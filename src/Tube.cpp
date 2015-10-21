@@ -40,6 +40,7 @@ Tube::Tube(Tube* tu)
   m_intv_t = tu->getT();
   m_intv_y = tu->getY();
   m_slices_number = tu->size();
+  m_enclosed_bounds = tu->getEnclosedBounds();
 
   if(tu->isSlice())
   {
@@ -121,16 +122,6 @@ double Tube::index2input(int index) const
   return 1.5 * index * (m_intv_t.ub() - m_intv_t.lb()) / m_slices_number;
 }
 
-Tube* Tube::getFirstSubTube() const
-{
-  return m_first_subtube;
-}
-
-Tube* Tube::getSecondSubTube() const
-{
-  return m_second_subtube;
-}
-
 const ibex::Interval& Tube::getT()
 {
   return m_intv_t;
@@ -197,6 +188,73 @@ void Tube::setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t)
   }
 }
 
+bool Tube::intersect(const ibex::Interval& intv_y, int index)
+{
+  bool result = getSlice(index)->intersect(intv_y, ibex::Interval::ALL_REALS, false);
+  updateFromIndex(index);
+  return result;
+}
+
+bool Tube::intersect(const ibex::Interval& intv_y, double t)
+{
+  bool result = getSlice(input2index(t))->intersect(intv_y, ibex::Interval::ALL_REALS, false);
+  updateFromInput(t);
+  return result;
+}
+
+bool Tube::intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t, bool allow_update)
+{
+  if(m_intv_t.intersects(intv_t))
+  {
+    bool contraction;
+
+    if(isSlice())
+    {
+      double diam = m_intv_y.diam();
+      m_intv_y = m_intv_y & intv_y;
+
+      if(m_intv_y.is_empty())
+        cout << "Warning Tube::intersect(): empty result:" 
+             << " t=" << intv_t << " y=" << intv_y << endl;
+
+      contraction = m_intv_y.diam() < diam;
+    }
+
+    else
+      contraction = m_first_subtube->intersect(intv_y, intv_t, false) || m_second_subtube->intersect(intv_y, intv_t, false);
+    
+    if(contraction && allow_update)
+      update();
+
+    return contraction;
+  }
+
+  return false;
+}
+
+pair<ibex::Interval,ibex::Interval> Tube::getEnclosedBounds() const
+{
+  return m_enclosed_bounds;
+}
+
+pair<ibex::Interval,ibex::Interval> Tube::getEnclosedBounds(const ibex::Interval& intv_t) const
+{
+  if(!intv_t.is_empty() && m_intv_t.intersects(intv_t))
+  {
+    if(isSlice() || intv_t.is_superset(m_intv_t))
+      return m_enclosed_bounds;
+
+    else
+    {
+      pair<ibex::Interval,ibex::Interval> ui_past = m_first_subtube->getEnclosedBounds(intv_t);
+      pair<ibex::Interval,ibex::Interval> ui_future = m_second_subtube->getEnclosedBounds(intv_t);
+      return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
+    }
+  }
+
+  return make_pair(ibex::Interval::EMPTY_SET, ibex::Interval::EMPTY_SET);
+}
+
 void Tube::print() const
 {
   if(isSlice())
@@ -207,6 +265,16 @@ void Tube::print() const
     m_first_subtube->print();
     m_second_subtube->print();
   }
+}
+
+Tube* Tube::getFirstSubTube() const
+{
+  return m_first_subtube;
+}
+
+Tube* Tube::getSecondSubTube() const
+{
+  return m_second_subtube;
 }
 
 void Tube::update()
@@ -232,6 +300,16 @@ void Tube::updateFromIndex(int index_focus)
         m_second_subtube->updateFromIndex(index_focus == -1 ? -1 : index_focus - (size() / 2));
       
       m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
+    }
+
+    if(isSlice())
+      m_enclosed_bounds = make_pair(ibex::Interval(m_intv_y.lb()), ibex::Interval(m_intv_y.ub()));
+
+    else
+    {
+      pair<ibex::Interval,ibex::Interval> ui_past = m_first_subtube->getEnclosedBounds();
+      pair<ibex::Interval,ibex::Interval> ui_future = m_second_subtube->getEnclosedBounds();
+      m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
   }
 }

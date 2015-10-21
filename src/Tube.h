@@ -78,20 +78,6 @@ class Tube
     double index2input(int index) const;
 
     /**
-     * \brief Return the half sub-tube ]tf/2,tf]
-     *
-     * \return the first part of the tube
-     */
-    Tube* getFirstSubTube() const;
-
-    /**
-     * \brief Return the half sub-tube [t0,tf/2[
-     *
-     * \return the second part of the tube
-     */
-    Tube* getSecondSubTube() const;
-
-    /**
      * \brief Return the domain of the tube
      *
      * \return an interval [t0,tf]
@@ -101,7 +87,7 @@ class Tube
     /**
      * \brief Return the domain of the slice represented by index
      *
-     * \param index index slice's number, between 0 and (size - 1)
+     * \param index slice's number, between 0 and (size - 1)
      * \return an interval [t0,tf]
      */
     const ibex::Interval& getT(int index);
@@ -117,7 +103,7 @@ class Tube
     /**
      * \brief Return the value of the slice represented by index
      *
-     * \param index index slice's number, between 0 and (size - 1)
+     * \param index slice's number, between 0 and (size - 1)
      * \return an interval [y1,y2]
      */
     const ibex::Interval& getY(int index);
@@ -142,7 +128,7 @@ class Tube
      * \brief Set the output value intv_y of the slice represented by index
      *
      * \param intv_y the output value to be set
-     * \param index index slice's number, between 0 and (size - 1)
+     * \param index slice's number, between 0 and (size - 1)
      */
     void setY(const ibex::Interval& intv_y, int index);
 
@@ -162,6 +148,66 @@ class Tube
      */
     void setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
 
+    /**
+     * \brief Return the half sub-tube ]tf/2,tf]
+     *
+     * \return the first part of the tube
+     */
+    Tube* getFirstSubTube() const;
+
+    /**
+     * \brief Return the half sub-tube [t0,tf/2[
+     *
+     * \return the second part of the tube
+     */
+    Tube* getSecondSubTube() const;
+
+    /**
+     * \brief Intersect and update tube's values with the given output intv_y
+     *
+     * \param intv_y the output value to intersect
+     * \param index slice's number, between 0 and (size - 1)
+     * \return true if a contraction has been done
+     */
+    bool intersect(const ibex::Interval& intv_y, int index);
+
+    /**
+     * \brief Intersect and update tube's values with the given output intv_y
+     *
+     * \param intv_y the output value to intersect
+     * \param t the input
+     * \return true if a contraction has been done
+     */
+    bool intersect(const ibex::Interval& intv_y, double t);
+
+    /**
+     * \brief Intersect and update tube's values with the given output intv_y
+     *
+     * \param intv_y the output value to intersect
+     * \param intv_t the interval input, Interval::ALL_REALS by default
+     * \param allow_update to allow the update of tube's data structure
+     * \return true if a contraction has been done
+     */
+    bool intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS, bool allow_update = true);
+
+    /**
+     * \brief Return enclosed bounds of the tube
+     *
+     * \return a pair of intervals representing all tube'smaxima and minima
+     */
+    std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds() const;
+
+    /**
+     * \brief Return enclosed bounds of the tube over the domain represented by intv_t
+     *
+     * \param intv_t the interval input, Interval::ALL_REALS by default
+     * \return a pair of intervals representing all tube'smaxima and minima
+     */
+    std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& intv_t) const;
+
+    /**
+     * \brief Display tube's values
+     */
     void print() const;
 
   protected:
@@ -192,6 +238,7 @@ class Tube
     int m_slices_number;
     Tube *m_first_subtube, *m_second_subtube;
     ibex::Interval m_intv_t, m_intv_y;
+    std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
 };
 
 #endif
