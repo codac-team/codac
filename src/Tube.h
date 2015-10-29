@@ -163,6 +163,14 @@ class Tube
     Tube* getSecondSubTube() const;
 
     /**
+     * \brief Return the integral over the domain represented by intv_t
+     *
+     * \param intv_t the interval input, Interval::ALL_REALS by default
+     * \return an interval [s1,s2]
+     */
+    ibex::Interval getIntegral(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
+
+    /**
      * \brief Intersect and update tube's values with the given output intv_y
      *
      * \param intv_y the output value to intersect
@@ -238,6 +246,7 @@ class Tube
     int m_slices_number;
     Tube *m_first_subtube, *m_second_subtube;
     ibex::Interval m_intv_t, m_intv_y;
+    ibex::Interval m_intv_integral;
     std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
 };
 
