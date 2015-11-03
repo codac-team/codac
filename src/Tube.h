@@ -9,6 +9,7 @@
 #define TubeIbex_HEADER
 
 #include <utility>
+#include <iostream>
 #include "ibex/ibex.h"
 
 class Tube
@@ -217,6 +218,7 @@ class Tube
      * \brief Display tube's values
      */
     void print() const;
+    friend std::ostream& operator<<(std::ostream&, const Tube&);
 
   protected:
 

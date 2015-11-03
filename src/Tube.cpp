@@ -279,6 +279,15 @@ void Tube::print() const
   }
 }
 
+std::ostream& operator<<(std::ostream& os, const Tube& x)
+{ 
+  cout << "Tube: t=" << x.m_intv_t 
+       << ", y=" << x.m_intv_y 
+       << ", slices=" << x.m_slices_number
+       << flush;
+  return os;
+}
+
 Tube* Tube::getFirstSubTube() const
 {
   return m_first_subtube;
