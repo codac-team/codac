@@ -188,7 +188,7 @@ void Tube::setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t)
   }
 }
 
-ibex::Interval Tube::getIntegral(const ibex::Interval& intv_t)
+ibex::Interval Tube::integral(const ibex::Interval& intv_t)
 {
   if(!m_intv_t.intersects(intv_t) || (m_intv_t & intv_t).diam() == 0.)
     return ibex::Interval(0.);
@@ -197,7 +197,19 @@ ibex::Interval Tube::getIntegral(const ibex::Interval& intv_t)
     return m_intv_y * (m_intv_t & intv_t).diam();
 
   else
-    return m_first_subtube->getIntegral(intv_t) + m_second_subtube->getIntegral(intv_t);
+    return m_first_subtube->integral(intv_t) + m_second_subtube->integral(intv_t);
+}
+
+pair<ibex::Interval,ibex::Interval> Tube::integral(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2)
+{
+  return make_pair(integral(ibex::Interval(intv_t1.ub(), intv_t2.lb())),
+                   integral(ibex::Interval(intv_t1.lb(), intv_t2.ub())));
+}
+
+ibex::Interval Tube::integralIntervalBounds(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2)
+{
+  return ibex::Interval(integral(ibex::Interval(intv_t1.ub(), intv_t2.lb())).lb(),
+                        integral(ibex::Interval(intv_t1.lb(), intv_t2.ub())).ub());
 }
 
 bool Tube::intersect(const ibex::Interval& intv_y, int index)

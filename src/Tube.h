@@ -169,7 +169,25 @@ class Tube
      * \param intv_t the interval input, Interval::ALL_REALS by default
      * \return an interval [s1,s2]
      */
-    ibex::Interval getIntegral(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
+    ibex::Interval integral(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
+
+    /**
+     * \brief Return the integral over the domain represented by [[intv_t1],[intv_t2]]
+     *
+     * \param intv_t1 the lower interval-bound input
+     * \param intv_t2 the upper interval-bound input
+     * \return an interval [s1,s2]
+     */
+    std::pair<ibex::Interval,ibex::Interval> integral(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2);
+
+    /**
+     * \brief Return the integral over the domain represented by [[intv_t1],[intv_t2]]
+     *
+     * \param intv_t1 the lower interval-bound input
+     * \param intv_t2 the upper interval-bound input
+     * \return an interval [s1,s2]
+     */
+    ibex::Interval integralIntervalBounds(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2);
 
     /**
      * \brief Intersect and update tube's values with the given output intv_y
