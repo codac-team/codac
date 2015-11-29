@@ -61,6 +61,30 @@ Tube::~Tube()
   delete m_second_subtube;
 }
 
+void Tube::resample(int new_slices_number)
+{
+  if((new_slices_number == 0) || (new_slices_number & (new_slices_number - 1))) // decrement and compare
+    cout << "Warning Tube::Tube(): slices number (" << new_slices_number << ") not a power of 2." << endl;
+
+  if(isSlice())
+  {
+    pair<ibex::Interval,ibex::Interval> bisection = m_intv_t.bisect(0.5);
+    m_first_subtube = new Tube(bisection.first, new_slices_number / 2);
+    m_first_subtube->setY(m_intv_y);
+    m_second_subtube = new Tube(bisection.second, new_slices_number / 2);
+    m_second_subtube->setY(m_intv_y);
+  }
+
+  else
+  {
+    m_first_subtube->resample(new_slices_number / 2);
+    m_second_subtube->resample(new_slices_number / 2);
+  }
+
+  m_slices_number = new_slices_number;
+  update();
+}
+
 int Tube::size() const
 {
   return m_slices_number;
@@ -96,6 +120,15 @@ Tube* Tube::getSlice(int index)
     else
       return m_first_subtube->getSlice(index);
   }
+}
+
+double Tube::getSliceWidth()
+{
+  if(isSlice())
+    return m_intv_t.diam();
+
+  else
+    return m_first_subtube->getSliceWidth();
 }
 
 int Tube::input2index(double t) const

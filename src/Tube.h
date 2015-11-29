@@ -41,6 +41,13 @@ class Tube
     ~Tube();
 
     /**
+     * \brief Resample the tube
+     *
+     * \param slices_number tube's sampling
+     */
+    void resample(int new_slices_number);
+
+    /**
      * \brief Return tube's size
      *
      * \return the number of slices defining the tube
@@ -61,6 +68,13 @@ class Tube
      * \return an object of class Tube corresponding to the slice indexed by index
      */
     Tube* getSlice(int index);
+
+    /**
+     * \brief Return the width of a slice
+     *
+     * \return the width of a slice
+     */
+    double getSliceWidth();
 
     /**
      * \brief Return the number of the slice containing the given input
