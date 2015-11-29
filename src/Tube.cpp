@@ -100,7 +100,7 @@ Tube* Tube::getSlice(int index)
   if(index < 0 || index >= m_slices_number)
   {
     cout << "Error Tube::getSlice(int): out of range "
-         << "for index=" << index << " in [0," << m_slices_number << "]" << endl;
+         << "for index=" << index << " in [0," << m_slices_number << "[" << endl;
     return NULL;
   }
 
@@ -148,7 +148,7 @@ double Tube::index2input(int index) const
   if(index < 0 || index >= m_slices_number)
   {
     cout << "Error Tube::index2time(int): out of range "
-         << "for index=" << index << " in [0," << m_slices_number << "]" << endl;
+         << "for index=" << index << " in [0," << m_slices_number << "[" << endl;
     return -1;
   }
 
