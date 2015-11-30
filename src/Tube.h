@@ -33,7 +33,7 @@ class Tube
      *
      * \param tu the tube to be copied
      */
-    Tube(Tube* tu);
+    Tube(const Tube& tu);
 
     /**
      * \brief Delete this tube
@@ -74,7 +74,7 @@ class Tube
      *
      * \return the width of a slice
      */
-    double getSliceWidth();
+    double getSliceWidth() const;
 
     /**
      * \brief Return the number of the slice containing the given input
@@ -183,7 +183,7 @@ class Tube
      * \param intv_t the interval input, Interval::ALL_REALS by default
      * \return an interval [s1,s2]
      */
-    ibex::Interval integral(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
+    const ibex::Interval integral(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
     /**
      * \brief Return the integral over the domain represented by [[intv_t1],[intv_t2]]
@@ -192,7 +192,7 @@ class Tube
      * \param intv_t2 the upper interval-bound input
      * \return an interval [s1,s2]
      */
-    std::pair<ibex::Interval,ibex::Interval> integral(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2);
+    const std::pair<ibex::Interval,ibex::Interval> integral(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2) const;
 
     /**
      * \brief Return the integral over the domain represented by [[intv_t1],[intv_t2]]
@@ -201,7 +201,7 @@ class Tube
      * \param intv_t2 the upper interval-bound input
      * \return an interval [s1,s2]
      */
-    ibex::Interval integralIntervalBounds(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2);
+    const ibex::Interval integralIntervalBounds(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2) const;
 
     /**
      * \brief Intersect and update tube's values with the given output intv_y
@@ -236,7 +236,7 @@ class Tube
      *
      * \return a pair of intervals representing all tube'smaxima and minima
      */
-    std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds() const;
+    const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds() const;
 
     /**
      * \brief Return enclosed bounds of the tube over the domain represented by intv_t
@@ -244,7 +244,7 @@ class Tube
      * \param intv_t the interval input, Interval::ALL_REALS by default
      * \return a pair of intervals representing all tube'smaxima and minima
      */
-    std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& intv_t) const;
+    const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& intv_t) const;
 
     /**
      * \brief Set this Tube to the hull of itself and another
