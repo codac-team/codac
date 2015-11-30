@@ -41,6 +41,7 @@ Tube::Tube(Tube* tu)
   m_intv_y = tu->getY();
   m_slices_number = tu->size();
   m_enclosed_bounds = tu->getEnclosedBounds();
+  m_intv_integral = tu->integral();
 
   if(tu->isSlice())
   {
@@ -331,6 +332,29 @@ std::ostream& operator<<(std::ostream& os, const Tube& x)
        << ", slices=" << x.m_slices_number
        << flush;
   return os;
+}
+
+Tube& Tube::operator |=(Tube x)
+{
+  if(size() != x.size())
+    cout << "Warning Tube::operator |=: cannot make the hull of Tubes of different dimensions: " 
+         << "n1=" << size() << " and n2=" << x.size() << endl;
+
+  if(getT() != x.getT())
+    cout << "Warning Tube::operator |=: cannot make the hull of Tubes of different domain: " 
+         << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
+
+  m_intv_y |= x.getY();
+
+  if(!isSlice())
+  {
+    *m_first_subtube |= x.getFirstSubTube();
+    *m_second_subtube |= x.getSecondSubTube();
+  }
+
+  update();
+  
+  return *this;
 }
 
 Tube* Tube::getFirstSubTube() const

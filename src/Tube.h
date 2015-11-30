@@ -247,6 +247,13 @@ class Tube
     std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& intv_t) const;
 
     /**
+     * \brief Set this Tube to the hull of itself and another
+     *
+     * \return a reference to this
+     */
+    Tube& operator|=(Tube x);
+
+    /**
      * \brief Display tube's values
      */
     void print() const;
