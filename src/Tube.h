@@ -258,7 +258,7 @@ class Tube
      *
      * \return a reference to this
      */
-    Tube& operator&=(Tube x);
+    Tube& operator&=(const Tube& x);
 
     /**
      * \brief Display tube's values

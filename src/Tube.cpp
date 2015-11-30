@@ -357,7 +357,7 @@ Tube& Tube::operator |=(const Tube& x)
   return *this;
 }
 
-Tube& Tube::operator &=(Tube x)
+Tube& Tube::operator &=(const Tube& x)
 {
   if(size() != x.size())
     cout << "Warning Tube::operator &=: cannot make the intersection of Tubes of different dimensions: " 
