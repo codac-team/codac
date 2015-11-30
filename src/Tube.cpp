@@ -156,7 +156,7 @@ double Tube::index2input(int index) const
   return 1.5 * index * (m_intv_t.ub() - m_intv_t.lb()) / m_slices_number;
 }
 
-const ibex::Interval& Tube::getT()
+const ibex::Interval& Tube::getT() const
 {
   return m_intv_t;
 }
@@ -181,7 +181,7 @@ const ibex::Interval& Tube::getY(double t)
   return getSlice(input2index(t))->m_intv_y;
 }
 
-ibex::Interval Tube::getY(const ibex::Interval& intv_t)
+ibex::Interval Tube::getY(const ibex::Interval& intv_t) const
 {
   if(!m_intv_t.intersects(intv_t))
     return ibex::Interval::EMPTY_SET;
@@ -334,7 +334,7 @@ std::ostream& operator<<(std::ostream& os, const Tube& x)
   return os;
 }
 
-Tube& Tube::operator |=(Tube x)
+Tube& Tube::operator |=(const Tube& x)
 {
   if(size() != x.size())
     cout << "Warning Tube::operator |=: cannot make the hull of Tubes of different dimensions: " 
@@ -350,6 +350,29 @@ Tube& Tube::operator |=(Tube x)
   {
     *m_first_subtube |= x.getFirstSubTube();
     *m_second_subtube |= x.getSecondSubTube();
+  }
+
+  update();
+  
+  return *this;
+}
+
+Tube& Tube::operator &=(Tube x)
+{
+  if(size() != x.size())
+    cout << "Warning Tube::operator &=: cannot make the intersection of Tubes of different dimensions: " 
+         << "n1=" << size() << " and n2=" << x.size() << endl;
+
+  if(getT() != x.getT())
+    cout << "Warning Tube::operator &=: cannot make the intersection of Tubes of different domain: " 
+         << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
+
+  m_intv_y &= x.getY();
+
+  if(!isSlice())
+  {
+    *m_first_subtube &= x.getFirstSubTube();
+    *m_second_subtube &= x.getSecondSubTube();
   }
 
   update();

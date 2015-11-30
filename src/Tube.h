@@ -97,7 +97,7 @@ class Tube
      *
      * \return an interval [t0,tf]
      */
-    const ibex::Interval& getT();
+    const ibex::Interval& getT() const;
 
     /**
      * \brief Return the domain of the slice represented by index
@@ -137,7 +137,7 @@ class Tube
      * \param intv_t the interval input, Interval::ALL_REALS by default
      * \return an interval [y1,y2]
      */
-    ibex::Interval getY(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
+    ibex::Interval getY(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
     /**
      * \brief Set the output value intv_y of the slice represented by index
@@ -251,7 +251,14 @@ class Tube
      *
      * \return a reference to this
      */
-    Tube& operator|=(Tube x);
+    Tube& operator|=(const Tube& x);
+
+    /**
+     * \brief \brief Set *this to its intersection with x
+     *
+     * \return a reference to this
+     */
+    Tube& operator&=(Tube x);
 
     /**
      * \brief Display tube's values
