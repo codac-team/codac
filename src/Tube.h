@@ -168,14 +168,14 @@ class Tube
      *
      * \return the first part of the tube
      */
-    Tube* getFirstSubTube() const;
+    const Tube* getFirstSubTube() const;
 
     /**
      * \brief Return the half sub-tube [t0,tf/2[
      *
      * \return the second part of the tube
      */
-    Tube* getSecondSubTube() const;
+    const Tube* getSecondSubTube() const;
 
     /**
      * \brief Return the integral over the domain represented by intv_t

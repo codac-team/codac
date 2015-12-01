@@ -380,12 +380,12 @@ Tube& Tube::operator &=(const Tube& x)
   return *this;
 }
 
-Tube* Tube::getFirstSubTube() const
+const Tube* Tube::getFirstSubTube() const
 {
   return m_first_subtube;
 }
 
-Tube* Tube::getSecondSubTube() const
+const Tube* Tube::getSecondSubTube() const
 {
   return m_second_subtube;
 }
