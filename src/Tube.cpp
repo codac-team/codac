@@ -269,7 +269,7 @@ bool Tube::intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t,
     if(isSlice())
     {
       double diam = m_intv_y.diam();
-      m_intv_y = m_intv_y & intv_y;
+      m_intv_y &= intv_y;
 
       if(m_intv_y.is_empty())
         cout << "Warning Tube::intersect(): empty result:" 
@@ -279,7 +279,10 @@ bool Tube::intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t,
     }
 
     else
-      contraction = m_first_subtube->intersect(intv_y, intv_t, false) || m_second_subtube->intersect(intv_y, intv_t, false);
+    {
+      contraction |= m_first_subtube->intersect(intv_y, intv_t, false);
+      contraction |= m_second_subtube->intersect(intv_y, intv_t, false);
+    }
     
     if(contraction && allow_update)
       update();
