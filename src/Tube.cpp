@@ -9,14 +9,15 @@
 #include <iomanip> // for setprecision()
 
 using namespace std;
+using namespace ibex;
 
-Tube::Tube(const ibex::Interval &intv_t, unsigned int slices_number)
+Tube::Tube(const Interval &intv_t, unsigned int slices_number)
 {
   if((slices_number == 0) || (slices_number & (slices_number - 1))) // decrement and compare
     cout << "Warning Tube::Tube(): slices number (" << slices_number << ") not a power of 2." << endl;
 
   m_intv_t = intv_t;
-  m_intv_y = ibex::Interval::EMPTY_SET;
+  m_intv_y = Interval::EMPTY_SET;
   m_slices_number = slices_number;
 
   if(slices_number == 1)
@@ -27,7 +28,7 @@ Tube::Tube(const ibex::Interval &intv_t, unsigned int slices_number)
 
   else
   {
-    pair<ibex::Interval,ibex::Interval> bisection = intv_t.bisect(0.5);
+    pair<Interval,Interval> bisection = intv_t.bisect(0.5);
     m_first_subtube = new Tube(bisection.first, slices_number / 2);
     m_second_subtube = new Tube(bisection.second, slices_number / 2);
   }
@@ -69,7 +70,7 @@ void Tube::resample(int new_slices_number)
 
   if(isSlice())
   {
-    pair<ibex::Interval,ibex::Interval> bisection = m_intv_t.bisect(0.5);
+    pair<Interval,Interval> bisection = m_intv_t.bisect(0.5);
     m_first_subtube = new Tube(bisection.first, new_slices_number / 2);
     m_first_subtube->setY(m_intv_y);
     m_second_subtube = new Tube(bisection.second, new_slices_number / 2);
@@ -156,35 +157,35 @@ double Tube::index2input(int index) const
   return 1.5 * index * (m_intv_t.ub() - m_intv_t.lb()) / m_slices_number;
 }
 
-const ibex::Interval& Tube::getT() const
+const Interval& Tube::getT() const
 {
   return m_intv_t;
 }
 
-const ibex::Interval& Tube::getT(int index)
+const Interval& Tube::getT(int index)
 {
   return getSlice(index)->getT();
 }
 
-const ibex::Interval& Tube::getT(double t)
+const Interval& Tube::getT(double t)
 {
   return getSlice(input2index(t))->getT();
 }
 
-const ibex::Interval& Tube::getY(int index)
+const Interval& Tube::getY(int index)
 {
   return getSlice(index)->m_intv_y;
 }
 
-const ibex::Interval& Tube::getY(double t)
+const Interval& Tube::getY(double t)
 {
   return getSlice(input2index(t))->m_intv_y;
 }
 
-ibex::Interval Tube::getY(const ibex::Interval& intv_t) const
+Interval Tube::getY(const Interval& intv_t) const
 {
   if(!m_intv_t.intersects(intv_t))
-    return ibex::Interval::EMPTY_SET;
+    return Interval::EMPTY_SET;
 
   else if(isSlice() || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
     return m_intv_y;
@@ -193,19 +194,19 @@ ibex::Interval Tube::getY(const ibex::Interval& intv_t) const
     return m_first_subtube->getY(intv_t) | m_second_subtube->getY(intv_t);
 }
 
-void Tube::setY(const ibex::Interval& intv_y, int index)
+void Tube::setY(const Interval& intv_y, int index)
 {
   getSlice(index)->setY(intv_y);
   updateFromIndex(index);
 }
 
-void Tube::setY(const ibex::Interval& intv_y, double t)
+void Tube::setY(const Interval& intv_y, double t)
 {
   getSlice(input2index(t))->setY(intv_y);
   updateFromInput(t);
 }
 
-void Tube::setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t)
+void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 {
   if(m_intv_t.intersects(intv_t))
   {
@@ -222,10 +223,10 @@ void Tube::setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t)
   }
 }
 
-const ibex::Interval Tube::integral(const ibex::Interval& intv_t) const
+const Interval Tube::integral(const Interval& intv_t) const
 {
   if(!m_intv_t.intersects(intv_t) || (m_intv_t & intv_t).diam() == 0.)
-    return ibex::Interval(0.);
+    return Interval(0.);
 
   else if(isSlice())
     return m_intv_y * (m_intv_t & intv_t).diam();
@@ -234,33 +235,33 @@ const ibex::Interval Tube::integral(const ibex::Interval& intv_t) const
     return m_first_subtube->integral(intv_t) + m_second_subtube->integral(intv_t);
 }
 
-const pair<ibex::Interval,ibex::Interval> Tube::integral(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2) const
+const pair<Interval,Interval> Tube::integral(const Interval& intv_t1, const Interval& intv_t2) const
 {
-  return make_pair(integral(ibex::Interval(intv_t1.ub(), intv_t2.lb())),
-                   integral(ibex::Interval(intv_t1.lb(), intv_t2.ub())));
+  return make_pair(integral(Interval(intv_t1.ub(), intv_t2.lb())),
+                   integral(Interval(intv_t1.lb(), intv_t2.ub())));
 }
 
-const ibex::Interval Tube::integralIntervalBounds(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2) const
+const Interval Tube::integralIntervalBounds(const Interval& intv_t1, const Interval& intv_t2) const
 {
-  return ibex::Interval(integral(ibex::Interval(intv_t1.ub(), intv_t2.lb())).lb(),
-                        integral(ibex::Interval(intv_t1.lb(), intv_t2.ub())).ub());
+  return Interval(integral(Interval(intv_t1.ub(), intv_t2.lb())).lb(),
+                        integral(Interval(intv_t1.lb(), intv_t2.ub())).ub());
 }
 
-bool Tube::intersect(const ibex::Interval& intv_y, int index)
+bool Tube::intersect(const Interval& intv_y, int index)
 {
-  bool result = getSlice(index)->intersect(intv_y, ibex::Interval::ALL_REALS, false);
+  bool result = getSlice(index)->intersect(intv_y, Interval::ALL_REALS, false);
   updateFromIndex(index);
   return result;
 }
 
-bool Tube::intersect(const ibex::Interval& intv_y, double t)
+bool Tube::intersect(const Interval& intv_y, double t)
 {
-  bool result = getSlice(input2index(t))->intersect(intv_y, ibex::Interval::ALL_REALS, false);
+  bool result = getSlice(input2index(t))->intersect(intv_y, Interval::ALL_REALS, false);
   updateFromInput(t);
   return result;
 }
 
-bool Tube::intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t, bool allow_update)
+bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool allow_update)
 {
   if(m_intv_t.intersects(intv_t))
   {
@@ -293,12 +294,12 @@ bool Tube::intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t,
   return false;
 }
 
-const pair<ibex::Interval,ibex::Interval> Tube::getEnclosedBounds() const
+const pair<Interval,Interval> Tube::getEnclosedBounds() const
 {
   return m_enclosed_bounds;
 }
 
-const pair<ibex::Interval,ibex::Interval> Tube::getEnclosedBounds(const ibex::Interval& intv_t) const
+const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
 {
   if(!intv_t.is_empty() && m_intv_t.intersects(intv_t))
   {
@@ -307,13 +308,13 @@ const pair<ibex::Interval,ibex::Interval> Tube::getEnclosedBounds(const ibex::In
 
     else
     {
-      pair<ibex::Interval,ibex::Interval> ui_past = m_first_subtube->getEnclosedBounds(intv_t);
-      pair<ibex::Interval,ibex::Interval> ui_future = m_second_subtube->getEnclosedBounds(intv_t);
+      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds(intv_t);
+      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds(intv_t);
       return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
   }
 
-  return make_pair(ibex::Interval::EMPTY_SET, ibex::Interval::EMPTY_SET);
+  return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 }
 
 void Tube::print() const
@@ -409,7 +410,7 @@ void Tube::updateFromIndex(int index_focus)
   {
     if(isSlice())
     {
-      m_enclosed_bounds = make_pair(ibex::Interval(m_intv_y.lb()), ibex::Interval(m_intv_y.ub()));
+      m_enclosed_bounds = make_pair(Interval(m_intv_y.lb()), Interval(m_intv_y.ub()));
       m_intv_integral = m_intv_y * m_intv_t.diam();
     }
 
@@ -424,8 +425,8 @@ void Tube::updateFromIndex(int index_focus)
       m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
       m_intv_integral = m_first_subtube->m_intv_integral + m_second_subtube->m_intv_integral;
 
-      pair<ibex::Interval,ibex::Interval> ui_past = m_first_subtube->getEnclosedBounds();
-      pair<ibex::Interval,ibex::Interval> ui_future = m_second_subtube->getEnclosedBounds();
+      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds();
+      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds();
       m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
   }
