@@ -271,11 +271,6 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool allow_
     {
       double diam = m_intv_y.diam();
       m_intv_y &= intv_y;
-
-      if(m_intv_y.is_empty())
-        cout << "Warning Tube::intersect(): empty result:" 
-             << " t=" << intv_t << " y=" << intv_y << endl;
-
       contraction = m_intv_y.diam() < diam;
     }
 
