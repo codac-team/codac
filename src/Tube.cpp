@@ -265,13 +265,16 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool allow_
 {
   if(m_intv_t.intersects(intv_t))
   {
-    bool contraction;
+    bool contraction = false;
 
     if(isSlice())
     {
-      double diam = m_intv_y.diam();
-      m_intv_y &= intv_y;
-      contraction = m_intv_y.diam() < diam;
+      if(!m_intv_y.is_empty())
+      {
+        double diam = m_intv_y.diam();
+        m_intv_y &= intv_y;
+        contraction = m_intv_y.is_empty() || m_intv_y.diam() < diam;
+      }
     }
 
     else
