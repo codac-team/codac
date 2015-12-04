@@ -247,6 +247,25 @@ const Interval Tube::integralIntervalBounds(const Interval& intv_t1, const Inter
                         integral(Interval(intv_t1.lb(), intv_t2.ub())).ub());
 }
 
+const Tube Tube::primitive()
+{
+  return primitive(Interval(0.));
+}
+
+const Tube Tube::primitive(const Interval& initial_value)
+{
+  Tube primitive(m_intv_t, m_slices_number);
+
+  Interval sum = initial_value;
+  for(int i = 0 ; i < m_slices_number ; i++)
+  {
+    primitive.setY(sum, i);
+    sum += getY(i) * getT(i).diam();
+  }
+
+  return primitive;
+}
+
 bool Tube::intersect(const Interval& intv_y, int index)
 {
   bool result = getSlice(index)->intersect(intv_y, Interval::ALL_REALS, false);

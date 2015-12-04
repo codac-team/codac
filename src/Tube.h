@@ -204,6 +204,20 @@ class Tube
     const ibex::Interval integralIntervalBounds(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2) const;
 
     /**
+     * \brief Return the primitive tube of this
+     *
+     * \return a tube defined over the same domain of this
+     */
+    const Tube primitive();
+
+    /**
+     * \brief Return the primitive tube of this
+     *
+     * \return a tube defined over the same domain of this
+     */
+    const Tube primitive(const ibex::Interval& initial_value);
+
+    /**
      * \brief Intersect and update tube's values with the given output intv_y
      *
      * \param intv_y the output value to intersect
