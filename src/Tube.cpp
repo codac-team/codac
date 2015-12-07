@@ -11,6 +11,7 @@
 using namespace std;
 using namespace ibex;
 
+
 Tube::Tube(const Interval &intv_t, unsigned int slices_number)
 {
   if((slices_number == 0) || (slices_number & (slices_number - 1))) // decrement and compare
@@ -42,7 +43,6 @@ Tube::Tube(const Tube& tu)
   m_intv_y = tu.getY();
   m_slices_number = tu.size();
   m_enclosed_bounds = tu.getEnclosedBounds();
-  m_intv_integral = tu.integral();
 
   if(tu.isSlice())
   {
@@ -223,30 +223,6 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t)
   }
 }
 
-const Interval Tube::integral(const Interval& intv_t) const
-{
-  if(!m_intv_t.intersects(intv_t) || (m_intv_t & intv_t).diam() == 0.)
-    return Interval(0.);
-
-  else if(isSlice())
-    return m_intv_y * (m_intv_t & intv_t).diam();
-
-  else
-    return m_first_subtube->integral(intv_t) + m_second_subtube->integral(intv_t);
-}
-
-const pair<Interval,Interval> Tube::integral(const Interval& intv_t1, const Interval& intv_t2) const
-{
-  return make_pair(integral(Interval(intv_t1.ub(), intv_t2.lb())),
-                   integral(Interval(intv_t1.lb(), intv_t2.ub())));
-}
-
-const Interval Tube::integralIntervalBounds(const Interval& intv_t1, const Interval& intv_t2) const
-{
-  return Interval(integral(Interval(intv_t1.ub(), intv_t2.lb())).lb(),
-                        integral(Interval(intv_t1.lb(), intv_t2.ub())).ub());
-}
-
 const Tube Tube::primitive()
 {
   return primitive(Interval(0.));
@@ -264,6 +240,23 @@ const Tube Tube::primitive(const Interval& initial_value)
   }
 
   return primitive;
+}
+
+Interval Tube::timeIntegration(const Tube& primitive, const Interval& t1, const Interval& t2) const
+{
+  pair<Interval,Interval> enc_prim = partialTimeIntegration(primitive, t1, t2);
+  return Interval(enc_prim.first.lb(), enc_prim.second.ub());
+}
+
+pair<Interval,Interval> Tube::partialTimeIntegration(const Tube& primitive, const Interval& t1, const Interval& t2) const
+{
+  pair<Interval,Interval> enc_prim_t1 = primitive.getEnclosedBounds(t1);
+  pair<Interval,Interval> enc_prim_t2 = primitive.getEnclosedBounds(t2);
+
+  Interval integral_min = enc_prim_t2.first - enc_prim_t1.first;
+  Interval integral_max = enc_prim_t2.second - enc_prim_t1.second;
+
+  return make_pair(integral_min, integral_max);
 }
 
 bool Tube::intersect(const Interval& intv_y, int index)
@@ -428,7 +421,6 @@ void Tube::updateFromIndex(int index_focus)
     if(isSlice())
     {
       m_enclosed_bounds = make_pair(Interval(m_intv_y.lb()), Interval(m_intv_y.ub()));
-      m_intv_integral = m_intv_y * m_intv_t.diam();
     }
 
     else
@@ -440,7 +432,6 @@ void Tube::updateFromIndex(int index_focus)
         m_second_subtube->updateFromIndex(index_focus == -1 ? -1 : index_focus - (size() / 2));
       
       m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
-      m_intv_integral = m_first_subtube->m_intv_integral + m_second_subtube->m_intv_integral;
 
       pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds();
       pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds();

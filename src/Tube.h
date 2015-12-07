@@ -178,30 +178,14 @@ class Tube
     const Tube* getSecondSubTube() const;
 
     /**
-     * \brief Return the integral over the domain represented by intv_t
+     * \brief Return the integral over the domain represented by [[t1],[t2]]
      *
-     * \param intv_t the interval input, Interval::ALL_REALS by default
+     * \param t1 the lower interval-bound input
+     * \param t2 the upper interval-bound input
      * \return an interval [s1,s2]
      */
-    const ibex::Interval integral(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
-
-    /**
-     * \brief Return the integral over the domain represented by [[intv_t1],[intv_t2]]
-     *
-     * \param intv_t1 the lower interval-bound input
-     * \param intv_t2 the upper interval-bound input
-     * \return an interval [s1,s2]
-     */
-    const std::pair<ibex::Interval,ibex::Interval> integral(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2) const;
-
-    /**
-     * \brief Return the integral over the domain represented by [[intv_t1],[intv_t2]]
-     *
-     * \param intv_t1 the lower interval-bound input
-     * \param intv_t2 the upper interval-bound input
-     * \return an interval [s1,s2]
-     */
-    const ibex::Interval integralIntervalBounds(const ibex::Interval& intv_t1, const ibex::Interval& intv_t2) const;
+    std::pair<ibex::Interval,ibex::Interval> partialTimeIntegration(const Tube &primitive, const ibex::Interval& t1, const ibex::Interval& t2) const;
+    ibex::Interval timeIntegration(const Tube &primitive, const ibex::Interval& t1, const ibex::Interval& t2) const;
 
     /**
      * \brief Return the primitive tube of this
@@ -308,7 +292,6 @@ class Tube
     int m_slices_number;
     Tube *m_first_subtube, *m_second_subtube;
     ibex::Interval m_intv_t, m_intv_y;
-    ibex::Interval m_intv_integral;
     std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
 };
 
