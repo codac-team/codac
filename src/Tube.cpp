@@ -12,16 +12,36 @@ using namespace std;
 using namespace ibex;
 
 
-Tube::Tube(const Interval &intv_t, unsigned int slices_number)
+Tube::Tube(const Interval &intv_t, double dt)
 {
-  if((slices_number == 0) || (slices_number & (slices_number - 1))) // decrement and compare
-    cout << "Warning Tube::Tube(): slices number (" << slices_number << ") not a power of 2." << endl;
+  double lb, ub = intv_t.lb();
+  vector<Interval> vector_slices;
+  do
+  {
+    lb = ub;
+    ub = lb + dt;
+    vector_slices.push_back(Interval(lb, ub));
+  } while(ub < intv_t.ub());
 
-  m_intv_t = intv_t;
+  initFromSlicesVector(vector_slices);
+  update();
+}
+
+Tube::Tube(vector<Interval> vector_slices, bool bool_update)
+{
+  initFromSlicesVector(vector_slices);
+  if(bool_update)
+    update();
+}
+
+void Tube::initFromSlicesVector(vector<Interval> vector_slices)
+{
+  m_dt = vector_slices[0].diam();
+  m_intv_t = Interval(vector_slices[0].lb(), vector_slices[vector_slices.size() - 1].ub());
   m_intv_y = Interval::EMPTY_SET;
-  m_slices_number = slices_number;
+  m_slices_number = vector_slices.size();
 
-  if(slices_number == 1)
+  if(m_slices_number == 1)
   {
     m_first_subtube = NULL;
     m_second_subtube = NULL;
@@ -29,16 +49,22 @@ Tube::Tube(const Interval &intv_t, unsigned int slices_number)
 
   else
   {
-    pair<Interval,Interval> bisection = intv_t.bisect(0.5);
-    m_first_subtube = new Tube(bisection.first, slices_number / 2);
-    m_second_subtube = new Tube(bisection.second, slices_number / 2);
-  }
+    vector<Interval> first_vector_slices, second_vector_slices;
+    int i, k = ceil(m_slices_number / 2.);
+    for(i = 0 ; i < k ; i++)
+      first_vector_slices.push_back(vector_slices[i]);
 
-  update();
+    for( ; i < m_slices_number ; i++)
+      second_vector_slices.push_back(vector_slices[i]);
+
+    m_first_subtube = new Tube(first_vector_slices, false);
+    m_second_subtube = new Tube(second_vector_slices, false);
+  }
 }
 
 Tube::Tube(const Tube& tu)
 {
+  m_dt = tu.getTimestep();
   m_intv_t = tu.getT();
   m_intv_y = tu.getY();
   m_slices_number = tu.size();
@@ -63,33 +89,14 @@ Tube::~Tube()
   delete m_second_subtube;
 }
 
-void Tube::resample(int new_slices_number)
-{
-  if((new_slices_number == 0) || (new_slices_number & (new_slices_number - 1))) // decrement and compare
-    cout << "Warning Tube::Tube(): slices number (" << new_slices_number << ") not a power of 2." << endl;
-
-  if(isSlice())
-  {
-    pair<Interval,Interval> bisection = m_intv_t.bisect(0.5);
-    m_first_subtube = new Tube(bisection.first, new_slices_number / 2);
-    m_first_subtube->setY(m_intv_y);
-    m_second_subtube = new Tube(bisection.second, new_slices_number / 2);
-    m_second_subtube->setY(m_intv_y);
-  }
-
-  else
-  {
-    m_first_subtube->resample(new_slices_number / 2);
-    m_second_subtube->resample(new_slices_number / 2);
-  }
-
-  m_slices_number = new_slices_number;
-  update();
-}
-
 int Tube::size() const
 {
   return m_slices_number;
+}
+
+double Tube::getTimestep() const
+{
+  return m_dt;
 }
 
 bool Tube::isSlice() const
@@ -116,21 +123,14 @@ Tube* Tube::getSlice(int index)
 
   else
   {
-    if(index >= size() / 2)
-      return m_second_subtube->getSlice(index - (size() / 2));
+    int mid_id = ceil(m_slices_number / 2.);
+
+    if(index < mid_id)
+      return m_first_subtube->getSlice(index);
 
     else
-      return m_first_subtube->getSlice(index);
+      return m_second_subtube->getSlice(index - mid_id);
   }
-}
-
-double Tube::getSliceWidth() const
-{
-  if(isSlice())
-    return m_intv_t.diam();
-
-  else
-    return m_first_subtube->getSliceWidth();
 }
 
 int Tube::input2index(double t) const
@@ -142,19 +142,19 @@ int Tube::input2index(double t) const
     return -1;
   }
 
-  return (int)(m_slices_number * (t - m_intv_t.lb()) / m_intv_t.diam());
+  if(isSlice())
+    return 0;
+
+  if(m_first_subtube->getT().contains(t))
+    return m_first_subtube->input2index(t);
+
+  else
+    return m_second_subtube->input2index(t) + m_first_subtube->size();
 }
 
-double Tube::index2input(int index) const
+double Tube::index2input(int index)
 {
-  if(index < 0 || index >= m_slices_number)
-  {
-    cout << "Error Tube::index2time(int): out of range "
-         << "for index=" << index << " in [0," << m_slices_number << "[" << endl;
-    return -1;
-  }
-
-  return 1.5 * index * (m_intv_t.ub() - m_intv_t.lb()) / m_slices_number;
+  return getSlice(index)->getT().lb();
 }
 
 const Interval& Tube::getT() const
@@ -230,13 +230,13 @@ const Tube Tube::primitive()
 
 const Tube Tube::primitive(const Interval& initial_value)
 {
-  Tube primitive(m_intv_t, m_slices_number);
+  Tube primitive(m_intv_t, m_dt);
 
   Interval sum = initial_value;
   for(int i = 0 ; i < m_slices_number ; i++)
   {
     primitive.setY(sum, i);
-    sum += getY(i) * getT(i).diam();
+    sum += getY(i) * m_dt;
   }
 
   return primitive;
@@ -344,6 +344,7 @@ std::ostream& operator<<(std::ostream& os, const Tube& x)
   cout << "Tube: t=" << x.m_intv_t 
        << ", y=" << x.m_intv_y 
        << ", slices=" << x.m_slices_number
+       << ", dt=" << x.m_dt
        << flush;
   return os;
 }
@@ -367,7 +368,6 @@ Tube& Tube::operator |=(const Tube& x)
   }
 
   update();
-  
   return *this;
 }
 
@@ -390,7 +390,6 @@ Tube& Tube::operator &=(const Tube& x)
   }
 
   update();
-  
   return *this;
 }
 
@@ -425,11 +424,13 @@ void Tube::updateFromIndex(int index_focus)
 
     else
     {
-      if(index_focus < m_slices_number / 2)
+      int mid_id = ceil(m_slices_number / 2.);
+
+      if(index_focus < mid_id)
         m_first_subtube->updateFromIndex(index_focus);
       
       else
-        m_second_subtube->updateFromIndex(index_focus == -1 ? -1 : index_focus - (size() / 2));
+        m_second_subtube->updateFromIndex(index_focus == -1 ? -1 : index_focus - mid_id);
       
       m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
 

@@ -26,7 +26,8 @@ class Tube
      * Tube's sampling is defined by slices_number. Because tube's data structure 
      * is based on a perfect binary tree, slices_number has to be a power of 2.
      */
-    Tube(const ibex::Interval &intv_t, unsigned int slices_number);
+    Tube(const ibex::Interval &intv_t, double dt);
+    Tube(std::vector<ibex::Interval> vector_slices, bool bool_update = true);
 
     /**
      * \brief Create a copy of the given tube tu
@@ -41,18 +42,18 @@ class Tube
     ~Tube();
 
     /**
-     * \brief Resample the tube
-     *
-     * \param slices_number tube's sampling
-     */
-    void resample(int new_slices_number);
-
-    /**
      * \brief Return tube's size
      *
      * \return the number of slices defining the tube
      */
     int size() const;
+
+    /**
+     * \brief Return the width of a slice
+     *
+     * \return the width of a slice
+     */
+    double getTimestep() const;
 
     /**
      * \brief Test if the tube is a box
@@ -70,13 +71,6 @@ class Tube
     Tube* getSlice(int index);
 
     /**
-     * \brief Return the width of a slice
-     *
-     * \return the width of a slice
-     */
-    double getSliceWidth() const;
-
-    /**
      * \brief Return the number of the slice containing the given input
      *
      * \param t the input
@@ -90,7 +84,7 @@ class Tube
      * \param index slice's number, between 0 and (size - 1)
      * \return an input in the slice
      */
-    double index2input(int index) const;
+    double index2input(int index);
 
     /**
      * \brief Return the domain of the tube
@@ -266,6 +260,8 @@ class Tube
 
   protected:
 
+    void initFromSlicesVector(std::vector<ibex::Interval> vector_slices);
+
     /**
      * \brief Update tube's data structure 
      * 
@@ -289,6 +285,7 @@ class Tube
      */
     void updateFromIndex(int index_focus);
     
+    double m_dt;
     int m_slices_number;
     Tube *m_first_subtube, *m_second_subtube;
     ibex::Interval m_intv_t, m_intv_y;
