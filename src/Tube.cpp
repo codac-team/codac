@@ -15,31 +15,31 @@ using namespace ibex;
 Tube::Tube(const Interval &intv_t, double dt)
 {
   double lb, ub = intv_t.lb();
-  vector<Interval> vector_slices;
+  vector<Interval> vector_dt;
   do
   {
     lb = ub;
     ub = lb + dt;
-    vector_slices.push_back(Interval(lb, ub));
+    vector_dt.push_back(Interval(lb, ub));
   } while(ub < intv_t.ub());
 
-  initFromSlicesVector(vector_slices);
+  initFromSlicesVector(vector_dt);
   update();
 }
 
-Tube::Tube(vector<Interval> vector_slices, bool bool_update)
+Tube::Tube(vector<Interval> vector_dt, bool bool_update)
 {
-  initFromSlicesVector(vector_slices);
+  initFromSlicesVector(vector_dt);
   if(bool_update)
     update();
 }
 
-void Tube::initFromSlicesVector(vector<Interval> vector_slices)
+void Tube::initFromSlicesVector(vector<Interval> vector_dt)
 {
-  m_dt = vector_slices[0].diam();
-  m_intv_t = Interval(vector_slices[0].lb(), vector_slices[vector_slices.size() - 1].ub());
+  m_dt = vector_dt[0].diam();
+  m_intv_t = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
   m_intv_y = Interval::EMPTY_SET;
-  m_slices_number = vector_slices.size();
+  m_slices_number = vector_dt.size();
 
   if(m_slices_number == 1)
   {
@@ -52,10 +52,10 @@ void Tube::initFromSlicesVector(vector<Interval> vector_slices)
     vector<Interval> first_vector_slices, second_vector_slices;
     int i, k = ceil(m_slices_number / 2.);
     for(i = 0 ; i < k ; i++)
-      first_vector_slices.push_back(vector_slices[i]);
+      first_vector_slices.push_back(vector_dt[i]);
 
     for( ; i < m_slices_number ; i++)
-      second_vector_slices.push_back(vector_slices[i]);
+      second_vector_slices.push_back(vector_dt[i]);
 
     m_first_subtube = new Tube(first_vector_slices, false);
     m_second_subtube = new Tube(second_vector_slices, false);
@@ -321,7 +321,7 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool allow_
   return false;
 }
 
-const pair<Interval,Interval> Tube::getEnclosedBounds() const
+const pair<const Interval&,const Interval&> Tube::getEnclosedBounds() const
 {
   return m_enclosed_bounds;
 }
@@ -342,6 +342,14 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
   }
 
   return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+}
+
+const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& t1, const Interval& t2) const
+{
+  pair<Interval,Interval> uy1 = getEnclosedBounds(t1);
+  pair<Interval,Interval> uy2 = getEnclosedBounds(t2);
+  return make_pair(Interval(uy1.first.lb() - uy2.second.ub(), uy1.first.ub() - uy2.second.lb()),
+                   Interval(uy1.second.lb() - uy2.first.ub(), uy1.second.ub() - uy2.first.lb()));
 }
 
 void Tube::print() const

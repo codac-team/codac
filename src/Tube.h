@@ -27,7 +27,7 @@ class Tube
      * is based on a perfect binary tree, slices_number has to be a power of 2.
      */
     Tube(const ibex::Interval &intv_t, double dt);
-    Tube(std::vector<ibex::Interval> vector_slices, bool bool_update = true);
+    Tube(std::vector<ibex::Interval> vector_dt, bool bool_update = true);
 
     /**
      * \brief Create a copy of the given tube tu
@@ -220,7 +220,7 @@ class Tube
      *
      * \return a pair of intervals representing all tube'smaxima and minima
      */
-    const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds() const;
+    const std::pair<const ibex::Interval&,const ibex::Interval&> getEnclosedBounds() const;
 
     /**
      * \brief Return enclosed bounds of the tube over the domain represented by intv_t
@@ -229,6 +229,7 @@ class Tube
      * \return a pair of intervals representing all tube'smaxima and minima
      */
     const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& intv_t) const;
+    const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
     /**
      * \brief Set this Tube to the hull of itself and another
