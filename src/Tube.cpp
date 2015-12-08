@@ -465,3 +465,43 @@ void Tube::updateFromIndex(int index_focus)
     }
   }
 }
+
+bool Tube::ctcFwd(const Tube& derivative_tube)
+{
+  if(size() != derivative_tube.size())
+    cout << "Warning ctcFwd(Tube derivative_tube): tube of different size." << endl;
+
+  bool contraction = false;
+
+  for(int i = 1 ; i < size() ; i++)
+  {
+    ibex::Interval y_new = (*this)[i - 1] + derivative_tube[i - 1] * derivative_tube.dt();
+    contraction |= getSlice(i)->intersect(y_new);
+  }
+
+  return contraction;
+}
+
+bool Tube::ctcBwd(const Tube& derivative_tube)
+{
+  if(size() != derivative_tube.size())
+    cout << "Warning ctcBwd(Tube derivative_tube): tube of different size." << endl;
+
+  bool contraction = false;
+
+  for(int i = size() - 2 ; i >= 0 ; i--)
+  {
+    ibex::Interval y_new = (*this)[i + 1] - derivative_tube[i + 1] * derivative_tube.dt();
+    contraction |= getSlice(i)->intersect(y_new);
+  }
+
+  return contraction;
+}
+
+bool Tube::ctcFwdBwd(const Tube& derivative_tube)
+{
+  bool contraction = false;
+  contraction |= ctcFwd(derivative_tube);
+  contraction |= ctcBwd(derivative_tube);
+  return contraction;
+}

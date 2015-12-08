@@ -251,6 +251,12 @@ class Tube
     void print() const;
     friend std::ostream& operator<<(std::ostream&, const Tube&);
 
+
+    /** Contractors **/
+    bool ctcFwd(const Tube& derivative_tube);
+    bool ctcBwd(const Tube& derivative_tube);
+    bool ctcFwdBwd(const Tube& derivative_tube);
+
   protected:
 
     void initFromSlicesVector(std::vector<ibex::Interval> vector_slices);
