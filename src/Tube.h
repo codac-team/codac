@@ -287,7 +287,7 @@ class Tube
     double m_dt;
     int m_slices_number;
     Tube *m_first_subtube, *m_second_subtube;
-    ibex::Interval m_intv_t, m_intv_y;
+    ibex::Interval *m_intv_t, m_intv_y;
     std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
 };
 
