@@ -64,7 +64,7 @@ void Tube::initFromSlicesVector(vector<Interval> vector_slices)
 
 Tube::Tube(const Tube& tu)
 {
-  m_dt = tu.getTimestep();
+  m_dt = tu.dt();
   m_intv_t = tu.getT();
   m_intv_y = tu.getY();
   m_slices_number = tu.size();
@@ -94,7 +94,7 @@ int Tube::size() const
   return m_slices_number;
 }
 
-double Tube::getTimestep() const
+double Tube::dt() const
 {
   return m_dt;
 }
@@ -131,6 +131,40 @@ Tube* Tube::getSlice(int index)
     else
       return m_second_subtube->getSlice(index - mid_id);
   }
+}
+
+const Interval& Tube::operator[](int index)
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+  return getSlice(index)->m_intv_y;
+}
+
+const Interval& Tube::operator[](double t)
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+  return getSlice(input2index(t))->m_intv_y;
+}
+
+Interval Tube::operator[](Interval intv_t) const
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+  if(!m_intv_t.intersects(intv_t))
+    return Interval::EMPTY_SET;
+
+  else if(isSlice() || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+    return m_intv_y;
+
+  else
+    return (*m_first_subtube)[intv_t] | (*m_second_subtube)[intv_t];
 }
 
 int Tube::input2index(double t) const
@@ -172,26 +206,9 @@ const Interval& Tube::getT(double t)
   return getSlice(input2index(t))->getT();
 }
 
-const Interval& Tube::getY(int index)
+const Interval& Tube::getY() const
 {
-  return getSlice(index)->m_intv_y;
-}
-
-const Interval& Tube::getY(double t)
-{
-  return getSlice(input2index(t))->m_intv_y;
-}
-
-Interval Tube::getY(const Interval& intv_t) const
-{
-  if(!m_intv_t.intersects(intv_t))
-    return Interval::EMPTY_SET;
-
-  else if(isSlice() || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
-    return m_intv_y;
-
-  else
-    return m_first_subtube->getY(intv_t) | m_second_subtube->getY(intv_t);
+  return m_intv_y;
 }
 
 void Tube::setY(const Interval& intv_y, int index)
@@ -236,7 +253,7 @@ const Tube Tube::primitive(const Interval& initial_value)
   for(int i = 0 ; i < m_slices_number ; i++)
   {
     primitive.setY(sum, i);
-    sum += getY(i) * m_dt;
+    sum += (*this)[i] * m_dt;
   }
 
   return primitive;

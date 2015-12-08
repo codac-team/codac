@@ -53,7 +53,7 @@ class Tube
      *
      * \return the width of a slice
      */
-    double getTimestep() const;
+    double dt() const;
 
     /**
      * \brief Test if the tube is a box
@@ -69,6 +69,15 @@ class Tube
      * \return an object of class Tube corresponding to the slice indexed by index
      */
     Tube* getSlice(int index);
+
+    /**
+     * \brief Return the y-value of the ith slice
+     *
+     * A return a non-const reference to the i^th slice (i starts from 0)
+     */
+    const ibex::Interval& operator[](int index);
+    const ibex::Interval& operator[](double t);
+    ibex::Interval operator[](ibex::Interval intv_t) const;
 
     /**
      * \brief Return the number of the slice containing the given input
@@ -110,28 +119,11 @@ class Tube
     const ibex::Interval& getT(double t);
 
     /**
-     * \brief Return the value of the slice represented by index
+     * \brief Return the union-value over the all domain
      *
-     * \param index slice's number, between 0 and (size - 1)
      * \return an interval [y1,y2]
      */
-    const ibex::Interval& getY(int index);
-
-    /**
-     * \brief Return the value of the slice containing the given input
-     *
-     * \param t the input
-     * \return an interval [y1,y2]
-     */
-    const ibex::Interval& getY(double t);
-
-    /**
-     * \brief Return the union-value over the domain represented by intv_t
-     *
-     * \param intv_t the interval input, Interval::ALL_REALS by default
-     * \return an interval [y1,y2]
-     */
-    ibex::Interval getY(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
+    const ibex::Interval& getY() const;
 
     /**
      * \brief Set the output value intv_y of the slice represented by index
