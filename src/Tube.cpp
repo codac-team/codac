@@ -37,7 +37,7 @@ Tube::Tube(vector<Interval> vector_dt, bool bool_update)
 void Tube::initFromSlicesVector(vector<Interval> vector_dt)
 {
   m_dt = vector_dt[0].diam();
-  m_intv_t = new Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
+  m_intv_t = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
   m_intv_y = Interval::EMPTY_SET;
   m_slices_number = vector_dt.size();
 
@@ -65,7 +65,7 @@ void Tube::initFromSlicesVector(vector<Interval> vector_dt)
 Tube::Tube(const Tube& tu)
 {
   m_dt = tu.dt();
-  m_intv_t = new Interval(tu.getT());
+  m_intv_t = tu.getT();
   m_intv_y = tu.getY();
   m_slices_number = tu.size();
   m_enclosed_bounds = tu.getEnclosedBounds();
@@ -157,10 +157,10 @@ Interval Tube::operator[](Interval intv_t) const
   // a call to update() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
   // For write access: use setY()
-  if(!m_intv_t->intersects(intv_t))
+  if(!m_intv_t.intersects(intv_t))
     return Interval::EMPTY_SET;
 
-  else if(isSlice() || intv_t.is_unbounded() || intv_t.is_superset(*m_intv_t))
+  else if(isSlice() || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
     return m_intv_y;
 
   else
@@ -169,10 +169,10 @@ Interval Tube::operator[](Interval intv_t) const
 
 int Tube::input2index(double t) const
 {
-  if(!m_intv_t->contains(t))
+  if(!m_intv_t.contains(t))
   {
     cout << "Error Tube::time2index(double): no corresponding slice "
-         << "for t=" << t << " in " << setprecision(16) << *m_intv_t << endl;
+         << "for t=" << t << " in " << setprecision(16) << m_intv_t << endl;
     return -1;
   }
 
@@ -193,7 +193,7 @@ double Tube::index2input(int index)
 
 const Interval& Tube::getT() const
 {
-  return *m_intv_t;
+  return m_intv_t;
 }
 
 const Interval& Tube::getT(int index)
@@ -225,7 +225,7 @@ void Tube::setY(const Interval& intv_y, double t)
 
 void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 {
-  if(m_intv_t->intersects(intv_t))
+  if(m_intv_t.intersects(intv_t))
   {
     if(isSlice())
       m_intv_y = intv_y;
@@ -247,7 +247,7 @@ const Tube Tube::primitive()
 
 const Tube Tube::primitive(const Interval& initial_value)
 {
-  Tube primitive(*m_intv_t, m_dt);
+  Tube primitive(m_intv_t, m_dt);
 
   Interval sum = initial_value;
   for(int i = 0 ; i < m_slices_number ; i++)
@@ -292,7 +292,7 @@ bool Tube::intersect(const Interval& intv_y, double t)
 
 bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool allow_update)
 {
-  if(m_intv_t->intersects(intv_t))
+  if(m_intv_t.intersects(intv_t))
   {
     bool contraction = false;
 
@@ -328,9 +328,9 @@ const pair<const Interval&,const Interval&> Tube::getEnclosedBounds() const
 
 const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
 {
-  if(!intv_t.is_empty() && m_intv_t->intersects(intv_t))
+  if(!intv_t.is_empty() && m_intv_t.intersects(intv_t))
   {
-    if(isSlice() || intv_t.is_superset(*m_intv_t))
+    if(isSlice() || intv_t.is_superset(m_intv_t))
       return m_enclosed_bounds;
 
     else
@@ -355,7 +355,7 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& t1, const 
 void Tube::print() const
 {
   if(isSlice())
-    cout << "Tube: " << *m_intv_t << " \t" << m_intv_y << endl;
+    cout << "Tube: " << m_intv_t << " \t" << m_intv_y << endl;
 
   else
   {
@@ -366,7 +366,7 @@ void Tube::print() const
 
 std::ostream& operator<<(std::ostream& os, const Tube& x)
 { 
-  cout << "Tube: t=" << *(x.m_intv_t)
+  cout << "Tube: t=" << x.m_intv_t
        << ", y=" << x.m_intv_y 
        << ", slices=" << x.m_slices_number
        << ", dt=" << x.m_dt
