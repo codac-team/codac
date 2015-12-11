@@ -89,6 +89,23 @@ Tube::~Tube()
   delete m_second_subtube;
 }
 
+double Tube::dist(const Tube& tube) const
+{
+  return fabs(tube.volume() - volume());
+}
+
+double Tube::volume() const
+{
+  double volume = 0.;
+  for(int i = 0 ; i < m_slices_number ; i++)
+  {
+    if((*this)[i].is_empty())
+      continue;
+    volume += m_dt * (*this)[i].diam();
+  }
+  return volume;
+}
+
 int Tube::size() const
 {
   return m_slices_number;
@@ -475,7 +492,7 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
 
   for(int i = 1 ; i < size() ; i++)
   {
-    ibex::Interval y_new = (*this)[i - 1] + derivative_tube[i - 1] * derivative_tube.dt();
+    Interval y_new = (*this)[i - 1] + derivative_tube[i - 1] * derivative_tube.dt();
     contraction |= getSlice(i)->intersect(y_new);
   }
 
@@ -491,7 +508,7 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
 
   for(int i = size() - 2 ; i >= 0 ; i--)
   {
-    ibex::Interval y_new = (*this)[i + 1] - derivative_tube[i + 1] * derivative_tube.dt();
+    Interval y_new = (*this)[i + 1] - derivative_tube[i + 1] * derivative_tube.dt();
     contraction |= getSlice(i)->intersect(y_new);
   }
 

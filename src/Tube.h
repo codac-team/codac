@@ -41,6 +41,9 @@ class Tube
      */
     ~Tube();
 
+    double volume() const;
+    double dist(const Tube& tube) const;
+
     /**
      * \brief Return tube's size
      *
