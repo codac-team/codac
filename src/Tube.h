@@ -197,7 +197,7 @@ class Tube
      * \param index slice's number, between 0 and (size - 1)
      * \return true if a contraction has been done
      */
-    bool intersect(const ibex::Interval& intv_y, int index);
+    bool intersect(const ibex::Interval& intv_y, int index, bool allow_update = false);
 
     /**
      * \brief Intersect and update tube's values with the given output intv_y
@@ -206,7 +206,7 @@ class Tube
      * \param t the input
      * \return true if a contraction has been done
      */
-    bool intersect(const ibex::Interval& intv_y, double t);
+    bool intersect(const ibex::Interval& intv_y, double t, bool allow_update = false);
 
     /**
      * \brief Intersect and update tube's values with the given output intv_y
@@ -233,6 +233,9 @@ class Tube
      */
     const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& intv_t) const;
     const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& t1, const ibex::Interval& t2) const;
+
+Tube& intersectWith(const Tube& x, bool allow_update = true);
+Tube& unionWith(const Tube& x, bool allow_update = true);
 
     /**
      * \brief Set this Tube to the hull of itself and another

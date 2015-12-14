@@ -293,17 +293,19 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Tube& primitive, cons
   return make_pair(integral_min, integral_max);
 }
 
-bool Tube::intersect(const Interval& intv_y, int index)
+bool Tube::intersect(const Interval& intv_y, int index, bool allow_update)
 {
   bool result = getSlice(index)->intersect(intv_y, Interval::ALL_REALS, false);
-  updateFromIndex(index);
+  if(allow_update)
+    updateFromIndex(index);
   return result;
 }
 
-bool Tube::intersect(const Interval& intv_y, double t)
+bool Tube::intersect(const Interval& intv_y, double t, bool allow_update)
 {
   bool result = getSlice(input2index(t))->intersect(intv_y, Interval::ALL_REALS, false);
-  updateFromInput(t);
+  if(allow_update)
+    updateFromInput(t);
   return result;
 }
 
@@ -391,48 +393,62 @@ std::ostream& operator<<(std::ostream& os, const Tube& x)
   return os;
 }
 
-Tube& Tube::operator |=(const Tube& x)
+Tube& Tube::unionWith(const Tube& x, bool allow_update)
 {
   if(size() != x.size())
-    cout << "Warning Tube::operator |=: cannot make the hull of Tubes of different dimensions: " 
+    cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different dimensions: " 
          << "n1=" << size() << " and n2=" << x.size() << endl;
 
   if(getT() != x.getT())
-    cout << "Warning Tube::operator |=: cannot make the hull of Tubes of different domain: " 
+    cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different domain: " 
          << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
 
   m_intv_y |= x.getY();
 
   if(!isSlice())
   {
-    *m_first_subtube |= *(x.getFirstSubTube());
-    *m_second_subtube |= *(x.getSecondSubTube());
+    m_first_subtube->unionWith(*(x.getFirstSubTube()), false);
+    m_second_subtube->unionWith(*(x.getSecondSubTube()), false);
   }
 
-  update();
+  if(allow_update)
+    update();
+
   return *this;
 }
 
-Tube& Tube::operator &=(const Tube& x)
+Tube& Tube::intersectWith(const Tube& x, bool allow_update)
 {
   if(size() != x.size())
-    cout << "Warning Tube::operator &=: cannot make the intersection of Tubes of different dimensions: " 
+    cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different dimensions: " 
          << "n1=" << size() << " and n2=" << x.size() << endl;
 
   if(getT() != x.getT())
-    cout << "Warning Tube::operator &=: cannot make the intersection of Tubes of different domain: " 
+    cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different domain: " 
          << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
 
   m_intv_y &= x.getY();
 
   if(!isSlice())
   {
-    *m_first_subtube &= *(x.getFirstSubTube());
-    *m_second_subtube &= *(x.getSecondSubTube());
+    m_first_subtube->intersectWith(*(x.getFirstSubTube()), false);
+    m_second_subtube->intersectWith(*(x.getSecondSubTube()), false);
   }
 
-  update();
+  if(allow_update)
+    update();
+
   return *this;
+}
+
+Tube& Tube::operator &=(const Tube& x)
+{
+  return intersectWith(x);
+}
+
+Tube& Tube::operator |=(const Tube& x)
+{
+  return unionWith(x);
 }
 
 const Tube* Tube::getFirstSubTube() const
@@ -493,9 +509,10 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
   for(int i = 1 ; i < size() ; i++)
   {
     Interval y_new = (*this)[i - 1] + derivative_tube[i - 1] * derivative_tube.dt();
-    contraction |= getSlice(i)->intersect(y_new);
+    contraction |= getSlice(i)->intersect(y_new, 0, false);
   }
 
+  update();
   return contraction;
 }
 
@@ -509,9 +526,10 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
   for(int i = size() - 2 ; i >= 0 ; i--)
   {
     Interval y_new = (*this)[i + 1] - derivative_tube[i + 1] * derivative_tube.dt();
-    contraction |= getSlice(i)->intersect(y_new);
+    contraction |= getSlice(i)->intersect(y_new, 0, false);
   }
 
+  update();
   return contraction;
 }
 
