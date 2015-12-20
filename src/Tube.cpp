@@ -482,13 +482,22 @@ void Tube::updateFromIndex(int index_focus)
 
     else
     {
-      int mid_id = ceil(m_slices_number / 2.);
-
-      if(index_focus < mid_id)
+      if(index_focus == -1)
+      {
         m_first_subtube->updateFromIndex(index_focus);
-      
+        m_second_subtube->updateFromIndex(index_focus);
+      }
+
       else
-        m_second_subtube->updateFromIndex(index_focus == -1 ? -1 : index_focus - mid_id);
+      {
+        int mid_id = ceil(m_slices_number / 2.);
+
+        if(index_focus < mid_id)
+          m_first_subtube->updateFromIndex(index_focus);
+        
+        else
+          m_second_subtube->updateFromIndex(index_focus - mid_id);
+      }
       
       m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
 
