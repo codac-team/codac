@@ -57,14 +57,19 @@ void Tube::createFromSlicesVector(vector<Interval> vector_dt, const Interval& de
 
   else
   {
+    // In the first subtube: [t0,thalf]
+    // In the second subtube: ]thalf,tf]
     vector<Interval> first_vector_slices, second_vector_slices;
     int i, k = ceil(m_slices_number / 2.);
+
     for(i = 0 ; i < k ; i++)
       first_vector_slices.push_back(vector_dt[i]);
 
     for( ; i < m_slices_number ; i++)
       second_vector_slices.push_back(vector_dt[i]);
 
+    // Subtubes are created without an update (bool_update = false)
+    // For reasons of efficiency, the update is called only once from the root
     m_first_subtube = new Tube(first_vector_slices, default_value, false);
     m_second_subtube = new Tube(second_vector_slices, default_value, false);
   }
@@ -112,7 +117,7 @@ double Tube::volume() const
   double volume = 0.;
   for(int i = 0 ; i < m_slices_number ; i++)
   {
-    if((*this)[i].is_empty())
+    if((*this)[i].is_empty()) // diam(EMPTY_SET) is not 0
       continue;
     volume += m_dt * (*this)[i].diam();
   }
@@ -239,17 +244,24 @@ const Interval& Tube::getY() const
 void Tube::setY(const Interval& intv_y, int index)
 {
   getSlice(index)->setY(intv_y);
-  updateFromIndex(index);
+  updateFromIndex(index); // an update is needed since some tube's values changed
 }
 
 void Tube::setY(const Interval& intv_y, double t)
 {
   getSlice(input2index(t))->setY(intv_y);
-  updateFromInput(t);
+  updateFromInput(t); // an update is needed since some tube's values changed
 }
 
 void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 {
+  setY(intv_y, intv_t, true);
+}
+
+void Tube::setY(const Interval& intv_y, const Interval& intv_t, bool bool_update)
+{
+  // Default value feature of C++ is not used because bool_update
+  // should not be used outside this class (protected status)
   if(m_intv_t.intersects(intv_t))
   {
     if(isSlice())
@@ -257,11 +269,12 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 
     else
     {
-      m_first_subtube->setY(intv_y, intv_t);
-      m_second_subtube->setY(intv_y, intv_t);
+      m_first_subtube->setY(intv_y, intv_t, false);
+      m_second_subtube->setY(intv_y, intv_t, false);
     }
     
-    update();
+    if(bool_update)
+      update(); // an update is needed since some tube's values changed
   }
 }
 
@@ -360,7 +373,7 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool bool_u
       {
         double diam = m_intv_y.diam();
         m_intv_y &= intv_y;
-        contraction = m_intv_y.is_empty() || m_intv_y.diam() < diam;
+        contraction = m_intv_y.is_empty() || m_intv_y.diam() < diam; // diam(EMPTY_SET) is not 0
       }
     }
 
@@ -370,6 +383,7 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool bool_u
       contraction |= m_second_subtube->intersect(intv_y, intv_t, false);
     }
     
+    // Tube is updated if a contraction has been done or if requested with bool_update
     if(contraction && bool_update)
       update();
 
@@ -382,7 +396,7 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool bool_u
 const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
 {
   if(intv_t == Interval::ALL_REALS)
-    return m_enclosed_bounds;
+    return m_enclosed_bounds; // pre-computed with update()
 
   else if(!intv_t.is_empty() && m_intv_t.intersects(intv_t))
   {
@@ -488,7 +502,7 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
 
   bool contraction = false;
 
-  for(int i = 1 ; i < size() ; i++)
+  for(int i = 1 ; i < size() ; i++) // from the past to the future
   {
     Interval y_new = (*this)[i - 1] + derivative_tube[i - 1] * derivative_tube.dt();
     contraction |= getSlice(i)->intersect(y_new, 0, false);
@@ -505,7 +519,7 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
 
   bool contraction = false;
 
-  for(int i = size() - 2 ; i >= 0 ; i--)
+  for(int i = size() - 2 ; i >= 0 ; i--) // from the future to the past
   {
     Interval y_new = (*this)[i + 1] - derivative_tube[i + 1] * derivative_tube.dt();
     contraction |= getSlice(i)->intersect(y_new, 0, false);

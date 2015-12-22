@@ -374,6 +374,16 @@ class Tube
      * \param bool_update to force the update of tube's data structure
      * \return true if a contraction has been done, false otherwise
      */
+    void setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t, bool bool_update);
+
+    /**
+     * \brief Intersect and update tube's values with the given y-value intv_y.
+     *
+     * \param intv_y the y-value to intersect
+     * \param index slice's number, between 0 and (size - 1)
+     * \param bool_update to force the update of tube's data structure
+     * \return true if a contraction has been done, false otherwise
+     */
     bool intersect(const ibex::Interval& intv_y, int index, bool bool_update);
 
     /**
