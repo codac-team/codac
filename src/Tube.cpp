@@ -6,42 +6,50 @@
 /************************************************************/
 
 #include "Tube.h"
+#include <iostream>
 #include <iomanip> // for setprecision()
 
 using namespace std;
 using namespace ibex;
 
 
-Tube::Tube(const Interval &intv_t, double dt)
+Tube::Tube(const Interval &intv_t, double time_step, const Interval& default_value)
 {
   double lb, ub = intv_t.lb();
-  vector<Interval> vector_dt;
+  vector<Interval> vector_dt; // a vector of slices is created only once
   do
   {
-    lb = ub;
-    ub = lb + dt;
+    lb = ub; // we guarantee all slices are adjacent
+    ub = lb + time_step;
     vector_dt.push_back(Interval(lb, ub));
   } while(ub < intv_t.ub());
 
-  initFromSlicesVector(vector_dt);
-  update();
+  createFromSlicesVector(vector_dt, default_value);
+  update(); // recursive update called from the root
 }
 
-Tube::Tube(vector<Interval> vector_dt, bool bool_update)
+Tube::Tube(vector<Interval> vector_dt, const Interval& default_value)
 {
-  initFromSlicesVector(vector_dt);
+  Tube(vector_dt, default_value, true);
+}
+
+Tube::Tube(vector<Interval> vector_dt, const Interval& default_value, bool bool_update)
+{
+  // Default value feature of C++ is not used because bool_update
+  // should not be used outside this class (protected status)
+  createFromSlicesVector(vector_dt, default_value);
   if(bool_update)
-    update();
+    update(); // recursive update (faster if only called from the root)
 }
 
-void Tube::initFromSlicesVector(vector<Interval> vector_dt)
+void Tube::createFromSlicesVector(vector<Interval> vector_dt, const Interval& default_value)
 {
-  m_dt = vector_dt[0].diam();
+  m_dt = vector_dt[0].diam(); // all timesteps are identical in the tree
   m_intv_t = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
-  m_intv_y = Interval::EMPTY_SET;
+  m_intv_y = default_value;
   m_slices_number = vector_dt.size();
 
-  if(m_slices_number == 1)
+  if(m_slices_number == 1) // if this is a leaf
   {
     m_first_subtube = NULL;
     m_second_subtube = NULL;
@@ -57,8 +65,8 @@ void Tube::initFromSlicesVector(vector<Interval> vector_dt)
     for( ; i < m_slices_number ; i++)
       second_vector_slices.push_back(vector_dt[i]);
 
-    m_first_subtube = new Tube(first_vector_slices, false);
-    m_second_subtube = new Tube(second_vector_slices, false);
+    m_first_subtube = new Tube(first_vector_slices, default_value, false);
+    m_second_subtube = new Tube(second_vector_slices, default_value, false);
   }
 }
 
@@ -89,9 +97,14 @@ Tube::~Tube()
   delete m_second_subtube;
 }
 
-double Tube::dist(const Tube& tube) const
+int Tube::size() const
 {
-  return fabs(tube.volume() - volume());
+  return m_slices_number;
+}
+
+double Tube::dt() const
+{
+  return m_dt;
 }
 
 double Tube::volume() const
@@ -106,14 +119,9 @@ double Tube::volume() const
   return volume;
 }
 
-int Tube::size() const
+double Tube::dist(const Tube& tube) const
 {
-  return m_slices_number;
-}
-
-double Tube::dt() const
-{
-  return m_dt;
+  return fabs(tube.volume() - volume());
 }
 
 bool Tube::isSlice() const
@@ -148,40 +156,6 @@ Tube* Tube::getSlice(int index)
     else
       return m_second_subtube->getSlice(index - mid_id);
   }
-}
-
-const Interval& Tube::operator[](int index)
-{
-  // Write access is not allowed for this operator:
-  // a call to update() is needed when values change,
-  // this call cannot be garanteed with a direct access to m_intv_y
-  // For write access: use setY()
-  return getSlice(index)->m_intv_y;
-}
-
-const Interval& Tube::operator[](double t)
-{
-  // Write access is not allowed for this operator:
-  // a call to update() is needed when values change,
-  // this call cannot be garanteed with a direct access to m_intv_y
-  // For write access: use setY()
-  return getSlice(input2index(t))->m_intv_y;
-}
-
-Interval Tube::operator[](Interval intv_t) const
-{
-  // Write access is not allowed for this operator:
-  // a call to update() is needed when values change,
-  // this call cannot be garanteed with a direct access to m_intv_y
-  // For write access: use setY()
-  if(!m_intv_t.intersects(intv_t))
-    return Interval::EMPTY_SET;
-
-  else if(isSlice() || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
-    return m_intv_y;
-
-  else
-    return (*m_first_subtube)[intv_t] | (*m_second_subtube)[intv_t];
 }
 
 int Tube::input2index(double t) const
@@ -223,6 +197,40 @@ const Interval& Tube::getT(double t)
   return getSlice(input2index(t))->getT();
 }
 
+const Interval& Tube::operator[](int index)
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+  return getSlice(index)->m_intv_y;
+}
+
+const Interval& Tube::operator[](double t)
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+  return getSlice(input2index(t))->m_intv_y;
+}
+
+Interval Tube::operator[](Interval intv_t) const
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+  if(!m_intv_t.intersects(intv_t))
+    return Interval::EMPTY_SET;
+
+  else if(isSlice() || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+    return m_intv_y;
+
+  else
+    return (*m_first_subtube)[intv_t] | (*m_second_subtube)[intv_t];
+}
+
 const Interval& Tube::getY() const
 {
   return m_intv_y;
@@ -255,6 +263,16 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t)
     
     update();
   }
+}
+
+const Tube* Tube::getFirstSubTube() const
+{
+  return m_first_subtube;
+}
+
+const Tube* Tube::getSecondSubTube() const
+{
+  return m_second_subtube;
 }
 
 const Tube Tube::primitive()
@@ -293,24 +311,45 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Tube& primitive, cons
   return make_pair(integral_min, integral_max);
 }
 
-bool Tube::intersect(const Interval& intv_y, int index, bool allow_update)
+bool Tube::intersect(const Interval& intv_y, int index)
 {
+  return intersect(intv_y, index, true);
+}
+
+bool Tube::intersect(const Interval& intv_y, int index, bool bool_update)
+{
+  // Default value feature of C++ is not used because bool_update
+  // should not be used outside this class (protected status)
   bool result = getSlice(index)->intersect(intv_y, Interval::ALL_REALS, false);
-  if(allow_update)
+  if(bool_update)
     updateFromIndex(index);
   return result;
 }
 
-bool Tube::intersect(const Interval& intv_y, double t, bool allow_update)
+bool Tube::intersect(const Interval& intv_y, double t)
 {
+  return intersect(intv_y, t, true);
+}
+
+bool Tube::intersect(const Interval& intv_y, double t, bool bool_update)
+{
+  // Default value feature of C++ is not used because bool_update
+  // should not be used outside this class (protected status)
   bool result = getSlice(input2index(t))->intersect(intv_y, Interval::ALL_REALS, false);
-  if(allow_update)
+  if(bool_update)
     updateFromInput(t);
   return result;
 }
 
-bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool allow_update)
+bool Tube::intersect(const Interval& intv_y, const Interval& intv_t)
 {
+  return intersect(intv_y, intv_t, true);
+}
+
+bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool bool_update)
+{
+  // Default value feature of C++ is not used because bool_update
+  // should not be used outside this class (protected status)
   if(m_intv_t.intersects(intv_t))
   {
     bool contraction = false;
@@ -331,7 +370,7 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool allow_
       contraction |= m_second_subtube->intersect(intv_y, intv_t, false);
     }
     
-    if(contraction && allow_update)
+    if(contraction && bool_update)
       update();
 
     return contraction;
@@ -340,14 +379,12 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool allow_
   return false;
 }
 
-const pair<const Interval&,const Interval&> Tube::getEnclosedBounds() const
-{
-  return m_enclosed_bounds;
-}
-
 const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
 {
-  if(!intv_t.is_empty() && m_intv_t.intersects(intv_t))
+  if(intv_t == Interval::ALL_REALS)
+    return m_enclosed_bounds;
+
+  else if(!intv_t.is_empty() && m_intv_t.intersects(intv_t))
   {
     if(isSlice() || intv_t.is_superset(m_intv_t))
       return m_enclosed_bounds;
@@ -360,15 +397,66 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
     }
   }
 
-  return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+  else
+    return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 }
 
-const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& t1, const Interval& t2) const
+Tube& Tube::unionWith(const Tube& x, bool bool_update)
 {
-  pair<Interval,Interval> uy1 = getEnclosedBounds(t1);
-  pair<Interval,Interval> uy2 = getEnclosedBounds(t2);
-  return make_pair(Interval(uy1.first.lb() - uy2.second.ub(), uy1.first.ub() - uy2.second.lb()),
-                   Interval(uy1.second.lb() - uy2.first.ub(), uy1.second.ub() - uy2.first.lb()));
+  if(size() != x.size())
+    cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different dimensions: " 
+         << "n1=" << size() << " and n2=" << x.size() << endl;
+
+  if(getT() != x.getT())
+    cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different domain: " 
+         << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
+
+  m_intv_y |= x.getY();
+
+  if(!isSlice())
+  {
+    m_first_subtube->unionWith(*(x.getFirstSubTube()), false);
+    m_second_subtube->unionWith(*(x.getSecondSubTube()), false);
+  }
+
+  if(bool_update)
+    update();
+
+  return *this;
+}
+
+Tube& Tube::intersectWith(const Tube& x, bool bool_update)
+{
+  if(size() != x.size())
+    cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different dimensions: " 
+         << "n1=" << size() << " and n2=" << x.size() << endl;
+
+  if(getT() != x.getT())
+    cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different domain: " 
+         << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
+
+  m_intv_y &= x.getY();
+
+  if(!isSlice())
+  {
+    m_first_subtube->intersectWith(*(x.getFirstSubTube()), false);
+    m_second_subtube->intersectWith(*(x.getSecondSubTube()), false);
+  }
+
+  if(bool_update)
+    update();
+
+  return *this;
+}
+
+Tube& Tube::operator &=(const Tube& x)
+{
+  return intersectWith(x, true);
+}
+
+Tube& Tube::operator |=(const Tube& x)
+{
+  return unionWith(x, true);
 }
 
 void Tube::print() const
@@ -391,121 +479,6 @@ std::ostream& operator<<(std::ostream& os, const Tube& x)
        << ", dt=" << x.m_dt
        << flush;
   return os;
-}
-
-Tube& Tube::unionWith(const Tube& x, bool allow_update)
-{
-  if(size() != x.size())
-    cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different dimensions: " 
-         << "n1=" << size() << " and n2=" << x.size() << endl;
-
-  if(getT() != x.getT())
-    cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different domain: " 
-         << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
-
-  m_intv_y |= x.getY();
-
-  if(!isSlice())
-  {
-    m_first_subtube->unionWith(*(x.getFirstSubTube()), false);
-    m_second_subtube->unionWith(*(x.getSecondSubTube()), false);
-  }
-
-  if(allow_update)
-    update();
-
-  return *this;
-}
-
-Tube& Tube::intersectWith(const Tube& x, bool allow_update)
-{
-  if(size() != x.size())
-    cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different dimensions: " 
-         << "n1=" << size() << " and n2=" << x.size() << endl;
-
-  if(getT() != x.getT())
-    cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different domain: " 
-         << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
-
-  m_intv_y &= x.getY();
-
-  if(!isSlice())
-  {
-    m_first_subtube->intersectWith(*(x.getFirstSubTube()), false);
-    m_second_subtube->intersectWith(*(x.getSecondSubTube()), false);
-  }
-
-  if(allow_update)
-    update();
-
-  return *this;
-}
-
-Tube& Tube::operator &=(const Tube& x)
-{
-  return intersectWith(x);
-}
-
-Tube& Tube::operator |=(const Tube& x)
-{
-  return unionWith(x);
-}
-
-const Tube* Tube::getFirstSubTube() const
-{
-  return m_first_subtube;
-}
-
-const Tube* Tube::getSecondSubTube() const
-{
-  return m_second_subtube;
-}
-
-void Tube::update()
-{
-  updateFromIndex(-1);
-}
-
-void Tube::updateFromInput(double t_focus)
-{
-  updateFromIndex(input2index(t_focus));
-}
-
-void Tube::updateFromIndex(int index_focus)
-{
-  if(index_focus == -1 || index_focus < m_slices_number)
-  {
-    if(isSlice())
-    {
-      m_enclosed_bounds = make_pair(Interval(m_intv_y.lb()), Interval(m_intv_y.ub()));
-    }
-
-    else
-    {
-      if(index_focus == -1)
-      {
-        m_first_subtube->updateFromIndex(index_focus);
-        m_second_subtube->updateFromIndex(index_focus);
-      }
-
-      else
-      {
-        int mid_id = ceil(m_slices_number / 2.);
-
-        if(index_focus < mid_id)
-          m_first_subtube->updateFromIndex(index_focus);
-        
-        else
-          m_second_subtube->updateFromIndex(index_focus - mid_id);
-      }
-      
-      m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
-
-      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds();
-      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds();
-      m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
-    }
-  }
 }
 
 bool Tube::ctcFwd(const Tube& derivative_tube)
@@ -548,4 +521,42 @@ bool Tube::ctcFwdBwd(const Tube& derivative_tube)
   contraction |= ctcFwd(derivative_tube);
   contraction |= ctcBwd(derivative_tube);
   return contraction;
+}
+
+void Tube::update()
+{
+  updateFromIndex(-1);
+}
+
+void Tube::updateFromInput(double t_focus)
+{
+  updateFromIndex(input2index(t_focus));
+}
+
+void Tube::updateFromIndex(int index_focus)
+{
+  if(index_focus == -1 || index_focus < m_slices_number)
+  {
+    if(isSlice())
+    {
+      m_enclosed_bounds = make_pair(Interval(m_intv_y.lb()), Interval(m_intv_y.ub()));
+    }
+
+    else
+    {
+      int mid_id = ceil(m_slices_number / 2.);
+
+      if(index_focus < mid_id)
+        m_first_subtube->updateFromIndex(index_focus);
+      
+      else
+        m_second_subtube->updateFromIndex(index_focus == -1 ? -1 : index_focus - mid_id);
+      
+      m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
+
+      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds();
+      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds();
+      m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
+    }
+  }
 }
