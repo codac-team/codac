@@ -320,7 +320,7 @@ class Tube
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
          */
-        bool ctcFwd(const Tube& derivative_tube);
+        bool ctcFwd(Tube* derivative_tube);
     
         /**
          * \brief To contract tube in backward (from the future to the past)
@@ -328,7 +328,7 @@ class Tube
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
          */
-        bool ctcBwd(const Tube& derivative_tube);
+        bool ctcBwd(Tube* derivative_tube);
     
         /**
          * \brief To contract tube in forward/backward
@@ -336,7 +336,7 @@ class Tube
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
          */
-        bool ctcFwdBwd(const Tube& derivative_tube);
+        bool ctcFwdBwd(Tube* derivative_tube);
 
   protected:
 

@@ -26,6 +26,7 @@ Tube::Tube(const Interval &intv_t, double time_step, const Interval& default_val
 
   createFromSlicesVector(vector_dt, default_value);
   update(); // recursive update called from the root
+  m_dt = time_step;
 }
 
 Tube::Tube(vector<Interval> vector_dt, const Interval& default_value)
@@ -296,12 +297,12 @@ const Tube Tube::primitive()
 const Tube Tube::primitive(const Interval& initial_value)
 {
   Tube primitive(m_intv_t, m_dt);
-
   Interval sum = initial_value;
+
   for(int i = 0 ; i < m_slices_number ; i++)
   {
     primitive.setY(sum, i);
-    sum += (*this)[i] * m_dt;
+    sum += (*this)[i] * getSlice(i)->getT().diam();
   }
 
   return primitive;
@@ -495,16 +496,17 @@ std::ostream& operator<<(std::ostream& os, const Tube& x)
   return os;
 }
 
-bool Tube::ctcFwd(const Tube& derivative_tube)
+bool Tube::ctcFwd(Tube* derivative_tube)
 {
-  if(size() != derivative_tube.size())
-    cout << "Warning ctcFwd(Tube derivative_tube): tube of different size." << endl;
+  if(size() != derivative_tube->size())
+    cout << "Warning ctcFwd(Tube* derivative_tube): tube of different size: "
+         << derivative_tube->size() << "/" << size() << endl;
 
   bool contraction = false;
 
   for(int i = 1 ; i < size() ; i++) // from the past to the future
   {
-    Interval y_new = (*this)[i - 1] + derivative_tube[i - 1] * derivative_tube.dt();
+    Interval y_new = (*this)[i-1] + (*derivative_tube)[i-1] * derivative_tube->getSlice(i-1)->getT().diam();
     contraction |= getSlice(i)->intersect(y_new, 0, false);
   }
 
@@ -512,16 +514,17 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
   return contraction;
 }
 
-bool Tube::ctcBwd(const Tube& derivative_tube)
+bool Tube::ctcBwd(Tube* derivative_tube)
 {
-  if(size() != derivative_tube.size())
-    cout << "Warning ctcBwd(Tube derivative_tube): tube of different size." << endl;
+  if(size() != derivative_tube->size())
+    cout << "Warning ctcBwd(Tube* derivative_tube): tube of different size: "
+         << derivative_tube->size() << "/" << size() << endl;
 
   bool contraction = false;
 
   for(int i = size() - 2 ; i >= 0 ; i--) // from the future to the past
   {
-    Interval y_new = (*this)[i + 1] - derivative_tube[i + 1] * derivative_tube.dt();
+    Interval y_new = (*this)[i+1] - (*derivative_tube)[i+1] * derivative_tube->getSlice(i+1)->getT().diam();
     contraction |= getSlice(i)->intersect(y_new, 0, false);
   }
 
@@ -529,7 +532,7 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
   return contraction;
 }
 
-bool Tube::ctcFwdBwd(const Tube& derivative_tube)
+bool Tube::ctcFwdBwd(Tube* derivative_tube)
 {
   bool contraction = false;
   contraction |= ctcFwd(derivative_tube);
