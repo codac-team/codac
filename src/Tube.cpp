@@ -426,9 +426,10 @@ Tube& Tube::unionWith(const Tube& x, bool bool_update)
     cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different domain: " 
          << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
 
-  m_intv_y |= x.getY();
+  if(isSlice())
+    m_intv_y |= x.getY();
 
-  if(!isSlice())
+  else
   {
     m_first_subtube->unionWith(*(x.getFirstSubTube()), false);
     m_second_subtube->unionWith(*(x.getSecondSubTube()), false);
@@ -450,9 +451,10 @@ Tube& Tube::intersectWith(const Tube& x, bool bool_update)
     cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different domain: " 
          << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
 
-  m_intv_y &= x.getY();
+  if(isSlice())
+    m_intv_y &= x.getY();
 
-  if(!isSlice())
+  else
   {
     m_first_subtube->intersectWith(*(x.getFirstSubTube()), false);
     m_second_subtube->intersectWith(*(x.getSecondSubTube()), false);
@@ -555,22 +557,28 @@ void Tube::updateFromIndex(int index_focus)
   if(index_focus == -1 || index_focus < m_slices_number)
   {
     if(isSlice())
-    {
       m_enclosed_bounds = make_pair(Interval(m_intv_y.lb()), Interval(m_intv_y.ub()));
-    }
 
     else
     {
-      int mid_id = ceil(m_slices_number / 2.);
+      if(index_focus == -1)
+      {
+        m_first_subtube->updateFromIndex(-1);
+        m_second_subtube->updateFromIndex(-1);
+      }
 
-      if(index_focus < mid_id)
-        m_first_subtube->updateFromIndex(index_focus);
-      
       else
-        m_second_subtube->updateFromIndex(index_focus == -1 ? -1 : index_focus - mid_id);
+      {
+        int mid_id = ceil(m_slices_number / 2.);
+
+        if(index_focus < mid_id)
+          m_first_subtube->updateFromIndex(index_focus);
+        
+        else
+          m_second_subtube->updateFromIndex(index_focus == -1 ? -1 : index_focus - mid_id);
+      }
       
       m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
-
       pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds();
       pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds();
       m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
