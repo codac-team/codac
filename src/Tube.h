@@ -337,6 +337,11 @@ class Tube
          * \return true if a contraction has been done, false otherwise
          */
         bool ctcFwdBwd(Tube* derivative_tube);
+    
+        /**
+         * \brief To be defined...
+         */
+        bool ctcIn(Tube* derivative_tube, ibex::Interval& y, ibex::Interval& t);
 
   protected:
 

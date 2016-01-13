@@ -542,6 +542,90 @@ bool Tube::ctcFwdBwd(Tube* derivative_tube)
   return contraction;
 }
 
+bool Tube::ctcIn(Tube *derivative_tube, Interval& y, Interval& t)
+{
+  bool t_contraction = false;
+  bool y_contraction = false;
+  bool tube_contraction = false;
+
+  // Trying to contract [t]
+  {
+    double t_diam = t.diam();
+
+    // In forward
+    int i = input2index(t.lb());
+    while(!(*this)[i].intersects(y) && i < input2index(t.ub()))
+    {
+      i++;
+      t = Interval(getT(i).lb(), t.ub()); // updating lower-bound (contraction)
+    }
+
+    // In backward
+    i = input2index(t.ub());
+    while(!(*this)[i].intersects(y) && i > input2index(t.lb()))
+    {
+      i--;
+      t = Interval(t.lb(), getT(i).ub()); // updating upper-bound (contraction)
+    }
+
+    t_contraction = t.diam() < t_diam;
+  }
+
+  // Trying to contract [y]
+  {
+    double y_diam = y.diam();
+    y &= (*this)[t];
+    y_contraction = y.diam() < y_diam;
+  }
+
+  // Trying to contract this
+  {
+    Tube tube_temp1(*this);
+
+    // Raw contraction without derivative information
+    for(int i = input2index(t.lb()) ; i <= input2index(t.ub()) ; i++)
+    {
+      Interval old_y = (*this)[i];
+      Interval new_y = old_y & y;
+      tube_temp1.setY(new_y, i);
+    }
+
+    // Taking derivative information into account
+    Tube tube_temp2(tube_temp1);
+    for(int i = input2index(t.lb()) ; i <= input2index(t.ub()) ; i++)
+    {
+      Tube tube_temp3(tube_temp1);
+      Interval new_y = tube_temp3[i];
+
+      // In forward
+      for(int j = i ; j <= input2index(t.ub()) ; j++)
+      {
+        new_y += Interval((*derivative_tube)[j].lb() * derivative_tube->getT(j).diam(),
+                          (*derivative_tube)[j].ub() * derivative_tube->getT(j).diam());
+        tube_temp3.setY(new_y, j);
+      }
+      new_y = tube_temp1[i];
+
+      // In backward
+      for(int j = i ; j >= input2index(t.lb()) ; j--)
+      {
+        Interval deriv = ((*derivative_tube)[j]);
+        new_y -= Interval(deriv.lb() * derivative_tube->getT(j).diam(),
+                          deriv.ub() * derivative_tube->getT(j).diam());
+        tube_temp3.setY(new_y | tube_temp3[j], j); // an union is made to keep forward's update
+      }
+
+      tube_temp2 |= tube_temp3;
+    }
+
+    double vol = volume();
+    (*this) &= tube_temp2;
+    tube_contraction = volume() < vol;
+  }
+
+  return t_contraction | tube_contraction | y_contraction;
+}
+
 void Tube::update()
 {
   updateFromIndex(-1);
