@@ -198,9 +198,13 @@ const Interval& Tube::getT(int index)
   return getSlice(index)->getT();
 }
 
-const Interval& Tube::getT(double t)
+Interval Tube::getT(double t)
 {
-  return getSlice(input2index(t))->getT();
+  int index = input2index(t);
+  Interval intv_t = getSlice(index)->getT();
+  if(t == intv_t.ub() && index < m_slices_number - 1) // on the boundary, between two slices
+    return getSlice(index + 1)->getT() | intv_t;
+  return intv_t;
 }
 
 const Interval& Tube::operator[](int index)
@@ -212,13 +216,18 @@ const Interval& Tube::operator[](int index)
   return getSlice(index)->m_intv_y;
 }
 
-const Interval& Tube::operator[](double t)
+Interval Tube::operator[](double t)
 {
   // Write access is not allowed for this operator:
   // a call to update() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
   // For write access: use setY()
-  return getSlice(input2index(t))->m_intv_y;
+  int index = input2index(t);
+  Interval intv_t = getSlice(index)->m_intv_t;
+  Interval intv_y = (*this)[index];
+  if(t == intv_t.ub() && index < m_slices_number - 1) // on the boundary, between two slices
+    return (*this)[index + 1] | intv_y;
+  return intv_y;
 }
 
 Interval Tube::operator[](Interval intv_t) const
@@ -476,15 +485,19 @@ Tube& Tube::operator |=(const Tube& x)
   return unionWith(x, true);
 }
 
-void Tube::print() const
+void Tube::print(int precision) const
 {
   if(isSlice())
+  {
+    if(precision != 0)
+      cout << setprecision(precision);
     cout << "Tube: " << m_intv_t << " \t" << m_intv_y << endl;
+  }
 
   else
   {
-    m_first_subtube->print();
-    m_second_subtube->print();
+    m_first_subtube->print(precision);
+    m_second_subtube->print(precision);
   }
 }
 

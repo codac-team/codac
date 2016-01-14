@@ -134,7 +134,7 @@ class Tube
      * \param t the input
      * \return an interval [t0,tf]
      */
-    const ibex::Interval& getT(double t);
+    ibex::Interval getT(double t);
 
     /**
      * \brief Return the y-value of the i^th slice, refered by index.
@@ -150,7 +150,7 @@ class Tube
      * \param t the given time
      * \return the y-value
      */
-    const ibex::Interval& operator[](double t);
+    ibex::Interval operator[](double t);
 
     /**
      * \brief Return the y-value for the given bounded time, refered by intv_t.
@@ -303,8 +303,11 @@ class Tube
 
     /**
      * \brief Display tube's values.
+
+     * \param precision sets the decimal precision to be used to format floating-point values on output
+     *        Default value: 0, meaning a default display without the use of setprecision
      */
-    void print() const;
+    void print(int precision = 0) const;
 
     /**
      * \brief Stream out tube x.
