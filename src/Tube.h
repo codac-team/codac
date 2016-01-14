@@ -431,10 +431,29 @@ class Tube
      * Note: both tubes have to be similar (same domain, same number of slices).
      * 
      * \param x the other tube
-     * \param bool_update to force the update of tube's data structure
      * \return a reference to this
      */
-    Tube& unionWith(const Tube& x, bool bool_update);
+    Tube& unionWith(const Tube& x);
+
+    /**
+     * \brief Perform the union on the considered node only
+     *
+     * Parents of children nodes are not updated.
+     * This method is used for multithreading purposes.
+     * 
+     * \param x a pointer to the other node
+     */
+    void unionWith_localUpdate(const Tube *x);
+
+    /**
+     * \brief Return all the nodes of the tree (not only the leafs)
+     *
+     * The root is also included in the vector.
+     * 
+     * \param v_nodes a vector containing pointers to the nodes
+     */
+    void getTubeNodes(std::vector<Tube*> &v_nodes);
+    void getTubeNodes(std::vector<const Tube*> &v_nodes) const; // the 'const' version
 
     /**
      * \brief Update tube's data structure.
