@@ -427,6 +427,28 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
     return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 }
 
+void Tube::getTubeNodes(vector<Tube*> &v_nodes)
+{
+  if(!isSlice())
+  {
+    m_first_subtube->getTubeNodes(v_nodes);
+    m_second_subtube->getTubeNodes(v_nodes);
+  }
+
+  v_nodes.push_back(this);
+}
+
+void Tube::getTubeNodes(vector<const Tube*> &v_nodes) const
+{
+  if(!isSlice())
+  {
+    m_first_subtube->getTubeNodes(v_nodes);
+    m_second_subtube->getTubeNodes(v_nodes);
+  }
+
+  v_nodes.push_back(this);
+}
+
 Tube& Tube::unionWith(const Tube& x)
 {
   if(size() != x.size())
@@ -461,29 +483,7 @@ void Tube::unionWith_localUpdate(const Tube *x)
                                 Interval(max(eb1.second.lb(), eb2.second.lb()), max(eb1.second.ub(), eb2.second.ub())));
 }
 
-void Tube::getTubeNodes(vector<Tube*> &v_nodes)
-{
-  if(!isSlice())
-  {
-    m_first_subtube->getTubeNodes(v_nodes);
-    m_second_subtube->getTubeNodes(v_nodes);
-  }
-
-  v_nodes.push_back(this);
-}
-
-void Tube::getTubeNodes(vector<const Tube*> &v_nodes) const
-{
-  if(!isSlice())
-  {
-    m_first_subtube->getTubeNodes(v_nodes);
-    m_second_subtube->getTubeNodes(v_nodes);
-  }
-
-  v_nodes.push_back(this);
-}
-
-Tube& Tube::intersectWith(const Tube& x, bool bool_update)
+Tube& Tube::intersectWith(const Tube& x)
 {
   if(size() != x.size())
     cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different dimensions: " 
@@ -493,24 +493,32 @@ Tube& Tube::intersectWith(const Tube& x, bool bool_update)
     cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different domain: " 
          << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
 
-  if(isSlice())
-    m_intv_y &= x.getY();
+  vector<Tube*> this_nodes;
+  vector<const Tube*> x_nodes;
+  getTubeNodes(this_nodes);
+  x.getTubeNodes(x_nodes);
 
-  else
+  #pragma omp parallel num_threads(omp_get_num_procs())
   {
-    m_first_subtube->intersectWith(*(x.getFirstSubTube()), false);
-    m_second_subtube->intersectWith(*(x.getSecondSubTube()), false);
+    #pragma omp for
+    for(int i = 0 ; i < this_nodes.size() ; i++)
+      this_nodes[i]->intersectWith_localUpdate(x_nodes[i]);
   }
 
-  if(bool_update)
-    update();
-
+  update();
   return *this;
+}
+
+void Tube::intersectWith_localUpdate(const Tube *x)
+{
+  m_intv_y &= x->getY();
+  // Enclosed bounds cannot be computed on this level.
+  // Synthesis has to be done from the root (see update() in intersectWith).
 }
 
 Tube& Tube::operator &=(const Tube& x)
 {
-  return intersectWith(x, true);
+  return intersectWith(x);
 }
 
 Tube& Tube::operator |=(const Tube& x)

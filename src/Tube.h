@@ -415,15 +415,14 @@ class Tube
     bool intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t, bool bool_update);
 
     /**
-     * \brief Set this Tube to the intersection of itself and another: tube x.
+     * \brief Return all the nodes of the tree (not only the leafs)
      *
-     * Note: both tubes have to be similar (same domain, same number of slices).
+     * The root is also included in the vector.
      * 
-     * \param x the other tube
-     * \param bool_update to force the update of tube's data structure
-     * \return a reference to this
+     * \param v_nodes a vector containing pointers to the nodes
      */
-    Tube& intersectWith(const Tube& x, bool bool_update);
+    void getTubeNodes(std::vector<Tube*> &v_nodes);
+    void getTubeNodes(std::vector<const Tube*> &v_nodes) const; // the 'const' version
 
     /**
      * \brief Set this Tube to the hull of itself and another: tube x.
@@ -446,14 +445,24 @@ class Tube
     void unionWith_localUpdate(const Tube *x);
 
     /**
-     * \brief Return all the nodes of the tree (not only the leafs)
+     * \brief Set this Tube to the intersection of itself and another: tube x.
      *
-     * The root is also included in the vector.
+     * Note: both tubes have to be similar (same domain, same number of slices).
      * 
-     * \param v_nodes a vector containing pointers to the nodes
+     * \param x the other tube
+     * \return a reference to this
      */
-    void getTubeNodes(std::vector<Tube*> &v_nodes);
-    void getTubeNodes(std::vector<const Tube*> &v_nodes) const; // the 'const' version
+    Tube& intersectWith(const Tube& x);
+
+    /**
+     * \brief Perform the intersection on the considered node only
+     *
+     * Parents of children nodes are not updated.
+     * This method is used for multithreading purposes.
+     * 
+     * \param x a pointer to the other node
+     */
+    void intersectWith_localUpdate(const Tube *x);
 
     /**
      * \brief Update tube's data structure.
