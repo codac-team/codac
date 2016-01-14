@@ -298,8 +298,16 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t, bool bool_update
 
     else
     {
-      m_first_subtube->setY(intv_y, intv_t, false);
-      m_second_subtube->setY(intv_y, intv_t, false);
+      #pragma omp parallel num_threads(omp_get_num_procs())
+      {
+        #pragma omp sections
+        {
+          #pragma omp section
+            m_first_subtube->setY(intv_y, intv_t, false);
+          #pragma omp section
+            m_second_subtube->setY(intv_y, intv_t, false);
+        }
+      }
     }
     
     if(bool_update)
@@ -408,8 +416,16 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool bool_u
 
     else
     {
-      contraction |= m_first_subtube->intersect(intv_y, intv_t, false);
-      contraction |= m_second_subtube->intersect(intv_y, intv_t, false);
+      #pragma omp parallel num_threads(omp_get_num_procs())
+      {
+        #pragma omp sections
+        {
+          #pragma omp section
+            contraction |= m_first_subtube->intersect(intv_y, intv_t, false);
+          #pragma omp section
+            contraction |= m_second_subtube->intersect(intv_y, intv_t, false);
+        }
+      }
     }
     
     // Tube is updated if a contraction has been done or if requested with bool_update
@@ -434,8 +450,18 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
 
     else
     {
-      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds(intv_t);
-      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds(intv_t);
+      pair<Interval,Interval> ui_past;
+      pair<Interval,Interval> ui_future;
+      #pragma omp parallel num_threads(omp_get_num_procs())
+      {
+        #pragma omp sections
+        {
+          #pragma omp section
+            ui_past = m_first_subtube->getEnclosedBounds(intv_t);
+          #pragma omp section
+            ui_future = m_second_subtube->getEnclosedBounds(intv_t);
+        }
+      }
       return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
   }
@@ -718,8 +744,16 @@ void Tube::updateFromIndex(int index_focus)
     {
       if(index_focus == -1)
       {
-        m_first_subtube->updateFromIndex(-1);
-        m_second_subtube->updateFromIndex(-1);
+        #pragma omp parallel num_threads(omp_get_num_procs())
+        {
+          #pragma omp sections
+          {
+            #pragma omp section
+              m_first_subtube->updateFromIndex(-1);
+            #pragma omp section
+              m_second_subtube->updateFromIndex(-1);
+          }
+        }
       }
 
       else
