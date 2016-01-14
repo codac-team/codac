@@ -8,8 +8,7 @@
 #include "Tube.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
-#include <omp.h>
-//#include <thread>
+#include <omp.h> // for multithreading
 
 using namespace std;
 using namespace ibex;
@@ -71,10 +70,18 @@ void Tube::createFromSlicesVector(vector<Interval> vector_dt, const Interval& de
     for( ; i < m_slices_number ; i++)
       second_vector_slices.push_back(vector_dt[i]);
 
-    // Subtubes are created without an update (bool_update = false)
-    // For reasons of efficiency, the update is called only once from the root
-    m_first_subtube = new Tube(first_vector_slices, default_value, false);
-    m_second_subtube = new Tube(second_vector_slices, default_value, false);
+    #pragma omp parallel num_threads(omp_get_num_procs())
+    {
+      #pragma omp sections
+      {
+        // Subtubes are created without an update (bool_update = false)
+        // For reasons of efficiency, the update is called only once from the root
+        #pragma omp section
+          m_first_subtube = new Tube(first_vector_slices, default_value, false);
+        #pragma omp section
+          m_second_subtube = new Tube(second_vector_slices, default_value, false);
+      }
+    }
   }
 }
 
@@ -94,8 +101,16 @@ Tube::Tube(const Tube& tu)
 
   else
   {
-    m_first_subtube = new Tube(*(tu.getFirstSubTube()));
-    m_second_subtube = new Tube(*(tu.getSecondSubTube()));
+    #pragma omp parallel num_threads(omp_get_num_procs())
+    {
+      #pragma omp sections
+      {
+        #pragma omp section
+          m_first_subtube = new Tube(*(tu.getFirstSubTube()));
+        #pragma omp section
+          m_second_subtube = new Tube(*(tu.getSecondSubTube()));
+      }
+    }
   }
 }
 
@@ -228,7 +243,7 @@ Interval Tube::operator[](double t)
   Interval intv_t = getSlice(index)->m_intv_t;
   Interval intv_y = (*this)[index];
   if(t == intv_t.ub() && index < m_slices_number - 1) // on the boundary, between two slices
-    return (*this)[index + 1] | intv_y;
+    return (*this)[index + 1] & intv_y;
   return intv_y;
 }
 
@@ -238,10 +253,12 @@ Interval Tube::operator[](Interval intv_t) const
   // a call to update() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
   // For write access: use setY()
-  if(!m_intv_t.intersects(intv_t))
+  Interval intersection = m_intv_t & intv_t;
+
+  if(intersection.is_empty() || intersection.lb() == intersection.ub())
     return Interval::EMPTY_SET;
 
-  else if(isSlice() || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+  else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
     return m_intv_y;
 
   else
