@@ -50,6 +50,7 @@ void Tube::createFromSlicesVector(vector<Interval> vector_dt, const Interval& de
   m_intv_t = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
   m_intv_y = default_value;
   m_slices_number = vector_dt.size();
+  m_build_primitive_needed = true;
 
   if(m_slices_number == 1) // if this is a leaf
   {
@@ -92,6 +93,7 @@ Tube::Tube(const Tube& tu)
   m_intv_y = tu.getY();
   m_slices_number = tu.size();
   m_enclosed_bounds = tu.getEnclosedBounds();
+  m_build_primitive_needed = true;
 
   if(tu.isSlice())
   {
@@ -152,6 +154,35 @@ bool Tube::isSlice() const
   return m_first_subtube == NULL && m_second_subtube == NULL;
 }
 
+const Tube* Tube::getSlice(int index) const
+{
+  if(index < 0 || index >= m_slices_number)
+  {
+    cout << "Error Tube::getSlice(int): out of range "
+         << "for index=" << index << " in [0," << m_slices_number << "[" << endl;
+    return NULL;
+  }
+
+  else if(isSlice())
+  {
+    if(index != 0)
+      cout << "Warning Tube::getX(int): index not null in slice." << endl;
+
+    return this;
+  }
+
+  else
+  {
+    int mid_id = ceil(m_slices_number / 2.);
+
+    if(index < mid_id)
+      return m_first_subtube->getSlice(index);
+
+    else
+      return m_second_subtube->getSlice(index - mid_id);
+  }
+}
+
 Tube* Tube::getSlice(int index)
 {
   if(index < 0 || index >= m_slices_number)
@@ -185,15 +216,18 @@ int Tube::input2index(double t) const
 {
   if(!m_intv_t.contains(t))
   {
-    cout << "Error Tube::time2index(double): no corresponding slice "
+    cout << "Error Tube::input2index(double): no corresponding slice "
          << "for t=" << t << " in " << setprecision(16) << m_intv_t << endl;
     return -1;
   }
 
+  if(t == m_intv_t.ub())
+    return m_slices_number - 1;
+
   if(isSlice())
     return 0;
 
-  if(m_first_subtube->getT().contains(t))
+  if(t < m_first_subtube->getT().ub())
     return m_first_subtube->input2index(t);
 
   else
@@ -211,6 +245,11 @@ const Interval& Tube::getT() const
 }
 
 const Interval& Tube::getT(int index)
+{
+  return getSlice(index)->getT();
+}
+
+const Interval& Tube::getT(int index) const
 {
   return getSlice(index)->getT();
 }
@@ -233,6 +272,15 @@ const Interval& Tube::operator[](int index)
   return getSlice(index)->m_intv_y;
 }
 
+const Interval& Tube::operator[](int index) const
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+  return getSlice(index)->m_intv_y;
+}
+
 Interval Tube::operator[](double t)
 {
   // Write access is not allowed for this operator:
@@ -242,9 +290,62 @@ Interval Tube::operator[](double t)
   int index = input2index(t);
   Interval intv_t = getSlice(index)->m_intv_t;
   Interval intv_y = (*this)[index];
-  if(t == intv_t.ub() && index < m_slices_number - 1) // on the boundary, between two slices
-    return (*this)[index + 1] & intv_y;
+  if(t == intv_t.lb() && index > 0) // on the boundary, between two slices
+    return (*this)[index - 1] & intv_y;
   return intv_y;
+}
+
+Interval Tube::operator[](double t) const
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+  int index = input2index(t);
+  Interval intv_t = getSlice(index)->m_intv_t;
+  Interval intv_y = (*this)[index];
+  if(t == intv_t.lb() && index > 0) // on the boundary, between two slices
+    return (*this)[index - 1] & intv_y;
+  return intv_y;
+}
+
+Interval Tube::operator[](Interval intv_t)
+{
+  // Write access is not allowed for this operator:
+  // a call to update() is needed when values change,
+  // this call cannot be garanteed with a direct access to m_intv_y
+  // For write access: use setY()
+
+  if(intv_t.lb() == intv_t.ub())
+    return (*this)[intv_t.lb()];
+
+  Interval intersection = m_intv_t & intv_t;
+
+  if(intersection.is_empty())
+    return Interval::EMPTY_SET;
+
+  else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+    return m_intv_y;
+
+  else
+  {
+    Interval inter_firstsubtube = m_first_subtube->getT() & intersection;
+    Interval inter_secondsubtube = m_second_subtube->getT() & intersection;
+
+    if(inter_firstsubtube == inter_secondsubtube)
+      return (*m_first_subtube)[inter_firstsubtube.lb()] & (*m_second_subtube)[inter_secondsubtube.lb()];
+
+    else if(inter_firstsubtube.lb() == inter_firstsubtube.ub()
+            && inter_secondsubtube.lb() != inter_secondsubtube.ub())
+      return (*m_second_subtube)[inter_secondsubtube];
+
+    else if(inter_firstsubtube.lb() != inter_firstsubtube.ub()
+            && inter_secondsubtube.lb() == inter_secondsubtube.ub())
+      return (*m_first_subtube)[inter_firstsubtube];
+
+    else
+      return (*m_first_subtube)[inter_firstsubtube] | (*m_second_subtube)[inter_secondsubtube];
+  }
 }
 
 Interval Tube::operator[](Interval intv_t) const
@@ -253,16 +354,37 @@ Interval Tube::operator[](Interval intv_t) const
   // a call to update() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
   // For write access: use setY()
+
+  if(intv_t.lb() == intv_t.ub())
+    return (*this)[intv_t.lb()];
+
   Interval intersection = m_intv_t & intv_t;
 
-  if(intersection.is_empty() || intersection.lb() == intersection.ub())
+  if(intersection.is_empty())
     return Interval::EMPTY_SET;
 
   else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
     return m_intv_y;
 
   else
-    return (*m_first_subtube)[intv_t] | (*m_second_subtube)[intv_t];
+  {
+    Interval inter_firstsubtube = m_first_subtube->getT() & intersection;
+    Interval inter_secondsubtube = m_second_subtube->getT() & intersection;
+
+    if(inter_firstsubtube == inter_secondsubtube)
+      return (*m_first_subtube)[inter_firstsubtube.lb()] & (*m_second_subtube)[inter_secondsubtube.lb()];
+
+    else if(inter_firstsubtube.lb() == inter_firstsubtube.ub()
+            && inter_secondsubtube.lb() != inter_secondsubtube.ub())
+      return (*m_second_subtube)[inter_secondsubtube];
+
+    else if(inter_firstsubtube.lb() != inter_firstsubtube.ub()
+            && inter_secondsubtube.lb() == inter_secondsubtube.ub())
+      return (*m_first_subtube)[inter_firstsubtube];
+
+    else
+      return (*m_first_subtube)[inter_firstsubtube] | (*m_second_subtube)[inter_secondsubtube];
+  }
 }
 
 const Interval& Tube::getY() const
@@ -272,26 +394,43 @@ const Interval& Tube::getY() const
 
 void Tube::setY(const Interval& intv_y, int index)
 {
+  setY(intv_y, index, true);
+  m_build_primitive_needed = true;
+}
+
+void Tube::setY(const Interval& intv_y, int index, bool bool_update)
+{
   getSlice(index)->setY(intv_y);
-  updateFromIndex(index); // an update is needed since some tube's values changed
+  if(bool_update)
+    updateFromIndex(index); // an update is needed since some tube's values changed
+  m_build_primitive_needed = true;
 }
 
 void Tube::setY(const Interval& intv_y, double t)
 {
+  setY(intv_y, t, true);
+  m_build_primitive_needed = true;
+}
+
+void Tube::setY(const Interval& intv_y, double t, bool bool_update)
+{
   getSlice(input2index(t))->setY(intv_y);
-  updateFromInput(t); // an update is needed since some tube's values changed
+  if(bool_update)
+    updateFromInput(t); // an update is needed since some tube's values changed
+  m_build_primitive_needed = true;
 }
 
 void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 {
   setY(intv_y, intv_t, true);
+  m_build_primitive_needed = true;
 }
 
 void Tube::setY(const Interval& intv_y, const Interval& intv_t, bool bool_update)
 {
   // Default value feature of C++ is not used because bool_update
   // should not be used outside this class (protected status)
-  if(m_intv_t.intersects(intv_t))
+  if(m_intv_t.intersects(intv_t) && m_intv_t.lb() != intv_t.ub() && m_intv_t.ub() != intv_t.lb())
   {
     if(isSlice())
       m_intv_y = intv_y;
@@ -304,6 +443,8 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t, bool bool_update
     
     if(bool_update)
       update(); // an update is needed since some tube's values changed
+
+    m_build_primitive_needed = true;
   }
 }
 
@@ -317,40 +458,170 @@ const Tube* Tube::getSecondSubTube() const
   return m_second_subtube;
 }
 
-const Tube Tube::primitive()
+Tube Tube::primitive()
 {
   return primitive(Interval(0.));
 }
 
-const Tube Tube::primitive(const Interval& initial_value)
+Tube Tube::primitive(const Interval& initial_value)
 {
   Tube primitive(m_intv_t, m_dt);
-  Interval sum = initial_value;
+  Interval sum_max = initial_value;
 
   for(int i = 0 ; i < m_slices_number ; i++)
   {
-    primitive.setY(sum, i);
-    sum += (*this)[i] * getSlice(i)->getT().diam();
+    double dt = getT(i).diam();
+    Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt);
+    primitive.setY(integrale_value, i, false);
+    sum_max += (*this)[i] * dt;
   }
 
+  primitive.update();
   return primitive;
 }
 
-Interval Tube::timeIntegration(const Tube& primitive, const Interval& t1, const Interval& t2) const
+void Tube::buildPartialPrimitive(bool build_from_leafs)
 {
-  pair<Interval,Interval> enc_prim = partialTimeIntegration(primitive, t1, t2);
-  return Interval(enc_prim.first.lb(), enc_prim.second.ub());
+  if(build_from_leafs)
+  {
+    if(!isSlice())
+    {
+      m_first_subtube->buildPartialPrimitive(true);
+      m_second_subtube->buildPartialPrimitive(true);
+
+      pair<Interval,Interval> pp_past = m_first_subtube->getPartialPrimitiveValue();
+      pair<Interval,Interval> pp_future = m_second_subtube->getPartialPrimitiveValue();
+      m_partial_primitive = make_pair(pp_past.first | pp_future.first, pp_past.second | pp_future.second);
+    }
+  }
+
+  else
+  {
+    Interval sum_max = Interval(0);
+
+    for(int i = 0 ; i < m_slices_number ; i++)
+    {
+      double dt = getT(i).diam();
+      Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt);
+      getSlice(i)->m_partial_primitive = make_pair(Interval(integrale_value.lb(), integrale_value.lb() + fabs((*this)[i].lb() * dt)),
+                                                   Interval(integrale_value.ub() - fabs((*this)[i].ub() * dt), integrale_value.ub()));
+      sum_max += (*this)[i] * dt;
+    }
+
+    buildPartialPrimitive(true);
+  }
+
+  m_build_primitive_needed = false;
 }
 
-pair<Interval,Interval> Tube::partialTimeIntegration(const Tube& primitive, const Interval& t1, const Interval& t2) const
+Interval Tube::timeIntegration(double t)
 {
-  pair<Interval,Interval> enc_prim_t1 = primitive.getEnclosedBounds(t1);
-  pair<Interval,Interval> enc_prim_t2 = primitive.getEnclosedBounds(t2);
+  return timeIntegration(Interval(t));
+}
 
-  Interval integral_min = enc_prim_t2.first - enc_prim_t1.first;
-  Interval integral_max = enc_prim_t2.second - enc_prim_t1.second;
+Interval Tube::timeIntegration(const Interval& t)
+{
+  pair<Interval,Interval> partial_ti = partialTimeIntegration(t);
+  return Interval(partial_ti.first.lb(), partial_ti.second.ub());
+}
 
-  return make_pair(integral_min, integral_max);
+pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t)
+{
+  if(m_build_primitive_needed)
+    buildPartialPrimitive();
+  
+  int index_lb = input2index(t.lb());
+  int index_ub = input2index(t.ub());
+
+  Interval integrale_lb = Interval::EMPTY_SET;
+  Interval integrale_ub = Interval::EMPTY_SET;
+
+  Interval intv_t_lb = Interval(getT(index_lb));
+  Interval intv_t_ub = Interval(getT(index_ub));
+
+  // Part A
+  {
+    pair<Interval,Interval> partial_primitive_first = getSlice(index_lb)->m_partial_primitive;
+    Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
+
+    Interval y_first = (*this)[index_lb];
+    Interval ta1 = Interval(intv_t_lb.lb(), t.lb());
+    Interval ta2 = Interval(intv_t_lb.lb(), min(t.ub(), intv_t_lb.ub()));
+    Interval tb1 = Interval(t.lb(), intv_t_lb.ub());
+    Interval tb2 = Interval(min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
+
+    if(y_first.lb() < 0)
+      integrale_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),
+                               primitive_lb.lb() - y_first.lb() * tb1.diam());
+
+    else if(y_first.lb() > 0)
+      integrale_lb |= Interval(primitive_lb.lb() + y_first.lb() * ta1.diam(),
+                               primitive_lb.lb() + y_first.lb() * ta2.diam());
+
+    if(y_first.ub() < 0)
+      integrale_ub |= Interval(primitive_lb.ub() + y_first.ub() * ta2.diam(),
+                               primitive_lb.ub() + y_first.ub() * ta1.diam());
+
+    else if(y_first.ub() > 0)
+      integrale_ub |= Interval(primitive_lb.ub() - y_first.ub() * tb1.diam(),
+                               primitive_lb.ub() - y_first.ub() * tb2.diam());
+  }
+
+  // Part B
+  if(index_ub - index_lb > 1)
+  {
+    pair<Interval,Interval> partial_primitive = getPartialPrimitiveValue(Interval(intv_t_lb.ub(), intv_t_ub.lb()));
+    integrale_lb |= partial_primitive.first;
+    integrale_ub |= partial_primitive.second;
+  }
+
+  // Part C
+  if(index_lb != index_ub)
+  {
+    pair<Interval,Interval> partial_primitive_second = getSlice(index_ub)->m_partial_primitive;
+    Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
+
+    Interval y_second = (*this)[index_ub];
+    Interval ta = Interval(intv_t_ub.lb(), t.ub());
+    Interval tb1 = intv_t_ub;
+    Interval tb2 = Interval(t.ub(), intv_t_ub.ub());
+
+    if(y_second.lb() < 0)
+      integrale_lb |= Interval(primitive_ub.lb() - y_second.lb() * tb2.diam(),
+                               primitive_ub.lb() - y_second.lb() * tb1.diam());
+
+    else if(y_second.lb() > 0)
+      integrale_lb |= Interval(primitive_ub.lb(),
+                               primitive_ub.lb() + y_second.lb() * ta.diam());
+
+    if(y_second.ub() < 0)
+      integrale_ub |= Interval(primitive_ub.ub() + y_second.ub() * ta.diam(),
+                               primitive_ub.ub());
+
+    else if(y_second.ub() > 0)
+      integrale_ub |= Interval(primitive_ub.ub() - y_second.ub() * tb1.diam(),
+                               primitive_ub.ub() - y_second.ub() * tb2.diam());
+  }
+
+  return make_pair(integrale_lb, integrale_ub);
+}
+
+Interval Tube::timeIntegration(const Interval& t1, const Interval& t2)
+{
+  pair<Interval,Interval> integrale_t1 = partialTimeIntegration(t1);
+  pair<Interval,Interval> integrale_t2 = partialTimeIntegration(t2);
+  double lb = (integrale_t2.first - integrale_t1.first).lb();
+  double ub = (integrale_t2.second - integrale_t1.second).ub();
+  return Interval(min(lb, ub), max(lb, ub));
+}
+
+
+pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t1, const Interval& t2)
+{
+  pair<Interval,Interval> integrale_t1 = partialTimeIntegration(t1);
+  pair<Interval,Interval> integrale_t2 = partialTimeIntegration(t2);
+  return make_pair((integrale_t2.first - integrale_t1.first),
+                   (integrale_t2.second - integrale_t1.second));
 }
 
 bool Tube::intersect(const Interval& intv_y, int index)
@@ -365,6 +636,7 @@ bool Tube::intersect(const Interval& intv_y, int index, bool bool_update)
   bool result = getSlice(index)->intersect(intv_y, Interval::ALL_REALS, false);
   if(bool_update)
     updateFromIndex(index);
+  m_build_primitive_needed = true;
   return result;
 }
 
@@ -380,6 +652,7 @@ bool Tube::intersect(const Interval& intv_y, double t, bool bool_update)
   bool result = getSlice(input2index(t))->intersect(intv_y, Interval::ALL_REALS, false);
   if(bool_update)
     updateFromInput(t);
+  m_build_primitive_needed = true;
   return result;
 }
 
@@ -424,32 +697,88 @@ bool Tube::intersect(const Interval& intv_y, const Interval& intv_t, bool bool_u
     if(contraction && bool_update)
       update();
 
+    m_build_primitive_needed = true;
     return contraction;
   }
 
   return false;
 }
 
-const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
+pair<Interval,Interval> Tube::getPartialPrimitiveValue(const Interval& intv_t)
 {
-  if(intv_t == Interval::ALL_REALS)
-    return m_enclosed_bounds; // pre-computed with update()
+  if(m_build_primitive_needed)
+    buildPartialPrimitive();
 
-  else if(!intv_t.is_empty() && m_intv_t.intersects(intv_t))
+  if(intv_t.lb() == intv_t.ub())
+    return make_pair(Interval((*this)[intv_t.lb()].lb()), Interval((*this)[intv_t.lb()].ub()));
+
+  Interval intersection = m_intv_t & intv_t;
+
+  if(intersection.is_empty())
+    return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+  else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+    return m_partial_primitive; // pre-computed with buildPartialPrimitive()
+
+  else
   {
-    if(isSlice() || intv_t.is_superset(m_intv_t))
-      return m_enclosed_bounds;
+    Interval inter_firstsubtube = m_first_subtube->getT() & intersection;
+    Interval inter_secondsubtube = m_second_subtube->getT() & intersection;
+
+    if(inter_firstsubtube.lb() == inter_firstsubtube.ub() && inter_secondsubtube.lb() == inter_secondsubtube.ub())
+      return make_pair(m_first_subtube->getPartialPrimitiveValue().first & m_second_subtube->getPartialPrimitiveValue().first,
+                       m_first_subtube->getPartialPrimitiveValue().second & m_second_subtube->getPartialPrimitiveValue().second);
+
+    else if(inter_firstsubtube.is_empty() || inter_firstsubtube.lb() == inter_firstsubtube.ub())
+      return m_second_subtube->getPartialPrimitiveValue(inter_secondsubtube);
+
+    else if(inter_secondsubtube.is_empty() || inter_secondsubtube.lb() == inter_secondsubtube.ub())
+      return m_first_subtube->getPartialPrimitiveValue(inter_firstsubtube);
 
     else
     {
-      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds(intv_t);
-      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds(intv_t);
+      pair<Interval,Interval> pp_past = m_first_subtube->getPartialPrimitiveValue(inter_firstsubtube);
+      pair<Interval,Interval> pp_future = m_second_subtube->getPartialPrimitiveValue(inter_secondsubtube);
+      return make_pair(pp_past.first | pp_future.first, pp_past.second | pp_future.second);
+    }
+  }
+}
+
+const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
+{
+  if(intv_t.lb() == intv_t.ub())
+    return make_pair(Interval((*this)[intv_t.lb()].lb()), Interval((*this)[intv_t.lb()].ub()));
+
+  Interval intersection = m_intv_t & intv_t;
+
+  if(intersection.is_empty())
+    return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+  else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+    return m_enclosed_bounds; // pre-computed with update()
+
+  else
+  {
+    Interval inter_firstsubtube = m_first_subtube->getT() & intersection;
+    Interval inter_secondsubtube = m_second_subtube->getT() & intersection;
+
+    if(inter_firstsubtube.lb() == inter_firstsubtube.ub() && inter_secondsubtube.lb() == inter_secondsubtube.ub())
+      return make_pair((*m_first_subtube)[inter_firstsubtube.lb()] & (*m_second_subtube)[inter_secondsubtube.lb()],
+                       (*m_first_subtube)[inter_firstsubtube.ub()] & (*m_second_subtube)[inter_secondsubtube.ub()]);
+
+    else if(inter_firstsubtube.is_empty() || inter_firstsubtube.lb() == inter_firstsubtube.ub())
+      return m_second_subtube->getEnclosedBounds(inter_secondsubtube);
+
+    else if(inter_secondsubtube.is_empty() || inter_secondsubtube.lb() == inter_secondsubtube.ub())
+      return m_first_subtube->getEnclosedBounds(inter_firstsubtube);
+
+    else
+    {
+      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds(inter_firstsubtube);
+      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds(inter_secondsubtube);
       return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
   }
-
-  else
-    return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 }
 
 void Tube::getTubeNodes(vector<Tube*> &v_nodes)
@@ -496,6 +825,7 @@ Tube& Tube::unionWith(const Tube& x)
       this_nodes[i]->unionWith_localUpdate(x_nodes[i]);
   }
 
+  m_build_primitive_needed = true;
   return *this;
 }
 
@@ -506,6 +836,7 @@ void Tube::unionWith_localUpdate(const Tube *x)
   pair<Interval,Interval> eb2 = x->getEnclosedBounds();
   m_enclosed_bounds = make_pair(Interval(min(eb1.first.lb(), eb2.first.lb()), min(eb1.first.ub(), eb2.first.ub())),
                                 Interval(max(eb1.second.lb(), eb2.second.lb()), max(eb1.second.ub(), eb2.second.ub())));
+  m_build_primitive_needed = true;
 }
 
 Tube& Tube::intersectWith(const Tube& x)
@@ -531,6 +862,7 @@ Tube& Tube::intersectWith(const Tube& x)
   }
 
   update();
+  m_build_primitive_needed = true;
   return *this;
 }
 
@@ -539,6 +871,7 @@ void Tube::intersectWith_localUpdate(const Tube *x)
   m_intv_y &= x->getY();
   // Enclosed bounds cannot be computed on this level.
   // Synthesis has to be done from the root (see update() in intersectWith).
+  m_build_primitive_needed = true;
 }
 
 Tube& Tube::operator &=(const Tube& x)
@@ -591,7 +924,12 @@ bool Tube::ctcFwd(Tube* derivative_tube)
     contraction |= getSlice(i)->intersect(y_new, 0, false);
   }
 
-  update();
+  if(contraction)
+  {
+    update();
+    m_build_primitive_needed = true;
+  }
+
   return contraction;
 }
 
@@ -609,7 +947,12 @@ bool Tube::ctcBwd(Tube* derivative_tube)
     contraction |= getSlice(i)->intersect(y_new, 0, false);
   }
 
-  update();
+  if(contraction)
+  {
+    update();
+    m_build_primitive_needed = true;
+  }
+
   return contraction;
 }
 
@@ -618,11 +961,13 @@ bool Tube::ctcFwdBwd(Tube* derivative_tube)
   bool contraction = false;
   contraction |= ctcFwd(derivative_tube);
   contraction |= ctcBwd(derivative_tube);
+  m_build_primitive_needed = contraction;
   return contraction;
 }
 
 bool Tube::ctcIn(Tube *derivative_tube, Interval& y, Interval& t)
 {
+  bool contraction;
   bool t_contraction = false;
   bool y_contraction = false;
   bool tube_contraction = false;
@@ -702,7 +1047,9 @@ bool Tube::ctcIn(Tube *derivative_tube, Interval& y, Interval& t)
     tube_contraction = volume() < vol;
   }
 
-  return t_contraction | tube_contraction | y_contraction;
+  contraction = t_contraction | tube_contraction | y_contraction;
+  m_build_primitive_needed = contraction;
+  return contraction;
 }
 
 void Tube::update()
@@ -717,10 +1064,13 @@ void Tube::updateFromInput(double t_focus)
 
 void Tube::updateFromIndex(int index_focus)
 {
+  m_build_primitive_needed = true;
   if(index_focus == -1 || index_focus < m_slices_number)
   {
     if(isSlice())
+    {
       m_enclosed_bounds = make_pair(Interval(m_intv_y.lb()), Interval(m_intv_y.ub()));
+    }
 
     else
     {
@@ -750,6 +1100,8 @@ void Tube::updateFromIndex(int index_focus)
       }
       
       m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
+
+      // Enclosed bounds
       pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds();
       pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds();
       m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
