@@ -296,7 +296,7 @@ void Tube::setY(const Interval& intv_y, double t)
 {
   int index = input2index(t);
   setY(intv_y, index);
-  if(getT(index).lb() == t)
+  if(getT(index).lb() == t && index > 0)
     setY(intv_y, index - 1);
 }
 
@@ -316,6 +316,15 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 
     requestFutureTreeComputation();
   }
+}
+
+void Tube::feed(const Interval& intv_y,  double t)
+{
+  int index = input2index(t);
+  Interval previous_y = (*this)[index];
+  setY(previous_y | intv_y, t);
+  if(getT(index).lb() == t && index > 0)
+    setY(previous_y | intv_y, index - 1);
 }
 
 const Tube* Tube::getFirstSubTube() const

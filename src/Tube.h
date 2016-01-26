@@ -188,6 +188,16 @@ class Tube
         void setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
 
         /**
+         * \brief Add the y-value intv_y for the slice containing the given input t.
+         *
+         * The new y-value is add without destroying previous data: a union is made for each slice.
+         *
+         * \param intv_y the y-value to be added
+         * \param t the input
+         */
+        void feed(const ibex::Interval& intv_y, double t);
+
+        /**
          * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
          *
          * \param intv_t the interval input, Interval::ALL_REALS by default
