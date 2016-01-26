@@ -5,8 +5,7 @@
 /*    DATE: 2015
 /************************************************************/
 
-
-Tube Tube::primitive(const Interval& initial_value)
+Tube Tube::primitive(const Interval& initial_value) const
 {
   Tube primitive(m_intv_t, m_dt);
   Interval sum_max = initial_value;
@@ -15,29 +14,28 @@ Tube Tube::primitive(const Interval& initial_value)
   {
     double dt = getT(i).diam();
     Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt);
-    primitive.setY(integrale_value, i, false);
+    primitive.setY(integrale_value, i);
     sum_max += (*this)[i] * dt;
   }
 
-  primitive.update();
   return primitive;
 }
 
-Interval Tube::timeIntegration(double t)
+Interval Tube::timeIntegration(double t) const
 {
   return timeIntegration(Interval(t));
 }
 
-Interval Tube::timeIntegration(const Interval& t)
+Interval Tube::timeIntegration(const Interval& t) const
 {
   pair<Interval,Interval> partial_ti = partialTimeIntegration(t);
   return Interval(partial_ti.first.lb(), partial_ti.second.ub());
 }
 
-pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t)
+pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t) const
 {
-  if(m_build_primitive_needed)
-    buildPartialPrimitive();
+  if(m_primitive_computation_needed)
+    buildPartialPrimitive(false);
   
   int index_lb = input2index(t.lb());
   int index_ub = input2index(t.ub());
@@ -50,7 +48,7 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t)
 
   // Part A
   {
-    pair<Interval,Interval> partial_primitive_first = getSlice(index_lb)->m_partial_primitive;
+    pair<Interval,Interval> partial_primitive_first = getSlice(index_lb)->getPartialPrimitiveValue();
     Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
 
     Interval y_first = (*this)[index_lb];
@@ -87,7 +85,7 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t)
   // Part C
   if(index_lb != index_ub)
   {
-    pair<Interval,Interval> partial_primitive_second = getSlice(index_ub)->m_partial_primitive;
+    pair<Interval,Interval> partial_primitive_second = getSlice(index_ub)->getPartialPrimitiveValue();
     Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
 
     Interval y_second = (*this)[index_ub];
@@ -115,7 +113,7 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t)
   return make_pair(integrale_lb, integrale_ub);
 }
 
-Interval Tube::timeIntegration(const Interval& t1, const Interval& t2)
+Interval Tube::timeIntegration(const Interval& t1, const Interval& t2) const
 {
   pair<Interval,Interval> integrale_t1 = partialTimeIntegration(t1);
   pair<Interval,Interval> integrale_t2 = partialTimeIntegration(t2);
@@ -125,7 +123,7 @@ Interval Tube::timeIntegration(const Interval& t1, const Interval& t2)
 }
 
 
-pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t1, const Interval& t2)
+pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t1, const Interval& t2) const
 {
   pair<Interval,Interval> integrale_t1 = partialTimeIntegration(t1);
   pair<Interval,Interval> integrale_t2 = partialTimeIntegration(t2);
@@ -133,8 +131,24 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t1, const I
                    (integrale_t2.second - integrale_t1.second));
 }
 
-void Tube::buildPartialPrimitive(bool build_from_leafs)
+void Tube::requestFuturePrimitivePreparation() const
 {
+  if(!m_primitive_computation_needed)
+  {
+    m_primitive_computation_needed = true;
+    if(!isSlice())
+    {
+      m_first_subtube->requestFuturePrimitivePreparation();
+      m_second_subtube->requestFuturePrimitivePreparation();
+    }
+  }
+}
+
+void Tube::buildPartialPrimitive(bool build_from_leafs) const
+{
+  // Warning: this method can only be called from the root
+  // (because computation starts from 0)
+
   if(build_from_leafs)
   {
     if(!isSlice())
@@ -164,14 +178,11 @@ void Tube::buildPartialPrimitive(bool build_from_leafs)
     buildPartialPrimitive(true);
   }
 
-  m_build_primitive_needed = false;
+  m_primitive_computation_needed = false;
 }
 
-pair<Interval,Interval> Tube::getPartialPrimitiveValue(const Interval& intv_t)
+pair<Interval,Interval> Tube::getPartialPrimitiveValue(const Interval& intv_t) const
 {
-  if(m_build_primitive_needed)
-    buildPartialPrimitive();
-
   if(intv_t.lb() == intv_t.ub())
     return make_pair(Interval((*this)[intv_t.lb()].lb()), Interval((*this)[intv_t.lb()].ub()));
 

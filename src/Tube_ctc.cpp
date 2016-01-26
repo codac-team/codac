@@ -5,7 +5,6 @@
 /*    DATE: 2015
 /************************************************************/
 
-
 bool Tube::ctcFwd(Tube* derivative_tube)
 {
   if(size() != derivative_tube->size())
@@ -16,15 +15,14 @@ bool Tube::ctcFwd(Tube* derivative_tube)
 
   for(int i = 1 ; i < size() ; i++) // from the past to the future
   {
-    Interval y_new = (*this)[i-1] + (*derivative_tube)[i-1] * derivative_tube->getSlice(i-1)->getT().diam();
-    contraction |= getSlice(i)->intersect(y_new, 0, false);
+    Interval y_old = (*this)[i];
+    Interval y_new = y_old & ((*this)[i-1] + (*derivative_tube)[i-1] * derivative_tube->getSlice(i-1)->getT().diam());
+    setY(y_new, i);
+    contraction |= y_old.diam() > y_new.diam();
   }
 
   if(contraction)
-  {
-    update();
-    m_build_primitive_needed = true;
-  }
+    requestFutureTreeComputation();
 
   return contraction;
 }
@@ -39,15 +37,14 @@ bool Tube::ctcBwd(Tube* derivative_tube)
 
   for(int i = size() - 2 ; i >= 0 ; i--) // from the future to the past
   {
+    Interval y_old = (*this)[i];
     Interval y_new = (*this)[i+1] - (*derivative_tube)[i+1] * derivative_tube->getSlice(i+1)->getT().diam();
-    contraction |= getSlice(i)->intersect(y_new, 0, false);
+    setY(y_new, i);
+    contraction |= y_old.diam() > y_new.diam();
   }
 
   if(contraction)
-  {
-    update();
-    m_build_primitive_needed = true;
-  }
+    requestFutureTreeComputation();
 
   return contraction;
 }
@@ -57,7 +54,6 @@ bool Tube::ctcFwdBwd(Tube* derivative_tube)
   bool contraction = false;
   contraction |= ctcFwd(derivative_tube);
   contraction |= ctcBwd(derivative_tube);
-  m_build_primitive_needed = contraction;
   return contraction;
 }
 
@@ -144,6 +140,9 @@ bool Tube::ctcIn(Tube *derivative_tube, Interval& y, Interval& t)
   }
 
   contraction = t_contraction | tube_contraction | y_contraction;
-  m_build_primitive_needed = contraction;
+
+  if(contraction)
+    requestFutureTreeComputation();
+
   return contraction;
 }

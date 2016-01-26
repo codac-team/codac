@@ -116,7 +116,7 @@ class Tube
          * \param index slice's number, between 0 and (size - 1)
          * \return the lower bound of the slice's domain
          */
-        double index2input(int index);
+        double index2input(int index) const;
 
         /**
          * \brief Return the domain of the tube.
@@ -131,7 +131,7 @@ class Tube
          * \param index slice's number, between 0 and (size - 1)
          * \return an interval [t0,tf]
          */
-        const ibex::Interval& getT(int index);
+        //const ibex::Interval& getT(int index);
         const ibex::Interval& getT(int index) const;
 
         /**
@@ -140,7 +140,7 @@ class Tube
          * \param t the input
          * \return an interval [t0,tf]
          */
-        ibex::Interval getT(double t);
+        ibex::Interval getT(double t) const;
 
         /**
          * \brief Return the y-value of the i^th slice, refered by index.
@@ -148,7 +148,7 @@ class Tube
          * \param index slice's number, between 0 and (size - 1)
          * \return the y-value
          */
-        const ibex::Interval& operator[](int index);
+        //const ibex::Interval& operator[](int index);
         const ibex::Interval& operator[](int index) const;
 
         /**
@@ -157,7 +157,7 @@ class Tube
          * \param t the given time
          * \return the y-value
          */
-        ibex::Interval operator[](double t);
+        //ibex::Interval operator[](double t);
         ibex::Interval operator[](double t) const;
 
         /**
@@ -166,7 +166,7 @@ class Tube
          * \param intv_t the given bounded time
          * \return the y-value
          */
-        ibex::Interval operator[](ibex::Interval intv_t);
+        //ibex::Interval operator[](ibex::Interval intv_t);
         ibex::Interval operator[](ibex::Interval intv_t) const;
 
         /**
@@ -221,7 +221,7 @@ class Tube
          * \param index slice's number, between 0 and (size - 1)
          * \return true if a contraction has been done, false otherwise
          */
-        bool intersect(const ibex::Interval& intv_y, int index);
+        //bool intersect(const ibex::Interval& intv_y, int index);
 
         /**
          * \brief Intersect and update tube's values with the given y-value intv_y.
@@ -230,7 +230,7 @@ class Tube
          * \param t the input
          * \return true if a contraction has been done, false otherwise
          */
-        bool intersect(const ibex::Interval& intv_y, double t);
+        //bool intersect(const ibex::Interval& intv_y, double t);
 
         /**
          * \brief Intersect and update tube's values with the given y-value intv_y.
@@ -239,7 +239,7 @@ class Tube
          * \param intv_t the interval input, Interval::ALL_REALS by default
          * \return true if a contraction has been done, false otherwise
          */
-        bool intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
+        //bool intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
 
         /**
          * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
@@ -291,7 +291,7 @@ class Tube
          * \param initial_value the initial condition for computation
          * \return a tube defined over the same domain of this
          */
-        Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.));
+        Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
 
         /**
          * \brief Return the precise bounded-integral over the domain represented by [0,t].
@@ -299,7 +299,7 @@ class Tube
          * \param t the upper bound of the domain
          * \return an interval [s1,s2]
          */
-        ibex::Interval timeIntegration(double t);
+        ibex::Interval timeIntegration(double t) const;
 
         /**
          * \brief Return the precise bounded-integral over the domain represented by [0,[t]].
@@ -307,7 +307,7 @@ class Tube
          * \param t the bounded upper bound of the domain
          * \return an interval [i1,i2]
          */
-        ibex::Interval timeIntegration(const ibex::Interval& t);
+        ibex::Interval timeIntegration(const ibex::Interval& t) const;
 
         /**
          * \brief Return the precise bounded-integral over the domain represented by [0,[t]] for f- and f+.
@@ -317,7 +317,7 @@ class Tube
          *   [s1,s2] corresponds to the bounded integral of f- over [0,[t]]
          *   [S1,S2] corresponds to the bounded integral of f+ over [0,[t]]
          */
-        std::pair<ibex::Interval,ibex::Interval> partialTimeIntegration(const ibex::Interval& t);
+        std::pair<ibex::Interval,ibex::Interval> partialTimeIntegration(const ibex::Interval& t) const;
 
         /**
          * \brief Return the precise bounded-integral over the domain represented by [[t1],[t2]].
@@ -326,7 +326,7 @@ class Tube
          * \param t2 the bounded upper bound of the domain
          * \return an interval [i1,i2]
          */
-        ibex::Interval timeIntegration(const ibex::Interval& t1, const ibex::Interval& t2);
+        ibex::Interval timeIntegration(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
         /**
          * \brief Return the precise bounded-integral over the domain represented by [[t1],[t2]] for f- and f+.
@@ -337,7 +337,7 @@ class Tube
          *   [s1,s2] corresponds to the bounded integral of f- over [[t1],[t2]]
          *   [S1,S2] corresponds to the bounded integral of f+ over [[t1],[t2]]
          */
-        std::pair<ibex::Interval,ibex::Interval> partialTimeIntegration(const ibex::Interval& t1, const ibex::Interval& t2);
+        std::pair<ibex::Interval,ibex::Interval> partialTimeIntegration(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
 
     /** Contractors **/
@@ -385,9 +385,9 @@ class Tube
      * \param default_value default y-values
      * \param bool_update to force the update of tube's data structure
      */
-    Tube(std::vector<ibex::Interval> vector_dt,
+    /*Tube(std::vector<ibex::Interval> vector_dt,
          const ibex::Interval& default_value,
-         bool bool_update);
+         bool bool_update);*/
 
     /**
      * \brief Create a tube over a domain defined by a vector of intervals.
@@ -406,7 +406,7 @@ class Tube
      * \param index slice's number, between 0 and (size - 1)
      * \param bool_update to force the update of tube's data structure
      */
-    void setY(const ibex::Interval& intv_y, int index, bool bool_update);
+    //void setY(const ibex::Interval& intv_y, int index, bool bool_update);
 
     /**
      * \brief Set the y-value intv_y for the slice containing the given input t.
@@ -415,7 +415,7 @@ class Tube
      * \param t the input
      * \param bool_update to force the update of tube's data structure
      */
-    void setY(const ibex::Interval& intv_y, double t, bool bool_update);
+    //void setY(const ibex::Interval& intv_y, double t, bool bool_update);
 
     /**
      * \brief Intersect and update tube's values with the given y-value intv_y.
@@ -424,7 +424,7 @@ class Tube
      * \param intv_t the interval input
      * \param bool_update to force the update of tube's data structure
      */
-    void setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t, bool bool_update);
+    //void setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t, bool bool_update);
 
     /**
      * \brief Intersect and update tube's values with the given y-value intv_y.
@@ -434,7 +434,7 @@ class Tube
      * \param bool_update to force the update of tube's data structure
      * \return true if a contraction has been done, false otherwise
      */
-    bool intersect(const ibex::Interval& intv_y, int index, bool bool_update);
+    //bool intersect(const ibex::Interval& intv_y, int index, bool bool_update);
 
     /**
      * \brief Intersect and update tube's values with the given y-value intv_y.
@@ -444,7 +444,7 @@ class Tube
      * \param bool_update to force the update of tube's data structure
      * \return true if a contraction has been done, false otherwise
      */
-    bool intersect(const ibex::Interval& intv_y, double t, bool bool_update);
+    //bool intersect(const ibex::Interval& intv_y, double t, bool bool_update);
 
     /**
      * \brief Intersect and update tube's values with the given y-value intv_y.
@@ -454,7 +454,7 @@ class Tube
      * \param bool_update to force the update of tube's data structure
      * \return true if a contraction has been done, false otherwise
      */
-    bool intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t, bool bool_update);
+    //bool intersect(const ibex::Interval& intv_y, const ibex::Interval& intv_t, bool bool_update);
 
     /**
      * \brief Return all the nodes of the tree (not only the leafs)
@@ -463,8 +463,8 @@ class Tube
      * 
      * \param v_nodes a vector containing pointers to the nodes
      */
-    void getTubeNodes(std::vector<Tube*> &v_nodes);
-    void getTubeNodes(std::vector<const Tube*> &v_nodes) const; // the 'const' version
+    void getTubeNodes(std::vector<Tube*> &v_nodes) const;
+    //void getTubeNodes(std::vector<const Tube*> &v_nodes) const; // the 'const' version
 
     /**
      * \brief Set this Tube to the hull of itself and another: tube x.
@@ -513,35 +513,39 @@ class Tube
      * is changed, the modification has to be propagated through
      * all upper branches.
      */
-    void update();
+    //void update();
+    void computeTree() const;
+    void requestFutureTreeComputation(int index = -1) const;
 
     /**
      * \brief Update tube's data structure (focusing on branches containing t_focus).
      *
      * \param t_focus if specified, it means an update is required for the given input
      */
-    void updateFromInput(double t_focus);
+    //void updateFromInput(double t_focus);
 
     /**
      * \brief Update tube's data structure (focusing on branches containing index_focus).
      *
      * \param index_focus if specified, it means an update is required for the given index
      */
-    void updateFromIndex(int index_focus);
+    //void updateFromIndex(int index_focus);
 
-    void buildPartialPrimitive(bool build_from_leafs = false);
-    std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
+void requestFuturePrimitivePreparation() const;
+    void buildPartialPrimitive(bool build_from_leafs = false) const;
+    std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
     
     // Class variables:
 
     double m_dt;
     int m_slices_number;
-    bool m_build_primitive_needed;
-    Tube *m_first_subtube, *m_second_subtube;
-    ibex::Interval m_intv_t, m_intv_y;
-    std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
-    std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
+    mutable bool m_tree_computation_needed;
+    mutable bool m_primitive_computation_needed;
+    mutable Tube *m_first_subtube, *m_second_subtube;
+    mutable ibex::Interval m_intv_t, m_intv_y;
+    mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
+    mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 };
 
 #endif
