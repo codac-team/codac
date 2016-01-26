@@ -5,18 +5,18 @@
 /*    DATE: 2015
 /************************************************************/
 
-bool Tube::ctcFwd(Tube* derivative_tube)
+bool Tube::ctcFwd(const Tube& derivative_tube)
 {
-  if(size() != derivative_tube->size())
-    cout << "Warning ctcFwd(Tube* derivative_tube): tube of different size: "
-         << derivative_tube->size() << "/" << size() << endl;
+  if(size() != derivative_tube.size())
+    cout << "Warning ctcFwd(const Tube& derivative_tube): tube of different size: "
+         << derivative_tube.size() << "/" << size() << endl;
 
   bool contraction = false;
 
   for(int i = 1 ; i < size() ; i++) // from the past to the future
   {
     Interval y_old = (*this)[i];
-    Interval y_new = y_old & ((*this)[i-1] + (*derivative_tube)[i-1] * derivative_tube->getSlice(i-1)->getT().diam());
+    Interval y_new = y_old & ((*this)[i-1] + derivative_tube[i-1] * derivative_tube.getT(i-1).diam());
     setY(y_new, i);
     contraction |= y_old.diam() > y_new.diam();
   }
@@ -27,18 +27,18 @@ bool Tube::ctcFwd(Tube* derivative_tube)
   return contraction;
 }
 
-bool Tube::ctcBwd(Tube* derivative_tube)
+bool Tube::ctcBwd(const Tube& derivative_tube)
 {
-  if(size() != derivative_tube->size())
-    cout << "Warning ctcBwd(Tube* derivative_tube): tube of different size: "
-         << derivative_tube->size() << "/" << size() << endl;
+  if(size() != derivative_tube.size())
+    cout << "Warning ctcBwd(const Tube& derivative_tube): tube of different size: "
+         << derivative_tube.size() << "/" << size() << endl;
 
   bool contraction = false;
 
   for(int i = size() - 2 ; i >= 0 ; i--) // from the future to the past
   {
     Interval y_old = (*this)[i];
-    Interval y_new = (*this)[i+1] - (*derivative_tube)[i+1] * derivative_tube->getSlice(i+1)->getT().diam();
+    Interval y_new = (*this)[i+1] - derivative_tube[i+1] * derivative_tube.getT(i+1).diam();
     setY(y_new, i);
     contraction |= y_old.diam() > y_new.diam();
   }
@@ -49,7 +49,7 @@ bool Tube::ctcBwd(Tube* derivative_tube)
   return contraction;
 }
 
-bool Tube::ctcFwdBwd(Tube* derivative_tube)
+bool Tube::ctcFwdBwd(const Tube& derivative_tube)
 {
   bool contraction = false;
   contraction |= ctcFwd(derivative_tube);
@@ -57,7 +57,7 @@ bool Tube::ctcFwdBwd(Tube* derivative_tube)
   return contraction;
 }
 
-bool Tube::ctcIn(Tube *derivative_tube, Interval& y, Interval& t)
+bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
 {
   bool contraction;
   bool t_contraction = false;
@@ -116,8 +116,8 @@ bool Tube::ctcIn(Tube *derivative_tube, Interval& y, Interval& t)
       // In forward
       for(int j = i ; j <= input2index(t.ub()) ; j++)
       {
-        new_y += Interval((*derivative_tube)[j].lb() * derivative_tube->getT(j).diam(),
-                          (*derivative_tube)[j].ub() * derivative_tube->getT(j).diam());
+        new_y += Interval(derivative_tube[j].lb() * derivative_tube.getT(j).diam(),
+                          derivative_tube[j].ub() * derivative_tube.getT(j).diam());
         tube_temp3.setY(new_y, j);
       }
       new_y = tube_temp1[i];
@@ -125,9 +125,9 @@ bool Tube::ctcIn(Tube *derivative_tube, Interval& y, Interval& t)
       // In backward
       for(int j = i ; j >= input2index(t.lb()) ; j--)
       {
-        Interval deriv = ((*derivative_tube)[j]);
-        new_y -= Interval(deriv.lb() * derivative_tube->getT(j).diam(),
-                          deriv.ub() * derivative_tube->getT(j).diam());
+        Interval deriv = derivative_tube[j];
+        new_y -= Interval(deriv.lb() * derivative_tube.getT(j).diam(),
+                          deriv.ub() * derivative_tube.getT(j).diam());
         tube_temp3.setY(new_y | tube_temp3[j], j); // an union is made to keep forward's update
       }
 

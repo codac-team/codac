@@ -1,6 +1,6 @@
 /************************************************************/
 /*    AUTH: Simon Rohou
-/*    FILE: Tube.cpp
+/*    FILE: Tube_integration.cpp
 /*    PRJT: TubeIbex https://github.com/SimonRohou/TubeIbex
 /*    DATE: 2015
 /************************************************************/
@@ -35,7 +35,7 @@ Interval Tube::timeIntegration(const Interval& t) const
 pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t) const
 {
   if(m_primitive_computation_needed)
-    buildPartialPrimitive(false);
+    computePartialPrimitive(false);
   
   int index_lb = input2index(t.lb());
   int index_ub = input2index(t.ub());
@@ -131,20 +131,20 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t1, const I
                    (integrale_t2.second - integrale_t1.second));
 }
 
-void Tube::requestFuturePrimitivePreparation() const
+void Tube::requestFuturePrimitiveComputation() const
 {
   if(!m_primitive_computation_needed)
   {
     m_primitive_computation_needed = true;
     if(!isSlice())
     {
-      m_first_subtube->requestFuturePrimitivePreparation();
-      m_second_subtube->requestFuturePrimitivePreparation();
+      m_first_subtube->requestFuturePrimitiveComputation();
+      m_second_subtube->requestFuturePrimitiveComputation();
     }
   }
 }
 
-void Tube::buildPartialPrimitive(bool build_from_leafs) const
+void Tube::computePartialPrimitive(bool build_from_leafs) const
 {
   // Warning: this method can only be called from the root
   // (because computation starts from 0)
@@ -153,8 +153,8 @@ void Tube::buildPartialPrimitive(bool build_from_leafs) const
   {
     if(!isSlice())
     {
-      m_first_subtube->buildPartialPrimitive(true);
-      m_second_subtube->buildPartialPrimitive(true);
+      m_first_subtube->computePartialPrimitive(true);
+      m_second_subtube->computePartialPrimitive(true);
 
       pair<Interval,Interval> pp_past = m_first_subtube->getPartialPrimitiveValue();
       pair<Interval,Interval> pp_future = m_second_subtube->getPartialPrimitiveValue();
@@ -175,7 +175,7 @@ void Tube::buildPartialPrimitive(bool build_from_leafs) const
       sum_max += (*this)[i] * dt;
     }
 
-    buildPartialPrimitive(true);
+    computePartialPrimitive(true);
   }
 
   m_primitive_computation_needed = false;
@@ -192,7 +192,7 @@ pair<Interval,Interval> Tube::getPartialPrimitiveValue(const Interval& intv_t) c
     return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
   else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
-    return m_partial_primitive; // pre-computed with buildPartialPrimitive()
+    return m_partial_primitive; // pre-computed with computePartialPrimitive()
 
   else
   {

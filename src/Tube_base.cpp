@@ -41,7 +41,7 @@ void Tube::createFromSlicesVector(vector<Interval> vector_dt, const Interval& de
 
   else
   {
-    // In the first subtube: [t0,thalf]
+    // In the first subtube: [t0,thalf[
     // In the second subtube: [thalf,tf]
     vector<Interval> first_vector_slices, second_vector_slices;
     int i, k = ceil(m_slices_number / 2.);
@@ -56,8 +56,6 @@ void Tube::createFromSlicesVector(vector<Interval> vector_dt, const Interval& de
     {
       #pragma omp sections
       {
-        // Subtubes are created without an update (bool_update = false)
-        // For reasons of efficiency, the update is called only once from the root
         #pragma omp section
           m_first_subtube = new Tube(first_vector_slices, default_value);
         #pragma omp section
@@ -148,11 +146,7 @@ const Tube* Tube::getSlice(int index) const
   }
 
   else if(isSlice())
-  {
-    if(index != 0)
-      cout << "Warning Tube::getX(int): index not null in slice." << endl;
     return this;
-  }
 
   else
   {
@@ -220,7 +214,7 @@ Interval Tube::getT(double t) const
 const Interval& Tube::operator[](int index) const
 {
   // Write access is not allowed for this operator:
-  // a call to update() is needed when values change,
+  // a further call to computeTree() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
   // For write access: use setY()
   return getSlice(index)->m_intv_y;
@@ -229,7 +223,7 @@ const Interval& Tube::operator[](int index) const
 Interval Tube::operator[](double t) const
 {
   // Write access is not allowed for this operator:
-  // a call to update() is needed when values change,
+  // a further call to computeTree() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
   // For write access: use setY()
   int index = input2index(t);
@@ -240,10 +234,10 @@ Interval Tube::operator[](double t) const
   return intv_y;
 }
 
-Interval Tube::operator[](Interval intv_t) const
+Interval Tube::operator[](const ibex::Interval& intv_t) const
 {
   // Write access is not allowed for this operator:
-  // a call to update() is needed when values change,
+  // a further call to computeTree() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
   // For write access: use setY()
 
@@ -292,13 +286,13 @@ const Interval& Tube::getY() const
   return m_intv_y;
 }
 
-void Tube::setY(const Interval& intv_y, int index/*, bool bool_update*/)
+void Tube::setY(const Interval& intv_y, int index)
 {
   getSlice(index)->setY(intv_y);
-  requestFutureTreeComputation(index); // an update is needed since some tube's values changed
+  requestFutureTreeComputation(index);
 }
 
-void Tube::setY(const Interval& intv_y, double t/*, bool bool_update*/)
+void Tube::setY(const Interval& intv_y, double t)
 {
   int index = input2index(t);
   setY(intv_y, index);
@@ -306,10 +300,8 @@ void Tube::setY(const Interval& intv_y, double t/*, bool bool_update*/)
     setY(intv_y, index - 1);
 }
 
-void Tube::setY(const Interval& intv_y, const Interval& intv_t/*, bool bool_update*/)
+void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 {
-  // Default value feature of C++ is not used because bool_update
-  // should not be used outside this class (protected status)
   if(intv_t == ibex::Interval::ALL_REALS ||
      (m_intv_t.intersects(intv_t) && m_intv_t.lb() != intv_t.ub() && m_intv_t.ub() != intv_t.lb()))
   {
@@ -351,7 +343,7 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
     if(m_tree_computation_needed)
       computeTree();
 
-    return m_enclosed_bounds; // pre-computed with update()
+    return m_enclosed_bounds; // pre-computed
   }
 
   else
@@ -378,15 +370,26 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
   }
 }
 
-void Tube::getTubeNodes(vector<Tube*> &v_nodes) const
+void Tube::getTubeNodes(vector<const Tube*> &v_nodes) const
 {
   if(!isSlice())
   {
     m_first_subtube->getTubeNodes(v_nodes);
     m_second_subtube->getTubeNodes(v_nodes);
-    v_nodes.push_back(m_first_subtube);
-    v_nodes.push_back(m_second_subtube);
   }
+
+  v_nodes.push_back(this);
+}
+
+void Tube::getTubeNodes(vector<Tube*> &v_nodes)
+{
+  if(!isSlice())
+  {
+    m_first_subtube->getTubeNodes(v_nodes);
+    m_second_subtube->getTubeNodes(v_nodes);
+  }
+
+  v_nodes.push_back(this);
 }
 
 Tube& Tube::unionWith(const Tube& x)
@@ -400,7 +403,7 @@ Tube& Tube::unionWith(const Tube& x)
          << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
 
   vector<Tube*> this_nodes;
-  vector</*const */Tube*> x_nodes;
+  vector<const Tube*> x_nodes;
   getTubeNodes(this_nodes);
   x.getTubeNodes(x_nodes);
 
@@ -411,7 +414,7 @@ Tube& Tube::unionWith(const Tube& x)
       this_nodes[i]->unionWith_localUpdate(x_nodes[i]);
   }
 
-  requestFuturePrimitivePreparation();
+  requestFuturePrimitiveComputation();
   return *this;
 }
 
@@ -426,7 +429,7 @@ void Tube::unionWith_localUpdate(const Tube *x)
   m_enclosed_bounds = make_pair(Interval(min(eb1.first.lb(), eb2.first.lb()), min(eb1.first.ub(), eb2.first.ub())),
                                 Interval(max(eb1.second.lb(), eb2.second.lb()), max(eb1.second.ub(), eb2.second.ub())));
 
-  requestFuturePrimitivePreparation();
+  requestFuturePrimitiveComputation();
 }
 
 Tube& Tube::intersectWith(const Tube& x)
@@ -440,7 +443,7 @@ Tube& Tube::intersectWith(const Tube& x)
          << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
 
   vector<Tube*> this_nodes;
-  vector<Tube*> x_nodes;
+  vector<const Tube*> x_nodes;
   getTubeNodes(this_nodes);
   x.getTubeNodes(x_nodes);
 
@@ -535,7 +538,7 @@ void Tube::requestFutureTreeComputation(int index) const
     }
   }
   
-  requestFuturePrimitivePreparation();
+  requestFuturePrimitiveComputation();
 }
 
 void Tube::computeTree() const
