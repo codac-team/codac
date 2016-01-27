@@ -318,13 +318,20 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t)
   }
 }
 
-void Tube::feed(const Interval& intv_y,  double t)
+const Interval Tube::feed(const Interval& intv_y, int index)
+{
+  setY((*this)[index] | intv_y, index);
+  return (*this)[index];
+}
+
+const Interval Tube::feed(const Interval& intv_y, double t)
 {
   int index = input2index(t);
   Interval previous_y = (*this)[index];
-  setY(previous_y | intv_y, t);
+  feed(intv_y, index);
   if(getT(index).lb() == t && index > 0)
-    setY(previous_y | intv_y, index - 1);
+    feed(intv_y, index - 1);
+  return (*this)[t];
 }
 
 const Tube* Tube::getFirstSubTube() const
