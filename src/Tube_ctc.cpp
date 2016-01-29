@@ -11,6 +11,14 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
     cout << "Warning ctcFwd(const Tube& derivative_tube): tube of different size: "
          << derivative_tube.size() << "/" << size() << endl;
 
+  for(int i = 0 ; i < size() ; i++)
+  {
+    if((*this)[i].is_empty())
+      cout << "Warning ctcFwd(const Tube& derivative_tube): (*this)[" << i << "] is empty" << endl;
+    if(derivative_tube[i].is_empty())
+      cout << "Warning ctcFwd(const Tube& derivative_tube): derivative_tube[" << i << "] is empty" << endl;
+  }
+
   bool contraction = false;
 
   for(int i = 1 ; i < size() ; i++) // from the past to the future
@@ -33,12 +41,20 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
     cout << "Warning ctcBwd(const Tube& derivative_tube): tube of different size: "
          << derivative_tube.size() << "/" << size() << endl;
 
+  for(int i = 0 ; i < size() ; i++)
+  {
+    if((*this)[i].is_empty())
+      cout << "Warning ctcBwd(const Tube& derivative_tube): (*this)[" << i << "] is empty" << endl;
+    if(derivative_tube[i].is_empty())
+      cout << "Warning ctcBwd(const Tube& derivative_tube): derivative_tube[" << i << "] is empty" << endl;
+  }
+
   bool contraction = false;
 
   for(int i = size() - 2 ; i >= 0 ; i--) // from the future to the past
   {
     Interval y_old = (*this)[i];
-    Interval y_new = (*this)[i+1] - derivative_tube[i+1] * derivative_tube.getT(i+1).diam();
+    Interval y_new = y_old & ((*this)[i+1] - derivative_tube[i+1] * derivative_tube.getT(i+1).diam());
     setY(y_new, i);
     contraction |= y_old.diam() > y_new.diam();
   }
