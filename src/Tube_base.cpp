@@ -359,6 +359,56 @@ Interval Tube::setInversion(const Interval& intv_y) const
   }
 }
 
+void Tube::setInversion(const Interval& intv_y, vector<Interval> &v_intv_t) const
+{
+  return setInversion(intv_y, v_intv_t, true);
+}
+
+void Tube::setInversion(const Interval& intv_y, vector<Interval> &v_intv_t, bool concatenate_results) const
+{
+  v_intv_t.clear();
+  Interval intv_t = setInversion(intv_y);
+
+  if(!intv_t.is_empty())
+  {
+    pair<Interval,Interval> enc_bounds = getEnclosedBounds(intv_t);
+
+    if(!concatenate_results)
+    {
+      if(enc_bounds.first.ub() > intv_y.ub() || enc_bounds.second.lb() < intv_y.lb())
+      {
+        // Bisection is needed
+        vector<Interval> v1;
+        m_first_subtube->setInversion(intv_y, v1, false);
+        v_intv_t.insert(v_intv_t.end(), v1.begin(), v1.end());
+        vector<Interval> v2;
+        m_second_subtube->setInversion(intv_y, v2, false);
+        v_intv_t.insert(v_intv_t.end(), v2.begin(), v2.end());
+      }
+
+      else
+        v_intv_t.push_back(intv_t);
+    }
+
+    else
+    {
+      vector<Interval> v;
+      setInversion(intv_y, v, false);
+
+      // Concatenation (solutions may be adjacent)
+      int i = 0;
+      while(i < v.size())
+      {
+        int j = i;
+        while(j + 1 < v.size() && v[i].ub() == v[j + 1].lb())
+          j ++;
+        v_intv_t.push_back(v[i] | v[j]);
+        i = j + 1;
+      }
+    }
+  }
+}
+
 const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
 {  
   if(intv_t.lb() == intv_t.ub())
@@ -399,13 +449,6 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
       return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
   }
-}
-
-const vector<Interval> Tube::getKernels(const Interval& intv_t) const
-{
-  vector<Interval> vector;
-  
-  return vector;
 }
 
 void Tube::getTubeNodes(vector<const Tube*> &v_nodes) const

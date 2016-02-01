@@ -229,12 +229,16 @@ class Tube
         ibex::Interval setInversion(const ibex::Interval& intv_y) const;
 
         /**
-         * \brief Return a vector of time-intervals corresponding to kernel solutions.
-         *
-         * \param intv_t the research domain
-         * \return a vector of intervals intv_i for which 0 belongs to this[intv_i]
+         * \brief Perform precise set-inversion on this.
+         * 
+         * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
+         * Here the returned value v_intv_t corresponds to detailed solutions.
+         * Vector v_intv_t is cleared before computation.
+         * 
+         * \param intv_y the y-value to invert
+         * \param v_intv_t a vector containing, at the end, each solutions of the set-inversion
          */
-        const std::vector<ibex::Interval> getKernels(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
+        void setInversion(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t) const;
 
         /**
          * \brief Set this Tube to the hull of itself and another.
@@ -495,6 +499,18 @@ class Tube
      *   [S1,S2] corresponds to the bounded integral of f+ over [0,[t]]
      */
     std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
+
+    /**
+     * \brief Perform precise set-inversion on this.
+     * 
+     * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
+     * Here the returned value vector<intv_t> corresponds to detailed solutions.
+     *
+     * \param intv_y the y-value to invert
+     * \param concatenate_results results may be adjacent, so a concatenation on vector's values can be requested
+     * \return a vector containing each solutions of the set-inversion
+     */
+    void setInversion(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, bool concatenate_results) const;
 
     /** Class variables **/
 
