@@ -362,6 +362,11 @@ class Tube
          */
         bool ctcIn(const Tube& derivative_tube, ibex::Interval& y, ibex::Interval& t);
 
+        /**
+         * \brief To be defined...
+         */
+        bool ctcOut(const ibex::Interval& y, const ibex::Interval& t);
+
 
   protected:
 

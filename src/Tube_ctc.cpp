@@ -162,3 +162,35 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
 
   return contraction;
 }
+
+bool Tube::ctcOut(const Interval& y, const Interval& t)
+{
+  double volume_before_ctc = volume();
+
+  for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
+  {
+    Interval y_i = (*this)[i];
+
+    if(y.intersects(y_i))
+    {
+      if(y.is_superset(y_i))
+        setY(Interval::EMPTY_SET, i);
+
+      else if(y_i.is_superset(y))
+      {
+        // nothing to do
+      }
+
+      else if(y_i.lb() < y.ub() && y_i.lb() > y.lb())
+        setY(Interval(y.ub(), y_i.ub()), i);
+
+      else if(y_i.ub() > y.lb() && y_i.ub() < y.ub())
+        setY(Interval(y_i.lb(), y.lb()), i);
+
+      else
+        cout << "Warning ctcOut(const Interval& y, const Interval& t): unhandled case for " << y << y_i << endl;
+    }
+  }
+
+  return volume() < volume_before_ctc;
+}
