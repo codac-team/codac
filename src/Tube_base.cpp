@@ -344,6 +344,21 @@ const Tube* Tube::getSecondSubTube() const
   return m_second_subtube;
 }
 
+Interval Tube::setInversion(const Interval& intv_y) const
+{
+  if(!getY().intersects(intv_y))
+    return Interval::EMPTY_SET;
+
+  else
+  {
+    if(isSlice())
+      return m_intv_t;
+
+    else
+      return m_first_subtube->setInversion(intv_y) | m_second_subtube->setInversion(intv_y);
+  }
+}
+
 const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
 {  
   if(intv_t.lb() == intv_t.ub())
@@ -384,6 +399,13 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
       return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
   }
+}
+
+const vector<Interval> Tube::getKernels(const Interval& intv_t) const
+{
+  vector<Interval> vector;
+  
+  return vector;
 }
 
 void Tube::getTubeNodes(vector<const Tube*> &v_nodes) const

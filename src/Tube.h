@@ -218,6 +218,25 @@ class Tube
         const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
         /**
+         * \brief Perform set-inversion on this.
+         * 
+         * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
+         * Here the returned value intv_t corresponds to the union of the solutions.
+         *
+         * \param intv_y the y-value to invert
+         * \return the resulted union of the set-inversion
+         */
+        ibex::Interval setInversion(const ibex::Interval& intv_y) const;
+
+        /**
+         * \brief Return a vector of time-intervals corresponding to kernel solutions.
+         *
+         * \param intv_t the research domain
+         * \return a vector of intervals intv_i for which 0 belongs to this[intv_i]
+         */
+        const std::vector<ibex::Interval> getKernels(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
+
+        /**
          * \brief Set this Tube to the hull of itself and another.
          *
          * Note: both tubes have to be similar (same domain, same number of slices).
