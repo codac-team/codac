@@ -12,12 +12,8 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
          << derivative_tube.size() << "/" << size() << endl;
 
   for(int i = 0 ; i < size() ; i++)
-  {
-    if((*this)[i].is_empty())
-      cout << "Warning ctcFwd(const Tube& derivative_tube): (*this)[" << i << "] is empty" << endl;
     if(derivative_tube[i].is_empty())
       cout << "Warning ctcFwd(const Tube& derivative_tube): derivative_tube[" << i << "] is empty" << endl;
-  }
 
   bool contraction = false;
 
@@ -42,12 +38,8 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
          << derivative_tube.size() << "/" << size() << endl;
 
   for(int i = 0 ; i < size() ; i++)
-  {
-    if((*this)[i].is_empty())
-      cout << "Warning ctcBwd(const Tube& derivative_tube): (*this)[" << i << "] is empty" << endl;
     if(derivative_tube[i].is_empty())
       cout << "Warning ctcBwd(const Tube& derivative_tube): derivative_tube[" << i << "] is empty" << endl;
-  }
 
   bool contraction = false;
 
