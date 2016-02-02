@@ -25,9 +25,6 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
     contraction |= y_old.diam() > y_new.diam();
   }
 
-  if(contraction)
-    requestFutureTreeComputation();
-
   return contraction;
 }
 
@@ -50,9 +47,6 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
     setY(y_new, i);
     contraction |= y_old.diam() > y_new.diam();
   }
-
-  if(contraction)
-    requestFutureTreeComputation();
 
   return contraction;
 }
@@ -150,9 +144,6 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
 
   contraction = t_contraction | tube_contraction | y_contraction;
 
-  if(contraction)
-    requestFutureTreeComputation();
-
   return contraction;
 }
 
@@ -162,17 +153,25 @@ bool Tube::ctcOut(const Interval& y, const Interval& t)
   pair<Interval,Interval> enc_bounds = getEnclosedBounds(t);
 
   if(y.intersects(enc_bounds.first))
-    for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
+    #pragma omp parallel num_threads(omp_get_num_procs())
     {
-      Interval y_i = (*this)[i];
-      setY(Interval(max(y.ub(), y_i.lb()), y_i.ub()), i);
+      #pragma omp for
+      for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
+      {
+        Interval y_i = (*this)[i];
+        setY(Interval(max(y.ub(), y_i.lb()), y_i.ub()), i);
+      }
     }
 
   else if(y.intersects(enc_bounds.second))
-    for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
+    #pragma omp parallel num_threads(omp_get_num_procs())
     {
-      Interval y_i = (*this)[i];
-      setY(Interval(y_i.lb(), min(y_i.ub(), y.lb())), i);
+      #pragma omp for
+      for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
+      {
+        Interval y_i = (*this)[i];
+        setY(Interval(y_i.lb(), min(y_i.ub(), y.lb())), i);
+      }
     }
 
   else
