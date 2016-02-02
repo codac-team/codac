@@ -75,6 +75,7 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
   // Trying to contract [t]
   {
     double t_diam = t.diam();
+    t &= getT();
 
     // In forward
     int i = input2index(t.lb());
@@ -158,31 +159,24 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
 bool Tube::ctcOut(const Interval& y, const Interval& t)
 {
   double volume_before_ctc = volume();
+  pair<Interval,Interval> enc_bounds = getEnclosedBounds(t);
 
-  for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
-  {
-    Interval y_i = (*this)[i];
-
-    if(y.intersects(y_i))
+  if(y.intersects(enc_bounds.first))
+    for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
     {
-      if(y.is_superset(y_i))
-        setY(Interval::EMPTY_SET, i);
-
-      else if(y_i.is_superset(y))
-      {
-        // nothing to do
-      }
-
-      else if(y_i.lb() < y.ub() && y_i.lb() > y.lb())
-        setY(Interval(y.ub(), y_i.ub()), i);
-
-      else if(y_i.ub() > y.lb() && y_i.ub() < y.ub())
-        setY(Interval(y_i.lb(), y.lb()), i);
-
-      else
-        cout << "Warning ctcOut(const Interval& y, const Interval& t): unhandled case for " << y << y_i << endl;
+      Interval y_i = (*this)[i];
+      setY(Interval(max(y.ub(), y_i.lb()), y_i.ub()), i);
     }
-  }
+
+  else if(y.intersects(enc_bounds.second))
+    for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
+    {
+      Interval y_i = (*this)[i];
+      setY(Interval(y_i.lb(), min(y_i.ub(), y.lb())), i);
+    }
+
+  else
+    return false; // surely no contraction
 
   return volume() < volume_before_ctc;
 }
