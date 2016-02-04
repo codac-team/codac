@@ -5,6 +5,14 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include "Tube.h"
+#include <iostream>
+#include <iomanip> // for setprecision()
+#include <omp.h> // for multithreading
+
+using namespace std;
+using namespace ibex;
+
 Tube::Tube(const Interval &intv_t, double time_step, const Interval& default_value)
 {
   double lb, ub = intv_t.lb();

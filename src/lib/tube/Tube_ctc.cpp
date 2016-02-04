@@ -5,6 +5,14 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include "Tube.h"
+#include <iostream>
+#include <iomanip> // for setprecision()
+#include <omp.h> // for multithreading
+
+using namespace std;
+using namespace ibex;
+
 bool Tube::ctcFwd(const Tube& derivative_tube)
 {
   if(size() != derivative_tube.size())

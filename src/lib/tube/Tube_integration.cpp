@@ -5,6 +5,14 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include "Tube.h"
+#include <iostream>
+#include <iomanip> // for setprecision()
+#include <omp.h> // for multithreading
+
+using namespace std;
+using namespace ibex;
+
 Tube Tube::primitive(const Interval& initial_value) const
 {
   Tube primitive(m_intv_t, m_dt);
