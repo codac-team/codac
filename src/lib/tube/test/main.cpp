@@ -1,9 +1,14 @@
-/************************************************************/
-/*    AUTH: Simon Rohou
-/*    FILE: main.cpp
-/*    PRJT: TubeIbex https://github.com/SimonRohou/TubeIbex
-/*    DATE: 2015
-/************************************************************/
+/* ============================================================================
+ *  IBEX-Robotics - Tube class tests
+ * ============================================================================
+ *  Copyright : Simon Rohou
+ *  License   : This program can be distributed under the terms of
+ *              the MIT license. See the file LICENSE.
+ *
+ *  Author(s) : Simon Rohou
+ *  Bug fixes : -
+ *  Created   : 2015
+ * ---------------------------------------------------------------------------- */
 
 #include "../Tube.h"
 #include <iostream>

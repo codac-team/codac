@@ -51,39 +51,3 @@ cout << tube[17.0000001] << endl;             // will display [2, 7]
 cout << tube[Interval(9.5, 17.5)] << endl;    // will display [-9, 7] (for dates between 9.5 and 17.5)
 cout << tube[Interval(19.2, 35.7)] << endl;   // will display [1, 13]
 ```
-
-
-CMake
------
-Here is an example of `CMakeLists.txt`:
-```
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-
-### Tube library
-  SET(SRC
-    ./Tube.cpp
-  )
-  SET(HEADERS 
-    ./Tube.h
-  )
-  ADD_LIBRARY(ibex-robotics-tube ${SRC})
-
-### programExample
-  SET(SRC
-    main.cpp
-  )
-
-  find_package(OpenMP)
-  if (OPENMP_FOUND)
-      set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-  endif()
-
-  ADD_EXECUTABLE(programExample ${SRC})
-
-  TARGET_LINK_LIBRARIES(programExample
-     ${CMAKE_THREAD_LIBS_INIT}
-     ibex-robotics-tube
-     ibex
-     prim)
-```

@@ -1,9 +1,22 @@
-/************************************************************/
-/*    AUTH: Simon Rohou
-/*    FILE: Tube_ctc.cpp
-/*    PRJT: TubeIbex https://github.com/SimonRohou/TubeIbex
-/*    DATE: 2015
-/************************************************************/
+/* ============================================================================
+ *  IBEX-Robotics - Tube class
+ * ============================================================================
+ *  Copyright : Simon Rohou
+ *  License   : This program can be distributed under the terms of
+ *              the MIT license. See the file LICENSE.
+ *
+ *  Author(s) : Simon Rohou
+ *  Bug fixes : -
+ *  Created   : 2015
+ * ---------------------------------------------------------------------------- */
+
+#include "Tube.h"
+#include <iostream>
+#include <iomanip> // for setprecision()
+#include <omp.h> // for multithreading
+
+using namespace std;
+using namespace ibex;
 
 bool Tube::ctcFwd(const Tube& derivative_tube)
 {
