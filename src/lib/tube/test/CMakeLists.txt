@@ -16,4 +16,4 @@ TARGET_LINK_LIBRARIES(testTube
     ibex
     prim)
 
-ADD_TEST(testTube ./testTube)
+ADD_TEST(testTube ${EXECUTABLE_OUTPUT_PATH}/testTube)
