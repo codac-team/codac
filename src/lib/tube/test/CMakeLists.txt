@@ -12,8 +12,9 @@ ADD_EXECUTABLE(testTube ${SRC})
 
 TARGET_LINK_LIBRARIES(testTube
     ${CMAKE_THREAD_LIBS_INIT}
+    ibex-robotics-graphics
     ibex-robotics-tube
-    ibex
-    prim)
+    ${LIBS}
+    )
 
 ADD_TEST(testTube ${EXECUTABLE_OUTPUT_PATH}/testTube)
