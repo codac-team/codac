@@ -42,7 +42,7 @@ class Tube
          * \param vector_dt an interval of slices domains
          * \param default_value default y-values
          */
-        Tube(std::vector<ibex::Interval> vector_dt,
+        Tube(const std::vector<ibex::Interval>& vector_dt,
              const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
 
         /**
@@ -383,7 +383,7 @@ class Tube
      * \param vector_slices an interval of slices domains
      * \param default_value default y-values
      */
-    void createFromSlicesVector(std::vector<ibex::Interval> vector_slices, const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
+    void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
 
     /**
      * \brief Return the half sub-tube [t0,tf/2[.

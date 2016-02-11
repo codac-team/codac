@@ -33,12 +33,12 @@ Tube::Tube(const Interval &intv_t, double time_step, const Interval& default_val
   m_dt = time_step;
 }
 
-Tube::Tube(vector<Interval> vector_dt, const Interval& default_value)
+Tube::Tube(const vector<Interval>& vector_dt, const Interval& default_value)
 {
   createFromSlicesVector(vector_dt, default_value);
 }
 
-void Tube::createFromSlicesVector(vector<Interval> vector_dt, const Interval& default_value)
+void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Interval& default_value)
 {
   m_dt = vector_dt[0].diam(); // all timesteps are identical in the tree
   m_intv_t = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
