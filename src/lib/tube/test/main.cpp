@@ -18,19 +18,19 @@
 using namespace std;
 using namespace ibex;
 
-bool test(bool success, string test_msg)
+bool test(bool success, const string& test_msg)
 {
   cout << "[\033[1;" << (success ? "32mOK" : "31mNOK") << "\033[1;0m] \t" << test_msg << endl;
   return success;
 }
 
-bool compare(Interval intv1, Interval intv2)
+bool compare(const Interval& intv1, const Interval& intv2)
 {
   return intv1 == intv2 ||
          fabs(intv1.lb() - intv2.lb()) < 1.0e-10 && fabs(intv1.ub() - intv2.ub()) < 1.0e-10;
 }
 
-bool compare(pair<Interval,Interval> p_intv1, pair<Interval,Interval> p_intv2)
+bool compare(const pair<Interval,Interval>& p_intv1, const pair<Interval,Interval>& p_intv2)
 {
   return compare(p_intv1.first, p_intv2.first) && compare(p_intv1.second, p_intv2.second);
 }
