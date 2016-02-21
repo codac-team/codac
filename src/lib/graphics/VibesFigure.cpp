@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "VibesFigure.h"
-
+#include <iostream>
 using namespace std;
 
 VibesFigure::VibesFigure(const string& figure_name)
