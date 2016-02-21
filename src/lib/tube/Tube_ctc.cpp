@@ -79,6 +79,12 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
   bool y_contraction = false;
   bool tube_contraction = false;
 
+  if(!(*this)[t].intersects(y))
+  {
+    cout << "Warning ctcIn(const Tube& derivative_tube, Interval& y, Interval& t): this[t] do not intersect y" << endl;
+    return false;
+  }
+
   // Trying to contract [t]
   {
     double t_diam = t.diam();
