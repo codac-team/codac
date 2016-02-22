@@ -25,8 +25,9 @@ class VibesFigure_Tube : public VibesFigure
      *
      * \param figure_name a reference to the figure that will be displayed in the window's title
      * \param tube a pointer to the tube to be displayed
+     * \param true_values if true values are available, a display is possible
      */
-    VibesFigure_Tube(const std::string& figure_name, Tube *tube);
+    VibesFigure_Tube(const std::string& figure_name, Tube *tube, std::map<double,double> *true_values = NULL);
 
     /**
      * \brief Delete this figure.
@@ -64,6 +65,7 @@ class VibesFigure_Tube : public VibesFigure
   protected:
     Tube *m_tube;
     mutable Tube *m_tube_copy;
+    std::map<double,double> *m_true_values;
 };
 
 #endif

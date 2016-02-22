@@ -14,14 +14,16 @@
 
 using namespace std;
 
-VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure(name)
+VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube, map<double,double> *true_values) : VibesFigure(name)
 {
   m_tube = tube;
   m_tube_copy = NULL;
+  m_true_values = true_values;
   vibes::axisLimits(m_tube->getT().lb(), m_tube->getT().ub(), 
                     m_tube->getY().lb(), m_tube->getY().ub());
   vibes::newGroup("slices_old_background", "lightGray[lightGray]", vibesParams("figure", m_name));
   vibes::newGroup("slices", "gray[yellow]", vibesParams("figure", m_name));
+  vibes::newGroup("true_values", "red", vibesParams("figure", m_name));
 }
 
 VibesFigure_Tube::~VibesFigure_Tube()
@@ -54,6 +56,20 @@ void VibesFigure_Tube::show(int slices_limit) const
   if(m_tube_copy != NULL)
     delete m_tube_copy;
   m_tube_copy = new Tube(*m_tube);
+
+  if(m_true_values != NULL)
+  {
+    vector<double> v_x, v_y;
+    typename map<double,double>::iterator it_true_values;
+    for(it_true_values = m_true_values->begin(); it_true_values != m_true_values->end(); it_true_values++)
+    {
+      v_x.push_back(it_true_values->first);
+      v_y.push_back(it_true_values->second);
+    }
+
+    vibes::clearGroup(m_name, "true_values");
+    vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", "true_values"));
+  }
 }
 
 void VibesFigure_Tube::drawSlice(const ibex::Interval& intv_t, const ibex::Interval& intv_y, const vibes::Params& params) const
