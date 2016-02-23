@@ -35,6 +35,13 @@ class VibesFigure_Tube : public VibesFigure
     ~VibesFigure_Tube();
 
     /**
+     * \brief Set a custom color for tube's slices.
+     *
+     * \param slices_color the new color
+     */
+    void setColor(std::string slices_color);
+
+    /**
      * \brief Display the tube.
      *
      * This method shows all slices.
