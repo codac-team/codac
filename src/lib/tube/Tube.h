@@ -279,6 +279,16 @@ class Tube
         friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
 
+    /** Arithmetic **/
+
+        Tube operator+(const Tube& x) const;
+        Tube operator-(const Tube& x) const;
+        Tube operator*(const Tube& x) const;
+        Tube operator/(const Tube& x) const;
+        Tube operator|(const Tube& x) const;
+        Tube operator&(const Tube& x) const;
+
+
     /** Integration computation **/
 
         /**
@@ -533,5 +543,31 @@ class Tube
     mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
     mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 };
+
+    /** Arithmetic **/
+    
+    Tube cos(const Tube& x);
+    Tube sin(const Tube& x);
+    Tube abs(const Tube& x);
+    Tube sqr(const Tube& x);
+    Tube sqrt(const Tube& x);
+    Tube pow(const Tube& x, int p);
+    Tube pow(const Tube& x, double p);
+    Tube pow(const Tube &x, const ibex::Interval& p);
+    Tube root(const Tube& x, int p);
+    Tube exp(const Tube& x);
+    Tube log(const Tube& x);
+    Tube cos(const Tube& x);
+    Tube sin(const Tube& x);
+    Tube tan(const Tube& x);
+    Tube acos(const Tube& x);
+    Tube asin(const Tube& x);
+    Tube atan(const Tube& x);
+    Tube cosh(const Tube& x);
+    Tube sinh(const Tube& x);
+    Tube tanh(const Tube& x);
+    Tube acosh(const Tube& x);
+    Tube asinh(const Tube& x);
+    Tube atanh(const Tube& x);
 
 #endif
