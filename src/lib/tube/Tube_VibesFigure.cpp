@@ -14,11 +14,11 @@
 
 using namespace std;
 
-VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube, map<double,double> *true_values) : VibesFigure(name)
+VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure(name)
 {
   m_tube = tube;
   m_tube_copy = NULL;
-  m_true_values = true_values;
+  m_id_map_scalar_values = 0;
   vibes::axisLimits(m_tube->getT().lb(), m_tube->getT().ub(), 
                     m_tube->getY().lb(), m_tube->getY().ub());
   setColor("yellow");
@@ -41,6 +41,24 @@ void VibesFigure_Tube::show() const
   return show(m_tube->size());
 }
 
+void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_values, const string& color) const
+{
+  m_id_map_scalar_values ++;
+  std::ostringstream o;
+  o << "scalar_values_" << std::hex << m_id_map_scalar_values;
+  vibes::newGroup(o.str(), color, vibesParams("figure", m_name));
+
+  vector<double> v_x, v_y;
+  typename map<double,double>::const_iterator it_scalar_values;
+  for(it_scalar_values = map_scalar_values.begin(); it_scalar_values != map_scalar_values.end(); it_scalar_values++)
+  {
+    v_x.push_back(it_scalar_values->first);
+    v_y.push_back(it_scalar_values->second);
+  }
+
+  vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", o.str()));
+}
+
 void VibesFigure_Tube::show(int slices_limit) const
 {
   vibes::Params params;
@@ -61,20 +79,6 @@ void VibesFigure_Tube::show(int slices_limit) const
   if(m_tube_copy != NULL)
     delete m_tube_copy;
   m_tube_copy = new Tube(*m_tube);
-
-  if(m_true_values != NULL)
-  {
-    vector<double> v_x, v_y;
-    typename map<double,double>::iterator it_true_values;
-    for(it_true_values = m_true_values->begin(); it_true_values != m_true_values->end(); it_true_values++)
-    {
-      v_x.push_back(it_true_values->first);
-      v_y.push_back(it_true_values->second);
-    }
-
-    vibes::clearGroup(m_name, "true_values");
-    vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", "true_values"));
-  }
 }
 
 void VibesFigure_Tube::drawSlice(const ibex::Interval& intv_t, const ibex::Interval& intv_y, const vibes::Params& params) const
