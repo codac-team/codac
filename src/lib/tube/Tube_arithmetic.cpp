@@ -34,6 +34,14 @@ Tube Tube::operator-(const Tube& x) const
   return new_tube;
 }
 
+Tube Tube::operator-() const
+{
+  Tube new_tube(*this);
+  for(int i = 0 ; i < size() ; i++)
+    new_tube.setY(-(*this)[i], i);
+  return new_tube;
+}
+
 Tube Tube::operator*(const Tube& x) const
 {
   Tube new_tube(*this);

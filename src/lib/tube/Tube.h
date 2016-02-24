@@ -283,6 +283,7 @@ class Tube
 
         Tube operator+(const Tube& x) const;
         Tube operator-(const Tube& x) const;
+        Tube operator-() const;
         Tube operator*(const Tube& x) const;
         Tube operator/(const Tube& x) const;
         Tube operator|(const Tube& x) const;
