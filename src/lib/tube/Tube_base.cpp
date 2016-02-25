@@ -347,6 +347,41 @@ const Interval Tube::feed(const Interval& intv_y, double t)
   return (*this)[t];
 }
 
+void Tube::feed(const map<double,Interval>& map_intv_y)
+{
+  int prev_slice_id = -1;
+  double prev_t;
+  Interval prev_value;
+  typename map<double,Interval>::const_iterator it_map;
+  for(it_map = map_intv_y.begin() ; it_map != map_intv_y.end() ; it_map++)
+  {
+    feed(it_map->second, it_map->first);
+
+    int slice_id = input2index(it_map->first);
+    Interval intv_t = getT(slice_id);
+    double t_boundary = intv_t.lb();
+    if(prev_slice_id != -1 && slice_id != prev_slice_id && t_boundary != it_map->first)
+    {
+      // Interpolation
+      double ratio = (t_boundary - prev_t) / (it_map->first - prev_t);
+      feed(ratio * it_map->second + (1. - ratio) * prev_value, t_boundary);
+    }
+
+    prev_t = it_map->first;
+    prev_slice_id = slice_id;
+    prev_value = it_map->second;
+  }
+}
+
+void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertainty)
+{
+  map<double,Interval> new_map;
+  typename map<double,double>::const_iterator it_map;
+  for(it_map = map_y.begin() ; it_map != map_y.end() ; it_map++)
+    new_map[it_map->first] = it_map->second + intv_uncertainty;
+  feed(new_map);
+}
+
 const Tube* Tube::getFirstSubTube() const
 {
   return m_first_subtube;

@@ -13,6 +13,9 @@
 #ifndef TubeIbex_HEADER
 #define TubeIbex_HEADER
 
+#include <map>
+#include <vector>
+#include <utility>
 #include "ibex/ibex.h"
 
 class Tube
@@ -213,6 +216,21 @@ class Tube
          * \return the resulted union for the corresponding time
          */
         const ibex::Interval feed(const ibex::Interval& intv_y, double t);
+
+        /**
+         * \brief Add y-values from a map.
+         *
+         * \param map_intv_y a map of [y-value] referenced by time
+         */
+        void feed(const std::map<double,ibex::Interval>& map_intv_y);
+
+        /**
+         * \brief Add y-values from a map.
+         *
+         * \param map_intv_y a map of y-values referenced by time
+         * \param intv_uncertainty enclosed uncertainty that will be added to each value of the map
+         */
+        void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty);
 
         /**
          * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
