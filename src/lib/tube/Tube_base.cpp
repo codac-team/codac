@@ -355,21 +355,27 @@ void Tube::feed(const map<double,Interval>& map_intv_y)
   typename map<double,Interval>::const_iterator it_map;
   for(it_map = map_intv_y.begin() ; it_map != map_intv_y.end() ; it_map++)
   {
+    if(!m_intv_t.contains(it_map->first))
+      continue;
+
     feed(it_map->second, it_map->first);
 
     int slice_id = input2index(it_map->first);
-    Interval intv_t = getT(slice_id);
-    double t_boundary = intv_t.lb();
-    if(prev_slice_id != -1 && slice_id != prev_slice_id && t_boundary != it_map->first)
+    if(slice_id >= 0 && slice_id < size())
     {
-      // Interpolation
-      double ratio = (t_boundary - prev_t) / (it_map->first - prev_t);
-      feed(ratio * it_map->second + (1. - ratio) * prev_value, t_boundary);
-    }
+      Interval intv_t = getT(slice_id);
+      double t_boundary = intv_t.lb();
+      if(prev_slice_id != -1 && slice_id != prev_slice_id && t_boundary != it_map->first)
+      {
+        // Interpolation
+        double ratio = (t_boundary - prev_t) / (it_map->first - prev_t);
+        feed(ratio * it_map->second + (1. - ratio) * prev_value, t_boundary);
+      }
 
-    prev_t = it_map->first;
-    prev_slice_id = slice_id;
-    prev_value = it_map->second;
+      prev_t = it_map->first;
+      prev_slice_id = slice_id;
+      prev_value = it_map->second;
+    }
   }
 }
 
