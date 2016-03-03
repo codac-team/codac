@@ -32,7 +32,7 @@ VibesFigure_Tube::~VibesFigure_Tube()
 void VibesFigure_Tube::setColor(string slices_color)
 {
   vibes::newGroup("slices_old_background", "lightGray[lightGray]", vibesParams("figure", m_name));
-  vibes::newGroup("slices", "gray[" + slices_color + "]", vibesParams("figure", m_name));
+  vibes::newGroup("slices", slices_color, vibesParams("figure", m_name));
   vibes::newGroup("true_values", "red", vibesParams("figure", m_name));
 }
 
