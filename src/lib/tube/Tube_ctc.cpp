@@ -30,12 +30,19 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
 
   bool contraction = false;
 
+  Interval y_front = (*this)[0];
+  y_front &= (*this)[0] + derivative_tube[0] * derivative_tube.getT(0).diam();
+
   for(int i = 1 ; i < size() ; i++) // from the past to the future
   {
     Interval y_old = (*this)[i];
-    Interval y_new = y_old & ((*this)[i-1] + derivative_tube[i-1] * derivative_tube.getT(i-1).diam());
+    Interval y_new = y_old & (y_front + derivative_tube[i] * Interval(0., derivative_tube.getT(i).diam()));
     setY(y_new, i);
     contraction |= y_old.diam() > y_new.diam();
+
+    y_front = y_old & (y_front + derivative_tube[i] * derivative_tube.getT(i).diam());
+    if(i < size()-1)
+      y_front &= (*this)[i+1];
   }
 
   return contraction;
@@ -53,12 +60,19 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
 
   bool contraction = false;
 
+  Interval y_front = (*this)[size() - 1];
+  y_front &= (*this)[size() - 1] - derivative_tube[size() - 1] * derivative_tube.getT(size() - 1).diam();
+
   for(int i = size() - 2 ; i >= 0 ; i--) // from the future to the past
   {
     Interval y_old = (*this)[i];
-    Interval y_new = y_old & ((*this)[i+1] - derivative_tube[i+1] * derivative_tube.getT(i+1).diam());
+    Interval y_new = y_old & (y_front - derivative_tube[i] * Interval(0., derivative_tube.getT(i).diam()));
     setY(y_new, i);
     contraction |= y_old.diam() > y_new.diam();
+
+    y_front = y_old & (y_front - derivative_tube[i] * derivative_tube.getT(i).diam());
+    if(i > 0)
+      y_front &= (*this)[i-1];
   }
 
   return contraction;
@@ -78,6 +92,13 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
   bool t_contraction = false;
   bool y_contraction = false;
   bool tube_contraction = false;
+
+  if(!(*this)[t].intersects(y))
+  {
+    cout << "Warning ctcIn(const Tube& derivative_tube, Interval& y, Interval& t): this[t] do not intersect y" << endl;
+    cout << "        this[t]=" << (*this)[t] << ", t=" << t << ", y=" << y << endl;
+    return false;
+  }
 
   // Trying to contract [t]
   {

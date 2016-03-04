@@ -34,6 +34,13 @@ class VibesFigure_Tube : public VibesFigure
     ~VibesFigure_Tube();
 
     /**
+     * \brief Set a custom color for tube's slices.
+     *
+     * \param slices_color the new color
+     */
+    void setColor(std::string slices_color);
+
+    /**
      * \brief Display the tube.
      *
      * This method shows all slices.
@@ -50,6 +57,14 @@ class VibesFigure_Tube : public VibesFigure
      */
     void show(int slices_limit) const;
 
+    /**
+     * \brief Display scalar values on top of the tube.
+     *
+     * \param map_scalar_values a map of the form [t](y) representing a trajectory
+     * \param color line's color
+     */
+    void showScalarValues(const std::map<double,double>& map_scalar_values, const std::string& color = "red") const;
+
   protected:
 
     /**
@@ -63,7 +78,9 @@ class VibesFigure_Tube : public VibesFigure
 
   protected:
     Tube *m_tube;
+    std::vector<std::map<double,double> > *m_true_values;
     mutable Tube *m_tube_copy;
+    mutable int m_id_map_scalar_values;
 };
 
 #endif

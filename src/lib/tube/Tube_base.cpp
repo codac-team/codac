@@ -33,12 +33,12 @@ Tube::Tube(const Interval &intv_t, double time_step, const Interval& default_val
   m_dt = time_step;
 }
 
-Tube::Tube(vector<Interval> vector_dt, const Interval& default_value)
+Tube::Tube(const vector<Interval>& vector_dt, const Interval& default_value)
 {
   createFromSlicesVector(vector_dt, default_value);
 }
 
-void Tube::createFromSlicesVector(vector<Interval> vector_dt, const Interval& default_value)
+void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Interval& default_value)
 {
   m_dt = vector_dt[0].diam(); // all timesteps are identical in the tree
   m_intv_t = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
@@ -345,6 +345,47 @@ const Interval Tube::feed(const Interval& intv_y, double t)
   if(getT(index).lb() == t && index > 0)
     feed(intv_y, index - 1);
   return (*this)[t];
+}
+
+void Tube::feed(const map<double,Interval>& map_intv_y)
+{
+  int prev_slice_id = -1;
+  double prev_t;
+  Interval prev_value;
+  typename map<double,Interval>::const_iterator it_map;
+  for(it_map = map_intv_y.begin() ; it_map != map_intv_y.end() ; it_map++)
+  {
+    if(!m_intv_t.contains(it_map->first))
+      continue;
+
+    feed(it_map->second, it_map->first);
+
+    int slice_id = input2index(it_map->first);
+    if(slice_id >= 0 && slice_id < size())
+    {
+      Interval intv_t = getT(slice_id);
+      double t_boundary = intv_t.lb();
+      if(prev_slice_id != -1 && slice_id != prev_slice_id && t_boundary != it_map->first)
+      {
+        // Interpolation
+        double ratio = (t_boundary - prev_t) / (it_map->first - prev_t);
+        feed(ratio * it_map->second + (1. - ratio) * prev_value, t_boundary);
+      }
+
+      prev_t = it_map->first;
+      prev_slice_id = slice_id;
+      prev_value = it_map->second;
+    }
+  }
+}
+
+void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertainty)
+{
+  map<double,Interval> new_map;
+  typename map<double,double>::const_iterator it_map;
+  for(it_map = map_y.begin() ; it_map != map_y.end() ; it_map++)
+    new_map[it_map->first] = it_map->second + intv_uncertainty;
+  feed(new_map);
 }
 
 const Tube* Tube::getFirstSubTube() const

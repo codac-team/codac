@@ -18,10 +18,10 @@ VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure
 {
   m_tube = tube;
   m_tube_copy = NULL;
+  m_id_map_scalar_values = 0;
   vibes::axisLimits(m_tube->getT().lb(), m_tube->getT().ub(), 
                     m_tube->getY().lb(), m_tube->getY().ub());
-  vibes::newGroup("slices_old_background", "lightGray[lightGray]", vibesParams("figure", m_name));
-  vibes::newGroup("slices", "gray[yellow]", vibesParams("figure", m_name));
+  setColor("yellow");
 }
 
 VibesFigure_Tube::~VibesFigure_Tube()
@@ -29,9 +29,34 @@ VibesFigure_Tube::~VibesFigure_Tube()
   delete m_tube_copy;
 }
 
+void VibesFigure_Tube::setColor(string slices_color)
+{
+  vibes::newGroup("slices_old_background", "lightGray[lightGray]", vibesParams("figure", m_name));
+  vibes::newGroup("slices", slices_color, vibesParams("figure", m_name));
+  vibes::newGroup("true_values", "red", vibesParams("figure", m_name));
+}
+
 void VibesFigure_Tube::show() const
 {
   return show(m_tube->size());
+}
+
+void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_values, const string& color) const
+{
+  m_id_map_scalar_values ++;
+  std::ostringstream o;
+  o << "scalar_values_" << std::hex << m_id_map_scalar_values;
+  vibes::newGroup(o.str(), color, vibesParams("figure", m_name));
+
+  vector<double> v_x, v_y;
+  typename map<double,double>::const_iterator it_scalar_values;
+  for(it_scalar_values = map_scalar_values.begin(); it_scalar_values != map_scalar_values.end(); it_scalar_values++)
+  {
+    v_x.push_back(it_scalar_values->first);
+    v_y.push_back(it_scalar_values->second);
+  }
+
+  vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", o.str()));
 }
 
 void VibesFigure_Tube::show(int slices_limit) const

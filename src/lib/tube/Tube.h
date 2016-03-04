@@ -13,6 +13,9 @@
 #ifndef TubeIbex_HEADER
 #define TubeIbex_HEADER
 
+#include <map>
+#include <vector>
+#include <utility>
 #include "ibex/ibex.h"
 
 class Tube
@@ -42,7 +45,7 @@ class Tube
          * \param vector_dt an interval of slices domains
          * \param default_value default y-values
          */
-        Tube(std::vector<ibex::Interval> vector_dt,
+        Tube(const std::vector<ibex::Interval>& vector_dt,
              const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
 
         /**
@@ -215,6 +218,21 @@ class Tube
         const ibex::Interval feed(const ibex::Interval& intv_y, double t);
 
         /**
+         * \brief Add y-values from a map.
+         *
+         * \param map_intv_y a map of [y-value] referenced by time
+         */
+        void feed(const std::map<double,ibex::Interval>& map_intv_y);
+
+        /**
+         * \brief Add y-values from a map.
+         *
+         * \param map_intv_y a map of y-values referenced by time
+         * \param intv_uncertainty enclosed uncertainty that will be added to each value of the map
+         */
+        void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty);
+
+        /**
          * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
          *
          * \param intv_t the interval input, Interval::ALL_REALS by default
@@ -277,6 +295,17 @@ class Tube
          * \brief Stream out tube x.
          */
         friend std::ostream& operator<<(std::ostream& str, const Tube& x);
+
+
+    /** Arithmetic **/
+
+        Tube operator+(const Tube& x) const;
+        Tube operator-(const Tube& x) const;
+        Tube operator-() const;
+        Tube operator*(const Tube& x) const;
+        Tube operator/(const Tube& x) const;
+        Tube operator|(const Tube& x) const;
+        Tube operator&(const Tube& x) const;
 
 
     /** Integration computation **/
@@ -383,7 +412,7 @@ class Tube
      * \param vector_slices an interval of slices domains
      * \param default_value default y-values
      */
-    void createFromSlicesVector(std::vector<ibex::Interval> vector_slices, const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
+    void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
 
     /**
      * \brief Return the half sub-tube [t0,tf/2[.
@@ -533,5 +562,31 @@ class Tube
     mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
     mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 };
+
+    /** Arithmetic **/
+    
+    Tube cos(const Tube& x);
+    Tube sin(const Tube& x);
+    Tube abs(const Tube& x);
+    Tube sqr(const Tube& x);
+    Tube sqrt(const Tube& x);
+    Tube pow(const Tube& x, int p);
+    Tube pow(const Tube& x, double p);
+    Tube pow(const Tube &x, const ibex::Interval& p);
+    Tube root(const Tube& x, int p);
+    Tube exp(const Tube& x);
+    Tube log(const Tube& x);
+    Tube cos(const Tube& x);
+    Tube sin(const Tube& x);
+    Tube tan(const Tube& x);
+    Tube acos(const Tube& x);
+    Tube asin(const Tube& x);
+    Tube atan(const Tube& x);
+    Tube cosh(const Tube& x);
+    Tube sinh(const Tube& x);
+    Tube tanh(const Tube& x);
+    Tube acosh(const Tube& x);
+    Tube asinh(const Tube& x);
+    Tube atanh(const Tube& x);
 
 #endif
