@@ -233,6 +233,15 @@ class Tube
         void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty);
 
         /**
+         * \brief Add y-values from a map.
+         *
+         * \param map_intv_y a map of y-values referenced by time
+         * \param intv_uncertainty enclosed uncertainty that will be added to each value of the map
+         * \param y_no_uncertainties enclosed uncertainty will not be added for this given value
+         */
+        void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty, double y_no_uncertainties);
+
+        /**
          * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
          *
          * \param intv_t the interval input, Interval::ALL_REALS by default

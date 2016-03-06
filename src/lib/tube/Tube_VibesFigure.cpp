@@ -21,7 +21,7 @@ VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure
   m_id_map_scalar_values = 0;
   vibes::axisLimits(m_tube->getT().lb(), m_tube->getT().ub(), 
                     m_tube->getY().lb(), m_tube->getY().ub());
-  setColor("yellow");
+  setColor("gray[yellow]");
 }
 
 VibesFigure_Tube::~VibesFigure_Tube()

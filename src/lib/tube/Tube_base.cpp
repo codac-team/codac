@@ -388,6 +388,20 @@ void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertaint
   feed(new_map);
 }
 
+void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertainty, double y_no_uncertainties)
+{
+  map<double,Interval> new_map;
+  typename map<double,double>::const_iterator it_map;
+  for(it_map = map_y.begin() ; it_map != map_y.end() ; it_map++)
+  {
+    Interval intv_y = Interval(it_map->second);
+    if(it_map->second != y_no_uncertainties)
+      intv_y += intv_uncertainty;
+    new_map[it_map->first] = intv_y;
+  }
+  feed(new_map);
+}
+
 const Tube* Tube::getFirstSubTube() const
 {
   return m_first_subtube;
