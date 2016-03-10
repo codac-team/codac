@@ -54,8 +54,9 @@ class VibesFigure_Tube : public VibesFigure
      * This will leave blanks between slices.
      *
      * \param slices_limit the max number of slices to display
+     * \param update_background if true, only last contraction is displayed (true by default)
      */
-    void show(int slices_limit) const;
+    void show(int slices_limit, bool update_background = true) const;
 
     /**
      * \brief Display scalar values on top of the tube.

@@ -59,7 +59,7 @@ void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_val
   vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", o.str()));
 }
 
-void VibesFigure_Tube::show(int slices_limit) const
+void VibesFigure_Tube::show(int slices_limit, bool update_background) const
 {
   vibes::Params params;
 
@@ -76,9 +76,12 @@ void VibesFigure_Tube::show(int slices_limit) const
   for(int i = 0 ; i < m_tube->size() ; i += max((int)(m_tube->size() / slices_limit), 1))
     drawSlice(m_tube->getT(i), (*m_tube)[i], params);
 
-  if(m_tube_copy != NULL)
-    delete m_tube_copy;
-  m_tube_copy = new Tube(*m_tube);
+  if(update_background)
+  {
+    if(m_tube_copy != NULL)
+      delete m_tube_copy;
+    m_tube_copy = new Tube(*m_tube);
+  }
 }
 
 void VibesFigure_Tube::drawSlice(const ibex::Interval& intv_t, const ibex::Interval& intv_y, const vibes::Params& params) const
