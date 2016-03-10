@@ -382,7 +382,7 @@ class Tube
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
          */
-        bool ctcFwd(const Tube& derivative_tube);
+        bool ctcFwd(const Tube& derivative_tube, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
 
         /**
          * \brief To contract tube in backward (from the future to the past).

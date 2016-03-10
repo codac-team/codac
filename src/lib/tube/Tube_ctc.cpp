@@ -18,7 +18,7 @@
 using namespace std;
 using namespace ibex;
 
-bool Tube::ctcFwd(const Tube& derivative_tube)
+bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 {
   if(size() != derivative_tube.size())
     cout << "Warning ctcFwd(const Tube& derivative_tube): tube of different size: "
@@ -30,10 +30,9 @@ bool Tube::ctcFwd(const Tube& derivative_tube)
 
   bool contraction = false;
 
-  Interval y_front = (*this)[0];
-  y_front &= (*this)[0] + derivative_tube[0] * derivative_tube.getT(0).diam();
+  Interval y_front = (*this)[0] & initial_value;
 
-  for(int i = 1 ; i < size() ; i++) // from the past to the future
+  for(int i = 0 ; i < size() ; i++) // from the past to the future
   {
     Interval y_old = (*this)[i];
     Interval y_new = y_old & (y_front + derivative_tube[i] * Interval(0., derivative_tube.getT(i).diam()));

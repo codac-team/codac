@@ -21,16 +21,8 @@ using namespace ibex;
 Tube Tube::primitive(const Interval& initial_value) const
 {
   Tube primitive(m_intv_t, m_dt);
-  Interval sum_max = initial_value;
-
-  for(int i = 0 ; i < m_slices_number ; i++)
-  {
-    double dt = getT(i).diam();
-    Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt);
-    primitive.setY(integrale_value, i);
-    sum_max += (*this)[i] * dt;
-  }
-
+  primitive.setY(Interval::ALL_REALS);
+  primitive.ctcFwd(*this, initial_value);
   return primitive;
 }
 
