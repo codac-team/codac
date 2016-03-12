@@ -17,4 +17,4 @@ TARGET_LINK_LIBRARIES(testTube
     ${LIBS}
     )
 
-ADD_TEST(testTube ${EXECUTABLE_OUTPUT_PATH}/testTube)
+ADD_TEST(testTube testTube)
