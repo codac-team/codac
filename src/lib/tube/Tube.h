@@ -27,7 +27,7 @@ class Tube
         /**
          * \brief Create a tube over the domain defined by the interval intv_t.
          *
-         * Values are set by default to Interval::EMPTY_SET.
+         * Values are set by default to Interval::ALL_REALS.
          *
          * \param intv_t tube's domain
          * \param time_step tube's precision corresponding to slice's width
@@ -35,18 +35,18 @@ class Tube
          */
         Tube(const ibex::Interval &intv_t,
              double time_step,
-             const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
+             const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
         /**
          * \brief Create a tube over a domain defined by a vector of intervals.
          *
-         * Values are set by default to Interval::EMPTY_SET.
+         * Values are set by default to Interval::ALL_REALS.
          *
          * \param vector_dt an interval of slices domains
          * \param default_value default y-values
          */
         Tube(const std::vector<ibex::Interval>& vector_dt,
-             const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
+             const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
         /**
          * \brief Create a copy of the given tube tu.
@@ -405,12 +405,12 @@ class Tube
     /**
      * \brief Create a tube over a domain defined by a vector of intervals.
      *
-     * Values are set by default to Interval::EMPTY_SET.
+     * Values are set by default to Interval::ALL_REALS.
      *
      * \param vector_slices an interval of slices domains
      * \param default_value default y-values
      */
-    void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
+    void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
     /**
      * \brief Return the half sub-tube [t0,tf/2[.
