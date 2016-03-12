@@ -306,17 +306,6 @@ class Tube
         friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
 
-    /** Arithmetic **/
-
-        Tube operator+(const Tube& x) const;
-        Tube operator-(const Tube& x) const;
-        Tube operator-() const;
-        Tube operator*(const Tube& x) const;
-        Tube operator/(const Tube& x) const;
-        Tube operator|(const Tube& x) const;
-        Tube operator&(const Tube& x) const;
-
-
     /** Integration computation **/
 
         /**
@@ -573,9 +562,44 @@ class Tube
 };
 
     /** Arithmetic **/
-    
-    Tube cos(const Tube& x);
-    Tube sin(const Tube& x);
+
+    Tube operator+(const Tube& x1, const Tube& x2);
+    Tube operator+(const Tube& x1, double x2);
+    Tube operator+(double x1, const Tube& x2);
+    Tube operator+(const Tube& x1, const ibex::Interval& x2);
+    Tube operator+(const ibex::Interval& x1, const Tube& x2);
+
+    Tube operator-(const Tube& x);
+    Tube operator-(const Tube& x1, const Tube& x2);
+    Tube operator-(const Tube& x1, double x2);
+    Tube operator-(double x1, const Tube& x2);
+    Tube operator-(const Tube& x1,  const ibex::Interval& x2);
+    Tube operator-(const ibex::Interval& x1, const Tube& x2);
+
+    Tube operator*(const Tube& x1, const Tube& x2);
+    Tube operator*(const Tube& x1, double x2);
+    Tube operator*(double x1, const Tube& x2);
+    Tube operator*(const ibex::Interval& x1, const Tube& x2);
+    Tube operator*(const Tube& x1, const ibex::Interval& x2);
+
+    Tube operator/(const Tube& x1, const Tube& x2);
+    Tube operator/(const Tube& x1, double x2);
+    Tube operator/(double x1, const Tube& x2);
+    Tube operator/(const ibex::Interval& x1, const Tube& x2);
+    Tube operator/(const Tube& x1, const ibex::Interval& x2);
+
+    Tube operator|(const Tube& x1, const Tube& x2);
+    Tube operator|(const Tube& x1, double x2);
+    Tube operator|(double x1, const Tube& x2);
+    Tube operator|(const ibex::Interval& x1, const Tube& x2);
+    Tube operator|(const Tube& x1, const ibex::Interval& x2);
+
+    Tube operator&(const Tube& x1, const Tube& x2);
+    Tube operator&(const Tube& x1, double x2);
+    Tube operator&(double x1, const Tube& x2);
+    Tube operator&(const ibex::Interval& x1, const Tube& x2);
+    Tube operator&(const Tube& x1, const ibex::Interval& x2);
+
     Tube abs(const Tube& x);
     Tube sqr(const Tube& x);
     Tube sqrt(const Tube& x);
