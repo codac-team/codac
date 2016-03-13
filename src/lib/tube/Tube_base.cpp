@@ -82,6 +82,18 @@ void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Inter
 
 Tube::Tube(const Tube& tu)
 {
+  m_first_subtube = NULL;
+  m_second_subtube = NULL;
+  *this = tu;
+}
+
+Tube& Tube::operator=(const Tube& tu)
+{
+  if(m_first_subtube != NULL)
+    delete m_first_subtube;
+  if(m_second_subtube != NULL)
+    delete m_second_subtube;
+
   m_dt = tu.dt();
   m_intv_t = tu.getT();
   m_intv_y = tu.getY();
@@ -109,6 +121,8 @@ Tube::Tube(const Tube& tu)
   }
 
   requestFutureTreeComputation();
+
+  return *this;
 }
 
 Tube::~Tube()

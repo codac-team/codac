@@ -21,7 +21,6 @@ using namespace ibex;
 Tube Tube::primitive(const Interval& initial_value) const
 {
   Tube primitive(m_intv_t, m_dt);
-  primitive.setY(Interval::ALL_REALS);
   primitive.ctcFwd(*this, initial_value);
   return primitive;
 }

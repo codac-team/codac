@@ -56,6 +56,11 @@ class Tube
         Tube(const Tube& tu);
 
         /**
+         * \brief Assign this Tube to tu.
+         */
+        Tube& operator=(const Tube& tu);
+
+        /**
          * \brief Delete this tube.
          */
         ~Tube();
