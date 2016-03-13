@@ -82,6 +82,7 @@ class VibesFigure_Tube : public VibesFigure
     std::vector<std::map<double,double> > *m_true_values;
     mutable Tube *m_tube_copy;
     mutable int m_id_map_scalar_values;
+    mutable bool m_need_to_update_axis;
 };
 
 #endif

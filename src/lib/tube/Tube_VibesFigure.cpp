@@ -13,15 +13,15 @@
 #include "Tube_VibesFigure.h"
 
 using namespace std;
+using namespace ibex;
 
 VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure(name)
 {
   m_tube = tube;
   m_tube_copy = NULL;
   m_id_map_scalar_values = 0;
-  vibes::axisLimits(m_tube->getT().lb(), m_tube->getT().ub(), 
-                    m_tube->getY().lb(), m_tube->getY().ub());
   setColor("gray[yellow]");
+  m_need_to_update_axis = true;
 }
 
 VibesFigure_Tube::~VibesFigure_Tube()
@@ -61,6 +61,13 @@ void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_val
 
 void VibesFigure_Tube::show(int slices_limit, bool update_background) const
 {
+  if(m_need_to_update_axis)
+  {
+    vibes::axisLimits(m_tube->getT().lb(), m_tube->getT().ub(), 
+                      m_tube->getY().lb(), m_tube->getY().ub(),
+                      m_name);
+  }
+
   vibes::Params params;
 
   if(m_tube_copy != NULL)
@@ -82,9 +89,12 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
       delete m_tube_copy;
     m_tube_copy = new Tube(*m_tube);
   }
+
+  if(m_tube->getY() == Interval::ALL_REALS)
+    m_need_to_update_axis = true;
 }
 
-void VibesFigure_Tube::drawSlice(const ibex::Interval& intv_t, const ibex::Interval& intv_y, const vibes::Params& params) const
+void VibesFigure_Tube::drawSlice(const Interval& intv_t, const Interval& intv_y, const vibes::Params& params) const
 {
   vibes::drawBox(intv_t.lb(), intv_t.ub(),
                  intv_y.lb(), intv_y.ub(),
