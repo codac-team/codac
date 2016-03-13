@@ -16,7 +16,7 @@
 #include <map>
 #include <vector>
 #include <utility>
-#include "ibex/ibex.h"
+#include "ibex_IntervalVector.h"
 
 class Tube
 {
@@ -62,18 +62,18 @@ class Tube
 
         /**
          * \brief Return the volume of this tube.
-         * 
+         *
          * The volume of a tube is defined by the surface enclosed by f- and f+.
-         * 
+         *
          * \return a double value, 0 if the tube is empty or if f- is equal to f+
          */
         double volume() const;
 
         /**
          * \brief Return the distance between two tubes.
-         * 
+         *
          * The distance is defined as the difference between the tubes volumes.
-         * 
+         *
          * \return a double value, 0 if the tubes are equal
          */
         double dist(const Tube& tube) const;
@@ -142,7 +142,7 @@ class Tube
 
         /**
          * \brief Return the y-value of the i^th slice, refered by index.
-         * 
+         *
          * \param index slice's id, between 0 and (size - 1)
          * \return the correspondingy-value
          */
@@ -150,7 +150,7 @@ class Tube
 
         /**
          * \brief Return the y-value for the given time, refered by t.
-         * 
+         *
          * \param t the given time
          * \return the corresponding y-value
          */
@@ -158,7 +158,7 @@ class Tube
 
         /**
          * \brief Return the y-value for the given bounded time, refered by intv_t.
-         * 
+         *
          * \param intv_t the given bounded time
          * \return the corresponding y-value
          */
@@ -242,7 +242,7 @@ class Tube
 
         /**
          * \brief Perform set-inversion on this.
-         * 
+         *
          * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
          * Here the returned value intv_t corresponds to the union of the solutions.
          *
@@ -253,11 +253,11 @@ class Tube
 
         /**
          * \brief Perform precise set-inversion on this.
-         * 
+         *
          * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
          * Here the returned value v_intv_t corresponds to detailed solutions.
          * Vector v_intv_t is cleared before computation.
-         * 
+         *
          * \param intv_y the y-value to invert
          * \param v_intv_t a vector containing, at the end, each solutions of the set-inversion
          */
@@ -267,7 +267,7 @@ class Tube
          * \brief Set this Tube to the hull of itself and another.
          *
          * Note: both tubes have to be similar (same domain, same number of slices).
-         * 
+         *
          * \param x the other tube
          * \return a reference to this
          */
@@ -277,7 +277,7 @@ class Tube
          * \brief Set this Tube to the intersection of itself and another.
          *
          * Note: both tubes have to be similar (same domain, same number of slices).
-         * 
+         *
          * \param x the other tube
          * \return a reference to this
          */
@@ -366,10 +366,10 @@ class Tube
 
 
     /** Contractors **/
-    
+
         /**
          * \brief To contract tube in forward (from the past to the future).
-         * 
+         *
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
          */
@@ -377,7 +377,7 @@ class Tube
 
         /**
          * \brief To contract tube in backward (from the future to the past).
-         * 
+         *
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
          */
@@ -385,7 +385,7 @@ class Tube
 
         /**
          * \brief To contract tube in forward/backward.
-         * 
+         *
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
          */
@@ -441,7 +441,7 @@ class Tube
      * \brief Return all the nodes of the tree (not only the leafs).
      *
      * The root is also included in the vector.
-     * 
+     *
      * \param v_nodes a vector containing pointers to the nodes
      */
     void getTubeNodes(std::vector<Tube*> &v_nodes);
@@ -451,7 +451,7 @@ class Tube
      * \brief Set this Tube to the hull of itself and another: tube x.
      *
      * Note: both tubes have to be similar (same domain, same number of slices).
-     * 
+     *
      * \param x the other tube
      * \return a reference to this
      */
@@ -462,7 +462,7 @@ class Tube
      *
      * Parents of children nodes are not updated.
      * This method is used for multithreading purposes.
-     * 
+     *
      * \param x a pointer to the other node
      */
     void unionWith_localUpdate(const Tube *x);
@@ -471,7 +471,7 @@ class Tube
      * \brief Set this Tube to the intersection of itself and another: tube x.
      *
      * Note: both tubes have to be similar (same domain, same number of slices).
-     * 
+     *
      * \param x the other tube
      * \return a reference to this
      */
@@ -482,14 +482,14 @@ class Tube
      *
      * Parents of children nodes are not updated.
      * This method is used for multithreading purposes.
-     * 
+     *
      * \param x a pointer to the other node
      */
     void intersectWith_localUpdate(const Tube *x);
 
     /**
      * \brief Update tube's data structure.
-     * 
+     *
      * Tube's structure is based on a binary tree. When a leaf
      * is changed, the modification has to be propagated through
      * all upper branches.
@@ -501,7 +501,7 @@ class Tube
 
     /**
      * \brief Request a future update of the tree.
-     * 
+     *
      * Set a flag to 'true' as a request for future tree computation.
      * See computeTree() method.
      *
@@ -512,7 +512,7 @@ class Tube
 
     /**
      * \brief Update tube's pre-computed primitives.
-     * 
+     *
      * For efficiency reasons, primitives are pre-computed
      * and stored into each node of the tree.
      * The computation can be done on demand with requestFuturePrimitiveComputation()
@@ -523,7 +523,7 @@ class Tube
 
     /**
      * \brief Request a future computation of primitives.
-     * 
+     *
      * Set a flag to 'true' as a request for future primitives computation.
      * See computePartialPrimitive() method.
      */
@@ -541,7 +541,7 @@ class Tube
 
     /**
      * \brief Perform precise set-inversion on this.
-     * 
+     *
      * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
      * Here the returned value vector<intv_t> corresponds to detailed solutions.
      *
@@ -564,7 +564,7 @@ class Tube
 };
 
     /** Arithmetic **/
-    
+
     Tube cos(const Tube& x);
     Tube sin(const Tube& x);
     Tube abs(const Tube& x);
