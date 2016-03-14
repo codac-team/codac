@@ -27,7 +27,7 @@ class Tube
         /**
          * \brief Create a tube over the domain defined by the interval intv_t.
          *
-         * Values are set by default to Interval::EMPTY_SET.
+         * Values are set by default to Interval::ALL_REALS.
          *
          * \param intv_t tube's domain
          * \param time_step tube's precision corresponding to slice's width
@@ -35,18 +35,18 @@ class Tube
          */
         Tube(const ibex::Interval &intv_t,
              double time_step,
-             const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
+             const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
         /**
          * \brief Create a tube over a domain defined by a vector of intervals.
          *
-         * Values are set by default to Interval::EMPTY_SET.
+         * Values are set by default to Interval::ALL_REALS.
          *
          * \param vector_dt an interval of slices domains
          * \param default_value default y-values
          */
         Tube(const std::vector<ibex::Interval>& vector_dt,
-             const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
+             const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
         /**
          * \brief Create a copy of the given tube tu.
@@ -54,6 +54,11 @@ class Tube
          * \param tu the tube to be copied
          */
         Tube(const Tube& tu);
+
+        /**
+         * \brief Assign this Tube to tu.
+         */
+        Tube& operator=(const Tube& tu);
 
         /**
          * \brief Delete this tube.
@@ -233,6 +238,15 @@ class Tube
         void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty);
 
         /**
+         * \brief Add y-values from a map.
+         *
+         * \param map_intv_y a map of y-values referenced by time
+         * \param intv_uncertainty enclosed uncertainty that will be added to each value of the map
+         * \param y_no_uncertainties enclosed uncertainty will not be added for this given value
+         */
+        void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty, double y_no_uncertainties);
+
+        /**
          * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
          *
          * \param intv_t the interval input, Interval::ALL_REALS by default
@@ -295,17 +309,6 @@ class Tube
          * \brief Stream out tube x.
          */
         friend std::ostream& operator<<(std::ostream& str, const Tube& x);
-
-
-    /** Arithmetic **/
-
-        Tube operator+(const Tube& x) const;
-        Tube operator-(const Tube& x) const;
-        Tube operator-() const;
-        Tube operator*(const Tube& x) const;
-        Tube operator/(const Tube& x) const;
-        Tube operator|(const Tube& x) const;
-        Tube operator&(const Tube& x) const;
 
 
     /** Integration computation **/
@@ -373,7 +376,7 @@ class Tube
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
          */
-        bool ctcFwd(const Tube& derivative_tube);
+        bool ctcFwd(const Tube& derivative_tube, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
 
         /**
          * \brief To contract tube in backward (from the future to the past).
@@ -407,12 +410,12 @@ class Tube
     /**
      * \brief Create a tube over a domain defined by a vector of intervals.
      *
-     * Values are set by default to Interval::EMPTY_SET.
+     * Values are set by default to Interval::ALL_REALS.
      *
      * \param vector_slices an interval of slices domains
      * \param default_value default y-values
      */
-    void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::EMPTY_SET);
+    void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
     /**
      * \brief Return the half sub-tube [t0,tf/2[.
@@ -565,8 +568,43 @@ class Tube
 
     /** Arithmetic **/
 
-    Tube cos(const Tube& x);
-    Tube sin(const Tube& x);
+    Tube operator+(const Tube& x1, const Tube& x2);
+    Tube operator+(const Tube& x1, double x2);
+    Tube operator+(double x1, const Tube& x2);
+    Tube operator+(const Tube& x1, const ibex::Interval& x2);
+    Tube operator+(const ibex::Interval& x1, const Tube& x2);
+
+    Tube operator-(const Tube& x);
+    Tube operator-(const Tube& x1, const Tube& x2);
+    Tube operator-(const Tube& x1, double x2);
+    Tube operator-(double x1, const Tube& x2);
+    Tube operator-(const Tube& x1,  const ibex::Interval& x2);
+    Tube operator-(const ibex::Interval& x1, const Tube& x2);
+
+    Tube operator*(const Tube& x1, const Tube& x2);
+    Tube operator*(const Tube& x1, double x2);
+    Tube operator*(double x1, const Tube& x2);
+    Tube operator*(const ibex::Interval& x1, const Tube& x2);
+    Tube operator*(const Tube& x1, const ibex::Interval& x2);
+
+    Tube operator/(const Tube& x1, const Tube& x2);
+    Tube operator/(const Tube& x1, double x2);
+    Tube operator/(double x1, const Tube& x2);
+    Tube operator/(const ibex::Interval& x1, const Tube& x2);
+    Tube operator/(const Tube& x1, const ibex::Interval& x2);
+
+    Tube operator|(const Tube& x1, const Tube& x2);
+    Tube operator|(const Tube& x1, double x2);
+    Tube operator|(double x1, const Tube& x2);
+    Tube operator|(const ibex::Interval& x1, const Tube& x2);
+    Tube operator|(const Tube& x1, const ibex::Interval& x2);
+
+    Tube operator&(const Tube& x1, const Tube& x2);
+    Tube operator&(const Tube& x1, double x2);
+    Tube operator&(double x1, const Tube& x2);
+    Tube operator&(const ibex::Interval& x1, const Tube& x2);
+    Tube operator&(const Tube& x1, const ibex::Interval& x2);
+
     Tube abs(const Tube& x);
     Tube sqr(const Tube& x);
     Tube sqrt(const Tube& x);

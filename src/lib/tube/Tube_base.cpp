@@ -82,6 +82,18 @@ void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Inter
 
 Tube::Tube(const Tube& tu)
 {
+  m_first_subtube = NULL;
+  m_second_subtube = NULL;
+  *this = tu;
+}
+
+Tube& Tube::operator=(const Tube& tu)
+{
+  if(m_first_subtube != NULL)
+    delete m_first_subtube;
+  if(m_second_subtube != NULL)
+    delete m_second_subtube;
+
   m_dt = tu.dt();
   m_intv_t = tu.getT();
   m_intv_y = tu.getY();
@@ -109,6 +121,8 @@ Tube::Tube(const Tube& tu)
   }
 
   requestFutureTreeComputation();
+
+  return *this;
 }
 
 Tube::~Tube()
@@ -385,6 +399,20 @@ void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertaint
   typename map<double,double>::const_iterator it_map;
   for(it_map = map_y.begin() ; it_map != map_y.end() ; it_map++)
     new_map[it_map->first] = it_map->second + intv_uncertainty;
+  feed(new_map);
+}
+
+void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertainty, double y_no_uncertainties)
+{
+  map<double,Interval> new_map;
+  typename map<double,double>::const_iterator it_map;
+  for(it_map = map_y.begin() ; it_map != map_y.end() ; it_map++)
+  {
+    Interval intv_y = Interval(it_map->second);
+    if(it_map->second != y_no_uncertainties)
+      intv_y += intv_uncertainty;
+    new_map[it_map->first] = intv_y;
+  }
   feed(new_map);
 }
 
