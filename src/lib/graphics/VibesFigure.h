@@ -13,7 +13,7 @@
 #ifndef VibesFigure_HEADER
 #define VibesFigure_HEADER
 
-#include "vibes/vibes.h"
+#include "vibes.h"
 #include <string>
 
 class VibesFigure
