@@ -146,10 +146,18 @@ double Tube::volume() const
   double volume = 0.;
   for(int i = 0 ; i < m_slices_number ; i++)
   {
-    if((*this)[i].is_empty()) // diam(EMPTY_SET) is not 0
+    if((*this)[i].is_empty()) // ibex::diam(EMPTY_SET) is not 0
       continue;
+
+    if((*this)[i].is_unbounded())
+    {
+      volume = INFINITY;
+      break;
+    }
+
     volume += m_dt * (*this)[i].diam();
   }
+
   return volume;
 }
 
