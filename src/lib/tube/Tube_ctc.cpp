@@ -152,8 +152,9 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
       // In forward
       for(int j = i ; j <= input2index(t.ub()) ; j++)
       {
-        new_y += Interval(derivative_tube[j].lb() * derivative_tube.getT(j).diam(),
-                          derivative_tube[j].ub() * derivative_tube.getT(j).diam());
+        Interval deriv = derivative_tube[j];
+        Interval deriv_t = derivative_tube.getT(j);
+        new_y += Interval(deriv.lb() * deriv_t.diam(), deriv.ub() * deriv_t.diam());
         tube_temp3.setY(new_y, j);
       }
       new_y = tube_temp1[i];
@@ -162,8 +163,8 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
       for(int j = i ; j >= input2index(t.lb()) ; j--)
       {
         Interval deriv = derivative_tube[j];
-        new_y -= Interval(deriv.lb() * derivative_tube.getT(j).diam(),
-                          deriv.ub() * derivative_tube.getT(j).diam());
+        Interval deriv_t = derivative_tube.getT(j);
+        new_y -= Interval(deriv.lb() * deriv_t.diam(), deriv.ub() * deriv_t.diam());
         tube_temp3.setY(new_y | tube_temp3[j], j); // an union is made to keep forward's update
       }
 

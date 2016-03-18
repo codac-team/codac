@@ -565,27 +565,39 @@ void Tube::getTubeNodes(vector<Tube*> &v_nodes)
 
 Tube& Tube::unionWith(const Tube& x)
 {
-  if(size() != x.size())
-    cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different dimensions: " 
-         << "n1=" << size() << " and n2=" << x.size() << endl;
-
-  if(getT() != x.getT())
-    cout << "Warning Tube::unionWith(): cannot make the hull of Tubes of different domain: " 
-         << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
-
-  vector<Tube*> this_nodes;
-  vector<const Tube*> x_nodes;
-  getTubeNodes(this_nodes);
-  x.getTubeNodes(x_nodes);
-
-  #pragma omp parallel num_threads(omp_get_num_procs())
+  if(size() != x.size() || getT() != x.getT())
   {
-    #pragma omp for
-    for(int i = 0 ; i < this_nodes.size() ; i++)
-      this_nodes[i]->unionWith_localUpdate(x_nodes[i]);
+    for(int i = 0 ; i < size() ; i++)
+    {
+      Interval this_intv_t = getT(i);
+      Interval this_intv_y = (*this)[i];
+
+      Interval x_intv_t = x.getT() & this_intv_t;
+
+      if(!x_intv_t.is_empty())
+      {
+        Interval x_intv_y = x[x_intv_t];
+        setY(this_intv_y | x_intv_y, x_intv_t);
+      }
+    }
   }
 
-  requestFuturePrimitiveComputation();
+  else // fast union
+  {
+    vector<Tube*> this_nodes;
+    vector<const Tube*> x_nodes;
+    getTubeNodes(this_nodes);
+    x.getTubeNodes(x_nodes);
+
+    #pragma omp parallel num_threads(omp_get_num_procs())
+    {
+      #pragma omp for
+      for(int i = 0 ; i < this_nodes.size() ; i++)
+        this_nodes[i]->unionWith_localUpdate(x_nodes[i]);
+    }
+  }
+
+  requestFutureTreeComputation();
   return *this;
 }
 
@@ -605,24 +617,36 @@ void Tube::unionWith_localUpdate(const Tube *x)
 
 Tube& Tube::intersectWith(const Tube& x)
 {
-  if(size() != x.size())
-    cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different dimensions: " 
-         << "n1=" << size() << " and n2=" << x.size() << endl;
-
-  if(getT() != x.getT())
-    cout << "Warning Tube::intersectWith(): cannot make the intersection of Tubes of different domain: " 
-         << "[t1]=" << getT() << " and [t2]=" << x.getT() << endl;
-
-  vector<Tube*> this_nodes;
-  vector<const Tube*> x_nodes;
-  getTubeNodes(this_nodes);
-  x.getTubeNodes(x_nodes);
-
-  #pragma omp parallel num_threads(omp_get_num_procs())
+  if(size() != x.size() || getT() != x.getT())
   {
-    #pragma omp for
-    for(int i = 0 ; i < this_nodes.size() ; i++)
-      this_nodes[i]->intersectWith_localUpdate(x_nodes[i]);
+    for(int i = 0 ; i < size() ; i++)
+    {
+      Interval this_intv_t = getT(i);
+      Interval this_intv_y = (*this)[i];
+
+      Interval x_intv_t = x.getT() & this_intv_t;
+
+      if(!x_intv_t.is_empty())
+      {
+        Interval x_intv_y = x[x_intv_t];
+        setY(this_intv_y & x_intv_y, x_intv_t);
+      }
+    }
+  }
+
+  else // fast intersection
+  {
+    vector<Tube*> this_nodes;
+    vector<const Tube*> x_nodes;
+    getTubeNodes(this_nodes);
+    x.getTubeNodes(x_nodes);
+
+    #pragma omp parallel num_threads(omp_get_num_procs())
+    {
+      #pragma omp for
+      for(int i = 0 ; i < this_nodes.size() ; i++)
+        this_nodes[i]->intersectWith_localUpdate(x_nodes[i]);
+    }
   }
 
   requestFutureTreeComputation();
