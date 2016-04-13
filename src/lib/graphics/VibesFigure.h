@@ -41,6 +41,34 @@ class VibesFigure
     std::string name() const;
 
     /**
+     * \brief Return x-position of the figure.
+     *
+     * \return x-position
+     */
+    double x() const;
+
+    /**
+     * \brief Return y-position of the figure.
+     *
+     * \return y-position
+     */
+    double y() const;
+
+    /**
+     * \brief Return figure's width.
+     *
+     * \return width
+     */
+    double width() const;
+
+    /**
+     * \brief Return figure's height.
+     *
+     * \return height
+     */
+    double height() const;
+
+    /**
      * \brief Set figure's properties: position and dimensions.
      *
      * \param x x-position
@@ -66,6 +94,7 @@ class VibesFigure
 
   protected:
     std::string m_name;
+    double m_x, m_y, m_width, m_height;
 };
 
 #endif
