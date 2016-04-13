@@ -1,5 +1,5 @@
 /* ============================================================================
- *  IBEX-Robotics - Tube_VibesFigure class
+ *  IBEX-Robotics - VibesFigure_Tube class
  * ============================================================================
  *  Copyright : Simon Rohou
  *  License   : This program can be distributed under the terms of
@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "Tube_VibesFigure.h"
+#include "VibesFigure_Tube.h"
 
 using namespace std;
 using namespace ibex;

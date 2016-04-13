@@ -298,6 +298,26 @@ class Tube
         Tube& operator&=(const Tube& x);
 
         /**
+         * \brief Set this Tube to the hull of itself and another: tube x.
+         *
+         * Note: both tubes have to be similar (same domain, same number of slices).
+         *
+         * \param x the other tube
+         * \return a reference to this
+         */
+        Tube& unionWith(const Tube& x);
+
+        /**
+         * \brief Set this Tube to the intersection of itself and another: tube x.
+         *
+         * Note: both tubes have to be similar (same domain, same number of slices).
+         *
+         * \param x the other tube
+         * \return a reference to this
+         */
+        Tube& intersectWith(const Tube& x);
+
+        /**
          * \brief Display tube's values.
 
          * \param precision the decimal precision to be used to format floating-point values on output
@@ -451,16 +471,6 @@ class Tube
     void getTubeNodes(std::vector<const Tube*> &v_nodes) const;
 
     /**
-     * \brief Set this Tube to the hull of itself and another: tube x.
-     *
-     * Note: both tubes have to be similar (same domain, same number of slices).
-     *
-     * \param x the other tube
-     * \return a reference to this
-     */
-    Tube& unionWith(const Tube& x);
-
-    /**
      * \brief Perform the union on the considered node only.
      *
      * Parents of children nodes are not updated.
@@ -469,16 +479,6 @@ class Tube
      * \param x a pointer to the other node
      */
     void unionWith_localUpdate(const Tube *x);
-
-    /**
-     * \brief Set this Tube to the intersection of itself and another: tube x.
-     *
-     * Note: both tubes have to be similar (same domain, same number of slices).
-     *
-     * \param x the other tube
-     * \return a reference to this
-     */
-    Tube& intersectWith(const Tube& x);
 
     /**
      * \brief Perform the intersection on the considered node only.

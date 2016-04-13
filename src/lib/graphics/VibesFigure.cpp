@@ -27,15 +27,36 @@ string VibesFigure::name() const
 
 void VibesFigure::setProperties(int x, int y, int width, int height)
 {
+  m_x = x; m_y = y; m_width = width; m_height = height;
   vibes::setFigureProperties(
             vibesParams("figure", m_name,
-                        "x", x,
-                        "y", y,
-                        "width", width,
-                        "height", height));
+                        "x", m_x,
+                        "y", m_y,
+                        "width", m_width,
+                        "height", m_height));
 }
 
 void VibesFigure::saveSVG() const
 {
   vibes::saveImage(m_name + ".svg", m_name);
+}
+
+double VibesFigure::x() const
+{
+  return m_x;
+}
+
+double VibesFigure::y() const
+{
+  return m_y;
+}
+
+double VibesFigure::width() const
+{
+  return m_width;
+}
+
+double VibesFigure::height() const
+{
+  return m_height;
 }
