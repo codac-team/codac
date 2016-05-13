@@ -20,7 +20,7 @@ VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure
   m_tube = tube;
   m_tube_copy = NULL;
   m_id_map_scalar_values = 0;
-  setColor("gray[yellow]");
+  setColors("gray[yellow]");
   m_need_to_update_axis = true;
 }
 
@@ -29,11 +29,11 @@ VibesFigure_Tube::~VibesFigure_Tube()
   delete m_tube_copy;
 }
 
-void VibesFigure_Tube::setColor(string slices_color)
+void VibesFigure_Tube::setColors(string slices_color, string background_color, string truth_color)
 {
-  vibes::newGroup("slices_old_background", "lightGray[lightGray]", vibesParams("figure", m_name));
+  vibes::newGroup("slices_old_background", background_color, vibesParams("figure", m_name));
   vibes::newGroup("slices", slices_color, vibesParams("figure", m_name));
-  vibes::newGroup("true_values", "red", vibesParams("figure", m_name));
+  vibes::newGroup("true_values", truth_color, vibesParams("figure", m_name));
 }
 
 void VibesFigure_Tube::show() const
