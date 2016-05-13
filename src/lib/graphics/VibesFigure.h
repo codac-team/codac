@@ -81,9 +81,11 @@ class VibesFigure
     /**
      * \brief Save vibes-figure in SVG format.
      *
-     * A file named {figure_name}.svg is created in the current directory.
+     * A file named {figure_name}{suffix}.svg is created in the current directory.
+     *
+     * \param suffix optional part name that can be added to figure_name, empty by default
      */
-    void saveSVG() const;
+    void saveSVG(const std::string& suffix = "") const;
 
     /**
      * \brief Display the figure.
