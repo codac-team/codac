@@ -20,17 +20,23 @@ using namespace ibex;
 
 Tube::Tube(const Interval &intv_t, double time_step, const Interval& default_value)
 {
-  double lb, ub = intv_t.lb();
-  vector<Interval> vector_dt; // a vector of slices is created only once
-  do
+  if(time_step > 0.)
   {
-    lb = ub; // we guarantee all slices are adjacent
-    ub = lb + time_step;
-    vector_dt.push_back(Interval(lb, ub));
-  } while(ub < intv_t.ub());
+    double lb, ub = intv_t.lb();
+    vector<Interval> vector_dt; // a vector of slices is created only once
+    do
+    {
+      lb = ub; // we guarantee all slices are adjacent
+      ub = lb + time_step;
+      vector_dt.push_back(Interval(lb, ub));
+    } while(ub < intv_t.ub());
 
-  createFromSlicesVector(vector_dt, default_value);
-  m_dt = time_step;
+    createFromSlicesVector(vector_dt, default_value);
+    m_dt = time_step;
+  }
+
+  else
+    cout << "Error Tube::Tube(...): wrong timestep: " << time_step << endl;
 }
 
 Tube::Tube(const vector<Interval>& vector_dt, const Interval& default_value)
