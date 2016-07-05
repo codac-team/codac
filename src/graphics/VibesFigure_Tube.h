@@ -1,5 +1,5 @@
 /* ============================================================================
- *  IBEX-Robotics - VibesFigure_Tube class
+ *  tube-lib - VibesFigure_Tube class
  * ============================================================================
  *  Copyright : Simon Rohou
  *  License   : This program can be distributed under the terms of

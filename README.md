@@ -1,4 +1,4 @@
-# Class Tube
+# tube-lib
 A proposal for an optimized Tube class based on the [Ibex library](http://www.ibex-lib.org/).
 
 Data structure is based on a binary tree in order to improve the reading. Some functions are multithreaded.
@@ -8,7 +8,7 @@ Example
 
 We choose to work on the following tube:
 
-![Image of Tube](http://rawgit.com/SimonRohou/ibex-robotics/master/src/lib/tube/doc/img/tube1_01.png)
+![Image of Tube](http://rawgit.com/SimonRohou/tube-lib/master/doc/img/tube1_01.png)
 
 We instanciate a tube over a temporal domain defined by the interval [0,46]. Its timestep (precision) is set to 1.0.
 ```cpp
@@ -38,7 +38,7 @@ tube.setY(Interval(1,3), Interval(36.2,45.7));
 
 In the same way, values can be accessed by index, by time or by interval:
 
-![Image of Tube](http://rawgit.com/SimonRohou/ibex-robotics/master/src/lib/tube/doc/img/tube1_02.png)
+![Image of Tube](http://rawgit.com/SimonRohou/tube-lib/master/doc/img/tube1_02.png)
 
 ```cpp
 // Reading values

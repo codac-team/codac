@@ -1,0 +1,49 @@
+# ==================================================================
+#  tube-lib - travis test script
+# ==================================================================
+
+language: c++
+sudo: false
+
+addons:
+  apt:
+    sources:
+    - deadsnakes
+    - ubuntu-toolchain-r-test
+    - chef-current-precise
+
+    packages:
+    - cmake
+    - time
+    - pkg-config
+    - g++-4.8
+
+cache:
+  directories:
+  - $HOME/ibex
+
+matrix:
+  include:
+  - os: osx
+    compiler: clang
+  - os: linux
+    compiler: gcc-4.8
+
+before_install:
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install clang-omp; fi
+
+install:
+  - sh ./scripts/ibex/build_IbexLib.sh
+  - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/ibex
+
+script:
+  - mkdir build
+  - cd build
+  - if [ $TRAVIS_OS_NAME == osx ]; then
+      CC=clang-omp CXX=clang-omp++ cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DIBEX_ROOT=${HOME}/ibex ../ ;
+    fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then
+      cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DIBEX_ROOT=${HOME}/ibex -DCMAKE_CXX_COMPILER=g++-4.8 ../ ;
+    fi
+  - make
+  - make test

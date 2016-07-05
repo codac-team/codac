@@ -1,5 +1,5 @@
 /* ============================================================================
- *  IBEX-Robotics - Tube class
+ *  tube-lib - Tube class
  * ============================================================================
  *  Copyright : Simon Rohou
  *  License   : This program can be distributed under the terms of
