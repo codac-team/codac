@@ -34,11 +34,13 @@ class VibesFigure_Tube : public VibesFigure
     ~VibesFigure_Tube();
 
     /**
-     * \brief Set a custom color for tube's slices.
+     * \brief Set custom colors
      *
-     * \param slices_color the new color
+     * \param slices_color new color of slices
+     * \param background_color new color of slices before contraction
+     * \param truth_color new color of represented trajectories
      */
-    void setColor(std::string slices_color);
+    void setColors(std::string slices_color, std::string background_color = "lightGray[lightGray]", std::string truth_color = "red");
 
     /**
      * \brief Display the tube.
