@@ -18,11 +18,11 @@
 
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})
 
-  add_library(tube-lib-core ${SRC})
-  target_link_libraries(tube-lib-core ${LIBS})
+  add_library(tube-core ${SRC})
+  target_link_libraries(tube-core ${LIBS})
 
   install(FILES ${HEADERS} DESTINATION "include/tube-lib")
-  install(TARGETS tube-lib-core DESTINATION lib)
+  install(TARGETS tube-core DESTINATION lib)
 
 
 # Tests

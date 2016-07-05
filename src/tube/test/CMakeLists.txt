@@ -19,7 +19,7 @@
 
   target_link_libraries(testTube
       ${CMAKE_THREAD_LIBS_INIT}
-      tube-lib-core
+      tube-core
       ${LIBS}
       )
 
