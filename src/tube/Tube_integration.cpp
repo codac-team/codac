@@ -13,7 +13,9 @@
 #include "Tube.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
-#include <omp.h> // for multithreading
+#ifdef _OPENMP
+  #include <omp.h> // for multithreading
+#endif
 
 using namespace std;
 using namespace ibex;
