@@ -1,9 +1,9 @@
 /* ============================================================================
  *  tube-lib - VibesFigure_Tube class
  * ============================================================================
- *  Copyright : Simon Rohou
+ *  Copyright : Copyright 2016 Simon Rohou
  *  License   : This program can be distributed under the terms of
- *              the MIT license. See the file LICENSE.
+ *              the Apache License, Version 2.0. See the file LICENSE.
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -
