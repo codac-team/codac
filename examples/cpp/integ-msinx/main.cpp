@@ -69,12 +69,14 @@ int main(int argc, char *argv[])
 
       figtube_x.show(); // displaying the tube
       i++;
-      cin.ignore(); // press ENTER to continue
+      
+      if(argc == 1) cin.ignore(); // press ENTER to continue
     } while(volume_x != tube_x.volume()); // up to the fixpoint
 
   /* =========== END =========== */
 
     vibes::endDrawing();
 
-  return (volume_x <= 9.14077) ? EXIT_SUCCESS : EXIT_FAILURE;
+  // Checking if this example is still working:
+  return (volume_x <= 9.15) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
