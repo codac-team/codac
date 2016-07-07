@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     figtube_x.setProperties(200, 050, 700, 700);
     figtube_x.setColors("#B2B2B2[#B2B2B2]");
 
-  /* =========== INTEGRATION (intervals) =========== */
+  /* =========== INTERVAL INTEGRATION =========== */
 
     int i = 0;
     double volume_x;
