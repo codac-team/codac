@@ -43,7 +43,6 @@ cmake_minimum_required(VERSION 2.8.7)
     message(FATAL_ERROR "Unable to find IBEX-lib. You may need to set IBEX_ROOT ${IBEX_ROOT}")
   endif()
 
-
 # Tests
 
   if(BUILD_TESTS)
@@ -54,7 +53,10 @@ cmake_minimum_required(VERSION 2.8.7)
 
 # Sources
 
+  include_directories(./build/include)
+
   add_subdirectory(src)
+  add_subdirectory(examples/cpp)
 
 
 # Uninstallation
