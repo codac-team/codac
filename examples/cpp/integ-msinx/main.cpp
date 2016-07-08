@@ -34,22 +34,22 @@ int main(int argc, char *argv[])
 
     double x0 = 1.;
     Interval domain(0,10);
-    double integration_timestep = 0.01;
+    double timestep = 0.01;
 
   /* =========== INITIALIZATION =========== */
 
     // Creating tubes over the [0,10] domain with some timestep:
-    Tube tube_a(domain, integration_timestep);
-    Tube tube_b(domain, integration_timestep);
+    Tube tube_a(domain, timestep);
+    Tube tube_b(domain, timestep);
      // Initialization with [-1,1] values forall t:
-    Tube tube_x(domain, integration_timestep, Interval(-1,1));
+    Tube tube_x(domain, timestep, Interval(-1,1));
 
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
     vibes::axisAuto();
 
-    VibesFigure_Tube figtube_x("Tube x", &tube_x);
+    VibesFigure_Tube figtube_x("Tube [x](·)", &tube_x);
     figtube_x.setProperties(200, 050, 700, 700);
     figtube_x.setColors("#B2B2B2[#B2B2B2]");
 

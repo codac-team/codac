@@ -26,12 +26,14 @@
 using namespace std;
 using namespace ibex;
 
+void displayTube(Tube* tube, const string& name, int x, int y);
+
 int main(int argc, char *argv[])
 {
   /* =========== PARAMETERS =========== */
 
     Interval domain(0,10);
-    double integration_timestep = 0.01;
+    double timestep = 0.01;
 
   /* =========== INITIALIZATION =========== */
 
@@ -39,8 +41,8 @@ int main(int argc, char *argv[])
     vibes::axisAuto();
 
     // Creating tubes over the [0,10] domain with some timestep:
-    Tube tube_x(domain, integration_timestep);
-    Tube tube_y(domain, integration_timestep);
+    Tube tube_x(domain, timestep);
+    Tube tube_y(domain, timestep);
 
     // Creating tubes [x](·) and [y](·) with some data
     for(int i = 0 ; i < tube_x.size() ; i++)
@@ -63,34 +65,11 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    int w = 700, h = 350;
-
-    string color = "#B9B9B9[#B9B9B9]";
-
-    VibesFigure_Tube figtube_x("example_tube_x", &tube_x);
-    figtube_x.setProperties(200, 100, w, h);
-    figtube_x.setColors(color);
-    figtube_x.show();
-
-    VibesFigure_Tube figtube_y("example_tube_y", &tube_y);
-    figtube_y.setProperties(300, 200, w, h);
-    figtube_y.setColors(color);
-    figtube_y.show();
-
-    VibesFigure_Tube figtube_a("example_tube_a", &tube_a);
-    figtube_a.setProperties(400, 300, w, h);
-    figtube_a.setColors(color);
-    figtube_a.show();
-
-    VibesFigure_Tube figtube_b("example_tube_b", &tube_b);
-    figtube_b.setProperties(500, 400, w, h);
-    figtube_b.setColors(color);
-    figtube_b.show();
-
-    VibesFigure_Tube figtube_c("example_tube_c", &tube_c);
-    figtube_c.setProperties(600, 500, w, h);
-    figtube_c.setColors(color);
-    figtube_c.show();
+    displayTube(&tube_x, "Example tube [x](·)", 200, 100);
+    displayTube(&tube_y, "Example tube [y](·)", 300, 200);
+    displayTube(&tube_a, "Example tube [a](·)", 400, 300);
+    displayTube(&tube_b, "Example tube [b](·)", 500, 400);
+    displayTube(&tube_c, "Example tube [c](·)", 600, 500);
 
   /* =========== END =========== */
 
@@ -102,4 +81,12 @@ int main(int argc, char *argv[])
        && fabs(tube_a.volume() - 65.519) < 1e-2
        && fabs(tube_b.volume() - 6.8414) < 1e-2
        && fabs(tube_c.volume() - 53.446) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
+void displayTube(Tube* tube, const string& name, int x, int y)
+{
+  VibesFigure_Tube figtube(name, tube);
+  figtube.setProperties(x, y, 700, 350);
+  figtube.setColors("#B9B9B9[#B9B9B9]");
+  figtube.show();
 }
