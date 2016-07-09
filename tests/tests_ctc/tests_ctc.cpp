@@ -12,7 +12,7 @@
 
 #define CATCH_CONFIG_MAIN
 #include "../catch/catch.hpp"
-#include "../tests_cases.hpp"
+//#include "../tests_cases.hpp"
 
 /*namespace ibex
 {
