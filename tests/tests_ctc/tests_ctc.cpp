@@ -14,7 +14,12 @@
 #include "../catch/catch.hpp"
 #include "../tests_cases.hpp"
 
-TEST_CASE("Contracting tube", "[core]")
+namespace ibex
 {
-  REQUIRE(true);
+  using namespace std;
+  
+  TEST_CASE("Contracting tube", "[core]")
+  {
+    REQUIRE(true);
+  }
 }
