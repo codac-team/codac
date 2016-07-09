@@ -23,10 +23,3 @@
 
   install(FILES ${HEADERS} DESTINATION "include/tube-lib")
   install(TARGETS tube-core DESTINATION lib)
-
-
-# Tests
-
-  if(BUILD_TESTS)
-  	add_subdirectory(test)
-  endif(BUILD_TESTS)

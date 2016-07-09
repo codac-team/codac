@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
 # Options
 
-  option(BUILD_TESTS "Build test" ON)
+  option(BUILD_TESTS "Build test" OFF)
   option(ONLY_PYTHON_BINDINGS "build library with python bindings only" OFF)
 
 
@@ -43,20 +43,22 @@ cmake_minimum_required(VERSION 2.8.7)
     message(FATAL_ERROR "Unable to find IBEX-lib. You may need to set IBEX_ROOT ${IBEX_ROOT}")
   endif()
 
-# Tests
-
-  if(BUILD_TESTS)
-    enable_testing()
-    include(CTest)
-  endif()
-
 
 # Sources
 
   include_directories(./build/include)
 
   add_subdirectory(src)
-  add_subdirectory(examples/cpp)
+  add_subdirectory(examples)
+
+
+# Tests
+
+  if(BUILD_TESTS)
+    enable_testing(true)
+    add_subdirectory(tests)
+    include(CTest)
+  endif()
 
 
 # Uninstallation
