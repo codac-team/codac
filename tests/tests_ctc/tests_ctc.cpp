@@ -14,7 +14,7 @@
 #include "../catch/catch.hpp"
 #include "../tests_cases.hpp"
 
-namespace ibex
+/*namespace ibex
 {
   using namespace std;
   
@@ -22,4 +22,4 @@ namespace ibex
   {
     REQUIRE(true);
   }
-}
+}*/
