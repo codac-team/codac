@@ -12,14 +12,9 @@
 
 #define CATCH_CONFIG_MAIN
 #include "../catch/catch.hpp"
-//#include "../tests_cases.hpp"
+#include "../tests_cases.hpp"
 
-/*namespace ibex
+TEST_CASE("Contracting tube", "[core]")
 {
-  using namespace std;
-  
-  TEST_CASE("Contracting tube", "[core]")
-  {
-    REQUIRE(true);
-  }
-}*/
+  REQUIRE(true);
+}
