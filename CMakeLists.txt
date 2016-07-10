@@ -47,9 +47,7 @@ cmake_minimum_required(VERSION 2.8.7)
 # Sources
 
   include_directories(./build/include)
-
   add_subdirectory(src)
-  add_subdirectory(examples)
 
 
 # Tests
@@ -60,6 +58,10 @@ cmake_minimum_required(VERSION 2.8.7)
     include(CTest)
   endif()
 
+
+# Sources
+
+  add_subdirectory(examples)
 
 # Uninstallation
 
