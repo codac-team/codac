@@ -428,6 +428,11 @@ class Tube
          */
         bool ctcOut(const ibex::Interval& y, const ibex::Interval& t);
 
+        /**
+         * \brief To be defined...
+         */
+        bool ctcIntertemporal(ibex::Interval& y, ibex::Interval& t1, ibex::Interval& t2);
+
 
   protected:
 
