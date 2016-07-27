@@ -183,6 +183,24 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
   return contraction;
 }
 
+bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, Interval& t)
+{
+  Interval y_temp = y;
+  return ctcIn(derivative_tube, y_temp, t);
+}
+
+bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, const Interval& t)
+{
+  Interval t_temp = t;
+  return ctcIn(derivative_tube, y, t_temp);
+}
+
+bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, const Interval& t)
+{
+  Interval y_temp = y, t_temp = t;
+  return ctcIn(derivative_tube, y_temp, t_temp);
+}
+
 bool Tube::ctcOut(const Interval& y, const Interval& t)
 {
   double volume_before_ctc = volume();
