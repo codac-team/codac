@@ -444,9 +444,12 @@ const Tube* Tube::getSecondSubTube() const
   return m_second_subtube;
 }
 
-Interval Tube::setInversion(const Interval& intv_y) const
+Interval Tube::setInversion(const Interval& intv_y, const Interval& intv_t) const
 {
-  if(!getY().intersects(intv_y))
+  if(!getT().intersects(intv_t)) // to apply this function on a tube's portion only
+    return Interval::EMPTY_SET;
+
+  else if(!getY().intersects(intv_y))
     return Interval::EMPTY_SET;
 
   else
@@ -455,7 +458,7 @@ Interval Tube::setInversion(const Interval& intv_y) const
       return m_intv_t;
 
     else
-      return m_first_subtube->setInversion(intv_y) | m_second_subtube->setInversion(intv_y);
+      return m_first_subtube->setInversion(intv_y, intv_t) | m_second_subtube->setInversion(intv_y, intv_t);
   }
 }
 

@@ -97,7 +97,7 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
   if(!(*this)[t].intersects(y))
   {
     cout << "Warning ctcIn(const Tube& derivative_tube, Interval& y, Interval& t): this[t] do not intersect y" << endl;
-    cout << "        this[t]=" << (*this)[t] << ", t=" << t << ", y=" << y << endl;
+    cout << "        this[t]=" << (*this)[t] << ", y=" << y << ", t=" << t << endl;
     return false;
   }
 

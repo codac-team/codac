@@ -261,9 +261,10 @@ class Tube
          * Here the returned value intv_t corresponds to the union of the solutions.
          *
          * \param intv_y the y-value to invert
+         * \param intv_t the optional t domain to consider
          * \return the resulted union of the set-inversion
          */
-        ibex::Interval setInversion(const ibex::Interval& intv_y) const;
+        ibex::Interval setInversion(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
         /**
          * \brief Perform precise set-inversion on this.

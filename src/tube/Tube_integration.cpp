@@ -38,6 +38,15 @@ Interval Tube::timeIntegration(const Interval& t) const
   return Interval(partial_ti.first.lb(), partial_ti.second.ub());
 }
 
+Interval Tube::timeIntegration(const Interval& t1, const Interval& t2) const
+{
+  pair<Interval,Interval> integrale_t1 = partialTimeIntegration(t1);
+  pair<Interval,Interval> integrale_t2 = partialTimeIntegration(t2);
+  double lb = (integrale_t2.first - integrale_t1.first).lb();
+  double ub = (integrale_t2.second - integrale_t1.second).ub();
+  return Interval(min(lb, ub), max(lb, ub));
+}
+
 pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t) const
 {
   if(m_primitive_computation_needed)
@@ -118,16 +127,6 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t) const
 
   return make_pair(integrale_lb, integrale_ub);
 }
-
-Interval Tube::timeIntegration(const Interval& t1, const Interval& t2) const
-{
-  pair<Interval,Interval> integrale_t1 = partialTimeIntegration(t1);
-  pair<Interval,Interval> integrale_t2 = partialTimeIntegration(t2);
-  double lb = (integrale_t2.first - integrale_t1.first).lb();
-  double ub = (integrale_t2.second - integrale_t1.second).ub();
-  return Interval(min(lb, ub), max(lb, ub));
-}
-
 
 pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t1, const Interval& t2) const
 {
