@@ -70,7 +70,7 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
 
   vibes::Params params;
 
-  if(m_tube_copy != NULL)
+  if(m_tube_copy != NULL && update_background)
   {
     vibes::clearGroup(m_name, "slices_old_background");
     params = vibesParams("figure", m_name, "group", "slices_old_background");
@@ -80,6 +80,10 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
 
   vibes::clearGroup(m_name, "slices");
   params = vibesParams("figure", m_name, "group", "slices");
+
+  if(slices_limit <= 0)
+    slices_limit = m_tube->size();
+
   for(int i = 0 ; i < m_tube->size() ; i += max((int)(m_tube->size() / slices_limit), 1))
     drawSlice(m_tube->getT(i), (*m_tube)[i], params);
 
