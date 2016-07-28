@@ -431,6 +431,11 @@ class Tube
         /**
          * \brief To be defined...
          */
+        bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2);
+
+        /**
+         * \brief To be defined...
+         */
         bool ctcIntertemporal(ibex::Interval& y, ibex::Interval& t1, ibex::Interval& t2);
 
 

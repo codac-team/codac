@@ -14,7 +14,40 @@
 #include "../catch/catch.hpp"
 #include "../tests_cases.hpp"
 
-TEST_CASE("Contracting tube: ctcIntertemporal", "[core]")
+TEST_CASE("Contracting tube: ctcIntertemporal(t1, t2)", "[core]")
+{
+  SECTION("Test tube1, case1")
+  {
+    Tube tube = tubeTest1();
+    Interval t1(0., 8.);
+    Interval t2(29.5);
+    tube.ctcIntertemporal(t1, t2);
+    REQUIRE(t1 == Interval(0., 4.));
+    REQUIRE(t2 == Interval(29.5));
+  }
+
+  SECTION("Test tube1, case2")
+  {
+    Tube tube = tubeTest1();
+    Interval t1(4.2, 23.5);
+    Interval t2(32., 36.);
+    tube.ctcIntertemporal(t1, t2);
+    REQUIRE(t1 == Interval(14., 19.));
+    REQUIRE(t2 == Interval(32., 36.));
+  }
+
+  SECTION("Test tube1, case3")
+  {
+    Tube tube = tubeTest1();
+    Interval t1(21., 26.);
+    Interval t2(5., 9.);
+    tube.ctcIntertemporal(t1, t2);
+    REQUIRE(t1 == Interval::EMPTY_SET);
+    REQUIRE(t2 == Interval::EMPTY_SET);
+  }
+}
+
+TEST_CASE("Contracting tube: ctcIntertemporal(y, t1, t2)", "[core]")
 {
   SECTION("Test tube1, case1")
   {

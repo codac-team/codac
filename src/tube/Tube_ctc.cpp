@@ -234,6 +234,23 @@ bool Tube::ctcOut(const Interval& y, const Interval& t)
   return volume() < volume_before_ctc;
 }
 
+bool Tube::ctcIntertemporal(Interval& t1, Interval& t2)
+{
+  bool contraction = false;
+  double t1_diam, t2_diam;
+
+  do
+  {
+    t1_diam = t1.diam();
+    t2_diam = t2.diam();
+    t1 &= setInversion((*this)[t2], t1);
+    t2 &= setInversion((*this)[t1], t2);
+    contraction |= t1.diam() < t1_diam || t2.diam() < t2_diam;
+  } while(t1.diam() < t1_diam || t2.diam() < t2_diam);
+
+  return contraction;
+}
+
 bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2)
 {
   bool contraction = false;
