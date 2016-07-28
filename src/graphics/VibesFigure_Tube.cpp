@@ -66,6 +66,7 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
     vibes::axisLimits(m_tube->getT().lb(), m_tube->getT().ub(), 
                       m_tube->getY().lb(), m_tube->getY().ub(),
                       m_name);
+    m_need_to_update_axis = false;
   }
 
   vibes::Params params;
