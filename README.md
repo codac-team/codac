@@ -27,21 +27,21 @@ Tube tube(Interval(0.,46.), 1.);
 We can set values by working with slices id (second argument has to be `int`):
 ```cpp
 // Setting values (for a slice)
-tube.setY(Interval(3,8), 0);
-tube.setY(Interval(2,7), 1);
+tube.set(Interval(3,8), 0);
+tube.set(Interval(2,7), 1);
 ```
 
 ..or by working with times (second argument has to be `double`):
 ```cpp
 // Setting values (for a given date)
-tube.setY(Interval(-4,4), 3.2);
-tube.setY(Interval(-9,-5), 5.9);
+tube.set(Interval(-4,4), 3.2);
+tube.set(Interval(-9,-5), 5.9);
 ```
 
 ..or by working with intervals of times (second argument has to be of type `ibex::Interval`):
 ```cpp
 // Setting values (within a given interval of times)
-tube.setY(Interval(1,3), Interval(36.2,45.7));
+tube.set(Interval(1,3), Interval(36.2,45.7));
 ```
 
 In the same way, values can be accessed by index, by time or by interval:
@@ -50,7 +50,7 @@ In the same way, values can be accessed by index, by time or by interval:
 
 ```cpp
 // Reading values
-cout << tube.getY() << endl;                  // will display [-11, 13] (global evaluation)
+cout << tube.image() << endl;                 // will display [-11, 13] (global evaluation)
 cout << tube[7] << endl;                      // will display [-11, -7] (8th slice)
 cout << tube[3.5] << endl;                    // will display [-4, 4] (t=3.5)
 cout << tube[17.0] << endl;                   // will display [2,6]
