@@ -26,9 +26,9 @@ void warningTubesSizes(const Tube& x1, const Tube& x2)
     cout << "Warning Tube::operator(): Tubes of different dimensions: " 
          << "n1=" << x1.size() << " and n2=" << x2.size() << endl;
 
-  if(x1.getT() != x2.getT())
+  if(x1.domain() != x2.domain())
     cout << "Warning Tube::unionWith(): Tubes of different domain: " 
-         << "[t1]=" << x1.getT() << " and [t2]=" << x2.getT() << endl;
+         << "[t1]=" << x1.domain() << " and [t2]=" << x2.domain() << endl;
 }
 
 Tube operator+(const Tube& x1, const Tube& x2)
@@ -36,7 +36,7 @@ Tube operator+(const Tube& x1, const Tube& x2)
   warningTubesSizes(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] + x2[i], i);
+    new_tube.set(x1[i] + x2[i], i);
   return new_tube;
 }
 
@@ -44,7 +44,7 @@ Tube operator+(const Tube& x1, double x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] + x2, i);
+    new_tube.set(x1[i] + x2, i);
   return new_tube;
 }
 
@@ -52,7 +52,7 @@ Tube operator+(double x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 + x2[i], i);
+    new_tube.set(x1 + x2[i], i);
   return new_tube;
 }
 
@@ -60,7 +60,7 @@ Tube operator+(const Tube& x1, const Interval& x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] + x2, i);
+    new_tube.set(x1[i] + x2, i);
   return new_tube;
 }
 
@@ -68,7 +68,7 @@ Tube operator+(const Interval& x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 + x2[i], i);
+    new_tube.set(x1 + x2[i], i);
   return new_tube;
 }
 
@@ -77,7 +77,7 @@ Tube operator-(const Tube& x)
 {
   Tube new_tube(x);
   for(int i = 0 ; i < x.size() ; i++)
-    new_tube.setY(-x[i], i);
+    new_tube.set(-x[i], i);
   return new_tube;
 }
 
@@ -86,7 +86,7 @@ Tube operator-(const Tube& x1, const Tube& x2)
   warningTubesSizes(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] - x2[i], i);
+    new_tube.set(x1[i] - x2[i], i);
   return new_tube;
 }
 
@@ -94,7 +94,7 @@ Tube operator-(const Tube& x1, double x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] - x2, i);
+    new_tube.set(x1[i] - x2, i);
   return new_tube;
 }
 
@@ -102,7 +102,7 @@ Tube operator-(double x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 - x2[i], i);
+    new_tube.set(x1 - x2[i], i);
   return new_tube;
 }
 
@@ -110,7 +110,7 @@ Tube operator-(const Tube& x1,  const Interval& x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] - x2, i);
+    new_tube.set(x1[i] - x2, i);
   return new_tube;
 }
 
@@ -118,7 +118,7 @@ Tube operator-(const Interval& x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 - x2[i], i);
+    new_tube.set(x1 - x2[i], i);
   return new_tube;
 }
 
@@ -128,7 +128,7 @@ Tube operator*(const Tube& x1, const Tube& x2)
   warningTubesSizes(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] * x2[i], i);
+    new_tube.set(x1[i] * x2[i], i);
   return new_tube;
 }
 
@@ -136,7 +136,7 @@ Tube operator*(const Tube& x1, double x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] * x2, i);
+    new_tube.set(x1[i] * x2, i);
   return new_tube;
 }
 
@@ -144,7 +144,7 @@ Tube operator*(double x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 * x2[i], i);
+    new_tube.set(x1 * x2[i], i);
   return new_tube;
 }
 
@@ -152,7 +152,7 @@ Tube operator*(const Interval& x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 * x2[i], i);
+    new_tube.set(x1 * x2[i], i);
   return new_tube;
 }
 
@@ -160,7 +160,7 @@ Tube operator*(const Tube& x1, const Interval& x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] * x2, i);
+    new_tube.set(x1[i] * x2, i);
   return new_tube;
 }
 
@@ -170,7 +170,7 @@ Tube operator/(const Tube& x1, const Tube& x2)
   warningTubesSizes(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] / x2[i], i);
+    new_tube.set(x1[i] / x2[i], i);
   return new_tube;
 }
 
@@ -178,7 +178,7 @@ Tube operator/(const Tube& x1, double x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] / x2, i);
+    new_tube.set(x1[i] / x2, i);
   return new_tube;
 }
 
@@ -186,7 +186,7 @@ Tube operator/(double x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 / x2[i], i);
+    new_tube.set(x1 / x2[i], i);
   return new_tube;
 }
 
@@ -194,7 +194,7 @@ Tube operator/(const Interval& x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 / x2[i], i);
+    new_tube.set(x1 / x2[i], i);
   return new_tube;
 }
 
@@ -202,7 +202,7 @@ Tube operator/(const Tube& x1, const Interval& x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] / x2, i);
+    new_tube.set(x1[i] / x2, i);
   return new_tube;
 }
 
@@ -219,7 +219,7 @@ Tube operator|(const Tube& x1, double x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] | x2, i);
+    new_tube.set(x1[i] | x2, i);
   return new_tube;
 }
 
@@ -227,7 +227,7 @@ Tube operator|(double x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 | x2[i], i);
+    new_tube.set(x1 | x2[i], i);
   return new_tube;
 }
 
@@ -235,7 +235,7 @@ Tube operator|(const Interval& x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 | x2[i], i);
+    new_tube.set(x1 | x2[i], i);
   return new_tube;
 }
 
@@ -243,7 +243,7 @@ Tube operator|(const Tube& x1, const Interval& x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] | x2, i);
+    new_tube.set(x1[i] | x2, i);
   return new_tube;
 }
 
@@ -260,7 +260,7 @@ Tube operator&(const Tube& x1, double x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] & x2, i);
+    new_tube.set(x1[i] & x2, i);
   return new_tube;
 }
 
@@ -268,7 +268,7 @@ Tube operator&(double x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 & x2[i], i);
+    new_tube.set(x1 & x2[i], i);
   return new_tube;
 }
 
@@ -276,7 +276,7 @@ Tube operator&(const Interval& x1, const Tube& x2)
 {
   Tube new_tube(x2);
   for(int i = 0 ; i < x2.size() ; i++)
-    new_tube.setY(x1 & x2[i], i);
+    new_tube.set(x1 & x2[i], i);
   return new_tube;
 }
 
@@ -284,18 +284,18 @@ Tube operator&(const Tube& x1, const Interval& x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
-    new_tube.setY(x1[i] & x2, i);
+    new_tube.set(x1[i] & x2, i);
   return new_tube;
 }
 
 #define func_unary(tube, f) \
     Tube new_tube(x); \
-    for(int i = 0 ; i < x.size() ; i++) new_tube.setY(ibex::f(x[i]), i); \
+    for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(x[i]), i); \
     return new_tube;
 
 #define func_binary(tube, param, f) \
     Tube new_tube(x); \
-    for(int i = 0 ; i < x.size() ; i++) new_tube.setY(ibex::f(x[i], param), i); \
+    for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(x[i], param), i); \
     return new_tube;
 
 Tube cos(const Tube& x) { func_unary(x, cos) }

@@ -64,7 +64,7 @@ TEST_CASE("Computing tube's primitive", "[core]")
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     Tube tube_primitive = tube.primitive();
     REQUIRE(ApproxIntv(tube_primitive[0]) == Interval(0,8));
     REQUIRE(ApproxIntv(tube_primitive[1]) == Interval(4,15));
@@ -97,7 +97,7 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     REQUIRE(ApproxIntv(tube.timeIntegration(0)) == Interval(0));
     REQUIRE(ApproxIntv(tube.timeIntegration(0.1)) == Interval(0.4,0.8));
     REQUIRE(ApproxIntv(tube.timeIntegration(1.1)) == Interval(4.2,8.7));
@@ -156,7 +156,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     REQUIRE(ApproxIntv(tube.timeIntegration(Interval(0))) == Interval(0));
     REQUIRE(ApproxIntv(tube.timeIntegration(Interval(0.1))) == Interval(0.4,0.8));
     REQUIRE(ApproxIntv(tube.timeIntegration(Interval(0.5))) == Interval(2,4));
@@ -292,7 +292,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     REQUIRE(ApproxIntvPair(tube.partialTimeIntegration(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
     REQUIRE(ApproxIntvPair(tube.partialTimeIntegration(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
     REQUIRE(ApproxIntvPair(tube.partialTimeIntegration(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
@@ -326,7 +326,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     REQUIRE(ApproxIntv(tube.timeIntegration(Interval(20), Interval(20))) == Interval(0.));
     REQUIRE(ApproxIntv(tube.timeIntegration(Interval(2.1), Interval(2.1))) == Interval(0.));
     REQUIRE(ApproxIntv(tube.timeIntegration(Interval(12.2), Interval(12.2))) == Interval(0.));
@@ -400,7 +400,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     REQUIRE(ApproxIntvPair(tube.partialTimeIntegration(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
     REQUIRE(ApproxIntvPair(tube.partialTimeIntegration(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
     REQUIRE(ApproxIntvPair(tube.partialTimeIntegration(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));

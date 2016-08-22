@@ -103,10 +103,10 @@ Tube& Tube::operator=(const Tube& tu)
     delete m_second_subtube;
 
   m_dt = tu.dt();
-  m_intv_t = tu.getT();
-  m_intv_y = tu.getY();
+  m_intv_t = tu.domain();
+  m_intv_y = tu.image();
   m_slices_number = tu.size();
-  m_enclosed_bounds = tu.getEnclosedBounds();
+  m_enclosed_bounds = tu.eval();
 
   if(tu.isSlice())
   {
@@ -223,7 +223,7 @@ int Tube::input2index(double t) const
   if(isSlice())
     return 0;
 
-  if(t < m_first_subtube->getT().ub())
+  if(t < m_first_subtube->domain().ub())
     return m_first_subtube->input2index(t);
 
   else
@@ -232,25 +232,25 @@ int Tube::input2index(double t) const
 
 double Tube::index2input(int index) const
 {
-  return getSlice(index)->getT().lb();
+  return getSlice(index)->domain().lb();
 }
 
-const Interval& Tube::getT() const
+const Interval& Tube::domain() const
 {
   return m_intv_t;
 }
 
-const Interval& Tube::getT(int index) const
+const Interval& Tube::domain(int index) const
 {
-  return getSlice(index)->getT();
+  return getSlice(index)->domain();
 }
 
-Interval Tube::getT(double t) const
+Interval Tube::domain(double t) const
 {
   int index = input2index(t);
-  Interval intv_t = getSlice(index)->getT();
+  Interval intv_t = getSlice(index)->domain();
   if(t == intv_t.ub() && index < m_slices_number - 1) // on the boundary, between two slices
-    return getSlice(index + 1)->getT() | intv_t;
+    return getSlice(index + 1)->domain() | intv_t;
   return intv_t;
 }
 
@@ -259,7 +259,7 @@ const Interval& Tube::operator[](int index) const
   // Write access is not allowed for this operator:
   // a further call to computeTree() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
-  // For write access: use setY()
+  // For write access: use set()
   return getSlice(index)->m_intv_y;
 }
 
@@ -268,7 +268,7 @@ Interval Tube::operator[](double t) const
   // Write access is not allowed for this operator:
   // a further call to computeTree() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
-  // For write access: use setY()
+  // For write access: use set()
   int index = input2index(t);
   Interval intv_t = getSlice(index)->m_intv_t;
   Interval intv_y = (*this)[index];
@@ -282,7 +282,7 @@ Interval Tube::operator[](const ibex::Interval& intv_t) const
   // Write access is not allowed for this operator:
   // a further call to computeTree() is needed when values change,
   // this call cannot be garanteed with a direct access to m_intv_y
-  // For write access: use setY()
+  // For write access: use set()
 
   if(intv_t.lb() == intv_t.ub())
     return (*this)[intv_t.lb()];
@@ -302,8 +302,8 @@ Interval Tube::operator[](const ibex::Interval& intv_t) const
 
   else
   {
-    Interval inter_firstsubtube = m_first_subtube->getT() & intersection;
-    Interval inter_secondsubtube = m_second_subtube->getT() & intersection;
+    Interval inter_firstsubtube = m_first_subtube->domain() & intersection;
+    Interval inter_secondsubtube = m_second_subtube->domain() & intersection;
 
     if(inter_firstsubtube == inter_secondsubtube)
       return (*m_first_subtube)[inter_firstsubtube.lb()] & (*m_second_subtube)[inter_secondsubtube.lb()];
@@ -321,7 +321,7 @@ Interval Tube::operator[](const ibex::Interval& intv_t) const
   }
 }
 
-const Interval& Tube::getY() const
+const Interval& Tube::image() const
 {
   if(m_tree_computation_needed)
     computeTree();
@@ -329,21 +329,21 @@ const Interval& Tube::getY() const
   return m_intv_y;
 }
 
-void Tube::setY(const Interval& intv_y, int index)
+void Tube::set(const Interval& intv_y, int index)
 {
-  getSlice(index)->setY(intv_y);
+  getSlice(index)->set(intv_y);
   requestFutureTreeComputation(index);
 }
 
-void Tube::setY(const Interval& intv_y, double t)
+void Tube::set(const Interval& intv_y, double t)
 {
   int index = input2index(t);
-  setY(intv_y, index);
-  if(getT(index).lb() == t && index > 0)
-    setY(intv_y, index - 1);
+  set(intv_y, index);
+  if(domain(index).lb() == t && index > 0)
+    set(intv_y, index - 1);
 }
 
-void Tube::setY(const Interval& intv_y, const Interval& intv_t)
+void Tube::set(const Interval& intv_y, const Interval& intv_t)
 {
   if(intv_t == ibex::Interval::ALL_REALS ||
      (m_intv_t.intersects(intv_t) && m_intv_t.lb() != intv_t.ub() && m_intv_t.ub() != intv_t.lb()))
@@ -353,8 +353,8 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 
     else
     {
-      m_first_subtube->setY(intv_y, intv_t);
-      m_second_subtube->setY(intv_y, intv_t);
+      m_first_subtube->set(intv_y, intv_t);
+      m_second_subtube->set(intv_y, intv_t);
     }
 
     requestFutureTreeComputation();
@@ -363,7 +363,7 @@ void Tube::setY(const Interval& intv_y, const Interval& intv_t)
 
 const Interval Tube::feed(const Interval& intv_y, int index)
 {
-  setY((*this)[index] | intv_y, index);
+  set((*this)[index] | intv_y, index);
   return (*this)[index];
 }
 
@@ -372,7 +372,7 @@ const Interval Tube::feed(const Interval& intv_y, double t)
   int index = input2index(t);
   Interval previous_y = (*this)[index];
   feed(intv_y, index);
-  if(getT(index).lb() == t && index > 0)
+  if(domain(index).lb() == t && index > 0)
     feed(intv_y, index - 1);
   return (*this)[t];
 }
@@ -392,7 +392,7 @@ void Tube::feed(const map<double,Interval>& map_intv_y)
 
     for(int i = input2index(ta) ; i <= input2index(tb) ; i++)
     {
-      Interval slice_t = getT(i) & Interval(ta,tb);
+      Interval slice_t = domain(i) & Interval(ta,tb);
 
       if(!slice_t.is_empty())
       {
@@ -444,12 +444,12 @@ const Tube* Tube::getSecondSubTube() const
   return m_second_subtube;
 }
 
-Interval Tube::setInversion(const Interval& intv_y, const Interval& intv_t) const
+Interval Tube::invert(const Interval& intv_y, const Interval& intv_t) const
 {
-  if(!getT().intersects(intv_t)) // to apply this function on a tube's portion only
+  if(!domain().intersects(intv_t)) // to apply this function on a tube's portion only
     return Interval::EMPTY_SET;
 
-  else if(!getY().intersects(intv_y))
+  else if(!image().intersects(intv_y))
     return Interval::EMPTY_SET;
 
   else
@@ -458,23 +458,23 @@ Interval Tube::setInversion(const Interval& intv_y, const Interval& intv_t) cons
       return m_intv_t;
 
     else
-      return m_first_subtube->setInversion(intv_y, intv_t) | m_second_subtube->setInversion(intv_y, intv_t);
+      return m_first_subtube->invert(intv_y, intv_t) | m_second_subtube->invert(intv_y, intv_t);
   }
 }
 
-void Tube::setInversion(const Interval& intv_y, vector<Interval> &v_intv_t) const
+void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t) const
 {
-  return setInversion(intv_y, v_intv_t, true);
+  return invert(intv_y, v_intv_t, true);
 }
 
-void Tube::setInversion(const Interval& intv_y, vector<Interval> &v_intv_t, bool concatenate_results) const
+void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t, bool concatenate_results) const
 {
   v_intv_t.clear();
-  Interval intv_t = setInversion(intv_y);
+  Interval intv_t = invert(intv_y);
 
   if(!intv_t.is_empty())
   {
-    pair<Interval,Interval> enc_bounds = getEnclosedBounds(intv_t);
+    pair<Interval,Interval> enc_bounds = eval(intv_t);
 
     if(!concatenate_results)
     {
@@ -482,10 +482,10 @@ void Tube::setInversion(const Interval& intv_y, vector<Interval> &v_intv_t, bool
       {
         // Bisection is needed
         vector<Interval> v1;
-        m_first_subtube->setInversion(intv_y, v1, false);
+        m_first_subtube->invert(intv_y, v1, false);
         v_intv_t.insert(v_intv_t.end(), v1.begin(), v1.end());
         vector<Interval> v2;
-        m_second_subtube->setInversion(intv_y, v2, false);
+        m_second_subtube->invert(intv_y, v2, false);
         v_intv_t.insert(v_intv_t.end(), v2.begin(), v2.end());
       }
 
@@ -496,7 +496,7 @@ void Tube::setInversion(const Interval& intv_y, vector<Interval> &v_intv_t, bool
     else
     {
       vector<Interval> v;
-      setInversion(intv_y, v, false);
+      invert(intv_y, v, false);
 
       // Concatenation (solutions may be adjacent)
       int i = 0;
@@ -512,7 +512,7 @@ void Tube::setInversion(const Interval& intv_y, vector<Interval> &v_intv_t, bool
   }
 }
 
-const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) const
+const pair<Interval,Interval> Tube::eval(const Interval& intv_t) const
 {  
   if(intv_t.lb() == intv_t.ub())
     return make_pair(Interval((*this)[intv_t.lb()].lb()), Interval((*this)[intv_t.lb()].ub()));
@@ -532,23 +532,23 @@ const pair<Interval,Interval> Tube::getEnclosedBounds(const Interval& intv_t) co
 
   else
   {
-    Interval inter_firstsubtube = m_first_subtube->getT() & intersection;
-    Interval inter_secondsubtube = m_second_subtube->getT() & intersection;
+    Interval inter_firstsubtube = m_first_subtube->domain() & intersection;
+    Interval inter_secondsubtube = m_second_subtube->domain() & intersection;
 
     if(inter_firstsubtube.lb() == inter_firstsubtube.ub() && inter_secondsubtube.lb() == inter_secondsubtube.ub())
       return make_pair((*m_first_subtube)[inter_firstsubtube.lb()] & (*m_second_subtube)[inter_secondsubtube.lb()],
                        (*m_first_subtube)[inter_firstsubtube.ub()] & (*m_second_subtube)[inter_secondsubtube.ub()]);
 
     else if(inter_firstsubtube.is_empty() || inter_firstsubtube.lb() == inter_firstsubtube.ub())
-      return m_second_subtube->getEnclosedBounds(inter_secondsubtube);
+      return m_second_subtube->eval(inter_secondsubtube);
 
     else if(inter_secondsubtube.is_empty() || inter_secondsubtube.lb() == inter_secondsubtube.ub())
-      return m_first_subtube->getEnclosedBounds(inter_firstsubtube);
+      return m_first_subtube->eval(inter_firstsubtube);
 
     else
     {
-      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds(inter_firstsubtube);
-      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds(inter_secondsubtube);
+      pair<Interval,Interval> ui_past = m_first_subtube->eval(inter_firstsubtube);
+      pair<Interval,Interval> ui_future = m_second_subtube->eval(inter_secondsubtube);
       return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
   }
@@ -578,19 +578,19 @@ void Tube::getTubeNodes(vector<Tube*> &v_nodes)
 
 Tube& Tube::unionWith(const Tube& x)
 {
-  if(size() != x.size() || getT() != x.getT())
+  if(size() != x.size() || domain() != x.domain())
   {
     for(int i = 0 ; i < size() ; i++)
     {
-      Interval this_intv_t = getT(i);
+      Interval this_intv_t = domain(i);
       Interval this_intv_y = (*this)[i];
 
-      Interval x_intv_t = x.getT() & this_intv_t;
+      Interval x_intv_t = x.domain() & this_intv_t;
 
       if(!x_intv_t.is_empty())
       {
         Interval x_intv_y = x[x_intv_t];
-        setY(this_intv_y | x_intv_y, x_intv_t);
+        set(this_intv_y | x_intv_y, x_intv_t);
       }
     }
   }
@@ -619,9 +619,9 @@ void Tube::unionWith_localUpdate(const Tube *x)
   if(m_tree_computation_needed)
     computeTree();
   
-  m_intv_y |= x->getY();
-  pair<Interval,Interval> eb1 = getEnclosedBounds();
-  pair<Interval,Interval> eb2 = x->getEnclosedBounds();
+  m_intv_y |= x->image();
+  pair<Interval,Interval> eb1 = eval();
+  pair<Interval,Interval> eb2 = x->eval();
   m_enclosed_bounds = make_pair(Interval(min(eb1.first.lb(), eb2.first.lb()), min(eb1.first.ub(), eb2.first.ub())),
                                 Interval(max(eb1.second.lb(), eb2.second.lb()), max(eb1.second.ub(), eb2.second.ub())));
 
@@ -630,19 +630,19 @@ void Tube::unionWith_localUpdate(const Tube *x)
 
 Tube& Tube::intersectWith(const Tube& x)
 {
-  if(size() != x.size() || getT() != x.getT())
+  if(size() != x.size() || domain() != x.domain())
   {
     for(int i = 0 ; i < size() ; i++)
     {
-      Interval this_intv_t = getT(i);
+      Interval this_intv_t = domain(i);
       Interval this_intv_y = (*this)[i];
 
-      Interval x_intv_t = x.getT() & this_intv_t;
+      Interval x_intv_t = x.domain() & this_intv_t;
 
       if(!x_intv_t.is_empty())
       {
         Interval x_intv_y = x[x_intv_t];
-        setY(this_intv_y & x_intv_y, x_intv_t);
+        set(this_intv_y & x_intv_y, x_intv_t);
       }
     }
   }
@@ -671,7 +671,7 @@ void Tube::intersectWith_localUpdate(const Tube *x)
   if(m_tree_computation_needed)
     computeTree();
   
-  m_intv_y &= x->getY();
+  m_intv_y &= x->image();
   // Enclosed bounds cannot be computed on this level.
   // Synthesis has to be done from the root (see update() in intersectWith).
   requestFutureTreeComputation();
@@ -769,11 +769,11 @@ void Tube::computeTree() const
         }
       }
       
-      m_intv_y = m_first_subtube->getY() | m_second_subtube->getY();
+      m_intv_y = m_first_subtube->image() | m_second_subtube->image();
 
       // Enclosed bounds
-      pair<Interval,Interval> ui_past = m_first_subtube->getEnclosedBounds();
-      pair<Interval,Interval> ui_future = m_second_subtube->getEnclosedBounds();
+      pair<Interval,Interval> ui_past = m_first_subtube->eval();
+      pair<Interval,Interval> ui_future = m_second_subtube->eval();
       m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
     }
 

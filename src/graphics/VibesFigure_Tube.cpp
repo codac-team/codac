@@ -63,8 +63,8 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
 {
   if(m_need_to_update_axis)
   {
-    vibes::axisLimits(m_tube->getT().lb(), m_tube->getT().ub(), 
-                      m_tube->getY().lb(), m_tube->getY().ub(),
+    vibes::axisLimits(m_tube->domain().lb(), m_tube->domain().ub(), 
+                      m_tube->image().lb(), m_tube->image().ub(),
                       m_name);
     m_need_to_update_axis = false;
   }
@@ -76,7 +76,7 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
     vibes::clearGroup(m_name, "slices_old_background");
     params = vibesParams("figure", m_name, "group", "slices_old_background");
     for(int i = 0 ; i < m_tube_copy->size() ; i++)
-      drawSlice(m_tube_copy->getT(i), (*m_tube_copy)[i], params);
+      drawSlice(m_tube_copy->domain(i), (*m_tube_copy)[i], params);
   }
 
   vibes::clearGroup(m_name, "slices");
@@ -86,7 +86,7 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
     slices_limit = m_tube->size();
 
   for(int i = 0 ; i < m_tube->size() ; i += max((int)(m_tube->size() / slices_limit), 1))
-    drawSlice(m_tube->getT(i), (*m_tube)[i], params);
+    drawSlice(m_tube->domain(i), (*m_tube)[i], params);
 
   if(update_background)
   {
@@ -95,7 +95,7 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
     m_tube_copy = new Tube(*m_tube);
   }
 
-  if(m_tube->getY() == Interval::ALL_REALS)
+  if(m_tube->image() == Interval::ALL_REALS)
     m_need_to_update_axis = true;
 }
 

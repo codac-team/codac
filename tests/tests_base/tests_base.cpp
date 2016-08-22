@@ -19,9 +19,9 @@ TEST_CASE("Reading tube", "[core]")
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
 
-    REQUIRE(tube.getY() == Interval(-11,13));
+    REQUIRE(tube.image() == Interval(-11,13));
     REQUIRE(tube[7] == Interval(-11,-7));
     REQUIRE(tube[3.5] == Interval(-4,4));
     REQUIRE(tube[17.5] == Interval(2,7));
@@ -45,7 +45,7 @@ TEST_CASE("Reading tube", "[core]")
   {
     Tube tube = tubeTest4();
 
-    REQUIRE(tube.getY() == Interval(-1.5,2));
+    REQUIRE(tube.image() == Interval(-1.5,2));
     REQUIRE(tube[0] == Interval(1,2));
     REQUIRE(tube[11] == Interval(-1.5,-0.5));
     REQUIRE(tube[11.0] == Interval(-1,-0.5));
@@ -58,7 +58,7 @@ TEST_CASE("Computing tube's volume", "[core]")
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     REQUIRE(tube.volume() == 197.);
   }
 
@@ -105,11 +105,11 @@ TEST_CASE("Testing union operation", "[core]")
   SECTION("Test tube1|tube2")
   {
     Tube tube1 = tubeTest1();
-    tube1.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
     Tube tube2 = tubeTest2();
     tube1 |= tube2;
 
-    REQUIRE(tube1.getY() == Interval(-11,13));
+    REQUIRE(tube1.image() == Interval(-11,13));
     REQUIRE(tube1[0] == Interval(-2,8));
     REQUIRE(tube1[5.5] == Interval(-9,6));
     REQUIRE(tube1[11] == Interval(-7,3));
@@ -126,10 +126,10 @@ TEST_CASE("Testing intersection operation", "[core]")
   SECTION("Test tube1&tube2")
   {
     Tube tube1 = tubeTest1();
-    tube1.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
     Tube tube2 = tubeTest2();
     tube1 &= tube2;
-    REQUIRE(tube1.getY() == Interval(-2,4));
+    REQUIRE(tube1.image() == Interval(-2,4));
     REQUIRE(tube1[0] == Interval::EMPTY_SET);
     REQUIRE(tube1[2.5] == Interval(1,3));
     REQUIRE(tube1[15.0] == Interval(-2,0));
@@ -146,25 +146,25 @@ TEST_CASE("Testing enclosed bounds", "[core]")
   SECTION("Test tube1")
   {
     Tube tube1 = tubeTest1();
-    tube1.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
 
-    REQUIRE(tube1.getEnclosedBounds() == make_pair(Interval(-11,9), Interval(-7,13)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(0.5,25.5)) == make_pair(Interval(-11,9), Interval(-7,13)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(7.1,19.8)) == make_pair(Interval(-11,6), Interval(-7,9)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(6.0,9.0)) == make_pair(Interval(-11,-10), Interval(-7,-6)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(0.)) == make_pair(Interval(4), Interval(8)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(5.)) == make_pair(Interval(-7), Interval(-5)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(5.2)) == make_pair(Interval(-9), Interval(-5)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(23.,24.)) == make_pair(Interval(8), Interval(13)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(22.,25.)) == make_pair(Interval(7,9), Interval(12,13)));
-    REQUIRE(tube1.getEnclosedBounds(Interval(21.,23.)) == make_pair(Interval(8,9), Interval(11,12)));
+    REQUIRE(tube1.eval() == make_pair(Interval(-11,9), Interval(-7,13)));
+    REQUIRE(tube1.eval(Interval(0.5,25.5)) == make_pair(Interval(-11,9), Interval(-7,13)));
+    REQUIRE(tube1.eval(Interval(7.1,19.8)) == make_pair(Interval(-11,6), Interval(-7,9)));
+    REQUIRE(tube1.eval(Interval(6.0,9.0)) == make_pair(Interval(-11,-10), Interval(-7,-6)));
+    REQUIRE(tube1.eval(Interval(0.)) == make_pair(Interval(4), Interval(8)));
+    REQUIRE(tube1.eval(Interval(5.)) == make_pair(Interval(-7), Interval(-5)));
+    REQUIRE(tube1.eval(Interval(5.2)) == make_pair(Interval(-9), Interval(-5)));
+    REQUIRE(tube1.eval(Interval(23.,24.)) == make_pair(Interval(8), Interval(13)));
+    REQUIRE(tube1.eval(Interval(22.,25.)) == make_pair(Interval(7,9), Interval(12,13)));
+    REQUIRE(tube1.eval(Interval(21.,23.)) == make_pair(Interval(8,9), Interval(11,12)));
   }
 
   SECTION("Test tube4")
   {
     Tube tube4 = tubeTest4();
     Tube tube4_primitive = tube4.primitive();
-    REQUIRE(tube4_primitive.getEnclosedBounds(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));
+    REQUIRE(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));
   }
 }
 
@@ -173,28 +173,28 @@ TEST_CASE("Testing set inversion", "[core]")
   SECTION("Scalar set inversion")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
-    REQUIRE(tube.setInversion(Interval(0.)) == Interval(3.0,46.0));
-    REQUIRE(tube.setInversion(Interval::ALL_REALS) == Interval(0.0,46.0));
-    REQUIRE(tube.setInversion(Interval(-12.0,14.0)) == Interval(0.0,46.0));
-    REQUIRE(tube.setInversion(Interval(-20,-18)) == Interval::EMPTY_SET);
-    REQUIRE(tube.setInversion(Interval(-1.0,1.0)) == Interval(2.0,46.0));
-    REQUIRE(tube.setInversion(Interval(-10.5)) == Interval(7.0,8.0));
-    REQUIRE(tube.setInversion(Interval(-12.0,-7.0)) == Interval(4.0,12.0));
-    REQUIRE(tube.setInversion(Interval(10.0,11.0)) == Interval(20.0,27.0));
-    REQUIRE(tube.setInversion(Interval(6.01,7.0)) == Interval(0.0,30.0));
-    REQUIRE(tube.setInversion(Interval(6.0,7.0)) == Interval(0.0,43.0));
-    REQUIRE(tube.setInversion(Interval(5.9,7.0)) == Interval(0.0,43.0));
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
+    REQUIRE(tube.invert(Interval(0.)) == Interval(3.0,46.0));
+    REQUIRE(tube.invert(Interval::ALL_REALS) == Interval(0.0,46.0));
+    REQUIRE(tube.invert(Interval(-12.0,14.0)) == Interval(0.0,46.0));
+    REQUIRE(tube.invert(Interval(-20,-18)) == Interval::EMPTY_SET);
+    REQUIRE(tube.invert(Interval(-1.0,1.0)) == Interval(2.0,46.0));
+    REQUIRE(tube.invert(Interval(-10.5)) == Interval(7.0,8.0));
+    REQUIRE(tube.invert(Interval(-12.0,-7.0)) == Interval(4.0,12.0));
+    REQUIRE(tube.invert(Interval(10.0,11.0)) == Interval(20.0,27.0));
+    REQUIRE(tube.invert(Interval(6.01,7.0)) == Interval(0.0,30.0));
+    REQUIRE(tube.invert(Interval(6.0,7.0)) == Interval(0.0,43.0));
+    REQUIRE(tube.invert(Interval(5.9,7.0)) == Interval(0.0,43.0));
   }
   
   SECTION("Vector set inversion")
   {
     Tube tube = tubeTest1();
-    tube.setY(Interval(-4,2), 14); // to test primitives pre-computation
+    tube.set(Interval(-4,2), 14); // to test primitives pre-computation
 
     vector<Interval> v;
 
-    tube.setInversion(Interval(0.), v);
+    tube.invert(Interval(0.), v);
     REQUIRE(v.size() == 4);
 
     if(v.size() == 4)
@@ -205,7 +205,7 @@ TEST_CASE("Testing set inversion", "[core]")
       REQUIRE(v[3] == Interval(43.0,46.0));
     }
 
-    tube.setInversion(Interval(-1.0,1.0), v);
+    tube.invert(Interval(-1.0,1.0), v);
     REQUIRE(v.size() == 4);
 
     if(v.size() == 4)
@@ -216,16 +216,16 @@ TEST_CASE("Testing set inversion", "[core]")
       REQUIRE(v[3] == Interval(36.0,46.0));
     }
 
-    tube.setInversion(Interval::ALL_REALS, v);
+    tube.invert(Interval::ALL_REALS, v);
     REQUIRE(v.size() == 1);
 
     if(v.size() == 1)
       REQUIRE(v[0] == Interval(0.0,46.0));
 
-    tube.setInversion(Interval(-30.0,-29.0), v);
+    tube.invert(Interval(-30.0,-29.0), v);
     REQUIRE(v.size() == 0);
 
-    tube.setInversion(Interval(3.5), v);
+    tube.invert(Interval(3.5), v);
     REQUIRE(v.size() == 5);
 
     if(v.size() == 5)
@@ -237,19 +237,19 @@ TEST_CASE("Testing set inversion", "[core]")
       REQUIRE(v[4] == Interval(40.0,45.0));
     }
 
-    tube.setInversion(Interval(9.5,30.0), v);
+    tube.invert(Interval(9.5,30.0), v);
     REQUIRE(v.size() == 1);
 
     if(v.size() == 1)
       REQUIRE(v[0] == Interval(20.0,27.0));
 
-    tube.setInversion(Interval(12.0,13.0), v);
+    tube.invert(Interval(12.0,13.0), v);
     REQUIRE(v.size() == 1);
 
     if(v.size() == 1)
       REQUIRE(v[0] == Interval(22.0,25.0));
 
-    tube.setInversion(Interval(-4.0,-3.0), v);
+    tube.invert(Interval(-4.0,-3.0), v);
     REQUIRE(v.size() == 3);
 
     if(v.size() == 3)

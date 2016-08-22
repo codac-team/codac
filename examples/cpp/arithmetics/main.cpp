@@ -50,13 +50,13 @@ int main(int argc, char *argv[])
       // Setting [value] for the ith slice:
       Interval value;
 
-      value = pow(tube_x.getT(i) - domain.ub() / 2., 2) + Interval(-0.5,0.5);
-      tube_x.setY(value, i);
+      value = pow(tube_x.domain(i) - domain.ub() / 2., 2) + Interval(-0.5,0.5);
+      tube_x.set(value, i);
 
-      value = 4. * -cos(tube_y.getT(i) - domain.ub() / 2.)
+      value = 4. * -cos(tube_y.domain(i) - domain.ub() / 2.)
               + Interval(-0.5,0.5)
-              + 0.1 * pow(tube_x.getT(i) - domain.ub() / 3., 2) * Interval(-2,2);
-      tube_y.setY(value, i);
+              + 0.1 * pow(tube_x.domain(i) - domain.ub() / 3., 2) * Interval(-2,2);
+      tube_y.set(value, i);
     }
 
     Tube tube_a = tube_x + tube_y;

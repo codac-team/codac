@@ -127,7 +127,7 @@ class Tube
          *
          * \return an interval [t0,tf]
          */
-        const ibex::Interval& getT() const;
+        const ibex::Interval& domain() const;
 
         /**
          * \brief Return the domain of the slice represented by index.
@@ -135,7 +135,7 @@ class Tube
          * \param index slice's id, between 0 and (size - 1)
          * \return an interval [t0,tf]
          */
-        const ibex::Interval& getT(int index) const;
+        const ibex::Interval& domain(int index) const;
 
         /**
          * \brief Return the domain of the slice containing the given input.
@@ -143,10 +143,10 @@ class Tube
          * \param t the input
          * \return an interval [t0,tf]
          */
-        ibex::Interval getT(double t) const;
+        ibex::Interval domain(double t) const;
 
         /**
-         * \brief Return the y-value of the i^th slice, refered by index.
+         * \brief Return the y-value (image) of the i^th slice, refered by index.
          *
          * \param index slice's id, between 0 and (size - 1)
          * \return the correspondingy-value
@@ -154,7 +154,7 @@ class Tube
         const ibex::Interval& operator[](int index) const;
 
         /**
-         * \brief Return the y-value for the given time, refered by t.
+         * \brief Return the y-value (image) for the given time, refered by t.
          *
          * \param t the given time
          * \return the corresponding y-value
@@ -162,7 +162,7 @@ class Tube
         ibex::Interval operator[](double t) const;
 
         /**
-         * \brief Return the y-value for the given bounded time, refered by intv_t.
+         * \brief Return the y-value (image) for the given bounded time, refered by intv_t.
          *
          * \param intv_t the given bounded time
          * \return the corresponding y-value
@@ -170,11 +170,11 @@ class Tube
         ibex::Interval operator[](const ibex::Interval& intv_t) const;
 
         /**
-         * \brief Return the union-value over the whole domain.
+         * \brief Return the set of all images over the whole domain.
          *
          * \return an interval [y1,y2]
          */
-        const ibex::Interval& getY() const;
+        const ibex::Interval& image() const;
 
         /**
          * \brief Set the y-value intv_y for the slice refered by index.
@@ -182,7 +182,7 @@ class Tube
          * \param intv_y the y-value to be set
          * \param index slice's id, between 0 and (size - 1)
          */
-        void setY(const ibex::Interval& intv_y, int index);
+        void set(const ibex::Interval& intv_y, int index);
 
         /**
          * \brief Set the y-value intv_y for the slice containing the given input t.
@@ -190,7 +190,7 @@ class Tube
          * \param intv_y the y-value to be set
          * \param t the input
          */
-        void setY(const ibex::Interval& intv_y, double t);
+        void set(const ibex::Interval& intv_y, double t);
 
         /**
          * \brief Set the y-value intv_y over the domain represented by intv_t.
@@ -198,7 +198,7 @@ class Tube
          * \param intv_y the y-value to be set
          * \param intv_t the interval input, Interval::ALL_REALS by default
          */
-        void setY(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
+        void set(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
 
         /**
          * \brief Add the y-value intv_y for the slice refered by index.
@@ -252,7 +252,7 @@ class Tube
          * \param intv_t the interval input, Interval::ALL_REALS by default
          * \return a pair of intervals representing all tube's minima and maxima: [[lb_min, lb_max], [ub_min, ub_max]]
          */
-        const std::pair<ibex::Interval,ibex::Interval> getEnclosedBounds(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
+        const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
         /**
          * \brief Perform set-inversion on this.
@@ -264,7 +264,7 @@ class Tube
          * \param intv_t the optional t domain to consider
          * \return the resulted union of the set-inversion
          */
-        ibex::Interval setInversion(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
+        ibex::Interval invert(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
         /**
          * \brief Perform precise set-inversion on this.
@@ -276,7 +276,7 @@ class Tube
          * \param intv_y the y-value to invert
          * \param v_intv_t a vector containing, at the end, each solutions of the set-inversion
          */
-        void setInversion(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t) const;
+        void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t) const;
 
         /**
          * \brief Set this Tube to the hull of itself and another.
@@ -566,7 +566,7 @@ class Tube
      * \param concatenate_results results may be adjacent, so a concatenation on vector's values can be requested
      * \return a vector containing each solutions of the set-inversion
      */
-    void setInversion(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, bool concatenate_results) const;
+    void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, bool concatenate_results) const;
 
     /** Class variables **/
 
