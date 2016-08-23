@@ -105,6 +105,21 @@ class Tube
         bool isSlice() const;
 
         /**
+         * \brief Test if the tube is empty (i.e. if all its slices are empty)
+         *
+         * \return true if the tube is empty, false otherwise
+         */
+        bool isEmpty() const;
+
+        /**
+         * \brief Test if the tube is discontinuous
+         * (i.e. if one slice does not intersect with the previous one)
+         *
+         * \return true if the tube is discontinuous, false otherwise
+         */
+        bool isDiscontinuous() const;
+
+        /**
          * \brief Return the id of the slice containing the given input t.
          * Returned index is such that getT(i).lb() <= t < getT(i).ub()
          *

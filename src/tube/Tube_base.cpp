@@ -179,6 +179,27 @@ bool Tube::isSlice() const
   return m_first_subtube == NULL && m_second_subtube == NULL;
 }
 
+bool Tube::isEmpty() const
+{
+  return image().is_empty();
+}
+
+bool Tube::isDiscontinuous() const
+{
+  Interval previous_slice_y = Interval::ALL_REALS;
+
+  for(int i = 0 ; i < size() ; i++)
+  {
+    Interval this_intv_y = (*this)[i];
+    if((previous_slice_y & this_intv_y).is_empty())
+      return true;
+
+    previous_slice_y = this_intv_y;
+  }
+
+  return false;
+}
+
 const Tube* Tube::getSlice(int index) const
 {
   if(index < 0 || index >= m_slices_number)

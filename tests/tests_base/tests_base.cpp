@@ -69,6 +69,40 @@ TEST_CASE("Computing tube's volume", "[core]")
   }
 }
 
+TEST_CASE("Computing empty test", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    Tube tube = tubeTest1();
+    tube.set(Interval::EMPTY_SET);
+    REQUIRE(tube.isEmpty());
+  }
+
+  SECTION("Test tube1 bis")
+  {
+    Tube tube = tubeTest1();
+    tube.set(Interval::EMPTY_SET, 10);
+    REQUIRE(!tube.isEmpty());
+  }
+}
+
+TEST_CASE("Computing discontinuity", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    Tube tube = tubeTest1();
+    tube.set(Interval(4,7), 20);
+    REQUIRE(tube.isDiscontinuous());
+  }
+
+  SECTION("Test tube1 bis")
+  {
+    Tube tube = tubeTest1();
+    tube.set(Interval::EMPTY_SET, 10);
+    REQUIRE(tube.isDiscontinuous());
+  }
+}
+
 TEST_CASE("Converting inputs to indexes", "[core]")
 {
   SECTION("Test tube1")
