@@ -234,7 +234,7 @@ bool Tube::ctcOut(const Interval& y, const Interval& t)
   return volume() < volume_before_ctc;
 }
 
-bool Tube::ctcIntertemporal(Interval& t1, Interval& t2)
+bool Tube::ctcIntertemporal(Interval& t1, Interval& t2) const
 {
   bool contraction = false;
   double t1_diam, t2_diam;
@@ -251,7 +251,7 @@ bool Tube::ctcIntertemporal(Interval& t1, Interval& t2)
   return contraction;
 }
 
-bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2)
+bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
 {
   bool contraction = false;
   double y_diam = y.diam(), t1_diam, t2_diam;

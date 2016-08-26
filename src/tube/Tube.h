@@ -446,12 +446,12 @@ class Tube
         /**
          * \brief To be defined...
          */
-        bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2);
+        bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2) const;
 
         /**
          * \brief To be defined...
          */
-        bool ctcIntertemporal(ibex::Interval& y, ibex::Interval& t1, ibex::Interval& t2);
+        bool ctcIntertemporal(ibex::Interval& y, ibex::Interval& t1, ibex::Interval& t2) const;
 
 
   protected:
