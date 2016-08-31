@@ -193,20 +193,41 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
 
 bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, Interval& t)
 {
+  double tube_vol = volume();
+  double t_diam = t.diam();
+
   Interval y_temp = y;
-  return ctcIn(derivative_tube, y_temp, t);
+
+  if(!ctcIn(derivative_tube, y_temp, t))
+    return false;
+
+  return volume() < tube_vol || t.diam() < t_diam;
 }
 
 bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, const Interval& t)
 {
+  double tube_vol = volume();
+  double y_diam = y.diam();
+
   Interval t_temp = t;
-  return ctcIn(derivative_tube, y, t_temp);
+  
+  if(!ctcIn(derivative_tube, y, t_temp))
+    return false;
+
+  return volume() < tube_vol || y.diam() < y_diam;
 }
 
 bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, const Interval& t)
 {
-  Interval y_temp = y, t_temp = t;
-  return ctcIn(derivative_tube, y_temp, t_temp);
+  double tube_vol = volume();
+
+  Interval y_temp = y;
+  Interval t_temp = t;
+  
+  if(!ctcIn(derivative_tube, y_temp, t_temp))
+    return false;
+
+  return volume() < tube_vol;
 }
 
 bool Tube::ctcOut(const Interval& y, const Interval& t)
