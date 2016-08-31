@@ -98,7 +98,15 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
   {
     cout << "Warning ctcIn(const Tube& derivative_tube, Interval& y, Interval& t): this[t] do not intersect y" << endl;
     cout << "        this[t]=" << (*this)[t] << ", y=" << y << ", t=" << t << endl;
-    return false;
+
+    if(this->isEmpty())
+      return false;
+
+    else
+    {
+      set(Interval::EMPTY_SET);
+      return true;
+    }
   }
 
   // Trying to contract [t]
