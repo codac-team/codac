@@ -169,9 +169,9 @@ double Tube::volume() const
   return volume;
 }
 
-double Tube::dist(const Tube& tube) const
+double Tube::dist(const Tube& tu) const
 {
-  return fabs(tube.volume() - volume());
+  return fabs(tu.volume() - volume());
 }
 
 bool Tube::isSlice() const
@@ -273,6 +273,12 @@ Interval Tube::domain(double t) const
   if(t == intv_t.ub() && index < m_slices_number - 1) // on the boundary, between two slices
     return getSlice(index + 1)->domain() | intv_t;
   return intv_t;
+}
+
+bool Tube::operator==(const Tube& tu) const
+{
+  return (isSlice() && tu.isSlice() && image() == tu.image() && domain() == tu.domain())
+          || (*getFirstSubTube() == *tu.getFirstSubTube() && *getSecondSubTube() == *tu.getSecondSubTube());
 }
 
 const Interval& Tube::operator[](int index) const

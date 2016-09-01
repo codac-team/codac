@@ -79,9 +79,10 @@ class Tube
          *
          * The distance is defined as the difference between the tubes volumes.
          *
+         * \param tu the tube to be compared
          * \return a double value, 0 if the tubes are equal
          */
-        double dist(const Tube& tube) const;
+        double dist(const Tube& tu) const;
 
         /**
          * \brief Return tube's size: the number of slices defining the tube.
@@ -159,6 +160,14 @@ class Tube
          * \return an interval [t0,tf]
          */
         ibex::Interval domain(double t) const;
+
+        /**
+         * \brief Comparison operator between two tubes. Return true in case of equality.
+         *
+         * \param tu the tube to be compared
+         * \return a boolean
+         */
+        bool operator==(const Tube& tu) const;
 
         /**
          * \brief Return the y-value (image) of the i^th slice, refered by index.
