@@ -14,6 +14,25 @@
 #include "../catch/catch.hpp"
 #include "../tests_cases.hpp"
 
+TEST_CASE("Equality, consistency", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    Tube tube_a = tubeTest1();
+    Tube tube_b = tubeTest1();
+    REQUIRE(tube_a == tube_a);
+    REQUIRE(tube_a == tube_b);
+  }
+
+  SECTION("Test tube4")
+  {
+    Tube tube_a = tubeTest4();
+    Tube tube_b = tubeTest4();
+    REQUIRE(tube_a == tube_a);
+    REQUIRE(tube_a == tube_b);
+  }
+}
+
 TEST_CASE("Reading tube", "[core]")
 {
   SECTION("Test tube1")
