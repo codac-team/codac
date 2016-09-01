@@ -89,106 +89,68 @@ bool Tube::ctcFwdBwd(const Tube& derivative_tube)
 
 bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
 {
-  bool contraction;
-  bool t_contraction = false;
-  bool y_contraction = false;
   bool tube_contraction = false;
 
-  if(!(*this)[t].intersects(y))
-  {
-    //cout << "Warning ctcIn(const Tube& derivative_tube, Interval& y, Interval& t): this[t] do not intersect y" << endl;
-    //cout << "        this[t]=" << (*this)[t] << ", y=" << y << ", t=" << t << endl;
+  double old_t_diam = t.diam();
+  double old_y_diam = y.diam();
 
-    if(this->isEmpty())
-      return false;
+  // Trying to contract [t]
+
+    t = invert((*this)[t] & y, t);
+
+  // Trying to contract [y]
+
+    if(t.is_empty())
+      y = Interval::EMPTY_SET;
+
+    else
+      y &= (*this)[t];
+
+  // Trying to contract this
+
+    if(t.is_empty() || y.is_empty())
+    {
+      tube_contraction = !isEmpty();
+      set(Interval::EMPTY_SET);
+    }
 
     else
     {
-      set(Interval::EMPTY_SET);
-      return true;
-    }
-  }
+      // Forward
+      map<int,Interval> map_fwd;
+      Interval integral_fwd(0.);
 
-  // Trying to contract [t]
-  {
-    double t_diam = t.diam();
-    t &= domain();
-
-    // In forward
-    int i = input2index(t.lb());
-    while(!(*this)[i].intersects(y) && i < input2index(t.ub()))
-    {
-      i++;
-      t = Interval(domain(i).lb(), t.ub()); // updating lower-bound (contraction)
-    }
-
-    // In backward
-    i = input2index(t.ub());
-    while(!(*this)[i].intersects(y) && i > input2index(t.lb()))
-    {
-      i--;
-      t = Interval(t.lb(), domain(i).ub()); // updating upper-bound (contraction)
-    }
-
-    t_contraction = t.diam() < t_diam;
-  }
-
-  // Trying to contract [y]
-  {
-    double y_diam = y.diam();
-    y &= (*this)[t];
-    y_contraction = y.diam() < y_diam;
-  }
-
-  // Trying to contract this
-  {
-    Tube tube_temp1(*this);
-
-    // Raw contraction without derivative information
-    for(int i = input2index(t.lb()) ; i <= input2index(t.ub()) ; i++)
-    {
-      Interval old_y = (*this)[i];
-      Interval new_y = old_y & y;
-      tube_temp1.set(new_y, i);
-    }
-
-    // Taking derivative information into account
-    Tube tube_temp2(tube_temp1);
-    for(int i = input2index(t.lb()) ; i <= input2index(t.ub()) ; i++)
-    {
-      Tube tube_temp3(tube_temp1);
-      Interval new_y = tube_temp3[i];
-
-      // In forward
-      for(int j = i ; j <= input2index(t.ub()) ; j++)
+      for(int i = input2index(t.lb()) ; i <= input2index(t.ub()) ; i++)
       {
-        Interval deriv = derivative_tube[j];
-        Interval deriv_t = derivative_tube.domain(j);
-        new_y += Interval(deriv.lb() * deriv_t.diam(), deriv.ub() * deriv_t.diam());
-        tube_temp3.set(new_y, j);
-      }
-      new_y = tube_temp1[i];
-
-      // In backward
-      for(int j = i ; j >= input2index(t.lb()) ; j--)
-      {
-        Interval deriv = derivative_tube[j];
-        Interval deriv_t = derivative_tube.domain(j);
-        new_y -= Interval(deriv.lb() * deriv_t.diam(), deriv.ub() * deriv_t.diam());
-        tube_temp3.set(new_y | tube_temp3[j], j); // an union is made to keep forward's update
+        Interval domain_i = domain(i);
+        double t_diam_part = max((domain_i & t).diam(), domain_i.diam() - (domain_i & t).diam());
+        integral_fwd += t_diam_part * derivative_tube[i];
+        map_fwd[i] = integral_fwd;
       }
 
-      tube_temp2 |= tube_temp3;
+      // Backward
+      map<int,Interval> map_bwd;
+      Interval integral_bwd(0.);
+      
+      for(int i = input2index(t.ub()) ; i >= input2index(t.lb()) ; i--)
+      {
+        Interval domain_i = domain(i);
+        double t_diam_part = max((domain_i & t).diam(), domain_i.diam() - (domain_i & t).diam());
+        integral_bwd -= t_diam_part * derivative_tube[i];
+        map_bwd[i] = integral_bwd;
+      }
+      
+      // Contraction
+      for(int i = input2index(t.lb()) ; i <= input2index(t.ub()) ; i++)
+      {
+        Interval this_i = (*this)[i];
+        Interval y_contraction = this_i & (y + (map_bwd[i] | map_fwd[i]));
+        tube_contraction |= y_contraction.diam() < this_i.diam();
+        set(y_contraction, i);
+      }
     }
 
-    double vol = volume();
-    (*this) &= tube_temp2;
-    tube_contraction = volume() < vol;
-  }
-
-  contraction = t_contraction | tube_contraction | y_contraction;
-
-  return contraction;
+  return old_t_diam > t.diam() || old_y_diam > y.diam() || tube_contraction;
 }
 
 bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, Interval& t)
