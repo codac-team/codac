@@ -476,7 +476,7 @@ Interval Tube::invert(const Interval& intv_y, const Interval& intv_t) const
   else
   {
     if(isSlice())
-      return m_intv_t;
+      return intv_t & m_intv_t;
 
     else
       return m_first_subtube->invert(intv_y, intv_t) | m_second_subtube->invert(intv_y, intv_t);
