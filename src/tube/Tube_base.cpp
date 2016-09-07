@@ -559,9 +559,13 @@ Tube Tube::subtube(const Interval& intv_t) const
     vector_dt.push_back(domain(i));
 
   Tube subtube = Tube(vector_dt);
-  for(int i = 0 ; i < subtube.size() ; i++)
-    subtube.set((*this)[i + index_lb], i);
-
+  #pragma omp parallel num_threads(omp_get_num_procs())
+  {
+    #pragma omp for
+      for(int i = 0 ; i < subtube.size() ; i++)
+        subtube.set((*this)[i + index_lb], i);
+  }
+  
   return subtube;
 }
 

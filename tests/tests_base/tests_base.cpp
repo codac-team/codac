@@ -345,6 +345,16 @@ TEST_CASE("Testing subtube", "[core]")
     REQUIRE(subtube[10] == Interval(-5.,-1.));
   }
 
+  SECTION("Test tube1 bis")
+  {
+    Tube tube = tubeTest1();
+    Tube subtube = tube.subtube(Interval(10.,12.));
+    REQUIRE(subtube.size() == 2);
+    REQUIRE(subtube.dt() == tube.dt());
+    REQUIRE(subtube[0] == Interval(-8.,-5.));
+    REQUIRE(subtube[1] == Interval(-7.,-4.));
+  }
+
   SECTION("Test tube1: consistency")
   {
     Tube tube = tubeTest1();
