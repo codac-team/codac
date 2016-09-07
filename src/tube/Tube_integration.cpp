@@ -58,8 +58,8 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t) const
   Interval integrale_lb = Interval::EMPTY_SET;
   Interval integrale_ub = Interval::EMPTY_SET;
 
-  Interval intv_t_lb = Interval(domain(index_lb));
-  Interval intv_t_ub = Interval(domain(index_ub));
+  Interval intv_t_lb = domain(index_lb);
+  Interval intv_t_ub = domain(index_ub);
 
   // Part A
   {
@@ -173,11 +173,10 @@ void Tube::computePartialPrimitive(bool build_from_leafs) const
 
     for(int i = 0 ; i < m_slices_number ; i++)
     {
-      double dt = domain(i).diam();
-      Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt);
-      getSlice(i)->m_partial_primitive = make_pair(Interval(integrale_value.lb(), integrale_value.lb() + fabs((*this)[i].lb() * dt)),
-                                                   Interval(integrale_value.ub() - fabs((*this)[i].ub() * dt), integrale_value.ub()));
-      sum_max += (*this)[i] * dt;
+      Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt());
+      getSlice(i)->m_partial_primitive = make_pair(Interval(integrale_value.lb(), integrale_value.lb() + fabs((*this)[i].lb() * dt())),
+                                                   Interval(integrale_value.ub() - fabs((*this)[i].ub() * dt()), integrale_value.ub()));
+      sum_max += (*this)[i] * dt();
     }
 
     computePartialPrimitive(true);

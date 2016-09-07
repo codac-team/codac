@@ -22,8 +22,8 @@ using namespace ibex;
 
 bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 {
-  if(size() != derivative_tube.size())
-    cout << "Warning ctcFwd(const Tube& derivative_tube): tube of different size: "
+  if(size() != derivative_tube.size() || dt() != derivative_tube.dt())
+    cout << "Warning ctcFwd(const Tube& derivative_tube): tube of different size or timestep: "
          << derivative_tube.size() << "/" << size() << endl;
 
   for(int i = 0 ; i < size() ; i++)
@@ -37,11 +37,11 @@ bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
   for(int i = 0 ; i < size() ; i++) // from the past to the future
   {
     Interval y_old = (*this)[i];
-    Interval y_new = y_old & (y_front + derivative_tube[i] * Interval(0., derivative_tube.domain(i).diam()));
+    Interval y_new = y_old & (y_front + derivative_tube[i] * Interval(0., dt()));
     set(y_new, i);
     contraction |= y_old.diam() > y_new.diam();
 
-    y_front = y_old & (y_front + derivative_tube[i] * derivative_tube.domain(i).diam());
+    y_front = y_old & (y_front + derivative_tube[i] * dt());
     if(i < size()-1)
       y_front &= (*this)[i+1];
   }
@@ -51,8 +51,8 @@ bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 
 bool Tube::ctcBwd(const Tube& derivative_tube)
 {
-  if(size() != derivative_tube.size())
-    cout << "Warning ctcBwd(const Tube& derivative_tube): tube of different size: "
+  if(size() != derivative_tube.size() || dt() != derivative_tube.dt())
+    cout << "Warning ctcBwd(const Tube& derivative_tube): tube of different size or timestep: "
          << derivative_tube.size() << "/" << size() << endl;
 
   for(int i = 0 ; i < size() ; i++)
@@ -62,16 +62,16 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
   bool contraction = false;
 
   Interval y_front = (*this)[size() - 1];
-  y_front &= (*this)[size() - 1] - derivative_tube[size() - 1] * derivative_tube.domain(size() - 1).diam();
+  y_front &= (*this)[size() - 1] - derivative_tube[size() - 1] * dt();
 
   for(int i = size() - 2 ; i >= 0 ; i--) // from the future to the past
   {
     Interval y_old = (*this)[i];
-    Interval y_new = y_old & (y_front - derivative_tube[i] * Interval(0., derivative_tube.domain(i).diam()));
+    Interval y_new = y_old & (y_front - derivative_tube[i] * Interval(0., dt()));
     set(y_new, i);
     contraction |= y_old.diam() > y_new.diam();
 
-    y_front = y_old & (y_front - derivative_tube[i] * derivative_tube.domain(i).diam());
+    y_front = y_old & (y_front - derivative_tube[i] * dt());
     if(i > 0)
       y_front &= (*this)[i-1];
   }

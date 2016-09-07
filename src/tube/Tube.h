@@ -38,17 +38,6 @@ class Tube
              const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
         /**
-         * \brief Create a tube over a domain defined by a vector of intervals.
-         *
-         * Values are set by default to Interval::ALL_REALS.
-         *
-         * \param vector_dt an interval of slices domains
-         * \param default_value default y-values
-         */
-        Tube(const std::vector<ibex::Interval>& vector_dt,
-             const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
-
-        /**
          * \brief Create a copy of the given tube tu.
          *
          * \param tu the tube to be copied
@@ -464,6 +453,18 @@ class Tube
 
 
   protected:
+
+    /**
+     * \brief Create a tube over a domain defined by a vector of intervals.
+     *
+     * Values are set by default to Interval::ALL_REALS.
+     * For now, all timesteps must be identical in the tree.
+     *
+     * \param vector_dt an interval of slices domains
+     * \param default_value default y-values
+     */
+    Tube(const std::vector<ibex::Interval>& vector_dt,
+         const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
     /**
      * \brief Create a tube over a domain defined by a vector of intervals.
