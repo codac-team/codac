@@ -228,6 +228,7 @@ TEST_CASE("Testing set inversion", "[core]")
     Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     REQUIRE(tube.invert(Interval(0.)) == Interval(3.0,46.0));
+    REQUIRE(tube.invert(Interval(-7.)) == Interval(4.0,12.0));
     REQUIRE(tube.invert(Interval::ALL_REALS) == Interval(0.0,46.0));
     REQUIRE(tube.invert(Interval(-12.0,14.0)) == Interval(0.0,46.0));
     REQUIRE(tube.invert(Interval(-20,-18)) == Interval::EMPTY_SET);
@@ -267,6 +268,15 @@ TEST_CASE("Testing set inversion", "[core]")
       REQUIRE(v[1] == Interval(13.0,17.0));
       REQUIRE(v[2] == Interval(34.0,35.0));
       REQUIRE(v[3] == Interval(36.0,46.0));
+    }
+
+    tube.invert(Interval(-6.9999), v);
+    REQUIRE(v.size() == 2);
+
+    if(v.size() == 2)
+    {
+      REQUIRE(v[0] == Interval(4.,7.));
+      REQUIRE(v[1] == Interval(8.,12.));
     }
 
     tube.invert(Interval::ALL_REALS, v);
