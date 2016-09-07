@@ -292,6 +292,14 @@ class Tube
         void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t) const;
 
         /**
+         * \brief Extract a subtube from this.
+         *
+         * \param intv_t the domain to extract
+         * \return a subtube defined over the intv_t domain
+         */
+        Tube subtube(const ibex::Interval& intv_t) const;
+
+        /**
          * \brief Set this Tube to the hull of itself and another.
          *
          * Note: both tubes have to be similar (same domain, same number of slices).

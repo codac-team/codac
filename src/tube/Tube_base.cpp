@@ -539,6 +539,32 @@ void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t, bool conca
   }
 }
 
+Tube Tube::subtube(const Interval& intv_t) const
+{
+  Interval intv_t_inter = intv_t & domain();
+
+  if(intv_t_inter.is_empty())
+  {
+    cout << "Error Tube::subtube(Interval): wrong domain." << endl;
+    return *this;
+  }
+
+  int index_lb = input2index(intv_t_inter.lb());
+  int index_ub = input2index(intv_t_inter.ub());
+  if(domain(index_ub).lb() == intv_t_inter.ub())
+    index_ub = max(0, index_ub - 1);
+
+  vector<Interval> vector_dt;
+  for(int i = index_lb ; i <= index_ub ; i++)
+    vector_dt.push_back(domain(i));
+
+  Tube subtube = Tube(vector_dt);
+  for(int i = 0 ; i < subtube.size() ; i++)
+    subtube.set((*this)[i + index_lb], i);
+
+  return subtube;
+}
+
 const pair<Interval,Interval> Tube::eval(const Interval& intv_t) const
 {  
   if(intv_t.lb() == intv_t.ub())
