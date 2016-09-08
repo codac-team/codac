@@ -87,12 +87,17 @@ bool Tube::ctcFwdBwd(const Tube& derivative_tube)
   return contraction;
 }
 
-bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
+bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
+                      bool& tube_contracted, bool& y_contracted, bool& t_contracted, bool fwd_bwd)
 {
-  bool tube_contraction = false;
+  bool inconsistency = false;
+  tube_contracted = false;
 
   double old_t_diam = t.diam();
   double old_y_diam = y.diam();
+
+  int index_lb, index_ub;
+  int min_index_ctc = 0, max_index_ctc = size() - 1; // set bounds to this contractor
 
   // Trying to contract [t]
 
@@ -109,87 +114,138 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t)
   // Trying to contract this
 
     if(t.is_empty() || y.is_empty())
-    {
-      tube_contraction = !isEmpty();
-      set(Interval::EMPTY_SET);
-    }
+      inconsistency = true;
 
     else
     {
-      // Forward
-      map<int,Interval> map_fwd;
-      Interval integral_fwd(0.);
+      // Slices of index_lb and index_ub strictly enclose the measurement [t]
 
-      for(int i = input2index(t.lb()) ; i <= input2index(t.ub()) ; i++)
-      {
-        Interval domain_i = domain(i);
-        double t_diam_part = max((domain_i & t).diam(), domain_i.diam() - (domain_i & t).diam());
-        integral_fwd += t_diam_part * derivative_tube[i];
-        map_fwd[i] = integral_fwd;
-      }
+        index_lb = input2index(t.lb());
+        // Special case when the lower bound of [t] equals a bound of a slice or is near empty values
+        if(domain(index_lb).lb() == t.lb() && (*this)[max(0, index_lb - 1)].intersects(y))
+          index_lb = max(0, index_lb - 1);
+
+        index_ub = input2index(t.ub());
+        // Special case when the upper bound of [t] is near empty values
+        if(!(*this)[max(0, index_ub)].intersects(y))
+          index_ub = max(0, index_ub - 1);
+  
+        if(!fwd_bwd)
+        {
+          min_index_ctc = max(0, index_lb - 1);
+          max_index_ctc = min(index_ub + 1, size() - 1);
+        }
+
+      // Map initialization
+
+        map<int,Interval> map_new_y;
+        for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
+          map_new_y[i] = Interval::EMPTY_SET;
+
+        Interval y_front;
 
       // Backward
-      map<int,Interval> map_bwd;
-      Interval integral_bwd(0.);
-      
-      for(int i = input2index(t.ub()) ; i >= input2index(t.lb()) ; i--)
-      {
-        Interval domain_i = domain(i);
-        double t_diam_part = max((domain_i & t).diam(), domain_i.diam() - (domain_i & t).diam());
-        integral_bwd -= t_diam_part * derivative_tube[i];
-        map_bwd[i] = integral_bwd;
-      }
-      
-      // Contraction
-      for(int i = input2index(t.lb()) ; i <= input2index(t.ub()) ; i++)
-      {
-        Interval this_i = (*this)[i];
-        Interval y_contraction = this_i & (y + (map_bwd[i] | map_fwd[i]));
-        tube_contraction |= y_contraction.diam() < this_i.diam();
-        set(y_contraction, i);
-      }
+
+        y_front = y;
+        for(int i = index_ub ; i >= min_index_ctc ; i--)
+        {
+          Interval integ_domain;
+          Interval slice_dom = domain(i);
+          double dt_ = slice_dom.diam();
+          Interval slice_deriv = derivative_tube[i];
+
+          // Over the ith slice
+          integ_domain = Interval(0., min(dt_, t.ub() - slice_dom.lb()));
+          map_new_y[i] |= (*this)[i] & (y_front - slice_deriv * integ_domain);
+
+          // On the front, backward way
+          integ_domain = Interval(min(dt_, max(0., t.lb() - slice_dom.lb())), min(dt_, t.ub() - slice_dom.lb()));
+          y_front = (*this)[slice_dom.lb()] & (y_front - slice_deriv * integ_domain);
+        }
+
+      // Forward
+
+        y_front = y;
+        for(int i = index_lb ; i <= max_index_ctc ; i++)
+        {
+          Interval integ_domain;
+          Interval slice_dom = domain(i);
+          double dt_ = slice_dom.diam();
+          Interval slice_deriv = derivative_tube[i];
+
+          // Over the ith slice
+          integ_domain = Interval(0., min(slice_dom.ub() - t.lb(), dt_));
+          map_new_y[i] |= (*this)[i] & (y_front + slice_deriv * integ_domain);
+
+          // On the front, forward way
+          integ_domain = Interval(min(dt_, max(0., slice_dom.ub() - t.ub())), min(dt_, slice_dom.ub() - t.lb()));
+          y_front = (*this)[slice_dom.ub()] & (y_front + slice_deriv * integ_domain);
+        }
+
+      // Synthesis
+
+        Interval prev_y;
+        for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
+        {
+          if(!prev_y.intersects(map_new_y[i]))
+          {
+            cout << "#### " << i << " ### " << index2input(i) << " " << map_new_y[i] << endl;
+            inconsistency = true;
+            break;
+          }
+
+          tube_contracted |= map_new_y[i].diam() < (*this)[i].diam();
+          prev_y = map_new_y[i];
+          set(map_new_y[i], i);
+        }
     }
 
-  return old_t_diam > t.diam() || old_y_diam > y.diam() || tube_contraction;
+  if(inconsistency)
+  {
+    //cout << "Warning ctcIn(): inconsistency" << endl;
+
+    for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
+      set(Interval::EMPTY_SET, i);
+
+    tube_contracted = true;
+    t.set_empty();
+    y.set_empty();
+  }
+
+  t_contracted = t.diam() < old_t_diam;
+  y_contracted = y.diam() < old_y_diam;
+  return tube_contracted | y_contracted | t_contracted;
 }
 
-bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, Interval& t)
+bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t, bool fwd_bwd)
 {
-  double tube_vol = volume();
-  double t_diam = t.diam();
+  bool tube_contracted, y_contracted, t_contracted;
+  return ctcIn_base(derivative_tube, y, t, tube_contracted, y_contracted, t_contracted, fwd_bwd);
+}
 
+bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, Interval& t, bool fwd_bwd)
+{
   Interval y_temp = y;
-
-  if(!ctcIn(derivative_tube, y_temp, t))
-    return false;
-
-  return volume() < tube_vol || t.diam() < t_diam;
+  bool tube_contracted, y_contracted, t_contracted;
+  ctcIn_base(derivative_tube, y_temp, t, tube_contracted, y_contracted, t_contracted, fwd_bwd);
+  return tube_contracted | t_contracted;
 }
 
-bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, const Interval& t)
+bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, const Interval& t, bool fwd_bwd)
 {
-  double tube_vol = volume();
-  double y_diam = y.diam();
-
   Interval t_temp = t;
-  
-  if(!ctcIn(derivative_tube, y, t_temp))
-    return false;
-
-  return volume() < tube_vol || y.diam() < y_diam;
+  bool tube_contracted, y_contracted, t_contracted;
+  ctcIn_base(derivative_tube, y, t_temp, tube_contracted, y_contracted, t_contracted, fwd_bwd);
+  return tube_contracted | y_contracted;
 }
 
-bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, const Interval& t)
+bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, const Interval& t, bool fwd_bwd)
 {
-  double tube_vol = volume();
-
   Interval y_temp = y;
   Interval t_temp = t;
-  
-  if(!ctcIn(derivative_tube, y_temp, t_temp))
-    return false;
-
-  return volume() < tube_vol;
+  bool tube_contracted, y_contracted, t_contracted;
+  ctcIn_base(derivative_tube, y_temp, t_temp, tube_contracted, y_contracted, t_contracted, fwd_bwd);
+  return tube_contracted;
 }
 
 bool Tube::ctcOut(const Interval& y, const Interval& t)
