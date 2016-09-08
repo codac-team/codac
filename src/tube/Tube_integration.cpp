@@ -173,10 +173,11 @@ void Tube::computePartialPrimitive(bool build_from_leafs) const
 
     for(int i = 0 ; i < m_slices_number ; i++)
     {
-      Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt());
-      getSlice(i)->m_partial_primitive = make_pair(Interval(integrale_value.lb(), integrale_value.lb() + fabs((*this)[i].lb() * dt())),
-                                                   Interval(integrale_value.ub() - fabs((*this)[i].ub() * dt()), integrale_value.ub()));
-      sum_max += (*this)[i] * dt();
+      double dt_ = domain(i).diam();
+      Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt_);
+      getSlice(i)->m_partial_primitive = make_pair(Interval(integrale_value.lb(), integrale_value.lb() + fabs((*this)[i].lb() * dt_)),
+                                                   Interval(integrale_value.ub() - fabs((*this)[i].ub() * dt_), integrale_value.ub()));
+      sum_max += (*this)[i] * dt_;
     }
 
     computePartialPrimitive(true);
