@@ -147,6 +147,7 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
       // Map initialization
 
         map<int,Interval> map_new_y;
+        #pragma omp for
         for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
           map_new_y[i] = Interval::EMPTY_SET;
 
@@ -211,6 +212,7 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
   {
     //cout << "Warning ctcIn(): inconsistency" << endl;
 
+    #pragma omp for
     for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
       set(Interval::EMPTY_SET, i);
 
@@ -257,7 +259,7 @@ bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, const Interval&
 
 bool Tube::ctcOut(const Interval& y, const Interval& t)
 {
-  double volume_before_ctc = volume();
+  bool contraction = false;
   pair<Interval,Interval> enc_bounds = eval(t);
 
   if(y.intersects(enc_bounds.first))
@@ -266,8 +268,10 @@ bool Tube::ctcOut(const Interval& y, const Interval& t)
       #pragma omp for
       for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
       {
-        Interval y_i = (*this)[i];
-        set(Interval(max(y.ub(), y_i.lb()), y_i.ub()), i);
+        Interval old_y = (*this)[i];
+        Interval new_y(max(y.ub(), old_y.lb()), old_y.ub());
+        contraction |= new_y.diam() < old_y.diam();
+        set(new_y, i);
       }
     }
 
@@ -277,15 +281,17 @@ bool Tube::ctcOut(const Interval& y, const Interval& t)
       #pragma omp for
       for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
       {
-        Interval y_i = (*this)[i];
-        set(Interval(y_i.lb(), min(y_i.ub(), y.lb())), i);
+        Interval old_y = (*this)[i];
+        Interval new_y(old_y.lb(), min(old_y.ub(), y.lb()));
+        contraction |= new_y.diam() < old_y.diam();
+        set(new_y, i);
       }
     }
 
   else
     return false; // surely no contraction
 
-  return volume() < volume_before_ctc;
+  return contraction;
 }
 
 bool Tube::ctcIntertemporal(Interval& t1, Interval& t2) const
