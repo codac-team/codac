@@ -40,7 +40,7 @@ class VibesFigure_Tube : public VibesFigure
      * \param background_color new color of slices before contraction
      * \param truth_color new color of represented trajectories
      */
-    void setColors(std::string slices_color, std::string background_color = "lightGray[lightGray]", std::string truth_color = "red");
+    void setColors(std::string slices_color, std::string slices_contracted_color = "", std::string background_color = "lightGray[lightGray]", std::string truth_color = "red");
 
     /**
      * \brief Display the tube.

@@ -20,7 +20,7 @@ VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure
   m_tube = tube;
   m_tube_copy = NULL;
   m_id_map_scalar_values = 0;
-  setColors("gray[yellow]");
+  setColors("#A0A0A0[#FFEA00]", "#888888[#FFBB00]");
   m_need_to_update_axis = true;
 }
 
@@ -29,10 +29,14 @@ VibesFigure_Tube::~VibesFigure_Tube()
   delete m_tube_copy;
 }
 
-void VibesFigure_Tube::setColors(string slices_color, string background_color, string truth_color)
+void VibesFigure_Tube::setColors(string slices_color, string slices_contracted_color, string background_color, string truth_color)
 {
+  if(slices_contracted_color == "")
+    slices_contracted_color = slices_color;
+
   vibes::newGroup("slices_old_background", background_color, vibesParams("figure", m_name));
   vibes::newGroup("slices", slices_color, vibesParams("figure", m_name));
+  vibes::newGroup("slices_contracted", slices_contracted_color, vibesParams("figure", m_name));
   vibes::newGroup("true_values", truth_color, vibesParams("figure", m_name));
 }
 
@@ -69,24 +73,32 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
     m_need_to_update_axis = false;
   }
 
-  vibes::Params params;
+  vibes::Params params_slices, params_contracted_slices;
 
   if(m_tube_copy != NULL && update_background)
   {
     vibes::clearGroup(m_name, "slices_old_background");
-    params = vibesParams("figure", m_name, "group", "slices_old_background");
+    params_slices = vibesParams("figure", m_name, "group", "slices_old_background");
     for(int i = 0 ; i < m_tube_copy->size() ; i++)
-      drawSlice(m_tube_copy->domain(i), (*m_tube_copy)[i], params);
+      drawSlice(m_tube_copy->domain(i), (*m_tube_copy)[i], params_slices);
   }
 
   vibes::clearGroup(m_name, "slices");
-  params = vibesParams("figure", m_name, "group", "slices");
+  vibes::clearGroup(m_name, "slices_contracted");
+  params_slices = vibesParams("figure", m_name, "group", "slices");
+  params_contracted_slices = vibesParams("figure", m_name, "group", "slices_contracted");
 
   if(slices_limit <= 0)
     slices_limit = m_tube->size();
 
   for(int i = 0 ; i < m_tube->size() ; i += max((int)(m_tube->size() / slices_limit), 1))
-    drawSlice(m_tube->domain(i), (*m_tube)[i], params);
+  {
+    vibes::Params params = params_slices;
+    Interval y_i = (*m_tube)[i];
+    if(m_tube_copy != NULL && y_i != (*m_tube_copy)[i]) // contraction
+      params = params_contracted_slices;
+    drawSlice(m_tube->domain(i), y_i, params);
+  }
 
   if(update_background)
   {
