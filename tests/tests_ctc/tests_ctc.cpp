@@ -217,6 +217,36 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     REQUIRE(x[8] == Interval(-2.5,4.5));
     REQUIRE(x[9] == Interval(-3.,5.5));
 
+    // Test A: ctcFwdBwd should not be effective after ctcIn(true)
+    x = x_raw;
+    intv_t = 1.;
+    intv_y = Interval(-0.5,1.);
+    contraction = x.ctcIn(xdot, intv_y, intv_t, true);
+    REQUIRE(contraction);
+    REQUIRE(intv_t == 1.);
+    REQUIRE(intv_y == Interval(-0.5,1.));
+    REQUIRE(x[0] == Interval(-1.5,1.5)); // optim: Interval(-1.5,1.5)
+    REQUIRE(x[1] == Interval(-1.,2.)); // optim: Interval(-1.,2.)
+    REQUIRE(x[2] == Interval(-1.5,2.)); // optim: Interval(-1.5,2.)
+    REQUIRE(x[3] == Interval(-2.,1.5));
+    REQUIRE(x[4] == Interval(-1.5,1.));
+    REQUIRE(x[5] == Interval(-1.,1.5));
+    REQUIRE(x[6] == Interval(-1.5,2.5));
+    REQUIRE(x[7] == Interval(-2.,3.5));
+    REQUIRE(x[8] == Interval(-2.5,4.5));
+    REQUIRE(x[9] == Interval(-3.,5.5));
+    REQUIRE(!x.ctcFwdBwd(xdot)); // no contraction expected
+    REQUIRE(x[0] == Interval(-1.5,1.5));
+    REQUIRE(x[1] == Interval(-1.,2.));
+    REQUIRE(x[2] == Interval(-1.5,2.));
+    REQUIRE(x[3] == Interval(-2.,1.5));
+    REQUIRE(x[4] == Interval(-1.5,1.));
+    REQUIRE(x[5] == Interval(-1.,1.5));
+    REQUIRE(x[6] == Interval(-1.5,2.5));
+    REQUIRE(x[7] == Interval(-2.,3.5));
+    REQUIRE(x[8] == Interval(-2.5,4.5));
+    REQUIRE(x[9] == Interval(-3.,5.5));
+
     // Test B
     x = x_raw;
     intv_t = Interval(0.5,2.5);
@@ -293,6 +323,36 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     REQUIRE(x[8] == Interval(-2.5,0.25)); // optim: Interval(-2.5,-0.25)
     REQUIRE(x[9] == Interval(-3.,1.25)); // optim: Interval(-3.,0.25)
 
+    // Test E: ctcFwdBwd should not be effective after ctcIn(true)
+    x = x_raw;
+    intv_t = Interval(6.5, 8.5);
+    intv_y = Interval(-4.5, -1.75);
+    contraction = x.ctcIn(xdot, intv_y, intv_t, true);
+    REQUIRE(contraction);
+    REQUIRE(intv_t == Interval(7., 8.5)); // optim: Interval(7.5, 8.5)
+    REQUIRE(intv_y == Interval(-2.5, -1.75)); // optim: Interval(-2.25, -1.75)
+    REQUIRE(x[0] == Interval(-5.5,2.5));
+    REQUIRE(x[1] == Interval(-4.5,2.));
+    REQUIRE(x[2] == Interval(-3.5,1.5));
+    REQUIRE(x[3] == Interval(-2.5,1.));
+    REQUIRE(x[4] == Interval(-1.5,0.5));
+    REQUIRE(x[5] == Interval(-1.,0.));
+    REQUIRE(x[6] == Interval(-1.5,-0.5)); // optim: Interval(-1.5,-0.5)
+    REQUIRE(x[7] == Interval(-2.,-0.75)); // optim: Interval(-2.,-1.)
+    REQUIRE(x[8] == Interval(-2.5,0.25)); // optim: Interval(-2.5,-0.25)
+    REQUIRE(x[9] == Interval(-3.,1.25)); // optim: Interval(-3.,0.25)
+    REQUIRE(!x.ctcFwdBwd(xdot)); // no contraction expected
+    REQUIRE(x[0] == Interval(-5.5,2.5));
+    REQUIRE(x[1] == Interval(-4.5,2.));
+    REQUIRE(x[2] == Interval(-3.5,1.5));
+    REQUIRE(x[3] == Interval(-2.5,1.));
+    REQUIRE(x[4] == Interval(-1.5,0.5));
+    REQUIRE(x[5] == Interval(-1.,0.));
+    REQUIRE(x[6] == Interval(-1.5,-0.5));
+    REQUIRE(x[7] == Interval(-2.,-0.75));
+    REQUIRE(x[8] == Interval(-2.5,0.25));
+    REQUIRE(x[9] == Interval(-3.,1.25));
+
     // Test F
     x = x_raw;
     intv_t = Interval(8.5,9.5);
@@ -311,6 +371,36 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     REQUIRE(x[7] == Interval(-2.,3.5)); // optim: Interval(-2.,3.3125)
     REQUIRE(x[8] == Interval(-2.,3.25)); // optim: Interval(-2.,3.25)
     REQUIRE(x[9] == Interval(-1.25,4.)); // optim: Interval(-1.25,4.)
+
+    // Test F: ctcFwdBwd should not be effective after ctcIn(true)
+    x = x_raw;
+    intv_t = Interval(8.5,9.5);
+    intv_y = Interval(-0.5,2.5);
+    contraction = x.ctcIn(xdot, intv_y, intv_t, true);
+    REQUIRE(contraction);
+    REQUIRE(intv_t == Interval(8.5,9.5));
+    REQUIRE(intv_y == Interval(-0.5,2.5));
+    REQUIRE(x[0] == Interval(-5.5,3.));
+    REQUIRE(x[1] == Interval(-4.5,2.5));
+    REQUIRE(x[2] == Interval(-3.5,2.));
+    REQUIRE(x[3] == Interval(-2.5,1.5));
+    REQUIRE(x[4] == Interval(-1.5,1.));
+    REQUIRE(x[5] == Interval(-1.,1.5));
+    REQUIRE(x[6] == Interval(-1.5,2.5));
+    REQUIRE(x[7] == Interval(-2.,3.5)); // optim: Interval(-2.,3.3125)
+    REQUIRE(x[8] == Interval(-2.,3.25)); // optim: Interval(-2.,3.25)
+    REQUIRE(x[9] == Interval(-1.25,4.)); // optim: Interval(-1.25,4.)
+    REQUIRE(!x.ctcFwdBwd(xdot)); // no contraction expected
+    REQUIRE(x[0] == Interval(-5.5,3.));
+    REQUIRE(x[1] == Interval(-4.5,2.5));
+    REQUIRE(x[2] == Interval(-3.5,2.));
+    REQUIRE(x[3] == Interval(-2.5,1.5));
+    REQUIRE(x[4] == Interval(-1.5,1.));
+    REQUIRE(x[5] == Interval(-1.,1.5));
+    REQUIRE(x[6] == Interval(-1.5,2.5));
+    REQUIRE(x[7] == Interval(-2.,3.5));
+    REQUIRE(x[8] == Interval(-2.,3.25));
+    REQUIRE(x[9] == Interval(-1.25,4.));
 
     // Test G
     x = x_raw;

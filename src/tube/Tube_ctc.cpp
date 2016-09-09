@@ -250,11 +250,17 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
 
     tube_contracted = true;
     t.set_empty();
+    t_contracted = true;
     y.set_empty();
+    y_contracted = true;
   }
 
-  t_contracted = t.diam() < old_t_diam;
-  y_contracted = y.diam() < old_y_diam;
+  else
+  {
+    t_contracted = t.diam() < old_t_diam;
+    y_contracted = y.diam() < old_y_diam;
+  }
+  
   return tube_contracted | y_contracted | t_contracted;
 }
 
