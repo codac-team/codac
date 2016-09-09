@@ -99,7 +99,6 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
                       bool& tube_contracted, bool& y_contracted, bool& t_contracted, bool fwd_bwd)
 {
   bool inconsistency = false;
-  tube_contracted = false;
 
   double old_t_diam = t.diam();
   double old_y_diam = y.diam();
@@ -194,7 +193,13 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
       // Synthesis
 
         Interval prev_y;
-        for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
+        tube_contracted = false;
+
+        // The synthesis is made over two for-loops
+        // so that we can stop the iteration if there is no more propagation
+
+        prev_y = Interval::ALL_REALS;
+        for(int i = index_lb ; i <= max_index_ctc ; i++) // forward
         {
           if(!prev_y.intersects(map_new_y[i]))
           {
@@ -202,9 +207,36 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
             break;
           }
 
-          tube_contracted |= map_new_y[i].diam() < (*this)[i].diam();
+          bool contraction = map_new_y[i].diam() < (*this)[i].diam();
+
+          if(!contraction && i > index_ub) // no more propagation
+            break;
+          
+          tube_contracted |= contraction;
           prev_y = map_new_y[i];
           set(map_new_y[i], i);
+        }
+
+        if(!inconsistency) // no need for synthesis if inconsistency already detected
+        {
+          prev_y = Interval::ALL_REALS;
+          for(int i = index_lb ; i >= min_index_ctc ; i--) // backward
+          {
+            if(!prev_y.intersects(map_new_y[i]))
+            {
+              inconsistency = true;
+              break;
+            }
+
+            bool contraction = map_new_y[i].diam() < (*this)[i].diam();
+
+            if(!contraction && i != index_lb) // no more propagation
+              break;
+            
+            tube_contracted |= contraction;
+            prev_y = map_new_y[i];
+            set(map_new_y[i], i);
+          }
         }
     }
 
