@@ -353,6 +353,11 @@ class Tube
          */
         friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
+        /**
+         * \brief To be defined...
+         */
+        ibex::Interval interpol(double t, const Tube& derivative_tube) const;
+
 
     /** Integration computation **/
 

@@ -12,6 +12,7 @@
 
 #define CATCH_CONFIG_MAIN
 #include "../catch/catch.hpp"
+#include "../catch/catch_interval.hpp"
 #include "../tests_cases.hpp"
 
 TEST_CASE("Equality, consistency", "[core]")
@@ -375,5 +376,23 @@ TEST_CASE("Testing subtube", "[core]")
     Tube tube = tubeTest1();
     Tube subtube = tube.subtube(Interval::ALL_REALS);
     REQUIRE(tube == subtube);
+  }
+}
+
+TEST_CASE("Testing interpol", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    Tube tube_derivative = tubeTest4();
+    Tube tube = tube_derivative.primitive();
+    REQUIRE(ApproxIntv(tube.interpol(0., tube_derivative)) == Interval(0.));
+    REQUIRE(ApproxIntv(tube.interpol(0.1, tube_derivative)) == Interval(0.1,0.2));
+    REQUIRE(ApproxIntv(tube.interpol(0.5, tube_derivative)) == Interval(0.5,1.0));
+    REQUIRE(ApproxIntv(tube.interpol(1.0, tube_derivative)) == Interval(1.,2.));
+    REQUIRE(ApproxIntv(tube.interpol(1.1, tube_derivative)) == Interval(1.1,2.2));
+    REQUIRE(ApproxIntv(tube.interpol(1.95, tube_derivative)) == Interval(1.95,3.9));
+    REQUIRE(ApproxIntv(tube.interpol(2.0, tube_derivative)) == Interval(2.0,4.0));
+    REQUIRE(ApproxIntv(tube.interpol(2.2, tube_derivative)) == Interval(2.2,4.4));
+    REQUIRE(ApproxIntv(tube.interpol(21., tube_derivative)) == Interval(13.5,36.5));
   }
 }
