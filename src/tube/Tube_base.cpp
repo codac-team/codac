@@ -489,19 +489,19 @@ Interval Tube::invert(const Interval& intv_y, const Interval& intv_t) const
   }
 }
 
-void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t) const
+void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t, const Interval& intv_t) const
 {
-  return invert(intv_y, v_intv_t, true);
+  return invert(intv_y, v_intv_t, intv_t, true);
 }
 
-void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t, bool concatenate_results) const
+void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t, const Interval& intv_t, bool concatenate_results) const
 {
   v_intv_t.clear();
-  Interval intv_t = invert(intv_y);
+  Interval intv_t_ctc = invert(intv_y, intv_t);
 
-  if(!intv_t.is_empty())
+  if(!intv_t_ctc.is_empty())
   {
-    pair<Interval,Interval> enc_bounds = eval(intv_t);
+    pair<Interval,Interval> enc_bounds = eval(intv_t_ctc);
 
     if(!concatenate_results)
     {
@@ -509,21 +509,21 @@ void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t, bool conca
       {
         // Bisection is needed
         vector<Interval> v1;
-        m_first_subtube->invert(intv_y, v1, false);
+        m_first_subtube->invert(intv_y, v1, intv_t, false);
         v_intv_t.insert(v_intv_t.end(), v1.begin(), v1.end());
         vector<Interval> v2;
-        m_second_subtube->invert(intv_y, v2, false);
+        m_second_subtube->invert(intv_y, v2, intv_t, false);
         v_intv_t.insert(v_intv_t.end(), v2.begin(), v2.end());
       }
 
       else
-        v_intv_t.push_back(intv_t);
+        v_intv_t.push_back(intv_t_ctc);
     }
 
     else
     {
       vector<Interval> v;
-      invert(intv_y, v, false);
+      invert(intv_y, v, intv_t, false);
 
       // Concatenation (solutions may be adjacent)
       int i = 0;

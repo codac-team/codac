@@ -288,8 +288,9 @@ class Tube
          *
          * \param intv_y the y-value to invert
          * \param v_intv_t a vector containing, at the end, each solutions of the set-inversion
+         * \param intv_t the optional t domain to consider
          */
-        void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t) const;
+        void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
         /**
          * \brief Extract a subtube from this.
@@ -598,10 +599,11 @@ class Tube
      * Here the returned value vector<intv_t> corresponds to detailed solutions.
      *
      * \param intv_y the y-value to invert
+     * \param intv_t the optional t domain to consider
      * \param concatenate_results results may be adjacent, so a concatenation on vector's values can be requested
      * \return a vector containing each solutions of the set-inversion
      */
-    void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, bool concatenate_results) const;
+    void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t, bool concatenate_results) const;
 
     /** Class variables **/
 
