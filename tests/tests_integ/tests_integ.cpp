@@ -15,6 +15,9 @@
 #include "../catch/catch_interval.hpp"
 #include "../tests_cases.hpp"
 
+using namespace Catch;
+using namespace Detail;
+
 TEST_CASE("Computing tube's primitive", "[core]")
 {
   SECTION("Test tube3")
