@@ -259,7 +259,18 @@ TEST_CASE("Testing set inversion", "[core]")
       REQUIRE(v[3] == Interval(43.0,46.0));
     }
 
-    tube.invert(Interval(-1.0,1.0), v);
+    // The same, with a custom domain:
+    tube.invert(Interval(0.), v, Interval(3.8,42.5));
+    REQUIRE(v.size() == 3);
+
+    if(v.size() == 3)
+    {
+      REQUIRE(v[0] == Interval(3.8,4.0));
+      REQUIRE(v[1] == Interval(14.0,17.0));
+      REQUIRE(v[2] == Interval(37.0,42.0));
+    }
+
+    tube.invert(Interval(-1.0,1.0), v, Interval::ALL_REALS);
     REQUIRE(v.size() == 4);
 
     if(v.size() == 4)
@@ -269,6 +280,10 @@ TEST_CASE("Testing set inversion", "[core]")
       REQUIRE(v[2] == Interval(34.0,35.0));
       REQUIRE(v[3] == Interval(36.0,46.0));
     }
+
+    // The same, with a custom domain (empty):
+    tube.invert(Interval(-1.0,1.0), v, Interval::EMPTY_SET);
+    REQUIRE(v.size() == 0);
 
     tube.invert(Interval(-6.9999), v);
     REQUIRE(v.size() == 2);
