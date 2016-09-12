@@ -388,9 +388,9 @@ TEST_CASE("Testing interpol", "[core]")
   {
     Tube tube_derivative = tubeTest4();
     Tube tube = tube_derivative.primitive();
-    REQUIRE(ApproxIntv(tube.interpol(0., tube_derivative)) == Interval(0.));
-    REQUIRE(ApproxIntv(tube.interpol(0.1, tube_derivative)) == Interval(0.1,0.2));
-    REQUIRE(ApproxIntv(tube.interpol(0.5, tube_derivative)) == Interval(0.5,1.0));
+    REQUIRE(ApproxIntv(tube.interpol(0., tube_derivative)) == Interval(0.,1.));
+    REQUIRE(ApproxIntv(tube.interpol(0.1, tube_derivative)) == Interval(0.1,1.1));
+    REQUIRE(ApproxIntv(tube.interpol(0.5, tube_derivative)) == Interval(0.5,1.5));
     REQUIRE(ApproxIntv(tube.interpol(1.0, tube_derivative)) == Interval(1.,2.));
     REQUIRE(ApproxIntv(tube.interpol(1.1, tube_derivative)) == Interval(1.1,2.2));
     REQUIRE(ApproxIntv(tube.interpol(1.95, tube_derivative)) == Interval(1.95,3.9));

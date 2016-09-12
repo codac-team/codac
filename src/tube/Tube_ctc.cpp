@@ -110,13 +110,33 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
 
     t = invert((*this)[t] & y, t);
 
+  // Computing index
+
+    // Slices of index_lb and index_ub strictly enclose the measurement [t]
+
+    index_lb = input2index(t.lb());
+    // Special case when the lower bound of [t] equals a bound of a slice or is near empty values
+    if(domain(index_lb).lb() == t.lb() && (*this)[max(0, index_lb - 1)].intersects(y))
+      index_lb = max(0, index_lb - 1);
+
+    index_ub = input2index(t.ub());
+    // Special case when the upper bound of [t] is near empty values
+    if(!(*this)[max(0, index_ub)].intersects(y))
+      index_ub = max(0, index_ub - 1);
+
+    if(!fwd_bwd)
+    {
+      min_index_ctc = max(0, index_lb - 1);
+      max_index_ctc = min(index_ub + 1, size() - 1);
+    }
+
   // Trying to contract [y]
 
     if(t.is_empty())
       y = Interval::EMPTY_SET;
 
     else
-      y &= (*this)[t];
+      y &= (*this)[t] & (interpol(t.lb(), derivative_tube) | interpol(t.ub(), derivative_tube));
 
   // Trying to contract this
 
@@ -125,24 +145,6 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
 
     else
     {
-      // Slices of index_lb and index_ub strictly enclose the measurement [t]
-
-        index_lb = input2index(t.lb());
-        // Special case when the lower bound of [t] equals a bound of a slice or is near empty values
-        if(domain(index_lb).lb() == t.lb() && (*this)[max(0, index_lb - 1)].intersects(y))
-          index_lb = max(0, index_lb - 1);
-
-        index_ub = input2index(t.ub());
-        // Special case when the upper bound of [t] is near empty values
-        if(!(*this)[max(0, index_ub)].intersects(y))
-          index_ub = max(0, index_ub - 1);
-  
-        if(!fwd_bwd)
-        {
-          min_index_ctc = max(0, index_lb - 1);
-          max_index_ctc = min(index_ub + 1, size() - 1);
-        }
-
       // Map initialization
 
         map<int,Interval> map_new_y;

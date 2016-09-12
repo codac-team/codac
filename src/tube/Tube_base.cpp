@@ -841,9 +841,8 @@ void Tube::computeTree() const
 Interval Tube::interpol(double t, const Tube& derivative_tube) const
 {
   int index = input2index(t);
-  Interval intv_t = domain(index);
+  Interval dom_ = domain(index);
   Interval deriv = derivative_tube[index];
-  return ((*this)[intv_t.lb()] + (t - intv_t.lb()) * deriv)
-       & ((*this)[intv_t.ub()] - (intv_t.ub() - t) * deriv.ub())
-       & ((*this)[intv_t.ub()] - (intv_t.ub() - t) * deriv.lb());
+  return ((*this)[dom_.ub()] - (dom_.ub() - t) * deriv)
+       & ((*this)[dom_.lb()] + (t - dom_.lb()) * deriv);
 }

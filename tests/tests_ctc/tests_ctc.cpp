@@ -292,7 +292,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = x.ctcIn(xdot, intv_y, intv_t, false);
     REQUIRE(contraction);
     REQUIRE(intv_t == 3.5);
-    REQUIRE(intv_y == Interval(-2.5,-0.5)); // optim: Interval(-2.,-0.5)
+    REQUIRE(intv_y == Interval(-2.,-0.5)); // optim: Interval(-2.,-0.5)
     REQUIRE(x[0] == Interval(-5.5,3.));
     REQUIRE(x[1] == Interval(-4.5,2.5));
     REQUIRE(x[2] == Interval(-3.5,0.25)); // optim: Interval(-3.5,0.25)
@@ -311,7 +311,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = x.ctcIn(xdot, intv_y, intv_t, false);
     REQUIRE(contraction);
     REQUIRE(intv_t == Interval(7., 8.5)); // optim: Interval(7.5, 8.5)
-    REQUIRE(intv_y == Interval(-2.5, -1.75)); // optim: Interval(-2.25, -1.75)
+    REQUIRE(intv_y == Interval(-2.25, -1.75)); // optim: Interval(-2.25, -1.75)
     REQUIRE(x[0] == Interval(-5.5,3.));
     REQUIRE(x[1] == Interval(-4.5,2.5));
     REQUIRE(x[2] == Interval(-3.5,2.));
@@ -330,7 +330,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = x.ctcIn(xdot, intv_y, intv_t, true);
     REQUIRE(contraction);
     REQUIRE(intv_t == Interval(7., 8.5)); // optim: Interval(7.5, 8.5)
-    REQUIRE(intv_y == Interval(-2.5, -1.75)); // optim: Interval(-2.25, -1.75)
+    REQUIRE(intv_y == Interval(-2.25, -1.75)); // optim: Interval(-2.25, -1.75)
     REQUIRE(x[0] == Interval(-5.5,2.5));
     REQUIRE(x[1] == Interval(-4.5,2.));
     REQUIRE(x[2] == Interval(-3.5,1.5));
@@ -409,7 +409,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = x.ctcIn(xdot, intv_y, intv_t, false);
     REQUIRE(contraction);
     REQUIRE(intv_t == Interval(7.,7.5)); // optim: Interval(7.5)
-    REQUIRE(intv_y == Interval(3.,3.5)); // optim: Interval(3.)
+    REQUIRE(intv_y == Interval(3.)); // optim: Interval(3.)
     REQUIRE(x[0] == Interval(-5.5,3.));
     REQUIRE(x[1] == Interval(-4.5,2.5));
     REQUIRE(x[2] == Interval(-3.5,2.));
@@ -504,7 +504,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = x.ctcIn(xdot, intv_y, intv_t, false);
     REQUIRE(contraction);
     REQUIRE(intv_t == Interval(1.5,3.)); // optim: Interval(1.5,2.5)
-    REQUIRE(intv_y == Interval(1.75,2.5)); // optim: Interval(1.75,2.25)
+    REQUIRE(intv_y == Interval(1.75,2.25)); // optim: Interval(1.75,2.25)
     REQUIRE(x[0] == Interval(-1.25,3.)); // optim: Interval(-0.75,3.)
     REQUIRE(x[1] == Interval(-0.25,2.5)); // optim: Interval(0.25,2.5)
     REQUIRE(x[2] == Interval(0.75,2.)); // optim: Interval(1.,2.)
@@ -542,7 +542,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = x.ctcIn(xdot, intv_y, intv_t, false);
     REQUIRE(contraction);
     REQUIRE(intv_t == Interval(6.,8.5)); // optim: Interval(6.5,8.5)
-    REQUIRE(intv_y == Interval(2.,4.5)); // optim: Interval(2.,4.)
+    REQUIRE(intv_y == Interval(2.,4.)); // optim: Interval(2.,4.)
     REQUIRE(x[0] == Interval(-5.5,3.));
     REQUIRE(x[1] == Interval(-4.5,2.5));
     REQUIRE(x[2] == Interval(-3.5,2.));
@@ -584,7 +584,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = tube.ctcIn(derivative, intv_y, intv_t, false);
     REQUIRE(contraction);
     REQUIRE(intv_t == Interval(3.5,5.)); // optim: Interval(3.5,4.5)
-    REQUIRE(intv_y == Interval(3.5,5.)); // optim: Interval(3.5,4.5)
+    REQUIRE(intv_y == Interval(3.5,4.5)); // optim: Interval(3.5,4.5)
     REQUIRE(tube[0] == Interval(6.,8.));
     REQUIRE(tube[1] == Interval(4.5,7.));
     REQUIRE(tube[2] == Interval(4.,6.));
@@ -603,7 +603,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = tube.ctcIn(derivative, intv_y, intv_t, false);
     REQUIRE(contraction);
     REQUIRE(intv_t == Interval(6.,8.5)); // optim: Interval(6.5+?,8.5)
-    REQUIRE(intv_y == Interval(-6.,-2.5)); // optim: Interval(-5.5+?,-2.5)
+    REQUIRE(intv_y == Interval(-5.25,-2.5)); // optim: Interval(-5.25,-2.5)
     REQUIRE(tube[0] == Interval(6.,8.)); 
     REQUIRE(tube[1] == Interval(4.5,7.));
     REQUIRE(tube[2] == Interval(3.,6.));
@@ -639,9 +639,9 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     intv_t = Interval(0.);
     intv_y = Interval(6.,8.);
     contraction = tube.ctcIn(derivative, intv_y, intv_t, false);
-    REQUIRE(!contraction);
+    REQUIRE(contraction);
     REQUIRE(intv_t == Interval(0.));
-    REQUIRE(intv_y == Interval(6.,8.));
+    REQUIRE(intv_y == Interval(7.,8.));
     REQUIRE(tube[0] == Interval(6.,8.)); 
     REQUIRE(tube[1] == Interval(4.5,7.));
     REQUIRE(tube[2] == Interval(3.,6.));
@@ -703,7 +703,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     contraction = tube.ctcIn(derivative, intv_y, intv_t, false);
     REQUIRE(contraction);
     REQUIRE(intv_t == Interval(4.,5.5));
-    REQUIRE(intv_y == Interval(-0.5,1.5));
+    REQUIRE(intv_y == Interval(-0.5,0.75));
     REQUIRE(tube[0] == Interval(-8.,-6.)); 
     REQUIRE(tube[1] == Interval(-7.,-4.5)); 
     REQUIRE(tube[2] == Interval(-6.,-3.)); 
