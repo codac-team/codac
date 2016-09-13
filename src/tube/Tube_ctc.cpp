@@ -95,6 +95,24 @@ bool Tube::ctcFwdBwd(const Tube& derivative_tube)
   return contraction;
 }
 
+void Tube::ctcIn_computeIndex(const Interval& t, const Interval& y, int& index_lb, int& index_ub)
+{
+  if(t.is_unbounded() || t.is_empty())
+    cout << "Error ctcIn_computeIndex(...): unbounded or empty [t]" << endl;
+
+  // Slices of index_lb and index_ub strictly enclose the measurement [t]
+
+  index_lb = input2index(t.lb());
+  // Special case when the lower bound of [t] equals a bound of a slice or is near empty values
+  if(domain(index_lb).lb() == t.lb() && (*this)[max(0, index_lb - 1)].intersects(y))
+    index_lb = max(0, index_lb - 1);
+
+  index_ub = input2index(t.ub());
+  // Special case when the upper bound of [t] is near empty values
+  if(!(*this)[max(0, index_ub)].intersects(y))
+    index_ub = max(0, index_ub - 1);
+}
+
 bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
                       bool& tube_contracted, bool& y_contracted, bool& t_contracted, bool& bisection_required, bool fwd_bwd)
 {
@@ -117,152 +135,131 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
   // Trying to contract [y]
 
     if(t.is_empty())
-      y = Interval::EMPTY_SET;
+      inconsistency = true;
 
     else
+    {
       y &= interpol(t, derivative_tube);
 
-  // Computing index
+      // Computing index
 
-    // Slices of index_lb and index_ub strictly enclose the measurement [t]
+        ctcIn_computeIndex(t, y, index_lb, index_ub);
 
-    index_lb = input2index(t.lb());
-    // Special case when the lower bound of [t] equals a bound of a slice or is near empty values
-    if(domain(index_lb).lb() == t.lb() && (*this)[max(0, index_lb - 1)].intersects(y))
-      index_lb = max(0, index_lb - 1);
-
-    index_ub = input2index(t.ub());
-    // Special case when the upper bound of [t] is near empty values
-    if(!(*this)[max(0, index_ub)].intersects(y))
-      index_ub = max(0, index_ub - 1);
-
-    if(!fwd_bwd)
-    {
-      min_index_ctc = max(0, index_lb - 1);
-      max_index_ctc = min(index_ub + 1, size() - 1);
-    }
-
-  // Initializations
-
-    map<int,Interval> map_new_y;
-    #pragma omp for
-    for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
-      map_new_y[i] = Interval::EMPTY_SET;
-
-    Interval old_y = y;
-    y = Interval::EMPTY_SET;
-    t = Interval::EMPTY_SET;
-
-  // Iteration for each [t] subdomain
-  for(int k = 0 ; k < v_intv_t.size() ; k++)
-  {
-    bool local_inconsistency = false;
-
-    Interval local_t = v_intv_t[k];
-    Interval local_y = old_y;
-
-    if(v_intv_t.size() > 1) // no need for recomputation of [y] and index if only one [t] subdomain
-    {
-      // Trying to contract [local_y]
-
-        if(local_t.is_empty())
-          local_y = Interval::EMPTY_SET;
-
-        else
-          local_y &= interpol(local_t, derivative_tube);
-
-      // Computing new index
-
-        // Slices of index_lb and index_ub strictly enclose the measurement [local_t]
-
-        index_lb = input2index(local_t.lb());
-        // Special case when the lower bound of [local_t] equals a bound of a slice or is near empty values
-        if(domain(index_lb).lb() == local_t.lb() && (*this)[max(0, index_lb - 1)].intersects(local_y))
-          index_lb = max(0, index_lb - 1);
-
-        index_ub = input2index(local_t.ub());
-        // Special case when the upper bound of [local_t] is near empty values
-        if(!(*this)[max(0, index_ub)].intersects(local_y))
-          index_ub = max(0, index_ub - 1);
-    }
-
-    // Trying to contract this
-
-      Interval y_front;
-
-      // Backward
-
-        y_front = local_y;
-        for(int i = index_ub ; i >= min_index_ctc ; i--)
+        if(!fwd_bwd)
         {
-          Interval integ_domain;
-          Interval slice_dom = domain(i);
-          double dt_ = slice_dom.diam();
-          Interval slice_deriv = derivative_tube[i];
-
-          // Over the ith slice
-          integ_domain = Interval(0., min(dt_, local_t.ub() - slice_dom.lb()));
-          map_new_y[i] |= (*this)[i] & (y_front - slice_deriv * integ_domain);
-
-          // On the front, backward way
-          integ_domain = Interval(min(dt_, max(0., local_t.lb() - slice_dom.lb())), min(dt_, local_t.ub() - slice_dom.lb()));
-          y_front = (*this)[slice_dom.lb()] & (y_front - slice_deriv * integ_domain);
+          min_index_ctc = max(0, index_lb - 1);
+          max_index_ctc = min(index_ub + 1, size() - 1);
         }
 
-      // Forward
+      // Initializations
 
-        y_front = local_y;
-        for(int i = index_lb ; i <= max_index_ctc ; i++)
-        {
-          Interval integ_domain;
-          Interval slice_dom = domain(i);
-          double dt_ = slice_dom.diam();
-          Interval slice_deriv = derivative_tube[i];
+        map<int,Interval> map_new_y;
+        #pragma omp for
+        for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
+          map_new_y[i] = Interval::EMPTY_SET;
 
-          // Over the ith slice
-          integ_domain = Interval(0., min(slice_dom.ub() - local_t.lb(), dt_));
-          map_new_y[i] |= (*this)[i] & (y_front + slice_deriv * integ_domain);
+        Interval old_y = y;
+        y = Interval::EMPTY_SET;
+        t = Interval::EMPTY_SET;
 
-          // On the front, forward way
-          integ_domain = Interval(min(dt_, max(0., slice_dom.ub() - local_t.ub())), min(dt_, slice_dom.ub() - local_t.lb()));
-          y_front = (*this)[slice_dom.ub()] & (y_front + slice_deriv * integ_domain);
-
-        }
-
-      y |= local_y;
-
-      if(local_y.is_empty())
-        local_t.set_empty();
-
-      else
-        valid_tsubdomains ++;
-
-      t |= local_t;
-  } // end of for
-
-  // Synthesis
-  {
-    Interval prev_y;
-    tube_contracted = false;
-
-    // The synthesis is made over two for-loops
-    // so that we can stop the iteration if there is no more propagation
-
-    prev_y = Interval::ALL_REALS;
-    for(int i = min_index_ctc ; i <= max_index_ctc ; i++) // forward
-    {
-      if(!prev_y.intersects(map_new_y[i]))
+      // Iteration for each [t] subdomain
+      for(int k = 0 ; k < v_intv_t.size() ; k++)
       {
-        inconsistency = true;
-        break;
+        bool local_inconsistency = false;
+
+        Interval local_t = v_intv_t[k];
+        Interval local_y = old_y;
+
+        if(v_intv_t.size() > 1) // no need for recomputation of [y] and index if only one [t] subdomain
+        {
+          if(local_t.is_empty())
+          {
+            local_y.set_empty();
+            continue;
+          }
+
+          else
+          {
+            // Trying to contract [local_y]
+            local_y &= interpol(local_t, derivative_tube);
+
+            // Computing new index
+            ctcIn_computeIndex(local_t, local_y, index_lb, index_ub);
+          }
+        }
+
+        // Trying to contract this
+
+          Interval y_front;
+
+          // Backward
+
+            y_front = local_y;
+            for(int i = index_ub ; i >= min_index_ctc ; i--)
+            {
+              Interval integ_domain;
+              Interval slice_dom = domain(i);
+              double dt_ = slice_dom.diam();
+              Interval slice_deriv = derivative_tube[i];
+
+              // Over the ith slice
+              integ_domain = Interval(0., min(dt_, local_t.ub() - slice_dom.lb()));
+              map_new_y[i] |= (*this)[i] & (y_front - slice_deriv * integ_domain);
+
+              // On the front, backward way
+              integ_domain = Interval(min(dt_, max(0., local_t.lb() - slice_dom.lb())), min(dt_, local_t.ub() - slice_dom.lb()));
+              y_front = (*this)[slice_dom.lb()] & (y_front - slice_deriv * integ_domain);
+            }
+
+          // Forward
+
+            y_front = local_y;
+            for(int i = index_lb ; i <= max_index_ctc ; i++)
+            {
+              Interval integ_domain;
+              Interval slice_dom = domain(i);
+              double dt_ = slice_dom.diam();
+              Interval slice_deriv = derivative_tube[i];
+
+              // Over the ith slice
+              integ_domain = Interval(0., min(slice_dom.ub() - local_t.lb(), dt_));
+              map_new_y[i] |= (*this)[i] & (y_front + slice_deriv * integ_domain);
+
+              // On the front, forward way
+              integ_domain = Interval(min(dt_, max(0., slice_dom.ub() - local_t.ub())), min(dt_, slice_dom.ub() - local_t.lb()));
+              y_front = (*this)[slice_dom.ub()] & (y_front + slice_deriv * integ_domain);
+
+            }
+
+          valid_tsubdomains ++;
+          y |= local_y;
+          t |= local_t;
+      } // end of for
+
+      // Synthesis
+      {
+        Interval prev_y;
+        tube_contracted = false;
+
+        // The synthesis is made over two for-loops
+        // so that we can stop the iteration if there is no more propagation
+
+        prev_y = Interval::ALL_REALS;
+        for(int i = min_index_ctc ; i <= max_index_ctc ; i++) // forward
+        {
+          if(!prev_y.intersects(map_new_y[i]))
+          {
+            inconsistency = true;
+            break;
+          }
+
+          bool contraction = map_new_y[i].diam() < (*this)[i].diam();
+
+          tube_contracted |= contraction;
+          prev_y = map_new_y[i];
+          set(map_new_y[i], i);
+        }
       }
-
-      bool contraction = map_new_y[i].diam() < (*this)[i].diam();
-
-      tube_contracted |= contraction;
-      prev_y = map_new_y[i];
-      set(map_new_y[i], i);
-    }
   }
 
   if(inconsistency)

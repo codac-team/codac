@@ -358,6 +358,7 @@ class Tube
          */
         ibex::Interval interpol(double t, const Tube& derivative_tube) const;
         ibex::Interval interpol(const ibex::Interval& intv_t, const Tube& derivative_tube) const;
+        std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& intv_t, const Tube& derivative_tube) const;
 
 
     /** Integration computation **/
@@ -611,6 +612,11 @@ class Tube
      * \return a vector containing each solutions of the set-inversion
      */
     void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t, bool concatenate_results) const;
+
+    /**
+     * \brief To be defined...
+     */
+    void ctcIn_computeIndex(const ibex::Interval& t, const ibex::Interval& y, int& index_lb, int& index_ub);
 
     /** Class variables **/
 

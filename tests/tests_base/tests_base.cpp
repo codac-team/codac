@@ -400,7 +400,7 @@ TEST_CASE("Testing interpol (double)", "[core]")
   }
 }
 
-TEST_CASE("Testing interpol (interval)", "[core]")
+TEST_CASE("Testing interpol (Interval)", "[core]")
 {
   SECTION("Test tube1")
   {
@@ -420,5 +420,28 @@ TEST_CASE("Testing interpol (interval)", "[core]")
     REQUIRE(ApproxIntv(tube.interpol(Interval(0.1,4.9), tube_derivative)) == Interval(0.1,9.8));
     REQUIRE(ApproxIntv(tube.interpol(Interval(0.,21.), tube_derivative)) == Interval(0.,36.5));
     REQUIRE(ApproxIntv(tube.interpol(Interval(7.5,11.5), tube_derivative)) == Interval(7.5,20.25));
+  }
+}
+
+TEST_CASE("Testing interpol (pair<Interval,Interval>)", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    Tube tube_derivative = tubeTest4();
+    Tube tube = tube_derivative.primitive();
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(0.), tube_derivative)) == make_pair(Interval(0.),Interval(1.)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(0.1), tube_derivative)) == make_pair(Interval(0.1),Interval(1.1)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(0.5), tube_derivative)) == make_pair(Interval(0.5),Interval(1.5)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(1.0), tube_derivative)) == make_pair(Interval(1.),Interval(2.)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(1.1), tube_derivative)) == make_pair(Interval(1.1),Interval(2.2)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(1.95), tube_derivative)) == make_pair(Interval(1.95),Interval(3.9)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(2.0), tube_derivative)) == make_pair(Interval(2.0),Interval(4.0)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(2.2), tube_derivative)) == make_pair(Interval(2.2),Interval(4.4)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(21.), tube_derivative)) == make_pair(Interval(13.5),Interval(36.5)));
+
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(0.,5.), tube_derivative)) == make_pair(Interval(0.,5.),Interval(1.,10.)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(0.1,4.9), tube_derivative)) == make_pair(Interval(0.1,4.9),Interval(1.1,9.8)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(0.,21.), tube_derivative)) == make_pair(Interval(0.,13.5),Interval(1.,36.5)));
+    REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(7.5,9.5), tube_derivative)) == make_pair(Interval(7.5,9.25),Interval(15.,18.75)));
   }
 }

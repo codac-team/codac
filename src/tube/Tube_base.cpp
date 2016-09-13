@@ -849,8 +849,31 @@ Interval Tube::interpol(double t, const Tube& derivative_tube) const
 
 Interval Tube::interpol(const Interval& intv_t, const Tube& derivative_tube) const
 {
+  pair<Interval,Interval> p_interpol = partialInterpol(intv_t, derivative_tube);
+  return p_interpol.first | p_interpol.second;
+}
+
+pair<Interval,Interval> Tube::partialInterpol(const Interval& intv_t, const Tube& derivative_tube) const
+{
+  Interval lb, ub;
+  lb.set_empty(); ub.set_empty();
+
+  Interval y_tlb = interpol(intv_t.lb(), derivative_tube);
+  Interval y_tub = interpol(intv_t.ub(), derivative_tube);
+
+  lb |= y_tlb.lb();
+  ub |= y_tlb.ub();
+
+  lb |= y_tub.lb();
+  ub |= y_tub.ub();
+
   Interval y = interpol(intv_t.lb(), derivative_tube) | interpol(intv_t.ub(), derivative_tube);
   for(int i = min(size() - 1, input2index(intv_t.lb()) + 1) ; i < max(0, input2index(intv_t.ub()) - 1) ; i++)
-    y |= (*this)[i];
-  return y;
+  {
+    pair<Interval,Interval> p_i = eval(domain(i));
+    lb |= p_i.first;
+    ub |= p_i.second;
+  }
+
+  return make_pair(lb, ub);
 }
