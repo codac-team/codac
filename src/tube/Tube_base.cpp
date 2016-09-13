@@ -846,3 +846,11 @@ Interval Tube::interpol(double t, const Tube& derivative_tube) const
   return ((*this)[dom_.ub()] - (dom_.ub() - t) * deriv)
        & ((*this)[dom_.lb()] + (t - dom_.lb()) * deriv);
 }
+
+Interval Tube::interpol(const Interval& intv_t, const Tube& derivative_tube) const
+{
+  Interval y = interpol(intv_t.lb(), derivative_tube) | interpol(intv_t.ub(), derivative_tube);
+  for(int i = min(size() - 1, input2index(intv_t.lb()) + 1) ; i < max(0, input2index(intv_t.ub()) - 1) ; i++)
+    y |= (*this)[i];
+  return y;
+}

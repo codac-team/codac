@@ -357,6 +357,7 @@ class Tube
          * \brief To be defined...
          */
         ibex::Interval interpol(double t, const Tube& derivative_tube) const;
+        ibex::Interval interpol(const ibex::Interval& intv_t, const Tube& derivative_tube) const;
 
 
     /** Integration computation **/

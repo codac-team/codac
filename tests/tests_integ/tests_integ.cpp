@@ -148,6 +148,7 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
     REQUIRE(ApproxIntv(tube.timeIntegration(10.0)) == Interval(9.5,19.5));
     REQUIRE(ApproxIntv(tube.timeIntegration(10.1)) == Interval(9.4,19.6));
     REQUIRE(ApproxIntv(tube.timeIntegration(11.0)) == Interval(8.5,20.5));
+    REQUIRE(ApproxIntv(tube.timeIntegration(11.5)) == Interval(7.75,20.25));
     REQUIRE(ApproxIntv(tube.timeIntegration(12.5)) == Interval(6.5,20.5));
     REQUIRE(ApproxIntv(tube.timeIntegration(12.6)) == Interval(6.4,20.6));
     REQUIRE(ApproxIntv(tube.timeIntegration(14.5)) == Interval(7,23.5));

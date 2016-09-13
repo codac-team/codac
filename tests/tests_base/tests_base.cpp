@@ -382,7 +382,7 @@ TEST_CASE("Testing subtube", "[core]")
   }
 }
 
-TEST_CASE("Testing interpol", "[core]")
+TEST_CASE("Testing interpol (double)", "[core]")
 {
   SECTION("Test tube1")
   {
@@ -397,5 +397,28 @@ TEST_CASE("Testing interpol", "[core]")
     REQUIRE(ApproxIntv(tube.interpol(2.0, tube_derivative)) == Interval(2.0,4.0));
     REQUIRE(ApproxIntv(tube.interpol(2.2, tube_derivative)) == Interval(2.2,4.4));
     REQUIRE(ApproxIntv(tube.interpol(21., tube_derivative)) == Interval(13.5,36.5));
+  }
+}
+
+TEST_CASE("Testing interpol (interval)", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    Tube tube_derivative = tubeTest4();
+    Tube tube = tube_derivative.primitive();
+    REQUIRE(ApproxIntv(tube.interpol(Interval(0.), tube_derivative)) == Interval(0.,1.));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(0.1), tube_derivative)) == Interval(0.1,1.1));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(0.5), tube_derivative)) == Interval(0.5,1.5));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(1.0), tube_derivative)) == Interval(1.,2.));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(1.1), tube_derivative)) == Interval(1.1,2.2));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(1.95), tube_derivative)) == Interval(1.95,3.9));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(2.0), tube_derivative)) == Interval(2.0,4.0));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(2.2), tube_derivative)) == Interval(2.2,4.4));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(21.), tube_derivative)) == Interval(13.5,36.5));
+
+    REQUIRE(ApproxIntv(tube.interpol(Interval(0.,5.), tube_derivative)) == Interval(0.,10.));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(0.1,4.9), tube_derivative)) == Interval(0.1,9.8));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(0.,21.), tube_derivative)) == Interval(0.,36.5));
+    REQUIRE(ApproxIntv(tube.interpol(Interval(7.5,11.5), tube_derivative)) == Interval(7.5,20.25));
   }
 }
