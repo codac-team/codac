@@ -451,8 +451,9 @@ class Tube
         bool ctcIn(const Tube& derivative_tube, ibex::Interval& y, const ibex::Interval& t, bool fwd_bwd = true);
         bool ctcIn(const Tube& derivative_tube, const ibex::Interval& y, const ibex::Interval& t, bool fwd_bwd = true);
         bool ctcIn_base(const Tube& derivative_tube, ibex::Interval& y, ibex::Interval& t,
-                        bool& tube_contracted, bool& y_contracted, bool& t_contracted, bool fwd_bwd = true);
-
+                                bool& tube_contracted, bool& y_contracted, bool& t_contracted,
+                                bool& bisection_required, bool fwd_bwd = true);
+        
         /**
          * \brief To be defined...
          */

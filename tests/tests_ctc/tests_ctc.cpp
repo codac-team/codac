@@ -438,7 +438,7 @@ TEST_CASE("Contracting tube: ctcIn(xdot, y, t)", "[ctc]")
     REQUIRE(x[6] == Interval(-1.5,2.5));
     REQUIRE(x[7] == Interval::EMPTY_SET); // optim: Interval::EMPTY_SET
     REQUIRE(x[8] == Interval::EMPTY_SET); // optim: Interval::EMPTY_SET
-    REQUIRE(x[9] == Interval::EMPTY_SET); // optim: Interval::EMPTY_SET
+    REQUIRE(x[9] == Interval(-3.,5.5));
 
     // Test I
     x = x_raw;
