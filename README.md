@@ -1,7 +1,7 @@
 # tube-lib [![Build Status](https://travis-ci.org/SimonRohou/tube-lib.svg)](https://travis-ci.org/SimonRohou/tube-lib)
-A proposal for an optimized Tube class based on the [Ibex library](http://www.ibex-lib.org/).
+A proposal for an optimized Tube class compatible with the [Ibex library](http://www.ibex-lib.org/).
 
-This data structure is based on a binary thus improving the reading. Some functions are multithreaded.
+This data structure is based on a binary tree thus improving the reading. Some functions are multithreaded.
 
 Definition
 -------

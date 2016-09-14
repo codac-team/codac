@@ -530,9 +530,15 @@ void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t, const Inte
       while(i < v.size())
       {
         int j = i;
-        while(j + 1 < v.size() && v[i].ub() == v[j + 1].lb())
+        Interval merge = v[i];
+
+        while(j + 1 < v.size() && v[j].ub() == v[j + 1].lb())
+        {
           j ++;
-        v_intv_t.push_back(v[i] | v[j]);
+          merge |= v[j];
+        }
+
+        v_intv_t.push_back(merge);
         i = j + 1;
       }
     }
