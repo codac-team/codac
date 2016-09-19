@@ -31,6 +31,7 @@ void warningTubesSizes(const Tube& x1, const Tube& x2)
          << "[t1]=" << x1.domain() << " and [t2]=" << x2.domain() << endl;
 }
 
+
 Tube operator+(const Tube& x1, const Tube& x2)
 {
   warningTubesSizes(x1, x2);
@@ -106,7 +107,7 @@ Tube operator-(double x1, const Tube& x2)
   return new_tube;
 }
 
-Tube operator-(const Tube& x1,  const Interval& x2)
+Tube operator-(const Tube& x1, const Interval& x2)
 {
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
@@ -287,6 +288,7 @@ Tube operator&(const Tube& x1, const Interval& x2)
     new_tube.set(x1[i] & x2, i);
   return new_tube;
 }
+
 
 #define func_unary(tube, f) \
     Tube new_tube(x); \

@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
 # Options
 
-  option(BUILD_TESTS "Build test" OFF)
+  option(BUILD_TESTS "Build test" ON)
   option(ONLY_PYTHON_BINDINGS "build library with python bindings only" OFF)
 
 

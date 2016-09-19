@@ -65,8 +65,9 @@ class VibesFigure_Tube : public VibesFigure
      *
      * \param map_scalar_values a map of the form [t](y) representing a trajectory
      * \param color line's color
+     * \param points_size size (in map value) of the points given by map_scalar_values. If 0, a lien is drawn, only points otherwise.
      */
-    void showScalarValues(const std::map<double,double>& map_scalar_values, const std::string& color = "red") const;
+    void showScalarValues(const std::map<double,double>& map_scalar_values, const std::string& color = "red", double points_size = 0.) const;
 
   protected:
 

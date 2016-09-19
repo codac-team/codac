@@ -45,7 +45,7 @@ void VibesFigure_Tube::show() const
   return show(m_tube->size());
 }
 
-void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_values, const string& color) const
+void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_values, const string& color, double points_size) const
 {
   m_id_map_scalar_values ++;
   std::ostringstream o;
@@ -56,11 +56,21 @@ void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_val
   typename map<double,double>::const_iterator it_scalar_values;
   for(it_scalar_values = map_scalar_values.begin(); it_scalar_values != map_scalar_values.end(); it_scalar_values++)
   {
-    v_x.push_back(it_scalar_values->first);
-    v_y.push_back(it_scalar_values->second);
+    if(points_size != 0)
+      vibes::drawPoint(it_scalar_values->first,
+                       it_scalar_values->second,
+                       points_size,
+                       vibesParams("figure", m_name, "group", o.str()));
+
+    else
+    {
+      v_x.push_back(it_scalar_values->first);
+      v_y.push_back(it_scalar_values->second);
+    }
   }
 
-  vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", o.str()));
+  if(points_size == 0.)
+    vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", o.str()));
 }
 
 void VibesFigure_Tube::show(int slices_limit, bool update_background) const
