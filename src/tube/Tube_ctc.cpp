@@ -42,6 +42,14 @@ bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
     contraction |= y_new.diam() < y_old.diam();
     set(y_new, i);
 
+    // Discontinuous
+    if(y_new.is_empty())
+    {
+      set(Interval::EMPTY_SET);
+      contraction = true;
+      break;
+    }
+
     // Preparing next slice computation
     if(i < size() - 1)
     {
@@ -75,6 +83,14 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
     Interval y_new = y_old & (y_front - derivative_tube[i] * Interval(0., dt_));
     contraction |= y_new.diam() < y_old.diam();
     set(y_new, i);
+
+    // Discontinuous
+    if(y_new.is_empty())
+    {
+      set(Interval::EMPTY_SET);
+      contraction = true;
+      break;
+    }
 
     if(i > 0)
     {
