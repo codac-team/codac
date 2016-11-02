@@ -234,7 +234,7 @@ int Tube::input2index(double t) const
   if(!m_intv_t.contains(t))
   {
     cout << "Error Tube::input2index(double): no corresponding slice "
-         << "for t=" << t << " in " << setprecision(16) << m_intv_t << endl;
+         << "for t=" << setprecision(16) << t << " in " << m_intv_t << endl;
     return -1;
   }
 
