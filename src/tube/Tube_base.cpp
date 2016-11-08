@@ -95,6 +95,12 @@ Tube::Tube(const Tube& tu)
   *this = tu;
 }
 
+Tube::Tube(const Tube& tu, const Interval& image_value)
+{
+  *this = tu;
+  set(image_value);
+}
+
 Tube& Tube::operator=(const Tube& tu)
 {
   if(m_first_subtube != NULL)

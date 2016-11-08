@@ -45,6 +45,14 @@ class Tube
         Tube(const Tube& tu);
 
         /**
+         * \brief Create a copy of the given tube tu with custom values.
+         *
+         * \param tu the tube to be copied
+         * \param image_value custom y-values
+         */
+        Tube(const Tube& tu, const ibex::Interval& image_value);
+
+        /**
          * \brief Assign this Tube to tu.
          */
         Tube& operator=(const Tube& tu);
