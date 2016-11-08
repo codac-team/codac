@@ -268,6 +268,13 @@ class Tube
         void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty, double y_no_uncertainties);
 
         /**
+         * \brief Add [-rad,+rad] over each slice.
+         *
+         * \param rad radius of the inflation
+         */
+        void inflate(double rad);
+
+        /**
          * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
          *
          * \param intv_t the interval input, Interval::ALL_REALS by default
