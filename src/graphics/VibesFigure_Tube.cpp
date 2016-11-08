@@ -77,9 +77,31 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
 {
   if(m_need_to_update_axis)
   {
-    vibes::axisLimits(m_tube->domain().lb(), m_tube->domain().ub(), 
-                      m_tube->image().lb(), m_tube->image().ub(),
-                      m_name);
+    double image_lb, image_ub;
+
+    if(!m_tube->image().is_unbounded())
+    {
+      image_lb = m_tube->image().lb();
+      image_ub = m_tube->image().ub();
+    }
+
+    else // some slices can be [-oo,+oo], maybe not all of them
+    {
+      image_lb = NAN;
+      image_ub = NAN;
+
+      for(int i = 0 ; i < m_tube->size() ; i++)
+      {
+        Interval slice = (*m_tube)[i];
+        if(!slice.is_unbounded())
+        {
+          image_lb = isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
+          image_ub = isnan(image_ub) || image_ub < slice.ub() ? slice.ub() : image_ub;
+        }
+      }
+    }
+
+    vibes::axisLimits(m_tube->domain().lb(), m_tube->domain().ub(), image_lb, image_ub, m_name);
     m_need_to_update_axis = false;
   }
 
