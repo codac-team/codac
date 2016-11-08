@@ -97,6 +97,8 @@ Tube::Tube(const Tube& tu)
 
 Tube::Tube(const Tube& tu, const Interval& image_value)
 {
+  m_first_subtube = NULL;
+  m_second_subtube = NULL;
   *this = tu;
   set(image_value);
 }
