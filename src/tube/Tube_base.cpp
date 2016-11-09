@@ -95,6 +95,14 @@ Tube::Tube(const Tube& tu)
   *this = tu;
 }
 
+Tube::Tube(const Tube& tu, const Interval& image_value)
+{
+  m_first_subtube = NULL;
+  m_second_subtube = NULL;
+  *this = tu;
+  set(image_value);
+}
+
 Tube& Tube::operator=(const Tube& tu)
 {
   if(m_first_subtube != NULL)
@@ -459,6 +467,15 @@ void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertaint
     new_map[it_map->first] = intv_y;
   }
   feed(new_map);
+}
+
+void Tube::inflate(double rad)
+{
+  for(int i = 0 ; i < m_slices_number ; i++)
+  {
+    Interval old_slice = (*this)[i];
+    set(old_slice.inflate(rad), i);
+  }
 }
 
 const Tube* Tube::getFirstSubTube() const
