@@ -295,6 +295,8 @@ class Tube
         /**
          * \brief Extract a subtube from this.
          *
+         * intv_t may be a subset of the new tube's domain in order to share the same slices cutting.
+         *
          * \param intv_t the domain to extract
          * \return a subtube defined over the intv_t domain
          */
