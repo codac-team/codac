@@ -27,7 +27,7 @@ void warningTubesSizes(const Tube& x1, const Tube& x2)
          << "n1=" << x1.size() << " and n2=" << x2.size() << endl;
 
   if(x1.domain() != x2.domain())
-    cout << "Warning Tube::unionWith(): Tubes of different domain: " 
+    cout << "Warning Tube::operator(): Tubes of different domain: " 
          << "[t1]=" << x1.domain() << " and [t2]=" << x2.domain() << endl;
 }
 
@@ -295,9 +295,15 @@ Tube operator&(const Tube& x1, const Interval& x2)
     for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(x[i]), i); \
     return new_tube;
 
-#define func_binary(tube, param, f) \
+#define func_unary_param(tube, param, f) \
     Tube new_tube(x); \
     for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(x[i], param), i); \
+    return new_tube;
+
+#define func_binary(tube_a, tube_b, f) \
+    Tube new_tube(x); \
+    warningTubesSizes(tube_a, tube_b); \
+    for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(tube_a[i], tube_b[i]), i); \
     return new_tube;
 
 Tube cos(const Tube& x) { func_unary(x, cos) }
@@ -305,10 +311,10 @@ Tube sin(const Tube& x) { func_unary(x, sin) }
 Tube abs(const Tube& x) { func_unary(x, abs) }
 Tube sqr(const Tube& x) { func_unary(x, sqr) }
 Tube sqrt(const Tube& x) { func_unary(x, sqrt) }
-Tube pow(const Tube& x, int p) { func_binary(x, p, pow) }
-Tube pow(const Tube& x, double p) { func_binary(x, p, pow) }
-Tube pow(const Tube& x, const Interval& p) { func_binary(x, p, pow) }
-Tube root(const Tube& x, int p) { func_binary(x, p, root) }
+Tube pow(const Tube& x, int p) { func_unary_param(x, p, pow) }
+Tube pow(const Tube& x, double p) { func_unary_param(x, p, pow) }
+Tube pow(const Tube& x, const Interval& p) { func_unary_param(x, p, pow) }
+Tube root(const Tube& x, int p) { func_unary_param(x, p, root) }
 Tube exp(const Tube& x) { func_unary(x, exp) }
 Tube log(const Tube& x) { func_unary(x, log) }
 Tube tan(const Tube& x) { func_unary(x, tan) }
@@ -321,3 +327,4 @@ Tube tanh(const Tube& x) { func_unary(x, tanh) }
 Tube acosh(const Tube& x) { func_unary(x, acosh) }
 Tube asinh(const Tube& x) { func_unary(x, asinh) }
 Tube atanh(const Tube& x) { func_unary(x, atanh) }
+Tube atan2(const Tube& y, const Tube& x) { func_binary(y, x, atan2) }
