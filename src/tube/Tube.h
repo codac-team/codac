@@ -707,5 +707,6 @@ class Tube
     Tube acosh(const Tube& x);
     Tube asinh(const Tube& x);
     Tube atanh(const Tube& x);
+    Tube atan2(const Tube& y, const Tube& x);
 
 #endif
