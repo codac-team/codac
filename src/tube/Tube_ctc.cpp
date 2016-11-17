@@ -336,14 +336,15 @@ bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, const Interval&
 
 bool Tube::ctcOut(const Interval& y, const Interval& t)
 {
+  Interval intersected_t = t & domain();
   bool contraction = false;
-  pair<Interval,Interval> enc_bounds = eval(t);
+  pair<Interval,Interval> enc_bounds = eval(intersected_t);
 
   if(y.intersects(enc_bounds.first))
     #pragma omp parallel num_threads(omp_get_num_procs())
     {
       #pragma omp for
-      for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
+      for(int i = input2index(intersected_t.lb()) ; i < input2index(intersected_t.ub()) ; i++)
       {
         Interval old_y = (*this)[i];
         Interval new_y(max(y.ub(), old_y.lb()), old_y.ub());
@@ -356,7 +357,7 @@ bool Tube::ctcOut(const Interval& y, const Interval& t)
     #pragma omp parallel num_threads(omp_get_num_procs())
     {
       #pragma omp for
-      for(int i = input2index(t.lb()) ; i < input2index(t.ub()) ; i++)
+      for(int i = input2index(intersected_t.lb()) ; i < input2index(intersected_t.ub()) ; i++)
       {
         Interval old_y = (*this)[i];
         Interval new_y(old_y.lb(), min(old_y.ub(), y.lb()));
