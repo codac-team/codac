@@ -103,10 +103,10 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
   return contraction;
 }
 
-bool Tube::ctcFwdBwd(const Tube& derivative_tube)
+bool Tube::ctcFwdBwd(const Tube& derivative_tube, const Interval& initial_value)
 {
   bool contraction = false;
-  contraction |= ctcFwd(derivative_tube);
+  contraction |= ctcFwd(derivative_tube, initial_value);
   contraction |= ctcBwd(derivative_tube);
   return contraction;
 }

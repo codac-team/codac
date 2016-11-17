@@ -441,6 +441,7 @@ class Tube
          * \brief To contract tube in forward (from the past to the future).
          *
          * \param derivative_tube the derivative of this
+         * \param initial_value an initial constraint to be considered
          * \return true if a contraction has been done, false otherwise
          */
         bool ctcFwd(const Tube& derivative_tube, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
@@ -457,9 +458,10 @@ class Tube
          * \brief To contract tube in forward/backward.
          *
          * \param derivative_tube the derivative of this
+         * \param initial_value an initial constraint to be considered
          * \return true if a contraction has been done, false otherwise
          */
-        bool ctcFwdBwd(const Tube& derivative_tube);
+        bool ctcFwdBwd(const Tube& derivative_tube, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
 
         /**
          * \brief To be defined...
