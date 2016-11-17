@@ -649,6 +649,7 @@ class Tube
 
     /** Arithmetic **/
 
+    Tube operator+(const Tube& x);
     Tube operator+(const Tube& x1, const Tube& x2);
     Tube operator+(const Tube& x1, double x2);
     Tube operator+(double x1, const Tube& x2);

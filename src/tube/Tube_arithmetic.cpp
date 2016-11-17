@@ -32,6 +32,11 @@ void warningTubesSizes(const Tube& x1, const Tube& x2)
 }
 
 
+Tube operator+(const Tube& x)
+{
+  return x;
+}
+
 Tube operator+(const Tube& x1, const Tube& x2)
 {
   warningTubesSizes(x1, x2);
