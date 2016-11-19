@@ -10,6 +10,7 @@
     Tube_ctc.cpp
     Tube_integration.cpp
     Tube_arithmetic.cpp
+    Tube_serialization.cpp
   )
 
   set(HEADERS

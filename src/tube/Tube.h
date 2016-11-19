@@ -33,7 +33,7 @@ class Tube
          * \param time_step tube's precision corresponding to slice's width
          * \param default_value default y-values
          */
-        Tube(const ibex::Interval &intv_t,
+        Tube(const ibex::Interval& intv_t,
              double time_step,
              const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
@@ -51,6 +51,15 @@ class Tube
          * \param image_value custom y-values
          */
         Tube(const Tube& tu, const ibex::Interval& image_value);
+
+        /**
+         * \brief Deserialize a binary file into a tube.
+         *
+         * The binary file has to be created with the reciprocal method Tube::serialize()
+         *
+         * \param binary_file_name the file name to deserialize
+         */
+        Tube(const std::string& binary_file_name = "tube.tbx");
 
         /**
          * \brief Assign this Tube to tu.
@@ -490,6 +499,19 @@ class Tube
         bool ctcIntertemporal(ibex::Interval& y, ibex::Interval& t1, ibex::Interval& t2) const;
 
 
+    /** Serialization **/
+
+        /**
+         * \brief Perform the serialization of this.
+         *
+         * The binary file will then be deserializable with
+         * the reciprocal constructor Tube::Tube(file_name)
+         *
+         * \param binary_file_name the name of the output binary file
+         */
+        bool serialize(const std::string& binary_file_name) const;
+
+
   protected:
 
     /**
@@ -503,6 +525,17 @@ class Tube
      */
     Tube(const std::vector<ibex::Interval>& vector_dt,
          const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
+
+    /**
+     * \brief Create a tube based on the given parameters.
+     *
+     * Values are set by default to Interval::ALL_REALS.
+     *
+     * \param intv_t tube's domain
+     * \param time_step tube's precision corresponding to slice's width
+     * \param default_value default y-values
+     */
+    void createFromSpecifications(const ibex::Interval& intv_t, double time_step, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
     /**
      * \brief Create a tube over a domain defined by a vector of intervals.

@@ -20,7 +20,17 @@
 using namespace std;
 using namespace ibex;
 
-Tube::Tube(const Interval &intv_t, double time_step, const Interval& default_value)
+Tube::Tube(const Interval& intv_t, double time_step, const Interval& default_value)
+{
+  createFromSpecifications(intv_t, time_step, default_value);
+}
+
+Tube::Tube(const vector<Interval>& vector_dt, const Interval& default_value)
+{
+  createFromSlicesVector(vector_dt, default_value);
+}
+
+void Tube::createFromSpecifications(const Interval& intv_t, double time_step, const Interval& default_value)
 {
   if(time_step > 0.)
   {
@@ -39,11 +49,6 @@ Tube::Tube(const Interval &intv_t, double time_step, const Interval& default_val
 
   else
     cout << "Error Tube::Tube(...): wrong timestep: " << time_step << endl;
-}
-
-Tube::Tube(const vector<Interval>& vector_dt, const Interval& default_value)
-{
-  createFromSlicesVector(vector_dt, default_value);
 }
 
 void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Interval& default_value)
