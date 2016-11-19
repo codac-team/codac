@@ -63,6 +63,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
   add_subdirectory(examples)
 
+
 # Uninstallation
 
   configure_file("${CMAKE_HOME_DIRECTORY}/scripts/cmake_modules/cmake_uninstall.cmake.in" "cmake_uninstall.cmake" IMMEDIATE @ONLY)
