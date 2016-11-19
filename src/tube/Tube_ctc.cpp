@@ -269,9 +269,7 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
             break;
           }
 
-          bool contraction = map_new_y[i].diam() < (*this)[i].diam();
-
-          tube_contracted |= contraction;
+          tube_contracted |= map_new_y[i].diam() < (*this)[i].diam();
           prev_y = map_new_y[i];
           set(map_new_y[i], i);
         }
