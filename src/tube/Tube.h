@@ -59,7 +59,7 @@ class Tube
          *
          * \param binary_file_name the file name to deserialize
          */
-        Tube(const std::string& binary_file_name = "tube.tbx");
+        Tube(const std::string& binary_file_name);
 
         /**
          * \brief Assign this Tube to tu.
@@ -509,7 +509,7 @@ class Tube
          *
          * \param binary_file_name the name of the output binary file
          */
-        bool serialize(const std::string& binary_file_name) const;
+        bool serialize(const std::string& binary_file_name = "tube") const;
 
 
   protected:
