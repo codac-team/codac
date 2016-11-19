@@ -25,10 +25,9 @@ using namespace ibex;
 
 /*
   Interval binary structure (VERSION 1)
-    - format: [short_int_intv_type]
-              [double_lb]
-              [double_ub]
-    - short_int_intv_type of type IntervalType
+    - format: [short_int_intv_type][double_lb][double_ub]
+    - short_int_intv_type of type IntervalType (see below)
+    - in case of unbounded intervals, the two last fields disappear
 */
 
 enum IntervalType { BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS };
@@ -36,7 +35,6 @@ enum IntervalType { BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS };
 void serializeInterval(ofstream& binFile, const Interval& intv)
 {
   short int intv_type;
-  double lb = 0., ub = 0.;
 
   if(intv == Interval::EMPTY_SET)
     intv_type = EMPTY_SET;
@@ -51,24 +49,22 @@ void serializeInterval(ofstream& binFile, const Interval& intv)
     intv_type = NEG_REALS;
 
   else
-  {
     intv_type = BOUNDED;
-    lb = intv.lb(); ub = intv.ub();
-  }
-  
+
   binFile.write((const char*)&intv_type, sizeof(short int));
-  binFile.write((const char*)&lb, sizeof(double));
-  binFile.write((const char*)&ub, sizeof(double));
+
+  if(intv_type == BOUNDED)
+  {
+    double lb = intv.lb(), ub = intv.ub();
+    binFile.write((const char*)&lb, sizeof(double));
+    binFile.write((const char*)&ub, sizeof(double));
+  }
 }
 
 void deserializeInterval(ifstream& binFile, Interval& intv)
 {
   short int intv_type;
-  double lb, ub;
-
   binFile.read((char*)&intv_type, sizeof(short int));
-  binFile.read((char*)&lb, sizeof(double));
-  binFile.read((char*)&ub, sizeof(double));
 
   switch(intv_type)
   {
@@ -89,6 +85,9 @@ void deserializeInterval(ifstream& binFile, Interval& intv)
       break;
 
     case BOUNDED:
+      double lb, ub;
+      binFile.read((char*)&lb, sizeof(double));
+      binFile.read((char*)&ub, sizeof(double));
       intv = Interval(lb, ub);
       break;
 
