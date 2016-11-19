@@ -509,7 +509,7 @@ class Tube
          *
          * \param binary_file_name the name of the output binary file
          */
-        bool serialize(const std::string& binary_file_name = "tube") const;
+        bool serialize(const std::string& binary_file_name = "x.tube") const;
 
 
   protected:

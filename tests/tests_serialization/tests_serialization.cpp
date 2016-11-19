@@ -21,11 +21,11 @@ using namespace Detail;
 
 bool testSerialization(const Tube& tube1)
 {
-  string filename = "test_serialization";
+  string filename = "test_serialization.tube";
 
   tube1.serialize(filename); // serialization
   Tube tube2(filename); // deserialization
-  remove((filename + ".tube").c_str());
+  remove(filename.c_str());
 
   return tube1 == tube2;
 }

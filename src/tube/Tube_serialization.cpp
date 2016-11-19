@@ -21,7 +21,6 @@
 using namespace std;
 using namespace ibex;
 
-const string EXTENSION = ".tube";
 #define CURRENT_VERSION_NUMBER 1
 
 /*
@@ -112,7 +111,7 @@ void deserializeInterval(ifstream& binFile, Interval& intv)
 
 Tube::Tube(const string& binary_file_name)
 {
-  ifstream binFile((binary_file_name + EXTENSION).c_str(), ios::in | ios::binary);
+  ifstream binFile(binary_file_name.c_str(), ios::in | ios::binary);
 
   if(!binFile.is_open())
   {
@@ -157,7 +156,7 @@ Tube::Tube(const string& binary_file_name)
 
 bool Tube::serialize(const string& binary_file_name) const
 {
-  ofstream binFile((binary_file_name + EXTENSION).c_str(), ios::out | ios::binary);
+  ofstream binFile(binary_file_name.c_str(), ios::out | ios::binary);
 
   if(!binFile.is_open())
   {
