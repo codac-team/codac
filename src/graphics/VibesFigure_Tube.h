@@ -80,6 +80,17 @@ class VibesFigure_Tube : public VibesFigure
      */
     void drawSlice(const ibex::Interval& intv_t, const ibex::Interval& intv_y, const vibes::Params& params) const;
 
+    /**
+     * \brief Compute the polygon as the envelope of the tube.
+     *
+     * This is an optimization instead of displaying each slice: a unique figure is shown.
+     *
+     * \param tube the tube to be shown as a polygon
+     * \param v_x a vector of double storing all x-point
+     * \param v_x a vector of double storing all y-point
+     */
+    void computePolygonEnvelope(const Tube& tube, std::vector<double>& v_x, std::vector<double>& v_y) const;
+
   protected:
     Tube *m_tube;
     std::vector<std::map<double,double> > *m_true_values;

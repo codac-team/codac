@@ -111,8 +111,9 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
   {
     vibes::clearGroup(m_name, "slices_old_background");
     params_slices = vibesParams("figure", m_name, "group", "slices_old_background");
-    for(int i = 0 ; i < m_tube_copy->size() ; i++)
-      drawSlice(m_tube_copy->domain(i), (*m_tube_copy)[i], params_slices);
+    vector<double> v_x, v_y;
+    computePolygonEnvelope(*m_tube_copy, v_x, v_y);
+    vibes::drawPolygon(v_x, v_y, params_slices);
   }
 
   vibes::clearGroup(m_name, "slices");
@@ -148,4 +149,25 @@ void VibesFigure_Tube::drawSlice(const Interval& intv_t, const Interval& intv_y,
   vibes::drawBox(intv_t.lb(), intv_t.ub(),
                  intv_y.lb(), intv_y.ub(),
                  params);
+}
+
+void VibesFigure_Tube::computePolygonEnvelope(const Tube& tube, vector<double>& v_x, vector<double>& v_y) const
+{
+  for(int i = 0 ; i < tube.size() ; i++)
+  {
+    IntervalVector sliceBox = tube.sliceBox(i);
+    v_x.push_back(sliceBox[0].lb());
+    v_x.push_back(sliceBox[0].ub());
+    v_y.push_back(sliceBox[1].ub());
+    v_y.push_back(sliceBox[1].ub());
+  }
+
+  for(int i = tube.size() - 1 ; i >= 0 ; i--)
+  {
+    IntervalVector sliceBox = tube.sliceBox(i);
+    v_x.push_back(sliceBox[0].ub());
+    v_x.push_back(sliceBox[0].lb());
+    v_y.push_back(sliceBox[1].lb());
+    v_y.push_back(sliceBox[1].lb());
+  }
 }
