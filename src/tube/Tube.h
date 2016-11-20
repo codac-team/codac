@@ -58,8 +58,9 @@ class Tube
          * The binary file has to be created with the reciprocal method Tube::serialize()
          *
          * \param binary_file_name the file name to deserialize
+         * \param real_values an optional map to get map<double,double> values possibly stored in the file
          */
-        Tube(const std::string& binary_file_name);
+        Tube(const std::string& binary_file_name, std::map<double,double> *real_values = NULL);
 
         /**
          * \brief Assign this Tube to tu.
@@ -516,8 +517,10 @@ class Tube
          * the reciprocal constructor Tube::Tube(file_name)
          *
          * \param binary_file_name the name of the output binary file
+         * \param real_values an optional map to store map<double,double> values in the file
          */
         bool serialize(const std::string& binary_file_name = "x.tube") const;
+        bool serialize(const std::string& binary_file_name, const std::map<double,double>& real_values) const;
 
 
   protected:

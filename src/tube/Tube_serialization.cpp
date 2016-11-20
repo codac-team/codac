@@ -100,15 +100,20 @@ void deserializeInterval(ifstream& binFile, Interval& intv)
 /*
   Tube binary files structure (VERSION 1)
     - minimal storage
-    - format: [short int_version_number]
+    - format: [short_int_version_number]
               [int_slices_number]
               [Interval_domain]
               [Interval_slice1]
               [Interval_slice2]
               ...
+              [int_number_real_values]
+              [double_value1_t]
+              [double_value1_y]
+              [double_value2_t]
+              ...
 */
 
-Tube::Tube(const string& binary_file_name)
+Tube::Tube(const string& binary_file_name, map<double,double> *real_values)
 {
   ifstream binFile(binary_file_name.c_str(), ios::in | ios::binary);
 
@@ -141,6 +146,19 @@ Tube::Tube(const string& binary_file_name)
       deserializeInterval(binFile, slice_value);
       set(slice_value, i);
     }
+
+    // Optional real values
+    int number_real_values;
+    binFile.read((char*)&number_real_values, sizeof(int));
+    real_values = new map<double,double>();
+
+    for(int i = 0 ; i < number_real_values ; i++)
+    {
+      double real_t, real_y;
+      binFile.read((char*)&real_t, sizeof(double));
+      binFile.read((char*)&real_y, sizeof(double));
+      (*real_values)[real_t] = real_y;
+    }
   }
 
   else
@@ -154,6 +172,12 @@ Tube::Tube(const string& binary_file_name)
 }
 
 bool Tube::serialize(const string& binary_file_name) const
+{
+  map<double,double> void_real_values;
+  return serialize(binary_file_name, void_real_values);
+}
+
+bool Tube::serialize(const string& binary_file_name, const map<double,double>& real_values) const
 {
   ofstream binFile(binary_file_name.c_str(), ios::out | ios::binary);
 
@@ -178,6 +202,17 @@ bool Tube::serialize(const string& binary_file_name) const
   // Slices
   for(int i = 0 ; i < slices_number ; i++)
     serializeInterval(binFile, (*this)[i]);
+
+  // Optional real values
+  int number_real_values = real_values.size();
+  binFile.write((const char*)&number_real_values, sizeof(int));
+  typename map<double,double>::const_iterator it;
+  for(it = real_values.begin(); it != real_values.end(); it++)
+  {
+    double real_t = it->first, real_y = it->second;
+    binFile.write((const char*)&real_t, sizeof(double));
+    binFile.write((const char*)&real_y, sizeof(double));
+  }
 
   binFile.close();
   return true;
