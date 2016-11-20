@@ -168,6 +168,14 @@ class Tube
         ibex::Interval domain(double t) const;
 
         /**
+         * \brief Return the slice box [domain]x[yvalue] represented by index.
+         *
+         * \param index slice's id, between 0 and (size - 1)
+         * \return an IntervalVector [t0,tf]x[ylb,yub]
+         */
+        ibex::IntervalVector sliceBox(int index) const;
+
+        /**
          * \brief Comparison operator between two tubes. Return true in case of equality.
          *
          * \param tu the tube to be compared

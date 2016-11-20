@@ -288,6 +288,15 @@ Interval Tube::domain(double t) const
   return intv_t;
 }
 
+IntervalVector Tube::sliceBox(int index) const
+{
+  const Tube *slice = getSlice(index);
+  IntervalVector slice_box(2);
+  slice_box[0] = slice->domain();
+  slice_box[1] = slice->image();
+  return slice_box;
+}
+
 bool Tube::operator==(const Tube& tu) const
 {
   return (isSlice() && tu.isSlice() && image() == tu.image() && domain() == tu.domain())
