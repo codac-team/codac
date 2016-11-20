@@ -403,8 +403,9 @@ void Tube::set(const Interval& intv_y, const Interval& intv_t)
 
 const Interval Tube::feed(const Interval& intv_y, int index)
 {
-  set((*this)[index] | intv_y, index);
-  return (*this)[index];
+  Interval new_y = (*this)[index] | intv_y;
+  set(new_y, index);
+  return new_y;
 }
 
 const Interval Tube::feed(const Interval& intv_y, double t)
@@ -429,6 +430,12 @@ void Tube::feed(const map<double,Interval>& map_intv_y)
   {
     ta = tb;
     tb = it_map->first;
+
+    if(ta < domain().lb())
+      continue;
+
+    if(tb > domain().ub())
+      break;
 
     for(int i = input2index(ta) ; i <= input2index(tb) ; i++)
     {
