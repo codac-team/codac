@@ -25,7 +25,7 @@ using namespace ibex;
 
 /*
   Interval binary structure (VERSION 1)
-    - format: [short_int_intv_type][double_lb][double_ub]
+    - format: [char_intv_type][double_lb][double_ub]
     - short_int_intv_type of type IntervalType (see below)
     - in case of unbounded intervals, the two last fields disappear
 */
@@ -34,7 +34,7 @@ enum IntervalType { BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS };
 
 void serializeInterval(ofstream& binFile, const Interval& intv)
 {
-  short int intv_type;
+  char intv_type;
 
   if(intv == Interval::EMPTY_SET)
     intv_type = EMPTY_SET;
@@ -51,7 +51,7 @@ void serializeInterval(ofstream& binFile, const Interval& intv)
   else
     intv_type = BOUNDED;
 
-  binFile.write((const char*)&intv_type, sizeof(short int));
+  binFile.write((const char*)&intv_type, sizeof(char));
 
   if(intv_type == BOUNDED)
   {
@@ -63,8 +63,8 @@ void serializeInterval(ofstream& binFile, const Interval& intv)
 
 void deserializeInterval(ifstream& binFile, Interval& intv)
 {
-  short int intv_type;
-  binFile.read((char*)&intv_type, sizeof(short int));
+  char intv_type;
+  binFile.read((char*)&intv_type, sizeof(char));
 
   switch(intv_type)
   {
@@ -100,7 +100,7 @@ void deserializeInterval(ifstream& binFile, Interval& intv)
 /*
   Tube binary files structure (VERSION 1)
     - minimal storage
-    - format: [short_int_version_number]
+    - format: [char_version_number]
               [int_slices_number]
               [Interval_domain]
               [Interval_slice1]
@@ -142,8 +142,8 @@ bool Tube::serialize(const string& binary_file_name, const map<double,double>& r
   }
 
   // Version number for compliance purposes
-  short int version = CURRENT_VERSION_NUMBER;
-  binFile.write((const char*)&version, sizeof(short int));
+  char version = CURRENT_VERSION_NUMBER;
+  binFile.write((const char*)&version, sizeof(char));
 
   // Slices number
   int slices_number = size();
@@ -183,8 +183,8 @@ void Tube::deserialize(const string& binary_file_name, map<double,double>& real_
   }
 
   // Version number for compliance purposes
-  short int version_number;
-  binFile.read((char*)&version_number, sizeof(short int));
+  char version_number;
+  binFile.read((char*)&version_number, sizeof(char));
 
   if(version_number == 1)
   {
@@ -208,7 +208,7 @@ void Tube::deserialize(const string& binary_file_name, map<double,double>& real_
     // Optional real values
     int number_real_values;
     binFile.read((char*)&number_real_values, sizeof(int));
-    
+
     for(int i = 0 ; i < number_real_values ; i++)
     {
       double real_t, real_y;
