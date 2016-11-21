@@ -16,6 +16,7 @@
 #include "../tests_cases.hpp"
 #include <stdio.h>
 
+using namespace std;
 using namespace Catch;
 using namespace Detail;
 
@@ -26,18 +27,18 @@ bool testSerialization(const Tube& tube1)
   map<double,double> map_test1, map_test2;
 
   for(int i = 0 ; i < tube1.size() ; i++)
-    if(!tube1[i].is_unbounded())
+    if(!tube1[i].is_unbounded() && tube1[i] != Interval::EMPTY_SET)
       map_test1[tube1.domain(i).mid()] = tube1[i].mid();
 
   tube1.serialize(filename, map_test1); // serialization
-  Tube tube2(filename, &map_test2); // deserialization
+  Tube tube2(filename, map_test2); // deserialization
   remove(filename.c_str());
 
   bool equality = tube1 == tube2;
 
   typename map<double,double>::const_iterator it;
   for(it = map_test2.begin(); it != map_test2.end(); it++)
-    equality &= map_test1[it->first] != it->second;
+    equality &= map_test1[it->first] == it->second;
 
   return equality;
 }

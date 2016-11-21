@@ -60,7 +60,8 @@ class Tube
          * \param binary_file_name the file name to deserialize
          * \param real_values an optional map to get map<double,double> values possibly stored in the file
          */
-        Tube(const std::string& binary_file_name, std::map<double,double> *real_values = NULL);
+        Tube(const std::string& binary_file_name);
+        Tube(const std::string& binary_file_name, std::map<double,double> &real_values);
 
         /**
          * \brief Assign this Tube to tu.
@@ -680,6 +681,16 @@ class Tube
      * \brief To be defined...
      */
     void ctcIn_computeIndex(const ibex::Interval& t, const ibex::Interval& y, int& index_lb, int& index_ub);
+
+    /**
+     * \brief Deserialize a binary file into a tube.
+     *
+     * The binary file has to be created with the reciprocal method Tube::serialize()
+     *
+     * \param binary_file_name the file name to deserialize
+     * \param real_values an optional map to get map<double,double> values possibly stored in the file
+     */
+    void deserialize(const std::string& binary_file_name, std::map<double,double>& real_values);
 
     /** Class variables **/
 

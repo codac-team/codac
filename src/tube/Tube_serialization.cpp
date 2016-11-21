@@ -113,62 +113,15 @@ void deserializeInterval(ifstream& binFile, Interval& intv)
               ...
 */
 
-Tube::Tube(const string& binary_file_name, map<double,double> *real_values)
+Tube::Tube(const string& binary_file_name)
 {
-  ifstream binFile(binary_file_name.c_str(), ios::in | ios::binary);
+  map<double,double> void_map;
+  deserialize(binary_file_name, void_map);
+}
 
-  if(!binFile.is_open())
-  {
-    cout << "Tube::Tube(binary_file_name) error while opening file:"
-         << "\"" << binary_file_name << "\"" << endl;
-    return;
-  }
-
-  // Version number for compliance purposes
-  short int version_number;
-  binFile.read((char*)&version_number, sizeof(short int));
-
-  if(version_number == 1)
-  {
-    // Slices number
-    int slices_number;
-    binFile.read((char*)&slices_number, sizeof(int));
-
-    // Domain
-    Interval domain;
-    deserializeInterval(binFile, domain);
-    createFromSpecifications(domain, domain.diam() / slices_number);
-
-    // Slices
-    for(int i = 0 ; i < slices_number ; i++)
-    {
-      Interval slice_value;
-      deserializeInterval(binFile, slice_value);
-      set(slice_value, i);
-    }
-
-    // Optional real values
-    int number_real_values;
-    binFile.read((char*)&number_real_values, sizeof(int));
-    real_values = new map<double,double>();
-
-    for(int i = 0 ; i < number_real_values ; i++)
-    {
-      double real_t, real_y;
-      binFile.read((char*)&real_t, sizeof(double));
-      binFile.read((char*)&real_y, sizeof(double));
-      (*real_values)[real_t] = real_y;
-    }
-  }
-
-  else
-  {
-    cout << "Tube::Tube(binary_file_name) deserialization version number "
-         << version_number << " not supported." << endl;
-    return;
-  }
-
-  binFile.close();
+Tube::Tube(const string& binary_file_name, map<double,double> &real_values)
+{
+  deserialize(binary_file_name, real_values);
 }
 
 bool Tube::serialize(const string& binary_file_name) const
@@ -216,4 +169,61 @@ bool Tube::serialize(const string& binary_file_name, const map<double,double>& r
 
   binFile.close();
   return true;
+}
+
+void Tube::deserialize(const string& binary_file_name, map<double,double>& real_values)
+{
+  ifstream binFile(binary_file_name.c_str(), ios::in | ios::binary);
+
+  if(!binFile.is_open())
+  {
+    cout << "Tube::Tube(binary_file_name) error while opening file:"
+         << "\"" << binary_file_name << "\"" << endl;
+    return;
+  }
+
+  // Version number for compliance purposes
+  short int version_number;
+  binFile.read((char*)&version_number, sizeof(short int));
+
+  if(version_number == 1)
+  {
+    // Slices number
+    int slices_number;
+    binFile.read((char*)&slices_number, sizeof(int));
+
+    // Domain
+    Interval domain;
+    deserializeInterval(binFile, domain);
+    createFromSpecifications(domain, domain.diam() / slices_number);
+
+    // Slices
+    for(int i = 0 ; i < slices_number ; i++)
+    {
+      Interval slice_value;
+      deserializeInterval(binFile, slice_value);
+      set(slice_value, i);
+    }
+
+    // Optional real values
+    int number_real_values;
+    binFile.read((char*)&number_real_values, sizeof(int));
+    
+    for(int i = 0 ; i < number_real_values ; i++)
+    {
+      double real_t, real_y;
+      binFile.read((char*)&real_t, sizeof(double));
+      binFile.read((char*)&real_y, sizeof(double));
+      real_values[real_t] = real_y;
+    }
+  }
+
+  else
+  {
+    cout << "Tube::Tube(binary_file_name) deserialization version number "
+         << version_number << " not supported." << endl;
+    return;
+  }
+
+  binFile.close();
 }
