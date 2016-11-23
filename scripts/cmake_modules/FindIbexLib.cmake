@@ -27,19 +27,29 @@ find_path(FILIB_INCLUDE_DIR ieee/primitive.hpp
           PATH_SUFFIXES include          
           )
 
+find_path(SOPLEX_INCLUDE_DIR soplex.h
+          HINTS ${PC_IBEX_INCLUDEDIR} ${PC_IBEX_INCLUDE_DIRS} ${IBEX_ROOT}
+          PATH_SUFFIXES include          
+          )
+
 
 find_library(IBEX_LIBRARY NAMES ibex
             HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}  ${IBEX_ROOT}
             PATH_SUFFIXES lib
-						)
+            )
 
 find_library(FILIB_LIBRARY NAMES prim
             HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}  ${IBEX_ROOT}
             PATH_SUFFIXES lib
-						)
+            )
 
-set(IBEX_LIBRARIES ${IBEX_LIBRARY} ${FILIB_LIBRARY})
-set(IBEX_INCLUDE_DIRS ${IBEX_INCLUDE_DIR} ${FILIB_INCLUDE_DIR})
+find_library(SOPLEX_LIBRARY NAMES soplex
+            HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}  ${IBEX_ROOT}
+            PATH_SUFFIXES lib
+            )
+
+set(IBEX_LIBRARIES ${IBEX_LIBRARY} ${FILIB_LIBRARY} ${SOPLEX_LIBRARY})
+set(IBEX_INCLUDE_DIRS ${IBEX_INCLUDE_DIR} ${FILIB_INCLUDE_DIR} ${SOPLEX_INCLUDE_DIR})
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set IBEX_FOUND to TRUE
