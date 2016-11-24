@@ -13,7 +13,6 @@
 #ifndef VibesFigure_HEADER
 #define VibesFigure_HEADER
 
-#include "ibex.h"
 #include "vibes.h"
 #include <string>
 

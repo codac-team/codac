@@ -16,7 +16,7 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "ibex.h"
+#include "ibex_Interval.h"
 
 namespace Catch
 {

@@ -13,6 +13,7 @@
 #ifndef VibesFigureTube_HEADER
 #define VibesFigureTube_HEADER
 
+#include "ibex_Interval.h"
 #include "VibesFigure.h"
 #include "Tube.h"
 
