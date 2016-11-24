@@ -14,6 +14,7 @@
 #define VibesFigureTube_HEADER
 
 #include "ibex_Interval.h"
+#include "ibex_IntervalVector.h"
 #include "VibesFigure.h"
 #include "Tube.h"
 
