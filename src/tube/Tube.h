@@ -17,6 +17,7 @@
 #include <vector>
 #include <utility>
 #include "ibex_IntervalVector.h"
+#include "ibex_Function.h"
 
 class Tube
 {
@@ -36,6 +37,32 @@ class Tube
         Tube(const ibex::Interval& intv_t,
              double time_step,
              const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
+
+        /**
+         * \brief Create a tube as an interval of two functions.
+         * 
+         * Note: fmin <= fmax
+         *
+         * \param intv_t tube's domain
+         * \param time_step tube's precision corresponding to slice's width
+         * \param fmin lower-bound ibex function
+         * \param fmin upper-bound ibex function
+         */
+        Tube(const ibex::Interval& intv_t,
+             double time_step,
+             const ibex::Function& fmin, const ibex::Function& fmax);
+
+        /**
+         * \brief Create a tube as an envelope of an uncertain functions.
+         *
+         * \param intv_t tube's domain
+         * \param time_step tube's precision corresponding to slice's width
+         * \param f the ibex function to enclose
+         * \param thickness the bounded uncertainty centered on f's values, [0.] by default
+         */
+        Tube(const ibex::Interval& intv_t,
+             double time_step,
+             const ibex::Function& f, const ibex::Interval& thickness = ibex::Interval::EMPTY_SET);
 
         /**
          * \brief Create a copy of the given tube tu.

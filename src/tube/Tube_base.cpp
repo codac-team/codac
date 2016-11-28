@@ -25,6 +25,29 @@ Tube::Tube(const Interval& intv_t, double time_step, const Interval& default_val
   createFromSpecifications(intv_t, time_step, default_value);
 }
 
+Tube::Tube(const Interval& intv_t, double time_step, const Function& fmin, const Function& fmax)
+{
+  createFromSpecifications(intv_t, time_step);
+  for(int i = 0 ; i < size() ; i++)
+  {
+    IntervalVector dom(1);
+    dom[0] = domain(i);
+    set(Interval(fmin.eval_vector(dom)[0].lb(), fmax.eval_vector(dom)[0].ub()), i);
+  }
+}
+
+Tube::Tube(const Interval& intv_t, double time_step, const Function& f, const Interval& thickness)
+{
+  Interval tube_thickness = thickness == Interval::EMPTY_SET ? 0. : thickness; // default value: [0.]
+  createFromSpecifications(intv_t, time_step);
+  for(int i = 0 ; i < size() ; i++)
+  {
+    IntervalVector dom(1);
+    dom[0] = domain(i);
+    set(Interval(f.eval_vector(dom)[0]) + tube_thickness, i);
+  }
+}
+
 Tube::Tube(const vector<Interval>& vector_dt, const Interval& default_value)
 {
   createFromSlicesVector(vector_dt, default_value);
