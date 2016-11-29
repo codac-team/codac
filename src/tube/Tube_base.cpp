@@ -27,6 +27,9 @@ Tube::Tube(const Interval& intv_t, double time_step, const Interval& default_val
 
 Tube::Tube(const Interval& intv_t, double time_step, const Function& fmin, const Function& fmax)
 {
+  if(fmin.nb_var() > 1 || fmax.nb_var() > 1)
+    cout << "Warning Tube::Tube(...): too many variables in function definition" << endl;
+
   createFromSpecifications(intv_t, time_step);
   for(int i = 0 ; i < size() ; i++)
   {
@@ -38,6 +41,9 @@ Tube::Tube(const Interval& intv_t, double time_step, const Function& fmin, const
 
 Tube::Tube(const Interval& intv_t, double time_step, const Function& f, const Interval& thickness)
 {
+  if(f.nb_var() > 1)
+    cout << "Warning Tube::Tube(...): too many variables in function definition" << endl;
+
   Interval tube_thickness = thickness == Interval::EMPTY_SET ? 0. : thickness; // default value: [0.]
   createFromSpecifications(intv_t, time_step);
   for(int i = 0 ; i < size() ; i++)
