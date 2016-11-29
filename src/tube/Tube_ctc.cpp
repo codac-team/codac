@@ -417,3 +417,85 @@ bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
     return contraction;
   }
 }
+
+
+#define func_ctc_unary(y, x, f, bwd_f) \
+    bool contraction = false; \
+    bool local_contraction; \
+    warningTubesSizes(x, y); \
+    for(int i = 0 ; i < x.size() ; i++) \
+    { \
+      do \
+      { \
+        local_contraction = false; \
+        local_contraction |= y.intersect(ibex::f(x[i]), i); \
+        Interval x_i = x[i]; \
+        ibex::bwd_f(y[i], x_i); \
+        local_contraction |= x.intersect(x_i, i); \
+        contraction |= local_contraction; \
+      } while(local_contraction); \
+    } \
+    return contraction;
+
+#define func_ctc_unary_param(y, x, param, f, bwd_f) \
+    bool contraction = false; \
+    bool local_contraction; \
+    warningTubesSizes(x, y); \
+    for(int i = 0 ; i < x.size() ; i++) \
+    { \
+      do \
+      { \
+        local_contraction = false; \
+        local_contraction |= y.intersect(ibex::f(x[i], param), i); \
+        Interval x_i = x[i]; \
+        ibex::bwd_f(y[i], param, x_i); \
+        local_contraction |= x.intersect(x_i, i); \
+        contraction |= local_contraction; \
+      } while(local_contraction); \
+    } \
+    return contraction;
+
+#define func_ctc_binary(c, a, b, f, bwd_f) \
+    bool contraction = false; \
+    bool local_contraction; \
+    warningTubesSizes(c, a); \
+    warningTubesSizes(c, b); \
+    for(int i = 0 ; i < a.size() ; i++) \
+    { \
+      do \
+      { \
+        local_contraction = false; \
+        local_contraction |= c.intersect(ibex::f(a[i], b[i]), i); \
+        Interval a_i = a[i]; \
+        Interval b_i = b[i]; \
+        ibex::bwd_f(c[i], a_i, b_i); \
+        ibex::bwd_f(c[i], a_i, b_i); \
+        local_contraction |= a.intersect(a_i, i); \
+        local_contraction |= b.intersect(b_i, i); \
+        contraction |= local_contraction; \
+      } while(local_contraction); \
+    } \
+    return contraction;
+
+bool ctcAbs(Tube& y, Tube& x) { func_ctc_unary(y, x, abs, bwd_abs); }
+bool ctcSqr(Tube& y, Tube& x) { func_ctc_unary(y, x, sqr, bwd_sqr); }
+bool ctcSqrt(Tube& y, Tube& x) { func_ctc_unary(y, x, sqrt, bwd_sqrt); }
+bool ctcPow(Tube& y, Tube& x, int p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
+bool ctcPow(Tube& y, Tube& x, double p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
+bool ctcPow(Tube& y, Tube& x, Interval& p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
+bool ctcRoot(Tube& y, Tube& x, int p) { func_ctc_unary_param(y, x, p, root, bwd_root); }
+bool ctcExp(Tube& y, Tube& x) { func_ctc_unary(y, x, exp, bwd_exp); }
+bool ctcLog(Tube& y, Tube& x) { func_ctc_unary(y, x, log, bwd_log); }
+bool ctcCos(Tube& y, Tube& x) { func_ctc_unary(y, x, cos, bwd_cos); }
+bool ctcSin(Tube& y, Tube& x) { func_ctc_unary(y, x, sin, bwd_sin); }
+bool ctcTan(Tube& y, Tube& x) { func_ctc_unary(y, x, tan, bwd_tan); }
+bool ctcAcos(Tube& y, Tube& x) { func_ctc_unary(y, x, acos, bwd_acos); }
+bool ctcAsin(Tube& y, Tube& x) { func_ctc_unary(y, x, asin, bwd_asin); }
+bool ctcAtan(Tube& y, Tube& x) { func_ctc_unary(y, x, atan, bwd_atan); }
+bool ctcCosh(Tube& y, Tube& x) { func_ctc_unary(y, x, cosh, bwd_cosh); }
+bool ctcSinh(Tube& y, Tube& x) { func_ctc_unary(y, x, sinh, bwd_sinh); }
+bool ctcTanh(Tube& y, Tube& x) { func_ctc_unary(y, x, tanh, bwd_tanh); }
+bool ctcAcosh(Tube& y, Tube& x) { func_ctc_unary(y, x, acosh, bwd_acosh); }
+bool ctcAsinh(Tube& y, Tube& x) { func_ctc_unary(y, x, asinh, bwd_asinh); }
+bool ctcAtanh(Tube& y, Tube& x) { func_ctc_unary(y, x, atanh, bwd_atanh); }
+bool ctcAtan2(Tube& theta, Tube& y, Tube& x) { func_ctc_binary(theta, y, x, atan2, bwd_atan2); }
