@@ -15,6 +15,8 @@
 using namespace std;
 using namespace ibex;
 
+#define BOUNDED_INFINITY 99999. // a real value to display unbounded slices
+
 VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure(name)
 {
   m_tube = tube;
@@ -146,9 +148,12 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
 
 void VibesFigure_Tube::drawSlice(const Interval& intv_t, const Interval& intv_y, const vibes::Params& params) const
 {
-  vibes::drawBox(intv_t.lb(), intv_t.ub(),
-                 intv_y.lb(), intv_y.ub(),
-                 params);
+  if(intv_y.is_empty())
+    return; // no display
+
+  double lb = isinf(intv_y.lb()) ? -BOUNDED_INFINITY : intv_y.lb();
+  double ub = isinf(intv_y.ub()) ? BOUNDED_INFINITY : intv_y.ub();
+  vibes::drawBox(intv_t.lb(), intv_t.ub(), lb, ub, params);
 }
 
 void VibesFigure_Tube::computePolygonEnvelope(const Tube& tube, vector<double>& v_x, vector<double>& v_y) const
