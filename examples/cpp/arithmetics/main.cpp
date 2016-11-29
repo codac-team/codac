@@ -41,23 +41,10 @@ int main(int argc, char *argv[])
     vibes::axisAuto();
 
     // Creating tubes over the [0,10] domain with some timestep:
-    Tube tube_x(domain, timestep);
-    Tube tube_y(domain, timestep);
-
-    // Creating tubes [x](·) and [y](·) with some data
-    for(int i = 0 ; i < tube_x.size() ; i++)
-    {
-      // Setting [value] for the ith slice:
-      Interval value;
-
-      value = pow(tube_x.domain(i) - domain.ub() / 2., 2) + Interval(-0.5,0.5);
-      tube_x.set(value, i);
-
-      value = 4. * -cos(tube_y.domain(i) - domain.ub() / 2.)
-              + Interval(-0.5,0.5)
-              + 0.1 * pow(tube_x.domain(i) - domain.ub() / 3., 2) * Interval(-2,2);
-      tube_y.set(value, i);
-    }
+    Tube tube_x(domain, timestep,
+                Function("t", "(t-5)^2 + [-0.5,0.5]"));
+    Tube tube_y(domain, timestep,
+                Function("t", "-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
 
     Tube tube_a = tube_x + tube_y;
     Tube tube_b = sin(tube_x);
