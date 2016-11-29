@@ -519,13 +519,14 @@ void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertaint
   feed(new_map);
 }
 
-void Tube::inflate(double rad)
+Tube& Tube::inflate(double rad)
 {
   for(int i = 0 ; i < m_slices_number ; i++)
   {
     Interval old_slice = (*this)[i];
     set(old_slice.inflate(rad), i);
   }
+  return *this;
 }
 
 const Tube* Tube::getFirstSubTube() const

@@ -317,8 +317,9 @@ class Tube
          * \brief Add [-rad,+rad] over each slice.
          *
          * \param rad radius of the inflation
+         * \return a reference to this
          */
-        void inflate(double rad);
+        Tube& inflate(double rad);
 
         /**
          * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
