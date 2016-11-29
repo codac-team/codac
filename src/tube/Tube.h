@@ -404,6 +404,15 @@ class Tube
         Tube& intersectWith(const Tube& x);
 
         /**
+         * \brief Perform an intersection over a slice refered by index.
+         *
+         * \param intv_y the y-value to intersect
+         * \param index slice's id, between 0 and (size - 1)
+         * \return true if a contraction has been done, false otherwise
+         */
+        bool intersect(const ibex::Interval& intv_y, int slice_index);
+
+        /**
          * \brief Display tube's values.
 
          * \param precision the decimal precision to be used to format floating-point values on output

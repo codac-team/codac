@@ -445,3 +445,23 @@ TEST_CASE("Testing interpol (pair<Interval,Interval>)", "[core]")
     REQUIRE(ApproxIntvPair(tube.partialInterpol(Interval(7.5,9.5), tube_derivative)) == make_pair(Interval(7.5,9.25),Interval(15.,18.75)));
   }
 }
+
+TEST_CASE("Testing intersect", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    Tube tube = tubeTest1();
+    tube.intersect(Interval(1.9,7.1), 1);
+    REQUIRE(tube[1] == Interval(2,7));
+    tube.intersect(Interval(0.9), 2);
+    REQUIRE(tube[2] == Interval::EMPTY_SET);
+    tube.intersect(Interval(-1.,1.), 3);
+    REQUIRE(tube[3] == Interval(-1.,1.));
+    tube.intersect(Interval(-2.,10.), 4);
+    REQUIRE(tube[4] == Interval(-2.,-1.));
+    tube.intersect(Interval::ALL_REALS, 5);
+    REQUIRE(tube[5] == Interval(-9,-5));
+    tube.intersect(Interval::EMPTY_SET, 6);
+    REQUIRE(tube[6] == Interval::EMPTY_SET);
+  }
+}

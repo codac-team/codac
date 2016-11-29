@@ -796,6 +796,15 @@ Tube& Tube::intersectWith(const Tube& x)
   return *this;
 }
 
+bool Tube::intersect(const Interval& intv_y, int slice_index)
+{
+  Tube *slice = getSlice(slice_index);
+  Interval old_y = slice->m_intv_y;
+  Interval new_y = old_y & intv_y;
+  slice->set(new_y);
+  return new_y.diam() < old_y.diam();
+}
+
 void Tube::intersectWith_localUpdate(const Tube *x)
 {
   if(m_tree_computation_needed)
