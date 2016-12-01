@@ -244,6 +244,17 @@ class Tube
         const ibex::Interval& image() const;
 
         /**
+         * \brief Test if this is in the interior of outer_tube.
+         *
+         * \note In particular, (-oo,oo) is in the interior of (-oo,oo)
+         *       and an empty tube is in the interior of an empty tube.
+         *       (Ibex definition)
+         * \note Always return true if this is empty.
+         * \return a boolean
+         */
+        bool isInteriorSubset(const Tube& outer_tube) const;
+
+        /**
          * \brief Set the y-value intv_y for the slice refered by index.
          *
          * \param intv_y the y-value to be set

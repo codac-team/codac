@@ -403,8 +403,20 @@ const Interval& Tube::image() const
 {
   if(m_tree_computation_needed)
     computeTree();
-  
   return m_intv_y;
+}
+
+bool Tube::isInteriorSubset(const Tube& outer_tube) const
+{
+  if(size() != outer_tube.size() || dt() != outer_tube.dt())
+    cout << "Warning isInteriorSubset(const Tube& outer_tube): tube of different size or timestep: "
+         << outer_tube.size() << "/" << size() << endl;
+
+  for(int i = 0 ; i < size() ; i++)
+    if(!(*this)[i].is_interior_subset(outer_tube[i]))
+      return false;
+
+  return true;
 }
 
 void Tube::set(const Interval& intv_y, int index)
