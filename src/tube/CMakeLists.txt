@@ -11,10 +11,12 @@
     Tube_integration.cpp
     Tube_arithmetic.cpp
     Tube_serialization.cpp
+    DomainError.cpp
   )
 
   set(HEADERS
     Tube.h
+    DomainError.h
   )
 
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})

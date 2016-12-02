@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
+#include "DomainError.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
@@ -22,9 +23,7 @@ using namespace ibex;
 
 bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 {
-  if(size() != derivative_tube.size() || dt() != derivative_tube.dt())
-    cout << "Warning ctcFwd(const Tube& derivative_tube): tube of different size or timestep: "
-         << derivative_tube.size() << "/" << size() << endl;
+  checkDomain(*this, derivative_tube);
 
   for(int i = 0 ; i < size() ; i++)
     if(derivative_tube[i].is_empty())
@@ -63,9 +62,7 @@ bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 }
 bool Tube::ctcBwd(const Tube& derivative_tube)
 {
-  if(size() != derivative_tube.size() || dt() != derivative_tube.dt())
-    cout << "Warning ctcBwd(const Tube& derivative_tube): tube of different size or timestep: "
-         << derivative_tube.size() << "/" << size() << endl;
+  checkDomain(*this, derivative_tube);
 
   for(int i = 0 ; i < size() ; i++)
     if(derivative_tube[i].is_empty())
@@ -132,6 +129,8 @@ void Tube::ctcIn_computeIndex(const Interval& t, const Interval& y, int& index_l
 bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
                       bool& tube_contracted, bool& y_contracted, bool& t_contracted, bool& bisection_required, bool fwd_bwd)
 {
+  checkDomain(*this, derivative_tube);
+  
   bool inconsistency = false;
   bisection_required = false;
 
@@ -422,7 +421,7 @@ bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
 #define func_ctc_unary(y, x, f, bwd_f) \
     bool contraction = false; \
     bool local_contraction; \
-    warningTubesSizes(x, y); \
+    checkDomain(x, y); \
     for(int i = 0 ; i < x.size() ; i++) \
     { \
       do \
@@ -440,7 +439,7 @@ bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
 #define func_ctc_unary_param(y, x, param, f, bwd_f) \
     bool contraction = false; \
     bool local_contraction; \
-    warningTubesSizes(x, y); \
+    checkDomain(x, y); \
     for(int i = 0 ; i < x.size() ; i++) \
     { \
       do \
@@ -458,8 +457,8 @@ bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
 #define func_ctc_binary(c, a, b, f, bwd_f) \
     bool contraction = false; \
     bool local_contraction; \
-    warningTubesSizes(c, a); \
-    warningTubesSizes(c, b); \
+    checkDomain(c, a); \
+    checkDomain(c, b); \
     for(int i = 0 ; i < a.size() ; i++) \
     { \
       do \

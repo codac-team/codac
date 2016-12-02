@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
+#include "DomainError.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
@@ -20,18 +21,6 @@
 using namespace std;
 using namespace ibex;
 
-void warningTubesSizes(const Tube& x1, const Tube& x2)
-{
-  if(x1.size() != x2.size())
-    cout << "Warning Tube::operator(): Tubes of different dimensions: " 
-         << "n1=" << x1.size() << " and n2=" << x2.size() << endl;
-
-  if(x1.domain() != x2.domain())
-    cout << "Warning Tube::operator(): Tubes of different domain: " 
-         << "[t1]=" << x1.domain() << " and [t2]=" << x2.domain() << endl;
-}
-
-
 Tube operator+(const Tube& x)
 {
   return x;
@@ -39,7 +28,7 @@ Tube operator+(const Tube& x)
 
 Tube operator+(const Tube& x1, const Tube& x2)
 {
-  warningTubesSizes(x1, x2);
+  checkDomain(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
     new_tube.set(x1[i] + x2[i], i);
@@ -89,7 +78,7 @@ Tube operator-(const Tube& x)
 
 Tube operator-(const Tube& x1, const Tube& x2)
 {
-  warningTubesSizes(x1, x2);
+  checkDomain(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
     new_tube.set(x1[i] - x2[i], i);
@@ -131,7 +120,7 @@ Tube operator-(const Interval& x1, const Tube& x2)
 
 Tube operator*(const Tube& x1, const Tube& x2)
 {
-  warningTubesSizes(x1, x2);
+  checkDomain(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
     new_tube.set(x1[i] * x2[i], i);
@@ -173,7 +162,7 @@ Tube operator*(const Tube& x1, const Interval& x2)
 
 Tube operator/(const Tube& x1, const Tube& x2)
 {
-  warningTubesSizes(x1, x2);
+  checkDomain(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
     new_tube.set(x1[i] / x2[i], i);
@@ -215,7 +204,7 @@ Tube operator/(const Tube& x1, const Interval& x2)
 
 Tube operator|(const Tube& x1, const Tube& x2)
 {
-  warningTubesSizes(x1, x2);
+  checkDomain(x1, x2);
   Tube new_tube(x1);
   new_tube |= x2;
   return new_tube;
@@ -256,7 +245,7 @@ Tube operator|(const Tube& x1, const Interval& x2)
 
 Tube operator&(const Tube& x1, const Tube& x2)
 {
-  warningTubesSizes(x1, x2);
+  checkDomain(x1, x2);
   Tube new_tube(x1);
   new_tube &= x2;
   return new_tube;
@@ -307,7 +296,7 @@ Tube operator&(const Tube& x1, const Interval& x2)
 
 #define func_binary(tube_a, tube_b, f) \
     Tube new_tube(x); \
-    warningTubesSizes(tube_a, tube_b); \
+    checkDomain(tube_a, tube_b); \
     for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(tube_a[i], tube_b[i]), i); \
     return new_tube;
 

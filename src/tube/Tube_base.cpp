@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
+#include "DomainError.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
@@ -408,9 +409,7 @@ const Interval& Tube::image() const
 
 bool Tube::isInteriorSubset(const Tube& outer_tube) const
 {
-  if(size() != outer_tube.size() || dt() != outer_tube.dt())
-    cout << "Warning isInteriorSubset(const Tube& outer_tube): tube of different size or timestep: "
-         << outer_tube.size() << "/" << size() << endl;
+  checkDomain(*this, outer_tube);
 
   for(int i = 0 ; i < size() ; i++)
     if(!(*this)[i].is_interior_subset(outer_tube[i]))
@@ -935,6 +934,7 @@ void Tube::computeTree() const
 
 Interval Tube::interpol(double t, const Tube& derivative_tube) const
 {
+  checkDomain(*this, derivative_tube);
   int index = input2index(t);
   Interval dom_ = domain(index);
   Interval deriv = derivative_tube[index];
