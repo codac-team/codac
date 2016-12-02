@@ -377,7 +377,7 @@ TEST_CASE("Testing subtube", "[core]")
   SECTION("Test tube1: consistency")
   {
     Tube tube = tubeTest1();
-    Tube subtube = tube.subtube(Interval::ALL_REALS);
+    Tube subtube = tube.subtube(tube.domain());
     REQUIRE(tube == subtube);
   }
 }

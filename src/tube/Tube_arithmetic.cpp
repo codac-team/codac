@@ -28,7 +28,7 @@ Tube operator+(const Tube& x)
 
 Tube operator+(const Tube& x1, const Tube& x2)
 {
-  checkDomain(x1, x2);
+  checkStructures(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
     new_tube.set(x1[i] + x2[i], i);
@@ -78,7 +78,7 @@ Tube operator-(const Tube& x)
 
 Tube operator-(const Tube& x1, const Tube& x2)
 {
-  checkDomain(x1, x2);
+  checkStructures(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
     new_tube.set(x1[i] - x2[i], i);
@@ -120,7 +120,7 @@ Tube operator-(const Interval& x1, const Tube& x2)
 
 Tube operator*(const Tube& x1, const Tube& x2)
 {
-  checkDomain(x1, x2);
+  checkStructures(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
     new_tube.set(x1[i] * x2[i], i);
@@ -162,7 +162,7 @@ Tube operator*(const Tube& x1, const Interval& x2)
 
 Tube operator/(const Tube& x1, const Tube& x2)
 {
-  checkDomain(x1, x2);
+  checkStructures(x1, x2);
   Tube new_tube(x1);
   for(int i = 0 ; i < x1.size() ; i++)
     new_tube.set(x1[i] / x2[i], i);
@@ -204,7 +204,7 @@ Tube operator/(const Tube& x1, const Interval& x2)
 
 Tube operator|(const Tube& x1, const Tube& x2)
 {
-  checkDomain(x1, x2);
+  checkStructures(x1, x2);
   Tube new_tube(x1);
   new_tube |= x2;
   return new_tube;
@@ -245,7 +245,7 @@ Tube operator|(const Tube& x1, const Interval& x2)
 
 Tube operator&(const Tube& x1, const Tube& x2)
 {
-  checkDomain(x1, x2);
+  checkStructures(x1, x2);
   Tube new_tube(x1);
   new_tube &= x2;
   return new_tube;
@@ -296,7 +296,7 @@ Tube operator&(const Tube& x1, const Interval& x2)
 
 #define func_binary(tube_a, tube_b, f) \
     Tube new_tube(x); \
-    checkDomain(tube_a, tube_b); \
+    checkStructures(tube_a, tube_b); \
     for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(tube_a[i], tube_b[i]), i); \
     return new_tube;
 

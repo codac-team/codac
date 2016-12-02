@@ -29,17 +29,21 @@ class DomainError : public std::exception
 {
   public:
 
-  	DomainError(const Tube& x1, const Tube& x2);
-    ~DomainError();
+    DomainError(const Tube& x, int slice_index);
+    DomainError(const Tube& x, double t);
+    DomainError(const Tube& x, const ibex::Interval& intv_t);
+    DomainError(const Tube& x1, const Tube& x2);
+    ~DomainError() {};
 
     virtual const char* what() const throw();
 
-  	int m_x1_slices_number, m_x2_slices_number;
-  	ibex::Interval m_x1_domain, m_x2_domain;
-  	std::string *m_what_msg;
+    std::string m_what_msg;
 };
 
 std::ostream& operator<<(std::ostream& os, const DomainError& e);
-void checkDomain(const Tube& x1, const Tube& x2);
+void checkDomain(const Tube& x, int slice_index);
+void checkDomain(const Tube&, double t);
+void checkDomain(const Tube& x, const ibex::Interval& intv_t);
+void checkStructures(const Tube& x1, const Tube& x2);
 
 #endif

@@ -23,7 +23,7 @@ using namespace ibex;
 
 bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 {
-  checkDomain(*this, derivative_tube);
+  checkStructures(*this, derivative_tube);
 
   for(int i = 0 ; i < size() ; i++)
     if(derivative_tube[i].is_empty())
@@ -62,7 +62,7 @@ bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 }
 bool Tube::ctcBwd(const Tube& derivative_tube)
 {
-  checkDomain(*this, derivative_tube);
+  checkStructures(*this, derivative_tube);
 
   for(int i = 0 ; i < size() ; i++)
     if(derivative_tube[i].is_empty())
@@ -129,7 +129,7 @@ void Tube::ctcIn_computeIndex(const Interval& t, const Interval& y, int& index_l
 bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
                       bool& tube_contracted, bool& y_contracted, bool& t_contracted, bool& bisection_required, bool fwd_bwd)
 {
-  checkDomain(*this, derivative_tube);
+  checkStructures(*this, derivative_tube);
   
   bool inconsistency = false;
   bisection_required = false;
@@ -421,7 +421,7 @@ bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
 #define func_ctc_unary(y, x, f, bwd_f) \
     bool contraction = false; \
     bool local_contraction; \
-    checkDomain(x, y); \
+    checkStructures(x, y); \
     for(int i = 0 ; i < x.size() ; i++) \
     { \
       do \
@@ -439,7 +439,7 @@ bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
 #define func_ctc_unary_param(y, x, param, f, bwd_f) \
     bool contraction = false; \
     bool local_contraction; \
-    checkDomain(x, y); \
+    checkStructures(x, y); \
     for(int i = 0 ; i < x.size() ; i++) \
     { \
       do \
@@ -457,8 +457,8 @@ bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
 #define func_ctc_binary(c, a, b, f, bwd_f) \
     bool contraction = false; \
     bool local_contraction; \
-    checkDomain(c, a); \
-    checkDomain(c, b); \
+    checkStructures(c, a); \
+    checkStructures(c, b); \
     for(int i = 0 ; i < a.size() ; i++) \
     { \
       do \

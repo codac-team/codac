@@ -245,14 +245,9 @@ bool Tube::isDiscontinuous() const
 
 const Tube* Tube::getSlice(int index) const
 {
-  if(index < 0 || index >= m_slices_number)
-  {
-    cout << "Error Tube::getSlice(int): out of range "
-         << "for index=" << index << " in [0," << m_slices_number << "[" << endl;
-    return NULL;
-  }
+  checkDomain(*this, index);
 
-  else if(isSlice())
+  if(isSlice())
     return this;
 
   else
@@ -274,12 +269,7 @@ Tube* Tube::getSlice(int index)
 
 int Tube::input2index(double t) const
 {
-  if(!m_intv_t.contains(t))
-  {
-    cout << "Error Tube::input2index(double): no corresponding slice "
-         << "for t=" << setprecision(16) << t << " in " << m_intv_t << endl;
-    return -1;
-  }
+  checkDomain(*this, t);
 
   if(t == m_intv_t.ub())
     return m_slices_number - 1;
@@ -409,7 +399,7 @@ const Interval& Tube::image() const
 
 bool Tube::isInteriorSubset(const Tube& outer_tube) const
 {
-  checkDomain(*this, outer_tube);
+  checkStructures(*this, outer_tube);
 
   for(int i = 0 ; i < size() ; i++)
     if(!(*this)[i].is_interior_subset(outer_tube[i]))
@@ -626,13 +616,8 @@ void Tube::invert(const Interval& intv_y, vector<Interval> &v_intv_t, const Inte
 
 Tube Tube::subtube(const Interval& intv_t) const
 {
+  checkDomain(*this, intv_t);
   Interval intv_t_inter = intv_t & domain();
-
-  if(intv_t_inter.is_empty())
-  {
-    cout << "Error Tube::subtube(Interval): wrong domain." << endl;
-    return *this;
-  }
 
   int index_lb = input2index(intv_t_inter.lb());
   int index_ub = input2index(intv_t_inter.ub());
@@ -884,13 +869,7 @@ void Tube::requestFutureTreeComputation(int index) const
 
     else
     {
-      if(index < 0 || index >= m_slices_number)
-      {
-        cout << "Error Tube::requestFutureTreeComputation(int): out of range "
-             << "for index=" << index << " in [0," << m_slices_number << "[" << endl;
-        return;
-      }
-
+      checkDomain(*this, index);
       int mid_id = ceil(m_slices_number / 2.);
       if(index < mid_id) m_first_subtube->requestFutureTreeComputation(index);
       else m_second_subtube->requestFutureTreeComputation(index - mid_id);
@@ -934,7 +913,7 @@ void Tube::computeTree() const
 
 Interval Tube::interpol(double t, const Tube& derivative_tube) const
 {
-  checkDomain(*this, derivative_tube);
+  checkStructures(*this, derivative_tube);
   int index = input2index(t);
   Interval dom_ = domain(index);
   Interval deriv = derivative_tube[index];
