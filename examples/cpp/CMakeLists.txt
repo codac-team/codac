@@ -3,5 +3,5 @@
 # ==================================================================
 
 
-add_subdirectory(arithmetics)
+add_subdirectory(arithmetic)
 add_subdirectory(integ-msinx)

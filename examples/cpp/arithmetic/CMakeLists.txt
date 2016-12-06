@@ -13,9 +13,9 @@
 
   )
 
-  add_executable(ex_arithmetics ${SRC})
+  add_executable(ex_arithmetic ${SRC})
 
-  target_link_libraries(ex_arithmetics
+  target_link_libraries(ex_arithmetic
     ${LIBS}
     tube-core
     tube-graphics)
@@ -24,5 +24,5 @@
 # Tests
 
   if(BUILD_TESTS)
-    add_test(NAME ExampleArithmetics COMMAND ex_arithmetics 0)
+    add_test(NAME ExampleArithmetics COMMAND ex_arithmetic 0)
   endif(BUILD_TESTS)

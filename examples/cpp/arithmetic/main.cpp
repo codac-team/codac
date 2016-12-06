@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tube-lib - Arithmetics on tubes: simple example
+ *  tube-lib - Arithmetic on tubes: simple example
  *
  *  Example from the paper "Guaranteed Computation of Robots Trajectories"
  *  Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
@@ -37,9 +37,6 @@ int main(int argc, char *argv[])
 
   /* =========== INITIALIZATION =========== */
 
-    vibes::beginDrawing();
-    vibes::axisAuto();
-
     // Creating tubes over the [0,10] domain with some timestep:
     Tube tube_x(domain, timestep,
                 Function("t", "(t-5)^2 + [-0.5,0.5]"));
@@ -52,15 +49,15 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
+    vibes::beginDrawing(); vibes::axisAuto();
     displayTube(&tube_x, "Example tube [x](·)", 200, 100);
     displayTube(&tube_y, "Example tube [y](·)", 300, 200);
     displayTube(&tube_a, "Example tube [a](·)", 400, 300);
     displayTube(&tube_b, "Example tube [b](·)", 500, 400);
     displayTube(&tube_c, "Example tube [c](·)", 600, 500);
+    vibes::endDrawing();
 
   /* =========== END =========== */
-
-    vibes::endDrawing();
 
   // Checking if this example is still working:
   return (fabs(tube_x.volume() - 10.512) < 1e-2
