@@ -101,4 +101,20 @@ class VibesFigure_Tube : public VibesFigure
     mutable bool m_need_to_update_axis;
 };
 
+/**
+ * \brief A fast function to display a tube
+ *
+ * Instantiate dynamically a new VibesFigure_Tube into a map if the
+ * corresponding key do not exist yet.
+ *
+ * Note: the values of the map has to be deleted at the end.
+ *
+ * \param map_graphics a map referencing to figure pointer to a tube pointer key
+ * \param tube a pointer to the tube to be displayed
+ * \param figure_name a reference to the figure that will be displayed in the window's title
+ * \param x x-position
+ * \param y y-position
+ */
+void displayTube(std::map<Tube*,VibesFigure_Tube*> &map_graphics, Tube *tube, const std::string& name = "", int x = 0, int y = 0);
+
 #endif

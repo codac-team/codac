@@ -24,8 +24,7 @@
 
 using namespace std;
 using namespace ibex;
-
-void displayTube(map<Tube*,VibesFigure_Tube*> &map_graphics, Tube *tube, const string& name = "", int x = 0, int y = 0);
+using namespace ibex;
 
 void constraintNetwork(Tube& x, Tube& y, Tube& ydot, Tube& a, Tube& b, Tube& c)
 {
@@ -86,27 +85,13 @@ int main(int argc, char *argv[])
     displayTube(map_graphics, &a);
     displayTube(map_graphics, &b);
     displayTube(map_graphics, &c);
-    vibes::endDrawing();
 
   /* =========== END =========== */
 
     // Deleting pointers to graphical tools
     for(auto it = map_graphics.begin(); it != map_graphics.end(); ++it)
       delete it->second;
+    vibes::endDrawing();
 
   return EXIT_SUCCESS;
-}
-
-void displayTube(map<Tube*,VibesFigure_Tube*> &map_graphics, Tube *tube, const string& name, int x, int y)
-{
-  if(map_graphics.find(tube) == map_graphics.end())
-  {
-    VibesFigure_Tube *figtube = new VibesFigure_Tube(name, tube);
-    figtube->setProperties(x, y, 700, 350);
-    string fg = "#A2A2A2", bg = "#D2D2D2";
-    figtube->setColors(fg + "[" + fg + "]", fg + "[" + fg + "]", bg + "[" + bg + "]");
-    map_graphics[tube] = figtube;
-  }
-
-  map_graphics[tube]->show();
 }

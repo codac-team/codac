@@ -17,6 +17,20 @@ using namespace ibex;
 
 #define BOUNDED_INFINITY 99999. // a real value to display unbounded slices
 
+void displayTube(map<Tube*,VibesFigure_Tube*> &map_graphics, Tube *tube, const string& name, int x, int y)
+{
+  if(map_graphics.find(tube) == map_graphics.end())
+  {
+    VibesFigure_Tube *figtube = new VibesFigure_Tube(name, tube);
+    figtube->setProperties(x, y, 700, 350);
+    string fg = "#A2A2A2", bg = "#D2D2D2";
+    figtube->setColors(fg + "[" + fg + "]", fg + "[" + fg + "]", bg + "[" + bg + "]");
+    map_graphics[tube] = figtube;
+  }
+
+  map_graphics[tube]->show();
+}
+
 VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure(name)
 {
   m_tube = tube;

@@ -39,19 +39,16 @@ int main(int argc, char *argv[])
   /* =========== INITIALIZATION =========== */
 
     // Creating tubes over the [0,10] domain with some timestep:
-    Tube tube_a(domain, timestep);
-    Tube tube_b(domain, timestep);
+    Tube a(domain, timestep);
+    Tube b(domain, timestep);
      // Initialization with [-1,1] values forall t:
-    Tube tube_x(domain, timestep, Interval(-1,1));
+    Tube x(domain, timestep, Interval(-1,1));
 
   /* =========== GRAPHICS =========== */
 
-    vibes::beginDrawing();
-    vibes::axisAuto();
-
-    VibesFigure_Tube figtube_x("Tube [x](·)", &tube_x);
-    figtube_x.setProperties(200, 050, 700, 700);
-    figtube_x.setColors("#B2B2B2[#B2B2B2]");
+    vibes::beginDrawing(); vibes::axisAuto();
+    map<Tube*,VibesFigure_Tube*> map_graphics;
+    displayTube(map_graphics, &x, "Tube [x](·)", 200, 50);
 
   /* =========== INTERVAL INTEGRATION =========== */
 
@@ -60,21 +57,24 @@ int main(int argc, char *argv[])
     do
     {
       cout << "Step " << i << "... \tpress ENTER to continue" << flush;
-      volume_x = tube_x.volume(); // check tube's volume to detect a fixpoint
+      volume_x = x.volume(); // check tube's volume to detect a fixpoint
 
       // Contractors based on elementary constraints:
-      tube_a &= sin(tube_x);
-      tube_b &= tube_a.primitive();
-      tube_x &= x0 - tube_b;
+      a &= sin(x);
+      b &= a.primitive();
+      x &= x0 - b;
 
-      figtube_x.show(); // displaying the tube
+      displayTube(map_graphics, &x);
       i++;
       
       if(argc == 1) cin.ignore(); // press ENTER to continue
-    } while(volume_x != tube_x.volume()); // up to the fixpoint
+    } while(volume_x != x.volume()); // up to the fixpoint
 
   /* =========== END =========== */
 
+    // Deleting pointers to graphical tools
+    for(auto it = map_graphics.begin(); it != map_graphics.end(); ++it)
+      delete it->second;
     vibes::endDrawing();
 
   // Checking if this example is still working:

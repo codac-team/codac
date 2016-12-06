@@ -26,8 +26,6 @@
 using namespace std;
 using namespace ibex;
 
-void displayTube(Tube* tube, const string& name, int x, int y);
-
 int main(int argc, char *argv[])
 {
   /* =========== PARAMETERS =========== */
@@ -50,14 +48,19 @@ int main(int argc, char *argv[])
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing(); vibes::axisAuto();
-    displayTube(&tube_x, "Example tube [x](·)", 200, 100);
-    displayTube(&tube_y, "Example tube [y](·)", 300, 200);
-    displayTube(&tube_a, "Example tube [a](·)", 400, 300);
-    displayTube(&tube_b, "Example tube [b](·)", 500, 400);
-    displayTube(&tube_c, "Example tube [c](·)", 600, 500);
-    vibes::endDrawing();
+    map<Tube*,VibesFigure_Tube*> map_graphics;
+    displayTube(map_graphics, &tube_x, "Example tube [x](·)", 200, 100);
+    displayTube(map_graphics, &tube_y, "Example tube [y](·)", 300, 200);
+    displayTube(map_graphics, &tube_a, "Example tube [a](·)", 400, 300);
+    displayTube(map_graphics, &tube_b, "Example tube [b](·)", 500, 400);
+    displayTube(map_graphics, &tube_c, "Example tube [c](·)", 600, 500);
 
   /* =========== END =========== */
+
+    // Deleting pointers to graphical tools
+    for(auto it = map_graphics.begin(); it != map_graphics.end(); ++it)
+      delete it->second;
+    vibes::endDrawing();
 
   // Checking if this example is still working:
   return (fabs(tube_x.volume() - 10.512) < 1e-2
@@ -65,12 +68,4 @@ int main(int argc, char *argv[])
        && fabs(tube_a.volume() - 65.519) < 1e-2
        && fabs(tube_b.volume() - 6.8414) < 1e-2
        && fabs(tube_c.volume() - 53.446) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-
-void displayTube(Tube* tube, const string& name, int x, int y)
-{
-  VibesFigure_Tube figtube(name, tube);
-  figtube.setProperties(x, y, 700, 350);
-  figtube.setColors("#B9B9B9[#B9B9B9]");
-  figtube.show();
 }
