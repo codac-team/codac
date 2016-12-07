@@ -46,13 +46,13 @@ int main(int argc, char *argv[])
     // Creating tubes over the [0,10] domain with some timestep:
     Tube ydot(domain, timestep), a(domain, timestep), b(domain, timestep), c(domain, timestep);
     Tube x(domain, timestep, Function("t", "(t-5)^2 + [-0.5,0.5]"));
-    Tube y(domain, timestep, Function("t", "-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
+    Tube y(domain, timestep, Function("t", "[-0.5,0.5] - 4*cos(t-5) + [-0.2,0.2]*(t-3.3)^2"));
 
     // Applying constraints with contractors on tubes
     constraintNetwork(x, y, ydot, a, b, c);
 
     // Specifying ydot
-    ydot &= Tube(domain, timestep, Function("t", "4*sin(t-5) + 0.2*(t-3.3)*[-0.5,0.5]"));
+    ydot &= Tube(domain, timestep, Function("t", "4*sin(t-5) + (t-3.3)*[-0.1,0.1]"));
 
   /* =========== GRAPHICS =========== */
 
