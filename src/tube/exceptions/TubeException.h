@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tube-lib - EmptyTubeException class
+ *  tube-lib - TubeException class
  * ============================================================================
  *  Copyright : Copyright 2016 Simon Rohou
  *  License   : This program can be distributed under the terms of
@@ -10,34 +10,35 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef EmptyTubeException_HEADER
-#define EmptyTubeException_HEADER
+#ifndef Exception_HEADER
+#define Exception_HEADER
 
 #include <iostream>
 #include <exception>
 #include <string>
 #include <sstream>
 #include "Tube.h"
-#include "TubeException.h"
 
 /**
- * \brief Emptiness error exception.
+ * \brief TubeException abstract class.
  *
- * Thrown when a tube is empty.
+ * Thrown when necessary.
  */
-class EmptyTubeException : public TubeException
+class TubeException : public std::exception
 {
   public:
 
-    EmptyTubeException(const Tube& x);
-    ~EmptyTubeException() {};
+    TubeException() {};
+    TubeException(const std::string& function_name, const std::string& custom_message);
+    ~TubeException() {};
 
-    //virtual const char* what() const throw();
+    virtual const char* what() const throw();
 
-    //std::string m_what_msg;
+  protected:
+
+    std::string m_what_msg;
 };
 
-//std::ostream& operator<<(std::ostream& os, const EmptyTubeException& e);
-void checkEmptiness(const Tube& x);
+std::ostream& operator<<(std::ostream& os, const TubeException& e);
 
 #endif

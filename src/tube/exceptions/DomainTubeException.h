@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tube-lib - DomainException class
+ *  tube-lib - DomainTubeException class
  * ============================================================================
  *  Copyright : Copyright 2016 Simon Rohou
  *  License   : This program can be distributed under the terms of
@@ -10,14 +10,15 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef DomainException_HEADER
-#define DomainException_HEADER
+#ifndef DomainTubeException_HEADER
+#define DomainTubeException_HEADER
 
 #include <iostream>
 #include <exception>
 #include <string>
 #include <sstream>
 #include "Tube.h"
+#include "TubeException.h"
 
 /**
  * \brief Domain error exception.
@@ -25,22 +26,22 @@
  * Thrown when two tubes do not share the same domain
  * or have a different data structure.
  */
-class DomainException : public std::exception
+class DomainTubeException : public TubeException
 {
   public:
 
-    DomainException(const Tube& x, int slice_index);
-    DomainException(const Tube& x, double t);
-    DomainException(const Tube& x, const ibex::Interval& intv_t);
-    DomainException(const Tube& x1, const Tube& x2);
-    ~DomainException() {};
+    DomainTubeException(const Tube& x, int slice_index);
+    DomainTubeException(const Tube& x, double t);
+    DomainTubeException(const Tube& x, const ibex::Interval& intv_t);
+    DomainTubeException(const Tube& x1, const Tube& x2);
+    ~DomainTubeException() {};
 
-    virtual const char* what() const throw();
+    //virtual const char* what() const throw();
 
-    std::string m_what_msg;
+    //std::string m_what_msg;
 };
 
-std::ostream& operator<<(std::ostream& os, const DomainException& e);
+//std::ostream& operator<<(std::ostream& os, const DomainTubeException& e);
 void checkDomain(const Tube& x, int slice_index);
 void checkDomain(const Tube&, double t);
 void checkDomain(const Tube& x, const ibex::Interval& intv_t);

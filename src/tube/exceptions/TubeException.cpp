@@ -10,34 +10,24 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef EmptyTubeException_HEADER
-#define EmptyTubeException_HEADER
-
-#include <iostream>
-#include <exception>
+#include "TubeException.h"
 #include <string>
 #include <sstream>
-#include "Tube.h"
-#include "TubeException.h"
 
-/**
- * \brief Emptiness error exception.
- *
- * Thrown when a tube is empty.
- */
-class EmptyTubeException : public TubeException
+using namespace std;
+
+TubeException::TubeException(const std::string& function_name, const std::string& custom_message)
 {
-  public:
+  m_what_msg = "in " + function_name + ": " + custom_message;
+}
 
-    EmptyTubeException(const Tube& x);
-    ~EmptyTubeException() {};
+const char* TubeException::what() const throw()
+{
+  return m_what_msg.c_str();
+}
 
-    //virtual const char* what() const throw();
-
-    //std::string m_what_msg;
-};
-
-//std::ostream& operator<<(std::ostream& os, const EmptyTubeException& e);
-void checkEmptiness(const Tube& x);
-
-#endif
+std::ostream& operator<<(std::ostream& os, const TubeException& e)
+{
+  os << e.what();
+  return os;
+}

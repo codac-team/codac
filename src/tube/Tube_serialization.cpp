@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
+#include "exceptions/TubeException.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip> // for setprecision()
@@ -92,8 +93,7 @@ void deserializeInterval(ifstream& binFile, Interval& intv)
       break;
 
     default:
-        cout << "Tube::deserializeInterval(...) unhandled case" << endl;
-        return;
+      throw TubeException("Tube::deserializeInterval(...)", "unhandled case");
   }
 }
 
@@ -135,11 +135,7 @@ bool Tube::serialize(const string& binary_file_name, const map<double,double>& r
   ofstream binFile(binary_file_name.c_str(), ios::out | ios::binary);
 
   if(!binFile.is_open())
-  {
-    cout << "Tube::serialize(binary_file_name) error while writing file:"
-         << "\"" << binary_file_name << "\"" << endl;
-    return false;
-  }
+    throw TubeException("Tube::serialize(binary_file_name)", "error while writing file \"" + binary_file_name + "\"");
 
   // Version number for compliance purposes
   char version = CURRENT_VERSION_NUMBER;
@@ -176,11 +172,7 @@ void Tube::deserialize(const string& binary_file_name, map<double,double>& real_
   ifstream binFile(binary_file_name.c_str(), ios::in | ios::binary);
 
   if(!binFile.is_open())
-  {
-    cout << "Tube::Tube(binary_file_name) error while opening file:"
-         << "\"" << binary_file_name << "\"" << endl;
-    return;
-  }
+    throw TubeException("Tube::serialize(binary_file_name)", "error while opening file \"" + binary_file_name + "\"");
 
   // Version number for compliance purposes
   char version_number;
@@ -219,11 +211,7 @@ void Tube::deserialize(const string& binary_file_name, map<double,double>& real_
   }
 
   else
-  {
-    cout << "Tube::Tube(binary_file_name) deserialization version number "
-         << version_number << " not supported." << endl;
-    return;
-  }
+    throw TubeException("Tube::Tube(binary_file_name)", "deserialization version number not supported");
 
   binFile.close();
 }

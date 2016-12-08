@@ -11,7 +11,8 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
-#include "exceptions/DomainException.h"
+#include "exceptions/TubeException.h"
+#include "exceptions/DomainTubeException.h"
 #include "exceptions/EmptyTubeException.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
@@ -106,7 +107,7 @@ bool Tube::ctcFwdBwd(const Tube& derivative_tube, const Interval& initial_value)
 void Tube::ctcIn_computeIndex(const Interval& t, const Interval& y, int& index_lb, int& index_ub)
 {
   if(t.is_unbounded() || t.is_empty())
-    cout << "Error ctcIn_computeIndex(...): unbounded or empty [t]" << endl;
+    throw TubeException("Tube::ctcIn_computeIndex(...)", "unbounded or empty [t]");
 
   // Slices of index_lb and index_ub strictly enclose the measurement [t]
 

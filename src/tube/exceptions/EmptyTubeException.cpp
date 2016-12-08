@@ -20,17 +20,25 @@ using namespace ibex;
 
 EmptyTubeException::EmptyTubeException(const Tube& x)
 {
-  Interval intv_t_emptiness = Interval::EMPTY_SET;
-  for(int i = 0 ; i < x.size() ; i++)
-    if(x[i].is_empty())
-      intv_t_emptiness |= x.domain(i);
-    
   ostringstream os;
-  os << "emptiness over [t]=" << intv_t_emptiness << endl;
+  os << "emptiness over ";
+
+  if(x.image() == Interval::EMPTY_SET)
+    os << "the whole domain";
+
+  else
+  {
+    Interval intv_t_emptiness = Interval::EMPTY_SET;
+    for(int i = 0 ; i < x.size() ; i++)
+      if(x[i].is_empty())
+        intv_t_emptiness |= x.domain(i);
+    os << "[t]=" << intv_t_emptiness << endl;
+  }
+  
   m_what_msg = os.str();
 }
 
-const char* EmptyTubeException::what() const throw()
+/*const char* EmptyTubeException::what() const throw()
 {
   return m_what_msg.c_str();
 }
@@ -39,10 +47,14 @@ std::ostream& operator<<(std::ostream& os, const EmptyTubeException& e)
 {
   os << e.what();
   return os;
-}
+}*/
 
 void checkEmptiness(const Tube& x)
 {
   if(x.isEmpty())
     throw EmptyTubeException(x);
+
+  for(int i = 0 ; i < x.size() ; i++)
+    if(x[i].is_empty())
+      throw EmptyTubeException(x);
 }

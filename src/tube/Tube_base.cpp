@@ -11,7 +11,8 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
-#include "exceptions/DomainException.h"
+#include "exceptions/TubeException.h"
+#include "exceptions/DomainTubeException.h"
 #include "exceptions/EmptyTubeException.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
@@ -30,7 +31,7 @@ Tube::Tube(const Interval& intv_t, double time_step, const Interval& default_val
 Tube::Tube(const Interval& intv_t, double time_step, const Function& fmin, const Function& fmax)
 {
   if(fmin.nb_var() > 1 || fmax.nb_var() > 1)
-    cout << "Warning Tube::Tube(...): too many variables in function definition" << endl;
+    throw TubeException("Tube constructor", "too many variables in function definition");
 
   createFromSpecifications(intv_t, time_step);
   for(int i = 0 ; i < size() ; i++)
@@ -44,7 +45,7 @@ Tube::Tube(const Interval& intv_t, double time_step, const Function& fmin, const
 Tube::Tube(const Interval& intv_t, double time_step, const Function& f, const Interval& thickness)
 {
   if(f.nb_var() > 1)
-    cout << "Warning Tube::Tube(...): too many variables in function definition" << endl;
+    throw TubeException("Tube constructor", "too many variables in function definition");
 
   Interval tube_thickness = thickness == Interval::EMPTY_SET ? 0. : thickness; // default value: [0.]
   createFromSpecifications(intv_t, time_step);
@@ -79,7 +80,7 @@ void Tube::createFromSpecifications(const Interval& intv_t, double time_step, co
   }
 
   else
-    cout << "Error Tube::Tube(...): wrong timestep: " << time_step << endl;
+    throw TubeException("Tube constructor", "wrong timestep");
 }
 
 void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Interval& default_value)

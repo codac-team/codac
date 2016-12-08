@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tube-lib - DomainException class
+ *  tube-lib - DomainTubeException class
  * ============================================================================
  *  Copyright : Copyright 2016 Simon Rohou
  *  License   : This program can be distributed under the terms of
@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "DomainException.h"
+#include "DomainTubeException.h"
 #include "Tube.h"
 #include <string>
 #include <sstream>
@@ -18,7 +18,7 @@
 using namespace std;
 using namespace ibex;
 
-DomainException::DomainException(const Tube& x, int slice_index)
+DomainTubeException::DomainTubeException(const Tube& x, int slice_index)
 {
   ostringstream os;
   os << "slice index out of range: ";
@@ -26,7 +26,7 @@ DomainException::DomainException(const Tube& x, int slice_index)
   m_what_msg = os.str();
 }
 
-DomainException::DomainException(const Tube& x, double t)
+DomainTubeException::DomainTubeException(const Tube& x, double t)
 {
   ostringstream os;
   os << "input out of range: ";
@@ -34,7 +34,7 @@ DomainException::DomainException(const Tube& x, double t)
   m_what_msg = os.str();
 }
 
-DomainException::DomainException(const Tube& x, const Interval& intv_t)
+DomainTubeException::DomainTubeException(const Tube& x, const Interval& intv_t)
 {
   ostringstream os;
   os << "interval input out of range: ";
@@ -42,7 +42,7 @@ DomainException::DomainException(const Tube& x, const Interval& intv_t)
   m_what_msg = os.str();
 }
 
-DomainException::DomainException(const Tube& x1, const Tube& x2)
+DomainTubeException::DomainTubeException(const Tube& x1, const Tube& x2)
 {
   ostringstream os;
   os << "Unable to perform an operation over tubes of different structure";
@@ -59,37 +59,37 @@ DomainException::DomainException(const Tube& x1, const Tube& x2)
   m_what_msg = os.str();
 }
 
-const char* DomainException::what() const throw()
+/*const char* DomainTubeException::what() const throw()
 {
   return m_what_msg.c_str();
 }
 
-std::ostream& operator<<(std::ostream& os, const DomainException& e)
+std::ostream& operator<<(std::ostream& os, const DomainTubeException& e)
 {
   os << e.what();
   return os;
 }
-
+*/
 void checkDomain(const Tube& x, int slice_index)
 {
   if(slice_index < 0 || slice_index > x.size() - 1)
-    throw DomainException(x, slice_index);
+    throw DomainTubeException(x, slice_index);
 }
 
 void checkDomain(const Tube& x, double t)
 {
   if(!x.domain().contains(t))
-    throw DomainException(x, t);
+    throw DomainTubeException(x, t);
 }
 
 void checkDomain(const Tube& x, const Interval& intv_t)
 {
   if(intv_t != x.domain() && !intv_t.is_interior_subset(x.domain()))
-    throw DomainException(x, intv_t);
+    throw DomainTubeException(x, intv_t);
 }
 
 void checkStructures(const Tube& x1, const Tube& x2)
 {
   if(x1.size() != x2.size() || x1.domain() != x2.domain())
-    throw DomainException(x1, x2);
+    throw DomainTubeException(x1, x2);
 }
