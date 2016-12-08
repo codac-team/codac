@@ -11,12 +11,14 @@
     Tube_integration.cpp
     Tube_arithmetic.cpp
     Tube_serialization.cpp
-    DomainError.cpp
+    exceptions/DomainException.cpp
+    exceptions/EmptyTubeException.cpp
   )
 
   set(HEADERS
     Tube.h
-    DomainError.h
+    exceptions/DomainException.h
+    exceptions/EmptyTubeException.h
   )
 
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})

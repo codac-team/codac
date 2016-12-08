@@ -11,7 +11,8 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
-#include "DomainError.h"
+#include "exceptions/DomainException.h"
+#include "exceptions/EmptyTubeException.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
@@ -24,10 +25,7 @@ using namespace ibex;
 bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 {
   checkStructures(*this, derivative_tube);
-
-  for(int i = 0 ; i < size() ; i++)
-    if(derivative_tube[i].is_empty())
-      cout << "Warning ctcFwd(const Tube& derivative_tube): derivative_tube[" << i << "] is empty" << endl;
+  checkEmptiness(derivative_tube);
 
   bool contraction = false;
   Interval next_y = (*this)[0];
@@ -63,10 +61,7 @@ bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
 bool Tube::ctcBwd(const Tube& derivative_tube)
 {
   checkStructures(*this, derivative_tube);
-
-  for(int i = 0 ; i < size() ; i++)
-    if(derivative_tube[i].is_empty())
-      cout << "Warning ctcBwd(const Tube& derivative_tube): derivative_tube[" << i << "] is empty" << endl;
+  checkEmptiness(derivative_tube);
 
   bool contraction = false;
   Interval next_y = (*this)[size() - 1];
@@ -130,6 +125,7 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
                       bool& tube_contracted, bool& y_contracted, bool& t_contracted, bool& bisection_required, bool fwd_bwd)
 {
   checkStructures(*this, derivative_tube);
+  checkEmptiness(derivative_tube);
   
   bool inconsistency = false;
   bisection_required = false;

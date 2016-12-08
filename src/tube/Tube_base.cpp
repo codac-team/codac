@@ -11,7 +11,8 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
-#include "DomainError.h"
+#include "exceptions/DomainException.h"
+#include "exceptions/EmptyTubeException.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
@@ -914,6 +915,7 @@ void Tube::computeTree() const
 Interval Tube::interpol(double t, const Tube& derivative_tube) const
 {
   checkStructures(*this, derivative_tube);
+  checkEmptiness(derivative_tube);
   int index = input2index(t);
   Interval dom_ = domain(index);
   Interval deriv = derivative_tube[index];

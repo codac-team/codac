@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
-#include "DomainError.h"
+#include "exceptions/DomainException.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
