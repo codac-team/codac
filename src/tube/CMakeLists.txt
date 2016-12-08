@@ -6,14 +6,14 @@
 # Sources
 
   set(SRC
-    exceptions/TubeException.cpp
-    exceptions/DomainTubeException.cpp
-    exceptions/EmptyTubeException.cpp
     Tube_base.cpp
     Tube_ctc.cpp
     Tube_integration.cpp
     Tube_arithmetic.cpp
     Tube_serialization.cpp
+    exceptions/TubeException.cpp
+    exceptions/DomainTubeException.cpp
+    exceptions/EmptyTubeException.cpp
   )
 
   set(HEADERS

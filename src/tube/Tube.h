@@ -742,14 +742,18 @@ class Tube
 
     /** Class variables **/
 
-    int m_slices_number;
-    mutable double m_volume;
-    mutable bool m_tree_computation_needed;
-    mutable bool m_primitive_computation_needed;
-    mutable Tube *m_first_subtube, *m_second_subtube;
-    mutable ibex::Interval m_intv_t, m_intv_y;
-    mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
-    mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
+      // Tube structure (no mutable needs)
+      int m_slices_number;
+      ibex::Interval m_intv_t;
+      Tube *m_first_subtube, *m_second_subtube;
+
+      // Tube attributes ('mutable' required: values may be updated from const methods)
+      mutable double m_volume;
+      mutable ibex::Interval m_intv_y;
+      mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
+      mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
+      mutable bool m_tree_computation_needed;
+      mutable bool m_primitive_computation_needed;
 };
 
     /** Arithmetic **/
