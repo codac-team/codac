@@ -196,22 +196,9 @@ double Tube::dt() const
 
 double Tube::volume() const
 {
-  double volume = 0.;
-  for(int i = 0 ; i < m_slices_number ; i++)
-  {
-    if((*this)[i].is_empty()) // ibex::diam(EMPTY_SET) is not 0
-      continue;
-
-    if((*this)[i].is_unbounded())
-    {
-      volume = INFINITY;
-      break;
-    }
-
-    volume += m_dt * (*this)[i].diam();
-  }
-
-  return volume;
+  if(m_tree_computation_needed)
+    computeTree();
+  return m_volume;
 }
 
 double Tube::dist(const Tube& tu) const
@@ -886,7 +873,20 @@ void Tube::computeTree() const
   if(m_tree_computation_needed)
   {
     if(isSlice())
+    {
+      m_volume = m_intv_t.diam();
+
+      if(m_intv_y.is_empty()) // ibex::diam(EMPTY_SET) is not 0
+        m_volume = 0.;
+
+      else if(m_intv_y.is_unbounded())
+        m_volume = INFINITY;
+
+      else
+        m_volume *= m_intv_y.diam();
+
       m_enclosed_bounds = make_pair(Interval(m_intv_y.lb()), Interval(m_intv_y.ub()));
+    }
 
     else
     {
@@ -902,6 +902,7 @@ void Tube::computeTree() const
       }
       
       m_intv_y = m_first_subtube->image() | m_second_subtube->image();
+      m_volume = m_first_subtube->volume() + m_second_subtube->volume();
 
       // Enclosed bounds
       pair<Interval,Interval> ui_past = m_first_subtube->eval();

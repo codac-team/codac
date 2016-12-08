@@ -744,6 +744,7 @@ class Tube
 
     double m_dt;
     int m_slices_number;
+    mutable double m_volume;
     mutable bool m_tree_computation_needed;
     mutable bool m_primitive_computation_needed;
     mutable Tube *m_first_subtube, *m_second_subtube;
