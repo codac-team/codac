@@ -76,7 +76,6 @@ void Tube::createFromSpecifications(const Interval& intv_t, double time_step, co
     } while(ub < intv_t.ub());
 
     createFromSlicesVector(vector_dt, default_value);
-    m_dt = time_step;
   }
 
   else
@@ -85,7 +84,6 @@ void Tube::createFromSpecifications(const Interval& intv_t, double time_step, co
 
 void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Interval& default_value)
 {
-  m_dt = vector_dt[0].diam(); // all timesteps are identical in the tree
   m_intv_t = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
   m_intv_y = default_value;
   m_slices_number = vector_dt.size();
@@ -147,7 +145,6 @@ Tube& Tube::operator=(const Tube& tu)
   if(m_second_subtube != NULL)
     delete m_second_subtube;
 
-  m_dt = tu.dt();
   m_intv_t = tu.domain();
   m_intv_y = tu.image();
   m_slices_number = tu.size();
@@ -191,7 +188,8 @@ int Tube::size() const
 
 double Tube::dt() const
 {
-  return m_dt;
+  // All timesteps are identical in the tree
+  return domain(0).diam();
 }
 
 double Tube::volume() const
@@ -836,10 +834,10 @@ std::ostream& operator<<(std::ostream& os, const Tube& x)
   if(x.m_tree_computation_needed)
     x.computeTree();
   
-  cout << "Tube: t=" << x.m_intv_t
-       << ", y=" << x.m_intv_y 
-       << ", slices=" << x.m_slices_number
-       << ", dt=" << x.m_dt
+  cout << "Tube: t=" << x.domain()
+       << ", y=" << x.image() 
+       << ", slices=" << x.size()
+       << ", dt=" << x.dt()
        << flush;
   return os;
 }

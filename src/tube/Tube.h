@@ -742,7 +742,6 @@ class Tube
 
     /** Class variables **/
 
-    double m_dt;
     int m_slices_number;
     mutable double m_volume;
     mutable bool m_tree_computation_needed;
