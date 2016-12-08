@@ -38,17 +38,6 @@ EmptyTubeException::EmptyTubeException(const Tube& x)
   m_what_msg = os.str();
 }
 
-/*const char* EmptyTubeException::what() const throw()
-{
-  return m_what_msg.c_str();
-}
-
-std::ostream& operator<<(std::ostream& os, const EmptyTubeException& e)
-{
-  os << e.what();
-  return os;
-}*/
-
 void checkEmptiness(const Tube& x)
 {
   if(x.isEmpty())

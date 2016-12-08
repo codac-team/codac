@@ -34,14 +34,8 @@ class DomainTubeException : public TubeException
     DomainTubeException(const Tube& x, double t);
     DomainTubeException(const Tube& x, const ibex::Interval& intv_t);
     DomainTubeException(const Tube& x1, const Tube& x2);
-    ~DomainTubeException() {};
-
-    //virtual const char* what() const throw();
-
-    //std::string m_what_msg;
 };
 
-//std::ostream& operator<<(std::ostream& os, const DomainTubeException& e);
 void checkDomain(const Tube& x, int slice_index);
 void checkDomain(const Tube&, double t);
 void checkDomain(const Tube& x, const ibex::Interval& intv_t);

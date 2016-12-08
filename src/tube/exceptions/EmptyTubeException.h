@@ -30,14 +30,8 @@ class EmptyTubeException : public TubeException
   public:
 
     EmptyTubeException(const Tube& x);
-    ~EmptyTubeException() {};
-
-    //virtual const char* what() const throw();
-
-    //std::string m_what_msg;
 };
 
-//std::ostream& operator<<(std::ostream& os, const EmptyTubeException& e);
 void checkEmptiness(const Tube& x);
 
 #endif

@@ -45,7 +45,7 @@ DomainTubeException::DomainTubeException(const Tube& x, const Interval& intv_t)
 DomainTubeException::DomainTubeException(const Tube& x1, const Tube& x2)
 {
   ostringstream os;
-  os << "Unable to perform an operation over tubes of different structure";
+  os << "unable to perform an operation over tubes of different structure";
 
   if(x1.size() != x2.size())
     os << endl << "Tubes of different slices number: " 
@@ -59,17 +59,6 @@ DomainTubeException::DomainTubeException(const Tube& x1, const Tube& x2)
   m_what_msg = os.str();
 }
 
-/*const char* DomainTubeException::what() const throw()
-{
-  return m_what_msg.c_str();
-}
-
-std::ostream& operator<<(std::ostream& os, const DomainTubeException& e)
-{
-  os << e.what();
-  return os;
-}
-*/
 void checkDomain(const Tube& x, int slice_index)
 {
   if(slice_index < 0 || slice_index > x.size() - 1)
