@@ -12,6 +12,8 @@
  *  computations and final result when reaching a fix point. Light gray
  *  areas represent the tube part that has been contracted during
  *  the contraction step.
+ *
+ *  Note: example replaced by the Lissajous example in the paper
  * ============================================================================
  *  Copyright : Copyright 2016 Simon Rohou
  *  License   : This program can be distributed under the terms of
