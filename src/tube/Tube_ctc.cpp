@@ -414,6 +414,50 @@ bool Tube::ctcIntertemporal(Interval& y, Interval& t1, Interval& t2) const
   }
 }
 
+bool Tube::ctcPeriodic(const Interval& period)
+{
+  bool contraction, at_least_one_contraction = false;
+
+  do
+  {
+    contraction = false;
+    double vol = volume();
+
+    for(int i = 0 ; i < size() ; i++)
+    {
+      int k;
+      Interval shift_dom, dom = domain(i);
+
+      k = 0; // Fwd
+      do
+      {
+        k++;
+        shift_dom = domain() & (dom + k*period);
+
+        if(!shift_dom.is_empty())
+          set((*this)[shift_dom] & (*this)[dom], dom);
+
+      } while(!shift_dom.is_empty());
+
+      k = 0; // Bwd
+      do
+      {
+        k--;
+        shift_dom = domain() & (dom + k*period);
+
+        if(!shift_dom.is_empty())
+          set((*this)[shift_dom] & (*this)[dom], dom);
+
+      } while(!shift_dom.is_empty());
+    }
+
+    contraction = vol > volume();
+    at_least_one_contraction |= contraction;
+  } while(contraction);
+
+  return at_least_one_contraction;
+}
+
 
 #define func_ctc_unary(y, x, f, bwd_f) \
     bool contraction = false; \
