@@ -31,12 +31,12 @@ bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
   bool contraction = false;
   Interval next_y = (*this)[0];
   Interval y_front = next_y & initial_value;
+  double dt = derivative_tube.dt();
 
   for(int i = 0 ; i < size() ; i++) // from the past to the future
   {
-    double dt_ = derivative_tube.domain(i).diam();
     Interval y_old = next_y;
-    Interval y_new = y_old & (y_front + derivative_tube[i] * Interval(0., dt_));
+    Interval y_new = y_old & (y_front + derivative_tube[i] * Interval(0., dt));
     contraction |= y_new.diam() < y_old.diam();
     set(y_new, i);
 
@@ -51,7 +51,7 @@ bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
     // Preparing next slice computation
     if(i < size() - 1)
     {
-      y_front = y_old & (y_front + derivative_tube[i] * dt_);
+      y_front = y_old & (y_front + derivative_tube[i] * dt);
       next_y = (*this)[i + 1];
       y_front &= next_y;
     }
@@ -68,12 +68,12 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
   Interval next_y = (*this)[size() - 1];
   Interval y_front = next_y & next_y - derivative_tube[size() - 1] * derivative_tube.domain(size() - 1).diam();
   next_y = (*this)[max(0, size() - 2)];
+  double dt = derivative_tube.dt();
 
   for(int i = max(0, size() - 2) ; i >= 0 ; i--) // from the future to the past
   {
-    double dt_ = derivative_tube.domain(i).diam();
     Interval y_old = (*this)[i];
-    Interval y_new = y_old & (y_front - derivative_tube[i] * Interval(0., dt_));
+    Interval y_new = y_old & (y_front - derivative_tube[i] * Interval(0., dt));
     contraction |= y_new.diam() < y_old.diam();
     set(y_new, i);
 
@@ -87,7 +87,7 @@ bool Tube::ctcBwd(const Tube& derivative_tube)
 
     if(i > 0)
     {
-      y_front = y_old & (y_front - derivative_tube[i] * dt_);
+      y_front = y_old & (y_front - derivative_tube[i] * dt);
       next_y = (*this)[i - 1];
       y_front &= next_y;
     }
@@ -135,6 +135,7 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
   int index_lb, index_ub;
   int min_index_ctc = 0, max_index_ctc = size() - 1; // set bounds to this contractor
   double old_t_diam = t.diam(), old_y_diam = y.diam();
+  double dt = derivative_tube.dt();
 
   // Trying to contract [t]
 
@@ -211,15 +212,14 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
             {
               Interval integ_domain;
               Interval slice_dom = domain(i);
-              double dt_ = slice_dom.diam();
               Interval slice_deriv = derivative_tube[i];
 
               // Over the ith slice
-              integ_domain = Interval(0., min(dt_, local_t.ub() - slice_dom.lb()));
+              integ_domain = Interval(0., min(dt, local_t.ub() - slice_dom.lb()));
               map_new_y[i] |= (*this)[i] & (y_front - slice_deriv * integ_domain);
 
               // On the front, backward way
-              integ_domain = Interval(min(dt_, max(0., local_t.lb() - slice_dom.lb())), min(dt_, local_t.ub() - slice_dom.lb()));
+              integ_domain = Interval(min(dt, max(0., local_t.lb() - slice_dom.lb())), min(dt, local_t.ub() - slice_dom.lb()));
               y_front = (*this)[slice_dom.lb()] & (y_front - slice_deriv * integ_domain);
             }
 
@@ -230,15 +230,14 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
             {
               Interval integ_domain;
               Interval slice_dom = domain(i);
-              double dt_ = slice_dom.diam();
               Interval slice_deriv = derivative_tube[i];
 
               // Over the ith slice
-              integ_domain = Interval(0., min(slice_dom.ub() - local_t.lb(), dt_));
+              integ_domain = Interval(0., min(slice_dom.ub() - local_t.lb(), dt));
               map_new_y[i] |= (*this)[i] & (y_front + slice_deriv * integ_domain);
 
               // On the front, forward way
-              integ_domain = Interval(min(dt_, max(0., slice_dom.ub() - local_t.ub())), min(dt_, slice_dom.ub() - local_t.lb()));
+              integ_domain = Interval(min(dt, max(0., slice_dom.ub() - local_t.ub())), min(dt, slice_dom.ub() - local_t.lb()));
               y_front = (*this)[slice_dom.ub()] & (y_front + slice_deriv * integ_domain);
 
             }
