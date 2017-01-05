@@ -51,6 +51,17 @@ int main(int argc, char *argv[])
       ydot.ctcFwdBwd(yddot, ydot0);
       x.ctcFwdBwd(xdot, x0);
       y.ctcFwdBwd(ydot, y0);
+
+      // Further constraints that can be considered
+      if(false)
+      {
+        y.ctcIn(ydot, y[M_PI/2.], 3.*M_PI/2.);
+        y.ctcIn(ydot, y[3.*M_PI/2.], M_PI/2.);
+        x.ctcIn(xdot, x[M_PI/2.], 3.*M_PI/2.);
+        x.ctcIn(xdot, x[3.*M_PI/2.], M_PI/2.);
+        y.ctcPeriodic(M_PI);
+      }
+
       yddot &= -0.4 * xddot * xdot;
 
       cout << "contraction step..." << endl;
@@ -65,7 +76,7 @@ int main(int argc, char *argv[])
     map<Tube*,VibesFigure_Tube*> map_graphics;
     displayTube(map_graphics, &x, "Tube [x](·)", 100, 100);
     displayTube(map_graphics, &y, "Tube [y](·)", 150, 150);
-    displayLissajousMap(x, y, 200, 200);
+    displayLissajousMap(x, y, 1200, 200);
 
   /* =========== END =========== */
 
