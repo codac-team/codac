@@ -6,19 +6,19 @@
 //
 // This file is part of VIBes' C++ API
 //
-// Copyright (c) 2013-2015 Vincent Drevelle, Jeremy Nicola, Simon Rohou, 
+// Copyright (c) 2013-2015 Vincent Drevelle, Jeremy Nicola, Simon Rohou,
 //                         Benoit Desrochers
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -219,10 +219,10 @@ namespace vibes {
   void beginDrawing();
   /// Start VIBes in file saving mode. All commands are saved to the specified file.
   void beginDrawing(const std::string &fileName);
-  
+
   /// Close connection to the viewer or the drawing file.
   void endDrawing();
-  
+
   /** @} */ // end of group connection
 
 
@@ -318,15 +318,15 @@ namespace vibes {
   VIBES_FUNC_COLOR_PARAM_1(drawLine,const std::vector< std::vector<double> > &,points)
   /// Draw a 2-D line from the list of abscissae \a x and the list of ordinates \a y
   VIBES_FUNC_COLOR_PARAM_2(drawLine,const std::vector<double> &,x, const std::vector<double> &,y)
-  
+
   // Draw a N-D set of points
   //VIBES_FUNC_COLOR_PARAM_1(drawPoints,const std::vector< std::vector<double> > &,points)
   //VIBES_FUNC_COLOR_PARAM_2(drawPoints,const std::vector< std::vector<double> > &,points, const std::vector<double> &,colorLevels)
   //VIBES_FUNC_COLOR_PARAM_3(drawPoints,const std::vector< std::vector<double> > &,points, const std::vector<double> &,colorLevels, const std::vector<double>&,radiuses)
   VIBES_FUNC_COLOR_PARAM_2(drawPoints,const std::vector<double> &,x, const std::vector<double> &,y)
-  //VIBES_FUNC_COLOR_PARAM_3(drawPoints,const std::vector<double> &,x, const std::vector<double> &,y, const std::vector<double> &,colorLevels)          
-  //VIBES_FUNC_COLOR_PARAM_4(drawPoints,const std::vector<double> &,x, const std::vector<double> &,y, const std::vector<double> &,colorLevels, const std::vector<double>&,radiuses)          
-          
+  //VIBES_FUNC_COLOR_PARAM_3(drawPoints,const std::vector<double> &,x, const std::vector<double> &,y, const std::vector<double> &,colorLevels)
+  //VIBES_FUNC_COLOR_PARAM_4(drawPoints,const std::vector<double> &,x, const std::vector<double> &,y, const std::vector<double> &,colorLevels, const std::vector<double>&,radiuses)
+
   /// Draw a 2-D arrow from (xA,yA) to (xB,yB)
   VIBES_FUNC_COLOR_PARAM_5(drawArrow,const double &,xA, const double &,yA, const double &,xB, const double &,yB, const double &,tip_length)
   /// Draw a N-D arrow from the list of coordinates \a points in the form ((x_1, y_1, z_1, ...), (x_2, y_2, z_2, ...), ...)
@@ -339,31 +339,38 @@ namespace vibes {
 
   /// Draw a 2-D vehicle at position (cx,cy)
   VIBES_FUNC_COLOR_PARAM_4(drawVehicle,const double &,cx, const double &,cy, const double &,rot, const double &,length)
-  
+
   /// Draw a 2-D submarine (type AUV) at position (cx,cy)
   VIBES_FUNC_COLOR_PARAM_4(drawAUV,const double &,cx, const double &,cy, const double &,rot, const double &,length)
 
   /// Draw a sector (part of an ellipse) at position (cx, cy) with axis (a, b) and angular bounds (startAngle, endAngle)
-  VIBES_FUNC_COLOR_PARAM_6(drawSector, const double &,cx, const double &,cy, 
-                                       const double &,a, const double &,b, 
+  VIBES_FUNC_COLOR_PARAM_6(drawSector, const double &,cx, const double &,cy,
+                                       const double &,a, const double &,b,
                                        const double &,startAngle, const double &,endAngle)
-  
+
   /// Draw a Pie at position (cx, cy) with radius between (r_min, r_max) and angular bounds (theta_min, theta_max)
-  /// theta_max and theta_min are in degrees and in counterclockwise 
-  VIBES_FUNC_COLOR_PARAM_6(drawPie, const double &,cx, const double &,cy, 
-                                       const double &,r_min, const double &,r_max, 
+  /// theta_max and theta_min are in degrees and in counterclockwise
+  VIBES_FUNC_COLOR_PARAM_6(drawPie, const double &,cx, const double &,cy,
+                                       const double &,r_min, const double &,r_max,
                                        const double &,theta_min, const double &,theta_max)
-          
+
   /// Draw a Point at position (cy, cy)
   VIBES_FUNC_COLOR_PARAM_2(drawPoint, const double &,cx, const double &,cy)
-          
+
   /// Draw a Point at position (cy, cy)
   VIBES_FUNC_COLOR_PARAM_3(drawPoint, const double &,cx, const double &,cy, const double &,radius)
-          
+
   /// Draw a ring at position (cx, cy) with radius between (r_min, r_max)
   VIBES_FUNC_COLOR_PARAM_4(drawRing, const double &,cx, const double &,cy,
-                                        const double &,r_min, const double &,r_max)
-          
+                                     const double &,r_min, const double &,r_max)
+
+  /// Draw a raster image with upper left corner at position <ulb, yub>
+  /// and with <xres, yres> pixel resolution.
+  /// The color used for transparency is throw the pen color
+  VIBES_FUNC_COLOR_PARAM_5(drawRaster, const std::string&, rasterFilename,
+                                       const double &,ulb, const double &, yub,
+                                       const double &,xres, const double &, yres);
+
   /// @}
   /// @name Objects grouping and deletion
   /// @{
@@ -500,15 +507,15 @@ namespace vibes {
     inline void drawBoxes(const std::vector<ibex::IntervalVector> &boxes, Params params){
         std::vector<std::vector<double> > bounds;
         for(unsigned int i=0;i<boxes.size();i++)
-  {
-      std::vector<double> boundsI;
-      boundsI.push_back(boxes[i][0].lb());
-      boundsI.push_back(boxes[i][0].ub());
-      boundsI.push_back(boxes[i][1].lb());
-      boundsI.push_back(boxes[i][1].ub());
-      bounds.push_back(boundsI);
-  }
-  vibes::drawBoxes(bounds, params);
+	{
+	    std::vector<double> boundsI;
+	    boundsI.push_back(boxes[i][0].lb());
+	    boundsI.push_back(boxes[i][0].ub());
+	    boundsI.push_back(boxes[i][1].lb());
+	    boundsI.push_back(boxes[i][1].ub());
+	    bounds.push_back(boundsI);
+	}
+	vibes::drawBoxes(bounds, params);
     }
   #endif //#ifdef __IBEX_INTERVAL_VECTOR_H__
 }
