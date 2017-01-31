@@ -560,6 +560,11 @@ class Tube
          * \brief To be defined...
          */
         bool ctcPeriodic(const ibex::Interval& period);
+        
+        /**
+         * \brief To be defined...
+         */
+        static bool contract(Tube& x1, Tube& x2, const ibex::Function& f);
 
 
     /** Serialization **/

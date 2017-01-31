@@ -14,6 +14,7 @@
 #include "exceptions/TubeException.h"
 #include "exceptions/DomainTubeException.h"
 #include "exceptions/EmptyTubeException.h"
+#include "ibex_CtcFwdBwd.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
@@ -538,3 +539,25 @@ bool ctcAcosh(Tube& y, Tube& x) { func_ctc_unary(y, x, acosh, bwd_acosh); }
 bool ctcAsinh(Tube& y, Tube& x) { func_ctc_unary(y, x, asinh, bwd_asinh); }
 bool ctcAtanh(Tube& y, Tube& x) { func_ctc_unary(y, x, atanh, bwd_atanh); }
 bool ctcAtan2(Tube& theta, Tube& y, Tube& x) { func_ctc_binary(theta, y, x, atan2, bwd_atan2); }
+
+bool Tube::contract(Tube& x1, Tube& x2, const Function& f)
+{
+  checkStructures(x1, x2);
+
+  if(f.nb_arg() != 2)
+    cout << "Tube::contract: wrong argument number" << endl;
+
+  Function fbis(f);
+  NumConstraint c(fbis);
+  CtcFwdBwd ctc(c);
+
+  for(int i = 0 ; i < x1.size() ; i++)
+  {
+    IntervalVector box(2);
+    box[0] = x1[i]; box[1] = x2[i];
+    ctc.contract(box);
+    x1.set(box[0], i); x2.set(box[1], i);
+  }
+
+  return true;
+}
