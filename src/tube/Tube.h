@@ -565,6 +565,12 @@ class Tube
          * \brief To be defined...
          */
         static bool contract(Tube& x1, Tube& x2, const ibex::Function& f);
+        static bool contract(Tube& x1, Tube& x2, Tube& x3, const ibex::Function& f);
+        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, const ibex::Function& f);
+        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, const ibex::Function& f);
+        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, const ibex::Function& f);
+        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, const ibex::Function& f);
+        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, const ibex::Function& f);
 
 
     /** Serialization **/

@@ -547,6 +547,8 @@ bool Tube::contract(Tube& x1, Tube& x2, const Function& f)
   if(f.nb_arg() != 2)
     cout << "Tube::contract: wrong argument number" << endl;
 
+  double volume = x1.volume() + x2.volume();
+
   Function fbis(f);
   NumConstraint c(fbis);
   CtcFwdBwd ctc(c);
@@ -559,5 +561,170 @@ bool Tube::contract(Tube& x1, Tube& x2, const Function& f)
     x1.set(box[0], i); x2.set(box[1], i);
   }
 
-  return true;
+  return volume < x1.volume() + x2.volume();
+}
+
+bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, const Function& f)
+{
+  checkStructures(x1, x2);
+  checkStructures(x1, x3);
+
+  if(f.nb_arg() != 3)
+    cout << "Tube::contract: wrong argument number" << endl;
+
+  double volume = x1.volume() + x2.volume() + x3.volume();
+
+  Function fbis(f);
+  NumConstraint c(fbis);
+  CtcFwdBwd ctc(c);
+
+  for(int i = 0 ; i < x1.size() ; i++)
+  {
+    IntervalVector box(3);
+    box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i];
+    ctc.contract(box);
+    x1.set(box[0], i); x2.set(box[1], i); x3.set(box[2], i);
+  }
+
+  return volume < x1.volume() + x2.volume() + x3.volume();
+}
+
+bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, const Function& f)
+{
+  checkStructures(x1, x2);
+  checkStructures(x1, x3);
+  checkStructures(x1, x4);
+
+  if(f.nb_arg() != 4)
+    cout << "Tube::contract: wrong argument number" << endl;
+
+  double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume();
+
+  Function fbis(f);
+  NumConstraint c(fbis);
+  CtcFwdBwd ctc(c);
+
+  for(int i = 0 ; i < x1.size() ; i++)
+  {
+    IntervalVector box(4);
+    box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i];
+    ctc.contract(box);
+    x1.set(box[0], i); x2.set(box[1], i); x3.set(box[2], i); x4.set(box[3], i);
+  }
+
+  return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume();
+}
+
+bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, const Function& f)
+{
+  checkStructures(x1, x2);
+  checkStructures(x1, x3);
+  checkStructures(x1, x4);
+  checkStructures(x1, x5);
+
+  if(f.nb_arg() != 5)
+    cout << "Tube::contract: wrong argument number" << endl;
+
+  double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume();
+
+  Function fbis(f);
+  NumConstraint c(fbis);
+  CtcFwdBwd ctc(c);
+
+  for(int i = 0 ; i < x1.size() ; i++)
+  {
+    IntervalVector box(5);
+    box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i]; box[4] = x5[i];
+    ctc.contract(box);
+    x1.set(box[0], i); x2.set(box[1], i); x3.set(box[2], i); x4.set(box[3], i); x5.set(box[4], i);
+  }
+
+  return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume();
+}
+
+bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, const Function& f)
+{
+  checkStructures(x1, x2);
+  checkStructures(x1, x3);
+  checkStructures(x1, x4);
+  checkStructures(x1, x5);
+  checkStructures(x1, x6);
+
+  if(f.nb_arg() != 6)
+    cout << "Tube::contract: wrong argument number" << endl;
+
+  double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume();
+
+  Function fbis(f);
+  NumConstraint c(fbis);
+  CtcFwdBwd ctc(c);
+
+  for(int i = 0 ; i < x1.size() ; i++)
+  {
+    IntervalVector box(6);
+    box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i]; box[4] = x5[i]; box[5] = x6[i];
+    ctc.contract(box);
+    x1.set(box[0], i); x2.set(box[1], i); x3.set(box[2], i); x4.set(box[3], i); x5.set(box[4], i); x6.set(box[5], i);
+  }
+
+  return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume();
+}
+
+bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, const Function& f)
+{
+  checkStructures(x1, x2);
+  checkStructures(x1, x3);
+  checkStructures(x1, x4);
+  checkStructures(x1, x5);
+  checkStructures(x1, x6);
+  checkStructures(x1, x7);
+
+  if(f.nb_arg() != 7)
+    cout << "Tube::contract: wrong argument number" << endl;
+
+  double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume() + x7.volume();
+
+  Function fbis(f);
+  NumConstraint c(fbis);
+  CtcFwdBwd ctc(c);
+
+  for(int i = 0 ; i < x1.size() ; i++)
+  {
+    IntervalVector box(7);
+    box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i]; box[4] = x5[i]; box[5] = x6[i]; box[6] = x7[i];
+    ctc.contract(box);
+    x1.set(box[0], i); x2.set(box[1], i); x3.set(box[2], i); x4.set(box[3], i); x5.set(box[4], i); x6.set(box[5], i); x7.set(box[6], i);
+  }
+
+  return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume() + x7.volume();
+}
+
+bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, const Function& f)
+{
+  checkStructures(x1, x2);
+  checkStructures(x1, x3);
+  checkStructures(x1, x4);
+  checkStructures(x1, x5);
+  checkStructures(x1, x6);
+  checkStructures(x1, x7);
+  checkStructures(x1, x8);
+
+  if(f.nb_arg() != 8)
+    cout << "Tube::contract: wrong argument number" << endl;
+
+  double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume() + x7.volume() + x8.volume();
+
+  Function fbis(f);
+  NumConstraint c(fbis);
+  CtcFwdBwd ctc(c);
+
+  for(int i = 0 ; i < x1.size() ; i++)
+  {
+    IntervalVector box(8);
+    box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i]; box[4] = x5[i]; box[5] = x6[i]; box[6] = x7[i]; box[7] = x8[i];
+    ctc.contract(box);
+    x1.set(box[0], i); x2.set(box[1], i); x3.set(box[2], i); x4.set(box[3], i); x5.set(box[4], i); x6.set(box[5], i); x7.set(box[6], i); x8.set(box[7], i);
+  }
+
+  return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume() + x7.volume() + x8.volume();
 }
