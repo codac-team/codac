@@ -91,7 +91,19 @@ class VibesFigure
      *
      * This is a virtual method to overload.
      */
-    virtual void show() const = 0;
+    virtual void show() const = 0;    
+
+    /**
+     * \brief Convert RGB grayscales values to hexa notation.
+     *
+     * \param r red intensity in [0,255]
+     * \param g green intensity in [0,255]
+     * \param b blue intensity in [0,255]
+     * \param alpha transparency in [0,255] (no transparency by default)
+     * \param prefix character to prefix the hexa value ('#' by default)
+     * \return string containing hexa value
+     */
+    static std::string rgb2hex(int r, int g, int b, int alpha = -1, const char* prefix = "#");
 
   protected:
     std::string m_name;

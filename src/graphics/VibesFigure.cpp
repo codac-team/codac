@@ -60,3 +60,28 @@ double VibesFigure::height() const
 {
   return m_height;
 }
+
+string VibesFigure::rgb2hex(int r, int g, int b, int alpha, const char* prefix)
+{
+  string result;
+  result.append(prefix);
+ 
+  char char_r[255];
+  sprintf(char_r, "%.2X", r);
+  result.append(char_r);
+  char char_g[255];
+  sprintf(char_g, "%.2X", g);
+  result.append(char_g);
+  char char_b[255];
+  sprintf(char_b, "%.2X", b);
+  result.append(char_b);
+
+  if(alpha != -1)
+  {
+    char char_alpha[255];
+    sprintf(char_alpha, "%.2X", alpha);
+    result.append(char_alpha);
+  }
+
+  return result;
+}
