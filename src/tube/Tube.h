@@ -533,18 +533,18 @@ class Tube
         /**
          * \brief To be defined...
          */
-        bool ctcObs(const Tube& derivative_tube, ibex::Interval& y, ibex::Interval& t, bool fwd_bwd = true);
-        bool ctcObs(const Tube& derivative_tube, const ibex::Interval& y, ibex::Interval& t, bool fwd_bwd = true);
-        bool ctcObs(const Tube& derivative_tube, ibex::Interval& y, const ibex::Interval& t, bool fwd_bwd = true);
-        bool ctcObs(const Tube& derivative_tube, const ibex::Interval& y, const ibex::Interval& t, bool fwd_bwd = true);
-        bool ctcIn_base(const Tube& derivative_tube, ibex::Interval& y, ibex::Interval& t,
-                                bool& tube_contracted, bool& y_contracted, bool& t_contracted,
+        bool ctcObs(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
+        bool ctcObs(const Tube& derivative_tube, ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
+        bool ctcObs(const Tube& derivative_tube, const ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
+        bool ctcObs(const Tube& derivative_tube, const ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
+        bool ctcObs_base(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y,
+                                bool& tube_contracted, bool& t_contracted, bool& y_contracted, 
                                 bool& bisection_required, bool fwd_bwd = true);
         
         /**
          * \brief To be defined...
          */
-        bool ctcOut(const ibex::Interval& y, const ibex::Interval& t);
+        bool ctcOut(const ibex::Interval& t, const ibex::Interval& y);
 
         /**
          * \brief To be defined...
@@ -744,7 +744,7 @@ class Tube
     /**
      * \brief To be defined...
      */
-    void ctcIn_computeIndex(const ibex::Interval& t, const ibex::Interval& y, int& index_lb, int& index_ub);
+    void ctcObs_computeIndex(const ibex::Interval& y, const ibex::Interval& t, int& index_lb, int& index_ub);
 
     /**
      * \brief Deserialize a binary file into a tube.

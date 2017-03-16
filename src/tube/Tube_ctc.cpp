@@ -105,7 +105,7 @@ bool Tube::ctcFwdBwd(const Tube& derivative_tube, const Interval& initial_value)
   return contraction;
 }
 
-void Tube::ctcIn_computeIndex(const Interval& t, const Interval& y, int& index_lb, int& index_ub)
+void Tube::ctcObs_computeIndex(const Interval& t, const Interval& y, int& index_lb, int& index_ub)
 {
   if(t.is_unbounded() || t.is_empty())
     throw TubeException("Tube::ctcIn_computeIndex(...)", "unbounded or empty [t]");
@@ -123,8 +123,8 @@ void Tube::ctcIn_computeIndex(const Interval& t, const Interval& y, int& index_l
     index_ub = max(0, index_ub - 1);
 }
 
-bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
-                      bool& tube_contracted, bool& y_contracted, bool& t_contracted, bool& bisection_required, bool fwd_bwd)
+bool Tube::ctcObs_base(const Tube& derivative_tube, Interval& t, Interval& y, 
+                      bool& tube_contracted, bool& t_contracted, bool& y_contracted, bool& bisection_required, bool fwd_bwd)
 {
   checkStructures(*this, derivative_tube);
   checkEmptiness(derivative_tube);
@@ -157,7 +157,7 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
 
       // Computing index
 
-        ctcIn_computeIndex(t, y, index_lb, index_ub);
+        ctcObs_computeIndex(t, y, index_lb, index_ub);
 
         if(!fwd_bwd)
         {
@@ -198,7 +198,7 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
             local_y &= interpol(local_t, derivative_tube);
 
             // Computing new index
-            ctcIn_computeIndex(local_t, local_y, index_lb, index_ub);
+            ctcObs_computeIndex(local_t, local_y, index_lb, index_ub);
           }
         }
 
@@ -297,38 +297,38 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
   return tube_contracted | y_contracted | t_contracted;
 }
 
-bool Tube::ctcObs(const Tube& derivative_tube, Interval& y, Interval& t, bool fwd_bwd)
+bool Tube::ctcObs(const Tube& derivative_tube, Interval& t, Interval& y, bool fwd_bwd)
 {
   bool tube_contracted, y_contracted, t_contracted, bisection_required;
-  return ctcIn_base(derivative_tube, y, t, tube_contracted, y_contracted, t_contracted, bisection_required, fwd_bwd);
+  return ctcObs_base(derivative_tube, t, y, tube_contracted, t_contracted, y_contracted, bisection_required, fwd_bwd);
 }
 
-bool Tube::ctcObs(const Tube& derivative_tube, const Interval& y, Interval& t, bool fwd_bwd)
+bool Tube::ctcObs(const Tube& derivative_tube, Interval& t, const Interval& y, bool fwd_bwd)
 {
   Interval y_temp = y;
   bool tube_contracted, y_contracted, t_contracted, bisection_required;
-  ctcIn_base(derivative_tube, y_temp, t, tube_contracted, y_contracted, t_contracted, bisection_required, fwd_bwd);
+  ctcObs_base(derivative_tube, t, y_temp, tube_contracted, t_contracted, y_contracted, bisection_required, fwd_bwd);
   return tube_contracted | t_contracted;
 }
 
-bool Tube::ctcObs(const Tube& derivative_tube, Interval& y, const Interval& t, bool fwd_bwd)
+bool Tube::ctcObs(const Tube& derivative_tube, const Interval& t, Interval& y, bool fwd_bwd)
 {
   Interval t_temp = t;
   bool tube_contracted, y_contracted, t_contracted, bisection_required;
-  ctcIn_base(derivative_tube, y, t_temp, tube_contracted, y_contracted, t_contracted, bisection_required, fwd_bwd);
+  ctcObs_base(derivative_tube, t_temp, y, tube_contracted, t_contracted, y_contracted, bisection_required, fwd_bwd);
   return tube_contracted | y_contracted;
 }
 
-bool Tube::ctcObs(const Tube& derivative_tube, const Interval& y, const Interval& t, bool fwd_bwd)
+bool Tube::ctcObs(const Tube& derivative_tube, const Interval& t, const Interval& y, bool fwd_bwd)
 {
   Interval y_temp = y;
   Interval t_temp = t;
   bool tube_contracted, y_contracted, t_contracted, bisection_required;
-  ctcIn_base(derivative_tube, y_temp, t_temp, tube_contracted, y_contracted, t_contracted, bisection_required, fwd_bwd);
+  ctcObs_base(derivative_tube, t_temp, y_temp, tube_contracted, t_contracted, y_contracted, bisection_required, fwd_bwd);
   return tube_contracted;
 }
 
-bool Tube::ctcOut(const Interval& y, const Interval& t)
+bool Tube::ctcOut(const Interval& t, const Interval& y)
 {
   Interval intersected_t = t & domain();
   bool contraction = false;
