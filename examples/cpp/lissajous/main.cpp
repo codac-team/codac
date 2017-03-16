@@ -55,10 +55,10 @@ int main(int argc, char *argv[])
       // Further constraints that can be considered
       if(false)
       {
-        y.ctcIn(ydot, y[M_PI/2.], 3.*M_PI/2.);
-        y.ctcIn(ydot, y[3.*M_PI/2.], M_PI/2.);
-        x.ctcIn(xdot, x[M_PI/2.], 3.*M_PI/2.);
-        x.ctcIn(xdot, x[3.*M_PI/2.], M_PI/2.);
+        y.ctcObs(ydot, y[M_PI/2.], 3.*M_PI/2.);
+        y.ctcObs(ydot, y[3.*M_PI/2.], M_PI/2.);
+        x.ctcObs(xdot, x[M_PI/2.], 3.*M_PI/2.);
+        x.ctcObs(xdot, x[3.*M_PI/2.], M_PI/2.);
         y.ctcPeriodic(M_PI);
       }
 

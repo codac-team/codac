@@ -274,7 +274,7 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
 
   if(inconsistency)
   {
-    //cout << "Warning ctcIn(): inconsistency" << endl;
+    //cout << "Warning ctcObs(): inconsistency" << endl;
 
     #pragma omp for
     for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
@@ -297,13 +297,13 @@ bool Tube::ctcIn_base(const Tube& derivative_tube, Interval& y, Interval& t,
   return tube_contracted | y_contracted | t_contracted;
 }
 
-bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, Interval& t, bool fwd_bwd)
+bool Tube::ctcObs(const Tube& derivative_tube, Interval& y, Interval& t, bool fwd_bwd)
 {
   bool tube_contracted, y_contracted, t_contracted, bisection_required;
   return ctcIn_base(derivative_tube, y, t, tube_contracted, y_contracted, t_contracted, bisection_required, fwd_bwd);
 }
 
-bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, Interval& t, bool fwd_bwd)
+bool Tube::ctcObs(const Tube& derivative_tube, const Interval& y, Interval& t, bool fwd_bwd)
 {
   Interval y_temp = y;
   bool tube_contracted, y_contracted, t_contracted, bisection_required;
@@ -311,7 +311,7 @@ bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, Interval& t, bo
   return tube_contracted | t_contracted;
 }
 
-bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, const Interval& t, bool fwd_bwd)
+bool Tube::ctcObs(const Tube& derivative_tube, Interval& y, const Interval& t, bool fwd_bwd)
 {
   Interval t_temp = t;
   bool tube_contracted, y_contracted, t_contracted, bisection_required;
@@ -319,7 +319,7 @@ bool Tube::ctcIn(const Tube& derivative_tube, Interval& y, const Interval& t, bo
   return tube_contracted | y_contracted;
 }
 
-bool Tube::ctcIn(const Tube& derivative_tube, const Interval& y, const Interval& t, bool fwd_bwd)
+bool Tube::ctcObs(const Tube& derivative_tube, const Interval& y, const Interval& t, bool fwd_bwd)
 {
   Interval y_temp = y;
   Interval t_temp = t;

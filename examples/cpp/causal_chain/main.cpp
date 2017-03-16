@@ -51,9 +51,9 @@ int main(int argc, char *argv[])
 
     /* =========== BACKWARD PROPAGATION =========== */
 
-      theta.ctcIn(u, Interval(-2.36,-2.32), 14.);
-      x.ctcIn(xdot, Interval(53.9,55.9), 14.);
-      y.ctcIn(ydot, Interval(6.9,8.9), 14.);
+      theta.ctcObs(u, Interval(-2.36,-2.32), 14.);
+      x.ctcObs(xdot, Interval(53.9,55.9), 14.);
+      y.ctcObs(ydot, Interval(6.9,8.9), 14.);
 
     /* =========== CONSTRAINT NETWORK =========== */
 
