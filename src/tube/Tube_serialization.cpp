@@ -101,7 +101,7 @@ void deserializeInterval(ifstream& binFile, Interval& intv)
   Tube binary files structure (VERSION 1)
     - minimal storage
     - format: [char_version_number]
-              [int_slices_number]
+              [double_dt_spec]
               [Interval_domain]
               [Interval_slice1]
               [Interval_slice2]
@@ -141,15 +141,15 @@ bool Tube::serialize(const string& binary_file_name, const map<double,double>& r
   char version = CURRENT_VERSION_NUMBER;
   binFile.write((const char*)&version, sizeof(char));
 
-  // Slices number
-  int slices_number = size();
-  binFile.write((const char*)&slices_number, sizeof(int));
+  // Timestep
+  double dt_specs = m_dt_specifications;
+  binFile.write((const char*)&dt_specs, sizeof(double));
 
   // Domain
   serializeInterval(binFile, domain());
 
   // Slices
-  for(int i = 0 ; i < slices_number ; i++)
+  for(int i = 0 ; i < size() ; i++)
     serializeInterval(binFile, (*this)[i]);
 
   // Optional real values
@@ -180,17 +180,17 @@ void Tube::deserialize(const string& binary_file_name, map<double,double>& real_
 
   if(version_number == 1)
   {
-    // Slices number
-    int slices_number;
-    binFile.read((char*)&slices_number, sizeof(int));
+    // Timestep
+    double dt_specs;
+    binFile.read((char*)&dt_specs, sizeof(double));
 
     // Domain
     Interval domain;
     deserializeInterval(binFile, domain);
-    createFromSpecifications(domain, domain.diam() / slices_number);
+    createFromSpecifications(domain, dt_specs);
 
     // Slices
-    for(int i = 0 ; i < slices_number ; i++)
+    for(int i = 0 ; i < size() ; i++)
     {
       Interval slice_value;
       deserializeInterval(binFile, slice_value);

@@ -765,6 +765,7 @@ class Tube
 
       // Tube attributes ('mutable' required: values may be updated from const methods)
       mutable double m_volume;
+      mutable double m_dt_specifications;
       mutable ibex::Interval m_intv_y;
       mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
       mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;

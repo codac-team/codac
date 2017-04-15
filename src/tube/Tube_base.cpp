@@ -64,6 +64,8 @@ Tube::Tube(const vector<Interval>& vector_dt, const Interval& default_value)
 
 void Tube::createFromSpecifications(const Interval& intv_t, double time_step, const Interval& default_value)
 {
+  m_dt_specifications = time_step;
+
   if(time_step > 0.)
   {
     double lb, ub = intv_t.lb();
@@ -149,6 +151,7 @@ Tube& Tube::operator=(const Tube& tu)
   m_intv_y = tu.image();
   m_slices_number = tu.size();
   m_enclosed_bounds = tu.eval();
+  m_dt_specifications = tu.m_dt_specifications;
 
   if(tu.isSlice())
   {
@@ -190,6 +193,7 @@ double Tube::dt() const
 {
   // All timesteps are identical in the tree
   return domain(0).diam();
+  // Note: m_dt_specifications is kept for serialization purposes
 }
 
 double Tube::volume() const
