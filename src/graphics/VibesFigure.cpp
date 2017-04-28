@@ -36,9 +36,9 @@ void VibesFigure::setProperties(int x, int y, int width, int height)
                         "height", m_height));
 }
 
-void VibesFigure::saveSVG(const string& suffix) const
+void VibesFigure::saveImage(const string& suffix, const string& extension) const
 {
-  vibes::saveImage(m_name + suffix + ".svg", m_name);
+  vibes::saveImage(m_name + suffix + extension, m_name);
 }
 
 double VibesFigure::x() const
