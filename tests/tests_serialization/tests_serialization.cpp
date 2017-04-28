@@ -24,21 +24,38 @@ bool testSerialization(const Tube& tube1)
 {
   string filename = "test_serialization.tube";
 
-  map<double,double> map_test1, map_test2;
+  map<double,double> map_test1a, map_test1b, map_test2a, map_test2b;
 
   for(int i = 0 ; i < tube1.size() ; i++)
     if(!tube1[i].is_unbounded() && tube1[i] != Interval::EMPTY_SET)
-      map_test1[tube1.domain(i).mid()] = tube1[i].mid();
+      map_test1a[tube1.domain(i).mid()] = tube1[i].mid();
 
-  tube1.serialize(filename, map_test1); // serialization
-  Tube tube2(filename, map_test2); // deserialization
+  for(int i = 0 ; i < tube1.size() ; i++)
+    if(!tube1[i].is_unbounded() && tube1[i] != Interval::EMPTY_SET)
+      map_test1b[tube1.domain(i).mid()] = 42.;
+
+  vector<map<double,double> > v_maps;
+
+  v_maps.push_back(map_test1a);
+  v_maps.push_back(map_test1b);
+  tube1.serialize(filename, v_maps); // serialization
+
+  v_maps.clear();
+  Tube tube2(filename, v_maps); // deserialization
   remove(filename.c_str());
 
   bool equality = tube1 == tube2;
 
+  if(v_maps.size() != 2)
+    return false;
+
+  map_test2a = v_maps[0];
+  map_test2b = v_maps[1];
   typename map<double,double>::const_iterator it;
-  for(it = map_test2.begin(); it != map_test2.end(); it++)
-    equality &= map_test1[it->first] == it->second;
+  for(it = map_test2a.begin(); it != map_test2a.end(); it++)
+    equality &= map_test1a[it->first] == it->second;
+  for(it = map_test2b.begin(); it != map_test2b.end(); it++)
+    equality &= map_test1b[it->first] == it->second;
 
   return equality;
 }

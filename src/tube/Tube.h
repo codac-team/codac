@@ -89,6 +89,7 @@ class Tube
          */
         Tube(const std::string& binary_file_name);
         Tube(const std::string& binary_file_name, std::map<double,double> &real_values);
+        Tube(const std::string& binary_file_name, std::vector<std::map<double,double> > &v_real_values);
 
         /**
          * \brief Assign this Tube to tu.
@@ -586,6 +587,7 @@ class Tube
          */
         bool serialize(const std::string& binary_file_name = "x.tube") const;
         bool serialize(const std::string& binary_file_name, const std::map<double,double>& real_values) const;
+        bool serialize(const std::string& binary_file_name, const std::vector<std::map<double,double> >& v_real_values) const;
 
 
   protected:
@@ -755,6 +757,7 @@ class Tube
      * \param real_values an optional map to get map<double,double> values possibly stored in the file
      */
     void deserialize(const std::string& binary_file_name, std::map<double,double>& real_values);
+    void deserialize(const std::string& binary_file_name, std::vector<std::map<double,double> >& v_real_values);
 
     /** Class variables **/
 

@@ -124,6 +124,11 @@ Tube::Tube(const string& binary_file_name, map<double,double> &real_values)
   deserialize(binary_file_name, real_values);
 }
 
+Tube::Tube(const string& binary_file_name, vector<map<double,double> > &v_real_values)
+{
+  deserialize(binary_file_name, v_real_values);
+}
+
 bool Tube::serialize(const string& binary_file_name) const
 {
   map<double,double> void_real_values;
@@ -131,6 +136,13 @@ bool Tube::serialize(const string& binary_file_name) const
 }
 
 bool Tube::serialize(const string& binary_file_name, const map<double,double>& real_values) const
+{
+  vector<map<double,double> > v_real_values;
+  v_real_values.push_back(real_values);
+  return serialize(binary_file_name, v_real_values);
+}
+
+bool Tube::serialize(const string& binary_file_name, const vector<map<double,double> >& v_real_values) const
 {
   ofstream binFile(binary_file_name.c_str(), ios::out | ios::binary);
 
@@ -153,14 +165,20 @@ bool Tube::serialize(const string& binary_file_name, const map<double,double>& r
     serializeInterval(binFile, (*this)[i]);
 
   // Optional real values
-  int number_real_values = real_values.size();
-  binFile.write((const char*)&number_real_values, sizeof(int));
-  typename map<double,double>::const_iterator it;
-  for(it = real_values.begin(); it != real_values.end(); it++)
+  int number_maps = v_real_values.size();
+  binFile.write((const char*)&number_maps, sizeof(int));
+
+  for(int i = 0 ; i < v_real_values.size() ; i++)
   {
-    double real_t = it->first, real_y = it->second;
-    binFile.write((const char*)&real_t, sizeof(double));
-    binFile.write((const char*)&real_y, sizeof(double));
+    int number_real_values = v_real_values[i].size();
+    binFile.write((const char*)&number_real_values, sizeof(int));
+    typename map<double,double>::const_iterator it;
+    for(it = v_real_values[i].begin(); it != v_real_values[i].end(); it++)
+    {
+      double real_t = it->first, real_y = it->second;
+      binFile.write((const char*)&real_t, sizeof(double));
+      binFile.write((const char*)&real_y, sizeof(double));
+    }
   }
 
   binFile.close();
@@ -168,6 +186,13 @@ bool Tube::serialize(const string& binary_file_name, const map<double,double>& r
 }
 
 void Tube::deserialize(const string& binary_file_name, map<double,double>& real_values)
+{
+  vector<map<double,double> > v_real_values;
+  deserialize(binary_file_name, v_real_values);
+  real_values = v_real_values[0];
+}
+
+void Tube::deserialize(const string& binary_file_name, vector<map<double,double> >& v_real_values)
 {
   ifstream binFile(binary_file_name.c_str(), ios::in | ios::binary);
 
@@ -198,15 +223,23 @@ void Tube::deserialize(const string& binary_file_name, map<double,double>& real_
     }
 
     // Optional real values
-    int number_real_values;
-    binFile.read((char*)&number_real_values, sizeof(int));
-
-    for(int i = 0 ; i < number_real_values ; i++)
+    int number_maps;
+    binFile.read((char*)&number_maps, sizeof(int));
+    for(int j = 0 ; j < number_maps ; j++)
     {
-      double real_t, real_y;
-      binFile.read((char*)&real_t, sizeof(double));
-      binFile.read((char*)&real_y, sizeof(double));
-      real_values[real_t] = real_y;
+      map<double,double> real_values;
+      int number_real_values;
+      binFile.read((char*)&number_real_values, sizeof(int));
+
+      for(int i = 0 ; i < number_real_values ; i++)
+      {
+        double real_t, real_y;
+        binFile.read((char*)&real_t, sizeof(double));
+        binFile.read((char*)&real_y, sizeof(double));
+        real_values[real_t] = real_y;
+      }
+
+      v_real_values.push_back(real_values);
     }
   }
 
