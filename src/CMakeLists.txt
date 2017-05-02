@@ -14,3 +14,4 @@
 
   add_subdirectory(tube)
   add_subdirectory(graphics)
+  add_subdirectory(tools)

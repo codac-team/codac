@@ -63,13 +63,14 @@ class VibesFigure_Tube : public VibesFigure
     void show(int slices_limit, bool update_background = true) const;
 
     /**
-     * \brief Display scalar values on top of the tube.
+     * \brief Display scalar values over the tube.
      *
      * \param map_scalar_values a map of the form [t](y) representing a trajectory
      * \param color line's color
-     * \param points_size size (in map value) of the points given by map_scalar_values. If 0, a lien is drawn, only points otherwise.
+     * \param points_size size (in map value) of the points given by map_scalar_values. If 0, a line is drawn, only points otherwise.
      */
     void showScalarValues(const std::map<double,double>& map_scalar_values, const std::string& color = "red", double points_size = 0.) const;
+
 
   protected:
 
@@ -93,7 +94,9 @@ class VibesFigure_Tube : public VibesFigure
      */
     void computePolygonEnvelope(const Tube& tube, std::vector<double>& v_x, std::vector<double>& v_y) const;
 
+
   protected:
+
     Tube *m_tube;
     std::vector<std::map<double,double> > *m_true_values;
     mutable Tube *m_tube_copy;
@@ -105,15 +108,15 @@ class VibesFigure_Tube : public VibesFigure
  * \brief A fast function to display a tube
  *
  * Instantiate dynamically a new VibesFigure_Tube into a map if the
- * corresponding key do not exist yet.
+ * corresponding key does not exist yet.
  *
  * Note: the values of the map has to be deleted at the end.
  *
- * \param map_graphics a map referencing to figure pointer to a tube pointer key
+ * \param map_graphics a map referencing figure pointers by a tube pointer key
  * \param tube a pointer to the tube to be displayed
  * \param figure_name a reference to the figure that will be displayed in the window's title
- * \param x x-position
- * \param y y-position
+ * \param x x-position (0 by default)
+ * \param y y-position (0 by default)
  */
 void displayTube(std::map<Tube*,VibesFigure_Tube*> &map_graphics, Tube *tube, const std::string& name = "", int x = 0, int y = 0);
 

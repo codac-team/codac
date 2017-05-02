@@ -72,8 +72,8 @@ class VibesFigure
      *
      * \param x x-position
      * \param y y-position
-     * \param width width value
-     * \param height height value
+     * \param width width value (px)
+     * \param height height value (px)
      */
     void setProperties(int x, int y, int width, int height);
 
@@ -83,7 +83,7 @@ class VibesFigure
      * A file named {figure_name}{suffix}.svg is created in the current directory.
      *
      * \param suffix optional part name that can be added to figure_name, empty by default
-     * \param extension optional part to specify image type
+     * \param extension optional part to specify image type, ".svg" by default
      */
     void saveImage(const std::string& suffix = "", const std::string& extension = ".svg") const;
 
@@ -106,7 +106,9 @@ class VibesFigure
      */
     static std::string rgb2hex(int r, int g, int b, int alpha = -1, const char* prefix = "#");
 
+
   protected:
+
     mutable std::string m_name;
     double m_x, m_y, m_width, m_height;
 };

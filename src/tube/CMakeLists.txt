@@ -26,7 +26,7 @@
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})
 
   add_library(tube-core ${SRC})
-  target_link_libraries(tube-core ${LIBS})
+  target_link_libraries(tube-core ${LIBS} tube-tools)
 
   install(FILES ${HEADERS} DESTINATION "include/tube-lib")
   install(TARGETS tube-core DESTINATION lib)
