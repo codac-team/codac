@@ -23,17 +23,17 @@
 using namespace std;
 using namespace ibex;
 
-Tube::Tube(const Interval& intv_t, double time_step, const Interval& default_value)
+Tube::Tube(const Interval& domain_, double timestep, const Interval& default_value)
 {
-  createFromSpecifications(intv_t, time_step, default_value);
+  createFromSpecifications(domain_, timestep, default_value);
 }
 
-Tube::Tube(const Interval& intv_t, double time_step, const Function& fmin, const Function& fmax)
+Tube::Tube(const Interval& domain_, double timestep, const Function& fmin, const Function& fmax)
 {
   if(fmin.nb_var() > 1 || fmax.nb_var() > 1)
     throw TubeException("Tube constructor", "too many variables in function definition");
 
-  createFromSpecifications(intv_t, time_step);
+  createFromSpecifications(domain_, timestep);
   for(int i = 0 ; i < size() ; i++)
   {
     IntervalVector dom(1);
@@ -42,13 +42,13 @@ Tube::Tube(const Interval& intv_t, double time_step, const Function& fmin, const
   }
 }
 
-Tube::Tube(const Interval& intv_t, double time_step, const Function& f, const Interval& thickness)
+Tube::Tube(const Interval& domain_, double timestep, const Function& f, const Interval& thickness)
 {
   if(f.nb_var() > 1)
     throw TubeException("Tube constructor", "too many variables in function definition");
 
   Interval tube_thickness = thickness == Interval::EMPTY_SET ? 0. : thickness; // default value: [0.]
-  createFromSpecifications(intv_t, time_step);
+  createFromSpecifications(domain_, timestep);
   for(int i = 0 ; i < size() ; i++)
   {
     IntervalVector dom(1);
@@ -62,20 +62,20 @@ Tube::Tube(const vector<Interval>& vector_dt, const Interval& default_value)
   createFromSlicesVector(vector_dt, default_value);
 }
 
-void Tube::createFromSpecifications(const Interval& intv_t, double time_step, const Interval& default_value)
+void Tube::createFromSpecifications(const Interval& domain_, double timestep, const Interval& default_value)
 {
-  m_dt_specifications = time_step;
+  m_dt_specifications = timestep;
 
-  if(time_step > 0.)
+  if(timestep > 0.)
   {
-    double lb, ub = intv_t.lb();
+    double lb, ub = domain_.lb();
     vector<Interval> vector_dt; // a vector of slices is created only once
     do
     {
       lb = ub; // we guarantee all slices are adjacent
-      ub = lb + time_step;
+      ub = lb + timestep;
       vector_dt.push_back(Interval(lb, ub));
-    } while(ub < intv_t.ub());
+    } while(ub < domain_.ub());
 
     createFromSlicesVector(vector_dt, default_value);
   }
@@ -86,8 +86,8 @@ void Tube::createFromSpecifications(const Interval& intv_t, double time_step, co
 
 void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Interval& default_value)
 {
-  m_intv_t = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
-  m_intv_y = default_value;
+  m_domain = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
+  m_image = default_value;
   m_slices_number = vector_dt.size();
   m_tree_computation_needed = true;
 
@@ -147,8 +147,8 @@ Tube& Tube::operator=(const Tube& tu)
   if(m_second_subtube != NULL)
     delete m_second_subtube;
 
-  m_intv_t = tu.domain();
-  m_intv_y = tu.image();
+  m_domain = tu.domain();
+  m_image = tu.image();
   m_slices_number = tu.size();
   m_enclosed_bounds = tu.eval();
   m_dt_specifications = tu.m_dt_specifications;
@@ -262,7 +262,7 @@ int Tube::input2index(double t) const
 {
   checkDomain(*this, t);
 
-  if(t == m_intv_t.ub())
+  if(t == m_domain.ub())
     return m_slices_number - 1;
 
   if(isSlice())
@@ -282,7 +282,7 @@ double Tube::index2input(int index) const
 
 const Interval& Tube::domain() const
 {
-  return m_intv_t;
+  return m_domain;
 }
 
 const Interval& Tube::domain(int index) const
@@ -318,19 +318,19 @@ const Interval& Tube::operator[](int index) const
 {
   // Write access is not allowed for this operator:
   // a further call to computeTree() is needed when values change,
-  // this call cannot be garanteed with a direct access to m_intv_y
+  // this call cannot be garanteed with a direct access to m_image
   // For write access: use set()
-  return getSlice(index)->m_intv_y;
+  return getSlice(index)->m_image;
 }
 
 Interval Tube::operator[](double t) const
 {
   // Write access is not allowed for this operator:
   // a further call to computeTree() is needed when values change,
-  // this call cannot be garanteed with a direct access to m_intv_y
+  // this call cannot be garanteed with a direct access to m_image
   // For write access: use set()
   int index = input2index(t);
-  Interval intv_t = getSlice(index)->m_intv_t;
+  Interval intv_t = getSlice(index)->m_domain;
   Interval intv_y = (*this)[index];
   if(t == intv_t.lb() && index > 0) // on the boundary, between two slices
     return (*this)[index - 1] & intv_y;
@@ -341,23 +341,23 @@ Interval Tube::operator[](const ibex::Interval& intv_t) const
 {
   // Write access is not allowed for this operator:
   // a further call to computeTree() is needed when values change,
-  // this call cannot be garanteed with a direct access to m_intv_y
+  // this call cannot be garanteed with a direct access to m_image
   // For write access: use set()
 
   if(intv_t.lb() == intv_t.ub())
     return (*this)[intv_t.lb()];
 
-  Interval intersection = m_intv_t & intv_t;
+  Interval intersection = m_domain & intv_t;
 
   if(intersection.is_empty())
     return Interval::EMPTY_SET;
 
-  else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+  else if(isSlice() || intv_t == m_domain || intv_t.is_unbounded() || intv_t.is_superset(m_domain))
   {
     if(m_tree_computation_needed)
       computeTree();
     
-    return m_intv_y;
+    return m_image;
   }
 
   else
@@ -385,7 +385,7 @@ const Interval& Tube::image() const
 {
   if(m_tree_computation_needed)
     computeTree();
-  return m_intv_y;
+  return m_image;
 }
 
 bool Tube::isInteriorSubset(const Tube& outer_tube) const
@@ -416,10 +416,10 @@ void Tube::set(const Interval& intv_y, double t)
 void Tube::set(const Interval& intv_y, const Interval& intv_t)
 {
   if(intv_t == ibex::Interval::ALL_REALS ||
-     (m_intv_t.intersects(intv_t) && m_intv_t.lb() != intv_t.ub() && m_intv_t.ub() != intv_t.lb()))
+     (m_domain.intersects(intv_t) && m_domain.lb() != intv_t.ub() && m_domain.ub() != intv_t.lb()))
   {
     if(isSlice())
-      m_intv_y = intv_y;
+      m_image = intv_y;
 
     else
     {
@@ -448,15 +448,15 @@ const Interval Tube::feed(const Interval& intv_y, double t)
   return (*this)[t];
 }
 
-void Tube::feed(const map<double,Interval>& map_intv_y)
+void Tube::feed(const map<double,Interval>& map_values)
 {
   double ta, tb;
   typename map<double,Interval>::const_iterator it_map;
-  it_map = map_intv_y.begin();
+  it_map = map_values.begin();
   tb = it_map->first;
   it_map++;
 
-  for( ; it_map != map_intv_y.end() ; it_map++)
+  for( ; it_map != map_values.end() ; it_map++)
   {
     ta = tb;
     tb = it_map->first;
@@ -477,10 +477,10 @@ void Tube::feed(const map<double,Interval>& map_intv_y)
         Interval slice_y = Interval::EMPTY_SET;
 
         ratio = (slice_t.lb() - ta) / (tb - ta);
-        slice_y |= (1 - ratio) * map_intv_y.at(ta) + ratio * map_intv_y.at(tb);
+        slice_y |= (1 - ratio) * map_values.at(ta) + ratio * map_values.at(tb);
 
         ratio = (slice_t.ub() - ta) / (tb - ta);
-        slice_y |= (1 - ratio) * map_intv_y.at(ta) + ratio * map_intv_y.at(tb);
+        slice_y |= (1 - ratio) * map_values.at(ta) + ratio * map_values.at(tb);
 
         feed(slice_y, i);
       }
@@ -488,26 +488,12 @@ void Tube::feed(const map<double,Interval>& map_intv_y)
   }
 }
 
-void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertainty)
+void Tube::feed(const map<double,double>& map_values, const Interval& intv_uncertainty)
 {
   map<double,Interval> new_map;
   typename map<double,double>::const_iterator it_map;
-  for(it_map = map_y.begin() ; it_map != map_y.end() ; it_map++)
+  for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
     new_map[it_map->first] = it_map->second + intv_uncertainty;
-  feed(new_map);
-}
-
-void Tube::feed(const map<double,double>& map_y, const Interval& intv_uncertainty, double y_no_uncertainties)
-{
-  map<double,Interval> new_map;
-  typename map<double,double>::const_iterator it_map;
-  for(it_map = map_y.begin() ; it_map != map_y.end() ; it_map++)
-  {
-    Interval intv_y = Interval(it_map->second);
-    if(it_map->second != y_no_uncertainties)
-      intv_y += intv_uncertainty;
-    new_map[it_map->first] = intv_y;
-  }
   feed(new_map);
 }
 
@@ -542,7 +528,7 @@ Interval Tube::invert(const Interval& intv_y, const Interval& intv_t) const
   else
   {
     if(isSlice())
-      return intv_t & m_intv_t;
+      return intv_t & m_domain;
 
     else
       return m_first_subtube->invert(intv_y, intv_t) | m_second_subtube->invert(intv_y, intv_t);
@@ -635,12 +621,12 @@ const pair<Interval,Interval> Tube::eval(const Interval& intv_t) const
   if(intv_t.lb() == intv_t.ub())
     return make_pair(Interval((*this)[intv_t.lb()].lb()), Interval((*this)[intv_t.lb()].ub()));
 
-  Interval intersection = m_intv_t & intv_t;
+  Interval intersection = m_domain & intv_t;
 
   if(intersection.is_empty())
     return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-  else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+  else if(isSlice() || intv_t == m_domain || intv_t.is_unbounded() || intv_t.is_superset(m_domain))
   {
     if(m_tree_computation_needed)
       computeTree();
@@ -737,7 +723,7 @@ void Tube::unionWith_localUpdate(const Tube *x)
   if(m_tree_computation_needed)
     computeTree();
   
-  m_intv_y |= x->image();
+  m_image |= x->image();
   pair<Interval,Interval> eb1 = eval();
   pair<Interval,Interval> eb2 = x->eval();
   m_enclosed_bounds = make_pair(Interval(min(eb1.first.lb(), eb2.first.lb()), min(eb1.first.ub(), eb2.first.ub())),
@@ -787,7 +773,7 @@ Tube& Tube::intersectWith(const Tube& x)
 bool Tube::intersect(const Interval& intv_y, int slice_index)
 {
   Tube *slice = getSlice(slice_index);
-  Interval old_y = slice->m_intv_y;
+  Interval old_y = slice->m_image;
   Interval new_y = old_y & intv_y;
   slice->set(new_y);
   return new_y.diam() < old_y.diam();
@@ -798,7 +784,7 @@ void Tube::intersectWith_localUpdate(const Tube *x)
   if(m_tree_computation_needed)
     computeTree();
   
-  m_intv_y &= x->image();
+  m_image &= x->image();
   // Enclosed bounds cannot be computed on this level.
   // Synthesis has to be done from the root (see update() in intersectWith).
   requestFutureTreeComputation();
@@ -823,7 +809,7 @@ void Tube::print(int precision) const
   {
     if(precision != 0)
       cout << setprecision(precision);
-    cout << "Tube: " << m_intv_t << " \t" << m_intv_y << endl;
+    cout << "Tube: " << m_domain << " \t" << m_image << endl;
   }
 
   else
@@ -876,18 +862,18 @@ void Tube::computeTree() const
   {
     if(isSlice())
     {
-      m_volume = m_intv_t.diam();
+      m_volume = m_domain.diam();
 
-      if(m_intv_y.is_empty()) // ibex::diam(EMPTY_SET) is not 0
+      if(m_image.is_empty()) // ibex::diam(EMPTY_SET) is not 0
         m_volume = 0.;
 
-      else if(m_intv_y.is_unbounded())
+      else if(m_image.is_unbounded())
         m_volume = INFINITY;
 
       else
-        m_volume *= m_intv_y.diam();
+        m_volume *= m_image.diam();
 
-      m_enclosed_bounds = make_pair(Interval(m_intv_y.lb()), Interval(m_intv_y.ub()));
+      m_enclosed_bounds = make_pair(Interval(m_image.lb()), Interval(m_image.ub()));
     }
 
     else
@@ -903,7 +889,7 @@ void Tube::computeTree() const
         }
       }
       
-      m_intv_y = m_first_subtube->image() | m_second_subtube->image();
+      m_image = m_first_subtube->image() | m_second_subtube->image();
       m_volume = m_first_subtube->volume() + m_second_subtube->volume();
 
       // Enclosed bounds

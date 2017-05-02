@@ -26,42 +26,42 @@ class Tube
     /** Basic methods **/
 
         /**
-         * \brief Create a tube over the domain defined by the interval intv_t.
+         * \brief Create a tube over the given domain with some timestep.
          *
          * Values are set by default to Interval::ALL_REALS.
          *
-         * \param intv_t tube's domain
-         * \param time_step tube's precision corresponding to slice's width
-         * \param default_value default y-values
+         * \param domain tube's domain
+         * \param timestep tube's precision corresponding to slices width
+         * \param default_value default image values
          */
-        Tube(const ibex::Interval& intv_t,
-             double time_step,
+        Tube(const ibex::Interval& domain,
+             double timestep,
              const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
         /**
-         * \brief Create a tube as an interval of two functions.
+         * \brief Create a tube from an interval of two functions.
          * 
          * Note: fmin <= fmax
          *
-         * \param intv_t tube's domain
-         * \param time_step tube's precision corresponding to slice's width
+         * \param domain tube's domain
+         * \param timestep tube's precision corresponding to slices width
          * \param fmin lower-bound ibex function
          * \param fmin upper-bound ibex function
          */
-        Tube(const ibex::Interval& intv_t,
-             double time_step,
+        Tube(const ibex::Interval& domain,
+             double timestep,
              const ibex::Function& fmin, const ibex::Function& fmax);
 
         /**
          * \brief Create a tube as an envelope of an uncertain functions.
          *
-         * \param intv_t tube's domain
-         * \param time_step tube's precision corresponding to slice's width
+         * \param domain tube's domain
+         * \param timestep tube's precision corresponding to slices width
          * \param f the ibex function to enclose
          * \param thickness the bounded uncertainty centered on f's values, [0.] by default
          */
-        Tube(const ibex::Interval& intv_t,
-             double time_step,
+        Tube(const ibex::Interval& domain,
+             double timestep,
              const ibex::Function& f, const ibex::Interval& thickness = ibex::Interval::EMPTY_SET);
 
         /**
@@ -74,25 +74,32 @@ class Tube
         /**
          * \brief Create a copy of the given tube tu with custom values.
          *
+         * Useful when working with tubes sharing the same structure.
+         *
          * \param tu the tube to be copied
-         * \param image_value custom y-values
+         * \param image custom image values, constant for all slices
          */
-        Tube(const Tube& tu, const ibex::Interval& image_value);
+        Tube(const Tube& tu, const ibex::Interval& image);
 
         /**
          * \brief Deserialize a binary file into a tube.
          *
          * The binary file has to be created with the reciprocal method Tube::serialize()
          *
+         * Maps of values can be stored within the same file. This feature allows to save trajectories
+         * that may be used for further computations. For instance, the real (but unknown) signal to
+         * approximate with the tube.
+         *
          * \param binary_file_name the file name to deserialize
          * \param real_values an optional map to get map<double,double> values possibly stored in the file
+         * \param v_real_values an optional vector of maps to get a set of map<double,double> values possibly stored in the file
          */
         Tube(const std::string& binary_file_name);
         Tube(const std::string& binary_file_name, std::map<double,double> &real_values);
         Tube(const std::string& binary_file_name, std::vector<std::map<double,double> > &v_real_values);
 
         /**
-         * \brief Assign this Tube to tu.
+         * \brief Assign this tube to tu.
          */
         Tube& operator=(const Tube& tu);
 
@@ -104,16 +111,16 @@ class Tube
         /**
          * \brief Return the volume of this tube.
          *
-         * The volume of a tube is defined by the surface enclosed by f- and f+.
+         * The volume of a tube is defined by the surface of the slices.
          *
-         * \return a double value, 0 if the tube is empty or if f- is equal to f+
+         * \return a double value, 0 if the tube is empty or if slices are thin
          */
         double volume() const;
 
         /**
          * \brief Return the distance between two tubes.
          *
-         * The distance is defined as the difference between the tubes volumes.
+         * The distance is defined as the difference between the tubes' volumes.
          *
          * \param tu the tube to be compared
          * \return a double value, 0 if the tubes are equal
@@ -123,12 +130,14 @@ class Tube
         /**
          * \brief Return tube's size: the number of slices defining the tube.
          *
-         * \return an integer representing the size
+         * \return an integer: slices number
          */
         int size() const;
 
         /**
-         * \brief Return the width of a slice (i.e. tube's time step).
+         * \brief Return the width of a slice (i.e. tube's time-step).
+         *
+         * Note: each slice strictly share the same width.
          *
          * \return the width of a slice
          */
@@ -150,6 +159,7 @@ class Tube
 
         /**
          * \brief Test if the tube is discontinuous
+         *
          * (i.e. if one slice does not intersect with the previous one)
          *
          * \return true if the tube is discontinuous, false otherwise
@@ -158,7 +168,8 @@ class Tube
 
         /**
          * \brief Return the id of the slice containing the given input t.
-         * Returned index is such that getT(i).lb() <= t < getT(i).ub()
+         *
+         * Returned index 'i' is such that domain(i).lb() <= t < domain(i).ub()
          *
          * \param t the input
          * \return an identifier representing the slice in the current tube
@@ -167,7 +178,8 @@ class Tube
 
         /**
          * \brief Return an input value of the slice represented by the given index.
-         * By default, returned value is getT(index).lb()
+         *
+         * Note: returned value is domain(index).lb()
          *
          * \param index slice's id, between 0 and (size - 1)
          * \return the lower bound of the slice's domain
@@ -182,7 +194,7 @@ class Tube
         const ibex::Interval& domain() const;
 
         /**
-         * \brief Return the domain of the slice represented by index.
+         * \brief Return the domain of the slice identified by index.
          *
          * \param index slice's id, between 0 and (size - 1)
          * \return an interval [t0,tf]
@@ -198,7 +210,7 @@ class Tube
         ibex::Interval domain(double t) const;
 
         /**
-         * \brief Return the slice box [domain]x[yvalue] represented by index.
+         * \brief Return the slice box [domain]x[image] represented by index.
          *
          * \param index slice's id, between 0 and (size - 1)
          * \return an IntervalVector [t0,tf]x[ylb,yub]
@@ -214,26 +226,26 @@ class Tube
         bool operator==(const Tube& tu) const;
 
         /**
-         * \brief Return the y-value (image) of the i^th slice, refered by index.
+         * \brief Return the image (y-value) of the i^th slice, refered by index.
          *
          * \param index slice's id, between 0 and (size - 1)
-         * \return the correspondingy-value
+         * \return the corresponding image
          */
         const ibex::Interval& operator[](int index) const;
 
         /**
-         * \brief Return the y-value (image) for the given time, refered by t.
+         * \brief Return the image (y-value) for the given time, refered by t.
          *
          * \param t the given time
-         * \return the corresponding y-value
+         * \return the corresponding image
          */
         ibex::Interval operator[](double t) const;
 
         /**
-         * \brief Return the y-value (image) for the given bounded time, refered by intv_t.
+         * \brief Return the image (y-value) for the given bounded time, refered by intv_t.
          *
          * \param intv_t the given bounded time
-         * \return the corresponding y-value
+         * \return the corresponding image
          */
         ibex::Interval operator[](const ibex::Interval& intv_t) const;
 
@@ -256,46 +268,52 @@ class Tube
         bool isInteriorSubset(const Tube& outer_tube) const;
 
         /**
-         * \brief Set the y-value intv_y for the slice refered by index.
+         * \brief Set the image intv_y for the slice refered by index.
          *
-         * \param intv_y the y-value to be set
+         * \param intv_y the image to be set
          * \param index slice's id, between 0 and (size - 1)
          */
         void set(const ibex::Interval& intv_y, int index);
 
         /**
-         * \brief Set the y-value intv_y for the slice containing the given input t.
+         * \brief Set the image intv_y for the slice containing the given input t.
          *
-         * \param intv_y the y-value to be set
+         * Note: this operation will affect the whole slice. For a guaranteed
+         * contraction at t, see the ctcObs() method.
+         *
+         * \param intv_y the image to be set
          * \param t the input
          */
         void set(const ibex::Interval& intv_y, double t);
 
         /**
-         * \brief Set the y-value intv_y over the domain represented by intv_t.
+         * \brief Set the image intv_y over the domain represented by intv_t.
          *
-         * \param intv_y the y-value to be set
+         * Note: this operation will affect the whole domain. For a guaranteed
+         * contraction over intv_t, see the ctcObs() method.
+         *
+         * \param intv_y the image to be set
          * \param intv_t the interval input, Interval::ALL_REALS by default
          */
         void set(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
 
         /**
-         * \brief Add the y-value intv_y for the slice refered by index.
+         * \brief Add the image intv_y for the slice refered by index.
          *
          * The new y-value is add without destroying previous data: a union is made for each slice.
          *
-         * \param intv_y the y-value to be added
+         * \param intv_y the image to be added
          * \param index slice's id, between 0 and (size - 1)
          * \return the resulted union for the corresponding slice
          */
         const ibex::Interval feed(const ibex::Interval& intv_y, int index);
 
         /**
-         * \brief Add the y-value intv_y for the slice containing the given input t.
+         * \brief Add the image intv_y for the slice containing the given input t.
          *
          * The new y-value is add without destroying previous data: a union is made for each slice.
          *
-         * \param intv_y the y-value to be added
+         * \param intv_y the image to be added
          * \param t the input
          * \return the resulted union for the corresponding time
          */
@@ -304,26 +322,17 @@ class Tube
         /**
          * \brief Add y-values from a map.
          *
-         * \param map_intv_y a map of [y-value] referenced by time
+         * \param map_values a map of [y-value] referenced by time
          */
-        void feed(const std::map<double,ibex::Interval>& map_intv_y);
+        void feed(const std::map<double,ibex::Interval>& map_values);
 
         /**
          * \brief Add y-values from a map.
          *
-         * \param map_intv_y a map of y-values referenced by time
-         * \param intv_uncertainty enclosed uncertainty that will be added to each value of the map
+         * \param map_values a map of y-values referenced by time
+         * \param intv_uncertainty bounded uncertainty that will be added to each value of the map
          */
-        void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty);
-
-        /**
-         * \brief Add y-values from a map.
-         *
-         * \param map_intv_y a map of y-values referenced by time
-         * \param intv_uncertainty enclosed uncertainty that will be added to each value of the map
-         * \param y_no_uncertainties enclosed uncertainty will not be added for this given value
-         */
-        void feed(const std::map<double,double>& map_y, const ibex::Interval& intv_uncertainty, double y_no_uncertainties);
+        void feed(const std::map<double,double>& map_values, const ibex::Interval& intv_uncertainty);
 
         /**
          * \brief Add [-rad,+rad] over each slice.
@@ -334,18 +343,19 @@ class Tube
         Tube& inflate(double rad);
 
         /**
-         * \brief Return enclosed bounds of tube's y-values over the domain represented by intv_t.
+         * \brief Return enclosed bounds of tube's images over the domain represented by intv_t.
          *
          * \param intv_t the interval input, Interval::ALL_REALS by default
-         * \return a pair of intervals representing all tube's minima and maxima: [[lb_min, lb_max], [ub_min, ub_max]]
+         * \return a pair of intervals enclosing all tube's minima and maxima: [[lb_min, lb_max], [ub_min, ub_max]]
          */
         const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
         /**
          * \brief Perform set-inversion on this.
          *
-         * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
-         * Here the returned value intv_t corresponds to the union of the solutions.
+         * The set-inversion of this tube consists in determining the set intv_t such that intv_t = [f]^-1(intv_y).
+         * The solution may be made of several subsets. 
+         * Here, the returned value intv_t corresponds to the union of the solutions subsets.
          *
          * \param intv_y the y-value to invert
          * \param intv_t the optional t domain to consider
@@ -356,12 +366,12 @@ class Tube
         /**
          * \brief Perform precise set-inversion on this.
          *
-         * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
-         * Here the returned value v_intv_t corresponds to detailed solutions.
-         * Vector v_intv_t is cleared before computation.
+         * The set-inversion of this tube consists in determining the set intv_t such that intv_t = [f]^-1(intv_y).
+         * The solution may be made of several subsets. 
+         * Here, the solutions subsets are stored within v_intv_t.
          *
          * \param intv_y the y-value to invert
-         * \param v_intv_t a vector containing, at the end, each solutions of the set-inversion
+         * \param v_intv_t a vector containing solutions subsets
          * \param intv_t the optional t domain to consider
          */
         void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
@@ -395,26 +405,6 @@ class Tube
          * \return a reference to this
          */
         Tube& operator&=(const Tube& x);
-
-        /**
-         * \brief Set this Tube to the hull of itself and another: tube x.
-         *
-         * Note: both tubes have to be similar (same domain, same number of slices).
-         *
-         * \param x the other tube
-         * \return a reference to this
-         */
-        Tube& unionWith(const Tube& x);
-
-        /**
-         * \brief Set this Tube to the intersection of itself and another: tube x.
-         *
-         * Note: both tubes have to be similar (same domain, same number of slices).
-         *
-         * \param x the other tube
-         * \return a reference to this
-         */
-        Tube& intersectWith(const Tube& x);
 
         /**
          * \brief Perform an intersection over a slice refered by index.
@@ -610,10 +600,10 @@ class Tube
      * Values are set by default to Interval::ALL_REALS.
      *
      * \param intv_t tube's domain
-     * \param time_step tube's precision corresponding to slice's width
+     * \param timestep tube's precision corresponding to slices width
      * \param default_value default y-values
      */
-    void createFromSpecifications(const ibex::Interval& intv_t, double time_step, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
+    void createFromSpecifications(const ibex::Interval& intv_t, double timestep, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
     /**
      * \brief Create a tube over a domain defined by a vector of intervals.
@@ -657,6 +647,26 @@ class Tube
      */
     void getTubeNodes(std::vector<Tube*> &v_nodes);
     void getTubeNodes(std::vector<const Tube*> &v_nodes) const;
+
+    /**
+     * \brief Set this Tube to the hull of itself and another: tube x.
+     *
+     * Note: both tubes have to be similar (same domain, same number of slices).
+     *
+     * \param x the other tube
+     * \return a reference to this
+     */
+    Tube& unionWith(const Tube& x);
+
+    /**
+     * \brief Set this Tube to the intersection of itself and another: tube x.
+     *
+     * Note: both tubes have to be similar (same domain, same number of slices).
+     *
+     * \param x the other tube
+     * \return a reference to this
+     */
+    Tube& intersectWith(const Tube& x);
 
     /**
      * \brief Perform the union on the considered node only.
@@ -763,13 +773,13 @@ class Tube
 
       // Tube structure (no mutable needs)
       int m_slices_number;
-      ibex::Interval m_intv_t;
+      ibex::Interval m_domain;
       Tube *m_first_subtube, *m_second_subtube;
 
       // Tube attributes ('mutable' required: values may be updated from const methods)
       mutable double m_volume;
       mutable double m_dt_specifications;
-      mutable ibex::Interval m_intv_y;
+      mutable ibex::Interval m_image;
       mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
       mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
       mutable bool m_tree_computation_needed;

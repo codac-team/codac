@@ -191,12 +191,12 @@ pair<Interval,Interval> Tube::getPartialPrimitiveValue(const Interval& intv_t) c
   if(intv_t.lb() == intv_t.ub())
     return make_pair(Interval((*this)[intv_t.lb()].lb()), Interval((*this)[intv_t.lb()].ub()));
 
-  Interval intersection = m_intv_t & intv_t;
+  Interval intersection = m_domain & intv_t;
 
   if(intersection.is_empty())
     return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-  else if(isSlice() || intv_t == m_intv_t || intv_t.is_unbounded() || intv_t.is_superset(m_intv_t))
+  else if(isSlice() || intv_t == m_domain || intv_t.is_unbounded() || intv_t.is_superset(m_domain))
     return m_partial_primitive; // pre-computed with computePartialPrimitive()
 
   else

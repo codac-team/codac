@@ -10,7 +10,7 @@ Functions called *contractors* are available to reduce these sets of trajectorie
 Computations stands on interval analysis and are, therefore, performed in a guaranteed way.
 Tubex stands on the [IBEX library](http://www.ibex-lib.org), itself relying on reliable numerical libraries such as [Filib](http://www2.math.uni-wuppertal.de/~xsc/software/filib.html).
 
-Note: a Python version [pyIbex](http://www.ensta-bretagne.fr/desrochers/pyibex) wrapping) is planned.
+Note: a Python version ([pyIbex](http://www.ensta-bretagne.fr/desrochers/pyibex) wrapping) is planned.
 
 
 ![Image of Tube](http://rawgit.com/SimonRohou/tubex-lib/master/doc/img/tube_slices.png)
