@@ -680,7 +680,7 @@ void Tube::getTubeNodes(vector<Tube*> &v_nodes)
   v_nodes.push_back(this);
 }
 
-Tube& Tube::unionWith(const Tube& x)
+Tube& Tube::operator |=(const Tube& x)
 {
   if(size() != x.size() || domain() != x.domain())
   {
@@ -732,7 +732,7 @@ void Tube::unionWith_localUpdate(const Tube *x)
   requestFuturePrimitiveComputation();
 }
 
-Tube& Tube::intersectWith(const Tube& x)
+Tube& Tube::operator &=(const Tube& x)
 {
   if(size() != x.size() || domain() != x.domain())
   {
@@ -788,16 +788,6 @@ void Tube::intersectWith_localUpdate(const Tube *x)
   // Enclosed bounds cannot be computed on this level.
   // Synthesis has to be done from the root (see update() in intersectWith).
   requestFutureTreeComputation();
-}
-
-Tube& Tube::operator &=(const Tube& x)
-{
-  return intersectWith(x);
-}
-
-Tube& Tube::operator |=(const Tube& x)
-{
-  return unionWith(x);
 }
 
 void Tube::print(int precision) const

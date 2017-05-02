@@ -649,26 +649,6 @@ class Tube
     void getTubeNodes(std::vector<const Tube*> &v_nodes) const;
 
     /**
-     * \brief Set this Tube to the hull of itself and another: tube x.
-     *
-     * Note: both tubes have to be similar (same domain, same number of slices).
-     *
-     * \param x the other tube
-     * \return a reference to this
-     */
-    Tube& unionWith(const Tube& x);
-
-    /**
-     * \brief Set this Tube to the intersection of itself and another: tube x.
-     *
-     * Note: both tubes have to be similar (same domain, same number of slices).
-     *
-     * \param x the other tube
-     * \return a reference to this
-     */
-    Tube& intersectWith(const Tube& x);
-
-    /**
      * \brief Perform the union on the considered node only.
      *
      * Parents of children nodes are not updated.
