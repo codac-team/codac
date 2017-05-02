@@ -28,7 +28,7 @@ class Tube
         /**
          * \brief Create a tube over the given domain with some timestep.
          *
-         * Values are set by default to Interval::ALL_REALS.
+         * Values are set by default to [-oo,oo].
          *
          * \param domain tube's domain
          * \param timestep tube's precision corresponding to slices width
@@ -293,7 +293,7 @@ class Tube
          * contraction over intv_t, see the ctcObs() method.
          *
          * \param intv_y the image to be set
-         * \param intv_t the interval input, Interval::ALL_REALS by default
+         * \param intv_t the interval input, [-oo,oo] by default
          */
         void set(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
 
@@ -345,7 +345,7 @@ class Tube
         /**
          * \brief Return enclosed bounds of tube's images over the domain represented by intv_t.
          *
-         * \param intv_t the interval input, Interval::ALL_REALS by default
+         * \param intv_t the interval input, [-oo,oo] by default
          * \return a pair of intervals enclosing all tube's minima and maxima: [[lb_min, lb_max], [ub_min, ub_max]]
          */
         const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
@@ -358,7 +358,7 @@ class Tube
          * Here, the returned value intv_t corresponds to the union of the solutions subsets.
          *
          * \param intv_y the y-value to invert
-         * \param intv_t the optional t domain to consider
+         * \param intv_t the optional t domain to consider, [-oo,oo] by default
          * \return the resulted union of the set-inversion
          */
         ibex::Interval invert(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
@@ -372,7 +372,7 @@ class Tube
          *
          * \param intv_y the y-value to invert
          * \param v_intv_t a vector containing solutions subsets
-         * \param intv_t the optional t domain to consider
+         * \param intv_t the optional t domain to consider, [-oo,oo] by default
          */
         void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
@@ -620,6 +620,7 @@ class Tube
          *
          * \param binary_file_name the name of the output binary file
          * \param real_values an optional map to store map<double,double> values in the file
+         * \param v_real_values an optional vector of maps to store a set of map<double,double> values in the file
          */
         bool serialize(const std::string& binary_file_name = "x.tube") const;
         bool serialize(const std::string& binary_file_name, const std::map<double,double>& real_values) const;
@@ -631,11 +632,11 @@ class Tube
     /**
      * \brief Create a tube over a domain defined by a vector of intervals.
      *
-     * Values are set by default to Interval::ALL_REALS.
-     * For now, all timesteps must be identical in the tree.
+     * Values are set by default to [-oo,oo].
+     * Note: for now, all timesteps must be identical in the tree.
      *
      * \param vector_dt an interval of slices domains
-     * \param default_value default y-values
+     * \param default_value default y-values ([-oo,oo] by default)
      */
     Tube(const std::vector<ibex::Interval>& vector_dt,
          const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
@@ -643,21 +644,21 @@ class Tube
     /**
      * \brief Create a tube based on the given parameters.
      *
-     * Values are set by default to Interval::ALL_REALS.
+     * Values are set by default to [-oo,oo].
      *
-     * \param intv_t tube's domain
+     * \param domain tube's domain
      * \param timestep tube's precision corresponding to slices width
-     * \param default_value default y-values
+     * \param default_value default tube's image ([-oo,oo] by default)
      */
-    void createFromSpecifications(const ibex::Interval& intv_t, double timestep, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
+    void createFromSpecifications(const ibex::Interval& domain, double timestep, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
     /**
      * \brief Create a tube over a domain defined by a vector of intervals.
      *
-     * Values are set by default to Interval::ALL_REALS.
+     * Values are set by default to [-oo,oo].
      *
      * \param vector_slices an interval of slices domains
-     * \param default_value default y-values
+     * \param default_value default tube's image
      */
     void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
@@ -744,7 +745,7 @@ class Tube
      * and stored into each node of the tree.
      * The computation can be done on demand with requestFuturePrimitiveComputation()
      *
-     * \input build_from_leafs true if the primitives have to be computed from the leafs
+     * \input build_from_leafs true if the primitives have to be computed from the leafs (false by default)
      */
     void computePartialPrimitive(bool build_from_leafs = false) const;
 
@@ -759,7 +760,7 @@ class Tube
     /**
      * \brief Return the precise and partial bounded-integral over the domain represented by [0,[t]] for f- and f+.
      *
-     * \param t the bounded upper bound of the domain, ibex::Interval::ALL_REALS by default
+     * \param t the bounded upper bound of the domain, [-oo,oo] by default
      * \return a pair of integrals <[s1,s2],[S1,S2]>
      *   [s1,s2] corresponds to the bounded integral of f- over [0,[t]]
      *   [S1,S2] corresponds to the bounded integral of f+ over [0,[t]]
@@ -769,10 +770,10 @@ class Tube
     /**
      * \brief Perform precise set-inversion on this.
      *
-     * The set-inversion of this tube consists in determining the set intv_t such that intv_t = f^-1(intv_y)
+     * The set-inversion of this tube consists in determining the set intv_t such that intv_t = [f]^-1(intv_y)
      * Here the returned value vector<intv_t> corresponds to detailed solutions.
      *
-     * \param intv_y the y-value to invert
+     * \param intv_y the image to invert
      * \param intv_t the optional t domain to consider
      * \param concatenate_results results may be adjacent, so a concatenation on vector's values can be requested
      * \return a vector containing each solutions of the set-inversion
@@ -791,6 +792,7 @@ class Tube
      *
      * \param binary_file_name the file name to deserialize
      * \param real_values an optional map to get map<double,double> values possibly stored in the file
+     * \param v_real_values an optional vector of maps to get sets of map<double,double> values possibly stored in the file
      */
     void deserialize(const std::string& binary_file_name, std::map<double,double>& real_values);
     void deserialize(const std::string& binary_file_name, std::vector<std::map<double,double> >& v_real_values);
