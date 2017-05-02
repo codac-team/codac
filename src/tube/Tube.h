@@ -462,7 +462,7 @@ class Tube
          * \param t the upper bound of the domain
          * \return an interval [i1,i2]
          */
-        ibex::Interval timeIntegration(double t) const;
+        ibex::Interval integral(double t) const;
 
         /**
          * \brief Return the precise bounded-integral over the domain represented by [0,[t]].
@@ -470,7 +470,7 @@ class Tube
          * \param t the bounded upper bound of the domain
          * \return an interval [i1,i2]
          */
-        ibex::Interval timeIntegration(const ibex::Interval& t) const;
+        ibex::Interval integral(const ibex::Interval& t) const;
 
         /**
          * \brief Return the precise and partial bounded-integral over the domain represented by [0,[t]] for f- and f+.
@@ -480,7 +480,7 @@ class Tube
          *   [s1,s2] corresponds to the bounded integral of f- over [0,[t]]
          *   [S1,S2] corresponds to the bounded integral of f+ over [0,[t]]
          */
-        std::pair<ibex::Interval,ibex::Interval> partialTimeIntegration(const ibex::Interval& t) const;
+        std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
 
         /**
          * \brief Return the precise bounded-integral over the domain represented by [[t1],[t2]].
@@ -489,7 +489,7 @@ class Tube
          * \param t2 the bounded upper bound of the domain
          * \return an interval [i1,i2]
          */
-        ibex::Interval timeIntegration(const ibex::Interval& t1, const ibex::Interval& t2) const;
+        ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
         /**
          * \brief Return the precise and partial bounded-integral over the domain represented by [[t1],[t2]] for f- and f+.
@@ -500,7 +500,7 @@ class Tube
          *   [s1,s2] corresponds to the bounded integral of f- over [[t1],[t2]]
          *   [S1,S2] corresponds to the bounded integral of f+ over [[t1],[t2]]
          */
-        std::pair<ibex::Interval,ibex::Interval> partialTimeIntegration(const ibex::Interval& t1, const ibex::Interval& t2) const;
+        std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
 
     /** Contractors **/

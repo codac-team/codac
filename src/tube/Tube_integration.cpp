@@ -27,27 +27,27 @@ Tube Tube::primitive(const Interval& initial_value) const
   return primitive;
 }
 
-Interval Tube::timeIntegration(double t) const
+Interval Tube::integral(double t) const
 {
-  return timeIntegration(Interval(t));
+  return integral(Interval(t));
 }
 
-Interval Tube::timeIntegration(const Interval& t) const
+Interval Tube::integral(const Interval& t) const
 {
-  pair<Interval,Interval> partial_ti = partialTimeIntegration(t);
+  pair<Interval,Interval> partial_ti = partialIntegral(t);
   return Interval(partial_ti.first.lb(), partial_ti.second.ub());
 }
 
-Interval Tube::timeIntegration(const Interval& t1, const Interval& t2) const
+Interval Tube::integral(const Interval& t1, const Interval& t2) const
 {
-  pair<Interval,Interval> integrale_t1 = partialTimeIntegration(t1);
-  pair<Interval,Interval> integrale_t2 = partialTimeIntegration(t2);
+  pair<Interval,Interval> integrale_t1 = partialIntegral(t1);
+  pair<Interval,Interval> integrale_t2 = partialIntegral(t2);
   double lb = (integrale_t2.first - integrale_t1.first).lb();
   double ub = (integrale_t2.second - integrale_t1.second).ub();
   return Interval(min(lb, ub), max(lb, ub));
 }
 
-pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t) const
+pair<Interval,Interval> Tube::partialIntegral(const Interval& t) const
 {
   if(m_primitive_computation_needed)
     computePartialPrimitive(false);
@@ -128,10 +128,10 @@ pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t) const
   return make_pair(integrale_lb, integrale_ub);
 }
 
-pair<Interval,Interval> Tube::partialTimeIntegration(const Interval& t1, const Interval& t2) const
+pair<Interval,Interval> Tube::partialIntegral(const Interval& t1, const Interval& t2) const
 {
-  pair<Interval,Interval> integrale_t1 = partialTimeIntegration(t1);
-  pair<Interval,Interval> integrale_t2 = partialTimeIntegration(t2);
+  pair<Interval,Interval> integrale_t1 = partialIntegral(t1);
+  pair<Interval,Interval> integrale_t2 = partialIntegral(t2);
   return make_pair((integrale_t2.first - integrale_t1.first),
                    (integrale_t2.second - integrale_t1.second));
 }

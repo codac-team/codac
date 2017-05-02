@@ -100,7 +100,7 @@ can be computed once, giving a primitive tube.
 
   Interval t1(1,2);
   Interval t2(8);
-  Interval integ = x.timeIntegration(t1,t2);
+  Interval integ = x.integral(t1,t2);
 
 Simple example
 --------------
