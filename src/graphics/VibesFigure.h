@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef VibesFigure_HEADER
-#define VibesFigure_HEADER
+#ifndef VIBESFIGURE_HEADER
+#define VIBESFIGURE_HEADER
 
 #include "vibes.h"
 #include <string>

@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef DomainTubeException_HEADER
-#define DomainTubeException_HEADER
+#ifndef DOMAINTUBEEXCEPTION_HEADER
+#define DOMAINTUBEEXCEPTION_HEADER
 
 #include <iostream>
 #include <exception>

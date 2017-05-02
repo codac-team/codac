@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef VibesFigureTube_HEADER
-#define VibesFigureTube_HEADER
+#ifndef VIBESFIGURETUBE_HEADER
+#define VIBESFIGURETUBE_HEADER
 
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"

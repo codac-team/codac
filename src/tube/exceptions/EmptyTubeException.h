@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef EmptyTubeException_HEADER
-#define EmptyTubeException_HEADER
+#ifndef EMPTYTUBEEXCEPTION_HEADER
+#define EMPTYTUBEEXCEPTION_HEADER
 
 #include <iostream>
 #include <exception>
