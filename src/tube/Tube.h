@@ -407,9 +407,9 @@ class Tube
         Tube& operator&=(const Tube& x);
 
         /**
-         * \brief Perform an intersection over a slice refered by index.
+         * \brief Perform an intersection over a slice refered by its index.
          *
-         * \param intv_y the y-value to intersect
+         * \param intv_y the image to intersect
          * \param index slice's id, between 0 and (size - 1)
          * \return true if a contraction has been done, false otherwise
          */
@@ -439,7 +439,7 @@ class Tube
     /** Integration computation **/
 
         /**
-         * \brief Return the primitive tube of this with initial condition.
+         * \brief Return the primitive tube of this, with custom initial condition.
          *
          * \param initial_value the initial condition for computation, [0.] by default
          * \return the primitive of this, defined over the same domain
@@ -496,16 +496,18 @@ class Tube
     /** Contractors **/
 
         /**
-         * \brief To contract tube in forward (from the past to the future).
+         * \brief Contract this in forward (from the past to the future)
+         * in order to be consistent with its derivative tube.
          *
          * \param derivative_tube the derivative of this
-         * \param initial_value an initial constraint to be considered
+         * \param initial_value an initial constraint to be considered ([-oo,oo] by default)
          * \return true if a contraction has been done, false otherwise
          */
         bool ctcFwd(const Tube& derivative_tube, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
 
         /**
-         * \brief To contract tube in backward (from the future to the past).
+         * \brief Contract this in backward (from the future to the past)
+         * in order to be consistent with its derivative tube.
          *
          * \param derivative_tube the derivative of this
          * \return true if a contraction has been done, false otherwise
@@ -513,16 +515,34 @@ class Tube
         bool ctcBwd(const Tube& derivative_tube);
 
         /**
-         * \brief To contract tube in forward/backward.
+         * \brief Contract this in forward/backward (both ways)
+         * in order to be consistent with its derivative tube.
          *
          * \param derivative_tube the derivative of this
-         * \param initial_value an initial constraint to be considered
+         * \param initial_value an initial constraint to be considered ([-oo,oo] by default)
          * \return true if a contraction has been done, false otherwise
          */
         bool ctcFwdBwd(const Tube& derivative_tube, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
 
         /**
-         * \brief To be defined...
+         * \brief Contract this and parameters from a given observation, such that y=x(t) with y\in[image], t\in[domain], x\in this
+         *
+         * The observation may be uncertain: [domain]x[image].
+         * Note: the derivative tube is required for such contraction.
+         *
+         * The contraction may be kept local (fwd_bwd=false) or leading to 
+         * a complete contraction of the tube over the whole domain (fwd_bwd=true).
+         * This parameter is useful for optimization purposes.
+         *
+         * \param derivative_tube the derivative of this
+         * \param t the domain containing the observation (may be contracted)
+         * \param y the interval image containing the observation (may be contracted)
+         * \param fwd_bwd a boolean allowing a propagation of the contraction over the whole domain
+         * \param tube_contracted a boolean, 'true' if a contraction happend for this 
+         * \param t_contracted a boolean, 'true' if a contraction happend for [domain]
+         * \param y_contracted a boolean, 'true' if a contraction happend for [image]
+         * \param bisection_required a boolean, 'true' if a bisection of [domain] should be considered to improve the contraction
+         * \return true if a contraction has been done, false otherwise
          */
         bool ctcObs(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
         bool ctcObs(const Tube& derivative_tube, ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
@@ -533,27 +553,53 @@ class Tube
                                 bool& bisection_required, bool fwd_bwd = true);
         
         /**
-         * \brief To be defined...
+         * \brief Contract this from a given non-observation, such that y\not=x(t) with y\in[image], t\in[domain], x\in this
+         *
+         * The non-observation may be uncertain: [domain]x[image].
+         *
+         * Note: DEPRECATED, this contractor will be removed.
+         *
+         * \param t the domain containing the non-observation
+         * \param y the interval image containing the non-observation
+         * \return true if a contraction has been done, false otherwise
          */
         bool ctcOut(const ibex::Interval& t, const ibex::Interval& y);
 
         /**
-         * \brief To be defined...
+         * \brief Contract parameters from the constraint x(t1)=x(t2), t1\in[t1], t2\in[t2], x\in this
+         *
+         * \param t1 the first domain
+         * \param t2 the second domain
+         * \return true if a contraction has been done, false otherwise
          */
         bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2) const;
 
         /**
-         * \brief To be defined...
+         * \brief Contract parameters from the constraint x(t1)=x(t2)=y, t1\in[t1], t2\in[t2], y\in[y], x\in this
+         *
+         * \param y image domain for y, may be contracted
+         * \param t1 the first domain, may be contracted
+         * \param t2 the second domain, may be contracted
+         * \return true if a contraction has been done, false otherwise
          */
         bool ctcIntertemporal(ibex::Interval& y, ibex::Interval& t1, ibex::Interval& t2) const;
-        
+
         /**
-         * \brief To be defined...
+         * \brief Contract this from the constraint x(t)=x(t+p), p\in[p], x\in this
+         *
+         * \param period the bounded periodicity of the signal enclosed by the tube
+         * \return true if a contraction has been done, false otherwise
          */
         bool ctcPeriodic(const ibex::Interval& period);
         
         /**
-         * \brief To be defined...
+         * \brief Contract tubes given algebraic constraints.
+         *
+         * Constraints are defined thanks to an ibex function that has to vanish.
+         * 
+         * \param x* the tubes (variables) involved in the constraints
+         * \param f the ibex function defining the constraints, the variables of which being the tubes
+         * \return true if a contraction has been done, false otherwise
          */
         static bool contract(Tube& x1, Tube& x2, const ibex::Function& f);
         static bool contract(Tube& x1, Tube& x2, Tube& x3, const ibex::Function& f);
