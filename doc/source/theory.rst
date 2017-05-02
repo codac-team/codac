@@ -6,17 +6,6 @@
 Tubes: basics
 =============
 
-Introduction
--------------
-
-*Tubex* is a library providing tools to handle sets of trajectories. 
-Computations stands on interval analysis and are, therefore, performed in a guaranteed way.
-Functions called *contractors* are available to reduce this sets given several constraints.
-Hence, the tubes are well suited to deal with non-linear dynamical systems depicted by differential constraints.
-
-A Python version (`pyIbex <http://www.ensta-bretagne.fr/desrochers/pyibex/>`_ wrapping) is planned.
-
-
 The following is an extract from the paper `Guaranteed computation of robot trajectories <http://simon-rohou.fr/research/tubint/tubint_paper.pdf>`_.
 
 Definition
