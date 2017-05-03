@@ -13,22 +13,16 @@ Installation
 Compiling the Tube class
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-**For Ubuntu:**
+**Linux:**
 
 .. code-block:: none
 
   git clone https://github.com/SimonRohou/tubex-lib
   cd tubex-lib
-  mkdir build
-  cd build
-  cmake ..
-  make
+  ./build.sh
 
-Command-line shortcut for the installation:
 
-.. code-block:: none
-
-  cd tubex-lib ; mkdir -p build ; cd build ; cmake .. ; make
+**Windows:**
 
 The code has not been tested on Windows yet.
 

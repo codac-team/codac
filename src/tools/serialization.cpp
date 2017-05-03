@@ -15,13 +15,6 @@
 using namespace std;
 using namespace ibex;
 
-/*
-  Interval binary structure
-    - format: [char_intv_type][double_lb][double_ub]
-    - short_int_intv_type of type IntervalType (see below)
-    - in case of unbounded intervals, the two last fields disappear
-*/
-
 enum IntervalType { BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS };
 
 void serializeInterval(ofstream& binFile, const Interval& intv)
