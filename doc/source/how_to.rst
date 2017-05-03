@@ -16,7 +16,7 @@ To create a :code:`Tube` object initialized with a constant image :math:`[y],\fo
   Tube z(domain, timestep, Interval(-42.0, 17.0)); // [y]=[-42.0, 17.0]
   Tube w(x, 3.0); // same structure as x, with [y]=[3]
 
-To create a :code:`Tube` object from a analytical expression:
+To create a :code:`Tube` object from an analytical expression:
 
 .. code-block:: c++
   
@@ -159,12 +159,17 @@ Setting values over a given subdomain :math:`[t]\subseteq[t_0,t_f]` (second argu
   // Setting values (within a given interval of times)
   x1.set(Interval(1,3), Interval(6.2,6.7)); // [y],[t]
 
+**Note:** be careful when updating a tube without the use of dedicated contractors. Tube discretization has to be
+kept in mind whenever an update is performed for some input :math:`t`. For guaranteed operations, please
+see the :ref:`contractors` section.
+
 
 Tube arithmetic
 ---------------
 
 The following operations have to be performed on similar tubes.
 By *similar* we mean tubes of same timestep and domain.
+
 Classical mathematical functions are applicable on tubes:
 
 .. code-block:: c++
@@ -173,21 +178,117 @@ Classical mathematical functions are applicable on tubes:
   Tube x3 = cos(x1) + sqrt(x2 + pow(x1, Interval(2,3)));
 
 
+.. _contractors:
+
 Contractors
 -----------
 
-TODO
+Differential constraint
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The contractor :math:`\mathcal{C}_{\frac{d}{dt}}` relies on the differential constraint :math:`\dot{x}=v`, with :math:`x(\cdot)\in[x](\cdot)`, :math:`v(\cdot)\in[v](\cdot)`.
+It is applicable through the method :code:`ctcFwdBwd()`.
+This has been the subject of the paper `Guaranteed computation of robot trajectories <http://simon-rohou.fr/research/tubint/tubint_paper.pdf>`_.
+
+*Note:* a contraction cannot be expected for the tube :math:`[v](\cdot)`.
 
 .. code-block:: c++
 
-  bool ctcFwdBwd(const Tube& derivative_tube, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
-  bool ctcObs(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
-  bool ctcOut(const ibex::Interval& t, const ibex::Interval& y);
-  bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2) const;
-  bool ctcIntertemporal(ibex::Interval& y, ibex::Interval& t1, ibex::Interval& t2) const;
-  bool ctcPeriodic(const ibex::Interval& period);
-  static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, const ibex::Function& f);
-  bool ctcAbs(Tube& y, Tube& x);
+  Tube x(domain, timestep), v(domain, timestep);
+  bool contraction = x.ctcFwdBwd(v);
+  // contraction is 'true' in case of any contraction on x
+
+Observation constraint
+^^^^^^^^^^^^^^^^^^^^^^
+
+The contractor :math:`\mathcal{C}_{\textrm{obs}}` relies on the observation constraint :math:`y=x(t)`, with :math:`t\in[t]`, :math:`y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
+It is applicable through the method :code:`ctcObs()`.
+This will be the subject of the paper *Reliable non-linear state estimation involving time uncertainties*.
+
+*Note:* the derivative tube :math:`[v](\cdot)` is required.
+
+.. code-block:: c++
+  
+  Interval intv_t, intv_y;
+  Tube x(domain, timestep), v(domain, timestep);
+  bool contraction = x.ctcObs(v, intv_t, intv_y);
+  // contraction is 'true' in case of
+  // any contraction on x, intv_t or intv_y
+
+
+Non-observation constraint
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The contractor :math:`\mathcal{C}_{\textrm{out}}` relies on the observation constraint :math:`y\not=x(t)`, with :math:`t\in[t]`, :math:`y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
+It is applicable through the method :code:`ctcOut()`.
+
+*Note:* a contraction cannot be expected for :math:`[t]`, :math:`[y]`.
+
+.. code-block:: c++
+  
+  Interval intv_t, intv_y;
+  Tube x(domain, timestep);
+  bool contraction = x.ctcOut(intv_t, intv_y);
+  // contraction is 'true' in case of any contraction on x
+
+
+Inter-temporal constraint
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The contractor :math:`\mathcal{C}_{t_1,t_2}` relies on the observation constraint :math:`x(t_1)=x(t_2)`, with :math:`t_1\in[t_1]`, :math:`t_2\in[t_2]`, :math:`x(\cdot)\in[x](\cdot)`.
+It is applicable through the method :code:`ctcIntertemporal()`.
+This will be the subject of the paper *Loop-based localization method for mobile robots*.
+
+*Note:* in this implementation, a contraction cannot be expected for the tube :math:`[x](\cdot)`.
+
+.. code-block:: c++
+
+  Interval t1, t2;
+  bool contraction = x.ctcIntertemporal(t1, t2);
+  // contraction is 'true' in case of any contraction on t1 or t2
+
+An extension is available for the constraint :math:`x(t_1)=x(t_2)=y`, with :math:`t_1\in[t_1]`, :math:`t_2\in[t_2]`, :math:`y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
+
+.. code-block:: c++
+
+  Interval t1, t2, y;
+  bool contraction = x.ctcIntertemporal(y, t1, t2);
+  // contraction is 'true' in case of any contraction on t1, t2 or y
+
+
+Periodic constraint
+^^^^^^^^^^^^^^^^^^^
+
+The contractor :math:`\mathcal{C}_{T}` relies on the observation constraint :math:`x(t)=x(t+T)`, with :math:`T\in[T]`, :math:`x(\cdot)\in[x](\cdot)`.
+
+.. code-block:: c++
+
+  Interval T;
+  bool contraction = x.ctcPeriodic(T);
+  // contraction is 'true' in case of any contraction on x or T
+
+
+Algebraic constraints
+^^^^^^^^^^^^^^^^^^^^^
+
+Custom contractors can be implemented based on any algebraic constraint thanks to the `IBEX library <http://www.ibex-lib.org/>`_.
+A :code:`Function` object (`see more <http://www.ibex-lib.org/doc/function.html>`_) has to be defined so that it vanishes when the constraint is achieved.
+
+Example for the minimal contractor :math:`\mathcal{C}_{+}` presented in :ref:`theory`.
+
+.. code-block:: c++
+
+  bool contraction = contract(a, x, y,
+          Function("a", "x", "y", "a - (x + y)"));
+  // contraction is 'true' in case of any contraction on a, x or y
+
+Another example with a *distance* constraint :math:`d=\sqrt{x^2+y^2}` applied on :math:`[x](\cdot)`, :math:`[y](\cdot)` and :math:`[d](\cdot)`.
+
+.. code-block:: c++
+
+  bool contraction = contract(x, y, d,
+          Function("x", "y", "d", "d - sqrt(x^2+y^2)"));
+  // contraction is 'true' in case of any contraction on x, y or d
 
 
 Integration
