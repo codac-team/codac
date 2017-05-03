@@ -17,7 +17,7 @@ This library is a proposal to solve such problem. A *tube* is a domain for a tra
 Functions called *contractors* are available to reduce these sets of trajectories given several constraints.
 
 Computations stands on interval analysis and are, therefore, performed in a guaranteed way.
-Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_, itself relying on reliable numerical libraries such as `Filib <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_.
+Tubex is compatible with the `IBEX library <http://www.ibex-lib.org/>`_, itself relying on reliable numerical libraries such as `Filib <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_.
 
 **Development:** for recent improvements and activities, see the `Github Tubex repository <https://github.com/SimonRohou/tubex-lib>`_.
 
