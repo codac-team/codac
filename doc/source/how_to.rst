@@ -294,16 +294,37 @@ Another example with a *distance* constraint :math:`d=\sqrt{x^2+y^2}` applied on
 Integration
 -----------
 
-TODO
+Computation of the primitive :math:`\int_{0}[x](\tau)d\tau`:
+
+.. code-block:: c++
+  
+  Tube primitive = x.primitive();
+
+Computation of :math:`[s]=\int_{0}^{[t]}[x](\tau)d\tau`:
+
+.. code-block:: c++
+  
+  Interval t;
+  Interval s = x.integral(t);
+
+Computation of :math:`[s]=\int_{[t_1]}^{[t_2]}[x](\tau)d\tau`:
+
+.. code-block:: c++
+  
+  Interval t1, t2;
+  Interval s = x.integral(t1, t2);
+
+A decomposition of the integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot)]` with :math:`[s^-]=\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau` and :math:`[s^+]=\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau` is computable by:
 
 .. code-block:: c++
 
-  Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
-  ibex::Interval integral(double t) const;
-  ibex::Interval integral(const ibex::Interval& t) const;
-  std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
-  ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
-  std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2
+  Interval t1, t2;
+  pair<Interval,Interval> s;
+  s = x.partialIntegral(t1, t2);
+  // s.first is [s^-]
+  // s.second is [s^+]
+
+*Note:* :math:`[s]=[s^-]\cup[s^+]`.
 
 
 Serialization
