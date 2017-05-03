@@ -37,6 +37,9 @@ Multi-threading
 The Tube class provides multi-threaded features implemented with the `OpenMP library <http://www.openmp.org/>`_.
 **Note:** several functions running with OpenMP have not be fully tested yet.
 
+Development
+-----------
+
 Documentation
 ^^^^^^^^^^^^^
 
@@ -51,3 +54,19 @@ Then, run:
 .. code-block:: none
 
   cd doc ; make html
+
+Tests
+^^^^^
+
+For now, we are using `Catch <https://github.com/philsquared/Catch>`_ to implement tests.
+
+Note that the *cmake* project file may need to be configured in order to set `BUILD_TESTS`.
+
+To launch tests:
+
+.. code-block:: none
+
+  cd build
+  cmake -DBUILD_TESTS=ON ..
+  make
+  make test

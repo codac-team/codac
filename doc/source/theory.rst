@@ -217,3 +217,10 @@ in :numref:`tubelbintegralslices`. The lower slice width
 .. figure:: ../img/tube_lb_integral_slices.png
 
   Outer approximation of the lower bound of :math:`\int_{a}^{b}[x](\tau)d\tau`.
+
+*Note:* this data structure stands on a binary tree, thus improving several computations such as tube evaluations. For instance, the bounded value :math:`[y]=[x]([t])` requires an access to each slice over the interval :math:`[t]`. With a tree structure, information is stored within high level nodes, thus preventing from a systematic evaluation of each slice over :math:`[t]`. See :numref:`tubetreeanimation`.
+
+.. _tubetreeanimation:
+.. figure:: ../img/tube_tree_animation.gif
+
+  Illustration of the binary tree structure, implemented in this library.

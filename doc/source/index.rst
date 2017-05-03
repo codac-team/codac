@@ -31,6 +31,7 @@ Documentation
    theory
    installation
    how_to
+   graphics
 
 
 .. Indices and tables
