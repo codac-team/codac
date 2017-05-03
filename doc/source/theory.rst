@@ -1,7 +1,4 @@
-.. tubex-lib documentation master file, created by
-   sphinx-quickstart on Sun Nov 20 11:16:37 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. _theory:
 
 Tubes: basics
 =============
@@ -119,6 +116,22 @@ arithmetic makes it possible to compute the following tubes:
   Tube tube_a = tube_x + tube_y;
   Tube tube_b = sin(tube_x);
   Tube tube_c = tube_x.primitive();
+
+Set-inversion
+-------------
+
+The tube set-inversion, denoted :math:`[x]^{-1}([y])`, is defined by
+
+.. math::
+  
+  [x]^{-1}([y])=\bigsqcup_{y\in[y]}\left\{ t\mid y\in[x](t)\right\}, 
+
+and is illustrated by :numref:`tubesetinversion`.
+
+.. _tubesetinversion:
+.. figure:: ../img/tube_set_inversion.png
+  
+  Tube set-inversion
 
 Contractors for tubes
 ---------------------

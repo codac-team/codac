@@ -60,7 +60,7 @@ Tests
 
 For now, we are using `Catch <https://github.com/philsquared/Catch>`_ to implement tests.
 
-Note that the *cmake* project file may need to be configured in order to set `BUILD_TESTS`.
+Note that the *cmake* project file may need to be configured in order to set :code:`BUILD_TESTS`.
 
 To launch tests:
 

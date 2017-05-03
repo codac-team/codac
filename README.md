@@ -1,4 +1,4 @@
-# tubex-lib [![Build Status](https://travis-ci.org/SimonRohou/tube-lib.svg)](https://travis-ci.org/SimonRohou/tube-lib)
+# Tubex library [![Build Status](https://travis-ci.org/SimonRohou/tube-lib.svg)](https://travis-ci.org/SimonRohou/tube-lib)
 
 *Tubex* is a C++ library providing tools to guarantee computations over sets of trajectories. 
 

@@ -4,7 +4,7 @@ How to handle tubes with Tubex
 Instantiation
 -------------
 
-To create a Tube object initialized with a constant image :math:`[y],\forall t`:
+To create a :code:`Tube` object initialized with a constant image :math:`[y],\forall t`:
 
 .. code-block:: c++
 
@@ -16,7 +16,7 @@ To create a Tube object initialized with a constant image :math:`[y],\forall t`:
   Tube z(domain, timestep, Interval(-42.0, 17.0)); // [y]=[-42.0, 17.0]
   Tube w(x, 3.0); // same structure as x, with [y]=[3]
 
-To create a Tube object from a analytical expression:
+To create a :code:`Tube` object from a analytical expression:
 
 .. code-block:: c++
   
@@ -33,7 +33,7 @@ To create a Tube object from a analytical expression:
           Function("t", "(t-5)^2 + 0.5")); // f2(t)
   // note: x1==x2==x3
 
-To create a Tube object from a map of values (will strictly wrap the map with linear interpolation):
+To create a :code:`Tube` object from a map of values (will strictly wrap the map with linear interpolation):
 
 .. code-block:: c++
 
@@ -53,8 +53,8 @@ To create a Tube object from a map of values (will strictly wrap the map with li
   x1.inflate(1.0);
 
 
-Parameters
-----------
+Basics
+------
 
 Basic features:
 
@@ -74,8 +74,11 @@ Working with tube's slices:
 .. code-block:: c++
 
   int nb_slices = x1.size(); // number of slices
-  int input2index(double t) const;
-  double index2input(int index) const;
+
+  double t1 = 2.3;
+  int i = x1.input2index(t1); // index of the slice containing input t1
+  double ti = x1.index2input(i); // input referencing the slice 'i'
+  // Note: ti not necessarily equal to t1
 
 Classical operations on sets are applicable on similar tubes:
 
@@ -89,7 +92,7 @@ Classical operations on sets are applicable on similar tubes:
 Evaluation and set-inversion
 ----------------------------
 
-To evaluate a specific part of a Tube object:
+To evaluate a specific part of a :code:`Tube` object:
 
 .. code-block:: c++
 
@@ -100,23 +103,41 @@ To evaluate a specific part of a Tube object:
   Interval y4 = x1[(int)5];            // of a given slice (6th)
   // Note: y4 == y3 \in y2 \subset y1
 
-Set-inversion:
-
-
-
+To enclose the bounds of :math:`f^-` or :math:`f^+`:
 
 .. code-block:: c++
 
-  const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
-  ibex::Interval invert(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
-  void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t ibex::Interval::ALL_REALS) const;
+  pair<Interval,Interval> p_bounds;
 
+  p_bounds = x1.eval();
+  // p_bounds.first  -> union of f^-(t), for all t
+  // p_bounds.second -> union of f^+(t), for all t
+
+  // Same operation, restricted over a subdomain [8,10]
+  p_bounds = x1.eval(Interval(8,10));
+
+A tube set-inversion may result in a set of intervals, each one of them being a subset of the tube domain (see definition in :ref:`theory`). The :code:`invert` method returns the union of these subsets, or the set of solutions within a :code:`vector` of :code:`Interval` objects.
+
+.. code-block:: c++
+
+  // Approximation of the Kernel of x1:
+  Interval kernel = x1.invert(0);
+
+  // Set-inversion: [x1]^-1([2,3])
+  Interval intv_ta = x1.invert(Interval(2,3));
+
+  // Same set-inversion restricted over a subdomain [8,10]
+  Interval intv_tb = x1.invert(Interval(2,3), Interval(8,10));
+
+  // Set-inversion returning sets of solutions:
+  vector<Interval> v_intv_t;
+  x1.invert(Interval(-1,1), v_intv_t);
 
 
 Updates
 -------
 
-Setting a value for its :math:`k`-th slice (second argument has to be *int*):
+Setting a value for its :math:`k`-th slice (second argument has to be :code:`int`):
 
 .. code-block:: c++
 
@@ -124,14 +145,14 @@ Setting a value for its :math:`k`-th slice (second argument has to be *int*):
   x1.set(Interval(3,8), 4); // k==5
 
 
-Setting a slice's value from an input :math:`t` (second argument has to be *double*):
+Setting a slice's value from an input :math:`t` (second argument has to be :code:`double`):
 
 .. code-block:: c++
 
   // Setting values (for a given date)
   x1.set(Interval(-3,3), 4.2);
 
-Setting values over a given subdomain :math:`[t]\subseteq[t_0,t_f]` (second argument has to be *ibex::Interval*):
+Setting values over a given subdomain :math:`[t]\subseteq[t_0,t_f]` (second argument has to be an :code:`Interval`):
 
 .. code-block:: c++
 
@@ -139,33 +160,23 @@ Setting values over a given subdomain :math:`[t]\subseteq[t_0,t_f]` (second argu
   x1.set(Interval(1,3), Interval(6.2,6.7)); // [y],[t]
 
 
-
-.. code-block:: c++
-
-  ibex::Interval operator[](const ibex::Interval& intv_t) const;
-  const ibex::Interval& image() const;
-  void set(const ibex::Interval& intv_y, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS);
-
-
-
-
-
 Tube arithmetic
 ---------------
 
+The following operations have to be performed on similar tubes.
+By *similar* we mean tubes of same timestep and domain.
+Classical mathematical functions are applicable on tubes:
+
 .. code-block:: c++
 
-  Tube operator+(const ibex::Interval& x1, const Tube& x2);
-  Tube operator-(const ibex::Interval& x1, const Tube& x2);
-  Tube operator*(const Tube& x1, const ibex::Interval& x2);
-  Tube operator/(const Tube& x1, const ibex::Interval& x2);
-  Tube abs(const Tube& x);
-
-**Note:** by *similar* we mean tubes of same timestep and domain.
+  Tube x2 = abs(x1);
+  Tube x3 = cos(x1) + sqrt(x2 + pow(x1, Interval(2,3)));
 
 
 Contractors
 -----------
+
+TODO
 
 .. code-block:: c++
 
@@ -182,6 +193,8 @@ Contractors
 Integration
 -----------
 
+TODO
+
 .. code-block:: c++
 
   Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
@@ -195,7 +208,7 @@ Integration
 Serialization
 -------------
 
-In case of heavy computations, a Tube object can be serialized within a binary file and fastly re-created afterwards:
+In case of heavy computations, a :code:`Tube` object can be serialized within a binary file and fastly re-created afterwards:
 
 .. code-block:: c++
 
@@ -204,7 +217,7 @@ In case of heavy computations, a Tube object can be serialized within a binary f
   Tube x2("x1.tube"); // will create a new tube x2 from the binary file
   // then, x1==x2
 
-Maps of values can be serialized jointly with the Tube object:
+Maps of values can be serialized jointly with the :code:`Tube` object:
 
 .. code-block:: c++
 
@@ -231,7 +244,7 @@ Maps of values can be serialized jointly with the Tube object:
 Graphics
 --------
 
-To print a Tube object in a terminal:
+To print a :code:`Tube` object in a terminal:
 
 .. code-block:: c++
   
@@ -246,7 +259,7 @@ A simple 2D rendering of a tube is available using the `Vibes viewer <http://ens
   displayTube(map_graphics, &x1, "Tube [x1](·)", 300, 200);
 
 The above line will display the tube within a Vibes window located at (300,200)px.
-The `map_graphics` variable is a map of pointers that has to be defined once.
+The :code:`map_graphics` variable is a map of pointers that has to be defined once.
 A complete example is provided hereinafter.
 
 .. code-block:: c++
