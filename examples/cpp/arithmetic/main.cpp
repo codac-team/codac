@@ -64,8 +64,8 @@ int main(int argc, char *argv[])
 
   // Checking if this example is still working:
   return (fabs(tube_x.volume() - 10.512) < 1e-2
-       && fabs(tube_y.volume() - 55.008) < 1e-2
-       && fabs(tube_a.volume() - 65.519) < 1e-2
+       && fabs(tube_y.volume() - 55.458) < 1e-2
+       && fabs(tube_a.volume() - 65.969) < 1e-2
        && fabs(tube_b.volume() - 6.8414) < 1e-2
        && fabs(tube_c.volume() - 53.446) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

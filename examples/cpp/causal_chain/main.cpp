@@ -37,7 +37,8 @@ int main(int argc, char *argv[])
     // Creating a tube over the [0,14] domain with some timestep:
     Tube u(domain, timestep, Function("t", "-cos((t+33)/5)+[-0.02,0.02]"));
     // Initial conditions:
-    Interval x0 = Interval(0.).inflate(1.), y0 = Interval(0.).inflate(1.), theta0 = Interval((-6./5.)*M_PI).inflate(0.02);
+    Interval x0 = Interval(0.).inflate(1.), y0 = x0;
+    Interval theta0 = Interval((-6./5.)*M_PI).inflate(0.02);
 
   /* =========== CONSTRAINT NETWORK =========== */
 
@@ -51,13 +52,12 @@ int main(int argc, char *argv[])
 
     /* =========== BACKWARD PROPAGATION =========== */
 
-      theta.ctcObs(u, Interval(-2.36,-2.32), 14.);
-      x.ctcObs(xdot, Interval(53.9,55.9), 14.);
-      y.ctcObs(ydot, Interval(6.9,8.9), 14.);
+      theta.ctcObs(u, 14., Interval(-2.36,-2.32));
+      x.ctcObs(xdot, 14., Interval(53.9,55.9));
+      y.ctcObs(ydot, 14., Interval(6.9,8.9));
 
     /* =========== CONSTRAINT NETWORK =========== */
 
-      theta.ctcFwdBwd(u);
       xdot &= speed * cos(theta);
       ydot &= speed * sin(theta);
       x.ctcFwdBwd(xdot);
@@ -97,8 +97,9 @@ int main(int argc, char *argv[])
     vibes::endDrawing();
 
   // Checking if this example is still working:
-  return (fabs(x.volume() - 158.839) < 1e-2
-       && fabs(y.volume() - 190.126) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (BACKWARD_EXAMPLE && fabs(x.volume() - 65.5594) < 1e-2 && fabs(y.volume() - 74.9425) < 1e-2)
+      || (!BACKWARD_EXAMPLE && fabs(x.volume() - 158.839) < 1e-2 && fabs(y.volume() - 190.126) < 1e-2)
+        ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 void displayCausalMap(const Tube& x, const Tube& y, int fig_x, int fig_y)
