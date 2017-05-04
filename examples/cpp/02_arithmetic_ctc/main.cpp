@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     IntervalVector measurement(2);
     measurement[0] = Interval(7.,7.2); // [t]
     measurement[1] = Interval(1.,1.8); // [y]
-    y.ctcObs(ydot, measurement[1], measurement[0]);
+    y.ctcObs(ydot, measurement[0], measurement[1]);
 
   /* =========== PROPAGATION (CSP) =========== */
 
@@ -93,5 +93,10 @@ int main(int argc, char *argv[])
       delete it->second;
     vibes::endDrawing();
 
-  return EXIT_SUCCESS;
+  // Checking if this example is still working:
+  return (fabs(x.volume() - 10.511) < 1e-2
+       && fabs(y.volume() - 18.033) < 1e-2
+       && fabs(a.volume() - 28.544) < 1e-2
+       && fabs(b.volume() - 5.4136) < 1e-2
+       && fabs(c.volume() - 41.736) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
