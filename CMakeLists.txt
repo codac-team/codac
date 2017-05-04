@@ -1,5 +1,5 @@
 # ==================================================================
-#  tube-lib - cmake configuration file
+#  tubex-lib - cmake configuration file
 # ==================================================================
 
 cmake_minimum_required(VERSION 2.8.7)
@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 2.8.7)
 # Settings:
   
   set(CMAKE_CXX_STANDARD 11)
-  set(PACKAGE_NAME      tube-lib)
+  set(PACKAGE_NAME      tubex-lib)
   set(PACKAGE_VERSION   "0.1")
   project(${PACKAGE_NAME})
   get_filename_component(TUBELIB_BIN_DIR  "./bin"   ABSOLUTE)

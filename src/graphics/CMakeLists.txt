@@ -1,5 +1,5 @@
 # ==================================================================
-#  tube-lib - cmake configuration file
+#  tubex-lib - cmake configuration file
 # ==================================================================
 
 
@@ -20,8 +20,8 @@
   include_directories(vibes)
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})
 
-  add_library(tube-graphics ${SRC})
-  target_link_libraries(tube-graphics ${LIBS})
+  add_library(tubex-graphics ${SRC})
+  target_link_libraries(tubex-graphics ${LIBS})
 
-  install(FILES ${HEADERS} DESTINATION "include/tube-lib")
-  install(TARGETS tube-graphics DESTINATION lib)
+  install(FILES ${HEADERS} DESTINATION "include/tubex-lib")
+  install(TARGETS tubex-graphics DESTINATION lib)

@@ -1,4 +1,4 @@
-# [Tubex library](http://simon-rohou.fr/research/tubex-lib) [![Build Status](https://travis-ci.org/SimonRohou/tube-lib.svg)](https://travis-ci.org/SimonRohou/tube-lib)
+# [Tubex library](http://simon-rohou.fr/research/tubex-lib) [![Build Status](https://travis-ci.org/SimonRohou/tubex-lib.svg)](https://travis-ci.org/SimonRohou/tubex-lib)
 
 *Tubex* is a C++ library providing tools to guarantee computations over sets of trajectories. 
 
@@ -10,9 +10,20 @@ Functions called *contractors* are available to reduce these sets of trajectorie
 Computations stands on interval analysis and are, therefore, performed in a guaranteed way.
 Tubex is compatible with the [IBEX library](http://www.ibex-lib.org), itself relying on reliable numerical libraries such as [Filib](http://www2.math.uni-wuppertal.de/~xsc/software/filib.html).
 
-**See the [Tubex documentation](http://simon-rohou.fr/research/tubex-lib)**.
+Documentation
+^^^^^^^^^^^^^
 
-Note: a Python version ([pyIbex](http://www.ensta-bretagne.fr/desrochers/pyibex) wrapping) is planned.
+**See the [official page](http://simon-rohou.fr/research/tubex-lib)**.
+
+Licence
+^^^^^^^
+
+This software is under [GNU General Public License](https://www.gnu.org/copyleft/gpl.html).
+
+Python extension
+^^^^^^^^^^^^^^^^
+
+A Python version ([pyIbex](http://www.ensta-bretagne.fr/desrochers/pyibex) wrapping) is planned.
 
 
 ![Image of Tube](http://rawgit.com/SimonRohou/tubex-lib/master/doc/img/tube_slices.png)

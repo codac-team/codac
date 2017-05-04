@@ -1,5 +1,5 @@
 # ==================================================================
-#  tube-lib - cmake configuration file
+#  tubex-lib - cmake configuration file
 # ==================================================================
 
 
@@ -15,8 +15,8 @@
 
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})
 
-  add_library(tube-tools ${SRC})
-  target_link_libraries(tube-tools ${LIBS})
+  add_library(tubex-tools ${SRC})
+  target_link_libraries(tubex-tools ${LIBS})
 
-  install(FILES ${HEADERS} DESTINATION "include/tube-lib")
-  install(TARGETS tube-tools DESTINATION lib)
+  install(FILES ${HEADERS} DESTINATION "include/tubex-lib")
+  install(TARGETS tubex-tools DESTINATION lib)

@@ -1,5 +1,5 @@
 # ==================================================================
-#  tube-lib - cmake configuration file
+#  tubex-lib - cmake configuration file
 # ==================================================================
 
 
@@ -17,8 +17,8 @@
 
   target_link_libraries(ex_causal_chain
     ${LIBS}
-    tube-core
-    tube-graphics)
+    tubex-core
+    tubex-graphics)
 
 
 # Tests

@@ -1,9 +1,9 @@
 /* ============================================================================
- *  tube-lib - DomainTubeException class
+ *  tubex-lib - DomainTubeException class
  * ============================================================================
- *  Copyright : Copyright 2016 Simon Rohou
- *  License   : This program can be distributed under the terms of
- *              the Apache License, Version 2.0. See the file LICENSE.
+ *  Copyright : Copyright 2017 Simon Rohou
+ *  License   : This program is distributed under the terms of
+ *              the GNU General Public License (GPL). See the file LICENSE.
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -

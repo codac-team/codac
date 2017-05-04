@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tube-lib - Arithmetic on tubes involving local contractions: simple example
+ *  tubex-lib - Arithmetic on tubes involving local contractions: simple example
  *
  *  Example from the paper "Using Tubes to Solve Dynamical Systems"
  *  Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
@@ -10,9 +10,9 @@
  *    [a](·) = [x](·) + [y](·)
  *    [b](·) = sin([x](·))
  * ============================================================================
- *  Copyright : Copyright 2016 Simon Rohou
- *  License   : This program can be distributed under the terms of
- *              the Apache License, Version 2.0. See the file LICENSE.
+ *  Copyright : Copyright 2017 Simon Rohou
+ *  License   : This program is distributed under the terms of
+ *              the GNU General Public License (GPL). See the file LICENSE.
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -
