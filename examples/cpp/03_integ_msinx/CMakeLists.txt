@@ -13,9 +13,9 @@
 
   )
 
-  add_executable(ex_integ-msinx ${SRC})
+  add_executable(ex_integ_msinx ${SRC})
 
-  target_link_libraries(ex_integ-msinx
+  target_link_libraries(ex_integ_msinx
     ${LIBS}
     tube-core
     tube-graphics)
@@ -24,5 +24,5 @@
 # Tests
 
   if(BUILD_TESTS)
-    add_test(NAME ExampleInteg-msinx COMMAND ex_integ-msinx 0)
+    add_test(NAME ExampleInteg_msinx COMMAND ex_integ_msinx 0)
   endif(BUILD_TESTS)

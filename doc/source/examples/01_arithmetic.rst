@@ -62,10 +62,10 @@ To run the example, launch the Vibes viewer and, from a terminal:
 
 .. code-block:: bash
 
-  ./build/examples/cpp/arithmetic/ex_arithmetic 
+  ./build/examples/cpp/01_arithmetic/ex_arithmetic 
 
 The sources are available in:
 
 .. code-block:: none
 
-  ./examples/cpp/arithmetic/main.cpp
+  ./examples/cpp/01_arithmetic/main.cpp

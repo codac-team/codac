@@ -10,10 +10,10 @@ To run the example, launch the Vibes viewer and, from a terminal:
 
 .. code-block:: bash
 
-  ./build/examples/cpp/arithmetic_ctc/ex_arithmetic_ctc
+  ./build/examples/cpp/02_arithmetic_ctc/ex_arithmetic_ctc
 
 The sources are available in:
 
 .. code-block:: none
 
-  ./examples/cpp/arithmetic_ctc/main.cpp
+  ./examples/cpp/02_arithmetic_ctc/main.cpp

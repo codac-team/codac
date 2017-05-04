@@ -10,10 +10,10 @@ To run the example, launch the Vibes viewer and, from a terminal:
 
 .. code-block:: bash
 
-  ./build/examples/cpp/causal_chain/ex_causal_chain
+  ./build/examples/cpp/04_causal_chain/ex_causal_chain
 
 The sources are available in:
 
 .. code-block:: none
 
-  ./examples/cpp/causal_chain/main.cpp
+  ./examples/cpp/04_causal_chain/main.cpp

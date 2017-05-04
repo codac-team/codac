@@ -10,10 +10,10 @@ To run the example, launch the Vibes viewer and, from a terminal:
 
 .. code-block:: bash
 
-  ./build/examples/cpp/integ-msinx/ex_integ-msinx
+  ./build/examples/cpp/03_integ_msinx/ex_integ_msinx
 
 The sources are available in:
 
 .. code-block:: none
 
-  ./examples/cpp/integ-msinx/main.cpp
+  ./examples/cpp/03_integ_msinx/main.cpp

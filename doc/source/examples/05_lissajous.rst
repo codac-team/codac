@@ -10,10 +10,10 @@ To run the example, launch the Vibes viewer and, from a terminal:
 
 .. code-block:: bash
 
-  ./build/examples/cpp/lissajous/ex_lissajous
+  ./build/examples/cpp/05_lissajous/ex_lissajous
 
 The sources are available in:
 
 .. code-block:: none
 
-  ./examples/cpp/lissajous/main.cpp
+  ./examples/cpp/05_lissajous/main.cpp
