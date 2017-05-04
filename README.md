@@ -15,6 +15,10 @@ Documentation
 
 **See the [official page](http://simon-rohou.fr/research/tubex-lib)**.
 
+
+![Image of Tube](https://cdn.rawgit.com/SimonRohou/tubex-lib/master/doc/img/tube_slices_small.png)
+
+
 Licence
 -------
 
@@ -24,6 +28,3 @@ Python extension
 ----------------
 
 A Python version ([pyIbex](http://www.ensta-bretagne.fr/desrochers/pyibex) wrapping) is planned.
-
-
-![Image of Tube](http://rawgit.com/SimonRohou/tubex-lib/master/doc/img/tube_slices.png)
