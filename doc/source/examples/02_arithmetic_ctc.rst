@@ -12,7 +12,6 @@ from :math:`[x](\cdot)` and :math:`[y](\cdot)` based on algebraic constraints. A
 .. _arithmeticctcexampletubex:
 .. figure:: ../../img/examples/02_arithmetic_ctc/example_ctc_tube_x.png
   :width: 50%
-  :align: left
 
   Arbitrary envelope of feasible :math:`x(\cdot)`.
 
