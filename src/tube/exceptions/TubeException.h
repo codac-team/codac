@@ -30,7 +30,7 @@ class TubeException : public std::exception
 
     TubeException() {};
     TubeException(const std::string& function_name, const std::string& custom_message);
-    ~TubeException() {};
+    ~TubeException() throw() {};
 
     virtual const char* what() const throw();
 
