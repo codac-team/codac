@@ -6,6 +6,13 @@ Prerequisites
 
 The installation assumes you have already installed the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_.
 
+For a fast installation of IBEX:
+
+.. code-block:: none
+
+  sh ./scripts/ibex/build_IbexLib.sh
+  export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/ibex
+
 
 Installation
 ------------
@@ -70,3 +77,5 @@ To launch tests:
   cmake -DBUILD_TESTS=ON ..
   make
   make test
+
+These tests include the run of C++ examples.
