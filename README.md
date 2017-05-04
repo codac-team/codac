@@ -11,17 +11,17 @@ Computations stands on interval analysis and are, therefore, performed in a guar
 Tubex is compatible with the [IBEX library](http://www.ibex-lib.org), itself relying on reliable numerical libraries such as [Filib](http://www2.math.uni-wuppertal.de/~xsc/software/filib.html).
 
 Documentation
-^^^^^^^^^^^^^
+-------------
 
 **See the [official page](http://simon-rohou.fr/research/tubex-lib)**.
 
 Licence
-^^^^^^^
+-------
 
 This software is under [GNU General Public License](https://www.gnu.org/copyleft/gpl.html).
 
 Python extension
-^^^^^^^^^^^^^^^^
+----------------
 
 A Python version ([pyIbex](http://www.ensta-bretagne.fr/desrochers/pyibex) wrapping) is planned.
 
