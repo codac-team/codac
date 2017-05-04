@@ -10,6 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
+#include <cstdio>
 #include "VibesFigure.h"
 
 using namespace std;
