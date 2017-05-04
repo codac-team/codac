@@ -21,7 +21,7 @@ by :numref:`arithmeticexampletubea`, :numref:`arithmeticexampletubeb` and :numre
 
 
 .. _arithmeticexampletubex:
-.. figure:: ../../img/examples/arithmetic/example_tube_x.png
+.. figure:: ../../img/examples/01_arithmetic/example_tube_x.png
   :width: 50%
   :align: left
 
@@ -30,7 +30,7 @@ by :numref:`arithmeticexampletubea`, :numref:`arithmeticexampletubeb` and :numre
 
 
 .. _arithmeticexampletubey:
-.. figure:: ../../img/examples/arithmetic/example_tube_y.png
+.. figure:: ../../img/examples/01_arithmetic/example_tube_y.png
   :width: 50%
 
   Tube :math:`[y](t)=-cos(t)+h(t)\cdot[e]` where :math:`h:\mathbb{R}\rightarrow\mathbb{R}`
@@ -38,21 +38,21 @@ by :numref:`arithmeticexampletubea`, :numref:`arithmeticexampletubeb` and :numre
 
 
 .. _arithmeticexampletubea:
-.. figure:: ../../img/examples/arithmetic/example_tube_a.png
+.. figure:: ../../img/examples/01_arithmetic/example_tube_a.png
   :width: 50%
 
   Tube :math:`[a](t)=[x](t)+[y](t)`
 
 
 .. _arithmeticexampletubeb:
-.. figure:: ../../img/examples/arithmetic/example_tube_b.png
+.. figure:: ../../img/examples/01_arithmetic/example_tube_b.png
   :width: 50%
 
   Tube :math:`[b](t)=\sin\left([x](t)\right)`
 
 
 .. _arithmeticexampletubec:
-.. figure:: ../../img/examples/arithmetic/example_tube_c.png
+.. figure:: ../../img/examples/01_arithmetic/example_tube_c.png
   :width: 50%
 
   Tube :math:`[c](t)=\int_{0}^{t}[x](\tau)d\tau`

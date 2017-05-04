@@ -26,12 +26,12 @@ using namespace std;
 using namespace ibex;
 using namespace ibex;
 
-void constraintNetwork(Tube& x, Tube& y, Tube& ydot, Tube& a, Tube& b, Tube& c)
+void constraintNetwork(Tube& x, Tube& y, Tube& ydot, Tube& a, Tube& p, Tube& q)
 {
   y.ctcFwdBwd(ydot);
   a &= x + y;
-  b &= atan(y);
-  c &= 2*sin(0.5*a) + sqr(b*2);
+  p &= atan(y);
+  q &= 2*sin(0.5*a) + sqr(p*2);
 }
 
 int main(int argc, char *argv[])
@@ -44,12 +44,12 @@ int main(int argc, char *argv[])
   /* =========== INITIALIZATION =========== */
 
     // Creating tubes over the [0,10] domain with some timestep:
-    Tube ydot(domain, timestep), a(domain, timestep), b(domain, timestep), c(domain, timestep);
+    Tube ydot(domain, timestep), a(domain, timestep), p(domain, timestep), q(domain, timestep);
     Tube x(domain, timestep, Function("t", "(t-5)^2 + [-0.5,0.5]"));
     Tube y(domain, timestep, Function("t", "[-0.5,0.5] - 4*cos(t-5) + [-0.2,0.2]*(t-3.3)^2"));
 
     // Applying constraints with contractors on tubes
-    constraintNetwork(x, y, ydot, a, b, c);
+    constraintNetwork(x, y, ydot, a, p, q);
 
     // Specifying ydot
     ydot &= Tube(domain, timestep, Function("t", "4*sin(t-5) + (t-3.3)*[-0.1,0.1]"));
@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
     displayTube(map_graphics, &x, "Tube [x](·)", 300, 200);
     displayTube(map_graphics, &y, "Tube [y](·)", 400, 300);
     displayTube(map_graphics, &a, "Tube [a](·)", 500, 400);
-    displayTube(map_graphics, &b, "Tube [b](·)", 600, 500);
-    displayTube(map_graphics, &c, "Tube [c](·)", 700, 600);
+    displayTube(map_graphics, &p, "Tube [p](·)", 600, 500);
+    displayTube(map_graphics, &q, "Tube [q](·)", 700, 600);
 
   /* =========== MEASUREMENT =========== */
 
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
   /* =========== PROPAGATION (CSP) =========== */
 
     // Applying constraints with contractors on tubes
-    constraintNetwork(x, y, ydot, a, b, c);
+    constraintNetwork(x, y, ydot, a, p, q);
 
   /* =========== GRAPHICS =========== */
 
@@ -83,8 +83,8 @@ int main(int argc, char *argv[])
     displayTube(map_graphics, &y);
     vibes::drawBox(measurement, "blue", vibesParams("figure", "Tube [y](·)"));
     displayTube(map_graphics, &a);
-    displayTube(map_graphics, &b);
-    displayTube(map_graphics, &c);
+    displayTube(map_graphics, &p);
+    displayTube(map_graphics, &q);
 
   /* =========== END =========== */
 
@@ -97,6 +97,6 @@ int main(int argc, char *argv[])
   return (fabs(x.volume() - 10.511) < 1e-2
        && fabs(y.volume() - 18.033) < 1e-2
        && fabs(a.volume() - 28.544) < 1e-2
-       && fabs(b.volume() - 5.4136) < 1e-2
-       && fabs(c.volume() - 41.736) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+       && fabs(p.volume() - 5.4136) < 1e-2
+       && fabs(q.volume() - 41.736) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
