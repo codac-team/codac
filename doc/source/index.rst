@@ -34,6 +34,7 @@ Documentation
    installation
    how_to
    graphics
+   examples/index
 
 
 .. Indices and tables
