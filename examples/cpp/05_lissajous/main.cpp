@@ -81,8 +81,7 @@ int main(int argc, char *argv[])
   /* =========== END =========== */
 
     // Deleting pointers to graphical tools
-    for(auto it = map_graphics.begin(); it != map_graphics.end(); ++it)
-      delete it->second;
+    for(auto& it : map_graphics) delete it.second;
     vibes::endDrawing();
 
   // Checking if this example is still working:
