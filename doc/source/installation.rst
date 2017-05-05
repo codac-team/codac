@@ -56,6 +56,7 @@ The documentation is generated thanks to `Sphinx <http://www.sphinx-doc.org/en/s
 .. code-block:: none
 
   pip install Sphinx
+  pip install sphinx_rtd_theme
 
 Then, run:
 
