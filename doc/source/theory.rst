@@ -10,7 +10,7 @@ Definition
 
 A tube :math:`[\mathbf{x}](\cdot)` is defined 
 as an envelope enclosing an uncertain trajectory :math:`\mathbf{x}(\cdot):\mathbb{R}\rightarrow\mathbb{R}^{n}`.
-It is built as an interval of two trajectories
+It is built as an interval of two functions
 :math:`[\mathbf{x}^{-}(\cdot),\mathbf{x}^{+}(\cdot)]` such that :math:`\forall t,~\mathbf{x}^{-}(t)\leqslant\mathbf{x}^{+}(t)`.
 A trajectory :math:`\mathbf{x}(\cdot)` belongs to the tube :math:`[\mathbf{x}](\cdot)`
 if :math:`\forall t,\mathbf{~x}(t)\in[\mathbf{x}](t)`.
@@ -23,6 +23,7 @@ a set of boxes. This sliced implementation is detailed hereinafter.
   A tube :math:`[x](\cdot)` represented by a set of slices. This representation
   can be used to enclose signals such as :math:`x^{*}(\cdot)`.
 
+**Code example:**
 
 .. code-block:: c++
 
@@ -44,6 +45,8 @@ proposed by Moore. If :math:`f` is an elementary function
 such as :math:`\sin`, :math:`\cos`, :math:`\dots`, we define :math:`f\bigl([x](\cdot)\bigr)` as
 the smallest tube containing all feasible values for :math:`f\bigl(x(\cdot)\bigr)`,
 :math:`x(\cdot)\in[x](\cdot)`.
+
+**Code example:**
 
 .. code-block:: c++
 
@@ -68,7 +71,7 @@ From the monotonicity of the integral operator, we can deduce:
 
 where :math:`\mathbf{x}^{-}(\cdot)` and :math:`\mathbf{x}^{+}(\cdot)` are the
 lower and upper bounds of tube :math:`[\mathbf{x}](\cdot)=[\mathbf{x}^{-}(\cdot),\mathbf{x}^{+}(\cdot)]`.
-The computed integral is a box with lower and upper bounds shown on Figure \ref{fig:tube:integral}. For efficiency purposes, the *interval
+The computed integral is a box with lower and upper bounds shown on :numref:`tubeinteginf` and :numref:`tubeintegsup`. For efficiency purposes, the *interval
 primitive* of a tube defined by :math:`\int_{0}^{t}[\mathbf{x}](\tau)d\tau`
 can be computed once, giving a primitive tube.
 
@@ -82,40 +85,44 @@ can be computed once, giving a primitive tube.
 
   Hatched part depicts the upper bound of :math:`\int_{a}^{b}[x](\tau)d\tau`.
 
+**Code example:**
+
 .. code-block:: c++
 
   Interval t1(1,2);
   Interval t2(8);
   Interval integ = x.integral(t1,t2);
 
-Simple example
---------------
-
-Given two scalar tubes :math:`[x](\cdot)` and :math:`[y](\cdot)`, the tube
-arithmetic makes it possible to compute the following tubes:
-
-.. math::
-
-  \begin{array}{rcl}
-  [a](\cdot) & = & [x](\cdot)+[y](\cdot)\\{}
-  [b](\cdot) & = & \sin\left([x](\cdot)\right)\\{}
-  [c](\cdot) & = & \int_{0}[x]\left(\tau\right)d\tau
-  \end{array}
-
-.. code-block:: c++
-
-  Interval domain(0,10);
-  double timestep = 0.01;
-
-  // Creating tubes over the [0,10] domain with some timestep:
-  Tube tube_x(domain, timestep,
-              Function("t", "(t-5)^2 + [-0.5,0.5]"));
-  Tube tube_y(domain, timestep,
-              Function("t", "-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
-
-  Tube tube_a = tube_x + tube_y;
-  Tube tube_b = sin(tube_x);
-  Tube tube_c = tube_x.primitive();
+.. Simple example
+.. --------------
+.. 
+.. Given two scalar tubes :math:`[x](\cdot)` and :math:`[y](\cdot)`, the tube
+.. arithmetic makes it possible to compute the following tubes:
+.. 
+.. .. math::
+.. 
+..   \begin{array}{rcl}
+..   [a](\cdot) & = & [x](\cdot)+[y](\cdot)\\{}
+..   [b](\cdot) & = & \sin\left([x](\cdot)\right)\\{}
+..   [c](\cdot) & = & \int_{0}[x]\left(\tau\right)d\tau
+..   \end{array}
+.. 
+.. **Code example:**
+.. 
+.. .. code-block:: c++
+.. 
+..   Interval domain(0,10);
+..   double timestep = 0.01;
+.. 
+..   // Creating tubes over the [0,10] domain with some timestep:
+..   Tube tube_x(domain, timestep,
+..               Function("t", "(t-5)^2 + [-0.5,0.5]"));
+..   Tube tube_y(domain, timestep,
+..               Function("t", "-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
+.. 
+..   Tube tube_a = tube_x + tube_y;
+..   Tube tube_b = sin(tube_x);
+..   Tube tube_c = tube_x.primitive();
 
 Set-inversion
 -------------
@@ -132,6 +139,13 @@ and is illustrated by :numref:`tubesetinversion`.
 .. figure:: ../img/tube_set_inversion.png
   
   Tube set-inversion
+
+**Code example:**
+
+.. code-block:: c++
+
+  // Set-inversion: [x1]^-1([2,3])
+  Interval t = x1.invert(Interval(2,3));
 
 Contractors for tubes
 ---------------------
@@ -178,6 +192,8 @@ with the constraint :math:`a(\cdot)=x(\cdot)+y(\cdot)` is:
 
 In this way, information on either :math:`[a](\cdot)`, :math:`[x](\cdot)` or
 :math:`[y](\cdot)` can be propagated to the other tubes. 
+
+**Code example:**
 
 .. code-block:: c++
 
