@@ -67,10 +67,8 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    vibes::beginDrawing(); vibes::axisAuto();
-    map<Tube*,VibesFigure_Tube*> map_graphics;
-    displayTube(map_graphics, &x, "Tube [x](·)", 100, 100);
-    displayTube(map_graphics, &y, "Tube [y](·)", 150, 150);
+    VibesFigure_Tube::show(&x, "Tube [x](·)", 100, 100);
+    VibesFigure_Tube::show(&y, "Tube [y](·)", 150, 150);
     displayCausalMap(x, y, 200, 200);
 
     #if !BACKWARD_EXAMPLE
@@ -91,9 +89,7 @@ int main(int argc, char *argv[])
 
   /* =========== END =========== */
 
-    // Deleting pointers to graphical tools
-    for(auto& it : map_graphics) delete it.second;
-    vibes::endDrawing();
+    VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:
   return (BACKWARD_EXAMPLE && fabs(x.volume() - 65.5594) < 1e-2 && fabs(y.volume() - 74.9425) < 1e-2)

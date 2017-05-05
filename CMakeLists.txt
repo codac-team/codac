@@ -8,8 +8,6 @@ cmake_minimum_required(VERSION 2.8.7)
 # Settings:
   
   set(CMAKE_CXX_STANDARD 11)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  set(CMAKE_CXX_EXTENSIONS OFF)
   set(PACKAGE_NAME      tubex-lib)
   set(PACKAGE_VERSION   "0.1")
   project(${PACKAGE_NAME})

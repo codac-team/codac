@@ -48,9 +48,7 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    vibes::beginDrawing(); vibes::axisAuto();
-    map<Tube*,VibesFigure_Tube*> map_graphics;
-    displayTube(map_graphics, &x, "Tube [x](·)", 200, 50);
+    VibesFigure_Tube::show(&x, "Tube [x](·)", 200, 50);
 
   /* =========== INTERVAL INTEGRATION =========== */
 
@@ -66,7 +64,7 @@ int main(int argc, char *argv[])
       b &= a.primitive();
       x &= x0 - b;
 
-      displayTube(map_graphics, &x);
+      VibesFigure_Tube::show(&x);
       i++;
       
       if(argc == 1) cin.ignore(); // press ENTER to continue
@@ -74,9 +72,7 @@ int main(int argc, char *argv[])
 
   /* =========== END =========== */
 
-    // Deleting pointers to graphical tools
-    for(auto& it : map_graphics) delete it.second;
-    vibes::endDrawing();
+    VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:
   return (volume_x <= 9.15) ? EXIT_SUCCESS : EXIT_FAILURE;

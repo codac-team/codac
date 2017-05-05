@@ -46,20 +46,13 @@ int main(int argc, char *argv[])
     Tube tube_c = tube_x.primitive();
 
   /* =========== GRAPHICS =========== */
-
-    vibes::beginDrawing(); vibes::axisAuto();
-    map<Tube*,VibesFigure_Tube*> map_graphics;
-    displayTube(map_graphics, &tube_x, "Example tube [x](·)", 200, 100);
-    displayTube(map_graphics, &tube_y, "Example tube [y](·)", 300, 200);
-    displayTube(map_graphics, &tube_a, "Example tube [a](·)", 400, 300);
-    displayTube(map_graphics, &tube_b, "Example tube [b](·)", 500, 400);
-    displayTube(map_graphics, &tube_c, "Example tube [c](·)", 600, 500);
-
-  /* =========== END =========== */
-
-    // Deleting pointers to graphical tools
-    for(auto& it : map_graphics) delete it.second;
-    vibes::endDrawing();
+    
+    VibesFigure_Tube::show(&tube_x, "Example tube [x](·)", 200, 100);
+    VibesFigure_Tube::show(&tube_y, "Example tube [y](·)", 300, 200);
+    VibesFigure_Tube::show(&tube_a, "Example tube [a](·)", 400, 300);
+    VibesFigure_Tube::show(&tube_b, "Example tube [b](·)", 500, 400);
+    VibesFigure_Tube::show(&tube_c, "Example tube [c](·)", 600, 500);
+    VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:
   return (fabs(tube_x.volume() - 10.512) < 1e-2

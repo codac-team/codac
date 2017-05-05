@@ -16,7 +16,7 @@
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
 #include "VibesFigure.h"
-#include "Tube.h"
+#include "Tube.h"    
 
 class VibesFigure_Tube : public VibesFigure
 {
@@ -71,6 +71,27 @@ class VibesFigure_Tube : public VibesFigure
      */
     void showScalarValues(const std::map<double,double>& map_scalar_values, const std::string& color = "red", double points_size = 0.) const;
 
+    /**
+     * \brief A fast function to display a tube
+     *
+     * Instantiate dynamically a new VibesFigure_Tube into a map if the
+     * corresponding key does not exist yet.
+     *
+     * Automatic call to vibes::beginDrawing().
+     *
+     * \param map_graphics a map referencing figure pointers by a tube pointer key
+     * \param tube a pointer to the tube to be displayed
+     * \param figure_name a reference to the figure that will be displayed in the window's title
+     * \param x x-position (0 by default)
+     * \param y y-position (0 by default)
+     */
+    static void show(Tube *tube, const std::string& name = "", int x = 0, int y = 0);
+
+    /**
+     * \brief A fast function to end tubes displays
+     */
+    static void endDrawing();
+
 
   protected:
 
@@ -102,22 +123,8 @@ class VibesFigure_Tube : public VibesFigure
     mutable Tube *m_tube_copy;
     mutable int m_id_map_scalar_values;
     mutable bool m_need_to_update_axis;
-};
 
-/**
- * \brief A fast function to display a tube
- *
- * Instantiate dynamically a new VibesFigure_Tube into a map if the
- * corresponding key does not exist yet.
- *
- * Note: the values of the map has to be deleted at the end.
- *
- * \param map_graphics a map referencing figure pointers by a tube pointer key
- * \param tube a pointer to the tube to be displayed
- * \param figure_name a reference to the figure that will be displayed in the window's title
- * \param x x-position (0 by default)
- * \param y y-position (0 by default)
- */
-void displayTube(std::map<Tube*,VibesFigure_Tube*> &map_graphics, Tube *tube, const std::string& name = "", int x = 0, int y = 0);
+    static std::map<Tube*,VibesFigure_Tube*> map_graphics;
+};
 
 #endif

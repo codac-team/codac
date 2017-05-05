@@ -12,14 +12,24 @@
 
 #include "VibesFigure_Tube.h"
 
+ // a real value to display unbounded slices
+#define BOUNDED_INFINITY 99999.
+
 using namespace std;
 using namespace ibex;
 
-#define BOUNDED_INFINITY 99999. // a real value to display unbounded slices
 
-void displayTube(map<Tube*,VibesFigure_Tube*> &map_graphics, Tube *tube, const string& name, int x, int y)
+std::map<Tube*,VibesFigure_Tube*> VibesFigure_Tube::map_graphics;
+ 
+void VibesFigure_Tube::show(Tube *tube, const string& name, int x, int y)
 {
-  if(map_graphics.find(tube) == map_graphics.end())
+  if(VibesFigure_Tube::map_graphics.size() == 0)
+  {
+    vibes::beginDrawing();
+    vibes::axisAuto();
+  }
+
+  if(VibesFigure_Tube::map_graphics.find(tube) == VibesFigure_Tube::map_graphics.end())
   {
     VibesFigure_Tube *figtube = new VibesFigure_Tube(name, tube);
     figtube->setProperties(x, y, 700, 350);
@@ -28,8 +38,18 @@ void displayTube(map<Tube*,VibesFigure_Tube*> &map_graphics, Tube *tube, const s
     map_graphics[tube] = figtube;
   }
 
-  map_graphics[tube]->show();
+  VibesFigure_Tube::map_graphics[tube]->show();
 }
+
+void VibesFigure_Tube::endDrawing()
+{
+  for(map<Tube*,VibesFigure_Tube*>::iterator it = VibesFigure_Tube::map_graphics.begin();
+      it != VibesFigure_Tube::map_graphics.end();
+      ++it)
+    delete it->second;
+  vibes::endDrawing();
+}
+
 
 VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure(name)
 {

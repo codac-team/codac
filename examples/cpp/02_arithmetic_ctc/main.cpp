@@ -56,13 +56,11 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    vibes::beginDrawing(); vibes::axisAuto();
-    map<Tube*,VibesFigure_Tube*> map_graphics;
-    displayTube(map_graphics, &x, "Tube [x](·)", 300, 200);
-    displayTube(map_graphics, &y, "Tube [y](·)", 400, 300);
-    displayTube(map_graphics, &a, "Tube [a](·)", 500, 400);
-    displayTube(map_graphics, &p, "Tube [p](·)", 600, 500);
-    displayTube(map_graphics, &q, "Tube [q](·)", 700, 600);
+    VibesFigure_Tube::show(&x, "Tube [x](·)", 300, 200);
+    VibesFigure_Tube::show(&y, "Tube [y](·)", 400, 300);
+    VibesFigure_Tube::show(&a, "Tube [a](·)", 500, 400);
+    VibesFigure_Tube::show(&p, "Tube [p](·)", 600, 500);
+    VibesFigure_Tube::show(&q, "Tube [q](·)", 700, 600);
 
   /* =========== MEASUREMENT =========== */
 
@@ -79,18 +77,13 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    displayTube(map_graphics, &x);
-    displayTube(map_graphics, &y);
+    VibesFigure_Tube::show(&x);
+    VibesFigure_Tube::show(&y);
     vibes::drawBox(measurement, "blue", vibesParams("figure", "Tube [y](·)"));
-    displayTube(map_graphics, &a);
-    displayTube(map_graphics, &p);
-    displayTube(map_graphics, &q);
-
-  /* =========== END =========== */
-
-    // Deleting pointers to graphical tools
-    for(auto& it : map_graphics) delete it.second;
-    vibes::endDrawing();
+    VibesFigure_Tube::show(&a);
+    VibesFigure_Tube::show(&p);
+    VibesFigure_Tube::show(&q);
+    VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:
   return (fabs(x.volume() - 10.511) < 1e-2
