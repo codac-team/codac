@@ -15,7 +15,7 @@ trajectory:
   \sin(2t)
   \end{array}\right).\end{array}
 
-This equations describes the actual trajectory which is unknown. To illustrate
+This equation describes the actual trajectory which is unknown. To illustrate
 our approach, we generate differential equations satisfied by :math:`\mathbf{x}(t)`.
 The initial condition is known to belong to a box :math:`[\mathbf{x}_{0}]`.
 The associated constraint network is the following:

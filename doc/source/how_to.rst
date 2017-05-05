@@ -42,11 +42,11 @@ To create a :code:`Tube` object from a map of values (will strictly wrap the map
   map_values[1.2] = 3.4;  map_values[8.5] = -36.0;
 
   Tube x1(domain, timestep, Interval::EMPTY_SET);
-  Tube x2(x1); // x2 is empty, as weel as x1
+  Tube x2(x1); // x2 is empty, as well as x1
 
   // Strict wrapping:
   x1.feed(map_values);
-  // Thickness of 2 centered on the values:
+  // For a thickness of 2, centered on the values:
   x2.feed(map_values, Interval(-1.0,1.0));
 
   // Inflation of x1 (then x1==x2):
@@ -222,7 +222,7 @@ Non-observation constraint
 The contractor :math:`\mathcal{C}_{\textrm{out}}` relies on the observation constraint :math:`y\not=x(t)`, with :math:`t\in[t]`, :math:`y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
 It is applicable through the method :code:`ctcOut()`.
 
-*Note:* a contraction cannot be expected for :math:`[t]`, :math:`[y]`.
+*Note:* a contraction cannot be expected for :math:`[t]` or :math:`[y]`.
 
 .. code-block:: c++
   
@@ -378,25 +378,20 @@ A simple 2D rendering of a tube is available using the `Vibes viewer <http://ens
 
 .. code-block:: c++
 
-  displayTube(map_graphics, &x1, "Tube [x1](·)", 300, 200);
+  VibesFigure_Tube::show(&x1, "Tube [x1](·)", 300, 200);
 
 The above line will display the tube within a Vibes window located at (300,200)px.
-The :code:`map_graphics` variable is a map of pointers that has to be defined once.
-A complete example is provided hereinafter.
+The :code:`endDrawing()` static method has to be called to properly end drawings.
+A brief example is provided hereinafter.
 
 .. code-block:: c++
-  
-  vibes::beginDrawing(); vibes::axisAuto();
-  map<Tube*,VibesFigure_Tube*> map_graphics;
 
   // code...
 
-  displayTube(map_graphics, &x1, "Tube [x1](·)", 300, 200);
+  VibesFigure_Tube::show(&x1, "Tube [x1](·)", 300, 200);
 
   // code...
 
-  for(auto it = map_graphics.begin(); it != map_graphics.end(); ++it)
-    delete it->second; // deleting pointers to graphical tools
-  vibes::endDrawing();
+  VibesFigure_Tube::endDrawing();
 
 See more in :ref:`graphicaltools`.

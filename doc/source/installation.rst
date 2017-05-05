@@ -36,12 +36,13 @@ The code has not been tested on Windows yet.
 Graphics
 ^^^^^^^^
 
-Graphical tools are provided in this library. These require the installation of the `Vibes viewer <http://enstabretagnerobotics.github.io/VIBES/>`_. See the instalaltion requirements.
+Graphical tools are provided in this library. These require the installation of the `Vibes viewer <http://enstabretagnerobotics.github.io/VIBES/>`_. See the installation requirements.
 
 Multi-threading
 ^^^^^^^^^^^^^^^
 
 The Tube class provides multi-threaded features implemented with the `OpenMP library <http://www.openmp.org/>`_.
+
 **Note:** several functions running with OpenMP have not be fully tested yet.
 
 Development

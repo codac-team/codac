@@ -2,7 +2,7 @@
 
 *Tubex* is a C++ library providing tools to guarantee computations over sets of trajectories. 
 
-In the field of *constraint programming*, problems are defined thanks to a constraint network involving variables submitted to constraints and known to belong to given domains. When dealing with dynamical systems, differential constraints have to be considered.
+In the field of *constraint programming*, problems are defined thanks to a constraint network involving variables submitted to rules and known to belong to given domains. When dealing with dynamical systems, differential constraints have to be considered.
 This library is a proposal to solve such problem. A *tube* is a domain for a trajectory variable (*e.g.* a signal evolving with time) for which several numerical, algebraic, non-linear, differential constraints will apply.
 
 Functions called *contractors* are available to reduce these sets of trajectories given several constraints.
