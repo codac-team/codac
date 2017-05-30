@@ -15,6 +15,7 @@
 #include "exceptions/DomainTubeException.h"
 #include "exceptions/EmptyTubeException.h"
 #include <iostream>
+#include <limits>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
   #include <omp.h> // for multithreading
