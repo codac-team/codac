@@ -327,6 +327,17 @@ class Tube
         void feed(const std::map<double,ibex::Interval>& map_values);
 
         /**
+         * \brief Add y-values from a map considering some standard deviation.
+         *
+         * Will enclose the value within [y-2*stddev,y+2*stddev].
+         * Both maps must share the same keys.
+         *
+         * \param map_values a map of y-values referenced by time
+         * \param map_stddev a map of sigma values referenced by time
+         */
+        void feed(const std::map<double,double>& map_values, const std::map<double,double>& map_stddev);
+
+        /**
          * \brief Add y-values from a map.
          *
          * \param map_values a map of y-values referenced by time

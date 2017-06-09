@@ -489,6 +489,23 @@ void Tube::feed(const map<double,Interval>& map_values)
   }
 }
 
+void Tube::feed(const map<double,double>& map_values, const map<double,double>& map_stddev)
+{
+  map<double,Interval> new_map;
+  typename map<double,double>::const_iterator it_map;
+  for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
+  {
+    if(isnan(it_map->second))
+      new_map[it_map->first] = Interval::ALL_REALS;
+    else
+    {
+      double sigma = map_stddev.at(it_map->first);
+      new_map[it_map->first] = Interval(it_map->second - 2*sigma, it_map->second + 2*sigma);
+    }
+  }
+  feed(new_map);
+}
+
 void Tube::feed(const map<double,double>& map_values, const Interval& intv_uncertainty)
 {
   map<double,Interval> new_map;
