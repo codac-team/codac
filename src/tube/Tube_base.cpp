@@ -24,6 +24,12 @@
 using namespace std;
 using namespace ibex;
 
+Tube::Tube()
+{
+  m_first_subtube = NULL;
+  m_second_subtube = NULL;
+}
+
 Tube::Tube(const Interval& domain_, double timestep, const Interval& default_value)
 {
   createFromSpecifications(domain_, timestep, default_value);

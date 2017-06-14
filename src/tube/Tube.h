@@ -26,6 +26,11 @@ class Tube
     /** Basic methods **/
 
         /**
+         * \brief Default constructor
+         */
+        Tube();
+
+        /**
          * \brief Create a tube over the given domain with some timestep.
          *
          * Values are set by default to [-oo,oo].
