@@ -78,7 +78,7 @@ void VibesFigure_Tube::setColors(string slices_color, string slices_contracted_c
 
 void VibesFigure_Tube::show() const
 {
-  return show(m_tube->size());
+  return show(false, m_tube->size());
 }
 
 void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_values, const string& color, double points_size) const
@@ -109,7 +109,7 @@ void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_val
     vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", o.str()));
 }
 
-void VibesFigure_Tube::show(int slices_limit, bool update_background) const
+void VibesFigure_Tube::show(bool detail_slices, int slices_limit, bool update_background) const
 {
   if(m_need_to_update_axis)
   {
@@ -157,16 +157,27 @@ void VibesFigure_Tube::show(int slices_limit, bool update_background) const
   params_slices = vibesParams("figure", m_name, "group", "slices");
   params_contracted_slices = vibesParams("figure", m_name, "group", "slices_contracted");
 
-  if(slices_limit <= 0)
-    slices_limit = m_tube->size();
-
-  for(int i = 0 ; i < m_tube->size() ; i += max((int)(m_tube->size() / slices_limit), 1))
+  if(!detail_slices)
   {
     vibes::Params params = params_slices;
-    Interval y_i = (*m_tube)[i];
-    if(m_tube_copy != NULL && y_i != (*m_tube_copy)[i]) // contraction
-      params = params_contracted_slices;
-    drawSlice(m_tube->domain(i), y_i, params);
+    vector<double> v_x, v_y;
+    computePolygonEnvelope(*m_tube, v_x, v_y);
+    vibes::drawPolygon(v_x, v_y, params_slices);
+  }
+
+  else
+  {
+    if(slices_limit <= 0)
+      slices_limit = m_tube->size();
+
+    for(int i = 0 ; i < m_tube->size() ; i += max((int)(m_tube->size() / slices_limit), 1))
+    {
+      vibes::Params params = params_slices;
+      Interval y_i = (*m_tube)[i];
+      if(m_tube_copy != NULL && y_i != (*m_tube_copy)[i]) // contraction
+        params = params_contracted_slices;
+      drawSlice(m_tube->domain(i), y_i, params);
+    }
   }
 
   if(update_background)

@@ -57,10 +57,11 @@ class VibesFigure_Tube : public VibesFigure
      * This method can be used for heavy tubes when it is costly to display all slices.
      * This will leave blanks between slices.
      *
+     * \param detail_slices if true, each slice will be shown as a box, polygon envelope otherwise
      * \param slices_limit the max number of slices to display
      * \param update_background if true, only last contraction is displayed (true by default)
      */
-    void show(int slices_limit, bool update_background = true) const;
+    void show(bool detail_slices, int slices_limit, bool update_background = true) const;
 
     /**
      * \brief Display scalar values over the tube.
