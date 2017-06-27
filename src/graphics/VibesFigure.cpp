@@ -11,6 +11,8 @@
  * ---------------------------------------------------------------------------- */
 
 #include <cstdio>
+#include <string>
+#include <iostream>
 #include "VibesFigure.h"
 
 using namespace std;
@@ -86,3 +88,22 @@ string VibesFigure::rgb2hex(int r, int g, int b, int alpha, const char* prefix)
 
   return result;
 }
+
+/*void VibesFigure::hex2rgb(const string& hexa, int &r, int &g, int &b, int &alpha)
+{
+  string hexa_min = hexa;
+  if(hexa.find("#") != string::npos)
+    hexa_min = hexa.substr(1,hexa.length()-1);
+
+  if(hexa_min.length() < 6)
+    cout << "VibesFigure::hex2rgb: error, invalid hexa value \"" << hexa << "\"" << endl;
+
+  r = std::stoi(hexa_min.substr(0,2).c_str(), NULL, 16);
+  g = std::stoi(hexa_min.substr(2,2).c_str(), NULL, 16);
+  b = std::stoi(hexa_min.substr(4,2).c_str(), NULL, 16);
+
+  if(hexa_min.length() > 7)
+    alpha = std::stoi(hexa_min.substr(6,2).c_str(), NULL, 16);
+  else
+    alpha = 0;
+}*/
