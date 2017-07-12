@@ -1,6 +1,25 @@
 How to handle tubes with Tubex
 ==============================
 
+Start a program
+---------------
+
+To write a program with Tubex, use the following canvas:
+
+.. code-block:: c++
+
+  #include "Tube.h"
+
+  using namespace std;
+  using namespace tubex;
+
+  int main(int argc, char *argv[])
+  {
+    // write your own code here
+
+  }
+
+
 Instantiation
 -------------
 
