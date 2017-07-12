@@ -845,8 +845,8 @@ std::ostream& operator<<(std::ostream& os, const Tube& x)
   
   cout << "Tube: t=" << x.domain()
        << ", y=" << x.image() 
-       << ", slices=" << x.size()
        << ", dt=" << x.dt()
+       << ", " << x.size() << " slices"
        << flush;
   return os;
 }
