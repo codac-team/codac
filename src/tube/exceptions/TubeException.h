@@ -19,26 +19,29 @@
 #include <sstream>
 #include "Tube.h"
 
-/**
- * \brief TubeException abstract class.
- *
- * Thrown when necessary.
- */
-class TubeException : public std::exception
+namespace tubex
 {
-  public:
+  /**
+   * \brief TubeException abstract class.
+   *
+   * Thrown when necessary.
+   */
+  class TubeException : public std::exception
+  {
+    public:
 
-    TubeException() {};
-    TubeException(const std::string& function_name, const std::string& custom_message);
-    ~TubeException() throw() {};
+      TubeException() {};
+      TubeException(const std::string& function_name, const std::string& custom_message);
+      ~TubeException() throw() {};
 
-    virtual const char* what() const throw();
+      virtual const char* what() const throw();
 
-  protected:
+    protected:
 
-    std::string m_what_msg;
-};
+      std::string m_what_msg;
+  };
 
-std::ostream& operator<<(std::ostream& os, const TubeException& e);
+  std::ostream& operator<<(std::ostream& os, const TubeException& e);
+}
 
 #endif

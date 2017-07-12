@@ -18,32 +18,35 @@
 using namespace std;
 using namespace ibex;
 
-EmptyTubeException::EmptyTubeException(const Tube& x)
+namespace tubex
 {
-  ostringstream os;
-  os << "emptiness over ";
-
-  if(x.image() == Interval::EMPTY_SET)
-    os << "the whole domain";
-
-  else
+  EmptyTubeException::EmptyTubeException(const Tube& x)
   {
-    Interval intv_t_emptiness = Interval::EMPTY_SET;
+    ostringstream os;
+    os << "emptiness over ";
+
+    if(x.image() == Interval::EMPTY_SET)
+      os << "the whole domain";
+
+    else
+    {
+      Interval intv_t_emptiness = Interval::EMPTY_SET;
+      for(int i = 0 ; i < x.size() ; i++)
+        if(x[i].is_empty())
+          intv_t_emptiness |= x.domain(i);
+      os << "[t]=" << intv_t_emptiness << endl;
+    }
+    
+    m_what_msg = os.str();
+  }
+
+  void checkEmptiness(const Tube& x)
+  {
+    if(x.isEmpty())
+      throw EmptyTubeException(x);
+
     for(int i = 0 ; i < x.size() ; i++)
       if(x[i].is_empty())
-        intv_t_emptiness |= x.domain(i);
-    os << "[t]=" << intv_t_emptiness << endl;
+        throw EmptyTubeException(x);
   }
-  
-  m_what_msg = os.str();
-}
-
-void checkEmptiness(const Tube& x)
-{
-  if(x.isEmpty())
-    throw EmptyTubeException(x);
-
-  for(int i = 0 ; i < x.size() ; i++)
-    if(x[i].is_empty())
-      throw EmptyTubeException(x);
 }

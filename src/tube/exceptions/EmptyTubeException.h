@@ -20,18 +20,21 @@
 #include "Tube.h"
 #include "TubeException.h"
 
-/**
- * \brief Emptiness error exception.
- *
- * Thrown when a tube is empty.
- */
-class EmptyTubeException : public TubeException
+namespace tubex
 {
-  public:
+  /**
+   * \brief Emptiness error exception.
+   *
+   * Thrown when a tube is empty.
+   */
+  class EmptyTubeException : public TubeException
+  {
+    public:
 
-    EmptyTubeException(const Tube& x);
-};
+      EmptyTubeException(const Tube& x);
+  };
 
-void checkEmptiness(const Tube& x);
+  void checkEmptiness(const Tube& x);
+}
 
 #endif

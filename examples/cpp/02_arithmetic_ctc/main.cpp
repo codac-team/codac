@@ -24,7 +24,7 @@
 
 using namespace std;
 using namespace ibex;
-using namespace ibex;
+using namespace tubex;
 
 void constraintNetwork(Tube& x, Tube& y, Tube& ydot, Tube& a, Tube& p, Tube& q)
 {

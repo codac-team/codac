@@ -19,6 +19,7 @@
 
 using namespace std;
 using namespace ibex;
+using namespace tubex;
 
 #define BACKWARD_EXAMPLE 1
 

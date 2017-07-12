@@ -19,6 +19,7 @@
 
 using namespace std;
 using namespace ibex;
+using namespace tubex;
 
 void displayLissajousMap(const Tube& x, const Tube& y, int fig_x, int fig_y);
 

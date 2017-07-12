@@ -16,18 +16,21 @@
 
 using namespace std;
 
-TubeException::TubeException(const std::string& function_name, const std::string& custom_message)
+namespace tubex
 {
-  m_what_msg = "in " + function_name + ": " + custom_message;
-}
+  TubeException::TubeException(const std::string& function_name, const std::string& custom_message)
+  {
+    m_what_msg = "in " + function_name + ": " + custom_message;
+  }
 
-const char* TubeException::what() const throw()
-{
-  return m_what_msg.c_str();
-}
+  const char* TubeException::what() const throw()
+  {
+    return m_what_msg.c_str();
+  }
 
-std::ostream& operator<<(std::ostream& os, const TubeException& e)
-{
-  os << e.what();
-  return os;
+  std::ostream& operator<<(std::ostream& os, const TubeException& e)
+  {
+    os << e.what();
+    return os;
+  }
 }

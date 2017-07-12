@@ -14,6 +14,7 @@
 
 using namespace std;
 using namespace ibex;
+using namespace tubex;
 
 Tube tubeTest1()
 {

@@ -20,25 +20,28 @@
 #include "Tube.h"
 #include "TubeException.h"
 
-/**
- * \brief Domain error exception.
- *
- * Thrown when two tubes do not share the same domain
- * or have a different data structure.
- */
-class DomainTubeException : public TubeException
+namespace tubex
 {
-  public:
+  /**
+   * \brief Domain error exception.
+   *
+   * Thrown when two tubes do not share the same domain
+   * or have a different data structure.
+   */
+  class DomainTubeException : public TubeException
+  {
+    public:
 
-    DomainTubeException(const Tube& x, int slice_index);
-    DomainTubeException(const Tube& x, double t);
-    DomainTubeException(const Tube& x, const ibex::Interval& intv_t);
-    DomainTubeException(const Tube& x1, const Tube& x2);
-};
+      DomainTubeException(const Tube& x, int slice_index);
+      DomainTubeException(const Tube& x, double t);
+      DomainTubeException(const Tube& x, const ibex::Interval& intv_t);
+      DomainTubeException(const Tube& x1, const Tube& x2);
+  };
 
-void checkDomain(const Tube& x, int slice_index);
-void checkDomain(const Tube&, double t);
-void checkDomain(const Tube& x, const ibex::Interval& intv_t);
-void checkStructures(const Tube& x1, const Tube& x2);
+  void checkDomain(const Tube& x, int slice_index);
+  void checkDomain(const Tube&, double t);
+  void checkDomain(const Tube& x, const ibex::Interval& intv_t);
+  void checkStructures(const Tube& x1, const Tube& x2);
+}
 
 #endif

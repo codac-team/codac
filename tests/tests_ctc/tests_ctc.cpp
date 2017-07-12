@@ -14,6 +14,8 @@
 #include "../catch/catch.hpp"
 #include "../tests_cases.hpp"
 
+using namespace tubex;
+
 TEST_CASE("Contracting tube: ctcFwd(xdot)", "[ctc]")
 {
   SECTION("Test ctcFwd")

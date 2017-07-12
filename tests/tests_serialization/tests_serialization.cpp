@@ -19,6 +19,7 @@
 using namespace std;
 using namespace Catch;
 using namespace Detail;
+using namespace tubex;
 
 bool testSerialization(const Tube& tube1)
 {

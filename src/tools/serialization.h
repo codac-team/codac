@@ -16,6 +16,8 @@
 #include <fstream>
 #include "ibex_Interval.h"
 
+namespace tubex
+{
   /**
    * \brief Write an Interval object into a binary file.
    * 
@@ -39,5 +41,6 @@
    * \param intv Interval object to be deserialized
    */
   void deserializeInterval(std::ifstream& binFile, ibex::Interval& intv);
+}
 
 #endif

@@ -17,6 +17,7 @@
 
 using namespace Catch;
 using namespace Detail;
+using namespace tubex;
 
 TEST_CASE("Equality, consistency", "[core]")
 {

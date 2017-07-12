@@ -19,11 +19,13 @@
 #include "ibex_IntervalVector.h"
 #include "ibex_Function.h"
 
-class Tube
+namespace tubex
 {
-  public:
+  class Tube
+  {
+    public:
 
-    /** Basic methods **/
+      /** Basic methods **/
 
         /**
          * \brief Default constructor
@@ -452,7 +454,7 @@ class Tube
         std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& intv_t, const Tube& derivative_tube) const;
 
 
-    /** Integration computation **/
+      /** Integration computation **/
 
         /**
          * \brief Return the primitive tube of this, with custom initial condition.
@@ -509,7 +511,7 @@ class Tube
         std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
 
-    /** Contractors **/
+      /** Contractors **/
 
         /**
          * \brief Contract this in forward (from the past to the future)
@@ -626,7 +628,7 @@ class Tube
         static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, const ibex::Function& f);
 
 
-    /** Serialization **/
+      /** Serialization **/
 
         /**
          * \brief Perform the serialization of this.
@@ -643,281 +645,282 @@ class Tube
         bool serialize(const std::string& binary_file_name, const std::vector<std::map<double,double> >& v_real_values) const;
 
 
-  protected:
+    protected:
 
-    /**
-     * \brief Create a tube over a domain defined by a vector of intervals.
-     *
-     * Values are set by default to [-oo,oo].
-     * Note: for now, all timesteps must be identical in the tree.
-     *
-     * \param vector_dt an interval of slices domains
-     * \param default_value default y-values ([-oo,oo] by default)
-     */
-    Tube(const std::vector<ibex::Interval>& vector_dt,
-         const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
+      /**
+       * \brief Create a tube over a domain defined by a vector of intervals.
+       *
+       * Values are set by default to [-oo,oo].
+       * Note: for now, all timesteps must be identical in the tree.
+       *
+       * \param vector_dt an interval of slices domains
+       * \param default_value default y-values ([-oo,oo] by default)
+       */
+      Tube(const std::vector<ibex::Interval>& vector_dt,
+           const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
-    /**
-     * \brief Create a tube based on the given parameters.
-     *
-     * Values are set by default to [-oo,oo].
-     *
-     * \param domain tube's domain
-     * \param timestep tube's precision corresponding to slices width
-     * \param default_value default tube's image ([-oo,oo] by default)
-     */
-    void createFromSpecifications(const ibex::Interval& domain, double timestep, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
+      /**
+       * \brief Create a tube based on the given parameters.
+       *
+       * Values are set by default to [-oo,oo].
+       *
+       * \param domain tube's domain
+       * \param timestep tube's precision corresponding to slices width
+       * \param default_value default tube's image ([-oo,oo] by default)
+       */
+      void createFromSpecifications(const ibex::Interval& domain, double timestep, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
-    /**
-     * \brief Create a tube over a domain defined by a vector of intervals.
-     *
-     * Values are set by default to [-oo,oo].
-     *
-     * \param vector_slices an interval of slices domains
-     * \param default_value default tube's image
-     */
-    void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
+      /**
+       * \brief Create a tube over a domain defined by a vector of intervals.
+       *
+       * Values are set by default to [-oo,oo].
+       *
+       * \param vector_slices an interval of slices domains
+       * \param default_value default tube's image
+       */
+      void createFromSlicesVector(const std::vector<ibex::Interval>& vector_slices, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
-    /**
-     * \brief Return the half sub-tube [t0,tf/2[.
-     *
-     * \return a pointer to the first part of the tube
-     */
-    const Tube* getFirstSubTube() const;
+      /**
+       * \brief Return the half sub-tube [t0,tf/2[.
+       *
+       * \return a pointer to the first part of the tube
+       */
+      const Tube* getFirstSubTube() const;
 
-    /**
-     * \brief Return the half sub-tube [tf/2,tf].
-     *
-     * \return a pointer to the second part of the tube
-     */
-    const Tube* getSecondSubTube() const;
+      /**
+       * \brief Return the half sub-tube [tf/2,tf].
+       *
+       * \return a pointer to the second part of the tube
+       */
+      const Tube* getSecondSubTube() const;
 
-    /**
-     * \brief Return the requested slice of the tube.
-     *
-     * \param index slice's id, between 0 and (size - 1)
-     * \return a pointer to the Tube corresponding to the slice indexed by index
-     */
-    Tube* getSlice(int index);
-    const Tube* getSlice(int index) const;
+      /**
+       * \brief Return the requested slice of the tube.
+       *
+       * \param index slice's id, between 0 and (size - 1)
+       * \return a pointer to the Tube corresponding to the slice indexed by index
+       */
+      Tube* getSlice(int index);
+      const Tube* getSlice(int index) const;
 
-    /**
-     * \brief Return all the nodes of the tree (not only the leafs).
-     *
-     * The root is also included in the vector.
-     *
-     * \param v_nodes a vector containing pointers to the nodes
-     */
-    void getTubeNodes(std::vector<Tube*> &v_nodes);
-    void getTubeNodes(std::vector<const Tube*> &v_nodes) const;
+      /**
+       * \brief Return all the nodes of the tree (not only the leafs).
+       *
+       * The root is also included in the vector.
+       *
+       * \param v_nodes a vector containing pointers to the nodes
+       */
+      void getTubeNodes(std::vector<Tube*> &v_nodes);
+      void getTubeNodes(std::vector<const Tube*> &v_nodes) const;
 
-    /**
-     * \brief Perform the union on the considered node only.
-     *
-     * Parents of children nodes are not updated.
-     * This method is used for multithreading purposes.
-     *
-     * \param x a pointer to the other node
-     */
-    void unionWith_localUpdate(const Tube *x);
+      /**
+       * \brief Perform the union on the considered node only.
+       *
+       * Parents of children nodes are not updated.
+       * This method is used for multithreading purposes.
+       *
+       * \param x a pointer to the other node
+       */
+      void unionWith_localUpdate(const Tube *x);
 
-    /**
-     * \brief Perform the intersection on the considered node only.
-     *
-     * Parents of children nodes are not updated.
-     * This method is used for multithreading purposes.
-     *
-     * \param x a pointer to the other node
-     */
-    void intersectWith_localUpdate(const Tube *x);
+      /**
+       * \brief Perform the intersection on the considered node only.
+       *
+       * Parents of children nodes are not updated.
+       * This method is used for multithreading purposes.
+       *
+       * \param x a pointer to the other node
+       */
+      void intersectWith_localUpdate(const Tube *x);
 
-    /**
-     * \brief Update tube's data structure.
-     *
-     * Tube's structure is based on a binary tree. When a leaf
-     * is changed, the modification has to be propagated through
-     * all upper branches.
-     * This method is defined as 'const' because it does not change
-     * logical values of the tube.
-     * The computation can be done on demand with requestFutureTreeComputation()
-     */
-    void computeTree() const;
+      /**
+       * \brief Update tube's data structure.
+       *
+       * Tube's structure is based on a binary tree. When a leaf
+       * is changed, the modification has to be propagated through
+       * all upper branches.
+       * This method is defined as 'const' because it does not change
+       * logical values of the tube.
+       * The computation can be done on demand with requestFutureTreeComputation()
+       */
+      void computeTree() const;
 
-    /**
-     * \brief Request a future update of the tree.
-     *
-     * Set a flag to 'true' as a request for future tree computation.
-     * See computeTree() method.
-     *
-     * \input index the index of the updated slice,
-     *        by default: -1 corresponding to an update of all slices
-     */
-    void requestFutureTreeComputation(int index = -1) const;
+      /**
+       * \brief Request a future update of the tree.
+       *
+       * Set a flag to 'true' as a request for future tree computation.
+       * See computeTree() method.
+       *
+       * \input index the index of the updated slice,
+       *        by default: -1 corresponding to an update of all slices
+       */
+      void requestFutureTreeComputation(int index = -1) const;
 
-    /**
-     * \brief Update tube's pre-computed primitives.
-     *
-     * For efficiency reasons, primitives are pre-computed
-     * and stored into each node of the tree.
-     * The computation can be done on demand with requestFuturePrimitiveComputation()
-     *
-     * \input build_from_leafs true if the primitives have to be computed from the leafs (false by default)
-     */
-    void computePartialPrimitive(bool build_from_leafs = false) const;
+      /**
+       * \brief Update tube's pre-computed primitives.
+       *
+       * For efficiency reasons, primitives are pre-computed
+       * and stored into each node of the tree.
+       * The computation can be done on demand with requestFuturePrimitiveComputation()
+       *
+       * \input build_from_leafs true if the primitives have to be computed from the leafs (false by default)
+       */
+      void computePartialPrimitive(bool build_from_leafs = false) const;
 
-    /**
-     * \brief Request a future computation of primitives.
-     *
-     * Set a flag to 'true' as a request for future primitives computation.
-     * See computePartialPrimitive() method.
-     */
-    void requestFuturePrimitiveComputation() const;
+      /**
+       * \brief Request a future computation of primitives.
+       *
+       * Set a flag to 'true' as a request for future primitives computation.
+       * See computePartialPrimitive() method.
+       */
+      void requestFuturePrimitiveComputation() const;
 
-    /**
-     * \brief Return the precise and partial bounded-integral over the domain represented by [0,[t]] for f- and f+.
-     *
-     * \param t the bounded upper bound of the domain, [-oo,oo] by default
-     * \return a pair of integrals <[s1,s2],[S1,S2]>
-     *   [s1,s2] corresponds to the bounded integral of f- over [0,[t]]
-     *   [S1,S2] corresponds to the bounded integral of f+ over [0,[t]]
-     */
-    std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
+      /**
+       * \brief Return the precise and partial bounded-integral over the domain represented by [0,[t]] for f- and f+.
+       *
+       * \param t the bounded upper bound of the domain, [-oo,oo] by default
+       * \return a pair of integrals <[s1,s2],[S1,S2]>
+       *   [s1,s2] corresponds to the bounded integral of f- over [0,[t]]
+       *   [S1,S2] corresponds to the bounded integral of f+ over [0,[t]]
+       */
+      std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
-    /**
-     * \brief Perform precise set-inversion on this.
-     *
-     * The set-inversion of this tube consists in determining the set intv_t such that intv_t = [f]^-1(intv_y)
-     * Here the returned value vector<intv_t> corresponds to detailed solutions.
-     *
-     * \param intv_y the image to invert
-     * \param intv_t the optional t domain to consider
-     * \param concatenate_results results may be adjacent, so a concatenation on vector's values can be requested
-     * \return a vector containing each solutions of the set-inversion
-     */
-    void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t, bool concatenate_results) const;
+      /**
+       * \brief Perform precise set-inversion on this.
+       *
+       * The set-inversion of this tube consists in determining the set intv_t such that intv_t = [f]^-1(intv_y)
+       * Here the returned value vector<intv_t> corresponds to detailed solutions.
+       *
+       * \param intv_y the image to invert
+       * \param intv_t the optional t domain to consider
+       * \param concatenate_results results may be adjacent, so a concatenation on vector's values can be requested
+       * \return a vector containing each solutions of the set-inversion
+       */
+      void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t, bool concatenate_results) const;
 
-    /**
-     * \brief To be defined...
-     */
-    void ctcObs_computeIndex(const ibex::Interval& y, const ibex::Interval& t, int& index_lb, int& index_ub);
+      /**
+       * \brief To be defined...
+       */
+      void ctcObs_computeIndex(const ibex::Interval& y, const ibex::Interval& t, int& index_lb, int& index_ub);
 
-    /**
-     * \brief Deserialize a binary file into a tube.
-     *
-     * The binary file has to be created with the reciprocal method Tube::serialize()
-     *
-     * \param binary_file_name the file name to deserialize
-     * \param real_values an optional map to get map<double,double> values possibly stored in the file
-     * \param v_real_values an optional vector of maps to get sets of map<double,double> values possibly stored in the file
-     */
-    void deserialize(const std::string& binary_file_name, std::map<double,double>& real_values);
-    void deserialize(const std::string& binary_file_name, std::vector<std::map<double,double> >& v_real_values);
+      /**
+       * \brief Deserialize a binary file into a tube.
+       *
+       * The binary file has to be created with the reciprocal method Tube::serialize()
+       *
+       * \param binary_file_name the file name to deserialize
+       * \param real_values an optional map to get map<double,double> values possibly stored in the file
+       * \param v_real_values an optional vector of maps to get sets of map<double,double> values possibly stored in the file
+       */
+      void deserialize(const std::string& binary_file_name, std::map<double,double>& real_values);
+      void deserialize(const std::string& binary_file_name, std::vector<std::map<double,double> >& v_real_values);
 
-    /** Class variables **/
+      /** Class variables **/
 
-      // Tube structure (no mutable needs)
-      int m_slices_number;
-      ibex::Interval m_domain;
-      Tube *m_first_subtube, *m_second_subtube;
+        // Tube structure (no mutable needs)
+        int m_slices_number;
+        ibex::Interval m_domain;
+        Tube *m_first_subtube, *m_second_subtube;
 
-      // Tube attributes ('mutable' required: values may be updated from const methods)
-      mutable double m_volume;
-      mutable double m_dt_specifications;
-      mutable ibex::Interval m_image;
-      mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
-      mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
-      mutable bool m_tree_computation_needed;
-      mutable bool m_primitive_computation_needed;
-};
+        // Tube attributes ('mutable' required: values may be updated from const methods)
+        mutable double m_volume;
+        mutable double m_dt_specifications;
+        mutable ibex::Interval m_image;
+        mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
+        mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
+        mutable bool m_tree_computation_needed;
+        mutable bool m_primitive_computation_needed;
+  };
 
-    /** Arithmetic **/
+  /** Arithmetic **/
 
-    void warningTubesSizes(const Tube& x1, const Tube& x2);
+  void warningTubesSizes(const Tube& x1, const Tube& x2);
 
-    Tube operator+(const Tube& x);
-    Tube operator+(const Tube& x1, const Tube& x2);
-    Tube operator+(const Tube& x1, double x2);
-    Tube operator+(double x1, const Tube& x2);
-    Tube operator+(const Tube& x1, const ibex::Interval& x2);
-    Tube operator+(const ibex::Interval& x1, const Tube& x2);
+  Tube operator+(const Tube& x);
+  Tube operator+(const Tube& x1, const Tube& x2);
+  Tube operator+(const Tube& x1, double x2);
+  Tube operator+(double x1, const Tube& x2);
+  Tube operator+(const Tube& x1, const ibex::Interval& x2);
+  Tube operator+(const ibex::Interval& x1, const Tube& x2);
 
-    Tube operator-(const Tube& x);
-    Tube operator-(const Tube& x1, const Tube& x2);
-    Tube operator-(const Tube& x1, double x2);
-    Tube operator-(double x1, const Tube& x2);
-    Tube operator-(const Tube& x1,  const ibex::Interval& x2);
-    Tube operator-(const ibex::Interval& x1, const Tube& x2);
+  Tube operator-(const Tube& x);
+  Tube operator-(const Tube& x1, const Tube& x2);
+  Tube operator-(const Tube& x1, double x2);
+  Tube operator-(double x1, const Tube& x2);
+  Tube operator-(const Tube& x1,  const ibex::Interval& x2);
+  Tube operator-(const ibex::Interval& x1, const Tube& x2);
 
-    Tube operator*(const Tube& x1, const Tube& x2);
-    Tube operator*(const Tube& x1, double x2);
-    Tube operator*(double x1, const Tube& x2);
-    Tube operator*(const ibex::Interval& x1, const Tube& x2);
-    Tube operator*(const Tube& x1, const ibex::Interval& x2);
+  Tube operator*(const Tube& x1, const Tube& x2);
+  Tube operator*(const Tube& x1, double x2);
+  Tube operator*(double x1, const Tube& x2);
+  Tube operator*(const ibex::Interval& x1, const Tube& x2);
+  Tube operator*(const Tube& x1, const ibex::Interval& x2);
 
-    Tube operator/(const Tube& x1, const Tube& x2);
-    Tube operator/(const Tube& x1, double x2);
-    Tube operator/(double x1, const Tube& x2);
-    Tube operator/(const ibex::Interval& x1, const Tube& x2);
-    Tube operator/(const Tube& x1, const ibex::Interval& x2);
+  Tube operator/(const Tube& x1, const Tube& x2);
+  Tube operator/(const Tube& x1, double x2);
+  Tube operator/(double x1, const Tube& x2);
+  Tube operator/(const ibex::Interval& x1, const Tube& x2);
+  Tube operator/(const Tube& x1, const ibex::Interval& x2);
 
-    Tube operator|(const Tube& x1, const Tube& x2);
-    Tube operator|(const Tube& x1, double x2);
-    Tube operator|(double x1, const Tube& x2);
-    Tube operator|(const ibex::Interval& x1, const Tube& x2);
-    Tube operator|(const Tube& x1, const ibex::Interval& x2);
+  Tube operator|(const Tube& x1, const Tube& x2);
+  Tube operator|(const Tube& x1, double x2);
+  Tube operator|(double x1, const Tube& x2);
+  Tube operator|(const ibex::Interval& x1, const Tube& x2);
+  Tube operator|(const Tube& x1, const ibex::Interval& x2);
 
-    Tube operator&(const Tube& x1, const Tube& x2);
-    Tube operator&(const Tube& x1, double x2);
-    Tube operator&(double x1, const Tube& x2);
-    Tube operator&(const ibex::Interval& x1, const Tube& x2);
-    Tube operator&(const Tube& x1, const ibex::Interval& x2);
+  Tube operator&(const Tube& x1, const Tube& x2);
+  Tube operator&(const Tube& x1, double x2);
+  Tube operator&(double x1, const Tube& x2);
+  Tube operator&(const ibex::Interval& x1, const Tube& x2);
+  Tube operator&(const Tube& x1, const ibex::Interval& x2);
 
-    Tube abs(const Tube& x);
-    Tube sqr(const Tube& x);
-    Tube sqrt(const Tube& x);
-    Tube pow(const Tube& x, int p);
-    Tube pow(const Tube& x, double p);
-    Tube pow(const Tube &x, const ibex::Interval& p);
-    Tube root(const Tube& x, int p);
-    Tube exp(const Tube& x);
-    Tube log(const Tube& x);
-    Tube cos(const Tube& x);
-    Tube sin(const Tube& x);
-    Tube tan(const Tube& x);
-    Tube acos(const Tube& x);
-    Tube asin(const Tube& x);
-    Tube atan(const Tube& x);
-    Tube cosh(const Tube& x);
-    Tube sinh(const Tube& x);
-    Tube tanh(const Tube& x);
-    Tube acosh(const Tube& x);
-    Tube asinh(const Tube& x);
-    Tube atanh(const Tube& x);
-    Tube atan2(const Tube& y, const Tube& x);
+  Tube abs(const Tube& x);
+  Tube sqr(const Tube& x);
+  Tube sqrt(const Tube& x);
+  Tube pow(const Tube& x, int p);
+  Tube pow(const Tube& x, double p);
+  Tube pow(const Tube &x, const ibex::Interval& p);
+  Tube root(const Tube& x, int p);
+  Tube exp(const Tube& x);
+  Tube log(const Tube& x);
+  Tube cos(const Tube& x);
+  Tube sin(const Tube& x);
+  Tube tan(const Tube& x);
+  Tube acos(const Tube& x);
+  Tube asin(const Tube& x);
+  Tube atan(const Tube& x);
+  Tube cosh(const Tube& x);
+  Tube sinh(const Tube& x);
+  Tube tanh(const Tube& x);
+  Tube acosh(const Tube& x);
+  Tube asinh(const Tube& x);
+  Tube atanh(const Tube& x);
+  Tube atan2(const Tube& y, const Tube& x);
 
-    /** Arithmetic contractors **/
+  /** Arithmetic contractors **/
 
-    bool ctcAbs(Tube& y, Tube& x);
-    bool ctcSqr(Tube& y, Tube& x);
-    bool ctcSqrt(Tube& y, Tube& x);
-    bool ctcPow(Tube& y, Tube& x, int p);
-    bool ctcPow(Tube& y, Tube& x, double p);
-    bool ctcPow(Tube& y, Tube& x, ibex::Interval& p);
-    bool ctcRoot(Tube& y, Tube& x);
-    bool ctcExp(Tube& y, Tube& x);
-    bool ctcLog(Tube& y, Tube& x);
-    bool ctcCos(Tube& y, Tube& x);
-    bool ctcSin(Tube& y, Tube& x);
-    bool ctcTan(Tube& y, Tube& x);
-    bool ctcAcos(Tube& y, Tube& x);
-    bool ctcAsin(Tube& y, Tube& x);
-    bool ctcAtan(Tube& y, Tube& x);
-    bool ctcCosh(Tube& y, Tube& x);
-    bool ctcSinh(Tube& y, Tube& x);
-    bool ctcTanh(Tube& y, Tube& x);
-    bool ctcAcosh(Tube& y, Tube& x);
-    bool ctcAsinh(Tube& y, Tube& x);
-    bool ctcAtanh(Tube& y, Tube& x);
-    bool ctcAtan2(Tube& theta, Tube& y, Tube& x);
+  bool ctcAbs(Tube& y, Tube& x);
+  bool ctcSqr(Tube& y, Tube& x);
+  bool ctcSqrt(Tube& y, Tube& x);
+  bool ctcPow(Tube& y, Tube& x, int p);
+  bool ctcPow(Tube& y, Tube& x, double p);
+  bool ctcPow(Tube& y, Tube& x, ibex::Interval& p);
+  bool ctcRoot(Tube& y, Tube& x);
+  bool ctcExp(Tube& y, Tube& x);
+  bool ctcLog(Tube& y, Tube& x);
+  bool ctcCos(Tube& y, Tube& x);
+  bool ctcSin(Tube& y, Tube& x);
+  bool ctcTan(Tube& y, Tube& x);
+  bool ctcAcos(Tube& y, Tube& x);
+  bool ctcAsin(Tube& y, Tube& x);
+  bool ctcAtan(Tube& y, Tube& x);
+  bool ctcCosh(Tube& y, Tube& x);
+  bool ctcSinh(Tube& y, Tube& x);
+  bool ctcTanh(Tube& y, Tube& x);
+  bool ctcAcosh(Tube& y, Tube& x);
+  bool ctcAsinh(Tube& y, Tube& x);
+  bool ctcAtanh(Tube& y, Tube& x);
+  bool ctcAtan2(Tube& theta, Tube& y, Tube& x);
+}
 
 #endif
