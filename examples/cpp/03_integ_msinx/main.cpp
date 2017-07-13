@@ -1,7 +1,7 @@
 /* ============================================================================
  *  tubex-lib - Guaranteed integration example: xdot = -sin(x)
  *
- *  Example from the paper "Guaranteed Computation of Robots Trajectories"
+ *  Example from the paper "Guaranteed Computation of Robot Trajectories"
  *  Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
  *
  *  Here we consider the following initial value problem:
@@ -17,7 +17,7 @@
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
- *              the GNU General Public License (GPL). See the file LICENSE.
+ *              the GNU Lesser General Public License (LGPL).
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -

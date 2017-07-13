@@ -24,7 +24,7 @@ Tubex is compatible with the `IBEX library <http://www.ibex-lib.org/>`_, itself 
 Licence
 -------
 
-This software is under `GNU General Public License <https://www.gnu.org/copyleft/gpl.html>`_.
+This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 Documentation
 -------------

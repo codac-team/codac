@@ -3,7 +3,7 @@
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
- *              the GNU General Public License (GPL). See the file LICENSE.
+ *              the GNU Lesser General Public License (LGPL).
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -
