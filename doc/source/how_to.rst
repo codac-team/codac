@@ -206,7 +206,7 @@ Differential constraint
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 The contractor :math:`\mathcal{C}_{\frac{d}{dt}}` relies on the differential constraint :math:`\dot{x}=v`, with :math:`x(\cdot)\in[x](\cdot)`, :math:`v(\cdot)\in[v](\cdot)`.
-It is applicable through the method :code:`ctcFwdBwd()`.
+It is applicable by the method :code:`ctcFwdBwd()`.
 This has been the subject of the paper `Guaranteed computation of robot trajectories <http://simon-rohou.fr/research/tubint/tubint_paper.pdf>`_.
 
 *Note:* a contraction cannot be expected for the tube :math:`[v](\cdot)`.
@@ -221,7 +221,7 @@ Observation constraint
 ^^^^^^^^^^^^^^^^^^^^^^
 
 The contractor :math:`\mathcal{C}_{\textrm{obs}}` relies on the observation constraint :math:`y=x(t)`, with :math:`t\in[t]`, :math:`y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
-It is applicable through the method :code:`ctcObs()`.
+It is applicable by the method :code:`ctcObs()`.
 This will be the subject of the paper *Reliable non-linear state estimation involving time uncertainties*.
 
 *Note:* the derivative tube :math:`[v](\cdot)` is required.
@@ -238,8 +238,8 @@ This will be the subject of the paper *Reliable non-linear state estimation invo
 Non-observation constraint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The contractor :math:`\mathcal{C}_{\textrm{out}}` relies on the observation constraint :math:`y\not=x(t)`, with :math:`t\in[t]`, :math:`y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
-It is applicable through the method :code:`ctcOut()`.
+The contractor :math:`\mathcal{C}_{\textrm{out}}` relies on the observation constraint :math:`y\not=x(t)`, :math:`\forall t\in[t],y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
+It is applicable by the method :code:`ctcOut()`.
 
 *Note:* a contraction cannot be expected for :math:`[t]` or :math:`[y]`.
 
@@ -255,7 +255,7 @@ Inter-temporal constraint
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The contractor :math:`\mathcal{C}_{t_1,t_2}` relies on the observation constraint :math:`x(t_1)=x(t_2)`, with :math:`t_1\in[t_1]`, :math:`t_2\in[t_2]`, :math:`x(\cdot)\in[x](\cdot)`.
-It is applicable through the method :code:`ctcIntertemporal()`.
+It is applicable by the method :code:`ctcIntertemporal()`.
 This will be the subject of the paper *Loop-based localization method for mobile robots*.
 
 *Note:* in this implementation, a contraction cannot be expected for the tube :math:`[x](\cdot)`.
