@@ -233,6 +233,14 @@ namespace tubex
         bool operator==(const Tube& tu) const;
 
         /**
+         * \brief Comparison operator between two tubes. Return true in case of inequality.
+         *
+         * \param tu the tube to be compared
+         * \return a boolean
+         */
+        bool operator!=(const Tube& tu) const;
+
+        /**
          * \brief Return the image (y-value) of the i^th slice, refered by index.
          *
          * \param index slice's id, between 0 and (size - 1)

@@ -323,6 +323,13 @@ namespace tubex
             || (*getFirstSubTube() == *tu.getFirstSubTube() && *getSecondSubTube() == *tu.getSecondSubTube());
   }
 
+  bool Tube::operator!=(const Tube& tu) const
+  {
+    return image() != tu.image()
+        || domain() != tu.domain()
+        || (!isSlice() && !tu.isSlice() && (*getFirstSubTube() != *tu.getFirstSubTube() || *getSecondSubTube() != *tu.getSecondSubTube()));
+  }
+
   const Interval& Tube::operator[](int index) const
   {
     // Write access is not allowed for this operator:
