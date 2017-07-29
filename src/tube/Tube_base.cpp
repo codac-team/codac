@@ -942,9 +942,6 @@ namespace tubex
 
   pair<Interval,Interval> Tube::partialInterpol(const Interval& intv_t, const Tube& derivative_tube) const
   {
-    Interval lb, ub;
-    lb.set_empty(); ub.set_empty();
-
     Interval y_tlb = interpol(intv_t.lb(), derivative_tube);
     Interval y_tub = interpol(intv_t.ub(), derivative_tube);
 
@@ -955,13 +952,16 @@ namespace tubex
      *    Interval(POS_INFINITY) = EMPTY_SET
      *    Interval(NEG_INFINITY,POS_INFINITY) = EMPTY_SET
      *
-     * Because of that, we have to detect infinite bounds
+     * So, we have to detect infinite bounds
      * and work with dbl_max (max double).
      *
      * This is only a temporary solution.
      */
 
-      double dbl_max = std::numeric_limits<float>::infinity();
+      double dbl_max = std::numeric_limits<double>::max();
+
+      Interval lb, ub;
+      lb.set_empty(); ub.set_empty();
 
       lb |= y_tlb.lb() == NEG_INFINITY ? Interval(-dbl_max) : y_tlb.lb();
       ub |= y_tlb.ub() == POS_INFINITY ? Interval(dbl_max) : y_tlb.ub();
@@ -969,7 +969,6 @@ namespace tubex
       lb |= y_tub.lb() == NEG_INFINITY ? Interval(-dbl_max) : y_tub.lb();
       ub |= y_tub.ub() == POS_INFINITY ? Interval(dbl_max) : y_tub.ub();
 
-    Interval y = interpol(intv_t.lb(), derivative_tube) | interpol(intv_t.ub(), derivative_tube);
     for(int i = min(size() - 1, input2index(intv_t.lb()) + 1) ; i < max(0, input2index(intv_t.ub()) - 1) ; i++)
     {
       pair<Interval,Interval> p_i = eval(domain(i));
