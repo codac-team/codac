@@ -42,7 +42,7 @@ namespace tubex
                           "height", m_height));
   }
 
-  void VibesFigure::axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
+  const IntervalVector& VibesFigure::axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
   {
     IntervalVector view_box(2, Interval::EMPTY_SET);
     view_box[0] |= Interval(x_min) | x_max;
@@ -75,9 +75,8 @@ namespace tubex
       m_view_box[1] = Interval(y_min, y_max);
     }
 
-    cout << m_name << m_view_box << endl;
-
     vibes::axisLimits(m_view_box[0].lb(), m_view_box[0].ub(), m_view_box[1].lb(), m_view_box[1].ub());
+    return m_view_box;
   }
 
   void VibesFigure::saveImage(const string& suffix, const string& extension) const

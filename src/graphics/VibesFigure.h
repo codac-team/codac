@@ -88,8 +88,9 @@ namespace tubex
        * \param y_min 
        * \param y_max 
        * \param keep_ratio view box is set to fit with the params, without changing its ratio (false by default)
+       * \return the limits box
        */
-      void axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio = false);
+      const ibex::IntervalVector& axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio = false);
 
       /**
        * \brief Save vibes-figure in SVG/PNG/... format.
