@@ -52,13 +52,15 @@ namespace tubex
   }
 
 
-  VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : VibesFigure(name)
+  VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : m_tubes_box(2, Interval::EMPTY_SET), VibesFigure(name)
   {
     m_tube = tube;
     m_tube_copy = NULL;
     m_id_map_scalar_values = 0;
     setColors("#A0A0A0[#FFEA00]", "#888888[#FFBB00]");
     m_need_to_update_axis = true;
+    m_tubes_box[0] |= tube->domain();
+    m_tubes_box[1] |= tube->image();
   }
 
   VibesFigure_Tube::~VibesFigure_Tube()
@@ -71,15 +73,16 @@ namespace tubex
     if(slices_contracted_color == "")
       slices_contracted_color = slices_color;
 
+    vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));
     vibes::newGroup("slices_old_background", background_color, vibesParams("figure", m_name));
     vibes::newGroup("slices", slices_color, vibesParams("figure", m_name));
     vibes::newGroup("slices_contracted", slices_contracted_color, vibesParams("figure", m_name));
     vibes::newGroup("true_values", truth_color, vibesParams("figure", m_name));
   }
 
-  void VibesFigure_Tube::show() const
+  void VibesFigure_Tube::show()
   {
-    return show(true, m_tube->size());
+    return show(false, m_tube->size());
   }
 
   void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_values, const string& color, double points_size) const
@@ -110,8 +113,10 @@ namespace tubex
       vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", o.str()));
   }
 
-  void VibesFigure_Tube::show(bool detail_slices, int slices_limit, bool update_background) const
+  void VibesFigure_Tube::show(bool detail_slices, int slices_limit, bool update_background)
   {
+    vibes::drawBox(m_tubes_box, vibesParams("figure", m_name, "group", "transparent_box"));
+
     if(m_need_to_update_axis)
     {
       double image_lb, image_ub;
@@ -138,7 +143,7 @@ namespace tubex
         }
       }
 
-      vibes::axisLimits(m_tube->domain().lb(), m_tube->domain().ub(), image_lb, image_ub, m_name);
+      axisLimits(m_tube->domain().lb(), m_tube->domain().ub(), image_lb, image_ub);
       m_need_to_update_axis = false;
     }
 
@@ -186,6 +191,8 @@ namespace tubex
       if(m_tube_copy != NULL)
         delete m_tube_copy;
       m_tube_copy = new Tube(*m_tube);
+      m_tubes_box[0] |= m_tube->domain();
+      m_tubes_box[1] |= m_tube->image();
     }
 
     if(m_tube->image() == Interval::ALL_REALS)

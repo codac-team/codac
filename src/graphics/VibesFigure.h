@@ -13,8 +13,9 @@
 #ifndef VIBESFIGURE_HEADER
 #define VIBESFIGURE_HEADER
 
-#include "vibes.h"
 #include <string>
+#include "vibes.h"
+#include "ibex_IntervalVector.h"
 
 namespace tubex
 {
@@ -80,6 +81,17 @@ namespace tubex
       void setProperties(int x, int y, int width, int height);
 
       /**
+       * \brief Set figure's axis limits.
+       *
+       * \param x_min 
+       * \param x_max 
+       * \param y_min 
+       * \param y_max 
+       * \param keep_ratio view box is set to fit with the params, without changing its ratio (false by default)
+       */
+      void axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio = false);
+
+      /**
        * \brief Save vibes-figure in SVG/PNG/... format.
        *
        * A file named {figure_name}{suffix}.svg is created in the current directory.
@@ -94,7 +106,7 @@ namespace tubex
        *
        * This is a virtual method to overload.
        */
-      virtual void show() const = 0;
+      virtual void show() = 0;
 
       /**
        * \brief Convert RGB grayscales values to hexa notation.
@@ -125,6 +137,7 @@ namespace tubex
 
       mutable std::string m_name;
       double m_x, m_y, m_width, m_height;
+      ibex::IntervalVector m_view_box;
   };
 }
 

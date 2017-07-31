@@ -16,10 +16,11 @@
 #include "VibesFigure.h"
 
 using namespace std;
+using namespace ibex;
 
 namespace tubex
 {
-  VibesFigure::VibesFigure(const string& figure_name)
+  VibesFigure::VibesFigure(const string& figure_name) : m_view_box(2, Interval::EMPTY_SET)
   {
     m_name = figure_name;
     vibes::newFigure(m_name);
@@ -39,6 +40,44 @@ namespace tubex
                           "y", m_y,
                           "width", m_width,
                           "height", m_height));
+  }
+
+  void VibesFigure::axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
+  {
+    IntervalVector view_box(2, Interval::EMPTY_SET);
+    view_box[0] |= Interval(x_min) | x_max;
+    view_box[1] |= Interval(y_min) | y_max;
+
+    float r = 1.;
+
+    if(keep_ratio && !m_view_box.is_empty())
+    {
+      float r = m_view_box[0].diam() / m_view_box[1].diam();
+
+
+      IntervalVector b1(2);
+      b1[0] = Interval(x_min, x_max);
+      b1[1] = (y_min + y_max)/2. + (b1[0]-b1[0].mid())/r;
+
+      IntervalVector b2(2);
+      b2[1] = Interval(y_min, y_max);
+      b2[0] = (x_min + x_max)/2. + (b2[1]-b2[1].mid())*r;
+
+      if(b1.is_subset(b2))
+        m_view_box = b2;
+      else
+        m_view_box = b1;
+    }
+
+    else
+    {
+      m_view_box[0] = Interval(x_min, x_max);
+      m_view_box[1] = Interval(y_min, y_max);
+    }
+
+    cout << m_name << m_view_box << endl;
+
+    vibes::axisLimits(m_view_box[0].lb(), m_view_box[0].ub(), m_view_box[1].lb(), m_view_box[1].ub());
   }
 
   void VibesFigure::saveImage(const string& suffix, const string& extension) const

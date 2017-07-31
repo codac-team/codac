@@ -51,7 +51,7 @@ namespace tubex
        *
        * This method shows all slices.
        */
-      virtual void show() const;
+      virtual void show();
 
       /**
        * \brief Display the tube.
@@ -63,7 +63,7 @@ namespace tubex
        * \param slices_limit the max number of slices to display
        * \param update_background if true, only last contraction is displayed (true by default)
        */
-      void show(bool detail_slices, int slices_limit, bool update_background = true) const;
+      void show(bool detail_slices, int slices_limit, bool update_background = true);
 
       /**
        * \brief Display scalar values over the tube.
@@ -126,6 +126,7 @@ namespace tubex
       mutable Tube *m_tube_copy;
       mutable int m_id_map_scalar_values;
       mutable bool m_need_to_update_axis;
+      mutable ibex::IntervalVector m_tubes_box;
 
       static std::map<Tube*,VibesFigure_Tube*> map_graphics;
   };
