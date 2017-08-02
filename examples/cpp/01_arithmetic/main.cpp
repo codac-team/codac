@@ -10,6 +10,7 @@
  *    [a](·) = [x](·) + [y](·)
  *    [b](·) = sin([x](·))
  *    [c](·) = integ([x](tau)dtau)
+ *    [d](·) = |[y](·)|
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -45,14 +46,16 @@ int main(int argc, char *argv[])
     Tube tube_a = tube_x + tube_y;
     Tube tube_b = sin(tube_x);
     Tube tube_c = tube_x.primitive();
+    Tube tube_d = abs(tube_y);
 
   /* =========== GRAPHICS =========== */
     
-    VibesFigure_Tube::show(&tube_x, "Example tube [x](·)", 200, 100);
-    VibesFigure_Tube::show(&tube_y, "Example tube [y](·)", 300, 200);
-    VibesFigure_Tube::show(&tube_a, "Example tube [a](·)", 400, 300);
-    VibesFigure_Tube::show(&tube_b, "Example tube [b](·)", 500, 400);
-    VibesFigure_Tube::show(&tube_c, "Example tube [c](·)", 600, 500);
+    VibesFigure_Tube::show(&tube_x, "Tube [x](·)", 200, 100);
+    VibesFigure_Tube::show(&tube_y, "Tube [y](·)", 300, 200);
+    VibesFigure_Tube::show(&tube_a, "Tube [a](·)", 400, 300);
+    VibesFigure_Tube::show(&tube_b, "Tube [b](·)", 500, 400);
+    VibesFigure_Tube::show(&tube_c, "Tube [c](·)", 600, 500);
+    VibesFigure_Tube::show(&tube_d, "Tube [d](·)", 700, 600);
     VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:
