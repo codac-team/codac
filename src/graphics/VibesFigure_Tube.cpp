@@ -13,7 +13,7 @@
 #include "VibesFigure_Tube.h"
 
  // a real value to display unbounded slices
-#define BOUNDED_INFINITY 99999.
+#define BOUNDED_INFINITY std::numeric_limits<float>::max()
 
 using namespace std;
 using namespace ibex;
@@ -214,19 +214,21 @@ namespace tubex
     for(int i = 0 ; i < tube.size() ; i++)
     {
       IntervalVector sliceBox = tube.sliceBox(i);
+
       v_x.push_back(sliceBox[0].lb());
       v_x.push_back(sliceBox[0].ub());
-      v_y.push_back(sliceBox[1].ub());
-      v_y.push_back(sliceBox[1].ub());
+      v_y.push_back(isinf(sliceBox[1].ub()) ? BOUNDED_INFINITY : sliceBox[1].ub());
+      v_y.push_back(isinf(sliceBox[1].ub()) ? BOUNDED_INFINITY : sliceBox[1].ub());
     }
 
     for(int i = tube.size() - 1 ; i >= 0 ; i--)
     {
       IntervalVector sliceBox = tube.sliceBox(i);
+
       v_x.push_back(sliceBox[0].ub());
       v_x.push_back(sliceBox[0].lb());
-      v_y.push_back(sliceBox[1].lb());
-      v_y.push_back(sliceBox[1].lb());
+      v_y.push_back(isinf(sliceBox[1].lb()) ? -BOUNDED_INFINITY : sliceBox[1].lb());
+      v_y.push_back(isinf(sliceBox[1].lb()) ? -BOUNDED_INFINITY : sliceBox[1].lb());
     }
   }
 }
