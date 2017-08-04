@@ -75,12 +75,9 @@ namespace tubex
       m_view_box[1] = Interval(y_min, y_max);
     }
 
-    vibes::axisLimits(m_view_box[0].lb(), m_view_box[0].ub(), m_view_box[1].lb(), m_view_box[1].ub(), m_name);
-
-    
-    vibes::setFigureProperties(
-              vibesParams("figure", m_name,
-                          "viewbox", "equal"));
+    vibes::axisLimits(m_view_box[0].lb(), m_view_box[0].ub(),
+                      m_view_box[1].lb(), m_view_box[1].ub(),
+                      m_name);
     return m_view_box;
   }
 
