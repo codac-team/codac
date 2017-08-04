@@ -13,6 +13,7 @@
 #include "VibesFigure_Tube.h"
 
  // a real value to display unbounded slices
+#include <limits>
 #define BOUNDED_INFINITY std::numeric_limits<float>::max()
 
 using namespace std;
