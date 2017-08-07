@@ -320,7 +320,7 @@ namespace tubex
   bool Tube::operator==(const Tube& tu) const
   {
     return (isSlice() && tu.isSlice() && image() == tu.image() && domain() == tu.domain())
-            || (*getFirstSubTube() == *tu.getFirstSubTube() && *getSecondSubTube() == *tu.getSecondSubTube());
+            || (!isSlice() && *getFirstSubTube() == *tu.getFirstSubTube() && *getSecondSubTube() == *tu.getSecondSubTube());
   }
 
   bool Tube::operator!=(const Tube& tu) const
