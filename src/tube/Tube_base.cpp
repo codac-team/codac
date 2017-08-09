@@ -227,6 +227,14 @@ namespace tubex
     return image().is_empty();
   }
 
+  bool Tube::isPartiallyEmpty() const
+  {
+    for(int i = 0 ; i < size() ; i++)
+      if((*this)[i].is_empty())
+        return true;
+    return false;
+  }
+
   bool Tube::isDiscontinuous() const
   {
     Interval previous_slice_y = Interval::ALL_REALS;

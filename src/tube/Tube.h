@@ -165,6 +165,13 @@ namespace tubex
         bool isEmpty() const;
 
         /**
+         * \brief Test if the tube is partially empty (i.e. if at least one slice is empty)
+         *
+         * \return true if the tube is partially empty, false otherwise
+         */
+        bool isPartiallyEmpty() const;
+
+        /**
          * \brief Test if the tube is discontinuous
          *
          * (i.e. if one slice does not intersect with the previous one)
