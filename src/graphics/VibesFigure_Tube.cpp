@@ -212,6 +212,8 @@ namespace tubex
 
   void VibesFigure_Tube::computePolygonEnvelope(const Tube& tube, vector<double>& v_x, vector<double>& v_y) const
   {
+    if(tube.isPartiallyEmpty()) cout << "Tube graphics: warning, tube " << m_name << " partially empty" << endl;
+
     for(int i = 0 ; i < tube.size() ; i++)
     {
       IntervalVector sliceBox = tube.sliceBox(i);
