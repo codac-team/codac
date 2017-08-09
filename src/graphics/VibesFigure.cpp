@@ -44,16 +44,9 @@ namespace tubex
 
   const IntervalVector& VibesFigure::axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
   {
-    IntervalVector view_box(2, Interval::EMPTY_SET);
-    view_box[0] |= Interval(x_min) | x_max;
-    view_box[1] |= Interval(y_min) | y_max;
-
-    float r = 1.;
-
     if(keep_ratio && !m_view_box.is_empty())
     {
       float r = m_view_box[0].diam() / m_view_box[1].diam();
-
 
       IntervalVector b1(2);
       b1[0] = Interval(x_min, x_max);
