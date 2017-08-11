@@ -79,24 +79,29 @@ namespace tubex
     vibes::saveImage(m_name + suffix + extension, m_name);
   }
 
-  double VibesFigure::x() const
+  int VibesFigure::x() const
   {
     return m_x;
   }
 
-  double VibesFigure::y() const
+  int VibesFigure::y() const
   {
     return m_y;
   }
 
-  double VibesFigure::width() const
+  int VibesFigure::width() const
   {
     return m_width;
   }
 
-  double VibesFigure::height() const
+  int VibesFigure::height() const
   {
     return m_height;
+  }
+
+  IntervalVector VibesFigure::viewBox() const
+  {
+    return m_view_box;
   }
 
   string VibesFigure::rgb2hex(int r, int g, int b, int alpha, const char* prefix)

@@ -47,28 +47,35 @@ namespace tubex
        *
        * \return x-position
        */
-      double x() const;
+      int x() const;
 
       /**
        * \brief Return y-position of the figure.
        *
        * \return y-position
        */
-      double y() const;
+      int y() const;
 
       /**
        * \brief Return figure's width.
        *
        * \return width
        */
-      double width() const;
+      int width() const;
 
       /**
        * \brief Return figure's height.
        *
        * \return height
        */
-      double height() const;
+      int height() const;
+
+      /**
+       * \brief Return figure's view box.
+       *
+       * \return IntervalVector
+       */
+      ibex::IntervalVector viewBox() const;
 
       /**
        * \brief Set figure's properties: position and dimensions.
@@ -137,7 +144,7 @@ namespace tubex
     protected:
 
       mutable std::string m_name;
-      double m_x, m_y, m_width, m_height;
+      int m_x, m_y, m_width, m_height;
       ibex::IntervalVector m_view_box;
   };
 }
