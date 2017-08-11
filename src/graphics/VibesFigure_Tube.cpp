@@ -74,7 +74,6 @@ namespace tubex
     if(slices_contracted_color == "")
       slices_contracted_color = slices_color;
 
-    vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));
     vibes::newGroup("slices_old_background", background_color, vibesParams("figure", m_name));
     vibes::newGroup("slices", slices_color, vibesParams("figure", m_name));
     vibes::newGroup("slices_contracted", slices_contracted_color, vibesParams("figure", m_name));

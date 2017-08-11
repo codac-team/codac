@@ -24,6 +24,7 @@ namespace tubex
   {
     m_name = figure_name;
     vibes::newFigure(m_name);
+    vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));
   }
 
   string VibesFigure::name() const
@@ -68,6 +69,9 @@ namespace tubex
       m_view_box[1] = Interval(y_min, y_max);
     }
 
+    vibes::drawBox(m_view_box[0].lb(), m_view_box[0].ub(),
+                   m_view_box[1].lb(), m_view_box[1].ub(),
+                   vibesParams("figure", m_name, "group", "transparent_box"));
     vibes::axisLimits(m_view_box[0].lb(), m_view_box[0].ub(),
                       m_view_box[1].lb(), m_view_box[1].ub(),
                       m_name);
