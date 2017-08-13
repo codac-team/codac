@@ -25,6 +25,12 @@ namespace tubex
    
   void VibesFigure_Tube::show(Tube *tube, const string& name, int x, int y)
   {
+    std::map<double,double> empty_map;
+    show(tube, name, empty_map, x, y);
+  }
+   
+  void VibesFigure_Tube::show(Tube *tube, const string& name, const std::map<double,double>& map_scalar_values, int x, int y)
+  {
     if(VibesFigure_Tube::map_graphics.size() == 0)
     {
       vibes::beginDrawing();
@@ -37,6 +43,7 @@ namespace tubex
       figtube->setProperties(x, y, 700, 350);
       string fg = "#A2A2A2", bg = "#D2D2D2";
       figtube->setColors(fg + "[" + fg + "]", fg + "[" + fg + "]", bg + "[" + bg + "]");
+      figtube->showScalarValues(map_scalar_values);
       map_graphics[tube] = figtube;
     }
 

@@ -72,7 +72,7 @@ namespace tubex
        * \param color line's color
        * \param points_size size (in map value) of the points given by map_scalar_values. If 0, a line is drawn, only points otherwise.
        */
-      void showScalarValues(const std::map<double,double>& map_scalar_values, const std::string& color = "red", double points_size = 0.) const;
+      void showScalarValues(const std::map<double,double>& map_scalar_values, const std::string& color = "#00609C", double points_size = 0.) const;
 
       /**
        * \brief A fast function to display a tube
@@ -85,10 +85,12 @@ namespace tubex
        * \param map_graphics a map referencing figure pointers by a tube pointer key
        * \param tube a pointer to the tube to be displayed
        * \param figure_name a reference to the figure that will be displayed in the window's title
+       * \param map_scalar_values a map of the form [t](y) representing a trajectory
        * \param x x-position (0 by default)
        * \param y y-position (0 by default)
        */
       static void show(Tube *tube, const std::string& name = "", int x = 0, int y = 0);
+      static void show(Tube *tube, const std::string& name, const std::map<double,double>& map_scalar_values, int x = 0, int y = 0);
 
       /**
        * \brief A fast function to end tubes displays
