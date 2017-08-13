@@ -145,10 +145,10 @@ int main(int argc, char *argv[])
     VibesFigure_Tube::show(&y, "Tube [y](·)", 150, 150);
     displayBeaconsMap(x, y, 200, 200);
     VibesFigure_Tube::endDrawing();
-
+    
   // Checking if this example is still working:
   return (fabs(x.volume() - 604.8) < 1e-2
-       && fabs(y.volume() - 665.4) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+       && fabs(y.volume() - 665.358) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 void displayBeaconsMap(const Tube& x, const Tube& y, int fig_x, int fig_y)
