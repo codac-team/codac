@@ -14,7 +14,6 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
-#include "VibesFigure.h"
 #include "VibesFigure_Tube.h"
 
 using namespace std;
@@ -75,7 +74,7 @@ int main(int argc, char *argv[])
 
     VibesFigure_Tube::show(&x, "Tube [x](·)", 100, 100);
     VibesFigure_Tube::show(&y, "Tube [y](·)", 150, 150);
-    displayLissajousMap(x, y, 1200, 200);
+    displayLissajousMap(x, y, 200, 200);
     VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:

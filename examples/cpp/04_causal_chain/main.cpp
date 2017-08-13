@@ -14,7 +14,6 @@
  * ---------------------------------------------------------------------------- */
 
 #include "Tube.h"
-#include "VibesFigure.h"
 #include "VibesFigure_Tube.h"
 
 using namespace std;
