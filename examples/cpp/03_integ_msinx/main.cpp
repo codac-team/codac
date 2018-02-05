@@ -39,86 +39,42 @@ int main(int argc, char *argv[])
     Interval domain(0,10);
     double timestep = 0.01;
 
-    float epsilon = 0.1;
+  /* =========== INITIALIZATION =========== */
+
+    // Creating tubes over the [0,10] domain with some timestep:
+    Tube a(domain, timestep);
+    Tube b(domain, timestep);
+     // Initialization with [-1,1] values forall t:
+    Tube x(domain, timestep, Interval(-1,1));
+
+  /* =========== GRAPHICS =========== */
+
+    VibesFigure_Tube::show(&x, "Tube [x](·)", 200, 50);
 
   /* =========== INTERVAL INTEGRATION =========== */
 
     int i = 0;
-
-    stack<Tube> s;
-    s.push(Tube(domain, timestep, Interval(-1,1)));
-
-    vector<Tube*> v_solutions;
-
-    while(!s.empty())
+    double volume_x;
+    do
     {
-      Tube x = s.top();
-      s.pop();
+      cout << "Step " << i << "... \tpress ENTER to continue" << flush;
+      volume_x = x.volume(); // check tube's volume to detect a fixpoint
 
-      //cout << "Contractions" << endl;
-      double volume_x_ctc;
+      // Contractors based on elementary constraints:
+      a &= sin(x);
+      b &= a.primitive();
+      x &= x0 - b;
 
-      Tube a(domain, timestep);
-      Tube b(domain, timestep);
-
-      do
-      {
-        //cout << "Step " << i << "... \tpress ENTER to continue" << flush;
-        volume_x_ctc = x.volume(); // check tube's volume to detect a fixpoint
-
-        // Contractors based on elementary constraints:
-        a &= sin(x);
-        b &= a.primitive();
-        x &= x0 - b;
-
-        i++;
-        
-        //if(argc == 1) cin.ignore(); // press ENTER to continue
-      } while(!x.isEmpty() && volume_x_ctc != x.volume()); // up to the fixpoint
-
-      if(!x.isEmpty())
-      {
-        // Bisection
-
-        float max_diam = 0.;
-        int index_max_diam;
-        for(int u = 0 ; u < x.size() ; u++)
-        {
-          if(x[u].diam() > max_diam)
-          {
-            max_diam = x[u].diam();
-            index_max_diam = u;
-          }
-        }
-
-        double t_bisection = x.domain(index_max_diam).mid();
-        double t_diam = x[t_bisection].diam();
-
-        if(t_diam > epsilon)
-        {
-          float ratio = 0.6;
-
-          Tube derivative = -sin(x);
-          pair<Tube,Tube> p = x.bisect(derivative, t_bisection, ratio);
-
-          if(!p.first.isEmpty()) s.push(p.first);
-          if(!p.second.isEmpty()) s.push(p.second);
-        }
-
-        else
-          v_solutions.push_back(new Tube(x));
-      }
-    }
-
-    cout << v_solutions.size() << " solutions" << endl;
-    VibesFigure_Tube::show(v_solutions[0], "Tube [x](·)", 200, 50);
-
+      VibesFigure_Tube::show(&x);
+      i++;
+      
+      if(argc == 1) cin.ignore(); // press ENTER to continue
+    } while(volume_x != x.volume()); // up to the fixpoint
 
   /* =========== END =========== */
 
     VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:
-  //return (volume_x_bis <= 9.15) ? EXIT_SUCCESS : EXIT_FAILURE;
-    return EXIT_SUCCESS;
+  return (volume_x <= 9.15) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
