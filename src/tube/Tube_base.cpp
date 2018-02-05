@@ -926,12 +926,7 @@ namespace tubex
           }
         }
         
-        if(m_first_subtube->image().is_empty() || m_second_subtube->image().is_empty())
-          m_image.set_empty();
-
-        else
-          m_image = m_first_subtube->image() | m_second_subtube->image();
-
+        m_image = m_first_subtube->image() | m_second_subtube->image();
         m_volume = m_first_subtube->volume() + m_second_subtube->volume();
 
         // Enclosed bounds
