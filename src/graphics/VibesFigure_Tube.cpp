@@ -276,8 +276,8 @@ namespace tubex
     if(intv_y.is_empty())
       return; // no display
 
-    double lb = isinf(intv_y.lb()) ? -BOUNDED_INFINITY : intv_y.lb();
-    double ub = isinf(intv_y.ub()) ? BOUNDED_INFINITY : intv_y.ub();
+    double lb = std::isinf(intv_y.lb()) ? -BOUNDED_INFINITY : intv_y.lb();
+    double ub = std::isinf(intv_y.ub()) ? BOUNDED_INFINITY : intv_y.ub();
     vibes::drawBox(intv_t.lb(), intv_t.ub(), lb, ub, params);
   }
 
@@ -291,8 +291,8 @@ namespace tubex
 
       v_x.push_back(sliceBox[0].lb());
       v_x.push_back(sliceBox[0].ub());
-      v_y.push_back(isinf(sliceBox[1].ub()) ? BOUNDED_INFINITY : sliceBox[1].ub());
-      v_y.push_back(isinf(sliceBox[1].ub()) ? BOUNDED_INFINITY : sliceBox[1].ub());
+      v_y.push_back(std::isinf(sliceBox[1].ub()) ? BOUNDED_INFINITY : sliceBox[1].ub());
+      v_y.push_back(std::isinf(sliceBox[1].ub()) ? BOUNDED_INFINITY : sliceBox[1].ub());
     }
 
     for(int i = tube.size() - 1 ; i >= 0 ; i--)
@@ -301,8 +301,8 @@ namespace tubex
 
       v_x.push_back(sliceBox[0].ub());
       v_x.push_back(sliceBox[0].lb());
-      v_y.push_back(isinf(sliceBox[1].lb()) ? -BOUNDED_INFINITY : sliceBox[1].lb());
-      v_y.push_back(isinf(sliceBox[1].lb()) ? -BOUNDED_INFINITY : sliceBox[1].lb());
+      v_y.push_back(std::isinf(sliceBox[1].lb()) ? -BOUNDED_INFINITY : sliceBox[1].lb());
+      v_y.push_back(std::isinf(sliceBox[1].lb()) ? -BOUNDED_INFINITY : sliceBox[1].lb());
     }
   }
 }
