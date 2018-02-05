@@ -140,6 +140,10 @@ namespace tubex
        */
       //static void hex2rgb(const std::string& hexa, int &r, int &g, int &b, int &alpha);
 
+    protected:
+
+      std::string groupNameSuffix(const std::string& name, int id);
+
 
     protected:
 

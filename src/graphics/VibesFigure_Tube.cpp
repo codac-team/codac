@@ -118,6 +118,24 @@ namespace tubex
 
   VibesFigure_Tube::VibesFigure_Tube(const string& name, vector<Tube*> v_tubes) : m_tubes_box(2, Interval::EMPTY_SET), VibesFigure(name)
   {
+    map<string,string> colors_map;
+    colors_map["slices_old_background"] = "red[red]";
+    colors_map["slices"] = "red[red]";
+    colors_map["slices_contracted"] = "red[red]";
+    m_color_tubes.push_back(colors_map);
+    colors_map["slices_old_background"] = "blue[blue]";
+    colors_map["slices"] = "blue[blue]";
+    colors_map["slices_contracted"] = "blue[blue]";
+    m_color_tubes.push_back(colors_map);
+    colors_map["slices_old_background"] = "green[green]";
+    colors_map["slices"] = "green[green]";
+    colors_map["slices_contracted"] = "green[green]";
+    m_color_tubes.push_back(colors_map);
+    colors_map["slices_old_background"] = "#FF8A1F[#FF8A1F]";
+    colors_map["slices"] = "#FF8A1F[#FF8A1F]";
+    colors_map["slices_contracted"] = "#FF8A1F[#FF8A1F]";
+    m_color_tubes.push_back(colors_map);
+
     for(int i = 0 ; i < v_tubes.size() ; i++)
     {
       m_v_tubes.push_back(v_tubes[i]);
@@ -128,7 +146,8 @@ namespace tubex
 
     m_id_map_scalar_values = 0;
     setColors("#A0A0A0[#FFEA00]", "#888888[#FFBB00]");
-    m_need_to_update_axis = true;
+    m_need_to_update_axis = false;
+    axisLimits(m_tubes_box[0].lb(), m_tubes_box[0].ub(), m_tubes_box[1].lb(), m_tubes_box[1].ub());
   }
 
   VibesFigure_Tube::~VibesFigure_Tube()
@@ -142,10 +161,20 @@ namespace tubex
     if(slices_contracted_color == "")
       slices_contracted_color = slices_color;
 
-    vibes::newGroup("slices_old_background", background_color, vibesParams("figure", m_name));
-    vibes::newGroup("slices", slices_color, vibesParams("figure", m_name));
-    vibes::newGroup("slices_contracted", slices_contracted_color, vibesParams("figure", m_name));
-    vibes::newGroup("true_values", truth_color, vibesParams("figure", m_name));
+    int nb_colors = m_color_tubes.size();
+    for(int i = 0 ; i < m_v_tubes.size() ; i++)
+    {
+      if(m_v_tubes.size() > 1)
+      {
+        background_color = m_color_tubes[i % nb_colors]["slices_old_background"];
+        slices_color = m_color_tubes[i % nb_colors]["slices"];
+        slices_contracted_color = m_color_tubes[i % nb_colors]["slices_contracted"];
+      }
+
+      vibes::newGroup(groupNameSuffix("slices_old_background", i), background_color, vibesParams("figure", m_name));
+      vibes::newGroup(groupNameSuffix("slices", i), slices_color, vibesParams("figure", m_name));
+      vibes::newGroup(groupNameSuffix("slices_contracted", i), slices_contracted_color, vibesParams("figure", m_name));
+    }
   }
 
   void VibesFigure_Tube::show()
@@ -222,17 +251,17 @@ namespace tubex
 
       if(m_v_tubes_copy[a] != NULL && update_background)
       {
-        vibes::clearGroup(m_name, "slices_old_background");
-        params_slices = vibesParams("figure", m_name, "group", "slices_old_background");
+        vibes::clearGroup(m_name, groupNameSuffix("slices_old_background", a));
+        params_slices = vibesParams("figure", m_name, "group", groupNameSuffix("slices_old_background", a));
         vector<double> v_x, v_y;
         computePolygonEnvelope(*m_v_tubes_copy[a], v_x, v_y);
         vibes::drawPolygon(v_x, v_y, params_slices);
       }
 
-      vibes::clearGroup(m_name, "slices");
-      vibes::clearGroup(m_name, "slices_contracted");
-      params_slices = vibesParams("figure", m_name, "group", "slices");
-      params_contracted_slices = vibesParams("figure", m_name, "group", "slices_contracted");
+      vibes::clearGroup(m_name, groupNameSuffix("slices", a));
+      vibes::clearGroup(m_name, groupNameSuffix("slices_contracted", a));
+      params_slices = vibesParams("figure", m_name, "group", groupNameSuffix("slices", a));
+      params_contracted_slices = vibesParams("figure", m_name, "group", groupNameSuffix("slices_contracted", a));
       
       if(!detail_slices)
       {

@@ -132,6 +132,7 @@ namespace tubex
       mutable int m_id_map_scalar_values;
       mutable bool m_need_to_update_axis;
       mutable ibex::IntervalVector m_tubes_box;
+      std::vector<std::map<std::string,std::string> > m_color_tubes;
 
       static std::vector<VibesFigure_Tube*> v_graphics;
   };

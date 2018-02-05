@@ -151,4 +151,11 @@ namespace tubex
     else
       alpha = 0;
   }*/
+
+  string VibesFigure::groupNameSuffix(const string& name, int id)
+  {
+    std::ostringstream o;
+    o << name << "_" << id;
+    return o.str();
+  }
 }
