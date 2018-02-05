@@ -519,7 +519,7 @@ namespace tubex
     typename map<double,double>::const_iterator it_map;
     for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
     {
-      if(isnan(it_map->second))
+      if(std::isnan(it_map->second))
         new_map[it_map->first] = Interval::ALL_REALS;
       else
       {
@@ -536,7 +536,7 @@ namespace tubex
     typename map<double,double>::const_iterator it_map;
     for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
     {
-      if(isnan(it_map->second))
+      if(std::isnan(it_map->second))
         new_map[it_map->first] = Interval::ALL_REALS;
       else
         new_map[it_map->first] = it_map->second + intv_uncertainty;
