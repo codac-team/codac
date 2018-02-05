@@ -208,8 +208,8 @@ namespace tubex
             Interval slice = (*m_v_tubes[a])[i];
             if(!slice.is_unbounded())
             {
-              image_lb = isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
-              image_ub = isnan(image_ub) || image_ub < slice.ub() ? slice.ub() : image_ub;
+              image_lb = std::isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
+              image_ub = std::isnan(image_ub) || image_ub < slice.ub() ? slice.ub() : image_ub;
             }
           }
         }
