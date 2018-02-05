@@ -21,7 +21,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  std::map<Tube*,VibesFigure_Tube*> VibesFigure_Tube::map_graphics;
+  std::vector<VibesFigure_Tube*> VibesFigure_Tube::v_graphics;
    
   void VibesFigure_Tube::show(Tube *tube, const string& name, int x, int y)
   {
@@ -31,39 +31,84 @@ namespace tubex
    
   void VibesFigure_Tube::show(Tube *tube, const string& name, const std::map<double,double>& map_scalar_values, int x, int y)
   {
-    if(VibesFigure_Tube::map_graphics.size() == 0)
+    if(VibesFigure_Tube::v_graphics.size() == 0)
     {
       vibes::beginDrawing();
       vibes::axisAuto();
     }
 
-    if(VibesFigure_Tube::map_graphics.find(tube) == VibesFigure_Tube::map_graphics.end())
+    VibesFigure_Tube *figtube = NULL;
+    for(int i = 0 ; i < v_graphics.size() ; i++)
     {
-      VibesFigure_Tube *figtube = new VibesFigure_Tube(name, tube);
+      if(v_graphics[i]->name() == name || name == "" && v_graphics[i]->m_v_tubes.size() > 0 && v_graphics[i]->m_v_tubes[0] == tube)
+      {
+        figtube = v_graphics[i];
+        break;
+      }
+    }
+
+    if(figtube == NULL)
+    {
+      figtube = new VibesFigure_Tube(name, tube);
       figtube->setProperties(x, y, 700, 350);
       string fg = "#A2A2A2", bg = "#D2D2D2";
       figtube->setColors(fg + "[" + fg + "]", fg + "[" + fg + "]", bg + "[" + bg + "]");
       figtube->showScalarValues(map_scalar_values);
-      map_graphics[tube] = figtube;
+      v_graphics.push_back(figtube);
     }
 
-    VibesFigure_Tube::map_graphics[tube]->show();
+    figtube->show();
+  }
+   
+  void VibesFigure_Tube::show(const std::vector<Tube*> v_tubes, const string& name, int x, int y)
+  {
+    std::map<double,double> empty_map;
+    show(v_tubes, name, empty_map, x, y);
+  }
+   
+  void VibesFigure_Tube::show(const std::vector<Tube*> v_tubes, const string& name, const std::map<double,double>& map_scalar_values, int x, int y)
+  {
+    if(VibesFigure_Tube::v_graphics.size() == 0)
+    {
+      vibes::beginDrawing();
+      vibes::axisAuto();
+    }
+
+    VibesFigure_Tube *figtube = NULL;
+    for(int i = 0 ; i < v_graphics.size() ; i++)
+    {
+      if(v_graphics[i]->name() == name)
+      {
+        figtube = v_graphics[i];
+        break;
+      }
+    }
+
+    if(figtube == NULL)
+    {
+      figtube = new VibesFigure_Tube(name, v_tubes);
+      figtube->setProperties(x, y, 700, 350);
+      string fg = "#A2A2A2", bg = "#D2D2D2";
+      figtube->setColors(fg + "[" + fg + "]", fg + "[" + fg + "]", bg + "[" + bg + "]");
+      figtube->showScalarValues(map_scalar_values);
+      v_graphics.push_back(figtube);
+    }
+
+    figtube->show();
   }
 
   void VibesFigure_Tube::endDrawing()
   {
-    for(map<Tube*,VibesFigure_Tube*>::iterator it = VibesFigure_Tube::map_graphics.begin();
-        it != VibesFigure_Tube::map_graphics.end();
-        ++it)
-      delete it->second;
+    for(int i = 0 ; i < v_graphics.size() ; i++)
+      delete v_graphics[i];
     vibes::endDrawing();
   }
 
 
   VibesFigure_Tube::VibesFigure_Tube(const string& name, Tube *tube) : m_tubes_box(2, Interval::EMPTY_SET), VibesFigure(name)
   {
-    m_tube = tube;
-    m_tube_copy = NULL;
+    m_v_tubes.push_back(tube);
+    m_v_tubes_copy.push_back(NULL);
     m_id_map_scalar_values = 0;
     setColors("#A0A0A0[#FFEA00]", "#888888[#FFBB00]");
     m_need_to_update_axis = true;
@@ -71,9 +116,25 @@ namespace tubex
     m_tubes_box[1] |= tube->image();
   }
 
+  VibesFigure_Tube::VibesFigure_Tube(const string& name, vector<Tube*> v_tubes) : m_tubes_box(2, Interval::EMPTY_SET), VibesFigure(name)
+  {
+    for(int i = 0 ; i < v_tubes.size() ; i++)
+    {
+      m_v_tubes.push_back(v_tubes[i]);
+      m_v_tubes_copy.push_back(NULL);
+      m_tubes_box[0] |= v_tubes[i]->domain();
+      m_tubes_box[1] |= v_tubes[i]->image();
+    }
+
+    m_id_map_scalar_values = 0;
+    setColors("#A0A0A0[#FFEA00]", "#888888[#FFBB00]");
+    m_need_to_update_axis = true;
+  }
+
   VibesFigure_Tube::~VibesFigure_Tube()
   {
-    delete m_tube_copy;
+    for(int i = 0 ; i < m_v_tubes_copy.size() ; i++)
+      delete m_v_tubes_copy[i];
   }
 
   void VibesFigure_Tube::setColors(string slices_color, string slices_contracted_color, string background_color, string truth_color)
@@ -89,7 +150,7 @@ namespace tubex
 
   void VibesFigure_Tube::show()
   {
-    return show(false, m_tube->size());
+    return show(false, 0);
   }
 
   void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_values, const string& color, double points_size) const
@@ -122,88 +183,92 @@ namespace tubex
 
   void VibesFigure_Tube::show(bool detail_slices, int slices_limit, bool update_background)
   {
+    vibes::clearGroup(m_name, "transparent_box");
     vibes::drawBox(m_tubes_box, vibesParams("figure", m_name, "group", "transparent_box"));
 
-    if(m_need_to_update_axis)
+    for(int a = 0 ; a < m_v_tubes.size() ; a++)
     {
-      double image_lb, image_ub;
-
-      if(!m_tube->image().is_unbounded())
+      if(m_need_to_update_axis)
       {
-        image_lb = m_tube->image().lb();
-        image_ub = m_tube->image().ub();
+        double image_lb, image_ub;
+
+        if(!m_v_tubes[a]->image().is_unbounded())
+        {
+          image_lb = m_v_tubes[a]->image().lb();
+          image_ub = m_v_tubes[a]->image().ub();
+        }
+
+        else // some slices can be [-oo,+oo], maybe not all of them
+        {
+          image_lb = NAN;
+          image_ub = NAN;
+
+          for(int i = 0 ; i < m_v_tubes[a]->size() ; i++)
+          {
+            Interval slice = (*m_v_tubes[a])[i];
+            if(!slice.is_unbounded())
+            {
+              image_lb = isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
+              image_ub = isnan(image_ub) || image_ub < slice.ub() ? slice.ub() : image_ub;
+            }
+          }
+        }
+
+        axisLimits(m_v_tubes[a]->domain().lb(), m_v_tubes[a]->domain().ub(), image_lb, image_ub);
+        m_need_to_update_axis = false;
       }
 
-      else // some slices can be [-oo,+oo], maybe not all of them
-      {
-        image_lb = NAN;
-        image_ub = NAN;
+      vibes::Params params_slices, params_contracted_slices;
 
-        for(int i = 0 ; i < m_tube->size() ; i++)
+      if(m_v_tubes_copy[a] != NULL && update_background)
+      {
+        vibes::clearGroup(m_name, "slices_old_background");
+        params_slices = vibesParams("figure", m_name, "group", "slices_old_background");
+        vector<double> v_x, v_y;
+        computePolygonEnvelope(*m_v_tubes_copy[a], v_x, v_y);
+        vibes::drawPolygon(v_x, v_y, params_slices);
+      }
+
+      vibes::clearGroup(m_name, "slices");
+      vibes::clearGroup(m_name, "slices_contracted");
+      params_slices = vibesParams("figure", m_name, "group", "slices");
+      params_contracted_slices = vibesParams("figure", m_name, "group", "slices_contracted");
+      
+      if(!detail_slices)
+      {
+        vibes::Params params = params_slices;
+        vector<double> v_x, v_y;
+        computePolygonEnvelope(*m_v_tubes[a], v_x, v_y);
+        vibes::drawPolygon(v_x, v_y, params_slices);
+      }
+
+      else
+      {
+        if(slices_limit <= 0)
+          slices_limit = m_v_tubes[a]->size();
+
+        for(int i = 0 ; i < m_v_tubes[a]->size() ; i += max((int)(m_v_tubes[a]->size() / slices_limit), 1))
         {
-          Interval slice = (*m_tube)[i];
-          if(!slice.is_unbounded())
-          {
-            image_lb = isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
-            image_ub = isnan(image_ub) || image_ub < slice.ub() ? slice.ub() : image_ub;
-          }
+          vibes::Params params = params_slices;
+          Interval y_i = (*m_v_tubes[a])[i];
+          if(m_v_tubes_copy[a] != NULL && y_i != (*m_v_tubes_copy[a])[i]) // contraction
+            params = params_contracted_slices;
+          drawSlice(m_v_tubes[a]->domain(i), y_i, params);
         }
       }
 
-      axisLimits(m_tube->domain().lb(), m_tube->domain().ub(), image_lb, image_ub);
-      m_need_to_update_axis = false;
-    }
-
-    vibes::Params params_slices, params_contracted_slices;
-
-    if(m_tube_copy != NULL && update_background)
-    {
-      vibes::clearGroup(m_name, "slices_old_background");
-      params_slices = vibesParams("figure", m_name, "group", "slices_old_background");
-      vector<double> v_x, v_y;
-      computePolygonEnvelope(*m_tube_copy, v_x, v_y);
-      vibes::drawPolygon(v_x, v_y, params_slices);
-    }
-
-    vibes::clearGroup(m_name, "slices");
-    vibes::clearGroup(m_name, "slices_contracted");
-    params_slices = vibesParams("figure", m_name, "group", "slices");
-    params_contracted_slices = vibesParams("figure", m_name, "group", "slices_contracted");
-
-    if(!detail_slices)
-    {
-      vibes::Params params = params_slices;
-      vector<double> v_x, v_y;
-      computePolygonEnvelope(*m_tube, v_x, v_y);
-      vibes::drawPolygon(v_x, v_y, params_slices);
-    }
-
-    else
-    {
-      if(slices_limit <= 0)
-        slices_limit = m_tube->size();
-
-      for(int i = 0 ; i < m_tube->size() ; i += max((int)(m_tube->size() / slices_limit), 1))
+      if(update_background)
       {
-        vibes::Params params = params_slices;
-        Interval y_i = (*m_tube)[i];
-        if(m_tube_copy != NULL && y_i != (*m_tube_copy)[i]) // contraction
-          params = params_contracted_slices;
-        drawSlice(m_tube->domain(i), y_i, params);
+        if(m_v_tubes_copy[a] != NULL)
+          delete m_v_tubes_copy[a];
+        m_v_tubes_copy[a] = new Tube(*m_v_tubes[a]);
+        m_tubes_box[0] |= m_v_tubes[a]->domain();
+        m_tubes_box[1] |= m_v_tubes[a]->image();
       }
-    }
 
-    if(update_background)
-    {
-      if(m_tube_copy != NULL)
-        delete m_tube_copy;
-      m_tube_copy = new Tube(*m_tube);
-      m_tubes_box[0] |= m_tube->domain();
-      m_tubes_box[1] |= m_tube->image();
+      if(m_v_tubes[a]->image() == Interval::ALL_REALS)
+        m_need_to_update_axis = true;
     }
-
-    if(m_tube->image() == Interval::ALL_REALS)
-      m_need_to_update_axis = true;
   }
 
   void VibesFigure_Tube::drawSlice(const Interval& intv_t, const Interval& intv_y, const vibes::Params& params) const

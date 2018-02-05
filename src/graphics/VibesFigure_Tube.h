@@ -31,6 +31,7 @@ namespace tubex
        * \param tube a pointer to the tube to be displayed
        */
       VibesFigure_Tube(const std::string& figure_name, Tube *tube);
+      VibesFigure_Tube(const std::string& figure_name, std::vector<Tube*> v_tubes);
 
       /**
        * \brief Delete this figure.
@@ -91,7 +92,9 @@ namespace tubex
        */
       static void show(Tube *tube, const std::string& name = "", int x = 0, int y = 0);
       static void show(Tube *tube, const std::string& name, const std::map<double,double>& map_scalar_values, int x = 0, int y = 0);
-
+      static void show(const std::vector<Tube*> v_tubes, const std::string& name, int x, int y);
+      static void show(const std::vector<Tube*> v_tubes, const std::string& name, const std::map<double,double>& map_scalar_values, int x, int y);
+      
       /**
        * \brief A fast function to end tubes displays
        */
@@ -123,14 +126,14 @@ namespace tubex
 
     protected:
 
-      Tube *m_tube;
+      std::vector<Tube*> m_v_tubes;
       std::vector<std::map<double,double> > *m_true_values;
-      mutable Tube *m_tube_copy;
+      mutable std::vector<Tube*> m_v_tubes_copy;
       mutable int m_id_map_scalar_values;
       mutable bool m_need_to_update_axis;
       mutable ibex::IntervalVector m_tubes_box;
 
-      static std::map<Tube*,VibesFigure_Tube*> map_graphics;
+      static std::vector<VibesFigure_Tube*> v_graphics;
   };
 }
 
