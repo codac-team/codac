@@ -466,3 +466,25 @@ TEST_CASE("Testing intersect", "[core]")
     REQUIRE(tube[6] == Interval::EMPTY_SET);
   }
 }
+
+TEST_CASE("Testing sampling", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    Tube tube = tubeTest1();
+    REQUIRE(ApproxIntv(tube.domain(0)) == Interval(0.,1.));
+    REQUIRE(ApproxIntv(tube.domain(1)) == Interval(1.,2.));
+    REQUIRE(tube.size() == 46);
+    tube.sample(0);
+    REQUIRE(ApproxIntv(tube.domain(0)) == Interval(0.,0.5));
+    REQUIRE(ApproxIntv(tube.domain(1)) == Interval(0.5,1.));
+    REQUIRE(ApproxIntv(tube.domain(2)) == Interval(1.,2.));
+    REQUIRE(tube.size() == 47);
+    tube.sample(0);
+    REQUIRE(ApproxIntv(tube.domain(0)) == Interval(0.,0.25));
+    REQUIRE(ApproxIntv(tube.domain(1)) == Interval(0.25,0.5));
+    REQUIRE(ApproxIntv(tube.domain(2)) == Interval(0.5,1.));
+    REQUIRE(ApproxIntv(tube.domain(3)) == Interval(1.,2.));
+    REQUIRE(tube.size() == 48);
+  }
+}

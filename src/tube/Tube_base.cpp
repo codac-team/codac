@@ -1011,7 +1011,39 @@ namespace tubex
     pair<IntervalVector,IntervalVector> p_xobs = bisector.bisect(x_obs);
     x1.ctcObs(derivative, t, p_xobs.first[0]);
     x2.ctcObs(derivative, t, p_xobs.second[0]);
-    
+
     return make_pair(x1, x2);
+  }
+
+  void Tube::sample(int index)
+  {
+    if(isSlice())
+    {
+      LargestFirst bisector(0., 0.5);
+      IntervalVector slice_domain(1, domain());
+      pair<IntervalVector,IntervalVector> p_domain = bisector.bisect(slice_domain);
+      vector<Interval> vector_dt;
+      vector_dt.push_back(p_domain.first[0]);
+      vector_dt.push_back(p_domain.second[0]);
+      createFromSlicesVector(vector_dt, image());
+    }
+
+    else
+    {
+      int mid_id = ceil(size() / 2.);
+
+      if(index < mid_id)
+        m_first_subtube->sample(index);
+      else
+        m_second_subtube->sample(index - mid_id);
+
+      m_v_slices.clear();
+
+      for(int i = 0 ; i < m_first_subtube->slices().size() ; i++)
+        m_v_slices.push_back(m_first_subtube->slices()[i]);
+      
+      for(int i = 0 ; i < m_second_subtube->slices().size() ; i++)
+        m_v_slices.push_back(m_second_subtube->slices()[i]);
+    }
   }
 }
