@@ -1001,4 +1001,17 @@ namespace tubex
 
     return make_pair(lb, ub);
   }
+
+  pair<Tube,Tube> Tube::bisect(const Tube& derivative, double t, float ratio)
+  {
+    Tube x1 = *this, x2 = *this;
+    IntervalVector x_obs(1, (*this)[t]);
+
+    LargestFirst bisector(0., ratio);
+    pair<IntervalVector,IntervalVector> p_xobs = bisector.bisect(x_obs);
+    x1.ctcObs(derivative, t, p_xobs.first[0]);
+    x2.ctcObs(derivative, t, p_xobs.second[0]);
+    
+    return make_pair(x1, x2);
+  }
 }

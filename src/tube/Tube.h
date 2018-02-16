@@ -469,6 +469,7 @@ namespace tubex
         ibex::Interval interpol(double t, const Tube& derivative_tube) const;
         ibex::Interval interpol(const ibex::Interval& intv_t, const Tube& derivative_tube) const;
         std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& intv_t, const Tube& derivative_tube) const;
+        std::pair<tubex::Tube,tubex::Tube> bisect(const tubex::Tube& derivative, double t, float ratio = 0.55);
 
 
       /** Integration computation **/
