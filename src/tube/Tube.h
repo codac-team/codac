@@ -150,6 +150,8 @@ namespace tubex
          */
         double dt() const;
 
+        std::vector<Tube*> slices() const;
+
         /**
          * \brief Test if the tube is a box (i.e. if it has only one slice).
          *
@@ -833,9 +835,9 @@ namespace tubex
       /** Class variables **/
 
         // Tube structure (no mutable needs)
-        int m_slices_number;
         ibex::Interval m_domain;
         Tube *m_first_subtube, *m_second_subtube;
+        std::vector<Tube*> m_v_slices;
 
         // Tube attributes ('mutable' required: values may be updated from const methods)
         mutable double m_volume;

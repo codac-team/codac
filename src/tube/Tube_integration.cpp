@@ -173,7 +173,7 @@ namespace tubex
     {
       Interval sum_max = Interval(0);
 
-      for(int i = 0 ; i < m_slices_number ; i++)
+      for(int i = 0 ; i < size() ; i++)
       {
         double dt_ = domain(i).diam();
         Interval integrale_value = sum_max + (*this)[i] * Interval(0., dt_);

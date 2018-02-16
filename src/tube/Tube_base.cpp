@@ -98,13 +98,15 @@ namespace tubex
   {
     m_domain = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
     m_image = default_value;
-    m_slices_number = vector_dt.size();
+    int slices_number = vector_dt.size();
     m_tree_computation_needed = true;
+    m_v_slices.clear();
 
-    if(m_slices_number == 1) // if this is a leaf
+    if(slices_number == 1) // if this is a leaf
     {
       m_first_subtube = NULL;
       m_second_subtube = NULL;
+      m_v_slices.push_back(this);
     }
 
     else
@@ -112,12 +114,12 @@ namespace tubex
       // In the first subtube: [t0,thalf[
       // In the second subtube: [thalf,tf]
       vector<Interval> first_vector_slices, second_vector_slices;
-      int i, k = ceil(m_slices_number / 2.);
+      int i, k = ceil(slices_number / 2.);
 
       for(i = 0 ; i < k ; i++)
         first_vector_slices.push_back(vector_dt[i]);
 
-      for( ; i < m_slices_number ; i++)
+      for( ; i < slices_number ; i++)
         second_vector_slices.push_back(vector_dt[i]);
 
       #pragma omp parallel num_threads(omp_get_num_procs())
@@ -130,6 +132,12 @@ namespace tubex
             m_second_subtube = new Tube(second_vector_slices, default_value);
         }
       }
+      
+      for(int i = 0 ; i < m_first_subtube->slices().size() ; i++)
+        m_v_slices.push_back(m_first_subtube->slices()[i]);
+      
+      for(int i = 0 ; i < m_second_subtube->slices().size() ; i++)
+        m_v_slices.push_back(m_second_subtube->slices()[i]);
     }
 
     requestFutureTreeComputation();
@@ -156,10 +164,10 @@ namespace tubex
       delete m_first_subtube;
     if(m_second_subtube != NULL)
       delete m_second_subtube;
+    m_v_slices.clear();
 
     m_domain = tu.domain();
     m_image = tu.image();
-    m_slices_number = tu.size();
     m_enclosed_bounds = tu.eval();
     m_dt_specifications = tu.m_dt_specifications;
 
@@ -167,6 +175,7 @@ namespace tubex
     {
       m_first_subtube = NULL;
       m_second_subtube = NULL;
+      m_v_slices.push_back(this);
     }
 
     else
@@ -181,6 +190,12 @@ namespace tubex
             m_second_subtube = new Tube(*(tu.getSecondSubTube()));
         }
       }
+
+      for(int i = 0 ; i < m_first_subtube->slices().size() ; i++)
+        m_v_slices.push_back(m_first_subtube->slices()[i]);
+      
+      for(int i = 0 ; i < m_second_subtube->slices().size() ; i++)
+        m_v_slices.push_back(m_second_subtube->slices()[i]);
     }
 
     requestFutureTreeComputation();
@@ -196,7 +211,7 @@ namespace tubex
 
   int Tube::size() const
   {
-    return m_slices_number;
+    return m_v_slices.size();
   }
 
   double Tube::dt() const
@@ -252,23 +267,15 @@ namespace tubex
     return false;
   }
 
+  std::vector<Tube*> Tube::slices() const
+  {
+    return m_v_slices;
+  }
+
   const Tube* Tube::getSlice(int index) const
   {
     checkDomain(*this, index);
-
-    if(isSlice())
-      return this;
-
-    else
-    {
-      int mid_id = ceil(m_slices_number / 2.);
-
-      if(index < mid_id)
-        return m_first_subtube->getSlice(index);
-
-      else
-        return m_second_subtube->getSlice(index - mid_id);
-    }
+    return m_v_slices[index];
   }
 
   Tube* Tube::getSlice(int index)
@@ -281,7 +288,7 @@ namespace tubex
     checkDomain(*this, t);
 
     if(t == m_domain.ub())
-      return m_slices_number - 1;
+      return size() - 1;
 
     if(isSlice())
       return 0;
@@ -312,7 +319,7 @@ namespace tubex
   {
     int index = input2index(t);
     Interval intv_t = getSlice(index)->domain();
-    if(t == intv_t.ub() && index < m_slices_number - 1) // on the boundary, between two slices
+    if(t == intv_t.ub() && index < size() - 1) // on the boundary, between two slices
       return getSlice(index + 1)->domain() | intv_t;
     return intv_t;
   }
@@ -546,7 +553,7 @@ namespace tubex
 
   Tube& Tube::inflate(double rad)
   {
-    for(int i = 0 ; i < m_slices_number ; i++)
+    for(int i = 0 ; i < size() ; i++)
     {
       Interval old_slice = (*this)[i];
       set(old_slice.inflate(rad), i);
@@ -884,7 +891,7 @@ namespace tubex
       else
       {
         checkDomain(*this, index);
-        int mid_id = ceil(m_slices_number / 2.);
+        int mid_id = ceil(size() / 2.);
         if(index < mid_id) m_first_subtube->requestFutureTreeComputation(index);
         else m_second_subtube->requestFutureTreeComputation(index - mid_id);
       }
