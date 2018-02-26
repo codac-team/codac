@@ -217,12 +217,12 @@ This has been the subject of the paper `Guaranteed computation of robot trajecto
   bool contraction = x.ctcFwdBwd(v);
   // contraction is 'true' in case of any contraction on x
 
-Observation constraint
-^^^^^^^^^^^^^^^^^^^^^^
+Evaluation constraint
+^^^^^^^^^^^^^^^^^^^^^
 
-The contractor :math:`\mathcal{C}_{\textrm{obs}}` relies on the observation constraint :math:`y=x(t)`, with :math:`t\in[t]`, :math:`y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
-It is applicable by the method :code:`ctcObs()`.
-This will be the subject of the paper *Reliable non-linear state estimation involving time uncertainties*.
+The contractor :math:`\mathcal{C}_{\textrm{eval}}` relies on the evaluation constraint :math:`y=x(t)`, with :math:`t\in[t]`, :math:`y\in[y]`, :math:`x(\cdot)\in[x](\cdot)`.
+It is applicable by the method :code:`ctcEval()`.
+This has been the subject of the paper `Reliable non-linear state estimation involving time uncertainties <http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf>`_.
 
 *Note:* the derivative tube :math:`[v](\cdot)` is required.
 
@@ -230,7 +230,7 @@ This will be the subject of the paper *Reliable non-linear state estimation invo
   
   Interval intv_t, intv_y;
   Tube x(domain, timestep), v(domain, timestep);
-  bool contraction = x.ctcObs(v, intv_t, intv_y);
+  bool contraction = x.ctcEval(v, intv_t, intv_y);
   // contraction is 'true' in case of
   // any contraction on x, intv_t or intv_y
 
@@ -254,7 +254,7 @@ It is applicable by the method :code:`ctcOut()`.
 Inter-temporal constraint
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The contractor :math:`\mathcal{C}_{t_1,t_2}` relies on the observation constraint :math:`x(t_1)=x(t_2)`, with :math:`t_1\in[t_1]`, :math:`t_2\in[t_2]`, :math:`x(\cdot)\in[x](\cdot)`.
+The contractor :math:`\mathcal{C}_{t_1,t_2}` relies on the evaluation constraint :math:`x(t_1)=x(t_2)`, with :math:`t_1\in[t_1]`, :math:`t_2\in[t_2]`, :math:`x(\cdot)\in[x](\cdot)`.
 It is applicable by the method :code:`ctcIntertemporal()`.
 This will be the subject of the paper *Loop-based localization method for mobile robots*.
 

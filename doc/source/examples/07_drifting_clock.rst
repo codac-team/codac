@@ -1,9 +1,7 @@
 Reliable correction of a drifting clock
 ---------------------------------------
 
-.. The following example is taken from `this paper <http://simon-rohou.fr/research/tubobs/tubobs_paper.pdf>`_.
-
-The following example is taken from the paper `Reliable Non-Linear State Estimation Involving Time Uncertainties`, submitted to Automatica.
+The following example is taken from `this paper <http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf>`_.
 
 Details are coming soon.
 
