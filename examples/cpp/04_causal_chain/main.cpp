@@ -52,9 +52,9 @@ int main(int argc, char *argv[])
 
     /* =========== BACKWARD PROPAGATION =========== */
 
-      theta.ctcObs(u, 14., Interval(-2.36,-2.32));
-      x.ctcObs(xdot, 14., Interval(53.9,55.9));
-      y.ctcObs(ydot, 14., Interval(6.9,8.9));
+      theta.ctcEval(u, 14., Interval(-2.36,-2.32));
+      x.ctcEval(xdot, 14., Interval(53.9,55.9));
+      y.ctcEval(ydot, 14., Interval(6.9,8.9));
 
     /* =========== CONSTRAINT NETWORK =========== */
 

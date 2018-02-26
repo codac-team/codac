@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     IntervalVector measurement(2);
     measurement[0] = Interval(7.,7.2); // [t]
     measurement[1] = Interval(1.,1.8); // [y]
-    y.ctcObs(ydot, measurement[0], measurement[1]);
+    y.ctcEval(ydot, measurement[0], measurement[1]);
 
   /* =========== PROPAGATION (CSP) =========== */
 

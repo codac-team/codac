@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
       for(int i = 0 ; i < v_tau.size() ; i++)
       {
         v_t[i] &= h.invert(v_tau[i]);
-        contraction |= y.ctcObs(ydot, v_t[i], v_z[i]);
-        contraction |= h.ctcObs(hdot, v_t[i], v_tau[i]);
+        contraction |= y.ctcEval(ydot, v_t[i], v_z[i]);
+        contraction |= h.ctcEval(hdot, v_t[i], v_tau[i]);
       }
 
       k++;

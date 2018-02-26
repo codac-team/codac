@@ -680,8 +680,8 @@ namespace tubex
 
     LargestFirst bisector(0., ratio);
     pair<IntervalVector,IntervalVector> p_xobs = bisector.bisect(x_obs);
-    x1.ctcObs(derivative, t, p_xobs.first[0]);
-    x2.ctcObs(derivative, t, p_xobs.second[0]);
+    x1.ctcEval(derivative, t, p_xobs.first[0]);
+    x2.ctcEval(derivative, t, p_xobs.second[0]);
 
     return make_pair(x1, x2);
   }

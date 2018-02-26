@@ -308,7 +308,7 @@ namespace tubex
          * \brief Set the image intv_y for the slice containing the given input t.
          *
          * Note: this operation will affect the whole slice. For a guaranteed
-         * contraction at t, see the ctcObs() method.
+         * contraction at t, see the ctcEval() method.
          *
          * \param intv_y the image to be set
          * \param t the input
@@ -319,7 +319,7 @@ namespace tubex
          * \brief Set the image intv_y over the domain represented by intv_t.
          *
          * Note: this operation will affect the whole domain. For a guaranteed
-         * contraction over intv_t, see the ctcObs() method.
+         * contraction over intv_t, see the ctcEval() method.
          *
          * \param intv_y the image to be set
          * \param intv_t the interval input, [-oo,oo] by default
@@ -614,11 +614,11 @@ namespace tubex
          * \param bisection_required a boolean, 'true' if a bisection of [domain] should be considered to improve the contraction
          * \return true if a contraction has been done, false otherwise
          */
-        bool ctcObs(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
-        bool ctcObs(const Tube& derivative_tube, ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
-        bool ctcObs(const Tube& derivative_tube, const ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
-        bool ctcObs(const Tube& derivative_tube, const ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
-        bool ctcObs_base(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y,
+        bool ctcEval(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
+        bool ctcEval(const Tube& derivative_tube, ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
+        bool ctcEval(const Tube& derivative_tube, const ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
+        bool ctcEval(const Tube& derivative_tube, const ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
+        bool ctcEval_base(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y,
                                 bool& tube_contracted, bool& t_contracted, bool& y_contracted, 
                                 bool& bisection_required, bool fwd_bwd = true);
         
@@ -853,7 +853,7 @@ namespace tubex
       /**
        * \brief To be defined...
        */
-      void ctcObs_computeIndex(const ibex::Interval& y, const ibex::Interval& t, int& index_lb, int& index_ub);
+      void ctcEval_computeIndex(const ibex::Interval& y, const ibex::Interval& t, int& index_lb, int& index_ub);
 
       /**
        * \brief Deserialize a binary file into a tube.

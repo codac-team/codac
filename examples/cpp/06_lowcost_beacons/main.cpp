@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
       {
         for(int j = 0 ; j < v_obs.size() ; j++)
           if(v_obs[j].first == i)
-            contraction |= v_g[i].ctcObs(v_gdot[i],
+            contraction |= v_g[i].ctcEval(v_gdot[i],
                                          v_obs[j].second[0],
                                          v_obs[j].second[1]);
 
