@@ -34,10 +34,10 @@ namespace tubex
     bool contraction = false;
     Interval next_y = (*this)[0];
     Interval y_front = next_y & initial_value;
-    double dt = derivative_tube.dt();
 
     for(int i = 0 ; i < size() ; i++) // from the past to the future
     {
+      double dt = domain(i).diam();
       Interval y_old = next_y;
       Interval y_new = y_old & (y_front + derivative_tube[i] * Interval(0., dt));
       contraction |= y_new.diam() < y_old.diam();
@@ -62,6 +62,7 @@ namespace tubex
 
     return contraction;
   }
+
   bool Tube::ctcBwd(const Tube& derivative_tube)
   {
     checkStructures(*this, derivative_tube);
@@ -71,10 +72,10 @@ namespace tubex
     Interval next_y = (*this)[size() - 1];
     Interval y_front = next_y & next_y - derivative_tube[size() - 1] * derivative_tube.domain(size() - 1).diam();
     next_y = (*this)[max(0, size() - 2)];
-    double dt = derivative_tube.dt();
 
     for(int i = max(0, size() - 2) ; i >= 0 ; i--) // from the future to the past
     {
+      double dt = domain(i).diam();
       Interval y_old = (*this)[i];
       Interval y_new = y_old & (y_front - derivative_tube[i] * Interval(0., dt));
       contraction |= y_new.diam() < y_old.diam();
@@ -138,7 +139,6 @@ namespace tubex
     int index_lb, index_ub;
     int min_index_ctc = 0, max_index_ctc = size() - 1; // set bounds to this contractor
     double old_t_diam = t.diam(), old_y_diam = y.diam();
-    double dt = derivative_tube.dt();
 
     // Trying to contract [t]
 
@@ -181,6 +181,7 @@ namespace tubex
         // Iteration for each [t] subdomain
         for(int k = 0 ; k < v_intv_t.size() ; k++)
         {
+          double dt = domain(k).diam();
           bool local_inconsistency = false;
 
           Interval local_t = v_intv_t[k];

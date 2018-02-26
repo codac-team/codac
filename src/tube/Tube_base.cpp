@@ -33,6 +33,11 @@ namespace tubex
     m_second_subtube = NULL;
   }
 
+  Tube::Tube(const Interval& domain_, const Interval& value)
+  {
+    createFromSpecifications(domain_, domain_.diam(), value);
+  }
+
   Tube::Tube(const Interval& domain_, double timestep, const Interval& default_value)
   {
     createFromSpecifications(domain_, timestep, default_value);
@@ -133,10 +138,10 @@ namespace tubex
         }
       }
       
-      for(int i = 0 ; i < m_first_subtube->slices().size() ; i++)
+      for(int i = 0 ; i < m_first_subtube->size() ; i++)
         m_v_slices.push_back(m_first_subtube->slices()[i]);
       
-      for(int i = 0 ; i < m_second_subtube->slices().size() ; i++)
+      for(int i = 0 ; i < m_second_subtube->size() ; i++)
         m_v_slices.push_back(m_second_subtube->slices()[i]);
     }
 
@@ -191,10 +196,10 @@ namespace tubex
         }
       }
 
-      for(int i = 0 ; i < m_first_subtube->slices().size() ; i++)
+      for(int i = 0 ; i < m_first_subtube->size() ; i++)
         m_v_slices.push_back(m_first_subtube->slices()[i]);
       
-      for(int i = 0 ; i < m_second_subtube->slices().size() ; i++)
+      for(int i = 0 ; i < m_second_subtube->size() ; i++)
         m_v_slices.push_back(m_second_subtube->slices()[i]);
     }
 
@@ -212,13 +217,6 @@ namespace tubex
   int Tube::size() const
   {
     return m_v_slices.size();
-  }
-
-  double Tube::dt() const
-  {
-    // All timesteps are identical in the tree
-    return domain(0).diam();
-    // Note: m_dt_specifications is kept for serialization purposes
   }
 
   double Tube::volume() const
@@ -645,6 +643,69 @@ namespace tubex
     }
   }
 
+  void Tube::sample(int index)
+  {
+    if(isSlice())
+    {
+      LargestFirst bisector(0., 0.5);
+      IntervalVector slice_domain(1, domain());
+      pair<IntervalVector,IntervalVector> p_domain = bisector.bisect(slice_domain);
+      vector<Interval> vector_dt;
+      vector_dt.push_back(p_domain.first[0]);
+      vector_dt.push_back(p_domain.second[0]);
+      createFromSlicesVector(vector_dt, image());
+    }
+
+    else
+    {
+      if(index < m_first_subtube->size())
+        m_first_subtube->sample(index);
+      else
+        m_second_subtube->sample(index - m_first_subtube->size());
+
+      m_v_slices.clear();
+
+      for(int i = 0 ; i < m_first_subtube->size() ; i++)
+        m_v_slices.push_back(m_first_subtube->slices()[i]);
+      
+      for(int i = 0 ; i < m_second_subtube->size() ; i++)
+        m_v_slices.push_back(m_second_subtube->slices()[i]);
+    }
+  }
+
+  pair<Tube,Tube> Tube::bisect(const Tube& derivative, double t, float ratio)
+  {
+    Tube x1 = *this, x2 = *this;
+    IntervalVector x_obs(1, (*this)[t]);
+
+    LargestFirst bisector(0., ratio);
+    pair<IntervalVector,IntervalVector> p_xobs = bisector.bisect(x_obs);
+    x1.ctcObs(derivative, t, p_xobs.first[0]);
+    x2.ctcObs(derivative, t, p_xobs.second[0]);
+
+    return make_pair(x1, x2);
+  }
+
+  double Tube::maxThickness()
+  {
+    int id;
+    return maxThickness(id);
+  }
+
+  double Tube::maxThickness(int& first_id_max_thickness)
+  {
+    first_id_max_thickness = -1;
+    float thickness = std::numeric_limits<double>::quiet_NaN();
+    for(int i = size()-1 ; i >= 0 ; i--)
+      if((*this)[i].diam() > thickness)
+      {
+        thickness = (*this)[i].diam();
+        first_id_max_thickness = i;
+      }
+
+    return thickness;
+  }
+
   Tube Tube::subtube(const Interval& intv_t) const
   {
     checkDomain(*this, intv_t);
@@ -870,7 +931,6 @@ namespace tubex
     
     cout << "Tube: t=" << x.domain()
          << ", y=" << x.image() 
-         << ", dt=" << x.dt()
          << ", " << x.size() << " slices"
          << flush;
     return os;
@@ -891,7 +951,7 @@ namespace tubex
       else
       {
         checkDomain(*this, index);
-        int mid_id = ceil(size() / 2.);
+        int mid_id = m_first_subtube->size();
         if(index < mid_id) m_first_subtube->requestFutureTreeComputation(index);
         else m_second_subtube->requestFutureTreeComputation(index - mid_id);
       }
@@ -1000,50 +1060,5 @@ namespace tubex
     }
 
     return make_pair(lb, ub);
-  }
-
-  pair<Tube,Tube> Tube::bisect(const Tube& derivative, double t, float ratio)
-  {
-    Tube x1 = *this, x2 = *this;
-    IntervalVector x_obs(1, (*this)[t]);
-
-    LargestFirst bisector(0., ratio);
-    pair<IntervalVector,IntervalVector> p_xobs = bisector.bisect(x_obs);
-    x1.ctcObs(derivative, t, p_xobs.first[0]);
-    x2.ctcObs(derivative, t, p_xobs.second[0]);
-
-    return make_pair(x1, x2);
-  }
-
-  void Tube::sample(int index)
-  {
-    if(isSlice())
-    {
-      LargestFirst bisector(0., 0.5);
-      IntervalVector slice_domain(1, domain());
-      pair<IntervalVector,IntervalVector> p_domain = bisector.bisect(slice_domain);
-      vector<Interval> vector_dt;
-      vector_dt.push_back(p_domain.first[0]);
-      vector_dt.push_back(p_domain.second[0]);
-      createFromSlicesVector(vector_dt, image());
-    }
-
-    else
-    {
-      int mid_id = ceil(size() / 2.);
-
-      if(index < mid_id)
-        m_first_subtube->sample(index);
-      else
-        m_second_subtube->sample(index - mid_id);
-
-      m_v_slices.clear();
-
-      for(int i = 0 ; i < m_first_subtube->slices().size() ; i++)
-        m_v_slices.push_back(m_first_subtube->slices()[i]);
-      
-      for(int i = 0 ; i < m_second_subtube->slices().size() ; i++)
-        m_v_slices.push_back(m_second_subtube->slices()[i]);
-    }
   }
 }

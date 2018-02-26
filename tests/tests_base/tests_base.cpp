@@ -351,7 +351,6 @@ TEST_CASE("Testing subtube", "[core]")
     Tube tube = tubeTest1();
     Tube subtube = tube.subtube(Interval(3.5,13.5));
     REQUIRE(subtube.size() == 11);
-    REQUIRE(subtube.dt() == tube.dt());
     REQUIRE(subtube[0] == Interval(-4.,4.));
     REQUIRE(subtube[1] == Interval(-7.,-1.));
     REQUIRE(subtube[2] == Interval(-9.,-5.));
@@ -370,7 +369,6 @@ TEST_CASE("Testing subtube", "[core]")
     Tube tube = tubeTest1();
     Tube subtube = tube.subtube(Interval(10.,12.));
     REQUIRE(subtube.size() == 2);
-    REQUIRE(subtube.dt() == tube.dt());
     REQUIRE(subtube[0] == Interval(-8.,-5.));
     REQUIRE(subtube[1] == Interval(-7.,-4.));
   }

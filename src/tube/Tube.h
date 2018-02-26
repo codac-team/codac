@@ -33,7 +33,7 @@ namespace tubex
         Tube();
 
         /**
-         * \brief Create a tube over the given domain with some timestep.
+         * \brief Create a tube over the given domain with some constant timestep.
          *
          * Values are set by default to [-oo,oo].
          *
@@ -46,12 +46,21 @@ namespace tubex
              const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
 
         /**
+         * \brief Create a one-slice tube over the given domain.
+         *
+         * \param domain tube's domain
+         * \param value image value
+         */
+        Tube(const ibex::Interval& domain,
+             const ibex::Interval& value);
+
+        /**
          * \brief Create a tube from an interval of two functions.
          * 
          * Note: fmin <= fmax
          *
          * \param domain tube's domain
-         * \param timestep tube's precision corresponding to slices width
+         * \param timestep tube's precision corresponding to slices' constant width
          * \param fmin lower-bound ibex function
          * \param fmin upper-bound ibex function
          */
@@ -63,7 +72,7 @@ namespace tubex
          * \brief Create a tube as an envelope of an uncertain functions.
          *
          * \param domain tube's domain
-         * \param timestep tube's precision corresponding to slices width
+         * \param timestep tube's precision corresponding to slices' constant width
          * \param f the ibex function to enclose
          * \param thickness the bounded uncertainty centered on f's values, [0.] by default
          */
@@ -142,14 +151,10 @@ namespace tubex
         int size() const;
 
         /**
-         * \brief Return the width of a slice (i.e. tube's time-step).
+         * \brief Return a vector of tube's slices
          *
-         * Note: each slice strictly share the same width.
-         *
-         * \return the width of a slice
+         * \return a vector of one-slice Tubes
          */
-        double dt() const;
-
         std::vector<Tube*> slices() const;
 
         /**
@@ -412,6 +417,36 @@ namespace tubex
         void invert(const ibex::Interval& intv_y, std::vector<ibex::Interval> &v_intv_t, const ibex::Interval& intv_t = ibex::Interval::ALL_REALS) const;
 
         /**
+         * \brief Bisect a slice into two
+         *
+         * Bisection by time.
+         *
+         * \param index bisect the slice refered by index
+         */
+        void sample(int index);
+
+        /**
+         * \brief Bisect a tube into two tubes
+         *
+         * Bisection by value.
+         *
+         * \param derivative_tube the derivative of this
+         * \param t the bisection time
+         * \param ratio the bisection ratio
+         * \return a pair of Tubes
+         */
+        std::pair<tubex::Tube,tubex::Tube> bisect(const tubex::Tube& derivative, double t, float ratio = 0.55);
+
+        /**
+         * \brief Return the maximum thickness of the tube
+         *
+         * \param first_id_max_thickness the first slice index corresponding to this thickness
+         * \return thickness
+         */
+        double maxThickness();
+        double maxThickness(int& first_id_max_thickness);
+
+        /**
          * \brief Extract a subtube from this.
          *
          * intv_t may be a subset of the new tube's domain in order to share the same slices cutting.
@@ -469,8 +504,6 @@ namespace tubex
         ibex::Interval interpol(double t, const Tube& derivative_tube) const;
         ibex::Interval interpol(const ibex::Interval& intv_t, const Tube& derivative_tube) const;
         std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& intv_t, const Tube& derivative_tube) const;
-        std::pair<tubex::Tube,tubex::Tube> bisect(const tubex::Tube& derivative, double t, float ratio = 0.55);
-        void sample(int index);
 
 
       /** Integration computation **/
@@ -684,7 +717,7 @@ namespace tubex
        * Values are set by default to [-oo,oo].
        *
        * \param domain tube's domain
-       * \param timestep tube's precision corresponding to slices width
+       * \param timestep tube's precision corresponding to slices' constant width
        * \param default_value default tube's image ([-oo,oo] by default)
        */
       void createFromSpecifications(const ibex::Interval& domain, double timestep, const ibex::Interval& default_value = ibex::Interval::ALL_REALS);
