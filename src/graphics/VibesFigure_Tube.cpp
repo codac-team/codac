@@ -119,21 +119,21 @@ namespace tubex
   VibesFigure_Tube::VibesFigure_Tube(const string& name, vector<Tube*> v_tubes) : m_tubes_box(2, Interval::EMPTY_SET), VibesFigure(name)
   {
     map<string,string> colors_map;
-    colors_map["slices_old_background"] = "red[red]";
-    colors_map["slices"] = "red[red]";
-    colors_map["slices_contracted"] = "red[red]";
+    colors_map["slices_old_background"] = "gray[red]";
+    colors_map["slices"] = "gray[red]";
+    colors_map["slices_contracted"] = "gray[red]";
     m_color_tubes.push_back(colors_map);
-    colors_map["slices_old_background"] = "blue[blue]";
-    colors_map["slices"] = "blue[blue]";
-    colors_map["slices_contracted"] = "blue[blue]";
+    colors_map["slices_old_background"] = "gray[blue]";
+    colors_map["slices"] = "gray[blue]";
+    colors_map["slices_contracted"] = "gray[blue]";
     m_color_tubes.push_back(colors_map);
-    colors_map["slices_old_background"] = "green[green]";
-    colors_map["slices"] = "green[green]";
-    colors_map["slices_contracted"] = "green[green]";
+    colors_map["slices_old_background"] = "gray[green]";
+    colors_map["slices"] = "gray[green]";
+    colors_map["slices_contracted"] = "gray[green]";
     m_color_tubes.push_back(colors_map);
-    colors_map["slices_old_background"] = "#FF8A1F[#FF8A1F]";
-    colors_map["slices"] = "#FF8A1F[#FF8A1F]";
-    colors_map["slices_contracted"] = "#FF8A1F[#FF8A1F]";
+    colors_map["slices_old_background"] = "gray[#FF8A1F]";
+    colors_map["slices"] = "gray[#FF8A1F]";
+    colors_map["slices_contracted"] = "gray[#FF8A1F]";
     m_color_tubes.push_back(colors_map);
 
     for(int i = 0 ; i < v_tubes.size() ; i++)
