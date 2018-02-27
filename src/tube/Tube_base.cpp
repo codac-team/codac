@@ -697,7 +697,7 @@ namespace tubex
     first_id_max_thickness = -1;
     float thickness = std::numeric_limits<double>::quiet_NaN();
     for(int i = size()-1 ; i >= 0 ; i--)
-      if((*this)[i].diam() > thickness)
+      if((*this)[i].diam() > thickness || isnan(thickness))
       {
         thickness = (*this)[i].diam();
         first_id_max_thickness = i;
