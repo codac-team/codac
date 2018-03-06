@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_Tube.h"
+#include "tubex_CtcDeriv.h"
 #include "exceptions/tubex_Exception.h"
 #include "exceptions/tubex_DomainException.h"
 #include "exceptions/tubex_EmptyException.h"
@@ -26,88 +27,24 @@ using namespace ibex;
 
 namespace tubex
 {
-  bool Tube::ctcFwd(const Tube& derivative_tube, const Interval& initial_value)
+  bool Tube::ctcFwd(const Tube& derivative_tube, const ibex::Interval& initial_value)
   {
-    checkStructures(*this, derivative_tube);
-    checkEmptiness(derivative_tube);
-
-    bool contraction = false;
-    Interval next_y = (*this)[0];
-    Interval y_front = next_y & initial_value;
-
-    for(int i = 0 ; i < size() ; i++) // from the past to the future
-    {
-      double dt = domain(i).diam();
-      Interval y_old = next_y;
-      Interval y_new = y_old & (y_front + derivative_tube[i] * Interval(0., dt));
-      contraction |= y_new.diam() < y_old.diam();
-      set(y_new, i);
-
-      // Discontinuous
-      if(y_new.is_empty())
-      {
-        set(Interval::EMPTY_SET);
-        contraction = true;
-        break;
-      }
-
-      // Preparing next slice computation
-      if(i < size() - 1)
-      {
-        y_front = y_old & (y_front + derivative_tube[i] * dt);
-        next_y = (*this)[i + 1];
-        y_front &= next_y;
-      }
-    }
-
-    return contraction;
+    CtcDeriv ctc(this, new Tube(derivative_tube), initial_value);
+    return ctc.contractFwd();
   }
 
   bool Tube::ctcBwd(const Tube& derivative_tube)
   {
-    checkStructures(*this, derivative_tube);
-    checkEmptiness(derivative_tube);
-
-    bool contraction = false;
-    Interval next_y = (*this)[size() - 1];
-    Interval y_front = next_y & next_y - derivative_tube[size() - 1] * derivative_tube.domain(size() - 1).diam();
-    next_y = (*this)[max(0, size() - 2)];
-
-    for(int i = max(0, size() - 2) ; i >= 0 ; i--) // from the future to the past
-    {
-      double dt = domain(i).diam();
-      Interval y_old = (*this)[i];
-      Interval y_new = y_old & (y_front - derivative_tube[i] * Interval(0., dt));
-      contraction |= y_new.diam() < y_old.diam();
-      set(y_new, i);
-
-      // Discontinuous
-      if(y_new.is_empty())
-      {
-        set(Interval::EMPTY_SET);
-        contraction = true;
-        break;
-      }
-
-      if(i > 0)
-      {
-        y_front = y_old & (y_front - derivative_tube[i] * dt);
-        next_y = (*this)[i - 1];
-        y_front &= next_y;
-      }
-    }
-
-    return contraction;
+    CtcDeriv ctc(this, new Tube(derivative_tube));
+    return ctc.contractBwd();
   }
-
-  bool Tube::ctcFwdBwd(const Tube& derivative_tube, const Interval& initial_value)
+  
+  bool Tube::ctcFwdBwd(const Tube& derivative_tube, const ibex::Interval& initial_value)
   {
-    bool contraction = false;
-    contraction |= ctcFwd(derivative_tube, initial_value);
-    contraction |= ctcBwd(derivative_tube);
-    return contraction;
+    CtcDeriv ctc(this, new Tube(derivative_tube), initial_value);
+    return ctc.contract();
   }
-
+  
   void Tube::ctcEval_computeIndex(const Interval& t, const Interval& y, int& index_lb, int& index_ub)
   {
     if(t.is_unbounded() || t.is_empty())

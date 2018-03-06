@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - CtcDiff class
+ *  tubex-lib - CtcDeriv class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,27 +10,30 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef CtcDiff_HEADER
-#define CtcDiff_HEADER
+#ifndef CtcDeriv_HEADER
+#define CtcDeriv_HEADER
 
 #include "tubex_Ctc.h"
 
 namespace tubex
 {
   /**
-   * \brief CtcDiff class.
+   * \brief CtcDeriv class.
    */
-  class CtcDiff : Ctc
+  class CtcDeriv : Ctc
   {
     public:
 
-      CtcDiff(Tube *x, const Tube *v);
+      CtcDeriv(Tube *x, const Tube *v, const ibex::Interval& x0 = ibex::Interval::ALL_REALS);
       bool contract();
+      bool contractFwd();
+      bool contractBwd();
 
     protected:
 
       Tube *m_x;
       const Tube *m_v;
+      const ibex::Interval m_x0;
   };
 }
 

@@ -34,7 +34,7 @@
     contractor/tubex_Ctc.cpp
     contractor/tubex_CtcCompo.cpp
     contractor/tubex_CtcDelay.cpp
-    contractor/tubex_CtcDiff.cpp
+    contractor/tubex_CtcDeriv.cpp
     contractor/tubex_CtcEval.cpp
 
     tools/tubex_Serialization.cpp
@@ -55,7 +55,7 @@
     contractor/tubex_Ctc.h
     contractor/tubex_CtcCompo.h
     contractor/tubex_CtcDelay.h
-    contractor/tubex_CtcDiff.h
+    contractor/tubex_CtcDeriv.h
     contractor/tubex_CtcEval.h
 
     tools/tubex_Serialization.h

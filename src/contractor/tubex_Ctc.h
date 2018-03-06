@@ -24,8 +24,8 @@ namespace tubex
   {
     public:
 
-      Ctc(){};
-      virtual bool contract();
+      Ctc() {};
+      virtual bool contract() {};
   };
 }
 
