@@ -25,7 +25,7 @@ namespace tubex
     public:
 
       CtcOut();
-      bool contract(const ibex::Interval& t, const ibex::Interval& y);
+      bool contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y);
 
     protected:
 

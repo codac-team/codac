@@ -37,6 +37,7 @@
     contractor/tubex_CtcDeriv.cpp
     contractor/tubex_CtcEval.cpp
     contractor/tubex_CtcIntertemp.cpp
+    contractor/tubex_CtcOut.cpp
 
     tools/tubex_Serialization.cpp
   )
@@ -59,6 +60,7 @@
     contractor/tubex_CtcDeriv.h
     contractor/tubex_CtcEval.h
     contractor/tubex_CtcIntertemp.h
+    contractor/tubex_CtcOut.h
 
     tools/tubex_Serialization.h
   )

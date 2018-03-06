@@ -13,6 +13,7 @@
 #include "tubex_Tube.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
+#include "tubex_CtcOut.h"
 #include "exceptions/tubex_Exception.h"
 #include "exceptions/tubex_DomainException.h"
 #include "exceptions/tubex_EmptyException.h"
@@ -76,40 +77,8 @@ namespace tubex
 
   bool Tube::ctcOut(const Interval& t, const Interval& y)
   {
-    Interval intersected_t = t & domain();
-    bool contraction = false;
-    pair<Interval,Interval> enc_bounds = eval(intersected_t);
-
-    if(y.intersects(enc_bounds.first))
-      #pragma omp parallel num_threads(omp_get_num_procs())
-      {
-        #pragma omp for
-        for(int i = input2index(intersected_t.lb()) ; i < input2index(intersected_t.ub()) ; i++)
-        {
-          Interval old_y = (*this)[i];
-          Interval new_y(max(y.ub(), old_y.lb()), old_y.ub());
-          contraction |= new_y.diam() < old_y.diam();
-          set(new_y, i);
-        }
-      }
-
-    else if(y.intersects(enc_bounds.second))
-      #pragma omp parallel num_threads(omp_get_num_procs())
-      {
-        #pragma omp for
-        for(int i = input2index(intersected_t.lb()) ; i < input2index(intersected_t.ub()) ; i++)
-        {
-          Interval old_y = (*this)[i];
-          Interval new_y(old_y.lb(), min(old_y.ub(), y.lb()));
-          contraction |= new_y.diam() < old_y.diam();
-          set(new_y, i);
-        }
-      }
-
-    else
-      return false; // surely no contraction
-
-    return contraction;
+    CtcOut ctc;
+    return ctc.contract(t, y, *this);
   }
 
   bool Tube::ctcIntertemporal(Interval& t1, Interval& t2) const
