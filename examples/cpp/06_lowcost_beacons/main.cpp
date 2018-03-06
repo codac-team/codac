@@ -37,12 +37,12 @@ bool ctcLoc(const pair<float,float>& beacon,
   Tube beacon_x(x, beacon.first);
   Tube beacon_y(y, beacon.second);
 
-  Tube::contract(xdot, v, theta, Function("xdot", "v", "theta", "xdot - v*cos(theta)"));
-  Tube::contract(ydot, v, theta, Function("ydot", "v", "theta", "ydot - v*sin(theta)"));
+  CtcArithmetic::contract(xdot, v, theta, Function("xdot", "v", "theta", "xdot - v*cos(theta)"));
+  CtcArithmetic::contract(ydot, v, theta, Function("ydot", "v", "theta", "ydot - v*sin(theta)"));
 
-  Tube::contract(x, y, g, beacon_x, beacon_y,
+  CtcArithmetic::contract(x, y, g, beacon_x, beacon_y,
       Function("x", "y", "g", "bx", "by", "g - sqrt((x-bx)^2+(y-by)^2)"));
-  Tube::contract(x, xdot, y, ydot, gdot, beacon_x, beacon_y,
+  CtcArithmetic::contract(x, xdot, y, ydot, gdot, beacon_x, beacon_y,
       Function("x", "xdot", "y", "ydot", "gdot", "bx", "by",
                "gdot - ((sign(x-bx)/sqrt(1+(((y-by)/(x-bx))^2)))*xdot + (sign(y-by)/sqrt(1+(((x-bx)/(y-by))^2)))*ydot)"));
 

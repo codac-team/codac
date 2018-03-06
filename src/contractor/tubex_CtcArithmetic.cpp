@@ -77,35 +77,35 @@ namespace tubex
       } \
       return contraction;
 
-  bool ctcAbs(Tube& y, Tube& x) { func_ctc_unary(y, x, abs, bwd_abs); }
-  bool ctcSqr(Tube& y, Tube& x) { func_ctc_unary(y, x, sqr, bwd_sqr); }
-  bool ctcSqrt(Tube& y, Tube& x) { func_ctc_unary(y, x, sqrt, bwd_sqrt); }
-  bool ctcPow(Tube& y, Tube& x, int p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
-  bool ctcPow(Tube& y, Tube& x, double p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
-  bool ctcPow(Tube& y, Tube& x, Interval& p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
-  bool ctcRoot(Tube& y, Tube& x, int p) { func_ctc_unary_param(y, x, p, root, bwd_root); }
-  bool ctcExp(Tube& y, Tube& x) { func_ctc_unary(y, x, exp, bwd_exp); }
-  bool ctcLog(Tube& y, Tube& x) { func_ctc_unary(y, x, log, bwd_log); }
-  bool ctcCos(Tube& y, Tube& x) { func_ctc_unary(y, x, cos, bwd_cos); }
-  bool ctcSin(Tube& y, Tube& x) { func_ctc_unary(y, x, sin, bwd_sin); }
-  bool ctcTan(Tube& y, Tube& x) { func_ctc_unary(y, x, tan, bwd_tan); }
-  bool ctcAcos(Tube& y, Tube& x) { func_ctc_unary(y, x, acos, bwd_acos); }
-  bool ctcAsin(Tube& y, Tube& x) { func_ctc_unary(y, x, asin, bwd_asin); }
-  bool ctcAtan(Tube& y, Tube& x) { func_ctc_unary(y, x, atan, bwd_atan); }
-  bool ctcCosh(Tube& y, Tube& x) { func_ctc_unary(y, x, cosh, bwd_cosh); }
-  bool ctcSinh(Tube& y, Tube& x) { func_ctc_unary(y, x, sinh, bwd_sinh); }
-  bool ctcTanh(Tube& y, Tube& x) { func_ctc_unary(y, x, tanh, bwd_tanh); }
-  bool ctcAcosh(Tube& y, Tube& x) { func_ctc_unary(y, x, acosh, bwd_acosh); }
-  bool ctcAsinh(Tube& y, Tube& x) { func_ctc_unary(y, x, asinh, bwd_asinh); }
-  bool ctcAtanh(Tube& y, Tube& x) { func_ctc_unary(y, x, atanh, bwd_atanh); }
-  bool ctcAtan2(Tube& theta, Tube& y, Tube& x) { func_ctc_binary(theta, y, x, atan2, bwd_atan2); }
+  bool CtcArithmetic::ctcAbs(Tube& y, Tube& x) { func_ctc_unary(y, x, abs, bwd_abs); }
+  bool CtcArithmetic::ctcSqr(Tube& y, Tube& x) { func_ctc_unary(y, x, sqr, bwd_sqr); }
+  bool CtcArithmetic::ctcSqrt(Tube& y, Tube& x) { func_ctc_unary(y, x, sqrt, bwd_sqrt); }
+  bool CtcArithmetic::ctcPow(Tube& y, Tube& x, int p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
+  bool CtcArithmetic::ctcPow(Tube& y, Tube& x, double p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
+  bool CtcArithmetic::ctcPow(Tube& y, Tube& x, Interval& p) { func_ctc_unary_param(y, x, p, pow, bwd_pow); }
+  bool CtcArithmetic::ctcRoot(Tube& y, Tube& x, int p) { func_ctc_unary_param(y, x, p, root, bwd_root); }
+  bool CtcArithmetic::ctcExp(Tube& y, Tube& x) { func_ctc_unary(y, x, exp, bwd_exp); }
+  bool CtcArithmetic::ctcLog(Tube& y, Tube& x) { func_ctc_unary(y, x, log, bwd_log); }
+  bool CtcArithmetic::ctcCos(Tube& y, Tube& x) { func_ctc_unary(y, x, cos, bwd_cos); }
+  bool CtcArithmetic::ctcSin(Tube& y, Tube& x) { func_ctc_unary(y, x, sin, bwd_sin); }
+  bool CtcArithmetic::ctcTan(Tube& y, Tube& x) { func_ctc_unary(y, x, tan, bwd_tan); }
+  bool CtcArithmetic::ctcAcos(Tube& y, Tube& x) { func_ctc_unary(y, x, acos, bwd_acos); }
+  bool CtcArithmetic::ctcAsin(Tube& y, Tube& x) { func_ctc_unary(y, x, asin, bwd_asin); }
+  bool CtcArithmetic::ctcAtan(Tube& y, Tube& x) { func_ctc_unary(y, x, atan, bwd_atan); }
+  bool CtcArithmetic::ctcCosh(Tube& y, Tube& x) { func_ctc_unary(y, x, cosh, bwd_cosh); }
+  bool CtcArithmetic::ctcSinh(Tube& y, Tube& x) { func_ctc_unary(y, x, sinh, bwd_sinh); }
+  bool CtcArithmetic::ctcTanh(Tube& y, Tube& x) { func_ctc_unary(y, x, tanh, bwd_tanh); }
+  bool CtcArithmetic::ctcAcosh(Tube& y, Tube& x) { func_ctc_unary(y, x, acosh, bwd_acosh); }
+  bool CtcArithmetic::ctcAsinh(Tube& y, Tube& x) { func_ctc_unary(y, x, asinh, bwd_asinh); }
+  bool CtcArithmetic::ctcAtanh(Tube& y, Tube& x) { func_ctc_unary(y, x, atanh, bwd_atanh); }
+  bool CtcArithmetic::ctcAtan2(Tube& theta, Tube& y, Tube& x) { func_ctc_binary(theta, y, x, atan2, bwd_atan2); }
 
-  bool Tube::contract(Tube& x1, Tube& x2, const Function& f)
+  bool CtcArithmetic::contract(Tube& x1, Tube& x2, const Function& f)
   {
     checkStructures(x1, x2);
 
     if(f.nb_arg() != 2)
-      cout << "Tube::contract: wrong argument number" << endl;
+      cout << "contract: wrong argument number" << endl;
 
     double volume = x1.volume() + x2.volume();
 
@@ -124,13 +124,13 @@ namespace tubex
     return volume < x1.volume() + x2.volume();
   }
 
-  bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, const Function& f)
+  bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, const Function& f)
   {
     checkStructures(x1, x2);
     checkStructures(x1, x3);
 
     if(f.nb_arg() != 3)
-      cout << "Tube::contract: wrong argument number" << endl;
+      cout << "contract: wrong argument number" << endl;
 
     double volume = x1.volume() + x2.volume() + x3.volume();
 
@@ -149,14 +149,14 @@ namespace tubex
     return volume < x1.volume() + x2.volume() + x3.volume();
   }
 
-  bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, const Function& f)
+  bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, const Function& f)
   {
     checkStructures(x1, x2);
     checkStructures(x1, x3);
     checkStructures(x1, x4);
 
     if(f.nb_arg() != 4)
-      cout << "Tube::contract: wrong argument number" << endl;
+      cout << "contract: wrong argument number" << endl;
 
     double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume();
 
@@ -175,7 +175,7 @@ namespace tubex
     return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume();
   }
 
-  bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, const Function& f)
+  bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, const Function& f)
   {
     checkStructures(x1, x2);
     checkStructures(x1, x3);
@@ -183,7 +183,7 @@ namespace tubex
     checkStructures(x1, x5);
 
     if(f.nb_arg() != 5)
-      cout << "Tube::contract: wrong argument number" << endl;
+      cout << "contract: wrong argument number" << endl;
 
     double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume();
 
@@ -202,7 +202,7 @@ namespace tubex
     return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume();
   }
 
-  bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, const Function& f)
+  bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, const Function& f)
   {
     checkStructures(x1, x2);
     checkStructures(x1, x3);
@@ -211,7 +211,7 @@ namespace tubex
     checkStructures(x1, x6);
 
     if(f.nb_arg() != 6)
-      cout << "Tube::contract: wrong argument number" << endl;
+      cout << "contract: wrong argument number" << endl;
 
     double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume();
 
@@ -230,7 +230,7 @@ namespace tubex
     return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume();
   }
 
-  bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, const Function& f)
+  bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, const Function& f)
   {
     checkStructures(x1, x2);
     checkStructures(x1, x3);
@@ -240,7 +240,7 @@ namespace tubex
     checkStructures(x1, x7);
 
     if(f.nb_arg() != 7)
-      cout << "Tube::contract: wrong argument number" << endl;
+      cout << "contract: wrong argument number" << endl;
 
     double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume() + x7.volume();
 
@@ -259,7 +259,7 @@ namespace tubex
     return volume < x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume() + x7.volume();
   }
 
-  bool Tube::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, const Function& f)
+  bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, const Function& f)
   {
     checkStructures(x1, x2);
     checkStructures(x1, x3);
@@ -270,7 +270,7 @@ namespace tubex
     checkStructures(x1, x8);
 
     if(f.nb_arg() != 8)
-      cout << "Tube::contract: wrong argument number" << endl;
+      cout << "contract: wrong argument number" << endl;
 
     double volume = x1.volume() + x2.volume() + x3.volume() + x4.volume() + x5.volume() + x6.volume() + x7.volume() + x8.volume();
 

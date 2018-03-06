@@ -608,19 +608,12 @@ namespace tubex
          * \param t the domain containing the observation (may be contracted)
          * \param y the interval image containing the observation (may be contracted)
          * \param fwd_bwd a boolean allowing a propagation of the contraction over the whole domain
-         * \param tube_contracted a boolean, 'true' if a contraction happend for this 
-         * \param t_contracted a boolean, 'true' if a contraction happend for [domain]
-         * \param y_contracted a boolean, 'true' if a contraction happend for [image]
-         * \param bisection_required a boolean, 'true' if a bisection of [domain] should be considered to improve the contraction
          * \return true if a contraction has been done, false otherwise
          */
         bool ctcEval(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
         bool ctcEval(const Tube& derivative_tube, ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
         bool ctcEval(const Tube& derivative_tube, const ibex::Interval& t, ibex::Interval& y, bool fwd_bwd = true);
         bool ctcEval(const Tube& derivative_tube, const ibex::Interval& t, const ibex::Interval& y, bool fwd_bwd = true);
-        bool ctcEval_base(const Tube& derivative_tube, ibex::Interval& t, ibex::Interval& y,
-                                bool& tube_contracted, bool& t_contracted, bool& y_contracted, 
-                                bool& bisection_required, bool fwd_bwd = true);
         
         /**
          * \brief Contract this from a given non-observation, such that y\not=x(t) with y\in[image], t\in[domain], x\in this
@@ -661,23 +654,6 @@ namespace tubex
          * \return true if a contraction has been done, false otherwise
          */
         bool ctcPeriodic(const ibex::Interval& period);
-        
-        /**
-         * \brief Contract tubes given algebraic constraints.
-         *
-         * Constraints are defined thanks to an ibex function that has to vanish.
-         * 
-         * \param x* the tubes (variables) involved in the constraints
-         * \param f the ibex function defining the constraints, the variables of which being the tubes
-         * \return true if a contraction has been done, false otherwise
-         */
-        static bool contract(Tube& x1, Tube& x2, const ibex::Function& f);
-        static bool contract(Tube& x1, Tube& x2, Tube& x3, const ibex::Function& f);
-        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, const ibex::Function& f);
-        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, const ibex::Function& f);
-        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, const ibex::Function& f);
-        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, const ibex::Function& f);
-        static bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, const ibex::Function& f);
 
 
       /** Serialization **/

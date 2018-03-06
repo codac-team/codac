@@ -237,4 +237,9 @@ namespace tubex
   {
     return false; // w cannot be contracted
   }
+
+  bool CtcEval::tBisectionRequired()
+  {
+    return m_bisection_required;
+  }
 }

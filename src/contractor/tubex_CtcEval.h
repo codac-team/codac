@@ -34,6 +34,9 @@ namespace tubex
       bool yContracted();
       bool wContracted();
 
+      // Returns a boolean: 'true' if a bisection of [t] should be considered to improve the contraction
+      bool tBisectionRequired();
+
     protected:
 
       void computeIndex(const ibex::Interval& t, const ibex::Interval& z, const Tube& y, int& index_lb, int& index_ub);
