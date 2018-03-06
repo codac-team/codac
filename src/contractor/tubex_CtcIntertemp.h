@@ -24,14 +24,11 @@ namespace tubex
   {
     public:
 
-      CtcIntertemp(ibex::Interval *t1, ibex::Interval *t2, Tube *y, const Tube *w);
-      bool contract();
+      CtcIntertemp();
+      bool contract(ibex::Interval& t1, ibex::Interval& t2, Tube& y, const Tube& w);
 
     protected:
-
-      ibex::Interval *m_t1, *m_t2;
-      Tube *m_y;
-      const Tube *m_w;
+      
   };
 }
 

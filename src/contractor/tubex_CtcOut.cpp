@@ -17,7 +17,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcOut::CtcOut(const ibex::Interval *t, const ibex::Interval *y) : m_t(t), m_y(y)
+  CtcOut::CtcOut()
   {
 
   }

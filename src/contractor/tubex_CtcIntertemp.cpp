@@ -17,12 +17,12 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcIntertemp::CtcIntertemp(Interval *t1, Interval *t2, Tube *y, const Tube *w) : m_t1(t1), m_t2(t2), m_y(y), m_w(w)
+  CtcIntertemp::CtcIntertemp()
   {
 
   }
 
-  bool CtcIntertemp::contract()
+  bool CtcIntertemp::contract(Interval& t1, Interval& t2, Tube& y, const Tube& w)
   {
     /* TO APPEAR SOON */
 

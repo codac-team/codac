@@ -24,12 +24,11 @@ namespace tubex
   {
     public:
 
-      CtcOut(const ibex::Interval *t, const ibex::Interval *y);
-      bool contract();
+      CtcOut();
+      bool contract(const ibex::Interval& t, const ibex::Interval& y);
 
     protected:
 
-      const ibex::Interval *m_t, *m_y;
   };
 }
 

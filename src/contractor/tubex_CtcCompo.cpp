@@ -17,12 +17,12 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcCompo::CtcCompo(Tube *x, Tube *y, Tube *z) : m_x(x), m_y(y), m_z(z)
+  CtcCompo::CtcCompo()
   {
 
   }
 
-  bool CtcCompo::contract()
+  bool CtcCompo::contract(Tube& x, Tube& y, Tube& z)
   {
     /* TO APPEAR SOON */
 

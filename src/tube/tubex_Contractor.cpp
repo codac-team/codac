@@ -12,6 +12,7 @@
 
 #include "tubex_Tube.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_CtcEval.h"
 #include "exceptions/tubex_Exception.h"
 #include "exceptions/tubex_DomainException.h"
 #include "exceptions/tubex_EmptyException.h"
@@ -29,243 +30,48 @@ namespace tubex
 {
   bool Tube::ctcFwd(const Tube& derivative_tube, const ibex::Interval& initial_value)
   {
-    CtcDeriv ctc(this, new Tube(derivative_tube), initial_value);
-    return ctc.contractFwd();
+    CtcDeriv ctc;
+    return ctc.contractFwd(*this, derivative_tube, initial_value);
   }
 
   bool Tube::ctcBwd(const Tube& derivative_tube)
   {
-    CtcDeriv ctc(this, new Tube(derivative_tube));
-    return ctc.contractBwd();
+    CtcDeriv ctc;
+    return ctc.contractBwd(*this, derivative_tube);
   }
   
   bool Tube::ctcFwdBwd(const Tube& derivative_tube, const ibex::Interval& initial_value)
   {
-    CtcDeriv ctc(this, new Tube(derivative_tube), initial_value);
-    return ctc.contract();
-  }
-  
-  void Tube::ctcEval_computeIndex(const Interval& t, const Interval& y, int& index_lb, int& index_ub)
-  {
-    if(t.is_unbounded() || t.is_empty())
-      throw Exception("Tube::ctcIn_computeIndex(...)", "unbounded or empty [t]");
-
-    // Slices of index_lb and index_ub strictly enclose the measurement [t]
-
-    index_lb = input2index(t.lb());
-    // Special case when the lower bound of [t] equals a bound of a slice or is near empty values
-    if(domain(index_lb).lb() == t.lb() && (*this)[max(0, index_lb - 1)].intersects(y))
-      index_lb = max(0, index_lb - 1);
-
-    index_ub = input2index(t.ub());
-    // Special case when the upper bound of [t] is near empty values
-    if(!(*this)[max(0, index_ub)].intersects(y))
-      index_ub = max(0, index_ub - 1);
-  }
-
-  bool Tube::ctcEval_base(const Tube& derivative_tube, Interval& t, Interval& y, 
-                        bool& tube_contracted, bool& t_contracted, bool& y_contracted, bool& bisection_required, bool fwd_bwd)
-  {
-    checkStructures(*this, derivative_tube);
-    checkEmptiness(derivative_tube);
-    
-    bool inconsistency = false;
-    bisection_required = false;
-
-    int valid_tsubdomains = 0;
-    int index_lb, index_ub;
-    int min_index_ctc = 0, max_index_ctc = size() - 1; // set bounds to this contractor
-    double old_t_diam = t.diam(), old_y_diam = y.diam();
-
-    // Trying to contract [t]
-
-      t = invert((*this)[t] & y, t);
-
-      // The observation [t]x[y] may cross the tube several times
-      vector<Interval> v_intv_t;
-      invert((*this)[t] & y, v_intv_t, t);
-
-    // Trying to contract [y]
-
-      if(t.is_empty())
-        inconsistency = true;
-
-      else
-      {
-        y &= interpol(t, derivative_tube);
-
-        // Computing index
-
-          ctcEval_computeIndex(t, y, index_lb, index_ub);
-
-          if(!fwd_bwd)
-          {
-            min_index_ctc = max(0, index_lb - 1);
-            max_index_ctc = min(index_ub + 1, size() - 1);
-          }
-
-        // Initializations
-
-          map<int,Interval> map_new_y;
-          #pragma omp for
-          for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
-            map_new_y[i] = Interval::EMPTY_SET;
-
-          Interval old_y = y;
-          y = Interval::EMPTY_SET;
-          t = Interval::EMPTY_SET;
-
-        // Iteration for each [t] subdomain
-        for(int k = 0 ; k < v_intv_t.size() ; k++)
-        {
-          double dt = domain(k).diam();
-          bool local_inconsistency = false;
-
-          Interval local_t = v_intv_t[k];
-          Interval local_y = old_y;
-
-          if(v_intv_t.size() > 1) // no need for recomputation of [y] and index if only one [t] subdomain
-          {
-            if(local_t.is_empty())
-            {
-              local_y.set_empty();
-              continue;
-            }
-
-            else
-            {
-              // Trying to contract [local_y]
-              local_y &= interpol(local_t, derivative_tube);
-
-              // Computing new index
-              ctcEval_computeIndex(local_t, local_y, index_lb, index_ub);
-            }
-          }
-
-          // Trying to contract this
-
-            Interval y_front;
-
-            // Backward
-
-              y_front = local_y;
-              for(int i = index_ub ; i >= min_index_ctc ; i--)
-              {
-                Interval integ_domain;
-                Interval slice_dom = domain(i);
-                Interval slice_deriv = derivative_tube[i];
-
-                // Over the ith slice
-                integ_domain = Interval(0., min(dt, local_t.ub() - slice_dom.lb()));
-                map_new_y[i] |= (*this)[i] & (y_front - slice_deriv * integ_domain);
-
-                // On the front, backward way
-                integ_domain = Interval(min(dt, max(0., local_t.lb() - slice_dom.lb())), min(dt, local_t.ub() - slice_dom.lb()));
-                y_front = (*this)[slice_dom.lb()] & (y_front - slice_deriv * integ_domain);
-              }
-
-            // Forward
-
-              y_front = local_y;
-              for(int i = index_lb ; i <= max_index_ctc ; i++)
-              {
-                Interval integ_domain;
-                Interval slice_dom = domain(i);
-                Interval slice_deriv = derivative_tube[i];
-
-                // Over the ith slice
-                integ_domain = Interval(0., min(slice_dom.ub() - local_t.lb(), dt));
-                map_new_y[i] |= (*this)[i] & (y_front + slice_deriv * integ_domain);
-
-                // On the front, forward way
-                integ_domain = Interval(min(dt, max(0., slice_dom.ub() - local_t.ub())), min(dt, slice_dom.ub() - local_t.lb()));
-                y_front = (*this)[slice_dom.ub()] & (y_front + slice_deriv * integ_domain);
-
-              }
-
-            valid_tsubdomains ++;
-            y |= local_y;
-            t |= local_t;
-        } // end of for
-
-        // Synthesis
-        {
-          Interval prev_y;
-          tube_contracted = false;
-
-          // The synthesis is made over two for-loops
-          // so that we can stop the iteration if there is no more propagation
-
-          prev_y = Interval::ALL_REALS;
-          for(int i = min_index_ctc ; i <= max_index_ctc ; i++) // forward
-          {
-            if(!prev_y.intersects(map_new_y[i]))
-            {
-              inconsistency = true;
-              break;
-            }
-
-            tube_contracted |= map_new_y[i].diam() < (*this)[i].diam();
-            prev_y = map_new_y[i];
-            set(map_new_y[i], i);
-          }
-        }
-    }
-
-    if(inconsistency)
-    {
-      //cout << "Warning ctcEval(): inconsistency" << endl;
-
-      #pragma omp for
-      for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
-        set(Interval::EMPTY_SET, i);
-
-      tube_contracted = true;
-      t.set_empty();
-      t_contracted = true;
-      y.set_empty();
-      y_contracted = true;
-    }
-
-    else
-    {
-      bisection_required = valid_tsubdomains > 1;
-      t_contracted = t.diam() < old_t_diam;
-      y_contracted = y.diam() < old_y_diam;
-    }
-    
-    return tube_contracted | y_contracted | t_contracted;
+    CtcDeriv ctc;
+    return ctc.contract(*this, derivative_tube, initial_value);
   }
 
   bool Tube::ctcEval(const Tube& derivative_tube, Interval& t, Interval& y, bool fwd_bwd)
   {
-    bool tube_contracted, y_contracted, t_contracted, bisection_required;
-    return ctcEval_base(derivative_tube, t, y, tube_contracted, t_contracted, y_contracted, bisection_required, fwd_bwd);
+    CtcEval ctc;
+    return ctc.contract(t, y, *this, derivative_tube, fwd_bwd);
   }
 
   bool Tube::ctcEval(const Tube& derivative_tube, Interval& t, const Interval& y, bool fwd_bwd)
   {
+    CtcEval ctc;
     Interval y_temp = y;
-    bool tube_contracted, y_contracted, t_contracted, bisection_required;
-    ctcEval_base(derivative_tube, t, y_temp, tube_contracted, t_contracted, y_contracted, bisection_required, fwd_bwd);
-    return tube_contracted | t_contracted;
+    return ctc.contract(t, y_temp, *this, derivative_tube, fwd_bwd);
   }
 
   bool Tube::ctcEval(const Tube& derivative_tube, const Interval& t, Interval& y, bool fwd_bwd)
   {
+    CtcEval ctc;
     Interval t_temp = t;
-    bool tube_contracted, y_contracted, t_contracted, bisection_required;
-    ctcEval_base(derivative_tube, t_temp, y, tube_contracted, t_contracted, y_contracted, bisection_required, fwd_bwd);
-    return tube_contracted | y_contracted;
+    return ctc.contract(t_temp, y, *this, derivative_tube, fwd_bwd);
   }
 
   bool Tube::ctcEval(const Tube& derivative_tube, const Interval& t, const Interval& y, bool fwd_bwd)
   {
+    CtcEval ctc;
     Interval y_temp = y;
     Interval t_temp = t;
-    bool tube_contracted, y_contracted, t_contracted, bisection_required;
-    ctcEval_base(derivative_tube, t_temp, y_temp, tube_contracted, t_contracted, y_contracted, bisection_required, fwd_bwd);
-    return tube_contracted;
+    return ctc.contract(t_temp, y_temp, *this, derivative_tube, fwd_bwd);
   }
 
   bool Tube::ctcOut(const Interval& t, const Interval& y)

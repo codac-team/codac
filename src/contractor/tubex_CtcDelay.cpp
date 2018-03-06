@@ -17,12 +17,12 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDelay::CtcDelay(Interval *a, Tube *x, Tube *y) : m_a(a), m_x(x), m_y(y)
+  CtcDelay::CtcDelay()
   {
 
   }
 
-  bool CtcDelay::contract()
+  bool CtcDelay::contract(Interval& a, Tube& x, Tube& y)
   {
     /* TO APPEAR SOON */
     

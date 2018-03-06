@@ -24,16 +24,13 @@ namespace tubex
   {
     public:
 
-      CtcDeriv(Tube *x, const Tube *v, const ibex::Interval& x0 = ibex::Interval::ALL_REALS);
-      bool contract();
-      bool contractFwd();
-      bool contractBwd();
+      CtcDeriv();
+      bool contract(Tube& x, const Tube& v, const ibex::Interval& x0 = ibex::Interval::ALL_REALS);
+      bool contractFwd(Tube& x, const Tube& v, const ibex::Interval& x0 = ibex::Interval::ALL_REALS);
+      bool contractBwd(Tube& x, const Tube& v);
 
     protected:
 
-      Tube *m_x;
-      const Tube *m_v;
-      const ibex::Interval m_x0;
   };
 }
 

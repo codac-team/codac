@@ -24,12 +24,11 @@ namespace tubex
   {
     public:
 
-      CtcCompo(Tube *x, Tube *y, Tube *z);
-      bool contract();
+      CtcCompo();
+      bool contract(Tube& x, Tube& y, Tube& z);
 
     protected:
-
-      Tube *m_x, *m_y, *m_z;
+      
   };
 }
 

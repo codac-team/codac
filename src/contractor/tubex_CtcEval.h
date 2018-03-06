@@ -24,14 +24,23 @@ namespace tubex
   {
     public:
 
-      CtcEval(ibex::Interval *t, ibex::Interval *z, Tube *y, const Tube *w);
-      bool contract();
+      CtcEval(/*ibex::Interval *t, ibex::Interval *z, Tube *y, const Tube *w*/);
+      bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, const Tube& w, bool propagation = true);
+
+      bool tContracted();
+      bool zContracted();
+      bool yContracted();
+      bool wContracted();
 
     protected:
+
+      void computeIndex(const ibex::Interval& t, const ibex::Interval& z, const Tube& y, int& index_lb, int& index_ub);
 
       ibex::Interval *m_t, *m_z;
       Tube *m_y;
       const Tube *m_w;
+      bool m_y_contracted, m_t_contracted, m_z_contracted;
+      bool m_bisection_required;
   };
 }
 

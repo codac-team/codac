@@ -24,13 +24,11 @@ namespace tubex
   {
     public:
 
-      CtcDelay(ibex::Interval *a, Tube *x, Tube *y);
-      bool contract();
+      CtcDelay();
+      bool contract(ibex::Interval& a, Tube& x, Tube& y);
 
     protected:
 
-      ibex::Interval *m_a;
-      Tube *m_x, *m_y;
   };
 }
 
