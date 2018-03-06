@@ -19,6 +19,8 @@ namespace tubex
 {
   /**
    * \brief CtcOut class.
+   *
+   * Constraint: z!=y(t)
    */
   class CtcOut : Ctc
   {

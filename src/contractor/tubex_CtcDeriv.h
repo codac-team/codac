@@ -19,6 +19,8 @@ namespace tubex
 {
   /**
    * \brief CtcDeriv class.
+   *
+   * Constraint: \dot{x}=v
    */
   class CtcDeriv : Ctc
   {

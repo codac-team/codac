@@ -19,7 +19,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcEval::CtcEval(/*Interval *t, Interval *z, Tube *y, const Tube *w*/)/* : m_t(t), m_z(z), m_y(y), m_w(w)*/
+  CtcEval::CtcEval()
   {
     m_bisection_required = false;
     m_y_contracted = false;

@@ -19,6 +19,8 @@ namespace tubex
 {
   /**
    * \brief CtcIntertemp class.
+   *
+   * Constraint: x(t1)=x(t2)
    */
   class CtcIntertemp : Ctc
   {

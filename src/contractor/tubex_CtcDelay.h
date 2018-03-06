@@ -19,6 +19,8 @@ namespace tubex
 {
   /**
    * \brief CtcDelay class.
+   *
+   * Constraint: x(t)=y(t+a)
    */
   class CtcDelay : Ctc
   {

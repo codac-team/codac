@@ -19,12 +19,14 @@ namespace tubex
 {
   /**
    * \brief CtcEval class.
+   *
+   * Constraint: z=y(t)
    */
   class CtcEval : Ctc
   {
     public:
 
-      CtcEval(/*ibex::Interval *t, ibex::Interval *z, Tube *y, const Tube *w*/);
+      CtcEval();
       bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, const Tube& w, bool propagation = true);
 
       bool tContracted();

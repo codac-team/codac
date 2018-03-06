@@ -19,6 +19,8 @@ namespace tubex
 {
   /**
    * \brief CtcCompo class.
+   *
+   * Constraint: x(t)=y(z(t))
    */
   class CtcCompo : Ctc
   {
