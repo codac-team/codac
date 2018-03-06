@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_Tube.h"
+#include "tubex.h"
 
 using namespace std;
 using namespace ibex;

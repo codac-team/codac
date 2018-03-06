@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Tube class
+ *  tubex-lib - Tube arithmetic
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_Tube.h"
-#include "exceptions/tubex_DomainException.h"
+#include "tubex_Arithmetic.h"
+#include "../tube/exceptions/tubex_DomainException.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
