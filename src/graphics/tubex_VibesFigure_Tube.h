@@ -15,8 +15,8 @@
 
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
-#include "VibesFigure.h"
-#include "Tube.h"    
+#include "tubex_VibesFigure.h"
+#include "tubex_Tube.h"    
 
 namespace tubex
 {

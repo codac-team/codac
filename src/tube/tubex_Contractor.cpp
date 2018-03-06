@@ -10,10 +10,10 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "Tube.h"
-#include "exceptions/TubeException.h"
-#include "exceptions/DomainTubeException.h"
-#include "exceptions/EmptyTubeException.h"
+#include "tubex_Tube.h"
+#include "exceptions/tubex_Exception.h"
+#include "exceptions/tubex_DomainException.h"
+#include "exceptions/tubex_EmptyException.h"
 #include "ibex_CtcFwdBwd.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
@@ -111,7 +111,7 @@ namespace tubex
   void Tube::ctcEval_computeIndex(const Interval& t, const Interval& y, int& index_lb, int& index_ub)
   {
     if(t.is_unbounded() || t.is_empty())
-      throw TubeException("Tube::ctcIn_computeIndex(...)", "unbounded or empty [t]");
+      throw Exception("Tube::ctcIn_computeIndex(...)", "unbounded or empty [t]");
 
     // Slices of index_lb and index_ub strictly enclose the measurement [t]
 

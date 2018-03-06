@@ -21,8 +21,8 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "Tube.h"
-#include "VibesFigure_Tube.h"
+#include "tubex_Tube.h"
+#include "tubex_VibesFigure_Tube.h"
 
 using namespace std;
 using namespace ibex;

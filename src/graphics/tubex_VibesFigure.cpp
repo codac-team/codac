@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <string>
 #include <iostream>
-#include "VibesFigure.h"
+#include "tubex_VibesFigure.h"
 
 using namespace std;
 using namespace ibex;

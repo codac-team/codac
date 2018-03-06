@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - TubeException class
+ *  tubex-lib - Exception class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,29 +10,29 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TUBEEXCEPTION_HEADER
-#define TUBEEXCEPTION_HEADER
+#ifndef Exception_HEADER
+#define Exception_HEADER
 
 #include <iostream>
 #include <exception>
 #include <string>
 #include <sstream>
-#include "Tube.h"
+#include "tubex_Tube.h"
 
 namespace tubex
 {
   /**
-   * \brief TubeException abstract class.
+   * \brief Exception abstract class.
    *
    * Thrown when necessary.
    */
-  class TubeException : public std::exception
+  class Exception : public std::exception
   {
     public:
 
-      TubeException() {};
-      TubeException(const std::string& function_name, const std::string& custom_message);
-      ~TubeException() throw() {};
+      Exception() {};
+      Exception(const std::string& function_name, const std::string& custom_message);
+      ~Exception() throw() {};
 
       virtual const char* what() const throw();
 
@@ -41,7 +41,7 @@ namespace tubex
       std::string m_what_msg;
   };
 
-  std::ostream& operator<<(std::ostream& os, const TubeException& e);
+  std::ostream& operator<<(std::ostream& os, const Exception& e);
 }
 
 #endif

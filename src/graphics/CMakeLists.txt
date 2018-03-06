@@ -7,13 +7,13 @@
 
   set(SRC
     vibes/vibes.cpp
-    VibesFigure.cpp
-    VibesFigure_Tube.cpp
+    tubex_VibesFigure.cpp
+    tubex_VibesFigure_Tube.cpp
   )
 
   set(HEADERS
-    VibesFigure.h
-    VibesFigure_Tube.h
+    tubex_VibesFigure.h
+    tubex_VibesFigure_Tube.h
     vibes/vibes.h
   )
 

@@ -28,6 +28,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
   include(CheckCXXCompilerFlag)
   check_cxx_compiler_flag(-fPIC SUPPORT_FPIC)
+
   if(SUPPORT_FPIC)
     set(CMAKE_CXX_FLAGS ${CMAKE_CSS_FLAGS} "-fPIC")
   endif(SUPPORT_FPIC)
@@ -52,6 +53,11 @@ cmake_minimum_required(VERSION 2.8.7)
   #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
   #endif()
+
+
+# To be removed:
+  
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated")
 
 
 # Sources

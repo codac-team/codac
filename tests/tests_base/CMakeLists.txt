@@ -8,5 +8,5 @@ set(TESTS_BASE_SOURCES
 )
 
 add_executable(tubelib_tests_base ${TESTS_BASE_SOURCES})
-target_link_libraries(tubelib_tests_base tubex-core)
+target_link_libraries(tubelib_tests_base tubex-lib)
 add_test(NAME TestBase COMMAND tubelib_tests_base)

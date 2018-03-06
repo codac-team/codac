@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "VibesFigure_Tube.h"
+#include "tubex_VibesFigure_Tube.h"
 
  // a real value to display unbounded slices
 #include <limits>

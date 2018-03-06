@@ -6,21 +6,21 @@
 # Sources
 
   set(SRC
-    Tube_base.cpp
-    Tube_ctc.cpp
-    Tube_integration.cpp
-    Tube_arithmetic.cpp
-    Tube_serialization.cpp
-    exceptions/TubeException.cpp
-    exceptions/DomainTubeException.cpp
-    exceptions/EmptyTubeException.cpp
+    tubex_Tube.cpp
+    tubex_Contractor.cpp
+    tubex_Integration.cpp
+    tubex_Arithmetic.cpp
+    tubex_Serializer.cpp
+    exceptions/tubex_Exception.cpp
+    exceptions/tubex_DomainException.cpp
+    exceptions/tubex_EmptyException.cpp
   )
 
   set(HEADERS
-    Tube.h
-    exceptions/TubeException.h
-    exceptions/DomainTubeException.h
-    exceptions/EmptyTubeException.h
+    tubex_Tube.h
+    exceptions/tubex_Exception.h
+    exceptions/tubex_DomainException.h
+    exceptions/tubex_EmptyException.h
   )
 
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})

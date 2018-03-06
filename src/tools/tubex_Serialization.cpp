@@ -10,7 +10,7 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "serialization.h"
+#include "tubex_Serialization.h"
 
 using namespace std;
 using namespace ibex;

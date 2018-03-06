@@ -8,5 +8,5 @@ set(TESTS_SERIALIZ_SOURCES
 )
 
 add_executable(tubelib_tests_serialization ${TESTS_SERIALIZ_SOURCES})
-target_link_libraries(tubelib_tests_serialization tubex-core)
+target_link_libraries(tubelib_tests_serialization tubex-lib)
 add_test(NAME TestSerializ COMMAND tubelib_tests_serialization)

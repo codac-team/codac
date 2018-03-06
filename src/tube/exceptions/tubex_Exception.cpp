@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - TubeException class
+ *  tubex-lib - Exception class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "TubeException.h"
+#include "tubex_Exception.h"
 #include <string>
 #include <sstream>
 
@@ -18,17 +18,17 @@ using namespace std;
 
 namespace tubex
 {
-  TubeException::TubeException(const std::string& function_name, const std::string& custom_message)
+  Exception::Exception(const std::string& function_name, const std::string& custom_message)
   {
     m_what_msg = "in " + function_name + ": " + custom_message;
   }
 
-  const char* TubeException::what() const throw()
+  const char* Exception::what() const throw()
   {
     return m_what_msg.c_str();
   }
 
-  std::ostream& operator<<(std::ostream& os, const TubeException& e)
+  std::ostream& operator<<(std::ostream& os, const Exception& e)
   {
     os << e.what();
     return os;

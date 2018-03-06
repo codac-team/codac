@@ -10,9 +10,9 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "serialization.h"
-#include "Tube.h"
-#include "exceptions/TubeException.h"
+#include "tubex_Serialization.h"
+#include "tubex_Tube.h"
+#include "exceptions/tubex_Exception.h"
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP
   #include <omp.h> // for multithreading
@@ -75,7 +75,7 @@ namespace tubex
     ofstream binFile(binary_file_name.c_str(), ios::out | ios::binary);
 
     if(!binFile.is_open())
-      throw TubeException("Tube::serialize(binary_file_name)", "error while writing file \"" + binary_file_name + "\"");
+      throw Exception("Tube::serialize(binary_file_name)", "error while writing file \"" + binary_file_name + "\"");
 
     // Version number for compliance purposes
     char version = CURRENT_VERSION_NUMBER;
@@ -125,7 +125,7 @@ namespace tubex
     ifstream binFile(binary_file_name.c_str(), ios::in | ios::binary);
 
     if(!binFile.is_open())
-      throw TubeException("Tube::serialize(binary_file_name)", "error while opening file \"" + binary_file_name + "\"");
+      throw Exception("Tube::serialize(binary_file_name)", "error while opening file \"" + binary_file_name + "\"");
 
     // Version number for compliance purposes
     char version_number;
@@ -172,7 +172,7 @@ namespace tubex
     }
 
     else
-      throw TubeException("Tube::Tube(binary_file_name)", "deserialization version number not supported");
+      throw Exception("Tube::Tube(binary_file_name)", "deserialization version number not supported");
 
     binFile.close();
   }

@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DomainTubeException class
+ *  tubex-lib - DomainException class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,15 +10,15 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef DOMAINTUBEEXCEPTION_HEADER
-#define DOMAINTUBEEXCEPTION_HEADER
+#ifndef DomainException_HEADER
+#define DomainException_HEADER
 
 #include <iostream>
 #include <exception>
 #include <string>
 #include <sstream>
-#include "Tube.h"
-#include "TubeException.h"
+#include "tubex_Tube.h"
+#include "tubex_Exception.h"
 
 namespace tubex
 {
@@ -28,14 +28,14 @@ namespace tubex
    * Thrown when two tubes do not share the same domain
    * or have a different data structure.
    */
-  class DomainTubeException : public TubeException
+  class DomainException : public Exception
   {
     public:
 
-      DomainTubeException(const Tube& x, int slice_index);
-      DomainTubeException(const Tube& x, double t);
-      DomainTubeException(const Tube& x, const ibex::Interval& intv_t);
-      DomainTubeException(const Tube& x1, const Tube& x2);
+      DomainException(const Tube& x, int slice_index);
+      DomainException(const Tube& x, double t);
+      DomainException(const Tube& x, const ibex::Interval& intv_t);
+      DomainException(const Tube& x1, const Tube& x2);
   };
 
   void checkDomain(const Tube& x, int slice_index);

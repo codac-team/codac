@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "Tube.h"
-#include "exceptions/DomainTubeException.h"
+#include "tubex_Tube.h"
+#include "exceptions/tubex_DomainException.h"
 #include <iostream>
 #include <iomanip> // for setprecision()
 #ifdef _OPENMP

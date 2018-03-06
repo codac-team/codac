@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - EmptyTubeException class
+ *  tubex-lib - EmptyException class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,15 +10,15 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef EMPTYTUBEEXCEPTION_HEADER
-#define EMPTYTUBEEXCEPTION_HEADER
+#ifndef EmptyException_HEADER
+#define EmptyException_HEADER
 
 #include <iostream>
 #include <exception>
 #include <string>
 #include <sstream>
-#include "Tube.h"
-#include "TubeException.h"
+#include "tubex_Tube.h"
+#include "tubex_Exception.h"
 
 namespace tubex
 {
@@ -27,11 +27,11 @@ namespace tubex
    *
    * Thrown when a tube is empty.
    */
-  class EmptyTubeException : public TubeException
+  class EmptyException : public Exception
   {
     public:
 
-      EmptyTubeException(const Tube& x);
+      EmptyException(const Tube& x);
   };
 
   void checkEmptiness(const Tube& x);

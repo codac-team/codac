@@ -6,11 +6,11 @@
 # Sources
 
   set(SRC
-    serialization.cpp
+    tubex_Serialization.cpp
   )
 
   set(HEADERS
-    serialization.h
+    tubex_Serialization.h
   )
 
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})

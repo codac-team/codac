@@ -17,8 +17,7 @@
 
   target_link_libraries(ex_arithmetic
     ${LIBS}
-    tubex-core
-    tubex-graphics)
+    tubex-lib)
 
 
 # Tests

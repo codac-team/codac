@@ -17,8 +17,7 @@
 
   target_link_libraries(ex_causal_chain
     ${LIBS}
-    tubex-core
-    tubex-graphics)
+    tubex-lib)
 
 
 # Tests
