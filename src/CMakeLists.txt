@@ -32,6 +32,7 @@
     arithmetic/tubex_Arithmetic.cpp
 
     contractor/tubex_Ctc.cpp
+    contractor/tubex_CtcArithmetic.cpp
     contractor/tubex_CtcCompo.cpp
     contractor/tubex_CtcDelay.cpp
     contractor/tubex_CtcDeriv.cpp
@@ -55,6 +56,7 @@
     arithmetic/tubex_Arithmetic.h
 
     contractor/tubex_Ctc.h
+    contractor/tubex_CtcArithmetic.h
     contractor/tubex_CtcCompo.h
     contractor/tubex_CtcDelay.h
     contractor/tubex_CtcDeriv.h
