@@ -23,8 +23,6 @@ using namespace ibex;
 
 namespace tubex
 {
-  #define CURRENT_VERSION_NUMBER 1
-
   /*
     Tube binary files structure (VERSION 1)
       - minimal storage
@@ -57,20 +55,20 @@ namespace tubex
     deserialize(binary_file_name, v_real_values);
   }
 
-  bool Tube::serialize(const string& binary_file_name) const
+  bool Tube::serialize(const string& binary_file_name, int version_number) const
   {
     map<double,double> void_real_values;
-    return serialize(binary_file_name, void_real_values);
+    return serialize(binary_file_name, void_real_values, version_number);
   }
 
-  bool Tube::serialize(const string& binary_file_name, const map<double,double>& real_values) const
+  bool Tube::serialize(const string& binary_file_name, const map<double,double>& real_values, int version_number) const
   {
     vector<map<double,double> > v_real_values;
     v_real_values.push_back(real_values);
-    return serialize(binary_file_name, v_real_values);
+    return serialize(binary_file_name, v_real_values, version_number);
   }
 
-  bool Tube::serialize(const string& binary_file_name, const vector<map<double,double> >& v_real_values) const
+  bool Tube::serialize(const string& binary_file_name, const vector<map<double,double> >& v_real_values, int version_number) const
   {
     ofstream binFile(binary_file_name.c_str(), ios::out | ios::binary);
 
@@ -78,35 +76,45 @@ namespace tubex
       throw Exception("Tube::serialize(binary_file_name)", "error while writing file \"" + binary_file_name + "\"");
 
     // Version number for compliance purposes
-    char version = CURRENT_VERSION_NUMBER;
-    binFile.write((const char*)&version, sizeof(char));
+    binFile.write((const char*)&version_number, sizeof(char));
 
-    // Timestep
-    double dt_specs = m_dt_specifications;
-    binFile.write((const char*)&dt_specs, sizeof(double));
-
-    // Domain
-    serializeInterval(binFile, domain());
-
-    // Slices
-    for(int i = 0 ; i < size() ; i++)
-      serializeInterval(binFile, (*this)[i]);
-
-    // Optional real values
-    int number_maps = v_real_values.size();
-    binFile.write((const char*)&number_maps, sizeof(int));
-
-    for(int i = 0 ; i < v_real_values.size() ; i++)
+    switch(version_number)
     {
-      int number_real_values = v_real_values[i].size();
-      binFile.write((const char*)&number_real_values, sizeof(int));
-      typename map<double,double>::const_iterator it;
-      for(it = v_real_values[i].begin(); it != v_real_values[i].end(); it++)
+      case 1:
       {
-        double real_t = it->first, real_y = it->second;
-        binFile.write((const char*)&real_t, sizeof(double));
-        binFile.write((const char*)&real_y, sizeof(double));
+        // Timestep
+        double dt_specs = m_dt_specifications;
+        binFile.write((const char*)&dt_specs, sizeof(double));
+
+        // Domain
+        serializeInterval(binFile, domain());
+
+        // Slices
+        for(int i = 0 ; i < size() ; i++)
+          serializeInterval(binFile, (*this)[i]);
+
+        // Optional real values
+        int number_maps = v_real_values.size();
+        binFile.write((const char*)&number_maps, sizeof(int));
+
+        for(int i = 0 ; i < v_real_values.size() ; i++)
+        {
+          int number_real_values = v_real_values[i].size();
+          binFile.write((const char*)&number_real_values, sizeof(int));
+          typename map<double,double>::const_iterator it;
+          for(it = v_real_values[i].begin(); it != v_real_values[i].end(); it++)
+          {
+            double real_t = it->first, real_y = it->second;
+            binFile.write((const char*)&real_t, sizeof(double));
+            binFile.write((const char*)&real_y, sizeof(double));
+          }
+        }
+
+        break;
       }
+
+      default:
+        throw Exception("Tube::serialize()", "unhandled case");
     }
 
     binFile.close();

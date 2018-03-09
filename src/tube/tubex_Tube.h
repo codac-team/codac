@@ -19,6 +19,8 @@
 #include "ibex_IntervalVector.h"
 #include "ibex_Function.h"
 
+#define SERIALIZATION_VERSION 1
+
 namespace tubex
 {
   class Tube
@@ -668,9 +670,9 @@ namespace tubex
          * \param real_values an optional map to store map<double,double> values in the file
          * \param v_real_values an optional vector of maps to store a set of map<double,double> values in the file
          */
-        bool serialize(const std::string& binary_file_name = "x.tube") const;
-        bool serialize(const std::string& binary_file_name, const std::map<double,double>& real_values) const;
-        bool serialize(const std::string& binary_file_name, const std::vector<std::map<double,double> >& v_real_values) const;
+        bool serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
+        bool serialize(const std::string& binary_file_name, const std::map<double,double>& real_values, int version_number = SERIALIZATION_VERSION) const;
+        bool serialize(const std::string& binary_file_name, const std::vector<std::map<double,double> >& v_real_values, int version_number = SERIALIZATION_VERSION) const;
 
 
     protected:
@@ -842,6 +844,7 @@ namespace tubex
        */
       void deserialize(const std::string& binary_file_name, std::map<double,double>& real_values);
       void deserialize(const std::string& binary_file_name, std::vector<std::map<double,double> >& v_real_values);
+
 
       /** Class variables **/
 
