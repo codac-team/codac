@@ -79,8 +79,6 @@ namespace tubex
 
   void Tube::createFromSpecifications(const Interval& domain_, double timestep, const Interval& default_value)
   {
-    m_dt_specifications = timestep;
-
     if(timestep > 0.)
     {
       double lb, ub = domain_.lb();
@@ -174,7 +172,6 @@ namespace tubex
     m_domain = tu.domain();
     m_image = tu.image();
     m_enclosed_bounds = tu.eval();
-    m_dt_specifications = tu.m_dt_specifications;
 
     if(tu.isSlice())
     {

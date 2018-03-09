@@ -83,7 +83,7 @@ namespace tubex
       case 1:
       {
         // Timestep
-        double dt_specs = m_dt_specifications;
+        double dt_specs = domain(0).diam();
         binFile.write((const char*)&dt_specs, sizeof(double));
 
         // Domain
