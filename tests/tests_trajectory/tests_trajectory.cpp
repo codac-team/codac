@@ -51,4 +51,20 @@ TEST_CASE("Trajectory base", "[traj]")
     traj.truncateDomain(Interval(-3.,5.));
     REQUIRE(ApproxIntv(traj.domain()) == Interval(0.,5.));
   }
+
+  SECTION("Domain shift")
+  {
+    map<double,double> map_values;
+    for(double t = 0. ; t < 10. ; t++)
+      map_values[t] = t;
+
+    Trajectory traj(map_values);
+
+    REQUIRE(ApproxIntv(traj.domain()) == Interval(0.,9.));
+    REQUIRE(Approx(traj[5.2]) == 5.2);
+    traj.shiftDomain(2.);
+    REQUIRE(ApproxIntv(traj.domain()) == Interval(-2.,7.));
+    REQUIRE(Approx(traj[5.2]) == 7.2);
+    REQUIRE(Approx(traj[3.2]) == 5.2);
+  }
 }

@@ -29,7 +29,7 @@ namespace tubex
       const ibex::Interval domain() const;
       double operator[](double t) const;
       void truncateDomain(const ibex::Interval& domain);
-      //void shiftDomain(double shift);
+      void shiftDomain(double shift_ref);
 
 
     protected:

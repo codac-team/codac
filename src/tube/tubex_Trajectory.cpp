@@ -56,8 +56,12 @@ namespace tubex
     }
   }
 
-  /*void Trajectory::shiftDomain(double shift)
+  void Trajectory::shiftDomain(double shift_ref)
   {
+    map<double,double> map_temp = m_map_values;
+    m_map_values.clear();
 
-  }*/
+    for(map<double,double>::iterator it = map_temp.begin() ; it != map_temp.end() ; it++)
+      m_map_values[it->first - shift_ref] = it->second;
+  }
 }
