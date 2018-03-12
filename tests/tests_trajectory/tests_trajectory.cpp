@@ -30,12 +30,12 @@ TEST_CASE("Trajectory base", "[traj]")
       map_values[t] = t;
 
     Trajectory traj(map_values);
-    REQUIRE(isnan(traj[-0.1]));
+    REQUIRE(std::isnan(traj[-0.1]));
     REQUIRE(Approx(traj[0.0]) == 0.0);
     REQUIRE(Approx(traj[0.2]) == 0.2);
     REQUIRE(Approx(traj[8.2]) == 8.2);
     REQUIRE(Approx(traj[9.0]) == 9.0);
-    REQUIRE(isnan(traj[9.1]));
+    REQUIRE(std::isnan(traj[9.1]));
   }
 
   SECTION("Update")
@@ -45,7 +45,7 @@ TEST_CASE("Trajectory base", "[traj]")
     REQUIRE(ApproxIntv(traj.domain()) == Interval(-4.));
     traj.set(-2.,4.);
     REQUIRE(ApproxIntv(traj.domain()) == Interval(-4.,-2.));
-    REQUIRE(isnan(traj[-5.]));
+    REQUIRE(std::isnan(traj[-5.]));
     REQUIRE(Approx(traj[-3.]) == 3.5);
   }
 

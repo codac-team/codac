@@ -27,6 +27,11 @@ namespace tubex
 
   }
 
+  const map<double,double> Trajectory::getMap() const
+  {
+    return m_map_values;
+  }
+
   const Interval Trajectory::domain() const
   {
     return Interval(m_map_values.begin()->first, m_map_values.rbegin()->first);

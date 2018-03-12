@@ -27,6 +27,7 @@ namespace tubex
        */
       Trajectory();
       Trajectory(std::map<double,double> m_map_values);
+      const std::map<double,double> getMap() const;
       const ibex::Interval domain() const;
       double& set(double t, double y);
       const double operator[](double t) const;
