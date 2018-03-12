@@ -17,6 +17,8 @@
 #include "ibex_Interval.h"
 #include "ibex_Function.h"
 
+#define DEFAULT_TRAJ_COLOR "#276279"
+
 namespace tubex
 {
   class Trajectory
@@ -26,14 +28,15 @@ namespace tubex
       /**
        * \brief Default constructor
        */
-      Trajectory(const std::string& name = "", const std::string& color = "blue");
-      Trajectory(const ibex::Function& f, const ibex::Interval& domain = ibex::Interval::ALL_REALS, const std::string& name = "", const std::string& color = "blue");
-      Trajectory(const std::map<double,double>& m_map_values, const std::string& name = "", const std::string& color = "blue");
+      Trajectory(const std::string& name = "", const std::string& color = DEFAULT_TRAJ_COLOR);
+      Trajectory(const ibex::Function& f, const ibex::Interval& domain, const std::string& name = "", const std::string& color = DEFAULT_TRAJ_COLOR);
+      Trajectory(const std::map<double,double>& m_map_values, const std::string& name = "", const std::string& color = DEFAULT_TRAJ_COLOR);
       ~Trajectory();
       const std::string& color() const;
       const std::string& name() const;
       void setName(const std::string& name);
       const std::map<double,double> getMap() const;
+      const ibex::Function* getFunction() const;
       const ibex::Interval domain() const;
       double& set(double t, double y);
       const double operator[](double t) const;

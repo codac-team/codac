@@ -81,6 +81,11 @@ namespace tubex
     return m_map_values;
   }
 
+  const Function* Trajectory::getFunction() const
+  {
+    return m_function;
+  }
+
   const Interval Trajectory::domain() const
   {
     return m_domain;

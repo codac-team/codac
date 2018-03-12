@@ -190,19 +190,38 @@ namespace tubex
     vibes::newGroup(o.str(), traj.color(), vibesParams("figure", m_name));
 
     vector<double> v_x, v_y;
-    typename map<double,double>::const_iterator it_scalar_values;
-    for(it_scalar_values = traj.getMap().begin(); it_scalar_values != traj.getMap().end(); it_scalar_values++)
-    {
-      if(points_size != 0)
-        vibes::drawPoint(it_scalar_values->first,
-                         it_scalar_values->second,
-                         points_size,
-                         vibesParams("figure", m_name, "group", o.str()));
 
-      else
+    if(traj.getFunction() == NULL)
+    {
+      typename map<double,double>::const_iterator it_scalar_values;
+      for(it_scalar_values = traj.getMap().begin(); it_scalar_values != traj.getMap().end(); it_scalar_values++)
       {
-        v_x.push_back(it_scalar_values->first);
-        v_y.push_back(it_scalar_values->second);
+        if(points_size != 0)
+          vibes::drawPoint(it_scalar_values->first,
+                           it_scalar_values->second,
+                           points_size,
+                           vibesParams("figure", m_name, "group", o.str()));
+
+        else
+        {
+          v_x.push_back(it_scalar_values->first);
+          v_y.push_back(it_scalar_values->second);
+        }
+      }
+    }
+
+    else
+    {
+      for(double t = traj.domain().lb() ; t <= traj.domain().ub() ; t+=traj.domain().diam()/1000.)
+      {
+        if(points_size != 0)
+          vibes::drawPoint(t, traj[t], points_size, vibesParams("figure", m_name, "group", o.str()));
+
+        else
+        {
+          v_x.push_back(t);
+          v_y.push_back(traj[t]);
+        }
       }
     }
 

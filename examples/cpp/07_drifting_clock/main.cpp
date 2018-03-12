@@ -40,10 +40,11 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::show(&y, "Tube [y](·)",
-        Trajectory(Function("t", "sqrt(pow(90+100*cos(t),2) + pow(20+100*sin(t),2) + pow(10,2))")), 100, 100);
-    VibesFigure_Tube::show(&h, "Tube [h](·)",
-        Trajectory(Function("t", "0.045*pow(t,2) + 0.98*t")), 150, 150);
+    Trajectory y_truth(Function("t", "sqrt((90+100*cos(t))^2 + (20+100*sin(t))^2 + 100)"), domain, "y*");
+    Trajectory h_truth(Function("t", "0.045*t^2+0.98*t"), domain, "h*");
+
+    VibesFigure_Tube::show(&y, "Tube [y](·)", y_truth, 100, 100);
+    VibesFigure_Tube::show(&h, "Tube [h](·)", h_truth, 150, 150);
 
   /* =========== MEASUREMENTS =========== */
 
