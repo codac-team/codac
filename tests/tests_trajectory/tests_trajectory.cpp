@@ -18,6 +18,7 @@
 using namespace Catch;
 using namespace Detail;
 using namespace tubex;
+using namespace ibex;
 using namespace std;
 
 TEST_CASE("Trajectory base", "[traj]")
@@ -36,5 +37,18 @@ TEST_CASE("Trajectory base", "[traj]")
     REQUIRE(Approx(traj[8.2]) == 8.2);
     REQUIRE(Approx(traj[9.0]) == 9.0);
     REQUIRE(isnan(traj[9.1]));
+  }
+
+  SECTION("Domain")
+  {
+    map<double,double> map_values;
+    for(double t = 0. ; t < 10. ; t++)
+      map_values[t] = t;
+
+    Trajectory traj(map_values);
+
+    REQUIRE(ApproxIntv(traj.domain()) == Interval(0.,9.));
+    traj.truncateDomain(Interval(-3.,5.));
+    REQUIRE(ApproxIntv(traj.domain()) == Interval(0.,5.));
   }
 }
