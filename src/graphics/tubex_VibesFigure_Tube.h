@@ -128,7 +128,6 @@ namespace tubex
     protected:
 
       std::vector<Tube*> m_v_tubes;
-      std::vector<Trajectory> *m_v_traj;
       mutable std::vector<Tube*> m_v_tubes_copy;
       mutable bool m_need_to_update_axis;
       mutable ibex::IntervalVector m_tubes_box;

@@ -191,6 +191,9 @@ namespace tubex
 
     vector<double> v_x, v_y;
 
+    if(traj.domain().is_unbounded() || traj.domain().is_empty())
+      return;
+
     if(traj.getFunction() == NULL)
     {
       typename map<double,double>::const_iterator it_scalar_values;
