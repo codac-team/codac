@@ -34,6 +34,15 @@ namespace tubex
   Trajectory::Trajectory(const map<double,double>& map_values, const string& name, const string& color) : m_function(NULL), m_domain(Interval::EMPTY_SET), m_map_values(map_values), m_color(color)
   {
     setName(name);
+    typename map<double,double>::const_iterator it_map;
+    for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
+      m_domain |= it_map->first;
+  }
+
+  Trajectory::~Trajectory()
+  {
+    if(m_function != NULL)
+      delete m_function;
   }
 
   void Trajectory::setName(const string& name)

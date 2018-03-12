@@ -138,7 +138,7 @@ TEST_CASE("Converting inputs to indexes", "[core]")
     REQUIRE(tube.input2index(0.5) == 0);
     REQUIRE(tube.input2index(0.6) == 0);
     REQUIRE(tube.input2index(0.9) == 0);
-    REQUIRE(tube.input2index(previous_float(1.0)) == 0);
+    REQUIRE(tube.input2index(ibex::previous_float(1.0)) == 0);
     REQUIRE(tube.input2index(1.0) == 1);
     REQUIRE(tube.input2index(46.0) == 45);
   }

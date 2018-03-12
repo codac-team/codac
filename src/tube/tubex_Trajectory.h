@@ -29,6 +29,7 @@ namespace tubex
       Trajectory(const std::string& name = "", const std::string& color = "blue");
       Trajectory(const ibex::Function& f, const ibex::Interval& domain = ibex::Interval::ALL_REALS, const std::string& name = "", const std::string& color = "blue");
       Trajectory(const std::map<double,double>& m_map_values, const std::string& name = "", const std::string& color = "blue");
+      ~Trajectory();
       const std::string& color() const;
       const std::string& name() const;
       void setName(const std::string& name);
