@@ -38,19 +38,12 @@ int main(int argc, char *argv[])
     Tube hdot(domain, tube_dt, Function("t", "[0.08,0.12]*t+[0.97,1.08]"));
     Tube h = hdot.primitive(Interval(0.));
 
-  /* =========== SIMULATION (UNKNOWN TRUTH) =========== */
-
-    map<double,double> map_y, map_h;
-    for(float t = domain.lb() ; t < domain.ub() ; t+=0.001)
-    {
-      map_h[t] = 0.045*pow(t,2) + 0.98*t;
-      map_y[t] = sqrt(pow(90+100*cos(t),2) + pow(20+100*sin(t),2) + pow(beacon_depth,2));
-    }
-
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::show(&y, "Tube [y](·)", map_y, 100, 100);
-    VibesFigure_Tube::show(&h, "Tube [h](·)", map_h, 150, 150);
+    VibesFigure_Tube::show(&y, "Tube [y](·)",
+        Trajectory(Function("t", "sqrt(pow(90+100*cos(t),2) + pow(20+100*sin(t),2) + pow(10,2))")), 100, 100);
+    VibesFigure_Tube::show(&h, "Tube [h](·)",
+        Trajectory(Function("t", "0.045*pow(t,2) + 0.98*t")), 150, 150);
 
   /* =========== MEASUREMENTS =========== */
 

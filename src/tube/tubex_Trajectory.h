@@ -15,6 +15,7 @@
 
 #include <map>
 #include "ibex_Interval.h"
+#include "ibex_Function.h"
 
 namespace tubex
 {
@@ -26,6 +27,7 @@ namespace tubex
        * \brief Default constructor
        */
       Trajectory(const std::string& name = "", const std::string& color = "blue");
+      Trajectory(const ibex::Function& f, const ibex::Interval& domain = ibex::Interval::ALL_REALS, const std::string& name = "", const std::string& color = "blue");
       Trajectory(const std::map<double,double>& m_map_values, const std::string& name = "", const std::string& color = "blue");
       const std::string& color() const;
       const std::string& name() const;
@@ -43,6 +45,8 @@ namespace tubex
       /** Class variables **/
 
         std::map<double,double> m_map_values;
+        ibex::Interval m_domain;
+        ibex::Function *m_function;
 
         // Graphics attributes
         std::string m_name, m_color;
