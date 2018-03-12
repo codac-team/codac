@@ -23,6 +23,21 @@ using namespace std;
 
 TEST_CASE("Trajectory base", "[traj]")
 {
+  SECTION("Names")
+  {
+    Trajectory traj_x1;
+    REQUIRE(traj_x1.name() == "x1");
+    map<double,double> map_values;
+    Trajectory traj_custom(map_values, "custom_name");
+    REQUIRE(traj_custom.name() == "custom_name");
+    Trajectory traj_x2;
+    REQUIRE(traj_x2.name() == "x2");
+    Trajectory traj_x3;
+    REQUIRE(traj_x3.name() == "x3");
+    traj_x3.setName("test");
+    REQUIRE(traj_x3.name() == "test");
+  }
+
   SECTION("Evaluation")
   {
     map<double,double> map_values;

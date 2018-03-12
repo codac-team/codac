@@ -10,6 +10,7 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
+#include <sstream>
 #include "tubex_Trajectory.h"
 
 using namespace std;
@@ -17,14 +18,48 @@ using namespace ibex;
 
 namespace tubex
 {
-  Trajectory::Trajectory()
-  {
+  int Trajectory::nb_traj;
+  vector<string> Trajectory::v_traj_names;
 
+  Trajectory::Trajectory(const string& name, const string& color) : m_color(color)
+  {
+    setName(name);
   }
 
-  Trajectory::Trajectory(const map<double,double> map_values) : m_map_values(map_values)
+  Trajectory::Trajectory(const map<double,double>& map_values, const string& name, const string& color) : m_map_values(map_values), m_color(color)
   {
+    setName(name);
+  }
 
+  void Trajectory::setName(const string& name)
+  {
+    if(name == "")
+    {
+      Trajectory::nb_traj ++;
+      std::ostringstream o;
+      o << "x" << std::hex << Trajectory::nb_traj;
+      m_name = o.str();
+    }
+
+    else
+    {
+      for(int i = 0 ; i < Trajectory::v_traj_names.size() ; i++)
+        if(Trajectory::v_traj_names[i] == name)
+          cout << "Trajectory::setName(): warning, trajectory \"" << name << "\" already exists" << endl;
+      m_name = name;
+    }
+    
+    Trajectory::v_traj_names.push_back(m_name);
+  }
+
+  const string& Trajectory::name() const
+  {
+    return m_name;
+  }
+
+  const string& Trajectory::color() const
+  {
+    return m_color;
   }
 
   const map<double,double> Trajectory::getMap() const

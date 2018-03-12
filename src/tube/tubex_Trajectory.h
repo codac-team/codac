@@ -25,8 +25,11 @@ namespace tubex
       /**
        * \brief Default constructor
        */
-      Trajectory();
-      Trajectory(std::map<double,double> m_map_values);
+      Trajectory(const std::string& name = "", const std::string& color = "blue");
+      Trajectory(const std::map<double,double>& m_map_values, const std::string& name = "", const std::string& color = "blue");
+      const std::string& color() const;
+      const std::string& name() const;
+      void setName(const std::string& name);
       const std::map<double,double> getMap() const;
       const ibex::Interval domain() const;
       double& set(double t, double y);
@@ -40,6 +43,11 @@ namespace tubex
       /** Class variables **/
 
         std::map<double,double> m_map_values;
+
+        // Graphics attributes
+        std::string m_name, m_color;
+        static int nb_traj;
+        static std::vector<std::string> v_traj_names;
   };
 }
 
