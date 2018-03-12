@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TUBEX_HEADER
-#define TUBEX_HEADER
+#ifndef TUBE_HEADER
+#define TUBE_HEADER
 
 #include <map>
 #include <vector>
