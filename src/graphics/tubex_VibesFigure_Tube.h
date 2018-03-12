@@ -16,7 +16,8 @@
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
 #include "tubex_VibesFigure.h"
-#include "tubex_Tube.h"    
+#include "tubex_Tube.h"
+#include "tubex_Trajectory.h"
 
 namespace tubex
 {
@@ -70,10 +71,10 @@ namespace tubex
        * \brief Display scalar values over the tube.
        *
        * \param map_scalar_values a map of the form [t](y) representing a trajectory
-       * \param color line's color
        * \param points_size size (in map value) of the points given by map_scalar_values. If 0, a line is drawn, only points otherwise.
        */
-      void showScalarValues(const std::map<double,double>& map_scalar_values, const std::string& color = "#00609C", double points_size = 0.) const;
+      void showTrajectory(const Trajectory& traj, double points_size = 0.) const;
+      void showTrajectories(const std::vector<Trajectory>& v_traj, double points_size = 0.) const;
 
       /**
        * \brief A fast function to display a tube
@@ -91,9 +92,9 @@ namespace tubex
        * \param y y-position (0 by default)
        */
       static void show(Tube *tube, const std::string& name = "", int x = 0, int y = 0);
-      static void show(Tube *tube, const std::string& name, const std::map<double,double>& map_scalar_values, int x = 0, int y = 0);
+      static void show(Tube *tube, const std::string& name, const Trajectory& traj, int x = 0, int y = 0);
       static void show(const std::vector<Tube*> v_tubes, const std::string& name, int x, int y);
-      static void show(const std::vector<Tube*> v_tubes, const std::string& name, const std::map<double,double>& map_scalar_values, int x, int y);
+      static void show(const std::vector<Tube*> v_tubes, const std::string& name, const std::vector<Trajectory>& v_traj, int x, int y);
       
       /**
        * \brief A fast function to end tubes displays
@@ -127,9 +128,8 @@ namespace tubex
     protected:
 
       std::vector<Tube*> m_v_tubes;
-      std::vector<std::map<double,double> > *m_true_values;
+      std::vector<Trajectory> *m_v_traj;
       mutable std::vector<Tube*> m_v_tubes_copy;
-      mutable int m_id_map_scalar_values;
       mutable bool m_need_to_update_axis;
       mutable ibex::IntervalVector m_tubes_box;
       std::vector<std::map<std::string,std::string> > m_color_tubes;

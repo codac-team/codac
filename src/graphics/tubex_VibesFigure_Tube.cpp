@@ -29,7 +29,7 @@ namespace tubex
     show(tube, name, empty_map, x, y);
   }
    
-  void VibesFigure_Tube::show(Tube *tube, const string& name, const std::map<double,double>& map_scalar_values, int x, int y)
+  void VibesFigure_Tube::show(Tube *tube, const string& name, const Trajectory& traj, int x, int y)
   {
     if(VibesFigure_Tube::v_graphics.size() == 0)
     {
@@ -53,7 +53,7 @@ namespace tubex
       figtube->setProperties(x, y, 700, 350);
       string fg = "#A2A2A2", bg = "#D2D2D2";
       figtube->setColors(fg + "[" + fg + "]", fg + "[" + fg + "]", bg + "[" + bg + "]");
-      figtube->showScalarValues(map_scalar_values);
+      figtube->showTrajectory(traj);
       v_graphics.push_back(figtube);
     }
 
@@ -62,11 +62,13 @@ namespace tubex
    
   void VibesFigure_Tube::show(const std::vector<Tube*> v_tubes, const string& name, int x, int y)
   {
-    std::map<double,double> empty_map;
-    show(v_tubes, name, empty_map, x, y);
+    vector<Trajectory> v_empty_traj;
+    for(int i = 0 ; i < v_tubes.size() ; i++)
+      v_empty_traj.push_back(Trajectory());
+    show(v_tubes, name, v_empty_traj, x, y);
   }
    
-  void VibesFigure_Tube::show(const std::vector<Tube*> v_tubes, const string& name, const std::map<double,double>& map_scalar_values, int x, int y)
+  void VibesFigure_Tube::show(const std::vector<Tube*> v_tubes, const string& name, const vector<Trajectory>& v_traj, int x, int y)
   {
     if(VibesFigure_Tube::v_graphics.size() == 0)
     {
@@ -90,7 +92,7 @@ namespace tubex
       figtube->setProperties(x, y, 700, 350);
       string fg = "#A2A2A2", bg = "#D2D2D2";
       figtube->setColors(fg + "[" + fg + "]", fg + "[" + fg + "]", bg + "[" + bg + "]");
-      figtube->showScalarValues(map_scalar_values);
+      figtube->showTrajectories(v_traj);
       v_graphics.push_back(figtube);
     }
 
@@ -109,7 +111,6 @@ namespace tubex
   {
     m_v_tubes.push_back(tube);
     m_v_tubes_copy.push_back(NULL);
-    m_id_map_scalar_values = 0;
     setColors("#A0A0A0[#FFEA00]", "#888888[#FFBB00]");
     m_need_to_update_axis = true;
     m_tubes_box[0] |= tube->domain();
@@ -145,7 +146,6 @@ namespace tubex
       m_tubes_box[1] |= v_tubes[i]->image();
     }
 
-    m_id_map_scalar_values = 0;
     setColors("#A0A0A0[#FFEA00]", "#888888[#FFBB00]");
     m_need_to_update_axis = false;
     axisLimits(m_tubes_box[0].lb(), m_tubes_box[0].ub(), m_tubes_box[1].lb(), m_tubes_box[1].ub());
@@ -183,16 +183,15 @@ namespace tubex
     return show(false, 0);
   }
 
-  void VibesFigure_Tube::showScalarValues(const map<double,double>& map_scalar_values, const string& color, double points_size) const
+  void VibesFigure_Tube::showTrajectory(const Trajectory& traj, double points_size) const
   {
-    m_id_map_scalar_values ++;
     std::ostringstream o;
-    o << "scalar_values_" << std::hex << m_id_map_scalar_values;
-    vibes::newGroup(o.str(), color, vibesParams("figure", m_name));
+    o << "traj_" << traj.name();
+    vibes::newGroup(o.str(), traj.color(), vibesParams("figure", m_name));
 
     vector<double> v_x, v_y;
     typename map<double,double>::const_iterator it_scalar_values;
-    for(it_scalar_values = map_scalar_values.begin(); it_scalar_values != map_scalar_values.end(); it_scalar_values++)
+    for(it_scalar_values = traj.getMap().begin(); it_scalar_values != traj.getMap().end(); it_scalar_values++)
     {
       if(points_size != 0)
         vibes::drawPoint(it_scalar_values->first,
@@ -209,6 +208,12 @@ namespace tubex
 
     if(points_size == 0.)
       vibes::drawLine(v_x, v_y, vibesParams("figure", m_name, "group", o.str()));
+  }
+
+  void VibesFigure_Tube::showTrajectories(const vector<Trajectory>& v_traj, double points_size) const
+  {
+    for(int i = 0 ; i < v_traj.size() ; i++)
+      showTrajectory(v_traj[i], points_size);
   }
 
   void VibesFigure_Tube::show(bool detail_slices, int slices_limit, bool update_background)
