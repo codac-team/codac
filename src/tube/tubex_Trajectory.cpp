@@ -17,6 +17,11 @@ using namespace ibex;
 
 namespace tubex
 {
+  Trajectory::Trajectory()
+  {
+
+  }
+
   Trajectory::Trajectory(const map<double,double> map_values) : m_map_values(map_values)
   {
 
@@ -27,7 +32,13 @@ namespace tubex
     return Interval(m_map_values.begin()->first, m_map_values.rbegin()->first);
   }
 
-  double Trajectory::operator[](double t) const
+  double& Trajectory::set(double t, double y)
+  {
+    m_map_values[t] = y;
+    return m_map_values[t];
+  }
+
+  const double Trajectory::operator[](double t) const
   {
     if(!domain().contains(t))
       return std::numeric_limits<double>::quiet_NaN();
@@ -37,9 +48,8 @@ namespace tubex
 
     typename map<double,double>::const_iterator it_lower, it_upper;
     it_lower = m_map_values.lower_bound(t);
-
     it_upper = it_lower;
-    it_upper++;
+    it_lower--;
 
     return it_lower->second +
            (t - it_lower->first) * (it_upper->second - it_lower->second) /

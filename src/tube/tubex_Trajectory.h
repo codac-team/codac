@@ -25,9 +25,11 @@ namespace tubex
       /**
        * \brief Default constructor
        */
+      Trajectory();
       Trajectory(std::map<double,double> m_map_values);
       const ibex::Interval domain() const;
-      double operator[](double t) const;
+      double& set(double t, double y);
+      const double operator[](double t) const;
       void truncateDomain(const ibex::Interval& domain);
       void shiftDomain(double shift_ref);
 
