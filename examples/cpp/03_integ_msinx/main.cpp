@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::show(&x, "Tube [x](·)", 200, 50);
+    VibesFigure_Tube::draw("Tube [x](·)", &x, 200, 50);
 
   /* =========== INTERVAL INTEGRATION =========== */
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
       b &= a.primitive();
       x &= x0 - b;
 
-      VibesFigure_Tube::show(&x);
+      VibesFigure_Tube::draw("Tube [x](·)");
       i++;
       
       if(argc == 1) cin.ignore(); // press ENTER to continue

@@ -49,12 +49,12 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
     
-    VibesFigure_Tube::show(&tube_x, "Tube [x](·)", 200, 100);
-    VibesFigure_Tube::show(&tube_y, "Tube [y](·)", 300, 200);
-    VibesFigure_Tube::show(&tube_a, "Tube [a](·)", 400, 300);
-    VibesFigure_Tube::show(&tube_b, "Tube [b](·)", 500, 400);
-    VibesFigure_Tube::show(&tube_c, "Tube [c](·)", 600, 500);
-    VibesFigure_Tube::show(&tube_d, "Tube [d](·)", 700, 600);
+    VibesFigure_Tube::draw("Tube [x](·)", &tube_x, 200, 100);
+    VibesFigure_Tube::draw("Tube [y](·)", &tube_y, 300, 200);
+    VibesFigure_Tube::draw("Tube [a](·)", &tube_a, 400, 300);
+    VibesFigure_Tube::draw("Tube [b](·)", &tube_b, 500, 400);
+    VibesFigure_Tube::draw("Tube [c](·)", &tube_c, 600, 500);
+    VibesFigure_Tube::draw("Tube [d](·)", &tube_d, 700, 600);
     VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:

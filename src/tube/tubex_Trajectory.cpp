@@ -18,20 +18,20 @@ using namespace ibex;
 
 namespace tubex
 {
-  int Trajectory::nb_traj;
+  int Trajectory::nb_traj = 0;
   vector<string> Trajectory::v_traj_names;
 
-  Trajectory::Trajectory(const string& name, const string& color) : m_function(NULL), m_domain(Interval::EMPTY_SET), m_color(color)
+  Trajectory::Trajectory(const string& name) : m_function(NULL), m_domain(Interval::EMPTY_SET)
   {
     setName(name);
   }
 
-  Trajectory::Trajectory(const Function& f, const Interval& dom, const string& name, const string& color) : m_function(new Function(f)), m_domain(dom), m_color(color)
+  Trajectory::Trajectory(const Function& f, const Interval& dom, const string& name) : m_function(new Function(f)), m_domain(dom)
   {
     setName(name);
   }
 
-  Trajectory::Trajectory(const map<double,double>& map_values, const string& name, const string& color) : m_function(NULL), m_domain(Interval::EMPTY_SET), m_map_values(map_values), m_color(color)
+  Trajectory::Trajectory(const map<double,double>& map_values, const string& name) : m_function(NULL), m_domain(Interval::EMPTY_SET), m_map_values(map_values)
   {
     setName(name);
     typename map<double,double>::const_iterator it_map;
@@ -69,11 +69,6 @@ namespace tubex
   const string& Trajectory::name() const
   {
     return m_name;
-  }
-
-  const string& Trajectory::color() const
-  {
-    return m_color;
   }
 
   const map<double,double> Trajectory::getMap() const

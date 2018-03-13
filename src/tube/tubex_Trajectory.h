@@ -17,8 +17,6 @@
 #include "ibex_Interval.h"
 #include "ibex_Function.h"
 
-#define DEFAULT_TRAJ_COLOR "#276279"
-
 namespace tubex
 {
   class Trajectory
@@ -28,11 +26,10 @@ namespace tubex
       /**
        * \brief Default constructor
        */
-      Trajectory(const std::string& name = "", const std::string& color = DEFAULT_TRAJ_COLOR);
-      Trajectory(const ibex::Function& f, const ibex::Interval& domain, const std::string& name = "", const std::string& color = DEFAULT_TRAJ_COLOR);
-      Trajectory(const std::map<double,double>& m_map_values, const std::string& name = "", const std::string& color = DEFAULT_TRAJ_COLOR);
+      Trajectory(const std::string& name = "");
+      Trajectory(const ibex::Function& f, const ibex::Interval& domain, const std::string& name = "");
+      Trajectory(const std::map<double,double>& m_map_values, const std::string& name = "");
       ~Trajectory();
-      const std::string& color() const;
       const std::string& name() const;
       void setName(const std::string& name);
       const std::map<double,double> getMap() const;
@@ -52,8 +49,8 @@ namespace tubex
         ibex::Interval m_domain;
         ibex::Function *m_function;
 
-        // Graphics attributes
-        std::string m_name, m_color;
+        // Name attributes
+        std::string m_name;
         static int nb_traj;
         static std::vector<std::string> v_traj_names;
   };

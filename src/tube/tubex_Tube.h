@@ -674,6 +674,8 @@ namespace tubex
         bool serialize(const std::string& binary_file_name, const std::map<double,double>& real_values, int version_number = SERIALIZATION_VERSION) const;
         bool serialize(const std::string& binary_file_name, const std::vector<std::map<double,double> >& v_real_values, int version_number = SERIALIZATION_VERSION) const;
 
+      const std::string& name() const;
+      void setName(const std::string& name);
 
     protected:
 
@@ -860,6 +862,11 @@ namespace tubex
         mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
         mutable bool m_tree_computation_needed;
         mutable bool m_primitive_computation_needed;
+
+        // Name attributes
+        std::string m_name;
+        static int nb_tubes;
+        static std::vector<std::string> v_tubes_names;
   };
 }
 

@@ -78,6 +78,11 @@ namespace tubex
     return m_view_box;
   }
 
+  const IntervalVector& VibesFigure::axisLimits(const IntervalVector& viewbox, bool keep_ratio)
+  {
+    return axisLimits(viewbox[0].lb(), viewbox[0].ub(), viewbox[1].lb(), viewbox[1].ub());
+  }
+
   void VibesFigure::saveImage(const string& suffix, const string& extension) const
   {
     vibes::saveImage(m_name + suffix + extension, m_name);

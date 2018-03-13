@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::show(&x, "Tube [x](·)", 300, 200);
-    VibesFigure_Tube::show(&y, "Tube [y](·)", 400, 300);
-    VibesFigure_Tube::show(&a, "Tube [a](·)", 500, 400);
-    VibesFigure_Tube::show(&p, "Tube [p](·)", 600, 500);
-    VibesFigure_Tube::show(&q, "Tube [q](·)", 700, 600);
+    VibesFigure_Tube::draw("Tube [x](·)", &x, 300, 200);
+    VibesFigure_Tube::draw("Tube [y](·)", &y, 400, 300);
+    VibesFigure_Tube::draw("Tube [a](·)", &a, 500, 400);
+    VibesFigure_Tube::draw("Tube [p](·)", &p, 600, 500);
+    VibesFigure_Tube::draw("Tube [q](·)", &q, 700, 600);
 
   /* =========== MEASUREMENT =========== */
 
@@ -73,12 +73,12 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::show(&x);
-    VibesFigure_Tube::show(&y);
+    VibesFigure_Tube::draw("Tube [x](·)");
+    VibesFigure_Tube::draw("Tube [y](·)");
     vibes::drawBox(measurement, "blue", vibesParams("figure", "Tube [y](·)"));
-    VibesFigure_Tube::show(&a);
-    VibesFigure_Tube::show(&p);
-    VibesFigure_Tube::show(&q);
+    VibesFigure_Tube::draw("Tube [a](·)");
+    VibesFigure_Tube::draw("Tube [p](·)");
+    VibesFigure_Tube::draw("Tube [q](·)");
     VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:

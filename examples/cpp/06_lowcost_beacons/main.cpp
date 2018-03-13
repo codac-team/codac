@@ -140,8 +140,8 @@ int main(int argc, char *argv[])
 
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::show(&x, "Tube [x](·)", 100, 100);
-    VibesFigure_Tube::show(&y, "Tube [y](·)", 150, 150);
+    VibesFigure_Tube::draw("Tube [x](·)", &x, 100, 100);
+    VibesFigure_Tube::draw("Tube [y](·)", &y, 150, 150);
     displayBeaconsMap(x, y, 200, 200);
     VibesFigure_Tube::endDrawing();
     

@@ -98,6 +98,7 @@ namespace tubex
        * \return the limits box
        */
       const ibex::IntervalVector& axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio = false);
+      const ibex::IntervalVector& axisLimits(const ibex::IntervalVector& viewbox, bool keep_ratio = false);
 
       /**
        * \brief Save vibes-figure in SVG/PNG/... format.

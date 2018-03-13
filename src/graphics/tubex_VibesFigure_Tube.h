@@ -13,11 +13,15 @@
 #ifndef VIBESFIGURETUBE_HEADER
 #define VIBESFIGURETUBE_HEADER
 
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
 #include "tubex_VibesFigure.h"
 #include "tubex_Tube.h"
 #include "tubex_Trajectory.h"
+
+// HTML color codes:
+#define TRAJ_COLOR                "#276279"
+#define TUBE_FRGRND_COLOR         "#a2a2a2"
+#define TUBE_BCKGRND_COLOR        "#d2d2d2"
+#define TRAJ_NB_DISPLAYED_POINTS  10000
 
 namespace tubex
 {
@@ -25,115 +29,47 @@ namespace tubex
   {
     public:
 
-      /**
-       * \brief Create a Tube view.
-       *
-       * \param figure_name a reference to the figure that will be displayed in the window's title
-       * \param tube a pointer to the tube to be displayed
-       */
-      VibesFigure_Tube(const std::string& figure_name, Tube *tube);
-      VibesFigure_Tube(const std::string& figure_name, std::vector<Tube*> v_tubes);
-
-      /**
-       * \brief Delete this figure.
-       */
+      VibesFigure_Tube(const std::string& fig_name, Tube *tube = NULL, Trajectory *traj = NULL);
       ~VibesFigure_Tube();
 
-      /**
-       * \brief Set custom colors
-       *
-       * \param slices_color new color of slices
-       * \param background_color new color of slices before contraction
-       * \param truth_color new color of represented trajectories
-       */
-      void setColors(std::string slices_color, std::string slices_contracted_color = "", std::string background_color = "lightGray[lightGray]", std::string truth_color = "red");
+      void addTube(Tube *tube, const std::string& color_frgrnd = TUBE_FRGRND_COLOR, const std::string& color_bckgrnd = TUBE_BCKGRND_COLOR);
+      void setTubeColor(Tube *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd);
+      void removeTube(Tube *tube);
 
-      /**
-       * \brief Display the tube.
-       *
-       * This method shows all slices.
-       */
+      void addTrajectory(Trajectory *traj, const std::string& color = TRAJ_COLOR);
+      void setTrajectoryColor(Trajectory *traj, const std::string& color);
+      void removeTrajectory(Trajectory *traj);
+
       virtual void show();
+      void show(bool detail_slices);
 
-      /**
-       * \brief Display the tube.
-       *
-       * This method can be used for heavy tubes when it is costly to display all slices.
-       * This will leave blanks between slices.
-       *
-       * \param detail_slices if true, each slice will be shown as a box, polygon envelope otherwise
-       * \param slices_limit the max number of slices to display
-       * \param update_background if true, only last contraction is displayed (true by default)
-       */
-      void show(bool detail_slices, int slices_limit, bool update_background = true);
-
-      /**
-       * \brief Display scalar values over the tube.
-       *
-       * \param map_scalar_values a map of the form [t](y) representing a trajectory
-       * \param points_size size (in map value) of the points given by map_scalar_values. If 0, a line is drawn, only points otherwise.
-       */
-      void showTrajectory(const Trajectory& traj, double points_size = 0.) const;
-      void showTrajectories(const std::vector<Trajectory>& v_traj, double points_size = 0.) const;
-
-      /**
-       * \brief A fast function to display a tube
-       *
-       * Instantiate dynamically a new VibesFigure_Tube into a map if the
-       * corresponding key does not exist yet.
-       *
-       * Automatic call to vibes::beginDrawing().
-       *
-       * \param map_graphics a map referencing figure pointers by a tube pointer key
-       * \param tube a pointer to the tube to be displayed
-       * \param figure_name a reference to the figure that will be displayed in the window's title
-       * \param map_scalar_values a map of the form [t](y) representing a trajectory
-       * \param x x-position (0 by default)
-       * \param y y-position (0 by default)
-       */
-      static void show(Tube *tube, const std::string& name = "", int x = 0, int y = 0);
-      static void show(Tube *tube, const std::string& name, const Trajectory& traj, int x = 0, int y = 0);
-      static void show(const std::vector<Tube*> v_tubes, const std::string& name, int x, int y);
-      static void show(const std::vector<Tube*> v_tubes, const std::string& name, const std::vector<Trajectory>& v_traj, int x, int y);
-      
-      /**
-       * \brief A fast function to end tubes displays
-       */
+      static void draw(const std::string& fig_name, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, Tube *tube, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, Trajectory *traj, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, Tube *tube, Trajectory *traj, int x = 0, int y = 0);
       static void endDrawing();
 
+    protected:
+
+      int idTube(Tube *tube);
+      int idTrajectory(Trajectory *traj);
+      const ibex::IntervalVector drawTube(Tube *tube, bool detail_slices = false);
+      static void computePolygonEnvelope(const Tube& tube, std::vector<double>& v_x, std::vector<double>& v_y);
+      void drawSlice(const ibex::IntervalVector& slice, const vibes::Params& params) const;
+      const ibex::IntervalVector drawTrajectory(Trajectory *traj, float points_size = 0.);
 
     protected:
 
-      /**
-       * \brief Display one slice of the tube.
-       *
-       * \param intv_t slice's width
-       * \param intv_y slice's height
-       * \param params slice's vibes group
-       */
-      void drawSlice(const ibex::Interval& intv_t, const ibex::Interval& intv_y, const vibes::Params& params) const;
-
-      /**
-       * \brief Compute the polygon as the envelope of the tube.
-       *
-       * This is an optimization instead of displaying each slice: a unique figure is shown.
-       *
-       * \param tube the tube to be shown as a polygon
-       * \param v_x a vector of double storing all x-point
-       * \param v_x a vector of double storing all y-point
-       */
-      void computePolygonEnvelope(const Tube& tube, std::vector<double>& v_x, std::vector<double>& v_y) const;
-
-
-    protected:
+      enum TubeColorType { TUBE_FOREGROUND_COLOR, TUBE_BACKGROUND_COLOR, TUBE_SLICES_COLOR };
 
       std::vector<Tube*> m_v_tubes;
-      mutable std::vector<Tube*> m_v_tubes_copy;
-      mutable bool m_need_to_update_axis;
-      mutable ibex::IntervalVector m_tubes_box;
-      std::vector<std::map<std::string,std::string> > m_color_tubes;
+      mutable std::map<Tube*,Tube*> m_m_tubes_copy;
+      std::map<Tube*,std::map<int,std::string> > m_m_tubes_color;
 
-      static std::vector<VibesFigure_Tube*> v_graphics;
+      std::vector<Trajectory*> m_v_traj;
+      std::map<Trajectory*,std::string> m_m_traj_color;
+
+      static std::vector<VibesFigure_Tube*> v_vibesfig_tube;
   };
 }
 

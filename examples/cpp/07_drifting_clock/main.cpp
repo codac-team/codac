@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
     Trajectory y_truth(Function("t", "sqrt((90+100*cos(t))^2 + (20+100*sin(t))^2 + 100)"), domain, "y*");
     Trajectory h_truth(Function("t", "0.045*t^2+0.98*t"), domain, "h*");
 
-    VibesFigure_Tube::show(&y, "Tube [y](·)", y_truth, 100, 100);
-    VibesFigure_Tube::show(&h, "Tube [h](·)", h_truth, 150, 150);
+    VibesFigure_Tube::draw("Tube [y](·)", &y, &y_truth, 100, 100);
+    VibesFigure_Tube::draw("Tube [h](·)", &h, &h_truth, 150, 150);
 
   /* =========== MEASUREMENTS =========== */
 
@@ -80,11 +80,10 @@ int main(int argc, char *argv[])
       k++;
     } while(contraction);
 
-    VibesFigure_Tube::show(&y, "Tube [y](·)");
-    VibesFigure_Tube::show(&h, "Tube [h](·)");
-
   /* =========== GRAPHICS =========== */
 
+    VibesFigure_Tube::draw("Tube [y](·)");
+    VibesFigure_Tube::draw("Tube [h](·)");
     VibesFigure_Tube::endDrawing();
 
   // Checking if this example is still working:

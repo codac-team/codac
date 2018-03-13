@@ -99,6 +99,7 @@ namespace tubex
 
   void Tube::createFromSlicesVector(const vector<Interval>& vector_dt, const Interval& default_value)
   {
+    setName("");
     m_domain = Interval(vector_dt[0].lb(), vector_dt[vector_dt.size() - 1].ub());
     m_image = default_value;
     int slices_number = vector_dt.size();
@@ -172,6 +173,7 @@ namespace tubex
     m_domain = tu.domain();
     m_image = tu.image();
     m_enclosed_bounds = tu.eval();
+    m_name = tu.name();
 
     if(tu.isSlice())
     {
@@ -1057,5 +1059,34 @@ namespace tubex
     }
 
     return make_pair(lb, ub);
+  }
+
+  int Tube::nb_tubes = 0;
+  vector<string> Tube::v_tubes_names;
+
+  void Tube::setName(const string& name)
+  {
+    if(name == "")
+    {
+      Tube::nb_tubes ++;
+      std::ostringstream o;
+      o << "x" << std::hex << Tube::nb_tubes;
+      m_name = o.str();
+    }
+
+    else
+    {
+      for(int i = 0 ; i < Tube::v_tubes_names.size() ; i++)
+        if(Tube::v_tubes_names[i] == name)
+          cout << "Tube::setName(): warning, tube \"" << name << "\" already exists" << endl;
+      m_name = name;
+    }
+    
+    Tube::v_tubes_names.push_back(m_name);
+  }
+
+  const string& Tube::name() const
+  {
+    return m_name;
   }
 }

@@ -39,8 +39,8 @@ cmake_minimum_required(VERSION 2.8.7)
 # IBEX-lib package
 
   # todo, clean the following:
-    include_directories(/usr/local/lib/ibex/3rd/)
-    include_directories(/usr/local/include/ibex/)
+    #include_directories(/usr/local/include/ibex/3rd/)
+    #include_directories(/usr/local/include/ibex/)
 
   set(IbexLib_USE_STATIC 1) # force ibex static linking
   find_package(IbexLib)
