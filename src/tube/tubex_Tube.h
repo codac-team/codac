@@ -29,10 +29,8 @@ namespace tubex
         Tube(const ibex::Interval& domain, const ibex::Interval& value);
         Tube(const Tube& x, const ibex::Interval& value);
         Tube(const std::string& binary_file_name);
-        //Tube(const std::string& binary_file_name, std::map<double,double> &real_values);
-        //Tube(const std::string& binary_file_name, std::vector<std::map<double,double> > &v_real_values);
-        //Tube(const ibex::Interval& domain, double timestep, const ibex::Function& fmin, const ibex::Function& fmax);
-        //Tube(const ibex::Interval& domain, double timestep, const ibex::Function& f, const ibex::Interval& thickness = ibex::Interval::EMPTY_SET);
+        Tube(const std::string& binary_file_name, Trajectory& traj);
+        Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
         Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
         std::pair<Tube,Tube> bisect(const Tube& derivative, double t, float ratio = 0.55) const;
 
@@ -96,10 +94,10 @@ namespace tubex
       /** Serialization: see file tubex_Tube_serialization.cpp **/
 
       bool serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
-      //bool serialize(const std::string& binary_file_name, const std::map<double,double>& real_values, int version_number = SERIALIZATION_VERSION) const;
-      //bool serialize(const std::string& binary_file_name, const std::vector<std::map<double,double> >& v_real_values, int version_number = SERIALIZATION_VERSION) const;
-      //void deserialize(const std::string& binary_file_name, std::map<double,double>& real_values);
-      //void deserialize(const std::string& binary_file_name, std::vector<std::map<double,double> >& v_real_values);
+      bool serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
+      bool serialize(const std::string& binary_file_name, const std::vector<const Trajectory&>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
+      void deserialize(const std::string& binary_file_name, Trajectory& traj);
+      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
 
     protected:
 

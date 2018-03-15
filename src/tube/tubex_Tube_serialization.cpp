@@ -28,23 +28,23 @@ namespace tubex
 
   }
 
-//  bool Tube::serialize(const string& binary_file_name, const map<double,double>& real_values, int version_number) const
-//  {
-//
-//  }
-//
-//  bool Tube::serialize(const string& binary_file_name, const vector<map<double,double> >& v_real_values, int version_number) const
-//  {
-//
-//  }
-//
-//  void Tube::deserialize(const string& binary_file_name, map<double,double>& real_values)
-//  {
-//
-//  }
-//
-//  void Tube::deserialize(const string& binary_file_name, vector<map<double,double> >& v_real_values)
-//  {
-//
-//  }
+  bool Tube::serialize(const string& binary_file_name, const Trajectory& traj, int version_number) const
+  {
+
+  }
+
+  bool Tube::serialize(const string& binary_file_name, const vector<const Trajectory&>& v_trajs, int version_number) const
+  {
+
+  }
+  
+  void Tube::deserialize(const string& binary_file_name, Trajectory& traj)
+  {
+
+  }
+  
+  void Tube::deserialize(const string& binary_file_name, vector<Trajectory>& v_trajs)
+  {
+
+  }
 }

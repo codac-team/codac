@@ -41,25 +41,15 @@ namespace tubex
 
   }
   
-//  Tube::Tube(const string& binary_file_name, map<double,double> &real_values)
-//  {
-//
-//  }
-//  
-//  Tube::Tube(const string& binary_file_name, vector<map<double,double> > &v_real_values)
-//  {
-//
-//  }
-//  
-//  Tube::Tube(const Interval& domain, double timestep, const Function& fmin, const Function& fmax)
-//  {
-//
-//  }
-//  
-//  Tube::Tube(const Interval& domain, double timestep, const Function& f, const Interval& thickness)
-//  {
-//
-//  }
+  Tube::Tube(const string& binary_file_name, Trajectory& traj)
+  {
+
+  }
+  
+  Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
+  {
+    
+  }
   
   Tube& Tube::operator=(const Tube& x)
   {
