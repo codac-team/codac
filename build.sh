@@ -10,8 +10,8 @@ cd ..
 sh $TUBELIB_DIR/scripts/ibex/build_IbexLib.sh
 cd $TUBELIB_DIR
 
-mkdir build -p
-cd build
+mkdir make -p
+cd make
 cmake -DCMAKE_INSTALL_PREFIX=~/ -DIBEX_ROOT=~/ibex ..
 make
 cd ..
