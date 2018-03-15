@@ -32,7 +32,7 @@ namespace tubex
   {
     checkStructures(x1, x2);
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] + x2[i], i);
     return new_tube;
   }
@@ -40,7 +40,7 @@ namespace tubex
   Tube operator+(const Tube& x1, double x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] + x2, i);
     return new_tube;
   }
@@ -48,7 +48,7 @@ namespace tubex
   Tube operator+(double x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 + x2[i], i);
     return new_tube;
   }
@@ -56,7 +56,7 @@ namespace tubex
   Tube operator+(const Tube& x1, const Interval& x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] + x2, i);
     return new_tube;
   }
@@ -64,7 +64,7 @@ namespace tubex
   Tube operator+(const Interval& x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 + x2[i], i);
     return new_tube;
   }
@@ -73,7 +73,7 @@ namespace tubex
   Tube operator-(const Tube& x)
   {
     Tube new_tube(x);
-    for(int i = 0 ; i < x.size() ; i++)
+    for(int i = 0 ; i < x.nbSlices() ; i++)
       new_tube.set(-x[i], i);
     return new_tube;
   }
@@ -82,7 +82,7 @@ namespace tubex
   {
     checkStructures(x1, x2);
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] - x2[i], i);
     return new_tube;
   }
@@ -90,7 +90,7 @@ namespace tubex
   Tube operator-(const Tube& x1, double x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] - x2, i);
     return new_tube;
   }
@@ -98,7 +98,7 @@ namespace tubex
   Tube operator-(double x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 - x2[i], i);
     return new_tube;
   }
@@ -106,7 +106,7 @@ namespace tubex
   Tube operator-(const Tube& x1, const Interval& x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] - x2, i);
     return new_tube;
   }
@@ -114,7 +114,7 @@ namespace tubex
   Tube operator-(const Interval& x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 - x2[i], i);
     return new_tube;
   }
@@ -124,7 +124,7 @@ namespace tubex
   {
     checkStructures(x1, x2);
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] * x2[i], i);
     return new_tube;
   }
@@ -132,7 +132,7 @@ namespace tubex
   Tube operator*(const Tube& x1, double x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] * x2, i);
     return new_tube;
   }
@@ -140,7 +140,7 @@ namespace tubex
   Tube operator*(double x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 * x2[i], i);
     return new_tube;
   }
@@ -148,7 +148,7 @@ namespace tubex
   Tube operator*(const Interval& x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 * x2[i], i);
     return new_tube;
   }
@@ -156,7 +156,7 @@ namespace tubex
   Tube operator*(const Tube& x1, const Interval& x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] * x2, i);
     return new_tube;
   }
@@ -166,7 +166,7 @@ namespace tubex
   {
     checkStructures(x1, x2);
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] / x2[i], i);
     return new_tube;
   }
@@ -174,7 +174,7 @@ namespace tubex
   Tube operator/(const Tube& x1, double x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] / x2, i);
     return new_tube;
   }
@@ -182,7 +182,7 @@ namespace tubex
   Tube operator/(double x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 / x2[i], i);
     return new_tube;
   }
@@ -190,7 +190,7 @@ namespace tubex
   Tube operator/(const Interval& x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 / x2[i], i);
     return new_tube;
   }
@@ -198,7 +198,7 @@ namespace tubex
   Tube operator/(const Tube& x1, const Interval& x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] / x2, i);
     return new_tube;
   }
@@ -215,7 +215,7 @@ namespace tubex
   Tube operator|(const Tube& x1, double x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] | x2, i);
     return new_tube;
   }
@@ -223,7 +223,7 @@ namespace tubex
   Tube operator|(double x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 | x2[i], i);
     return new_tube;
   }
@@ -231,7 +231,7 @@ namespace tubex
   Tube operator|(const Interval& x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 | x2[i], i);
     return new_tube;
   }
@@ -239,7 +239,7 @@ namespace tubex
   Tube operator|(const Tube& x1, const Interval& x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] | x2, i);
     return new_tube;
   }
@@ -256,7 +256,7 @@ namespace tubex
   Tube operator&(const Tube& x1, double x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] & x2, i);
     return new_tube;
   }
@@ -264,7 +264,7 @@ namespace tubex
   Tube operator&(double x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 & x2[i], i);
     return new_tube;
   }
@@ -272,7 +272,7 @@ namespace tubex
   Tube operator&(const Interval& x1, const Tube& x2)
   {
     Tube new_tube(x2);
-    for(int i = 0 ; i < x2.size() ; i++)
+    for(int i = 0 ; i < x2.nbSlices() ; i++)
       new_tube.set(x1 & x2[i], i);
     return new_tube;
   }
@@ -280,7 +280,7 @@ namespace tubex
   Tube operator&(const Tube& x1, const Interval& x2)
   {
     Tube new_tube(x1);
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
       new_tube.set(x1[i] & x2, i);
     return new_tube;
   }
@@ -288,18 +288,18 @@ namespace tubex
 
   #define func_unary(tube, f) \
       Tube new_tube(x); \
-      for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(x[i]), i); \
+      for(int i = 0 ; i < x.nbSlices() ; i++) new_tube.set(ibex::f(x[i]), i); \
       return new_tube;
 
   #define func_unary_param(tube, param, f) \
       Tube new_tube(x); \
-      for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(x[i], param), i); \
+      for(int i = 0 ; i < x.nbSlices() ; i++) new_tube.set(ibex::f(x[i], param), i); \
       return new_tube;
 
   #define func_binary(tube_a, tube_b, f) \
       Tube new_tube(x); \
       checkStructures(tube_a, tube_b); \
-      for(int i = 0 ; i < x.size() ; i++) new_tube.set(ibex::f(tube_a[i], tube_b[i]), i); \
+      for(int i = 0 ; i < x.nbSlices() ; i++) new_tube.set(ibex::f(tube_a[i], tube_b[i]), i); \
       return new_tube;
 
   Tube cos(const Tube& x) { func_unary(x, cos) }

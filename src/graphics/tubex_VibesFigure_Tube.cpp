@@ -202,7 +202,7 @@ namespace tubex
           image_lb = NAN;
           image_ub = NAN;
 
-          for(int i = 0 ; i < tube->size() ; i++)
+          for(int i = 0 ; i < tube->nbSlices() ; i++)
           {
             Interval slice = (*tube)[i];
             if(!slice.is_unbounded())
@@ -264,7 +264,7 @@ namespace tubex
         if(detail_slices)
         {
           vibes::newGroup(group_name, m_map_tubes[tube].m_colors[TubeColorType::SLICES], vibesParams("figure", m_name));
-          for(int i = 0 ; i < tube->size() ; i++)
+          for(int i = 0 ; i < tube->nbSlices() ; i++)
             drawSlice(tube->sliceBox(i), params_foreground);
         }
 
@@ -281,9 +281,9 @@ namespace tubex
 
     void VibesFigure_Tube::computePolygonEnvelope(const Tube& tube, vector<double>& v_x, vector<double>& v_y)
     {
-      if(tube.isPartiallyEmpty()) cout << "Tube graphics: warning, tube " << tube.name() << " partially empty" << endl;
+      if(tube.isEmpty()) cout << "Tube graphics: warning, tube " << tube.name() << " is empty" << endl;
 
-      for(int i = 0 ; i < tube.size() ; i++)
+      for(int i = 0 ; i < tube.nbSlices() ; i++)
       {
         IntervalVector slice_box = tube.sliceBox(i);
         slice_box[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
@@ -291,7 +291,7 @@ namespace tubex
         v_y.push_back(slice_box[1].ub()); v_y.push_back(slice_box[1].ub());
       }
 
-      for(int i = tube.size() - 1 ; i >= 0 ; i--)
+      for(int i = tube.nbSlices() - 1 ; i >= 0 ; i--)
       {
         IntervalVector slice_box = tube.sliceBox(i);
         slice_box[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);

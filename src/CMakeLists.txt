@@ -17,14 +17,15 @@
 #  add_subdirectory(tools)
 
   set(SRC
-    tube/tubex_Tube.cpp
-    tube/tubex_Contractor.cpp
-    tube/tubex_Integration.cpp
-    tube/tubex_Serializer.cpp
+    tube/tubex_Subtube_base.cpp
+    tube/tubex_Subtube_integration.cpp
+    tube/tubex_Trajectory.cpp
+    tube/tubex_Tube_base.cpp
+    tube/tubex_Tube_contractors.cpp
+    tube/tubex_Tube_serialization.cpp
     tube/exceptions/tubex_Exception.cpp
     tube/exceptions/tubex_DomainException.cpp
     tube/exceptions/tubex_EmptyException.cpp
-    tube/tubex_Trajectory.cpp
 
     graphics/vibes/vibes.cpp
     graphics/tubex_VibesFigure.cpp
@@ -45,11 +46,12 @@
   )
 
   set(HEADERS
+    tube/tubex_Subtube.h
+    tube/tubex_Trajectory.h
     tube/tubex_Tube.h
     tube/exceptions/tubex_Exception.h
     tube/exceptions/tubex_DomainException.h
     tube/exceptions/tubex_EmptyException.h
-    tube/tubex_Trajectory.h
 
     graphics/tubex_VibesFigure.h
     graphics/tubex_VibesFigure_Tube.h

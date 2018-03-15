@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_EmptyException.h"
-#include "tubex_Tube.h"
+#include "tubex_Subtube.h"
 #include <string>
 #include <sstream>
 
@@ -20,7 +20,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  EmptyException::EmptyException(const Tube& x)
+  EmptyException::EmptyException(const Subtube& x)
   {
     ostringstream os;
     os << "emptiness over ";
@@ -31,21 +31,21 @@ namespace tubex
     else
     {
       Interval intv_t_emptiness = Interval::EMPTY_SET;
-      for(int i = 0 ; i < x.size() ; i++)
+      for(int i = 0 ; i < x.nbSlices() ; i++)
         if(x[i].is_empty())
-          intv_t_emptiness |= x.domain(i);
+          intv_t_emptiness |= x.sliceDomain(i);
       os << "[t]=" << intv_t_emptiness << endl;
     }
     
     m_what_msg = os.str();
   }
 
-  void checkEmptiness(const Tube& x)
+  void checkEmptiness(const Subtube& x)
   {
     if(x.isEmpty())
       throw EmptyException(x);
 
-    for(int i = 0 ; i < x.size() ; i++)
+    for(int i = 0 ; i < x.nbSlices() ; i++)
       if(x[i].is_empty())
         throw EmptyException(x);
   }

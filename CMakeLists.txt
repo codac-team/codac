@@ -14,15 +14,15 @@ cmake_minimum_required(VERSION 2.8.7)
   get_filename_component(TUBELIB_BIN_DIR   "./bin"   ABSOLUTE)
   get_filename_component(TUBELIB_LIB_DIR   "./lib"   ABSOLUTE)
   get_filename_component(TUBELIB_DATA_DIR  "./data"  ABSOLUTE)
-  get_filename_component(TUBELIB_BUILD_DIR "./make" ABSOLUTE)
-  get_filename_component(TUBELIB_SRC_DIR   "./make" ABSOLUTE)
+  get_filename_component(TUBELIB_BUILD_DIR "./build" ABSOLUTE)
+  get_filename_component(TUBELIB_SRC_DIR   "./build" ABSOLUTE)
   set(DATA_DIRECTORY "${TUBELIB_DATA_DIR}" CACHE PATH "")
   set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/scripts/cmake_modules")
 
 
 # Options
 
-  option(BUILD_TESTS "Build test" ON)
+  option(BUILD_TESTS "Build test" OFF)
   option(ONLY_PYTHON_BINDINGS "build library with python bindings only" OFF)
 
 
@@ -68,7 +68,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
 # Sources
 
-  include_directories(./make/include)
+  include_directories(./build/include)
   add_subdirectory(src)
 
 
@@ -83,7 +83,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
 # Examples
 
-  add_subdirectory(examples)
+  #add_subdirectory(examples)
 
 
 # Uninstallation

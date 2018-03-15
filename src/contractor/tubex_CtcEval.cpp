@@ -37,7 +37,7 @@ namespace tubex
 
     int valid_tsubdomains = 0;
     int index_lb, index_ub;
-    int min_index_ctc = 0, max_index_ctc = y.size() - 1; // set bounds to this contractor
+    int min_index_ctc = 0, max_index_ctc = y.nbSlices() - 1; // set bounds to this contractor
     double old_t_diam = t.diam(), old_z_diam = z.diam();
 
     // Trying to contract [t]
@@ -64,7 +64,7 @@ namespace tubex
           if(!propagation)
           {
             min_index_ctc = max(0, index_lb - 1);
-            max_index_ctc = min(index_ub + 1, y.size() - 1);
+            max_index_ctc = min(index_ub + 1, y.nbSlices() - 1);
           }
 
         // Initializations
@@ -81,7 +81,7 @@ namespace tubex
         // Iteration for each [t] subdomain
         for(int k = 0 ; k < v_intv_t.size() ; k++)
         {
-          double dt = y.domain(k).diam();
+          double dt = y.sliceDomain(k).diam();
           bool local_inconsistency = false;
 
           Interval local_t = v_intv_t[k];
@@ -115,7 +115,7 @@ namespace tubex
               for(int i = index_ub ; i >= min_index_ctc ; i--)
               {
                 Interval integ_domain;
-                Interval slice_dom = y.domain(i);
+                Interval slice_dom = y.sliceDomain(i);
                 Interval slice_deriv = w[i];
 
                 // Over the ith slice
@@ -133,7 +133,7 @@ namespace tubex
               for(int i = index_lb ; i <= max_index_ctc ; i++)
               {
                 Interval integ_domain;
-                Interval slice_dom = y.domain(i);
+                Interval slice_dom = y.sliceDomain(i);
                 Interval slice_deriv = w[i];
 
                 // Over the ith slice
@@ -209,7 +209,7 @@ namespace tubex
 
     index_lb = y.input2index(t.lb());
     // Special case when the lower bound of [t] equals a bound of a slice or is near empty values
-    if(y.domain(index_lb).lb() == t.lb() && y[max(0, index_lb - 1)].intersects(z))
+    if(y.sliceDomain(index_lb).lb() == t.lb() && y[max(0, index_lb - 1)].intersects(z))
       index_lb = max(0, index_lb - 1);
 
     index_ub = y.input2index(t.ub());

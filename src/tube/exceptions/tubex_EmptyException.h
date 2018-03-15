@@ -17,7 +17,7 @@
 #include <exception>
 #include <string>
 #include <sstream>
-#include "tubex_Tube.h"
+#include "tubex_Subtube.h"
 #include "tubex_Exception.h"
 
 namespace tubex
@@ -31,10 +31,10 @@ namespace tubex
   {
     public:
 
-      EmptyException(const Tube& x);
+      EmptyException(const Subtube& x);
   };
 
-  void checkEmptiness(const Tube& x);
+  void checkEmptiness(const Subtube& x);
 }
 
 #endif

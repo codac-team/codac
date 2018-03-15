@@ -23,15 +23,15 @@ namespace tubex
       bool contraction = false; \
       bool local_contraction; \
       checkStructures(x, y); \
-      for(int i = 0 ; i < x.size() ; i++) \
+      for(int i = 0 ; i < x.nbSlices() ; i++) \
       { \
         do \
         { \
           local_contraction = false; \
-          local_contraction |= y.intersect(ibex::f(x[i]), i); \
+          local_contraction |= y.contract(ibex::f(x[i]), i); \
           Interval x_i = x[i]; \
           ibex::bwd_f(y[i], x_i); \
-          local_contraction |= x.intersect(x_i, i); \
+          local_contraction |= x.contract(x_i, i); \
           contraction |= local_contraction; \
         } while(local_contraction); \
       } \
@@ -41,15 +41,15 @@ namespace tubex
       bool contraction = false; \
       bool local_contraction; \
       checkStructures(x, y); \
-      for(int i = 0 ; i < x.size() ; i++) \
+      for(int i = 0 ; i < x.nbSlices() ; i++) \
       { \
         do \
         { \
           local_contraction = false; \
-          local_contraction |= y.intersect(ibex::f(x[i], param), i); \
+          local_contraction |= y.contract(ibex::f(x[i], param), i); \
           Interval x_i = x[i]; \
           ibex::bwd_f(y[i], param, x_i); \
-          local_contraction |= x.intersect(x_i, i); \
+          local_contraction |= x.contract(x_i, i); \
           contraction |= local_contraction; \
         } while(local_contraction); \
       } \
@@ -60,18 +60,18 @@ namespace tubex
       bool local_contraction; \
       checkStructures(c, a); \
       checkStructures(c, b); \
-      for(int i = 0 ; i < a.size() ; i++) \
+      for(int i = 0 ; i < a.nbSlices() ; i++) \
       { \
         do \
         { \
           local_contraction = false; \
-          local_contraction |= c.intersect(ibex::f(a[i], b[i]), i); \
+          local_contraction |= c.contract(ibex::f(a[i], b[i]), i); \
           Interval a_i = a[i]; \
           Interval b_i = b[i]; \
           ibex::bwd_f(c[i], a_i, b_i); \
           ibex::bwd_f(c[i], a_i, b_i); \
-          local_contraction |= a.intersect(a_i, i); \
-          local_contraction |= b.intersect(b_i, i); \
+          local_contraction |= a.contract(a_i, i); \
+          local_contraction |= b.contract(b_i, i); \
           contraction |= local_contraction; \
         } while(local_contraction); \
       } \
@@ -113,7 +113,7 @@ namespace tubex
     NumConstraint c(fbis);
     CtcFwdBwd ctc(c);
 
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
     {
       IntervalVector box(2);
       box[0] = x1[i]; box[1] = x2[i];
@@ -138,7 +138,7 @@ namespace tubex
     NumConstraint c(fbis);
     CtcFwdBwd ctc(c);
 
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
     {
       IntervalVector box(3);
       box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i];
@@ -164,7 +164,7 @@ namespace tubex
     NumConstraint c(fbis);
     CtcFwdBwd ctc(c);
 
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
     {
       IntervalVector box(4);
       box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i];
@@ -191,7 +191,7 @@ namespace tubex
     NumConstraint c(fbis);
     CtcFwdBwd ctc(c);
 
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
     {
       IntervalVector box(5);
       box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i]; box[4] = x5[i];
@@ -219,7 +219,7 @@ namespace tubex
     NumConstraint c(fbis);
     CtcFwdBwd ctc(c);
 
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
     {
       IntervalVector box(6);
       box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i]; box[4] = x5[i]; box[5] = x6[i];
@@ -248,7 +248,7 @@ namespace tubex
     NumConstraint c(fbis);
     CtcFwdBwd ctc(c);
 
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
     {
       IntervalVector box(7);
       box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i]; box[4] = x5[i]; box[5] = x6[i]; box[6] = x7[i];
@@ -278,7 +278,7 @@ namespace tubex
     NumConstraint c(fbis);
     CtcFwdBwd ctc(c);
 
-    for(int i = 0 ; i < x1.size() ; i++)
+    for(int i = 0 ; i < x1.nbSlices() ; i++)
     {
       IntervalVector box(8);
       box[0] = x1[i]; box[1] = x2[i]; box[2] = x3[i]; box[3] = x4[i]; box[4] = x5[i]; box[5] = x6[i]; box[6] = x7[i]; box[7] = x8[i];

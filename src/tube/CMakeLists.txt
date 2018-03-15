@@ -7,6 +7,7 @@
 
   set(SRC
     tubex_Tube.cpp
+    tubex_Subtube.cpp
     tubex_Contractor.cpp
     tubex_Integration.cpp
     tubex_Arithmetic.cpp
@@ -18,6 +19,7 @@
 
   set(HEADERS
     tubex_Tube.h
+    tubex_Subtube.h
     exceptions/tubex_Exception.h
     exceptions/tubex_DomainException.h
     exceptions/tubex_EmptyException.h

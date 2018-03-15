@@ -344,7 +344,7 @@ TEST_CASE("Testing set inversion", "[core]")
   }
 }
 
-TEST_CASE("Testing subtube", "[core]")
+/*TEST_CASE("Testing subtube", "[core]")
 {
   SECTION("Test tube1")
   {
@@ -379,7 +379,7 @@ TEST_CASE("Testing subtube", "[core]")
     Tube subtube = tube.subtube(tube.domain());
     REQUIRE(tube == subtube);
   }
-}
+}*/
 
 TEST_CASE("Testing interpol (double)", "[core]")
 {

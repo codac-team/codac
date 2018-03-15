@@ -36,7 +36,7 @@ namespace tubex
     checkStructures(x, v);
     checkEmptiness(v);
 
-    int size = x.size();
+    int size = x.nbSlices();
     bool contraction = false;
 
     Interval next_y = x[0];
@@ -44,7 +44,7 @@ namespace tubex
 
     for(int i = 0 ; i < size ; i++) // from the past to the future
     {
-      double dt = x.domain(i).diam();
+      double dt = x.sliceDomain(i).diam();
       Interval y_old = next_y;
       Interval y_new = y_old & (y_front + v[i] * Interval(0., dt));
       contraction |= y_new.diam() < y_old.diam();
@@ -53,7 +53,7 @@ namespace tubex
       // Discontinuous
       if(y_new.is_empty())
       {
-        x.set(Interval::EMPTY_SET);
+        x.setEmpty();
         contraction = true;
         break;
       }
@@ -75,16 +75,16 @@ namespace tubex
     checkStructures(x, v);
     checkEmptiness(v);
 
-    int size = x.size();
+    int size = x.nbSlices();
     bool contraction = false;
 
     Interval next_y = x[size - 1];
-    Interval y_front = next_y & next_y - v[size - 1] * v.domain(size - 1).diam();
+    Interval y_front = next_y & next_y - v[size - 1] * v.sliceDomain(size - 1).diam();
     next_y = x[max(0, size - 2)];
 
     for(int i = max(0, size - 2) ; i >= 0 ; i--) // from the future to the past
     {
-      double dt = x.domain(i).diam();
+      double dt = x.sliceDomain(i).diam();
       Interval y_old = x[i];
       Interval y_new = y_old & (y_front - v[i] * Interval(0., dt));
       contraction |= y_new.diam() < y_old.diam();
@@ -93,7 +93,7 @@ namespace tubex
       // Discontinuous
       if(y_new.is_empty())
       {
-        x.set(Interval::EMPTY_SET);
+        x.setEmpty();
         contraction = true;
         break;
       }
