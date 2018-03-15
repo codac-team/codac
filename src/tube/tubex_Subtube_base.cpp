@@ -27,273 +27,309 @@ using namespace ibex;
 
 namespace tubex
 {
-  Subtube::Subtube()
-  {
+  // Public methods
 
-  }
+    // Definition
 
-  Subtube::Subtube(const Subtube& x)
-  {
+      Subtube::Subtube()
+      {
 
-  }
+      }
 
-  Subtube& Subtube::operator=(const Subtube& x)
-  {
+      Subtube::Subtube(const Subtube& x)
+      {
 
-  }
-  
-  Subtube& Subtube::operator|=(const Subtube& x)
-  {
+      }
+      
+      Subtube::Subtube(const Interval& domain, const Interval& value)
+      {
 
-  }
-  
-  Subtube& Subtube::operator|=(const Trajectory& x)
-  {
+      }
+      
+      Subtube::Subtube(const Subtube& x, const Interval& value)
+      {
 
-  }
-  
-  Subtube& Subtube::operator&=(const Subtube& x)
-  {
+      }
+      
+      Subtube::~Subtube()
+      {
 
-  }
-  
-  bool Subtube::operator==(const Subtube& x) const
-  {
+      }
+      
+      const Interval& Subtube::domain() const
+      {
 
-  }
-  
-  bool Subtube::operator!=(const Subtube& x) const
-  {
+      }  
 
-  }
-  
-  Subtube::~Subtube()
-  {
+    // Slices structure
 
-  }
+      int Subtube::nbSlices() const
+      {
 
-  int Subtube::nbSlices() const
-  {
+      }
+      
+      IntervalVector Subtube::sliceBox(int slice_id) const
+      {
 
-  }
-  
-  double Subtube::volume() const
-  {
+      }
+      
+      bool Subtube::isSlice() const
+      {
 
-  }
-  
-  double Subtube::dist(const Subtube& x) const
-  {
+      }
+      
+      Subtube* Subtube::getSlice(int slice_id)
+      {
 
-  }
+      }
+      
+      const Subtube* Subtube::getSlice(int slice_id) const
+      {
 
-  const Interval& Subtube::domain() const
-  {
+      }
+      
+      void Subtube::getSlices(vector<Subtube*>& v_slices) const
+      {
 
-  }
-  
-  const Interval& Subtube::sliceDomain(int slice_id) const
-  {
+      }
+      
+      int Subtube::input2index(double t) const
+      {
 
-  }
-  
-  const Interval& Subtube::sliceDomain(double t) const
-  {
+      }
+      
+      double Subtube::index2input(int slice_id) const
+      {
 
-  }
+      }
+      
+      const Interval& Subtube::sliceDomain(int slice_id) const
+      {
 
-  void Subtube::sample(int slice_id)
-  {
+      }
+      
+      const Interval& Subtube::sliceDomain(double t) const
+      {
+
+      }
+      
+      void Subtube::sample(int slice_id)
+      {
+
+      }
+
+    // Access values
+
+      double Subtube::volume() const
+      {
+
+      }
+      
+      double Subtube::dist(const Subtube& x) const
+      {
+
+      }
+      
+      const Interval& Subtube::image() const
+      {
+
+      }
+      
+      const Interval& Subtube::operator[](int slice_id) const
+      {
+
+      }
+      
+      Interval Subtube::operator[](double t) const
+      {
+
+      }
+      
+      Interval Subtube::operator[](const Interval& t) const
+      {
+
+      }
+      
+      const pair<Interval,Interval> Subtube::eval(const Interval& t) const
+      {
+
+      }
+      
+      Interval Subtube::interpol(double t, const Subtube& derivative) const
+      {
+
+      }
+      
+      Interval Subtube::interpol(const Interval& t, const Subtube& derivative) const
+      {
+
+      }
+      
+      pair<Interval,Interval> Subtube::partialInterpol(const Interval& t, const Subtube& derivative) const
+      {
+
+      }
+      
+      Interval Subtube::invert(const Interval& y, const Interval& t) const
+      {
+
+      }
+      
+      void Subtube::invert(const Interval& y, vector<Interval> &v_t, const Interval& t) const
+      {
+
+      }
+      
+      double Subtube::maxThickness() const
+      {
+
+      }
+      
+      double Subtube::maxThickness(int& first_id_max_thickness) const
+      {
+
+      }
+      
+    // Tests
+
+      bool Subtube::isEmpty() const
+      {
+
+      }
+      
+      bool Subtube::operator==(const Subtube& x) const
+      {
+
+      }
+      
+      bool Subtube::operator!=(const Subtube& x) const
+      {
+
+      }
     
-  }
-  
-  const Interval& Subtube::image() const
-  {
+    // Setting values
 
-  }
-  
-  const Interval& Subtube::operator[](int slice_id) const
-  {
+      void Subtube::set(const Interval& y, int slice_id)
+      {
 
-  }
-  
-  Interval Subtube::operator[](double t) const
-  {
+      }
+      
+      void Subtube::setEmpty()
+      {
 
-  }
-  
-  Interval Subtube::operator[](const Interval& t) const
-  {
+      }
+      
+      bool Subtube::contract(const Interval& y, int slice_id)
+      {
 
-  }
-  
-  IntervalVector Subtube::sliceBox(int slice_id) const
-  {
+      }
+      
+      Subtube& Subtube::inflate(const Interval& y, int slice_id)
+      {
 
-  }
+      }
+      
+      Subtube& Subtube::inflate(const Interval& y, double t)
+      {
 
-  const pair<Interval,Interval> Subtube::eval(const Interval& t) const
-  {
+      }
+      
+      Subtube& Subtube::inflate(double rad)
+      {
 
-  }
-  
-  Interval Subtube::interpol(double t, const Subtube& derivative) const
-  {
+      }
 
-  }
-  
-  Interval Subtube::interpol(const Interval& t, const Subtube& derivative) const
-  {
+    // Operators
 
-  }
-  
-  pair<Interval,Interval> Subtube::partialInterpol(const Interval& t, const Subtube& derivative) const
-  {
+      Subtube& Subtube::operator=(const Subtube& x)
+      {
 
-  }
+      }
+      
+      Subtube& Subtube::operator|=(const Subtube& x)
+      {
 
-  void Subtube::getSlices(vector<Subtube*>& v_slices) const
-  {
+      }
+      
+      Subtube& Subtube::operator|=(const Trajectory& x)
+      {
 
-  }
-  
-  Subtube* Subtube::getSlice(int slice_id)
-  {
+      }
+      
+      Subtube& Subtube::operator&=(const Subtube& x)
+      {
 
-  }
-  
-  const Subtube* Subtube::getSlice(int slice_id) const
-  {
+      }
 
-  }
-  
-  bool Subtube::isSlice() const
-  {
+    // String
 
-  }
-  
-  int Subtube::input2index(double t) const
-  {
+      ostream& operator<<(ostream& str, const Subtube& x)
+      {
 
-  }
-  
-  double Subtube::index2input(int slice_id) const
-  {
+      }
 
-  }
+  // Protected methods
 
-  void Subtube::set(const Interval& y, int slice_id)
-  {
+    // Definition
 
-  }
+      Subtube::Subtube(const vector<Interval>& v_slices_domains, const Interval& value)
+      {
 
-  void Subtube::setEmpty()
-  {
+      }
 
-  }
+    // Slices/tree structure
 
-  bool Subtube::contract(const Interval& y, int slice_id)
-  {
+      void Subtube::createFromSlicesVector(const vector<Interval>& v_slices_domains, const Interval& value)
+      {
+
+      }
+      
+      const Subtube* Subtube::getFirstSubtube() const
+      {
+
+      }
+          
+      const Subtube* Subtube::getSecondSubtube() const
+      {
+
+      }
+          
+      void Subtube::getSubtubeNodes(vector<Subtube*> &v_nodes)
+      {
+
+      }
+      
+      void Subtube::getSubtubeNodes(vector<const Subtube*> &v_nodes) const
+      {
+
+      }
+          
+      void Subtube::computeTree() const
+      {
+
+      }
+      
+      void Subtube::flagFutureTreeComputation(int slice_id) const
+      {
+
+      }
     
-  }
-  
-  Subtube& Subtube::inflate(const Interval& y, int slice_id)
-  {
+    // Access values
 
-  }
-  
-  Subtube& Subtube::inflate(const Interval& y, double t)
-  {
+      void Subtube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
+      {
 
-  }
-  
-  Subtube& Subtube::inflate(double rad)
-  {
+      }
+    
+    // Operators
 
-  }
+      void Subtube::unionWith_localUpdate(const Subtube *x)
+      {
 
-  bool Subtube::isEmpty() const
-  {
+      }
+      
+      void Subtube::intersectWith_localUpdate(const Subtube *x)
+      {
 
-  }
-  
-  Interval Subtube::invert(const Interval& y, const Interval& t) const
-  {
-
-  }
-  
-  void Subtube::invert(const Interval& y, vector<Interval> &v_t, const Interval& t) const
-  {
-
-  }
-  
-  double Subtube::maxThickness() const
-  {
-
-  }
-  
-  double Subtube::maxThickness(int& first_id_max_thickness) const
-  {
-
-  }
-
-  ostream& operator<<(ostream& str, const Subtube& x)
-  {
-
-  }
-
-  Subtube::Subtube(const vector<Interval>& v_slices_domains, const Interval& value)
-  {
-
-  }
-
-  void Subtube::createFromSlicesVector(const vector<Interval>& v_slices_domains, const Interval& value)
-  {
-
-  }
-  
-  const Subtube* Subtube::getFirstSubtube() const
-  {
-
-  }
-  
-  const Subtube* Subtube::getSecondSubtube() const
-  {
-
-  }
-  
-  void Subtube::getSubtubeNodes(vector<Subtube*> &v_nodes)
-  {
-
-  }
-  
-  void Subtube::getSubtubeNodes(vector<const Subtube*> &v_nodes) const
-  {
-
-  }
-  
-  void Subtube::unionWith_localUpdate(const Subtube *x)
-  {
-
-  }
-  
-  void Subtube::intersectWith_localUpdate(const Subtube *x)
-  {
-
-  }
-  
-  void Subtube::computeTree() const
-  {
-
-  }
-  
-  void Subtube::flagFutureTreeComputation(int slice_id) const
-  {
-
-  }
-  
-  void Subtube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
-  {
-
-  }
+      }
 }

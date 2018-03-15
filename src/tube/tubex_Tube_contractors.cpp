@@ -20,63 +20,67 @@ using namespace ibex;
 
 namespace tubex
 {
-  bool Tube::ctcFwd(const Tube& derivative, const Interval& initial_value)
-  {
+  // Public methods
 
-  }
+    bool Tube::ctcFwd(const Tube& derivative, const Interval& initial_value)
+    {
+      
+    }
+    
+    bool Tube::ctcBwd(const Tube& derivative)
+    {
+      
+    }
+    
+    bool Tube::ctcFwdBwd(const Tube& derivative, const Interval& initial_value)
+    {
+      
+    }
+    
+    bool Tube::ctcEval(const Tube& derivative, Interval& t, Interval& z, bool propagate)
+    {
+      
+    }
+    
+    bool Tube::ctcEval(const Tube& derivative, Interval& t, const Interval& z, bool propagate)
+    {
+      
+    }
+    
+    bool Tube::ctcEval(const Tube& derivative, const Interval& t, Interval& z, bool propagate)
+    {
+      
+    }
+    
+    bool Tube::ctcEval(const Tube& derivative, const Interval& t, const Interval& z, bool propagate)
+    {
+      
+    }
+    
+    bool Tube::ctcOut(const Interval& t, const Interval& z)
+    {
+      
+    }
+    
+    bool Tube::ctcIntertemporal(Interval& t1, Interval& t2) const
+    {
+      
+    }
 
-  bool Tube::ctcBwd(const Tube& derivative)
-  {
+    bool Tube::ctcIntertemporal(Interval& z, Interval& t1, Interval& t2) const
+    {
+      
+    }
 
-  }
-  
-  bool Tube::ctcFwdBwd(const Tube& derivative, const Interval& initial_value)
-  {
+    bool Tube::ctcPeriodic(const Interval& period)
+    {
+      
+    }
 
-  }
-  
-  bool Tube::ctcEval(const Tube& derivative, Interval& t, Interval& z, bool propagate)
-  {
+  // Protected methods
 
-  }
-  
-  bool Tube::ctcEval(const Tube& derivative, Interval& t, const Interval& z, bool propagate)
-  {
+    void Tube::ctcEval_computeIndex(const Interval& z, const Interval& t, int& index_lb, int& index_ub)
+    {
 
-  }
-  
-  bool Tube::ctcEval(const Tube& derivative, const Interval& t, Interval& z, bool propagate)
-  {
-
-  }
-  
-  bool Tube::ctcEval(const Tube& derivative, const Interval& t, const Interval& z, bool propagate)
-  {
-
-  }
-
-  void Tube::ctcEval_computeIndex(const Interval& z, const Interval& t, int& index_lb, int& index_ub)
-  {
-
-  }
-
-  bool Tube::ctcOut(const Interval& t, const Interval& z)
-  {
-
-  }
-  
-  bool Tube::ctcIntertemporal(Interval& t1, Interval& t2) const
-  {
-
-  }
-  
-  bool Tube::ctcIntertemporal(Interval& z, Interval& t1, Interval& t2) const
-  {
-
-  }
-  
-  bool Tube::ctcPeriodic(const Interval& period)
-  {
-
-  }
+    }
 }

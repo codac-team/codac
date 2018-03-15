@@ -23,28 +23,30 @@ using namespace ibex;
 
 namespace tubex
 {
-  bool Tube::serialize(const string& binary_file_name, int version_number) const
-  {
+  // Public methods
 
-  }
+    bool Tube::serialize(const string& binary_file_name, int version_number) const
+    {
 
-  bool Tube::serialize(const string& binary_file_name, const Trajectory& traj, int version_number) const
-  {
+    }
 
-  }
+    bool Tube::serialize(const string& binary_file_name, const Trajectory& traj, int version_number) const
+    {
 
-  bool Tube::serialize(const string& binary_file_name, const vector<const Trajectory&>& v_trajs, int version_number) const
-  {
+    }
+    
+    bool Tube::serialize(const string& binary_file_name, const vector<const Trajectory&>& v_trajs, int version_number) const
+    {
 
-  }
-  
-  void Tube::deserialize(const string& binary_file_name, Trajectory& traj)
-  {
+    }
+    
+    void Tube::deserialize(const string& binary_file_name, Trajectory& traj)
+    {
 
-  }
-  
-  void Tube::deserialize(const string& binary_file_name, vector<Trajectory>& v_trajs)
-  {
+    }
+    
+    void Tube::deserialize(const string& binary_file_name, vector<Trajectory>& v_trajs)
+    {
 
-  }
+    }
 }

@@ -21,228 +21,235 @@ using namespace ibex;
 
 namespace tubex
 {
-  Tube::Tube(const Interval& domain, double timestep, const Interval& value)
-  {
+  // Public methods
 
-  }
+    // Definition
 
-  Tube::Tube(const Interval& domain, const Interval& value)
-  {
+      Tube::Tube(const Interval& domain, double timestep, const Interval& value)
+      {
 
-  }
-  
-  Tube::Tube(const Tube& x, const Interval& value)
-  {
-
-  }
-  
-  Tube::Tube(const string& binary_file_name)
-  {
-
-  }
-  
-  Tube::Tube(const string& binary_file_name, Trajectory& traj)
-  {
-
-  }
-  
-  Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
-  {
+      }
     
-  }
-  
-  Tube& Tube::operator=(const Tube& x)
-  {
+      Tube::Tube(const Interval& domain, const Interval& value)
+      {
 
-  }
+      }
+    
+      Tube::Tube(const Tube& x, const Interval& value)
+      {
 
-  Tube& Tube::operator|=(const Tube& x)
-  {
+      }
+    
+      Tube::Tube(const string& binary_file_name)
+      {
 
-  }
-  
-  Tube& Tube::operator|=(const Trajectory& x)
-  {
+      }
+    
+      Tube::Tube(const string& binary_file_name, Trajectory& traj)
+      {
 
-  }
-  
-  Tube& Tube::operator&=(const Tube& x)
-  {
+      }
+    
+      Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
+      {
 
-  }
-  
-  bool Tube::operator==(const Tube& x) const
-  {
+      }
+    
+      Tube Tube::primitive(const Interval& initial_value) const
+      {
 
-  }
-  
-  bool Tube::operator!=(const Tube& x) const
-  {
+      }
+    
+      pair<Tube,Tube> Tube::bisect(const Tube& derivative, double t, float ratio) const
+      {
 
-  }
+      }
 
-  Interval Tube::operator[](double t) const
-  {
+    // Slices structure
 
-  }
+      void Tube::sample(int slice_id)
+      {
 
-  Interval Tube::operator[](const Interval& t) const
-  {
-    return ((Subtube)*this)[t];
-  }
-  
-  const pair<Interval,Interval> Tube::eval(const Interval& t) const
-  {
+      }
+    
+      const Interval& Tube::inputGate(int slice_id) const
+      {
 
-  }
+      }
+    
+      const Interval& Tube::outputGate(int slice_id) const
+      {
 
-  Interval Tube::interpol(double t, const Tube& derivative) const
-  {
+      }
+    
+      void Tube::setInputGate(int slice_id)
+      {
 
-  }
-  
-  Interval Tube::interpol(const Interval& t, const Tube& derivative) const
-  {
+      }
+    
+      void Tube::setOutputGate(int slice_id)
+      {
 
-  }
-  
-  pair<Interval,Interval> Tube::partialInterpol(const Interval& t, const Tube& derivative) const
-  {
+      }
 
-  }
-  
-  void Tube::set(const Interval& y, int slice_id)
-  {
+    // Access values
 
-  }
+      Interval Tube::operator[](double t) const
+      {
 
-  void Tube::setEmpty()
-  {
+      }
+    
+      Interval Tube::operator[](const Interval& t) const
+      {
 
-  }
-  
-  bool Tube::contract(const Interval& y, int slice_id)
-  {
+      }
+    
+      const pair<Interval,Interval> Tube::eval(const Interval& t) const
+      {
 
-  }
-  
-  Tube& inflate(const Interval& y, int slice_id)
-  {
+      }
+    
+      Interval Tube::interpol(double t, const Tube& derivative) const
+      {
 
-  }
-  
-  Tube& inflate(const Interval& y, double t)
-  {
+      }
+    
+      Interval Tube::interpol(const Interval& t, const Tube& derivative) const
+      {
 
-  }
+      }
+    
+      pair<Interval,Interval> Tube::partialInterpol(const Interval& t, const Tube& derivative) const
+      {
 
-//  void Tube::feed(const map<double,Interval>& map_values)
-//  {
-//
-//  }
-//  
-//  void Tube::feed(const map<double,double>& map_values, const map<double,double>& map_stddev)
-//  {
-//
-//  }
-//  
-//  void Tube::feed(const map<double,double>& map_values, const Interval& intv_uncertainty)
-//  {
-//
-//  }
+      }
+    
+      Interval Tube::invert(const Interval& y, const Interval& t) const
+      {
 
-  Tube& Tube::inflate(double rad)
-  {
+      }
+    
+      void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& t) const
+      {
 
-  }
+      }
 
-  bool Tube::isEmpty() const
-  {
+    // Tests
 
-  }
+      bool Tube::operator==(const Tube& x) const
+      {
 
-  bool Tube::isInteriorSubset(const Tube& outer_tube) const
-  {
+      }
+    
+      bool Tube::operator!=(const Tube& x) const
+      {
 
-  }
-  
-  bool Tube::encloses(const Trajectory& x) const
-  {
+      }
+    
+      bool Tube::isEmpty() const
+      {
 
-  }
+      }
+    
+      bool Tube::isInteriorSubset(const Tube& outer_tube) const
+      {
 
-  Interval Tube::invert(const Interval& y, const Interval& t) const
-  {
+      }
+    
+      bool Tube::encloses(const Trajectory& x) const
+      {
 
-  }
+      }
 
-  void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& t) const
-  {
+    // Setting values
 
-  }
+      void Tube::set(const Interval& y, int slice_id)
+      {
 
-  Tube Tube::primitive(const Interval& initial_value) const
-  {
+      }
+    
+      void Tube::setEmpty()
+      {
 
-  }
+      }
+    
+      bool Tube::contract(const Interval& y, int slice_id)
+      {
 
-  void Tube::sample(int slice_id)
-  {
+      }
+    
+      const Interval Tube::inflate(const Interval& y, int slice_id)
+      {
 
-  }
-  
-  pair<Tube,Tube> Tube::bisect(const Tube& derivative, double t, float ratio) const
-  {
+      }
+    
+      const Interval Tube::inflate(const Interval& y, double t)
+      {
 
-  }
+      }
+    
+      Tube& Tube::inflate(double rad)
+      {
 
-  const Interval& Tube::inputGate(int slice_id) const
-  {
+      }
 
-  }
+    // Operators
 
-  const Interval& Tube::outputGate(int slice_id) const
-  {
+      Tube& Tube::operator=(const Tube& x)
+      {
+        
+      }
 
-  }
-  
-  void Tube::setInputGate(int slice_id)
-  {
+      Tube& Tube::operator|=(const Tube& x)
+      {
+        
+      }
 
-  }
+      Tube& Tube::operator|=(const Trajectory& x)
+      {
+        
+      }
 
-  void Tube::setOutputGate(int slice_id)
-  {
+      Tube& Tube::operator&=(const Tube& x)
+      {
+        
+      }
 
-  }
+    // String
 
-  const string& Tube::name() const
-  {
+      const string& Tube::name() const
+      {
 
-  }
+      }
+    
+      void Tube::setName(const string& name)
+      {
+        
+      }
 
-  void Tube::setName(const string& name)
-  {
+      ostream& operator<<(ostream& str, const Tube& x)
+      {
+        
+      }
 
-  }
-  
-  ostream& operator<<(ostream& str, const Tube& x)
-  {
+  // Protected methods
 
-  }
+    // Definition
 
-  void Tube::createFromSpecifications(const Interval& domain, double timestep, const Interval& value)
-  {
+      void Tube::createFromSpecifications(const Interval& domain, double timestep, const Interval& value)
+      {
+        
+      }
 
-  }
-  
-  void Tube::createTube(const vector<Interval>& v_slices_domains, const Interval& value)
-  {
+      void Tube::createTube(const vector<Interval>& v_slices_domains, const Interval& value)
+      {
+        
+      }
 
-  }
-  
-  void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
-  {
+    // Access values
 
-  }
+      void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
+      {
+
+      }
 }
