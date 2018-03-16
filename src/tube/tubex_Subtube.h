@@ -45,12 +45,15 @@ namespace tubex
       bool isSlice() const;
       Subtube* getSlice(int slice_id);
       const Subtube* getSlice(int slice_id) const;
-      void getSlices(std::vector<Subtube*>& v_slices) const;
+      Subtube* getSlice(double t);
+      const Subtube* getSlice(double t) const;
+      void getSlices(std::vector<const Subtube*>& v_slices) const;
       int input2index(double t) const;
       double index2input(int slice_id) const;
       const ibex::Interval& sliceDomain(int slice_id) const;
       const ibex::Interval& sliceDomain(double t) const;
       void sampleSlice(double timestep = 0.);
+      void sampleSlice(const std::vector<ibex::Interval>& v_slices_domains);
 
       // Access values
       double volume() const;
@@ -104,7 +107,7 @@ namespace tubex
     /** Base: see file tubex_Subtube_base.cpp **/
 
       // Definition
-      Subtube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value = ibex::Interval::ALL_REALS);
+      Subtube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
 
       // Slices/tree structure
       void createFromSlicesVector(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value = ibex::Interval::ALL_REALS);
@@ -112,8 +115,8 @@ namespace tubex
       const Subtube* getSecondSubtube() const;
       void getSubtubeNodes(std::vector<Subtube*> &v_nodes);
       void getSubtubeNodes(std::vector<const Subtube*> &v_nodes) const;
-      void computeTree() const;
-      void flagFutureTreeComputation(int slice_id = -1) const;
+      void updateTree() const;
+      void flagFutureTreeUpdate(int slice_id = -1) const;
 
       // Access values
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
