@@ -117,6 +117,7 @@ namespace tubex
       void getSubtubeNodes(std::vector<const Subtube*> &v_nodes) const;
       void updateTree() const;
       void flagFutureTreeUpdate(int slice_id = -1) const;
+      bool treeUpdateNeeded() const;
 
       // Access values
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
@@ -135,6 +136,7 @@ namespace tubex
 
       void computePartialPrimitive(bool build_from_leafs = false) const;
       void flagFuturePrimitiveComputation() const;
+      bool primitiveUpdateNeeded() const;
       std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       
     /** Class variables **/

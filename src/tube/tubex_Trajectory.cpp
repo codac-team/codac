@@ -119,6 +119,11 @@ namespace tubex
              (it_upper->first - it_lower->first);
     }
   }
+  
+  const Interval Trajectory::operator[](const Interval& t) const
+  {
+    // todo
+  }
 
   void Trajectory::truncateDomain(const Interval& domain)
   {

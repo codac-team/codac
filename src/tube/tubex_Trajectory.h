@@ -37,6 +37,7 @@ namespace tubex
       const ibex::Interval domain() const;
       double& set(double t, double y);
       const double operator[](double t) const;
+      const ibex::Interval operator[](const ibex::Interval& t) const;
       void truncateDomain(const ibex::Interval& domain);
       void shiftDomain(double shift_ref);
 

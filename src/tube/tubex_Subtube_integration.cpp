@@ -60,6 +60,11 @@ namespace tubex
     {
 
     }
+
+    bool Subtube::primitiveUpdateNeeded() const
+    {
+      return m_primitive_computation_needed;
+    }
     
     pair<Interval,Interval> Subtube::getPartialPrimitiveValue(const Interval& t) const
     {

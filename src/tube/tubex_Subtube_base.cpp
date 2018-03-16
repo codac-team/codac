@@ -540,17 +540,73 @@ namespace tubex
 
       Subtube& Subtube::operator=(const Subtube& x)
       {
+        if(m_first_subtube != NULL) delete m_first_subtube;
+        if(m_second_subtube != NULL) delete m_second_subtube;
 
+        m_domain = x.domain();
+        m_image = x.image();
+        m_slices_number = x.nbSlices();
+        m_enclosed_bounds = x.eval();
+        m_volume = x.volume();
+        m_tree_computation_needed = x.treeUpdateNeeded();
+        m_primitive_computation_needed = x.primitiveUpdateNeeded();
+
+        if(x.isSlice())
+        {
+          m_first_subtube = NULL;
+          m_second_subtube = NULL;
+        }
+
+        else
+        {
+          m_first_subtube = new Subtube(*(x.getFirstSubtube()));
+          m_second_subtube = new Subtube(*(x.getSecondSubtube()));
+        }
+
+        return *this;
       }
       
       Subtube& Subtube::operator|=(const Subtube& x)
       {
+        // Case of tubes of different structure
+        // todo: better check of different structure. The following is not reliable
+        if(nbSlices() != x.nbSlices() || domain() != x.domain())
+        {
+          for(int i = 0 ; i < nbSlices() ; i++)
+          {
+            Interval this_t = sliceDomain(i);
+            Interval this_y = (*this)[i];
 
+            Interval x_t = x.domain() & this_t;
+
+            if(!x_t.is_empty())
+            {
+              Interval x_y = x[x_t];
+              set(this_y | x_y, i);
+            }
+          }
+        }
+
+        else // fast union
+        {
+          vector<Subtube*> this_nodes;
+          vector<const Subtube*> x_nodes;
+          getSubtubeNodes(this_nodes);
+          x.getSubtubeNodes(x_nodes);
+
+          for(int i = 0 ; i < this_nodes.size() ; i++)
+            this_nodes[i]->unionWith_localUpdate(x_nodes[i]);
+        }
+
+        // todo: check the interest of the following
+        flagFutureTreeUpdate();
+        return *this;
       }
       
       Subtube& Subtube::operator|=(const Trajectory& x)
       {
-
+        for(int i = 0 ; i < nbSlices() ; i++)
+          inflate(x[sliceDomain(i)], i);
       }
       
       Subtube& Subtube::operator&=(const Subtube& x)
@@ -619,6 +675,11 @@ namespace tubex
       void Subtube::flagFutureTreeUpdate(int slice_id) const
       {
 
+      }
+
+      bool Subtube::treeUpdateNeeded() const
+      {
+        return m_tree_computation_needed;
       }
     
     // Access values
