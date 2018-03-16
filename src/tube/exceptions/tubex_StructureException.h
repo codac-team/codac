@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - EmptyException class
+ *  tubex-lib - StructureException class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef EmptyException_HEADER
-#define EmptyException_HEADER
+#ifndef StructureException_HEADER
+#define StructureException_HEADER
 
 #include <iostream>
 #include <exception>
@@ -23,18 +23,18 @@
 namespace tubex
 {
   /**
-   * \brief Emptiness error exception.
+   * \brief Structure error exception.
    *
-   * Thrown when a tube is empty.
+   * Thrown when two tubes do not share
+   * the same data structure.
    */
-  class EmptyException : public Exception
+  class StructureException : public Exception
   {
     public:
 
-      EmptyException(const Subtube& x);
+      StructureException(const Subtube& x1, const Subtube& x2);
+      static void check(const Subtube& x1, const Subtube& x2);
       // todo: equivalent constructor for Tube class
-
-      static void check(const Subtube& x);
   };
 }
 

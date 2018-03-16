@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcDeriv.h"
-#include "tubex_DomainException.h"
+#include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
 
 using namespace std;
@@ -33,8 +33,8 @@ namespace tubex
 
   bool CtcDeriv::contractFwd(Tube& x, const Tube& v, const Interval& x0) // temporal forward
   {
-    checkStructures(x, v);
-    checkEmptiness(v);
+    StructureException::check(x, v);
+    EmptyException::check(v);
 
     int size = x.nbSlices();
     bool contraction = false;
@@ -72,8 +72,8 @@ namespace tubex
 
   bool CtcDeriv::contractBwd(Tube& x, const Tube& v) // temporal backward
   {
-    checkStructures(x, v);
-    checkEmptiness(v);
+    StructureException::check(x, v);
+    EmptyException::check(v);
 
     int size = x.nbSlices();
     bool contraction = false;

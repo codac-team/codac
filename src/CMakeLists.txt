@@ -26,6 +26,7 @@
     tube/exceptions/tubex_Exception.cpp
     tube/exceptions/tubex_DomainException.cpp
     tube/exceptions/tubex_EmptyException.cpp
+    tube/exceptions/tubex_StructureException.cpp
 
     graphics/vibes/vibes.cpp
     graphics/tubex_VibesFigure.cpp
@@ -52,6 +53,7 @@
     tube/exceptions/tubex_Exception.h
     tube/exceptions/tubex_DomainException.h
     tube/exceptions/tubex_EmptyException.h
+    tube/exceptions/tubex_StructureException.h
 
     graphics/tubex_VibesFigure.h
     graphics/tubex_VibesFigure_Tube.h

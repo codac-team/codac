@@ -17,7 +17,6 @@
 #include <exception>
 #include <string>
 #include <sstream>
-#include "tubex_Tube.h"
 
 namespace tubex
 {

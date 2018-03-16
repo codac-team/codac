@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcEval.h"
-#include "tubex_DomainException.h"
+#include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
 
 using namespace std;
@@ -29,8 +29,8 @@ namespace tubex
 
   bool CtcEval::contract(Interval& t, Interval& z, Tube& y, const Tube& w, bool propagation)
   {
-    checkStructures(y, w);
-    checkEmptiness(w);
+    StructureException::check(y, w);
+    EmptyException::check(w);
     
     bool inconsistency = false;
     m_bisection_required = false;

@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcArithmetic.h"
-#include "tubex_DomainException.h"
+#include "tubex_StructureException.h"
 #include "ibex_CtcFwdBwd.h"
 
 using namespace std;
@@ -22,7 +22,7 @@ namespace tubex
   #define func_ctc_unary(y, x, f, bwd_f) \
       bool contraction = false; \
       bool local_contraction; \
-      checkStructures(x, y); \
+      StructureException::check(x, y); \
       for(int i = 0 ; i < x.nbSlices() ; i++) \
       { \
         do \
@@ -40,7 +40,7 @@ namespace tubex
   #define func_ctc_unary_param(y, x, param, f, bwd_f) \
       bool contraction = false; \
       bool local_contraction; \
-      checkStructures(x, y); \
+      StructureException::check(x, y); \
       for(int i = 0 ; i < x.nbSlices() ; i++) \
       { \
         do \
@@ -58,8 +58,8 @@ namespace tubex
   #define func_ctc_binary(c, a, b, f, bwd_f) \
       bool contraction = false; \
       bool local_contraction; \
-      checkStructures(c, a); \
-      checkStructures(c, b); \
+      StructureException::check(c, a); \
+      StructureException::check(c, b); \
       for(int i = 0 ; i < a.nbSlices() ; i++) \
       { \
         do \
@@ -102,7 +102,7 @@ namespace tubex
 
   bool CtcArithmetic::contract(Tube& x1, Tube& x2, const Function& f)
   {
-    checkStructures(x1, x2);
+    StructureException::check(x1, x2);
 
     if(f.nb_arg() != 2)
       cout << "contract: wrong argument number" << endl;
@@ -126,8 +126,8 @@ namespace tubex
 
   bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, const Function& f)
   {
-    checkStructures(x1, x2);
-    checkStructures(x1, x3);
+    StructureException::check(x1, x2);
+    StructureException::check(x1, x3);
 
     if(f.nb_arg() != 3)
       cout << "contract: wrong argument number" << endl;
@@ -151,9 +151,9 @@ namespace tubex
 
   bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, const Function& f)
   {
-    checkStructures(x1, x2);
-    checkStructures(x1, x3);
-    checkStructures(x1, x4);
+    StructureException::check(x1, x2);
+    StructureException::check(x1, x3);
+    StructureException::check(x1, x4);
 
     if(f.nb_arg() != 4)
       cout << "contract: wrong argument number" << endl;
@@ -177,10 +177,10 @@ namespace tubex
 
   bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, const Function& f)
   {
-    checkStructures(x1, x2);
-    checkStructures(x1, x3);
-    checkStructures(x1, x4);
-    checkStructures(x1, x5);
+    StructureException::check(x1, x2);
+    StructureException::check(x1, x3);
+    StructureException::check(x1, x4);
+    StructureException::check(x1, x5);
 
     if(f.nb_arg() != 5)
       cout << "contract: wrong argument number" << endl;
@@ -204,11 +204,11 @@ namespace tubex
 
   bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, const Function& f)
   {
-    checkStructures(x1, x2);
-    checkStructures(x1, x3);
-    checkStructures(x1, x4);
-    checkStructures(x1, x5);
-    checkStructures(x1, x6);
+    StructureException::check(x1, x2);
+    StructureException::check(x1, x3);
+    StructureException::check(x1, x4);
+    StructureException::check(x1, x5);
+    StructureException::check(x1, x6);
 
     if(f.nb_arg() != 6)
       cout << "contract: wrong argument number" << endl;
@@ -232,12 +232,12 @@ namespace tubex
 
   bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, const Function& f)
   {
-    checkStructures(x1, x2);
-    checkStructures(x1, x3);
-    checkStructures(x1, x4);
-    checkStructures(x1, x5);
-    checkStructures(x1, x6);
-    checkStructures(x1, x7);
+    StructureException::check(x1, x2);
+    StructureException::check(x1, x3);
+    StructureException::check(x1, x4);
+    StructureException::check(x1, x5);
+    StructureException::check(x1, x6);
+    StructureException::check(x1, x7);
 
     if(f.nb_arg() != 7)
       cout << "contract: wrong argument number" << endl;
@@ -261,13 +261,13 @@ namespace tubex
 
   bool CtcArithmetic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, const Function& f)
   {
-    checkStructures(x1, x2);
-    checkStructures(x1, x3);
-    checkStructures(x1, x4);
-    checkStructures(x1, x5);
-    checkStructures(x1, x6);
-    checkStructures(x1, x7);
-    checkStructures(x1, x8);
+    StructureException::check(x1, x2);
+    StructureException::check(x1, x3);
+    StructureException::check(x1, x4);
+    StructureException::check(x1, x5);
+    StructureException::check(x1, x6);
+    StructureException::check(x1, x7);
+    StructureException::check(x1, x8);
 
     if(f.nb_arg() != 8)
       cout << "contract: wrong argument number" << endl;

@@ -40,7 +40,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  void checkEmptiness(const Subtube& x)
+  void EmptyException::check(const Subtube& x)
   {
     if(x.isEmpty())
       throw EmptyException(x);

@@ -25,8 +25,7 @@ namespace tubex
   /**
    * \brief Domain error exception.
    *
-   * Thrown when two tubes do not share the same domain
-   * or have a different data structure.
+   * Thrown when an access to a tube is impossible.
    */
   class DomainException : public Exception
   {
@@ -35,13 +34,12 @@ namespace tubex
       DomainException(const Subtube& x, int slice_index);
       DomainException(const Subtube& x, double t);
       DomainException(const Subtube& x, const ibex::Interval& intv_t);
-      DomainException(const Subtube& x1, const Subtube& x2);
+      // todo: equivalent constructor for Tube class
+        
+      static void check(const Subtube& x, int slice_index);
+      static void check(const Subtube& x, double t);
+      static void check(const Subtube& x, const ibex::Interval& intv_t);
   };
-
-  void checkDomain(const Subtube& x, int slice_index);
-  void checkDomain(const Subtube&, double t);
-  void checkDomain(const Subtube& x, const ibex::Interval& intv_t);
-  void checkStructures(const Subtube& x1, const Subtube& x2);
 }
 
 #endif

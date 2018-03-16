@@ -32,15 +32,16 @@ namespace tubex
 
       // Definition
       Subtube();
-      Subtube(const Subtube& x);
       Subtube(const ibex::Interval& domain, const ibex::Interval& value);
+      Subtube(const ibex::Interval& domain, double timestep, const ibex::Interval& value);
+      Subtube(const Subtube& x);
       Subtube(const Subtube& x, const ibex::Interval& value);
       ~Subtube();
       const ibex::Interval& domain() const;
 
       // Slices structure
       int nbSlices() const;
-      ibex::IntervalVector sliceBox(int slice_id) const;
+      const ibex::IntervalVector sliceBox(int slice_id) const;
       bool isSlice() const;
       Subtube* getSlice(int slice_id);
       const Subtube* getSlice(int slice_id) const;
@@ -49,7 +50,7 @@ namespace tubex
       double index2input(int slice_id) const;
       const ibex::Interval& sliceDomain(int slice_id) const;
       const ibex::Interval& sliceDomain(double t) const;
-      void sample(int slice_id);
+      void sampleSlice(double timestep = 0.);
 
       // Access values
       double volume() const;
@@ -73,6 +74,7 @@ namespace tubex
       bool operator!=(const Subtube& x) const;
 
       // Setting values
+      void set(const ibex::Interval& y);
       void set(const ibex::Interval& y, int slice_id);
       void setEmpty();
       bool contract(const ibex::Interval& y, int slice_id);
@@ -136,16 +138,16 @@ namespace tubex
 
       // Subtube structure (no mutable needs)
       ibex::Interval m_domain;
-      Subtube *m_first_subtube, *m_second_subtube;
-      short int m_slices_number;
+      Subtube *m_first_subtube = NULL, *m_second_subtube = NULL;
+      short int m_slices_number = 1;
 
       // Subtube attributes ('mutable' required: values may be updated from const methods)
       mutable double m_volume;
       mutable ibex::Interval m_image;
       mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
       mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
-      mutable bool m_tree_computation_needed;
-      mutable bool m_primitive_computation_needed;
+      mutable bool m_tree_computation_needed = true;
+      mutable bool m_primitive_computation_needed = true;
   };
 }
 

@@ -44,44 +44,21 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DomainException::DomainException(const Subtube& x1, const Subtube& x2)
-  {
-    ostringstream os;
-    os << "unable to perform an operation over tubes of different structure";
-
-    if(x1.nbSlices() != x2.nbSlices())
-      os << endl << "Subtubes of different slices number: " 
-         << "n1=" << x1.nbSlices() << " and n2=" << x2.nbSlices();
-
-    if(x1.domain() != x2.domain())
-      os << endl << "Subtubes of different domains: " 
-         << "[t1]=" << x1.domain() << " and [t2]=" << x2.domain();
-
-    os << endl;
-    m_what_msg = os.str();
-  }
-
-  void checkDomain(const Subtube& x, int slice_index)
+  void check(const Subtube& x, int slice_index)
   {
     if(slice_index < 0 || slice_index > x.nbSlices() - 1)
       throw DomainException(x, slice_index);
   }
 
-  void checkDomain(const Subtube& x, double t)
+  void check(const Subtube& x, double t)
   {
     if(!x.domain().contains(t))
       throw DomainException(x, t);
   }
 
-  void checkDomain(const Subtube& x, const Interval& intv_t)
+  void check(const Subtube& x, const Interval& intv_t)
   {
     if(intv_t != x.domain() && !intv_t.is_interior_subset(x.domain()))
       throw DomainException(x, intv_t);
-  }
-
-  void checkStructures(const Subtube& x1, const Subtube& x2)
-  {
-    if(x1.nbSlices() != x2.nbSlices() || x1.domain() != x2.domain())
-      throw DomainException(x1, x2);
   }
 }

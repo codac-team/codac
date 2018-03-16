@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Tube arithmetic
+ *  tubex-lib - Subtube arithmetic
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -13,71 +13,71 @@
 #ifndef TUBEX_ARITHMETIC
 #define TUBEX_ARITHMETIC
 
-#include "tubex_Tube.h"
+#include "tubex_Subtube.h"
 #include "ibex_Interval.h"
 
 namespace tubex
 {
-  Tube operator+(const Tube& x);
-  Tube operator+(const Tube& x1, const Tube& x2);
-  Tube operator+(const Tube& x1, double x2);
-  Tube operator+(double x1, const Tube& x2);
-  Tube operator+(const Tube& x1, const ibex::Interval& x2);
-  Tube operator+(const ibex::Interval& x1, const Tube& x2);
+  Subtube operator+(const Subtube& x);
+  Subtube operator+(const Subtube& x1, const Subtube& x2);
+  Subtube operator+(const Subtube& x1, double x2);
+  Subtube operator+(double x1, const Subtube& x2);
+  Subtube operator+(const Subtube& x1, const ibex::Interval& x2);
+  Subtube operator+(const ibex::Interval& x1, const Subtube& x2);
 
-  Tube operator-(const Tube& x);
-  Tube operator-(const Tube& x1, const Tube& x2);
-  Tube operator-(const Tube& x1, double x2);
-  Tube operator-(double x1, const Tube& x2);
-  Tube operator-(const Tube& x1,  const ibex::Interval& x2);
-  Tube operator-(const ibex::Interval& x1, const Tube& x2);
+  Subtube operator-(const Subtube& x);
+  Subtube operator-(const Subtube& x1, const Subtube& x2);
+  Subtube operator-(const Subtube& x1, double x2);
+  Subtube operator-(double x1, const Subtube& x2);
+  Subtube operator-(const Subtube& x1,  const ibex::Interval& x2);
+  Subtube operator-(const ibex::Interval& x1, const Subtube& x2);
 
-  Tube operator*(const Tube& x1, const Tube& x2);
-  Tube operator*(const Tube& x1, double x2);
-  Tube operator*(double x1, const Tube& x2);
-  Tube operator*(const ibex::Interval& x1, const Tube& x2);
-  Tube operator*(const Tube& x1, const ibex::Interval& x2);
+  Subtube operator*(const Subtube& x1, const Subtube& x2);
+  Subtube operator*(const Subtube& x1, double x2);
+  Subtube operator*(double x1, const Subtube& x2);
+  Subtube operator*(const ibex::Interval& x1, const Subtube& x2);
+  Subtube operator*(const Subtube& x1, const ibex::Interval& x2);
 
-  Tube operator/(const Tube& x1, const Tube& x2);
-  Tube operator/(const Tube& x1, double x2);
-  Tube operator/(double x1, const Tube& x2);
-  Tube operator/(const ibex::Interval& x1, const Tube& x2);
-  Tube operator/(const Tube& x1, const ibex::Interval& x2);
+  Subtube operator/(const Subtube& x1, const Subtube& x2);
+  Subtube operator/(const Subtube& x1, double x2);
+  Subtube operator/(double x1, const Subtube& x2);
+  Subtube operator/(const ibex::Interval& x1, const Subtube& x2);
+  Subtube operator/(const Subtube& x1, const ibex::Interval& x2);
 
-  Tube operator|(const Tube& x1, const Tube& x2);
-  Tube operator|(const Tube& x1, double x2);
-  Tube operator|(double x1, const Tube& x2);
-  Tube operator|(const ibex::Interval& x1, const Tube& x2);
-  Tube operator|(const Tube& x1, const ibex::Interval& x2);
+  Subtube operator|(const Subtube& x1, const Subtube& x2);
+  Subtube operator|(const Subtube& x1, double x2);
+  Subtube operator|(double x1, const Subtube& x2);
+  Subtube operator|(const ibex::Interval& x1, const Subtube& x2);
+  Subtube operator|(const Subtube& x1, const ibex::Interval& x2);
 
-  Tube operator&(const Tube& x1, const Tube& x2);
-  Tube operator&(const Tube& x1, double x2);
-  Tube operator&(double x1, const Tube& x2);
-  Tube operator&(const ibex::Interval& x1, const Tube& x2);
-  Tube operator&(const Tube& x1, const ibex::Interval& x2);
+  Subtube operator&(const Subtube& x1, const Subtube& x2);
+  Subtube operator&(const Subtube& x1, double x2);
+  Subtube operator&(double x1, const Subtube& x2);
+  Subtube operator&(const ibex::Interval& x1, const Subtube& x2);
+  Subtube operator&(const Subtube& x1, const ibex::Interval& x2);
 
-  Tube abs(const Tube& x);
-  Tube sqr(const Tube& x);
-  Tube sqrt(const Tube& x);
-  Tube pow(const Tube& x, int p);
-  Tube pow(const Tube& x, double p);
-  Tube pow(const Tube &x, const ibex::Interval& p);
-  Tube root(const Tube& x, int p);
-  Tube exp(const Tube& x);
-  Tube log(const Tube& x);
-  Tube cos(const Tube& x);
-  Tube sin(const Tube& x);
-  Tube tan(const Tube& x);
-  Tube acos(const Tube& x);
-  Tube asin(const Tube& x);
-  Tube atan(const Tube& x);
-  Tube cosh(const Tube& x);
-  Tube sinh(const Tube& x);
-  Tube tanh(const Tube& x);
-  Tube acosh(const Tube& x);
-  Tube asinh(const Tube& x);
-  Tube atanh(const Tube& x);
-  Tube atan2(const Tube& y, const Tube& x);
+  Subtube abs(const Subtube& x);
+  Subtube sqr(const Subtube& x);
+  Subtube sqrt(const Subtube& x);
+  Subtube pow(const Subtube& x, int p);
+  Subtube pow(const Subtube& x, double p);
+  Subtube pow(const Subtube &x, const ibex::Interval& p);
+  Subtube root(const Subtube& x, int p);
+  Subtube exp(const Subtube& x);
+  Subtube log(const Subtube& x);
+  Subtube cos(const Subtube& x);
+  Subtube sin(const Subtube& x);
+  Subtube tan(const Subtube& x);
+  Subtube acos(const Subtube& x);
+  Subtube asin(const Subtube& x);
+  Subtube atan(const Subtube& x);
+  Subtube cosh(const Subtube& x);
+  Subtube sinh(const Subtube& x);
+  Subtube tanh(const Subtube& x);
+  Subtube acosh(const Subtube& x);
+  Subtube asinh(const Subtube& x);
+  Subtube atanh(const Subtube& x);
+  Subtube atan2(const Subtube& y, const Subtube& x);
 }
 
 #endif

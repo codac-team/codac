@@ -25,8 +25,8 @@ namespace tubex
     /** Base: see file tubex_Tube_base.cpp **/
 
       // Definition
-      Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& value = ibex::Interval::ALL_REALS);
       Tube(const ibex::Interval& domain, const ibex::Interval& value);
+      Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& value = ibex::Interval::ALL_REALS);
       Tube(const Tube& x, const ibex::Interval& value);
       Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
@@ -59,6 +59,7 @@ namespace tubex
       bool encloses(const Trajectory& x) const;
 
       // Setting values
+      void set(const ibex::Interval& y);
       void set(const ibex::Interval& y, int slice_id);
       void setEmpty();
       bool contract(const ibex::Interval& y, int slice_id);
@@ -103,7 +104,6 @@ namespace tubex
 
     /** Basics: see file tubex_Tube_base.cpp **/
 
-      void createFromSpecifications(const ibex::Interval& domain, double timestep, const ibex::Interval& value = ibex::Interval::ALL_REALS);
       void createTube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
 
@@ -115,7 +115,7 @@ namespace tubex
 
       std::vector<Subtube*> m_v_slices;
       std::map<int,ibex::Interval> m_m_output_gates; // map<slice_id,gate_value> ; slice_id=-1 <=> init value of the tube
-      std::string m_name;
+      std::string m_name = "";
 
       static int nb_tubes;
       static std::vector<std::string> v_tubes_names;

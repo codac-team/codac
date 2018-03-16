@@ -15,6 +15,7 @@
 #include "exceptions/tubex_Exception.h"
 #include "exceptions/tubex_DomainException.h"
 #include "exceptions/tubex_EmptyException.h"
+#include "exceptions/tubex_StructureException.h"
 #include <iostream>
 #include <limits>
 #include <iomanip> // for setprecision()
@@ -33,59 +34,87 @@ namespace tubex
 
       Subtube::Subtube()
       {
+        
+      }
+      
+      Subtube::Subtube(const Interval& domain, const Interval& value) : m_domain(domain), m_image(value)
+      {
+        if(domain.is_unbounded())
+          throw Exception("Subtube constructor", "unbounded domain");
+      }
 
+      Subtube::Subtube(const Interval& domain, double timestep, const Interval& value) : m_domain(domain), m_image(value)
+      {
+        if(domain.is_unbounded())
+          throw Exception("Subtube constructor", "unbounded domain");
+        if(timestep <= 0.)
+          throw Exception("Subtube constructor", "invalid timestep");
+
+        sampleSlice(timestep);
       }
 
       Subtube::Subtube(const Subtube& x)
       {
-
-      }
-      
-      Subtube::Subtube(const Interval& domain, const Interval& value)
-      {
-
+        *this = x;
       }
       
       Subtube::Subtube(const Subtube& x, const Interval& value)
       {
-
+        *this = x;
+        set(value);
       }
       
       Subtube::~Subtube()
       {
-
+        if(m_first_subtube != NULL) delete m_first_subtube;
+        if(m_second_subtube != NULL) delete m_second_subtube;
       }
       
       const Interval& Subtube::domain() const
       {
-
+        return m_domain;
       }  
 
     // Slices structure
 
       int Subtube::nbSlices() const
       {
-
+        return m_slices_number;
       }
       
-      IntervalVector Subtube::sliceBox(int slice_id) const
+      const IntervalVector Subtube::sliceBox(int slice_id) const
       {
-
+        IntervalVector box(2);
+        const Subtube *slice = getSlice(slice_id);
+        box[0] = slice->domain();
+        box[1] = slice->image();
+        return box;
       }
       
       bool Subtube::isSlice() const
       {
-
+        return m_slices_number == 1;
       }
       
       Subtube* Subtube::getSlice(int slice_id)
       {
+        DomainException::check(*this, slice_id);
 
+        if(isSlice())
+          return this;
+
+        else
+        {
+          if(slice_id >= m_first_subtube->nbSlices())
+            return m_second_subtube->getSlice(slice_id - m_first_subtube->nbSlices());
+          else
+            return m_first_subtube->getSlice(slice_id);
+        }
       }
       
       const Subtube* Subtube::getSlice(int slice_id) const
       {
-
+        return const_cast<Subtube*>(getSlice(slice_id));
       }
       
       void Subtube::getSlices(vector<Subtube*>& v_slices) const
@@ -95,26 +124,38 @@ namespace tubex
       
       int Subtube::input2index(double t) const
       {
+        DomainException::check(*this, t);
+
 
       }
       
       double Subtube::index2input(int slice_id) const
       {
+        DomainException::check(*this, slice_id);
+
 
       }
       
       const Interval& Subtube::sliceDomain(int slice_id) const
       {
+        DomainException::check(*this, slice_id);
+
 
       }
       
       const Interval& Subtube::sliceDomain(double t) const
       {
+        DomainException::check(*this, t);
+
 
       }
       
-      void Subtube::sample(int slice_id)
+      void Subtube::sampleSlice(double timestep)
       {
+        if(!isSlice())
+          throw Exception("Subtube::sampleSlice()", "already sampled");
+        if(timestep <= 0.)
+          throw Exception("Subtube constructor", "invalid timestep");
 
       }
 
@@ -127,6 +168,8 @@ namespace tubex
       
       double Subtube::dist(const Subtube& x) const
       {
+        StructureException::check(*this, x);
+
 
       }
       
@@ -208,6 +251,11 @@ namespace tubex
       }
     
     // Setting values
+
+      void Subtube::set(const Interval& y)
+      {
+
+      }
 
       void Subtube::set(const Interval& y, int slice_id)
       {

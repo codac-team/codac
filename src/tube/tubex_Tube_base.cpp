@@ -24,18 +24,18 @@ namespace tubex
   // Public methods
 
     // Definition
+    
+      Tube::Tube(const Interval& domain, const Interval& value) : Subtube(domain, value)
+      {
 
-      Tube::Tube(const Interval& domain, double timestep, const Interval& value)
+      }
+
+      Tube::Tube(const Interval& domain, double timestep, const Interval& value) : Subtube(domain, timestep, value)
       {
 
       }
     
-      Tube::Tube(const Interval& domain, const Interval& value)
-      {
-
-      }
-    
-      Tube::Tube(const Tube& x, const Interval& value)
+      Tube::Tube(const Tube& x, const Interval& value) : Subtube(x, value)
       {
 
       }
@@ -163,6 +163,11 @@ namespace tubex
 
     // Setting values
 
+      void Tube::set(const Interval& y)
+      {
+
+      }
+
       void Tube::set(const Interval& y, int slice_id)
       {
 
@@ -235,11 +240,6 @@ namespace tubex
   // Protected methods
 
     // Definition
-
-      void Tube::createFromSpecifications(const Interval& domain, double timestep, const Interval& value)
-      {
-        
-      }
 
       void Tube::createTube(const vector<Interval>& v_slices_domains, const Interval& value)
       {
