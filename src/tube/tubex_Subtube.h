@@ -110,7 +110,6 @@ namespace tubex
       Subtube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
 
       // Slices/tree structure
-      void createFromSlicesVector(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value = ibex::Interval::ALL_REALS);
       const Subtube* getFirstSubtube() const;
       const Subtube* getSecondSubtube() const;
       void getSubtubeNodes(std::vector<Subtube*> &v_nodes);

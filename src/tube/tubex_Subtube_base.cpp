@@ -589,6 +589,8 @@ namespace tubex
 
         else // fast union
         {
+          // todo: study the strategy of union: all nodes or slices only with further updates
+
           vector<Subtube*> this_nodes;
           vector<const Subtube*> x_nodes;
           getSubtubeNodes(this_nodes);
@@ -598,27 +600,66 @@ namespace tubex
             this_nodes[i]->unionWith_localUpdate(x_nodes[i]);
         }
 
-        // todo: check the interest of the following
+        // todo: check the usefulness of the following
         flagFutureTreeUpdate();
         return *this;
       }
       
       Subtube& Subtube::operator|=(const Trajectory& x)
       {
+        // todo: study the strategy of union: all nodes or slices only with further updates
+          
         for(int i = 0 ; i < nbSlices() ; i++)
           inflate(x[sliceDomain(i)], i);
       }
       
       Subtube& Subtube::operator&=(const Subtube& x)
       {
+        // todo: study the strategy of union: all nodes or slices only with further updates
 
+        // Case of tubes of different structure
+        // todo: better check of different structure. The following is not reliable
+        if(nbSlices() != x.nbSlices() || domain() != x.domain())
+        {
+          for(int i = 0 ; i < nbSlices() ; i++)
+          {
+            Interval this_t = sliceDomain(i);
+            Interval this_y = (*this)[i];
+
+            Interval x_t = x.domain() & this_t;
+
+            if(!x_t.is_empty())
+            {
+              Interval x_y = x[x_t];
+              set(this_y & x_y, i);
+            }
+          }
+        }
+
+        else // fast union
+        {
+          // todo: study the strategy of union: all nodes or slices only with further updates
+
+          vector<Subtube*> this_nodes;
+          vector<const Subtube*> x_nodes;
+          getSubtubeNodes(this_nodes);
+          x.getSubtubeNodes(x_nodes);
+
+          for(int i = 0 ; i < this_nodes.size() ; i++)
+            this_nodes[i]->intersectWith_localUpdate(x_nodes[i]);
+        }
+
+        // todo: check the usefulness of the following
+        flagFutureTreeUpdate();
+        return *this;
       }
 
     // String
 
       ostream& operator<<(ostream& str, const Subtube& x)
       {
-
+        cout << "Subtube: t=" << x.domain() << ", y=" << x.image() << flush;
+        return str;
       }
 
   // Protected methods
@@ -638,43 +679,94 @@ namespace tubex
       }
 
     // Slices/tree structure
-
-      void Subtube::createFromSlicesVector(const vector<Interval>& v_slices_domains, const Interval& value)
-      {
-
-      }
       
       const Subtube* Subtube::getFirstSubtube() const
       {
-
+        return m_first_subtube;
       }
           
       const Subtube* Subtube::getSecondSubtube() const
       {
-
+        return m_second_subtube;
       }
           
       void Subtube::getSubtubeNodes(vector<Subtube*> &v_nodes)
       {
+        if(!isSlice())
+        {
+          m_first_subtube->getSubtubeNodes(v_nodes);
+          m_second_subtube->getSubtubeNodes(v_nodes);
+        }
 
+        v_nodes.push_back(this);
       }
       
       void Subtube::getSubtubeNodes(vector<const Subtube*> &v_nodes) const
       {
-
+        getSubtubeNodes(v_nodes);
       }
           
       void Subtube::updateTree() const
       {
-        if(!m_tree_computation_needed)
+        if(!treeUpdateNeeded())
           return;
 
+        if(isSlice())
+        {
+          // todo: volume of sliceBox()?
+          m_volume = m_domain.diam();
 
+          if(m_image.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
+            m_volume = 0.;
+
+          else if(m_image.is_unbounded())
+            m_volume = INFINITY;
+
+          else
+            m_volume *= m_image.diam();
+
+          m_enclosed_bounds = make_pair(Interval(m_image.lb()), Interval(m_image.ub()));
+        }
+
+        else
+        {
+          m_first_subtube->updateTree();
+          m_second_subtube->updateTree();
+          
+          m_image = m_first_subtube->image() | m_second_subtube->image();
+          m_volume = m_first_subtube->volume() + m_second_subtube->volume();
+
+          // Enclosed bounds
+          pair<Interval,Interval> ui_past = m_first_subtube->eval();
+          pair<Interval,Interval> ui_future = m_second_subtube->eval();
+          m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
+        }
+
+        m_tree_computation_needed = false;
       }
       
       void Subtube::flagFutureTreeUpdate(int slice_id) const
       {
+        m_tree_computation_needed = true;
 
+        if(!isSlice())
+        {
+          if(slice_id == -1)
+          {
+            m_first_subtube->flagFutureTreeUpdate(-1);
+            m_second_subtube->flagFutureTreeUpdate(-1);
+          }
+
+          else
+          {
+            DomainException::check(*this, slice_id);
+            int mid_id = m_first_subtube->nbSlices();
+            if(slice_id < mid_id) m_first_subtube->flagFutureTreeUpdate(slice_id);
+            else m_second_subtube->flagFutureTreeUpdate(slice_id - mid_id);
+          }
+        }
+        
+        flagFuturePrimitiveComputation();
       }
 
       bool Subtube::treeUpdateNeeded() const
@@ -739,11 +831,26 @@ namespace tubex
 
       void Subtube::unionWith_localUpdate(const Subtube *x)
       {
+        if(treeUpdateNeeded())
+          updateTree();
+        
+        m_image |= x->image();
+        pair<Interval,Interval> eb1 = eval();
+        pair<Interval,Interval> eb2 = x->eval();
+        m_enclosed_bounds = make_pair(Interval(min(eb1.first.lb(), eb2.first.lb()), min(eb1.first.ub(), eb2.first.ub())),
+                                      Interval(max(eb1.second.lb(), eb2.second.lb()), max(eb1.second.ub(), eb2.second.ub())));
 
+        flagFuturePrimitiveComputation();
       }
       
       void Subtube::intersectWith_localUpdate(const Subtube *x)
       {
-
+        if(treeUpdateNeeded())
+          updateTree();
+        
+        m_image &= x->image();
+        // Enclosed bounds cannot be computed on this level.
+        // Synthesis has to be done from the root
+        flagFutureTreeUpdate();
       }
 }
