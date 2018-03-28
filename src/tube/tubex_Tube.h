@@ -13,22 +13,52 @@
 #ifndef TUBE_HEADER
 #define TUBE_HEADER
 
-#include "tubex_TubeNode.h"
+#include "tubex_TubeTree.h"
+
+#define SERIALIZATION_VERSION 2
 
 namespace tubex
 {
-  class Tube : public TubeNode
+  class Tube : public TubeTree
   {
     public:
 
-      Tube(const ibex::Interval& domain);
-      ibex::Interval operator()(double t) const;
+    /** Base: **/
 
-    protected:
+      // Definition
+      Tube(double timestep, const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      Tube(const std::string& binary_file_name);
+      Tube(const std::string& binary_file_name, Trajectory& traj);
+      Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
+      std::pair<Tube,Tube> bisect(const Tube& derivative, double t, float ratio = 0.55) const;
 
-    /** Class variables **/
+      // Slices structure
+      void sample(int subslices_nb);
+      void sample(const std::vector<ibex::Interval>& v_slices_domains);
+      void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
 
-      TubeNode *m_first_tubenode = NULL, *m_second_tubenode = NULL;
+    /** Contractors: **/
+
+      bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
+      bool ctcBwd(const Tube& derivative);
+      bool ctcFwdBwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
+      bool ctcEval(const Tube& derivative, ibex::Interval& t, ibex::Interval& z, bool propagate = true);
+      bool ctcEval(const Tube& derivative, ibex::Interval& t, const ibex::Interval& z, bool propagate = true);
+      bool ctcEval(const Tube& derivative, const ibex::Interval& t, ibex::Interval& z, bool propagate = true);
+      bool ctcEval(const Tube& derivative, const ibex::Interval& t, const ibex::Interval& z, bool propagate = true);
+      bool ctcOut(const ibex::Interval& t, const ibex::Interval& z);
+      bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2) const;
+      bool ctcIntertemporal(ibex::Interval& z, ibex::Interval& t1, ibex::Interval& t2) const;
+      bool ctcPeriodic(const ibex::Interval& period);
+
+    /** Serialization: **/
+
+      bool serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
+      bool serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
+      bool serialize(const std::string& binary_file_name, const std::vector<const Trajectory&>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
+      void deserialize(const std::string& binary_file_name, Trajectory& traj);
+      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
   };
 }
 

@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - TubeNode class
+ *  tubex-lib - Tube class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,30 +10,26 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_TubeNode.h"
+#include "tubex_Tube.h"
+#include "tubex_TubeSlice.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  /*TubeNode::TubeNode(const Interval& domain, const Interval& codomain) : m_domain(domain), m_codomain(codomain)
+  /*Tube::Tube(const Interval& domain) : TubeNode(domain, Interval::ALL_REALS)
   {
-    
+    m_first_tubenode = new TubeSlice(domain, Interval::ALL_REALS);
   }
 
-  const ibex::Interval& TubeNode::domain() const
+  Interval Tube::operator()(double t) const
   {
-    return m_domain;
+    return Interval::ALL_REALS;
   }
 
-  const ibex::Interval& TubeNode::codomain() const
+  void Tube::sample(double t, const Interval& gate)
   {
-    return m_codomain;
-  }
 
-  const double TubeNode::volume() const
-  {
-    return m_volume;
   }*/
 }

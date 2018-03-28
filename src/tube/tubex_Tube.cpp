@@ -11,20 +11,11 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_Tube.h"
-#include "tubex_TubeSlice.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  Tube::Tube(const Interval& domain) : TubeNode(domain, Interval::ALL_REALS)
-  {
-    m_first_tubenode = new TubeSlice(domain, Interval::ALL_REALS);
-  }
 
-  Interval Tube::operator()(double t) const
-  {
-    return Interval::ALL_REALS;
-  }
 }

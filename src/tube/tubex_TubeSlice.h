@@ -21,18 +21,24 @@ namespace tubex
   {
     public:
 
-      TubeSlice(const ibex::Interval& domain, const ibex::Interval& codomain);
+    /** Base: **/
+
+      // Definition
+      TubeSlice(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       ~TubeSlice();
 
-      TubeSlice* nextSlice() const;
-      void setNextSlice(TubeSlice *next_slice);
+      // Slices structure
       TubeSlice* prevSlice() const;
       void setPrevSlice(TubeSlice *prev_slice);
-
+      TubeSlice* nextSlice() const;
+      void setNextSlice(TubeSlice *next_slice);
       const ibex::Interval inputGate() const;
       const ibex::Interval outputGate() const;
       void setInputGate(const ibex::Interval& input_gate);
       void setOuputGate(const ibex::Interval& output_gate);
+
+      // Access values
+      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
     protected:
 
