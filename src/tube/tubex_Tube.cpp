@@ -10,26 +10,21 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TUBE_HEADER
-#define TUBE_HEADER
+#include "tubex_Tube.h"
+#include "tubex_TubeSlice.h"
 
-#include "tubex_TubeNode.h"
+using namespace std;
+using namespace ibex;
 
 namespace tubex
 {
-  class Tube : public TubeNode
+  Tube::Tube(const Interval& domain) : TubeNode(domain, Interval::ALL_REALS)
   {
-    public:
+    m_first_tubenode = new TubeSlice(domain, Interval::ALL_REALS);
+  }
 
-      Tube(const ibex::Interval& domain);
-      ibex::Interval operator()(double t) const;
-
-    protected:
-
-    /** Class variables **/
-
-      TubeNode *m_first_tubenode = NULL, *m_second_tubenode = NULL;
-  };
+  Interval Tube::operator()(double t) const
+  {
+    return Interval::ALL_REALS;
+  }
 }
-
-#endif

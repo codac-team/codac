@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Tube class
+ *  tubex-lib - TubeNode class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,26 +10,30 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TUBE_HEADER
-#define TUBE_HEADER
-
 #include "tubex_TubeNode.h"
+
+using namespace std;
+using namespace ibex;
 
 namespace tubex
 {
-  class Tube : public TubeNode
+  TubeNode::TubeNode(const Interval& domain, const Interval& codomain) : m_domain(domain), m_codomain(codomain)
   {
-    public:
+    
+  }
 
-      Tube(const ibex::Interval& domain);
-      ibex::Interval operator()(double t) const;
+  const ibex::Interval& TubeNode::domain() const
+  {
+    return m_domain;
+  }
 
-    protected:
+  const ibex::Interval& TubeNode::codomain() const
+  {
+    return m_codomain;
+  }
 
-    /** Class variables **/
-
-      TubeNode *m_first_tubenode = NULL, *m_second_tubenode = NULL;
-  };
+  const double TubeNode::volume() const
+  {
+    return m_volume;
+  }
 }
-
-#endif
