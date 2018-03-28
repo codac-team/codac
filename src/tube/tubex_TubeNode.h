@@ -66,7 +66,7 @@ namespace tubex
       bool encloses(const Trajectory& x) const;
 
       // Setting values
-      void set(const ibex::Interval& codomain);
+      void set(const ibex::Interval& y);
       void set(const ibex::Interval& y, int slice_id);
       void setEmpty();
       bool contract(const ibex::Interval& y, int slice_id);

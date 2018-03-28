@@ -40,6 +40,9 @@ namespace tubex
       // Access values
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
+      // String
+      friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
+
     protected:
 
     /** Class variables **/

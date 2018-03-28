@@ -38,6 +38,9 @@ namespace tubex
       void sample(const std::vector<ibex::Interval>& v_slices_domains);
       void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
 
+      // String
+      friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
+
     /** Contractors: **/
 
       bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);

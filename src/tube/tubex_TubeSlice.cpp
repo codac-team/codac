@@ -123,4 +123,12 @@ namespace tubex
     {
       return make_pair(m_codomain, m_codomain);
     }
+
+    // String
+
+    ostream& operator<<(ostream& str, const TubeSlice& x)
+    {
+      cout << "TubeSlice: t=" << x.domain() << ", y=" << x.codomain() << flush;
+      return str;
+    }
 }

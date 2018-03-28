@@ -18,4 +18,9 @@ using namespace ibex;
 namespace tubex
 {
 
+
+  ostream& operator<<(ostream& str, const Tube& x)
+  {
+
+  }
 }
