@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_DomainException.h"
-#include "tubex_Subtube.h"
+#include "tubex_TubeNode.h"
 #include <string>
 #include <sstream>
 
@@ -20,7 +20,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  DomainException::DomainException(const Subtube& x, int slice_index)
+  DomainException::DomainException(const TubeNode& x, int slice_index)
   {
     ostringstream os;
     os << "slice index out of range: ";
@@ -28,7 +28,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DomainException::DomainException(const Subtube& x, double t)
+  DomainException::DomainException(const TubeNode& x, double t)
   {
     ostringstream os;
     os << "input out of range: ";
@@ -36,7 +36,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DomainException::DomainException(const Subtube& x, const Interval& intv_t)
+  DomainException::DomainException(const TubeNode& x, const Interval& intv_t)
   {
     ostringstream os;
     os << "interval input out of range: ";
@@ -44,19 +44,19 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  void check(const Subtube& x, int slice_index)
+  void check(const TubeNode& x, int slice_index)
   {
     if(slice_index < 0 || slice_index > x.nbSlices() - 1)
       throw DomainException(x, slice_index);
   }
 
-  void check(const Subtube& x, double t)
+  void check(const TubeNode& x, double t)
   {
     if(!x.domain().contains(t))
       throw DomainException(x, t);
   }
 
-  void check(const Subtube& x, const Interval& intv_t)
+  void check(const TubeNode& x, const Interval& intv_t)
   {
     if(intv_t != x.domain() && !intv_t.is_interior_subset(x.domain()))
       throw DomainException(x, intv_t);

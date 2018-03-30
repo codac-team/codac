@@ -30,40 +30,41 @@ namespace tubex
       // Definition
       TubeNode(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       TubeNode(const TubeNode& x, const ibex::Interval& codomain);
+      TubeNode(const TubeNode& x);
       const ibex::Interval& domain() const;
 
       // Slices structure
       int nbSlices() const;
-      bool isSlice() const;
-      TubeSlice* getSlice(int slice_id);
-      const TubeSlice* getSlice(int slice_id) const;
-      TubeSlice* getSlice(double t);
-      const TubeSlice* getSlice(double t) const;
-      void getSlices(std::vector<const TubeSlice*>& v_slices) const;
-      int input2index(double t) const;
+      virtual bool isSlice() const = 0;
+      virtual TubeSlice* getSlice(int slice_id) = 0;
+      virtual const TubeSlice* getSlice(int slice_id) const = 0;
+      virtual TubeSlice* getSlice(double t) = 0;
+      virtual const TubeSlice* getSlice(double t) const = 0;
+      virtual void getSlices(std::vector<const TubeSlice*>& v_slices) const = 0;
+      virtual int input2index(double t) const = 0;
       double index2input(int slice_id) const;
-      const ibex::IntervalVector sliceBox(int slice_id) const;
-      const ibex::Interval& sliceDomain(int slice_id) const;
-      const ibex::Interval& sliceDomain(double t) const;
+      virtual const ibex::IntervalVector sliceBox(int slice_id) const = 0;
+      virtual const ibex::Interval& sliceDomain(int slice_id) const = 0;
+      virtual const ibex::Interval& sliceDomain(double t) const = 0;
 
       // Access values
-      const ibex::Interval& codomain() const;
-      double volume() const;
+      virtual const ibex::Interval& codomain() const = 0;
+      virtual double volume() const = 0;
       double dist(const TubeNode& x) const;
       const ibex::Interval& operator()(int slice_id) const;
       ibex::Interval interpol(double t, const TubeNode& derivative) const;
       ibex::Interval interpol(const ibex::Interval& t, const TubeNode& derivative) const;
       std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& t, const TubeNode& derivative) const;
-      ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      virtual ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       double maxThickness() const;
-      double maxThickness(int& first_id_max_thickness) const;
-      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      virtual double maxThickness(int& first_id_max_thickness) const = 0;
+      virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
 
       // Tests
       bool isEmpty() const;
-      bool isInteriorSubset(const TubeNode& outer_tube) const;
-      bool encloses(const Trajectory& x) const;
+      virtual bool isInteriorSubset(const TubeNode& outer_tube) const = 0;
+      virtual bool encloses(const Trajectory& x) const = 0;
 
       // Setting values
       void set(const ibex::Interval& y);

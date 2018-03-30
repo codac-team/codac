@@ -18,6 +18,11 @@ using namespace ibex;
 
 namespace tubex
 {
+    
+    bool TubeTree::isSlice() const
+    {
+      return false;
+    }
   /*Tube::Tube(const Interval& domain) : TubeNode(domain, Interval::ALL_REALS)
   {
     m_first_tubenode = new TubeSlice(domain, Interval::ALL_REALS);
@@ -32,4 +37,13 @@ namespace tubex
   {
 
   }*/
+    
+    Interval TubeTree::invert(const Interval& y, const Interval& t) const
+    {
+      if(!m_domain.intersects(t) || !codomain().intersects(y))
+        return Interval::EMPTY_SET;
+
+      else
+        return m_first_tubenode->invert(y, t) | m_second_tubenode->invert(y, t);
+    }
 }

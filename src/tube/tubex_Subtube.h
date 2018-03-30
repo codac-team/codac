@@ -31,41 +31,52 @@ namespace tubex
     /** Base: see file tubex_Subtube_base.cpp **/
 
       // Definition
-      Subtube();
-      Subtube(const ibex::Interval& domain, const ibex::Interval& value);
-      Subtube(const ibex::Interval& domain, double timestep, const ibex::Interval& value);
-      Subtube(const Subtube& x);
-      Subtube(const Subtube& x, const ibex::Interval& value);
-      ~Subtube();
-      const ibex::Interval& domain() const;
+      Tube(const ibex::Interval& domain, const ibex::Interval& value = ibex::Interval::ALL_REALS);
+      Tube(double timestep, const ibex::Interval& domain, const ibex::Interval& value = ibex::Interval::ALL_REALS);
+      Tube(const Tube& x, const ibex::Interval& value);
+      Tube(const std::string& binary_file_name);
+      Tube(const std::string& binary_file_name, Trajectory& traj);
+      Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
+      std::pair<Tube,Tube> bisect(const Tube& derivative, double t, float ratio = 0.55) const;
 
       // Slices structure
       int nbSlices() const;
       const ibex::IntervalVector sliceBox(int slice_id) const;
       bool isSlice() const;
-      Subtube* getSlice(int slice_id);
-      const Subtube* getSlice(int slice_id) const;
-      Subtube* getSlice(double t);
-      const Subtube* getSlice(double t) const;
-      void getSlices(std::vector<const Subtube*>& v_slices) const;
+      TubeSlice* getSlice(int slice_id);
+      const TubeSlice* getSlice(int slice_id) const;
+      TubeSlice* getSlice(double t);
+      const TubeSlice* getSlice(double t) const;
+      void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
       double index2input(int slice_id) const;
       const ibex::Interval& sliceDomain(int slice_id) const;
       const ibex::Interval& sliceDomain(double t) const;
-      void sampleSlice(double timestep = 0.);
-      void sampleSlice(const std::vector<ibex::Interval>& v_slices_domains);
+
+      void sample(int subslices_nb);
+      void sample(const std::vector<ibex::Interval>& v_slices_domains);
+      void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
+      TubeSlice* nextSlice() const;
+      void setNextSlice(TubeSlice *next_slice);
+      TubeSlice* prevSlice() const;
+      void setPrevSlice(TubeSlice *prev_slice);
+      const ibex::Interval inputGate() const;
+      const ibex::Interval outputGate() const;
+      void setInputGate(const ibex::Interval& input_gate);
+      void setOuputGate(const ibex::Interval& output_gate);
 
       // Access values
       double volume() const;
-      double dist(const Subtube& x) const;
+      double dist(const Tube& x) const;
       const ibex::Interval& image() const;
-      const ibex::Interval& operator[](int slice_id) const;
-      ibex::Interval operator[](double t) const;
-      ibex::Interval operator[](const ibex::Interval& t) const;
+      const ibex::Interval& operator()(int slice_id) const;
+      ibex::Interval operator()(double t) const;
+      ibex::Interval operator()(const ibex::Interval& t) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-      ibex::Interval interpol(double t, const Subtube& derivative) const;
-      ibex::Interval interpol(const ibex::Interval& t, const Subtube& derivative) const;
-      std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& t, const Subtube& derivative) const;
+      ibex::Interval interpol(double t, const Tube& derivative) const;
+      ibex::Interval interpol(const ibex::Interval& t, const Tube& derivative) const;
+      std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& t, const Tube& derivative) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       double maxThickness() const;
@@ -73,26 +84,49 @@ namespace tubex
 
       // Tests
       bool isEmpty() const;
-      bool operator==(const Subtube& x) const;
-      bool operator!=(const Subtube& x) const;
+      bool isInteriorSubset(const Tube& outer_tube) const;
+      bool encloses(const Trajectory& x) const;
 
       // Setting values
       void set(const ibex::Interval& y);
       void set(const ibex::Interval& y, int slice_id);
       void setEmpty();
       bool contract(const ibex::Interval& y, int slice_id);
-      Subtube& inflate(const ibex::Interval& y, int slice_id);
-      Subtube& inflate(const ibex::Interval& y, double t);
-      Subtube& inflate(double rad);
+      Tube& inflate(const ibex::Interval& y, int slice_id);
+      Tube& inflate(const ibex::Interval& y, double t);
+      Tube& inflate(double rad);
 
       // Operators
-      Subtube& operator=(const Subtube& x);
-      Subtube& operator|=(const Subtube& x);
-      Subtube& operator|=(const Trajectory& x);
-      Subtube& operator&=(const Subtube& x);
+      Tube& operator=(const Tube& x);
+      Tube& operator|=(const Tube& x);
+      Tube& operator|=(const Trajectory& x);
+      Tube& operator&=(const Tube& x);
 
       // String
-      friend std::ostream& operator<<(std::ostream& str, const Subtube& x);
+      friend std::ostream& operator<<(std::ostream& str, const Tube& x);
+
+
+    /** Contractors: see file tubex_Tube_contractors.cpp **/
+
+      bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
+      bool ctcBwd(const Tube& derivative);
+      bool ctcFwdBwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
+      bool ctcEval(const Tube& derivative, ibex::Interval& t, ibex::Interval& z, bool propagate = true);
+      bool ctcEval(const Tube& derivative, ibex::Interval& t, const ibex::Interval& z, bool propagate = true);
+      bool ctcEval(const Tube& derivative, const ibex::Interval& t, ibex::Interval& z, bool propagate = true);
+      bool ctcEval(const Tube& derivative, const ibex::Interval& t, const ibex::Interval& z, bool propagate = true);
+      bool ctcOut(const ibex::Interval& t, const ibex::Interval& z);
+      bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2) const;
+      bool ctcIntertemporal(ibex::Interval& z, ibex::Interval& t1, ibex::Interval& t2) const;
+      bool ctcPeriodic(const ibex::Interval& period);
+
+    /** Serialization: see file tubex_Tube_serialization.cpp **/
+
+      bool serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
+      bool serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
+      bool serialize(const std::string& binary_file_name, const std::vector<const Trajectory&>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
+      void deserialize(const std::string& binary_file_name, Trajectory& traj);
+      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
 
     /** Integration: see file tubex_Subtube_integration.cpp **/
 
@@ -107,13 +141,14 @@ namespace tubex
     /** Base: see file tubex_Subtube_base.cpp **/
 
       // Definition
-      Subtube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
+      Tube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
+      void createTube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
 
       // Slices/tree structure
-      const Subtube* getFirstSubtube() const;
-      const Subtube* getSecondSubtube() const;
-      void getSubtubeNodes(std::vector<Subtube*> &v_nodes);
-      void getSubtubeNodes(std::vector<const Subtube*> &v_nodes) const;
+      const Tube* getFirstSubtube() const;
+      const Tube* getSecondSubtube() const;
+      void getSubtubeNodes(std::vector<Tube*> &v_nodes);
+      void getSubtubeNodes(std::vector<const Tube*> &v_nodes) const;
       void updateTree() const;
       void flagFutureTreeUpdate(int slice_id = -1) const;
       bool treeUpdateNeeded() const;
@@ -126,10 +161,14 @@ namespace tubex
       // Setting values
 
       // Operators
-      void unionWith_localUpdate(const Subtube *x);
-      void intersectWith_localUpdate(const Subtube *x);
+      void unionWith_localUpdate(const Tube *x);
+      void intersectWith_localUpdate(const Tube *x);
 
       // String
+
+    /** Contractors: see file tubex_Tube_contractors.cpp **/
+
+      void ctcEval_computeIndex(const ibex::Interval& z, const ibex::Interval& t, int& index_lb, int& index_ub);
 
     /** Integration: see file tubex_Subtube_integration.cpp **/
 

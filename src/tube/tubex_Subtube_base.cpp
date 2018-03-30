@@ -52,79 +52,10 @@ namespace tubex
         sampleSlice(timestep);
       }
 
-      Subtube::Subtube(const Subtube& x)
-      {
-        *this = x;
-      }
-      
-      Subtube::Subtube(const Subtube& x, const Interval& value)
-      {
-        *this = x;
-        set(value);
-      }
-      
       Subtube::~Subtube()
       {
         if(m_first_subtube != NULL) delete m_first_subtube;
         if(m_second_subtube != NULL) delete m_second_subtube;
-      }
-      
-      const Interval& Subtube::domain() const
-      {
-        return m_domain;
-      }  
-
-    // Slices structure
-
-      int Subtube::nbSlices() const
-      {
-        // todo: has to be updated?
-        return m_slices_number;
-      }
-      
-      const IntervalVector Subtube::sliceBox(int slice_id) const
-      {
-        IntervalVector box(2);
-        const Subtube *slice = getSlice(slice_id);
-        box[0] = slice->domain();
-        box[1] = slice->image();
-        return box;
-      }
-      
-      bool Subtube::isSlice() const
-      {
-        return m_slices_number == 1;
-      }
-      
-      Subtube* Subtube::getSlice(int slice_id)
-      {
-        DomainException::check(*this, slice_id);
-
-        if(isSlice())
-          return this;
-
-        else
-        {
-          if(slice_id >= m_first_subtube->nbSlices())
-            return m_second_subtube->getSlice(slice_id - m_first_subtube->nbSlices());
-          else
-            return m_first_subtube->getSlice(slice_id);
-        }
-      }
-      
-      const Subtube* Subtube::getSlice(int slice_id) const
-      {
-        return const_cast<Subtube*>(getSlice(slice_id));
-      }
-      
-      Subtube* Subtube::getSlice(double t)
-      {
-        return getSlice(input2index(t));
-      }
-      
-      const Subtube* Subtube::getSlice(double t) const
-      {
-        return const_cast<Subtube*>(getSlice(t));
       }
       
       void Subtube::getSlices(vector<const Subtube*>& v_slices) const
@@ -137,30 +68,6 @@ namespace tubex
           m_first_subtube->getSlices(v_slices);
           m_second_subtube->getSlices(v_slices);
         }
-      }
-      
-      int Subtube::input2index(double t) const
-      {
-        DomainException::check(*this, t);
-
-        // todo: check the following
-        //if(t == m_domain.ub())
-        //  return nbSlices() - 1;
-
-        if(isSlice())
-          return 0;
-
-        if(t < m_first_subtube->domain().ub())
-          return m_first_subtube->input2index(t);
-
-        else
-          return m_second_subtube->input2index(t) + m_first_subtube->nbSlices();
-      }
-      
-      double Subtube::index2input(int slice_id) const
-      {
-        DomainException::check(*this, slice_id);
-        return getSlice(slice_id)->domain().lb();
       }
       
       const Interval& Subtube::sliceDomain(int slice_id) const
@@ -229,17 +136,6 @@ namespace tubex
       {
         updateTree();
         return m_volume;
-      }
-      
-      double Subtube::dist(const Subtube& x) const
-      {
-        return fabs(x.volume() - volume());
-      }
-      
-      const Interval& Subtube::image() const
-      {
-        updateTree();
-        return m_image;
       }
       
       const Interval& Subtube::operator[](int slice_id) const
@@ -353,97 +249,6 @@ namespace tubex
         }
       }
       
-      Interval Subtube::interpol(double t, const Subtube& derivative) const
-      {
-        StructureException::check(*this, derivative);
-        EmptyException::check(derivative);
-
-        int slice_id = input2index(t);
-        Interval dom_ = sliceDomain(slice_id);
-        Interval deriv_value = derivative[slice_id];
-        return ((*this)[dom_.ub()] - (dom_.ub() - t) * deriv_value)
-             & ((*this)[dom_.lb()] + (t - dom_.lb()) * deriv_value);
-      }
-      
-      Interval Subtube::interpol(const Interval& t, const Subtube& derivative) const
-      {
-        pair<Interval,Interval> p_interpol = partialInterpol(t, derivative);
-        return p_interpol.first | p_interpol.second;
-      }
-      
-      pair<Interval,Interval> Subtube::partialInterpol(const Interval& t, const Subtube& derivative) const
-      {
-        Interval y_tlb = interpol(t.lb(), derivative);
-        Interval y_tub = interpol(t.ub(), derivative);
-
-        /* Dealing with infinity...
-         *
-         * In IBEX, the following is defined:
-         *    Interval(NEG_INFINITY) = EMPTY_SET
-         *    Interval(POS_INFINITY) = EMPTY_SET
-         *    Interval(NEG_INFINITY,POS_INFINITY) = EMPTY_SET
-         *
-         * So, we have to detect infinite bounds
-         * and work with dbl_max (max double).
-         *
-         * This is only a temporary solution.
-         * [todo]
-         */
-
-          double dbl_max = std::numeric_limits<double>::max();
-
-          Interval lb, ub;
-          lb.set_empty(); ub.set_empty();
-
-          lb |= y_tlb.lb() == NEG_INFINITY ? Interval(-dbl_max) : y_tlb.lb();
-          ub |= y_tlb.ub() == POS_INFINITY ? Interval(dbl_max) : y_tlb.ub();
-
-          lb |= y_tub.lb() == NEG_INFINITY ? Interval(-dbl_max) : y_tub.lb();
-          ub |= y_tub.ub() == POS_INFINITY ? Interval(dbl_max) : y_tub.ub();
-
-          // todo: check the following simplification:
-          // lb &= dbl_max*Interval(-1.,1.);
-          // ub &= dbl_max*Interval(-1.,1.);
-
-        for(int i = min(nbSlices() - 1, input2index(t.lb()) + 1) ; i < max(0, input2index(t.ub()) - 1) ; i++)
-        {
-          pair<Interval,Interval> p_i = eval(sliceDomain(i));
-          lb |= p_i.first;
-          ub |= p_i.second;
-        }
-
-        return make_pair(lb, ub);
-      }
-      
-      Interval Subtube::invert(const Interval& y, const Interval& t) const
-      {
-        if(!domain().intersects(t))
-          return Interval::EMPTY_SET;
-
-        else if(!image().intersects(y))
-          return Interval::EMPTY_SET;
-
-        else
-        {
-          if(isSlice())
-            return t & m_domain;
-
-          else
-            return m_first_subtube->invert(y, t) | m_second_subtube->invert(y, t);
-        }
-      }
-      
-      void Subtube::invert(const Interval& y, vector<Interval> &v_t, const Interval& t) const
-      {
-        return invert(y, v_t, t, true);
-      }
-      
-      double Subtube::maxThickness() const
-      {
-        int id;
-        return maxThickness(id);
-      }
-      
       double Subtube::maxThickness(int& first_id_max_thickness) const
       {
         first_id_max_thickness = -1;
@@ -460,10 +265,6 @@ namespace tubex
       
     // Tests
 
-      bool Subtube::isEmpty() const
-      {
-        return image().is_empty();
-      }
       
       bool Subtube::operator==(const Subtube& x) const
       {

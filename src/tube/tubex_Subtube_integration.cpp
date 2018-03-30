@@ -142,7 +142,7 @@ namespace tubex
 
       if(build_from_leafs)
       {
-        if(!isSlice()) // check usefulness of this block
+        if(!isSlice()) // todo: check usefulness of this block
         {
           m_first_subtube->computePartialPrimitive(true);
           m_second_subtube->computePartialPrimitive(true);

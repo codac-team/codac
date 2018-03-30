@@ -19,14 +19,10 @@
   set(SRC
 #    tube/tubex_Subtube_base.cpp
 #    tube/tubex_Subtube_integration.cpp
-#    tube/tubex_Trajectory.cpp
+    tube/tubex_Trajectory.cpp
 #    tube/tubex_Tube_base.cpp
 #    tube/tubex_Tube_contractors.cpp
 #    tube/tubex_Tube_serialization.cpp
-#    tube/exceptions/tubex_Exception.cpp
-#    tube/exceptions/tubex_DomainException.cpp
-#    tube/exceptions/tubex_EmptyException.cpp
-#    tube/exceptions/tubex_StructureException.cpp
 #
 #    graphics/vibes/vibes.cpp
 #    graphics/tubex_VibesFigure.cpp
@@ -45,21 +41,22 @@
 #
 #    tools/tubex_Serialization.cpp
 
-    tube/tubex_TubeNode.cpp
     tube/tubex_TubeSlice.cpp
+    tube/tubex_TubeNode.cpp
+    tube/tubex_TubeTree.cpp
+    tube/tubex_Tube.cpp
 #    tube/tubex_TubeSystem.cpp
 #    tube/tubex_TubeVector.cpp
-    tube/tubex_Tube.cpp
+    tube/exceptions/tubex_Exception.cpp
+    tube/exceptions/tubex_DomainException.cpp
+    tube/exceptions/tubex_EmptyException.cpp
+    tube/exceptions/tubex_StructureException.cpp
   )
 
   set(HEADERS
 #    tube/tubex_Subtube.h
-#    tube/tubex_Trajectory.h
+    tube/tubex_Trajectory.h
 #    tube/tubex_Tube.h
-#    tube/exceptions/tubex_Exception.h
-#    tube/exceptions/tubex_DomainException.h
-#    tube/exceptions/tubex_EmptyException.h
-#    tube/exceptions/tubex_StructureException.h
 #
 #    graphics/tubex_VibesFigure.h
 #    graphics/tubex_VibesFigure_Tube.h
@@ -78,11 +75,16 @@
 #
 #    tools/tubex_Serialization.h
 
-    tube/tubex_TubeNode.h
     tube/tubex_TubeSlice.h
+    tube/tubex_TubeNode.h
+    tube/tubex_TubeTree.h
+    tube/tubex_Tube.h
 #    tube/tubex_TubeSystem.h
 #    tube/tubex_TubeVector.h
-    tube/tubex_Tube.h
+    tube/exceptions/tubex_Exception.h
+    tube/exceptions/tubex_DomainException.h
+    tube/exceptions/tubex_EmptyException.h
+    tube/exceptions/tubex_StructureException.h
   )
 
 

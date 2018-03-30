@@ -17,7 +17,7 @@
 #include <exception>
 #include <string>
 #include <sstream>
-#include "tubex_Subtube.h"
+#include "tubex_TubeNode.h"
 #include "tubex_Exception.h"
 
 namespace tubex
@@ -31,14 +31,13 @@ namespace tubex
   {
     public:
 
-      DomainException(const Subtube& x, int slice_index);
-      DomainException(const Subtube& x, double t);
-      DomainException(const Subtube& x, const ibex::Interval& intv_t);
-      // todo: equivalent constructor for Tube class
+      DomainException(const TubeNode& x, int slice_index);
+      DomainException(const TubeNode& x, double t);
+      DomainException(const TubeNode& x, const ibex::Interval& intv_t);
         
-      static void check(const Subtube& x, int slice_index);
-      static void check(const Subtube& x, double t);
-      static void check(const Subtube& x, const ibex::Interval& intv_t);
+      static void check(const TubeNode& x, int slice_index);
+      static void check(const TubeNode& x, double t);
+      static void check(const TubeNode& x, const ibex::Interval& intv_t);
   };
 }
 

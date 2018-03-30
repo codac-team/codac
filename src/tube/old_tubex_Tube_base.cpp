@@ -216,17 +216,6 @@ namespace tubex
     return *this;
   }
 
-  bool Tube::isInteriorSubset(const Tube& outer_tube) const
-  {
-    checkStructures(*this, outer_tube);
-
-    for(int i = 0 ; i < size() ; i++)
-      if(!(*this)[i].is_interior_subset(outer_tube[i]))
-        return false;
-
-    return true;
-  }
-
   pair<Tube,Tube> Tube::bisect(const Tube& derivative, double t, float ratio)
   {
     Tube x1 = *this, x2 = *this;

@@ -26,12 +26,29 @@ namespace tubex
       // Definition
 
       // Slices structure
+      TubeSlice* getSlice(int slice_id);
+      const TubeSlice* getSlice(int slice_id) const;
+      TubeSlice* getSlice(double t);
+      const TubeSlice* getSlice(double t) const;
+      void getSlices(std::vector<const TubeSlice*>& v_slices) const;
+      int input2index(double t) const;
+      const ibex::IntervalVector sliceBox(int slice_id) const;
+      const ibex::Interval& sliceDomain(int slice_id) const;
+      const ibex::Interval& sliceDomain(double t) const;
 
       // Access values
+      const ibex::Interval& codomain() const;
+      double volume() const;
       const ibex::Interval& operator()(int slice_id) const;
       ibex::Interval operator()(double t) const;
       ibex::Interval operator()(const ibex::Interval& t) const;
+      ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      double maxThickness(int& first_id_max_thickness) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+
+      // Tests
+      bool isInteriorSubset(const TubeNode& outer_tube) const;
+      bool encloses(const Trajectory& x) const;
 
     protected:
 
@@ -42,6 +59,7 @@ namespace tubex
       void createTube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
 
       // Slices/tree structure
+      bool isSlice() const;
       const TubeTree* getFirstSubtube() const;
       const TubeTree* getSecondSubtube() const;
       void getTubeNodes(std::vector<TubeNode*> &v_nodes);
