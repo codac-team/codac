@@ -26,7 +26,7 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      Tube(double timestep, const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      /*Tube(double timestep, const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       Tube(const Tube& x, const ibex::Interval& codomain);
       Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
@@ -45,7 +45,7 @@ namespace tubex
 
     /** Contractors: **/
 
-      bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
+      /*bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
       bool ctcBwd(const Tube& derivative);
       bool ctcFwdBwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
       bool ctcEval(const Tube& derivative, ibex::Interval& t, ibex::Interval& z, bool propagate = true);
@@ -59,11 +59,11 @@ namespace tubex
 
     /** Serialization: **/
 
-      bool serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
+      /*bool serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
       bool serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
       bool serialize(const std::string& binary_file_name, const std::vector<const Trajectory&>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
       void deserialize(const std::string& binary_file_name, Trajectory& traj);
-      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);*/
   };
 }
 
