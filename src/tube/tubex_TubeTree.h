@@ -34,6 +34,7 @@ namespace tubex
       TubeNode* getFirstTubeNode() const;
       TubeNode* getSecondTubeNode() const;
       int sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
+      void sample(const std::vector<double>& v_bounds);
       TubeSlice* getSlice(int slice_id);
       const TubeSlice* getSlice(int slice_id) const;
       TubeSlice* getSlice(double t);

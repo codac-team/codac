@@ -49,6 +49,27 @@ TEST_CASE("Tube definition", "[core]")
 
   SECTION("Tube class")
   {
-    // todo
+    Tube tube_a(Interval(0.,12.), 1.);
+    CHECK(tube_a.nbSlices() == 12);
+    CHECK(tube_a.domain() == Interval(0.,12.));
+    CHECK(tube_a.getFirstTubeNode()->domain() == Interval(0.,6.));
+    CHECK(tube_a.getFirstTubeNode()->nbSlices() == 6);
+    CHECK(tube_a.getSecondTubeNode()->domain() == Interval(6.,12.));
+    CHECK(tube_a.getSecondTubeNode()->nbSlices() == 6);
+    CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getFirstTubeNode()->domain() == Interval(0.,3.));
+    CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getFirstTubeNode()->nbSlices() == 3);
+    CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getSecondTubeNode()->domain() == Interval(3.,6.));
+    CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getSecondTubeNode()->nbSlices() == 3);
+
+    Tube tube_b(Interval(0.,12.), 0.5);
+    CHECK(tube_b.nbSlices() == 24);
+    CHECK(tube_b.domain() == Interval(0.,12.));
+
+    Tube tube_c(Interval(0.,4.), 1.1);
+    CHECK(tube_c.nbSlices() == 4);
+    CHECK(ApproxIntv(tube_c.getSlice(0)->domain()) == Interval(0.,1.1));
+    CHECK(ApproxIntv(tube_c.getSlice(1)->domain()) == Interval(1.1,2.2));
+    CHECK(ApproxIntv(tube_c.getSlice(2)->domain()) == Interval(2.2,3.3));
+    CHECK(ApproxIntv(tube_c.getSlice(3)->domain()) == Interval(3.3,4.));
   }
 }

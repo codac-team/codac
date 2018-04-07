@@ -204,6 +204,25 @@ namespace tubex
       m_slices_number += new_slices_nb;
       return new_slices_nb;
     }
+    
+    void TubeTree::sample(const vector<double>& v_bounds)
+    {
+      if(v_bounds.empty())
+        return;
+
+      vector<double> v_first_bounds, v_last_bounds;
+
+      int mid = v_bounds.size() / 2;
+      for(int i = 0 ; i < v_bounds.size() ; i++)
+      {
+        if(i < mid) v_first_bounds.push_back(v_bounds[i]);
+        else if(i <= mid) sample(v_bounds[i]);
+        else v_last_bounds.push_back(v_bounds[i]);
+      }
+
+      sample(v_first_bounds);
+      sample(v_last_bounds);
+    }
 
     TubeSlice* TubeTree::getSlice(int slice_id)
     {

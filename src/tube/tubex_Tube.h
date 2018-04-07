@@ -26,19 +26,16 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      /*Tube(double timestep, const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
-      Tube(const Tube& x, const ibex::Interval& codomain);
+      Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      /*Tube(const Tube& x, const ibex::Interval& codomain);
       Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
-      Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
-
-      // Slices structure
-      void sample(int subslices_nb);
-      void sample(const std::vector<ibex::Interval>& v_slices_domains);
+      Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;*/
 
       // Bisection
-      std::pair<Tube,Tube> bisect(const Tube& derivative, double t, float ratio = 0.55) const;
+      /*std::pair<Tube,Tube> bisect(const Tube& derivative, double t, float ratio = 0.55) const;
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
