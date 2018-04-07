@@ -25,7 +25,7 @@ namespace tubex
     ostringstream os;
     os << "emptiness over ";
 
-    if(x.codomain() == Interval::EMPTY_SET)
+    /*if(x.codomain() == Interval::EMPTY_SET)
       os << "the whole domain";
 
     else
@@ -35,18 +35,18 @@ namespace tubex
         if(x(i).is_empty())
           intv_t_emptiness |= x.sliceDomain(i);
       os << "[t]=" << intv_t_emptiness << endl;
-    }
+    }*/
     
     m_what_msg = os.str();
   }
 
   void EmptyException::check(const TubeNode& x)
   {
-    if(x.isEmpty())
-      throw EmptyException(x);
-
-    for(int i = 0 ; i < x.nbSlices() ; i++)
-      if(x(i).is_empty())
-        throw EmptyException(x);
+    //if(x.isEmpty())
+    //  throw EmptyException(x);
+    //
+    //for(int i = 0 ; i < x.nbSlices() ; i++)
+    //  if(x(i).is_empty())
+    //    throw EmptyException(x);
   }
 }

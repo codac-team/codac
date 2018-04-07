@@ -58,18 +58,6 @@ namespace tubex
         if(m_second_subtube != NULL) delete m_second_subtube;
       }
       
-      void Subtube::getSlices(vector<const Subtube*>& v_slices) const
-      {
-        if(isSlice())
-          v_slices.push_back(this);
-
-        else
-        {
-          m_first_subtube->getSlices(v_slices);
-          m_second_subtube->getSlices(v_slices);
-        }
-      }
-      
       const Interval& Subtube::sliceDomain(int slice_id) const
       {
         return getSlice(slice_id)->domain();
@@ -489,22 +477,6 @@ namespace tubex
       const Subtube* Subtube::getSecondSubtube() const
       {
         return m_second_subtube;
-      }
-          
-      void Subtube::getSubtubeNodes(vector<Subtube*> &v_nodes)
-      {
-        if(!isSlice())
-        {
-          m_first_subtube->getSubtubeNodes(v_nodes);
-          m_second_subtube->getSubtubeNodes(v_nodes);
-        }
-
-        v_nodes.push_back(this);
-      }
-      
-      void Subtube::getSubtubeNodes(vector<const Subtube*> &v_nodes) const
-      {
-        getSubtubeNodes(v_nodes);
       }
           
       void Subtube::updateTree() const

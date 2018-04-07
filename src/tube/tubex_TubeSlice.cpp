@@ -29,25 +29,29 @@ namespace tubex
 
     }
 
+    TubeSlice::TubeSlice(const TubeSlice& x) : TubeNode(x)
+    {
+      *this = x;
+    }
+
     TubeSlice::~TubeSlice()
     {
-      if(m_input_gate != NULL)
-      {
+      // todo: delete gates elsewhere
+      /*if(m_input_gate != NULL)
         delete m_input_gate;
-        m_input_gate = NULL;
-      }
 
       if(m_output_gate != NULL)
-      {
-        delete m_output_gate;
-        m_output_gate = NULL;
-      }
+        delete m_output_gate;*/
+    }
 
-      if(m_prev_slice != NULL)
-        m_prev_slice->m_next_slice = NULL;
-
-      if(m_next_slice != NULL)
-        m_next_slice->m_prev_slice = NULL;
+    TubeSlice& TubeSlice::operator=(const TubeSlice& x)
+    {
+      TubeNode::operator=(x);
+      m_prev_slice = x.m_prev_slice;
+      m_next_slice = x.m_next_slice;
+      m_input_gate = x.m_input_gate;
+      m_output_gate = x.m_output_gate;
+      return *this;
     }
 
     // Slices structure
@@ -56,7 +60,7 @@ namespace tubex
     {
       return true;
     }
-    
+
     TubeSlice* TubeSlice::getSlice(int slice_id)
     {
       DomainException::check(*this, slice_id);
@@ -90,22 +94,9 @@ namespace tubex
       return 0;
     }
     
-    const IntervalVector TubeSlice::sliceBox(int slice_id) const
+    void TubeSlice::getTubeNodes(vector<const TubeNode*> &v_nodes) const
     {
-      IntervalVector box(2);
-      box[0] = m_domain;
-      box[1] = m_codomain;
-      return box;
-    }
-    
-    const Interval& TubeSlice::sliceDomain(int slice_id) const
-    {
-      return m_domain;
-    }
-    
-    const Interval& TubeSlice::sliceDomain(double t) const
-    {
-      return m_domain;
+      v_nodes.push_back(static_cast<const TubeNode*>(this));
     }
 
     TubeSlice* TubeSlice::prevSlice() const
@@ -113,19 +104,42 @@ namespace tubex
       return m_prev_slice;
     }
 
-    void TubeSlice::setPrevSlice(TubeSlice *prev_slice)
-    {
-      m_prev_slice = prev_slice;
-    }
-
     TubeSlice* TubeSlice::nextSlice() const
     {
       return m_next_slice;
     }
 
-    void TubeSlice::setNextSlice(TubeSlice *next_slice)
+    void TubeSlice::chainSlices(TubeSlice *first_slice, TubeSlice *second_slice, Interval *gate)
     {
-      m_next_slice = next_slice;
+      if(first_slice != NULL)
+      {
+        first_slice->m_next_slice = second_slice;
+
+        if(gate != NULL)
+        {
+          if(first_slice->m_output_gate != NULL)
+            throw Exception("TubeSlice::chainSlices", "gate already existing");
+          first_slice->m_output_gate = gate;
+        }
+
+        else if(second_slice != NULL && first_slice->m_output_gate == NULL)
+          first_slice->m_output_gate = second_slice->m_input_gate;
+      }
+
+      if(second_slice != NULL)
+      {
+        second_slice->m_prev_slice = first_slice;
+
+        if(gate != NULL)
+        {
+          if(second_slice->m_input_gate != NULL)
+            throw Exception("TubeSlice::chainSlices", "gate already existing");
+          second_slice->m_input_gate = gate;
+        }
+
+        else if(first_slice != NULL && second_slice->m_input_gate == NULL)
+          second_slice->m_input_gate = first_slice->m_output_gate;
+      }
     }
 
     const Interval TubeSlice::inputGate() const
@@ -152,37 +166,13 @@ namespace tubex
         return m_codomain;
     }
     
-    void TubeSlice::setInputGate(const Interval& input_gate)
-    {
-      if(m_input_gate == NULL)
-      {
-        m_input_gate = new Interval(input_gate);
-        m_prev_slice->m_output_gate = m_input_gate;
-      }
-
-      else
-        *m_input_gate = input_gate;
-    }
-    
-    void TubeSlice::setOuputGate(const Interval& output_gate)
-    {
-      if(m_output_gate == NULL)
-      {
-        m_output_gate = new Interval(output_gate);
-        m_next_slice->m_input_gate = m_output_gate;
-      }
-
-      else
-        *m_output_gate = output_gate;
-    }
-    
     // Access values
 
     const Interval& TubeSlice::codomain() const
     {
       return m_codomain;
     }
-
+/*
     double TubeSlice::volume() const
     {
       return m_volume;
@@ -239,4 +229,5 @@ namespace tubex
       cout << "TubeSlice: t=" << x.domain() << ", y=" << x.codomain() << flush;
       return str;
     }
+    */
 }

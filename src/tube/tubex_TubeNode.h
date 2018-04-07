@@ -29,8 +29,9 @@ namespace tubex
 
       // Definition
       TubeNode(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
-      TubeNode(const TubeNode& x, const ibex::Interval& codomain);
       TubeNode(const TubeNode& x);
+      ~TubeNode();
+      TubeNode& operator=(const TubeNode& x);
       const ibex::Interval& domain() const;
 
       // Slices structure
@@ -43,13 +44,15 @@ namespace tubex
       virtual void getSlices(std::vector<const TubeSlice*>& v_slices) const = 0;
       virtual int input2index(double t) const = 0;
       double index2input(int slice_id) const;
-      virtual const ibex::IntervalVector sliceBox(int slice_id) const = 0;
-      virtual const ibex::Interval& sliceDomain(int slice_id) const = 0;
-      virtual const ibex::Interval& sliceDomain(double t) const = 0;
+      const ibex::IntervalVector sliceBox(int slice_id) const;
+      const ibex::IntervalVector sliceBox(double t) const;
+      const ibex::Interval& sliceDomain(int slice_id) const;
+      const ibex::Interval& sliceDomain(double t) const;
+      virtual void getTubeNodes(std::vector<const TubeNode*> &v_nodes) const = 0;
 
       // Access values
       virtual const ibex::Interval& codomain() const = 0;
-      virtual double volume() const = 0;
+      /*virtual double volume() const = 0;
       double dist(const TubeNode& x) const;
       const ibex::Interval& operator()(int slice_id) const;
       ibex::Interval interpol(double t, const TubeNode& derivative) const;
@@ -65,6 +68,8 @@ namespace tubex
       bool isEmpty() const;
       virtual bool isInteriorSubset(const TubeNode& outer_tube) const = 0;
       virtual bool encloses(const Trajectory& x) const = 0;
+      bool operator==(const TubeNode& x) const;
+      bool operator!=(const TubeNode& x) const;
 
       // Setting values
       void set(const ibex::Interval& y);
@@ -76,28 +81,30 @@ namespace tubex
       TubeNode& inflate(double rad);
 
       // Operators
-      TubeNode& operator=(const TubeNode& x);
       TubeNode& operator|=(const TubeNode& x);
       TubeNode& operator|=(const Trajectory& x);
       TubeNode& operator&=(const TubeNode& x);
 
       // String
-      friend std::ostream& operator<<(std::ostream& str, const TubeNode& x);
+      friend std::ostream& operator<<(std::ostream& str, const TubeNode& x);*/
 
     /** Integration: **/
 
-      ibex::Interval integral(double t) const;
+      /*ibex::Interval integral(double t) const;
       ibex::Interval integral(const ibex::Interval& t) const;
       ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
       std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
       std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
-
+*/
     protected:
 
     /** Base: **/
 
+      // Definition
+      //TubeNode();
+
       // Access values
-      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
+      /*void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
 
       // Tests
 
@@ -105,23 +112,25 @@ namespace tubex
 
       // Operators
       void unionWith_localUpdate(const TubeNode *x);
-      void intersectWith_localUpdate(const TubeNode *x);
+      void intersectWith_localUpdate(const TubeNode *x);*/
 
       // String
 
     /** Integration: **/
 
-      std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      //std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       
     /** Class variables **/
 
       // Subtube structure (no mutable needs)
-      const ibex::Interval m_domain;
+      ibex::Interval m_domain;
       short int m_slices_number = 1;
 
       // Subtube attributes ('mutable' required: values may be updated from const methods)
       mutable ibex::Interval m_codomain;
       mutable double m_volume;
+
+      friend class TubeTree;
   };
 }
 

@@ -24,21 +24,27 @@ namespace tubex
     /** Base: **/
 
       // Definition
+      TubeTree(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      TubeTree(const TubeTree& x);
+      ~TubeTree();
+      TubeTree& operator=(const TubeTree& x);
 
       // Slices structure
+      bool isSlice() const;
+      TubeNode* getFirstTubeNode() const;
+      TubeNode* getSecondTubeNode() const;
+      int sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
       TubeSlice* getSlice(int slice_id);
       const TubeSlice* getSlice(int slice_id) const;
       TubeSlice* getSlice(double t);
       const TubeSlice* getSlice(double t) const;
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
-      const ibex::IntervalVector sliceBox(int slice_id) const;
-      const ibex::Interval& sliceDomain(int slice_id) const;
-      const ibex::Interval& sliceDomain(double t) const;
+      void getTubeNodes(std::vector<const TubeNode*> &v_nodes) const;
 
       // Access values
       const ibex::Interval& codomain() const;
-      double volume() const;
+      /*double volume() const;
       const ibex::Interval& operator()(int slice_id) const;
       ibex::Interval operator()(double t) const;
       ibex::Interval operator()(const ibex::Interval& t) const;
@@ -55,15 +61,10 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      TubeTree(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
+      /*TubeTree(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
       void createTube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
 
       // Slices/tree structure
-      bool isSlice() const;
-      const TubeTree* getFirstSubtube() const;
-      const TubeTree* getSecondSubtube() const;
-      void getTubeNodes(std::vector<TubeNode*> &v_nodes);
-      void getTubeNodes(std::vector<const TubeNode*> &v_nodes) const;
       void updateTree() const;
       void flagFutureTreeUpdate(int slice_id = -1) const;
       bool treeUpdateNeeded() const;
@@ -78,11 +79,11 @@ namespace tubex
 
     /** Contractors: **/
 
-      void ctcEval_computeIndex(const ibex::Interval& z, const ibex::Interval& t, int& index_lb, int& index_ub);
+      //void ctcEval_computeIndex(const ibex::Interval& z, const ibex::Interval& t, int& index_lb, int& index_ub);
 
     /** Integration: **/
 
-      void computePartialPrimitive(bool build_from_leafs = false) const;
+      /*void computePartialPrimitive(bool build_from_leafs = false) const;
       void flagFuturePrimitiveComputation() const;
       bool primitiveUpdateNeeded() const;
 

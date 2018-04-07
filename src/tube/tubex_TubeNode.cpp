@@ -28,19 +28,25 @@ namespace tubex
 
     TubeNode::TubeNode(const Interval& domain, const Interval& codomain) : m_domain(domain), m_codomain(codomain)
     {
-      if(domain.is_unbounded())
-        throw Exception("TubeNode constructor", "unbounded domain");
-    }
-
-    TubeNode::TubeNode(const TubeNode& x, const Interval& codomain)
-    {
-      *this = x;
-      m_codomain = codomain;
+      if(domain.is_unbounded() || domain.is_empty())
+        throw Exception("TubeNode constructor", "empty or unbounded domain");
     }
 
     TubeNode::TubeNode(const TubeNode& x)
     {
       *this = x;
+    }
+
+    TubeNode::~TubeNode()
+    {
+
+    }
+
+    TubeNode& TubeNode::operator=(const TubeNode& x)
+    {
+      m_domain = x.domain();
+      m_codomain = x.codomain();
+      return *this;
     }
     
     const Interval& TubeNode::domain() const
@@ -60,9 +66,33 @@ namespace tubex
       return getSlice(slice_id)->domain().lb(); // by convention
     }
     
+    const IntervalVector TubeNode::sliceBox(int slice_id) const
+    {
+      IntervalVector box(2);
+      const TubeSlice* slice = getSlice(slice_id);
+      box[0] = slice->domain();
+      box[1] = slice->codomain();
+      return box;
+    }
+    
+    const IntervalVector TubeNode::sliceBox(double t) const
+    {
+      return sliceBox(input2index(t));
+    }
+    
+    const Interval& TubeNode::sliceDomain(int slice_id) const
+    {
+      return getSlice(slice_id)->domain();
+    }
+    
+    const Interval& TubeNode::sliceDomain(double t) const
+    {
+      return getSlice(t)->domain();
+    }
+    
     // Access values
     
-    double TubeNode::dist(const TubeNode& x) const
+    /*double TubeNode::dist(const TubeNode& x) const
     {
       return fabs(x.volume() - volume());
     }
@@ -92,19 +122,18 @@ namespace tubex
       Interval y_tlb = interpol(t.lb(), derivative);
       Interval y_tub = interpol(t.ub(), derivative);
 
-      /* Dealing with infinity...
-       *
-       * In IBEX, the following is defined:
-       *    Interval(NEG_INFINITY) = EMPTY_SET
-       *    Interval(POS_INFINITY) = EMPTY_SET
-       *    Interval(NEG_INFINITY,POS_INFINITY) = EMPTY_SET
-       *
-       * So, we have to detect infinite bounds
-       * and work with dbl_max (max double).
-       *
-       * This is only a temporary solution.
-       * [todo]
-       */
+      // Dealing with infinity...
+      //
+      // In IBEX, the following is defined:
+      //    Interval(NEG_INFINITY) = EMPTY_SET
+      //    Interval(POS_INFINITY) = EMPTY_SET
+      //    Interval(NEG_INFINITY,POS_INFINITY) = EMPTY_SET
+      //
+      // So, we have to detect infinite bounds
+      // and work with dbl_max (max double).
+      //
+      // This is only a temporary solution.
+      // [todo]
 
         double dbl_max = std::numeric_limits<double>::max();
 
@@ -149,6 +178,16 @@ namespace tubex
       return codomain().is_empty();
     }
     
+    bool TubeNode::operator==(const TubeNode& x) const
+    {
+      
+    }
+    
+    bool TubeNode::operator!=(const TubeNode& x) const
+    {
+      
+    }
+    
     // Setting values
 
     void TubeNode::set(const Interval& y)
@@ -187,11 +226,6 @@ namespace tubex
     }
     
     // Operators
-
-    TubeNode& TubeNode::operator=(const TubeNode& x)
-    {
-
-    }
     
     TubeNode& TubeNode::operator|=(const TubeNode& x)
     {
@@ -240,11 +274,18 @@ namespace tubex
     pair<Interval,Interval> TubeNode::partialIntegral(const Interval& t1, const Interval& t2) const
     {
 
-    }
+    }*/
   
   // Protected methods
 
-    // Access values
+    // Definition
+
+    /*TubeNode::TubeNode()
+    {
+
+    }*/
+
+    /*// Access values
     void TubeNode::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
     {
 
@@ -273,5 +314,5 @@ namespace tubex
     pair<Interval,Interval> TubeNode::getPartialPrimitiveValue(const Interval& t) const
     {
 
-    }
+    }*/
 }

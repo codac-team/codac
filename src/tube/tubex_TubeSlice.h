@@ -25,7 +25,9 @@ namespace tubex
 
       // Definition
       TubeSlice(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      TubeSlice(const TubeSlice& x);
       ~TubeSlice();
+      TubeSlice& operator=(const TubeSlice& x);
 
       // Slices structure
       bool isSlice() const;
@@ -35,21 +37,16 @@ namespace tubex
       const TubeSlice* getSlice(double t) const;
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
-      const ibex::IntervalVector sliceBox(int slice_id) const;
-      const ibex::Interval& sliceDomain(int slice_id) const;
-      const ibex::Interval& sliceDomain(double t) const;
+      void getTubeNodes(std::vector<const TubeNode*> &v_nodes) const;
       TubeSlice* prevSlice() const;
-      void setPrevSlice(TubeSlice *prev_slice);
       TubeSlice* nextSlice() const;
-      void setNextSlice(TubeSlice *next_slice);
+      static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice, ibex::Interval *gate = NULL);
       const ibex::Interval inputGate() const;
       const ibex::Interval outputGate() const;
-      void setInputGate(const ibex::Interval& input_gate);
-      void setOuputGate(const ibex::Interval& output_gate);
 
       // Access values
       const ibex::Interval& codomain() const;
-      double volume() const;
+      /*double volume() const;
       ibex::Interval interpol(double t, const TubeSlice& derivative) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       double maxThickness(int& first_id_max_thickness) const;
@@ -60,7 +57,7 @@ namespace tubex
       bool encloses(const Trajectory& x) const;
 
       // String
-      friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
+      friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);*/
 
     protected:
 
@@ -68,6 +65,8 @@ namespace tubex
 
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;
       ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
+
+      friend class TubeTree;
   };
 }
 

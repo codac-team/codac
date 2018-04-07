@@ -24,7 +24,7 @@ namespace tubex
   {
     ostringstream os;
     os << "slice index out of range: ";
-    os << "i=" << slice_index << " not in " << Interval(0,(x.nbSlices()-1)) << endl;
+    //os << "i=" << slice_index << " not in " << Interval(0,(x.nbSlices()-1)) << endl;
     m_what_msg = os.str();
   }
 
@@ -44,19 +44,19 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  void check(const TubeNode& x, int slice_index)
+  void DomainException::check(const TubeNode& x, int slice_index)
   {
-    if(slice_index < 0 || slice_index > x.nbSlices() - 1)
+    if(slice_index < 0 || slice_index >= x.nbSlices())
       throw DomainException(x, slice_index);
   }
 
-  void check(const TubeNode& x, double t)
+  void DomainException::check(const TubeNode& x, double t)
   {
     if(!x.domain().contains(t))
       throw DomainException(x, t);
   }
 
-  void check(const TubeNode& x, const Interval& intv_t)
+  void DomainException::check(const TubeNode& x, const Interval& intv_t)
   {
     if(intv_t != x.domain() && !intv_t.is_interior_subset(x.domain()))
       throw DomainException(x, intv_t);

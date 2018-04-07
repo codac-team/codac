@@ -22,7 +22,7 @@ namespace tubex
 {
   StructureException::StructureException(const TubeNode& x1, const TubeNode& x2)
   {
-    ostringstream os;
+    /*ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
 
     if(x1.nbSlices() != x2.nbSlices())
@@ -34,12 +34,12 @@ namespace tubex
          << "[t1]=" << x1.domain() << " and [t2]=" << x2.domain();
 
     os << endl;
-    m_what_msg = os.str();
+    m_what_msg = os.str();*/
   }
 
-  void check(const TubeNode& x1, const TubeNode& x2)
+  void StructureException::check(const TubeNode& x1, const TubeNode& x2)
   {
-    if(x1.nbSlices() != x2.nbSlices() || x1.domain() != x2.domain())
-      throw StructureException(x1, x2);
+    //if(x1.nbSlices() != x2.nbSlices() || x1.domain() != x2.domain())
+    //  throw StructureException(x1, x2);
   }
 }
