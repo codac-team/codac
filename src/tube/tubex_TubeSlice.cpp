@@ -47,10 +47,6 @@ namespace tubex
     TubeSlice& TubeSlice::operator=(const TubeSlice& x)
     {
       TubeNode::operator=(x);
-      m_prev_slice = x.m_prev_slice;
-      m_next_slice = x.m_next_slice;
-      m_input_gate = x.m_input_gate;
-      m_output_gate = x.m_output_gate;
       return *this;
     }
 

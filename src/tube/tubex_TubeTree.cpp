@@ -121,12 +121,16 @@ namespace tubex
           return 0; // no degenerate slice
 
         TubeSlice slice(*(TubeSlice*)m_first_tubenode);
+        TubeSlice *prev_slice = ((TubeSlice*)m_first_tubenode)->prevSlice();
+        TubeSlice *next_slice = ((TubeSlice*)m_first_tubenode)->nextSlice();
         delete m_first_tubenode;
 
         m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), codomain());
         m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), codomain());
 
+        TubeSlice::chainSlices(prev_slice, (TubeSlice*)m_first_tubenode);
         TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode, new Interval(gate));
+        TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, next_slice);
       }
 
       else
@@ -157,6 +161,8 @@ namespace tubex
             return 0; // no degenerate slice
           
           TubeSlice slice(*(TubeSlice*)(*slice_ptr));
+          TubeSlice *prev_slice = ((TubeSlice*)(*slice_ptr))->prevSlice();
+          TubeSlice *next_slice = ((TubeSlice*)(*slice_ptr))->nextSlice();
           delete (*slice_ptr);
 
           *slice_ptr = new TubeTree(slice.domain(), slice.codomain());
@@ -166,9 +172,9 @@ namespace tubex
           *first_slice = new TubeSlice(Interval(slice.domain().lb(), t), slice.codomain());
           *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.codomain());
           
-          TubeSlice::chainSlices(slice.prevSlice(), *first_slice);
+          TubeSlice::chainSlices(prev_slice, *first_slice);
           TubeSlice::chainSlices(*first_slice, *second_slice, new Interval(gate));
-          TubeSlice::chainSlices(*second_slice, slice.nextSlice());
+          TubeSlice::chainSlices(*second_slice, next_slice);
 
           (*slice_ptr)->m_slices_number = 2;
         }
