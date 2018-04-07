@@ -41,7 +41,6 @@ cmake_minimum_required(VERSION 2.8.7)
   # todo, clean the following:
     include_directories(/usr/local/include/ibex/3rd/)
     include_directories(/usr/local/include/ibex/)
-    include_directories(${TUBELIB_BUILD_DIR}/include/)
 
   set(IbexLib_USE_STATIC 1) # force ibex static linking
   find_package(IbexLib)
@@ -69,7 +68,7 @@ cmake_minimum_required(VERSION 2.8.7)
 
 # Sources
 
-  include_directories(./make/include)
+  include_directories(${TUBELIB_BUILD_DIR}/include/)
   add_subdirectory(src)
 
 

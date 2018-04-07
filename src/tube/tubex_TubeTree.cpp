@@ -141,8 +141,12 @@ namespace tubex
         m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), codomain());
         m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), codomain());
 
+        Interval *gate_ptr = NULL;
+        if(!codomain().is_interior_subset(gate))
+          gate_ptr = new Interval(gate & codomain());
+
         TubeSlice::chainSlices(prev_slice, (TubeSlice*)m_first_tubenode);
-        TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode, new Interval(gate));
+        TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode, gate_ptr);
         TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, next_slice);
       }
 
@@ -185,8 +189,12 @@ namespace tubex
           *first_slice = new TubeSlice(Interval(slice.domain().lb(), t), slice.codomain());
           *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.codomain());
           
+          Interval *gate_ptr = NULL;
+          if(!(*slice_ptr)->codomain().is_interior_subset(gate))
+            gate_ptr = new Interval(gate & (*slice_ptr)->codomain());
+
           TubeSlice::chainSlices(prev_slice, *first_slice);
-          TubeSlice::chainSlices(*first_slice, *second_slice, new Interval(gate));
+          TubeSlice::chainSlices(*first_slice, *second_slice, gate_ptr);
           TubeSlice::chainSlices(*second_slice, next_slice);
 
           (*slice_ptr)->m_slices_number = 2;

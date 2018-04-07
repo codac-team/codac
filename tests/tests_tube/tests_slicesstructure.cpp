@@ -263,15 +263,15 @@ TEST_CASE("Tube slices structure", "[core]")
     TubeTree tubetree_a(Interval(0.,1.), Interval(-1.,1.));
     tubetree_a.sample(0.6, Interval(0.0,0.5));
     tubetree_a.sample(0.7, Interval(0.2,0.3));
-    tubetree_a.sample(0.62, Interval(0.5,0.6));
+    tubetree_a.sample(0.62, Interval(-6.,6.)); // too large gate
     tubetree_a.sample(0.1, Interval(-1.0,-0.8));
     CHECK(tubetree_a.getSlice(0)->inputGate() == Interval(-1.,1.));
     CHECK(tubetree_a.getSlice(0)->outputGate() == Interval(-1.,-0.8));
     CHECK(tubetree_a.getSlice(1)->inputGate() == Interval(-1.,-0.8));
     CHECK(tubetree_a.getSlice(1)->outputGate() == Interval(0.,0.5));
     CHECK(tubetree_a.getSlice(2)->inputGate() == Interval(0.,0.5));
-    CHECK(tubetree_a.getSlice(2)->outputGate() == Interval(0.5,0.6));
-    CHECK(tubetree_a.getSlice(3)->inputGate() == Interval(0.5,0.6));
+    CHECK(tubetree_a.getSlice(2)->outputGate() == Interval(-1.,1.));
+    CHECK(tubetree_a.getSlice(3)->inputGate() == Interval(-1.,1.));
     CHECK(tubetree_a.getSlice(3)->outputGate() == Interval(0.2,0.3));
     CHECK(tubetree_a.getSlice(4)->inputGate() == Interval(0.2,0.3));
     CHECK(tubetree_a.getSlice(4)->outputGate() == Interval(-1.,1));
@@ -282,8 +282,8 @@ TEST_CASE("Tube slices structure", "[core]")
     CHECK(tubetree_b.getSlice(1)->inputGate() == Interval(-1.,-0.8));
     CHECK(tubetree_b.getSlice(1)->outputGate() == Interval(0.,0.5));
     CHECK(tubetree_b.getSlice(2)->inputGate() == Interval(0.,0.5));
-    CHECK(tubetree_b.getSlice(2)->outputGate() == Interval(0.5,0.6));
-    CHECK(tubetree_b.getSlice(3)->inputGate() == Interval(0.5,0.6));
+    CHECK(tubetree_b.getSlice(2)->outputGate() == Interval(-1.,1.));
+    CHECK(tubetree_b.getSlice(3)->inputGate() == Interval(-1.,1.));
     CHECK(tubetree_b.getSlice(3)->outputGate() == Interval(0.2,0.3));
     CHECK(tubetree_b.getSlice(4)->inputGate() == Interval(0.2,0.3));
     CHECK(tubetree_b.getSlice(4)->outputGate() == Interval(-1.,1));
@@ -294,10 +294,17 @@ TEST_CASE("Tube slices structure", "[core]")
     CHECK(tubetree_c.getSlice(1)->inputGate() == Interval(-1.,-0.8));
     CHECK(tubetree_c.getSlice(1)->outputGate() == Interval(0.,0.5));
     CHECK(tubetree_c.getSlice(2)->inputGate() == Interval(0.,0.5));
-    CHECK(tubetree_c.getSlice(2)->outputGate() == Interval(0.5,0.6));
-    CHECK(tubetree_c.getSlice(3)->inputGate() == Interval(0.5,0.6));
+    CHECK(tubetree_c.getSlice(2)->outputGate() == Interval(-1.,1.));
+    CHECK(tubetree_c.getSlice(3)->inputGate() == Interval(-1.,1.));
     CHECK(tubetree_c.getSlice(3)->outputGate() == Interval(0.2,0.3));
     CHECK(tubetree_c.getSlice(4)->inputGate() == Interval(0.2,0.3));
     CHECK(tubetree_c.getSlice(4)->outputGate() == Interval(-1.,1));
+
+    tubetree_a.sample(0.67); // no gate specification
+    CHECK(tubetree_a.getSlice(0.67)->inputGate() == Interval(-1.,1));
+    tubetree_a.sample(0.68, Interval::ALL_REALS);
+    CHECK(tubetree_a.getSlice(0.68)->inputGate() == Interval(-1.,1));
+    tubetree_a.sample(0.69, Interval::EMPTY_SET);
+    CHECK(tubetree_a.getSlice(0.69)->inputGate() == Interval::EMPTY_SET);
   }
 }
