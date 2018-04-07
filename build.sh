@@ -12,6 +12,6 @@ cd $TUBELIB_DIR
 
 mkdir make -p
 cd make
-cmake -DCMAKE_INSTALL_PREFIX=~/ -DIBEX_ROOT=~/ibex ..
+cmake -DCMAKE_INSTALL_PREFIX=~/ -DIBEX_ROOT=~/ibex -DCMAKE_CXX_COMPILER=g++-5 ..
 make
 cd ..

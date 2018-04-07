@@ -16,7 +16,7 @@ addons:
     - cmake
     - time
     - pkg-config
-    - g++-4.8
+    - g++-5
 
 cache:
   directories:
@@ -27,7 +27,7 @@ matrix:
   #- os: osx
   #  compiler: clang
   - os: linux
-    compiler: gcc-4.8
+    compiler: gcc-5
 
 #before_install:
 #  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install clang-omp; fi
@@ -43,7 +43,7 @@ script:
   #    CC=clang-omp CXX=clang-omp++ cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DIBEX_ROOT=${HOME}/ibex -DBUILD_TESTS=ON ../ ;
   #  fi
   - if [ $TRAVIS_OS_NAME == linux ]; then
-      cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DIBEX_ROOT=${HOME}/ibex -DCMAKE_CXX_COMPILER=g++-4.8 -DBUILD_TESTS=ON ../ ;
+      cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DIBEX_ROOT=${HOME}/ibex -DCMAKE_CXX_COMPILER=g++-5 -DBUILD_TESTS=ON ../ ;
     fi
   - make
   - make test
