@@ -44,8 +44,10 @@ namespace tubex
 
     TubeNode& TubeNode::operator=(const TubeNode& x)
     {
-      m_domain = x.domain();
-      m_codomain = x.codomain();
+      m_domain = x.m_domain;
+      m_codomain = x.m_codomain;
+      m_slices_number = x.m_slices_number;
+      m_volume = x.m_volume;
       return *this;
     }
     
@@ -61,6 +63,26 @@ namespace tubex
       return m_slices_number;
     }
     
+    TubeSlice* TubeNode::getFirstSlice()
+    {
+      return getSlice(0);
+    }
+
+    const TubeSlice* TubeNode::getFirstSlice() const
+    {
+      return const_cast<TubeSlice*>(getFirstSlice());
+    }
+
+    TubeSlice* TubeNode::getLastSlice()
+    {
+      return getSlice(nbSlices() - 1);
+    }
+    
+    const TubeSlice* TubeNode::getLastSlice() const
+    {
+      return const_cast<TubeSlice*>(getLastSlice());
+    }
+
     double TubeNode::index2input(int slice_id) const
     {
       return getSlice(slice_id)->domain().lb(); // by convention

@@ -41,6 +41,10 @@ namespace tubex
       virtual const TubeSlice* getSlice(int slice_id) const = 0;
       virtual TubeSlice* getSlice(double t) = 0;
       virtual const TubeSlice* getSlice(double t) const = 0;
+      TubeSlice* getFirstSlice();
+      const TubeSlice* getFirstSlice() const;
+      TubeSlice* getLastSlice();
+      const TubeSlice* getLastSlice() const;
       virtual void getSlices(std::vector<const TubeSlice*>& v_slices) const = 0;
       virtual int input2index(double t) const = 0;
       double index2input(int slice_id) const;

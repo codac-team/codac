@@ -36,12 +36,7 @@ namespace tubex
 
     TubeSlice::~TubeSlice()
     {
-      // todo: delete gates elsewhere
-      /*if(m_input_gate != NULL)
-        delete m_input_gate;
-
-      if(m_output_gate != NULL)
-        delete m_output_gate;*/
+      
     }
 
     TubeSlice& TubeSlice::operator=(const TubeSlice& x)

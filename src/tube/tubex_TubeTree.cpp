@@ -36,6 +36,12 @@ namespace tubex
 
     TubeTree::~TubeTree()
     {
+      // Deleting gate between the two nodes
+      TubeSlice *last_slice_first_node = getSlice(m_first_tubenode->nbSlices() - 1);
+      if(((TubeSlice*)last_slice_first_node)->m_output_gate != NULL)
+        delete ((TubeSlice*)last_slice_first_node)->m_output_gate;
+
+      // Deleting nodes
       if(m_first_tubenode != NULL)
       {
         delete m_first_tubenode;
@@ -52,6 +58,11 @@ namespace tubex
     TubeTree& TubeTree::operator=(const TubeTree& x)
     {
       TubeNode::operator=(x);
+
+      m_enclosed_bounds = x.m_enclosed_bounds;
+      m_partial_primitive = x.m_partial_primitive;
+      m_tree_update_needed = x.m_tree_update_needed;
+      m_primitive_update_needed = x.m_primitive_update_needed;
 
       if(m_first_tubenode != NULL)
       {
@@ -81,14 +92,16 @@ namespace tubex
 
         else
           m_second_tubenode = new TubeTree(*((TubeTree*)x.getSecondTubeNode()));
+
+        // Chaining slices (+ gate in between)
+
+        Interval *gate = NULL;
+
+        if(x.m_first_tubenode->getLastSlice()->m_output_gate != NULL)
+          gate = new Interval(*x.m_first_tubenode->getLastSlice()->m_output_gate);
+
+        TubeSlice::chainSlices(m_first_tubenode->getLastSlice(), m_second_tubenode->getFirstSlice(), gate);
       }
-
-      // todo: gates
-
-      m_enclosed_bounds = x.m_enclosed_bounds;
-      m_partial_primitive = x.m_partial_primitive;
-      m_tree_update_needed = x.m_tree_update_needed;
-      m_primitive_update_needed = x.m_primitive_update_needed;
 
       return *this;
     }
