@@ -113,7 +113,7 @@ namespace tubex
     }
     
     // Access values
-    
+
     /*
     const Interval& TubeNode::operator()(int slice_id) const
     {
@@ -208,21 +208,6 @@ namespace tubex
     
     // Setting values
 
-    void TubeNode::set(const Interval& y)
-    {
-
-    }
-    
-    void TubeNode::set(const Interval& y, int slice_id)
-    {
-
-    }
-    
-    void TubeNode::setEmpty()
-    {
-
-    }
-    
     bool TubeNode::contract(const Interval& y, int slice_id)
     {
 

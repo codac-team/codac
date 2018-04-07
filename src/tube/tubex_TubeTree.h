@@ -26,6 +26,7 @@ namespace tubex
       // Definition
       TubeTree(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       TubeTree(const TubeTree& x);
+      //TubeTree(const TubeTree& x, const ibex::Interval& codomain);
       ~TubeTree();
       TubeTree& operator=(const TubeTree& x);
 
@@ -55,7 +56,14 @@ namespace tubex
 
       // Tests
       bool isInteriorSubset(const TubeNode& outer_tube) const;
-      bool encloses(const Trajectory& x) const;
+      bool encloses(const Trajectory& x) const;*/
+
+      // Setting values
+      void set(const ibex::Interval& y);
+      void set(const ibex::Interval& y, int slice_id);
+      void set(const ibex::Interval& y, double t);
+      void set(const ibex::Interval& y, const ibex::Interval& t);
+      void setEmpty();
 
     protected:
 

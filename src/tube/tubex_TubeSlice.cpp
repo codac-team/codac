@@ -26,18 +26,7 @@ namespace tubex
 
     TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain) : TubeNode(domain, codomain)
     {
-      m_volume = domain.diam();
-
-      if(codomain.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
-        m_volume = 0.;
-
-      else if(codomain.is_unbounded())
-        m_volume = INFINITY;
-
-      else
-        m_volume *= codomain.diam();
-
-      m_enclosed_bounds = make_pair(Interval(codomain.lb()), Interval(codomain.ub()));
+      set(codomain);
     }
 
     TubeSlice::TubeSlice(const TubeSlice& x) : TubeNode(x)
@@ -203,7 +192,7 @@ namespace tubex
 
       else if(t == m_domain.ub())
         return outputGate();
-      
+
       return m_codomain;
     }
 
@@ -265,7 +254,33 @@ namespace tubex
     {
       return x[m_domain].is_interior_subset(m_codomain);
     }
+    */
+
+    // Setting values
+
+    void TubeSlice::set(const Interval& y)
+    {
+      m_codomain = y;
+      m_enclosed_bounds = make_pair(Interval(m_codomain.lb()), Interval(m_codomain.ub()));
+
+      m_volume = m_domain.diam();
+
+      if(m_codomain.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
+        m_volume = 0.;
+
+      else if(m_codomain.is_unbounded())
+        m_volume = INFINITY;
+
+      else
+        m_volume *= m_codomain.diam();
+    }
     
+    void TubeSlice::setEmpty()
+    {
+      set(Interval::EMPTY_SET);
+    }
+    
+    /*
     // String
 
     ostream& operator<<(ostream& str, const TubeSlice& x)

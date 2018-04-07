@@ -74,13 +74,12 @@ namespace tubex
       virtual bool isInteriorSubset(const TubeNode& outer_tube) const = 0;
       virtual bool encloses(const Trajectory& x) const = 0;
       bool operator==(const TubeNode& x) const;
-      bool operator!=(const TubeNode& x) const;
+      bool operator!=(const TubeNode& x) const;*/
 
       // Setting values
-      void set(const ibex::Interval& y);
-      void set(const ibex::Interval& y, int slice_id);
-      void setEmpty();
-      bool contract(const ibex::Interval& y, int slice_id);
+      virtual void set(const ibex::Interval& y) = 0;
+      virtual void setEmpty() = 0;
+      /*bool contract(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, double t);
       TubeNode& inflate(double rad);

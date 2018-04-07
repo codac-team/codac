@@ -57,8 +57,13 @@ namespace tubex
 
       // Tests
       bool isInteriorSubset(const TubeNode& outer_tube) const;
-      bool encloses(const Trajectory& x) const;
+      bool encloses(const Trajectory& x) const;*/
 
+      // Setting values
+      void set(const ibex::Interval& y);
+      void setEmpty();
+
+      /*
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);*/
 

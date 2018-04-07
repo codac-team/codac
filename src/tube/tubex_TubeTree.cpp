@@ -356,6 +356,53 @@ namespace tubex
 
     // Tests
 
+    // Setting values
+
+    void TubeTree::set(const Interval& y)
+    {
+      TubeSlice *slice = getFirstSlice();
+
+      int i = 0;
+      while(slice != NULL)
+      {
+        slice->set(y);
+        flagFutureTreeUpdate(i);
+        slice = slice->nextSlice();
+        i++;
+      }
+    }
+    
+    void TubeTree::set(const Interval& y, int slice_id)
+    {
+      getSlice(slice_id)->set(y);
+      flagFutureTreeUpdate(slice_id);
+    }
+    
+    void TubeTree::set(const Interval& y, double t)
+    {
+      getSlice(t)->set(y);
+      flagFutureTreeUpdate(input2index(t));
+    }
+    
+    void TubeTree::set(const Interval& y, const Interval& t)
+    {
+      TubeSlice *slice = getSlice(t.lb());
+
+      int i = 0;
+      while(slice != NULL && t.contains(slice->domain().lb()))
+      {
+        slice->set(y);
+        flagFutureTreeUpdate(i);
+        slice = slice->nextSlice();
+        i++;
+      }
+    }
+    
+    void TubeTree::setEmpty()
+    {
+      set(Interval::EMPTY_SET);
+    }
+
 
   // Protected methods
 
@@ -393,15 +440,19 @@ namespace tubex
       if(slice_id == -1)
       {
         if(!m_first_tubenode->isSlice()) ((TubeTree*)m_first_tubenode)->flagFutureTreeUpdate(-1);
-        if(!m_second_tubenode->isSlice()) ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(-1);
+        if(m_second_tubenode != NULL && !m_second_tubenode->isSlice()) ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(-1);
       }
 
       else
       {
         DomainException::check(*this, slice_id);
         int mid_id = m_first_tubenode->nbSlices();
-        if(slice_id < mid_id) ((TubeTree*)m_first_tubenode)->flagFutureTreeUpdate(slice_id);
-        else ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(slice_id - mid_id);
+
+        if(slice_id < mid_id && !m_first_tubenode->isSlice())
+          ((TubeTree*)m_first_tubenode)->flagFutureTreeUpdate(slice_id);
+
+        else if(!m_second_tubenode->isSlice())
+          ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(slice_id - mid_id);
       }
       
       // todo: flagFuturePrimitiveComputation();
