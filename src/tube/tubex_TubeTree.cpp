@@ -138,12 +138,12 @@ namespace tubex
         TubeSlice *next_slice = ((TubeSlice*)m_first_tubenode)->nextSlice();
         delete m_first_tubenode;
 
-        m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), codomain());
-        m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), codomain());
+        m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), m_codomain);
+        m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), m_codomain);
 
         Interval *gate_ptr = NULL;
-        if(!codomain().is_interior_subset(gate))
-          gate_ptr = new Interval(gate & codomain());
+        if(!m_codomain.is_interior_subset(gate))
+          gate_ptr = new Interval(gate & m_codomain);
 
         TubeSlice::chainSlices(prev_slice, (TubeSlice*)m_first_tubenode);
         TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode, gate_ptr);
@@ -182,16 +182,16 @@ namespace tubex
           TubeSlice *next_slice = ((TubeSlice*)(*slice_ptr))->nextSlice();
           delete (*slice_ptr);
 
-          *slice_ptr = new TubeTree(slice.domain(), slice.codomain());
+          *slice_ptr = new TubeTree(slice.domain(), slice.m_codomain);
           TubeSlice **first_slice = (TubeSlice**)&((TubeTree*)(*slice_ptr))->m_first_tubenode;
           TubeSlice **second_slice = (TubeSlice**)&((TubeTree*)(*slice_ptr))->m_second_tubenode;
 
-          *first_slice = new TubeSlice(Interval(slice.domain().lb(), t), slice.codomain());
-          *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.codomain());
+          *first_slice = new TubeSlice(Interval(slice.domain().lb(), t), slice.m_codomain);
+          *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.m_codomain);
           
           Interval *gate_ptr = NULL;
-          if(!(*slice_ptr)->codomain().is_interior_subset(gate))
-            gate_ptr = new Interval(gate & (*slice_ptr)->codomain());
+          if(!(*slice_ptr)->m_codomain.is_interior_subset(gate))
+            gate_ptr = new Interval(gate & (*slice_ptr)->m_codomain);
 
           TubeSlice::chainSlices(prev_slice, *first_slice);
           TubeSlice::chainSlices(*first_slice, *second_slice, gate_ptr);
@@ -263,7 +263,14 @@ namespace tubex
 
     const Interval& TubeTree::codomain() const
     {
+      checkDataTree();
       return m_codomain;
+    }
+
+    double TubeTree::volume() const
+    {
+      checkDataTree();
+      return m_volume;
     }
 
     // Tests
@@ -274,6 +281,56 @@ namespace tubex
     // Definition
 
     // Slices/tree structure
+
+    void TubeTree::checkDataTree() const
+    {
+      if(!treeUpdateNeeded())
+        return;
+
+      if(!m_first_tubenode->isSlice())
+        ((TubeTree*)m_first_tubenode)->checkDataTree();
+
+      if(m_second_tubenode != NULL)
+      {
+        if(!m_second_tubenode->isSlice()) ((TubeTree*)m_second_tubenode)->checkDataTree();
+        m_codomain |= m_second_tubenode->codomain();
+        m_volume += m_second_tubenode->volume();
+      }
+
+      // Enclosed bounds
+      // todo: pair<Interval,Interval> ui_past = m_first_tubenode->eval();
+      // todo: pair<Interval,Interval> ui_future = m_second_tubenode->eval();
+      // todo: m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
+
+      m_tree_update_needed = false;
+    }
+
+    void TubeTree::flagFutureTreeUpdate(int slice_id) const
+    {
+      m_tree_update_needed = true;
+
+      if(slice_id == -1)
+      {
+        if(!m_first_tubenode->isSlice()) ((TubeTree*)m_first_tubenode)->flagFutureTreeUpdate(-1);
+        if(!m_second_tubenode->isSlice()) ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(-1);
+      }
+
+      else
+      {
+        DomainException::check(*this, slice_id);
+        int mid_id = m_first_tubenode->nbSlices();
+        if(slice_id < mid_id) ((TubeTree*)m_first_tubenode)->flagFutureTreeUpdate(slice_id);
+        else ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(slice_id - mid_id);
+      }
+      
+      // todo: flagFuturePrimitiveComputation();
+    }
+    
+    bool TubeTree::treeUpdateNeeded() const
+    {
+      return m_tree_update_needed;
+    }
+    
 
     // Tests
 

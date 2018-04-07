@@ -44,8 +44,8 @@ namespace tubex
 
       // Access values
       const ibex::Interval& codomain() const;
-      /*double volume() const;
-      const ibex::Interval& operator()(int slice_id) const;
+      double volume() const;
+      /*const ibex::Interval& operator()(int slice_id) const;
       ibex::Interval operator()(double t) const;
       ibex::Interval operator()(const ibex::Interval& t) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
@@ -62,14 +62,14 @@ namespace tubex
 
       // Definition
       /*TubeTree(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
-      void createTube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
+      void createTube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);*/
 
       // Slices/tree structure
-      void updateTree() const;
+      void checkDataTree() const;
       void flagFutureTreeUpdate(int slice_id = -1) const;
       bool treeUpdateNeeded() const;
 
-      // Tests
+      /*// Tests
 
       // Setting values
 
@@ -90,8 +90,6 @@ namespace tubex
     /** Class variables **/
 
       TubeNode *m_first_tubenode = NULL, *m_second_tubenode = NULL;
-      mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
-      mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
       mutable bool m_tree_update_needed = true;
       mutable bool m_primitive_update_needed = true;
   };

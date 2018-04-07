@@ -56,8 +56,8 @@ namespace tubex
 
       // Access values
       virtual const ibex::Interval& codomain() const = 0;
-      /*virtual double volume() const = 0;
-      double dist(const TubeNode& x) const;
+      virtual double volume() const = 0;
+      /*double dist(const TubeNode& x) const;
       const ibex::Interval& operator()(int slice_id) const;
       ibex::Interval interpol(double t, const TubeNode& derivative) const;
       ibex::Interval interpol(const ibex::Interval& t, const TubeNode& derivative) const;
@@ -133,6 +133,8 @@ namespace tubex
       // Subtube attributes ('mutable' required: values may be updated from const methods)
       mutable ibex::Interval m_codomain;
       mutable double m_volume;
+      mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
+      mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 
       friend class TubeTree;
   };

@@ -26,7 +26,18 @@ namespace tubex
 
     TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain) : TubeNode(domain, codomain)
     {
+      m_volume = domain.diam();
 
+      if(codomain.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
+        m_volume = 0.;
+
+      else if(codomain.is_unbounded())
+        m_volume = INFINITY;
+
+      else
+        m_volume *= codomain.diam();
+      
+      m_enclosed_bounds = make_pair(Interval(codomain.lb()), Interval(codomain.ub()));
     }
 
     TubeSlice::TubeSlice(const TubeSlice& x) : TubeNode(x)
@@ -162,6 +173,11 @@ namespace tubex
     const Interval& TubeSlice::codomain() const
     {
       return m_codomain;
+    }
+    
+    double TubeSlice::volume() const
+    {
+      return m_volume;
     }
 /*
     double TubeSlice::volume() const
