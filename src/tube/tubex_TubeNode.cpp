@@ -114,11 +114,7 @@ namespace tubex
     
     // Access values
     
-    /*double TubeNode::dist(const TubeNode& x) const
-    {
-      return fabs(x.volume() - volume());
-    }
-    
+    /*
     const Interval& TubeNode::operator()(int slice_id) const
     {
       return getSlice(slice_id)->codomain();

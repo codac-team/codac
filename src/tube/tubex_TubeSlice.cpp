@@ -36,7 +36,7 @@ namespace tubex
 
       else
         m_volume *= codomain.diam();
-      
+
       m_enclosed_bounds = make_pair(Interval(codomain.lb()), Interval(codomain.ub()));
     }
 
@@ -178,6 +178,43 @@ namespace tubex
     double TubeSlice::volume() const
     {
       return m_volume;
+    }
+
+    const Interval& TubeSlice::operator()(int slice_id) const
+    {
+      // Write access is not allowed for this operator:
+      // a further call to checkDataTree() is needed when values change,
+      // this call cannot be garanteed with a direct access to m_codomain
+      // For write access: use set()
+      DomainException::check(*this, slice_id);
+      return m_codomain;
+    }
+
+    Interval TubeSlice::operator()(double t) const
+    {
+      // Write access is not allowed for this operator:
+      // a further call to checkDataTree() is needed when values change,
+      // this call cannot be garanteed with a direct access to m_codomain
+      // For write access: use set()
+      DomainException::check(*this, t);
+
+      if(t == m_domain.lb())
+        return inputGate();
+
+      else if(t == m_domain.ub())
+        return outputGate();
+      
+      return m_codomain;
+    }
+
+    Interval TubeSlice::operator()(const Interval& t) const
+    {
+      // Write access is not allowed for this operator:
+      // a further call to checkDataTree() is needed when values change,
+      // this call cannot be garanteed with a direct access to m_codomain
+      // For write access: use set()
+      DomainException::check(*this, t);
+      return m_codomain;
     }
 /*
     double TubeSlice::volume() const

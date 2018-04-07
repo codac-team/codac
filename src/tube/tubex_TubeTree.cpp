@@ -273,6 +273,68 @@ namespace tubex
       return m_volume;
     }
 
+    const Interval& TubeTree::operator()(int slice_id) const
+    {
+      // Write access is not allowed for this operator:
+      // a further call to checkDataTree() is needed when values change,
+      // this call cannot be garanteed with a direct access to m_codomain
+      // For write access: use set()
+      return (*getSlice(slice_id))(0);
+    }
+
+    Interval TubeTree::operator()(double t) const
+    {
+      // Write access is not allowed for this operator:
+      // a further call to checkDataTree() is needed when values change,
+      // this call cannot be garanteed with a direct access to m_codomain
+      // For write access: use set()
+      return (*getSlice(t))(t);
+    }
+
+    Interval TubeTree::operator()(const ibex::Interval& t) const
+    {
+      // Write access is not allowed for this operator:
+      // a further call to checkDataTree() is needed when values change,
+      // this call cannot be garanteed with a direct access to m_codomain
+      // For write access: use set()
+
+      if(t.lb() == t.ub())
+        return (*this)(t.lb());
+
+      Interval intersection = m_domain & t;
+
+      if(intersection.is_empty())
+        return Interval::EMPTY_SET;
+
+      else if(t == m_domain || t.is_unbounded() || t.is_superset(m_domain))
+      {
+        checkDataTree();
+        return m_codomain;
+      }
+
+      else
+      {
+        Interval inter_firsttubenode = m_first_tubenode->domain() & intersection;
+        Interval inter_secondtubenode = m_second_tubenode->domain() & intersection;
+
+        /*
+        // todo: check the following
+        if(inter_firsttubenode == inter_secondtubenode)
+          return (*m_first_tubenode)(inter_firsttubenode.lb()) & (*m_second_tubenode)(inter_secondtubenode.lb());
+
+        else if(inter_firsttubenode.lb() == inter_firsttubenode.ub()
+                && inter_secondtubenode.lb() != inter_secondtubenode.ub())
+          return (*m_second_tubenode)(inter_secondtubenode);
+
+        else if(inter_firsttubenode.lb() != inter_firsttubenode.ub()
+                && inter_secondtubenode.lb() == inter_secondtubenode.ub())
+          return (*m_first_tubenode)(inter_firsttubenode);
+
+        else*/
+          return (*m_first_tubenode)(inter_firsttubenode) | (*m_second_tubenode)(inter_secondtubenode);
+      }
+    }
+
     // Tests
 
 

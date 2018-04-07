@@ -2,6 +2,7 @@ set(TESTS_TUBE_SOURCES
   tests.cpp
   tests_definition.cpp
   tests_slicesstructure.cpp
+  tests_values.cpp
 )
 
 include_directories(${TUBELIB_BUILD_DIR}/include/)
