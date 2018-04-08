@@ -61,9 +61,11 @@ TEST_CASE("Tube definition", "[core]")
     CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getSecondTubeNode()->domain() == Interval(3.,6.));
     CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getSecondTubeNode()->nbSlices() == 3);
 
-    Tube tube_b(Interval(0.,12.), 0.5);
+    Tube tube_b(Interval(0.,12.), 0.5, Interval(-3.,-2.));
     CHECK(tube_b.nbSlices() == 24);
     CHECK(tube_b.domain() == Interval(0.,12.));
+    CHECK(tube_b[3] == Interval(-3.,-2.));
+    CHECK(tube_b.codomain() == Interval(-3.,-2.));
 
     Tube tube_c(Interval(0.,4.), 1.1);
     CHECK(tube_c.nbSlices() == 4);

@@ -126,6 +126,7 @@ namespace tubex
     int TubeTree::sample(double t, const Interval& gate)
     {
       DomainException::check(*this, t);
+      checkDataTree();
       int new_slices_nb = 1;
 
       if(m_second_tubenode == NULL)
@@ -142,7 +143,7 @@ namespace tubex
         m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), m_codomain);
 
         Interval *gate_ptr = NULL;
-        if(!m_codomain.is_interior_subset(gate))
+        if(!m_codomain.is_interior_subset(gate) && gate != Interval::ALL_REALS)
           gate_ptr = new Interval(gate & m_codomain);
 
         TubeSlice::chainSlices(prev_slice, (TubeSlice*)m_first_tubenode);
@@ -190,7 +191,7 @@ namespace tubex
           *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.m_codomain);
           
           Interval *gate_ptr = NULL;
-          if(!(*slice_ptr)->m_codomain.is_interior_subset(gate))
+          if(!(*slice_ptr)->m_codomain.is_interior_subset(gate) && gate != Interval::ALL_REALS)
             gate_ptr = new Interval(gate & (*slice_ptr)->m_codomain);
 
           TubeSlice::chainSlices(prev_slice, *first_slice);
@@ -292,38 +293,38 @@ namespace tubex
       return m_volume;
     }
 
-    const Interval& TubeTree::operator()(int slice_id) const
+    const Interval& TubeTree::operator[](int slice_id) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
       // this call cannot be garanteed with a direct access to m_codomain
       // For write access: use set()
-      return (*getSlice(slice_id))(0);
+      return (*getSlice(slice_id))[0];
     }
 
-    Interval TubeTree::operator()(double t) const
+    Interval TubeTree::operator[](double t) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
       // this call cannot be garanteed with a direct access to m_codomain
       // For write access: use set()
-      return (*getSlice(t))(t);
+      return (*getSlice(t))[t];
     }
 
-    Interval TubeTree::operator()(const ibex::Interval& t) const
+    Interval TubeTree::operator[](const ibex::Interval& t) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
       // this call cannot be garanteed with a direct access to m_codomain
       // For write access: use set()
-
-      if(t.lb() == t.ub())
-        return (*this)(t.lb());
 
       Interval intersection = m_domain & t;
 
       if(intersection.is_empty())
         return Interval::EMPTY_SET;
+
+      else if(t.lb() == t.ub())
+        return (*this)[t.lb()];
 
       else if(t == m_domain || t.is_unbounded() || t.is_superset(m_domain))
       {
@@ -332,26 +333,8 @@ namespace tubex
       }
 
       else
-      {
-        Interval inter_firsttubenode = m_first_tubenode->domain() & intersection;
-        Interval inter_secondtubenode = m_second_tubenode->domain() & intersection;
-
-        /*
-        // todo: check the following
-        if(inter_firsttubenode == inter_secondtubenode)
-          return (*m_first_tubenode)(inter_firsttubenode.lb()) & (*m_second_tubenode)(inter_secondtubenode.lb());
-
-        else if(inter_firsttubenode.lb() == inter_firsttubenode.ub()
-                && inter_secondtubenode.lb() != inter_secondtubenode.ub())
-          return (*m_second_tubenode)(inter_secondtubenode);
-
-        else if(inter_firsttubenode.lb() != inter_firsttubenode.ub()
-                && inter_secondtubenode.lb() == inter_secondtubenode.ub())
-          return (*m_first_tubenode)(inter_firsttubenode);
-
-        else*/
-          return (*m_first_tubenode)(inter_firsttubenode) | (*m_second_tubenode)(inter_secondtubenode);
-      }
+        return (*m_first_tubenode)[m_first_tubenode->domain() & t]
+             | (*m_second_tubenode)[m_second_tubenode->domain() & t];
     }
 
     // Tests
@@ -366,10 +349,11 @@ namespace tubex
       while(slice != NULL)
       {
         slice->set(y);
-        flagFutureTreeUpdate(i);
         slice = slice->nextSlice();
         i++;
       }
+
+      flagFutureTreeUpdate();
     }
     
     void TubeTree::set(const Interval& y, int slice_id)
@@ -386,15 +370,17 @@ namespace tubex
     
     void TubeTree::set(const Interval& y, const Interval& t)
     {
-      TubeSlice *slice = getSlice(t.lb());
+      sample(t.lb());
+      sample(t.ub());
 
-      int i = 0;
-      while(slice != NULL && t.contains(slice->domain().lb()))
+      int i = input2index(t.lb());
+      TubeSlice *slice = getSlice(i);
+
+      for( ; i < input2index(t.ub()) ; i++)
       {
         slice->set(y);
-        flagFutureTreeUpdate(i);
         slice = slice->nextSlice();
-        i++;
+        flagFutureTreeUpdate(i);
       }
     }
     

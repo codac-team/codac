@@ -188,7 +188,7 @@ Tube tubeTest4()
   Tube tube(Interval(0.,21.), 1.);
   tube.set(Interval(1,2), Interval(0,9));
   tube.set(Interval(0.5,1.5), Interval(9,10));
-  tube.set(Interval(-1,1), Interval(10.2));
+  tube.set(Interval(-1,1), Interval(10.2)); // degenerate time interval
   tube.set(Interval(-1.5,-0.5), Interval(11,12));
   tube.set(Interval(-1,1), Interval(12,13));
   tube.set(Interval(0.5,1.5), Interval(13,14));

@@ -169,7 +169,7 @@ namespace tubex
       return m_volume;
     }
 
-    const Interval& TubeSlice::operator()(int slice_id) const
+    const Interval& TubeSlice::operator[](int slice_id) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
@@ -179,7 +179,7 @@ namespace tubex
       return m_codomain;
     }
 
-    Interval TubeSlice::operator()(double t) const
+    Interval TubeSlice::operator[](double t) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
@@ -196,7 +196,7 @@ namespace tubex
       return m_codomain;
     }
 
-    Interval TubeSlice::operator()(const Interval& t) const
+    Interval TubeSlice::operator[](const Interval& t) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
