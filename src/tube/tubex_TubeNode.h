@@ -62,12 +62,11 @@ namespace tubex
       /*ibex::Interval interpol(double t, const TubeNode& derivative) const;
       ibex::Interval interpol(const ibex::Interval& t, const TubeNode& derivative) const;
       std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& t, const TubeNode& derivative) const;
-      virtual ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
-      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-      double maxThickness() const;
+      */virtual ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const = 0;
+      /*double maxThickness() const;
       virtual double maxThickness(int& first_id_max_thickness) const = 0;
-      virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
-
+      */virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
+/*
       // Tests
       bool isEmpty() const;
       virtual bool isInteriorSubset(const TubeNode& outer_tube) const = 0;
@@ -107,8 +106,8 @@ namespace tubex
       //TubeNode();
 
       // Access values
-      /*void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
-
+      virtual void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const = 0;
+/*
       // Tests
 
       // Setting values

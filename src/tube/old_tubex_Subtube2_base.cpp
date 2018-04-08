@@ -480,57 +480,6 @@ namespace tubex
       }
     
     // Access values
-
-      void Subtube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
-      {
-        v_t.clear();
-        Interval intv_t_ctc = invert(y, search_domain);
-
-        if(!intv_t_ctc.is_empty())
-        {
-          pair<Interval,Interval> enc_bounds = eval(intv_t_ctc);
-
-          if(!concatenate_results)
-          {
-            if(enc_bounds.first.ub() > y.ub() || enc_bounds.second.lb() < y.lb())
-            {
-              // Bisection is needed
-              vector<Interval> v1;
-              m_first_subtube->invert(y, v1, search_domain, false);
-              v_t.insert(v_t.end(), v1.begin(), v1.end());
-              vector<Interval> v2;
-              m_second_subtube->invert(y, v2, search_domain, false);
-              v_t.insert(v_t.end(), v2.begin(), v2.end());
-            }
-
-            else
-              v_t.push_back(intv_t_ctc);
-          }
-
-          else
-          {
-            vector<Interval> v;
-            invert(y, v, search_domain, false);
-
-            // Concatenation (solutions may be adjacent)
-            int i = 0;
-            while(i < v.size())
-            {
-              int j = i;
-              Interval merge = v[i];
-
-              while(j + 1 < v.size() && v[j].ub() == v[j + 1].lb())
-              {
-                j ++;
-                merge |= v[j];
-              }
-
-              v_t.push_back(merge);
-              i = j + 1;
-            }
-          }
-        }
-      }
     
     // Operators
 

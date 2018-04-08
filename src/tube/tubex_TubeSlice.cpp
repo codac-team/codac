@@ -206,16 +206,17 @@ namespace tubex
       Interval deriv_value = derivative.codomain();
       return Interval::EMPTY_SET; // todo: gates in computations
     }
-    
-    Interval TubeSlice::invert(const Interval& y, const Interval& t) const
+    */
+    Interval TubeSlice::invert(const Interval& y, const Interval& search_domain) const
     {
-      if(!m_domain.intersects(t) || !m_codomain.intersects(y))
+      if(!m_domain.intersects(search_domain) || !m_codomain.intersects(y))
         return Interval::EMPTY_SET;
 
       else
-        return t & m_domain;
+        return search_domain & m_domain;
     }
-    
+
+    /*
     double TubeSlice::maxThickness(int& first_id_max_thickness) const
     {
       first_id_max_thickness = 0;
@@ -227,8 +228,22 @@ namespace tubex
       if(!t.intersects(m_domain))
         return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
       return make_pair(m_codomain, m_codomain);
-    }
+    }*/
 
+    const pair<Interval,Interval> TubeSlice::eval(const Interval& t) const
+    {
+      Interval intersection = t & m_domain;
+
+      if(intersection.is_empty())
+        return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+      else if(intersection.is_degenerated())
+        return make_pair(Interval((*this)[intersection.lb()].lb()), Interval((*this)[intersection.lb()].ub()));
+
+      else
+        return m_enclosed_bounds; // pre-computed
+    }
+/*
     // Tests
 
     bool TubeSlice::isInteriorSubset(const TubeNode& outer_tube) const
@@ -276,4 +291,13 @@ namespace tubex
       return str;
     }
     */
+
+  // Protected methods
+
+    void TubeSlice::invert(const Interval& y, vector<ibex::Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
+    {
+      Interval inversion = invert(y, search_domain);
+      if(!inversion.is_empty())
+        v_t.push_back(inversion);
+    }
 }

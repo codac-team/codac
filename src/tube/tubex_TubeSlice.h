@@ -48,12 +48,12 @@ namespace tubex
       const ibex::Interval& codomain() const;
       double volume() const;
       const ibex::Interval operator[](double t) const;
-      const ibex::Interval operator[](const ibex::Interval& t) const;
-      /*ibex::Interval interpol(double t, const TubeSlice& derivative) const;
-      ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-      double maxThickness(int& first_id_max_thickness) const;
+      const ibex::Interval operator[](const ibex::Interval& search_domain) const;
+      //ibex::Interval interpol(double t, const TubeSlice& derivative) const;
+      ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      //double maxThickness(int& first_id_max_thickness) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-
+/*
       // Tests
       bool isInteriorSubset(const TubeNode& outer_tube) const;
       bool encloses(const Trajectory& x) const;*/
@@ -67,6 +67,11 @@ namespace tubex
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);*/
 
     protected:
+
+    /** Base: **/
+
+      // Access values
+      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
 
     /** Class variables **/
 

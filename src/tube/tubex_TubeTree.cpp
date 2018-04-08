@@ -365,6 +365,55 @@ namespace tubex
                | (*m_second_tubenode)[m_second_tubenode->domain() & t];
       }
     }
+    
+    Interval TubeTree::invert(const Interval& y, const Interval& search_domain) const
+    {
+      if(!domain().intersects(search_domain)) // to apply this function on a tube portion only
+        return Interval::EMPTY_SET;
+
+      else if(!codomain().intersects(y))
+        return Interval::EMPTY_SET;
+
+      else
+      {
+        if(isSlice())
+          return search_domain & m_domain;
+
+        else
+          return m_first_tubenode->invert(y, search_domain) | m_second_tubenode->invert(y, search_domain);
+      }
+    }
+
+    void TubeTree::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain) const
+    {
+      return invert(y, v_t, search_domain, true);
+    }
+
+    const pair<Interval,Interval> TubeTree::eval(const Interval& t) const
+    {
+      Interval intersection = m_domain & t;
+
+      if(intersection.is_empty())
+        return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+      else if(intersection.is_degenerated())
+        return make_pair(Interval((*this)[intersection.lb()].lb()), Interval((*this)[intersection.lb()].ub()));
+
+      else if(intersection == m_domain)
+      {
+        checkDataTree();
+        return m_enclosed_bounds; // pre-computed
+      }
+
+      else
+      {
+        Interval inter_firstsubtube = m_first_tubenode->domain() & intersection;
+        Interval inter_secondsubtube = m_second_tubenode->domain() & intersection;
+        pair<Interval,Interval> ui_past = m_first_tubenode->eval(inter_firstsubtube);
+        pair<Interval,Interval> ui_future = m_second_tubenode->eval(inter_secondsubtube);
+        return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
+      }
+    }
 
     // Tests
 
@@ -490,6 +539,58 @@ namespace tubex
       return m_tree_update_needed;
     }
     
+    // Access values
+
+    void TubeTree::invert(const Interval& y, vector<ibex::Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
+    {
+      v_t.clear();
+      Interval intv_t_ctc = invert(y, search_domain);
+
+      if(!intv_t_ctc.is_empty())
+      {
+        pair<Interval,Interval> enc_bounds = eval(intv_t_ctc);
+
+        if(!concatenate_results)
+        {
+          if(enc_bounds.first.ub() > y.ub() || enc_bounds.second.lb() < y.lb())
+          {
+            // Bisection is needed
+            vector<Interval> v1;
+            m_first_tubenode->invert(y, v1, search_domain, false);
+            v_t.insert(v_t.end(), v1.begin(), v1.end());
+            vector<Interval> v2;
+            m_second_tubenode->invert(y, v2, search_domain, false);
+            v_t.insert(v_t.end(), v2.begin(), v2.end());
+          }
+
+          else
+            v_t.push_back(intv_t_ctc);
+        }
+
+        else
+        {
+          vector<Interval> v;
+          invert(y, v, search_domain, false);
+
+          // Concatenation (solutions may be adjacent)
+          int i = 0;
+          while(i < v.size())
+          {
+            int j = i;
+            Interval merge = v[i];
+
+            while(j + 1 < v.size() && v[j].ub() == v[j + 1].lb())
+            {
+              j ++;
+              merge |= v[j];
+            }
+
+            v_t.push_back(merge);
+            i = j + 1;
+          }
+        }
+      }
+    }
 
     // Tests
 
