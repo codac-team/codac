@@ -28,6 +28,7 @@ namespace tubex
       // Definition
       Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      Tube(const Tube& x, const ibex::Interval& codomain);
       /*Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);

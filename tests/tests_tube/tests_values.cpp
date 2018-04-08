@@ -2,6 +2,7 @@
 #include "../catch/catch_interval.hpp"
 #include "tubex.h"
 #include "../tests_cases.hpp"
+#include <utility>
 
 using namespace Catch;
 using namespace Detail;

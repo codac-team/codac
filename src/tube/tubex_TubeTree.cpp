@@ -34,6 +34,12 @@ namespace tubex
       *this = x;
     }
 
+    TubeTree::TubeTree(const TubeTree& x, const Interval& codomain) : TubeNode(x)
+    {
+      *this = x;
+      set(codomain);
+    }
+
     TubeTree::~TubeTree()
     {
       // Deleting gate between the two nodes

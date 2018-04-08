@@ -115,11 +115,6 @@ namespace tubex
     // Access values
 
     /*
-    const Interval& TubeNode::operator()(int slice_id) const
-    {
-      return getSlice(slice_id)->codomain();
-    }
-    
     Interval TubeNode::interpol(double t, const TubeNode& derivative) const
     {
       // todo: change interpol to operator() with derivative as second argument
@@ -176,17 +171,6 @@ namespace tubex
       }
 
       return make_pair(lb, ub);
-    }
-    
-    void TubeNode::invert(const Interval& y, vector<Interval> &v_t, const Interval& t) const
-    {
-      return invert(y, v_t, t, true);
-    }
-    
-    double TubeNode::maxThickness() const
-    {
-      int id;
-      return maxThickness(id);
     }
     
     // Tests

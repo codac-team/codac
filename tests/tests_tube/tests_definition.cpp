@@ -73,5 +73,13 @@ TEST_CASE("Tube definition", "[core]")
     CHECK(ApproxIntv(tube_c.getSlice(1)->domain()) == Interval(1.1,2.2));
     CHECK(ApproxIntv(tube_c.getSlice(2)->domain()) == Interval(2.2,3.3));
     CHECK(ApproxIntv(tube_c.getSlice(3)->domain()) == Interval(3.3,4.));
+
+    Tube tube_d(tube_c);
+    CHECK(tube_d.codomain() == tube_c.codomain());
+    CHECK(tube_d.nbSlices() == tube_c.nbSlices());
+
+    Tube tube_e(tube_c, Interval(1.,2.));
+    CHECK(tube_e.codomain() == Interval(1.,2.));
+    CHECK(tube_e.nbSlices() == tube_c.nbSlices());
   }
 }

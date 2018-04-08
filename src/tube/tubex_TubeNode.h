@@ -101,7 +101,6 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      //TubeNode();
 
       // Access values
       virtual void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const = 0;

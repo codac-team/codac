@@ -26,7 +26,7 @@ namespace tubex
       // Definition
       TubeTree(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       TubeTree(const TubeTree& x);
-      //TubeTree(const TubeTree& x, const ibex::Interval& codomain);
+      TubeTree(const TubeTree& x, const ibex::Interval& codomain);
       ~TubeTree();
       TubeTree& operator=(const TubeTree& x);
 
@@ -73,9 +73,7 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      /*TubeTree(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);
-      void createTube(const std::vector<ibex::Interval>& v_slices_domains, const ibex::Interval& value);*/
-
+      
       // Slices/tree structure
       void checkDataTree() const;
       void flagFutureTreeUpdate(int slice_id = -1) const;

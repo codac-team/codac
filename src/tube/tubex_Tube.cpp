@@ -42,4 +42,9 @@ namespace tubex
       sample(v_bounds);
     }
   }
+
+  Tube::Tube(const Tube& x, const Interval& codomain) : TubeTree(x, codomain)
+  {
+
+  }
 }
