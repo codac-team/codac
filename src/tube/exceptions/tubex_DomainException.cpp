@@ -58,7 +58,7 @@ namespace tubex
 
   void DomainException::check(const TubeNode& x, const Interval& intv_t)
   {
-    if(intv_t != x.domain() && !intv_t.is_subset(x.domain()))
+    if(intv_t.is_empty() || !intv_t.is_subset(x.domain()))
       throw DomainException(x, intv_t);
   }
 }

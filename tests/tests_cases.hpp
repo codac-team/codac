@@ -22,9 +22,9 @@ Tube tubeTest1()
   tube.set(Interval(4,8), 0);
   tube.set(Interval(2,7), 1);
   tube.set(Interval(1,6), 2);
-  tube.set(Interval(-4,4), 3.2); // double
+  tube.set(Interval(-4,4), 3);
   tube.set(Interval(-7,-1), 4);
-  tube.set(Interval(-9,-5), 5.9); // double
+  tube.set(Interval(-9,-5), 5);
   tube.set(Interval(-10,-6), 6);
   tube.set(Interval(-11,-7), 7);
   tube.set(Interval(-10,-6), 8);
@@ -187,12 +187,12 @@ Tube tubeTest4()
 {
   Tube tube(Interval(0.,21.), 1.);
   tube.set(Interval(1,2), Interval(0,9));
-  tube.set(Interval(0.5,1.5), Interval(9,10));
+  tube.set(Interval(0.5,1.5), Interval(9,11));
   tube.set(Interval(-1,1), Interval(10.2)); // degenerate time interval
   tube.set(Interval(-1.5,-0.5), Interval(11,12));
   tube.set(Interval(-1,1), Interval(12,13));
   tube.set(Interval(0.5,1.5), Interval(13,14));
-  tube.set(Interval(1,2), Interval(14,21));  
+  tube.set(Interval(1,2), Interval(14,21));
   return tube;
 }
 

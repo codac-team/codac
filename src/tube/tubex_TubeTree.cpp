@@ -279,6 +279,29 @@ namespace tubex
       m_second_tubenode->getTubeNodes(v_nodes);
     }
 
+    void TubeTree::setGateValue(double t, const Interval& gate)
+    {
+      DomainException::check(*this, t);
+      TubeSlice *slice = getSlice(t);
+      if(slice->domain().lb() != t)
+        throw Exception("TubeTree::setGateValue", "no gate at this time input");
+
+      if(slice->m_input_gate != NULL)
+        *(slice->m_input_gate) = gate;
+
+      else
+      {
+        slice->m_input_gate = new Interval(gate);
+        *slice->m_input_gate &= slice->codomain();
+
+        if(slice->prevSlice() != NULL)
+        {
+          *slice->m_input_gate &= slice->prevSlice()->codomain();
+          slice->prevSlice()->m_output_gate = slice->m_input_gate;
+        }
+      }
+    }
+
     // Access values
 
     const Interval& TubeTree::codomain() const
@@ -299,10 +322,10 @@ namespace tubex
       // a further call to checkDataTree() is needed when values change,
       // this call cannot be garanteed with a direct access to m_codomain
       // For write access: use set()
-      return (*getSlice(slice_id))[0];
+      return getSlice(slice_id)->codomain();
     }
 
-    Interval TubeTree::operator[](double t) const
+    const Interval TubeTree::operator[](double t) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
@@ -311,7 +334,7 @@ namespace tubex
       return (*getSlice(t))[t];
     }
 
-    Interval TubeTree::operator[](const ibex::Interval& t) const
+    const Interval TubeTree::operator[](const ibex::Interval& t) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
@@ -323,18 +346,24 @@ namespace tubex
       if(intersection.is_empty())
         return Interval::EMPTY_SET;
 
-      else if(t.lb() == t.ub())
+      else if(t.is_degenerated())
         return (*this)[t.lb()];
 
-      else if(t == m_domain || t.is_unbounded() || t.is_superset(m_domain))
-      {
-        checkDataTree();
-        return m_codomain;
-      }
+      else if(intersection == m_domain)
+        return codomain();
 
       else
-        return (*m_first_tubenode)[m_first_tubenode->domain() & t]
-             | (*m_second_tubenode)[m_second_tubenode->domain() & t];
+      {
+        if((m_first_tubenode->domain() & t).is_empty())
+          return (*m_second_tubenode)[m_second_tubenode->domain() & t];
+
+        else if((m_second_tubenode->domain() & t).is_empty())
+          return (*m_first_tubenode)[m_first_tubenode->domain() & t];
+
+        else
+          return (*m_first_tubenode)[m_first_tubenode->domain() & t]
+               | (*m_second_tubenode)[m_second_tubenode->domain() & t];
+      }
     }
 
     // Tests
@@ -364,23 +393,32 @@ namespace tubex
     
     void TubeTree::set(const Interval& y, double t)
     {
-      getSlice(t)->set(y);
-      flagFutureTreeUpdate(input2index(t));
+      sample(t);
+      setGateValue(t, y);
     }
     
     void TubeTree::set(const Interval& y, const Interval& t)
     {
-      sample(t.lb());
-      sample(t.ub());
+      if(t.is_degenerated())
+        set(y, t.lb());
 
-      int i = input2index(t.lb());
-      TubeSlice *slice = getSlice(i);
-
-      for( ; i < input2index(t.ub()) ; i++)
+      else
       {
-        slice->set(y);
-        slice = slice->nextSlice();
-        flagFutureTreeUpdate(i);
+        sample(t.lb());
+        sample(t.ub());
+
+        int i = input2index(t.lb());
+        TubeSlice *slice = getSlice(i);
+
+        for( ; i <= input2index(t.ub()) && slice != NULL ; i++)
+        {
+          if((t & slice->domain()).is_degenerated())
+            continue;
+          
+          slice->set(y);
+          slice = slice->nextSlice();
+          flagFutureTreeUpdate(i);
+        }
       }
     }
     
@@ -403,6 +441,9 @@ namespace tubex
 
       if(!m_first_tubenode->isSlice())
         ((TubeTree*)m_first_tubenode)->checkDataTree();
+
+      m_codomain = m_first_tubenode->codomain();
+      m_volume = m_first_tubenode->volume();
 
       if(m_second_tubenode != NULL)
       {
