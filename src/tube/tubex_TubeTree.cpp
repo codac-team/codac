@@ -389,6 +389,33 @@ namespace tubex
       return invert(y, v_t, search_domain, true);
     }
 
+    double TubeTree::maxThickness()
+    {
+      int first_id_max_thickness;
+      return maxThickness(first_id_max_thickness);
+    }
+
+    double TubeTree::maxThickness(int& first_id_max_thickness)
+    {
+      int i = 0;
+      double max_thickness = 0.;
+
+      TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        if(slice->codomain().diam() > max_thickness)
+        {
+          max_thickness = slice->codomain().diam();
+          first_id_max_thickness = i;
+        }
+
+        slice = slice->nextSlice();
+        i++;
+      }
+
+      return max_thickness;
+    }
+
     const pair<Interval,Interval> TubeTree::eval(const Interval& t) const
     {
       Interval intersection = m_domain & t;

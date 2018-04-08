@@ -60,6 +60,12 @@ namespace tubex
       bool serialize(const std::string& binary_file_name, const std::vector<const Trajectory&>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
       void deserialize(const std::string& binary_file_name, Trajectory& traj);
       void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);*/
+
+    protected:
+
+    /** Contractors: **/
+
+      //void ctcEval_computeIndex(const ibex::Interval& z, const ibex::Interval& t, int& index_lb, int& index_ub);
   };
 }
 

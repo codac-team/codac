@@ -149,23 +149,23 @@ TEST_CASE("Testing enclosed bounds (tube evaluations)")
     Tube tube1 = tubeTest1();
     tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
 
-    // todo: REQUIRE(ApproxIntvPair(tube1.eval())  == make_pair(Interval(-11,9), Interval(-7,13)));
-    // todo: REQUIRE(tube1.eval(Interval(0.5,25.5)) == make_pair(Interval(-11,9), Interval(-7,13)));
-    // todo: REQUIRE(tube1.eval(Interval(7.1,19.8)) == make_pair(Interval(-11,6), Interval(-7,9)));
-    // todo: REQUIRE(tube1.eval(Interval(6.0,9.0)) == make_pair(Interval(-11,-10), Interval(-7,-6)));
-    // todo: REQUIRE(tube1.eval(Interval(0.)) == make_pair(Interval(4), Interval(8)));
-    // todo: REQUIRE(tube1.eval(Interval(5.)) == make_pair(Interval(-7), Interval(-5)));
-    // todo: REQUIRE(tube1.eval(Interval(5.2)) == make_pair(Interval(-9), Interval(-5)));
-    // todo: REQUIRE(tube1.eval(Interval(23.,24.)) == make_pair(Interval(8), Interval(13)));
-    // todo: REQUIRE(tube1.eval(Interval(22.,25.)) == make_pair(Interval(7,9), Interval(12,13)));
-    // todo: REQUIRE(tube1.eval(Interval(21.,23.)) == make_pair(Interval(8,9), Interval(11,12)));
+    // todo: CHECK(ApproxIntvPair(tube1.eval())  == make_pair(Interval(-11,9), Interval(-7,13)));
+    // todo: CHECK(tube1.eval(Interval(0.5,25.5)) == make_pair(Interval(-11,9), Interval(-7,13)));
+    // todo: CHECK(tube1.eval(Interval(7.1,19.8)) == make_pair(Interval(-11,6), Interval(-7,9)));
+    // todo: CHECK(tube1.eval(Interval(6.0,9.0)) == make_pair(Interval(-11,-10), Interval(-7,-6)));
+    // todo: CHECK(tube1.eval(Interval(0.)) == make_pair(Interval(4), Interval(8)));
+    // todo: CHECK(tube1.eval(Interval(5.)) == make_pair(Interval(-7), Interval(-5)));
+    // todo: CHECK(tube1.eval(Interval(5.2)) == make_pair(Interval(-9), Interval(-5)));
+    // todo: CHECK(tube1.eval(Interval(23.,24.)) == make_pair(Interval(8), Interval(13)));
+    // todo: CHECK(tube1.eval(Interval(22.,25.)) == make_pair(Interval(7,9), Interval(12,13)));
+    // todo: CHECK(tube1.eval(Interval(21.,23.)) == make_pair(Interval(8,9), Interval(11,12)));
   }
 
   SECTION("Test tube4")
   {
     Tube tube4 = tubeTest4();
     // todo: Tube tube4_primitive = tube4.primitive();
-    // todo: REQUIRE(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));
+    // todo: CHECK(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));
   }
 }
 
@@ -175,18 +175,18 @@ TEST_CASE("Testing set inversion")
   {
     Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
-    REQUIRE(tube.invert(Interval(0.)) == Interval(3.0,46.0));
-    REQUIRE(tube.invert(Interval(-7.)) == Interval(4.0,12.0));
-    REQUIRE(tube.invert(Interval::ALL_REALS) == Interval(0.0,46.0));
-    REQUIRE(tube.invert(Interval(-12.0,14.0)) == Interval(0.0,46.0));
-    REQUIRE(tube.invert(Interval(-20,-18)) == Interval::EMPTY_SET);
-    REQUIRE(tube.invert(Interval(-1.0,1.0)) == Interval(2.0,46.0));
-    REQUIRE(tube.invert(Interval(-10.5)) == Interval(7.0,8.0));
-    REQUIRE(tube.invert(Interval(-12.0,-7.0)) == Interval(4.0,12.0));
-    REQUIRE(tube.invert(Interval(10.0,11.0)) == Interval(20.0,27.0));
-    REQUIRE(tube.invert(Interval(6.01,7.0)) == Interval(0.0,30.0));
-    REQUIRE(tube.invert(Interval(6.0,7.0)) == Interval(0.0,43.0));
-    REQUIRE(tube.invert(Interval(5.9,7.0)) == Interval(0.0,43.0));
+    CHECK(tube.invert(Interval(0.)) == Interval(3.0,46.0));
+    CHECK(tube.invert(Interval(-7.)) == Interval(4.0,12.0));
+    CHECK(tube.invert(Interval::ALL_REALS) == Interval(0.0,46.0));
+    CHECK(tube.invert(Interval(-12.0,14.0)) == Interval(0.0,46.0));
+    CHECK(tube.invert(Interval(-20,-18)) == Interval::EMPTY_SET);
+    CHECK(tube.invert(Interval(-1.0,1.0)) == Interval(2.0,46.0));
+    CHECK(tube.invert(Interval(-10.5)) == Interval(7.0,8.0));
+    CHECK(tube.invert(Interval(-12.0,-7.0)) == Interval(4.0,12.0));
+    CHECK(tube.invert(Interval(10.0,11.0)) == Interval(20.0,27.0));
+    CHECK(tube.invert(Interval(6.01,7.0)) == Interval(0.0,30.0));
+    CHECK(tube.invert(Interval(6.0,7.0)) == Interval(0.0,43.0));
+    CHECK(tube.invert(Interval(5.9,7.0)) == Interval(0.0,43.0));
   }
   
   SECTION("Vector set inversion")
@@ -197,92 +197,111 @@ TEST_CASE("Testing set inversion")
     vector<Interval> v;
 
     tube.invert(Interval(0.), v);
-    REQUIRE(v.size() == 4);
+    CHECK(v.size() == 4);
 
     if(v.size() == 4)
     {
-      REQUIRE(v[0] == Interval(3.0,4.0));
-      REQUIRE(v[1] == Interval(14.0,17.0));
-      REQUIRE(v[2] == Interval(37.0,42.0));
-      REQUIRE(v[3] == Interval(43.0,46.0));
+      CHECK(v[0] == Interval(3.0,4.0));
+      CHECK(v[1] == Interval(14.0,17.0));
+      CHECK(v[2] == Interval(37.0,42.0));
+      CHECK(v[3] == Interval(43.0,46.0));
     }
 
     // The same, with a custom domain:
     tube.invert(Interval(0.), v, Interval(3.8,42.5));
-    REQUIRE(v.size() == 3);
+    CHECK(v.size() == 3);
 
     if(v.size() == 3)
     {
-      REQUIRE(v[0] == Interval(3.8,4.0));
-      REQUIRE(v[1] == Interval(14.0,17.0));
-      REQUIRE(v[2] == Interval(37.0,42.0));
+      CHECK(v[0] == Interval(3.8,4.0));
+      CHECK(v[1] == Interval(14.0,17.0));
+      CHECK(v[2] == Interval(37.0,42.0));
     }
 
     tube.invert(Interval(-1.0,1.0), v, Interval::ALL_REALS);
-    REQUIRE(v.size() == 4);
+    CHECK(v.size() == 4);
 
     if(v.size() == 4)
     {
-      REQUIRE(v[0] == Interval(2.0,5.0));
-      REQUIRE(v[1] == Interval(13.0,17.0));
-      REQUIRE(v[2] == Interval(34.0,35.0));
-      REQUIRE(v[3] == Interval(36.0,46.0));
+      CHECK(v[0] == Interval(2.0,5.0));
+      CHECK(v[1] == Interval(13.0,17.0));
+      CHECK(v[2] == Interval(34.0,35.0));
+      CHECK(v[3] == Interval(36.0,46.0));
     }
 
     // The same, with a custom domain (empty):
     tube.invert(Interval(-1.0,1.0), v, Interval::EMPTY_SET);
-    REQUIRE(v.size() == 0);
+    CHECK(v.size() == 0);
 
     tube.invert(Interval(-6.9999), v);
-    REQUIRE(v.size() == 2);
+    CHECK(v.size() == 2);
 
     if(v.size() == 2)
     {
-      REQUIRE(v[0] == Interval(4.,7.));
-      REQUIRE(v[1] == Interval(8.,12.));
+      CHECK(v[0] == Interval(4.,7.));
+      CHECK(v[1] == Interval(8.,12.));
     }
 
     tube.invert(Interval::ALL_REALS, v);
-    REQUIRE(v.size() == 1);
+    CHECK(v.size() == 1);
 
     if(v.size() == 1)
-      REQUIRE(v[0] == Interval(0.0,46.0));
+      CHECK(v[0] == Interval(0.0,46.0));
 
     tube.invert(Interval(-30.0,-29.0), v);
-    REQUIRE(v.size() == 0);
+    CHECK(v.size() == 0);
 
     tube.invert(Interval(3.5), v);
-    REQUIRE(v.size() == 5);
+    CHECK(v.size() == 5);
 
     if(v.size() == 5)
     {
-      REQUIRE(v[0] == Interval(1.0,4.0));
-      REQUIRE(v[1] == Interval(15.0,18.0));
-      REQUIRE(v[2] == Interval(26.0,27.0));
-      REQUIRE(v[3] == Interval(30.0,38.0));
-      REQUIRE(v[4] == Interval(40.0,45.0));
+      CHECK(v[0] == Interval(1.0,4.0));
+      CHECK(v[1] == Interval(15.0,18.0));
+      CHECK(v[2] == Interval(26.0,27.0));
+      CHECK(v[3] == Interval(30.0,38.0));
+      CHECK(v[4] == Interval(40.0,45.0));
     }
 
     tube.invert(Interval(9.5,30.0), v);
-    REQUIRE(v.size() == 1);
+    CHECK(v.size() == 1);
 
     if(v.size() == 1)
-      REQUIRE(v[0] == Interval(20.0,27.0));
+      CHECK(v[0] == Interval(20.0,27.0));
 
     tube.invert(Interval(12.0,13.0), v);
-    REQUIRE(v.size() == 1);
+    CHECK(v.size() == 1);
 
     if(v.size() == 1)
-      REQUIRE(v[0] == Interval(22.0,25.0));
+      CHECK(v[0] == Interval(22.0,25.0));
 
     tube.invert(Interval(-4.0,-3.0), v);
-    REQUIRE(v.size() == 3);
+    CHECK(v.size() == 3);
 
     if(v.size() == 3)
     {
-      REQUIRE(v[0] == Interval(3.0,5.0));
-      REQUIRE(v[1] == Interval(9.0,10.0));
-      REQUIRE(v[2] == Interval(11.0,15.0));
+      CHECK(v[0] == Interval(3.0,5.0));
+      CHECK(v[1] == Interval(9.0,10.0));
+      CHECK(v[2] == Interval(11.0,15.0));
     }
+  }
+}
+
+TEST_CASE("Testing thickness evaluation")
+{
+  SECTION("tubeTest1")
+  {
+    Tube tube = tubeTest1();
+    int slice_id;
+    CHECK(tube.maxThickness(slice_id) == 8.);
+    CHECK(slice_id == 3);
+  }
+
+  SECTION("tubeTest2")
+  {
+    Tube tube = tubeTest2();
+    int slice_id;
+    CHECK(tube.maxThickness(slice_id) == 4.);
+    CHECK(slice_id == 1);
   }
 }

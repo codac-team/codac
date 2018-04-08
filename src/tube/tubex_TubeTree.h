@@ -53,7 +53,8 @@ namespace tubex
       const ibex::Interval operator[](const ibex::Interval& t) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      //double maxThickness(int& first_id_max_thickness) const;
+      double maxThickness();
+      double maxThickness(int& first_id_max_thickness);
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 /*
       // Tests
@@ -90,10 +91,6 @@ namespace tubex
       // Operators
 
       // String
-
-    /** Contractors: **/
-
-      //void ctcEval_computeIndex(const ibex::Interval& z, const ibex::Interval& t, int& index_lb, int& index_ub);
 
     /** Integration: **/
 

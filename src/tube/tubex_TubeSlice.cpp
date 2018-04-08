@@ -217,12 +217,6 @@ namespace tubex
     }
 
     /*
-    double TubeSlice::maxThickness(int& first_id_max_thickness) const
-    {
-      first_id_max_thickness = 0;
-      return m_codomain.diam();
-    }
-
     const pair<Interval,Interval> TubeSlice::eval(const Interval& t) const
     {
       if(!t.intersects(m_domain))
