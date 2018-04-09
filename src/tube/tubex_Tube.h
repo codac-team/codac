@@ -36,9 +36,9 @@ namespace tubex
 
       // Bisection
       /*std::pair<Tube,Tube> bisect(const Tube& derivative, double t, float ratio = 0.55) const;
-
+*/
       // String
-      friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
+      friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
     /** Contractors: **/
 

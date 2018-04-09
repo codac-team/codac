@@ -67,9 +67,8 @@ namespace tubex
       void setInputGate(const ibex::Interval& input_gate);
       void setOutputGate(const ibex::Interval& output_gate);
 
-      /*
       // String
-      friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);*/
+      friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
 
     protected:
 
