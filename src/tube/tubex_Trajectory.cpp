@@ -12,6 +12,7 @@
 
 #include <sstream>
 #include "tubex_Trajectory.h"
+#include "tubex_DomainException.h"
 
 using namespace std;
 using namespace ibex;
@@ -26,7 +27,7 @@ namespace tubex
     setName(name);
   }
 
-  Trajectory::Trajectory(const Function& f, const Interval& dom, const string& name) : m_function(new Function(f)), m_domain(dom)
+  Trajectory::Trajectory(const Function& f, const Interval& domain, const string& name) : m_function(new Function(f)), m_domain(domain)
   {
     setName(name);
   }
@@ -86,6 +87,11 @@ namespace tubex
     return m_domain;
   }
 
+  const Interval Trajectory::codomain() const
+  {
+    return (*this)[m_domain];
+  }
+
   double& Trajectory::set(double t, double y)
   {
     m_map_values[t] = y;
@@ -95,17 +101,16 @@ namespace tubex
 
   const double Trajectory::operator[](double t) const
   {
-    if(!domain().contains(t))
-      return std::numeric_limits<double>::quiet_NaN();
+    DomainException::check(*this, t);
 
-    else if(m_map_values.find(t) != m_map_values.end())
-      return m_map_values.at(t);
-
-    else if(m_function != NULL)
+    if(m_function != NULL)
     {
       IntervalVector box(1, Interval(t));
       return m_function->eval(box).mid();
     }
+
+    else if(m_map_values.find(t) != m_map_values.end())
+      return m_map_values.at(t);
 
     else
     {
@@ -122,6 +127,7 @@ namespace tubex
   
   const Interval Trajectory::operator[](const Interval& t) const
   {
+    DomainException::check(*this, t);
     // todo
   }
 

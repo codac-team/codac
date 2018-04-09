@@ -35,6 +35,7 @@ namespace tubex
       const std::map<double,double> getMap() const;
       const ibex::Function* getFunction() const;
       const ibex::Interval domain() const;
+      const ibex::Interval codomain() const;
       double& set(double t, double y);
       const double operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& t) const;
@@ -46,9 +47,10 @@ namespace tubex
 
       /** Class variables **/
 
-        std::map<double,double> m_map_values;
         ibex::Interval m_domain;
+        // A trajectory is defined either by a Function or a map of values
         ibex::Function *m_function;
+        std::map<double,double> m_map_values;
 
         // Name attributes
         std::string m_name;

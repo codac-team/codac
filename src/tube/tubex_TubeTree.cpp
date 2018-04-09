@@ -560,7 +560,18 @@ namespace tubex
       else
         throw Exception("TubeTree::setGate", "inexistent gate");
     }
+    
+    TubeTree& TubeTree::inflate(const Interval& rad)
+    {
 
+    }
+
+    // Operators
+
+    TubeTree& TubeTree::operator|=(const Trajectory& x)
+    {
+      
+    }
 
   // Protected methods
 

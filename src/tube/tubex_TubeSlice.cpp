@@ -322,6 +322,18 @@ namespace tubex
       }
     }
     
+    TubeNode& TubeSlice::inflate(const Interval& rad)
+    {
+      // todo
+    }
+    
+    // Operators
+    
+    TubeSlice& TubeSlice::operator|=(const Trajectory& x)
+    {
+      // todo
+    }
+    
     // String
 
     ostream& operator<<(ostream& str, const TubeSlice& x)

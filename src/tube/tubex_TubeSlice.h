@@ -66,6 +66,10 @@ namespace tubex
       void setEmpty();
       void setInputGate(const ibex::Interval& input_gate);
       void setOutputGate(const ibex::Interval& output_gate);
+      TubeNode& inflate(const ibex::Interval& rad);
+
+      // Operators
+      TubeSlice& operator|=(const Trajectory& x);
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);

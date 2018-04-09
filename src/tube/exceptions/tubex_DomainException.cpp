@@ -36,11 +36,41 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DomainException::DomainException(const TubeNode& x, const Interval& intv_t)
+  DomainException::DomainException(const Trajectory& x, double t)
+  {
+    ostringstream os;
+    os << "input out of range: ";
+    os << "t=" << t << " not in " << x.domain() << endl;
+    m_what_msg = os.str();
+  }
+
+  DomainException::DomainException(const TubeNode& x, const Interval& t)
   {
     ostringstream os;
     os << "interval input out of range: ";
-    os << "t=" << intv_t << " not a subset of " << x.domain() << endl;
+    os << "t=" << t << " not a subset of " << x.domain() << endl;
+    m_what_msg = os.str();
+  }
+
+  DomainException::DomainException(const Trajectory& x, const Interval& t)
+  {
+    ostringstream os;
+    os << "interval input out of range: ";
+    os << "t=" << t << " not a subset of " << x.domain() << endl;
+    m_what_msg = os.str();
+  }
+
+  DomainException::DomainException(const TubeNode& x1, const TubeNode& x2)
+  {
+    ostringstream os;
+    os << "variables are not defined over the same domain: " << x1.domain() << "!=" << x2.domain() << endl;
+    m_what_msg = os.str();
+  }
+
+  DomainException::DomainException(const Trajectory& x1, const Trajectory& x2)
+  {
+    ostringstream os;
+    os << "trajectories are not defined over the same domain: " << x1.domain() << "!=" << x2.domain() << endl;
     m_what_msg = os.str();
   }
 
@@ -56,9 +86,33 @@ namespace tubex
       throw DomainException(x, t);
   }
 
-  void DomainException::check(const TubeNode& x, const Interval& intv_t)
+  void DomainException::check(const Trajectory& x, double t)
   {
-    if(intv_t.is_empty() || !intv_t.is_subset(x.domain()))
-      throw DomainException(x, intv_t);
+    if(!x.domain().contains(t))
+      throw DomainException(x, t);
+  }
+
+  void DomainException::check(const TubeNode& x, const Interval& t)
+  {
+    if(t.is_empty() || !t.is_subset(x.domain()))
+      throw DomainException(x, t);
+  }
+
+  void DomainException::check(const Trajectory& x, const Interval& t)
+  {
+    if(t.is_empty() || !t.is_subset(x.domain()))
+      throw DomainException(x, t);
+  }
+
+  void DomainException::check(const TubeNode& x1, const TubeNode& x2)
+  {
+    if(x1.domain() != x2.domain())
+      throw DomainException(x1, x2);
+  }
+
+  void DomainException::check(const Trajectory& x1, const Trajectory& x2)
+  {
+    if(x1.domain() != x2.domain())
+      throw DomainException(x1, x2);
   }
 }

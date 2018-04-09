@@ -164,16 +164,6 @@ namespace tubex
     }*/
     
     // Tests
-    
-    bool TubeNode::operator==(const TubeNode& x) const
-    {
-      return isEqual(x);
-    }
-    
-    bool TubeNode::operator!=(const TubeNode& x) const
-    {
-      return isDifferent(x);
-    }
 
     /*bool TubeNode::isEmpty() const
     {
@@ -200,11 +190,11 @@ namespace tubex
     TubeNode& TubeNode::inflate(double rad)
     {
 
-    }
+    }*/
     
     // Operators
     
-    TubeNode& TubeNode::operator|=(const TubeNode& x)
+    /*TubeNode& TubeNode::operator|=(const TubeNode& x)
     {
 
     }

@@ -43,7 +43,6 @@ namespace tubex
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
       void getTubeNodes(std::vector<const TubeNode*> &v_nodes) const;
-      void setGate(double t, const ibex::Interval& gate);
 
       // Access values
       const ibex::Interval& codomain() const;
@@ -71,6 +70,11 @@ namespace tubex
       void set(const ibex::Interval& y, double t);
       void set(const ibex::Interval& y, const ibex::Interval& t);
       void setEmpty();
+      void setGate(double t, const ibex::Interval& gate);
+      TubeTree& inflate(const ibex::Interval& rad);
+
+      // Operators
+      TubeTree& operator|=(const Trajectory& x);
 
     protected:
 

@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_StructureException.h"
+#include "tubex_DomainException.h"
 #include "tubex_TubeNode.h"
 #include "tubex_TubeSlice.h"
 #include <string>
@@ -30,17 +31,14 @@ namespace tubex
       os << endl << "TubeNodes of different slices number: " 
          << "n1=" << x1.nbSlices() << " and n2=" << x2.nbSlices();
 
-    if(x1.domain() != x2.domain())
-      os << endl << "TubeNodes of different domains: " 
-         << "[t1]=" << x1.domain() << " and [t2]=" << x2.domain();
-
     os << endl;
     m_what_msg = os.str();
   }
 
   void StructureException::check(const TubeNode& x1, const TubeNode& x2)
   {
-    if(x1.nbSlices() != x2.nbSlices() || x1.domain() != x2.domain())
+    DomainException::check(x1, x2);
+    if(x1.nbSlices() != x2.nbSlices())
       throw StructureException(x1, x2);
 
     TubeSlice *slice_x1 = x1.getFirstSlice();

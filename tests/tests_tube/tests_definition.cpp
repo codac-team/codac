@@ -81,5 +81,16 @@ TEST_CASE("Tube definition", "[core]")
     Tube tube_e(tube_c, Interval(1.,2.));
     CHECK(tube_e.codomain() == Interval(1.,2.));
     CHECK(tube_e.nbSlices() == tube_c.nbSlices());
+
+    CHECK_THROWS(Tube tube_f(Interval(0.,12.), -1.););
+
+    Tube tube_f(Interval(0.,12.), 0.);
+    CHECK(tube_f.domain() == Interval(0.,12.));
+    CHECK(tube_f.nbSlices() == 1);
+  }
+
+  SECTION("Tube class - Trajectory")
+  {
+    // todo...
   }
 }

@@ -64,8 +64,6 @@ namespace tubex
       virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
 
       // Tests
-      bool operator==(const TubeNode& x) const;
-      bool operator!=(const TubeNode& x) const;
       virtual bool isEmpty() const = 0;
       virtual bool encloses(const Trajectory& x) const = 0;
 
@@ -75,12 +73,13 @@ namespace tubex
       /*bool contract(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, double t);
-      TubeNode& inflate(double rad);
-
+      TubeNode& inflate(double rad);*/
+      virtual TubeNode& inflate(const ibex::Interval& rad) = 0;
+/*
       // Operators
-      TubeNode& operator|=(const TubeNode& x);
-      TubeNode& operator|=(const Trajectory& x);
-      TubeNode& operator&=(const TubeNode& x);
+      TubeNode& operator|=(const TubeNode& x);*/
+      virtual TubeNode& operator|=(const Trajectory& x) = 0;
+      /*TubeNode& operator&=(const TubeNode& x);
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeNode& x);*/

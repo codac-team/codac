@@ -12,6 +12,7 @@
 
 #include "tubex_Tube.h"
 #include "tubex_Exception.h"
+#include "tubex_DomainException.h"
 
 using namespace std;
 using namespace ibex;
@@ -25,8 +26,13 @@ namespace tubex
   
   Tube::Tube(const Interval& domain, double timestep, const Interval& codomain) : TubeTree(domain, codomain)
   {
-    if(timestep <= 0.)
-      throw Exception("TubeSlice::chainSlices", "gate already existing");
+    if(timestep < 0.)
+      throw Exception("Tube constructor", "invalid timestep");
+
+    else if(timestep == 0.)
+    {
+      // then the tube is defined as one single slice
+    }
 
     else if(timestep < domain.diam())
     {
@@ -47,7 +53,26 @@ namespace tubex
   {
 
   }
-    
+
+  Tube::Tube(const Trajectory& traj, const Interval& thickness, double timestep) : Tube(traj.domain(), timestep, Interval::EMPTY_SET)
+  {
+    if(traj.domain().is_unbounded() || traj.domain().is_empty())
+      throw Exception("Tube constructor", "empty or unbounded trajectory domain");
+
+    *this |= traj;
+    inflate(thickness);
+  }
+
+  Tube::Tube(const Trajectory& lb, const Trajectory& ub, double timestep) : Tube(lb.domain(), timestep, Interval::EMPTY_SET)
+  {
+    if(lb.domain().is_unbounded() || lb.domain().is_empty() || ub.domain().is_unbounded() || ub.domain().is_empty())
+      throw Exception("Tube constructor", "empty or unbounded trajectory domain");
+    DomainException::check(lb, ub);
+
+    *this |= lb;
+    *this |= ub;
+  }
+
   // String
 
   ostream& operator<<(ostream& str, const Tube& x)
