@@ -12,6 +12,7 @@
 
 #include "tubex_StructureException.h"
 #include "tubex_TubeNode.h"
+#include "tubex_TubeSlice.h"
 #include <string>
 #include <sstream>
 
@@ -41,5 +42,34 @@ namespace tubex
   {
     if(x1.nbSlices() != x2.nbSlices() || x1.domain() != x2.domain())
       throw StructureException(x1, x2);
+
+    TubeSlice *slice_x1 = x1.getFirstSlice();
+    TubeSlice *slice_x2 = x2.getFirstSlice();
+
+    while(slice_x1 != NULL)
+    {
+      if(slice_x1->domain() != slice_x2->domain())
+        throw StructureException(*slice_x1, *slice_x2);
+
+      slice_x1 = slice_x1->nextSlice();
+      slice_x2 = slice_x2->nextSlice();
+    }
+  }
+
+  void StructureException::check(const TubeTree& x1, const TubeTree& x2)
+  {
+    StructureException::check((const TubeNode&)x1, (const TubeNode&)x2);
+
+    TubeSlice *slice_x1 = x1.getFirstSlice();
+    TubeSlice *slice_x2 = x2.getFirstSlice();
+
+    while(slice_x1 != NULL)
+    {
+      if(slice_x1->domain() != slice_x2->domain())
+        throw StructureException(*slice_x1, *slice_x2);
+
+      slice_x1 = slice_x1->nextSlice();
+      slice_x2 = slice_x2->nextSlice();
+    }
   }
 }

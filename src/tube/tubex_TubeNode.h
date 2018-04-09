@@ -41,10 +41,8 @@ namespace tubex
       virtual const TubeSlice* getSlice(int slice_id) const = 0;
       virtual TubeSlice* getSlice(double t) = 0;
       virtual const TubeSlice* getSlice(double t) const = 0;
-      TubeSlice* getFirstSlice();
-      const TubeSlice* getFirstSlice() const;
-      TubeSlice* getLastSlice();
-      const TubeSlice* getLastSlice() const;
+      TubeSlice* getFirstSlice() const;
+      TubeSlice* getLastSlice() const;
       virtual void getSlices(std::vector<const TubeSlice*>& v_slices) const = 0;
       virtual int input2index(double t) const = 0;
       double index2input(int slice_id) const;
@@ -66,11 +64,10 @@ namespace tubex
       virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
 /*
       // Tests
-      bool isEmpty() const;
-      virtual bool isInteriorSubset(const TubeNode& outer_tube) const = 0;
+      bool isEmpty() const;*/
       virtual bool encloses(const Trajectory& x) const = 0;
       bool operator==(const TubeNode& x) const;
-      bool operator!=(const TubeNode& x) const;*/
+      bool operator!=(const TubeNode& x) const;
 
       // Setting values
       virtual void set(const ibex::Interval& y) = 0;

@@ -1,6 +1,7 @@
 set(TESTS_TUBE_SOURCES
   tests.cpp
   tests_definition.cpp
+  tests_exceptions.cpp
   tests_slicesstructure.cpp
   tests_values.cpp
 )

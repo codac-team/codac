@@ -24,7 +24,7 @@ namespace tubex
   {
     ostringstream os;
     os << "slice index out of range: ";
-    //os << "i=" << slice_index << " not in " << Interval(0,(x.nbSlices()-1)) << endl;
+    os << "i=" << slice_index << " not in " << Interval(0,(x.nbSlices()-1)) << endl;
     m_what_msg = os.str();
   }
 

@@ -240,17 +240,23 @@ namespace tubex
 
     // Tests
 
-    bool TubeSlice::isInteriorSubset(const TubeSlice& outer_set) const
+    bool TubeSlice::isSubset(const TubeSlice& x) const
     {
-      StructureException::check(*this, outer_set);
-      return m_codomain.is_interior_subset(outer_set.codomain())
-          && inputGate().is_interior_subset(outer_set.inputGate())
-          && outputGate().is_interior_subset(outer_set.outputGate());
+      StructureException::check(*this, x);
+      return m_codomain.is_subset(x.codomain())
+          && inputGate().is_subset(x.inputGate())
+          && outputGate().is_subset(x.outputGate());
+    }
+
+    bool TubeSlice::isStrictSubset(const TubeSlice& x) const
+    {
+      StructureException::check(*this, x);
+      return isSubset(x) && (*this) != x;
     }
 
     bool TubeSlice::encloses(const Trajectory& x) const
     {
-      return x[m_domain].is_interior_subset(m_codomain)
+      return x[m_domain].is_subset(m_codomain)
           && inputGate().contains(x[m_domain.lb()])
           && outputGate().contains(x[m_domain.ub()]);
     }

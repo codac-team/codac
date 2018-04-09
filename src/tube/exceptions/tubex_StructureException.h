@@ -18,6 +18,7 @@
 #include <string>
 #include <sstream>
 #include "tubex_TubeNode.h"
+#include "tubex_TubeTree.h"
 #include "tubex_Exception.h"
 
 namespace tubex
@@ -34,7 +35,7 @@ namespace tubex
 
       StructureException(const TubeNode& x1, const TubeNode& x2);
       static void check(const TubeNode& x1, const TubeNode& x2);
-      // todo: equivalent constructor for Tube class
+      static void check(const TubeTree& x1, const TubeTree& x2);
   };
 }
 

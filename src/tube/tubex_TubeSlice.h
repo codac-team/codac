@@ -54,7 +54,8 @@ namespace tubex
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
       // Tests
-      bool isInteriorSubset(const TubeSlice& outer_set) const;
+      bool isSubset(const TubeSlice& x) const;
+      bool isStrictSubset(const TubeSlice& x) const;
       bool encloses(const Trajectory& x) const;
 
       // Setting values

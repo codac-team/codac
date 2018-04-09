@@ -428,34 +428,38 @@ namespace tubex
 
     // Tests
 
-    bool TubeTree::isInteriorSubset(const TubeTree& outer_set) const
+    bool TubeTree::isSubset(const TubeTree& x) const
     {
-      StructureException::check(*this, outer_set);
-      const TubeSlice **slice, **outer_slice;
-      *slice = getFirstSlice();
-      *outer_slice = outer_set.getFirstSlice();
+      StructureException::check(*this, x);
+      TubeSlice *slice = getFirstSlice();
+      TubeSlice *outer_slice = getFirstSlice();
 
-      while(*slice != NULL)
+      while(slice != NULL)
       {
-        if(!(*slice)->isInteriorSubset(**outer_slice))
+        if(!slice->isSubset(*outer_slice))
           return false;
-        *slice = (*slice)->nextSlice();
-        *outer_slice = (*outer_slice)->nextSlice();
+        slice = slice->nextSlice();
+        outer_slice = outer_slice->nextSlice();
       }
 
       return true;
     }
 
+    bool TubeTree::isStrictSubset(const TubeTree& x) const
+    {
+      StructureException::check(*this, x);
+      return isSubset(x) && (*this) != x;
+    }
+
     bool TubeTree::encloses(const Trajectory& x) const
     {
-      const TubeSlice **slice;
-      *slice = getFirstSlice();
+      TubeSlice *slice = getFirstSlice();
 
-      while(*slice != NULL)
+      while(slice != NULL)
       {
-        if(!(*slice)->encloses(x))
+        if(!slice->encloses(x))
           return false;
-        *slice = (*slice)->nextSlice();
+        slice = slice->nextSlice();
       }
 
       return true;

@@ -63,24 +63,14 @@ namespace tubex
       return m_slices_number;
     }
     
-    TubeSlice* TubeNode::getFirstSlice()
+    TubeSlice* TubeNode::getFirstSlice() const
     {
-      return getSlice(0);
+      return const_cast<TubeSlice*>(getSlice(0));
     }
 
-    const TubeSlice* TubeNode::getFirstSlice() const
+    TubeSlice* TubeNode::getLastSlice() const
     {
-      return const_cast<TubeSlice*>(getFirstSlice());
-    }
-
-    TubeSlice* TubeNode::getLastSlice()
-    {
-      return getSlice(nbSlices() - 1);
-    }
-    
-    const TubeSlice* TubeNode::getLastSlice() const
-    {
-      return const_cast<TubeSlice*>(getLastSlice());
+      return const_cast<TubeSlice*>(getSlice(nbSlices() - 1));
     }
 
     double TubeNode::index2input(int slice_id) const
@@ -178,7 +168,7 @@ namespace tubex
     bool TubeNode::isEmpty() const
     {
       return codomain().is_empty();
-    }
+    }*/
     
     bool TubeNode::operator==(const TubeNode& x) const
     {
@@ -189,7 +179,7 @@ namespace tubex
     {
       
     }
-    
+    /*
     // Setting values
 
     bool TubeNode::contract(const Interval& y, int slice_id)

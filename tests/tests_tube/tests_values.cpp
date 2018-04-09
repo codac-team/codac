@@ -2,7 +2,6 @@
 #include "../catch/catch_interval.hpp"
 #include "tubex.h"
 #include "../tests_cases.hpp"
-#include <utility>
 
 using namespace Catch;
 using namespace Detail;
@@ -307,7 +306,7 @@ TEST_CASE("Testing thickness evaluation")
   }
 }
 
-TEST_CASE("Testing isInteriorSubset()")
+TEST_CASE("Testing isSubset()")
 {
   SECTION("TubeSlice")
   {
@@ -315,20 +314,28 @@ TEST_CASE("Testing isInteriorSubset()")
     TubeSlice slice2(Interval(0.,1.), Interval(0.,4.));
     TubeSlice slice3(Interval(0.,1.4), Interval(0.,4.));
 
-    CHECK_THROWS(slice1.isInteriorSubset(slice3));
-    CHECK(slice1.isInteriorSubset(slice2));
+    CHECK_THROWS(slice1.isSubset(slice3));
+    CHECK(slice1.isSubset(slice2));
 
     slice1.setGateValue(0., Interval(0.5,2.));
-    CHECK(slice1.isInteriorSubset(slice2));
+    CHECK(slice1.isSubset(slice2));
     CHECK(slice1[0.] == Interval(1.,2.));
 
     slice1.setGateValue(1., Interval(0.5,2.));
-    CHECK(slice1.isInteriorSubset(slice2));
+    CHECK(slice1.isSubset(slice2));
     CHECK(slice1[1.] == Interval(1.,2.));
   }
 
-  SECTION("TubeTree")
+  SECTION("Tube")
   {
-    // todo...
+    Tube tube1(Interval(0.,1.), 1., Interval(0.,5.));
+    Tube tube2(Interval(0.,1.), 1., Interval(0.,5.));
+    Tube tube3(Interval(0.,1.), 0.5);
+
+    CHECK_THROWS(tube1.isSubset(tube3));
+    CHECK(tube1.isSubset(tube2));
+    CHECK(!tube1.isStrictSubset(tube2));
+    tube1.set(Interval(1.,4.));
+    CHECK(tube1.isSubset(tube2));
   }
 }
