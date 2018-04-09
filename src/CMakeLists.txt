@@ -47,10 +47,10 @@
     tube/tubex_Tube.cpp
 #    tube/tubex_TubeSystem.cpp
 #    tube/tubex_TubeVector.cpp
-    tube/exceptions/tubex_Exception.cpp
-    tube/exceptions/tubex_DomainException.cpp
-    tube/exceptions/tubex_EmptyException.cpp
-    tube/exceptions/tubex_StructureException.cpp
+    exceptions/tubex_Exception.cpp
+    exceptions/tubex_DomainException.cpp
+    exceptions/tubex_EmptyException.cpp
+    exceptions/tubex_StructureException.cpp
   )
 
   set(HEADERS
@@ -81,10 +81,10 @@
     tube/tubex_Tube.h
 #    tube/tubex_TubeSystem.h
 #    tube/tubex_TubeVector.h
-    tube/exceptions/tubex_Exception.h
-    tube/exceptions/tubex_DomainException.h
-    tube/exceptions/tubex_EmptyException.h
-    tube/exceptions/tubex_StructureException.h
+    exceptions/tubex_Exception.h
+    exceptions/tubex_DomainException.h
+    exceptions/tubex_EmptyException.h
+    exceptions/tubex_StructureException.h
   )
 
 
