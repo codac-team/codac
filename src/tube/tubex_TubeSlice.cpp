@@ -42,6 +42,8 @@ namespace tubex
     TubeSlice& TubeSlice::operator=(const TubeSlice& x)
     {
       TubeNode::operator=(x);
+      setInputGate(x.inputGate());
+      setOutputGate(x.outputGate());
       return *this;
     }
 
@@ -100,35 +102,19 @@ namespace tubex
       return m_next_slice;
     }
 
-    void TubeSlice::chainSlices(TubeSlice *first_slice, TubeSlice *second_slice, Interval *gate)
+    void TubeSlice::chainSlices(TubeSlice *first_slice, TubeSlice *second_slice)
     {
       if(first_slice != NULL)
       {
         first_slice->m_next_slice = second_slice;
-
-        if(gate != NULL)
-        {
-          if(first_slice->m_output_gate != NULL)
-            throw Exception("TubeSlice::chainSlices", "gate already existing");
-          first_slice->m_output_gate = gate;
-        }
-
-        else if(second_slice != NULL && first_slice->m_output_gate == NULL)
+        if(second_slice != NULL && first_slice->m_output_gate == NULL)
           first_slice->m_output_gate = second_slice->m_input_gate;
       }
 
       if(second_slice != NULL)
       {
         second_slice->m_prev_slice = first_slice;
-
-        if(gate != NULL)
-        {
-          if(second_slice->m_input_gate != NULL)
-            throw Exception("TubeSlice::chainSlices", "gate already existing");
-          second_slice->m_input_gate = gate;
-        }
-
-        else if(first_slice != NULL && second_slice->m_input_gate == NULL)
+        if(first_slice != NULL && second_slice->m_input_gate == NULL)
           second_slice->m_input_gate = first_slice->m_output_gate;
       }
     }
@@ -239,6 +225,16 @@ namespace tubex
     }
 
     // Tests
+    
+    bool TubeSlice::operator==(const TubeSlice& x) const
+    {
+      return isEqual(x);
+    }
+    
+    bool TubeSlice::operator!=(const TubeSlice& x) const
+    {
+      return isDifferent(x);
+    }
 
     bool TubeSlice::isSubset(const TubeSlice& x) const
     {
@@ -285,45 +281,38 @@ namespace tubex
       set(Interval::EMPTY_SET);
     }
 
-    void TubeSlice::setGateValue(double t, const Interval& gate)
+    void TubeSlice::setInputGate(const Interval& input_gate)
     {
-      DomainException::check(*this, t);
-      if(m_domain.lb() != t && m_domain.ub() != t)
-        throw Exception("TubeSlice::setGateValue", "no gate at this time input");
+      if(m_input_gate != NULL)
+        *m_input_gate = input_gate;
 
-      if(m_domain.lb() == t) // input gate
+      else
       {
-        if(m_input_gate != NULL)
-          *m_input_gate = gate;
+        m_input_gate = new Interval(input_gate);
+        *m_input_gate &= m_codomain;
 
-        else
+        if(prevSlice() != NULL)
         {
-          m_input_gate = new Interval(gate);
-          *m_input_gate &= m_codomain;
-
-          if(prevSlice() != NULL)
-          {
-            *m_input_gate &= prevSlice()->codomain();
-            prevSlice()->m_output_gate = m_input_gate;
-          }
+          *m_input_gate &= prevSlice()->codomain();
+          prevSlice()->m_output_gate = m_input_gate;
         }
       }
+    }
 
-      else // output gate
+    void TubeSlice::setOutputGate(const Interval& output_gate)
+    {
+      if(m_output_gate != NULL)
+        *m_output_gate = output_gate;
+
+      else
       {
-        if(m_output_gate != NULL)
-          *m_output_gate = gate;
+        m_output_gate = new Interval(output_gate);
+        *m_output_gate &= m_codomain;
 
-        else
+        if(nextSlice() != NULL)
         {
-          m_output_gate = new Interval(gate);
-          *m_output_gate &= m_codomain;
-
-          if(nextSlice() != NULL)
-          {
-            *m_output_gate &= nextSlice()->codomain();
-            nextSlice()->m_input_gate = m_output_gate;
-          }
+          *m_output_gate &= nextSlice()->codomain();
+          nextSlice()->m_input_gate = m_output_gate;
         }
       }
     }
@@ -340,10 +329,28 @@ namespace tubex
 
   // Protected methods
 
+    // Access values
+
     void TubeSlice::invert(const Interval& y, vector<ibex::Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
     {
       Interval inversion = invert(y, search_domain);
       if(!inversion.is_empty())
         v_t.push_back(inversion);
+    }
+
+    // Tests
+
+    bool TubeSlice::isEqual(const TubeSlice& x) const
+    {
+      return TubeNode::isEqual(x) && 
+             inputGate() == x.inputGate() &&
+             outputGate() == x.outputGate();
+    }
+    
+    bool TubeSlice::isDifferent(const TubeSlice& x) const
+    {
+      return TubeNode::isDifferent(x) ||
+             inputGate() != x.inputGate() ||
+             outputGate() != x.outputGate();
     }
 }

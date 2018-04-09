@@ -62,17 +62,16 @@ namespace tubex
       std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& t, const TubeNode& derivative) const;
       */virtual ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const = 0;
       virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
-/*
+
       // Tests
-      bool isEmpty() const;*/
-      virtual bool encloses(const Trajectory& x) const = 0;
       bool operator==(const TubeNode& x) const;
       bool operator!=(const TubeNode& x) const;
+      /*bool isEmpty() const;*/
+      virtual bool encloses(const Trajectory& x) const = 0;
 
       // Setting values
       virtual void set(const ibex::Interval& y) = 0;
       virtual void setEmpty() = 0;
-      virtual void setGateValue(double t, const ibex::Interval& gate) = 0;
       /*bool contract(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, double t);
@@ -102,9 +101,11 @@ namespace tubex
 
       // Access values
       virtual void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const = 0;
-/*
-      // Tests
 
+      // Tests
+      bool isEqual(const TubeNode& x) const;
+      bool isDifferent(const TubeNode& x) const;
+/*
       // Setting values
 
       // Operators

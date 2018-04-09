@@ -43,7 +43,7 @@ namespace tubex
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
       void getTubeNodes(std::vector<const TubeNode*> &v_nodes) const;
-      void setGateValue(double t, const ibex::Interval& gate);
+      void setGate(double t, const ibex::Interval& gate);
 
       // Access values
       const ibex::Interval& codomain() const;
@@ -58,6 +58,8 @@ namespace tubex
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
       // Tests
+      bool operator==(const TubeTree& x) const;
+      bool operator!=(const TubeTree& x) const;
       bool isSubset(const TubeTree& x) const;
       bool isStrictSubset(const TubeTree& x) const;
       bool encloses(const Trajectory& x) const;
@@ -83,9 +85,11 @@ namespace tubex
       // Access values
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
 
-      /*// Tests
+      // Tests
+      bool isEqual(const TubeTree& x) const;
+      bool isDifferent(const TubeTree& x) const;
 
-      // Setting values
+      /*// Setting values
 
       // Operators
 

@@ -306,6 +306,68 @@ TEST_CASE("Testing thickness evaluation")
   }
 }
 
+TEST_CASE("Testing equalities")
+{
+  SECTION("TubeSlice")
+  {
+    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
+    TubeSlice slice2(Interval(0.,1.), Interval(1.,3.));
+    CHECK(slice1 == slice2);
+    CHECK_FALSE(slice1 != slice2);
+
+    slice1.set(Interval(10.,10.5));
+    CHECK(slice1 != slice2);
+    CHECK_FALSE(slice1 == slice2);
+
+    slice1 = slice2;
+    CHECK(slice1 == slice2);
+    CHECK_FALSE(slice1 != slice2);
+
+    slice1 = slice2;
+    slice1.setInputGate(Interval(2.));
+    CHECK(slice1 != slice2);
+    CHECK_FALSE(slice1 == slice2);
+
+    slice1 = slice2;
+    slice1.setOutputGate(Interval(6.));
+    CHECK(slice1 != slice2);
+    CHECK_FALSE(slice1 == slice2);
+  }
+
+  SECTION("Tube")
+  {
+    Tube tube1(Interval(0.,1.), 0.1, Interval(1.,3.));
+    Tube tube2(Interval(0.,1.), 0.1, Interval(1.,3.));
+
+    CHECK(tube1 == tube2);
+    CHECK_FALSE(tube1 != tube2);
+
+    tube1.set(Interval(2.,3.), 2);
+    CHECK(tube1 != tube2);
+    CHECK_FALSE(tube1 == tube2);
+
+    tube1 = tube2;
+    CHECK(tube1 == tube2);
+    CHECK_FALSE(tube1 != tube2);
+
+    tube1.set(Interval(2.,3.), 0.5);
+    CHECK(tube1 != tube2);
+    CHECK_FALSE(tube1 == tube2);
+
+    tube1.set(Interval(1.,3.), 0.5);
+    CHECK(tube1 == tube2);
+    CHECK_FALSE(tube1 != tube2);
+
+    tube1.set(Interval(1.,3.2), 1.);
+    CHECK(tube1 != tube2);
+    CHECK_FALSE(tube1 == tube2);
+
+    tube1.set(Interval(1.,3.), 1.);
+    CHECK(tube1 == tube2);
+    CHECK_FALSE(tube1 != tube2);
+  }
+}
+
 TEST_CASE("Testing isSubset()")
 {
   SECTION("TubeSlice")
@@ -317,25 +379,40 @@ TEST_CASE("Testing isSubset()")
     CHECK_THROWS(slice1.isSubset(slice3));
     CHECK(slice1.isSubset(slice2));
 
-    slice1.setGateValue(0., Interval(0.5,2.));
+    slice1.setInputGate(Interval(0.5,2.));
     CHECK(slice1.isSubset(slice2));
     CHECK(slice1[0.] == Interval(1.,2.));
 
-    slice1.setGateValue(1., Interval(0.5,2.));
+    slice1.setOutputGate(Interval(0.5,2.));
     CHECK(slice1.isSubset(slice2));
     CHECK(slice1[1.] == Interval(1.,2.));
   }
 
   SECTION("Tube")
   {
-    Tube tube1(Interval(0.,1.), 1., Interval(0.,5.));
-    Tube tube2(Interval(0.,1.), 1., Interval(0.,5.));
-    Tube tube3(Interval(0.,1.), 0.5);
+    Tube tube1(Interval(0.,10.), 1., Interval(0.,5.));
+    Tube tube2(Interval(0.,10.), 1., Interval(0.,5.));
+    Tube tube3(Interval(0.,10.), 0.5);
 
     CHECK_THROWS(tube1.isSubset(tube3));
     CHECK(tube1.isSubset(tube2));
     CHECK(!tube1.isStrictSubset(tube2));
     tube1.set(Interval(1.,4.));
     CHECK(tube1.isSubset(tube2));
+
+    tube1 = tube2;
+    CHECK(tube1.isSubset(tube2));
+    CHECK(!tube1.isStrictSubset(tube2));
+    tube1.set(Interval(1.,5.), 2); // strict subset due to a slice only
+    CHECK(tube1.isSubset(tube2));
+    CHECK(tube1 != tube2);
+    CHECK(tube1.isStrictSubset(tube2));
+
+    tube1 = tube2;
+    CHECK(tube1.isSubset(tube2));
+    CHECK(!tube1.isStrictSubset(tube2));
+    tube1.set(Interval(1.,5.), 2.); // strict subset due to a gate only
+    CHECK(tube1.isSubset(tube2));
+    CHECK(tube1.isStrictSubset(tube2));
   }
 }

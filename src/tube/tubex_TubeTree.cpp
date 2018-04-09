@@ -102,12 +102,13 @@ namespace tubex
 
         // Chaining slices (+ gate in between)
 
-        Interval *gate = NULL;
-
+        TubeSlice::chainSlices(m_first_tubenode->getLastSlice(), m_second_tubenode->getFirstSlice());
+        
         if(x.m_first_tubenode->getLastSlice()->m_output_gate != NULL)
-          gate = new Interval(*x.m_first_tubenode->getLastSlice()->m_output_gate);
-
-        TubeSlice::chainSlices(m_first_tubenode->getLastSlice(), m_second_tubenode->getFirstSlice(), gate);
+        {
+          double t = x.m_first_tubenode->domain().ub();
+          m_first_tubenode->getLastSlice()->setOutputGate(*x.m_first_tubenode->getLastSlice()->m_output_gate);
+        }
       }
 
       return *this;
@@ -149,13 +150,12 @@ namespace tubex
         m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), m_codomain);
         m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), m_codomain);
 
-        Interval *gate_ptr = NULL;
-        if(!m_codomain.is_interior_subset(gate) && gate != Interval::ALL_REALS)
-          gate_ptr = new Interval(gate & m_codomain);
-
         TubeSlice::chainSlices(prev_slice, (TubeSlice*)m_first_tubenode);
-        TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode, gate_ptr);
+        TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode);
         TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, next_slice);
+
+        if(!m_codomain.is_interior_subset(gate) && gate != Interval::ALL_REALS)
+          ((TubeSlice*)m_first_tubenode)->setOutputGate(gate & m_codomain);
       }
 
       else
@@ -196,14 +196,13 @@ namespace tubex
 
           *first_slice = new TubeSlice(Interval(slice.domain().lb(), t), slice.m_codomain);
           *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.m_codomain);
-          
-          Interval *gate_ptr = NULL;
-          if(!(*slice_ptr)->m_codomain.is_interior_subset(gate) && gate != Interval::ALL_REALS)
-            gate_ptr = new Interval(gate & (*slice_ptr)->m_codomain);
 
           TubeSlice::chainSlices(prev_slice, *first_slice);
-          TubeSlice::chainSlices(*first_slice, *second_slice, gate_ptr);
+          TubeSlice::chainSlices(*first_slice, *second_slice);
           TubeSlice::chainSlices(*second_slice, next_slice);
+
+          if(!(*slice_ptr)->m_codomain.is_interior_subset(gate) && gate != Interval::ALL_REALS)
+            (*first_slice)->setOutputGate(gate & m_codomain);
 
           (*slice_ptr)->m_slices_number = 2;
         }
@@ -427,6 +426,16 @@ namespace tubex
     }
 
     // Tests
+    
+    bool TubeTree::operator==(const TubeTree& x) const
+    {
+      return isEqual(x);
+    }
+    
+    bool TubeTree::operator!=(const TubeTree& x) const
+    {
+      return isDifferent(x);
+    }
 
     bool TubeTree::isSubset(const TubeTree& x) const
     {
@@ -491,7 +500,7 @@ namespace tubex
     void TubeTree::set(const Interval& y, double t)
     {
       sample(t);
-      setGateValue(t, y);
+      setGate(t, y);
     }
     
     void TubeTree::set(const Interval& y, const Interval& t)
@@ -524,9 +533,18 @@ namespace tubex
       set(Interval::EMPTY_SET);
     }
 
-    void TubeTree::setGateValue(double t, const Interval& gate)
+    void TubeTree::setGate(double t, const Interval& gate)
     {
-      getSlice(t)->setGateValue(t, gate);
+      TubeSlice *slice = getSlice(t);
+
+      if(slice->domain().lb() == t)
+        slice->setInputGate(gate);
+
+      else if(slice->domain().ub() == t)
+        slice->setOutputGate(gate);
+
+      else
+        throw Exception("TubeTree::setGate", "inexistent gate");
     }
 
 
@@ -646,6 +664,52 @@ namespace tubex
     }
 
     // Tests
+
+    bool TubeTree::isEqual(const TubeTree& x) const
+    {
+      if(!TubeNode::isEqual(x))
+        return false;
+
+      if(!((m_first_tubenode == NULL && x.getFirstTubeNode() == NULL)
+          || ((m_first_tubenode != NULL && x.getFirstTubeNode() != NULL)
+              && ((m_first_tubenode->isSlice() && x.getFirstTubeNode()->isSlice() && ((TubeSlice*)m_first_tubenode)->isEqual(*(TubeSlice*)x.getFirstTubeNode()))
+               || (!m_first_tubenode->isSlice() && !x.getFirstTubeNode()->isSlice() && ((TubeTree*)m_first_tubenode)->isEqual(*(TubeTree*)x.getFirstTubeNode()))))))
+        return false;
+
+      if(!((m_second_tubenode == NULL && x.getSecondTubeNode() == NULL)
+          || ((m_second_tubenode != NULL && x.getSecondTubeNode() != NULL)
+              && ((m_second_tubenode->isSlice() && x.getSecondTubeNode()->isSlice() && ((TubeSlice*)m_second_tubenode)->isEqual(*(TubeSlice*)x.getSecondTubeNode()))
+               || (!m_second_tubenode->isSlice() && !x.getSecondTubeNode()->isSlice() && ((TubeTree*)m_second_tubenode)->isEqual(*(TubeTree*)x.getSecondTubeNode()))))))
+        return false;
+
+      return true;
+    }
+    
+    bool TubeTree::isDifferent(const TubeTree& x) const
+    {
+      StructureException::check(*this, x);
+
+      if(TubeNode::isDifferent(x))
+        return true;
+
+      if((m_first_tubenode != NULL && x.getFirstTubeNode() == NULL)
+             || (m_first_tubenode == NULL && x.getFirstTubeNode() != NULL)
+             || (m_first_tubenode->isSlice() && !x.getFirstTubeNode()->isSlice())
+             || (!m_first_tubenode->isSlice() && x.getFirstTubeNode()->isSlice())
+             || (m_first_tubenode->isSlice() && ((TubeSlice*)m_first_tubenode)->isDifferent(*(TubeSlice*)x.getFirstTubeNode()))
+             || (!m_first_tubenode->isSlice() && ((TubeTree*)m_first_tubenode)->isDifferent(*(TubeTree*)x.getFirstTubeNode())))
+        return true;
+
+      if((m_second_tubenode != NULL && x.getSecondTubeNode() == NULL)
+             || (m_second_tubenode == NULL && x.getSecondTubeNode() != NULL)
+             || (m_second_tubenode->isSlice() && !x.getSecondTubeNode()->isSlice())
+             || (!m_second_tubenode->isSlice() && x.getSecondTubeNode()->isSlice())
+             || (m_second_tubenode->isSlice() && ((TubeSlice*)m_second_tubenode)->isDifferent(*(TubeSlice*)x.getSecondTubeNode()))
+             || (!m_second_tubenode->isSlice() && ((TubeTree*)m_second_tubenode)->isDifferent(*(TubeTree*)x.getSecondTubeNode())))
+        return true;
+
+      return false;
+    }
 
     // Setting values
 

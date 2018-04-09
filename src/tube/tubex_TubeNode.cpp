@@ -161,25 +161,25 @@ namespace tubex
       }
 
       return make_pair(lb, ub);
-    }
+    }*/
     
     // Tests
-
-    bool TubeNode::isEmpty() const
-    {
-      return codomain().is_empty();
-    }*/
     
     bool TubeNode::operator==(const TubeNode& x) const
     {
-      
+      return isEqual(x);
     }
     
     bool TubeNode::operator!=(const TubeNode& x) const
     {
-      
+      return isDifferent(x);
     }
-    /*
+
+    /*bool TubeNode::isEmpty() const
+    {
+      return codomain().is_empty();
+    }
+    
     // Setting values
 
     bool TubeNode::contract(const Interval& y, int slice_id)
@@ -266,10 +266,20 @@ namespace tubex
     void TubeNode::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
     {
 
-    }
+    }*/
     
     // Tests
 
+    bool TubeNode::isEqual(const TubeNode& x) const
+    {
+      return domain() == x.domain() && codomain() == x.codomain();
+    }
+
+    bool TubeNode::isDifferent(const TubeNode& x) const
+    {
+      return domain() != x.domain() || codomain() != x.codomain();
+    }
+/*
     // Setting values
 
     // Operators

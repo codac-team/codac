@@ -56,6 +56,12 @@ TEST_CASE("Tube slices structure", "[core]")
     CHECK(tubetree_a.getSecondTubeNode() == NULL);
 
     CHECK_THROWS(tubetree_a.sample(-1.0););
+
+    tubetree_a.sample(0.); // the following has no effect
+    CHECK(tubetree_a.nbSlices() == 1);
+    tubetree_a.sample(1.); // the following has no effect
+    CHECK(tubetree_a.nbSlices() == 1);
+
     tubetree_a.sample(0.6);
 
     {
@@ -136,6 +142,11 @@ TEST_CASE("Tube slices structure", "[core]")
       CHECK(tubetree_e1->domain() == Interval(0.0,0.1));
       CHECK(tubetree_e2->domain() == Interval(0.1,0.6));
     }
+
+    tubetree_a.sample(0.); // the following has no effect
+    CHECK(tubetree_a.nbSlices() == 5);
+    tubetree_a.sample(1.); // the following has no effect
+    CHECK(tubetree_a.nbSlices() == 5);
   }
 
   SECTION("input2index and reverse operation")
@@ -306,5 +317,17 @@ TEST_CASE("Tube slices structure", "[core]")
     CHECK(tubetree_a.getSlice(0.68)->inputGate() == Interval(-1.,1));
     tubetree_a.sample(0.69, Interval::EMPTY_SET);
     CHECK(tubetree_a.getSlice(0.69)->inputGate() == Interval::EMPTY_SET);
+
+    tubetree_a.getSlice(0.69)->setInputGate(Interval(5.));
+    CHECK(tubetree_a.getSlice(0.69)->inputGate() == Interval(5.));
+    CHECK(tubetree_a[0.69] == Interval(5.));
+
+    tubetree_a.set(Interval(0.), 0.);
+    CHECK(tubetree_a.getSlice(0)->inputGate() == Interval(0.));
+    CHECK(tubetree_a[0.] == Interval(0.));
+
+    tubetree_a.set(Interval(0.3), 1.);
+    CHECK(tubetree_a.getSlice(tubetree_a.nbSlices()-1)->outputGate() == Interval(0.3));
+    CHECK(tubetree_a[1.] == Interval(0.3));
   }
 }
