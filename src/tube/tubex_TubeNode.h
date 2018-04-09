@@ -75,6 +75,7 @@ namespace tubex
       // Setting values
       virtual void set(const ibex::Interval& y) = 0;
       virtual void setEmpty() = 0;
+      virtual void setGateValue(double t, const ibex::Interval& gate) = 0;
       /*bool contract(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, double t);

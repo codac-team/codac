@@ -13,6 +13,7 @@
 #include "tubex_Tube.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_DomainException.h"
+#include "tubex_StructureException.h"
 
 using namespace std;
 using namespace ibex;
@@ -285,29 +286,6 @@ namespace tubex
       m_second_tubenode->getTubeNodes(v_nodes);
     }
 
-    void TubeTree::setGateValue(double t, const Interval& gate)
-    {
-      DomainException::check(*this, t);
-      TubeSlice *slice = getSlice(t);
-      if(slice->domain().lb() != t)
-        throw Exception("TubeTree::setGateValue", "no gate at this time input");
-
-      if(slice->m_input_gate != NULL)
-        *(slice->m_input_gate) = gate;
-
-      else
-      {
-        slice->m_input_gate = new Interval(gate);
-        *slice->m_input_gate &= slice->codomain();
-
-        if(slice->prevSlice() != NULL)
-        {
-          *slice->m_input_gate &= slice->prevSlice()->codomain();
-          slice->prevSlice()->m_output_gate = slice->m_input_gate;
-        }
-      }
-    }
-
     // Access values
 
     const Interval& TubeTree::codomain() const
@@ -450,6 +428,39 @@ namespace tubex
 
     // Tests
 
+    bool TubeTree::isInteriorSubset(const TubeTree& outer_set) const
+    {
+      StructureException::check(*this, outer_set);
+      const TubeSlice **slice, **outer_slice;
+      *slice = getFirstSlice();
+      *outer_slice = outer_set.getFirstSlice();
+
+      while(*slice != NULL)
+      {
+        if(!(*slice)->isInteriorSubset(**outer_slice))
+          return false;
+        *slice = (*slice)->nextSlice();
+        *outer_slice = (*outer_slice)->nextSlice();
+      }
+
+      return true;
+    }
+
+    bool TubeTree::encloses(const Trajectory& x) const
+    {
+      const TubeSlice **slice;
+      *slice = getFirstSlice();
+
+      while(*slice != NULL)
+      {
+        if(!(*slice)->encloses(x))
+          return false;
+        *slice = (*slice)->nextSlice();
+      }
+
+      return true;
+    }
+
     // Setting values
 
     void TubeTree::set(const Interval& y)
@@ -507,6 +518,11 @@ namespace tubex
     void TubeTree::setEmpty()
     {
       set(Interval::EMPTY_SET);
+    }
+
+    void TubeTree::setGateValue(double t, const Interval& gate)
+    {
+      getSlice(t)->setGateValue(t, gate);
     }
 
 

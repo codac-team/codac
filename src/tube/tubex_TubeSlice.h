@@ -52,14 +52,15 @@ namespace tubex
       //ibex::Interval interpol(double t, const TubeSlice& derivative) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-/*
+
       // Tests
-      bool isInteriorSubset(const TubeNode& outer_tube) const;
-      bool encloses(const Trajectory& x) const;*/
+      bool isInteriorSubset(const TubeSlice& outer_set) const;
+      bool encloses(const Trajectory& x) const;
 
       // Setting values
       void set(const ibex::Interval& y);
       void setEmpty();
+      void setGateValue(double t, const ibex::Interval& gate);
 
       /*
       // String

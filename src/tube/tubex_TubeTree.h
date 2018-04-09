@@ -56,10 +56,10 @@ namespace tubex
       double maxThickness();
       double maxThickness(int& first_id_max_thickness);
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-/*
+
       // Tests
-      bool isInteriorSubset(const TubeNode& outer_tube) const;
-      bool encloses(const Trajectory& x) const;*/
+      bool isInteriorSubset(const TubeTree& outer_set) const;
+      bool encloses(const Trajectory& x) const;
 
       // Setting values
       void set(const ibex::Interval& y);

@@ -306,3 +306,29 @@ TEST_CASE("Testing thickness evaluation")
     CHECK(slice_id == 1);
   }
 }
+
+TEST_CASE("Testing isInteriorSubset()")
+{
+  SECTION("TubeSlice")
+  {
+    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
+    TubeSlice slice2(Interval(0.,1.), Interval(0.,4.));
+    TubeSlice slice3(Interval(0.,1.4), Interval(0.,4.));
+
+    CHECK_THROWS(slice1.isInteriorSubset(slice3));
+    CHECK(slice1.isInteriorSubset(slice2));
+
+    slice1.setGateValue(0., Interval(0.5,2.));
+    CHECK(slice1.isInteriorSubset(slice2));
+    CHECK(slice1[0.] == Interval(1.,2.));
+
+    slice1.setGateValue(1., Interval(0.5,2.));
+    CHECK(slice1.isInteriorSubset(slice2));
+    CHECK(slice1[1.] == Interval(1.,2.));
+  }
+
+  SECTION("TubeTree")
+  {
+    // todo...
+  }
+}

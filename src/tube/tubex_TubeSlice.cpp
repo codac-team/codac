@@ -54,24 +54,24 @@ namespace tubex
 
     TubeSlice* TubeSlice::getSlice(int slice_id)
     {
-      DomainException::check(*this, slice_id);
-      return this;
+      return const_cast<TubeSlice*>(static_cast<const TubeSlice*>(this)->getSlice(slice_id));
     }
 
     const TubeSlice* TubeSlice::getSlice(int slice_id) const
     {
-      return const_cast<TubeSlice*>(getSlice(slice_id));
+      DomainException::check(*this, slice_id);
+      return this;
     }
 
     TubeSlice* TubeSlice::getSlice(double t)
     {
-      DomainException::check(*this, t);
-      return this;
+      return const_cast<TubeSlice*>(static_cast<const TubeSlice*>(this)->getSlice(t));
     }
 
     const TubeSlice* TubeSlice::getSlice(double t) const
     {
-      return const_cast<TubeSlice*>(getSlice(t));
+      DomainException::check(*this, t);
+      return this;
     }
 
     void TubeSlice::getSlices(vector<const TubeSlice*>& v_slices) const
@@ -237,20 +237,23 @@ namespace tubex
       else
         return m_enclosed_bounds; // pre-computed
     }
-/*
+
     // Tests
 
-    bool TubeSlice::isInteriorSubset(const TubeNode& outer_tube) const
+    bool TubeSlice::isInteriorSubset(const TubeSlice& outer_set) const
     {
-      StructureException::check(*this, outer_tube);
-      return m_codomain.is_interior_subset(outer_tube.codomain());
+      StructureException::check(*this, outer_set);
+      return m_codomain.is_interior_subset(outer_set.codomain())
+          && inputGate().is_interior_subset(outer_set.inputGate())
+          && outputGate().is_interior_subset(outer_set.outputGate());
     }
 
     bool TubeSlice::encloses(const Trajectory& x) const
     {
-      return x[m_domain].is_interior_subset(m_codomain);
+      return x[m_domain].is_interior_subset(m_codomain)
+          && inputGate().contains(x[m_domain.lb()])
+          && outputGate().contains(x[m_domain.ub()]);
     }
-    */
 
     // Setting values
 
@@ -274,6 +277,49 @@ namespace tubex
     void TubeSlice::setEmpty()
     {
       set(Interval::EMPTY_SET);
+    }
+
+    void TubeSlice::setGateValue(double t, const Interval& gate)
+    {
+      DomainException::check(*this, t);
+      if(m_domain.lb() != t && m_domain.ub() != t)
+        throw Exception("TubeSlice::setGateValue", "no gate at this time input");
+
+      if(m_domain.lb() == t) // input gate
+      {
+        if(m_input_gate != NULL)
+          *m_input_gate = gate;
+
+        else
+        {
+          m_input_gate = new Interval(gate);
+          *m_input_gate &= m_codomain;
+
+          if(prevSlice() != NULL)
+          {
+            *m_input_gate &= prevSlice()->codomain();
+            prevSlice()->m_output_gate = m_input_gate;
+          }
+        }
+      }
+
+      else // output gate
+      {
+        if(m_output_gate != NULL)
+          *m_output_gate = gate;
+
+        else
+        {
+          m_output_gate = new Interval(gate);
+          *m_output_gate &= m_codomain;
+
+          if(nextSlice() != NULL)
+          {
+            *m_output_gate &= nextSlice()->codomain();
+            nextSlice()->m_input_gate = m_output_gate;
+          }
+        }
+      }
     }
     
     /*
