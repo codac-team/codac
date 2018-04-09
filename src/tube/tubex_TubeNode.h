@@ -66,7 +66,7 @@ namespace tubex
       // Tests
       bool operator==(const TubeNode& x) const;
       bool operator!=(const TubeNode& x) const;
-      /*bool isEmpty() const;*/
+      virtual bool isEmpty() const = 0;
       virtual bool encloses(const Trajectory& x) const = 0;
 
       // Setting values

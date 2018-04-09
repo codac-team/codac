@@ -62,6 +62,7 @@ namespace tubex
       bool operator!=(const TubeTree& x) const;
       bool isSubset(const TubeTree& x) const;
       bool isStrictSubset(const TubeTree& x) const;
+      bool isEmpty() const;
       bool encloses(const Trajectory& x) const;
 
       // Setting values

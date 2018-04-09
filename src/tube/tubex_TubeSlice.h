@@ -58,6 +58,7 @@ namespace tubex
       bool operator!=(const TubeSlice& x) const;
       bool isSubset(const TubeSlice& x) const;
       bool isStrictSubset(const TubeSlice& x) const;
+      bool isEmpty() const;
       bool encloses(const Trajectory& x) const;
 
       // Setting values

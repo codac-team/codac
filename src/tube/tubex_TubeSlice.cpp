@@ -249,6 +249,11 @@ namespace tubex
       StructureException::check(*this, x);
       return isSubset(x) && (*this) != x;
     }
+    
+    bool TubeSlice::isEmpty() const
+    {
+      return m_codomain.is_empty() || inputGate().is_empty() || outputGate().is_empty();
+    }
 
     bool TubeSlice::encloses(const Trajectory& x) const
     {

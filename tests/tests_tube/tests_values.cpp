@@ -416,3 +416,55 @@ TEST_CASE("Testing isSubset()")
     CHECK(tube1.isStrictSubset(tube2));
   }
 }
+
+TEST_CASE("Testing encloses()")
+{
+  SECTION("TubeSlice")
+  {
+    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
+    // todo
+  }
+
+  SECTION("Tube")
+  {
+    Tube tube1(Interval(0.,10.), 1., Interval(0.,5.));
+    // todo
+  }
+}
+
+TEST_CASE("Testing isEmpty()")
+{
+  SECTION("TubeSlice")
+  {
+    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
+    CHECK(!slice1.isEmpty());
+    slice1.setInputGate(Interval(5.));
+    CHECK(slice1.isEmpty());
+    slice1.setInputGate(Interval(2.));
+    CHECK(!slice1.isEmpty());
+    slice1.setOutputGate(Interval(5.));
+    CHECK(slice1.isEmpty());
+    slice1.setOutputGate(Interval(2.));
+    CHECK(!slice1.isEmpty());
+    slice1.set(Interval::EMPTY_SET);
+    CHECK(slice1.isEmpty());
+    slice1.set(Interval::ALL_REALS);
+    CHECK(!slice1.isEmpty());
+  }
+
+  SECTION("Tube")
+  {
+    Tube tube1(Interval(0.,10.), Interval(0.,5.));
+    CHECK(!tube1.isEmpty());
+    tube1.set(Interval(6.), 2.3);
+    CHECK(tube1.isEmpty());
+    tube1.set(Interval(5.), 2.3);
+    CHECK(!tube1.isEmpty());
+    tube1.set(Interval::EMPTY_SET, 0);
+    CHECK(tube1.isEmpty());
+    tube1.set(Interval(4.,5.));
+    CHECK(!tube1.isEmpty());
+    tube1.set(Interval::EMPTY_SET, 10.);
+    CHECK(tube1.isEmpty());
+  }
+}

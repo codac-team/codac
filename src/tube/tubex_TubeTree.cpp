@@ -459,6 +459,20 @@ namespace tubex
       StructureException::check(*this, x);
       return isSubset(x) && (*this) != x;
     }
+    
+    bool TubeTree::isEmpty() const
+    {
+      TubeSlice *slice = getFirstSlice();
+
+      while(slice != NULL)
+      {
+        if(slice->isEmpty())
+          return true;
+        slice = slice->nextSlice();
+      }
+
+      return false;
+    }
 
     bool TubeTree::encloses(const Trajectory& x) const
     {
