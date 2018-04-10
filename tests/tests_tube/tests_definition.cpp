@@ -8,7 +8,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-TEST_CASE("Tube definition", "[core]")
+TEST_CASE("Tube definition")
 {
   SECTION("TubeSlice class")
   {

@@ -219,14 +219,6 @@ namespace tubex
         return search_domain & m_domain;
     }
 
-    /*
-    const pair<Interval,Interval> TubeSlice::eval(const Interval& t) const
-    {
-      if(!t.intersects(m_domain))
-        return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
-      return make_pair(m_codomain, m_codomain);
-    }*/
-
     const pair<Interval,Interval> TubeSlice::eval(const Interval& t) const
     {
       Interval intersection = t & m_domain;
@@ -235,7 +227,8 @@ namespace tubex
         return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
       else if(intersection.is_degenerated())
-        return make_pair(Interval((*this)[intersection.lb()].lb()), Interval((*this)[intersection.lb()].ub()));
+        return make_pair(Interval((*this)[intersection.lb()].lb()),
+                         Interval((*this)[intersection.lb()].ub()));
 
       else
         return m_enclosed_bounds; // pre-computed

@@ -8,7 +8,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-TEST_CASE("Tube values", "[core]")
+TEST_CASE("Tube values")
 {
   SECTION("Test tube1")
   {
@@ -364,6 +364,20 @@ TEST_CASE("Testing equalities")
     tube1.set(Interval(1.,3.), 1.);
     CHECK(tube1 == tube2);
     CHECK_FALSE(tube1 != tube2);
+
+    Tube tube_a1 = tubeTest1();
+    Tube tube_b1 = tubeTest1();
+    CHECK(tube_a1 == tube_a1);
+    CHECK(tube_a1 == tube_b1);
+    CHECK_FALSE(tube_a1 != tube_a1);
+    CHECK_FALSE(tube_a1 != tube_b1);
+
+    Tube tube_a2 = tubeTest4();
+    Tube tube_b2 = tubeTest4();
+    CHECK(tube_a2 == tube_a2);
+    CHECK(tube_a2 == tube_b2);
+    CHECK_FALSE(tube_a2 != tube_a2);
+    CHECK_FALSE(tube_a2 != tube_b2);
   }
 }
 
@@ -466,6 +480,19 @@ TEST_CASE("Testing isEmpty()")
     tube1.set(Interval::EMPTY_SET, 10.);
     CHECK(tube1.isEmpty());
   }
+
+  SECTION("Tube test")
+  {
+    Tube tube = tubeTest1();
+    CHECK_FALSE(tube.isEmpty());
+    tube.set(Interval::EMPTY_SET);
+    CHECK(tube.isEmpty());
+    tube = tubeTest1();
+    tube.set(Interval::EMPTY_SET, 10);
+    CHECK(tube.isEmpty());
+    tube.set(Interval(5.), 10);
+    CHECK_FALSE(tube.isEmpty());
+  }
 }
 
 TEST_CASE("Testing inflate()")
@@ -478,6 +505,14 @@ TEST_CASE("Testing inflate()")
     CHECK(slice.codomain() == Interval(-0.2,0.2));
     slice.inflate(1.);
     CHECK(ApproxIntv(slice.codomain()) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(slice.inputGate()) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(slice.outputGate()) == Interval(-1.2,1.2));
+    slice.setInputGate(Interval(0.,0.5));
+    slice.setOutputGate(Interval(0.,0.3));
+    slice.inflate(1.);
+    CHECK(ApproxIntv(slice.codomain()) == Interval(-2.2,2.2));
+    CHECK(ApproxIntv(slice.inputGate()) == Interval(-1.,1.5));
+    CHECK(ApproxIntv(slice.outputGate()) == Interval(-1.,1.3));
   }
 
   SECTION("Tube")
@@ -503,5 +538,23 @@ TEST_CASE("Testing inflate()")
     CHECK(ApproxIntv(tube[8]) == Interval(1.,9.));
     CHECK(ApproxIntv(tube[9]) == Interval(1.,9.));
     CHECK(ApproxIntv(tube[t]) == Interval(2.,8.));
+  }
+}
+
+TEST_CASE("Testing volume()")
+{
+  SECTION("TubeSlice")
+  {
+    TubeSlice slice(Interval(0.,10.), Interval(4.,5.));
+    CHECK(slice.volume() == 10.);
+  }
+
+  SECTION("Tube")
+  {
+    Tube tube1 = tubeTest1();
+    tube1.set(Interval(-4,2), 14);
+    CHECK(tube1.volume() == 197.);
+    Tube tube4 = tubeTest4();
+    CHECK(tube4.volume() == 9.+2.+1.+2.+1.+(21.-14.)*1.);
   }
 }

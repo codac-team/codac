@@ -8,7 +8,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-TEST_CASE("Operators", "[core]")
+TEST_CASE("Operators")
 {
   SECTION("Test tube1|tube2")
   {

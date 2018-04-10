@@ -8,7 +8,35 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-TEST_CASE("Tube slices structure", "[core]")
+TEST_CASE("input2index / index2input")
+{
+  SECTION("input2index")
+  {
+    Tube tube = tubeTest1();
+
+    CHECK(tube.input2index(0.0) == 0);
+    CHECK(tube.input2index(0.1) == 0);
+    CHECK(tube.input2index(0.5) == 0);
+    CHECK(tube.input2index(0.6) == 0);
+    CHECK(tube.input2index(0.9) == 0);
+    CHECK(tube.input2index(ibex::previous_float(1.0)) == 0);
+    CHECK(tube.input2index(1.0) == 1);
+    CHECK(tube.input2index(46.0) == 45);
+  }
+
+  SECTION("index2input")
+  {
+    Tube tube = tubeTest1();
+
+    CHECK(tube.index2input(0) == 0.0);
+    CHECK(tube.input2index(1) == 1.0);
+    CHECK(tube.input2index(2) == 2.0);
+    for(int i = 0 ; i < 46 ; i++)
+      CHECK(i == tube.input2index(tube.index2input(i)));
+  }
+}
+
+TEST_CASE("Tube slices structure")
 {
   SECTION("TubeSlice class")
   {
