@@ -13,23 +13,32 @@ TEST_CASE("Exceptions")
 {
   SECTION("DomainException")
   {
-    // todo: static void check(const TubeNode& x, int slice_index);
-    // todo: static void check(const TubeNode& x, double t);
-    // todo: static void check(const TubeNode& x, const ibex::Interval& intv_t);
+    Tube tube1(Interval(0.,1.)), tube2(Interval(0.,1.4));
+    CHECK_THROWS(DomainException::check(tube1, tube2));
+    CHECK_THROWS(DomainException::check(tube1, -3.));
+    CHECK_THROWS(DomainException::check(tube1, 2));
+    CHECK_THROWS(DomainException::check(tube1, Interval(-1.,5.)));
+
+    TubeSlice slice1(Interval(0.,1.)), slice2(Interval(0.,1.4));
+    CHECK_THROWS(DomainException::check(slice1, slice2));
+    CHECK_THROWS(DomainException::check(slice1, -3.));
+    CHECK_THROWS(DomainException::check(slice1, 2));
+    CHECK_THROWS(DomainException::check(slice1, Interval(-1.,5.)));
   }
 
   SECTION("EmptyException")
   {
-    /*Tube tube(Interval(0.,1.), Interval::EMPTY_SET);
+    Tube tube(Interval(0.,1.), Interval::EMPTY_SET);
     CHECK_THROWS(EmptyException::check(tube));
 
     TubeSlice slice(Interval(0.,1.), Interval::EMPTY_SET);
-    CHECK_THROWS(EmptyException::check(slice));*/
+    CHECK_THROWS(EmptyException::check(slice));
   }
 
   SECTION("StructureException")
   {
-    // todo: static void check(const TubeNode& x1, const TubeNode& x2);
-    // todo: static void check(const TubeTree& x1, const TubeTree& x2);
+    Tube tube1(Interval(0.,1.), 1.), tube2(Interval(0.,1.), 4.), tube3(Interval(0.,1.), 0.5);
+    CHECK(tube1.nbSlices() == tube2.nbSlices());
+    CHECK_THROWS(StructureException::check(tube1, tube3));
   }
 }
