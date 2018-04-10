@@ -119,47 +119,6 @@ TEST_CASE("Converting indexes to inputs", "[core]")
   }
 }
 
-TEST_CASE("Testing union operation", "[core]")
-{
-  SECTION("Test tube1|tube2")
-  {
-    Tube tube1 = tubeTest1();
-    tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
-    Tube tube2 = tubeTest2();
-    tube1 |= tube2;
-
-    REQUIRE(tube1.image() == Interval(-11,13));
-    REQUIRE(tube1[0] == Interval(-2,8));
-    REQUIRE(tube1[5.5] == Interval(-9,6));
-    REQUIRE(tube1[11] == Interval(-7,3));
-    REQUIRE(tube1[21.3] == Interval(2,11));
-    REQUIRE(tube1[45] == Interval(-1,3));
-    REQUIRE(tube1[Interval(5,10)] == Interval(-11,6));
-    REQUIRE(tube1[Interval(15,20)] == Interval(-3,9));
-    REQUIRE(tube1[Interval(8.2,39.9)] == Interval(-10,13));
-  }
-}
-
-TEST_CASE("Testing intersection operation", "[core]")
-{
-  SECTION("Test tube1&tube2")
-  {
-    Tube tube1 = tubeTest1();
-    tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
-    Tube tube2 = tubeTest2();
-    tube1 &= tube2;
-    REQUIRE(tube1.image() == Interval(-2,4));
-    REQUIRE(tube1[0] == Interval::EMPTY_SET);
-    REQUIRE(tube1[2.5] == Interval(1,3));
-    REQUIRE(tube1[15.0] == Interval(-2,0));
-    REQUIRE(tube1[44.5] == Interval(0,2));
-    REQUIRE(tube1[39] == Interval(-1));
-    REQUIRE(tube1[Interval(0,6)] == Interval(1,4));
-    REQUIRE(tube1[Interval(11,19)] == Interval(-2,1));
-    REQUIRE(tube1[Interval(39.5,40.3)] == Interval(-1));
-  }
-}
-
 
 /*TEST_CASE("Testing subtube", "[core]")
 {
