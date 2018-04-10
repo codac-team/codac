@@ -33,7 +33,7 @@ namespace tubex
   {
     typename map<double,double>::const_iterator it_map;
     for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
-      m_domain |= it_map->first;
+      set(it_map->first, it_map->second);
   }
 
   Trajectory::~Trajectory()
@@ -59,7 +59,7 @@ namespace tubex
 
   const Interval Trajectory::codomain() const
   {
-    return (*this)[m_domain];
+    return m_codomain;
   }
 
   const double Trajectory::operator[](double t) const
@@ -115,6 +115,7 @@ namespace tubex
   {
     m_map_values[t] = y;
     m_domain |= t;
+    m_codomain |= y;
     return m_map_values[t];
   }
 
@@ -126,6 +127,10 @@ namespace tubex
       if(!domain.contains(it->first)) it = m_map_values.erase(it);
       else ++it;
     }
+
+    m_codomain.set_empty();
+    for(map<double,double>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
+      m_codomain |= it->second;
 
     m_domain &= domain;
   }
