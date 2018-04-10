@@ -1,6 +1,6 @@
 #include "../catch/catch.hpp"
 #include "../catch/catch_interval.hpp"
-#include "tubex.h"
+#include "tests.h"
 #include <utility>
 
 using namespace Catch;

@@ -570,7 +570,68 @@ namespace tubex
 
     TubeTree& TubeTree::operator|=(const Trajectory& x)
     {
-      
+      DomainException::check(*this, x);
+
+      int i = 0;
+      TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        *slice |= x;
+        slice = slice->nextSlice();
+        flagFutureTreeUpdate(i);
+        i++;
+      }
+    }
+
+    TubeTree& TubeTree::operator|=(const TubeTree& x)
+    {
+      DomainException::check(*this, x);
+      StructureException::check(*this, x);
+
+      int i = 0;
+      TubeSlice *slice = getFirstSlice();
+      TubeSlice *x_slice = x.getFirstSlice();
+      while(slice != NULL)
+      {
+        *slice |= *x_slice;
+        slice = slice->nextSlice();
+        x_slice = x_slice->nextSlice();
+        flagFutureTreeUpdate(i);
+        i++;
+      }
+    }
+
+    TubeTree& TubeTree::operator&=(const Trajectory& x)
+    {
+      DomainException::check(*this, x);
+
+      int i = 0;
+      TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        *slice &= x;
+        slice = slice->nextSlice();
+        flagFutureTreeUpdate(i);
+        i++;
+      }
+    }
+
+    TubeTree& TubeTree::operator&=(const TubeTree& x)
+    {
+      DomainException::check(*this, x);
+      StructureException::check(*this, x);
+
+      int i = 0;
+      TubeSlice *slice = getFirstSlice();
+      TubeSlice *x_slice = x.getFirstSlice();
+      while(slice != NULL)
+      {
+        *slice &= *x_slice;
+        slice = slice->nextSlice();
+        x_slice = x_slice->nextSlice();
+        flagFutureTreeUpdate(i);
+        i++;
+      }
     }
 
   // Protected methods

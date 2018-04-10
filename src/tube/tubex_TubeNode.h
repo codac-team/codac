@@ -75,14 +75,11 @@ namespace tubex
       TubeNode& inflate(const ibex::Interval& y, double t);
       TubeNode& inflate(double rad);*/
       virtual TubeNode& inflate(const ibex::Interval& rad) = 0;
-/*
+
       // Operators
-      TubeNode& operator|=(const TubeNode& x);*/
-      virtual TubeNode& operator|=(const Trajectory& x) = 0;
-      /*TubeNode& operator&=(const TubeNode& x);
 
       // String
-      friend std::ostream& operator<<(std::ostream& str, const TubeNode& x);*/
+      friend std::ostream& operator<<(std::ostream& str, const TubeNode& x);
 
     /** Integration: **/
 

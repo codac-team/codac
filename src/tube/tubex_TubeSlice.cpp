@@ -331,7 +331,34 @@ namespace tubex
     
     TubeSlice& TubeSlice::operator|=(const Trajectory& x)
     {
-      // todo
+      DomainException::check(*this, x);
+      m_codomain |= x[m_domain];
+      setInputGate(inputGate() | x[m_domain.lb()]);
+      setOutputGate(outputGate() | x[m_domain.ub()]);
+    }
+    
+    TubeSlice& TubeSlice::operator|=(const TubeSlice& x)
+    {
+      DomainException::check(*this, x);
+      m_codomain |= x.codomain();
+      setInputGate(inputGate() | x.inputGate());
+      setOutputGate(outputGate() | x.outputGate());
+    }
+    
+    TubeSlice& TubeSlice::operator&=(const Trajectory& x)
+    {
+      DomainException::check(*this, x);
+      m_codomain &= x[m_domain];
+      setInputGate(inputGate() & x[m_domain.lb()]);
+      setOutputGate(outputGate() & x[m_domain.ub()]);
+    }
+    
+    TubeSlice& TubeSlice::operator&=(const TubeSlice& x)
+    {
+      DomainException::check(*this, x);
+      m_codomain &= x.codomain();
+      setInputGate(inputGate() & x.inputGate());
+      setOutputGate(outputGate() & x.outputGate());
     }
     
     // String

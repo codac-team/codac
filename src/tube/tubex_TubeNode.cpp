@@ -207,15 +207,16 @@ namespace tubex
     TubeNode& TubeNode::operator&=(const TubeNode& x)
     {
 
-    }
+    }*/
 
     // String
 
     ostream& operator<<(ostream& str, const TubeNode& x)
     {
-
+      cout << "TubeNode " << x.domain() << "↦" << x.codomain() << flush;
+      return str;
     }
-    
+    /*
     // Integration
 
     Interval TubeNode::integral(double t) const

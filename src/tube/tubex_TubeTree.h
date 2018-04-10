@@ -75,6 +75,9 @@ namespace tubex
 
       // Operators
       TubeTree& operator|=(const Trajectory& x);
+      TubeTree& operator|=(const TubeTree& x);
+      TubeTree& operator&=(const Trajectory& x);
+      TubeTree& operator&=(const TubeTree& x);
 
     protected:
 

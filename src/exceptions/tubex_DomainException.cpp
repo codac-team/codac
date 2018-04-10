@@ -74,6 +74,13 @@ namespace tubex
     m_what_msg = os.str();
   }
 
+  DomainException::DomainException(const TubeNode& x1, const Trajectory& x2)
+  {
+    ostringstream os;
+    os << "trajectory's domain is not a subset of tube's domain: " << x2.domain() << ", " << x1.domain() << endl;
+    m_what_msg = os.str();
+  }
+
   void DomainException::check(const TubeNode& x, int slice_index)
   {
     if(slice_index < 0 || slice_index >= x.nbSlices())
@@ -113,6 +120,12 @@ namespace tubex
   void DomainException::check(const Trajectory& x1, const Trajectory& x2)
   {
     if(x1.domain() != x2.domain())
+      throw DomainException(x1, x2);
+  }
+
+  void DomainException::check(const TubeNode& x1, const Trajectory& x2)
+  {
+    if(x1.domain().is_subset(x2.domain()))
       throw DomainException(x1, x2);
   }
 }

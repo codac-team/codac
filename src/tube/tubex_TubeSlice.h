@@ -69,7 +69,10 @@ namespace tubex
       TubeNode& inflate(const ibex::Interval& rad);
 
       // Operators
+      TubeSlice& operator|=(const TubeSlice& x);
       TubeSlice& operator|=(const Trajectory& x);
+      TubeSlice& operator&=(const TubeSlice& x);
+      TubeSlice& operator&=(const Trajectory& x);
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);

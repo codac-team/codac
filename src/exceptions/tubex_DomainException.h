@@ -38,6 +38,7 @@ namespace tubex
       DomainException(const Trajectory& x, const ibex::Interval& t);
       DomainException(const TubeNode& x1, const TubeNode& x2);
       DomainException(const Trajectory& x1, const Trajectory& x2);
+      DomainException(const TubeNode& x1, const Trajectory& x2);
         
       static void check(const TubeNode& x, int slice_index);
       static void check(const TubeNode& x, double t);
@@ -46,6 +47,7 @@ namespace tubex
       static void check(const Trajectory& x, const ibex::Interval& t);
       static void check(const TubeNode& x1, const TubeNode& x2);
       static void check(const Trajectory& x1, const Trajectory& x2);
+      static void check(const TubeNode& x1, const Trajectory& x2);
   };
 }
 
