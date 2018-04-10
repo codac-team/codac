@@ -677,9 +677,14 @@ namespace tubex
       }
 
       // Enclosed bounds
-      // todo: pair<Interval,Interval> ui_past = m_first_tubenode->eval();
-      // todo: pair<Interval,Interval> ui_future = m_second_tubenode->eval();
-      // todo: m_enclosed_bounds = make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
+      m_enclosed_bounds = m_first_tubenode->eval();
+
+      if(m_second_tubenode != NULL)
+      {
+        pair<Interval,Interval> ui_future = m_second_tubenode->eval();
+        m_enclosed_bounds.first |= ui_future.first;
+        m_enclosed_bounds.second |= ui_future.second;
+      }
 
       m_tree_update_needed = false;
     }
