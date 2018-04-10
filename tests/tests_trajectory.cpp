@@ -1,25 +1,10 @@
-/* ============================================================================
- *  tubex-lib - Trajectory tests
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
- *  License   : This program is distributed under the terms of
- *              the GNU Lesser General Public License (LGPL).
- *
- *  Author(s) : Simon Rohou
- *  Bug fixes : -
- *  Created   : 2015
- * ---------------------------------------------------------------------------- */
-
-#define CATCH_CONFIG_MAIN
-#include "../catch/catch.hpp"
-#include "../catch/catch_interval.hpp"
-#include "tubex_Trajectory.h"
+#include "tests.h"
 
 using namespace Catch;
 using namespace Detail;
-using namespace tubex;
-using namespace ibex;
 using namespace std;
+using namespace ibex;
+using namespace tubex;
 
 TEST_CASE("Trajectory base")
 {

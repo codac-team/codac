@@ -1,5 +1,3 @@
-#include "../catch/catch.hpp"
-#include "../catch/catch_interval.hpp"
 #include "tests.h"
 
 using namespace Catch;

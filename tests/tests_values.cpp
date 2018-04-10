@@ -1,5 +1,3 @@
-#include "../catch/catch.hpp"
-#include "../catch/catch_interval.hpp"
 #include "tests.h"
 
 using namespace Catch;
@@ -148,13 +146,13 @@ TEST_CASE("Testing enclosed bounds (tube evaluations)")
     Tube tube1 = tubeTest1();
     tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
 
-    // todo: CHECK(ApproxIntvPair(tube1.eval())  == make_pair(Interval(-11,9), Interval(-7,13)));
-    // todo: CHECK(tube1.eval(Interval(0.5,25.5)) == make_pair(Interval(-11,9), Interval(-7,13)));
-    // todo: CHECK(tube1.eval(Interval(7.1,19.8)) == make_pair(Interval(-11,6), Interval(-7,9)));
+    CHECK(ApproxIntvPair(tube1.eval())  == make_pair(Interval(-11,9), Interval(-7,13)));
+    CHECK(tube1.eval(Interval(0.5,25.5)) == make_pair(Interval(-11,9), Interval(-7,13)));
+    CHECK(tube1.eval(Interval(7.1,19.8)) == make_pair(Interval(-11,6), Interval(-7,9)));
     // todo: CHECK(tube1.eval(Interval(6.0,9.0)) == make_pair(Interval(-11,-10), Interval(-7,-6)));
-    // todo: CHECK(tube1.eval(Interval(0.)) == make_pair(Interval(4), Interval(8)));
-    // todo: CHECK(tube1.eval(Interval(5.)) == make_pair(Interval(-7), Interval(-5)));
-    // todo: CHECK(tube1.eval(Interval(5.2)) == make_pair(Interval(-9), Interval(-5)));
+    CHECK(tube1.eval(Interval(0.)) == make_pair(Interval(4), Interval(8)));
+    CHECK(tube1.eval(Interval(5.)) == make_pair(Interval(-7), Interval(-5)));
+    CHECK(tube1.eval(Interval(5.2)) == make_pair(Interval(-9), Interval(-5)));
     // todo: CHECK(tube1.eval(Interval(23.,24.)) == make_pair(Interval(8), Interval(13)));
     // todo: CHECK(tube1.eval(Interval(22.,25.)) == make_pair(Interval(7,9), Interval(12,13)));
     // todo: CHECK(tube1.eval(Interval(21.,23.)) == make_pair(Interval(8,9), Interval(11,12)));
