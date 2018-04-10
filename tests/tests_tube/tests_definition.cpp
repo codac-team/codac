@@ -88,8 +88,46 @@ TEST_CASE("Tube definition")
     CHECK(tube_f.nbSlices() == 1);
   }
 
-  SECTION("Tube class - Trajectory")
+  SECTION("Tube class - 2 Trajectory")
   {
-    // todo...
+    Trajectory traj_lb(Function("t", "t^2"), Interval(-1.,10.));
+    Trajectory traj_ub(Function("t", "t^2-2"), Interval(-1.,10.));
+    
+    Tube tube_1slice(traj_lb, traj_ub);
+    CHECK(tube_1slice.nbSlices() == 1);
+    CHECK(tube_1slice.domain() == Interval(-1.,10.));
+    CHECK(tube_1slice.codomain() == Interval(-2.,100.));
+    CHECK(Interval(28.25,30.25).is_subset(tube_1slice[5.5]));
+    CHECK(tube_1slice.maxThickness() > 2.);
+    
+    Tube tube_100slices(traj_lb, traj_ub, traj_ub.domain().diam() / 100.);
+    CHECK(tube_100slices.nbSlices() == 100);
+    CHECK(tube_100slices.domain() == Interval(-1.,10.));
+    CHECK(tube_100slices.codomain() == Interval(-2.,100.));
+    CHECK(Interval(28.25,30.25).is_subset(tube_100slices[5.5]));
+    CHECK(tube_100slices[5.5].is_subset(Interval(28.,32.)));
+    CHECK(tube_100slices.maxThickness() > 2.);
+  }
+
+  SECTION("Tube class - 1 Trajectory")
+  {
+    Trajectory traj1(Function("t", "(t^2)*(-3+t*(1+2*(t^2)))"), Interval(0.,1.1));
+    Trajectory traj2(Function("t", "2*(t^5)+(t^3)-3*(t^2)"), Interval(0.,1.1));
+    
+    Tube tube0(Interval(0.,1.1), 0.1, Interval::EMPTY_SET);
+    CHECK(tube0.nbSlices() == 12);
+    CHECK(tube0.codomain() == Interval::EMPTY_SET);
+    tube0 |= traj2;
+
+    Interval t = tube0.getLastSlice()->prevSlice()->domain(); //(1.0,1.1);
+    Interval slice_codomain = 2*pow(t,5)+pow(t,3)-3*pow(t,2);
+    CHECK(tube0.getLastSlice()->prevSlice()->codomain() == slice_codomain);
+    CHECK(tube0.codomain().ub() == slice_codomain.ub());
+
+    Tube tube1(traj1, 0., 0.1);
+    Tube tube2(traj2, 0., 0.1);
+    CHECK(tube2 == tube0);
+    CHECK(tube1.isSubset(tube2));
+    CHECK(tube1.isStrictSubset(tube2));
   }
 }

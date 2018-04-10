@@ -125,7 +125,7 @@ namespace tubex
 
   void DomainException::check(const TubeNode& x1, const Trajectory& x2)
   {
-    if(x1.domain().is_subset(x2.domain()))
+    if(!x1.domain().is_subset(x2.domain()))
       throw DomainException(x1, x2);
   }
 }

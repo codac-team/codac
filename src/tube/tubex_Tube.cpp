@@ -56,19 +56,12 @@ namespace tubex
 
   Tube::Tube(const Trajectory& traj, double thickness, double timestep) : Tube(traj.domain(), timestep, Interval::EMPTY_SET)
   {
-    if(traj.domain().is_unbounded() || traj.domain().is_empty())
-      throw Exception("Tube constructor", "empty or unbounded trajectory domain");
-
     *this |= traj;
     inflate(thickness);
   }
 
   Tube::Tube(const Trajectory& lb, const Trajectory& ub, double timestep) : Tube(lb.domain(), timestep, Interval::EMPTY_SET)
   {
-    if(lb.domain().is_unbounded() || lb.domain().is_empty() || ub.domain().is_unbounded() || ub.domain().is_empty())
-      throw Exception("Tube constructor", "empty or unbounded trajectory domain");
-    DomainException::check(lb, ub);
-
     *this |= lb;
     *this |= ub;
   }
