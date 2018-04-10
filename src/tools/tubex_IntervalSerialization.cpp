@@ -10,7 +10,7 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_Serialization.h"
+#include "tubex_IntervalSerialization.h"
 
 using namespace std;
 using namespace ibex;

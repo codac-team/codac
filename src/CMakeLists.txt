@@ -33,6 +33,10 @@
     exceptions/tubex_DomainException.cpp
     exceptions/tubex_EmptyException.cpp
     exceptions/tubex_StructureException.cpp
+
+    tools/tubex_IntervalSerialization.cpp
+    tools/tubex_TrajectorySerialization.cpp
+    tools/tubex_TubeSerialization.cpp
   )
 
   set(HEADERS
@@ -56,6 +60,10 @@
     exceptions/tubex_DomainException.h
     exceptions/tubex_EmptyException.h
     exceptions/tubex_StructureException.h
+
+    tools/tubex_IntervalSerialization.h
+    tools/tubex_TrajectorySerialization.h
+    tools/tubex_TubeSerialization.h
   )
 
 
