@@ -183,6 +183,23 @@ namespace tubex
         return (*this)[t.lb()];
       return m_codomain;
     }
+
+    const Interval TubeSlice::interpol(double t, const TubeSlice& derivative) const
+    {
+      DomainException::check(*this, derivative);
+      EmptyException::check(derivative);
+
+      return (outputGate() - (m_domain.ub() - t) * derivative.codomain())
+           & (inputGate() + (t - m_domain.lb()) * derivative.codomain());
+    }
+
+    const Interval TubeSlice::interpol(const Interval& t, const TubeSlice& derivative) const
+    {
+      DomainException::check(*this, derivative);
+      EmptyException::check(derivative);
+
+      // todo
+    }
 /*
     Interval TubeSlice::interpol(double t, const TubeSlice& derivative) const
     {
@@ -267,7 +284,7 @@ namespace tubex
     void TubeSlice::set(const Interval& y)
     {
       m_codomain = y;
-      m_enclosed_bounds = make_pair(Interval(m_codomain.lb()), Interval(m_codomain.ub()));
+      updateEnclosedBounds();
 
       m_volume = m_domain.diam();
 
@@ -302,6 +319,8 @@ namespace tubex
           prevSlice()->m_output_gate = m_input_gate;
         }
       }
+
+      updateEnclosedBounds();
     }
 
     void TubeSlice::setOutputGate(const Interval& output_gate)
@@ -320,11 +339,19 @@ namespace tubex
           nextSlice()->m_input_gate = m_output_gate;
         }
       }
+
+      updateEnclosedBounds();
     }
     
-    TubeNode& TubeSlice::inflate(const Interval& rad)
+    TubeNode& TubeSlice::inflate(double rad)
     {
-      // todo
+      // todo: simplify with simple addition
+      Interval e(-rad,rad);
+      set(m_codomain + e);
+      if(m_input_gate != NULL)
+        setInputGate(inputGate() + e);
+      if(m_input_gate != NULL)
+        setOutputGate(outputGate() + e);
     }
     
     // Operators
@@ -332,33 +359,37 @@ namespace tubex
     TubeSlice& TubeSlice::operator|=(const Trajectory& x)
     {
       DomainException::check(*this, x);
-      m_codomain |= x[m_domain];
+      set(m_codomain | x[m_domain]);
       setInputGate(inputGate() | x[m_domain.lb()]);
       setOutputGate(outputGate() | x[m_domain.ub()]);
+      // todo: create gates only if necessary
     }
     
     TubeSlice& TubeSlice::operator|=(const TubeSlice& x)
     {
       DomainException::check(*this, x);
-      m_codomain |= x.codomain();
+      set(m_codomain | x.codomain());
       setInputGate(inputGate() | x.inputGate());
       setOutputGate(outputGate() | x.outputGate());
+      // todo: create gates only if necessary
     }
     
     TubeSlice& TubeSlice::operator&=(const Trajectory& x)
     {
       DomainException::check(*this, x);
-      m_codomain &= x[m_domain];
+      set(m_codomain & x[m_domain]);
       setInputGate(inputGate() & x[m_domain.lb()]);
       setOutputGate(outputGate() & x[m_domain.ub()]);
+      // todo: create gates only if necessary
     }
     
     TubeSlice& TubeSlice::operator&=(const TubeSlice& x)
     {
       DomainException::check(*this, x);
-      m_codomain &= x.codomain();
+      set(m_codomain & x.codomain());
       setInputGate(inputGate() & x.inputGate());
       setOutputGate(outputGate() & x.outputGate());
+      // todo: create gates only if necessary
     }
     
     // String
@@ -378,6 +409,13 @@ namespace tubex
       Interval inversion = invert(y, search_domain);
       if(!inversion.is_empty())
         v_t.push_back(inversion);
+    }
+
+    void TubeSlice::updateEnclosedBounds()
+    {
+      Interval lb = Interval(m_codomain.lb()) | inputGate().lb() | outputGate().lb();
+      Interval ub = Interval(m_codomain.ub()) | inputGate().ub() | outputGate().ub();
+      m_enclosed_bounds = make_pair(lb, ub);
     }
 
     // Tests

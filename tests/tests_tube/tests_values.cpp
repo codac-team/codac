@@ -467,3 +467,41 @@ TEST_CASE("Testing isEmpty()")
     CHECK(tube1.isEmpty());
   }
 }
+
+TEST_CASE("Testing inflate()")
+{
+  SECTION("TubeSlice")
+  {
+    TubeSlice slice(Interval(0.,10.), Interval(0.));
+    CHECK(slice.codomain() == Interval(0.));
+    slice.inflate(0.2);
+    CHECK(slice.codomain() == Interval(-0.2,0.2));
+    slice.inflate(1.);
+    CHECK(ApproxIntv(slice.codomain()) == Interval(-1.2,1.2));
+  }
+
+  SECTION("Tube")
+  {
+    Tube tube(Interval(0.,10.), 0.8, Interval(0.));
+    CHECK(tube.codomain() == Interval(0.));
+    CHECK(tube[3] == Interval(0.));
+    CHECK(tube.getSlice(3)->inputGate() == Interval(0.));
+    tube.inflate(0.2);
+    CHECK(tube.codomain() == Interval(-0.2,0.2));
+    CHECK(tube[6] == Interval(-0.2,0.2));
+    CHECK(tube.getSlice(6)->inputGate() == Interval(-0.2,0.2));
+    tube.inflate(1.);
+    CHECK(ApproxIntv(tube.codomain()) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(tube[9]) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(tube.getSlice(9)->inputGate()) == Interval(-1.2,1.2));
+    double t = tube.getSlice(9)->domain().lb();
+    tube.set(Interval(3.,7.), 8);
+    tube.set(Interval(3.,7.), 9);
+    tube.set(Interval(4.,6.), t);
+    CHECK(ApproxIntv(tube[t]) == Interval(4.,6.));
+    tube.inflate(2.);
+    CHECK(ApproxIntv(tube[8]) == Interval(1.,9.));
+    CHECK(ApproxIntv(tube[9]) == Interval(1.,9.));
+    CHECK(ApproxIntv(tube[t]) == Interval(2.,8.));
+  }
+}

@@ -74,7 +74,7 @@ namespace tubex
       TubeNode& inflate(const ibex::Interval& y, int slice_id);
       TubeNode& inflate(const ibex::Interval& y, double t);
       TubeNode& inflate(double rad);*/
-      virtual TubeNode& inflate(const ibex::Interval& rad) = 0;
+      virtual TubeNode& inflate(double rad) = 0;
 
       // Operators
 

@@ -14,6 +14,7 @@
 #include "tubex_TubeSlice.h"
 #include "tubex_DomainException.h"
 #include "tubex_StructureException.h"
+#include "tubex_EmptyException.h"
 
 using namespace std;
 using namespace ibex;
@@ -348,6 +349,20 @@ namespace tubex
                | (*m_second_tubenode)[m_second_tubenode->domain() & t];
       }
     }
+
+    const Interval TubeTree::interpol(double t, const TubeTree& derivative) const
+    {
+      return getSlice(t)->interpol(t, *derivative.getSlice(t));
+    }
+
+    const Interval TubeTree::interpol(const Interval& t, const TubeTree& derivative) const
+    {
+      DomainException::check(*this, t);
+      DomainException::check(*this, derivative);
+      EmptyException::check(derivative);
+
+      // todo
+    }
     
     Interval TubeTree::invert(const Interval& y, const Interval& search_domain) const
     {
@@ -561,9 +576,16 @@ namespace tubex
         throw Exception("TubeTree::setGate", "inexistent gate");
     }
     
-    TubeTree& TubeTree::inflate(const Interval& rad)
+    TubeTree& TubeTree::inflate(double rad)
     {
-
+      TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        slice->inflate(rad);
+        slice = slice->nextSlice();
+      }
+      
+      flagFutureTreeUpdate();
     }
 
     // Operators
@@ -572,15 +594,14 @@ namespace tubex
     {
       DomainException::check(*this, x);
 
-      int i = 0;
       TubeSlice *slice = getFirstSlice();
       while(slice != NULL)
       {
         *slice |= x;
         slice = slice->nextSlice();
-        flagFutureTreeUpdate(i);
-        i++;
       }
+
+      flagFutureTreeUpdate();
     }
 
     TubeTree& TubeTree::operator|=(const TubeTree& x)
@@ -588,7 +609,6 @@ namespace tubex
       DomainException::check(*this, x);
       StructureException::check(*this, x);
 
-      int i = 0;
       TubeSlice *slice = getFirstSlice();
       TubeSlice *x_slice = x.getFirstSlice();
       while(slice != NULL)
@@ -596,24 +616,23 @@ namespace tubex
         *slice |= *x_slice;
         slice = slice->nextSlice();
         x_slice = x_slice->nextSlice();
-        flagFutureTreeUpdate(i);
-        i++;
       }
+
+      flagFutureTreeUpdate();
     }
 
     TubeTree& TubeTree::operator&=(const Trajectory& x)
     {
       DomainException::check(*this, x);
 
-      int i = 0;
       TubeSlice *slice = getFirstSlice();
       while(slice != NULL)
       {
         *slice &= x;
         slice = slice->nextSlice();
-        flagFutureTreeUpdate(i);
-        i++;
       }
+
+      flagFutureTreeUpdate();
     }
 
     TubeTree& TubeTree::operator&=(const TubeTree& x)
@@ -621,7 +640,6 @@ namespace tubex
       DomainException::check(*this, x);
       StructureException::check(*this, x);
 
-      int i = 0;
       TubeSlice *slice = getFirstSlice();
       TubeSlice *x_slice = x.getFirstSlice();
       while(slice != NULL)
@@ -629,9 +647,9 @@ namespace tubex
         *slice &= *x_slice;
         slice = slice->nextSlice();
         x_slice = x_slice->nextSlice();
-        flagFutureTreeUpdate(i);
-        i++;
       }
+      
+      flagFutureTreeUpdate();
     }
 
   // Protected methods

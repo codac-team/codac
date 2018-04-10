@@ -50,6 +50,8 @@ namespace tubex
       const ibex::Interval& operator[](int slice_id) const;
       const ibex::Interval operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& t) const;
+      const ibex::Interval interpol(double t, const TubeTree& derivative) const;
+      const ibex::Interval interpol(const ibex::Interval& t, const TubeTree& derivative) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       double maxThickness();
@@ -71,7 +73,7 @@ namespace tubex
       void set(const ibex::Interval& y, const ibex::Interval& t);
       void setEmpty();
       void setGate(double t, const ibex::Interval& gate);
-      TubeTree& inflate(const ibex::Interval& rad);
+      TubeTree& inflate(double rad);
 
       // Operators
       TubeTree& operator|=(const Trajectory& x);

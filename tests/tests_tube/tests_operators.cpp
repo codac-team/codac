@@ -45,6 +45,11 @@ TEST_CASE("Operators", "[core]")
     CHECK(tube1[40] == Interval(-3.,4.));
   }
 
+  SECTION("Test tube1|traj2")
+  {
+    // todo
+  }
+
   SECTION("Test tube1&tube2")
   {
     Tube tube1 = tubeTest1();
@@ -78,5 +83,10 @@ TEST_CASE("Operators", "[core]")
     tube1 &= tube2;
     CHECK(tube1[40.] == Interval(1.));
     CHECK(tube1[40] == Interval(-1.));
+  }
+
+  SECTION("Test tube1&traj2")
+  {
+    // todo
   }
 }

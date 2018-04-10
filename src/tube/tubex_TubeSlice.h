@@ -49,7 +49,8 @@ namespace tubex
       double volume() const;
       const ibex::Interval operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& search_domain) const;
-      //ibex::Interval interpol(double t, const TubeSlice& derivative) const;
+      const ibex::Interval interpol(double t, const TubeSlice& derivative) const;
+      const ibex::Interval interpol(const ibex::Interval& t, const TubeSlice& derivative) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
@@ -66,7 +67,7 @@ namespace tubex
       void setEmpty();
       void setInputGate(const ibex::Interval& input_gate);
       void setOutputGate(const ibex::Interval& output_gate);
-      TubeNode& inflate(const ibex::Interval& rad);
+      TubeNode& inflate(double rad);
 
       // Operators
       TubeSlice& operator|=(const TubeSlice& x);
@@ -83,6 +84,7 @@ namespace tubex
 
       // Access values
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
+      void updateEnclosedBounds();
 
       // Tests
       bool isEqual(const TubeSlice& x) const;
