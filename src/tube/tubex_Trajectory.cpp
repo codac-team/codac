@@ -19,22 +19,18 @@ using namespace ibex;
 
 namespace tubex
 {
-  int Trajectory::nb_traj = 0;
-  vector<string> Trajectory::v_traj_names;
-
-  Trajectory::Trajectory(const string& name) : m_function(NULL), m_domain(Interval::EMPTY_SET)
+  Trajectory::Trajectory()
   {
-    setName(name);
+
   }
 
-  Trajectory::Trajectory(const Function& f, const Interval& domain, const string& name) : m_function(new Function(f)), m_domain(domain)
+  Trajectory::Trajectory(const Function& f, const Interval& domain) : m_function(new Function(f)), m_domain(domain)
   {
-    setName(name);
+
   }
 
-  Trajectory::Trajectory(const map<double,double>& map_values, const string& name) : m_function(NULL), m_domain(Interval::EMPTY_SET), m_map_values(map_values)
+  Trajectory::Trajectory(const map<double,double>& map_values) : m_map_values(map_values)
   {
-    setName(name);
     typename map<double,double>::const_iterator it_map;
     for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
       m_domain |= it_map->first;
@@ -44,32 +40,6 @@ namespace tubex
   {
     if(m_function != NULL)
       delete m_function;
-  }
-
-  void Trajectory::setName(const string& name)
-  {
-    if(name == "")
-    {
-      Trajectory::nb_traj ++;
-      std::ostringstream o;
-      o << "x" << std::hex << Trajectory::nb_traj;
-      m_name = o.str();
-    }
-
-    else
-    {
-      for(int i = 0 ; i < Trajectory::v_traj_names.size() ; i++)
-        if(Trajectory::v_traj_names[i] == name)
-          cout << "Trajectory::setName(): warning, trajectory \"" << name << "\" already exists" << endl;
-      m_name = name;
-    }
-    
-    Trajectory::v_traj_names.push_back(m_name);
-  }
-
-  const string& Trajectory::name() const
-  {
-    return m_name;
   }
 
   const map<double,double> Trajectory::getMap() const
@@ -92,13 +62,6 @@ namespace tubex
     return (*this)[m_domain];
   }
 
-  double& Trajectory::set(double t, double y)
-  {
-    m_map_values[t] = y;
-    m_domain |= t;
-    return m_map_values[t];
-  }
-
   const double Trajectory::operator[](double t) const
   {
     DomainException::check(*this, t);
@@ -110,7 +73,7 @@ namespace tubex
     }
 
     else if(m_map_values.find(t) != m_map_values.end())
-      return m_map_values.at(t);
+      return m_map_values.at(t); // key exists
 
     else
     {
@@ -119,6 +82,7 @@ namespace tubex
       it_upper = it_lower;
       it_lower--;
 
+      // Linear interpolation
       return it_lower->second +
              (t - it_lower->first) * (it_upper->second - it_lower->second) /
              (it_upper->first - it_lower->first);
@@ -128,7 +92,30 @@ namespace tubex
   const Interval Trajectory::operator[](const Interval& t) const
   {
     DomainException::check(*this, t);
-    // todo
+
+    if(m_function != NULL)
+    {
+      IntervalVector box(1, Interval(t));
+      return m_function->eval(box);
+    }
+
+    else
+    {
+      Interval eval(Interval::EMPTY_SET);
+      eval |= (*this)[t.lb()];
+      eval |= (*this)[t.ub()];
+
+      for(map<double,double>::const_iterator it = m_map_values.lower_bound(t.lb()) ;
+          it != m_map_values.upper_bound(t.ub()) ; it++)
+        eval |= it->second;
+    }
+  }
+
+  double& Trajectory::set(double t, double y)
+  {
+    m_map_values[t] = y;
+    m_domain |= t;
+    return m_map_values[t];
   }
 
   void Trajectory::truncateDomain(const Interval& domain)

@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TUBETREE_HEADER
-#define TUBETREE_HEADER
+#ifndef TubeTree_HEADER
+#define TubeTree_HEADER
 
 #include "tubex_TubeNode.h"
 

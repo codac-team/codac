@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TUBENODE_HEADER
-#define TUBENODE_HEADER
+#ifndef TubeNode_HEADER
+#define TubeNode_HEADER
 
 #include "ibex.h"
 #include "tubex_Trajectory.h"
@@ -97,12 +97,10 @@ namespace tubex
       // Tests
       bool isEqual(const TubeNode& x) const;
       bool isDifferent(const TubeNode& x) const;
-/*
+
       // Setting values
 
       // Operators
-      void unionWith_localUpdate(const TubeNode *x);
-      void intersectWith_localUpdate(const TubeNode *x);*/
 
       // String
 

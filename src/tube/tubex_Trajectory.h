@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef TRAJECTORY_HEADER
-#define TRAJECTORY_HEADER
+#ifndef Trajectory_HEADER
+#define Trajectory_HEADER
 
 #include <map>
 #include "ibex_Interval.h"
@@ -23,22 +23,22 @@ namespace tubex
   {
     public:
 
-      /**
-       * \brief Default constructor
-       */
-      Trajectory(const std::string& name = "");
-      Trajectory(const ibex::Function& f, const ibex::Interval& domain, const std::string& name = "");
-      Trajectory(const std::map<double,double>& m_map_values, const std::string& name = "");
+      // Definition
+      Trajectory();
+      Trajectory(const ibex::Function& f, const ibex::Interval& domain);
+      Trajectory(const std::map<double,double>& m_map_values);
       ~Trajectory();
-      const std::string& name() const;
-      void setName(const std::string& name);
+
+      // Access values
       const std::map<double,double> getMap() const;
       const ibex::Function* getFunction() const;
       const ibex::Interval domain() const;
       const ibex::Interval codomain() const;
-      double& set(double t, double y);
       const double operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& t) const;
+
+      // Setting values
+      double& set(double t, double y);
       void truncateDomain(const ibex::Interval& domain);
       void shiftDomain(double shift_ref);
 
@@ -47,15 +47,10 @@ namespace tubex
 
       /** Class variables **/
 
-        ibex::Interval m_domain;
+        ibex::Interval m_domain = ibex::Interval::EMPTY_SET, m_codomain = ibex::Interval::EMPTY_SET;
         // A trajectory is defined either by a Function or a map of values
-        ibex::Function *m_function;
+        ibex::Function *m_function = NULL;
         std::map<double,double> m_map_values;
-
-        // Name attributes
-        std::string m_name;
-        static int nb_traj;
-        static std::vector<std::string> v_traj_names;
   };
 }
 

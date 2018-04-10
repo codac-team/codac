@@ -12,41 +12,23 @@
 
 # Sources
 
-#  add_subdirectory(tube)
-#  add_subdirectory(graphics)
-#  add_subdirectory(tools)
-
   set(SRC
-#    tube/tubex_Subtube_base.cpp
-#    tube/tubex_Subtube_integration.cpp
     tube/tubex_Trajectory.cpp
-#    tube/tubex_Tube_base.cpp
-#    tube/tubex_Tube_contractors.cpp
-#    tube/tubex_Tube_serialization.cpp
-#
-#    graphics/vibes/vibes.cpp
-#    graphics/tubex_VibesFigure.cpp
-#    graphics/tubex_VibesFigure_Tube.cpp
-#
-#    arithmetic/tubex_Arithmetic.cpp
-#
-#    contractor/tubex_Ctc.cpp
-#    contractor/tubex_CtcArithmetic.cpp
-#    contractor/tubex_CtcCompo.cpp
-#    contractor/tubex_CtcDelay.cpp
-#    contractor/tubex_CtcDeriv.cpp
-#    contractor/tubex_CtcEval.cpp
-#    contractor/tubex_CtcIntertemp.cpp
-#    contractor/tubex_CtcOut.cpp
-#
-#    tools/tubex_Serialization.cpp
 
     tube/tubex_TubeSlice.cpp
     tube/tubex_TubeNode.cpp
     tube/tubex_TubeTree.cpp
     tube/tubex_Tube.cpp
-#    tube/tubex_TubeSystem.cpp
-#    tube/tubex_TubeVector.cpp
+
+    contractor/tubex_Ctc.cpp
+    #contractor/tubex_CtcArithmetic.cpp
+    #contractor/tubex_CtcCompo.cpp
+    #contractor/tubex_CtcDelay.cpp
+    #contractor/tubex_CtcDeriv.cpp
+    #contractor/tubex_CtcEval.cpp
+    #contractor/tubex_CtcIntertemp.cpp
+    #contractor/tubex_CtcOut.cpp
+
     exceptions/tubex_Exception.cpp
     exceptions/tubex_DomainException.cpp
     exceptions/tubex_EmptyException.cpp
@@ -54,33 +36,22 @@
   )
 
   set(HEADERS
-#    tube/tubex_Subtube.h
     tube/tubex_Trajectory.h
-#    tube/tubex_Tube.h
-#
-#    graphics/tubex_VibesFigure.h
-#    graphics/tubex_VibesFigure_Tube.h
-#    graphics/vibes/vibes.h
-#
-#    arithmetic/tubex_Arithmetic.h
-#
-#    contractor/tubex_Ctc.h
-#    contractor/tubex_CtcArithmetic.h
-#    contractor/tubex_CtcCompo.h
-#    contractor/tubex_CtcDelay.h
-#    contractor/tubex_CtcDeriv.h
-#    contractor/tubex_CtcEval.h
-#    contractor/tubex_CtcIntertemp.h
-#    contractor/tubex_CtcOut.h
-#
-#    tools/tubex_Serialization.h
 
     tube/tubex_TubeSlice.h
     tube/tubex_TubeNode.h
     tube/tubex_TubeTree.h
     tube/tubex_Tube.h
-#    tube/tubex_TubeSystem.h
-#    tube/tubex_TubeVector.h
+
+    contractor/tubex_Ctc.h
+    #contractor/tubex_CtcArithmetic.h
+    #contractor/tubex_CtcCompo.h
+    #contractor/tubex_CtcDelay.h
+    #contractor/tubex_CtcDeriv.h
+    #contractor/tubex_CtcEval.h
+    #contractor/tubex_CtcIntertemp.h
+    #contractor/tubex_CtcOut.h
+
     exceptions/tubex_Exception.h
     exceptions/tubex_DomainException.h
     exceptions/tubex_EmptyException.h

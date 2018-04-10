@@ -21,44 +21,6 @@ using namespace tubex;
 
 
 
-
-/*TEST_CASE("Testing subtube", "[core]")
-{
-  SECTION("Test tube1")
-  {
-    Tube tube = tubeTest1();
-    Tube subtube = tube.subtube(Interval(3.5,13.5));
-    REQUIRE(subtube.size() == 11);
-    REQUIRE(subtube[0] == Interval(-4.,4.));
-    REQUIRE(subtube[1] == Interval(-7.,-1.));
-    REQUIRE(subtube[2] == Interval(-9.,-5.));
-    REQUIRE(subtube[3] == Interval(-10.,-6.));
-    REQUIRE(subtube[4] == Interval(-11.,-7.));
-    REQUIRE(subtube[5] == Interval(-10.,-6.));
-    REQUIRE(subtube[6] == Interval(-9.,-4.));
-    REQUIRE(subtube[7] == Interval(-8.,-5.));
-    REQUIRE(subtube[8] == Interval(-7.,-4.));
-    REQUIRE(subtube[9] == Interval(-6.,-2.));
-    REQUIRE(subtube[10] == Interval(-5.,-1.));
-  }
-
-  SECTION("Test tube1 bis")
-  {
-    Tube tube = tubeTest1();
-    Tube subtube = tube.subtube(Interval(10.,12.));
-    REQUIRE(subtube.size() == 2);
-    REQUIRE(subtube[0] == Interval(-8.,-5.));
-    REQUIRE(subtube[1] == Interval(-7.,-4.));
-  }
-
-  SECTION("Test tube1: consistency")
-  {
-    Tube tube = tubeTest1();
-    Tube subtube = tube.subtube(tube.domain());
-    REQUIRE(tube == subtube);
-  }
-}*/
-
 TEST_CASE("Testing interpol (double)", "[core]")
 {
   SECTION("Test tube1")
