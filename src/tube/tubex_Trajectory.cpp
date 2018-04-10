@@ -26,7 +26,8 @@ namespace tubex
 
   Trajectory::Trajectory(const Function& f, const Interval& domain) : m_function(new Function(f)), m_domain(domain)
   {
-
+    IntervalVector box(1, domain);
+    m_codomain = m_function->eval(box);
   }
 
   Trajectory::Trajectory(const map<double,double>& map_values) : m_map_values(map_values)
@@ -93,7 +94,10 @@ namespace tubex
   {
     DomainException::check(*this, t);
 
-    if(m_function != NULL)
+    if(m_domain == t)
+      return m_codomain;
+
+    else if(m_function != NULL)
     {
       IntervalVector box(1, Interval(t));
       return m_function->eval(box);
@@ -108,6 +112,8 @@ namespace tubex
       for(map<double,double>::const_iterator it = m_map_values.lower_bound(t.lb()) ;
           it != m_map_values.upper_bound(t.ub()) ; it++)
         eval |= it->second;
+
+      return eval;
     }
   }
 

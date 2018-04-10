@@ -55,6 +55,9 @@ TEST_CASE("Trajectory base")
     CHECK(traj2[9.] == 4.);
     CHECK(traj2[13.] == 0.);
     CHECK(traj2[14.] == 1.);
+    CHECK(traj2[Interval(2.,9.)] == Interval(-1.,4.));
+    CHECK(traj2[Interval(3.,12.)] == Interval(-2.,4.));
+    CHECK(traj2[traj2.domain()] == Interval(-2.,4.));
   }
 
   SECTION("Update")
@@ -74,13 +77,18 @@ TEST_CASE("Trajectory base")
     for(double t = 0. ; t < 10. ; t++)
       map_values[t] = t;
 
-    Trajectory traj(map_values);
+    Trajectory traj1(map_values);
 
-    CHECK(ApproxIntv(traj.domain()) == Interval(0.,9.));
-    CHECK(ApproxIntv(traj.codomain()) == Interval(0.,9.));
-    traj.truncateDomain(Interval(-3.,5.));
-    CHECK(ApproxIntv(traj.domain()) == Interval(0.,5.));
-    CHECK(ApproxIntv(traj.codomain()) == Interval(0.,5.));
+    CHECK(ApproxIntv(traj1.domain()) == Interval(0.,9.));
+    CHECK(ApproxIntv(traj1.codomain()) == Interval(0.,9.));
+    traj1.truncateDomain(Interval(-3.,5.));
+    CHECK(ApproxIntv(traj1.domain()) == Interval(0.,5.));
+    CHECK(ApproxIntv(traj1.codomain()) == Interval(0.,5.));
+
+    Trajectory traj2(Function("x", "x^2"), Interval(-1.,10.));
+    CHECK(traj2.domain() == Interval(-1.,10.));
+    CHECK(traj2.codomain() == Interval(0.,100.));
+    CHECK(Approx(traj2[5.3]) == 28.09);
   }
 
   SECTION("Domain shift")
