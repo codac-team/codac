@@ -20,6 +20,7 @@
 namespace tubex
 {
   class TubeSlice;
+  class Tube;
 
   class TubeNode
   {
@@ -121,6 +122,7 @@ namespace tubex
       mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 
       friend class TubeTree;
+      friend void deserializeTube(std::ifstream& bin_file, Tube *tube);
   };
 }
 

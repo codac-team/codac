@@ -13,12 +13,15 @@
 #include "tubex_Tube.h"
 #include "tubex_Exception.h"
 #include "tubex_DomainException.h"
+#include "tubex_TubeSerialization.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
+  // Definition
+
   Tube::Tube(const Interval& domain, const Interval& codomain) : TubeTree(domain, codomain)
   {
 
@@ -66,11 +69,33 @@ namespace tubex
     *this |= ub;
   }
 
+  Tube::Tube(const string& binary_file_name) : TubeTree(Interval(0.))
+  {
+    ifstream bin_file(binary_file_name.c_str(), ios::in | ios::binary);
+
+    if(!bin_file.is_open())
+      throw Exception("Tube constructor", "error while opening file \"" + binary_file_name + "\"");
+
+    deserializeTube(bin_file, this);
+  }
+
   // String
 
   ostream& operator<<(ostream& str, const Tube& x)
   {
     cout << "Tube " << x.domain() << "↦" << x.codomain() << flush;
     return str;
+  }
+
+  // Serialization
+
+  void Tube::serialize(const string& binary_file_name, int version_number) const
+  {
+    ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
+
+    if(!bin_file.is_open())
+      throw Exception("Tube::serialize()", "error while writing file \"" + binary_file_name + "\"");
+
+    serializeTube(bin_file, *this, version_number);
   }
 }

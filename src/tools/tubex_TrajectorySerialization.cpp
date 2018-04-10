@@ -17,13 +17,19 @@ using namespace ibex;
 
 namespace tubex
 {
-  void serializeTrajectory(ofstream& binFile, const Trajectory& traj)
+  void serializeTrajectory(ofstream& bin_file, const Trajectory& traj)
   {
+    if(!bin_file.is_open())
+      throw Exception("serializeTrajectory()", "ofstream& bin_file not open");
+
     // todo...
   }
 
-  void deserializeTrajectory(ifstream& binFile, Trajectory& intv)
+  void deserializeTrajectory(ifstream& bin_file, Trajectory& intv)
   {
+    if(!bin_file.is_open())
+      throw Exception("deserializeTrajectory()", "ofstream& bin_file not open");
+
     // todo...
   }
 }

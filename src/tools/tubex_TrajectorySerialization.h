@@ -18,8 +18,8 @@
 
 namespace tubex
 {
-  void serializeTrajectory(std::ofstream& binFile, const Trajectory& traj);
-  void deserializeTrajectory(std::ifstream& binFile, Trajectory& traj);
+  void serializeTrajectory(std::ofstream& bin_file, const Trajectory& traj);
+  void deserializeTrajectory(std::ifstream& bin_file, Trajectory& traj);
 }
 
 #endif

@@ -96,6 +96,7 @@ namespace tubex
       ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
 
       friend class TubeTree;
+      friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number);
   };
 }
 

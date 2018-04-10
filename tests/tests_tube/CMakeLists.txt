@@ -3,6 +3,7 @@ set(TESTS_TUBE_SOURCES
   tests_definition.cpp
   tests_exceptions.cpp
   tests_operators.cpp
+  tests_serialization.cpp
   tests_slicesstructure.cpp
   tests_values.cpp
 )

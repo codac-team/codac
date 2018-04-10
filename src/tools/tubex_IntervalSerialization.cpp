@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_IntervalSerialization.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -19,8 +20,11 @@ namespace tubex
 {
   enum IntervalType { BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS };
 
-  void serializeInterval(ofstream& binFile, const Interval& intv)
+  void serializeInterval(ofstream& bin_file, const Interval& intv)
   {
+    if(!bin_file.is_open())
+      throw Exception("serializeInterval()", "ofstream& bin_file not open");
+
     char intv_type;
 
     if(intv == Interval::EMPTY_SET)
@@ -38,20 +42,23 @@ namespace tubex
     else
       intv_type = BOUNDED;
 
-    binFile.write((const char*)&intv_type, sizeof(char));
+    bin_file.write((const char*)&intv_type, sizeof(char));
 
     if(intv_type == BOUNDED)
     {
       double lb = intv.lb(), ub = intv.ub();
-      binFile.write((const char*)&lb, sizeof(double));
-      binFile.write((const char*)&ub, sizeof(double));
+      bin_file.write((const char*)&lb, sizeof(double));
+      bin_file.write((const char*)&ub, sizeof(double));
     }
   }
 
-  void deserializeInterval(ifstream& binFile, Interval& intv)
+  void deserializeInterval(ifstream& bin_file, Interval& intv)
   {
+    if(!bin_file.is_open())
+      throw Exception("serializeInterval()", "ofstream& bin_file not open");
+
     char intv_type;
-    binFile.read((char*)&intv_type, sizeof(char));
+    bin_file.read((char*)&intv_type, sizeof(char));
 
     switch(intv_type)
     {
@@ -73,13 +80,13 @@ namespace tubex
 
       case BOUNDED:
         double lb, ub;
-        binFile.read((char*)&lb, sizeof(double));
-        binFile.read((char*)&ub, sizeof(double));
+        bin_file.read((char*)&lb, sizeof(double));
+        bin_file.read((char*)&ub, sizeof(double));
         intv = Interval(lb, ub);
         break;
 
       default:
-        cout << "Tube::deserializeInterval(...): unhandled case" << endl;
+        throw Exception("deserializeInterval()", "unhandled case");
     }
   }
 }

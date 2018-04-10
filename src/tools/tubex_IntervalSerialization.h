@@ -27,20 +27,20 @@ namespace tubex
    *   either BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS.
    *   In case of unbounded intervals, the two last fields disappear.
    *
-   * \param binFile binary file (ofstream object)
+   * \param bin_file binary file (ofstream object)
    * \param intv Interval object to be serialized
    */
-  void serializeInterval(std::ofstream& binFile, const ibex::Interval& intv);
+  void serializeInterval(std::ofstream& bin_file, const ibex::Interval& intv);
 
   /**
    * \brief Create an Interval object from a binary file.
    *
    * The binary file has to be written by the serializeInterval() function.
    *
-   * \param binFile binary file (ifstream object)
+   * \param bin_file binary file (ifstream object)
    * \param intv Interval object to be deserialized
    */
-  void deserializeInterval(std::ifstream& binFile, ibex::Interval& intv);
+  void deserializeInterval(std::ifstream& bin_file, ibex::Interval& intv);
 }
 
 #endif

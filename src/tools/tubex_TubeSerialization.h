@@ -16,10 +16,12 @@
 #include <fstream>
 #include "tubex.h"
 
+#define SERIALIZATION_VERSION 2
+
 namespace tubex
 {
-  void serializeTube(std::ofstream& binFile, const Tube& tube);
-  void deserializeTube(std::ifstream& binFile, Tube& tube);
+  void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number = SERIALIZATION_VERSION);
+  void deserializeTube(std::ifstream& bin_file, Tube *tube);
 }
 
 #endif
