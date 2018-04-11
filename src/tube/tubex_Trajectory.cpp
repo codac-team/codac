@@ -19,6 +19,8 @@ using namespace ibex;
 
 namespace tubex
 {
+  // Definition
+
   Trajectory::Trajectory()
   {
 
@@ -43,7 +45,9 @@ namespace tubex
       delete m_function;
   }
 
-  const map<double,double> Trajectory::getMap() const
+  // Access values
+
+  const map<double,double>& Trajectory::getMap() const
   {
     return m_map_values;
   }
@@ -53,12 +57,12 @@ namespace tubex
     return m_function;
   }
 
-  const Interval Trajectory::domain() const
+  const Interval& Trajectory::domain() const
   {
     return m_domain;
   }
 
-  const Interval Trajectory::codomain() const
+  const Interval& Trajectory::codomain() const
   {
     return m_codomain;
   }
@@ -116,6 +120,42 @@ namespace tubex
       return eval;
     }
   }
+  
+  // Tests
+
+  bool Trajectory::operator==(const Trajectory& x) const
+  {
+    if(m_function == NULL && x.getFunction() == NULL)
+    {
+      typename map<double,double>::const_iterator it_map;
+      for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
+      {
+        if(x.getMap().find(it_map->first) == x.getMap().end())
+          return false;
+
+        if(it_map->second != x.getMap().at(it_map->first))
+          return false;
+      }
+
+      return true;
+    }
+
+    else if(m_function != NULL && x.getFunction() != NULL)
+    {
+      throw Exception("Trajectory::operator==",
+                      "operator== not implemented in case of Trajectory defined by a Function");
+    }
+
+    else
+      return false;
+  }
+  
+  bool Trajectory::operator!=(const Trajectory& x) const
+  {
+    return domain() != x.domain() | codomain() != x.codomain() | !(*this == x);
+  }
+
+  // Setting values
 
   double& Trajectory::set(double t, double y)
   {

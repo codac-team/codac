@@ -91,4 +91,40 @@ TEST_CASE("Trajectory base")
     CHECK(Approx(traj[5.2]) == 7.2);
     CHECK(Approx(traj[3.2]) == 5.2);
   }
+
+  SECTION("Tests")
+  {
+    // Defined by maps of values
+    map<double,double> map_values;
+    for(double t = 0. ; t < 10. ; t++)
+      map_values[t] = t;
+
+    Trajectory traj1(map_values);
+    Trajectory traj2(map_values);
+    CHECK(traj1 == traj2);
+    CHECK_FALSE(traj1 != traj2);
+
+    traj1.set(3.2, 4.5);
+    CHECK_FALSE(traj1 == traj2);
+    CHECK(traj1 != traj2);
+
+    traj1 = traj2;
+    CHECK(traj1 == traj2);
+    CHECK_FALSE(traj1 != traj2);
+
+    traj1.set(0., 4.4);
+    CHECK_FALSE(traj1 == traj2);
+    CHECK(traj1 != traj2);
+
+    // Not defined yet
+    Trajectory traj3, traj4;
+    CHECK(traj3 == traj4);
+    CHECK_FALSE(traj3 != traj4);
+
+    // Defined by a Function object
+    Trajectory traj5(Function("t", "t^2"), Interval(0.,10.));
+    Trajectory traj6(Function("t", "t^2+1"), Interval(0.,10.));
+    CHECK_THROWS(traj5 == traj6); // not implemented yet
+    CHECK_THROWS(traj5 != traj6); // not implemented yet
+  }
 }

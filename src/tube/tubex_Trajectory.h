@@ -30,12 +30,16 @@ namespace tubex
       ~Trajectory();
 
       // Access values
-      const std::map<double,double> getMap() const;
+      const std::map<double,double>& getMap() const;
       const ibex::Function* getFunction() const;
-      const ibex::Interval domain() const;
-      const ibex::Interval codomain() const;
+      const ibex::Interval& domain() const;
+      const ibex::Interval& codomain() const;
       const double operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& t) const;
+
+      // Tests
+      bool operator==(const Trajectory& x) const;
+      bool operator!=(const Trajectory& x) const;
 
       // Setting values
       double& set(double t, double y);
