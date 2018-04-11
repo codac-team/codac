@@ -213,7 +213,7 @@ namespace tubex
 
     ostream& operator<<(ostream& str, const TubeNode& x)
     {
-      cout << "TubeNode " << x.domain() << "↦" << x.codomain() << flush;
+      str << "TubeNode " << x.domain() << "↦" << x.codomain() << flush;
       return str;
     }
     /*

@@ -102,10 +102,9 @@ TEST_CASE("Tube definition")
     CHECK(tube2.nbSlices() == tube3.nbSlices());
     CHECK(tube2.domain() == tube3.domain());
     CHECK(tube2.codomain() == tube3.codomain());
+    CHECK(tube2.volume() == tube3.volume());
     for(int i = 0 ; i < tube2.nbSlices() ; i++)
       CHECK(tube2[i] == tube3[i]);
-    //CHECK(tube2 = tube3); // todo: check this
-    //CHECK_FALSE(tube2 != tube3); // todo: check this
   }
 
   SECTION("Tube class - 2 Trajectory")

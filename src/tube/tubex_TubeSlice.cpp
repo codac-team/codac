@@ -389,7 +389,7 @@ namespace tubex
 
     ostream& operator<<(ostream& str, const TubeSlice& x)
     {
-      cout << "Slice " << x.domain() << "↦" << x.codomain() << flush;
+      str << "Slice " << x.domain() << "↦(" << x.inputGate() << ")" << x.codomain() << "(" << x.outputGate() << ")" << flush;
       return str;
     }
 

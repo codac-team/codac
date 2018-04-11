@@ -112,10 +112,10 @@ namespace tubex
 
 
     // String
-
+    
     ostream& operator<<(ostream& str, const Tube& x)
     {
-      cout << "Tube " << x.domain() << "↦" << x.codomain() << flush;
+      str << "Tube " << x.domain() << "↦" << x.codomain() << flush;
       return str;
     }
 
