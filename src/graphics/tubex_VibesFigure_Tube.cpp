@@ -67,8 +67,8 @@ namespace tubex
       }
 
       figtube->setProperties(x, y, 700, 350);
-      if(tube != NULL) figtube->addTube(tube);
-      if(traj != NULL) figtube->addTrajectory(traj);
+      if(tube != NULL) figtube->addTube(tube, DEFAULT_TUBE_NAME);
+      if(traj != NULL) figtube->addTrajectory(traj, DEFAULT_TRAJ_NAME);
       figtube->show();
     }
 
@@ -83,8 +83,8 @@ namespace tubex
 
     VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const Tube *tube, const Trajectory *traj) : VibesFigure(fig_name)
     {
-      if(tube != NULL) addTube(tube);
-      if(traj != NULL) addTrajectory(traj);
+      if(tube != NULL) addTube(tube, DEFAULT_TUBE_NAME);
+      if(traj != NULL) addTrajectory(traj, DEFAULT_TUBE_NAME);
       m_view_box = IntervalVector(2, Interval::EMPTY_SET);
     }
 
@@ -96,7 +96,8 @@ namespace tubex
           delete it->second.tube_copy;
     }
 
-    void VibesFigure_Tube::addTube(const Tube *tube, const string& color_frgrnd, const string& color_bckgrnd)
+    void VibesFigure_Tube::addTube(const Tube *tube, const string& name,
+                                   const string& color_frgrnd, const string& color_bckgrnd)
     {
       if(m_map_tubes.find(tube) != m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::addTube(): tube already added" << endl;
@@ -104,8 +105,17 @@ namespace tubex
       else
         m_map_tubes[tube];
 
+      setTubeName(tube, name);
       setTubeColor(tube, color_frgrnd, color_bckgrnd);
       setTubeColor(tube, TubeColorType::SLICES, DEFAULT_SLICES_COLOR);
+    }
+
+    void VibesFigure_Tube::setTubeName(const Tube *tube, const string& name)
+    {
+      if(m_map_tubes.find(tube) == m_map_tubes.end())
+        cout << "Warning VibesFigure_Tube::setTubeName(): unknown tube" << endl;
+
+      m_map_tubes[tube].name = name;
     }
 
     void VibesFigure_Tube::setTubeColor(const Tube *tube, const string& color_frgrnd, const string& color_bckgrnd)
@@ -135,13 +145,23 @@ namespace tubex
       m_map_tubes.erase(tube);
     }
 
-    void VibesFigure_Tube::addTrajectory(const Trajectory *traj, const string& color)
+    void VibesFigure_Tube::addTrajectory(const Trajectory *traj, const string& name, const string& color)
     {
       if(m_map_trajs.find(traj) != m_map_trajs.end())
         cout << "Warning VibesFigure_Tube::addTrajectory(): trajectory already added" << endl;
 
       else
         m_map_trajs[traj].color = color;
+
+      setTrajectoryName(traj, name);
+    }
+
+    void VibesFigure_Tube::setTrajectoryName(const Trajectory *traj, const string& name)
+    {
+      if(m_map_trajs.find(traj) == m_map_trajs.end())
+        cout << "Warning VibesFigure_Tube::setTrajectoryName(): unknown trajectory" << endl;
+
+      m_map_trajs[traj].name = name;
     }
     
     void VibesFigure_Tube::setTrajectoryColor(const Trajectory *traj, const string& color)
@@ -191,10 +211,10 @@ namespace tubex
 
         double image_lb, image_ub;
 
-        if(!tube->image().is_unbounded())
+        if(!tube->codomain().is_unbounded())
         {
-          image_lb = tube->image().lb();
-          image_ub = tube->image().ub();
+          image_lb = tube->codomain().lb();
+          image_ub = tube->codomain().ub();
         }
 
         else // some slices can be [-oo,+oo], maybe not all of them
@@ -219,7 +239,7 @@ namespace tubex
       // Displaying tube
 
         ostringstream o;
-        o << "tube_" << tube->name();
+        o << "tube_" << m_map_tubes[tube].name;
         string group_name = o.str();
         string group_name_bckgrnd = o.str() + "_old";
 
@@ -243,7 +263,7 @@ namespace tubex
             // with the current version of the tube.
 
             vector<double> v_x, v_y;
-            computePolygonEnvelope(*m_map_tubes[tube].tube_copy, v_x, v_y);
+            computePolygonEnvelope(m_map_tubes[tube].tube_copy, v_x, v_y);
             vibes::clearGroup(m_name, group_name_bckgrnd);
             vibes::newGroup(group_name_bckgrnd, m_map_tubes[tube].m_colors[TubeColorType::BACKGROUND], vibesParams("figure", m_name));
             vibes::Params params_background = vibesParams("figure", m_name, "group", group_name_bckgrnd);
@@ -271,7 +291,7 @@ namespace tubex
         else
         {
           vector<double> v_x, v_y;
-          computePolygonEnvelope(*tube, v_x, v_y);
+          computePolygonEnvelope(tube, v_x, v_y);
           vibes::newGroup(group_name, m_map_tubes[tube].m_colors[TubeColorType::FOREGROUND], vibesParams("figure", m_name));
           vibes::drawPolygon(v_x, v_y, params_foreground);
         }
@@ -279,21 +299,22 @@ namespace tubex
       return viewbox;
     }
 
-    void VibesFigure_Tube::computePolygonEnvelope(const Tube& tube, vector<double>& v_x, vector<double>& v_y)
+    void VibesFigure_Tube::computePolygonEnvelope(const Tube *tube, vector<double>& v_x, vector<double>& v_y)
     {
-      if(tube.isEmpty()) cout << "Tube graphics: warning, tube " << tube.name() << " is empty" << endl;
+      if(tube->isEmpty())
+        cout << "Tube graphics: warning, tube " << m_map_tubes[tube].name << " is empty" << endl;
 
-      for(int i = 0 ; i < tube.nbSlices() ; i++)
+      for(int i = 0 ; i < tube->nbSlices() ; i++)
       {
-        IntervalVector slice_box = tube.sliceBox(i);
+        IntervalVector slice_box = tube->sliceBox(i);
         slice_box[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
         v_x.push_back(slice_box[0].lb()); v_x.push_back(slice_box[0].ub());
         v_y.push_back(slice_box[1].ub()); v_y.push_back(slice_box[1].ub());
       }
 
-      for(int i = tube.nbSlices() - 1 ; i >= 0 ; i--)
+      for(int i = tube->nbSlices() - 1 ; i >= 0 ; i--)
       {
-        IntervalVector slice_box = tube.sliceBox(i);
+        IntervalVector slice_box = tube->sliceBox(i);
         slice_box[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
         v_x.push_back(slice_box[0].ub()); v_x.push_back(slice_box[0].lb());
         v_y.push_back(slice_box[1].lb()); v_y.push_back(slice_box[1].lb());
@@ -315,7 +336,7 @@ namespace tubex
       IntervalVector viewbox(2, Interval::EMPTY_SET);
 
       std::ostringstream o;
-      o << "traj_" << traj->name();
+      o << "traj_" << m_map_trajs[traj].name;
       vibes::newGroup(o.str(), m_map_trajs[traj].color, vibesParams("figure", m_name));
 
       if(traj->domain().is_unbounded() || traj->domain().is_empty())
