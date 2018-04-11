@@ -54,6 +54,18 @@ namespace tubex
         sample(v_bounds);
       }
     }
+    
+    Tube::Tube(const Interval& domain, double timestep, const Function& function) : Tube(domain, timestep)
+    {
+      TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        IntervalVector iv_domain(1, slice->domain());
+        slice->set(function.eval(iv_domain));
+        slice = slice->nextSlice();
+      }
+      flagFutureTreeUpdate();
+    }
 
     Tube::Tube(const Tube& x, const Interval& codomain) : TubeTree(x, codomain)
     {

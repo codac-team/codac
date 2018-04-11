@@ -86,10 +86,32 @@ TEST_CASE("Tube definition")
     CHECK(tube_f.nbSlices() == 1);
   }
 
+  SECTION("Tube class - Function")
+  {
+    Tube tube1(Interval(-1.,10.), 0.01, Function("t", "t^2"));
+    Trajectory traj1_inside(Interval(-1.,10.), Function("t", "t^2"));
+    Trajectory traj1_outside(Interval(-1.,10.), Function("t", "t^2+2"));
+
+    CHECK(tube1.encloses(traj1_inside));
+    CHECK_FALSE(tube1.encloses(traj1_outside));
+
+    Tube tube2(Interval(-1.,10.), 0.01, Function("t", "t^2+[-1,1]"));
+    Trajectory traj3_lb(Interval(-1.,10.), Function("t", "(t^2)-1"));
+    Trajectory traj3_ub(Interval(-1.,10.), Function("t", "(t^2)+1"));
+    Tube tube3(traj3_lb, traj3_ub, 0.01);
+    CHECK(tube2.nbSlices() == tube3.nbSlices());
+    CHECK(tube2.domain() == tube3.domain());
+    CHECK(tube2.codomain() == tube3.codomain());
+    for(int i = 0 ; i < tube2.nbSlices() ; i++)
+      CHECK(tube2[i] == tube3[i]);
+    //CHECK(tube2 = tube3); // todo: check this
+    //CHECK_FALSE(tube2 != tube3); // todo: check this
+  }
+
   SECTION("Tube class - 2 Trajectory")
   {
-    Trajectory traj_lb(Function("t", "t^2"), Interval(-1.,10.));
-    Trajectory traj_ub(Function("t", "t^2-2"), Interval(-1.,10.));
+    Trajectory traj_lb(Interval(-1.,10.), Function("t", "t^2"));
+    Trajectory traj_ub(Interval(-1.,10.), Function("t", "t^2-2"));
     
     Tube tube_1slice(traj_lb, traj_ub);
     CHECK(tube_1slice.nbSlices() == 1);
@@ -109,8 +131,8 @@ TEST_CASE("Tube definition")
 
   SECTION("Tube class - 1 Trajectory")
   {
-    Trajectory traj1(Function("t", "(t^2)*(-3+t*(1+2*(t^2)))"), Interval(0.,1.1));
-    Trajectory traj2(Function("t", "2*(t^5)+(t^3)-3*(t^2)"), Interval(0.,1.1));
+    Trajectory traj1(Interval(0.,1.1), Function("t", "(t^2)*(-3+t*(1+2*(t^2)))"));
+    Trajectory traj2(Interval(0.,1.1), Function("t", "2*(t^5)+(t^3)-3*(t^2)"));
     
     Tube tube0(Interval(0.,1.1), 0.1, Interval::EMPTY_SET);
     CHECK(tube0.nbSlices() == 12);

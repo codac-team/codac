@@ -26,7 +26,7 @@ namespace tubex
 
   }
 
-  Trajectory::Trajectory(const Function& f, const Interval& domain) : m_function(new Function(f)), m_domain(domain)
+  Trajectory::Trajectory(const Interval& domain, const Function& f) : m_domain(domain), m_function(new Function(f))
   {
     IntervalVector box(1, domain);
     m_codomain = m_function->eval(box);
