@@ -55,7 +55,7 @@ namespace tubex
   void deserializeInterval(ifstream& bin_file, Interval& intv)
   {
     if(!bin_file.is_open())
-      throw Exception("serializeInterval()", "ofstream& bin_file not open");
+      throw Exception("serializeInterval()", "ifstream& bin_file not open");
 
     char intv_type;
     bin_file.read((char*)&intv_type, sizeof(char));

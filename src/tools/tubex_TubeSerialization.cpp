@@ -117,10 +117,13 @@ namespace tubex
     }
   }
 
-  void deserializeTube(ifstream& bin_file, Tube *tube)
+  void deserializeTube(ifstream& bin_file, Tube& tube)
   {
     if(!bin_file.is_open())
-      throw Exception("deserializeTube()", "ofstream& bin_file not open");
+      throw Exception("deserializeTube()", "ifstream& bin_file not open");
+
+    if(tube.nbSlices() != 1)
+      throw Exception("deserializeTube()", "tube already defined");
 
     // Version number for compliance purposes
     char version_number;
@@ -154,16 +157,16 @@ namespace tubex
         bin_file.read((char*)&domain_ub, sizeof(double));
 
         // Creating tube
-        tube->m_domain = Interval(domain_lb, domain_ub);
-        tube->getFirstSlice()->m_domain = Interval(domain_lb, domain_ub);
-        tube->sample(v_domain_bounds);
+        tube.m_domain = Interval(domain_lb, domain_ub);
+        tube.getFirstSlice()->m_domain = Interval(domain_lb, domain_ub);
+        tube.sample(v_domain_bounds);
 
         // Codomains
         for(int i = 0 ; i < slices_number ; i++)
         {
           Interval slice_value;
           deserializeInterval(bin_file, slice_value);
-          tube->set(slice_value, i);
+          tube.set(slice_value, i);
         }
 
         // Gates
@@ -177,7 +180,7 @@ namespace tubex
           bin_file.read((char*)&t, sizeof(double));
           Interval gate;
           deserializeInterval(bin_file, gate);
-          tube->set(gate, t);
+          tube.set(gate, t);
         }
 
         break;

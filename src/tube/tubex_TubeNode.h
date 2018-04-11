@@ -122,7 +122,7 @@ namespace tubex
       mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 
       friend class TubeTree;
-      friend void deserializeTube(std::ifstream& bin_file, Tube *tube);
+      friend void deserializeTube(std::ifstream& bin_file, Tube& tube);
   };
 }
 

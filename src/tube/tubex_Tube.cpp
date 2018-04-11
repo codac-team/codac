@@ -76,7 +76,7 @@ namespace tubex
     if(!bin_file.is_open())
       throw Exception("Tube constructor", "error while opening file \"" + binary_file_name + "\"");
 
-    deserializeTube(bin_file, this);
+    deserializeTube(bin_file, *this);
   }
 
   // String

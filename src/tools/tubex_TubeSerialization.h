@@ -21,7 +21,7 @@
 namespace tubex
 {
   void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number = SERIALIZATION_VERSION);
-  void deserializeTube(std::ifstream& bin_file, Tube *tube);
+  void deserializeTube(std::ifstream& bin_file, Tube& tube);
 }
 
 #endif
