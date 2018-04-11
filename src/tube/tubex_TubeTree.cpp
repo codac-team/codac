@@ -774,50 +774,72 @@ namespace tubex
 
     // Tests
 
-    bool TubeTree::isEqual(const TubeTree& x) const
+    bool TubeTree::nodesAreEqual(const TubeNode* node1, const TubeNode* node2)
     {
-      if(!TubeNode::isEqual(x))
-        return false;
+      if(node1 != NULL || node2 != NULL)
+      {
+        if(node1 == NULL || node2 == NULL) // one is NULL, the other one is not
+          return false;
 
-      if(!((m_first_tubenode == NULL && x.getFirstTubeNode() == NULL)
-          || ((m_first_tubenode != NULL && x.getFirstTubeNode() != NULL)
-              && ((m_first_tubenode->isSlice() && x.getFirstTubeNode()->isSlice() && ((TubeSlice*)m_first_tubenode)->isEqual(*(TubeSlice*)x.getFirstTubeNode()))
-               || (!m_first_tubenode->isSlice() && !x.getFirstTubeNode()->isSlice() && ((TubeTree*)m_first_tubenode)->isEqual(*(TubeTree*)x.getFirstTubeNode()))))))
-        return false;
+        else // both are not NULL
+        {
+          if(node1->isSlice() && node2->isSlice()) // both are slices
+          {
+            if(!((TubeSlice*)node1)->TubeSlice::isEqual(*(TubeSlice*)node2))
+              return false; // slices are not equal
+          }
 
-      if(!((m_second_tubenode == NULL && x.getSecondTubeNode() == NULL)
-          || ((m_second_tubenode != NULL && x.getSecondTubeNode() != NULL)
-              && ((m_second_tubenode->isSlice() && x.getSecondTubeNode()->isSlice() && ((TubeSlice*)m_second_tubenode)->isEqual(*(TubeSlice*)x.getSecondTubeNode()))
-               || (!m_second_tubenode->isSlice() && !x.getSecondTubeNode()->isSlice() && ((TubeTree*)m_second_tubenode)->isEqual(*(TubeTree*)x.getSecondTubeNode()))))))
-        return false;
+          else if(node1->isSlice() || node2->isSlice())
+            return false; // one is a slice, the other one is not
+
+          else if(!((TubeTree*)node1)->TubeTree::isEqual(*(TubeTree*)node2))
+            return false; // both are trees, not equal
+        }
+      }
 
       return true;
+    }
+
+    bool TubeTree::isEqual(const TubeTree& x) const
+    {
+      StructureException::check(*this, x);
+
+      return TubeNode::isEqual(x)
+        && nodesAreEqual(m_first_tubenode, x.getFirstTubeNode())
+        && nodesAreEqual(m_second_tubenode, x.getSecondTubeNode());
+    }
+
+    bool TubeTree::nodesAreDifferent(const TubeNode* node1, const TubeNode* node2)
+    {
+      if(node1 == NULL && node2 == NULL)
+        return false;
+
+      else if(node1 != NULL && node2 != NULL) // both are not NULL
+      {
+        if((node1->isSlice() && !node2->isSlice()) || (!node1->isSlice() && node2->isSlice()))
+          return true;
+
+        else // nodes are of same type
+        {
+          if(node1->isSlice()) // both are slices
+            return ((TubeSlice*)node1)->TubeSlice::isDifferent(*(TubeSlice*)node2);
+
+          else
+            return ((TubeTree*)node1)->TubeTree::isDifferent(*(TubeTree*)node2);
+        }
+      }
+
+      else // one is NULL, the other one is not
+        return true;
     }
     
     bool TubeTree::isDifferent(const TubeTree& x) const
     {
       StructureException::check(*this, x);
 
-      if(TubeNode::isDifferent(x))
-        return true;
-
-      if((m_first_tubenode != NULL && x.getFirstTubeNode() == NULL)
-             || (m_first_tubenode == NULL && x.getFirstTubeNode() != NULL)
-             || (m_first_tubenode->isSlice() && !x.getFirstTubeNode()->isSlice())
-             || (!m_first_tubenode->isSlice() && x.getFirstTubeNode()->isSlice())
-             || (m_first_tubenode->isSlice() && ((TubeSlice*)m_first_tubenode)->isDifferent(*(TubeSlice*)x.getFirstTubeNode()))
-             || (!m_first_tubenode->isSlice() && ((TubeTree*)m_first_tubenode)->isDifferent(*(TubeTree*)x.getFirstTubeNode())))
-        return true;
-
-      if((m_second_tubenode != NULL && x.getSecondTubeNode() == NULL)
-             || (m_second_tubenode == NULL && x.getSecondTubeNode() != NULL)
-             || (m_second_tubenode->isSlice() && !x.getSecondTubeNode()->isSlice())
-             || (!m_second_tubenode->isSlice() && x.getSecondTubeNode()->isSlice())
-             || (m_second_tubenode->isSlice() && ((TubeSlice*)m_second_tubenode)->isDifferent(*(TubeSlice*)x.getSecondTubeNode()))
-             || (!m_second_tubenode->isSlice() && ((TubeTree*)m_second_tubenode)->isDifferent(*(TubeTree*)x.getSecondTubeNode())))
-        return true;
-
-      return false;
+      return TubeNode::isDifferent(x)
+        || nodesAreDifferent(m_first_tubenode, x.getFirstTubeNode())
+        || nodesAreDifferent(m_second_tubenode, x.getSecondTubeNode());
     }
 
     // Setting values
@@ -829,45 +851,6 @@ namespace tubex
     // Contractors
 
     // Integration
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*bool TubeTree::isSlice() const
-    {
-      return false;
-    }
-  /*Tube::Tube(const Interval& domain) : TubeNode(domain, Interval::ALL_REALS)
-  {
-    m_first_tubenode = new TubeSlice(domain, Interval::ALL_REALS);
-  }
-
-  Interval Tube::operator()(double t) const
-  {
-    return Interval::ALL_REALS;
-  }
-
-  void Tube::sample(double t, const Interval& gate)
-  {
-
-  }*/
     
   /*  Interval TubeTree::invert(const Interval& y, const Interval& t) const
     {

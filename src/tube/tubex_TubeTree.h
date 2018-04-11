@@ -96,7 +96,9 @@ namespace tubex
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
 
       // Tests
+      static bool nodesAreEqual(const TubeNode* node1, const TubeNode* node2);
       bool isEqual(const TubeTree& x) const;
+      static bool nodesAreDifferent(const TubeNode* node1, const TubeNode* node2);
       bool isDifferent(const TubeTree& x) const;
 
       // Setting values
