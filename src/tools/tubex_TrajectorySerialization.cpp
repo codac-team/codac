@@ -18,7 +18,7 @@ using namespace ibex;
 namespace tubex
 {
   /*
-    Tube binary files structure (VERSION 2)
+    Trajectory binary files structure (VERSION 2)
       - minimal storage
       - note: only map valued trajectories are serializable
       - format: [char_version_number]

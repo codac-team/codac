@@ -1,4 +1,5 @@
 #include "tests.h"
+#include <cstdio>
 
 using namespace Catch;
 using namespace Detail;
@@ -19,6 +20,7 @@ TEST_CASE("serialization/deserialization of Tube")
     CHECK_THROWS(Tube tube2(filename, traj););
     CHECK_THROWS(Tube tube3(filename, v_trajs););
     Tube tube4(filename);
+    remove(filename.c_str());
     CHECK(tube1 == tube4);
   }
 
@@ -43,6 +45,7 @@ TEST_CASE("serialization/deserialization of Tube")
     string filename = "test_serialization_gates.tube";
     tube1.serialize(filename);
     Tube tube2(filename);
+    remove(filename.c_str());
     CHECK(tube1 == tube2);
 
     CHECK(tube2[0.] == Interval(7.));
@@ -65,6 +68,7 @@ TEST_CASE("serialization/deserialization of Tube")
     tube1.serialize(filename, traj1);
     Trajectory traj4;
     Tube tube2(filename, traj4);
+    remove(filename.c_str());
     CHECK(tube1 == tube2);
     CHECK(traj1 == traj4);
 
@@ -77,6 +81,7 @@ TEST_CASE("serialization/deserialization of Tube")
     tube1.serialize(filename, v_trajs);
     vector<Trajectory> v_trajs_2;
     Tube tube3(filename, v_trajs_2);
+    remove(filename.c_str());
     CHECK(v_trajs.size() == v_trajs_2.size());
     CHECK(tube1 == tube3);
     for(int i = 0 ; i < v_trajs.size() ; i++)

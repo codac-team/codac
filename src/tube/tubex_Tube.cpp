@@ -97,7 +97,7 @@ namespace tubex
     }
     
     // Bisection
-    
+
 
     // String
 
@@ -108,6 +108,16 @@ namespace tubex
     }
 
     // Serialization
+
+    /*
+      Tube binary files structure (VERSION 2)
+        - minimal storage
+        - format: [tube]
+                  [int_nb_trajectories]
+                  [traj1]
+                  [traj2]
+                  ...
+    */
 
     void Tube::serialize(const string& binary_file_name, int version_number) const
     {
