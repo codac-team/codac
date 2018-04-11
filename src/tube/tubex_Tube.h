@@ -37,8 +37,9 @@ namespace tubex
       //Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
 
       // Bisection
-      /*std::pair<Tube,Tube> bisect(const Tube& derivative, double t, float ratio = 0.55) const;
-*/
+      //std::pair<Tube,Tube> bisect(const Tube& derivative, float ratio = 0.55) const;
+      //std::pair<Tube,Tube> bisect(double t, const Tube& derivative, float ratio = 0.55) const;
+
       // String
       friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
@@ -63,10 +64,6 @@ namespace tubex
       void serialize(const std::string& binary_file_name, const std::vector<Trajectory>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
 
     protected:
-
-    /** Contractors: **/
-
-      //void ctcEval_computeIndex(const ibex::Interval& z, const ibex::Interval& t, int& index_lb, int& index_ub);
 
     /** Serialization: **/
 

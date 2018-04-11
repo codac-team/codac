@@ -95,6 +95,9 @@ namespace tubex
       if(v_trajs.size() == 0)
         throw Exception("Tube constructor", "unable to deserialize a Trajectory");
     }
+    
+    // Bisection
+    
 
     // String
 

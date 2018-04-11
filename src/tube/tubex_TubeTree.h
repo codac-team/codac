@@ -99,7 +99,7 @@ namespace tubex
       bool isEqual(const TubeTree& x) const;
       bool isDifferent(const TubeTree& x) const;
 
-      /*// Setting values
+      // Setting values
 
       // Operators
 

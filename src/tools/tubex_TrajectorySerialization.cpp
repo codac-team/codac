@@ -17,6 +17,20 @@ using namespace ibex;
 
 namespace tubex
 {
+  /*
+    Tube binary files structure (VERSION 2)
+      - minimal storage
+      - note: only map valued trajectories are serializable
+      - format: [char_version_number]
+                [int_nb_points]
+                [double_t_pt1]
+                [double_y_pt1]
+                [double_t_pt2]
+                [double_y_pt2]
+                [double_t_pt3]
+                ...
+  */
+
   void serializeTrajectory(ofstream& bin_file, const Trajectory& traj, int version_number)
   {
     if(!bin_file.is_open())
@@ -29,7 +43,7 @@ namespace tubex
       throw Exception("serializeTrajectory()", "trajectory not defined");
 
     // Version number for compliance purposes
-    bin_file.write((const char*)&version_number, sizeof(int));
+    bin_file.write((const char*)&version_number, sizeof(char));
 
     switch(version_number)
     {
@@ -67,8 +81,8 @@ namespace tubex
       throw Exception("deserializeTrajectory()", "trajectory already defined");
 
     // Version number for compliance purposes
-    int version_number;
-    bin_file.read((char*)&version_number, sizeof(int));
+    char version_number;
+    bin_file.read((char*)&version_number, sizeof(char));
     
     switch(version_number)
     {

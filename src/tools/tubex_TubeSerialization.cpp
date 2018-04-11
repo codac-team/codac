@@ -18,13 +18,31 @@ using namespace ibex;
 
 namespace tubex
 {
+  /*
+    Tube binary files structure (VERSION 2)
+      - minimal storage
+      - format: [char_version_number]
+                [int_nb_slices]
+                [double_t0]
+                [double_t1] // time input shared by 1rst and 2nd slices
+                [double_t2]
+                ...
+                [interval_y0] // value of 1rst slice
+                [interval_y0]
+                ...
+                [int_nb_gates]
+                [double_t_g1] // time input of 1rst gate
+                [interval_g1] // value of 1rst gate
+                ...
+  */
+
   void serializeTube(ofstream& bin_file, const Tube& tube, int version_number)
   {
     if(!bin_file.is_open())
       throw Exception("serializeTube()", "ofstream& bin_file not open");
 
     // Version number for compliance purposes
-    bin_file.write((const char*)&version_number, sizeof(int));
+    bin_file.write((const char*)&version_number, sizeof(char));
 
     switch(version_number)
     {
@@ -110,8 +128,8 @@ namespace tubex
       throw Exception("deserializeTube()", "tube already defined");
 
     // Version number for compliance purposes
-    int version_number;
-    bin_file.read((char*)&version_number, sizeof(int));
+    char version_number;
+    bin_file.read((char*)&version_number, sizeof(char));
 
     switch(version_number)
     {
