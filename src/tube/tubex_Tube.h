@@ -32,9 +32,9 @@ namespace tubex
       Tube(const Trajectory& traj, double thickness = 0., double timestep = 0.);
       Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
       Tube(const std::string& binary_file_name);
-      /*Tube(const std::string& binary_file_name, Trajectory& traj);
+      Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
-      Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;*/
+      //Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
 
       // Bisection
       /*std::pair<Tube,Tube> bisect(const Tube& derivative, double t, float ratio = 0.55) const;
@@ -59,10 +59,8 @@ namespace tubex
     /** Serialization: **/
 
       void serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
-      /*void serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
-      void serialize(const std::string& binary_file_name, const std::vector<const Trajectory&>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
-      void deserialize(const std::string& binary_file_name, Trajectory& traj);
-      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);*/
+      void serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
+      void serialize(const std::string& binary_file_name, const std::vector<Trajectory>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
 
     protected:
 
@@ -70,6 +68,9 @@ namespace tubex
 
       //void ctcEval_computeIndex(const ibex::Interval& z, const ibex::Interval& t, int& index_lb, int& index_ub);
 
+    /** Serialization: **/
+
+      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
   };
 }
 

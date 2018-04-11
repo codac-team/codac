@@ -16,22 +16,6 @@
 using namespace std;
 using namespace ibex;
 
-  /*
-    Tube binary files structure (VERSION 1)
-      - minimal storage
-      - format: [char_version_number]
-                [double_dt_spec]
-                [Interval_domain]
-                [Interval_slice1]
-                [Interval_slice2]
-                ...
-                [int_number_real_values]
-                [double_value1_t]
-                [double_value1_y]
-                [double_value2_t]
-                ...
-  */
-
 namespace tubex
 {
   void serializeTube(ofstream& bin_file, const Tube& tube, int version_number)
@@ -40,7 +24,7 @@ namespace tubex
       throw Exception("serializeTube()", "ofstream& bin_file not open");
 
     // Version number for compliance purposes
-    bin_file.write((const char*)&version_number, sizeof(char));
+    bin_file.write((const char*)&version_number, sizeof(int));
 
     switch(version_number)
     {
@@ -126,8 +110,8 @@ namespace tubex
       throw Exception("deserializeTube()", "tube already defined");
 
     // Version number for compliance purposes
-    char version_number;
-    bin_file.read((char*)&version_number, sizeof(char));
+    int version_number;
+    bin_file.read((char*)&version_number, sizeof(int));
 
     switch(version_number)
     {

@@ -29,7 +29,7 @@ namespace tubex
       throw Exception("serializeTrajectory()", "trajectory not defined");
 
     // Version number for compliance purposes
-    bin_file.write((const char*)&version_number, sizeof(char));
+    bin_file.write((const char*)&version_number, sizeof(int));
 
     switch(version_number)
     {
@@ -67,9 +67,9 @@ namespace tubex
       throw Exception("deserializeTrajectory()", "trajectory already defined");
 
     // Version number for compliance purposes
-    char version_number;
-    bin_file.read((char*)&version_number, sizeof(char));
-
+    int version_number;
+    bin_file.read((char*)&version_number, sizeof(int));
+    
     switch(version_number)
     {
       case 1:
