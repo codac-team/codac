@@ -284,8 +284,13 @@ namespace tubex
         if(detail_slices)
         {
           vibes::newGroup(group_name, m_map_tubes[tube].m_colors[TubeColorType::SLICES], vibesParams("figure", m_name));
-          for(int i = 0 ; i < tube->nbSlices() ; i++)
-            drawSlice(tube->sliceBox(i), params_foreground);
+          TubeSlice *slice = tube->getFirstSlice();
+          while(slice != NULL)
+          {
+            drawSlice(*slice, params_foreground);
+            slice = slice->nextSlice();
+            // todo: drawGate
+          }
         }
 
         else
@@ -321,13 +326,14 @@ namespace tubex
       }
     }
 
-    void VibesFigure_Tube::drawSlice(const IntervalVector& slice, const vibes::Params& params) const
+    void VibesFigure_Tube::drawSlice(const TubeSlice& slice, const vibes::Params& params) const
     {
-      if(slice[1].is_empty())
+      if(slice.codomain().is_empty())
         return; // no display
 
-      IntervalVector boundedSlice(slice);
-      boundedSlice[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
+      IntervalVector boundedSlice(2);
+      boundedSlice[0] = slice.domain();
+      boundedSlice[1] = slice.codomain() & Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
       vibes::drawBox(boundedSlice, params);
     }
     
