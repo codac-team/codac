@@ -79,7 +79,7 @@ namespace tubex
     bool contraction = false;
 
     Interval next_y = x[size - 1];
-    Interval y_front = next_y & next_y - v[size - 1] * v.sliceDomain(size - 1).diam();
+    Interval y_front = next_y & (next_y - v[size - 1] * v.sliceDomain(size - 1).diam());
     next_y = x[max(0, size - 2)];
 
     for(int i = max(0, size - 2) ; i >= 0 ; i--) // from the future to the past
