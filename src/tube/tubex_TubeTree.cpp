@@ -40,6 +40,7 @@ namespace tubex
     {
       *this = x;
       set(codomain);
+      deleteGates();
     }
 
     TubeTree::~TubeTree()
@@ -718,6 +719,16 @@ namespace tubex
     bool TubeTree::treeUpdateNeeded() const
     {
       return m_tree_update_needed;
+    }
+
+    void TubeTree::deleteGates()
+    {
+      TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        slice->deleteGates();
+        slice = slice->nextSlice();
+      }
     }
     
     // Access values

@@ -142,6 +142,25 @@ namespace tubex
       else
         return m_codomain;
     }
+
+    void TubeSlice::deleteGates()
+    {
+      if(m_input_gate != NULL)
+      {
+        delete m_input_gate;
+        m_input_gate = NULL;
+        if(m_prev_slice != NULL)
+          m_prev_slice->m_output_gate = NULL;
+      }
+
+      if(m_output_gate != NULL)
+      {
+        delete m_output_gate;
+        m_output_gate = NULL;
+        if(m_next_slice != NULL)
+          m_next_slice->m_input_gate = NULL;
+      }
+    }
     
     // Access values
 

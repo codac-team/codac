@@ -43,6 +43,7 @@ namespace tubex
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
       const ibex::Interval inputGate() const;
       const ibex::Interval outputGate() const;
+      void deleteGates();
 
       // Access values
       const ibex::Interval& codomain() const;

@@ -93,6 +93,7 @@ namespace tubex
       void checkDataTree() const;
       void flagFutureTreeUpdate(int slice_id = -1) const;
       bool treeUpdateNeeded() const;
+      void deleteGates();
 
       // Access values
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
