@@ -462,7 +462,7 @@ namespace tubex
 
       else
       {
-        // todo, from prev slice?
+        throw Exception("TubeSlice::getPartialPrimitiveValue", "unexpected case");
       }
     }
 }

@@ -134,10 +134,10 @@ namespace tubex
 
     Interval Tube::integral(const Interval& t1, const Interval& t2) const
     {
-      pair<Interval,Interval> integrale_t1 = partialIntegral(t1);
-      pair<Interval,Interval> integrale_t2 = partialIntegral(t2);
-      double lb = (integrale_t2.first - integrale_t1.first).lb();
-      double ub = (integrale_t2.second - integrale_t1.second).ub();
+      pair<Interval,Interval> integral_t1 = partialIntegral(t1);
+      pair<Interval,Interval> integral_t2 = partialIntegral(t2);
+      double lb = (integral_t2.first - integral_t1.first).lb();
+      double ub = (integral_t2.second - integral_t1.second).ub();
       return Interval(min(lb, ub), max(lb, ub));
     }
 
@@ -148,8 +148,8 @@ namespace tubex
       int index_lb = input2index(t.lb());
       int index_ub = input2index(t.ub());
 
-      Interval integrale_lb = Interval::EMPTY_SET;
-      Interval integrale_ub = Interval::EMPTY_SET;
+      Interval integral_lb = Interval::EMPTY_SET;
+      Interval integral_ub = Interval::EMPTY_SET;
 
       Interval intv_t_lb = sliceDomain(index_lb);
       Interval intv_t_ub = sliceDomain(index_ub);
@@ -166,28 +166,28 @@ namespace tubex
         Interval tb2 = Interval(min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
 
         if(y_first.lb() < 0)
-          integrale_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),
-                                   primitive_lb.lb() - y_first.lb() * tb1.diam());
+          integral_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),
+                                  primitive_lb.lb() - y_first.lb() * tb1.diam());
 
         else if(y_first.lb() > 0)
-          integrale_lb |= Interval(primitive_lb.lb() + y_first.lb() * ta1.diam(),
-                                   primitive_lb.lb() + y_first.lb() * ta2.diam());
+          integral_lb |= Interval(primitive_lb.lb() + y_first.lb() * ta1.diam(),
+                                  primitive_lb.lb() + y_first.lb() * ta2.diam());
 
         if(y_first.ub() < 0)
-          integrale_ub |= Interval(primitive_lb.ub() + y_first.ub() * ta2.diam(),
-                                   primitive_lb.ub() + y_first.ub() * ta1.diam());
+          integral_ub |= Interval(primitive_lb.ub() + y_first.ub() * ta2.diam(),
+                                  primitive_lb.ub() + y_first.ub() * ta1.diam());
 
         else if(y_first.ub() > 0)
-          integrale_ub |= Interval(primitive_lb.ub() - y_first.ub() * tb1.diam(),
-                                   primitive_lb.ub() - y_first.ub() * tb2.diam());
+          integral_ub |= Interval(primitive_lb.ub() - y_first.ub() * tb1.diam(),
+                                  primitive_lb.ub() - y_first.ub() * tb2.diam());
       }
 
       // Part B
       if(index_ub - index_lb > 1)
       {
         pair<Interval,Interval> partial_primitive = getPartialPrimitiveValue(Interval(intv_t_lb.ub(), intv_t_ub.lb()));
-        integrale_lb |= partial_primitive.first;
-        integrale_ub |= partial_primitive.second;
+        integral_lb |= partial_primitive.first;
+        integral_ub |= partial_primitive.second;
       }
 
       // Part C
@@ -202,31 +202,31 @@ namespace tubex
         Interval tb2 = Interval(t.ub(), intv_t_ub.ub());
 
         if(y_second.lb() < 0)
-          integrale_lb |= Interval(primitive_ub.lb() - y_second.lb() * tb2.diam(),
-                                   primitive_ub.lb() - y_second.lb() * tb1.diam());
+          integral_lb |= Interval(primitive_ub.lb() - y_second.lb() * tb2.diam(),
+                                  primitive_ub.lb() - y_second.lb() * tb1.diam());
 
         else if(y_second.lb() > 0)
-          integrale_lb |= Interval(primitive_ub.lb(),
-                                   primitive_ub.lb() + y_second.lb() * ta.diam());
+          integral_lb |= Interval(primitive_ub.lb(),
+                                  primitive_ub.lb() + y_second.lb() * ta.diam());
 
         if(y_second.ub() < 0)
-          integrale_ub |= Interval(primitive_ub.ub() + y_second.ub() * ta.diam(),
-                                   primitive_ub.ub());
+          integral_ub |= Interval(primitive_ub.ub() + y_second.ub() * ta.diam(),
+                                  primitive_ub.ub());
 
         else if(y_second.ub() > 0)
-          integrale_ub |= Interval(primitive_ub.ub() - y_second.ub() * tb1.diam(),
-                                   primitive_ub.ub() - y_second.ub() * tb2.diam());
+          integral_ub |= Interval(primitive_ub.ub() - y_second.ub() * tb1.diam(),
+                                  primitive_ub.ub() - y_second.ub() * tb2.diam());
       }
 
-      return make_pair(integrale_lb, integrale_ub);
+      return make_pair(integral_lb, integral_ub);
     }
 
     pair<Interval,Interval> Tube::partialIntegral(const Interval& t1, const Interval& t2) const
     {
-      pair<Interval,Interval> integrale_t1 = partialIntegral(t1);
-      pair<Interval,Interval> integrale_t2 = partialIntegral(t2);
-      return make_pair((integrale_t2.first - integrale_t1.first),
-                       (integrale_t2.second - integrale_t1.second));
+      pair<Interval,Interval> integral_t1 = partialIntegral(t1);
+      pair<Interval,Interval> integral_t2 = partialIntegral(t2);
+      return make_pair((integral_t2.first - integral_t1.first),
+                       (integral_t2.second - integral_t1.second));
     }
 
     // Serialization
@@ -289,9 +289,9 @@ namespace tubex
         {
           double dt = slice->domain().diam();
           Interval slice_codomain = slice->codomain();
-          Interval integrale_value = sum_max + slice_codomain * Interval(0., dt);
-          slice->m_partial_primitive = make_pair(Interval(integrale_value.lb(), integrale_value.lb() + fabs(slice_codomain.lb() * dt)),
-                                                 Interval(integrale_value.ub() - fabs(slice_codomain.ub() * dt), integrale_value.ub()));
+          Interval integral_value = sum_max + slice_codomain * Interval(0., dt);
+          slice->m_partial_primitive = make_pair(Interval(integral_value.lb(), integral_value.lb() + fabs(slice_codomain.lb() * dt)),
+                                                 Interval(integral_value.ub() - fabs(slice_codomain.ub() * dt), integral_value.ub()));
           slice->m_primitive_update_needed = true;
           sum_max += slice_codomain * dt;
           slice = slice->nextSlice();
