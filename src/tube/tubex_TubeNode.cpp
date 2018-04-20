@@ -220,88 +220,6 @@ namespace tubex
       return str;
     }
 
-    // Integration
-
-    pair<Interval,Interval> TubeNode::partialIntegral(const Interval& t) const
-    {
-      checkPartialPrimitive();
-      
-      int index_lb = input2index(t.lb());
-      int index_ub = input2index(t.ub());
-
-      Interval integrale_lb = Interval::EMPTY_SET;
-      Interval integrale_ub = Interval::EMPTY_SET;
-
-      Interval intv_t_lb = sliceDomain(index_lb);
-      Interval intv_t_ub = sliceDomain(index_ub);
-
-      // Part A
-      {
-        pair<Interval,Interval> partial_primitive_first = getSlice(index_lb)->getPartialPrimitiveValue();
-        Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
-
-        Interval y_first = (*this)[index_lb];
-        Interval ta1 = Interval(intv_t_lb.lb(), t.lb());
-        Interval ta2 = Interval(intv_t_lb.lb(), min(t.ub(), intv_t_lb.ub()));
-        Interval tb1 = Interval(t.lb(), intv_t_lb.ub());
-        Interval tb2 = Interval(min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
-
-        if(y_first.lb() < 0)
-          integrale_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),
-                                   primitive_lb.lb() - y_first.lb() * tb1.diam());
-
-        else if(y_first.lb() > 0)
-          integrale_lb |= Interval(primitive_lb.lb() + y_first.lb() * ta1.diam(),
-                                   primitive_lb.lb() + y_first.lb() * ta2.diam());
-
-        if(y_first.ub() < 0)
-          integrale_ub |= Interval(primitive_lb.ub() + y_first.ub() * ta2.diam(),
-                                   primitive_lb.ub() + y_first.ub() * ta1.diam());
-
-        else if(y_first.ub() > 0)
-          integrale_ub |= Interval(primitive_lb.ub() - y_first.ub() * tb1.diam(),
-                                   primitive_lb.ub() - y_first.ub() * tb2.diam());
-      }
-
-      // Part B
-      if(index_ub - index_lb > 1)
-      {
-        pair<Interval,Interval> partial_primitive = getPartialPrimitiveValue(Interval(intv_t_lb.ub(), intv_t_ub.lb()));
-        integrale_lb |= partial_primitive.first;
-        integrale_ub |= partial_primitive.second;
-      }
-
-      // Part C
-      if(index_lb != index_ub)
-      {
-        pair<Interval,Interval> partial_primitive_second = getSlice(index_ub)->getPartialPrimitiveValue();
-        Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
-
-        Interval y_second = (*this)[index_ub];
-        Interval ta = Interval(intv_t_ub.lb(), t.ub());
-        Interval tb1 = intv_t_ub;
-        Interval tb2 = Interval(t.ub(), intv_t_ub.ub());
-
-        if(y_second.lb() < 0)
-          integrale_lb |= Interval(primitive_ub.lb() - y_second.lb() * tb2.diam(),
-                                   primitive_ub.lb() - y_second.lb() * tb1.diam());
-
-        else if(y_second.lb() > 0)
-          integrale_lb |= Interval(primitive_ub.lb(),
-                                   primitive_ub.lb() + y_second.lb() * ta.diam());
-
-        if(y_second.ub() < 0)
-          integrale_ub |= Interval(primitive_ub.ub() + y_second.ub() * ta.diam(),
-                                   primitive_ub.ub());
-
-        else if(y_second.ub() > 0)
-          integrale_ub |= Interval(primitive_ub.ub() - y_second.ub() * tb1.diam(),
-                                   primitive_ub.ub() - y_second.ub() * tb2.diam());
-      }
-
-      return make_pair(integrale_lb, integrale_ub);
-    }
-  
   // Protected methods
 
     // Definition
@@ -346,5 +264,5 @@ namespace tubex
     // String
 
     // Integration
-    
+
 }

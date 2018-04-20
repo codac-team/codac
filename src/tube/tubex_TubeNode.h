@@ -79,8 +79,6 @@ namespace tubex
       friend std::ostream& operator<<(std::ostream& str, const TubeNode& x);
 
     /** Integration: **/
-    
-      std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
 
     protected:
 

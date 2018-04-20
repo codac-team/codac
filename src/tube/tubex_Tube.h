@@ -44,6 +44,14 @@ namespace tubex
       // String
       friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
+    /** Integration: **/
+
+      ibex::Interval integral(double t) const;
+      ibex::Interval integral(const ibex::Interval& t) const;
+      ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
+      std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+
     /** Contractors: **/
 
       /*bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
