@@ -66,6 +66,10 @@ namespace tubex
 
     protected:
 
+    /** Integration: **/
+      
+      void checkPartialPrimitive() const;
+
     /** Serialization: **/
 
       void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);

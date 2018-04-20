@@ -81,6 +81,8 @@ namespace tubex
       TubeTree& operator&=(const Trajectory& x);
       TubeTree& operator&=(const TubeTree& x);
 
+    /** Integration: **/
+
     protected:
 
     /** Base: **/
@@ -109,12 +111,8 @@ namespace tubex
 
     /** Integration: **/
 
-      void checkPartialIntegral() const;
-      void flagFutureIntegralUpdate(int slice_id = -1) const;
-
-      /*void computePartialPrimitive(bool build_from_leafs = false) const;
-      void flagFuturePrimitiveComputation() const;
-      bool primitiveUpdateNeeded() const;
+      void checkPartialPrimitive() const;
+      void flagFuturePrimitiveUpdate(int slice_id = -1) const;
 
     /** Class variables **/
 

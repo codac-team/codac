@@ -649,6 +649,10 @@ namespace tubex
       flagFutureTreeUpdate();
     }
 
+    // Integration
+
+
+
   // Protected methods
 
     // Definition
@@ -707,8 +711,8 @@ namespace tubex
         else if(!m_second_tubenode->isSlice())
           ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(slice_id - mid_id);
       }
-      
-      // todo: flagFuturePrimitiveComputation();
+
+      flagFuturePrimitiveUpdate(slice_id);
     }
     
     bool TubeTree::treeUpdateNeeded() const
@@ -849,31 +853,43 @@ namespace tubex
 
     // Integration
 
-    void TubeTree::checkPartialIntegral() const
+    void TubeTree::checkPartialPrimitive() const
     {
-      if(!m_integral_update_needed)
+      if(!m_primitive_update_needed)
         return;
       
-      m_partial_integral = m_first_tubenode->partialIntegral();
+      m_first_tubenode->checkPartialPrimitive();
+      m_partial_primitive = m_first_tubenode->getPartialPrimitiveValue();
+
       if(m_second_tubenode != NULL)
       {
-        m_partial_integral.first += m_second_tubenode->partialIntegral().first;
-        m_partial_integral.second += m_second_tubenode->partialIntegral().second;
+        m_second_tubenode->checkPartialPrimitive();
+        m_partial_primitive.first |= m_second_tubenode->getPartialPrimitiveValue().first;
+        m_partial_primitive.second |= m_second_tubenode->getPartialPrimitiveValue().second;
       }
+
+      m_primitive_update_needed = false;
     }
 
-    void TubeTree::flagFutureIntegralUpdate(int slice_id) const
+    void TubeTree::flagFuturePrimitiveUpdate(int slice_id) const
     {
-      DomainException::check(*this, slice_id);
+      m_primitive_update_needed = true;
 
-      m_integral_update_needed = true;
+      if(slice_id == -1)
+      {
+        m_first_tubenode->flagFuturePrimitiveUpdate(-1);
+        if(m_second_tubenode != NULL) m_second_tubenode->flagFuturePrimitiveUpdate(-1);
+      }
 
-      int mid_id = m_first_tubenode->nbSlices();
+      else
+      {
+        DomainException::check(*this, slice_id);
+        int mid_id = m_first_tubenode->nbSlices();
 
-      if(slice_id == -1 || slice_id < mid_id)
-        m_first_tubenode->flagFutureIntegralUpdate(slice_id);
+        m_first_tubenode->flagFuturePrimitiveUpdate(slice_id < mid_id ? slice_id : -1);
 
-      if(m_second_tubenode != NULL && (slice_id == -1 || slice_id >= mid_id))
-        m_second_tubenode->flagFutureIntegralUpdate(slice_id);
+        if(m_second_tubenode != NULL && slice_id >= mid_id)
+          m_second_tubenode->flagFuturePrimitiveUpdate(slice_id - mid_id);
+      }
     }
 }

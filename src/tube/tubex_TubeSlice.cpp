@@ -393,6 +393,9 @@ namespace tubex
       return str;
     }
 
+    // Integration
+
+
   // Protected methods
 
     // Access values
@@ -429,16 +432,17 @@ namespace tubex
     
     // Integration
 
-    void TubeSlice::checkPartialIntegral() const
+    void TubeSlice::checkPartialPrimitive() const
     {
-      if(!m_integral_update_needed)
-        return;
-      m_partial_integral.first = Interval(domain().diam() * codomain().lb());
-      m_partial_integral.second = Interval(domain().diam() * codomain().ub());
+      if(!m_primitive_update_needed)
+        throw Exception("TubeSlice::checkPartialPrimitive", "primitive value not set");
+      // should be set from Tube class
     }
 
-    void TubeSlice::flagFutureIntegralUpdate(int slice_id) const
+    void TubeSlice::flagFuturePrimitiveUpdate(int slice_id) const
     {
-      m_integral_update_needed = true;
+      if(slice_id != -1)
+        DomainException::check(*this, slice_id);
+      m_primitive_update_needed = true;
     }
 }

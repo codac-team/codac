@@ -49,8 +49,8 @@ namespace tubex
       m_slices_number = x.m_slices_number;
       m_volume = x.m_volume;
       m_enclosed_bounds = x.m_enclosed_bounds;
-      m_partial_integral = x.m_partial_integral;
-      m_integral_update_needed = x.m_integral_update_needed;
+      m_partial_primitive = x.m_partial_primitive;
+      m_primitive_update_needed = x.m_primitive_update_needed;
       return *this;
     }
     
@@ -222,38 +222,6 @@ namespace tubex
 
     // Integration
 
-    const pair<Interval,Interval>& TubeNode::partialIntegral() const
-    {
-      if(m_integral_update_needed)
-        checkPartialIntegral();
-      return m_partial_integral;
-    }
-
-    /*
-    Interval TubeNode::integral(double t) const
-    {
-
-    }
-    
-    Interval TubeNode::integral(const Interval& t) const
-    {
-
-    }
-    
-    Interval TubeNode::integral(const Interval& t1, const Interval& t2) const
-    {
-
-    }
-    
-    pair<Interval,Interval> TubeNode::partialIntegral(const Interval& t) const
-    {
-
-    }
-    
-    pair<Interval,Interval> TubeNode::partialIntegral(const Interval& t1, const Interval& t2) const
-    {
-
-    }*/
   
   // Protected methods
 
@@ -281,12 +249,12 @@ namespace tubex
     {
       return domain() != x.domain() || codomain() != x.codomain();
     }
-/*
+
     // Setting values
 
     // Operators
 
-    void TubeNode::unionWith_localUpdate(const TubeNode *x)
+    /*void TubeNode::unionWith_localUpdate(const TubeNode *x)
     {
 
     }
@@ -294,14 +262,15 @@ namespace tubex
     void TubeNode::intersectWith_localUpdate(const TubeNode *x)
     {
 
-    }
+    }*/
     
     // String
 
     // Integration
 
-    pair<Interval,Interval> TubeNode::getPartialPrimitiveValue(const Interval& t) const
+    const pair<Interval,Interval>& TubeNode::getPartialPrimitiveValue() const
     {
-
-    }*/
+      checkPartialPrimitive();
+      return m_partial_primitive;
+    }
 }

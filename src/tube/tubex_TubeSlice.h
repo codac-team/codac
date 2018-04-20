@@ -78,6 +78,8 @@ namespace tubex
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
 
+    /** Integration: **/
+
     protected:
 
     /** Base: **/
@@ -91,14 +93,15 @@ namespace tubex
       bool isDifferent(const TubeSlice& x) const;
 
       // Integration
-      void checkPartialIntegral() const;
-      void flagFutureIntegralUpdate(int slice_id = -1) const;
+      void checkPartialPrimitive() const;
+      void flagFuturePrimitiveUpdate(int slice_id = -1) const;
       
     /** Class variables **/
 
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;
       ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
 
+      friend class Tube;
       friend class TubeTree;
       friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number);
   };

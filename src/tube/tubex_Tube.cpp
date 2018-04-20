@@ -163,6 +163,34 @@ namespace tubex
 
   // Protected methods
 
+    // Integration
+
+    void Tube::checkPartialPrimitive() const
+    {
+      // Warning: this method can only be called from the root (Tube class)
+      // (because computation starts from 0)
+
+      if(m_primitive_update_needed)
+      {
+        Interval sum_max = Interval(0);
+
+        TubeSlice *slice = getFirstSlice();
+        while(slice != NULL)
+        {
+          double dt = slice->domain().diam();
+          Interval slice_codomain = slice->codomain();
+          Interval integrale_value = sum_max + slice_codomain * Interval(0., dt);
+          slice->m_partial_primitive = make_pair(Interval(integrale_value.lb(), integrale_value.lb() + fabs(slice_codomain.lb() * dt)),
+                                                 Interval(integrale_value.ub() - fabs(slice_codomain.ub() * dt), integrale_value.ub()));
+          slice->m_primitive_update_needed = true;
+          sum_max += slice_codomain * dt;
+          slice = slice->nextSlice();
+        }
+
+        TubeTree::checkPartialPrimitive(); // updating nodes from leafs information
+      }
+    }
+
     // Serialization
 
     void Tube::deserialize(const string& binary_file_name, vector<Trajectory>& v_trajs)
