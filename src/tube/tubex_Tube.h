@@ -35,7 +35,7 @@ namespace tubex
       Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
-      //Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
+      Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
 
       // Bisection
       //std::pair<Tube,Tube> bisect(const Tube& derivative, float ratio = 0.55) const;
@@ -54,10 +54,10 @@ namespace tubex
 
     /** Contractors: **/
 
-      /*bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
+      bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
       bool ctcBwd(const Tube& derivative);
       bool ctcFwdBwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
-      bool ctcEval(const Tube& derivative, ibex::Interval& t, ibex::Interval& z, bool propagate = true);
+      /*bool ctcEval(const Tube& derivative, ibex::Interval& t, ibex::Interval& z, bool propagate = true);
       bool ctcEval(const Tube& derivative, ibex::Interval& t, const ibex::Interval& z, bool propagate = true);
       bool ctcEval(const Tube& derivative, const ibex::Interval& t, ibex::Interval& z, bool propagate = true);
       bool ctcEval(const Tube& derivative, const ibex::Interval& t, const ibex::Interval& z, bool propagate = true);

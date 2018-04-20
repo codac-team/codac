@@ -18,19 +18,20 @@ TEST_CASE("Computing tube's primitive", "[core]")
     CHECK(ApproxIntv(tube[3]) == Interval(-2,0));
     CHECK(ApproxIntv(tube[4]) == Interval(-3,-1));
 
-    /*Tube tube_primitive = tube.primitive();
+    Tube tube_primitive = tube.primitive();
     CHECK(ApproxIntv(tube_primitive[0]) == Interval(0,3));
     CHECK(ApproxIntv(tube_primitive[1]) == Interval(1,5));
     CHECK(ApproxIntv(tube_primitive[2]) == Interval(0,6));
     CHECK(ApproxIntv(tube_primitive[3]) == Interval(-2,6));
-    CHECK(ApproxIntv(tube_primitive[4]) == Interval(-5,6));*/
+    CHECK(ApproxIntv(tube_primitive[4]) == Interval(-5,6));
   }
 
   SECTION("Test tube4")
   {
     Tube tube = tubeTest4();
-    /*Tube tube_primitive = tube.primitive();
-    CHECK(ApproxIntv(tube_primitive[0]) == Interval(0,2));
+    //tube.set(Interval(-1,1), Interval(10,11));
+    Tube tube_primitive = tube.primitive();
+    /*CHECK(ApproxIntv(tube_primitive[0]) == Interval(0,2));
     CHECK(ApproxIntv(tube_primitive[1]) == Interval(1,4));
     CHECK(ApproxIntv(tube_primitive[2]) == Interval(2,6));
     CHECK(ApproxIntv(tube_primitive[3]) == Interval(3,8));
@@ -57,10 +58,10 @@ TEST_CASE("Computing tube's primitive", "[core]")
   {
     Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
-    /*Tube tube_primitive = tube.primitive();
+    Tube tube_primitive = tube.primitive();
     CHECK(ApproxIntv(tube_primitive[0]) == Interval(0,8));
     CHECK(ApproxIntv(tube_primitive[1]) == Interval(4,15));
-    CHECK(ApproxIntv(tube_primitive[2]) == Interval(6,21));*/
+    CHECK(ApproxIntv(tube_primitive[2]) == Interval(6,21));
   }
 
   SECTION("Test tube4(05)")

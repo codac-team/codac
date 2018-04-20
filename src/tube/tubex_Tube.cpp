@@ -15,6 +15,7 @@
 #include "tubex_DomainException.h"
 #include "tubex_TubeSerialization.h"
 #include "tubex_TrajectorySerialization.h"
+#include "tubex_CtcDeriv.h"
 
 using namespace std;
 using namespace ibex;
@@ -106,6 +107,13 @@ namespace tubex
       deserialize(binary_file_name, v_trajs);
       if(v_trajs.size() == 0)
         throw Exception("Tube constructor", "unable to deserialize a Trajectory");
+    }
+    
+    Tube Tube::primitive(const Interval& initial_value) const
+    {
+      Tube primitive(*this, Interval::ALL_REALS);
+      primitive.ctcFwd(*this, initial_value);
+      return primitive;
     }
     
     // Bisection
@@ -229,6 +237,26 @@ namespace tubex
                        (integral_t2.second - integral_t1.second));
     }
 
+    // Contractors
+
+    bool Tube::ctcFwd(const Tube& derivative, const Interval& initial_value)
+    {
+      CtcDeriv ctc;
+      return ctc.contractFwd(*this, derivative, initial_value);
+    }
+
+    bool Tube::ctcBwd(const Tube& derivative)
+    {
+      CtcDeriv ctc;
+      return ctc.contractBwd(*this, derivative);
+    }
+
+    bool Tube::ctcFwdBwd(const Tube& derivative, const Interval& initial_value)
+    {
+      CtcDeriv ctc;
+      return ctc.contract(*this, derivative, initial_value);
+    }
+      
     // Serialization
 
     /*
