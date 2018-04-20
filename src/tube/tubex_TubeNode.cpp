@@ -48,6 +48,9 @@ namespace tubex
       m_codomain = x.m_codomain;
       m_slices_number = x.m_slices_number;
       m_volume = x.m_volume;
+      m_enclosed_bounds = x.m_enclosed_bounds;
+      m_partial_integral = x.m_partial_integral;
+      m_integral_update_needed = x.m_integral_update_needed;
       return *this;
     }
     
@@ -216,9 +219,17 @@ namespace tubex
       str << "TubeNode " << x.domain() << "↦" << x.codomain() << flush;
       return str;
     }
-    /*
+
     // Integration
 
+    const pair<Interval,Interval>& TubeNode::partialIntegral() const
+    {
+      if(m_integral_update_needed)
+        checkPartialIntegral();
+      return m_partial_integral;
+    }
+
+    /*
     Interval TubeNode::integral(double t) const
     {
 

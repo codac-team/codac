@@ -90,6 +90,10 @@ namespace tubex
       bool isEqual(const TubeSlice& x) const;
       bool isDifferent(const TubeSlice& x) const;
 
+      // Integration
+      void checkPartialIntegral() const;
+      void flagFutureIntegralUpdate(int slice_id = -1) const;
+      
     /** Class variables **/
 
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;

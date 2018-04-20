@@ -67,10 +67,7 @@ namespace tubex
     {
       TubeNode::operator=(x);
 
-      m_enclosed_bounds = x.m_enclosed_bounds;
-      m_partial_primitive = x.m_partial_primitive;
       m_tree_update_needed = x.m_tree_update_needed;
-      m_primitive_update_needed = x.m_primitive_update_needed;
 
       if(m_first_tubenode != NULL)
       {
@@ -851,13 +848,32 @@ namespace tubex
     // Contractors
 
     // Integration
-    
-  /*  Interval TubeTree::invert(const Interval& y, const Interval& t) const
-    {
-      if(!m_domain.intersects(t) || !codomain().intersects(y))
-        return Interval::EMPTY_SET;
 
-      else
-        return m_first_tubenode->invert(y, t) | m_second_tubenode->invert(y, t);
-    }*/
+    void TubeTree::checkPartialIntegral() const
+    {
+      if(!m_integral_update_needed)
+        return;
+      
+      m_partial_integral = m_first_tubenode->partialIntegral();
+      if(m_second_tubenode != NULL)
+      {
+        m_partial_integral.first += m_second_tubenode->partialIntegral().first;
+        m_partial_integral.second += m_second_tubenode->partialIntegral().second;
+      }
+    }
+
+    void TubeTree::flagFutureIntegralUpdate(int slice_id) const
+    {
+      DomainException::check(*this, slice_id);
+
+      m_integral_update_needed = true;
+
+      int mid_id = m_first_tubenode->nbSlices();
+
+      if(slice_id == -1 || slice_id < mid_id)
+        m_first_tubenode->flagFutureIntegralUpdate(slice_id);
+
+      if(m_second_tubenode != NULL && (slice_id == -1 || slice_id >= mid_id))
+        m_second_tubenode->flagFutureIntegralUpdate(slice_id);
+    }
 }

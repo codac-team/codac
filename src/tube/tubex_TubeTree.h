@@ -109,6 +109,9 @@ namespace tubex
 
     /** Integration: **/
 
+      void checkPartialIntegral() const;
+      void flagFutureIntegralUpdate(int slice_id = -1) const;
+
       /*void computePartialPrimitive(bool build_from_leafs = false) const;
       void flagFuturePrimitiveComputation() const;
       bool primitiveUpdateNeeded() const;
@@ -117,7 +120,6 @@ namespace tubex
 
       TubeNode *m_first_tubenode = NULL, *m_second_tubenode = NULL;
       mutable bool m_tree_update_needed = true;
-      mutable bool m_primitive_update_needed = true;
   };
 }
 

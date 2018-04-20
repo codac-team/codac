@@ -108,6 +108,9 @@ namespace tubex
     /** Integration: **/
 
       //std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      const std::pair<ibex::Interval,ibex::Interval>& partialIntegral() const;
+      virtual void checkPartialIntegral() const = 0;
+      virtual void flagFutureIntegralUpdate(int slice_id = -1) const = 0;
       
     /** Class variables **/
 
@@ -119,7 +122,8 @@ namespace tubex
       mutable ibex::Interval m_codomain;
       mutable double m_volume;
       mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
-      mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
+      mutable std::pair<ibex::Interval,ibex::Interval> m_partial_integral;
+      mutable bool m_integral_update_needed = true;
 
       friend class TubeTree;
       friend void deserializeTube(std::ifstream& bin_file, Tube& tube);
