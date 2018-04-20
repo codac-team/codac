@@ -95,6 +95,8 @@ namespace tubex
       // Integration
       void checkPartialPrimitive() const;
       void flagFuturePrimitiveUpdate(int slice_id = -1) const;
+      const std::pair<ibex::Interval,ibex::Interval>& getPartialPrimitiveValue() const;
+      std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t) const;
       
     /** Class variables **/
 
@@ -103,6 +105,7 @@ namespace tubex
 
       friend class Tube;
       friend class TubeTree;
+      friend class TubeNode;
       friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number);
   };
 }

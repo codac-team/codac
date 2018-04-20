@@ -79,6 +79,8 @@ namespace tubex
       friend std::ostream& operator<<(std::ostream& str, const TubeNode& x);
 
     /** Integration: **/
+    
+      std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
 
     protected:
 
@@ -102,7 +104,8 @@ namespace tubex
     /** Integration: **/
 
       virtual void checkPartialPrimitive() const = 0;
-      const std::pair<ibex::Interval,ibex::Interval>& getPartialPrimitiveValue() const;
+      virtual const std::pair<ibex::Interval,ibex::Interval>& getPartialPrimitiveValue() const = 0;
+      virtual std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t) const = 0;
       virtual void flagFuturePrimitiveUpdate(int slice_id = -1) const = 0;
       
     /** Class variables **/

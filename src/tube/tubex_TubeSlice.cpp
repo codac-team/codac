@@ -445,4 +445,24 @@ namespace tubex
         DomainException::check(*this, slice_id);
       m_primitive_update_needed = true;
     }
+
+    const pair<Interval,Interval>& TubeSlice::getPartialPrimitiveValue() const
+    {
+      checkPartialPrimitive();
+      return m_partial_primitive;
+    }
+
+    pair<Interval,Interval> TubeSlice::getPartialPrimitiveValue(const Interval& t) const
+    {
+      if(t == m_domain || t.is_unbounded() || t.is_superset(m_domain))
+      {
+        checkPartialPrimitive();
+        return m_partial_primitive;
+      }
+
+      else
+      {
+        // todo, from prev slice?
+      }
+    }
 }

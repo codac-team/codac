@@ -892,4 +892,50 @@ namespace tubex
           m_second_tubenode->flagFuturePrimitiveUpdate(slice_id - mid_id);
       }
     }
+
+    const pair<Interval,Interval>& TubeTree::getPartialPrimitiveValue() const
+    {
+      checkPartialPrimitive();
+      return m_partial_primitive;
+    }
+
+    pair<Interval,Interval> TubeTree::getPartialPrimitiveValue(const Interval& t) const
+    {
+      if(t.lb() == t.ub()) // todo: check this:
+        return make_pair(Interval((*this)[t.lb()].lb()), Interval((*this)[t.lb()].ub()));
+
+      Interval intersection = m_domain & t;
+
+      if(intersection.is_empty()) // todo: put an Exception?
+        return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+      else if(t == m_domain || t.is_unbounded() || t.is_superset(m_domain))
+      {
+        checkPartialPrimitive();
+        return m_partial_primitive;
+      }
+
+      else
+      {
+        Interval inter_firstsubtube = m_first_tubenode->domain() & intersection;
+        Interval inter_secondsubtube = m_second_tubenode->domain() & intersection;
+
+        if(inter_firstsubtube.lb() == inter_firstsubtube.ub() && inter_secondsubtube.lb() == inter_secondsubtube.ub())
+          return make_pair(m_first_tubenode->getPartialPrimitiveValue().first & m_second_tubenode->getPartialPrimitiveValue().first,
+                           m_first_tubenode->getPartialPrimitiveValue().second & m_second_tubenode->getPartialPrimitiveValue().second);
+
+        else if(inter_firstsubtube.is_empty() || inter_firstsubtube.lb() == inter_firstsubtube.ub())
+          return m_second_tubenode->getPartialPrimitiveValue(inter_secondsubtube);
+
+        else if(inter_secondsubtube.is_empty() || inter_secondsubtube.lb() == inter_secondsubtube.ub())
+          return m_first_tubenode->getPartialPrimitiveValue(inter_firstsubtube);
+
+        else
+        {
+          pair<Interval,Interval> pp_past = m_first_tubenode->getPartialPrimitiveValue(inter_firstsubtube);
+          pair<Interval,Interval> pp_future = m_second_tubenode->getPartialPrimitiveValue(inter_secondsubtube);
+          return make_pair(pp_past.first | pp_future.first, pp_past.second | pp_future.second);
+        }
+      }
+    }
 }

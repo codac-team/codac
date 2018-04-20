@@ -286,8 +286,8 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
   {
     Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
-    //CHECK(ApproxIntvPair(tube.partialIntegral(tube.domain())) == make_pair(Interval(-85,7), Interval(-16,194)));
-    //CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
+    CHECK(ApproxIntvPair(tube.partialIntegral(tube.domain())) == make_pair(Interval(-85,7), Interval(-16,194)));
+    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
     /*CHECK(ApproxIntvPair(tube.partialIntegral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
     CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
     CHECK(ApproxIntvPair(tube.partialIntegral(Interval(2.,6.))) == make_pair(Interval(-13,7), Interval(15,25)));

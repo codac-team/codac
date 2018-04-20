@@ -113,6 +113,8 @@ namespace tubex
 
       void checkPartialPrimitive() const;
       void flagFuturePrimitiveUpdate(int slice_id = -1) const;
+      const std::pair<ibex::Interval,ibex::Interval>& getPartialPrimitiveValue() const;
+      std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t) const;
 
     /** Class variables **/
 
