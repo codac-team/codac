@@ -14,6 +14,7 @@
 #define CtcDeriv_HEADER
 
 #include "tubex_Ctc.h"
+#include "tubex_TubeSlice.h"
 
 namespace tubex
 {
@@ -30,6 +31,10 @@ namespace tubex
       bool contract(Tube& x, const Tube& v, const ibex::Interval& x0 = ibex::Interval::ALL_REALS);
       bool contractFwd(Tube& x, const Tube& v, const ibex::Interval& x0 = ibex::Interval::ALL_REALS);
       bool contractBwd(Tube& x, const Tube& v);
+
+      bool contract(TubeSlice& x, const TubeSlice& v);
+      bool contract(const TubeSlice& x, const TubeSlice& v, double t, ibex::Interval& y);
+      bool contract(const TubeSlice& x, const TubeSlice& v, const ibex::Interval& t, ibex::Interval& y);
 
     protected:
 

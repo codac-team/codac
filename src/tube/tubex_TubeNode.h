@@ -58,10 +58,10 @@ namespace tubex
       virtual double volume() const = 0;
       virtual const ibex::Interval operator[](double t) const = 0;
       virtual const ibex::Interval operator[](const ibex::Interval& t) const = 0;
-      /*ibex::Interval interpol(double t, const TubeNode& derivative) const;
+      ibex::Interval interpol(double t, const TubeNode& derivative) const;
       ibex::Interval interpol(const ibex::Interval& t, const TubeNode& derivative) const;
-      std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& t, const TubeNode& derivative) const;
-      */virtual ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const = 0;
+      //std::pair<ibex::Interval,ibex::Interval> partialInterpol(const ibex::Interval& t, const TubeNode& derivative) const;
+      virtual ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const = 0;
       virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
 
       // Tests

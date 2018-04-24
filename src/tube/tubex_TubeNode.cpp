@@ -107,20 +107,18 @@ namespace tubex
     
     // Access values
 
-    /*
     Interval TubeNode::interpol(double t, const TubeNode& derivative) const
     {
-      // todo: change interpol to operator() with derivative as second argument
       return getSlice(t)->interpol(t, *derivative.getSlice(t));
     }
-    
+
     Interval TubeNode::interpol(const Interval& t, const TubeNode& derivative) const
     {
-      // todo: change interpol to operator() with derivative as second argument
-      pair<Interval,Interval> p_interpol = partialInterpol(t, derivative);
+      pair<Interval,Interval> p_interpol;// = partialInterpol(t, derivative);
       return p_interpol.first | p_interpol.second;
     }
     
+    /*
     pair<Interval,Interval> TubeNode::partialInterpol(const Interval& t, const TubeNode& derivative) const
     {
       // todo: change interpol to operator() with derivative as second argument
@@ -167,50 +165,10 @@ namespace tubex
     }*/
     
     // Tests
-
-    /*bool TubeNode::isEmpty() const
-    {
-      return codomain().is_empty();
-    }
     
     // Setting values
 
-    bool TubeNode::contract(const Interval& y, int slice_id)
-    {
-
-    }
-    
-    TubeNode& TubeNode::inflate(const Interval& y, int slice_id)
-    {
-
-    }
-    
-    TubeNode& TubeNode::inflate(const Interval& y, double t)
-    {
-
-    }
-    
-    TubeNode& TubeNode::inflate(double rad)
-    {
-
-    }*/
-    
     // Operators
-    
-    /*TubeNode& TubeNode::operator|=(const TubeNode& x)
-    {
-
-    }
-    
-    TubeNode& TubeNode::operator|=(const Trajectory& x)
-    {
-
-    }
-    
-    TubeNode& TubeNode::operator&=(const TubeNode& x)
-    {
-
-    }*/
 
     // String
 
