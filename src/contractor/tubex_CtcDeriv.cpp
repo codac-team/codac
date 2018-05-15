@@ -82,6 +82,8 @@ namespace tubex
 
   bool CtcDeriv::contract(TubeSlice& x, const TubeSlice& v)
   {
+    EmptyException::check(v);
+
     bool ctc = false;
     Interval t = x.domain(), y = x.codomain();
     Interval in_gate = x.inputGate(), out_gate = x.outputGate();
@@ -102,7 +104,7 @@ namespace tubex
 
     // 2. Envelope
 
-    /*Interval envelope;
+    Interval envelope;
     
     if(v.codomain().is_degenerated())
       envelope = in_gate | out_gate;
@@ -125,7 +127,7 @@ namespace tubex
       Interval t_inter_lb = linesIntersectionLb(x, v);
 
         if(t_inter_lb.intersects(t))
-          envelope |= yolb(t_inter_ub,x,v);
+          envelope |= yolb(t_inter_lb,x,v);
 
         if(t_inter_lb.ub() < t.lb())
           envelope |= yolb(t,x,v);
@@ -137,8 +139,8 @@ namespace tubex
     if(y.is_strict_superset(envelope))
     {
       ctc = true;
-      x.set(y);
-    }*/
+      x.set(envelope);
+    }
 
     return ctc;
   }
@@ -154,47 +156,28 @@ namespace tubex
 
   }
 
-  bool CtcDeriv::contract(Tube& x, const Tube& v, const Interval& x0)
+  bool CtcDeriv::contract(Tube& x, const Tube& v)
   {
-    bool contraction = contractFwd(x, v, x0);
+    bool contraction = false;
+    contraction |= contractFwd(x, v);
     contraction |= contractBwd(x, v);
+    // todo: optimized propagation, according to gates' updates
     return contraction;
   }
 
-  bool CtcDeriv::contractFwd(Tube& x, const Tube& v, const Interval& x0) // temporal forward
+  bool CtcDeriv::contractFwd(Tube& x, const Tube& v) // temporal forward
   {
     StructureException::check(x, v);
-    //EmptyException::check(v); // todo: is v empty critical?
 
-    int size = x.nbSlices();
     bool contraction = false;
-
-    Interval next_y = x[0];
-    Interval y_front = next_y & x0;
-
-    for(int i = 0 ; i < size ; i++) // from the past to the future
+    TubeSlice *x_slice = x.getFirstSlice();
+    TubeSlice *v_slice = v.getFirstSlice();
+    
+    while(x_slice != NULL)
     {
-      double dt = x.sliceDomain(i).diam();
-      Interval y_old = next_y;
-      Interval y_new = y_old & (y_front + v[i] * Interval(0., dt));
-      contraction |= y_new.diam() < y_old.diam();
-      x.set(y_new, i);
-
-      // Discontinuous
-      if(y_new.is_empty())
-      {
-        x.setEmpty();
-        contraction = true;
-        break;
-      }
-
-      // Preparing next slice computation
-      if(i < size - 1)
-      {
-        y_front = y_old & (y_front + v[i] * dt);
-        next_y = x[i + 1];
-        y_front &= next_y;
-      }
+      contraction |= contract(*x_slice, *v_slice);
+      x_slice = x_slice->nextSlice();
+      v_slice = v_slice->nextSlice();
     }
 
     return contraction;
@@ -203,37 +186,16 @@ namespace tubex
   bool CtcDeriv::contractBwd(Tube& x, const Tube& v) // temporal backward
   {
     StructureException::check(x, v);
-    EmptyException::check(v);
 
-    int size = x.nbSlices();
     bool contraction = false;
-
-    Interval next_y = x[size - 1];
-    Interval y_front = next_y & (next_y - v[size - 1] * v.sliceDomain(size - 1).diam());
-    next_y = x[max(0, size - 2)];
-
-    for(int i = max(0, size - 2) ; i >= 0 ; i--) // from the future to the past
+    TubeSlice *x_slice = x.getLastSlice();
+    TubeSlice *v_slice = v.getLastSlice();
+    
+    while(x_slice != NULL)
     {
-      double dt = x.sliceDomain(i).diam();
-      Interval y_old = x[i];
-      Interval y_new = y_old & (y_front - v[i] * Interval(0., dt));
-      contraction |= y_new.diam() < y_old.diam();
-      x.set(y_new, i);
-
-      // Discontinuous
-      if(y_new.is_empty())
-      {
-        x.setEmpty();
-        contraction = true;
-        break;
-      }
-
-      if(i > 0)
-      {
-        y_front = y_old & (y_front - v[i] * dt);
-        next_y = x[i - 1];
-        y_front &= next_y;
-      }
+      contraction |= contract(*x_slice, *v_slice);
+      x_slice = x_slice->prevSlice();
+      v_slice = v_slice->prevSlice();
     }
 
     return contraction;

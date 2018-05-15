@@ -9,7 +9,7 @@ using namespace tubex;
 
 TEST_CASE("Computing tube's primitive", "[core]")
 {
-  SECTION("Test tube3")
+  /*SECTION("Test tube3")
   {
     Tube tube = tubeTest3();
     CHECK(ApproxIntv(tube[0]) == Interval(1,3));
@@ -64,18 +64,18 @@ TEST_CASE("Computing tube's primitive", "[core]")
     CHECK(ApproxIntv(tube_primitive[7]) == Interval(7,16));
     CHECK(ApproxIntv(tube_primitive[8]) == Interval(8,18));
     CHECK(ApproxIntv(tube_primitive[9]) == Interval(9,19.5)); // domain [9,10]
-    /*CHECK(ApproxIntv(tube_primitive[10.]) == Interval(9,19.5)); // singleton
-    CHECK(ApproxIntv(tube_primitive[10]) == Interval(8.5,20.5)); // domain [10,10.2]
-    CHECK(ApproxIntv(tube_primitive[11]) == Interval(7,20.5));
-    CHECK(ApproxIntv(tube_primitive[12]) == Interval(6,21));
-    CHECK(ApproxIntv(tube_primitive[13]) == Interval(6,22.5));
-    CHECK(ApproxIntv(tube_primitive[14]) == Interval(6.5,24.5));
-    CHECK(ApproxIntv(tube_primitive[15]) == Interval(7.5,26.5));
-    CHECK(ApproxIntv(tube_primitive[16]) == Interval(8.5,28.5));
-    CHECK(ApproxIntv(tube_primitive[17]) == Interval(9.5,30.5));
-    CHECK(ApproxIntv(tube_primitive[18]) == Interval(10.5,32.5));
-    CHECK(ApproxIntv(tube_primitive[19]) == Interval(11.5,34.5));
-    CHECK(ApproxIntv(tube_primitive[20]) == Interval(12.5,36.5));*/
+    //CHECK(ApproxIntv(tube_primitive[10.]) == Interval(9,19.5)); // singleton
+    //CHECK(ApproxIntv(tube_primitive[10]) == Interval(8.5,20.5)); // domain [10,10.2]
+    //CHECK(ApproxIntv(tube_primitive[11]) == Interval(7,20.5));
+    //CHECK(ApproxIntv(tube_primitive[12]) == Interval(6,21));
+    //CHECK(ApproxIntv(tube_primitive[13]) == Interval(6,22.5));
+    //CHECK(ApproxIntv(tube_primitive[14]) == Interval(6.5,24.5));
+    //CHECK(ApproxIntv(tube_primitive[15]) == Interval(7.5,26.5));
+    //CHECK(ApproxIntv(tube_primitive[16]) == Interval(8.5,28.5));
+    //CHECK(ApproxIntv(tube_primitive[17]) == Interval(9.5,30.5));
+    //CHECK(ApproxIntv(tube_primitive[18]) == Interval(10.5,32.5));
+    //CHECK(ApproxIntv(tube_primitive[19]) == Interval(11.5,34.5));
+    //CHECK(ApproxIntv(tube_primitive[20]) == Interval(12.5,36.5));
   }
 
   SECTION("Test tube1")
@@ -462,5 +462,5 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     Tube tube = tubeTest4_05();
     CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
     CHECK(ApproxIntvPair(tube.partialIntegral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
-  }
+  }*/
 }

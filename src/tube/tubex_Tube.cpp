@@ -112,7 +112,8 @@ namespace tubex
     Tube Tube::primitive(const Interval& initial_value) const
     {
       Tube primitive(*this, Interval::ALL_REALS);
-      primitive.ctcFwd(*this, initial_value);
+      primitive.set(primitive.domain().lb(), initial_value);
+      primitive.ctcFwd(*this);
       return primitive;
     }
     
@@ -239,10 +240,10 @@ namespace tubex
 
     // Contractors
 
-    bool Tube::ctcFwd(const Tube& derivative, const Interval& initial_value)
+    bool Tube::ctcFwd(const Tube& derivative)
     {
       CtcDeriv ctc;
-      return ctc.contractFwd(*this, derivative, initial_value);
+      return ctc.contractFwd(*this, derivative);
     }
 
     bool Tube::ctcBwd(const Tube& derivative)
@@ -251,10 +252,10 @@ namespace tubex
       return ctc.contractBwd(*this, derivative);
     }
 
-    bool Tube::ctcFwdBwd(const Tube& derivative, const Interval& initial_value)
+    bool Tube::ctcFwdBwd(const Tube& derivative)
     {
       CtcDeriv ctc;
-      return ctc.contract(*this, derivative, initial_value);
+      return ctc.contract(*this, derivative);
     }
       
     // Serialization

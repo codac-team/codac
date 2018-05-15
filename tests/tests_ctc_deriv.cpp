@@ -20,10 +20,10 @@ TEST_CASE("CtcDeriv")
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
 
-    //CHECK(contraction);
+    CHECK(contraction);
     CHECK(x.inputGate() == Interval(-1.,2.));
     CHECK(x.outputGate() == Interval(-2.,0.));
-    //CHECK(x.codomain() == Interval(-3.5,3.));
+    CHECK(x.codomain() == Interval(-3.5,3.));
   }
 
   SECTION("Test slice, output gate contraction")
@@ -57,6 +57,10 @@ TEST_CASE("CtcDeriv")
     CHECK(contraction);
     CHECK(x.inputGate() == Interval(1.));
     CHECK(x.outputGate() == Interval(-3.));
-    //CHECK(x.codomain() == Interval(-3.,1.));
+    CHECK(x.codomain() == Interval(-3.,1.));
+    CHECK(x.interpol(-1., v) == Interval(1.));
+    CHECK(x.interpol(1., v) == Interval(-1.));
+    CHECK(x.interpol(3., v) == Interval(-3.));
+    CHECK(x.interpol(0., v) == Interval(0.));
   }
 }

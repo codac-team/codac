@@ -28,8 +28,8 @@ namespace tubex
     public:
 
       CtcDeriv();
-      bool contract(Tube& x, const Tube& v, const ibex::Interval& x0 = ibex::Interval::ALL_REALS);
-      bool contractFwd(Tube& x, const Tube& v, const ibex::Interval& x0 = ibex::Interval::ALL_REALS);
+      bool contract(Tube& x, const Tube& v);
+      bool contractFwd(Tube& x, const Tube& v);
       bool contractBwd(Tube& x, const Tube& v);
 
       bool contract(TubeSlice& x, const TubeSlice& v);

@@ -54,9 +54,9 @@ namespace tubex
 
     /** Contractors: **/
 
-      bool ctcFwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
+      bool ctcFwd(const Tube& derivative);
       bool ctcBwd(const Tube& derivative);
-      bool ctcFwdBwd(const Tube& derivative, const ibex::Interval& initial_value = ibex::Interval::ALL_REALS);
+      bool ctcFwdBwd(const Tube& derivative);
       /*bool ctcEval(const Tube& derivative, ibex::Interval& t, ibex::Interval& z, bool propagate = true);
       bool ctcEval(const Tube& derivative, ibex::Interval& t, const ibex::Interval& z, bool propagate = true);
       bool ctcEval(const Tube& derivative, const ibex::Interval& t, ibex::Interval& z, bool propagate = true);
