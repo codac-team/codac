@@ -93,6 +93,10 @@ namespace tubex
       bool isEqual(const TubeSlice& x) const;
       bool isDifferent(const TubeSlice& x) const;
 
+      // Setting values
+      void setInputGate(const ibex::Interval& input_gate, bool update_data);
+      void setOutputGate(const ibex::Interval& output_gate, bool update_data);
+
       // Integration
       void checkPartialPrimitive() const;
       void flagFuturePrimitiveUpdate(int slice_id = -1) const;

@@ -8,7 +8,7 @@ using namespace tubex;
 
 TEST_CASE("input2index / index2input")
 {
-  SECTION("input2index")
+  /*SECTION("input2index")
   {
     Tube tube = tubeTest1();
 
@@ -354,5 +354,5 @@ TEST_CASE("Tube slices structure")
     tubetree_a.set(Interval(0.3), 1.);
     CHECK(tubetree_a.getSlice(tubetree_a.nbSlices()-1)->outputGate() == Interval(0.3));
     CHECK(tubetree_a[1.] == Interval(0.3));
-  }
+  }*/
 }

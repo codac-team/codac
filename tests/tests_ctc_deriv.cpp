@@ -9,7 +9,7 @@ using namespace tubex;
 
 TEST_CASE("CtcDeriv")
 {
-  SECTION("Test slice, envelope contraction")
+  /*SECTION("Test slice, envelope contraction")
   {
     TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
     x.setInputGate(Interval(-1.,2.));
@@ -62,5 +62,5 @@ TEST_CASE("CtcDeriv")
     CHECK(x.interpol(1., v) == Interval(-1.));
     CHECK(x.interpol(3., v) == Interval(-3.));
     CHECK(x.interpol(0., v) == Interval(0.));
-  }
+  }*/
 }

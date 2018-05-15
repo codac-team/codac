@@ -296,7 +296,6 @@ namespace tubex
     void TubeSlice::set(const Interval& y)
     {
       m_codomain = y;
-      updateEnclosedBounds();
 
       m_volume = m_domain.diam();
 
@@ -308,6 +307,10 @@ namespace tubex
 
       else
         m_volume *= m_codomain.diam();
+
+      setInputGate(y, false);
+      setOutputGate(y, false);
+      updateEnclosedBounds();
     }
     
     void TubeSlice::setEmpty()
@@ -317,42 +320,12 @@ namespace tubex
 
     void TubeSlice::setInputGate(const Interval& input_gate)
     {
-      if(m_input_gate != NULL)
-        *m_input_gate = input_gate;
-
-      else
-      {
-        m_input_gate = new Interval(input_gate);
-        *m_input_gate &= m_codomain;
-
-        if(prevSlice() != NULL)
-        {
-          *m_input_gate &= prevSlice()->codomain();
-          prevSlice()->m_output_gate = m_input_gate;
-        }
-      }
-
-      updateEnclosedBounds();
+      setInputGate(input_gate, true);
     }
 
     void TubeSlice::setOutputGate(const Interval& output_gate)
     {
-      if(m_output_gate != NULL)
-        *m_output_gate = output_gate;
-
-      else
-      {
-        m_output_gate = new Interval(output_gate);
-        *m_output_gate &= m_codomain;
-
-        if(nextSlice() != NULL)
-        {
-          *m_output_gate &= nextSlice()->codomain();
-          nextSlice()->m_input_gate = m_output_gate;
-        }
-      }
-
-      updateEnclosedBounds();
+      setOutputGate(output_gate, true);
     }
     
     TubeNode& TubeSlice::inflate(double rad)
@@ -447,6 +420,52 @@ namespace tubex
       return TubeNode::isDifferent(x) ||
              inputGate() != x.inputGate() ||
              outputGate() != x.outputGate();
+    }
+
+    // Setting values
+
+    void TubeSlice::setInputGate(const Interval& input_gate, bool update_data)
+    {
+      if(m_input_gate != NULL)
+        *m_input_gate = input_gate;
+
+      else
+      {
+        m_input_gate = new Interval(input_gate);
+        
+        if(prevSlice() != NULL)
+          prevSlice()->m_output_gate = m_input_gate;
+      }
+      
+      *m_input_gate &= m_codomain;
+
+      if(prevSlice() != NULL)
+        *m_input_gate &= prevSlice()->codomain();
+
+      if(update_data)
+        updateEnclosedBounds();
+    }
+
+    void TubeSlice::setOutputGate(const Interval& output_gate, bool update_data)
+    {
+      if(m_output_gate != NULL)
+        *m_output_gate = output_gate;
+
+      else
+      {
+        m_output_gate = new Interval(output_gate);
+        
+        if(nextSlice() != NULL)
+          nextSlice()->m_input_gate = m_output_gate;
+      }
+      
+      *m_output_gate &= m_codomain;
+
+      if(nextSlice() != NULL)
+        *m_output_gate &= nextSlice()->codomain();
+
+      if(update_data)
+        updateEnclosedBounds();
     }
     
     // Integration

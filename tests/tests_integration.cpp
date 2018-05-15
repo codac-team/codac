@@ -9,7 +9,7 @@ using namespace tubex;
 
 TEST_CASE("Computing tube's primitive", "[core]")
 {
-  SECTION("Test tube3")
+  /*SECTION("Test tube3")
   {
     Tube tube = tubeTest3();
     CHECK(ApproxIntv(tube[0]) == Interval(1,3));
@@ -25,8 +25,8 @@ TEST_CASE("Computing tube's primitive", "[core]")
     CHECK(ApproxIntv(tube_primitive[3]) == Interval(-2,6));
     CHECK(ApproxIntv(tube_primitive[4]) == Interval(-5,6));
   }
-/*
-  SECTION("Test tube4")
+
+  /*SECTION("Test tube4")
   {
     Tube tube = tubeTest4();
     tube.set(Interval(-1,1), Interval(10,11));
@@ -77,7 +77,7 @@ TEST_CASE("Computing tube's primitive", "[core]")
     CHECK(ApproxIntv(tube_primitive[19]) == Interval(11.5,34.5));
     CHECK(ApproxIntv(tube_primitive[20]) == Interval(12.5,36.5));
   }
-
+/*
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
