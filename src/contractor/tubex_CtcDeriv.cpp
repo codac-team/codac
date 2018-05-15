@@ -104,15 +104,10 @@ namespace tubex
 
     // 2. Envelope
 
-    Interval envelope;
-    
-    if(v.codomain().is_degenerated())
-      envelope = in_gate | out_gate;
+    Interval envelope = in_gate | out_gate;
 
-    else
+    if(!v.codomain().is_degenerated())
     {
-      envelope.set_empty();
-
       Interval t_inter_ub = linesIntersectionUb(x, v);
 
         if(t_inter_ub.intersects(t))
