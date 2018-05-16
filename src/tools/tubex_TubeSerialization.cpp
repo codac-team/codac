@@ -30,9 +30,8 @@ namespace tubex
                 [interval_y0] // value of 1rst slice
                 [interval_y0]
                 ...
-                [int_nb_gates]
-                [double_t_g1] // time input of 1rst gate
-                [interval_g1] // value of 1rst gate
+                [gate_t0] // value of 1rst gate
+                [gate_t1]
                 ...
   */
 
@@ -79,36 +78,12 @@ namespace tubex
         }
 
         // Gates
-
-        int nb_gates = 0;
         slice = tube.getFirstSlice();
+        serializeInterval(bin_file, slice->inputGate());
         while(slice != NULL)
         {
-          if(slice->m_input_gate != NULL)
-            nb_gates++;
+          serializeInterval(bin_file, slice->outputGate());
           slice = slice->nextSlice();
-        }
-        if(tube.getLastSlice()->m_output_gate != NULL)
-          nb_gates++;
-        bin_file.write((const char*)&nb_gates, sizeof(int));
-
-        slice = tube.getFirstSlice();
-        while(slice != NULL)
-        {
-          if(slice->m_input_gate != NULL)
-          {
-            double t = slice->domain().lb();
-            bin_file.write((const char*)&t, sizeof(double));
-            serializeInterval(bin_file, *slice->m_input_gate);
-          }
-          slice = slice->nextSlice();
-        }
-        
-        if(tube.getLastSlice()->m_output_gate != NULL)
-        {
-          double t = tube.domain().ub();
-          bin_file.write((const char*)&t, sizeof(double));
-          serializeInterval(bin_file, *tube.getLastSlice()->m_output_gate);
         }
 
         break;
@@ -173,15 +148,19 @@ namespace tubex
 
         // Gates
 
-        int gates_number;
-        bin_file.read((char*)&gates_number, sizeof(int));
+        int gates_number = tube.nbSlices() + 1;
 
         for(int i = 0 ; i < gates_number ; i++)
         {
-          double t;
-          bin_file.read((char*)&t, sizeof(double));
           Interval gate;
           deserializeInterval(bin_file, gate);
+
+          double t;
+          if(i < gates_number - 1)
+            t = tube.sliceDomain(i).lb();
+          else
+            t = tube.domain().ub();
+
           tube.set(gate, t);
         }
 

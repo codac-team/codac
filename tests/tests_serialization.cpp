@@ -9,7 +9,7 @@ using namespace tubex;
 
 TEST_CASE("serialization/deserialization of Tube")
 {
-  /*SECTION("No gates")
+  SECTION("No gates")
   {
     Tube tube1 = tubeTest1();
     string filename = "test_serialization_nogates.tube";
@@ -86,5 +86,5 @@ TEST_CASE("serialization/deserialization of Tube")
     CHECK(tube1 == tube3);
     for(int i = 0 ; i < v_trajs.size() ; i++)
       CHECK(v_trajs[i] == v_trajs_2[i]);
-  }*/
+  }
 }
