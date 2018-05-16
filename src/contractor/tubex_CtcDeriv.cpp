@@ -82,8 +82,6 @@ namespace tubex
 
   bool CtcDeriv::contract(TubeSlice& x, const TubeSlice& v)
   {
-    EmptyException::check(v);
-
     bool ctc = false;
     Interval t = x.domain(), y = x.codomain();
     Interval in_gate = x.inputGate(), out_gate = x.outputGate();

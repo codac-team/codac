@@ -63,4 +63,21 @@ TEST_CASE("CtcDeriv")
     CHECK(x.interpol(3., v) == Interval(-3.));
     CHECK(x.interpol(0., v) == Interval(0.));
   }
+
+  SECTION("Test slice, empty case")
+  {
+    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    x.setInputGate(Interval(-1.,2.));
+    x.setOutputGate(Interval(-2.,0.));
+
+    TubeSlice v(x.domain(), Interval::EMPTY_SET);
+
+    CtcDeriv ctc;
+    bool contraction = ctc.contract(x,v);
+
+    CHECK(contraction);
+    CHECK(x.inputGate().is_empty());
+    CHECK(x.outputGate().is_empty());
+    CHECK(x.codomain().is_empty());
+  }
 }
