@@ -134,7 +134,7 @@ namespace tubex
     if(y.is_strict_superset(envelope))
     {
       ctc = true;
-      x.set(envelope);
+      x.setEnvelope(envelope);
     }
 
     return ctc;
