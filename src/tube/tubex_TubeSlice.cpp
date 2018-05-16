@@ -26,24 +26,40 @@ namespace tubex
 
     TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain) : TubeNode(domain, codomain)
     {
+      m_input_gate = new Interval();
+      m_output_gate = new Interval();
       set(codomain);
     }
 
     TubeSlice::TubeSlice(const TubeSlice& x) : TubeNode(x)
     {
+      m_input_gate = new Interval();
+      m_output_gate = new Interval();
       *this = x;
     }
 
     TubeSlice::~TubeSlice()
     {
-      
+      // Gates are deleted if not shared with other slices
+
+      if(m_prev_slice == NULL)
+      {
+        delete m_input_gate;
+        m_input_gate = NULL;
+      }
+
+      if(m_next_slice == NULL)
+      {
+        delete m_output_gate;
+        m_output_gate = NULL;
+      }
     }
 
     TubeSlice& TubeSlice::operator=(const TubeSlice& x)
     {
       TubeNode::operator=(x);
-      setInputGate(x.inputGate());
-      setOutputGate(x.outputGate());
+      *m_input_gate = *x.m_input_gate;
+      *m_output_gate = *x.m_output_gate;
       return *this;
     }
 
@@ -105,61 +121,30 @@ namespace tubex
     void TubeSlice::chainSlices(TubeSlice *first_slice, TubeSlice *second_slice)
     {
       if(first_slice != NULL)
-      {
         first_slice->m_next_slice = second_slice;
-        if(second_slice != NULL && first_slice->m_output_gate == NULL)
-          first_slice->m_output_gate = second_slice->m_input_gate;
-      }
 
       if(second_slice != NULL)
-      {
         second_slice->m_prev_slice = first_slice;
-        if(first_slice != NULL && second_slice->m_input_gate == NULL)
-          second_slice->m_input_gate = first_slice->m_output_gate;
+
+      if(first_slice != NULL && second_slice != NULL)
+      {
+        *first_slice->m_output_gate &= *second_slice->m_input_gate;
+        delete second_slice->m_input_gate;
+        second_slice->m_input_gate = first_slice->m_output_gate;
+
+        first_slice->flagFutureDataUpdate();
+        second_slice->flagFutureDataUpdate();
       }
     }
 
     const Interval TubeSlice::inputGate() const
     {
-      if(m_input_gate != NULL)
-        return *m_input_gate;
-
-      else if(m_prev_slice != NULL)
-        return m_codomain & m_prev_slice->m_codomain;
-
-      else
-        return m_codomain;
+      return *m_input_gate;
     }
     
     const Interval TubeSlice::outputGate() const
     {
-      if(m_output_gate != NULL)
-        return *m_output_gate;
-
-      else if(m_next_slice != NULL)
-        return m_codomain & m_next_slice->m_codomain;
-
-      else
-        return m_codomain;
-    }
-
-    void TubeSlice::deleteGates()
-    {
-      if(m_input_gate != NULL)
-      {
-        delete m_input_gate;
-        m_input_gate = NULL;
-        if(m_prev_slice != NULL)
-          m_prev_slice->m_output_gate = NULL;
-      }
-
-      if(m_output_gate != NULL)
-      {
-        delete m_output_gate;
-        m_output_gate = NULL;
-        if(m_next_slice != NULL)
-          m_next_slice->m_input_gate = NULL;
-      }
+      return *m_output_gate;
     }
     
     // Access values
@@ -171,6 +156,7 @@ namespace tubex
     
     double TubeSlice::volume() const
     {
+      checkData();
       return m_volume;
     }
 
@@ -245,12 +231,31 @@ namespace tubex
       if(intersection.is_empty())
         return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-      else if(intersection.is_degenerated())
-        return make_pair(Interval((*this)[intersection.lb()].lb()),
-                         Interval((*this)[intersection.lb()].ub()));
-
       else
-        return m_enclosed_bounds; // pre-computed
+      {
+        Interval lb = Interval::EMPTY_SET;
+        Interval ub = Interval::EMPTY_SET;
+
+        if(intersection.contains(m_domain.lb()))
+        {
+          lb |= inputGate().lb();
+          ub |= inputGate().ub();
+        }
+
+        if(intersection.contains(m_domain.ub()))
+        {
+          lb |= outputGate().lb();
+          ub |= outputGate().ub();
+        }
+
+        if(!intersection.is_degenerated())
+        {
+          lb |= m_codomain.lb();
+          ub |= m_codomain.ub();
+        }
+
+        return make_pair(lb, ub);
+      }
     }
 
     // Tests
@@ -295,22 +300,9 @@ namespace tubex
 
     void TubeSlice::set(const Interval& y)
     {
-      m_codomain = y;
-
-      m_volume = m_domain.diam();
-
-      if(m_codomain.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
-        m_volume = 0.;
-
-      else if(m_codomain.is_unbounded())
-        m_volume = INFINITY;
-
-      else
-        m_volume *= m_codomain.diam();
-
-      setInputGate(y, false);
-      setOutputGate(y, false);
-      updateEnclosedBounds();
+      setEnvelope(y);
+      setInputGate(y);
+      setOutputGate(y);
     }
     
     void TubeSlice::setEmpty()
@@ -318,25 +310,44 @@ namespace tubex
       set(Interval::EMPTY_SET);
     }
 
+    void TubeSlice::setEnvelope(const Interval& envelope)
+    {
+      m_codomain = envelope;
+      *m_input_gate &= m_codomain;
+      *m_output_gate &= m_codomain;
+
+      flagFutureDataUpdate();
+    }
+
     void TubeSlice::setInputGate(const Interval& input_gate)
     {
-      setInputGate(input_gate, true);
+      *m_input_gate = input_gate;
+      *m_input_gate &= m_codomain;
+
+      if(prevSlice() != NULL)
+        *m_input_gate &= prevSlice()->codomain();
+
+      flagFutureDataUpdate();
     }
 
     void TubeSlice::setOutputGate(const Interval& output_gate)
     {
-      setOutputGate(output_gate, true);
+      *m_output_gate = output_gate;
+      *m_output_gate &= m_codomain;
+
+      if(nextSlice() != NULL)
+        *m_output_gate &= nextSlice()->codomain();
+
+      flagFutureDataUpdate();
     }
     
     TubeNode& TubeSlice::inflate(double rad)
     {
       // todo: simplify with simple addition
       Interval e(-rad,rad);
-      set(m_codomain + e);
-      if(m_input_gate != NULL)
-        setInputGate(inputGate() + e);
-      if(m_input_gate != NULL)
-        setOutputGate(outputGate() + e);
+      setEnvelope(m_codomain + e);
+      setInputGate(*m_input_gate + e);
+      setOutputGate(*m_output_gate + e);
     }
     
     // Operators
@@ -344,37 +355,33 @@ namespace tubex
     TubeSlice& TubeSlice::operator|=(const Trajectory& x)
     {
       DomainException::check(*this, x);
-      set(m_codomain | x[m_domain]);
+      setEnvelope(m_codomain | x[m_domain]);
       setInputGate(inputGate() | x[m_domain.lb()]);
       setOutputGate(outputGate() | x[m_domain.ub()]);
-      // todo: create gates only if necessary
     }
     
     TubeSlice& TubeSlice::operator|=(const TubeSlice& x)
     {
       DomainException::check(*this, x);
-      set(m_codomain | x.codomain());
+      setEnvelope(m_codomain | x.codomain());
       setInputGate(inputGate() | x.inputGate());
       setOutputGate(outputGate() | x.outputGate());
-      // todo: create gates only if necessary
     }
     
     TubeSlice& TubeSlice::operator&=(const Trajectory& x)
     {
       DomainException::check(*this, x);
-      set(m_codomain & x[m_domain]);
+      setEnvelope(m_codomain & x[m_domain]);
       setInputGate(inputGate() & x[m_domain.lb()]);
       setOutputGate(outputGate() & x[m_domain.ub()]);
-      // todo: create gates only if necessary
     }
     
     TubeSlice& TubeSlice::operator&=(const TubeSlice& x)
     {
       DomainException::check(*this, x);
-      set(m_codomain & x.codomain());
+      setEnvelope(m_codomain & x.codomain());
       setInputGate(inputGate() & x.inputGate());
       setOutputGate(outputGate() & x.outputGate());
-      // todo: create gates only if necessary
     }
     
     // String
@@ -399,13 +406,6 @@ namespace tubex
         v_t.push_back(inversion);
     }
 
-    void TubeSlice::updateEnclosedBounds()
-    {
-      Interval lb = Interval(m_codomain.lb()) | inputGate().lb() | outputGate().lb();
-      Interval ub = Interval(m_codomain.ub()) | inputGate().ub() | outputGate().ub();
-      m_enclosed_bounds = make_pair(lb, ub);
-    }
-
     // Tests
 
     bool TubeSlice::isEqual(const TubeSlice& x) const
@@ -423,51 +423,33 @@ namespace tubex
     }
 
     // Setting values
-
-    void TubeSlice::setInputGate(const Interval& input_gate, bool update_data)
-    {
-      if(m_input_gate != NULL)
-        *m_input_gate = input_gate;
-
-      else
-      {
-        m_input_gate = new Interval(input_gate);
-        
-        if(prevSlice() != NULL)
-          prevSlice()->m_output_gate = m_input_gate;
-      }
-      
-      *m_input_gate &= m_codomain;
-
-      if(prevSlice() != NULL)
-        *m_input_gate &= prevSlice()->codomain();
-
-      if(update_data)
-        updateEnclosedBounds();
-    }
-
-    void TubeSlice::setOutputGate(const Interval& output_gate, bool update_data)
-    {
-      if(m_output_gate != NULL)
-        *m_output_gate = output_gate;
-
-      else
-      {
-        m_output_gate = new Interval(output_gate);
-        
-        if(nextSlice() != NULL)
-          nextSlice()->m_input_gate = m_output_gate;
-      }
-      
-      *m_output_gate &= m_codomain;
-
-      if(nextSlice() != NULL)
-        *m_output_gate &= nextSlice()->codomain();
-
-      if(update_data)
-        updateEnclosedBounds();
-    }
     
+    void TubeSlice::checkData() const
+    {
+      if(!m_data_update_needed)
+        return;
+
+      // Volume
+      {
+        if(m_codomain.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
+          m_volume = 0.;
+
+        else if(m_codomain.is_unbounded())
+          m_volume = INFINITY;
+
+        else
+          m_volume = m_domain.diam() * m_codomain.diam();
+      }
+
+      m_data_update_needed = false;
+    }
+
+    void TubeSlice::flagFutureDataUpdate(int slice_id) const
+    {
+      m_data_update_needed = true;
+      flagFuturePrimitiveUpdate(slice_id);
+    }
+
     // Integration
 
     void TubeSlice::checkPartialPrimitive() const

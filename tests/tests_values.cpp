@@ -8,7 +8,7 @@ using namespace tubex;
 
 TEST_CASE("Tube values")
 {
-  /*SECTION("Test tube1")
+  SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
@@ -114,7 +114,7 @@ TEST_CASE("Tube values")
     CHECK(tube[3.] == Interval::EMPTY_SET);
     tube.set(Interval(4.,5.), Interval(3.,4.));
     CHECK(tube[3.] == Interval(4.));
-  }*/
+  }
 
   SECTION("Setting values over an interval domain (bis)")
   {
@@ -163,7 +163,7 @@ TEST_CASE("Tube values")
     tube.set(Interval(-1.5,1.5), Interval(1.,7.));
 
     // Checking gates...
-    /*CHECK(tube[0.] == Interval(-3.,1.)); // not changed
+    CHECK(tube[0.] == Interval(-3.,1.)); // not changed
     CHECK(tube[1.] == Interval(-1.5,1.5)); // new gate
     CHECK(tube[2.] == Interval(-1.5,1.5));
     CHECK(tube[4.] == Interval(-1.5,1.5));
@@ -177,10 +177,10 @@ TEST_CASE("Tube values")
     CHECK(tube[2] == Interval(-1.5,1.5));
     CHECK(tube[3] == Interval(-1.5,1.5));
     CHECK(tube[4] == Interval(-1.5,1.5));
-    CHECK(tube[5] == Interval(-2.,1.)); // not changed*/
+    CHECK(tube[5] == Interval(-2.,1.)); // not changed
   }
 
-  /*SECTION("Setting values at some precise time input")
+  SECTION("Setting values at some precise time input")
   {
     Tube tube(Interval(0.,10.));
     tube.set(Interval(3.,4.), 2.);
@@ -213,13 +213,14 @@ TEST_CASE("Testing enclosed bounds (tube evaluations)")
     CHECK(ApproxIntvPair(tube1.eval())  == make_pair(Interval(-11,9), Interval(-7,13)));
     CHECK(tube1.eval(Interval(0.5,25.5)) == make_pair(Interval(-11,9), Interval(-7,13)));
     CHECK(tube1.eval(Interval(7.1,19.8)) == make_pair(Interval(-11,6), Interval(-7,9)));
-    // todo: CHECK(tube1.eval(Interval(6.0,9.0)) == make_pair(Interval(-11,-10), Interval(-7,-6)));
+    CHECK(tube1.eval(Interval(6.0,9.0)) == make_pair(Interval(-11,-9), Interval(-7,-6)));
     CHECK(tube1.eval(Interval(0.)) == make_pair(Interval(4), Interval(8)));
     CHECK(tube1.eval(Interval(5.)) == make_pair(Interval(-7), Interval(-5)));
     CHECK(tube1.eval(Interval(5.2)) == make_pair(Interval(-9), Interval(-5)));
-    // todo: CHECK(tube1.eval(Interval(23.,24.)) == make_pair(Interval(8), Interval(13)));
-    // todo: CHECK(tube1.eval(Interval(22.,25.)) == make_pair(Interval(7,9), Interval(12,13)));
-    // todo: CHECK(tube1.eval(Interval(21.,23.)) == make_pair(Interval(8,9), Interval(11,12)));
+    CHECK(tube1.eval(Interval(23.2,23.8)) == make_pair(Interval(8), Interval(13)));
+    CHECK(tube1.eval(Interval(23.,24.)) == make_pair(Interval(8.,9.), Interval(12.,13.)));
+    CHECK(tube1.eval(Interval(22.,25.)) == make_pair(Interval(7,9), Interval(11,13)));
+    CHECK(tube1.eval(Interval(21.,23.)) == make_pair(Interval(8,9), Interval(10,12)));
   }
 
   SECTION("Test tube4")
@@ -419,13 +420,17 @@ TEST_CASE("Testing equalities")
     CHECK(tube1 == tube2);
     CHECK_FALSE(tube1 != tube2);
 
-    tube1.set(Interval(1.,3.2), 1.);
+    tube1.set(Interval(1.,2.2), 1.);
     CHECK(tube1 != tube2);
     CHECK_FALSE(tube1 == tube2);
 
-    tube1.set(Interval(1.,3.), 1.);
+    tube1.set(Interval(1.,3.2), 1.); // gate changed to [1.,3.]
     CHECK(tube1 == tube2);
     CHECK_FALSE(tube1 != tube2);
+
+    tube1.set(Interval(1.,2.2), 1.);
+    CHECK(tube1 != tube2);
+    CHECK_FALSE(tube1 == tube2);
 
     Tube tube_a1 = tubeTest1();
     Tube tube_b1 = tubeTest1();
@@ -553,7 +558,7 @@ TEST_CASE("Testing isEmpty()")
     tube.set(Interval::EMPTY_SET, 10);
     CHECK(tube.isEmpty());
     tube.set(Interval(5.), 10);
-    CHECK_FALSE(tube.isEmpty());
+    CHECK(tube.isEmpty());
   }
 }
 
@@ -562,16 +567,27 @@ TEST_CASE("Testing inflate()")
   SECTION("TubeSlice")
   {
     TubeSlice slice(Interval(0.,10.), Interval(0.));
+
     CHECK(slice.codomain() == Interval(0.));
+
     slice.inflate(0.2);
+
     CHECK(slice.codomain() == Interval(-0.2,0.2));
+
     slice.inflate(1.);
+
     CHECK(ApproxIntv(slice.codomain()) == Interval(-1.2,1.2));
     CHECK(ApproxIntv(slice.inputGate()) == Interval(-1.2,1.2));
     CHECK(ApproxIntv(slice.outputGate()) == Interval(-1.2,1.2));
+
     slice.setInputGate(Interval(0.,0.5));
     slice.setOutputGate(Interval(0.,0.3));
+
+    CHECK(slice[0.] == Interval(0.,0.5));
+    CHECK(slice[10.] == Interval(0.,0.3));
+
     slice.inflate(1.);
+
     CHECK(ApproxIntv(slice.codomain()) == Interval(-2.2,2.2));
     CHECK(ApproxIntv(slice.inputGate()) == Interval(-1.,1.5));
     CHECK(ApproxIntv(slice.outputGate()) == Interval(-1.,1.3));
@@ -583,6 +599,7 @@ TEST_CASE("Testing inflate()")
     CHECK(tube.codomain() == Interval(0.));
     CHECK(tube[3] == Interval(0.));
     CHECK(tube.getSlice(3)->inputGate() == Interval(0.));
+    CHECK(tube.getSlice(6)->inputGate() == Interval(0.));
     tube.inflate(0.2);
     CHECK(tube.codomain() == Interval(-0.2,0.2));
     CHECK(tube[6] == Interval(-0.2,0.2));
@@ -618,5 +635,5 @@ TEST_CASE("Testing volume()")
     CHECK(tube1.volume() == 197.);
     Tube tube4 = tubeTest4();
     CHECK(tube4.volume() == 9.+2.+1.+2.+1.+(21.-14.)*1.);
-  }*/
+  }
 }

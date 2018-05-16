@@ -44,6 +44,8 @@ namespace tubex
       const ibex::Interval inputGate() const;
       const ibex::Interval outputGate() const;
       void deleteGates();
+      void deleteInputGate();
+      void deleteOutputGate();
 
       // Access values
       const ibex::Interval& codomain() const;
@@ -66,6 +68,7 @@ namespace tubex
       // Setting values
       void set(const ibex::Interval& y);
       void setEmpty();
+      void setEnvelope(const ibex::Interval& envelope);
       void setInputGate(const ibex::Interval& input_gate);
       void setOutputGate(const ibex::Interval& output_gate);
       TubeNode& inflate(double rad);
@@ -94,8 +97,8 @@ namespace tubex
       bool isDifferent(const TubeSlice& x) const;
 
       // Setting values
-      void setInputGate(const ibex::Interval& input_gate, bool update_data);
-      void setOutputGate(const ibex::Interval& output_gate, bool update_data);
+      void checkData() const;
+      void flagFutureDataUpdate(int slice_id = -1) const;
 
       // Integration
       void checkPartialPrimitive() const;

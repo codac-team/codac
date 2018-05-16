@@ -90,9 +90,6 @@ namespace tubex
       // Definition
       
       // Slices/tree structure
-      void checkDataTree() const;
-      void flagFutureTreeUpdate(int slice_id = -1) const;
-      bool treeUpdateNeeded() const;
       void deleteGates();
 
       // Access values
@@ -105,6 +102,8 @@ namespace tubex
       bool isDifferent(const TubeTree& x) const;
 
       // Setting values
+      void checkData() const;
+      void flagFutureDataUpdate(int slice_id = -1) const;
 
       // Operators
 
@@ -119,8 +118,8 @@ namespace tubex
 
     /** Class variables **/
 
+      mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
       TubeNode *m_first_tubenode = NULL, *m_second_tubenode = NULL;
-      mutable bool m_tree_update_needed = true;
   };
 }
 

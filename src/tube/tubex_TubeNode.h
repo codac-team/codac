@@ -94,6 +94,8 @@ namespace tubex
       bool isDifferent(const TubeNode& x) const;
 
       // Setting values
+      virtual void checkData() const = 0;
+      virtual void flagFutureDataUpdate(int slice_id = -1) const = 0;
 
       // Operators
 
@@ -115,9 +117,9 @@ namespace tubex
       // Subtube attributes ('mutable' required: values may be updated from const methods)
       mutable ibex::Interval m_codomain;
       mutable double m_volume;
-      mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
       mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
       mutable bool m_primitive_update_needed = true;
+      mutable bool m_data_update_needed = true;
 
       friend class TubeTree;
       friend void deserializeTube(std::ifstream& bin_file, Tube& tube);

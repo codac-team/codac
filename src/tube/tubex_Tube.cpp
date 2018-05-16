@@ -65,7 +65,8 @@ namespace tubex
         slice->set(function.eval(iv_domain));
         slice = slice->nextSlice();
       }
-      flagFutureTreeUpdate();
+      
+      flagFutureDataUpdate();
     }
 
     Tube::Tube(const Tube& x, const Interval& codomain) : TubeTree(x, codomain)

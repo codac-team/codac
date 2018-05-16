@@ -40,17 +40,10 @@ namespace tubex
     {
       *this = x;
       set(codomain);
-      deleteGates();
     }
 
     TubeTree::~TubeTree()
     {
-      // Deleting gate between the two nodes
-      TubeSlice *last_slice_first_node = getSlice(m_first_tubenode->nbSlices() - 1);
-      if(((TubeSlice*)last_slice_first_node)->m_output_gate != NULL)
-        delete ((TubeSlice*)last_slice_first_node)->m_output_gate;
-
-      // Deleting nodes
       if(m_first_tubenode != NULL)
       {
         delete m_first_tubenode;
@@ -66,21 +59,23 @@ namespace tubex
 
     TubeTree& TubeTree::operator=(const TubeTree& x)
     {
+      // Reset
+      {
+        if(m_first_tubenode != NULL)
+        {
+          delete m_first_tubenode;
+          m_first_tubenode = NULL;
+        }
+
+        if(m_second_tubenode != NULL)
+        {
+          delete m_second_tubenode;
+          m_second_tubenode = NULL;
+        }
+      }
+
       TubeNode::operator=(x);
-
-      m_tree_update_needed = x.m_tree_update_needed;
-
-      if(m_first_tubenode != NULL)
-      {
-        delete m_first_tubenode;
-        m_first_tubenode = NULL;
-      }
-
-      if(m_second_tubenode != NULL)
-      {
-        delete m_second_tubenode;
-        m_second_tubenode = NULL;
-      }
+      m_enclosed_bounds = x.m_enclosed_bounds;
 
       if(x.getFirstTubeNode() != NULL)
       {
@@ -99,15 +94,7 @@ namespace tubex
         else
           m_second_tubenode = new TubeTree(*((TubeTree*)x.getSecondTubeNode()));
 
-        // Chaining slices (+ gate in between)
-
         TubeSlice::chainSlices(m_first_tubenode->getLastSlice(), m_second_tubenode->getFirstSlice());
-        
-        if(x.m_first_tubenode->getLastSlice()->m_output_gate != NULL)
-        {
-          double t = x.m_first_tubenode->domain().ub();
-          m_first_tubenode->getLastSlice()->setOutputGate(*x.m_first_tubenode->getLastSlice()->m_output_gate);
-        }
       }
 
       return *this;
@@ -133,7 +120,7 @@ namespace tubex
     int TubeTree::sample(double t, const Interval& gate)
     {
       DomainException::check(*this, t);
-      checkDataTree();
+      checkData();
       int new_slices_nb = 1;
 
       if(m_second_tubenode == NULL)
@@ -153,8 +140,13 @@ namespace tubex
         TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode);
         TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, next_slice);
 
-        if(!m_codomain.is_interior_subset(gate) && gate != Interval::ALL_REALS)
-          ((TubeSlice*)m_first_tubenode)->setOutputGate(gate & m_codomain);
+        if(prev_slice == NULL)
+          ((TubeSlice*)m_first_tubenode)->setInputGate(slice.inputGate());
+
+        if(next_slice == NULL)
+          ((TubeSlice*)m_second_tubenode)->setOutputGate(slice.outputGate());
+
+        ((TubeSlice*)m_first_tubenode)->setOutputGate(gate);
       }
 
       else
@@ -200,13 +192,18 @@ namespace tubex
           TubeSlice::chainSlices(*first_slice, *second_slice);
           TubeSlice::chainSlices(*second_slice, next_slice);
 
-          if(!(*slice_ptr)->m_codomain.is_interior_subset(gate) && gate != Interval::ALL_REALS)
-            (*first_slice)->setOutputGate(gate & m_codomain);
+          if(prev_slice == NULL)
+            (*first_slice)->setInputGate(slice.inputGate());
 
+          if(next_slice == NULL)
+            (*second_slice)->setOutputGate(slice.outputGate());
+
+          (*first_slice)->setOutputGate(gate);
           (*slice_ptr)->m_slices_number = 2;
         }
       }
 
+      flagFutureDataUpdate();
       m_slices_number += new_slices_nb;
       return new_slices_nb;
     }
@@ -288,13 +285,13 @@ namespace tubex
 
     const Interval& TubeTree::codomain() const
     {
-      checkDataTree();
+      checkData();
       return m_codomain;
     }
 
     double TubeTree::volume() const
     {
-      checkDataTree();
+      checkData();
       return m_volume;
     }
 
@@ -424,7 +421,7 @@ namespace tubex
 
       else if(intersection == m_domain)
       {
-        checkDataTree();
+        checkData();
         return m_enclosed_bounds; // pre-computed
       }
 
@@ -515,13 +512,13 @@ namespace tubex
         i++;
       }
 
-      flagFutureTreeUpdate();
+      flagFutureDataUpdate();
     }
     
     void TubeTree::set(const Interval& y, int slice_id)
     {
       getSlice(slice_id)->set(y);
-      flagFutureTreeUpdate(slice_id);
+      flagFutureDataUpdate(slice_id);
     }
     
     void TubeTree::set(const Interval& y, double t)
@@ -547,10 +544,9 @@ namespace tubex
         {
           if((t & slice->domain()).is_degenerated())
             continue;
-          
           slice->set(y);
           slice = slice->nextSlice();
-          flagFutureTreeUpdate(i);
+          flagFutureDataUpdate(i);
         }
       }
     }
@@ -576,14 +572,29 @@ namespace tubex
     
     TubeTree& TubeTree::inflate(double rad)
     {
+      Interval e(-rad,rad);
+
       TubeSlice *slice = getFirstSlice();
+      TubeSlice *first_slice = slice;
+
+      // Setting envelopes before gates' inflation
       while(slice != NULL)
       {
-        slice->inflate(rad);
+        slice->setEnvelope(slice->codomain() + e);
         slice = slice->nextSlice();
       }
-      
-      flagFutureTreeUpdate();
+
+      slice = first_slice;
+
+      while(slice != NULL)
+      {
+        if(slice == first_slice)
+          slice->setInputGate(slice->inputGate() + e);
+        slice->setOutputGate(slice->outputGate() + e);
+        slice = slice->nextSlice();
+      }
+
+      flagFutureDataUpdate();
     }
 
     // Operators
@@ -593,13 +604,26 @@ namespace tubex
       DomainException::check(*this, x);
 
       TubeSlice *slice = getFirstSlice();
+      TubeSlice *first_slice = slice;
+
+      // Setting envelopes before gates' update
       while(slice != NULL)
       {
-        *slice |= x;
+        slice->setEnvelope(slice->codomain() | x[slice->domain()]);
         slice = slice->nextSlice();
       }
 
-      flagFutureTreeUpdate();
+      slice = first_slice;
+
+      while(slice != NULL)
+      {
+        if(slice == first_slice)
+          slice->setInputGate(slice->inputGate() | x[slice->domain().lb()]);
+        slice->setOutputGate(slice->outputGate() | x[slice->domain().ub()]);
+        slice = slice->nextSlice();
+      }
+
+      flagFutureDataUpdate();
     }
 
     TubeTree& TubeTree::operator|=(const TubeTree& x)
@@ -608,15 +632,30 @@ namespace tubex
       StructureException::check(*this, x);
 
       TubeSlice *slice = getFirstSlice();
+      TubeSlice *first_slice = slice;
       TubeSlice *x_slice = x.getFirstSlice();
+
+      // Setting envelopes before gates' update
       while(slice != NULL)
       {
-        *slice |= *x_slice;
+        slice->setEnvelope(slice->codomain() | x_slice->codomain());
         slice = slice->nextSlice();
         x_slice = x_slice->nextSlice();
       }
 
-      flagFutureTreeUpdate();
+      slice = first_slice;
+      x_slice = x.getFirstSlice();
+
+      while(slice != NULL)
+      {
+        if(slice == first_slice)
+          slice->setInputGate(slice->inputGate() | x_slice->inputGate());
+        slice->setOutputGate(slice->outputGate() | x_slice->outputGate());
+        slice = slice->nextSlice();
+        x_slice = x_slice->nextSlice();
+      }
+
+      flagFutureDataUpdate();
     }
 
     TubeTree& TubeTree::operator&=(const Trajectory& x)
@@ -624,13 +663,26 @@ namespace tubex
       DomainException::check(*this, x);
 
       TubeSlice *slice = getFirstSlice();
+      TubeSlice *first_slice = slice;
+
+      // Setting envelopes before gates' update
       while(slice != NULL)
       {
-        *slice &= x;
+        slice->setEnvelope(slice->codomain() & x[slice->domain()]);
         slice = slice->nextSlice();
       }
 
-      flagFutureTreeUpdate();
+      slice = first_slice;
+
+      while(slice != NULL)
+      {
+        if(slice == first_slice)
+          slice->setInputGate(slice->inputGate() & x[slice->domain().lb()]);
+        slice->setOutputGate(slice->outputGate() & x[slice->domain().ub()]);
+        slice = slice->nextSlice();
+      }
+
+      flagFutureDataUpdate();
     }
 
     TubeTree& TubeTree::operator&=(const TubeTree& x)
@@ -639,15 +691,30 @@ namespace tubex
       StructureException::check(*this, x);
 
       TubeSlice *slice = getFirstSlice();
+      TubeSlice *first_slice = slice;
       TubeSlice *x_slice = x.getFirstSlice();
+
+      // Setting envelopes before gates' update
       while(slice != NULL)
       {
-        *slice &= *x_slice;
+        slice->setEnvelope(slice->codomain() & x_slice->codomain());
         slice = slice->nextSlice();
         x_slice = x_slice->nextSlice();
       }
-      
-      flagFutureTreeUpdate();
+
+      slice = first_slice;
+      x_slice = x.getFirstSlice();
+
+      while(slice != NULL)
+      {
+        if(slice == first_slice)
+          slice->setInputGate(slice->inputGate() & x_slice->inputGate());
+        slice->setOutputGate(slice->outputGate() & x_slice->outputGate());
+        slice = slice->nextSlice();
+        x_slice = x_slice->nextSlice();
+      }
+
+      flagFutureDataUpdate();
     }
 
     // Integration
@@ -660,20 +727,18 @@ namespace tubex
 
     // Slices/tree structure
 
-    void TubeTree::checkDataTree() const
+    void TubeTree::checkData() const
     {
-      if(!treeUpdateNeeded())
+      if(!m_data_update_needed)
         return;
 
-      if(!m_first_tubenode->isSlice())
-        ((TubeTree*)m_first_tubenode)->checkDataTree();
-
+      m_first_tubenode->checkData();
       m_codomain = m_first_tubenode->codomain();
       m_volume = m_first_tubenode->volume();
 
       if(m_second_tubenode != NULL)
       {
-        if(!m_second_tubenode->isSlice()) ((TubeTree*)m_second_tubenode)->checkDataTree();
+        m_second_tubenode->checkData();
         m_codomain |= m_second_tubenode->codomain();
         m_volume += m_second_tubenode->volume();
       }
@@ -688,17 +753,17 @@ namespace tubex
         m_enclosed_bounds.second |= ui_future.second;
       }
 
-      m_tree_update_needed = false;
+      m_data_update_needed = false;
     }
 
-    void TubeTree::flagFutureTreeUpdate(int slice_id) const
+    void TubeTree::flagFutureDataUpdate(int slice_id) const
     {
-      m_tree_update_needed = true;
+      m_data_update_needed = true;
 
       if(slice_id == -1)
       {
-        if(!m_first_tubenode->isSlice()) ((TubeTree*)m_first_tubenode)->flagFutureTreeUpdate(-1);
-        if(m_second_tubenode != NULL && !m_second_tubenode->isSlice()) ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(-1);
+        m_first_tubenode->flagFutureDataUpdate(-1);
+        if(m_second_tubenode != NULL) m_second_tubenode->flagFutureDataUpdate(-1);
       }
 
       else
@@ -706,29 +771,14 @@ namespace tubex
         DomainException::check(*this, slice_id);
         int mid_id = m_first_tubenode->nbSlices();
 
-        if(slice_id < mid_id && !m_first_tubenode->isSlice())
-          ((TubeTree*)m_first_tubenode)->flagFutureTreeUpdate(slice_id);
+        if(slice_id < mid_id)
+          m_first_tubenode->flagFutureDataUpdate(slice_id);
 
-        else if(!m_second_tubenode->isSlice())
-          ((TubeTree*)m_second_tubenode)->flagFutureTreeUpdate(slice_id - mid_id);
+        else
+          m_second_tubenode->flagFutureDataUpdate(slice_id - mid_id);
       }
 
       flagFuturePrimitiveUpdate(slice_id);
-    }
-    
-    bool TubeTree::treeUpdateNeeded() const
-    {
-      return m_tree_update_needed;
-    }
-
-    void TubeTree::deleteGates()
-    {
-      TubeSlice *slice = getFirstSlice();
-      while(slice != NULL)
-      {
-        slice->deleteGates();
-        slice = slice->nextSlice();
-      }
     }
     
     // Access values

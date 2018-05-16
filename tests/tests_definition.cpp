@@ -147,7 +147,7 @@ TEST_CASE("Tube definition")
     Tube tube2(traj2, 0., 0.1);
     CHECK(tube2[0.] == tube0[0.]);
     CHECK(tube2[1.1] == tube0[1.1]);
-    // todo: CHECK(tube2 == tube0);
+    CHECK(tube2 == tube0);
     CHECK(tube1.isSubset(tube2));
     CHECK(tube1.isStrictSubset(tube2));
   }

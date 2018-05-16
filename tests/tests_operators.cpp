@@ -8,7 +8,7 @@ using namespace tubex;
 
 TEST_CASE("Operators")
 {
-  /*SECTION("Test tube1|tube2")
+  SECTION("Test tube1|tube2")
   {
     Tube tube1 = tubeTest1();
     tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
@@ -76,15 +76,17 @@ TEST_CASE("Operators")
     CHECK(tube1[0.] == Interval::EMPTY_SET);
     CHECK(tube1[0] == Interval::EMPTY_SET);
 
-    tube1.set(Interval(0.,2.), 40.);
-    tube2.set(Interval(1.), 40.);
+    CHECK(tube1[39.999] == Interval(-1.));
+    CHECK(tube1[40.001] == Interval(-1.));
+    tube1.set(Interval(-2.,0.), 40.);
+    CHECK(tube1[40.] == Interval(-1.));
+    tube2.set(Interval(-1.2), 40.);
     tube1 &= tube2;
-    CHECK(tube1[40.] == Interval(1.));
-    CHECK(tube1[40] == Interval(-1.));
+    CHECK(tube1[40.] == Interval::EMPTY_SET);
   }
 
   SECTION("Test tube1&traj2")
   {
     // todo
-  }*/
+  }
 }

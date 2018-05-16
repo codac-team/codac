@@ -48,8 +48,8 @@ namespace tubex
       m_codomain = x.m_codomain;
       m_slices_number = x.m_slices_number;
       m_volume = x.m_volume;
-      m_enclosed_bounds = x.m_enclosed_bounds;
       m_partial_primitive = x.m_partial_primitive;
+      m_data_update_needed = x.m_data_update_needed;
       m_primitive_update_needed = x.m_primitive_update_needed;
       return *this;
     }
