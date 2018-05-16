@@ -81,6 +81,23 @@ TEST_CASE("CtcDeriv")
     CHECK(x.codomain().is_empty());
   }
 
+  SECTION("Test slice, empty case (bis)")
+  {
+    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    x.setInputGate(Interval(-1.,2.));
+    x.setOutputGate(Interval::EMPTY_SET);
+
+    TubeSlice v(x.domain(), Interval(-1.,1.));
+
+    CtcDeriv ctc;
+    bool contraction = ctc.contract(x,v);
+
+    CHECK(contraction);
+    CHECK(x.inputGate().is_empty());
+    CHECK(x.outputGate().is_empty());
+    CHECK(x.codomain().is_empty());
+  }
+
   SECTION("Test fwd")
   {
     Tube tube(Interval(0., 6.), 1.0);
@@ -172,3 +189,105 @@ TEST_CASE("CtcDeriv")
     CHECK(tube[4] == Interval(3.5,4.25));
   }
 }
+
+/*TEST_CASE("CtcDeriv (interpol)")
+{
+  SECTION("From: Test slice, envelope contraction")
+  {
+    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    x.setInputGate(Interval(-1.,2.));
+    x.setOutputGate(Interval(-2.,0.));
+    TubeSlice v(x.domain(), Interval(-1.,1.));
+    
+    bool contraction;
+    Interval y;
+    CtcDeriv ctc;
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(0.5,2.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-3.5,2.5));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(-1.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-1.,2.));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(-0.5,0.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-2.,3.));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(1.5), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-3.5,1.5));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(2.5), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-2.5,0.5));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(3.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-2.,0.));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(-1.,3.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-1.,3.));
+
+    y = Interval::ALL_REALS;
+    CHECK_THROWS(contraction = ctc.contract(x, v, Interval(-10.,3.), y));
+  }
+
+  SECTION("From: Test slice, output gate contraction")
+  {
+    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    x.setInputGate(Interval(-1.,3.));
+    x.setOutputGate(Interval(-5.,0.5));
+    TubeSlice v(x.domain(), Interval(-1.));
+
+    bool contraction;
+    Interval y;
+    CtcDeriv ctc;
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(2.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-4.,0.));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(-1.,3.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-5.,3.));
+  }
+
+  SECTION("From: Test slice, complete contraction (degenerate tube)")
+  {
+    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    x.setInputGate(Interval(1.,3.));
+    x.setOutputGate(Interval(-4.,-3.));
+    TubeSlice v(x.domain(), Interval(-1.,1.));
+
+    bool contraction;
+    Interval y;
+    CtcDeriv ctc;
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(0.5,2.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-2.,-0.5));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(1.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-1.));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, Interval(-1.,3.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(-3.,1.));
+  }
+}*/

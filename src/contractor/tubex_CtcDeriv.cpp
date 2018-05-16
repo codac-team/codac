@@ -86,8 +86,6 @@ namespace tubex
     Interval t = x.domain(), y = x.codomain();
     Interval in_gate = x.inputGate(), out_gate = x.outputGate();
 
-    // todo : check empty cases
-
     // 1. Propagations from gate to gate
 
     Interval in_gate_proj = in_gate + x.domain().diam() * v.codomain();
