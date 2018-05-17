@@ -81,6 +81,24 @@ TEST_CASE("CtcDeriv")
     CHECK(x.codomain().is_empty());
   }
 
+  SECTION("Test slice, all reals case")
+  {
+    TubeSlice x(Interval(-1.,3.));
+    TubeSlice v(x.domain());
+
+    CHECK(x.inputGate() == Interval::ALL_REALS);
+    CHECK(x.outputGate() == Interval::ALL_REALS);
+    CHECK(x.codomain() == Interval::ALL_REALS);
+
+    CtcDeriv ctc;
+    bool contraction = ctc.contract(x,v);
+
+    CHECK(!contraction);
+    CHECK(x.inputGate() == Interval::ALL_REALS);
+    CHECK(x.outputGate() == Interval::ALL_REALS);
+    CHECK(x.codomain() == Interval::ALL_REALS);
+  }
+
   SECTION("Test slice, empty case (bis)")
   {
     TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
@@ -190,7 +208,7 @@ TEST_CASE("CtcDeriv")
   }
 }
 
-/*TEST_CASE("CtcDeriv (interpol)")
+TEST_CASE("CtcDeriv (interpol)")
 {
   SECTION("From: Test slice, envelope contraction")
   {
@@ -236,7 +254,7 @@ TEST_CASE("CtcDeriv")
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(-1.,3.), y);
     CHECK(contraction);
-    CHECK(y == Interval(-1.,3.));
+    CHECK(y == Interval(-3.5,3.));
 
     y = Interval::ALL_REALS;
     CHECK_THROWS(contraction = ctc.contract(x, v, Interval(-10.,3.), y));
@@ -290,4 +308,4 @@ TEST_CASE("CtcDeriv")
     CHECK(contraction);
     CHECK(y == Interval(-3.,1.));
   }
-}*/
+}

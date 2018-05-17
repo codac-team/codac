@@ -28,16 +28,22 @@ namespace tubex
     public:
 
       CtcDeriv();
+
+      // Tube
       bool contract(Tube& x, const Tube& v);
       bool contractFwd(Tube& x, const Tube& v);
       bool contractBwd(Tube& x, const Tube& v);
+      bool contract(const Tube& x, const Tube& v, const ibex::Interval& t, ibex::Interval& y);
 
+      // Tube slice
       bool contract(TubeSlice& x, const TubeSlice& v);
       bool contract(const TubeSlice& x, const TubeSlice& v, double t, ibex::Interval& y);
       bool contract(const TubeSlice& x, const TubeSlice& v, const ibex::Interval& t, ibex::Interval& y);
 
     protected:
 
+      bool contractGates(TubeSlice& x, const TubeSlice& v);
+      bool contractEnvelope(const TubeSlice& x, const TubeSlice& v, const ibex::Interval& t, ibex::Interval& y);
   };
 }
 
