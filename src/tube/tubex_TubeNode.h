@@ -20,6 +20,7 @@
 namespace tubex
 {
   class TubeSlice;
+  class TubeTree;
   class Tube;
 
   class TubeNode
@@ -52,6 +53,7 @@ namespace tubex
       const ibex::Interval& sliceDomain(int slice_id) const;
       const ibex::Interval& sliceDomain(double t) const;
       virtual void getTubeNodes(std::vector<const TubeNode*> &v_nodes) const = 0;
+      TubeTree* tubeReference() const;
 
       // Access values
       virtual const ibex::Interval& codomain() const = 0;
@@ -85,6 +87,7 @@ namespace tubex
     /** Base: **/
 
       // Definition
+      void setTubeReference(TubeTree *tube);
 
       // Access values
       virtual void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const = 0;
@@ -95,7 +98,7 @@ namespace tubex
 
       // Setting values
       virtual void checkData() const = 0;
-      virtual void flagFutureDataUpdate(int slice_id = -1) const = 0;
+      virtual void flagFutureDataUpdateFromRoot(int slice_id = -1) const = 0;
 
       // Operators
 
@@ -106,7 +109,7 @@ namespace tubex
       virtual void checkPartialPrimitive() const = 0;
       virtual const std::pair<ibex::Interval,ibex::Interval>& getPartialPrimitiveValue() const = 0;
       virtual std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t) const = 0;
-      virtual void flagFuturePrimitiveUpdate(int slice_id = -1) const = 0;
+      virtual void flagFuturePrimitiveUpdateFromRoot(int slice_id = -1) const = 0;
       
     /** Class variables **/
 
@@ -120,6 +123,8 @@ namespace tubex
       mutable std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
       mutable bool m_primitive_update_needed = true;
       mutable bool m_data_update_needed = true;
+
+      TubeTree *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
       friend class TubeTree;
       friend void deserializeTube(std::ifstream& bin_file, Tube& tube);

@@ -105,6 +105,11 @@ namespace tubex
       return getSlice(t)->domain();
     }
     
+    TubeTree* TubeNode::tubeReference() const
+    {
+      return m_tube_ref;
+    }
+    
     // Access values
 
     Interval TubeNode::interpol(double t, const TubeNode& derivative) const
@@ -181,6 +186,11 @@ namespace tubex
   // Protected methods
 
     // Definition
+
+    void TubeNode::setTubeReference(TubeTree *tube_ref)
+    {
+      m_tube_ref = tube_ref;
+    }
 
     /*TubeNode::TubeNode()
     {

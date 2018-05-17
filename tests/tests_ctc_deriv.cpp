@@ -138,6 +138,7 @@ TEST_CASE("CtcDeriv")
     CHECK(tube_test_fwd[3] == Interval(-2.5,4.));
     CHECK(tube_test_fwd[4] == Interval(-3.,5.));
     CHECK(tube_test_fwd[5] == Interval(-3.5,6.));
+    CHECK(tube_test_fwd.codomain() == Interval(-3.5,6.));
   }
 
   SECTION("Test bwd")
@@ -162,6 +163,7 @@ TEST_CASE("CtcDeriv")
     CHECK(tube_test_bwd[3] == Interval(-2.,3.));
     CHECK(tube_test_bwd[4] == Interval(-1.5,2.));
     CHECK(tube_test_bwd[5] == Interval(-1.,1.));
+    CHECK(tube_test_bwd.codomain() == Interval(-3.5,6.));
   }
 
   SECTION("Test fwd/bwd")
@@ -181,6 +183,7 @@ TEST_CASE("CtcDeriv")
     CHECK(ApproxIntv(tube[3]) == Interval(-2.,2.333333));
     CHECK(tube[4] == Interval(-1.5,2.));
     CHECK(tube[5] == Interval(-1.,1.));
+    CHECK(ApproxIntv(tube.codomain()) == Interval(-2.333333,2.333333));
   }
 
   SECTION("Test fwd/bwd (example from tubint paper)")
@@ -205,6 +208,7 @@ TEST_CASE("CtcDeriv")
     CHECK(tube[2] == Interval(3.,4.));
     CHECK(tube[3] == Interval(3.5,4.));
     CHECK(tube[4] == Interval(3.5,4.25));
+    CHECK(tube.codomain() == Interval(0.,4.25));
   }
 }
 
@@ -304,8 +308,53 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(y == Interval(-1.));
 
     y = Interval::ALL_REALS;
+    contraction = ctc.contract(x, v, 1., y);
+    CHECK(contraction);
+    CHECK(y == Interval(-1.));
+
+    y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(-1.,3.), y);
     CHECK(contraction);
     CHECK(y == Interval(-3.,1.));
+  }
+
+  SECTION("Interpolation over a tube (example from tubint paper)")
+  {
+    Tube tube(Interval(0., 5.), 1.0);
+    Tube tubedot(tube);
+
+    tube.set(Interval(0.), 0.);
+    tube.set(Interval(4.), 5.);
+
+    tubedot.set(Interval(1.,2.), 0);
+    tubedot.set(Interval(0.5,1.5), 1);
+    tubedot.set(Interval(0.,0.5), 2);
+    tubedot.set(Interval(0.), 3);
+    tubedot.set(Interval(-0.5,0.5), 4);
+
+    Interval y;
+    bool contraction;
+    CtcDeriv ctc;
+
+    // tube evaluation before tube contraction
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(tube, tubedot, Interval(0.,5.), y);
+    CHECK(!contraction);
+    CHECK(tube.codomain() == Interval::ALL_REALS);
+    CHECK(y == Interval::ALL_REALS);
+
+    ctc.contract(tube, tubedot); // contraction of the tube
+    CHECK(tube.codomain() == Interval(0.,4.25));
+    CHECK(tube[0] == Interval(0.,2.));
+    CHECK(tube[1] == Interval(1.5,3.5));
+    CHECK(tube[2] == Interval(3.,4.));
+    CHECK(tube[3] == Interval(3.5,4.));
+    CHECK(tube[4] == Interval(3.5,4.25));
+
+    // tube evaluation after tube contraction
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(tube, tubedot, Interval(0.,5.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(0.,4.25));
   }
 }

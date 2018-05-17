@@ -76,8 +76,13 @@ TEST_CASE("Tube definition")
     CHECK(tube_d.nbSlices() == tube_c.nbSlices());
 
     Tube tube_e(tube_c, Interval(1.,2.));
+    CHECK(tube_e.tubeReference() == &tube_e);
     CHECK(tube_e.codomain() == Interval(1.,2.));
     CHECK(tube_e.nbSlices() == tube_c.nbSlices());
+    CHECK(tube_e.getSlice(0)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.getSlice(1)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.getSlice(2)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.getSlice(3)->codomain() == Interval(1.,2.));
 
     CHECK_THROWS(Tube tube_f(Interval(0.,12.), -1.););
 

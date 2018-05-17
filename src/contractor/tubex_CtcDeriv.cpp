@@ -27,6 +27,8 @@ namespace tubex
 
   bool CtcDeriv::contract(TubeSlice& x, const TubeSlice& v)
   {
+    StructureException::check(x, v);
+
     bool ctc = false;
     const Interval t = x.domain();
     Interval y;
@@ -38,14 +40,10 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, double t, Interval& y)
-  {
-    // todo: optimized function for double t
-    return contract(x, v, Interval(t), y);
-  }
-
   bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)
   {
+    StructureException::check(x, v);
+
     bool ctc = false;
     TubeSlice x_temp = x;
 
@@ -66,17 +64,22 @@ namespace tubex
 
   bool CtcDeriv::contractFwd(Tube& x, const Tube& v) // temporal forward
   {
-    StructureException::check(x, v);
-
     bool ctc = false;
     TubeSlice *x_slice = x.getFirstSlice();
     TubeSlice *v_slice = v.getFirstSlice();
 
+    int i = 0;
     while(x_slice != NULL)
     {
-      ctc |= contract(*x_slice, *v_slice);
+      if(contract(*x_slice, *v_slice))
+      {
+        //x.flagFutureDataUpdate(i);
+        ctc = true;
+      }
+
       x_slice = x_slice->nextSlice();
       v_slice = v_slice->nextSlice();
+      i++;
     }
 
     return ctc;
@@ -84,17 +87,22 @@ namespace tubex
 
   bool CtcDeriv::contractBwd(Tube& x, const Tube& v) // temporal backward
   {
-    StructureException::check(x, v);
-
     bool ctc = false;
     TubeSlice *x_slice = x.getLastSlice();
     TubeSlice *v_slice = v.getLastSlice();
     
+    int i = x.nbSlices() - 1;
     while(x_slice != NULL)
     {
-      ctc |= contract(*x_slice, *v_slice);
+      if(contract(*x_slice, *v_slice))
+      {
+        //x.flagFutureDataUpdate(i);
+        ctc = true;
+      }
+
       x_slice = x_slice->prevSlice();
       v_slice = v_slice->prevSlice();
+      i--;
     }
 
     return ctc;
@@ -102,7 +110,32 @@ namespace tubex
 
   bool CtcDeriv::contract(const Tube& x, const Tube& v, const Interval& t, Interval& y)
   {
-    // todo
+    DomainException::check(x, t);
+
+    TubeSlice *x_slice = (TubeSlice*)x.getSlice(t.lb());
+    TubeSlice *v_slice = (TubeSlice*)v.getSlice(t.lb());
+
+    Interval envelope = Interval::EMPTY_SET;
+    
+    while(x_slice != NULL && x_slice->domain().intersects(t))
+    {
+      if(x_slice->domain().is_subset(t))
+        envelope |= x_slice->codomain();
+
+      else
+      {
+        Interval y_slice;
+        contract(*x_slice, *v_slice, t & x_slice->domain(), y_slice);
+        envelope |= y_slice;
+      }
+
+      x_slice = x_slice->nextSlice();
+      v_slice = v_slice->nextSlice();
+    }
+
+    bool ctc = envelope.is_strict_subset(y);
+    y &= envelope;
+    return ctc;
   }
 
   bool CtcDeriv::contractGates(TubeSlice& x, const TubeSlice& v)
@@ -220,7 +253,7 @@ namespace tubex
     }
 
     envelope &= x.codomain();
-    bool ctc = (envelope != y);
+    bool ctc = envelope.is_strict_subset(y);
     y &= envelope;
     return ctc;
   }

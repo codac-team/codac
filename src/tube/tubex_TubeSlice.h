@@ -88,6 +88,8 @@ namespace tubex
 
     /** Base: **/
 
+      // Slices structure
+
       // Access values
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
       void updateEnclosedBounds();
@@ -98,11 +100,13 @@ namespace tubex
 
       // Setting values
       void checkData() const;
-      void flagFutureDataUpdate(int slice_id = -1) const;
+      void flagFutureDataUpdateFromRoot(int slice_id = -1) const;
+      void flagFutureDataUpdateFromLeaf() const;
 
       // Integration
       void checkPartialPrimitive() const;
-      void flagFuturePrimitiveUpdate(int slice_id = -1) const;
+      void flagFuturePrimitiveUpdateFromRoot(int slice_id = -1) const;
+      void flagFuturePrimitiveUpdateFromLeaf() const;
       const std::pair<ibex::Interval,ibex::Interval>& getPartialPrimitiveValue() const;
       std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t) const;
       
