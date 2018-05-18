@@ -45,6 +45,20 @@ namespace tubex
       //std::pair<Tube,Tube> bisect(const Tube& derivative, float ratio = 0.55) const;
       //std::pair<Tube,Tube> bisect(double t, const Tube& derivative, float ratio = 0.55) const;
 
+      // Operators
+      Tube& operator+=(const Trajectory& x);
+      Tube& operator+=(const Tube& x);
+      Tube& operator-=(const Trajectory& x);
+      Tube& operator-=(const Tube& x);
+      Tube& operator*=(const Trajectory& x);
+      Tube& operator*=(const Tube& x);
+      Tube& operator/=(const Trajectory& x);
+      Tube& operator/=(const Tube& x);
+      Tube& operator|=(const Trajectory& x);
+      Tube& operator|=(const Tube& x);
+      Tube& operator&=(const Trajectory& x);
+      Tube& operator&=(const Tube& x);
+
       // String
       friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 

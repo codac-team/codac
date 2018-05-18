@@ -74,10 +74,18 @@ namespace tubex
       TubeNode& inflate(double rad);
 
       // Operators
-      TubeSlice& operator|=(const TubeSlice& x);
+      TubeSlice& operator+=(const Trajectory& x);
+      TubeSlice& operator+=(const TubeSlice& x);
+      TubeSlice& operator-=(const Trajectory& x);
+      TubeSlice& operator-=(const TubeSlice& x);
+      TubeSlice& operator*=(const Trajectory& x);
+      TubeSlice& operator*=(const TubeSlice& x);
+      TubeSlice& operator/=(const Trajectory& x);
+      TubeSlice& operator/=(const TubeSlice& x);
       TubeSlice& operator|=(const Trajectory& x);
-      TubeSlice& operator&=(const TubeSlice& x);
+      TubeSlice& operator|=(const TubeSlice& x);
       TubeSlice& operator&=(const Trajectory& x);
+      TubeSlice& operator&=(const TubeSlice& x);
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);

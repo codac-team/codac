@@ -163,6 +163,7 @@ TEST_CASE("CtcDeriv")
     CHECK(tube_test_bwd[3] == Interval(-2.,3.));
     CHECK(tube_test_bwd[4] == Interval(-1.5,2.));
     CHECK(tube_test_bwd[5] == Interval(-1.,1.));
+    CHECK(tube_test_fwdbwd.codomain() == Interval(-3.5,6.));
     CHECK(tube_test_bwd.codomain() == Interval(-3.5,6.));
   }
 

@@ -73,12 +73,6 @@ namespace tubex
       void setGate(double t, const ibex::Interval& gate);
       TubeTree& inflate(double rad);
 
-      // Operators
-      TubeTree& operator|=(const Trajectory& x);
-      TubeTree& operator|=(const TubeTree& x);
-      TubeTree& operator&=(const Trajectory& x);
-      TubeTree& operator&=(const TubeTree& x);
-
     /** Integration: **/
 
     protected:

@@ -61,6 +61,7 @@ namespace tubex
       TubeNode::operator=(x);
       *m_input_gate = *x.m_input_gate;
       *m_output_gate = *x.m_output_gate;
+      flagFutureDataUpdateFromLeaf();
       return *this;
     }
 
@@ -209,7 +210,7 @@ namespace tubex
       ctc.contract(*this, derivative, t, y);
       return y;
     }
-    
+
     Interval TubeSlice::invert(const Interval& y, const Interval& search_domain) const
     {
       if(!m_domain.intersects(search_domain) || !m_codomain.intersects(y))
@@ -343,40 +344,6 @@ namespace tubex
       setEnvelope(m_codomain + e);
       setInputGate(*m_input_gate + e);
       setOutputGate(*m_output_gate + e);
-    }
-    
-    // Operators
-    
-    TubeSlice& TubeSlice::operator|=(const Trajectory& x)
-    {
-      DomainException::check(*this, x);
-      setEnvelope(m_codomain | x[m_domain]);
-      setInputGate(inputGate() | x[m_domain.lb()]);
-      setOutputGate(outputGate() | x[m_domain.ub()]);
-    }
-    
-    TubeSlice& TubeSlice::operator|=(const TubeSlice& x)
-    {
-      DomainException::check(*this, x);
-      setEnvelope(m_codomain | x.codomain());
-      setInputGate(inputGate() | x.inputGate());
-      setOutputGate(outputGate() | x.outputGate());
-    }
-    
-    TubeSlice& TubeSlice::operator&=(const Trajectory& x)
-    {
-      DomainException::check(*this, x);
-      setEnvelope(m_codomain & x[m_domain]);
-      setInputGate(inputGate() & x[m_domain.lb()]);
-      setOutputGate(outputGate() & x[m_domain.ub()]);
-    }
-    
-    TubeSlice& TubeSlice::operator&=(const TubeSlice& x)
-    {
-      DomainException::check(*this, x);
-      setEnvelope(m_codomain & x.codomain());
-      setInputGate(inputGate() & x.inputGate());
-      setOutputGate(outputGate() & x.outputGate());
     }
     
     // String
