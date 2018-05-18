@@ -68,18 +68,11 @@ namespace tubex
     TubeSlice *x_slice = x.getFirstSlice();
     TubeSlice *v_slice = v.getFirstSlice();
 
-    int i = 0;
     while(x_slice != NULL)
     {
-      if(contract(*x_slice, *v_slice))
-      {
-        //x.flagFutureDataUpdate(i);
-        ctc = true;
-      }
-
+      ctc |= contract(*x_slice, *v_slice);
       x_slice = x_slice->nextSlice();
       v_slice = v_slice->nextSlice();
-      i++;
     }
 
     return ctc;
@@ -91,18 +84,11 @@ namespace tubex
     TubeSlice *x_slice = x.getLastSlice();
     TubeSlice *v_slice = v.getLastSlice();
     
-    int i = x.nbSlices() - 1;
     while(x_slice != NULL)
     {
-      if(contract(*x_slice, *v_slice))
-      {
-        //x.flagFutureDataUpdate(i);
-        ctc = true;
-      }
-
+      ctc |= contract(*x_slice, *v_slice);
       x_slice = x_slice->prevSlice();
       v_slice = v_slice->prevSlice();
-      i--;
     }
 
     return ctc;
@@ -133,9 +119,9 @@ namespace tubex
       v_slice = v_slice->nextSlice();
     }
 
-    bool ctc = envelope.is_strict_subset(y);
+    Interval prev_y = y;
     y &= envelope;
-    return ctc;
+    return prev_y != y;
   }
 
   bool CtcDeriv::contractGates(TubeSlice& x, const TubeSlice& v)
@@ -252,9 +238,9 @@ namespace tubex
           envelope |= yilb(t, x, v);
     }
 
+    Interval prev_y = y;
     envelope &= x.codomain();
-    bool ctc = envelope.is_strict_subset(y);
     y &= envelope;
-    return ctc;
+    return prev_y != y;
   }
 }

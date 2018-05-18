@@ -459,9 +459,13 @@ namespace tubex
       {
         m_data_update_needed = true;
         m_primitive_update_needed = true;
-        int slice_id = m_tube_ref->input2index(m_domain.mid());
-        m_tube_ref->flagFuturePrimitiveUpdateFromRoot(slice_id);
-        m_tube_ref->flagFutureDataUpdateFromRoot(slice_id);
+
+        if(m_tube_ref != NULL)
+        {
+          int slice_id = m_tube_ref->input2index(m_domain.mid());
+          m_tube_ref->flagFuturePrimitiveUpdateFromRoot(slice_id);
+          m_tube_ref->flagFutureDataUpdateFromRoot(slice_id);
+        }
       }
     }
 
@@ -485,8 +489,12 @@ namespace tubex
       if(!m_primitive_update_needed)
       {
         m_primitive_update_needed = true;
-        int slice_id = m_tube_ref->input2index(m_domain.mid());
-        m_tube_ref->flagFuturePrimitiveUpdateFromRoot(slice_id);
+
+        if(m_tube_ref != NULL)
+        {
+          int slice_id = m_tube_ref->input2index(m_domain.mid());
+          m_tube_ref->flagFuturePrimitiveUpdateFromRoot(slice_id);
+        }
       }
     }
 

@@ -302,17 +302,22 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(contraction);
     CHECK(y == Interval(-2.,-0.5));
 
-    y = Interval::ALL_REALS;
+    y = Interval(-1.,300.);
     contraction = ctc.contract(x, v, Interval(1.), y);
     CHECK(contraction);
     CHECK(y == Interval(-1.));
+
+    y = Interval(1.,300.);
+    contraction = ctc.contract(x, v, Interval(1.), y);
+    CHECK(contraction);
+    CHECK(y == Interval::EMPTY_SET);
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, 1., y);
     CHECK(contraction);
     CHECK(y == Interval(-1.));
 
-    y = Interval::ALL_REALS;
+    y = Interval(-20.,1.);
     contraction = ctc.contract(x, v, Interval(-1.,3.), y);
     CHECK(contraction);
     CHECK(y == Interval(-3.,1.));
@@ -356,5 +361,44 @@ TEST_CASE("CtcDeriv (interpol)")
     contraction = ctc.contract(tube, tubedot, Interval(0.,5.), y);
     CHECK(contraction);
     CHECK(y == Interval(0.,4.25));
+    contraction = ctc.contract(tube, tubedot, Interval(0.,5.), y);
+    CHECK_FALSE(contraction);
+    CHECK(y == Interval(0.,4.25));
+
+    y = Interval(3.,10.);
+    contraction = ctc.contract(tube, tubedot, Interval(1.,3.), y);
+    CHECK(contraction);
+    CHECK(y == Interval(3.,4.));
+
+    y = Interval::EMPTY_SET;
+    contraction = ctc.contract(tube, tubedot, Interval(1.,3.), y);
+    CHECK_FALSE(contraction);
+    CHECK(y == Interval::EMPTY_SET);
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(tube, tubedot, Interval(2.2,2.7), y);
+    CHECK(contraction);
+    CHECK(y == Interval(3.1,3.85));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(tube, tubedot, Interval(4.5), y);
+    CHECK(contraction);
+    CHECK(y == Interval(3.75,4.25));
+
+    y = Interval::ALL_REALS;
+    contraction = ctc.contract(tube, tubedot, Interval(4.1,4.9), y);
+    CHECK(contraction);
+    CHECK(y == Interval(3.55,4.25));
+
+    y = Interval(0.5,1.5);
+    contraction = ctc.contract(tube, tubedot, Interval(0.25,0.75), y);
+    CHECK_FALSE(contraction);
+    CHECK(y == Interval(0.5,1.5));
+
+    y = Interval::ALL_REALS;
+    CHECK_THROWS(ctc.contract(tube, tubedot, Interval(-10.,10.), y));
+    contraction = ctc.contract(tube, tubedot, tube.domain(), y);
+    CHECK(contraction);
+    CHECK(y == tube.codomain());
   }
 }
