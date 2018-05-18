@@ -342,7 +342,7 @@ TEST_CASE("CtcDeriv (interpol)")
     bool contraction;
     CtcDeriv ctc;
 
-    // tube evaluation before tube contraction
+    // Tube evaluation before tube contraction
     y = Interval::ALL_REALS;
     contraction = ctc.contract(tube, tubedot, Interval(0.,5.), y);
     CHECK(!contraction);
@@ -357,7 +357,7 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(tube[3] == Interval(3.5,4.));
     CHECK(tube[4] == Interval(3.5,4.25));
 
-    // tube evaluation after tube contraction
+    // Tube evaluation after tube contraction
     y = Interval::ALL_REALS;
     contraction = ctc.contract(tube, tubedot, Interval(0.,5.), y);
     CHECK(contraction);

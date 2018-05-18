@@ -226,8 +226,9 @@ TEST_CASE("Testing enclosed bounds (tube evaluations)")
   SECTION("Test tube4")
   {
     Tube tube4 = tubeTest4();
-    // todo: Tube tube4_primitive = tube4.primitive();
-    // todo: CHECK(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));
+    tube4.set(Interval(-1,1), Interval(10,11));
+    Tube tube4_primitive = tube4.primitive();
+    CHECK(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));
   }
 }
 

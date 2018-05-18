@@ -218,16 +218,6 @@ namespace tubex
     // Setting values
 
     // Operators
-
-    /*void TubeNode::unionWith_localUpdate(const TubeNode *x)
-    {
-
-    }
-    
-    void TubeNode::intersectWith_localUpdate(const TubeNode *x)
-    {
-
-    }*/
     
     // String
 
