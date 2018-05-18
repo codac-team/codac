@@ -116,6 +116,21 @@ namespace tubex
       return primitive;
     }
     
+    // Access values
+
+    const Interval Tube::interpol(double t, const Tube& derivative) const
+    {
+      return interpol(Interval(t), derivative);
+    }
+
+    const Interval Tube::interpol(const Interval& t, const Tube& derivative) const
+    {
+      Interval y;
+      CtcDeriv ctc;
+      ctc.contract(*this, derivative, t, y);
+      return y;
+    }
+
     // Bisection
 
 

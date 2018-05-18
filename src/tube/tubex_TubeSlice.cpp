@@ -14,6 +14,7 @@
 #include "tubex_DomainException.h"
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
+#include "tubex_CtcDeriv.h"
 
 using namespace std;
 using namespace ibex;
@@ -191,30 +192,24 @@ namespace tubex
 
     const Interval TubeSlice::interpol(double t, const TubeSlice& derivative) const
     {
-      DomainException::check(*this, derivative);
-      EmptyException::check(derivative);
+      return interpol(Interval(t), derivative);
 
-      return (outputGate() - (m_domain.ub() - t) * derivative.codomain())
-           & (inputGate() + (t - m_domain.lb()) * derivative.codomain());
+      #if false // old implementation (faster?)
+        DomainException::check(*this, derivative);
+        EmptyException::check(derivative);
+        return (outputGate() - (m_domain.ub() - t) * derivative.codomain())
+             & (inputGate() + (t - m_domain.lb()) * derivative.codomain());
+      #endif
     }
 
     const Interval TubeSlice::interpol(const Interval& t, const TubeSlice& derivative) const
     {
-      DomainException::check(*this, derivative);
-      EmptyException::check(derivative);
-
-      // todo
+      Interval y;
+      CtcDeriv ctc;
+      ctc.contract(*this, derivative, t, y);
+      return y;
     }
-/*
-    Interval TubeSlice::interpol(double t, const TubeSlice& derivative) const
-    {
-      DomainException::check(*this, t);
-      StructureException::check(*this, derivative);
-      EmptyException::check(derivative);
-      Interval deriv_value = derivative.codomain();
-      return Interval::EMPTY_SET; // todo: gates in computations
-    }
-    */
+    
     Interval TubeSlice::invert(const Interval& y, const Interval& search_domain) const
     {
       if(!m_domain.intersects(search_domain) || !m_codomain.intersects(y))

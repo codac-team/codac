@@ -15,6 +15,7 @@
 #include "tubex_DomainException.h"
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
+#include "tubex_CtcDeriv.h"
 
 using namespace std;
 using namespace ibex;
@@ -354,20 +355,6 @@ namespace tubex
           return (*m_first_tubenode)[m_first_tubenode->domain() & t]
                | (*m_second_tubenode)[m_second_tubenode->domain() & t];
       }
-    }
-
-    const Interval TubeTree::interpol(double t, const TubeTree& derivative) const
-    {
-      return getSlice(t)->interpol(t, *derivative.getSlice(t));
-    }
-
-    const Interval TubeTree::interpol(const Interval& t, const TubeTree& derivative) const
-    {
-      DomainException::check(*this, t);
-      DomainException::check(*this, derivative);
-      EmptyException::check(derivative);
-
-      // todo
     }
     
     Interval TubeTree::invert(const Interval& y, const Interval& search_domain) const

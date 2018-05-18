@@ -37,6 +37,10 @@ namespace tubex
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
       Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
 
+      // Access values
+      const ibex::Interval interpol(double t, const Tube& derivative) const;
+      const ibex::Interval interpol(const ibex::Interval& t, const Tube& derivative) const;
+
       // Bisection
       //std::pair<Tube,Tube> bisect(const Tube& derivative, float ratio = 0.55) const;
       //std::pair<Tube,Tube> bisect(double t, const Tube& derivative, float ratio = 0.55) const;
