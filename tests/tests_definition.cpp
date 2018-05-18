@@ -112,6 +112,17 @@ TEST_CASE("Tube definition")
       CHECK(tube2[i] == tube3[i]);
   }
 
+  SECTION("Tube class - Function (thick slices)")
+  {
+    Tube tube(Interval(-1.,1.), 0.667, Function("t", "t^2"));
+    CHECK(tube.nbSlices() == 3);
+    CHECK(tube[0] == Interval(pow(-1. + 0.667, 2), 1.));
+    CHECK(tube[-1.] == Interval(1.));
+    CHECK(tube[1.] == Interval(1.));
+    CHECK(tube[-0.9] == tube[0]);
+    CHECK(ApproxIntv(tube[1]) == Interval(0., pow(tube.getSlice(1)->domain().ub(), 2)));
+  }
+
   SECTION("Tube class - 2 Trajectory")
   {
     Trajectory traj_lb(Interval(-1.,10.), Function("t", "t^2"));

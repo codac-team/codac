@@ -58,11 +58,25 @@ namespace tubex
     
     Tube::Tube(const Interval& domain, double timestep, const Function& function) : Tube(domain, timestep)
     {
-      TubeSlice *slice = getFirstSlice();
+      TubeSlice *slice, *first_slice = getFirstSlice();
+
+      // Setting envelopes
+      slice = first_slice;
       while(slice != NULL)
       {
         IntervalVector iv_domain(1, slice->domain());
-        slice->set(function.eval(iv_domain));
+        slice->setEnvelope(function.eval(iv_domain));
+        slice = slice->nextSlice();
+      }
+
+      // Setting gates
+      slice = first_slice;
+      while(slice != NULL)
+      {
+        IntervalVector iv_domain_input(1, slice->domain().lb());
+        slice->setInputGate(function.eval(iv_domain_input));
+        IntervalVector iv_domain_output(1, slice->domain().ub());
+        slice->setOutputGate(function.eval(iv_domain_output));
         slice = slice->nextSlice();
       }
     }
