@@ -17,8 +17,7 @@
 #include <exception>
 #include <string>
 #include <sstream>
-#include "tubex_TubeNode.h"
-#include "tubex_TubeTree.h"
+#include "tubex_TubeComponent.h"
 #include "tubex_Exception.h"
 
 namespace tubex
@@ -33,8 +32,8 @@ namespace tubex
   {
     public:
 
-      StructureException(const TubeNode& x1, const TubeNode& x2);
-      static void check(const TubeNode& x1, const TubeNode& x2);
+      StructureException(const TubeComponent& x1, const TubeComponent& x2);
+      static void check(const TubeComponent& x1, const TubeComponent& x2);
   };
 }
 

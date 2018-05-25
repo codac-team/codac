@@ -25,14 +25,14 @@ namespace tubex
 
     // Definition
 
-    TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain) : TubeNode(domain, codomain)
+    TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain) : TubeComponent(domain, codomain)
     {
       m_input_gate = new Interval();
       m_output_gate = new Interval();
       set(codomain);
     }
 
-    TubeSlice::TubeSlice(const TubeSlice& x) : TubeNode(x)
+    TubeSlice::TubeSlice(const TubeSlice& x) : TubeComponent(x)
     {
       m_input_gate = new Interval();
       m_output_gate = new Interval();
@@ -58,7 +58,7 @@ namespace tubex
 
     TubeSlice& TubeSlice::operator=(const TubeSlice& x)
     {
-      TubeNode::operator=(x);
+      TubeComponent::operator=(x);
       *m_input_gate = *x.m_input_gate;
       *m_output_gate = *x.m_output_gate;
       flagFutureDataUpdateFromLeaf();
@@ -105,9 +105,9 @@ namespace tubex
       return 0;
     }
     
-    void TubeSlice::getTubeNodes(vector<const TubeNode*> &v_nodes) const
+    void TubeSlice::getTubeComponents(vector<const TubeComponent*> &v_nodes) const
     {
-      v_nodes.push_back(static_cast<const TubeNode*>(this));
+      v_nodes.push_back(static_cast<const TubeComponent*>(this));
     }
 
     TubeSlice* TubeSlice::prevSlice() const
@@ -337,7 +337,7 @@ namespace tubex
       flagFutureDataUpdateFromLeaf();
     }
     
-    TubeNode& TubeSlice::inflate(double rad)
+    TubeComponent& TubeSlice::inflate(double rad)
     {
       // todo: simplify with simple addition
       Interval e(-rad,rad);
@@ -374,14 +374,14 @@ namespace tubex
 
     bool TubeSlice::isEqual(const TubeSlice& x) const
     {
-      return TubeNode::isEqual(x) && 
+      return TubeComponent::isEqual(x) && 
              inputGate() == x.inputGate() &&
              outputGate() == x.outputGate();
     }
     
     bool TubeSlice::isDifferent(const TubeSlice& x) const
     {
-      return TubeNode::isDifferent(x) ||
+      return TubeComponent::isDifferent(x) ||
              inputGate() != x.inputGate() ||
              outputGate() != x.outputGate();
     }

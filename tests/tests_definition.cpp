@@ -26,22 +26,22 @@ TEST_CASE("Tube definition")
     CHECK_THROWS(TubeSlice(Interval::EMPTY_SET));
   }
 
-  SECTION("TubeTree class")
+  SECTION("TubeNode class")
   {
-    TubeTree tubetree(Interval(0.,1.), Interval(-1.,1.));
+    TubeNode tubetree(Interval(0.,1.), Interval(-1.,1.));
     CHECK(tubetree.domain() == Interval(0.,1.));
     CHECK(tubetree.codomain() == Interval(-1.,1.));
 
-    TubeTree tubetree_copy1 = tubetree;
+    TubeNode tubetree_copy1 = tubetree;
     CHECK(tubetree_copy1.domain() == Interval(0.,1.));
     CHECK(tubetree_copy1.codomain() == Interval(-1.,1.));
 
-    TubeTree tubetree_copy2(tubetree);
+    TubeNode tubetree_copy2(tubetree);
     CHECK(tubetree_copy2.domain() == Interval(0.,1.));
     CHECK(tubetree_copy2.codomain() == Interval(-1.,1.));
 
-    CHECK_THROWS(TubeTree(Interval::ALL_REALS));
-    CHECK_THROWS(TubeTree(Interval::EMPTY_SET));
+    CHECK_THROWS(TubeNode(Interval::ALL_REALS));
+    CHECK_THROWS(TubeNode(Interval::EMPTY_SET));
   }
 
   SECTION("Tube class")
@@ -49,14 +49,14 @@ TEST_CASE("Tube definition")
     Tube tube_a(Interval(0.,12.), 1.);
     CHECK(tube_a.nbSlices() == 12);
     CHECK(tube_a.domain() == Interval(0.,12.));
-    CHECK(tube_a.getFirstTubeNode()->domain() == Interval(0.,6.));
-    CHECK(tube_a.getFirstTubeNode()->nbSlices() == 6);
-    CHECK(tube_a.getSecondTubeNode()->domain() == Interval(6.,12.));
-    CHECK(tube_a.getSecondTubeNode()->nbSlices() == 6);
-    CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getFirstTubeNode()->domain() == Interval(0.,3.));
-    CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getFirstTubeNode()->nbSlices() == 3);
-    CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getSecondTubeNode()->domain() == Interval(3.,6.));
-    CHECK(((TubeTree*)tube_a.getFirstTubeNode())->getSecondTubeNode()->nbSlices() == 3);
+    CHECK(tube_a.getFirstTubeComponent()->domain() == Interval(0.,6.));
+    CHECK(tube_a.getFirstTubeComponent()->nbSlices() == 6);
+    CHECK(tube_a.getSecondTubeComponent()->domain() == Interval(6.,12.));
+    CHECK(tube_a.getSecondTubeComponent()->nbSlices() == 6);
+    CHECK(((TubeNode*)tube_a.getFirstTubeComponent())->getFirstTubeComponent()->domain() == Interval(0.,3.));
+    CHECK(((TubeNode*)tube_a.getFirstTubeComponent())->getFirstTubeComponent()->nbSlices() == 3);
+    CHECK(((TubeNode*)tube_a.getFirstTubeComponent())->getSecondTubeComponent()->domain() == Interval(3.,6.));
+    CHECK(((TubeNode*)tube_a.getFirstTubeComponent())->getSecondTubeComponent()->nbSlices() == 3);
 
     Tube tube_b(Interval(0.,12.), 0.5, Interval(-3.,-2.));
     CHECK(tube_b.nbSlices() == 24);

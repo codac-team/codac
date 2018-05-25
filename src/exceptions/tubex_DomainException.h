@@ -17,7 +17,7 @@
 #include <exception>
 #include <string>
 #include <sstream>
-#include "tubex_TubeNode.h"
+#include "tubex_TubeComponent.h"
 #include "tubex_Exception.h"
 
 namespace tubex
@@ -31,23 +31,23 @@ namespace tubex
   {
     public:
 
-      DomainException(const TubeNode& x, int slice_index);
-      DomainException(const TubeNode& x, double t);
+      DomainException(const TubeComponent& x, int slice_index);
+      DomainException(const TubeComponent& x, double t);
       DomainException(const Trajectory& x, double t);
-      DomainException(const TubeNode& x, const ibex::Interval& t);
+      DomainException(const TubeComponent& x, const ibex::Interval& t);
       DomainException(const Trajectory& x, const ibex::Interval& t);
-      DomainException(const TubeNode& x1, const TubeNode& x2);
+      DomainException(const TubeComponent& x1, const TubeComponent& x2);
       DomainException(const Trajectory& x1, const Trajectory& x2);
-      DomainException(const TubeNode& x1, const Trajectory& x2);
+      DomainException(const TubeComponent& x1, const Trajectory& x2);
         
-      static void check(const TubeNode& x, int slice_index);
-      static void check(const TubeNode& x, double t);
+      static void check(const TubeComponent& x, int slice_index);
+      static void check(const TubeComponent& x, double t);
       static void check(const Trajectory& x, double t);
-      static void check(const TubeNode& x, const ibex::Interval& t);
+      static void check(const TubeComponent& x, const ibex::Interval& t);
       static void check(const Trajectory& x, const ibex::Interval& t);
-      static void check(const TubeNode& x1, const TubeNode& x2);
+      static void check(const TubeComponent& x1, const TubeComponent& x2);
       static void check(const Trajectory& x1, const Trajectory& x2);
-      static void check(const TubeNode& x1, const Trajectory& x2);
+      static void check(const TubeComponent& x1, const Trajectory& x2);
   };
 }
 

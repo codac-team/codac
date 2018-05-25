@@ -26,12 +26,12 @@ namespace tubex
 
     // Definition
 
-    Tube::Tube(const Interval& domain, const Interval& codomain) : TubeTree(domain, codomain)
+    Tube::Tube(const Interval& domain, const Interval& codomain) : TubeNode(domain, codomain)
     {
 
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const Interval& codomain) : TubeTree(domain, codomain)
+    Tube::Tube(const Interval& domain, double timestep, const Interval& codomain) : TubeNode(domain, codomain)
     {
       if(timestep < 0.)
         throw Exception("Tube constructor", "invalid timestep");
@@ -81,7 +81,7 @@ namespace tubex
       }
     }
 
-    Tube::Tube(const Tube& x, const Interval& codomain) : TubeTree(x, codomain)
+    Tube::Tube(const Tube& x, const Interval& codomain) : TubeNode(x, codomain)
     {
 
     }
@@ -98,13 +98,13 @@ namespace tubex
       *this |= ub;
     }
 
-    Tube::Tube(const string& binary_file_name) : TubeTree(Interval(0.))
+    Tube::Tube(const string& binary_file_name) : TubeNode(Interval(0.))
     {
       vector<Trajectory> v_trajs;
       deserialize(binary_file_name, v_trajs);
     }
     
-    Tube::Tube(const string& binary_file_name, Trajectory& traj) : TubeTree(Interval(0.))
+    Tube::Tube(const string& binary_file_name, Trajectory& traj) : TubeNode(Interval(0.))
     {
       vector<Trajectory> v_trajs;
       deserialize(binary_file_name, v_trajs);
@@ -115,7 +115,7 @@ namespace tubex
       traj = v_trajs[0];
     }
 
-    Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs) : TubeTree(Interval(0.))
+    Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs) : TubeNode(Interval(0.))
     {
       deserialize(binary_file_name, v_trajs);
       if(v_trajs.size() == 0)
@@ -354,7 +354,7 @@ namespace tubex
           slice = slice->nextSlice();
         }
 
-        TubeTree::checkPartialPrimitive(); // updating nodes from leafs information
+        TubeNode::checkPartialPrimitive(); // updating nodes from leafs information
       }
     }
 

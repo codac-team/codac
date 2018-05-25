@@ -13,11 +13,11 @@
 #ifndef TubeSlice_HEADER
 #define TubeSlice_HEADER
 
-#include "tubex_TubeNode.h"
+#include "tubex_TubeComponent.h"
 
 namespace tubex
 {
-  class TubeSlice : public TubeNode
+  class TubeSlice : public TubeComponent
   {
     public:
 
@@ -37,7 +37,7 @@ namespace tubex
       const TubeSlice* getSlice(double t) const;
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
-      void getTubeNodes(std::vector<const TubeNode*> &v_nodes) const;
+      void getTubeComponents(std::vector<const TubeComponent*> &v_nodes) const;
       TubeSlice* prevSlice() const;
       TubeSlice* nextSlice() const;
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
@@ -71,7 +71,7 @@ namespace tubex
       void setEnvelope(const ibex::Interval& envelope);
       void setInputGate(const ibex::Interval& input_gate);
       void setOutputGate(const ibex::Interval& output_gate);
-      TubeNode& inflate(double rad);
+      TubeComponent& inflate(double rad);
 
       // Operators
       TubeSlice& operator+=(const Trajectory& x);
@@ -124,8 +124,8 @@ namespace tubex
       ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
 
       friend class Tube;
-      friend class TubeTree;
       friend class TubeNode;
+      friend class TubeComponent;
       friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number);
   };
 }

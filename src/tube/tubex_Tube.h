@@ -13,13 +13,13 @@
 #ifndef Tube_HEADER
 #define Tube_HEADER
 
-#include "tubex_TubeTree.h"
+#include "tubex_TubeNode.h"
 
 #define SERIALIZATION_VERSION 2
 
 namespace tubex
 {
-  class Tube : public TubeTree
+  class Tube : public TubeNode
   {
     public:
 

@@ -12,7 +12,7 @@
 
 #include "tubex_StructureException.h"
 #include "tubex_DomainException.h"
-#include "tubex_TubeNode.h"
+#include "tubex_TubeComponent.h"
 #include "tubex_TubeSlice.h"
 #include <string>
 #include <sstream>
@@ -22,20 +22,20 @@ using namespace ibex;
 
 namespace tubex
 {
-  StructureException::StructureException(const TubeNode& x1, const TubeNode& x2)
+  StructureException::StructureException(const TubeComponent& x1, const TubeComponent& x2)
   {
     ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
 
     if(x1.nbSlices() != x2.nbSlices())
-      os << endl << "TubeNodes of different slices number: " 
+      os << endl << "TubeComponents of different slices number: " 
          << "n1=" << x1.nbSlices() << " and n2=" << x2.nbSlices();
 
     os << endl;
     m_what_msg = os.str();
   }
 
-  void StructureException::check(const TubeNode& x1, const TubeNode& x2)
+  void StructureException::check(const TubeComponent& x1, const TubeComponent& x2)
   {
     DomainException::check(x1, x2);
     if(x1.nbSlices() != x2.nbSlices())
