@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcDelay.h"
+#include "tubex_TubeSlice.h"
 
 using namespace std;
 using namespace ibex;
@@ -24,8 +25,65 @@ namespace tubex
 
   bool CtcDelay::contract(Interval& a, Tube& x, Tube& y)
   {
-    /* TO APPEAR SOON */
-    
-    return false;
+    int i = 0;
+    double volume;
+
+    do
+    {
+      // todo: gates
+      volume = x.volume() + y.volume() + a.diam(); // todo: optimized version of this?
+
+      TubeSlice *x_slice = x.getFirstSlice();
+      while(x_slice != NULL)
+      {
+        Interval inv = y.invert(x_slice->codomain()) & x.domain();
+
+        if(inv.lb() == x.domain().lb() || inv.ub() == x.domain().ub())
+          continue;
+
+        a &= inv - x_slice->domain();
+        x_slice = x_slice->nextSlice();
+      }
+
+      TubeSlice *y_slice = y.getFirstSlice();
+      while(y_slice != NULL)
+      {
+        Interval inv = x.invert(y_slice->codomain()) & x.domain();
+        if(inv.lb() == x.domain().lb() || inv.ub() == x.domain().ub())
+          continue;
+
+        a &= y_slice->domain() - inv;
+        y_slice = y_slice->nextSlice();
+      }
+
+      x_slice = x.getFirstSlice();
+      while(x_slice != NULL)
+      {
+        Interval inv = (x_slice->domain() + a) & y.domain();
+        if(inv.is_empty() || inv.lb() == y.domain().lb() || inv.ub() == y.domain().ub())
+          continue;
+        x_slice->set(x_slice->codomain() & y[inv]);
+        x_slice = x_slice->nextSlice();
+      }
+
+      y_slice = y.getFirstSlice();
+      while(y_slice != NULL)
+      {
+        Interval inv = (y_slice->domain() - a) & x.domain();
+        if(inv.is_empty() || inv.lb() == x.domain().lb() || inv.ub() == x.domain().ub())
+          continue;
+        y_slice->set(y_slice->codomain() & x[inv]);
+        y_slice = y_slice->nextSlice();
+      }
+
+      i++;
+      cout << "iteration " << i << " \ta=" << a << endl;
+
+      if(a.is_empty())
+        break;
+
+    } while(volume != x.volume() + y.volume() + a.diam());
+
+    return i != 1;
   }
 }
