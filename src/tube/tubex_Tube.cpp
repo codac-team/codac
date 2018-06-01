@@ -16,6 +16,7 @@
 #include "tubex_TubeSerialization.h"
 #include "tubex_TrajectorySerialization.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_CtcEval.h"
 
 using namespace std;
 using namespace ibex;
@@ -285,6 +286,12 @@ namespace tubex
     {
       CtcDeriv ctc;
       return ctc.contract(*this, derivative);
+    }
+
+    bool Tube::ctcEval(Interval& t, Interval& z, const Tube& derivative, bool propagate)
+    {
+      CtcEval ctc;
+      return ctc.contract(t, z, *this, derivative, propagate);
     }
       
     // Serialization

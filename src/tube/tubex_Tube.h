@@ -75,11 +75,8 @@ namespace tubex
       bool ctcFwd(const Tube& derivative);
       bool ctcBwd(const Tube& derivative);
       bool ctcFwdBwd(const Tube& derivative);
-      /*bool ctcEval(const Tube& derivative, ibex::Interval& t, ibex::Interval& z, bool propagate = true);
-      bool ctcEval(const Tube& derivative, ibex::Interval& t, const ibex::Interval& z, bool propagate = true);
-      bool ctcEval(const Tube& derivative, const ibex::Interval& t, ibex::Interval& z, bool propagate = true);
-      bool ctcEval(const Tube& derivative, const ibex::Interval& t, const ibex::Interval& z, bool propagate = true);
-      bool ctcOut(const ibex::Interval& t, const ibex::Interval& z);
+      bool ctcEval(ibex::Interval& t, ibex::Interval& z, const Tube& derivative, bool propagate = true);
+      /*bool ctcOut(const ibex::Interval& t, const ibex::Interval& z);
       bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2) const;
       bool ctcIntertemporal(ibex::Interval& z, ibex::Interval& t1, ibex::Interval& t2) const;
       bool ctcPeriodic(const ibex::Interval& period);

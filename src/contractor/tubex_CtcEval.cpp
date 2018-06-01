@@ -13,6 +13,7 @@
 #include "tubex_CtcEval.h"
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
+#include "tubex_DomainException.h"
 
 using namespace std;
 using namespace ibex;
@@ -21,17 +22,32 @@ namespace tubex
 {
   CtcEval::CtcEval()
   {
-    m_bisection_required = false;
-    m_y_contracted = false;
-    m_t_contracted = false;
-    m_z_contracted = false;
+
   }
 
-  bool CtcEval::contract(Interval& t, Interval& z, Tube& y, const Tube& w, bool propagation)
+  bool CtcEval::contract(double t, Interval& z, Tube& y, const Tube& w, bool propagate)
   {
     StructureException::check(y, w);
+    DomainException::check(y, t);
+    EmptyException::check(w);
+    return contract_knownTime(t, z, y, w, propagate);
+  }
+
+  bool CtcEval::contract(Interval& t, Interval& z, Tube& y, const Tube& w, bool propagate)
+  {
+    StructureException::check(y, w);
+    DomainException::check(y, t);
     EmptyException::check(w);
     
+    if(t.is_degenerated())
+      return contract(t.lb(), z, y, w, propagate);
+
+    else
+      return contract_timeUncertainty(t, z, y, w, propagate);
+  }
+
+  bool CtcEval::contract_timeUncertainty(Interval& t, Interval& z, Tube& y, const Tube& w, bool propagate)
+  {
     bool inconsistency = false;
     m_bisection_required = false;
 
@@ -61,7 +77,7 @@ namespace tubex
 
           computeIndex(t, z, y, index_lb, index_ub);
 
-          if(!propagation)
+          if(!propagate)
           {
             min_index_ctc = max(0, index_lb - 1);
             max_index_ctc = min(index_ub + 1, y.nbSlices() - 1);
@@ -75,8 +91,8 @@ namespace tubex
             map_new_z[i] = Interval::EMPTY_SET;
 
           Interval old_z = z;
-          z = Interval::EMPTY_SET;
-          t = Interval::EMPTY_SET;
+          z.set_empty();
+          t.set_empty();
 
         // Iteration for each [t] subdomain
         for(int k = 0 ; k < v_intv_t.size() ; k++)
@@ -177,8 +193,6 @@ namespace tubex
 
     if(inconsistency)
     {
-      //cout << "Warning ctcEval(): inconsistency" << endl;
-
       #pragma omp for
       for(int i = min_index_ctc ; i <= max_index_ctc ; i++)
         y.set(Interval::EMPTY_SET, i);
@@ -198,6 +212,11 @@ namespace tubex
     }
     
     return m_z_contracted | m_y_contracted | m_t_contracted;
+  }
+
+  bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y, const Tube& w, bool propagate)
+  {
+
   }
 
   void CtcEval::computeIndex(const Interval& t, const Interval& z, const Tube& y, int& index_lb, int& index_ub)
