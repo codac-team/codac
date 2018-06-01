@@ -135,6 +135,7 @@ namespace tubex
     const Interval Tube::interpol(double t, const Tube& derivative) const
     {
       return interpol(Interval(t), derivative);
+      // todo: check a faster implementation for this degenerate case?
     }
 
     const Interval Tube::interpol(const Interval& t, const Tube& derivative) const

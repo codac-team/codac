@@ -16,6 +16,7 @@
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_TubeSlice.h"
+#include "tubex_CtcDeriv.h"
 
 using namespace std;
 using namespace ibex;
@@ -111,63 +112,6 @@ namespace tubex
     }
     
     // Access values
-
-    Interval TubeComponent::interpol(double t, const TubeComponent& derivative) const
-    {
-      return getSlice(t)->interpol(t, *derivative.getSlice(t));
-    }
-
-    Interval TubeComponent::interpol(const Interval& t, const TubeComponent& derivative) const
-    {
-      pair<Interval,Interval> p_interpol;// = partialInterpol(t, derivative);
-      return p_interpol.first | p_interpol.second;
-    }
-    
-    /*
-    pair<Interval,Interval> TubeComponent::partialInterpol(const Interval& t, const TubeComponent& derivative) const
-    {
-      // todo: change interpol to operator() with derivative as second argument
-      // todo: gates
-      Interval y_tlb = interpol(t.lb(), derivative);
-      Interval y_tub = interpol(t.ub(), derivative);
-
-      // Dealing with infinity...
-      //
-      // In IBEX, the following is defined:
-      //    Interval(NEG_INFINITY) = EMPTY_SET
-      //    Interval(POS_INFINITY) = EMPTY_SET
-      //    Interval(NEG_INFINITY,POS_INFINITY) = EMPTY_SET
-      //
-      // So, we have to detect infinite bounds
-      // and work with dbl_max (max double).
-      //
-      // This is only a temporary solution.
-      // [todo]
-
-        double dbl_max = std::numeric_limits<double>::max();
-
-        Interval lb, ub;
-        lb.set_empty(); ub.set_empty();
-
-        lb |= y_tlb.lb() == NEG_INFINITY ? Interval(-dbl_max) : y_tlb.lb();
-        ub |= y_tlb.ub() == POS_INFINITY ? Interval(dbl_max) : y_tlb.ub();
-
-        lb |= y_tub.lb() == NEG_INFINITY ? Interval(-dbl_max) : y_tub.lb();
-        ub |= y_tub.ub() == POS_INFINITY ? Interval(dbl_max) : y_tub.ub();
-
-        // todo: check the following simplification:
-        // lb &= dbl_max*Interval(-1.,1.);
-        // ub &= dbl_max*Interval(-1.,1.);
-
-      for(int i = min(nbSlices() - 1, input2index(t.lb()) + 1) ; i < max(0, input2index(t.ub()) - 1) ; i++)
-      {
-        pair<Interval,Interval> p_i = eval(sliceDomain(i));
-        lb |= p_i.first;
-        ub |= p_i.second;
-      }
-
-      return make_pair(lb, ub);
-    }*/
     
     // Tests
     

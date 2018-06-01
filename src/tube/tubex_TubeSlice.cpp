@@ -195,7 +195,7 @@ namespace tubex
     {
       return interpol(Interval(t), derivative);
 
-      #if false // old implementation (faster?)
+      #if false // old implementation (faster?) todo:check
         DomainException::check(*this, derivative);
         EmptyException::check(derivative);
         return (outputGate() - (m_domain.ub() - t) * derivative.codomain())
