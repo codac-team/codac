@@ -27,6 +27,7 @@ namespace tubex
     public:
 
       CtcEval();
+      bool contract(double t, ibex::Interval& z, Tube& y);
       bool contract(double t, ibex::Interval& z, Tube& y, const Tube& w, bool propagate = true);
       bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, const Tube& w, bool propagate = true);
 
@@ -41,6 +42,7 @@ namespace tubex
     protected:
 
       bool contract_timeUncertainty(ibex::Interval& t, ibex::Interval& z, Tube& y, const Tube& w, bool propagate);
+      bool contract_knownTime(double t, ibex::Interval& z, Tube& y);
       bool contract_knownTime(double t, ibex::Interval& z, Tube& y, const Tube& w, bool propagate);
       void computeIndex(const ibex::Interval& t, const ibex::Interval& z, const Tube& y, int& index_lb, int& index_ub);
 

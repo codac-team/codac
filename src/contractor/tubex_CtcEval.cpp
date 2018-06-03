@@ -25,6 +25,12 @@ namespace tubex
 
   }
 
+  bool CtcEval::contract(double t, Interval& z, Tube& y)
+  {
+    DomainException::check(y, t);
+    return contract_knownTime(t, z, y);
+  }
+
   bool CtcEval::contract(double t, Interval& z, Tube& y, const Tube& w, bool propagate)
   {
     StructureException::check(y, w);
@@ -214,9 +220,22 @@ namespace tubex
     return m_z_contracted | m_y_contracted | m_t_contracted;
   }
 
+  bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y)
+  {
+    bool contraction = (z != (z & y[t])) && (y[t] != (z & y[t]));
+    y.sample(t);
+    z &= y[t];
+    return contraction;
+  }
+
   bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y, const Tube& w, bool propagate)
   {
+    bool contraction = contract_knownTime(t, z, y);
 
+    if(propagate)
+      contraction |= y.ctcFwdBwd(w); // todo: optimize propagations from evaluation
+
+    return contraction;
   }
 
   void CtcEval::computeIndex(const Interval& t, const Interval& z, const Tube& y, int& index_lb, int& index_ub)
