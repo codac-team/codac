@@ -97,11 +97,11 @@ TEST_CASE("Tube values")
     // Bounded interval domain
     tube.set(Interval(2.,4.), Interval(2.,3.));
     CHECK(tube.nbSlices() == 3);
-    CHECK(tube.sliceDomain(0) == Interval(0.,2.));
+    CHECK(tube.getSlice(0)->domain() == Interval(0.,2.));
     CHECK(tube[0] == Interval(6.,10.));
-    CHECK(tube.sliceDomain(1) == Interval(2.,3.));
+    CHECK(tube.getSlice(1)->domain() == Interval(2.,3.));
     CHECK(tube[1] == Interval(2.,4.));
-    CHECK(tube.sliceDomain(2) == Interval(3.,10.));
+    CHECK(tube.getSlice(2)->domain() == Interval(3.,10.));
     CHECK(tube[2] == Interval(6.,10.));
 
     // Gates, slices intersection
@@ -185,8 +185,8 @@ TEST_CASE("Tube values")
     Tube tube(Interval(0.,10.));
     tube.set(Interval(3.,4.), 2.);
     CHECK(tube.nbSlices() == 2);
-    CHECK(tube.sliceDomain(0) == Interval(0.,2.));
-    CHECK(tube.sliceDomain(1) == Interval(2.,10.));
+    CHECK(tube.getSlice(0)->domain() == Interval(0.,2.));
+    CHECK(tube.getSlice(1)->domain() == Interval(2.,10.));
     CHECK(tube[0] == Interval::ALL_REALS);
     CHECK(tube[1] == Interval::ALL_REALS);
     CHECK(tube[2.] == Interval(3.,4.));

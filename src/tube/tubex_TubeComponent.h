@@ -48,12 +48,8 @@ namespace tubex
       virtual void getSlices(std::vector<const TubeSlice*>& v_slices) const = 0;
       virtual int input2index(double t) const = 0;
       double index2input(int slice_id) const;
-      const ibex::IntervalVector sliceBox(int slice_id) const;
-      const ibex::IntervalVector sliceBox(double t) const;
-      const ibex::Interval& sliceDomain(int slice_id) const;
-      const ibex::Interval& sliceDomain(double t) const;
       virtual void getTubeComponents(std::vector<const TubeComponent*> &v_nodes) const = 0;
-      TubeNode* tubeReference() const;
+      Tube* tubeReference() const;
 
       // Access values
       virtual const ibex::Interval& codomain() const = 0;
@@ -64,6 +60,10 @@ namespace tubex
       virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
 
       // Tests
+      virtual bool operator==(const TubeNode& x) const = 0;
+      virtual bool operator!=(const TubeNode& x) const = 0;
+      virtual bool isSubset(const TubeNode& x) const = 0;
+      virtual bool isStrictSubset(const TubeNode& x) const = 0;
       virtual bool isEmpty() const = 0;
       virtual bool encloses(const Trajectory& x) const = 0;
 
@@ -84,7 +84,7 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      void setTubeReference(TubeNode *tube);
+      void setTubeReference(Tube *tube);
 
       // Access values
       virtual void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const = 0;
@@ -121,9 +121,12 @@ namespace tubex
       mutable bool m_primitive_update_needed = true;
       mutable bool m_data_update_needed = true;
 
-      TubeNode *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
+      Tube *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
       friend class TubeNode;
+      friend class TubeSlice; // todo: remove this? not sure
+      friend class Tube; // todo: remove this? not sure
+      friend class CtcDeriv; // todo: remove this
       friend void deserializeTube(std::ifstream& bin_file, Tube& tube);
   };
 }

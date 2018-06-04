@@ -13,13 +13,14 @@
 #ifndef Tube_HEADER
 #define Tube_HEADER
 
-#include "tubex_TubeNode.h"
+#include "tubex_TubeComponent.h"
+#include "tubex_TubeSlice.h"
 
 #define SERIALIZATION_VERSION 2
 
 namespace tubex
 {
-  class Tube : public TubeNode
+  class Tube
   {
     public:
 
@@ -35,11 +36,54 @@ namespace tubex
       Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      ~Tube();
       Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
+      Tube& operator=(const Tube& x);
+      const ibex::Interval& domain() const;
+
+      // Slices structure
+      int nbSlices() const;
+      TubeSlice* getSlice(int slice_id);
+      const TubeSlice* getSlice(int slice_id) const;
+      TubeSlice* getSlice(double t);
+      const TubeSlice* getSlice(double t) const;
+      TubeSlice* getFirstSlice() const; // todo: check constness of these
+      TubeSlice* getLastSlice() const;
+      void getSlices(std::vector<const TubeSlice*>& v_slices) const;
+      int input2index(double t) const;
+      double index2input(int slice_id) const;
+      void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
+      void sample(const std::vector<double>& v_bounds);
 
       // Access values
+      const ibex::Interval& codomain() const;
+      double volume() const;
+      const ibex::Interval operator[](int slice_id) const;
+      const ibex::Interval operator[](double t) const;
+      const ibex::Interval operator[](const ibex::Interval& t) const;
+      ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       const ibex::Interval interpol(double t, const Tube& derivative) const;
       const ibex::Interval interpol(const ibex::Interval& t, const Tube& derivative) const;
+      double maxThickness();
+      double maxThickness(int& first_id_max_thickness);
+
+      // Tests
+      bool operator==(const Tube& x) const;
+      bool operator!=(const Tube& x) const;
+      bool isSubset(const Tube& x) const;
+      bool isStrictSubset(const Tube& x) const;
+      bool isEmpty() const;
+      bool encloses(const Trajectory& x) const;
+
+      // Setting values
+      void set(const ibex::Interval& y);
+      void set(const ibex::Interval& y, int slice_id);
+      void set(const ibex::Interval& y, double t);
+      void set(const ibex::Interval& y, const ibex::Interval& t);
+      void setEmpty();
+      Tube& inflate(double rad);
 
       // Bisection
       //std::pair<Tube,Tube> bisect(const Tube& derivative, float ratio = 0.55) const;
@@ -96,6 +140,17 @@ namespace tubex
     /** Serialization: **/
 
       void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+
+    /** Class variables **/
+
+      TubeComponent *m_component = NULL;
+
+      friend class CtcDeriv; // todo: remove this
+      friend class CtcEval; // todo: remove this? not sure
+      friend class TubeSlice; // todo: remove this? not sure
+      friend class TubeComponent; // todo: remove this? not sure
+      friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number); // todo: remove this? not sure
+      friend void deserializeTube(std::ifstream& bin_file, Tube& tube); // todo: remove this? not sure
   };
 }
 

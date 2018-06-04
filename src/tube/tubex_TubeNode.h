@@ -24,7 +24,8 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      TubeNode(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      //TubeNode(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      TubeNode(const ibex::Interval& domain, const std::vector<double>& v_bounds, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       TubeNode(const TubeNode& x);
       TubeNode(const TubeNode& x, const ibex::Interval& codomain);
       ~TubeNode();
@@ -34,8 +35,6 @@ namespace tubex
       bool isSlice() const;
       TubeComponent* getFirstTubeComponent() const;
       TubeComponent* getSecondTubeComponent() const;
-      int sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
-      void sample(const std::vector<double>& v_bounds);
       TubeSlice* getSlice(int slice_id);
       TubeSlice* getSlice(double t);
       const TubeSlice* getSlice(int slice_id) const;
@@ -52,8 +51,6 @@ namespace tubex
       const ibex::Interval operator[](const ibex::Interval& t) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      double maxThickness();
-      double maxThickness(int& first_id_max_thickness);
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
       // Tests
@@ -67,10 +64,7 @@ namespace tubex
       // Setting values
       void set(const ibex::Interval& y);
       void set(const ibex::Interval& y, int slice_id);
-      void set(const ibex::Interval& y, double t);
-      void set(const ibex::Interval& y, const ibex::Interval& t);
       void setEmpty();
-      void setGate(double t, const ibex::Interval& gate);
       TubeNode& inflate(double rad);
 
     /** Integration: **/

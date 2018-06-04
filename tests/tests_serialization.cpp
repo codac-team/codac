@@ -59,9 +59,9 @@ TEST_CASE("serialization/deserialization of Tube")
     Trajectory traj1, traj2, traj3;
     for(int i = 0 ; i < tube1.nbSlices() ; i++)
     {
-      traj1.set(tube1.sliceDomain(i).mid(), tube1[i].mid());
-      traj2.set(tube1.sliceDomain(i).mid(), tube1[i].lb());
-      traj3.set(tube1.sliceDomain(i).mid(), tube1[i].ub());
+      traj1.set(tube1.getSlice(i)->domain().mid(), tube1[i].mid());
+      traj2.set(tube1.getSlice(i)->domain().mid(), tube1[i].lb());
+      traj3.set(tube1.getSlice(i)->domain().mid(), tube1[i].ub());
     }
 
     string filename = "test_serialization_traj.tube";

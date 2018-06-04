@@ -103,7 +103,7 @@ namespace tubex
         // Iteration for each [t] subdomain
         for(int k = 0 ; k < v_intv_t.size() ; k++)
         {
-          double dt = y.sliceDomain(k).diam();
+          double dt = y.getSlice(k)->domain().diam();
           bool local_inconsistency = false;
 
           Interval local_t = v_intv_t[k];
@@ -137,7 +137,7 @@ namespace tubex
               for(int i = index_ub ; i >= min_index_ctc ; i--)
               {
                 Interval integ_domain;
-                Interval slice_dom = y.sliceDomain(i);
+                Interval slice_dom = y.getSlice(i)->domain();
                 Interval slice_deriv = w[i];
 
                 // Over the ith slice
@@ -155,7 +155,7 @@ namespace tubex
               for(int i = index_lb ; i <= max_index_ctc ; i++)
               {
                 Interval integ_domain;
-                Interval slice_dom = y.sliceDomain(i);
+                Interval slice_dom = y.getSlice(i)->domain();
                 Interval slice_deriv = w[i];
 
                 // Over the ith slice
@@ -247,7 +247,7 @@ namespace tubex
 
     index_lb = y.input2index(t.lb());
     // Special case when the lower bound of [t] equals a bound of a slice or is near empty values
-    if(y.sliceDomain(index_lb).lb() == t.lb() && y[max(0, index_lb - 1)].intersects(z))
+    if(y.getSlice(index_lb)->domain().lb() == t.lb() && y[max(0, index_lb - 1)].intersects(z))
       index_lb = max(0, index_lb - 1);
 
     index_ub = y.input2index(t.ub());
@@ -274,6 +274,7 @@ namespace tubex
   bool CtcEval::wContracted()
   {
     return false; // w cannot be contracted
+    // todo: contraction in case of degenerate tube (w to [0])
   }
 
   bool CtcEval::tBisectionRequired()

@@ -27,22 +27,18 @@ namespace tubex
 
     // Definition
 
-    Tube::Tube(const Interval& domain, const Interval& codomain) : TubeNode(domain, codomain)
+    Tube::Tube(const Interval& domain, const Interval& codomain)
     {
-
+      m_component = new TubeSlice(domain, codomain);
+      m_component->setTubeReference(this);
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const Interval& codomain) : TubeNode(domain, codomain)
+    Tube::Tube(const Interval& domain, double timestep, const Interval& codomain)
     {
       if(timestep < 0.)
         throw Exception("Tube constructor", "invalid timestep");
 
-      else if(timestep == 0.)
-      {
-        // then the tube is defined as one single slice
-      }
-
-      else if(timestep < domain.diam())
+      else if(timestep > 0. && timestep < domain.diam())
       {
         double lb, ub = domain.lb();
         vector<double> v_bounds; // a vector of slices is created only once
@@ -53,8 +49,16 @@ namespace tubex
           if(ub < domain.ub()) v_bounds.push_back(ub);
         } while(ub < domain.ub());
 
-        sample(v_bounds);
+        m_component = new TubeNode(domain, v_bounds, codomain);
       }
+
+      else // timestep == 0. or timestep >= domain.diam()
+      {
+        // then the tube is defined as one single slice
+        m_component = new TubeSlice(domain, codomain);
+      }
+
+      m_component->setTubeReference(this);
     }
     
     Tube::Tube(const Interval& domain, double timestep, const Function& function) : Tube(domain, timestep)
@@ -82,9 +86,18 @@ namespace tubex
       }
     }
 
-    Tube::Tube(const Tube& x, const Interval& codomain) : TubeNode(x, codomain)
+    Tube::Tube(const Tube& x, const Interval& codomain)
     {
+      if(typeid(x.m_component) == typeid(TubeSlice))
+        m_component = new TubeSlice(x.m_component->domain(), codomain);
 
+      else if(typeid(x.m_component) == typeid(TubeNode))
+        m_component = new TubeNode(*((TubeNode*)x.m_component), codomain);
+
+      else
+        throw Exception("Tube constructor", "invalid component");
+
+      m_component->setTubeReference(this);
     }
 
     Tube::Tube(const Trajectory& traj, double thickness, double timestep) : Tube(traj.domain(), timestep, Interval::EMPTY_SET)
@@ -99,13 +112,13 @@ namespace tubex
       *this |= ub;
     }
 
-    Tube::Tube(const string& binary_file_name) : TubeNode(Interval(0.))
+    Tube::Tube(const string& binary_file_name)
     {
       vector<Trajectory> v_trajs;
       deserialize(binary_file_name, v_trajs);
     }
     
-    Tube::Tube(const string& binary_file_name, Trajectory& traj) : TubeNode(Interval(0.))
+    Tube::Tube(const string& binary_file_name, Trajectory& traj)
     {
       vector<Trajectory> v_trajs;
       deserialize(binary_file_name, v_trajs);
@@ -116,13 +129,20 @@ namespace tubex
       traj = v_trajs[0];
     }
 
-    Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs) : TubeNode(Interval(0.))
+    Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
     {
       deserialize(binary_file_name, v_trajs);
       if(v_trajs.size() == 0)
-        throw Exception("Tube constructor", "unable to deserialize a Trajectory");
+        throw Exception("Tube constructor", "unable to deserialize some Trajectory");
     }
     
+    Tube::~Tube()
+    {
+      if(m_component == NULL)
+        throw Exception("Tube destructor", "uninitialized component");
+      delete m_component;
+    }
+
     Tube Tube::primitive(const Interval& initial_value) const
     {
       Tube primitive(*this, Interval::ALL_REALS);
@@ -130,8 +150,226 @@ namespace tubex
       primitive.ctcFwd(*this);
       return primitive;
     }
-    
+
+    Tube& Tube::operator=(const Tube& x)
+    {
+      *m_component = *(x.m_component);
+    }
+
+    const Interval& Tube::domain() const
+    {
+      return m_component->domain();
+    }
+  
+    // Slices structure
+
+    int Tube::nbSlices() const
+    {
+      return m_component->nbSlices();
+    }
+
+    TubeSlice* Tube::getSlice(int slice_id)
+    {
+      return m_component->getSlice(slice_id);
+    }
+
+    const TubeSlice* Tube::getSlice(int slice_id) const
+    {
+      return m_component->getSlice(slice_id);
+    }
+
+    TubeSlice* Tube::getSlice(double t)
+    {
+      return m_component->getSlice(t);
+    }
+
+    const TubeSlice* Tube::getSlice(double t) const
+    {
+      return m_component->getSlice(t);
+    }
+
+    TubeSlice* Tube::getFirstSlice() const
+    {
+      return m_component->getFirstSlice();
+    }
+
+    TubeSlice* Tube::getLastSlice() const
+    {
+      return m_component->getLastSlice();
+    }
+
+    void Tube::getSlices(vector<const TubeSlice*>& v_slices) const
+    {
+      m_component->getSlices(v_slices);
+    }
+
+    int Tube::input2index(double t) const
+    {
+      return m_component->input2index(t);
+    }
+
+    double Tube::index2input(int slice_id) const
+    {
+      return m_component->index2input(slice_id);
+    }
+
+    void Tube::sample(double t, const Interval& gate)
+    {
+      /* todo 
+      DomainException::check(*this, t);
+      checkData();
+      int new_slices_nb = 1;
+
+      if(m_second_tubenode == NULL)
+      {
+        if(m_first_tubenode->domain().lb() == t || m_first_tubenode->domain().ub() == t)
+          return 0; // no degenerate slice
+
+        TubeSlice slice(*(TubeSlice*)m_first_tubenode);
+        TubeSlice *prev_slice = ((TubeSlice*)m_first_tubenode)->prevSlice();
+        TubeSlice *next_slice = ((TubeSlice*)m_first_tubenode)->nextSlice();
+        delete m_first_tubenode;
+
+        m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), m_codomain);
+        m_first_tubenode->setTubeReference(m_tube_ref);
+        m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), m_codomain);
+        m_second_tubenode->setTubeReference(m_tube_ref);
+
+        TubeSlice::chainSlices(prev_slice, (TubeSlice*)m_first_tubenode);
+        TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode);
+        TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, next_slice);
+
+        if(prev_slice == NULL)
+          ((TubeSlice*)m_first_tubenode)->setInputGate(slice.inputGate());
+
+        if(next_slice == NULL)
+          ((TubeSlice*)m_second_tubenode)->setOutputGate(slice.outputGate());
+
+        ((TubeSlice*)m_first_tubenode)->setOutputGate(gate);
+      }
+
+      else
+      {
+        TubeComponent **slice_ptr = NULL;
+
+        if(m_first_tubenode->domain().contains(t))
+        {
+          if(m_first_tubenode->nbSlices() >= 2)
+            new_slices_nb = ((TubeNode*)m_first_tubenode)->sample(t, gate);
+
+          else
+            slice_ptr = &m_first_tubenode;
+        }
+
+        else
+        {
+          if(m_second_tubenode->nbSlices() >= 2)
+            new_slices_nb = ((TubeNode*)m_second_tubenode)->sample(t, gate);
+
+          else if(m_second_tubenode != NULL)
+            slice_ptr = &m_second_tubenode;
+        }
+
+        if(slice_ptr != NULL)
+        {
+          if((*slice_ptr)->domain().lb() == t || (*slice_ptr)->domain().ub() == t)
+            return 0; // no degenerate slice
+          
+          TubeSlice slice(*(TubeSlice*)(*slice_ptr));
+          TubeSlice *prev_slice = ((TubeSlice*)(*slice_ptr))->prevSlice();
+          TubeSlice *next_slice = ((TubeSlice*)(*slice_ptr))->nextSlice();
+          delete (*slice_ptr);
+
+          *slice_ptr = new TubeNode(slice.domain(), slice.m_codomain);
+          (*slice_ptr)->setTubeReference(m_tube_ref);
+          TubeSlice **first_slice = (TubeSlice**)&((TubeNode*)(*slice_ptr))->m_first_tubenode;
+          TubeSlice **second_slice = (TubeSlice**)&((TubeNode*)(*slice_ptr))->m_second_tubenode;
+
+          *first_slice = new TubeSlice(Interval(slice.domain().lb(), t), slice.m_codomain);
+          (*first_slice)->setTubeReference(m_tube_ref);
+          *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.m_codomain);
+          (*second_slice)->setTubeReference(m_tube_ref);
+
+          TubeSlice::chainSlices(prev_slice, *first_slice);
+          TubeSlice::chainSlices(*first_slice, *second_slice);
+          TubeSlice::chainSlices(*second_slice, next_slice);
+
+          if(prev_slice == NULL)
+            (*first_slice)->setInputGate(slice.inputGate());
+
+          if(next_slice == NULL)
+            (*second_slice)->setOutputGate(slice.outputGate());
+
+          (*first_slice)->setOutputGate(gate);
+          (*slice_ptr)->m_slices_number = 2;
+        }
+      }
+
+      m_slices_number += new_slices_nb;
+      return new_slices_nb;*/
+    }
+
+    void Tube::sample(const vector<double>& v_bounds)
+    {
+      if(v_bounds.empty())
+        return;
+
+      vector<double> v_first_bounds, v_last_bounds;
+
+      int mid = v_bounds.size() / 2;
+      for(int i = 0 ; i < v_bounds.size() ; i++)
+      {
+        if(i < mid) v_first_bounds.push_back(v_bounds[i]);
+        else if(i <= mid) sample(v_bounds[i]);
+        else v_last_bounds.push_back(v_bounds[i]);
+      }
+
+      sample(v_first_bounds);
+      sample(v_last_bounds);
+    }
+
     // Access values
+
+    const Interval& Tube::codomain() const
+    {
+      return m_component->codomain();
+    }
+
+    double Tube::volume() const
+    {
+      return m_component->volume();
+    }
+
+    const Interval Tube::operator[](int slice_id) const
+    {
+      return (*m_component)[slice_id];
+    }
+
+    const Interval Tube::operator[](double t) const
+    {
+      return (*m_component)[t];
+    }
+
+    const Interval Tube::operator[](const Interval& t) const
+    {
+      return (*m_component)[t];
+    }
+
+    Interval Tube::invert(const Interval& y, const Interval& search_domain) const
+    {
+      return m_component->invert(y, search_domain);
+    }
+
+    void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain) const
+    {
+      // todo: case according to Class object
+      //m_component->invert(y, v_t, search_domain);
+    }
+
+    const pair<Interval,Interval> Tube::eval(const Interval& t) const
+    {
+      return m_component->eval(t);
+    }
 
     const Interval Tube::interpol(double t, const Tube& derivative) const
     {
@@ -145,6 +383,127 @@ namespace tubex
       CtcDeriv ctc;
       ctc.contract(*this, derivative, t, y);
       return y;
+    }
+
+    double Tube::maxThickness()
+    {
+      int first_id_max_thickness;
+      return maxThickness(first_id_max_thickness);
+    }
+
+    double Tube::maxThickness(int& first_id_max_thickness)
+    {
+      int i = 0;
+      double max_thickness = 0.;
+
+      TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        if(slice->codomain().diam() > max_thickness)
+        {
+          max_thickness = slice->codomain().diam();
+          first_id_max_thickness = i;
+        }
+
+        slice = slice->nextSlice();
+        i++;
+      }
+
+      return max_thickness;
+    }
+
+    // Tests
+
+    bool Tube::operator==(const Tube& x) const
+    {
+      return *m_component == *(x.m_component);
+    }
+
+    bool Tube::operator!=(const Tube& x) const
+    {
+      return *m_component != *(x.m_component);
+    }
+
+    bool Tube::isSubset(const Tube& x) const
+    {
+      return m_component->isSubset(*(x.m_component));
+    }
+
+    bool Tube::isStrictSubset(const Tube& x) const
+    {
+      return m_component->isStrictSubset(*(x.m_component));
+    }
+
+    bool Tube::isEmpty() const
+    {
+      return m_component->isEmpty();
+    }
+
+    bool Tube::encloses(const Trajectory& x) const
+    {
+      return m_component->encloses(x);
+    }
+
+    // Setting values
+
+    void Tube::set(const Interval& y)
+    {
+      m_component->set(y);
+    }
+
+    void Tube::set(const Interval& y, int slice_id)
+    {
+      m_component->getSlice(slice_id)->set(y);
+    }
+
+    void Tube::set(const Interval& y, double t)
+    {
+      sample(t);
+
+      TubeSlice *slice = getSlice(t);
+
+      if(slice->domain().lb() == t)
+        slice->setInputGate(y);
+
+      else if(slice->domain().ub() == t)
+        slice->setOutputGate(y);
+
+      else
+        throw Exception("Tube::set", "inexistent gate");
+    }
+
+    void Tube::set(const Interval& y, const Interval& t)
+    {
+      if(t.is_degenerated())
+        set(y, t.lb());
+
+      else
+      {
+        sample(t.lb());
+        sample(t.ub());
+
+        int i = input2index(t.lb());
+        TubeSlice *slice = getSlice(i);
+
+        for( ; i <= input2index(t.ub()) && slice != NULL ; i++)
+        {
+          if((t & slice->domain()).is_degenerated())
+            continue;
+          slice->set(y);
+          slice = slice->nextSlice();
+        }
+      }
+    }
+
+    void Tube::setEmpty()
+    {
+      m_component->setEmpty();
+    }
+
+    Tube& Tube::inflate(double rad)
+    {
+      m_component->inflate(rad);
+      return *this;
     }
 
     // Bisection
@@ -190,8 +549,8 @@ namespace tubex
       Interval integral_lb = Interval::EMPTY_SET;
       Interval integral_ub = Interval::EMPTY_SET;
 
-      Interval intv_t_lb = sliceDomain(index_lb);
-      Interval intv_t_ub = sliceDomain(index_ub);
+      Interval intv_t_lb = getSlice(index_lb)->domain();
+      Interval intv_t_ub = getSlice(index_ub)->domain();
 
       // Part A
       {
@@ -224,7 +583,7 @@ namespace tubex
       // Part B
       if(index_ub - index_lb > 1)
       {
-        pair<Interval,Interval> partial_primitive = getPartialPrimitiveValue(Interval(intv_t_lb.ub(), intv_t_ub.lb()));
+        pair<Interval,Interval> partial_primitive = m_component->getPartialPrimitiveValue(Interval(intv_t_lb.ub(), intv_t_ub.lb()));
         integral_lb |= partial_primitive.first;
         integral_ub |= partial_primitive.second;
       }
@@ -345,7 +704,7 @@ namespace tubex
       // Warning: this method can only be called from the root (Tube class)
       // (because computation starts from 0)
 
-      if(m_primitive_update_needed)
+      if(m_component->m_primitive_update_needed)
       {
         Interval sum_max = Interval(0);
 
@@ -362,7 +721,7 @@ namespace tubex
           slice = slice->nextSlice();
         }
 
-        TubeNode::checkPartialPrimitive(); // updating nodes from leafs information
+        m_component->checkPartialPrimitive(); // updating nodes from leafs information
       }
     }
 
@@ -377,13 +736,16 @@ namespace tubex
 
       deserializeTube(bin_file, *this);
 
-      int nb_trajs;
-      bin_file.read((char*)&nb_trajs, sizeof(int));
-      for(int i = 0 ; i < nb_trajs ; i++)
+      if(!bin_file.eof())
       {
-        Trajectory traj;
-        deserializeTrajectory(bin_file, traj);
-        v_trajs.push_back(traj);
+        int nb_trajs;
+        bin_file.read((char*)&nb_trajs, sizeof(int));
+        for(int i = 0 ; i < nb_trajs ; i++)
+        {
+          Trajectory traj;
+          deserializeTrajectory(bin_file, traj);
+          v_trajs.push_back(traj);
+        }
       }
 
       bin_file.close();

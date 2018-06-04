@@ -34,6 +34,9 @@ namespace tubex
 
       StructureException(const TubeComponent& x1, const TubeComponent& x2);
       static void check(const TubeComponent& x1, const TubeComponent& x2);
+
+      StructureException(const Tube& x1, const Tube& x2);
+      static void check(const Tube& x1, const Tube& x2);
   };
 }
 

@@ -32,9 +32,11 @@ namespace tubex
     public:
 
       EmptyException(const TubeComponent& x);
+      EmptyException(const Tube& x);
       // todo: equivalent constructor for Tube class
 
       static void check(const TubeComponent& x);
+      static void check(const Tube& x);
   };
 }
 

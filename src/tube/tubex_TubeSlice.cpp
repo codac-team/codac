@@ -156,6 +156,14 @@ namespace tubex
       return m_codomain;
     }
     
+    const IntervalVector TubeSlice::box() const
+    {
+      IntervalVector box(2);
+      box[0] = domain();
+      box[1] = codomain();
+      return box;
+    }
+    
     double TubeSlice::volume() const
     {
       checkData();
@@ -425,8 +433,8 @@ namespace tubex
         if(m_tube_ref != NULL)
         {
           int slice_id = m_tube_ref->input2index(m_domain.mid());
-          m_tube_ref->flagFuturePrimitiveUpdateFromRoot(slice_id);
-          m_tube_ref->flagFutureDataUpdateFromRoot(slice_id);
+          m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
+          m_tube_ref->m_component->flagFutureDataUpdateFromRoot(slice_id);
         }
       }
     }
@@ -455,7 +463,7 @@ namespace tubex
         if(m_tube_ref != NULL)
         {
           int slice_id = m_tube_ref->input2index(m_domain.mid());
-          m_tube_ref->flagFuturePrimitiveUpdateFromRoot(slice_id);
+          m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
         }
       }
     }

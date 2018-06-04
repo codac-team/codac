@@ -12,6 +12,7 @@
 
 #include "tubex_StructureException.h"
 #include "tubex_DomainException.h"
+#include "tubex_Tube.h"
 #include "tubex_TubeComponent.h"
 #include "tubex_TubeSlice.h"
 #include <string>
@@ -53,4 +54,36 @@ namespace tubex
       slice_x2 = slice_x2->nextSlice();
     }
   }
+
+    StructureException::StructureException(const Tube& x1, const Tube& x2)
+    {
+      ostringstream os;
+      os << "unable to perform an operation over tubes of different structure";
+
+      if(x1.nbSlices() != x2.nbSlices())
+        os << endl << "TubeComponents of different slices number: " 
+           << "n1=" << x1.nbSlices() << " and n2=" << x2.nbSlices();
+
+      os << endl;
+      m_what_msg = os.str();
+    }
+
+    void StructureException::check(const Tube& x1, const Tube& x2)
+    {
+      DomainException::check(x1, x2);
+      if(x1.nbSlices() != x2.nbSlices())
+        throw StructureException(x1, x2);
+
+      TubeSlice *slice_x1 = x1.getFirstSlice();
+      TubeSlice *slice_x2 = x2.getFirstSlice();
+
+      while(slice_x1 != NULL)
+      {
+        if(slice_x1->domain() != slice_x2->domain())
+          throw StructureException(*slice_x1, *slice_x2);
+
+        slice_x1 = slice_x1->nextSlice();
+        slice_x2 = slice_x2->nextSlice();
+      }
+    }
 }

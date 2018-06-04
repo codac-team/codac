@@ -91,7 +91,7 @@ namespace tubex
       v_slice = v_slice->prevSlice();
     }
 
-    x.flagFutureDataUpdateFromRoot(); // todo: remove this
+    x.m_component->flagFutureDataUpdateFromRoot(); // todo: remove this
     return ctc;
   }
 

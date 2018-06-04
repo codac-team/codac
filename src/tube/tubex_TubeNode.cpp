@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_Tube.h"
+#include "tubex_TubeNode.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_DomainException.h"
 #include "tubex_StructureException.h"
@@ -26,23 +26,20 @@ namespace tubex
 
     // Definition
 
-    TubeNode::TubeNode(const Interval& domain, const Interval& codomain) : TubeComponent(domain, codomain)
+    /*TubeNode::TubeNode(const Interval& domain, const Interval& codomain) : TubeComponent(domain, codomain)
     {
       m_first_tubenode = new TubeSlice(domain, codomain);
-      m_tube_ref = this;
       m_first_tubenode->setTubeReference(m_tube_ref);
       m_second_tubenode = NULL;
-    }
+    }*/
 
     TubeNode::TubeNode(const TubeNode& x) : TubeComponent(x)
     {
-      m_tube_ref = this;
       *this = x;
     }
 
     TubeNode::TubeNode(const TubeNode& x, const Interval& codomain) : TubeComponent(x)
     {
-      m_tube_ref = this;
       *this = x;
       set(codomain);
     }
@@ -123,120 +120,6 @@ namespace tubex
     TubeComponent* TubeNode::getSecondTubeComponent() const
     {
       return m_second_tubenode;
-    }
-    
-    int TubeNode::sample(double t, const Interval& gate)
-    {
-      DomainException::check(*this, t);
-      checkData();
-      int new_slices_nb = 1;
-
-      if(m_second_tubenode == NULL)
-      {
-        if(m_first_tubenode->domain().lb() == t || m_first_tubenode->domain().ub() == t)
-          return 0; // no degenerate slice
-
-        TubeSlice slice(*(TubeSlice*)m_first_tubenode);
-        TubeSlice *prev_slice = ((TubeSlice*)m_first_tubenode)->prevSlice();
-        TubeSlice *next_slice = ((TubeSlice*)m_first_tubenode)->nextSlice();
-        delete m_first_tubenode;
-
-        m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), m_codomain);
-        m_first_tubenode->setTubeReference(m_tube_ref);
-        m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), m_codomain);
-        m_second_tubenode->setTubeReference(m_tube_ref);
-
-        TubeSlice::chainSlices(prev_slice, (TubeSlice*)m_first_tubenode);
-        TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode);
-        TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, next_slice);
-
-        if(prev_slice == NULL)
-          ((TubeSlice*)m_first_tubenode)->setInputGate(slice.inputGate());
-
-        if(next_slice == NULL)
-          ((TubeSlice*)m_second_tubenode)->setOutputGate(slice.outputGate());
-
-        ((TubeSlice*)m_first_tubenode)->setOutputGate(gate);
-      }
-
-      else
-      {
-        TubeComponent **slice_ptr = NULL;
-
-        if(m_first_tubenode->domain().contains(t))
-        {
-          if(m_first_tubenode->nbSlices() >= 2)
-            new_slices_nb = ((TubeNode*)m_first_tubenode)->sample(t, gate);
-
-          else
-            slice_ptr = &m_first_tubenode;
-        }
-
-        else
-        {
-          if(m_second_tubenode->nbSlices() >= 2)
-            new_slices_nb = ((TubeNode*)m_second_tubenode)->sample(t, gate);
-
-          else if(m_second_tubenode != NULL)
-            slice_ptr = &m_second_tubenode;
-        }
-
-        if(slice_ptr != NULL)
-        {
-          if((*slice_ptr)->domain().lb() == t || (*slice_ptr)->domain().ub() == t)
-            return 0; // no degenerate slice
-          
-          TubeSlice slice(*(TubeSlice*)(*slice_ptr));
-          TubeSlice *prev_slice = ((TubeSlice*)(*slice_ptr))->prevSlice();
-          TubeSlice *next_slice = ((TubeSlice*)(*slice_ptr))->nextSlice();
-          delete (*slice_ptr);
-
-          *slice_ptr = new TubeNode(slice.domain(), slice.m_codomain);
-          (*slice_ptr)->setTubeReference(m_tube_ref);
-          TubeSlice **first_slice = (TubeSlice**)&((TubeNode*)(*slice_ptr))->m_first_tubenode;
-          TubeSlice **second_slice = (TubeSlice**)&((TubeNode*)(*slice_ptr))->m_second_tubenode;
-
-          *first_slice = new TubeSlice(Interval(slice.domain().lb(), t), slice.m_codomain);
-          (*first_slice)->setTubeReference(m_tube_ref);
-          *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.m_codomain);
-          (*second_slice)->setTubeReference(m_tube_ref);
-
-          TubeSlice::chainSlices(prev_slice, *first_slice);
-          TubeSlice::chainSlices(*first_slice, *second_slice);
-          TubeSlice::chainSlices(*second_slice, next_slice);
-
-          if(prev_slice == NULL)
-            (*first_slice)->setInputGate(slice.inputGate());
-
-          if(next_slice == NULL)
-            (*second_slice)->setOutputGate(slice.outputGate());
-
-          (*first_slice)->setOutputGate(gate);
-          (*slice_ptr)->m_slices_number = 2;
-        }
-      }
-
-      m_slices_number += new_slices_nb;
-      return new_slices_nb;
-    }
-    
-    void TubeNode::sample(const vector<double>& v_bounds)
-    {
-      if(v_bounds.empty())
-        return;
-
-      vector<double> v_first_bounds, v_last_bounds;
-
-      int mid = v_bounds.size() / 2;
-      for(int i = 0 ; i < v_bounds.size() ; i++)
-      {
-        if(i < mid) v_first_bounds.push_back(v_bounds[i]);
-        else if(i <= mid) sample(v_bounds[i]);
-        else v_last_bounds.push_back(v_bounds[i]);
-      }
-
-      sample(v_first_bounds);
-      sample(v_last_bounds);
     }
 
     TubeSlice* TubeNode::getSlice(int slice_id)
@@ -380,33 +263,6 @@ namespace tubex
       return invert(y, v_t, search_domain, true);
     }
 
-    double TubeNode::maxThickness()
-    {
-      int first_id_max_thickness;
-      return maxThickness(first_id_max_thickness);
-    }
-
-    double TubeNode::maxThickness(int& first_id_max_thickness)
-    {
-      int i = 0;
-      double max_thickness = 0.;
-
-      TubeSlice *slice = getFirstSlice();
-      while(slice != NULL)
-      {
-        if(slice->codomain().diam() > max_thickness)
-        {
-          max_thickness = slice->codomain().diam();
-          first_id_max_thickness = i;
-        }
-
-        slice = slice->nextSlice();
-        i++;
-      }
-
-      return max_thickness;
-    }
-
     const pair<Interval,Interval> TubeNode::eval(const Interval& t) const
     {
       Interval intersection = m_domain & t;
@@ -516,54 +372,11 @@ namespace tubex
       getSlice(slice_id)->set(y);
     }
     
-    void TubeNode::set(const Interval& y, double t)
-    {
-      sample(t);
-      setGate(t, y);
-    }
-    
-    void TubeNode::set(const Interval& y, const Interval& t)
-    {
-      if(t.is_degenerated())
-        set(y, t.lb());
-
-      else
-      {
-        sample(t.lb());
-        sample(t.ub());
-
-        int i = input2index(t.lb());
-        TubeSlice *slice = getSlice(i);
-
-        for( ; i <= input2index(t.ub()) && slice != NULL ; i++)
-        {
-          if((t & slice->domain()).is_degenerated())
-            continue;
-          slice->set(y);
-          slice = slice->nextSlice();
-        }
-      }
-    }
-    
     void TubeNode::setEmpty()
     {
       set(Interval::EMPTY_SET);
     }
 
-    void TubeNode::setGate(double t, const Interval& gate)
-    {
-      TubeSlice *slice = getSlice(t);
-
-      if(slice->domain().lb() == t)
-        slice->setInputGate(gate);
-
-      else if(slice->domain().ub() == t)
-        slice->setOutputGate(gate);
-
-      else
-        throw Exception("TubeNode::setGate", "inexistent gate");
-    }
-    
     TubeNode& TubeNode::inflate(double rad)
     {
       Interval e(-rad,rad);

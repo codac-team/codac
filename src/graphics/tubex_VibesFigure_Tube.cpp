@@ -318,7 +318,7 @@ namespace tubex
 
       for(int i = 0 ; i < tube->nbSlices() ; i++)
       {
-        IntervalVector slice_box = tube->sliceBox(i);
+        IntervalVector slice_box = tube->getSlice(i)->box();
         slice_box[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
         v_x.push_back(slice_box[0].lb()); v_x.push_back(slice_box[0].ub());
         v_y.push_back(slice_box[1].ub()); v_y.push_back(slice_box[1].ub());
@@ -326,7 +326,7 @@ namespace tubex
 
       for(int i = tube->nbSlices() - 1 ; i >= 0 ; i--)
       {
-        IntervalVector slice_box = tube->sliceBox(i);
+        IntervalVector slice_box = tube->getSlice(i)->box();
         slice_box[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
         v_x.push_back(slice_box[0].ub()); v_x.push_back(slice_box[0].lb());
         v_y.push_back(slice_box[1].lb()); v_y.push_back(slice_box[1].lb());

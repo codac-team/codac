@@ -13,6 +13,7 @@
 #include "tubex_EmptyException.h"
 #include "tubex_TubeComponent.h"
 #include "tubex_TubeSlice.h"
+#include "tubex_Tube.h"
 #include <string>
 #include <sstream>
 
@@ -57,4 +58,41 @@ namespace tubex
     if(x.isEmpty())
       throw EmptyException(x);
   }
+
+    EmptyException::EmptyException(const Tube& x)
+    {
+      ostringstream os;
+      os << "emptiness over ";
+
+      if(x.codomain().is_empty())
+        os << "the whole domain";
+
+      else
+      {
+        Interval intv_t_emptiness = Interval::EMPTY_SET;
+        TubeSlice *slice = x.getFirstSlice();
+        while(slice != NULL)
+        {
+          if(slice->isEmpty())
+          {
+            if(slice->inputGate().is_empty())
+              intv_t_emptiness |= slice->inputGate();
+            if(slice->codomain().is_empty())
+              intv_t_emptiness |= slice->codomain();
+            if(slice->outputGate().is_empty())
+              intv_t_emptiness |= slice->outputGate();
+          }
+          slice = slice->nextSlice();
+        }
+        os << "[t]=" << intv_t_emptiness << endl;
+      }
+      
+      m_what_msg = os.str();
+    }
+
+    void EmptyException::check(const Tube& x)
+    {
+      if(x.isEmpty())
+        throw EmptyException(x);
+    }
 }

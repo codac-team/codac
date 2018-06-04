@@ -49,6 +49,7 @@ namespace tubex
 
       // Access values
       const ibex::Interval& codomain() const;
+      const ibex::IntervalVector box() const;
       double volume() const;
       const ibex::Interval operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& search_domain) const;

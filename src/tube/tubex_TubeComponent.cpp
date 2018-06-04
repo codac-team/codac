@@ -82,31 +82,7 @@ namespace tubex
       return getSlice(slice_id)->domain().lb(); // by convention
     }
     
-    const IntervalVector TubeComponent::sliceBox(int slice_id) const
-    {
-      IntervalVector box(2);
-      const TubeSlice* slice = getSlice(slice_id);
-      box[0] = slice->domain();
-      box[1] = slice->codomain();
-      return box;
-    }
-    
-    const IntervalVector TubeComponent::sliceBox(double t) const
-    {
-      return sliceBox(input2index(t));
-    }
-    
-    const Interval& TubeComponent::sliceDomain(int slice_id) const
-    {
-      return getSlice(slice_id)->domain();
-    }
-    
-    const Interval& TubeComponent::sliceDomain(double t) const
-    {
-      return getSlice(t)->domain();
-    }
-    
-    TubeNode* TubeComponent::tubeReference() const
+    Tube* TubeComponent::tubeReference() const
     {
       return m_tube_ref;
     }
@@ -131,7 +107,7 @@ namespace tubex
 
     // Definition
 
-    void TubeComponent::setTubeReference(TubeNode *tube_ref)
+    void TubeComponent::setTubeReference(Tube *tube_ref)
     {
       m_tube_ref = tube_ref;
     }

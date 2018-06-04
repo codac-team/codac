@@ -99,8 +99,8 @@ namespace tubex
     if(!bin_file.is_open())
       throw Exception("deserializeTube()", "ifstream& bin_file not open");
 
-    if(tube.nbSlices() != 1)
-      throw Exception("deserializeTube()", "tube already defined");
+    if(tube.m_component != NULL)
+      throw Exception("deserializeTube()", "tube's component already defined");
 
     // Version number for compliance purposes
     char version_number;
@@ -132,11 +132,18 @@ namespace tubex
 
         double domain_ub;
         bin_file.read((char*)&domain_ub, sizeof(double));
+        Interval domain(domain_lb, domain_ub);
 
-        // Creating tube
-        tube.m_domain = Interval(domain_lb, domain_ub);
-        tube.getFirstSlice()->m_domain = Interval(domain_lb, domain_ub);
-        tube.sample(v_domain_bounds);
+        // Creating tube's component
+
+        if(slices_number == 1)
+          tube.m_component = new TubeSlice(domain);
+
+        else if(slices_number > 1)
+          tube.m_component = new TubeNode(domain, v_domain_bounds);
+
+        else
+          throw Exception("deserializeTube()", "wrong slices number");
 
         // Codomains
         for(int i = 0 ; i < slices_number ; i++)
@@ -148,7 +155,7 @@ namespace tubex
 
         // Gates
 
-        int gates_number = tube.nbSlices() + 1;
+        int gates_number = slices_number + 1;
 
         for(int i = 0 ; i < gates_number ; i++)
         {
@@ -157,7 +164,7 @@ namespace tubex
 
           double t;
           if(i < gates_number - 1)
-            t = tube.sliceDomain(i).lb();
+            t = tube.getSlice(i)->domain().lb();
           else
             t = tube.domain().ub();
 
