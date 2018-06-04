@@ -108,6 +108,7 @@ namespace tubex
       setTubeName(tube, name);
       setTubeColor(tube, color_frgrnd, color_bckgrnd);
       setTubeColor(tube, TubeColorType::SLICES, DEFAULT_SLICES_COLOR);
+      setTubeColor(tube, TubeColorType::GATES, DEFAULT_GATES_COLOR);
     }
 
     void VibesFigure_Tube::setTubeName(const Tube *tube, const string& name)
@@ -189,7 +190,7 @@ namespace tubex
     {
       typename map<const Tube*,FigTubeParams>::const_iterator it_tubes;
       for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
-        m_view_box |= drawTube(it_tubes->first);
+        m_view_box |= drawTube(it_tubes->first, detail_slices);
 
       // Trajectories are drawn on top of the tubes
       typename map<const Trajectory*,FigTrajParams>::const_iterator it_trajs;
@@ -279,17 +280,23 @@ namespace tubex
         // Can be either displayed slice by slice or with a polygon envelope.
 
         vibes::Params params_foreground = vibesParams("figure", m_name, "group", group_name);
+        vibes::Params params_foreground_gates = vibesParams("figure", m_name, "group", group_name + "_gates", "FixedScale", true);
         vibes::clearGroup(m_name, group_name);
+        vibes::clearGroup(m_name, group_name + "_gates");
 
         if(detail_slices)
         {
           vibes::newGroup(group_name, m_map_tubes[tube].m_colors[TubeColorType::SLICES], vibesParams("figure", m_name));
+          vibes::newGroup(group_name + "_gates", m_map_tubes[tube].m_colors[TubeColorType::GATES], vibesParams("figure", m_name));
+          
           TubeSlice *slice = tube->getFirstSlice();
+          drawGate(slice->inputGate(), tube->domain().lb(), params_foreground_gates);
+
           while(slice != NULL)
           {
             drawSlice(*slice, params_foreground);
+            drawGate(slice->outputGate(), slice->domain().ub(), params_foreground_gates);
             slice = slice->nextSlice();
-            // todo: drawGate
           }
         }
 
@@ -335,6 +342,25 @@ namespace tubex
       boundedSlice[0] = slice.domain();
       boundedSlice[1] = slice.codomain() & Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
       vibes::drawBox(boundedSlice, params);
+    }
+
+    void VibesFigure_Tube::drawGate(const Interval& gate, double t, const vibes::Params& params) const
+    {
+      if(gate.is_empty())
+        return; // no display
+      
+      if(gate.is_degenerated())
+      {
+        vibes::drawPoint(t, gate.lb(), 1, params);
+      }
+
+      else
+      {
+        IntervalVector gateBox(2);
+        gateBox[0] = t;
+        gateBox[1] = gate & Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
+        vibes::drawBox(gateBox, params);
+      }
     }
     
     const IntervalVector VibesFigure_Tube::drawTrajectory(const Trajectory *traj, float points_size)

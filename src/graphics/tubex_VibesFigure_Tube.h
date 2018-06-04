@@ -28,6 +28,7 @@ namespace tubex
   #define DEFAULT_FRGRND_COLOR      "#a2a2a2[#a2a2a2]"
   #define DEFAULT_BCKGRND_COLOR     "#d2d2d2[#d2d2d2]"
   #define DEFAULT_SLICES_COLOR      "lightGray[#a2a2a2]"
+  #define DEFAULT_GATES_COLOR      "#004668[#004668]"
 
   class VibesFigure_Tube : public VibesFigure
   {
@@ -62,11 +63,12 @@ namespace tubex
       const ibex::IntervalVector drawTube(const Tube *tube, bool detail_slices = false);
       void computePolygonEnvelope(const Tube *tube, std::vector<double>& v_x, std::vector<double>& v_y);
       void drawSlice(const TubeSlice& slice, const vibes::Params& params) const;
+      void drawGate(const ibex::Interval& gate, double t, const vibes::Params& params) const;
       const ibex::IntervalVector drawTrajectory(const Trajectory *traj, float points_size = 0.);
 
     protected:
 
-      enum TubeColorType { FOREGROUND, BACKGROUND, SLICES };
+      enum TubeColorType { FOREGROUND, BACKGROUND, SLICES, GATES };
 
       struct FigTubeParams
       {
