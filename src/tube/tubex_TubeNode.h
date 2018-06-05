@@ -24,7 +24,7 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      TubeNode(const ibex::Interval& first_domain, const ibex::Interval& second_domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      TubeNode(const TubeSlice& slice, double t);
       TubeNode(const TubeNode& x);
       TubeNode(const TubeNode& x, const ibex::Interval& codomain);
       ~TubeNode();
@@ -41,6 +41,7 @@ namespace tubex
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
       void getTubeComponents(std::vector<const TubeComponent*> &v_nodes) const;
+      TubeNode* getParentOf(TubeSlice* slice);
 
       // Access values
       const ibex::Interval& codomain() const;
@@ -73,6 +74,10 @@ namespace tubex
     /** Base: **/
 
       // Definition
+      void setTubeReference(Tube *tube_ref);
+
+      // Slices structure
+      void updateSlicesNumber();
       
       // Slices/tree structure
 

@@ -46,6 +46,7 @@ namespace tubex
       void deleteGates();
       void deleteInputGate();
       void deleteOutputGate();
+      TubeNode* getParentOf(TubeSlice* slice);
 
       // Access values
       const ibex::Interval& codomain() const;
@@ -98,6 +99,7 @@ namespace tubex
     /** Base: **/
 
       // Slices structure
+      void updateSlicesNumber();
 
       // Access values
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;

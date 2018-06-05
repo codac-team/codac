@@ -86,10 +86,10 @@ namespace tubex
 
     Tube::Tube(const Tube& x, const Interval& codomain)
     {
-      if(typeid(x.m_component) == typeid(TubeSlice))
+      if(typeid(*(x.m_component)) == typeid(TubeSlice))
         m_component = new TubeSlice(x.m_component->domain(), codomain);
 
-      else if(typeid(x.m_component) == typeid(TubeNode))
+      else if(typeid(*(x.m_component)) == typeid(TubeNode))
         m_component = new TubeNode(*((TubeNode*)x.m_component), codomain);
 
       else
@@ -213,98 +213,40 @@ namespace tubex
 
     void Tube::sample(double t, const Interval& gate)
     {
-      /* todo 
       DomainException::check(*this, t);
-      checkData();
-      int new_slices_nb = 1;
+      m_component->checkData();
 
-      if(m_second_tubenode == NULL)
+      if(m_component->domain().lb() == t || m_component->domain().ub() == t)
       {
-        if(m_first_tubenode->domain().lb() == t || m_first_tubenode->domain().ub() == t)
-          return 0; // no degenerate slice
-
-        TubeSlice slice(*(TubeSlice*)m_first_tubenode);
-        TubeSlice *prev_slice = ((TubeSlice*)m_first_tubenode)->prevSlice();
-        TubeSlice *next_slice = ((TubeSlice*)m_first_tubenode)->nextSlice();
-        delete m_first_tubenode;
-
-        m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), m_codomain);
-        m_first_tubenode->setTubeReference(m_tube_ref);
-        m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), m_codomain);
-        m_second_tubenode->setTubeReference(m_tube_ref);
-
-        TubeSlice::chainSlices(prev_slice, (TubeSlice*)m_first_tubenode);
-        TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode);
-        TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, next_slice);
-
-        if(prev_slice == NULL)
-          ((TubeSlice*)m_first_tubenode)->setInputGate(slice.inputGate());
-
-        if(next_slice == NULL)
-          ((TubeSlice*)m_second_tubenode)->setOutputGate(slice.outputGate());
-
-        ((TubeSlice*)m_first_tubenode)->setOutputGate(gate);
+        // no degenerate slice
       }
 
       else
       {
-        TubeComponent **slice_ptr = NULL;
+        TubeSlice *slice_to_be_sampled = getSlice(t);
+        TubeComponent *parent = m_component->getParentOf(slice_to_be_sampled);
+        TubeComponent **new_component; // todo: test simple pointer
 
-        if(m_first_tubenode->domain().contains(t))
-        {
-          if(m_first_tubenode->nbSlices() >= 2)
-            new_slices_nb = ((TubeNode*)m_first_tubenode)->sample(t, gate);
-
-          else
-            slice_ptr = &m_first_tubenode;
-        }
+        if(parent == m_component) // tube has one slice
+          new_component = &m_component;
 
         else
         {
-          if(m_second_tubenode->nbSlices() >= 2)
-            new_slices_nb = ((TubeNode*)m_second_tubenode)->sample(t, gate);
+          if(slice_to_be_sampled == ((TubeNode*)m_component)->getFirstTubeComponent())
+            *new_component = (((TubeNode*)m_component)->getFirstTubeComponent());
 
-          else if(m_second_tubenode != NULL)
-            slice_ptr = &m_second_tubenode;
+          else if(slice_to_be_sampled == ((TubeNode*)m_component)->getSecondTubeComponent())
+            *new_component = (((TubeNode*)m_component)->getSecondTubeComponent());
+
+          else
+            throw Exception("Tube::sample", "unhandled case");
         }
 
-        if(slice_ptr != NULL)
-        {
-          if((*slice_ptr)->domain().lb() == t || (*slice_ptr)->domain().ub() == t)
-            return 0; // no degenerate slice
-          
-          TubeSlice slice(*(TubeSlice*)(*slice_ptr));
-          TubeSlice *prev_slice = ((TubeSlice*)(*slice_ptr))->prevSlice();
-          TubeSlice *next_slice = ((TubeSlice*)(*slice_ptr))->nextSlice();
-          delete (*slice_ptr);
-
-          *slice_ptr = new TubeNode(slice.domain(), slice.m_codomain);
-          (*slice_ptr)->setTubeReference(m_tube_ref);
-          TubeSlice **first_slice = (TubeSlice**)&((TubeNode*)(*slice_ptr))->m_first_tubenode;
-          TubeSlice **second_slice = (TubeSlice**)&((TubeNode*)(*slice_ptr))->m_second_tubenode;
-
-          *first_slice = new TubeSlice(Interval(slice.domain().lb(), t), slice.m_codomain);
-          (*first_slice)->setTubeReference(m_tube_ref);
-          *second_slice = new TubeSlice(Interval(t, slice.domain().ub()), slice.m_codomain);
-          (*second_slice)->setTubeReference(m_tube_ref);
-
-          TubeSlice::chainSlices(prev_slice, *first_slice);
-          TubeSlice::chainSlices(*first_slice, *second_slice);
-          TubeSlice::chainSlices(*second_slice, next_slice);
-
-          if(prev_slice == NULL)
-            (*first_slice)->setInputGate(slice.inputGate());
-
-          if(next_slice == NULL)
-            (*second_slice)->setOutputGate(slice.outputGate());
-
-          (*first_slice)->setOutputGate(gate);
-          (*slice_ptr)->m_slices_number = 2;
-        }
+        delete *new_component;
+        *new_component = new TubeNode(*slice_to_be_sampled, t);
+        m_component->updateSlicesNumber();
+        set(t, gate);
       }
-
-      m_slices_number += new_slices_nb;
-      return new_slices_nb;*/
     }
 
     void Tube::sample(const vector<double>& v_bounds)

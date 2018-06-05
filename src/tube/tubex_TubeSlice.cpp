@@ -149,6 +149,11 @@ namespace tubex
       return *m_output_gate;
     }
     
+    TubeNode* TubeSlice::getParentOf(TubeSlice* slice)
+    {
+      return NULL;
+    }
+    
     // Access values
 
     const Interval& TubeSlice::codomain() const
@@ -371,6 +376,11 @@ namespace tubex
   // Protected methods
 
     // Slices structure
+
+    void TubeSlice::updateSlicesNumber()
+    {
+      m_slices_number = 1;
+    }
 
     // Access values
 

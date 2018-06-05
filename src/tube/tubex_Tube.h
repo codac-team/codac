@@ -133,6 +133,8 @@ namespace tubex
 
     protected:
 
+    /** Base: **/
+
     /** Integration: **/
       
       void checkPartialPrimitive() const;

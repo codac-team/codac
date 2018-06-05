@@ -26,13 +26,30 @@ namespace tubex
 
     // Definition
 
-    TubeNode::TubeNode(const Interval& first_domain, const Interval& second_domain, const Interval& codomain) : TubeComponent(first_domain | second_domain, codomain)
+    TubeNode::TubeNode(const TubeSlice& slice, double t) : TubeComponent(slice.domain(), slice.codomain())
     {
-      if(first_domain.ub() != second_domain.lb())
-        throw Exception("TubeNode constructor", "invalid subdomains");
+      if(t <= slice.domain().lb() || t >= slice.domain().ub())
+        throw Exception("TubeNode constructor", "invalid time bisection");
 
-      m_first_tubenode = new TubeSlice(first_domain, codomain);
-      m_second_tubenode = new TubeSlice(second_domain, codomain);
+      m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), slice.codomain());
+      m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), slice.codomain());
+      setTubeReference(slice.tubeReference());
+      
+      if(slice.prevSlice() != NULL)
+      {
+        TubeSlice::chainSlices(slice.prevSlice(), (TubeSlice*)m_first_tubenode);
+        ((TubeSlice*)m_first_tubenode)->setInputGate(slice.inputGate());
+      }
+
+      TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode);
+      
+      if(slice.nextSlice() != NULL)
+      {
+        TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, slice.nextSlice());
+        ((TubeSlice*)m_second_tubenode)->setOutputGate(slice.outputGate());
+      }
+
+      m_slices_number = 2;
     }
 
     TubeNode::TubeNode(const TubeNode& x) : TubeComponent(x)
@@ -176,6 +193,31 @@ namespace tubex
       v_nodes.push_back(static_cast<const TubeComponent*>(this));
       m_first_tubenode->getTubeComponents(v_nodes);
       m_second_tubenode->getTubeComponents(v_nodes);
+    }
+    
+    TubeNode* TubeNode::getParentOf(TubeSlice* slice)
+    {
+      if(m_first_tubenode == slice || m_second_tubenode == slice)
+        return this;
+
+      else
+      {
+        TubeNode *parent = m_first_tubenode->getParentOf(slice);
+
+        if(parent != NULL)
+          return parent;
+
+        else
+        {
+          parent = m_second_tubenode->getParentOf(slice);
+
+          if(parent != NULL)
+            return parent;
+
+          else
+            throw Exception("TubeNode::getParentOf", "unable to find slice");
+        }
+      }
     }
 
     // Access values
@@ -416,7 +458,21 @@ namespace tubex
 
     // Definition
 
+    void TubeNode::setTubeReference(Tube *tube_ref)
+    {
+      TubeComponent::setTubeReference(tube_ref);
+      m_first_tubenode->setTubeReference(tube_ref);
+      m_second_tubenode->setTubeReference(tube_ref);
+    }
+
     // Slices/tree structure
+
+    void TubeNode::updateSlicesNumber()
+    {
+      m_first_tubenode->updateSlicesNumber();
+      m_second_tubenode->updateSlicesNumber();
+      m_slices_number = m_first_tubenode->nbSlices() + m_second_tubenode->nbSlices();
+    }
     
     // Access values
 
