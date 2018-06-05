@@ -185,13 +185,6 @@ namespace tubex
         return m_first_component->nbSlices() + m_second_component->input2index(t);
     }
     
-    void TubeNode::getTubeComponents(vector<const TubeComponent*> &v_nodes) const
-    {
-      v_nodes.push_back(static_cast<const TubeComponent*>(this));
-      m_first_component->getTubeComponents(v_nodes);
-      m_second_component->getTubeComponents(v_nodes);
-    }
-    
     TubeNode* TubeNode::getParentOf(TubeComponent* component)
     {
       if(m_first_component == component || m_second_component == component)

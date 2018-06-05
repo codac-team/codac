@@ -55,6 +55,7 @@ namespace tubex
       double index2input(int slice_id) const;
       void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
       void sample(const std::vector<double>& v_bounds);
+      TubeComponent* getTubeComponent();
 
       // Access values
       const ibex::Interval& codomain() const;

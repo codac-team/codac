@@ -286,6 +286,11 @@ namespace tubex
       sample(v_last_bounds);
     }
 
+    TubeComponent* Tube::getTubeComponent()
+    {
+      return m_component;
+    }
+
     // Access values
 
     const Interval& Tube::codomain() const

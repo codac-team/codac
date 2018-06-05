@@ -37,7 +37,6 @@ namespace tubex
       const TubeSlice* getSlice(double t) const;
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
-      void getTubeComponents(std::vector<const TubeComponent*> &v_nodes) const;
       TubeSlice* prevSlice() const;
       TubeSlice* nextSlice() const;
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);

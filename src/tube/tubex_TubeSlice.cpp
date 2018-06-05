@@ -104,11 +104,6 @@ namespace tubex
       DomainException::check(*this, t);
       return 0;
     }
-    
-    void TubeSlice::getTubeComponents(vector<const TubeComponent*> &v_nodes) const
-    {
-      v_nodes.push_back(static_cast<const TubeComponent*>(this));
-    }
 
     TubeSlice* TubeSlice::prevSlice() const
     {
