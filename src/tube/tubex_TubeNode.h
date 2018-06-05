@@ -82,9 +82,7 @@ namespace tubex
 
       // Tests
       static bool nodesAreEqual(const TubeComponent* node1, const TubeComponent* node2);
-      bool isEqual(const TubeNode& x) const;
       static bool nodesAreDifferent(const TubeComponent* node1, const TubeComponent* node2);
-      bool isDifferent(const TubeNode& x) const;
 
       // Setting values
       void checkData() const;

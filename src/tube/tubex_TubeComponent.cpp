@@ -90,6 +90,37 @@ namespace tubex
     // Access values
     
     // Tests
+
+    bool TubeComponent::operator==(const TubeComponent& x) const
+    {
+      return domain() == x.domain() && codomain() == x.codomain();
+    }
+
+    bool TubeComponent::operator!=(const TubeComponent& x) const
+    {
+      return domain() != x.domain() || codomain() != x.codomain();
+    }
+
+    bool TubeComponent::isSubset(const TubeComponent& x) const
+    {
+      StructureException::check(*this, x);
+      return codomain().is_subset(x.codomain());
+    }
+
+    bool TubeComponent::isStrictSubset(const TubeComponent& x) const
+    {
+      return isSubset(x) && (*this) != x;
+    }
+
+    bool TubeComponent::isEmpty() const
+    {
+      return codomain().is_empty();
+    }
+
+    bool TubeComponent::encloses(const Trajectory& x) const
+    {
+      return x[m_domain].is_subset(codomain());
+    }
     
     // Setting values
 
@@ -124,16 +155,6 @@ namespace tubex
     }*/
     
     // Tests
-
-    bool TubeComponent::isEqual(const TubeComponent& x) const
-    {
-      return domain() == x.domain() && codomain() == x.codomain();
-    }
-
-    bool TubeComponent::isDifferent(const TubeComponent& x) const
-    {
-      return domain() != x.domain() || codomain() != x.codomain();
-    }
 
     // Setting values
 

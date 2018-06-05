@@ -33,6 +33,11 @@ namespace tubex
       m_second_tubenode = NULL;
     }*/
 
+    TubeNode::TubeNode(const Interval& domain, const vector<double>& v_bounds, const Interval& codomain) : TubeComponent(domain, codomain)
+    {
+      // todo
+    }
+
     TubeNode::TubeNode(const TubeNode& x) : TubeComponent(x)
     {
       *this = x;
@@ -293,19 +298,23 @@ namespace tubex
     
     bool TubeNode::operator==(const TubeNode& x) const
     {
-      return isEqual(x);
+      return TubeComponent::operator==(x)
+        && nodesAreEqual(m_first_tubenode, x.getFirstTubeComponent())
+        && nodesAreEqual(m_second_tubenode, x.getSecondTubeComponent());
     }
     
     bool TubeNode::operator!=(const TubeNode& x) const
     {
-      return isDifferent(x);
+      return TubeComponent::operator!=(x)
+        || nodesAreDifferent(m_first_tubenode, x.getFirstTubeComponent())
+        || nodesAreDifferent(m_second_tubenode, x.getSecondTubeComponent());
     }
 
-    bool TubeNode::isSubset(const TubeNode& x) const
+    bool TubeNode::isSubset(const TubeNode& x) const // todo: test this
     {
       StructureException::check(*this, x);
       TubeSlice *slice = getFirstSlice();
-      TubeSlice *outer_slice = getFirstSlice();
+      TubeSlice *outer_slice = x.getFirstSlice();
 
       while(slice != NULL)
       {
@@ -478,28 +487,19 @@ namespace tubex
         {
           if(node1->isSlice() && node2->isSlice()) // both are slices
           {
-            if(!((TubeSlice*)node1)->TubeSlice::isEqual(*(TubeSlice*)node2))
+            if(!((TubeSlice*)node1)->TubeSlice::operator==(*(TubeSlice*)node2))
               return false; // slices are not equal
           }
 
           else if(node1->isSlice() || node2->isSlice())
             return false; // one is a slice, the other one is not
 
-          else if(!((TubeNode*)node1)->TubeNode::isEqual(*(TubeNode*)node2))
+          else if(!((TubeNode*)node1)->TubeNode::operator==(*(TubeNode*)node2))
             return false; // both are trees, not equal
         }
       }
 
       return true;
-    }
-
-    bool TubeNode::isEqual(const TubeNode& x) const
-    {
-      StructureException::check(*this, x);
-
-      return TubeComponent::isEqual(x)
-        && nodesAreEqual(m_first_tubenode, x.getFirstTubeComponent())
-        && nodesAreEqual(m_second_tubenode, x.getSecondTubeComponent());
     }
 
     bool TubeNode::nodesAreDifferent(const TubeComponent* node1, const TubeComponent* node2)
@@ -515,24 +515,15 @@ namespace tubex
         else // nodes are of same type
         {
           if(node1->isSlice()) // both are slices
-            return ((TubeSlice*)node1)->TubeSlice::isDifferent(*(TubeSlice*)node2);
+            return ((TubeSlice*)node1)->TubeSlice::operator!=(*(TubeSlice*)node2);
 
           else
-            return ((TubeNode*)node1)->TubeNode::isDifferent(*(TubeNode*)node2);
+            return ((TubeNode*)node1)->TubeNode::operator!=(*(TubeNode*)node2);
         }
       }
 
       else // one is NULL, the other one is not
         return true;
-    }
-    
-    bool TubeNode::isDifferent(const TubeNode& x) const
-    {
-      StructureException::check(*this, x);
-
-      return TubeComponent::isDifferent(x)
-        || nodesAreDifferent(m_first_tubenode, x.getFirstTubeComponent())
-        || nodesAreDifferent(m_second_tubenode, x.getSecondTubeComponent());
     }
 
     // Setting values

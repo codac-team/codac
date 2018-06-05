@@ -103,10 +103,6 @@ namespace tubex
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
       void updateEnclosedBounds();
 
-      // Tests
-      bool isEqual(const TubeSlice& x) const;
-      bool isDifferent(const TubeSlice& x) const;
-
       // Setting values
       void checkData() const;
       void flagFutureDataUpdateFromRoot(int slice_id = -1) const;

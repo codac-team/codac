@@ -60,12 +60,12 @@ namespace tubex
       virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
 
       // Tests
-      virtual bool operator==(const TubeNode& x) const = 0;
-      virtual bool operator!=(const TubeNode& x) const = 0;
-      virtual bool isSubset(const TubeNode& x) const = 0;
-      virtual bool isStrictSubset(const TubeNode& x) const = 0;
-      virtual bool isEmpty() const = 0;
-      virtual bool encloses(const Trajectory& x) const = 0;
+      bool operator==(const TubeComponent& x) const;
+      bool operator!=(const TubeComponent& x) const;
+      bool isSubset(const TubeComponent& x) const;
+      bool isStrictSubset(const TubeComponent& x) const;
+      bool isEmpty() const;
+      bool encloses(const Trajectory& x) const;
 
       // Setting values
       virtual void set(const ibex::Interval& y) = 0;
@@ -90,8 +90,6 @@ namespace tubex
       virtual void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const = 0;
 
       // Tests
-      bool isEqual(const TubeComponent& x) const;
-      bool isDifferent(const TubeComponent& x) const;
 
       // Setting values
       virtual void checkData() const = 0;

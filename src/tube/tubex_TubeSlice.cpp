@@ -266,36 +266,39 @@ namespace tubex
     
     bool TubeSlice::operator==(const TubeSlice& x) const
     {
-      return isEqual(x);
+      return TubeComponent::operator==(x) && 
+             inputGate() == x.inputGate() &&
+             outputGate() == x.outputGate();
     }
     
     bool TubeSlice::operator!=(const TubeSlice& x) const
     {
-      return isDifferent(x);
+      return TubeComponent::operator!=(x) ||
+             inputGate() != x.inputGate() ||
+             outputGate() != x.outputGate();
     }
 
     bool TubeSlice::isSubset(const TubeSlice& x) const
     {
       StructureException::check(*this, x);
-      return m_codomain.is_subset(x.codomain())
+      return TubeComponent::isSubset(x)
           && inputGate().is_subset(x.inputGate())
           && outputGate().is_subset(x.outputGate());
     }
 
     bool TubeSlice::isStrictSubset(const TubeSlice& x) const
     {
-      StructureException::check(*this, x);
       return isSubset(x) && (*this) != x;
     }
     
     bool TubeSlice::isEmpty() const
     {
-      return m_codomain.is_empty() || inputGate().is_empty() || outputGate().is_empty();
+      return TubeComponent::isEmpty() || inputGate().is_empty() || outputGate().is_empty();
     }
 
     bool TubeSlice::encloses(const Trajectory& x) const
     {
-      return x[m_domain].is_subset(m_codomain)
+      return TubeComponent::encloses(x)
           && inputGate().contains(x[m_domain.lb()])
           && outputGate().contains(x[m_domain.ub()]);
     }
@@ -376,22 +379,6 @@ namespace tubex
       Interval inversion = invert(y, search_domain);
       if(!inversion.is_empty())
         v_t.push_back(inversion);
-    }
-
-    // Tests
-
-    bool TubeSlice::isEqual(const TubeSlice& x) const
-    {
-      return TubeComponent::isEqual(x) && 
-             inputGate() == x.inputGate() &&
-             outputGate() == x.outputGate();
-    }
-    
-    bool TubeSlice::isDifferent(const TubeSlice& x) const
-    {
-      return TubeComponent::isDifferent(x) ||
-             inputGate() != x.inputGate() ||
-             outputGate() != x.outputGate();
     }
 
     // Setting values
