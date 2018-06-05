@@ -38,6 +38,7 @@ namespace tubex
 
   void StructureException::check(const TubeComponent& x1, const TubeComponent& x2)
   {
+    // todo:  if(typeid(x1) != typeid(x2)))
     DomainException::check(x1, x2);
     if(x1.nbSlices() != x2.nbSlices())
       throw StructureException(x1, x2);

@@ -380,31 +380,59 @@ namespace tubex
 
     bool Tube::operator==(const Tube& x) const
     {
-      return *m_component == *(x.m_component);
+      if(typeid(*m_component) != typeid(*(x.m_component)))
+        return false;
+
+      else if(typeid(*m_component) == typeid(TubeSlice))
+        return ((TubeSlice*)m_component)->TubeSlice::operator==(*((TubeSlice*)x.m_component));
+      
+      else
+        return ((TubeNode*)m_component)->TubeNode::operator==(*((TubeNode*)x.m_component));
     }
 
     bool Tube::operator!=(const Tube& x) const
     {
-      return *m_component != *(x.m_component);
+      if(typeid(*m_component) != typeid(*(x.m_component)))
+        return true;
+
+      else if(typeid(*m_component) == typeid(TubeSlice))
+        return ((TubeSlice*)m_component)->TubeSlice::operator!=(*((TubeSlice*)x.m_component));
+
+      else
+        return ((TubeNode*)m_component)->TubeNode::operator!=(*((TubeNode*)x.m_component));
     }
 
     bool Tube::isSubset(const Tube& x) const
     {
-      return m_component->isSubset(*(x.m_component));
+      StructureException::check(*m_component, *(x.m_component));
+
+      if(typeid(*m_component) == typeid(TubeSlice))
+        return ((TubeSlice*)m_component)->TubeSlice::isSubset(*((TubeSlice*)x.m_component));
+
+      else
+        return ((TubeNode*)m_component)->TubeNode::isSubset(*((TubeNode*)x.m_component));
     }
 
     bool Tube::isStrictSubset(const Tube& x) const
     {
-      return m_component->isStrictSubset(*(x.m_component));
+      StructureException::check(*m_component, *(x.m_component));
+
+      if(typeid(*m_component) == typeid(TubeSlice))
+        return ((TubeSlice*)m_component)->TubeSlice::isStrictSubset(*((TubeSlice*)x.m_component));
+
+      else
+        return ((TubeNode*)m_component)->TubeNode::isStrictSubset(*((TubeNode*)x.m_component));
     }
 
     bool Tube::isEmpty() const
     {
+      // todo: compliance with methods of same type: operator==, isSubset, etc.
       return m_component->isEmpty();
     }
 
     bool Tube::encloses(const Trajectory& x) const
     {
+      // todo: compliance with methods of same type: operator==, isSubset, etc.
       return m_component->encloses(x);
     }
 

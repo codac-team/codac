@@ -61,12 +61,12 @@ namespace tubex
       virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
 
       // Tests
-      bool operator==(const TubeComponent& x) const;
-      bool operator!=(const TubeComponent& x) const;
-      bool isSubset(const TubeComponent& x) const;
-      bool isStrictSubset(const TubeComponent& x) const;
-      bool isEmpty() const;
-      bool encloses(const Trajectory& x) const;
+      virtual bool operator==(const TubeComponent& x) const;
+      virtual bool operator!=(const TubeComponent& x) const;
+      virtual bool isSubset(const TubeComponent& x) const;
+      virtual bool isStrictSubset(const TubeComponent& x) const;
+      virtual bool isEmpty() const;
+      virtual bool encloses(const Trajectory& x) const;
 
       // Setting values
       virtual void set(const ibex::Interval& y) = 0;
@@ -129,6 +129,7 @@ namespace tubex
       friend class TubeSlice; // todo: remove this? not sure
       friend class Tube; // todo: remove this? not sure
       friend class CtcDeriv; // todo: remove this
+      friend class EmptyException; // todo: remove this
       friend void deserializeTube(std::ifstream& bin_file, Tube& tube);
   };
 }

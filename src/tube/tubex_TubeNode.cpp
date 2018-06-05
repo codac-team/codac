@@ -484,54 +484,32 @@ namespace tubex
 
     bool TubeNode::nodesAreEqual(const TubeComponent* node1, const TubeComponent* node2)
     {
-      if(node1 != NULL || node2 != NULL)
-      {
-        if(node1 == NULL || node2 == NULL) // one is NULL, the other one is not
-          return false;
+      if(node1 == NULL || node2 == NULL)
+        throw Exception("TubeNode::nodesAreEqual", "NULL pointer");
 
-        else // both are not NULL
-        {
-          // todo: remove isSlice
-          if(node1->isSlice() && node2->isSlice()) // both are slices
-          {
-            if(!((TubeSlice*)node1)->TubeSlice::operator==(*(TubeSlice*)node2))
-              return false; // slices are not equal
-          }
+      if(typeid(*node1) != typeid(*node2))
+        return false;
 
-          else if(node1->isSlice() || node2->isSlice())
-            return false; // one is a slice, the other one is not
+      if(typeid(*node1) == typeid(TubeSlice))
+        return ((TubeSlice*)node1)->TubeSlice::operator==(*((TubeSlice*)node2));
 
-          else if(!((TubeNode*)node1)->TubeNode::operator==(*(TubeNode*)node2))
-            return false; // both are trees, not equal
-        }
-      }
-
-      return true;
+      else
+        return ((TubeNode*)node1)->TubeNode::operator==(*((TubeNode*)node2));
     }
 
     bool TubeNode::nodesAreDifferent(const TubeComponent* node1, const TubeComponent* node2)
     {
-      if(node1 == NULL && node2 == NULL)
-        return false;
+      if(node1 == NULL || node2 == NULL)
+        throw Exception("TubeNode::nodesAreEqual", "NULL pointer");
 
-      else if(node1 != NULL && node2 != NULL) // both are not NULL
-      {
-          // todo: remove isSlice
-        if((node1->isSlice() && !node2->isSlice()) || (!node1->isSlice() && node2->isSlice()))
-          return true;
-
-        else // nodes are of same type
-        {
-          if(node1->isSlice()) // both are slices
-            return ((TubeSlice*)node1)->TubeSlice::operator!=(*(TubeSlice*)node2);
-
-          else
-            return ((TubeNode*)node1)->TubeNode::operator!=(*(TubeNode*)node2);
-        }
-      }
-
-      else // one is NULL, the other one is not
+      if(typeid(*node1) != typeid(*node2))
         return true;
+
+      if(typeid(*node1) == typeid(TubeSlice))
+        return ((TubeSlice*)node1)->TubeSlice::operator!=(*((TubeSlice*)node2));
+
+      else
+        return ((TubeNode*)node1)->TubeNode::operator!=(*((TubeNode*)node2));
     }
 
     // Setting values

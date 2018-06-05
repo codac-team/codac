@@ -173,12 +173,13 @@ TEST_CASE("Tube definition")
     CHECK(tube0.getLastSlice()->prevSlice()->codomain() == slice_codomain);
     CHECK(tube0.codomain().ub() == slice_codomain.ub());
 
-    Tube tube1(traj1, 0., 0.1);
     Tube tube2(traj2, 0., 0.1);
     CHECK(tube2[0.] == tube0[0.]);
     CHECK(tube2[1.1] == tube0[1.1]);
     CHECK(tube2 == tube0);
-    CHECK(tube1.isSubset(tube2));
-    CHECK(tube1.isStrictSubset(tube2));
+    Tube tube1 = tube2;
+    tube1.inflate(0.001);
+    CHECK(tube2.isSubset(tube1));
+    CHECK(tube2.isStrictSubset(tube1));
   }
 }
