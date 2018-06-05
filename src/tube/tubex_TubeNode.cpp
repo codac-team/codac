@@ -65,59 +65,35 @@ namespace tubex
 
     TubeNode::~TubeNode()
     {
-      if(m_first_component != NULL)
-      {
-        delete m_first_component;
-        m_first_component = NULL;
-      }
-
-      if(m_second_component != NULL)
-      {
-        delete m_second_component;
-        m_second_component = NULL;
-      }
+      if(m_first_component == NULL || m_second_component == NULL)
+        throw Exception("Tube destructor", "uninitialized components");
+      
+      delete m_first_component;
+      delete m_second_component;
     }
 
     TubeNode& TubeNode::operator=(const TubeNode& x)
     {
-      // Reset
-      {
-        if(m_first_component != NULL)
-        {
-          delete m_first_component;
-          m_first_component = NULL;
-        }
-
-        if(m_second_component != NULL)
-        {
-          delete m_second_component;
-          m_second_component = NULL;
-        }
-      }
+      delete m_first_component;
+      delete m_second_component;
 
       TubeComponent::operator=(x);
       m_enclosed_bounds = x.m_enclosed_bounds;
 
-      if(x.getFirstTubeComponent() != NULL)
-      {
-        if(x.getFirstTubeComponent()->isSlice())
-          m_first_component = new TubeSlice(*((TubeSlice*)x.getFirstTubeComponent()));
+      if(typeid(*(x.getFirstTubeComponent())) == typeid(TubeSlice))
+        m_first_component = new TubeSlice(*((TubeSlice*)x.getFirstTubeComponent()));
 
-        else
-          m_first_component = new TubeNode(*((TubeNode*)x.getFirstTubeComponent()));
-      }
+      else
+        m_first_component = new TubeNode(*((TubeNode*)x.getFirstTubeComponent()));
 
-      if(x.getSecondTubeComponent() != NULL)
-      {
-        if(x.getSecondTubeComponent()->isSlice())
-          m_second_component = new TubeSlice(*((TubeSlice*)x.getSecondTubeComponent()));
+      if(typeid(*(x.getSecondTubeComponent())) == typeid(TubeSlice))
+        m_second_component = new TubeSlice(*((TubeSlice*)x.getSecondTubeComponent()));
 
-        else
-          m_second_component = new TubeNode(*((TubeNode*)x.getSecondTubeComponent()));
-
-        TubeSlice::chainSlices(m_first_component->getLastSlice(), m_second_component->getFirstSlice());
-      }
-
+      else
+        m_second_component = new TubeNode(*((TubeNode*)x.getSecondTubeComponent()));
+      
+      TubeSlice::chainSlices(m_first_component->getLastSlice(), m_second_component->getFirstSlice());
+      
       return *this;
     }
 
@@ -276,7 +252,7 @@ namespace tubex
 
       else
       {
-        if(isSlice())
+        if(isSlice()) // todo: remove this?
           return search_domain & m_domain;
 
         else
@@ -437,7 +413,7 @@ namespace tubex
 
     void TubeNode::setTubeReference(Tube *tube_ref)
     {
-      TubeComponent::setTubeReference(tube_ref);
+      m_tube_ref = tube_ref;
       m_first_component->setTubeReference(tube_ref);
       m_second_component->setTubeReference(tube_ref);
     }
@@ -515,6 +491,7 @@ namespace tubex
 
         else // both are not NULL
         {
+          // todo: remove isSlice
           if(node1->isSlice() && node2->isSlice()) // both are slices
           {
             if(!((TubeSlice*)node1)->TubeSlice::operator==(*(TubeSlice*)node2))
@@ -539,6 +516,7 @@ namespace tubex
 
       else if(node1 != NULL && node2 != NULL) // both are not NULL
       {
+          // todo: remove isSlice
         if((node1->isSlice() && !node2->isSlice()) || (!node1->isSlice() && node2->isSlice()))
           return true;
 
@@ -566,23 +544,15 @@ namespace tubex
       m_first_component->checkData();
       m_codomain = m_first_component->codomain();
       m_volume = m_first_component->volume();
-
-      if(m_second_component != NULL)
-      {
-        m_second_component->checkData();
-        m_codomain |= m_second_component->codomain();
-        m_volume += m_second_component->volume();
-      }
+      m_second_component->checkData();
+      m_codomain |= m_second_component->codomain();
+      m_volume += m_second_component->volume();
 
       // Enclosed bounds
       m_enclosed_bounds = m_first_component->eval();
-
-      if(m_second_component != NULL)
-      {
-        pair<Interval,Interval> ui_future = m_second_component->eval();
-        m_enclosed_bounds.first |= ui_future.first;
-        m_enclosed_bounds.second |= ui_future.second;
-      }
+      pair<Interval,Interval> ui_future = m_second_component->eval();
+      m_enclosed_bounds.first |= ui_future.first;
+      m_enclosed_bounds.second |= ui_future.second;
 
       m_data_update_needed = false;
     }
@@ -595,7 +565,7 @@ namespace tubex
       if(slice_id == -1)
       {
         m_first_component->flagFutureDataUpdateFromRoot(-1);
-        if(m_second_component != NULL) m_second_component->flagFutureDataUpdateFromRoot(-1);
+        m_second_component->flagFutureDataUpdateFromRoot(-1);
       }
 
       else
@@ -625,14 +595,10 @@ namespace tubex
         return;
       
       m_first_component->checkPartialPrimitive();
+      m_second_component->checkPartialPrimitive();
       m_partial_primitive = m_first_component->getPartialPrimitiveValue();
-
-      if(m_second_component != NULL)
-      {
-        m_second_component->checkPartialPrimitive();
-        m_partial_primitive.first |= m_second_component->getPartialPrimitiveValue().first;
-        m_partial_primitive.second |= m_second_component->getPartialPrimitiveValue().second;
-      }
+      m_partial_primitive.first |= m_second_component->getPartialPrimitiveValue().first;
+      m_partial_primitive.second |= m_second_component->getPartialPrimitiveValue().second;
 
       m_primitive_update_needed = false;
     }
@@ -644,7 +610,7 @@ namespace tubex
       if(slice_id == -1)
       {
         m_first_component->flagFuturePrimitiveUpdateFromRoot(-1);
-        if(m_second_component != NULL) m_second_component->flagFuturePrimitiveUpdateFromRoot(-1);
+        m_second_component->flagFuturePrimitiveUpdateFromRoot(-1);
       }
 
       else
@@ -654,7 +620,7 @@ namespace tubex
 
         m_first_component->flagFuturePrimitiveUpdateFromRoot(slice_id < mid_id ? slice_id : -1);
 
-        if(m_second_component != NULL && slice_id >= mid_id)
+        if(slice_id >= mid_id)
           m_second_component->flagFuturePrimitiveUpdateFromRoot(slice_id - mid_id);
       }
     }

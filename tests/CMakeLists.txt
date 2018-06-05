@@ -1,4 +1,8 @@
 file(GLOB_RECURSE TESTS_SOURCES "tests_sli*.cpp")
+set(TESTS_SOURCES ${TESTS_SOURCES} tests_trajectory.cpp)
+set(TESTS_SOURCES ${TESTS_SOURCES} tests_operators.cpp)
+set(TESTS_SOURCES ${TESTS_SOURCES} tests_exceptions.cpp)
+set(TESTS_SOURCES ${TESTS_SOURCES} tests_definition.cpp)
 set(TESTS_SOURCES ${TESTS_SOURCES} main.cpp)
 add_executable(tubelib_tests ${TESTS_SOURCES})
 target_link_libraries(tubelib_tests tubex-lib)

@@ -85,7 +85,7 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      void setTubeReference(Tube *tube);
+      virtual void setTubeReference(Tube *tube) = 0;
 
       // Slices structure
       virtual void updateSlicesNumber() = 0;

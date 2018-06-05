@@ -86,16 +86,7 @@ namespace tubex
 
     Tube::Tube(const Tube& x)
     {
-      if(typeid(*(x.m_component)) == typeid(TubeSlice))
-        m_component = new TubeSlice(*((TubeSlice*)x.m_component));
-
-      else if(typeid(*(x.m_component)) == typeid(TubeNode))
-        m_component = new TubeNode(*((TubeNode*)x.m_component));
-
-      else
-        throw Exception("Tube constructor", "invalid component");
-
-      m_component->setTubeReference(this);
+      *this = x;
     }
 
     Tube::Tube(const Tube& x, const Interval& codomain) : Tube(x)
@@ -156,7 +147,17 @@ namespace tubex
 
     Tube& Tube::operator=(const Tube& x)
     {
-      *m_component = *(x.m_component);
+      if(typeid(*(x.m_component)) == typeid(TubeSlice))
+        m_component = new TubeSlice(*((TubeSlice*)x.m_component));
+
+      else if(typeid(*(x.m_component)) == typeid(TubeNode))
+        m_component = new TubeNode(*((TubeNode*)x.m_component));
+
+      else
+        throw Exception("Tube constructor", "invalid component");
+
+      m_component->setTubeReference(this);
+      return *this;
     }
 
     const Interval& Tube::domain() const

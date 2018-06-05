@@ -98,6 +98,9 @@ namespace tubex
 
     /** Base: **/
 
+      // Definition
+      void setTubeReference(Tube *tube_ref);
+
       // Slices structure
       void updateSlicesNumber();
 

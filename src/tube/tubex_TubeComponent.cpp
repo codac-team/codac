@@ -138,11 +138,6 @@ namespace tubex
 
     // Definition
 
-    void TubeComponent::setTubeReference(Tube *tube_ref)
-    {
-      m_tube_ref = tube_ref;
-    }
-
     /*TubeComponent::TubeComponent()
     {
 

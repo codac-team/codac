@@ -380,6 +380,11 @@ namespace tubex
 
   // Protected methods
 
+    void TubeSlice::setTubeReference(Tube *tube_ref)
+    {
+      m_tube_ref = tube_ref;
+    }
+
     // Slices structure
 
     void TubeSlice::updateSlicesNumber()
