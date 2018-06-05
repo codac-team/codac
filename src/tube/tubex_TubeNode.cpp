@@ -31,22 +31,22 @@ namespace tubex
       if(t <= slice.domain().lb() || t >= slice.domain().ub())
         throw Exception("TubeNode constructor", "invalid time bisection");
 
-      m_first_tubenode = new TubeSlice(Interval(slice.domain().lb(), t), slice.codomain());
-      m_second_tubenode = new TubeSlice(Interval(t, slice.domain().ub()), slice.codomain());
+      m_first_component = new TubeSlice(Interval(slice.domain().lb(), t), slice.codomain());
+      m_second_component = new TubeSlice(Interval(t, slice.domain().ub()), slice.codomain());
       setTubeReference(slice.tubeReference());
       
       if(slice.prevSlice() != NULL)
       {
-        TubeSlice::chainSlices(slice.prevSlice(), (TubeSlice*)m_first_tubenode);
-        ((TubeSlice*)m_first_tubenode)->setInputGate(slice.inputGate());
+        TubeSlice::chainSlices(slice.prevSlice(), (TubeSlice*)m_first_component);
+        ((TubeSlice*)m_first_component)->setInputGate(slice.inputGate());
       }
 
-      TubeSlice::chainSlices((TubeSlice*)m_first_tubenode, (TubeSlice*)m_second_tubenode);
+      TubeSlice::chainSlices((TubeSlice*)m_first_component, (TubeSlice*)m_second_component);
       
       if(slice.nextSlice() != NULL)
       {
-        TubeSlice::chainSlices((TubeSlice*)m_second_tubenode, slice.nextSlice());
-        ((TubeSlice*)m_second_tubenode)->setOutputGate(slice.outputGate());
+        TubeSlice::chainSlices((TubeSlice*)m_second_component, slice.nextSlice());
+        ((TubeSlice*)m_second_component)->setOutputGate(slice.outputGate());
       }
 
       m_slices_number = 2;
@@ -65,16 +65,16 @@ namespace tubex
 
     TubeNode::~TubeNode()
     {
-      if(m_first_tubenode != NULL)
+      if(m_first_component != NULL)
       {
-        delete m_first_tubenode;
-        m_first_tubenode = NULL;
+        delete m_first_component;
+        m_first_component = NULL;
       }
 
-      if(m_second_tubenode != NULL)
+      if(m_second_component != NULL)
       {
-        delete m_second_tubenode;
-        m_second_tubenode = NULL;
+        delete m_second_component;
+        m_second_component = NULL;
       }
     }
 
@@ -82,16 +82,16 @@ namespace tubex
     {
       // Reset
       {
-        if(m_first_tubenode != NULL)
+        if(m_first_component != NULL)
         {
-          delete m_first_tubenode;
-          m_first_tubenode = NULL;
+          delete m_first_component;
+          m_first_component = NULL;
         }
 
-        if(m_second_tubenode != NULL)
+        if(m_second_component != NULL)
         {
-          delete m_second_tubenode;
-          m_second_tubenode = NULL;
+          delete m_second_component;
+          m_second_component = NULL;
         }
       }
 
@@ -101,24 +101,24 @@ namespace tubex
       if(x.getFirstTubeComponent() != NULL)
       {
         if(x.getFirstTubeComponent()->isSlice())
-          m_first_tubenode = new TubeSlice(*((TubeSlice*)x.getFirstTubeComponent()));
+          m_first_component = new TubeSlice(*((TubeSlice*)x.getFirstTubeComponent()));
 
         else
-          m_first_tubenode = new TubeNode(*((TubeNode*)x.getFirstTubeComponent()));
+          m_first_component = new TubeNode(*((TubeNode*)x.getFirstTubeComponent()));
         
-        m_first_tubenode->setTubeReference(m_tube_ref);
+        m_first_component->setTubeReference(m_tube_ref);
       }
 
       if(x.getSecondTubeComponent() != NULL)
       {
         if(x.getSecondTubeComponent()->isSlice())
-          m_second_tubenode = new TubeSlice(*((TubeSlice*)x.getSecondTubeComponent()));
+          m_second_component = new TubeSlice(*((TubeSlice*)x.getSecondTubeComponent()));
 
         else
-          m_second_tubenode = new TubeNode(*((TubeNode*)x.getSecondTubeComponent()));
+          m_second_component = new TubeNode(*((TubeNode*)x.getSecondTubeComponent()));
 
-        m_second_tubenode->setTubeReference(m_tube_ref);
-        TubeSlice::chainSlices(m_first_tubenode->getLastSlice(), m_second_tubenode->getFirstSlice());
+        m_second_component->setTubeReference(m_tube_ref);
+        TubeSlice::chainSlices(m_first_component->getLastSlice(), m_second_component->getFirstSlice());
       }
 
       return *this;
@@ -133,12 +133,12 @@ namespace tubex
     
     TubeComponent* TubeNode::getFirstTubeComponent() const
     {
-      return m_first_tubenode;
+      return m_first_component;
     }
     
     TubeComponent* TubeNode::getSecondTubeComponent() const
     {
-      return m_second_tubenode;
+      return m_second_component;
     }
 
     TubeSlice* TubeNode::getSlice(int slice_id)
@@ -155,11 +155,11 @@ namespace tubex
     {
       DomainException::check(*this, slice_id);
 
-      if(slice_id < m_first_tubenode->nbSlices())
-        return m_first_tubenode->getSlice(slice_id);
+      if(slice_id < m_first_component->nbSlices())
+        return m_first_component->getSlice(slice_id);
 
       else
-        return m_second_tubenode->getSlice(slice_id - m_first_tubenode->nbSlices());
+        return m_second_component->getSlice(slice_id - m_first_component->nbSlices());
     }
     
     const TubeSlice* TubeNode::getSlice(double t) const
@@ -170,8 +170,8 @@ namespace tubex
     
     void TubeNode::getSlices(vector<const TubeSlice*>& v_slices) const
     {
-      m_first_tubenode->getSlices(v_slices);
-      m_second_tubenode->getSlices(v_slices);
+      m_first_component->getSlices(v_slices);
+      m_second_component->getSlices(v_slices);
     }
     
     int TubeNode::input2index(double t) const
@@ -181,35 +181,35 @@ namespace tubex
       if(t == m_domain.ub())
         return nbSlices() - 1;
 
-      else if(t < m_first_tubenode->domain().ub())
-        return m_first_tubenode->input2index(t);
+      else if(t < m_first_component->domain().ub())
+        return m_first_component->input2index(t);
 
       else
-        return m_first_tubenode->nbSlices() + m_second_tubenode->input2index(t);
+        return m_first_component->nbSlices() + m_second_component->input2index(t);
     }
     
     void TubeNode::getTubeComponents(vector<const TubeComponent*> &v_nodes) const
     {
       v_nodes.push_back(static_cast<const TubeComponent*>(this));
-      m_first_tubenode->getTubeComponents(v_nodes);
-      m_second_tubenode->getTubeComponents(v_nodes);
+      m_first_component->getTubeComponents(v_nodes);
+      m_second_component->getTubeComponents(v_nodes);
     }
     
     TubeNode* TubeNode::getParentOf(TubeSlice* slice)
     {
-      if(m_first_tubenode == slice || m_second_tubenode == slice)
+      if(m_first_component == slice || m_second_component == slice)
         return this;
 
       else
       {
-        TubeNode *parent = m_first_tubenode->getParentOf(slice);
+        TubeNode *parent = m_first_component->getParentOf(slice);
 
         if(parent != NULL)
           return parent;
 
         else
         {
-          parent = m_second_tubenode->getParentOf(slice);
+          parent = m_second_component->getParentOf(slice);
 
           if(parent != NULL)
             return parent;
@@ -272,15 +272,15 @@ namespace tubex
 
       else
       {
-        if((m_first_tubenode->domain() & t).is_empty())
-          return (*m_second_tubenode)[m_second_tubenode->domain() & t];
+        if((m_first_component->domain() & t).is_empty())
+          return (*m_second_component)[m_second_component->domain() & t];
 
-        else if((m_second_tubenode->domain() & t).is_empty())
-          return (*m_first_tubenode)[m_first_tubenode->domain() & t];
+        else if((m_second_component->domain() & t).is_empty())
+          return (*m_first_component)[m_first_component->domain() & t];
 
         else
-          return (*m_first_tubenode)[m_first_tubenode->domain() & t]
-               | (*m_second_tubenode)[m_second_tubenode->domain() & t];
+          return (*m_first_component)[m_first_component->domain() & t]
+               | (*m_second_component)[m_second_component->domain() & t];
       }
     }
     
@@ -298,7 +298,7 @@ namespace tubex
           return search_domain & m_domain;
 
         else
-          return m_first_tubenode->invert(y, search_domain) | m_second_tubenode->invert(y, search_domain);
+          return m_first_component->invert(y, search_domain) | m_second_component->invert(y, search_domain);
       }
     }
 
@@ -325,10 +325,10 @@ namespace tubex
 
       else
       {
-        Interval inter_firstsubtube = m_first_tubenode->domain() & intersection;
-        Interval inter_secondsubtube = m_second_tubenode->domain() & intersection;
-        pair<Interval,Interval> ui_past = m_first_tubenode->eval(inter_firstsubtube);
-        pair<Interval,Interval> ui_future = m_second_tubenode->eval(inter_secondsubtube);
+        Interval inter_firstsubtube = m_first_component->domain() & intersection;
+        Interval inter_secondsubtube = m_second_component->domain() & intersection;
+        pair<Interval,Interval> ui_past = m_first_component->eval(inter_firstsubtube);
+        pair<Interval,Interval> ui_future = m_second_component->eval(inter_secondsubtube);
         return make_pair(ui_past.first | ui_future.first, ui_past.second | ui_future.second);
       }
     }
@@ -338,15 +338,15 @@ namespace tubex
     bool TubeNode::operator==(const TubeNode& x) const
     {
       return TubeComponent::operator==(x)
-        && nodesAreEqual(m_first_tubenode, x.getFirstTubeComponent())
-        && nodesAreEqual(m_second_tubenode, x.getSecondTubeComponent());
+        && nodesAreEqual(m_first_component, x.getFirstTubeComponent())
+        && nodesAreEqual(m_second_component, x.getSecondTubeComponent());
     }
     
     bool TubeNode::operator!=(const TubeNode& x) const
     {
       return TubeComponent::operator!=(x)
-        || nodesAreDifferent(m_first_tubenode, x.getFirstTubeComponent())
-        || nodesAreDifferent(m_second_tubenode, x.getSecondTubeComponent());
+        || nodesAreDifferent(m_first_component, x.getFirstTubeComponent())
+        || nodesAreDifferent(m_second_component, x.getSecondTubeComponent());
     }
 
     bool TubeNode::isSubset(const TubeNode& x) const // todo: test this
@@ -461,17 +461,17 @@ namespace tubex
     void TubeNode::setTubeReference(Tube *tube_ref)
     {
       TubeComponent::setTubeReference(tube_ref);
-      m_first_tubenode->setTubeReference(tube_ref);
-      m_second_tubenode->setTubeReference(tube_ref);
+      m_first_component->setTubeReference(tube_ref);
+      m_second_component->setTubeReference(tube_ref);
     }
 
     // Slices/tree structure
 
     void TubeNode::updateSlicesNumber()
     {
-      m_first_tubenode->updateSlicesNumber();
-      m_second_tubenode->updateSlicesNumber();
-      m_slices_number = m_first_tubenode->nbSlices() + m_second_tubenode->nbSlices();
+      m_first_component->updateSlicesNumber();
+      m_second_component->updateSlicesNumber();
+      m_slices_number = m_first_component->nbSlices() + m_second_component->nbSlices();
     }
     
     // Access values
@@ -491,10 +491,10 @@ namespace tubex
           {
             // Bisection is needed
             vector<Interval> v1;
-            m_first_tubenode->invert(y, v1, search_domain, false);
+            m_first_component->invert(y, v1, search_domain, false);
             v_t.insert(v_t.end(), v1.begin(), v1.end());
             vector<Interval> v2;
-            m_second_tubenode->invert(y, v2, search_domain, false);
+            m_second_component->invert(y, v2, search_domain, false);
             v_t.insert(v_t.end(), v2.begin(), v2.end());
           }
 
@@ -586,23 +586,23 @@ namespace tubex
       if(!m_data_update_needed)
         return;
 
-      m_first_tubenode->checkData();
-      m_codomain = m_first_tubenode->codomain();
-      m_volume = m_first_tubenode->volume();
+      m_first_component->checkData();
+      m_codomain = m_first_component->codomain();
+      m_volume = m_first_component->volume();
 
-      if(m_second_tubenode != NULL)
+      if(m_second_component != NULL)
       {
-        m_second_tubenode->checkData();
-        m_codomain |= m_second_tubenode->codomain();
-        m_volume += m_second_tubenode->volume();
+        m_second_component->checkData();
+        m_codomain |= m_second_component->codomain();
+        m_volume += m_second_component->volume();
       }
 
       // Enclosed bounds
-      m_enclosed_bounds = m_first_tubenode->eval();
+      m_enclosed_bounds = m_first_component->eval();
 
-      if(m_second_tubenode != NULL)
+      if(m_second_component != NULL)
       {
-        pair<Interval,Interval> ui_future = m_second_tubenode->eval();
+        pair<Interval,Interval> ui_future = m_second_component->eval();
         m_enclosed_bounds.first |= ui_future.first;
         m_enclosed_bounds.second |= ui_future.second;
       }
@@ -617,20 +617,20 @@ namespace tubex
 
       if(slice_id == -1)
       {
-        m_first_tubenode->flagFutureDataUpdateFromRoot(-1);
-        if(m_second_tubenode != NULL) m_second_tubenode->flagFutureDataUpdateFromRoot(-1);
+        m_first_component->flagFutureDataUpdateFromRoot(-1);
+        if(m_second_component != NULL) m_second_component->flagFutureDataUpdateFromRoot(-1);
       }
 
       else
       {
         DomainException::check(*this, slice_id);
-        int mid_id = m_first_tubenode->nbSlices();
+        int mid_id = m_first_component->nbSlices();
 
         if(slice_id < mid_id)
-          m_first_tubenode->flagFutureDataUpdateFromRoot(slice_id);
+          m_first_component->flagFutureDataUpdateFromRoot(slice_id);
 
         else
-          m_second_tubenode->flagFutureDataUpdateFromRoot(slice_id - mid_id);
+          m_second_component->flagFutureDataUpdateFromRoot(slice_id - mid_id);
       }
     }
 
@@ -647,14 +647,14 @@ namespace tubex
       if(!m_primitive_update_needed)
         return;
       
-      m_first_tubenode->checkPartialPrimitive();
-      m_partial_primitive = m_first_tubenode->getPartialPrimitiveValue();
+      m_first_component->checkPartialPrimitive();
+      m_partial_primitive = m_first_component->getPartialPrimitiveValue();
 
-      if(m_second_tubenode != NULL)
+      if(m_second_component != NULL)
       {
-        m_second_tubenode->checkPartialPrimitive();
-        m_partial_primitive.first |= m_second_tubenode->getPartialPrimitiveValue().first;
-        m_partial_primitive.second |= m_second_tubenode->getPartialPrimitiveValue().second;
+        m_second_component->checkPartialPrimitive();
+        m_partial_primitive.first |= m_second_component->getPartialPrimitiveValue().first;
+        m_partial_primitive.second |= m_second_component->getPartialPrimitiveValue().second;
       }
 
       m_primitive_update_needed = false;
@@ -666,19 +666,19 @@ namespace tubex
 
       if(slice_id == -1)
       {
-        m_first_tubenode->flagFuturePrimitiveUpdateFromRoot(-1);
-        if(m_second_tubenode != NULL) m_second_tubenode->flagFuturePrimitiveUpdateFromRoot(-1);
+        m_first_component->flagFuturePrimitiveUpdateFromRoot(-1);
+        if(m_second_component != NULL) m_second_component->flagFuturePrimitiveUpdateFromRoot(-1);
       }
 
       else
       {
         DomainException::check(*this, slice_id);
-        int mid_id = m_first_tubenode->nbSlices();
+        int mid_id = m_first_component->nbSlices();
 
-        m_first_tubenode->flagFuturePrimitiveUpdateFromRoot(slice_id < mid_id ? slice_id : -1);
+        m_first_component->flagFuturePrimitiveUpdateFromRoot(slice_id < mid_id ? slice_id : -1);
 
-        if(m_second_tubenode != NULL && slice_id >= mid_id)
-          m_second_tubenode->flagFuturePrimitiveUpdateFromRoot(slice_id - mid_id);
+        if(m_second_component != NULL && slice_id >= mid_id)
+          m_second_component->flagFuturePrimitiveUpdateFromRoot(slice_id - mid_id);
       }
     }
 
@@ -706,23 +706,23 @@ namespace tubex
 
       else
       {
-        Interval inter_firstsubtube = m_first_tubenode->domain() & intersection;
-        Interval inter_secondsubtube = m_second_tubenode->domain() & intersection;
+        Interval inter_firstsubtube = m_first_component->domain() & intersection;
+        Interval inter_secondsubtube = m_second_component->domain() & intersection;
 
         if(inter_firstsubtube.lb() == inter_firstsubtube.ub() && inter_secondsubtube.lb() == inter_secondsubtube.ub())
-          return make_pair(m_first_tubenode->getPartialPrimitiveValue().first & m_second_tubenode->getPartialPrimitiveValue().first,
-                           m_first_tubenode->getPartialPrimitiveValue().second & m_second_tubenode->getPartialPrimitiveValue().second);
+          return make_pair(m_first_component->getPartialPrimitiveValue().first & m_second_component->getPartialPrimitiveValue().first,
+                           m_first_component->getPartialPrimitiveValue().second & m_second_component->getPartialPrimitiveValue().second);
 
         else if(inter_firstsubtube.is_empty() || inter_firstsubtube.lb() == inter_firstsubtube.ub())
-          return m_second_tubenode->getPartialPrimitiveValue(inter_secondsubtube);
+          return m_second_component->getPartialPrimitiveValue(inter_secondsubtube);
 
         else if(inter_secondsubtube.is_empty() || inter_secondsubtube.lb() == inter_secondsubtube.ub())
-          return m_first_tubenode->getPartialPrimitiveValue(inter_firstsubtube);
+          return m_first_component->getPartialPrimitiveValue(inter_firstsubtube);
 
         else
         {
-          pair<Interval,Interval> pp_past = m_first_tubenode->getPartialPrimitiveValue(inter_firstsubtube);
-          pair<Interval,Interval> pp_future = m_second_tubenode->getPartialPrimitiveValue(inter_secondsubtube);
+          pair<Interval,Interval> pp_past = m_first_component->getPartialPrimitiveValue(inter_firstsubtube);
+          pair<Interval,Interval> pp_future = m_second_component->getPartialPrimitiveValue(inter_secondsubtube);
           return make_pair(pp_past.first | pp_future.first, pp_past.second | pp_future.second);
         }
       }

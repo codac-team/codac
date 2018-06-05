@@ -106,7 +106,7 @@ namespace tubex
     /** Class variables **/
 
       mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
-      TubeComponent *m_first_tubenode = NULL, *m_second_tubenode = NULL;
+      TubeComponent *m_first_component = NULL, *m_second_component = NULL;
 
       friend class TubeSlice;
       friend class CtcDeriv;
