@@ -36,7 +36,7 @@ TEST_CASE("input2index / index2input")
   }
 }
 
-TEST_CASE("Tube slices structure")
+/*TEST_CASE("Tube slices structure")
 {
   SECTION("TubeSlice class")
   {
@@ -418,3 +418,4 @@ TEST_CASE("Tube slices structure")
     CHECK(tube_a[1.] == Interval(0.3));
   }
 }
+*/

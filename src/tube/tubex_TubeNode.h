@@ -41,7 +41,7 @@ namespace tubex
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
       void getTubeComponents(std::vector<const TubeComponent*> &v_nodes) const;
-      TubeNode* getParentOf(TubeSlice* slice);
+      TubeNode* getParentOf(TubeComponent* component);
 
       // Access values
       const ibex::Interval& codomain() const;
@@ -108,6 +108,7 @@ namespace tubex
       mutable std::pair<ibex::Interval,ibex::Interval> m_enclosed_bounds;
       TubeComponent *m_first_component = NULL, *m_second_component = NULL;
 
+      friend class Tube;
       friend class TubeSlice;
       friend class CtcDeriv;
   };

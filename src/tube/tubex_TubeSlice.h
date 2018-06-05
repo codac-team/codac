@@ -46,7 +46,7 @@ namespace tubex
       void deleteGates();
       void deleteInputGate();
       void deleteOutputGate();
-      TubeNode* getParentOf(TubeSlice* slice);
+      TubeNode* getParentOf(TubeComponent* component);
 
       // Access values
       const ibex::Interval& codomain() const;

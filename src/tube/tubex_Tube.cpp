@@ -215,38 +215,53 @@ namespace tubex
     {
       DomainException::check(*this, t);
       m_component->checkData();
+      
+      m_component->updateSlicesNumber(); // todo: this should be removed
 
-      if(m_component->domain().lb() == t || m_component->domain().ub() == t)
+      TubeSlice *slice_to_be_sampled = getSlice(t);
+
+      if(slice_to_be_sampled->domain().lb() == t || slice_to_be_sampled->domain().ub() == t)
       {
-        // no degenerate slice
+        // No degenerate slice,
+        // the method has no effect.
       }
 
       else
       {
-        TubeSlice *slice_to_be_sampled = getSlice(t);
         TubeComponent *parent = m_component->getParentOf(slice_to_be_sampled);
-        TubeComponent **new_component; // todo: test simple pointer
+        TubeComponent *new_component = new TubeNode(*slice_to_be_sampled, t);
 
-        if(parent == m_component) // tube has one slice
-          new_component = &m_component;
+        if(parent == NULL) // no parent, the tube has one slice
+        {
+          delete m_component;
+          m_component = new_component;
+        }
 
         else
         {
-          if(slice_to_be_sampled == ((TubeNode*)m_component)->getFirstTubeComponent())
-            *new_component = (((TubeNode*)m_component)->getFirstTubeComponent());
+          TubeComponent *first_component = ((TubeNode*)parent)->m_first_component;
+          TubeComponent *second_component = ((TubeNode*)parent)->m_second_component;
 
-          else if(slice_to_be_sampled == ((TubeNode*)m_component)->getSecondTubeComponent())
-            *new_component = (((TubeNode*)m_component)->getSecondTubeComponent());
+          if(slice_to_be_sampled == (TubeSlice*)first_component)
+          {
+            delete first_component;
+            ((TubeNode*)parent)->m_first_component = new_component;
+          }
+          
+          else if(slice_to_be_sampled == (TubeSlice*)second_component)
+          {
+            delete second_component;
+            ((TubeNode*)parent)->m_second_component = new_component;
+          }
 
           else
             throw Exception("Tube::sample", "unhandled case");
         }
 
-        delete *new_component;
-        *new_component = new TubeNode(*slice_to_be_sampled, t);
-        m_component->updateSlicesNumber();
-        set(t, gate);
+        set(gate, t);
       }
+      
+      m_component->updateSlicesNumber();
     }
 
     void Tube::sample(const vector<double>& v_bounds)
@@ -453,7 +468,10 @@ namespace tubex
     
     ostream& operator<<(ostream& str, const Tube& x)
     {
-      str << "Tube " << x.domain() << "↦" << x.codomain() << flush;
+      str << "Tube " << x.domain() << "↦" << x.codomain()
+          << ", " << x.nbSlices()
+          << " slice" << (x.nbSlices() > 1 ? "s" : "")
+          << flush;
       return str;
     }
 

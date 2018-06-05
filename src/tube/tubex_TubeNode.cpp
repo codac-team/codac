@@ -195,28 +195,20 @@ namespace tubex
       m_second_component->getTubeComponents(v_nodes);
     }
     
-    TubeNode* TubeNode::getParentOf(TubeSlice* slice)
+    TubeNode* TubeNode::getParentOf(TubeComponent* component)
     {
-      if(m_first_component == slice || m_second_component == slice)
+      if(m_first_component == component || m_second_component == component)
         return this;
 
       else
       {
-        TubeNode *parent = m_first_component->getParentOf(slice);
+        TubeNode *parent = m_first_component->getParentOf(component);
 
         if(parent != NULL)
           return parent;
 
         else
-        {
-          parent = m_second_component->getParentOf(slice);
-
-          if(parent != NULL)
-            return parent;
-
-          else
-            throw Exception("TubeNode::getParentOf", "unable to find slice");
-        }
+          return m_second_component->getParentOf(component);
       }
     }
 

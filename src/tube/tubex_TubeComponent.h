@@ -50,7 +50,7 @@ namespace tubex
       double index2input(int slice_id) const;
       virtual void getTubeComponents(std::vector<const TubeComponent*> &v_nodes) const = 0;
       Tube* tubeReference() const;
-      virtual TubeNode* getParentOf(TubeSlice* slice) = 0;
+      virtual TubeNode* getParentOf(TubeComponent* component) = 0;
 
       // Access values
       virtual const ibex::Interval& codomain() const = 0;

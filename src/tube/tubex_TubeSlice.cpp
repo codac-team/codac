@@ -149,7 +149,7 @@ namespace tubex
       return *m_output_gate;
     }
     
-    TubeNode* TubeSlice::getParentOf(TubeSlice* slice)
+    TubeNode* TubeSlice::getParentOf(TubeComponent* component)
     {
       return NULL;
     }
