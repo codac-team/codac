@@ -24,8 +24,7 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      //TubeNode(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
-      TubeNode(const ibex::Interval& domain, const std::vector<double>& v_bounds, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      TubeNode(const ibex::Interval& first_domain, const ibex::Interval& second_domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       TubeNode(const TubeNode& x);
       TubeNode(const TubeNode& x, const ibex::Interval& codomain);
       ~TubeNode();

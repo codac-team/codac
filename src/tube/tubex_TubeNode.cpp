@@ -26,16 +26,13 @@ namespace tubex
 
     // Definition
 
-    /*TubeNode::TubeNode(const Interval& domain, const Interval& codomain) : TubeComponent(domain, codomain)
+    TubeNode::TubeNode(const Interval& first_domain, const Interval& second_domain, const Interval& codomain) : TubeComponent(first_domain | second_domain, codomain)
     {
-      m_first_tubenode = new TubeSlice(domain, codomain);
-      m_first_tubenode->setTubeReference(m_tube_ref);
-      m_second_tubenode = NULL;
-    }*/
+      if(first_domain.ub() != second_domain.lb())
+        throw Exception("TubeNode constructor", "invalid subdomains");
 
-    TubeNode::TubeNode(const Interval& domain, const vector<double>& v_bounds, const Interval& codomain) : TubeComponent(domain, codomain)
-    {
-      // todo
+      m_first_tubenode = new TubeSlice(first_domain, codomain);
+      m_second_tubenode = new TubeSlice(second_domain, codomain);
     }
 
     TubeNode::TubeNode(const TubeNode& x) : TubeComponent(x)

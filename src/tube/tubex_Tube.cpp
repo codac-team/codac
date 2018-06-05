@@ -29,11 +29,12 @@ namespace tubex
 
     Tube::Tube(const Interval& domain, const Interval& codomain)
     {
+      // By default, the tube is defined as one single slice
       m_component = new TubeSlice(domain, codomain);
       m_component->setTubeReference(this);
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const Interval& codomain)
+    Tube::Tube(const Interval& domain, double timestep, const Interval& codomain) : Tube(domain, codomain)
     {
       if(timestep < 0.)
         throw Exception("Tube constructor", "invalid timestep");
@@ -49,16 +50,13 @@ namespace tubex
           if(ub < domain.ub()) v_bounds.push_back(ub);
         } while(ub < domain.ub());
 
-        m_component = new TubeNode(domain, v_bounds, codomain);
+        sample(v_bounds);
       }
 
       else // timestep == 0. or timestep >= domain.diam()
       {
-        // then the tube is defined as one single slice
-        m_component = new TubeSlice(domain, codomain);
+        // then the tube stays defined as one single slice
       }
-
-      m_component->setTubeReference(this);
     }
     
     Tube::Tube(const Interval& domain, double timestep, const Function& function) : Tube(domain, timestep)

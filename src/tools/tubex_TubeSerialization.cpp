@@ -134,15 +134,14 @@ namespace tubex
         bin_file.read((char*)&domain_ub, sizeof(double));
         Interval domain(domain_lb, domain_ub);
 
-        // Creating tube's component
+        // Creating tube
 
-        if(slices_number == 1)
-          tube.m_component = new TubeSlice(domain);
+        tube.m_component = new TubeSlice(domain);
 
-        else if(slices_number > 1)
-          tube.m_component = new TubeNode(domain, v_domain_bounds);
+        if(slices_number > 1)
+          tube.sample(v_domain_bounds);
 
-        else
+        else if(slices_number < 1)
           throw Exception("deserializeTube()", "wrong slices number");
 
         // Codomains
