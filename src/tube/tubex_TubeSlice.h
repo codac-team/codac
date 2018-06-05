@@ -52,6 +52,7 @@ namespace tubex
       const ibex::Interval& codomain() const;
       const ibex::IntervalVector box() const;
       double volume() const;
+      const ibex::Interval operator[](int slice_id) const;
       const ibex::Interval operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& search_domain) const;
       const ibex::Interval interpol(double t, const TubeSlice& derivative) const;

@@ -55,6 +55,7 @@ namespace tubex
       // Access values
       virtual const ibex::Interval& codomain() const = 0;
       virtual double volume() const = 0;
+      virtual const ibex::Interval operator[](int slice_id) const = 0;
       virtual const ibex::Interval operator[](double t) const = 0;
       virtual const ibex::Interval operator[](const ibex::Interval& t) const = 0;
       virtual ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const = 0;

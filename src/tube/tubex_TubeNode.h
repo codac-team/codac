@@ -46,7 +46,7 @@ namespace tubex
       // Access values
       const ibex::Interval& codomain() const;
       double volume() const;
-      const ibex::Interval& operator[](int slice_id) const;
+      const ibex::Interval operator[](int slice_id) const;
       const ibex::Interval operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& t) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
@@ -63,7 +63,6 @@ namespace tubex
 
       // Setting values
       void set(const ibex::Interval& y);
-      void set(const ibex::Interval& y, int slice_id);
       void setEmpty();
       TubeNode& inflate(double rad);
 

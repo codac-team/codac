@@ -175,6 +175,16 @@ namespace tubex
       return m_volume;
     }
 
+    const Interval TubeSlice::operator[](int slice_id) const
+    {
+      // Write access is not allowed for this operator:
+      // a further call to checkDataTree() is needed when values change,
+      // this call cannot be garanteed with a direct access to m_codomain
+      // For write access: use set()
+      DomainException::check(*this, slice_id);
+      return m_codomain;
+    }
+
     const Interval TubeSlice::operator[](double t) const
     {
       // Write access is not allowed for this operator:

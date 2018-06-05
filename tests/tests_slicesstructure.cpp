@@ -36,7 +36,7 @@ TEST_CASE("input2index / index2input")
   }
 }
 
-/*TEST_CASE("Tube slices structure")
+TEST_CASE("Tube slices structure")
 {
   SECTION("TubeSlice class")
   {
@@ -57,6 +57,7 @@ TEST_CASE("input2index / index2input")
     CHECK(tube_b.domain() == Interval(0.,1.));
     CHECK(tube_b.codomain() == Interval(-1.,1.));
     CHECK(tube_b.nbSlices() == 1);
+    CHECK(tube_b.getSlice(0) != NULL);
     CHECK(tube_b.getSlice(0)->tubeReference() == &tube_b);
 
     Tube tube_c = tube_a;
@@ -189,11 +190,15 @@ TEST_CASE("input2index / index2input")
     tube.set(Interval(-3.,2.), 0);
     tube.set(Interval(-1.,3.), 1);
     tube.set(Interval(-3.,2.), 2);
+    CHECK(tube.nbSlices() == 3);
     tube.set(Interval(-3.,1.), 0.); // gate
+    CHECK(tube.nbSlices() == 3);
     tube.set(Interval(0.,1.), 2.); // gate
+    CHECK(tube.nbSlices() == 3);
     tube.set(Interval(-1.,1.), 4.); // gate
+    CHECK(tube.nbSlices() == 3);
     tube.set(Interval(-1.,0.), 6.); // gate
-
+    CHECK(tube.nbSlices() == 3);
     CHECK(tube[0] == Interval(-3.,2.));
     CHECK(tube[1] == Interval(-1.,3.));
     CHECK(tube[2] == Interval(-3.,2.));
@@ -418,4 +423,3 @@ TEST_CASE("input2index / index2input")
     CHECK(tube_a[1.] == Interval(0.3));
   }
 }
-*/

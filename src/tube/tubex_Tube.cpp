@@ -84,18 +84,23 @@ namespace tubex
       }
     }
 
-    Tube::Tube(const Tube& x, const Interval& codomain)
+    Tube::Tube(const Tube& x)
     {
       if(typeid(*(x.m_component)) == typeid(TubeSlice))
-        m_component = new TubeSlice(x.m_component->domain(), codomain);
+        m_component = new TubeSlice(*((TubeSlice*)x.m_component));
 
       else if(typeid(*(x.m_component)) == typeid(TubeNode))
-        m_component = new TubeNode(*((TubeNode*)x.m_component), codomain);
+        m_component = new TubeNode(*((TubeNode*)x.m_component));
 
       else
         throw Exception("Tube constructor", "invalid component");
 
       m_component->setTubeReference(this);
+    }
+
+    Tube::Tube(const Tube& x, const Interval& codomain) : Tube(x)
+    {
+      set(codomain);
     }
 
     Tube::Tube(const Trajectory& traj, double thickness, double timestep) : Tube(traj.domain(), timestep, Interval::EMPTY_SET)
@@ -216,14 +221,13 @@ namespace tubex
       DomainException::check(*this, t);
       m_component->checkData();
       
-      m_component->updateSlicesNumber(); // todo: this should be removed
-
       TubeSlice *slice_to_be_sampled = getSlice(t);
 
       if(slice_to_be_sampled->domain().lb() == t || slice_to_be_sampled->domain().ub() == t)
       {
         // No degenerate slice,
         // the method has no effect.
+        return;
       }
 
       else
@@ -258,10 +262,9 @@ namespace tubex
             throw Exception("Tube::sample", "unhandled case");
         }
 
+        m_component->updateSlicesNumber();
         set(gate, t);
       }
-      
-      m_component->updateSlicesNumber();
     }
 
     void Tube::sample(const vector<double>& v_bounds)
@@ -414,7 +417,6 @@ namespace tubex
     void Tube::set(const Interval& y, double t)
     {
       sample(t);
-
       TubeSlice *slice = getSlice(t);
 
       if(slice->domain().lb() == t)

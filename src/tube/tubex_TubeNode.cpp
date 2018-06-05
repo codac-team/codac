@@ -36,18 +36,18 @@ namespace tubex
       setTubeReference(slice.tubeReference());
       
       if(slice.prevSlice() != NULL)
-      {
         TubeSlice::chainSlices(slice.prevSlice(), (TubeSlice*)m_first_component);
+
+      else
         ((TubeSlice*)m_first_component)->setInputGate(slice.inputGate());
-      }
 
       TubeSlice::chainSlices((TubeSlice*)m_first_component, (TubeSlice*)m_second_component);
       
       if(slice.nextSlice() != NULL)
-      {
         TubeSlice::chainSlices((TubeSlice*)m_second_component, slice.nextSlice());
+
+      else
         ((TubeSlice*)m_second_component)->setOutputGate(slice.outputGate());
-      }
 
       m_slices_number = 2;
     }
@@ -105,8 +105,6 @@ namespace tubex
 
         else
           m_first_component = new TubeNode(*((TubeNode*)x.getFirstTubeComponent()));
-        
-        m_first_component->setTubeReference(m_tube_ref);
       }
 
       if(x.getSecondTubeComponent() != NULL)
@@ -117,7 +115,6 @@ namespace tubex
         else
           m_second_component = new TubeNode(*((TubeNode*)x.getSecondTubeComponent()));
 
-        m_second_component->setTubeReference(m_tube_ref);
         TubeSlice::chainSlices(m_first_component->getLastSlice(), m_second_component->getFirstSlice());
       }
 
@@ -226,7 +223,7 @@ namespace tubex
       return m_volume;
     }
 
-    const Interval& TubeNode::operator[](int slice_id) const
+    const Interval TubeNode::operator[](int slice_id) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
@@ -405,11 +402,6 @@ namespace tubex
       }
 
       flagFutureDataUpdateFromRoot(); // todo: remove this
-    }
-    
-    void TubeNode::set(const Interval& y, int slice_id)
-    {
-      getSlice(slice_id)->set(y);
     }
     
     void TubeNode::setEmpty()
