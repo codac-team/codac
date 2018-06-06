@@ -17,6 +17,10 @@
 #include "vibes.h"
 #include "ibex_IntervalVector.h"
 
+// a real value to display unbounded slices
+#include <limits>
+#define BOUNDED_INFINITY numeric_limits<float>::max()
+
 namespace tubex
 {
   class VibesFigure

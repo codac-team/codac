@@ -43,12 +43,14 @@ namespace tubex
       static Polygon intersect(const Polygon& p1, const Polygon& p2);
       static Polygon translate(const Polygon& p, const ibex::IntervalVector& box);
 
-    //protected:
+    protected:
 
       #ifdef _TUBES_POLYG_WITH_BOOST_
         Polygon(const boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> >& p);
         boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > m_polygon;
       #endif
+
+      friend class VibesFigure_Polygon;
   };
 }
 

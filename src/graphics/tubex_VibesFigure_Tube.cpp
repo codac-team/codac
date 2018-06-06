@@ -14,10 +14,6 @@
 #include "vibes.h"
 #include "tubex_VibesFigure_Tube.h"
 
-// a real value to display unbounded slices
-#include <limits>
-#define BOUNDED_INFINITY numeric_limits<float>::max()
-
 using namespace std;
 using namespace ibex;
 

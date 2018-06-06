@@ -22,12 +22,12 @@ using namespace ibex;
   #include <boost/geometry.hpp>
   #include <boost/foreach.hpp>
 
+  using boost::geometry::get;
+  typedef boost::geometry::model::d2::point_xy<double> point;
+  typedef boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > polygon;
+
   namespace tubex
   {
-    using boost::geometry::get;
-    typedef boost::geometry::model::d2::point_xy<double> point;
-    typedef boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > polygon;
-
     Polygon::Polygon(const polygon& p)
     {
       m_polygon = p;
@@ -75,20 +75,6 @@ using namespace ibex;
     {
       return m_polygon.outer().size();
     }
-
-    /*void Polygon::show(const vibes::Params& params) const
-    {
-      vector<point> const& points = m_polygon.outer();
-      vector<double> v_x, v_y;
-
-      for(vector<point>::size_type i = 0; i < points.size(); ++i)
-      {
-        v_x.push_back(get<0>(points[i]));
-        v_y.push_back(get<1>(points[i]));
-      } 
-
-      vibes::drawPolygon(v_x, v_y, params);
-    }*/
 
     IntervalVector Polygon::box() const
     {
