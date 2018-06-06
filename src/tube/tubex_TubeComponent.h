@@ -47,7 +47,6 @@ namespace tubex
       TubeSlice* getLastSlice() const;
       virtual void getSlices(std::vector<const TubeSlice*>& v_slices) const = 0;
       virtual int input2index(double t) const = 0;
-      //double index2input(int slice_id) const;
       Tube* tubeReference() const;
       virtual TubeNode* getParentOf(TubeComponent* component) = 0;
 
@@ -58,6 +57,7 @@ namespace tubex
       virtual const ibex::Interval operator[](double t) const = 0;
       virtual const ibex::Interval operator[](const ibex::Interval& t) const = 0;
       virtual ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const = 0;
+      virtual void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const = 0;
       virtual const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const = 0;
 
       // Tests

@@ -254,7 +254,7 @@ TEST_CASE("Testing set inversion")
   
   SECTION("Vector set inversion")
   {
-    /*Tube tube = tubeTest1();
+    Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
 
     vector<Interval> v;
@@ -346,7 +346,7 @@ TEST_CASE("Testing set inversion")
       CHECK(v[0] == Interval(3.0,5.0));
       CHECK(v[1] == Interval(9.0,10.0));
       CHECK(v[2] == Interval(11.0,15.0));
-    }*/
+    }
   }
 }
 

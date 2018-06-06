@@ -57,6 +57,7 @@ namespace tubex
       const ibex::Interval interpol(double t, const TubeSlice& derivative) const;
       const ibex::Interval interpol(const ibex::Interval& t, const TubeSlice& derivative) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
       // Tests

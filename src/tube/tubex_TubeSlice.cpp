@@ -238,6 +238,11 @@ namespace tubex
         return search_domain & m_domain;
     }
 
+    void TubeSlice::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain) const
+    {
+      return invert(y, v_t, search_domain, true);
+    }
+
     const pair<Interval,Interval> TubeSlice::eval(const Interval& t) const
     {
       Interval intersection = t & m_domain;

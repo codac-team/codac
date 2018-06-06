@@ -19,6 +19,7 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
 
     CHECK(contraction);
     CHECK(x.inputGate() == Interval(-1.,2.));
@@ -36,6 +37,7 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
 
     CHECK(contraction);
     CHECK(x.inputGate() == Interval(-1.,3.));
@@ -53,6 +55,7 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
 
     CHECK(contraction);
     CHECK(x.inputGate() == Interval(1.));
@@ -74,6 +77,7 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
 
     CHECK(contraction);
     CHECK(x.inputGate().is_empty());
@@ -92,6 +96,7 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
 
     CHECK(!contraction);
     CHECK(x.inputGate() == Interval::ALL_REALS);
@@ -109,6 +114,7 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
 
     CHECK(contraction);
     CHECK(x.inputGate().is_empty());
@@ -127,9 +133,11 @@ TEST_CASE("CtcDeriv")
 
     Tube tube_test_fwd(tube);
     ctc.contractFwd(tube_test_fwd, tubedot);
+    CHECK_FALSE(ctc.contractFwd(tube_test_fwd, tubedot)); // fixed point already reached
 
     Tube tube_test_fwdbwd(tube);
     ctc.contract(tube_test_fwdbwd, tubedot);
+    CHECK_FALSE(ctc.contract(tube_test_fwdbwd, tubedot)); // fixed point already reached
 
     CHECK(tube_test_fwd == tube_test_fwdbwd);
     CHECK(tube_test_fwd[0] == Interval(-1.,1.));
@@ -152,9 +160,11 @@ TEST_CASE("CtcDeriv")
 
     Tube tube_test_bwd(tube);
     ctc.contractBwd(tube_test_bwd, tubedot);
+    CHECK_FALSE(ctc.contractBwd(tube_test_bwd, tubedot)); // fixed point already reached
 
     Tube tube_test_fwdbwd(tube);
     ctc.contract(tube_test_fwdbwd, tubedot);
+    CHECK_FALSE(ctc.contract(tube_test_fwdbwd, tubedot)); // fixed point already reached
 
     CHECK(tube_test_bwd == tube_test_fwdbwd);
     CHECK(tube_test_bwd[0] == Interval(-3.5,6.));
@@ -177,6 +187,7 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     ctc.contract(tube, tubedot);
+    CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
 
     CHECK(tube[0] == Interval(-1.,1.));
     CHECK(tube[1] == Interval(-2,1.5));
@@ -203,6 +214,7 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     ctc.contract(tube, tubedot);
+    CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
 
     CHECK(tube[0] == Interval(0.,2.));
     CHECK(tube[1] == Interval(1.5,3.5));
@@ -228,36 +240,43 @@ TEST_CASE("CtcDeriv (interpol)")
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(0.5,2.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(0.5,2.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-3.5,2.5));
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(-1.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(-1.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-1.,2.));
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(-0.5,0.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(-0.5,0.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-2.,3.));
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(1.5), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(1.5), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-3.5,1.5));
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(2.5), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(2.5), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-2.5,0.5));
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(3.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(3.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-2.,0.));
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(-1.,3.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(-1.,3.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-3.5,3.));
 
@@ -278,11 +297,13 @@ TEST_CASE("CtcDeriv (interpol)")
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(2.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(2.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-4.,0.));
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(-1.,3.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(-1.,3.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-5.,3.));
   }
@@ -300,26 +321,31 @@ TEST_CASE("CtcDeriv (interpol)")
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, Interval(0.5,2.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(0.5,2.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-2.,-0.5));
 
     y = Interval(-1.,300.);
     contraction = ctc.contract(x, v, Interval(1.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(1.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-1.));
 
     y = Interval(1.,300.);
     contraction = ctc.contract(x, v, Interval(1.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(1.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval::EMPTY_SET);
 
     y = Interval::ALL_REALS;
     contraction = ctc.contract(x, v, 1., y);
+    CHECK_FALSE(ctc.contract(x, v, 1., y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-1.));
 
     y = Interval(-20.,1.);
     contraction = ctc.contract(x, v, Interval(-1.,3.), y);
+    CHECK_FALSE(ctc.contract(x, v, Interval(-1.,3.), y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval(-3.,1.));
   }
@@ -350,6 +376,7 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(y == Interval::ALL_REALS);
 
     ctc.contract(tube, tubedot); // contraction of the tube
+    CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
     CHECK(tube.codomain() == Interval(0.,4.25));
     CHECK(tube[0] == Interval(0.,2.));
     CHECK(tube[1] == Interval(1.5,3.5));

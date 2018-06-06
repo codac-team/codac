@@ -222,8 +222,8 @@ namespace tubex
 
   bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y)
   {
-    bool contraction = (z != (z & y[t])) && (y[t] != (z & y[t]));
-    y.sample(t);
+    bool contraction = (z != (z & y[t])) || (y[t] != (z & y[t]));
+    y.set(z, t);
     z &= y[t];
     return contraction;
   }

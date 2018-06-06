@@ -212,12 +212,6 @@ namespace tubex
       return m_component->input2index(t);
     }
 
-    /* DEPRECATED
-    double Tube::index2input(int slice_id) const
-    {
-      return m_component->index2input(slice_id);
-    }*/
-
     void Tube::sample(double t, const Interval& gate)
     {
       DomainException::check(*this, t);
@@ -326,8 +320,14 @@ namespace tubex
 
     void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain) const
     {
-      // todo: case according to Class object
-      //m_component->invert(y, v_t, search_domain);
+      if(typeid(*m_component) == typeid(TubeSlice))
+        ((TubeSlice*)m_component)->invert(y, v_t, search_domain);
+
+      else if(typeid(*m_component) == typeid(TubeNode))
+        ((TubeNode*)m_component)->invert(y, v_t, search_domain);
+
+      else
+        throw Exception("Tube::invert", "invalid component");
     }
 
     const pair<Interval,Interval> Tube::eval(const Interval& t) const

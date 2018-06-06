@@ -31,7 +31,7 @@ namespace tubex
 
     bool ctc = false;
     const Interval t = x.domain();
-    Interval y;
+    Interval y = x.codomain();
 
     ctc |= contractGates(x, v);
     ctc |= contractEnvelope(x, v, t, y);
@@ -43,14 +43,9 @@ namespace tubex
   bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)
   {
     StructureException::check(x, v);
-
-    bool ctc = false;
     TubeSlice x_temp = x;
-
-    ctc |= contractGates(x_temp, v);
-    ctc |= contractEnvelope(x_temp, v, t, y);
-
-    return ctc;
+    contractGates(x_temp, v);
+    return contractEnvelope(x_temp, v, t, y);
   }
 
   bool CtcDeriv::contract(Tube& x, const Tube& v)
@@ -91,7 +86,6 @@ namespace tubex
       v_slice = v_slice->prevSlice();
     }
 
-    x.m_component->flagFutureDataUpdateFromRoot(); // todo: remove this
     return ctc;
   }
 
