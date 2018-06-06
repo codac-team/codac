@@ -77,10 +77,11 @@ namespace tubex
       return const_cast<TubeSlice*>(getSlice(nbSlices() - 1));
     }
 
+    /* DEPRECATED
     double TubeComponent::index2input(int slice_id) const
     {
       return getSlice(slice_id)->domain().lb(); // by convention
-    }
+    }*/
     
     Tube* TubeComponent::tubeReference() const
     {

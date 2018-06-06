@@ -212,10 +212,11 @@ namespace tubex
       return m_component->input2index(t);
     }
 
+    /* DEPRECATED
     double Tube::index2input(int slice_id) const
     {
       return m_component->index2input(slice_id);
-    }
+    }*/
 
     void Tube::sample(double t, const Interval& gate)
     {

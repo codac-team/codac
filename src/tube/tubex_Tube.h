@@ -18,6 +18,9 @@
 
 #define SERIALIZATION_VERSION 2
 
+// todo:
+// - test memory leaks
+
 namespace tubex
 {
   class Tube
@@ -52,7 +55,7 @@ namespace tubex
       TubeSlice* getLastSlice() const;
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
-      double index2input(int slice_id) const;
+      //double index2input(int slice_id) const;
       void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
       void sample(const std::vector<double>& v_bounds);
       TubeComponent* getTubeComponent();

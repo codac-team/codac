@@ -47,7 +47,7 @@ namespace tubex
       TubeSlice* getLastSlice() const;
       virtual void getSlices(std::vector<const TubeSlice*>& v_slices) const = 0;
       virtual int input2index(double t) const = 0;
-      double index2input(int slice_id) const;
+      //double index2input(int slice_id) const;
       Tube* tubeReference() const;
       virtual TubeNode* getParentOf(TubeComponent* component) = 0;
 
