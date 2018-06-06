@@ -28,6 +28,11 @@ using namespace ibex;
 
   namespace tubex
   {
+    Polygon::Polygon()
+    {
+
+    }
+
     Polygon::Polygon(const polygon& p)
     {
       m_polygon = p;
@@ -84,6 +89,11 @@ using namespace ibex;
       iv_box[0] = Interval(get<0>(box.min_corner()), get<0>(box.max_corner()));
       iv_box[1] = Interval(get<1>(box.min_corner()), get<1>(box.max_corner()));
       return iv_box;
+    }
+
+    void Polygon::makeConvex()
+    {
+      boost::geometry::convex_hull(m_polygon, m_polygon);
     }
 
     Polygon Polygon::intersect(const Polygon& p1, const Polygon& p2)

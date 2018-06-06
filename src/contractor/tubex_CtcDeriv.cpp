@@ -201,8 +201,13 @@ namespace tubex
 
   bool CtcDeriv::contractPolygon(const TubeSlice& x, const TubeSlice& v, Polygon& p)
   {
-    // todo
-
+    vector<double> v_x, v_y;
+    v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().lb());
+    v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().ub());
+    v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().lb());
+    v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().ub());
+    p = Polygon(v_x, v_y);
+    p.makeConvex();
     return false;
   }
 

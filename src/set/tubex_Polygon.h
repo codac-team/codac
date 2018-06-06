@@ -32,6 +32,7 @@ namespace tubex
   {
     public:
 
+      Polygon();
       Polygon(const ibex::IntervalVector& box);
       Polygon(const std::vector<ibex::IntervalVector>& v_boxes);
       Polygon(const std::vector<double>& v_x, const std::vector<double>& v_y);
@@ -39,6 +40,7 @@ namespace tubex
       int nbPoints() const;
       //void show(const vibes::Params& params) const;
       ibex::IntervalVector box() const;
+      void makeConvex();
 
       static Polygon intersect(const Polygon& p1, const Polygon& p2);
       static Polygon translate(const Polygon& p, const ibex::IntervalVector& box);
