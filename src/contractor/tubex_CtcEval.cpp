@@ -83,7 +83,7 @@ namespace tubex
 
           computeIndex(t, z, y, index_lb, index_ub);
 
-          if(!propagate)
+          //if(!propagate) // todo: optimize this? For now, propagation performed by CtcDeriv
           {
             min_index_ctc = max(0, index_lb - 1);
             max_index_ctc = min(index_ub + 1, y.nbSlices() - 1);
@@ -216,6 +216,9 @@ namespace tubex
       m_t_contracted = t.diam() < old_t_diam;
       m_z_contracted = z.diam() < old_z_diam;
     }
+
+    if(propagate)
+      m_y_contracted |= y.ctcFwdBwd(w); // todo: optimize propagations from evaluation
     
     return m_z_contracted | m_y_contracted | m_t_contracted;
   }

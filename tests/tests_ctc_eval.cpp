@@ -42,6 +42,7 @@ TEST_CASE("CtcEval")
     intv_y = Interval(-0.5,1.);
     CHECK(x[1.] == Interval(-4.5,2.5));
     contraction = x.ctcEval(intv_t, intv_y, xdot, false);
+    CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     CHECK(contraction);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
@@ -63,6 +64,7 @@ TEST_CASE("CtcEval")
     intv_y = Interval(-0.5,1.);
     CHECK(x[1.] == Interval(-4.5,2.5));
     contraction = x.ctcEval(intv_t, intv_y, xdot, true);
+    CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, true)); // fixed point already reached
     CHECK(contraction);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
@@ -86,6 +88,7 @@ TEST_CASE("CtcEval")
     intv_t = 1.;
     intv_y = Interval(-0.5,1.);
     contraction = x.ctcEval(intv_t, intv_y, xdot, true);
+    CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, true)); // fixed point already reached
     CHECK(contraction);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
@@ -111,11 +114,12 @@ TEST_CASE("CtcEval")
     CHECK(x[8] == Interval(-2.5,4.5));
     CHECK(x[9] == Interval(-3.,5.5));
 
-    /*// Test B
+    // Test B
     x = x_raw;
     intv_t = Interval(0.5,2.5);
     intv_y = -2.;
     contraction = x.ctcEval(intv_t, intv_y, xdot, false);
+    CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     CHECK(contraction);
     CHECK(intv_t == Interval(0.5,2.5));
     CHECK(intv_y == -2.);
@@ -130,13 +134,35 @@ TEST_CASE("CtcEval")
     CHECK(x[8] == Interval(-2.5,4.5));
     CHECK(x[9] == Interval(-3.,5.5));
 
-    // Test C
+    // Test B propag
     x = x_raw;
+    intv_t = Interval(0.5,2.5);
+    intv_y = -2.;
+    contraction = x.ctcEval(intv_t, intv_y, xdot, true);
+    CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, true)); // fixed point already reached
+    CHECK(contraction);
+    CHECK(intv_t == Interval(0.5,2.5));
+    CHECK(intv_y == -2.);
+    CHECK(x[0] == Interval(-4.5,-0.75)); // optim: Interval(-4.5,-0.75)
+    CHECK(x[1] == Interval(-3.5,-0.5)); // optim: Interval(-3.5,-0.5)
+    CHECK(x[2] == Interval(-3.25,0.5)); // optim: Interval(-3.,0.5)
+    CHECK(x[3.] == Interval(-2.5,0.5));
+    CHECK(ApproxIntv(x[3]) == Interval(-2.5,1.16666667));
+    CHECK(x[4] == Interval(-1.5,1.));
+    CHECK(x[5] == Interval(-1.,1.5));
+    CHECK(x[6] == Interval(-1.5,2.5));
+    CHECK(x[7] == Interval(-2.,3.5));
+    CHECK(x[8] == Interval(-2.5,4.5));
+    CHECK(x[9] == Interval(-3.,5.5));
+
+    // Test C
+    /*x = x_raw;
     intv_t = Interval(0.5,3.5);
     intv_y = -4.;
     contraction = x.ctcEval(intv_t, intv_y, xdot, false);
+    CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     CHECK(contraction);
-    CHECK(intv_t == Interval(0.5,2.));
+    CHECK(intv_t == Interval(0.5,1.5));
     CHECK(intv_y == -4.);
     CHECK(x[0] == Interval(-5.5,-3.)); // optim: Interval(-5.5,-3.25)
     CHECK(x[1] == Interval(-4.5,-2.5)); // optim: Interval(-4.5,-2.5)
@@ -148,7 +174,7 @@ TEST_CASE("CtcEval")
     CHECK(x[7] == Interval(-2.,3.5));
     CHECK(x[8] == Interval(-2.5,4.5));
     CHECK(x[9] == Interval(-3.,5.5));
-
+/*
     // Test D
     x = x_raw;
     intv_t = 3.5;
