@@ -12,7 +12,10 @@
 
 #include "ibex.h"
 #include "vibes.h"
+#include "tubex_Polygon.h"
+#include "tubex_CtcDeriv.h"
 #include "tubex_VibesFigure_Tube.h"
+#include "tubex_VibesFigure_Polygon.h"
 
 using namespace std;
 using namespace ibex;
@@ -105,6 +108,7 @@ namespace tubex
       setTubeColor(tube, color_frgrnd, color_bckgrnd);
       setTubeColor(tube, TubeColorType::SLICES, DEFAULT_SLICES_COLOR);
       setTubeColor(tube, TubeColorType::GATES, DEFAULT_GATES_COLOR);
+      setTubeColor(tube, TubeColorType::POLYGONS, DEFAULT_POLYGONS_COLOR);
     }
 
     void VibesFigure_Tube::setTubeName(const Tube *tube, const string& name)
@@ -113,6 +117,14 @@ namespace tubex
         cout << "Warning VibesFigure_Tube::setTubeName(): unknown tube" << endl;
 
       m_map_tubes[tube].name = name;
+    }
+    
+    void VibesFigure_Tube::setTubeDerivative(const Tube *tube, const Tube *derivative)
+    {
+      if(m_map_tubes.find(tube) == m_map_tubes.end())
+        cout << "Warning VibesFigure_Tube::setTubeDerivative(): unknown tube" << endl;
+
+      m_map_tubes[tube].tube_derivative = derivative;
     }
 
     void VibesFigure_Tube::setTubeColor(const Tube *tube, const string& color_frgrnd, const string& color_bckgrnd)
@@ -276,23 +288,38 @@ namespace tubex
         // Can be either displayed slice by slice or with a polygon envelope.
 
         vibes::Params params_foreground = vibesParams("figure", m_name, "group", group_name);
+        vibes::Params params_foreground_polygons = vibesParams("figure", m_name, "group", group_name + "_polygons");
         vibes::Params params_foreground_gates = vibesParams("figure", m_name, "group", group_name + "_gates", "FixedScale", true);
         vibes::clearGroup(m_name, group_name);
+        vibes::clearGroup(m_name, group_name + "_polygons");
         vibes::clearGroup(m_name, group_name + "_gates");
 
         if(detail_slices)
         {
           vibes::newGroup(group_name, m_map_tubes[tube].m_colors[TubeColorType::SLICES], vibesParams("figure", m_name));
+          vibes::newGroup(group_name + "_polygons", m_map_tubes[tube].m_colors[TubeColorType::POLYGONS], vibesParams("figure", m_name));
           vibes::newGroup(group_name + "_gates", m_map_tubes[tube].m_colors[TubeColorType::GATES], vibesParams("figure", m_name));
           
           TubeSlice *slice = tube->getFirstSlice();
+          TubeSlice *deriv_slice = NULL;
+
+          if(m_map_tubes[tube].tube_derivative != NULL)
+            deriv_slice = m_map_tubes[tube].tube_derivative->getFirstSlice();
+
           drawGate(slice->inputGate(), tube->domain().lb(), params_foreground_gates);
 
           while(slice != NULL)
           {
-            drawSlice(*slice, params_foreground);
+            if(deriv_slice != NULL)
+              drawSlice(*slice, *deriv_slice, params_foreground, params_foreground_polygons);
+            else
+              drawSlice(*slice, params_foreground);
+
             drawGate(slice->outputGate(), slice->domain().ub(), params_foreground_gates);
             slice = slice->nextSlice();
+            
+            if(deriv_slice != NULL)
+              deriv_slice = deriv_slice->nextSlice();
           }
         }
 
@@ -309,6 +336,8 @@ namespace tubex
 
     void VibesFigure_Tube::computePolygonEnvelope(const Tube *tube, vector<double>& v_x, vector<double>& v_y)
     {
+      // todo: use Polygon class here
+
       if(tube->isEmpty())
         cout << "Tube graphics: warning, tube " << m_map_tubes[tube].name << " is empty" << endl;
 
@@ -338,6 +367,19 @@ namespace tubex
       boundedSlice[0] = slice.domain();
       boundedSlice[1] = slice.codomain() & Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
       vibes::drawBox(boundedSlice, params);
+    }
+
+    void VibesFigure_Tube::drawSlice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon) const
+    {
+      if(slice.codomain().is_empty())
+        return; // no display
+
+      drawSlice(slice, params_slice);
+
+      Polygon p(slice.box());
+      CtcDeriv ctc;
+      ctc.contractPolygon(slice, deriv_slice, p);
+      VibesFigure_Polygon::draw(p, params_polygon);
     }
 
     void VibesFigure_Tube::drawGate(const Interval& gate, double t, const vibes::Params& params) const

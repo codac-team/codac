@@ -28,7 +28,8 @@ namespace tubex
   #define DEFAULT_FRGRND_COLOR      "#a2a2a2[#a2a2a2]"
   #define DEFAULT_BCKGRND_COLOR     "#d2d2d2[#d2d2d2]"
   #define DEFAULT_SLICES_COLOR      "lightGray[#a2a2a2]"
-  #define DEFAULT_GATES_COLOR      "#004668[#004668]"
+  #define DEFAULT_GATES_COLOR       "#004668[#004668]"
+  #define DEFAULT_POLYGONS_COLOR    "black"
 
   class VibesFigure_Tube : public VibesFigure
   {
@@ -39,6 +40,7 @@ namespace tubex
 
       void addTube(const Tube *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
       void setTubeName(const Tube *tube, const std::string& name);
+      void setTubeDerivative(const Tube *tube, const Tube *derivative);
       void setTubeColor(const Tube *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd);
       void setTubeColor(const Tube *tube, int color_type, const std::string& color);
       void removeTube(const Tube *tube);
@@ -63,17 +65,19 @@ namespace tubex
       const ibex::IntervalVector drawTube(const Tube *tube, bool detail_slices = false);
       void computePolygonEnvelope(const Tube *tube, std::vector<double>& v_x, std::vector<double>& v_y);
       void drawSlice(const TubeSlice& slice, const vibes::Params& params) const;
+      void drawSlice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon) const;
       void drawGate(const ibex::Interval& gate, double t, const vibes::Params& params) const;
       const ibex::IntervalVector drawTrajectory(const Trajectory *traj, float points_size = 0.);
 
     protected:
 
-      enum TubeColorType { FOREGROUND, BACKGROUND, SLICES, GATES };
+      enum TubeColorType { FOREGROUND, BACKGROUND, SLICES, GATES, POLYGONS };
 
       struct FigTubeParams
       {
         std::map<int,std::string> m_colors;
-        Tube *tube_copy = NULL;
+        Tube *tube_copy = NULL; // to display previous values in background
+        const Tube *tube_derivative = NULL; // to display polygons enclosed by slices
         std::string name;
       };
 

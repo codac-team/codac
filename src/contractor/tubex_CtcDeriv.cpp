@@ -34,6 +34,10 @@ namespace tubex
     Interval y = x.codomain();
 
     ctc |= contractGates(x, v);
+
+    Polygon p(x.box());
+    ctc |= contractPolygon(x, v, p);
+
     ctc |= contractEnvelope(x, v, t, y);
     x.setEnvelope(y);
 
@@ -193,6 +197,13 @@ namespace tubex
     return (x.inputGate().lb() - x.outputGate().lb()
             + v.codomain().ub()*x.domain().ub()
             - v.codomain().lb()*x.domain().lb()) / v.codomain().diam();
+  }
+
+  bool CtcDeriv::contractPolygon(const TubeSlice& x, const TubeSlice& v, Polygon& p)
+  {
+    // todo
+
+    return false;
   }
 
   bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)

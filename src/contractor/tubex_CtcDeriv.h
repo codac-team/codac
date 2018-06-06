@@ -15,6 +15,7 @@
 
 #include "tubex_Ctc.h"
 #include "tubex_TubeSlice.h"
+#include "tubex_Polygon.h"
 
 namespace tubex
 {
@@ -38,6 +39,8 @@ namespace tubex
       // Tube slice
       bool contract(TubeSlice& x, const TubeSlice& v);
       bool contract(const TubeSlice& x, const TubeSlice& v, const ibex::Interval& t, ibex::Interval& y);
+
+      bool contractPolygon(const TubeSlice& x, const TubeSlice& v, Polygon& p);
 
     protected:
 

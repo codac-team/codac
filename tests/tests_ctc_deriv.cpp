@@ -222,6 +222,16 @@ TEST_CASE("CtcDeriv")
     CHECK(tube[3] == Interval(3.5,4.));
     CHECK(tube[4] == Interval(3.5,4.25));
     CHECK(tube.codomain() == Interval(0.,4.25));
+
+    if(true) // drawing results
+    {
+      vibes::beginDrawing();
+      VibesFigure_Tube fig_tube("tubint", &tube);
+      fig_tube.setProperties(100, 100, 500, 500);
+      fig_tube.setTubeDerivative(&tube, &tubedot);
+      fig_tube.show(true);
+      vibes::endDrawing();
+    }
   }
 }
 
