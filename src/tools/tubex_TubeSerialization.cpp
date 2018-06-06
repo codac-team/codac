@@ -137,6 +137,7 @@ namespace tubex
         // Creating tube
 
         tube.m_component = new TubeSlice(domain);
+        tube.m_component->setTubeReference(&tube);
 
         if(slices_number > 1)
           tube.sample(v_domain_bounds);

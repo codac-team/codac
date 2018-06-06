@@ -221,7 +221,6 @@ namespace tubex
     void Tube::sample(double t, const Interval& gate)
     {
       DomainException::check(*this, t);
-      m_component->checkData();
       
       TubeSlice *slice_to_be_sampled = getSlice(t);
 
