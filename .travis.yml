@@ -17,6 +17,7 @@ addons:
     - time
     - pkg-config
     - g++-5
+    - libboost-dev
 
 cache:
   directories:
