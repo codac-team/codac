@@ -68,8 +68,8 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
-    CHECK(x[0.] == Interval(-1.5,1.5));
-    CHECK(x[0] == Interval(-1.5,1.5));
+    CHECK(ApproxIntv(x[0.]) == Interval(-1.5,1.5));
+    CHECK(ApproxIntv(x[0]) == Interval(-1.5,1.5));
     CHECK(x[1.] == intv_y);
     CHECK(x[1] == Interval(-1.,2.));
     CHECK(x[2.] == Interval(-1.,2.));
@@ -92,7 +92,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
-    CHECK(x[0] == Interval(-1.5,1.5)); // optim: Interval(-1.5,1.5)
+    CHECK(ApproxIntv(x[0]) == Interval(-1.5,1.5)); // optim: Interval(-1.5,1.5)
     CHECK(x[1] == Interval(-1.,2.)); // optim: Interval(-1.,2.)
     CHECK(x[2] == Interval(-1.5,2.)); // optim: Interval(-1.5,2.)
     CHECK(ApproxIntv(x[3]) == Interval(-1.83333333,1.5));
@@ -103,7 +103,7 @@ TEST_CASE("CtcEval")
     CHECK(x[8] == Interval(-2.5,4.5));
     CHECK(x[9] == Interval(-3.,5.5));
     CHECK_FALSE(x.ctcFwdBwd(xdot)); // no contraction expected
-    CHECK(x[0] == Interval(-1.5,1.5));
+    CHECK(ApproxIntv(x[0]) == Interval(-1.5,1.5));
     CHECK(x[1] == Interval(-1.,2.));
     CHECK(x[2] == Interval(-1.5,2.));
     CHECK(ApproxIntv(x[3]) == Interval(-1.83333333,1.5));

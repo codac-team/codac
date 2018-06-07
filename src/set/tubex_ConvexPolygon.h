@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Polygon class
+ *  tubex-lib - ConvexPolygon class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,4 +10,21 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
+#ifndef ConvexPolygon_HEADER
+#define ConvexPolygon_HEADER
 
+#include "tubex_Polygon.h"
+
+namespace tubex
+{
+  class ConvexPolygon : public Polygon
+  {
+    public:
+
+      ConvexPolygon(const std::vector<ibex::IntervalVector>& v_boxes);
+
+      friend ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2);
+  };
+}
+
+#endif

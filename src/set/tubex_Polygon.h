@@ -13,18 +13,9 @@
 #ifndef Polygon_HEADER
 #define Polygon_HEADER
 
-#define _TUBES_POLYG_WITH_BOOST_ 1
-
 #include <vector>
-#include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
-//#include "vibes.h"
-
-#ifdef _TUBES_POLYG_WITH_BOOST_
-  #include <boost/geometry/geometries/polygon.hpp>
-  #include <boost/geometry/geometries/point_xy.hpp>
-  using boost::geometry::get;
-#endif
+#include "tubex_Point.h"
 
 namespace tubex
 {
@@ -34,32 +25,23 @@ namespace tubex
 
       Polygon();
       Polygon(const ibex::IntervalVector& box);
-      Polygon(const std::vector<ibex::IntervalVector>& v_boxes);
-      Polygon(const std::vector<double>& v_x, const std::vector<double>& v_y);
+      Polygon(const std::vector<Point> v_points);
 
-      int nbPoints() const;
-      void getPoints(std::vector<double>& v_x, std::vector<double>& v_y) const;
+      int nbVertices() const;
+      std::vector<Point> getVertices() const;
+      const Point operator[](int vertex_id) const;
       ibex::IntervalVector box() const;
-      void makeConvex();
 
+      bool isPoint() const;
+      bool isSegment() const;
       bool operator==(const Polygon& p) const;
       bool operator!=(const Polygon& p) const;
 
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
-      static Polygon translate(const Polygon& p, const ibex::IntervalVector& box);
-      friend Polygon operator&(const Polygon& p1, const Polygon& p2);
 
     protected:
 
-      #ifdef _TUBES_POLYG_WITH_BOOST_
-        Polygon(const boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> >& p);
-        boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > m_polygon;
-      #endif
-
-      void createFromPoints(const std::vector<double>& v_x, const std::vector<double>& v_y);
-      void createFromBoxes(const std::vector<ibex::IntervalVector>& v_boxes);
-
-      friend class VibesFigure_Polygon;
+      std::vector<Point> m_v_vertices;
   };
 }
 

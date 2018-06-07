@@ -35,8 +35,8 @@ namespace tubex
 
     ctc |= contractGates(x, v);
 
-    //Polygon p(x.box());
-    //ctc |= contractPolygon(x, v, p);
+    //ConvexPolygon p(x.box());
+    //ctc |= contractConvexPolygon(x, v, p);
 
     ctc |= contractEnvelope(x, v, t, y);
     x.setEnvelope(y);
@@ -199,11 +199,26 @@ namespace tubex
             - v.codomain().lb()*x.domain().lb()) / v.codomain().diam();
   }
 
-  Polygon CtcDeriv::getPolygon(const TubeSlice& x, const TubeSlice& v)
+  ConvexPolygon CtcDeriv::getPolygon(const TubeSlice& x, const TubeSlice& v)
   {
-    vector<double> v_x, v_y;
+    if(v.codomain().is_unbounded())
+      throw Exception("CtcDeriv::getPolygon", "unbounded derivative");
 
-    if(x.inputGate() != Interval::ALL_REALS && x.outputGate() != Interval::ALL_REALS)
+    if(x.inputGate() == Interval::ALL_REALS || x.outputGate() == Interval::ALL_REALS)
+      throw Exception("CtcDeriv::getPolygon", "unbounded gates");
+
+    /*vector<double> v_x, v_y;
+
+    if(v.codomain().is_degenerated())
+    {
+      v_x.push_back(x.domain().lb());
+      v_y.push_back(yiub(x.domain().lb(), x, v).mid());
+
+      v_x.push_back(x.domain().ub());
+      v_y.push_back(youb(x.domain().ub(), x, v).mid());
+    }
+
+    else
     {
       v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().lb());
       v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().ub());
@@ -212,7 +227,7 @@ namespace tubex
       if(t_inter_ub.intersects(x.domain()))
       {
         v_x.push_back(t_inter_ub.mid()); 
-      v_y.push_back(youb(t_inter_ub.mid(), x, v).mid());
+        v_y.push_back(youb(t_inter_ub.mid(), x, v).mid());
       }
 
       v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().ub());
@@ -226,18 +241,13 @@ namespace tubex
       }
     }
 
-    Polygon p(v_x, v_y);
-    return p;
+    ConvexPolygon p(v_x, v_y);
+    return p;*/
   }
 
   bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)
   {
     DomainException::check(x, t);
-
-    IntervalVector box(2);
-    box[0] = t;
-    box[1] = x.codomain();
-
 
     Interval envelope;
 
@@ -246,10 +256,20 @@ namespace tubex
 
     /*else
     {
-      Polygon polygon_box(box);
-      Polygon polygon_slice = getPolygon(x, v);
-      Polygon result = polygon_box & polygon_slice;
-      envelope = result.box()[1];
+      ConvexPolygon ConvexPolygon_slice = getPolygon(x, v);
+
+      if(!x.codomain().is_unbounded())
+      {
+        IntervalVector box = x.box();
+        box[0] &= t;
+        ConvexPolygon ConvexPolygon_box(box);
+        cout << "ConvexPolygon_box " << ConvexPolygon_box << endl;
+        cout << "ConvexPolygon_slice " << ConvexPolygon_slice << endl;
+        ConvexPolygon_slice = ConvexPolygon_slice & ConvexPolygon_box;
+        cout << "ConvexPolygon_slice " << ConvexPolygon_slice << endl;
+      }
+
+      envelope = ConvexPolygon_slice.box()[1];
     }
 
     /**/else if(v.codomain().is_degenerated())
