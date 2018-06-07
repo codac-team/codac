@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include "tubex_Polygon.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -40,40 +41,19 @@ using namespace ibex;
 
     Polygon::Polygon(const IntervalVector& box)
     {
-      vector<double> v_x, v_y;
-      v_x.push_back(box[0].lb()); v_y.push_back(box[1].lb());
-      v_x.push_back(box[0].ub()); v_y.push_back(box[1].lb());
-      v_x.push_back(box[0].ub()); v_y.push_back(box[1].ub());
-      v_x.push_back(box[0].lb()); v_y.push_back(box[1].ub());
-      Polygon poly_points(v_x, v_y);
-      boost::geometry::convex_hull(poly_points.m_polygon, m_polygon);
+      vector<IntervalVector> v_boxes;
+      v_boxes.push_back(box);
+      createFromBoxes(v_boxes);
     }
 
     Polygon::Polygon(const vector<IntervalVector>& v_boxes)
     {
-      vector<double> v_x, v_y;
-      for(int i = 0 ; i < v_boxes.size() ; i++)
-      {
-        v_x.push_back(v_boxes[i][0].lb());
-        v_y.push_back(v_boxes[i][1].lb());
-        v_x.push_back(v_boxes[i][0].ub());
-        v_y.push_back(v_boxes[i][1].lb());
-        v_x.push_back(v_boxes[i][0].lb());
-        v_y.push_back(v_boxes[i][1].ub());
-        v_x.push_back(v_boxes[i][0].ub());
-        v_y.push_back(v_boxes[i][1].ub());
-      }
-
-      Polygon poly_points(v_x, v_y);
-      boost::geometry::convex_hull(poly_points.m_polygon, m_polygon);
+      createFromBoxes(v_boxes);
     }
 
     Polygon::Polygon(const vector<double>& v_x, const vector<double>& v_y)
     {
-      vector<point> pts;
-      for(int i = 0 ; i < v_x.size() ; i++)
-        pts.push_back(point(v_x[i], v_y[i]));
-      boost::geometry::assign_points(m_polygon, pts);
+      createFromPoints(v_x, v_y);
     }
 
     int Polygon::nbPoints() const
@@ -93,19 +73,26 @@ using namespace ibex;
 
     void Polygon::makeConvex()
     {
-      boost::geometry::convex_hull(m_polygon, m_polygon);
+      boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > poly;
+      boost::geometry::convex_hull(m_polygon, poly);
+      m_polygon = poly;
     }
-
-    Polygon Polygon::intersect(const Polygon& p1, const Polygon& p2)
+    
+    bool Polygon::operator==(const Polygon& p) const
     {
-      deque<polygon> output;
-      boost::geometry::intersection(p1.m_polygon, p2.m_polygon, output);
-      BOOST_FOREACH(polygon const& p, output)
-        return Polygon(p);
+      return boost::geometry::equals(m_polygon, p.m_polygon);
+    }
+    
+    bool Polygon::operator!=(const Polygon& p) const
+    {
+      return !operator==(p);
     }
 
     Polygon Polygon::translate(const Polygon& p, const IntervalVector& translation)
     {
+      if(translation.is_unbounded())
+        throw Exception("Polygon::translate", "unbounded translation");
+
       vector<point> const& points = p.m_polygon.outer();
       vector<IntervalVector> v_boxes;
 
@@ -119,6 +106,52 @@ using namespace ibex;
       }
 
       return Polygon(v_boxes);
+    }
+
+    void Polygon::createFromPoints(const vector<double>& v_x, const vector<double>& v_y)
+    {
+      if(v_x.size() != v_y.size())
+        throw Exception("Polygon::createFromPoints", "points vectors of different size");
+
+      if(v_x.size() == 0)
+        throw Exception("Polygon::createFromPoints", "empty points vectors");
+
+      vector<point> pts;
+      for(int i = 0 ; i < v_x.size() ; i++)
+        pts.push_back(point(v_x[i], v_y[i]));
+      boost::geometry::clear(m_polygon);
+      boost::geometry::assign_points(m_polygon, pts);
+    }
+
+    void Polygon::createFromBoxes(const vector<IntervalVector>& v_boxes)
+    {
+      if(v_boxes.size() == 0)
+        throw Exception("Polygon::createFromBoxes", "empty boxes vector");
+
+      vector<point> pts;
+      for(int i = 0 ; i < v_boxes.size() ; i++)
+      {
+        if(v_boxes[i].is_unbounded())
+          throw Exception("Polygon::createFromBoxes", "unbounded box");
+
+        pts.push_back(point(v_boxes[i][0].lb(), v_boxes[i][1].lb()));
+        pts.push_back(point(v_boxes[i][0].ub(), v_boxes[i][1].lb()));
+        pts.push_back(point(v_boxes[i][0].lb(), v_boxes[i][1].ub()));
+        pts.push_back(point(v_boxes[i][0].ub(), v_boxes[i][1].ub()));
+      }
+
+      boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > poly;
+      boost::geometry::clear(m_polygon);
+      boost::geometry::assign_points(m_polygon, pts);
+      makeConvex();
+    }
+    
+    Polygon operator&(const Polygon& p1, const Polygon& p2)
+    {
+      deque<polygon> output;
+      boost::geometry::intersection(p1.m_polygon, p2.m_polygon, output);
+      BOOST_FOREACH(polygon const& p, output)
+        return Polygon(p);
     }
   }
 

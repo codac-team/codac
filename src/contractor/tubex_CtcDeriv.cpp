@@ -35,8 +35,8 @@ namespace tubex
 
     ctc |= contractGates(x, v);
 
-    Polygon p(x.box());
-    ctc |= contractPolygon(x, v, p);
+    //Polygon p(x.box());
+    //ctc |= contractPolygon(x, v, p);
 
     ctc |= contractEnvelope(x, v, t, y);
     x.setEnvelope(y);
@@ -199,27 +199,60 @@ namespace tubex
             - v.codomain().lb()*x.domain().lb()) / v.codomain().diam();
   }
 
-  bool CtcDeriv::contractPolygon(const TubeSlice& x, const TubeSlice& v, Polygon& p)
+  Polygon CtcDeriv::getPolygon(const TubeSlice& x, const TubeSlice& v)
   {
     vector<double> v_x, v_y;
-    v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().lb());
-    v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().ub());
-    v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().lb());
-    v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().ub());
-    p = Polygon(v_x, v_y);
-    p.makeConvex();
-    return false;
+
+    if(x.inputGate() != Interval::ALL_REALS && x.outputGate() != Interval::ALL_REALS)
+    {
+      v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().lb());
+      v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().ub());
+
+      Interval t_inter_ub = linesIntersectionUb(x, v);
+      if(t_inter_ub.intersects(x.domain()))
+      {
+        v_x.push_back(t_inter_ub.mid()); 
+      v_y.push_back(youb(t_inter_ub.mid(), x, v).mid());
+      }
+
+      v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().ub());
+      v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().lb());
+
+      Interval t_inter_lb = linesIntersectionLb(x, v);
+      if(t_inter_lb.intersects(x.domain()))
+      {
+        v_x.push_back(t_inter_lb.mid());
+        v_y.push_back(yolb(t_inter_lb.mid(), x, v).mid());
+      }
+    }
+
+    Polygon p(v_x, v_y);
+    return p;
   }
 
   bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)
   {
     DomainException::check(x, t);
+
+    IntervalVector box(2);
+    box[0] = t;
+    box[1] = x.codomain();
+
+
     Interval envelope;
 
     if(x.inputGate() == Interval::ALL_REALS || x.outputGate() == Interval::ALL_REALS)
       envelope = Interval::ALL_REALS;
 
-    else if(v.codomain().is_degenerated())
+    /*else
+    {
+      Polygon polygon_box(box);
+      Polygon polygon_slice = getPolygon(x, v);
+      Polygon result = polygon_box & polygon_slice;
+      envelope = result.box()[1];
+    }
+
+    /**/else if(v.codomain().is_degenerated())
       envelope = yiub(t, x, v) | yilb(t, x, v);
 
     else
@@ -247,7 +280,7 @@ namespace tubex
 
         if(t_inter_lb.lb() >= t.ub())
           envelope |= yilb(t, x, v);
-    }
+    }/**/
 
     Interval prev_y = y;
     envelope &= x.codomain();

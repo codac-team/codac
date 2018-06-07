@@ -29,7 +29,7 @@ namespace tubex
   #define DEFAULT_BCKGRND_COLOR     "#d2d2d2[#d2d2d2]"
   #define DEFAULT_SLICES_COLOR      "lightGray[#a2a2a2]"
   #define DEFAULT_GATES_COLOR       "#004668[#004668]"
-  #define DEFAULT_POLYGONS_COLOR    "black"
+  #define DEFAULT_POLYGONS_COLOR    "#00536E[#2696BA]"
 
   class VibesFigure_Tube : public VibesFigure
   {

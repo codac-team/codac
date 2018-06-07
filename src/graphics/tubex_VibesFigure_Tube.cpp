@@ -376,10 +376,8 @@ namespace tubex
 
       drawSlice(slice, params_slice);
 
-      Polygon p(slice.box());
       CtcDeriv ctc;
-      ctc.contractPolygon(slice, deriv_slice, p);
-      VibesFigure_Polygon::draw(p, params_polygon);
+      VibesFigure_Polygon::draw(ctc.getPolygon(slice, deriv_slice), params_polygon);
     }
 
     void VibesFigure_Tube::drawGate(const Interval& gate, double t, const vibes::Params& params) const

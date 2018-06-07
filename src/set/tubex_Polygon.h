@@ -42,7 +42,9 @@ namespace tubex
       ibex::IntervalVector box() const;
       void makeConvex();
 
-      static Polygon intersect(const Polygon& p1, const Polygon& p2);
+      bool operator==(const Polygon& p) const;
+      bool operator!=(const Polygon& p) const;
+
       static Polygon translate(const Polygon& p, const ibex::IntervalVector& box);
 
     protected:
@@ -52,8 +54,14 @@ namespace tubex
         boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > m_polygon;
       #endif
 
+      void createFromPoints(const std::vector<double>& v_x, const std::vector<double>& v_y);
+      void createFromBoxes(const std::vector<ibex::IntervalVector>& v_boxes);
+
       friend class VibesFigure_Polygon;
+      friend Polygon operator&(const Polygon& p1, const Polygon& p2);
   };
+
+  Polygon operator&(const Polygon& p1, const Polygon& p2);
 }
 
 #endif
