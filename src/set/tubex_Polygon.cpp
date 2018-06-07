@@ -25,7 +25,8 @@ using namespace ibex;
 
   using boost::geometry::get;
   typedef boost::geometry::model::d2::point_xy<double> point;
-  typedef boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > polygon;
+  typedef boost::geometry::model::polygon<point> polygon;
+  typedef boost::geometry::model::linestring<point> linestring;
 
   namespace tubex
   {
@@ -37,6 +38,7 @@ using namespace ibex;
     Polygon::Polygon(const polygon& p)
     {
       m_polygon = p;
+      makeConvex();
     }
 
     Polygon::Polygon(const IntervalVector& box)
@@ -59,6 +61,18 @@ using namespace ibex;
     int Polygon::nbPoints() const
     {
       return m_polygon.outer().size();
+    }
+
+    void Polygon::getPoints(vector<double>& v_x, vector<double>& v_y) const
+    {
+      v_x.clear();
+      v_y.clear();
+
+      for(int i = 0 ; i < m_polygon.outer().size() ; i++)
+      {
+        v_x.push_back(get<0>(m_polygon.outer()[i]));
+        v_y.push_back(get<1>(m_polygon.outer()[i]));
+      }
     }
 
     IntervalVector Polygon::box() const
@@ -86,6 +100,22 @@ using namespace ibex;
     bool Polygon::operator!=(const Polygon& p) const
     {
       return !operator==(p);
+    }
+
+    ostream& operator<<(ostream& str, const Polygon& p)
+    {
+      vector<double> v_x, v_y;
+      p.getPoints(v_x, v_y);
+
+      str << "{";
+      for(int i = 0 ; i < v_x.size() ; i++)
+      {
+        if(i != 0) str << ",";
+        str << "(" << v_x[i] << "," << v_y[i] << ")";
+      }
+
+      str << "}";
+      return str;
     }
 
     Polygon Polygon::translate(const Polygon& p, const IntervalVector& translation)
@@ -121,6 +151,7 @@ using namespace ibex;
         pts.push_back(point(v_x[i], v_y[i]));
       boost::geometry::clear(m_polygon);
       boost::geometry::assign_points(m_polygon, pts);
+      makeConvex();
     }
 
     void Polygon::createFromBoxes(const vector<IntervalVector>& v_boxes)
@@ -148,6 +179,20 @@ using namespace ibex;
     
     Polygon operator&(const Polygon& p1, const Polygon& p2)
     {
+      /*if(p1.nbPoints() == 2)
+      {
+        linestring ls;
+        boost::geometry::append(ls, point(get<0>(p1.m_polygon.outer()[0]), get<1>(p1.m_polygon.outer()[0])));
+        boost::geometry::append(ls, point(get<0>(p1.m_polygon.outer()[1]), get<1>(p1.m_polygon.outer()[1])));
+        
+        deque<linestring> output;
+        boost::geometry::intersection(p2.m_polygon, ls, output);
+        BOOST_FOREACH(linestring const& l, output)
+        {
+          return Polygon(polygon(l));
+        }
+      }*/
+
       deque<polygon> output;
       boost::geometry::intersection(p1.m_polygon, p2.m_polygon, output);
       BOOST_FOREACH(polygon const& p, output)

@@ -38,14 +38,16 @@ namespace tubex
       Polygon(const std::vector<double>& v_x, const std::vector<double>& v_y);
 
       int nbPoints() const;
-      //void show(const vibes::Params& params) const;
+      void getPoints(std::vector<double>& v_x, std::vector<double>& v_y) const;
       ibex::IntervalVector box() const;
       void makeConvex();
 
       bool operator==(const Polygon& p) const;
       bool operator!=(const Polygon& p) const;
 
+      friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
       static Polygon translate(const Polygon& p, const ibex::IntervalVector& box);
+      friend Polygon operator&(const Polygon& p1, const Polygon& p2);
 
     protected:
 
@@ -58,10 +60,7 @@ namespace tubex
       void createFromBoxes(const std::vector<ibex::IntervalVector>& v_boxes);
 
       friend class VibesFigure_Polygon;
-      friend Polygon operator&(const Polygon& p1, const Polygon& p2);
   };
-
-  Polygon operator&(const Polygon& p1, const Polygon& p2);
 }
 
 #endif
