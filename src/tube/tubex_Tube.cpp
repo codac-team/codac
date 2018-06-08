@@ -345,7 +345,8 @@ namespace tubex
     {
       Interval y;
       CtcDeriv ctc;
-      ctc.contract(*this, derivative, t, y);
+      Interval t_ = t;
+      ctc.contract(*this, derivative, t_, y);
       return y;
     }
 

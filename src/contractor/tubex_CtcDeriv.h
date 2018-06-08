@@ -17,6 +17,8 @@
 #include "tubex_TubeSlice.h"
 #include "tubex_ConvexPolygon.h"
 
+// todo: contract v if x degenerated
+
 namespace tubex
 {
   /**
@@ -34,18 +36,18 @@ namespace tubex
       bool contract(Tube& x, const Tube& v);
       bool contractFwd(Tube& x, const Tube& v);
       bool contractBwd(Tube& x, const Tube& v);
-      bool contract(const Tube& x, const Tube& v, const ibex::Interval& t, ibex::Interval& y);
+      bool contract(const Tube& x, const Tube& v, ibex::Interval& t, ibex::Interval& y);
 
       // Tube slice
       bool contract(TubeSlice& x, const TubeSlice& v);
-      bool contract(const TubeSlice& x, const TubeSlice& v, const ibex::Interval& t, ibex::Interval& y);
+      bool contract(const TubeSlice& x, const TubeSlice& v, ibex::Interval& t, ibex::Interval& y);
 
       ConvexPolygon getPolygon(const TubeSlice& x, const TubeSlice& v);
 
     protected:
 
       bool contractGates(TubeSlice& x, const TubeSlice& v);
-      bool contractEnvelope(const TubeSlice& x, const TubeSlice& v, const ibex::Interval& t, ibex::Interval& y);
+      bool contractEnvelope(const TubeSlice& x, const TubeSlice& v, ibex::Interval& t, ibex::Interval& y);
   };
 }
 

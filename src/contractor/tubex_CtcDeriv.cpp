@@ -31,7 +31,7 @@ namespace tubex
     StructureException::check(x, v);
 
     bool ctc = false;
-    const Interval t = x.domain();
+    Interval t = x.domain();
     Interval y = x.codomain();
 
     ctc |= contractGates(x, v);
@@ -41,7 +41,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)
+  bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, Interval& t, Interval& y)
   {
     StructureException::check(x, v);
     TubeSlice x_temp = x;
@@ -90,34 +90,34 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contract(const Tube& x, const Tube& v, const Interval& t, Interval& y)
+  bool CtcDeriv::contract(const Tube& x, const Tube& v, Interval& t, Interval& y)
   {
-    DomainException::check(x, t);
+    Interval prev_y = y;
+    Interval prev_t = t;
+
+    t &= x.domain();
 
     TubeSlice *x_slice = (TubeSlice*)x.getSlice(t.lb());
+    TubeSlice *x_last_slice = (TubeSlice*)x.getSlice(t.ub());
     TubeSlice *v_slice = (TubeSlice*)v.getSlice(t.lb());
 
-    Interval envelope = Interval::EMPTY_SET;
+    Interval y_union = Interval::EMPTY_SET;
+    Interval t_union = Interval::EMPTY_SET;
     
-    while(x_slice != NULL && x_slice->domain().intersects(t))
+    while(x_slice != x_last_slice->nextSlice())
     {
-      if(x_slice->domain().is_subset(t))
-        envelope |= x_slice->codomain();
-
-      else
-      {
-        Interval y_slice;
-        contract(*x_slice, *v_slice, t & x_slice->domain(), y_slice);
-        envelope |= y_slice;
-      }
+      Interval y_slice = y, t_slice = t & x_slice->domain();
+      contract(*x_slice, *v_slice, t_slice, y_slice);
+      y_union |= y_slice;
+      t_union |= t_slice;
 
       x_slice = x_slice->nextSlice();
       v_slice = v_slice->nextSlice();
     }
 
-    Interval prev_y = y;
-    y &= envelope;
-    return prev_y != y;
+    y &= y_union;
+    t &= t_union;
+    return prev_y != y || prev_t != t;
   }
 
   bool CtcDeriv::contractGates(TubeSlice& x, const TubeSlice& v)
@@ -231,8 +231,9 @@ namespace tubex
     }
   }
 
-  bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)
+  bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, Interval& t, Interval& y)
   {
+    t &= x.domain();
     DomainException::check(x, t);
     Interval prev_y = y;
 
