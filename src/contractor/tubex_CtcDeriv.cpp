@@ -35,10 +35,6 @@ namespace tubex
     Interval y = x.codomain();
 
     ctc |= contractGates(x, v);
-
-    //ConvexPolygon p(x.box());
-    //ctc |= contractConvexPolygon(x, v, p);
-
     ctc |= contractEnvelope(x, v, t, y);
     x.setEnvelope(y);
 
@@ -238,45 +234,64 @@ namespace tubex
   bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)
   {
     DomainException::check(x, t);
+    Interval prev_y = y;
 
-    Interval envelope;
-
-    if(x.inputGate() == Interval::ALL_REALS || x.outputGate() == Interval::ALL_REALS)
-      envelope = Interval::ALL_REALS;
-
-    else if(v.codomain().is_degenerated())
-      envelope = yiub(t, x, v) | yilb(t, x, v);
+    if(t.is_degenerated() && (t.lb() == x.domain().lb() || t.lb() == x.domain().ub()))
+      y &= x[t.lb()];
 
     else
     {
-      envelope.set_empty();
+      Interval envelope;
 
-      Interval t_inter_ub = linesIntersectionUb(x, v);
+      if(x.inputGate() == Interval::ALL_REALS || x.outputGate() == Interval::ALL_REALS)
+        envelope = Interval::ALL_REALS;
 
-        if(t_inter_ub.intersects(t))
-          envelope |= youb(t_inter_ub, x, v);
+      else if(v.codomain().is_degenerated())
+        envelope = yiub(t, x, v) | yilb(t, x, v);
 
-        if(t_inter_ub.ub() <= t.lb())
-          envelope |= youb(t, x, v);
+      else
+      {
+        if(v.codomain() == Interval::ALL_REALS)
+          envelope = Interval::ALL_REALS;
 
-        if(t_inter_ub.lb() >= t.ub())
-          envelope |= yiub(t, x, v);
+        else if(v.codomain().lb() == NEG_INFINITY)
+          envelope = yiub(t.ub(), x, v) | yolb(t.lb(), x, v);
 
-      Interval t_inter_lb = linesIntersectionLb(x, v);
+        else if(v.codomain().ub() == POS_INFINITY)
+          envelope = yilb(t.ub(), x, v) | youb(t.lb(), x, v);
 
-        if(t_inter_lb.intersects(t))
-          envelope |= yolb(t_inter_lb, x, v);
+        else
+        {
+          envelope.set_empty();
 
-        if(t_inter_lb.ub() <= t.lb())
-          envelope |= yolb(t, x, v);
+          Interval t_inter_ub = linesIntersectionUb(x, v);
 
-        if(t_inter_lb.lb() >= t.ub())
-          envelope |= yilb(t, x, v);
-    }/**/
+          if(t_inter_ub.intersects(t))
+            envelope |= youb(t_inter_ub, x, v);
 
-    Interval prev_y = y;
-    envelope &= x.codomain();
-    y &= envelope;
+          if(t_inter_ub.ub() <= t.lb())
+            envelope |= youb(t, x, v);
+
+          if(t_inter_ub.lb() >= t.ub())
+            envelope |= yiub(t, x, v);
+
+          Interval t_inter_lb = linesIntersectionLb(x, v);
+
+          if(t_inter_lb.intersects(t))
+            envelope |= yolb(t_inter_lb, x, v);
+
+          if(t_inter_lb.ub() <= t.lb())
+            envelope |= yolb(t, x, v);
+
+          if(t_inter_lb.lb() >= t.ub())
+            envelope |= yilb(t, x, v);
+        }
+      }
+
+      envelope &= x.codomain();
+      y &= envelope;
+    }
+
     return prev_y != y;
   }
 }

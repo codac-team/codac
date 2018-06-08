@@ -87,7 +87,44 @@ TEST_CASE("CtcDeriv")
     CHECK(x.codomain().is_empty());
   }
 
-  SECTION("Test slice, all reals case")
+  SECTION("Test slice, empty case (bis)")
+  {
+    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    x.setInputGate(Interval(-1.,2.));
+    x.setOutputGate(Interval::EMPTY_SET);
+
+    TubeSlice v(x.domain(), Interval(-1.,1.));
+
+    CtcDeriv ctc;
+    bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
+
+    CHECK(contraction);
+    CHECK(x.inputGate().is_empty());
+    CHECK(x.outputGate().is_empty());
+    CHECK(x.codomain().is_empty());
+  }
+
+  SECTION("Test slice, unbounded slice")
+  {
+    TubeSlice x(Interval(-1.,3.));
+    TubeSlice v(x.domain(), Interval(0.,1.));
+
+    CHECK(x.inputGate() == Interval::ALL_REALS);
+    CHECK(x.outputGate() == Interval::ALL_REALS);
+    CHECK(x.codomain() == Interval::ALL_REALS);
+
+    CtcDeriv ctc;
+    bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
+
+    CHECK(!contraction);
+    CHECK(x.inputGate() == Interval::ALL_REALS);
+    CHECK(x.outputGate() == Interval::ALL_REALS);
+    CHECK(x.codomain() == Interval::ALL_REALS);
+  }
+
+  SECTION("Test slice, unbounded derivative (1)")
   {
     TubeSlice x(Interval(-1.,3.));
     TubeSlice v(x.domain());
@@ -106,22 +143,50 @@ TEST_CASE("CtcDeriv")
     CHECK(x.codomain() == Interval::ALL_REALS);
   }
 
-  SECTION("Test slice, empty case (bis)")
+  SECTION("Test slice, unbounded derivative ([-oo,1])")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    TubeSlice x(Interval(-1.,3.));
     x.setInputGate(Interval(-1.,2.));
-    x.setOutputGate(Interval::EMPTY_SET);
+    x.setOutputGate(Interval(-2.,0.));
+    TubeSlice v(x.domain(), Interval(NEG_INFINITY,1.));
 
-    TubeSlice v(x.domain(), Interval(-1.,1.));
+    CHECK(x.inputGate() == Interval(-1.,2.));
+    CHECK(x.outputGate() == Interval(-2.,0.));
+    CHECK(x.codomain() == Interval::ALL_REALS);
+    CHECK(v.codomain() == Interval(NEG_INFINITY,1.));
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
     CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
 
     CHECK(contraction);
-    CHECK(x.inputGate().is_empty());
-    CHECK(x.outputGate().is_empty());
-    CHECK(x.codomain().is_empty());
+    CHECK(x.inputGate() == Interval(-1.,2.));
+    CHECK(x.outputGate() == Interval(-2.,0.));
+    CHECK(x.codomain() == Interval(-6.,6.));
+    CHECK(v.codomain() == Interval(NEG_INFINITY,1.));
+  }
+
+  SECTION("Test slice, unbounded derivative ([1,oo])")
+  {
+    TubeSlice x(Interval(-1.,3.));
+    x.setInputGate(Interval(-1.,2.));
+    x.setOutputGate(Interval(-2.,0.));
+    TubeSlice v(x.domain(), Interval(-1.,POS_INFINITY));
+
+    CHECK(x.inputGate() == Interval(-1.,2.));
+    CHECK(x.outputGate() == Interval(-2.,0.));
+    CHECK(x.codomain() == Interval::ALL_REALS);
+    CHECK(v.codomain() == Interval(-1.,POS_INFINITY));
+
+    CtcDeriv ctc;
+    bool contraction = ctc.contract(x,v);
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
+
+    CHECK(contraction);
+    CHECK(x.inputGate() == Interval(-1.,2.));
+    CHECK(x.outputGate() == Interval(-2.,0.));
+    CHECK(x.codomain() == Interval(-5.,4.));
+    CHECK(v.codomain() == Interval(-1.,POS_INFINITY));
   }
 
   SECTION("Test fwd")
