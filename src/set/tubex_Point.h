@@ -13,6 +13,9 @@
 #ifndef Point_HEADER
 #define Point_HEADER
 
+#include <vector>
+#include "ibex_IntervalVector.h"
+
 namespace tubex
 {
   struct Point
@@ -20,11 +23,11 @@ namespace tubex
     double x;
     double y;
 
-    bool operator==(const Point& p) const
-    {
-      return x == p.x && y == p.y;
-    }
+    bool operator==(const Point& p) const;
   };
+
+  Point point(double x, double y);
+  void pushPoints(std::vector<Point>& v_points, const ibex::IntervalVector& box);
 }
 
 #endif

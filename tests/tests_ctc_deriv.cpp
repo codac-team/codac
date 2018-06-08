@@ -55,10 +55,8 @@ TEST_CASE("CtcDeriv")
 
     TubeSlice v(x.domain(), Interval(-1.,1.));
 
-    /*CtcDeriv ctc;
-    cout << "AAAA1" << endl;
+    CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
-    cout << "AAAA2" << endl;
     CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
 
     CHECK(contraction);
@@ -68,9 +66,9 @@ TEST_CASE("CtcDeriv")
     CHECK(x.interpol(-1., v) == Interval(1.));
     CHECK(x.interpol(1., v) == Interval(-1.));
     CHECK(x.interpol(3., v) == Interval(-3.));
-    CHECK(x.interpol(0., v) == Interval(0.));*/
+    CHECK(x.interpol(0., v) == Interval(0.));
   }
-/*
+
   SECTION("Test slice, empty case")
   {
     TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
@@ -442,5 +440,5 @@ TEST_CASE("CtcDeriv (interpol)")
     contraction = ctc.contract(tube, tubedot, tube.domain(), y);
     CHECK(contraction);
     CHECK(y == tube.codomain());
-  }*/
+  }
 }

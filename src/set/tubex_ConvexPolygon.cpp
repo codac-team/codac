@@ -10,29 +10,41 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
+#include <iostream>
+#include "tubex_ConvexPolygon.h"
+#include "tubex_Exception.h"
 
+using namespace std;
+using namespace ibex;
 
-/*
-      void makeConvex();
-      bool isClosed() const;
-      const Point operator[](int point_id) const;
+namespace tubex
+{
+  ConvexPolygon::ConvexPolygon(const vector<IntervalVector>& v_boxes)
+  {
+    // todo
 
-      bool operator==(const Polygon& p) const;
-      bool operator!=(const Polygon& p) const;
+    /* make convex:
+    boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > poly;
+    boost::geometry::convex_hull(m_polygon, poly);
+    m_polygon = poly;
+    */
+  }
+  
+  ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points) : Polygon(v_points)
+  {
+    // todo (test convexity, or make it convex)
+  }
+  
+  ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2)
+  {
+    // todo
 
-      friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
-      static Polygon translate(const Polygon& p, const ibex::IntervalVector& box);
-      friend Polygon operator&(const Polygon& p1, const Polygon& p2);
+    /*boostpolygon bp1 = create_boostpolygon(p1);
+    boostpolygon bp2 = create_boostpolygon(p2);
 
-    protected:
-
-      #ifdef _TUBES_POLYG_WITH_BOOST_
-        Polygon(const boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> >& p);
-        Polygon(const boost::geometry::model::segment<boost::geometry::model::d2::point_xy<double> >& s);
-        boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > m_polygon;
-      #endif
-
-      void createFromPoints(const std::vector<double>& v_x, const std::vector<double>& v_y);
-      void createFromBoxes(const std::vector<ibex::IntervalVector>& v_boxes);
-
-      friend class VibesFigure_Polygon;*/
+    deque<boostpolygon> output;
+    boost::geometry::intersection(bp1, bp2, output);
+    BOOST_FOREACH(boostpolygon const& p, output)
+      return create_polyon(p);*/
+  }
+}

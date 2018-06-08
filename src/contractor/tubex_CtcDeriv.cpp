@@ -14,6 +14,7 @@
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_DomainException.h"
+#include "tubex_ConvexPolygon.h"
 
 using namespace std;
 using namespace ibex;
@@ -202,47 +203,36 @@ namespace tubex
   ConvexPolygon CtcDeriv::getPolygon(const TubeSlice& x, const TubeSlice& v)
   {
     if(v.codomain().is_unbounded())
-      throw Exception("CtcDeriv::getPolygon", "unbounded derivative");
-
-    if(x.inputGate() == Interval::ALL_REALS || x.outputGate() == Interval::ALL_REALS)
-      throw Exception("CtcDeriv::getPolygon", "unbounded gates");
-
-    /*vector<double> v_x, v_y;
-
-    if(v.codomain().is_degenerated())
     {
-      v_x.push_back(x.domain().lb());
-      v_y.push_back(yiub(x.domain().lb(), x, v).mid());
+      //throw Exception("CtcDeriv::getPolygon", "unbounded derivative");
+    }
 
-      v_x.push_back(x.domain().ub());
-      v_y.push_back(youb(x.domain().ub(), x, v).mid());
+    else if(x.inputGate() == Interval::ALL_REALS || x.outputGate() == Interval::ALL_REALS)
+    {
+      //throw Exception("CtcDeriv::getPolygon", "unbounded gates");
     }
 
     else
     {
-      v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().lb());
-      v_x.push_back(x.domain().lb()); v_y.push_back(x.inputGate().ub());
+      vector<Point> v_pts;
+
+      v_pts.push_back(point(x.domain().lb(), x.inputGate().lb()));
+      v_pts.push_back(point(x.domain().lb(), x.inputGate().ub()));
 
       Interval t_inter_ub = linesIntersectionUb(x, v);
       if(t_inter_ub.intersects(x.domain()))
-      {
-        v_x.push_back(t_inter_ub.mid()); 
-        v_y.push_back(youb(t_inter_ub.mid(), x, v).mid());
-      }
+        v_pts.push_back(point(t_inter_ub.mid() ,youb(t_inter_ub.mid(), x, v).mid()));
 
-      v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().ub());
-      v_x.push_back(x.domain().ub()); v_y.push_back(x.outputGate().lb());
+      v_pts.push_back(point(x.domain().ub(), x.outputGate().ub()));
+      v_pts.push_back(point(x.domain().ub(), x.outputGate().lb()));
 
       Interval t_inter_lb = linesIntersectionLb(x, v);
       if(t_inter_lb.intersects(x.domain()))
-      {
-        v_x.push_back(t_inter_lb.mid());
-        v_y.push_back(yolb(t_inter_lb.mid(), x, v).mid());
-      }
-    }
+        v_pts.push_back(point(t_inter_lb.mid(), yolb(t_inter_lb.mid(), x, v).mid()));
 
-    ConvexPolygon p(v_x, v_y);
-    return p;*/
+      ConvexPolygon p(v_pts);
+      return p;
+    }
   }
 
   bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, const Interval& t, Interval& y)
@@ -254,25 +244,7 @@ namespace tubex
     if(x.inputGate() == Interval::ALL_REALS || x.outputGate() == Interval::ALL_REALS)
       envelope = Interval::ALL_REALS;
 
-    /*else
-    {
-      ConvexPolygon ConvexPolygon_slice = getPolygon(x, v);
-
-      if(!x.codomain().is_unbounded())
-      {
-        IntervalVector box = x.box();
-        box[0] &= t;
-        ConvexPolygon ConvexPolygon_box(box);
-        cout << "ConvexPolygon_box " << ConvexPolygon_box << endl;
-        cout << "ConvexPolygon_slice " << ConvexPolygon_slice << endl;
-        ConvexPolygon_slice = ConvexPolygon_slice & ConvexPolygon_box;
-        cout << "ConvexPolygon_slice " << ConvexPolygon_slice << endl;
-      }
-
-      envelope = ConvexPolygon_slice.box()[1];
-    }
-
-    /**/else if(v.codomain().is_degenerated())
+    else if(v.codomain().is_degenerated())
       envelope = yiub(t, x, v) | yilb(t, x, v);
 
     else

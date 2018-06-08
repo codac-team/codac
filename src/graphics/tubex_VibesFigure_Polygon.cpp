@@ -15,31 +15,18 @@
 using namespace std;
 using namespace ibex;
 
-#ifdef _TUBES_POLYG_WITH_BOOST_
-
-  #include <deque>
-  #include <boost/geometry.hpp>
-  #include <boost/foreach.hpp>
-
-  using boost::geometry::get;
-  typedef boost::geometry::model::d2::point_xy<double> point;
-  typedef boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > polygon;
-
-  namespace tubex
+namespace tubex
+{
+  void VibesFigure_Polygon::draw(const Polygon& p, const vibes::Params& params)
   {
-    void VibesFigure_Polygon::draw(const Polygon& p, const vibes::Params& params)
+    vector<double> v_x, v_y;
+
+    for(int i = 0 ; i < p.nbVertices() ; i++)
     {
-      vector<point> const& points = p.m_polygon.outer();
-      vector<double> v_x, v_y;
+      v_x.push_back(p[i].x);
+      v_y.push_back(p[i].y);
+    } 
 
-      for(vector<point>::size_type i = 0; i < points.size(); ++i)
-      {
-        v_x.push_back(get<0>(points[i]));
-        v_y.push_back(get<1>(points[i]));
-      } 
-
-      vibes::drawPolygon(v_x, v_y, params);
-    }
+    vibes::drawPolygon(v_x, v_y, params);
   }
-
-#endif
+}
