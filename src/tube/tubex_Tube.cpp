@@ -499,7 +499,19 @@ namespace tubex
     }
 
     // Bisection
+    
+    pair<Tube,Tube> Tube::bisect(double t, float ratio) const
+    {
+      pair<Tube,Tube> p = make_pair(*this,*this);
 
+      LargestFirst bisector(0., ratio);
+      IntervalVector slice_domain(1, (*this)[t]);
+      pair<IntervalVector,IntervalVector> p_codomain = bisector.bisect(slice_domain);
+
+      p.first.set(p_codomain.first[0], t);
+      p.second.set(p_codomain.second[0], t);
+      return p;
+    }
 
     // String
     

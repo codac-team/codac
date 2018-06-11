@@ -91,6 +91,7 @@ namespace tubex
       Tube& inflate(double rad);
 
       // Bisection
+      std::pair<Tube,Tube> bisect(double t, float ratio = 0.55) const;
       //std::pair<Tube,Tube> bisect(const Tube& derivative, float ratio = 0.55) const;
       //std::pair<Tube,Tube> bisect(double t, const Tube& derivative, float ratio = 0.55) const;
 
