@@ -65,10 +65,10 @@ TEST_CASE("CtcDeriv")
     CHECK(x.inputGate() == Interval(1.));
     CHECK(x.outputGate() == Interval(-3.));
     CHECK(x.codomain() == Interval(-3.,1.));
-    CHECK(x.interpol(-1., v) == Interval(1.));
+    /*CHECK(x.interpol(-1., v) == Interval(1.));
     CHECK(x.interpol(1., v) == Interval(-1.));
     CHECK(x.interpol(3., v) == Interval(-3.));
-    CHECK(x.interpol(0., v) == Interval(0.));
+    CHECK(x.interpol(0., v) == Interval(0.));*/
   }
 
   SECTION("Test slice, empty case")
@@ -291,11 +291,27 @@ TEST_CASE("CtcDeriv")
     CHECK(tube[3] == Interval(3.5,4.));
     CHECK(tube[4] == Interval(3.5,4.25));
     CHECK(tube.codomain() == Interval(0.,4.25));
+
+    cout << "#0" << ctc.getPolygon(*tube.getSlice(0), *tubedot.getSlice(0)) << endl;
+    cout << "#1" << ctc.getPolygon(*tube.getSlice(1), *tubedot.getSlice(1)) << endl;
+    cout << "#2" << ctc.getPolygon(*tube.getSlice(2), *tubedot.getSlice(2)) << endl;
+    cout << "#3" << ctc.getPolygon(*tube.getSlice(3), *tubedot.getSlice(3)) << endl;
+    cout << "#4" << ctc.getPolygon(*tube.getSlice(4), *tubedot.getSlice(4)) << endl;
+
+    if(VIBES_DRAWING) // drawing results
+    {
+      vibes::beginDrawing();
+      VibesFigure_Tube fig_tube("tubint", &tube);
+      fig_tube.setProperties(100, 100, 500, 500);
+      fig_tube.setTubeDerivative(&tube, &tubedot);
+      fig_tube.show(true);
+      vibes::endDrawing();
+    }
   }
 }
 
 TEST_CASE("CtcDeriv (interpol)")
-{
+{/*
   SECTION("From: Test slice, envelope contraction")
   {
     TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
@@ -541,7 +557,7 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(t == tube.domain());
     CHECK(y == tube.codomain());
 
-    /*if(VIBES_DRAWING) // drawing results
+    if(VIBES_DRAWING) // drawing results
     {
       vibes::beginDrawing();
       IntervalVector box(2);
@@ -557,8 +573,10 @@ TEST_CASE("CtcDeriv (interpol)")
       box[0] = Interval(0.4,0.8);
       box[1] = Interval(0.3,0.6);
       vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+      cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
       CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      CHECK(box[0] == Interval(0.));
+      cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl;
+      CHECK(box[0] == Interval(0.4,0.55));
       CHECK(box[1] == Interval(0.5,0.6));
       vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
@@ -611,6 +629,6 @@ TEST_CASE("CtcDeriv (interpol)")
       vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
       vibes::endDrawing();
-    }*/
-  }
+    }
+  }*/
 }

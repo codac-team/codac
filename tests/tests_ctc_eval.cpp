@@ -11,7 +11,7 @@ TEST_CASE("CtcEval")
 {
   SECTION("Test CtcEval, special cases")
   {
-    Tube xdot(Interval(0., 10.), 1.0);
+    /*Tube xdot(Interval(0., 10.), 1.0);
     xdot.set(Interval(-0.5,1.));
 
     Tube x(xdot);

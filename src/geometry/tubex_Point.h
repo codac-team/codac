@@ -24,6 +24,7 @@ namespace tubex
     double y;
 
     bool operator==(const Point& p) const;
+    bool operator!=(const Point& p) const;
   };
 
   Point point(double x, double y);

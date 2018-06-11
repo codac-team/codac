@@ -8,6 +8,8 @@ using namespace tubex;
 
 TEST_CASE("Polygon")
 {
+  // todo: test Polygon constructor with redundant points
+
   SECTION("Polygon from IntervalVector")
   {
     /*IntervalVector iv(2);

@@ -47,7 +47,7 @@ namespace tubex
     protected:
 
       bool contractGates(TubeSlice& x, const TubeSlice& v);
-      bool contractEnvelope(const TubeSlice& x, const TubeSlice& v, ibex::Interval& t, ibex::Interval& y);
+      bool contractEnvelope(const TubeSlice& x, const TubeSlice& v, ibex::Interval& t, ibex::Interval& y, ConvexPolygon& p);
   };
 }
 

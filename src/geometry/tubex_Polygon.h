@@ -25,6 +25,7 @@ namespace tubex
   {
     public:
 
+      Polygon();
       Polygon(const ibex::IntervalVector& box);
       Polygon(const std::vector<Point>& v_points);
 
@@ -41,8 +42,7 @@ namespace tubex
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
 
     protected:
-
-      Polygon();
+      
       std::vector<Point> m_v_vertices;
   };
 }

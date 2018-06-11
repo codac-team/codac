@@ -19,6 +19,11 @@ using namespace ibex;
 
 namespace tubex
 {
+  ConvexPolygon::ConvexPolygon()
+  {
+
+  }
+  
   ConvexPolygon::ConvexPolygon(const vector<IntervalVector>& v_boxes)
   {
     // todo

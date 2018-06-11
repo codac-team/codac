@@ -31,7 +31,9 @@ namespace tubex
 
   Polygon::Polygon(const vector<Point>& v_points)
   {
-    m_v_vertices = v_points;
+    for(int i = 0 ; i < v_points.size() ; i++)
+      if(v_points[i] != v_points[(i + 1) % v_points.size()])
+        m_v_vertices.push_back(v_points[i]);
   }
 
   int Polygon::nbVertices() const

@@ -22,6 +22,11 @@ namespace tubex
     return x == p.x && y == p.y;
   }
 
+  bool Point::operator!=(const Point& p) const
+  {
+    return x != p.x || y != p.y;
+  }
+
   Point point(double x, double y)
   {
     Point p;
