@@ -228,7 +228,7 @@ namespace tubex
     y.set_empty();
     Interval prev_t = t;
 
-    // At this step, gates are already contracted
+    // At this step, gates are supposed to be contracted
 
     vector<Point> v_pts;
     v_pts.push_back(point(t.lb(), x.inputGate().lb()));
@@ -250,7 +250,11 @@ namespace tubex
 
     else
     {
-      y |= x.inputGate() | x.outputGate();
+      Interval y_tlb, y_tub, t_lb = t.lb(), t_ub = t.ub();
+      ConvexPolygon p_;
+      contractEnvelope(x, v, t_lb, y_tlb, p_);
+      contractEnvelope(x, v, t_ub, y_tub, p_);
+      y |= y_tlb | y_tub;
 
       // Lower bounds
 
@@ -278,16 +282,25 @@ namespace tubex
             y_inter_lb = yolb(t_inter_lb, x, v) | yilb(t_inter_lb, x, v);
             y |= y_inter_lb;
 
-            if(y_inter_lb.ub() >= y.lb())
+            if(y_inter_lb.ub() >= prev_y.lb())
               v_pts.push_back(point(t_inter_lb.mid(), y_inter_lb.mid()));
 
             else
             {
-              Interval t_a = yilb_inv(y.lb(), x, v);
-              v_pts.push_back(point(t_a.mid(), y.lb()));
-              Interval t_b = yolb_inv(y.lb(), x, v);
-              v_pts.push_back(point(t_b.mid(), y.lb()));
+              Interval t_a = yilb_inv(prev_y.lb(), x, v);
+              v_pts.push_back(point(t_a.mid(), prev_y.lb()));
+              Interval t_b = yolb_inv(prev_y.lb(), x, v);
+              v_pts.push_back(point(t_b.mid(), prev_y.lb()));
             }
+          }
+
+          else
+          {
+            if(t_inter_lb.ub() < t.lb())
+              y |= x.outputGate().lb() - (x.domain().ub() - t.lb()) * v.codomain().ub();
+
+            else if(t_inter_lb.lb() > t.ub())
+              y |= x.inputGate().lb() + (t.ub() - x.domain().lb()) * v.codomain().lb();
           }
         }
 
@@ -321,22 +334,32 @@ namespace tubex
             y_inter_ub = youb(t_inter_ub, x, v) | yiub(t_inter_ub, x, v);
             y |= y_inter_ub;
 
-            if(y_inter_ub.lb() <= y.ub())
+            if(y_inter_ub.lb() <= prev_y.ub())
               v_pts.push_back(point(t_inter_ub.mid(), y_inter_ub.mid()));
 
             else
             {
-              Interval t_a = yiub_inv(y.ub(), x, v);
-              v_pts.push_back(point(t_a.mid(), y.ub()));
-              Interval t_b = youb_inv(y.ub(), x, v);
-              v_pts.push_back(point(t_b.mid(), y.ub()));
+              Interval t_b = youb_inv(prev_y.ub(), x, v);
+              v_pts.push_back(point(t_b.mid(), prev_y.ub()));
+              Interval t_a = yiub_inv(prev_y.ub(), x, v);
+              v_pts.push_back(point(t_a.mid(), prev_y.ub()));
             }
+          }
+
+          else
+          {
+            if(t_inter_ub.ub() < t.lb())
+              y |= x.outputGate().ub() - (x.domain().ub() - t.lb()) * v.codomain().lb();
+
+            else if(t_inter_ub.lb() > t.ub())
+              y |= x.inputGate().ub() + (t.ub() - x.domain().lb()) * v.codomain().ub();
           }
         }
 
         v_pts.push_back(point(t.lb(), x.inputGate().ub()));
     }
 
+    y &= prev_y;
     y &= x.codomain();
 
     p = ConvexPolygon(v_pts);
