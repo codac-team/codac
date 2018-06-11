@@ -15,6 +15,11 @@
 #include <iostream>
 #include "tubex_VibesFigure.h"
 
+// a real value to display unbounded slices
+#include <limits>
+#define BOUNDED_INFINITY 99999. //numeric_limits<float>::max()
+// max() seems unusable with vibes::drawPolygon
+
 using namespace std;
 using namespace ibex;
 
@@ -162,5 +167,15 @@ namespace tubex
     std::ostringstream o;
     o << name << "_" << id;
     return o.str();
+  }
+
+  double VibesFigure::truncInf(double x)
+  {
+    return (x == POS_INFINITY ? BOUNDED_INFINITY : (x == NEG_INFINITY ? -BOUNDED_INFINITY : x));
+  }
+
+  const Interval VibesFigure::truncInf(const ibex::Interval& x)
+  {
+    return Interval(truncInf(x.lb()),truncInf(x.ub()));
   }
 }

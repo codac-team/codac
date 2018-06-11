@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_VibesFigure_Polygon.h"
+#include "tubex_VibesFigure.h"
 
 using namespace std;
 using namespace ibex;
@@ -23,10 +24,11 @@ namespace tubex
 
     for(int i = 0 ; i < p.nbVertices() ; i++)
     {
-      v_x.push_back(p[i].x);
-      v_y.push_back(p[i].y);
+      v_x.push_back(VibesFigure::truncInf(p[i].x));
+      v_y.push_back(VibesFigure::truncInf(p[i].y));
     } 
 
-    vibes::drawPolygon(v_x, v_y, params);
+    if(v_x.size() > 0)
+      vibes::drawPolygon(v_x, v_y, params);
   }
 }

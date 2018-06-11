@@ -305,7 +305,7 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test fwd/bwd (other example)")
   {
-    Tube tube(Interval(0., 18.), Interval(-1.,7.));
+    Tube tube(Interval(0., 26.), Interval(-1.,7.));
 
     tube.set(Interval(2.,3.), 0.);
     tube.set(Interval(3.,4.), 4.);
@@ -314,18 +314,25 @@ TEST_CASE("CtcDeriv")
     tube.set(Interval(5.5), 14.);
     tube.set(Interval(5.5), 16.);
     tube.set(Interval(-1.), 18.);
+    tube.set(Interval(5.5), 20.);
+    tube.set(Interval(5.5), 23.);
+    tube.set(Interval::ALL_REALS, 8);
+    tube.set(Interval(5.5), 23.); // setting gate again
 
     Tube tubedot(tube, Interval(-1.,1.));
 
-    CHECK(tube.nbSlices() == 6);
-    CHECK(tubedot.nbSlices() == 6);
+    CHECK(tube.nbSlices() == 9);
+    CHECK(tubedot.nbSlices() == 9);
 
     tubedot.set(Interval(-1.5,4.), 0);
     tubedot.set(Interval(-0.75,-0.5), 1);
     tubedot.set(Interval(-1./3.,1.), 2);
     tubedot.set(Interval(4.5/2.), 3);
     tubedot.set(Interval(0.), 4);
-    tubedot.set(Interval(-999.,-6.5/2.), 5);
+    tubedot.set(Interval(NEG_INFINITY,-6.5/2.), 5);
+    tubedot.set(Interval(6.5/2.,POS_INFINITY), 6);
+    tubedot.set(Interval::ALL_REALS, 7);
+    tubedot.set(Interval::ALL_REALS, 8);
 
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
@@ -343,9 +350,12 @@ TEST_CASE("CtcDeriv")
     ctc.contract(*(tube.getSlice(3)), *(tubedot.getSlice(3)));
     ctc.contract(*(tube.getSlice(4)), *(tubedot.getSlice(4)));
     ctc.contract(*(tube.getSlice(5)), *(tubedot.getSlice(5)));
+    ctc.contract(*(tube.getSlice(6)), *(tubedot.getSlice(6)));
+    ctc.contract(*(tube.getSlice(7)), *(tubedot.getSlice(7)));
+    ctc.contract(*(tube.getSlice(8)), *(tubedot.getSlice(8)));
     CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
 
-    cout << "#0" << ctc.getPolygon(*tube.getSlice(0), *tubedot.getSlice(0)) << endl;
+    //cout << "#0" << ctc.getPolygon(*tube.getSlice(8), *tubedot.getSlice(8)) << endl;
 
     CHECK(tube[0.] == Interval(2.,3.));
     CHECK(tube[0] == Interval(-1.,7.));
@@ -360,7 +370,13 @@ TEST_CASE("CtcDeriv")
     CHECK(tube[16.] == Interval(5.5));
     CHECK(tube[5] == Interval(-1.,5.5));
     CHECK(tube[18.] == Interval(-1.));
-    CHECK(tube.codomain() == Interval(-1.,7.));
+    CHECK(tube[6] == Interval(-1.,5.5));
+    CHECK(tube[20.] == Interval(5.5));
+    CHECK(tube[7] == Interval(-1.,7.));
+    CHECK(tube[23.] == Interval(5.5));
+    CHECK(tube[8] == Interval::ALL_REALS);
+    CHECK(tube[26.] == Interval::ALL_REALS);
+    CHECK(tube.codomain() == Interval::ALL_REALS);
 
     #if VIBES_DRAWING // drawing results
       fig_tube.show(true);

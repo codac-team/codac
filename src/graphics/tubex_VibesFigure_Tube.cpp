@@ -344,7 +344,7 @@ namespace tubex
       for(int i = 0 ; i < tube->nbSlices() ; i++)
       {
         IntervalVector slice_box = tube->getSlice(i)->box();
-        slice_box[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
+        slice_box[1] = truncInf(slice_box[1]);
         v_x.push_back(slice_box[0].lb()); v_x.push_back(slice_box[0].ub());
         v_y.push_back(slice_box[1].ub()); v_y.push_back(slice_box[1].ub());
       }
@@ -352,7 +352,7 @@ namespace tubex
       for(int i = tube->nbSlices() - 1 ; i >= 0 ; i--)
       {
         IntervalVector slice_box = tube->getSlice(i)->box();
-        slice_box[1] &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
+        slice_box[1] = truncInf(slice_box[1]);
         v_x.push_back(slice_box[0].ub()); v_x.push_back(slice_box[0].lb());
         v_y.push_back(slice_box[1].lb()); v_y.push_back(slice_box[1].lb());
       }
@@ -365,7 +365,7 @@ namespace tubex
 
       IntervalVector boundedSlice(2);
       boundedSlice[0] = slice.domain();
-      boundedSlice[1] = slice.codomain() & Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
+      boundedSlice[1] = truncInf(slice.codomain());
       vibes::drawBox(boundedSlice, params);
     }
 
@@ -394,7 +394,7 @@ namespace tubex
       {
         IntervalVector gateBox(2);
         gateBox[0] = t;
-        gateBox[1] = gate & Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
+        gateBox[1] = truncInf(gate);
         vibes::drawBox(gateBox, params);
       }
     }

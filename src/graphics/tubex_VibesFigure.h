@@ -17,10 +17,6 @@
 #include "vibes.h"
 #include "ibex_IntervalVector.h"
 
-// a real value to display unbounded slices
-#include <limits>
-#define BOUNDED_INFINITY numeric_limits<float>::max()
-
 namespace tubex
 {
   class VibesFigure
@@ -144,6 +140,9 @@ namespace tubex
        * \return 
        */
       //static void hex2rgb(const std::string& hexa, int &r, int &g, int &b, int &alpha);
+
+      static double truncInf(double x);
+      static const ibex::Interval truncInf(const ibex::Interval& x);
 
     protected:
 

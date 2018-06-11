@@ -200,170 +200,167 @@ namespace tubex
 
   ConvexPolygon CtcDeriv::getPolygon(const TubeSlice& x, const TubeSlice& v)
   {
-    if(v.codomain().is_unbounded())
-    {
-      //throw Exception("CtcDeriv::getPolygon", "unbounded derivative");
-    }
-
-    else if(x.inputGate() == Interval::ALL_REALS || x.outputGate() == Interval::ALL_REALS)
-    {
-      //throw Exception("CtcDeriv::getPolygon", "unbounded gates");
-    }
-
-    else
-    {
-      ConvexPolygon p;
-      Interval t = x.domain();
-      Interval y = x.codomain();
-      contractEnvelope(x, v, t, y, p);
-      return p;
-    }
+    ConvexPolygon p;
+    Interval t = x.domain();
+    Interval y = x.codomain();
+    contractEnvelope(x, v, t, y, p);
+    return p;
   }
 
   bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, Interval& t, Interval& y, ConvexPolygon& p)
   {
+    Interval prev_y = y, prev_t = t;
     t &= x.domain();
     DomainException::check(x, t);
-    Interval prev_y = y;
-    y.set_empty();
-    Interval prev_t = t;
 
-    // At this step, gates are supposed to be contracted
-
-    vector<Point> v_pts;
-    v_pts.push_back(point(t.lb(), x.inputGate().lb()));
-
-    if(t.is_degenerated())
+    if(v.codomain() == Interval::ALL_REALS)
     {
-      if(t.lb() == x.domain().lb())
-        y = x.inputGate();
-
-      else if(t.lb() == x.domain().ub())
-        y = x.outputGate();
-
-      else
-      {
-        y = (x.outputGate() - (x.domain().ub() - t.lb()) * v.codomain())
-          & (x.inputGate() + (t.lb() - x.domain().lb()) * v.codomain());
-      }
+      // No contraction expected
+      // Polygon computed for display purposes
+      p = ConvexPolygon(x.box());
     }
 
     else
     {
-      Interval y_tlb, y_tub, t_lb = t.lb(), t_ub = t.ub();
-      ConvexPolygon p_;
-      contractEnvelope(x, v, t_lb, y_tlb, p_);
-      contractEnvelope(x, v, t_ub, y_tub, p_);
-      y |= y_tlb | y_tub;
+      // At this step, gates are supposed to be contracted
 
-      // Lower bounds
+      y.set_empty();
 
-        if(!v.codomain().is_degenerated())
+      vector<Point> v_pts;
+      v_pts.push_back(point(t.lb(), x.inputGate().lb()));
+
+      if(t.is_degenerated())
+      {
+        if(t.lb() == x.domain().lb())
+          y = x.inputGate();
+
+        else if(t.lb() == x.domain().ub())
+          y = x.outputGate();
+
+        else
         {
-          Interval t_inter_lb, y_inter_lb;
+          y = (x.outputGate() - (x.domain().ub() - t.lb()) * v.codomain())
+            & (x.inputGate() + (t.lb() - x.domain().lb()) * v.codomain());
+        }
+      }
 
-          if(v.codomain().lb() == NEG_INFINITY)
+      else
+      {
+        Interval y_tlb, y_tub, t_lb = t.lb(), t_ub = t.ub();
+        ConvexPolygon p_;
+        contractEnvelope(x, v, t_lb, y_tlb, p_);
+        contractEnvelope(x, v, t_ub, y_tub, p_);
+        y |= y_tlb | y_tub;
+
+        // Lower bounds
+
+          if(!v.codomain().is_degenerated())
           {
-            t_inter_lb = t.lb();
-          }
+            Interval t_inter_lb, y_inter_lb;
 
-          else if(v.codomain().ub() == POS_INFINITY)
-          {
-            t_inter_lb = t.ub();
-          }
+            if(v.codomain().lb() == NEG_INFINITY)
+            {
+              t_inter_lb = t.lb();
+            }
 
-          else
-          {
-            t_inter_lb = linesIntersectionLb(x, v);
-          }
-
-          if(t_inter_lb.lb() >= t.lb() && t_inter_lb.ub() <= t.ub())
-          {
-            y_inter_lb = yolb(t_inter_lb, x, v) | yilb(t_inter_lb, x, v);
-            y |= y_inter_lb;
-
-            if(y_inter_lb.ub() >= prev_y.lb())
-              v_pts.push_back(point(t_inter_lb.mid(), y_inter_lb.mid()));
+            else if(v.codomain().ub() == POS_INFINITY)
+            {
+              t_inter_lb = t.ub();
+            }
 
             else
             {
-              Interval t_a = yilb_inv(prev_y.lb(), x, v);
-              v_pts.push_back(point(t_a.mid(), prev_y.lb()));
-              Interval t_b = yolb_inv(prev_y.lb(), x, v);
-              v_pts.push_back(point(t_b.mid(), prev_y.lb()));
+              t_inter_lb = linesIntersectionLb(x, v);
             }
-          }
 
-          else
-          {
-            if(t_inter_lb.ub() < t.lb())
-              y |= x.outputGate().lb() - (x.domain().ub() - t.lb()) * v.codomain().ub();
+            if(t_inter_lb.lb() >= t.lb() && t_inter_lb.ub() <= t.ub())
+            {
+              y_inter_lb = yolb(t_inter_lb, x, v) | yilb(t_inter_lb, x, v);
+              y |= y_inter_lb;
 
-            else if(t_inter_lb.lb() > t.ub())
-              y |= x.inputGate().lb() + (t.ub() - x.domain().lb()) * v.codomain().lb();
-          }
-        }
+              if(y_inter_lb.ub() >= prev_y.lb())
+                v_pts.push_back(point(t_inter_lb.mid(), y_inter_lb.mid()));
 
-        v_pts.push_back(point(t.ub(), x.outputGate().lb()));
-
-      // Upper bounds
-
-        v_pts.push_back(point(t.ub(), x.outputGate().ub()));
-
-        if(!v.codomain().is_degenerated())
-        {
-          Interval t_inter_ub, y_inter_ub;
-
-          if(v.codomain().lb() == NEG_INFINITY)
-          {
-            t_inter_ub = t.ub();
-          }
-
-          else if(v.codomain().ub() == POS_INFINITY)
-          {
-            t_inter_ub = t.lb();
-          }
-
-          else
-          {
-            t_inter_ub = linesIntersectionUb(x, v);
-          }
-
-          if(t_inter_ub.lb() >= t.lb() && t_inter_ub.ub() <= t.ub())
-          {
-            y_inter_ub = youb(t_inter_ub, x, v) | yiub(t_inter_ub, x, v);
-            y |= y_inter_ub;
-
-            if(y_inter_ub.lb() <= prev_y.ub())
-              v_pts.push_back(point(t_inter_ub.mid(), y_inter_ub.mid()));
+              else
+              {
+                Interval t_a = yilb_inv(prev_y.lb(), x, v);
+                v_pts.push_back(point(t_a.mid(), prev_y.lb()));
+                Interval t_b = yolb_inv(prev_y.lb(), x, v);
+                v_pts.push_back(point(t_b.mid(), prev_y.lb()));
+              }
+            }
 
             else
             {
-              Interval t_b = youb_inv(prev_y.ub(), x, v);
-              v_pts.push_back(point(t_b.mid(), prev_y.ub()));
-              Interval t_a = yiub_inv(prev_y.ub(), x, v);
-              v_pts.push_back(point(t_a.mid(), prev_y.ub()));
+              if(t_inter_lb.ub() < t.lb())
+                y |= x.outputGate().lb() - (x.domain().ub() - t.lb()) * v.codomain().ub();
+
+              else if(t_inter_lb.lb() > t.ub())
+                y |= x.inputGate().lb() + (t.ub() - x.domain().lb()) * v.codomain().lb();
             }
           }
 
-          else
+          v_pts.push_back(point(t.ub(), x.outputGate().lb()));
+
+        // Upper bounds
+
+          v_pts.push_back(point(t.ub(), x.outputGate().ub()));
+
+          if(!v.codomain().is_degenerated())
           {
-            if(t_inter_ub.ub() < t.lb())
-              y |= x.outputGate().ub() - (x.domain().ub() - t.lb()) * v.codomain().lb();
+            Interval t_inter_ub, y_inter_ub;
 
-            else if(t_inter_ub.lb() > t.ub())
-              y |= x.inputGate().ub() + (t.ub() - x.domain().lb()) * v.codomain().ub();
+            if(v.codomain().lb() == NEG_INFINITY)
+            {
+              t_inter_ub = t.ub();
+            }
+
+            else if(v.codomain().ub() == POS_INFINITY)
+            {
+              t_inter_ub = t.lb();
+            }
+
+            else
+            {
+              t_inter_ub = linesIntersectionUb(x, v);
+            }
+
+            if(t_inter_ub.lb() >= t.lb() && t_inter_ub.ub() <= t.ub())
+            {
+              y_inter_ub = youb(t_inter_ub, x, v) | yiub(t_inter_ub, x, v);
+              y |= y_inter_ub;
+
+              if(y_inter_ub.lb() <= prev_y.ub())
+                v_pts.push_back(point(t_inter_ub.mid(), y_inter_ub.mid()));
+
+              else
+              {
+                Interval t_b = youb_inv(prev_y.ub(), x, v);
+                v_pts.push_back(point(t_b.mid(), prev_y.ub()));
+                Interval t_a = yiub_inv(prev_y.ub(), x, v);
+                v_pts.push_back(point(t_a.mid(), prev_y.ub()));
+              }
+            }
+
+            else
+            {
+              if(t_inter_ub.ub() < t.lb())
+                y |= x.outputGate().ub() - (x.domain().ub() - t.lb()) * v.codomain().lb();
+
+              else if(t_inter_ub.lb() > t.ub())
+                y |= x.inputGate().ub() + (t.ub() - x.domain().lb()) * v.codomain().ub();
+            }
           }
-        }
 
-        v_pts.push_back(point(t.lb(), x.inputGate().ub()));
+          v_pts.push_back(point(t.lb(), x.inputGate().ub()));
+      }
+
+      y &= prev_y;
+      y &= x.codomain();
+      p = ConvexPolygon(v_pts);
     }
-
-    y &= prev_y;
-    y &= x.codomain();
-
-    p = ConvexPolygon(v_pts);
 
     return prev_y != y || prev_t != t;
   }
+
 }
