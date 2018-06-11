@@ -30,16 +30,16 @@ namespace tubex
   {
     StructureException::check(x, v);
 
-    bool ctc = false;
+    TubeSlice prev_x = x;
     Interval t = x.domain();
     Interval y = x.codomain();
     ConvexPolygon p; // unused
 
-    ctc |= contractGates(x, v);
-    ctc |= contractEnvelope(x, v, t, y, p);
+    contractGates(x, v);
+    contractEnvelope(x, v, t, y, p);
     x.setEnvelope(y);
 
-    return ctc;
+    return x != prev_x;
   }
 
   bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, Interval& t, Interval& y)
@@ -182,6 +182,20 @@ namespace tubex
     return ((y - x.outputGate().ub()) / v.codomain().lb()) + x.domain().ub();
   }
 
+  Interval ylb_inv(const Interval& y, const TubeSlice& x)
+  {
+    if(x.inputGate().lb() == x.outputGate().lb())
+      return Interval::ALL_REALS;
+    return x.domain().lb() + (y - x.inputGate().lb()) / ((x.outputGate().lb() - x.inputGate().lb()) / (x.domain().diam()));
+  }
+
+  Interval yub_inv(const Interval& y, const TubeSlice& x)
+  {
+    if(x.inputGate().ub() == x.outputGate().ub())
+      return Interval::ALL_REALS;
+    return x.domain().lb() + (y - x.inputGate().ub()) / ((x.outputGate().ub() - x.inputGate().ub()) / (x.domain().diam()));
+  }
+
   typedef Interval (* vFunctionCall)(const Interval& t, const TubeSlice& x, const TubeSlice& v);
 
   Interval linesIntersectionUb(const TubeSlice& x, const TubeSlice& v)
@@ -210,10 +224,14 @@ namespace tubex
   bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, Interval& t, Interval& y, ConvexPolygon& p)
   {
     Interval prev_y = y, prev_t = t;
-    t &= x.domain();
-    DomainException::check(x, t);
 
-    if(v.codomain() == Interval::ALL_REALS)
+    if(t.is_empty() || y.is_empty())
+    {
+      t.set_empty();
+      y.set_empty();
+    }
+
+    else if(v.codomain() == Interval::ALL_REALS)
     {
       // No contraction expected
       // Polygon computed for display purposes
@@ -223,6 +241,11 @@ namespace tubex
     else
     {
       // At this step, gates are supposed to be contracted
+
+      t &= x.domain();
+      DomainException::check(x, t);
+
+      // Contracting [y]
 
       y.set_empty();
 
@@ -357,7 +380,59 @@ namespace tubex
 
       y &= prev_y;
       y &= x.codomain();
+
+      // Contracting [t]
+
+      /*if(!t.is_degenerated())
+      {
+        Interval t_ = Interval::EMPTY_SET;
+
+        //t_ = (t & yilb_inv(y,x,v)) | (t & yolb_inv(y,x,v)) | (t & yiub_inv(y,x,v)) | (t & youb_inv(y,x,v));
+
+        Interval t_inter_lb = linesIntersectionLb(x, v);
+        Interval y_inter_lb = yilb_inv(t_inter_lb, x, v) | yolb_inv(t_inter_lb, x, v);
+
+        //if(!(y_inter_lb & y).is_empty())
+        {
+          if(t_inter_lb.lb() > t.lb() && t_inter_lb.ub() < t.ub())
+          {
+            //t_ |= (t & yilb_inv(y,x,v)) & (t & yolb_inv(y,x,v));
+            t_ |= t & (yolb_inv(y,x,v) | t.lb()) & (yilb_inv(y,x,v) | t.ub());
+          }
+
+          else
+          {
+            t_ |= (t & ylb_inv(y,x));
+          }
+        }
+
+        Interval t_inter_ub = linesIntersectionUb(x, v);
+        Interval y_inter_ub = yiub_inv(t_inter_ub, x, v) | youb_inv(t_inter_ub, x, v);
+
+        if(!(y_inter_ub & y).is_empty())
+        {
+          if(t_inter_ub.lb() > t.lb() && t_inter_ub.ub() < t.ub())
+          {
+            //t_ |= (t & yiub_inv(y,x,v)) & (t & youb_inv(y,x,v));
+            t_ |= t & (youb_inv(y,x,v) | t.lb()) & (yiub_inv(y,x,v) | t.ub());
+          }
+
+          else
+          {
+            t_ |= (t & yub_inv(y,x));
+          }
+        }
+
+        t &= t_;
+      }*/
+
       p = ConvexPolygon(v_pts);
+    }
+
+    if(t.is_empty() || y.is_empty())
+    {
+      t.set_empty();
+      y.set_empty();
     }
 
     return prev_y != y || prev_t != t;

@@ -99,12 +99,11 @@ TEST_CASE("CtcDeriv")
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
-    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
-
     CHECK(contraction);
     CHECK(x.inputGate().is_empty());
     CHECK(x.outputGate().is_empty());
     CHECK(x.codomain().is_empty());
+    CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
   }
 
   SECTION("Test slice, unbounded slice")
@@ -337,7 +336,8 @@ TEST_CASE("CtcDeriv")
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
       VibesFigure_Tube fig_tube("test", &tube);
-      fig_tube.setProperties(600, 100, 500, 500);
+      //fig_tube.setProperties(600, 100, 500, 500);
+      fig_tube.setProperties(100, 100, 500, 500);
       fig_tube.setTubeDerivative(&tube, &tubedot);
       fig_tube.show(true);
       fig_tube.show(true);
@@ -509,9 +509,12 @@ TEST_CASE("CtcDeriv (interpol)")
     y = Interval(1.,300.);
     t = Interval(1.);
     contraction = ctc.contract(x, v, t, y);
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
     CHECK(contraction);
     CHECK(y == Interval::EMPTY_SET);
+    CHECK(t == Interval::EMPTY_SET);
+    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
+    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
+    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
 
     y = Interval::ALL_REALS;
     t = 1.;
@@ -528,7 +531,7 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(y == Interval(-3.,1.));
   }
 
-  SECTION("Interpolation over a tube (example from tubint paper)")
+  /*SECTION("Interpolation over a tube (example from tubint paper)")
   {
     Tube tube(Interval(0., 5.), 1.0);
     Tube tubedot(tube);
@@ -593,7 +596,8 @@ TEST_CASE("CtcDeriv (interpol)")
     y = Interval::EMPTY_SET;
     t = Interval(1.,3.);
     contraction = ctc.contract(tube, tubedot, t, y);
-    CHECK_FALSE(contraction);
+    CHECK(contraction);
+    CHECK(t == Interval::EMPTY_SET);
     CHECK(y == Interval::EMPTY_SET);
 
     y = Interval::ALL_REALS;
@@ -614,12 +618,6 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(contraction);
     CHECK(y == Interval(3.55,4.25));
 
-    y = Interval(0.5,1.5);
-    t = Interval(0.25,0.75);
-    contraction = ctc.contract(tube, tubedot, t, y);
-    CHECK_FALSE(contraction);
-    CHECK(y == Interval(0.5,1.5));
-
     y = Interval::ALL_REALS;
     t = Interval(-10.,10.);
     CHECK(ctc.contract(tube, tubedot, t, y));
@@ -632,78 +630,152 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(t == tube.domain());
     CHECK(y == tube.codomain());
 
-    if(VIBES_DRAWING) // drawing results
-    {
-      vibes::beginDrawing();
-      IntervalVector box(2);
+    if(VIBES_DRAWING) vibes::beginDrawing();
+    
+    IntervalVector box(2);
 
-      box[0] = Interval(-1.,6.);
-      box[1] = Interval(-0.5,4.5);
-      vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
-      CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      CHECK(box[0] == Interval(0.,5.));
-      CHECK(box[1] == Interval(0.,4.25));
-      vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
-/*
-      box[0] = Interval(0.4,0.8);
-      box[1] = Interval(0.3,0.6);
-      vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
-      cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-      CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl;
-      CHECK(box[0] == Interval(0.4,0.55));
-      CHECK(box[1] == Interval(0.4,0.6));
-      vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+    box[0] = Interval(0.25,0.75);
+    box[1] = Interval(0.5,1.5);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK_FALSE(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(0.25,0.75));
+    CHECK(box[1] == Interval(0.5,1.5));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
-      box[0] = Interval(1.2,1.5);
-      box[1] = Interval(1.,4.);
-      vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
-      CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      CHECK(box[0] == Interval(1.2,1.8));
-      CHECK(box[1] == Interval(1.8,2.75));
-      vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+    box[0] = Interval(-1.,6.);
+    box[1] = Interval(-0.5,4.5);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(0.,5.));
+    CHECK(box[1] == Interval(0.,4.25));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
-      box[0] = Interval(1.8,3.1);
-      box[1] = Interval(2.5,4.2);
-      vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
-      CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      CHECK(box[0] == Interval(1.2,1.8));
-      CHECK(box[1] == Interval(1.8,2.75));
-      vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+    box[0] = Interval(0.4,0.8);
+    box[1] = Interval(0.3,0.6);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(0.4,0.55));
+    CHECK(box[1] == Interval(0.4,0.6));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
-      box[0] = Interval(0.2);
-      box[1] = Interval(0.1,0.8);
-      vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
-      CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      CHECK(box[0] == Interval(1.2,1.8));
-      CHECK(box[1] == Interval(1.8,2.75));
-      vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+    box[0] = Interval(1.2,1.5);
+    box[1] = Interval(1.,4.);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(1.2,1.5));
+    CHECK(ApproxIntv(box[1]) == Interval(1.8,2.75));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
-      box[0] = Interval(0.8);
-      box[1] = Interval(0.8,1.8);
-      vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
-      CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      CHECK(box[0] == Interval(1.2,1.8));
-      CHECK(box[1] == Interval(1.8,2.75));
-      vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+    box[0] = Interval(1.8,3.1);
+    box[1] = Interval(2.5,4.2);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(1.8,3.1));
+    CHECK(ApproxIntv(box[1]) == Interval(2.7,4.));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
-      box[0] = Interval(0.5,2.5);
-      box[1] = Interval(2.2);
-      vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
-      CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      CHECK(box[0] == Interval(1.2,1.8));
-      CHECK(box[1] == Interval(1.8,2.75));
-      vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+    box[0] = Interval(0.2);
+    box[1] = Interval(0.1,0.8);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(0.2));
+    CHECK(box[1] == Interval(0.2,0.4));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
-      box[0] = Interval(4.1,4.9);
-      box[1] = Interval(4.1,4.5);
-      vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
-      CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
-      CHECK(box[0] == Interval(1.2,1.8));
-      CHECK(box[1] == Interval(1.8,2.75));
-      vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
-*/
-      vibes::endDrawing();
-    }
+    box[0] = Interval(0.8);
+    box[1] = Interval(0.8,1.8);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(0.8));
+    CHECK(box[1] == Interval(1.1,1.6));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+
+    box[0] = Interval(0.5,2.5);
+    box[1] = Interval(2.2);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(ApproxIntv(box[0]) == Interval(1.1333333,1.4666666));
+    CHECK(box[1] == Interval(2.2));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+
+    box[0] = Interval(4.1,4.9);
+    box[1] = Interval(4.1,4.5);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(ApproxIntv(box[0]) == Interval(4.2,4.8));
+    CHECK(box[1] == Interval(4.1,4.25));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+
+    box[0] = Interval(4.2,4.7);
+    box[1] = Interval(3.55,3.8);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(ApproxIntv(box[0]) == Interval(4.2,4.6));
+    CHECK(box[1] == Interval(4.1,4.25));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
+
+    if(VIBES_DRAWING) vibes::endDrawing();
   }
+
+  SECTION("Interpolation over a tube (other example)")
+  {
+    Tube tube(Interval(0., 26.), Interval(-1.,7.));
+
+    tube.set(Interval(2.,3.), 0.);
+    tube.set(Interval(3.,4.), 4.);
+    tube.set(Interval(1.), 8.);
+    tube.set(Interval(1.), 12.);
+    tube.set(Interval(5.5), 14.);
+    tube.set(Interval(5.5), 16.);
+    tube.set(Interval(-1.), 18.);
+    tube.set(Interval(5.5), 20.);
+    tube.set(Interval(5.5), 23.);
+    tube.set(Interval::ALL_REALS, 8);
+    tube.set(Interval(5.5), 23.); // setting gate again
+
+    Tube tubedot(tube, Interval(-1.,1.));
+    tubedot.set(Interval(-1.5,4.), 0);
+    tubedot.set(Interval(-0.75,-0.5), 1);
+    tubedot.set(Interval(-1./3.,1.), 2);
+    tubedot.set(Interval(4.5/2.), 3);
+    tubedot.set(Interval(0.), 4);
+    tubedot.set(Interval(NEG_INFINITY,-6.5/2.), 5);
+    tubedot.set(Interval(6.5/2.,POS_INFINITY), 6);
+    tubedot.set(Interval::ALL_REALS, 7);
+    tubedot.set(Interval::ALL_REALS, 8);
+
+    CtcDeriv ctc;
+    ctc.contract(tube, tubedot);
+
+    #if VIBES_DRAWING // drawing results
+      vibes::beginDrawing();
+      VibesFigure_Tube fig_tube("test", &tube);
+      //fig_tube.setProperties(600, 100, 500, 500);
+      fig_tube.setProperties(100, 100, 1000, 500);
+      fig_tube.setTubeDerivative(&tube, &tubedot);
+      fig_tube.show(true);
+    #endif
+
+    IntervalVector box(2);
+
+    box[0] = Interval(8.1,11.8);
+    box[1] = Interval(1.9,3.);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(6.5,9.3));
+    CHECK(box[1] == Interval(1.9,2.125));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    box[0] = Interval(9.,11.8);
+    box[1] = Interval(0.2,0.5);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    CHECK(ctc.contract(tube, tubedot, box[0], box[1]));
+    CHECK(box[0] == Interval(6.5,9.3));
+    CHECK(box[1] == Interval(1.9,2.125));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    #if VIBES_DRAWING // drawing results
+      vibes::endDrawing();
+    #endif
+  }*/
 }
