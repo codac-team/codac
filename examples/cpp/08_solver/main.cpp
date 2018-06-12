@@ -6,16 +6,20 @@ using namespace tubex;
 
 #define IVP 1
 #define BVP 2
-#define SOLVER_TEST IVP
+#define SOLVER_TEST BVP
 
-void contract(vector<Tube>& v_x)
-{
-  #if SOLVER_TEST == IVP
 
+#if SOLVER_TEST == IVP
+
+  void contract(vector<Tube>& v_x)
+  {
     v_x[0].ctcFwdBwd(-sin(v_x[0]));
+  }
 
-  #elif SOLVER_TEST == BVP
-    
+#elif SOLVER_TEST == BVP
+      
+  void contract(vector<Tube>& v_x)
+  {
     Variable vx0, vx1;
     SystemFactory fac;
     fac.add_var(vx0);
@@ -32,9 +36,10 @@ void contract(vector<Tube>& v_x)
     v_x[0].set(bounds[1], 1.);
 
     v_x[0].ctcFwdBwd(v_x[0]);
+  }
 
-  #endif
-}
+#endif
+
 
 int main(int argc, char *argv[])
 {
@@ -52,78 +57,17 @@ int main(int argc, char *argv[])
     #elif SOLVER_TEST == BVP
 
       Interval domain(0.,1.);
-      float epsilon = 0.051;
+      float epsilon = 0.04;
       v.push_back(Tube(domain, Interval(-1.,1.)));
 
     #endif
 
   /* =========== SOLVER =========== */
 
-    stack<vector<Tube> > s;
-    s.push(v);
-    vector<vector<Tube> > v_solutions;
+    tubex::Solver solver;
+    vector<vector<Tube> > v_solutions = solver.solve(v, &contract, epsilon);
 
-    while(!s.empty())
-    {
-      vector<Tube> v_x = s.top();
-      s.pop();
-
-      // 1. Contractions up to the fixed point
-
-        bool emptiness;
-        double volume, new_volume;
-
-        do
-        {
-          volume = 0.;
-          for(int i = 0 ; i < v_x.size() ; i++)
-            volume += v_x[i].volume();
-          contract(v_x);
-
-          emptiness = false;
-          new_volume = 0.;
-          for(int i = 0 ; i < v_x.size() ; i++)
-          {
-            emptiness |= v_x[i].isEmpty();
-            volume += v_x[i].volume();
-          }
-
-        } while(!emptiness && volume != volume);
-
-      // 2. Bisection
-
-        if(!emptiness)
-        {
-          int first_id_max_thickness_x0;
-          double max_thickness_x0 = v_x[0].maxThickness(first_id_max_thickness_x0);
-          double t_bisection = v_x[0].getSlice(first_id_max_thickness_x0)->domain().mid();
-
-          if(max_thickness_x0 > epsilon)
-          {
-            vector<Tube> v_first, v_second;
-
-            for(int i = 0 ; i < v_x.size() ; i++)
-            {
-              pair<Tube,Tube> p_x = v_x[i].bisect(t_bisection);
-              v_first.push_back(p_x.first);
-              v_second.push_back(p_x.second);
-            }
-
-            s.push(v_first);
-            s.push(v_second);
-          }
-
-          else
-          {
-            vector<Tube> v;
-            for(int i = 0 ; i < v_x.size() ; i++)
-              v.push_back(Tube(v_x[i]));
-            v_solutions.push_back(v);
-          }
-        }
-
-      cout << "solutions: " << v_solutions.size() << endl;
-    }
+  /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
     VibesFigure_Tube fig("Solver");
@@ -150,7 +94,7 @@ int main(int argc, char *argv[])
       fig.setTubeDerivative(&v_solutions[i][0], &v_solutions[i][0]);
     }
 
-    fig.show(false);
+    fig.show(true);
     vibes::endDrawing();
 
   return EXIT_SUCCESS;
