@@ -4,102 +4,153 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-int main(int argc, char *argv[])
+#define IVP 1
+#define BVP 2
+#define SOLVER_TEST IVP
+
+void contract(vector<Tube>& v_x)
 {
-  /* =========== PARAMETERS =========== */
+  #if SOLVER_TEST == IVP
 
-    Interval domain(0.,1.);
-    double timestep = 0.001;
-    float epsilon = 0.01;
+    v_x[0].ctcFwdBwd(-sin(v_x[0]));
 
-  /* =========== SYSTEM =========== */
-
+  #elif SOLVER_TEST == BVP
+    
     Variable vx0, vx1;
-
     SystemFactory fac;
     fac.add_var(vx0);
     fac.add_var(vx1);
     fac.add_ctr(sqr(vx0) + sqr(vx1) = 1);
-
     System sys(fac);
-    CtcHC4 hc4(sys);
+    ibex::CtcHC4 hc4(sys);
 
-  /* =========== RESOLUTION =========== */
+    IntervalVector bounds(2);
+    bounds[0] &= v_x[0][0.];
+    bounds[1] &= v_x[0][1.];
+    hc4.contract(bounds);
+    v_x[0].set(bounds[0], 0.);
+    v_x[0].set(bounds[1], 1.);
 
-    stack<Tube> s;
-    vector<Tube*> v_solutions;
-    s.push(Tube(domain, timestep, Interval(-10.,10.))); // initial domain
+    v_x[0].ctcFwdBwd(v_x[0]);
 
-    // Note: an initial bounded image (e.g. [-10,10]) is mandatory
-    // in order to enable contractions with the ctcEval operator
+  #endif
+}
+
+int main(int argc, char *argv[])
+{
+  /* =========== PARAMETERS =========== */
+
+    vector<Tube> v;
+
+    #if SOLVER_TEST == IVP
+
+      Interval domain(0.,10.);
+      float epsilon = 0.1;
+      v.push_back(Tube(domain, Interval(-1.,1.)));
+      v[0].set(1., 0.); // initial condition
+
+    #elif SOLVER_TEST == BVP
+
+      Interval domain(0.,1.);
+      float epsilon = 0.051;
+      v.push_back(Tube(domain, Interval(-1.,1.)));
+
+    #endif
+
+  /* =========== SOLVER =========== */
+
+    stack<vector<Tube> > s;
+    s.push(v);
+    vector<vector<Tube> > v_solutions;
 
     while(!s.empty())
     {
-      Tube x = s.top(); s.pop();
+      vector<Tube> v_x = s.top();
+      s.pop();
 
       // 1. Contractions up to the fixed point
 
-        IntervalVector bounds(2);
-        double volume_x;
+        bool emptiness;
+        double volume, new_volume;
 
         do
         {
-          volume_x = x.volume(); // check tube's volume to detect a fixed point
+          volume = 0.;
+          for(int i = 0 ; i < v_x.size() ; i++)
+            volume += v_x[i].volume();
+          contract(v_x);
 
-          // Contractions
+          emptiness = false;
+          new_volume = 0.;
+          for(int i = 0 ; i < v_x.size() ; i++)
+          {
+            emptiness |= v_x[i].isEmpty();
+            volume += v_x[i].volume();
+          }
 
-            bounds[0] &= x[0.];
-            bounds[1] &= x[1.];
-            hc4.contract(bounds);
-
-            // BVP, constraints at 0 and 1:
-            x.set(bounds[0], 0.); // the derivative of x is x
-            x.set(bounds[1], 1.);
-
-            x.ctcFwdBwd(x);
-
-        } while(!x.isEmpty() && volume_x != x.volume()); // up to the fixed point
+        } while(!emptiness && volume != volume);
 
       // 2. Bisection
 
-        if(!x.isEmpty())
+        if(!emptiness)
         {
-          int first_id_max_thickness;
-          double max_thickness = x.maxThickness(first_id_max_thickness);
-          double t_bisection = x.getSlice(first_id_max_thickness)->domain().mid(); // bisection in the middle of a slice
+          int first_id_max_thickness_x0;
+          double max_thickness_x0 = v_x[0].maxThickness(first_id_max_thickness_x0);
+          double t_bisection = v_x[0].getSlice(first_id_max_thickness_x0)->domain().mid();
 
-          cout << "first_id_max_thickness " << first_id_max_thickness << endl;
-          cout << "t_bisection " << t_bisection << endl;
-          cout << "max_thickness " << max_thickness << endl;
-
-          if(max_thickness > epsilon)
+          if(max_thickness_x0 > epsilon)
           {
-            pair<Tube,Tube> p = x.bisect(t_bisection);
-            s.push(p.first);
-            s.push(p.second);
+            vector<Tube> v_first, v_second;
+
+            for(int i = 0 ; i < v_x.size() ; i++)
+            {
+              pair<Tube,Tube> p_x = v_x[i].bisect(t_bisection);
+              v_first.push_back(p_x.first);
+              v_second.push_back(p_x.second);
+            }
+
+            s.push(v_first);
+            s.push(v_second);
           }
 
           else
           {
-            v_solutions.push_back(new Tube(x));
+            vector<Tube> v;
+            for(int i = 0 ; i < v_x.size() ; i++)
+              v.push_back(Tube(v_x[i]));
+            v_solutions.push_back(v);
           }
         }
+
+      cout << "solutions: " << v_solutions.size() << endl;
     }
 
-    // Graphics
-
     vibes::beginDrawing();
-
     VibesFigure_Tube fig("Solver");
-    fig.setProperties(100,100,1000,450);
+
+    #if SOLVER_TEST == IVP
+
+      fig.setProperties(100,100,700,700);
+
+    #elif SOLVER_TEST == BVP
+
+      fig.setProperties(100,100,700,350);
+      Trajectory truth1(domain, Function("t", "exp(t)/sqrt(1+exp(2))"));
+      fig.addTrajectory(&truth1, "truth1", "blue");
+      Trajectory truth2(domain, Function("t", "-exp(t)/sqrt(1+exp(2))"));
+      fig.addTrajectory(&truth2, "truth2", "red");
+
+    #endif
+
     for(int i = 0 ; i < v_solutions.size() ; i++)
     {
       ostringstream o;
       o << "solution_" << i;
-      fig.addTube(v_solutions[i], o.str());
+      fig.addTube(&v_solutions[i][0], o.str());
+      fig.setTubeDerivative(&v_solutions[i][0], &v_solutions[i][0]);
     }
 
-    fig.show();
+    fig.show(false);
     vibes::endDrawing();
 
   return EXIT_SUCCESS;
