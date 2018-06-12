@@ -61,27 +61,7 @@ namespace tubex
     
     Tube::Tube(const Interval& domain, double timestep, const Function& function) : Tube(domain, timestep)
     {
-      TubeSlice *slice, *first_slice = getFirstSlice();
-
-      // Setting envelopes
-      slice = first_slice;
-      while(slice != NULL)
-      {
-        IntervalVector iv_domain(1, slice->domain());
-        slice->setEnvelope(function.eval(iv_domain));
-        slice = slice->nextSlice();
-      }
-
-      // Setting gates
-      slice = first_slice;
-      while(slice != NULL)
-      {
-        IntervalVector iv_domain_input(1, slice->domain().lb());
-        slice->setInputGate(function.eval(iv_domain_input));
-        IntervalVector iv_domain_output(1, slice->domain().ub());
-        slice->setOutputGate(function.eval(iv_domain_output));
-        slice = slice->nextSlice();
-      }
+      set(function);
     }
 
     Tube::Tube(const Tube& x)
@@ -92,6 +72,11 @@ namespace tubex
     Tube::Tube(const Tube& x, const Interval& codomain) : Tube(x)
     {
       set(codomain);
+    }
+
+    Tube::Tube(const Tube& x, const Function& function) : Tube(x)
+    {
+      set(function);
     }
 
     Tube::Tube(const Trajectory& traj, double thickness, double timestep) : Tube(traj.domain(), timestep, Interval::EMPTY_SET)
@@ -487,6 +472,31 @@ namespace tubex
       }
     }
 
+    void Tube::set(const Function& function)
+    {
+      TubeSlice *slice, *first_slice = getFirstSlice();
+
+      // Setting envelopes
+      slice = first_slice;
+      while(slice != NULL)
+      {
+        IntervalVector iv_domain(1, slice->domain());
+        slice->setEnvelope(function.eval(iv_domain));
+        slice = slice->nextSlice();
+      }
+
+      // Setting gates
+      slice = first_slice;
+      while(slice != NULL)
+      {
+        IntervalVector iv_domain_input(1, slice->domain().lb());
+        slice->setInputGate(function.eval(iv_domain_input));
+        IntervalVector iv_domain_output(1, slice->domain().ub());
+        slice->setOutputGate(function.eval(iv_domain_output));
+        slice = slice->nextSlice();
+      }
+    }
+
     void Tube::setEmpty()
     {
       m_component->setEmpty();
@@ -506,10 +516,19 @@ namespace tubex
 
       LargestFirst bisector(0., ratio);
       IntervalVector slice_domain(1, (*this)[t]);
-      pair<IntervalVector,IntervalVector> p_codomain = bisector.bisect(slice_domain);
 
-      p.first.set(p_codomain.first[0], t);
-      p.second.set(p_codomain.second[0], t);
+      try
+      {
+        pair<IntervalVector,IntervalVector> p_codomain = bisector.bisect(slice_domain);
+        p.first.set(p_codomain.first[0], t);
+        p.second.set(p_codomain.second[0], t);
+      }
+
+      catch(ibex::NoBisectableVariableException&)
+      {
+        throw Exception("Tube::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
+      };
+
       return p;
     }
 
