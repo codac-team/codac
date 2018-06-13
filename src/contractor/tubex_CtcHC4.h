@@ -22,8 +22,6 @@ namespace tubex
 {
   /**
    * \brief CtcHC4 class.
-   *
-   * Constraint: \dot{x}=v
    */
   class CtcHC4 : Ctc
   {

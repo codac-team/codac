@@ -7,6 +7,7 @@ using namespace tubex;
 #define IVP 1
 #define BVP 2
 #define BVP_TEST 3
+#define IVP_PICARD 4
 #define SOLVER_TEST IVP
 
 
@@ -14,7 +15,28 @@ using namespace tubex;
 
   void contract(vector<Tube>& v_x)
   {
+    if(v_x[0].codomain().is_unbounded())
+    {
+      tubex::CtcPicard tube_picard;
+      Function f("x", "-sin(x)");
+      tube_picard.contract(f, v_x[0]);
+    }
+
     v_x[0].ctcFwdBwd(-sin(v_x[0]));
+  }
+
+#elif SOLVER_TEST == IVP_PICARD
+
+  void contract(vector<Tube>& v_x)
+  {
+    if(v_x[0].codomain().is_unbounded())
+    {
+      tubex::CtcPicard tube_picard;
+      Function f("x", "-x");
+      tube_picard.contract(f, v_x[0]);
+    }
+
+    v_x[0].ctcFwdBwd(-v_x[0]);
   }
 
 #elif SOLVER_TEST == BVP
@@ -71,7 +93,15 @@ int main(int argc, char *argv[])
 
       Interval domain(0.,10.);
       float epsilon = 0.05;
-      v.push_back(Tube(domain, Interval(-1.,1.)));
+      v.push_back(Tube(domain));
+      v[0].set(1., 0.); // initial condition
+      bool show_details = true;
+
+    #elif SOLVER_TEST == IVP_PICARD
+
+      Interval domain(0.,1.);
+      float epsilon = 0.05;
+      v.push_back(Tube(domain));
       v[0].set(1., 0.); // initial condition
       bool show_details = true;
 
@@ -107,6 +137,10 @@ int main(int argc, char *argv[])
     VibesFigure_Tube fig("Solver");
 
     #if SOLVER_TEST == IVP
+
+      fig.setProperties(100,100,700,500);
+
+    #elif SOLVER_TEST == IVP_PICARD
 
       fig.setProperties(100,100,700,500);
 
