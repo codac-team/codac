@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     #if SOLVER_TEST == IVP
 
       Interval domain(0.,10.);
-      float epsilon = 0.1;
+      float epsilon = 0.05;
       v.push_back(Tube(domain, Interval(-1.,1.)));
       v[0].set(1., 0.); // initial condition
       bool show_details = true;
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     #elif SOLVER_TEST == BVP
 
       Interval domain(0.,1.);
-      float epsilon = 0.04;
+      float epsilon = 0.05;
       v.push_back(Tube(domain, Interval(-1.,1.)));
       bool show_details = true;
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 
     #if SOLVER_TEST == IVP
 
-      fig.setProperties(100,100,700,700);
+      fig.setProperties(100,100,700,500);
 
     #elif SOLVER_TEST == BVP
 

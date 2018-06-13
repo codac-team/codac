@@ -55,6 +55,7 @@ namespace tubex
       const TubeSlice* getSlice(double t) const;
       TubeSlice* getFirstSlice() const; // todo: check constness of these
       TubeSlice* getLastSlice() const;
+      TubeSlice* getWiderSlice() const;
       void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
       void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);

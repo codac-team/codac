@@ -22,6 +22,22 @@ namespace tubex
 
   }
 
+  double Solver::tubeVectorVolume(const vector<Tube>& v_x) const
+  {
+    double volume = 0.;
+    for(int i = 0 ; i < v_x.size() ; i++)
+      volume += v_x[i].volume();
+    return volume;
+  }
+
+  double Solver::tubeVectorIsEmpty(const vector<Tube>& v_x) const
+  {
+    for(int i = 0 ; i < v_x.size() ; i++)
+      if(v_x[i].isEmpty())
+        return true;
+    return false;
+  }
+
   vector<vector<Tube> > Solver::solve(vector<Tube>& v_x, void (*ctc_func)(std::vector<Tube>&), float epsilon)
   {
     stack<vector<Tube> > s;
@@ -33,29 +49,39 @@ namespace tubex
       vector<Tube> v_x = s.top();
       s.pop();
 
-      // 1. Contractions up to the fixed point
+      bool emptiness;
+      double volume, volume_before_refining;
+      float refining_ratio = 0.005;
 
-        bool emptiness;
-        double volume, new_volume;
+      do
+      {
+        volume_before_refining = tubeVectorVolume(v_x);
 
-        do
-        {
-          volume = 0.;
+        // 1. Refining
+
+          int first_id_max_thickness_x0;
+          double max_thickness_x0 = v_x[0].maxThickness(first_id_max_thickness_x0);
+          double t_refining = v_x[0].getSlice(first_id_max_thickness_x0)->domain().mid();
+          //double t_refining = v_x[0].getWiderSlice()->domain().mid();
+
           for(int i = 0 ; i < v_x.size() ; i++)
-            volume += v_x[i].volume();
-          ctc_func(v_x);
+            v_x[i].sample(t_refining);
 
-          emptiness = false;
-          new_volume = 0.;
-          for(int i = 0 ; i < v_x.size() ; i++)
+        // 2. Contractions up to the fixed point
+
+          double volume_before_ctc;
+
+          do
           {
-            emptiness |= v_x[i].isEmpty();
-            volume += v_x[i].volume();
-          }
+            volume_before_ctc = tubeVectorVolume(v_x);
+            ctc_func(v_x);
+            emptiness = tubeVectorIsEmpty(v_x);
+            volume = tubeVectorVolume(v_x);
+          } while(!emptiness && volume != volume_before_ctc); // fixed point
 
-        } while(!emptiness && volume != volume);
+      } while(!emptiness && (volume / volume_before_refining) < (1. - refining_ratio));
 
-      // 2. Bisection
+      // 3. Bisection
 
         if(!emptiness)
         {

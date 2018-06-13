@@ -187,6 +187,25 @@ namespace tubex
       return m_component->getLastSlice();
     }
 
+    TubeSlice* Tube::getWiderSlice() const
+    {
+      double max_domain_width = 0.;
+      TubeSlice *wider_slice, *slice = getFirstSlice();
+
+      while(slice != NULL)
+      {
+        if(slice->domain().diam() > max_domain_width)
+        {
+          wider_slice = slice;
+          max_domain_width = slice->domain().diam();
+        }
+
+        slice = slice->nextSlice();
+      }
+
+      return wider_slice;
+    }
+
     void Tube::getSlices(vector<const TubeSlice*>& v_slices) const
     {
       m_component->getSlices(v_slices);
@@ -280,7 +299,14 @@ namespace tubex
 
     double Tube::volume() const
     {
-      return m_component->volume();
+      TubeSlice *slice = getFirstSlice();
+      double volume = 0.;
+      while(slice != NULL)
+      {
+        volume += slice->box().volume();
+        slice = slice->nextSlice();
+      }
+      return volume;
     }
 
     const Interval Tube::operator[](int slice_id) const
