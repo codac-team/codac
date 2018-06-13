@@ -7,7 +7,7 @@ using namespace tubex;
 #define IVP 1
 #define BVP 2
 #define BVP_TEST 3
-#define SOLVER_TEST BVP
+#define SOLVER_TEST IVP
 
 
 #if SOLVER_TEST == IVP

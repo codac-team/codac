@@ -27,7 +27,8 @@ namespace tubex
       double tubeVectorIsEmpty(const std::vector<Tube>& v_x) const;
       std::vector<std::vector<Tube> > solve(std::vector<Tube>& v_x,
                                             void (*ctc_func)(std::vector<Tube>&),
-                                            float epsilon);
+                                            float max_thickness,
+                                            float refining_ratio = 0.005);
 
     protected:
       

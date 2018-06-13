@@ -38,7 +38,7 @@ namespace tubex
     return false;
   }
 
-  vector<vector<Tube> > Solver::solve(vector<Tube>& v_x, void (*ctc_func)(std::vector<Tube>&), float epsilon)
+  vector<vector<Tube> > Solver::solve(vector<Tube>& v_x, void (*ctc_func)(std::vector<Tube>&), float max_thickness, float refining_ratio)
   {
     stack<vector<Tube> > s;
     s.push(v_x);
@@ -51,7 +51,6 @@ namespace tubex
 
       bool emptiness;
       double volume, volume_before_refining;
-      float refining_ratio = 0.005;
 
       do
       {
@@ -89,7 +88,7 @@ namespace tubex
           double max_thickness_x0 = v_x[0].maxThickness(first_id_max_thickness_x0);
           double t_bisection = v_x[0].getSlice(first_id_max_thickness_x0)->domain().mid();
 
-          if(max_thickness_x0 > epsilon)
+          if(max_thickness_x0 > max_thickness)
           {
             vector<Tube> v_first, v_second;
 
