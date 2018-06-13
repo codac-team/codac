@@ -6,9 +6,9 @@ using namespace tubex;
 
 #define IVP 1
 #define BVP 2
-#define BVP_TEST 3
 #define IVP_PICARD 4
-#define SOLVER_TEST IVP
+#define BVP_CP2010 5
+#define SOLVER_TEST IVP_PICARD
 
 
 #if SOLVER_TEST == IVP
@@ -31,9 +31,11 @@ using namespace tubex;
   {
     if(v_x[0].codomain().is_unbounded())
     {
+      vector<Tube*> v_x_ptr;
+      v_x_ptr.push_back(&(v_x[0]));
       tubex::CtcPicard tube_picard;
       Function f("x", "-x");
-      tube_picard.contract(f, v_x[0]);
+      tube_picard.contract(f, v_x_ptr);
     }
 
     v_x[0].ctcFwdBwd(-v_x[0]);
@@ -61,23 +63,28 @@ using namespace tubex;
     v_x[0].ctcFwdBwd(v_x[0]);
   }
 
-#elif SOLVER_TEST == BVP_TEST
+#elif SOLVER_TEST == BVP_CP2010
       
   void contract(vector<Tube>& v_x)
   {
-    Variable vt, vu, vudot;
-    SystemFactory fac;
-    fac.add_var(vt);
-    fac.add_var(vu);
-    fac.add_var(vudot);
-    fac.add_ctr(vudot - vt*cos(vt) + vu - (1.+vt)*sin(vt) = 0.);
-    System sys(fac);
-    ibex::CtcHC4 hc4(sys);
+    if(v_x[0].codomain().is_unbounded())
+    {
+      tubex::CtcPicard tube_picard;
 
-    tubex::CtcHC4 tube_hc4;
-    tube_hc4.contract(v_x[0], v_x[1], hc4);
+      vector<Tube*> v_x_ptr;
+      for(int i = 0 ; i < v_x.size() ; i++)
+        v_x_ptr.push_back(&(v_x[i]));
+
+      Variable x1, x2;
+      Function f(x1, x2, Return(x2, 0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
+      tube_picard.contract(f, v_x_ptr);
+    }
+
+    float g = 20., b = 0.4, l = 0.05;
+    Tube temp = l * v_x[0] * exp((g*b*(1.-v_x[0])) / (1. + b * (1.-v_x[0])));
 
     v_x[0].ctcFwdBwd(v_x[1]);
+    v_x[1].ctcFwdBwd(temp);
   }
 
 #endif
@@ -112,13 +119,15 @@ int main(int argc, char *argv[])
       v.push_back(Tube(domain, Interval(-1.,1.)));
       bool show_details = true;
 
-    #elif SOLVER_TEST == BVP_TEST
+    #elif SOLVER_TEST == BVP_CP2010
 
-      Interval domain(0.,2.5);
+      Interval domain(0.,1.);
       float epsilon = 0.2;
-      v.push_back(Tube(domain, Interval(0.5,2.5)));
-      v.push_back(Tube(domain, Interval(-20.,20.)));
-      v[0].set(1., 0.); // initial condition
+      v.push_back(Tube(domain));
+      v.push_back(Tube(domain));
+      v[0].set(1., 1.);
+      v[0].set(Interval(0.,1.), 0.);
+      v[1].set(0., 0.);
       bool show_details = true;
 
     #endif
@@ -152,11 +161,9 @@ int main(int argc, char *argv[])
       Trajectory truth2(domain, Function("t", "-exp(t)/sqrt(1+exp(2))"));
       fig.addTrajectory(&truth2, "truth2", "red");
 
-    #elif SOLVER_TEST == BVP_TEST
+    #elif SOLVER_TEST == BVP_CP2010
 
       fig.setProperties(100,100,700,350);
-      Trajectory truth1(domain, Function("t", "exp(-t)+t*sin(t)"));
-      fig.addTrajectory(&truth1, "truth1", "blue");
 
     #endif
 

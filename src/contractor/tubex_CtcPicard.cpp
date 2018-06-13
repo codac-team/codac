@@ -90,6 +90,45 @@ namespace tubex
 
     return ctc;
   }
+  
+  bool CtcPicard::contract(const Function& f, vector<Tube*>& x)
+  {
+    bool ctc = false;
+    vector<TubeSlice*> v_slice_x;
+    for(int i = 0 ; i < x.size() ; i++)
+      v_slice_x.push_back(x[i]->getFirstSlice());
+
+    while(v_slice_x[0] != NULL)
+    {
+      ctc |= contract(f, v_slice_x);
+
+      bool unbounded_slice = false;
+      for(int i = 0 ; i < v_slice_x.size() ; i++)
+        unbounded_slice |= v_slice_x[i]->codomain().is_unbounded();
+
+      if(unbounded_slice && v_slice_x[0]->domain().diam() > x[0]->domain().diam() / 500.) // Picard failed
+      {
+        for(int i = 0 ; i < v_slice_x.size() ; i++)
+        {
+          TubeSlice *prev_slice_x = v_slice_x[i]->prevSlice();
+          if(i == 0) cout << "sampling at " << v_slice_x[i]->domain().diam() << endl;
+          x[i]->sample(v_slice_x[i]->domain().mid());
+
+          if(prev_slice_x == NULL)
+            v_slice_x[i] = x[i]->getFirstSlice();
+
+          else
+            v_slice_x[i] = prev_slice_x->nextSlice();
+        }
+        continue;
+      }
+
+      for(int i = 0 ; i < v_slice_x.size() ; i++)
+        v_slice_x[i] = v_slice_x[i]->nextSlice();
+    }
+
+    return ctc;
+  }
 
   bool CtcPicard::contract(const Function& f, TubeSlice& x)
   {
@@ -110,6 +149,31 @@ namespace tubex
     return ctc;
   }
 
+  bool CtcPicard::contract(const Function& f, vector<TubeSlice*>& x)
+  {
+    bool ctc = false;
+    IntervalVector intv_x(x.size()), intv_x0(x.size());
+
+    for(int i = 0 ; i < x.size() ; i++)
+    {
+      intv_x[i] = x[i]->codomain();
+      intv_x0[i] = x[i]->inputGate();
+    }
+
+    ctc |= contract(f, intv_x, intv_x0, Interval(0., x[0]->domain().diam()));
+    for(int i = 0 ; i < x.size() ; i++)
+      x[i]->setEnvelope(intv_x[i]);
+
+    for(int i = 0 ; i < x.size() ; i++)
+      intv_x[i] = x[i]->outputGate();
+
+    ctc |= contract(f, intv_x, intv_x0, Interval(x[0]->domain().diam()));
+    for(int i = 0 ; i < x.size() ; i++)
+      x[i]->setOutputGate(intv_x[i]);
+
+    return ctc;
+  }
+
   bool CtcPicard::contract(const Function& f, Interval& x, const Interval& x0, const Interval& h, const Interval& xdot)
   {
     float delta = m_delta;
@@ -123,6 +187,30 @@ namespace tubex
       new_x = x0 + h * (f.eval(box) & xdot);
       if(new_x.is_unbounded())
         return false;
+    } while(!new_x.is_strict_interior_subset(guess));
+
+    bool ctc = x != new_x;
+    x = new_x;
+    return ctc;
+  }
+
+  bool CtcPicard::contract(const Function& f, IntervalVector& x, const IntervalVector& x0, const Interval& h)
+  {
+    float delta = m_delta;
+    float epsilon = std::numeric_limits<float>::epsilon();
+    IntervalVector guess = x0, new_x = x;
+
+    do
+    {
+      for(int i = 0 ; i < guess.size() ; i++)
+        guess[i] = guess[i].mid() + delta * (guess[i] - guess[i].mid()) + Interval(-epsilon,epsilon);
+
+      new_x = x0 + h * f.eval_vector(guess);
+
+      for(int i = 0 ; i < x.size() ; i++)
+        if(new_x[i].is_unbounded())
+          return false;
+
     } while(!new_x.is_strict_interior_subset(guess));
 
     bool ctc = x != new_x;
