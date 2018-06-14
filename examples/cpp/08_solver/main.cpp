@@ -8,7 +8,7 @@ using namespace tubex;
 #define BVP 2
 #define IVP_PICARD 4
 #define BVP_CP2010 5
-#define SOLVER_TEST IVP_PICARD
+#define SOLVER_TEST BVP
 
 
 #if SOLVER_TEST == IVP
@@ -59,6 +59,13 @@ using namespace tubex;
     hc4.contract(bounds);
     v_x[0].set(bounds[0], 0.);
     v_x[0].set(bounds[1], 1.);
+
+    if(v_x[0].codomain().is_unbounded())
+    {
+      tubex::CtcPicard tube_picard;
+      Function f("x", "x");
+      tube_picard.contract(f, v_x[0]);
+    }
 
     v_x[0].ctcFwdBwd(v_x[0]);
   }
@@ -116,7 +123,7 @@ int main(int argc, char *argv[])
 
       Interval domain(0.,1.);
       float epsilon = 0.05;
-      v.push_back(Tube(domain, Interval(-1.,1.)));
+      v.push_back(Tube(domain));
       bool show_details = true;
 
     #elif SOLVER_TEST == BVP_CP2010
@@ -124,9 +131,9 @@ int main(int argc, char *argv[])
       Interval domain(0.,1.);
       float epsilon = 0.2;
       v.push_back(Tube(domain));
-      v.push_back(Tube(domain));
       v[0].set(1., 1.);
       v[0].set(Interval(0.,1.), 0.);
+      v.push_back(Tube(domain));
       v[1].set(0., 0.);
       bool show_details = true;
 
