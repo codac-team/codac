@@ -13,9 +13,9 @@
 
   )
 
-  add_executable(ex_arithmetic ${SRC})
+  add_executable(ex_solver ${SRC})
 
-  target_link_libraries(ex_arithmetic
+  target_link_libraries(ex_solver
     ${LIBS}
     tubex-lib)
 
@@ -23,5 +23,5 @@
 # Tests
 
   if(BUILD_TESTS)
-    add_test(NAME ExampleArithmetics COMMAND ex_arithmetic 0)
+    add_test(NAME ExampleSolver COMMAND ex_solver 0)
   endif(BUILD_TESTS)
