@@ -8,19 +8,19 @@ using namespace tubex;
 #define BVP 2
 #define IVP_PICARD 4
 #define BVP_CP2010 5
-#define SOLVER_TEST BVP
+#define SOLVER_TEST IVP
 
 
 #if SOLVER_TEST == IVP
 
   void contract(vector<Tube>& v_x)
   {
-    if(v_x[0].codomain().is_unbounded())
+    /*if(v_x[0].codomain().is_unbounded())
     {
       tubex::CtcPicard tube_picard;
       Function f("x", "-sin(x)");
       tube_picard.contract(f, v_x[0]);
-    }
+    }*/
 
     v_x[0].ctcFwdBwd(-sin(v_x[0]));
   }
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
     #if SOLVER_TEST == IVP
 
       Interval domain(0.,10.);
-      float epsilon = 0.05;
+      float epsilon = 0.03;
       v.push_back(Tube(domain));
       v[0].set(1., 0.); // initial condition
       bool show_details = true;
