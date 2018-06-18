@@ -26,24 +26,21 @@ namespace tubex
   {
     public:
 
-      CtcPicard(float delta = 1.01);
+      CtcPicard(float delta = 1.1);
 
       // Tube
       bool contract(const ibex::Function& f, Tube& x);
-      bool contract(const ibex::Function& f, Tube& x, Tube& xdot);
       bool contract(const ibex::Function& f, std::vector<Tube*>& x);
 
       // TubeSlice
       bool contract(const ibex::Function& f, TubeSlice& x);
-      bool contract(const ibex::Function& f, TubeSlice& x, const TubeSlice& xdot);
       bool contract(const ibex::Function& f, std::vector<TubeSlice*>& x);
 
     protected:
 
       bool contract(const ibex::Function& f,
                     ibex::Interval& x, const ibex::Interval& x0,
-                    const ibex::Interval& h,
-                    const ibex::Interval& xdot = ibex::Interval::ALL_REALS);
+                    const ibex::Interval& h);
 
       bool contract(const ibex::Function& f,
                     ibex::IntervalVector& x, const ibex::IntervalVector& x0,

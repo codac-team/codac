@@ -16,6 +16,8 @@
 using namespace std;
 using namespace ibex;
 
+#define EPSILON std::numeric_limits<float>::epsilon()
+
 namespace tubex
 {
   // todo: backward
@@ -47,45 +49,6 @@ namespace tubex
       }
 
       slice_x = slice_x->nextSlice();
-    }
-
-    return ctc;
-  }
-
-  bool CtcPicard::contract(const Function& f, Tube& x, Tube& xdot)
-  {
-    StructureException::check(x, xdot);
-    bool ctc = false;
-    TubeSlice *slice_x = x.getFirstSlice(), *slice_xdot = xdot.getFirstSlice();
-
-    while(slice_x != NULL)
-    {
-      ctc |= contract(f, *slice_x, *slice_xdot);
-      if(slice_x->codomain().is_unbounded()) // Picard failed
-      {
-        TubeSlice *prev_slice_x = slice_x->prevSlice();
-        TubeSlice *prev_slice_xdot = slice_xdot->prevSlice();
-
-        x.sample(slice_x->domain().mid());
-        xdot.sample(slice_x->domain().mid());
-
-        if(prev_slice_x == NULL)
-        {
-          slice_x = x.getFirstSlice();
-          slice_xdot = xdot.getFirstSlice();
-        }
-
-        else
-        {
-          slice_x = prev_slice_x->nextSlice();
-          slice_xdot = prev_slice_xdot->nextSlice();
-        }
-
-        continue;
-      }
-
-      slice_x = slice_x->nextSlice();
-      slice_xdot = slice_xdot->nextSlice();
     }
 
     return ctc;
@@ -132,19 +95,12 @@ namespace tubex
 
   bool CtcPicard::contract(const Function& f, TubeSlice& x)
   {
-    TubeSlice xdot_unbounded(x);
-    xdot_unbounded.set(Interval::ALL_REALS);
-    return contract(f, x, xdot_unbounded);
-  }
-
-  bool CtcPicard::contract(const Function& f, TubeSlice& x, const TubeSlice& xdot)
-  {
     bool ctc = false;
     Interval intv_x = x.codomain();
-    ctc |= contract(f, intv_x, x.inputGate(), Interval(0., x.domain().diam()), xdot.codomain());
+    ctc |= contract(f, intv_x, x.inputGate(), Interval(0., x.domain().diam()));
     x.setEnvelope(intv_x);
     intv_x = x.outputGate();
-    ctc |= contract(f, intv_x, x.inputGate(), Interval(x.domain().diam()), xdot.codomain());
+    ctc |= contract(f, intv_x, x.inputGate(), Interval(x.domain().diam()));
     x.setOutputGate(intv_x);
     return ctc;
   }
@@ -152,7 +108,7 @@ namespace tubex
   bool CtcPicard::contract(const Function& f, vector<TubeSlice*>& x)
   {
     bool ctc = false;
-    IntervalVector intv_x(x.size()), intv_x0(x.size());
+    IntervalVector intv_x(x.size()), intv_x0(x.size()), intv_xf(x.size());
 
     for(int i = 0 ; i < x.size() ; i++)
     {
@@ -165,26 +121,22 @@ namespace tubex
       x[i]->setEnvelope(intv_x[i]);
 
     for(int i = 0 ; i < x.size() ; i++)
-      intv_x[i] = x[i]->outputGate();
-
-    ctc |= contract(f, intv_x, intv_x0, Interval(x[0]->domain().diam()));
-    for(int i = 0 ; i < x.size() ; i++)
-      x[i]->setOutputGate(intv_x[i]);
+      x[i]->setOutputGate(x[i]->inputGate()
+                        + x[i]->domain().diam() * f.eval_vector(intv_x)[i]);
 
     return ctc;
   }
 
-  bool CtcPicard::contract(const Function& f, Interval& x, const Interval& x0, const Interval& h, const Interval& xdot)
+  bool CtcPicard::contract(const Function& f, Interval& x, const Interval& x0, const Interval& h)
   {
     float delta = m_delta;
-    float epsilon = std::numeric_limits<float>::epsilon();
     Interval guess = x0, new_x = x;
 
     do
     {
-      guess = guess.mid() + delta * (guess - guess.mid()) + Interval(-epsilon,epsilon);
+      guess = guess.mid() + delta * (guess - guess.mid()) + Interval(-EPSILON,EPSILON);
       IntervalVector box(1, guess);
-      new_x = x0 + h * (f.eval(box) & xdot);
+      new_x = x0 + h * f.eval(box);
       if(new_x.is_unbounded())
         return false;
     } while(!new_x.is_strict_interior_subset(guess));
@@ -197,24 +149,20 @@ namespace tubex
   bool CtcPicard::contract(const Function& f, IntervalVector& x, const IntervalVector& x0, const Interval& h)
   {
     float delta = m_delta;
-    float epsilon = std::numeric_limits<float>::epsilon();
-    IntervalVector guess = x0, new_x = x;
+    IntervalVector x_guess = x0, x_enclosure(x.size());
 
     do
     {
-      for(int i = 0 ; i < guess.size() ; i++)
-        guess[i] = guess[i].mid() + delta * (guess[i] - guess[i].mid()) + Interval(-epsilon,epsilon);
+      for(int i = 0 ; i < x_guess.size() ; i++)
+        x_guess[i] = x_guess[i].mid()
+                   + delta * (x_guess[i] - x_guess[i].mid())
+                   + Interval(-EPSILON,EPSILON); // in case of degenerate box
 
-      new_x = x0 + h * f.eval_vector(guess);
+      x_enclosure = x0 + h * f.eval_vector(x_guess);
+    } while(!x_enclosure.is_strict_interior_subset(x_guess));
 
-      for(int i = 0 ; i < x.size() ; i++)
-        if(new_x[i].is_unbounded())
-          return false;
-
-    } while(!new_x.is_strict_interior_subset(guess));
-
-    bool ctc = x != new_x;
-    x = new_x;
+    bool ctc = x != x_enclosure;
+    x = x_enclosure;
     return ctc;
   }
 }

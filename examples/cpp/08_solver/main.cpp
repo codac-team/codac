@@ -8,7 +8,8 @@ using namespace tubex;
 #define BVP 2
 #define IVP_PICARD 4
 #define BVP_CP2010 5
-#define SOLVER_TEST IVP
+#define DELAY 6
+#define SOLVER_TEST BVP_CP2010
 
 
 #if SOLVER_TEST == IVP
@@ -74,7 +75,7 @@ using namespace tubex;
       
   void contract(vector<Tube>& v_x)
   {
-    if(v_x[0].codomain().is_unbounded())
+    //if(v_x[0].codomain().is_unbounded())
     {
       tubex::CtcPicard tube_picard;
 
@@ -85,13 +86,39 @@ using namespace tubex;
       Variable x1, x2;
       Function f(x1, x2, Return(x2, 0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
       tube_picard.contract(f, v_x_ptr);
+      //{
+      //  cout << "Picard failed" << endl;
+      //  exit(1);
+      //}
     }
 
-    float g = 20., b = 0.4, l = 0.05;
-    Tube temp = l * v_x[0] * exp((g*b*(1.-v_x[0])) / (1. + b * (1.-v_x[0])));
+    //float g = 20., b = 0.4, l = 0.05;
+    //Tube temp = l * v_x[0] * exp((g*b*(1.-v_x[0])) / (1. + b * (1.-v_x[0])));
 
     v_x[0].ctcFwdBwd(v_x[1]);
-    v_x[1].ctcFwdBwd(temp);
+    //v_x[1].ctcFwdBwd(temp);
+  }
+
+#elif SOLVER_TEST == DELAY
+      
+  void contract(vector<Tube>& v_x)
+  {
+    float a = 0.5;
+
+    /*if(v_x[0].codomain().is_unbounded())
+    {
+      tubex::CtcPicard tube_picard;
+      Function f("x", "exp(0.5)*x(t-0.5)");
+      tube_picard.contract(f, v_x[0]);
+    }*/
+
+    CtcDelay tube_delay;
+    Interval intv_a(a);
+    tube_delay.contract(intv_a, v_x[1], v_x[0]);
+    v_x[2] &= v_x[1] * exp(intv_a);
+    v_x[1] &= v_x[2] * log(intv_a);
+
+    v_x[0].ctcFwdBwd(v_x[2]);
   }
 
 #endif
@@ -137,6 +164,15 @@ int main(int argc, char *argv[])
       v[1].set(0., 0.);
       bool show_details = true;
 
+    #elif SOLVER_TEST == DELAY
+
+      Interval domain(0.,10.);
+      float epsilon = 0.2;
+      v.push_back(Tube(domain, exp(domain)));
+      v.push_back(Tube(domain));
+      v.push_back(Tube(domain));
+      bool show_details = true;
+
     #endif
 
   /* =========== SOLVER =========== */
@@ -169,6 +205,10 @@ int main(int argc, char *argv[])
       fig.addTrajectory(&truth2, "truth2", "red");
 
     #elif SOLVER_TEST == BVP_CP2010
+
+      fig.setProperties(100,100,700,350);
+
+    #elif SOLVER_TEST == DELAY
 
       fig.setProperties(100,100,700,350);
 

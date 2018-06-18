@@ -25,6 +25,7 @@ namespace tubex
 
   bool CtcDelay::contract(Interval& a, Tube& x, Tube& y)
   {
+    cout << "CtcDelay: starting" << endl;
     int i = 0;
     double volume;
 
@@ -33,7 +34,7 @@ namespace tubex
       // todo: gates
       volume = x.volume() + y.volume() + a.diam(); // todo: optimized version of this?
 
-      TubeSlice *x_slice = x.getFirstSlice();
+      /*TubeSlice *x_slice = x.getFirstSlice();
       while(x_slice != NULL)
       {
         Interval inv = y.invert(x_slice->codomain()) & x.domain();
@@ -54,24 +55,30 @@ namespace tubex
 
         a &= y_slice->domain() - inv;
         y_slice = y_slice->nextSlice();
-      }
+      }*/
 
-      x_slice = x.getFirstSlice();
+      TubeSlice *x_slice = x.getFirstSlice();
       while(x_slice != NULL)
       {
         Interval inv = (x_slice->domain() + a) & y.domain();
         if(inv.is_empty() || inv.lb() == y.domain().lb() || inv.ub() == y.domain().ub())
+        {
+          x_slice = x_slice->nextSlice();
           continue;
+        }
         x_slice->set(x_slice->codomain() & y[inv]);
         x_slice = x_slice->nextSlice();
       }
 
-      y_slice = y.getFirstSlice();
+      TubeSlice *y_slice = y.getFirstSlice();
       while(y_slice != NULL)
       {
         Interval inv = (y_slice->domain() - a) & x.domain();
         if(inv.is_empty() || inv.lb() == x.domain().lb() || inv.ub() == x.domain().ub())
+        {
+          y_slice = y_slice->nextSlice();
           continue;
+        }
         y_slice->set(y_slice->codomain() & x[inv]);
         y_slice = y_slice->nextSlice();
       }
@@ -84,6 +91,7 @@ namespace tubex
 
     } while(volume != x.volume() + y.volume() + a.diam());
 
+    cout << "CtcDelay: ending" << endl;
     return i != 1;
   }
 }
