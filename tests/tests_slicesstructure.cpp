@@ -27,13 +27,6 @@ TEST_CASE("input2index")
 
 TEST_CASE("Tube slices structure")
 {
-  SECTION("TubeSlice class")
-  {
-    TubeSlice tubeslice(Interval(0.,1.));
-    CHECK(tubeslice.isSlice());
-    CHECK(tubeslice.nbSlices() == 1);
-  }
-
   SECTION("Tube class (one slice)")
   {
     Tube tube_a(Interval(0.,1.), Interval(-1.,1.));

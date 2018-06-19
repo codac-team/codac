@@ -17,7 +17,7 @@
 #include <exception>
 #include <string>
 #include <sstream>
-#include "tubex_TubeComponent.h"
+#include "tubex_TubeSlice.h"
 #include "tubex_Exception.h"
 
 namespace tubex
@@ -31,11 +31,11 @@ namespace tubex
   {
     public:
 
-      EmptyException(const TubeComponent& x);
+      EmptyException(const TubeSlice& x);
       EmptyException(const Tube& x);
       // todo: equivalent constructor for Tube class
 
-      static void check(const TubeComponent& x);
+      static void check(const TubeSlice& x);
       static void check(const Tube& x);
   };
 }

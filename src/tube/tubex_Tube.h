@@ -13,8 +13,10 @@
 #ifndef Tube_HEADER
 #define Tube_HEADER
 
-#include "tubex_TubeComponent.h"
+#include <vector>
+#include "ibex.h"
 #include "tubex_TubeSlice.h"
+#include "tubex_Trajectory.h"
 
 #define SERIALIZATION_VERSION 2
 
@@ -25,6 +27,8 @@
 
 namespace tubex
 {
+  class TubeSlice;
+  
   class Tube
   {
     public:
@@ -155,7 +159,7 @@ namespace tubex
       friend class CtcDeriv; // todo: remove this
       friend class CtcEval; // todo: remove this? not sure
       friend class TubeSlice; // todo: remove this? not sure
-      friend class TubeComponent; // todo: remove this? not sure
+      //friend class TubeComponent; // todo: remove this? not sure
       friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number); // todo: remove this? not sure
       friend void deserializeTube(std::ifstream& bin_file, Tube& tube); // todo: remove this? not sure
   };

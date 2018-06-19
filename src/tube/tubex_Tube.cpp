@@ -29,6 +29,9 @@ namespace tubex
 
     Tube::Tube(const Interval& domain, const Interval& codomain)
     {
+      if(domain.is_empty() || domain.is_unbounded() || domain.is_degenerated())
+        throw Exception("Tube constructor", "invalid domain");
+
       // By default, the tube is defined as one single slice
       TubeSlice *slice = new TubeSlice(domain, codomain);
       slice->setTubeReference(this);
@@ -37,6 +40,9 @@ namespace tubex
     
     Tube::Tube(const Interval& domain, double timestep, const Interval& codomain)
     {
+      if(domain.is_empty() || domain.is_unbounded() || domain.is_degenerated())
+        throw Exception("Tube constructor", "invalid domain");
+      
       if(timestep < 0.)
         throw Exception("Tube constructor", "invalid timestep");
 
@@ -371,7 +377,7 @@ namespace tubex
 
     const Interval Tube::operator[](int slice_id) const
     {
-      return getSlice(slice_id)->operator[](0);
+      return getSlice(slice_id)->codomain();
     }
 
     const Interval Tube::operator[](double t) const

@@ -25,14 +25,17 @@ namespace tubex
 
     // Definition
 
-    TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain) : TubeComponent(domain, codomain)
+    TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain) : m_domain(domain)
     {
+      if(domain.is_empty() || domain.is_unbounded() || domain.is_degenerated())
+        throw Exception("TubeSlice constructor", "invalid domain");
+      
       m_input_gate = new Interval();
       m_output_gate = new Interval();
       set(codomain);
     }
 
-    TubeSlice::TubeSlice(const TubeSlice& x) : TubeComponent(x)
+    TubeSlice::TubeSlice(const TubeSlice& x)
     {
       m_input_gate = new Interval();
       m_output_gate = new Interval();
@@ -58,16 +61,22 @@ namespace tubex
 
     TubeSlice& TubeSlice::operator=(const TubeSlice& x)
     {
-      TubeComponent::operator=(x);
+      m_domain = x.m_domain;
+      m_codomain = x.m_codomain;
       *m_input_gate = *x.m_input_gate;
       *m_output_gate = *x.m_output_gate;
-      flagFutureDataUpdateFromLeaf();
+      //flagFutureDataUpdateFromLeaf();
       return *this;
+    }
+    
+    const Interval& TubeSlice::domain() const
+    {
+      return m_domain;
     }
 
     // Slices structure
     
-    bool TubeSlice::isSlice() const
+    /*bool TubeSlice::isSlice() const
     {
       return true;
     }
@@ -103,7 +112,7 @@ namespace tubex
     {
       DomainException::check(*this, t);
       return 0;
-    }
+    }*/
 
     TubeSlice* TubeSlice::prevSlice() const
     {
@@ -129,8 +138,8 @@ namespace tubex
         //delete second_slice->m_input_gate; // todo: check remaining unused gates
         second_slice->m_input_gate = first_slice->m_output_gate;
 
-        first_slice->flagFutureDataUpdateFromLeaf();
-        second_slice->flagFutureDataUpdateFromLeaf();
+        //first_slice->flagFutureDataUpdateFromLeaf();
+        //second_slice->flagFutureDataUpdateFromLeaf();
       }
     }
 
@@ -143,11 +152,16 @@ namespace tubex
     {
       return *m_output_gate;
     }
-    
-    TubeNode* TubeSlice::getParentOf(TubeComponent* component)
+
+    Tube* TubeSlice::tubeReference() const
     {
-      return NULL;
+      return m_tube_ref;
     }
+    
+    //TubeNode* TubeSlice::getParentOf(TubeComponent* component)
+    //{
+    //  return NULL;
+    //}
     
     // Access values
 
@@ -166,11 +180,19 @@ namespace tubex
     
     double TubeSlice::volume() const
     {
-      checkData();
-      return m_volume;
+      //checkData();
+      //return m_volume;
+      if(m_codomain.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
+        return 0.;
+
+      else if(m_codomain.is_unbounded())
+        return INFINITY;
+
+      else
+        return m_domain.diam() * m_codomain.diam();
     }
 
-    const Interval TubeSlice::operator[](int slice_id) const
+    /*const Interval TubeSlice::operator[](int slice_id) const
     {
       // Write access is not allowed for this operator:
       // a further call to checkDataTree() is needed when values change,
@@ -178,7 +200,7 @@ namespace tubex
       // For write access: use set()
       DomainException::check(*this, slice_id);
       return m_codomain;
-    }
+    }*/
 
     const Interval TubeSlice::operator[](double t) const
     {
@@ -283,22 +305,24 @@ namespace tubex
     
     bool TubeSlice::operator==(const TubeSlice& x) const
     {
-      return TubeComponent::operator==(x) && 
+      return domain() == x.domain() &&
+             codomain() == x.codomain() &&
              inputGate() == x.inputGate() &&
              outputGate() == x.outputGate();
     }
     
     bool TubeSlice::operator!=(const TubeSlice& x) const
     {
-      return TubeComponent::operator!=(x) ||
+      return domain() != x.domain() ||
+             codomain() != x.codomain() ||
              inputGate() != x.inputGate() ||
              outputGate() != x.outputGate();
     }
 
     bool TubeSlice::isSubset(const TubeSlice& x) const
     {
-      StructureException::check(*this, x);
-      return TubeComponent::isSubset(x)
+      DomainException::check(*this, x);
+      return codomain().is_subset(x.codomain())
           && inputGate().is_subset(x.inputGate())
           && outputGate().is_subset(x.outputGate());
     }
@@ -310,12 +334,12 @@ namespace tubex
     
     bool TubeSlice::isEmpty() const
     {
-      return TubeComponent::isEmpty() || inputGate().is_empty() || outputGate().is_empty();
+      return m_codomain.is_empty() || inputGate().is_empty() || outputGate().is_empty();
     }
 
     bool TubeSlice::encloses(const Trajectory& x) const
     {
-      return TubeComponent::encloses(x)
+      return x[m_domain].is_subset(m_codomain)
           && inputGate().contains(x[m_domain.lb()])
           && outputGate().contains(x[m_domain.ub()]);
     }
@@ -340,7 +364,7 @@ namespace tubex
       *m_input_gate &= m_codomain;
       *m_output_gate &= m_codomain;
 
-      flagFutureDataUpdateFromLeaf();
+      //flagFutureDataUpdateFromLeaf();
     }
 
     void TubeSlice::setInputGate(const Interval& input_gate)
@@ -351,7 +375,7 @@ namespace tubex
       if(prevSlice() != NULL)
         *m_input_gate &= prevSlice()->codomain();
 
-      flagFutureDataUpdateFromLeaf();
+      //flagFutureDataUpdateFromLeaf();
     }
 
     void TubeSlice::setOutputGate(const Interval& output_gate)
@@ -362,10 +386,10 @@ namespace tubex
       if(nextSlice() != NULL)
         *m_output_gate &= nextSlice()->codomain();
 
-      flagFutureDataUpdateFromLeaf();
+      //flagFutureDataUpdateFromLeaf();
     }
     
-    TubeComponent& TubeSlice::inflate(double rad)
+    TubeSlice& TubeSlice::inflate(double rad)
     {
       // todo: simplify with simple addition
       Interval e(-rad,rad);
@@ -399,10 +423,10 @@ namespace tubex
 
     // Slices structure
 
-    void TubeSlice::updateSlicesNumber()
-    {
-      m_slices_number = 1;
-    }
+    //void TubeSlice::updateSlicesNumber()
+    //{
+    //  m_slices_number = 1;
+    //}
 
     // Access values
 
@@ -415,7 +439,7 @@ namespace tubex
 
     // Setting values
     
-    void TubeSlice::checkData() const
+    /*void TubeSlice::checkData() const
     {
       if(!m_data_update_needed)
         return;
@@ -433,18 +457,18 @@ namespace tubex
       }
 
       m_data_update_needed = false;
-    }
+    }*/
 
-    void TubeSlice::flagFutureDataUpdateFromRoot(int slice_id) const
+    /*void TubeSlice::flagFutureDataUpdateFromRoot(int slice_id) const
     {
       // slice_id is not used in this class
       m_data_update_needed = true;
       m_primitive_update_needed = true;
-    }
+    }*/
 
-    void TubeSlice::flagFutureDataUpdateFromLeaf() const
+    /*void TubeSlice::flagFutureDataUpdateFromLeaf() const
     {
-      /*if(!m_data_update_needed)
+      if(!m_data_update_needed)
       {
         m_data_update_needed = true;
         m_primitive_update_needed = true;
@@ -455,12 +479,12 @@ namespace tubex
           m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
           m_tube_ref->m_component->flagFutureDataUpdateFromRoot(slice_id);
         }
-      }*/
-    }
+      }
+    }*/
 
     // Integration
 
-    void TubeSlice::checkPartialPrimitive() const
+    /*void TubeSlice::checkPartialPrimitive() const
     {
       if(!m_primitive_update_needed)
         throw Exception("TubeSlice::checkPartialPrimitive", "primitive value not set");
@@ -475,7 +499,7 @@ namespace tubex
 
     void TubeSlice::flagFuturePrimitiveUpdateFromLeaf() const
     {
-      /*if(!m_primitive_update_needed)
+      if(!m_primitive_update_needed)
       {
         m_primitive_update_needed = true;
 
@@ -484,21 +508,21 @@ namespace tubex
           int slice_id = m_tube_ref->input2index(m_domain.mid());
           m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
         }
-      }*/
-    }
+      }
+    }*/
 
     const pair<Interval,Interval>& TubeSlice::getPartialPrimitiveValue() const
     {
-      checkPartialPrimitive();
-      return m_partial_primitive;
+      //checkPartialPrimitive();
+      //return m_partial_primitive;
     }
 
     pair<Interval,Interval> TubeSlice::getPartialPrimitiveValue(const Interval& t) const
     {
       if(t == m_domain || t.is_unbounded() || t.is_superset(m_domain))
       {
-        checkPartialPrimitive();
-        return m_partial_primitive;
+        //checkPartialPrimitive();
+        //return m_partial_primitive;
       }
 
       else

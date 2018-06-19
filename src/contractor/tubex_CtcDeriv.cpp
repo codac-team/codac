@@ -28,7 +28,7 @@ namespace tubex
 
   bool CtcDeriv::contract(TubeSlice& x, const TubeSlice& v)
   {
-    StructureException::check(x, v);
+    DomainException::check(x, v);
 
     TubeSlice prev_x = x;
     Interval t = x.domain();
@@ -44,7 +44,7 @@ namespace tubex
 
   bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, Interval& t, Interval& y)
   {
-    StructureException::check(x, v);
+    DomainException::check(x, v);
     TubeSlice x_temp = x;
     ConvexPolygon p; // unused
     contractGates(x_temp, v);

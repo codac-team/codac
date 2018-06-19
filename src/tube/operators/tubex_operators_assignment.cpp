@@ -67,7 +67,7 @@
   \
   TubeSlice& TubeSlice::f(const TubeSlice& slice_x) \
   { \
-    StructureException::check(*this, slice_x); \
+    DomainException::check(*this, slice_x); \
     Interval y; \
     y = codomain(); y.f(slice_x.codomain()); setEnvelope(y); \
     y = inputGate(); y.f(slice_x.inputGate()); setInputGate(y); \

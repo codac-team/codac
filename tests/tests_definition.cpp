@@ -42,6 +42,7 @@ TEST_CASE("Tube definition")
 
     CHECK_THROWS(Tube(Interval::ALL_REALS));
     CHECK_THROWS(Tube(Interval::EMPTY_SET));
+    CHECK_THROWS(Tube(Interval(5.9))); // degenerate domain
   }
 
   SECTION("Tube class")

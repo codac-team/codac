@@ -13,11 +13,14 @@
 #ifndef TubeSlice_HEADER
 #define TubeSlice_HEADER
 
-#include "tubex_TubeComponent.h"
+#include "tubex_Tube.h"
+#include "tubex_Trajectory.h"
 
 namespace tubex
 {
-  class TubeSlice : public TubeComponent
+  class Tube;
+
+  class TubeSlice
   {
     public:
 
@@ -28,15 +31,16 @@ namespace tubex
       TubeSlice(const TubeSlice& x);
       ~TubeSlice();
       TubeSlice& operator=(const TubeSlice& x);
+      const ibex::Interval& domain() const;
 
       // Slices structure
-      bool isSlice() const;
-      TubeSlice* getSlice(int slice_id);
-      const TubeSlice* getSlice(int slice_id) const;
-      TubeSlice* getSlice(double t);
-      const TubeSlice* getSlice(double t) const;
-      void getSlices(std::vector<const TubeSlice*>& v_slices) const;
-      int input2index(double t) const;
+      //bool isSlice() const;
+      //TubeSlice* getSlice(int slice_id);
+      //const TubeSlice* getSlice(int slice_id) const;
+      //TubeSlice* getSlice(double t);
+      //const TubeSlice* getSlice(double t) const;
+      //void getSlices(std::vector<const TubeSlice*>& v_slices) const;
+      //int input2index(double t) const;
       TubeSlice* prevSlice() const;
       TubeSlice* nextSlice() const;
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
@@ -45,13 +49,14 @@ namespace tubex
       void deleteGates();
       void deleteInputGate();
       void deleteOutputGate();
-      TubeNode* getParentOf(TubeComponent* component);
+      Tube* tubeReference() const;
+      //TubeNode* getParentOf(TubeComponent* component);
 
       // Access values
       const ibex::Interval& codomain() const;
       const ibex::IntervalVector box() const;
       double volume() const;
-      const ibex::Interval operator[](int slice_id) const;
+      //const ibex::Interval operator[](int slice_id) const;
       const ibex::Interval operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& search_domain) const;
       const ibex::Interval interpol(double t, const TubeSlice& derivative) const;
@@ -74,7 +79,7 @@ namespace tubex
       void setEnvelope(const ibex::Interval& envelope);
       void setInputGate(const ibex::Interval& input_gate);
       void setOutputGate(const ibex::Interval& output_gate);
-      TubeComponent& inflate(double rad);
+      TubeSlice& inflate(double rad);
 
       // Operators
       TubeSlice& operator+=(const Trajectory& x);
@@ -104,32 +109,34 @@ namespace tubex
       void setDomain(const ibex::Interval& domain);
 
       // Slices structure
-      void updateSlicesNumber();
+      //void updateSlicesNumber();
 
       // Access values
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
-      void updateEnclosedBounds();
+      //void updateEnclosedBounds();
 
       // Setting values
-      void checkData() const;
-      void flagFutureDataUpdateFromRoot(int slice_id = -1) const;
-      void flagFutureDataUpdateFromLeaf() const;
+      //void checkData() const;
+      //void flagFutureDataUpdateFromRoot(int slice_id = -1) const;
+      //void flagFutureDataUpdateFromLeaf() const;
 
       // Integration
-      void checkPartialPrimitive() const;
-      void flagFuturePrimitiveUpdateFromRoot(int slice_id = -1) const;
-      void flagFuturePrimitiveUpdateFromLeaf() const;
+      //void checkPartialPrimitive() const;
+      //void flagFuturePrimitiveUpdateFromRoot(int slice_id = -1) const;
+      //void flagFuturePrimitiveUpdateFromLeaf() const;
       const std::pair<ibex::Interval,ibex::Interval>& getPartialPrimitiveValue() const;
       std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t) const;
       
     /** Class variables **/
 
+      ibex::Interval m_domain;
+      ibex::Interval m_codomain;
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;
       ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
 
+      Tube *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
+
       friend class Tube;
-      friend class TubeNode;
-      friend class TubeComponent;
       friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number);
       friend void deserializeTube(std::ifstream& bin_file, Tube& tube);
   };

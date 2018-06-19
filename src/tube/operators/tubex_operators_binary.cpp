@@ -115,7 +115,7 @@
   \
   TubeSlice f(const TubeSlice& slice_x1, const TubeSlice& slice_x2) \
   { \
-    StructureException::check(slice_x1, slice_x2); \
+    DomainException::check(slice_x1, slice_x2); \
     TubeSlice new_slice_x(slice_x1); \
     new_slice_x.setEnvelope(ibex::f(new_slice_x.codomain(), slice_x2.codomain())); \
     new_slice_x.setInputGate(ibex::f(new_slice_x.inputGate(), slice_x2.inputGate())); \
