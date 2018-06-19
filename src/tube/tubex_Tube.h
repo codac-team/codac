@@ -21,6 +21,7 @@
 // todo:
 // - test memory leaks
 // - integral computations with gates
+// - custom propagation fixed point
 
 namespace tubex
 {
@@ -45,7 +46,7 @@ namespace tubex
       ~Tube();
       Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
       Tube& operator=(const Tube& x);
-      const ibex::Interval& domain() const;
+      const ibex::Interval domain() const; // todo: output const Interval& (reference)
 
       // Slices structure
       int nbSlices() const;
@@ -56,14 +57,14 @@ namespace tubex
       TubeSlice* getFirstSlice() const; // todo: check constness of these
       TubeSlice* getLastSlice() const;
       TubeSlice* getWiderSlice() const;
-      void getSlices(std::vector<const TubeSlice*>& v_slices) const;
+      //void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
       void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
-      void sample(const std::vector<double>& v_bounds);
-      TubeComponent* getTubeComponent();
+      //void sample(const std::vector<double>& v_bounds);
+      //TubeComponent* getTubeComponent();
 
       // Access values
-      const ibex::Interval& codomain() const;
+      const ibex::Interval codomain() const; // todo: output const Interval& (reference)
       double volume() const;
       const ibex::Interval operator[](int slice_id) const;
       const ibex::Interval operator[](double t) const;
@@ -95,8 +96,6 @@ namespace tubex
 
       // Bisection
       std::pair<Tube,Tube> bisect(double t, float ratio = 0.55) const;
-      //std::pair<Tube,Tube> bisect(const Tube& derivative, float ratio = 0.55) const;
-      //std::pair<Tube,Tube> bisect(double t, const Tube& derivative, float ratio = 0.55) const;
 
       // Operators
       Tube& operator+=(const Trajectory& x);
@@ -129,10 +128,6 @@ namespace tubex
       bool ctcBwd(const Tube& derivative);
       bool ctcFwdBwd(const Tube& derivative);
       bool ctcEval(ibex::Interval& t, ibex::Interval& z, const Tube& derivative, bool propagate = true);
-      /*bool ctcOut(const ibex::Interval& t, const ibex::Interval& z);
-      bool ctcIntertemporal(ibex::Interval& t1, ibex::Interval& t2) const;
-      bool ctcIntertemporal(ibex::Interval& z, ibex::Interval& t1, ibex::Interval& t2) const;
-      bool ctcPeriodic(const ibex::Interval& period);
 
     /** Serialization: **/
 
@@ -154,7 +149,8 @@ namespace tubex
 
     /** Class variables **/
 
-      TubeComponent *m_component = NULL;
+      //TubeComponent *m_component = NULL;
+      std::vector<TubeSlice*> m_v_slices;
 
       friend class CtcDeriv; // todo: remove this
       friend class CtcEval; // todo: remove this? not sure

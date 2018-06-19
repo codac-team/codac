@@ -99,8 +99,8 @@ namespace tubex
     if(!bin_file.is_open())
       throw Exception("deserializeTube()", "ifstream& bin_file not open");
 
-    if(tube.m_component != NULL)
-      throw Exception("deserializeTube()", "tube's component already defined");
+    if(tube.nbSlices() != 0)
+      throw Exception("deserializeTube()", "tube's already defined");
 
     // Version number for compliance purposes
     char version_number;
@@ -118,45 +118,42 @@ namespace tubex
         int slices_number;
         bin_file.read((char*)&slices_number, sizeof(int));
 
-        // Domains
-        double domain_lb;
-        bin_file.read((char*)&domain_lb, sizeof(double));
-
-        vector<double> v_domain_bounds;
-        for(int i = 1 ; i < slices_number ; i++)
-        {
-          double bound;
-          bin_file.read((char*)&bound, sizeof(double));
-          v_domain_bounds.push_back(bound);
-        }
-
-        double domain_ub;
-        bin_file.read((char*)&domain_ub, sizeof(double));
-        Interval domain(domain_lb, domain_ub);
-
-        // Creating tube
-
-        tube.m_component = new TubeSlice(domain);
-        tube.m_component->setTubeReference(&tube);
-
-        if(slices_number > 1)
-          tube.sample(v_domain_bounds);
-
-        else if(slices_number < 1)
+        if(slices_number < 1)
           throw Exception("deserializeTube()", "wrong slices number");
 
-        // Codomains
+        // Creating slices
+        double lb;
+        bin_file.read((char*)&lb, sizeof(double));
+
+        TubeSlice *prev_slice = NULL;
+        vector<double> v_domain_bounds;
         for(int i = 0 ; i < slices_number ; i++)
+        {
+          double ub;
+          bin_file.read((char*)&ub, sizeof(double));
+          TubeSlice *slice = new TubeSlice(Interval(lb, ub));
+          slice->setTubeReference(&tube);
+          tube.m_v_slices.push_back(slice);
+          lb = ub;
+
+          if(prev_slice != NULL)
+            TubeSlice::chainSlices(prev_slice, slice);
+          prev_slice = slice;
+        }
+
+        // Codomains
+        TubeSlice *slice = tube.getFirstSlice();
+        while(slice != NULL)
         {
           Interval slice_value;
           deserializeInterval(bin_file, slice_value);
-          tube.set(slice_value, i);
+          slice->set(slice_value);
+          slice = slice->nextSlice();
         }
 
         // Gates
 
         int gates_number = slices_number + 1;
-
         for(int i = 0 ; i < gates_number ; i++)
         {
           Interval gate;

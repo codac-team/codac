@@ -73,39 +73,40 @@ TEST_CASE("Tube slices structure")
     tube_a.sample(0.6);
 
     {
-      TubeComponent *subtube_b1 = ((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent();
-      TubeComponent *subtube_b2 = ((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent();
+      //TubeComponent *subtube_b1 = ((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent();
+      //TubeComponent *subtube_b2 = ((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent();
 
       CHECK(tube_a.nbSlices() == 2);
-      CHECK(subtube_b1->nbSlices() == 1);
-      CHECK(subtube_b2->nbSlices() == 1);
-      CHECK(subtube_b1->domain() == Interval(0.,0.6));
-      CHECK(subtube_b2->domain() == Interval(0.6,1.));
-      CHECK(subtube_b1->tubeReference() == &tube_a);
-      CHECK(subtube_b2->tubeReference() == &tube_a);
+      CHECK(tube_a.domain() == Interval(0.,1.));
+      //CHECK(subtube_b1->nbSlices() == 1);
+      //CHECK(subtube_b2->nbSlices() == 1);
+      //CHECK(subtube_b1->domain() == Interval(0.,0.6));
+      //CHECK(subtube_b2->domain() == Interval(0.6,1.));
+      //CHECK(subtube_b1->tubeReference() == &tube_a);
+      //CHECK(subtube_b2->tubeReference() == &tube_a);
     }
 
     tube_a.sample(0.7);
 
     {
-      TubeComponent *subtube_b1 = ((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent();
-      TubeComponent *subtube_b2 = ((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent();
-      TubeComponent *subtube_c1 = ((TubeNode*)subtube_b2)->getFirstTubeComponent();
-      TubeComponent *subtube_c2 = ((TubeNode*)subtube_b2)->getSecondTubeComponent();
+      //TubeComponent *subtube_b1 = ((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent();
+      //TubeComponent *subtube_b2 = ((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent();
+      //TubeComponent *subtube_c1 = ((TubeNode*)subtube_b2)->getFirstTubeComponent();
+      //TubeComponent *subtube_c2 = ((TubeNode*)subtube_b2)->getSecondTubeComponent();
 
       CHECK(tube_a.nbSlices() == 3);
-      CHECK(subtube_b1->nbSlices() == 1);
-      CHECK(subtube_b1->domain() == Interval(0.,0.6));
-      CHECK(subtube_b2->nbSlices() == 2);
-      CHECK(subtube_b2->domain() == Interval(0.6,1.));
-      CHECK(subtube_b1->tubeReference() == &tube_a);
-      CHECK(subtube_b2->tubeReference() == &tube_a);
-      CHECK(subtube_c1->nbSlices() == 1);
-      CHECK(subtube_c2->nbSlices() == 1);
-      CHECK(subtube_c1->domain() == Interval(0.6,0.7));
-      CHECK(subtube_c2->domain() == Interval(0.7,1.0));
-      CHECK(subtube_c1->tubeReference() == &tube_a);
-      CHECK(subtube_c2->tubeReference() == &tube_a);
+      //CHECK(subtube_b1->nbSlices() == 1);
+      //CHECK(subtube_b1->domain() == Interval(0.,0.6));
+      //CHECK(subtube_b2->nbSlices() == 2);
+      //CHECK(subtube_b2->domain() == Interval(0.6,1.));
+      //CHECK(subtube_b1->tubeReference() == &tube_a);
+      //CHECK(subtube_b2->tubeReference() == &tube_a);
+      //CHECK(subtube_c1->nbSlices() == 1);
+      //CHECK(subtube_c2->nbSlices() == 1);
+      //CHECK(subtube_c1->domain() == Interval(0.6,0.7));
+      //CHECK(subtube_c2->domain() == Interval(0.7,1.0));
+      //CHECK(subtube_c1->tubeReference() == &tube_a);
+      //CHECK(subtube_c2->tubeReference() == &tube_a);
     }
 
     tube_a.sample(0.7); // the following has no more effect
@@ -114,54 +115,54 @@ TEST_CASE("Tube slices structure")
     tube_a.sample(0.62);
 
     {
-      TubeComponent *subtube_b1 = ((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent();
-      TubeComponent *subtube_b2 = ((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent();
-      TubeComponent *subtube_c1 = ((TubeNode*)subtube_b2)->getFirstTubeComponent();
-      TubeComponent *subtube_c2 = ((TubeNode*)subtube_b2)->getSecondTubeComponent();
-      TubeComponent *subtube_d1 = ((TubeNode*)subtube_c1)->getFirstTubeComponent();
-      TubeComponent *subtube_d2 = ((TubeNode*)subtube_c1)->getSecondTubeComponent();
+      //TubeComponent *subtube_b1 = ((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent();
+      //TubeComponent *subtube_b2 = ((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent();
+      //TubeComponent *subtube_c1 = ((TubeNode*)subtube_b2)->getFirstTubeComponent();
+      //TubeComponent *subtube_c2 = ((TubeNode*)subtube_b2)->getSecondTubeComponent();
+      //TubeComponent *subtube_d1 = ((TubeNode*)subtube_c1)->getFirstTubeComponent();
+      //TubeComponent *subtube_d2 = ((TubeNode*)subtube_c1)->getSecondTubeComponent();
 
       CHECK(tube_a.nbSlices() == 4);
-      CHECK(subtube_b1->nbSlices() == 1);
-      CHECK(subtube_b1->domain() == Interval(0.,0.6));
-      CHECK(subtube_b2->nbSlices() == 3);
-      CHECK(subtube_b2->domain() == Interval(0.6,1.));
-      CHECK(subtube_b1->tubeReference() == &tube_a);
-      CHECK(subtube_b2->tubeReference() == &tube_a);
-      CHECK(subtube_c1->nbSlices() == 2);
-      CHECK(subtube_c2->nbSlices() == 1);
-      CHECK(subtube_c1->domain() == Interval(0.6,0.7));
-      CHECK(subtube_c2->domain() == Interval(0.7,1.0));
-      CHECK(subtube_c1->tubeReference() == &tube_a);
-      CHECK(subtube_c2->tubeReference() == &tube_a);
-      CHECK(subtube_d1->nbSlices() == 1);
-      CHECK(subtube_d2->nbSlices() == 1);
-      CHECK(subtube_d1->domain() == Interval(0.6,0.62));
-      CHECK(subtube_d2->domain() == Interval(0.62,0.7));
-      CHECK(subtube_d1->tubeReference() == &tube_a);
-      CHECK(subtube_d2->tubeReference() == &tube_a);
+      //CHECK(subtube_b1->nbSlices() == 1);
+      //CHECK(subtube_b1->domain() == Interval(0.,0.6));
+      //CHECK(subtube_b2->nbSlices() == 3);
+      //CHECK(subtube_b2->domain() == Interval(0.6,1.));
+      //CHECK(subtube_b1->tubeReference() == &tube_a);
+      //CHECK(subtube_b2->tubeReference() == &tube_a);
+      //CHECK(subtube_c1->nbSlices() == 2);
+      //CHECK(subtube_c2->nbSlices() == 1);
+      //CHECK(subtube_c1->domain() == Interval(0.6,0.7));
+      //CHECK(subtube_c2->domain() == Interval(0.7,1.0));
+      //CHECK(subtube_c1->tubeReference() == &tube_a);
+      //CHECK(subtube_c2->tubeReference() == &tube_a);
+      //CHECK(subtube_d1->nbSlices() == 1);
+      //CHECK(subtube_d2->nbSlices() == 1);
+      //CHECK(subtube_d1->domain() == Interval(0.6,0.62));
+      //CHECK(subtube_d2->domain() == Interval(0.62,0.7));
+      //CHECK(subtube_d1->tubeReference() == &tube_a);
+      //CHECK(subtube_d2->tubeReference() == &tube_a);
     }
 
     tube_a.sample(0.1);
     tube_a.sample(0.1); // the following has no more effect
 
     {
-      TubeComponent *subtube_b1 = ((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent();
-      TubeComponent *subtube_b2 = ((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent();
-      TubeComponent *subtube_e1 = ((TubeNode*)subtube_b1)->getFirstTubeComponent();
-      TubeComponent *subtube_e2 = ((TubeNode*)subtube_b1)->getSecondTubeComponent();
+      //TubeComponent *subtube_b1 = ((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent();
+      //TubeComponent *subtube_b2 = ((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent();
+      //TubeComponent *subtube_e1 = ((TubeNode*)subtube_b1)->getFirstTubeComponent();
+      //TubeComponent *subtube_e2 = ((TubeNode*)subtube_b1)->getSecondTubeComponent();
 
       CHECK(tube_a.nbSlices() == 5);
-      CHECK(subtube_b1->nbSlices() == 2);
-      CHECK(subtube_b1->domain() == Interval(0.,0.6));
-      CHECK(subtube_b2->nbSlices() == 3);
-      CHECK(subtube_b2->domain() == Interval(0.6,1.));
-      CHECK(subtube_e1->nbSlices() == 1);
-      CHECK(subtube_e2->nbSlices() == 1);
-      CHECK(subtube_e1->domain() == Interval(0.0,0.1));
-      CHECK(subtube_e2->domain() == Interval(0.1,0.6));
-      CHECK(subtube_e1->tubeReference() == &tube_a);
-      CHECK(subtube_e2->tubeReference() == &tube_a);
+      //CHECK(subtube_b1->nbSlices() == 2);
+      //CHECK(subtube_b1->domain() == Interval(0.,0.6));
+      //CHECK(subtube_b2->nbSlices() == 3);
+      //CHECK(subtube_b2->domain() == Interval(0.6,1.));
+      //CHECK(subtube_e1->nbSlices() == 1);
+      //CHECK(subtube_e2->nbSlices() == 1);
+      //CHECK(subtube_e1->domain() == Interval(0.0,0.1));
+      //CHECK(subtube_e2->domain() == Interval(0.1,0.6));
+      //CHECK(subtube_e1->tubeReference() == &tube_a);
+      //CHECK(subtube_e2->tubeReference() == &tube_a);
     }
 
     tube_a.sample(0.); // the following has no effect
@@ -234,7 +235,7 @@ TEST_CASE("Tube slices structure")
   SECTION("Getting slices")
   {
     Tube tube(Interval(0.,1.), Interval(-1.,1.));
-    CHECK(tube.getSlice(0) == ((TubeSlice*)tube.getTubeComponent()));
+    //CHECK(tube.getSlice(0) == ((TubeSlice*)tube.getTubeComponent()));
     CHECK_THROWS(tube.getSlice(1));
     tube.sample(0.6);
     tube.sample(0.7);
@@ -280,8 +281,8 @@ TEST_CASE("Tube slices structure")
 
     // First and last slices
     CHECK(tube.getSlice(0) == tube.getFirstSlice());
-    CHECK(tube.getSlice(0) == ((TubeNode*)tube.getTubeComponent())->getFirstTubeComponent()->getFirstSlice());
-    CHECK(tube.getSlice(1) == ((TubeNode*)tube.getTubeComponent())->getFirstTubeComponent()->getLastSlice());
+    //CHECK(tube.getSlice(0) == ((TubeNode*)tube.getTubeComponent())->getFirstTubeComponent()->getFirstSlice());
+    //CHECK(tube.getSlice(1) == ((TubeNode*)tube.getTubeComponent())->getFirstTubeComponent()->getLastSlice());
     CHECK(tube.getSlice(4) == tube.getLastSlice());
 
     // Checking root references
@@ -292,11 +293,11 @@ TEST_CASE("Tube slices structure")
     CHECK(tube.getSlice(4)->tubeReference() == &tube);
 
     // getSlices
-    vector<const TubeSlice*> v_slices;
-    tube.getSlices(v_slices);
-    CHECK(v_slices.size() == 5);
-    for(int i = 0 ; i < 5 ; i++)
-      CHECK(v_slices[i] == tube.getSlice(i));
+    //vector<const TubeSlice*> v_slices;
+    //tube.getSlices(v_slices);
+    //CHECK(v_slices.size() == 5);
+    //for(int i = 0 ; i < 5 ; i++)
+    //  CHECK(v_slices[i] == tube.getSlice(i));
     CHECK(tube.getSlice(0.1)->box()[0] == Interval(0.1,0.6));
     CHECK(tube.getSlice(0.1)->box()[1] == Interval(-1.,1.));
     CHECK(tube.getSlice(0.1)->domain() == Interval(0.1,0.6));

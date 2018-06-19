@@ -126,7 +126,7 @@ namespace tubex
       if(first_slice != NULL && second_slice != NULL)
       {
         *first_slice->m_output_gate &= *second_slice->m_input_gate;
-        delete second_slice->m_input_gate;
+        //delete second_slice->m_input_gate; // todo: check remaining unused gates
         second_slice->m_input_gate = first_slice->m_output_gate;
 
         first_slice->flagFutureDataUpdateFromLeaf();
@@ -232,7 +232,7 @@ namespace tubex
 
     Interval TubeSlice::invert(const Interval& y, const Interval& search_domain) const
     {
-      if(!m_domain.intersects(search_domain) || !m_codomain.intersects(y))
+      if(!m_domain.intersects(search_domain) || !(*this)[m_domain & search_domain].intersects(y))
         return Interval::EMPTY_SET;
 
       else
@@ -268,7 +268,8 @@ namespace tubex
           ub |= outputGate().ub();
         }
 
-        if(!intersection.is_degenerated())
+        if(!intersection.is_degenerated()
+          || (intersection != m_domain.lb() && intersection != m_domain.ub()))
         {
           lb |= m_codomain.lb();
           ub |= m_codomain.ub();
@@ -390,6 +391,11 @@ namespace tubex
     {
       m_tube_ref = tube_ref;
     }
+    
+    void TubeSlice::setDomain(const Interval& domain)
+    {
+      m_domain = domain;
+    }
 
     // Slices structure
 
@@ -438,7 +444,7 @@ namespace tubex
 
     void TubeSlice::flagFutureDataUpdateFromLeaf() const
     {
-      if(!m_data_update_needed)
+      /*if(!m_data_update_needed)
       {
         m_data_update_needed = true;
         m_primitive_update_needed = true;
@@ -449,7 +455,7 @@ namespace tubex
           m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
           m_tube_ref->m_component->flagFutureDataUpdateFromRoot(slice_id);
         }
-      }
+      }*/
     }
 
     // Integration
@@ -469,7 +475,7 @@ namespace tubex
 
     void TubeSlice::flagFuturePrimitiveUpdateFromLeaf() const
     {
-      if(!m_primitive_update_needed)
+      /*if(!m_primitive_update_needed)
       {
         m_primitive_update_needed = true;
 
@@ -478,7 +484,7 @@ namespace tubex
           int slice_id = m_tube_ref->input2index(m_domain.mid());
           m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
         }
-      }
+      }*/
     }
 
     const pair<Interval,Interval>& TubeSlice::getPartialPrimitiveValue() const

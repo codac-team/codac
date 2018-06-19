@@ -101,6 +101,7 @@ namespace tubex
 
       // Definition
       void setTubeReference(Tube *tube_ref);
+      void setDomain(const ibex::Interval& domain);
 
       // Slices structure
       void updateSlicesNumber();
@@ -130,6 +131,7 @@ namespace tubex
       friend class TubeNode;
       friend class TubeComponent;
       friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number);
+      friend void deserializeTube(std::ifstream& bin_file, Tube& tube);
   };
 }
 

@@ -234,7 +234,20 @@ TEST_CASE("Testing enclosed bounds (tube evaluations)")
 
 TEST_CASE("Testing set inversion")
 {
-  SECTION("Scalar set inversion")
+  SECTION("Scalar set inversion (TubeSlice)")
+  {
+    TubeSlice slice(Interval(0.,1.), Interval(0.,10.));
+    slice.setInputGate(Interval(2.,3.));
+    slice.setOutputGate(Interval(5.,6.));
+    CHECK(slice.invert(Interval(4.,6.), Interval(0.)) == Interval::EMPTY_SET);
+    CHECK(slice.invert(Interval(2.5,6.), Interval(0.)) == 0.);
+    CHECK(slice.invert(Interval(0.,1.), Interval(1.)) == Interval::EMPTY_SET);
+    CHECK(slice.invert(Interval(2.5,6.), Interval(1.)) == 1.);
+    CHECK(slice.invert(Interval(2.5,6.), Interval(0.2,0.5)) == Interval(0.2,0.5));
+    CHECK(slice.invert(Interval(2.5,6.), Interval(0.2)) == Interval(0.2));
+  }
+
+  SECTION("Scalar set inversion (Tube)")
   {
     Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
