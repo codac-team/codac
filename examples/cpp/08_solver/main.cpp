@@ -9,8 +9,7 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST BVP_CP2010
-
+#define SOLVER_TEST BVP
 
 #if SOLVER_TEST == IVP
 
@@ -75,8 +74,9 @@ using namespace tubex;
       
   void contract(vector<Tube>& v_x)
   {
-    //if(v_x[0].codomain().is_unbounded())
+    if(v_x[0].codomain().is_unbounded())
     {
+      cout << "starting Picard " << v_x[0].nbSlices() << endl;
       tubex::CtcPicard tube_picard;
 
       vector<Tube*> v_x_ptr;
@@ -90,13 +90,14 @@ using namespace tubex;
       //  cout << "Picard failed" << endl;
       //  exit(1);
       //}
+      cout << "ending Picard" << endl;
     }
 
-    //float g = 20., b = 0.4, l = 0.05;
-    //Tube temp = l * v_x[0] * exp((g*b*(1.-v_x[0])) / (1. + b * (1.-v_x[0])));
+    float g = 20., b = 0.4, l = 0.05;
+    Tube x2dot = l * v_x[0] * exp((g*b*(1.-v_x[0])) / (1. + b * (1.-v_x[0])));
 
     v_x[0].ctcFwdBwd(v_x[1]);
-    //v_x[1].ctcFwdBwd(temp);
+    v_x[1].ctcFwdBwd(x2dot);
   }
 
 #elif SOLVER_TEST == DELAY
@@ -156,7 +157,7 @@ int main(int argc, char *argv[])
     #elif SOLVER_TEST == BVP_CP2010
 
       Interval domain(0.,1.);
-      float epsilon = 0.2;
+      float epsilon = 0.001;
       v.push_back(Tube(domain));
       v[0].set(1., 1.);
       v[0].set(Interval(0.,1.), 0.);

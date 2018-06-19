@@ -38,7 +38,11 @@ namespace tubex
     return false;
   }
 
-  vector<vector<Tube> > Solver::solve(vector<Tube>& v_x, void (*ctc_func)(std::vector<Tube>&), float max_thickness, float refining_ratio)
+  vector<vector<Tube> > Solver::solve(vector<Tube>& v_x,
+                                      void (*ctc_func)(std::vector<Tube>&),
+                                      float max_thickness,
+                                      float refining_ratio,
+                                      float fixed_point_ratio)
   {
     stack<vector<Tube> > s;
     s.push(v_x);
@@ -76,7 +80,7 @@ namespace tubex
             ctc_func(v_x);
             emptiness = tubeVectorIsEmpty(v_x);
             volume = tubeVectorVolume(v_x);
-          } while(!emptiness && volume != volume_before_ctc); // fixed point
+          } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio)); // fixed point
 
       } while(!emptiness && (volume / volume_before_refining) < (1. - refining_ratio));
 

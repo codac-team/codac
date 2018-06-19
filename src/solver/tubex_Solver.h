@@ -28,7 +28,8 @@ namespace tubex
       std::vector<std::vector<Tube> > solve(std::vector<Tube>& v_x,
                                             void (*ctc_func)(std::vector<Tube>&),
                                             float max_thickness,
-                                            float refining_ratio = 0.005);
+                                            float refining_ratio = 0.005,
+                                            float fixed_point_ratio = 0.005);
 
     protected:
       
