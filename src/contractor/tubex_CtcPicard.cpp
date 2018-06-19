@@ -69,12 +69,12 @@ namespace tubex
       for(int i = 0 ; i < v_slice_x.size() ; i++)
         unbounded_slice |= v_slice_x[i]->codomain().is_unbounded();
 
-      if(unbounded_slice && v_slice_x[0]->domain().diam() > x[0]->domain().diam() / 500.) // Picard failed
+      if(unbounded_slice && v_slice_x[0]->domain().diam() > x[0]->domain().diam() / 5000.) // Picard failed
       {
         for(int i = 0 ; i < v_slice_x.size() ; i++)
         {
           TubeSlice *prev_slice_x = v_slice_x[i]->prevSlice();
-          if(i == 0) cout << "sampling at " << v_slice_x[i]->domain().diam() << endl;
+          //if(i == 0) cout << "sampling at " << v_slice_x[i]->domain().diam() << endl;
           x[i]->sample(v_slice_x[i]->domain().mid());
 
           if(prev_slice_x == NULL)
@@ -159,6 +159,10 @@ namespace tubex
                    + Interval(-EPSILON,EPSILON); // in case of degenerate box
 
       x_enclosure = x0 + h * f.eval_vector(x_guess);
+
+      if(x_enclosure.is_unbounded())
+        return false;
+
     } while(!x_enclosure.is_strict_interior_subset(x_guess));
 
     bool ctc = x != x_enclosure;
