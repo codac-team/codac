@@ -14,6 +14,7 @@
 #include "tubex_DomainException.h"
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
+#include "tubex_DimensionException.h"
 //#include "tubex_CtcDeriv.h"
 
 using namespace std;
@@ -260,6 +261,7 @@ namespace tubex
 
     const IntervalVector TubeSlice::interpol(const Interval& t, const TubeSlice& derivative) const
     {
+      DimensionException::check(*this, derivative);
       //IntervalVector y;
       //CtcDeriv ctc;
       //Interval t_ = t;
@@ -269,6 +271,8 @@ namespace tubex
 
     Interval TubeSlice::invert(const IntervalVector& y, const Interval& search_domain) const
     {
+      DimensionException::check(*this, y);
+
       if(!m_domain.intersects(search_domain) || !(*this)[m_domain & search_domain].intersects(y))
         return Interval::EMPTY_SET;
 
@@ -321,6 +325,7 @@ namespace tubex
     
     bool TubeSlice::operator==(const TubeSlice& x) const
     {
+      DimensionException::check(*this, x);
       return domain() == x.domain() &&
              codomain() == x.codomain() &&
              inputGate() == x.inputGate() &&
@@ -329,6 +334,7 @@ namespace tubex
     
     bool TubeSlice::operator!=(const TubeSlice& x) const
     {
+      DimensionException::check(*this, x);
       return domain() != x.domain() ||
              codomain() != x.codomain() ||
              inputGate() != x.inputGate() ||
@@ -338,6 +344,7 @@ namespace tubex
     bool TubeSlice::isSubset(const TubeSlice& x) const
     {
       DomainException::check(*this, x);
+      DimensionException::check(*this, x);
       return codomain().is_subset(x.codomain())
           && inputGate().is_subset(x.inputGate())
           && outputGate().is_subset(x.outputGate());
@@ -355,6 +362,7 @@ namespace tubex
 
     bool TubeSlice::encloses(const Trajectory& x) const
     {
+      DimensionException::check(*this, x);
       return x[m_domain].is_subset(m_codomain)
           && inputGate().contains(x[m_domain.lb()])
           && outputGate().contains(x[m_domain.ub()]);
@@ -364,6 +372,7 @@ namespace tubex
 
     void TubeSlice::set(const IntervalVector& y)
     {
+      DimensionException::check(*this, y);
       setEnvelope(y);
       setInputGate(y);
       setOutputGate(y);
@@ -377,6 +386,7 @@ namespace tubex
 
     void TubeSlice::setEnvelope(const IntervalVector& envelope)
     {
+      DimensionException::check(*this, envelope);
       m_codomain = envelope;
       *m_input_gate &= m_codomain;
       *m_output_gate &= m_codomain;
@@ -386,6 +396,7 @@ namespace tubex
 
     void TubeSlice::setInputGate(const IntervalVector& input_gate)
     {
+      DimensionException::check(*this, input_gate);
       *m_input_gate = input_gate;
       *m_input_gate &= m_codomain;
 
@@ -397,6 +408,7 @@ namespace tubex
 
     void TubeSlice::setOutputGate(const IntervalVector& output_gate)
     {
+      DimensionException::check(*this, output_gate);
       *m_output_gate = output_gate;
       *m_output_gate &= m_codomain;
 

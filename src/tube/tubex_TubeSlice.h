@@ -37,29 +37,17 @@ namespace tubex
       int dim() const;
 
       // Slices structure
-      //bool isSlice() const;
-      //TubeSlice* getSlice(int slice_id);
-      //const TubeSlice* getSlice(int slice_id) const;
-      //TubeSlice* getSlice(double t);
-      //const TubeSlice* getSlice(double t) const;
-      //void getSlices(std::vector<const TubeSlice*>& v_slices) const;
-      //int input2index(double t) const;
       TubeSlice* prevSlice() const;
       TubeSlice* nextSlice() const;
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
       const ibex::IntervalVector inputGate() const;
       const ibex::IntervalVector outputGate() const;
-      void deleteGates();
-      void deleteInputGate();
-      void deleteOutputGate();
       Tube* tubeReference() const;
-      //TubeNode* getParentOf(TubeComponent* component);
 
       // Access values
       const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
       const ibex::IntervalVector box() const;
       double volume() const;
-      //const ibex::Interval operator[](int slice_id) const;
       const ibex::IntervalVector operator[](double t) const;
       const ibex::IntervalVector operator[](const ibex::Interval& search_domain) const;
       const ibex::IntervalVector interpol(double t, const TubeSlice& derivative) const;
@@ -112,21 +100,13 @@ namespace tubex
       void setDomain(const ibex::Interval& domain);
 
       // Slices structure
-      //void updateSlicesNumber();
 
       // Access values
       void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
-      //void updateEnclosedBounds();
 
       // Setting values
-      //void checkData() const;
-      //void flagFutureDataUpdateFromRoot(int slice_id = -1) const;
-      //void flagFutureDataUpdateFromLeaf() const;
 
       // Integration
-      //void checkPartialPrimitive() const;
-      //void flagFuturePrimitiveUpdateFromRoot(int slice_id = -1) const;
-      //void flagFuturePrimitiveUpdateFromLeaf() const;
       const std::pair<ibex::IntervalVector,ibex::IntervalVector>& getPartialPrimitiveValue() const;
       std::pair<ibex::IntervalVector,ibex::IntervalVector> getPartialPrimitiveValue(const ibex::Interval& t) const;
       
@@ -136,7 +116,6 @@ namespace tubex
       ibex::IntervalVector m_codomain = ibex::IntervalVector(1); // by default: 1-dim codomain
       ibex::IntervalVector *m_input_gate = NULL, *m_output_gate = NULL;
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;
-
       Tube *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
       friend class Tube;

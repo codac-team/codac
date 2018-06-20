@@ -65,11 +65,8 @@ namespace tubex
       TubeSlice* getFirstSlice() const; // todo: check constness of these
       TubeSlice* getLastSlice() const;
       TubeSlice* getWiderSlice() const;
-      //void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
       void sample(double t, const ibex::IntervalVector& gate);
-      //void sample(const std::vector<double>& v_bounds);
-      //TubeComponent* getTubeComponent();
 
       // Access values
       const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
@@ -163,7 +160,6 @@ namespace tubex
       friend class CtcDeriv; // todo: remove this
       friend class CtcEval; // todo: remove this? not sure
       friend class TubeSlice; // todo: remove this? not sure
-      //friend class TubeComponent; // todo: remove this? not sure
       friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number); // todo: remove this? not sure
       friend void deserializeTube(std::ifstream& bin_file, Tube& tube); // todo: remove this? not sure
   };
