@@ -45,7 +45,7 @@ using namespace tubex;
       
   void contract(TubeVector& x)
   {
-    Variable vx0, vx1;
+    /*Variable vx0, vx1;
     SystemFactory fac;
     fac.add_var(vx0);
     fac.add_var(vx1);
@@ -67,7 +67,8 @@ using namespace tubex;
       tube_picard.contract(f, x);
     }
     
-    //v_x[0].ctcFwdBwd(v_x[0]);
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, x);*/
   }
 
 #elif SOLVER_TEST == BVP_CP2010

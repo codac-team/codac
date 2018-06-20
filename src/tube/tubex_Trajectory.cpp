@@ -93,7 +93,7 @@ namespace tubex
     if(m_function != NULL)
     {
       IntervalVector box(1, Interval(t));
-      return m_function->eval(box).mid();
+      return m_function->eval_vector(box).mid();
     }
 
     else if(m_map_values.find(t) != m_map_values.end())

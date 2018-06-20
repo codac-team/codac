@@ -17,7 +17,7 @@
 #include "tubex_TrajectorySerialization.h"
 #include "tubex_DimensionException.h"
 #include "tubex_StructureException.h"
-//#include "tubex_CtcDeriv.h"
+#include "tubex_CtcDeriv.h"
 //#include "tubex_CtcEval.h"
 
 using namespace std;
@@ -160,7 +160,8 @@ namespace tubex
     TubeVector TubeVector::primitive() const
     {
       TubeVector primitive(domain(), dim());
-      primitive.ctcFwd(*this);
+      CtcDeriv ctc_deriv;
+      ctc_deriv.contract(primitive, *this);
       return primitive;
     }
 
@@ -292,7 +293,6 @@ namespace tubex
         // the method has no effect.
         return;
       }
-
       // Creating new slice
       int new_slice_id = input2index(t) + 1;
       vector<TubeSlice*>::iterator it = m_v_slices.begin() + new_slice_id;
@@ -306,6 +306,7 @@ namespace tubex
       // Updated domains and gates
       m_v_slices[new_slice_id]->setDomain(Interval(t, slice_to_be_sampled->domain().ub()));
       slice_to_be_sampled->setDomain(Interval(slice_to_be_sampled->domain().lb(), t));
+      slice_to_be_sampled->setOutputGate(slice_to_be_sampled->codomain()); // todo: keep this?
 
       //TubeSlice *slice_to_be_sampled = getSlice(t);
       //
@@ -947,28 +948,12 @@ namespace tubex
 
     // Contractors
 
-    bool TubeVector::ctcFwd(const TubeVector& derivative)
+    bool TubeVector::ctcDeriv(const TubeVector& derivative)
     {
       DimensionException::check(*this, derivative);
       StructureException::check(*this, derivative);
-      //CtcDeriv ctc;
-      //return ctc.contractFwd(*this, derivative);
-    }
-
-    bool TubeVector::ctcBwd(const TubeVector& derivative)
-    {
-      DimensionException::check(*this, derivative);
-      StructureException::check(*this, derivative);
-      //CtcDeriv ctc;
-      //return ctc.contractBwd(*this, derivative);
-    }
-
-    bool TubeVector::ctcFwdBwd(const TubeVector& derivative)
-    {
-      DimensionException::check(*this, derivative);
-      StructureException::check(*this, derivative);
-      //CtcDeriv ctc;
-      //return ctc.contract(*this, derivative);
+      CtcDeriv ctc;
+      return ctc.contract(*this, derivative);
     }
 
     bool TubeVector::ctcEval(Interval& t, IntervalVector& z, const TubeVector& derivative, bool propagate)

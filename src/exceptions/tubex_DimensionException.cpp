@@ -58,6 +58,14 @@ namespace tubex
     m_what_msg = os.str();
   }
 
+  DimensionException::DimensionException(const TubeSlice& x, int i)
+  {
+    ostringstream os;
+    os << "wrong dimension access: ";
+    os << "slice(" << x.dim() << "), i(" << i << ")" << endl;
+    m_what_msg = os.str();
+  }
+
   DimensionException::DimensionException(const TubeSlice& x, const IntervalVector& box)
   {
     ostringstream os;
@@ -150,6 +158,12 @@ namespace tubex
   {
     if(traj1.dim() != traj2.dim())
       throw DimensionException(traj1, traj2);
+  }
+
+  void DimensionException::check(const TubeSlice& x, int i)
+  {
+    if(i < 0 || i >= x.dim())
+      throw DimensionException(x, i);
   }
 
   void DimensionException::check(const TubeSlice& x, const IntervalVector& box)

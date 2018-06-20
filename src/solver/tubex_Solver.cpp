@@ -50,7 +50,7 @@ namespace tubex
           double max_thickness = x.maxThickness(first_id_max_thickness);
           double t_refining = x.getSlice(first_id_max_thickness)->domain().mid();
           x.sample(t_refining);
-
+/*
         // 2. Contractions up to the fixed point
 
           double volume_before_ctc;
@@ -62,9 +62,9 @@ namespace tubex
             emptiness = x.isEmpty();
             volume = x.volume();
           } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio)); // fixed point
-
+*/
       } while(!emptiness && (volume / volume_before_refining) < (1. - refining_ratio));
-
+/*
       // 3. Bisection
 
         if(!emptiness)
@@ -82,7 +82,7 @@ namespace tubex
 
           else
             v_solutions.push_back(x);
-        }
+        }*/
 
       cout << "\rsolutions: " << v_solutions.size() << "  " << flush;
     }
