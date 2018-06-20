@@ -24,7 +24,7 @@ namespace tubex
 
   Trajectory::Trajectory()
   {
-
+    
   }
 
   Trajectory::Trajectory(const Interval& domain, const Function& f)

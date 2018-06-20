@@ -14,6 +14,7 @@
 #include "tubex_operators.h"
 #include "tubex_DomainException.h"
 #include "tubex_StructureException.h"
+#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;
@@ -39,7 +40,7 @@ namespace tubex
     unary_op(acosh);
     unary_op(asinh);
     unary_op(atanh);
-    
+   
     Tube operator+(const Tube& x)
     {
       return x;
@@ -49,15 +50,15 @@ namespace tubex
     {
       return x;
     }
-
+ 
     Tube operator-(const Tube& x)
     {
-      return 0. - x;
+      return IntervalVector(x.dim(), 0.) - x;
     }
 
     TubeSlice operator-(const TubeSlice& x)
     {
-      return 0. - x;
+      return IntervalVector(x.dim(), 0.) - x;
     }
 
   #include "tubex_operators_unary_param.cpp"

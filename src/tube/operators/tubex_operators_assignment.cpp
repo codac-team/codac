@@ -1,9 +1,10 @@
-/*#define assignment_op(f) \
+#define assignment_op(f) \
   \
   Tube& Tube::f(const Tube& tube_x) \
   { \
     StructureException::check(*this, tube_x); \
-    Interval y; \
+    DimensionException::check(*this, tube_x); \
+    IntervalVector y(tube_x.dim()); \
     TubeSlice *slice, *first_slice = getFirstSlice(); \
     TubeSlice *slice_x, *first_slice_x = tube_x.getFirstSlice(); \
     slice = first_slice; \
@@ -38,7 +39,8 @@
   Tube& Tube::f(const Trajectory& traj_x) \
   { \
     DomainException::check(*this, traj_x); \
-    Interval y; \
+    DimensionException::check(*this, traj_x); \
+    IntervalVector y(traj_x.dim()); \
     TubeSlice *slice, *first_slice = getFirstSlice(); \
     slice = first_slice; \
     while(slice != NULL) \
@@ -68,8 +70,8 @@
   TubeSlice& TubeSlice::f(const TubeSlice& slice_x) \
   { \
     DomainException::check(*this, slice_x); \
-    Interval y; \
-    y = codomain(); y.f(slice_x.codomain()); setEnvelope(y); \
+    DimensionException::check(*this, slice_x); \
+    IntervalVector y = codomain(); y.f(slice_x.codomain()); setEnvelope(y); \
     y = inputGate(); y.f(slice_x.inputGate()); setInputGate(y); \
     y = outputGate(); y.f(slice_x.outputGate()); setOutputGate(y); \
     return *this; \
@@ -78,10 +80,9 @@
   TubeSlice& TubeSlice::f(const Trajectory& traj_x) \
   { \
     DomainException::check(*this, traj_x); \
-    Interval y; \
-    y = codomain(); y.f(traj_x[domain()]); setEnvelope(y); \
+    DimensionException::check(*this, traj_x); \
+    IntervalVector y = codomain(); y.f(traj_x[domain()]); setEnvelope(y); \
     y = inputGate(); y.f(traj_x[Interval(domain().lb())]); setInputGate(y); \
     y = outputGate(); y.f(traj_x[Interval(domain().ub())]); setOutputGate(y); \
     return *this; \
   }
-*/

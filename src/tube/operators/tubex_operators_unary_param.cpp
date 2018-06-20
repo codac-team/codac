@@ -1,4 +1,4 @@
-/*#define unary_param_op(f, p) \
+#define unary_param_op(f, p) \
   \
   Tube f(const Tube& x1, p param) \
   { \
@@ -9,7 +9,10 @@
     slice_x2 = first_slice_x2; \
     while(slice_x1 != NULL) \
     { \
-      slice_x2->setEnvelope(ibex::f(slice_x1->codomain(), param)); \
+      IntervalVector box = slice_x1->codomain(); \
+      for(int i = 0 ; i < box.size() ; i++) \
+        box[i] = ibex::f(box[i], param); \
+      slice_x2->setEnvelope(box); \
       slice_x1 = slice_x1->nextSlice(); \
       slice_x2 = slice_x2->nextSlice(); \
     } \
@@ -18,8 +21,16 @@
     while(slice_x1 != NULL) \
     { \
       if(slice_x1 == first_slice_x1) \
-        slice_x2->setInputGate(ibex::f(slice_x1->inputGate(), param)); \
-      slice_x2->setOutputGate(ibex::f(slice_x1->outputGate(), param)); \
+      { \
+        IntervalVector box = slice_x1->inputGate(); \
+        for(int i = 0 ; i < box.size() ; i++) \
+        box[i] = ibex::f(box[i], param); \
+        slice_x2->setInputGate(box); \
+      } \
+      IntervalVector box = slice_x1->outputGate(); \
+      for(int i = 0 ; i < box.size() ; i++) \
+        box[i] = ibex::f(box[i], param); \
+      slice_x2->setOutputGate(box); \
       slice_x1 = slice_x1->nextSlice(); \
       slice_x2 = slice_x2->nextSlice(); \
     } \
@@ -29,9 +40,17 @@
   TubeSlice f(const TubeSlice& x1, p param) \
   { \
     TubeSlice x2(x1); \
-    x2.setEnvelope(ibex::f(x1.codomain(), param)); \
-    x2.setInputGate(ibex::f(x1.inputGate(), param)); \
-    x2.setOutputGate(ibex::f(x1.outputGate(), param)); \
+    IntervalVector box = x1.codomain(); \
+    for(int i = 0 ; i < box.size() ; i++) \
+      box[i] = ibex::f(box[i], param); \
+    x2.setEnvelope(box); \
+    box = x1.inputGate(); \
+    for(int i = 0 ; i < box.size() ; i++) \
+      box[i] = ibex::f(box[i], param); \
+    x2.setInputGate(box); \
+    box = x1.outputGate(); \
+    for(int i = 0 ; i < box.size() ; i++) \
+      box[i] = ibex::f(box[i], param); \
+    x2.setOutputGate(box); \
     return x2; \
   }
-*/

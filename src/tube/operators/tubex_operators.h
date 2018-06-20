@@ -20,7 +20,7 @@
 
 namespace tubex
 {
-  #include "tubex_operators_unary.h"
+  /*#include "tubex_operators_unary.h"
 
     unary_op_h(cos);
     unary_op_h(sin);
@@ -59,7 +59,7 @@ namespace tubex
     binary_op_h(operator*);
     binary_op_h(operator/);
     binary_op_h(operator|);
-    binary_op_h(operator&);
+    binary_op_h(operator&);*/
 }
 
 #endif
