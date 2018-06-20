@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Tube class
+ *  tubex-lib - TubeVector class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,12 +10,13 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 #include "tubex_Exception.h"
 #include "tubex_DomainException.h"
 #include "tubex_TubeSerialization.h"
 #include "tubex_TrajectorySerialization.h"
 #include "tubex_DimensionException.h"
+#include "tubex_StructureException.h"
 //#include "tubex_CtcDeriv.h"
 //#include "tubex_CtcEval.h"
 
@@ -28,7 +29,7 @@ namespace tubex
 
     // Definition
 
-    Tube::Tube(const Interval& domain, int dim)
+    TubeVector::TubeVector(const Interval& domain, int dim)
     {
       DomainException::check(domain);
       DimensionException::check(dim);
@@ -39,14 +40,14 @@ namespace tubex
       m_v_slices.push_back(slice);
     }
 
-    Tube::Tube(const Interval& domain, const IntervalVector& codomain)
-      : Tube(domain, codomain.size())
+    TubeVector::TubeVector(const Interval& domain, const IntervalVector& codomain)
+      : TubeVector(domain, codomain.size())
     {
       DomainException::check(domain);
       set(codomain);
     }
     
-    Tube::Tube(const Interval& domain, double timestep, int dim)
+    TubeVector::TubeVector(const Interval& domain, double timestep, int dim)
     {
       DomainException::check(domain);
       DomainException::check(timestep);
@@ -74,51 +75,51 @@ namespace tubex
       } while(ub < domain.ub());
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const IntervalVector& codomain)
-      : Tube(domain, timestep, codomain.size())
+    TubeVector::TubeVector(const Interval& domain, double timestep, const IntervalVector& codomain)
+      : TubeVector(domain, timestep, codomain.size())
     {
       DomainException::check(domain);
       DomainException::check(timestep);
       set(codomain);
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const Function& function)
-      : Tube(domain, timestep, function.image_dim())
+    TubeVector::TubeVector(const Interval& domain, double timestep, const Function& function)
+      : TubeVector(domain, timestep, function.image_dim())
     {
       DomainException::check(domain);
       DomainException::check(timestep);
       set(function);
     }
 
-    Tube::Tube(const Tube& x)
+    TubeVector::TubeVector(const TubeVector& x)
     {
       *this = x;
     }
 
-    Tube::Tube(const Tube& x, const IntervalVector& codomain)
-      : Tube(x)
+    TubeVector::TubeVector(const TubeVector& x, const IntervalVector& codomain)
+      : TubeVector(x)
     {
       DimensionException::check(x, codomain);
       set(codomain);
     }
 
-    Tube::Tube(const Tube& x, const Function& function)
-      : Tube(x)
+    TubeVector::TubeVector(const TubeVector& x, const Function& function)
+      : TubeVector(x)
     {
       DimensionException::check(x, function);
       set(function);
     }
 
-    Tube::Tube(const Trajectory& traj, double timestep)
-      : Tube(traj.domain(), timestep, traj.dim())
+    TubeVector::TubeVector(const Trajectory& traj, double timestep)
+      : TubeVector(traj.domain(), timestep, traj.dim())
     {
       DomainException::check(timestep);
       setEmpty();
       *this |= traj;
     }
 
-    Tube::Tube(const Trajectory& lb, const Trajectory& ub, double timestep)
-      : Tube(lb.domain(), timestep, lb.dim())
+    TubeVector::TubeVector(const Trajectory& lb, const Trajectory& ub, double timestep)
+      : TubeVector(lb.domain(), timestep, lb.dim())
     {
       DomainException::check(timestep);
       DimensionException::check(lb, ub);
@@ -127,43 +128,43 @@ namespace tubex
       *this |= ub;
     }
 
-    Tube::Tube(const string& binary_file_name)
+    TubeVector::TubeVector(const string& binary_file_name)
     {
       vector<Trajectory> v_trajs;
       deserialize(binary_file_name, v_trajs);
     }
     
-    Tube::Tube(const string& binary_file_name, Trajectory& traj)
+    TubeVector::TubeVector(const string& binary_file_name, Trajectory& traj)
     {
       vector<Trajectory> v_trajs;
       deserialize(binary_file_name, v_trajs);
 
       if(v_trajs.size() == 0)
-        throw Exception("Tube constructor", "unable to deserialize a Trajectory");
+        throw Exception("TubeVector constructor", "unable to deserialize a Trajectory");
 
       traj = v_trajs[0];
     }
 
-    Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
+    TubeVector::TubeVector(const string& binary_file_name, vector<Trajectory>& v_trajs)
     {
       deserialize(binary_file_name, v_trajs);
       if(v_trajs.size() == 0)
-        throw Exception("Tube constructor", "unable to deserialize some Trajectory");
+        throw Exception("TubeVector constructor", "unable to deserialize some Trajectory");
     }
     
-    Tube::~Tube()
+    TubeVector::~TubeVector()
     {
       m_v_slices.clear();
     }
 
-    Tube Tube::primitive() const
+    TubeVector TubeVector::primitive() const
     {
-      Tube primitive(domain(), dim());
+      TubeVector primitive(domain(), dim());
       primitive.ctcFwd(*this);
       return primitive;
     }
 
-    Tube& Tube::operator=(const Tube& x)
+    TubeVector& TubeVector::operator=(const TubeVector& x)
     {
       m_v_slices.clear();
       TubeSlice *prev_slice = NULL;
@@ -182,32 +183,32 @@ namespace tubex
       return *this;
     }
 
-    const Interval Tube::domain() const
+    const Interval TubeVector::domain() const
     {
       // todo: read from tree structure
       return Interval((*m_v_slices.begin())->domain().lb(),
                       (*m_v_slices.rbegin())->domain().ub());
     }
 
-    int Tube::dim() const
+    int TubeVector::dim() const
     {
       return m_v_slices[0]->dim();
     }
   
     // Slices structure
 
-    int Tube::nbSlices() const
+    int TubeVector::nbSlices() const
     {
       return m_v_slices.size();
     }
 
-    TubeSlice* Tube::getSlice(int slice_id)
+    TubeSlice* TubeVector::getSlice(int slice_id)
     {
       DomainException::check(*this, slice_id);
       return m_v_slices[slice_id];
     }
 
-    const TubeSlice* Tube::getSlice(int slice_id) const
+    const TubeSlice* TubeVector::getSlice(int slice_id) const
     {
       DomainException::check(*this, slice_id);
       // todo: remove this?
@@ -215,14 +216,14 @@ namespace tubex
       return m_v_slices[slice_id];
     }
 
-    TubeSlice* Tube::getSlice(double t)
+    TubeSlice* TubeVector::getSlice(double t)
     {
       DomainException::check(*this, t);
       // todo: remove this?
       return getSlice(input2index(t));
     }
 
-    const TubeSlice* Tube::getSlice(double t) const
+    const TubeSlice* TubeVector::getSlice(double t) const
     {
       DomainException::check(*this, t);
       // todo: remove this?
@@ -230,17 +231,17 @@ namespace tubex
       return getSlice(input2index(t));
     }
 
-    TubeSlice* Tube::getFirstSlice() const
+    TubeSlice* TubeVector::getFirstSlice() const
     {
       return m_v_slices[0];
     }
 
-    TubeSlice* Tube::getLastSlice() const
+    TubeSlice* TubeVector::getLastSlice() const
     {
       return m_v_slices[nbSlices() - 1];
     }
 
-    TubeSlice* Tube::getWiderSlice() const
+    TubeSlice* TubeVector::getWiderSlice() const
     {
       double max_domain_width = 0.;
       TubeSlice *wider_slice, *slice = getFirstSlice();
@@ -259,13 +260,13 @@ namespace tubex
       return wider_slice;
     }
 
-    //void Tube::getSlices(vector<const TubeSlice*>& v_slices) const
+    //void TubeVector::getSlices(vector<const TubeSlice*>& v_slices) const
     //{
     //  // todo: remove this?
     //  //return m_v_slices;
     //}
 
-    int Tube::input2index(double t) const
+    int TubeVector::input2index(double t) const
     {
       DomainException::check(*this, t);
       // todo: read from tree structure
@@ -278,10 +279,9 @@ namespace tubex
           return i;
     }
 
-    void Tube::sample(double t, const IntervalVector& gate)
+    void TubeVector::sample(double t)
     {
       DomainException::check(*this, t);
-      DimensionException::check(*this, gate);
 
       TubeSlice *slice_to_be_sampled = getSlice(t);
       TubeSlice *next_slice = slice_to_be_sampled->nextSlice();
@@ -306,7 +306,6 @@ namespace tubex
       // Updated domains and gates
       m_v_slices[new_slice_id]->setDomain(Interval(t, slice_to_be_sampled->domain().ub()));
       slice_to_be_sampled->setDomain(Interval(slice_to_be_sampled->domain().lb(), t));
-      slice_to_be_sampled->setOutputGate(gate);
 
       //TubeSlice *slice_to_be_sampled = getSlice(t);
       //
@@ -319,8 +318,8 @@ namespace tubex
       //
       //else
       //{
-      //  TubeComponent *parent = m_component->getParentOf(slice_to_be_sampled);
-      //  TubeComponent *new_component = new TubeNode(*slice_to_be_sampled, t);
+      //  TubeVectorComponent *parent = m_component->getParentOf(slice_to_be_sampled);
+      //  TubeVectorComponent *new_component = new TubeVectorNode(*slice_to_be_sampled, t);
       //    
       //  if(parent == NULL) // no parent, the tube has one slice
       //  {
@@ -330,23 +329,23 @@ namespace tubex
       //  
       //  else
       //  {
-      //    TubeComponent *first_component = ((TubeNode*)parent)->m_first_component;
-      //    TubeComponent *second_component = ((TubeNode*)parent)->m_second_component;
+      //    TubeVectorComponent *first_component = ((TubeVectorNode*)parent)->m_first_component;
+      //    TubeVectorComponent *second_component = ((TubeVectorNode*)parent)->m_second_component;
       //    
       //    if(slice_to_be_sampled == (TubeSlice*)first_component)
       //    {
       //      delete first_component;
-      //      ((TubeNode*)parent)->m_first_component = new_component;
+      //      ((TubeVectorNode*)parent)->m_first_component = new_component;
       //    }
       //      
       //    else if(slice_to_be_sampled == (TubeSlice*)second_component)
       //    {
       //      delete second_component;
-      //      ((TubeNode*)parent)->m_second_component = new_component;
+      //      ((TubeVectorNode*)parent)->m_second_component = new_component;
       //    }
       //    
       //    else
-      //      throw Exception("Tube::sample", "unhandled case");
+      //      throw Exception("TubeVector::sample", "unhandled case");
       //  }
       //  
       //  m_component->updateSlicesNumber();
@@ -354,7 +353,15 @@ namespace tubex
       //}
     }
 
-    //void Tube::sample(const vector<double>& v_bounds)
+    void TubeVector::sample(double t, const IntervalVector& gate)
+    {
+      DomainException::check(*this, t);
+      DimensionException::check(*this, gate);
+      sample(t);
+      set(gate, t);
+    }
+
+    //void TubeVector::sample(const vector<double>& v_bounds)
     //{
     //  // todo: remove this?
     //  
@@ -375,7 +382,7 @@ namespace tubex
     //  sample(v_last_bounds);
     //}
     //
-    //TubeComponent* Tube::getTubeComponent()
+    //TubeVectorComponent* TubeVector::getTubeVectorComponent()
     //{
     //  // todo: remove this?
     //  //return m_component;
@@ -383,7 +390,7 @@ namespace tubex
 
     // Access values
 
-    const IntervalVector Tube::codomain() const
+    const IntervalVector TubeVector::codomain() const
     {
       // todo: use tree structure instead
       TubeSlice *slice = getFirstSlice();
@@ -396,7 +403,7 @@ namespace tubex
       return codomain;
     }
 
-    double Tube::volume() const
+    double TubeVector::volume() const
     {
       TubeSlice *slice = getFirstSlice();
       double volume = 0.;
@@ -408,19 +415,19 @@ namespace tubex
       return volume;
     }
 
-    const IntervalVector Tube::operator[](int slice_id) const
+    const IntervalVector TubeVector::operator[](int slice_id) const
     {
       DomainException::check(*this, slice_id);
       return getSlice(slice_id)->codomain();
     }
 
-    const IntervalVector Tube::operator[](double t) const
+    const IntervalVector TubeVector::operator[](double t) const
     {
       DomainException::check(*this, t);
       return getSlice(t)->operator[](t);
     }
 
-    const IntervalVector Tube::operator[](const Interval& t) const
+    const IntervalVector TubeVector::operator[](const Interval& t) const
     {
       DomainException::check(*this, t);
 
@@ -444,7 +451,7 @@ namespace tubex
       return codomain;
     }
 
-    Interval Tube::invert(const IntervalVector& y, const Interval& search_domain) const
+    Interval TubeVector::invert(const IntervalVector& y, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
 
@@ -464,7 +471,7 @@ namespace tubex
       return invert;
     }
 
-    void Tube::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
+    void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
       v_t.clear();
@@ -495,7 +502,7 @@ namespace tubex
         v_t.push_back(invert);
     }
 
-    const pair<IntervalVector,IntervalVector> Tube::eval(const Interval& t) const
+    const pair<IntervalVector,IntervalVector> TubeVector::eval(const Interval& t) const
     {
       // todo: use tree structure instead
 
@@ -518,7 +525,7 @@ namespace tubex
       return enclosed_bounds;
     }
 
-    const IntervalVector Tube::interpol(double t, const Tube& derivative) const
+    const IntervalVector TubeVector::interpol(double t, const TubeVector& derivative) const
     {
       DomainException::check(*this, t);
       DimensionException::check(*this, derivative);
@@ -527,7 +534,7 @@ namespace tubex
       // todo: check a faster implementation for this degenerate case?
     }
 
-    const IntervalVector Tube::interpol(const Interval& t, const Tube& derivative) const
+    const IntervalVector TubeVector::interpol(const Interval& t, const TubeVector& derivative) const
     {
       DomainException::check(*this, t);
       DimensionException::check(*this, derivative);
@@ -539,13 +546,13 @@ namespace tubex
       //return y;
     }
 
-    double Tube::maxThickness()
+    double TubeVector::maxThickness()
     {
       int first_id_max_thickness;
       return maxThickness(first_id_max_thickness);
     }
 
-    double Tube::maxThickness(int& first_id_max_thickness)
+    double TubeVector::maxThickness(int& first_id_max_thickness)
     {
       int i = 0;
       double max_thickness = 0.;
@@ -568,7 +575,7 @@ namespace tubex
 
     // Tests
 
-    bool Tube::operator==(const Tube& x) const
+    bool TubeVector::operator==(const TubeVector& x) const
     {
       DimensionException::check(*this, x);
       // todo: common with other same-type methods
@@ -587,7 +594,7 @@ namespace tubex
       return true;
     }
 
-    bool Tube::operator!=(const Tube& x) const
+    bool TubeVector::operator!=(const TubeVector& x) const
     {
       DimensionException::check(*this, x);
       // todo: common with other same-type methods
@@ -606,7 +613,7 @@ namespace tubex
       return false;
     }
 
-    bool Tube::isSubset(const Tube& x) const
+    bool TubeVector::isSubset(const TubeVector& x) const
     {
       DimensionException::check(*this, x);
       StructureException::check(*this, x);
@@ -624,7 +631,7 @@ namespace tubex
       return false;
     }
 
-    bool Tube::isStrictSubset(const Tube& x) const
+    bool TubeVector::isStrictSubset(const TubeVector& x) const
     {
       DimensionException::check(*this, x);
       StructureException::check(*this, x);
@@ -642,7 +649,7 @@ namespace tubex
       return false;
     }
 
-    bool Tube::isEmpty() const
+    bool TubeVector::isEmpty() const
     {
       // todo: common with other same-type methods
 
@@ -657,7 +664,7 @@ namespace tubex
       return false;
     }
 
-    bool Tube::encloses(const Trajectory& x) const
+    bool TubeVector::encloses(const Trajectory& x) const
     {
       // todo: common with other same-type methods
       DomainException::check(*this, x);
@@ -676,7 +683,7 @@ namespace tubex
 
     // Setting values
 
-    void Tube::set(const IntervalVector& y)
+    void TubeVector::set(const IntervalVector& y)
     {
       DimensionException::check(*this, y);
 
@@ -688,21 +695,21 @@ namespace tubex
       }
     }
 
-    void Tube::set(const IntervalVector& y, int slice_id)
+    void TubeVector::set(const IntervalVector& y, int slice_id)
     {
       DimensionException::check(*this, y);
       DomainException::check(*this, slice_id);
       getSlice(slice_id)->set(y);
     }
 
-    void Tube::set(const IntervalVector& y, double t)
+    void TubeVector::set(const IntervalVector& y, double t)
     {
       DimensionException::check(*this, y);
       DomainException::check(*this, t);
       sample(t, y);
     }
 
-    void Tube::set(const IntervalVector& y, const Interval& t)
+    void TubeVector::set(const IntervalVector& y, const Interval& t)
     {
       DimensionException::check(*this, y);
       DomainException::check(*this, t);
@@ -728,7 +735,7 @@ namespace tubex
       }
     }
 
-    void Tube::set(const Function& f)
+    void TubeVector::set(const Function& f)
     {
       DimensionException::check(*this, f);
       TubeSlice *slice, *first_slice = getFirstSlice();
@@ -754,13 +761,13 @@ namespace tubex
       }
     }
 
-    void Tube::setEmpty()
+    void TubeVector::setEmpty()
     {
       IntervalVector empty_box(dim(), Interval::EMPTY_SET);
       set(empty_box);
     }
 
-    Tube& Tube::inflate(double rad)
+    TubeVector& TubeVector::inflate(double rad)
     {
       IntervalVector e(dim(), Interval(-rad,rad));
 
@@ -789,10 +796,10 @@ namespace tubex
 
     // Bisection
     
-    pair<Tube,Tube> Tube::bisect(double t, float ratio) const
+    pair<TubeVector,TubeVector> TubeVector::bisect(double t, float ratio) const
     {
       DomainException::check(*this, t);
-      pair<Tube,Tube> p = make_pair(*this,*this);
+      pair<TubeVector,TubeVector> p = make_pair(*this,*this);
 
       LargestFirst bisector(0., ratio);
 
@@ -805,7 +812,7 @@ namespace tubex
 
       catch(ibex::NoBisectableVariableException&)
       {
-        throw Exception("Tube::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
+        throw Exception("TubeVector::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
       };
 
       return p;
@@ -813,9 +820,9 @@ namespace tubex
 
     // String
     
-    ostream& operator<<(ostream& str, const Tube& x)
+    ostream& operator<<(ostream& str, const TubeVector& x)
     {
-      str << "Tube " << x.domain() << "↦" << x.codomain()
+      str << "TubeVector " << x.domain() << "↦" << x.codomain()
           << ", " << x.nbSlices()
           << " slice" << (x.nbSlices() > 1 ? "s" : "")
           << flush;
@@ -824,20 +831,20 @@ namespace tubex
 
     // Integration
 
-    IntervalVector Tube::integral(double t) const
+    IntervalVector TubeVector::integral(double t) const
     {
       DomainException::check(*this, t);
       return integral(Interval(t));
     }
 
-    IntervalVector Tube::integral(const Interval& t) const
+    IntervalVector TubeVector::integral(const Interval& t) const
     {
       DomainException::check(*this, t);
       //pair<IntervalVector,IntervalVector> partial_ti = partialIntegral(t);
       //return Interval(partial_ti.first.lb(), partial_ti.second.ub());
     }
 
-    IntervalVector Tube::integral(const Interval& t1, const Interval& t2) const
+    IntervalVector TubeVector::integral(const Interval& t1, const Interval& t2) const
     {
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
@@ -848,7 +855,7 @@ namespace tubex
       //return Interval(min(lb, ub), max(lb, ub));
     }
 //
-    //pair<Interval,Interval> Tube::partialIntegral(const Interval& t) const
+    //pair<Interval,Interval> TubeVector::partialIntegral(const Interval& t) const
     //{
     //  checkPartialPrimitive();
     //  
@@ -928,7 +935,7 @@ namespace tubex
     //  return make_pair(integral_lb, integral_ub);
     //}
 
-    pair<IntervalVector,IntervalVector> Tube::partialIntegral(const Interval& t1, const Interval& t2) const
+    pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t1, const Interval& t2) const
     {
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
@@ -940,7 +947,7 @@ namespace tubex
 
     // Contractors
 
-    bool Tube::ctcFwd(const Tube& derivative)
+    bool TubeVector::ctcFwd(const TubeVector& derivative)
     {
       DimensionException::check(*this, derivative);
       StructureException::check(*this, derivative);
@@ -948,7 +955,7 @@ namespace tubex
       //return ctc.contractFwd(*this, derivative);
     }
 
-    bool Tube::ctcBwd(const Tube& derivative)
+    bool TubeVector::ctcBwd(const TubeVector& derivative)
     {
       DimensionException::check(*this, derivative);
       StructureException::check(*this, derivative);
@@ -956,7 +963,7 @@ namespace tubex
       //return ctc.contractBwd(*this, derivative);
     }
 
-    bool Tube::ctcFwdBwd(const Tube& derivative)
+    bool TubeVector::ctcFwdBwd(const TubeVector& derivative)
     {
       DimensionException::check(*this, derivative);
       StructureException::check(*this, derivative);
@@ -964,7 +971,7 @@ namespace tubex
       //return ctc.contract(*this, derivative);
     }
 
-    bool Tube::ctcEval(Interval& t, IntervalVector& z, const Tube& derivative, bool propagate)
+    bool TubeVector::ctcEval(Interval& t, IntervalVector& z, const TubeVector& derivative, bool propagate)
     {
       DimensionException::check(*this, t);
       DimensionException::check(*this, z);
@@ -976,25 +983,25 @@ namespace tubex
       
     // Serialization
 
-    void Tube::serialize(const string& binary_file_name, int version_number) const
+    void TubeVector::serialize(const string& binary_file_name, int version_number) const
     {
       vector<Trajectory> v_trajs;
       serialize(binary_file_name, v_trajs, version_number);
     }
 
-    void Tube::serialize(const string& binary_file_name, const Trajectory& traj, int version_number) const
+    void TubeVector::serialize(const string& binary_file_name, const Trajectory& traj, int version_number) const
     {
       vector<Trajectory> v_trajs;
       v_trajs.push_back(traj);
       serialize(binary_file_name, v_trajs, version_number);
     }
     
-    void Tube::serialize(const string& binary_file_name, const vector<Trajectory>& v_trajs, int version_number) const
+    void TubeVector::serialize(const string& binary_file_name, const vector<Trajectory>& v_trajs, int version_number) const
     {
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("Tube::serialize()", "error while writing file \"" + binary_file_name + "\"");
+        throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
 
       serializeTube(bin_file, *this, version_number);
 
@@ -1010,9 +1017,9 @@ namespace tubex
 
     // Integration
 
-    //void Tube::checkPartialPrimitive() const
+    //void TubeVector::checkPartialPrimitive() const
     //{
-    //  // Warning: this method can only be called from the root (Tube class)
+    //  // Warning: this method can only be called from the root (TubeVector class)
     //  // (because computation starts from 0)
     //  
     //  /*if(m_component->m_primitive_update_needed)
@@ -1038,12 +1045,12 @@ namespace tubex
 
     // Serialization
 
-    void Tube::deserialize(const string& binary_file_name, vector<Trajectory>& v_trajs)
+    void TubeVector::deserialize(const string& binary_file_name, vector<Trajectory>& v_trajs)
     {
       ifstream bin_file(binary_file_name.c_str(), ios::in | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("Tube::deserialize()", "error while opening file \"" + binary_file_name + "\"");
+        throw Exception("TubeVector::deserialize()", "error while opening file \"" + binary_file_name + "\"");
 
       deserializeTube(bin_file, *this);
 

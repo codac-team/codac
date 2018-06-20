@@ -16,7 +16,7 @@
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_Trajectory.h"
-#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 
 namespace tubex
 {
@@ -30,11 +30,11 @@ namespace tubex
     public:
 
       EmptyException(const TubeSlice& x);
-      EmptyException(const Tube& x);
-      // todo: equivalent constructor for Tube class
+      EmptyException(const TubeVector& x);
+      // todo: equivalent constructor for TubeVector class
 
       static void check(const TubeSlice& x);
-      static void check(const Tube& x);
+      static void check(const TubeVector& x);
   };
 }
 

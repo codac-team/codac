@@ -90,7 +90,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const Tube& x, const IntervalVector& box)
+  DimensionException::DimensionException(const TubeVector& x, const IntervalVector& box)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -98,7 +98,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const Tube& x, const Trajectory& traj)
+  DimensionException::DimensionException(const TubeVector& x, const Trajectory& traj)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -106,7 +106,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const Tube& x, const Function& f)
+  DimensionException::DimensionException(const TubeVector& x, const Function& f)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -114,7 +114,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const Tube& x1, const Tube& x2)
+  DimensionException::DimensionException(const TubeVector& x1, const TubeVector& x2)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -176,25 +176,25 @@ namespace tubex
       throw DimensionException(x1, x2);
   }
 
-  void DimensionException::check(const Tube& x, const IntervalVector& box)
+  void DimensionException::check(const TubeVector& x, const IntervalVector& box)
   {
     if(x.dim() != box.size())
       throw DimensionException(x, box);
   }
 
-  void DimensionException::check(const Tube& x, const Trajectory& traj)
+  void DimensionException::check(const TubeVector& x, const Trajectory& traj)
   {
     if(x.dim() != traj.dim())
       throw DimensionException(x, traj);
   }
 
-  void DimensionException::check(const Tube& x, const Function& f)
+  void DimensionException::check(const TubeVector& x, const Function& f)
   {
     if(x.dim() != f.image_dim())
       throw DimensionException(x, f);
   }
 
-  void DimensionException::check(const Tube& x1, const Tube& x2)
+  void DimensionException::check(const TubeVector& x1, const TubeVector& x2)
   {
     if(x1.dim() != x2.dim())
       throw DimensionException(x1, x2);

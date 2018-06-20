@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Tube class
+ *  tubex-lib - TubeVector class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef Tube_HEADER
-#define Tube_HEADER
+#ifndef TubeVector_HEADER
+#define TubeVector_HEADER
 
 #include <vector>
 #include "ibex.h"
@@ -30,29 +30,29 @@ namespace tubex
 {
   class TubeSlice;
   
-  class Tube : DynamicalItem
+  class TubeVector : DynamicalItem
   {
     public:
 
     /** Base: **/
 
       // Definition
-      Tube(const ibex::Interval& domain, int dim = 1);
-      Tube(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
-      Tube(const ibex::Interval& domain, double timestep, int dim = 1);
-      Tube(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
-      Tube(const ibex::Interval& domain, double timestep, const ibex::Function& function);
-      Tube(const Tube& x);
-      Tube(const Tube& x, const ibex::IntervalVector& codomain);
-      Tube(const Tube& x, const ibex::Function& function);
-      Tube(const Trajectory& traj, double timestep);
-      Tube(const Trajectory& lb, const Trajectory& ub, double timestep);
-      Tube(const std::string& binary_file_name);
-      Tube(const std::string& binary_file_name, Trajectory& traj);
-      Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
-      ~Tube();
-      Tube primitive() const;
-      Tube& operator=(const Tube& x);
+      TubeVector(const ibex::Interval& domain, int dim = 1);
+      TubeVector(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
+      TubeVector(const ibex::Interval& domain, double timestep, int dim = 1);
+      TubeVector(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
+      TubeVector(const ibex::Interval& domain, double timestep, const ibex::Function& function);
+      TubeVector(const TubeVector& x);
+      TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
+      TubeVector(const TubeVector& x, const ibex::Function& function);
+      TubeVector(const Trajectory& traj, double timestep);
+      TubeVector(const Trajectory& lb, const Trajectory& ub, double timestep);
+      TubeVector(const std::string& binary_file_name);
+      TubeVector(const std::string& binary_file_name, Trajectory& traj);
+      TubeVector(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      ~TubeVector();
+      TubeVector primitive() const;
+      TubeVector& operator=(const TubeVector& x);
       const ibex::Interval domain() const; // todo: output const Interval& (reference)
       int dim() const;
 
@@ -66,6 +66,7 @@ namespace tubex
       TubeSlice* getLastSlice() const;
       TubeSlice* getWiderSlice() const;
       int input2index(double t) const;
+      void sample(double t);
       void sample(double t, const ibex::IntervalVector& gate);
 
       // Access values
@@ -77,16 +78,16 @@ namespace tubex
       ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-      const ibex::IntervalVector interpol(double t, const Tube& derivative) const;
-      const ibex::IntervalVector interpol(const ibex::Interval& t, const Tube& derivative) const;
+      const ibex::IntervalVector interpol(double t, const TubeVector& derivative) const;
+      const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& derivative) const;
       double maxThickness();
       double maxThickness(int& first_id_max_thickness);
 
       // Tests
-      bool operator==(const Tube& x) const;
-      bool operator!=(const Tube& x) const;
-      bool isSubset(const Tube& x) const;
-      bool isStrictSubset(const Tube& x) const;
+      bool operator==(const TubeVector& x) const;
+      bool operator!=(const TubeVector& x) const;
+      bool isSubset(const TubeVector& x) const;
+      bool isStrictSubset(const TubeVector& x) const;
       bool isEmpty() const;
       bool encloses(const Trajectory& x) const;
 
@@ -97,27 +98,27 @@ namespace tubex
       void set(const ibex::IntervalVector& y, const ibex::Interval& t);
       void set(const ibex::Function& function);
       void setEmpty();
-      Tube& inflate(double rad);
+      TubeVector& inflate(double rad);
 
       // Bisection
-      std::pair<Tube,Tube> bisect(double t, float ratio = 0.55) const;
+      std::pair<TubeVector,TubeVector> bisect(double t, float ratio = 0.55) const;
 
       // Operators
-      Tube& operator+=(const Trajectory& x);
-      Tube& operator+=(const Tube& x);
-      Tube& operator-=(const Trajectory& x);
-      Tube& operator-=(const Tube& x);
-      Tube& operator*=(const Trajectory& x);
-      Tube& operator*=(const Tube& x);
-      Tube& operator/=(const Trajectory& x);
-      Tube& operator/=(const Tube& x);
-      Tube& operator|=(const Trajectory& x);
-      Tube& operator|=(const Tube& x);
-      Tube& operator&=(const Trajectory& x);
-      Tube& operator&=(const Tube& x);
+      TubeVector& operator+=(const Trajectory& x);
+      TubeVector& operator+=(const TubeVector& x);
+      TubeVector& operator-=(const Trajectory& x);
+      TubeVector& operator-=(const TubeVector& x);
+      TubeVector& operator*=(const Trajectory& x);
+      TubeVector& operator*=(const TubeVector& x);
+      TubeVector& operator/=(const Trajectory& x);
+      TubeVector& operator/=(const TubeVector& x);
+      TubeVector& operator|=(const Trajectory& x);
+      TubeVector& operator|=(const TubeVector& x);
+      TubeVector& operator&=(const Trajectory& x);
+      TubeVector& operator&=(const TubeVector& x);
 
       // String
-      friend std::ostream& operator<<(std::ostream& str, const Tube& x);
+      friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
 
     /** Integration: **/
 
@@ -129,10 +130,10 @@ namespace tubex
 
     /** Contractors: **/
 
-      bool ctcFwd(const Tube& derivative);
-      bool ctcBwd(const Tube& derivative);
-      bool ctcFwdBwd(const Tube& derivative);
-      bool ctcEval(ibex::Interval& t, ibex::IntervalVector& z, const Tube& derivative, bool propagate = true);
+      bool ctcFwd(const TubeVector& derivative);
+      bool ctcBwd(const TubeVector& derivative);
+      bool ctcFwdBwd(const TubeVector& derivative);
+      bool ctcEval(ibex::Interval& t, ibex::IntervalVector& z, const TubeVector& derivative, bool propagate = true);
 
     /** Serialization: **/
 
@@ -154,14 +155,14 @@ namespace tubex
 
     /** Class variables **/
 
-      //TubeComponent *m_component = NULL;
+      //TubeVectorComponent *m_component = NULL;
       std::vector<TubeSlice*> m_v_slices;
 
       friend class CtcDeriv; // todo: remove this
       friend class CtcEval; // todo: remove this? not sure
       friend class TubeSlice; // todo: remove this? not sure
-      friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number); // todo: remove this? not sure
-      friend void deserializeTube(std::ifstream& bin_file, Tube& tube); // todo: remove this? not sure
+      friend void serializeTube(std::ofstream& bin_file, const TubeVector& tube, int version_number); // todo: remove this? not sure
+      friend void deserializeTube(std::ifstream& bin_file, TubeVector& tube); // todo: remove this? not sure
   };
 }
 

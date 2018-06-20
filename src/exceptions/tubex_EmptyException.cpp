@@ -32,7 +32,7 @@ namespace tubex
       throw EmptyException(x);
   }
 
-    EmptyException::EmptyException(const Tube& x)
+    EmptyException::EmptyException(const TubeVector& x)
     {
       ostringstream os;
       os << "emptiness over ";
@@ -63,7 +63,7 @@ namespace tubex
       m_what_msg = os.str();
     }
 
-    void EmptyException::check(const Tube& x)
+    void EmptyException::check(const TubeVector& x)
     {
       if(x.isEmpty())
         throw EmptyException(x);

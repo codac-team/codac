@@ -14,14 +14,14 @@
 #define TUBE_SERIALIZATION_HEADER
 
 #include <fstream>
-#include "tubex.h"
+#include "tubex_TubeVector.h"
 
 #define SERIALIZATION_VERSION 2
 
 namespace tubex
 {
-  void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number = SERIALIZATION_VERSION);
-  void deserializeTube(std::ifstream& bin_file, Tube& tube);
+  void serializeTube(std::ofstream& bin_file, const TubeVector& tube, int version_number = SERIALIZATION_VERSION);
+  void deserializeTube(std::ifstream& bin_file, TubeVector& tube);
 }
 
 #endif

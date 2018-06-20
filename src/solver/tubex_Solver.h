@@ -14,7 +14,7 @@
 #define Solver_HEADER
 
 #include <vector>
-#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 
 namespace tubex
 {
@@ -23,13 +23,11 @@ namespace tubex
     public:
 
       Solver();
-      double tubeVectorVolume(const std::vector<Tube>& v_x) const;
-      double tubeVectorIsEmpty(const std::vector<Tube>& v_x) const;
-      std::vector<std::vector<Tube> > solve(std::vector<Tube>& v_x,
-                                            void (*ctc_func)(std::vector<Tube>&),
-                                            float max_thickness,
-                                            float refining_ratio = 0.005,
-                                            float fixed_point_ratio = 0.005);
+      std::vector<TubeVector> solve(const TubeVector& x0,
+                                    void (*ctc_func)(TubeVector&), // todo: contractor object
+                                    float max_thickness,
+                                    float refining_ratio = 0.005,
+                                    float fixed_point_ratio = 0.005);
 
     protected:
       

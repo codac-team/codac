@@ -33,7 +33,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-    StructureException::StructureException(const Tube& x1, const Tube& x2)
+    StructureException::StructureException(const TubeVector& x1, const TubeVector& x2)
     {
       ostringstream os;
       os << "unable to perform an operation over tubes of different structure";
@@ -46,7 +46,7 @@ namespace tubex
       m_what_msg = os.str();
     }
 
-    void StructureException::check(const Tube& x1, const Tube& x2)
+    void StructureException::check(const TubeVector& x1, const TubeVector& x2)
     {
       DomainException::check(x1, x2);
       if(x1.nbSlices() != x2.nbSlices())

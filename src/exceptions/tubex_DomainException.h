@@ -16,7 +16,7 @@
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_Trajectory.h"
-#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 
 namespace tubex
 {
@@ -40,11 +40,11 @@ namespace tubex
       DomainException(const Trajectory& x1, const Trajectory& x2);
       DomainException(const TubeSlice& x1, const Trajectory& x2);
 
-      DomainException(const Tube& x, int slice_index);
-      DomainException(const Tube& x, double t);
-      DomainException(const Tube& x, const ibex::Interval& t);
-      DomainException(const Tube& x1, const Tube& x2);
-      DomainException(const Tube& x1, const Trajectory& x2);
+      DomainException(const TubeVector& x, int slice_index);
+      DomainException(const TubeVector& x, double t);
+      DomainException(const TubeVector& x, const ibex::Interval& t);
+      DomainException(const TubeVector& x1, const TubeVector& x2);
+      DomainException(const TubeVector& x1, const Trajectory& x2);
         
       static void check(const ibex::Interval& domain);
       static void check(double timestep);
@@ -57,11 +57,11 @@ namespace tubex
       static void check(const Trajectory& x1, const Trajectory& x2);
       static void check(const TubeSlice& x1, const Trajectory& x2);
         
-      static void check(const Tube& x, int slice_index);
-      static void check(const Tube& x, double t);
-      static void check(const Tube& x, const ibex::Interval& t);
-      static void check(const Tube& x1, const Tube& x2);
-      static void check(const Tube& x1, const Trajectory& x2);
+      static void check(const TubeVector& x, int slice_index);
+      static void check(const TubeVector& x, double t);
+      static void check(const TubeVector& x, const ibex::Interval& t);
+      static void check(const TubeVector& x1, const TubeVector& x2);
+      static void check(const TubeVector& x1, const Trajectory& x2);
   };
 }
 

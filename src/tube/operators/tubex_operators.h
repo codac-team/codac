@@ -13,7 +13,7 @@
 #ifndef TUBEX_OPERATORS
 #define TUBEX_OPERATORS
 
-#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_Trajectory.h"
 #include "ibex_Interval.h"

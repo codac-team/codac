@@ -12,6 +12,7 @@
 
 #include "tubex_TubeSerialization.h"
 #include "tubex_IntervalSerialization.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -35,7 +36,7 @@ namespace tubex
                 ...
   */
 
-  void serializeTube(ofstream& bin_file, const Tube& tube, int version_number)
+  void serializeTube(ofstream& bin_file, const TubeVector& tube, int version_number)
   {
     if(!bin_file.is_open())
       throw Exception("serializeTube()", "ofstream& bin_file not open");
@@ -94,7 +95,7 @@ namespace tubex
     }
   }
 
-  void deserializeTube(ifstream& bin_file, Tube& tube)
+  void deserializeTube(ifstream& bin_file, TubeVector& tube)
   {
     if(!bin_file.is_open())
       throw Exception("deserializeTube()", "ifstream& bin_file not open");

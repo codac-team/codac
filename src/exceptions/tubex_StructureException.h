@@ -16,7 +16,7 @@
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_Trajectory.h"
-#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 
 namespace tubex
 {
@@ -32,8 +32,8 @@ namespace tubex
 
       StructureException(const TubeSlice& x1, const TubeSlice& x2);
 
-      StructureException(const Tube& x1, const Tube& x2);
-      static void check(const Tube& x1, const Tube& x2);
+      StructureException(const TubeVector& x1, const TubeVector& x2);
+      static void check(const TubeVector& x1, const TubeVector& x2);
   };
 }
 

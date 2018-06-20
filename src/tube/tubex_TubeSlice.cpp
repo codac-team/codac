@@ -164,12 +164,12 @@ namespace tubex
       return *m_output_gate;
     }
 
-    Tube* TubeSlice::tubeReference() const
+    TubeVector* TubeSlice::tubeReference() const
     {
       return m_tube_ref;
     }
     
-    //TubeNode* TubeSlice::getParentOf(TubeComponent* component)
+    //TubeVectorNode* TubeSlice::getParentOf(TubeVectorComponent* component)
     //{
     //  return NULL;
     //}
@@ -452,7 +452,7 @@ namespace tubex
 
   // Protected methods
 
-    void TubeSlice::setTubeReference(Tube *tube_ref)
+    void TubeSlice::setTubeReference(TubeVector *tube_ref)
     {
       m_tube_ref = tube_ref;
     }
@@ -531,7 +531,7 @@ namespace tubex
     {
       if(!m_primitive_update_needed)
         throw Exception("TubeSlice::checkPartialPrimitive", "primitive value not set");
-      // should be set from Tube class
+      // should be set from TubeVector class
     }
 
     void TubeSlice::flagFuturePrimitiveUpdateFromRoot(int slice_id) const

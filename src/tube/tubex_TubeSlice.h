@@ -13,13 +13,13 @@
 #ifndef TubeSlice_HEADER
 #define TubeSlice_HEADER
 
-#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 #include "tubex_Trajectory.h"
 #include "tubex_DynamicalItem.h"
 
 namespace tubex
 {
-  class Tube;
+  class TubeVector;
 
   class TubeSlice : DynamicalItem
   {
@@ -42,7 +42,7 @@ namespace tubex
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
       const ibex::IntervalVector inputGate() const;
       const ibex::IntervalVector outputGate() const;
-      Tube* tubeReference() const;
+      TubeVector* tubeReference() const;
 
       // Access values
       const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
@@ -96,7 +96,7 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      void setTubeReference(Tube *tube_ref);
+      void setTubeReference(TubeVector *tube_ref);
       void setDomain(const ibex::Interval& domain);
 
       // Slices structure
@@ -116,11 +116,11 @@ namespace tubex
       ibex::IntervalVector m_codomain = ibex::IntervalVector(1); // by default: 1-dim codomain
       ibex::IntervalVector *m_input_gate = NULL, *m_output_gate = NULL;
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;
-      Tube *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
+      TubeVector *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
-      friend class Tube;
-      friend void serializeTube(std::ofstream& bin_file, const Tube& tube, int version_number);
-      friend void deserializeTube(std::ifstream& bin_file, Tube& tube);
+      friend class TubeVector;
+      friend void serializeTube(std::ofstream& bin_file, const TubeVector& tube, int version_number);
+      friend void deserializeTube(std::ifstream& bin_file, TubeVector& tube);
   };
 }
 

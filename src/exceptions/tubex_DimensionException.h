@@ -13,7 +13,7 @@
 #ifndef DimensionException_HEADER
 #define DimensionException_HEADER
 
-#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_Exception.h"
 
@@ -37,10 +37,10 @@ namespace tubex
       DimensionException(const TubeSlice& x, const Trajectory& traj);
       DimensionException(const TubeSlice& x, const ibex::Function& f);
       DimensionException(const TubeSlice& x1, const TubeSlice& x2);
-      DimensionException(const Tube& x, const ibex::IntervalVector& box);
-      DimensionException(const Tube& x, const Trajectory& traj);
-      DimensionException(const Tube& x, const ibex::Function& f);
-      DimensionException(const Tube& x1, const Tube& x2);
+      DimensionException(const TubeVector& x, const ibex::IntervalVector& box);
+      DimensionException(const TubeVector& x, const Trajectory& traj);
+      DimensionException(const TubeVector& x, const ibex::Function& f);
+      DimensionException(const TubeVector& x1, const TubeVector& x2);
 
       static void check(int dim);
       static void check(const ibex::Vector& x1, const ibex::Vector& x2);
@@ -51,10 +51,10 @@ namespace tubex
       static void check(const TubeSlice& x, const Trajectory& traj);
       static void check(const TubeSlice& x, const ibex::Function& f);
       static void check(const TubeSlice& x1, const TubeSlice& x2);
-      static void check(const Tube& x, const ibex::IntervalVector& box);
-      static void check(const Tube& x, const Trajectory& traj);
-      static void check(const Tube& x, const ibex::Function& f);
-      static void check(const Tube& x1, const Tube& x2);
+      static void check(const TubeVector& x, const ibex::IntervalVector& box);
+      static void check(const TubeVector& x, const Trajectory& traj);
+      static void check(const TubeVector& x, const ibex::Function& f);
+      static void check(const TubeVector& x1, const TubeVector& x2);
   };
 }
 

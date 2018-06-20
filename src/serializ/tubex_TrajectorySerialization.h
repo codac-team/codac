@@ -14,7 +14,8 @@
 #define TRAJECTORY_SERIALIZATION_HEADER
 
 #include <fstream>
-#include "tubex.h"
+#include "tubex_Trajectory.h"
+#include "tubex_TubeVector.h"
 
 namespace tubex
 {
