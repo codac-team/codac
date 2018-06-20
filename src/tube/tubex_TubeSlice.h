@@ -107,8 +107,8 @@ namespace tubex
       // Setting values
 
       // Integration
-      const std::pair<ibex::IntervalVector,ibex::IntervalVector>& getPartialPrimitiveValue() const;
-      std::pair<ibex::IntervalVector,ibex::IntervalVector> getPartialPrimitiveValue(const ibex::Interval& t) const;
+      //const std::pair<ibex::IntervalVector,ibex::IntervalVector>& getPartialPrimitiveValue() const;
+      //std::pair<ibex::IntervalVector,ibex::IntervalVector> getPartialPrimitiveValue(const ibex::Interval& t) const;
       
     /** Class variables **/
 

@@ -28,11 +28,8 @@ namespace tubex
 
     TubeSlice::TubeSlice(const Interval& domain, int dim) : m_domain(domain)
     {
-      if(domain.is_empty() || domain.is_unbounded() || domain.is_degenerated())
-        throw Exception("TubeSlice constructor", "invalid domain");
-      
-      if(dim < 1)
-        throw Exception("TubeSlice constructor", "invalid dimension");
+      DomainException::check(domain);
+      DimensionException::check(dim);
       
       m_input_gate = new IntervalVector(dim);
       m_output_gate = new IntervalVector(dim);
@@ -40,6 +37,7 @@ namespace tubex
 
     TubeSlice::TubeSlice(const Interval& domain, const IntervalVector& codomain) : TubeSlice(domain, codomain.size())
     {
+      DomainException::check(domain);
       set(codomain);
     }
 
@@ -137,6 +135,8 @@ namespace tubex
 
     void TubeSlice::chainSlices(TubeSlice *first_slice, TubeSlice *second_slice)
     {
+      DimensionException::check(*first_slice, *second_slice);
+
       if(first_slice != NULL)
         first_slice->m_next_slice = second_slice;
 
@@ -249,6 +249,11 @@ namespace tubex
 
     const IntervalVector TubeSlice::interpol(double t, const TubeSlice& derivative) const
     {
+      DomainException::check(*this, t);
+      DomainException::check(*this, derivative);
+      DimensionException::check(*this, derivative);
+      EmptyException::check(derivative);
+
       return interpol(Interval(t), derivative);
 
       #if false // old implementation (faster?) todo:check
@@ -261,7 +266,10 @@ namespace tubex
 
     const IntervalVector TubeSlice::interpol(const Interval& t, const TubeSlice& derivative) const
     {
+      DomainException::check(*this, t);
+      DomainException::check(*this, derivative);
       DimensionException::check(*this, derivative);
+      EmptyException::check(derivative);
       //IntervalVector y;
       //CtcDeriv ctc;
       //Interval t_ = t;
@@ -282,6 +290,7 @@ namespace tubex
 
     void TubeSlice::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
     {
+      DimensionException::check(*this, y);
       return invert(y, v_t, search_domain, true);
     }
 
@@ -352,6 +361,8 @@ namespace tubex
 
     bool TubeSlice::isStrictSubset(const TubeSlice& x) const
     {
+      DomainException::check(*this, x);
+      DimensionException::check(*this, x);
       return isSubset(x) && (*this) != x;
     }
     
@@ -362,6 +373,7 @@ namespace tubex
 
     bool TubeSlice::encloses(const Trajectory& x) const
     {
+      DomainException::check(*this, x);
       DimensionException::check(*this, x);
       return x[m_domain].is_subset(m_codomain)
           && inputGate().contains(x[m_domain.lb()])
@@ -447,6 +459,7 @@ namespace tubex
     
     void TubeSlice::setDomain(const Interval& domain)
     {
+      DomainException::check(domain);
       m_domain = domain;
     }
 
@@ -461,6 +474,7 @@ namespace tubex
 
     void TubeSlice::invert(const IntervalVector& y, vector<ibex::Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
     {
+      DimensionException::check(*this, y);
       Interval inversion = invert(y, search_domain);
       if(!inversion.is_empty())
         v_t.push_back(inversion);
@@ -538,7 +552,7 @@ namespace tubex
           m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
         }
       }
-    }*/
+    }
 
     const pair<IntervalVector,IntervalVector>& TubeSlice::getPartialPrimitiveValue() const
     {
@@ -558,5 +572,5 @@ namespace tubex
       {
         throw Exception("TubeSlice::getPartialPrimitiveValue", "unexpected case");
       }
-    }
+    }*/
 }
