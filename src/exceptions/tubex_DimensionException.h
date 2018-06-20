@@ -29,6 +29,7 @@ namespace tubex
     public:
 
       DimensionException(int dim);
+      DimensionException(const ibex::Vector& x1, const ibex::Vector& x2);
       DimensionException(const Trajectory& traj, const ibex::IntervalVector& box);
       DimensionException(const Trajectory& traj, const ibex::Function& f);
       DimensionException(const Trajectory& traj1, const Trajectory& traj2);
@@ -42,6 +43,7 @@ namespace tubex
       DimensionException(const Tube& x1, const Tube& x2);
 
       static void check(int dim);
+      static void check(const ibex::Vector& x1, const ibex::Vector& x2);
       static void check(const Trajectory& traj, const ibex::Function& f);
       static void check(const Trajectory& traj, const ibex::IntervalVector& box);
       static void check(const Trajectory& traj1, const Trajectory& traj2);

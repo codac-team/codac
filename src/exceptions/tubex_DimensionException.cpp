@@ -26,6 +26,14 @@ namespace tubex
     m_what_msg = os.str();
   }
 
+  DimensionException::DimensionException(const Vector& x1, const Vector& x2)
+  {
+    ostringstream os;
+    os << "objects of different dimension: ";
+    os << "x1(" << x1.size() << "), x2(" << x2.size() << ")" << endl;
+    m_what_msg = os.str();
+  }
+
   DimensionException::DimensionException(const Trajectory& traj, const IntervalVector& box)
   {
     ostringstream os;
@@ -118,6 +126,12 @@ namespace tubex
   {
     if(dim < 1)
       throw DimensionException(dim);
+  }
+
+  void DimensionException::check(const Vector& x1, const Vector& x2)
+  {
+    if(x1.size() != x2.size())
+      throw DimensionException(x1, x2);
   }
 
   void DimensionException::check(const Trajectory& traj, const Function& f)

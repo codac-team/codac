@@ -14,6 +14,7 @@
 #define Trajectory_HEADER
 
 #include <map>
+#include "ibex_Vector.h"
 #include "ibex_Interval.h"
 #include "ibex_Function.h"
 #include "tubex_DynamicalItem.h"

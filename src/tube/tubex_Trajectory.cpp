@@ -13,6 +13,7 @@
 #include <sstream>
 #include "tubex_Trajectory.h"
 #include "tubex_DomainException.h"
+#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;
@@ -21,22 +22,28 @@ namespace tubex
 {
   // Definition
 
-  /*Trajectory::Trajectory()
+  Trajectory::Trajectory()
   {
 
   }
 
-  Trajectory::Trajectory(const Interval& domain, const Function& f) : m_domain(domain), m_function(new Function(f))
+  Trajectory::Trajectory(const Interval& domain, const Function& f)
+    : m_domain(domain), m_function(new Function(f))
   {
+    DomainException::check(domain);
     IntervalVector box(1, domain);
-    m_codomain = m_function->eval(box);
+    m_codomain = m_function->eval_vector(box);
   }
 
-  Trajectory::Trajectory(const map<double,double>& map_values) : m_map_values(map_values)
+  Trajectory::Trajectory(const map<double,Vector>& map_values)
+    : m_map_values(map_values)
   {
-    typename map<double,double>::const_iterator it_map;
+    typename map<double,Vector>::const_iterator it_map;
     for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
+    {
       set(it_map->first, it_map->second);
+      DimensionException::check(m_map_values.begin()->second, it_map->second);
+    }
   }
 
   Trajectory::~Trajectory()
@@ -47,7 +54,7 @@ namespace tubex
 
   // Access values
 
-  const map<double,double>& Trajectory::getMap() const
+  const map<double,Vector>& Trajectory::getMap() const
   {
     return m_map_values;
   }
@@ -62,12 +69,12 @@ namespace tubex
     return m_domain;
   }
 
-  const Interval Trajectory::codomain() const
+  const IntervalVector Trajectory::codomain() const
   {
     return m_codomain;
   }
 
-  const double Trajectory::operator[](double t) const
+  const Vector Trajectory::operator[](double t) const
   {
     DomainException::check(*this, t);
 
@@ -82,19 +89,24 @@ namespace tubex
 
     else
     {
-      typename map<double,double>::const_iterator it_lower, it_upper;
+      typename map<double,Vector>::const_iterator it_lower, it_upper;
       it_lower = m_map_values.lower_bound(t);
       it_upper = it_lower;
       it_lower--;
 
+      Vector p(dim());
+
       // Linear interpolation
-      return it_lower->second +
-             (t - it_lower->first) * (it_upper->second - it_lower->second) /
-             (it_upper->first - it_lower->first);
+      for(int i = 0 ; i < dim() ; i++)
+        p[i] = it_lower->second[i] +
+               (t - it_lower->first) * (it_upper->second[i] - it_lower->second[i]) /
+               (it_upper->first - it_lower->first);
+
+      return p;
     }
   }
   
-  const Interval Trajectory::operator[](const Interval& t) const
+  const IntervalVector Trajectory::operator[](const Interval& t) const
   {
     DomainException::check(*this, t);
 
@@ -104,16 +116,16 @@ namespace tubex
     else if(m_function != NULL)
     {
       IntervalVector box(1, Interval(t));
-      return m_function->eval(box);
+      return m_function->eval_vector(box);
     }
 
     else
     {
-      Interval eval(Interval::EMPTY_SET);
+      IntervalVector eval(dim(), Interval::EMPTY_SET);
       eval |= (*this)[t.lb()];
       eval |= (*this)[t.ub()];
 
-      for(map<double,double>::const_iterator it = m_map_values.lower_bound(t.lb()) ;
+      for(map<double,Vector>::const_iterator it = m_map_values.lower_bound(t.lb()) ;
           it != m_map_values.upper_bound(t.ub()) ; it++)
         eval |= it->second;
 
@@ -125,9 +137,11 @@ namespace tubex
 
   bool Trajectory::operator==(const Trajectory& x) const
   {
+    DimensionException::check(*this, x);
+
     if(m_function == NULL && x.getFunction() == NULL)
     {
-      typename map<double,double>::const_iterator it_map;
+      typename map<double,Vector>::const_iterator it_map;
       for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
       {
         if(x.getMap().find(it_map->first) == x.getMap().end())
@@ -152,22 +166,26 @@ namespace tubex
   
   bool Trajectory::operator!=(const Trajectory& x) const
   {
+    DimensionException::check(*this, x);
     return domain() != x.domain() | codomain() != x.codomain() | !(*this == x);
   }
 
   // Setting values
 
-  double& Trajectory::set(double t, double y)
+  Vector& Trajectory::set(double t, const Vector& y)
   {
-    m_map_values[t] = y;
+    DimensionException::check(*this, y);
+    m_map_values.emplace(t, y);
     m_domain |= t;
     m_codomain |= y;
-    return m_map_values[t];
+    return m_map_values.at(t);
   }
 
   void Trajectory::truncateDomain(const Interval& domain)
   {
-    map<double,double>::iterator it = m_map_values.begin();
+    DomainException::check(domain);
+
+    map<double,Vector>::iterator it = m_map_values.begin();
     while(it != m_map_values.end())
     {
       if(!domain.contains(it->first)) it = m_map_values.erase(it);
@@ -175,7 +193,7 @@ namespace tubex
     }
 
     m_codomain.set_empty();
-    for(map<double,double>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
+    for(map<double,Vector>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
       m_codomain |= it->second;
 
     m_domain &= domain;
@@ -183,12 +201,12 @@ namespace tubex
 
   void Trajectory::shiftDomain(double shift_ref)
   {
-    map<double,double> map_temp = m_map_values;
+    map<double,Vector> map_temp = m_map_values;
     m_map_values.clear();
 
-    for(map<double,double>::iterator it = map_temp.begin() ; it != map_temp.end() ; it++)
-      m_map_values[it->first - shift_ref] = it->second;
+    for(map<double,Vector>::iterator it = map_temp.begin() ; it != map_temp.end() ; it++)
+      m_map_values.emplace(it->first - shift_ref, it->second);
 
     m_domain -= shift_ref;
-  }*/
+  }
 }
