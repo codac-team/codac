@@ -37,6 +37,7 @@ namespace tubex
       const ibex::Function* getFunction() const;
       const ibex::Interval domain() const; // todo: output const Interval& (reference)
       const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
+      const ibex::IntervalVector codomainBox() const; // todo: output const Interval& (reference)
       const ibex::Vector operator[](double t) const;
       const ibex::IntervalVector operator[](const ibex::Interval& t) const;
 

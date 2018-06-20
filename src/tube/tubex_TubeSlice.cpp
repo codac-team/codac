@@ -178,7 +178,7 @@ namespace tubex
 
     const IntervalVector TubeSlice::codomain() const
     {
-      return m_codomain;
+      return codomainBox();
     }
     
     const IntervalVector TubeSlice::box() const
@@ -471,6 +471,11 @@ namespace tubex
     //}
 
     // Access values
+
+    const IntervalVector TubeSlice::codomainBox() const
+    {
+      return m_codomain;
+    }
 
     void TubeSlice::invert(const IntervalVector& y, vector<ibex::Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
     {

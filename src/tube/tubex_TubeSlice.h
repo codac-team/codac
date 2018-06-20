@@ -102,6 +102,7 @@ namespace tubex
       // Slices structure
 
       // Access values
+      const ibex::IntervalVector codomainBox() const; // todo: output const Interval& (reference)
       void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
 
       // Setting values

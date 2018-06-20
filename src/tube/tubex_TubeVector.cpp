@@ -393,15 +393,7 @@ namespace tubex
 
     const IntervalVector TubeVector::codomain() const
     {
-      // todo: use tree structure instead
-      TubeSlice *slice = getFirstSlice();
-      IntervalVector codomain(dim(), Interval::EMPTY_SET);
-      while(slice != NULL)
-      {
-        codomain |= slice->codomain();
-        slice = slice->nextSlice();
-      }
-      return codomain;
+      return codomainBox();
     }
 
     double TubeVector::volume() const
@@ -855,9 +847,9 @@ namespace tubex
       //Vector ub = (integral_t2.second - integral_t1.second).ub();
       //return Interval(min(lb, ub), max(lb, ub));
     }
-//
-    //pair<Interval,Interval> TubeVector::partialIntegral(const Interval& t) const
-    //{
+
+    pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t) const
+    {
     //  checkPartialPrimitive();
     //  
     //  int index_lb = input2index(t.lb());
@@ -934,7 +926,7 @@ namespace tubex
     //  }
     //  
     //  return make_pair(integral_lb, integral_ub);
-    //}
+    }
 
     pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t1, const Interval& t2) const
     {
@@ -999,6 +991,21 @@ namespace tubex
     }
 
   // Protected methods
+
+    // Access values
+
+    const IntervalVector TubeVector::codomainBox() const
+    {
+      // todo: use tree structure instead
+      TubeSlice *slice = getFirstSlice();
+      IntervalVector codomain(dim(), Interval::EMPTY_SET);
+      while(slice != NULL)
+      {
+        codomain |= slice->codomainBox();
+        slice = slice->nextSlice();
+      }
+      return codomain;
+    }
 
     // Integration
 

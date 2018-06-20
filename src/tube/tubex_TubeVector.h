@@ -45,8 +45,8 @@ namespace tubex
       TubeVector(const TubeVector& x);
       TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
       TubeVector(const TubeVector& x, const ibex::Function& function);
-      TubeVector(const Trajectory& traj, double timestep);
-      TubeVector(const Trajectory& lb, const Trajectory& ub, double timestep);
+      TubeVector(const Trajectory& traj, double timestep = 0.);
+      TubeVector(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
       TubeVector(const std::string& binary_file_name);
       TubeVector(const std::string& binary_file_name, Trajectory& traj);
       TubeVector(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
@@ -142,6 +142,9 @@ namespace tubex
     protected:
 
     /** Base: **/
+
+      // Access values
+      const ibex::IntervalVector codomainBox() const; // todo: output const Interval& (reference)
 
     /** Integration: **/
       

@@ -83,6 +83,11 @@ namespace tubex
 
   const IntervalVector Trajectory::codomain() const
   {
+    return codomainBox();
+  }
+
+  const IntervalVector Trajectory::codomainBox() const
+  {
     return m_codomain;
   }
 
