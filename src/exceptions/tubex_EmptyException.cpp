@@ -10,12 +10,9 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_EmptyException.h"
-#include "tubex_TubeSlice.h"
-#include "tubex_TubeSlice.h"
-#include "tubex_Tube.h"
 #include <string>
 #include <sstream>
+#include "tubex_EmptyException.h"
 
 using namespace std;
 using namespace ibex;
@@ -52,11 +49,11 @@ namespace tubex
           if(slice->isEmpty())
           {
             if(slice->inputGate().is_empty())
-              intv_t_emptiness |= slice->inputGate();
+              intv_t_emptiness |= slice->domain().lb();
             if(slice->codomain().is_empty())
-              intv_t_emptiness |= slice->codomain();
+              intv_t_emptiness |= slice->domain();
             if(slice->outputGate().is_empty())
-              intv_t_emptiness |= slice->outputGate();
+              intv_t_emptiness |= slice->domain().ub();
           }
           slice = slice->nextSlice();
         }

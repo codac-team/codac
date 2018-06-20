@@ -10,11 +10,9 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_DomainException.h"
-#include "tubex_Tube.h"
-#include "tubex_TubeSlice.h"
 #include <string>
 #include <sstream>
+#include "tubex_DomainException.h"
 
 using namespace std;
 using namespace ibex;

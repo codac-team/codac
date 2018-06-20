@@ -21,7 +21,7 @@ namespace tubex
 {
   // Definition
 
-  Trajectory::Trajectory()
+  /*Trajectory::Trajectory()
   {
 
   }
@@ -57,12 +57,12 @@ namespace tubex
     return m_function;
   }
 
-  const Interval& Trajectory::domain() const
+  const Interval Trajectory::domain() const
   {
     return m_domain;
   }
 
-  const Interval& Trajectory::codomain() const
+  const Interval Trajectory::codomain() const
   {
     return m_codomain;
   }
@@ -190,5 +190,5 @@ namespace tubex
       m_map_values[it->first - shift_ref] = it->second;
 
     m_domain -= shift_ref;
-  }
+  }*/
 }

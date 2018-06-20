@@ -19,26 +19,27 @@ namespace tubex
 {
   bool Point::operator==(const Point& p) const
   {
-    return x == p.x && y == p.y;
+    return t == p.t && x == p.x;
   }
 
   bool Point::operator!=(const Point& p) const
   {
-    return x != p.x || y != p.y;
+    return t != p.t || x != p.x;
   }
 
-  Point point(double x, double y)
+  Point point(double t, Vector x)
   {
     Point p;
-    p.x = x; p.y = y;
+    p.t = t; p.x = x;
     return p;
   }
 
   void pushPoints(vector<Point>& v_points, const IntervalVector& box)
   {
-    v_points.push_back(point(box[0].lb(), box[1].lb()));
-    v_points.push_back(point(box[0].lb(), box[1].ub()));
-    v_points.push_back(point(box[0].ub(), box[1].ub()));
-    v_points.push_back(point(box[0].ub(), box[1].lb()));
+    // todo
+    //v_points.push_back(point(box[0].lb(), box[1].lb()));
+    //v_points.push_back(point(box[0].lb(), box[1].ub()));
+    //v_points.push_back(point(box[0].ub(), box[1].ub()));
+    //v_points.push_back(point(box[0].ub(), box[1].lb()));
   }
 }

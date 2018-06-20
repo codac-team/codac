@@ -1,4 +1,4 @@
-#define unary_param_op(f, p) \
+/*#define unary_param_op(f, p) \
   \
   Tube f(const Tube& x1, p param) \
   { \
@@ -34,3 +34,4 @@
     x2.setOutputGate(ibex::f(x1.outputGate(), param)); \
     return x2; \
   }
+*/

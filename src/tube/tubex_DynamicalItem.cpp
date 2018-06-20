@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Point structure
+ *  tubex-lib - DynamicalItem class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -7,29 +7,15 @@
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -
- *  Created   : 2018
+ *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef Point_HEADER
-#define Point_HEADER
+#include "tubex_DynamicalItem.h"
 
-#include <vector>
-#include "ibex_IntervalVector.h"
-#include "ibex_Vector.h"
+using namespace std;
+using namespace ibex;
 
 namespace tubex
 {
-  struct Point
-  {
-    double t;
-    ibex::Vector x = ibex::Vector(1);
-
-    bool operator==(const Point& p) const;
-    bool operator!=(const Point& p) const;
-  };
-
-  Point point(double t, ibex::Vector x);
-  void pushPoints(std::vector<Point>& v_points, const ibex::IntervalVector& box);
+  
 }
-
-#endif

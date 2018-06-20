@@ -20,7 +20,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  #include "tubex_operators_unary.cpp"
+  /*#include "tubex_operators_unary.cpp"
 
     unary_op(cos);
     unary_op(sin);
@@ -84,5 +84,5 @@ namespace tubex
     assignment_op(operator*=);
     assignment_op(operator/=);
     assignment_op(operator|=);
-    assignment_op(operator&=);
+    assignment_op(operator&=);*/
 }

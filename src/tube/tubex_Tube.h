@@ -17,6 +17,7 @@
 #include "ibex.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_Trajectory.h"
+#include "tubex_DynamicalItem.h"
 
 #define SERIALIZATION_VERSION 2
 
@@ -29,28 +30,31 @@ namespace tubex
 {
   class TubeSlice;
   
-  class Tube
+  class Tube : DynamicalItem
   {
     public:
 
     /** Base: **/
 
       // Definition
-      Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
-      Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      Tube(const ibex::Interval& domain, int dim = 1);
+      Tube(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
+      Tube(const ibex::Interval& domain, double timestep, int dim = 1);
+      Tube(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
       Tube(const ibex::Interval& domain, double timestep, const ibex::Function& function);
       Tube(const Tube& x);
-      Tube(const Tube& x, const ibex::Interval& codomain);
+      Tube(const Tube& x, const ibex::IntervalVector& codomain);
       Tube(const Tube& x, const ibex::Function& function);
-      Tube(const Trajectory& traj, double thickness = 0., double timestep = 0.);
-      Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
+      Tube(const Trajectory& traj, double timestep);
+      Tube(const Trajectory& lb, const Trajectory& ub, double timestep);
       Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
       ~Tube();
-      Tube primitive(const ibex::Interval& initial_value = ibex::Interval(0.)) const;
+      Tube primitive() const;
       Tube& operator=(const Tube& x);
       const ibex::Interval domain() const; // todo: output const Interval& (reference)
+      int dim() const;
 
       // Slices structure
       int nbSlices() const;
@@ -63,21 +67,21 @@ namespace tubex
       TubeSlice* getWiderSlice() const;
       //void getSlices(std::vector<const TubeSlice*>& v_slices) const;
       int input2index(double t) const;
-      void sample(double t, const ibex::Interval& gate = ibex::Interval::ALL_REALS);
+      void sample(double t, const ibex::IntervalVector& gate);
       //void sample(const std::vector<double>& v_bounds);
       //TubeComponent* getTubeComponent();
 
       // Access values
-      const ibex::Interval codomain() const; // todo: output const Interval& (reference)
+      const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
       double volume() const;
-      const ibex::Interval operator[](int slice_id) const;
-      const ibex::Interval operator[](double t) const;
-      const ibex::Interval operator[](const ibex::Interval& t) const;
-      ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-      const ibex::Interval interpol(double t, const Tube& derivative) const;
-      const ibex::Interval interpol(const ibex::Interval& t, const Tube& derivative) const;
+      const ibex::IntervalVector operator[](int slice_id) const;
+      const ibex::IntervalVector operator[](double t) const;
+      const ibex::IntervalVector operator[](const ibex::Interval& t) const;
+      ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      const ibex::IntervalVector interpol(double t, const Tube& derivative) const;
+      const ibex::IntervalVector interpol(const ibex::Interval& t, const Tube& derivative) const;
       double maxThickness();
       double maxThickness(int& first_id_max_thickness);
 
@@ -90,10 +94,10 @@ namespace tubex
       bool encloses(const Trajectory& x) const;
 
       // Setting values
-      void set(const ibex::Interval& y);
-      void set(const ibex::Interval& y, int slice_id);
-      void set(const ibex::Interval& y, double t);
-      void set(const ibex::Interval& y, const ibex::Interval& t);
+      void set(const ibex::IntervalVector& y);
+      void set(const ibex::IntervalVector& y, int slice_id);
+      void set(const ibex::IntervalVector& y, double t);
+      void set(const ibex::IntervalVector& y, const ibex::Interval& t);
       void set(const ibex::Function& function);
       void setEmpty();
       Tube& inflate(double rad);
@@ -120,18 +124,18 @@ namespace tubex
 
     /** Integration: **/
 
-      ibex::Interval integral(double t) const;
-      ibex::Interval integral(const ibex::Interval& t) const;
-      ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
-      std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
-      std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      ibex::IntervalVector integral(double t) const;
+      ibex::IntervalVector integral(const ibex::Interval& t) const;
+      ibex::IntervalVector integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      std::pair<ibex::IntervalVector,ibex::IntervalVector> partialIntegral(const ibex::Interval& t) const;
+      std::pair<ibex::IntervalVector,ibex::IntervalVector> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
     /** Contractors: **/
 
       bool ctcFwd(const Tube& derivative);
       bool ctcBwd(const Tube& derivative);
       bool ctcFwdBwd(const Tube& derivative);
-      bool ctcEval(ibex::Interval& t, ibex::Interval& z, const Tube& derivative, bool propagate = true);
+      bool ctcEval(ibex::Interval& t, ibex::IntervalVector& z, const Tube& derivative, bool propagate = true);
 
     /** Serialization: **/
 

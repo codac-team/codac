@@ -1,4 +1,4 @@
-#define assignment_op(f) \
+/*#define assignment_op(f) \
   \
   Tube& Tube::f(const Tube& tube_x) \
   { \
@@ -84,3 +84,4 @@
     y = outputGate(); y.f(traj_x[Interval(domain().ub())]); setOutputGate(y); \
     return *this; \
   }
+*/

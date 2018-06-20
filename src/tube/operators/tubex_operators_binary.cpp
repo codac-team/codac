@@ -1,4 +1,4 @@
-#define binary_op(f) \
+/*#define binary_op(f) \
   \
   Tube f(const Tube& tube_x1, const Tube& tube_x2) \
   { \
@@ -160,3 +160,4 @@
     new_slice_x.setOutputGate(ibex::f(new_slice_x.outputGate(), x2[Interval(new_slice_x.domain().ub())])); \
     return new_slice_x; \
   }
+*/

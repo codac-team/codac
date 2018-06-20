@@ -52,6 +52,11 @@ namespace tubex
     }
   }
 
+  void serializeInterval(ofstream& bin_file, const IntervalVector& box)
+  {
+    // todo
+  }
+
   void deserializeInterval(ifstream& bin_file, Interval& intv)
   {
     if(!bin_file.is_open())
@@ -88,5 +93,10 @@ namespace tubex
       default:
         throw Exception("deserializeInterval()", "unhandled case");
     }
+  }
+
+  void deserializeInterval(ifstream& bin_file, IntervalVector& box)
+  {
+    // todo
   }
 }

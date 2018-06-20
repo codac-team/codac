@@ -9,7 +9,7 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST IVP
+#define SOLVER_TEST BVP
 
 #if SOLVER_TEST == IVP
 

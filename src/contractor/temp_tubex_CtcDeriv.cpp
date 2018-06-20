@@ -125,16 +125,16 @@ namespace tubex
   bool CtcDeriv::contractGates(TubeSlice& x, const TubeSlice& v)
   {
     bool ctc = false;
-    Interval in_gate = x.inputGate(), out_gate = x.outputGate();
+    IntervalVector in_gate = x.inputGate(), out_gate = x.outputGate();
 
     // Propagations from gate to gate
 
-    Interval in_gate_proj = in_gate + x.domain().diam() * v.codomain();
+    IntervalVector in_gate_proj = in_gate + x.domain().diam() * v.codomain();
     out_gate &= in_gate_proj;
     ctc |= out_gate != x.outputGate();
     x.setOutputGate(out_gate);
 
-    Interval out_gate_proj = out_gate - x.domain().diam() * v.codomain();
+    IntervalVector out_gate_proj = out_gate - x.domain().diam() * v.codomain();
     in_gate &= out_gate_proj;
     ctc |= in_gate != x.inputGate();
     x.setInputGate(in_gate);
@@ -142,54 +142,54 @@ namespace tubex
     return ctc;
   }
 
-  Interval yilb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  IntervalVector yilb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     return x.inputGate().lb() + v.codomain().lb() * (t - x.domain().lb());
   }
 
-  Interval yilb_inv(const Interval& y, const TubeSlice& x, const TubeSlice& v)
+  Interval yilb_inv(const IntervalVector& y, const TubeSlice& x, const TubeSlice& v)
   {
     return ((y - x.inputGate().lb()) / v.codomain().lb()) + x.domain().lb();
   }
 
-  Interval yiub(const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  IntervalVector yiub(const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     return x.inputGate().ub() + v.codomain().ub() * (t - x.domain().lb());
   }
 
-  Interval yiub_inv(const Interval& y, const TubeSlice& x, const TubeSlice& v)
+  Interval yiub_inv(const IntervalVector& y, const TubeSlice& x, const TubeSlice& v)
   {
     return ((y - x.inputGate().ub()) / v.codomain().ub()) + x.domain().lb();
   }
 
-  Interval yolb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  IntervalVector yolb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     return x.outputGate().lb() + v.codomain().ub() * (t - x.domain().ub());
   }
 
-  Interval yolb_inv(const Interval& y, const TubeSlice& x, const TubeSlice& v)
+  Interval yolb_inv(const IntervalVector& y, const TubeSlice& x, const TubeSlice& v)
   {
     return ((y - x.outputGate().lb()) / v.codomain().ub()) + x.domain().ub();
   }
 
-  Interval youb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  IntervalVector youb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     return x.outputGate().ub() + v.codomain().lb() * (t - x.domain().ub());
   }
 
-  Interval youb_inv(const Interval& y, const TubeSlice& x, const TubeSlice& v)
+  Interval youb_inv(const IntervalVector& y, const TubeSlice& x, const TubeSlice& v)
   {
     return ((y - x.outputGate().ub()) / v.codomain().lb()) + x.domain().ub();
   }
 
-  Interval ylb_inv(const Interval& y, const TubeSlice& x)
+  Interval ylb_inv(const IntervalVector& y, const TubeSlice& x)
   {
     if(x.inputGate().lb() == x.outputGate().lb())
       return Interval::ALL_REALS;
     return x.domain().lb() + (y - x.inputGate().lb()) / ((x.outputGate().lb() - x.inputGate().lb()) / (x.domain().diam()));
   }
 
-  Interval yub_inv(const Interval& y, const TubeSlice& x)
+  Interval yub_inv(const IntervalVector& y, const TubeSlice& x)
   {
     if(x.inputGate().ub() == x.outputGate().ub())
       return Interval::ALL_REALS;
@@ -198,32 +198,33 @@ namespace tubex
 
   typedef Interval (* vFunctionCall)(const Interval& t, const TubeSlice& x, const TubeSlice& v);
 
-  Interval linesIntersectionUb(const TubeSlice& x, const TubeSlice& v)
+  IntervalVector linesIntersectionUb(const TubeSlice& x, const TubeSlice& v)
   {
     return (x.outputGate().ub() - x.inputGate().ub()
-            + v.codomain().ub()*x.domain().lb()
-            - v.codomain().lb()*x.domain().ub()) / v.codomain().diam();
+            + v.codomain().ub() * Vector(x.dim(), x.domain().lb())
+            - v.codomain().lb() * Vector(x.dim(), x.domain().ub())) / v.codomain().diam();
   }
 
-  Interval linesIntersectionLb(const TubeSlice& x, const TubeSlice& v)
+  IntervalVector linesIntersectionLb(const TubeSlice& x, const TubeSlice& v)
   {
     return (x.inputGate().lb() - x.outputGate().lb()
-            + v.codomain().ub()*x.domain().ub()
-            - v.codomain().lb()*x.domain().lb()) / v.codomain().diam();
+            + v.codomain().ub() * Vector(x.dim(), x.domain().ub())
+            - v.codomain().lb() * Vector(x.dim(), x.domain().lb())) / v.codomain().diam();
   }
 
   ConvexPolygon CtcDeriv::getPolygon(const TubeSlice& x, const TubeSlice& v)
   {
     ConvexPolygon p;
     Interval t = x.domain();
-    Interval y = x.codomain();
+    IntervalVector y = x.codomain();
     contractEnvelope(x, v, t, y, p);
     return p;
   }
 
-  bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, Interval& t, Interval& y, ConvexPolygon& p)
+  bool CtcDeriv::contractEnvelope(const TubeSlice& x, const TubeSlice& v, Interval& t, IntervalVector& y, ConvexPolygon& p)
   {
-    Interval prev_y = y, prev_t = t;
+    IntervalVector prev_y = y;
+    Interval prev_t = t;
 
     if(t.is_empty() || y.is_empty())
     {
@@ -231,7 +232,7 @@ namespace tubex
       y.set_empty();
     }
 
-    else if(v.codomain() == Interval::ALL_REALS)
+    else if(v.codomain().is_unbounded())
     {
       // No contraction expected
       // Polygon computed for display purposes
@@ -269,7 +270,8 @@ namespace tubex
 
       else
       {
-        Interval y_tlb, y_tub, t_lb = t.lb(), t_ub = t.ub();
+        IntervalVector y_tlb(x.dim()), y_tub(x.dim());
+        Interval t_lb = t.lb(), t_ub = t.ub();
         ConvexPolygon p_;
         contractEnvelope(x, v, t_lb, y_tlb, p_);
         contractEnvelope(x, v, t_ub, y_tub, p_);

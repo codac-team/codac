@@ -107,7 +107,7 @@ namespace tubex
       for(int i = 0 ; i < p.nbVertices() ; i++)
       {
         if(i != 0) str << ",";
-        str << "(" << p.getVertices()[i].x << "," << p.getVertices()[i].y << ")";
+        str << "(" << p.getVertices()[i].t << "," << p.getVertices()[i].x << ")";
       }
     }
 

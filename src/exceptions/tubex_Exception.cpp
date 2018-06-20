@@ -10,9 +10,9 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_Exception.h"
 #include <string>
 #include <sstream>
+#include "tubex_Exception.h"
 
 using namespace std;
 

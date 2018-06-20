@@ -15,23 +15,26 @@
 
 #include "tubex_Tube.h"
 #include "tubex_Trajectory.h"
+#include "tubex_DynamicalItem.h"
 
 namespace tubex
 {
   class Tube;
 
-  class TubeSlice
+  class TubeSlice : DynamicalItem
   {
     public:
 
     /** Base: **/
 
       // Definition
-      TubeSlice(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      TubeSlice(const ibex::Interval& domain, int dim = 1);
+      TubeSlice(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
       TubeSlice(const TubeSlice& x);
       ~TubeSlice();
       TubeSlice& operator=(const TubeSlice& x);
-      const ibex::Interval& domain() const;
+      const ibex::Interval domain() const; // todo: output const Interval& (reference)
+      int dim() const;
 
       // Slices structure
       //bool isSlice() const;
@@ -44,8 +47,8 @@ namespace tubex
       TubeSlice* prevSlice() const;
       TubeSlice* nextSlice() const;
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
-      const ibex::Interval inputGate() const;
-      const ibex::Interval outputGate() const;
+      const ibex::IntervalVector inputGate() const;
+      const ibex::IntervalVector outputGate() const;
       void deleteGates();
       void deleteInputGate();
       void deleteOutputGate();
@@ -53,17 +56,17 @@ namespace tubex
       //TubeNode* getParentOf(TubeComponent* component);
 
       // Access values
-      const ibex::Interval& codomain() const;
+      const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
       const ibex::IntervalVector box() const;
       double volume() const;
       //const ibex::Interval operator[](int slice_id) const;
-      const ibex::Interval operator[](double t) const;
-      const ibex::Interval operator[](const ibex::Interval& search_domain) const;
-      const ibex::Interval interpol(double t, const TubeSlice& derivative) const;
-      const ibex::Interval interpol(const ibex::Interval& t, const TubeSlice& derivative) const;
-      ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      const ibex::IntervalVector operator[](double t) const;
+      const ibex::IntervalVector operator[](const ibex::Interval& search_domain) const;
+      const ibex::IntervalVector interpol(double t, const TubeSlice& derivative) const;
+      const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeSlice& derivative) const;
+      ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
       // Tests
       bool operator==(const TubeSlice& x) const;
@@ -74,11 +77,11 @@ namespace tubex
       bool encloses(const Trajectory& x) const;
 
       // Setting values
-      void set(const ibex::Interval& y);
+      void set(const ibex::IntervalVector& y);
       void setEmpty();
-      void setEnvelope(const ibex::Interval& envelope);
-      void setInputGate(const ibex::Interval& input_gate);
-      void setOutputGate(const ibex::Interval& output_gate);
+      void setEnvelope(const ibex::IntervalVector& envelope);
+      void setInputGate(const ibex::IntervalVector& input_gate);
+      void setOutputGate(const ibex::IntervalVector& output_gate);
       TubeSlice& inflate(double rad);
 
       // Operators
@@ -112,7 +115,7 @@ namespace tubex
       //void updateSlicesNumber();
 
       // Access values
-      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
+      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
       //void updateEnclosedBounds();
 
       // Setting values
@@ -124,15 +127,15 @@ namespace tubex
       //void checkPartialPrimitive() const;
       //void flagFuturePrimitiveUpdateFromRoot(int slice_id = -1) const;
       //void flagFuturePrimitiveUpdateFromLeaf() const;
-      const std::pair<ibex::Interval,ibex::Interval>& getPartialPrimitiveValue() const;
-      std::pair<ibex::Interval,ibex::Interval> getPartialPrimitiveValue(const ibex::Interval& t) const;
+      const std::pair<ibex::IntervalVector,ibex::IntervalVector>& getPartialPrimitiveValue() const;
+      std::pair<ibex::IntervalVector,ibex::IntervalVector> getPartialPrimitiveValue(const ibex::Interval& t) const;
       
     /** Class variables **/
 
       ibex::Interval m_domain;
-      ibex::Interval m_codomain;
+      ibex::IntervalVector m_codomain = ibex::IntervalVector(1); // by default: 1-dim codomain
+      ibex::IntervalVector *m_input_gate = NULL, *m_output_gate = NULL;
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;
-      ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
 
       Tube *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 

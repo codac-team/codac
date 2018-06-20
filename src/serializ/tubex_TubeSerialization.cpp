@@ -131,7 +131,7 @@ namespace tubex
         {
           double ub;
           bin_file.read((char*)&ub, sizeof(double));
-          TubeSlice *slice = new TubeSlice(Interval(lb, ub));
+          TubeSlice *slice = new TubeSlice(Interval(lb, ub), 0); // todo: set dim
           slice->setTubeReference(&tube);
           tube.m_v_slices.push_back(slice);
           lb = ub;
@@ -145,7 +145,7 @@ namespace tubex
         TubeSlice *slice = tube.getFirstSlice();
         while(slice != NULL)
         {
-          Interval slice_value;
+          IntervalVector slice_value(1);
           deserializeInterval(bin_file, slice_value);
           slice->set(slice_value);
           slice = slice->nextSlice();
@@ -156,7 +156,7 @@ namespace tubex
         int gates_number = slices_number + 1;
         for(int i = 0 ; i < gates_number ; i++)
         {
-          Interval gate;
+          IntervalVector gate(1);
           deserializeInterval(bin_file, gate);
 
           double t;

@@ -74,16 +74,16 @@ cmake_minimum_required(VERSION 2.8.7)
 
 # Tests
 
-  if(BUILD_TESTS)
-    enable_testing(true)
-    add_subdirectory(tests)
-    include(CTest)
-  endif()
+  #if(BUILD_TESTS)
+  #  enable_testing(true)
+  #  add_subdirectory(tests)
+  #  include(CTest)
+  #endif()
 
 
 # Examples
 
-  add_subdirectory(examples)
+  #add_subdirectory(examples)
 
 
 # Uninstallation

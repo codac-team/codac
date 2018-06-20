@@ -13,13 +13,10 @@
 #ifndef StructureException_HEADER
 #define StructureException_HEADER
 
-#include <iostream>
-#include <exception>
-#include <string>
-#include <sstream>
-#include "tubex_TubeSlice.h"
-#include "tubex_Tube.h"
 #include "tubex_Exception.h"
+#include "tubex_TubeSlice.h"
+#include "tubex_Trajectory.h"
+#include "tubex_Tube.h"
 
 namespace tubex
 {
