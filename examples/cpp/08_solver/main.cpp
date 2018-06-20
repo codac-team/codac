@@ -13,7 +13,7 @@ using namespace tubex;
 
 #if SOLVER_TEST == IVP
 
-  void contract(vector<Tube>& v_x)
+  void contract(TubeVector& v_x)
   {
     /*if(v_x[0].codomain().is_unbounded())
     {
@@ -22,14 +22,14 @@ using namespace tubex;
       tube_picard.contract(f, v_x[0]);
     }*/
 
-    v_x[0].ctcFwdBwd(-sin(v_x[0]));
+    //v_x[0].ctcFwdBwd(-sin(v_x[0]));
   }
 
 #elif SOLVER_TEST == IVP_PICARD
 
-  void contract(vector<Tube>& v_x)
+  void contract(TubeVector& v_x)
   {
-    if(v_x[0].codomain().is_unbounded())
+    /*if(v_x[0].codomain().is_unbounded())
     {
       vector<Tube*> v_x_ptr;
       v_x_ptr.push_back(&(v_x[0]));
@@ -38,12 +38,12 @@ using namespace tubex;
       tube_picard.contract(f, v_x_ptr);
     }
 
-    v_x[0].ctcFwdBwd(-v_x[0]);
+    v_x[0].ctcFwdBwd(-v_x[0]);*/
   }
 
 #elif SOLVER_TEST == BVP
       
-  void contract(vector<Tube>& v_x)
+  void contract(TubeVector& x)
   {
     Variable vx0, vx1;
     SystemFactory fac;
@@ -52,57 +52,48 @@ using namespace tubex;
     fac.add_ctr(sqr(vx0) + sqr(vx1) = 1);
     System sys(fac);
     ibex::CtcHC4 hc4(sys);
-
+    
     IntervalVector bounds(2);
-    bounds[0] &= v_x[0][0.];
-    bounds[1] &= v_x[0][1.];
+    bounds[0] &= x[0.][0];
+    bounds[1] &= x[1.][0];
     hc4.contract(bounds);
-    v_x[0].set(bounds[0], 0.);
-    v_x[0].set(bounds[1], 1.);
-
-    if(v_x[0].codomain().is_unbounded())
+    x.set(IntervalVector(1,bounds[0]), 0.);
+    x.set(IntervalVector(1,bounds[1]), 1.);
+    
+    if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard tube_picard;
       Function f("x", "x");
-      tube_picard.contract(f, v_x[0]);
+      tube_picard.contract(f, x);
     }
-
-    v_x[0].ctcFwdBwd(v_x[0]);
+    
+    //v_x[0].ctcFwdBwd(v_x[0]);
   }
 
 #elif SOLVER_TEST == BVP_CP2010
       
-  void contract(vector<Tube>& v_x)
+  void contract(TubeVector& x)
   {
-    if(v_x[0].codomain().is_unbounded())
-    {
-      cout << "starting Picard " << v_x[0].nbSlices() << endl;
-      tubex::CtcPicard tube_picard;
-
-      vector<Tube*> v_x_ptr;
-      for(int i = 0 ; i < v_x.size() ; i++)
-        v_x_ptr.push_back(&(v_x[i]));
-
-      Variable x1, x2;
-      Function f(x1, x2, Return(x2, 0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
-      tube_picard.contract(f, v_x_ptr);
-      //{
-      //  cout << "Picard failed" << endl;
-      //  exit(1);
-      //}
-      cout << "ending Picard" << endl;
-    }
-
-    float g = 20., b = 0.4, l = 0.05;
-    Tube x2dot = l * v_x[0] * exp((g*b*(1.-v_x[0])) / (1. + b * (1.-v_x[0])));
-
-    v_x[0].ctcFwdBwd(v_x[1]);
-    v_x[1].ctcFwdBwd(x2dot);
+    //if(x.codomain().is_unbounded())
+    //{
+    //  cout << "starting Picard " << x.nbSlices() << endl;
+    //  Variable x1, x2;
+    //  Function f(x1, x2, Return(x2, 0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
+    //  tubex::CtcPicard tube_picard;
+    //  tube_picard.contract(f, x);
+    //  cout << "ending Picard" << endl;
+    //}
+    //
+    //float g = 20., b = 0.4, l = 0.05;
+    //Tube x2dot = l * v_x[0] * exp((g*b*(1.-v_x[0])) / (1. + b * (1.-v_x[0])));
+    //
+    //v_x[0].ctcFwdBwd(v_x[1]);
+    //v_x[1].ctcFwdBwd(x2dot);
   }
 
 #elif SOLVER_TEST == DELAY
       
-  void contract(vector<Tube>& v_x)
+  void contract(TubeVector& x)
   {
     float a = 0.5;
 
@@ -113,13 +104,13 @@ using namespace tubex;
       tube_picard.contract(f, v_x[0]);
     }*/
 
-    CtcDelay tube_delay;
-    Interval intv_a(a);
-    tube_delay.contract(intv_a, v_x[1], v_x[0]);
-    v_x[2] &= v_x[1] * exp(intv_a);
-    v_x[1] &= v_x[2] * log(intv_a);
-
-    v_x[0].ctcFwdBwd(v_x[2]);
+    //CtcDelay tube_delay;
+    //Interval intv_a(a);
+    //tube_delay.contract(intv_a, v_x[1], v_x[0]);
+    //v_x[2] &= v_x[1] * exp(intv_a);
+    //v_x[1] &= v_x[2] * log(intv_a);
+    //
+    //v_x[0].ctcFwdBwd(v_x[2]);
   }
 
 #endif
@@ -129,57 +120,56 @@ int main(int argc, char *argv[])
 {
   /* =========== PARAMETERS =========== */
 
-    vector<Tube> v;
-
     #if SOLVER_TEST == IVP
 
-      Interval domain(0.,10.);
       float epsilon = 0.03;
-      v.push_back(Tube(domain));
-      v[0].set(1., 0.); // initial condition
+      Interval domain(0.,10.);
+      TubeVector x(domain, 1);
+      x.set(IntervalVector(1,1.), 0.); // initial condition
       bool show_details = true;
 
     #elif SOLVER_TEST == IVP_PICARD
 
-      Interval domain(0.,1.);
       float epsilon = 0.05;
-      v.push_back(Tube(domain));
-      v[0].set(1., 0.); // initial condition
+      Interval domain(0.,1.);
+      TubeVector x(domain, 1);
+      x.set(IntervalVector(1,1.), 0.); // initial condition
       bool show_details = true;
 
     #elif SOLVER_TEST == BVP
 
-      Interval domain(0.,1.);
       float epsilon = 0.05;
-      v.push_back(Tube(domain));
+      Interval domain(0.,1.);
+      TubeVector x(domain, 1);
       bool show_details = true;
 
     #elif SOLVER_TEST == BVP_CP2010
 
-      Interval domain(0.,1.);
       float epsilon = 0.001;
-      v.push_back(Tube(domain));
-      v[0].set(1., 1.);
-      v[0].set(Interval(0.,1.), 0.);
-      v.push_back(Tube(domain));
-      v[1].set(0., 0.);
+      Interval domain(0.,1.);
+      TubeVector x(domain, 2);
+      IntervalVector x0(2), xf(2);
+      x0[0] = Interval(0.,1.); x0[1] = 0.;
+      xf[0] = 1.;
+      x.set(x0, 0.);
+      x.set(xf, 1.);
       bool show_details = true;
 
     #elif SOLVER_TEST == DELAY
 
-      Interval domain(0.,10.);
-      float epsilon = 0.2;
-      v.push_back(Tube(domain, exp(domain)));
-      v.push_back(Tube(domain));
-      v.push_back(Tube(domain));
-      bool show_details = true;
+      //Interval domain(0.,10.);
+      //float epsilon = 0.2;
+      //v.push_back(Tube(domain, exp(domain)));
+      //v.push_back(Tube(domain));
+      //v.push_back(Tube(domain));
+      //bool show_details = true;
 
     #endif
 
   /* =========== SOLVER =========== */
 
     tubex::Solver solver;
-    vector<vector<Tube> > v_solutions = solver.solve(v, &contract, epsilon);
+    vector<TubeVector> v_solutions = solver.solve(x, &contract, epsilon);
 
     if(v_solutions.size() == 0)
       cout << "no solution found" << endl;
@@ -219,8 +209,8 @@ int main(int argc, char *argv[])
     {
       ostringstream o;
       o << "solution_" << i;
-      fig.addTube(&v_solutions[i][0], o.str());
-      fig.setTubeDerivative(&v_solutions[i][0], &v_solutions[i][0]);
+      fig.addTube(&v_solutions[i], o.str());
+      fig.setTubeDerivative(&v_solutions[i], &v_solutions[i]);
     }
 
     fig.show(show_details);

@@ -1,6 +1,6 @@
 #define assignment_op(f) \
   \
-  Tube& Tube::f(const Tube& tube_x) \
+  TubeVector& TubeVector::f(const TubeVector& tube_x) \
   { \
     StructureException::check(*this, tube_x); \
     DimensionException::check(*this, tube_x); \
@@ -36,7 +36,7 @@
     return *this; \
   } \
   \
-  Tube& Tube::f(const Trajectory& traj_x) \
+  TubeVector& TubeVector::f(const Trajectory& traj_x) \
   { \
     DomainException::check(*this, traj_x); \
     DimensionException::check(*this, traj_x); \

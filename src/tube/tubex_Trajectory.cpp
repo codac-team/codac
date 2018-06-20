@@ -52,6 +52,18 @@ namespace tubex
       delete m_function;
   }
 
+  int Trajectory::dim() const
+  {
+    if(m_function != NULL)
+      return m_function->image_dim();
+
+    else if(m_map_values.size() == 0)
+      return 0;
+    
+    else
+      return m_map_values.begin()->second.size();
+  }
+
   // Access values
 
   const map<double,Vector>& Trajectory::getMap() const

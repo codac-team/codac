@@ -31,9 +31,9 @@ namespace tubex
                 ...
   */
 
-  /*void serializeTrajectory(ofstream& bin_file, const Trajectory& traj, int version_number)
+  void serializeTrajectory(ofstream& bin_file, const Trajectory& traj, int version_number)
   {
-    if(!bin_file.is_open())
+    /*if(!bin_file.is_open())
       throw Exception("serializeTrajectory()", "ofstream& bin_file not open");
 
     if(traj.getFunction() != NULL)
@@ -69,12 +69,12 @@ namespace tubex
 
       default:
         throw Exception("serializeTrajectory()", "unhandled case");
-    }
+    }*/
   }
 
   void deserializeTrajectory(ifstream& bin_file, Trajectory& traj)
   {
-    if(!bin_file.is_open())
+    /*if(!bin_file.is_open())
       throw Exception("deserializeTrajectory()", "ifstream& bin_file not open");
 
     if(traj.getMap().size() != 0)
@@ -109,6 +109,6 @@ namespace tubex
 
       default:
         throw Exception("deserializeTrajectory()", "deserialization version number not supported");
-    }
-  }*/
+    }*/
+  }
 }

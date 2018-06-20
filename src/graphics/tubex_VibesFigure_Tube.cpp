@@ -13,9 +13,9 @@
 #include "ibex.h"
 #include "vibes.h"
 #include "tubex_Polygon.h"
-#include "tubex_CtcDeriv.h"
+//#include "tubex_CtcDeriv.h"
 #include "tubex_VibesFigure_Tube.h"
-#include "tubex_VibesFigure_Polygon.h"
+//#include "tubex_VibesFigure_Polygon.h"
 
 using namespace std;
 using namespace ibex;
@@ -31,7 +31,7 @@ namespace tubex
       draw(fig_name, NULL, NULL, x, y);
     }
 
-    void VibesFigure_Tube::draw(const string& fig_name, const Tube *tube, int x, int y)
+    void VibesFigure_Tube::draw(const string& fig_name, const TubeVector *tube, int x, int y)
     {
       draw(fig_name, tube, NULL, x, y);
     }
@@ -41,7 +41,7 @@ namespace tubex
       draw(fig_name, NULL, traj, x, y);
     }
     
-    void VibesFigure_Tube::draw(const string& fig_name, const Tube *tube, const Trajectory *traj, int x, int y)
+    void VibesFigure_Tube::draw(const string& fig_name, const TubeVector *tube, const Trajectory *traj, int x, int y)
     {
       if(VibesFigure_Tube::v_vibesfig_tube.size() == 0)
       {
@@ -80,7 +80,7 @@ namespace tubex
 
   // Non-static items
 
-    VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const Tube *tube, const Trajectory *traj) : VibesFigure(fig_name)
+    VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const TubeVector *tube, const Trajectory *traj) : VibesFigure(fig_name)
     {
       if(tube != NULL) addTube(tube, DEFAULT_TUBE_NAME);
       if(traj != NULL) addTrajectory(traj, DEFAULT_TUBE_NAME);
@@ -89,13 +89,13 @@ namespace tubex
 
     VibesFigure_Tube::~VibesFigure_Tube()
     {
-      typename map<const Tube*,FigTubeParams>::const_iterator it;
+      typename map<const TubeVector*,FigTubeParams>::const_iterator it;
       for(it = m_map_tubes.begin(); it != m_map_tubes.end(); it++)
         if(it->second.tube_copy != NULL)
           delete it->second.tube_copy;
     }
 
-    void VibesFigure_Tube::addTube(const Tube *tube, const string& name,
+    void VibesFigure_Tube::addTube(const TubeVector *tube, const string& name,
                                    const string& color_frgrnd, const string& color_bckgrnd)
     {
       if(m_map_tubes.find(tube) != m_map_tubes.end())
@@ -111,7 +111,7 @@ namespace tubex
       setTubeColor(tube, TubeColorType::POLYGONS, DEFAULT_POLYGONS_COLOR);
     }
 
-    void VibesFigure_Tube::setTubeName(const Tube *tube, const string& name)
+    void VibesFigure_Tube::setTubeName(const TubeVector *tube, const string& name)
     {
       if(m_map_tubes.find(tube) == m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::setTubeName(): unknown tube" << endl;
@@ -119,7 +119,7 @@ namespace tubex
       m_map_tubes[tube].name = name;
     }
     
-    void VibesFigure_Tube::setTubeDerivative(const Tube *tube, const Tube *derivative)
+    void VibesFigure_Tube::setTubeDerivative(const TubeVector *tube, const TubeVector *derivative)
     {
       if(m_map_tubes.find(tube) == m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::setTubeDerivative(): unknown tube" << endl;
@@ -127,7 +127,7 @@ namespace tubex
       m_map_tubes[tube].tube_derivative = derivative;
     }
 
-    void VibesFigure_Tube::setTubeColor(const Tube *tube, const string& color_frgrnd, const string& color_bckgrnd)
+    void VibesFigure_Tube::setTubeColor(const TubeVector *tube, const string& color_frgrnd, const string& color_bckgrnd)
     {
       if(m_map_tubes.find(tube) == m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::setTubeColor(): unknown tube" << endl;
@@ -136,7 +136,7 @@ namespace tubex
       setTubeColor(tube, TubeColorType::BACKGROUND, color_bckgrnd);
     }
 
-    void VibesFigure_Tube::setTubeColor(const Tube *tube, int color_type, const string& color)
+    void VibesFigure_Tube::setTubeColor(const TubeVector *tube, int color_type, const string& color)
     {
       if(m_map_tubes.find(tube) == m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::setTubeColor(): unknown tube" << endl;
@@ -144,7 +144,7 @@ namespace tubex
       m_map_tubes[tube].m_colors[color_type] = color;
     }
     
-    void VibesFigure_Tube::removeTube(const Tube *tube)
+    void VibesFigure_Tube::removeTube(const TubeVector *tube)
     {
       if(m_map_tubes.find(tube) == m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::removeTube(): unable to remove" << endl;
@@ -196,7 +196,7 @@ namespace tubex
     
     void VibesFigure_Tube::show(bool detail_slices)
     {
-      typename map<const Tube*,FigTubeParams>::const_iterator it_tubes;
+      typename map<const TubeVector*,FigTubeParams>::const_iterator it_tubes;
       for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
         m_view_box |= drawTube(it_tubes->first, detail_slices);
 
@@ -212,7 +212,7 @@ namespace tubex
       vibes::drawBox(m_view_box, vibesParams("figure", m_name, "group", "transparent_box"));
     }
 
-    const IntervalVector VibesFigure_Tube::drawTube(const Tube *tube, bool detail_slices)
+    const IntervalVector VibesFigure_Tube::drawTube(const TubeVector *tube, bool detail_slices)
     {
       IntervalVector viewbox(2, Interval::EMPTY_SET);
 
@@ -222,8 +222,8 @@ namespace tubex
 
         if(!tube->codomain().is_unbounded())
         {
-          image_lb = tube->codomain().lb();
-          image_ub = tube->codomain().ub();
+          image_lb = tube->codomain()[0].lb();
+          image_ub = tube->codomain()[0].ub();
         }
 
         else // some slices can be [-oo,+oo], maybe not all of them
@@ -233,7 +233,7 @@ namespace tubex
 
           for(int i = 0 ; i < tube->nbSlices() ; i++)
           {
-            Interval slice = (*tube)[i];
+            Interval slice = (*tube)[i][0];
             if(!slice.is_unbounded())
             {
               image_lb = std::isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
@@ -281,7 +281,7 @@ namespace tubex
             delete m_map_tubes[tube].tube_copy;
           }
 
-          m_map_tubes[tube].tube_copy = new Tube(*tube);
+          m_map_tubes[tube].tube_copy = new TubeVector(*tube);
         }
 
         // Second, the foreground: actual values of the tube.
@@ -306,7 +306,7 @@ namespace tubex
           if(m_map_tubes[tube].tube_derivative != NULL)
             deriv_slice = m_map_tubes[tube].tube_derivative->getFirstSlice();
 
-          drawGate(slice->inputGate(), tube->domain().lb(), params_foreground_gates);
+          drawGate(slice->inputGate()[0], tube->domain().lb(), params_foreground_gates);
 
           while(slice != NULL)
           {
@@ -315,7 +315,7 @@ namespace tubex
             else
               drawSlice(*slice, params_foreground);
 
-            drawGate(slice->outputGate(), slice->domain().ub(), params_foreground_gates);
+            drawGate(slice->outputGate()[0], slice->domain().ub(), params_foreground_gates);
             slice = slice->nextSlice();
             
             if(deriv_slice != NULL)
@@ -334,7 +334,7 @@ namespace tubex
       return viewbox;
     }
 
-    void VibesFigure_Tube::computePolygonEnvelope(const Tube *tube, vector<double>& v_x, vector<double>& v_y)
+    void VibesFigure_Tube::computePolygonEnvelope(const TubeVector *tube, vector<double>& v_x, vector<double>& v_y)
     {
       // todo: use Polygon class here
 
@@ -365,7 +365,7 @@ namespace tubex
 
       IntervalVector boundedSlice(2);
       boundedSlice[0] = slice.domain();
-      boundedSlice[1] = truncInf(slice.codomain());
+      boundedSlice[1] = truncInf(slice.codomain()[0]);
       vibes::drawBox(boundedSlice, params);
     }
 
@@ -376,8 +376,8 @@ namespace tubex
 
       drawSlice(slice, params_slice);
 
-      CtcDeriv ctc;
-      VibesFigure_Polygon::draw(ctc.getPolygon(slice, deriv_slice), params_polygon);
+      //CtcDeriv ctc;
+      //VibesFigure_Polygon::draw(ctc.getPolygon(slice, deriv_slice), params_polygon);
     }
 
     void VibesFigure_Tube::drawGate(const Interval& gate, double t, const vibes::Params& params) const
@@ -418,21 +418,21 @@ namespace tubex
 
       if(traj->getFunction() == NULL)
       {
-        typename map<double,double>::const_iterator it_scalar_values;
+        typename map<double,Vector>::const_iterator it_scalar_values;
         for(it_scalar_values = traj->getMap().begin(); it_scalar_values != traj->getMap().end(); it_scalar_values++)
         {
           if(points_size != 0.)
-            vibes::drawPoint(it_scalar_values->first, it_scalar_values->second,
+            vibes::drawPoint(it_scalar_values->first, it_scalar_values->second[0],
                              points_size, vibesParams("figure", m_name, "group", o.str()));
 
           else
           {
             v_x.push_back(it_scalar_values->first);
-            v_y.push_back(it_scalar_values->second);
+            v_y.push_back(it_scalar_values->second[0]);
           }
 
           viewbox[0] |= it_scalar_values->first;
-          viewbox[1] |= it_scalar_values->second;
+          viewbox[1] |= it_scalar_values->second[0];
         }
       }
 
@@ -441,16 +441,16 @@ namespace tubex
         for(double t = traj->domain().lb() ; t <= traj->domain().ub() ; t+=traj->domain().diam()/TRAJ_NB_DISPLAYED_POINTS)
         {
           if(points_size != 0.)
-            vibes::drawPoint(t, (*traj)[t], points_size, vibesParams("figure", m_name, "group", o.str()));
+            vibes::drawPoint(t, (*traj)[t][0], points_size, vibesParams("figure", m_name, "group", o.str()));
 
           else
           {
             v_x.push_back(t);
-            v_y.push_back((*traj)[t]);
+            v_y.push_back((*traj)[t][0]);
           }
 
           viewbox[0] |= t;
-          viewbox[1] |= (*traj)[t];
+          viewbox[1] |= (*traj)[t][0];
         }
       }
 
