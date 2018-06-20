@@ -19,6 +19,20 @@ using namespace ibex;
 
 namespace tubex
 {
+  DomainException::DomainException(const ibex::Interval& domain)
+  {
+    ostringstream os;
+    os << "invalid domain: " << domain << endl;
+    m_what_msg = os.str();
+  }
+
+  DomainException::DomainException(double timestep)
+  {
+    ostringstream os;
+    os << "invalid timestep: " << timestep << endl;
+    m_what_msg = os.str();
+  }
+
   DomainException::DomainException(const TubeSlice& x, double t)
   {
     ostringstream os;
@@ -109,6 +123,19 @@ namespace tubex
       os << "trajectory's domain is not a subset of tube's domain: " << x2.domain() << ", " << x1.domain() << endl;
       m_what_msg = os.str();
     }
+
+  void DomainException::check(const ibex::Interval& domain)
+  {
+    if(domain.is_empty() || domain.is_unbounded() || domain.is_degenerated())
+      throw DomainException(domain);
+  }
+
+  void DomainException::check(double timestep)
+  {
+    if(timestep < 0.)
+      throw DomainException(timestep);
+    // if 0. (default value), equivalent to no sampling
+  }
 
   void DomainException::check(const TubeSlice& x, double t)
   {

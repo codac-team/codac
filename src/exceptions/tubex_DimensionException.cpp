@@ -19,6 +19,13 @@ using namespace ibex;
 
 namespace tubex
 {
+  DimensionException::DimensionException(int dim)
+  {
+    ostringstream os;
+    os << "invalid dimension: " << dim << endl;
+    m_what_msg = os.str();
+  }
+
   DimensionException::DimensionException(const Trajectory& traj, const IntervalVector& box)
   {
     ostringstream os;
@@ -105,6 +112,12 @@ namespace tubex
     os << "objects of different dimension: ";
     os << "tube1(" << x1.dim() << "), tube2(" << x2.dim() << ")" << endl;
     m_what_msg = os.str();
+  }
+
+  void DimensionException::check(int dim)
+  {
+    if(dim < 1)
+      throw DimensionException(dim);
   }
 
   void DimensionException::check(const Trajectory& traj, const Function& f)
