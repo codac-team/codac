@@ -188,7 +188,10 @@ namespace tubex
   bool TrajectoryVector::operator!=(const TrajectoryVector& x) const
   {
     DimensionException::check(*this, x);
-    return domain() != x.domain() | codomain() != x.codomain() | !(*this == x);
+    if(m_function != NULL)
+      throw Exception("TrajectoryVector::operator!=",
+                      "operator!= not implemented in case of TrajectoryVector defined by a Function");
+    return domain() != x.domain() || codomain() != x.codomain() || !(*this == x);
   }
 
   // Setting values
@@ -229,5 +232,14 @@ namespace tubex
       m_map_values.emplace(it->first - shift_ref, it->second);
 
     m_domain -= shift_ref;
+  }
+
+  // String
+  
+  std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x)
+  {
+    str << "TrajectoryVector " << x.domain() << "↦" << x.codomain()
+        << flush;
+    return str;
   }
 }

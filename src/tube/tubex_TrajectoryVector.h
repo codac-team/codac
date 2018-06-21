@@ -51,6 +51,9 @@ namespace tubex
       void truncateDomain(const ibex::Interval& domain);
       void shiftDomain(double shift_ref);
 
+      // String
+      friend std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x);
+
 
     protected:
 

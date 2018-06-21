@@ -80,4 +80,13 @@ namespace tubex
   {
     return TrajectoryVector::set(t, Vector(1, y))[0];
   }
+
+  // String
+  
+  std::ostream& operator<<(std::ostream& str, const Trajectory& x)
+  {
+    str << "Trajectory " << x.domain() << "↦" << x.codomain()
+        << flush;
+    return str;
+  }
 }

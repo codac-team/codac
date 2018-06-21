@@ -44,6 +44,9 @@ namespace tubex
       double set(double t, double y);
       using TrajectoryVector::truncateDomain;
       using TrajectoryVector::shiftDomain;
+
+      // String
+      friend std::ostream& operator<<(std::ostream& str, const Trajectory& x);
   };
 }
 
