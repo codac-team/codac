@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Trajectory class
+ *  tubex-lib - TrajectoryVector class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef Trajectory_HEADER
-#define Trajectory_HEADER
+#ifndef TrajectoryVector_HEADER
+#define TrajectoryVector_HEADER
 
 #include <map>
 #include "ibex_Vector.h"
@@ -21,15 +21,15 @@
 
 namespace tubex
 {
-  class Trajectory : DynamicalItem
+  class TrajectoryVector : DynamicalItem
   {
     public:
 
       // Definition
-      Trajectory();
-      Trajectory(const ibex::Interval& domain, const ibex::Function& f);
-      Trajectory(const std::map<double,ibex::Vector>& m_map_values);
-      ~Trajectory();
+      TrajectoryVector();
+      TrajectoryVector(const ibex::Interval& domain, const ibex::Function& f);
+      TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
+      ~TrajectoryVector();
       int dim() const;
 
       // Access values
@@ -42,8 +42,9 @@ namespace tubex
       const ibex::IntervalVector operator[](const ibex::Interval& t) const;
 
       // Tests
-      bool operator==(const Trajectory& x) const;
-      bool operator!=(const Trajectory& x) const;
+      bool notDefined() const;
+      bool operator==(const TrajectoryVector& x) const;
+      bool operator!=(const TrajectoryVector& x) const;
 
       // Setting values
       ibex::Vector& set(double t, const ibex::Vector& y);
@@ -56,7 +57,7 @@ namespace tubex
       /** Class variables **/
 
         ibex::Interval m_domain = ibex::Interval::EMPTY_SET;
-        ibex::IntervalVector m_codomain = ibex::IntervalVector(1);
+        ibex::IntervalVector m_codomain = ibex::IntervalVector(1, ibex::Interval::EMPTY_SET);
         // A trajectory is defined either by a Function or a map of values
         ibex::Function *m_function = NULL;
         std::map<double,ibex::Vector> m_map_values;

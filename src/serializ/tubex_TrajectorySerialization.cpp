@@ -18,7 +18,7 @@ using namespace ibex;
 namespace tubex
 {
   /*
-    Trajectory binary files structure (VERSION 2)
+    TrajectoryVector binary files structure (VERSION 2)
       - minimal storage
       - note: only map valued trajectories are serializable
       - format: [char_version_number]
@@ -31,7 +31,7 @@ namespace tubex
                 ...
   */
 
-  void serializeTrajectory(ofstream& bin_file, const Trajectory& traj, int version_number)
+  void serializeTrajectory(ofstream& bin_file, const TrajectoryVector& traj, int version_number)
   {
     /*if(!bin_file.is_open())
       throw Exception("serializeTrajectory()", "ofstream& bin_file not open");
@@ -72,7 +72,7 @@ namespace tubex
     }*/
   }
 
-  void deserializeTrajectory(ifstream& bin_file, Trajectory& traj)
+  void deserializeTrajectory(ifstream& bin_file, TrajectoryVector& traj)
   {
     /*if(!bin_file.is_open())
       throw Exception("deserializeTrajectory()", "ifstream& bin_file not open");

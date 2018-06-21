@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Trajectory class
+ *  tubex-lib - TrajectoryVector class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include <sstream>
-#include "tubex_Trajectory.h"
+#include "tubex_TrajectoryVector.h"
 #include "tubex_DomainException.h"
 #include "tubex_DimensionException.h"
 
@@ -22,12 +22,12 @@ namespace tubex
 {
   // Definition
 
-  Trajectory::Trajectory()
+  TrajectoryVector::TrajectoryVector()
   {
     
   }
 
-  Trajectory::Trajectory(const Interval& domain, const Function& f)
+  TrajectoryVector::TrajectoryVector(const Interval& domain, const Function& f)
     : m_domain(domain), m_function(new Function(f))
   {
     DomainException::check(domain);
@@ -35,7 +35,7 @@ namespace tubex
     m_codomain = m_function->eval_vector(box);
   }
 
-  Trajectory::Trajectory(const map<double,Vector>& map_values)
+  TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)
     : m_map_values(map_values)
   {
     typename map<double,Vector>::const_iterator it_map;
@@ -46,13 +46,13 @@ namespace tubex
     }
   }
 
-  Trajectory::~Trajectory()
+  TrajectoryVector::~TrajectoryVector()
   {
     if(m_function != NULL)
       delete m_function;
   }
 
-  int Trajectory::dim() const
+  int TrajectoryVector::dim() const
   {
     if(m_function != NULL)
       return m_function->image_dim();
@@ -66,32 +66,32 @@ namespace tubex
 
   // Access values
 
-  const map<double,Vector>& Trajectory::getMap() const
+  const map<double,Vector>& TrajectoryVector::getMap() const
   {
     return m_map_values;
   }
 
-  const Function* Trajectory::getFunction() const
+  const Function* TrajectoryVector::getFunction() const
   {
     return m_function;
   }
 
-  const Interval Trajectory::domain() const
+  const Interval TrajectoryVector::domain() const
   {
     return m_domain;
   }
 
-  const IntervalVector Trajectory::codomain() const
+  const IntervalVector TrajectoryVector::codomain() const
   {
     return codomainBox();
   }
 
-  const IntervalVector Trajectory::codomainBox() const
+  const IntervalVector TrajectoryVector::codomainBox() const
   {
     return m_codomain;
   }
 
-  const Vector Trajectory::operator[](double t) const
+  const Vector TrajectoryVector::operator[](double t) const
   {
     DomainException::check(*this, t);
 
@@ -123,7 +123,7 @@ namespace tubex
     }
   }
   
-  const IntervalVector Trajectory::operator[](const Interval& t) const
+  const IntervalVector TrajectoryVector::operator[](const Interval& t) const
   {
     DomainException::check(*this, t);
 
@@ -152,7 +152,12 @@ namespace tubex
   
   // Tests
 
-  bool Trajectory::operator==(const Trajectory& x) const
+  bool TrajectoryVector::notDefined() const
+  {
+    return m_function == NULL && m_map_values.empty();
+  }
+
+  bool TrajectoryVector::operator==(const TrajectoryVector& x) const
   {
     DimensionException::check(*this, x);
 
@@ -173,15 +178,15 @@ namespace tubex
 
     else if(m_function != NULL && x.getFunction() != NULL)
     {
-      throw Exception("Trajectory::operator==",
-                      "operator== not implemented in case of Trajectory defined by a Function");
+      throw Exception("TrajectoryVector::operator==",
+                      "operator== not implemented in case of TrajectoryVector defined by a Function");
     }
 
     else
       return false;
   }
   
-  bool Trajectory::operator!=(const Trajectory& x) const
+  bool TrajectoryVector::operator!=(const TrajectoryVector& x) const
   {
     DimensionException::check(*this, x);
     return domain() != x.domain() | codomain() != x.codomain() | !(*this == x);
@@ -189,16 +194,16 @@ namespace tubex
 
   // Setting values
 
-  Vector& Trajectory::set(double t, const Vector& y)
+  Vector& TrajectoryVector::set(double t, const Vector& y)
   {
-    DimensionException::check(*this, y);
+    if(!notDefined()) DimensionException::check(*this, y);
     m_map_values.emplace(t, y);
     m_domain |= t;
     m_codomain |= y;
     return m_map_values.at(t);
   }
 
-  void Trajectory::truncateDomain(const Interval& domain)
+  void TrajectoryVector::truncateDomain(const Interval& domain)
   {
     DomainException::check(domain);
 
@@ -216,7 +221,7 @@ namespace tubex
     m_domain &= domain;
   }
 
-  void Trajectory::shiftDomain(double shift_ref)
+  void TrajectoryVector::shiftDomain(double shift_ref)
   {
     map<double,Vector> map_temp = m_map_values;
     m_map_values.clear();

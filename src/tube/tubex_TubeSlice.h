@@ -14,7 +14,7 @@
 #define TubeSlice_HEADER
 
 #include "tubex_TubeVector.h"
-#include "tubex_Trajectory.h"
+#include "tubex_TrajectoryVector.h"
 #include "tubex_DynamicalItem.h"
 
 namespace tubex
@@ -62,7 +62,7 @@ namespace tubex
       bool isSubset(const TubeSlice& x) const;
       bool isStrictSubset(const TubeSlice& x) const;
       bool isEmpty() const;
-      bool encloses(const Trajectory& x) const;
+      bool encloses(const TrajectoryVector& x) const;
 
       // Setting values
       void set(const ibex::IntervalVector& y);
@@ -73,17 +73,17 @@ namespace tubex
       TubeSlice& inflate(double rad);
 
       // Operators
-      TubeSlice& operator+=(const Trajectory& x);
+      TubeSlice& operator+=(const TrajectoryVector& x);
       TubeSlice& operator+=(const TubeSlice& x);
-      TubeSlice& operator-=(const Trajectory& x);
+      TubeSlice& operator-=(const TrajectoryVector& x);
       TubeSlice& operator-=(const TubeSlice& x);
-      TubeSlice& operator*=(const Trajectory& x);
+      TubeSlice& operator*=(const TrajectoryVector& x);
       TubeSlice& operator*=(const TubeSlice& x);
-      TubeSlice& operator/=(const Trajectory& x);
+      TubeSlice& operator/=(const TrajectoryVector& x);
       TubeSlice& operator/=(const TubeSlice& x);
-      TubeSlice& operator|=(const Trajectory& x);
+      TubeSlice& operator|=(const TrajectoryVector& x);
       TubeSlice& operator|=(const TubeSlice& x);
-      TubeSlice& operator&=(const Trajectory& x);
+      TubeSlice& operator&=(const TrajectoryVector& x);
       TubeSlice& operator&=(const TubeSlice& x);
 
       // String

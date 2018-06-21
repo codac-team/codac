@@ -36,12 +36,12 @@ namespace tubex
       draw(fig_name, tube, NULL, x, y);
     }
 
-    void VibesFigure_Tube::draw(const string& fig_name, const Trajectory *traj, int x, int y)
+    void VibesFigure_Tube::draw(const string& fig_name, const TrajectoryVector *traj, int x, int y)
     {
       draw(fig_name, NULL, traj, x, y);
     }
     
-    void VibesFigure_Tube::draw(const string& fig_name, const TubeVector *tube, const Trajectory *traj, int x, int y)
+    void VibesFigure_Tube::draw(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj, int x, int y)
     {
       if(VibesFigure_Tube::v_vibesfig_tube.size() == 0)
       {
@@ -67,7 +67,7 @@ namespace tubex
 
       figtube->setProperties(x, y, 700, 350);
       if(tube != NULL) figtube->addTube(tube, DEFAULT_TUBE_NAME);
-      if(traj != NULL) figtube->addTrajectory(traj, DEFAULT_TRAJ_NAME);
+      if(traj != NULL) figtube->addTrajectoryVector(traj, DEFAULT_TRAJ_NAME);
       figtube->show();
     }
 
@@ -80,10 +80,10 @@ namespace tubex
 
   // Non-static items
 
-    VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const TubeVector *tube, const Trajectory *traj) : VibesFigure(fig_name)
+    VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj) : VibesFigure(fig_name)
     {
       if(tube != NULL) addTube(tube, DEFAULT_TUBE_NAME);
-      if(traj != NULL) addTrajectory(traj, DEFAULT_TUBE_NAME);
+      if(traj != NULL) addTrajectoryVector(traj, DEFAULT_TUBE_NAME);
       m_view_box = IntervalVector(2, Interval::EMPTY_SET);
     }
 
@@ -154,37 +154,37 @@ namespace tubex
       m_map_tubes.erase(tube);
     }
 
-    void VibesFigure_Tube::addTrajectory(const Trajectory *traj, const string& name, const string& color)
+    void VibesFigure_Tube::addTrajectoryVector(const TrajectoryVector *traj, const string& name, const string& color)
     {
       if(m_map_trajs.find(traj) != m_map_trajs.end())
-        cout << "Warning VibesFigure_Tube::addTrajectory(): trajectory already added" << endl;
+        cout << "Warning VibesFigure_Tube::addTrajectoryVector(): trajectory already added" << endl;
 
       else
         m_map_trajs[traj].color = color;
 
-      setTrajectoryName(traj, name);
+      setTrajectoryVectorName(traj, name);
     }
 
-    void VibesFigure_Tube::setTrajectoryName(const Trajectory *traj, const string& name)
+    void VibesFigure_Tube::setTrajectoryVectorName(const TrajectoryVector *traj, const string& name)
     {
       if(m_map_trajs.find(traj) == m_map_trajs.end())
-        cout << "Warning VibesFigure_Tube::setTrajectoryName(): unknown trajectory" << endl;
+        cout << "Warning VibesFigure_Tube::setTrajectoryVectorName(): unknown trajectory" << endl;
 
       m_map_trajs[traj].name = name;
     }
     
-    void VibesFigure_Tube::setTrajectoryColor(const Trajectory *traj, const string& color)
+    void VibesFigure_Tube::setTrajectoryVectorColor(const TrajectoryVector *traj, const string& color)
     {
       if(m_map_trajs.find(traj) == m_map_trajs.end())
-        cout << "Warning VibesFigure_Tube::setTrajectoryColor(): unknown trajectory" << endl;
+        cout << "Warning VibesFigure_Tube::setTrajectoryVectorColor(): unknown trajectory" << endl;
 
       m_map_trajs[traj].color = color;
     }
     
-    void VibesFigure_Tube::removeTrajectory(const Trajectory *traj)
+    void VibesFigure_Tube::removeTrajectoryVector(const TrajectoryVector *traj)
     {
       if(m_map_trajs.find(traj) == m_map_trajs.end())
-        cout << "Warning VibesFigure_Tube::removeTrajectory(): unable to remove" << endl;
+        cout << "Warning VibesFigure_Tube::removeTrajectoryVector(): unable to remove" << endl;
 
       m_map_trajs.erase(traj);
     }
@@ -201,9 +201,9 @@ namespace tubex
         m_view_box |= drawTube(it_tubes->first, detail_slices);
 
       // Trajectories are drawn on top of the tubes
-      typename map<const Trajectory*,FigTrajParams>::const_iterator it_trajs;
+      typename map<const TrajectoryVector*,FigTrajParams>::const_iterator it_trajs;
       for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
-        m_view_box |= drawTrajectory(it_trajs->first);
+        m_view_box |= drawTrajectoryVector(it_trajs->first);
 
       axisLimits(m_view_box);
 
@@ -399,7 +399,7 @@ namespace tubex
       }
     }
     
-    const IntervalVector VibesFigure_Tube::drawTrajectory(const Trajectory *traj, float points_size)
+    const IntervalVector VibesFigure_Tube::drawTrajectoryVector(const TrajectoryVector *traj, float points_size)
     {
       IntervalVector viewbox(2, Interval::EMPTY_SET);
 

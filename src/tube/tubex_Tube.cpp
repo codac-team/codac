@@ -58,13 +58,13 @@ namespace tubex
 
     }
 
-    Tube::Tube(const Trajectory& traj, double timestep)
+    Tube::Tube(const TrajectoryVector& traj, double timestep)
       : TubeVector(traj, timestep)
     {
 
     }
 
-    Tube::Tube(const Trajectory& lb, const Trajectory& ub, double timestep)
+    Tube::Tube(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep)
       : TubeVector(lb, ub, timestep)
     {
 
@@ -76,13 +76,13 @@ namespace tubex
 
     }
 
-    Tube::Tube(const string& binary_file_name, Trajectory& traj)
+    Tube::Tube(const string& binary_file_name, TrajectoryVector& traj)
       : TubeVector(binary_file_name, traj)
     {
 
     }
 
-    Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
+    Tube::Tube(const string& binary_file_name, vector<TrajectoryVector>& v_trajs)
       : TubeVector(binary_file_name, v_trajs)
     {
 

@@ -64,6 +64,55 @@ namespace Catch
         ibex::Interval m_value;
     };
 
+    class ApproxVector
+    {
+      public:
+        explicit ApproxVector(ibex::Vector value) :
+            m_epsilon(std::numeric_limits<float>::epsilon()*10),
+            m_value(value)
+        {}
+
+        friend bool operator ==(ibex::Vector lhs, ApproxVector const& rhs)
+        {
+          double e = rhs.m_epsilon;
+
+          if(lhs != rhs.m_value)
+            return false;
+
+          for(int i = 0 ; i < lhs.size() ; i++)
+            if(fabs(lhs[i] - rhs.m_value[i]) >= e)
+              return false;
+
+          return true;
+        }
+
+        friend bool operator ==(ApproxVector const& lhs, ibex::Vector rhs)
+        {
+          return operator ==(rhs, lhs);
+        }
+
+        friend bool operator !=(ibex::Vector lhs, ApproxVector const& rhs)
+        {
+          return !operator ==(lhs, rhs);
+        }
+
+        friend bool operator !=(ApproxVector const& lhs, ibex::Vector rhs)
+        {
+          return !operator ==(rhs, lhs);
+        }
+
+        std::string toString() const
+        {
+          std::ostringstream oss;
+          oss << "Approx( " << Catch::toString(m_value) << " )";
+          return oss.str();
+        }
+
+      private:
+        double m_epsilon;
+        ibex::Vector m_value = ibex::Vector(1);
+    };
+
     class ApproxIntvPair
     {
       public:

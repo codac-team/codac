@@ -34,7 +34,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const Trajectory& traj, const IntervalVector& box)
+  DimensionException::DimensionException(const TrajectoryVector& traj, const IntervalVector& box)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -42,7 +42,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const Trajectory& traj, const Function& f)
+  DimensionException::DimensionException(const TrajectoryVector& traj, const Function& f)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -50,7 +50,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const Trajectory& traj1, const Trajectory& traj2)
+  DimensionException::DimensionException(const TrajectoryVector& traj1, const TrajectoryVector& traj2)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -74,7 +74,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const TubeSlice& x, const Trajectory& traj)
+  DimensionException::DimensionException(const TubeSlice& x, const TrajectoryVector& traj)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -106,7 +106,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const TubeVector& x, const Trajectory& traj)
+  DimensionException::DimensionException(const TubeVector& x, const TrajectoryVector& traj)
   {
     ostringstream os;
     os << "objects of different dimension: ";
@@ -142,19 +142,19 @@ namespace tubex
       throw DimensionException(x1, x2);
   }
 
-  void DimensionException::check(const Trajectory& traj, const Function& f)
+  void DimensionException::check(const TrajectoryVector& traj, const Function& f)
   {
     if(traj.dim() != f.image_dim())
       throw DimensionException(traj, f);
   }
 
-  void DimensionException::check(const Trajectory& traj, const IntervalVector& box)
+  void DimensionException::check(const TrajectoryVector& traj, const IntervalVector& box)
   {
     if(traj.dim() != box.size())
       throw DimensionException(traj, box);
   }
 
-  void DimensionException::check(const Trajectory& traj1, const Trajectory& traj2)
+  void DimensionException::check(const TrajectoryVector& traj1, const TrajectoryVector& traj2)
   {
     if(traj1.dim() != traj2.dim())
       throw DimensionException(traj1, traj2);
@@ -172,7 +172,7 @@ namespace tubex
       throw DimensionException(x, box);
   }
 
-  void DimensionException::check(const TubeSlice& x, const Trajectory& traj)
+  void DimensionException::check(const TubeSlice& x, const TrajectoryVector& traj)
   {
     if(x.dim() != traj.dim())
       throw DimensionException(x, traj);
@@ -196,7 +196,7 @@ namespace tubex
       throw DimensionException(x, box);
   }
 
-  void DimensionException::check(const TubeVector& x, const Trajectory& traj)
+  void DimensionException::check(const TubeVector& x, const TrajectoryVector& traj)
   {
     if(x.dim() != traj.dim())
       throw DimensionException(x, traj);

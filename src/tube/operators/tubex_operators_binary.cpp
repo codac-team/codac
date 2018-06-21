@@ -87,7 +87,7 @@
     return new_tube_x; \
   } \
   \
-  Tube f(const Trajectory& x1, const Tube& tube_x2) \
+  Tube f(const TrajectoryVector& x1, const Tube& tube_x2) \
   { \
     DomainException::check(tube_x2, x1); \
     DimensionException::check(tube_x2, x1); \
@@ -110,7 +110,7 @@
     return new_tube_x; \
   } \
   \
-  Tube f(const Tube& tube_x1, const Trajectory& x2) \
+  Tube f(const Tube& tube_x1, const TrajectoryVector& x2) \
   { \
     DomainException::check(tube_x1, x2); \
     DimensionException::check(tube_x1, x2); \
@@ -164,7 +164,7 @@
     return new_slice_x; \
   } \
   \
-  TubeSlice f(const Trajectory& x1, const TubeSlice& slice_x2) \
+  TubeSlice f(const TrajectoryVector& x1, const TubeSlice& slice_x2) \
   { \
     DomainException::check(slice_x2, x1); \
     DimensionException::check(slice_x1, slice_x2); \
@@ -175,7 +175,7 @@
     return new_slice_x; \
   } \
   \
-  TubeSlice f(const TubeSlice& slice_x1, const Trajectory& x2) \
+  TubeSlice f(const TubeSlice& slice_x1, const TrajectoryVector& x2) \
   { \
     DomainException::check(slice_x1, x2); \
     DimensionException::check(slice_x1, x2); \

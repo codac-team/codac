@@ -36,7 +36,7 @@
     return *this; \
   } \
   \
-  TubeVector& TubeVector::f(const Trajectory& traj_x) \
+  TubeVector& TubeVector::f(const TrajectoryVector& traj_x) \
   { \
     DomainException::check(*this, traj_x); \
     DimensionException::check(*this, traj_x); \
@@ -77,7 +77,7 @@
     return *this; \
   } \
   \
-  TubeSlice& TubeSlice::f(const Trajectory& traj_x) \
+  TubeSlice& TubeSlice::f(const TrajectoryVector& traj_x) \
   { \
     DomainException::check(*this, traj_x); \
     DimensionException::check(*this, traj_x); \

@@ -15,7 +15,7 @@
 
 #include "tubex_TubeVector.h"
 #include "tubex_TubeSlice.h"
-#include "tubex_Trajectory.h"
+#include "tubex_TrajectoryVector.h"
 #include "ibex_Interval.h"
 
 namespace tubex

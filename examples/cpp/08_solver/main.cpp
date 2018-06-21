@@ -9,20 +9,21 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST IVP_PICARD
+#define SOLVER_TEST IVP
 
 #if SOLVER_TEST == IVP
 
-  void contract(TubeVector& v_x)
+  void contract(TubeVector& x)
   {
-    /*if(v_x[0].codomain().is_unbounded())
+    if(x.codomain().is_unbounded())
     {
-      tubex::CtcPicard tube_picard;
+      tubex::CtcPicard ctc_picard;
       Function f("x", "-sin(x)");
-      tube_picard.contract(f, v_x[0]);
-    }*/
+      ctc_picard.contract(f, x);
+    }
 
-    //v_x[0].ctcFwdBwd(-sin(v_x[0]));
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, x);
   }
 
 #elif SOLVER_TEST == IVP_PICARD
@@ -31,9 +32,9 @@ using namespace tubex;
   {
     if(x.codomain().is_unbounded())
     {
-      tubex::CtcPicard tube_picard;
+      tubex::CtcPicard ctc_picard;
       Function f("x", "-x");
-      tube_picard.contract(f, x);
+      ctc_picard.contract(f, x);
       cout << x << endl;
     }
 
@@ -63,9 +64,9 @@ using namespace tubex;
     if(x.codomain().is_unbounded())
     {
       cout << "Picard" << endl;
-      tubex::CtcPicard tube_picard;
+      tubex::CtcPicard ctc_picard;
       Function f("x", "x");
-      tube_picard.contract(f, x);
+      ctc_picard.contract(f, x);
       cout << "end of Picard " << x << endl;
     }
     
@@ -82,8 +83,8 @@ using namespace tubex;
     //  cout << "starting Picard " << x.nbSlices() << endl;
     //  Variable x1, x2;
     //  Function f(x1, x2, Return(x2, 0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
-    //  tubex::CtcPicard tube_picard;
-    //  tube_picard.contract(f, x);
+    //  tubex::CtcPicard ctc_picard;
+    //  ctc_picard.contract(f, x);
     //  cout << "ending Picard" << endl;
     //}
     //
@@ -102,9 +103,9 @@ using namespace tubex;
 
     /*if(v_x[0].codomain().is_unbounded())
     {
-      tubex::CtcPicard tube_picard;
+      tubex::CtcPicard ctc_picard;
       Function f("x", "exp(0.5)*x(t-0.5)");
-      tube_picard.contract(f, v_x[0]);
+      ctc_picard.contract(f, v_x[0]);
     }*/
 
     //CtcDelay tube_delay;

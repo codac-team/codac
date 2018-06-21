@@ -14,13 +14,13 @@
 #define TRAJECTORY_SERIALIZATION_HEADER
 
 #include <fstream>
-#include "tubex_Trajectory.h"
+#include "tubex_TrajectoryVector.h"
 #include "tubex_TubeVector.h"
 
 namespace tubex
 {
-  void serializeTrajectory(std::ofstream& bin_file, const Trajectory& traj, int version_number = SERIALIZATION_VERSION);
-  void deserializeTrajectory(std::ifstream& bin_file, Trajectory& traj);
+  void serializeTrajectory(std::ofstream& bin_file, const TrajectoryVector& traj, int version_number = SERIALIZATION_VERSION);
+  void deserializeTrajectory(std::ifstream& bin_file, TrajectoryVector& traj);
 }
 
 #endif

@@ -371,7 +371,7 @@ namespace tubex
       return m_codomain.is_empty() || inputGate().is_empty() || outputGate().is_empty();
     }
 
-    bool TubeSlice::encloses(const Trajectory& x) const
+    bool TubeSlice::encloses(const TrajectoryVector& x) const
     {
       DomainException::check(*this, x);
       DimensionException::check(*this, x);

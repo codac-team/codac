@@ -16,7 +16,7 @@
 #include <vector>
 #include "ibex.h"
 #include "tubex_TubeSlice.h"
-#include "tubex_Trajectory.h"
+#include "tubex_TrajectoryVector.h"
 #include "tubex_DynamicalItem.h"
 
 #define SERIALIZATION_VERSION 2
@@ -45,11 +45,11 @@ namespace tubex
       TubeVector(const TubeVector& x);
       TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
       TubeVector(const TubeVector& x, const ibex::Function& function);
-      TubeVector(const Trajectory& traj, double timestep = 0.);
-      TubeVector(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
+      TubeVector(const TrajectoryVector& traj, double timestep = 0.);
+      TubeVector(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep = 0.);
       TubeVector(const std::string& binary_file_name);
-      TubeVector(const std::string& binary_file_name, Trajectory& traj);
-      TubeVector(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      TubeVector(const std::string& binary_file_name, TrajectoryVector& traj);
+      TubeVector(const std::string& binary_file_name, std::vector<TrajectoryVector>& v_trajs);
       ~TubeVector();
       TubeVector primitive() const;
       TubeVector& operator=(const TubeVector& x);
@@ -89,7 +89,7 @@ namespace tubex
       bool isSubset(const TubeVector& x) const;
       bool isStrictSubset(const TubeVector& x) const;
       bool isEmpty() const;
-      bool encloses(const Trajectory& x) const;
+      bool encloses(const TrajectoryVector& x) const;
 
       // Setting values
       void set(const ibex::IntervalVector& y);
@@ -104,17 +104,17 @@ namespace tubex
       std::pair<TubeVector,TubeVector> bisect(double t, float ratio = 0.55) const;
 
       // Operators
-      TubeVector& operator+=(const Trajectory& x);
+      TubeVector& operator+=(const TrajectoryVector& x);
       TubeVector& operator+=(const TubeVector& x);
-      TubeVector& operator-=(const Trajectory& x);
+      TubeVector& operator-=(const TrajectoryVector& x);
       TubeVector& operator-=(const TubeVector& x);
-      TubeVector& operator*=(const Trajectory& x);
+      TubeVector& operator*=(const TrajectoryVector& x);
       TubeVector& operator*=(const TubeVector& x);
-      TubeVector& operator/=(const Trajectory& x);
+      TubeVector& operator/=(const TrajectoryVector& x);
       TubeVector& operator/=(const TubeVector& x);
-      TubeVector& operator|=(const Trajectory& x);
+      TubeVector& operator|=(const TrajectoryVector& x);
       TubeVector& operator|=(const TubeVector& x);
-      TubeVector& operator&=(const Trajectory& x);
+      TubeVector& operator&=(const TrajectoryVector& x);
       TubeVector& operator&=(const TubeVector& x);
 
       // String
@@ -136,8 +136,8 @@ namespace tubex
     /** Serialization: **/
 
       void serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
-      void serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
-      void serialize(const std::string& binary_file_name, const std::vector<Trajectory>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
+      void serialize(const std::string& binary_file_name, const TrajectoryVector& traj, int version_number = SERIALIZATION_VERSION) const;
+      void serialize(const std::string& binary_file_name, const std::vector<TrajectoryVector>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
 
     protected:
 
@@ -152,7 +152,7 @@ namespace tubex
 
     /** Serialization: **/
 
-      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      void deserialize(const std::string& binary_file_name, std::vector<TrajectoryVector>& v_trajs);
 
     /** Class variables **/
 

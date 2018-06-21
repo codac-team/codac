@@ -110,7 +110,7 @@ namespace tubex
       set(function);
     }
 
-    TubeVector::TubeVector(const Trajectory& traj, double timestep)
+    TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)
       : TubeVector(traj.domain(), timestep, traj.dim())
     {
       DomainException::check(timestep);
@@ -118,7 +118,7 @@ namespace tubex
       *this |= traj;
     }
 
-    TubeVector::TubeVector(const Trajectory& lb, const Trajectory& ub, double timestep)
+    TubeVector::TubeVector(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep)
       : TubeVector(lb.domain(), timestep, lb.dim())
     {
       DomainException::check(timestep);
@@ -130,26 +130,26 @@ namespace tubex
 
     TubeVector::TubeVector(const string& binary_file_name)
     {
-      vector<Trajectory> v_trajs;
+      vector<TrajectoryVector> v_trajs;
       deserialize(binary_file_name, v_trajs);
     }
     
-    TubeVector::TubeVector(const string& binary_file_name, Trajectory& traj)
+    TubeVector::TubeVector(const string& binary_file_name, TrajectoryVector& traj)
     {
-      vector<Trajectory> v_trajs;
+      vector<TrajectoryVector> v_trajs;
       deserialize(binary_file_name, v_trajs);
 
       if(v_trajs.size() == 0)
-        throw Exception("TubeVector constructor", "unable to deserialize a Trajectory");
+        throw Exception("TubeVector constructor", "unable to deserialize a TrajectoryVector");
 
       traj = v_trajs[0];
     }
 
-    TubeVector::TubeVector(const string& binary_file_name, vector<Trajectory>& v_trajs)
+    TubeVector::TubeVector(const string& binary_file_name, vector<TrajectoryVector>& v_trajs)
     {
       deserialize(binary_file_name, v_trajs);
       if(v_trajs.size() == 0)
-        throw Exception("TubeVector constructor", "unable to deserialize some Trajectory");
+        throw Exception("TubeVector constructor", "unable to deserialize some TrajectoryVector");
     }
     
     TubeVector::~TubeVector()
@@ -596,7 +596,7 @@ namespace tubex
       return false;
     }
 
-    bool TubeVector::encloses(const Trajectory& x) const
+    bool TubeVector::encloses(const TrajectoryVector& x) const
     {
       // todo: common with other same-type methods
       DomainException::check(*this, x);
@@ -897,18 +897,18 @@ namespace tubex
 
     void TubeVector::serialize(const string& binary_file_name, int version_number) const
     {
-      vector<Trajectory> v_trajs;
+      vector<TrajectoryVector> v_trajs;
       serialize(binary_file_name, v_trajs, version_number);
     }
 
-    void TubeVector::serialize(const string& binary_file_name, const Trajectory& traj, int version_number) const
+    void TubeVector::serialize(const string& binary_file_name, const TrajectoryVector& traj, int version_number) const
     {
-      vector<Trajectory> v_trajs;
+      vector<TrajectoryVector> v_trajs;
       v_trajs.push_back(traj);
       serialize(binary_file_name, v_trajs, version_number);
     }
     
-    void TubeVector::serialize(const string& binary_file_name, const vector<Trajectory>& v_trajs, int version_number) const
+    void TubeVector::serialize(const string& binary_file_name, const vector<TrajectoryVector>& v_trajs, int version_number) const
     {
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
@@ -972,7 +972,7 @@ namespace tubex
 
     // Serialization
 
-    void TubeVector::deserialize(const string& binary_file_name, vector<Trajectory>& v_trajs)
+    void TubeVector::deserialize(const string& binary_file_name, vector<TrajectoryVector>& v_trajs)
     {
       ifstream bin_file(binary_file_name.c_str(), ios::in | ios::binary);
 
@@ -987,7 +987,7 @@ namespace tubex
         bin_file.read((char*)&nb_trajs, sizeof(int));
         for(int i = 0 ; i < nb_trajs ; i++)
         {
-          Trajectory traj;
+          TrajectoryVector traj;
           deserializeTrajectory(bin_file, traj);
           v_trajs.push_back(traj);
         }
