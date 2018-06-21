@@ -54,7 +54,7 @@ namespace tubex
 
       TubeSlice *slice_x1 = x1.getFirstSlice();
       TubeSlice *slice_x2 = x2.getFirstSlice();
-
+      
       while(slice_x1 != NULL)
       {
         if(slice_x1->domain() != slice_x2->domain())

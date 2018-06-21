@@ -27,12 +27,19 @@ namespace tubex
     return t != p.t || x != p.x;
   }
 
-  Point point(double t, Vector x)
+  Point point(double t, double x)
   {
     Point p;
     p.t = t; p.x = x;
     return p;
   }
+
+  /*Point point(double t, Vector x)
+  {
+    Point p;
+    p.t = t; p.x = x;
+    return p;
+  }*/
 
   void pushPoints(vector<Point>& v_points, const IntervalVector& box)
   {

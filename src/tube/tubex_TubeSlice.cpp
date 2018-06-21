@@ -135,8 +135,6 @@ namespace tubex
 
     void TubeSlice::chainSlices(TubeSlice *first_slice, TubeSlice *second_slice)
     {
-      DimensionException::check(*first_slice, *second_slice);
-
       if(first_slice != NULL)
         first_slice->m_next_slice = second_slice;
 
@@ -145,6 +143,8 @@ namespace tubex
 
       if(first_slice != NULL && second_slice != NULL)
       {
+        DimensionException::check(*first_slice, *second_slice);
+
         *first_slice->m_output_gate &= *second_slice->m_input_gate;
         //delete second_slice->m_input_gate; // todo: check remaining unused gates
         second_slice->m_input_gate = first_slice->m_output_gate;

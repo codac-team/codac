@@ -36,7 +36,7 @@ namespace tubex
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
       ~Tube();
-      using TubeVector::primitive;
+      Tube primitive() const;
       using TubeVector::operator=;
       using TubeVector::domain;
       using TubeVector::dim;

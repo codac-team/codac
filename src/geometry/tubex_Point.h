@@ -15,20 +15,22 @@
 
 #include <vector>
 #include "ibex_IntervalVector.h"
-#include "ibex_Vector.h"
+//#include "ibex_Vector.h"
 
 namespace tubex
 {
   struct Point
   {
     double t;
-    ibex::Vector x = ibex::Vector(1);
+    double x;
+    //ibex::Vector x = ibex::Vector(1);
 
     bool operator==(const Point& p) const;
     bool operator!=(const Point& p) const;
   };
 
-  Point point(double t, ibex::Vector x);
+  Point point(double t, double x);
+  //Point point(double t, ibex::Vector x);
   void pushPoints(std::vector<Point>& v_points, const ibex::IntervalVector& box);
 }
 

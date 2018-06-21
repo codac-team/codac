@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_Tube.h"
+#include "tubex_CtcDeriv.h"
 
 using namespace std;
 using namespace ibex;
@@ -90,6 +91,14 @@ namespace tubex
     Tube::~Tube()
     {
 
+    }
+    
+    Tube Tube::primitive() const
+    {
+      Tube primitive(*this, Interval::ALL_REALS);
+      CtcDeriv ctc_deriv;
+      ctc_deriv.contractFwd(primitive, *this);
+      return primitive;
     }
 
     void Tube::sample(double t, const Interval& gate)

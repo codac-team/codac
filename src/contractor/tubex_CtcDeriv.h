@@ -37,11 +37,11 @@ namespace tubex
       bool contract(TubeVector& x, const TubeVector& v);
       bool contractFwd(TubeVector& x, const TubeVector& v);
       bool contractBwd(TubeVector& x, const TubeVector& v);
-      //bool contract(const TubeVector& x, const TubeVector& v, ibex::Interval& t, ibex::IntervalVector& y);
+      bool contract(const TubeVector& x, const TubeVector& v, ibex::Interval& t, ibex::IntervalVector& y);
 
       // Tube slice
       bool contract(TubeSlice& x, const TubeSlice& v);
-      //bool contract(const TubeSlice& x, const TubeSlice& v, ibex::Interval& t, ibex::IntervalVector& y);
+      bool contract(const TubeSlice& x, const TubeSlice& v, ibex::Interval& t, ibex::IntervalVector& y);
 
       ConvexPolygon getPolygon(int i, const TubeSlice& x, const TubeSlice& v);
 

@@ -159,26 +159,27 @@ namespace tubex
 
     TubeVector TubeVector::primitive() const
     {
-      TubeVector primitive(domain(), dim());
+      TubeVector primitive(*this, IntervalVector(dim(), Interval::ALL_REALS));
       CtcDeriv ctc_deriv;
-      ctc_deriv.contract(primitive, *this);
+      ctc_deriv.contractFwd(primitive, *this);
       return primitive;
     }
 
     TubeVector& TubeVector::operator=(const TubeVector& x)
     {
       m_v_slices.clear();
-      TubeSlice *prev_slice = NULL;
+      TubeSlice *prev_slice = NULL, *slice_x = x.getFirstSlice();
 
-      for(int i = 0 ; i < x.nbSlices() ; i++)
+      while(slice_x != NULL)
       {
-        TubeSlice *slice = new TubeSlice(*x.getSlice(i));
+        TubeSlice *slice = new TubeSlice(*slice_x);
         slice->setTubeReference(this);
         m_v_slices.push_back(slice);
 
         if(prev_slice != NULL)
           TubeSlice::chainSlices(prev_slice, slice);
         prev_slice = slice;
+        slice_x = slice_x->nextSlice();
       }
 
       return *this;
@@ -293,65 +294,20 @@ namespace tubex
         // the method has no effect.
         return;
       }
+
       // Creating new slice
+      TubeSlice *new_slice = new TubeSlice(*slice_to_be_sampled);
+      new_slice->setTubeReference(this);
+      new_slice->setDomain(Interval(t, slice_to_be_sampled->domain().ub()));
+      slice_to_be_sampled->setDomain(Interval(slice_to_be_sampled->domain().lb(), t));
+
       int new_slice_id = input2index(t) + 1;
       vector<TubeSlice*>::iterator it = m_v_slices.begin() + new_slice_id;
-      m_v_slices.insert(it, new TubeSlice(*slice_to_be_sampled));
-      m_v_slices[new_slice_id]->setTubeReference(this);
+      m_v_slices.insert(it, new_slice);
 
       // Updated slices structure
-      TubeSlice::chainSlices(m_v_slices[new_slice_id], next_slice);
-      TubeSlice::chainSlices(slice_to_be_sampled, m_v_slices[new_slice_id]);
-
-      // Updated domains and gates
-      m_v_slices[new_slice_id]->setDomain(Interval(t, slice_to_be_sampled->domain().ub()));
-      slice_to_be_sampled->setDomain(Interval(slice_to_be_sampled->domain().lb(), t));
-      slice_to_be_sampled->setOutputGate(slice_to_be_sampled->codomain()); // todo: keep this?
-
-      //TubeSlice *slice_to_be_sampled = getSlice(t);
-      //
-      //if(slice_to_be_sampled->domain().lb() == t || slice_to_be_sampled->domain().ub() == t)
-      //{
-      //  // No degenerate slice,
-      //  // the method has no effect.
-      //  return;
-      //}
-      //
-      //else
-      //{
-      //  TubeVectorComponent *parent = m_component->getParentOf(slice_to_be_sampled);
-      //  TubeVectorComponent *new_component = new TubeVectorNode(*slice_to_be_sampled, t);
-      //    
-      //  if(parent == NULL) // no parent, the tube has one slice
-      //  {
-      //    delete m_component;
-      //    m_component = new_component;
-      //  }
-      //  
-      //  else
-      //  {
-      //    TubeVectorComponent *first_component = ((TubeVectorNode*)parent)->m_first_component;
-      //    TubeVectorComponent *second_component = ((TubeVectorNode*)parent)->m_second_component;
-      //    
-      //    if(slice_to_be_sampled == (TubeSlice*)first_component)
-      //    {
-      //      delete first_component;
-      //      ((TubeVectorNode*)parent)->m_first_component = new_component;
-      //    }
-      //      
-      //    else if(slice_to_be_sampled == (TubeSlice*)second_component)
-      //    {
-      //      delete second_component;
-      //      ((TubeVectorNode*)parent)->m_second_component = new_component;
-      //    }
-      //    
-      //    else
-      //      throw Exception("TubeVector::sample", "unhandled case");
-      //  }
-      //  
-      //  m_component->updateSlicesNumber();
-      //  set(gate, t);
-      //}
+      TubeSlice::chainSlices(new_slice, next_slice);
+      TubeSlice::chainSlices(slice_to_be_sampled, new_slice);
     }
 
     void TubeVector::sample(double t, const IntervalVector& gate)
@@ -359,35 +315,12 @@ namespace tubex
       DomainException::check(*this, t);
       DimensionException::check(*this, gate);
       sample(t);
-      set(gate, t);
+      TubeSlice *slice = getSlice(t);
+      if(t == slice->domain().lb())
+        slice->setInputGate(gate);
+      else
+        slice->setOutputGate(gate);
     }
-
-    //void TubeVector::sample(const vector<double>& v_bounds)
-    //{
-    //  // todo: remove this?
-    //  
-    //  if(v_bounds.empty())
-    //    return;
-    //  
-    //  vector<double> v_first_bounds, v_last_bounds;
-    //  
-    //  int mid = v_bounds.size() / 2;
-    //  for(int i = 0 ; i < v_bounds.size() ; i++)
-    //  {
-    //    if(i < mid) v_first_bounds.push_back(v_bounds[i]);
-    //    else if(i <= mid) sample(v_bounds[i]);
-    //    else v_last_bounds.push_back(v_bounds[i]);
-    //  }
-    //  
-    //  sample(v_first_bounds);
-    //  sample(v_last_bounds);
-    //}
-    //
-    //TubeVectorComponent* TubeVector::getTubeVectorComponent()
-    //{
-    //  // todo: remove this?
-    //  //return m_component;
-    //}
 
     // Access values
 
@@ -712,16 +645,12 @@ namespace tubex
 
       else
       {
-        sample(t.lb(), y);
-        sample(t.ub(), y);
+        sample(t.lb());
+        sample(t.ub());
 
-        int i = input2index(t.lb());
-        TubeSlice *slice = getSlice(i);
-
-        for( ; i <= input2index(t.ub()) && slice != NULL ; i++)
+        TubeSlice *slice = getSlice(input2index(t.lb()));
+        while(slice != NULL && !(t & slice->domain()).is_degenerated())
         {
-          if((t & slice->domain()).is_degenerated())
-            continue;
           slice->set(y);
           slice = slice->nextSlice();
         }

@@ -35,34 +35,44 @@ namespace tubex
     TubeSlice prev_x = x;
     Interval t = x.domain();
     IntervalVector y = x.codomain();
-    ConvexPolygon p; // unused
 
     contractGates(x, v);
 
     for(int i = 0 ; i < x.dim() ; i++)
+    {
+      ConvexPolygon p; // unused
       contractEnvelope(i, x, v, t, y[i], p);
+    }
 
     x.setEnvelope(y);
 
     return x != prev_x;
   }
 
-  /*bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, Interval& t, IntervalVector& y)
+  bool CtcDeriv::contract(const TubeSlice& x, const TubeSlice& v, Interval& t, IntervalVector& y)
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
     DimensionException::check(x, y);
 
+    bool ctc = false;
     TubeSlice x_temp = x;
-    ConvexPolygon p; // unused
     contractGates(x_temp, v);
-    return contractEnvelope(x_temp, v, t, y, p);
-  }*/
+
+    for(int i = 0 ; i < x.dim() ; i++)
+    {
+      ConvexPolygon p; // unused
+      ctc |= contractEnvelope(i, x_temp, v, t, y[i], p);
+    }
+
+    return ctc;
+  }
 
   bool CtcDeriv::contract(TubeVector& x, const TubeVector& v)
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
+    StructureException::check(x, v);
 
     bool ctc = false;
     ctc |= contractFwd(x, v);
@@ -75,6 +85,7 @@ namespace tubex
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
+    StructureException::check(x, v);
 
     bool ctc = false;
     TubeSlice *x_slice = x.getFirstSlice();
@@ -94,6 +105,7 @@ namespace tubex
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
+    StructureException::check(x, v);
     
     bool ctc = false;
     TubeSlice *x_slice = x.getLastSlice();
@@ -109,7 +121,7 @@ namespace tubex
     return ctc;
   }
 
-  /*bool CtcDeriv::contract(const TubeVector& x, const TubeVector& v, Interval& t, IntervalVector& y)
+  bool CtcDeriv::contract(const TubeVector& x, const TubeVector& v, Interval& t, IntervalVector& y)
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
@@ -142,7 +154,7 @@ namespace tubex
     y = y_union;
     t = t_union;
     return prev_y != y || prev_t != t;
-  }*/
+  }
 
   bool CtcDeriv::contractGates(TubeSlice& x, const TubeSlice& v)
   {
@@ -170,58 +182,62 @@ namespace tubex
   Interval yilb(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
+    DimensionException::check(x, i);
     return x.inputGate()[i].lb() + v.codomain()[i].lb() * (t - x.domain().lb());
   }
 
   Interval yilb_inv(int i, const Interval& y, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
-    DimensionException::check(x, y);
+    DimensionException::check(x, i);
     return ((y - x.inputGate()[i].lb()) / v.codomain()[i].lb()) + x.domain().lb();
   }
 
   Interval yiub(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
+    DimensionException::check(x, i);
     return x.inputGate()[i].ub() + v.codomain()[i].ub() * (t - x.domain().lb());
   }
 
   Interval yiub_inv(int i, const Interval& y, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
-    DimensionException::check(x, y);
+    DimensionException::check(x, i);
     return ((y - x.inputGate()[i].ub()) / v.codomain()[i].ub()) + x.domain().lb();
   }
 
   Interval yolb(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
+    DimensionException::check(x, i);
     return x.outputGate()[i].lb() + v.codomain()[i].ub() * (t - x.domain().ub());
   }
 
   Interval yolb_inv(int i, const Interval& y, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
-    DimensionException::check(x, y);
+    DimensionException::check(x, i);
     return ((y - x.outputGate()[i].lb()) / v.codomain()[i].ub()) + x.domain().ub();
   }
 
   Interval youb(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
+    DimensionException::check(x, i);
     return x.outputGate()[i].ub() + v.codomain()[i].lb() * (t - x.domain().ub());
   }
 
   Interval youb_inv(int i, const Interval& y, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
-    DimensionException::check(x, y);
+    DimensionException::check(x, i);
     return ((y - x.outputGate()[i].ub()) / v.codomain()[i].lb()) + x.domain().ub();
   }
 
   Interval ylb_inv(int i, const Interval& y, const TubeSlice& x)
   {
-    DimensionException::check(x, y);
+    DimensionException::check(x, i);
     if(x.inputGate()[i].lb() == x.outputGate()[i].lb())
       return Interval::ALL_REALS;
     return x.domain().lb() + (y - x.inputGate()[i].lb()) / ((x.outputGate()[i].lb() - x.inputGate()[i].lb()) / (x.domain().diam()));
@@ -229,7 +245,7 @@ namespace tubex
 
   Interval yub_inv(int i, const Interval& y, const TubeSlice& x)
   {
-    DimensionException::check(x, y);
+    DimensionException::check(x, i);
 
     if(x.inputGate()[i].ub() == x.outputGate()[i].ub())
       return Interval::ALL_REALS;
@@ -239,6 +255,7 @@ namespace tubex
   Interval linesIntersectionUb(int i, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
+    DimensionException::check(x, i);
     return (x.outputGate()[i].ub() - x.inputGate()[i].ub()
             + v.codomain()[i].ub() * x.domain().lb()
             - v.codomain()[i].lb() * x.domain().ub()) / v.codomain()[i].diam();
@@ -247,6 +264,7 @@ namespace tubex
   Interval linesIntersectionLb(int i, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
+    DimensionException::check(x, i);
     return (x.inputGate()[i].lb() - x.outputGate()[i].lb()
             + v.codomain()[i].ub() * x.domain().ub()
             - v.codomain()[i].lb() * x.domain().lb()) / v.codomain()[i].diam();
@@ -279,11 +297,14 @@ namespace tubex
       y.set_empty();
     }
 
-    else if(v.codomain()[i].is_unbounded())
+    else if(v.codomain()[i] == Interval::ALL_REALS)
     {
       // No contraction expected
       // Polygon computed for display purposes
-      p = ConvexPolygon(x.box());
+      IntervalVector box(2);
+      box[0] = x.domain();
+      box[1] = x.codomain()[i];
+      p = ConvexPolygon(box);
     }
 
     else
@@ -317,7 +338,7 @@ namespace tubex
 
       else
       {
-        Interval y_tlb(x.dim()), y_tub(x.dim());
+        Interval y_tlb, y_tub;
         Interval t_lb = t.lb(), t_ub = t.ub();
         ConvexPolygon p_;
         contractEnvelope(i, x, v, t_lb, y_tlb, p_);
