@@ -85,8 +85,20 @@ namespace tubex
   
   std::ostream& operator<<(std::ostream& str, const Trajectory& x)
   {
-    str << "Trajectory " << x.domain() << "↦" << x.codomain()
-        << flush;
+    str << "Trajectory " << x.domain() << "↦" << x.codomain();
+
+    if(x.m_function != NULL)
+      str << " (" << x.m_function->minibex() << ")";
+
+    else if(!x.m_map_values.empty())
+    {
+      str << ", " << x.m_map_values.size() << " pts: { ";
+      for(map<double,Vector>::const_iterator it = x.m_map_values.begin() ; it != x.m_map_values.end() ; it++)
+        str << "(" << it->first << "," << it->second[0] << ") ";
+      str << "} ";
+    }
+
+    str << flush;
     return str;
   }
 }

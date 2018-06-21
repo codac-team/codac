@@ -199,6 +199,7 @@ namespace tubex
   Vector& TrajectoryVector::set(double t, const Vector& y)
   {
     if(!notDefined()) DimensionException::check(*this, y);
+    m_map_values.erase(t);
     m_map_values.emplace(t, y);
     m_domain |= t;
     m_codomain |= y;
@@ -238,8 +239,20 @@ namespace tubex
   
   std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x)
   {
-    str << "TrajectoryVector " << x.domain() << "↦" << x.codomain()
-        << flush;
+    str << "TrajectoryVector " << x.domain() << "↦" << x.codomain();
+
+    if(x.m_function != NULL)
+      str << " (" << x.m_function->minibex() << ")";
+
+    else if(!x.m_map_values.empty())
+    {
+      str << ", " << x.m_map_values.size() << " pts: { ";
+      for(map<double,Vector>::const_iterator it = x.m_map_values.begin() ; it != x.m_map_values.end() ; it++)
+        str << "(" << it->first << "," << it->second << ") ";
+      str << "} ";
+    }
+
+    str << flush;
     return str;
   }
 }

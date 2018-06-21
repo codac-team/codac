@@ -10,55 +10,55 @@ TEST_CASE("Trajectory base")
 {
   SECTION("Evaluation")
   {
-    map<double,Vector> map_values;
+    map<double,double> map_values;
     for(double t = 0. ; t < 10. ; t++)
-      map_values.emplace(t, Vector(1, t));
+      map_values[t] = t;
 
     Trajectory traj1(map_values);
     CHECK_THROWS(traj1[-0.1];);
-    CHECK(ApproxVector(traj1[0.0]) == Vector(1, 0.0));
-    CHECK(ApproxVector(traj1[0.2]) == Vector(1, 0.2));
-    CHECK(ApproxVector(traj1[8.2]) == Vector(1, 8.2));
-    CHECK(ApproxVector(traj1[9.0]) == Vector(1, 9.0));
+    CHECK(Approx(traj1[0.0]) == 0.0);
+    CHECK(Approx(traj1[0.2]) == 0.2);
+    CHECK(Approx(traj1[8.2]) == 8.2);
+    CHECK(Approx(traj1[9.0]) == 9.0);
     CHECK_THROWS(traj1[9.1];);
 
     Trajectory traj2;
-    traj2.set(0., Vector(1, 1.));
-    traj2.set(2., Vector(1, -1.));
-    traj2.set(6., Vector(1, 1.));
-    traj2.set(7., Vector(1, 2.));
-    traj2.set(8., Vector(1, 4.));
-    traj2.set(10., Vector(1, 4.));
-    traj2.set(11., Vector(1, -2.));
-    traj2.set(14., Vector(1, 1.));
+    traj2.set(0., 1.);
+    traj2.set(2., -1.);
+    traj2.set(6., 1.);
+    traj2.set(7., 2.);
+    traj2.set(8., 4.);
+    traj2.set(10., 4.);
+    traj2.set(11., -2.);
+    traj2.set(14., 1.);
     CHECK(traj2.domain() == Interval(0.,14.));
-    CHECK(traj2.codomain()[0] == Interval(-2.,4.));
+    CHECK(traj2.codomain() == Interval(-2.,4.));
     CHECK_THROWS(traj2[-0.1];);
-    CHECK(traj2[0.] == Vector(1, 1.));
-    CHECK(traj2[1.] == Vector(1, 0.));
-    CHECK(traj2[4.] == Vector(1, 0.));
-    CHECK(traj2[9.] == Vector(1, 4.));
-    CHECK(traj2[13.] == Vector(1, 0.));
-    CHECK(traj2[14.] == Vector(1, 1.));
-    CHECK(traj2[Interval(2.,9.)] == IntervalVector(1, Interval(-1.,4.)));
-    CHECK(traj2[Interval(3.,12.)] == IntervalVector(1, Interval(-2.,4.)));
-    CHECK(traj2[traj2.domain()] == IntervalVector(1, Interval(-2.,4.)));
+    CHECK(traj2[0.] == 1.);
+    CHECK(traj2[1.] == 0.);
+    CHECK(traj2[4.] == 0.);
+    CHECK(traj2[9.] == 4.);
+    CHECK(traj2[13.] == 0.);
+    CHECK(traj2[14.] == 1.);
+    CHECK(traj2[Interval(2.,9.)] == Interval(-1.,4.));
+    CHECK(traj2[Interval(3.,12.)] == Interval(-2.,4.));
+    CHECK(traj2[traj2.domain()] == Interval(-2.,4.));
   }
 
   SECTION("Update")
   {
     Trajectory traj;
-    traj.set(-4., Vector(1, 3.));
-    CHECK(ApproxIntv(traj.domain()) == InvervalVector(1, Interval(-4.)));
-    traj.set(-2., Vector(1, 4.));
-    CHECK(ApproxIntv(traj.domain()) == InvervalVector(1, Interval(-4.,-2.)));
+    traj.set(-4.,3.);
+    CHECK(ApproxIntv(traj.domain()) == Interval(-4.));
+    traj.set(-2.,4.);
+    CHECK(ApproxIntv(traj.domain()) == Interval(-4.,-2.));
     CHECK_THROWS(traj[-5.];);
-    CHECK(Approx(traj[-3.]) == Vector(1, 3.5));
+    CHECK(Approx(traj[-3.]) == 3.5);
   }
 
   SECTION("Domain")
   {
-    map<double,Vector> map_values;
+    map<double,double> map_values;
     for(double t = 0. ; t < 10. ; t++)
       map_values[t] = t;
 
@@ -72,7 +72,7 @@ TEST_CASE("Trajectory base")
 
     Trajectory traj2(Interval(-1.,10.), Function("t", "t^2"));
     CHECK(traj2.domain() == Interval(-1.,10.));
-    CHECK(traj2.codomain() == Interval(0.,100.));/*
+    CHECK(traj2.codomain() == Interval(0.,100.));
     CHECK(Approx(traj2[5.3]) == 28.09);
   }
 
@@ -102,17 +102,21 @@ TEST_CASE("Trajectory base")
     Trajectory traj1(map_values);
     Trajectory traj2(map_values);
     CHECK(traj1 == traj2);
+    CHECK(traj1.domain() == Interval(0.,9.));
     CHECK_FALSE(traj1 != traj2);
 
     traj1.set(3.2, 4.5);
+    CHECK(traj1.domain() == Interval(0.,9.));
     CHECK_FALSE(traj1 == traj2);
     CHECK(traj1 != traj2);
 
     traj1 = traj2;
+    CHECK(traj1.domain() == Interval(0.,9.));
     CHECK(traj1 == traj2);
     CHECK_FALSE(traj1 != traj2);
 
     traj1.set(0., 4.4);
+    CHECK(traj1.domain() == Interval(0.,9.));
     CHECK_FALSE(traj1 == traj2);
     CHECK(traj1 != traj2);
 
@@ -125,6 +129,6 @@ TEST_CASE("Trajectory base")
     Trajectory traj5(Interval(0.,10.), Function("t", "t^2"));
     Trajectory traj6(Interval(0.,10.), Function("t", "t^2+1"));
     CHECK_THROWS(traj5 == traj6); // not implemented yet
-    CHECK_THROWS(traj5 != traj6); // not implemented yet*/
+    CHECK_THROWS(traj5 != traj6); // not implemented yet
   }
 }
