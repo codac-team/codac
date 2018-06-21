@@ -228,9 +228,7 @@ TEST_CASE("Testing enclosed bounds (tube evaluations)")
     Tube tube4 = tubeTest4();
     tube4.set(Interval(-1,1), Interval(10,11));
     Tube tube4_primitive = tube4.primitive();
-    cout << tube4_primitive << endl;
-    cout << tube4_primitive.eval(Interval(12.5,14.5)).first << endl << tube4_primitive.eval(Interval(12.5,14.5)).second << endl;
-    CHECK(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));/*
+    //CHECK(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));/*
   }
 }
 
@@ -241,12 +239,12 @@ TEST_CASE("Testing set inversion")
     TubeSlice slice(Interval(0.,1.), IntervalVector(1, Interval(0.,10.)));
     slice.setInputGate(IntervalVector(1, Interval(2.,3.)));
     slice.setOutputGate(IntervalVector(1, Interval(5.,6.)));
-    CHECK(slice.invert(Interval(4.,6.), Interval(0.)) == Interval::EMPTY_SET);
-    CHECK(slice.invert(Interval(2.5,6.), Interval(0.)) == 0.);
-    CHECK(slice.invert(Interval(0.,1.), Interval(1.)) == Interval::EMPTY_SET);
-    CHECK(slice.invert(Interval(2.5,6.), Interval(1.)) == 1.);
-    CHECK(slice.invert(Interval(2.5,6.), Interval(0.2,0.5)) == Interval(0.2,0.5));
-    CHECK(slice.invert(Interval(2.5,6.), Interval(0.2)) == Interval(0.2));
+    CHECK(slice.invert(IntervalVector(1, Interval(4.,6.)), Interval(0.)) == Interval::EMPTY_SET);
+    CHECK(slice.invert(IntervalVector(1, Interval(2.5,6.)), Interval(0.)) == 0.);
+    CHECK(slice.invert(IntervalVector(1, Interval(0.,1.)), Interval(1.)) == Interval::EMPTY_SET);
+    CHECK(slice.invert(IntervalVector(1, Interval(2.5,6.)), Interval(1.)) == 1.);
+    CHECK(slice.invert(IntervalVector(1, Interval(2.5,6.)), Interval(0.2,0.5)) == Interval(0.2,0.5));
+    CHECK(slice.invert(IntervalVector(1, Interval(2.5,6.)), Interval(0.2)) == Interval(0.2));
   }
 
   SECTION("Scalar set inversion (Tube)")
@@ -388,12 +386,12 @@ TEST_CASE("Testing equalities")
 {
   SECTION("TubeSlice")
   {
-    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
-    TubeSlice slice2(Interval(0.,1.), Interval(1.,3.));
+    TubeSlice slice1(Interval(0.,1.), IntervalVector(1, Interval(1.,3.)));
+    TubeSlice slice2(Interval(0.,1.), IntervalVector(1, Interval(1.,3.)));
     CHECK(slice1 == slice2);
     CHECK_FALSE(slice1 != slice2);
 
-    slice1.set(Interval(10.,10.5));
+    slice1.set(IntervalVector(1, Interval(10.,10.5)));
     CHECK(slice1 != slice2);
     CHECK_FALSE(slice1 == slice2);
 
@@ -402,12 +400,12 @@ TEST_CASE("Testing equalities")
     CHECK_FALSE(slice1 != slice2);
 
     slice1 = slice2;
-    slice1.setInputGate(Interval(2.));
+    slice1.setInputGate(IntervalVector(1, Interval(2.)));
     CHECK(slice1 != slice2);
     CHECK_FALSE(slice1 == slice2);
 
     slice1 = slice2;
-    slice1.setOutputGate(Interval(6.));
+    slice1.setOutputGate(IntervalVector(1, Interval(6.)));
     CHECK(slice1 != slice2);
     CHECK_FALSE(slice1 == slice2);
   }
@@ -468,20 +466,20 @@ TEST_CASE("Testing isSubset()")
 {
   SECTION("TubeSlice")
   {
-    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
-    TubeSlice slice2(Interval(0.,1.), Interval(0.,4.));
-    TubeSlice slice3(Interval(0.,1.4), Interval(0.,4.));
+    TubeSlice slice1(Interval(0.,1.), IntervalVector(1, Interval(1.,3.)));
+    TubeSlice slice2(Interval(0.,1.), IntervalVector(1, Interval(0.,4.)));
+    TubeSlice slice3(Interval(0.,1.4), IntervalVector(1, Interval(0.,4.)));
 
     CHECK_THROWS(slice1.isSubset(slice3));
     CHECK(slice1.isSubset(slice2));
 
-    slice1.setInputGate(Interval(0.5,2.));
+    slice1.setInputGate(IntervalVector(1, Interval(0.5,2.)));
     CHECK(slice1.isSubset(slice2));
-    CHECK(slice1[0.] == Interval(1.,2.));
+    CHECK(slice1[0.][0] == Interval(1.,2.));
 
-    slice1.setOutputGate(Interval(0.5,2.));
+    slice1.setOutputGate(IntervalVector(1, Interval(0.5,2.)));
     CHECK(slice1.isSubset(slice2));
-    CHECK(slice1[1.] == Interval(1.,2.));
+    CHECK(slice1[1.][0] == Interval(1.,2.));
   }
 
   SECTION("Tube")
@@ -517,7 +515,7 @@ TEST_CASE("Testing encloses()")
 {
   SECTION("TubeSlice")
   {
-    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
+    TubeSlice slice1(Interval(0.,1.), IntervalVector(1, Interval(1.,3.)));
     // todo
   }
 
@@ -532,19 +530,19 @@ TEST_CASE("Testing isEmpty()")
 {
   SECTION("TubeSlice")
   {
-    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
+    TubeSlice slice1(Interval(0.,1.), IntervalVector(1, Interval(1.,3.)));
     CHECK(!slice1.isEmpty());
-    slice1.setInputGate(Interval(5.));
+    slice1.setInputGate(IntervalVector(1, Interval(5.)));
     CHECK(slice1.isEmpty());
-    slice1.setInputGate(Interval(2.));
+    slice1.setInputGate(IntervalVector(1, Interval(2.)));
     CHECK(!slice1.isEmpty());
-    slice1.setOutputGate(Interval(5.));
+    slice1.setOutputGate(IntervalVector(1, Interval(5.)));
     CHECK(slice1.isEmpty());
-    slice1.setOutputGate(Interval(2.));
+    slice1.setOutputGate(IntervalVector(1, Interval(2.)));
     CHECK(!slice1.isEmpty());
-    slice1.set(Interval::EMPTY_SET);
+    slice1.set(IntervalVector(1, Interval::EMPTY_SET));
     CHECK(slice1.isEmpty());
-    slice1.set(Interval::ALL_REALS);
+    slice1.set(IntervalVector(1, Interval::ALL_REALS));
     CHECK(!slice1.isEmpty());
   }
 
@@ -582,31 +580,31 @@ TEST_CASE("Testing inflate()")
 {
   SECTION("TubeSlice")
   {
-    TubeSlice slice(Interval(0.,10.), Interval(0.));
+    TubeSlice slice(Interval(0.,10.), IntervalVector(1, Interval(0.)));
 
-    CHECK(slice.codomain() == Interval(0.));
+    CHECK(slice.codomain()[0] == Interval(0.));
 
     slice.inflate(0.2);
 
-    CHECK(slice.codomain() == Interval(-0.2,0.2));
+    CHECK(slice.codomain()[0] == Interval(-0.2,0.2));
 
     slice.inflate(1.);
 
-    CHECK(ApproxIntv(slice.codomain()) == Interval(-1.2,1.2));
-    CHECK(ApproxIntv(slice.inputGate()) == Interval(-1.2,1.2));
-    CHECK(ApproxIntv(slice.outputGate()) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(slice.codomain()[0]) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(slice.inputGate()[0]) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(slice.outputGate()[0]) == Interval(-1.2,1.2));
 
-    slice.setInputGate(Interval(0.,0.5));
-    slice.setOutputGate(Interval(0.,0.3));
+    slice.setInputGate(IntervalVector(1, Interval(0.,0.5)));
+    slice.setOutputGate(IntervalVector(1, Interval(0.,0.3)));
 
-    CHECK(slice[0.] == Interval(0.,0.5));
-    CHECK(slice[10.] == Interval(0.,0.3));
+    CHECK(slice[0.][0] == Interval(0.,0.5));
+    CHECK(slice[10.][0] == Interval(0.,0.3));
 
     slice.inflate(1.);
 
-    CHECK(ApproxIntv(slice.codomain()) == Interval(-2.2,2.2));
-    CHECK(ApproxIntv(slice.inputGate()) == Interval(-1.,1.5));
-    CHECK(ApproxIntv(slice.outputGate()) == Interval(-1.,1.3));
+    CHECK(ApproxIntv(slice.codomain()[0]) == Interval(-2.2,2.2));
+    CHECK(ApproxIntv(slice.inputGate()[0]) == Interval(-1.,1.5));
+    CHECK(ApproxIntv(slice.outputGate()[0]) == Interval(-1.,1.3));
   }
 
   SECTION("Tube")
@@ -614,16 +612,16 @@ TEST_CASE("Testing inflate()")
     Tube tube(Interval(0.,10.), 0.8, Interval(0.));
     CHECK(tube.codomain() == Interval(0.));
     CHECK(tube[3] == Interval(0.));
-    CHECK(tube.getSlice(3)->inputGate() == Interval(0.));
-    CHECK(tube.getSlice(6)->inputGate() == Interval(0.));
+    CHECK(tube.getSlice(3)->inputGate()[0] == Interval(0.));
+    CHECK(tube.getSlice(6)->inputGate()[0] == Interval(0.));
     tube.inflate(0.2);
     CHECK(tube.codomain() == Interval(-0.2,0.2));
     CHECK(tube[6] == Interval(-0.2,0.2));
-    CHECK(tube.getSlice(6)->inputGate() == Interval(-0.2,0.2));
+    CHECK(tube.getSlice(6)->inputGate()[0] == Interval(-0.2,0.2));
     tube.inflate(1.);
     CHECK(ApproxIntv(tube.codomain()) == Interval(-1.2,1.2));
     CHECK(ApproxIntv(tube[9]) == Interval(-1.2,1.2));
-    CHECK(ApproxIntv(tube.getSlice(9)->inputGate()) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(tube.getSlice(9)->inputGate()[0]) == Interval(-1.2,1.2));
     double t = tube.getSlice(9)->domain().lb();
     tube.set(Interval(3.,7.), 8);
     tube.set(Interval(3.,7.), 9);
@@ -640,7 +638,7 @@ TEST_CASE("Testing volume()")
 {
   SECTION("TubeSlice")
   {
-    TubeSlice slice(Interval(0.,10.), Interval(4.,5.));
+    TubeSlice slice(Interval(0.,10.), IntervalVector(1, Interval(4.,5.)));
     CHECK(slice.volume() == 10.);
   }
 
@@ -650,6 +648,6 @@ TEST_CASE("Testing volume()")
     tube1.set(Interval(-4,2), 14);
     CHECK(tube1.volume() == 197.);
     Tube tube4 = tubeTest4();
-    CHECK(tube4.volume() == 9.+2.+1.+2.+1.+(21.-14.)*1.);*/
+    CHECK(tube4.volume() == 9.+2.+1.+2.+1.+(21.-14.)*1.);
   }
 }
