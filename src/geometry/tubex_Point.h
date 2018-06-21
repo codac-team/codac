@@ -31,7 +31,7 @@ namespace tubex
 
   Point point(double t, double x);
   //Point point(double t, ibex::Vector x);
-  void pushPoints(std::vector<Point>& v_points, const ibex::IntervalVector& box);
+  void pushPoints(const ibex::IntervalVector& box, std::vector<Point>& v_points);
 }
 
 #endif

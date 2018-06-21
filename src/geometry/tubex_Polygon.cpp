@@ -26,7 +26,7 @@ namespace tubex
 
   Polygon::Polygon(const IntervalVector& box)
   {
-    pushPoints(m_v_vertices, box);
+    pushPoints(box, m_v_vertices);
   }
 
   Polygon::Polygon(const vector<Point>& v_points)

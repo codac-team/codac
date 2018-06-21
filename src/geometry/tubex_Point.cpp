@@ -41,12 +41,11 @@ namespace tubex
     return p;
   }*/
 
-  void pushPoints(vector<Point>& v_points, const IntervalVector& box)
+  void pushPoints(const IntervalVector& box, vector<Point>& v_points)
   {
-    // todo
-    //v_points.push_back(point(box[0].lb(), box[1].lb()));
-    //v_points.push_back(point(box[0].lb(), box[1].ub()));
-    //v_points.push_back(point(box[0].ub(), box[1].ub()));
-    //v_points.push_back(point(box[0].ub(), box[1].lb()));
+    v_points.push_back(point(box[0].lb(), box[1].lb()));
+    v_points.push_back(point(box[0].lb(), box[1].ub()));
+    v_points.push_back(point(box[0].ub(), box[1].ub()));
+    v_points.push_back(point(box[0].ub(), box[1].lb()));
   }
 }

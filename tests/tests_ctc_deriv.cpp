@@ -354,7 +354,7 @@ TEST_CASE("CtcDeriv")
     ctc.contract(*(tube.getSlice(8)), *(tubedot.getSlice(8)));
     CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
 
-    //cout << "#0" << ctc.getPolygon(*tube.getSlice(8), *tubedot.getSlice(8)) << endl;
+    //cout << "#0" << ctc.getPolygon(0, *tube.getSlice(8), *tubedot.getSlice(8)) << endl;
 
     CHECK(tube[0.] == Interval(2.,3.));
     CHECK(tube[0] == Interval(-1.,7.));

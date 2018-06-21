@@ -444,9 +444,9 @@ namespace tubex
                 y |= x.inputGate()[i].ub() + (t.ub() - x.domain().lb()) * v.codomain()[i].ub();
             }
           }
-
-          v_pts.push_back(point(t.lb(), x.inputGate()[i].ub()));
       }
+      
+      v_pts.push_back(point(t.lb(), x.inputGate()[i].ub()));
 
       y &= prev_y;
       y &= x.codomain()[i];
