@@ -47,11 +47,11 @@ namespace tubex
         // 1. Refining
 
           int first_id_max_thickness;
-          double max_thickness = x.maxThickness(first_id_max_thickness);
+          x.maxThickness(first_id_max_thickness);
           double t_refining = x.getSlice(first_id_max_thickness)->domain().mid();
           x.sample(t_refining);
-/*
-        // 2. Contractions up to the fixed point
+
+        // 2. Propagations up to the fixed point
 
           double volume_before_ctc;
 
@@ -61,30 +61,30 @@ namespace tubex
             ctc_func(x);
             emptiness = x.isEmpty();
             volume = x.volume();
-          } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio)); // fixed point
-*/
+          } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio));
+
       } while(!emptiness && (volume / volume_before_refining) < (1. - refining_ratio));
-/*
+
       // 3. Bisection
 
         if(!emptiness)
         {
           int first_id_max_thickness;
-          double max_thickness = x.maxThickness(first_id_max_thickness);
+          double x_max_thickness = x.maxThickness(first_id_max_thickness);
           double t_bisection = x.getSlice(first_id_max_thickness)->domain().mid();
 
-          if(max_thickness > max_thickness)
+          if(x_max_thickness < max_thickness)
+            v_solutions.push_back(x);
+
+          else
           {
             pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
             s.push(p_x.first);
             s.push(p_x.second);
           }
+        }
 
-          else
-            v_solutions.push_back(x);
-        }*/
-
-      cout << "\rsolutions: " << v_solutions.size() << "  " << flush;
+      //cout << "\rsolutions: " << v_solutions.size() << "  " << flush;
     }
 
     cout << endl;

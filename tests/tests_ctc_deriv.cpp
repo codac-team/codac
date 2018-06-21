@@ -570,15 +570,15 @@ TEST_CASE("CtcDeriv (interpol)")
     CHECK(tube[3][0] == Interval(3.5,4.));
     CHECK(tube[4][0] == Interval(3.5,4.25));
 
-    //if(VIBES_DRAWING) // drawing results
-    //{
-    //  vibes::beginDrawing();
-    //  VibesFigure_Tube fig_tube("tubint", &tube);
-    //  fig_tube.setProperties(100, 100, 500, 500);
-    //  fig_tube.setTubeDerivative(&tube, &tubedot);
-    //  fig_tube.show(true);
-    //  vibes::endDrawing();
-    //}
+    if(VIBES_DRAWING) // drawing results
+    {
+      vibes::beginDrawing();
+      VibesFigure_Tube fig_tube("tubint", &tube);
+      fig_tube.setProperties(100, 100, 500, 500);
+      fig_tube.setTubeDerivative(&tube, &tubedot);
+      fig_tube.show(true);
+      vibes::endDrawing();
+    }
 
     // Tube evaluation after tube contraction
     y[0] = Interval::ALL_REALS;

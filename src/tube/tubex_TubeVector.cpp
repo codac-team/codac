@@ -486,6 +486,12 @@ namespace tubex
       TubeSlice *slice = getFirstSlice();
       while(slice != NULL)
       {
+        if(slice->codomain().is_unbounded())
+        {
+          first_id_max_thickness = i;
+          return numeric_limits<double>::infinity();
+        }
+
         if(slice->codomain().max_diam() > max_thickness)
         {
           max_thickness = slice->codomain().max_diam();

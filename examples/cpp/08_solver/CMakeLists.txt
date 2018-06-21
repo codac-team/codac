@@ -22,6 +22,6 @@
 
 # Tests
 
-  if(BUILD_TESTS)
-    add_test(NAME ExampleSolver COMMAND ex_solver 0)
-  endif(BUILD_TESTS)
+  #if(BUILD_TESTS)
+  #  add_test(NAME ExampleSolver COMMAND ex_solver 0)
+  #endif(BUILD_TESTS)

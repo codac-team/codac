@@ -9,7 +9,7 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST BVP
+#define SOLVER_TEST IVP_PICARD
 
 #if SOLVER_TEST == IVP
 
@@ -27,25 +27,25 @@ using namespace tubex;
 
 #elif SOLVER_TEST == IVP_PICARD
 
-  void contract(TubeVector& v_x)
+  void contract(TubeVector& x)
   {
-    /*if(v_x[0].codomain().is_unbounded())
+    if(x.codomain().is_unbounded())
     {
-      vector<Tube*> v_x_ptr;
-      v_x_ptr.push_back(&(v_x[0]));
       tubex::CtcPicard tube_picard;
       Function f("x", "-x");
-      tube_picard.contract(f, v_x_ptr);
+      tube_picard.contract(f, x);
+      cout << x << endl;
     }
 
-    v_x[0].ctcFwdBwd(-v_x[0]);*/
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, x);
   }
 
 #elif SOLVER_TEST == BVP
       
   void contract(TubeVector& x)
   {
-    /*Variable vx0, vx1;
+    Variable vx0, vx1;
     SystemFactory fac;
     fac.add_var(vx0);
     fac.add_var(vx1);
@@ -54,21 +54,23 @@ using namespace tubex;
     ibex::CtcHC4 hc4(sys);
     
     IntervalVector bounds(2);
-    bounds[0] &= x[0.][0];
-    bounds[1] &= x[1.][0];
+    bounds[0] = x[0.][0];
+    bounds[1] = x[1.][0];
     hc4.contract(bounds);
     x.set(IntervalVector(1,bounds[0]), 0.);
     x.set(IntervalVector(1,bounds[1]), 1.);
     
     if(x.codomain().is_unbounded())
     {
+      cout << "Picard" << endl;
       tubex::CtcPicard tube_picard;
       Function f("x", "x");
       tube_picard.contract(f, x);
+      cout << "end of Picard " << x << endl;
     }
     
     CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, x);*/
+    ctc_deriv.contract(x, x);
   }
 
 #elif SOLVER_TEST == BVP_CP2010
@@ -134,7 +136,7 @@ int main(int argc, char *argv[])
       float epsilon = 0.05;
       Interval domain(0.,1.);
       TubeVector x(domain, 1);
-      x.set(IntervalVector(1,1.), 0.); // initial condition
+      x.set(IntervalVector(1, 1.), 0.); // initial condition
       bool show_details = true;
 
     #elif SOLVER_TEST == BVP
@@ -208,6 +210,7 @@ int main(int argc, char *argv[])
 
     for(int i = 0 ; i < v_solutions.size() ; i++)
     {
+      cout << i << ": " << v_solutions[i] << endl;
       ostringstream o;
       o << "solution_" << i;
       fig.addTube(&v_solutions[i], o.str());

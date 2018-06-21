@@ -20,15 +20,15 @@ namespace tubex
 {
   void VibesFigure_Polygon::draw(const Polygon& p, const vibes::Params& params)
   {
-    vector<double> v_x, v_y;
+    vector<double> v_t, v_x;
 
     for(int i = 0 ; i < p.nbVertices() ; i++)
     {
+      v_t.push_back(VibesFigure::truncInf(p[i].t));
       v_x.push_back(VibesFigure::truncInf(p[i].x));
-      v_y.push_back(VibesFigure::truncInf(p[i].y));
     } 
 
-    if(v_x.size() > 0)
-      vibes::drawPolygon(v_x, v_y, params);
+    if(v_t.size() > 0)
+      vibes::drawPolygon(v_t, v_x, params);
   }
 }
