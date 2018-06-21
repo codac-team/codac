@@ -36,13 +36,12 @@ namespace tubex
   }
 
   TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)
-    : m_map_values(map_values)
   {
     typename map<double,Vector>::const_iterator it_map;
-    for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
+    for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
     {
       set(it_map->first, it_map->second);
-      DimensionException::check(m_map_values.begin()->second, it_map->second);
+      DimensionException::check(map_values.begin()->second, it_map->second);
     }
   }
 

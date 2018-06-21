@@ -136,6 +136,12 @@ namespace tubex
       throw DimensionException(dim);
   }
 
+  void DimensionException::checkScalar(int dim)
+  {
+    if(dim != 1)
+      throw DimensionException(dim);
+  }
+
   void DimensionException::check(const Vector& x1, const Vector& x2)
   {
     if(x1.size() != x2.size())

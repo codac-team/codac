@@ -14,6 +14,7 @@
 #define Tube_HEADER
 
 #include "tubex_TubeVector.h"
+#include "tubex_Trajectory.h"
 
 namespace tubex
 {
@@ -30,11 +31,11 @@ namespace tubex
       Tube(const Tube& x);
       Tube(const Tube& x, const ibex::Interval& codomain);
       Tube(const Tube& x, const ibex::Function& function);
-      Tube(const TrajectoryVector& traj, double timestep = 0.);
-      Tube(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep = 0.);
+      Tube(const Trajectory& traj, double timestep = 0.);
+      Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
       Tube(const std::string& binary_file_name);
-      Tube(const std::string& binary_file_name, TrajectoryVector& traj);
-      Tube(const std::string& binary_file_name, std::vector<TrajectoryVector>& v_trajs);
+      Tube(const std::string& binary_file_name, Trajectory& traj);
+      Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
       ~Tube();
       Tube primitive() const;
       using TubeVector::operator=;

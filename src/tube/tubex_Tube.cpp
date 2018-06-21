@@ -12,6 +12,7 @@
 
 #include "tubex_Tube.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;
@@ -34,10 +35,10 @@ namespace tubex
 
     }
 
-    Tube::Tube(const Interval& domain, double timestep, const Function& function)
-      : TubeVector(domain, timestep, function)
+    Tube::Tube(const Interval& domain, double timestep, const Function& f)
+      : TubeVector(domain, timestep, f)
     {
-
+      DimensionException::checkScalar(f.image_dim());
     }
 
     Tube::Tube(const Tube& x)
@@ -52,22 +53,23 @@ namespace tubex
 
     }
 
-    Tube::Tube(const Tube& x, const Function& function)
-      : TubeVector(x, function)
+    Tube::Tube(const Tube& x, const Function& f)
+      : TubeVector(x, f)
     {
-
+      DimensionException::checkScalar(f.image_dim());
     }
 
-    Tube::Tube(const TrajectoryVector& traj, double timestep)
+    Tube::Tube(const Trajectory& traj, double timestep)
       : TubeVector(traj, timestep)
     {
-
+      DimensionException::checkScalar(traj.dim());
     }
 
-    Tube::Tube(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep)
+    Tube::Tube(const Trajectory& lb, const Trajectory& ub, double timestep)
       : TubeVector(lb, ub, timestep)
     {
-
+      DimensionException::checkScalar(lb.dim());
+      DimensionException::checkScalar(ub.dim());
     }
 
     Tube::Tube(const string& binary_file_name)
@@ -76,17 +78,17 @@ namespace tubex
 
     }
 
-    Tube::Tube(const string& binary_file_name, TrajectoryVector& traj)
+    /*Tube::Tube(const string& binary_file_name, Trajectory& traj)
       : TubeVector(binary_file_name, traj)
     {
-
+      // todo
     }
 
-    Tube::Tube(const string& binary_file_name, vector<TrajectoryVector>& v_trajs)
+    Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
       : TubeVector(binary_file_name, v_trajs)
     {
-
-    }
+      // todo
+    }*/
 
     Tube::~Tube()
     {

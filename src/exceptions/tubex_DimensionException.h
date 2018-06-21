@@ -44,6 +44,7 @@ namespace tubex
       DimensionException(const TubeVector& x1, const TubeVector& x2);
 
       static void check(int dim);
+      static void checkScalar(int dim);
       static void check(const ibex::Vector& x1, const ibex::Vector& x2);
       static void check(const TrajectoryVector& traj, const ibex::Function& f);
       static void check(const TrajectoryVector& traj, const ibex::IntervalVector& box);
