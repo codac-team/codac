@@ -188,8 +188,8 @@ namespace tubex
     const Interval TubeVector::domain() const
     {
       // todo: read from tree structure
-      return Interval((*m_v_slices.begin())->domain().lb(),
-                      (*m_v_slices.rbegin())->domain().ub());
+      return Interval(m_v_slices.front()->domain().lb(),
+                      m_v_slices.back()->domain().ub());
     }
 
     int TubeVector::dim() const
@@ -273,12 +273,17 @@ namespace tubex
       DomainException::check(*this, t);
       // todo: read from tree structure
 
-      if(t == domain().ub())
-        return nbSlices() - 1;
-
-      for(int i = 0 ; i < nbSlices() ; i++)
-        if(t >= m_v_slices[i]->domain().lb() && t < m_v_slices[i]->domain().ub())
+      int i = -1;
+      const TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        i++;
+        if(t < slice->domain().ub())
           return i;
+        slice = slice->nextSlice();
+      }
+
+      return i;
     }
 
     void TubeVector::sample(double t)
@@ -301,13 +306,13 @@ namespace tubex
       new_slice->setDomain(Interval(t, slice_to_be_sampled->domain().ub()));
       slice_to_be_sampled->setDomain(Interval(slice_to_be_sampled->domain().lb(), t));
 
-      int new_slice_id = input2index(t) + 1;
-      vector<TubeSlice*>::iterator it = m_v_slices.begin() + new_slice_id;
-      m_v_slices.insert(it, new_slice);
+      vector<TubeSlice*>::iterator it = find(m_v_slices.begin(), m_v_slices.end(), slice_to_be_sampled);
+      m_v_slices.insert(++it, new_slice);
 
       // Updated slices structure
       TubeSlice::chainSlices(new_slice, next_slice);
       TubeSlice::chainSlices(slice_to_be_sampled, new_slice);
+      new_slice->setInputGate(new_slice->codomain());
     }
 
     void TubeVector::sample(double t, const IntervalVector& gate)
