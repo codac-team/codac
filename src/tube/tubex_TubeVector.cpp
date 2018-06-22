@@ -110,6 +110,26 @@ namespace tubex
       set(f);
     }
 
+    TubeVector::TubeVector(const Function& f, const TubeVector& x)
+      : TubeVector(x)
+    {
+      DimensionException::check(x, f); // todo: test f.input dim = f.output dim
+
+      TubeSlice *slice = getFirstSlice();
+      while(slice != NULL)
+      {
+        IntervalVector codomain = slice->inputGate();
+        slice->setInputGate(f.eval_vector(codomain));
+        codomain = slice->codomain();
+        slice->setEnvelope(f.eval_vector(codomain));
+        slice = slice->nextSlice();
+      }
+      
+      slice = getLastSlice();
+      IntervalVector codomain = slice->outputGate();
+      slice->setOutputGate(f.eval_vector(codomain));
+    }
+
     TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)
       : TubeVector(traj.domain(), timestep, traj.dim())
     {

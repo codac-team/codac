@@ -45,6 +45,7 @@ namespace tubex
       TubeVector(const TubeVector& x);
       TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
       TubeVector(const TubeVector& x, const ibex::Function& function);
+      TubeVector(const ibex::Function& function, const TubeVector& x);
       TubeVector(const TrajectoryVector& traj, double timestep = 0.);
       TubeVector(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep = 0.);
       TubeVector(const std::string& binary_file_name);

@@ -15,31 +15,32 @@ using namespace tubex;
 
   void contract(TubeVector& x)
   {
+    Function f("x", "-sin(x)");
+
     if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
-      Function f("x", "-sin(x)");
       ctc_picard.contract(f, x);
     }
 
     CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, x);
+    ctc_deriv.contract(x, TubeVector(f, x));
   }
 
 #elif SOLVER_TEST == IVP_PICARD
 
   void contract(TubeVector& x)
   {
+    Function f("x", "-x");
+
     if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
-      Function f("x", "-x");
       ctc_picard.contract(f, x);
-      cout << x << endl;
     }
 
     CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, x);
+    ctc_deriv.contract(x, TubeVector(f, x));
   }
 
 #elif SOLVER_TEST == BVP
@@ -61,15 +62,16 @@ using namespace tubex;
     x.set(IntervalVector(1,bounds[0]), 0.);
     x.set(IntervalVector(1,bounds[1]), 1.);
     
+    Function f("x", "x");
+
     if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
-      Function f("x", "x");
       ctc_picard.contract(f, x);
     }
     
     CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, x);
+    ctc_deriv.contract(x, TubeVector(f, x));
   }
 
 #elif SOLVER_TEST == BVP_CP2010

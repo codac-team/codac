@@ -14,9 +14,9 @@
 #define CtcHC4_HEADER
 
 #include "tubex_Ctc.h"
-#include "tubex_Tube.h"
-#include "tubex_TubeSlice.h"
 #include "ibex_CtcHC4.h"
+#include "tubex_TubeSlice.h"
+#include "tubex_TubeVector.h"
 
 namespace tubex
 {
@@ -28,18 +28,8 @@ namespace tubex
     public:
 
       CtcHC4();
-
-      // Tube
-      bool contract(Tube& x1, ibex::CtcHC4& hc4);
-      bool contract(Tube& x1, Tube& x2, ibex::CtcHC4& hc4);
-      bool contract(Tube& x1, Tube& x2, Tube& x3, ibex::CtcHC4& hc4);
-      bool contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, ibex::CtcHC4& hc4);
-
-      // TubeSlice
-      bool contract(TubeSlice& x1, ibex::CtcHC4& hc4);
-      bool contract(TubeSlice& x1, TubeSlice& x2, ibex::CtcHC4& hc4);
-      bool contract(TubeSlice& x1, TubeSlice& x2, TubeSlice& x3, ibex::CtcHC4& hc4);
-      bool contract(TubeSlice& x1, TubeSlice& x2, TubeSlice& x3, TubeSlice& x4, ibex::CtcHC4& hc4);
+      bool contract(ibex::CtcHC4& hc4, TubeVector& x);
+      bool contract(ibex::CtcHC4& hc4, TubeSlice& x);
 
     protected:
 
