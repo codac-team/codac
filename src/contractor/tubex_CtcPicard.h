@@ -28,7 +28,8 @@ namespace tubex
 
       CtcPicard(float delta = 1.1);
       bool contract(const ibex::Function& f, TubeVector& x);
-      bool contract(const ibex::Function& f, TubeSlice& x);
+      bool contract_fwd(const ibex::Function& f, TubeSlice& x);
+      bool contract_bwd(const ibex::Function& f, TubeSlice& x);
 
     protected:
 

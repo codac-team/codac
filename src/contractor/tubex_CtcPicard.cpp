@@ -34,7 +34,8 @@ namespace tubex
 
     while(slice_x != NULL)
     {
-      ctc |= contract(f, *slice_x);
+      ctc |= contract_fwd(f, *slice_x);
+      ctc |= contract_bwd(f, *slice_x);
 
       bool unbounded_slice = slice_x->codomain().is_unbounded();
 
@@ -58,8 +59,10 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract(const Function& f, TubeSlice& x)
+  bool CtcPicard::contract_fwd(const Function& f, TubeSlice& x)
   {
+    // todo: optimal approach with polygons?
+
     IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate(), intv_xf = x.outputGate();
     bool ctc = contract(f, intv_x, intv_x0, Interval(0., x.domain().diam()));
     x.setEnvelope(intv_x);
@@ -67,7 +70,20 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract(const Function& f, IntervalVector& x, const IntervalVector& x0, const Interval& h)
+  bool CtcPicard::contract_bwd(const Function& f, TubeSlice& x)
+  {
+    // todo: optimal approach with polygons?
+
+    IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate(), intv_xf = x.outputGate();
+    bool ctc = contract(f, intv_x, intv_xf, -Interval(0., x.domain().diam()));
+    x.setEnvelope(intv_x);
+    x.setOutputGate(x.outputGate() - x.domain().diam() * f.eval_vector(intv_x));
+    return ctc;
+  }
+
+  bool CtcPicard::contract(const Function& f,
+                           IntervalVector& x, const IntervalVector& x0,
+                           const Interval& h)
   {
     float delta = m_delta;
     IntervalVector x_guess = x0, x_enclosure(x.size());

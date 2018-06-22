@@ -26,22 +26,25 @@ namespace tubex
 
     // Definition
 
-    TubeSlice::TubeSlice(const Interval& domain, int dim) : m_domain(domain)
+    TubeSlice::TubeSlice(const Interval& domain, int dim)
+      : TubeSlice(domain, IntervalVector(dim))
     {
       DomainException::check(domain);
       DimensionException::check(dim);
-      
-      m_input_gate = new IntervalVector(dim);
-      m_output_gate = new IntervalVector(dim);
     }
 
-    TubeSlice::TubeSlice(const Interval& domain, const IntervalVector& codomain) : TubeSlice(domain, codomain.size())
+    TubeSlice::TubeSlice(const Interval& domain, const IntervalVector& codomain)
+      : m_domain(domain), m_codomain(codomain)
     {
       DomainException::check(domain);
-      set(codomain);
+      DimensionException::check(codomain.size());
+      
+      m_input_gate = new IntervalVector(codomain);
+      m_output_gate = new IntervalVector(codomain);
     }
 
-    TubeSlice::TubeSlice(const TubeSlice& x) : TubeSlice(x.domain(), x.codomain())
+    TubeSlice::TubeSlice(const TubeSlice& x)
+      : TubeSlice(x.domain(), x.codomain())
     {
       *this = x;
     }

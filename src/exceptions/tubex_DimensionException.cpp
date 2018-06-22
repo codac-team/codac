@@ -102,7 +102,7 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << "tube(" << x.dim() << "), box(" << box.size() << ")" << endl;
+    os << "TubeVector(" << x.dim() << "), box(" << box.size() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -110,7 +110,7 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << "tube(" << x.dim() << "), traj(" << traj.dim() << ")" << endl;
+    os << "TubeVector(" << x.dim() << "), traj(" << traj.dim() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -118,7 +118,7 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << "tube(" << x.dim() << "), f(" << f.image_dim() << ")" << endl;
+    os << "TubeVector(" << x.dim() << "), f(" << f.image_dim() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -126,7 +126,7 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << "tube1(" << x1.dim() << "), tube2(" << x2.dim() << ")" << endl;
+    os << "TubeVector1(" << x1.dim() << "), TubeVector2(" << x2.dim() << ")" << endl;
     m_what_msg = os.str();
   }
 

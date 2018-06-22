@@ -21,7 +21,7 @@ TEST_CASE("CtcPicard")
       CtcPicard ctc_picard;
 
       CHECK(x.codomain()[0] == Interval::ALL_REALS);
-      ctc_picard.contract(f, x);
+      ctc_picard.contract_fwd(f, x);
       CHECK(x.codomain()[0].is_superset(Interval(exp(domain))));
       CHECK(x.outputGate()[0].is_superset(Interval(exp(domain.ub()))));
   }

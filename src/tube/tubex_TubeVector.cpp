@@ -30,21 +30,21 @@ namespace tubex
     // Definition
 
     TubeVector::TubeVector(const Interval& domain, int dim)
+      : TubeVector(domain, IntervalVector(dim))
     {
       DomainException::check(domain);
       DimensionException::check(dim);
-
-      // By default, the tube is defined as one single slice
-      TubeSlice *slice = new TubeSlice(domain, dim);
-      slice->setTubeReference(this);
-      m_v_slices.push_back(slice);
     }
 
     TubeVector::TubeVector(const Interval& domain, const IntervalVector& codomain)
-      : TubeVector(domain, codomain.size())
     {
       DomainException::check(domain);
-      set(codomain);
+      DimensionException::check(codomain.size());
+
+      // By default, the tube is defined as one single slice
+      TubeSlice *slice = new TubeSlice(domain, codomain);
+      slice->setTubeReference(this);
+      m_v_slices.push_back(slice);
     }
     
     TubeVector::TubeVector(const Interval& domain, double timestep, int dim)
@@ -124,7 +124,7 @@ namespace tubex
         slice->setEnvelope(f.eval_vector(codomain));
         slice = slice->nextSlice();
       }
-      
+
       slice = getLastSlice();
       IntervalVector codomain = slice->outputGate();
       slice->setOutputGate(f.eval_vector(codomain));

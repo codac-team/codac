@@ -9,7 +9,7 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST BVP
+#define SOLVER_TEST BVP_CP2010
 
 #if SOLVER_TEST == IVP
 
@@ -78,21 +78,19 @@ using namespace tubex;
       
   void contract(TubeVector& x)
   {
-    //if(x.codomain().is_unbounded())
-    //{
-    //  cout << "starting Picard " << x.nbSlices() << endl;
-    //  Variable x1, x2;
-    //  Function f(x1, x2, Return(x2, 0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
-    //  tubex::CtcPicard ctc_picard;
-    //  ctc_picard.contract(f, x);
-    //  cout << "ending Picard" << endl;
-    //}
-    //
-    //float g = 20., b = 0.4, l = 0.05;
-    //Tube x2dot = l * v_x[0] * exp((g*b*(1.-v_x[0])) / (1. + b * (1.-v_x[0])));
-    //
-    //v_x[0].ctcFwdBwd(v_x[1]);
-    //v_x[1].ctcFwdBwd(x2dot);
+    Variable x1, x2;
+    Function f(x1, x2, Return(x2, 0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
+
+    if(x.codomain().is_unbounded())
+    {
+      cout << "starting Picard " << x.nbSlices() << endl;
+      tubex::CtcPicard ctc_picard;
+      ctc_picard.contract(f, x);
+      cout << "ending Picard" << endl;
+    }
+    
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, TubeVector(f, x));
   }
 
 #elif SOLVER_TEST == DELAY
@@ -149,12 +147,16 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == BVP_CP2010
 
-      float epsilon = 0.001;
+      float epsilon = 0.4;
       Interval domain(0.,1.);
-      TubeVector x(domain, 2);
-      IntervalVector x0(2), xf(2);
+      IntervalVector box(2), x0(2), xf(2);
+
+      box[0] = Interval(0.,1.);
+      box[1] = Interval(0.,2.);
+      TubeVector x(domain, box);
+
       x0[0] = Interval(0.,1.); x0[1] = 0.;
-      xf[0] = 1.;
+      xf[0] = 1.; xf[1] = Interval(0.97034556001404).inflate(0.01);
       x.set(x0, 0.);
       x.set(xf, 1.);
       bool show_details = true;
@@ -218,7 +220,8 @@ int main(int argc, char *argv[])
       fig.setTubeDerivative(&v_solutions[i], &v_solutions[i]);
     }
 
-    fig.show(show_details);
+    if(!v_solutions.empty())
+      fig.show(show_details);
     vibes::endDrawing();
 
   return EXIT_SUCCESS;
