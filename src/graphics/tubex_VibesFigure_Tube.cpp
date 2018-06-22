@@ -67,7 +67,7 @@ namespace tubex
 
       figtube->setProperties(x, y, 700, 350);
       if(tube != NULL) figtube->addTube(tube, DEFAULT_TUBE_NAME);
-      if(traj != NULL) figtube->addTrajectoryVector(traj, DEFAULT_TRAJ_NAME);
+      if(traj != NULL) figtube->addTrajectory(traj, DEFAULT_TRAJ_NAME);
       figtube->show();
     }
 
@@ -83,7 +83,7 @@ namespace tubex
     VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj) : VibesFigure(fig_name)
     {
       if(tube != NULL) addTube(tube, DEFAULT_TUBE_NAME);
-      if(traj != NULL) addTrajectoryVector(traj, DEFAULT_TUBE_NAME);
+      if(traj != NULL) addTrajectory(traj, DEFAULT_TUBE_NAME);
       m_view_box = IntervalVector(2, Interval::EMPTY_SET);
     }
 
@@ -154,10 +154,10 @@ namespace tubex
       m_map_tubes.erase(tube);
     }
 
-    void VibesFigure_Tube::addTrajectoryVector(const TrajectoryVector *traj, const string& name, const string& color)
+    void VibesFigure_Tube::addTrajectory(const TrajectoryVector *traj, const string& name, const string& color)
     {
       if(m_map_trajs.find(traj) != m_map_trajs.end())
-        cout << "Warning VibesFigure_Tube::addTrajectoryVector(): trajectory already added" << endl;
+        cout << "Warning VibesFigure_Tube::addTrajectory(): trajectory already added" << endl;
 
       else
         m_map_trajs[traj].color = color;

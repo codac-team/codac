@@ -9,7 +9,7 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST IVP
+#define SOLVER_TEST BVP
 
 #if SOLVER_TEST == IVP
 
@@ -63,11 +63,9 @@ using namespace tubex;
     
     if(x.codomain().is_unbounded())
     {
-      cout << "Picard" << endl;
       tubex::CtcPicard ctc_picard;
       Function f("x", "x");
       ctc_picard.contract(f, x);
-      cout << "end of Picard " << x << endl;
     }
     
     CtcDeriv ctc_deriv;
