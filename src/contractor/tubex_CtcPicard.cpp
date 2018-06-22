@@ -61,8 +61,6 @@ namespace tubex
 
   bool CtcPicard::contract_fwd(const Function& f, TubeSlice& x)
   {
-    // todo: optimal approach with polygons?
-
     IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate(), intv_xf = x.outputGate();
     bool ctc = contract(f, intv_x, intv_x0, Interval(0., x.domain().diam()));
     x.setEnvelope(intv_x);
@@ -72,8 +70,6 @@ namespace tubex
 
   bool CtcPicard::contract_bwd(const Function& f, TubeSlice& x)
   {
-    // todo: optimal approach with polygons?
-
     IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate(), intv_xf = x.outputGate();
     bool ctc = contract(f, intv_x, intv_xf, -Interval(0., x.domain().diam()));
     x.setEnvelope(intv_x);
