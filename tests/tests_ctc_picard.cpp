@@ -74,10 +74,64 @@ TEST_CASE("CtcPicard")
 
     if(VIBES_DRAWING) // drawing results
     {
-      cout << x_auto_sampling << endl;
-      cout << x_preserve_sampling << endl;
       vibes::beginDrawing();
       VibesFigure_Tube fig_tube("picard", &x_auto_sampling);
+      fig_tube.setProperties(100, 100, 500, 500);
+      fig_tube.show(true);
+      vibes::endDrawing();
+    }
+  }
+
+  SECTION("Test CtcPicard / TubeVector - dim 2")
+  {
+    Interval domain(0.,1.);
+
+    TubeVector x(domain, 2);
+    IntervalVector condition(2, Interval(1.));
+    x.set(condition, 0.);
+
+    Variable var_x, var_y;
+    Function f(var_x, var_y, Return(-var_x, -var_y));
+    CtcPicard ctc_picard;
+    ctc_picard.contract(f, x, false);
+    
+    CHECK_FALSE(x.codomain().is_unbounded());
+    CHECK(x.codomain()[0].is_superset(exp(-domain)));
+    CHECK(x[0.][0].is_superset(Interval(exp(-0.))));
+    CHECK(x[1.][0].is_superset(Interval(exp(-1.))));
+
+    if(VIBES_DRAWING) // drawing results
+    {
+      vibes::beginDrawing();
+      VibesFigure_Tube fig_tube("picard", &x);
+      fig_tube.setProperties(100, 100, 500, 500);
+      fig_tube.show(true);
+      vibes::endDrawing();
+    }
+  }
+
+  SECTION("Test CtcPicard / TubeVector - dim 1 - backward")
+  {
+    Interval domain(0.,1.);
+
+    TubeVector x(domain, 1);
+    IntervalVector condition(1, Interval(1.));
+    x.set(condition, 1.);
+
+    Function f("x", "-x");
+    CtcPicard ctc_picard;
+
+    ctc_picard.contract(f, x, false);
+    
+    CHECK_FALSE(x.codomain().is_unbounded());
+    CHECK(x.codomain()[0].is_superset(exp(-(domain - 1.))));
+    CHECK(x[0.][0].is_superset(Interval(exp(1.))));
+    CHECK(x[1.][0].is_superset(Interval(exp(0.))));
+
+    if(VIBES_DRAWING) // drawing results
+    {
+      vibes::beginDrawing();
+      VibesFigure_Tube fig_tube("picard", &x);
       fig_tube.setProperties(100, 100, 500, 500);
       fig_tube.show(true);
       vibes::endDrawing();

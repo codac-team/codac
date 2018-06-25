@@ -38,31 +38,50 @@ namespace tubex
     else
       x_ptr = &x;
     
-    TubeSlice *slice_x = x_ptr->getFirstSlice();
+    bool fwd = true;
+    TubeSlice *slice_x;
+
+    if(!x[x.domain().lb()].is_subset(x[x.domain().ub()]))
+    {
+      fwd = false;
+      slice_x = x_ptr->getLastSlice();
+    }
+
+    else
+      slice_x = x_ptr->getFirstSlice();
 
     while(slice_x != NULL)
     {
-      ctc |= contract_fwd(f, *slice_x);
-      //ctc |= contract_bwd(f, *slice_x);
+      if(fwd) ctc |= contract_fwd(f, *slice_x);
+      else ctc |= contract_bwd(f, *slice_x);
 
       bool unbounded_slice = slice_x->codomain().is_unbounded();
 
       if(unbounded_slice && slice_x->domain().diam() > x_ptr->domain().diam() / 5000.)
       {
-        TubeSlice *prev_slice_x = slice_x->prevSlice();
-        cout << "sampling " << slice_x->domain().mid() << endl;
+        TubeSlice *prev_slice_x;
+        if(fwd) prev_slice_x = slice_x->prevSlice();
+        else prev_slice_x = slice_x->nextSlice();
+
         x_ptr->sample(slice_x->domain().mid());
 
         if(prev_slice_x == NULL)
-          slice_x = x_ptr->getFirstSlice();
+        {
+          if(fwd) slice_x = x_ptr->getFirstSlice();
+          else slice_x = x_ptr->getLastSlice();
+        }
 
         else
-          slice_x = prev_slice_x->nextSlice();
+        {
+          if(fwd) slice_x = prev_slice_x->nextSlice();
+          else slice_x = prev_slice_x->prevSlice();
+        }
 
         continue;
       }
 
-      slice_x = slice_x->nextSlice();
+      if(fwd) slice_x = slice_x->nextSlice();
+      else slice_x = slice_x->prevSlice();
     }
 
     if(preserve_sampling)
@@ -79,19 +98,19 @@ namespace tubex
 
   bool CtcPicard::contract_fwd(const Function& f, TubeSlice& x)
   {
-    IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate(), intv_xf = x.outputGate();
+    IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate();
     bool ctc = contract(f, intv_x, intv_x0, Interval(0., x.domain().diam()));
     x.setEnvelope(intv_x);
-    x.setOutputGate(x.inputGate() + x.domain().diam() * f.eval_vector(intv_x));
+    x.setOutputGate(x.outputGate() & (intv_x0 + x.domain().diam() * f.eval_vector(intv_x)));
     return ctc;
   }
 
   bool CtcPicard::contract_bwd(const Function& f, TubeSlice& x)
   {
-    IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate(), intv_xf = x.outputGate();
+    IntervalVector intv_x = x.codomain(), intv_xf = x.outputGate();
     bool ctc = contract(f, intv_x, intv_xf, -Interval(0., x.domain().diam()));
     x.setEnvelope(intv_x);
-    x.setInputGate(x.outputGate() - x.domain().diam() * f.eval_vector(intv_x));
+    x.setInputGate(x.inputGate() & (intv_xf - x.domain().diam() * f.eval_vector(intv_x)));
     return ctc;
   }
 
@@ -125,7 +144,7 @@ namespace tubex
     } while(!x_enclosure.is_strict_interior_subset(x_guess));
 
     bool ctc = x != x_enclosure;
-    x = x_enclosure;
+    x &= x_enclosure;
     return ctc;
   }
 }
