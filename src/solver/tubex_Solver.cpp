@@ -46,9 +46,7 @@ namespace tubex
 
         // 1. Refining
 
-          int first_id_max_thickness;
-          x.maxThickness(first_id_max_thickness);
-          double t_refining = x.getSlice(first_id_max_thickness)->domain().mid();
+          double t_refining = x.getWiderSlice()->domain().mid();
           x.sample(t_refining);
 
         // 2. Propagations up to the fixed point

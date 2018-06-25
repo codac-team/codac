@@ -22,33 +22,37 @@ namespace tubex
 {
   // todo: backward
 
-  CtcPicard::CtcPicard(float delta) : m_delta(delta)
+  CtcPicard::CtcPicard(float delta, bool preserve_sampling)
+    : m_delta(delta), m_preserve_sampling(preserve_sampling)
   {
 
   }
   
-  bool CtcPicard::contract(const Function& f, TubeVector& x, bool preserve_sampling)
+  bool CtcPicard::contract_fwd(const Function& f, TubeVector& x)
+  {
+    return contract(f, x, true);
+  }
+  
+  bool CtcPicard::contract_bwd(const Function& f, TubeVector& x)
+  {
+    return contract(f, x, false);
+  }
+  
+  bool CtcPicard::contract(const Function& f, TubeVector& x, bool fwd)
   {
     bool ctc = false;
     TubeVector *x_ptr;
 
-    if(preserve_sampling)
+    if(m_preserve_sampling)
       x_ptr = new TubeVector(x);
 
     else
       x_ptr = &x;
     
-    bool fwd = true;
     TubeSlice *slice_x;
 
-    if(!x[x.domain().lb()].is_subset(x[x.domain().ub()]))
-    {
-      fwd = false;
-      slice_x = x_ptr->getLastSlice();
-    }
-
-    else
-      slice_x = x_ptr->getFirstSlice();
+    if(fwd) slice_x = x_ptr->getFirstSlice();
+    else slice_x = x_ptr->getLastSlice();
 
     while(slice_x != NULL)
     {
@@ -84,7 +88,7 @@ namespace tubex
       else slice_x = slice_x->prevSlice();
     }
 
-    if(preserve_sampling)
+    if(m_preserve_sampling)
     {
       double lb = x.domain().lb(), ub = x.domain().ub();
       x.set(x.codomain() & x_ptr->codomain());
@@ -141,7 +145,7 @@ namespace tubex
       if(x_enclosure.is_unbounded())
         return false;
 
-    } while(!x_enclosure.is_strict_interior_subset(x_guess));
+    } while(!x_enclosure.is_interior_subset(x_guess));
 
     bool ctc = x != x_enclosure;
     x &= x_enclosure;

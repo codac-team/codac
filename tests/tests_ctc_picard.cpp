@@ -56,10 +56,11 @@ TEST_CASE("CtcPicard")
     TubeVector x_auto_sampling(x_preserve_sampling);
 
     Function f("x", "-x");
-    CtcPicard ctc_picard;
+    CtcPicard ctc_picard_preserve(1.1, true);
+    CtcPicard ctc_picard_auto(1.1, false);
 
-    ctc_picard.contract(f, x_preserve_sampling, true);
-    ctc_picard.contract(f, x_auto_sampling, false);
+    ctc_picard_preserve.contract(f, x_preserve_sampling);
+    ctc_picard_auto.contract(f, x_auto_sampling);
     
     CHECK_FALSE(x_preserve_sampling.codomain().is_unbounded());
     CHECK(x_preserve_sampling.codomain()[0].is_superset(exp(-domain)));
@@ -92,8 +93,8 @@ TEST_CASE("CtcPicard")
 
     Variable var_x, var_y;
     Function f(var_x, var_y, Return(-var_x, -var_y));
-    CtcPicard ctc_picard;
-    ctc_picard.contract(f, x, false);
+    CtcPicard ctc_picard(1.1, false);
+    ctc_picard.contract(f, x);
     
     CHECK_FALSE(x.codomain().is_unbounded());
     CHECK(x.codomain()[0].is_superset(exp(-domain)));
@@ -119,9 +120,9 @@ TEST_CASE("CtcPicard")
     x.set(condition, 1.);
 
     Function f("x", "-x");
-    CtcPicard ctc_picard;
+    CtcPicard ctc_picard(1.1, false);
 
-    ctc_picard.contract(f, x, false);
+    ctc_picard.contract(f, x);
     
     CHECK_FALSE(x.codomain().is_unbounded());
     CHECK(x.codomain()[0].is_superset(exp(-(domain - 1.))));

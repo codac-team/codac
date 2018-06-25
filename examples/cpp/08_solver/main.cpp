@@ -11,7 +11,7 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST BVP
+#define SOLVER_TEST BVP_CP2010
 
 #if SOLVER_TEST == IVP
 
@@ -123,15 +123,35 @@ using namespace tubex;
       
   void contract(TubeVector& x)
   {
-    Variable x1, x2;
-    Function f(x1, x2, Return(x2, 0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
+    Variable x1, x2, x1dot, x2dot;
+    
+    Function f(x1,
+               x2,
+               x1dot,
+               x2dot,
+        Return(x2,
+               0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1))),
+               Interval::ALL_REALS,
+               Interval::ALL_REALS));
 
-    if(x.codomain().is_unbounded())
+    Function g(x1,
+               x2,
+               x1dot,
+               x2dot,
+        Return(x1,
+               x2,
+               x2,
+               0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
+
+    x &= TubeVector(g, x);
+
+    //if(x.codomain().is_unbounded())
     {
-      cout << "starting Picard " << x.nbSlices() << endl;
+      //cout << "starting Picard " << x.nbSlices() << endl;
       tubex::CtcPicard ctc_picard;
-      ctc_picard.contract(f, x);
-      cout << "ending Picard" << endl;
+      ctc_picard.contract_fwd(f, x);
+      ctc_picard.contract_bwd(f, x);
+      //cout << "ending Picard" << endl;
     }
     
     CtcDeriv ctc_deriv;
@@ -201,13 +221,13 @@ int main(int argc, char *argv[])
 
       float epsilon = 0.1;
       Interval domain(0.,1.);
-      IntervalVector box(2), x0(2), xf(2);
+      IntervalVector box(4), x0(4), xf(4);
 
-      //box[0] = Interval(0.,1.);
-      //box[1] = Interval(0.,2.);
+      box[0] = Interval(0.,1.);
+      box[1] = Interval(0.,2.);
       TubeVector x(domain, box);
 
-      x0[0] = Interval(0.,1.); x0[1] = 0.;
+      x0[0] = Interval(0.97034556001404).inflate(0.1);/*Interval(0.,1.);*/ x0[1] = 0.;
       xf[0] = 1.;
       x.set(x0, 0.);
       x.set(xf, 1.);
