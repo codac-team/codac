@@ -35,7 +35,8 @@ namespace tubex
   {
     public:
 
-      VibesFigure_Tube(const std::string& fig_name, const TubeVector *tube = NULL, const TrajectoryVector *traj = NULL);
+      VibesFigure_Tube(const std::string& fig_name, int dim = 1);
+      VibesFigure_Tube(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj = NULL);
       ~VibesFigure_Tube();
 
       void addTube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
@@ -52,6 +53,7 @@ namespace tubex
 
       virtual void show();
       void show(bool detail_slices);
+      void show(int dim, bool detail_slices);
 
       // Static methods (shortcuts for fast and simple use)
       static void draw(const std::string& fig_name, int x = 0, int y = 0);
@@ -67,7 +69,7 @@ namespace tubex
       void drawSlice(const TubeSlice& slice, const vibes::Params& params) const;
       void drawSlice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon) const;
       void drawGate(const ibex::Interval& gate, double t, const vibes::Params& params) const;
-      const ibex::IntervalVector drawTrajectoryVector(const TrajectoryVector *traj, float points_size = 0.);
+      const ibex::IntervalVector drawTrajectory(const TrajectoryVector *traj, float points_size = 0.);
 
     protected:
 

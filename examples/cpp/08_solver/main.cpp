@@ -9,13 +9,14 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST BVP_CP2010
+#define SOLVER_TEST IVP
 
 #if SOLVER_TEST == IVP
 
   void contract(TubeVector& x)
   {
-    Function f("x", "-sin(x)");
+    Variable x1, x2;
+    Function f(x1, x2, Return(-sin(x1), -x2));
 
     if(x.codomain().is_unbounded())
     {
@@ -124,10 +125,10 @@ int main(int argc, char *argv[])
 
     #if SOLVER_TEST == IVP
 
-      float epsilon = 0.03;
+      float epsilon = 0.3;
       Interval domain(0.,10.);
-      TubeVector x(domain, 1);
-      x.set(IntervalVector(1,1.), 0.); // initial condition
+      TubeVector x(domain, 2);
+      x.set(IntervalVector(2,1.), 0.); // initial condition
       bool show_details = true;
 
     #elif SOLVER_TEST == IVP_PICARD
@@ -147,7 +148,7 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == BVP_CP2010
 
-      float epsilon = 0.4;
+      float epsilon = 0.1;
       Interval domain(0.,1.);
       IntervalVector box(2), x0(2), xf(2);
 
@@ -156,7 +157,7 @@ int main(int argc, char *argv[])
       TubeVector x(domain, box);
 
       x0[0] = Interval(0.,1.); x0[1] = 0.;
-      xf[0] = 1.; xf[1] = Interval(0.97034556001404).inflate(0.01);
+      xf[0] = 1.; xf[0] = Interval(0.97034556001404).inflate(0.001);
       x.set(x0, 0.);
       x.set(xf, 1.);
       bool show_details = true;
@@ -183,7 +184,7 @@ int main(int argc, char *argv[])
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    VibesFigure_Tube fig("Solver");
+    VibesFigure_Tube fig("Solver", x.dim());
 
     #if SOLVER_TEST == IVP
 

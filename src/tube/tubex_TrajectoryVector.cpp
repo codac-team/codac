@@ -218,6 +218,7 @@ namespace tubex
     }
 
     m_codomain.set_empty();
+
     for(map<double,Vector>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
       m_codomain |= it->second;
 

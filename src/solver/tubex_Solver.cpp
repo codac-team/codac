@@ -84,7 +84,7 @@ namespace tubex
           }
         }
 
-      //cout << "\rsolutions: " << v_solutions.size() << "  " << flush;
+      cout << "\rsolutions: " << v_solutions.size() << "  " << flush;
     }
 
     cout << endl;

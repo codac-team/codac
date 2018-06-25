@@ -28,7 +28,7 @@ namespace tubex
        *
        * \param figure_name a reference to the figure that will be displayed in the window's title
        */
-      VibesFigure(const std::string& figure_name);
+      VibesFigure(const std::string& figure_name, int nb_layers = 1);
 
       /**
        * \brief Delete this figure.
@@ -146,7 +146,9 @@ namespace tubex
 
     protected:
 
-      std::string groupNameSuffix(const std::string& name, int id);
+      void setCurrentLayer(int layer);
+      std::string figName();
+      static std::string addSuffix(const std::string& name, int id);
 
 
     protected:
@@ -154,6 +156,7 @@ namespace tubex
       mutable std::string m_name;
       int m_x, m_y, m_width, m_height;
       ibex::IntervalVector m_view_box;
+      int m_nb_layers = 1, m_current_layer = 0;
   };
 }
 
