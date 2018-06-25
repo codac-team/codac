@@ -36,6 +36,36 @@
     return *this; \
   } \
   \
+  TubeVector& TubeVector::f(const IntervalVector& x) \
+  { \
+    DimensionException::check(*this, x); \
+    IntervalVector y(x); \
+    TubeSlice *slice, *first_slice = getFirstSlice(); \
+    slice = first_slice; \
+    while(slice != NULL) \
+    { \
+      y = slice->codomain(); \
+      y.f(x); \
+      slice->setEnvelope(y); \
+      slice = slice->nextSlice(); \
+    } \
+    slice = first_slice; \
+    while(slice != NULL) \
+    { \
+      if(slice == first_slice) \
+      { \
+        y = slice->inputGate(); \
+        y.f(x); \
+        slice->setInputGate(y); \
+      } \
+      y = slice->outputGate(); \
+      y.f(x); \
+      slice->setOutputGate(y); \
+      slice = slice->nextSlice(); \
+    } \
+    return *this; \
+  } \
+  \
   TubeVector& TubeVector::f(const TrajectoryVector& traj_x) \
   { \
     DomainException::check(*this, traj_x); \
