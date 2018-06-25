@@ -30,6 +30,7 @@ namespace tubex
       bool contract(const ibex::Function& f, TubeVector& x, bool preserve_sampling = false);
       bool contract_fwd(const ibex::Function& f, TubeSlice& x);
       bool contract_bwd(const ibex::Function& f, TubeSlice& x);
+      int picardIterations() const;
 
     protected:
 
@@ -38,6 +39,7 @@ namespace tubex
                     const ibex::Interval& h);
 
       float m_delta;
+      int m_picard_iterations = 0;
   };
 }
 
