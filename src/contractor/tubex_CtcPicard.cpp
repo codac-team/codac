@@ -27,10 +27,18 @@ namespace tubex
 
   }
   
-  bool CtcPicard::contract(const Function& f, TubeVector& x)
+  bool CtcPicard::contract(const Function& f, TubeVector& x, bool preserve_sampling)
   {
     bool ctc = false;
-    TubeSlice* slice_x = x.getFirstSlice();
+    TubeVector *x_ptr;
+
+    if(preserve_sampling)
+      x_ptr = new TubeVector(x);
+
+    else
+      x_ptr = &x;
+    
+    TubeSlice *slice_x = x_ptr->getFirstSlice();
 
     while(slice_x != NULL)
     {
@@ -39,13 +47,13 @@ namespace tubex
 
       bool unbounded_slice = slice_x->codomain().is_unbounded();
 
-      if(unbounded_slice && slice_x->domain().diam() > x.domain().diam() / 5000.)
+      if(unbounded_slice && slice_x->domain().diam() > x_ptr->domain().diam() / 5000.)
       {
         TubeSlice *prev_slice_x = slice_x->prevSlice();
-        x.sample(slice_x->domain().mid());
+        x_ptr->sample(slice_x->domain().mid());
 
         if(prev_slice_x == NULL)
-          slice_x = x.getFirstSlice();
+          slice_x = x_ptr->getFirstSlice();
 
         else
           slice_x = prev_slice_x->nextSlice();
@@ -54,6 +62,12 @@ namespace tubex
       }
 
       slice_x = slice_x->nextSlice();
+    }
+
+    if(preserve_sampling)
+    {
+      x &= x_ptr->codomain();
+      delete x_ptr;
     }
 
     return ctc;

@@ -1,4 +1,5 @@
 #include "tubex.h"
+#include <time.h>
 
 using namespace std;
 using namespace ibex;
@@ -6,17 +7,17 @@ using namespace tubex;
 
 #define IVP 1
 #define BVP 2
+#define DAE 3
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST IVP
+#define SOLVER_TEST BVP
 
 #if SOLVER_TEST == IVP
 
   void contract(TubeVector& x)
   {
-    Variable x1, x2;
-    Function f(x1, x2, Return(-sin(x1), -x2));
+    Function f("x", "-sin(x)");
 
     if(x.codomain().is_unbounded())
     {
@@ -44,6 +45,49 @@ using namespace tubex;
     ctc_deriv.contract(x, TubeVector(f, x));
   }
 
+#elif SOLVER_TEST == DAE
+
+  void contract(TubeVector& x)
+  {
+    //Variable vx, vy;
+    //Function f("x", "y", "(y, [-oo,oo])");//vx, vy, Return(vy,"[-oo,oo]"));
+
+    //if(x.codomain().is_unbounded())
+    //{
+    //  tubex::CtcPicard ctc_picard;
+    //  ctc_picard.contract(f, x);
+    //}
+
+    Variable vx0, vx1;
+    SystemFactory fac;
+    fac.add_var(vx0);
+    fac.add_var(vx1);
+    fac.add_ctr(sqr(vx0) + sqr(vx1) = 1);
+    System sys(fac);
+    ibex::CtcHC4 hc4(sys);
+    tubex::CtcHC4 ctc_hc4;
+    ctc_hc4.contract(hc4, x);
+
+    TubeVector xdot(x);
+    TubeSlice *xdot_slice = xdot.getFirstSlice(), *x_slice = x.getFirstSlice();
+    while(xdot_slice != NULL)
+    {
+      IntervalVector box(2);
+      box[0] = x_slice->inputGate()[1];
+      xdot_slice->setInputGate(box);
+      box[0] = x_slice->outputGate()[1];
+      xdot_slice->setOutputGate(box);
+      box[0] = x_slice->codomain()[1];
+      xdot_slice->setEnvelope(box);
+
+      x_slice = x_slice->nextSlice();
+      xdot_slice = xdot_slice->nextSlice();
+    }
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, xdot);
+  }
+
 #elif SOLVER_TEST == BVP
       
   void contract(TubeVector& x)
@@ -68,7 +112,7 @@ using namespace tubex;
     if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
-      ctc_picard.contract(f, x);
+      ctc_picard.contract(f, x, true);
     }
     
     CtcDeriv ctc_deriv;
@@ -125,10 +169,10 @@ int main(int argc, char *argv[])
 
     #if SOLVER_TEST == IVP
 
-      float epsilon = 0.3;
+      float epsilon = 0.1;
       Interval domain(0.,10.);
-      TubeVector x(domain, 2);
-      x.set(IntervalVector(2,1.), 0.); // initial condition
+      TubeVector x(domain, 1);
+      x.set(IntervalVector(1,1.), 0.); // initial condition
       bool show_details = true;
 
     #elif SOLVER_TEST == IVP_PICARD
@@ -137,6 +181,13 @@ int main(int argc, char *argv[])
       Interval domain(0.,1.);
       TubeVector x(domain, 1);
       x.set(IntervalVector(1, 1.), 0.); // initial condition
+      bool show_details = true;
+
+    #elif SOLVER_TEST == DAE
+
+      float epsilon = 0.5;
+      Interval domain(0.,1.);
+      TubeVector x(domain, IntervalVector(2, Interval(-1.,1.)));
       bool show_details = true;
 
     #elif SOLVER_TEST == BVP
@@ -152,12 +203,12 @@ int main(int argc, char *argv[])
       Interval domain(0.,1.);
       IntervalVector box(2), x0(2), xf(2);
 
-      box[0] = Interval(0.,1.);
-      box[1] = Interval(0.,2.);
+      //box[0] = Interval(0.,1.);
+      //box[1] = Interval(0.,2.);
       TubeVector x(domain, box);
 
       x0[0] = Interval(0.,1.); x0[1] = 0.;
-      xf[0] = 1.; xf[0] = Interval(0.97034556001404).inflate(0.001);
+      xf[0] = 1.;
       x.set(x0, 0.);
       x.set(xf, 1.);
       bool show_details = true;
@@ -176,7 +227,9 @@ int main(int argc, char *argv[])
   /* =========== SOLVER =========== */
 
     tubex::Solver solver;
+    clock_t tStart = clock();
     vector<TubeVector> v_solutions = solver.solve(x, &contract, epsilon);
+    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
     if(v_solutions.size() == 0)
       cout << "no solution found" << endl;
@@ -191,6 +244,10 @@ int main(int argc, char *argv[])
       fig.setProperties(100,100,700,500);
 
     #elif SOLVER_TEST == IVP_PICARD
+
+      fig.setProperties(100,100,700,500);
+
+    #elif SOLVER_TEST == DAE
 
       fig.setProperties(100,100,700,500);
 
@@ -218,7 +275,7 @@ int main(int argc, char *argv[])
       ostringstream o;
       o << "solution_" << i;
       fig.addTube(&v_solutions[i], o.str());
-      fig.setTubeDerivative(&v_solutions[i], &v_solutions[i]);
+      //fig.setTubeDerivative(&v_solutions[i], &v_solutions[i]);
     }
 
     if(!v_solutions.empty())
