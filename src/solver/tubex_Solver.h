@@ -28,6 +28,7 @@ namespace tubex
                                     float max_thickness,
                                     float refining_ratio = 0.005,
                                     float fixed_point_ratio = 0.005);
+      void cid(TubeVector &x, void (*ctc_func)(TubeVector&));
 
     protected:
       

@@ -12,7 +12,7 @@ using namespace tubex;
 #define BVP_CP2010 5
 #define DELAY 6
 #define IVP2 7
-#define SOLVER_TEST IVP
+#define SOLVER_TEST BVP_CP2010
 
 #if SOLVER_TEST == IVP
 
@@ -275,8 +275,8 @@ int main(int argc, char *argv[])
 
       // 0.5058725840206
       // 0.9226804137526
-      x0[0] = Interval(0.5058725840206).inflate(0.000001); x0[1] = 0.;
-      /*xf[1] = Interval(0.5058725840206).inflate(0.000001);*/ xf[0] = 1.;
+      x0[0] = Interval(0.5058725840206).inflate(0.01); x0[1] = 0.;
+      /*xf[1] = Interval(0.7379775914054797).inflate(0.000001);*/ xf[0] = 1.;
       x.set(x0, 0.);
       x.set(xf, 1.);
       bool show_details = true;

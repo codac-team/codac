@@ -57,17 +57,7 @@ namespace tubex
           {
             volume_before_ctc = x.volume();
             ctc_func(x);
-
-            // CID.
-            //if(!x.isEmpty())
-            //{
-            //  pair<TubeVector,TubeVector> p_x = x.bisect(t_refining);
-            //  ctc_func(p_x.first);
-            //  ctc_func(p_x.second);
-            //  x = p_x.first;
-            //  x |= p_x.second;
-            //}
-
+            cid(x, ctc_func);
             emptiness = x.isEmpty();
             volume = x.volume();
           } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio));
@@ -98,5 +88,20 @@ namespace tubex
 
     cout << endl;
     return v_solutions;
+  }
+
+  void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
+  {
+    if(!x.isEmpty())
+    {
+      int first_id_max_thickness;
+      double x_max_thickness = x.maxThickness(first_id_max_thickness);
+      double t_bisection = x.getSlice(first_id_max_thickness)->domain().lb();
+      pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
+      ctc_func(p_x.first);
+      ctc_func(p_x.second);
+      x = p_x.first;
+      x |= p_x.second;
+    }
   }
 }
