@@ -57,6 +57,17 @@ namespace tubex
           {
             volume_before_ctc = x.volume();
             ctc_func(x);
+
+            // CID.
+            //if(!x.isEmpty())
+            //{
+            //  pair<TubeVector,TubeVector> p_x = x.bisect(t_refining);
+            //  ctc_func(p_x.first);
+            //  ctc_func(p_x.second);
+            //  x = p_x.first;
+            //  x |= p_x.second;
+            //}
+
             emptiness = x.isEmpty();
             volume = x.volume();
           } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio));

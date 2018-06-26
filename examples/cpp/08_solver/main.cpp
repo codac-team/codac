@@ -11,19 +11,48 @@ using namespace tubex;
 #define IVP_PICARD 4
 #define BVP_CP2010 5
 #define DELAY 6
-#define SOLVER_TEST BVP_CP2010
+#define IVP2 7
+#define SOLVER_TEST IVP
 
 #if SOLVER_TEST == IVP
 
   void contract(TubeVector& x)
   {
-    Function f("x", "-sin(x)");
+    Variable var_x, var_xdot;
+    Function f(var_x, -sin(var_x));
+    //Function f(var_x, var_xdot, Return(-sin(var_x), Interval(-1.,1.)));
+    //Function g(var_x, var_xdot, Return(var_x, -sin(var_x)));
 
     if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
       ctc_picard.contract(f, x);
     }
+
+    //cout << "e" << endl;
+    //x &= TubeVector(g, x);
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, TubeVector(f, x));
+  }
+
+#elif SOLVER_TEST == IVP2
+
+  void contract(TubeVector& x)
+  {
+    Variable var_x, var_xdot;
+    Function f(var_x, -sin(var_x));
+    //Function f(var_x, var_xdot, Return(-sin(var_x), Interval(-1.,1.)));
+    //Function g(var_x, var_xdot, Return(var_x, -sin(var_x)));
+
+    if(x.codomain().is_unbounded())
+    {
+      tubex::CtcPicard ctc_picard;
+      ctc_picard.contract(f, x);
+    }
+
+    //cout << "e" << endl;
+    //x &= TubeVector(g, x);
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, TubeVector(f, x));
@@ -127,23 +156,28 @@ using namespace tubex;
     
     Function f(x1,
                x2,
+        Return(x2,
+               0.1 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
+    
+    /*Function f(x1,
+               x2,
                x1dot,
                x2dot,
         Return(x2,
-               0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1))),
+               0.1 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1))),
                Interval::ALL_REALS,
-               Interval::ALL_REALS));
+               Interval::ALL_REALS));*/
 
-    Function g(x1,
+    /*Function g(x1,
                x2,
                x1dot,
                x2dot,
         Return(x1,
                x2,
                x2,
-               0.05 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
+               0.1 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
 
-    x &= TubeVector(g, x);
+    x &= TubeVector(g, x);*/
 
     //if(x.codomain().is_unbounded())
     {
@@ -189,10 +223,22 @@ int main(int argc, char *argv[])
 
     #if SOLVER_TEST == IVP
 
-      float epsilon = 0.1;
+      float epsilon = 0.051;
       Interval domain(0.,10.);
       TubeVector x(domain, 1);
-      x.set(IntervalVector(1,1.), 0.); // initial condition
+      IntervalVector init_value(1);
+      init_value[0] = Interval(1.);
+      x.set(init_value, 0.); // initial condition
+      bool show_details = true;
+
+    #elif SOLVER_TEST == IVP2
+
+      float epsilon = 0.051;
+      Interval domain(0.,10.);
+      TubeVector x(domain, 1);
+      IntervalVector init_value(1);
+      init_value[0] = Interval(2.*atan(exp(-10.)*tan(0.5)));
+      x.set(init_value, 10.); // initial condition
       bool show_details = true;
 
     #elif SOLVER_TEST == IVP_PICARD
@@ -221,14 +267,16 @@ int main(int argc, char *argv[])
 
       float epsilon = 0.1;
       Interval domain(0.,1.);
-      IntervalVector box(4), x0(4), xf(4);
+      IntervalVector codomain(2), x0(codomain), xf(codomain);
 
-      box[0] = Interval(0.,1.);
-      box[1] = Interval(0.,2.);
-      TubeVector x(domain, box);
+      codomain[0] = Interval(0.,1.);
+      codomain[1] = Interval(0.,2.);
+      TubeVector x(domain, codomain);
 
-      x0[0] = Interval(0.97034556001404).inflate(0.1);/*Interval(0.,1.);*/ x0[1] = 0.;
-      xf[0] = 1.;
+      // 0.5058725840206
+      // 0.9226804137526
+      x0[0] = Interval(0.5058725840206).inflate(0.000001); x0[1] = 0.;
+      /*xf[1] = Interval(0.5058725840206).inflate(0.000001);*/ xf[0] = 1.;
       x.set(x0, 0.);
       x.set(xf, 1.);
       bool show_details = true;
@@ -262,6 +310,14 @@ int main(int argc, char *argv[])
     #if SOLVER_TEST == IVP
 
       fig.setProperties(100,100,700,500);
+      Trajectory truth(domain, Function("t", "2.*atan(exp(-t)*tan(0.5))"));
+      fig.addTrajectory(&truth, "truth1", "blue");
+
+    #elif SOLVER_TEST == IVP2
+
+      fig.setProperties(100,100,700,500);
+      Trajectory truth(domain, Function("t", "2.*atan(exp(-t)*tan(0.5))"));
+      fig.addTrajectory(&truth, "truth1", "blue");
 
     #elif SOLVER_TEST == IVP_PICARD
 
