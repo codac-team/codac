@@ -92,10 +92,10 @@ TEST_CASE("Tube definition")
 
     Tube tube_c(Interval(0.,4.), 1.1);
     CHECK(tube_c.nbSlices() == 4);
-    //CHECK(tube_c.getSlice(0)->tubeReference() == &tube_c);
-    //CHECK(tube_c.getSlice(1)->tubeReference() == &tube_c);
-    //CHECK(tube_c.getSlice(2)->tubeReference() == &tube_c);
-    //CHECK(tube_c.getSlice(3)->tubeReference() == &tube_c);
+    CHECK(tube_c.getSlice(0)->tubeReference() == &tube_c);
+    CHECK(tube_c.getSlice(1)->tubeReference() == &tube_c);
+    CHECK(tube_c.getSlice(2)->tubeReference() == &tube_c);
+    CHECK(tube_c.getSlice(3)->tubeReference() == &tube_c);
     CHECK(ApproxIntv(tube_c.getSlice(0)->domain()) == Interval(0.,1.1));
     CHECK(ApproxIntv(tube_c.getSlice(1)->domain()) == Interval(1.1,2.2));
     CHECK(ApproxIntv(tube_c.getSlice(2)->domain()) == Interval(2.2,3.3));
@@ -105,19 +105,19 @@ TEST_CASE("Tube definition")
     CHECK(tube_d == tube_c);
     CHECK(tube_d.codomain() == tube_c.codomain());
     CHECK(tube_d.nbSlices() == tube_c.nbSlices());
-    //CHECK(tube_d.getSlice(0)->tubeReference() == &tube_d);
+    CHECK(tube_d.getSlice(0)->tubeReference() == &tube_d);
     //CHECK(tube_d.getTubeComponent()->tubeReference() == &tube_d);
     //CHECK(((TubeNode*)tube_d.getTubeComponent())->getFirstTubeComponent()->tubeReference() == &tube_d);
-    //CHECK(tube_d.getSlice(0)->tubeReference() == tube_d.getSlice(1)->tubeReference());
-    //CHECK(tube_d.getSlice(1)->tubeReference() == &tube_d);
-    //CHECK(tube_d.getSlice(2)->tubeReference() == &tube_d);
-    //CHECK(tube_d.getSlice(3)->tubeReference() == &tube_d);
+    CHECK(tube_d.getSlice(0)->tubeReference() == tube_d.getSlice(1)->tubeReference());
+    CHECK(tube_d.getSlice(1)->tubeReference() == &tube_d);
+    CHECK(tube_d.getSlice(2)->tubeReference() == &tube_d);
+    CHECK(tube_d.getSlice(3)->tubeReference() == &tube_d);
 
     Tube tube_e(tube_c, Interval(1.,2.));
-    //CHECK(tube_e.getSlice(0)->tubeReference() == &tube_e);
-    //CHECK(tube_e.getSlice(1)->tubeReference() == &tube_e);
-    //CHECK(tube_e.getSlice(2)->tubeReference() == &tube_e);
-    //CHECK(tube_e.getSlice(3)->tubeReference() == &tube_e);
+    CHECK(tube_e.getSlice(0)->tubeReference() == &tube_e);
+    CHECK(tube_e.getSlice(1)->tubeReference() == &tube_e);
+    CHECK(tube_e.getSlice(2)->tubeReference() == &tube_e);
+    CHECK(tube_e.getSlice(3)->tubeReference() == &tube_e);
     CHECK(tube_e.codomain() == Interval(1.,2.));
     CHECK(tube_e.nbSlices() == tube_c.nbSlices());
     CHECK(tube_e.getSlice(0)->codomain()[0] == Interval(1.,2.));
