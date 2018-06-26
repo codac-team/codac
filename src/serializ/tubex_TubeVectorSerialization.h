@@ -20,8 +20,8 @@
 
 namespace tubex
 {
-  void serializeTube(std::ofstream& bin_file, const TubeVector& tube, int version_number = SERIALIZATION_VERSION);
-  void deserializeTube(std::ifstream& bin_file, TubeVector& tube);
+  void serializeTubeVector(std::ofstream& bin_file, const TubeVector& tube, int version_number = SERIALIZATION_VERSION);
+  void deserializeTubeVector(std::ifstream& bin_file, TubeVector& tube);
 }
 
 #endif

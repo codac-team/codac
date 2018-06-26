@@ -120,8 +120,8 @@ namespace tubex
       TubeVector *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
       friend class TubeVector;
-      friend void serializeTube(std::ofstream& bin_file, const TubeVector& tube, int version_number);
-      friend void deserializeTube(std::ifstream& bin_file, TubeVector& tube);
+      friend void serializeTubeVector(std::ofstream& bin_file, const TubeVector& tube, int version_number);
+      friend void deserializeTubeVector(std::ifstream& bin_file, TubeVector& tube);
   };
 }
 

@@ -27,6 +27,11 @@ namespace tubex
     
   }
 
+  TrajectoryVector::TrajectoryVector(const TrajectoryVector& traj)
+  {
+    *this = traj;
+  }
+
   TrajectoryVector::TrajectoryVector(const Interval& domain, const Function& f)
     : m_domain(domain), m_function(new Function(f))
   {

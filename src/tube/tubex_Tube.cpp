@@ -73,22 +73,40 @@ namespace tubex
     }
 
     Tube::Tube(const string& binary_file_name)
-      : TubeVector(binary_file_name)
+      : TubeVector(Interval(0.,1.), 1) // to be changed
     {
-
+      TubeVector x(binary_file_name);
+      DimensionException::checkScalar(x.dim());
+      *this = x;
     }
 
-    /*Tube::Tube(const string& binary_file_name, Trajectory& traj)
-      : TubeVector(binary_file_name, traj)
+    Tube::Tube(const string& binary_file_name, Trajectory& traj)
+      : TubeVector(Interval(0.,1.), 1) // to be changed
     {
-      // todo
+      TrajectoryVector traj_vector;
+      TubeVector x(binary_file_name, traj_vector);
+
+      DimensionException::checkScalar(x.dim());
+      if(traj_vector.dim() != 0)
+        DimensionException::checkScalar(traj_vector.dim());
+
+      *this = x;
     }
 
     Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
-      : TubeVector(binary_file_name, v_trajs)
+      : TubeVector(Interval(0.,1.), 1) // to be changed
     {
-      // todo
-    }*/
+      vector<TrajectoryVector> v_trajs_vector;
+      TubeVector x(binary_file_name, v_trajs_vector);
+
+      DimensionException::checkScalar(x.dim());
+      if(v_trajs_vector.size() != 0)
+        DimensionException::checkScalar(v_trajs_vector[0].dim());
+
+      *this = x;
+      for(int i = 0 ; i < v_trajs_vector.size() ; i++)
+        v_trajs.push_back(v_trajs_vector[i]);
+    }
 
     Tube::~Tube()
     {

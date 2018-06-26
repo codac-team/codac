@@ -13,8 +13,8 @@
 #include "tubex_TubeVector.h"
 #include "tubex_Exception.h"
 #include "tubex_DomainException.h"
-#include "tubex_TubeSerialization.h"
-#include "tubex_TrajectorySerialization.h"
+#include "tubex_TubeVectorSerialization.h"
+#include "tubex_TrajectoryVectorSerialization.h"
 #include "tubex_DimensionException.h"
 #include "tubex_StructureException.h"
 #include "tubex_CtcDeriv.h"
@@ -940,12 +940,12 @@ namespace tubex
       if(!bin_file.is_open())
         throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
 
-      serializeTube(bin_file, *this, version_number);
+      serializeTubeVector(bin_file, *this, version_number);
 
       int nb_trajs = v_trajs.size();
       bin_file.write((const char*)&nb_trajs, sizeof(int));
       for(int i = 0 ; i < v_trajs.size() ; i++)
-        serializeTrajectory(bin_file, v_trajs[i], version_number);
+        serializeTrajectoryVector(bin_file, v_trajs[i], version_number);
 
       bin_file.close();
     }
@@ -1004,7 +1004,7 @@ namespace tubex
       if(!bin_file.is_open())
         throw Exception("TubeVector::deserialize()", "error while opening file \"" + binary_file_name + "\"");
 
-      deserializeTube(bin_file, *this);
+      deserializeTubeVector(bin_file, *this);
 
       if(!bin_file.eof())
       {
@@ -1013,7 +1013,7 @@ namespace tubex
         for(int i = 0 ; i < nb_trajs ; i++)
         {
           TrajectoryVector traj;
-          deserializeTrajectory(bin_file, traj);
+          deserializeTrajectoryVector(bin_file, traj);
           v_trajs.push_back(traj);
         }
       }

@@ -10,7 +10,7 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_TrajectorySerialization.h"
+#include "tubex_TrajectoryVectorSerialization.h"
 
 using namespace std;
 using namespace ibex;
@@ -31,7 +31,7 @@ namespace tubex
                 ...
   */
 
-  void serializeTrajectory(ofstream& bin_file, const TrajectoryVector& traj, int version_number)
+  void serializeTrajectoryVector(ofstream& bin_file, const TrajectoryVector& traj, int version_number)
   {
     /*if(!bin_file.is_open())
       throw Exception("serializeTrajectory()", "ofstream& bin_file not open");
@@ -72,7 +72,7 @@ namespace tubex
     }*/
   }
 
-  void deserializeTrajectory(ifstream& bin_file, TrajectoryVector& traj)
+  void deserializeTrajectoryVector(ifstream& bin_file, TrajectoryVector& traj)
   {
     /*if(!bin_file.is_open())
       throw Exception("deserializeTrajectory()", "ifstream& bin_file not open");

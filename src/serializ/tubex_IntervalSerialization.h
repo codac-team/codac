@@ -15,6 +15,7 @@
 
 #include <fstream>
 #include "ibex_Interval.h"
+#include "ibex_IntervalVector.h"
 
 namespace tubex
 {
@@ -31,7 +32,7 @@ namespace tubex
    * \param intv Interval object to be serialized
    */
   void serializeInterval(std::ofstream& bin_file, const ibex::Interval& intv);
-  void serializeInterval(std::ofstream& bin_file, const ibex::IntervalVector& box);
+  void serializeIntervalVector(std::ofstream& bin_file, const ibex::IntervalVector& box);
 
   /**
    * \brief Create an Interval object from a binary file.
@@ -42,7 +43,7 @@ namespace tubex
    * \param intv Interval object to be deserialized
    */
   void deserializeInterval(std::ifstream& bin_file, ibex::Interval& intv);
-  void deserializeInterval(std::ifstream& bin_file, ibex::IntervalVector& box);
+  void deserializeIntervalVector(std::ifstream& bin_file, ibex::IntervalVector& box);
 }
 
 #endif

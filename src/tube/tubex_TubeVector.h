@@ -169,8 +169,8 @@ namespace tubex
       friend class CtcDeriv; // todo: remove this
       friend class CtcEval; // todo: remove this? not sure
       friend class TubeSlice; // todo: remove this? not sure
-      friend void serializeTube(std::ofstream& bin_file, const TubeVector& tube, int version_number); // todo: remove this? not sure
-      friend void deserializeTube(std::ifstream& bin_file, TubeVector& tube); // todo: remove this? not sure
+      friend void serializeTubeVector(std::ofstream& bin_file, const TubeVector& tube, int version_number); // todo: remove this? not sure
+      friend void deserializeTubeVector(std::ifstream& bin_file, TubeVector& tube); // todo: remove this? not sure
   };
 }
 

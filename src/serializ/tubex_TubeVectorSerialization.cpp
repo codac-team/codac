@@ -10,9 +10,10 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_TubeSerialization.h"
+#include "tubex_TubeVectorSerialization.h"
 #include "tubex_IntervalSerialization.h"
 #include "tubex_Exception.h"
+#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;
@@ -23,6 +24,7 @@ namespace tubex
     Tube binary files structure (VERSION 2)
       - minimal storage
       - format: [char_version_number]
+                [int_dim]
                 [int_nb_slices]
                 [double_t0]
                 [double_t1] // time input shared by 1rst and 2nd slices
@@ -36,7 +38,7 @@ namespace tubex
                 ...
   */
 
-  void serializeTube(ofstream& bin_file, const TubeVector& tube, int version_number)
+  void serializeTubeVector(ofstream& bin_file, const TubeVector& tube, int version_number)
   {
     if(!bin_file.is_open())
       throw Exception("serializeTube()", "ofstream& bin_file not open");
@@ -52,6 +54,10 @@ namespace tubex
 
       case 2:
       {
+        // Slices number
+        int dim = tube.dim();
+        bin_file.write((const char*)&dim, sizeof(int));
+
         // Slices number
         int slices_number = tube.nbSlices();
         bin_file.write((const char*)&slices_number, sizeof(int));
@@ -74,16 +80,16 @@ namespace tubex
         slice = tube.getFirstSlice();
         while(slice != NULL)
         {
-          serializeInterval(bin_file, slice->codomain());
+          serializeIntervalVector(bin_file, slice->codomain());
           slice = slice->nextSlice();
         }
 
         // Gates
         slice = tube.getFirstSlice();
-        serializeInterval(bin_file, slice->inputGate());
+        serializeIntervalVector(bin_file, slice->inputGate());
         while(slice != NULL)
         {
-          serializeInterval(bin_file, slice->outputGate());
+          serializeIntervalVector(bin_file, slice->outputGate());
           slice = slice->nextSlice();
         }
 
@@ -95,7 +101,7 @@ namespace tubex
     }
   }
 
-  void deserializeTube(ifstream& bin_file, TubeVector& tube)
+  void deserializeTubeVector(ifstream& bin_file, TubeVector& tube)
   {
     if(!bin_file.is_open())
       throw Exception("deserializeTube()", "ifstream& bin_file not open");
@@ -115,6 +121,11 @@ namespace tubex
 
       case 2:
       {
+        // Dimension
+        int dim;
+        bin_file.read((char*)&dim, sizeof(int));
+        DimensionException::check(dim);
+
         // Slices number
         int slices_number;
         bin_file.read((char*)&slices_number, sizeof(int));
@@ -132,7 +143,7 @@ namespace tubex
         {
           double ub;
           bin_file.read((char*)&ub, sizeof(double));
-          TubeSlice *slice = new TubeSlice(Interval(lb, ub), 0); // todo: set dim
+          TubeSlice *slice = new TubeSlice(Interval(lb, ub), dim);
           slice->setTubeReference(&tube);
           tube.m_v_slices.push_back(slice);
           lb = ub;
@@ -146,8 +157,8 @@ namespace tubex
         TubeSlice *slice = tube.getFirstSlice();
         while(slice != NULL)
         {
-          IntervalVector slice_value(1);
-          deserializeInterval(bin_file, slice_value);
+          IntervalVector slice_value(dim);
+          deserializeIntervalVector(bin_file, slice_value);
           slice->set(slice_value);
           slice = slice->nextSlice();
         }
@@ -157,8 +168,8 @@ namespace tubex
         int gates_number = slices_number + 1;
         for(int i = 0 ; i < gates_number ; i++)
         {
-          IntervalVector gate(1);
-          deserializeInterval(bin_file, gate);
+          IntervalVector gate(dim);
+          deserializeIntervalVector(bin_file, gate);
 
           double t;
           if(i < gates_number - 1)

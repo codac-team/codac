@@ -29,6 +29,7 @@ namespace tubex
       TrajectoryVector();
       TrajectoryVector(const ibex::Interval& domain, const ibex::Function& f);
       TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
+      TrajectoryVector(const TrajectoryVector& traj);
       ~TrajectoryVector();
       int dim() const;
 

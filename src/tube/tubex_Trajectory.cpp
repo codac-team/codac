@@ -39,6 +39,12 @@ namespace tubex
     for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
       set(it_map->first, it_map->second);
   }
+  
+  Trajectory::Trajectory(const TrajectoryVector& traj)
+  {
+    DimensionException::checkScalar(traj.dim());
+    *this = traj;
+  }
 
   Trajectory::~Trajectory()
   {

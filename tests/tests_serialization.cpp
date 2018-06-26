@@ -9,7 +9,7 @@ using namespace tubex;
 
 TEST_CASE("serialization/deserialization of Tube")
 {
-  /*SECTION("No gates")
+  SECTION("No gates")
   {
     Tube tube1 = tubeTest1();
     string filename = "test_serialization_nogates.tube";
@@ -53,7 +53,7 @@ TEST_CASE("serialization/deserialization of Tube")
     CHECK(tube2[3.] == Interval(2.,3.));
   }
 
-  SECTION("With trajectories")
+  /*SECTION("With trajectories")
   {
     Tube tube1 = tubeTest1();
     Trajectory traj1, traj2, traj3;
