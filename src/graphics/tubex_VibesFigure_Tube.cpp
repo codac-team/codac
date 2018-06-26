@@ -16,6 +16,7 @@
 #include "tubex_CtcDeriv.h"
 #include "tubex_VibesFigure_Tube.h"
 #include "tubex_VibesFigure_Polygon.h"
+#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;
@@ -65,6 +66,9 @@ namespace tubex
         v_vibesfig_tube.push_back(figtube);
       }
 
+      if(tube != NULL) DimensionException::check(*figtube, *tube);
+      if(tube != NULL && traj != NULL) DimensionException::check(*tube, *traj);
+
       figtube->setProperties(x, y, 700, 350);
       if(tube != NULL) figtube->addTube(tube, DEFAULT_TUBE_NAME);
       if(traj != NULL) figtube->addTrajectory(traj, DEFAULT_TRAJ_NAME);
@@ -83,12 +87,15 @@ namespace tubex
     VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, int dim)
       : VibesFigure(fig_name, dim)
     {
+      DimensionException::check(dim);
       m_view_box = IntervalVector(2, Interval::EMPTY_SET);
     }
 
     VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
       : VibesFigure_Tube(fig_name, tube->dim())
     {
+      DimensionException::check(*this, *tube);
+      DimensionException::check(*this, *traj);
       addTube(tube, DEFAULT_TUBE_NAME);
       if(traj != NULL) addTrajectory(traj, DEFAULT_TUBE_NAME);
     }
@@ -101,9 +108,25 @@ namespace tubex
           delete it->second.tube_copy;
     }
 
+    int VibesFigure_Tube::dim() const
+    {
+      if(m_map_tubes.empty())
+      {
+        if(m_map_trajs.empty())
+          return 0;
+
+        return m_map_trajs.begin()->first->dim();
+      }
+
+      else
+        return m_map_tubes.begin()->first->dim();
+    }
+
     void VibesFigure_Tube::addTube(const TubeVector *tube, const string& name,
                                    const string& color_frgrnd, const string& color_bckgrnd)
     {
+      DimensionException::check(*this, *tube);
+
       if(m_map_tubes.find(tube) != m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::addTube(): tube already added" << endl;
 
@@ -119,6 +142,8 @@ namespace tubex
 
     void VibesFigure_Tube::setTubeName(const TubeVector *tube, const string& name)
     {
+      DimensionException::check(*this, *tube);
+
       if(m_map_tubes.find(tube) == m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::setTubeName(): unknown tube" << endl;
 
@@ -127,6 +152,8 @@ namespace tubex
     
     void VibesFigure_Tube::setTubeDerivative(const TubeVector *tube, const TubeVector *derivative)
     {
+      DimensionException::check(*this, *derivative);
+
       if(m_map_tubes.find(tube) == m_map_tubes.end())
         cout << "Warning VibesFigure_Tube::setTubeDerivative(): unknown tube" << endl;
 
@@ -162,6 +189,8 @@ namespace tubex
 
     void VibesFigure_Tube::addTrajectory(const TrajectoryVector *traj, const string& name, const string& color)
     {
+      DimensionException::check(*this, *traj);
+
       if(m_map_trajs.find(traj) != m_map_trajs.end())
         cout << "Warning VibesFigure_Tube::addTrajectory(): trajectory already added" << endl;
 

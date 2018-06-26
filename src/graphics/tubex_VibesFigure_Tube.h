@@ -38,6 +38,7 @@ namespace tubex
       VibesFigure_Tube(const std::string& fig_name, int dim = 1);
       VibesFigure_Tube(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj = NULL);
       ~VibesFigure_Tube();
+      int dim() const;
 
       void addTube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
       void setTubeName(const TubeVector *tube, const std::string& name);

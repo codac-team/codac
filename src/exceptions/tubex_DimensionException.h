@@ -16,6 +16,7 @@
 #include "tubex_TubeVector.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_Exception.h"
+#include "tubex_VibesFigure_Tube.h"
 
 namespace tubex
 {
@@ -42,6 +43,8 @@ namespace tubex
       DimensionException(const TubeVector& x, const TrajectoryVector& traj);
       DimensionException(const TubeVector& x, const ibex::Function& f);
       DimensionException(const TubeVector& x1, const TubeVector& x2);
+      DimensionException(const VibesFigure_Tube& fig, const TubeVector& x);
+      DimensionException(const VibesFigure_Tube& fig, const TrajectoryVector& traj);
 
       static void check(int dim);
       static void checkScalar(int dim);
@@ -58,6 +61,8 @@ namespace tubex
       static void check(const TubeVector& x, const TrajectoryVector& traj);
       static void check(const TubeVector& x, const ibex::Function& f);
       static void check(const TubeVector& x1, const TubeVector& x2);
+      static void check(const VibesFigure_Tube& fig, const TubeVector& x);
+      static void check(const VibesFigure_Tube& fig, const TrajectoryVector& traj);
   };
 }
 

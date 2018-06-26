@@ -130,6 +130,22 @@ namespace tubex
     m_what_msg = os.str();
   }
 
+  DimensionException::DimensionException(const VibesFigure_Tube& fig, const TubeVector& x)
+  {
+    ostringstream os;
+    os << "objects of different dimension: ";
+    os << "VibesFigure_Tube(" << fig.dim() << "), TubeVector(" << x.dim() << ")" << endl;
+    m_what_msg = os.str();
+  }
+
+  DimensionException::DimensionException(const VibesFigure_Tube& fig, const TrajectoryVector& traj)
+  {
+    ostringstream os;
+    os << "objects of different dimension: ";
+    os << "VibesFigure_Tube(" << fig.dim() << "), TrajectoryVector(" << traj.dim() << ")" << endl;
+    m_what_msg = os.str();
+  }
+
   void DimensionException::check(int dim)
   {
     if(dim < 1)
@@ -218,5 +234,19 @@ namespace tubex
   {
     if(x1.dim() != x2.dim())
       throw DimensionException(x1, x2);
+  }
+
+  void DimensionException::check(const VibesFigure_Tube& fig, const TubeVector& x)
+  {
+    int dim = fig.dim();
+    if(dim != 0 && x.dim() != dim)
+      throw DimensionException(fig, x);
+  }
+
+  void DimensionException::check(const VibesFigure_Tube& fig, const TrajectoryVector& traj)
+  {
+    int dim = fig.dim();
+    if(dim != 0 && traj.dim() != dim)
+      throw DimensionException(fig, traj);
   }
 }
