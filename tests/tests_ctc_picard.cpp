@@ -122,7 +122,7 @@ TEST_CASE("CtcPicard")
     Function f("x", "-x");
     CtcPicard ctc_picard(1.1, false);
 
-    ctc_picard.contract(f, x);
+    ctc_picard.contract_bwd(f, x);
     
     CHECK_FALSE(x.codomain().is_unbounded());
     CHECK(x.codomain()[0].is_superset(exp(-(domain - 1.))));
