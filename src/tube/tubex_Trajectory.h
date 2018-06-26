@@ -27,6 +27,7 @@ namespace tubex
       Trajectory(const std::map<double,double>& m_map_values);
       Trajectory(const TrajectoryVector& traj);
       ~Trajectory();
+      Trajectory& operator=(const Trajectory& x);
       using TrajectoryVector::dim;
 
       // Access values

@@ -73,7 +73,7 @@ namespace tubex
     }
 
     Tube::Tube(const string& binary_file_name)
-      : TubeVector(Interval(0.,1.), 1) // to be changed
+      : TubeVector(Interval(0.,1.), 1)
     {
       TubeVector x(binary_file_name);
       DimensionException::checkScalar(x.dim());
@@ -81,7 +81,7 @@ namespace tubex
     }
 
     Tube::Tube(const string& binary_file_name, Trajectory& traj)
-      : TubeVector(Interval(0.,1.), 1) // to be changed
+      : TubeVector(Interval(0.,1.), 1)
     {
       TrajectoryVector traj_vector;
       TubeVector x(binary_file_name, traj_vector);
@@ -91,10 +91,11 @@ namespace tubex
         DimensionException::checkScalar(traj_vector.dim());
 
       *this = x;
+      traj = Trajectory(traj_vector);
     }
 
     Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
-      : TubeVector(Interval(0.,1.), 1) // to be changed
+      : TubeVector(Interval(0.,1.), 1)
     {
       vector<TrajectoryVector> v_trajs_vector;
       TubeVector x(binary_file_name, v_trajs_vector);
@@ -277,4 +278,21 @@ namespace tubex
 
     // Serialization
 
+    void Tube::serialize(const string& binary_file_name, int version_number) const
+    {
+      TubeVector::serialize(binary_file_name, version_number);
+    }
+
+    void Tube::serialize(const string& binary_file_name, const Trajectory& traj, int version_number) const
+    {
+      TubeVector::serialize(binary_file_name, traj, version_number);
+    }
+
+    void Tube::serialize(const string& binary_file_name, const vector<Trajectory>& v_trajs, int version_number) const
+    {
+      vector<TrajectoryVector> v_trajs_vector;
+      for(int i = 0 ; i < v_trajs.size() ; i++)
+        v_trajs_vector.push_back(v_trajs[i]);
+      TubeVector::serialize(binary_file_name, v_trajs_vector, version_number);
+    }
 }

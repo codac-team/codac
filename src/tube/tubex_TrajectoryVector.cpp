@@ -56,6 +56,24 @@ namespace tubex
       delete m_function;
   }
 
+  TrajectoryVector& TrajectoryVector::operator=(const TrajectoryVector& x)
+  {
+    m_domain = x.m_domain;
+    m_codomain = x.m_codomain;
+
+    if(m_function != NULL)
+      delete m_function;
+
+    if(x.m_function == NULL)
+      m_function = NULL;
+
+    else
+      m_function = new Function(*x.m_function);
+
+    m_map_values = x.m_map_values;
+    return *this;
+  }
+
   int TrajectoryVector::dim() const
   {
     if(m_function != NULL)

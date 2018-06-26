@@ -31,6 +31,7 @@ namespace tubex
       TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
       TrajectoryVector(const TrajectoryVector& traj);
       ~TrajectoryVector();
+      TrajectoryVector& operator=(const TrajectoryVector& x);
       int dim() const;
 
       // Access values

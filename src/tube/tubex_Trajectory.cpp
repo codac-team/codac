@@ -43,12 +43,18 @@ namespace tubex
   Trajectory::Trajectory(const TrajectoryVector& traj)
   {
     DimensionException::checkScalar(traj.dim());
-    *this = traj;
+    TrajectoryVector::operator=(traj);
   }
 
   Trajectory::~Trajectory()
   {
 
+  }
+  
+  Trajectory& Trajectory::operator=(const Trajectory& x)
+  {
+    TrajectoryVector::operator=(x);
+    return *this;
   }
 
   // Access values

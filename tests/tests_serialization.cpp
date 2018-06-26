@@ -53,7 +53,7 @@ TEST_CASE("serialization/deserialization of Tube")
     CHECK(tube2[3.] == Interval(2.,3.));
   }
 
-  /*SECTION("With trajectories")
+  SECTION("With trajectories")
   {
     Tube tube1 = tubeTest1();
     Trajectory traj1, traj2, traj3;
@@ -86,5 +86,5 @@ TEST_CASE("serialization/deserialization of Tube")
     CHECK(tube1 == tube3);
     for(int i = 0 ; i < v_trajs.size() ; i++)
       CHECK(v_trajs[i] == v_trajs_2[i]);
-  }*/
+  }
 }
