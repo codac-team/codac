@@ -57,7 +57,7 @@ namespace tubex
           {
             volume_before_ctc = x.volume();
             ctc_func(x);
-            cid(x, ctc_func);
+            //cid(x, ctc_func);
             emptiness = x.isEmpty();
             volume = x.volume();
           } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio));

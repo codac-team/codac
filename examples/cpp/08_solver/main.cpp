@@ -5,54 +5,27 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define IVP 1
-#define BVP 2
-#define DAE 3
-#define IVP_PICARD 4
-#define BVP_CP2010 5
-#define DELAY 6
-#define IVP2 7
-#define SOLVER_TEST BVP_CP2010
+#define IVP_XMSIN_FWD 1
+#define IVP_XMSIN_BWD 2
+#define BVP 3
+#define DAE 4
+#define IVP_PICARD 5
+#define BVP_CP2010 6
+#define DELAY 1
+#define SOLVER_TEST IVP_XMSIN_FWD
 
-#if SOLVER_TEST == IVP
+#if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
   void contract(TubeVector& x)
   {
-    Variable var_x, var_xdot;
+    Variable var_x;
     Function f(var_x, -sin(var_x));
-    //Function f(var_x, var_xdot, Return(-sin(var_x), Interval(-1.,1.)));
-    //Function g(var_x, var_xdot, Return(var_x, -sin(var_x)));
 
-    if(x.codomain().is_unbounded())
+    //if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
       ctc_picard.contract(f, x);
     }
-
-    //cout << "e" << endl;
-    //x &= TubeVector(g, x);
-
-    CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, TubeVector(f, x));
-  }
-
-#elif SOLVER_TEST == IVP2
-
-  void contract(TubeVector& x)
-  {
-    Variable var_x, var_xdot;
-    Function f(var_x, -sin(var_x));
-    //Function f(var_x, var_xdot, Return(-sin(var_x), Interval(-1.,1.)));
-    //Function g(var_x, var_xdot, Return(var_x, -sin(var_x)));
-
-    if(x.codomain().is_unbounded())
-    {
-      tubex::CtcPicard ctc_picard;
-      ctc_picard.contract(f, x);
-    }
-
-    //cout << "e" << endl;
-    //x &= TubeVector(g, x);
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, TubeVector(f, x));
@@ -221,24 +194,20 @@ int main(int argc, char *argv[])
 {
   /* =========== PARAMETERS =========== */
 
-    #if SOLVER_TEST == IVP
+    #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
       float epsilon = 0.051;
       Interval domain(0.,10.);
       TubeVector x(domain, 1);
-      IntervalVector init_value(1);
-      init_value[0] = Interval(1.);
-      x.set(init_value, 0.); // initial condition
-      bool show_details = true;
 
-    #elif SOLVER_TEST == IVP2
+      #if SOLVER_TEST == IVP_XMSIN_FWD
+        double t_value = domain.lb();
+      #else
+        double t_value = domain.ub();
+      #endif
 
-      float epsilon = 0.051;
-      Interval domain(0.,10.);
-      TubeVector x(domain, 1);
-      IntervalVector init_value(1);
-      init_value[0] = Interval(2.*atan(exp(-10.)*tan(0.5)));
-      x.set(init_value, 10.); // initial condition
+      IntervalVector init_value(1, Interval(2.*atan(exp(-t_value)*tan(0.5))));
+      x.set(init_value, t_value);
       bool show_details = true;
 
     #elif SOLVER_TEST == IVP_PICARD
@@ -307,13 +276,7 @@ int main(int argc, char *argv[])
     vibes::beginDrawing();
     VibesFigure_Tube fig("Solver", x.dim());
 
-    #if SOLVER_TEST == IVP
-
-      fig.setProperties(100,100,700,500);
-      Trajectory truth(domain, Function("t", "2.*atan(exp(-t)*tan(0.5))"));
-      fig.addTrajectory(&truth, "truth1", "blue");
-
-    #elif SOLVER_TEST == IVP2
+    #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
       fig.setProperties(100,100,700,500);
       Trajectory truth(domain, Function("t", "2.*atan(exp(-t)*tan(0.5))"));
