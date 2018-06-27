@@ -21,7 +21,7 @@ namespace tubex
 {
   class TubeVector;
 
-  class TubeSlice : DynamicalItem
+  class TubeSlice : public DynamicalItem
   {
     public:
 
@@ -88,6 +88,7 @@ namespace tubex
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
+      const std::string className() const { return "TubeSlice"; };
 
     /** Integration: **/
 

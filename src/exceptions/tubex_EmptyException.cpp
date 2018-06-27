@@ -32,40 +32,40 @@ namespace tubex
       throw EmptyException(x);
   }
 
-    EmptyException::EmptyException(const TubeVector& x)
+  EmptyException::EmptyException(const TubeVector& x)
+  {
+    ostringstream os;
+    os << "emptiness over ";
+
+    if(x.codomain().is_empty())
+      os << "the whole domain";
+
+    else
     {
-      ostringstream os;
-      os << "emptiness over ";
-
-      if(x.codomain().is_empty())
-        os << "the whole domain";
-
-      else
+      Interval intv_t_emptiness = Interval::EMPTY_SET;
+      TubeSlice *slice = x.getFirstSlice();
+      while(slice != NULL)
       {
-        Interval intv_t_emptiness = Interval::EMPTY_SET;
-        TubeSlice *slice = x.getFirstSlice();
-        while(slice != NULL)
+        if(slice->isEmpty())
         {
-          if(slice->isEmpty())
-          {
-            if(slice->inputGate().is_empty())
-              intv_t_emptiness |= slice->domain().lb();
-            if(slice->codomain().is_empty())
-              intv_t_emptiness |= slice->domain();
-            if(slice->outputGate().is_empty())
-              intv_t_emptiness |= slice->domain().ub();
-          }
-          slice = slice->nextSlice();
+          if(slice->inputGate().is_empty())
+            intv_t_emptiness |= slice->domain().lb();
+          if(slice->codomain().is_empty())
+            intv_t_emptiness |= slice->domain();
+          if(slice->outputGate().is_empty())
+            intv_t_emptiness |= slice->domain().ub();
         }
-        os << "[t]=" << intv_t_emptiness << endl;
+        slice = slice->nextSlice();
       }
-      
-      m_what_msg = os.str();
+      os << "[t]=" << intv_t_emptiness << endl;
     }
+    
+    m_what_msg = os.str();
+  }
 
-    void EmptyException::check(const TubeVector& x)
-    {
-      if(x.isEmpty())
-        throw EmptyException(x);
-    }
+  void EmptyException::check(const TubeVector& x)
+  {
+    if(x.isEmpty())
+      throw EmptyException(x);
+  }
 }

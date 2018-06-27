@@ -21,7 +21,7 @@
 
 namespace tubex
 {
-  class TrajectoryVector : DynamicalItem
+  class TrajectoryVector : public DynamicalItem
   {
     public:
 
@@ -55,7 +55,7 @@ namespace tubex
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x);
-
+      const std::string className() const { return "TrajectoryVector"; };
 
     protected:
 

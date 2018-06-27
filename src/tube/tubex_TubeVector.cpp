@@ -226,13 +226,13 @@ namespace tubex
 
     TubeSlice* TubeVector::getSlice(int slice_id)
     {
-      DomainException::check(*this, slice_id);
+      StructureException::check(*this, slice_id);
       return m_v_slices[slice_id];
     }
 
     const TubeSlice* TubeVector::getSlice(int slice_id) const
     {
-      DomainException::check(*this, slice_id);
+      StructureException::check(*this, slice_id);
       // todo: remove this?
       // check cast?
       return m_v_slices[slice_id];
@@ -368,7 +368,7 @@ namespace tubex
 
     const IntervalVector TubeVector::operator[](int slice_id) const
     {
-      DomainException::check(*this, slice_id);
+      StructureException::check(*this, slice_id);
       return getSlice(slice_id)->codomain();
     }
 
@@ -655,7 +655,7 @@ namespace tubex
     void TubeVector::set(const IntervalVector& y, int slice_id)
     {
       DimensionException::check(*this, y);
-      DomainException::check(*this, slice_id);
+      StructureException::check(*this, slice_id);
       getSlice(slice_id)->set(y);
     }
 
@@ -910,7 +910,6 @@ namespace tubex
 
     bool TubeVector::ctcEval(Interval& t, IntervalVector& z, const TubeVector& derivative, bool propagate)
     {
-      DimensionException::check(*this, t);
       DimensionException::check(*this, z);
       DimensionException::check(*this, derivative);
       StructureException::check(*this, derivative);

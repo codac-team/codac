@@ -33,35 +33,49 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-    StructureException::StructureException(const TubeVector& x1, const TubeVector& x2)
+  StructureException::StructureException(const TubeVector& x, int slice_index)
+  {
+    ostringstream os;
+    os << "slice index out of range: ";
+    os << "i=" << slice_index << " not in " << Interval(0,(x.nbSlices()-1)) << endl;
+    m_what_msg = os.str();
+  }
+
+  StructureException::StructureException(const TubeVector& x1, const TubeVector& x2)
+  {
+    ostringstream os;
+    os << "unable to perform an operation over tubes of different structure";
+
+    if(x1.nbSlices() != x2.nbSlices())
+      os << endl << "TubeSlices of different slices number: " 
+         << "n1=" << x1.nbSlices() << " and n2=" << x2.nbSlices();
+
+    os << endl;
+    m_what_msg = os.str();
+  }
+
+  void StructureException::check(const TubeVector& x1, const TubeVector& x2)
+  {
+    DomainException::check(x1, x2);
+    if(x1.nbSlices() != x2.nbSlices())
+      throw StructureException(x1, x2);
+
+    TubeSlice *slice_x1 = x1.getFirstSlice();
+    TubeSlice *slice_x2 = x2.getFirstSlice();
+    
+    while(slice_x1 != NULL)
     {
-      ostringstream os;
-      os << "unable to perform an operation over tubes of different structure";
+      if(slice_x1->domain() != slice_x2->domain())
+        throw StructureException(*slice_x1, *slice_x2);
 
-      if(x1.nbSlices() != x2.nbSlices())
-        os << endl << "TubeSlices of different slices number: " 
-           << "n1=" << x1.nbSlices() << " and n2=" << x2.nbSlices();
-
-      os << endl;
-      m_what_msg = os.str();
+      slice_x1 = slice_x1->nextSlice();
+      slice_x2 = slice_x2->nextSlice();
     }
+  }
 
-    void StructureException::check(const TubeVector& x1, const TubeVector& x2)
-    {
-      DomainException::check(x1, x2);
-      if(x1.nbSlices() != x2.nbSlices())
-        throw StructureException(x1, x2);
-
-      TubeSlice *slice_x1 = x1.getFirstSlice();
-      TubeSlice *slice_x2 = x2.getFirstSlice();
-      
-      while(slice_x1 != NULL)
-      {
-        if(slice_x1->domain() != slice_x2->domain())
-          throw StructureException(*slice_x1, *slice_x2);
-
-        slice_x1 = slice_x1->nextSlice();
-        slice_x2 = slice_x2->nextSlice();
-      }
-    }
+  void StructureException::check(const TubeVector& x, int slice_index)
+  {
+    if(slice_index < 0 || slice_index >= x.nbSlices())
+      throw StructureException(x, slice_index);
+  }
 }

@@ -31,7 +31,6 @@ namespace tubex
 
       EmptyException(const TubeSlice& x);
       EmptyException(const TubeVector& x);
-      // todo: equivalent constructor for TubeVector class
 
       static void check(const TubeSlice& x);
       static void check(const TubeVector& x);

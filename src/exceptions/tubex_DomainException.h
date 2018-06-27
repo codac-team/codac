@@ -14,8 +14,7 @@
 #define DomainException_HEADER
 
 #include "tubex_Exception.h"
-#include "tubex_TubeSlice.h"
-#include "tubex_TrajectoryVector.h"
+#include "tubex_DynamicalItem.h"
 #include "tubex_TubeVector.h"
 
 namespace tubex
@@ -31,37 +30,13 @@ namespace tubex
 
       DomainException(const ibex::Interval& domain);
       DomainException(double timestep);
-
-      DomainException(const TubeSlice& x, double t);
-      DomainException(const TrajectoryVector& x, double t);
-      DomainException(const TubeSlice& x, const ibex::Interval& t);
-      DomainException(const TrajectoryVector& x, const ibex::Interval& t);
-      DomainException(const TubeSlice& x1, const TubeSlice& x2);
-      DomainException(const TrajectoryVector& x1, const TrajectoryVector& x2);
-      DomainException(const TubeSlice& x1, const TrajectoryVector& x2);
-
-      DomainException(const TubeVector& x, int slice_index);
-      DomainException(const TubeVector& x, double t);
-      DomainException(const TubeVector& x, const ibex::Interval& t);
-      DomainException(const TubeVector& x1, const TubeVector& x2);
-      DomainException(const TubeVector& x1, const TrajectoryVector& x2);
+      DomainException(const DynamicalItem& x, const ibex::Interval& t);
+      DomainException(const DynamicalItem& x1, const DynamicalItem& x2);
         
       static void check(const ibex::Interval& domain);
       static void check(double timestep);
-
-      static void check(const TubeSlice& x, double t);
-      static void check(const TrajectoryVector& x, double t);
-      static void check(const TubeSlice& x, const ibex::Interval& t);
-      static void check(const TrajectoryVector& x, const ibex::Interval& t);
-      static void check(const TubeSlice& x1, const TubeSlice& x2);
-      static void check(const TrajectoryVector& x1, const TrajectoryVector& x2);
-      static void check(const TubeSlice& x1, const TrajectoryVector& x2);
-        
-      static void check(const TubeVector& x, int slice_index);
-      static void check(const TubeVector& x, double t);
-      static void check(const TubeVector& x, const ibex::Interval& t);
-      static void check(const TubeVector& x1, const TubeVector& x2);
-      static void check(const TubeVector& x1, const TrajectoryVector& x2);
+      static void check(const DynamicalItem& x, const ibex::Interval& t);
+      static void check(const DynamicalItem& x1, const DynamicalItem& x2);
   };
 }
 

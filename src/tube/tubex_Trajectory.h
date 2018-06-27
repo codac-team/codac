@@ -49,6 +49,7 @@ namespace tubex
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const Trajectory& x);
+      const std::string className() const { return "Trajectory"; };
   };
 }
 

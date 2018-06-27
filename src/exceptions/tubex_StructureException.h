@@ -31,9 +31,11 @@ namespace tubex
     public:
 
       StructureException(const TubeSlice& x1, const TubeSlice& x2);
-
+      StructureException(const TubeVector& x, int slice_index);
       StructureException(const TubeVector& x1, const TubeVector& x2);
+      
       static void check(const TubeVector& x1, const TubeVector& x2);
+      static void check(const TubeVector& x, int slice_index);
   };
 }
 

@@ -101,6 +101,7 @@ namespace tubex
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
+      const std::string className() const { return "Tube"; };
 
     /** Integration: **/
 
