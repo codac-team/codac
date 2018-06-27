@@ -11,14 +11,14 @@ TEST_CASE("CtcEval")
 {
   SECTION("Test CtcEval, special cases")
   {
-    /*Tube xdot(Interval(0., 10.), 1.0);
+    Tube xdot(Interval(0., 10.), 1.0);
     xdot.set(Interval(-0.5,1.));
 
     Tube x(xdot);
     x.set(Interval::ALL_REALS);
     x.set(Interval(-1.5,1.), 4);
     x.set(Interval(-1.,1.5), 5);
-    x.ctcFwdBwd(xdot);
+    x.ctcDeriv(xdot);
     Tube x_raw(x);
 
     // Checking the tube...
@@ -36,7 +36,7 @@ TEST_CASE("CtcEval")
     bool contraction;
     Interval intv_t, intv_y;
 
-    // Test A
+    /*// Test A
     x = x_raw;
     intv_t = 1.;
     intv_y = Interval(-0.5,1.);
@@ -83,7 +83,7 @@ TEST_CASE("CtcEval")
     CHECK(x[8] == Interval(-2.5,4.5));
     CHECK(x[9] == Interval(-3.,5.5));
 
-    // Test A: ctcFwdBwd should not be effective after ctcEval(true)
+    // Test A: ctcDeriv should not be effective after ctcEval(true)
     x = x_raw;
     intv_t = 1.;
     intv_y = Interval(-0.5,1.);
@@ -102,7 +102,7 @@ TEST_CASE("CtcEval")
     CHECK(x[7] == Interval(-2.,3.5));
     CHECK(x[8] == Interval(-2.5,4.5));
     CHECK(x[9] == Interval(-3.,5.5));
-    CHECK_FALSE(x.ctcFwdBwd(xdot)); // no contraction expected
+    CHECK_FALSE(x.ctcDeriv(xdot)); // no contraction expected
     CHECK(ApproxIntv(x[0]) == Interval(-1.5,1.5));
     CHECK(x[1] == Interval(-1.,2.));
     CHECK(x[2] == Interval(-1.5,2.));
@@ -112,13 +112,13 @@ TEST_CASE("CtcEval")
     CHECK(x[6] == Interval(-1.5,2.5));
     CHECK(x[7] == Interval(-2.,3.5));
     CHECK(x[8] == Interval(-2.5,4.5));
-    CHECK(x[9] == Interval(-3.,5.5));
+    CHECK(x[9] == Interval(-3.,5.5));*/
 
     // Test B
     x = x_raw;
     intv_t = Interval(0.5,2.5);
-    intv_y = -2.;
-    contraction = x.ctcEval(intv_t, intv_y, xdot, false);
+    intv_y = Interval(-2.).inflate(0.1);
+    /*contraction = x.ctcEval(intv_t, intv_y, xdot, false);
     CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     CHECK(contraction);
     CHECK(intv_t == Interval(0.5,2.5));
@@ -213,7 +213,7 @@ TEST_CASE("CtcEval")
     CHECK(x[8] == Interval(-2.5,0.25)); // optim: Interval(-2.5,-0.25)
     CHECK(x[9] == Interval(-3.,1.25)); // optim: Interval(-3.,0.25)
 
-    // Test E: ctcFwdBwd should not be effective after ctcEval(true)
+    // Test E: ctcDeriv should not be effective after ctcEval(true)
     x = x_raw;
     intv_t = Interval(6.5, 8.5);
     intv_y = Interval(-4.5, -1.75);
@@ -231,7 +231,7 @@ TEST_CASE("CtcEval")
     CHECK(x[7] == Interval(-2.,-0.75)); // optim: Interval(-2.,-1.)
     CHECK(x[8] == Interval(-2.5,0.25)); // optim: Interval(-2.5,-0.25)
     CHECK(x[9] == Interval(-3.,1.25)); // optim: Interval(-3.,0.25)
-    CHECK(!x.ctcFwdBwd(xdot)); // no contraction expected
+    CHECK(!x.ctcDeriv(xdot)); // no contraction expected
     CHECK(x[0] == Interval(-5.5,2.5));
     CHECK(x[1] == Interval(-4.5,2.));
     CHECK(x[2] == Interval(-3.5,1.5));
@@ -262,7 +262,7 @@ TEST_CASE("CtcEval")
     CHECK(x[8] == Interval(-2.,3.25)); // optim: Interval(-2.,3.25)
     CHECK(x[9] == Interval(-1.25,4.)); // optim: Interval(-1.25,4.)
 
-    // Test F: ctcFwdBwd should not be effective after ctcEval(true)
+    // Test F: ctcDeriv should not be effective after ctcEval(true)
     x = x_raw;
     intv_t = Interval(8.5,9.5);
     intv_y = Interval(-0.5,2.5);
@@ -280,7 +280,7 @@ TEST_CASE("CtcEval")
     CHECK(x[7] == Interval(-2.,3.5)); // optim: Interval(-2.,3.3125)
     CHECK(x[8] == Interval(-2.,3.25)); // optim: Interval(-2.,3.25)
     CHECK(x[9] == Interval(-1.25,4.)); // optim: Interval(-1.25,4.)
-    CHECK(!x.ctcFwdBwd(xdot)); // no contraction expected
+    CHECK(!x.ctcDeriv(xdot)); // no contraction expected
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -451,7 +451,7 @@ TEST_CASE("CtcEval")
     Tube derivative(tube);
     derivative.set(Interval(-1.5,-1.));
     tube.set(Interval(6.,8.), 0);
-    tube.ctcFwdBwd(derivative);
+    tube.ctcDeriv(derivative);
 
     CHECK(tube[0] == Interval(6.,8.)); 
     CHECK(tube[1] == Interval(4.5,7.));
@@ -551,7 +551,7 @@ TEST_CASE("CtcEval")
     Tube derivative(tube);
     derivative.set(Interval(1.,1.5));
     tube.set(Interval(-8.,-6.), 0);
-    tube.ctcFwdBwd(derivative);
+    tube.ctcDeriv(derivative);
 
     CHECK(tube[0] == Interval(-8.,-6.)); 
     CHECK(tube[1] == Interval(-7.,-4.5)); 

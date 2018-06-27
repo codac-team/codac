@@ -12,6 +12,7 @@
 
 #include "tubex_Tube.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_CtcEval.h"
 #include "tubex_DimensionException.h"
 
 using namespace std;
@@ -271,9 +272,10 @@ namespace tubex
 
     bool Tube::ctcEval(Interval& t, Interval& z, const Tube& derivative, bool propagate)
     {
-      IntervalVector z_box(1, z);
-      bool ctc = TubeVector::ctcEval(t, z_box, derivative, propagate);
-      z = z_box[0];
+      //IntervalVector z_box(1, z);
+      CtcEval ctc_eval;
+      bool ctc = ctc_eval.contract(t, z, *this, derivative, propagate);
+      //z = z_box[0];
       return ctc;
     }
 

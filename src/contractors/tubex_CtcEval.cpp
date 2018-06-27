@@ -71,7 +71,7 @@ namespace tubex
       y.invert(y[t] & z, v_intv_t, t);
 
     // Trying to contract [z]
-
+cout << "1" << endl;
       if(t.is_empty())
         inconsistency = true;
 
@@ -196,7 +196,7 @@ namespace tubex
           }
         }
     }
-
+cout << "2" << endl;
     if(inconsistency)
     {
       #pragma omp for
@@ -216,10 +216,10 @@ namespace tubex
       m_t_contracted = t.diam() < old_t_diam;
       m_z_contracted = z.diam() < old_z_diam;
     }
-
+cout << "3" << endl;
     if(propagate)
-      m_y_contracted |= y.ctcFwdBwd(w); // todo: optimize propagations from evaluation
-    
+      m_y_contracted |= y.ctcDeriv(w); // todo: optimize propagations from evaluation
+cout << "4" << endl;
     return m_z_contracted | m_y_contracted | m_t_contracted;
   }
 
@@ -236,7 +236,7 @@ namespace tubex
     bool contraction = contract_knownTime(t, z, y);
 
     if(propagate)
-      contraction |= y.ctcFwdBwd(w); // todo: optimize propagations from evaluation
+      contraction |= y.ctcDeriv(w); // todo: optimize propagations from evaluation
 
     return contraction;
   }

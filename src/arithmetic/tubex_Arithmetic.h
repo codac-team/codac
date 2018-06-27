@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - Subtube arithmetic
+ *  tubex-lib - Arithmetic
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
