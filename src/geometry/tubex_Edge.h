@@ -22,6 +22,10 @@ namespace tubex
     public:
 
       Edge(Point p1, Point p2);
+
+    protected:
+
+      Point m_p1, m_p2;
   };
 }
 

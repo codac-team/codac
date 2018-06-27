@@ -24,7 +24,7 @@ namespace tubex
     public:
 
       Point(const ibex::Interval& t, const ibex::Interval& x);
-
+      const ibex::IntervalVector box() const;
       bool operator==(const Point& p) const;
       bool operator!=(const Point& p) const;
 

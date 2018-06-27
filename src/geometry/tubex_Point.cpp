@@ -18,9 +18,17 @@ using namespace ibex;
 namespace tubex
 {
   Point::Point(const Interval& t_, const Interval& x_)
+    : t(t_), x(x_)
   {
-    t = t_;
-    x = x_;
+    if(x == POS_INFINITY || x == NEG_INFINITY)
+      x = Interval::ALL_REALS;
+  }
+  
+  const IntervalVector Point::box() const
+  {
+    IntervalVector box(2);
+    box[0] = t; box[1] = x;
+    return box;
   }
 
   bool Point::operator==(const Point& p) const

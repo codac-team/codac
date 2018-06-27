@@ -16,8 +16,7 @@
 #include <vector>
 #include "ibex_IntervalVector.h"
 #include "tubex_Point.h"
-
-//#define _TUBES_POLYG_WITH_BOOST_ 0
+#include "tubex_Edge.h"
 
 namespace tubex
 {
@@ -31,6 +30,7 @@ namespace tubex
 
       int nbVertices() const;
       std::vector<Point> getVertices() const;
+      std::vector<Edge> getEdges() const;
       const Point operator[](int vertex_id) const;
       ibex::IntervalVector box() const;
 
@@ -42,34 +42,11 @@ namespace tubex
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
 
     protected:
+
+      void deleteRedundantPoints();
       
       std::vector<Point> m_v_vertices;
   };
 }
-
-#endif
-
-#ifdef _TUBES_POLYG_WITH_BOOST_
-  
-  #include <deque>
-  #include <boost/geometry.hpp>
-  #include <boost/foreach.hpp>
-  #include <boost/geometry/geometries/polygon.hpp>
-  #include <boost/geometry/geometries/segment.hpp>
-  #include <boost/geometry/geometries/point_xy.hpp>
-
-  using boost::geometry::get;
-  typedef boost::geometry::model::d2::point_xy<double> boostpoint;
-  typedef boost::geometry::model::polygon<boostpoint> boostpolygon;
-  typedef boost::geometry::model::segment<boostpoint> boostsegment;
-
-  #include <limits>
-  #define BOUNDED_NEG_INFINITY -9. //numeric_limits<float>::lowest()+1
-  #define BOUNDED_POS_INFINITY 9. //numeric_limits<float>::max()-1
-
-  // Related functions
-  boostpoint create_boostpoint(tubex::Point p);
-  boostpolygon create_boostpolygon(const tubex::Polygon& p);
-  tubex::Polygon create_polygon(const boostpolygon& bp);
 
 #endif

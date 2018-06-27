@@ -27,13 +27,14 @@ namespace tubex
   Polygon::Polygon(const IntervalVector& box)
   {
     pushPoints(box, m_v_vertices);
+    deleteRedundantPoints();
   }
 
   Polygon::Polygon(const vector<Point>& v_points)
   {
     for(int i = 0 ; i < v_points.size() ; i++)
-      if(v_points[i] != v_points[(i + 1) % v_points.size()])
-        m_v_vertices.push_back(v_points[i]);
+      m_v_vertices.push_back(v_points[i]);
+    deleteRedundantPoints();
   }
 
   int Polygon::nbVertices() const
@@ -46,6 +47,14 @@ namespace tubex
     return m_v_vertices;
   }
 
+  vector<Edge> Polygon::getEdges() const
+  {
+    vector<Edge> v_edges;
+    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+      v_edges.push_back(Edge(m_v_vertices[i], m_v_vertices[(i+1) % m_v_vertices.size()]));
+    return v_edges;
+  }
+
   const Point Polygon::operator[](int vertex_id) const
   {
     if(vertex_id < 0 || vertex_id >= nbVertices())
@@ -55,18 +64,10 @@ namespace tubex
 
   IntervalVector Polygon::box() const
   {
-    #ifdef _TUBES_POLYG_WITH_BOOST_
-
-      boostpolygon bp = create_boostpolygon(*this);
-
-      IntervalVector iv_box(2);
-      boost::geometry::model::box<boostpoint> box;
-      boost::geometry::envelope(bp, box);
-      iv_box[0] = Interval(get<0>(box.min_corner()), get<0>(box.max_corner()));
-      iv_box[1] = Interval(get<1>(box.min_corner()), get<1>(box.max_corner()));
-      return iv_box;
-
-    #endif
+    IntervalVector box(2, Interval::EMPTY_SET);
+    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+      box |= m_v_vertices[i].box();
+    return box;
   }
 
   bool Polygon::isPoint() const
@@ -81,18 +82,36 @@ namespace tubex
 
   bool Polygon::operator==(const Polygon& p) const
   {
-    #ifdef _TUBES_POLYG_WITH_BOOST_
+    if(m_v_vertices.size() != p.m_v_vertices.size())
+      return false;
 
-      boostpolygon bp1 = create_boostpolygon(*this);
-      boostpolygon bp2 = create_boostpolygon(p);
-      return boost::geometry::equals(bp1, bp2);
+    int i; // looking for first same elements
+    for(i = 0 ; i < m_v_vertices.size() ; i++)
+      if(m_v_vertices[0] == p.m_v_vertices[i])
+        break;
 
-    #endif
+    for(int j = 0 ; j < m_v_vertices.size() ; j++)
+      if(m_v_vertices[j] != p.m_v_vertices[(j+i) % p.m_v_vertices.size()])
+        return false;
+
+    return true;
   }
 
   bool Polygon::operator!=(const Polygon& p) const
   {
-    return !(*this == p);
+    if(m_v_vertices.size() != p.m_v_vertices.size())
+      return true;
+
+    int i; // looking for first same elements
+    for(i = 0 ; i < m_v_vertices.size() ; i++)
+      if(m_v_vertices[0] == p.m_v_vertices[i])
+        break;
+
+    for(int j = 0 ; j < m_v_vertices.size() ; j++)
+      if(m_v_vertices[j] != p.m_v_vertices[(j+i) % p.m_v_vertices.size()])
+        return true;
+
+    return false;
   }
 
   ostream& operator<<(ostream& str, const Polygon& p)
@@ -114,38 +133,14 @@ namespace tubex
     str << "}";
     return str;
   }
+
+  void Polygon::deleteRedundantPoints()
+  {
+    vector<Point> v_vertices;
+    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+      if(m_v_vertices[i].x.is_unbounded()
+        || m_v_vertices[i] != m_v_vertices[(i+1) % m_v_vertices.size()])
+        v_vertices.push_back(m_v_vertices[i]);
+    m_v_vertices = v_vertices;
+  }
 }
-
-
-#ifdef _TUBES_POLYG_WITH_BOOST_
-
-  boostpoint create_boostpoint(tubex::Point p)
-  {
-    boostpoint bpt;
-    double x, y;
-    x = (p.x);// == POS_INFINITY ? BOUNDED_POS_INFINITY : p.x);
-    x = (p.x);// == NEG_INFINITY ? BOUNDED_NEG_INFINITY : p.x);
-    y = (p.y);// == POS_INFINITY ? BOUNDED_POS_INFINITY : p.y);
-    y = (p.y);// == NEG_INFINITY ? BOUNDED_NEG_INFINITY : p.y);
-    return boostpoint(x,y);
-  }
-
-  boostpolygon create_boostpolygon(const tubex::Polygon& p)
-  {
-    boostpolygon bp;
-    std::vector<boostpoint> v_bpts;
-
-    for(int i = 0 ; i < p.nbVertices() ; i++)
-      v_bpts.push_back(create_boostpoint(p[i]));
-    v_bpts.push_back(create_boostpoint(p[0])); // closing set (boost standard)
-    
-    boost::geometry::assign_points(bp, v_bpts);
-    return bp;
-  }
-
-  tubex::Polygon create_polygon(const boostpolygon& bp)
-  {
-
-  }
-
-#endif
