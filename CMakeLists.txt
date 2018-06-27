@@ -23,7 +23,7 @@ cmake_minimum_required(VERSION 2.8.7)
 # Options
 
   option(BUILD_TESTS "Build test" ON)
-  option(ONLY_PYTHON_BINDINGS "build library with python bindings only" OFF)
+  #option(ONLY_PYTHON_BINDINGS "build library with python bindings only" OFF)
 
 
 # Position Independent Code
@@ -41,15 +41,18 @@ cmake_minimum_required(VERSION 2.8.7)
   # todo, clean the following:
     include_directories(/usr/local/include/ibex/3rd/)
     include_directories(/usr/local/include/ibex/)
+    set(LIBS ${LIBS} /usr/local/lib/libibex.a)
+    #set(LIBS ${LIBS} /usr/local/lib/ibex/3rd/libgaol.a)
+    set(LIBS ${LIBS} /usr/local/lib/ibex/3rd/libprim.a)
 
-  set(IbexLib_USE_STATIC 1) # force ibex static linking
-  find_package(IbexLib)
-  if(IBEX_FOUND)
-    include_directories(${IBEX_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${IBEX_LIBRARIES})
-  else()
-    message(FATAL_ERROR "Unable to find IBEX-lib. You may need to set IBEX_ROOT ${IBEX_ROOT}")
-  endif()
+  #set(IbexLib_USE_STATIC 1) # force ibex static linking
+  #find_package(IbexLib)
+  #if(IBEX_FOUND)
+  #  include_directories(${IBEX_INCLUDE_DIRS})
+  #  set(LIBS ${LIBS} ${IBEX_LIBRARIES})
+  #else()
+  #  message(FATAL_ERROR "Unable to find IBEX-lib. You may need to set IBEX_ROOT ${IBEX_ROOT}")
+  #endif()
 
 
 # OpenMP library
