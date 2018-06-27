@@ -77,18 +77,22 @@ cout << "1" << endl;
 
       else
       {
+        cout << "a" << endl;
         z &= y.interpol(t, w);
 
         // Computing index
 
+        cout << "b" << endl;
           computeIndex(t, z, y, index_lb, index_ub);
 
+        cout << "c" << endl;
           //if(!propagate) // todo: optimize this? For now, propagation performed by CtcDeriv
           {
             min_index_ctc = max(0, index_lb - 1);
             max_index_ctc = min(index_ub + 1, y.nbSlices() - 1);
           }
 
+        cout << "d" << endl;
         // Initializations
 
           map<int,Interval> map_new_z;
@@ -100,6 +104,7 @@ cout << "1" << endl;
           z.set_empty();
           t.set_empty();
 
+        cout << "e" << endl;
         // Iteration for each [t] subdomain
         for(int k = 0 ; k < v_intv_t.size() ; k++)
         {
@@ -173,6 +178,7 @@ cout << "1" << endl;
             t |= local_t;
         } // end of for
 
+        cout << "f" << endl;
         // Synthesis
         {
           Interval prev_z;
@@ -181,6 +187,7 @@ cout << "1" << endl;
           // The synthesis is made over two for-loops
           // so that we can stop the iteration if there is no more propagation
 
+        cout << "g" << endl;
           prev_z = Interval::ALL_REALS;
           for(int i = min_index_ctc ; i <= max_index_ctc ; i++) // forward
           {

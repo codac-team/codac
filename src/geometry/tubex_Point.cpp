@@ -17,6 +17,12 @@ using namespace ibex;
 
 namespace tubex
 {
+  Point::Point(const Interval& t_, const Interval& x_)
+  {
+    t = t_;
+    x = x_;
+  }
+
   bool Point::operator==(const Point& p) const
   {
     return t == p.t && x == p.x;
@@ -27,25 +33,11 @@ namespace tubex
     return t != p.t || x != p.x;
   }
 
-  Point point(double t, double x)
-  {
-    Point p;
-    p.t = t; p.x = x;
-    return p;
-  }
-
-  /*Point point(double t, Vector x)
-  {
-    Point p;
-    p.t = t; p.x = x;
-    return p;
-  }*/
-
   void pushPoints(const IntervalVector& box, vector<Point>& v_points)
   {
-    v_points.push_back(point(box[0].lb(), box[1].lb()));
-    v_points.push_back(point(box[0].lb(), box[1].ub()));
-    v_points.push_back(point(box[0].ub(), box[1].ub()));
-    v_points.push_back(point(box[0].ub(), box[1].lb()));
+    v_points.push_back(Point(box[0].lb(), box[1].lb()));
+    v_points.push_back(Point(box[0].lb(), box[1].ub()));
+    v_points.push_back(Point(box[0].ub(), box[1].ub()));
+    v_points.push_back(Point(box[0].ub(), box[1].lb()));
   }
 }

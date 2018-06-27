@@ -24,8 +24,8 @@ namespace tubex
 
     for(int i = 0 ; i < p.nbVertices() ; i++)
     {
-      v_t.push_back(VibesFigure::truncInf(p[i].t));
-      v_x.push_back(VibesFigure::truncInf(p[i].x));
+      v_t.push_back(VibesFigure::truncInf(p[i].t.mid()));
+      v_x.push_back(VibesFigure::truncInf(p[i].x.mid()));
     } 
 
     if(v_t.size() > 0)

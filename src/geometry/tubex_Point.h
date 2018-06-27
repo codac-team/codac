@@ -14,23 +14,27 @@
 #define Point_HEADER
 
 #include <vector>
+#include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
-//#include "ibex_Vector.h"
 
 namespace tubex
 {
-  struct Point
+  class Point
   {
-    double t;
-    double x;
-    //ibex::Vector x = ibex::Vector(1);
+    public:
 
-    bool operator==(const Point& p) const;
-    bool operator!=(const Point& p) const;
+      Point(const ibex::Interval& t, const ibex::Interval& x);
+
+      bool operator==(const Point& p) const;
+      bool operator!=(const Point& p) const;
+
+    public:
+
+      // Reliable representation of points:
+      ibex::Interval t;
+      ibex::Interval x;
   };
 
-  Point point(double t, double x);
-  //Point point(double t, ibex::Vector x);
   void pushPoints(const ibex::IntervalVector& box, std::vector<Point>& v_points);
 }
 

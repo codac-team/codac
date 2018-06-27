@@ -319,7 +319,7 @@ namespace tubex
       y.set_empty();
 
       vector<Point> v_pts;
-      v_pts.push_back(point(t.lb(), x.inputGate()[i].lb()));
+      v_pts.push_back(Point(t.lb(), x.inputGate()[i].lb()));
 
       if(t.is_degenerated())
       {
@@ -372,14 +372,14 @@ namespace tubex
               y |= y_inter_lb;
 
               if(y_inter_lb.ub() >= prev_y.lb())
-                v_pts.push_back(point(t_inter_lb.mid(), y_inter_lb.mid()));
+                v_pts.push_back(Point(t_inter_lb.mid(), y_inter_lb.mid()));
 
               else
               {
                 Interval t_a = yilb_inv(i, prev_y.lb(), x, v);
-                v_pts.push_back(point(t_a.mid(), prev_y.lb()));
+                v_pts.push_back(Point(t_a.mid(), prev_y.lb()));
                 Interval t_b = yolb_inv(i, prev_y.lb(), x, v);
-                v_pts.push_back(point(t_b.mid(), prev_y.lb()));
+                v_pts.push_back(Point(t_b.mid(), prev_y.lb()));
               }
             }
 
@@ -393,11 +393,11 @@ namespace tubex
             }
           }
 
-          v_pts.push_back(point(t.ub(), x.outputGate()[i].lb()));
+          v_pts.push_back(Point(t.ub(), x.outputGate()[i].lb()));
 
         // Upper bounds
 
-          v_pts.push_back(point(t.ub(), x.outputGate()[i].ub()));
+          v_pts.push_back(Point(t.ub(), x.outputGate()[i].ub()));
 
           if(!v.codomain()[i].is_degenerated())
           {
@@ -424,14 +424,14 @@ namespace tubex
               y |= y_inter_ub;
 
               if(y_inter_ub.lb() <= prev_y.ub())
-                v_pts.push_back(point(t_inter_ub.mid(), y_inter_ub.mid()));
+                v_pts.push_back(Point(t_inter_ub.mid(), y_inter_ub.mid()));
 
               else
               {
                 Interval t_b = youb_inv(i, prev_y.ub(), x, v);
-                v_pts.push_back(point(t_b.mid(), prev_y.ub()));
+                v_pts.push_back(Point(t_b.mid(), prev_y.ub()));
                 Interval t_a = yiub_inv(i, prev_y.ub(), x, v);
-                v_pts.push_back(point(t_a.mid(), prev_y.ub()));
+                v_pts.push_back(Point(t_a.mid(), prev_y.ub()));
               }
             }
 
@@ -446,7 +446,7 @@ namespace tubex
           }
       }
       
-      v_pts.push_back(point(t.lb(), x.inputGate()[i].ub()));
+      v_pts.push_back(Point(t.lb(), x.inputGate()[i].ub()));
 
       y &= prev_y;
       y &= x.codomain()[i];

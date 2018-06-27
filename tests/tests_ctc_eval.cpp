@@ -117,8 +117,8 @@ TEST_CASE("CtcEval")
     // Test B
     x = x_raw;
     intv_t = Interval(0.5,2.5);
-    intv_y = Interval(-2.).inflate(0.1);
-    /*contraction = x.ctcEval(intv_t, intv_y, xdot, false);
+    /*intv_y = -2.;
+    contraction = x.ctcEval(intv_t, intv_y, xdot, false);
     CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     CHECK(contraction);
     CHECK(intv_t == Interval(0.5,2.5));
