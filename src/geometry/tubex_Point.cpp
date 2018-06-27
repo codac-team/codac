@@ -20,8 +20,7 @@ namespace tubex
   Point::Point(const Interval& t_, const Interval& x_)
     : t(t_), x(x_)
   {
-    if(x == POS_INFINITY || x == NEG_INFINITY)
-      x = Interval::ALL_REALS;
+    
   }
   
   const IntervalVector Point::box() const
@@ -41,11 +40,20 @@ namespace tubex
     return t != p.t || x != p.x;
   }
 
+  ostream& operator<<(ostream& str, const Point& p)
+  {
+    str << "(" << p.t << "," << p.x << ")";
+    return str;
+  }
+
   void pushPoints(const IntervalVector& box, vector<Point>& v_points)
   {
-    v_points.push_back(Point(box[0].lb(), box[1].lb()));
-    v_points.push_back(Point(box[0].lb(), box[1].ub()));
-    v_points.push_back(Point(box[0].ub(), box[1].ub()));
-    v_points.push_back(Point(box[0].ub(), box[1].lb()));
+    Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval::ALL_REALS;
+    Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval::ALL_REALS;
+
+    v_points.push_back(Point(box[0].lb(), xlb));
+    v_points.push_back(Point(box[0].lb(), xub));
+    v_points.push_back(Point(box[0].ub(), xub));
+    v_points.push_back(Point(box[0].ub(), xlb));
   }
 }

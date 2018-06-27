@@ -166,6 +166,12 @@ namespace Catch
   }
 
   template<>
+  inline std::string toString<Detail::ApproxVector>(Detail::ApproxVector const& value)
+  {
+    return value.toString();
+  }
+
+  template<>
   inline std::string toString<Detail::ApproxIntvPair>(Detail::ApproxIntvPair const& value)
   {
     return value.toString();

@@ -27,6 +27,7 @@ namespace tubex
       const ibex::IntervalVector box() const;
       bool operator==(const Point& p) const;
       bool operator!=(const Point& p) const;
+      friend std::ostream& operator<<(std::ostream& str, const Point& p);
 
     public:
 

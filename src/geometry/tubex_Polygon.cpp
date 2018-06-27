@@ -66,7 +66,10 @@ namespace tubex
   {
     IntervalVector box(2, Interval::EMPTY_SET);
     for(int i = 0 ; i < m_v_vertices.size() ; i++)
-      box |= m_v_vertices[i].box();
+    {
+      box[0] |= m_v_vertices[i].t;
+      box[1] |= m_v_vertices[i].x;
+    }
     return box;
   }
 
@@ -126,7 +129,7 @@ namespace tubex
       for(int i = 0 ; i < p.nbVertices() ; i++)
       {
         if(i != 0) str << ",";
-        str << "(" << p.getVertices()[i].t << "," << p.getVertices()[i].x << ")";
+        str << p.getVertices()[i];
       }
     }
 

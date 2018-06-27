@@ -22,11 +22,19 @@ namespace tubex
     public:
 
       Edge(Point p1, Point p2);
+      const ibex::IntervalVector box() const;
+      const ibex::IntervalVector operator&(const ibex::IntervalVector& box) const;
+      bool operator==(const Edge& e) const;
+      bool operator!=(const Edge& e) const;
+      const Point operator&(const Edge& e) const;
+      friend std::ostream& operator<<(std::ostream& str, const Edge& e);
 
     protected:
 
       Point m_p1, m_p2;
   };
+
+  void pushEdges(const ibex::IntervalVector& box, std::vector<Edge>& v_edges);
 }
 
 #endif
