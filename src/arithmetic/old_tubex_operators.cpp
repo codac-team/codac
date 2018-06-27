@@ -77,13 +77,4 @@ namespace tubex
     binary_op(operator/);
     binary_op(operator|);
     binary_op(operator&);*/
-
-  #include "tubex_operators_assignment.cpp"
-
-    //assignment_op(operator+=);
-    //assignment_op(operator-=);
-    //assignment_op(operator*=);
-    //assignment_op(operator/=);
-    assignment_op(operator|=);
-    assignment_op(operator&=);
 }
