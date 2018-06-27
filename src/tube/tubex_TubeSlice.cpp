@@ -72,7 +72,6 @@ namespace tubex
       m_codomain = x.m_codomain;
       *m_input_gate = *x.m_input_gate;
       *m_output_gate = *x.m_output_gate;
-      //flagFutureDataUpdateFromLeaf();
       return *this;
     }
     
@@ -87,44 +86,6 @@ namespace tubex
     }
 
     // Slices structure
-    
-    /*bool TubeSlice::isSlice() const
-    {
-      return true;
-    }
-
-    TubeSlice* TubeSlice::getSlice(int slice_id)
-    {
-      return const_cast<TubeSlice*>(static_cast<const TubeSlice*>(this)->getSlice(slice_id));
-    }
-
-    const TubeSlice* TubeSlice::getSlice(int slice_id) const
-    {
-      DomainException::check(*this, slice_id);
-      return this;
-    }
-
-    TubeSlice* TubeSlice::getSlice(double t)
-    {
-      return const_cast<TubeSlice*>(static_cast<const TubeSlice*>(this)->getSlice(t));
-    }
-
-    const TubeSlice* TubeSlice::getSlice(double t) const
-    {
-      DomainException::check(*this, t);
-      return this;
-    }
-
-    void TubeSlice::getSlices(vector<const TubeSlice*>& v_slices) const
-    {
-      v_slices.push_back(this);
-    }
-    
-    int TubeSlice::input2index(double t) const
-    {
-      DomainException::check(*this, t);
-      return 0;
-    }*/
 
     TubeSlice* TubeSlice::prevSlice() const
     {
@@ -151,9 +112,6 @@ namespace tubex
         *first_slice->m_output_gate &= *second_slice->m_input_gate;
         //delete second_slice->m_input_gate; // todo: check remaining unused gates
         second_slice->m_input_gate = first_slice->m_output_gate;
-
-        //first_slice->flagFutureDataUpdateFromLeaf();
-        //second_slice->flagFutureDataUpdateFromLeaf();
       }
     }
 
@@ -171,11 +129,6 @@ namespace tubex
     {
       return m_tube_ref;
     }
-    
-    //TubeVectorNode* TubeSlice::getParentOf(TubeVectorComponent* component)
-    //{
-    //  return NULL;
-    //}
     
     // Access values
 
@@ -195,9 +148,6 @@ namespace tubex
     
     double TubeSlice::volume() const
     {
-      //checkData();
-      //return m_volume;
-
       return m_codomain.volume() * m_domain.diam();
 
       // todo: check the following:
@@ -210,16 +160,6 @@ namespace tubex
       //else
       //  return m_domain.diam() * m_codomain.diam();
     }
-
-    /*const Interval TubeSlice::operator[](int slice_id) const
-    {
-      // Write access is not allowed for this operator:
-      // a further call to checkDataTree() is needed when values change,
-      // this call cannot be garanteed with a direct access to m_codomain
-      // For write access: use set()
-      DomainException::check(*this, slice_id);
-      return m_codomain;
-    }*/
 
     const IntervalVector TubeSlice::operator[](double t) const
     {
@@ -405,8 +345,6 @@ namespace tubex
       m_codomain = envelope;
       *m_input_gate &= m_codomain;
       *m_output_gate &= m_codomain;
-
-      //flagFutureDataUpdateFromLeaf();
     }
 
     void TubeSlice::setInputGate(const IntervalVector& input_gate)
@@ -417,8 +355,6 @@ namespace tubex
 
       if(prevSlice() != NULL)
         *m_input_gate &= prevSlice()->codomain();
-
-      //flagFutureDataUpdateFromLeaf();
     }
 
     void TubeSlice::setOutputGate(const IntervalVector& output_gate)
@@ -429,8 +365,6 @@ namespace tubex
 
       if(nextSlice() != NULL)
         *m_output_gate &= nextSlice()->codomain();
-
-      //flagFutureDataUpdateFromLeaf();
     }
     
     TubeSlice& TubeSlice::inflate(double rad)
@@ -468,11 +402,6 @@ namespace tubex
 
     // Slices structure
 
-    //void TubeSlice::updateSlicesNumber()
-    //{
-    //  m_slices_number = 1;
-    //}
-
     // Access values
 
     const IntervalVector TubeSlice::codomainBox() const
@@ -489,49 +418,6 @@ namespace tubex
     }
 
     // Setting values
-    
-    /*void TubeSlice::checkData() const
-    {
-      if(!m_data_update_needed)
-        return;
-
-      // Volume
-      {
-        if(m_codomain.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
-          m_volume = 0.;
-
-        else if(m_codomain.is_unbounded())
-          m_volume = INFINITY;
-
-        else
-          m_volume = m_domain.diam() * m_codomain.diam();
-      }
-
-      m_data_update_needed = false;
-    }*/
-
-    /*void TubeSlice::flagFutureDataUpdateFromRoot(int slice_id) const
-    {
-      // slice_id is not used in this class
-      m_data_update_needed = true;
-      m_primitive_update_needed = true;
-    }*/
-
-    /*void TubeSlice::flagFutureDataUpdateFromLeaf() const
-    {
-      if(!m_data_update_needed)
-      {
-        m_data_update_needed = true;
-        m_primitive_update_needed = true;
-
-        if(m_tube_ref != NULL)
-        {
-          int slice_id = m_tube_ref->input2index(m_domain.mid());
-          m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
-          m_tube_ref->m_component->flagFutureDataUpdateFromRoot(slice_id);
-        }
-      }
-    }*/
 
     // Integration
 
@@ -540,26 +426,6 @@ namespace tubex
       if(!m_primitive_update_needed)
         throw Exception("TubeSlice::checkPartialPrimitive", "primitive value not set");
       // should be set from TubeVector class
-    }
-
-    void TubeSlice::flagFuturePrimitiveUpdateFromRoot(int slice_id) const
-    {
-      // slice_id is not used in this class
-      m_primitive_update_needed = true;
-    }
-
-    void TubeSlice::flagFuturePrimitiveUpdateFromLeaf() const
-    {
-      if(!m_primitive_update_needed)
-      {
-        m_primitive_update_needed = true;
-
-        if(m_tube_ref != NULL)
-        {
-          int slice_id = m_tube_ref->input2index(m_domain.mid());
-          m_tube_ref->m_component->flagFuturePrimitiveUpdateFromRoot(slice_id);
-        }
-      }
     }
 
     const pair<IntervalVector,IntervalVector>& TubeSlice::getPartialPrimitiveValue() const

@@ -282,12 +282,6 @@ namespace tubex
       return wider_slice;
     }
 
-    //void TubeVector::getSlices(vector<const TubeSlice*>& v_slices) const
-    //{
-    //  // todo: remove this?
-    //  //return m_v_slices;
-    //}
-
     int TubeVector::input2index(double t) const
     {
       DomainException::check(*this, t);
