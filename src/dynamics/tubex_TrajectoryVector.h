@@ -19,6 +19,9 @@
 #include "ibex_Function.h"
 #include "tubex_DynamicalItem.h"
 
+// todo:
+// - arithmetic operators for trajectories?
+
 namespace tubex
 {
   class TrajectoryVector : public DynamicalItem

@@ -117,6 +117,7 @@ namespace tubex
     Tube Tube::primitive() const
     {
       Tube primitive(*this, Interval::ALL_REALS);
+      primitive.set(0., primitive.domain().lb());
       CtcDeriv ctc_deriv;
       ctc_deriv.contractFwd(primitive, *this);
       return primitive;

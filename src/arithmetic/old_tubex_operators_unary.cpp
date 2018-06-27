@@ -1,8 +1,8 @@
 #define unary_op(f) \
   \
-  Tube f(const Tube& x1) \
+  TubeVector f(const TubeVector& x1) \
   { \
-    Tube x2(x1); \
+    TubeVector x2(x1); \
     TubeSlice *slice_x1, *first_slice_x1 = x1.getFirstSlice(); \
     TubeSlice *slice_x2, *first_slice_x2 = x2.getFirstSlice(); \
     slice_x1 = first_slice_x1; \

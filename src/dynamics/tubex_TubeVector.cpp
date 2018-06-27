@@ -180,6 +180,7 @@ namespace tubex
     TubeVector TubeVector::primitive() const
     {
       TubeVector primitive(*this, IntervalVector(dim(), Interval::ALL_REALS));
+      primitive.set(IntervalVector(dim(), 0.), primitive.domain().lb());
       CtcDeriv ctc_deriv;
       ctc_deriv.contractFwd(primitive, *this);
       return primitive;

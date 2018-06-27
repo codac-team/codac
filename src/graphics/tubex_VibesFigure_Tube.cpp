@@ -326,7 +326,7 @@ namespace tubex
 
             delete m_map_tubes[tube].tube_copy;
           }
-
+          
           m_map_tubes[tube].tube_copy = new TubeVector(*tube);
         }
 
