@@ -48,8 +48,8 @@ namespace tubex
 
   void pushPoints(const IntervalVector& box, vector<Point>& v_points)
   {
-    Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval::ALL_REALS;
-    Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval::ALL_REALS;
+    Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
+    Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
 
     v_points.push_back(Point(box[0].lb(), xlb));
     v_points.push_back(Point(box[0].lb(), xub));

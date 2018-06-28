@@ -72,31 +72,60 @@ namespace tubex
   
   const Point Edge::operator&(const Edge& e) const
   {
-    if(e.box()[0].is_degenerated())
+    if(e.box()[0].is_degenerated()) // vertical edge e
     {
       Interval a = (m_p2.x - m_p1.x) / (m_p2.t - m_p1.t);
+      if(a.is_empty())
+        a = Interval::ALL_REALS;
+
       Interval b = m_p1.x;
 
       IntervalVector inter(2);
       inter[0] = e.box()[0]; inter[1] = b + a * (e.box()[0] - m_p1.t);
 
-      if(inter[1].is_subset(e.box()[1]) && inter[0].is_subset(box()[0]))
+      if(a.is_unbounded() // vertical or degenerate polygon's line
+        && !(e.box()[0] & box()[0]).is_empty() // possibly colinear lines
+        && !(e.box()[1] & box()[1]).is_empty()) // overlapping lines
+      {
+        return Point(e.box()[0], e.box()[1] & box()[1]);
+      }
+
+      else if(!inter[1].is_empty() && inter[1].is_subset(e.box()[1]) && inter[0].is_subset(box()[0]))
+      {
         return Point(inter[0], inter[1]);
+      }
       
       else
         return Point(Interval::EMPTY_SET, Interval::EMPTY_SET);
     }
 
-    else if(e.box()[1].is_degenerated())
+    else if(e.box()[1].is_degenerated()) // horizontal edge e
     {
       Interval a = (m_p2.x - m_p1.x) / (m_p2.t - m_p1.t);
+      if(a.is_empty())
+        a = Interval::ALL_REALS;
+
       Interval b = m_p1.x;
 
       IntervalVector inter(2);
       inter[0] = m_p1.t + ((e.box()[1] - b) / a); inter[1] = e.box()[1];
 
-      if(inter[0].is_subset(e.box()[0]) && inter[1].is_subset(box()[1]))
+      if(inter[0].is_empty())
+        inter[0] = Interval::ALL_REALS;
+
+      inter[0] &= box()[0] & e.box()[0];
+
+      if(a.is_unbounded() // vertical or degenerate polygon's line
+        && e.box()[1].is_subset(box()[1]) && box()[0].is_subset(e.box()[0])) // and lines intersect
+      {
+
+        return Point(m_p1.t | m_p2.t, e.box()[1]);
+      }
+
+      else if(!inter[0].is_empty() && inter[0].is_subset(e.box()[0]) && inter[1].is_subset(box()[1]))
+      {
         return Point(inter[0], inter[1]);
+      }
 
       else
         return Point(Interval::EMPTY_SET, Interval::EMPTY_SET);
@@ -114,8 +143,8 @@ namespace tubex
 
   void pushEdges(const IntervalVector& box, vector<Edge>& v_edges)
   {
-    Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval::ALL_REALS;
-    Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval::ALL_REALS;
+    Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
+    Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
 
     v_edges.push_back(Edge(Point(box[0].lb(), xlb), Point(box[0].ub(), xlb)));
     v_edges.push_back(Edge(Point(box[0].ub(), xlb), Point(box[0].ub(), xub)));

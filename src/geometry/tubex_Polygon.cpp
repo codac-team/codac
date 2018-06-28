@@ -144,14 +144,15 @@ namespace tubex
   
   const IntervalVector Polygon::operator&(const IntervalVector& x) const
   {
+    IntervalVector reduced_x = x;// & box();
     IntervalVector inter(2, Interval::EMPTY_SET);
 
     vector<Edge> v_edges = getEdges();
     for(int i = 0 ; i < v_edges.size() ; i++)
-      inter |= v_edges[i] & x;
+      inter |= v_edges[i] & reduced_x;
 
     vector<Point> v_x_vertices;
-    pushPoints(x, v_x_vertices);
+    pushPoints(reduced_x, v_x_vertices);
     for(int i = 0 ; i < v_x_vertices.size() ; i++)
       if(this->encloses(v_x_vertices[i]))
         inter |= v_x_vertices[i].box();
