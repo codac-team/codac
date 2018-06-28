@@ -258,11 +258,11 @@ TEST_CASE("CtcDeriv")
 
     CHECK(tube[0] == Interval(-1.,1.));
     CHECK(tube[1] == Interval(-2,1.5));
-    CHECK(ApproxIntv(tube[2]) == Interval(-2.333333,2.));
-    CHECK(ApproxIntv(tube[3]) == Interval(-2.,2.333333));
+    CHECK(ApproxIntv(tube[2]) == Interval(-7./3.,2.));
+    CHECK(ApproxIntv(tube[3]) == Interval(-2.,7./3.));
     CHECK(tube[4] == Interval(-1.5,2.));
     CHECK(tube[5] == Interval(-1.,1.));
-    CHECK(ApproxIntv(tube.codomain()) == Interval(-2.333333,2.333333));
+    CHECK(ApproxIntv(tube.codomain()) == Interval(-7./3.,7./3.));
   }
 
   SECTION("Test fwd/bwd (example from tubint paper)")

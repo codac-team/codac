@@ -116,6 +116,48 @@ namespace tubex
 
     return false;
   }
+  
+  bool Polygon::encloses(const Point& p) const
+  {
+    // Note: code patterned after [Franklin, 2000]
+
+    int cn = 0; // the  crossing number counter
+    vector<Point> v_vertices = getVertices();
+    int n = v_vertices.size();
+
+    // Loop through all edges of the polygon
+    for(int i = 0 ; i <= n ; i++)
+    {
+      // Edge from V[i]  to V[i+1]
+      if(((v_vertices[i].x.mid() <= p.x.mid()) && (v_vertices[(i+1)%n].x.mid() > p.x.mid())) // an upward crossing
+      || ((v_vertices[i].x.mid() > p.x.mid()) && (v_vertices[(i+1)%n].x.mid() <= p.x.mid()))) // a downward crossing
+      {
+        // Compute  the actual edge-ray intersect t-coordinate
+        float vt = (float)(p.x.mid() - v_vertices[i].x.mid()) / (v_vertices[(i+1)%n].x.mid() - v_vertices[i].x.mid());
+        if(p.t.mid() < v_vertices[i].t.mid() + vt * (v_vertices[(i+1)%n].t.mid() - v_vertices[i].t.mid())) // p.t < intersect
+          ++cn; // a valid crossing of x=p.x right of p.t
+      }
+    }
+
+    return (cn & 1); // 0 if even (out), and 1 if odd (in)
+  }
+  
+  const IntervalVector Polygon::operator&(const IntervalVector& x) const
+  {
+    IntervalVector inter(2, Interval::EMPTY_SET);
+
+    vector<Edge> v_edges = getEdges();
+    for(int i = 0 ; i < v_edges.size() ; i++)
+      inter |= v_edges[i] & x;
+
+    vector<Point> v_x_vertices;
+    pushPoints(x, v_x_vertices);
+    for(int i = 0 ; i < v_x_vertices.size() ; i++)
+      if(this->encloses(v_x_vertices[i]))
+        inter |= v_x_vertices[i].box();
+
+    return inter;
+  }
 
   ostream& operator<<(ostream& str, const Polygon& p)
   {

@@ -22,11 +22,13 @@ namespace Catch
 {
   namespace Detail
   {
+    #define DEFAULT_EPSILON std::numeric_limits<double>::epsilon()*10
+
     class ApproxIntv
     {
       public:
         explicit ApproxIntv(ibex::Interval value) :
-            m_epsilon(std::numeric_limits<float>::epsilon()*10),
+            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
@@ -68,7 +70,7 @@ namespace Catch
     {
       public:
         explicit ApproxVector(ibex::Vector value) :
-            m_epsilon(std::numeric_limits<float>::epsilon()*10),
+            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
@@ -117,7 +119,7 @@ namespace Catch
     {
       public:
         explicit ApproxIntvPair(std::pair<ibex::Interval,ibex::Interval> value) :
-            m_epsilon(std::numeric_limits<float>::epsilon()*10),
+            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
