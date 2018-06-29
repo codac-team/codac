@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcPicard.h"
-#include "tubex_StructureException.h"
+#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;
@@ -30,16 +30,19 @@ namespace tubex
   
   bool CtcPicard::contract_fwd(const Function& f, TubeVector& x)
   {
+    DimensionException::check(x, f);
     return contract(f, x, true);
   }
   
   bool CtcPicard::contract_bwd(const Function& f, TubeVector& x)
   {
+    DimensionException::check(x, f);
     return contract(f, x, false);
   }
   
   bool CtcPicard::contract(const Function& f, TubeVector& x, bool fwd)
   {
+    DimensionException::check(x, f);
     bool ctc = false;
     TubeVector *x_ptr;
 
@@ -102,6 +105,7 @@ namespace tubex
 
   bool CtcPicard::contract_fwd(const Function& f, TubeSlice& x)
   {
+    DimensionException::check(x, f);
     double h = x.domain().diam();
     IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate();
     bool ctc = contract(f, intv_x, intv_x0, h);
@@ -112,6 +116,7 @@ namespace tubex
 
   bool CtcPicard::contract_bwd(const Function& f, TubeSlice& x)
   {
+    DimensionException::check(x, f);
     double h = x.domain().diam();
     IntervalVector intv_x = x.codomain(), intv_xf = x.outputGate();
     bool ctc = contract(f, intv_x, intv_xf, -h);
@@ -144,7 +149,7 @@ namespace tubex
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      x_enclosure = x0 + (Interval(h) | 0.) * f.eval_vector(x_guess);
+      x_enclosure = eval(1, f, x_guess, x0, h) & eval(2, f, x_guess, x0, h);
 
       if(x_enclosure.is_unbounded())
         return false;
@@ -154,5 +159,28 @@ namespace tubex
     bool ctc = x != x_enclosure;
     x &= x_enclosure;
     return ctc;
+  }
+
+  const IntervalVector CtcPicard::eval(int order,
+                                       const Function& f,
+                                       const IntervalVector& x,
+                                       const IntervalVector& x0,
+                                       double h)
+  {
+    Interval intv_h = (Interval(h) | 0.);
+
+    switch(order)
+    {
+      case 1:
+        return x0 + intv_h * f.eval_vector(x);
+
+      case 2:
+        return x0
+          + intv_h * f.eval_vector(x0)
+          + pow(intv_h,2)/2. * f.jacobian(x) * f.eval_vector(x);
+
+      default:
+        throw Exception("CtcPicard::eval", "undefined evaluation order");
+    }
   }
 }

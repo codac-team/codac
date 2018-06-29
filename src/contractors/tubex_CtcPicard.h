@@ -40,6 +40,11 @@ namespace tubex
                     ibex::IntervalVector& x,
                     const ibex::IntervalVector& x0,
                     double h);
+      const ibex::IntervalVector eval(int order,
+                                      const ibex::Function& f,
+                                      const ibex::IntervalVector& x,
+                                      const ibex::IntervalVector& x0,
+                                      double h);
 
       float m_delta;
       bool m_preserve_sampling = false;
