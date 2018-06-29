@@ -17,32 +17,42 @@ using namespace ibex;
 
 namespace tubex
 {
-  Point::Point(const Interval& t_, const Interval& x_)
-    : t(t_), x(x_)
+  Point::Point(const Interval& t, const Interval& x)
+    : m_t(t), m_x(x)
   {
     
+  }
+
+  const Interval& Point::t() const
+  {
+    return m_t;
+  }
+
+  const Interval& Point::x() const
+  {
+    return m_x;
   }
   
   const IntervalVector Point::box() const
   {
     IntervalVector box(2);
-    box[0] = t; box[1] = x;
+    box[0] = m_t; box[1] = m_x;
     return box;
   }
 
   bool Point::operator==(const Point& p) const
   {
-    return t == p.t && x == p.x;
+    return m_t == p.m_t && m_x == p.m_x;
   }
 
   bool Point::operator!=(const Point& p) const
   {
-    return t != p.t || x != p.x;
+    return m_t != p.m_t || m_x != p.m_x;
   }
 
   ostream& operator<<(ostream& str, const Point& p)
   {
-    str << "(" << p.t << "," << p.x << ")";
+    str << "(" << p.m_t << "," << p.m_x << ")";
     return str;
   }
 

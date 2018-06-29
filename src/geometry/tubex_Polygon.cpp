@@ -67,8 +67,8 @@ namespace tubex
     IntervalVector box(2, Interval::EMPTY_SET);
     for(int i = 0 ; i < m_v_vertices.size() ; i++)
     {
-      box[0] |= m_v_vertices[i].t;
-      box[1] |= m_v_vertices[i].x;
+      box[0] |= m_v_vertices[i].t();
+      box[1] |= m_v_vertices[i].x();
     }
     return box;
   }
@@ -129,13 +129,13 @@ namespace tubex
     for(int i = 0 ; i <= n ; i++)
     {
       // Edge from V[i]  to V[i+1]
-      if(((v_vertices[i].x.mid() <= p.x.mid()) && (v_vertices[(i+1)%n].x.mid() > p.x.mid())) // an upward crossing
-      || ((v_vertices[i].x.mid() > p.x.mid()) && (v_vertices[(i+1)%n].x.mid() <= p.x.mid()))) // a downward crossing
+      if(((v_vertices[i].x().mid() <= p.x().mid()) && (v_vertices[(i+1)%n].x().mid() > p.x().mid())) // an upward crossing
+      || ((v_vertices[i].x().mid() > p.x().mid()) && (v_vertices[(i+1)%n].x().mid() <= p.x().mid()))) // a downward crossing
       {
         // Compute  the actual edge-ray intersect t-coordinate
-        float vt = (float)(p.x.mid() - v_vertices[i].x.mid()) / (v_vertices[(i+1)%n].x.mid() - v_vertices[i].x.mid());
-        if(p.t.mid() < v_vertices[i].t.mid() + vt * (v_vertices[(i+1)%n].t.mid() - v_vertices[i].t.mid())) // p.t < intersect
-          ++cn; // a valid crossing of x=p.x right of p.t
+        float vt = (float)(p.x().mid() - v_vertices[i].x().mid()) / (v_vertices[(i+1)%n].x().mid() - v_vertices[i].x().mid());
+        if(p.t().mid() < v_vertices[i].t().mid() + vt * (v_vertices[(i+1)%n].t().mid() - v_vertices[i].t().mid())) // p.t() < intersect
+          ++cn; // a valid crossing of x=p.x() right of p.t()
       }
     }
 
@@ -144,6 +144,8 @@ namespace tubex
   
   const IntervalVector Polygon::operator&(const IntervalVector& x) const
   {
+    // todo: the following could be easily optimized
+
     IntervalVector reduced_x = x;// & box();
     IntervalVector inter(2, Interval::EMPTY_SET);
 
@@ -184,7 +186,7 @@ namespace tubex
   {
     vector<Point> v_vertices;
     for(int i = 0 ; i < m_v_vertices.size() ; i++)
-      if(m_v_vertices[i].x.is_unbounded()
+      if(m_v_vertices[i].x().is_unbounded()
         || m_v_vertices[i] != m_v_vertices[(i+1) % m_v_vertices.size()])
         v_vertices.push_back(m_v_vertices[i]);
     m_v_vertices = v_vertices;

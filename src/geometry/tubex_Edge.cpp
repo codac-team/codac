@@ -19,7 +19,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  Edge::Edge(Point p1, Point p2) : m_p1(p1), m_p2(p2)
+  Edge::Edge(const Point& p1, const Point& p2) : m_p1(p1), m_p2(p2)
   {
 
   }
@@ -74,14 +74,17 @@ namespace tubex
   {
     if(e.box()[0].is_degenerated()) // vertical edge e
     {
-      Interval a = (m_p2.x - m_p1.x) / (m_p2.t - m_p1.t);
+      //if(box()[0].is_degenerated()) // vertical polygon's line
+      //  return Point(box()[0] & e.box()[0], box()[1] & e.box()[1]);
+
+      Interval a = (m_p2.x() - m_p1.x()) / (m_p2.t() - m_p1.t());
       if(a.is_empty())
         a = Interval::ALL_REALS;
 
-      Interval b = m_p1.x;
+      Interval b = m_p1.x();
 
       IntervalVector inter(2);
-      inter[0] = e.box()[0]; inter[1] = b + a * (e.box()[0] - m_p1.t);
+      inter[0] = e.box()[0]; inter[1] = b + a * (e.box()[0] - m_p1.t());
 
       if(a.is_unbounded() // vertical or degenerate polygon's line
         && !(e.box()[0] & box()[0]).is_empty() // possibly colinear lines
@@ -101,14 +104,14 @@ namespace tubex
 
     else if(e.box()[1].is_degenerated()) // horizontal edge e
     {
-      Interval a = (m_p2.x - m_p1.x) / (m_p2.t - m_p1.t);
+      Interval a = (m_p2.x() - m_p1.x()) / (m_p2.t() - m_p1.t());
       if(a.is_empty())
         a = Interval::ALL_REALS;
 
-      Interval b = m_p1.x;
+      Interval b = m_p1.x();
 
       IntervalVector inter(2);
-      inter[0] = m_p1.t + ((e.box()[1] - b) / a); inter[1] = e.box()[1];
+      inter[0] = m_p1.t() + ((e.box()[1] - b) / a); inter[1] = e.box()[1];
 
       if(inter[0].is_empty())
         inter[0] = Interval::ALL_REALS;
@@ -119,7 +122,7 @@ namespace tubex
         && e.box()[1].is_subset(box()[1]) && box()[0].is_subset(e.box()[0])) // and lines intersect
       {
 
-        return Point(m_p1.t | m_p2.t, e.box()[1]);
+        return Point(m_p1.t() | m_p2.t(), e.box()[1]);
       }
 
       else if(!inter[0].is_empty() && inter[0].is_subset(e.box()[0]) && inter[1].is_subset(box()[1]))

@@ -21,7 +21,7 @@ namespace tubex
   {
     public:
 
-      Edge(Point p1, Point p2);
+      Edge(const Point& p1, const Point& p2);
       const ibex::IntervalVector box() const;
       const ibex::IntervalVector operator&(const ibex::IntervalVector& box) const;
       bool operator==(const Edge& e) const;

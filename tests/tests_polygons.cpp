@@ -178,22 +178,22 @@ TEST_CASE("Polygon")
     Edge edge1(Point(2.,0.), Point(9.,4.));
     Edge edge2(Point(3.,2.), Point(7.,2.));
     Point pt_inter = edge1 & edge2;
-    CHECK(ApproxIntv(pt_inter.t) == Point(5.5,2.).t);
-    CHECK(ApproxIntv(pt_inter.x) == Point(5.5,2.).x);
+    CHECK(ApproxIntv(pt_inter.t()) == Point(5.5,2.).t());
+    CHECK(ApproxIntv(pt_inter.x()) == Point(5.5,2.).x());
 
     // Vertical edge
     edge1 = Edge(Point(1.,4.), Point(3.,2.));
     edge2 = Edge(Point(2.,1.), Point(2.,7.));
     pt_inter = edge1 & edge2;
-    CHECK(ApproxIntv(pt_inter.t) == Point(2.,3.).t);
-    CHECK(ApproxIntv(pt_inter.x) == Point(2.,3.).x);
+    CHECK(ApproxIntv(pt_inter.t()) == Point(2.,3.).t());
+    CHECK(ApproxIntv(pt_inter.x()) == Point(2.,3.).x());
 
     // No intersection
     edge1 = Edge(Point(2.,0.), Point(4.,2.));
     edge2 = Edge(Point(0.,-1.), Point(4.,-1.));
     pt_inter = edge1 & edge2;
-    CHECK(ApproxIntv(pt_inter.t) == Interval::EMPTY_SET);
-    CHECK(ApproxIntv(pt_inter.x) == Interval::EMPTY_SET);
+    CHECK(ApproxIntv(pt_inter.t()) == Interval::EMPTY_SET);
+    CHECK(ApproxIntv(pt_inter.x()) == Interval::EMPTY_SET);
 
     edge = p.getEdges()[1];
     inter = edge & x;
@@ -277,6 +277,39 @@ TEST_CASE("Polygon")
     box_inter = p & x;
     CHECK(ApproxIntv(box_inter[0]) == Interval(0.5,3.5));
     CHECK(ApproxIntv(box_inter[1]) == Interval(0.5,6.5));
+  }
+
+  SECTION("Intersection, box/polygon, another test")
+  {
+    vector<Point> v_p;
+    v_p.push_back(Point(1.,1.));
+    v_p.push_back(Point(3.,1.));
+    v_p.push_back(Point(11.,3.));
+    v_p.push_back(Point(13.,5.));
+    v_p.push_back(Point(14.,9.));
+    v_p.push_back(Point(10.,13.));
+    v_p.push_back(Point(8.,14.));
+    v_p.push_back(Point(6.,13.));
+    v_p.push_back(Point(3.,10.));
+    v_p.push_back(Point(1.,6.));
+    v_p.push_back(Point(1.,3.));
+    Polygon p(v_p);
+    IntervalVector x(2), box_inter(2);
+
+    x[0] = Interval(0.,2.); x[1] = Interval(0.,2.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(1.,2.));
+    CHECK(box_inter[1] == Interval(1.,2.));
+
+    x[0] = Interval(0.,1.); x[1] = Interval(0.,1.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(1.,1.));
+    CHECK(box_inter[1] == Interval(1.,1.));
+
+    x[0] = Interval(0.,0.9); x[1] = Interval(0.,0.9);
+    box_inter = p & x;
+    //CHECK(box_inter[0] == Interval::EMPTY_SET);
+    //CHECK(box_inter[1] == Interval::EMPTY_SET);
   }
 
   SECTION("Unbounded case, POS_INFINITY")
