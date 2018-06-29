@@ -65,10 +65,10 @@ TEST_CASE("CtcDeriv")
     CHECK(x.inputGate()[0] == Interval(1.));
     CHECK(x.outputGate()[0] == Interval(-3.));
     CHECK(x.codomain()[0] == Interval(-3.,1.));
-    //CHECK(x.interpol(-1., v) == Interval(1.));
-    //CHECK(x.interpol(1., v) == Interval(-1.));
-    //CHECK(x.interpol(3., v) == Interval(-3.));
-    //CHECK(x.interpol(0., v) == Interval(0.));
+    CHECK(x.interpol(-1., v) == Interval(1.));
+    CHECK(x.interpol(1., v) == Interval(-1.));
+    CHECK(x.interpol(3., v) == Interval(-3.));
+    CHECK(x.interpol(0., v) == Interval(0.));
   }
 
   SECTION("Test slice, empty case")

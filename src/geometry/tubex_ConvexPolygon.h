@@ -14,6 +14,7 @@
 #define ConvexPolygon_HEADER
 
 #include "tubex_Polygon.h"
+#include "ibex_IntervalVector.h"
 
 namespace tubex
 {
@@ -23,10 +24,9 @@ namespace tubex
 
       ConvexPolygon();
       ConvexPolygon(const ibex::IntervalVector& box);
-      ConvexPolygon(const std::vector<ibex::IntervalVector>& v_boxes);
       ConvexPolygon(const std::vector<Point>& v_points);
 
-      friend ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2);
+      const ibex::IntervalVector operator&(const ibex::IntervalVector& x) const;
   };
 }
 

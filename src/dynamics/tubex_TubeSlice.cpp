@@ -15,7 +15,7 @@
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_DimensionException.h"
-//#include "tubex_CtcDeriv.h"
+#include "tubex_CtcDeriv.h"
 
 using namespace std;
 using namespace ibex;
@@ -199,7 +199,7 @@ namespace tubex
 
       return interpol(Interval(t), derivative);
 
-      #if false // old implementation (faster?) todo:check
+      #if false // todo: check this old implementation (faster?)
         DomainException::check(*this, derivative);
         EmptyException::check(derivative);
         return (outputGate() - (m_domain.ub() - t) * derivative.codomain())
@@ -213,11 +213,28 @@ namespace tubex
       DomainException::check(*this, derivative);
       DimensionException::check(*this, derivative);
       EmptyException::check(derivative);
-      //IntervalVector y;
-      //CtcDeriv ctc;
-      //Interval t_ = t;
-      //ctc.contract(*this, derivative, t_, y);
-      //return y;
+      
+      IntervalVector interpol(dim(), Interval::EMPTY_SET);
+
+      if(domain().is_subset(t))
+          interpol |= codomain();
+
+      else
+      {
+        CtcDeriv ctc_deriv;
+
+        for(int i = 0 ; i < dim() ; i++)
+        {
+          IntervalVector slice_box(2);
+          slice_box[0] = t & domain();
+          slice_box[1] = codomain()[i];
+
+          ConvexPolygon p = ctc_deriv.getPolygon(i, *this, derivative);
+          interpol[i] |= (p & slice_box)[1];
+        }
+      }
+
+      return interpol;
     }
 
     Interval TubeSlice::invert(const IntervalVector& y, const Interval& search_domain) const

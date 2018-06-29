@@ -163,7 +163,7 @@ TEST_CASE("Polygon")
     v_p.push_back(Point(2.,7.));
     v_p.push_back(Point(0.,5.));
     v_p.push_back(Point(0.,3.));
-    Polygon p(v_p);
+    ConvexPolygon p(v_p);
     CHECK(p.nbVertices() == 8);
 
     CHECK(p.getEdges()[0] == Edge(Point(1.,0.), Point(2.,0.)));
@@ -225,7 +225,7 @@ TEST_CASE("Polygon")
     v_p.push_back(Point(2.,7.));
     v_p.push_back(Point(0.,5.));
     v_p.push_back(Point(0.,3.));
-    Polygon p(v_p);
+    ConvexPolygon p(v_p);
     IntervalVector x(2), box_inter(2);
 
     x[0] = Interval(0.5,4.); x[1] = Interval(-1.,1.);
@@ -296,7 +296,7 @@ TEST_CASE("Polygon")
     v_p.push_back(Point(3.,10.));
     v_p.push_back(Point(1.,6.));
     v_p.push_back(Point(1.,3.));
-    Polygon p(v_p);
+    ConvexPolygon p(v_p);
     IntervalVector x(2), box_inter(2);
 
     CHECK(p.encloses(Point(7.,7.)));
@@ -408,7 +408,7 @@ TEST_CASE("Polygon")
     v_p.push_back(Point(2.,Interval(3.,POS_INFINITY)));
     v_p.push_back(Point(0.,5.));
     v_p.push_back(Point(0.,3.));
-    Polygon p(v_p);
+    ConvexPolygon p(v_p);
     IntervalVector x(2), box_inter(2);
 
     CHECK(p.encloses(Point(3.5,8.)));

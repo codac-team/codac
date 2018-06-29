@@ -485,11 +485,19 @@ namespace tubex
       DomainException::check(*this, t);
       DimensionException::check(*this, derivative);
       StructureException::check(*this, derivative);
-      //IntervalVector y;
-      //CtcDeriv ctc;
-      //Interval t_ = t;
-      //ctc.contract(*this, derivative, t_, y);
-      //return y;
+
+      IntervalVector interpol(dim(), Interval::EMPTY_SET);
+
+      const TubeSlice *slice_x = getSlice(t.lb());
+      const TubeSlice *slice_xdot = derivative.getSlice(t.lb());
+      while(slice_x != NULL && slice_x->domain().lb() < t.ub())
+      {
+        interpol |= slice_x->interpol(t, *slice_xdot);
+        slice_x = slice_x->nextSlice();
+        slice_xdot = slice_xdot->nextSlice();
+      }
+
+      return interpol;
     }
 
     double TubeVector::maxThickness() const

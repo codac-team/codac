@@ -39,7 +39,6 @@ namespace tubex
       bool operator==(const Polygon& p) const;
       bool operator!=(const Polygon& p) const;
       bool encloses(const Point& p) const;
-      const ibex::IntervalVector operator&(const ibex::IntervalVector& x) const;
 
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
 

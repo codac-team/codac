@@ -144,26 +144,6 @@ namespace tubex
 
     return (cn & 1); // 0 if even (out), and 1 if odd (in)
   }
-  
-  const IntervalVector Polygon::operator&(const IntervalVector& x) const
-  {
-    // todo: the following could be easily optimized
-
-    IntervalVector reduced_x = x & box();
-    IntervalVector inter(2, Interval::EMPTY_SET);
-
-    vector<Edge> v_edges = getEdges();
-    for(int i = 0 ; i < v_edges.size() ; i++)
-      inter |= v_edges[i] & reduced_x;
-
-    vector<Point> v_x_vertices;
-    pushPoints(reduced_x, v_x_vertices);
-    for(int i = 0 ; i < v_x_vertices.size() ; i++)
-      if(this->encloses(v_x_vertices[i]))
-        inter |= v_x_vertices[i].box();
-
-    return inter;
-  }
 
   ostream& operator<<(ostream& str, const Polygon& p)
   {
