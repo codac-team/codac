@@ -16,6 +16,7 @@
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_DynamicalItem.h"
+#include "tubex_ConvexPolygon.h"
 
 namespace tubex
 {
@@ -42,6 +43,7 @@ namespace tubex
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
       const ibex::IntervalVector inputGate() const;
       const ibex::IntervalVector outputGate() const;
+      const ConvexPolygon polygon(int i, const TubeSlice& v) const; // todo: store polygon in cache memory?
       TubeVector* tubeReference() const;
 
       // Access values
