@@ -102,19 +102,21 @@ namespace tubex
 
   bool CtcPicard::contract_fwd(const Function& f, TubeSlice& x)
   {
+    double h = x.domain().diam();
     IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate();
-    bool ctc = contract(f, intv_x, intv_x0, Interval(0., x.domain().diam()));
+    bool ctc = contract(f, intv_x, intv_x0, h);
     x.setEnvelope(intv_x);
-    x.setOutputGate(x.outputGate() & (intv_x0 + x.domain().diam() * f.eval_vector(intv_x)));
+    x.setOutputGate(x.outputGate() & (intv_x0 + h * f.eval_vector(intv_x)));
     return ctc;
   }
 
   bool CtcPicard::contract_bwd(const Function& f, TubeSlice& x)
   {
+    double h = x.domain().diam();
     IntervalVector intv_x = x.codomain(), intv_xf = x.outputGate();
-    bool ctc = contract(f, intv_x, intv_xf, -Interval(0., x.domain().diam()));
+    bool ctc = contract(f, intv_x, intv_xf, -h);
     x.setEnvelope(intv_x);
-    x.setInputGate(x.inputGate() & (intv_xf - x.domain().diam() * f.eval_vector(intv_x)));
+    x.setInputGate(x.inputGate() & (intv_xf - h * f.eval_vector(intv_x)));
     return ctc;
   }
 
@@ -124,23 +126,25 @@ namespace tubex
   }
 
   bool CtcPicard::contract(const Function& f,
-                           IntervalVector& x, const IntervalVector& x0,
-                           const Interval& h)
+                           IntervalVector& x,
+                           const IntervalVector& x0,
+                           double h)
   {
     float delta = m_delta;
-    IntervalVector x_guess = x0, x_enclosure(x.size());
+    IntervalVector x_guess = x0, x_enclosure = x0;
     m_picard_iterations = 0;
 
     do
     {
       m_picard_iterations++;
+      x_guess = x_enclosure;
 
       for(int i = 0 ; i < x_guess.size() ; i++)
         x_guess[i] = x_guess[i].mid()
                    + delta * (x_guess[i] - x_guess[i].mid())
-                   + Interval(-EPSILON,EPSILON); // in case of degenerate box
+                   + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      x_enclosure = x0 + h * f.eval_vector(x_guess);
+      x_enclosure = x0 + (Interval(h) | 0.) * f.eval_vector(x_guess);
 
       if(x_enclosure.is_unbounded())
         return false;

@@ -24,7 +24,7 @@ TEST_CASE("CtcPicard")
     ctc_picard.contract_fwd(f, x);
     CHECK(x.codomain()[0].is_superset(Interval(exp(domain))));
     CHECK(x.outputGate()[0].is_superset(Interval(exp(domain.ub()))));
-    //CHECK(ctc_picard.picardIterations() < 10);
+    CHECK(ctc_picard.picardIterations() < 4);
   }
 
   SECTION("Test CtcPicard / TubeSlice - dim 2")

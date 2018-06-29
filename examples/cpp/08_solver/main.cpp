@@ -11,8 +11,8 @@ using namespace tubex;
 #define DAE 4
 #define IVP_PICARD 5
 #define BVP_CP2010 6
-#define DELAY 1
-#define SOLVER_TEST IVP_XMSIN_FWD
+#define DELAY 7
+#define SOLVER_TEST BVP_CP2010
 
 #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
@@ -37,7 +37,7 @@ using namespace tubex;
   {
     Function f("x", "-x");
 
-    if(x.codomain().is_unbounded())
+    //if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
       ctc_picard.contract(f, x);
@@ -111,7 +111,7 @@ using namespace tubex;
     
     Function f("x", "x");
 
-    if(x.codomain().is_unbounded())
+    //if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
       ctc_picard.contract(f, x, true);

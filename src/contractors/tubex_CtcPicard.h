@@ -37,8 +37,9 @@ namespace tubex
     protected:
 
       bool contract(const ibex::Function& f,
-                    ibex::IntervalVector& x, const ibex::IntervalVector& x0,
-                    const ibex::Interval& h);
+                    ibex::IntervalVector& x,
+                    const ibex::IntervalVector& x0,
+                    double h);
 
       float m_delta;
       bool m_preserve_sampling = false;
