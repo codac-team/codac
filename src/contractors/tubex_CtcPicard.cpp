@@ -149,7 +149,7 @@ namespace tubex
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      x_enclosure = eval(1, f, x_guess, x0, h) & eval(2, f, x_guess, x0, h);
+      x_enclosure = eval(1, f, x_guess, x0, h);// & eval(2, f, x_guess, x0, h);
 
       if(x_enclosure.is_unbounded())
         return false;

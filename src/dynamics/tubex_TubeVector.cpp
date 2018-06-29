@@ -492,13 +492,13 @@ namespace tubex
       //return y;
     }
 
-    double TubeVector::maxThickness()
+    double TubeVector::maxThickness() const
     {
       int first_id_max_thickness;
       return maxThickness(first_id_max_thickness);
     }
 
-    double TubeVector::maxThickness(int& first_id_max_thickness)
+    double TubeVector::maxThickness(int& first_id_max_thickness) const
     {
       int i = 0;
       double max_thickness = 0.;
@@ -520,6 +520,38 @@ namespace tubex
 
         slice = slice->nextSlice();
         i++;
+      }
+
+      return max_thickness;
+    }
+
+    double TubeVector::maxGateThickness(double& t) const
+    {
+      TubeSlice *slice = getFirstSlice();
+
+      if(slice->inputGate().is_unbounded())
+      {
+        t = slice->domain().lb();
+        return numeric_limits<double>::infinity();
+      }
+
+      double max_thickness = slice->inputGate().max_diam();
+
+      while(slice != NULL)
+      {
+        if(slice->outputGate().is_unbounded())
+        {
+          t = slice->domain().ub();
+          return numeric_limits<double>::infinity();
+        }
+
+        if(slice->outputGate().max_diam() > max_thickness)
+        {
+          max_thickness = slice->outputGate().max_diam();
+          t = slice->domain().ub();
+        }
+
+        slice = slice->nextSlice();
       }
 
       return max_thickness;

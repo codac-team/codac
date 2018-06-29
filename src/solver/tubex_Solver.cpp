@@ -94,9 +94,8 @@ namespace tubex
   {
     if(!x.isEmpty())
     {
-      int first_id_max_thickness;
-      double x_max_thickness = x.maxThickness(first_id_max_thickness);
-      double t_bisection = x.getSlice(first_id_max_thickness)->domain().lb();
+      double t_bisection;
+      x.maxGateThickness(t_bisection);
       pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
       ctc_func(p_x.first);
       ctc_func(p_x.second);
