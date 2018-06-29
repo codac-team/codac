@@ -11,7 +11,7 @@ TEST_CASE("CtcEval")
 {
   SECTION("Test CtcEval, special cases")
   {
-    Tube xdot(Interval(0., 10.), 1.0);
+    /*Tube xdot(Interval(0., 10.), 1.0);
     xdot.set(Interval(-0.5,1.));
 
     Tube x(xdot);
@@ -36,7 +36,7 @@ TEST_CASE("CtcEval")
     bool contraction;
     Interval intv_t, intv_y;
 
-    /*// Test A
+    // Test A
     x = x_raw;
     intv_t = 1.;
     intv_y = Interval(-0.5,1.);
@@ -112,7 +112,7 @@ TEST_CASE("CtcEval")
     CHECK(x[6] == Interval(-1.5,2.5));
     CHECK(x[7] == Interval(-2.,3.5));
     CHECK(x[8] == Interval(-2.5,4.5));
-    CHECK(x[9] == Interval(-3.,5.5));*/
+    CHECK(x[9] == Interval(-3.,5.5));
 
     // Test B
     x = x_raw;

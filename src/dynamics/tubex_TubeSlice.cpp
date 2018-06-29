@@ -228,9 +228,7 @@ namespace tubex
           IntervalVector slice_box(2);
           slice_box[0] = t & domain();
           slice_box[1] = codomain()[i];
-
-          ConvexPolygon p = ctc_deriv.getPolygon(i, *this, derivative);
-          interpol[i] |= (p & slice_box)[1];
+          interpol[i] |= (polygon(i, derivative) & slice_box)[1];
         }
       }
 

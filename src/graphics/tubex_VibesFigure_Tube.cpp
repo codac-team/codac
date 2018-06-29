@@ -13,7 +13,6 @@
 #include "ibex.h"
 #include "vibes.h"
 #include "tubex_Polygon.h"
-#include "tubex_CtcDeriv.h"
 #include "tubex_VibesFigure_Tube.h"
 #include "tubex_VibesFigure_Polygon.h"
 #include "tubex_DimensionException.h"
@@ -421,9 +420,7 @@ namespace tubex
         return; // no display
 
       drawSlice(slice, params_slice);
-
-      CtcDeriv ctc;
-      VibesFigure_Polygon::draw(ctc.getPolygon(0, slice, deriv_slice), params_polygon);
+      VibesFigure_Polygon::draw(slice.polygon(0, deriv_slice), params_polygon);
     }
 
     void VibesFigure_Tube::drawGate(const Interval& gate, double t, const vibes::Params& params) const
