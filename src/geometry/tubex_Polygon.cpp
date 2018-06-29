@@ -126,9 +126,12 @@ namespace tubex
     int n = v_vertices.size();
 
     // Loop through all edges of the polygon
-    for(int i = 0 ; i <= n ; i++)
+    for(int i = 0 ; i < n ; i++)
     {
-      // Edge from V[i]  to V[i+1]
+      if(p.box().is_subset(v_vertices[i].box()))
+        return true;
+
+      // Edge from v[i] to v[i+1]
       if(((v_vertices[i].x().mid() <= p.x().mid()) && (v_vertices[(i+1)%n].x().mid() > p.x().mid())) // an upward crossing
       || ((v_vertices[i].x().mid() > p.x().mid()) && (v_vertices[(i+1)%n].x().mid() <= p.x().mid()))) // a downward crossing
       {
@@ -146,7 +149,7 @@ namespace tubex
   {
     // todo: the following could be easily optimized
 
-    IntervalVector reduced_x = x;// & box();
+    IntervalVector reduced_x = x & box();
     IntervalVector inter(2, Interval::EMPTY_SET);
 
     vector<Edge> v_edges = getEdges();

@@ -74,64 +74,40 @@ namespace tubex
   {
     if(e.box()[0].is_degenerated()) // vertical edge e
     {
-      //if(box()[0].is_degenerated()) // vertical polygon's line
-      //  return Point(box()[0] & e.box()[0], box()[1] & e.box()[1]);
-
-      Interval a = (m_p2.x() - m_p1.x()) / (m_p2.t() - m_p1.t());
-      if(a.is_empty())
-        a = Interval::ALL_REALS;
-
-      Interval b = m_p1.x();
-
-      IntervalVector inter(2);
-      inter[0] = e.box()[0]; inter[1] = b + a * (e.box()[0] - m_p1.t());
-
-      if(a.is_unbounded() // vertical or degenerate polygon's line
-        && !(e.box()[0] & box()[0]).is_empty() // possibly colinear lines
-        && !(e.box()[1] & box()[1]).is_empty()) // overlapping lines
+      if(box().is_flat()) // vertical or horizontal polygon's line
       {
-        return Point(e.box()[0], e.box()[1] & box()[1]);
+        return Point(box()[0] & e.box()[0], box()[1] & e.box()[1]);
       }
 
-      else if(!inter[1].is_empty() && inter[1].is_subset(e.box()[1]) && inter[0].is_subset(box()[0]))
+      else // oblique polygon's line
       {
-        return Point(inter[0], inter[1]);
+        // Line equation x=a*t+b
+        Interval a = (m_p2.x() - m_p1.x()) / (m_p2.t() - m_p1.t()); // slope
+        Interval b = m_p1.x();
+
+        // Intersecting polygon's line and edge's line
+        return Point(e.box()[0] & box()[0],
+                     e.box()[1] & (b + a * (e.box()[0] - m_p1.t())));
       }
-      
-      else
-        return Point(Interval::EMPTY_SET, Interval::EMPTY_SET);
     }
 
     else if(e.box()[1].is_degenerated()) // horizontal edge e
     {
-      Interval a = (m_p2.x() - m_p1.x()) / (m_p2.t() - m_p1.t());
-      if(a.is_empty())
-        a = Interval::ALL_REALS;
-
-      Interval b = m_p1.x();
-
-      IntervalVector inter(2);
-      inter[0] = m_p1.t() + ((e.box()[1] - b) / a); inter[1] = e.box()[1];
-
-      if(inter[0].is_empty())
-        inter[0] = Interval::ALL_REALS;
-
-      inter[0] &= box()[0] & e.box()[0];
-
-      if(a.is_unbounded() // vertical or degenerate polygon's line
-        && e.box()[1].is_subset(box()[1]) && box()[0].is_subset(e.box()[0])) // and lines intersect
+      if(box().is_flat()) // vertical or horizontal polygon's line
       {
-
-        return Point(m_p1.t() | m_p2.t(), e.box()[1]);
+        return Point(box()[0] & e.box()[0], box()[1] & e.box()[1]);
       }
 
-      else if(!inter[0].is_empty() && inter[0].is_subset(e.box()[0]) && inter[1].is_subset(box()[1]))
+      else // oblique polygon's line
       {
-        return Point(inter[0], inter[1]);
-      }
+        // Line equation x=a*t+b
+        Interval a = (m_p2.x() - m_p1.x()) / (m_p2.t() - m_p1.t()); // slope
+        Interval b = m_p1.x();
 
-      else
-        return Point(Interval::EMPTY_SET, Interval::EMPTY_SET);
+        // Intersecting polygon's line and edge's line
+        return Point(e.box()[0] & (m_p1.t() + ((e.box()[1] - b) / a)),
+                     e.box()[1] & box()[1]);
+      }
     }
 
     else

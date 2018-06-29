@@ -20,7 +20,8 @@ namespace tubex
   Point::Point(const Interval& t, const Interval& x)
     : m_t(t), m_x(x)
   {
-    
+    if(m_t.is_empty()) m_x.set_empty();
+    if(m_x.is_empty()) m_t.set_empty();
   }
 
   const Interval& Point::t() const

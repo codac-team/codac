@@ -141,6 +141,9 @@ TEST_CASE("Polygon")
     CHECK((Edge(Point(8.,4.), Point(9.,2.)) & Edge(Point(8.5,8.), Point(8.5,7.))) == Point(Interval::EMPTY_SET,Interval::EMPTY_SET)); // secant oblique lines, no intersection
     CHECK((Edge(Point(6.,-1.), Point(8.,1.)) & Edge(Point(7.5,0.), Point(9.,0.))) == Point(Interval::EMPTY_SET,Interval::EMPTY_SET)); // secant oblique lines, no intersection
     CHECK((Edge(Point(6.,-1.), Point(8.,1.)) & Edge(Point(6.5,0.5), Point(6.5,2.))) == Point(Interval::EMPTY_SET,Interval::EMPTY_SET)); // secant oblique lines, no intersection
+  
+    // Other tests
+    CHECK((Edge(Point(8.,14.), Point(6.,13.)) & Edge(Point(1.,1.), Point(1.,14.))) == Point(Interval::EMPTY_SET,Interval::EMPTY_SET));
   }
 
   SECTION("Intersection, line/line, unbounded case")
@@ -296,6 +299,18 @@ TEST_CASE("Polygon")
     Polygon p(v_p);
     IntervalVector x(2), box_inter(2);
 
+    CHECK(p.encloses(Point(7.,7.)));
+    CHECK(p.encloses(Point(1.,4.)));
+    CHECK(p.encloses(Point(3.,10.)));
+    CHECK(p.encloses(Point(8.,14.)));
+    CHECK(p.encloses(Point(2.,8.)));
+    CHECK(p.encloses(Point(2.5,9.)));
+    CHECK_FALSE(p.encloses(Point(10.,2.)));
+    CHECK_FALSE(p.encloses(Point(0.0,0.0)));
+    CHECK_FALSE(p.encloses(Point(0.0,0.9)));
+    CHECK_FALSE(p.encloses(Point(0.9,0.0)));
+    CHECK_FALSE(p.encloses(Point(0.9,0.9)));
+
     x[0] = Interval(0.,2.); x[1] = Interval(0.,2.);
     box_inter = p & x;
     CHECK(box_inter[0] == Interval(1.,2.));
@@ -308,8 +323,78 @@ TEST_CASE("Polygon")
 
     x[0] = Interval(0.,0.9); x[1] = Interval(0.,0.9);
     box_inter = p & x;
-    //CHECK(box_inter[0] == Interval::EMPTY_SET);
-    //CHECK(box_inter[1] == Interval::EMPTY_SET);
+    CHECK(box_inter[0] == Interval::EMPTY_SET);
+    CHECK(box_inter[1] == Interval::EMPTY_SET);
+    
+    x[0] = Interval(-70.,1.); x[1] = Interval::ALL_REALS;
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(1.));
+    CHECK(box_inter[1] == Interval(1.,6.));
+
+    x[0] = Interval(7.,8.); x[1] = Interval(7.,8.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(7.,8.));
+    CHECK(box_inter[1] == Interval(7.,8.));
+
+    x[0] = Interval(7.); x[1] = Interval(7.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(7.));
+    CHECK(box_inter[1] == Interval(7.));
+
+    x[0] = Interval(6.); x[1] = Interval(13.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(6.));
+    CHECK(box_inter[1] == Interval(13.));
+
+    x[0] = Interval(7.,13.); x[1] = Interval(1.,2.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(7.));
+    CHECK(box_inter[1] == Interval(2.));
+
+    x[0] = Interval(12.,16.); x[1] = Interval(3.,12.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(12.,14.));
+    CHECK(box_inter[1] == Interval(4.,11.));
+
+    x[0] = Interval(7.); x[1] = Interval::POS_REALS;
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(7.));
+    CHECK(box_inter[1] == Interval(2.,13.5));
+
+    x[0] = Interval::POS_REALS; x[1] = Interval::POS_REALS;
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(1.,14.));
+    CHECK(box_inter[1] == Interval(1.,14.));
+
+    x[0] = Interval::POS_REALS; x[1] = Interval(8.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(2.,13.75));
+    CHECK(box_inter[1] == Interval(8.));
+
+    x[0] = Interval::POS_REALS; x[1] = Interval(15.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval::EMPTY_SET);
+    CHECK(box_inter[1] == Interval::EMPTY_SET);
+
+    x[0] = Interval::NEG_REALS; x[1] = Interval(13.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval::EMPTY_SET);
+    CHECK(box_inter[1] == Interval::EMPTY_SET);
+
+    x[0] = Interval(1.); x[1] = Interval(2.,4.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(1.));
+    CHECK(box_inter[1] == Interval(2.,4.));
+
+    x[0] = Interval(2.,7.); x[1] = Interval(1.,2.);
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval(2.,7.));
+    CHECK(box_inter[1] == Interval(1.,2.));
+
+    x[0] = Interval::EMPTY_SET; x[1] = Interval::EMPTY_SET;
+    box_inter = p & x;
+    CHECK(box_inter[0] == Interval::EMPTY_SET);
+    CHECK(box_inter[1] == Interval::EMPTY_SET);
   }
 
   SECTION("Unbounded case, POS_INFINITY")
