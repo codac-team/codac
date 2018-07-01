@@ -76,8 +76,10 @@ namespace tubex
       const ibex::IntervalVector operator[](int slice_id) const;
       const ibex::IntervalVector operator[](double t) const;
       const ibex::IntervalVector operator[](const ibex::Interval& t) const;
-      ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::IntervalVector& y, const TubeVector& derivative, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const TubeVector& derivative, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       const ibex::IntervalVector interpol(double t, const TubeVector& derivative) const;
       const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& derivative) const;

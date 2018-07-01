@@ -235,21 +235,58 @@ namespace tubex
       return interpol;
     }
 
-    Interval TubeSlice::invert(const IntervalVector& y, const Interval& search_domain) const
+    const Interval TubeSlice::invert(const IntervalVector& y, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
-
-      if(!m_domain.intersects(search_domain) || !(*this)[m_domain & search_domain].intersects(y))
-        return Interval::EMPTY_SET;
-
-      else
-        return search_domain & m_domain;
+      TubeSlice derivative(domain(), Interval::ALL_REALS); // todo: optimize this
+      return invert(y, derivative, search_domain);
     }
 
-    void TubeSlice::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
+    const Interval TubeSlice::invert(const IntervalVector& y, const TubeSlice& derivative, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
-      return invert(y, v_t, search_domain, true);
+
+      if(!m_domain.intersects(search_domain))
+        return Interval::EMPTY_SET;
+
+      else if((m_domain & search_domain) == m_domain && m_codomain.intersects(y))
+        return m_domain;
+
+      else if(search_domain == m_domain.lb())
+      {
+        if(y.intersects(inputGate()))
+          return m_domain.lb();
+        else
+          return Interval::EMPTY_SET;
+      }
+
+      else if(search_domain == m_domain.ub())
+      {
+        if(y.intersects(outputGate()))
+          return m_domain.ub();
+        else
+          return Interval::EMPTY_SET;
+      }
+
+      else
+      {
+        Interval t = Interval::EMPTY_SET;
+
+        for(int i = 0 ; i < dim() ; i++)
+        {
+          ConvexPolygon p = polygon(i, derivative);
+          IntervalVector box(2);
+          box[0] = search_domain; box[1] = y[i];
+          box = p & box;
+
+          if(box[0].is_empty())
+            return Interval::EMPTY_SET;
+
+          t |= box[0];
+        }
+
+        return t;
+      }
     }
 
     const pair<IntervalVector,IntervalVector> TubeSlice::eval(const Interval& t) const
@@ -422,14 +459,6 @@ namespace tubex
     const IntervalVector TubeSlice::codomainBox() const
     {
       return m_codomain;
-    }
-
-    void TubeSlice::invert(const IntervalVector& y, vector<ibex::Interval> &v_t, const Interval& search_domain, bool concatenate_results) const
-    {
-      DimensionException::check(*this, y);
-      Interval inversion = invert(y, search_domain);
-      if(!inversion.is_empty())
-        v_t.push_back(inversion);
     }
 
     // Setting values

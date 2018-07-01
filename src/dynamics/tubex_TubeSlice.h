@@ -54,8 +54,8 @@ namespace tubex
       const ibex::IntervalVector operator[](const ibex::Interval& search_domain) const;
       const ibex::IntervalVector interpol(double t, const TubeSlice& derivative) const;
       const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeSlice& derivative) const;
-      ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::IntervalVector& y, const TubeSlice& derivative, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
       // Tests
@@ -106,7 +106,6 @@ namespace tubex
 
       // Access values
       const ibex::IntervalVector codomainBox() const; // todo: output const Interval& (reference)
-      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain, bool concatenate_results) const;
 
       // Setting values
 

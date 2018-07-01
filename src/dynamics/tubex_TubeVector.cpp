@@ -397,7 +397,22 @@ namespace tubex
       return codomain;
     }
 
-    Interval TubeVector::invert(const IntervalVector& y, const Interval& search_domain) const
+    const Interval TubeVector::invert(const IntervalVector& y, const Interval& search_domain) const
+    {
+      DimensionException::check(*this, y);
+      TubeVector derivative(*this, Interval::ALL_REALS); // todo: optimize this
+      return invert(y, derivative, search_domain);
+    }
+
+    void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
+    {
+      DimensionException::check(*this, y);
+      TubeVector derivative(*this, Interval::ALL_REALS); // todo: optimize this
+      v_t.clear();
+      invert(y, v_t, derivative, search_domain);
+    }
+
+    const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& derivative, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
 
@@ -417,7 +432,7 @@ namespace tubex
       return invert;
     }
 
-    void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
+    void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const TubeVector& derivative, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
       v_t.clear();
