@@ -27,28 +27,20 @@ namespace tubex
   {
     public:
 
-      CtcEval();
-      bool contract(double t, ibex::Interval& z, Tube& y, Tube& w);
-      bool contract(double t, ibex::Interval& z, Tube& y, Tube& w, bool propagate = true);
-      bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w, bool propagate = true);
+      CtcEval(bool enable_propagation = true, bool enable_slicing = true);
 
-      bool tContracted();
-      bool zContracted();
-      bool yContracted();
-      bool wContracted();
-
-      // Returns a boolean: 'true' if a bisection of [t] should be considered to improve the contraction
-      bool tBisectionRequired();
+      bool contract(double t, ibex::Interval& z, Tube& y, Tube& w) const;
+      bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w) const;
 
     protected:
 
-      bool contract_timeUncertainty(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w, bool propagate);
-      bool contract_knownTime(double t, ibex::Interval& z, Tube& y, Tube& w);
-      bool contract_knownTime(double t, ibex::Interval& z, Tube& y, Tube& w, bool propagate);
-      void computeIndex(const ibex::Interval& t, const ibex::Interval& z, const Tube& y, int& index_lb, int& index_ub);
+      void computeIndex(const ibex::Interval& t, const ibex::Interval& z, const Tube& y, int& index_lb, int& index_ub) const;
 
-      bool m_y_contracted = false, m_t_contracted = false, m_z_contracted = false;
-      bool m_bisection_required = false;
+      bool m_propagation_enabled = true;
+      bool m_slicing_enabled = true;
+
+      mutable bool m_y_contracted = false, m_t_contracted = false, m_z_contracted = false;
+      mutable bool m_bisection_required = false;
   };
 }
 

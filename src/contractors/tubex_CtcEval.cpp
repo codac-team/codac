@@ -20,40 +20,38 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcEval::CtcEval()
+  CtcEval::CtcEval(bool enable_propagation, bool enable_slicing)
+    : m_propagation_enabled(enable_propagation), m_slicing_enabled(enable_slicing)
   {
 
   }
 
-  bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w)
-  {
-    DomainException::check(y, t);
-    return contract_knownTime(t, z, y, w);
-  }
-
-  bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w, bool propagate)
+  bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w) const
   {
     StructureException::check(y, w);
     DomainException::check(y, t);
     EmptyException::check(w);
-    return contract_knownTime(t, z, y, w, propagate);
+
+    bool contraction = (z != (z & y[t])) || (y[t] != (z & y[t]));
+    y.set(z, t);
+    w.sample(t);
+    z &= y[t];
+
+    if(m_propagation_enabled)
+      contraction |= y.ctcDeriv(w); // todo: optimize propagations from evaluation
+
+    return contraction;
   }
 
-  bool CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w, bool propagate)
+  bool CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w) const
   {
     StructureException::check(y, w);
     DomainException::check(y, t);
     EmptyException::check(w);
     
     if(t.is_degenerated())
-      return contract(t.lb(), z, y, w, propagate);
+      return contract(t.lb(), z, y, w);
 
-    else
-      return contract_timeUncertainty(t, z, y, w, propagate);
-  }
-
-  bool CtcEval::contract_timeUncertainty(Interval& t, Interval& z, Tube& y, Tube& w, bool propagate)
-  {
     bool inconsistency = false;
     m_bisection_required = false;
 
@@ -71,7 +69,7 @@ namespace tubex
       y.invert(y[t] & z, v_intv_t, w, t);
 
     // Trying to contract [z]
-      
+
       if(t.is_empty())
         inconsistency = true;
 
@@ -217,32 +215,13 @@ namespace tubex
       m_z_contracted = z.diam() < old_z_diam;
     }
 
-    if(propagate)
+    if(m_propagation_enabled)
       m_y_contracted |= y.ctcDeriv(w); // todo: optimize propagations from evaluation
 
     return m_z_contracted | m_y_contracted | m_t_contracted;
   }
 
-  bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y, Tube& w)
-  {
-    bool contraction = (z != (z & y[t])) || (y[t] != (z & y[t]));
-    y.set(z, t);
-    w.sample(t);
-    z &= y[t];
-    return contraction;
-  }
-
-  bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y, Tube& w, bool propagate)
-  {
-    bool contraction = contract_knownTime(t, z, y, w);
-
-    if(propagate)
-      contraction |= y.ctcDeriv(w); // todo: optimize propagations from evaluation
-
-    return contraction;
-  }
-
-  void CtcEval::computeIndex(const Interval& t, const Interval& z, const Tube& y, int& index_lb, int& index_ub)
+  void CtcEval::computeIndex(const Interval& t, const Interval& z, const Tube& y, int& index_lb, int& index_ub) const
   {
     if(t.is_unbounded() || t.is_empty())
       throw Exception("CtcEval::computeIndex(...)", "unbounded or empty [t]");
@@ -260,7 +239,7 @@ namespace tubex
       index_ub = max(0, index_ub - 1);
   }
 
-  bool CtcEval::tContracted()
+  /*bool CtcEval::tContracted()
   {
     return m_t_contracted;
   }
@@ -284,5 +263,5 @@ namespace tubex
   bool CtcEval::tBisectionRequired()
   {
     return m_bisection_required;
-  }
+  }*/
 }

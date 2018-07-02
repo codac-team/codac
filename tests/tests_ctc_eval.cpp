@@ -39,7 +39,7 @@ TEST_CASE("CtcEval")
     Interval intv_t, intv_y;
 
     // Test A
-    x = x_raw;
+    /*x = x_raw;
     intv_t = 1.;
     intv_y = Interval(-0.5,1.);
     CHECK(x[1.] == Interval(-4.5,2.5));

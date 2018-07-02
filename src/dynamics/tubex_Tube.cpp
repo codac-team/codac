@@ -280,11 +280,11 @@ namespace tubex
 
     // Contractors
 
-    bool Tube::ctcEval(Interval& t, Interval& z, Tube& w, bool propagate)
+    bool Tube::ctcEval(Interval& t, Interval& z, Tube& w)
     {
       //IntervalVector z_box(1, z);
       CtcEval ctc_eval;
-      bool ctc = ctc_eval.contract(t, z, *this, w, propagate);
+      bool ctc = ctc_eval.contract(t, z, *this, w);
       //z = z_box[0];
       return ctc;
     }

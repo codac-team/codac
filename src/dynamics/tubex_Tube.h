@@ -114,7 +114,7 @@ namespace tubex
     /** Contractors: **/
 
       using TubeVector::ctcDeriv;
-      bool ctcEval(ibex::Interval& t, ibex::Interval& z, Tube& w, bool propagate = true);
+      bool ctcEval(ibex::Interval& t, ibex::Interval& z, Tube& w);
 
     /** Serialization: **/
 
