@@ -25,13 +25,13 @@ namespace tubex
 
   }
 
-  bool CtcEval::contract(double t, Interval& z, Tube& y)
+  bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w)
   {
     DomainException::check(y, t);
-    return contract_knownTime(t, z, y);
+    return contract_knownTime(t, z, y, w);
   }
 
-  bool CtcEval::contract(double t, Interval& z, Tube& y, const Tube& w, bool propagate)
+  bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w, bool propagate)
   {
     StructureException::check(y, w);
     DomainException::check(y, t);
@@ -39,7 +39,7 @@ namespace tubex
     return contract_knownTime(t, z, y, w, propagate);
   }
 
-  bool CtcEval::contract(Interval& t, Interval& z, Tube& y, const Tube& w, bool propagate)
+  bool CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w, bool propagate)
   {
     StructureException::check(y, w);
     DomainException::check(y, t);
@@ -52,7 +52,7 @@ namespace tubex
       return contract_timeUncertainty(t, z, y, w, propagate);
   }
 
-  bool CtcEval::contract_timeUncertainty(Interval& t, Interval& z, Tube& y, const Tube& w, bool propagate)
+  bool CtcEval::contract_timeUncertainty(Interval& t, Interval& z, Tube& y, Tube& w, bool propagate)
   {
     bool inconsistency = false;
     m_bisection_required = false;
@@ -64,35 +64,31 @@ namespace tubex
 
     // Trying to contract [t]
 
-      t = y.invert(y[t] & z, t);
+      t = y.invert(y[t] & z, w, t);
 
       // The observation [t]x[z] may cross the tube several times
       vector<Interval> v_intv_t;
-      y.invert(y[t] & z, v_intv_t, t);
+      y.invert(y[t] & z, v_intv_t, w, t);
 
     // Trying to contract [z]
-cout << "1" << endl;
+      
       if(t.is_empty())
         inconsistency = true;
 
       else
       {
-        cout << "a" << endl;
         z &= y.interpol(t, w);
 
         // Computing index
 
-        cout << "b" << endl;
           computeIndex(t, z, y, index_lb, index_ub);
 
-        cout << "c" << endl;
           //if(!propagate) // todo: optimize this? For now, propagation performed by CtcDeriv
           {
             min_index_ctc = max(0, index_lb - 1);
             max_index_ctc = min(index_ub + 1, y.nbSlices() - 1);
           }
 
-        cout << "d" << endl;
         // Initializations
 
           map<int,Interval> map_new_z;
@@ -104,7 +100,6 @@ cout << "1" << endl;
           z.set_empty();
           t.set_empty();
 
-        cout << "e" << endl;
         // Iteration for each [t] subdomain
         for(int k = 0 ; k < v_intv_t.size() ; k++)
         {
@@ -178,7 +173,6 @@ cout << "1" << endl;
             t |= local_t;
         } // end of for
 
-        cout << "f" << endl;
         // Synthesis
         {
           Interval prev_z;
@@ -187,7 +181,6 @@ cout << "1" << endl;
           // The synthesis is made over two for-loops
           // so that we can stop the iteration if there is no more propagation
 
-        cout << "g" << endl;
           prev_z = Interval::ALL_REALS;
           for(int i = min_index_ctc ; i <= max_index_ctc ; i++) // forward
           {
@@ -203,7 +196,7 @@ cout << "1" << endl;
           }
         }
     }
-cout << "2" << endl;
+
     if(inconsistency)
     {
       #pragma omp for
@@ -223,24 +216,25 @@ cout << "2" << endl;
       m_t_contracted = t.diam() < old_t_diam;
       m_z_contracted = z.diam() < old_z_diam;
     }
-cout << "3" << endl;
+
     if(propagate)
       m_y_contracted |= y.ctcDeriv(w); // todo: optimize propagations from evaluation
-cout << "4" << endl;
+
     return m_z_contracted | m_y_contracted | m_t_contracted;
   }
 
-  bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y)
+  bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y, Tube& w)
   {
     bool contraction = (z != (z & y[t])) || (y[t] != (z & y[t]));
     y.set(z, t);
+    w.sample(t);
     z &= y[t];
     return contraction;
   }
 
-  bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y, const Tube& w, bool propagate)
+  bool CtcEval::contract_knownTime(double t, Interval& z, Tube& y, Tube& w, bool propagate)
   {
-    bool contraction = contract_knownTime(t, z, y);
+    bool contraction = contract_knownTime(t, z, y, w);
 
     if(propagate)
       contraction |= y.ctcDeriv(w); // todo: optimize propagations from evaluation

@@ -161,6 +161,16 @@ namespace tubex
       TubeVector::invert(IntervalVector(1, y), v_t, search_domain);
     }
 
+    Interval Tube::invert(const Interval& y, const Tube& v, const Interval& search_domain) const
+    {
+      return TubeVector::invert(IntervalVector(1, y), v, search_domain);
+    }
+
+    void Tube::invert(const Interval& y, vector<Interval> &v_t, const Tube& v, const Interval& search_domain) const
+    {
+      TubeVector::invert(IntervalVector(1, y), v_t, v, search_domain);
+    }
+
     const pair<Interval,Interval> Tube::eval(const Interval& t) const
     {
       pair<IntervalVector,IntervalVector> p_box = TubeVector::eval(t);
@@ -270,11 +280,11 @@ namespace tubex
 
     // Contractors
 
-    bool Tube::ctcEval(Interval& t, Interval& z, const Tube& derivative, bool propagate)
+    bool Tube::ctcEval(Interval& t, Interval& z, Tube& w, bool propagate)
     {
       //IntervalVector z_box(1, z);
       CtcEval ctc_eval;
-      bool ctc = ctc_eval.contract(t, z, *this, derivative, propagate);
+      bool ctc = ctc_eval.contract(t, z, *this, w, propagate);
       //z = z_box[0];
       return ctc;
     }

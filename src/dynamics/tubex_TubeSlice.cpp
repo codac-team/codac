@@ -246,6 +246,8 @@ namespace tubex
     {
       DimensionException::check(*this, y);
 
+      // todo: use enclosed bounds also? in order to speed up computations
+
       if(!m_domain.intersects(search_domain))
         return Interval::EMPTY_SET;
 

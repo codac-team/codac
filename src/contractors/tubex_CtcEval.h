@@ -28,9 +28,9 @@ namespace tubex
     public:
 
       CtcEval();
-      bool contract(double t, ibex::Interval& z, Tube& y);
-      bool contract(double t, ibex::Interval& z, Tube& y, const Tube& w, bool propagate = true);
-      bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, const Tube& w, bool propagate = true);
+      bool contract(double t, ibex::Interval& z, Tube& y, Tube& w);
+      bool contract(double t, ibex::Interval& z, Tube& y, Tube& w, bool propagate = true);
+      bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w, bool propagate = true);
 
       bool tContracted();
       bool zContracted();
@@ -42,9 +42,9 @@ namespace tubex
 
     protected:
 
-      bool contract_timeUncertainty(ibex::Interval& t, ibex::Interval& z, Tube& y, const Tube& w, bool propagate);
-      bool contract_knownTime(double t, ibex::Interval& z, Tube& y);
-      bool contract_knownTime(double t, ibex::Interval& z, Tube& y, const Tube& w, bool propagate);
+      bool contract_timeUncertainty(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w, bool propagate);
+      bool contract_knownTime(double t, ibex::Interval& z, Tube& y, Tube& w);
+      bool contract_knownTime(double t, ibex::Interval& z, Tube& y, Tube& w, bool propagate);
       void computeIndex(const ibex::Interval& t, const ibex::Interval& z, const Tube& y, int& index_lb, int& index_ub);
 
       bool m_y_contracted = false, m_t_contracted = false, m_z_contracted = false;

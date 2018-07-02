@@ -135,8 +135,8 @@ namespace tubex
 
     /** Contractors: **/
 
-      bool ctcDeriv(const TubeVector& derivative);
-      bool ctcEval(ibex::Interval& t, ibex::IntervalVector& z, const TubeVector& derivative, bool propagate = true);
+      bool ctcDeriv(const TubeVector& v);
+      bool ctcEval(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& w, bool propagate = true);
 
     /** Serialization: **/
 

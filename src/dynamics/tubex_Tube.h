@@ -60,6 +60,8 @@ namespace tubex
       const ibex::Interval operator[](const ibex::Interval& t) const;
       ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      ibex::Interval invert(const ibex::Interval& y, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       const ibex::Interval interpol(double t, const Tube& derivative) const;
       const ibex::Interval interpol(const ibex::Interval& t, const Tube& derivative) const;
@@ -112,7 +114,7 @@ namespace tubex
     /** Contractors: **/
 
       using TubeVector::ctcDeriv;
-      bool ctcEval(ibex::Interval& t, ibex::Interval& z, const Tube& derivative, bool propagate = true);
+      bool ctcEval(ibex::Interval& t, ibex::Interval& z, Tube& w, bool propagate = true);
 
     /** Serialization: **/
 

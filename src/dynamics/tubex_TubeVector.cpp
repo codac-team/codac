@@ -447,10 +447,11 @@ namespace tubex
       if(intersection.is_empty())
         return;
 
-      const TubeSlice *slice = getSlice(intersection.lb());
-      while(slice != NULL && slice->domain().lb() <= intersection.ub())
+      const TubeSlice *slice_x = getSlice(intersection.lb());
+      const TubeSlice *slice_xdot = derivative.getSlice(intersection.lb());
+      while(slice_x != NULL && slice_x->domain().lb() <= intersection.ub())
       {
-        Interval local_invert = slice->invert(y, intersection);
+        Interval local_invert = slice_x->invert(y, *slice_xdot, intersection);
         if(local_invert.is_empty() && !invert.is_empty())
         {
           v_t.push_back(invert);
@@ -460,7 +461,8 @@ namespace tubex
         else
           invert |= local_invert;
 
-        slice = slice->nextSlice();
+        slice_x = slice_x->nextSlice();
+        slice_xdot = slice_xdot->nextSlice();
       }
 
       if(!invert.is_empty())
@@ -511,7 +513,7 @@ namespace tubex
       const TubeSlice *slice_xdot = derivative.getSlice(t.lb());
       while(slice_x != NULL && slice_x->domain().lb() < t.ub())
       {
-        interpol |= slice_x->interpol(t, *slice_xdot);
+        interpol |= slice_x->interpol(t & slice_x->domain(), *slice_xdot);
         slice_x = slice_x->nextSlice();
         slice_xdot = slice_xdot->nextSlice();
       }
@@ -954,21 +956,21 @@ namespace tubex
 
     // Contractors
 
-    bool TubeVector::ctcDeriv(const TubeVector& derivative)
+    bool TubeVector::ctcDeriv(const TubeVector& v)
     {
-      DimensionException::check(*this, derivative);
-      StructureException::check(*this, derivative);
+      DimensionException::check(*this, v);
+      StructureException::check(*this, v);
       CtcDeriv ctc;
-      return ctc.contract(*this, derivative);
+      return ctc.contract(*this, v);
     }
 
-    bool TubeVector::ctcEval(Interval& t, IntervalVector& z, const TubeVector& derivative, bool propagate)
+    bool TubeVector::ctcEval(Interval& t, IntervalVector& z, TubeVector& w, bool propagate)
     {
       DimensionException::check(*this, z);
-      DimensionException::check(*this, derivative);
-      StructureException::check(*this, derivative);
+      DimensionException::check(*this, w);
+      StructureException::check(*this, w);
       //CtcEval ctc;
-      //return ctc.contract(t, z, *this, derivative, propagate);
+      //return ctc.contract(t, z, *this, w, propagate);
     }
       
     // Serialization
