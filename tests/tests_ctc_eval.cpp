@@ -151,6 +151,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
     //CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot)); // fixed point already reached
     //CHECK(contraction);
+    CHECK(x.nbSlices() == 10);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
     CHECK(x[0] == Interval(-5.5,3.));
@@ -174,6 +175,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
     //CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot)); // fixed point already reached
     //CHECK(contraction);
+    CHECK(x.nbSlices() == 10);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
     CHECK(x[0] == Interval(-1.5,1.5));
@@ -204,6 +206,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
     //CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     //CHECK(contraction);
+    CHECK(x.nbSlices() == 12);
     CHECK(intv_t == Interval(0.5,2.5));
     CHECK(intv_y == -2.);
     CHECK(x[0] == Interval(-5.5,3.));
@@ -231,6 +234,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
     //CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     //CHECK(contraction);
+    CHECK(x.nbSlices() == 12);
     CHECK(intv_t == Interval(0.5,2.5));
     CHECK(intv_y == -2.);
     CHECK(x[0] == Interval(-4.5,-0.75));
@@ -254,26 +258,6 @@ TEST_CASE("CtcEval")
     CHECK(x[10] == Interval(-2.5,4.5));
     CHECK(x[11] == Interval(-3.,5.5));
 
-    if(false & VIBES_DRAWING) // drawing results
-    {
-      x = x_raw;
-      xdot = xdot_raw;
-      IntervalVector box(2);
-      box[0] = Interval(0.5,2.5);
-      box[1] = Interval(-2.);
-      vibes::beginDrawing();
-      VibesFigure_Tube fig_tube("ctceval", &x);
-      fig_tube.setProperties(100, 100, 500, 500);
-      fig_tube.setTubeDerivative(&x, &xdot);
-      fig_tube.show(true);
-      contraction = ctc_eval_propa.contract(box[0], box[1], x, xdot);
-      x.ctcDeriv(xdot);
-      contraction = ctc_eval_propa.contract(box[0], box[1], x, xdot);
-      fig_tube.show(true);
-      vibes::drawBox(box, vibesParams("figure", "ctceval", "blue"));
-      vibes::endDrawing();
-    }
-
     // Test C (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -282,6 +266,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
     //CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     //CHECK(contraction);
+    CHECK(x.nbSlices() == 12);
     CHECK(intv_t == Interval(0.5,1.5));
     CHECK(intv_y == -4.);
     CHECK(x[0] == Interval(-5.5,3.));
@@ -289,60 +274,110 @@ TEST_CASE("CtcEval")
     CHECK(x[1] == Interval(-5.5,3.));
     CHECK(x[1.] == Interval(-4.5,-3.5));
     CHECK(x[2] == Interval(-4.5,2.5));
-    //CHECK(x[1.5] == Interval(-4.,-3.)); // todo: consider previous and next gate in the list
-    /*CHECK(x[3] == Interval(-4.5,2.5));
-    CHECK(x[4] == Interval(-4.5,2.5));
-    CHECK(x[5] == Interval(-3.5,2.));
-    CHECK(x[6] == Interval(-2.5,1.5));
-    CHECK(x[7] == Interval(-1.5,1.));
-    CHECK(x[8] == Interval(-1.,1.5));
-    CHECK(x[9] == Interval(-1.5,2.5));
-    CHECK(x[10] == Interval(-2.,3.5));
-    CHECK(x[11] == Interval(-2.5,4.5));
-    CHECK(x[12] == Interval(-3.,5.5));
+    CHECK(x[1.5] == Interval(-4.,-3.));
+    CHECK(x[3] == Interval(-4.5,2.5));
+    CHECK(x[4] == Interval(-3.5,2.));
+    CHECK(x[5] == Interval(-2.5,1.5));
+    CHECK(x[6] == Interval(-1.5,1.));
+    CHECK(x[7] == Interval(-1.,1.5));
+    CHECK(x[8] == Interval(-1.5,2.5));
+    CHECK(x[9] == Interval(-2.,3.5));
+    CHECK(x[10] == Interval(-2.5,4.5));
+    CHECK(x[11] == Interval(-3.,5.5));
 
     // Test C (propa)
-    /*x = x_raw;
+    x = x_raw;
     xdot = xdot_raw;
     intv_t = Interval(0.5,3.5);
     intv_y = -4.;
-    contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
+    contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
     //CHECK_FALSE(x.ctcEval(intv_t, intv_y, xdot, false)); // fixed point already reached
     //CHECK(contraction);
+    CHECK(x.nbSlices() == 12);
     CHECK(intv_t == Interval(0.5,1.5));
     CHECK(intv_y == -4.);
     CHECK(x[0] == Interval(-5.5,-3.25));
-    CHECK(x[1] == Interval(-4.5,-2.5));
-    CHECK(x[2] == Interval(-3.5,-1.5));
-    CHECK(x[3] == Interval(-2.5,1.5));
-    CHECK(x[4] == Interval(-1.5,1.));
-    CHECK(x[5] == Interval(-1.,1.5));
-    CHECK(x[6] == Interval(-1.5,2.5));
-    CHECK(x[7] == Interval(-2.,3.5));
-    CHECK(x[8] == Interval(-2.5,4.5));
-    CHECK(x[9] == Interval(-3.,5.5));
+    CHECK(x[0.5] == Interval(-5.,-3.5));
+    //CHECK(x[1] == Interval(-5.,-3.5)); // optimality
+    CHECK(x[1.] == Interval(-4.5,-3.5));
+    CHECK(x[2] == Interval(-4.5,-3.));
+    CHECK(x[1.5] == Interval(-4.,-3.));
+    CHECK(x[3] == Interval(-4.,-2.5));
+    CHECK(x[4] == Interval(-3.5,-1.5));
+    CHECK(x[5] == Interval(-2.5,-0.5));
+    CHECK(x[6] == Interval(-1.5,0.5));
+    CHECK(x[7] == Interval(-1.,1.5));
+    CHECK(x[8] == Interval(-1.5,2.5));
+    CHECK(x[9] == Interval(-2.,3.5));
+    CHECK(x[10] == Interval(-2.5,4.5));
+    CHECK(x[11] == Interval(-3.,5.5));
 
-    // Test D
-/*    x = x_raw;
+    if(false & VIBES_DRAWING) // drawing results
+    {
+      x = x_raw;
+      xdot = xdot_raw;
+      IntervalVector box(2);
+      box[0] = Interval(0.5,3.5);
+      box[1] = Interval(-4.);
+      vibes::beginDrawing();
+      VibesFigure_Tube fig_tube("ctceval", &x);
+      fig_tube.setProperties(100, 100, 500, 500);
+      fig_tube.setTubeDerivative(&x, &xdot);
+      fig_tube.show(true);
+      contraction = ctc_eval_propa.contract(box[0], box[1], x, xdot);
+      fig_tube.show(true);
+      vibes::drawBox(box, vibesParams("figure", "ctceval", "blue"));
+      vibes::endDrawing();
+    }
+
+    // Test D (no propa)
+    x = x_raw;
+    xdot = xdot_raw;
     intv_t = 3.5;
     intv_y = Interval(-3.5,-0.5);
     CHECK(x.nbSlices() == 10);
-    contraction = x.ctcEval(intv_t, intv_y, xdot, true);
+    contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
     CHECK(x.nbSlices() == 11);
-    CHECK(contraction);
+    //CHECK(contraction);
     CHECK(intv_t == 3.5);
-    CHECK(intv_y == Interval(-2.,-0.5)); // optim: Interval(-2.,-0.5)
+    CHECK(intv_y == Interval(-2.,-0.5));
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
-    CHECK(x[2] == Interval(-3.5,0.25)); // optim: Interval(-3.5,0.25)
-    CHECK(x[3] == Interval(-2.5,0.)); // optim: Interval(-2.5,0.)
-    CHECK(x[4] == Interval(-1.5,1.));
-    CHECK(x[5] == Interval(-1.,1.5));
-    CHECK(x[6] == Interval(-1.5,2.5));
-    CHECK(x[7] == Interval(-2.,3.5));
-    CHECK(x[8] == Interval(-2.5,4.5));
-    CHECK(x[9] == Interval(-3.,5.5));
+    CHECK(x[2] == Interval(-3.5,2.));
+    CHECK(x[3] == Interval(-2.5,1.5));
+    CHECK(x[3.5] == Interval(-2.,-0.5));
+    CHECK(x[4] == Interval(-2.5,1.5));
+    CHECK(x[5] == Interval(-1.5,1.));
+    CHECK(x[6] == Interval(-1.,1.5));
+    CHECK(x[7] == Interval(-1.5,2.5));
+    CHECK(x[8] == Interval(-2.,3.5));
+    CHECK(x[9] == Interval(-2.5,4.5));
+    CHECK(x[10] == Interval(-3.,5.5));
 
+    // Test D (propa)
+    x = x_raw;
+    xdot = xdot_raw;
+    intv_t = 3.5;
+    intv_y = Interval(-3.5,-0.5);
+    CHECK(x.nbSlices() == 10);
+    contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
+    CHECK(x.nbSlices() == 11);
+    //CHECK(contraction);
+    CHECK(intv_t == 3.5);
+    CHECK(intv_y == Interval(-2.,-0.5));
+    CHECK(x[0] == Interval(-5.5,1.25));
+    CHECK(x[1] == Interval(-4.5,0.75));
+    CHECK(x[2] == Interval(-3.5,0.25));
+    CHECK(x[3] == Interval(-2.5,-0.25));
+    CHECK(x[3.5] == Interval(-2.,-0.5));
+    CHECK(x[4] == Interval(-2.,0.));
+    CHECK(x[5] == Interval(-1.5,1.));
+    CHECK(x[6] == Interval(-1.,1.5));
+    CHECK(x[7] == Interval(-1.5,2.5));
+    CHECK(x[8] == Interval(-2.,3.5));
+    CHECK(x[9] == Interval(-2.5,4.5));
+    CHECK(x[10] == Interval(-3.,5.5));
+/*
     // Test E
     x = x_raw;
     intv_t = Interval(6.5, 8.5);

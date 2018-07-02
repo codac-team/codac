@@ -35,6 +35,7 @@ namespace tubex
 
     bool contraction = false;
 
+    z &= y.interpol(t, w);
     y.set(z, t);
     w.sample(t); // w is also sampled to stay compliant with y
 
@@ -59,8 +60,9 @@ namespace tubex
         t &= y.invert(z, w ,t);
         z &= y.interpol(t, w);
 
-    y.sample(t.lb()); y.sample(t.ub());
-    w.sample(t.lb()); w.sample(t.ub()); // w is also sampled to stay compliant with y
+    y.set(y.interpol(t.lb(), w), t.lb()); w.sample(t.lb());
+    y.set(y.interpol(t.ub(), w), t.ub()); w.sample(t.ub());
+    // Note: w is also sampled to stay compliant with y
 
     CtcDeriv ctc_deriv;
     Interval front_gate;

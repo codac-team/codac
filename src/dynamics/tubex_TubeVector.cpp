@@ -499,6 +499,11 @@ namespace tubex
       DomainException::check(*this, t);
       DimensionException::check(*this, derivative);
       StructureException::check(*this, derivative);
+
+      const TubeSlice *slice_x = getSlice(t);
+      if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
+        return (*slice_x)[t];
+
       return interpol(Interval(t), derivative);
       // todo: check a faster implementation for this degenerate case?
     }
