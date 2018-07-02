@@ -57,8 +57,12 @@ namespace tubex
     if(t.is_degenerated())
       return contract(t.lb(), z, y, w);
 
-        t &= y.invert(z, w ,t);
-        z &= y.interpol(t, w);
+    t &= y.invert(z, w ,t);
+
+    if(t.is_degenerated())
+      return contract(t.lb(), z, y, w);
+    
+    z &= y.interpol(t, w);
 
     y.set(y.interpol(t.lb(), w), t.lb()); w.sample(t.lb());
     y.set(y.interpol(t.ub(), w), t.ub()); w.sample(t.ub());
@@ -123,12 +127,9 @@ namespace tubex
 
     // 4. Evaluation contraction
 
-      if(m_propagation_enabled)
-      {
-        t &= y.invert(z, w ,t);
-        z &= y.interpol(t, w);
-      }
-
+      t &= y.invert(z, w ,t);
+      z &= y.interpol(t, w);
+    
 
   /*
 

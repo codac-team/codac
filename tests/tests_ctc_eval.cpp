@@ -377,94 +377,17 @@ TEST_CASE("CtcEval")
     CHECK(x[8] == Interval(-2.,3.5));
     CHECK(x[9] == Interval(-2.5,4.5));
     CHECK(x[10] == Interval(-3.,5.5));
-/*
-    // Test E
+
+    // Test E (no propa)
     x = x_raw;
+    xdot = xdot_raw;
     intv_t = Interval(6.5, 8.5);
     intv_y = Interval(-4.5, -1.75);
-    contraction = x.ctcEval(intv_t, intv_y, xdot, false);
-    CHECK(contraction);
-    CHECK(intv_t == Interval(7., 8.5)); // optim: Interval(7.5, 8.5)
-    CHECK(intv_y == Interval(-2.25, -1.75)); // optim: Interval(-2.25, -1.75)
-    CHECK(x[0] == Interval(-5.5,3.));
-    CHECK(x[1] == Interval(-4.5,2.5));
-    CHECK(x[2] == Interval(-3.5,2.));
-    CHECK(x[3] == Interval(-2.5,1.5));
-    CHECK(x[4] == Interval(-1.5,1.));
-    CHECK(x[5] == Interval(-1.,1.5));
-    CHECK(x[6] == Interval(-1.5,-0.5)); // optim: Interval(-1.5,-0.5)
-    CHECK(x[7] == Interval(-2.,-0.75)); // optim: Interval(-2.,-1.)
-    CHECK(x[8] == Interval(-2.5,0.25)); // optim: Interval(-2.5,-0.25)
-    CHECK(x[9] == Interval(-3.,1.25)); // optim: Interval(-3.,0.25)
-
-    // Test E: ctcDeriv should not be effective after ctcEval(true)
-    x = x_raw;
-    intv_t = Interval(6.5, 8.5);
-    intv_y = Interval(-4.5, -1.75);
-    contraction = x.ctcEval(intv_t, intv_y, xdot, true);
-    CHECK(contraction);
-    CHECK(intv_t == Interval(7., 8.5)); // optim: Interval(7.5, 8.5)
-    CHECK(intv_y == Interval(-2.25, -1.75)); // optim: Interval(-2.25, -1.75)
-    CHECK(x[0] == Interval(-5.5,2.5));
-    CHECK(x[1] == Interval(-4.5,2.));
-    CHECK(x[2] == Interval(-3.5,1.5));
-    CHECK(x[3] == Interval(-2.5,1.));
-    CHECK(x[4] == Interval(-1.5,0.5));
-    CHECK(x[5] == Interval(-1.,0.));
-    CHECK(x[6] == Interval(-1.5,-0.5)); // optim: Interval(-1.5,-0.5)
-    CHECK(x[7] == Interval(-2.,-0.75)); // optim: Interval(-2.,-1.)
-    CHECK(x[8] == Interval(-2.5,0.25)); // optim: Interval(-2.5,-0.25)
-    CHECK(x[9] == Interval(-3.,1.25)); // optim: Interval(-3.,0.25)
-    CHECK(!x.ctcDeriv(xdot)); // no contraction expected
-    CHECK(x[0] == Interval(-5.5,2.5));
-    CHECK(x[1] == Interval(-4.5,2.));
-    CHECK(x[2] == Interval(-3.5,1.5));
-    CHECK(x[3] == Interval(-2.5,1.));
-    CHECK(x[4] == Interval(-1.5,0.5));
-    CHECK(x[5] == Interval(-1.,0.));
-    CHECK(x[6] == Interval(-1.5,-0.5));
-    CHECK(x[7] == Interval(-2.,-0.75));
-    CHECK(x[8] == Interval(-2.5,0.25));
-    CHECK(x[9] == Interval(-3.,1.25));
-
-    // Test F
-    x = x_raw;
-    intv_t = Interval(8.5,9.5);
-    intv_y = Interval(-0.5,2.5);
-    contraction = x.ctcEval(intv_t, intv_y, xdot, false);
-    CHECK(contraction);
-    CHECK(intv_t == Interval(8.5,9.5));
-    CHECK(intv_y == Interval(-0.5,2.5));
-    CHECK(x[0] == Interval(-5.5,3.));
-    CHECK(x[1] == Interval(-4.5,2.5));
-    CHECK(x[2] == Interval(-3.5,2.));
-    CHECK(x[3] == Interval(-2.5,1.5));
-    CHECK(x[4] == Interval(-1.5,1.));
-    CHECK(x[5] == Interval(-1.,1.5));
-    CHECK(x[6] == Interval(-1.5,2.5));
-    CHECK(x[7] == Interval(-2.,3.5)); // optim: Interval(-2.,3.3125)
-    CHECK(x[8] == Interval(-2.,3.25)); // optim: Interval(-2.,3.25)
-    CHECK(x[9] == Interval(-1.25,4.)); // optim: Interval(-1.25,4.)
-
-    // Test F: ctcDeriv should not be effective after ctcEval(true)
-    x = x_raw;
-    intv_t = Interval(8.5,9.5);
-    intv_y = Interval(-0.5,2.5);
-    contraction = x.ctcEval(intv_t, intv_y, xdot, true);
-    CHECK(contraction);
-    CHECK(intv_t == Interval(8.5,9.5));
-    CHECK(intv_y == Interval(-0.5,2.5));
-    CHECK(x[0] == Interval(-5.5,3.));
-    CHECK(x[1] == Interval(-4.5,2.5));
-    CHECK(x[2] == Interval(-3.5,2.));
-    CHECK(x[3] == Interval(-2.5,1.5));
-    CHECK(x[4] == Interval(-1.5,1.));
-    CHECK(x[5] == Interval(-1.,1.5));
-    CHECK(x[6] == Interval(-1.5,2.5));
-    CHECK(x[7] == Interval(-2.,3.5)); // optim: Interval(-2.,3.3125)
-    CHECK(x[8] == Interval(-2.,3.25)); // optim: Interval(-2.,3.25)
-    CHECK(x[9] == Interval(-1.25,4.)); // optim: Interval(-1.25,4.)
-    CHECK(!x.ctcDeriv(xdot)); // no contraction expected
+    contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
+    CHECK(x.nbSlices() == 12);
+    //CHECK(contraction);
+    CHECK(intv_t == Interval(7.5, 8.5));
+    CHECK(intv_y == Interval(-2.25, -1.75));
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -473,28 +396,133 @@ TEST_CASE("CtcEval")
     CHECK(x[5] == Interval(-1.,1.5));
     CHECK(x[6] == Interval(-1.5,2.5));
     CHECK(x[7] == Interval(-2.,3.5));
-    CHECK(x[8] == Interval(-2.,3.25));
-    CHECK(x[9] == Interval(-1.25,4.));
+    CHECK(x[7.5] == Interval(-1.75,-1.25));
+    CHECK(x[8] == Interval(-2.,3.5));
+    CHECK(x[8.] == Interval(-2.,-1.25));
+    CHECK(x[9] == Interval(-2.5,4.5));
+    CHECK(x[10] == Interval(-2.5,4.5));
+    CHECK(x[11] == Interval(-3.,5.5));
 
-    // Test G
+    // Test E (propa)
     x = x_raw;
-    intv_t = Interval(6.5,7.5);
-    intv_y = Interval(3.,4.);
-    contraction = x.ctcEval(intv_t, intv_y, xdot, false);
-    CHECK(contraction);
-    CHECK(intv_t == Interval(7.,7.5)); // optim: Interval(7.5)
-    CHECK(intv_y == Interval(3.)); // optim: Interval(3.)
+    xdot = xdot_raw;
+    intv_t = Interval(6.5, 8.5);
+    intv_y = Interval(-4.5, -1.75);
+    contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
+    CHECK(x.nbSlices() == 12);
+    //CHECK(contraction);
+    CHECK(intv_t == Interval(7.5, 8.5));
+    CHECK(intv_y == Interval(-2.25, -1.75));
+    CHECK(x[0] == Interval(-5.5,2.5));
+    CHECK(x[1] == Interval(-4.5,2.));
+    CHECK(x[2] == Interval(-3.5,1.5));
+    CHECK(x[3] == Interval(-2.5,1.));
+    CHECK(x[4] == Interval(-1.5,0.5));
+    CHECK(x[5] == Interval(-1.,0.));
+    CHECK(x[6] == Interval(-1.5,-0.5));
+    CHECK(x[7] == Interval(-1.75,-1.));
+    CHECK(x[7.5] == Interval(-1.75,-1.25));
+    //CHECK(x[8] == Interval(-2.,-1.25)); // optimality
+    CHECK(x[8.] == Interval(-2.,-1.25));
+    CHECK(x[9] == Interval(-2.25,-0.75));
+    CHECK(x[10] == Interval(-2.5,-0.25));
+    CHECK(x[11] == Interval(-3.,0.75));
+
+    // Test F (no propa)
+    x = x_raw;
+    xdot = xdot_raw;
+    intv_t = Interval(8.5,9.5);
+    intv_y = Interval(-0.5,2.5);
+    contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
+    CHECK(x.nbSlices() == 12);
+    //CHECK(contraction);
+    CHECK(intv_t == Interval(8.5,9.5));
+    CHECK(intv_y == Interval(-0.5,2.5));
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
     CHECK(x[3] == Interval(-2.5,1.5));
     CHECK(x[4] == Interval(-1.5,1.));
     CHECK(x[5] == Interval(-1.,1.5));
-    CHECK(x[6] == Interval(1.5,2.5)); // optim: Interval(1.5,2.5)
-    CHECK(x[7] == Interval(2.5,3.5)); // optim: Interval(2.5,2.5)
-    CHECK(x[8] == Interval(2.,4.5)); // optim: Interval(2.25,4.5)
-    CHECK(x[9] == Interval(-3.,5.5));
+    CHECK(x[6] == Interval(-1.5,2.5));
+    CHECK(x[7] == Interval(-2.,3.5));
+    CHECK(x[8] == Interval(-2.5,4.5));
+    CHECK(x[8.5] == Interval(-1.5,3.));
+    CHECK(x[9] == Interval(-2.5,4.5));
+    CHECK(x[10] == Interval(-3.,5.5));
+    CHECK(x[9.5] == Interval(-1.,3.5));
+    CHECK(x[11] == Interval(-3,5.5));
 
+    // Test F (propa)
+    x = x_raw;
+    xdot = xdot_raw;
+    intv_t = Interval(8.5,9.5);
+    intv_y = Interval(-0.5,2.5);
+    contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
+    CHECK(x.nbSlices() == 12);
+    //CHECK(contraction);
+    CHECK(intv_t == Interval(8.5,9.5));
+    CHECK(intv_y == Interval(-0.5,2.5));
+    CHECK(x[0] == Interval(-5.5,3.));
+    CHECK(x[1] == Interval(-4.5,2.5));
+    CHECK(x[2] == Interval(-3.5,2.));
+    CHECK(x[3] == Interval(-2.5,1.5));
+    CHECK(x[4] == Interval(-1.5,1.));
+    CHECK(x[5] == Interval(-1.,1.5));
+    CHECK(x[6] == Interval(-1.5,2.5));
+    CHECK(ApproxIntv(x[7]) == Interval(-2.,3.+1./3.));
+    CHECK(x[8] == Interval(-2.,3.25));
+    CHECK(x[8.5] == Interval(-1.5,3.));
+    //CHECK(x[9] == Interval(-1.5,3.)); // optimality
+    //CHECK(x[10] == Interval(-1.,3.5)); // optimality
+    CHECK(x[9.5] == Interval(-1.,3.5));
+    CHECK(x[11] == Interval(-1.25,4.));
+
+    // Test G (no propa)
+    x = x_raw;
+    xdot = xdot_raw;
+    intv_t = Interval(6.5,7.5);
+    intv_y = Interval(3.,4.);
+    contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
+    //CHECK(contraction);
+    CHECK(intv_t == Interval(7.5));
+    CHECK(intv_y == Interval(3.));
+    CHECK(x[0] == Interval(-5.5,3.));
+    CHECK(x[1] == Interval(-4.5,2.5));
+    CHECK(x[2] == Interval(-3.5,2.));
+    CHECK(x[3] == Interval(-2.5,1.5));
+    CHECK(x[4] == Interval(-1.5,1.));
+    CHECK(x[5] == Interval(-1.,1.5));
+    CHECK(x[6] == Interval(-1.5,2.5));
+    CHECK(x[7] == Interval(-2.,3.5));
+    CHECK(x[7.5] == Interval(3.));
+    CHECK(x[8] == Interval(-2.,3.5));
+    CHECK(x[9] == Interval(-2.5,4.5));
+    CHECK(x[10] == Interval(-3.,5.5));
+
+    // Test G (propa)
+    x = x_raw;
+    xdot = xdot_raw;
+    intv_t = Interval(6.5,7.5);
+    intv_y = Interval(3.,4.);
+    contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
+    //CHECK(contraction);
+    CHECK(intv_t == Interval(7.5));
+    CHECK(intv_y == Interval(3.));
+    CHECK(x[0] == Interval(-4.5,3.));
+    CHECK(x[1] == Interval(-3.5,2.5));
+    CHECK(x[2] == Interval(-2.5,2.));
+    CHECK(x[3] == Interval(-1.5,1.5));
+    CHECK(x[4] == Interval(-0.5,1.));
+    CHECK(x[5] == Interval(0.5,1.5));
+    CHECK(x[6] == Interval(1.5,2.5));
+    CHECK(x[7] == Interval(2.5,3.));
+    CHECK(x[7.5] == Interval(3.));
+    CHECK(x[8] == Interval(2.75,3.5));
+    CHECK(x[9] == Interval(2.25,4.5));
+    CHECK(x[10] == Interval(1.75,5.5));
+
+/*
     // Test H
     x = x_raw;
     intv_t = Interval(7.,8.25);
