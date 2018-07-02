@@ -17,6 +17,7 @@
 #include "tubex_TubeSlice.h"
 #include "tubex_TubeVector.h"
 #include "tubex_ConvexPolygon.h"
+#include "tubex_CtcEval.h"
 
 // todo: contract v if x degenerated
 
@@ -41,6 +42,8 @@ namespace tubex
 
       bool contractGates(TubeSlice& x, const TubeSlice& v);
       bool contractCodomain(int i, TubeSlice& x, const TubeSlice& v);
+
+      friend class CtcEval;
   };
 }
 

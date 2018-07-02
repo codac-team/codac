@@ -47,7 +47,7 @@ namespace tubex
     os << "unable to perform an operation over tubes of different structure";
 
     if(x1.nbSlices() != x2.nbSlices())
-      os << endl << "TubeSlices of different slices number: " 
+      os << endl << "TubeVector of different slices number: " 
          << "n1=" << x1.nbSlices() << " and n2=" << x2.nbSlices();
 
     os << endl;

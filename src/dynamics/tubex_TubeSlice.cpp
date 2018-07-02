@@ -195,7 +195,6 @@ namespace tubex
       DomainException::check(*this, t);
       DomainException::check(*this, derivative);
       DimensionException::check(*this, derivative);
-      EmptyException::check(derivative);
 
       return interpol(Interval(t), derivative);
 
@@ -212,16 +211,14 @@ namespace tubex
       DomainException::check(*this, t);
       DomainException::check(*this, derivative);
       DimensionException::check(*this, derivative);
-      EmptyException::check(derivative);
-      
-      IntervalVector interpol(dim(), Interval::EMPTY_SET);
 
       if(domain().is_subset(t))
-          interpol |= codomain();
+        return codomain();
 
       else
       {
         CtcDeriv ctc_deriv;
+        IntervalVector interpol(dim(), Interval::EMPTY_SET);
 
         for(int i = 0 ; i < dim() ; i++)
         {
@@ -230,9 +227,9 @@ namespace tubex
           slice_box[1] = codomain()[i];
           interpol[i] |= (polygon(i, derivative) & slice_box)[1];
         }
-      }
 
-      return interpol;
+        return interpol;
+      }
     }
 
     const Interval TubeSlice::invert(const IntervalVector& y, const Interval& search_domain) const

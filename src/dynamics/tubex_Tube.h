@@ -96,8 +96,12 @@ namespace tubex
       Tube& operator/=(const Trajectory& x);
       Tube& operator/=(const Tube& x);
       Tube& operator/=(const ibex::Interval& x);
-      using TubeVector::operator|=;
-      using TubeVector::operator&=;
+      Tube& operator&=(const Trajectory& x);
+      Tube& operator&=(const Tube& x);
+      Tube& operator&=(const ibex::Interval& x);
+      Tube& operator|=(const Trajectory& x);
+      Tube& operator|=(const Tube& x);
+      Tube& operator|=(const ibex::Interval& x);
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);

@@ -426,9 +426,11 @@ namespace tubex
 
       const TubeSlice *slice_x = getSlice(intersection.lb());
       const TubeSlice *slice_xdot = derivative.getSlice(intersection.lb());
-      while(slice_x != NULL && slice_x->domain().lb() <= intersection.ub())
+      while(slice_x != NULL && slice_x->domain().lb() < intersection.ub())
       {
-        invert |= slice_x->invert(y, *slice_xdot, intersection);
+        if(slice_x->codomain().intersects(y))
+          invert |= slice_x->invert(y, *slice_xdot, intersection);
+
         slice_x = slice_x->nextSlice();
         slice_xdot = slice_xdot->nextSlice();
       }

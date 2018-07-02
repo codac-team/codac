@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcEval.h"
+#include "tubex_CtcDeriv.h"
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_DomainException.h"
@@ -30,15 +31,18 @@ namespace tubex
   {
     StructureException::check(y, w);
     DomainException::check(y, t);
-    EmptyException::check(w);
+    EmptyException::check(w); // todo: remove this
 
-    bool contraction = (z != (z & y[t])) || (y[t] != (z & y[t]));
+    bool contraction = false;
+
     y.set(z, t);
-    w.sample(t);
-    z &= y[t];
+    w.sample(t); // w is also sampled to stay compliant with y
 
     if(m_propagation_enabled)
-      contraction |= y.ctcDeriv(w); // todo: optimize propagations from evaluation
+    {
+      CtcDeriv ctc_deriv;
+      ctc_deriv.contract(y, w);
+    }
 
     return contraction;
   }
@@ -47,10 +51,84 @@ namespace tubex
   {
     StructureException::check(y, w);
     DomainException::check(y, t);
-    EmptyException::check(w);
+    //EmptyException::check(w); // todo: remove this?
     
     if(t.is_degenerated())
       return contract(t.lb(), z, y, w);
+
+        t &= y.invert(z, w ,t);
+        z &= y.interpol(t, w);
+
+    y.sample(t.lb()); y.sample(t.ub());
+    w.sample(t.lb()); w.sample(t.ub()); // w is also sampled to stay compliant with y
+
+    CtcDeriv ctc_deriv;
+    Interval front_gate;
+    list<IntervalVector> l_gates;
+    TubeSlice *slice_y;
+    const TubeSlice *slice_w;
+
+    // 1. Forward propagation
+
+      slice_y = y.getSlice(t.lb());
+      slice_w = w.getSlice(t.lb());
+      front_gate = slice_y->inputGate()[0] & z;
+      l_gates.push_front(IntervalVector(1, front_gate));
+
+      while(slice_y != NULL && slice_y->domain().lb() < t.ub())
+      {
+        // Forward propagation of the evaluation
+        front_gate += slice_y->domain().diam() * slice_w->codomain()[0]; // projection
+        front_gate |= z; // evaluation
+        front_gate &= slice_y->outputGate()[0]; // contraction
+
+        // Storing temporarily fwd propagation 
+        l_gates.push_front(IntervalVector(1, front_gate));
+
+        // Iteration
+        slice_y = slice_y->nextSlice();
+        slice_w = slice_w->nextSlice();
+      }
+
+    // 2. Backward propagation
+
+      slice_y = y.getSlice(previous_float(t.ub()));
+      slice_w = w.getSlice(previous_float(t.ub()));
+      front_gate = slice_y->outputGate()[0] & z;
+      slice_y->setOutputGate(l_gates.front() | IntervalVector(1, front_gate));
+
+      while(slice_y != NULL && slice_y->domain().lb() >= t.lb())
+      {
+        // Backward propagation of the evaluation
+        front_gate -= slice_y->domain().diam() * slice_w->codomain()[0]; // projection
+        front_gate |= z; // evaluation
+        front_gate &= slice_y->inputGate()[0]; // contraction
+
+        // Updating tube
+        l_gates.pop_front();
+        slice_y->setInputGate(l_gates.front() | IntervalVector(1, front_gate));
+        ctc_deriv.contractGates(*slice_y, *slice_w);
+
+        // Iteration
+        slice_y = slice_y->prevSlice();
+        slice_w = slice_w->prevSlice();
+      }
+
+    // 3. Envelopes contraction
+
+      if(m_propagation_enabled)
+        ctc_deriv.contract(y, w);
+
+    // 4. Evaluation contraction
+
+      if(m_propagation_enabled)
+      {
+        t &= y.invert(z, w ,t);
+        z &= y.interpol(t, w);
+      }
+
+
+  /*
 
     bool inconsistency = false;
     m_bisection_required = false;
@@ -218,7 +296,7 @@ namespace tubex
     if(m_propagation_enabled)
       m_y_contracted |= y.ctcDeriv(w); // todo: optimize propagations from evaluation
 
-    return m_z_contracted | m_y_contracted | m_t_contracted;
+    return m_z_contracted | m_y_contracted | m_t_contracted;*/
   }
 
   void CtcEval::computeIndex(const Interval& t, const Interval& z, const Tube& y, int& index_lb, int& index_ub) const
