@@ -228,7 +228,7 @@ TEST_CASE("Testing enclosed bounds (tube evaluations)")
     Tube tube4 = tubeTest4();
     tube4.set(Interval(-1,1), Interval(10,11));
     Tube tube4_primitive = tube4.primitive();
-    //CHECK(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));/*
+    CHECK(tube4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));
   }
 }
 
@@ -360,6 +360,41 @@ TEST_CASE("Testing set inversion")
       CHECK(v[1] == Interval(9.0,10.0));
       CHECK(v[2] == Interval(11.0,15.0));
     }
+  }
+
+  SECTION("Invert method with derivative")
+  {
+    TubeVector x(Interval(0., 5.), 1.0, 1);
+    TubeVector v(x);
+
+    x.set(IntervalVector(1, Interval(0.)), 0.);
+    x.set(IntervalVector(1, Interval(4.)), 5.);
+
+    v.set(IntervalVector(1, Interval(1.,2.)), 0);
+    v.set(IntervalVector(1, Interval(0.5,1.5)), 1);
+    v.set(IntervalVector(1, Interval(0.,0.5)), 2);
+    v.set(IntervalVector(1, Interval(0.)), 3);
+    v.set(IntervalVector(1, Interval(-0.5,0.5)), 4);
+
+    CtcDeriv ctc;
+    ctc.contract(x, v);
+
+    CHECK(x.invert(x.codomain()) == x.domain());
+    CHECK(x.invert(Interval::ALL_REALS) == x.domain());
+
+    // Using derivative
+    CHECK(x.invert(x.codomain(), v) == x.domain());
+    CHECK(x.invert(Interval::ALL_REALS, v) == x.domain());
+    CHECK(x.invert(Interval(0.), v) == Interval(0.));
+    CHECK(x.invert(Interval(4.25), v) == Interval(4.5));
+    CHECK(x.invert(Interval(4.), v) == Interval(3.,5.));
+    CHECK(ApproxIntv(x.invert(Interval(4.1), v)) == Interval(4.2,4.8));
+    CHECK(x.invert(Interval(3.5), v) == Interval(2.,4.));
+    CHECK(x.invert(Interval::EMPTY_SET, v) == Interval::EMPTY_SET);
+    CHECK(x.invert(Interval(10.), v) == Interval::EMPTY_SET);
+    CHECK(x.invert(Interval(2.,3.), v) == Interval(1.,2.));
+    CHECK(x.invert(Interval(1.), v) == Interval(0.5,0.75));
+    CHECK(x.invert(Interval(3.5,4.), v) == Interval(2.,5.));
   }
 }
 

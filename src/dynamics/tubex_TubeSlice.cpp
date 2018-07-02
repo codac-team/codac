@@ -249,7 +249,7 @@ namespace tubex
       if(!m_domain.intersects(search_domain))
         return Interval::EMPTY_SET;
 
-      else if((m_domain & search_domain) == m_domain && m_codomain.intersects(y))
+      else if((m_domain & search_domain) == m_domain && m_codomain.is_subset(y))
         return m_domain;
 
       else if(search_domain == m_domain.lb())

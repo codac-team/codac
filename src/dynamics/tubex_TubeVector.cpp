@@ -415,6 +415,8 @@ namespace tubex
     const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& derivative, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
+      StructureException::check(*this, derivative);
+      DomainException::check(*this, derivative);
 
       // todo: use tree structure instead
       Interval invert = Interval::EMPTY_SET;
@@ -422,11 +424,13 @@ namespace tubex
       if(intersection.is_empty())
         return Interval::EMPTY_SET;
 
-      const TubeSlice *slice = getSlice(intersection.lb());
-      while(slice != NULL && slice->domain().lb() <= intersection.ub())
+      const TubeSlice *slice_x = getSlice(intersection.lb());
+      const TubeSlice *slice_xdot = derivative.getSlice(intersection.lb());
+      while(slice_x != NULL && slice_x->domain().lb() <= intersection.ub())
       {
-        invert |= slice->invert(y, intersection);
-        slice = slice->nextSlice();
+        invert |= slice_x->invert(y, *slice_xdot, intersection);
+        slice_x = slice_x->nextSlice();
+        slice_xdot = slice_xdot->nextSlice();
       }
 
       return invert;
