@@ -54,7 +54,7 @@ namespace tubex
       ~TubeVector();
       TubeVector primitive() const;
       TubeVector& operator=(const TubeVector& x);
-      const ibex::Interval domain() const; // todo: output const Interval& (reference)
+      const ibex::Interval domain() const;
       int dim() const;
 
       // Slices structure
@@ -71,7 +71,7 @@ namespace tubex
       void sample(double t, const ibex::IntervalVector& gate);
 
       // Access values
-      const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
+      const ibex::IntervalVector codomain() const;
       double volume() const;
       const ibex::IntervalVector operator[](int slice_id) const;
       const ibex::IntervalVector operator[](double t) const;
@@ -149,7 +149,7 @@ namespace tubex
     /** Base: **/
 
       // Access values
-      const ibex::IntervalVector codomainBox() const; // todo: output const Interval& (reference)
+      const ibex::IntervalVector codomainBox() const;
 
     /** Integration: **/
       
@@ -161,7 +161,6 @@ namespace tubex
 
     /** Class variables **/
 
-      //TubeVectorComponent *m_component = NULL;
       std::vector<TubeSlice*> m_v_slices;
 
       friend class CtcDeriv; // todo: remove this

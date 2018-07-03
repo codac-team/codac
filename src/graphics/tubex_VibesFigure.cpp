@@ -15,10 +15,10 @@
 #include <iostream>
 #include "tubex_VibesFigure.h"
 
-// a real value to display unbounded slices
+// A real value to display unbounded slices:
 #include <limits>
 #define BOUNDED_INFINITY 99999. //numeric_limits<float>::max()
-// max() seems unusable with vibes::drawPolygon
+// Note: numeric_limits<float>::max() seems unusable with vibes::drawPolygon
 
 using namespace std;
 using namespace ibex;

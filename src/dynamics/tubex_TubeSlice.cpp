@@ -163,9 +163,7 @@ namespace tubex
 
     const IntervalVector TubeSlice::operator[](double t) const
     {
-      // Write access is not allowed for this operator:
-      // a further call to checkDataTree() is needed when values change,
-      // this call cannot be garanteed with a direct access to m_codomain
+      // Write access is not allowed for this operator
       // For write access: use set()
       DomainException::check(*this, t);
 
@@ -180,9 +178,7 @@ namespace tubex
 
     const IntervalVector TubeSlice::operator[](const Interval& t) const
     {
-      // Write access is not allowed for this operator:
-      // a further call to checkDataTree() is needed when values change,
-      // this call cannot be garanteed with a direct access to m_codomain
+      // Write access is not allowed for this operator
       // For write access: use set()
       DomainException::check(*this, t);
       if(t.is_degenerated())

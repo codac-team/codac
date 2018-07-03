@@ -40,9 +40,9 @@ namespace tubex
       // Access values
       const std::map<double,ibex::Vector>& getMap() const;
       const ibex::Function* getFunction() const;
-      const ibex::Interval domain() const; // todo: output const Interval& (reference)
-      const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
-      const ibex::IntervalVector codomainBox() const; // todo: output const Interval& (reference)
+      const ibex::Interval domain() const;
+      const ibex::IntervalVector codomain() const;
+      const ibex::IntervalVector codomainBox() const;
       const ibex::Vector operator[](double t) const;
       const ibex::IntervalVector operator[](const ibex::Interval& t) const;
 

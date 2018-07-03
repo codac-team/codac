@@ -7,7 +7,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define VIBES_DRAWING 1
+#define VIBES_DRAWING 0
 
 // todo: test cases of infinite upper/lower bound only on derivative or tube itself
 

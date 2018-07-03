@@ -131,7 +131,7 @@ namespace tubex
 
     // Access values
 
-    const Interval Tube::codomain() const // todo: output const Interval& (reference)
+    const Interval Tube::codomain() const
     {
       return TubeVector::codomain()[0];
     }
@@ -282,11 +282,8 @@ namespace tubex
 
     bool Tube::ctcEval(Interval& t, Interval& z, Tube& w)
     {
-      //IntervalVector z_box(1, z);
-      CtcEval ctc_eval;
-      bool ctc = ctc_eval.contract(t, z, *this, w);
-      //z = z_box[0];
-      return ctc;
+      CtcEval ctc_eval(true);
+      return ctc_eval.contract(t, z, *this, w);
     }
 
     // Serialization

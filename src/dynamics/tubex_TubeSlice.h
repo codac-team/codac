@@ -34,7 +34,7 @@ namespace tubex
       TubeSlice(const TubeSlice& x);
       ~TubeSlice();
       TubeSlice& operator=(const TubeSlice& x);
-      const ibex::Interval domain() const; // todo: output const Interval& (reference)
+      const ibex::Interval domain() const;
       int dim() const;
 
       // Slices structure
@@ -47,7 +47,7 @@ namespace tubex
       TubeVector* tubeReference() const;
 
       // Access values
-      const ibex::IntervalVector codomain() const; // todo: output const Interval& (reference)
+      const ibex::IntervalVector codomain() const;
       const ibex::IntervalVector box() const;
       double volume() const;
       const ibex::IntervalVector operator[](double t) const;
@@ -105,7 +105,7 @@ namespace tubex
       // Slices structure
 
       // Access values
-      const ibex::IntervalVector codomainBox() const; // todo: output const Interval& (reference)
+      const ibex::IntervalVector codomainBox() const;
 
       // Setting values
 

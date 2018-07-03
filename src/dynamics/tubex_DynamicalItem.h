@@ -22,8 +22,8 @@ namespace tubex
     public:
 
       virtual int dim() const = 0;
-      virtual const ibex::Interval domain() const = 0; // todo: output const Interval& (reference)
-      virtual const ibex::IntervalVector codomainBox() const = 0; // todo: output const Interval& (reference)
+      virtual const ibex::Interval domain() const = 0;
+      virtual const ibex::IntervalVector codomainBox() const = 0;
       virtual const std::string className() const = 0;
   };
 }

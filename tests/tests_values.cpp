@@ -6,7 +6,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define VIBES_DRAWING 1
+#define VIBES_DRAWING 0
 
 TEST_CASE("Tube values")
 {

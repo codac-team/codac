@@ -53,7 +53,7 @@ namespace tubex
       void sample(double t, const ibex::Interval& gate);
 
       // Access values
-      const ibex::Interval codomain() const; // todo: output const Interval& (reference)
+      const ibex::Interval codomain() const;
       using TubeVector::volume;
       const ibex::Interval operator[](int slice_id) const;
       const ibex::Interval operator[](double t) const;

@@ -31,7 +31,7 @@ namespace tubex
   
   ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points) : Polygon(v_points)
   {
-    // todo (test convexity, or make it convex)
+    // todo: (test convexity, or make it convex)
   }
   
   const IntervalVector ConvexPolygon::operator&(const IntervalVector& x) const

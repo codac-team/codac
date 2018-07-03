@@ -965,19 +965,14 @@ namespace tubex
 
     bool TubeVector::ctcDeriv(const TubeVector& v)
     {
-      DimensionException::check(*this, v);
-      StructureException::check(*this, v);
       CtcDeriv ctc;
       return ctc.contract(*this, v);
     }
 
     bool TubeVector::ctcEval(Interval& t, IntervalVector& z, TubeVector& w)
     {
-      DimensionException::check(*this, z);
-      DimensionException::check(*this, w);
-      StructureException::check(*this, w);
-      //CtcEval ctc;
-      //return ctc.contract(t, z, *this, w);
+      CtcEval ctc;
+      return ctc.contract(t, z, *this, w);
     }
       
     // Serialization
