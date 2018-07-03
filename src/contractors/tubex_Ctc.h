@@ -13,6 +13,9 @@
 #ifndef Ctc_HEADER
 #define Ctc_HEADER
 
+#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
+
 namespace tubex
 {
   /**

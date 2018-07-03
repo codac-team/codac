@@ -14,7 +14,6 @@
 #define CtcEval_HEADER
 
 #include "tubex_Ctc.h"
-#include "tubex_Tube.h"
 
 namespace tubex
 {

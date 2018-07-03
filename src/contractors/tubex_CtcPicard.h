@@ -14,7 +14,6 @@
 #define CtcPicard_HEADER
 
 #include "tubex_Ctc.h"
-#include "tubex_TubeVector.h"
 #include "tubex_TubeSlice.h"
 
 namespace tubex

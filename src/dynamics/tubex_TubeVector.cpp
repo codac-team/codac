@@ -18,7 +18,7 @@
 #include "tubex_DimensionException.h"
 #include "tubex_StructureException.h"
 #include "tubex_CtcDeriv.h"
-//#include "tubex_CtcEval.h"
+#include "tubex_CtcEval.h"
 
 using namespace std;
 using namespace ibex;
