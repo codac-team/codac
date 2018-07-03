@@ -44,7 +44,7 @@ namespace tubex
     }
 
     TubeSlice::TubeSlice(const TubeSlice& x)
-      : TubeSlice(x.domain(), x.codomain())
+      : TubeSlice(x.domain(), x.codomain()) // in order to instantiate gates
     {
       *this = x;
     }

@@ -36,19 +36,19 @@ int main(int argc, char *argv[])
     Tube y = sqrt(sqr(x1) + sqr(x2) + sqr(beacon_depth));
     Tube ydot = (x1*x1dot + x2*x2dot) / y;
     Tube hdot(domain, tube_dt, Function("t", "[0.08,0.12]*t+[0.97,1.08]"));
-    Tube h = hdot.primitive(Interval(0.));
+    Tube h = hdot.primitive();
 
   /* =========== GRAPHICS =========== */
 
-    Trajectory y_truth(Function("t", "sqrt((90+100*cos(t))^2 + (20+100*sin(t))^2 + 100)"), domain, "y*");
-    Trajectory h_truth(Function("t", "0.045*t^2+0.98*t"), domain, "h*");
+    Trajectory y_truth(domain, Function("t", "sqrt((90+100*cos(t))^2 + (20+100*sin(t))^2 + 100)"));
+    Trajectory h_truth(domain, Function("t", "0.045*t^2+0.98*t"));
 
     VibesFigure_Tube::draw("Tube [y](·)", &y, &y_truth, 100, 100);
     VibesFigure_Tube::draw("Tube [h](·)", &h, &h_truth, 150, 150);
 
   /* =========== MEASUREMENTS =========== */
 
-    vector<float> v_tau;
+    vector<Interval> v_tau;
     vector<Interval> v_t;
     vector<Interval> v_z;
 
@@ -64,17 +64,17 @@ int main(int argc, char *argv[])
   /* =========== CONTRACTIONS =========== */
 
     bool contraction;
-    int k = 0;
+    int k = 1;
     do
     {
-      cout << "Computation step " << (k+1) << "..." << endl;
+      cout << "Computation step " << k << "..." << endl;
       contraction = false;
 
       for(int i = 0 ; i < v_tau.size() ; i++)
       {
         v_t[i] &= h.invert(v_tau[i]);
-        contraction |= y.ctcEval(ydot, v_t[i], v_z[i]);
-        contraction |= h.ctcEval(hdot, v_t[i], v_tau[i]);
+        contraction |= y.ctcEval(v_t[i], v_z[i], ydot);
+        contraction |= h.ctcEval(v_t[i], v_tau[i], hdot);
       }
 
       k++;
