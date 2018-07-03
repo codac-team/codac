@@ -123,17 +123,17 @@ namespace tubex
           slice_w = w.getSlice(t.lb());
 
           front_gate = slice_y->inputGate() & z;
-          if(front_gate.is_empty())
-          {
-            // Mathematically, this case should not happen
+            // Mathematically, front_gate should not be empty at this point.
             // Due to numerical approximations, the computation of t by the invert method
             // provides a wider enclosure t'. The evaluation of y[t'.lb()] may not
             // intersect z and so the front_gate becomes empty.
-            // An epsilon inflation is performed to overcome this problem.
-            double epsilon = std::numeric_limits<double>::epsilon();
-            for(int k = 1 ; front_gate.is_empty() ; k++)
-              front_gate = IntervalVector(slice_y->inputGate()).inflate(epsilon * k) & z;
-          }
+            // An epsilon inflation could be used to overcome this problem. Or:
+            for(int i = 0 ; i < y.dim() ; i++)
+              if(front_gate[i].is_empty())
+              {
+                if(slice_y->inputGate()[i].ub() < z[i].lb()) front_gate[i] = z[i].lb();
+                else front_gate[i] = z[i].ub();
+              }
 
           l_gates.push_front(front_gate);
 
@@ -158,13 +158,13 @@ namespace tubex
           slice_w = w.getSlice(previous_float(t.ub()));
 
           front_gate = slice_y->outputGate() & z;
-          if(front_gate.is_empty())
-          {
-            // Epsilon inflation, some remark as before
-            double epsilon = std::numeric_limits<double>::epsilon();
-            for(int k = 1 ; front_gate.is_empty() ; k++)
-              front_gate = IntervalVector(slice_y->outputGate()).inflate(epsilon * k) & z;
-          }
+            // Overcoming numerical approximations, same remark as before:
+            for(int i = 0 ; i < y.dim() ; i++)
+              if(front_gate[i].is_empty())
+              {
+                if(slice_y->outputGate()[i].ub() < z[i].lb()) front_gate[i] = z[i].lb();
+                else front_gate[i] = z[i].ub();
+              }
 
           slice_y->setOutputGate(l_gates.front() | front_gate);
 
