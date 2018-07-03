@@ -316,12 +316,10 @@ namespace tubex
             // Otherwise, the copy is displayed and then updated
             // with the current version of the tube.
 
-            vector<double> v_x, v_y;
-            computePolygonEnvelope(m_map_tubes[tube].tube_copy, v_x, v_y);
             vibes::clearGroup(name(), group_name_bckgrnd);
             vibes::newGroup(group_name_bckgrnd, m_map_tubes[tube].m_colors[TubeColorType::BACKGROUND], vibesParams("figure", name()));
             vibes::Params params_background = vibesParams("figure", name(), "group", group_name_bckgrnd);
-            vibes::drawPolygon(v_x, v_y, params_background);
+            VibesFigure_Polygon::draw(polygonEnvelope(m_map_tubes[tube].tube_copy), params_background);
 
             delete m_map_tubes[tube].tube_copy;
           }
@@ -370,37 +368,37 @@ namespace tubex
 
         else
         {
-          vector<double> v_x, v_y;
-          computePolygonEnvelope(tube, v_x, v_y);
           vibes::newGroup(group_name, m_map_tubes[tube].m_colors[TubeColorType::FOREGROUND], vibesParams("figure", name()));
-          vibes::drawPolygon(v_x, v_y, params_foreground);
+          VibesFigure_Polygon::draw(polygonEnvelope(tube), params_foreground);
         }
 
       return viewbox;
     }
 
-    void VibesFigure_Tube::computePolygonEnvelope(const TubeVector *tube, vector<double>& v_x, vector<double>& v_y)
+    const Polygon VibesFigure_Tube::polygonEnvelope(const TubeVector *tube)
     {
-      // todo: use Polygon class here
-
       if(tube->isEmpty())
         cout << "Tube graphics: warning, tube " << m_map_tubes[tube].name << " is empty" << endl;
+
+      vector<Point> v_pts;
 
       for(int i = 0 ; i < tube->nbSlices() ; i++)
       {
         IntervalVector slice_box = tube->getSlice(i)->box();
         slice_box[1 + m_current_layer] = truncInf(slice_box[1 + m_current_layer]);
-        v_x.push_back(slice_box[0].lb()); v_x.push_back(slice_box[0].ub());
-        v_y.push_back(slice_box[1 + m_current_layer].ub()); v_y.push_back(slice_box[1 + m_current_layer].ub());
+        v_pts.push_back(Point(slice_box[0].lb(), slice_box[1 + m_current_layer].ub()));
+        v_pts.push_back(Point(slice_box[0].ub(), slice_box[1 + m_current_layer].ub()));
       }
 
       for(int i = tube->nbSlices() - 1 ; i >= 0 ; i--)
       {
         IntervalVector slice_box = tube->getSlice(i)->box();
         slice_box[1 + m_current_layer] = truncInf(slice_box[1 + m_current_layer]);
-        v_x.push_back(slice_box[0].ub()); v_x.push_back(slice_box[0].lb());
-        v_y.push_back(slice_box[1 + m_current_layer].lb()); v_y.push_back(slice_box[1 + m_current_layer].lb());
+        v_pts.push_back(Point(slice_box[0].ub(), slice_box[1 + m_current_layer].lb()));
+        v_pts.push_back(Point(slice_box[0].lb(), slice_box[1 + m_current_layer].lb()));
       }
+      
+      return Polygon(v_pts);
     }
 
     void VibesFigure_Tube::drawSlice(const TubeSlice& slice, const vibes::Params& params) const

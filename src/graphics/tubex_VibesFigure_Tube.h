@@ -66,7 +66,7 @@ namespace tubex
     protected:
 
       const ibex::IntervalVector drawTube(const TubeVector *tube, bool detail_slices = false);
-      void computePolygonEnvelope(const TubeVector *tube, std::vector<double>& v_x, std::vector<double>& v_y);
+      const Polygon polygonEnvelope(const TubeVector *tube);
       void drawSlice(const TubeSlice& slice, const vibes::Params& params) const;
       void drawSlice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon) const;
       void drawGate(const ibex::Interval& gate, double t, const vibes::Params& params) const;

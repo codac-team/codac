@@ -7,7 +7,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define VIBES_DRAWING 0
+#define VIBES_DRAWING 1
 
 TEST_CASE("CtcEval")
 {
@@ -925,7 +925,7 @@ TEST_CASE("CtcEval")
     box[1] = Interval(1.);
     ctc_eval.contract(box[0], box[1], x_c, v_c);
 
-    if(false & VIBES_DRAWING) // drawing results
+    if(VIBES_DRAWING) // drawing results
     {
       vibes::beginDrawing();
       VibesFigure_Tube fig_tube("ctceval", &x);
