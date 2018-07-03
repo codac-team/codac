@@ -33,9 +33,13 @@ namespace tubex
     public:
 
       CtcDeriv();
+
+      // TubeVector
       bool contract(TubeVector& x, const TubeVector& v);
       bool contractFwd(TubeVector& x, const TubeVector& v);
       bool contractBwd(TubeVector& x, const TubeVector& v);
+
+      // TubeSlice
       bool contract(TubeSlice& x, const TubeSlice& v);
 
     protected:

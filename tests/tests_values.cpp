@@ -904,7 +904,6 @@ TEST_CASE("Interpol")
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
       VibesFigure_Tube fig_x("test", &x);
-      //fig_x.setProperties(600, 100, 500, 500);
       fig_x.setProperties(100, 100, 1000, 500);
       fig_x.setTubeDerivative(&x, &v);
       fig_x.show(true);
