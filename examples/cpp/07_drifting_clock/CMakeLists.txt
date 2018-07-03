@@ -23,5 +23,5 @@
 # Tests
 
   if(BUILD_TESTS)
-    add_test(NAME ExampleDriftingClock COMMAND ex_drifting_clock 0)
+  #  add_test(NAME ExampleDriftingClock COMMAND ex_drifting_clock 0)
   endif(BUILD_TESTS)

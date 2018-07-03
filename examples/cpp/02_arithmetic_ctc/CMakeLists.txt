@@ -23,5 +23,5 @@
 # Tests
 
   if(BUILD_TESTS)
-    add_test(NAME ExampleArithmeticsCtc COMMAND ex_arithmetic_ctc 0)
+  #  add_test(NAME ExampleArithmeticsCtc COMMAND ex_arithmetic_ctc 0)
   endif(BUILD_TESTS)

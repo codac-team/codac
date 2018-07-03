@@ -23,5 +23,5 @@
 # Tests
 
   if(BUILD_TESTS)
-    add_test(NAME ExampleCausalChain COMMAND ex_causal_chain 0)
+  #  add_test(NAME ExampleCausalChain COMMAND ex_causal_chain 0)
   endif(BUILD_TESTS)

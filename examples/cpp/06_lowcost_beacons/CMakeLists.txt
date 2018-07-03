@@ -23,5 +23,5 @@
 # Tests
 
   if(BUILD_TESTS)
-    add_test(NAME ExampleLowcostBeacons COMMAND ex_lowcost_beacons 0)
+  #  add_test(NAME ExampleLowcostBeacons COMMAND ex_lowcost_beacons 0)
   endif(BUILD_TESTS)

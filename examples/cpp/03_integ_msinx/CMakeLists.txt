@@ -23,5 +23,5 @@
 # Tests
 
   if(BUILD_TESTS)
-    add_test(NAME ExampleIntegMsinx COMMAND ex_integ_msinx 0)
+  #  add_test(NAME ExampleIntegMsinx COMMAND ex_integ_msinx 0)
   endif(BUILD_TESTS)
