@@ -930,7 +930,7 @@ TEST_CASE("Interpol")
   SECTION("Interpolation over a x (other example)")
   {
     Tube x(Interval(0., 26.), Interval(-1.,7.));
-/*
+
     x.set(Interval(2.,3.), 0.);
     x.set(Interval(3.,4.), 4.);
     x.set(Interval(1.), 8.);
@@ -960,7 +960,6 @@ TEST_CASE("Interpol")
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
       VibesFigure_Tube fig_x("test", &x);
-      //fig_x.setProperties(600, 100, 500, 500);
       fig_x.setProperties(100, 100, 1000, 500);
       fig_x.setTubeDerivative(&x, &v);
       fig_x.show(true);
@@ -979,37 +978,98 @@ TEST_CASE("Interpol")
     CHECK(ApproxIntv(box[1]) == Interval(1.9,2.));
     if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
 
-    //#if VIBES_DRAWING // drawing results
-    //  fig_x.show(true);
-    //#endif
+    x = x_raw;
+    v = v_raw;
+    box[0] = Interval(9.,11.8);
+    box[1] = Interval(0.2,0.5);
+    CHECK(ApproxIntv(x.invert(box[1], v, box[0])) == Interval(9.5,11.5));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    ctc_eval.contract(box[0], box[1], x, v);
+    CHECK(x.nbSlices() == 11);
+    CHECK(ApproxIntv(box[0]) == Interval(9.5,11.5));
+    CHECK(ApproxIntv(box[1]) == Interval(0.2,0.5));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
 
     x = x_raw;
     v = v_raw;
-    x.ctcDeriv(v);
-    x.ctcDeriv(v);
-    x.ctcDeriv(v);
-
-    box[0] = Interval(9.,11.8);
-    box[1] = Interval(0.2,0.5);
-
-    CHECK(ApproxIntv(x.invert(box[1], v, box[0])) == Interval(9.5,11.5));
-
+    box[0] = Interval(10.,11.3);
+    box[1] = Interval(-0.2,0.25);
     if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
-cout << "--------" << endl;    ctc_eval.contract(box[0], box[1], x, v);
-
-    CHECK(x.nbSlices() == 11);
-
-
-#if VIBES_DRAWING // drawing results
-      //fig_x.show(true);
-      #endif
-
-/*    CHECK(ApproxIntv(box[0]) == Interval(9.5,11.5));
-    CHECK(ApproxIntv(box[1]) == Interval(1.9,2.125));
+    ctc_eval.contract(box[0], box[1], x, v);
+    CHECK(ApproxIntv(box[0]) == Interval(10.25,11.25));
+    CHECK(ApproxIntv(box[1]) == Interval(0.,0.25));
     if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
 
-    #if VIBES_DRAWING // drawing results
-      vibes::endDrawing();
-    #endif*/
+    x = x_raw;
+    v = v_raw;
+    box[0] = Interval(11.8,12.4);
+    box[1] = Interval(0.6,1.3);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    ctc_eval.contract(box[0], box[1], x, v);
+    CHECK(ApproxIntv(box[0]) == Interval(11.8,12.1+1./30.));
+    CHECK(ApproxIntv(box[1]) == Interval(0.8,1.3));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    x = x_raw;
+    v = v_raw;
+    box[0] = Interval(12.6,13.);
+    box[1] = Interval(1.5,4.5);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    ctc_eval.contract(box[0], box[1], x, v);
+    CHECK(ApproxIntv(box[0]) == Interval(12.6,13.));
+    CHECK(ApproxIntv(box[1]) == Interval(2.35,3.25));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    x = x_raw;
+    v = v_raw;
+    box[0] = Interval(14.2,15.);
+    box[1] = Interval(5.,6.);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    ctc_eval.contract(box[0], box[1], x, v);
+    CHECK(ApproxIntv(box[0]) == Interval(14.2,15.));
+    CHECK(ApproxIntv(box[1]) == Interval(5.5));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    x = x_raw;
+    v = v_raw;
+    box[0] = Interval(13.5,15.5);
+    box[1] = Interval(3.2,6.5);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    ctc_eval.contract(box[0], box[1], x, v);
+    CHECK(ApproxIntv(box[0]) == Interval(13.5,15.5));
+    CHECK(ApproxIntv(box[1]) == Interval(4.375,5.5));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    x = x_raw;
+    v = v_raw;
+    box[0] = Interval(7.8,9.);
+    box[1] = Interval(1.05,1.3);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    ctc_eval.contract(box[0], box[1], x, v);
+    CHECK(ApproxIntv(box[0]) == Interval(7.8,9.));
+    CHECK(ApproxIntv(box[1]) == Interval(1.05,1.3));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    x = x_raw;
+    v = v_raw;
+    box[0] = Interval(16.2,19.5);
+    box[1] = Interval(0.,3.);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    ctc_eval.contract(box[0], box[1], x, v);
+    //CHECK(ApproxIntv(box[0]) == Interval(16.7692,19.2308));
+    CHECK(ApproxIntv(box[1]) == Interval(0.,3.));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    x = x_raw;
+    v = v_raw;
+    box[0] = Interval(0.2,3.);
+    box[1] = Interval(6.,8.);
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
+    ctc_eval.contract(box[0], box[1], x, v);
+    CHECK(ApproxIntv(box[0]) == Interval(0.75,2.+2./3.));
+    CHECK(ApproxIntv(box[1]) == Interval(6.,7.));
+    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
+
+    if(VIBES_DRAWING) vibes::endDrawing();
   }
 }
