@@ -15,6 +15,7 @@
 #include "tubex_StructureException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_DomainException.h"
+#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;
@@ -29,14 +30,24 @@ namespace tubex
 
   bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w) const
   {
+    IntervalVector z_(1, z);
+    bool contraction = contract(t, z_, y, w);
+    z &= z_[0];
+    return contraction;
+  }
+
+  bool CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w) const
+  {
     StructureException::check(y, w);
-    DomainException::check(y, t);
+    DimensionException::check(y, z);
+    DimensionException::check(y, w);
+    StructureException::check(y, w);
 
     if(z.is_empty() || y.isEmpty())
       return false;
 
-    Interval z_ = z;
-    Tube y_ = y;
+    IntervalVector z_ = z;
+    TubeVector y_ = y;
 
     z &= y.interpol(t, w);
     y.set(z, t);
@@ -61,13 +72,24 @@ namespace tubex
 
   bool CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w) const
   {
+    IntervalVector z_(1, z);
+    bool contraction = contract(t, z_, y, w);
+    z &= z_[0];
+    return contraction;
+  }
+
+  bool CtcEval::contract(Interval& t, IntervalVector& z, TubeVector& y, TubeVector& w) const
+  {
     StructureException::check(y, w);
+    DimensionException::check(y, z);
+    DimensionException::check(y, w);
 
     if(t.is_empty() || z.is_empty() || y.isEmpty())
       return false;
 
-    Interval t_ = t, z_ = z;
-    Tube y_ = y;
+    Interval t_ = t;
+    IntervalVector z_ = z;
+    TubeVector y_ = y;
     
     if(t.is_degenerated())
       return contract(t.lb(), z, y, w);
@@ -90,7 +112,7 @@ namespace tubex
         // the same for future comparison
 
         CtcDeriv ctc_deriv;
-        Interval front_gate;
+        IntervalVector front_gate(y.dim());
         list<IntervalVector> l_gates;
         TubeSlice *slice_y;
         TubeSlice *slice_w;
@@ -100,7 +122,7 @@ namespace tubex
           slice_y = y.getSlice(t.lb());
           slice_w = w.getSlice(t.lb());
 
-          front_gate = slice_y->inputGate()[0] & z;
+          front_gate = slice_y->inputGate() & z;
           if(front_gate.is_empty())
           {
             // Mathematically, this case should not happen
@@ -110,20 +132,20 @@ namespace tubex
             // An epsilon inflation is performed to overcome this problem.
             double epsilon = std::numeric_limits<double>::epsilon();
             for(int k = 1 ; front_gate.is_empty() ; k++)
-              front_gate = Interval(slice_y->inputGate()[0]).inflate(epsilon * k) & z;
+              front_gate = IntervalVector(slice_y->inputGate()).inflate(epsilon * k) & z;
           }
 
-          l_gates.push_front(IntervalVector(1, front_gate));
+          l_gates.push_front(front_gate);
 
           while(slice_y != NULL && slice_y->domain().lb() < t.ub())
           {
             // Forward propagation of the evaluation
-            front_gate += slice_y->domain().diam() * slice_w->codomain()[0]; // projection
+            front_gate += slice_y->domain().diam() * slice_w->codomain(); // projection
             front_gate |= z; // evaluation
-            front_gate &= slice_y->outputGate()[0]; // contraction
+            front_gate &= slice_y->outputGate(); // contraction
 
             // Storing temporarily fwd propagation 
-            l_gates.push_front(IntervalVector(1, front_gate));
+            l_gates.push_front(front_gate);
 
             // Iteration
             slice_y = slice_y->nextSlice();
@@ -135,27 +157,27 @@ namespace tubex
           slice_y = y.getSlice(previous_float(t.ub()));
           slice_w = w.getSlice(previous_float(t.ub()));
 
-          front_gate = slice_y->outputGate()[0] & z;
+          front_gate = slice_y->outputGate() & z;
           if(front_gate.is_empty())
           {
             // Epsilon inflation, some remark as before
             double epsilon = std::numeric_limits<double>::epsilon();
             for(int k = 1 ; front_gate.is_empty() ; k++)
-              front_gate = Interval(slice_y->outputGate()[0]).inflate(epsilon * k) & z;
+              front_gate = IntervalVector(slice_y->outputGate()).inflate(epsilon * k) & z;
           }
 
-          slice_y->setOutputGate(l_gates.front() | IntervalVector(1, front_gate));
+          slice_y->setOutputGate(l_gates.front() | front_gate);
 
           while(slice_y != NULL && slice_y->domain().lb() >= t.lb())
           {
             // Backward propagation of the evaluation
-            front_gate -= slice_y->domain().diam() * slice_w->codomain()[0]; // projection
+            front_gate -= slice_y->domain().diam() * slice_w->codomain(); // projection
             front_gate |= z; // evaluation
-            front_gate &= slice_y->inputGate()[0]; // contraction
+            front_gate &= slice_y->inputGate(); // contraction
 
             // Updating tube
             l_gates.pop_front();
-            slice_y->setInputGate(l_gates.front() | IntervalVector(1, front_gate));
+            slice_y->setInputGate(l_gates.front() | front_gate);
             ctc_deriv.contractGates(*slice_y, *slice_w);
 
             // Iteration

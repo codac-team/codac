@@ -28,8 +28,14 @@ namespace tubex
     public:
 
       CtcEval(bool enable_propagation = true);
+
+      // Tube
       bool contract(double t, ibex::Interval& z, Tube& y, Tube& w) const;
       bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w) const;
+
+      // TubeVector
+      bool contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
+      bool contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
 
     protected:
 
