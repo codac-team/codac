@@ -139,23 +139,28 @@ namespace tubex
       StructureException::check(tube_x1, tube_x2); \
       DimensionException::check(tube_x1, tube_x2); \
       Tube new_tube_x(tube_x1); \
-      TubeSlice *slice_x1, *first_slice_x1 = new_tube_x.getFirstSlice(); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
       TubeSlice *slice_x2, *first_slice_x2 = tube_x2.getFirstSlice(); \
+      slice_x = first_slice_x; \
       slice_x1 = first_slice_x1; \
       slice_x2 = first_slice_x2; \
       while(slice_x1 != NULL) \
       { \
-        slice_x1->setEnvelope(IntervalVector(1, ibex::f(slice_x1->codomain()[0], slice_x2->codomain()[0]))); \
+        slice_x->setEnvelope(IntervalVector(1, ibex::f(slice_x1->codomain()[0], slice_x2->codomain()[0]))); \
+        slice_x = slice_x->nextSlice(); \
         slice_x1 = slice_x1->nextSlice(); \
         slice_x2 = slice_x2->nextSlice(); \
       } \
+      slice_x = first_slice_x; \
       slice_x1 = first_slice_x1; \
       slice_x2 = first_slice_x2; \
       while(slice_x1 != NULL) \
       { \
-        if(slice_x1 == first_slice_x1) \
-          slice_x1->setInputGate(IntervalVector(1, ibex::f(slice_x1->inputGate()[0], slice_x2->inputGate()[0]))); \
-        slice_x1->setOutputGate(IntervalVector(1, ibex::f(slice_x1->outputGate()[0], slice_x2->outputGate()[0]))); \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(IntervalVector(1, ibex::f(slice_x1->inputGate()[0], slice_x2->inputGate()[0]))); \
+        slice_x->setOutputGate(IntervalVector(1, ibex::f(slice_x1->outputGate()[0], slice_x2->outputGate()[0]))); \
+        slice_x = slice_x->nextSlice(); \
         slice_x1 = slice_x1->nextSlice(); \
         slice_x2 = slice_x2->nextSlice(); \
       } \
