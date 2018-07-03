@@ -59,77 +59,89 @@ namespace tubex
 
     t &= y.invert(z, w ,t);
 
-    if(t.is_degenerated())
-      return contract(t.lb(), z, y, w);
-    
-    z &= y.interpol(t, w);
-
-    y.set(y.interpol(t.lb(), w), t.lb()); w.sample(t.lb());
-    y.set(y.interpol(t.ub(), w), t.ub()); w.sample(t.ub());
-    // Note: w is also sampled to stay compliant with y
-
-    CtcDeriv ctc_deriv;
-    Interval front_gate;
-    list<IntervalVector> l_gates;
-    TubeSlice *slice_y;
-    const TubeSlice *slice_w;
-
-    // 1. Forward propagation
-
-      slice_y = y.getSlice(t.lb());
-      slice_w = w.getSlice(t.lb());
-      front_gate = slice_y->inputGate()[0] & z;
-      l_gates.push_front(IntervalVector(1, front_gate));
-
-      while(slice_y != NULL && slice_y->domain().lb() < t.ub())
-      {
-        // Forward propagation of the evaluation
-        front_gate += slice_y->domain().diam() * slice_w->codomain()[0]; // projection
-        front_gate |= z; // evaluation
-        front_gate &= slice_y->outputGate()[0]; // contraction
-
-        // Storing temporarily fwd propagation 
-        l_gates.push_front(IntervalVector(1, front_gate));
-
-        // Iteration
-        slice_y = slice_y->nextSlice();
-        slice_w = slice_w->nextSlice();
-      }
-
-    // 2. Backward propagation
-
-      slice_y = y.getSlice(previous_float(t.ub()));
-      slice_w = w.getSlice(previous_float(t.ub()));
-      front_gate = slice_y->outputGate()[0] & z;
-      slice_y->setOutputGate(l_gates.front() | IntervalVector(1, front_gate));
-
-      while(slice_y != NULL && slice_y->domain().lb() >= t.lb())
-      {
-        // Backward propagation of the evaluation
-        front_gate -= slice_y->domain().diam() * slice_w->codomain()[0]; // projection
-        front_gate |= z; // evaluation
-        front_gate &= slice_y->inputGate()[0]; // contraction
-
-        // Updating tube
-        l_gates.pop_front();
-        slice_y->setInputGate(l_gates.front() | IntervalVector(1, front_gate));
-        ctc_deriv.contractGates(*slice_y, *slice_w);
-
-        // Iteration
-        slice_y = slice_y->prevSlice();
-        slice_w = slice_w->prevSlice();
-      }
-
-    // 3. Envelopes contraction
-
-      if(m_propagation_enabled)
-        ctc_deriv.contract(y, w);
-
-    // 4. Evaluation contraction
-
-      t &= y.invert(z, w ,t);
+    if(!t.is_empty())
+    {
+      if(t.is_degenerated())
+        return contract(t.lb(), z, y, w);
+      
       z &= y.interpol(t, w);
-    
+
+      if(!z.is_empty())
+      {
+        y.set(y.interpol(t.lb(), w), t.lb()); w.sample(t.lb());
+        y.set(y.interpol(t.ub(), w), t.ub()); w.sample(t.ub());
+        // Note: w is also sampled to stay compliant with y
+
+        CtcDeriv ctc_deriv;
+        Interval front_gate;
+        list<IntervalVector> l_gates;
+        TubeSlice *slice_y;
+        const TubeSlice *slice_w;
+
+        // 1. Forward propagation
+
+          slice_y = y.getSlice(t.lb());
+          slice_w = w.getSlice(t.lb());
+          front_gate = slice_y->inputGate()[0] & z;
+          l_gates.push_front(IntervalVector(1, front_gate));
+
+          while(slice_y != NULL && slice_y->domain().lb() < t.ub())
+          {
+            // Forward propagation of the evaluation
+            front_gate += slice_y->domain().diam() * slice_w->codomain()[0]; // projection
+            front_gate |= z; // evaluation
+            front_gate &= slice_y->outputGate()[0]; // contraction
+
+            // Storing temporarily fwd propagation 
+            l_gates.push_front(IntervalVector(1, front_gate));
+
+            // Iteration
+            slice_y = slice_y->nextSlice();
+            slice_w = slice_w->nextSlice();
+          }
+
+        // 2. Backward propagation
+
+          slice_y = y.getSlice(previous_float(t.ub()));
+          slice_w = w.getSlice(previous_float(t.ub()));
+          front_gate = slice_y->outputGate()[0] & z;
+          slice_y->setOutputGate(l_gates.front() | IntervalVector(1, front_gate));
+
+          while(slice_y != NULL && slice_y->domain().lb() >= t.lb())
+          {
+            // Backward propagation of the evaluation
+            front_gate -= slice_y->domain().diam() * slice_w->codomain()[0]; // projection
+            front_gate |= z; // evaluation
+            front_gate &= slice_y->inputGate()[0]; // contraction
+
+            // Updating tube
+            l_gates.pop_front();
+            slice_y->setInputGate(l_gates.front() | IntervalVector(1, front_gate));
+            ctc_deriv.contractGates(*slice_y, *slice_w);
+
+            // Iteration
+            slice_y = slice_y->prevSlice();
+            slice_w = slice_w->prevSlice();
+          }
+
+        // 3. Envelopes contraction
+
+          if(m_propagation_enabled)
+            ctc_deriv.contract(y, w);
+
+        // 4. Evaluation contraction
+
+          t &= y.invert(z, w ,t);
+          z &= y.interpol(t, w);
+      }
+    }
+
+    if(t.is_empty() || z.is_empty())
+    {
+      t.set_empty();
+      z.set_empty();
+      y.setEmpty();
+    }
 
   /*
 
