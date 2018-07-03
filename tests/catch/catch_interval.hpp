@@ -22,7 +22,7 @@ namespace Catch
 {
   namespace Detail
   {
-    #define DEFAULT_EPSILON std::numeric_limits<double>::epsilon()*10
+    #define DEFAULT_EPSILON std::numeric_limits<double>::epsilon()*100
 
     class ApproxIntv
     {
@@ -57,7 +57,7 @@ namespace Catch
         std::string toString() const
         {
           std::ostringstream oss;
-          oss << "Approx( " << Catch::toString(m_value) << " )";
+          oss << "ApproxIntv(" << Catch::toString(m_value) << ")";
           return oss.str();
         }
 
@@ -106,7 +106,7 @@ namespace Catch
         std::string toString() const
         {
           std::ostringstream oss;
-          oss << "Approx( " << Catch::toString(m_value) << " )";
+          oss << "ApproxVector(" << Catch::toString(m_value) << ")";
           return oss.str();
         }
 
@@ -151,7 +151,7 @@ namespace Catch
         std::string toString() const
         {
           std::ostringstream oss;
-          oss << "Approx( " << Catch::toString(m_value.first) << "," << Catch::toString(m_value.second) << " )";
+          oss << "ApproxIntvPair(" << Catch::toString(m_value.first) << "," << Catch::toString(m_value.second) << ")";
           return oss.str();
         }
 
