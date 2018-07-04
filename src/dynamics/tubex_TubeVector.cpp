@@ -83,7 +83,7 @@ namespace tubex
       set(codomain);
     }
     
-    TubeVector::TubeVector(const Interval& domain, double timestep, const Function& f)
+    TubeVector::TubeVector(const Interval& domain, double timestep, const Fnc& f)
       : TubeVector(domain, timestep, f.image_dim())
     {
       DomainException::check(domain);
@@ -103,14 +103,14 @@ namespace tubex
       set(codomain);
     }
 
-    TubeVector::TubeVector(const TubeVector& x, const Function& f)
+    TubeVector::TubeVector(const TubeVector& x, const Fnc& f)
       : TubeVector(x)
     {
       DimensionException::check(x, f);
       set(f);
     }
 
-    TubeVector::TubeVector(const Function& f, const TubeVector& x)
+    TubeVector::TubeVector(const Fnc& f, const TubeVector& x)
       : TubeVector(x)
     {
       DimensionException::check(x, f); // todo: test f.input dim = f.output dim
@@ -751,7 +751,7 @@ namespace tubex
       }
     }
 
-    void TubeVector::set(const Function& f)
+    void TubeVector::set(const Fnc& f)
     {
       DimensionException::check(*this, f);
       TubeSlice *slice, *first_slice = getFirstSlice();

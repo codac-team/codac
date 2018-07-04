@@ -28,19 +28,19 @@ namespace tubex
 
   }
   
-  bool CtcPicard::contract_fwd(const Function& f, TubeVector& x)
+  bool CtcPicard::contract_fwd(const Fnc& f, TubeVector& x)
   {
     DimensionException::check(x, f);
     return contract(f, x, true);
   }
   
-  bool CtcPicard::contract_bwd(const Function& f, TubeVector& x)
+  bool CtcPicard::contract_bwd(const Fnc& f, TubeVector& x)
   {
     DimensionException::check(x, f);
     return contract(f, x, false);
   }
   
-  bool CtcPicard::contract(const Function& f, TubeVector& x, bool fwd)
+  bool CtcPicard::contract(const Fnc& f, TubeVector& x, bool fwd)
   {
     DimensionException::check(x, f);
     bool ctc = false;
@@ -103,7 +103,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_fwd(const Function& f, TubeSlice& x)
+  bool CtcPicard::contract_fwd(const Fnc& f, TubeSlice& x)
   {
     DimensionException::check(x, f);
     double h = x.domain().diam();
@@ -114,7 +114,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_bwd(const Function& f, TubeSlice& x)
+  bool CtcPicard::contract_bwd(const Fnc& f, TubeSlice& x)
   {
     DimensionException::check(x, f);
     double h = x.domain().diam();
@@ -130,7 +130,7 @@ namespace tubex
     return m_picard_iterations;
   }
 
-  bool CtcPicard::contract(const Function& f,
+  bool CtcPicard::contract(const Fnc& f,
                            IntervalVector& x,
                            const IntervalVector& x0,
                            double h)
@@ -162,7 +162,7 @@ namespace tubex
   }
 
   const IntervalVector CtcPicard::eval(int order,
-                                       const Function& f,
+                                       const Fnc& f,
                                        const IntervalVector& x,
                                        const IntervalVector& x0,
                                        double h)

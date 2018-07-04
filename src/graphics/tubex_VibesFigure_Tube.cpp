@@ -452,7 +452,7 @@ namespace tubex
         return viewbox;
 
       // Two display modes available:
-      // - one by Function
+      // - one by Fnc
       // - one by map<double,double>
 
       vector<double> v_x, v_y;

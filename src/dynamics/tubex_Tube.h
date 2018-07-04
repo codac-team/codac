@@ -27,10 +27,10 @@ namespace tubex
       // Definition
       Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
-      Tube(const ibex::Interval& domain, double timestep, const ibex::Function& function);
+      Tube(const ibex::Interval& domain, double timestep, const ibex::Fnc& f);
       Tube(const Tube& x);
       Tube(const Tube& x, const ibex::Interval& codomain);
-      Tube(const Tube& x, const ibex::Function& function);
+      Tube(const Tube& x, const ibex::Fnc& f);
       Tube(const Trajectory& traj, double timestep = 0.);
       Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
       Tube(const std::string& binary_file_name);
@@ -80,7 +80,7 @@ namespace tubex
       void set(const ibex::Interval& y, int slice_id);
       void set(const ibex::Interval& y, double t);
       void set(const ibex::Interval& y, const ibex::Interval& t);
-      void set(const ibex::Function& function);
+      void set(const ibex::Fnc& f);
       using TubeVector::setEmpty;
       using TubeVector::inflate;
 

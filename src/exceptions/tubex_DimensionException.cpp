@@ -55,12 +55,12 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  DimensionException::DimensionException(const DynamicalItem& x, const Function& f)
+  DimensionException::DimensionException(const DynamicalItem& x, const Fnc& f)
   {
     ostringstream os;
     os << "objects of different dimension: ";
     os << x.className() << "(" << x.dim() << "), "
-       << "Function(" << f.image_dim() << ")" << endl;
+       << "Fnc(" << f.image_dim() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -112,7 +112,7 @@ namespace tubex
       throw DimensionException(x, box);
   }
 
-  void DimensionException::check(const DynamicalItem& x, const ibex::Function& f)
+  void DimensionException::check(const DynamicalItem& x, const ibex::Fnc& f)
   {
     if(x.dim() != f.image_dim())
       throw DimensionException(x, f);

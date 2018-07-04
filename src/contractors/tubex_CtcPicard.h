@@ -13,6 +13,7 @@
 #ifndef CtcPicard_HEADER
 #define CtcPicard_HEADER
 
+#include "ibex_Fnc.h"
 #include "tubex_Ctc.h"
 #include "tubex_TubeSlice.h"
 
@@ -26,21 +27,21 @@ namespace tubex
     public:
 
       CtcPicard(float delta = 1.1, bool preserve_sampling = false);
-      bool contract_fwd(const ibex::Function& f, TubeVector& x);
-      bool contract_bwd(const ibex::Function& f, TubeVector& x);
-      bool contract(const ibex::Function& f, TubeVector& x, bool fwd = true);
-      bool contract_fwd(const ibex::Function& f, TubeSlice& x);
-      bool contract_bwd(const ibex::Function& f, TubeSlice& x);
+      bool contract_fwd(const ibex::Fnc& f, TubeVector& x);
+      bool contract_bwd(const ibex::Fnc& f, TubeVector& x);
+      bool contract(const ibex::Fnc& f, TubeVector& x, bool fwd = true);
+      bool contract_fwd(const ibex::Fnc& f, TubeSlice& x);
+      bool contract_bwd(const ibex::Fnc& f, TubeSlice& x);
       int picardIterations() const;
 
     protected:
 
-      bool contract(const ibex::Function& f,
+      bool contract(const ibex::Fnc& f,
                     ibex::IntervalVector& x,
                     const ibex::IntervalVector& x0,
                     double h);
       const ibex::IntervalVector eval(int order,
-                                      const ibex::Function& f,
+                                      const ibex::Fnc& f,
                                       const ibex::IntervalVector& x,
                                       const ibex::IntervalVector& x0,
                                       double h);

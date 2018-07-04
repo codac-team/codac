@@ -40,7 +40,7 @@ namespace tubex
       throw Exception("serializeTrajectoryVector()", "ofstream& bin_file not open");
 
     if(traj.getFunction() != NULL)
-      throw Exception("serializeTrajectoryVector()", "Function serialization not implemented");
+      throw Exception("serializeTrajectoryVector()", "Fnc serialization not implemented");
 
     if(traj.getMap().size() == 0)
       throw Exception("serializeTrajectoryVector()", "trajectory not defined");

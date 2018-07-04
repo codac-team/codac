@@ -12,9 +12,48 @@ using namespace tubex;
 #define IVP_PICARD 5
 #define BVP_CP2010 6
 #define DELAY 7
-#define SOLVER_TEST IVP_XMSIN_BWD
+#define SOLVER_TEST DELAY
 
-#if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
+
+#if SOLVER_TEST == DELAY
+  
+  class FncDelay : public Fnc
+  {
+    public: 
+
+      FncDelay() : Fnc(1,1)
+      {
+
+      }
+
+      Interval eval(const IntervalVector& box) const
+      {
+        return box[0];
+      }
+  };
+
+  void contract(TubeVector& x)
+  {
+    float a = 0.5;
+    
+    //FncDelay f;
+    //TubeVector xdot(f, x);
+    ////if(v_x[0].codomain().is_unbounded())
+    //{
+    //  tubex::CtcPicard ctc_picard;
+    //  ctc_picard.contract(f, v_x[0]);
+    //}
+
+    //CtcDelay tube_delay;
+    //Interval intv_a(a);
+    //tube_delay.contract(intv_a, v_x[1], v_x[0]);
+    //v_x[2] &= v_x[1] * exp(intv_a);
+    //v_x[1] &= v_x[2] * log(intv_a);
+    //
+    //v_x[0].ctcFwdBwd(v_x[2]);
+  }
+
+#elif SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
   void contract(TubeVector& x)
   {
@@ -165,28 +204,6 @@ using namespace tubex;
     ctc_deriv.contract(x, TubeVector(f, x));
   }
 
-#elif SOLVER_TEST == DELAY
-      
-  void contract(TubeVector& x)
-  {
-    float a = 0.5;
-
-    /*if(v_x[0].codomain().is_unbounded())
-    {
-      tubex::CtcPicard ctc_picard;
-      Function f("x", "exp(0.5)*x(t-0.5)");
-      ctc_picard.contract(f, v_x[0]);
-    }*/
-
-    //CtcDelay tube_delay;
-    //Interval intv_a(a);
-    //tube_delay.contract(intv_a, v_x[1], v_x[0]);
-    //v_x[2] &= v_x[1] * exp(intv_a);
-    //v_x[1] &= v_x[2] * log(intv_a);
-    //
-    //v_x[0].ctcFwdBwd(v_x[2]);
-  }
-
 #endif
 
 
@@ -252,12 +269,11 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == DELAY
 
-      //Interval domain(0.,10.);
-      //float epsilon = 0.2;
-      //v.push_back(Tube(domain, exp(domain)));
-      //v.push_back(Tube(domain));
-      //v.push_back(Tube(domain));
-      //bool show_details = true;
+      float epsilon = 0.05;
+      Interval domain(0.,1.);
+      TubeVector x(domain, IntervalVector(1, Interval(-99999.,99999.)));
+      x.set(IntervalVector(1, 1.), 0.); // initial condition
+      bool show_details = true;
 
     #endif
 
@@ -305,6 +321,8 @@ int main(int argc, char *argv[])
     #elif SOLVER_TEST == DELAY
 
       fig.setProperties(100,100,700,350);
+      Trajectory truth(domain, Function("t", "exp(t)"));
+      fig.addTrajectory(&truth, "truth", "blue");
 
     #endif
 
