@@ -26,7 +26,7 @@ using namespace tubex;
 
       }
 
-      Interval eval(const IntervalVector& box) const
+      IntervalVector eval_vector(const IntervalVector& box) const
       {
         return box[0];
       }
