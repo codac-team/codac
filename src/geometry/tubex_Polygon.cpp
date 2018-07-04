@@ -85,16 +85,21 @@ namespace tubex
 
   bool Polygon::operator==(const Polygon& p) const
   {
-    if(m_v_vertices.size() != p.m_v_vertices.size())
+    int n = m_v_vertices.size();
+    if(n != p.m_v_vertices.size())
       return false;
 
     int i; // looking for first same elements
-    for(i = 0 ; i < m_v_vertices.size() ; i++)
+    for(i = 0 ; i < n ; i++)
       if(m_v_vertices[0] == p.m_v_vertices[i])
         break;
 
-    for(int j = 0 ; j < m_v_vertices.size() ; j++)
-      if(m_v_vertices[j] != p.m_v_vertices[(j+i) % p.m_v_vertices.size()])
+    int way = 1;
+    if(n > 1)
+      way = (m_v_vertices[1] == p.m_v_vertices[(i+1) % n]) ? 1 : -1;
+
+    for(int j = 0 ; j < n ; j++)
+      if(m_v_vertices[j] != p.m_v_vertices[(i+way*j+n) % n])
         return false;
 
     return true;
@@ -102,16 +107,21 @@ namespace tubex
 
   bool Polygon::operator!=(const Polygon& p) const
   {
-    if(m_v_vertices.size() != p.m_v_vertices.size())
+    int n = m_v_vertices.size();
+    if(n != p.m_v_vertices.size())
       return true;
 
     int i; // looking for first same elements
-    for(i = 0 ; i < m_v_vertices.size() ; i++)
+    for(i = 0 ; i < n ; i++)
       if(m_v_vertices[0] == p.m_v_vertices[i])
         break;
 
-    for(int j = 0 ; j < m_v_vertices.size() ; j++)
-      if(m_v_vertices[j] != p.m_v_vertices[(j+i) % p.m_v_vertices.size()])
+    int way = 1;
+    if(n > 1)
+      way = (m_v_vertices[1] == p.m_v_vertices[(i+1) % n]) ? 1 : -1;
+
+    for(int j = 0 ; j < n ; j++)
+      if(m_v_vertices[j] != p.m_v_vertices[(i+way*j+n) % n])
         return true;
 
     return false;

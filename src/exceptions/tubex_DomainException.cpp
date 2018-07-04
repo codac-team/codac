@@ -45,7 +45,7 @@ namespace tubex
   DomainException::DomainException(const DynamicalItem& x1, const DynamicalItem& x2)
   {
     ostringstream os;
-    os << "variables are not defined over the same domain: "
+    os << "objects are not defined over the same domain: "
        << x1.domain() << "(" << x1.className() << ") != "
        << x2.domain() << "(" << x2.className() << ")" << endl;
     m_what_msg = os.str();

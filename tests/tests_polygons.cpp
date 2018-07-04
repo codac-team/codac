@@ -115,6 +115,34 @@ TEST_CASE("Polygon")
     CHECK(p_result == p);
   }
 
+  SECTION("Polygon from points (comparison)")
+  {
+    vector<Point> v_p;
+    v_p.push_back(Point(-1., -1.));
+    v_p.push_back(Point(-3.5, -3.5));
+    v_p.push_back(Point(1.5, 1.5));
+    v_p.push_back(Point(3., -2.));
+    v_p.push_back(Point(3., 0.));
+    v_p.push_back(Point(0., 3.));
+    v_p.push_back(Point(-1., 2.));
+    Polygon p1(v_p);
+
+    v_p.clear();
+    v_p.push_back(Point(-1., -1.));
+    v_p.push_back(Point(-1., 2.));
+    v_p.push_back(Point(0., 3.));
+    v_p.push_back(Point(3., 0.));
+    v_p.push_back(Point(3., -2.));
+    v_p.push_back(Point(1.5, 1.5));
+    v_p.push_back(Point(-3.5, -3.5));
+    Polygon p2(v_p);
+
+    CHECK(p1 == p2);
+    CHECK(ApproxPolygon(p1) == p2); // testing Approx* class too
+    CHECK_FALSE(p1 != p2);
+    CHECK_FALSE(ApproxPolygon(p1) != p2); // testing Approx* class too
+  }
+
   SECTION("Intersection, line/line")
   {
     CHECK((Edge(Point(0.,0.), Point(0.,0.)) & Edge(Point(0.,0.), Point(5.,0.))) == Point(0.,0.)); // degenerate line, horizontal edge line
@@ -466,5 +494,182 @@ cout << "-------------" << endl;
     box_inter = p & x;
     CHECK(ApproxIntv(box_inter[0]) == Interval(0.5,3.5));
     CHECK(ApproxIntv(box_inter[1]) == Interval(0.5,6.5));*/
+  }
+
+  SECTION("Polygons from TubeSlice, test 1")
+  {
+    TubeSlice x(Interval(-1.,3.), 1); // unbounded
+    x.setInputGate(IntervalVector(1, Interval(-1.,2.)));
+    x.setOutputGate(IntervalVector(1, Interval(-2.,0.)));
+
+    TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.,1.)));
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
+
+    ConvexPolygon p1 = x.polygon(0, v);
+    CHECK(p1.box()[0] == Interval(-1.,3.));
+    CHECK(p1.box()[1] == Interval(-3.5,3.));
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(-1.,-1.));
+    v_pts.push_back(Point(-1.,2.));
+    v_pts.push_back(Point(0.,3.));
+    v_pts.push_back(Point(3.,0.));
+    v_pts.push_back(Point(3.,-2.));
+    v_pts.push_back(Point(1.5,-3.5));
+    ConvexPolygon p2(v_pts);
+
+    CHECK(ApproxPolygon(p1) == p2);
+  }
+
+  SECTION("Polygons from TubeSlice, test 2")
+  {
+    TubeSlice x(Interval(-1.,3.), IntervalVector(1, Interval(-5.,3.)));
+    x.setInputGate(IntervalVector(1, Interval(-1.,3.)));
+    x.setOutputGate(IntervalVector(1, Interval(-5.,0.5)));
+
+    TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.)));
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
+
+    ConvexPolygon p1 = x.polygon(0, v);
+    CHECK(p1.box()[0] == Interval(-1.,3.));
+    CHECK(p1.box()[1] == Interval(-5.,3.));
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(-1.,-1.));
+    v_pts.push_back(Point(-1.,3.));
+    v_pts.push_back(Point(3.,-1.));
+    v_pts.push_back(Point(3.,-5.));
+    v_pts.push_back(Point(-1.,-1.));
+    ConvexPolygon p2(v_pts);
+
+    CHECK(ApproxPolygon(p1) == p2);
+  }
+
+  SECTION("Polygons from TubeSlice, test 3, degenerate case")
+  {
+    TubeSlice x(Interval(-1.,3.), IntervalVector(1, Interval(-5.,3.)));
+    x.setInputGate(IntervalVector(1, Interval(1.,3.)));
+    x.setOutputGate(IntervalVector(1, Interval(-4.,-3.)));
+
+    TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.,1.)));
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
+
+    ConvexPolygon p1 = x.polygon(0, v);
+    CHECK(p1.box()[0] == Interval(-1.,3.));
+    CHECK(p1.box()[1] == Interval(-3.,1.));
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(-1.,1.));
+    v_pts.push_back(Point(3.,-3.));
+    ConvexPolygon p2(v_pts);
+
+    CHECK(ApproxPolygon(p1) == p2);
+  }
+
+  SECTION("Polygons from TubeSlice, test 4")
+  {
+    TubeSlice x(Interval(0.,4.), IntervalVector(1, Interval(-1.,7.)));
+    x.setInputGate(IntervalVector(1, Interval(2.,3.)));
+    x.setOutputGate(IntervalVector(1, Interval(3.,4.)));
+
+    TubeSlice v(Interval(0.,4.), IntervalVector(1, Interval(-1.5,4.)));
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
+
+    ConvexPolygon p1 = x.polygon(0, v);
+    CHECK(p1.box()[0] == Interval(0.,4.));
+    CHECK(p1.box()[1] == Interval(-1.,7.));
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(0.,2.));
+    v_pts.push_back(Point(0.,3.));
+    v_pts.push_back(Point(1.,7.));
+    v_pts.push_back(Point(2.,7.));
+    v_pts.push_back(Point(4.,4.));
+    v_pts.push_back(Point(4.,3.));
+    v_pts.push_back(Point(3.,-1.));
+    v_pts.push_back(Point(2.,-1.));
+    ConvexPolygon p2(v_pts);
+
+    CHECK(ApproxPolygon(p1) == p2);
+  }
+
+  SECTION("Polygons from TubeSlice, test 4")
+  {
+    TubeSlice x(Interval(4.,8.), IntervalVector(1, Interval(-1.,7.)));
+    x.setInputGate(IntervalVector(1, Interval(3.,4.)));
+    x.setOutputGate(IntervalVector(1, Interval(1.)));
+
+    TubeSlice v(Interval(4.,8.), IntervalVector(1, Interval(-0.75,-0.5)));
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
+
+    ConvexPolygon p1 = x.polygon(0, v);
+    CHECK(p1.box()[0] == Interval(4.,8.));
+    CHECK(p1.box()[1] == Interval(1.,4.));
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(4.,3.));
+    v_pts.push_back(Point(4.,4.));
+    v_pts.push_back(Point(8.,1.));
+    ConvexPolygon p2(v_pts);
+
+    CHECK(ApproxPolygon(p1) == p2);
+  }
+
+  SECTION("Polygons from TubeSlice, test 5")
+  {
+    TubeSlice x(Interval(8.,12.), IntervalVector(1, Interval(-1.,7.)));
+    x.setInputGate(IntervalVector(1, Interval(1.)));
+    x.setOutputGate(IntervalVector(1, Interval(1.)));
+
+    TubeSlice v(Interval(8.,12.), IntervalVector(1, Interval(-1./3.,1.)));
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
+
+    ConvexPolygon p1 = x.polygon(0, v);
+    CHECK(p1.box()[0] == Interval(8.,12.));
+    CHECK(ApproxIntv(p1.box()[1]) == Interval(0.,2.));
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(8.,1.));
+    v_pts.push_back(Point(9.,2.));
+    v_pts.push_back(Point(12.,1.));
+    v_pts.push_back(Point(11.,0.));
+    ConvexPolygon p2(v_pts);
+
+    CHECK(ApproxPolygon(p1) == p2);
+  }
+
+  SECTION("Polygons from TubeSlice, test 6")
+  {
+    TubeSlice x(Interval(12.,14.), IntervalVector(1, Interval(-1.,7.)));
+    x.setInputGate(IntervalVector(1, Interval(1.)));
+    x.setOutputGate(IntervalVector(1, Interval(5.5)));
+
+    TubeSlice v(Interval(12.,14.), IntervalVector(1, Interval(4.5)/2.));
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
+
+    ConvexPolygon p1 = x.polygon(0, v);
+    CHECK(p1.box()[0] == Interval(12.,14.));
+    CHECK(ApproxIntv(p1.box()[1]) == Interval(1.,5.5));
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(12.,1.));
+    v_pts.push_back(Point(14,5.5));
+    ConvexPolygon p2(v_pts);
+
+    CHECK(ApproxPolygon(p1) == p2);
   }
 }
