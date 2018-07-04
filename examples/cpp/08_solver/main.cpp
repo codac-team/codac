@@ -12,7 +12,7 @@ using namespace tubex;
 #define IVP_PICARD 5
 #define BVP_CP2010 6
 #define DELAY 7
-#define SOLVER_TEST IVP_XMSIN_FWD
+#define SOLVER_TEST IVP_XMSIN_BWD
 
 #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 

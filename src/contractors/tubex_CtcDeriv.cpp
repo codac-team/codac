@@ -121,7 +121,10 @@ namespace tubex
     DomainException::check(x, v);
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-
+    
+    // todo: remove this:
+    x.setEnvelope(x.codomain() & IntervalVector(x.dim(), Interval(-99999.,99999.)));
+    
     IntervalVector box = x.codomain(), prev_box = box;
     box[i] = x.polygon(i, v).box()[1];
     x.setEnvelope(box);
