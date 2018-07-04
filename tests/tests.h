@@ -1,6 +1,6 @@
 #include "./catch/catch.hpp"
 #include "./catch/catch_interval.hpp"
-#include "tubex.h"
+#include "tubex_Tube.h"
 
 tubex::Tube tubeTest1();
 tubex::Tube tubeTest1_01();

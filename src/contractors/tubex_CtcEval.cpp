@@ -10,6 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
+#include <list>
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_StructureException.h"

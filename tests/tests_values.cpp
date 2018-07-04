@@ -1,4 +1,8 @@
 #include "tests.h"
+#include "tubex_CtcDeriv.h"
+#include "tubex_CtcEval.h"
+#include "tubex_VibesFigure_Tube.h"
+#include "vibes.h"
 
 using namespace Catch;
 using namespace Detail;

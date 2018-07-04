@@ -13,7 +13,8 @@
 #ifndef DynamicalItem_HEADER
 #define DynamicalItem_HEADER
 
-#include "ibex.h"
+#include "ibex_Interval.h"
+#include "ibex_IntervalVector.h"
 
 namespace tubex
 {

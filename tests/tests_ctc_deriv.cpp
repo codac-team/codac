@@ -1,5 +1,6 @@
 #include "tests.h"
 #include <cstdio>
+#include "tubex_CtcDeriv.h"
 
 using namespace Catch;
 using namespace Detail;

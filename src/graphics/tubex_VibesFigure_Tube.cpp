@@ -10,7 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "ibex.h"
+#include "ibex_Interval.h"
+#include "ibex_IntervalVector.h"
 #include "vibes.h"
 #include "tubex_Polygon.h"
 #include "tubex_VibesFigure_Tube.h"

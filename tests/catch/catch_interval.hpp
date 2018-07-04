@@ -16,7 +16,9 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "ibex.h"
+#include "ibex_Interval.h"
+#include "ibex_IntervalVector.h"
+#include "tubex_Point.h"
 #include "tubex_Polygon.h"
 
 namespace Catch

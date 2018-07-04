@@ -1,5 +1,9 @@
 #include "tests.h"
 #include <utility>
+#include "tubex_EmptyException.h"
+#include "tubex_StructureException.h"
+#include "tubex_DomainException.h"
+#include "tubex_DimensionException.h"
 
 using namespace Catch;
 using namespace Detail;

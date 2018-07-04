@@ -19,6 +19,8 @@
 #include "tubex_StructureException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
+#include "ibex_LargestFirst.h"
+#include "ibex_NoBisectableVariableException.h"
 
 using namespace std;
 using namespace ibex;

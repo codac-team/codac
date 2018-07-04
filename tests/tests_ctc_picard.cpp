@@ -1,5 +1,8 @@
 #include "tests.h"
 #include <cstdio>
+#include "tubex_CtcPicard.h"
+#include "tubex_VibesFigure_Tube.h"
+#include "vibes.h"
 
 using namespace Catch;
 using namespace Detail;
