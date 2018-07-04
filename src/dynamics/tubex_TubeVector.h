@@ -14,7 +14,7 @@
 #define TubeVector_HEADER
 
 #include <vector>
-#include "ibex_Fnc.h"
+#include "tubex_Fnc.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_DynamicalItem.h"
@@ -28,6 +28,7 @@
 
 namespace tubex
 {
+  class Fnc;
   class TubeSlice;
   
   class TubeVector : public DynamicalItem
@@ -41,11 +42,10 @@ namespace tubex
       TubeVector(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
       TubeVector(const ibex::Interval& domain, double timestep, int dim = 1);
       TubeVector(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
-      TubeVector(const ibex::Interval& domain, double timestep, const ibex::Fnc& f);
+      TubeVector(const ibex::Interval& domain, double timestep, const Fnc& f);
       TubeVector(const TubeVector& x);
       TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
-      TubeVector(const TubeVector& x, const ibex::Fnc& f);
-      TubeVector(const ibex::Fnc& f, const TubeVector& x);
+      TubeVector(const TubeVector& x, const Fnc& f);
       TubeVector(const TrajectoryVector& traj, double timestep = 0.);
       TubeVector(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep = 0.);
       TubeVector(const std::string& binary_file_name);
@@ -100,7 +100,6 @@ namespace tubex
       void set(const ibex::IntervalVector& y, int slice_id);
       void set(const ibex::IntervalVector& y, double t);
       void set(const ibex::IntervalVector& y, const ibex::Interval& t);
-      void set(const ibex::Fnc& f);
       void setEmpty();
       TubeVector& inflate(double rad);
 

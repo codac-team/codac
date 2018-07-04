@@ -28,21 +28,21 @@ namespace tubex
 
   }
   
-  bool CtcPicard::contract_fwd(const Fnc& f, TubeVector& x)
+  bool CtcPicard::contract_fwd(const ibex::Fnc& f, TubeVector& x)
   {
-    DimensionException::check(x, f);
+    // todo: DimensionException::check(x, f);
     return contract(f, x, true);
   }
   
-  bool CtcPicard::contract_bwd(const Fnc& f, TubeVector& x)
+  bool CtcPicard::contract_bwd(const ibex::Fnc& f, TubeVector& x)
   {
-    DimensionException::check(x, f);
+    // todo: DimensionException::check(x, f);
     return contract(f, x, false);
   }
   
-  bool CtcPicard::contract(const Fnc& f, TubeVector& x, bool fwd)
+  bool CtcPicard::contract(const ibex::Fnc& f, TubeVector& x, bool fwd)
   {
-    DimensionException::check(x, f);
+    // todo: DimensionException::check(x, f);
     bool ctc = false;
     TubeVector *x_ptr;
 
@@ -103,9 +103,9 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_fwd(const Fnc& f, TubeSlice& x)
+  bool CtcPicard::contract_fwd(const ibex::Fnc& f, TubeSlice& x)
   {
-    DimensionException::check(x, f);
+    // todo: DimensionException::check(x, f);
     double h = x.domain().diam();
     IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate();
     bool ctc = contract(f, intv_x, intv_x0, h);
@@ -114,9 +114,9 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_bwd(const Fnc& f, TubeSlice& x)
+  bool CtcPicard::contract_bwd(const ibex::Fnc& f, TubeSlice& x)
   {
-    DimensionException::check(x, f);
+    // todo: DimensionException::check(x, f);
     double h = x.domain().diam();
     IntervalVector intv_x = x.codomain(), intv_xf = x.outputGate();
     bool ctc = contract(f, intv_x, intv_xf, -h);
@@ -130,7 +130,7 @@ namespace tubex
     return m_picard_iterations;
   }
 
-  bool CtcPicard::contract(const Fnc& f,
+  bool CtcPicard::contract(const ibex::Fnc& f,
                            IntervalVector& x,
                            const IntervalVector& x0,
                            double h)
@@ -162,7 +162,7 @@ namespace tubex
   }
 
   const IntervalVector CtcPicard::eval(int order,
-                                       const Fnc& f,
+                                       const ibex::Fnc& f,
                                        const IntervalVector& x,
                                        const IntervalVector& x0,
                                        double h)

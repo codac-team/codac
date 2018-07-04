@@ -17,6 +17,8 @@
 
 namespace tubex
 {
+  class TubeVector;
+  
   class Fnc
   {
     public:
@@ -28,7 +30,7 @@ namespace tubex
       int nbVar() const;
       int imageDim() const;
 
-      virtual TubeVector eval(const TubeVector& x) const = 0;
+      virtual TubeVector eval_vector(const TubeVector& x) const = 0;
 
     protected:
 

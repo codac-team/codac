@@ -57,11 +57,11 @@ namespace tubex
 
   DimensionException::DimensionException(const DynamicalItem& x, const Fnc& f)
   {
-    ostringstream os;
-    os << "objects of different dimension: ";
-    os << x.className() << "(" << x.dim() << "), "
-       << "Fnc(" << f.image_dim() << ")" << endl;
-    m_what_msg = os.str();
+    // todo: ostringstream os;
+    // todo: os << "objects of different dimension: ";
+    // todo: os << x.className() << "(" << x.dim() << "), "
+    // todo:    << "Fnc(" << f.image_dim() << ")" << endl;
+    // todo: m_what_msg = os.str();
   }
 
   DimensionException::DimensionException(const DynamicalItem& x1, const DynamicalItem& x2)
@@ -84,8 +84,8 @@ namespace tubex
 
   void DimensionException::check(int dim)
   {
-    if(dim < 1)
-      throw DimensionException(dim);
+    // todo: check if(dim < 1)
+    // todo: check   throw DimensionException(dim);
   }
 
   void DimensionException::checkScalar(int dim)
@@ -112,10 +112,10 @@ namespace tubex
       throw DimensionException(x, box);
   }
 
-  void DimensionException::check(const DynamicalItem& x, const ibex::Fnc& f)
+  void DimensionException::check(const DynamicalItem& x, const Fnc& f)
   {
-    if(x.dim() != f.image_dim())
-      throw DimensionException(x, f);
+    // todo: if(x.dim() != f.image_dim())
+    // todo:   throw DimensionException(x, f);
   }
 
   void DimensionException::check(const DynamicalItem& x1, const DynamicalItem& x2)

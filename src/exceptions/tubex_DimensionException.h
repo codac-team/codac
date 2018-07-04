@@ -33,7 +33,7 @@ namespace tubex
       DimensionException(const ibex::Vector& x1, const ibex::Vector& x2);
       DimensionException(const DynamicalItem& x, int i);
       DimensionException(const DynamicalItem& x, const ibex::IntervalVector& box);
-      DimensionException(const DynamicalItem& x, const ibex::Fnc& f);
+      DimensionException(const DynamicalItem& x, const Fnc& f);
       DimensionException(const DynamicalItem& x1, const DynamicalItem& x2);
       DimensionException(const VibesFigure_Tube& fig, const DynamicalItem& x);
 
@@ -42,7 +42,7 @@ namespace tubex
       static void check(const ibex::Vector& x1, const ibex::Vector& x2);
       static void check(const DynamicalItem& x, int i);
       static void check(const DynamicalItem& x, const ibex::IntervalVector& box);
-      static void check(const DynamicalItem& x, const ibex::Fnc& f);
+      static void check(const DynamicalItem& x, const Fnc& f);
       static void check(const DynamicalItem& x1, const DynamicalItem& x2);
       static void check(const VibesFigure_Tube& fig, const DynamicalItem& x);
   };

@@ -37,11 +37,11 @@ namespace tubex
     delete m_ibex_f;
   }
 
-  TubeVector Function::eval(const TubeVector& x) const
+  TubeVector Function::eval_vector(const TubeVector& x) const
   {
     // todo: check dim x
     IntervalVector box(nbVar() + 1); // +1 for system variable (t)
-    TubeVector y(x, IntervalVector(1, Interval::ALL_REALS));
+    TubeVector y(x, IntervalVector(imageDim(), Interval::ALL_REALS));
 
     TubeSlice *x_slice = x.getFirstSlice();
     TubeSlice *y_slice = y.getFirstSlice();
@@ -50,12 +50,14 @@ namespace tubex
     {
       // Input gate
       box[0] = x_slice->domain().lb();
-      box.put(1, x_slice->inputGate());
+      if(nbVar() != 0)
+        box.put(1, x_slice->inputGate());
       y_slice->setInputGate(m_ibex_f->eval_vector(box));
       
       // Envelope
       box[0] = x_slice->domain();
-      box.put(1, x_slice->codomain());
+      if(nbVar() != 0)
+        box.put(1, x_slice->codomain());
       y_slice->setEnvelope(m_ibex_f->eval_vector(box));
 
       x_slice = x_slice->nextSlice();
@@ -67,7 +69,8 @@ namespace tubex
 
     // Output gate
     box[0] = x_slice->domain().ub();
-    box.put(1, x_slice->outputGate());
+    if(nbVar() != 0)
+        box.put(1, x_slice->outputGate());
     y_slice->setOutputGate(m_ibex_f->eval_vector(box));
 
     return y;

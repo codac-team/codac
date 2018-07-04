@@ -39,7 +39,7 @@ namespace tubex
     Tube::Tube(const Interval& domain, double timestep, const Fnc& f)
       : TubeVector(domain, timestep, f)
     {
-      DimensionException::checkScalar(f.image_dim());
+      DimensionException::checkScalar(f.imageDim());
     }
 
     Tube::Tube(const Tube& x)
@@ -57,7 +57,7 @@ namespace tubex
     Tube::Tube(const Tube& x, const Fnc& f)
       : TubeVector(x, f)
     {
-      DimensionException::checkScalar(f.image_dim());
+      DimensionException::checkScalar(f.imageDim());
     }
 
     Tube::Tube(const Trajectory& traj, double timestep)
@@ -229,11 +229,6 @@ namespace tubex
     void Tube::set(const Interval& y, const Interval& t)
     {
       TubeVector::set(IntervalVector(1, y), t);
-    }
-
-    void Tube::set(const Fnc& function)
-    {
-      TubeVector::set(function);
     }
 
     // Bisection

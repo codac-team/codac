@@ -1,5 +1,6 @@
 #include "tests.h"
 #include <cstdio>
+#include "tubex_Function.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_VibesFigure_Tube.h"
@@ -909,8 +910,8 @@ TEST_CASE("CtcEval")
 
   SECTION("Test CtcEval, multi eval")
   {
-    Function f_x("t", "cos(t)+t*[-0.1,0.2]");
-    Function f_v("t", "-sin(t)+[-0.1,0.2]");
+    tubex::Function f_x("cos(t)+t*[-0.1,0.2]");
+    tubex::Function f_v("-sin(t)+[-0.1,0.2]");
 
     Tube x(Interval(0.,20.), 0.1, f_x);
     Tube v(Interval(0.,20.), 0.1, f_v);

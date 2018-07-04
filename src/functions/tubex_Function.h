@@ -26,7 +26,7 @@ namespace tubex
       Function(const char* x1, const char* y);
       ~Function();
 
-      TubeVector eval(const TubeVector& x) const;
+      TubeVector eval_vector(const TubeVector& x) const;
 
     protected:
 

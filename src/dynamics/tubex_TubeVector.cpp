@@ -86,11 +86,12 @@ namespace tubex
     }
     
     TubeVector::TubeVector(const Interval& domain, double timestep, const Fnc& f)
-      : TubeVector(domain, timestep, f.image_dim())
+      : TubeVector(domain, timestep, f.nbVar())
     {
       DomainException::check(domain);
       DomainException::check(timestep);
-      set(f);
+      // todo: check nb of input args (one only)
+      *this = f.eval_vector(*this);
     }
 
     TubeVector::TubeVector(const TubeVector& x)
@@ -106,30 +107,11 @@ namespace tubex
     }
 
     TubeVector::TubeVector(const TubeVector& x, const Fnc& f)
-      : TubeVector(x)
+      : TubeVector(x.domain(), f.imageDim())
     {
       DimensionException::check(x, f);
-      set(f);
-    }
-
-    TubeVector::TubeVector(const Fnc& f, const TubeVector& x)
-      : TubeVector(x)
-    {
-      DimensionException::check(x, f); // todo: test f.input dim = f.output dim
-
-      TubeSlice *slice = getFirstSlice();
-      while(slice != NULL)
-      {
-        IntervalVector codomain = slice->inputGate();
-        slice->setInputGate(f.eval_vector(codomain));
-        codomain = slice->codomain();
-        slice->setEnvelope(f.eval_vector(codomain));
-        slice = slice->nextSlice();
-      }
-
-      slice = getLastSlice();
-      IntervalVector codomain = slice->outputGate();
-      slice->setOutputGate(f.eval_vector(codomain));
+      // todo: check nb of input args (one only)
+      *this = f.eval_vector(x);
     }
 
     TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)
@@ -750,32 +732,6 @@ namespace tubex
           slice->set(y);
           slice = slice->nextSlice();
         }
-      }
-    }
-
-    void TubeVector::set(const Fnc& f)
-    {
-      DimensionException::check(*this, f);
-      TubeSlice *slice, *first_slice = getFirstSlice();
-
-      // Setting envelopes
-      slice = first_slice;
-      while(slice != NULL)
-      {
-        IntervalVector iv_domain(1, slice->domain());
-        slice->setEnvelope(f.eval_vector(iv_domain));
-        slice = slice->nextSlice();
-      }
-
-      // Setting gates
-      slice = first_slice;
-      while(slice != NULL)
-      {
-        IntervalVector iv_domain_input(1, slice->domain().lb());
-        slice->setInputGate(f.eval_vector(iv_domain_input));
-        IntervalVector iv_domain_output(1, slice->domain().ub());
-        slice->setOutputGate(f.eval_vector(iv_domain_output));
-        slice = slice->nextSlice();
       }
     }
 
