@@ -21,7 +21,18 @@ namespace tubex
   {
     public:
 
-      
+      Fnc();
+      Fnc(int n, int m);
+      ~Fnc();
+
+      int nbVar() const;
+      int imageDim() const;
+
+      virtual TubeVector eval(const TubeVector& x) const = 0;
+
+    protected:
+
+      int m_nb_vars = -1, m_img_dim = -1;
   };
 }
 

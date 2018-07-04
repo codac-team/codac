@@ -13,6 +13,7 @@
 #ifndef Function_HEADER
 #define Function_HEADER
 
+#include "ibex_Function.h"
 #include "tubex_Fnc.h"
 
 namespace tubex
@@ -21,6 +22,15 @@ namespace tubex
   {
     public:
 
+      Function(const char* y);
+      Function(const char* x1, const char* y);
+      ~Function();
+
+      TubeVector eval(const TubeVector& x) const;
+
+    protected:
+
+      ibex::Function *m_ibex_f;
   };
 }
 

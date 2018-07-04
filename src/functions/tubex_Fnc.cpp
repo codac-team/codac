@@ -13,9 +13,32 @@
 #include "tubex_Fnc.h"
 
 using namespace std;
-using namespace ibex;
+//using namespace ibex;
 
 namespace tubex
 {
-  
+  Fnc::Fnc()
+  {
+
+  }
+
+  Fnc::Fnc(int n, int m) : m_nb_vars(n), m_img_dim(m)
+  {
+
+  }
+
+  Fnc::~Fnc()
+  {
+
+  }
+
+  int Fnc::nbVar() const
+  {
+    return m_nb_vars;
+  }
+
+  int Fnc::imageDim() const
+  {
+    return m_img_dim;
+  }
 }
