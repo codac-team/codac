@@ -136,15 +136,15 @@ TEST_CASE("Tube definition")
   SECTION("Tube class - Function")
   {
     Tube tube1(Interval(-1.,10.), 0.01, tubex::Function("t^2"));
-    Trajectory traj1_inside(Interval(-1.,10.), ibex::Function("t", "t^2"));
-    Trajectory traj1_outside(Interval(-1.,10.), ibex::Function("t", "t^2+2"));
+    Trajectory traj1_inside(Interval(-1.,10.), tubex::Function("t^2"));
+    Trajectory traj1_outside(Interval(-1.,10.), tubex::Function("t^2+2"));
 
     CHECK(tube1.encloses(traj1_inside));
     CHECK_FALSE(tube1.encloses(traj1_outside));
 
     Tube tube2(Interval(-1.,10.), 0.01, tubex::Function("t^2+[-1,1]"));
-    Trajectory traj3_lb(Interval(-1.,10.), ibex::Function("t", "(t^2)-1"));
-    Trajectory traj3_ub(Interval(-1.,10.), ibex::Function("t", "(t^2)+1"));
+    Trajectory traj3_lb(Interval(-1.,10.), tubex::Function("(t^2)-1"));
+    Trajectory traj3_ub(Interval(-1.,10.), tubex::Function("(t^2)+1"));
     Tube tube3(traj3_lb, traj3_ub, 0.01);
     CHECK(tube2.nbSlices() == tube3.nbSlices());
     CHECK(tube2.domain() == tube3.domain());
@@ -167,8 +167,8 @@ TEST_CASE("Tube definition")
 
   SECTION("Tube class - 2 Trajectory")
   {
-    Trajectory traj_lb(Interval(-1.,10.), ibex::Function("t", "t^2"));
-    Trajectory traj_ub(Interval(-1.,10.), ibex::Function("t", "t^2-2"));
+    Trajectory traj_lb(Interval(-1.,10.), tubex::Function("t^2"));
+    Trajectory traj_ub(Interval(-1.,10.), tubex::Function("t^2-2"));
     
     Tube tube_1slice(traj_lb, traj_ub);
     CHECK(tube_1slice.nbSlices() == 1);
@@ -188,8 +188,8 @@ TEST_CASE("Tube definition")
 
   SECTION("Tube class - 1 Trajectory")
   {
-    Trajectory traj1(Interval(0.,1.1), ibex::Function("t", "(t^2)*(-3+t*(1+2*(t^2)))"));
-    Trajectory traj2(Interval(0.,1.1), ibex::Function("t", "2*(t^5)+(t^3)-3*(t^2)"));
+    Trajectory traj1(Interval(0.,1.1), tubex::Function("(t^2)*(-3+t*(1+2*(t^2)))"));
+    Trajectory traj2(Interval(0.,1.1), tubex::Function("2*(t^5)+(t^3)-3*(t^2)"));
     
     Tube tube0(Interval(0.,1.1), 0.1, Interval::EMPTY_SET);
     CHECK(tube0.nbSlices() == 12);

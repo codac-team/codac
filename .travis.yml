@@ -49,4 +49,4 @@ script:
   #- make
   - ./build.sh
   - cd make
-  #- make test
+  - make test

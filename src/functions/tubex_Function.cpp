@@ -18,18 +18,22 @@ using namespace ibex;
 namespace tubex
 {
   Function::Function(const char* y)
+    : tubex::Fnc(0, 1)
   {
     m_ibex_f = new ibex::Function("t", y);
-    m_nb_vars = m_ibex_f->nb_var() - 1;
-    m_img_dim = m_ibex_f->image_dim();
   }
 
   Function::Function(const char* x1, const char* y)
+    : tubex::Fnc(1, 1)
   {
     m_ibex_f = new ibex::Function("t", x1, y);
-    m_nb_vars = m_ibex_f->nb_var() - 1;
-    m_img_dim = m_ibex_f->image_dim();
     // todo: check x1!="t"
+  }
+
+  Function::Function(const tubex::Function& f)
+    : tubex::Fnc(f.nbVars(), f.imageDim())
+  {
+    m_ibex_f = new ibex::Function(*f.m_ibex_f);
   }
 
   Function::~Function()
@@ -37,7 +41,17 @@ namespace tubex
     delete m_ibex_f;
   }
 
-  TubeVector Function::eval_vector(const TubeVector& x) const
+  IntervalVector Function::eval(const Interval& t, const IntervalVector& x) const
+  {
+    // todo: check dim x regarding f
+    IntervalVector box(nbVars() + 1); // +1 for system variable (t)
+    box[0] = t;
+    if(nbVars() != 0)
+      box.put(1, x);
+    return m_ibex_f->eval_vector(box);
+  }
+
+  TubeVector Function::eval(const TubeVector& x) const
   {
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
     IntervalVector box(nbVars() + 1); // +1 for system variable (t)
@@ -48,17 +62,8 @@ namespace tubex
 
     while(x_slice != NULL)
     {
-      // Input gate
-      box[0] = x_slice->domain().lb();
-      if(nbVars() != 0)
-        box.put(1, x_slice->inputGate());
-      y_slice->setInputGate(m_ibex_f->eval_vector(box));
-      
-      // Envelope
-      box[0] = x_slice->domain();
-      if(nbVars() != 0)
-        box.put(1, x_slice->codomain());
-      y_slice->setEnvelope(m_ibex_f->eval_vector(box));
+      y_slice->setInputGate(eval(x_slice->domain().lb(), x_slice->inputGate()));
+      y_slice->setEnvelope(eval(x_slice->domain(), x_slice->codomain()));
 
       x_slice = x_slice->nextSlice();
       y_slice = y_slice->nextSlice();
@@ -66,12 +71,7 @@ namespace tubex
 
     x_slice = x.getLastSlice();
     y_slice = y.getLastSlice();
-
-    // Output gate
-    box[0] = x_slice->domain().ub();
-    if(nbVars() != 0)
-        box.put(1, x_slice->outputGate());
-    y_slice->setOutputGate(m_ibex_f->eval_vector(box));
+    y_slice->setOutputGate(eval(x_slice->domain().ub(), x_slice->outputGate()));
 
     return y;
   }

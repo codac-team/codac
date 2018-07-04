@@ -27,10 +27,10 @@ namespace tubex
     
   }
 
-  Trajectory::Trajectory(const Interval& domain, const Function& f)
+  Trajectory::Trajectory(const Interval& domain, const tubex::Function& f)
     : TrajectoryVector(domain, f)
   {
-    DimensionException::checkScalar(f.image_dim());
+    DimensionException::checkScalar(f.imageDim());
   }
 
   Trajectory::Trajectory(const map<double,double>& map_values)
@@ -100,7 +100,7 @@ namespace tubex
     str << "Trajectory " << x.domain() << "↦" << x.codomain();
 
     if(x.m_function != NULL)
-      str << " (" << x.m_function->minibex() << ")";
+      str << " (Fnc object)";
 
     else if(!x.m_map_values.empty())
     {

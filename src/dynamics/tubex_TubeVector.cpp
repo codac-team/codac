@@ -91,7 +91,7 @@ namespace tubex
       DomainException::check(domain);
       DomainException::check(timestep);
       // todo: check nb of input args (one only)
-      *this = f.eval_vector(TubeVector(*this, IntervalVector(1)));
+      *this = f.eval(TubeVector(*this, IntervalVector(1)));
     }
 
     TubeVector::TubeVector(const TubeVector& x)

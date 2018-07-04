@@ -32,12 +32,11 @@ namespace tubex
     *this = traj;
   }
 
-  TrajectoryVector::TrajectoryVector(const Interval& domain, const Function& f)
-    : m_domain(domain), m_function(new Function(f))
+  TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f)
+    : m_domain(domain), m_function(new tubex::Function(f))
   {
     DomainException::check(domain);
-    IntervalVector box(1, domain);
-    m_codomain = m_function->eval_vector(box);
+    m_codomain = m_function->eval(domain);
   }
 
   TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)
@@ -68,7 +67,7 @@ namespace tubex
       m_function = NULL;
 
     else
-      m_function = new Function(*x.m_function);
+      m_function = new tubex::Function(*x.m_function);
 
     m_map_values = x.m_map_values;
     return *this;
@@ -77,7 +76,7 @@ namespace tubex
   int TrajectoryVector::dim() const
   {
     if(m_function != NULL)
-      return m_function->image_dim();
+      return m_function->imageDim();
 
     else if(m_map_values.size() == 0)
       return 0;
@@ -93,7 +92,7 @@ namespace tubex
     return m_map_values;
   }
 
-  const Function* TrajectoryVector::getFunction() const
+  const tubex::Function* TrajectoryVector::getFunction() const
   {
     return m_function;
   }
@@ -118,10 +117,7 @@ namespace tubex
     DomainException::check(*this, t);
 
     if(m_function != NULL)
-    {
-      IntervalVector box(1, Interval(t));
-      return m_function->eval_vector(box).mid();
-    }
+      return m_function->eval(t).mid();
 
     else if(m_map_values.find(t) != m_map_values.end())
       return m_map_values.at(t); // key exists
@@ -153,10 +149,7 @@ namespace tubex
       return m_codomain;
 
     else if(m_function != NULL)
-    {
-      IntervalVector box(1, Interval(t));
-      return m_function->eval_vector(box);
-    }
+      return m_function->eval(t);
 
     else
     {
@@ -266,7 +259,7 @@ namespace tubex
     str << "TrajectoryVector " << x.domain() << "↦" << x.codomain();
 
     if(x.m_function != NULL)
-      str << " (" << x.m_function->minibex() << ")";
+      str << " (Fnc object)";
 
     else if(!x.m_map_values.empty())
     {

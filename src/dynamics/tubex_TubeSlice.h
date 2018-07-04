@@ -21,6 +21,7 @@
 namespace tubex
 {
   class TubeVector;
+  class TrajectoryVector;
 
   class TubeSlice : public DynamicalItem
   {

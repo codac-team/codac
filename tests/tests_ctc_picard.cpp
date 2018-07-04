@@ -20,7 +20,7 @@ TEST_CASE("CtcPicard")
     TubeSlice x(domain, 1);
     x.setInputGate(IntervalVector(1, Interval(1.)));
 
-    Function f("x", "x");
+    ibex::Function f("x", "x");
     CtcPicard ctc_picard(1.1);
 
     CHECK(x.codomain()[0] == Interval::ALL_REALS);
@@ -39,7 +39,7 @@ TEST_CASE("CtcPicard")
     x.setInputGate(condition);
 
     Variable var_x, var_y;
-    Function f(var_x, var_y, Return(var_x,var_y));
+    ibex::Function f(var_x, var_y, Return(var_x,var_y));
     CtcPicard ctc_picard;
 
     CHECK(x.codomain() == IntervalVector(2, Interval::ALL_REALS));
@@ -58,7 +58,7 @@ TEST_CASE("CtcPicard")
 
     TubeVector x_auto_sampling(x_preserve_sampling);
 
-    Function f("x", "-x");
+    ibex::Function f("x", "-x");
     CtcPicard ctc_picard_preserve(1.1, true);
     CtcPicard ctc_picard_auto(1.1, false);
 
@@ -95,7 +95,7 @@ TEST_CASE("CtcPicard")
     x.set(condition, 0.);
 
     Variable var_x, var_y;
-    Function f(var_x, var_y, Return(-var_x, -var_y));
+    ibex::Function f(var_x, var_y, Return(-var_x, -var_y));
     CtcPicard ctc_picard(1.1, false);
     ctc_picard.contract(f, x);
     
@@ -122,7 +122,7 @@ TEST_CASE("CtcPicard")
     IntervalVector condition(1, Interval(1.));
     x.set(condition, 1.);
 
-    Function f("x", "-x");
+    ibex::Function f("x", "-x");
     CtcPicard ctc_picard(1.1, false);
 
     ctc_picard.contract_bwd(f, x);

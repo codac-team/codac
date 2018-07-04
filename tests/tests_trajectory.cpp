@@ -70,7 +70,7 @@ TEST_CASE("Trajectory base")
     CHECK(ApproxIntv(traj1.domain()) == Interval(0.,5.));
     CHECK(ApproxIntv(traj1.codomain()) == Interval(0.,5.));
 
-    Trajectory traj2(Interval(-1.,10.), Function("t", "t^2"));
+    Trajectory traj2(Interval(-1.,10.), tubex::Function("t^2"));
     CHECK(traj2.domain() == Interval(-1.,10.));
     CHECK(traj2.codomain() == Interval(0.,100.));
     CHECK(Approx(traj2[5.3]) == 28.09);
@@ -126,8 +126,8 @@ TEST_CASE("Trajectory base")
     CHECK_FALSE(traj3 != traj4);
 
     // Defined by a Function object
-    Trajectory traj5(Interval(0.,10.), Function("t", "t^2"));
-    Trajectory traj6(Interval(0.,10.), Function("t", "t^2+1"));
+    Trajectory traj5(Interval(0.,10.), tubex::Function("t^2"));
+    Trajectory traj6(Interval(0.,10.), tubex::Function("t^2+1"));
     CHECK_THROWS(traj5 == traj6); // not implemented yet
     CHECK_THROWS(traj5 != traj6); // not implemented yet
   }

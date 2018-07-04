@@ -13,8 +13,6 @@
 #ifndef Fnc_HEADER
 #define Fnc_HEADER
 
-#include "tubex_TubeVector.h"
-
 namespace tubex
 {
   class TubeVector;
@@ -30,7 +28,7 @@ namespace tubex
       int nbVars() const;
       int imageDim() const;
 
-      virtual TubeVector eval_vector(const TubeVector& x) const = 0;
+      virtual TubeVector eval(const TubeVector& x) const = 0;
 
     protected:
 

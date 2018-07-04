@@ -13,7 +13,6 @@
 #include "tubex_Fnc.h"
 
 using namespace std;
-using namespace ibex;
 
 namespace tubex
 {
