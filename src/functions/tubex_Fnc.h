@@ -27,7 +27,7 @@ namespace tubex
       Fnc(int n, int m);
       ~Fnc();
 
-      int nbVar() const;
+      int nbVars() const;
       int imageDim() const;
 
       virtual TubeVector eval_vector(const TubeVector& x) const = 0;

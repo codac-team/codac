@@ -85,13 +85,13 @@ namespace tubex
       set(codomain);
     }
     
-    TubeVector::TubeVector(const Interval& domain, double timestep, const Fnc& f)
-      : TubeVector(domain, timestep, f.nbVar())
+    TubeVector::TubeVector(const Interval& domain, double timestep, const tubex::Fnc& f)
+      : TubeVector(domain, timestep, f.imageDim())
     {
       DomainException::check(domain);
       DomainException::check(timestep);
       // todo: check nb of input args (one only)
-      *this = f.eval_vector(*this);
+      *this = f.eval_vector(TubeVector(*this, IntervalVector(1)));
     }
 
     TubeVector::TubeVector(const TubeVector& x)
@@ -104,14 +104,6 @@ namespace tubex
     {
       DimensionException::check(x, codomain);
       set(codomain);
-    }
-
-    TubeVector::TubeVector(const TubeVector& x, const Fnc& f)
-      : TubeVector(x.domain(), f.imageDim())
-    {
-      DimensionException::check(x, f);
-      // todo: check nb of input args (one only)
-      *this = f.eval_vector(x);
     }
 
     TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)

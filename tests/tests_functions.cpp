@@ -14,7 +14,7 @@ TEST_CASE("Functions")
 {
   SECTION("Test 1")
   {
-    /*TubeVector x(Interval(0.,10.), 0.01, tubex::Function("sin(t)+[-0.01,0.01]"));
+    TubeVector x(Interval(0.,10.), 0.01, tubex::Function("sin(t)+[-0.01,0.01]"));
     tubex::Function f("x", "t/10.+x");
     TubeVector y1(f.eval_vector(x));
     TubeVector y2(Interval(0.,10.), 0.01, tubex::Function("t/10.+sin(t)+[-0.01,0.01]"));
@@ -37,6 +37,6 @@ TEST_CASE("Functions")
       fig_tube_y2.show(true);
 
       vibes::endDrawing();
-    }*/
+    }
   }
 }

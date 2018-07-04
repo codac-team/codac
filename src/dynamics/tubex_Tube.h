@@ -30,7 +30,6 @@ namespace tubex
       Tube(const ibex::Interval& domain, double timestep, const Fnc& f);
       Tube(const Tube& x);
       Tube(const Tube& x, const ibex::Interval& codomain);
-      Tube(const Tube& x, const Fnc& f);
       Tube(const Trajectory& traj, double timestep = 0.);
       Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
       Tube(const std::string& binary_file_name);

@@ -791,7 +791,7 @@ TEST_CASE("Interpol")
     CHECK(x.interpol(Interval(4.1,4.9), v) == Interval(3.55,4.25));
 
     if(VIBES_DRAWING) vibes::beginDrawing();
-/*
+
     x = x_raw;
     v = v_raw;
     box[0] = Interval(0.25,0.75);
@@ -801,7 +801,7 @@ TEST_CASE("Interpol")
     CHECK(box[0] == Interval(0.25,0.75));
     CHECK(box[1] == Interval(0.5,1.5));
     if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
-*/
+
     x = x_raw;
     v = v_raw;
     box[0] = Interval(-1.,6.);
@@ -812,7 +812,7 @@ TEST_CASE("Interpol")
     CHECK(box[1] == Interval(0.,4.25));
     CHECK(x == x_raw); // the tube should not have been contracted
     if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
-/*
+
     x = x_raw;
     v = v_raw;
     box[0] = Interval(0.4,0.8);
@@ -893,7 +893,7 @@ TEST_CASE("Interpol")
     CHECK(box[1] == Interval(3.6,3.8));
     if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "tubint", "red"));
 
-    if(VIBES_DRAWING) vibes::endDrawing();*/
+    if(VIBES_DRAWING) vibes::endDrawing();
   }
 
   SECTION("Interpolation, isolated example, epsilon inflation required")

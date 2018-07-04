@@ -910,11 +910,8 @@ TEST_CASE("CtcEval")
 
   SECTION("Test CtcEval, multi eval")
   {
-    tubex::Function f_x("cos(t)+t*[-0.1,0.2]");
-    tubex::Function f_v("-sin(t)+[-0.1,0.2]");
-
-    Tube x(Interval(0.,20.), 0.1, f_x);
-    Tube v(Interval(0.,20.), 0.1, f_v);
+    Tube x(Interval(0.,20.), 0.1, tubex::Function("cos(t)+t*[-0.1,0.2]"));
+    Tube v(Interval(0.,20.), 0.1, tubex::Function("-sin(t)+[-0.1,0.2]"));
     x.ctcDeriv(v);
 
     IntervalVector box(2);

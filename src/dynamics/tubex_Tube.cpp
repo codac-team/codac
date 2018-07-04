@@ -54,12 +54,6 @@ namespace tubex
 
     }
 
-    Tube::Tube(const Tube& x, const Fnc& f)
-      : TubeVector(x, f)
-    {
-      DimensionException::checkScalar(f.imageDim());
-    }
-
     Tube::Tube(const Trajectory& traj, double timestep)
       : TubeVector(traj, timestep)
     {

@@ -13,7 +13,7 @@
 #include "tubex_Fnc.h"
 
 using namespace std;
-//using namespace ibex;
+using namespace ibex;
 
 namespace tubex
 {
@@ -32,7 +32,7 @@ namespace tubex
 
   }
 
-  int Fnc::nbVar() const
+  int Fnc::nbVars() const
   {
     return m_nb_vars;
   }
