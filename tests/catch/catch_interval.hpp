@@ -17,6 +17,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "ibex.h"
+#include "tubex_Polygon.h"
 
 namespace Catch
 {
@@ -127,10 +128,7 @@ namespace Catch
         {
           double e = rhs.m_epsilon;
           return lhs == rhs.m_value ||
-                 (fabs(lhs.first.lb() - rhs.m_value.first.lb()) < e &&
-                  fabs(lhs.first.ub() - rhs.m_value.first.ub()) < e &&
-                  fabs(lhs.second.lb() - rhs.m_value.second.lb()) < e &&
-                  fabs(lhs.second.ub() - rhs.m_value.second.ub()) < e);
+                 (ApproxIntv(lhs.first) == rhs.m_value.first && ApproxIntv(lhs.second) == rhs.m_value.second);
         }
 
         friend bool operator ==(ApproxIntvPair const& lhs, std::pair<ibex::Interval,ibex::Interval> rhs)
@@ -159,6 +157,109 @@ namespace Catch
         double m_epsilon;
         std::pair<ibex::Interval,ibex::Interval> m_value;
     };
+
+    class ApproxPoint
+    {
+      public:
+        explicit ApproxPoint(tubex::Point value) :
+            m_epsilon(DEFAULT_EPSILON),
+            m_value(value)
+        {}
+
+        friend bool operator ==(tubex::Point lhs, ApproxPoint const& rhs)
+        {
+          return lhs == rhs.m_value ||
+            lhs.t() == ApproxIntv(rhs.m_value.t()) && lhs.x() == ApproxIntv(rhs.m_value.x());
+        }
+
+        friend bool operator ==(ApproxPoint const& lhs, tubex::Point rhs)
+        {
+          return operator ==(rhs, lhs);
+        }
+
+        friend bool operator !=(tubex::Point lhs, ApproxPoint const& rhs)
+        {
+          return !operator ==(lhs, rhs);
+        }
+
+        friend bool operator !=(ApproxPoint const& lhs, tubex::Point rhs)
+        {
+          return !operator ==(rhs, lhs);
+        }
+
+        std::string toString() const
+        {
+          std::ostringstream oss;
+          oss << "ApproxPoint(" << Catch::toString(m_value) << ")";
+          return oss.str();
+        }
+
+      private:
+        double m_epsilon;
+        tubex::Point m_value;
+    };
+
+    class ApproxPolygon
+    {
+      public:
+        explicit ApproxPolygon(tubex::Polygon value) :
+            m_epsilon(DEFAULT_EPSILON),
+            m_value(value)
+        {}
+
+        friend bool operator ==(tubex::Polygon lhs, ApproxPolygon const& rhs)
+        {
+          if(lhs == rhs.m_value)
+            return true;
+
+          int n = lhs.getVertices().size();
+          if(n != rhs.m_value.getVertices().size())
+            return false;
+
+          int i; // looking for first same elements
+          for(i = 0 ; i < n ; i++)
+            if(lhs.getVertices()[0] == ApproxPoint(rhs.m_value.getVertices()[i]))
+              break;
+
+          int way = 1;
+          if(n > 1)
+            way = (lhs.getVertices()[1] == ApproxPoint(rhs.m_value.getVertices()[(i+1) % n])) ? 1 : -1;
+
+          for(int j = 0 ; j < n ; j++)
+          {
+            if(lhs.getVertices()[j] != ApproxPoint(rhs.m_value.getVertices()[(i+way*j+n) % n]))
+              return false;
+          }
+
+          return true;
+        }
+
+        friend bool operator ==(ApproxPolygon const& lhs, tubex::Polygon rhs)
+        {
+          return operator ==(rhs, lhs);
+        }
+
+        friend bool operator !=(tubex::Polygon lhs, ApproxPolygon const& rhs)
+        {
+          return !operator ==(lhs, rhs);
+        }
+
+        friend bool operator !=(ApproxPolygon const& lhs, tubex::Polygon rhs)
+        {
+          return !operator ==(rhs, lhs);
+        }
+
+        std::string toString() const
+        {
+          std::ostringstream oss;
+          oss << "ApproxPolygon(" << Catch::toString(m_value) << ")";
+          return oss.str();
+        }
+
+      private:
+        double m_epsilon;
+        tubex::Polygon m_value;
+    };
   }
 
   template<>
@@ -175,6 +276,18 @@ namespace Catch
 
   template<>
   inline std::string toString<Detail::ApproxIntvPair>(Detail::ApproxIntvPair const& value)
+  {
+    return value.toString();
+  }
+
+  template<>
+  inline std::string toString<Detail::ApproxPoint>(Detail::ApproxPoint const& value)
+  {
+    return value.toString();
+  }
+
+  template<>
+  inline std::string toString<Detail::ApproxPolygon>(Detail::ApproxPolygon const& value)
   {
     return value.toString();
   }
