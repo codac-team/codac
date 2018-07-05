@@ -13,7 +13,7 @@ using namespace tubex;
 #define IVP_PICARD 5
 #define BVP_CP2010 6
 #define DELAY 7
-#define SOLVER_TEST IVP_XMSIN_FWD
+#define SOLVER_TEST DELAY
 
 
 #if SOLVER_TEST == DELAY
@@ -22,36 +22,70 @@ using namespace tubex;
   {
     public: 
 
-      FncDelay() : Fnc(1,1)
+      FncDelay(double delay) : Fnc(1,1), m_delay(delay)
       {
 
       }
 
-      IntervalVector eval_vector(const IntervalVector& box) const
+      const IntervalVector eval(double t, const IntervalVector& x) const
       {
-        return box[0];
+
       }
+
+      const IntervalVector eval(const Interval& t, const IntervalVector& x) const
+      {
+
+      }
+
+      const TubeVector eval(const TubeVector& x) const
+      {
+        // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
+        TubeVector y(x, IntervalVector(x.dim()));
+
+        Interval t_delayed;
+        const TubeSlice *x_slice = x.getFirstSlice();
+        TubeSlice *y_slice = y.getFirstSlice();
+
+        while(y_slice != NULL)
+        {
+          t_delayed = x_slice->domain().lb() - m_delay;
+          if(t_delayed.is_subset(x.domain()))
+            y_slice->setInputGate(x[t_delayed]);
+          
+          t_delayed = x_slice->domain() - m_delay;
+          if(t_delayed.is_subset(x.domain()))
+            y_slice->setEnvelope(x[t_delayed]);
+
+          x_slice = x_slice->nextSlice();
+          y_slice = y_slice->nextSlice();
+        }
+
+        x_slice = x.getLastSlice();
+        y_slice = y.getLastSlice();
+        t_delayed = x_slice->domain().ub() - m_delay;
+          if(t_delayed.is_subset(x.domain()))
+            y_slice->setOutputGate(x[t_delayed]);
+
+        return y;
+      }
+
+    protected:
+
+      double m_delay = 0.;
   };
 
   void contract(TubeVector& x)
   {
-    float a = 0.5;
-    
-    //FncDelay f;
-    //TubeVector xdot(f, x);
-    ////if(v_x[0].codomain().is_unbounded())
-    //{
-    //  tubex::CtcPicard ctc_picard;
-    //  ctc_picard.contract(f, v_x[0]);
-    //}
+    FncDelay f(0.5);
 
-    //CtcDelay tube_delay;
-    //Interval intv_a(a);
-    //tube_delay.contract(intv_a, v_x[1], v_x[0]);
-    //v_x[2] &= v_x[1] * exp(intv_a);
-    //v_x[1] &= v_x[2] * log(intv_a);
-    //
-    //v_x[0].ctcFwdBwd(v_x[2]);
+    //if(v_x[0].codomain().is_unbounded())
+    {
+      //tubex::CtcPicard ctc_picard;
+      //ctc_picard.contract(f, x);
+    }
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, exp(0.5) * f.eval(x));
   }
 
 #elif SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD

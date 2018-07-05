@@ -15,7 +15,6 @@
 
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"
-#include "tubex_TrajectoryVector.h"
 #include "tubex_TubeVector.h"
 
 namespace tubex

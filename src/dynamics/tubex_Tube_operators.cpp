@@ -23,7 +23,7 @@ namespace tubex
 {
   #define assignment_op_scalar(f) \
     \
-    Tube& Tube::f(const Tube& x) \
+    const Tube& Tube::f(const Tube& x) \
     { \
       StructureException::check(*this, x); \
       Interval y; \
@@ -58,7 +58,7 @@ namespace tubex
       return *this; \
     } \
     \
-    Tube& Tube::f(const Interval& x) \
+    const Tube& Tube::f(const Interval& x) \
     { \
       Interval y; \
       TubeSlice *slice, *first_slice = getFirstSlice(); \
@@ -87,7 +87,7 @@ namespace tubex
       return *this; \
     } \
     \
-    Tube& Tube::f(const Trajectory& x) \
+    const Tube& Tube::f(const Trajectory& x) \
     { \
       DomainException::check(*this, x); \
       Interval y; \

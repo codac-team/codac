@@ -70,7 +70,6 @@ namespace tubex
   const TubeVector Function::eval(const TubeVector& x) const
   {
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
-    IntervalVector box(nbVars() + 1); // +1 for system variable (t)
     TubeVector y(x, IntervalVector(imageDim()));
 
     const TubeSlice *x_slice = x.getFirstSlice();

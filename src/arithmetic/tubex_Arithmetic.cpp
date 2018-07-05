@@ -10,6 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
+#include "ibex_Interval.h"
+#include "ibex_IntervalVector.h"
 #include "tubex_Arithmetic.h"
 #include "tubex_DimensionException.h"
 #include "tubex_DomainException.h"
@@ -22,7 +24,7 @@ namespace tubex
 {
   #define unary_op(f) \
     \
-    Tube f(const Tube& x1) \
+    const Tube f(const Tube& x1) \
     { \
       Tube x2(x1); \
       const TubeSlice *slice_x1, *first_slice_x1 = x1.getFirstSlice(); \
@@ -77,19 +79,19 @@ namespace tubex
   unary_op(asinh);
   unary_op(atanh);
 
-  Tube operator+(const Tube& x)
+  const TubeVector operator+(const TubeVector& x)
   {
     return x;
   }
 
-  Tube operator-(const Tube& x)
+  const TubeVector operator-(const TubeVector& x)
   {
     return 0. - x;
   }
 
   #define unary_param_op(f, p) \
     \
-    Tube f(const Tube& x1, p param) \
+    const Tube f(const Tube& x1, p param) \
     { \
       Tube x2(x1); \
       const TubeSlice *slice_x1, *first_slice_x1 = x1.getFirstSlice(); \
@@ -130,14 +132,13 @@ namespace tubex
   unary_param_op(pow, double);
   unary_param_op(pow, const Interval&);
   unary_param_op(root, int);
-
-  #define binary_op(f) \
+  
+  #define binary_op_scalar(f) \
     \
-    Tube f(const Tube& tube_x1, const Tube& tube_x2) \
+    const Tube f(const Tube& tube_x1, const Tube& tube_x2) \
     { \
       DomainException::check(tube_x1, tube_x2); \
       StructureException::check(tube_x1, tube_x2); \
-      DimensionException::check(tube_x1, tube_x2); \
       Tube new_tube_x(tube_x1); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
       const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
@@ -167,75 +168,61 @@ namespace tubex
       return new_tube_x; \
     } \
     \
-    Tube f(const Interval& x1, const Tube& tube_x2) \
-    { \
-      Tube new_tube_x(tube_x2); \
-      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        slice_x->setEnvelope(IntervalVector(1, ibex::f(x1, slice_x->codomain()[0]))); \
-        slice_x = slice_x->nextSlice(); \
-      } \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        if(slice_x == first_slice_x) \
-          slice_x->setInputGate(IntervalVector(1, ibex::f(x1, slice_x->inputGate()[0]))); \
-        slice_x->setOutputGate(IntervalVector(1, ibex::f(x1, slice_x->outputGate()[0]))); \
-        slice_x = slice_x->nextSlice(); \
-      } \
-      return new_tube_x; \
-    } \
-    \
-    Tube f(const Tube& tube_x1, const Interval& x2) \
+    const Tube f(const Tube& tube_x1, const Interval& x2) \
     { \
       Tube new_tube_x(tube_x1); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
       slice_x = first_slice_x; \
-      while(slice_x != NULL) \
+      slice_x1 = first_slice_x1; \
+      while(slice_x1 != NULL) \
       { \
-        slice_x->setEnvelope(IntervalVector(1, ibex::f(slice_x->codomain()[0], x2))); \
+        slice_x->setEnvelope(IntervalVector(1, ibex::f(slice_x1->codomain()[0], x2))); \
         slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
       } \
       slice_x = first_slice_x; \
-      while(slice_x != NULL) \
+      slice_x1 = first_slice_x1; \
+      while(slice_x1 != NULL) \
       { \
         if(slice_x == first_slice_x) \
-          slice_x->setInputGate(IntervalVector(1, ibex::f(slice_x->inputGate()[0], x2))); \
-        slice_x->setOutputGate(IntervalVector(1, ibex::f(slice_x->outputGate()[0], x2))); \
+          slice_x->setInputGate(IntervalVector(1, ibex::f(slice_x1->inputGate()[0], x2))); \
+        slice_x->setOutputGate(IntervalVector(1, ibex::f(slice_x1->outputGate()[0], x2))); \
         slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
       } \
       return new_tube_x; \
     } \
     \
-    Tube f(const Trajectory& x1, const Tube& tube_x2) \
+    const Tube f(const Interval& x1, const Tube& tube_x2) \
     { \
-      DomainException::check(tube_x2, x1); \
-      DimensionException::check(tube_x2, x1); \
       Tube new_tube_x(tube_x2); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      const TubeSlice *slice_x2, *first_slice_x2 = tube_x2.getFirstSlice(); \
       slice_x = first_slice_x; \
-      while(slice_x != NULL) \
+      slice_x2 = first_slice_x2; \
+      while(slice_x2 != NULL) \
       { \
-        slice_x->setEnvelope(IntervalVector(1, ibex::f(x1[slice_x->domain()], slice_x->codomain()[0]))); \
+        slice_x->setEnvelope(IntervalVector(1, ibex::f(x1, slice_x2->codomain()[0]))); \
         slice_x = slice_x->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
       } \
       slice_x = first_slice_x; \
-      while(slice_x != NULL) \
+      slice_x2 = first_slice_x2; \
+      while(slice_x2 != NULL) \
       { \
         if(slice_x == first_slice_x) \
-          slice_x->setInputGate(IntervalVector(1, ibex::f(x1[Interval(slice_x->domain().lb())], slice_x->inputGate()[0]))); \
-        slice_x->setOutputGate(IntervalVector(1, ibex::f(x1[Interval(slice_x->domain().ub())], slice_x->outputGate()[0]))); \
+          slice_x->setInputGate(IntervalVector(1, ibex::f(x1, slice_x2->inputGate()[0]))); \
+        slice_x->setOutputGate(IntervalVector(1, ibex::f(x1, slice_x2->outputGate()[0]))); \
         slice_x = slice_x->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
       } \
       return new_tube_x; \
     } \
     \
-    Tube f(const Tube& tube_x1, const Trajectory& x2) \
+    const Tube f(const Tube& tube_x1, const Trajectory& x2) \
     { \
       DomainException::check(tube_x1, x2); \
-      DimensionException::check(tube_x1, x2); \
       Tube new_tube_x(tube_x1); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
       slice_x = first_slice_x; \
@@ -253,13 +240,326 @@ namespace tubex
         slice_x = slice_x->nextSlice(); \
       } \
       return new_tube_x; \
+    } \
+    \
+    const Tube f(const Trajectory& x1, const Tube& tube_x2) \
+    { \
+      DomainException::check(tube_x2, x1); \
+      Tube new_tube_x(tube_x2); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        slice_x->setEnvelope(IntervalVector(1, ibex::f(x1[slice_x->domain()], slice_x->codomain()[0]))); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(IntervalVector(1, ibex::f(x1[Interval(slice_x->domain().lb())], slice_x->inputGate()[0]))); \
+        slice_x->setOutputGate(IntervalVector(1, ibex::f(x1[Interval(slice_x->domain().ub())], slice_x->outputGate()[0]))); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      return new_tube_x; \
     }
 
-  binary_op(atan2);
+  binary_op_scalar(atan2);
+
+  #define binary_op(f) \
+    \
+    const TubeVector f(const TubeVector& tube_x1, const TubeVector& tube_x2) \
+    { \
+      DomainException::check(tube_x1, tube_x2); \
+      StructureException::check(tube_x1, tube_x2); \
+      DimensionException::check(tube_x1, tube_x2); \
+      TubeVector new_tube_x(tube_x1); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
+      const TubeSlice *slice_x2, *first_slice_x2 = tube_x2.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      slice_x1 = first_slice_x1; \
+      slice_x2 = first_slice_x2; \
+      while(slice_x1 != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(slice_x1->codomain(), slice_x2->codomain())); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      slice_x1 = first_slice_x1; \
+      slice_x2 = first_slice_x2; \
+      while(slice_x1 != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(slice_x1->inputGate(), slice_x2->inputGate())); \
+        slice_x->setOutputGate(ibex::f(slice_x1->outputGate(), slice_x2->outputGate())); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const TubeVector& tube_x1, const IntervalVector& x2) \
+    { \
+      DimensionException::check(tube_x1, x2); \
+      TubeVector new_tube_x(tube_x1); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      slice_x1 = first_slice_x1; \
+      while(slice_x1 != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(slice_x1->codomain(), x2)); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      slice_x1 = first_slice_x1; \
+      while(slice_x1 != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(slice_x1->inputGate(), x2)); \
+        slice_x->setOutputGate(ibex::f(slice_x1->outputGate(), x2)); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const IntervalVector& x1, const TubeVector& tube_x2) \
+    { \
+      DimensionException::check(tube_x2, x1); \
+      TubeVector new_tube_x(tube_x2); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      const TubeSlice *slice_x2, *first_slice_x2 = tube_x2.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      slice_x2 = first_slice_x2; \
+      while(slice_x2 != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(x1, slice_x2->codomain())); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      slice_x2 = first_slice_x2; \
+      while(slice_x2 != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(x1, slice_x2->inputGate())); \
+        slice_x->setOutputGate(ibex::f(x1, slice_x2->outputGate())); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const TubeVector& tube_x1, const TrajectoryVector& x2) \
+    { \
+      DomainException::check(tube_x1, x2); \
+      DimensionException::check(tube_x1, x2); \
+      TubeVector new_tube_x(tube_x1); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(slice_x->codomain(), x2[slice_x->domain()])); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(slice_x->inputGate(), x2[Interval(slice_x->domain().lb())])); \
+        slice_x->setOutputGate(ibex::f(slice_x->outputGate(), x2[Interval(slice_x->domain().ub())])); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const TrajectoryVector& x1, const TubeVector& tube_x2) \
+    { \
+      DomainException::check(tube_x2, x1); \
+      DimensionException::check(tube_x2, x1); \
+      TubeVector new_tube_x(tube_x2); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(x1[slice_x->domain()], slice_x->codomain())); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(x1[Interval(slice_x->domain().lb())], slice_x->inputGate())); \
+        slice_x->setOutputGate(ibex::f(x1[Interval(slice_x->domain().ub())], slice_x->outputGate())); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      return new_tube_x; \
+    }
+
   binary_op(operator+);
   binary_op(operator-);
-  binary_op(operator*);
-  binary_op(operator/);
-  binary_op(operator|);
-  binary_op(operator&);
+
+  #define binary_op_with_scalar_commutative(f) \
+    \
+    const TubeVector f(const Tube& tube_x1, const TubeVector& tube_x2) \
+    { \
+      DomainException::check(tube_x1, tube_x2); \
+      StructureException::check(tube_x1, tube_x2); \
+      TubeVector new_tube_x(tube_x1); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
+      const TubeSlice *slice_x2, *first_slice_x2 = tube_x2.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      slice_x1 = first_slice_x1; \
+      slice_x2 = first_slice_x2; \
+      while(slice_x1 != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(slice_x1->codomain()[0], slice_x2->codomain())); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      slice_x1 = first_slice_x1; \
+      slice_x2 = first_slice_x2; \
+      while(slice_x1 != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(slice_x1->inputGate()[0], slice_x2->inputGate())); \
+        slice_x->setOutputGate(ibex::f(slice_x1->outputGate()[0], slice_x2->outputGate())); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const TubeVector& tube_x1, const Tube& tube_x2) \
+    { \
+      DomainException::check(tube_x1, tube_x2); \
+      StructureException::check(tube_x1, tube_x2); \
+      TubeVector new_tube_x(tube_x1); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
+      const TubeSlice *slice_x2, *first_slice_x2 = tube_x2.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      slice_x1 = first_slice_x1; \
+      slice_x2 = first_slice_x2; \
+      while(slice_x1 != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(slice_x1->codomain(), slice_x2->codomain()[0])); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      slice_x1 = first_slice_x1; \
+      slice_x2 = first_slice_x2; \
+      while(slice_x1 != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(slice_x1->inputGate(), slice_x2->inputGate()[0])); \
+        slice_x->setOutputGate(ibex::f(slice_x1->outputGate(), slice_x2->outputGate()[0])); \
+        slice_x = slice_x->nextSlice(); \
+        slice_x1 = slice_x1->nextSlice(); \
+        slice_x2 = slice_x2->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const Interval& x1, const TubeVector& tube_x2) \
+    { \
+      TubeVector new_tube_x(tube_x2); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(x1, slice_x->codomain())); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(x1, slice_x->inputGate())); \
+        slice_x->setOutputGate(ibex::f(x1, slice_x->outputGate())); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const TubeVector& tube_x1, const Interval& x2) \
+    { \
+      TubeVector new_tube_x(tube_x1); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(slice_x->codomain(), x2)); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(slice_x->inputGate(), x2)); \
+        slice_x->setOutputGate(ibex::f(slice_x->outputGate(), x2)); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const Trajectory& x1, const TubeVector& tube_x2) \
+    { \
+      DomainException::check(tube_x2, x1); \
+      TubeVector new_tube_x(tube_x2); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(x1[slice_x->domain()], slice_x->codomain())); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(x1[Interval(slice_x->domain().lb())], slice_x->inputGate())); \
+        slice_x->setOutputGate(ibex::f(x1[Interval(slice_x->domain().ub())], slice_x->outputGate())); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      return new_tube_x; \
+    } \
+    \
+    const TubeVector f(const TubeVector& tube_x1, const Trajectory& x2) \
+    { \
+      DomainException::check(tube_x1, x2); \
+      TubeVector new_tube_x(tube_x1); \
+      TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        slice_x->setEnvelope(ibex::f(slice_x->codomain(), x2[slice_x->domain()])); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      slice_x = first_slice_x; \
+      while(slice_x != NULL) \
+      { \
+        if(slice_x == first_slice_x) \
+          slice_x->setInputGate(ibex::f(slice_x->inputGate(), x2[Interval(slice_x->domain().lb())])); \
+        slice_x->setOutputGate(ibex::f(slice_x->outputGate(), x2[Interval(slice_x->domain().ub())])); \
+        slice_x = slice_x->nextSlice(); \
+      } \
+      return new_tube_x; \
+    }
+
+  binary_op_with_scalar_commutative(operator+);
+  binary_op_with_scalar_commutative(operator-);
+  binary_op_with_scalar_commutative(operator*);
 }
