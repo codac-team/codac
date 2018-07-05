@@ -89,7 +89,7 @@ namespace tubex
 
     TubeSlice* TubeSlice::prevSlice()
     {
-      return m_prev_slice;
+      return const_cast<TubeSlice*>(static_cast<const TubeSlice&>(*this).prevSlice());
     }
 
     const TubeSlice* TubeSlice::prevSlice() const
@@ -99,7 +99,7 @@ namespace tubex
 
     TubeSlice* TubeSlice::nextSlice()
     {
-      return m_next_slice;
+      return const_cast<TubeSlice*>(static_cast<const TubeSlice&>(*this).nextSlice());
     }
 
     const TubeSlice* TubeSlice::nextSlice() const

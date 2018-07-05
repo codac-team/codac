@@ -205,35 +205,30 @@ namespace tubex
     TubeSlice* TubeVector::getSlice(int slice_id)
     {
       StructureException::check(*this, slice_id);
-      return m_v_slices[slice_id];
+      return const_cast<TubeSlice*>(static_cast<const TubeVector&>(*this).getSlice(slice_id));
     }
 
     const TubeSlice* TubeVector::getSlice(int slice_id) const
     {
       StructureException::check(*this, slice_id);
-      // todo: remove this?
-      // check cast?
       return m_v_slices[slice_id];
     }
 
     TubeSlice* TubeVector::getSlice(double t)
     {
       DomainException::check(*this, t);
-      // todo: remove this?
-      return getSlice(input2index(t));
+      return const_cast<TubeSlice*>(static_cast<const TubeVector&>(*this).getSlice(t));
     }
 
     const TubeSlice* TubeVector::getSlice(double t) const
     {
       DomainException::check(*this, t);
-      // todo: remove this?
-      // check cast?
       return getSlice(input2index(t));
     }
 
     TubeSlice* TubeVector::getFirstSlice()
     {
-      return m_v_slices[0];
+      return const_cast<TubeSlice*>(static_cast<const TubeVector&>(*this).getFirstSlice());
     }
 
     const TubeSlice* TubeVector::getFirstSlice() const
@@ -243,37 +238,21 @@ namespace tubex
 
     TubeSlice* TubeVector::getLastSlice()
     {
-      return m_v_slices[nbSlices() - 1];
+      return const_cast<TubeSlice*>(static_cast<const TubeVector&>(*this).getLastSlice());
     }
 
     const TubeSlice* TubeVector::getLastSlice() const
     {
-      // todo: static const cast
       return m_v_slices[nbSlices() - 1];
     }
 
     TubeSlice* TubeVector::getWiderSlice()
     {
-      double max_domain_width = 0.;
-      TubeSlice *wider_slice, *slice = getFirstSlice();
-
-      while(slice != NULL)
-      {
-        if(slice->domain().diam() > max_domain_width)
-        {
-          wider_slice = slice;
-          max_domain_width = slice->domain().diam();
-        }
-
-        slice = slice->nextSlice();
-      }
-
-      return wider_slice;
+      return const_cast<TubeSlice*>(static_cast<const TubeVector&>(*this).getWiderSlice());
     }
 
     const TubeSlice* TubeVector::getWiderSlice() const
     {
-      // todo: static const cast
       double max_domain_width = 0.;
       const TubeSlice *wider_slice, *slice = getFirstSlice();
 
