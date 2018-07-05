@@ -48,6 +48,11 @@ namespace tubex
   {
     return m_img_dim;
   }
+  
+  const IntervalVector Fnc::eval(double t, const IntervalVector& x) const
+  {
+    return eval(Interval(t), x);
+  }
 
   const TubeVector Fnc::eval(const TubeVector& x) const
   {

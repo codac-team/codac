@@ -49,11 +49,6 @@ namespace tubex
     Fnc::operator=(f);
   }
 
-  const IntervalVector Function::eval(double t, const IntervalVector& x) const
-  {
-    return eval(Interval(t), x);
-  }
-
   const IntervalVector Function::eval(const Interval& t, const IntervalVector& x) const
   {
     // todo: check dim x regarding f

@@ -27,11 +27,6 @@ using namespace tubex;
 
       }
 
-      const IntervalVector eval(double t, const IntervalVector& x) const
-      {
-
-      }
-
       const IntervalVector eval(const Interval& t, const IntervalVector& x) const
       {
         

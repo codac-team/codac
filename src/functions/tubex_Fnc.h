@@ -31,7 +31,7 @@ namespace tubex
       int nbVars() const;
       int imageDim() const;
 
-      virtual const ibex::IntervalVector eval(double t, const ibex::IntervalVector& x = ibex::IntervalVector(1)) const = 0;
+      const ibex::IntervalVector eval(double t, const ibex::IntervalVector& x = ibex::IntervalVector(1)) const;
       virtual const ibex::IntervalVector eval(const ibex::Interval& t, const ibex::IntervalVector& x = ibex::IntervalVector(1)) const = 0;
       const TubeVector eval(const TubeVector& x) const;
 
