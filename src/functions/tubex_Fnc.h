@@ -26,6 +26,7 @@ namespace tubex
       Fnc();
       Fnc(int n, int m);
       ~Fnc();
+      const Fnc& operator=(const Fnc& f);
 
       int nbVars() const;
       int imageDim() const;

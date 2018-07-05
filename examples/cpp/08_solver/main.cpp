@@ -1,3 +1,4 @@
+#include "ibex.h"
 #include "tubex.h"
 #include <time.h>
 
@@ -12,12 +13,12 @@ using namespace tubex;
 #define IVP_PICARD 5
 #define BVP_CP2010 6
 #define DELAY 7
-#define SOLVER_TEST DELAY
+#define SOLVER_TEST IVP_XMSIN_FWD
 
 
 #if SOLVER_TEST == DELAY
   
-  class FncDelay : public Fnc
+  class FncDelay : public tubex::Fnc
   {
     public: 
 
@@ -57,8 +58,7 @@ using namespace tubex;
 
   void contract(TubeVector& x)
   {
-    Variable var_x;
-    Function f(var_x, -sin(var_x));
+    tubex::Function f("x", "-sin(x)");
 
     //if(x.codomain().is_unbounded())
     {
@@ -67,14 +67,14 @@ using namespace tubex;
     }
 
     CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, TubeVector(f, x));
+    ctc_deriv.contract(x, f.eval(x));
   }
 
 #elif SOLVER_TEST == IVP_PICARD
 
   void contract(TubeVector& x)
   {
-    Function f("x", "-x");
+    tubex::Function f("x", "-x");
 
     //if(x.codomain().is_unbounded())
     {
@@ -83,7 +83,7 @@ using namespace tubex;
     }
 
     CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, TubeVector(f, x));
+    ctc_deriv.contract(x, f.eval(x));
   }
 
 #elif SOLVER_TEST == DAE
@@ -91,7 +91,7 @@ using namespace tubex;
   void contract(TubeVector& x)
   {
     //Variable vx, vy;
-    //Function f("x", "y", "(y, [-oo,oo])");//vx, vy, Return(vy,"[-oo,oo]"));
+    //tubex::Function f("x", "y", "(y, [-oo,oo])");//vx, vy, Return(vy,"[-oo,oo]"));
 
     //if(x.codomain().is_unbounded())
     //{
@@ -148,7 +148,7 @@ using namespace tubex;
     x.set(IntervalVector(1,bounds[0]), 0.);
     x.set(IntervalVector(1,bounds[1]), 1.);
     
-    Function f("x", "x");
+    tubex::Function f("x", "x");
 
     //if(x.codomain().is_unbounded())
     {
@@ -157,7 +157,7 @@ using namespace tubex;
     }
     
     CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, TubeVector(f, x));
+    ctc_deriv.contract(x, f.eval(x));
   }
 
 #elif SOLVER_TEST == BVP_CP2010
@@ -166,7 +166,7 @@ using namespace tubex;
   {
     Variable x1, x2, x1dot, x2dot;
     
-    Function f(x1,
+    tubex::Function f(x1,
                x2,
         Return(x2,
                0.1 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
@@ -201,7 +201,7 @@ using namespace tubex;
     }
     
     CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, TubeVector(f, x));
+    ctc_deriv.contract(x, f.eval(x));
   }
 
 #endif
@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
     #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
       fig.setProperties(100,100,700,500);
-      Trajectory truth(domain, Function("t", "2.*atan(exp(-t)*tan(0.5))"));
+      Trajectory truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
       fig.addTrajectory(&truth, "truth1", "blue");
 
     #elif SOLVER_TEST == IVP_PICARD
@@ -309,9 +309,9 @@ int main(int argc, char *argv[])
     #elif SOLVER_TEST == BVP
 
       fig.setProperties(100,100,700,350);
-      Trajectory truth1(domain, Function("t", "exp(t)/sqrt(1+exp(2))"));
+      Trajectory truth1(domain, tubex::Function("exp(t)/sqrt(1+exp(2))"));
       fig.addTrajectory(&truth1, "truth1", "blue");
-      Trajectory truth2(domain, Function("t", "-exp(t)/sqrt(1+exp(2))"));
+      Trajectory truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
       fig.addTrajectory(&truth2, "truth2", "red");
 
     #elif SOLVER_TEST == BVP_CP2010
@@ -321,7 +321,7 @@ int main(int argc, char *argv[])
     #elif SOLVER_TEST == DELAY
 
       fig.setProperties(100,100,700,350);
-      Trajectory truth(domain, Function("t", "exp(t)"));
+      Trajectory truth(domain, tubex::Function("exp(t)"));
       fig.addTrajectory(&truth, "truth", "blue");
 
     #endif

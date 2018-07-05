@@ -30,6 +30,12 @@ namespace tubex
   {
 
   }
+  
+  const Fnc& Fnc::operator=(const Fnc& f)
+  {
+    m_nb_vars = f.m_nb_vars;
+    m_img_dim = f.m_img_dim;
+  }
 
   int Fnc::nbVars() const
   {

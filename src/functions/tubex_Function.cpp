@@ -33,12 +33,20 @@ namespace tubex
   Function::Function(const tubex::Function& f)
     : tubex::Fnc(f.nbVars(), f.imageDim())
   {
-    m_ibex_f = new ibex::Function(*f.m_ibex_f);
+    *this = f;
   }
 
   Function::~Function()
   {
     delete m_ibex_f;
+  }
+
+  const Function& Function::operator=(const Function& f)
+  {
+    if(m_ibex_f != NULL)
+      delete m_ibex_f;
+    m_ibex_f = new ibex::Function(*f.m_ibex_f);
+    Fnc::operator=(f);
   }
 
   const IntervalVector Function::eval(double t, const IntervalVector& x) const
@@ -51,8 +59,10 @@ namespace tubex
     // todo: check dim x regarding f
     IntervalVector box(nbVars() + 1); // +1 for system variable (t)
     box[0] = t;
+    //cout << "------1 " << nbVars() << " " << x.size() << " " << x << endl;
     if(nbVars() != 0)
       box.put(1, x);
+    //cout << "------2" << endl;
     return m_ibex_f->eval_vector(box);
   }
 

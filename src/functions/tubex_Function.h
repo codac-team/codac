@@ -29,6 +29,7 @@ namespace tubex
       Function(const char* x1, const char* y);
       Function(const tubex::Function& f);
       ~Function();
+      const Function& operator=(const Function& f);
 
       const ibex::IntervalVector eval(double t, const ibex::IntervalVector& x = ibex::IntervalVector(1)) const;
       const ibex::IntervalVector eval(const ibex::Interval& t, const ibex::IntervalVector& x = ibex::IntervalVector(1)) const;
@@ -36,7 +37,7 @@ namespace tubex
 
     protected:
 
-      ibex::Function *m_ibex_f;
+      ibex::Function *m_ibex_f = NULL;
   };
 }
 

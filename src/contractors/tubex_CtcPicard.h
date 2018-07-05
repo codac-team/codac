@@ -27,27 +27,27 @@ namespace tubex
     public:
 
       CtcPicard(float delta = 1.1, bool preserve_sampling = false);
-      bool contract_fwd(const tubex::Fnc& f, TubeVector& x) const;
-      bool contract_bwd(const tubex::Fnc& f, TubeVector& x) const;
-      bool contract(const tubex::Fnc& f, TubeVector& x, bool fwd = true) const;
-      bool contract_fwd(const tubex::Fnc& f, TubeSlice& x) const;
-      bool contract_bwd(const tubex::Fnc& f, TubeSlice& x) const;
+      bool contract_fwd(const tubex::Function& f, TubeVector& x) const;
+      bool contract_bwd(const tubex::Function& f, TubeVector& x) const;
+      bool contract(const tubex::Function& f, TubeVector& x, bool fwd = true) const;
+      bool contract_fwd(const tubex::Function& f, TubeSlice& x) const;
+      bool contract_bwd(const tubex::Function& f, TubeSlice& x) const;
       int picardIterations() const;
 
-    protected:
 
-      bool contract(const tubex::Fnc& f,
+      bool contract(const tubex::Function& f,
                     const ibex::Interval& t,
+                    const ibex::Interval& h,
                     ibex::IntervalVector& x,
-                    double t0,
                     const ibex::IntervalVector& x0) const;
-
-      const ibex::IntervalVector eval(int order,
-                                      const tubex::Fnc& f,
+      const ibex::IntervalVector eval(const tubex::Function& f,
                                       const ibex::Interval& t,
+                                      const ibex::Interval& h,
                                       const ibex::IntervalVector& x,
-                                      double t0,
-                                      const ibex::IntervalVector& x0) const;
+                                      const ibex::IntervalVector& x0,
+                                      int order = 1) const;
+
+    protected:
 
       float m_delta;
       bool m_preserve_sampling = false;
