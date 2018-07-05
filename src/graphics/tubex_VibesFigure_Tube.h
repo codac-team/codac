@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef VIBESFIGURETUBE_HEADER
-#define VIBESFIGURETUBE_HEADER
+#ifndef __TUBEX_VIBESFIGURETUBE_H__
+#define __TUBEX_VIBESFIGURETUBE_H__
 
 #include "tubex_VibesFigure.h"
 #include "tubex_TubeVector.h"

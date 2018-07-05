@@ -10,8 +10,8 @@
  *  Created   : 2017
  * ---------------------------------------------------------------------------- */
 
-#ifndef CtcDelay_HEADER
-#define CtcDelay_HEADER
+#ifndef __TUBEX_CTCDELAY_H__
+#define __TUBEX_CTCDELAY_H__
 
 #include "tubex_Ctc.h"
 

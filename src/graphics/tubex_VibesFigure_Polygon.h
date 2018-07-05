@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef VIBESFIGUREPOLYGON_HEADER
-#define VIBESFIGUREPOLYGON_HEADER
+#ifndef __TUBEX_VIBESFIGUREPOLYGON_H__
+#define __TUBEX_VIBESFIGUREPOLYGON_H__
 
 #include "vibes.h"
 #include "tubex_Polygon.h"

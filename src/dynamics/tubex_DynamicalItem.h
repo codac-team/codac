@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef DynamicalItem_HEADER
-#define DynamicalItem_HEADER
+#ifndef __TUBEX_DYNAMICALITEM_H__
+#define __TUBEX_DYNAMICALITEM_H__
 
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"

@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TubeVector_HEADER
-#define TubeVector_HEADER
+#ifndef __TUBEX_TUBEVECTOR_H__
+#define __TUBEX_TUBEVECTOR_H__
 
 #include <vector>
 #include "tubex_Fnc.h"

@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef CtcEval_HEADER
-#define CtcEval_HEADER
+#ifndef __TUBEX_CTCEVAL_H__
+#define __TUBEX_CTCEVAL_H__
 
 #include "tubex_Ctc.h"
 

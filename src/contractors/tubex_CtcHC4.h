@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef CtcHC4_HEADER
-#define CtcHC4_HEADER
+#ifndef __TUBEX_CTCHC4_H__
+#define __TUBEX_CTCHC4_H__
 
 #include "tubex_Ctc.h"
 #include "ibex_CtcHC4.h"

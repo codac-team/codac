@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef Exception_HEADER
-#define Exception_HEADER
+#ifndef __TUBEX_EXCEPTION_H__
+#define __TUBEX_EXCEPTION_H__
 
 #include <iostream>
 #include <exception>

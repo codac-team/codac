@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef Point_HEADER
-#define Point_HEADER
+#ifndef __TUBEX_POINT_H__
+#define __TUBEX_POINT_H__
 
 #include <vector>
 #include "ibex_Interval.h"

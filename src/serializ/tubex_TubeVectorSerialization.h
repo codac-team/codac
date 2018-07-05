@@ -10,8 +10,8 @@
  *  Created   : 2017
  * ---------------------------------------------------------------------------- */
 
-#ifndef TUBE_SERIALIZATION_HEADER
-#define TUBE_SERIALIZATION_HEADER
+#ifndef __TUBEX_TUBEVECTORSERIALIZATION_H__
+#define __TUBEX_TUBEVECTORSERIALIZATION_H__
 
 #include <fstream>
 #include "tubex_TubeVector.h"

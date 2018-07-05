@@ -10,8 +10,8 @@
  *  Created   : 2017
  * ---------------------------------------------------------------------------- */
 
-#ifndef INTERVAL_SERIALIZATION_HEADER
-#define INTERVAL_SERIALIZATION_HEADER
+#ifndef __TUBEX_INTERVALSERIALIZATION_H__
+#define __TUBEX_INTERVALSERIALIZATION_H__
 
 #include <fstream>
 #include "ibex_Interval.h"

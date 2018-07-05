@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef Fnc_HEADER
-#define Fnc_HEADER
+#ifndef __TUBEX_FNC_H__
+#define __TUBEX_FNC_H__
 
 #include "ibex_IntervalVector.h"
 

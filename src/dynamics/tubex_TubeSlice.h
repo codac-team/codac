@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TubeSlice_HEADER
-#define TubeSlice_HEADER
+#ifndef __TUBEX_TUBESLICE_H__
+#define __TUBEX_TUBESLICE_H__
 
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"

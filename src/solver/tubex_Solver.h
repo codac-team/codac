@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef Solver_HEADER
-#define Solver_HEADER
+#ifndef __TUBEX_SOLVER_H__
+#define __TUBEX_SOLVER_H__
 
 #include <vector>
 #include "tubex_TubeVector.h"

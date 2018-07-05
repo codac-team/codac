@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef TUBEX_ARITHMETIC
-#define TUBEX_ARITHMETIC
+#ifndef __TUBEX_ARITHMETIC_H__
+#define __TUBEX_ARITHMETIC_H__
 
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"

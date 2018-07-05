@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef TrajectoryVector_HEADER
-#define TrajectoryVector_HEADER
+#ifndef __TUBEX_TRAJECTORYVECTOR_H__
+#define __TUBEX_TRAJECTORYVECTOR_H__
 
 #include <map>
 #include "ibex_Vector.h"

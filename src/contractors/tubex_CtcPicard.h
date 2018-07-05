@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef CtcPicard_HEADER
-#define CtcPicard_HEADER
+#ifndef __TUBEX_CTCPICARD_H__
+#define __TUBEX_CTCPICARD_H__
 
 #include "tubex_Ctc.h"
 #include "tubex_Fnc.h"

@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef Ctc_HEADER
-#define Ctc_HEADER
+#ifndef __TUBEX_CTC_H__
+#define __TUBEX_CTC_H__
 
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"

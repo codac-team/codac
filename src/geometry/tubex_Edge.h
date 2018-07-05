@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef Edge_HEADER
-#define Edge_HEADER
+#ifndef __TUBEX_EDGE_H__
+#define __TUBEX_EDGE_H__
 
 #include "tubex_Point.h"
 

@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef EmptyException_HEADER
-#define EmptyException_HEADER
+#ifndef __TUBEX_EMPTYEXCEPTION_H__
+#define __TUBEX_EMPTYEXCEPTION_H__
 
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"

@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef StructureException_HEADER
-#define StructureException_HEADER
+#ifndef __TUBEX_STRUCTUREEXCEPTION_H__
+#define __TUBEX_STRUCTUREEXCEPTION_H__
 
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"

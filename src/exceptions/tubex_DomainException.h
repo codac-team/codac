@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef DomainException_HEADER
-#define DomainException_HEADER
+#ifndef __TUBEX_DOMAINEXCEPTION_H__
+#define __TUBEX_DOMAINEXCEPTION_H__
 
 #include "tubex_Exception.h"
 #include "tubex_DynamicalItem.h"

@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef DimensionException_HEADER
-#define DimensionException_HEADER
+#ifndef __TUBEX_DIMENSIONEXCEPTION_H__
+#define __TUBEX_DIMENSIONEXCEPTION_H__
 
 #include "ibex_Fnc.h"
 #include "tubex_Exception.h"

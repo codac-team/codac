@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef Polygon_HEADER
-#define Polygon_HEADER
+#ifndef __TUBEX_POLYGON_H__
+#define __TUBEX_POLYGON_H__
 
 #include <vector>
 #include "ibex_IntervalVector.h"

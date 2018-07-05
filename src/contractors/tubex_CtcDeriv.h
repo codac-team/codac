@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef CtcDeriv_HEADER
-#define CtcDeriv_HEADER
+#ifndef __TUBEX_CTCDERIV_H__
+#define __TUBEX_CTCDERIV_H__
 
 #include "tubex_Ctc.h"
 #include "tubex_TubeSlice.h"

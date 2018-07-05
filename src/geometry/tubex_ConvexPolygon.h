@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef ConvexPolygon_HEADER
-#define ConvexPolygon_HEADER
+#ifndef __TUBEX_CONVEXPOLYGON_H__
+#define __TUBEX_CONVEXPOLYGON_H__
 
 #include "tubex_Polygon.h"
 #include "ibex_IntervalVector.h"

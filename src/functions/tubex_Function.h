@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef Function_HEADER
-#define Function_HEADER
+#ifndef __TUBEX_FUNCTION_H__
+#define __TUBEX_FUNCTION_H__
 
 #include "ibex_Function.h"
 #include "tubex_Fnc.h"

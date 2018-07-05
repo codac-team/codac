@@ -10,8 +10,8 @@
  *  Created   : 2017
  * ---------------------------------------------------------------------------- */
 
-#ifndef TRAJECTORY_SERIALIZATION_HEADER
-#define TRAJECTORY_SERIALIZATION_HEADER
+#ifndef __TUBEX_TRAJECTORYVECTORSERIALIZATION_H__
+#define __TUBEX_TRAJECTORYVECTORSERIALIZATION_H__
 
 #include <fstream>
 #include "tubex_TrajectoryVector.h"
