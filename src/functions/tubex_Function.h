@@ -15,12 +15,9 @@
 
 #include "ibex_Function.h"
 #include "tubex_Fnc.h"
-#include "tubex_TubeVector.h"
 
 namespace tubex
 {
-  class TubeVector;
-
   class Function : public Fnc
   {
     public:
@@ -31,8 +28,9 @@ namespace tubex
       ~Function();
       const Function& operator=(const Function& f);
 
-      const ibex::IntervalVector eval(const ibex::Interval& t, const ibex::IntervalVector& x = ibex::IntervalVector(1)) const;
-      const TubeVector eval(const TubeVector& x) const;
+      using Fnc::eval;
+      const ibex::IntervalVector eval(const ibex::Interval& t) const;
+      const ibex::IntervalVector eval(const ibex::Interval& t, const ibex::IntervalVector& x) const;
 
     protected:
 

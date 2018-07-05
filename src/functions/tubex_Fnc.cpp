@@ -49,7 +49,7 @@ namespace tubex
     return m_img_dim;
   }
   
-  const IntervalVector Fnc::eval(double t, const IntervalVector& x) const
+  const IntervalVector Fnc::eval(double t, const ibex::IntervalVector& x) const
   {
     return eval(Interval(t), x);
   }

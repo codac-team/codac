@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_Function.h"
+#include "tubex_TubeVector.h"
 
 using namespace std;
 using namespace ibex;
@@ -49,8 +50,17 @@ namespace tubex
     Fnc::operator=(f);
   }
 
+  const IntervalVector Function::eval(const Interval& t) const
+  {
+    IntervalVector box(1, t);
+    return m_ibex_f->eval_vector(box);
+  }
+
   const IntervalVector Function::eval(const Interval& t, const IntervalVector& x) const
   {
+    if(nbVars() == 0)
+      return eval(t);
+
     // todo: check dim x regarding f
     if(x.is_empty())
       return IntervalVector(imageDim(), Interval::EMPTY_SET);
@@ -60,10 +70,5 @@ namespace tubex
     if(nbVars() != 0)
       box.put(1, x);
     return m_ibex_f->eval_vector(box);
-  }
-
-  const TubeVector Function::eval(const TubeVector& x) const
-  {
-    return Fnc::eval(x);
   }
 }

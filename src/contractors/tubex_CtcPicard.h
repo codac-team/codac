@@ -26,12 +26,12 @@ namespace tubex
   {
     public:
 
-      CtcPicard(float delta = 1.1, bool preserve_sampling = false);
+      CtcPicard(float delta = 1.1, bool preserve_sampling = false, const ibex::Interval& restricted_domain = ibex::Interval::ALL_REALS);
       bool contract_fwd(const tubex::Fnc& f, TubeVector& x) const;
       bool contract_bwd(const tubex::Fnc& f, TubeVector& x) const;
       bool contract(const tubex::Fnc& f, TubeVector& x, bool fwd = true) const;
-      bool contract_fwd(const tubex::Fnc& f, TubeSlice& x) const;
-      bool contract_bwd(const tubex::Fnc& f, TubeSlice& x) const;
+      bool contract_fwd(const tubex::Fnc& f, TubeSlice& slice) const;
+      bool contract_bwd(const tubex::Fnc& f, TubeSlice& slice) const;
       int picardIterations() const;
 
 
@@ -51,6 +51,7 @@ namespace tubex
 
       float m_delta;
       bool m_preserve_sampling = false;
+      ibex::Interval m_restricted_domain;
       mutable int m_picard_iterations = 0;
   };
 }
