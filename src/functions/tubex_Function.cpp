@@ -57,12 +57,13 @@ namespace tubex
   const IntervalVector Function::eval(const Interval& t, const IntervalVector& x) const
   {
     // todo: check dim x regarding f
+    if(x.is_empty())
+      return IntervalVector(imageDim(), Interval::EMPTY_SET);
+
     IntervalVector box(nbVars() + 1); // +1 for system variable (t)
     box[0] = t;
-    //cout << "------1 " << nbVars() << " " << x.size() << " " << x << endl;
     if(nbVars() != 0)
       box.put(1, x);
-    //cout << "------2" << endl;
     return m_ibex_f->eval_vector(box);
   }
 

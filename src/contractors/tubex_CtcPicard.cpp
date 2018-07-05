@@ -28,19 +28,19 @@ namespace tubex
 
   }
   
-  bool CtcPicard::contract_fwd(const tubex::Function& f, TubeVector& x) const
+  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeVector& x) const
   {
     // todo: DimensionException::check(x, f);
     return contract(f, x, true);
   }
   
-  bool CtcPicard::contract_bwd(const tubex::Function& f, TubeVector& x) const
+  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeVector& x) const
   {
     // todo: DimensionException::check(x, f);
     return contract(f, x, false);
   }
   
-  bool CtcPicard::contract(const tubex::Function& f, TubeVector& x, bool fwd) const
+  bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, bool fwd) const
   {
     // todo: DimensionException::check(x, f);
     bool ctc = false;
@@ -103,7 +103,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_fwd(const tubex::Function& f, TubeSlice& x) const
+  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeSlice& x) const
   {
     // todo: DimensionException::check(x, f);
     Interval t = x.domain();
@@ -116,7 +116,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_bwd(const tubex::Function& f, TubeSlice& x) const
+  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeSlice& x) const
   {
     // todo: DimensionException::check(x, f);
     Interval t = x.domain();
@@ -134,7 +134,7 @@ namespace tubex
     return m_picard_iterations;
   }
 
-  bool CtcPicard::contract(const tubex::Function& f,
+  bool CtcPicard::contract(const tubex::Fnc& f,
                            const Interval& t,
                            const Interval& h,
                            IntervalVector& x,
@@ -166,7 +166,7 @@ namespace tubex
     return ctc;
   }
 
-  const IntervalVector CtcPicard::eval(const tubex::Function& f,
+  const IntervalVector CtcPicard::eval(const tubex::Fnc& f,
                                        const Interval& t,
                                        const Interval& h,
                                        const IntervalVector& x,
