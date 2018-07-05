@@ -40,7 +40,7 @@ namespace tubex
        *
        * \return figure's name
        */
-      std::string name() const;
+      const std::string name() const;
 
       /**
        * \brief Return x-position of the figure.
@@ -75,7 +75,7 @@ namespace tubex
        *
        * \return IntervalVector
        */
-      ibex::IntervalVector viewBox() const;
+      const ibex::IntervalVector& viewBox() const;
 
       /**
        * \brief Set figure's properties: position and dimensions.
@@ -127,7 +127,7 @@ namespace tubex
        * \param prefix character to prefix the hexa value ('#' by default)
        * \return string containing hexa value
        */
-      static std::string rgb2hex(int r, int g, int b, int alpha = -1, const char* prefix = "#");
+      static const std::string rgb2hex(int r, int g, int b, int alpha = -1, const char* prefix = "#");
 
       /**
        * \brief Convert hexa notation to RGB values.
@@ -147,7 +147,7 @@ namespace tubex
     protected:
 
       void setCurrentLayer(int layer);
-      std::string figName();
+      const std::string& figName();
       static std::string addSuffix(const std::string& name, int id);
 
 

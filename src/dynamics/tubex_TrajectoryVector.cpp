@@ -55,7 +55,7 @@ namespace tubex
       delete m_function;
   }
 
-  TrajectoryVector& TrajectoryVector::operator=(const TrajectoryVector& x)
+  const TrajectoryVector& TrajectoryVector::operator=(const TrajectoryVector& x)
   {
     m_domain = x.m_domain;
     m_codomain = x.m_codomain;
@@ -212,7 +212,7 @@ namespace tubex
 
   // Setting values
 
-  Vector& TrajectoryVector::set(double t, const Vector& y)
+  const Vector& TrajectoryVector::set(double t, const Vector& y)
   {
     if(!notDefined()) DimensionException::check(*this, y);
     m_map_values.erase(t);

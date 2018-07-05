@@ -42,12 +42,12 @@ namespace tubex
     return m_v_vertices.size();
   }
 
-  vector<Point> Polygon::getVertices() const
+  const vector<Point>& Polygon::getVertices() const
   {
     return m_v_vertices;
   }
 
-  vector<Edge> Polygon::getEdges() const
+  const vector<Edge> Polygon::getEdges() const
   {
     vector<Edge> v_edges;
     for(int i = 0 ; i < m_v_vertices.size() ; i++)
@@ -62,7 +62,7 @@ namespace tubex
     return m_v_vertices[vertex_id];
   }
 
-  IntervalVector Polygon::box() const
+  const IntervalVector Polygon::box() const
   {
     IntervalVector box(2, Interval::EMPTY_SET);
     for(int i = 0 ; i < m_v_vertices.size() ; i++)

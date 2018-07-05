@@ -79,7 +79,7 @@ namespace tubex
       struct FigTubeParams
       {
         std::map<int,std::string> m_colors;
-        TubeVector *tube_copy = NULL; // to display previous values in background
+        const TubeVector *tube_copy = NULL; // to display previous values in background
         const TubeVector *tube_derivative = NULL; // to display polygons enclosed by slices
         std::string name;
       };

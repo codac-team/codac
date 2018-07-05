@@ -43,7 +43,7 @@ namespace tubex
     else
     {
       Interval intv_t_emptiness = Interval::EMPTY_SET;
-      TubeSlice *slice = x.getFirstSlice();
+      const TubeSlice *slice = x.getFirstSlice();
       while(slice != NULL)
       {
         if(slice->isEmpty())

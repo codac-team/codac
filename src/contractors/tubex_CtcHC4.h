@@ -27,8 +27,8 @@ namespace tubex
     public:
 
       CtcHC4();
-      bool contract(ibex::CtcHC4& hc4, TubeVector& x);
-      bool contract(ibex::CtcHC4& hc4, TubeSlice& x);
+      bool contract(ibex::CtcHC4& hc4, TubeVector& x) const;
+      bool contract(ibex::CtcHC4& hc4, TubeSlice& x) const;
 
     protected:
 

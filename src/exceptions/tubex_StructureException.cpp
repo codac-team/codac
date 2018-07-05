@@ -60,8 +60,8 @@ namespace tubex
     if(x1.nbSlices() != x2.nbSlices())
       throw StructureException(x1, x2);
 
-    TubeSlice *slice_x1 = x1.getFirstSlice();
-    TubeSlice *slice_x2 = x2.getFirstSlice();
+    const TubeSlice *slice_x1 = x1.getFirstSlice();
+    const TubeSlice *slice_x2 = x2.getFirstSlice();
     
     while(slice_x1 != NULL)
     {

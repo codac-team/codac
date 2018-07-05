@@ -109,7 +109,7 @@ namespace tubex
 
     }
     
-    Tube Tube::primitive() const
+    const Tube Tube::primitive() const
     {
       Tube primitive(*this, Interval::ALL_REALS);
       primitive.set(0., primitive.domain().lb());
@@ -145,7 +145,7 @@ namespace tubex
       return TubeVector::operator[](t)[0];
     }
 
-    Interval Tube::invert(const Interval& y, const Interval& search_domain) const
+    const Interval Tube::invert(const Interval& y, const Interval& search_domain) const
     {
       return TubeVector::invert(IntervalVector(1, y), search_domain);
     }
@@ -155,7 +155,7 @@ namespace tubex
       TubeVector::invert(IntervalVector(1, y), v_t, search_domain);
     }
 
-    Interval Tube::invert(const Interval& y, const Tube& v, const Interval& search_domain) const
+    const Interval Tube::invert(const Interval& y, const Tube& v, const Interval& search_domain) const
     {
       return TubeVector::invert(IntervalVector(1, y), v, search_domain);
     }
@@ -240,28 +240,28 @@ namespace tubex
 
     // Integration
 
-    Interval Tube::integral(double t) const
+    const Interval Tube::integral(double t) const
     {
       return TubeVector::integral(t)[0];
     }
 
-    Interval Tube::integral(const Interval& t) const
+    const Interval Tube::integral(const Interval& t) const
     {
       return TubeVector::integral(t)[0];
     }
 
-    Interval Tube::integral(const Interval& t1, const Interval& t2) const
+    const Interval Tube::integral(const Interval& t1, const Interval& t2) const
     {
       return TubeVector::integral(t1, t2)[0];
     }
 
-    pair<Interval,Interval> Tube::partialIntegral(const Interval& t) const
+    const pair<Interval,Interval> Tube::partialIntegral(const Interval& t) const
     {
       pair<IntervalVector,IntervalVector> p_box = TubeVector::partialIntegral(t);
       return make_pair(p_box.first[0], p_box.second[0]);
     }
 
-    pair<Interval,Interval> Tube::partialIntegral(const Interval& t1, const Interval& t2) const
+    const pair<Interval,Interval> Tube::partialIntegral(const Interval& t1, const Interval& t2) const
     {
       pair<IntervalVector,IntervalVector> p_box = TubeVector::partialIntegral(t1, t2);
       return make_pair(p_box.first[0], p_box.second[0]);

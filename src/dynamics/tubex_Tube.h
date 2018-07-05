@@ -36,7 +36,7 @@ namespace tubex
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
       ~Tube();
-      Tube primitive() const;
+      const Tube primitive() const;
       using TubeVector::operator=;
       using TubeVector::domain;
       using TubeVector::dim;
@@ -57,9 +57,9 @@ namespace tubex
       const ibex::Interval operator[](int slice_id) const;
       const ibex::Interval operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& t) const;
-      ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      ibex::Interval invert(const ibex::Interval& y, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::Interval& y, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       const ibex::Interval interpol(double t, const Tube& derivative) const;
@@ -107,11 +107,11 @@ namespace tubex
 
     /** Integration: **/
 
-      ibex::Interval integral(double t) const;
-      ibex::Interval integral(const ibex::Interval& t) const;
-      ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
-      std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
-      std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      const ibex::Interval integral(double t) const;
+      const ibex::Interval integral(const ibex::Interval& t) const;
+      const ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      const std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
+      const std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
     /** Contractors: **/
 

@@ -28,7 +28,7 @@ namespace tubex
       StructureException::check(*this, x); \
       Interval y; \
       TubeSlice *slice, *first_slice = getFirstSlice(); \
-      TubeSlice *slice_x, *first_slice_x = x.getFirstSlice(); \
+      const TubeSlice *slice_x, *first_slice_x = x.getFirstSlice(); \
       slice = first_slice; \
       slice_x = first_slice_x; \
       while(slice != NULL) \

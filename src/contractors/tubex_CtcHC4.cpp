@@ -25,7 +25,7 @@ namespace tubex
 
   }
   
-  bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeVector& x)
+  bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeVector& x) const
   {
     bool ctc = false;
     TubeSlice *slice = x.getFirstSlice();
@@ -39,7 +39,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeSlice& x)
+  bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeSlice& x) const
   {
     TubeSlice x_old = x;
     IntervalVector box = x.box();

@@ -36,7 +36,7 @@ namespace tubex
       TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
       TrajectoryVector(const TrajectoryVector& traj);
       ~TrajectoryVector();
-      TrajectoryVector& operator=(const TrajectoryVector& x);
+      const TrajectoryVector& operator=(const TrajectoryVector& x);
       int dim() const;
 
       // Access values
@@ -54,7 +54,7 @@ namespace tubex
       bool operator!=(const TrajectoryVector& x) const;
 
       // Setting values
-      ibex::Vector& set(double t, const ibex::Vector& y);
+      const ibex::Vector& set(double t, const ibex::Vector& y);
       void truncateDomain(const ibex::Interval& domain);
       void shiftDomain(double shift_ref);
 

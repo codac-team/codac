@@ -41,12 +41,12 @@ namespace tubex
     delete m_ibex_f;
   }
 
-  IntervalVector Function::eval(double t, const IntervalVector& x) const
+  const IntervalVector Function::eval(double t, const IntervalVector& x) const
   {
     return eval(Interval(t), x);
   }
 
-  IntervalVector Function::eval(const Interval& t, const IntervalVector& x) const
+  const IntervalVector Function::eval(const Interval& t, const IntervalVector& x) const
   {
     // todo: check dim x regarding f
     IntervalVector box(nbVars() + 1); // +1 for system variable (t)
@@ -56,13 +56,13 @@ namespace tubex
     return m_ibex_f->eval_vector(box);
   }
 
-  TubeVector Function::eval(const TubeVector& x) const
+  const TubeVector Function::eval(const TubeVector& x) const
   {
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
     IntervalVector box(nbVars() + 1); // +1 for system variable (t)
     TubeVector y(x, IntervalVector(imageDim()));
 
-    TubeSlice *x_slice = x.getFirstSlice();
+    const TubeSlice *x_slice = x.getFirstSlice();
     TubeSlice *y_slice = y.getFirstSlice();
 
     while(x_slice != NULL)

@@ -51,8 +51,8 @@ namespace tubex
       TubeVector(const std::string& binary_file_name, TrajectoryVector& traj);
       TubeVector(const std::string& binary_file_name, std::vector<TrajectoryVector>& v_trajs);
       ~TubeVector();
-      TubeVector primitive() const;
-      TubeVector& operator=(const TubeVector& x);
+      const TubeVector primitive() const;
+      const TubeVector& operator=(const TubeVector& x);
       const ibex::Interval domain() const;
       int dim() const;
 
@@ -62,9 +62,12 @@ namespace tubex
       const TubeSlice* getSlice(int slice_id) const;
       TubeSlice* getSlice(double t);
       const TubeSlice* getSlice(double t) const;
-      TubeSlice* getFirstSlice() const; // todo: check constness of these
-      TubeSlice* getLastSlice() const;
-      TubeSlice* getWiderSlice() const;
+      TubeSlice* getFirstSlice();
+      const TubeSlice* getFirstSlice() const;
+      TubeSlice* getLastSlice();
+      const TubeSlice* getLastSlice() const;
+      TubeSlice* getWiderSlice();
+      const TubeSlice* getWiderSlice() const;
       int input2index(double t) const;
       void sample(double t);
       void sample(double t, const ibex::IntervalVector& gate);
@@ -100,7 +103,7 @@ namespace tubex
       void set(const ibex::IntervalVector& y, double t);
       void set(const ibex::IntervalVector& y, const ibex::Interval& t);
       void setEmpty();
-      TubeVector& inflate(double rad);
+      const TubeVector& inflate(double rad);
 
       // Bisection
       std::pair<TubeVector,TubeVector> bisect(double t, float ratio = 0.55) const;
@@ -125,11 +128,11 @@ namespace tubex
 
     /** Integration: **/
 
-      ibex::IntervalVector integral(double t) const;
-      ibex::IntervalVector integral(const ibex::Interval& t) const;
-      ibex::IntervalVector integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
-      std::pair<ibex::IntervalVector,ibex::IntervalVector> partialIntegral(const ibex::Interval& t) const;
-      std::pair<ibex::IntervalVector,ibex::IntervalVector> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      const ibex::IntervalVector integral(double t) const;
+      const ibex::IntervalVector integral(const ibex::Interval& t) const;
+      const ibex::IntervalVector integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      const std::pair<ibex::IntervalVector,ibex::IntervalVector> partialIntegral(const ibex::Interval& t) const;
+      const std::pair<ibex::IntervalVector,ibex::IntervalVector> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
     /** Contractors: **/
 

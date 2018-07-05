@@ -66,7 +66,7 @@ namespace tubex
       }
     }
 
-    TubeSlice& TubeSlice::operator=(const TubeSlice& x)
+    const TubeSlice& TubeSlice::operator=(const TubeSlice& x)
     {
       m_domain = x.m_domain;
       m_codomain = x.m_codomain;
@@ -87,12 +87,22 @@ namespace tubex
 
     // Slices structure
 
-    TubeSlice* TubeSlice::prevSlice() const
+    TubeSlice* TubeSlice::prevSlice()
     {
       return m_prev_slice;
     }
 
-    TubeSlice* TubeSlice::nextSlice() const
+    const TubeSlice* TubeSlice::prevSlice() const
+    {
+      return m_prev_slice;
+    }
+
+    TubeSlice* TubeSlice::nextSlice()
+    {
+      return m_next_slice;
+    }
+
+    const TubeSlice* TubeSlice::nextSlice() const
     {
       return m_next_slice;
     }
@@ -125,7 +135,7 @@ namespace tubex
       return *m_output_gate;
     }
 
-    TubeVector* TubeSlice::tubeReference() const
+    const TubeVector* TubeSlice::tubeReference() const
     {
       return m_tube_ref;
     }
@@ -414,7 +424,7 @@ namespace tubex
         *m_output_gate &= nextSlice()->codomain();
     }
     
-    TubeSlice& TubeSlice::inflate(double rad)
+    const TubeSlice& TubeSlice::inflate(double rad)
     {
       // todo: simplify with simple addition
       IntervalVector e(dim(), Interval(-rad,rad));

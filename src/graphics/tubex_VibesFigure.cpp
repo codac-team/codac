@@ -40,7 +40,7 @@ namespace tubex
     setCurrentLayer(0);
   }
 
-  string VibesFigure::name() const
+  const string VibesFigure::name() const
   {
     if(m_nb_layers == 1)
       return m_name;
@@ -136,12 +136,12 @@ namespace tubex
     return m_height;
   }
 
-  IntervalVector VibesFigure::viewBox() const
+  const IntervalVector& VibesFigure::viewBox() const
   {
     return m_view_box;
   }
 
-  string VibesFigure::rgb2hex(int r, int g, int b, int alpha, const char* prefix)
+  const string VibesFigure::rgb2hex(int r, int g, int b, int alpha, const char* prefix)
   {
     string result;
     result.append(prefix);

@@ -62,7 +62,7 @@ namespace tubex
         int slices_number = tube.nbSlices();
         bin_file.write((const char*)&slices_number, sizeof(int));
 
-        TubeSlice *slice;
+        const TubeSlice *slice;
 
         // Domains
         double lb;

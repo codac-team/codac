@@ -25,7 +25,7 @@ namespace tubex
     Tube f(const Tube& x1) \
     { \
       Tube x2(x1); \
-      TubeSlice *slice_x1, *first_slice_x1 = x1.getFirstSlice(); \
+      const TubeSlice *slice_x1, *first_slice_x1 = x1.getFirstSlice(); \
       TubeSlice *slice_x2, *first_slice_x2 = x2.getFirstSlice(); \
       slice_x1 = first_slice_x1; \
       slice_x2 = first_slice_x2; \
@@ -92,7 +92,7 @@ namespace tubex
     Tube f(const Tube& x1, p param) \
     { \
       Tube x2(x1); \
-      TubeSlice *slice_x1, *first_slice_x1 = x1.getFirstSlice(); \
+      const TubeSlice *slice_x1, *first_slice_x1 = x1.getFirstSlice(); \
       TubeSlice *slice_x2, *first_slice_x2 = x2.getFirstSlice(); \
       slice_x1 = first_slice_x1; \
       slice_x2 = first_slice_x2; \
@@ -140,8 +140,8 @@ namespace tubex
       DimensionException::check(tube_x1, tube_x2); \
       Tube new_tube_x(tube_x1); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
-      TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
-      TubeSlice *slice_x2, *first_slice_x2 = tube_x2.getFirstSlice(); \
+      const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
+      const TubeSlice *slice_x2, *first_slice_x2 = tube_x2.getFirstSlice(); \
       slice_x = first_slice_x; \
       slice_x1 = first_slice_x1; \
       slice_x2 = first_slice_x2; \

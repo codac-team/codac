@@ -29,7 +29,7 @@ namespace tubex
       DimensionException::check(*this, x); \
       IntervalVector y(x.dim()); \
       TubeSlice *slice, *first_slice = getFirstSlice(); \
-      TubeSlice *slice_x, *first_slice_x = x.getFirstSlice(); \
+      const TubeSlice *slice_x, *first_slice_x = x.getFirstSlice(); \
       slice = first_slice; \
       slice_x = first_slice_x; \
       while(slice != NULL) \

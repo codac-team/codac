@@ -153,7 +153,7 @@ namespace tubex
       m_v_slices.clear();
     }
 
-    TubeVector TubeVector::primitive() const
+    const TubeVector TubeVector::primitive() const
     {
       TubeVector primitive(*this, IntervalVector(dim(), Interval::ALL_REALS));
       primitive.set(IntervalVector(dim(), 0.), primitive.domain().lb());
@@ -162,10 +162,11 @@ namespace tubex
       return primitive;
     }
 
-    TubeVector& TubeVector::operator=(const TubeVector& x)
+    const TubeVector& TubeVector::operator=(const TubeVector& x)
     {
       m_v_slices.clear();
-      TubeSlice *prev_slice = NULL, *slice_x = x.getFirstSlice();
+      TubeSlice *prev_slice = NULL;
+      const TubeSlice *slice_x = x.getFirstSlice();
 
       while(slice_x != NULL)
       {
@@ -230,20 +231,51 @@ namespace tubex
       return getSlice(input2index(t));
     }
 
-    TubeSlice* TubeVector::getFirstSlice() const
+    TubeSlice* TubeVector::getFirstSlice()
     {
       return m_v_slices[0];
     }
 
-    TubeSlice* TubeVector::getLastSlice() const
+    const TubeSlice* TubeVector::getFirstSlice() const
+    {
+      return m_v_slices[0];
+    }
+
+    TubeSlice* TubeVector::getLastSlice()
     {
       return m_v_slices[nbSlices() - 1];
     }
 
-    TubeSlice* TubeVector::getWiderSlice() const
+    const TubeSlice* TubeVector::getLastSlice() const
+    {
+      // todo: static const cast
+      return m_v_slices[nbSlices() - 1];
+    }
+
+    TubeSlice* TubeVector::getWiderSlice()
     {
       double max_domain_width = 0.;
       TubeSlice *wider_slice, *slice = getFirstSlice();
+
+      while(slice != NULL)
+      {
+        if(slice->domain().diam() > max_domain_width)
+        {
+          wider_slice = slice;
+          max_domain_width = slice->domain().diam();
+        }
+
+        slice = slice->nextSlice();
+      }
+
+      return wider_slice;
+    }
+
+    const TubeSlice* TubeVector::getWiderSlice() const
+    {
+      // todo: static const cast
+      double max_domain_width = 0.;
+      const TubeSlice *wider_slice, *slice = getFirstSlice();
 
       while(slice != NULL)
       {
@@ -327,7 +359,7 @@ namespace tubex
 
     double TubeVector::volume() const
     {
-      TubeSlice *slice = getFirstSlice();
+      const TubeSlice *slice = getFirstSlice();
       double volume = 0.;
       while(slice != NULL)
       {
@@ -515,7 +547,7 @@ namespace tubex
       int i = 0;
       double max_thickness = 0.;
 
-      TubeSlice *slice = getFirstSlice();
+      const TubeSlice *slice = getFirstSlice();
       while(slice != NULL)
       {
         if(slice->codomain().is_unbounded())
@@ -539,7 +571,7 @@ namespace tubex
 
     double TubeVector::maxGateThickness(double& t) const
     {
-      TubeSlice *slice = getFirstSlice();
+      const TubeSlice *slice = getFirstSlice();
 
       if(slice->inputGate().is_unbounded())
       {
@@ -578,7 +610,7 @@ namespace tubex
       if(x.nbSlices() != nbSlices())
         return false;
 
-      TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
+      const TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
       while(slice != NULL)
       {
         if(*slice != *slice_x)
@@ -597,7 +629,7 @@ namespace tubex
       if(x.nbSlices() != nbSlices())
         return true;
 
-      TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
+      const TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
       while(slice != NULL)
       {
         if(*slice != *slice_x)
@@ -615,7 +647,7 @@ namespace tubex
       StructureException::check(*this, x);
       // todo: common with other same-type methods
 
-      TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
+      const TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
       while(slice != NULL)
       {
         if(slice->isSubset(*slice_x))
@@ -633,7 +665,7 @@ namespace tubex
       StructureException::check(*this, x);
       // todo: common with other same-type methods
 
-      TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
+      const TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
       while(slice != NULL)
       {
         if(slice->isStrictSubset(*slice_x))
@@ -649,7 +681,7 @@ namespace tubex
     {
       // todo: common with other same-type methods
 
-      TubeSlice *slice = getFirstSlice();
+      const TubeSlice *slice = getFirstSlice();
       while(slice != NULL)
       {
         if(slice->isEmpty())
@@ -666,7 +698,7 @@ namespace tubex
       DomainException::check(*this, x);
       DimensionException::check(*this, x);
 
-      TubeSlice *slice = getFirstSlice();
+      const TubeSlice *slice = getFirstSlice();
       while(slice != NULL)
       {
         if(!slice->encloses(x))
@@ -733,7 +765,7 @@ namespace tubex
       set(empty_box);
     }
 
-    TubeVector& TubeVector::inflate(double rad)
+    const TubeVector& TubeVector::inflate(double rad)
     {
       IntervalVector e(dim(), Interval(-rad,rad));
 
@@ -797,20 +829,20 @@ namespace tubex
 
     // Integration
 
-    IntervalVector TubeVector::integral(double t) const
+    const IntervalVector TubeVector::integral(double t) const
     {
       DomainException::check(*this, t);
       return integral(Interval(t));
     }
 
-    IntervalVector TubeVector::integral(const Interval& t) const
+    const IntervalVector TubeVector::integral(const Interval& t) const
     {
       DomainException::check(*this, t);
       //pair<IntervalVector,IntervalVector> partial_ti = partialIntegral(t);
       //return Interval(partial_ti.first.lb(), partial_ti.second.ub());
     }
 
-    IntervalVector TubeVector::integral(const Interval& t1, const Interval& t2) const
+    const IntervalVector TubeVector::integral(const Interval& t1, const Interval& t2) const
     {
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
@@ -821,7 +853,7 @@ namespace tubex
       //return Interval(min(lb, ub), max(lb, ub));
     }
 
-    pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t) const
+    const pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t) const
     {
     //  checkPartialPrimitive();
     //  
@@ -901,7 +933,7 @@ namespace tubex
     //  return make_pair(integral_lb, integral_ub);
     }
 
-    pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t1, const Interval& t2) const
+    const pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t1, const Interval& t2) const
     {
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
@@ -964,7 +996,7 @@ namespace tubex
     const IntervalVector TubeVector::codomainBox() const
     {
       // todo: use tree structure instead
-      TubeSlice *slice = getFirstSlice();
+      const TubeSlice *slice = getFirstSlice();
       IntervalVector codomain(dim(), Interval::EMPTY_SET);
       while(slice != NULL)
       {

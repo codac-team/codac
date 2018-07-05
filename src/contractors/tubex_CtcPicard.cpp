@@ -28,19 +28,19 @@ namespace tubex
 
   }
   
-  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeVector& x)
+  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeVector& x) const
   {
     // todo: DimensionException::check(x, f);
     return contract(f, x, true);
   }
   
-  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeVector& x)
+  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeVector& x) const
   {
     // todo: DimensionException::check(x, f);
     return contract(f, x, false);
   }
   
-  bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, bool fwd)
+  bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, bool fwd) const
   {
     // todo: DimensionException::check(x, f);
     bool ctc = false;
@@ -103,7 +103,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeSlice& x)
+  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeSlice& x) const
   {
     // todo: DimensionException::check(x, f);
     const Interval t = x.domain();
@@ -114,7 +114,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeSlice& x)
+  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeSlice& x) const
   {
     // todo: DimensionException::check(x, f);
     const Interval t = x.domain();
@@ -134,7 +134,7 @@ namespace tubex
                            const Interval& t,
                            IntervalVector& x,
                            double t0,
-                           const IntervalVector& x0)
+                           const IntervalVector& x0) const
   {
     float delta = m_delta;
     IntervalVector x_guess = x0, x_enclosure = x0;
@@ -167,7 +167,7 @@ namespace tubex
                                        const Interval& t,
                                        const IntervalVector& x,
                                        double t0,
-                                       const IntervalVector& x0)
+                                       const IntervalVector& x0) const
   {
     Interval intv_h = (t - t0) | 0.;
 

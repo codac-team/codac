@@ -32,17 +32,17 @@ namespace tubex
       CtcDeriv();
 
       // TubeVector
-      bool contract(TubeVector& x, const TubeVector& v);
-      bool contractFwd(TubeVector& x, const TubeVector& v);
-      bool contractBwd(TubeVector& x, const TubeVector& v);
+      bool contract(TubeVector& x, const TubeVector& v) const;
+      bool contractFwd(TubeVector& x, const TubeVector& v) const;
+      bool contractBwd(TubeVector& x, const TubeVector& v) const;
 
       // TubeSlice
-      bool contract(TubeSlice& x, const TubeSlice& v);
+      bool contract(TubeSlice& x, const TubeSlice& v) const;
 
     protected:
 
-      bool contractGates(TubeSlice& x, const TubeSlice& v);
-      bool contractCodomain(int i, TubeSlice& x, const TubeSlice& v);
+      bool contractGates(TubeSlice& x, const TubeSlice& v) const;
+      bool contractCodomain(int i, TubeSlice& x, const TubeSlice& v) const;
 
       friend class CtcEval; // contractGates used by CtcEval
   };

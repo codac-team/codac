@@ -344,8 +344,8 @@ namespace tubex
           vibes::newGroup(group_name + "_polygons", m_map_tubes[tube].m_colors[TubeColorType::POLYGONS], vibesParams("figure", name()));
           vibes::newGroup(group_name + "_gates", m_map_tubes[tube].m_colors[TubeColorType::GATES], vibesParams("figure", name()));
           
-          TubeSlice *slice = tube->getFirstSlice();
-          TubeSlice *deriv_slice = NULL;
+          const TubeSlice *slice = tube->getFirstSlice();
+          const TubeSlice *deriv_slice = NULL;
 
           if(m_map_tubes[tube].tube_derivative != NULL)
             deriv_slice = m_map_tubes[tube].tube_derivative->getFirstSlice();

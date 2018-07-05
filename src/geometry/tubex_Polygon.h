@@ -29,10 +29,10 @@ namespace tubex
       Polygon(const std::vector<Point>& v_points);
 
       int nbVertices() const;
-      std::vector<Point> getVertices() const;
-      std::vector<Edge> getEdges() const;
+      const std::vector<Point>& getVertices() const;
+      const std::vector<Edge> getEdges() const;
       const Point operator[](int vertex_id) const;
-      ibex::IntervalVector box() const;
+      const ibex::IntervalVector box() const;
 
       bool isPoint() const;
       bool isSegment() const;

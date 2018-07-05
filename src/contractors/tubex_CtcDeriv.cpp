@@ -27,7 +27,7 @@ namespace tubex
 
   }
 
-  bool CtcDeriv::contract(TubeVector& x, const TubeVector& v)
+  bool CtcDeriv::contract(TubeVector& x, const TubeVector& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
@@ -40,7 +40,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contractFwd(TubeVector& x, const TubeVector& v) // temporal forward
+  bool CtcDeriv::contractFwd(TubeVector& x, const TubeVector& v) const // temporal forward
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
@@ -48,7 +48,7 @@ namespace tubex
 
     bool ctc = false;
     TubeSlice *x_slice = x.getFirstSlice();
-    TubeSlice *v_slice = v.getFirstSlice();
+    const TubeSlice *v_slice = v.getFirstSlice();
 
     while(x_slice != NULL)
     {
@@ -60,7 +60,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contractBwd(TubeVector& x, const TubeVector& v) // temporal backward
+  bool CtcDeriv::contractBwd(TubeVector& x, const TubeVector& v) const // temporal backward
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
@@ -68,7 +68,7 @@ namespace tubex
     
     bool ctc = false;
     TubeSlice *x_slice = x.getLastSlice();
-    TubeSlice *v_slice = v.getLastSlice();
+    const TubeSlice *v_slice = v.getLastSlice();
     
     while(x_slice != NULL)
     {
@@ -80,7 +80,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contract(TubeSlice& x, const TubeSlice& v)
+  bool CtcDeriv::contract(TubeSlice& x, const TubeSlice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
@@ -95,7 +95,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contractGates(TubeSlice& x, const TubeSlice& v)
+  bool CtcDeriv::contractGates(TubeSlice& x, const TubeSlice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
@@ -116,7 +116,7 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contractCodomain(int i, TubeSlice& x, const TubeSlice& v)
+  bool CtcDeriv::contractCodomain(int i, TubeSlice& x, const TubeSlice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);

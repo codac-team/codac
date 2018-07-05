@@ -34,18 +34,20 @@ namespace tubex
       TubeSlice(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
       TubeSlice(const TubeSlice& x);
       ~TubeSlice();
-      TubeSlice& operator=(const TubeSlice& x);
+      const TubeSlice& operator=(const TubeSlice& x);
       const ibex::Interval domain() const;
       int dim() const;
 
       // Slices structure
-      TubeSlice* prevSlice() const;
-      TubeSlice* nextSlice() const;
+      TubeSlice* prevSlice();
+      const TubeSlice* prevSlice() const;
+      TubeSlice* nextSlice();
+      const TubeSlice* nextSlice() const;
       static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
       const ibex::IntervalVector inputGate() const;
       const ibex::IntervalVector outputGate() const;
       const ConvexPolygon polygon(int i, const TubeSlice& v) const; // todo: store polygon in cache memory?
-      TubeVector* tubeReference() const;
+      const TubeVector* tubeReference() const;
 
       // Access values
       const ibex::IntervalVector codomain() const;
@@ -73,7 +75,7 @@ namespace tubex
       void setEnvelope(const ibex::IntervalVector& envelope);
       void setInputGate(const ibex::IntervalVector& input_gate);
       void setOutputGate(const ibex::IntervalVector& output_gate);
-      TubeSlice& inflate(double rad);
+      const TubeSlice& inflate(double rad);
 
       // Operators
       TubeSlice& operator+=(const TrajectoryVector& x);

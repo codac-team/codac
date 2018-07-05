@@ -22,11 +22,11 @@ namespace tubex
 
   }
 
-  vector<TubeVector> Solver::solve(const TubeVector& x0,
-                                   void (*ctc_func)(TubeVector&),
-                                   float max_thickness,
-                                   float refining_ratio,
-                                   float fixed_point_ratio)
+  const vector<TubeVector> Solver::solve(const TubeVector& x0,
+                                         void (*ctc_func)(TubeVector&),
+                                         float max_thickness,
+                                         float refining_ratio,
+                                         float fixed_point_ratio)
   {
     stack<TubeVector> s;
     s.push(x0);

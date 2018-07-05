@@ -51,7 +51,7 @@ namespace tubex
 
   }
   
-  Trajectory& Trajectory::operator=(const Trajectory& x)
+  const Trajectory& Trajectory::operator=(const Trajectory& x)
   {
     TrajectoryVector::operator=(x);
     return *this;
