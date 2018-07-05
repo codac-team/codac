@@ -32,7 +32,7 @@ namespace tubex
 
       // Definition
       TrajectoryVector();
-      TrajectoryVector(const ibex::Interval& domain, const Function& f);
+      TrajectoryVector(const ibex::Interval& domain, const tubex::Function& f);
       TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
       TrajectoryVector(const TrajectoryVector& traj);
       ~TrajectoryVector();
@@ -41,7 +41,7 @@ namespace tubex
 
       // Access values
       const std::map<double,ibex::Vector>& getMap() const;
-      const Function* getFunction() const;
+      const tubex::Function* getFunction() const;
       const ibex::Interval domain() const;
       const ibex::IntervalVector codomain() const;
       const ibex::IntervalVector codomainBox() const;
@@ -69,7 +69,7 @@ namespace tubex
         ibex::Interval m_domain = ibex::Interval::EMPTY_SET;
         ibex::IntervalVector m_codomain = ibex::IntervalVector(1, ibex::Interval::EMPTY_SET);
         // A trajectory is defined either by a Function or a map of values
-        Function *m_function = NULL;
+        tubex::Function *m_function = NULL;
         std::map<double,ibex::Vector> m_map_values;
   };
 }

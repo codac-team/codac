@@ -28,19 +28,19 @@ namespace tubex
 
   }
   
-  bool CtcPicard::contract_fwd(const ibex::Fnc& f, TubeVector& x)
+  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeVector& x)
   {
     // todo: DimensionException::check(x, f);
     return contract(f, x, true);
   }
   
-  bool CtcPicard::contract_bwd(const ibex::Fnc& f, TubeVector& x)
+  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeVector& x)
   {
     // todo: DimensionException::check(x, f);
     return contract(f, x, false);
   }
   
-  bool CtcPicard::contract(const ibex::Fnc& f, TubeVector& x, bool fwd)
+  bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, bool fwd)
   {
     // todo: DimensionException::check(x, f);
     bool ctc = false;
@@ -103,25 +103,25 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcPicard::contract_fwd(const ibex::Fnc& f, TubeSlice& x)
+  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeSlice& x)
   {
     // todo: DimensionException::check(x, f);
-    double h = x.domain().diam();
-    IntervalVector intv_x = x.codomain(), intv_x0 = x.inputGate();
-    bool ctc = contract(f, intv_x, intv_x0, h);
+    const Interval t = x.domain();
+    IntervalVector intv_x = x.codomain();
+    bool ctc = contract(f, t, intv_x, x.domain().lb(), x.inputGate());
     x.setEnvelope(intv_x);
-    x.setOutputGate(x.outputGate() & (intv_x0 + h * f.eval_vector(intv_x)));
+    x.setOutputGate(x.outputGate() & (x.inputGate() + t.diam() * f.eval(x.domain().ub(), intv_x)));
     return ctc;
   }
 
-  bool CtcPicard::contract_bwd(const ibex::Fnc& f, TubeSlice& x)
+  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeSlice& x)
   {
     // todo: DimensionException::check(x, f);
-    double h = x.domain().diam();
-    IntervalVector intv_x = x.codomain(), intv_xf = x.outputGate();
-    bool ctc = contract(f, intv_x, intv_xf, -h);
+    const Interval t = x.domain();
+    IntervalVector intv_x = x.codomain();
+    bool ctc = contract(f, t, intv_x, x.domain().ub(), x.outputGate());
     x.setEnvelope(intv_x);
-    x.setInputGate(x.inputGate() & (intv_xf - h * f.eval_vector(intv_x)));
+    x.setInputGate(x.inputGate() & (x.outputGate() - t.diam() * f.eval(x.domain().lb(), intv_x)));
     return ctc;
   }
 
@@ -130,10 +130,11 @@ namespace tubex
     return m_picard_iterations;
   }
 
-  bool CtcPicard::contract(const ibex::Fnc& f,
+  bool CtcPicard::contract(const tubex::Fnc& f,
+                           const Interval& t,
                            IntervalVector& x,
-                           const IntervalVector& x0,
-                           double h)
+                           double t0,
+                           const IntervalVector& x0)
   {
     float delta = m_delta;
     IntervalVector x_guess = x0, x_enclosure = x0;
@@ -149,7 +150,7 @@ namespace tubex
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      x_enclosure = eval(1, f, x_guess, x0, h);// & eval(2, f, x_guess, x0, h);
+      x_enclosure = eval(1, f, t, x_guess, t0, x0);// & eval(2, f, x_guess, x0, h);
 
       if(x_enclosure.is_unbounded())
         return false;
@@ -162,22 +163,23 @@ namespace tubex
   }
 
   const IntervalVector CtcPicard::eval(int order,
-                                       const ibex::Fnc& f,
+                                       const tubex::Fnc& f,
+                                       const Interval& t,
                                        const IntervalVector& x,
-                                       const IntervalVector& x0,
-                                       double h)
+                                       double t0,
+                                       const IntervalVector& x0)
   {
-    Interval intv_h = (Interval(h) | 0.);
+    Interval intv_h = (t - t0) | 0.;
 
     switch(order)
     {
       case 1:
-        return x0 + intv_h * f.eval_vector(x);
+        return x0 + intv_h * f.eval(t, x);
 
-      case 2:
+      /*case 2: // not defined yet with tubex::Function
         return x0
           + intv_h * f.eval_vector(x0)
-          + pow(intv_h,2)/2. * f.jacobian(x) * f.eval_vector(x);
+          + pow(intv_h,2)/2. * f.jacobian(x) * f.eval_vector(x);*/
 
       default:
         throw Exception("CtcPicard::eval", "undefined evaluation order");

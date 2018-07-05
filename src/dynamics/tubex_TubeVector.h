@@ -42,7 +42,7 @@ namespace tubex
       TubeVector(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
       TubeVector(const ibex::Interval& domain, double timestep, int dim = 1);
       TubeVector(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
-      TubeVector(const ibex::Interval& domain, double timestep, const Fnc& f);
+      TubeVector(const ibex::Interval& domain, double timestep, const tubex::Fnc& f);
       TubeVector(const TubeVector& x);
       TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
       TubeVector(const TrajectoryVector& traj, double timestep = 0.);

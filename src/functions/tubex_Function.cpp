@@ -41,6 +41,11 @@ namespace tubex
     delete m_ibex_f;
   }
 
+  IntervalVector Function::eval(double t, const IntervalVector& x) const
+  {
+    return eval(Interval(t), x);
+  }
+
   IntervalVector Function::eval(const Interval& t, const IntervalVector& x) const
   {
     // todo: check dim x regarding f
