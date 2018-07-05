@@ -29,27 +29,34 @@ using namespace tubex;
 
       const IntervalVector eval(const Interval& t, const IntervalVector& x) const
       {
-        
+        return x;
+      }
+
+      const IntervalVector eval(const Interval& t, const TubeVector& x) const
+      {
+        IntervalVector eval_result(x.dim(), Interval::EMPTY_SET);
+
+        if(m_delay > t.lb())
+          eval_result |= eval(t, x[t]);
+
+        if(m_delay < t.ub())
+          eval_result |= exp(m_delay) * x[t - m_delay];
+
+        return eval_result;
       }
 
       const TubeVector eval(const TubeVector& x) const
       {
         // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
-        TubeVector y(x, IntervalVector(x.dim()));
+        TubeVector y(x, IntervalVector(imageDim()));
 
-        Interval t_delayed;
         const TubeSlice *x_slice = x.getFirstSlice();
         TubeSlice *y_slice = y.getFirstSlice();
 
-        while(y_slice != NULL)
+        while(x_slice != NULL)
         {
-          t_delayed = x_slice->domain().lb() - m_delay;
-          if(t_delayed.is_subset(x.domain()))
-            y_slice->setInputGate(x[t_delayed]);
-          
-          t_delayed = x_slice->domain() - m_delay;
-          if(t_delayed.is_subset(x.domain()))
-            y_slice->setEnvelope(x[t_delayed]);
+          y_slice->setInputGate(eval(x_slice->domain().lb(), x));
+          y_slice->setEnvelope(eval(x_slice->domain(), x));
 
           x_slice = x_slice->nextSlice();
           y_slice = y_slice->nextSlice();
@@ -57,9 +64,7 @@ using namespace tubex;
 
         x_slice = x.getLastSlice();
         y_slice = y.getLastSlice();
-        t_delayed = x_slice->domain().ub() - m_delay;
-          if(t_delayed.is_subset(x.domain()))
-            y_slice->setOutputGate(x[t_delayed]);
+        y_slice->setOutputGate(eval(x_slice->domain().ub(), x));
 
         return y;
       }
@@ -71,16 +76,17 @@ using namespace tubex;
 
   void contract(TubeVector& x)
   {
-    FncDelay f(0.5);
+    double delay = 0.5;
+    FncDelay f(delay);
 
     //if(v_x[0].codomain().is_unbounded())
     {
-      //tubex::CtcPicard ctc_picard;
-      //ctc_picard.contract(f, x);
+      tubex::CtcPicard ctc_picard(1.1, false, Interval(x.domain().lb(), delay));
+      ctc_picard.contract(f, x);
     }
 
-    CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, exp(0.5) * f.eval(x));
+    //CtcDeriv ctc_deriv;
+    //ctc_deriv.contract(x, exp(delay) * f.eval(x));
   }
 
 #elif SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD

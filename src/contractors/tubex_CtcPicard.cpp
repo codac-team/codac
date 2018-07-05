@@ -53,12 +53,10 @@ namespace tubex
     else
       x_ptr = &x;
     
-    TubeSlice *starting_slice, *slice_x;
+    TubeSlice *slice_x;
 
-    if(fwd) starting_slice = x_ptr->getSlice(contraction_domain.lb());
-    else starting_slice = x_ptr->getSlice(previous_float(contraction_domain.ub()));
-
-    slice_x = starting_slice;
+    if(fwd) slice_x = x_ptr->getSlice(contraction_domain.lb());
+    else slice_x = x_ptr->getSlice(previous_float(contraction_domain.ub()));
 
     while(slice_x != NULL && slice_x->domain().is_subset(contraction_domain))
     {
