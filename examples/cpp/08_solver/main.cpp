@@ -13,8 +13,8 @@ using namespace tubex;
 #define IVP_PICARD 5
 #define BVP_CP2010 6
 #define DELAY 7
-#define SOLVER_TEST DELAY
-
+#define DELAY_BVP 8
+#define SOLVER_TEST DELAY_BVP
 
 #if SOLVER_TEST == DELAY
   
@@ -85,6 +85,99 @@ using namespace tubex;
       ctc_picard.contract(f, x);
     }
 
+    CtcDelay ctc_delay;
+    TubeVector y(x, IntervalVector(x.dim(), Interval::ALL_REALS));
+    ctc_delay.contract(delay, x, y);
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, exp(delay) * y);
+  }
+
+#elif SOLVER_TEST == DELAY_BVP
+  
+  class FncDelay : public tubex::Fnc
+  {
+    public: 
+
+      FncDelay(double delay) : Fnc(1,1), m_delay(delay)
+      {
+
+      }
+
+      const IntervalVector eval(const Interval& t, const IntervalVector& x) const
+      {
+        return x;
+      }
+
+      const IntervalVector eval(const Interval& t, const TubeVector& x) const
+      {
+        IntervalVector eval_result(x.dim(), Interval::EMPTY_SET);
+
+        if(m_delay > t.lb())
+          eval_result |= eval(t, x[t]);
+
+        if(m_delay < t.ub())
+          eval_result |= exp(m_delay) * x[t - m_delay];
+
+        return eval_result;
+      }
+
+      const TubeVector eval(const TubeVector& x) const
+      {
+        // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
+        TubeVector y(x, IntervalVector(imageDim()));
+
+        const TubeSlice *x_slice = x.getFirstSlice();
+        TubeSlice *y_slice = y.getFirstSlice();
+
+        while(x_slice != NULL)
+        {
+          y_slice->setInputGate(eval(x_slice->domain().lb(), x));
+          y_slice->setEnvelope(eval(x_slice->domain(), x));
+
+          x_slice = x_slice->nextSlice();
+          y_slice = y_slice->nextSlice();
+        }
+
+        x_slice = x.getLastSlice();
+        y_slice = y.getLastSlice();
+        y_slice->setOutputGate(eval(x_slice->domain().ub(), x));
+
+        return y;
+      }
+
+    protected:
+
+      double m_delay = 0.;
+  };
+
+  void contract(TubeVector& x)
+  {
+    Variable vx0, vx1;
+    SystemFactory fac;
+    fac.add_var(vx0);
+    fac.add_var(vx1);
+    fac.add_ctr(sqr(vx0) + sqr(vx1) = 1);
+    System sys(fac);
+    ibex::CtcHC4 hc4(sys);
+    
+    IntervalVector bounds(2);
+    bounds[0] = x[0.][0];
+    bounds[1] = x[1.][0];
+    hc4.contract(bounds);
+    x.set(IntervalVector(1,bounds[0]), 0.);
+    x.set(IntervalVector(1,bounds[1]), 1.);
+
+    double delay = 0.5;
+    FncDelay f(delay);
+
+    //if(x.codomain().is_unbounded())
+    {
+      tubex::CtcPicard ctc_picard(1.1, false, Interval(x.domain().lb(), delay));
+      ctc_picard.contract(f, x, true);
+      ctc_picard.contract(f, x, false);
+    }
+    
     CtcDelay ctc_delay;
     TubeVector y(x, IntervalVector(x.dim(), Interval::ALL_REALS));
     ctc_delay.contract(delay, x, y);
@@ -288,6 +381,13 @@ int main(int argc, char *argv[])
       TubeVector x(domain, 1);
       bool show_details = true;
 
+    #elif SOLVER_TEST == DELAY_BVP
+
+      float epsilon = 0.05;
+      Interval domain(0.,1.);
+      TubeVector x(domain, 1);
+      bool show_details = true;
+
     #elif SOLVER_TEST == BVP_CP2010
 
       float epsilon = 0.1;
@@ -310,8 +410,7 @@ int main(int argc, char *argv[])
 
       float epsilon = 0.05;
       Interval domain(0.,1.);
-      TubeVector x(domain, IntervalVector(1, Interval(-99999.,99999.)));
-      x.set(IntervalVector(1, 1.), 0.); // initial condition
+      TubeVector x(domain, 1);
       bool show_details = true;
 
     #endif
@@ -362,6 +461,14 @@ int main(int argc, char *argv[])
       fig.setProperties(100,100,700,350);
       Trajectory truth(domain, tubex::Function("exp(t)"));
       fig.addTrajectory(&truth, "truth", "blue");
+
+    #elif SOLVER_TEST == DELAY_BVP
+
+      fig.setProperties(100,100,700,350);
+      Trajectory truth1(domain, tubex::Function("exp(t)/sqrt(1+exp(2))"));
+      fig.addTrajectory(&truth1, "truth1", "blue");
+      Trajectory truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
+      fig.addTrajectory(&truth2, "truth2", "red");
 
     #endif
 
