@@ -29,7 +29,7 @@ namespace tubex
       CtcDelay();
 
       // Tube
-      bool contract(const ibex::Interval& a, TubeVector& x, TubeVector& y) const;
+      bool contract(const ibex::Interval& a, const TubeVector& x, TubeVector& y) const;
 
     protected:
 

@@ -85,8 +85,12 @@ using namespace tubex;
       ctc_picard.contract(f, x);
     }
 
-    //CtcDeriv ctc_deriv;
-    //ctc_deriv.contract(x, exp(delay) * f.eval(x));
+    CtcDelay ctc_delay;
+    TubeVector y(x, IntervalVector(x.dim(), Interval::ALL_REALS));
+    ctc_delay.contract(delay, x, y);
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, exp(delay) * y);
   }
 
 #elif SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
