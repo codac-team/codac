@@ -30,7 +30,7 @@ namespace tubex
 
       using Fnc::eval;
       const ibex::IntervalVector eval(const ibex::Interval& t) const;
-      const ibex::IntervalVector eval(const ibex::Interval& t, const ibex::IntervalVector& x) const;
+      const ibex::IntervalVector eval(const ibex::Interval& t, const TubeVector& x) const;
 
     protected:
 

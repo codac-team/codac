@@ -30,12 +30,15 @@ namespace tubex
       bool contract_fwd(const tubex::Fnc& f, TubeVector& x) const;
       bool contract_bwd(const tubex::Fnc& f, TubeVector& x) const;
       bool contract(const tubex::Fnc& f, TubeVector& x, bool fwd = true) const;
-      bool contract_fwd(const tubex::Fnc& f, TubeSlice& slice) const;
-      bool contract_bwd(const tubex::Fnc& f, TubeSlice& slice) const;
+      bool contract_fwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
+      bool contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
       int picardIterations() const;
 
-
-      bool contract(const tubex::Fnc& f,
+  bool guessSliceEnvelope(const Fnc& f,
+                                     const TubeVector& tube,
+                                     TubeSlice& slice,
+                                     bool fwd) const;
+      /*bool contract(const tubex::Fnc& f,
                     const ibex::Interval& t,
                     const ibex::Interval& h,
                     ibex::IntervalVector& x,
@@ -45,7 +48,7 @@ namespace tubex
                                       const ibex::Interval& h,
                                       const ibex::IntervalVector& x,
                                       const ibex::IntervalVector& x0,
-                                      int order = 1) const;
+                                      int order = 1) const;*/
 
     protected:
 

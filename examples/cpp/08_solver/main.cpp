@@ -14,7 +14,7 @@ using namespace tubex;
 #define BVP_CP2010 6
 #define DELAY 7
 #define DELAY_BVP 8
-#define SOLVER_TEST DELAY
+#define SOLVER_TEST IVP_XMSIN_BWD
 
 
 class FncDelayCustom : public tubex::Fnc

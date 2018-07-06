@@ -49,7 +49,7 @@ namespace tubex
     return m_img_dim;
   }
   
-  const IntervalVector Fnc::eval(double t, const ibex::IntervalVector& x) const
+  const IntervalVector Fnc::eval(double t, const TubeVector& x) const
   {
     return eval(Interval(t), x);
   }
@@ -64,8 +64,8 @@ namespace tubex
 
     while(x_slice != NULL)
     {
-      y_slice->setInputGate(eval(x_slice->domain().lb(), x_slice->inputGate()));
-      y_slice->setEnvelope(eval(x_slice->domain(), x_slice->codomain()));
+      y_slice->setInputGate(eval(x_slice->domain().lb(), x));
+      y_slice->setEnvelope(eval(x_slice->domain(), x));
 
       x_slice = x_slice->nextSlice();
       y_slice = y_slice->nextSlice();
@@ -73,7 +73,7 @@ namespace tubex
 
     x_slice = x.getLastSlice();
     y_slice = y.getLastSlice();
-    y_slice->setOutputGate(eval(x_slice->domain().ub(), x_slice->outputGate()));
+    y_slice->setOutputGate(eval(x_slice->domain().ub(), x));
 
     return y;
   }
