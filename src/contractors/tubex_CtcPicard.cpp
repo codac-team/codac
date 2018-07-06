@@ -22,8 +22,8 @@ namespace tubex
 {
   // todo: backward
 
-  CtcPicard::CtcPicard(float delta, bool preserve_sampling, const ibex::Interval& restricted_domain)
-    : m_delta(delta), m_preserve_sampling(preserve_sampling), m_restricted_domain(restricted_domain)
+  CtcPicard::CtcPicard(float delta, bool preserve_sampling)
+    : m_delta(delta), m_preserve_sampling(preserve_sampling)
   {
 
   }
@@ -45,7 +45,6 @@ namespace tubex
     // todo: DimensionException::check(x, f);
     bool ctc = false;
     TubeVector *x_ptr;
-    Interval contraction_domain = m_restricted_domain & x.domain();
 
     if(m_preserve_sampling)
       x_ptr = new TubeVector(x);
@@ -55,10 +54,10 @@ namespace tubex
     
     TubeSlice *slice_x;
 
-    if(fwd) slice_x = x_ptr->getSlice(contraction_domain.lb());
-    else slice_x = x_ptr->getSlice(previous_float(contraction_domain.ub()));
+    if(fwd) slice_x = x_ptr->getFirstSlice();
+    else slice_x = x_ptr->getLastSlice();
 
-    while(slice_x != NULL && slice_x->domain().is_subset(contraction_domain))
+    while(slice_x != NULL)
     {
       if(fwd) ctc |= contract_fwd(f, *slice_x);
       else ctc |= contract_bwd(f, *slice_x);
@@ -75,8 +74,8 @@ namespace tubex
 
         if(prev_slice_x == NULL)
         {
-          if(fwd) slice_x = x_ptr->getSlice(contraction_domain.lb());
-          else slice_x = x_ptr->getSlice(previous_float(contraction_domain.ub()));
+          if(fwd) slice_x = x_ptr->getFirstSlice();
+          else slice_x = x_ptr->getLastSlice();
         }
 
         else
