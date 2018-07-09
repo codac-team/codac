@@ -14,7 +14,7 @@ using namespace tubex;
 #define BVP_CP2010 6
 #define DELAY 7
 #define DELAY_BVP 8
-#define SOLVER_TEST IVP_XMSIN_FWD
+#define SOLVER_TEST DELAY_BVP
 
 
 class FncDelayCustom : public tubex::Fnc
@@ -39,6 +39,7 @@ class FncDelayCustom : public tubex::Fnc
         eval_result |= eval(t, x[t]);
 
       if(m_delay < t.ub())
+        //eval_result |= IntervalVector(x.dim(), Interval::ALL_REALS);
         eval_result |= exp(m_delay) * x[t - m_delay];
 
       return eval_result;
