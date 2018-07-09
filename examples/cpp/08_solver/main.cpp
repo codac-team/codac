@@ -14,7 +14,7 @@ using namespace tubex;
 #define BVP_CP2010 6
 #define DELAY 7
 #define DELAY_BVP 8
-#define SOLVER_TEST DELAY_BVP
+#define SOLVER_TEST DAE
 
 
 class FncDelayCustom : public tubex::Fnc
@@ -155,17 +155,10 @@ class FncDelayCustom : public tubex::Fnc
 
   void contract(TubeVector& x)
   {
-    //Variable vx, vy;
-    //tubex::Function f("x", "y", "(y, [-oo,oo])");//vx, vy, Return(vy,"[-oo,oo]"));
-
-    //if(x.codomain().is_unbounded())
-    //{
-    //  tubex::CtcPicard ctc_picard;
-    //  ctc_picard.contract(f, x);
-    //}
-
-    Variable vx0, vx1;
+    // Constraint x^2+y^2=1
+    Variable vt, vx0, vx1;
     SystemFactory fac;
+    fac.add_var(vt);
     fac.add_var(vx0);
     fac.add_var(vx1);
     fac.add_ctr(sqr(vx0) + sqr(vx1) = 1);
@@ -174,24 +167,13 @@ class FncDelayCustom : public tubex::Fnc
     tubex::CtcHC4 ctc_hc4;
     ctc_hc4.contract(hc4, x);
 
-    TubeVector xdot(x);
-    TubeSlice *xdot_slice = xdot.getFirstSlice(), *x_slice = x.getFirstSlice();
-    while(xdot_slice != NULL)
-    {
-      IntervalVector box(2);
-      box[0] = x_slice->inputGate()[1];
-      xdot_slice->setInputGate(box);
-      box[0] = x_slice->outputGate()[1];
-      xdot_slice->setOutputGate(box);
-      box[0] = x_slice->codomain()[1];
-      xdot_slice->setEnvelope(box);
-
-      x_slice = x_slice->nextSlice();
-      xdot_slice = xdot_slice->nextSlice();
-    }
-
-    CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, xdot);
+    // Constraint xdot = y
+    //tubex::Function f("x", "y", "(y;[-10,10])"); // testcase 1
+    tubex::Function f("x", "y", "(y^2;[-10,10])"); // testcase 2
+    tubex::CtcPicard ctc_picard; // by Picard
+    ctc_picard.contract(f, x);
+    CtcDeriv ctc_deriv; // by Cd/dt
+    ctc_deriv.contract(x, f.eval(x));
   }
 
 #elif SOLVER_TEST == BVP
@@ -268,9 +250,13 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == DAE
 
-      float epsilon = 0.5;
-      Interval domain(0.,1.);
+      float epsilon = 0.05;
+      Interval domain(0.,1.5);
       TubeVector x(domain, IntervalVector(2, Interval(-1.,1.)));
+      IntervalVector init(2);
+      //init[0] = Interval(cos(3.*M_PI/4.));
+      init[1] = Interval(sin(3.*M_PI/4.));
+      x.set(init, domain.lb());
       bool show_details = true;
 
     #elif SOLVER_TEST == BVP
