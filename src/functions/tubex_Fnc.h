@@ -23,7 +23,6 @@ namespace tubex
   {
     public:
 
-      Fnc();
       Fnc(int n, int m);
       ~Fnc();
       const Fnc& operator=(const Fnc& f);
@@ -31,11 +30,12 @@ namespace tubex
       int nbVars() const;
       int imageDim() const;
 
-      const ibex::IntervalVector eval(double t, const TubeVector& x) const;
-      virtual const ibex::IntervalVector eval(const ibex::Interval& t, const TubeVector& x) const = 0;
       const TubeVector eval(const TubeVector& x) const;
+      virtual const ibex::IntervalVector eval(const ibex::Interval& t, const TubeVector& x) const = 0;
 
     protected:
+      
+      Fnc();
 
       int m_nb_vars = -1, m_img_dim = -1;
   };
