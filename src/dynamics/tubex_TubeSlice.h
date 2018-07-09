@@ -98,18 +98,9 @@ namespace tubex
 
     protected:
 
-    /** Base: **/
-
-      // Definition
       void setTubeReference(TubeVector *tube_ref);
       void setDomain(const ibex::Interval& domain);
-
-      // Slices structure
-
-      // Access values
       const ibex::IntervalVector codomainBox() const;
-
-      // Setting values
 
     /** Class variables **/
 
@@ -120,7 +111,6 @@ namespace tubex
       TubeVector *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
       friend class TubeVector;
-      friend void serializeTubeVector(std::ofstream& bin_file, const TubeVector& tube, int version_number);
       friend void deserializeTubeVector(std::ifstream& bin_file, TubeVector& tube);
   };
 }

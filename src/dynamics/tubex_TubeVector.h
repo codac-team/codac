@@ -179,28 +179,14 @@ namespace tubex
 
     protected:
 
-    /** Base: **/
-
-      // Access values
       const ibex::IntervalVector codomainBox() const;
-
-    /** Integration: **/
-      
-      void checkPartialPrimitive() const;
-
-    /** Serialization: **/
-
       void deserialize(const std::string& binary_file_name, std::vector<TrajectoryVector>& v_trajs);
 
     /** Class variables **/
 
       std::vector<TubeSlice*> m_v_slices;
 
-      friend class CtcDeriv; // todo: remove this
-      friend class CtcEval; // todo: remove this? not sure
-      friend class TubeSlice; // todo: remove this? not sure
-      friend void serializeTubeVector(std::ofstream& bin_file, const TubeVector& tube, int version_number); // todo: remove this? not sure
-      friend void deserializeTubeVector(std::ifstream& bin_file, TubeVector& tube); // todo: remove this? not sure
+      friend void deserializeTubeVector(std::ifstream& bin_file, TubeVector& tube);
   };
 }
 

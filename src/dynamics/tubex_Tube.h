@@ -128,10 +128,6 @@ namespace tubex
 
     protected:
 
-    /** Base: **/
-
-      // Access values
-
       using TubeVector::codomainBox;
   };
 }
