@@ -14,7 +14,7 @@ using namespace tubex;
 #define BVP_CP2010 6
 #define DELAY 7
 #define DELAY_BVP 8
-#define SOLVER_TEST IVP_XMSIN_BWD
+#define SOLVER_TEST DELAY_BVP
 
 
 class FncDelayCustom : public tubex::Fnc
@@ -80,11 +80,8 @@ class FncDelayCustom : public tubex::Fnc
     double delay = 0.5;
     FncDelayCustom f(delay);
 
-    //if(v_x[0].codomain().is_unbounded())
-    {
-      tubex::CtcPicard ctc_picard(1.1);
-      ctc_picard.contract(f, x);
-    }
+    tubex::CtcPicard ctc_picard(1.1);
+    ctc_picard.contract(f, x);
 
     CtcDelay ctc_delay;
     TubeVector y(x, IntervalVector(x.dim(), Interval::ALL_REALS));
@@ -116,11 +113,8 @@ class FncDelayCustom : public tubex::Fnc
     double delay = 0.5;
     FncDelayCustom f(delay);
 
-    //if(x.codomain().is_unbounded())
-    {
-      tubex::CtcPicard ctc_picard(1.1);
-      ctc_picard.contract(f, x);
-    }
+    tubex::CtcPicard ctc_picard(1.1);
+    ctc_picard.contract(f, x);
     
     CtcDelay ctc_delay;
     TubeVector y(x, IntervalVector(x.dim(), Interval::ALL_REALS));
@@ -135,14 +129,9 @@ class FncDelayCustom : public tubex::Fnc
   void contract(TubeVector& x)
   {
     tubex::Function f("x", "-sin(x)");
-    
-    //if(x.codomain().is_unbounded())
-    {
-      //cout << "Picard 1" << endl;
-      tubex::CtcPicard ctc_picard;
-      ctc_picard.contract_bwd(f, x);
-      //cout << "Picard 2" << endl;
-    }
+
+    tubex::CtcPicard ctc_picard;
+    ctc_picard.contract(f, x);
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, f.eval(x));
@@ -154,11 +143,8 @@ class FncDelayCustom : public tubex::Fnc
   {
     tubex::Function f("x", "-x");
 
-    //if(x.codomain().is_unbounded())
-    {
-      tubex::CtcPicard ctc_picard;
-      ctc_picard.contract(f, x);
-    }
+    tubex::CtcPicard ctc_picard;
+    ctc_picard.contract(f, x);
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, f.eval(x));
@@ -228,11 +214,8 @@ class FncDelayCustom : public tubex::Fnc
     
     tubex::Function f("x", "x");
 
-    //if(x.codomain().is_unbounded())
-    {
-      tubex::CtcPicard ctc_picard;
-      ctc_picard.contract(f, x);
-    }
+    tubex::CtcPicard ctc_picard;
+    ctc_picard.contract(f, x);
     
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, f.eval(x));
@@ -242,41 +225,10 @@ class FncDelayCustom : public tubex::Fnc
       
   void contract(TubeVector& x)
   {
-    Variable x1, x2, x1dot, x2dot;
+    tubex::Function f("x1", "x2", "(x2 ; 0.1 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1))))");
     
-    tubex::Function f(x1,
-               x2,
-        Return(x2,
-               0.1 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
-    
-    /*Function f(x1,
-               x2,
-               x1dot,
-               x2dot,
-        Return(x2,
-               0.1 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1))),
-               Interval::ALL_REALS,
-               Interval::ALL_REALS));*/
-
-    /*Function g(x1,
-               x2,
-               x1dot,
-               x2dot,
-        Return(x1,
-               x2,
-               x2,
-               0.1 * x1 * exp((20.*0.4*(1.-x1)) / (1. + 0.4 * (1.-x1)))));
-
-    x &= TubeVector(g, x);*/
-
-    //if(x.codomain().is_unbounded())
-    {
-      //cout << "starting Picard " << x.nbSlices() << endl;
-      tubex::CtcPicard ctc_picard;
-      ctc_picard.contract_fwd(f, x);
-      ctc_picard.contract_bwd(f, x);
-      //cout << "ending Picard" << endl;
-    }
+    tubex::CtcPicard ctc_picard;
+    ctc_picard.contract(f, x);
     
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, f.eval(x));
@@ -291,7 +243,7 @@ int main(int argc, char *argv[])
 
     #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
-      float epsilon = 0.151;
+      float epsilon = 0.051;
       Interval domain(0.,10.);
       TubeVector x(domain, 1);
 

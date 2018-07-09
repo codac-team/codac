@@ -27,9 +27,10 @@ namespace tubex
     public:
 
       CtcPicard(float delta = 1.1);
+      bool contract(const tubex::Fnc& f, TubeVector& x) const;
       void contract_fwd(const tubex::Fnc& f, TubeVector& x) const;
       void contract_bwd(const tubex::Fnc& f, TubeVector& x) const;
-      bool contract(const tubex::Fnc& f, TubeVector& x, bool fwd = true) const;
+      bool contract(const tubex::Fnc& f, TubeVector& x, bool fwd) const;
 
       void contract_fwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
       void contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;

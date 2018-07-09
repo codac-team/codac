@@ -25,6 +25,13 @@ namespace tubex
 
   }
   
+  bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x) const
+  {
+    DimensionException::check(x, f);
+    contract(f, x, true);
+    contract(f, x, false);
+  }
+  
   void CtcPicard::contract_fwd(const tubex::Fnc& f, TubeVector& x) const
   {
     DimensionException::check(x, f);
