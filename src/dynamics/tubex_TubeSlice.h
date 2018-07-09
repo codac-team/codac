@@ -94,8 +94,7 @@ namespace tubex
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
       const std::string className() const { return "TubeSlice"; };
-
-    /** Integration: **/
+      
 
     protected:
 
@@ -112,10 +111,6 @@ namespace tubex
 
       // Setting values
 
-      // Integration
-      //const std::pair<ibex::IntervalVector,ibex::IntervalVector>& getPartialPrimitiveValue() const;
-      //std::pair<ibex::IntervalVector,ibex::IntervalVector> getPartialPrimitiveValue(const ibex::Interval& t) const;
-      
     /** Class variables **/
 
       ibex::Interval m_domain;

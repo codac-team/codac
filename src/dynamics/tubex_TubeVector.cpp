@@ -817,109 +817,74 @@ namespace tubex
     const IntervalVector TubeVector::integral(const Interval& t) const
     {
       DomainException::check(*this, t);
-      //pair<IntervalVector,IntervalVector> partial_ti = partialIntegral(t);
-      //return Interval(partial_ti.first.lb(), partial_ti.second.ub());
+      pair<IntervalVector,IntervalVector> partial_ti = partialIntegral(t);
+      return IntervalVector(partial_ti.first.lb()) | partial_ti.second.ub();
     }
 
     const IntervalVector TubeVector::integral(const Interval& t1, const Interval& t2) const
     {
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
-      //pair<IntervalVector,IntervalVector> integral_t1 = partialIntegral(t1);
-      //pair<IntervalVector,IntervalVector> integral_t2 = partialIntegral(t2);
-      //Vector lb = (integral_t2.first - integral_t1.first).lb();
-      //Vector ub = (integral_t2.second - integral_t1.second).ub();
-      //return Interval(min(lb, ub), max(lb, ub));
+      pair<IntervalVector,IntervalVector> integral_t1 = partialIntegral(t1);
+      pair<IntervalVector,IntervalVector> integral_t2 = partialIntegral(t2);
+      Vector lb = (integral_t2.first - integral_t1.first).lb();
+      Vector ub = (integral_t2.second - integral_t1.second).ub();
+      return IntervalVector(lb) | ub;
     }
 
     const pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t) const
     {
-    //  checkPartialPrimitive();
-    //  
-    //  int index_lb = input2index(t.lb());
-    //  int index_ub = input2index(t.ub());
-    //  
-    //  Interval integral_lb = Interval::EMPTY_SET;
-    //  Interval integral_ub = Interval::EMPTY_SET;
-    //  
-    //  Interval intv_t_lb = getSlice(index_lb)->domain();
-    //  Interval intv_t_ub = getSlice(index_ub)->domain();
-    //  
-    //  // Part A
-    //  {
-    //    pair<Interval,Interval> partial_primitive_first = getSlice(index_lb)->getPartialPrimitiveValue();
-    //    Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
-    //      
-    //    Interval y_first = (*this)[index_lb];
-    //    Interval ta1 = Interval(intv_t_lb.lb(), t.lb());
-    //    Interval ta2 = Interval(intv_t_lb.lb(), min(t.ub(), intv_t_lb.ub()));
-    //    Interval tb1 = Interval(t.lb(), intv_t_lb.ub());
-    //    Interval tb2 = Interval(min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
-    //    
-    //    if(y_first.lb() < 0)
-    //      integral_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),
-    //                              primitive_lb.lb() - y_first.lb() * tb1.diam());
-    //    
-    //    else if(y_first.lb() > 0)
-    //      integral_lb |= Interval(primitive_lb.lb() + y_first.lb() * ta1.diam(),
-    //                              primitive_lb.lb() + y_first.lb() * ta2.diam());
-    //    
-    //    if(y_first.ub() < 0)
-    //      integral_ub |= Interval(primitive_lb.ub() + y_first.ub() * ta2.diam(),
-    //                              primitive_lb.ub() + y_first.ub() * ta1.diam());
-    //    
-    //    else if(y_first.ub() > 0)
-    //      integral_ub |= Interval(primitive_lb.ub() - y_first.ub() * tb1.diam(),
-    //                              primitive_lb.ub() - y_first.ub() * tb2.diam());
-    //  }
-    //  
-    //  // Part B
-    //  if(index_ub - index_lb > 1)
-    //  {
-    //    pair<Interval,Interval> partial_primitive = m_component->getPartialPrimitiveValue(Interval(intv_t_lb.ub(), intv_t_ub.lb()));
-    //    integral_lb |= partial_primitive.first;
-    //    integral_ub |= partial_primitive.second;
-    //  }
-    //  
-    //  // Part C
-    //  if(index_lb != index_ub)
-    //  {
-    //    pair<Interval,Interval> partial_primitive_second = getSlice(index_ub)->getPartialPrimitiveValue();
-    //    Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
-    //  
-    //    Interval y_second = (*this)[index_ub];
-    //    Interval ta = Interval(intv_t_ub.lb(), t.ub());
-    //    Interval tb1 = intv_t_ub;
-    //    Interval tb2 = Interval(t.ub(), intv_t_ub.ub());
-    //  
-    //    if(y_second.lb() < 0)
-    //      integral_lb |= Interval(primitive_ub.lb() - y_second.lb() * tb2.diam(),
-    //                              primitive_ub.lb() - y_second.lb() * tb1.diam());
-    //    
-    //    else if(y_second.lb() > 0)
-    //      integral_lb |= Interval(primitive_ub.lb(),
-    //                              primitive_ub.lb() + y_second.lb() * ta.diam());
-    //    
-    //    if(y_second.ub() < 0)
-    //      integral_ub |= Interval(primitive_ub.ub() + y_second.ub() * ta.diam(),
-    //                              primitive_ub.ub());
-    //  
-    //    else if(y_second.ub() > 0)
-    //      integral_ub |= Interval(primitive_ub.ub() - y_second.ub() * tb1.diam(),
-    //                              primitive_ub.ub() - y_second.ub() * tb2.diam());
-    //  }
-    //  
-    //  return make_pair(integral_lb, integral_ub);
+      // todo: use tree structure here
+      DomainException::check(*this, t);
+
+      Interval intv_t;
+      const TubeSlice *slice = getFirstSlice();
+      pair<IntervalVector,IntervalVector> p_integ
+        = make_pair(IntervalVector(dim(), 0.), IntervalVector(dim(), 0.)), p_integ_uncertain(p_integ);
+
+      while(slice != NULL && slice->domain().lb() < t.ub())
+      {
+        // From t0 to tlb
+
+          intv_t = slice->domain() & Interval(domain().lb(), t.lb());
+          if(!intv_t.is_empty())
+          {
+            p_integ.first += intv_t.diam() * slice->codomain().lb();
+            p_integ.second += intv_t.diam() * slice->codomain().ub();
+
+            p_integ_uncertain = p_integ;
+          }
+
+        // From tlb to tub
+
+          intv_t = slice->domain() & t;
+          if(!intv_t.is_empty())
+          {
+            pair<IntervalVector,IntervalVector> p_integ_temp(p_integ_uncertain);
+            p_integ_uncertain.first += Interval(0., intv_t.diam()) * slice->codomain().lb();
+            p_integ_uncertain.second += Interval(0., intv_t.diam()) * slice->codomain().ub();
+          
+            p_integ.first |= p_integ_uncertain.first;
+            p_integ.second |= p_integ_uncertain.second;
+
+            p_integ_uncertain.first = p_integ_temp.first + intv_t.diam() * slice->codomain().lb();
+            p_integ_uncertain.second = p_integ_temp.second + intv_t.diam() * slice->codomain().ub();
+          }
+
+        slice = slice->nextSlice();
+      }
+
+      return p_integ;
     }
 
     const pair<IntervalVector,IntervalVector> TubeVector::partialIntegral(const Interval& t1, const Interval& t2) const
     {
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
-      //pair<IntervalVector,IntervalVector> integral_t1 = partialIntegral(t1);
-      //pair<IntervalVector,IntervalVector> integral_t2 = partialIntegral(t2);
-      //return make_pair((integral_t2.first - integral_t1.first),
-      //                 (integral_t2.second - integral_t1.second));
+      pair<IntervalVector,IntervalVector> integral_t1 = partialIntegral(t1);
+      pair<IntervalVector,IntervalVector> integral_t2 = partialIntegral(t2);
+      return make_pair((integral_t2.first - integral_t1.first),
+                       (integral_t2.second - integral_t1.second));
     }
 
     // Contractors
@@ -986,32 +951,6 @@ namespace tubex
     }
 
     // Integration
-
-    //void TubeVector::checkPartialPrimitive() const
-    //{
-    //  // Warning: this method can only be called from the root (TubeVector class)
-    //  // (because computation starts from 0)
-    //  
-    //  /*if(m_component->m_primitive_update_needed)
-    //  {
-    //    Interval sum_max = Interval(0);
-    //    
-    //    TubeSlice *slice = getFirstSlice();
-    //    while(slice != NULL)
-    //    {
-    //      double dt = slice->domain().diam();
-    //      Interval slice_codomain = slice->codomain();
-    //      Interval integral_value = sum_max + slice_codomain * Interval(0., dt);
-    //      slice->m_partial_primitive = make_pair(Interval(integral_value.lb(), integral_value.lb() + fabs(slice_codomain.lb() * dt)),
-    //                                             Interval(integral_value.ub() - fabs(slice_codomain.ub() * dt), integral_value.ub()));
-    //      slice->m_primitive_update_needed = true;
-    //      sum_max += slice_codomain * dt;
-    //      slice = slice->nextSlice();
-    //    }
-    //    
-    //    m_component->checkPartialPrimitive(); // updating nodes from leafs information
-    //  }
-    //}
 
     // Serialization
 

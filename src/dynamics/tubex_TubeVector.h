@@ -16,8 +16,6 @@
 #include <vector>
 #include "tubex_Fnc.h"
 #include "tubex_TubeSlice.h"
-//#include "tubex_Tube.h"
-//#include "tubex_Trajectory.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_DynamicalItem.h"
 
@@ -25,7 +23,6 @@
 
 // todo:
 // - test memory leaks
-// - integral computations with gates
 // - custom propagation fixed point
 
 namespace tubex

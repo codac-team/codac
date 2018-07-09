@@ -441,8 +441,6 @@ namespace tubex
       return str;
     }
 
-    // Integration
-
 
   // Protected methods
 
@@ -467,33 +465,5 @@ namespace tubex
     }
 
     // Setting values
-
-    // Integration
-
-    /*void TubeSlice::checkPartialPrimitive() const
-    {
-      if(!m_primitive_update_needed)
-        throw Exception("TubeSlice::checkPartialPrimitive", "primitive value not set");
-      // should be set from TubeVector class
-    }
-
-    const pair<IntervalVector,IntervalVector>& TubeSlice::getPartialPrimitiveValue() const
-    {
-      //checkPartialPrimitive();
-      //return m_partial_primitive;
-    }
-
-    pair<IntervalVector,IntervalVector> TubeSlice::getPartialPrimitiveValue(const Interval& t) const
-    {
-      if(t == m_domain || t.is_unbounded() || t.is_superset(m_domain))
-      {
-        //checkPartialPrimitive();
-        //return m_partial_primitive;
-      }
-
-      else
-      {
-        throw Exception("TubeSlice::getPartialPrimitiveValue", "unexpected case");
-      }
-    }*/
+    
 }

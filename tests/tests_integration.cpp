@@ -11,7 +11,7 @@ TEST_CASE("Computing tube's primitive", "[core]")
 {
   SECTION("Test tube3")
   {
-    /*Tube tube = tubeTest3();
+    Tube tube = tubeTest3();
     CHECK(ApproxIntv(tube[0]) == Interval(1,3));
     CHECK(ApproxIntv(tube[1]) == Interval(0,2));
     CHECK(ApproxIntv(tube[2]) == Interval(-1,1));
@@ -231,6 +231,9 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntv(tube.integral(Interval(12.5))) == Interval(6.5,20.5));
     CHECK(ApproxIntv(tube.integral(Interval(14.5))) == Interval(7,23.5));
+    pair<Interval,Interval> p_intv = tube.partialIntegral(Interval(12.5,14.5));
+    CHECK(p_intv.first == Interval(6.,7.));
+    CHECK(p_intv.second == Interval(20.5,23.5));
     CHECK(ApproxIntv(tube.integral(Interval(12.5,14.5))) == Interval(6.0,23.5));
     CHECK(ApproxIntv(tube.integral(Interval(0))) == Interval(0));
     CHECK(ApproxIntv(tube.integral(Interval(10.2))) == Interval(9.3,19.7));
@@ -241,8 +244,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
   SECTION("Test tube4(05)")
   {
     Tube tube = tubeTest4_05();
+    tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntv(tube.integral(Interval(12.5))) == Interval(6.5,20.5));
     CHECK(ApproxIntv(tube.integral(Interval(14.5))) == Interval(7,23.5));
+    pair<Interval,Interval> p_intv = tube.partialIntegral(Interval(12.5,14.5));
+    CHECK(p_intv.first == Interval(6.,7.));
+    CHECK(p_intv.second == Interval(20.5,23.5));
     CHECK(ApproxIntv(tube.integral(Interval(12.5,14.5))) == Interval(6.0,23.5));
     CHECK(ApproxIntv(tube.integral(Interval(0))) == Interval(0));
     CHECK(ApproxIntv(tube.integral(Interval(10.2))) == Interval(9.3,19.7));
@@ -462,5 +469,5 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     Tube tube = tubeTest4_05();
     CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
     CHECK(ApproxIntvPair(tube.partialIntegral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
-  */}
+  }
 }
