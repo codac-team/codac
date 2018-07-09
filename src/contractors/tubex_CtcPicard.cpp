@@ -86,7 +86,7 @@ namespace tubex
   {
     DimensionException::check(tube, f);
     DimensionException::check(tube, slice);
-    
+
     guessSliceEnvelope(f, tube, slice, true);
     slice.setOutputGate(slice.outputGate()
       & (slice.inputGate() + slice.domain().diam() * f.eval(slice.domain(), tube)));
@@ -117,7 +117,7 @@ namespace tubex
 
     float delta = m_delta;
     Interval h, t = slice.domain();
-    IntervalVector x(slice.codomain()), x0(tube.dim()), xf(x0), max_envelope = slice.codomain();
+    IntervalVector initial_x(slice.codomain()), x0(tube.dim()), xf(x0);
 
     if(fwd)
     {
@@ -139,19 +139,19 @@ namespace tubex
     do
     {
       m_picard_iterations++;
-      x_guess = x_enclosure & max_envelope;
+      x_guess = x_enclosure;
 
       for(int i = 0 ; i < x_guess.size() ; i++)
         x_guess[i] = x_guess[i].mid()
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      slice.setEnvelope(x_guess);
+      slice.setEnvelope(x_guess & initial_x);
       x_enclosure = x0 + h * f.eval(t, tube);
 
       if(x_enclosure.is_unbounded())
       {
-        slice.setEnvelope(x); // coming back to the initial state
+        slice.setEnvelope(initial_x); // coming back to the initial state
         break;
       }
 

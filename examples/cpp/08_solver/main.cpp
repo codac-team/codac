@@ -82,7 +82,7 @@ class FncDelayCustom : public tubex::Fnc
 
     //if(v_x[0].codomain().is_unbounded())
     {
-      tubex::CtcPicard ctc_picard(1.1, false);
+      tubex::CtcPicard ctc_picard(1.1);
       ctc_picard.contract(f, x);
     }
 
@@ -118,9 +118,8 @@ class FncDelayCustom : public tubex::Fnc
 
     //if(x.codomain().is_unbounded())
     {
-      tubex::CtcPicard ctc_picard(1.1, false);
-      ctc_picard.contract(f, x, true);
-      ctc_picard.contract(f, x, false);
+      tubex::CtcPicard ctc_picard(1.1);
+      ctc_picard.contract(f, x);
     }
     
     CtcDelay ctc_delay;
@@ -136,11 +135,13 @@ class FncDelayCustom : public tubex::Fnc
   void contract(TubeVector& x)
   {
     tubex::Function f("x", "-sin(x)");
-
+    
     //if(x.codomain().is_unbounded())
     {
+      //cout << "Picard 1" << endl;
       tubex::CtcPicard ctc_picard;
-      ctc_picard.contract(f, x);
+      ctc_picard.contract_bwd(f, x);
+      //cout << "Picard 2" << endl;
     }
 
     CtcDeriv ctc_deriv;
@@ -230,7 +231,7 @@ class FncDelayCustom : public tubex::Fnc
     //if(x.codomain().is_unbounded())
     {
       tubex::CtcPicard ctc_picard;
-      ctc_picard.contract(f, x, true);
+      ctc_picard.contract(f, x);
     }
     
     CtcDeriv ctc_deriv;
@@ -290,7 +291,7 @@ int main(int argc, char *argv[])
 
     #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
-      float epsilon = 0.051;
+      float epsilon = 0.151;
       Interval domain(0.,10.);
       TubeVector x(domain, 1);
 
