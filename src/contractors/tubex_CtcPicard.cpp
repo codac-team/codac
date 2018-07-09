@@ -20,62 +20,50 @@ using namespace ibex;
 
 namespace tubex
 {
-  // todo: backward
-
-  CtcPicard::CtcPicard(float delta, bool preserve_sampling)
-    : m_delta(delta), m_preserve_sampling(preserve_sampling)
+  CtcPicard::CtcPicard(float delta) : m_delta(delta)
   {
 
   }
   
-  bool CtcPicard::contract_fwd(const tubex::Fnc& f, TubeVector& x) const
+  void CtcPicard::contract_fwd(const tubex::Fnc& f, TubeVector& x) const
   {
-    // todo: DimensionException::check(x, f);
-    return contract(f, x, true);
+    DimensionException::check(x, f);
+    contract(f, x, true);
   }
   
-  bool CtcPicard::contract_bwd(const tubex::Fnc& f, TubeVector& x) const
+  void CtcPicard::contract_bwd(const tubex::Fnc& f, TubeVector& x) const
   {
-    // todo: DimensionException::check(x, f);
-    return contract(f, x, false);
+    DimensionException::check(x, f);
+    contract(f, x, false);
   }
   
   bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, bool fwd) const
   {
-    // todo: DimensionException::check(x, f);
-    bool ctc = false;
-    TubeVector *x_ptr;
-
-    // todo: if(m_preserve_sampling)
-    // todo:   x_ptr = new TubeVector(x);
-    // todo: 
-    // todo: else
-      x_ptr = &x;
-    
+    DimensionException::check(x, f);
     TubeSlice *slice_x;
 
-    if(fwd) slice_x = x_ptr->getFirstSlice();
-    else slice_x = x_ptr->getLastSlice();
+    if(fwd) slice_x = x.getFirstSlice();
+    else slice_x = x.getLastSlice();
 
     while(slice_x != NULL)
     {
-      if(fwd) ctc |= contract_fwd(f, x, *slice_x);
-      else ctc |= contract_bwd(f, x, *slice_x);
+      if(fwd) contract_fwd(f, x, *slice_x);
+      else contract_bwd(f, x, *slice_x);
 
       bool unbounded_slice = slice_x->codomain().is_unbounded();
 
-      if(unbounded_slice && slice_x->domain().diam() > x_ptr->domain().diam() / 5000.)
+      if(unbounded_slice && slice_x->domain().diam() > x.domain().diam() / 5000.)
       {
         TubeSlice *prev_slice_x;
         if(fwd) prev_slice_x = slice_x->prevSlice();
         else prev_slice_x = slice_x->nextSlice();
 
-        x_ptr->sample(slice_x->domain().mid());
+        x.sample(slice_x->domain().mid());
 
         if(prev_slice_x == NULL)
         {
-          if(fwd) slice_x = x_ptr->getFirstSlice();
-          else slice_x = x_ptr->getLastSlice();
+          if(fwd) slice_x = x.getFirstSlice();
+          else slice_x = x.getLastSlice();
         }
 
         else
@@ -91,36 +79,27 @@ namespace tubex
       else slice_x = slice_x->prevSlice();
     }
 
-    if(m_preserve_sampling)
-    {
-      // todo: double lb = x.domain().lb(), ub = x.domain().ub();
-      // todo: x.set(x.codomain() & x_ptr->codomain());
-      // todo: x.set(x[lb] & (*x_ptr)[lb], lb);
-      // todo: x.set(x[ub] & (*x_ptr)[ub], ub);
-      // todo: delete x_ptr;
-    }
-
-    return ctc;
+    // todo: return value
   }
 
-  bool CtcPicard::contract_fwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const
+  void CtcPicard::contract_fwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const
   {
-    // todo: DimensionException::check(x, f);
+    DimensionException::check(tube, f);
+    DimensionException::check(tube, slice);
+    
     guessSliceEnvelope(f, tube, slice, true);
     slice.setOutputGate(slice.outputGate()
       & (slice.inputGate() + slice.domain().diam() * f.eval(slice.domain(), tube)));
-
-    // todo: return ctc;
   }
 
-  bool CtcPicard::contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const
+  void CtcPicard::contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const
   {
-    // todo: DimensionException::check(x, f);
+    DimensionException::check(tube, f);
+    DimensionException::check(tube, slice);
+
     guessSliceEnvelope(f, tube, slice, false);
     slice.setInputGate(slice.inputGate()
       & (slice.outputGate() - slice.domain().diam() * f.eval(slice.domain(), tube)));
-
-    // todo: return ctc;
   }
 
   int CtcPicard::picardIterations() const
@@ -128,11 +107,14 @@ namespace tubex
     return m_picard_iterations;
   }
 
-  bool CtcPicard::guessSliceEnvelope(const tubex::Fnc& f,
+  void CtcPicard::guessSliceEnvelope(const tubex::Fnc& f,
                                      const TubeVector& tube,
                                      TubeSlice& slice,
                                      bool fwd) const
   {
+    DimensionException::check(tube, f);
+    DimensionException::check(tube, slice);
+
     float delta = m_delta;
     Interval h, t = slice.domain();
     IntervalVector x(slice.codomain()), x0(tube.dim()), xf(x0), max_envelope = slice.codomain();
@@ -167,8 +149,6 @@ namespace tubex
       slice.setEnvelope(x_guess);
       x_enclosure = x0 + h * f.eval(t, tube);
 
-      // eval(f, t, h, x_guess, x0);
-
       if(x_enclosure.is_unbounded())
       {
         slice.setEnvelope(x); // coming back to the initial state
@@ -179,29 +159,6 @@ namespace tubex
 
     // Restoring ending gate, contracted by setting the envelope
     if(fwd) slice.setOutputGate(xf);
-    else slice.setInputGate(x0);
-    //return ctc; // todo: return value
+    else slice.setInputGate(xf);
   }
-
-  /*const IntervalVector CtcPicard::eval(const tubex::Fnc& f,
-                                       const Interval& t,
-                                       const Interval& h,
-                                       const IntervalVector& x,
-                                       const IntervalVector& x0,
-                                       int order) const
-  {
-    switch(order)
-    {
-      case 1:
-        return x0 + h * f.eval(t, x);
-
-      //case 2: // not implemented yet for tubex::Function objects
-      //  return x0
-      //    + intv_h * f.eval_vector(x0)
-      //    + pow(intv_h,2)/2. * f.jacobian(x) * f.eval_vector(x);
-
-      default:
-        throw Exception("CtcPicard::eval", "undefined evaluation order");
-    }
-  }*/
 }

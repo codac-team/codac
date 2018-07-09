@@ -24,6 +24,7 @@ namespace tubex
 
       Function(const char* y);
       Function(const char* x1, const char* y);
+      Function(const char* x1, const char* x2, const char* y);
       Function(const tubex::Function& f);
       ~Function();
       const Function& operator=(const Function& f);

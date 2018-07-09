@@ -31,6 +31,13 @@ namespace tubex
     // todo: check x1!="t"
   }
 
+  Function::Function(const char* x1, const char* x2, const char* y)
+    : tubex::Fnc(2, 2)
+  {
+    m_ibex_f = new ibex::Function("t", x1, x2, y);
+    // todo: check x1!="t" x2!="t"
+  }
+
   Function::Function(const tubex::Function& f)
     : tubex::Fnc(f.nbVars(), f.imageDim())
   {

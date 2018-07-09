@@ -26,34 +26,22 @@ namespace tubex
   {
     public:
 
-      CtcPicard(float delta = 1.1, bool preserve_sampling = false);
-      bool contract_fwd(const tubex::Fnc& f, TubeVector& x) const;
-      bool contract_bwd(const tubex::Fnc& f, TubeVector& x) const;
+      CtcPicard(float delta = 1.1);
+      void contract_fwd(const tubex::Fnc& f, TubeVector& x) const;
+      void contract_bwd(const tubex::Fnc& f, TubeVector& x) const;
       bool contract(const tubex::Fnc& f, TubeVector& x, bool fwd = true) const;
-      bool contract_fwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
-      bool contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
-      int picardIterations() const;
 
-  bool guessSliceEnvelope(const Fnc& f,
-                                     const TubeVector& tube,
-                                     TubeSlice& slice,
-                                     bool fwd) const;
-      /*bool contract(const tubex::Fnc& f,
-                    const ibex::Interval& t,
-                    const ibex::Interval& h,
-                    ibex::IntervalVector& x,
-                    const ibex::IntervalVector& x0) const;
-      const ibex::IntervalVector eval(const tubex::Fnc& f,
-                                      const ibex::Interval& t,
-                                      const ibex::Interval& h,
-                                      const ibex::IntervalVector& x,
-                                      const ibex::IntervalVector& x0,
-                                      int order = 1) const;*/
+      void contract_fwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
+      void contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
+      int picardIterations() const;
+      void guessSliceEnvelope(const Fnc& f,
+                              const TubeVector& tube,
+                              TubeSlice& slice,
+                              bool fwd) const;
 
     protected:
 
       float m_delta;
-      bool m_preserve_sampling = false;
       mutable int m_picard_iterations = 0;
   };
 }
