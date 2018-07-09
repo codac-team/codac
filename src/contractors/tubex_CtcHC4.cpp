@@ -41,6 +41,9 @@ namespace tubex
 
   bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeSlice& x) const
   {
+    if(x.isEmpty())
+      return false;
+    
     TubeSlice x_old = x;
     IntervalVector box = x.box();
     hc4.contract(box);
