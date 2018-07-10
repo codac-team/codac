@@ -515,16 +515,17 @@ namespace tubex
       return interpol;
     }
 
-    double TubeVector::maxThickness() const
+    const Vector TubeVector::maxThickness() const
     {
       int first_id_max_thickness;
       return maxThickness(first_id_max_thickness);
     }
 
-    double TubeVector::maxThickness(int& first_id_max_thickness) const
+    const Vector TubeVector::maxThickness(int& first_id_max_thickness) const
     {
       int i = 0;
-      double max_thickness = 0.;
+      double max_diam = 0.;
+      Vector max_thickness(dim(), 0.);
 
       const TubeSlice *slice = getFirstSlice();
       while(slice != NULL)
@@ -532,12 +533,13 @@ namespace tubex
         if(slice->codomain().is_unbounded())
         {
           first_id_max_thickness = i;
-          return numeric_limits<double>::infinity();
+          return Vector(dim(), numeric_limits<double>::infinity());
         }
 
-        if(slice->codomain().max_diam() > max_thickness)
+        if(slice->codomain().max_diam() > max_diam)
         {
-          max_thickness = slice->codomain().max_diam();
+          max_diam = slice->codomain().max_diam();
+          max_thickness = slice->codomain().diam();
           first_id_max_thickness = i;
         }
 
@@ -548,29 +550,31 @@ namespace tubex
       return max_thickness;
     }
 
-    double TubeVector::maxGateThickness(double& t) const
+    const Vector TubeVector::maxGateThickness(double& t) const
     {
       const TubeSlice *slice = getFirstSlice();
 
       if(slice->inputGate().is_unbounded())
       {
         t = slice->domain().lb();
-        return numeric_limits<double>::infinity();
+        return Vector(dim(), numeric_limits<double>::infinity());
       }
 
-      double max_thickness = slice->inputGate().max_diam();
+      double max_diam = 0.;
+      Vector max_thickness = slice->inputGate().diam();
 
       while(slice != NULL)
       {
         if(slice->outputGate().is_unbounded())
         {
           t = slice->domain().ub();
-          return numeric_limits<double>::infinity();
+          return Vector(dim(), numeric_limits<double>::infinity());
         }
 
-        if(slice->outputGate().max_diam() > max_thickness)
+        if(slice->outputGate().max_diam() > max_diam)
         {
-          max_thickness = slice->outputGate().max_diam();
+          max_diam = slice->codomain().max_diam();
+          max_thickness = slice->outputGate().diam();
           t = slice->domain().ub();
         }
 
@@ -778,7 +782,7 @@ namespace tubex
       DomainException::check(*this, t);
       pair<TubeVector,TubeVector> p = make_pair(*this,*this);
 
-      LargestFirst bisector(0., ratio);
+      LargestFirst bisector(0., ratio); // todo: bisect according to another rule than largest first?
 
       try
       {

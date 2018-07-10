@@ -25,7 +25,7 @@ namespace tubex
       Solver();
       const std::vector<TubeVector> solve(const TubeVector& x0,
                                           void (*ctc_func)(TubeVector&), // todo: contractor object
-                                          float max_thickness,
+                                         const ibex::Vector& max_thickness,
                                           float refining_ratio = 0.005,
                                           float fixed_point_ratio = 0.005);
       void cid(TubeVector &x, void (*ctc_func)(TubeVector&));

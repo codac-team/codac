@@ -180,6 +180,21 @@ namespace tubex
     {
       return TubeVector::interpol(t, derivative)[0];
     }
+    
+    double Tube::maxThickness() const
+    {
+      return TubeVector::maxThickness()[0];
+    }
+
+    double Tube::maxThickness(int& first_id_max_thickness) const
+    {
+      return TubeVector::maxThickness(first_id_max_thickness)[0];
+    }
+    
+    double Tube::maxGateThickness(double& t) const
+    {
+      return TubeVector::maxGateThickness(t)[0];
+    }
 
     // Tests
 

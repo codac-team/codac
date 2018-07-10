@@ -86,9 +86,9 @@ namespace tubex
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       const ibex::IntervalVector interpol(double t, const TubeVector& derivative) const;
       const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& derivative) const;
-      double maxThickness() const;
-      double maxThickness(int& first_id_max_thickness) const;
-      double maxGateThickness(double& t) const;
+      const ibex::Vector maxThickness() const;
+      const ibex::Vector maxThickness(int& first_id_max_thickness) const;
+      const ibex::Vector maxGateThickness(double& t) const;
 
       // Tests
       bool operator==(const TubeVector& x) const;

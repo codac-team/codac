@@ -24,10 +24,11 @@ namespace tubex
 
   const vector<TubeVector> Solver::solve(const TubeVector& x0,
                                          void (*ctc_func)(TubeVector&),
-                                         float max_thickness,
+                                         const Vector& max_thickness,
                                          float refining_ratio,
                                          float fixed_point_ratio)
   {
+    // todo: check dim max_thickness vector
     stack<TubeVector> s;
     s.push(x0);
     vector<TubeVector> v_solutions;
@@ -69,10 +70,14 @@ namespace tubex
         if(!emptiness)
         {
           int first_id_max_thickness;
-          double x_max_thickness = x.maxThickness(first_id_max_thickness);
+          Vector x_max_thickness = x.maxThickness(first_id_max_thickness);
           double t_bisection = x.getSlice(first_id_max_thickness)->domain().mid();
 
-          if(x_max_thickness < max_thickness)
+          bool is_thin_enough = true;
+          for(int i = 0 ; i < x.dim() ; i++)
+            is_thin_enough &= x_max_thickness[i] < max_thickness[i];
+
+          if(is_thin_enough)
             v_solutions.push_back(x);
 
           else
@@ -82,7 +87,8 @@ namespace tubex
             s.push(p_x.second);
           }
         }
-
+if(v_solutions.size() == 1)
+  break;
       cout << "\rsolutions: " << v_solutions.size() << "  " << flush;
     }
 

@@ -15,8 +15,13 @@ using namespace tubex;
 #define DELAY 7
 #define DELAY_BVP 8
 #define SINGULARITY 9
-#define SOLVER_TEST SINGULARITY
+#define PATH_PLANNING 10
+#define SOLVER_TEST PATH_PLANNING
 
+double obstacle_radius = 0.95;
+
+void createObstacles(vector<IntervalVector>& v_obstacles);
+void displayPathPlanningMap(const vector<TubeVector>& v_x, const vector<IntervalVector>& v_obstacles);
 
 class FncDelayCustom : public tubex::Fnc
 {
@@ -254,6 +259,65 @@ class FncDelayCustom : public tubex::Fnc
     ctc_deriv.contract(x, f.eval(x));
   }
 
+#elif SOLVER_TEST == PATH_PLANNING
+      
+  void contract(TubeVector& x)
+  {
+    Variable vx, vt, vy, vcos, vsin;
+
+    {
+      SystemFactory fac;
+      fac.add_var(vt);
+      fac.add_var(vx);
+      fac.add_var(vy);
+      fac.add_var(vcos);
+      fac.add_var(vsin);
+      fac.add_ctr(sqr(vcos) + sqr(vsin) = 1);
+      fac.add_ctr(cos(asin(vsin)) = vcos);
+      System sys(fac);
+      ibex::CtcHC4 hc4(sys);
+      tubex::CtcHC4 ctc_hc4;
+      ctc_hc4.contract(hc4, x);
+    }
+
+    tubex::Function f("x","y", "costheta", "sintheta",
+                      "(costheta;sintheta;0.2*[-1,0];0.2*[-1,0])");
+    
+    tubex::CtcPicard ctc_picard;
+    ctc_picard.contract(f, x);
+    
+    TubeVector v = f.eval(x);
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
+
+    vector<IntervalVector> v_obstacles;
+    createObstacles(v_obstacles);
+    {
+      SystemFactory fac;
+      fac.add_var(vt);
+      fac.add_var(vx);
+      fac.add_var(vy);
+      fac.add_var(vcos);
+      fac.add_var(vsin);
+      for(int i = 0 ; i < v_obstacles.size() ; i++)
+        fac.add_ctr(sqrt(sqr(vx-v_obstacles[i][0]) + sqr(vy-v_obstacles[i][1])) > obstacle_radius);
+      System sys(fac);
+      ibex::CtcHC4 hc4(sys);
+      tubex::CtcHC4 ctc_hc4;
+      ctc_hc4.contract(hc4, x);
+    }
+
+    CtcEval ctc_eval;
+    Interval t(24.5,25.);
+    IntervalVector z(4);
+    z[0] = Interval(3.25).inflate(0.001);
+    z[1] = Interval(8.75).inflate(0.001);
+    z[2] = Interval(cos(M_PI/2.)).inflate(0.001);//Interval(-1.,1.);
+    z[3] = Interval(sin(M_PI/2.)).inflate(0.001);//Interval(-1.,1.);
+    //ctc_eval.contract(t, z, x, v);
+  }
+
 #endif
 
 
@@ -263,7 +327,7 @@ int main(int argc, char *argv[])
 
     #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
-      float epsilon = 0.051;
+      Vector epsilon(1, 0.05);
       Interval domain(0.,10.);
       TubeVector x(domain, 1);
 
@@ -279,7 +343,7 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == IVP_PICARD
 
-      float epsilon = 0.05;
+      Vector epsilon(1, 0.05);
       Interval domain(0.,1.);
       TubeVector x(domain, 1);
       x.set(IntervalVector(1, 1.), 0.); // initial condition
@@ -287,7 +351,7 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == DAE
 
-      float epsilon = 0.15;
+      Vector epsilon(2, 0.15);
       Interval domain(0.,2.);
       TubeVector x(domain, IntervalVector(4, Interval(-1.,1.)));
       IntervalVector init(4);
@@ -299,7 +363,7 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == SINGULARITY
 
-      float epsilon = 0.05;
+      Vector epsilon(2, 0.05);
       Interval domain(0.,1.5);
       TubeVector x(domain, IntervalVector(2, Interval(-2.,2.)));
       IntervalVector init(2);
@@ -310,21 +374,21 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == BVP
 
-      float epsilon = 0.05;
+      Vector epsilon(1, 0.05);
       Interval domain(0.,1.);
       TubeVector x(domain, 1);
       bool show_details = true;
 
     #elif SOLVER_TEST == DELAY_BVP
 
-      float epsilon = 0.05;
+      Vector epsilon(1, 0.05);
       Interval domain(0.,1.);
       TubeVector x(domain, 1);
       bool show_details = true;
 
     #elif SOLVER_TEST == BVP_CP2010
 
-      float epsilon = 0.1;
+      Vector epsilon(1, 0.1);
       Interval domain(0.,1.);
       IntervalVector codomain(2), x0(codomain), xf(codomain);
 
@@ -342,13 +406,41 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == DELAY
 
-      float epsilon = 0.05;
-      Interval domain(0.,1.);
+      Vector epsilon(1, 0.05);
+      Interval domain(0.,5.);
       TubeVector x(domain, 1);
       double t_value = domain.lb();
       IntervalVector init_value(1, Interval(2.*atan(exp(-t_value)*tan(0.5))));
       x.set(init_value, t_value);
       bool show_details = true;
+
+    #elif SOLVER_TEST == PATH_PLANNING
+
+      Vector epsilon(4);
+      epsilon[0] = 4.;
+      epsilon[1] = 4.;
+      epsilon[2] = 0.12;
+      epsilon[3] = 0.12;
+
+      Interval domain(0.,7.);
+      IntervalVector codomain(4);
+      codomain[0] = Interval(0.,8.5);
+      codomain[1] = Interval(-0.5,12.);
+      codomain[2] = Interval(-1.,1.);
+      codomain[3] = Interval(-1.,1.);
+      TubeVector x(domain, codomain);
+
+      IntervalVector init_value(4);
+      init_value[0] = 0.5+1.5;
+      init_value[1] = 5.;
+      init_value[2] = cos(0.);
+      init_value[3] = sin(0.);
+      x.set(init_value, domain.lb());
+
+      bool show_details = true;
+
+      vector<IntervalVector> v_obstacles;
+      createObstacles(v_obstacles);
 
     #endif
 
@@ -415,6 +507,10 @@ int main(int argc, char *argv[])
       Trajectory truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
       fig.addTrajectory(&truth2, "truth2", "red");
 
+    #elif SOLVER_TEST == PATH_PLANNING
+
+      fig.setProperties(100,100,700,350);
+
     #endif
 
     for(int i = 0 ; i < v_solutions.size() ; i++)
@@ -426,9 +522,69 @@ int main(int argc, char *argv[])
       //fig.setTubeDerivative(&v_solutions[i], &v_solutions[i]);
     }
 
+    #if SOLVER_TEST == PATH_PLANNING
+      displayPathPlanningMap(v_solutions, v_obstacles);
+    #endif
+
     if(!v_solutions.empty())
       fig.show(show_details);
     vibes::endDrawing();
 
   return EXIT_SUCCESS;
+}
+
+
+
+void createObstacles(vector<IntervalVector>& v_obstacles)
+{
+  IntervalVector box(2);
+  box[0] = Interval(2.25); box[1] = Interval(6.);
+  v_obstacles.push_back(box);
+  box[0] = Interval(4.25); box[1] = Interval(6.);
+  v_obstacles.push_back(box);
+  box[0] = Interval(2.25); box[1] = Interval(4.);
+  v_obstacles.push_back(box);
+  box[0] = Interval(4.25); box[1] = Interval(4.);
+  v_obstacles.push_back(box);
+
+  for(double a = M_PI/2. ; a > -M_PI-0.2 ; a-= 0.1)
+  {
+    box[0] = cos(a) * 7.5/2.; box[1] = sin(a) * 7.5/2.;
+    box[0] += 6.; box[1] += 2.25;
+    v_obstacles.push_back(box);
+    box[0] = cos(a) * 3./2.; box[1] = sin(a) * 3./2.;
+    box[0] += 6.; box[1] += 2.25;
+    v_obstacles.push_back(box);
+  }
+}
+
+void displayPathPlanningMap(const vector<TubeVector>& v_x, const vector<IntervalVector>& v_obstacles)
+{
+  const string fig_name = "Map (top view): [x](·)x[y](·)";
+  const int slices_number_to_display = 500;
+
+  vibes::newFigure(fig_name);
+  vibes::setFigureProperties(
+            vibesParams("figure", fig_name, "x", 100, "y", 100, "width", 600, "height", 600));
+  vibes::axisLimits(0., 10., 0., 10.);
+
+  for(int i = 0 ; i < v_obstacles.size() ; i++)
+    vibes::drawCircle(v_obstacles[i][0].mid(), v_obstacles[i][1].mid(), obstacle_radius, "#779CA3[#A5C8CE]", vibesParams("figure", fig_name));
+
+  for(int k = 0 ; k < v_x.size() ; k++)
+  {
+    // Robot's tubes projection
+    int startpoint;
+    for(int i = 0 ; i < v_x[k].nbSlices() ; i += max((int)(v_x[k].nbSlices() / slices_number_to_display), 1))
+      startpoint = i;
+
+    for(int i = startpoint ; i >= 0; i -= max((int)(v_x[k].nbSlices() / slices_number_to_display), 1))
+    {
+      Interval intv_x = v_x[k][i][0];
+      Interval intv_y = v_x[k][i][1];
+      if(!intv_x.is_unbounded() && !intv_y.is_unbounded())
+        vibes::drawBox(intv_x.lb(), intv_x.ub(), intv_y.lb(), intv_y.ub(),
+                       "#DEDEDE[#DEDEDE]", vibesParams("figure", fig_name));
+    }
+  }
 }

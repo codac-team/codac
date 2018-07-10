@@ -45,7 +45,7 @@ namespace tubex
 
   Function::Function(const char* x1, const char* x2, const char* x3, const char* y)
   {
-    const char* xdyn[2];
+    const char* xdyn[3];
     xdyn[0] = x1;
     xdyn[1] = x2;
     xdyn[2] = x3;
@@ -54,7 +54,7 @@ namespace tubex
 
   Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* y)
   {
-    const char* xdyn[2];
+    const char* xdyn[4];
     xdyn[0] = x1;
     xdyn[1] = x2;
     xdyn[2] = x3;
@@ -64,7 +64,7 @@ namespace tubex
 
   Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* y)
   {
-    const char* xdyn[2];
+    const char* xdyn[5];
     xdyn[0] = x1;
     xdyn[1] = x2;
     xdyn[2] = x3;
@@ -75,7 +75,7 @@ namespace tubex
 
   Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* y)
   {
-    const char* xdyn[2];
+    const char* xdyn[6];
     xdyn[0] = x1;
     xdyn[1] = x2;
     xdyn[2] = x3;
