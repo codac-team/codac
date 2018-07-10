@@ -14,7 +14,8 @@ using namespace tubex;
 #define BVP_CP2010 6
 #define DELAY 7
 #define DELAY_BVP 8
-#define SOLVER_TEST DAE
+#define SINGULARITY 9
+#define SOLVER_TEST SINGULARITY
 
 
 class FncDelayCustom : public tubex::Fnc
@@ -156,22 +157,58 @@ class FncDelayCustom : public tubex::Fnc
   void contract(TubeVector& x)
   {
     // Constraint x^2+y^2=1
-    Variable vt, vx0, vx1;
+    Variable vt, vx, vy, vxdot, vydot;
+    SystemFactory fac1;
+    fac1.add_var(vt);
+    fac1.add_var(vx);
+    fac1.add_var(vy);
+    fac1.add_var(vxdot);
+    fac1.add_var(vydot);
+    fac1.add_ctr(sqr(vx) + sqr(vy) = 1);
+    System sys1(fac1);
+    ibex::CtcHC4 hc41(sys1);
+
+    SystemFactory fac2;
+    fac2.add_var(vt);
+    fac2.add_var(vx);
+    fac2.add_var(vy);
+    fac2.add_var(vxdot);
+    fac2.add_var(vydot);
+    fac2.add_ctr(vx*vxdot+vy*vydot=0);
+    System sys2(fac2);
+    ibex::CtcHC4 hc42(sys2);
+
+    tubex::CtcHC4 ctc_hc4;
+    ctc_hc4.contract(hc41, x);
+    ctc_hc4.contract(hc42, x);
+
+    // Constraint xdot = y
+    tubex::Function f("x", "y", "xdot", "ydot", "(y;[-1,1];[-1,1];[-1,1])"); // testcase 1
+    //tubex::Function f("x", "y", "(y^2;[-10,10])"); // testcase 2
+    tubex::CtcPicard ctc_picard; // by Picard
+    ctc_picard.contract(f, x);
+    CtcDeriv ctc_deriv; // by Cd/dt
+    ctc_deriv.contract(x, f.eval(x));
+  }
+
+#elif SOLVER_TEST == SINGULARITY
+
+  void contract(TubeVector& x)
+  {
+    Variable vt, vy, vydot;
     SystemFactory fac;
     fac.add_var(vt);
-    fac.add_var(vx0);
-    fac.add_var(vx1);
-    fac.add_ctr(sqr(vx0) + sqr(vx1) = 1);
+    fac.add_var(vy);
+    fac.add_var(vydot);
+    fac.add_ctr(vy+vy*vydot=0);
     System sys(fac);
     ibex::CtcHC4 hc4(sys);
     tubex::CtcHC4 ctc_hc4;
     ctc_hc4.contract(hc4, x);
 
-    // Constraint xdot = y
-    //tubex::Function f("x", "y", "(y;[-10,10])"); // testcase 1
-    tubex::Function f("x", "y", "(y^2;[-10,10])"); // testcase 2
+    tubex::Function f("y", "ydot", "(ydot;[-999,999])");
     tubex::CtcPicard ctc_picard; // by Picard
-    ctc_picard.contract(f, x);
+    //ctc_picard.contract(f, x);
     CtcDeriv ctc_deriv; // by Cd/dt
     ctc_deriv.contract(x, f.eval(x));
   }
@@ -250,12 +287,24 @@ int main(int argc, char *argv[])
 
     #elif SOLVER_TEST == DAE
 
+      float epsilon = 0.15;
+      Interval domain(0.,2.);
+      TubeVector x(domain, IntervalVector(4, Interval(-1.,1.)));
+      IntervalVector init(4);
+      init[0] = 0.; init[1] = 1.;
+      //init[0] = Interval(cos(3.*M_PI/4.));
+      //init[1] = Interval(sin(3.*M_PI/4.));
+      x.set(init, domain.lb());
+      bool show_details = true;
+
+    #elif SOLVER_TEST == SINGULARITY
+
       float epsilon = 0.05;
       Interval domain(0.,1.5);
-      TubeVector x(domain, IntervalVector(2, Interval(-1.,1.)));
+      TubeVector x(domain, IntervalVector(2, Interval(-2.,2.)));
       IntervalVector init(2);
-      //init[0] = Interval(cos(3.*M_PI/4.));
-      init[1] = Interval(sin(3.*M_PI/4.));
+      init[0] = 1.;
+      //init[1] = -1.;
       x.set(init, domain.lb());
       bool show_details = true;
 
@@ -331,6 +380,14 @@ int main(int argc, char *argv[])
     #elif SOLVER_TEST == DAE
 
       fig.setProperties(100,100,700,500);
+      TrajectoryVector truth1(domain, tubex::Function("(sin(t);cos(t))"));
+      fig.addTrajectory(&truth1, "truth1", "blue");
+
+    #elif SOLVER_TEST == SINGULARITY
+
+      fig.setProperties(100,100,700,500);
+      TrajectoryVector truth1(domain, tubex::Function("(1-t,-1)"));
+      fig.addTrajectory(&truth1, "truth1", "blue");
 
     #elif SOLVER_TEST == BVP
 
@@ -362,7 +419,7 @@ int main(int argc, char *argv[])
 
     for(int i = 0 ; i < v_solutions.size() ; i++)
     {
-      cout << i << ": " << v_solutions[i] << endl;
+      cout << (i+1) << ": " << v_solutions[i] <<  ", tf↦" << v_solutions[i][v_solutions[i].domain().ub()] << endl;
       ostringstream o;
       o << "solution_" << i;
       fig.addTube(&v_solutions[i], o.str());
