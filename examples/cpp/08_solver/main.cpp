@@ -265,31 +265,31 @@ class FncDelayCustom : public tubex::Fnc
   {
     Variable vx, vt, vy, vcos, vsin;
 
-    {
-      SystemFactory fac;
-      fac.add_var(vt);
-      fac.add_var(vx);
-      fac.add_var(vy);
-      fac.add_var(vcos);
-      fac.add_var(vsin);
-      fac.add_ctr(sqr(vcos) + sqr(vsin) = 1);
-      fac.add_ctr(cos(asin(vsin)) = vcos);
-      System sys(fac);
-      ibex::CtcHC4 hc4(sys);
-      tubex::CtcHC4 ctc_hc4;
-      ctc_hc4.contract(hc4, x);
-    }
+    //{
+    //  SystemFactory fac;
+    //  fac.add_var(vt);
+    //  fac.add_var(vx);
+    //  fac.add_var(vy);
+    //  fac.add_var(vcos);
+    //  fac.add_var(vsin);
+    //  fac.add_ctr(sqr(vcos) + sqr(vsin) = 1);
+    //  fac.add_ctr(cos(asin(vsin)) = vcos);
+    //  System sys(fac);
+    //  ibex::CtcHC4 hc4(sys);
+    //  tubex::CtcHC4 ctc_hc4;
+    //  ctc_hc4.contract(hc4, x);
+    //}
 
     tubex::Function f("x","y", "costheta", "sintheta",
-                      "(costheta;sintheta;0.2*[-1,0];0.2*[-1,0])");
+                      "(costheta;sintheta;0.25*[-1,0];0.25*[-1,0])");
     
-    tubex::CtcPicard ctc_picard;
-    ctc_picard.contract(f, x);
+    //tubex::CtcPicard ctc_picard;
+    //ctc_picard.contract(f, x);
     
     TubeVector v = f.eval(x);
 
-    CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, v);
+    //CtcDeriv ctc_deriv;
+    //ctc_deriv.contract(x, v);
 
     vector<IntervalVector> v_obstacles;
     createObstacles(v_obstacles);
@@ -300,6 +300,8 @@ class FncDelayCustom : public tubex::Fnc
       fac.add_var(vy);
       fac.add_var(vcos);
       fac.add_var(vsin);
+      fac.add_ctr(sqr(vcos) + sqr(vsin) = 1);
+      fac.add_ctr(cos(asin(vsin)) = vcos);
       for(int i = 0 ; i < v_obstacles.size() ; i++)
         fac.add_ctr(sqrt(sqr(vx-v_obstacles[i][0]) + sqr(vy-v_obstacles[i][1])) > obstacle_radius);
       System sys(fac);
@@ -308,14 +310,27 @@ class FncDelayCustom : public tubex::Fnc
       ctc_hc4.contract(hc4, x);
     }
 
-    CtcEval ctc_eval;
-    Interval t(24.5,25.);
-    IntervalVector z(4);
-    z[0] = Interval(3.25).inflate(0.001);
-    z[1] = Interval(8.75).inflate(0.001);
-    z[2] = Interval(cos(M_PI/2.)).inflate(0.001);//Interval(-1.,1.);
-    z[3] = Interval(sin(M_PI/2.)).inflate(0.001);//Interval(-1.,1.);
-    //ctc_eval.contract(t, z, x, v);
+    {
+      CtcEval ctc_eval(false);
+      Interval t(4., 4.06);
+      IntervalVector z(4);
+      z[0] = Interval(5.98,6.06);
+      z[1] = Interval(4.89,4.91);
+      z[2] = Interval(0.9525,0.9755);
+      z[3] = Interval(-0.304,-0.22);
+      ctc_eval.contract(t, z, x, v);
+    }
+
+    {
+      CtcEval ctc_eval(true);
+      Interval t(7.9374,8.);
+      IntervalVector z(4);
+      z[0] = Interval(8.49735, 8.5);
+      z[1] = Interval(2.23252, 2.26765);
+      z[2] = Interval(0.1262, 0.229281);
+      z[3] = Interval(-0.992005, -0.97336);
+      ctc_eval.contract(t, z, x, v);
+    }
   }
 
 #endif
@@ -422,7 +437,7 @@ int main(int argc, char *argv[])
       epsilon[2] = 0.12;
       epsilon[3] = 0.12;
 
-      Interval domain(0.,7.);
+      Interval domain(0.,8.);
       IntervalVector codomain(4);
       codomain[0] = Interval(0.,8.5);
       codomain[1] = Interval(-0.5,12.);

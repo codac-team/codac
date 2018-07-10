@@ -32,6 +32,7 @@ namespace tubex
     stack<TubeVector> s;
     s.push(x0);
     vector<TubeVector> v_solutions;
+    clock_t tStart = clock();
 
     while(!s.empty())
     {
@@ -89,7 +90,8 @@ namespace tubex
         }
 if(v_solutions.size() == 1)
   break;
-      cout << "\rsolutions: " << v_solutions.size() << "  " << flush;
+
+      cout << "\rsolutions: " << v_solutions.size() << "  (" << (int)((double)(clock() - tStart)/CLOCKS_PER_SEC) << "s)   " << flush;
     }
 
     cout << endl;
