@@ -15,7 +15,7 @@
 #include "tubex_Arithmetic.h"
 #include "tubex_DimensionException.h"
 #include "tubex_DomainException.h"
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 
 using namespace std;
 using namespace ibex;
@@ -138,7 +138,7 @@ namespace tubex
     const Tube f(const Tube& tube_x1, const Tube& tube_x2) \
     { \
       DomainException::check(tube_x1, tube_x2); \
-      StructureException::check(tube_x1, tube_x2); \
+      SamplingException::check(tube_x1, tube_x2); \
       Tube new_tube_x(tube_x1); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
       const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
@@ -271,7 +271,7 @@ namespace tubex
     const TubeVector f(const TubeVector& tube_x1, const TubeVector& tube_x2) \
     { \
       DomainException::check(tube_x1, tube_x2); \
-      StructureException::check(tube_x1, tube_x2); \
+      SamplingException::check(tube_x1, tube_x2); \
       DimensionException::check(tube_x1, tube_x2); \
       TubeVector new_tube_x(tube_x1); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
@@ -410,7 +410,7 @@ namespace tubex
     const TubeVector f(const Tube& tube_x1, const TubeVector& tube_x2) \
     { \
       DomainException::check(tube_x1, tube_x2); \
-      StructureException::check(tube_x1, tube_x2); \
+      SamplingException::check(tube_x1, tube_x2); \
       TubeVector new_tube_x(tube_x1); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
       const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \
@@ -443,7 +443,7 @@ namespace tubex
     const TubeVector f(const TubeVector& tube_x1, const Tube& tube_x2) \
     { \
       DomainException::check(tube_x1, tube_x2); \
-      StructureException::check(tube_x1, tube_x2); \
+      SamplingException::check(tube_x1, tube_x2); \
       TubeVector new_tube_x(tube_x1); \
       TubeSlice *slice_x, *first_slice_x = new_tube_x.getFirstSlice(); \
       const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.getFirstSlice(); \

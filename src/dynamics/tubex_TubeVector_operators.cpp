@@ -15,7 +15,7 @@
 #include "tubex_TrajectoryVector.h"
 #include "tubex_DomainException.h"
 #include "tubex_DimensionException.h"
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 
 using namespace std;
 using namespace ibex;
@@ -26,7 +26,7 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const TubeVector& x) \
     { \
-      StructureException::check(*this, x); \
+      SamplingException::check(*this, x); \
       DimensionException::check(*this, x); \
       IntervalVector y(x.dim()); \
       TubeSlice *slice, *first_slice = getFirstSlice(); \
@@ -135,7 +135,7 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
-      /* todo: StructureException::check(*this, x); */\
+      /* todo: SamplingException::check(*this, x); */\
       IntervalVector y(dim()); \
       TubeSlice *slice, *first_slice = getFirstSlice(); \
       const TubeSlice *slice_x, *first_slice_x = x.getFirstSlice(); \

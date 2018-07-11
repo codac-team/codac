@@ -13,7 +13,7 @@
 #include <list>
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_DomainException.h"
 #include "tubex_DimensionException.h"
@@ -39,10 +39,10 @@ namespace tubex
 
   bool CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w) const
   {
-    StructureException::check(y, w);
+    SamplingException::check(y, w);
     DimensionException::check(y, z);
     DimensionException::check(y, w);
-    StructureException::check(y, w);
+    SamplingException::check(y, w);
 
     if(z.is_empty() || y.isEmpty())
       return false;
@@ -81,7 +81,7 @@ namespace tubex
 
   bool CtcEval::contract(Interval& t, IntervalVector& z, TubeVector& y, TubeVector& w) const
   {
-    StructureException::check(y, w);
+    SamplingException::check(y, w);
     DimensionException::check(y, z);
     DimensionException::check(y, w);
 

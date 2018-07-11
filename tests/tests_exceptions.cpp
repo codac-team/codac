@@ -1,7 +1,7 @@
 #include "tests.h"
 #include <utility>
 #include "tubex_EmptyException.h"
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 #include "tubex_DomainException.h"
 #include "tubex_DimensionException.h"
 
@@ -37,10 +37,10 @@ TEST_CASE("Exceptions")
     CHECK_THROWS(EmptyException::check(slice));
   }
 
-  SECTION("StructureException")
+  SECTION("SamplingException")
   {
     Tube tube1(Interval(0.,1.), 1.), tube2(Interval(0.,1.), 4.), tube3(Interval(0.,1.), 0.5);
     CHECK(tube1.nbSlices() == tube2.nbSlices());
-    CHECK_THROWS(StructureException::check(tube1, tube3));
+    CHECK_THROWS(SamplingException::check(tube1, tube3));
   }
 }

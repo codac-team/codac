@@ -16,7 +16,7 @@
 #include "tubex_TubeVectorSerialization.h"
 #include "tubex_TrajectoryVectorSerialization.h"
 #include "tubex_DimensionException.h"
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
 #include "ibex_LargestFirst.h"
@@ -204,13 +204,13 @@ namespace tubex
 
     TubeSlice* TubeVector::getSlice(int slice_id)
     {
-      StructureException::check(*this, slice_id);
+      SamplingException::check(*this, slice_id);
       return const_cast<TubeSlice*>(static_cast<const TubeVector&>(*this).getSlice(slice_id));
     }
 
     const TubeSlice* TubeVector::getSlice(int slice_id) const
     {
-      StructureException::check(*this, slice_id);
+      SamplingException::check(*this, slice_id);
       return m_v_slices[slice_id];
     }
 
@@ -350,7 +350,7 @@ namespace tubex
 
     const IntervalVector TubeVector::operator[](int slice_id) const
     {
-      StructureException::check(*this, slice_id);
+      SamplingException::check(*this, slice_id);
       return getSlice(slice_id)->codomain();
     }
 
@@ -402,7 +402,7 @@ namespace tubex
     const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& derivative, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
-      StructureException::check(*this, derivative);
+      SamplingException::check(*this, derivative);
       DomainException::check(*this, derivative);
 
       // todo: use tree structure instead
@@ -485,7 +485,7 @@ namespace tubex
     {
       DomainException::check(*this, t);
       DimensionException::check(*this, derivative);
-      StructureException::check(*this, derivative);
+      SamplingException::check(*this, derivative);
 
       const TubeSlice *slice_x = getSlice(t);
       if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
@@ -499,7 +499,7 @@ namespace tubex
     {
       DomainException::check(*this, t);
       DimensionException::check(*this, derivative);
-      StructureException::check(*this, derivative);
+      SamplingException::check(*this, derivative);
 
       IntervalVector interpol(dim(), Interval::EMPTY_SET);
 
@@ -627,7 +627,7 @@ namespace tubex
     bool TubeVector::isSubset(const TubeVector& x) const
     {
       DimensionException::check(*this, x);
-      StructureException::check(*this, x);
+      SamplingException::check(*this, x);
       // todo: common with other same-type methods
 
       const TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
@@ -645,7 +645,7 @@ namespace tubex
     bool TubeVector::isStrictSubset(const TubeVector& x) const
     {
       DimensionException::check(*this, x);
-      StructureException::check(*this, x);
+      SamplingException::check(*this, x);
       // todo: common with other same-type methods
 
       const TubeSlice *slice = getFirstSlice(), *slice_x = x.getFirstSlice();
@@ -709,7 +709,7 @@ namespace tubex
     void TubeVector::set(const IntervalVector& y, int slice_id)
     {
       DimensionException::check(*this, y);
-      StructureException::check(*this, slice_id);
+      SamplingException::check(*this, slice_id);
       getSlice(slice_id)->set(y);
     }
 

@@ -12,7 +12,7 @@
 
 #include <string>
 #include <sstream>
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 #include "tubex_DomainException.h"
 
 using namespace std;
@@ -20,7 +20,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  StructureException::StructureException(const TubeSlice& x1, const TubeSlice& x2)
+  SamplingException::SamplingException(const TubeSlice& x1, const TubeSlice& x2)
   {
     ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
@@ -33,7 +33,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  StructureException::StructureException(const TubeVector& x, int slice_index)
+  SamplingException::SamplingException(const TubeVector& x, int slice_index)
   {
     ostringstream os;
     os << "slice index out of range: ";
@@ -41,7 +41,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  StructureException::StructureException(const TubeVector& x1, const TubeVector& x2)
+  SamplingException::SamplingException(const TubeVector& x1, const TubeVector& x2)
   {
     ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
@@ -54,11 +54,11 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  void StructureException::check(const TubeVector& x1, const TubeVector& x2)
+  void SamplingException::check(const TubeVector& x1, const TubeVector& x2)
   {
     DomainException::check(x1, x2);
     if(x1.nbSlices() != x2.nbSlices())
-      throw StructureException(x1, x2);
+      throw SamplingException(x1, x2);
 
     const TubeSlice *slice_x1 = x1.getFirstSlice();
     const TubeSlice *slice_x2 = x2.getFirstSlice();
@@ -66,16 +66,16 @@ namespace tubex
     while(slice_x1 != NULL)
     {
       if(slice_x1->domain() != slice_x2->domain())
-        throw StructureException(*slice_x1, *slice_x2);
+        throw SamplingException(*slice_x1, *slice_x2);
 
       slice_x1 = slice_x1->nextSlice();
       slice_x2 = slice_x2->nextSlice();
     }
   }
 
-  void StructureException::check(const TubeVector& x, int slice_index)
+  void SamplingException::check(const TubeVector& x, int slice_index)
   {
     if(slice_index < 0 || slice_index >= x.nbSlices())
-      throw StructureException(x, slice_index);
+      throw SamplingException(x, slice_index);
   }
 }

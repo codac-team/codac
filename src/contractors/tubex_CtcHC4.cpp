@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcHC4.h"
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 
 using namespace std;
 using namespace ibex;

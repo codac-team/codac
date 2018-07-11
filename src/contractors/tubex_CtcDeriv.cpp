@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcDeriv.h"
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_DomainException.h"
 #include "tubex_DimensionException.h"
@@ -31,7 +31,7 @@ namespace tubex
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
-    StructureException::check(x, v);
+    SamplingException::check(x, v);
 
     bool ctc = false;
     ctc |= contractFwd(x, v);
@@ -44,7 +44,7 @@ namespace tubex
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
-    StructureException::check(x, v);
+    SamplingException::check(x, v);
 
     bool ctc = false;
     TubeSlice *x_slice = x.getFirstSlice();
@@ -64,7 +64,7 @@ namespace tubex
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
-    StructureException::check(x, v);
+    SamplingException::check(x, v);
     
     bool ctc = false;
     TubeSlice *x_slice = x.getLastSlice();

@@ -12,7 +12,7 @@
 
 #include <list>
 #include "tubex_CtcDelay.h"
-#include "tubex_StructureException.h"
+#include "tubex_SamplingException.h"
 #include "tubex_DomainException.h"
 #include "tubex_DimensionException.h"
 
@@ -30,7 +30,7 @@ namespace tubex
   {
     DomainException::check(x, y);
     DimensionException::check(x, y);
-    StructureException::check(x, y);
+    SamplingException::check(x, y);
 
     Interval intv_t;
     const TubeSlice *slice_x = x.getFirstSlice();
