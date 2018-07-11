@@ -26,8 +26,8 @@ namespace tubex
       const std::vector<TubeVector> solve(const TubeVector& x0,
                                           void (*ctc_func)(TubeVector&), // todo: contractor object
                                          const ibex::Vector& max_thickness,
-                                          float refining_ratio = 0.05,
-                                          float fixed_point_ratio = 0.05);
+                                          float refining_ratio = 0.005,
+                                          float fixed_point_ratio = 0.005);
       void cid(TubeVector &x, void (*ctc_func)(TubeVector&));
 
     protected:

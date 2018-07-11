@@ -16,7 +16,7 @@ using namespace tubex;
 #define DELAY_BVP 8
 #define SINGULARITY 9
 #define PATH_PLANNING 10
-#define SOLVER_TEST PATH_PLANNING
+#define SOLVER_TEST DELAY_BVP
 
 double obstacle_radius = 0.95;
 
@@ -138,7 +138,12 @@ class FncDelayCustom : public tubex::Fnc
     tubex::Function f("x", "-sin(x)");
 
     tubex::CtcPicard ctc_picard;
-    ctc_picard.contract(f, x);
+
+    #if SOLVER_TEST == IVP_XMSIN_FWD
+      ctc_picard.contract_fwd(f, x);
+    #elif SOLVER_TEST == IVP_XMSIN_BWD
+      ctc_picard.contract_bwd(f, x);
+    #endif
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, f.eval(x));
