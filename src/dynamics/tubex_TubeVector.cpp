@@ -150,6 +150,8 @@ namespace tubex
     
     TubeVector::~TubeVector()
     {
+      for(int i = 0 ; i < m_v_slices.size() ; i++)
+        delete m_v_slices[i];
       m_v_slices.clear();
     }
 
