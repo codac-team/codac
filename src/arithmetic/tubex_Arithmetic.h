@@ -63,6 +63,8 @@ namespace tubex
       const Tube f(const Tube& tube_x1, const Trajectory& x2); \
       const Tube f(const Trajectory& x1, const Tube& tube_x2);
   
+    header_binary_op_scalar(operator+);
+    header_binary_op_scalar(operator-);
     header_binary_op_scalar(atan2);
 
     #define header_binary_op(f) \

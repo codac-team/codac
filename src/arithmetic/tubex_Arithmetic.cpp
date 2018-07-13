@@ -264,6 +264,8 @@ namespace tubex
       return new_tube_x; \
     }
 
+  binary_op_scalar(operator+);
+  binary_op_scalar(operator-);
   binary_op_scalar(atan2);
 
   #define binary_op(f) \
