@@ -18,7 +18,7 @@
 
 namespace tubex
 {
-  class Tube : public TubeVector // todo: make this private?
+  class Tube : public TubeVector
   {
     public:
 
