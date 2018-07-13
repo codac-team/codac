@@ -240,8 +240,6 @@ namespace tubex
     {
       set_current_layer(dim);
 
-      m_view_box.set_empty();
-
       typename map<const TubeVector*,FigTubeParams>::const_iterator it_tubes;
       for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
         m_view_box |= draw_tube(it_tubes->first, detail_slices);
