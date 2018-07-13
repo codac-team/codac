@@ -38,9 +38,9 @@ int main(int argc, char *argv[])
 
     // Creating tubes over the [0,10] domain with some timestep:
     Tube tube_x(domain, timestep,
-                Function("t", "(t-5)^2 + [-0.5,0.5]"));
+                tubex::Function("(t-5)^2 + [-0.5,0.5]"));
     Tube tube_y(domain, timestep,
-                Function("t", "-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
+                tubex::Function("-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
 
     Tube tube_a = tube_x + tube_y;
     Tube tube_b = sin(tube_x);
