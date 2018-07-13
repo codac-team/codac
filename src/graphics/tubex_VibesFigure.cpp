@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <string>
 #include <iostream>
+#include "ibex_IntervalVector.h"
 #include "tubex_VibesFigure.h"
 
 // A real value to display unbounded slices:
@@ -139,6 +140,64 @@ namespace tubex
   const IntervalVector& VibesFigure::view_box() const
   {
     return m_view_box;
+  }
+
+  void VibesFigure::draw_box(const IntervalVector& box, const vibes::Params& params)
+  {
+    draw_box(box, "", params);
+  }
+
+  void VibesFigure::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
+  {
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+    if(color != "") vibes::drawBox(box, color, params_this_fig);
+    else vibes::drawBox(box, params_this_fig);
+  }
+  
+  void VibesFigure::draw_line(const vector<double>& v_x, const vector<double>& v_y, const vibes::Params& params)
+  {
+    draw_line(v_x, v_y, "", params);
+  }
+  
+  void VibesFigure::draw_line(const vector<double>& v_x, const vector<double>& v_y, const string& color, const vibes::Params& params)
+  {
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+    vibes::drawLine(v_x, v_y, params_this_fig);
+  }
+  
+  void VibesFigure::draw_circle(double x, double y, double r, const vibes::Params& params)
+  {
+    draw_circle(x, y, r, "", params);
+  }
+  
+  void VibesFigure::draw_circle(double x, double y, double r, const string& color, const vibes::Params& params)
+  {
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+    vibes::drawCircle(x, y, r, params_this_fig);
+  }
+  
+  void VibesFigure::draw_polygon(const Polygon& p, const vibes::Params& params)
+  {
+    draw_polygon(p, "", params);
+  }
+  
+  void VibesFigure::draw_polygon(const Polygon& p, const string& color, const vibes::Params& params)
+  {
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+    vector<double> v_t, v_x;
+
+    for(int i = 0 ; i < p.nb_vertices() ; i++)
+    {
+      v_t.push_back(trunc_inf(p[i].t().mid()));
+      v_x.push_back(trunc_inf(p[i].x().mid()));
+    } 
+
+    if(v_t.size() > 0)
+      vibes::drawPolygon(v_t, v_x, params_this_fig);
   }
 
   const string VibesFigure::rgb2hex(int r, int g, int b, int alpha, const char* prefix)

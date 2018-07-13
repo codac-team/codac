@@ -16,6 +16,7 @@
 #include <string>
 #include "vibes.h"
 #include "ibex_IntervalVector.h"
+#include "tubex_Polygon.h"
 
 namespace tubex
 {
@@ -76,6 +77,15 @@ namespace tubex
        * \return IntervalVector
        */
       const ibex::IntervalVector& view_box() const;
+
+      void draw_box(const ibex::IntervalVector& box, const vibes::Params& params);
+      void draw_box(const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const vibes::Params& params);
+      void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_circle(double x, double y, double r, const vibes::Params& params);
+      void draw_circle(double x, double y, double r, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_polygon(const Polygon& p, const vibes::Params& params);
+      void draw_polygon(const Polygon& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Set figure's properties: position and dimensions.
@@ -147,7 +157,6 @@ namespace tubex
     protected:
 
       void set_current_layer(int layer);
-      const std::string& fig_name();
       static std::string add_suffix(const std::string& name, int id);
 
 

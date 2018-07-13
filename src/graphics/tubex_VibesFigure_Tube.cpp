@@ -15,7 +15,6 @@
 #include "vibes.h"
 #include "tubex_Polygon.h"
 #include "tubex_VibesFigure_Tube.h"
-#include "tubex_VibesFigure_Polygon.h"
 #include "tubex_DimensionException.h"
 
 using namespace std;
@@ -253,7 +252,7 @@ namespace tubex
 
       // The following is used as a calibration of the SVG file
       vibes::clearGroup(name(), "transparent_box");
-      vibes::drawBox(m_view_box, vibesParams("figure", name(), "group", "transparent_box"));
+      draw_box(m_view_box, vibesParams("figure", name(), "group", "transparent_box"));
     }
 
     const IntervalVector VibesFigure_Tube::draw_tube(const TubeVector *tube, bool detail_slices)
@@ -318,7 +317,7 @@ namespace tubex
             vibes::clearGroup(name(), group_name_bckgrnd);
             vibes::newGroup(group_name_bckgrnd, m_map_tubes[tube].m_colors[TubeColorType::BACKGROUND], vibesParams("figure", name()));
             vibes::Params params_background = vibesParams("figure", name(), "group", group_name_bckgrnd);
-            VibesFigure_Polygon::draw(polygon_envelope(m_map_tubes[tube].tube_copy), params_background);
+            draw_polygon(polygon_envelope(m_map_tubes[tube].tube_copy), params_background);
 
             delete m_map_tubes[tube].tube_copy;
           }
@@ -329,9 +328,9 @@ namespace tubex
         // Second, the foreground: actual values of the tube.
         // Can be either displayed slice by slice or with a polygon envelope.
 
-        vibes::Params params_foreground = vibesParams("figure", name(), "group", group_name);
-        vibes::Params params_foreground_polygons = vibesParams("figure", name(), "group", group_name + "_polygons");
-        vibes::Params params_foreground_gates = vibesParams("figure", name(), "group", group_name + "_gates", "FixedScale", true);
+        vibes::Params params_foreground = vibesParams("group", group_name);
+        vibes::Params params_foreground_polygons = vibesParams("group", group_name + "_polygons");
+        vibes::Params params_foreground_gates = vibesParams("group", group_name + "_gates", "FixedScale", true);
         vibes::clearGroup(name(), group_name);
         vibes::clearGroup(name(), group_name + "_polygons");
         vibes::clearGroup(name(), group_name + "_gates");
@@ -368,16 +367,16 @@ namespace tubex
         else
         {
           vibes::newGroup(group_name, m_map_tubes[tube].m_colors[TubeColorType::FOREGROUND], vibesParams("figure", name()));
-          VibesFigure_Polygon::draw(polygon_envelope(tube), params_foreground);
+          draw_polygon(polygon_envelope(tube), params_foreground);
         }
 
       return viewbox;
     }
 
-    const Polygon VibesFigure_Tube::polygon_envelope(const TubeVector *tube)
+    const Polygon VibesFigure_Tube::polygon_envelope(const TubeVector *tube) const
     {
       if(tube->is_empty())
-        cout << "Tube graphics: warning, tube " << m_map_tubes[tube].name << " is empty" << endl;
+        cout << "Tube graphics: warning, tube " << m_map_tubes.at(tube).name << " is empty" << endl;
 
       vector<Point> v_pts;
 
@@ -400,7 +399,7 @@ namespace tubex
       return Polygon(v_pts);
     }
 
-    void VibesFigure_Tube::draw_slice(const TubeSlice& slice, const vibes::Params& params) const
+    void VibesFigure_Tube::draw_slice(const TubeSlice& slice, const vibes::Params& params)
     {
       if(slice.codomain().is_empty())
         return; // no display
@@ -408,19 +407,19 @@ namespace tubex
       IntervalVector boundedSlice(2);
       boundedSlice[0] = slice.domain();
       boundedSlice[1] = trunc_inf(slice.codomain()[m_current_layer]);
-      vibes::drawBox(boundedSlice, params);
+      draw_box(boundedSlice, params);
     }
 
-    void VibesFigure_Tube::draw_slice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon) const
+    void VibesFigure_Tube::draw_slice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon)
     {
       if(slice.codomain().is_empty())
         return; // no display
 
       draw_slice(slice, params_slice);
-      VibesFigure_Polygon::draw(slice.polygon(0, deriv_slice), params_polygon);
+      draw_polygon(slice.polygon(0, deriv_slice), params_polygon);
     }
 
-    void VibesFigure_Tube::draw_gate(const Interval& gate, double t, const vibes::Params& params) const
+    void VibesFigure_Tube::draw_gate(const Interval& gate, double t, const vibes::Params& params)
     {
       if(gate.is_empty())
         return; // no display
@@ -435,7 +434,7 @@ namespace tubex
         IntervalVector gateBox(2);
         gateBox[0] = t;
         gateBox[1] = trunc_inf(gate);
-        vibes::drawBox(gateBox, params);
+        draw_box(gateBox, params);
       }
     }
     
