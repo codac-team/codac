@@ -190,7 +190,6 @@ namespace tubex
 
     const Interval TubeVector::domain() const
     {
-      // todo: read from tree structure
       return Interval(m_v_slices.front()->domain().lb(),
                       m_v_slices.back()->domain().ub());
     }
@@ -278,7 +277,6 @@ namespace tubex
     int TubeVector::input2index(double t) const
     {
       DomainException::check(*this, t);
-      // todo: read from tree structure
 
       int i = -1;
       const TubeSlice *slice = get_first_slice();
@@ -372,7 +370,6 @@ namespace tubex
       if(t.is_degenerated())
         return operator[](t.lb());
 
-      // todo: use tree structure instead
       const TubeSlice *slice = get_slice(t.lb());
       const TubeSlice *last_slice = get_slice(t.ub());
       if(last_slice->domain().lb() != t.ub())
@@ -410,7 +407,6 @@ namespace tubex
       SamplingException::check(*this, v);
       DomainException::check(*this, v);
 
-      // todo: use tree structure instead
       Interval invert = Interval::EMPTY_SET;
       Interval intersection = search_domain & domain();
       if(intersection.is_empty())
@@ -435,7 +431,6 @@ namespace tubex
       DimensionException::check(*this, y);
       v_t.clear();
 
-      // todo: use tree structure instead
       Interval invert = Interval::EMPTY_SET;
       Interval intersection = search_domain & domain();
       if(intersection.is_empty())
@@ -465,8 +460,6 @@ namespace tubex
 
     const pair<IntervalVector,IntervalVector> TubeVector::eval(const Interval& t) const
     {
-      // todo: use tree structure instead
-
       pair<IntervalVector,IntervalVector> enclosed_bounds
         = make_pair(IntervalVector(dim(), Interval::EMPTY_SET), IntervalVector(dim(), Interval::EMPTY_SET));
 
@@ -843,7 +836,6 @@ namespace tubex
 
     const pair<IntervalVector,IntervalVector> TubeVector::partial_integral(const Interval& t) const
     {
-      // todo: use tree structure here
       DomainException::check(*this, t);
 
       Interval intv_t;
@@ -948,7 +940,6 @@ namespace tubex
 
     const IntervalVector TubeVector::codomain_box() const
     {
-      // todo: use tree structure instead
       const TubeSlice *slice = get_first_slice();
       IntervalVector codomain(dim(), Interval::EMPTY_SET);
       while(slice != NULL)

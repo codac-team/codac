@@ -127,10 +127,6 @@ namespace tubex
       void serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
       void serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
       void serialize(const std::string& binary_file_name, const std::vector<Trajectory>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
-
-    protected:
-
-      //using TubeVector::codomain_box; // todo: remove this?
   };
 }
 
