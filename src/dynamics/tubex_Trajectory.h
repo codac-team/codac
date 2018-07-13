@@ -17,7 +17,7 @@
 
 namespace tubex
 {
-  class Trajectory : public TrajectoryVector // todo: make this private?
+  class Trajectory : public TrajectoryVector
   {
     public:
 
