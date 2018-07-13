@@ -71,7 +71,11 @@ namespace tubex
         m_v_slices.push_back(slice);
 
         if(prev_slice != NULL)
+        {
+          delete slice->m_input_gate;
+          slice->m_input_gate = NULL;
           TubeSlice::chain_slices(prev_slice, slice);
+        }
         prev_slice = slice;
 
       } while(ub < domain.ub());
@@ -180,7 +184,11 @@ namespace tubex
         m_v_slices.push_back(slice);
 
         if(prev_slice != NULL)
+        {
+          delete slice->m_input_gate;
+          slice->m_input_gate = NULL;
           TubeSlice::chain_slices(prev_slice, slice);
+        }
         prev_slice = slice;
         slice_x = slice_x->next_slice();
       }
@@ -296,7 +304,6 @@ namespace tubex
       DomainException::check(*this, t);
 
       TubeSlice *slice_to_be_sampled = get_slice(t);
-      TubeSlice *next_slice = slice_to_be_sampled->next_slice();
 
       if(slice_to_be_sampled->domain().lb() == t || slice_to_be_sampled->domain().ub() == t)
       {
@@ -304,6 +311,8 @@ namespace tubex
         // the method has no effect.
         return;
       }
+
+      TubeSlice *next_slice = slice_to_be_sampled->next_slice();
 
       // Creating new slice
       TubeSlice *new_slice = new TubeSlice(*slice_to_be_sampled);
@@ -315,6 +324,8 @@ namespace tubex
       m_v_slices.insert(++it, new_slice);
 
       // Updated slices structure
+      delete new_slice->m_input_gate;
+      new_slice->m_input_gate = NULL;
       TubeSlice::chain_slices(new_slice, next_slice);
       TubeSlice::chain_slices(slice_to_be_sampled, new_slice);
       new_slice->set_input_gate(new_slice->codomain());

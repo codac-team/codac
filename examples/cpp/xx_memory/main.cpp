@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
   Interval domain(0.,1.);
 
-  Tube x(domain, 0.5);
+  Tube x(domain, 0.05);
   cout << "nbslices: " << x.nb_slices() << endl;
 
 

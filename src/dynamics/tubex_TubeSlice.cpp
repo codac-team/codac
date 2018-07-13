@@ -115,8 +115,8 @@ namespace tubex
       {
         DimensionException::check(*first_slice, *second_slice);
 
-        *first_slice->m_output_gate &= *second_slice->m_input_gate;
-        //delete second_slice->m_input_gate; // todo: check remaining unused gates
+        if(second_slice->m_input_gate != NULL)
+          *first_slice->m_output_gate &= *second_slice->m_input_gate;
         second_slice->m_input_gate = first_slice->m_output_gate;
       }
     }
