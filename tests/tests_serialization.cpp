@@ -88,3 +88,110 @@ TEST_CASE("serialization/deserialization of Tube")
       CHECK(v_trajs[i] == v_trajs_2[i]);
   }
 }
+
+bool test_serialization(const Tube& tube1)
+{
+  string filename = "test_serialization.tube";
+
+  Trajectory traj_test1a, traj_test1b, traj_test2a, traj_test2b;
+
+  for(int i = 0 ; i < tube1.nb_slices() ; i++)
+    traj_test1a.set(tube1.get_slice(i)->domain().mid(), tube1[i].is_unbounded() | tube1[i].is_empty() ? 1. : tube1[i].mid());
+
+  for(int i = 0 ; i < tube1.nb_slices() ; i++)
+    traj_test1b.set(tube1.get_slice(i)->domain().mid(), 42.);
+
+  vector<Trajectory> v_trajs;
+  v_trajs.push_back(traj_test1a);
+  v_trajs.push_back(traj_test1b);
+  tube1.serialize(filename, v_trajs); // serialization
+
+  v_trajs.clear();
+  Tube tube2(filename, v_trajs); // deserialization
+  remove(filename.c_str());
+
+  bool equality = tube1 == tube2;
+
+  if(v_trajs.size() != 2)
+    return false;
+
+  traj_test2a = v_trajs[0];
+  traj_test2b = v_trajs[1];
+  equality &= traj_test1a == traj_test2a;
+  equality &= traj_test1b == traj_test2b;
+
+  return equality;
+}
+
+TEST_CASE("(de)serializations on bounded tubes", "[core]")
+{
+  SECTION("Test tube1")
+  {
+    CHECK(test_serialization(tubeTest1()));
+  }
+
+  SECTION("Test tube1(01)")
+  {
+    CHECK(test_serialization(tubeTest1_01()));    
+  }
+
+  SECTION("Test tube2")
+  {
+    CHECK(test_serialization(tubeTest2()));
+  }
+
+  SECTION("Test tube3")
+  {
+    CHECK(test_serialization(tubeTest3()));
+  }
+
+  SECTION("Test tube4")
+  {
+    CHECK(test_serialization(tubeTest4()));
+  }
+
+  SECTION("Test tube4(05)")
+  {
+    CHECK(test_serialization(tubeTest4_05()));
+  }
+}
+
+TEST_CASE("(de)serializations on unbounded tubes", "[core]")
+{
+  SECTION("Test POS_REALS")
+  {
+    Tube tube = tubeTest1();
+    tube.set(Interval::POS_REALS, tube.nb_slices() / 2);
+    CHECK(test_serialization(tube));
+    tube.set(Interval::POS_REALS);
+    CHECK(test_serialization(tube));
+  }
+
+  SECTION("Test NEG_REALS")
+  {
+    Tube tube = tubeTest2();
+    tube.set(Interval::NEG_REALS, 5);
+    CHECK(test_serialization(tube));
+    tube.set(Interval::NEG_REALS);
+    CHECK(test_serialization(tube));
+  }
+
+  SECTION("Test ALL_REALS")
+  {
+    Tube tube = tubeTest3();
+    tube.set(Interval::ALL_REALS, 1);
+    CHECK(test_serialization(tube));
+    tube.set(Interval::ALL_REALS);
+    CHECK(test_serialization(tube));
+  }
+
+  SECTION("Test EMPTY_SET")
+  {
+    Tube tube = tubeTest4();
+    tube.set(Interval::EMPTY_SET, 0);
+    tube.set(Interval::EMPTY_SET, 8);
+    CHECK(test_serialization(tube));
+    tube.set(Interval::EMPTY_SET);
+    CHECK(test_serialization(tube));
+  }
+}
