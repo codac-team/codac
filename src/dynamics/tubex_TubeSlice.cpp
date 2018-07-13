@@ -51,19 +51,15 @@ namespace tubex
 
     TubeSlice::~TubeSlice()
     {
+      // Links to other slices are destroyed
+
+      if(m_prev_slice != NULL) m_prev_slice->m_next_slice = NULL;
+      if(m_next_slice != NULL) m_next_slice->m_prev_slice = NULL;
+
       // Gates are deleted if not shared with other slices
 
-      if(m_prev_slice == NULL)
-      {
-        delete m_input_gate;
-        m_input_gate = NULL;
-      }
-
-      if(m_next_slice == NULL)
-      {
-        delete m_output_gate;
-        m_output_gate = NULL;
-      }
+      if(m_prev_slice == NULL) delete m_input_gate;
+      if(m_next_slice == NULL) delete m_output_gate;
     }
 
     const TubeSlice& TubeSlice::operator=(const TubeSlice& x)

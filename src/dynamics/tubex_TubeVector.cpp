@@ -166,7 +166,10 @@ namespace tubex
 
     const TubeVector& TubeVector::operator=(const TubeVector& x)
     {
+      for(int i = 0 ; i < m_v_slices.size() ; i++)
+        delete m_v_slices[i];
       m_v_slices.clear();
+
       TubeSlice *prev_slice = NULL;
       const TubeSlice *slice_x = x.getFirstSlice();
 
