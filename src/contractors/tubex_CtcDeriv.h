@@ -33,18 +33,18 @@ namespace tubex
 
       // TubeVector
       bool contract(TubeVector& x, const TubeVector& v) const;
-      bool contractFwd(TubeVector& x, const TubeVector& v) const;
-      bool contractBwd(TubeVector& x, const TubeVector& v) const;
+      bool contract_fwd(TubeVector& x, const TubeVector& v) const;
+      bool contract_bwd(TubeVector& x, const TubeVector& v) const;
 
       // TubeSlice
       bool contract(TubeSlice& x, const TubeSlice& v) const;
 
     protected:
 
-      bool contractGates(TubeSlice& x, const TubeSlice& v) const;
-      bool contractCodomain(int i, TubeSlice& x, const TubeSlice& v) const;
+      bool contract_gates(TubeSlice& x, const TubeSlice& v) const;
+      bool contract_codomain(int i, TubeSlice& x, const TubeSlice& v) const;
 
-      friend class CtcEval; // contractGates used by CtcEval
+      friend class CtcEval; // contract_gates used by CtcEval
   };
 }
 

@@ -76,7 +76,7 @@ namespace tubex
   int TrajectoryVector::dim() const
   {
     if(m_function != NULL)
-      return m_function->imageDim();
+      return m_function->image_dim();
 
     else if(m_map_values.size() == 0)
       return 0;
@@ -87,12 +87,12 @@ namespace tubex
 
   // Access values
 
-  const map<double,Vector>& TrajectoryVector::getMap() const
+  const map<double,Vector>& TrajectoryVector::get_map() const
   {
     return m_map_values;
   }
 
-  const tubex::Function* TrajectoryVector::getFunction() const
+  const tubex::Function* TrajectoryVector::get_function() const
   {
     return m_function;
   }
@@ -104,10 +104,10 @@ namespace tubex
 
   const IntervalVector TrajectoryVector::codomain() const
   {
-    return codomainBox();
+    return codomain_box();
   }
 
-  const IntervalVector TrajectoryVector::codomainBox() const
+  const IntervalVector TrajectoryVector::codomain_box() const
   {
     return m_codomain;
   }
@@ -167,7 +167,7 @@ namespace tubex
   
   // Tests
 
-  bool TrajectoryVector::notDefined() const
+  bool TrajectoryVector::not_defined() const
   {
     return m_function == NULL && m_map_values.empty();
   }
@@ -176,22 +176,22 @@ namespace tubex
   {
     DimensionException::check(*this, x);
 
-    if(m_function == NULL && x.getFunction() == NULL)
+    if(m_function == NULL && x.get_function() == NULL)
     {
       typename map<double,Vector>::const_iterator it_map;
       for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
       {
-        if(x.getMap().find(it_map->first) == x.getMap().end())
+        if(x.get_map().find(it_map->first) == x.get_map().end())
           return false;
 
-        if(it_map->second != x.getMap().at(it_map->first))
+        if(it_map->second != x.get_map().at(it_map->first))
           return false;
       }
 
       return true;
     }
 
-    else if(m_function != NULL && x.getFunction() != NULL)
+    else if(m_function != NULL && x.get_function() != NULL)
     {
       throw Exception("TrajectoryVector::operator==",
                       "operator== not implemented in case of TrajectoryVector defined by a Function");
@@ -214,7 +214,7 @@ namespace tubex
 
   const Vector& TrajectoryVector::set(double t, const Vector& y)
   {
-    if(!notDefined()) DimensionException::check(*this, y);
+    if(!not_defined()) DimensionException::check(*this, y);
     m_map_values.erase(t);
     m_map_values.emplace(t, y);
     m_domain |= t;
@@ -222,7 +222,7 @@ namespace tubex
     return m_map_values.at(t);
   }
 
-  void TrajectoryVector::truncateDomain(const Interval& domain)
+  void TrajectoryVector::truncate_domain(const Interval& domain)
   {
     DomainException::check(domain);
 
@@ -241,7 +241,7 @@ namespace tubex
     m_domain &= domain;
   }
 
-  void TrajectoryVector::shiftDomain(double shift_ref)
+  void TrajectoryVector::shift_domain(double shift_ref)
   {
     map<double,Vector> map_temp = m_map_values;
     m_map_values.clear();

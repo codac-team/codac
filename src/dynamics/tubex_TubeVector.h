@@ -58,17 +58,17 @@ namespace tubex
       int dim() const;
 
       // Slices structure
-      int nbSlices() const;
-      TubeSlice* getSlice(int slice_id);
-      const TubeSlice* getSlice(int slice_id) const;
-      TubeSlice* getSlice(double t);
-      const TubeSlice* getSlice(double t) const;
-      TubeSlice* getFirstSlice();
-      const TubeSlice* getFirstSlice() const;
-      TubeSlice* getLastSlice();
-      const TubeSlice* getLastSlice() const;
-      TubeSlice* getWiderSlice();
-      const TubeSlice* getWiderSlice() const;
+      int nb_slices() const;
+      TubeSlice* get_slice(int slice_id);
+      const TubeSlice* get_slice(int slice_id) const;
+      TubeSlice* get_slice(double t);
+      const TubeSlice* get_slice(double t) const;
+      TubeSlice* get_first_slice();
+      const TubeSlice* get_first_slice() const;
+      TubeSlice* get_last_slice();
+      const TubeSlice* get_last_slice() const;
+      TubeSlice* get_wider_slice();
+      const TubeSlice* get_wider_slice() const;
       int input2index(double t) const;
       void sample(double t);
       void sample(double t, const ibex::IntervalVector& gate);
@@ -86,16 +86,16 @@ namespace tubex
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       const ibex::IntervalVector interpol(double t, const TubeVector& derivative) const;
       const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& derivative) const;
-      const ibex::Vector maxThickness() const;
-      const ibex::Vector maxThickness(int& first_id_max_thickness) const;
-      const ibex::Vector maxGateThickness(double& t) const;
+      const ibex::Vector max_thickness() const;
+      const ibex::Vector max_thickness(int& first_id_max_thickness) const;
+      const ibex::Vector max_gate_thickness(double& t) const;
 
       // Tests
       bool operator==(const TubeVector& x) const;
       bool operator!=(const TubeVector& x) const;
-      bool isSubset(const TubeVector& x) const;
-      bool isStrictSubset(const TubeVector& x) const;
-      bool isEmpty() const;
+      bool is_subset(const TubeVector& x) const;
+      bool is_strict_subset(const TubeVector& x) const;
+      bool is_empty() const;
       bool encloses(const TrajectoryVector& x) const;
 
       // Setting values
@@ -103,7 +103,7 @@ namespace tubex
       void set(const ibex::IntervalVector& y, int slice_id);
       void set(const ibex::IntervalVector& y, double t);
       void set(const ibex::IntervalVector& y, const ibex::Interval& t);
-      void setEmpty();
+      void set_empty();
       const TubeVector& inflate(double rad);
 
       // Bisection
@@ -156,20 +156,20 @@ namespace tubex
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
-      const std::string className() const { return "TubeVector"; };
+      const std::string class_name() const { return "TubeVector"; };
 
     /** Integration: **/
 
       const ibex::IntervalVector integral(double t) const;
       const ibex::IntervalVector integral(const ibex::Interval& t) const;
       const ibex::IntervalVector integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
-      const std::pair<ibex::IntervalVector,ibex::IntervalVector> partialIntegral(const ibex::Interval& t) const;
-      const std::pair<ibex::IntervalVector,ibex::IntervalVector> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t) const;
+      const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
     /** Contractors: **/
 
-      bool ctcDeriv(const TubeVector& v);
-      bool ctcEval(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& w);
+      bool ctc_deriv(const TubeVector& v);
+      bool ctc_eval(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& w);
 
     /** Serialization: **/
 
@@ -179,14 +179,14 @@ namespace tubex
 
     protected:
 
-      const ibex::IntervalVector codomainBox() const;
+      const ibex::IntervalVector codomain_box() const;
       void deserialize(const std::string& binary_file_name, std::vector<TrajectoryVector>& v_trajs);
 
     /** Class variables **/
 
       std::vector<TubeSlice*> m_v_slices;
 
-      friend void deserializeTubeVector(std::ifstream& bin_file, TubeVector& tube);
+      friend void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
   };
 }
 

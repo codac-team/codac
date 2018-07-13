@@ -28,7 +28,7 @@ namespace tubex
 
   void EmptyException::check(const TubeSlice& x)
   {
-    if(x.isEmpty())
+    if(x.is_empty())
       throw EmptyException(x);
   }
 
@@ -43,19 +43,19 @@ namespace tubex
     else
     {
       Interval intv_t_emptiness = Interval::EMPTY_SET;
-      const TubeSlice *slice = x.getFirstSlice();
+      const TubeSlice *slice = x.get_first_slice();
       while(slice != NULL)
       {
-        if(slice->isEmpty())
+        if(slice->is_empty())
         {
-          if(slice->inputGate().is_empty())
+          if(slice->input_gate().is_empty())
             intv_t_emptiness |= slice->domain().lb();
           if(slice->codomain().is_empty())
             intv_t_emptiness |= slice->domain();
-          if(slice->outputGate().is_empty())
+          if(slice->output_gate().is_empty())
             intv_t_emptiness |= slice->domain().ub();
         }
-        slice = slice->nextSlice();
+        slice = slice->next_slice();
       }
       os << "[t]=" << intv_t_emptiness << endl;
     }
@@ -65,7 +65,7 @@ namespace tubex
 
   void EmptyException::check(const TubeVector& x)
   {
-    if(x.isEmpty())
+    if(x.is_empty())
       throw EmptyException(x);
   }
 }

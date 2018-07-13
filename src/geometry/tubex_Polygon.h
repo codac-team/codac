@@ -28,14 +28,14 @@ namespace tubex
       Polygon(const ibex::IntervalVector& box);
       Polygon(const std::vector<Point>& v_points);
 
-      int nbVertices() const;
-      const std::vector<Point>& getVertices() const;
-      const std::vector<Edge> getEdges() const;
+      int nb_vertices() const;
+      const std::vector<Point>& get_vertices() const;
+      const std::vector<Edge> get_edges() const;
       const Point operator[](int vertex_id) const;
       const ibex::IntervalVector box() const;
 
-      bool isPoint() const;
-      bool isSegment() const;
+      bool is_point() const;
+      bool is_segment() const;
       bool operator==(const Polygon& p) const;
       bool operator!=(const Polygon& p) const;
       bool encloses(const Point& p) const;
@@ -44,7 +44,7 @@ namespace tubex
 
     protected:
 
-      void deleteRedundantPoints();
+      void delete_redundant_points();
       
       std::vector<Point> m_v_vertices;
   };

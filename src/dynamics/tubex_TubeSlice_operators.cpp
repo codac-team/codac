@@ -26,9 +26,9 @@ namespace tubex
     { \
       DomainException::check(*this, slice_x); \
       DimensionException::check(*this, slice_x); \
-      IntervalVector y = codomain(); y.f(slice_x.codomain()); setEnvelope(y); \
-      y = inputGate(); y.f(slice_x.inputGate()); setInputGate(y); \
-      y = outputGate(); y.f(slice_x.outputGate()); setOutputGate(y); \
+      IntervalVector y = codomain(); y.f(slice_x.codomain()); set_envelope(y); \
+      y = input_gate(); y.f(slice_x.input_gate()); set_input_gate(y); \
+      y = output_gate(); y.f(slice_x.output_gate()); set_output_gate(y); \
       return *this; \
     } \
     \
@@ -36,9 +36,9 @@ namespace tubex
     { \
       DomainException::check(*this, traj_x); \
       DimensionException::check(*this, traj_x); \
-      IntervalVector y = codomain(); y.f(traj_x[domain()]); setEnvelope(y); \
-      y = inputGate(); y.f(traj_x[Interval(domain().lb())]); setInputGate(y); \
-      y = outputGate(); y.f(traj_x[Interval(domain().ub())]); setOutputGate(y); \
+      IntervalVector y = codomain(); y.f(traj_x[domain()]); set_envelope(y); \
+      y = input_gate(); y.f(traj_x[Interval(domain().lb())]); set_input_gate(y); \
+      y = output_gate(); y.f(traj_x[Interval(domain().ub())]); set_output_gate(y); \
       return *this; \
     }
 

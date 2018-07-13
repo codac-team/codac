@@ -48,7 +48,7 @@ namespace tubex
 
         // 1. Refining
 
-          double t_refining = x.getWiderSlice()->domain().mid();
+          double t_refining = x.get_wider_slice()->domain().mid();
           x.sample(t_refining);
 
         // 2. Propagations up to the fixed point
@@ -60,7 +60,7 @@ namespace tubex
             volume_before_ctc = x.volume();
             ctc_func(x);
             //cid(x, ctc_func);
-            emptiness = x.isEmpty();
+            emptiness = x.is_empty();
             volume = x.volume();
           } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio));
 
@@ -71,8 +71,8 @@ namespace tubex
         if(!emptiness)
         {
           int first_id_max_thickness;
-          Vector x_max_thickness = x.maxThickness(first_id_max_thickness);
-          double t_bisection = x.getSlice(first_id_max_thickness)->domain().mid();
+          Vector x_max_thickness = x.max_thickness(first_id_max_thickness);
+          double t_bisection = x.get_slice(first_id_max_thickness)->domain().mid();
 
           bool is_thin_enough = true;
           for(int i = 0 ; i < x.dim() ; i++)
@@ -98,10 +98,10 @@ namespace tubex
 
   void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
   {
-    if(!x.isEmpty())
+    if(!x.is_empty())
     {
       double t_bisection;
-      x.maxGateThickness(t_bisection);
+      x.max_gate_thickness(t_bisection);
       pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
       ctc_func(p_x.first);
       ctc_func(p_x.second);

@@ -42,7 +42,7 @@ namespace tubex
   {
     ostringstream os;
     os << "wrong dimension access: ";
-    os << x.className() << "(" << x.dim() << "), i=" << i << endl;
+    os << x.class_name() << "(" << x.dim() << "), i=" << i << endl;
     m_what_msg = os.str();
   }
 
@@ -50,7 +50,7 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << x.className() << "(" << x.dim() << "), "
+    os << x.class_name() << "(" << x.dim() << "), "
        << "IntervalVector(" << box.size() << ")" << endl;
     m_what_msg = os.str();
   }
@@ -59,7 +59,7 @@ namespace tubex
   {
     // todo: ostringstream os;
     // todo: os << "objects of different dimension: ";
-    // todo: os << x.className() << "(" << x.dim() << "), "
+    // todo: os << x.class_name() << "(" << x.dim() << "), "
     // todo:    << "Fnc(" << f.image_dim() << ")" << endl;
     // todo: m_what_msg = os.str();
   }
@@ -68,8 +68,8 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << x1.className() << "(" << x1.dim() << "), "
-       << x2.className() << "(" << x2.dim() << ")" << endl;
+    os << x1.class_name() << "(" << x1.dim() << "), "
+       << x2.class_name() << "(" << x2.dim() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -78,7 +78,7 @@ namespace tubex
     ostringstream os;
     os << "objects of different dimension: ";
     os << "VibesFigure_Tube(" << fig.dim() << "), "
-       << x.className() << "(" << x.dim() << ")" << endl;
+       << x.class_name() << "(" << x.dim() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -88,7 +88,7 @@ namespace tubex
     // todo: check   throw DimensionException(dim);
   }
 
-  void DimensionException::checkScalar(int dim)
+  void DimensionException::check_scalar(int dim)
   {
     if(dim != 1)
       throw DimensionException(dim, "not scalar");

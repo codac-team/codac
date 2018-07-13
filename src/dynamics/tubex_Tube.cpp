@@ -39,7 +39,7 @@ namespace tubex
     Tube::Tube(const Interval& domain, double timestep, const Fnc& f)
       : TubeVector(domain, timestep, f)
     {
-      DimensionException::checkScalar(f.imageDim());
+      DimensionException::check_scalar(f.image_dim());
     }
 
     Tube::Tube(const Tube& x)
@@ -57,21 +57,21 @@ namespace tubex
     Tube::Tube(const Trajectory& traj, double timestep)
       : TubeVector(traj, timestep)
     {
-      DimensionException::checkScalar(traj.dim());
+      DimensionException::check_scalar(traj.dim());
     }
 
     Tube::Tube(const Trajectory& lb, const Trajectory& ub, double timestep)
       : TubeVector(lb, ub, timestep)
     {
-      DimensionException::checkScalar(lb.dim());
-      DimensionException::checkScalar(ub.dim());
+      DimensionException::check_scalar(lb.dim());
+      DimensionException::check_scalar(ub.dim());
     }
 
     Tube::Tube(const string& binary_file_name)
       : TubeVector(Interval(0.,1.), 1)
     {
       TubeVector x(binary_file_name);
-      DimensionException::checkScalar(x.dim());
+      DimensionException::check_scalar(x.dim());
       *this = x;
     }
 
@@ -81,9 +81,9 @@ namespace tubex
       TrajectoryVector traj_vector;
       TubeVector x(binary_file_name, traj_vector);
 
-      DimensionException::checkScalar(x.dim());
+      DimensionException::check_scalar(x.dim());
       if(traj_vector.dim() != 0)
-        DimensionException::checkScalar(traj_vector.dim());
+        DimensionException::check_scalar(traj_vector.dim());
 
       *this = x;
       traj = Trajectory(traj_vector);
@@ -95,9 +95,9 @@ namespace tubex
       vector<TrajectoryVector> v_trajs_vector;
       TubeVector x(binary_file_name, v_trajs_vector);
 
-      DimensionException::checkScalar(x.dim());
+      DimensionException::check_scalar(x.dim());
       if(v_trajs_vector.size() != 0)
-        DimensionException::checkScalar(v_trajs_vector[0].dim());
+        DimensionException::check_scalar(v_trajs_vector[0].dim());
 
       *this = x;
       for(int i = 0 ; i < v_trajs_vector.size() ; i++)
@@ -114,7 +114,7 @@ namespace tubex
       Tube primitive(*this, Interval::ALL_REALS);
       primitive.set(0., primitive.domain().lb());
       CtcDeriv ctc_deriv;
-      ctc_deriv.contractFwd(primitive, *this);
+      ctc_deriv.contract_fwd(primitive, *this);
       return primitive;
     }
 
@@ -181,19 +181,19 @@ namespace tubex
       return TubeVector::interpol(t, derivative)[0];
     }
     
-    double Tube::maxThickness() const
+    double Tube::max_thickness() const
     {
-      return TubeVector::maxThickness()[0];
+      return TubeVector::max_thickness()[0];
     }
 
-    double Tube::maxThickness(int& first_id_max_thickness) const
+    double Tube::max_thickness(int& first_id_max_thickness) const
     {
-      return TubeVector::maxThickness(first_id_max_thickness)[0];
+      return TubeVector::max_thickness(first_id_max_thickness)[0];
     }
     
-    double Tube::maxGateThickness(double& t) const
+    double Tube::max_gate_thickness(double& t) const
     {
-      return TubeVector::maxGateThickness(t)[0];
+      return TubeVector::max_gate_thickness(t)[0];
     }
 
     // Tests
@@ -208,14 +208,14 @@ namespace tubex
       return TubeVector::operator!=(x);
     }
 
-    bool Tube::isSubset(const Tube& x) const
+    bool Tube::is_subset(const Tube& x) const
     {
-      return TubeVector::isSubset(x);
+      return TubeVector::is_subset(x);
     }
 
-    bool Tube::isStrictSubset(const Tube& x) const
+    bool Tube::is_strict_subset(const Tube& x) const
     {
-      return TubeVector::isStrictSubset(x);
+      return TubeVector::is_strict_subset(x);
     }
 
     // Setting values
@@ -247,8 +247,8 @@ namespace tubex
     std::ostream& operator<<(std::ostream& str, const Tube& x)
     {
       str << "Tube " << x.domain() << "↦" << x.codomain()
-          << ", " << x.nbSlices()
-          << " slice" << (x.nbSlices() > 1 ? "s" : "")
+          << ", " << x.nb_slices()
+          << " slice" << (x.nb_slices() > 1 ? "s" : "")
           << flush;
       return str;
     }
@@ -270,21 +270,21 @@ namespace tubex
       return TubeVector::integral(t1, t2)[0];
     }
 
-    const pair<Interval,Interval> Tube::partialIntegral(const Interval& t) const
+    const pair<Interval,Interval> Tube::partial_integral(const Interval& t) const
     {
-      pair<IntervalVector,IntervalVector> p_box = TubeVector::partialIntegral(t);
+      pair<IntervalVector,IntervalVector> p_box = TubeVector::partial_integral(t);
       return make_pair(p_box.first[0], p_box.second[0]);
     }
 
-    const pair<Interval,Interval> Tube::partialIntegral(const Interval& t1, const Interval& t2) const
+    const pair<Interval,Interval> Tube::partial_integral(const Interval& t1, const Interval& t2) const
     {
-      pair<IntervalVector,IntervalVector> p_box = TubeVector::partialIntegral(t1, t2);
+      pair<IntervalVector,IntervalVector> p_box = TubeVector::partial_integral(t1, t2);
       return make_pair(p_box.first[0], p_box.second[0]);
     }
 
     // Contractors
 
-    bool Tube::ctcEval(Interval& t, Interval& z, Tube& w)
+    bool Tube::ctc_eval(Interval& t, Interval& z, Tube& w)
     {
       CtcEval ctc_eval(true);
       return ctc_eval.contract(t, z, *this, w);

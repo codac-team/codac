@@ -51,9 +51,9 @@ int main(int argc, char *argv[])
 
     /* =========== BACKWARD PROPAGATION =========== */
 
-      theta.ctcEval(u, 14., Interval(-2.36,-2.32));
-      x.ctcEval(xdot, 14., Interval(53.9,55.9));
-      y.ctcEval(ydot, 14., Interval(6.9,8.9));
+      theta.ctc_eval(u, 14., Interval(-2.36,-2.32));
+      x.ctc_eval(xdot, 14., Interval(53.9,55.9));
+      y.ctc_eval(ydot, 14., Interval(6.9,8.9));
 
     /* =========== CONSTRAINT NETWORK =========== */
 
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
   /* =========== END =========== */
 
-    VibesFigure_Tube::endDrawing();
+    VibesFigure_Tube::end_drawing();
 
   // Checking if this example is still working:
   return (BACKWARD_EXAMPLE && fabs(x.volume() - 65.5594) < 1e-2 && fabs(y.volume() - 74.9425) < 1e-2)
@@ -104,7 +104,7 @@ void displayCausalMap(const Tube& x, const Tube& y, int fig_x, int fig_y)
   vibes::newFigure(fig_name);
   vibes::setFigureProperties(
             vibesParams("figure", fig_name, "x", fig_x, "y", fig_y, "width", 900, "height", 600));
-  vibes::axisLimits(-20, 100, -40, 40);
+  vibes::axis_limits(-20, 100, -40, 40);
 
   // Robot's tubes projection
   int startpoint;

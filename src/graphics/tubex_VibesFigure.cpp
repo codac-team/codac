@@ -32,12 +32,12 @@ namespace tubex
 
     for(int i = 0 ; i < nb_layers ; i++)
     {
-      setCurrentLayer(i);
+      set_current_layer(i);
       vibes::newFigure(name());
       vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", name()));
     }
     
-    setCurrentLayer(0);
+    set_current_layer(0);
   }
 
   const string VibesFigure::name() const
@@ -53,14 +53,14 @@ namespace tubex
     }
   }
 
-  void VibesFigure::setProperties(int x, int y, int width, int height)
+  void VibesFigure::set_properties(int x, int y, int width, int height)
   {
     int current_layer = m_current_layer;
     m_x = x; m_y = y; m_width = width; m_height = height;
 
     for(int i = m_nb_layers-1 ; i >= 0 ; i--)
     {
-      setCurrentLayer(i);
+      set_current_layer(i);
       vibes::setFigureProperties(
                 vibesParams("x", m_x,
                             "y", m_y,
@@ -68,10 +68,10 @@ namespace tubex
                             "height", m_height));
     }
 
-    setCurrentLayer(current_layer);
+    set_current_layer(current_layer);
   }
 
-  const IntervalVector& VibesFigure::axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
+  const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
   {
     if(keep_ratio && !m_view_box.is_empty())
     {
@@ -106,12 +106,12 @@ namespace tubex
     return m_view_box;
   }
 
-  const IntervalVector& VibesFigure::axisLimits(const IntervalVector& viewbox, bool keep_ratio)
+  const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, bool keep_ratio)
   {
-    return axisLimits(viewbox[0].lb(), viewbox[0].ub(), viewbox[1].lb(), viewbox[1].ub());
+    return axis_limits(viewbox[0].lb(), viewbox[0].ub(), viewbox[1].lb(), viewbox[1].ub());
   }
 
-  void VibesFigure::saveImage(const string& suffix, const string& extension) const
+  void VibesFigure::save_image(const string& suffix, const string& extension) const
   {
     vibes::saveImage(name() + suffix + extension, name());
   }
@@ -136,7 +136,7 @@ namespace tubex
     return m_height;
   }
 
-  const IntervalVector& VibesFigure::viewBox() const
+  const IntervalVector& VibesFigure::view_box() const
   {
     return m_view_box;
   }
@@ -185,26 +185,26 @@ namespace tubex
       alpha = 0;
   }*/
 
-  string VibesFigure::addSuffix(const string& name, int id)
+  string VibesFigure::add_suffix(const string& name, int id)
   {
     std::ostringstream o;
     o << name << "_" << id;
     return o.str();
   }
 
-  void VibesFigure::setCurrentLayer(int layer)
+  void VibesFigure::set_current_layer(int layer)
   {
     m_current_layer = layer;
     vibes::selectFigure(name());
   }
 
-  double VibesFigure::truncInf(double x)
+  double VibesFigure::trunc_inf(double x)
   {
     return (x == POS_INFINITY ? BOUNDED_INFINITY : (x == NEG_INFINITY ? -BOUNDED_INFINITY : x));
   }
 
-  const Interval VibesFigure::truncInf(const ibex::Interval& x)
+  const Interval VibesFigure::trunc_inf(const ibex::Interval& x)
   {
-    return Interval(truncInf(x.lb()),truncInf(x.ub()));
+    return Interval(trunc_inf(x.lb()),trunc_inf(x.ub()));
   }
 }

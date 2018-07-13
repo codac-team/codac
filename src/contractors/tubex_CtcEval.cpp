@@ -44,7 +44,7 @@ namespace tubex
     DimensionException::check(y, w);
     SamplingException::check(y, w);
 
-    if(z.is_empty() || y.isEmpty())
+    if(z.is_empty() || y.is_empty())
       return false;
 
     IntervalVector z_ = z;
@@ -61,14 +61,14 @@ namespace tubex
       ctc_deriv.contract(y, w);
     }
 
-    if(z.is_empty() || y.isEmpty())
+    if(z.is_empty() || y.is_empty())
     {
       z.set_empty();
-      y.setEmpty();
+      y.set_empty();
       return true;
     }
 
-    return z != z_ || y.isStrictSubset(y_);
+    return z != z_ || y.is_strict_subset(y_);
   }
 
   bool CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w) const
@@ -85,7 +85,7 @@ namespace tubex
     DimensionException::check(y, z);
     DimensionException::check(y, w);
 
-    if(t.is_empty() || z.is_empty() || y.isEmpty())
+    if(t.is_empty() || z.is_empty() || y.is_empty())
       return false;
 
     Interval t_ = t;
@@ -120,10 +120,10 @@ namespace tubex
 
         // 1. Forward propagation
 
-          slice_y = y.getSlice(t.lb());
-          slice_w = w.getSlice(t.lb());
+          slice_y = y.get_slice(t.lb());
+          slice_w = w.get_slice(t.lb());
 
-          front_gate = slice_y->inputGate() & z;
+          front_gate = slice_y->input_gate() & z;
             // Mathematically, front_gate should not be empty at this point.
             // Due to numerical approximations, the computation of t by the invert method
             // provides a wider enclosure t'. The evaluation of y[t'.lb()] may not
@@ -132,7 +132,7 @@ namespace tubex
             for(int i = 0 ; i < y.dim() ; i++)
               if(front_gate[i].is_empty())
               {
-                if(slice_y->inputGate()[i].ub() < z[i].lb()) front_gate[i] = z[i].lb();
+                if(slice_y->input_gate()[i].ub() < z[i].lb()) front_gate[i] = z[i].lb();
                 else front_gate[i] = z[i].ub();
               }
 
@@ -143,47 +143,47 @@ namespace tubex
             // Forward propagation of the evaluation
             front_gate += slice_y->domain().diam() * slice_w->codomain(); // projection
             front_gate |= z; // evaluation
-            front_gate &= slice_y->outputGate(); // contraction
+            front_gate &= slice_y->output_gate(); // contraction
 
             // Storing temporarily fwd propagation 
             l_gates.push_front(front_gate);
 
             // Iteration
-            slice_y = slice_y->nextSlice();
-            slice_w = slice_w->nextSlice();
+            slice_y = slice_y->next_slice();
+            slice_w = slice_w->next_slice();
           }
 
         // 2. Backward propagation
 
-          slice_y = y.getSlice(previous_float(t.ub()));
-          slice_w = w.getSlice(previous_float(t.ub()));
+          slice_y = y.get_slice(previous_float(t.ub()));
+          slice_w = w.get_slice(previous_float(t.ub()));
 
-          front_gate = slice_y->outputGate() & z;
+          front_gate = slice_y->output_gate() & z;
             // Overcoming numerical approximations, same remark as before:
             for(int i = 0 ; i < y.dim() ; i++)
               if(front_gate[i].is_empty())
               {
-                if(slice_y->outputGate()[i].ub() < z[i].lb()) front_gate[i] = z[i].lb();
+                if(slice_y->output_gate()[i].ub() < z[i].lb()) front_gate[i] = z[i].lb();
                 else front_gate[i] = z[i].ub();
               }
 
-          slice_y->setOutputGate(l_gates.front() | front_gate);
+          slice_y->set_output_gate(l_gates.front() | front_gate);
 
           while(slice_y != NULL && slice_y->domain().lb() >= t.lb())
           {
             // Backward propagation of the evaluation
             front_gate -= slice_y->domain().diam() * slice_w->codomain(); // projection
             front_gate |= z; // evaluation
-            front_gate &= slice_y->inputGate(); // contraction
+            front_gate &= slice_y->input_gate(); // contraction
 
             // Updating tube
             l_gates.pop_front();
-            slice_y->setInputGate(l_gates.front() | front_gate);
-            ctc_deriv.contractGates(*slice_y, *slice_w);
+            slice_y->set_input_gate(l_gates.front() | front_gate);
+            ctc_deriv.contract_gates(*slice_y, *slice_w);
 
             // Iteration
-            slice_y = slice_y->prevSlice();
-            slice_w = slice_w->prevSlice();
+            slice_y = slice_y->prev_slice();
+            slice_w = slice_w->prev_slice();
           }
 
         // 3. Envelopes contraction
@@ -199,14 +199,14 @@ namespace tubex
       }
     }
 
-    if(t.is_empty() || z.is_empty() || y.isEmpty())
+    if(t.is_empty() || z.is_empty() || y.is_empty())
     {
       t.set_empty();
       z.set_empty();
-      y.setEmpty();
+      y.set_empty();
       return true;
     }
 
-    return t != t_ || z != z_ || y.isStrictSubset(y_);
+    return t != t_ || z != z_ || y.is_strict_subset(y_);
   }
 }

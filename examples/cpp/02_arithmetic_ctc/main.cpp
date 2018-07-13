@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     IntervalVector measurement(2);
     measurement[0] = Interval(7.,7.2); // [t]
     measurement[1] = Interval(1.,1.8); // [y]
-    y.ctcEval(ydot, measurement[0], measurement[1]);
+    y.ctc_eval(ydot, measurement[0], measurement[1]);
 
   /* =========== PROPAGATION (CSP) =========== */
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     VibesFigure_Tube::draw("Tube [a](·)");
     VibesFigure_Tube::draw("Tube [p](·)");
     VibesFigure_Tube::draw("Tube [q](·)");
-    VibesFigure_Tube::endDrawing();
+    VibesFigure_Tube::end_drawing();
 
   // Checking if this example is still working:
   return (fabs(x.volume() - 10.511) < 1e-2

@@ -22,10 +22,10 @@ namespace tubex
   {
     vector<double> v_t, v_x;
 
-    for(int i = 0 ; i < p.nbVertices() ; i++)
+    for(int i = 0 ; i < p.nb_vertices() ; i++)
     {
-      v_t.push_back(VibesFigure::truncInf(p[i].t().mid()));
-      v_x.push_back(VibesFigure::truncInf(p[i].x().mid()));
+      v_t.push_back(VibesFigure::trunc_inf(p[i].t().mid()));
+      v_x.push_back(VibesFigure::trunc_inf(p[i].x().mid()));
     } 
 
     if(v_t.size() > 0)

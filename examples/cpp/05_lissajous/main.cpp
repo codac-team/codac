@@ -54,10 +54,10 @@ int main(int argc, char *argv[])
       // Further constraints that can be considered
       if(false)
       {
-        y.ctcEval(ydot, y[M_PI/2.], 3.*M_PI/2.);
-        y.ctcEval(ydot, y[3.*M_PI/2.], M_PI/2.);
-        x.ctcEval(xdot, x[M_PI/2.], 3.*M_PI/2.);
-        x.ctcEval(xdot, x[3.*M_PI/2.], M_PI/2.);
+        y.ctc_eval(ydot, y[M_PI/2.], 3.*M_PI/2.);
+        y.ctc_eval(ydot, y[3.*M_PI/2.], M_PI/2.);
+        x.ctc_eval(xdot, x[M_PI/2.], 3.*M_PI/2.);
+        x.ctc_eval(xdot, x[3.*M_PI/2.], M_PI/2.);
         y.ctcPeriodic(M_PI);
       }
 
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     VibesFigure_Tube::draw("Tube [x](·)", &x, 100, 100);
     VibesFigure_Tube::draw("Tube [y](·)", &y, 150, 150);
     displayLissajousMap(x, y, 200, 200);
-    VibesFigure_Tube::endDrawing();
+    VibesFigure_Tube::end_drawing();
 
   // Checking if this example is still working:
   return (fabs(x.volume() - 2.84844) < 1e-2
@@ -89,7 +89,7 @@ void displayLissajousMap(const Tube& x, const Tube& y, int fig_x, int fig_y)
   vibes::newFigure(fig_name);
   vibes::setFigureProperties(
             vibesParams("figure", fig_name, "x", fig_x, "y", fig_y, "width", 900, "height", 600));
-  vibes::axisLimits(-12, 12, -8, 8);
+  vibes::axis_limits(-12, 12, -8, 8);
 
   // Robot's tubes projection
   int startpoint;

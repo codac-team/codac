@@ -45,7 +45,7 @@ namespace tubex
       else // interpolation
       {
         vector<Edge> v_box_edges;
-        pushEdges(x, v_box_edges);
+        push_edges(x, v_box_edges);
         for(int i = 0 ; i < v_box_edges.size() ; i++)
           inter |= (*this & v_box_edges[i]).box();
         return inter;
@@ -120,7 +120,7 @@ namespace tubex
     return str;
   }
 
-  void pushEdges(const IntervalVector& box, vector<Edge>& v_edges)
+  void push_edges(const IntervalVector& box, vector<Edge>& v_edges)
   {
     Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
     Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);

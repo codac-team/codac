@@ -54,23 +54,23 @@ class FncDelayCustom : public tubex::Fnc
     const TubeVector eval(const TubeVector& x) const
     {
       // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
-      TubeVector y(x, IntervalVector(imageDim()));
+      TubeVector y(x, IntervalVector(image_dim()));
 
-      const TubeSlice *x_slice = x.getFirstSlice();
-      TubeSlice *y_slice = y.getFirstSlice();
+      const TubeSlice *x_slice = x.get_first_slice();
+      TubeSlice *y_slice = y.get_first_slice();
 
       while(x_slice != NULL)
       {
-        y_slice->setInputGate(eval(x_slice->domain().lb(), x));
-        y_slice->setEnvelope(eval(x_slice->domain(), x));
+        y_slice->set_input_gate(eval(x_slice->domain().lb(), x));
+        y_slice->set_envelope(eval(x_slice->domain(), x));
 
-        x_slice = x_slice->nextSlice();
-        y_slice = y_slice->nextSlice();
+        x_slice = x_slice->next_slice();
+        y_slice = y_slice->next_slice();
       }
 
-      x_slice = x.getLastSlice();
-      y_slice = y.getLastSlice();
-      y_slice->setOutputGate(eval(x_slice->domain().ub(), x));
+      x_slice = x.get_last_slice();
+      y_slice = y.get_last_slice();
+      y_slice->set_output_gate(eval(x_slice->domain().ub(), x));
 
       return y;
     }
@@ -481,55 +481,55 @@ int main(int argc, char *argv[])
 
     #if SOLVER_TEST == IVP_XMSIN_FWD || SOLVER_TEST == IVP_XMSIN_BWD
 
-      fig.setProperties(100,100,700,500);
+      fig.set_properties(100,100,700,500);
       Trajectory truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
-      fig.addTrajectory(&truth, "truth1", "blue");
+      fig.add_trajectory(&truth, "truth1", "blue");
 
     #elif SOLVER_TEST == IVP_PICARD
 
-      fig.setProperties(100,100,700,500);
+      fig.set_properties(100,100,700,500);
 
     #elif SOLVER_TEST == DAE
 
-      fig.setProperties(100,100,700,500);
+      fig.set_properties(100,100,700,500);
       TrajectoryVector truth1(domain, tubex::Function("(sin(t);cos(t))"));
-      fig.addTrajectory(&truth1, "truth1", "blue");
+      fig.add_trajectory(&truth1, "truth1", "blue");
 
     #elif SOLVER_TEST == SINGULARITY
 
-      fig.setProperties(100,100,700,500);
+      fig.set_properties(100,100,700,500);
       TrajectoryVector truth1(domain, tubex::Function("(1-t,-1)"));
-      fig.addTrajectory(&truth1, "truth1", "blue");
+      fig.add_trajectory(&truth1, "truth1", "blue");
 
     #elif SOLVER_TEST == BVP
 
-      fig.setProperties(100,100,700,350);
+      fig.set_properties(100,100,700,350);
       Trajectory truth1(domain, tubex::Function("exp(t)/sqrt(1+exp(2))"));
-      fig.addTrajectory(&truth1, "truth1", "blue");
+      fig.add_trajectory(&truth1, "truth1", "blue");
       Trajectory truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
-      fig.addTrajectory(&truth2, "truth2", "red");
+      fig.add_trajectory(&truth2, "truth2", "red");
 
     #elif SOLVER_TEST == BVP_CP2010
 
-      fig.setProperties(100,100,700,350);
+      fig.set_properties(100,100,700,350);
 
     #elif SOLVER_TEST == DELAY
 
-      fig.setProperties(100,100,700,350);
+      fig.set_properties(100,100,700,350);
       Trajectory truth(domain, tubex::Function("exp(t)"));
-      fig.addTrajectory(&truth, "truth", "blue");
+      fig.add_trajectory(&truth, "truth", "blue");
 
     #elif SOLVER_TEST == DELAY_BVP
 
-      fig.setProperties(100,100,700,350);
+      fig.set_properties(100,100,700,350);
       Trajectory truth1(domain, tubex::Function("exp(t)/sqrt(1+exp(2))"));
-      fig.addTrajectory(&truth1, "truth1", "blue");
+      fig.add_trajectory(&truth1, "truth1", "blue");
       Trajectory truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
-      fig.addTrajectory(&truth2, "truth2", "red");
+      fig.add_trajectory(&truth2, "truth2", "red");
 
     #elif SOLVER_TEST == PATH_PLANNING
 
-      fig.setProperties(100,100,700,350);
+      fig.set_properties(100,100,700,350);
 
     #endif
 
@@ -538,8 +538,8 @@ int main(int argc, char *argv[])
       cout << (i+1) << ": " << v_solutions[i] <<  ", tf↦" << v_solutions[i][v_solutions[i].domain().ub()] << endl;
       ostringstream o;
       o << "solution_" << i;
-      fig.addTube(&v_solutions[i], o.str());
-      //fig.setTubeDerivative(&v_solutions[i], &v_solutions[i]);
+      fig.add_tube(&v_solutions[i], o.str());
+      //fig.set_tube_derivative(&v_solutions[i], &v_solutions[i]);
     }
 
     #if SOLVER_TEST == PATH_PLANNING
@@ -595,10 +595,10 @@ void displayPathPlanningMap(const vector<TubeVector>& v_x, const vector<Interval
   {
     // Robot's tubes projection
     int startpoint;
-    for(int i = 0 ; i < v_x[k].nbSlices() ; i += max((int)(v_x[k].nbSlices() / slices_number_to_display), 1))
+    for(int i = 0 ; i < v_x[k].nb_slices() ; i += max((int)(v_x[k].nb_slices() / slices_number_to_display), 1))
       startpoint = i;
 
-    for(int i = startpoint ; i >= 0; i -= max((int)(v_x[k].nbSlices() / slices_number_to_display), 1))
+    for(int i = startpoint ; i >= 0; i -= max((int)(v_x[k].nb_slices() / slices_number_to_display), 1))
     {
       Interval intv_x = v_x[k][i][0];
       Interval intv_y = v_x[k][i][1];

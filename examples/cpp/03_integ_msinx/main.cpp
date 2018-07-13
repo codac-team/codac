@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
   /* =========== END =========== */
 
-    VibesFigure_Tube::endDrawing();
+    VibesFigure_Tube::end_drawing();
 
   // Checking if this example is still working:
   return (volume_x <= 9.15) ? EXIT_SUCCESS : EXIT_FAILURE;

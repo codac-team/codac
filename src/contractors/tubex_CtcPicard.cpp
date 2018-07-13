@@ -49,8 +49,8 @@ namespace tubex
     DimensionException::check(x, f);
     TubeSlice *slice_x;
 
-    if(fwd) slice_x = x.getFirstSlice();
-    else slice_x = x.getLastSlice();
+    if(fwd) slice_x = x.get_first_slice();
+    else slice_x = x.get_last_slice();
 
     while(slice_x != NULL)
     {
@@ -62,28 +62,28 @@ namespace tubex
       if(unbounded_slice && slice_x->domain().diam() > x.domain().diam() / 5000.)
       {
         TubeSlice *prev_slice_x;
-        if(fwd) prev_slice_x = slice_x->prevSlice();
-        else prev_slice_x = slice_x->nextSlice();
+        if(fwd) prev_slice_x = slice_x->prev_slice();
+        else prev_slice_x = slice_x->next_slice();
 
         x.sample(slice_x->domain().mid());
 
         if(prev_slice_x == NULL)
         {
-          if(fwd) slice_x = x.getFirstSlice();
-          else slice_x = x.getLastSlice();
+          if(fwd) slice_x = x.get_first_slice();
+          else slice_x = x.get_last_slice();
         }
 
         else
         {
-          if(fwd) slice_x = prev_slice_x->nextSlice();
-          else slice_x = prev_slice_x->prevSlice();
+          if(fwd) slice_x = prev_slice_x->next_slice();
+          else slice_x = prev_slice_x->prev_slice();
         }
 
         continue;
       }
 
-      if(fwd) slice_x = slice_x->nextSlice();
-      else slice_x = slice_x->prevSlice();
+      if(fwd) slice_x = slice_x->next_slice();
+      else slice_x = slice_x->prev_slice();
     }
 
     // todo: return value
@@ -94,9 +94,9 @@ namespace tubex
     DimensionException::check(tube, f);
     DimensionException::check(tube, slice);
 
-    guessSliceEnvelope(f, tube, slice, true);
-    slice.setOutputGate(slice.outputGate()
-      & (slice.inputGate() + slice.domain().diam() * f.eval(slice.domain(), tube)));
+    guess_slice_envelope(f, tube, slice, true);
+    slice.set_output_gate(slice.output_gate()
+      & (slice.input_gate() + slice.domain().diam() * f.eval(slice.domain(), tube)));
   }
 
   void CtcPicard::contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const
@@ -104,17 +104,17 @@ namespace tubex
     DimensionException::check(tube, f);
     DimensionException::check(tube, slice);
 
-    guessSliceEnvelope(f, tube, slice, false);
-    slice.setInputGate(slice.inputGate()
-      & (slice.outputGate() - slice.domain().diam() * f.eval(slice.domain(), tube)));
+    guess_slice_envelope(f, tube, slice, false);
+    slice.set_input_gate(slice.input_gate()
+      & (slice.output_gate() - slice.domain().diam() * f.eval(slice.domain(), tube)));
   }
 
-  int CtcPicard::picardIterations() const
+  int CtcPicard::picard_iterations() const
   {
     return m_picard_iterations;
   }
 
-  void CtcPicard::guessSliceEnvelope(const tubex::Fnc& f,
+  void CtcPicard::guess_slice_envelope(const tubex::Fnc& f,
                                      const TubeVector& tube,
                                      TubeSlice& slice,
                                      bool fwd) const
@@ -128,15 +128,15 @@ namespace tubex
 
     if(fwd)
     {
-      x0 = slice.inputGate();
-      xf = slice.outputGate();
+      x0 = slice.input_gate();
+      xf = slice.output_gate();
       h = Interval(0., t.diam());
     }
 
     else
     {
-      x0 = slice.outputGate();
-      xf = slice.inputGate();
+      x0 = slice.output_gate();
+      xf = slice.input_gate();
       h = Interval(-t.diam(), 0.);
     }
 
@@ -153,19 +153,19 @@ namespace tubex
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      slice.setEnvelope(x_guess & initial_x);
+      slice.set_envelope(x_guess & initial_x);
       x_enclosure = x0 + h * f.eval(t, tube);
 
       if(x_enclosure.is_unbounded())
       {
-        slice.setEnvelope(initial_x); // coming back to the initial state
+        slice.set_envelope(initial_x); // coming back to the initial state
         break;
       }
 
     } while(!x_enclosure.is_interior_subset(x_guess));
 
     // Restoring ending gate, contracted by setting the envelope
-    if(fwd) slice.setOutputGate(xf);
-    else slice.setInputGate(xf);
+    if(fwd) slice.set_output_gate(xf);
+    else slice.set_input_gate(xf);
   }
 }

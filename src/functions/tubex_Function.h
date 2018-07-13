@@ -40,7 +40,7 @@ namespace tubex
 
     protected:
 
-      void constructFromArray(int n, const char** x, const char* y);
+      void construct_from_array(int n, const char** x, const char* y);
 
       ibex::Function *m_ibex_f = NULL;
   };

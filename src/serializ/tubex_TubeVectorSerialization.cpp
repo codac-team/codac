@@ -38,7 +38,7 @@ namespace tubex
                 ...
   */
 
-  void serializeTubeVector(ofstream& bin_file, const TubeVector& tube, int version_number)
+  void serialize_tubevector(ofstream& bin_file, const TubeVector& tube, int version_number)
   {
     if(!bin_file.is_open())
       throw Exception("serializeTube()", "ofstream& bin_file not open");
@@ -59,38 +59,38 @@ namespace tubex
         bin_file.write((const char*)&dim, sizeof(int));
 
         // Slices number
-        int slices_number = tube.nbSlices();
+        int slices_number = tube.nb_slices();
         bin_file.write((const char*)&slices_number, sizeof(int));
 
         const TubeSlice *slice;
 
         // Domains
         double lb;
-        slice = tube.getFirstSlice();
+        slice = tube.get_first_slice();
         while(slice != NULL)
         {
           lb = slice->domain().lb();
           bin_file.write((const char*)&lb, sizeof(double));
-          slice = slice->nextSlice();
+          slice = slice->next_slice();
         }
         lb = tube.domain().ub();
         bin_file.write((const char*)&lb, sizeof(double));
 
         // Codomains
-        slice = tube.getFirstSlice();
+        slice = tube.get_first_slice();
         while(slice != NULL)
         {
-          serializeIntervalVector(bin_file, slice->codomain());
-          slice = slice->nextSlice();
+          serialize_intervalvector(bin_file, slice->codomain());
+          slice = slice->next_slice();
         }
 
         // Gates
-        slice = tube.getFirstSlice();
-        serializeIntervalVector(bin_file, slice->inputGate());
+        slice = tube.get_first_slice();
+        serialize_intervalvector(bin_file, slice->input_gate());
         while(slice != NULL)
         {
-          serializeIntervalVector(bin_file, slice->outputGate());
-          slice = slice->nextSlice();
+          serialize_intervalvector(bin_file, slice->output_gate());
+          slice = slice->next_slice();
         }
 
         break;
@@ -101,12 +101,12 @@ namespace tubex
     }
   }
 
-  void deserializeTubeVector(ifstream& bin_file, TubeVector& tube)
+  void deserialize_tubevector(ifstream& bin_file, TubeVector& tube)
   {
     if(!bin_file.is_open())
       throw Exception("deserializeTube()", "ifstream& bin_file not open");
 
-    if(tube.nbSlices() != 0)
+    if(tube.nb_slices() != 0)
       throw Exception("deserializeTube()", "tube's already defined");
 
     // Version number for compliance purposes
@@ -144,23 +144,23 @@ namespace tubex
           double ub;
           bin_file.read((char*)&ub, sizeof(double));
           TubeSlice *slice = new TubeSlice(Interval(lb, ub), dim);
-          slice->setTubeReference(&tube);
+          slice->set_tube_ref(&tube);
           tube.m_v_slices.push_back(slice);
           lb = ub;
 
           if(prev_slice != NULL)
-            TubeSlice::chainSlices(prev_slice, slice);
+            TubeSlice::chain_slices(prev_slice, slice);
           prev_slice = slice;
         }
 
         // Codomains
-        TubeSlice *slice = tube.getFirstSlice();
+        TubeSlice *slice = tube.get_first_slice();
         while(slice != NULL)
         {
           IntervalVector slice_value(dim);
-          deserializeIntervalVector(bin_file, slice_value);
+          deserialize_intervalvector(bin_file, slice_value);
           slice->set(slice_value);
-          slice = slice->nextSlice();
+          slice = slice->next_slice();
         }
 
         // Gates
@@ -169,11 +169,11 @@ namespace tubex
         for(int i = 0 ; i < gates_number ; i++)
         {
           IntervalVector gate(dim);
-          deserializeIntervalVector(bin_file, gate);
+          deserialize_intervalvector(bin_file, gate);
 
           double t;
           if(i < gates_number - 1)
-            t = tube.getSlice(i)->domain().lb();
+            t = tube.get_slice(i)->domain().lb();
           else
             t = tube.domain().ub();
 

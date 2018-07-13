@@ -27,8 +27,8 @@ namespace tubex
       ~Fnc();
       const Fnc& operator=(const Fnc& f);
 
-      int nbVars() const;
-      int imageDim() const;
+      int nb_vars() const;
+      int image_dim() const;
 
       const TubeVector eval(const TubeVector& x) const;
       virtual const ibex::IntervalVector eval(const ibex::Interval& t, const TubeVector& x) const = 0;

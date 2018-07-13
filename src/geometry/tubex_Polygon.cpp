@@ -26,28 +26,28 @@ namespace tubex
 
   Polygon::Polygon(const IntervalVector& box)
   {
-    pushPoints(box, m_v_vertices);
-    deleteRedundantPoints();
+    push_points(box, m_v_vertices);
+    delete_redundant_points();
   }
 
   Polygon::Polygon(const vector<Point>& v_points)
   {
     for(int i = 0 ; i < v_points.size() ; i++)
       m_v_vertices.push_back(v_points[i]);
-    deleteRedundantPoints();
+    delete_redundant_points();
   }
 
-  int Polygon::nbVertices() const
+  int Polygon::nb_vertices() const
   {
     return m_v_vertices.size();
   }
 
-  const vector<Point>& Polygon::getVertices() const
+  const vector<Point>& Polygon::get_vertices() const
   {
     return m_v_vertices;
   }
 
-  const vector<Edge> Polygon::getEdges() const
+  const vector<Edge> Polygon::get_edges() const
   {
     vector<Edge> v_edges;
     for(int i = 0 ; i < m_v_vertices.size() ; i++)
@@ -57,7 +57,7 @@ namespace tubex
 
   const Point Polygon::operator[](int vertex_id) const
   {
-    if(vertex_id < 0 || vertex_id >= nbVertices())
+    if(vertex_id < 0 || vertex_id >= nb_vertices())
       throw Exception("Polygon::operator[]", "invalid vertex id");
     return m_v_vertices[vertex_id];
   }
@@ -73,14 +73,14 @@ namespace tubex
     return box;
   }
 
-  bool Polygon::isPoint() const
+  bool Polygon::is_point() const
   {
-    return nbVertices() == 1;
+    return nb_vertices() == 1;
   }
 
-  bool Polygon::isSegment() const
+  bool Polygon::is_segment() const
   {
-    return nbVertices() == 2;
+    return nb_vertices() == 2;
   }
 
   bool Polygon::operator==(const Polygon& p) const
@@ -132,7 +132,7 @@ namespace tubex
     // Note: code patterned after [Franklin, 2000]
 
     int cn = 0; // the  crossing number counter
-    vector<Point> v_vertices = getVertices();
+    vector<Point> v_vertices = get_vertices();
     int n = v_vertices.size();
 
     // Loop through all edges of the polygon
@@ -159,15 +159,15 @@ namespace tubex
   {
     str << "{";
 
-    if(p.nbVertices() == 0)
+    if(p.nb_vertices() == 0)
       str << " empty ";
 
     else
     {
-      for(int i = 0 ; i < p.nbVertices() ; i++)
+      for(int i = 0 ; i < p.nb_vertices() ; i++)
       {
         if(i != 0) str << ",";
-        str << p.getVertices()[i];
+        str << p.get_vertices()[i];
       }
     }
 
@@ -175,7 +175,7 @@ namespace tubex
     return str;
   }
 
-  void Polygon::deleteRedundantPoints()
+  void Polygon::delete_redundant_points()
   {
     vector<Point> v_vertices;
     for(int i = 0 ; i < m_v_vertices.size() ; i++)

@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     VibesFigure_Tube::draw("Tube [b](·)", &tube_b, 500, 400);
     VibesFigure_Tube::draw("Tube [c](·)", &tube_c, 600, 500);
     VibesFigure_Tube::draw("Tube [d](·)", &tube_d, 700, 600);
-    VibesFigure_Tube::endDrawing();
+    VibesFigure_Tube::end_drawing();
 
   // Checking if this example is still working:
   return /*(fabs(tube_x.volume() - 10.512) < 1e-2

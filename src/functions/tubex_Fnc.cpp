@@ -39,12 +39,12 @@ namespace tubex
     m_img_dim = f.m_img_dim;
   }
 
-  int Fnc::nbVars() const
+  int Fnc::nb_vars() const
   {
     return m_nb_vars;
   }
 
-  int Fnc::imageDim() const
+  int Fnc::image_dim() const
   {
     return m_img_dim;
   }
@@ -52,23 +52,23 @@ namespace tubex
   const TubeVector Fnc::eval(const TubeVector& x) const
   {
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
-    TubeVector y(x, IntervalVector(imageDim()));
+    TubeVector y(x, IntervalVector(image_dim()));
 
-    const TubeSlice *x_slice = x.getFirstSlice();
-    TubeSlice *y_slice = y.getFirstSlice();
+    const TubeSlice *x_slice = x.get_first_slice();
+    TubeSlice *y_slice = y.get_first_slice();
 
     while(x_slice != NULL)
     {
-      y_slice->setInputGate(eval(x_slice->domain().lb(), x));
-      y_slice->setEnvelope(eval(x_slice->domain(), x));
+      y_slice->set_input_gate(eval(x_slice->domain().lb(), x));
+      y_slice->set_envelope(eval(x_slice->domain(), x));
 
-      x_slice = x_slice->nextSlice();
-      y_slice = y_slice->nextSlice();
+      x_slice = x_slice->next_slice();
+      y_slice = y_slice->next_slice();
     }
 
-    x_slice = x.getLastSlice();
-    y_slice = y.getLastSlice();
-    y_slice->setOutputGate(eval(x_slice->domain().ub(), x));
+    x_slice = x.get_last_slice();
+    y_slice = y.get_last_slice();
+    y_slice->set_output_gate(eval(x_slice->domain().ub(), x));
 
     return y;
   }

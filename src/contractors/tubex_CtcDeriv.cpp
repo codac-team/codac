@@ -34,47 +34,47 @@ namespace tubex
     SamplingException::check(x, v);
 
     bool ctc = false;
-    ctc |= contractFwd(x, v);
-    ctc |= contractBwd(x, v);
+    ctc |= contract_fwd(x, v);
+    ctc |= contract_bwd(x, v);
     // todo: optimized propagation, according to gates' updates
     return ctc;
   }
 
-  bool CtcDeriv::contractFwd(TubeVector& x, const TubeVector& v) const // temporal forward
+  bool CtcDeriv::contract_fwd(TubeVector& x, const TubeVector& v) const // temporal forward
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
     SamplingException::check(x, v);
 
     bool ctc = false;
-    TubeSlice *x_slice = x.getFirstSlice();
-    const TubeSlice *v_slice = v.getFirstSlice();
+    TubeSlice *x_slice = x.get_first_slice();
+    const TubeSlice *v_slice = v.get_first_slice();
 
     while(x_slice != NULL)
     {
       ctc |= contract(*x_slice, *v_slice);
-      x_slice = x_slice->nextSlice();
-      v_slice = v_slice->nextSlice();
+      x_slice = x_slice->next_slice();
+      v_slice = v_slice->next_slice();
     }
 
     return ctc;
   }
 
-  bool CtcDeriv::contractBwd(TubeVector& x, const TubeVector& v) const // temporal backward
+  bool CtcDeriv::contract_bwd(TubeVector& x, const TubeVector& v) const // temporal backward
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
     SamplingException::check(x, v);
     
     bool ctc = false;
-    TubeSlice *x_slice = x.getLastSlice();
-    const TubeSlice *v_slice = v.getLastSlice();
+    TubeSlice *x_slice = x.get_last_slice();
+    const TubeSlice *v_slice = v.get_last_slice();
     
     while(x_slice != NULL)
     {
       ctc |= contract(*x_slice, *v_slice);
-      x_slice = x_slice->prevSlice();
-      v_slice = v_slice->prevSlice();
+      x_slice = x_slice->prev_slice();
+      v_slice = v_slice->prev_slice();
     }
 
     return ctc;
@@ -87,47 +87,47 @@ namespace tubex
 
     bool ctc = false;
 
-    ctc |= contractGates(x, v);
+    ctc |= contract_gates(x, v);
 
     for(int i = 0 ; i < x.dim() ; i++)
-      ctc |= contractCodomain(i, x, v);
+      ctc |= contract_codomain(i, x, v);
 
     return ctc;
   }
 
-  bool CtcDeriv::contractGates(TubeSlice& x, const TubeSlice& v) const
+  bool CtcDeriv::contract_gates(TubeSlice& x, const TubeSlice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
     
     bool ctc = false;
-    IntervalVector in_gate = x.inputGate(), out_gate = x.outputGate();
+    IntervalVector in_gate = x.input_gate(), out_gate = x.output_gate();
 
     IntervalVector in_gate_proj = in_gate + x.domain().diam() * v.codomain();
     out_gate &= in_gate_proj;
-    ctc |= out_gate != x.outputGate();
-    x.setOutputGate(out_gate);
+    ctc |= out_gate != x.output_gate();
+    x.set_output_gate(out_gate);
 
     IntervalVector out_gate_proj = out_gate - x.domain().diam() * v.codomain();
     in_gate &= out_gate_proj;
-    ctc |= in_gate != x.inputGate();
-    x.setInputGate(in_gate);
+    ctc |= in_gate != x.input_gate();
+    x.set_input_gate(in_gate);
 
     return ctc;
   }
 
-  bool CtcDeriv::contractCodomain(int i, TubeSlice& x, const TubeSlice& v) const
+  bool CtcDeriv::contract_codomain(int i, TubeSlice& x, const TubeSlice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
     DimensionException::check(x, i);
     
     // todo: remove this:
-    x.setEnvelope(x.codomain() & IntervalVector(x.dim(), Interval(-99999.,99999.)));
+    x.set_envelope(x.codomain() & IntervalVector(x.dim(), Interval(-99999.,99999.)));
     
     IntervalVector box = x.codomain(), prev_box = box;
     box[i] = x.polygon(i, v).box()[1];
-    x.setEnvelope(box);
+    x.set_envelope(box);
     return prev_box != box;
   }
 }

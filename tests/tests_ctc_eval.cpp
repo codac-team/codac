@@ -26,10 +26,10 @@ TEST_CASE("CtcEval")
     v.set(Interval(-1.), 2);
     v.set(Interval(1.), 3);
 
-    CHECK(x.nbSlices() == 4);
+    CHECK(x.nb_slices() == 4);
     CtcEval ctc_eval(false);
     ctc_eval.contract(t, z, x, v);
-    CHECK(x.nbSlices() == 6);
+    CHECK(x.nb_slices() == 6);
 
     CHECK(x.codomain() == Interval::ALL_REALS); // only gates should be affected
     CHECK(x[-1.] == Interval::ALL_REALS);
@@ -45,10 +45,10 @@ TEST_CASE("CtcEval")
       vibes::beginDrawing();
       x &= Interval(-10.,10.);
       VibesFigure_Tube fig_tube("ctceval", &x);
-      fig_tube.setProperties(100, 100, 500, 500);
-      fig_tube.setTubeDerivative(&x, &v);
+      fig_tube.set_properties(100, 100, 500, 500);
+      fig_tube.set_tube_derivative(&x, &v);
       fig_tube.show(true);
-      vibes::endDrawing();
+      vibes::end_drawing();
     }
   }
 /*
@@ -66,12 +66,12 @@ TEST_CASE("CtcEval")
     x.set(Interval(0.,1.), 2.);
     v.sample(2.);
 
-    CHECK(x.nbSlices() == 5);
+    CHECK(x.nb_slices() == 5);
 
     CtcEval ctc_eval(false);
     ctc_eval.contract(t, z, x, v);
 
-    CHECK(x.nbSlices() == 7);
+    CHECK(x.nb_slices() == 7);
 
     CHECK(x.codomain() == Interval::ALL_REALS); // only gates should be affected
     CHECK(x[-1.] == Interval::ALL_REALS);
@@ -94,8 +94,8 @@ TEST_CASE("CtcEval")
       vibes::beginDrawing();
       x &= Interval(-10.,10.);
       VibesFigure_Tube fig_tube("ctceval", &x);
-      fig_tube.setProperties(100, 100, 500, 500);
-      fig_tube.setTubeDerivative(&x, &v);
+      fig_tube.set_properties(100, 100, 500, 500);
+      fig_tube.set_tube_derivative(&x, &v);
       fig_tube.show(true);
     }
 
@@ -111,7 +111,7 @@ TEST_CASE("CtcEval")
     CHECK(box[0] == Interval(2.6,3.8));
     CHECK(box[1] == Interval(1.6));
 
-    if(VIBES_DRAWING) vibes::endDrawing();
+    if(VIBES_DRAWING) vibes::end_drawing();
   }*/
 
   SECTION("Test CtcEval, special cases")
@@ -124,7 +124,7 @@ TEST_CASE("CtcEval")
     // todo: apply this: x.set(Interval::ALL_REALS);
     x.set(Interval(-1.5,1.), 4);
     x.set(Interval(-1.,1.5), 5);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, xdot);
@@ -156,7 +156,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
     CHECK_FALSE(ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot)); // fixed point already reached
     CHECK(contraction);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
     CHECK(x[0] == Interval(-5.5,3.));
@@ -180,7 +180,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
     CHECK_FALSE(ctc_eval_propa.contract(intv_t, intv_y, x, xdot)); // fixed point already reached
     CHECK(contraction);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     CHECK(intv_t == 1.);
     CHECK(intv_y == Interval(-0.5,1.));
     CHECK(x[0] == Interval(-1.5,1.5));
@@ -195,7 +195,7 @@ TEST_CASE("CtcEval")
     CHECK(x[8] == Interval(-2.5,4.5));
     CHECK(x[9] == Interval(-3.,5.5));
 
-    // Test A: ctcDeriv should not be effective after ctcEval(true)
+    // Test A: ctc_deriv should not be effective after ctc_eval(true)
     x = x_raw;
     xdot = xdot_raw;
     intv_t = 1.;
@@ -211,7 +211,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
     CHECK_FALSE(ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot)); // fixed point already reached
     CHECK(contraction);
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(intv_t == Interval(0.5,2.5));
     CHECK(intv_y == -2.);
     CHECK(x[0] == Interval(-5.5,3.));
@@ -239,16 +239,16 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
     CHECK_FALSE(ctc_eval_propa.contract(intv_t, intv_y, x, xdot)); // fixed point already reached
     CHECK(contraction);
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(intv_t == Interval(0.5,2.5));
     CHECK(intv_y == -2.);
     CHECK(x[0] == Interval(-4.5,-0.75));
     CHECK(x[0.5] == Interval(-4.,-1.));
     CHECK(x[1] == Interval(-4.,-1.));
     CHECK(x[1.] == Interval(-3.5,-1.25));
-    CHECK(x.getSlice(0.6)->domain() == Interval(0.5,1.));
-    CHECK(x.getSlice(0.6)->inputGate() == Interval(-4.,-1.));
-    CHECK(x.getSlice(0.6)->outputGate() == Interval(-3.5,-1.25));
+    CHECK(x.get_slice(0.6)->domain() == Interval(0.5,1.));
+    CHECK(x.get_slice(0.6)->input_gate() == Interval(-4.,-1.));
+    CHECK(x.get_slice(0.6)->output_gate() == Interval(-3.5,-1.25));
     CHECK(xdot[2] == Interval(-0.5,1.));
     //CHECK(x[2] == Interval(-3.5,-0.5)); // todo: optimal implementation?
     CHECK(x[2.] == Interval(-2.75,-0.5));
@@ -271,7 +271,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
     CHECK_FALSE(ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot)); // fixed point already reached
     CHECK(contraction);
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(intv_t == Interval(0.5,1.5));
     CHECK(intv_y == -4.);
     CHECK(x[0] == Interval(-5.5,3.));
@@ -298,7 +298,7 @@ TEST_CASE("CtcEval")
     contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
     CHECK_FALSE(ctc_eval_propa.contract(intv_t, intv_y, x, xdot)); // fixed point already reached
     CHECK(contraction);
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(intv_t == Interval(0.5,1.5));
     CHECK(intv_y == -4.);
     CHECK(x[0] == Interval(-5.5,-3.25));
@@ -326,8 +326,8 @@ TEST_CASE("CtcEval")
       box[1] = Interval(-4.);
       vibes::beginDrawing();
       VibesFigure_Tube fig_tube("ctceval", &x);
-      fig_tube.setProperties(100, 100, 500, 500);
-      fig_tube.setTubeDerivative(&x, &xdot);
+      fig_tube.set_properties(100, 100, 500, 500);
+      fig_tube.set_tube_derivative(&x, &xdot);
       fig_tube.show(true);
       contraction = ctc_eval_propa.contract(box[0], box[1], x, xdot);
       fig_tube.show(true);
@@ -340,9 +340,9 @@ TEST_CASE("CtcEval")
     xdot = xdot_raw;
     intv_t = 3.5;
     intv_y = Interval(-3.5,-0.5);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
-    CHECK(x.nbSlices() == 11);
+    CHECK(x.nb_slices() == 11);
     CHECK(contraction);
     CHECK(intv_t == 3.5);
     CHECK(intv_y == Interval(-2.,-0.5));
@@ -364,9 +364,9 @@ TEST_CASE("CtcEval")
     xdot = xdot_raw;
     intv_t = 3.5;
     intv_y = Interval(-3.5,-0.5);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
-    CHECK(x.nbSlices() == 11);
+    CHECK(x.nb_slices() == 11);
     CHECK(contraction);
     CHECK(intv_t == 3.5);
     CHECK(intv_y == Interval(-2.,-0.5));
@@ -389,7 +389,7 @@ TEST_CASE("CtcEval")
     intv_t = Interval(6.5, 8.5);
     intv_y = Interval(-4.5, -1.75);
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(contraction);
     CHECK(intv_t == Interval(7.5, 8.5));
     CHECK(intv_y == Interval(-2.25, -1.75));
@@ -414,7 +414,7 @@ TEST_CASE("CtcEval")
     intv_t = Interval(6.5, 8.5);
     intv_y = Interval(-4.5, -1.75);
     contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(contraction);
     CHECK(intv_t == Interval(7.5, 8.5));
     CHECK(intv_y == Interval(-2.25, -1.75));
@@ -439,7 +439,7 @@ TEST_CASE("CtcEval")
     intv_t = Interval(8.5,9.5);
     intv_y = Interval(-0.5,2.5);
     contraction = ctc_eval_nopropa.contract(intv_t, intv_y, x, xdot);
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(contraction);
     CHECK(intv_t == Interval(8.5,9.5));
     CHECK(intv_y == Interval(-0.5,2.5));
@@ -464,7 +464,7 @@ TEST_CASE("CtcEval")
     intv_t = Interval(8.5,9.5);
     intv_y = Interval(-0.5,2.5);
     contraction = ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(contraction);
     CHECK(intv_t == Interval(8.5,9.5));
     CHECK(intv_y == Interval(-0.5,2.5));
@@ -536,7 +536,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval::EMPTY_SET);
     CHECK(intv_y == Interval::EMPTY_SET);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     CHECK(x[0] == Interval::EMPTY_SET);
     CHECK(x[1] == Interval::EMPTY_SET);
     CHECK(x[2] == Interval::EMPTY_SET);
@@ -547,7 +547,7 @@ TEST_CASE("CtcEval")
     CHECK(x[7] == Interval::EMPTY_SET);
     CHECK(x[8] == Interval::EMPTY_SET);
     CHECK(x[9] == Interval::EMPTY_SET);
-    CHECK(x.isEmpty());
+    CHECK(x.is_empty());
 
     // Test H (propa)
     x = x_raw;
@@ -558,7 +558,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval::EMPTY_SET);
     CHECK(intv_y == Interval::EMPTY_SET);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     CHECK(x[0] == Interval::EMPTY_SET);
     CHECK(x[1] == Interval::EMPTY_SET);
     CHECK(x[2] == Interval::EMPTY_SET);
@@ -569,7 +569,7 @@ TEST_CASE("CtcEval")
     CHECK(x[7] == Interval::EMPTY_SET);
     CHECK(x[8] == Interval::EMPTY_SET);
     CHECK(x[9] == Interval::EMPTY_SET);
-    CHECK(x.isEmpty());
+    CHECK(x.is_empty());
 
     // Test I (no propa)
     x = x_raw;
@@ -580,7 +580,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(2.5));
     CHECK(intv_y == Interval(0.5));
-    CHECK(x.nbSlices() == 11);
+    CHECK(x.nb_slices() == 11);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -603,7 +603,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(2.5));
     CHECK(intv_y == Interval(0.5));
-    CHECK(x.nbSlices() == 11);
+    CHECK(x.nb_slices() == 11);
     CHECK(x[0] == Interval(-2.,1.75));
     CHECK(x[1] == Interval(-1.,1.25));
     CHECK(x[2] == Interval(-0.,0.75));
@@ -626,7 +626,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == 6.25);
     CHECK(intv_y == Interval(0.5,1.));
-    CHECK(x.nbSlices() == 11);
+    CHECK(x.nb_slices() == 11);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -649,7 +649,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == 6.25);
     CHECK(intv_y == Interval(0.5,1.));
-    CHECK(x.nbSlices() == 11);
+    CHECK(x.nb_slices() == 11);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -672,7 +672,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(5.25, 8.25));
     CHECK(intv_y == Interval(-0.5, 0.));
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -697,7 +697,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(5.25, 8.25));
     CHECK(intv_y == Interval(-0.5, 0.));
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -722,7 +722,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(1.5,2.5));
     CHECK(intv_y == Interval(1.75,2.25));
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[1.5] == Interval(0.75,2.25));
@@ -747,7 +747,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(1.5,2.5));
     CHECK(intv_y == Interval(1.75,2.25));
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(x[0] == Interval(-0.75,3.));
     CHECK(x[1] == Interval(0.25,2.5));
     CHECK(x[1.5] == Interval(0.75,2.25));
@@ -772,7 +772,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval::EMPTY_SET);
     CHECK(intv_y == Interval::EMPTY_SET);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     CHECK(x[0] == Interval::EMPTY_SET);
     CHECK(x[1] == Interval::EMPTY_SET);
     CHECK(x[2] == Interval::EMPTY_SET);
@@ -783,7 +783,7 @@ TEST_CASE("CtcEval")
     CHECK(x[7] == Interval::EMPTY_SET);
     CHECK(x[8] == Interval::EMPTY_SET);
     CHECK(x[9] == Interval::EMPTY_SET);
-    CHECK(x.isEmpty());
+    CHECK(x.is_empty());
 
     // Test M (propa)
     x = x_raw;
@@ -794,7 +794,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval::EMPTY_SET);
     CHECK(intv_y == Interval::EMPTY_SET);
-    CHECK(x.nbSlices() == 10);
+    CHECK(x.nb_slices() == 10);
     CHECK(x[0] == Interval::EMPTY_SET);
     CHECK(x[1] == Interval::EMPTY_SET);
     CHECK(x[2] == Interval::EMPTY_SET);
@@ -805,7 +805,7 @@ TEST_CASE("CtcEval")
     CHECK(x[7] == Interval::EMPTY_SET);
     CHECK(x[8] == Interval::EMPTY_SET);
     CHECK(x[9] == Interval::EMPTY_SET);
-    CHECK(x.isEmpty());
+    CHECK(x.is_empty());
 
     // Test N (no propa)
     x = x_raw;
@@ -816,7 +816,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(6.5,8.5));
     CHECK(intv_y == Interval(2.,4.));
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -841,7 +841,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(6.5,8.5));
     CHECK(intv_y == Interval(2.,4.));
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -866,7 +866,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(2.5,9.5));
     CHECK(intv_y == Interval(-3.,-2.5));
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(x[0] == Interval(-5.5,3.));
     CHECK(x[1] == Interval(-4.5,2.5));
     CHECK(x[2] == Interval(-3.5,2.));
@@ -891,7 +891,7 @@ TEST_CASE("CtcEval")
     CHECK(contraction);
     CHECK(intv_t == Interval(2.5,9.5));
     CHECK(intv_y == Interval(-3.,-2.5));
-    CHECK(x.nbSlices() == 12);
+    CHECK(x.nb_slices() == 12);
     CHECK(x[0] == Interval(-5.5,2.25));
     CHECK(x[1] == Interval(-4.5,1.75));
     CHECK(x[2] == Interval(-3.5,1.25));
@@ -912,7 +912,7 @@ TEST_CASE("CtcEval")
   {
     Tube x(Interval(0.,20.), 0.1, tubex::Function("cos(t)+t*[-0.1,0.2]"));
     Tube v(Interval(0.,20.), 0.1, tubex::Function("-sin(t)+[-0.1,0.2]"));
-    x.ctcDeriv(v);
+    x.ctc_deriv(v);
 
     IntervalVector box(2);
     CtcEval ctc_eval(true);
@@ -930,8 +930,8 @@ TEST_CASE("CtcEval")
     {
       vibes::beginDrawing();
       VibesFigure_Tube fig_tube("ctceval", &x);
-      fig_tube.setProperties(100, 100, 800, 400);
-      fig_tube.setTubeDerivative(&x, &v);
+      fig_tube.set_properties(100, 100, 800, 400);
+      fig_tube.set_tube_derivative(&x, &v);
       fig_tube.show(true);
       x = x_c;
       v = v_c;
@@ -946,7 +946,7 @@ TEST_CASE("CtcEval")
     Tube v(x);
     v.set(Interval(-1.5,-1.));
     x.set(Interval(6.,8.), 0);
-    x.ctcDeriv(v);
+    x.ctc_deriv(v);
 
     CtcEval ctc_eval;
 
@@ -1054,7 +1054,7 @@ TEST_CASE("CtcEval")
     Tube derivative(tube);
     derivative.set(Interval(1.,1.5));
     tube.set(Interval(-8.,-6.), 0);
-    tube.ctcDeriv(derivative);
+    tube.ctc_deriv(derivative);
 
     CHECK(tube[0] == Interval(-8.,-6.)); 
     CHECK(tube[1] == Interval(-7.,-4.5)); 
@@ -1074,7 +1074,7 @@ TEST_CASE("CtcEval")
 
     intv_t = Interval(5.,10.);
     intv_y = Interval(-3.,-1.);
-    contraction = tube.ctcEval(intv_t, intv_y, derivative, false);
+    contraction = tube.ctc_eval(intv_t, intv_y, derivative, false);
     CHECK(contraction);
     CHECK(intv_t == Interval(5.,8.));
     CHECK(intv_y == Interval(-3.,-1.));
@@ -1093,7 +1093,7 @@ TEST_CASE("CtcEval")
     tube = tube_raw;
     intv_t = Interval(2.,5.5);
     intv_y = Interval(-0.5,3.);
-    contraction = tube.ctcEval(intv_t, intv_y, derivative, false);
+    contraction = tube.ctc_eval(intv_t, intv_y, derivative, false);
     CHECK(contraction);
     CHECK(intv_t == Interval(4.,5.5));
     CHECK(intv_y == Interval(-0.5,0.75));
@@ -1112,7 +1112,7 @@ TEST_CASE("CtcEval")
     tube = tube_raw;
     intv_t = Interval(3.5,7.);
     intv_y = Interval(-5.2,-4.8);
-    contraction = tube.ctcEval(intv_t, intv_y, derivative, false);
+    contraction = tube.ctc_eval(intv_t, intv_y, derivative, false);
     CHECK(contraction);
     CHECK(intv_t == Interval::EMPTY_SET);
     CHECK(intv_y == Interval::EMPTY_SET);

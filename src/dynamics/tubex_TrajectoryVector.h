@@ -40,27 +40,27 @@ namespace tubex
       int dim() const;
 
       // Access values
-      const std::map<double,ibex::Vector>& getMap() const;
-      const tubex::Function* getFunction() const;
+      const std::map<double,ibex::Vector>& get_map() const;
+      const tubex::Function* get_function() const;
       const ibex::Interval domain() const;
       const ibex::IntervalVector codomain() const;
-      const ibex::IntervalVector codomainBox() const;
+      const ibex::IntervalVector codomain_box() const;
       const ibex::Vector operator[](double t) const;
       const ibex::IntervalVector operator[](const ibex::Interval& t) const;
 
       // Tests
-      bool notDefined() const;
+      bool not_defined() const;
       bool operator==(const TrajectoryVector& x) const;
       bool operator!=(const TrajectoryVector& x) const;
 
       // Setting values
       const ibex::Vector& set(double t, const ibex::Vector& y);
-      void truncateDomain(const ibex::Interval& domain);
-      void shiftDomain(double shift_ref);
+      void truncate_domain(const ibex::Interval& domain);
+      void shift_domain(double shift_ref);
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x);
-      const std::string className() const { return "TrajectoryVector"; };
+      const std::string class_name() const { return "TrajectoryVector"; };
 
     protected:
 

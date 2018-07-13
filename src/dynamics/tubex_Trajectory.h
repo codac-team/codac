@@ -31,25 +31,25 @@ namespace tubex
       using TrajectoryVector::dim;
 
       // Access values
-      using TrajectoryVector::getFunction;
+      using TrajectoryVector::get_function;
       using TrajectoryVector::domain;
       const ibex::Interval codomain() const;
       double operator[](double t) const;
       const ibex::Interval operator[](const ibex::Interval& t) const;
 
       // Tests
-      using TrajectoryVector::notDefined;
+      using TrajectoryVector::not_defined;
       bool operator==(const Trajectory& x) const;
       bool operator!=(const Trajectory& x) const;
 
       // Setting values
       double set(double t, double y);
-      using TrajectoryVector::truncateDomain;
-      using TrajectoryVector::shiftDomain;
+      using TrajectoryVector::truncate_domain;
+      using TrajectoryVector::shift_domain;
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const Trajectory& x);
-      const std::string className() const { return "Trajectory"; };
+      const std::string class_name() const { return "Trajectory"; };
   };
 }
 

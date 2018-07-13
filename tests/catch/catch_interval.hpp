@@ -214,22 +214,22 @@ namespace Catch
           if(lhs == rhs.m_value)
             return true;
 
-          int n = lhs.getVertices().size();
-          if(n != rhs.m_value.getVertices().size())
+          int n = lhs.get_vertices().size();
+          if(n != rhs.m_value.get_vertices().size())
             return false;
 
           int i; // looking for first same elements
           for(i = 0 ; i < n ; i++)
-            if(lhs.getVertices()[0] == ApproxPoint(rhs.m_value.getVertices()[i]))
+            if(lhs.get_vertices()[0] == ApproxPoint(rhs.m_value.get_vertices()[i]))
               break;
 
           int way = 1;
           if(n > 1)
-            way = (lhs.getVertices()[1] == ApproxPoint(rhs.m_value.getVertices()[(i+1) % n])) ? 1 : -1;
+            way = (lhs.get_vertices()[1] == ApproxPoint(rhs.m_value.get_vertices()[(i+1) % n])) ? 1 : -1;
 
           for(int j = 0 ; j < n ; j++)
           {
-            if(lhs.getVertices()[j] != ApproxPoint(rhs.m_value.getVertices()[(i+way*j+n) % n]))
+            if(lhs.get_vertices()[j] != ApproxPoint(rhs.m_value.get_vertices()[(i+way*j+n) % n]))
               return false;
           }
 

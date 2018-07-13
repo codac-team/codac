@@ -66,7 +66,7 @@ TEST_CASE("Trajectory base")
 
     CHECK(ApproxIntv(traj1.domain()) == Interval(0.,9.));
     CHECK(ApproxIntv(traj1.codomain()) == Interval(0.,9.));
-    traj1.truncateDomain(Interval(-3.,5.));
+    traj1.truncate_domain(Interval(-3.,5.));
     CHECK(ApproxIntv(traj1.domain()) == Interval(0.,5.));
     CHECK(ApproxIntv(traj1.codomain()) == Interval(0.,5.));
 
@@ -86,7 +86,7 @@ TEST_CASE("Trajectory base")
 
     CHECK(ApproxIntv(traj.domain()) == Interval(0.,9.));
     CHECK(Approx(traj[5.2]) == 5.2);
-    traj.shiftDomain(2.);
+    traj.shift_domain(2.);
     CHECK(ApproxIntv(traj.domain()) == Interval(-2.,7.));
     CHECK(Approx(traj[5.2]) == 7.2);
     CHECK(Approx(traj[3.2]) == 5.2);

@@ -73,8 +73,8 @@ int main(int argc, char *argv[])
       for(int i = 0 ; i < v_tau.size() ; i++)
       {
         v_t[i] &= h.invert(v_tau[i]);
-        contraction |= y.ctcEval(v_t[i], v_z[i], ydot);
-        contraction |= h.ctcEval(v_t[i], v_tau[i], hdot);
+        contraction |= y.ctc_eval(v_t[i], v_z[i], ydot);
+        contraction |= h.ctc_eval(v_t[i], v_tau[i], hdot);
       }
 
       k++;
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 
     VibesFigure_Tube::draw("Tube [y](·)");
     VibesFigure_Tube::draw("Tube [h](·)");
-    VibesFigure_Tube::endDrawing();
+    VibesFigure_Tube::end_drawing();
 
   // Checking if this example is still working:
   return (fabs(h.volume() - 9.86763) < 1e-2

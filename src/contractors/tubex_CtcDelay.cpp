@@ -33,25 +33,25 @@ namespace tubex
     SamplingException::check(x, y);
 
     Interval intv_t;
-    const TubeSlice *slice_x = x.getFirstSlice();
-    TubeSlice *slice_y = y.getFirstSlice();
+    const TubeSlice *slice_x = x.get_first_slice();
+    TubeSlice *slice_y = y.get_first_slice();
 
     while(slice_x != NULL)
     {
       intv_t = slice_y->domain().lb() - a;
       if(intv_t.is_subset(y.domain()))
-        slice_y->setInputGate(slice_y->inputGate() & x[intv_t]);
+        slice_y->set_input_gate(slice_y->input_gate() & x[intv_t]);
 
       intv_t = slice_y->domain() - a;
       if(intv_t.is_subset(y.domain()))
-        slice_y->setEnvelope(slice_y->codomain() & x[intv_t]);
+        slice_y->set_envelope(slice_y->codomain() & x[intv_t]);
 
       intv_t = slice_y->domain().ub() - a;
       if(intv_t.is_subset(y.domain()))
-        slice_y->setOutputGate(slice_y->outputGate() & x[intv_t]);
+        slice_y->set_output_gate(slice_y->output_gate() & x[intv_t]);
 
-      slice_x = slice_x->nextSlice();
-      slice_y = slice_y->nextSlice();
+      slice_x = slice_x->next_slice();
+      slice_y = slice_y->next_slice();
     }
 
     // todo: return value

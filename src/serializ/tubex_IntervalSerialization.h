@@ -31,19 +31,19 @@ namespace tubex
    * \param bin_file binary file (ofstream object)
    * \param intv Interval object to be serialized
    */
-  void serializeInterval(std::ofstream& bin_file, const ibex::Interval& intv);
-  void serializeIntervalVector(std::ofstream& bin_file, const ibex::IntervalVector& box);
+  void serialize_interval(std::ofstream& bin_file, const ibex::Interval& intv);
+  void serialize_intervalvector(std::ofstream& bin_file, const ibex::IntervalVector& box);
 
   /**
    * \brief Create an Interval object from a binary file.
    *
-   * The binary file has to be written by the serializeInterval() function.
+   * The binary file has to be written by the serialize_interval() function.
    *
    * \param bin_file binary file (ifstream object)
    * \param intv Interval object to be deserialized
    */
-  void deserializeInterval(std::ifstream& bin_file, ibex::Interval& intv);
-  void deserializeIntervalVector(std::ifstream& bin_file, ibex::IntervalVector& box);
+  void deserialize_interval(std::ifstream& bin_file, ibex::Interval& intv);
+  void deserialize_intervalvector(std::ifstream& bin_file, ibex::IntervalVector& box);
 }
 
 #endif

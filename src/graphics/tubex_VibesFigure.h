@@ -75,7 +75,7 @@ namespace tubex
        *
        * \return IntervalVector
        */
-      const ibex::IntervalVector& viewBox() const;
+      const ibex::IntervalVector& view_box() const;
 
       /**
        * \brief Set figure's properties: position and dimensions.
@@ -85,7 +85,7 @@ namespace tubex
        * \param width width value (px)
        * \param height height value (px)
        */
-      void setProperties(int x, int y, int width, int height);
+      void set_properties(int x, int y, int width, int height);
 
       /**
        * \brief Set figure's axis limits.
@@ -97,8 +97,8 @@ namespace tubex
        * \param keep_ratio view box is set to fit with the params, without changing its ratio (false by default)
        * \return the limits box
        */
-      const ibex::IntervalVector& axisLimits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio = false);
-      const ibex::IntervalVector& axisLimits(const ibex::IntervalVector& viewbox, bool keep_ratio = false);
+      const ibex::IntervalVector& axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio = false);
+      const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, bool keep_ratio = false);
 
       /**
        * \brief Save vibes-figure in SVG/PNG/... format.
@@ -108,7 +108,7 @@ namespace tubex
        * \param suffix optional part name that can be added to figure_name, empty by default
        * \param extension optional part to specify image type, ".svg" by default
        */
-      void saveImage(const std::string& suffix = "", const std::string& extension = ".svg") const;
+      void save_image(const std::string& suffix = "", const std::string& extension = ".svg") const;
 
       /**
        * \brief Display the figure.
@@ -141,14 +141,14 @@ namespace tubex
        */
       //static void hex2rgb(const std::string& hexa, int &r, int &g, int &b, int &alpha);
 
-      static double truncInf(double x);
-      static const ibex::Interval truncInf(const ibex::Interval& x);
+      static double trunc_inf(double x);
+      static const ibex::Interval trunc_inf(const ibex::Interval& x);
 
     protected:
 
-      void setCurrentLayer(int layer);
-      const std::string& figName();
-      static std::string addSuffix(const std::string& name, int id);
+      void set_current_layer(int layer);
+      const std::string& fig_name();
+      static std::string add_suffix(const std::string& name, int id);
 
 
     protected:

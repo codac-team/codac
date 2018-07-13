@@ -38,7 +38,7 @@ namespace tubex
       ibex::Interval m_x;
   };
 
-  void pushPoints(const ibex::IntervalVector& box, std::vector<Point>& v_points);
+  void push_points(const ibex::IntervalVector& box, std::vector<Point>& v_points);
 }
 
 #endif

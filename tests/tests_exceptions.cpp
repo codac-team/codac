@@ -40,7 +40,7 @@ TEST_CASE("Exceptions")
   SECTION("SamplingException")
   {
     Tube tube1(Interval(0.,1.), 1.), tube2(Interval(0.,1.), 4.), tube3(Interval(0.,1.), 0.5);
-    CHECK(tube1.nbSlices() == tube2.nbSlices());
+    CHECK(tube1.nb_slices() == tube2.nb_slices());
     CHECK_THROWS(SamplingException::check(tube1, tube3));
   }
 }

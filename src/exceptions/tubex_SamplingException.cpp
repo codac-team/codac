@@ -37,7 +37,7 @@ namespace tubex
   {
     ostringstream os;
     os << "slice index out of range: ";
-    os << "i=" << slice_index << " not in " << Interval(0,(x.nbSlices()-1)) << endl;
+    os << "i=" << slice_index << " not in " << Interval(0,(x.nb_slices()-1)) << endl;
     m_what_msg = os.str();
   }
 
@@ -46,9 +46,9 @@ namespace tubex
     ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
 
-    if(x1.nbSlices() != x2.nbSlices())
+    if(x1.nb_slices() != x2.nb_slices())
       os << endl << "TubeVector of different slices number: " 
-         << "n1=" << x1.nbSlices() << " and n2=" << x2.nbSlices();
+         << "n1=" << x1.nb_slices() << " and n2=" << x2.nb_slices();
 
     os << endl;
     m_what_msg = os.str();
@@ -57,25 +57,25 @@ namespace tubex
   void SamplingException::check(const TubeVector& x1, const TubeVector& x2)
   {
     DomainException::check(x1, x2);
-    if(x1.nbSlices() != x2.nbSlices())
+    if(x1.nb_slices() != x2.nb_slices())
       throw SamplingException(x1, x2);
 
-    const TubeSlice *slice_x1 = x1.getFirstSlice();
-    const TubeSlice *slice_x2 = x2.getFirstSlice();
+    const TubeSlice *slice_x1 = x1.get_first_slice();
+    const TubeSlice *slice_x2 = x2.get_first_slice();
     
     while(slice_x1 != NULL)
     {
       if(slice_x1->domain() != slice_x2->domain())
         throw SamplingException(*slice_x1, *slice_x2);
 
-      slice_x1 = slice_x1->nextSlice();
-      slice_x2 = slice_x2->nextSlice();
+      slice_x1 = slice_x1->next_slice();
+      slice_x2 = slice_x2->next_slice();
     }
   }
 
   void SamplingException::check(const TubeVector& x, int slice_index)
   {
-    if(slice_index < 0 || slice_index >= x.nbSlices())
+    if(slice_index < 0 || slice_index >= x.nb_slices())
       throw SamplingException(x, slice_index);
   }
 }

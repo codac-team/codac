@@ -34,11 +34,11 @@ namespace tubex
 
       void contract_fwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
       void contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
-      int picardIterations() const;
-      void guessSliceEnvelope(const Fnc& f,
-                              const TubeVector& tube,
-                              TubeSlice& slice,
-                              bool fwd) const;
+      int picard_iterations() const;
+      void guess_slice_envelope(const Fnc& f,
+                                const TubeVector& tube,
+                                TubeSlice& slice,
+                                bool fwd) const;
 
     protected:
 

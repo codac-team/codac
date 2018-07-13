@@ -38,7 +38,7 @@ namespace tubex
       DimensionException(const VibesFigure_Tube& fig, const DynamicalItem& x);
 
       static void check(int dim);
-      static void checkScalar(int dim);
+      static void check_scalar(int dim);
       static void check(const ibex::Vector& x1, const ibex::Vector& x2);
       static void check(const DynamicalItem& x, int i);
       static void check(const DynamicalItem& x, const ibex::IntervalVector& box);

@@ -30,7 +30,7 @@ namespace tubex
   Trajectory::Trajectory(const Interval& domain, const tubex::Function& f)
     : TrajectoryVector(domain, f)
   {
-    DimensionException::checkScalar(f.imageDim());
+    DimensionException::check_scalar(f.image_dim());
   }
 
   Trajectory::Trajectory(const map<double,double>& map_values)
@@ -42,7 +42,7 @@ namespace tubex
   
   Trajectory::Trajectory(const TrajectoryVector& traj)
   {
-    DimensionException::checkScalar(traj.dim());
+    DimensionException::check_scalar(traj.dim());
     TrajectoryVector::operator=(traj);
   }
 
@@ -61,7 +61,7 @@ namespace tubex
 
   const Interval Trajectory::codomain() const
   {
-    return codomainBox()[0];
+    return codomain_box()[0];
   }
 
   double Trajectory::operator[](double t) const

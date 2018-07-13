@@ -42,11 +42,11 @@ namespace tubex
       using TubeVector::dim;
 
       // Slices structure
-      using TubeVector::nbSlices;
-      using TubeVector::getSlice;
-      using TubeVector::getFirstSlice;
-      using TubeVector::getLastSlice;
-      using TubeVector::getWiderSlice;
+      using TubeVector::nb_slices;
+      using TubeVector::get_slice;
+      using TubeVector::get_first_slice;
+      using TubeVector::get_last_slice;
+      using TubeVector::get_wider_slice;
       using TubeVector::input2index;
       using TubeVector::sample;
       void sample(double t, const ibex::Interval& gate);
@@ -64,16 +64,16 @@ namespace tubex
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       const ibex::Interval interpol(double t, const Tube& derivative) const;
       const ibex::Interval interpol(const ibex::Interval& t, const Tube& derivative) const;
-      double maxThickness() const;
-      double maxThickness(int& first_id_max_thickness) const;
-      double maxGateThickness(double& t) const;
+      double max_thickness() const;
+      double max_thickness(int& first_id_max_thickness) const;
+      double max_gate_thickness(double& t) const;
 
       // Tests
       bool operator==(const Tube& x) const;
       bool operator!=(const Tube& x) const;
-      bool isSubset(const Tube& x) const;
-      bool isStrictSubset(const Tube& x) const;
-      using TubeVector::isEmpty;
+      bool is_subset(const Tube& x) const;
+      bool is_strict_subset(const Tube& x) const;
+      using TubeVector::is_empty;
       using TubeVector::encloses;
 
       // Setting values
@@ -81,7 +81,7 @@ namespace tubex
       void set(const ibex::Interval& y, int slice_id);
       void set(const ibex::Interval& y, double t);
       void set(const ibex::Interval& y, const ibex::Interval& t);
-      using TubeVector::setEmpty;
+      using TubeVector::set_empty;
       using TubeVector::inflate;
 
       // Bisection
@@ -107,20 +107,20 @@ namespace tubex
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
-      const std::string className() const { return "Tube"; };
+      const std::string class_name() const { return "Tube"; };
 
     /** Integration: **/
 
       const ibex::Interval integral(double t) const;
       const ibex::Interval integral(const ibex::Interval& t) const;
       const ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
-      const std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t) const;
-      const std::pair<ibex::Interval,ibex::Interval> partialIntegral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      const std::pair<ibex::Interval,ibex::Interval> partial_integral(const ibex::Interval& t) const;
+      const std::pair<ibex::Interval,ibex::Interval> partial_integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
     /** Contractors: **/
 
-      using TubeVector::ctcDeriv;
-      bool ctcEval(ibex::Interval& t, ibex::Interval& z, Tube& w);
+      using TubeVector::ctc_deriv;
+      bool ctc_eval(ibex::Interval& t, ibex::Interval& z, Tube& w);
 
     /** Serialization: **/
 
@@ -130,7 +130,7 @@ namespace tubex
 
     protected:
 
-      using TubeVector::codomainBox;
+      //using TubeVector::codomain_box; // todo: remove this?
   };
 }
 

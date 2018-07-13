@@ -28,12 +28,12 @@ namespace tubex
   bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeVector& x) const
   {
     bool ctc = false;
-    TubeSlice *slice = x.getFirstSlice();
+    TubeSlice *slice = x.get_first_slice();
 
     while(slice != NULL)
     {
       ctc |= contract(hc4, *slice);
-      slice = slice->nextSlice();
+      slice = slice->next_slice();
     }
 
     return ctc;
@@ -41,23 +41,23 @@ namespace tubex
 
   bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeSlice& x) const
   {
-    if(x.isEmpty())
+    if(x.is_empty())
       return false;
     
     TubeSlice x_old = x;
     IntervalVector box = x.box();
     hc4.contract(box);
-    x.setEnvelope(box.subvector(1, box.size() - 1));
+    x.set_envelope(box.subvector(1, box.size() - 1));
 
     box[0] = x.domain().lb();
-    box.put(1, x_old.inputGate());
+    box.put(1, x_old.input_gate());
     hc4.contract(box);
-    x.setInputGate(box.subvector(1, box.size() - 1));
+    x.set_input_gate(box.subvector(1, box.size() - 1));
 
     box[0] = x.domain().ub();
-    box.put(1, x_old.outputGate());
+    box.put(1, x_old.output_gate());
     hc4.contract(box);
-    x.setOutputGate(box.subvector(1, box.size() - 1));
+    x.set_output_gate(box.subvector(1, box.size() - 1));
 
     return x_old != x;
   }

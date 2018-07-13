@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
       {
         for(int j = 0 ; j < v_obs.size() ; j++)
           if(v_obs[j].first == i)
-            contraction |= v_g[i].ctcEval(v_gdot[i],
+            contraction |= v_g[i].ctc_eval(v_gdot[i],
                                          v_obs[j].second[0],
                                          v_obs[j].second[1]);
 
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
     VibesFigure_Tube::draw("Tube [x](·)", &x, 100, 100);
     VibesFigure_Tube::draw("Tube [y](·)", &y, 150, 150);
     displayBeaconsMap(x, y, 200, 200);
-    VibesFigure_Tube::endDrawing();
+    VibesFigure_Tube::end_drawing();
     
   // Checking if this example is still working:
   return (fabs(x.volume() - 604.8) < 1e-2

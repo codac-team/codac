@@ -24,89 +24,89 @@ namespace tubex
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return x.inputGate()[i].lb() + v.codomain()[i].lb() * (t - x.domain().lb());
+    return x.input_gate()[i].lb() + v.codomain()[i].lb() * (t - x.domain().lb());
   }
 
   Interval yilb_inv(int i, const Interval& y, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return ((y - x.inputGate()[i].lb()) / v.codomain()[i].lb()) + x.domain().lb();
+    return ((y - x.input_gate()[i].lb()) / v.codomain()[i].lb()) + x.domain().lb();
   }
 
   Interval yiub(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return x.inputGate()[i].ub() + v.codomain()[i].ub() * (t - x.domain().lb());
+    return x.input_gate()[i].ub() + v.codomain()[i].ub() * (t - x.domain().lb());
   }
 
   Interval yiub_inv(int i, const Interval& y, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return ((y - x.inputGate()[i].ub()) / v.codomain()[i].ub()) + x.domain().lb();
+    return ((y - x.input_gate()[i].ub()) / v.codomain()[i].ub()) + x.domain().lb();
   }
 
   Interval yolb(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return x.outputGate()[i].lb() + v.codomain()[i].ub() * (t - x.domain().ub());
+    return x.output_gate()[i].lb() + v.codomain()[i].ub() * (t - x.domain().ub());
   }
 
   Interval yolb_inv(int i, const Interval& y, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return ((y - x.outputGate()[i].lb()) / v.codomain()[i].ub()) + x.domain().ub();
+    return ((y - x.output_gate()[i].lb()) / v.codomain()[i].ub()) + x.domain().ub();
   }
 
   Interval youb(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return x.outputGate()[i].ub() + v.codomain()[i].lb() * (t - x.domain().ub());
+    return x.output_gate()[i].ub() + v.codomain()[i].lb() * (t - x.domain().ub());
   }
 
   Interval youb_inv(int i, const Interval& y, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return ((y - x.outputGate()[i].ub()) / v.codomain()[i].lb()) + x.domain().ub();
+    return ((y - x.output_gate()[i].ub()) / v.codomain()[i].lb()) + x.domain().ub();
   }
 
   Interval ylb_inv(int i, const Interval& y, const TubeSlice& x)
   {
     DimensionException::check(x, i);
-    if(x.inputGate()[i].lb() == x.outputGate()[i].lb())
+    if(x.input_gate()[i].lb() == x.output_gate()[i].lb())
       return Interval::ALL_REALS;
-    return x.domain().lb() + (y - x.inputGate()[i].lb()) / ((x.outputGate()[i].lb() - x.inputGate()[i].lb()) / (x.domain().diam()));
+    return x.domain().lb() + (y - x.input_gate()[i].lb()) / ((x.output_gate()[i].lb() - x.input_gate()[i].lb()) / (x.domain().diam()));
   }
 
   Interval yub_inv(int i, const Interval& y, const TubeSlice& x)
   {
     DimensionException::check(x, i);
 
-    if(x.inputGate()[i].ub() == x.outputGate()[i].ub())
+    if(x.input_gate()[i].ub() == x.output_gate()[i].ub())
       return Interval::ALL_REALS;
-    return x.domain().lb() + (y - x.inputGate()[i].ub()) / ((x.outputGate()[i].ub() - x.inputGate()[i].ub()) / (x.domain().diam()));
+    return x.domain().lb() + (y - x.input_gate()[i].ub()) / ((x.output_gate()[i].ub() - x.input_gate()[i].ub()) / (x.domain().diam()));
   }
 
-  Interval linesIntersectionUb(int i, const TubeSlice& x, const TubeSlice& v)
+  Interval lines_intersection_ub(int i, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return (x.outputGate()[i].ub() - x.inputGate()[i].ub()
+    return (x.output_gate()[i].ub() - x.input_gate()[i].ub()
             + v.codomain()[i].ub() * x.domain().lb()
             - v.codomain()[i].lb() * x.domain().ub()) / v.codomain()[i].diam();
   }
 
-  Interval linesIntersectionLb(int i, const TubeSlice& x, const TubeSlice& v)
+  Interval lines_intersection_lb(int i, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
-    return (x.inputGate()[i].lb() - x.outputGate()[i].lb()
+    return (x.input_gate()[i].lb() - x.output_gate()[i].lb()
             + v.codomain()[i].ub() * x.domain().ub()
             - v.codomain()[i].lb() * x.domain().lb()) / v.codomain()[i].diam();
   }
@@ -133,7 +133,7 @@ namespace tubex
     else
     {
       vector<Point> v_pts;
-      v_pts.push_back(Point(t.lb(), inputGate()[i].lb()));
+      v_pts.push_back(Point(t.lb(), input_gate()[i].lb()));
 
       if(!t.is_degenerated())
       {
@@ -155,7 +155,7 @@ namespace tubex
 
             else
             {
-              t_inter_lb = linesIntersectionLb(i, *this, v);
+              t_inter_lb = lines_intersection_lb(i, *this, v);
             }
 
             if(t_inter_lb.lb() >= t.lb() && t_inter_lb.ub() <= t.ub())
@@ -175,11 +175,11 @@ namespace tubex
             }
           }
 
-          v_pts.push_back(Point(t.ub(), outputGate()[i].lb()));
+          v_pts.push_back(Point(t.ub(), output_gate()[i].lb()));
 
         // Upper bounds
 
-          v_pts.push_back(Point(t.ub(), outputGate()[i].ub()));
+          v_pts.push_back(Point(t.ub(), output_gate()[i].ub()));
 
           if(!v.codomain()[i].is_degenerated())
           {
@@ -197,7 +197,7 @@ namespace tubex
 
             else
             {
-              t_inter_ub = linesIntersectionUb(i, *this, v);
+              t_inter_ub = lines_intersection_ub(i, *this, v);
             }
 
             if(t_inter_ub.lb() >= t.lb() && t_inter_ub.ub() <= t.ub())
@@ -218,7 +218,7 @@ namespace tubex
           }
       }
       
-      v_pts.push_back(Point(t.lb(), inputGate()[i].ub()));
+      v_pts.push_back(Point(t.lb(), input_gate()[i].ub()));
       return ConvexPolygon(v_pts);
     }
   }

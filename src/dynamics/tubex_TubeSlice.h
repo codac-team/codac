@@ -39,15 +39,15 @@ namespace tubex
       int dim() const;
 
       // Slices structure
-      TubeSlice* prevSlice();
-      const TubeSlice* prevSlice() const;
-      TubeSlice* nextSlice();
-      const TubeSlice* nextSlice() const;
-      static void chainSlices(TubeSlice *first_slice, TubeSlice *second_slice);
-      const ibex::IntervalVector inputGate() const;
-      const ibex::IntervalVector outputGate() const;
+      TubeSlice* prev_slice();
+      const TubeSlice* prev_slice() const;
+      TubeSlice* next_slice();
+      const TubeSlice* next_slice() const;
+      static void chain_slices(TubeSlice *first_slice, TubeSlice *second_slice);
+      const ibex::IntervalVector input_gate() const;
+      const ibex::IntervalVector output_gate() const;
       const ConvexPolygon polygon(int i, const TubeSlice& v) const; // todo: store polygon in cache memory?
-      const TubeVector* tubeReference() const;
+      const TubeVector* tube_reference() const;
 
       // Access values
       const ibex::IntervalVector codomain() const;
@@ -64,17 +64,17 @@ namespace tubex
       // Tests
       bool operator==(const TubeSlice& x) const;
       bool operator!=(const TubeSlice& x) const;
-      bool isSubset(const TubeSlice& x) const;
-      bool isStrictSubset(const TubeSlice& x) const;
-      bool isEmpty() const;
+      bool is_subset(const TubeSlice& x) const;
+      bool is_strict_subset(const TubeSlice& x) const;
+      bool is_empty() const;
       bool encloses(const TrajectoryVector& x) const;
 
       // Setting values
       void set(const ibex::IntervalVector& y);
-      void setEmpty();
-      void setEnvelope(const ibex::IntervalVector& envelope);
-      void setInputGate(const ibex::IntervalVector& input_gate);
-      void setOutputGate(const ibex::IntervalVector& output_gate);
+      void set_empty();
+      void set_envelope(const ibex::IntervalVector& envelope);
+      void set_input_gate(const ibex::IntervalVector& input_gate);
+      void set_output_gate(const ibex::IntervalVector& output_gate);
       const TubeSlice& inflate(double rad);
 
       // Operators
@@ -93,14 +93,14 @@ namespace tubex
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeSlice& x);
-      const std::string className() const { return "TubeSlice"; };
+      const std::string class_name() const { return "TubeSlice"; };
       
 
     protected:
 
-      void setTubeReference(TubeVector *tube_ref);
-      void setDomain(const ibex::Interval& domain);
-      const ibex::IntervalVector codomainBox() const;
+      void set_tube_ref(TubeVector *tube_ref);
+      void set_domain(const ibex::Interval& domain);
+      const ibex::IntervalVector codomain_box() const;
 
     /** Class variables **/
 
@@ -111,7 +111,7 @@ namespace tubex
       TubeVector *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
       friend class TubeVector;
-      friend void deserializeTubeVector(std::ifstream& bin_file, TubeVector& tube);
+      friend void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
   };
 }
 

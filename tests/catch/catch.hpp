@@ -669,7 +669,7 @@ struct NameAndDesc {
 
 void registerTestCase
     (   ITestCase* testCase,
-        char const* className,
+        char const* class_name,
         NameAndDesc const& nameAndDesc,
         SourceLineInfo const& lineInfo );
 
@@ -683,13 +683,13 @@ struct AutoReg {
     template<typename C>
     AutoReg
         (   void (C::*method)(),
-            char const* className,
+            char const* class_name,
             NameAndDesc const& nameAndDesc,
             SourceLineInfo const& lineInfo ) {
 
         registerTestCase
             (   new MethodTestCase<C>( method ),
-                className,
+                class_name,
                 nameAndDesc,
                 lineInfo );
     }
@@ -2826,7 +2826,7 @@ namespace Catch {
         };
 
         TestCaseInfo(   std::string const& _name,
-                        std::string const& _className,
+                        std::string const& _class_name,
                         std::string const& _description,
                         std::set<std::string> const& _tags,
                         SourceLineInfo const& _lineInfo );
@@ -2841,7 +2841,7 @@ namespace Catch {
         bool expectedToFail() const;
 
         std::string name;
-        std::string className;
+        std::string class_name;
         std::string description;
         std::set<std::string> tags;
         std::set<std::string> lcaseTags;
@@ -2872,7 +2872,7 @@ namespace Catch {
     };
 
     TestCase makeTestCase(  ITestCase* testCase,
-                            std::string const& className,
+                            std::string const& class_name,
                             std::string const& name,
                             std::string const& description,
                             SourceLineInfo const& lineInfo );
@@ -2964,9 +2964,9 @@ namespace Catch {
                         std::string testCaseName = methodName.substr( 15 );
                         std::string name = Detail::getAnnotation( cls, "Name", testCaseName );
                         std::string desc = Detail::getAnnotation( cls, "Description", testCaseName );
-                        const char* className = class_getName( cls );
+                        const char* class_name = class_getName( cls );
 
-                        getMutableRegistryHub().registerTest( makeTestCase( new OcMethod( cls, selector ), className, name.c_str(), desc.c_str(), SourceLineInfo() ) );
+                        getMutableRegistryHub().registerTest( makeTestCase( new OcMethod( cls, selector ), class_name, name.c_str(), desc.c_str(), SourceLineInfo() ) );
                         noTestMethods++;
                     }
                 }
@@ -6589,16 +6589,16 @@ namespace Catch {
     };
 
     inline std::string extractClassName( std::string const& classOrQualifiedMethodName ) {
-        std::string className = classOrQualifiedMethodName;
-        if( startsWith( className, "&" ) )
+        std::string class_name = classOrQualifiedMethodName;
+        if( startsWith( class_name, "&" ) )
         {
-            std::size_t lastColons = className.rfind( "::" );
-            std::size_t penultimateColons = className.rfind( "::", lastColons-1 );
+            std::size_t lastColons = class_name.rfind( "::" );
+            std::size_t penultimateColons = class_name.rfind( "::", lastColons-1 );
             if( penultimateColons == std::string::npos )
                 penultimateColons = 1;
-            className = className.substr( penultimateColons, lastColons-penultimateColons );
+            class_name = class_name.substr( penultimateColons, lastColons-penultimateColons );
         }
-        return className;
+        return class_name;
     }
 
     void registerTestCase
@@ -7393,7 +7393,7 @@ namespace Catch {
     }
 
     TestCase makeTestCase(  ITestCase* _testCase,
-                            std::string const& _className,
+                            std::string const& _class_name,
                             std::string const& _name,
                             std::string const& _descOrTags,
                             SourceLineInfo const& _lineInfo )
@@ -7433,7 +7433,7 @@ namespace Catch {
             tags.insert( "." );
         }
 
-        TestCaseInfo info( _name, _className, desc, tags, _lineInfo );
+        TestCaseInfo info( _name, _class_name, desc, tags, _lineInfo );
         return TestCase( _testCase, info );
     }
 
@@ -7453,12 +7453,12 @@ namespace Catch {
     }
 
     TestCaseInfo::TestCaseInfo( std::string const& _name,
-                                std::string const& _className,
+                                std::string const& _class_name,
                                 std::string const& _description,
                                 std::set<std::string> const& _tags,
                                 SourceLineInfo const& _lineInfo )
     :   name( _name ),
-        className( _className ),
+        class_name( _class_name ),
         description( _description ),
         lineInfo( _lineInfo ),
         properties( None )
@@ -7468,7 +7468,7 @@ namespace Catch {
 
     TestCaseInfo::TestCaseInfo( TestCaseInfo const& other )
     :   name( other.name ),
-        className( other.className ),
+        class_name( other.class_name ),
         description( other.description ),
         tags( other.tags ),
         lcaseTags( other.lcaseTags ),
@@ -7506,7 +7506,7 @@ namespace Catch {
     void TestCase::swap( TestCase& other ) {
         test.swap( other.test );
         name.swap( other.name );
-        className.swap( other.className );
+        class_name.swap( other.class_name );
         description.swap( other.description );
         tags.swap( other.tags );
         lcaseTags.swap( other.lcaseTags );
@@ -7522,7 +7522,7 @@ namespace Catch {
     bool TestCase::operator == ( TestCase const& other ) const {
         return  test.get() == other.test.get() &&
                 name == other.name &&
-                className == other.className;
+                class_name == other.class_name;
     }
 
     bool TestCase::operator < ( TestCase const& other ) const {
@@ -9416,16 +9416,16 @@ namespace Catch {
             assert( testCaseNode.children.size() == 1 );
             SectionNode const& rootSection = *testCaseNode.children.front();
 
-            std::string className = stats.testInfo.className;
+            std::string class_name = stats.testInfo.class_name;
 
-            if( className.empty() ) {
+            if( class_name.empty() ) {
                 if( rootSection.childSections.empty() )
-                    className = "global";
+                    class_name = "global";
             }
-            writeSection( className, "", rootSection );
+            writeSection( class_name, "", rootSection );
         }
 
-        void writeSection(  std::string const& className,
+        void writeSection(  std::string const& class_name,
                             std::string const& rootName,
                             SectionNode const& sectionNode ) {
             std::string name = trim( sectionNode.stats.sectionInfo.name );
@@ -9436,12 +9436,12 @@ namespace Catch {
                 !sectionNode.stdOut.empty() ||
                 !sectionNode.stdErr.empty() ) {
                 XmlWriter::ScopedElement e = xml.scopedElement( "testcase" );
-                if( className.empty() ) {
+                if( class_name.empty() ) {
                     xml.writeAttribute( "classname", name );
                     xml.writeAttribute( "name", "root" );
                 }
                 else {
-                    xml.writeAttribute( "classname", className );
+                    xml.writeAttribute( "classname", class_name );
                     xml.writeAttribute( "name", name );
                 }
                 xml.writeAttribute( "time", Catch::toString( sectionNode.stats.durationInSeconds ) );
@@ -9458,10 +9458,10 @@ namespace Catch {
                     itEnd = sectionNode.childSections.end();
                     it != itEnd;
                     ++it )
-                if( className.empty() )
+                if( class_name.empty() )
                     writeSection( name, "", **it );
                 else
-                    writeSection( className, name, **it );
+                    writeSection( class_name, name, **it );
         }
 
         void writeAssertions( SectionNode const& sectionNode ) {
@@ -10394,7 +10394,7 @@ int main (int argc, char * const argv[]) {
 
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
     #define CATCH_TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
-    #define CATCH_TEST_CASE_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, __VA_ARGS__ )
+    #define CATCH_TEST_CASE_METHOD( class_name, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, __VA_ARGS__ )
     #define CATCH_METHOD_AS_TEST_CASE( method, ... ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, __VA_ARGS__ )
     #define CATCH_REGISTER_TEST_CASE( Function, ... ) INTERNAL_CATCH_REGISTER_TESTCASE( Function, __VA_ARGS__ )
     #define CATCH_SECTION( ... ) INTERNAL_CATCH_SECTION( __VA_ARGS__ )
@@ -10402,7 +10402,7 @@ int main (int argc, char * const argv[]) {
     #define CATCH_SUCCEED( ... ) INTERNAL_CATCH_MSG( Catch::ResultWas::Ok, Catch::ResultDisposition::ContinueOnFailure, "CATCH_SUCCEED", __VA_ARGS__ )
 #else
     #define CATCH_TEST_CASE( name, description ) INTERNAL_CATCH_TESTCASE( name, description )
-    #define CATCH_TEST_CASE_METHOD( className, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( className, name, description )
+    #define CATCH_TEST_CASE_METHOD( class_name, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, name, description )
     #define CATCH_METHOD_AS_TEST_CASE( method, name, description ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, name, description )
     #define CATCH_REGISTER_TEST_CASE( function, name, description ) INTERNAL_CATCH_REGISTER_TESTCASE( function, name, description )
     #define CATCH_SECTION( name, description ) INTERNAL_CATCH_SECTION( name, description )
@@ -10419,10 +10419,10 @@ int main (int argc, char * const argv[]) {
 // "BDD-style" convenience wrappers
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
 #define CATCH_SCENARIO( ... ) CATCH_TEST_CASE( "Scenario: " __VA_ARGS__ )
-#define CATCH_SCENARIO_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " __VA_ARGS__ )
+#define CATCH_SCENARIO_METHOD( class_name, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, "Scenario: " __VA_ARGS__ )
 #else
 #define CATCH_SCENARIO( name, tags ) CATCH_TEST_CASE( "Scenario: " name, tags )
-#define CATCH_SCENARIO_METHOD( className, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " name, tags )
+#define CATCH_SCENARIO_METHOD( class_name, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, "Scenario: " name, tags )
 #endif
 #define CATCH_GIVEN( desc )    CATCH_SECTION( std::string( "Given: ") + desc, "" )
 #define CATCH_WHEN( desc )     CATCH_SECTION( std::string( " When: ") + desc, "" )
@@ -10463,7 +10463,7 @@ int main (int argc, char * const argv[]) {
 
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
     #define TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
-    #define TEST_CASE_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, __VA_ARGS__ )
+    #define TEST_CASE_METHOD( class_name, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, __VA_ARGS__ )
     #define METHOD_AS_TEST_CASE( method, ... ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, __VA_ARGS__ )
     #define REGISTER_TEST_CASE( Function, ... ) INTERNAL_CATCH_REGISTER_TESTCASE( Function, __VA_ARGS__ )
     #define SECTION( ... ) INTERNAL_CATCH_SECTION( __VA_ARGS__ )
@@ -10471,7 +10471,7 @@ int main (int argc, char * const argv[]) {
     #define SUCCEED( ... ) INTERNAL_CATCH_MSG( Catch::ResultWas::Ok, Catch::ResultDisposition::ContinueOnFailure, "SUCCEED", __VA_ARGS__ )
 #else
     #define TEST_CASE( name, description ) INTERNAL_CATCH_TESTCASE( name, description )
-    #define TEST_CASE_METHOD( className, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( className, name, description )
+    #define TEST_CASE_METHOD( class_name, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, name, description )
     #define METHOD_AS_TEST_CASE( method, name, description ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, name, description )
     #define REGISTER_TEST_CASE( method, name, description ) INTERNAL_CATCH_REGISTER_TESTCASE( method, name, description )
     #define SECTION( name, description ) INTERNAL_CATCH_SECTION( name, description )
@@ -10492,10 +10492,10 @@ int main (int argc, char * const argv[]) {
 // "BDD-style" convenience wrappers
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
 #define SCENARIO( ... ) TEST_CASE( "Scenario: " __VA_ARGS__ )
-#define SCENARIO_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " __VA_ARGS__ )
+#define SCENARIO_METHOD( class_name, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, "Scenario: " __VA_ARGS__ )
 #else
 #define SCENARIO( name, tags ) TEST_CASE( "Scenario: " name, tags )
-#define SCENARIO_METHOD( className, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " name, tags )
+#define SCENARIO_METHOD( class_name, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( class_name, "Scenario: " name, tags )
 #endif
 #define GIVEN( desc )    SECTION( std::string("   Given: ") + desc, "" )
 #define WHEN( desc )     SECTION( std::string("    When: ") + desc, "" )

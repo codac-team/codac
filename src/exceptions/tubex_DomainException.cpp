@@ -38,7 +38,7 @@ namespace tubex
     ostringstream os;
     os << "interval input out of range: ";
     os << "t=" << t << " not a subset of " << x.domain()
-       << " (object " << x.className() << ")" << endl;
+       << " (object " << x.class_name() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -46,8 +46,8 @@ namespace tubex
   {
     ostringstream os;
     os << "objects are not defined over the same domain: "
-       << x1.domain() << "(" << x1.className() << ") != "
-       << x2.domain() << "(" << x2.className() << ")" << endl;
+       << x1.domain() << "(" << x1.class_name() << ") != "
+       << x2.domain() << "(" << x2.class_name() << ")" << endl;
     m_what_msg = os.str();
   }
 

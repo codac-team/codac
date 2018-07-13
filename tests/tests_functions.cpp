@@ -25,15 +25,15 @@ TEST_CASE("Functions")
       vibes::beginDrawing();
 
       VibesFigure_Tube fig_tube_x("x", &x);
-      fig_tube_x.setProperties(400, 400, 600, 300);
+      fig_tube_x.set_properties(400, 400, 600, 300);
       fig_tube_x.show(true);
 
       VibesFigure_Tube fig_tube_y1("y1", &y1);
-      fig_tube_y1.setProperties(400, 400, 600, 300);
+      fig_tube_y1.set_properties(400, 400, 600, 300);
       fig_tube_y1.show(true);
 
       VibesFigure_Tube fig_tube_y2("y2", &y2);
-      fig_tube_y2.setProperties(400, 400, 600, 300);
+      fig_tube_y2.set_properties(400, 400, 600, 300);
       fig_tube_y2.show(true);
 
       vibes::endDrawing();

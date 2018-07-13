@@ -34,7 +34,7 @@ namespace tubex
       Point m_p1, m_p2;
   };
 
-  void pushEdges(const ibex::IntervalVector& box, std::vector<Edge>& v_edges);
+  void push_edges(const ibex::IntervalVector& box, std::vector<Edge>& v_edges);
 }
 
 #endif

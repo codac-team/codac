@@ -18,7 +18,7 @@ TEST_CASE("Polygon")
     iv[1] = Interval(10.,11.);
 
     Polygon p(iv);
-    CHECK(p.nbVertices() == 4);
+    CHECK(p.nb_vertices() == 4);
     CHECK(p.box() == iv);
     CHECK(p[0] == Point(-1.,10.));
     CHECK(p[1] == Point(-1.,11.));
@@ -47,7 +47,7 @@ TEST_CASE("Polygon")
     v_pts.push_back(Point(4.,4.));
 
     Polygon p1(v_pts);
-    CHECK(p1.nbVertices() == 4);
+    CHECK(p1.nb_vertices() == 4);
 
     IntervalVector iv(2);
     iv[0] = Interval(2.,4.);
@@ -55,7 +55,7 @@ TEST_CASE("Polygon")
     CHECK(p1.box() == iv);
 
     Polygon p2(iv);
-    CHECK(p2.nbVertices() == 4);
+    CHECK(p2.nb_vertices() == 4);
     CHECK(p1 == p2);
 
     // Polygon defined by points in different order
@@ -98,7 +98,7 @@ TEST_CASE("Polygon")
     v_p.push_back(Point(3.,2.));
 
     Polygon p(v_p);
-    CHECK(p.nbVertices() == 5);
+    CHECK(p.nb_vertices() == 5);
 
     IntervalVector iv(2);
     iv[0] = Interval(1.,5.);
@@ -193,14 +193,14 @@ TEST_CASE("Polygon")
     v_p.push_back(Point(0.,5.));
     v_p.push_back(Point(0.,3.));
     ConvexPolygon p(v_p);
-    CHECK(p.nbVertices() == 8);
+    CHECK(p.nb_vertices() == 8);
 
-    CHECK(p.getEdges()[0] == Edge(Point(1.,0.), Point(2.,0.)));
-    CHECK(p.getEdges()[1] == Edge(Point(2.,0.), Point(4.,2.)));
+    CHECK(p.get_edges()[0] == Edge(Point(1.,0.), Point(2.,0.)));
+    CHECK(p.get_edges()[1] == Edge(Point(2.,0.), Point(4.,2.)));
 
     IntervalVector inter(2), x(2);
     
-    Edge edge = p.getEdges()[0];
+    Edge edge = p.get_edges()[0];
     x[0] = Interval(0.5,4.); x[1] = Interval(-1.,1.);
     inter = edge & x;
     CHECK(inter[0] == Interval(1.,2.));
@@ -227,17 +227,17 @@ TEST_CASE("Polygon")
     CHECK(ApproxIntv(pt_inter.t()) == Interval::EMPTY_SET);
     CHECK(ApproxIntv(pt_inter.x()) == Interval::EMPTY_SET);
 
-    edge = p.getEdges()[1];
+    edge = p.get_edges()[1];
     inter = edge & x;
     CHECK(inter[0] == Interval(2.,3.));
     CHECK(inter[1] == Interval(0.,1.));
 
-    edge = p.getEdges()[2];
+    edge = p.get_edges()[2];
     inter = edge & x;
     CHECK(inter[0] == Interval::EMPTY_SET);
     CHECK(inter[1] == Interval::EMPTY_SET);
 
-    edge = p.getEdges()[3];
+    edge = p.get_edges()[3];
     inter = edge & x;
     CHECK(inter[0] == Interval::EMPTY_SET);
     CHECK(inter[1] == Interval::EMPTY_SET);
@@ -500,8 +500,8 @@ cout << "-------------" << endl;
   SECTION("Polygons from TubeSlice, test 1")
   {
     TubeSlice x(Interval(-1.,3.), 1); // unbounded
-    x.setInputGate(IntervalVector(1, Interval(-1.,2.)));
-    x.setOutputGate(IntervalVector(1, Interval(-2.,0.)));
+    x.set_input_gate(IntervalVector(1, Interval(-1.,2.)));
+    x.set_output_gate(IntervalVector(1, Interval(-2.,0.)));
 
     TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.,1.)));
 
@@ -527,8 +527,8 @@ cout << "-------------" << endl;
   SECTION("Polygons from TubeSlice, test 2")
   {
     TubeSlice x(Interval(-1.,3.), IntervalVector(1, Interval(-5.,3.)));
-    x.setInputGate(IntervalVector(1, Interval(-1.,3.)));
-    x.setOutputGate(IntervalVector(1, Interval(-5.,0.5)));
+    x.set_input_gate(IntervalVector(1, Interval(-1.,3.)));
+    x.set_output_gate(IntervalVector(1, Interval(-5.,0.5)));
 
     TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.)));
 
@@ -553,8 +553,8 @@ cout << "-------------" << endl;
   SECTION("Polygons from TubeSlice, test 3, degenerate case")
   {
     TubeSlice x(Interval(-1.,3.), IntervalVector(1, Interval(-5.,3.)));
-    x.setInputGate(IntervalVector(1, Interval(1.,3.)));
-    x.setOutputGate(IntervalVector(1, Interval(-4.,-3.)));
+    x.set_input_gate(IntervalVector(1, Interval(1.,3.)));
+    x.set_output_gate(IntervalVector(1, Interval(-4.,-3.)));
 
     TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.,1.)));
 
@@ -576,8 +576,8 @@ cout << "-------------" << endl;
   SECTION("Polygons from TubeSlice, test 4")
   {
     TubeSlice x(Interval(0.,4.), IntervalVector(1, Interval(-1.,7.)));
-    x.setInputGate(IntervalVector(1, Interval(2.,3.)));
-    x.setOutputGate(IntervalVector(1, Interval(3.,4.)));
+    x.set_input_gate(IntervalVector(1, Interval(2.,3.)));
+    x.set_output_gate(IntervalVector(1, Interval(3.,4.)));
 
     TubeSlice v(Interval(0.,4.), IntervalVector(1, Interval(-1.5,4.)));
 
@@ -605,8 +605,8 @@ cout << "-------------" << endl;
   SECTION("Polygons from TubeSlice, test 4")
   {
     TubeSlice x(Interval(4.,8.), IntervalVector(1, Interval(-1.,7.)));
-    x.setInputGate(IntervalVector(1, Interval(3.,4.)));
-    x.setOutputGate(IntervalVector(1, Interval(1.)));
+    x.set_input_gate(IntervalVector(1, Interval(3.,4.)));
+    x.set_output_gate(IntervalVector(1, Interval(1.)));
 
     TubeSlice v(Interval(4.,8.), IntervalVector(1, Interval(-0.75,-0.5)));
 
@@ -629,8 +629,8 @@ cout << "-------------" << endl;
   SECTION("Polygons from TubeSlice, test 5")
   {
     TubeSlice x(Interval(8.,12.), IntervalVector(1, Interval(-1.,7.)));
-    x.setInputGate(IntervalVector(1, Interval(1.)));
-    x.setOutputGate(IntervalVector(1, Interval(1.)));
+    x.set_input_gate(IntervalVector(1, Interval(1.)));
+    x.set_output_gate(IntervalVector(1, Interval(1.)));
 
     TubeSlice v(Interval(8.,12.), IntervalVector(1, Interval(-1./3.,1.)));
 
@@ -654,8 +654,8 @@ cout << "-------------" << endl;
   SECTION("Polygons from TubeSlice, test 6")
   {
     TubeSlice x(Interval(12.,14.), IntervalVector(1, Interval(-1.,7.)));
-    x.setInputGate(IntervalVector(1, Interval(1.)));
-    x.setOutputGate(IntervalVector(1, Interval(5.5)));
+    x.set_input_gate(IntervalVector(1, Interval(1.)));
+    x.set_output_gate(IntervalVector(1, Interval(5.5)));
 
     TubeSlice v(Interval(12.,14.), IntervalVector(1, Interval(4.5)/2.));
 

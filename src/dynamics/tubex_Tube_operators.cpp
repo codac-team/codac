@@ -27,17 +27,17 @@ namespace tubex
     { \
       SamplingException::check(*this, x); \
       Interval y; \
-      TubeSlice *slice, *first_slice = getFirstSlice(); \
-      const TubeSlice *slice_x, *first_slice_x = x.getFirstSlice(); \
+      TubeSlice *slice, *first_slice = get_first_slice(); \
+      const TubeSlice *slice_x, *first_slice_x = x.get_first_slice(); \
       slice = first_slice; \
       slice_x = first_slice_x; \
       while(slice != NULL) \
       { \
         y = slice->codomain()[0]; \
         y.f(slice_x->codomain()[0]); \
-        slice->setEnvelope(IntervalVector(1, y)); \
-        slice = slice->nextSlice(); \
-        slice_x = slice_x->nextSlice(); \
+        slice->set_envelope(IntervalVector(1, y)); \
+        slice = slice->next_slice(); \
+        slice_x = slice_x->next_slice(); \
       } \
       slice = first_slice; \
       slice_x = first_slice_x; \
@@ -45,15 +45,15 @@ namespace tubex
       { \
         if(slice == first_slice) \
         { \
-          y = slice->inputGate()[0]; \
-          y.f(slice_x->inputGate()[0]); \
-          slice->setInputGate(IntervalVector(1, y)); \
+          y = slice->input_gate()[0]; \
+          y.f(slice_x->input_gate()[0]); \
+          slice->set_input_gate(IntervalVector(1, y)); \
         } \
-        y = slice->outputGate()[0]; \
-        y.f(slice_x->outputGate()[0]); \
-        slice->setOutputGate(IntervalVector(1, y)); \
-        slice = slice->nextSlice(); \
-        slice_x = slice_x->nextSlice(); \
+        y = slice->output_gate()[0]; \
+        y.f(slice_x->output_gate()[0]); \
+        slice->set_output_gate(IntervalVector(1, y)); \
+        slice = slice->next_slice(); \
+        slice_x = slice_x->next_slice(); \
       } \
       return *this; \
     } \
@@ -61,28 +61,28 @@ namespace tubex
     const Tube& Tube::f(const Interval& x) \
     { \
       Interval y; \
-      TubeSlice *slice, *first_slice = getFirstSlice(); \
+      TubeSlice *slice, *first_slice = get_first_slice(); \
       slice = first_slice; \
       while(slice != NULL) \
       { \
         y = slice->codomain()[0]; \
         y.f(x); \
-        slice->setEnvelope(IntervalVector(1, y)); \
-        slice = slice->nextSlice(); \
+        slice->set_envelope(IntervalVector(1, y)); \
+        slice = slice->next_slice(); \
       } \
       slice = first_slice; \
       while(slice != NULL) \
       { \
         if(slice == first_slice) \
         { \
-          y = slice->inputGate()[0]; \
+          y = slice->input_gate()[0]; \
           y.f(x); \
-          slice->setInputGate(IntervalVector(1, y)); \
+          slice->set_input_gate(IntervalVector(1, y)); \
         } \
-        y = slice->outputGate()[0]; \
+        y = slice->output_gate()[0]; \
         y.f(x); \
-        slice->setOutputGate(IntervalVector(1, y)); \
-        slice = slice->nextSlice(); \
+        slice->set_output_gate(IntervalVector(1, y)); \
+        slice = slice->next_slice(); \
       } \
       return *this; \
     } \
@@ -91,28 +91,28 @@ namespace tubex
     { \
       DomainException::check(*this, x); \
       Interval y; \
-      TubeSlice *slice, *first_slice = getFirstSlice(); \
+      TubeSlice *slice, *first_slice = get_first_slice(); \
       slice = first_slice; \
       while(slice != NULL) \
       { \
         y = slice->codomain()[0]; \
         y.f(x[slice->domain()]); \
-        slice->setEnvelope(IntervalVector(1, y)); \
-        slice = slice->nextSlice(); \
+        slice->set_envelope(IntervalVector(1, y)); \
+        slice = slice->next_slice(); \
       } \
       slice = first_slice; \
       while(slice != NULL) \
       { \
         if(slice == first_slice) \
         { \
-          y = slice->inputGate()[0]; \
+          y = slice->input_gate()[0]; \
           y.f(x[Interval(slice->domain().lb())]); \
-          slice->setInputGate(IntervalVector(1, y)); \
+          slice->set_input_gate(IntervalVector(1, y)); \
         } \
-        y = slice->outputGate()[0]; \
+        y = slice->output_gate()[0]; \
         y.f(x[Interval(slice->domain().ub())]); \
-        slice->setOutputGate(IntervalVector(1, y)); \
-        slice = slice->nextSlice(); \
+        slice->set_output_gate(IntervalVector(1, y)); \
+        slice = slice->next_slice(); \
       } \
       return *this; \
     }

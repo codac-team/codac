@@ -20,19 +20,19 @@ namespace tubex
 {
   Function::Function(int n, const char** x, const char* y)
   {
-    constructFromArray(n, x, y);
+    construct_from_array(n, x, y);
   }
 
   Function::Function(const char* y)
   {
-    constructFromArray(0, NULL, y);
+    construct_from_array(0, NULL, y);
   }
 
   Function::Function(const char* x1, const char* y)
   {
     const char* xdyn[1];
     xdyn[0] = x1;
-    constructFromArray(1, xdyn, y);
+    construct_from_array(1, xdyn, y);
   }
 
   Function::Function(const char* x1, const char* x2, const char* y)
@@ -40,7 +40,7 @@ namespace tubex
     const char* xdyn[2];
     xdyn[0] = x1;
     xdyn[1] = x2;
-    constructFromArray(2, xdyn, y);
+    construct_from_array(2, xdyn, y);
   }
 
   Function::Function(const char* x1, const char* x2, const char* x3, const char* y)
@@ -49,7 +49,7 @@ namespace tubex
     xdyn[0] = x1;
     xdyn[1] = x2;
     xdyn[2] = x3;
-    constructFromArray(3, xdyn, y);
+    construct_from_array(3, xdyn, y);
   }
 
   Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* y)
@@ -59,7 +59,7 @@ namespace tubex
     xdyn[1] = x2;
     xdyn[2] = x3;
     xdyn[3] = x4;
-    constructFromArray(4, xdyn, y);
+    construct_from_array(4, xdyn, y);
   }
 
   Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* y)
@@ -70,7 +70,7 @@ namespace tubex
     xdyn[2] = x3;
     xdyn[3] = x4;
     xdyn[4] = x5;
-    constructFromArray(5, xdyn, y);
+    construct_from_array(5, xdyn, y);
   }
 
   Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* y)
@@ -82,11 +82,11 @@ namespace tubex
     xdyn[3] = x4;
     xdyn[4] = x5;
     xdyn[5] = x6;
-    constructFromArray(6, xdyn, y);
+    construct_from_array(6, xdyn, y);
   }
 
   Function::Function(const tubex::Function& f)
-    : tubex::Fnc(f.nbVars(), f.imageDim())
+    : tubex::Fnc(f.nb_vars(), f.image_dim())
   {
     *this = f;
   }
@@ -112,21 +112,21 @@ namespace tubex
 
   const IntervalVector Function::eval(const Interval& t, const TubeVector& x) const
   {
-    if(nbVars() == 0)
+    if(nb_vars() == 0)
       return eval(t);
 
     // todo: check dim x regarding f
     if(x[t].is_empty())
-      return IntervalVector(imageDim(), Interval::EMPTY_SET);
+      return IntervalVector(image_dim(), Interval::EMPTY_SET);
 
-    IntervalVector box(nbVars() + 1); // +1 for system variable (t)
+    IntervalVector box(nb_vars() + 1); // +1 for system variable (t)
     box[0] = t;
-    if(nbVars() != 0)
+    if(nb_vars() != 0)
       box.put(1, x[t]);
     return m_ibex_f->eval_vector(box);
   }
 
-  void Function::constructFromArray(int n, const char** x, const char* y)
+  void Function::construct_from_array(int n, const char** x, const char* y)
   {
     const char* xdyn[n+1];
     xdyn[0] = "t";

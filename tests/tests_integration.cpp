@@ -231,7 +231,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntv(tube.integral(Interval(12.5))) == Interval(6.5,20.5));
     CHECK(ApproxIntv(tube.integral(Interval(14.5))) == Interval(7,23.5));
-    pair<Interval,Interval> p_intv = tube.partialIntegral(Interval(12.5,14.5));
+    pair<Interval,Interval> p_intv = tube.partial_integral(Interval(12.5,14.5));
     CHECK(p_intv.first == Interval(6.,7.));
     CHECK(p_intv.second == Interval(20.5,23.5));
     CHECK(ApproxIntv(tube.integral(Interval(12.5,14.5))) == Interval(6.0,23.5));
@@ -247,7 +247,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntv(tube.integral(Interval(12.5))) == Interval(6.5,20.5));
     CHECK(ApproxIntv(tube.integral(Interval(14.5))) == Interval(7,23.5));
-    pair<Interval,Interval> p_intv = tube.partialIntegral(Interval(12.5,14.5));
+    pair<Interval,Interval> p_intv = tube.partial_integral(Interval(12.5,14.5));
     CHECK(p_intv.first == Interval(6.,7.));
     CHECK(p_intv.second == Interval(20.5,23.5));
     CHECK(ApproxIntv(tube.integral(Interval(12.5,14.5))) == Interval(6.0,23.5));
@@ -264,76 +264,76 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
   {
     Tube tube = tubeTest4();
     tube.set(Interval(-1,1), Interval(10,11));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0))) == make_pair(Interval(0.), Interval(0.)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.2))) == make_pair(Interval(0.2), Interval(0.4)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.1))) == make_pair(Interval(0.1), Interval(0.2)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.9))) == make_pair(Interval(0.9), Interval(1.8)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(1.0))) == make_pair(Interval(1), Interval(2)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(1.2))) == make_pair(Interval(1.2), Interval(2.4)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(2.0))) == make_pair(Interval(2.0), Interval(4.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(3.0))) == make_pair(Interval(3.0), Interval(6.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(5.0))) == make_pair(Interval(5.0), Interval(10.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(7.0))) == make_pair(Interval(7.0), Interval(14.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(9.0))) == make_pair(Interval(9.0), Interval(18.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(10.0))) == make_pair(Interval(9.5), Interval(19.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(10.1))) == make_pair(Interval(9.4), Interval(19.6)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(11.0))) == make_pair(Interval(8.5), Interval(20.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(12.5))) == make_pair(Interval(6.5), Interval(20.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(12.6))) == make_pair(Interval(6.4), Interval(20.6)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(14.5))) == make_pair(Interval(7), Interval(23.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(12.5,13))) == make_pair(Interval(6,6.5), Interval(20.5,21)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(13,14))) == make_pair(Interval(6,6.5), Interval(21,22.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(14,14.5))) == make_pair(Interval(6.5,7), Interval(22.5,23.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(12.5,14.5))) == make_pair(Interval(6.0,7.0), Interval(20.5,23.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(1.5,3.5))) == make_pair(Interval(1.5,3.5), Interval(3,7)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(9,21))) == make_pair(Interval(6,13.5), Interval(18,36.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0))) == make_pair(Interval(0.), Interval(0.)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.2))) == make_pair(Interval(0.2), Interval(0.4)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1))) == make_pair(Interval(0.1), Interval(0.2)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.9))) == make_pair(Interval(0.9), Interval(1.8)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(1.0))) == make_pair(Interval(1), Interval(2)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(1.2))) == make_pair(Interval(1.2), Interval(2.4)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(2.0))) == make_pair(Interval(2.0), Interval(4.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(3.0))) == make_pair(Interval(3.0), Interval(6.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(5.0))) == make_pair(Interval(5.0), Interval(10.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(7.0))) == make_pair(Interval(7.0), Interval(14.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(9.0))) == make_pair(Interval(9.0), Interval(18.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(10.0))) == make_pair(Interval(9.5), Interval(19.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(10.1))) == make_pair(Interval(9.4), Interval(19.6)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(11.0))) == make_pair(Interval(8.5), Interval(20.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.5))) == make_pair(Interval(6.5), Interval(20.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.6))) == make_pair(Interval(6.4), Interval(20.6)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(14.5))) == make_pair(Interval(7), Interval(23.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.5,13))) == make_pair(Interval(6,6.5), Interval(20.5,21)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(13,14))) == make_pair(Interval(6,6.5), Interval(21,22.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(14,14.5))) == make_pair(Interval(6.5,7), Interval(22.5,23.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.5,14.5))) == make_pair(Interval(6.0,7.0), Interval(20.5,23.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(1.5,3.5))) == make_pair(Interval(1.5,3.5), Interval(3,7)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(9,21))) == make_pair(Interval(6,13.5), Interval(18,36.5)));
   }
 
   SECTION("Test tube4(05)")
   {
     Tube tube = tubeTest4_05();
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0))) == make_pair(Interval(0.), Interval(0.)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.2))) == make_pair(Interval(0.2), Interval(0.4)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.1))) == make_pair(Interval(0.1), Interval(0.2)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.9))) == make_pair(Interval(0.9), Interval(1.8)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(1.0))) == make_pair(Interval(1), Interval(2)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(1.2))) == make_pair(Interval(1.2), Interval(2.4)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(2.0))) == make_pair(Interval(2.0), Interval(4.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(3.0))) == make_pair(Interval(3.0), Interval(6.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(5.0))) == make_pair(Interval(5.0), Interval(10.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(7.0))) == make_pair(Interval(7.0), Interval(14.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(9.0))) == make_pair(Interval(9.0), Interval(18.0)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(10.0))) == make_pair(Interval(9.5), Interval(19.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(10.1))) == make_pair(Interval(9.4), Interval(19.6)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(11.0))) == make_pair(Interval(8.5), Interval(20.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(12.5))) == make_pair(Interval(6.5), Interval(20.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(12.6))) == make_pair(Interval(6.4), Interval(20.6)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(14.5))) == make_pair(Interval(7), Interval(23.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(12.5,13))) == make_pair(Interval(6,6.5), Interval(20.5,21)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(13,14))) == make_pair(Interval(6,6.5), Interval(21,22.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(14,14.5))) == make_pair(Interval(6.5,7), Interval(22.5,23.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(12.5,14.5))) == make_pair(Interval(6.0,7.0), Interval(20.5,23.5)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(1.5,3.5))) == make_pair(Interval(1.5,3.5), Interval(3,7)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(9,21))) == make_pair(Interval(6,13.5), Interval(18,36.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0))) == make_pair(Interval(0.), Interval(0.)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.2))) == make_pair(Interval(0.2), Interval(0.4)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1))) == make_pair(Interval(0.1), Interval(0.2)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.9))) == make_pair(Interval(0.9), Interval(1.8)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(1.0))) == make_pair(Interval(1), Interval(2)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(1.2))) == make_pair(Interval(1.2), Interval(2.4)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(2.0))) == make_pair(Interval(2.0), Interval(4.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(3.0))) == make_pair(Interval(3.0), Interval(6.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(5.0))) == make_pair(Interval(5.0), Interval(10.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(7.0))) == make_pair(Interval(7.0), Interval(14.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(9.0))) == make_pair(Interval(9.0), Interval(18.0)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(10.0))) == make_pair(Interval(9.5), Interval(19.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(10.1))) == make_pair(Interval(9.4), Interval(19.6)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(11.0))) == make_pair(Interval(8.5), Interval(20.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.5))) == make_pair(Interval(6.5), Interval(20.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.6))) == make_pair(Interval(6.4), Interval(20.6)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(14.5))) == make_pair(Interval(7), Interval(23.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.5,13))) == make_pair(Interval(6,6.5), Interval(20.5,21)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(13,14))) == make_pair(Interval(6,6.5), Interval(21,22.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(14,14.5))) == make_pair(Interval(6.5,7), Interval(22.5,23.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.5,14.5))) == make_pair(Interval(6.0,7.0), Interval(20.5,23.5)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(1.5,3.5))) == make_pair(Interval(1.5,3.5), Interval(3,7)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(9,21))) == make_pair(Interval(6,13.5), Interval(18,36.5)));
   }
 
   SECTION("Test tube1")
   {
     Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
-    CHECK(ApproxIntvPair(tube.partialIntegral(tube.domain())) == make_pair(Interval(-85,7), Interval(-16,194)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(2.,6.))) == make_pair(Interval(-13,7), Interval(15,25)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(6.,7.))) == make_pair(Interval(-23,-13), Interval(13,19)));
+    CHECK(ApproxIntvPair(tube.partial_integral(tube.domain())) == make_pair(Interval(-85,7), Interval(-16,194)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(2.,6.))) == make_pair(Interval(-13,7), Interval(15,25)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(6.,7.))) == make_pair(Interval(-23,-13), Interval(13,19)));
 
     Interval integrale_lb = Interval::EMPTY_SET;
     Interval integrale_ub = Interval::EMPTY_SET;
     for(double t = 0.0 ; t <= 46.0 ; t += 0.2)
     {
-      integrale_lb |= tube.partialIntegral(Interval(0, t)).first;
-      integrale_ub |= tube.partialIntegral(Interval(0, t)).second;
+      integrale_lb |= tube.partial_integral(Interval(0, t)).first;
+      integrale_ub |= tube.partial_integral(Interval(0, t)).second;
     }
     CHECK(integrale_lb.is_subset(Interval(-85,7)));
     CHECK(integrale_ub.is_subset(Interval(-16,194)));
@@ -342,11 +342,11 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
   SECTION("Test tube1(01)")
   {
     Tube tube = tubeTest1_01();
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(2.,6.))) == make_pair(Interval(-13,7), Interval(15,25)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(6.,7.))) == make_pair(Interval(-23,-13), Interval(13,19)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(2.,6.))) == make_pair(Interval(-13,7), Interval(15,25)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(6.,7.))) == make_pair(Interval(-23,-13), Interval(13,19)));
   }
 }
 
@@ -431,43 +431,43 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
   {
     Tube tube = tubeTest1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(17,20), Interval(28,33))) == make_pair(Interval(51,80), Interval(88,143)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.), Interval(7.))) == make_pair(Interval(-23), Interval(13)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(2.), Interval(6.))) == make_pair(Interval(-19), Interval(4)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0,2), Interval(6,7))) == make_pair(Interval(-29,-13), Interval(-2,19)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(10,13), Interval(17,20))) == make_pair(Interval(-32,1), Interval(0,35)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.), Interval(46.))) == make_pair(Interval(-3), Interval(194)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(17,20), Interval(28,33))) == make_pair(Interval(51,80), Interval(88,143)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.), Interval(7.))) == make_pair(Interval(-23), Interval(13)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(2.), Interval(6.))) == make_pair(Interval(-19), Interval(4)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0,2), Interval(6,7))) == make_pair(Interval(-29,-13), Interval(-2,19)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(10,13), Interval(17,20))) == make_pair(Interval(-32,1), Interval(0,35)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.), Interval(46.))) == make_pair(Interval(-3), Interval(194)));
   }
 
   SECTION("Test tube1(01)")
   {
     Tube tube = tubeTest1_01();
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(17,20), Interval(28,33))) == make_pair(Interval(51,80), Interval(88,143)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.), Interval(7.))) == make_pair(Interval(-23), Interval(13)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(2.), Interval(6.))) == make_pair(Interval(-19), Interval(4)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0,2), Interval(6,7))) == make_pair(Interval(-29,-13), Interval(-2,19)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(10,13), Interval(17,20))) == make_pair(Interval(-32,1), Interval(0,35)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.), Interval(46.))) == make_pair(Interval(-3), Interval(194)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(17,20), Interval(28,33))) == make_pair(Interval(51,80), Interval(88,143)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.), Interval(7.))) == make_pair(Interval(-23), Interval(13)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(2.), Interval(6.))) == make_pair(Interval(-19), Interval(4)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0,2), Interval(6,7))) == make_pair(Interval(-29,-13), Interval(-2,19)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(10,13), Interval(17,20))) == make_pair(Interval(-32,1), Interval(0,35)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.), Interval(46.))) == make_pair(Interval(-3), Interval(194)));
   }
 
   SECTION("Test tube4")
   {
     Tube tube = tubeTest4();
     tube.set(Interval(-1,1), Interval(10,11));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
   }
 
   SECTION("Test tube4(05)")
   {
     Tube tube = tubeTest4_05();
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
-    CHECK(ApproxIntvPair(tube.partialIntegral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
+    CHECK(ApproxIntvPair(tube.partial_integral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
   }
 }
