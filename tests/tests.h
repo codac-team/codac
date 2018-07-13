@@ -2,9 +2,9 @@
 #include "./catch/catch_interval.hpp"
 #include "tubex_Tube.h"
 
-tubex::Tube tubeTest1();
-tubex::Tube tubeTest1_01();
-tubex::Tube tubeTest2();
-tubex::Tube tubeTest3();
-tubex::Tube tubeTest4();
-tubex::Tube tubeTest4_05();
+tubex::Tube tube_test_1();
+tubex::Tube tube_test_1_01();
+tubex::Tube tube_test2();
+tubex::Tube tube_test3();
+tubex::Tube tube_test4();
+tubex::Tube tube_test4_05();

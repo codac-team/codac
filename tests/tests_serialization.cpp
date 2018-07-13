@@ -11,7 +11,7 @@ TEST_CASE("serialization/deserialization of Tube")
 {
   SECTION("No gates")
   {
-    Tube tube1 = tubeTest1();
+    Tube tube1 = tube_test_1();
     string filename = "test_serialization_nogates.tube";
     tube1.serialize(filename);
 
@@ -26,7 +26,7 @@ TEST_CASE("serialization/deserialization of Tube")
 
   SECTION("With gates")
   {
-    Tube tube1 = tubeTest1();
+    Tube tube1 = tube_test_1();
 
     CHECK(tube1[0.] == Interval(4.,8.));
     CHECK(tube1[46.] == Interval(-1.,3.));
@@ -55,7 +55,7 @@ TEST_CASE("serialization/deserialization of Tube")
 
   SECTION("With trajectories")
   {
-    Tube tube1 = tubeTest1();
+    Tube tube1 = tube_test_1();
     Trajectory traj1, traj2, traj3;
     for(int i = 0 ; i < tube1.nb_slices() ; i++)
     {
@@ -127,32 +127,32 @@ TEST_CASE("(de)serializations on bounded tubes", "[core]")
 {
   SECTION("Test tube1")
   {
-    CHECK(test_serialization(tubeTest1()));
+    CHECK(test_serialization(tube_test_1()));
   }
 
   SECTION("Test tube1(01)")
   {
-    CHECK(test_serialization(tubeTest1_01()));    
+    CHECK(test_serialization(tube_test_1_01()));    
   }
 
   SECTION("Test tube2")
   {
-    CHECK(test_serialization(tubeTest2()));
+    CHECK(test_serialization(tube_test2()));
   }
 
   SECTION("Test tube3")
   {
-    CHECK(test_serialization(tubeTest3()));
+    CHECK(test_serialization(tube_test3()));
   }
 
   SECTION("Test tube4")
   {
-    CHECK(test_serialization(tubeTest4()));
+    CHECK(test_serialization(tube_test4()));
   }
 
   SECTION("Test tube4(05)")
   {
-    CHECK(test_serialization(tubeTest4_05()));
+    CHECK(test_serialization(tube_test4_05()));
   }
 }
 
@@ -160,7 +160,7 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
 {
   SECTION("Test POS_REALS")
   {
-    Tube tube = tubeTest1();
+    Tube tube = tube_test_1();
     tube.set(Interval::POS_REALS, tube.nb_slices() / 2);
     CHECK(test_serialization(tube));
     tube.set(Interval::POS_REALS);
@@ -169,7 +169,7 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
 
   SECTION("Test NEG_REALS")
   {
-    Tube tube = tubeTest2();
+    Tube tube = tube_test2();
     tube.set(Interval::NEG_REALS, 5);
     CHECK(test_serialization(tube));
     tube.set(Interval::NEG_REALS);
@@ -178,7 +178,7 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
 
   SECTION("Test ALL_REALS")
   {
-    Tube tube = tubeTest3();
+    Tube tube = tube_test3();
     tube.set(Interval::ALL_REALS, 1);
     CHECK(test_serialization(tube));
     tube.set(Interval::ALL_REALS);
@@ -187,7 +187,7 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
 
   SECTION("Test EMPTY_SET")
   {
-    Tube tube = tubeTest4();
+    Tube tube = tube_test4();
     tube.set(Interval::EMPTY_SET, 0);
     tube.set(Interval::EMPTY_SET, 8);
     CHECK(test_serialization(tube));

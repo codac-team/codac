@@ -10,12 +10,12 @@ TEST_CASE("Operators")
 {
   SECTION("Test tube1|tube2")
   {
-    Tube tube1 = tubeTest1();
+    Tube tube1 = tube_test_1();
     tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
-    Tube tube2 = tubeTest2();
+    Tube tube2 = tube_test2();
     tube1 |= tube2;
 
-    CHECK_THROWS(tube1 |= tubeTest4_05(););
+    CHECK_THROWS(tube1 |= tube_test4_05(););
     CHECK(tube1.codomain() == Interval(-11,13));
     CHECK(tube1[0] == Interval(-2,8));
     CHECK(tube1[5.5] == Interval(-9,6));
@@ -27,8 +27,8 @@ TEST_CASE("Operators")
     CHECK(tube1[Interval(8.2,39.9)] == Interval(-10,13));
 
     // Gates
-    tube1 = tubeTest1();
-    tube2 = tubeTest2();
+    tube1 = tube_test_1();
+    tube2 = tube_test2();
 
     tube1.set(Interval(4.), 0.);
     tube2.set(Interval(-1.,0.), 0.);
@@ -50,12 +50,12 @@ TEST_CASE("Operators")
 
   SECTION("Test tube1&tube2")
   {
-    Tube tube1 = tubeTest1();
+    Tube tube1 = tube_test_1();
     tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
-    Tube tube2 = tubeTest2();
+    Tube tube2 = tube_test2();
     tube1 &= tube2;
 
-    CHECK_THROWS(tube1 &= tubeTest4_05(););
+    CHECK_THROWS(tube1 &= tube_test4_05(););
     CHECK(tube1.codomain() == Interval(-2,4));
     CHECK(tube1[0] == Interval::EMPTY_SET);
     CHECK(tube1[2.5] == Interval(1,3));
@@ -67,8 +67,8 @@ TEST_CASE("Operators")
     CHECK(tube1[Interval(39.5,40.3)] == Interval(-1));
 
     // Gates
-    tube1 = tubeTest1();
-    tube2 = tubeTest2();
+    tube1 = tube_test_1();
+    tube2 = tube_test2();
 
     tube1.set(Interval(4.), 0.);
     tube2.set(Interval(-1.,0.), 0.);

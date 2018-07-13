@@ -548,7 +548,7 @@ int main(int argc, char *argv[])
 
     if(!v_solutions.empty())
       fig.show(show_details);
-    vibes::endDrawing();
+    vibes::end_drawing();
 
   return EXIT_SUCCESS;
 }
@@ -586,7 +586,7 @@ void displayPathPlanningMap(const vector<TubeVector>& v_x, const vector<Interval
   vibes::newFigure(fig_name);
   vibes::setFigureProperties(
             vibesParams("figure", fig_name, "x", 100, "y", 100, "width", 600, "height", 600));
-  vibes::axisLimits(0., 10., 0., 10.);
+  vibes::axis_limits(0., 10., 0., 10.);
 
   for(int i = 0 ; i < v_obstacles.size() ; i++)
     vibes::drawCircle(v_obstacles[i][0].mid(), v_obstacles[i][1].mid(), obstacle_radius, "#779CA3[#A5C8CE]", vibesParams("figure", fig_name));

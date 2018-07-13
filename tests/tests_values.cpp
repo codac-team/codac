@@ -16,7 +16,7 @@ TEST_CASE("Tube values")
 {
   SECTION("Test x1")
   {
-    Tube x = tubeTest1();
+    Tube x = tube_test_1();
     x.set(Interval(-4,2), 14); // to test primitives pre-computation
 
     CHECK(x.nb_slices() == 46);
@@ -200,7 +200,7 @@ TEST_CASE("Tube values")
 
   SECTION("Test x4")
   {
-    Tube x = tubeTest4();
+    Tube x = tube_test4();
     CHECK(x.codomain() == Interval(-1.5,2));
     CHECK(x[0] == Interval(1.,2.));
     CHECK(x[10.2] == Interval(0.5,1.0));
@@ -213,7 +213,7 @@ TEST_CASE("Testing enclosed bounds (x evaluations)")
 {
   SECTION("Test x1")
   {
-    Tube x1 = tubeTest1();
+    Tube x1 = tube_test_1();
     x1.set(Interval(-4,2), 14); // to test primitives pre-computation
 
     CHECK(ApproxIntvPair(x1.eval())  == make_pair(Interval(-11,9), Interval(-7,13)));
@@ -231,7 +231,7 @@ TEST_CASE("Testing enclosed bounds (x evaluations)")
 
   SECTION("Test x4")
   {
-    Tube x4 = tubeTest4();
+    Tube x4 = tube_test4();
     x4.set(Interval(-1,1), Interval(10,11));
     Tube x4_primitive = x4.primitive();
     CHECK(x4_primitive.eval(Interval(12.5,14.5)) == make_pair(Interval(6,6.5), Interval(21,24.5)));
@@ -255,7 +255,7 @@ TEST_CASE("Testing set inversion")
 
   SECTION("Scalar set inversion (Tube)")
   {
-    Tube x = tubeTest1();
+    Tube x = tube_test_1();
     x.set(Interval(-4,2), 14); // to test primitives pre-computation
     CHECK(x.invert(Interval(0.)) == Interval(3.0,46.0));
     CHECK(x.invert(Interval(-7.)) == Interval(4.0,12.0));
@@ -273,7 +273,7 @@ TEST_CASE("Testing set inversion")
   
   SECTION("Vector set inversion")
   {
-    Tube x = tubeTest1();
+    Tube x = tube_test_1();
     x.set(Interval(-4,2), 14); // to test primitives pre-computation
 
     vector<Interval> v;
@@ -406,17 +406,17 @@ TEST_CASE("Testing set inversion")
 
 TEST_CASE("Testing thickness evaluation")
 {
-  SECTION("tubeTest1")
+  SECTION("tube_test_1")
   {
-    Tube x = tubeTest1();
+    Tube x = tube_test_1();
     int slice_id;
     CHECK(x.max_thickness(slice_id) == 8.);
     CHECK(slice_id == 3);
   }
 
-  SECTION("tubeTest2")
+  SECTION("tube_test2")
   {
-    Tube x = tubeTest2();
+    Tube x = tube_test2();
     int slice_id;
     CHECK(x.max_thickness(slice_id) == 4.);
     CHECK(slice_id == 1);
@@ -487,15 +487,15 @@ TEST_CASE("Testing equalities")
     CHECK(x1 != x2);
     CHECK_FALSE(x1 == x2);
 
-    Tube x_a1 = tubeTest1();
-    Tube x_b1 = tubeTest1();
+    Tube x_a1 = tube_test_1();
+    Tube x_b1 = tube_test_1();
     CHECK(x_a1 == x_a1);
     CHECK(x_a1 == x_b1);
     CHECK_FALSE(x_a1 != x_a1);
     CHECK_FALSE(x_a1 != x_b1);
 
-    Tube x_a2 = tubeTest4();
-    Tube x_b2 = tubeTest4();
+    Tube x_a2 = tube_test4();
+    Tube x_b2 = tube_test4();
     CHECK(x_a2 == x_a2);
     CHECK(x_a2 == x_b2);
     CHECK_FALSE(x_a2 != x_a2);
@@ -605,11 +605,11 @@ TEST_CASE("Testing is_empty()")
 
   SECTION("Tube test")
   {
-    Tube x = tubeTest1();
+    Tube x = tube_test_1();
     CHECK_FALSE(x.is_empty());
     x.set(Interval::EMPTY_SET);
     CHECK(x.is_empty());
-    x = tubeTest1();
+    x = tube_test_1();
     x.set(Interval::EMPTY_SET, 10);
     CHECK(x.is_empty());
     x.set(Interval(5.), 10);
@@ -685,10 +685,10 @@ TEST_CASE("Testing volume()")
 
   SECTION("Tube")
   {
-    Tube x1 = tubeTest1();
+    Tube x1 = tube_test_1();
     x1.set(Interval(-4,2), 14);
     CHECK(x1.volume() == 197.);
-    Tube x4 = tubeTest4();
+    Tube x4 = tube_test4();
     CHECK(x4.volume() == 9.+2.+1.+2.+1.+(21.-14.)*1.);
   }
 }
@@ -751,8 +751,8 @@ TEST_CASE("Interpol")
     CtcEval ctc_eval;
 
     // Tube evaluation before x contraction
-    //y = Interval::ALL_REALS;
-    //t = Interval::ALL_REALS;
+    y = Interval::ALL_REALS;
+    t = Interval::ALL_REALS;
     //contraction = ctc_eval.contract(t, y, x, v);
     ////CHECK(contraction);
     //CHECK(x.codomain() == Interval::ALL_REALS);
@@ -1061,7 +1061,7 @@ TEST_CASE("Interpol")
     box[1] = Interval(0.,3.);
     if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "blue"));
     ctc_eval.contract(box[0], box[1], x, v);
-    //CHECK(ApproxIntv(box[0]) == Interval(16.7692,19.2308));
+    CHECK(ApproxIntv(box[0]) == Interval(16.76923076923076649791255476884543895721,19.23076923076923350208744523115456104279));
     CHECK(ApproxIntv(box[1]) == Interval(0.,3.));
     if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "test", "red"));
 

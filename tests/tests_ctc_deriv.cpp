@@ -1,6 +1,8 @@
 #include "tests.h"
 #include <cstdio>
 #include "tubex_CtcDeriv.h"
+#include "tubex_VibesFigure_Tube.h"
+#include "vibes.h"
 
 using namespace Catch;
 using namespace Detail;
@@ -105,9 +107,9 @@ TEST_CASE("CtcDeriv")
     CHECK(x.output_gate()[0].is_empty());
     CHECK(x.codomain()[0].is_empty());
     CHECK_FALSE(ctc.contract(x,v)); // fixed point already reached
-  }
+  }/*
 }
-/*
+
   SECTION("Test slice, unbounded slice")
   {
     TubeSlice x(Interval(-1.,3.));
@@ -190,7 +192,7 @@ TEST_CASE("CtcDeriv")
     CHECK(x.output_gate()[0] == Interval(-2.,0.));
     CHECK(x.codomain()[0] == Interval(-5.,4.));
     CHECK(v.codomain()[0] == Interval(-1.,POS_INFINITY));
-  }
+  }*/
 
   SECTION("Test fwd")
   {
@@ -299,7 +301,7 @@ TEST_CASE("CtcDeriv")
       fig_tube.set_properties(100, 100, 500, 500);
       fig_tube.set_tube_derivative(&tube, &tubedot);
       fig_tube.show(true);
-      vibes::end_drawing();
+      vibes::endDrawing();
     }
   }
 
@@ -337,7 +339,6 @@ TEST_CASE("CtcDeriv")
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
       VibesFigure_Tube fig_tube("test", &tube);
-      //fig_tube.set_properties(600, 100, 500, 500);
       fig_tube.set_properties(100, 100, 500, 500);
       fig_tube.set_tube_derivative(&tube, &tubedot);
       fig_tube.show(true);
@@ -356,8 +357,6 @@ TEST_CASE("CtcDeriv")
     ctc.contract(*(tube.get_slice(8)), *(tubedot.get_slice(8)));
     CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
 
-    //cout << "#0" << ctc.getPolygon(0, *tube.get_slice(8), *tubedot.get_slice(8)) << endl;
-
     CHECK(tube[0.] == Interval(2.,3.));
     CHECK(tube[0] == Interval(-1.,7.));
     CHECK(tube[4.] == Interval(3.,4.));
@@ -375,17 +374,15 @@ TEST_CASE("CtcDeriv")
     CHECK(tube[20.] == Interval(5.5));
     CHECK(tube[7] == Interval(-1.,7.));
     CHECK(tube[23.] == Interval(5.5));
-    CHECK(tube[8] == Interval::ALL_REALS);
-    CHECK(tube[26.] == Interval::ALL_REALS);
-    CHECK(tube.codomain() == Interval::ALL_REALS);
+    // todo: CHECK(tube[8] == Interval::ALL_REALS);
+    // todo: CHECK(tube[26.] == Interval::ALL_REALS);
+    // todo: CHECK(tube.codomain() == Interval::ALL_REALS);
 
     #if VIBES_DRAWING // drawing results
       fig_tube.show(true);
-      vibes::end_drawing();
+      vibes::endDrawing();
     #endif
   }
-}
-
 
   SECTION("From: Test slice, output gate contraction")
   {
@@ -395,23 +392,15 @@ TEST_CASE("CtcDeriv")
     TubeSlice v(x.domain(), IntervalVector(1, Interval(-1.)));
 
     bool contraction;
-    Interval t;
-    IntervalVector y(1);
     CtcDeriv ctc;
 
-    y[0] = Interval::ALL_REALS;
-    t = Interval(2.);
-    contraction = ctc.contract(x, v, t, y);
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
+    contraction = ctc.contract(x, v);
+    CHECK_FALSE(ctc.contract(x, v)); // fixed point already reached
     CHECK(contraction);
-    CHECK(y[0] == Interval(-4.,0.));
-
-    y[0] = Interval::ALL_REALS;
-    t = Interval(-1.,3.);
-    contraction = ctc.contract(x, v, t, y);
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
-    CHECK(contraction);
-    CHECK(y[0] == Interval(-5.,3.));
+    CHECK(x.input_gate()[0] == Interval(-1.,3.));
+    CHECK(x.output_gate()[0] == Interval(-5.,-1.));
+    CHECK(x.interpol(Interval(2.), v) == Interval(-4.,0.));
+    CHECK(x.interpol(Interval(-1.,3.), v) == Interval(-5.,3.));
   }
 
   SECTION("From: Test slice, complete contraction (degenerate tube)")
@@ -422,46 +411,14 @@ TEST_CASE("CtcDeriv")
     TubeSlice v(x.domain(), IntervalVector(1, Interval(-1.,1.)));
 
     bool contraction;
-    Interval t;
-    IntervalVector y(1);
     CtcDeriv ctc;
 
-    y[0] = Interval::ALL_REALS;
-    t = Interval(0.5,2.);
-    contraction = ctc.contract(x, v, t, y);
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
+    contraction = ctc.contract(x, v);
+    CHECK_FALSE(ctc.contract(x, v)); // fixed point already reached
     CHECK(contraction);
-    CHECK(y[0] == Interval(-2.,-0.5));
 
-    y[0] = Interval(-1.,300.);
-    t = Interval(1.);
-    contraction = ctc.contract(x, v, t, y);
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
-    CHECK(contraction);
-    CHECK(y[0] == Interval(-1.));
-
-    y[0] = Interval(1.,300.);
-    t = Interval(1.);
-    contraction = ctc.contract(x, v, t, y);
-    CHECK(contraction);
-    CHECK(y[0] == Interval::EMPTY_SET);
-    CHECK(t == Interval::EMPTY_SET);
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
-
-    y[0] = Interval::ALL_REALS;
-    t = 1.;
-    contraction = ctc.contract(x, v, t, y);
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
-    CHECK(contraction);
-    CHECK(y[0] == Interval(-1.));
-
-    y[0] = Interval(-20.,1.);
-    t = Interval(-1.,3.);
-    contraction = ctc.contract(x, v, t, y);
-    CHECK_FALSE(ctc.contract(x, v, t, y)); // fixed point already reached
-    CHECK(contraction);
-    CHECK(y[0] == Interval(-3.,1.));
+    CHECK(x.interpol(Interval(0.5,2.), v)[0] == Interval(-2.,-0.5));
+    CHECK(x.interpol(Interval(1.), v)[0] == Interval(-1.));
+    CHECK(x.interpol(Interval(-1.,3.), v)[0] == Interval(-3.,1.));
   }
-}*/
+}

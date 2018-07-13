@@ -192,27 +192,27 @@ namespace tubex
       return m_codomain;
     }
 
-    const IntervalVector TubeSlice::interpol(double t, const TubeSlice& derivative) const
+    const IntervalVector TubeSlice::interpol(double t, const TubeSlice& v) const
     {
       DomainException::check(*this, t);
-      DomainException::check(*this, derivative);
-      DimensionException::check(*this, derivative);
+      DomainException::check(*this, v);
+      DimensionException::check(*this, v);
 
-      return interpol(Interval(t), derivative);
+      return interpol(Interval(t), v);
 
       #if false // todo: check this old implementation (faster?)
-        DomainException::check(*this, derivative);
-        EmptyException::check(derivative);
-        return (output_gate() - (m_domain.ub() - t) * derivative.codomain())
-             & (input_gate() + (t - m_domain.lb()) * derivative.codomain());
+        DomainException::check(*this, v);
+        EmptyException::check(v);
+        return (output_gate() - (m_domain.ub() - t) * v.codomain())
+             & (input_gate() + (t - m_domain.lb()) * v.codomain());
       #endif
     }
 
-    const IntervalVector TubeSlice::interpol(const Interval& t, const TubeSlice& derivative) const
+    const IntervalVector TubeSlice::interpol(const Interval& t, const TubeSlice& v) const
     {
       DomainException::check(*this, t);
-      DomainException::check(*this, derivative);
-      DimensionException::check(*this, derivative);
+      DomainException::check(*this, v);
+      DimensionException::check(*this, v);
 
       if(domain().is_subset(t))
         return codomain();
@@ -227,7 +227,7 @@ namespace tubex
           IntervalVector slice_box(2);
           slice_box[0] = t & domain();
           slice_box[1] = codomain()[i];
-          interpol[i] |= (polygon(i, derivative) & slice_box)[1];
+          interpol[i] |= (polygon(i, v) & slice_box)[1];
         }
 
         return interpol;
@@ -237,11 +237,11 @@ namespace tubex
     const Interval TubeSlice::invert(const IntervalVector& y, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
-      TubeSlice derivative(domain(), Interval::ALL_REALS); // todo: optimize this
-      return invert(y, derivative, search_domain);
+      TubeSlice v(domain(), Interval::ALL_REALS); // todo: optimize this
+      return invert(y, v, search_domain);
     }
 
-    const Interval TubeSlice::invert(const IntervalVector& y, const TubeSlice& derivative, const Interval& search_domain) const
+    const Interval TubeSlice::invert(const IntervalVector& y, const TubeSlice& v, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
 
@@ -275,7 +275,7 @@ namespace tubex
 
         for(int i = 0 ; i < dim() ; i++)
         {
-          ConvexPolygon p = polygon(i, derivative);
+          ConvexPolygon p = polygon(i, v);
           IntervalVector box(2);
           box[0] = search_domain; box[1] = y[i];
           box = p & box;

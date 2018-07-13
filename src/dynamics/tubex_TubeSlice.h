@@ -55,10 +55,10 @@ namespace tubex
       double volume() const;
       const ibex::IntervalVector operator[](double t) const;
       const ibex::IntervalVector operator[](const ibex::Interval& search_domain) const;
-      const ibex::IntervalVector interpol(double t, const TubeSlice& derivative) const;
-      const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeSlice& derivative) const;
+      const ibex::IntervalVector interpol(double t, const TubeSlice& v) const;
+      const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeSlice& v) const;
       const ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
-      const ibex::Interval invert(const ibex::IntervalVector& y, const TubeSlice& derivative, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::IntervalVector& y, const TubeSlice& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
 
       // Tests

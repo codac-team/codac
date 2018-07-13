@@ -11,7 +11,7 @@ add_subdirectory(01_arithmetic)
 #add_subdirectory(06_lowcost_beacons)
 #add_subdirectory(07_drifting_clock)
 #add_subdirectory(08_contredo)
-add_subdirectory(08_solver)
+#add_subdirectory(08_solver)
 add_subdirectory(xx_memory)
 
 #add_subdirectory(08_v2)

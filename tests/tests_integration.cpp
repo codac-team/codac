@@ -11,7 +11,7 @@ TEST_CASE("Computing tube's primitive", "[core]")
 {
   SECTION("Test tube3")
   {
-    Tube tube = tubeTest3();
+    Tube tube = tube_test3();
     CHECK(ApproxIntv(tube[0]) == Interval(1,3));
     CHECK(ApproxIntv(tube[1]) == Interval(0,2));
     CHECK(ApproxIntv(tube[2]) == Interval(-1,1));
@@ -28,7 +28,7 @@ TEST_CASE("Computing tube's primitive", "[core]")
 
   SECTION("Test tube4")
   {
-    Tube tube = tubeTest4();
+    Tube tube = tube_test4();
     tube.set(Interval(-1,1), Interval(10,11));
     Tube tube_primitive = tube.primitive();
 
@@ -80,7 +80,7 @@ TEST_CASE("Computing tube's primitive", "[core]")
 
   SECTION("Test tube1")
   {
-    Tube tube = tubeTest1();
+    Tube tube = tube_test_1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     Tube tube_primitive = tube.primitive();
     CHECK(ApproxIntv(tube_primitive[0]) == Interval(0,8));
@@ -90,7 +90,7 @@ TEST_CASE("Computing tube's primitive", "[core]")
 
   SECTION("Test tube4(05)")
   {
-    Tube tube = tubeTest4_05();
+    Tube tube = tube_test4_05();
     Tube tube_primitive = tube.primitive();
     CHECK(ApproxIntv(tube_primitive[0]) == Interval(0.0,1));
     CHECK(ApproxIntv(tube_primitive[1]) == Interval(0.5,2));
@@ -113,7 +113,7 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
 {
   SECTION("Test tube1")
   {
-    Tube tube = tubeTest1();
+    Tube tube = tube_test_1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     CHECK(ApproxIntv(tube.integral(0)) == Interval(0));
     CHECK(ApproxIntv(tube.integral(0.1)) == Interval(0.4,0.8));
@@ -131,7 +131,7 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
 
   SECTION("Test tube1(01)")
   {
-    Tube tube = tubeTest1_01();
+    Tube tube = tube_test_1_01();
     CHECK(ApproxIntv(tube.integral(0)) == Interval(0));
     CHECK(ApproxIntv(tube.integral(0.1)) == Interval(0.4,0.8));
     CHECK(ApproxIntv(tube.integral(1.1)) == Interval(4.2,8.7));
@@ -148,7 +148,7 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
   
   SECTION("Test tube4")
   {
-    Tube tube = tubeTest4();
+    Tube tube = tube_test4();
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntv(tube.integral(0.0)) == Interval(0.0));
     CHECK(ApproxIntv(tube.integral(0.1)) == Interval(0.1,0.2));
@@ -174,7 +174,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
 {
   SECTION("Test tube1")
   {
-    Tube tube = tubeTest1();
+    Tube tube = tube_test_1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     CHECK(ApproxIntv(tube.integral(Interval(0))) == Interval(0));
     CHECK(ApproxIntv(tube.integral(Interval(0.1))) == Interval(0.4,0.8));
@@ -201,7 +201,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
 
   SECTION("Test tube1(01)")
   {
-    Tube tube = tubeTest1_01();
+    Tube tube = tube_test_1_01();
     CHECK(ApproxIntv(tube.integral(Interval(0))) == Interval(0));
     CHECK(ApproxIntv(tube.integral(Interval(0.1))) == Interval(0.4,0.8));
     CHECK(ApproxIntv(tube.integral(Interval(0.5))) == Interval(2,4));
@@ -227,7 +227,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
 
   SECTION("Test tube4")
   {
-    Tube tube = tubeTest4();
+    Tube tube = tube_test4();
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntv(tube.integral(Interval(12.5))) == Interval(6.5,20.5));
     CHECK(ApproxIntv(tube.integral(Interval(14.5))) == Interval(7,23.5));
@@ -243,7 +243,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
 
   SECTION("Test tube4(05)")
   {
-    Tube tube = tubeTest4_05();
+    Tube tube = tube_test4_05();
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntv(tube.integral(Interval(12.5))) == Interval(6.5,20.5));
     CHECK(ApproxIntv(tube.integral(Interval(14.5))) == Interval(7,23.5));
@@ -262,7 +262,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
 {
   SECTION("Test tube4")
   {
-    Tube tube = tubeTest4();
+    Tube tube = tube_test4();
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0))) == make_pair(Interval(0.), Interval(0.)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.2))) == make_pair(Interval(0.2), Interval(0.4)));
@@ -291,7 +291,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
 
   SECTION("Test tube4(05)")
   {
-    Tube tube = tubeTest4_05();
+    Tube tube = tube_test4_05();
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0))) == make_pair(Interval(0.), Interval(0.)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.2))) == make_pair(Interval(0.2), Interval(0.4)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1))) == make_pair(Interval(0.1), Interval(0.2)));
@@ -319,7 +319,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
 
   SECTION("Test tube1")
   {
-    Tube tube = tubeTest1();
+    Tube tube = tube_test_1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     CHECK(ApproxIntvPair(tube.partial_integral(tube.domain())) == make_pair(Interval(-85,7), Interval(-16,194)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
@@ -341,7 +341,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
 
   SECTION("Test tube1(01)")
   {
-    Tube tube = tubeTest1_01();
+    Tube tube = tube_test_1_01();
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
@@ -354,7 +354,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
 {
   SECTION("Test tube1")
   {
-    Tube tube = tubeTest1();
+    Tube tube = tube_test_1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     CHECK(ApproxIntv(tube.integral(Interval(20), Interval(20))) == Interval(0.));
     CHECK(ApproxIntv(tube.integral(Interval(2.1), Interval(2.1))) == Interval(0.));
@@ -383,7 +383,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
 
   SECTION("Test tube1(01)")
   {
-    Tube tube = tubeTest1_01();
+    Tube tube = tube_test_1_01();
     CHECK(ApproxIntv(tube.integral(Interval(20), Interval(20))) == Interval(0.));
     CHECK(ApproxIntv(tube.integral(Interval(2.1), Interval(2.1))) == Interval(0.));
     CHECK(ApproxIntv(tube.integral(Interval(12.2), Interval(12.2))) == Interval(0.));
@@ -411,7 +411,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
 
   SECTION("Test tube4")
   {
-    Tube tube = tubeTest4();
+    Tube tube = tube_test4();
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntv(tube.integral(Interval(0,8), Interval(15,21))) == Interval(-0.5,36.5));
     CHECK(ApproxIntv(tube.integral(Interval(0,8), Interval(9,21))) == Interval(-2,36.5));
@@ -419,7 +419,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
 
   SECTION("Test tube4(05)")
   {
-    Tube tube = tubeTest4_05();
+    Tube tube = tube_test4_05();
     CHECK(ApproxIntv(tube.integral(Interval(0,8), Interval(15,21))) == Interval(-0.5,36.5));
     CHECK(ApproxIntv(tube.integral(Interval(0,8), Interval(9,21))) == Interval(-2,36.5));
   }
@@ -429,7 +429,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
 {
   SECTION("Test tube1")
   {
-    Tube tube = tubeTest1();
+    Tube tube = tube_test_1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
@@ -444,7 +444,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
 
   SECTION("Test tube1(01)")
   {
-    Tube tube = tubeTest1_01();
+    Tube tube = tube_test_1_01();
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
@@ -458,7 +458,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
 
   SECTION("Test tube4")
   {
-    Tube tube = tubeTest4();
+    Tube tube = tube_test4();
     tube.set(Interval(-1,1), Interval(10,11));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
@@ -466,7 +466,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
 
   SECTION("Test tube4(05)")
   {
-    Tube tube = tubeTest4_05();
+    Tube tube = tube_test4_05();
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
     CHECK(ApproxIntvPair(tube.partial_integral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
   }

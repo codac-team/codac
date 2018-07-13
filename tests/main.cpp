@@ -6,7 +6,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-Tube tubeTest1()
+Tube tube_test_1()
 {
   Tube tube(Interval(0.,46.), 1.);
   tube.set(Interval(4,8), 0);
@@ -58,7 +58,7 @@ Tube tubeTest1()
   return tube;
 }
 
-Tube tubeTest1_01()
+Tube tube_test_1_01()
 {
   Tube tube(Interval(0.,46.), 0.5);
   tube.set(Interval(4,8), Interval(0,1));
@@ -110,7 +110,7 @@ Tube tubeTest1_01()
   return tube;
 }
 
-Tube tubeTest2()
+Tube tube_test2()
 {
   Tube tube(Interval(0.,46.), 1.);
   tube.set(Interval(-2,0), 0);
@@ -162,7 +162,7 @@ Tube tubeTest2()
   return tube;
 }
 
-Tube tubeTest3()
+Tube tube_test3()
 {
   Tube tube(Interval(0.,5.), 1.);
   tube.set(Interval(1,3), 0);
@@ -173,7 +173,7 @@ Tube tubeTest3()
   return tube;
 }
 
-Tube tubeTest4()
+Tube tube_test4()
 {
   Tube tube(Interval(0.,21.), 1.);
   tube.set(Interval(1,2), Interval(0,9));
@@ -186,7 +186,7 @@ Tube tubeTest4()
   return tube;
 }
 
-Tube tubeTest4_05()
+Tube tube_test4_05()
 {
   Tube tube(Interval(0.,21.), 0.5);
   tube.set(Interval(1,2), Interval(0,9));

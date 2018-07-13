@@ -392,23 +392,23 @@ namespace tubex
     const Interval TubeVector::invert(const IntervalVector& y, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
-      TubeVector derivative(*this, Interval::ALL_REALS); // todo: optimize this
-      return invert(y, derivative, search_domain);
+      TubeVector v(*this, Interval::ALL_REALS); // todo: optimize this
+      return invert(y, v, search_domain);
     }
 
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
-      TubeVector derivative(*this, Interval::ALL_REALS); // todo: optimize this
+      TubeVector v(*this, Interval::ALL_REALS); // todo: optimize this
       v_t.clear();
-      invert(y, v_t, derivative, search_domain);
+      invert(y, v_t, v, search_domain);
     }
 
-    const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& derivative, const Interval& search_domain) const
+    const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& v, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
-      SamplingException::check(*this, derivative);
-      DomainException::check(*this, derivative);
+      SamplingException::check(*this, v);
+      DomainException::check(*this, v);
 
       // todo: use tree structure instead
       Interval invert = Interval::EMPTY_SET;
@@ -417,7 +417,7 @@ namespace tubex
         return Interval::EMPTY_SET;
 
       const TubeSlice *slice_x = get_slice(intersection.lb());
-      const TubeSlice *slice_xdot = derivative.get_slice(intersection.lb());
+      const TubeSlice *slice_xdot = v.get_slice(intersection.lb());
       while(slice_x != NULL && slice_x->domain().lb() < intersection.ub())
       {
         if(slice_x->codomain().intersects(y))
@@ -430,7 +430,7 @@ namespace tubex
       return invert;
     }
 
-    void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const TubeVector& derivative, const Interval& search_domain) const
+    void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const TubeVector& v, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
       v_t.clear();
@@ -442,7 +442,7 @@ namespace tubex
         return;
 
       const TubeSlice *slice_x = get_slice(intersection.lb());
-      const TubeSlice *slice_xdot = derivative.get_slice(intersection.lb());
+      const TubeSlice *slice_xdot = v.get_slice(intersection.lb());
       while(slice_x != NULL && slice_x->domain().lb() <= intersection.ub())
       {
         Interval local_invert = slice_x->invert(y, *slice_xdot, intersection);
@@ -486,30 +486,30 @@ namespace tubex
       return enclosed_bounds;
     }
 
-    const IntervalVector TubeVector::interpol(double t, const TubeVector& derivative) const
+    const IntervalVector TubeVector::interpol(double t, const TubeVector& v) const
     {
       DomainException::check(*this, t);
-      DimensionException::check(*this, derivative);
-      SamplingException::check(*this, derivative);
+      DimensionException::check(*this, v);
+      SamplingException::check(*this, v);
 
       const TubeSlice *slice_x = get_slice(t);
       if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
         return (*slice_x)[t];
 
-      return interpol(Interval(t), derivative);
+      return interpol(Interval(t), v);
       // todo: check a faster implementation for this degenerate case?
     }
 
-    const IntervalVector TubeVector::interpol(const Interval& t, const TubeVector& derivative) const
+    const IntervalVector TubeVector::interpol(const Interval& t, const TubeVector& v) const
     {
       DomainException::check(*this, t);
-      DimensionException::check(*this, derivative);
-      SamplingException::check(*this, derivative);
+      DimensionException::check(*this, v);
+      SamplingException::check(*this, v);
 
       IntervalVector interpol(dim(), Interval::EMPTY_SET);
 
       const TubeSlice *slice_x = get_slice(t.lb());
-      const TubeSlice *slice_xdot = derivative.get_slice(t.lb());
+      const TubeSlice *slice_xdot = v.get_slice(t.lb());
       while(slice_x != NULL && slice_x->domain().lb() < t.ub())
       {
         interpol |= slice_x->interpol(t & slice_x->domain(), *slice_xdot);

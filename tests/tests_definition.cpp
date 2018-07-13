@@ -76,14 +76,6 @@ TEST_CASE("Tube definition")
     Tube tube_a(Interval(0.,12.), 1.);
     CHECK(tube_a.nb_slices() == 12);
     CHECK(tube_a.domain() == Interval(0.,12.));
-    //CHECK(((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent()->domain() == Interval(0.,6.));
-    //CHECK(((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent()->nb_slices() == 6);
-    //CHECK(((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent()->domain() == Interval(6.,12.));
-    //CHECK(((TubeNode*)tube_a.getTubeComponent())->getSecondTubeComponent()->nb_slices() == 6);
-    //CHECK(((TubeNode*)((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent())->getFirstTubeComponent()->domain() == Interval(0.,3.));
-    //CHECK(((TubeNode*)((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent())->getFirstTubeComponent()->nb_slices() == 3);
-    //CHECK(((TubeNode*)((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent())->getSecondTubeComponent()->domain() == Interval(3.,6.));
-    //CHECK(((TubeNode*)((TubeNode*)tube_a.getTubeComponent())->getFirstTubeComponent())->getSecondTubeComponent()->nb_slices() == 3);
 
     Tube tube_b(Interval(0.,12.), 0.5, Interval(-3.,-2.));
     CHECK(tube_b.nb_slices() == 24);
@@ -107,8 +99,6 @@ TEST_CASE("Tube definition")
     CHECK(tube_d.codomain() == tube_c.codomain());
     CHECK(tube_d.nb_slices() == tube_c.nb_slices());
     CHECK(tube_d.get_slice(0)->tube_reference() == &tube_d);
-    //CHECK(tube_d.getTubeComponent()->tube_reference() == &tube_d);
-    //CHECK(((TubeNode*)tube_d.getTubeComponent())->getFirstTubeComponent()->tube_reference() == &tube_d);
     CHECK(tube_d.get_slice(0)->tube_reference() == tube_d.get_slice(1)->tube_reference());
     CHECK(tube_d.get_slice(1)->tube_reference() == &tube_d);
     CHECK(tube_d.get_slice(2)->tube_reference() == &tube_d);

@@ -62,8 +62,8 @@ namespace tubex
       const ibex::Interval invert(const ibex::Interval& y, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-      const ibex::Interval interpol(double t, const Tube& derivative) const;
-      const ibex::Interval interpol(const ibex::Interval& t, const Tube& derivative) const;
+      const ibex::Interval interpol(double t, const Tube& v) const;
+      const ibex::Interval interpol(const ibex::Interval& t, const Tube& v) const;
       double max_thickness() const;
       double max_thickness(int& first_id_max_thickness) const;
       double max_gate_thickness(double& t) const;

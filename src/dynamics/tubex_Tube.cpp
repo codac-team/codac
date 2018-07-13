@@ -171,14 +171,14 @@ namespace tubex
       return make_pair(p_box.first[0], p_box.second[0]);
     }
 
-    const Interval Tube::interpol(double t, const Tube& derivative) const
+    const Interval Tube::interpol(double t, const Tube& v) const
     {
-      return TubeVector::interpol(t, derivative)[0];
+      return TubeVector::interpol(t, v)[0];
     }
 
-    const Interval Tube::interpol(const Interval& t, const Tube& derivative) const
+    const Interval Tube::interpol(const Interval& t, const Tube& v) const
     {
-      return TubeVector::interpol(t, derivative)[0];
+      return TubeVector::interpol(t, v)[0];
     }
     
     double Tube::max_thickness() const
