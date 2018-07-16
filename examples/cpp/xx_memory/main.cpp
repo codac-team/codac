@@ -12,6 +12,18 @@ int main(int argc, char *argv[])
   Interval domain(0.,1.);
 
   Tube x(domain, 0.05);
+  Tube y = x;
+  x.sample(0.37638639863868);
+  Tube z(x);
+  z.set(Interval::EMPTY_SET);
+  Tube a(domain, 0.05, tubex::Function("cos(t)+t*[-0.01,0.02]"));
+
+  a.serialize("a.tube");
+
+  Tube b("a.tube");
+
+  cout << a << endl;
+  cout << b << endl;
   cout << "nbslices: " << x.nb_slices() << endl;
 
 

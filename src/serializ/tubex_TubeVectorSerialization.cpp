@@ -149,7 +149,11 @@ namespace tubex
           lb = ub;
 
           if(prev_slice != NULL)
+          {
+            delete slice->m_input_gate;
+            slice->m_input_gate = NULL;
             TubeSlice::chain_slices(prev_slice, slice);
+          }
           prev_slice = slice;
         }
 
