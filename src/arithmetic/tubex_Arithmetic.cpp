@@ -89,6 +89,11 @@ namespace tubex
     return 0. - x;
   }
 
+  const Tube operator-(const Tube& x)
+  {
+    return 0. - x;
+  }
+
   #define unary_param_op(f, p) \
     \
     const Tube f(const Tube& x1, p param) \
@@ -492,6 +497,8 @@ namespace tubex
 
   binary_op(operator+);
   binary_op(operator-);
+  //binary_op(operator|);
+  //binary_op(operator&);
 
   #define binary_op_with_scalar_commutative_types(f) \
     \

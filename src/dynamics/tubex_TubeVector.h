@@ -145,7 +145,7 @@ namespace tubex
         const TubeVector& operator*=(const Trajectory& x);
         const TubeVector& operator*=(const ibex::Interval& x);
         // Note: operation TubeVector*=(Tube|Trajectory|Interval)Vector not defined
-        // Note: operation TubeVector\= not defined, since IntervalVector not defined either
+        // Note: operation TubeVector/= not defined, since IntervalVector not defined either
 
       // Other mathematical operators
 

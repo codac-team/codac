@@ -43,6 +43,7 @@ namespace tubex
     header_unary_op(atanh);
     const TubeVector operator+(const TubeVector& x);
     const TubeVector operator-(const TubeVector& x);
+    const Tube operator-(const Tube& x);
 
   /* Unary operations with parameter */
   
@@ -84,13 +85,9 @@ namespace tubex
 
     header_binary_op(operator+);
     header_binary_op(operator-);
-    //header_binary_op(operator|);
+    header_binary_op(operator|);
     header_binary_op(operator&);
 
-  TubeVector operator|(const TubeVector& x1, const TubeVector& x2);
-  Tube operator|(const Tube& x1, const Tube& x2);
-
-  
     #define header_binary_op_with_scalar_commutative_types(f) \
       const TubeVector f(const Tube& tube_x1, const TubeVector& tube_x2); \
       const TubeVector f(const TubeVector& tube_x1, const Tube& tube_x2); \

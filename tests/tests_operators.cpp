@@ -8,7 +8,7 @@ using namespace tubex;
 
 TEST_CASE("Operators")
 {
-  /*SECTION("Test tube1|tube2")
+  SECTION("Test tube1|tube2")
   {
     Tube tube1 = tube_test_1();
     tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
@@ -41,6 +41,76 @@ TEST_CASE("Operators")
     tube1 |= tube2;
     CHECK(tube1[40.] == Interval(-3.,2.));
     CHECK(tube1[40] == Interval(-3.,4.));
+  }
+
+  SECTION("Test assignment operators")
+  {
+    Interval domain(0.,10.);
+    TubeVector tube1(domain, 2);
+    tube1.set(IntervalVector(2, Interval(0.,1.)));
+    
+    // Assignments with vector tubes...
+
+    tube1 += IntervalVector(2, Interval(0.,4.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(0.,5.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(0.,5.)));
+    
+    tube1 -= IntervalVector(2, Interval(0.,4.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(-4.,5.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(-4.,5.)));
+    
+    tube1 |= IntervalVector(2, Interval(-10.,11.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(-10.,11.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(-10.,11.)));
+    
+    tube1 &= IntervalVector(2, Interval(-1.,1.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(-1.,1.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(-1.,1.)));
+    
+    // Now with scalar tubes...
+    
+    tube1 += Tube(domain, Interval(2.,3.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(1.,4.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(1.,4.)));
+    
+    tube1 -= Tube(domain, Interval(2.,3.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(-2.,2.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(-2.,2.)));
+    
+    tube1 *= Tube(domain, Interval(1.,2.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(-4.,4.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(-4.,4.)));
+    
+    tube1 &= Tube(domain, Interval(2.,6.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(2.,4.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(2.,4.)));
+    
+    tube1 |= Tube(domain, Interval(6.));
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(2.,6.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(2.,6.)));
+    
+    // Now with scalar values...
+
+    tube1.set(IntervalVector(2, Interval(-1.,1.)));
+    tube1 += Interval(2.,3.);
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(1.,4.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(1.,4.)));
+    
+    tube1 -= Interval(2.,3.);
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(-2.,2.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(-2.,2.)));
+    
+    tube1 *= Interval(1.,2.);
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(-4.,4.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(-4.,4.)));
+    
+    tube1 &= Interval(2.,6.);
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(2.,4.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(2.,4.)));
+    
+    tube1 |= Interval(6.);
+    CHECK(tube1.codomain() == IntervalVector(2, Interval(2.,6.)));
+    CHECK(tube1[0.] == IntervalVector(2, Interval(2.,6.)));
   }
 
   SECTION("Test tube1|traj2")
@@ -88,5 +158,5 @@ TEST_CASE("Operators")
   SECTION("Test tube1&traj2")
   {
     // todo
-  }*/
+  }
 }
