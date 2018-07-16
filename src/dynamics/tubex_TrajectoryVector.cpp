@@ -35,6 +35,7 @@ namespace tubex
   TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f)
     : m_domain(domain), m_function(new tubex::Function(f))
   {
+    // todo: check thickness of f? (only thin functions should be allowed)
     DomainException::check(domain);
     m_codomain = m_function->eval(domain);
   }

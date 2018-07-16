@@ -30,6 +30,7 @@ namespace tubex
   Trajectory::Trajectory(const Interval& domain, const tubex::Function& f)
     : TrajectoryVector(domain, f)
   {
+    // todo: check thickness of f? (only thin functions should be allowed)
     DimensionException::check_scalar(f.image_dim());
   }
 

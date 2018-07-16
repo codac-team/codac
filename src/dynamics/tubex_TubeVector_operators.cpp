@@ -93,8 +93,6 @@ namespace tubex
   assignment_op_vector(operator-=);
   assignment_op_vector(operator|=);
   assignment_op_vector(operator&=);
-  //assignment_op_vector(operator|);
-  //assignment_op_vector(operator&);
 
   // Note: operator*= and operator/= are not defined for vector items
 
