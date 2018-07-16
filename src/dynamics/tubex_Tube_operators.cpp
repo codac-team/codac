@@ -86,6 +86,8 @@ namespace tubex
     }
 
   assignment_op_scalar(operator/=);
+  //assignment_op_scalar(operator|);
+  //assignment_op_scalar(operator&);
 
   // Note: other operators are defined in the vector case
 }

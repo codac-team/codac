@@ -58,7 +58,7 @@ namespace tubex
   unary_op(acosh);
   unary_op(asinh);
   unary_op(atanh);
-/*
+
   const TubeVector operator+(const TubeVector& x)
   {
     return x;
@@ -66,13 +66,19 @@ namespace tubex
 
   const TubeVector operator-(const TubeVector& x)
   {
-    return 0. - x;
+    TubeVector result(x);
+    TubeSlice *slice_result = result.get_first_slice();
+    const TubeSlice *slice_x = x.get_first_slice();
+    while(slice_result != NULL)
+    {
+      slice_result->set_envelope(-slice_x->codomain());
+      slice_result->set_input_gate(-slice_x->input_gate());
+      slice_result->set_output_gate(-slice_x->output_gate());
+      slice_result = slice_result->next_slice();
+      slice_x = slice_x->next_slice();
+    }
+    return result;
   }
-
-  const Tube operator-(const Tube& x)
-  {
-    return 0. - x;
-  }*/
 
   #define unary_param_op(f, p) \
     \
@@ -340,22 +346,22 @@ namespace tubex
 
   binary_op(operator+);
   binary_op(operator-);
-/*
-  #define binary_op_with_scalar_commutative_types(f) \
+
+  #define binary_op_with_scalar_1(f) \
     \
     const TubeVector f(const Tube& x1, const TubeVector& x2) \
     { \
       SamplingException::check(x1, x2); \
       DomainException::check(x1, x2); \
-      TubeVector result(x1); \
+      TubeVector result(x2); \
       TubeSlice *slice = result.get_first_slice(); \
       const TubeSlice *slice_x1 = x1.get_first_slice(); \
       const TubeSlice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
-        slice->set_envelope(f(slice_x1->codomain(), slice_x2->codomain())); \
-        slice->set_input_gate(f(slice_x1->input_gate(), slice_x2->input_gate())); \
-        slice->set_output_gate(f(slice_x1->output_gate(), slice_x2->output_gate())); \
+        slice->set_envelope(ibex::f(slice_x1->codomain()[0], slice_x2->codomain())); \
+        slice->set_input_gate(ibex::f(slice_x1->input_gate()[0], slice_x2->input_gate())); \
+        slice->set_output_gate(ibex::f(slice_x1->output_gate()[0], slice_x2->output_gate())); \
         slice = slice->next_slice(); \
         slice_x1 = slice_x1->next_slice(); \
         slice_x2 = slice_x2->next_slice(); \
@@ -363,126 +369,38 @@ namespace tubex
       return result; \
     } \
     \
-    const TubeVector f(const TubeVector& x1, const Tube& x2) \
+    const TubeVector f(const Trajectory& x1, const TubeVector& x2) \
     { \
-      DomainException::check(tube_x1, tube_x2); \
-      SamplingException::check(tube_x1, tube_x2); \
-      TubeVector new_tube_x(tube_x1); \
-      TubeSlice *slice_x, *first_slice_x = new_tube_x.get_first_slice(); \
-      const TubeSlice *slice_x1, *first_slice_x1 = tube_x1.get_first_slice(); \
-      const TubeSlice *slice_x2, *first_slice_x2 = tube_x2.get_first_slice(); \
-      slice_x = first_slice_x; \
-      slice_x1 = first_slice_x1; \
-      slice_x2 = first_slice_x2; \
-      while(slice_x1 != NULL) \
+      DomainException::check(x2, x1); \
+      TubeVector result(x2); \
+      TubeSlice *slice = result.get_first_slice(); \
+      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      while(slice != NULL) \
       { \
-        slice_x->set_envelope(ibex::f(slice_x1->codomain(), slice_x2->codomain()[0])); \
-        slice_x = slice_x->next_slice(); \
-        slice_x1 = slice_x1->next_slice(); \
+        slice->set_envelope(ibex::f(Interval(x1[slice->domain()]), slice_x2->codomain())); \
+        slice->set_input_gate(ibex::f(Interval(x1[slice->domain().lb()]), slice_x2->input_gate())); \
+        slice->set_output_gate(ibex::f(Interval(x1[slice->domain().ub()]), slice_x2->output_gate())); \
+        slice = slice->next_slice(); \
         slice_x2 = slice_x2->next_slice(); \
       } \
-      slice_x = first_slice_x; \
-      slice_x1 = first_slice_x1; \
-      slice_x2 = first_slice_x2; \
-      while(slice_x1 != NULL) \
-      { \
-        if(slice_x == first_slice_x) \
-          slice_x->set_input_gate(ibex::f(slice_x1->input_gate(), slice_x2->input_gate()[0])); \
-        slice_x->set_output_gate(ibex::f(slice_x1->output_gate(), slice_x2->output_gate()[0])); \
-        slice_x = slice_x->next_slice(); \
-        slice_x1 = slice_x1->next_slice(); \
-        slice_x2 = slice_x2->next_slice(); \
-      } \
-      return new_tube_x; \
+      return result; \
     } \
     \
     const TubeVector f(const Interval& x1, const TubeVector& x2) \
     { \
-      TubeVector new_tube_x(tube_x2); \
-      TubeSlice *slice_x, *first_slice_x = new_tube_x.get_first_slice(); \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
+      TubeVector result(x2); \
+      TubeSlice *slice = result.get_first_slice(); \
+      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      while(slice != NULL) \
       { \
-        slice_x->set_envelope(ibex::f(x1, slice_x->codomain())); \
-        slice_x = slice_x->next_slice(); \
+        slice->set_envelope(ibex::f(x1, slice_x2->codomain())); \
+        slice->set_input_gate(ibex::f(x1, slice_x2->input_gate())); \
+        slice->set_output_gate(ibex::f(x1, slice_x2->output_gate())); \
+        slice = slice->next_slice(); \
+        slice_x2 = slice_x2->next_slice(); \
       } \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        if(slice_x == first_slice_x) \
-          slice_x->set_input_gate(ibex::f(x1, slice_x->input_gate())); \
-        slice_x->set_output_gate(ibex::f(x1, slice_x->output_gate())); \
-        slice_x = slice_x->next_slice(); \
-      } \
-      return new_tube_x; \
-    } \
-    \
-    const TubeVector f(const TubeVector& x1, const Interval& x2) \
-    { \
-      TubeVector new_tube_x(tube_x1); \
-      TubeSlice *slice_x, *first_slice_x = new_tube_x.get_first_slice(); \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        slice_x->set_envelope(ibex::f(slice_x->codomain(), x2)); \
-        slice_x = slice_x->next_slice(); \
-      } \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        if(slice_x == first_slice_x) \
-          slice_x->set_input_gate(ibex::f(slice_x->input_gate(), x2)); \
-        slice_x->set_output_gate(ibex::f(slice_x->output_gate(), x2)); \
-        slice_x = slice_x->next_slice(); \
-      } \
-      return new_tube_x; \
-    } \
-    \
-    const TubeVector f(const Trajectory& x1, const TubeVector& x2) \
-    { \
-      DomainException::check(tube_x2, x1); \
-      TubeVector new_tube_x(tube_x2); \
-      TubeSlice *slice_x, *first_slice_x = new_tube_x.get_first_slice(); \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        slice_x->set_envelope(ibex::f(x1[slice_x->domain()], slice_x->codomain())); \
-        slice_x = slice_x->next_slice(); \
-      } \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        if(slice_x == first_slice_x) \
-          slice_x->set_input_gate(ibex::f(x1[Interval(slice_x->domain().lb())], slice_x->input_gate())); \
-        slice_x->set_output_gate(ibex::f(x1[Interval(slice_x->domain().ub())], slice_x->output_gate())); \
-        slice_x = slice_x->next_slice(); \
-      } \
-      return new_tube_x; \
-    } \
-    \
-    const TubeVector f(const TubeVector& x1, const Trajectory& x2) \
-    { \
-      DomainException::check(tube_x1, x2); \
-      TubeVector new_tube_x(tube_x1); \
-      TubeSlice *slice_x, *first_slice_x = new_tube_x.get_first_slice(); \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        slice_x->set_envelope(ibex::f(slice_x->codomain(), x2[slice_x->domain()])); \
-        slice_x = slice_x->next_slice(); \
-      } \
-      slice_x = first_slice_x; \
-      while(slice_x != NULL) \
-      { \
-        if(slice_x == first_slice_x) \
-          slice_x->set_input_gate(ibex::f(slice_x->input_gate(), x2[Interval(slice_x->domain().lb())])); \
-        slice_x->set_output_gate(ibex::f(slice_x->output_gate(), x2[Interval(slice_x->domain().ub())])); \
-        slice_x = slice_x->next_slice(); \
-      } \
-      return new_tube_x; \
+      return result; \
     }
 
-  binary_op_with_scalar_commutative_types(operator+);
-  binary_op_with_scalar_commutative_types(operator-);
-  //binary_op_with_scalar_commutative_types(operator*);*/
+  binary_op_with_scalar_1(operator*);
 }

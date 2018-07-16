@@ -41,9 +41,8 @@ namespace tubex
     header_unary_op(acosh);
     header_unary_op(asinh);
     header_unary_op(atanh);
-    //const TubeVector operator+(const TubeVector& x);
-    //const TubeVector operator-(const TubeVector& x);
-    //const Tube operator-(const Tube& x);
+    const TubeVector operator+(const TubeVector& x);
+    const TubeVector operator-(const TubeVector& x);
 
   // Unary operations with parameter
   
@@ -59,10 +58,10 @@ namespace tubex
   
     #define header_binary_op_scalar_commutative_types(f) \
       const Tube f(const Tube& x1, const Tube& x2); \
-      const Tube f(const Tube& x1, const ibex::Interval& x2); \
-      const Tube f(const ibex::Interval& x1, const Tube& x2); \
       const Tube f(const Tube& x1, const Trajectory& x2); \
-      const Tube f(const Trajectory& x1, const Tube& x2);
+      const Tube f(const Trajectory& x1, const Tube& x2); \
+      const Tube f(const Tube& x1, const ibex::Interval& x2); \
+      const Tube f(const ibex::Interval& x1, const Tube& x2);
   
     header_binary_op_scalar_commutative_types(operator+);
     header_binary_op_scalar_commutative_types(operator-);
@@ -71,39 +70,27 @@ namespace tubex
   
     #define header_binary_op_scalar_noncommutative_types(f) \
       const Tube f(const Tube& x1, const Tube& x2); \
-      const Tube f(const Tube& x1, const ibex::Interval& x2); \
-      const Tube f(const Tube& x1, const Trajectory& x2);
+      const Tube f(const Tube& x1, const Trajectory& x2); \
+      const Tube f(const Tube& x1, const ibex::Interval& x2);
   
     header_binary_op_scalar_noncommutative_types(operator/);
 
     #define header_binary_op(f) \
       const TubeVector f(const TubeVector& x1, const TubeVector& x2); \
-      const TubeVector f(const TubeVector& x1, const ibex::IntervalVector& x2); \
-      const TubeVector f(const ibex::IntervalVector& x1, const TubeVector& x2); \
       const TubeVector f(const TubeVector& x1, const TrajectoryVector& x2); \
-      const TubeVector f(const TrajectoryVector& x1, const TubeVector& x2);
+      const TubeVector f(const TrajectoryVector& x1, const TubeVector& x2); \
+      const TubeVector f(const TubeVector& x1, const ibex::IntervalVector& x2); \
+      const TubeVector f(const ibex::IntervalVector& x1, const TubeVector& x2);
 
     header_binary_op(operator+);
     header_binary_op(operator-);
 
-    /*#define header_binary_op_with_scalar_commutative_types(f) \
+    #define header_binary_op_with_scalar_1(f) \
       const TubeVector f(const Tube& x1, const TubeVector& x2); \
-      const TubeVector f(const TubeVector& x1, const Tube& x2); \
-      const TubeVector f(const ibex::Interval& x1, const TubeVector& x2); \
-      const TubeVector f(const TubeVector& x1, const ibex::Interval& x2); \
       const TubeVector f(const Trajectory& x1, const TubeVector& x2); \
-      const TubeVector f(const TubeVector& x1, const Trajectory& x2);
+      const TubeVector f(const ibex::Interval& x1, const TubeVector& x2);
 
-    header_binary_op_with_scalar_commutative_types(operator+);
-    header_binary_op_with_scalar_commutative_types(operator-);
-    header_binary_op_with_scalar_commutative_types(operator*);
-  
-    #define header_binary_op_with_scalar_noncommutative_types(f) \
-      const TubeVector f(const TubeVector& x1, const Tube& x2); \
-      const TubeVector f(const TubeVector& x1, const ibex::Interval& x2); \
-      const TubeVector f(const TubeVector& x1, const Trajectory& x2);
-
-    header_binary_op_with_scalar_noncommutative_types(operator/);*/
+    header_binary_op_with_scalar_1(operator*);
 }
 
 #endif

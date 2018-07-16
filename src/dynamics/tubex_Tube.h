@@ -88,7 +88,6 @@ namespace tubex
       // Bisection
       const std::pair<Tube,Tube> bisect(double t, float ratio = 0.55) const;
 
-
       // Operators
 
         // Assignments
@@ -98,26 +97,18 @@ namespace tubex
         using TubeVector::operator|=;
         using TubeVector::operator&=;
         using TubeVector::operator*=;
-
         const Tube& operator/=(const Tube& x);
         const Tube& operator/=(const Trajectory& x);
         const Tube& operator/=(const ibex::Interval& x);
 
-      // Other mathematical operators
+        // Other mathematical operators
 
-        /*const TubeVector operator|(const TubeVector& x);
-        const TubeVector operator|(const Tube& x);
-        const TubeVector operator|(const TrajectoryVector& x);
-        const TubeVector operator|(const Trajectory& x);
-        const TubeVector operator|(const ibex::IntervalVector& x);
-        const TubeVector operator|(const ibex::Interval& x);
-
-        const TubeVector operator&(const TubeVector& x);
-        const TubeVector operator&(const Tube& x);
-        const TubeVector operator&(const TrajectoryVector& x);
-        const TubeVector operator&(const Trajectory& x);
-        const TubeVector operator&(const ibex::IntervalVector& x);
-        const TubeVector operator&(const ibex::Interval& x);*/
+        //const Tube& operator|(const Tube& x);
+        //const Tube& operator|(const Trajectory& x);
+        //const Tube& operator|(const ibex::Interval& x);
+        //const Tube& operator&(const Tube& x);
+        //const Tube& operator&(const Trajectory& x);
+        //const Tube& operator&(const ibex::Interval& x);
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
