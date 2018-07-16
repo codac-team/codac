@@ -149,6 +149,14 @@ namespace tubex
 
       // Other mathematical operators
 
+        const TubeVector& operator|(const TubeVector& x);
+        const TubeVector& operator|(const TrajectoryVector& x);
+        const TubeVector& operator|(const ibex::IntervalVector& x);
+
+        const TubeVector& operator&(const TubeVector& x);
+        const TubeVector& operator&(const TrajectoryVector& x);
+        const TubeVector& operator&(const ibex::IntervalVector& x);
+
         /*const TubeVector operator|(const TubeVector& x);
         const TubeVector operator|(const Tube& x);
         const TubeVector operator|(const TrajectoryVector& x);

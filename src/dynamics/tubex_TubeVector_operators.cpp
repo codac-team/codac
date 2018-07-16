@@ -30,6 +30,7 @@ namespace tubex
     { \
       DimensionException::check(*this, x); \
       SamplingException::check(*this, x); \
+      DomainException::check(*this, x); \
       TubeVector copy(*this); \
       TubeSlice *slice = get_first_slice(); \
       TubeSlice *slice_copy = copy.get_first_slice(); \
@@ -44,6 +45,7 @@ namespace tubex
         slice->set_output_gate(output_gate.f(slice_x->output_gate())); \
         slice = slice->next_slice(); \
         slice_x = slice_x->next_slice(); \
+        slice_copy = slice_copy->next_slice(); \
       } \
       return *this; \
     } \
@@ -93,6 +95,8 @@ namespace tubex
   assignment_op_vector(operator-=);
   assignment_op_vector(operator|=);
   assignment_op_vector(operator&=);
+  assignment_op_vector(operator|);
+  assignment_op_vector(operator&);
 
   // Note: operator*= and operator/= are not defined for vector items
 
@@ -101,6 +105,7 @@ namespace tubex
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
       SamplingException::check(*this, x); \
+      DomainException::check(*this, x); \
       int n = dim(); \
       TubeVector copy(*this); \
       TubeSlice *slice = get_first_slice(); \
@@ -172,7 +177,6 @@ namespace tubex
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
       SamplingException::check(*this, x); \
-      int n = dim(); \
       TubeVector copy(*this); \
       TubeSlice *slice = get_first_slice(); \
       TubeSlice *slice_copy = copy.get_first_slice(); \
@@ -195,7 +199,6 @@ namespace tubex
     const TubeVector& TubeVector::f(const Trajectory& x) \
     { \
       DomainException::check(*this, x); \
-      int n = dim(); \
       TubeVector copy(*this); \
       TubeSlice *slice = get_first_slice(); \
       TubeSlice *slice_copy = copy.get_first_slice(); \
@@ -216,7 +219,6 @@ namespace tubex
     const TubeVector& TubeVector::f(const Interval& x) \
     { \
       TubeVector copy(*this); \
-      int n = dim(); \
       TubeSlice *slice = get_first_slice(); \
       TubeSlice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \

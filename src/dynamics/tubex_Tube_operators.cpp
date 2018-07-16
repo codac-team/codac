@@ -26,7 +26,7 @@ namespace tubex
     const Tube& Tube::f(const Tube& x) \
     { \
       SamplingException::check(*this, x); \
-      int n = dim(); \
+      DomainException::check(*this, x); \
       Tube copy(*this); \
       TubeSlice *slice = get_first_slice(); \
       TubeSlice *slice_copy = copy.get_first_slice(); \
@@ -49,7 +49,6 @@ namespace tubex
     const Tube& Tube::f(const Trajectory& x) \
     { \
       DomainException::check(*this, x); \
-      int n = dim(); \
       Tube copy(*this); \
       TubeSlice *slice = get_first_slice(); \
       TubeSlice *slice_copy = copy.get_first_slice(); \
@@ -70,7 +69,6 @@ namespace tubex
     const Tube& Tube::f(const Interval& x) \
     { \
       Tube copy(*this); \
-      int n = dim(); \
       TubeSlice *slice = get_first_slice(); \
       TubeSlice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
