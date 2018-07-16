@@ -22,9 +22,44 @@ int main(int argc, char *argv[])
 
   Tube b("a.tube");
 
-  cout << a << endl;
-  cout << b << endl;
-  cout << "nbslices: " << x.nb_slices() << endl;
+  IntervalVector box1(2, Interval(0.,9.));
+  Interval intv1(0.,9.);
+
+  //box1 += intv1;
+
+  Tube s1(domain), s2(s1);
+  TubeVector t1(domain, 2), t2(t1);
+  t1 += t2;
+  t1 -= t2;
+  t1 &= t2;
+  t1 |= t2;
+  t1 += box1;
+  t1 += intv1;
+  t1 += s1;
+  t1 -= s1;
+  t1 &= s1;
+  t1 |= s1;
+  t1 *= intv1;
+  t1 *= s1;
+
+  t1 = t1 + t2;
+  t1 = t1 - t2;
+  s1 = s1 + s2;
+  s1 = s1 - s2;
+  s1 = s1 / s2;
+  s1 = s1 * s2;
+
+  s1.set(Interval(0., 1.));
+  //cout << s1 << endl;
+  pair<Tube,Tube> p_s = s1.bisect(0.);
+  s1.inflate(0.5);
+  //cout << s1 << endl;
+
+
+
+IntervalVector test1(2), test2(2);
+IntervalVector test3 = test1 | test2;
+
 
 
 

@@ -31,6 +31,11 @@ namespace tubex
 
     // Definition
 
+    TubeVector::TubeVector()
+    {
+      
+    }
+
     TubeVector::TubeVector(const Interval& domain, int dim)
       : TubeVector(domain, IntervalVector(dim))
     {
@@ -786,7 +791,7 @@ namespace tubex
 
     // Bisection
     
-    pair<TubeVector,TubeVector> TubeVector::bisect(double t, float ratio) const
+    const pair<TubeVector,TubeVector> TubeVector::bisect(double t, float ratio) const
     {
       DomainException::check(*this, t);
       pair<TubeVector,TubeVector> p = make_pair(*this,*this);

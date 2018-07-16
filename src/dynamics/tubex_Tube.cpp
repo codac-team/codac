@@ -48,6 +48,33 @@ namespace tubex
 
     }
 
+    Tube::Tube(int dim, const TubeVector& x)
+      : TubeVector(x.domain())
+    {
+      // todo: check dim
+      TubeSlice *prev_slice = NULL;
+      const TubeSlice *slice_x = x.get_first_slice();
+
+      while(slice_x != NULL)
+      {
+        TubeSlice *slice = new TubeSlice(slice_x->domain(), 1);
+        slice->set_envelope(slice_x->codomain()[dim]);
+        slice->set_input_gate(slice_x->input_gate()[dim]);
+        slice->set_output_gate(slice_x->output_gate()[dim]);
+        slice->set_tube_ref(this);
+        m_v_slices.push_back(slice);
+
+        if(prev_slice != NULL)
+        {
+          delete slice->m_input_gate;
+          slice->m_input_gate = NULL;
+          TubeSlice::chain_slices(prev_slice, slice);
+        }
+        prev_slice = slice;
+        slice_x = slice_x->next_slice();
+      }
+    }
+
     Tube::Tube(const Tube& x, const Interval& codomain)
       : TubeVector(x, IntervalVector(1, codomain))
     {
@@ -241,6 +268,12 @@ namespace tubex
     }
 
     // Bisection
+
+    const pair<Tube,Tube> Tube::bisect(double t, float ratio) const
+    {
+      pair<TubeVector,TubeVector> p = TubeVector::bisect(t, ratio);
+      return make_pair(Tube(0, p.first), Tube(0, p.second));
+    }
 
     // String
     

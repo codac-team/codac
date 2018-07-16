@@ -193,8 +193,8 @@ TEST_CASE("Tube definition")
 
     Tube tube2(traj2, 0.1);
     CHECK(tube2[0.] == tube0[0.]);
-    CHECK(tube2[1.1] == tube0[1.1]);
-    CHECK(tube2 == tube0);
+    CHECK(ApproxIntv(tube2[1.1]) == tube0[1.1]);
+    CHECK(ApproxTubeVector(tube2) == tube0);
     Tube tube1 = tube2;
     tube1.inflate(0.001);
     CHECK(tube2.is_subset(tube1));

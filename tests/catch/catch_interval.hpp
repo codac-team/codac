@@ -20,6 +20,9 @@
 #include "ibex_IntervalVector.h"
 #include "tubex_Point.h"
 #include "tubex_Polygon.h"
+#include "tubex_TubeVector.h"
+#include "tubex_TubeSlice.h"
+#include "tubex_DimensionException.h"
 
 namespace Catch
 {
@@ -67,6 +70,149 @@ namespace Catch
       private:
         double m_epsilon;
         ibex::Interval m_value;
+    };
+
+    class ApproxIntvVector
+    {
+      public:
+        explicit ApproxIntvVector(ibex::IntervalVector value) :
+            m_epsilon(DEFAULT_EPSILON),
+            m_value(value)
+        {}
+
+        friend bool operator ==(ibex::IntervalVector lhs, ApproxIntvVector const& rhs)
+        {
+          if(lhs.size() != rhs.m_value.size())
+            return false;
+          for(int i = 0 ; i < rhs.m_value.size() ; i++)
+            if(lhs[i] != ApproxIntv(rhs.m_value[i]))
+              return false;
+          return true;
+        }
+
+        friend bool operator ==(ApproxIntvVector const& lhs, ibex::IntervalVector rhs)
+        {
+          return operator ==(rhs, lhs);
+        }
+
+        friend bool operator !=(ibex::IntervalVector lhs, ApproxIntvVector const& rhs)
+        {
+          return !operator ==(lhs, rhs);
+        }
+
+        friend bool operator !=(ApproxIntvVector const& lhs, ibex::IntervalVector rhs)
+        {
+          return !operator ==(rhs, lhs);
+        }
+
+        std::string toString() const
+        {
+          std::ostringstream oss;
+          oss << "ApproxIntvVector(" << Catch::toString(m_value) << ")";
+          return oss.str();
+        }
+
+      private:
+        double m_epsilon;
+        ibex::IntervalVector m_value;
+    };
+
+    class ApproxTubeSlice
+    {
+      public:
+        explicit ApproxTubeSlice(tubex::TubeSlice value) :
+            m_epsilon(DEFAULT_EPSILON),
+            m_value(value)
+        {}
+
+        friend bool operator ==(tubex::TubeSlice lhs, ApproxTubeSlice const& rhs)
+        {
+          tubex::DimensionException::check(lhs, rhs.m_value);
+          return lhs.domain() == ApproxIntv(rhs.m_value.domain()) &&
+                 lhs.codomain() == ApproxIntvVector(rhs.m_value.codomain()) &&
+                 lhs.input_gate() == ApproxIntvVector(rhs.m_value.input_gate()) &&
+                 lhs.output_gate() == ApproxIntvVector(rhs.m_value.output_gate());
+        }
+
+        friend bool operator ==(ApproxTubeSlice const& lhs, tubex::TubeSlice rhs)
+        {
+          return operator ==(rhs, lhs);
+        }
+
+        friend bool operator !=(tubex::TubeSlice lhs, ApproxTubeSlice const& rhs)
+        {
+          return !operator ==(lhs, rhs);
+        }
+
+        friend bool operator !=(ApproxTubeSlice const& lhs, tubex::TubeSlice rhs)
+        {
+          return !operator ==(rhs, lhs);
+        }
+
+        std::string toString() const
+        {
+          std::ostringstream oss;
+          oss << "ApproxTubeSlice(" << Catch::toString(m_value) << ")";
+          return oss.str();
+        }
+
+      private:
+        double m_epsilon;
+        tubex::TubeSlice m_value;
+    };
+
+    class ApproxTubeVector
+    {
+      public:
+        explicit ApproxTubeVector(tubex::TubeVector value) :
+            m_epsilon(DEFAULT_EPSILON),
+            m_value(value)
+        {}
+
+        friend bool operator ==(tubex::TubeVector lhs, ApproxTubeVector const& rhs)
+        {
+          tubex::DimensionException::check(lhs, rhs.m_value);
+
+          if(lhs.nb_slices() != rhs.m_value.nb_slices())
+            return false;
+
+          const tubex::TubeSlice *slice = lhs.get_first_slice(), *slice_x = rhs.m_value.get_first_slice();
+          while(slice != NULL)
+          {
+            if(*slice != ApproxTubeSlice(*slice_x))
+              return false;
+            slice = slice->next_slice();
+            slice_x = slice_x->next_slice();
+          }
+
+          return true;
+        }
+
+        friend bool operator ==(ApproxTubeVector const& lhs, tubex::TubeVector rhs)
+        {
+          return operator ==(rhs, lhs);
+        }
+
+        friend bool operator !=(tubex::TubeVector lhs, ApproxTubeVector const& rhs)
+        {
+          return !operator ==(lhs, rhs);
+        }
+
+        friend bool operator !=(ApproxTubeVector const& lhs, tubex::TubeVector rhs)
+        {
+          return !operator ==(rhs, lhs);
+        }
+
+        std::string toString() const
+        {
+          std::ostringstream oss;
+          oss << "ApproxTubeVector(" << Catch::toString(m_value) << ")";
+          return oss.str();
+        }
+
+      private:
+        double m_epsilon;
+        tubex::TubeVector m_value;
     };
 
     class ApproxVector
@@ -266,6 +412,24 @@ namespace Catch
 
   template<>
   inline std::string toString<Detail::ApproxIntv>(Detail::ApproxIntv const& value)
+  {
+    return value.toString();
+  }
+
+  template<>
+  inline std::string toString<Detail::ApproxIntvVector>(Detail::ApproxIntvVector const& value)
+  {
+    return value.toString();
+  }
+
+  template<>
+  inline std::string toString<Detail::ApproxTubeVector>(Detail::ApproxTubeVector const& value)
+  {
+    return value.toString();
+  }
+
+  template<>
+  inline std::string toString<Detail::ApproxTubeSlice>(Detail::ApproxTubeSlice const& value)
   {
     return value.toString();
   }

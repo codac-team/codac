@@ -110,6 +110,7 @@ namespace tubex
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;
       TubeVector *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
+      friend class Tube;
       friend class TubeVector;
       friend void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
   };

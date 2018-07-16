@@ -8,7 +8,7 @@ using namespace tubex;
 
 TEST_CASE("Operators")
 {
-  SECTION("Test tube1|tube2")
+  /*SECTION("Test tube1|tube2")
   {
     Tube tube1 = tube_test_1();
     tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
@@ -88,5 +88,5 @@ TEST_CASE("Operators")
   SECTION("Test tube1&traj2")
   {
     // todo
-  }
+  }*/
 }
