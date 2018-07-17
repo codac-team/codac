@@ -27,10 +27,10 @@ void contract(TubeVector& x)
 
     tubex::Function f("x", "x");
 
-    CtcPicard ctc_picard;
+    CtcPicard ctc_picard(true);
     ctc_picard.contract(f, x);
     
-    CtcDeriv ctc_deriv;
+    CtcDeriv ctc_deriv(true);
     ctc_deriv.contract(x, f.eval(x));
 }
 

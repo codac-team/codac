@@ -29,23 +29,42 @@ namespace tubex
     const TubeVector& TubeVector::f(const TubeVector& x) \
     { \
       DimensionException::check(*this, x); \
-      SlicingException::check(*this, x); \
       DomainException::check(*this, x); \
-      TubeVector copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
-      const TubeSlice *slice_x = x.get_first_slice(); \
-      while(slice != NULL) \
+      if(TubeVector::share_same_slicing(*this, x)) \
       { \
-        IntervalVector input_gate = slice_copy->input_gate(); \
-        IntervalVector envelope = slice_copy->codomain(); \
-        IntervalVector output_gate = slice_copy->output_gate(); \
-        slice->set_envelope(envelope.f(slice_x->codomain())); \
-        slice->set_input_gate(input_gate.f(slice_x->input_gate())); \
-        slice->set_output_gate(output_gate.f(slice_x->output_gate())); \
-        slice = slice->next_slice(); \
-        slice_x = slice_x->next_slice(); \
-        slice_copy = slice_copy->next_slice(); \
+        TubeVector copy(*this); \
+        TubeSlice *slice = get_first_slice(); \
+        TubeSlice *slice_copy = copy.get_first_slice(); \
+        const TubeSlice *slice_x = x.get_first_slice(); \
+        while(slice != NULL) \
+        { \
+          IntervalVector input_gate = slice_copy->input_gate(); \
+          IntervalVector envelope = slice_copy->codomain(); \
+          IntervalVector output_gate = slice_copy->output_gate(); \
+          slice->set_envelope(envelope.f(slice_x->codomain())); \
+          slice->set_input_gate(input_gate.f(slice_x->input_gate())); \
+          slice->set_output_gate(output_gate.f(slice_x->output_gate())); \
+          slice = slice->next_slice(); \
+          slice_x = slice_x->next_slice(); \
+          slice_copy = slice_copy->next_slice(); \
+        } \
+      } \
+      else \
+      { \
+        TubeVector copy(*this); \
+        TubeSlice *slice = get_first_slice(); \
+        TubeSlice *slice_copy = copy.get_first_slice(); \
+        while(slice != NULL) \
+        { \
+          IntervalVector input_gate = slice_copy->input_gate(); \
+          IntervalVector envelope = slice_copy->codomain(); \
+          IntervalVector output_gate = slice_copy->output_gate(); \
+          slice->set_envelope(envelope.f(x[slice->domain()])); \
+          slice->set_input_gate(input_gate.f(x[slice->domain().lb()])); \
+          slice->set_output_gate(output_gate.f(x[slice->domain().ub()])); \
+          slice = slice->next_slice(); \
+          slice_copy = slice_copy->next_slice(); \
+        } \
       } \
       return *this; \
     } \
@@ -105,6 +124,7 @@ namespace tubex
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
       DomainException::check(*this, x); \
+      SlicingException::check(*this, x); \
       if(TubeVector::share_same_slicing(*this, x)) \
       { \
         int n = dim(); \
@@ -125,8 +145,6 @@ namespace tubex
           slice_copy = slice_copy->next_slice(); \
         } \
       } \
-      else \
-        SlicingException::check(*this, x); \
       return *this; \
     } \
     \

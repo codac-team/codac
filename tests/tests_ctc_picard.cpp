@@ -101,8 +101,8 @@ TEST_CASE("CtcPicard")
     TubeVector x_auto_sampling(x_preserve_sampling);
 
     tubex::Function f("x", "-x");
-    CtcPicard ctc_picard_preserve(1.1/*, true*/);
-    CtcPicard ctc_picard_auto(1.1/*, false*/);
+    CtcPicard ctc_picard_preserve(true, 1.1);
+    CtcPicard ctc_picard_auto(false, 1.1);
 
     ctc_picard_preserve.contract(f, x_preserve_sampling);
     ctc_picard_auto.contract(f, x_auto_sampling);
@@ -111,7 +111,7 @@ TEST_CASE("CtcPicard")
     CHECK(x_preserve_sampling.codomain()[0].is_superset(exp(-domain)));
     CHECK(x_preserve_sampling[0.][0].is_superset(Interval(exp(-0.))));
     CHECK(x_preserve_sampling[1.][0].is_superset(Interval(exp(-1.))));
-    // todo: CHECK(x_preserve_sampling.nb_slices() == 1);
+    CHECK(x_preserve_sampling.nb_slices() == 1);
     
     CHECK(x_auto_sampling.codomain()[0] == x_preserve_sampling.codomain()[0]);
     CHECK(x_auto_sampling[0.][0] == x_preserve_sampling[0.][0]);

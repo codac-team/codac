@@ -87,8 +87,8 @@ namespace tubex
     if(m_preserve_slicing)
     {
       first_slicing.set_empty();
-      //first_slicing |= x;
-      //x = first_slicing;
+      first_slicing |= x;
+      x = first_slicing;
     }
 
     // todo: return value

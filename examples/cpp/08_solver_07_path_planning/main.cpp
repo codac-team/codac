@@ -28,7 +28,7 @@ void contract(TubeVector& x)
       fac.add_ctr(sqrt(sqr(vx-v_obstacles[i][0]) + sqr(vy-v_obstacles[i][1])) > obstacle_radius);
     System sys(fac);
     ibex::CtcHC4 hc4(sys);
-    tubex::CtcHC4 ctc_hc4;
+    tubex::CtcHC4 ctc_hc4(true);
     ctc_hc4.contract(hc4, x);
   }
 
@@ -37,7 +37,7 @@ void contract(TubeVector& x)
   TubeVector v = f.eval(x);
 
   {
-    CtcEval ctc_eval(false);
+    CtcEval ctc_eval(true, false);
     Interval t(4., 4.06);
     IntervalVector z(4);
     z[0] = Interval(5.98,6.06);
@@ -48,7 +48,7 @@ void contract(TubeVector& x)
   }
 
   {
-    CtcEval ctc_eval(true);
+    CtcEval ctc_eval(true, true);
     Interval t(7.9374,8.);
     IntervalVector z(4);
     z[0] = Interval(8.49735, 8.5);

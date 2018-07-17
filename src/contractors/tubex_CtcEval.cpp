@@ -47,6 +47,7 @@ namespace tubex
     if(z.is_empty() || y.is_empty())
       return false;
 
+    TubeVector y_first_slicing(y), w_first_slicing(w);
     IntervalVector z_ = z;
     TubeVector y_ = y;
 
@@ -66,6 +67,17 @@ namespace tubex
       z.set_empty();
       y.set_empty();
       return true;
+    }
+
+    if(m_preserve_slicing)
+    {
+      y_first_slicing.set_empty();
+      y_first_slicing |= y;
+      y = y_first_slicing;
+
+      w_first_slicing.set_empty();
+      w_first_slicing |= w;
+      w = w_first_slicing;
     }
 
     return z != z_ || y.is_strict_subset(y_);
@@ -88,6 +100,7 @@ namespace tubex
     if(t.is_empty() || z.is_empty() || y.is_empty())
       return false;
 
+    TubeVector y_first_slicing(y), w_first_slicing(w);
     Interval t_ = t;
     IntervalVector z_ = z;
     TubeVector y_ = y;
@@ -197,6 +210,17 @@ namespace tubex
           if(!t.is_empty())
             z &= y.interpol(t, w);
       }
+    }
+
+    if(m_preserve_slicing)
+    {
+      y_first_slicing.set_empty();
+      y_first_slicing |= y;
+      y = y_first_slicing;
+
+      w_first_slicing.set_empty();
+      w_first_slicing |= w;
+      w = w_first_slicing;
     }
 
     if(t.is_empty() || z.is_empty() || y.is_empty())
