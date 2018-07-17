@@ -57,20 +57,8 @@ namespace tubex
   void SamplingException::check(const TubeVector& x1, const TubeVector& x2)
   {
     DomainException::check(x1, x2);
-    if(x1.nb_slices() != x2.nb_slices())
+    if(!TubeVector::share_same_slicing(x1, x2))
       throw SamplingException(x1, x2);
-
-    const TubeSlice *slice_x1 = x1.get_first_slice();
-    const TubeSlice *slice_x2 = x2.get_first_slice();
-    
-    while(slice_x1 != NULL)
-    {
-      if(slice_x1->domain() != slice_x2->domain())
-        throw SamplingException(*slice_x1, *slice_x2);
-
-      slice_x1 = slice_x1->next_slice();
-      slice_x2 = slice_x2->next_slice();
-    }
   }
 
   void SamplingException::check(const TubeVector& x, int slice_index)

@@ -104,25 +104,29 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
-      SamplingException::check(*this, x); \
       DomainException::check(*this, x); \
-      int n = dim(); \
-      TubeVector copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
-      const TubeSlice *slice_x = x.get_first_slice(); \
-      while(slice != NULL) \
+      if(share_same_slicing(*this, x)) \
       { \
-        IntervalVector input_gate = slice_copy->input_gate(); \
-        IntervalVector envelope = slice_copy->codomain(); \
-        IntervalVector output_gate = slice_copy->output_gate(); \
-        slice->set_envelope(envelope.f(IntervalVector(n, slice_x->codomain()[0]))); \
-        slice->set_input_gate(input_gate.f(IntervalVector(n, slice_x->input_gate()[0]))); \
-        slice->set_output_gate(output_gate.f(IntervalVector(n, slice_x->output_gate()[0]))); \
-        slice = slice->next_slice(); \
-        slice_x = slice_x->next_slice(); \
-        slice_copy = slice_copy->next_slice(); \
+        int n = dim(); \
+        TubeVector copy(*this); \
+        TubeSlice *slice = get_first_slice(); \
+        TubeSlice *slice_copy = copy.get_first_slice(); \
+        const TubeSlice *slice_x = x.get_first_slice(); \
+        while(slice != NULL) \
+        { \
+          IntervalVector input_gate = slice_copy->input_gate(); \
+          IntervalVector envelope = slice_copy->codomain(); \
+          IntervalVector output_gate = slice_copy->output_gate(); \
+          slice->set_envelope(envelope.f(IntervalVector(n, slice_x->codomain()[0]))); \
+          slice->set_input_gate(input_gate.f(IntervalVector(n, slice_x->input_gate()[0]))); \
+          slice->set_output_gate(output_gate.f(IntervalVector(n, slice_x->output_gate()[0]))); \
+          slice = slice->next_slice(); \
+          slice_x = slice_x->next_slice(); \
+          slice_copy = slice_copy->next_slice(); \
+        } \
       } \
+      else \
+        SamplingException::check(*this, x); \
       return *this; \
     } \
     \

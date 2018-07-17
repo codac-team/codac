@@ -348,6 +348,28 @@ namespace tubex
         slice->set_output_gate(gate);
     }
 
+    bool TubeVector::share_same_slicing(const TubeVector& x1, const TubeVector& x2)
+    {
+      DomainException::check(x1, x2);
+
+      if(x1.nb_slices() != x2.nb_slices())
+        return false;
+
+      const TubeSlice *slice_x1 = x1.get_first_slice();
+      const TubeSlice *slice_x2 = x2.get_first_slice();
+      
+      while(slice_x1 != NULL)
+      {
+        if(slice_x1->domain() != slice_x2->domain())
+          return false;
+
+        slice_x1 = slice_x1->next_slice();
+        slice_x2 = slice_x2->next_slice();
+      }
+
+      return true;
+    }
+
     // Access values
 
     const IntervalVector TubeVector::codomain() const

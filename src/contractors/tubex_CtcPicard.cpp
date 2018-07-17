@@ -29,6 +29,7 @@ namespace tubex
   bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa) const
   {
     DimensionException::check(x, f);
+    TubeVector first_slicing(x);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
@@ -81,6 +82,13 @@ namespace tubex
 
         slice_x = slice_x->prev_slice();
       }
+    }
+
+    if(m_preserve_slicing)
+    {
+      first_slicing.set_empty();
+      //first_slicing |= x;
+      //x = first_slicing;
     }
 
     // todo: return value

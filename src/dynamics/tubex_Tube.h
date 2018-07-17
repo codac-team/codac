@@ -51,6 +51,7 @@ namespace tubex
       using TubeVector::input2index;
       using TubeVector::sample;
       void sample(double t, const ibex::Interval& gate);
+      using TubeVector::share_same_slicing;
 
       // Access values
       const ibex::Interval codomain() const;
