@@ -16,6 +16,7 @@
 #include "tubex_Ctc.h"
 #include "tubex_Fnc.h"
 #include "tubex_TubeSlice.h"
+#include "tubex_TubeSlice.h"
 
 namespace tubex
 {
@@ -27,20 +28,21 @@ namespace tubex
     public:
 
       CtcPicard(float delta = 1.1);
-      bool contract(const tubex::Fnc& f, TubeVector& x) const;
-      void contract_fwd(const tubex::Fnc& f, TubeVector& x) const;
-      void contract_bwd(const tubex::Fnc& f, TubeVector& x) const;
-      bool contract(const tubex::Fnc& f, TubeVector& x, bool fwd) const;
-
-      void contract_fwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
-      void contract_bwd(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice) const;
+      bool contract(const tubex::Fnc& f,
+                    TubeVector& x,
+                    TPropagation t_propa = FORWARD | BACKWARD) const;
       int picard_iterations() const;
+
+    protected:
+
+      void contract(const tubex::Fnc& f,
+                    const TubeVector& tube,
+                    TubeSlice& slice,
+                    TPropagation t_propa) const;
       void guess_slice_envelope(const Fnc& f,
                                 const TubeVector& tube,
                                 TubeSlice& slice,
-                                bool fwd) const;
-
-    protected:
+                                TPropagation t_propa) const;
 
       float m_delta;
       mutable int m_picard_iterations = 0;

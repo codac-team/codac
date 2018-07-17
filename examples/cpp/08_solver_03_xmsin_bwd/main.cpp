@@ -10,7 +10,7 @@ void contract(TubeVector& x)
   tubex::Function f("x", "-sin(x)");
 
   CtcPicard ctc_picard;
-  ctc_picard.contract_bwd(f, x);
+  ctc_picard.contract(f, x, BACKWARD);
 
   CtcDeriv ctc_deriv;
   ctc_deriv.contract(x, f.eval(x));
