@@ -82,5 +82,7 @@ IntervalVector test3 = test1 | test2;
   figz.draw_box(IntervalVector(2, Interval(0.6,0.8)));
   figz.draw_box(IntervalVector(2, Interval(0.5,0.8)));
   figy.draw_box(IntervalVector(2, Interval(0.,0.3)));*/
+  
 
+  return EXIT_SUCCESS;
 }
