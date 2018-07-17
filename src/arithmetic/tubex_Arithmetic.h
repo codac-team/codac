@@ -66,6 +66,8 @@ namespace tubex
     header_binary_op_scalar_commutative_types(operator+);
     header_binary_op_scalar_commutative_types(operator-);
     header_binary_op_scalar_commutative_types(operator*);
+    header_binary_op_scalar_commutative_types(operator|);
+    header_binary_op_scalar_commutative_types(operator&);
     header_binary_op_scalar_commutative_types(atan2);
   
     #define header_binary_op_scalar_noncommutative_types(f) \

@@ -103,12 +103,7 @@ namespace tubex
 
         // Other mathematical operators
 
-        //const Tube& operator|(const Tube& x);
-        //const Tube& operator|(const Trajectory& x);
-        //const Tube& operator|(const ibex::Interval& x);
-        //const Tube& operator&(const Tube& x);
-        //const Tube& operator&(const Trajectory& x);
-        //const Tube& operator&(const ibex::Interval& x);
+        // Note: operator| and operator& for Tube are defined in Arithmetic.* files
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);

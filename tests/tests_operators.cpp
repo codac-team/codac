@@ -363,7 +363,7 @@ TEST_CASE("Operators")
     CHECK(result.codomain() == IntervalVector(2, Interval(-2.,2.)));
     CHECK(result[0.] == IntervalVector(2, Interval(-2.,2.)));
     
-    /*tube1 = result;
+    tube1 = result;
     result = tube1 & IntervalVector(2, Interval(2.,6.));
     CHECK(result.codomain() == IntervalVector(2, Interval(2.)));
     CHECK(result[0.] == IntervalVector(2, Interval(2.)));
@@ -378,11 +378,6 @@ TEST_CASE("Operators")
     result = Tube(domain, Interval(1.,2.)) * tube1;
     CHECK(result.codomain() == IntervalVector(2, Interval(2.,12.)));
     CHECK(result[0.] == IntervalVector(2, Interval(2.,12.)));
-    
-    tube1 = result;
-    result = tube1 & Tube(domain, Interval(2.,6.));
-    CHECK(result.codomain() == IntervalVector(2, Interval(2.,6.)));
-    CHECK(result[0.] == IntervalVector(2, Interval(2.,6.)));*/
   }
 
   SECTION("Test set operators for Tube")
@@ -406,7 +401,7 @@ TEST_CASE("Operators")
     CHECK(tube1.codomain() == Interval(-4.,4.));
     CHECK(tube1[0.] == Interval(-4.,4.));
     
-    /*tube1 = tube1 & Tube(domain, Interval(2.,6.));
+    tube1 = tube1 & Tube(domain, Interval(2.,6.));
     CHECK(tube1.codomain() == Interval(2.,4.));
     CHECK(tube1[0.] == Interval(2.,4.));
     
@@ -418,6 +413,27 @@ TEST_CASE("Operators")
     CHECK(tube1.codomain() == Interval(1.,3.));
     CHECK(tube1[0.] == Interval(1.,3.));
     
+    tube1.set(Interval(-1.,1.));
+    tube1 = Tube(domain, Interval(2.,3.)) + tube1;
+    CHECK(tube1.codomain() == Interval(1.,4.));
+    CHECK(tube1[0.] == Interval(1.,4.));
+    
+    tube1 = - Tube(domain, Interval(2.,3.)) + tube1;
+    CHECK(tube1.codomain() == Interval(-2.,2.));
+    CHECK(tube1[0.] == Interval(-2.,2.));
+    
+    tube1 = Tube(domain, Interval(1.,2.)) * tube1;
+    CHECK(tube1.codomain() == Interval(-4.,4.));
+    CHECK(tube1[0.] == Interval(-4.,4.));
+    
+    tube1 = Tube(domain, Interval(2.,6.)) & tube1;
+    CHECK(tube1.codomain() == Interval(2.,4.));
+    CHECK(tube1[0.] == Interval(2.,4.));
+    
+    tube1 = Tube(domain, Interval(6.)) | tube1;
+    CHECK(tube1.codomain() == Interval(2.,6.));
+    CHECK(tube1[0.] == Interval(2.,6.));
+
     // Now with scalar trajectories...
 
     tube1.set(Interval(-1.,1.));
@@ -437,13 +453,34 @@ TEST_CASE("Operators")
     CHECK(tube1.codomain() == Interval(-12.,11.));
     CHECK(tube1[0.] == Interval(-12.,11.));
     
-    /*tube1 = tube1 & Trajectory(domain, tubex::Function("(1.)"));
+    tube1 = tube1 & Trajectory(domain, tubex::Function("(1.)"));
     CHECK(tube1.codomain() == Interval(1.));
     CHECK(tube1[0.] == Interval(1.));
     
     tube1 = tube1 / Trajectory(domain, tubex::Function("(2.)"));
     CHECK(tube1.codomain() == Interval(0.5));
     CHECK(tube1[0.] == Interval(0.5));
+
+    tube1.set(Interval(-1.,1.));
+    tube1 = Trajectory(domain, tubex::Function("(2.)")) + tube1;
+    CHECK(tube1.codomain() == Interval(1.,3.));
+    CHECK(tube1[0.] == Interval(1.,3.));
+    
+    tube1 = - Trajectory(domain, tubex::Function("(4.)")) + tube1;
+    CHECK(tube1.codomain() == Interval(-3.,-1.));
+    CHECK(tube1[0.] == Interval(-3.,-1.));
+    
+    tube1 = Trajectory(domain, tubex::Function("(4.)")) * tube1;
+    CHECK(tube1.codomain() == Interval(-12.,-4.));
+    CHECK(tube1[0.] == Interval(-12.,-4.));
+    
+    tube1 = Trajectory(domain, tubex::Function("(11.)")) | tube1;
+    CHECK(tube1.codomain() == Interval(-12.,11.));
+    CHECK(tube1[0.] == Interval(-12.,11.));
+    
+    tube1 = Trajectory(domain, tubex::Function("(1.)")) & tube1;
+    CHECK(tube1.codomain() == Interval(1.));
+    CHECK(tube1[0.] == Interval(1.));
     
     // Now with scalar values...
 
@@ -466,11 +503,32 @@ TEST_CASE("Operators")
     
     tube1 = tube1 | Interval(6.);
     CHECK(tube1.codomain() == Interval(2.,6.));
-    CHECK(tube1[0.] == Interval(2.,6.));*/
+    CHECK(tube1[0.] == Interval(2.,6.));
     
-    //tube1 = tube1 / Interval(2.);
-    //CHECK(tube1.codomain() == Interval(1.,3.));
-    //CHECK(tube1[0.] == Interval(1.,3.));
+    tube1 = tube1 / Interval(2.);
+    CHECK(tube1.codomain() == Interval(1.,3.));
+    CHECK(tube1[0.] == Interval(1.,3.));
+    
+    tube1.set(Interval(-1.,1.));
+    tube1 = Interval(2.,3.) + tube1;
+    CHECK(tube1.codomain() == Interval(1.,4.));
+    CHECK(tube1[0.] == Interval(1.,4.));
+    
+    tube1 = - Interval(2.,3.) + tube1;
+    CHECK(tube1.codomain() == Interval(-2.,2.));
+    CHECK(tube1[0.] == Interval(-2.,2.));
+    
+    tube1 = Interval(1.,2.) * tube1;
+    CHECK(tube1.codomain() == Interval(-4.,4.));
+    CHECK(tube1[0.] == Interval(-4.,4.));
+    
+    tube1 = Interval(2.,6.) & tube1;
+    CHECK(tube1.codomain() == Interval(2.,4.));
+    CHECK(tube1[0.] == Interval(2.,4.));
+    
+    tube1 = Interval(6.) | tube1;
+    CHECK(tube1.codomain() == Interval(2.,6.));
+    CHECK(tube1[0.] == Interval(2.,6.));
   }
 
   SECTION("Test tube1&tube2")

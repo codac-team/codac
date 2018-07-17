@@ -177,7 +177,7 @@ namespace tubex
     \
     const Tube f(const Interval& x1, const Tube& x2) \
     { \
-      Tube result(x1); \
+      Tube result(x2); \
       TubeSlice *slice = result.get_first_slice(); \
       const TubeSlice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
@@ -194,6 +194,8 @@ namespace tubex
   binary_op_scalar_commutative_types(operator+);
   binary_op_scalar_commutative_types(operator-);
   binary_op_scalar_commutative_types(operator*);
+  binary_op_scalar_commutative_types(operator|);
+  binary_op_scalar_commutative_types(operator&);
   binary_op_scalar_commutative_types(atan2);
   
   #define binary_op_scalar_noncommutative_types(f) \
