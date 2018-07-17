@@ -29,7 +29,7 @@ namespace tubex
   {
     public:
 
-      CtcDeriv();
+      CtcDeriv(bool preserve_slicing = false);
       bool contract(TubeVector& x, const TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD) const;
       bool contract(TubeSlice& x, const TubeSlice& v) const;
 

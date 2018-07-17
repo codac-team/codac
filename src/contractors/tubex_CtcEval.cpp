@@ -23,8 +23,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcEval::CtcEval(bool enable_propagation)
-    : m_propagation_enabled(enable_propagation)
+  CtcEval::CtcEval(bool preserve_slicing, bool enable_propagation)
+    : Ctc(preserve_slicing), m_propagation_enabled(enable_propagation)
   {
 
   }

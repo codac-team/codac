@@ -22,7 +22,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDeriv::CtcDeriv()
+  CtcDeriv::CtcDeriv(bool preserve_slicing)
+    : Ctc(preserve_slicing)
   {
 
   }

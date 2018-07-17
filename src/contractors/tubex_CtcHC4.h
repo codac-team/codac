@@ -26,7 +26,7 @@ namespace tubex
   {
     public:
 
-      CtcHC4();
+      CtcHC4(bool preserve_slicing = false);
       bool contract(ibex::CtcHC4& hc4, TubeVector& x) const;
       bool contract(ibex::CtcHC4& hc4, TubeSlice& x) const;
 

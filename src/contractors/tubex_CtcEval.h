@@ -26,7 +26,7 @@ namespace tubex
   {
     public:
 
-      CtcEval(bool enable_propagation = true);
+      CtcEval(bool preserve_slicing = false, bool enable_propagation = true);
 
       // Tube
       bool contract(double t, ibex::Interval& z, Tube& y, Tube& w) const;

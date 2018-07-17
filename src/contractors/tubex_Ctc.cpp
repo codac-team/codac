@@ -16,5 +16,9 @@ using namespace std;
 
 namespace tubex
 {
+  Ctc::Ctc(bool preserve_slicing)
+  	: m_preserve_slicing(preserve_slicing)
+  {
 
+  }
 }

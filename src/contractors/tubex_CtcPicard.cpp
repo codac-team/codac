@@ -20,7 +20,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcPicard::CtcPicard(float delta) : m_delta(delta)
+  CtcPicard::CtcPicard(bool preserve_slicing, float delta)
+    : Ctc(preserve_slicing), m_delta(delta)
   {
 
   }

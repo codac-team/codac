@@ -34,8 +34,12 @@ namespace tubex
   {
     public:
 
-      Ctc() {};
+      Ctc(bool preserve_slicing = false);
       virtual bool contract() {};
+
+    protected:
+
+      bool m_preserve_slicing;
   };
 }
 

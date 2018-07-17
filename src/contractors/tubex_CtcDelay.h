@@ -26,7 +26,7 @@ namespace tubex
   {
     public:
 
-      CtcDelay();
+      CtcDelay(bool preserve_slicing = false);
 
       // Tube
       bool contract(const ibex::Interval& a, const TubeVector& x, TubeVector& y) const;

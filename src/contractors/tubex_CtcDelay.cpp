@@ -21,7 +21,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDelay::CtcDelay()
+  CtcDelay::CtcDelay(bool preserve_slicing)
+    : Ctc(preserve_slicing)
   {
 
   }

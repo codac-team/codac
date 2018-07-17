@@ -27,7 +27,7 @@ namespace tubex
   {
     public:
 
-      CtcPicard(float delta = 1.1);
+      CtcPicard(bool preserve_slicing = false, float delta = 1.1);
       bool contract(const tubex::Fnc& f,
                     TubeVector& x,
                     TPropagation t_propa = FORWARD | BACKWARD) const;

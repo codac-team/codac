@@ -20,7 +20,8 @@ namespace tubex
 {
   // todo: avoid redundant gate contractions
   
-  CtcHC4::CtcHC4()
+  CtcHC4::CtcHC4(bool preserve_slicing)
+    : Ctc(preserve_slicing)
   {
 
   }

@@ -27,7 +27,7 @@ TEST_CASE("CtcEval")
     v.set(Interval(1.), 3);
 
     CHECK(x.nb_slices() == 4);
-    CtcEval ctc_eval(false);
+    CtcEval ctc_eval(false, false);
     ctc_eval.contract(t, z, x, v);
     CHECK(x.nb_slices() == 6);
 
@@ -68,7 +68,7 @@ TEST_CASE("CtcEval")
 
     CHECK(x.nb_slices() == 5);
 
-    CtcEval ctc_eval(false);
+    CtcEval ctc_eval(false, false);
     ctc_eval.contract(t, z, x, v);
 
     CHECK(x.nb_slices() == 7);
@@ -86,7 +86,7 @@ TEST_CASE("CtcEval")
     t = Interval(1.75,5.5);
     z = Interval(1.6);
 
-    ctc_eval = CtcEval(true);
+    ctc_eval = CtcEval(false, true);
     ctc_eval.contract(t, z, x, v);
 
     if(VIBES_DRAWING) // drawing results
@@ -145,7 +145,7 @@ TEST_CASE("CtcEval")
 
     bool contraction;
     Interval intv_t, intv_y;
-    CtcEval ctc_eval_propa(true), ctc_eval_nopropa(false);
+    CtcEval ctc_eval_propa(false, true), ctc_eval_nopropa(false, false);
 
     // Test A (no propa)
     x = x_raw;
@@ -915,7 +915,7 @@ TEST_CASE("CtcEval")
     x.ctc_deriv(v);
 
     IntervalVector box(2);
-    CtcEval ctc_eval(true);
+    CtcEval ctc_eval(false, true);
     Tube x_c(x); Tube v_c(v);
 
     box[0] = Interval(11.98);
