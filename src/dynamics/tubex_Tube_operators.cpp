@@ -14,7 +14,7 @@
 #include "tubex_Trajectory.h"
 #include "tubex_DomainException.h"
 #include "tubex_DimensionException.h"
-#include "tubex_SamplingException.h"
+#include "tubex_SlicingException.h"
 
 using namespace std;
 using namespace ibex;
@@ -25,7 +25,7 @@ namespace tubex
     \
     const Tube& Tube::f(const Tube& x) \
     { \
-      SamplingException::check(*this, x); \
+      SlicingException::check(*this, x); \
       DomainException::check(*this, x); \
       Tube copy(*this); \
       TubeSlice *slice = get_first_slice(); \

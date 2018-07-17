@@ -15,7 +15,7 @@
 #include "tubex_TrajectoryVector.h"
 #include "tubex_DomainException.h"
 #include "tubex_DimensionException.h"
-#include "tubex_SamplingException.h"
+#include "tubex_SlicingException.h"
 
 using namespace std;
 using namespace ibex;
@@ -29,7 +29,7 @@ namespace tubex
     const TubeVector& TubeVector::f(const TubeVector& x) \
     { \
       DimensionException::check(*this, x); \
-      SamplingException::check(*this, x); \
+      SlicingException::check(*this, x); \
       DomainException::check(*this, x); \
       TubeVector copy(*this); \
       TubeSlice *slice = get_first_slice(); \
@@ -105,7 +105,7 @@ namespace tubex
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
       DomainException::check(*this, x); \
-      if(share_same_slicing(*this, x)) \
+      if(TubeVector::share_same_slicing(*this, x)) \
       { \
         int n = dim(); \
         TubeVector copy(*this); \
@@ -126,7 +126,7 @@ namespace tubex
         } \
       } \
       else \
-        SamplingException::check(*this, x); \
+        SlicingException::check(*this, x); \
       return *this; \
     } \
     \
@@ -180,7 +180,7 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
-      SamplingException::check(*this, x); \
+      SlicingException::check(*this, x); \
       TubeVector copy(*this); \
       TubeSlice *slice = get_first_slice(); \
       TubeSlice *slice_copy = copy.get_first_slice(); \

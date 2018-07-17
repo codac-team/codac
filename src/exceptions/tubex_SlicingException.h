@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - SamplingException class
+ *  tubex-lib - SlicingException class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_SAMPLINGEXCEPTION_H__
-#define __TUBEX_SAMPLINGEXCEPTION_H__
+#ifndef __TUBEX_SLICINGEXCEPTION_H__
+#define __TUBEX_SLICINGEXCEPTION_H__
 
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"
@@ -25,13 +25,13 @@ namespace tubex
    * Thrown when two tubes do not share
    * the same data structure.
    */
-  class SamplingException : public Exception
+  class SlicingException : public Exception
   {
     public:
 
-      SamplingException(const TubeSlice& x1, const TubeSlice& x2);
-      SamplingException(const TubeVector& x, int slice_index);
-      SamplingException(const TubeVector& x1, const TubeVector& x2);
+      SlicingException(const TubeSlice& x1, const TubeSlice& x2);
+      SlicingException(const TubeVector& x, int slice_index);
+      SlicingException(const TubeVector& x1, const TubeVector& x2);
       
       static void check(const TubeVector& x1, const TubeVector& x2);
       static void check(const TubeVector& x, int slice_index);

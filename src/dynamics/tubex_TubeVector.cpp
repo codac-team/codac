@@ -16,7 +16,7 @@
 #include "tubex_TubeVectorSerialization.h"
 #include "tubex_TrajectoryVectorSerialization.h"
 #include "tubex_DimensionException.h"
-#include "tubex_SamplingException.h"
+#include "tubex_SlicingException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
 #include "ibex_LargestFirst.h"
@@ -221,13 +221,13 @@ namespace tubex
 
     TubeSlice* TubeVector::get_slice(int slice_id)
     {
-      SamplingException::check(*this, slice_id);
+      SlicingException::check(*this, slice_id);
       return const_cast<TubeSlice*>(static_cast<const TubeVector&>(*this).get_slice(slice_id));
     }
 
     const TubeSlice* TubeVector::get_slice(int slice_id) const
     {
-      SamplingException::check(*this, slice_id);
+      SlicingException::check(*this, slice_id);
       return m_v_slices[slice_id];
     }
 
@@ -391,7 +391,7 @@ namespace tubex
 
     const IntervalVector TubeVector::operator[](int slice_id) const
     {
-      SamplingException::check(*this, slice_id);
+      SlicingException::check(*this, slice_id);
       return get_slice(slice_id)->codomain();
     }
 
@@ -442,7 +442,7 @@ namespace tubex
     const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& v, const Interval& search_domain) const
     {
       DimensionException::check(*this, y);
-      SamplingException::check(*this, v);
+      SlicingException::check(*this, v);
       DomainException::check(*this, v);
 
       Interval invert = Interval::EMPTY_SET;
@@ -521,7 +521,7 @@ namespace tubex
     {
       DomainException::check(*this, t);
       DimensionException::check(*this, v);
-      SamplingException::check(*this, v);
+      SlicingException::check(*this, v);
 
       const TubeSlice *slice_x = get_slice(t);
       if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
@@ -535,7 +535,7 @@ namespace tubex
     {
       DomainException::check(*this, t);
       DimensionException::check(*this, v);
-      SamplingException::check(*this, v);
+      SlicingException::check(*this, v);
 
       IntervalVector interpol(dim(), Interval::EMPTY_SET);
 
@@ -663,7 +663,7 @@ namespace tubex
     bool TubeVector::is_subset(const TubeVector& x) const
     {
       DimensionException::check(*this, x);
-      SamplingException::check(*this, x);
+      SlicingException::check(*this, x);
       // todo: common with other same-type methods
 
       const TubeSlice *slice = get_first_slice(), *slice_x = x.get_first_slice();
@@ -681,7 +681,7 @@ namespace tubex
     bool TubeVector::is_strict_subset(const TubeVector& x) const
     {
       DimensionException::check(*this, x);
-      SamplingException::check(*this, x);
+      SlicingException::check(*this, x);
       // todo: common with other same-type methods
 
       const TubeSlice *slice = get_first_slice(), *slice_x = x.get_first_slice();
@@ -745,7 +745,7 @@ namespace tubex
     void TubeVector::set(const IntervalVector& y, int slice_id)
     {
       DimensionException::check(*this, y);
-      SamplingException::check(*this, slice_id);
+      SlicingException::check(*this, slice_id);
       get_slice(slice_id)->set(y);
     }
 

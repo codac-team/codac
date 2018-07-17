@@ -15,7 +15,7 @@
 #include "tubex_Arithmetic.h"
 #include "tubex_DimensionException.h"
 #include "tubex_DomainException.h"
-#include "tubex_SamplingException.h"
+#include "tubex_SlicingException.h"
 #include "tubex_TubeSlice.h"
 
 using namespace std;
@@ -107,7 +107,7 @@ namespace tubex
     \
     const Tube f(const Tube& x1, const Tube& x2) \
     { \
-      SamplingException::check(x1, x2); \
+      SlicingException::check(x1, x2); \
       DomainException::check(x1, x2); \
       Tube result(x1); \
       TubeSlice *slice = result.get_first_slice(); \
@@ -202,7 +202,7 @@ namespace tubex
     \
     const Tube f(const Tube& x1, const Tube& x2) \
     { \
-      SamplingException::check(x1, x2); \
+      SlicingException::check(x1, x2); \
       DomainException::check(x1, x2); \
       Tube result(x1); \
       TubeSlice *slice = result.get_first_slice(); \
@@ -260,7 +260,7 @@ namespace tubex
     const TubeVector f(const TubeVector& x1, const TubeVector& x2) \
     { \
       DimensionException::check(x1, x2); \
-      SamplingException::check(x1, x2); \
+      SlicingException::check(x1, x2); \
       DomainException::check(x1, x2); \
       TubeVector result(x1); \
       TubeSlice *slice = result.get_first_slice(); \
@@ -353,7 +353,7 @@ namespace tubex
     \
     const TubeVector f(const Tube& x1, const TubeVector& x2) \
     { \
-      SamplingException::check(x1, x2); \
+      SlicingException::check(x1, x2); \
       DomainException::check(x1, x2); \
       TubeVector result(x2); \
       TubeSlice *slice = result.get_first_slice(); \

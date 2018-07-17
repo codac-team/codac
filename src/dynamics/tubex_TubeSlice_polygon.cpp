@@ -12,7 +12,7 @@
 
 #include "tubex_TubeSlice.h"
 #include "tubex_DomainException.h"
-#include "tubex_SamplingException.h"
+#include "tubex_SlicingException.h"
 #include "tubex_DimensionException.h"
 
 using namespace std;

@@ -12,7 +12,7 @@
 
 #include <string>
 #include <sstream>
-#include "tubex_SamplingException.h"
+#include "tubex_SlicingException.h"
 #include "tubex_DomainException.h"
 
 using namespace std;
@@ -20,7 +20,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  SamplingException::SamplingException(const TubeSlice& x1, const TubeSlice& x2)
+  SlicingException::SlicingException(const TubeSlice& x1, const TubeSlice& x2)
   {
     ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
@@ -33,7 +33,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  SamplingException::SamplingException(const TubeVector& x, int slice_index)
+  SlicingException::SlicingException(const TubeVector& x, int slice_index)
   {
     ostringstream os;
     os << "slice index out of range: ";
@@ -41,7 +41,7 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  SamplingException::SamplingException(const TubeVector& x1, const TubeVector& x2)
+  SlicingException::SlicingException(const TubeVector& x1, const TubeVector& x2)
   {
     ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
@@ -54,16 +54,16 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  void SamplingException::check(const TubeVector& x1, const TubeVector& x2)
+  void SlicingException::check(const TubeVector& x1, const TubeVector& x2)
   {
     DomainException::check(x1, x2);
     if(!TubeVector::share_same_slicing(x1, x2))
-      throw SamplingException(x1, x2);
+      throw SlicingException(x1, x2);
   }
 
-  void SamplingException::check(const TubeVector& x, int slice_index)
+  void SlicingException::check(const TubeVector& x, int slice_index)
   {
     if(slice_index < 0 || slice_index >= x.nb_slices())
-      throw SamplingException(x, slice_index);
+      throw SlicingException(x, slice_index);
   }
 }
