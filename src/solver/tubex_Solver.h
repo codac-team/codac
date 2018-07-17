@@ -27,13 +27,15 @@ namespace tubex
       const std::vector<TubeVector> solve(const TubeVector& x0,
                                           void (*ctc_func)(TubeVector&), // todo: contractor object
                                           const ibex::Vector& max_thickness,
-                                          float refining_ratio = 0.005,
-                                          float fixed_point_ratio = 0.005);
-      void cid(TubeVector &x, void (*ctc_func)(TubeVector&));
+                                          float refining_fxpt_ratio = 0.005,
+                                          float propa_fxpt_ratio = 0.005,
+                                          float cid_fxpt_ratio = 0.005);
       bool solution_encloses(const std::vector<TubeVector>& v_solutions, const TrajectoryVector& truth);
 
     protected:
       
+      void propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio);
+      void cid(TubeVector &x, void (*ctc_func)(TubeVector&), float cid_fxpt_ratio);
   };
 }
 

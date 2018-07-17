@@ -26,8 +26,9 @@ namespace tubex
   const vector<TubeVector> Solver::solve(const TubeVector& x0,
                                          void (*ctc_func)(TubeVector&),
                                          const Vector& max_thickness,
-                                         float refining_ratio,
-                                         float fixed_point_ratio)
+                                         float refining_fxpt_ratio,
+                                         float propa_fxpt_ratio,
+                                         float cid_fxpt_ratio)
   {
     clock_t t_start = clock();
 
@@ -43,7 +44,7 @@ namespace tubex
       s.pop();
 
       bool emptiness;
-      double volume, volume_before_refining;
+      double volume_before_refining;
 
       do
       {
@@ -56,20 +57,20 @@ namespace tubex
 
         // 2. Propagations up to the fixed point
 
-          double volume_before_ctc;
+          propagation(x, ctc_func, propa_fxpt_ratio);
 
-          do
-          {
-            volume_before_ctc = x.volume();
-            ctc_func(x);
-            //cid(x, ctc_func);
-            emptiness = x.is_empty();
-            volume = x.volume();
-          } while(!emptiness && (volume / volume_before_ctc) < (1. - fixed_point_ratio));
+        emptiness = x.is_empty();
+      } while(!emptiness && (x.volume() / volume_before_refining) < (1. - refining_fxpt_ratio));
 
-      } while(!emptiness && (volume / volume_before_refining) < (1. - refining_ratio));
+      // 3. CID up to the fixed point
+    
+      //if(!emptiness)
+      //{
+      //  cid(x, ctc_func, cid_fxpt_ratio);
+      //  emptiness = x.is_empty();
+      //}
 
-      // 3. Bisection
+      // 4. Bisection
 
         if(!emptiness)
         {
@@ -103,17 +104,43 @@ namespace tubex
     return v_solutions;
   }
 
-  void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
+  void Solver::propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio)
   {
-    if(!x.is_empty())
+    bool emptiness;
+    double volume, volume_before_ctc;
+
+    do
     {
-      double t_bisection;
-      x.max_gate_thickness(t_bisection);
-      pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
-      ctc_func(p_x.first);
-      ctc_func(p_x.second);
-      x = p_x.first;
-      x |= p_x.second;
+      volume_before_ctc = x.volume();
+      ctc_func(x);
+      emptiness = x.is_empty();
+      volume = x.volume();
+    } while(!emptiness && (volume / volume_before_ctc) < (1. - propa_fxpt_ratio));
+  }
+
+  void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&), float cid_fxpt_ratio)
+  {
+    double t_bisection;
+    x.max_gate_thickness(t_bisection);
+    pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
+    //pair<TubeVector,TubeVector> p_x_1 = p_x.first.bisect(t_bisection);
+    //pair<TubeVector,TubeVector> p_x_2 = p_x.second.bisect(t_bisection);
+    x.set_empty();
+
+    stack<TubeVector> s;
+    s.push(p_x.first);
+    s.push(p_x.second);
+    //s.push(p_x_1.first);
+    //s.push(p_x_1.second);
+    //s.push(p_x_2.first);
+    //s.push(p_x_2.second);
+
+    while(!s.empty())
+    {
+      TubeVector branch_x = s.top();
+      s.pop();
+      propagation(branch_x, ctc_func, cid_fxpt_ratio);
+      x |= branch_x;
     }
   }
   
