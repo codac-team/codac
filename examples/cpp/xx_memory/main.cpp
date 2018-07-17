@@ -55,14 +55,8 @@ int main(int argc, char *argv[])
   s1.inflate(0.5);
   //cout << s1 << endl;
 
-
-
-IntervalVector test1(2), test2(2);
-IntervalVector test3 = test1 | test2;
-
-
-
-
+  IntervalVector test1(2), test2(2);
+  IntervalVector test3 = test1 | test2;
 
   /*vibes::beginDrawing();
 
@@ -83,6 +77,5 @@ IntervalVector test3 = test1 | test2;
   figz.draw_box(IntervalVector(2, Interval(0.5,0.8)));
   figy.draw_box(IntervalVector(2, Interval(0.,0.3)));*/
   
-
   return EXIT_SUCCESS;
 }

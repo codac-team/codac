@@ -10,6 +10,7 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
+#include <time.h>
 #include "tubex_Solver.h"
 
 using namespace std;
@@ -28,6 +29,8 @@ namespace tubex
                                          float refining_ratio,
                                          float fixed_point_ratio)
   {
+    clock_t t_start = clock();
+
     // todo: check dim max_thickness vector
     stack<TubeVector> s;
     s.push(x0);
@@ -93,6 +96,10 @@ namespace tubex
     }
 
     cout << endl;
+    printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
+    if(v_solutions.size() == 0)
+      cout << "no solution found" << endl;
+
     return v_solutions;
   }
 
@@ -108,5 +115,13 @@ namespace tubex
       x = p_x.first;
       x |= p_x.second;
     }
+  }
+  
+  bool Solver::solution_encloses(const vector<TubeVector>& v_solutions, const TrajectoryVector& truth)
+  {
+    for(int i = 0 ; i < v_solutions.size() ; i++)
+      if(v_solutions[i].encloses(truth))
+        return true;
+    return false;
   }
 }

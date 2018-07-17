@@ -15,6 +15,7 @@
 
 #include <vector>
 #include "tubex_TubeVector.h"
+#include "tubex_TrajectoryVector.h"
 
 namespace tubex
 {
@@ -29,6 +30,7 @@ namespace tubex
                                           float refining_ratio = 0.005,
                                           float fixed_point_ratio = 0.005);
       void cid(TubeVector &x, void (*ctc_func)(TubeVector&));
+      bool solution_encloses(const std::vector<TubeVector>& v_solutions, const TrajectoryVector& truth);
 
     protected:
       

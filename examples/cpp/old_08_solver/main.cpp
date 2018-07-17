@@ -16,7 +16,7 @@ using namespace tubex;
 #define DELAY_BVP 8
 #define SINGULARITY 9
 #define PATH_PLANNING 10
-#define SOLVER_TEST DELAY_BVP
+#define SOLVER_TEST PATH_PLANNING
 
 double obstacle_radius = 0.95;
 
@@ -539,7 +539,6 @@ int main(int argc, char *argv[])
       ostringstream o;
       o << "solution_" << i;
       fig.add_tube(&v_solutions[i], o.str());
-      //fig.set_tube_derivative(&v_solutions[i], &v_solutions[i]);
     }
 
     #if SOLVER_TEST == PATH_PLANNING
@@ -548,7 +547,7 @@ int main(int argc, char *argv[])
 
     if(!v_solutions.empty())
       fig.show(show_details);
-    vibes::end_drawing();
+    vibes::endDrawing();
 
   return EXIT_SUCCESS;
 }
@@ -586,7 +585,7 @@ void displayPathPlanningMap(const vector<TubeVector>& v_x, const vector<Interval
   vibes::newFigure(fig_name);
   vibes::setFigureProperties(
             vibesParams("figure", fig_name, "x", 100, "y", 100, "width", 600, "height", 600));
-  vibes::axis_limits(0., 10., 0., 10.);
+  vibes::axisLimits(0., 10., 0., 10.);
 
   for(int i = 0 ; i < v_obstacles.size() ; i++)
     vibes::drawCircle(v_obstacles[i][0].mid(), v_obstacles[i][1].mid(), obstacle_radius, "#779CA3[#A5C8CE]", vibesParams("figure", fig_name));
