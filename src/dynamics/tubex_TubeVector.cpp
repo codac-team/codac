@@ -169,7 +169,7 @@ namespace tubex
       TubeVector primitive(*this, IntervalVector(dim(), Interval::ALL_REALS));
       primitive.set(IntervalVector(dim(), 0.), primitive.domain().lb());
       CtcDeriv ctc_deriv;
-      ctc_deriv.contract_fwd(primitive, *this);
+      ctc_deriv.contract(primitive, *this, FORWARD);
       return primitive;
     }
 

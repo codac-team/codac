@@ -203,8 +203,8 @@ TEST_CASE("CtcDeriv")
     CtcDeriv ctc;
 
     Tube tube_test_fwd(tube);
-    ctc.contract_fwd(tube_test_fwd, tubedot);
-    CHECK_FALSE(ctc.contract_fwd(tube_test_fwd, tubedot)); // fixed point already reached
+    ctc.contract(tube_test_fwd, tubedot, FORWARD);
+    CHECK_FALSE(ctc.contract(tube_test_fwd, tubedot, FORWARD)); // fixed point already reached
 
     Tube tube_test_fwdbwd(tube);
     ctc.contract(tube_test_fwdbwd, tubedot);
@@ -230,8 +230,8 @@ TEST_CASE("CtcDeriv")
     CtcDeriv ctc;
 
     Tube tube_test_bwd(tube);
-    ctc.contract_bwd(tube_test_bwd, tubedot);
-    CHECK_FALSE(ctc.contract_bwd(tube_test_bwd, tubedot)); // fixed point already reached
+    ctc.contract(tube_test_bwd, tubedot, BACKWARD);
+    CHECK_FALSE(ctc.contract(tube_test_bwd, tubedot, BACKWARD)); // fixed point already reached
 
     Tube tube_test_fwdbwd(tube);
     ctc.contract(tube_test_fwdbwd, tubedot);

@@ -141,7 +141,7 @@ namespace tubex
       Tube primitive(*this, Interval::ALL_REALS);
       primitive.set(0., primitive.domain().lb());
       CtcDeriv ctc_deriv;
-      ctc_deriv.contract_fwd(primitive, *this);
+      ctc_deriv.contract(primitive, *this, FORWARD);
       return primitive;
     }
 

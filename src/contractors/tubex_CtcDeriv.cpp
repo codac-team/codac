@@ -27,56 +27,41 @@ namespace tubex
 
   }
 
-  bool CtcDeriv::contract(TubeVector& x, const TubeVector& v) const
+  bool CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
     SamplingException::check(x, v);
 
     bool ctc = false;
-    ctc |= contract_fwd(x, v);
-    ctc |= contract_bwd(x, v);
+    
+    if(t_propa & FORWARD)
+    {
+      TubeSlice *x_slice = x.get_first_slice();
+      const TubeSlice *v_slice = v.get_first_slice();
+
+      while(x_slice != NULL)
+      {
+        ctc |= contract(*x_slice, *v_slice);
+        x_slice = x_slice->next_slice();
+        v_slice = v_slice->next_slice();
+      }
+    }
+    
+    if(t_propa & BACKWARD)
+    {
+      TubeSlice *x_slice = x.get_last_slice();
+      const TubeSlice *v_slice = v.get_last_slice();
+
+      while(x_slice != NULL)
+      {
+        ctc |= contract(*x_slice, *v_slice);
+        x_slice = x_slice->prev_slice();
+        v_slice = v_slice->prev_slice();
+      }
+    }
+
     // todo: optimized propagation, according to gates' updates
-    return ctc;
-  }
-
-  bool CtcDeriv::contract_fwd(TubeVector& x, const TubeVector& v) const // temporal forward
-  {
-    DomainException::check(x, v);
-    DimensionException::check(x, v);
-    SamplingException::check(x, v);
-
-    bool ctc = false;
-    TubeSlice *x_slice = x.get_first_slice();
-    const TubeSlice *v_slice = v.get_first_slice();
-
-    while(x_slice != NULL)
-    {
-      ctc |= contract(*x_slice, *v_slice);
-      x_slice = x_slice->next_slice();
-      v_slice = v_slice->next_slice();
-    }
-
-    return ctc;
-  }
-
-  bool CtcDeriv::contract_bwd(TubeVector& x, const TubeVector& v) const // temporal backward
-  {
-    DomainException::check(x, v);
-    DimensionException::check(x, v);
-    SamplingException::check(x, v);
-    
-    bool ctc = false;
-    TubeSlice *x_slice = x.get_last_slice();
-    const TubeSlice *v_slice = v.get_last_slice();
-    
-    while(x_slice != NULL)
-    {
-      ctc |= contract(*x_slice, *v_slice);
-      x_slice = x_slice->prev_slice();
-      v_slice = v_slice->prev_slice();
-    }
-
     return ctc;
   }
 

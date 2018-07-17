@@ -18,6 +18,15 @@
 
 namespace tubex
 {
+  enum TPropagation
+  {
+    FORWARD = 0x01,
+    BACKWARD = 0x02
+  };
+  
+  inline TPropagation operator|(TPropagation a, TPropagation b)
+  { return static_cast<TPropagation>(static_cast<int>(a) | static_cast<int>(b)); }
+
   /**
    * \brief Ctc class.
    */

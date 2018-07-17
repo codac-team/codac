@@ -30,13 +30,7 @@ namespace tubex
     public:
 
       CtcDeriv();
-
-      // TubeVector
-      bool contract(TubeVector& x, const TubeVector& v) const;
-      bool contract_fwd(TubeVector& x, const TubeVector& v) const;
-      bool contract_bwd(TubeVector& x, const TubeVector& v) const;
-
-      // TubeSlice
+      bool contract(TubeVector& x, const TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD) const;
       bool contract(TubeSlice& x, const TubeSlice& v) const;
 
     protected:
