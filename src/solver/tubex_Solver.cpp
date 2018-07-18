@@ -58,16 +58,16 @@ namespace tubex
 
           propagation(x, ctc_func, propa_fxpt_ratio);
 
-        emptiness = x.is_empty();
-      } while(!emptiness && (x.volume() / volume_before_refining) < (1. - refining_fxpt_ratio));
+        // 3. CID up to the fixed point
+      
+          emptiness = x.is_empty();
+          if(!emptiness)
+          {
+            cid(x, ctc_func, cid_fxpt_ratio);
+            emptiness = x.is_empty();
+          }
 
-      // 3. CID up to the fixed point
-    
-      //if(!emptiness)
-      //{
-      //  cid(x, ctc_func, cid_fxpt_ratio);
-      //  emptiness = x.is_empty();
-      //}
+      } while(!emptiness && (x.volume() / volume_before_refining) < (1. - refining_fxpt_ratio));
 
       // 4. Bisection
 
@@ -86,6 +86,7 @@ namespace tubex
 
           else
           {
+            cout << "bisect" << endl;
             pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
             s.push(p_x.first);
             s.push(p_x.second);
@@ -122,17 +123,17 @@ namespace tubex
     double t_bisection;
     x.max_gate_thickness(t_bisection);
     pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
-    //pair<TubeVector,TubeVector> p_x_1 = p_x.first.bisect(t_bisection);
-    //pair<TubeVector,TubeVector> p_x_2 = p_x.second.bisect(t_bisection);
+    pair<TubeVector,TubeVector> p_x_1 = p_x.first.bisect(t_bisection);
+    pair<TubeVector,TubeVector> p_x_2 = p_x.second.bisect(t_bisection);
     x.set_empty();
 
     stack<TubeVector> s;
-    s.push(p_x.first);
-    s.push(p_x.second);
-    //s.push(p_x_1.first);
-    //s.push(p_x_1.second);
-    //s.push(p_x_2.first);
-    //s.push(p_x_2.second);
+    //s.push(p_x.first);
+    //s.push(p_x.second);
+    s.push(p_x_1.first);
+    s.push(p_x_1.second);
+    s.push(p_x_2.first);
+    s.push(p_x_2.second);
 
     while(!s.empty())
     {

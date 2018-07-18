@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
   /* =========== SOLVER =========== */
 
     tubex::Solver solver;
-    vector<TubeVector> v_solutions = solver.solve(x, &contract, epsilon);
+    vector<TubeVector> v_solutions = solver.solve(x, &contract, epsilon, 0.05, 0.05, 1.);
 
   /* =========== GRAPHICS =========== */
 
