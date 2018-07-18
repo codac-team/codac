@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
 
   /* =========== SOLVER =========== */
 
-    tubex::Solver solver;
-    vector<TubeVector> v_solutions = solver.solve(x, &contract, epsilon, 0.05, 0.05, 1.);
+    tubex::Solver solver(epsilon, 0.005, 0.005, 1.);
+    vector<TubeVector> v_solutions = solver.solve(x, &contract);
 
   /* =========== GRAPHICS =========== */
 
@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
 
     for(int i = 0 ; i < v_solutions.size() ; i++)
     {
-      cout << (i+1) << ": " << v_solutions[i] <<  ", tf↦" << v_solutions[i][v_solutions[i].domain().ub()] << endl;
       ostringstream o; o << "solution_" << i;
       fig.add_tube(&v_solutions[i], o.str());
     }

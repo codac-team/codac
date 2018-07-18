@@ -18,17 +18,15 @@ using namespace ibex;
 
 namespace tubex
 {
-  Solver::Solver()
+  Solver::Solver(const Vector& max_thickness, float refining_fxpt_ratio, float propa_fxpt_ratio, float cid_fxpt_ratio)
   {
-
+    m_max_thickness = max_thickness;
+    m_refining_fxpt_ratio = refining_fxpt_ratio;
+    m_propa_fxpt_ratio = propa_fxpt_ratio;
+    m_cid_fxpt_ratio = cid_fxpt_ratio;
   }
 
-  const vector<TubeVector> Solver::solve(const TubeVector& x0,
-                                         void (*ctc_func)(TubeVector&),
-                                         const Vector& max_thickness,
-                                         float refining_fxpt_ratio,
-                                         float propa_fxpt_ratio,
-                                         float cid_fxpt_ratio)
+  const vector<TubeVector> Solver::solve(const TubeVector& x0, void (*ctc_func)(TubeVector&))
   {
     clock_t t_start = clock();
 
@@ -56,37 +54,32 @@ namespace tubex
 
         // 2. Propagations up to the fixed point
 
-          propagation(x, ctc_func, propa_fxpt_ratio);
+          propagation(x, ctc_func, m_propa_fxpt_ratio);
 
         // 3. CID up to the fixed point
       
           emptiness = x.is_empty();
           if(!emptiness)
           {
-            cid(x, ctc_func, cid_fxpt_ratio);
+            cid(x, ctc_func);
             emptiness = x.is_empty();
           }
 
-      } while(!emptiness && (x.volume() / volume_before_refining) < (1. - refining_fxpt_ratio));
+      } while(!emptiness && !stopping_condition_met(x) && (x.volume() / volume_before_refining) < (1. - m_refining_fxpt_ratio));
 
       // 4. Bisection
 
         if(!emptiness)
         {
-          int first_id_max_thickness;
-          Vector x_max_thickness = x.max_thickness(first_id_max_thickness);
-          double t_bisection = x.get_slice(first_id_max_thickness)->domain().mid();
-
-          bool is_thin_enough = true;
-          for(int i = 0 ; i < x.dim() ; i++)
-            is_thin_enough &= x_max_thickness[i] < max_thickness[i];
-
-          if(is_thin_enough)
+          if(stopping_condition_met(x))
             v_solutions.push_back(x);
 
           else
           {
-            cout << "bisect" << endl;
+            cout << "Bisection..." << endl;
+            int first_id_max_thickness;
+            x.max_thickness(first_id_max_thickness);
+            double t_bisection = x.get_slice(first_id_max_thickness)->domain().mid();
             pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
             s.push(p_x.first);
             s.push(p_x.second);
@@ -101,7 +94,22 @@ namespace tubex
     if(v_solutions.size() == 0)
       cout << "no solution found" << endl;
 
+    for(int i = 0 ; i < v_solutions.size() ; i++)
+      cout << (i+1) << ": "
+           << v_solutions[i] <<  ", tf↦" << v_solutions[i][v_solutions[i].domain().ub()]
+           << " (max thickness: " << v_solutions[i].max_thickness() << ")"
+           << endl;
+
     return v_solutions;
+  }
+
+  bool Solver::stopping_condition_met(const TubeVector& x)
+  {
+    Vector x_max_thickness = x.max_thickness();
+    for(int i = 0 ; i < x.dim() ; i++)
+      if(x_max_thickness[i] > m_max_thickness[i])
+        return false;
+    return true;
   }
 
   void Solver::propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio)
@@ -115,10 +123,10 @@ namespace tubex
       ctc_func(x);
       emptiness = x.is_empty();
       volume = x.volume();
-    } while(!emptiness && (volume / volume_before_ctc) < (1. - propa_fxpt_ratio));
+    } while(!emptiness && !stopping_condition_met(x) && (volume / volume_before_ctc) < (1. - propa_fxpt_ratio));
   }
 
-  void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&), float cid_fxpt_ratio)
+  void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
   {
     double t_bisection;
     x.max_gate_thickness(t_bisection);
@@ -139,7 +147,7 @@ namespace tubex
     {
       TubeVector branch_x = s.top();
       s.pop();
-      propagation(branch_x, ctc_func, cid_fxpt_ratio);
+      propagation(branch_x, ctc_func, m_cid_fxpt_ratio);
       x |= branch_x;
     }
   }

@@ -93,8 +93,8 @@ int main(int argc, char *argv[])
 
   /* =========== SOLVER =========== */
 
-    tubex::Solver solver;
-    vector<TubeVector> v_solutions = solver.solve(x, &contract, epsilon);
+    tubex::Solver solver(epsilon, 0.005, 0.005, 1.);
+    vector<TubeVector> v_solutions = solver.solve(x, &contract);
 
   /* =========== GRAPHICS =========== */
 
