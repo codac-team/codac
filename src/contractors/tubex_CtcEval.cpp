@@ -120,10 +120,16 @@ namespace tubex
 
       if(!z.is_empty())
       {
-        y.set(y.interpol(t.lb(), w), t.lb()); w.sample(t.lb()); y_.sample(t.lb());
-        y.set(y.interpol(t.ub(), w), t.ub()); w.sample(t.ub()); y_.sample(t.ub());
-        // Note: w is also sampled to stay compliant with y,
-        // the same for future comparison
+        y.set(y.interpol(t.lb(), w), t.lb()); w.sample(t.lb());
+        y.set(y.interpol(t.ub(), w), t.ub()); w.sample(t.ub());
+          
+        // Note: w is also sampled to stay compliant with y.
+        // The same for future comparison:
+        if(!m_preserve_slicing)
+        {
+          y_.sample(t.lb());
+          y_.sample(t.ub());
+        }
 
         CtcDeriv ctc_deriv;
         IntervalVector front_gate(y.dim());
