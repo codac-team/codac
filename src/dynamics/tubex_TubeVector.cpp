@@ -873,12 +873,15 @@ namespace tubex
 
     const IntervalVector TubeVector::integral(const Interval& t) const
     {
-      // todo: integral in case of unbounded tubes
+      // todo: more accurate output in case of unbounded tubes (evaluate each dimension separately)
       DomainException::check(*this, t);
       pair<IntervalVector,IntervalVector> partial_ti = partial_integral(t);
 
       if(partial_ti.first.is_empty() || partial_ti.second.is_empty())
         return IntervalVector(dim(), Interval::EMPTY_SET);
+
+      else if(partial_ti.first.is_unbounded() || partial_ti.second.is_unbounded())
+        return IntervalVector(dim(), Interval::ALL_REALS);
 
       else
         return IntervalVector(partial_ti.first.lb()) | partial_ti.second.ub();
@@ -886,7 +889,7 @@ namespace tubex
 
     const IntervalVector TubeVector::integral(const Interval& t1, const Interval& t2) const
     {
-      // todo: integral in case of unbounded tubes
+      // todo: more accurate output in case of unbounded tubes (evaluate each dimension separately)
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
 
@@ -899,6 +902,12 @@ namespace tubex
         return IntervalVector(dim(), Interval::EMPTY_SET);
       }
 
+      else if(integral_t1.first.is_unbounded() || integral_t1.second.is_unbounded() ||
+              integral_t2.first.is_unbounded() || integral_t2.second.is_unbounded())
+      {
+        return IntervalVector(dim(), Interval::ALL_REALS);
+      }
+
       else
       {
         Vector lb = (integral_t2.first - integral_t1.first).lb();
@@ -909,7 +918,7 @@ namespace tubex
 
     const pair<IntervalVector,IntervalVector> TubeVector::partial_integral(const Interval& t) const
     {
-      // todo: integral in case of unbounded tubes
+      // todo: more accurate output in case of unbounded tubes (evaluate each dimension separately)
       DomainException::check(*this, t);
 
       Interval intv_t;
@@ -923,6 +932,13 @@ namespace tubex
         {
           p_integ.first.set_empty();
           p_integ.second.set_empty();
+          return p_integ;
+        }
+
+        if(slice->codomain().is_unbounded())
+        {
+          p_integ.first = IntervalVector(dim(), Interval::ALL_REALS);
+          p_integ.second = IntervalVector(dim(), Interval::ALL_REALS);
           return p_integ;
         }
 

@@ -43,10 +43,10 @@ int main()
     int n = 1;
     Vector epsilon(n, 0.2);
     Interval domain(0.,2.);
-    TubeVector x(domain, IntervalVector(n, Interval(-999.,999.)));
+    TubeVector x(domain, n);
     Trajectory truth(domain, tubex::Function("0.5*exp(-t)*sin(2*t)"));
     x.set(IntervalVector(n, truth[domain.lb()]), domain.lb());
-    //x.set(IntervalVector(n, truth[domain.ub()]), domain.ub());
+    x.set(IntervalVector(n, truth[domain.ub()]), domain.ub());
 
   /* =========== SOLVER =========== */
 
