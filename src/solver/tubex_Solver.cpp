@@ -24,16 +24,29 @@ namespace tubex
     m_refining_fxpt_ratio = refining_fxpt_ratio;
     m_propa_fxpt_ratio = propa_fxpt_ratio;
     m_cid_fxpt_ratio = cid_fxpt_ratio;
+
+    // Embedded graphics
+    vibes::beginDrawing();
+    m_fig = new VibesFigure_Tube("Solver", max_thickness.size());
+    m_fig->set_properties(100,100,700,500);
   }
 
-  const vector<TubeVector> Solver::solve(const TubeVector& x0, void (*ctc_func)(TubeVector&))
+  Solver::~Solver()
   {
+    delete m_fig;
+    vibes::endDrawing();
+  }
+
+  const list<TubeVector> Solver::solve(const TubeVector& x0, void (*ctc_func)(TubeVector&))
+  {
+    int i = 0;
     clock_t t_start = clock();
+    m_fig->show(true);
 
     // todo: check dim max_thickness vector
     stack<TubeVector> s;
     s.push(x0);
-    vector<TubeVector> v_solutions;
+    list<TubeVector> l_solutions;
 
     while(!s.empty())
     {
@@ -72,7 +85,15 @@ namespace tubex
         if(!emptiness)
         {
           if(stopping_condition_met(x))
-            v_solutions.push_back(x);
+          {
+            l_solutions.push_back(x);
+
+            // Displaying solution
+            ostringstream o; o << "solution_" << i;
+            m_fig->add_tube(&l_solutions.back(), o.str());
+            m_fig->show(true);
+            i++;
+          }
 
           else
           {
@@ -84,21 +105,31 @@ namespace tubex
           }
         }
 
-      cout << "\rsolutions: " << v_solutions.size() << "  (" << (int)((double)(clock() - t_start)/CLOCKS_PER_SEC) << "s)   " << flush;
+      cout << "\rsolutions: " << l_solutions.size() << "  (" << (int)((double)(clock() - t_start)/CLOCKS_PER_SEC) << "s)   " << flush;
     }
 
     cout << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
-    if(v_solutions.size() == 0)
+    if(l_solutions.size() == 0)
       cout << "no solution found" << endl;
 
-    for(int i = 0 ; i < v_solutions.size() ; i++)
-      cout << (i+1) << ": "
-           << v_solutions[i] <<  ", tf↦" << v_solutions[i][v_solutions[i].domain().ub()]
-           << " (max thickness: " << v_solutions[i].max_thickness() << ")"
+    int j = 0;
+    list<TubeVector>::iterator it;
+    for(it = l_solutions.begin(); it != l_solutions.end(); ++it)
+    {
+      j++;
+      cout << j << ": "
+           << *it <<  ", tf↦" << (*it)[it->domain().ub()]
+           << " (max thickness: " << it->max_thickness() << ")"
            << endl;
+    }
 
-    return v_solutions;
+    return l_solutions;
+  }
+
+  VibesFigure_Tube* Solver::figure()
+  {
+    return m_fig;
   }
 
   bool Solver::stopping_condition_met(const TubeVector& x)
@@ -150,10 +181,11 @@ namespace tubex
     }
   }
   
-  bool Solver::solution_encloses(const vector<TubeVector>& v_solutions, const TrajectoryVector& truth)
+  bool Solver::solution_encloses(const list<TubeVector>& l_solutions, const TrajectoryVector& truth)
   {
-    for(int i = 0 ; i < v_solutions.size() ; i++)
-      if(v_solutions[i].encloses(truth))
+    list<TubeVector>::const_iterator it;
+    for(it = l_solutions.begin(); it != l_solutions.end(); ++it)
+      if(it->encloses(truth))
         return true;
     return false;
   }

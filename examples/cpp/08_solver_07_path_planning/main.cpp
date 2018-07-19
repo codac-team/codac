@@ -8,7 +8,7 @@ using namespace tubex;
 double obstacle_radius = 0.95;
 
 void createObstacles(vector<IntervalVector>& v_obstacles);
-void displayPathPlanningMap(const vector<TubeVector>& v_x, const vector<IntervalVector>& v_obstacles);
+void displayPathPlanningMap(const list<TubeVector>& l_x, const vector<IntervalVector>& v_obstacles);
 
 void contract(TubeVector& x)
 {
@@ -94,17 +94,17 @@ int main(int argc, char *argv[])
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon, 0.005, 0.005, 1.);
-    vector<TubeVector> v_solutions = solver.solve(x, &contract);
+    list<TubeVector> l_solutions = solver.solve(x, &contract);
 
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    displayPathPlanningMap(v_solutions, v_obstacles);
+    displayPathPlanningMap(l_solutions, v_obstacles);
     vibes::endDrawing();
 
 
   // Checking if this example is still working:
-  return (!v_solutions.empty()) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (!l_solutions.empty()) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 void createObstacles(vector<IntervalVector>& v_obstacles)
@@ -130,7 +130,7 @@ void createObstacles(vector<IntervalVector>& v_obstacles)
   }
 }
 
-void displayPathPlanningMap(const vector<TubeVector>& v_x, const vector<IntervalVector>& v_obstacles)
+void displayPathPlanningMap(const list<TubeVector>& l_x, const vector<IntervalVector>& v_obstacles)
 {
   const string fig_name = "Map (top view): [x](·)x[y](·)";
   const int slices_number_to_display = 500;
@@ -143,17 +143,18 @@ void displayPathPlanningMap(const vector<TubeVector>& v_x, const vector<Interval
   for(int i = 0 ; i < v_obstacles.size() ; i++)
     vibes::drawCircle(v_obstacles[i][0].mid(), v_obstacles[i][1].mid(), obstacle_radius, "#779CA3[#A5C8CE]", vibesParams("figure", fig_name));
 
-  for(int k = 0 ; k < v_x.size() ; k++)
+  list<TubeVector>::const_iterator it;
+  for(it = l_x.begin(); it != l_x.end(); ++it)
   {
     // Robot's tubes projection
     int startpoint;
-    for(int i = 0 ; i < v_x[k].nb_slices() ; i += max((int)(v_x[k].nb_slices() / slices_number_to_display), 1))
+    for(int i = 0 ; i < it->nb_slices() ; i += max((int)(it->nb_slices() / slices_number_to_display), 1))
       startpoint = i;
 
-    for(int i = startpoint ; i >= 0; i -= max((int)(v_x[k].nb_slices() / slices_number_to_display), 1))
+    for(int i = startpoint ; i >= 0; i -= max((int)(it->nb_slices() / slices_number_to_display), 1))
     {
-      Interval intv_x = v_x[k][i][0];
-      Interval intv_y = v_x[k][i][1];
+      Interval intv_x = (*it)[i][0];
+      Interval intv_y = (*it)[i][1];
       if(!intv_x.is_unbounded() && !intv_y.is_unbounded())
         vibes::drawBox(intv_x.lb(), intv_x.ub(), intv_y.lb(), intv_y.ub(),
                        "#DEDEDE[#DEDEDE]", vibesParams("figure", fig_name));

@@ -13,9 +13,10 @@
 #ifndef __TUBEX_SOLVER_H__
 #define __TUBEX_SOLVER_H__
 
-#include <vector>
+#include <list>
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
+#include "tubex_VibesFigure_Tube.h"
 
 namespace tubex
 {
@@ -27,8 +28,10 @@ namespace tubex
              float refining_fxpt_ratio = 0.005,
              float propa_fxpt_ratio = 0.005,
              float cid_fxpt_ratio = 0.005);
-      const std::vector<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
-      bool solution_encloses(const std::vector<TubeVector>& v_solutions, const TrajectoryVector& truth);
+      ~Solver();
+      const std::list<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
+      VibesFigure_Tube* figure();
+      bool solution_encloses(const std::list<TubeVector>& v_solutions, const TrajectoryVector& truth);
 
     protected:
       
@@ -40,6 +43,9 @@ namespace tubex
       float m_refining_fxpt_ratio;
       float m_propa_fxpt_ratio;
       float m_cid_fxpt_ratio;
+
+      // Embedded graphics
+      VibesFigure_Tube *m_fig = NULL;
   };
 }
 

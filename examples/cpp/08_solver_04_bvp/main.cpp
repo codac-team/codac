@@ -48,27 +48,12 @@ int main(int argc, char *argv[])
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon, 0.005, 0.005, 1.);
-    vector<TubeVector> v_solutions = solver.solve(x, &contract);
-
-  /* =========== GRAPHICS =========== */
-
-    vibes::beginDrawing();
-    VibesFigure_Tube fig("Solver", x.dim());
-    fig.set_properties(100,100,700,500);
-    fig.add_trajectory(&truth1, "truth1", "blue");
-    fig.add_trajectory(&truth2, "truth2", "red");
-
-    for(int i = 0 ; i < v_solutions.size() ; i++)
-    {
-      ostringstream o; o << "solution_" << i;
-      fig.add_tube(&v_solutions[i], o.str());
-    }
-
-    fig.show(true);
-    vibes::endDrawing();
+    solver.figure()->add_trajectory(&truth1, "truth1", "blue");
+    solver.figure()->add_trajectory(&truth2, "truth2", "red");
+    list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 
   // Checking if this example is still working:
-  return (solver.solution_encloses(v_solutions, truth1)
-       && solver.solution_encloses(v_solutions, truth2)) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (solver.solution_encloses(l_solutions, truth1)
+       && solver.solution_encloses(l_solutions, truth2)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
