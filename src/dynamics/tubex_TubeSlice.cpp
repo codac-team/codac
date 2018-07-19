@@ -417,7 +417,6 @@ namespace tubex
     
     const TubeSlice& TubeSlice::inflate(double rad)
     {
-      // todo: simplify with simple addition
       IntervalVector e(dim(), Interval(-rad,rad));
       set_envelope(m_codomain + e);
       set_input_gate(*m_input_gate + e);

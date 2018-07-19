@@ -21,10 +21,6 @@
 
 #define SERIALIZATION_VERSION 2
 
-// todo:
-// - test memory leaks
-// - custom propagation fixed point
-
 namespace tubex
 {
   class Fnc;
