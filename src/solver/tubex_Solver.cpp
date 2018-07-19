@@ -78,7 +78,9 @@ namespace tubex
             emptiness = x.is_empty();
           }
 
-      } while(!emptiness && !stopping_condition_met(x) && (x.volume() / volume_before_refining) < (1. - m_refining_fxpt_ratio));
+      } while(!emptiness
+           && !stopping_condition_met(x)
+           && !fixed_point_reached(x.dim(), volume_before_refining, x.volume(), m_refining_fxpt_ratio));
 
       // 4. Bisection
 
@@ -141,18 +143,24 @@ namespace tubex
     return true;
   }
 
+  bool Solver::fixed_point_reached(int n, double volume_before, double volume_after, float fxpt_ratio)
+  {
+    return (pow(volume_after, 1./n) / pow(volume_before, 1./n)) > (1. - fxpt_ratio);
+  }
+
   void Solver::propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio)
   {
     bool emptiness;
-    double volume, volume_before_ctc;
+    double volume_before_ctc;
 
     do
     {
       volume_before_ctc = x.volume();
       ctc_func(x);
       emptiness = x.is_empty();
-      volume = x.volume();
-    } while(!emptiness && !stopping_condition_met(x) && (volume / volume_before_ctc) < (1. - propa_fxpt_ratio));
+    } while(!emptiness
+         && !stopping_condition_met(x)
+         && !fixed_point_reached(x.dim(), volume_before_ctc, x.volume(), propa_fxpt_ratio));
   }
 
   void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
