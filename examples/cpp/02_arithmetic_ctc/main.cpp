@@ -30,7 +30,7 @@ void constraintNetwork(Tube& x, Tube& y, Tube& ydot, Tube& a, Tube& p, Tube& q)
   q &= 2*sin(0.5*a) + sqr(p*2);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   /* =========== PARAMETERS =========== */
 

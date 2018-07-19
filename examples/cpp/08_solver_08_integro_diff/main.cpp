@@ -36,7 +36,7 @@ void contract(TubeVector& x)
   ctc_deriv.contract(x, IntervalVector(x.dim(), 1.) - 2.*x - 5.*x.primitive(), FORWARD | BACKWARD);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   /* =========== PARAMETERS =========== */
 

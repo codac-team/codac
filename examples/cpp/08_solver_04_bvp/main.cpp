@@ -34,7 +34,7 @@ void contract(TubeVector& x)
     ctc_deriv.contract(x, f.eval(x));
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   /* =========== PARAMETERS =========== */
 

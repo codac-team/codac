@@ -341,7 +341,7 @@ class FncDelayCustom : public tubex::Fnc
 #endif
 
 
-int main(int argc, char *argv[])
+int main()
 {
   /* =========== PARAMETERS =========== */
 

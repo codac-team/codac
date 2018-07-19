@@ -59,7 +59,7 @@ void contract(TubeVector& x)
   }
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   /* =========== PARAMETERS =========== */
 

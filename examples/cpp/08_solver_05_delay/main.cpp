@@ -77,7 +77,7 @@ void contract(TubeVector& x)
   ctc_deriv.contract(x, exp(delay) * y);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   /* =========== PARAMETERS =========== */
 

@@ -59,7 +59,7 @@ bool ctcLoc(const pair<float,float>& beacon,
   return x_old != x || xdot_old != xdot || y_old != y || ydot_old != ydot || theta_old != theta || thetadot_old != thetadot || v_old != v || vdot_old != vdot || g_old != g || gdot_old != gdot;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
   /* =========== PARAMETERS =========== */
 

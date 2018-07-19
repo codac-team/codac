@@ -4,7 +4,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-int main(int argc, char *argv[])
+int main()
 {
   IntervalVector *test = new IntervalVector(2);
   delete test;

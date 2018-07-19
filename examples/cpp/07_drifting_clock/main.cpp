@@ -19,7 +19,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-int main(int argc, char *argv[])
+int main()
 {
   /* =========== PARAMETERS =========== */
 
