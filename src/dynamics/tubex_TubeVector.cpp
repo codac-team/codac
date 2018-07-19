@@ -99,8 +99,12 @@ namespace tubex
     {
       DomainException::check(domain);
       DomainException::check(timestep);
-      // todo: check nb of input args (one only)
-      *this = f.eval(TubeVector(*this, IntervalVector(1)));
+      if(f.nb_vars() != 0)
+        throw Exception("TubeVector constructor",
+                        "function's inputs not limited to system variable");
+      // A copy of this is sent anyway in order to know the data structure to produce
+      TubeVector input(*this, IntervalVector(1)); // 1: one variable (system variable t)
+      *this = f.eval(input);
     }
 
     TubeVector::TubeVector(const TubeVector& x)
