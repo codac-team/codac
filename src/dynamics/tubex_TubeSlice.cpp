@@ -194,18 +194,9 @@ namespace tubex
 
     const IntervalVector TubeSlice::interpol(double t, const TubeSlice& v) const
     {
-      DomainException::check(*this, t);
       DomainException::check(*this, v);
       DimensionException::check(*this, v);
-
       return interpol(Interval(t), v);
-
-      #if false // todo: check this old implementation (faster?)
-        DomainException::check(*this, v);
-        EmptyException::check(v);
-        return (output_gate() - (m_domain.ub() - t) * v.codomain())
-             & (input_gate() + (t - m_domain.lb()) * v.codomain());
-      #endif
     }
 
     const IntervalVector TubeSlice::interpol(const Interval& t, const TubeSlice& v) const
@@ -216,6 +207,10 @@ namespace tubex
 
       if(domain().is_subset(t))
         return codomain();
+
+      else if(t.is_degenerated())
+        return (output_gate() - (m_domain.ub() - t) * v.codomain())
+             & (input_gate() + (t - m_domain.lb()) * v.codomain());
 
       else
       {
