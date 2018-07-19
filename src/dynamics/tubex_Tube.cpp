@@ -212,11 +212,6 @@ namespace tubex
     {
       return TubeVector::max_thickness()[0];
     }
-
-    double Tube::max_thickness(int& first_id_max_thickness) const
-    {
-      return TubeVector::max_thickness(first_id_max_thickness)[0];
-    }
     
     double Tube::max_gate_thickness(double& t) const
     {

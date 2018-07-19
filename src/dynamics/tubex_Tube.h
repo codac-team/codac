@@ -48,7 +48,9 @@ namespace tubex
       using TubeVector::get_first_slice;
       using TubeVector::get_last_slice;
       using TubeVector::get_wider_slice;
+      using TubeVector::get_largest_slice;
       using TubeVector::input2index;
+      using TubeVector::index;
       using TubeVector::sample;
       void sample(double t, const ibex::Interval& gate);
       using TubeVector::share_same_slicing;
@@ -67,7 +69,6 @@ namespace tubex
       const ibex::Interval interpol(double t, const Tube& v) const;
       const ibex::Interval interpol(const ibex::Interval& t, const Tube& v) const;
       double max_thickness() const;
-      double max_thickness(int& first_id_max_thickness) const;
       double max_gate_thickness(double& t) const;
 
       // Tests

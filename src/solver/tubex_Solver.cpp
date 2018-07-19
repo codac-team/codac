@@ -77,9 +77,7 @@ namespace tubex
           else
           {
             cout << "Bisection..." << endl;
-            int first_id_max_thickness;
-            x.max_thickness(first_id_max_thickness);
-            double t_bisection = x.get_slice(first_id_max_thickness)->domain().mid();
+            double t_bisection = x.get_largest_slice()->domain().mid();
             pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
             s.push(p_x.first);
             s.push(p_x.second);

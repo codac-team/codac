@@ -69,7 +69,10 @@ namespace tubex
       const TubeSlice* get_last_slice() const;
       TubeSlice* get_wider_slice();
       const TubeSlice* get_wider_slice() const;
+      TubeSlice* get_largest_slice();
+      const TubeSlice* get_largest_slice() const;
       int input2index(double t) const;
+      int index(const TubeSlice* slice) const;
       void sample(double t);
       void sample(double t, const ibex::IntervalVector& gate);
       static bool share_same_slicing(const TubeVector& x1, const TubeVector& x2);
@@ -88,7 +91,6 @@ namespace tubex
       const ibex::IntervalVector interpol(double t, const TubeVector& v) const;
       const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& v) const;
       const ibex::Vector max_thickness() const;
-      const ibex::Vector max_thickness(int& first_id_max_thickness) const;
       const ibex::Vector max_gate_thickness(double& t) const;
 
       // Tests

@@ -287,6 +287,34 @@ namespace tubex
       return wider_slice;
     }
 
+    TubeSlice* TubeVector::get_largest_slice()
+    {
+      return const_cast<TubeSlice*>(static_cast<const TubeVector&>(*this).get_largest_slice());
+    }
+
+    const TubeSlice* TubeVector::get_largest_slice() const
+    {
+      int i = 0;
+      double max_diam = 0.;
+      const TubeSlice *slice = get_first_slice(), *largest = slice;
+
+      while(slice != NULL)
+      {
+        if(slice->codomain().is_unbounded())
+          return slice;
+
+        if(slice->codomain().max_diam() > max_diam)
+        {
+          max_diam = slice->codomain().max_diam();
+          largest = slice;
+        }
+
+        slice = slice->next_slice();
+      }
+
+      return largest;
+    }
+
     int TubeVector::input2index(double t) const
     {
       DomainException::check(*this, t);
@@ -301,6 +329,19 @@ namespace tubex
         slice = slice->next_slice();
       }
 
+      return i;
+    }
+
+    int TubeVector::index(const TubeSlice* slice) const // todo: test this
+    {
+      int i = 0;
+      const TubeSlice *it = get_first_slice();
+      while(it != NULL && it != slice)
+      {
+        it = it->next_slice();
+        if(it == NULL) return -1;
+        i++;
+      }
       return i;
     }
 
@@ -553,37 +594,13 @@ namespace tubex
 
     const Vector TubeVector::max_thickness() const
     {
-      int first_id_max_thickness;
-      return max_thickness(first_id_max_thickness);
-    }
+      const TubeSlice *largest = get_largest_slice();
 
-    const Vector TubeVector::max_thickness(int& first_id_max_thickness) const
-    {
-      int i = 0;
-      double max_diam = 0.;
-      Vector max_thickness(dim(), 0.);
+      if(largest->codomain().is_unbounded())
+        return Vector(dim(), numeric_limits<double>::infinity());
 
-      const TubeSlice *slice = get_first_slice();
-      while(slice != NULL)
-      {
-        if(slice->codomain().is_unbounded())
-        {
-          first_id_max_thickness = i;
-          return Vector(dim(), numeric_limits<double>::infinity());
-        }
-
-        if(slice->codomain().max_diam() > max_diam)
-        {
-          max_diam = slice->codomain().max_diam();
-          max_thickness = slice->codomain().diam();
-          first_id_max_thickness = i;
-        }
-
-        slice = slice->next_slice();
-        i++;
-      }
-
-      return max_thickness;
+      else
+        return largest->codomain().diam();
     }
 
     const Vector TubeVector::max_gate_thickness(double& t) const
@@ -856,24 +873,43 @@ namespace tubex
 
     const IntervalVector TubeVector::integral(const Interval& t) const
     {
+      // todo: integral in case of unbounded tubes
       DomainException::check(*this, t);
       pair<IntervalVector,IntervalVector> partial_ti = partial_integral(t);
-      return IntervalVector(partial_ti.first.lb()) | partial_ti.second.ub();
+
+      if(partial_ti.first.is_empty() || partial_ti.second.is_empty())
+        return IntervalVector(dim(), Interval::EMPTY_SET);
+
+      else
+        return IntervalVector(partial_ti.first.lb()) | partial_ti.second.ub();
     }
 
     const IntervalVector TubeVector::integral(const Interval& t1, const Interval& t2) const
     {
+      // todo: integral in case of unbounded tubes
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
+
       pair<IntervalVector,IntervalVector> integral_t1 = partial_integral(t1);
       pair<IntervalVector,IntervalVector> integral_t2 = partial_integral(t2);
-      Vector lb = (integral_t2.first - integral_t1.first).lb();
-      Vector ub = (integral_t2.second - integral_t1.second).ub();
-      return IntervalVector(lb) | ub;
+
+      if(integral_t1.first.is_empty() || integral_t1.second.is_empty() ||
+         integral_t2.first.is_empty() || integral_t2.second.is_empty())
+      {
+        return IntervalVector(dim(), Interval::EMPTY_SET);
+      }
+
+      else
+      {
+        Vector lb = (integral_t2.first - integral_t1.first).lb();
+        Vector ub = (integral_t2.second - integral_t1.second).ub();
+        return IntervalVector(lb) | ub;
+      }
     }
 
     const pair<IntervalVector,IntervalVector> TubeVector::partial_integral(const Interval& t) const
     {
+      // todo: integral in case of unbounded tubes
       DomainException::check(*this, t);
 
       Interval intv_t;
@@ -883,6 +919,13 @@ namespace tubex
 
       while(slice != NULL && slice->domain().lb() < t.ub())
       {
+        if(slice->codomain().is_empty())
+        {
+          p_integ.first.set_empty();
+          p_integ.second.set_empty();
+          return p_integ;
+        }
+
         // From t0 to tlb
 
           intv_t = slice->domain() & Interval(domain().lb(), t.lb());
@@ -890,7 +933,6 @@ namespace tubex
           {
             p_integ.first += intv_t.diam() * slice->codomain().lb();
             p_integ.second += intv_t.diam() * slice->codomain().ub();
-
             p_integ_uncertain = p_integ;
           }
 
