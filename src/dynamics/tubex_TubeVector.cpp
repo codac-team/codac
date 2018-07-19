@@ -336,7 +336,7 @@ namespace tubex
       return i;
     }
 
-    int TubeVector::index(const TubeSlice* slice) const // todo: test this
+    int TubeVector::index(const TubeSlice* slice) const
     {
       int i = 0;
       const TubeSlice *it = get_first_slice();
@@ -643,106 +643,64 @@ namespace tubex
 
     // Tests
 
+    #define test_content(f, bool_output) \
+      \
+      DimensionException::check(*this, x); \
+      SlicingException::check(*this, x); \
+      const TubeSlice *slice = get_first_slice(), *slice_x = x.get_first_slice(); \
+      while(slice != NULL) \
+      { \
+        if(slice->f(*slice_x)) \
+          return bool_output; \
+        slice = slice->next_slice(); \
+        slice_x = slice_x->next_slice(); \
+      } \
+      return !bool_output;
+
     bool TubeVector::operator==(const TubeVector& x) const
     {
-      DimensionException::check(*this, x);
-      // todo: common with other same-type methods
       if(x.nb_slices() != nb_slices())
         return false;
-
-      const TubeSlice *slice = get_first_slice(), *slice_x = x.get_first_slice();
-      while(slice != NULL)
-      {
-        if(*slice != *slice_x)
-          return false;
-        slice = slice->next_slice();
-        slice_x = slice_x->next_slice();
-      }
-
-      return true;
+      test_content(operator!=, false);
     }
 
     bool TubeVector::operator!=(const TubeVector& x) const
     {
-      DimensionException::check(*this, x);
-      // todo: common with other same-type methods
       if(x.nb_slices() != nb_slices())
         return true;
-
-      const TubeSlice *slice = get_first_slice(), *slice_x = x.get_first_slice();
-      while(slice != NULL)
-      {
-        if(*slice != *slice_x)
-          return true;
-        slice = slice->next_slice();
-        slice_x = slice_x->next_slice();
-      }
-      
-      return false;
+      test_content(operator!=, true);
     }
 
     bool TubeVector::is_subset(const TubeVector& x) const
     {
-      DimensionException::check(*this, x);
-      SlicingException::check(*this, x);
-      // todo: common with other same-type methods
-
-      const TubeSlice *slice = get_first_slice(), *slice_x = x.get_first_slice();
-      while(slice != NULL)
-      {
-        if(slice->is_subset(*slice_x))
-          return true;
-        slice = slice->next_slice();
-        slice_x = slice_x->next_slice();
-      }
-      
-      return false;
+      test_content(is_subset, true);
     }
 
     bool TubeVector::is_strict_subset(const TubeVector& x) const
     {
-      DimensionException::check(*this, x);
-      SlicingException::check(*this, x);
-      // todo: common with other same-type methods
-
-      const TubeSlice *slice = get_first_slice(), *slice_x = x.get_first_slice();
-      while(slice != NULL)
-      {
-        if(slice->is_strict_subset(*slice_x))
-          return true;
-        slice = slice->next_slice();
-        slice_x = slice_x->next_slice();
-      }
-      
-      return false;
+      test_content(is_strict_subset, true);
     }
 
     bool TubeVector::is_empty() const
     {
-      // todo: common with other same-type methods
-
       const TubeSlice *slice = get_first_slice();
       while(slice != NULL)
       {
-        if(slice->is_empty())
-          return true;
+        if(slice->is_empty()) return true;
         slice = slice->next_slice();
       }
-      
       return false;
     }
 
     bool TubeVector::encloses(const TrajectoryVector& x) const
     {
-      // todo: common with other same-type methods
       DomainException::check(*this, x);
       DimensionException::check(*this, x);
 
       const TubeSlice *slice = get_first_slice();
       while(slice != NULL)
       {
-        if(!slice->encloses(x))
-          return false;
+        if(!slice->encloses(x)) return false;
         slice = slice->next_slice();
       }
       
