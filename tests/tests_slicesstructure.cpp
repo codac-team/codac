@@ -11,7 +11,6 @@ TEST_CASE("input2index")
   SECTION("input2index")
   {
     Tube tube = tube_test_1();
-
     CHECK(tube.input2index(0.0) == 0);
     CHECK(tube.input2index(0.1) == 0);
     CHECK(tube.input2index(0.5) == 0);
@@ -22,6 +21,17 @@ TEST_CASE("input2index")
     CHECK(tube.input2index(46.0) == 45);
     CHECK(tube.input2index(tube.domain().ub()) == 45);
     CHECK(tube.nb_slices() == 46);
+  }
+
+  SECTION("index")
+  {
+    Tube tube = tube_test_1();
+    CHECK_THROWS(tube.index(tube.get_slice(-1)) == 3);
+    CHECK(tube.index(tube.get_slice(0)) == 0);
+    CHECK(tube.index(tube.get_slice(3)) == 3);
+    CHECK(tube.index(tube.get_slice(45)) == 45);
+    CHECK(tube.index(tube.get_first_slice()) == 0);
+    CHECK(tube.index(tube.get_last_slice()) == 45);
   }
 }
 
