@@ -17,7 +17,8 @@
 
   target_link_libraries(solver_01_picard
     ${LIBS}
-    tubex-lib)
+    tubex-core
+    tubex-solver)
 
 
 # Tests

@@ -17,7 +17,8 @@
 
   target_link_libraries(solver_08_integro_diff
     ${LIBS}
-    tubex-lib)
+    tubex-core
+    tubex-solver)
 
 
 # Tests

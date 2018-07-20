@@ -17,7 +17,7 @@
 
   target_link_libraries(ex_lissajous
     ${LIBS}
-    tubex-lib)
+    tubex-core)
 
 
 # Tests

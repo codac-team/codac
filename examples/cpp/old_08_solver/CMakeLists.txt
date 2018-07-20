@@ -17,7 +17,8 @@
 
   target_link_libraries(ex_solver
     ${LIBS}
-    tubex-lib)
+    tubex-core
+    tubex-solver)
 
 
 # Tests

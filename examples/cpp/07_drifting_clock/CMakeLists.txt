@@ -17,7 +17,7 @@
 
   target_link_libraries(ex_drifting_clock
     ${LIBS}
-    tubex-lib)
+    tubex-core)
 
 
 # Tests

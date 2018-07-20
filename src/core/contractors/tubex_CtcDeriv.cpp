@@ -62,7 +62,6 @@ namespace tubex
       }
     }
 
-    // todo: optimized propagation, according to gates' updates
     return ctc;
   }
 

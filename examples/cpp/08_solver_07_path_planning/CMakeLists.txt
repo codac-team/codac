@@ -17,7 +17,8 @@
 
   target_link_libraries(solver_07_path_planning
     ${LIBS}
-    tubex-lib)
+    tubex-core
+    tubex-solver)
 
 
 # Tests

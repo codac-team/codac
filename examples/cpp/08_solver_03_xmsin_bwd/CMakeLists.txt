@@ -17,7 +17,8 @@
 
   target_link_libraries(solver_03_xmsin_bwd
     ${LIBS}
-    tubex-lib)
+    tubex-core
+    tubex-solver)
 
 
 # Tests

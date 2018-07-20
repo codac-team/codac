@@ -17,7 +17,7 @@
 
   target_link_libraries(ex_integ_msinx
     ${LIBS}
-    tubex-lib)
+    tubex-core)
 
 
 # Tests

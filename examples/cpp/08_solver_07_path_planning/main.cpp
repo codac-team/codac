@@ -1,5 +1,6 @@
 #include "ibex.h"
 #include "tubex.h"
+#include "tubex-solver.h"
 
 using namespace std;
 using namespace ibex;

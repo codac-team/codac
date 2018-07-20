@@ -17,7 +17,7 @@
 
   target_link_libraries(ex_arithmetic_ctc
     ${LIBS}
-    tubex-lib)
+    tubex-core)
 
 
 # Tests

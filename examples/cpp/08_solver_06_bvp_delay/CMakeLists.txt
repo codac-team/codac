@@ -17,7 +17,8 @@
 
   target_link_libraries(solver_06_bvp_delay
     ${LIBS}
-    tubex-lib)
+    tubex-core
+    tubex-solver)
 
 
 # Tests
