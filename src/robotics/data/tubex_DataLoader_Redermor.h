@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DataLoader class
+ *  tubex-lib - DataLoader_Redermor class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,23 +10,24 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_DataLoader.h"
-#include "tubex_Exception.h"
+#ifndef __TUBEX_DATALOADER_REDERMOR_H__
+#define __TUBEX_DATALOADER_REDERMOR_H__
 
-using namespace std;
+#include "ibex_Interval.h"
+#include "tubex_DataLoader.h"
 
 namespace tubex
 {
-  DataLoader::DataLoader(const string& file_path)
+  class DataLoader_Redermor : DataLoader
   {
-    m_datafile = new ifstream();
-    m_datafile->open(file_path.c_str(), std::ios_base::out);
-    if(!m_datafile->is_open())
-      throw Exception("DataLoader constructor", "unable to load data file");
-  }
+    public:
 
-  DataLoader::~DataLoader()
-  {
-    delete m_datafile;
-  }
+      DataLoader_Redermor(const std::string& file_path);
+      bool loadData(TubeVector& x, const ibex::Interval& domain = ibex::Interval::ALL_REALS);
+
+    protected:
+
+  };
 }
+
+#endif
