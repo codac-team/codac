@@ -115,7 +115,7 @@ namespace tubex
     TubeVector::TubeVector(const TubeVector& x, const IntervalVector& codomain)
       : TubeVector(x)
     {
-      DimensionException::check(x, codomain);
+      resize(codomain.size());
       set(codomain);
     }
 
@@ -214,6 +214,16 @@ namespace tubex
     int TubeVector::dim() const
     {
       return m_v_slices[0]->dim();
+    }
+
+    void TubeVector::resize(int n)
+    {
+      TubeSlice *slice = get_first_slice();
+      while(slice != NULL)
+      {
+        slice->resize(n);
+        slice = slice->next_slice();
+      }
     }
   
     // Slices structure
@@ -784,6 +794,33 @@ namespace tubex
         if(slice == first_slice)
           slice->set_input_gate(slice->input_gate() + e);
         slice->set_output_gate(slice->output_gate() + e);
+        slice = slice->next_slice();
+      }
+
+      return *this;
+    }
+
+    const TubeVector& TubeVector::inflate(const TrajectoryVector& rad)
+    {
+      DimensionException::check(*this, rad);
+      DomainException::check(*this, rad);
+      TubeSlice *slice = get_first_slice();
+      TubeSlice *first_slice = slice;
+
+      // Setting envelopes before gates' inflation
+      while(slice != NULL)
+      {
+        slice->set_envelope(slice->codomain() + Interval(-1.,1.) * rad[slice->domain()]);
+        slice = slice->next_slice();
+      }
+
+      slice = first_slice;
+
+      while(slice != NULL)
+      {
+        if(slice == first_slice)
+          slice->set_input_gate(slice->input_gate() + Interval(-1.,1.) * rad[slice->domain().lb()]);
+        slice->set_output_gate(slice->output_gate() + Interval(-1.,1.) * rad[slice->domain().ub()]);
         slice = slice->next_slice();
       }
 

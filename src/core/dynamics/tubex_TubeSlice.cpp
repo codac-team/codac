@@ -434,6 +434,13 @@ namespace tubex
 
   // Protected methods
 
+    void TubeSlice::resize(int n)
+    {
+      m_codomain.resize(n);
+      m_input_gate->resize(n);
+      m_output_gate->resize(n);
+    }
+
     void TubeSlice::set_tube_ref(TubeVector *tube_ref)
     {
       m_tube_ref = tube_ref;

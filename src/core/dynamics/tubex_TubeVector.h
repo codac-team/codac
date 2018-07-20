@@ -52,6 +52,7 @@ namespace tubex
       const TubeVector& operator=(const TubeVector& x);
       const ibex::Interval domain() const;
       int dim() const;
+      void resize(int n);
 
       // Slices structure
       int nb_slices() const;
@@ -104,6 +105,7 @@ namespace tubex
       void set(const ibex::IntervalVector& y, const ibex::Interval& t);
       void set_empty();
       const TubeVector& inflate(double rad);
+      const TubeVector& inflate(const TrajectoryVector& rad);
 
       // Bisection
       const std::pair<TubeVector,TubeVector> bisect(double t, float ratio = 0.55) const;

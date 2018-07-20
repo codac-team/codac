@@ -98,6 +98,7 @@ namespace tubex
 
     protected:
 
+      void resize(int n);
       void set_tube_ref(TubeVector *tube_ref);
       void set_domain(const ibex::Interval& domain);
       const ibex::IntervalVector codomain_box() const;

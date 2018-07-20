@@ -23,7 +23,9 @@ namespace tubex
     public:
 
       DataLoader_Redermor(const std::string& file_path);
-      bool loadData(TubeVector& x, const ibex::Interval& domain = ibex::Interval::ALL_REALS);
+      void load_data(TubeVector *&x,
+                     TrajectoryVector *&truth,
+                     const ibex::Interval& domain = ibex::Interval::ALL_REALS);
 
     protected:
 

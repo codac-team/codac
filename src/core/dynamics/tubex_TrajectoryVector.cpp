@@ -215,11 +215,18 @@ namespace tubex
 
   const Vector& TrajectoryVector::set(double t, const Vector& y)
   {
-    if(!not_defined()) DimensionException::check(*this, y);
+    if(not_defined())
+      m_codomain = IntervalVector(y);
+
+    else
+    {
+      DimensionException::check(*this, y);
+      m_codomain |= y;
+    }
+
     m_map_values.erase(t);
     m_map_values.emplace(t, y);
     m_domain |= t;
-    m_codomain |= y;
     return m_map_values.at(t);
   }
 
@@ -262,7 +269,7 @@ namespace tubex
     if(x.m_function != NULL)
       str << " (Fnc object)";
 
-    else if(!x.m_map_values.empty())
+    else if(!x.m_map_values.empty() && x.m_map_values.size() < 10)
     {
       str << ", " << x.m_map_values.size() << " pts: { ";
       for(map<double,Vector>::const_iterator it = x.m_map_values.begin() ; it != x.m_map_values.end() ; it++)
