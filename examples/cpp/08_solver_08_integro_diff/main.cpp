@@ -15,7 +15,8 @@ class FncIntegroDiff : public tubex::Fnc
 
     const IntervalVector eval(const Interval& t, const TubeVector& x) const
     {
-      return Vector(1, 1.) - 2. * (x)[t] - 5. * x.integral(t);
+      return Vector(1, 1.) - 2. * x[t] - 5. * x.integral(t);
+      //return Vector(1, 1.) - 2. * sin(x)[t] - 5. * x.integral(t); // unsolved by Mathematica
     }
 };
 
@@ -45,7 +46,7 @@ void contract(TubeVector& x)
     ctc_picard.contract(f, x, FORWARD | BACKWARD);
 
     CtcDeriv ctc_deriv(true);
-    ctc_deriv.contract(x, Vector(1, 1.) - 2.*(x) - 5.*x.primitive(), FORWARD | BACKWARD);
+    ctc_deriv.contract(x, f.eval(x), FORWARD | BACKWARD);
 }
 
 int main()
