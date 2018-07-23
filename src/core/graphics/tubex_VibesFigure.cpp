@@ -63,8 +63,8 @@ namespace tubex
     {
       set_current_layer(i);
       vibes::setFigureProperties(
-                vibesParams("x", m_x,
-                            "y", m_y,
+                vibesParams("x", m_x + i*50,
+                            "y", m_y + i*50,
                             "width", m_width,
                             "height", m_height));
     }
@@ -158,10 +158,15 @@ namespace tubex
     vibes::Params params_this_fig(params);
     if(box.size() == m_nb_layers + 1) // box to be displayed in all views
     {
+      m_view_box[0] |= box[0];
       int current_layer = m_current_layer;
 
       for(int i = 0 ; i < m_nb_layers ; i++)
       {
+        if(box[i+1].is_unbounded() || box[i+1].is_empty())
+          continue;
+
+        m_view_box[i+1] |= box[i+1];
         IntervalVector proj_box(2);
         proj_box[0] = box[0];
         proj_box[1] = box[i+1];
@@ -176,6 +181,8 @@ namespace tubex
 
     else if(box.size() == 2)
     {
+      m_view_box[0] |= box[0];
+      m_view_box[m_current_layer+1] |= box[1];
       params_this_fig["figure"] = name();
       if(color != "") vibes::drawBox(box, color, params_this_fig);
       else vibes::drawBox(box, params_this_fig);
