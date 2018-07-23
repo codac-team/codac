@@ -10,6 +10,13 @@ void contract(TubeVector& x)
 {
   tubex::Function f("y1", "y2", "(-0.7*y1 ; 0.7*y1 - (ln(2)/5.)*y2)");
 
+  /*
+  double a = 0.7;
+  double b = ln(2.)/5.;
+  double k = (1. - 0.75*e^(-6.*b)) / (e^(-6.*a) - e^(-6.*b));
+  y1 = ((b/a) - 1.)*k*exp(-a*t)
+  */
+
   CtcPicard ctc_picard(true);
   ctc_picard.contract(f, x, FORWARD);
 
