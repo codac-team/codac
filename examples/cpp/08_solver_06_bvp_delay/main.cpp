@@ -10,15 +10,8 @@ class FncDelayCustom : public tubex::Fnc
 {
   public: 
 
-    FncDelayCustom(double delay) : Fnc(1,1), m_delay(delay)
-    {
-
-    }
-
-    const IntervalVector eval(const Interval& t, const IntervalVector& x) const
-    {
-      return x;
-    }
+    FncDelayCustom(double delay) : Fnc(1,1), m_delay(delay) { };
+    const IntervalVector eval(const Interval& t, const IntervalVector& x) const { return x; };
 
     const IntervalVector eval(const Interval& t, const TubeVector& x) const
     {
@@ -31,30 +24,6 @@ class FncDelayCustom : public tubex::Fnc
         eval_result |= exp(m_delay) * x[(t - m_delay) & x.domain()];
 
       return eval_result;
-    }
-
-    const TubeVector eval(const TubeVector& x) const
-    {
-      // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
-      TubeVector y(x, IntervalVector(image_dim()));
-
-      const TubeSlice *x_slice = x.get_first_slice();
-      TubeSlice *y_slice = y.get_first_slice();
-
-      while(x_slice != NULL)
-      {
-        y_slice->set_input_gate(eval(x_slice->domain().lb(), x));
-        y_slice->set_envelope(eval(x_slice->domain(), x));
-
-        x_slice = x_slice->next_slice();
-        y_slice = y_slice->next_slice();
-      }
-
-      x_slice = x.get_last_slice();
-      y_slice = y.get_last_slice();
-      y_slice->set_output_gate(eval(x_slice->domain().ub(), x));
-
-      return y;
     }
 
   protected:
