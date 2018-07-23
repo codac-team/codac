@@ -87,7 +87,6 @@ namespace tubex
       : VibesFigure(fig_name, dim)
     {
       DimensionException::check(dim);
-      m_view_box = IntervalVector(2, Interval::EMPTY_SET);
     }
 
     VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
@@ -248,16 +247,12 @@ namespace tubex
       for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
         m_view_box |= draw_trajectory(it_trajs->first);
 
-      axis_limits(m_view_box);
-
-      // The following is used as a calibration of the SVG file
-      vibes::clearGroup(name(), "transparent_box");
-      draw_box(m_view_box, vibesParams("figure", name(), "group", "transparent_box"));
+      axis_limits(m_view_box, m_current_layer);
     }
 
     const IntervalVector VibesFigure_Tube::draw_tube(const TubeVector *tube, bool detail_slices)
     {
-      IntervalVector viewbox(2, Interval::EMPTY_SET);
+      IntervalVector viewbox(m_nb_layers + 1, Interval::EMPTY_SET);
 
       // Computing viewbox
 
@@ -286,7 +281,7 @@ namespace tubex
         }
 
         viewbox[0] = tube->domain();
-        viewbox[1] = Interval(image_lb, image_ub);
+        viewbox[m_current_layer+1] = Interval(image_lb, image_ub);
 
       // Displaying tube
 
@@ -440,7 +435,7 @@ namespace tubex
     
     const IntervalVector VibesFigure_Tube::draw_trajectory(const TrajectoryVector *traj, float points_size)
     {
-      IntervalVector viewbox(2, Interval::EMPTY_SET);
+      IntervalVector viewbox(m_nb_layers + 1, Interval::EMPTY_SET);
 
       std::ostringstream o;
       o << "traj_" << m_map_trajs[traj].name;
@@ -471,7 +466,7 @@ namespace tubex
           }
 
           viewbox[0] |= it_scalar_values->first;
-          viewbox[1] |= it_scalar_values->second[m_current_layer];
+          viewbox[m_current_layer+1] |= it_scalar_values->second[m_current_layer];
         }
       }
 
@@ -489,7 +484,7 @@ namespace tubex
           }
 
           viewbox[0] |= t;
-          viewbox[1] |= (*traj)[t][m_current_layer];
+          viewbox[m_current_layer+1] |= (*traj)[t][m_current_layer];
         }
       }
 

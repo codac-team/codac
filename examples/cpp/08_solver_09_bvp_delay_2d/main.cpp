@@ -50,9 +50,12 @@ int main()
   /* =========== PARAMETERS =========== */
 
     int n = 2;
-    Vector epsilon(n, 0.5);
+    Vector epsilon(n, 0.4);
     Interval domain(0.,2.*M_PI);
-    TubeVector x(domain, IntervalVector(n, Interval(-9.,9.)));
+    IntervalVector codomain(2);
+    codomain[0] = Interval(0.3,1.4);
+    codomain[1] = Interval(0.2,0.625);
+    TubeVector x(domain, codomain);
 
     IntervalVector init(2);
     init[0] = Interval(1.25,1.3);
@@ -64,7 +67,7 @@ int main()
 
   /* =========== SOLVER =========== */
 
-    tubex::Solver solver(epsilon, 0.001, 0.005, 1.);
+    tubex::Solver solver(epsilon, 0.01, 0.01, 1.);
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
   return EXIT_SUCCESS;

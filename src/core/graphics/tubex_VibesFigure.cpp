@@ -27,7 +27,7 @@ using namespace ibex;
 namespace tubex
 {
   VibesFigure::VibesFigure(const string& figure_name, int nb_layers)
-    : m_view_box(2, Interval::EMPTY_SET), m_nb_layers(nb_layers)
+    : m_view_box(nb_layers+1, Interval::EMPTY_SET), m_nb_layers(nb_layers)
   {
     m_name = figure_name;
 
@@ -74,9 +74,9 @@ namespace tubex
 
   const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
   {
-    if(keep_ratio && !m_view_box.is_empty())
+    if(keep_ratio && !m_view_box.is_empty() && m_nb_layers == 1)
     {
-      float r = m_view_box[0].diam() / m_view_box[1].diam();
+      float r = m_view_box[0].diam() / m_view_box[m_current_layer+1].diam();
 
       IntervalVector b1(2);
       b1[0] = Interval(x_min, x_max);
@@ -95,21 +95,27 @@ namespace tubex
     else
     {
       m_view_box[0] = Interval(x_min, x_max);
-      m_view_box[1] = Interval(y_min, y_max);
+      m_view_box[m_current_layer+1] = Interval(y_min, y_max);
     }
 
     vibes::drawBox(m_view_box[0].lb(), m_view_box[0].ub(),
-                   m_view_box[1].lb(), m_view_box[1].ub(),
+                   m_view_box[m_current_layer+1].lb(), m_view_box[m_current_layer+1].ub(),
                    vibesParams("figure", name(), "group", "transparent_box"));
     vibes::axisLimits(m_view_box[0].lb(), m_view_box[0].ub(),
-                      m_view_box[1].lb(), m_view_box[1].ub(),
+                      m_view_box[m_current_layer+1].lb(), m_view_box[m_current_layer+1].ub(),
                       name());
     return m_view_box;
   }
 
   const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, bool keep_ratio)
   {
-    return axis_limits(viewbox[0].lb(), viewbox[0].ub(), viewbox[1].lb(), viewbox[1].ub());
+    return axis_limits(viewbox, 0, keep_ratio);
+  }
+
+  const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, int layer_id, bool keep_ratio)
+  {
+    // todo: check dim of viewbox
+    return axis_limits(viewbox[0].lb(), viewbox[0].ub(), viewbox[layer_id+1].lb(), viewbox[layer_id+1].ub());
   }
 
   void VibesFigure::save_image(const string& suffix, const string& extension) const
