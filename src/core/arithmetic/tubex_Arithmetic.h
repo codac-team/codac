@@ -22,7 +22,8 @@ namespace tubex
   // Unary operations
 
     #define header_unary_op(f) \
-      const Tube f(const Tube& x);
+      const Tube f(const Tube& x); \
+      const TubeVector f(const TubeVector& x);
 
     header_unary_op(cos);
     header_unary_op(sin);

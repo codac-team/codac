@@ -39,6 +39,23 @@ namespace tubex
         slice_x = slice_x->next_slice(); \
       } \
       return result; \
+    } \
+    \
+    const TubeVector f(const TubeVector& x) \
+    { \
+      DimensionException::check_scalar(x.dim()); /* todo: improve error message */\
+      TubeVector result(x); \
+      TubeSlice *slice_result = result.get_first_slice(); \
+      const TubeSlice *slice_x = x.get_first_slice(); \
+      while(slice_result != NULL) \
+      { \
+        slice_result->set_envelope(IntervalVector(1, ibex::f(slice_x->codomain()[0]))); \
+        slice_result->set_input_gate(IntervalVector(1, ibex::f(slice_x->input_gate()[0]))); \
+        slice_result->set_output_gate(IntervalVector(1, ibex::f(slice_x->output_gate()[0]))); \
+        slice_result = slice_result->next_slice(); \
+        slice_x = slice_x->next_slice(); \
+      } \
+      return result; \
     }
 
   unary_op(cos);
