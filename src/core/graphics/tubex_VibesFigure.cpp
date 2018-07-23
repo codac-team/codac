@@ -156,9 +156,35 @@ namespace tubex
   void VibesFigure::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
   {
     vibes::Params params_this_fig(params);
-    params_this_fig["figure"] = name();
-    if(color != "") vibes::drawBox(box, color, params_this_fig);
-    else vibes::drawBox(box, params_this_fig);
+    if(box.size() == m_nb_layers + 1) // box to be displayed in all views
+    {
+      int current_layer = m_current_layer;
+
+      for(int i = 0 ; i < m_nb_layers ; i++)
+      {
+        IntervalVector proj_box(2);
+        proj_box[0] = box[0];
+        proj_box[1] = box[i+1];
+        set_current_layer(i);
+        params_this_fig["figure"] = name();
+        if(color != "") vibes::drawBox(proj_box, color, params_this_fig);
+        else vibes::drawBox(proj_box, params_this_fig);
+      }
+      
+      set_current_layer(current_layer);
+    }
+
+    else if(box.size() == 2)
+    {
+      params_this_fig["figure"] = name();
+      if(color != "") vibes::drawBox(box, color, params_this_fig);
+      else vibes::drawBox(box, params_this_fig);
+    }
+
+    else
+    {
+      // todo: exception
+    }
   }
   
   void VibesFigure::draw_line(const vector<double>& v_x, const vector<double>& v_y, const vibes::Params& params)
