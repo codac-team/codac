@@ -11,7 +11,7 @@ add_subdirectory(08_solver_04_bvp)
 #add_subdirectory(08_solver_05_delay)
 add_subdirectory(08_solver_06_bvp_delay)
 #add_subdirectory(08_solver_07_path_planning)
-#add_subdirectory(08_solver_08_integro_diff)
+add_subdirectory(08_solver_08_integro_diff)
 add_subdirectory(09_redermor_trajectory)
 
 #add_subdirectory(02_arithmetic_ctc)

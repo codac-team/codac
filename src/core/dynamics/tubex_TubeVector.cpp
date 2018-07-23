@@ -218,12 +218,8 @@ namespace tubex
 
     void TubeVector::resize(int n)
     {
-      TubeSlice *slice = get_first_slice();
-      while(slice != NULL)
-      {
-        slice->resize(n);
-        slice = slice->next_slice();
-      }
+      for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        s->resize(n);
     }
   
     // Slices structure
@@ -285,18 +281,14 @@ namespace tubex
     const TubeSlice* TubeVector::get_wider_slice() const
     {
       double max_domain_width = 0.;
-      const TubeSlice *wider_slice, *slice = get_first_slice();
+      const TubeSlice *wider_slice;
 
-      while(slice != NULL)
-      {
-        if(slice->domain().diam() > max_domain_width)
+      for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        if(s->domain().diam() > max_domain_width)
         {
-          wider_slice = slice;
-          max_domain_width = slice->domain().diam();
+          wider_slice = s;
+          max_domain_width = s->domain().diam();
         }
-
-        slice = slice->next_slice();
-      }
 
       return wider_slice;
     }
@@ -310,20 +302,18 @@ namespace tubex
     {
       int i = 0;
       double max_diam = 0.;
-      const TubeSlice *slice = get_first_slice(), *largest = slice;
+      const TubeSlice *largest = get_first_slice();
 
-      while(slice != NULL)
+      for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
       {
-        if(slice->codomain().is_unbounded())
-          return slice;
+        if(s->codomain().is_unbounded())
+          return s;
 
-        if(slice->codomain().max_diam() > max_diam)
+        if(s->codomain().max_diam() > max_diam)
         {
-          max_diam = slice->codomain().max_diam();
-          largest = slice;
+          max_diam = s->codomain().max_diam();
+          largest = s;
         }
-
-        slice = slice->next_slice();
       }
 
       return largest;
@@ -334,13 +324,11 @@ namespace tubex
       DomainException::check(*this, t);
 
       int i = -1;
-      const TubeSlice *slice = get_first_slice();
-      while(slice != NULL)
+      for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
       {
         i++;
-        if(t < slice->domain().ub())
+        if(t < s->domain().ub())
           return i;
-        slice = slice->next_slice();
       }
 
       return i;
