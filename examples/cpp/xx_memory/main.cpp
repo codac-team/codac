@@ -6,7 +6,39 @@ using namespace tubex;
 
 int main()
 {
-  IntervalVector *test = new IntervalVector(2);
+  float delta = 0.001;
+  Interval domain(1.,4.5);
+  Tube y(domain, delta, tubex::Function("sin(t)+sin(2*t)+sin(3*t)+sin(4*t)+(3-t)*[0.01,0.3]+[0,0.2]"));
+  //Tube y(domain, delta, tubex::Function("cos(t)+2.*[-0.1,0.1]"));
+  //Tube w(domain, delta, tubex::Function("-sin(t)+t*[-0.01,0.02]"));
+  //Trajectory ytruth(domain, tubex::Function("cos(t)+0.08"));
+
+
+  vibes::beginDrawing();
+  VibesFigure_Tube fig("tubeval");
+  fig.add_tube(&y, "y");
+  //fig.add_trajectory(&ytruth, "ytruth", "black");
+  fig.set_properties(200, 50, 800, 400);
+  fig.show();
+
+  //vibes::newGroup("eval_red", "red", vibesParams("figure", "tubeval"));
+  //vibes::newGroup("eval_blue", "blue", vibesParams("figure", "tubeval"));
+
+  //IntervalVector box(2);
+  //box[0] = Interval(4.6,5.);
+  //box[1] = Interval(0.3,0.8);
+  //fig.draw_box(box, vibesParams("group", "eval_red", "figure", "tubeval"));
+  //CtcEval ctc_eval;
+  //ctc_eval.contract(box[0], box[1], y, w);
+  //fig.draw_box(box, vibesParams("group", "eval_blue", "figure", "tubeval"));
+  //fig.show();
+
+  vibes::endDrawing();
+
+
+
+
+  /*IntervalVector *test = new IntervalVector(2);
   delete test;
 
   Interval domain(0.,1.);
@@ -56,7 +88,7 @@ int main()
   //cout << s1 << endl;
 
   IntervalVector test1(2), test2(2);
-  IntervalVector test3 = test1 | test2;
+  IntervalVector test3 = test1 | test2;*/
 
   /*vibes::beginDrawing();
 

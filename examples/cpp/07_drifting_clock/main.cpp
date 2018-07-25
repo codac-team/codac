@@ -29,19 +29,19 @@ int main()
 
   /* =========== INITIALIZATION =========== */
 
-    Tube x1(domain, tube_dt, Function("t", "100*cos(t)+[80,100]"));
-    Tube x2(domain, tube_dt, Function("t", "100*sin(t)+[10,30]"));
-    Tube x1dot(domain, tube_dt, Function("t", "-100*sin(t)+[-0.1,0.1]"));
-    Tube x2dot(domain, tube_dt, Function("t", "100*cos(t)+[-0.1,0.1]"));
+    Tube x1(domain, tube_dt, tubex::Function("100*cos(t)+[80,100]"));
+    Tube x2(domain, tube_dt, tubex::Function("100*sin(t)+[10,30]"));
+    Tube x1dot(domain, tube_dt, tubex::Function("-100*sin(t)+[-0.1,0.1]"));
+    Tube x2dot(domain, tube_dt, tubex::Function("100*cos(t)+[-0.1,0.1]"));
     Tube y = sqrt(sqr(x1) + sqr(x2) + sqr(beacon_depth));
     Tube ydot = (x1*x1dot + x2*x2dot) / y;
-    Tube hdot(domain, tube_dt, Function("t", "[0.08,0.12]*t+[0.97,1.08]"));
+    Tube hdot(domain, tube_dt, tubex::Function("[0.08,0.12]*t+[0.97,1.08]"));
     Tube h = hdot.primitive();
 
   /* =========== GRAPHICS =========== */
 
-    Trajectory y_truth(domain, Function("t", "sqrt((90+100*cos(t))^2 + (20+100*sin(t))^2 + 100)"));
-    Trajectory h_truth(domain, Function("t", "0.045*t^2+0.98*t"));
+    Trajectory y_truth(domain, tubex::Function("sqrt((90+100*cos(t))^2 + (20+100*sin(t))^2 + 100)"));
+    Trajectory h_truth(domain, tubex::Function("0.045*t^2+0.98*t"));
 
     VibesFigure_Tube::draw("Tube [y](·)", &y, &y_truth, 100, 100);
     VibesFigure_Tube::draw("Tube [h](·)", &h, &h_truth, 150, 150);
