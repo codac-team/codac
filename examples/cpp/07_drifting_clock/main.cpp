@@ -60,7 +60,7 @@ int main()
     v_tau.push_back(12.46); v_t.push_back(Interval::ALL_REALS); v_z.push_back(Interval(60.03, 64.03));
     v_tau.push_back(15.25); v_t.push_back(Interval::ALL_REALS); v_z.push_back(Interval(78.76, 82.76));
     v_tau.push_back(18.24); v_t.push_back(Interval::ALL_REALS); v_z.push_back(Interval(175.88, 179.88));
-
+  
   /* =========== CONTRACTIONS =========== */
 
     bool contraction;
@@ -70,10 +70,17 @@ int main()
       cout << "Computation step " << k << "..." << endl;
       contraction = false;
 
+for(int i = 0 ; i < v_tau.size() ; i++)
+{
+  IntervalVector box(2);
+  box[0] = y.domain();
+  box[1] = v_tau[i];
+  vibes::drawBox(box, "blue", vibesParams("figure", "Tube [h](·)"));
+}break;
       for(int i = 0 ; i < v_tau.size() ; i++)
       {
-        v_t[i] &= h.invert(v_tau[i]);
-        contraction |= y.ctc_eval(v_t[i], v_z[i], ydot);
+        //v_t[i] &= h.invert(v_tau[i]);
+        //contraction |= y.ctc_eval(v_t[i], v_z[i], ydot);
         contraction |= h.ctc_eval(v_t[i], v_tau[i], hdot);
       }
 
