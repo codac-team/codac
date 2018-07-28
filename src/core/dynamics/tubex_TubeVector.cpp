@@ -184,11 +184,9 @@ namespace tubex
       m_v_slices.clear();
 
       TubeSlice *prev_slice = NULL;
-      const TubeSlice *slice_x = x.get_first_slice();
-
-      while(slice_x != NULL)
+      for(const TubeSlice *s = x.get_first_slice() ; s != NULL ; s = s->next_slice())
       {
-        TubeSlice *slice = new TubeSlice(*slice_x);
+        TubeSlice *slice = new TubeSlice(*s);
         slice->set_tube_ref(this);
         m_v_slices.push_back(slice);
 
@@ -198,8 +196,8 @@ namespace tubex
           slice->m_input_gate = NULL;
           TubeSlice::chain_slices(prev_slice, slice);
         }
+
         prev_slice = slice;
-        slice_x = slice_x->next_slice();
       }
 
       return *this;
@@ -303,7 +301,6 @@ namespace tubex
       int i = 0;
       double max_diam = 0.;
       const TubeSlice *largest = get_first_slice();
-
       for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
       {
         if(s->codomain().is_unbounded())
@@ -398,16 +395,12 @@ namespace tubex
       if(x1.nb_slices() != x2.nb_slices())
         return false;
 
-      const TubeSlice *slice_x1 = x1.get_first_slice();
-      const TubeSlice *slice_x2 = x2.get_first_slice();
-      
-      while(slice_x1 != NULL)
+      const TubeSlice *s2 = x2.get_first_slice();
+      for(const TubeSlice *s1 = x1.get_first_slice() ; s1 != NULL ; s1 = s1->next_slice())
       {
-        if(slice_x1->domain() != slice_x2->domain())
+        if(s1->domain() != s2->domain())
           return false;
-
-        slice_x1 = slice_x1->next_slice();
-        slice_x2 = slice_x2->next_slice();
+        s2 = s2->next_slice();
       }
 
       return true;
@@ -422,13 +415,9 @@ namespace tubex
 
     double TubeVector::volume() const
     {
-      const TubeSlice *slice = get_first_slice();
       double volume = 0.;
-      while(slice != NULL)
-      {
-        volume += slice->volume();
-        slice = slice->next_slice();
-      }
+      for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        volume += s->volume();
       return volume;
     }
 
@@ -765,24 +754,15 @@ namespace tubex
     {
       IntervalVector e(dim(), Interval(-rad,rad));
 
-      TubeSlice *slice = get_first_slice();
-      TubeSlice *first_slice = slice;
-
       // Setting envelopes before gates' inflation
-      while(slice != NULL)
-      {
-        slice->set_envelope(slice->codomain() + e);
-        slice = slice->next_slice();
-      }
+      for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        s->set_envelope(s->codomain() + e);
 
-      slice = first_slice;
-
-      while(slice != NULL)
+      for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
       {
-        if(slice == first_slice)
-          slice->set_input_gate(slice->input_gate() + e);
-        slice->set_output_gate(slice->output_gate() + e);
-        slice = slice->next_slice();
+        if(s == get_first_slice())
+          s->set_input_gate(s->input_gate() + e);
+        s->set_output_gate(s->output_gate() + e);
       }
 
       return *this;
@@ -792,24 +772,16 @@ namespace tubex
     {
       DimensionException::check(*this, rad);
       DomainException::check(*this, rad);
-      TubeSlice *slice = get_first_slice();
-      TubeSlice *first_slice = slice;
 
       // Setting envelopes before gates' inflation
-      while(slice != NULL)
-      {
-        slice->set_envelope(slice->codomain() + Interval(-1.,1.) * rad[slice->domain()]);
-        slice = slice->next_slice();
-      }
+      for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        s->set_envelope(s->codomain() + Interval(-1.,1.) * rad[s->domain()]);
 
-      slice = first_slice;
-
-      while(slice != NULL)
+      for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
       {
-        if(slice == first_slice)
-          slice->set_input_gate(slice->input_gate() + Interval(-1.,1.) * rad[slice->domain().lb()]);
-        slice->set_output_gate(slice->output_gate() + Interval(-1.,1.) * rad[slice->domain().ub()]);
-        slice = slice->next_slice();
+        if(s == get_first_slice())
+          s->set_input_gate(s->input_gate() + Interval(-1.,1.) * rad[s->domain().lb()]);
+        s->set_output_gate(s->output_gate() + Interval(-1.,1.) * rad[s->domain().ub()]);
       }
 
       return *this;
@@ -1023,13 +995,9 @@ namespace tubex
 
     const IntervalVector TubeVector::codomain_box() const
     {
-      const TubeSlice *slice = get_first_slice();
       IntervalVector codomain(dim(), Interval::EMPTY_SET);
-      while(slice != NULL)
-      {
-        codomain |= slice->codomain_box();
-        slice = slice->next_slice();
-      }
+      for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        codomain |= s->codomain_box();
       return codomain;
     }
 

@@ -53,14 +53,12 @@ namespace tubex
     {
       // todo: check dim
       TubeSlice *prev_slice = NULL;
-      const TubeSlice *slice_x = x.get_first_slice();
-
-      while(slice_x != NULL)
+      for(const TubeSlice *s = x.get_first_slice() ; s != NULL ; s = s->next_slice())
       {
-        TubeSlice *slice = new TubeSlice(slice_x->domain(), 1);
-        slice->set_envelope(slice_x->codomain()[dim]);
-        slice->set_input_gate(slice_x->input_gate()[dim]);
-        slice->set_output_gate(slice_x->output_gate()[dim]);
+        TubeSlice *slice = new TubeSlice(s->domain(), 1);
+        slice->set_envelope(s->codomain()[dim]);
+        slice->set_input_gate(s->input_gate()[dim]);
+        slice->set_output_gate(s->output_gate()[dim]);
         slice->set_tube_ref(this);
         m_v_slices.push_back(slice);
 
@@ -71,7 +69,6 @@ namespace tubex
           TubeSlice::chain_slices(prev_slice, slice);
         }
         prev_slice = slice;
-        slice_x = slice_x->next_slice();
       }
     }
 

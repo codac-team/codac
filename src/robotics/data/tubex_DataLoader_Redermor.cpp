@@ -10,6 +10,7 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
+#include <time.h>
 #include "tubex_Exception.h"
 #include "tubex_DataLoader_Redermor.h"
 #include "tubex_Function.h"
@@ -27,6 +28,8 @@ namespace tubex
 
   void DataLoader_Redermor::load_data(TubeVector *&x, TrajectoryVector *&truth, const Interval& domain)
   {
+    clock_t t_start = clock();
+
     // todo: truncate domain
     if(!m_datafile->is_open())
       throw Exception("DataLoader_Redermor::load_data", "data file not already opened");
@@ -76,7 +79,9 @@ namespace tubex
                         vxr * cos(theta) * sin(psi) \
                         + vyr * (cos(psi) * cos(phi) + sin(theta) * sin(psi) * sin(phi)) \
                         - vzr * (cos(psi) * sin(phi) - sin(theta) * cos(phi) * sin(psi)))");
-    TubeVector tt = f.eval(data_x).primitive();
-    x = new TubeVector(tt);
+    data_x = f.eval(data_x);
+
+    // Returning primitive
+    x = new TubeVector(data_x.primitive());
   }
 }

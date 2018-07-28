@@ -62,36 +62,24 @@ namespace tubex
         int slices_number = tube.nb_slices();
         bin_file.write((const char*)&slices_number, sizeof(int));
 
-        const TubeSlice *slice;
-
         // Domains
         double lb;
-        slice = tube.get_first_slice();
-        while(slice != NULL)
+        for(const TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
         {
-          lb = slice->domain().lb();
+          lb = s->domain().lb();
           bin_file.write((const char*)&lb, sizeof(double));
-          slice = slice->next_slice();
         }
         lb = tube.domain().ub();
         bin_file.write((const char*)&lb, sizeof(double));
 
         // Codomains
-        slice = tube.get_first_slice();
-        while(slice != NULL)
-        {
-          serialize_intervalvector(bin_file, slice->codomain());
-          slice = slice->next_slice();
-        }
+        for(const TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+          serialize_intervalvector(bin_file, s->codomain());
 
         // Gates
-        slice = tube.get_first_slice();
-        serialize_intervalvector(bin_file, slice->input_gate());
-        while(slice != NULL)
-        {
-          serialize_intervalvector(bin_file, slice->output_gate());
-          slice = slice->next_slice();
-        }
+        serialize_intervalvector(bin_file, tube.get_first_slice()->input_gate());
+        for(const TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+          serialize_intervalvector(bin_file, s->output_gate());
 
         break;
       }
@@ -158,13 +146,11 @@ namespace tubex
         }
 
         // Codomains
-        TubeSlice *slice = tube.get_first_slice();
-        while(slice != NULL)
+        for(TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
         {
           IntervalVector slice_value(dim);
           deserialize_intervalvector(bin_file, slice_value);
-          slice->set(slice_value);
-          slice = slice->next_slice();
+          s->set(slice_value);
         }
 
         // Gates
