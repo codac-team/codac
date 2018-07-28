@@ -126,6 +126,11 @@ namespace tubex
     return m_ibex_f->eval_vector(box);
   }
 
+  const IntervalVector Function::eval(const TubeSlice& x) const
+  {
+    return m_ibex_f->eval_vector(x.box());
+  }
+
   void Function::construct_from_array(int n, const char** x, const char* y)
   {
     const char* xdyn[n+1];
@@ -135,5 +140,50 @@ namespace tubex
     m_ibex_f = new ibex::Function(n+1, xdyn, y);
     m_nb_vars = n;
     m_img_dim = m_ibex_f->image_dim();
+  }
+
+  const TubeVector Function::eval(const TubeVector& x) const
+  {
+    // Faster evaluation than the generic Fnc::eval method
+    // For now, Function class does not allow inter-temporal evaluations
+    // such as delays or integral computations. Hence, the generic method
+    // Fnc::eval(Interval t, TubeVector x) can be replaced by a dedicated evaluation
+
+    // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
+    TubeVector y(x, IntervalVector(image_dim()));
+
+    const TubeSlice *x_slice = x.get_first_slice();
+    TubeSlice *y_slice = y.get_first_slice();
+    IntervalVector box(x.dim() + 1);
+
+    while(x_slice != NULL)
+    {
+      if(x_slice->is_empty())
+        y_slice->set_empty();
+
+      else
+      {
+        box = x_slice->box();
+        y_slice->set_envelope(m_ibex_f->eval_vector(box));
+        box[0] = box[0].lb();
+        box.put(1, x_slice->input_gate());
+        y_slice->set_input_gate(m_ibex_f->eval_vector(box));
+      }
+
+      x_slice = x_slice->next_slice();
+      y_slice = y_slice->next_slice();
+    }
+
+    x_slice = x.get_last_slice();
+    y_slice = y.get_last_slice();
+
+    if(!x_slice->is_empty())
+    {
+      box[0] = x_slice->domain().ub();
+      box.put(1, x_slice->output_gate());
+      y_slice->set_output_gate(m_ibex_f->eval_vector(box));
+    }
+
+    return y;
   }
 }

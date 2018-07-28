@@ -18,6 +18,8 @@
 
 namespace tubex
 {
+  class TubeSlice;
+  
   class Function : public Fnc
   {
     public:
@@ -35,7 +37,9 @@ namespace tubex
       const Function& operator=(const Function& f);
 
       using Fnc::eval;
+      const TubeVector eval(const TubeVector& x) const;
       const ibex::IntervalVector eval(const ibex::Interval& t) const;
+      const ibex::IntervalVector eval(const TubeSlice& x) const;
       const ibex::IntervalVector eval(const ibex::Interval& t, const TubeVector& x) const;
 
     protected:

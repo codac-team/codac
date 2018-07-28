@@ -59,6 +59,7 @@ namespace tubex
 
     while(x_slice != NULL)
     {
+      IntervalVector test = eval(x_slice->domain().lb(), x);
       y_slice->set_input_gate(eval(x_slice->domain().lb(), x));
       y_slice->set_envelope(eval(x_slice->domain(), x));
 
