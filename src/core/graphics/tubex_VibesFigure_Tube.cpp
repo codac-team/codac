@@ -65,12 +65,17 @@ namespace tubex
         v_vibesfig_tube.push_back(figtube);
       }
 
-      if(tube != NULL) DimensionException::check(*figtube, *tube);
-      if(tube != NULL && traj != NULL) DimensionException::check(*tube, *traj);
+      if(tube != NULL)
+      {
+        DimensionException::check(*figtube, *tube);
+        if(traj != NULL) DimensionException::check(*tube, *traj);
+        figtube->set_properties(x, y, 700, 350);
+        figtube->add_tube(tube, DEFAULT_TUBE_NAME);
+      }
 
-      figtube->set_properties(x, y, 700, 350);
-      if(tube != NULL) figtube->add_tube(tube, DEFAULT_TUBE_NAME);
-      if(traj != NULL) figtube->add_trajectory(traj, DEFAULT_TRAJ_NAME);
+      if(traj != NULL)
+        figtube->add_trajectory(traj, DEFAULT_TRAJ_NAME);
+      
       figtube->show();
     }
 

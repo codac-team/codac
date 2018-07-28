@@ -63,6 +63,7 @@ int main()
   
   /* =========== CONTRACTIONS =========== */
 
+    CtcEval ctc_eval(false, false);
     bool contraction;
     int k = 1;
     do
@@ -70,20 +71,14 @@ int main()
       cout << "Computation step " << k << "..." << endl;
       contraction = false;
 
-for(int i = 0 ; i < v_tau.size() ; i++)
-{
-  IntervalVector box(2);
-  box[0] = y.domain();
-  box[1] = v_tau[i];
-  vibes::drawBox(box, "blue", vibesParams("figure", "Tube [h](·)"));
-}break;
       for(int i = 0 ; i < v_tau.size() ; i++)
       {
-        //v_t[i] &= h.invert(v_tau[i]);
-        //contraction |= y.ctc_eval(v_t[i], v_z[i], ydot);
-        contraction |= h.ctc_eval(v_t[i], v_tau[i], hdot);
+        v_t[i] &= h.invert(v_tau[i]);
+        contraction |= ctc_eval.contract(v_t[i], v_z[i], y, ydot);
+        contraction |= ctc_eval.contract(v_t[i], v_tau[i], h, hdot);
       }
-
+      
+      contraction |= h.ctc_deriv(hdot);
       k++;
     } while(contraction);
 
