@@ -70,14 +70,46 @@ namespace tubex
     DomainException::check(x, v);
     DimensionException::check(x, v);
 
-    bool ctc = false;
+    const TubeSlice old_x = x;
+    IntervalVector box = x.codomain(), ingate = x.input_gate(), outgate = x.output_gate();
 
-    ctc |= contract_gates(x, v);
+    // todo: remove this:
+      box &= IntervalVector(x.dim(), Interval(-99999.,99999.));
+      x.set_envelope(box);
 
     for(int i = 0 ; i < x.dim() ; i++)
-      ctc |= contract_codomain(i, x, v);
+    {
+      if(outgate[i] == Interval::ALL_REALS)
+      {
+        // Faster evaluation without polygons
+        box[i] &= ingate[i] + Interval(0.,x.domain().diam()) * v.codomain()[i];
+        outgate[i] &= ingate[i] + x.domain().diam() * v.codomain()[i];
+      }
 
-    return ctc;
+      else if(ingate[i] == Interval::ALL_REALS)
+      {
+        // Faster evaluation without polygons
+        box[i] &= outgate[i] - Interval(0.,x.domain().diam()) * v.codomain()[i];
+        ingate[i] &= outgate[i] - x.domain().diam() * v.codomain()[i];
+      }
+
+      else
+      {
+        // Gates contraction
+        outgate[i] &= ingate[i] + x.domain().diam() * v.codomain()[i];
+        ingate[i] &= outgate[i] - x.domain().diam() * v.codomain()[i];
+        x.set_input_gate(ingate);
+        x.set_output_gate(outgate);
+
+        // Optimal envelope
+        box[i] &= x.polygon(i, v).box()[1];
+      }
+    }
+
+    x.set_envelope(box);
+    x.set_input_gate(ingate);
+    x.set_output_gate(outgate);
+    return old_x != x;
   }
 
   bool CtcDeriv::contract_gates(TubeSlice& x, const TubeSlice& v) const
@@ -99,20 +131,5 @@ namespace tubex
     x.set_input_gate(in_gate);
 
     return ctc;
-  }
-
-  bool CtcDeriv::contract_codomain(int i, TubeSlice& x, const TubeSlice& v) const
-  {
-    DomainException::check(x, v);
-    DimensionException::check(x, v);
-    DimensionException::check(x, i);
-    
-    // todo: remove this:
-    x.set_envelope(x.codomain() & IntervalVector(x.dim(), Interval(-99999.,99999.)));
-    
-    IntervalVector box = x.codomain(), prev_box = box;
-    box[i] = x.polygon(i, v).box()[1];
-    x.set_envelope(box);
-    return prev_box != box;
   }
 }

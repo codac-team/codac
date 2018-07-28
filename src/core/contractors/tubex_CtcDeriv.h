@@ -36,8 +36,6 @@ namespace tubex
     protected:
 
       bool contract_gates(TubeSlice& x, const TubeSlice& v) const;
-      bool contract_codomain(int i, TubeSlice& x, const TubeSlice& v) const;
-
       friend class CtcEval; // contract_gates used by CtcEval
   };
 }
