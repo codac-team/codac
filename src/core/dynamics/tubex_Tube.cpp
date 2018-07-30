@@ -52,15 +52,25 @@ namespace tubex
       : TubeVector(x.domain())
     {
       // todo: check dim
-      TubeSlice *prev_slice = NULL;
+      TubeSlice *prev_slice = NULL, *slice = NULL;
       for(const TubeSlice *s = x.get_first_slice() ; s != NULL ; s = s->next_slice())
       {
-        TubeSlice *slice = new TubeSlice(s->domain(), 1);
+        if(slice == NULL)
+        {
+          slice = new TubeSlice(s->domain(), 1);
+          m_first_slice = slice;
+        }
+
+        else
+        {
+          slice->m_next_slice = new TubeSlice(s->domain(), 1);
+          slice = slice->next_slice();
+        }
+
         slice->set_envelope(s->codomain()[dim]);
         slice->set_input_gate(s->input_gate()[dim]);
         slice->set_output_gate(s->output_gate()[dim]);
         slice->set_tube_ref(this);
-        m_v_slices.push_back(slice);
 
         if(prev_slice != NULL)
         {
@@ -68,6 +78,7 @@ namespace tubex
           slice->m_input_gate = NULL;
           TubeSlice::chain_slices(prev_slice, slice);
         }
+
         prev_slice = slice;
       }
     }

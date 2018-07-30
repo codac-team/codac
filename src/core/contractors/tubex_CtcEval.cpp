@@ -42,12 +42,11 @@ namespace tubex
     SlicingException::check(y, w);
     DimensionException::check(y, z);
     DimensionException::check(y, w);
-    SlicingException::check(y, w);
 
     if(z.is_empty() || y.is_empty())
       return false;
 
-    TubeVector y_first_slicing(y), w_first_slicing(w);
+    TubeVector y_first_slicing = y, w_first_slicing = w; // doto: instanciate this just in case
     IntervalVector z_ = z;
     TubeVector y_ = y;
 
@@ -79,7 +78,7 @@ namespace tubex
       w_first_slicing |= w;
       w = w_first_slicing;
     }
-
+    
     return z != z_ || y.is_strict_subset(y_);
   }
 
@@ -96,6 +95,9 @@ namespace tubex
     SlicingException::check(y, w);
     DimensionException::check(y, z);
     DimensionException::check(y, w);
+    
+    if(t.is_degenerated())
+      return contract(t.lb(), z, y, w);
 
     if(t.is_empty() || z.is_empty() || y.is_empty())
       return false;
@@ -104,9 +106,6 @@ namespace tubex
     Interval t_ = t;
     IntervalVector z_ = z;
     TubeVector y_ = y;
-    
-    if(t.is_degenerated())
-      return contract(t.lb(), z, y, w);
 
     t &= y.domain();
     t &= y.invert(z, w ,t);

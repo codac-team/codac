@@ -50,9 +50,8 @@ namespace tubex
       DimensionException::check(codomain.size());
 
       // By default, the tube is defined as one single slice
-      TubeSlice *slice = new TubeSlice(domain, codomain);
-      slice->set_tube_ref(this);
-      m_v_slices.push_back(slice);
+      m_first_slice = new TubeSlice(domain, codomain);
+      m_first_slice->set_tube_ref(this);
     }
     
     TubeVector::TubeVector(const Interval& domain, double timestep, int dim)
@@ -61,7 +60,7 @@ namespace tubex
       DomainException::check(timestep);
       DimensionException::check(dim);
 
-      TubeSlice *prev_slice = NULL;
+      TubeSlice *prev_slice = NULL, *slice;
       double lb, ub = domain.lb();
 
       if(timestep == 0.)
@@ -72,9 +71,8 @@ namespace tubex
         lb = ub; // we guarantee all slices are adjacent
         ub = min(lb + timestep, domain.ub());
 
-        TubeSlice *slice = new TubeSlice(Interval(lb,ub), dim);
+        slice = new TubeSlice(Interval(lb,ub), dim);
         slice->set_tube_ref(this);
-        m_v_slices.push_back(slice);
 
         if(prev_slice != NULL)
         {
@@ -82,7 +80,10 @@ namespace tubex
           slice->m_input_gate = NULL;
           TubeSlice::chain_slices(prev_slice, slice);
         }
+
         prev_slice = slice;
+        if(m_first_slice == NULL) m_first_slice = slice;
+        slice = slice->next_slice();
 
       } while(ub < domain.ub());
     }
@@ -164,9 +165,13 @@ namespace tubex
     
     TubeVector::~TubeVector()
     {
-      for(int i = 0 ; i < m_v_slices.size() ; i++)
-        delete m_v_slices[i];
-      m_v_slices.clear();
+      TubeSlice *slice = get_first_slice();
+      while(slice != NULL)
+      {
+        TubeSlice *next_slice = slice->next_slice();
+        delete slice;
+        slice = next_slice;
+      }
     }
 
     const TubeVector TubeVector::primitive() const
@@ -180,16 +185,33 @@ namespace tubex
 
     const TubeVector& TubeVector::operator=(const TubeVector& x)
     {
-      for(int i = 0 ; i < m_v_slices.size() ; i++)
-        delete m_v_slices[i];
-      m_v_slices.clear();
+      { // Destroying already existing slices
+        TubeSlice *slice = get_first_slice();
+        while(slice != NULL)
+        {
+          TubeSlice *next_slice = slice->next_slice();
+          delete slice;
+          slice = next_slice;
+        }
+      }
 
-      TubeSlice *prev_slice = NULL;
+      TubeSlice *prev_slice = NULL, *slice = NULL;
+
       for(const TubeSlice *s = x.get_first_slice() ; s != NULL ; s = s->next_slice())
       {
-        TubeSlice *slice = new TubeSlice(*s);
+        if(slice == NULL)
+        {
+          slice = new TubeSlice(*s);
+          m_first_slice = slice;
+        }
+
+        else
+        {
+          slice->m_next_slice = new TubeSlice(*s);
+          slice = slice->next_slice();
+        }
+
         slice->set_tube_ref(this);
-        m_v_slices.push_back(slice);
 
         if(prev_slice != NULL)
         {
@@ -206,13 +228,13 @@ namespace tubex
 
     const Interval TubeVector::domain() const
     {
-      return Interval(m_v_slices.front()->domain().lb(),
-                      m_v_slices.back()->domain().ub());
+      return Interval(get_first_slice()->domain().lb(),
+                      get_last_slice()->domain().ub());
     }
 
     int TubeVector::dim() const
     {
-      return m_v_slices[0]->dim();
+      return get_first_slice()->dim();
     }
 
     void TubeVector::resize(int n)
@@ -268,7 +290,10 @@ namespace tubex
 
     int TubeVector::nb_slices() const
     {
-      return m_v_slices.size();
+      int size = 0;
+      for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        size ++;
+      return size;
     }
 
     TubeSlice* TubeVector::get_slice(int slice_id)
@@ -280,7 +305,14 @@ namespace tubex
     const TubeSlice* TubeVector::get_slice(int slice_id) const
     {
       SlicingException::check(*this, slice_id);
-      return m_v_slices[slice_id];
+      int i = 0;
+      for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+      {
+        if(i == slice_id)
+          return s;
+        i++;
+      }
+      return NULL;
     }
 
     TubeSlice* TubeVector::get_slice(double t)
@@ -302,7 +334,7 @@ namespace tubex
 
     const TubeSlice* TubeVector::get_first_slice() const
     {
-      return m_v_slices[0];
+      return m_first_slice;
     }
 
     TubeSlice* TubeVector::get_last_slice()
@@ -312,7 +344,10 @@ namespace tubex
 
     const TubeSlice* TubeVector::get_last_slice() const
     {
-      return m_v_slices[nb_slices() - 1];
+      for(const TubeSlice *s = get_first_slice() ; true ; s = s->next_slice())
+        if(s->next_slice() == NULL)
+          return s;
+      return NULL;
     }
 
     TubeSlice* TubeVector::get_wider_slice()
@@ -409,8 +444,8 @@ namespace tubex
       new_slice->set_domain(Interval(t, slice_to_be_sampled->domain().ub()));
       slice_to_be_sampled->set_domain(Interval(slice_to_be_sampled->domain().lb(), t));
 
-      vector<TubeSlice*>::iterator it = find(m_v_slices.begin(), m_v_slices.end(), slice_to_be_sampled);
-      m_v_slices.insert(++it, new_slice);
+      // todo: remove this? vector<TubeSlice*>::iterator it = find(m_v_slices.begin(), m_v_slices.end(), slice_to_be_sampled);
+      // todo: remove this? m_v_slices.insert(++it, new_slice);
 
       // Updated slices structure
       delete new_slice->m_input_gate;

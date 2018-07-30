@@ -125,15 +125,14 @@ namespace tubex
         double lb;
         bin_file.read((char*)&lb, sizeof(double));
 
-        TubeSlice *prev_slice = NULL;
+        TubeSlice *prev_slice = NULL, *slice;
         vector<double> v_domain_bounds;
         for(int i = 0 ; i < slices_number ; i++)
         {
           double ub;
           bin_file.read((char*)&ub, sizeof(double));
-          TubeSlice *slice = new TubeSlice(Interval(lb, ub), dim);
+          slice = new TubeSlice(Interval(lb, ub), dim);
           slice->set_tube_ref(&tube);
-          tube.m_v_slices.push_back(slice);
           lb = ub;
 
           if(prev_slice != NULL)
@@ -142,7 +141,10 @@ namespace tubex
             slice->m_input_gate = NULL;
             TubeSlice::chain_slices(prev_slice, slice);
           }
+
           prev_slice = slice;
+          if(tube.m_first_slice == NULL) tube.m_first_slice = slice;
+          slice = slice->next_slice();
         }
 
         // Codomains

@@ -6,6 +6,27 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
+TEST_CASE("operator=")
+{
+  SECTION("test")
+  {
+    TubeVector tube_one_slice(Interval(0.,10.), 0.2);
+    tube_one_slice.sample(5.);
+
+    TubeVector tube1(Interval(0.,10.), 0.001, 4);
+    TubeVector tube2(tube1);
+    CHECK(tube1 == tube2);
+    CHECK(tube1.nb_slices() != 1);
+    CHECK(tube1.nb_slices() == tube2.nb_slices());
+
+    Tube tube1_scalar(Interval(0.,10.), 0.001);
+    Tube tube2_scalar(tube1_scalar);
+    CHECK(tube1_scalar == tube2_scalar);
+    CHECK(tube1_scalar.nb_slices() != 1);
+    CHECK(tube1_scalar.nb_slices() == tube2_scalar.nb_slices());
+  }
+}
+
 TEST_CASE("input2index")
 {
   SECTION("input2index")

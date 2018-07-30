@@ -191,7 +191,7 @@ namespace tubex
 
     /** Class variables **/
 
-      std::vector<TubeSlice*> m_v_slices;
+      TubeSlice *m_first_slice = NULL;
 
       friend void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
   };
