@@ -85,6 +85,33 @@ namespace tubex
     construct_from_array(6, xdyn, y);
   }
 
+  Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* y)
+  {
+    const char* xdyn[7];
+    xdyn[0] = x1;
+    xdyn[1] = x2;
+    xdyn[2] = x3;
+    xdyn[3] = x4;
+    xdyn[4] = x5;
+    xdyn[5] = x6;
+    xdyn[6] = x7;
+    construct_from_array(7, xdyn, y);
+  }
+
+  Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* x8, const char* y)
+  {
+    const char* xdyn[8];
+    xdyn[0] = x1;
+    xdyn[1] = x2;
+    xdyn[2] = x3;
+    xdyn[3] = x4;
+    xdyn[4] = x5;
+    xdyn[5] = x6;
+    xdyn[6] = x7;
+    xdyn[7] = x8;
+    construct_from_array(8, xdyn, y);
+  }
+
   Function::Function(const tubex::Function& f)
     : tubex::Fnc(f.nb_vars(), f.image_dim())
   {

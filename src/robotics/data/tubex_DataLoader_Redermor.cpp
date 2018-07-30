@@ -79,9 +79,10 @@ namespace tubex
                         vxr * cos(theta) * sin(psi) \
                         + vyr * (cos(psi) * cos(phi) + sin(theta) * sin(psi) * sin(phi)) \
                         - vzr * (cos(psi) * sin(phi) - sin(theta) * cos(phi) * sin(psi)))");
-    data_x = f.eval(data_x);
 
-    // Returning primitive
-    x = new TubeVector(data_x.primitive());
+    x = new TubeVector(data_x);
+    x->resize(4);
+    x->put(0, f.eval(data_x).primitive());
+    x->put(2, f.eval(data_x));
   }
 }
