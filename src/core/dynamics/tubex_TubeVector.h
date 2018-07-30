@@ -53,6 +53,8 @@ namespace tubex
       const ibex::Interval domain() const;
       int dim() const;
       void resize(int n);
+      const TubeVector subvector(int start_index, int end_index) const;
+      void put(int start_index, const TubeVector& subvec);
 
       // Slices structure
       int nb_slices() const;

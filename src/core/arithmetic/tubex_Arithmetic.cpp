@@ -422,4 +422,13 @@ namespace tubex
     }
 
   binary_op_with_scalar_1(operator*);
+
+
+  void ibex_overloaded_put(IntervalVector& box, int start_index, const IntervalVector& subvec)
+  {
+    // todo: check dim
+    // Overloading in order to overcome the !is_empty() ibex's assertion
+    for(int i = 0 ; i < subvec.size() ; i++)
+      box[i + start_index] = subvec[i];
+  }
 }

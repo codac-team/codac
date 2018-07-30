@@ -19,6 +19,7 @@
 #include "tubex_SlicingException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
+#include "tubex_Arithmetic.h"
 #include "ibex_LargestFirst.h"
 #include "ibex_NoBisectableVariableException.h"
 
@@ -218,6 +219,49 @@ namespace tubex
     {
       for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
         s->resize(n);
+    }
+    
+    const TubeVector TubeVector::subvector(int start_index, int end_index) const
+    {
+      // todo; check start_index, end_index, <
+      TubeVector subvec(domain(), end_index - start_index + 1);
+      TubeSlice *ssv = subvec.get_first_slice();
+      for(const TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+      {
+        ssv->set_envelope(s->codomain().subvector(start_index, end_index));
+        ssv->set_input_gate(s->input_gate().subvector(start_index, end_index));
+        ssv->set_output_gate(s->output_gate().subvector(start_index, end_index));
+        ssv = ssv->next_slice();
+      }
+      return subvec;
+    }
+    
+    void TubeVector::put(int start_index, const TubeVector& subvec)
+    {
+      // todo: check size subvec
+      // todo: check structure tubes
+
+      for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        s->set_all_reals(start_index, start_index + subvec.dim() - 1);
+
+      const TubeSlice *ssv = subvec.get_first_slice();
+      for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+      {
+        IntervalVector codomain = s->codomain();
+        IntervalVector input_gate = s->input_gate();
+
+        ibex_overloaded_put(codomain, start_index, ssv->codomain());
+        s->set_envelope(codomain);
+        ibex_overloaded_put(input_gate, start_index, ssv->input_gate());
+        s->set_input_gate(input_gate);
+
+        ssv = ssv->next_slice();
+      }
+
+      TubeSlice *s = get_last_slice();
+      IntervalVector output_gate = s->output_gate();
+      ibex_overloaded_put(output_gate, start_index, subvec.get_last_slice()->output_gate());
+      s->set_output_gate(output_gate);
     }
   
     // Slices structure

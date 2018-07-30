@@ -72,6 +72,8 @@ namespace tubex
       // Setting values
       void set(const ibex::IntervalVector& y);
       void set_empty();
+      void set_all_reals();
+      void set_all_reals(int start_index, int end_index);
       void set_envelope(const ibex::IntervalVector& envelope);
       void set_input_gate(const ibex::IntervalVector& input_gate);
       void set_output_gate(const ibex::IntervalVector& output_gate);

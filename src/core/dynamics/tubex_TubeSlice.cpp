@@ -16,6 +16,7 @@
 #include "tubex_EmptyException.h"
 #include "tubex_DimensionException.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_Arithmetic.h"
 
 using namespace std;
 using namespace ibex;
@@ -376,9 +377,32 @@ namespace tubex
     void TubeSlice::set(const IntervalVector& y)
     {
       DimensionException::check(*this, y);
-      set_envelope(y);
-      set_input_gate(y);
-      set_output_gate(y);
+      m_codomain = y;
+
+      *m_input_gate = y;
+      if(prev_slice() != NULL) *m_input_gate &= prev_slice()->codomain();
+
+      *m_output_gate = y;
+      if(next_slice() != NULL) *m_output_gate &= next_slice()->codomain();
+    }
+
+    void TubeSlice::set_all_reals()
+    {
+      set_all_reals(0, dim() - 1);
+    }
+
+    void TubeSlice::set_all_reals(int start_index, int end_index)
+    {
+      // todo: check index
+      IntervalVector all_reals(end_index - start_index + 1);
+
+      ibex_overloaded_put(m_codomain, start_index, all_reals);
+
+      ibex_overloaded_put(*m_input_gate, start_index, all_reals);
+      if(prev_slice() != NULL) *m_input_gate &= prev_slice()->codomain();
+
+      ibex_overloaded_put(*m_output_gate, start_index, all_reals);
+      if(next_slice() != NULL) *m_output_gate &= next_slice()->codomain();
     }
     
     void TubeSlice::set_empty()

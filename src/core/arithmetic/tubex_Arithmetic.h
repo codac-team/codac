@@ -94,6 +94,10 @@ namespace tubex
       const TubeVector f(const ibex::Interval& x1, const TubeVector& x2);
 
     header_binary_op_with_scalar_1(operator*);
+
+  // Utility functions
+
+    void ibex_overloaded_put(ibex::IntervalVector& box, int start_index, const ibex::IntervalVector& subvec);
 }
 
 #endif
