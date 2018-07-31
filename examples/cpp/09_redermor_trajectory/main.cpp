@@ -12,24 +12,17 @@ int main()
   TrajectoryVector *x_truth;
   DataLoader_Redermor data_loader("./data/redermor/gesmi.txt");
   data_loader.load_data(x, x_truth);
+  vector<Beacon> v_seamarks = data_loader.get_beacons();
 
   vibes::beginDrawing();
-  VibesFigure_Tube fig_x("Redermor state", 5);
+  VibesFigure_Tube fig_x("Redermor state", 2);
   fig_x.add_tube(x, "x");
   fig_x.add_trajectory(x_truth, "x_truth");
   fig_x.set_properties(2000, 50, 500, 250);
 
   VibesFigure_Map fig_map("Redermor map", x, x_truth);
+  fig_map.add_beacons(v_seamarks);
   fig_map.set_properties(1450, 50, 500, 500);
-
-  IntervalVector seamark(3);
-  map<int,IntervalVector*> m_seamarks;
-  seamark[0] = 594.0533723; seamark[1] = 374.7293035;  seamark[2] = 19.; m_seamarks[0] = new IntervalVector(seamark);
-  seamark[0] = 599.6093723; seamark[1] = 484.5528643;  seamark[2] = 19.; m_seamarks[1] = new IntervalVector(seamark);
-  seamark[0] = 601.4613723; seamark[1] = 557.3573086;  seamark[2] = 19.; m_seamarks[2] = new IntervalVector(seamark);
-  seamark[0] = 94.01337232; seamark[1] = -2.868189501; seamark[2] = 19.; m_seamarks[3] = new IntervalVector(seamark);
-  seamark[0] = 119.9413723; seamark[1] = 84.75155672;  seamark[2] = 20.; m_seamarks[4] = new IntervalVector(seamark);
-  seamark[0] = 127.3493723; seamark[1] = 156.3280366;  seamark[2] = 20.; m_seamarks[5] = new IntervalVector(seamark);
 
   IntervalVector obs(2);
   map<int,vector<IntervalVector> > m_obs;
@@ -46,7 +39,7 @@ int main()
   obs[0] = 3688.0; obs[1] = 26.98; m_obs[5].push_back(obs);
   obs[0] = 5279.0; obs[1] = 33.51; m_obs[5].push_back(obs);
 
-  for(int i = 0 ; i < m_seamarks.size() ; i++)
+  for(int i = 0 ; i < v_seamarks.size() ; i++)
     for(int k = 0 ; k < m_obs[i].size() ; k++)
       x->sample(m_obs[i][k][0].mid());
 
@@ -63,7 +56,7 @@ int main()
                               + (zdot*sign(z-bz)/sqrt(1+(((y-by)^2+(x-bx)^2)/((z-bz)^2)))))");
 
   map<int,TubeVector*> m_x;
-  for(int i = 0 ; i < m_seamarks.size() ; i++)
+  for(int i = 0 ; i < v_seamarks.size() ; i++)
   {
     m_x[i] = new TubeVector(*x);
     m_x[i]->resize(11);
@@ -71,7 +64,7 @@ int main()
     // todo: optimize this block:
     TubeVector b(*x);
     b.resize(3);
-    b.set(*m_seamarks[i]);
+    b.set(v_seamarks[i].pos_box());
     m_x[i]->put(6, b);
     m_x[i]->put(9, fg.eval(*m_x[i]));
 
@@ -106,7 +99,7 @@ int main()
   ibex::CtcHC4 hc4(sys);
   tubex::CtcHC4 ctc_hc4;
 
-  for(int i = 0 ; i < m_seamarks.size() ; i++)
+  for(int i = 0 ; i < v_seamarks.size() ; i++)
   {
     cout << "Seamark " << (i+1) << endl;
     fig_x.show();
@@ -142,7 +135,7 @@ int main()
   fig_x.show();
   fig_map.show();
 
-  for(int i = 0 ; i < m_seamarks.size() ; i++)
+  for(int i = 0 ; i < v_seamarks.size() ; i++)
   {
     delete m_x[i];
   }

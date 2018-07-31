@@ -23,6 +23,7 @@ namespace tubex
   #define DEFAULT_TUBE_NAME         "[?](·)"
   #define DEFAULT_TRAJ_NAME         "?(·)"
   #define TRAJ_NB_DISPLAYED_POINTS  10000
+  
   // HTML color codes:
   #define DEFAULT_TRAJ_COLOR        "#276279"
   #define DEFAULT_FRGRND_COLOR      "#a2a2a2[#a2a2a2]"

@@ -22,6 +22,21 @@ namespace tubex
   {
     add_tube(tube, DEFAULT_TUBE_NAME);
     add_trajectory(traj, DEFAULT_TRAJ_NAME);
+
+    vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
+  }
+
+  void VibesFigure_Map::add_beacon(const Beacon& beacon, const string& color)
+  {
+    // Simply directly drawn
+    draw_beacon(beacon, color, vibesParams("figure", name(), "group", "beacons"));
+  }
+
+  void VibesFigure_Map::add_beacons(const vector<Beacon>& v_beacons, const string& color)
+  {
+    // Simply directly drawn
+    for(int i = 0 ; i < v_beacons.size() ; i++)
+      add_beacon(v_beacons[i], color);
   }
 
   const IntervalVector VibesFigure_Map::draw_tube(const TubeVector *tube, bool detail_slices)
@@ -56,7 +71,7 @@ namespace tubex
         }
       }
 
-      viewbox = keep_ratio(IntervalVector(image_lb) | image_ub);
+      viewbox = IntervalVector(image_lb) | image_ub;
 
     // Displaying tube
 
@@ -95,7 +110,7 @@ namespace tubex
         draw_tube_slices(tube, params_foreground);
       }
 
-    return viewbox;
+    return keep_ratio(viewbox);
   }
 
   const IntervalVector VibesFigure_Map::draw_trajectory(const TrajectoryVector *traj, float points_size)
@@ -133,7 +148,7 @@ namespace tubex
       vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
     }
 
-    return viewbox;
+    return keep_ratio(viewbox);
   }
 
   void VibesFigure_Map::draw_tube_slices(const TubeVector *tube, const vibes::Params& params)
@@ -148,6 +163,12 @@ namespace tubex
       return; // no display
 
     draw_box(slice.codomain().subvector(0,1), params);
+  }
+
+  void VibesFigure_Map::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
+  {
+    IntervalVector drawn_box = beacon.pos().subvector(0,1);
+    draw_box(drawn_box.inflate(2.), color, params);
   }
 
   const IntervalVector VibesFigure_Map::keep_ratio(const IntervalVector& viewbox) const

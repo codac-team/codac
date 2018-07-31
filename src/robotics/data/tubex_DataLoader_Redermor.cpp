@@ -119,4 +119,16 @@ namespace tubex
 
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
+
+  vector<Beacon> DataLoader_Redermor::get_beacons() const
+  {
+    vector<Beacon> v_beacons;
+    v_beacons.push_back(Beacon(594.0533723, 374.72930350, 19.));
+    v_beacons.push_back(Beacon(599.6093723, 484.55286430, 19.));
+    v_beacons.push_back(Beacon(601.4613723, 557.35730860, 19.));
+    v_beacons.push_back(Beacon(94.01337232, -2.868189501, 19.));
+    v_beacons.push_back(Beacon(119.9413723, 84.751556720, 20.));
+    v_beacons.push_back(Beacon(127.3493723, 156.32803660, 20.));
+    return v_beacons;
+  }
 }

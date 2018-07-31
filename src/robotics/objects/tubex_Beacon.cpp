@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DataLoader_Redermor class
+ *  tubex-lib - Beacon class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,28 +10,33 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_DATALOADER_REDERMOR_H__
-#define __TUBEX_DATALOADER_REDERMOR_H__
-
-#include "ibex_Interval.h"
-#include "tubex_DataLoader.h"
+#include <iostream>
 #include "tubex_Beacon.h"
+
+using namespace std;
+using namespace ibex;
 
 namespace tubex
 {
-  class DataLoader_Redermor : DataLoader
+  Beacon::Beacon(const Vector& pos)
+    : m_pos(pos), m_pos_box(pos)
   {
-    public:
 
-      DataLoader_Redermor(const std::string& file_path);
-      void load_data(TubeVector *&x,
-                     TrajectoryVector *&truth,
-                     const ibex::Interval& domain = ibex::Interval::ALL_REALS);
-      std::vector<Beacon> get_beacons() const;
+  }
 
-    protected:
+  Beacon::Beacon(double x, double y, double z)
+  {
+    m_pos[0] = x; m_pos[1] = y; m_pos[2] = z;
+    m_pos_box = IntervalVector(m_pos);
+  }
 
-  };
+  const ibex::Vector& Beacon::pos() const
+  {
+    return m_pos;
+  }
+
+  const ibex::IntervalVector& Beacon::pos_box() const
+  {
+    return m_pos_box;
+  }
 }
-
-#endif
