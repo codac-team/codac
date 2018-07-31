@@ -31,14 +31,12 @@ namespace tubex
   {
     m_name = figure_name;
 
-    for(int i = 0 ; i < nb_layers ; i++)
+    for(int i = nb_layers - 1 ; i >= 0 ; i--)
     {
       set_current_layer(i);
       vibes::newFigure(name());
       vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", name()));
     }
-    
-    set_current_layer(0);
   }
 
   const string VibesFigure::name() const
