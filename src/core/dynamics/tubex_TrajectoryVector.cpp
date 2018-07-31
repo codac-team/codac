@@ -269,12 +269,18 @@ namespace tubex
     if(x.m_function != NULL)
       str << " (Fnc object)";
 
-    else if(!x.m_map_values.empty() && x.m_map_values.size() < 10)
+    else if(!x.m_map_values.empty())
     {
-      str << ", " << x.m_map_values.size() << " pts: { ";
-      for(map<double,Vector>::const_iterator it = x.m_map_values.begin() ; it != x.m_map_values.end() ; it++)
-        str << "(" << it->first << "," << it->second << ") ";
-      str << "} ";
+      if(x.m_map_values.size() < 10)
+      {
+        str << ", " << x.m_map_values.size() << " pts: { ";
+        for(map<double,Vector>::const_iterator it = x.m_map_values.begin() ; it != x.m_map_values.end() ; it++)
+          str << "(" << it->first << "," << it->second << ") ";
+        str << "} ";
+      }
+
+      else
+        str << ", " << x.m_map_values.size() << " points";
     }
 
     str << flush;
