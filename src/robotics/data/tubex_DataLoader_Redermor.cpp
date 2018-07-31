@@ -68,7 +68,7 @@ namespace tubex
     }
 
     // Data from sensors with uncertainties
-    TubeVector data_x(traj_data_x, 1.);
+    TubeVector data_x(traj_data_x, 2.);
     data_x.inflate(traj_data_dx);
 
     // Computing robot's velocities

@@ -13,11 +13,9 @@ int main()
   DataLoader_Redermor data_loader("./data/redermor/gesmi.txt");
   data_loader.load_data(x, x_truth);
 
-  //vibes::beginDrawing();
-  //VibesFigure_Tube fig("Redermor", x/*, x_truth*/);
-  //fig.set_properties(1550, 50, 600, 300);
-  //fig.show();
-  //vibes::endDrawing();
+  vibes::beginDrawing();
+  VibesFigure_Tube fig("Redermor", x/*, x_truth*/);
+  fig.set_properties(1550, 50, 600, 300);
 
   IntervalVector seamark(2);
   map<int,IntervalVector*> m_seamarks;
@@ -43,52 +41,88 @@ int main()
   obs[0] = 3688.0; obs[1] = 26.98; m_obs[5].push_back(obs);
   obs[0] = 5279.0; obs[1] = 33.51; m_obs[5].push_back(obs);
 
-  CtcEval ctc_eval(false, true);
+  for(int i = 0 ; i < m_seamarks.size() ; i++)
+    for(int k = 0 ; k < m_obs[i].size() ; k++)
+      x->sample(m_obs[i][k][0].mid());
 
-  tubex::Function fg("x", "y", "xdot", "ydot", "bx", "by", 
-    "(bx ; by ; sqrt((x-bx)^2+(y-by)^2) ; ((sign(x-bx)/sqrt(1+(((y-by)/(x-bx))^2)))*xdot + (sign(y-by)/sqrt(1+(((x-bx)/(y-by))^2)))*ydot))");
-  map<int,Tube*> m_g;
+  CtcEval ctc_eval(false, false);
+
+  tubex::Function fg("x", "y", "xdot", "ydot", "bx", "by", "g", "gdot", 
+    "(sqrt((x-bx)^2+(y-by)^2) ; ((sign(x-bx)/sqrt(1+(((y-by)/(x-bx))^2)))*xdot + (sign(y-by)/sqrt(1+(((x-bx)/(y-by))^2)))*ydot))");
+  
+  map<int,TubeVector*> m_x;
   for(int i = 0 ; i < m_seamarks.size() ; i++)
   {
+    m_x[i] = new TubeVector(*x);
+    m_x[i]->resize(8);
+
+    // todo: optimize this block:
     TubeVector b(*x);
     b.resize(2);
     b.set(*m_seamarks[i]);
-    TubeVector temp(*x);
-    temp.resize(6);
-    temp.put(4, b);
-    TubeVector g = fg.eval(temp);
+    m_x[i]->put(4,b);
+    m_x[i]->put(6, fg.eval(*m_x[i]));
 
-    Tube tube_g(2, g), tube_gdot(3, g);
-
+    Tube temp_g(6, *m_x[i]), temp_gdot(7, *m_x[i]);
     for(int k = 0 ; k < m_obs[i].size() ; k++)
-    {
-      ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], tube_g, tube_gdot);
-    }
+      ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], temp_g, temp_gdot);
+    temp_g.ctc_deriv(temp_gdot);
+
+    m_x[i]->put(6, temp_g);
+    m_x[i]->put(7, temp_gdot);
   }
 
-    Variable vx, vy, vxdot, vydot, vbx, vby, vg, vgdot;
-    SystemFactory fac;
-    fac.add_var(vx);
-    fac.add_var(vy);
-    fac.add_var(vxdot);
-    fac.add_var(vydot);
-    fac.add_var(vbx);
-    fac.add_var(vby);
-    fac.add_var(vg);
-    fac.add_var(vgdot);
-    //fac.add_ctr(sqr(vx0) + sqr(vx1) = 1);
-    //System sys(fac);
-    //ibex::CtcHC4 hc4(sys);
+  Variable vt, vx, vy, vxdot, vydot, vbx, vby, vg, vgdot;
+  SystemFactory fac;
+  fac.add_var(vt);
+  fac.add_var(vx);
+  fac.add_var(vy);
+  fac.add_var(vxdot);
+  fac.add_var(vydot);
+  fac.add_var(vbx);
+  fac.add_var(vby);
+  fac.add_var(vg);
+  fac.add_var(vgdot);
+  fac.add_ctr(vg = sqrt(sqr(vx-vbx)+sqr(vy-vby)));
+  fac.add_ctr(vgdot = ((sign(vx-vbx)/sqrt(1+sqr((vy-vby)/(vx-vbx))))*vxdot + (sign(vy-vby)/sqrt(1+sqr((vx-vbx)/(vy-vby))))*vydot));
+  System sys(fac);
+  ibex::CtcHC4 hc4(sys);
+  tubex::CtcHC4 ctc_hc4;
 
-  tubex::CtcHC4 ctc_hc4();
-  tubex::Function fg_hc4("x", "y", "xdot", "ydot", "bx", "by", "g", "gdot",
-      "(g - sqrt((x-bx)^2+(y-by)^2) ; gdot - ((sign(x-bx)/sqrt(1+(((y-by)/(x-bx))^2)))*xdot + (sign(y-by)/sqrt(1+(((x-bx)/(y-by))^2)))*ydot))");
-  
   for(int i = 0 ; i < m_seamarks.size() ; i++)
   {
+    cout << "Seamark " << (i+1) << endl;
+    fig.show();
 
+    ctc_hc4.contract(hc4, *m_x[i]);
 
+    Tube x_temp(0, *m_x[i]);
+    Tube xdot_temp(2, *m_x[i]);
+    x_temp.ctc_deriv(xdot_temp);
+    m_x[i]->put(0, x_temp);
+
+    Tube y_temp(1, *m_x[i]);
+    Tube ydot_temp(3, *m_x[i]);
+    y_temp.ctc_deriv(ydot_temp);
+    m_x[i]->put(1, y_temp);
+
+    Tube g_temp(6, *m_x[i]);
+    Tube gdot_temp(7, *m_x[i]);
+    g_temp.ctc_deriv(gdot_temp);
+    m_x[i]->put(6, g_temp);
+
+    TubeVector temp(*m_x[i]);
+    temp.resize(4);
+    *x &= temp;
+    fig.show();
   }
+
+  for(int i = 0 ; i < m_seamarks.size() ; i++)
+  {
+    delete m_x[i];
+  }
+
+  vibes::endDrawing();
 
   delete x;
   delete x_truth;
