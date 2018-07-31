@@ -57,8 +57,8 @@ namespace tubex
     if(!bin_file.is_open())
       throw Exception("serialize_intervalvector()", "ofstream& bin_file not open");
 
-    char size = box.size();
-    bin_file.write((const char*)&size, sizeof(char));
+    short int size = box.size();
+    bin_file.write((const char*)&size, sizeof(short int));
     for(int i = 0 ; i < size ; i++)
       serialize_interval(bin_file, box[i]);
   }
@@ -106,8 +106,8 @@ namespace tubex
     if(!bin_file.is_open())
       throw Exception("deserialize_intervalvector()", "ifstream& bin_file not open");
 
-    char size;
-    bin_file.read((char*)&size, sizeof(char));
+    short int size;
+    bin_file.read((char*)&size, sizeof(short int));
     box = IntervalVector(size);
     for(int i = 0 ; i < size ; i++)
       deserialize_interval(bin_file, box[i]);

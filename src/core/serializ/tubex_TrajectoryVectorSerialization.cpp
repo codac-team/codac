@@ -23,8 +23,8 @@ namespace tubex
     TrajectoryVector binary files structure (VERSION 2)
       - minimal storage
       - note: only map valued trajectories are serializable
-      - format: [char_version_number]
-                [int_dim]
+      - format: [short_int_version_number]
+                [short_int_dim]
                 [int_nb_points]
                 [double_t_pt1]
                 [double_y_pt1]
@@ -46,7 +46,7 @@ namespace tubex
       throw Exception("serialize_trajvector()", "trajectory not defined");
 
     // Version number for compliance purposes
-    bin_file.write((const char*)&version_number, sizeof(char));
+    bin_file.write((const char*)&version_number, sizeof(short int));
 
     switch(version_number)
     {
@@ -57,12 +57,12 @@ namespace tubex
       case 2:
       {
         // Dimension
-        char dim = traj.dim();
-        bin_file.write((const char*)&dim, sizeof(char));
+        short int dim = traj.dim();
+        bin_file.write((const char*)&dim, sizeof(short int));
 
         // Points number
-        char pts_number = traj.get_map().size();
-        bin_file.write((const char*)&pts_number, sizeof(char));
+        int pts_number = traj.get_map().size();
+        bin_file.write((const char*)&pts_number, sizeof(int));
 
         typename map<double,Vector>::const_iterator it_map;
         for(it_map = traj.get_map().begin() ; it_map != traj.get_map().end() ; it_map++)
@@ -89,8 +89,8 @@ namespace tubex
       throw Exception("deserialize_trajvector()", "trajectory already defined");
 
     // Version number for compliance purposes
-    char version_number;
-    bin_file.read((char*)&version_number, sizeof(char));
+    short int version_number;
+    bin_file.read((char*)&version_number, sizeof(short int));
     
     switch(version_number)
     {
@@ -101,12 +101,12 @@ namespace tubex
       case 2:
       {
         // Dimension
-        char dim;
-        bin_file.read((char*)&dim, sizeof(char));
+        short int dim;
+        bin_file.read((char*)&dim, sizeof(short int));
 
         // Points number
-        char pts_number;
-        bin_file.read((char*)&pts_number, sizeof(char));
+        int pts_number;
+        bin_file.read((char*)&pts_number, sizeof(int));
 
         for(int i = 0 ; i < pts_number ; i++)
         {

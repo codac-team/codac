@@ -23,15 +23,15 @@ namespace tubex
   /*
     Tube binary files structure (VERSION 2)
       - minimal storage
-      - format: [char_version_number]
-                [int_dim]
+      - format: [short_int_version_number]
+                [short_int_dim]
                 [int_nb_slices]
                 [double_t0]
                 [double_t1] // time input shared by 1rst and 2nd slices
                 [double_t2]
                 ...
                 [interval_y0] // value of 1rst slice
-                [interval_y0]
+                [interval_y1]
                 ...
                 [gate_t0] // value of 1rst gate
                 [gate_t1]
@@ -44,7 +44,7 @@ namespace tubex
       throw Exception("serializeTube()", "ofstream& bin_file not open");
 
     // Version number for compliance purposes
-    bin_file.write((const char*)&version_number, sizeof(char));
+    bin_file.write((const char*)&version_number, sizeof(short int));
 
     switch(version_number)
     {
@@ -55,8 +55,8 @@ namespace tubex
       case 2:
       {
         // Slices number
-        int dim = tube.dim();
-        bin_file.write((const char*)&dim, sizeof(int));
+        short int dim = tube.dim();
+        bin_file.write((const char*)&dim, sizeof(short int));
 
         // Slices number
         int slices_number = tube.nb_slices();
@@ -98,8 +98,8 @@ namespace tubex
       throw Exception("deserializeTube()", "tube's already defined");
 
     // Version number for compliance purposes
-    char version_number;
-    bin_file.read((char*)&version_number, sizeof(char));
+    short int version_number;
+    bin_file.read((char*)&version_number, sizeof(short int));
 
     switch(version_number)
     {
@@ -110,8 +110,8 @@ namespace tubex
       case 2:
       {
         // Dimension
-        int dim;
-        bin_file.read((char*)&dim, sizeof(int));
+        short int dim;
+        bin_file.read((char*)&dim, sizeof(short int));
         DimensionException::check(dim);
 
         // Slices number
@@ -125,15 +125,25 @@ namespace tubex
         double lb;
         bin_file.read((char*)&lb, sizeof(double));
 
-        TubeSlice *prev_slice = NULL, *slice;
-        vector<double> v_domain_bounds;
+        TubeSlice *prev_slice = NULL, *slice = NULL;
         for(int i = 0 ; i < slices_number ; i++)
         {
           double ub;
           bin_file.read((char*)&ub, sizeof(double));
-          slice = new TubeSlice(Interval(lb, ub), dim);
+
+          if(slice == NULL)
+          {
+            slice = new TubeSlice(Interval(lb, ub), dim);
+            tube.m_first_slice = slice;
+          }
+
+          else
+          {
+            slice->m_next_slice = new TubeSlice(Interval(lb, ub), dim);
+            slice = slice->next_slice();
+          }
+
           slice->set_tube_ref(&tube);
-          lb = ub;
 
           if(prev_slice != NULL)
           {
@@ -143,34 +153,28 @@ namespace tubex
           }
 
           prev_slice = slice;
-          if(tube.m_first_slice == NULL) tube.m_first_slice = slice;
-          slice = slice->next_slice();
+          lb = ub;
         }
 
         // Codomains
+        IntervalVector slice_value(dim);
         for(TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
         {
-          IntervalVector slice_value(dim);
           deserialize_intervalvector(bin_file, slice_value);
           s->set(slice_value);
         }
 
         // Gates
 
-        int gates_number = slices_number + 1;
-        for(int i = 0 ; i < gates_number ; i++)
+        IntervalVector gate(dim);
+        for(TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
         {
-          IntervalVector gate(dim);
           deserialize_intervalvector(bin_file, gate);
-
-          double t;
-          if(i < gates_number - 1)
-            t = tube.get_slice(i)->domain().lb();
-          else
-            t = tube.domain().ub();
-
-          tube.set(gate, t);
+          s->set_input_gate(gate);
         }
+        
+        deserialize_intervalvector(bin_file, gate); // last gate
+        tube.get_last_slice()->set_output_gate(gate);
 
         break;
       }
