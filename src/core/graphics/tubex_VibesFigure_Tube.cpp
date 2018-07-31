@@ -321,7 +321,7 @@ namespace tubex
           image_lb = NAN;
           image_ub = NAN;
 
-          for(int i = 0 ; i < tube->nb_slices() ; i++)
+          for(int i = 0 ; i < tube->nb_slices() ; i++) // todo: slice ptr iteration
           {
             Interval slice = (*tube)[i][m_current_layer];
             if(!slice.is_unbounded())
@@ -372,41 +372,42 @@ namespace tubex
 
         // Second, the foreground: actual values of the tube.
         // Can be either displayed slice by slice or with a polygon envelope.
-
-        vibes::Params params_foreground = vibesParams("group", group_name);
-        vibes::Params params_foreground_polygons = vibesParams("group", group_name + "_polygons");
-        vibes::Params params_foreground_gates = vibesParams("group", group_name + "_gates", "FixedScale", true);
-        vibes::clearGroup(name(), group_name);
-        vibes::clearGroup(name(), group_name + "_polygons");
-        vibes::clearGroup(name(), group_name + "_gates");
-
-        if(detail_slices)
         {
-          const TubeSlice *slice = tube->get_first_slice();
-          const TubeSlice *deriv_slice = NULL;
+          vibes::Params params_foreground = vibesParams("group", group_name);
+          vibes::Params params_foreground_polygons = vibesParams("group", group_name + "_polygons");
+          vibes::Params params_foreground_gates = vibesParams("group", group_name + "_gates", "FixedScale", true);
+          vibes::clearGroup(name(), group_name);
+          vibes::clearGroup(name(), group_name + "_polygons");
+          vibes::clearGroup(name(), group_name + "_gates");
 
-          if(m_map_tubes[tube].tube_derivative != NULL)
-            deriv_slice = m_map_tubes[tube].tube_derivative->get_first_slice();
-
-          draw_gate(slice->input_gate()[m_current_layer], tube->domain().lb(), params_foreground_gates);
-
-          while(slice != NULL)
+          if(detail_slices)
           {
-            if(deriv_slice != NULL)
-              draw_slice(*slice, *deriv_slice, params_foreground, params_foreground_polygons);
-            else
-              draw_slice(*slice, params_foreground);
+            const TubeSlice *slice = tube->get_first_slice();
+            const TubeSlice *deriv_slice = NULL;
 
-            draw_gate(slice->output_gate()[m_current_layer], slice->domain().ub(), params_foreground_gates);
-            slice = slice->next_slice();
-            
-            if(deriv_slice != NULL)
-              deriv_slice = deriv_slice->next_slice();
+            if(m_map_tubes[tube].tube_derivative != NULL)
+              deriv_slice = m_map_tubes[tube].tube_derivative->get_first_slice();
+
+            draw_gate(slice->input_gate()[m_current_layer], tube->domain().lb(), params_foreground_gates);
+
+            while(slice != NULL)
+            {
+              if(deriv_slice != NULL)
+                draw_slice(*slice, *deriv_slice, params_foreground, params_foreground_polygons);
+              else
+                draw_slice(*slice, params_foreground);
+
+              draw_gate(slice->output_gate()[m_current_layer], slice->domain().ub(), params_foreground_gates);
+              slice = slice->next_slice();
+              
+              if(deriv_slice != NULL)
+                deriv_slice = deriv_slice->next_slice();
+            }
           }
-        }
 
-        else
-          draw_polygon(polygon_envelope(tube), params_foreground);
+          else
+            draw_polygon(polygon_envelope(tube), params_foreground);
+        }
 
       return viewbox;
     }
@@ -483,6 +484,7 @@ namespace tubex
       std::ostringstream o;
       o << "traj_" << m_map_trajs[traj].name;
       string group_name = o.str();
+      vibes::clearGroup(name(), group_name);
 
       if(traj->domain().is_unbounded() || traj->domain().is_empty())
         return viewbox;

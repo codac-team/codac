@@ -14,8 +14,13 @@ int main()
   data_loader.load_data(x, x_truth);
 
   vibes::beginDrawing();
-  VibesFigure_Tube fig("Redermor", x, x_truth);
-  fig.set_properties(1550, 50, 600, 300);
+  VibesFigure_Tube fig_x("Redermor state", 5);
+  fig_x.add_tube(x, "x");
+  fig_x.add_trajectory(x_truth, "x_truth");
+  fig_x.set_properties(2000, 50, 500, 250);
+
+  VibesFigure_Map fig_map("Redermor map", x, x_truth);
+  fig_map.set_properties(1450, 50, 500, 500);
 
   IntervalVector seamark(3);
   map<int,IntervalVector*> m_seamarks;
@@ -104,7 +109,8 @@ int main()
   for(int i = 0 ; i < m_seamarks.size() ; i++)
   {
     cout << "Seamark " << (i+1) << endl;
-    fig.show();
+    fig_x.show();
+    fig_map.show();
 
     ctc_hc4.contract(hc4, *m_x[i]);
 
@@ -131,8 +137,10 @@ int main()
     TubeVector temp(*m_x[i]);
     temp.resize(6);
     *x &= temp;
-    fig.show();
   }
+
+  fig_x.show();
+  fig_map.show();
 
   for(int i = 0 ; i < m_seamarks.size() ; i++)
   {

@@ -61,8 +61,8 @@ namespace tubex
     {
       set_current_layer(i);
       vibes::setFigureProperties(
-                vibesParams("x", m_x + i*50,
-                            "y", m_y + i*50,
+                vibesParams("x", m_x + i*(200./m_nb_layers),
+                            "y", m_y + i*(200./m_nb_layers),
                             "width", m_width,
                             "height", m_height));
     }
