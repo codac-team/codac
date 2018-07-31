@@ -354,6 +354,7 @@ namespace tubex
           {
             // If a copy of the tube has not been done,
             // we make one and no display is done.
+            m_map_tubes[tube].tube_copy = new TubeVector(*tube);
           }
 
           else
@@ -365,10 +366,8 @@ namespace tubex
             vibes::Params params_background = vibesParams("figure", name(), "group", group_name_bckgrnd);
             draw_polygon(polygon_envelope(m_map_tubes[tube].tube_copy), params_background);
 
-            delete m_map_tubes[tube].tube_copy;
+            //delete m_map_tubes[tube].tube_copy;
           }
-          
-          m_map_tubes[tube].tube_copy = new TubeVector(*tube);
         }
 
         // Second, the foreground: actual values of the tube.
