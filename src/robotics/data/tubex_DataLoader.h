@@ -31,8 +31,13 @@ namespace tubex
                              TrajectoryVector *&truth,
                              const ibex::Interval& domain = ibex::Interval::ALL_REALS) = 0;
 
+      bool serialized_data_available() const;
+      void deserialize_data(TubeVector *&x, TrajectoryVector *&traj) const;
+      void serialize_data(const TubeVector& x, const TrajectoryVector& traj) const;
+
     protected:
 
+      std::string m_file_path;
       std::ifstream *m_datafile;
   };
 }
