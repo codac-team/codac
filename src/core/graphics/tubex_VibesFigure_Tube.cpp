@@ -414,7 +414,7 @@ namespace tubex
     const Polygon VibesFigure_Tube::polygon_envelope(const TubeVector *tube) const
     {
       if(tube->is_empty())
-        cout << "Tube graphics: warning, empty tube" << endl;
+        cout << "Tube graphics: warning, empty tube (" << name() << ")" << endl;
 
       vector<Point> v_pts;
 

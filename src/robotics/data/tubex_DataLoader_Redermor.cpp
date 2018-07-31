@@ -11,9 +11,9 @@
  * ---------------------------------------------------------------------------- */
 
 #include <time.h>
-#include "tubex_Exception.h"
 #include "tubex_DataLoader_Redermor.h"
 #include "tubex_Function.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -36,7 +36,7 @@ namespace tubex
 
     int i = 0;
     string line;
-    TrajectoryVector traj_data_x, traj_data_dx;
+    TrajectoryVector traj_data_x, traj_data_dx, traj_depth, traj_ddepth;
     truth = new TrajectoryVector();
 
     while(getline(*m_datafile, line))
@@ -62,27 +62,50 @@ namespace tubex
                >> y[9] >> dy[9])) // y
         throw Exception("DataLoader_Redermor::load_data", "fail loading data");
 
+      // Trajectory used for velocities evaluations:
       traj_data_x.set(t, y.subvector(0,5));
       traj_data_dx.set(t, dy.subvector(0,5));
-      truth->set(t, y.subvector(8,9));
+
+      // Trajectory used for depth enclosure:
+      traj_depth.set(t, y.subvector(6,6));
+      traj_ddepth.set(t, 0.01 * y.subvector(6,6));
+
+      // Trajectory used as ground truth:
+      Vector truth_vector(6);
+      truth_vector.put(0, y.subvector(8,9));
+      truth_vector[2] = y[6];
+      truth_vector.put(3, Vector(3, 0.));
+      truth->set(t, truth_vector);
     }
 
-    // Data from sensors with uncertainties
+    // Data from sensors with uncertainties:
     TubeVector data_x(traj_data_x, 2.);
     data_x.inflate(traj_data_dx);
 
-    // Computing robot's velocities
+    // Computing robot's velocities:
     tubex::Function f("phi", "theta", "psi", "vxr", "vyr", "vzr", 
                       "(vxr * cos(theta) * cos(psi) \
                         - vyr * (cos(phi) * sin(psi) - sin(theta) * cos(psi) * sin(phi)) \
-                        + vzr * (sin(phi) * sin(psi) + sin(theta) * cos(psi) * cos(phi)) ; \
+                        + vzr * (sin(phi) * sin(psi) + sin(theta) * cos(psi) * cos(phi)) \
+                        ; \
                         vxr * cos(theta) * sin(psi) \
                         + vyr * (cos(psi) * cos(phi) + sin(theta) * sin(psi) * sin(phi)) \
-                        - vzr * (cos(psi) * sin(phi) - sin(theta) * cos(phi) * sin(psi)))");
+                        - vzr * (cos(psi) * sin(phi) - sin(theta) * cos(phi) * sin(psi)) ; \
+                        - vxr * sin(theta) + vyr * cos(theta)*sin(phi) + vzr * cos(theta) * cos(phi))");
+    TubeVector velocities = f.eval(data_x);
 
+    // State vector:
     x = new TubeVector(data_x);
-    x->resize(4);
-    x->put(0, f.eval(data_x).primitive());
-    x->put(2, f.eval(data_x));
+    x->resize(6);
+    x->put(0, velocities.primitive());
+    x->put(3, velocities);
+
+    // Case of the depth, directly sensed:
+    TubeVector depth(*x);
+    depth.resize(1);
+    depth.set_empty();
+    depth |= traj_depth;
+    depth.inflate(traj_ddepth);
+    x->put(2, depth);
   }
 }
