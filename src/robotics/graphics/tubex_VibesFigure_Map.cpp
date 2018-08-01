@@ -11,11 +11,13 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_VibesFigure_Map.h"
+#include "tubex_Colors.h"
 
 using namespace std;
 using namespace ibex;
 
-#define SLICES_NUMBER_TO_DISPLAY 100
+#define GRAY_DISPLAY_MODE         0
+#define SLICES_NUMBER_TO_DISPLAY  1000
 
 namespace tubex
 {
@@ -23,7 +25,7 @@ namespace tubex
     : VibesFigure_Tube(fig_name, 1) // one layer
   {
     add_tube(tube, DEFAULT_TUBE_NAME);
-    add_trajectory(traj, DEFAULT_TRAJ_NAME);
+    add_trajectory(traj, DEFAULT_TRAJ_NAME, GRAY_DISPLAY_MODE ? DEFAULT_TRAJ_COLOR : "white");
 
     vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
   }
@@ -99,7 +101,7 @@ namespace tubex
 
           vibes::clearGroup(name(), group_name_bckgrnd);
           vibes::Params params_background = vibesParams("figure", name(), "group", group_name_bckgrnd);
-          draw_tube_slices(m_map_tubes[tube].tube_copy, params_background);
+          draw_tube_slices(m_map_tubes[tube].tube_copy, params_background, true);
 
           //delete m_map_tubes[tube].tube_copy;
         }
@@ -109,7 +111,7 @@ namespace tubex
       {
         vibes::Params params_foreground = vibesParams("group", group_name);
         vibes::clearGroup(name(), group_name);
-        draw_tube_slices(tube, params_foreground);
+        draw_tube_slices(tube, params_foreground, false);
       }
 
     return keep_ratio(viewbox);
@@ -136,7 +138,8 @@ namespace tubex
       {
         if(points_size != 0.)
           vibes::drawPoint(it_scalar_values->second[0], it_scalar_values->second[1],
-                           points_size, vibesParams("figure", name(), "group", group_name));
+                           points_size,
+                           vibesParams("figure", name(), "group", group_name));
 
         else
         {
@@ -153,26 +156,63 @@ namespace tubex
     return keep_ratio(viewbox);
   }
 
-  void VibesFigure_Map::draw_tube_slices(const TubeVector *tube, const vibes::Params& params)
+  void VibesFigure_Map::draw_tube_slices(const TubeVector *tube, const vibes::Params& params, bool background_tube)
   {
     int step = max((int)(tube->nb_slices() / SLICES_NUMBER_TO_DISPLAY), 1);
 
+    int i = 0;
+    string color;
+    if(background_tube)
+      color = DEFAULT_BCKGRND_COLOR;
+
     for(const TubeSlice *s = tube->get_first_slice() ; s != NULL ; )
     {
-      draw_slice(*s, params);
+      if(!background_tube)
+        color = shaded_slice_color((1. * i) / tube->nb_slices());
+      draw_slice(*s, color, params);
 
       // Reduced number of slices
-      for(int i = 0 ; i < step && s != NULL ; i++)
+      for(int j = 0 ; j < step && s != NULL ; j++)
+      {
+        i++;
         s = s->next_slice();
+      }
     }
   }
 
-  void VibesFigure_Map::draw_slice(const TubeSlice& slice, const vibes::Params& params)
+  const string VibesFigure_Map::shaded_slice_color(float r) const
+  {
+    float color_gray_min = 128, color_gray_max = 220;
+
+    if(!GRAY_DISPLAY_MODE)
+    {
+      color_gray_min = 127.5;
+      color_gray_max = 229.5;
+    }
+
+    int g = color_gray_min + (color_gray_max - color_gray_min) * (1. - r);
+
+    hsv hsv_value;
+    hsv_value.v = g / 255.;
+    hsv_value.h = 0.;
+    hsv_value.s = 0.;
+
+    if(!GRAY_DISPLAY_MODE)
+    {
+      hsv_value.h = 200.;
+      hsv_value.s = 0.40;
+    }
+
+    string hex_color = rgb2hex(hsv2rgb(hsv_value));
+    return hex_color + "[" + hex_color + "]";
+  }
+
+  void VibesFigure_Map::draw_slice(const TubeSlice& slice, const std::string& color, const vibes::Params& params)
   {
     if(slice.codomain().subvector(0,1).is_empty())
       return; // no display
 
-    draw_box(slice.codomain().subvector(0,1), params);
+    draw_box(slice.codomain().subvector(0,1), color, params);
   }
 
   void VibesFigure_Map::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
