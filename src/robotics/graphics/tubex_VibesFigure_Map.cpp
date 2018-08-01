@@ -15,6 +15,8 @@
 using namespace std;
 using namespace ibex;
 
+#define SLICES_NUMBER_TO_DISPLAY 100
+
 namespace tubex
 {
   VibesFigure_Map::VibesFigure_Map(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
@@ -153,8 +155,16 @@ namespace tubex
 
   void VibesFigure_Map::draw_tube_slices(const TubeVector *tube, const vibes::Params& params)
   {
-    for(const TubeSlice *s = tube->get_first_slice() ; s != NULL ; s = s->next_slice())
+    int step = max((int)(tube->nb_slices() / SLICES_NUMBER_TO_DISPLAY), 1);
+
+    for(const TubeSlice *s = tube->get_first_slice() ; s != NULL ; )
+    {
       draw_slice(*s, params);
+
+      // Reduced number of slices
+      for(int i = 0 ; i < step && s != NULL ; i++)
+        s = s->next_slice();
+    }
   }
 
   void VibesFigure_Map::draw_slice(const TubeSlice& slice, const vibes::Params& params)
