@@ -21,72 +21,72 @@ TEST_CASE("Tube values")
 
     CHECK(x.nb_slices() == 46);
 
-    CHECK(x[ 0] == Interval(4,8));
-    CHECK(x[ 1] == Interval(2,7));
-    CHECK(x[ 2] == Interval(1,6));
-    CHECK(x[ 3] == Interval(-4,4));
-    CHECK(x[ 4] == Interval(-7,-1));
-    CHECK(x[ 5] == Interval(-9,-5));
-    CHECK(x[ 6] == Interval(-10,-6));
-    CHECK(x[ 7] == Interval(-11,-7));
-    CHECK(x[ 8] == Interval(-10,-6));
-    CHECK(x[ 9] == Interval(-9,-4));
-    CHECK(x[10] == Interval(-8,-5));
-    CHECK(x[11] == Interval(-7,-4));
-    CHECK(x[12] == Interval(-6,-2));
-    CHECK(x[13] == Interval(-5,-1));
-    CHECK(x[14] == Interval(-4,2));
-    CHECK(x[15] == Interval(-2,4));
-    CHECK(x[16] == Interval(0,6));
-    CHECK(x[17] == Interval(2,7));
-    CHECK(x[18] == Interval(4,8));
-    CHECK(x[19] == Interval(6,9));
-    CHECK(x[20] == Interval(7,10));
-    CHECK(x[21] == Interval(8,11));
-    CHECK(x[22] == Interval(9,12));
-    CHECK(x[23] == Interval(8,13));
-    CHECK(x[24] == Interval(7,12));
-    CHECK(x[25] == Interval(5,11));
-    CHECK(x[26] == Interval(3,10));
-    CHECK(x[27] == Interval(4,9));
-    CHECK(x[28] == Interval(5,8));
-    CHECK(x[29] == Interval(4,7));
-    CHECK(x[30] == Interval(3,6));
-    CHECK(x[31] == Interval(3,5));
-    CHECK(x[32] == Interval(2,5));
-    CHECK(x[33] == Interval(2,5));
-    CHECK(x[34] == Interval(1,5));
-    CHECK(x[35] == Interval(2,4));
-    CHECK(x[36] == Interval(1,4));
-    CHECK(x[37] == Interval(0,4));
-    CHECK(x[38] == Interval(-1,3));
-    CHECK(x[39] == Interval(-1,3));
-    CHECK(x[40] == Interval(-1,4));
-    CHECK(x[41] == Interval(0,5));
-    CHECK(x[42] == Interval(1,6));
-    CHECK(x[43] == Interval(0,5));
-    CHECK(x[44] == Interval(-1,4));
-    CHECK(x[45] == Interval(-1,3));
+    CHECK(x( 0) == Interval(4,8));
+    CHECK(x( 1) == Interval(2,7));
+    CHECK(x( 2) == Interval(1,6));
+    CHECK(x( 3) == Interval(-4,4));
+    CHECK(x( 4) == Interval(-7,-1));
+    CHECK(x( 5) == Interval(-9,-5));
+    CHECK(x( 6) == Interval(-10,-6));
+    CHECK(x( 7) == Interval(-11,-7));
+    CHECK(x( 8) == Interval(-10,-6));
+    CHECK(x( 9) == Interval(-9,-4));
+    CHECK(x(10) == Interval(-8,-5));
+    CHECK(x(11) == Interval(-7,-4));
+    CHECK(x(12) == Interval(-6,-2));
+    CHECK(x(13) == Interval(-5,-1));
+    CHECK(x(14) == Interval(-4,2));
+    CHECK(x(15) == Interval(-2,4));
+    CHECK(x(16) == Interval(0,6));
+    CHECK(x(17) == Interval(2,7));
+    CHECK(x(18) == Interval(4,8));
+    CHECK(x(19) == Interval(6,9));
+    CHECK(x(20) == Interval(7,10));
+    CHECK(x(21) == Interval(8,11));
+    CHECK(x(22) == Interval(9,12));
+    CHECK(x(23) == Interval(8,13));
+    CHECK(x(24) == Interval(7,12));
+    CHECK(x(25) == Interval(5,11));
+    CHECK(x(26) == Interval(3,10));
+    CHECK(x(27) == Interval(4,9));
+    CHECK(x(28) == Interval(5,8));
+    CHECK(x(29) == Interval(4,7));
+    CHECK(x(30) == Interval(3,6));
+    CHECK(x(31) == Interval(3,5));
+    CHECK(x(32) == Interval(2,5));
+    CHECK(x(33) == Interval(2,5));
+    CHECK(x(34) == Interval(1,5));
+    CHECK(x(35) == Interval(2,4));
+    CHECK(x(36) == Interval(1,4));
+    CHECK(x(37) == Interval(0,4));
+    CHECK(x(38) == Interval(-1,3));
+    CHECK(x(39) == Interval(-1,3));
+    CHECK(x(40) == Interval(-1,4));
+    CHECK(x(41) == Interval(0,5));
+    CHECK(x(42) == Interval(1,6));
+    CHECK(x(43) == Interval(0,5));
+    CHECK(x(44) == Interval(-1,4));
+    CHECK(x(45) == Interval(-1,3));
 
-    CHECK(x[7] == Interval(-11,-7));
-    CHECK(x[3.5] == Interval(-4,4));
-    CHECK(x[17.5] == Interval(2,7));
-    CHECK(x[32.5] == Interval(2,5));
-    CHECK(x[17.0] == Interval(2,6)); // t belongs to two slices
-    CHECK(x[16.9999999] == Interval(0,6));
-    CHECK(x[17.0000001] == Interval(2,7));
-    CHECK(x[Interval(9.5,17.5)] == Interval(-9,7));
-    CHECK(x[Interval(16.1,37.9)] == Interval(0,13));
-    CHECK(x[Interval(37.4,45.6)] == Interval(-1,6));
-    CHECK(x[Interval(14.0,27.0)] == Interval(-4,13));
-    CHECK(x[Interval(19.2,35.7)] == Interval(1,13));
-    CHECK(x[Interval(15.0,16.0)] == Interval(-2,4));
-    CHECK(x[Interval(15.2,15.3)] == Interval(-2,4));
-    CHECK(x[15.2] == Interval(-2,4));
-    CHECK(x[Interval(0.)] == Interval(4,8));
-    CHECK(x[Interval(5.)] == Interval(-7,-5));
-    CHECK(x[Interval(24.)] == Interval(8,12));
-    CHECK(x[Interval(46.)] == Interval(-1,3));
+    CHECK(x(7) == Interval(-11,-7));
+    CHECK(x(3.5) == Interval(-4,4));
+    CHECK(x(17.5) == Interval(2,7));
+    CHECK(x(32.5) == Interval(2,5));
+    CHECK(x(17.0) == Interval(2,6)); // t belongs to two slices
+    CHECK(x(16.9999999) == Interval(0,6));
+    CHECK(x(17.0000001) == Interval(2,7));
+    CHECK(x(Interval(9.5,17.5)) == Interval(-9,7));
+    CHECK(x(Interval(16.1,37.9)) == Interval(0,13));
+    CHECK(x(Interval(37.4,45.6)) == Interval(-1,6));
+    CHECK(x(Interval(14.0,27.0)) == Interval(-4,13));
+    CHECK(x(Interval(19.2,35.7)) == Interval(1,13));
+    CHECK(x(Interval(15.0,16.0)) == Interval(-2,4));
+    CHECK(x(Interval(15.2,15.3)) == Interval(-2,4));
+    CHECK(x(15.2) == Interval(-2,4));
+    CHECK(x(Interval(0.)) == Interval(4,8));
+    CHECK(x(Interval(5.)) == Interval(-7,-5));
+    CHECK(x(Interval(24.)) == Interval(8,12));
+    CHECK(x(Interval(46.)) == Interval(-1,3));
     CHECK(x.codomain() == Interval(-11,13));
   }
 
@@ -104,22 +104,22 @@ TEST_CASE("Tube values")
     x.set(Interval(2.,4.), Interval(2.,3.));
     CHECK(x.nb_slices() == 3);
     CHECK(x.get_slice(0)->domain() == Interval(0.,2.));
-    CHECK(x[0] == Interval(6.,10.));
+    CHECK(x(0) == Interval(6.,10.));
     CHECK(x.get_slice(1)->domain() == Interval(2.,3.));
-    CHECK(x[1] == Interval(2.,4.));
+    CHECK(x(1) == Interval(2.,4.));
     CHECK(x.get_slice(2)->domain() == Interval(3.,10.));
-    CHECK(x[2] == Interval(6.,10.));
+    CHECK(x(2) == Interval(6.,10.));
 
     // Gates, slices intersection
     x.set(Interval(1.,3.), Interval(0.,2.));
     CHECK(x.nb_slices() == 3);
-    CHECK(x[0] == Interval(1.,3.));
-    CHECK(x[0.] == Interval(1.,3.));
-    CHECK(x[2.] == Interval(2.,3.));
-    CHECK(x[2.01] == Interval(2.,4.));
-    CHECK(x[3.] == Interval::EMPTY_SET);
+    CHECK(x(0) == Interval(1.,3.));
+    CHECK(x(0.) == Interval(1.,3.));
+    CHECK(x(2.) == Interval(2.,3.));
+    CHECK(x(2.01) == Interval(2.,4.));
+    CHECK(x(3.) == Interval::EMPTY_SET);
     x.set(Interval(4.,5.), Interval(3.,4.));
-    CHECK(x[3.] == Interval(4.));
+    CHECK(x(3.) == Interval(4.));
   }
 
   SECTION("Setting values over an interval domain (bis)")
@@ -138,18 +138,18 @@ TEST_CASE("Tube values")
     x.set(Interval(-3.,2.), Interval(4.,6.));
     x.set(Interval(-2.,1.), Interval(6.,8.));
 
-    CHECK(x[0] == Interval(-3.,2.));
-    CHECK(x[1] == Interval(-1.,3.));
-    CHECK(x[2] == Interval(-3.,2.));
-    CHECK(x[3] == Interval(-2.,1.));
+    CHECK(x(0) == Interval(-3.,2.));
+    CHECK(x(1) == Interval(-1.,3.));
+    CHECK(x(2) == Interval(-3.,2.));
+    CHECK(x(3) == Interval(-2.,1.));
     CHECK(x.codomain() == Interval(-3.,3.));
 
     // The gates have been changed too
-    CHECK(x[0.] == Interval(-3.,2.));
-    CHECK(x[2.] == Interval(-1.,2.));
-    CHECK(x[4.] == Interval(-1.,2.));
-    CHECK(x[6.] == Interval(-2.,1.));
-    CHECK(x[8.] == Interval(-2.,1.));
+    CHECK(x(0.) == Interval(-3.,2.));
+    CHECK(x(2.) == Interval(-1.,2.));
+    CHECK(x(4.) == Interval(-1.,2.));
+    CHECK(x(6.) == Interval(-2.,1.));
+    CHECK(x(8.) == Interval(-2.,1.));
 
     // Setting again the gates
     x.set(Interval(-3.,1.), 0.);
@@ -159,31 +159,31 @@ TEST_CASE("Tube values")
     x.set(Interval(-2.,1.), 8.);
 
     // Checking new values
-    CHECK(x[0.] == Interval(-3.,1.));
-    CHECK(x[2.] == Interval(0.,1.));
-    CHECK(x[4.] == Interval(-1.,1.));
-    CHECK(x[6.] == Interval(-1.,0.));
-    CHECK(x[8.] == Interval(-2.,1.));
+    CHECK(x(0.) == Interval(-3.,1.));
+    CHECK(x(2.) == Interval(0.,1.));
+    CHECK(x(4.) == Interval(-1.,1.));
+    CHECK(x(6.) == Interval(-1.,0.));
+    CHECK(x(8.) == Interval(-2.,1.));
 
     // New setting over all slices
     x.set(Interval(-1.5,1.5), Interval(1.,7.));
 
     // Checking gates...
-    CHECK(x[0.] == Interval(-3.,1.)); // not changed
-    CHECK(x[1.] == Interval(-1.5,1.5)); // new gate
-    CHECK(x[2.] == Interval(-1.5,1.5));
-    CHECK(x[4.] == Interval(-1.5,1.5));
-    CHECK(x[6.] == Interval(-1.5,1.5));
-    CHECK(x[7.] == Interval(-1.5,1.)); // new gate
-    CHECK(x[8.] == Interval(-2.,1.)); // not changed
+    CHECK(x(0.) == Interval(-3.,1.)); // not changed
+    CHECK(x(1.) == Interval(-1.5,1.5)); // new gate
+    CHECK(x(2.) == Interval(-1.5,1.5));
+    CHECK(x(4.) == Interval(-1.5,1.5));
+    CHECK(x(6.) == Interval(-1.5,1.5));
+    CHECK(x(7.) == Interval(-1.5,1.)); // new gate
+    CHECK(x(8.) == Interval(-2.,1.)); // not changed
 
     // ...and values
-    CHECK(x[0] == Interval(-3.,2.)); // not changed
-    CHECK(x[1] == Interval(-1.5,1.5));
-    CHECK(x[2] == Interval(-1.5,1.5));
-    CHECK(x[3] == Interval(-1.5,1.5));
-    CHECK(x[4] == Interval(-1.5,1.5));
-    CHECK(x[5] == Interval(-2.,1.)); // not changed
+    CHECK(x(0) == Interval(-3.,2.)); // not changed
+    CHECK(x(1) == Interval(-1.5,1.5));
+    CHECK(x(2) == Interval(-1.5,1.5));
+    CHECK(x(3) == Interval(-1.5,1.5));
+    CHECK(x(4) == Interval(-1.5,1.5));
+    CHECK(x(5) == Interval(-2.,1.)); // not changed
   }
 
   SECTION("Setting values at some precise time input")
@@ -193,19 +193,19 @@ TEST_CASE("Tube values")
     CHECK(x.nb_slices() == 2);
     CHECK(x.get_slice(0)->domain() == Interval(0.,2.));
     CHECK(x.get_slice(1)->domain() == Interval(2.,10.));
-    CHECK(x[0] == Interval::ALL_REALS);
-    CHECK(x[1] == Interval::ALL_REALS);
-    CHECK(x[2.] == Interval(3.,4.));
+    CHECK(x(0) == Interval::ALL_REALS);
+    CHECK(x(1) == Interval::ALL_REALS);
+    CHECK(x(2.) == Interval(3.,4.));
   }
 
   SECTION("Test x4")
   {
     Tube x = tube_test4();
     CHECK(x.codomain() == Interval(-1.5,2));
-    CHECK(x[0] == Interval(1.,2.));
-    CHECK(x[10.2] == Interval(0.5,1.0));
-    CHECK(x[11.0] == Interval::EMPTY_SET);
-    CHECK(x[1.5] == Interval(1.,2.));
+    CHECK(x(0) == Interval(1.,2.));
+    CHECK(x(10.2) == Interval(0.5,1.0));
+    CHECK(x(11.0) == Interval::EMPTY_SET);
+    CHECK(x(1.5) == Interval(1.,2.));
   }
 }
 
@@ -515,11 +515,11 @@ TEST_CASE("Testing is_subset()")
 
     slice1.set_input_gate(IntervalVector(1, Interval(0.5,2.)));
     CHECK(slice1.is_subset(slice2));
-    CHECK(slice1[0.][0] == Interval(1.,2.));
+    CHECK(slice1(0.)[0] == Interval(1.,2.));
 
     slice1.set_output_gate(IntervalVector(1, Interval(0.5,2.)));
     CHECK(slice1.is_subset(slice2));
-    CHECK(slice1[1.][0] == Interval(1.,2.));
+    CHECK(slice1(1.)[0] == Interval(1.,2.));
   }
 
   SECTION("Tube")
@@ -637,8 +637,8 @@ TEST_CASE("Testing inflate()")
     slice.set_input_gate(IntervalVector(1, Interval(0.,0.5)));
     slice.set_output_gate(IntervalVector(1, Interval(0.,0.3)));
 
-    CHECK(slice[0.][0] == Interval(0.,0.5));
-    CHECK(slice[10.][0] == Interval(0.,0.3));
+    CHECK(slice(0.)[0] == Interval(0.,0.5));
+    CHECK(slice(10.)[0] == Interval(0.,0.3));
 
     slice.inflate(1.);
 
@@ -651,26 +651,26 @@ TEST_CASE("Testing inflate()")
   {
     Tube x(Interval(0.,10.), 0.8, Interval(0.));
     CHECK(x.codomain() == Interval(0.));
-    CHECK(x[3] == Interval(0.));
+    CHECK(x(3) == Interval(0.));
     CHECK(x.get_slice(3)->input_gate()[0] == Interval(0.));
     CHECK(x.get_slice(6)->input_gate()[0] == Interval(0.));
     x.inflate(0.2);
     CHECK(x.codomain() == Interval(-0.2,0.2));
-    CHECK(x[6] == Interval(-0.2,0.2));
+    CHECK(x(6) == Interval(-0.2,0.2));
     CHECK(x.get_slice(6)->input_gate()[0] == Interval(-0.2,0.2));
     x.inflate(1.);
     CHECK(ApproxIntv(x.codomain()) == Interval(-1.2,1.2));
-    CHECK(ApproxIntv(x[9]) == Interval(-1.2,1.2));
+    CHECK(ApproxIntv(x(9)) == Interval(-1.2,1.2));
     CHECK(ApproxIntv(x.get_slice(9)->input_gate()[0]) == Interval(-1.2,1.2));
     double t = x.get_slice(9)->domain().lb();
     x.set(Interval(3.,7.), 8);
     x.set(Interval(3.,7.), 9);
     x.set(Interval(4.,6.), t);
-    CHECK(ApproxIntv(x[t]) == Interval(4.,6.));
+    CHECK(ApproxIntv(x(t)) == Interval(4.,6.));
     x.inflate(2.);
-    CHECK(ApproxIntv(x[8]) == Interval(1.,9.));
-    CHECK(ApproxIntv(x[9]) == Interval(1.,9.));
-    CHECK(ApproxIntv(x[t]) == Interval(2.,8.));
+    CHECK(ApproxIntv(x(8)) == Interval(1.,9.));
+    CHECK(ApproxIntv(x(9)) == Interval(1.,9.));
+    CHECK(ApproxIntv(x(t)) == Interval(2.,8.));
   }
 }
 
@@ -761,20 +761,20 @@ TEST_CASE("Interpol")
     x.ctc_deriv(v); // contraction of the x
     //CHECK_FALSE(ctc_eval.contract(x, v)); // fixed point already reached
     CHECK(x.codomain() == Interval(0.,4.25));
-    CHECK(x[0] == Interval(0.,2.));
-    CHECK(x[1] == Interval(1.5,3.5));
-    CHECK(x[2] == Interval(3.,4.));
-    CHECK(x[3] == Interval(3.5,4.));
-    CHECK(x[4] == Interval(3.5,4.25));
+    CHECK(x(0) == Interval(0.,2.));
+    CHECK(x(1) == Interval(1.5,3.5));
+    CHECK(x(2) == Interval(3.,4.));
+    CHECK(x(3) == Interval(3.5,4.));
+    CHECK(x(4) == Interval(3.5,4.25));
 
     if(VIBES_DRAWING) // drawing results
     {
-      vibes::beginDrawing();
-      VibesFigure_Tube fig_x("tubint", &x);
-      fig_x.set_properties(100, 100, 500, 500);
-      fig_x.set_tube_derivative(&x, &v);
-      fig_x.show(true);
-      vibes::endDrawing();
+      //vibes::beginDrawing();
+      //VibesFigure_Tube fig_x("tubint", &x);
+      //fig_x.set_properties(100, 100, 500, 500);
+      //fig_x.set_tube_derivative(&x, &v);
+      //fig_x.show(true);
+      //vibes::endDrawing();
     }
 
     // Tube evaluation

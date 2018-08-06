@@ -29,6 +29,9 @@ namespace tubex
 
       CtcPicard(bool preserve_slicing = false, float delta = 1.1);
       bool contract(const tubex::Fnc& f,
+                    Tube& x,
+                    TPropagation t_propa = FORWARD | BACKWARD) const;
+      bool contract(const tubex::Fnc& f,
                     TubeVector& x,
                     TPropagation t_propa = FORWARD | BACKWARD) const;
       int picard_iterations() const;
@@ -36,9 +39,18 @@ namespace tubex
     protected:
 
       void contract(const tubex::Fnc& f,
+                    const Tube& tube,
+                    TubeSlice& slice,
+                    TPropagation t_propa) const;
+      void contract(const tubex::Fnc& f,
                     const TubeVector& tube,
                     TubeSlice& slice,
                     TPropagation t_propa) const;
+
+      void guess_slice_envelope(const Fnc& f,
+                                const Tube& tube,
+                                TubeSlice& slice,
+                                TPropagation t_propa) const;
       void guess_slice_envelope(const Fnc& f,
                                 const TubeVector& tube,
                                 TubeSlice& slice,

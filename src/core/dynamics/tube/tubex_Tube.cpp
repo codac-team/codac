@@ -263,6 +263,12 @@ namespace tubex
       return m_tubevector->codomain()[m_component_id];
     }
 
+    double Tube::volume() const
+    {
+      // todo: scalar implementation
+      return m_tubevector->volume();
+    }
+
     const Interval Tube::operator()(int slice_id) const
     {
       return (*m_tubevector)(slice_id)[m_component_id];

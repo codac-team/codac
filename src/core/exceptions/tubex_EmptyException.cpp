@@ -32,9 +32,9 @@ namespace tubex
       throw EmptyException(x);
   }
 
-  EmptyException::EmptyException(const TubeVector& x)
+  EmptyException::EmptyException(const AbstractTube& x)
   {
-    ostringstream os;
+    /* todo: ostringstream os;
     os << "emptiness over ";
 
     if(x.codomain().is_empty())
@@ -60,12 +60,12 @@ namespace tubex
       os << "[t]=" << intv_t_emptiness << endl;
     }
     
-    m_what_msg = os.str();
+    m_what_msg = os.str();*/
   }
 
-  void EmptyException::check(const TubeVector& x)
+  void EmptyException::check(const AbstractTube& x)
   {
-    if(x.is_empty())
-      throw EmptyException(x);
+    // todo: if(x.is_empty())
+    // todo:   throw EmptyException(x);
   }
 }

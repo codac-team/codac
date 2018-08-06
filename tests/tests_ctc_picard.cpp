@@ -109,13 +109,13 @@ TEST_CASE("CtcPicard")
     
     CHECK_FALSE(x_preserve_sampling.codomain().is_unbounded());
     CHECK(x_preserve_sampling.codomain()[0].is_superset(exp(-domain)));
-    CHECK(x_preserve_sampling[0.][0].is_superset(Interval(exp(-0.))));
-    CHECK(x_preserve_sampling[1.][0].is_superset(Interval(exp(-1.))));
+    CHECK(x_preserve_sampling(0.)[0].is_superset(Interval(exp(-0.))));
+    CHECK(x_preserve_sampling(1.)[0].is_superset(Interval(exp(-1.))));
     CHECK(x_preserve_sampling.nb_slices() == 1);
     
     CHECK(x_auto_sampling.codomain()[0] == x_preserve_sampling.codomain()[0]);
-    CHECK(x_auto_sampling[0.][0] == x_preserve_sampling[0.][0]);
-    CHECK(x_auto_sampling[1.][0] == x_preserve_sampling[1.][0]);
+    CHECK(x_auto_sampling(0.)[0] == x_preserve_sampling(0.)[0]);
+    CHECK(x_auto_sampling(1.)[0] == x_preserve_sampling(1.)[0]);
     CHECK(x_auto_sampling.nb_slices() != 1);
 
     if(VIBES_DRAWING) // drawing results
@@ -142,11 +142,11 @@ TEST_CASE("CtcPicard")
     
     CHECK_FALSE(x.codomain().is_unbounded());
     CHECK(x.codomain()[0].is_superset(exp(-domain)));
-    CHECK(x[0.][0].is_superset(Interval(exp(-0.))));
-    CHECK(x[1.][0].is_superset(Interval(exp(-1.))));
+    CHECK(x(0.)[0].is_superset(Interval(exp(-0.))));
+    CHECK(x(1.)[0].is_superset(Interval(exp(-1.))));
     CHECK(x.codomain()[1].is_superset(exp(domain)));
-    CHECK(x[0.][1].is_superset(Interval(exp(0.))));
-    CHECK(x[1.][1].is_superset(Interval(exp(1.))));
+    CHECK(x(0.)[1].is_superset(Interval(exp(0.))));
+    CHECK(x(1.)[1].is_superset(Interval(exp(1.))));
     
     if(false & VIBES_DRAWING) // drawing results
     {
@@ -171,16 +171,16 @@ TEST_CASE("CtcPicard")
     
     CHECK_FALSE(x.codomain().is_unbounded());
     CHECK(x.codomain().is_superset(exp(-domain)));
-    CHECK(x[0.].is_superset(Interval(exp(-0.))));
-    CHECK(x[1.].is_superset(Interval(exp(-1))));
+    CHECK(x(0.).is_superset(Interval(exp(-0.))));
+    CHECK(x(1.).is_superset(Interval(exp(-1))));
 
     if(false & VIBES_DRAWING) // drawing results
     {
-      vibes::beginDrawing();
-      VibesFigure_Tube fig_tube("picard", &x);
-      fig_tube.set_properties(100, 100, 500, 500);
-      fig_tube.show(true);
-      vibes::endDrawing();
+      //vibes::beginDrawing();
+      //VibesFigure_Tube fig_tube("picard", &x);
+      //fig_tube.set_properties(100, 100, 500, 500);
+      //fig_tube.show(true);
+      //vibes::endDrawing();
     }
   }
 
@@ -197,16 +197,16 @@ TEST_CASE("CtcPicard")
     
     CHECK_FALSE(x.codomain().is_unbounded());
     CHECK(x.codomain().is_superset(exp(-domain)));
-    CHECK(x[0.].is_superset(Interval(exp(-0.))));
-    CHECK(x[1.].is_superset(Interval(exp(-1))));
+    CHECK(x(0.).is_superset(Interval(exp(-0.))));
+    CHECK(x(1.).is_superset(Interval(exp(-1))));
 
     if(false & VIBES_DRAWING) // drawing results
     {
-      vibes::beginDrawing();
-      VibesFigure_Tube fig_tube("picard", &x);
-      fig_tube.set_properties(100, 100, 500, 500);
-      fig_tube.show(true);
-      vibes::endDrawing();
+      //vibes::beginDrawing();
+      //VibesFigure_Tube fig_tube("picard", &x);
+      //fig_tube.set_properties(100, 100, 500, 500);
+      //fig_tube.show(true);
+      //vibes::endDrawing();
     }
   }
 }

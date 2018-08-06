@@ -42,8 +42,8 @@ namespace tubex
     header_unary_op(acosh);
     header_unary_op(asinh);
     header_unary_op(atanh);
-    const TubeVector operator+(const TubeVector& x);
-    const TubeVector operator-(const TubeVector& x);
+    header_unary_op(operator+);
+    header_unary_op(operator-);
 
   // Unary operations with parameter
   

@@ -26,6 +26,11 @@ namespace tubex
 
   }
   
+  bool CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa) const
+  {
+    // todo
+  }
+  
   bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa) const
   {
     DimensionException::check(x, f);
@@ -94,6 +99,11 @@ namespace tubex
     // todo: return value
   }
 
+  void CtcPicard::contract(const tubex::Fnc& f, const Tube& tube, TubeSlice& slice, TPropagation t_propa) const
+  {
+    // todo
+  }
+
   void CtcPicard::contract(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice, TPropagation t_propa) const
   {
     // todo: check that !((t_propa & FORWARD) && (t_propa & BACKWARD))
@@ -120,6 +130,14 @@ namespace tubex
   int CtcPicard::picard_iterations() const
   {
     return m_picard_iterations;
+  }
+
+  void CtcPicard::guess_slice_envelope(const tubex::Fnc& f,
+                                       const Tube& tube,
+                                       TubeSlice& slice,
+                                       TPropagation t_propa) const
+  {
+    // todo
   }
 
   void CtcPicard::guess_slice_envelope(const tubex::Fnc& f,

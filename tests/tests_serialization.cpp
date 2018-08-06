@@ -28,9 +28,9 @@ TEST_CASE("serialization/deserialization of Tube")
   {
     Tube tube1 = tube_test_1();
 
-    CHECK(tube1[0.] == Interval(4.,8.));
-    CHECK(tube1[46.] == Interval(-1.,3.));
-    CHECK(tube1[3.] == Interval(1.,4.));
+    CHECK(tube1(0.) == Interval(4.,8.));
+    CHECK(tube1(46.) == Interval(-1.,3.));
+    CHECK(tube1(3.) == Interval(1.,4.));
 
     // todo: test a set value at 3.9
 
@@ -38,9 +38,9 @@ TEST_CASE("serialization/deserialization of Tube")
     tube1.set(Interval(7.), 0.);
     tube1.set(Interval::EMPTY_SET, 46.);
 
-    CHECK(tube1[0.] == Interval(7.));
-    CHECK(tube1[46.] == Interval::EMPTY_SET);
-    CHECK(tube1[3.] == Interval(2.,3.));
+    CHECK(tube1(0.) == Interval(7.));
+    CHECK(tube1(46.) == Interval::EMPTY_SET);
+    CHECK(tube1(3.) == Interval(2.,3.));
 
     string filename = "test_serialization_gates.tube";
     tube1.serialize(filename);
@@ -48,9 +48,9 @@ TEST_CASE("serialization/deserialization of Tube")
     remove(filename.c_str());
     CHECK(tube1 == tube2);
 
-    CHECK(tube2[0.] == Interval(7.));
-    CHECK(tube2[46.] == Interval::EMPTY_SET);
-    CHECK(tube2[3.] == Interval(2.,3.));
+    CHECK(tube2(0.) == Interval(7.));
+    CHECK(tube2(46.) == Interval::EMPTY_SET);
+    CHECK(tube2(3.) == Interval(2.,3.));
   }
 
   SECTION("With trajectories")
@@ -59,9 +59,9 @@ TEST_CASE("serialization/deserialization of Tube")
     Trajectory traj1, traj2, traj3;
     for(int i = 0 ; i < tube1.nb_slices() ; i++)
     {
-      traj1.set(tube1.get_slice(i)->domain().mid(), tube1[i].mid());
-      traj2.set(tube1.get_slice(i)->domain().mid(), tube1[i].lb());
-      traj3.set(tube1.get_slice(i)->domain().mid(), tube1[i].ub());
+      traj1.set(tube1.get_slice(i)->domain().mid(), tube1(i).mid());
+      traj2.set(tube1.get_slice(i)->domain().mid(), tube1(i).lb());
+      traj3.set(tube1.get_slice(i)->domain().mid(), tube1(i).ub());
     }
 
     string filename = "test_serialization_traj.tube";
@@ -96,7 +96,7 @@ bool test_serialization(const Tube& tube1)
   Trajectory traj_test1a, traj_test1b, traj_test2a, traj_test2b;
 
   for(int i = 0 ; i < tube1.nb_slices() ; i++)
-    traj_test1a.set(tube1.get_slice(i)->domain().mid(), tube1[i].is_unbounded() | tube1[i].is_empty() ? 1. : tube1[i].mid());
+    traj_test1a.set(tube1.get_slice(i)->domain().mid(), tube1(i).is_unbounded() | tube1(i).is_empty() ? 1. : tube1(i).mid());
 
   for(int i = 0 ; i < tube1.nb_slices() ; i++)
     traj_test1b.set(tube1.get_slice(i)->domain().mid(), 42.);

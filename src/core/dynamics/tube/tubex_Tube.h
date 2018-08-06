@@ -34,8 +34,8 @@ namespace tubex
       Tube(const Tube& x);
       Tube(int dim, const TubeVector& x);
       Tube(const Tube& x, const ibex::Interval& codomain);
-      Tube(const Trajectory& traj, double timestep = 0.);
-      Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
+      Tube(const Trajectory& traj, double timestep);
+      Tube(const Trajectory& lb, const Trajectory& ub, double timestep);
       Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);

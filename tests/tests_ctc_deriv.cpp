@@ -211,12 +211,12 @@ TEST_CASE("CtcDeriv")
     CHECK_FALSE(ctc.contract(tube_test_fwdbwd, tubedot)); // fixed point already reached
 
     CHECK(tube_test_fwd == tube_test_fwdbwd);
-    CHECK(tube_test_fwd[0] == Interval(-1.,1.));
-    CHECK(tube_test_fwd[1] == Interval(-1.5,2.));
-    CHECK(tube_test_fwd[2] == Interval(-2.,3.));
-    CHECK(tube_test_fwd[3] == Interval(-2.5,4.));
-    CHECK(tube_test_fwd[4] == Interval(-3.,5.));
-    CHECK(tube_test_fwd[5] == Interval(-3.5,6.));
+    CHECK(tube_test_fwd(0) == Interval(-1.,1.));
+    CHECK(tube_test_fwd(1) == Interval(-1.5,2.));
+    CHECK(tube_test_fwd(2) == Interval(-2.,3.));
+    CHECK(tube_test_fwd(3) == Interval(-2.5,4.));
+    CHECK(tube_test_fwd(4) == Interval(-3.,5.));
+    CHECK(tube_test_fwd(5) == Interval(-3.5,6.));
     CHECK(tube_test_fwd.codomain() == Interval(-3.5,6.));
   }
 
@@ -238,12 +238,12 @@ TEST_CASE("CtcDeriv")
     CHECK_FALSE(ctc.contract(tube_test_fwdbwd, tubedot)); // fixed point already reached
 
     CHECK(tube_test_bwd == tube_test_fwdbwd);
-    CHECK(tube_test_bwd[0] == Interval(-3.5,6.));
-    CHECK(tube_test_bwd[1] == Interval(-3.,5.));
-    CHECK(tube_test_bwd[2] == Interval(-2.5,4.));
-    CHECK(tube_test_bwd[3] == Interval(-2.,3.));
-    CHECK(tube_test_bwd[4] == Interval(-1.5,2.));
-    CHECK(tube_test_bwd[5] == Interval(-1.,1.));
+    CHECK(tube_test_bwd(0) == Interval(-3.5,6.));
+    CHECK(tube_test_bwd(1) == Interval(-3.,5.));
+    CHECK(tube_test_bwd(2) == Interval(-2.5,4.));
+    CHECK(tube_test_bwd(3) == Interval(-2.,3.));
+    CHECK(tube_test_bwd(4) == Interval(-1.5,2.));
+    CHECK(tube_test_bwd(5) == Interval(-1.,1.));
     CHECK(tube_test_fwdbwd.codomain() == Interval(-3.5,6.));
     CHECK(tube_test_bwd.codomain() == Interval(-3.5,6.));
   }
@@ -260,12 +260,12 @@ TEST_CASE("CtcDeriv")
     ctc.contract(tube, tubedot);
     CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
 
-    CHECK(tube[0] == Interval(-1.,1.));
-    CHECK(tube[1] == Interval(-2,1.5));
-    CHECK(ApproxIntv(tube[2]) == Interval(-7./3.,2.));
-    CHECK(ApproxIntv(tube[3]) == Interval(-2.,7./3.));
-    CHECK(tube[4] == Interval(-1.5,2.));
-    CHECK(tube[5] == Interval(-1.,1.));
+    CHECK(tube(0) == Interval(-1.,1.));
+    CHECK(tube(1) == Interval(-2,1.5));
+    CHECK(ApproxIntv(tube(2)) == Interval(-7./3.,2.));
+    CHECK(ApproxIntv(tube(3)) == Interval(-2.,7./3.));
+    CHECK(tube(4) == Interval(-1.5,2.));
+    CHECK(tube(5) == Interval(-1.,1.));
     CHECK(ApproxIntv(tube.codomain()) == Interval(-7./3.,7./3.));
   }
 
@@ -287,21 +287,21 @@ TEST_CASE("CtcDeriv")
     ctc.contract(tube, tubedot);
     CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
 
-    CHECK(tube[0] == Interval(0.,2.));
-    CHECK(tube[1] == Interval(1.5,3.5));
-    CHECK(tube[2] == Interval(3.,4.));
-    CHECK(tube[3] == Interval(3.5,4.));
-    CHECK(tube[4] == Interval(3.5,4.25));
+    CHECK(tube(0) == Interval(0.,2.));
+    CHECK(tube(1) == Interval(1.5,3.5));
+    CHECK(tube(2) == Interval(3.,4.));
+    CHECK(tube(3) == Interval(3.5,4.));
+    CHECK(tube(4) == Interval(3.5,4.25));
     CHECK(tube.codomain() == Interval(0.,4.25));
 
     if(VIBES_DRAWING) // drawing results
     {
-      vibes::beginDrawing();
-      VibesFigure_Tube fig_tube("tubint", &tube);
-      fig_tube.set_properties(100, 100, 500, 500);
-      fig_tube.set_tube_derivative(&tube, &tubedot);
-      fig_tube.show(true);
-      vibes::endDrawing();
+      //vibes::beginDrawing();
+      //VibesFigure_Tube fig_tube("tubint", &tube);
+      //fig_tube.set_properties(100, 100, 500, 500);
+      //fig_tube.set_tube_derivative(&tube, &tubedot);
+      //fig_tube.show(true);
+      //vibes::endDrawing();
     }
   }
 
@@ -357,25 +357,25 @@ TEST_CASE("CtcDeriv")
     ctc.contract(*(tube.get_slice(8)), *(tubedot.get_slice(8)));
     CHECK_FALSE(ctc.contract(tube, tubedot)); // fixed point already reached
 
-    CHECK(tube[0.] == Interval(2.,3.));
-    CHECK(tube[0] == Interval(-1.,7.));
-    CHECK(tube[4.] == Interval(3.,4.));
-    CHECK(tube[1] == Interval(1.,4.));
-    CHECK(tube[8.] == Interval(1.));
-    CHECK(ApproxIntv(tube[2]) == Interval(0.,2.));
-    CHECK(tube[12.] == Interval(1.));
-    CHECK(tube[3] == Interval(1.,5.5));
-    CHECK(tube[14.] == Interval(5.5));
-    CHECK(tube[4] == Interval(5.5));
-    CHECK(tube[16.] == Interval(5.5));
-    CHECK(tube[5] == Interval(-1.,5.5));
-    CHECK(tube[18.] == Interval(-1.));
-    CHECK(tube[6] == Interval(-1.,5.5));
-    CHECK(tube[20.] == Interval(5.5));
-    CHECK(tube[7] == Interval(-1.,7.));
-    CHECK(tube[23.] == Interval(5.5));
-    // todo: CHECK(tube[8] == Interval::ALL_REALS);
-    // todo: CHECK(tube[26.] == Interval::ALL_REALS);
+    CHECK(tube(0.) == Interval(2.,3.));
+    CHECK(tube(0) == Interval(-1.,7.));
+    CHECK(tube(4.) == Interval(3.,4.));
+    CHECK(tube(1) == Interval(1.,4.));
+    CHECK(tube(8.) == Interval(1.));
+    CHECK(ApproxIntv(tube(2)) == Interval(0.,2.));
+    CHECK(tube(12.) == Interval(1.));
+    CHECK(tube(3) == Interval(1.,5.5));
+    CHECK(tube(14.) == Interval(5.5));
+    CHECK(tube(4) == Interval(5.5));
+    CHECK(tube(16.) == Interval(5.5));
+    CHECK(tube(5) == Interval(-1.,5.5));
+    CHECK(tube(18.) == Interval(-1.));
+    CHECK(tube(6) == Interval(-1.,5.5));
+    CHECK(tube(20.) == Interval(5.5));
+    CHECK(tube(7) == Interval(-1.,7.));
+    CHECK(tube(23.) == Interval(5.5));
+    // todo: CHECK(tube(8) == Interval::ALL_REALS);
+    // todo: CHECK(tube(26.) == Interval::ALL_REALS);
     // todo: CHECK(tube.codomain() == Interval::ALL_REALS);
 
     #if VIBES_DRAWING // drawing results

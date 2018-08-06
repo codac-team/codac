@@ -76,9 +76,30 @@ namespace tubex
   unary_op(asinh);
   unary_op(atanh);
 
+  const Tube operator+(const Tube& x)
+  {
+    return x;
+  }
+
   const TubeVector operator+(const TubeVector& x)
   {
     return x;
+  }
+
+  const Tube operator-(const Tube& x)
+  {
+    Tube result(x);
+    TubeSlice *slice_result = result.get_first_slice();
+    const TubeSlice *slice_x = x.get_first_slice();
+    while(slice_result != NULL)
+    {
+      slice_result->set_envelope(-slice_x->codomain());
+      slice_result->set_input_gate(-slice_x->input_gate());
+      slice_result->set_output_gate(-slice_x->output_gate());
+      slice_result = slice_result->next_slice();
+      slice_x = slice_x->next_slice();
+    }
+    return result;
   }
 
   const TubeVector operator-(const TubeVector& x)

@@ -15,8 +15,7 @@
 
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"
-#include "tubex_TrajectoryVector.h"
-#include "tubex_TubeVector.h"
+#include "tubex_AbstractTube.h"
 
 namespace tubex
 {
@@ -30,10 +29,10 @@ namespace tubex
     public:
 
       EmptyException(const TubeSlice& x);
-      EmptyException(const TubeVector& x);
+      EmptyException(const AbstractTube& x);
 
       static void check(const TubeSlice& x);
-      static void check(const TubeVector& x);
+      static void check(const AbstractTube& x);
   };
 }
 

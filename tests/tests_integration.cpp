@@ -12,18 +12,18 @@ TEST_CASE("Computing tube's primitive", "[core]")
   SECTION("Test tube3")
   {
     Tube tube = tube_test3();
-    CHECK(ApproxIntv(tube[0]) == Interval(1,3));
-    CHECK(ApproxIntv(tube[1]) == Interval(0,2));
-    CHECK(ApproxIntv(tube[2]) == Interval(-1,1));
-    CHECK(ApproxIntv(tube[3]) == Interval(-2,0));
-    CHECK(ApproxIntv(tube[4]) == Interval(-3,-1));
+    CHECK(ApproxIntv(tube(0)) == Interval(1,3));
+    CHECK(ApproxIntv(tube(1)) == Interval(0,2));
+    CHECK(ApproxIntv(tube(2)) == Interval(-1,1));
+    CHECK(ApproxIntv(tube(3)) == Interval(-2,0));
+    CHECK(ApproxIntv(tube(4)) == Interval(-3,-1));
 
     Tube tube_primitive = tube.primitive();
-    CHECK(ApproxIntv(tube_primitive[0]) == Interval(0,3));
-    CHECK(ApproxIntv(tube_primitive[1]) == Interval(1,5));
-    CHECK(ApproxIntv(tube_primitive[2]) == Interval(0,6));
-    CHECK(ApproxIntv(tube_primitive[3]) == Interval(-2,6));
-    CHECK(ApproxIntv(tube_primitive[4]) == Interval(-5,6));
+    CHECK(ApproxIntv(tube_primitive(0)) == Interval(0,3));
+    CHECK(ApproxIntv(tube_primitive(1)) == Interval(1,5));
+    CHECK(ApproxIntv(tube_primitive(2)) == Interval(0,6));
+    CHECK(ApproxIntv(tube_primitive(3)) == Interval(-2,6));
+    CHECK(ApproxIntv(tube_primitive(4)) == Interval(-5,6));
   }
 
   SECTION("Test tube4")
@@ -32,50 +32,50 @@ TEST_CASE("Computing tube's primitive", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     Tube tube_primitive = tube.primitive();
 
-    CHECK(ApproxIntv(tube_primitive[Interval(0,1)]) == Interval(0,2));
-    CHECK(ApproxIntv(tube_primitive[Interval(1,2)]) == Interval(1,4));
-    CHECK(ApproxIntv(tube_primitive[Interval(2,3)]) == Interval(2,6));
-    CHECK(ApproxIntv(tube_primitive[Interval(3,4)]) == Interval(3,8));
-    CHECK(ApproxIntv(tube_primitive[Interval(4,5)]) == Interval(4,10));
-    CHECK(ApproxIntv(tube_primitive[Interval(5,6)]) == Interval(5,12));
-    CHECK(ApproxIntv(tube_primitive[Interval(6,7)]) == Interval(6,14));
-    CHECK(ApproxIntv(tube_primitive[Interval(7,8)]) == Interval(7,16));
-    CHECK(ApproxIntv(tube_primitive[Interval(8,9)]) == Interval(8,18));
-    CHECK(ApproxIntv(tube_primitive[Interval(9,10)]) == Interval(9,19.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(10,11)]) == Interval(8.5,20.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(11,12)]) == Interval(7,20.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(12,13)]) == Interval(6,21));
-    CHECK(ApproxIntv(tube_primitive[Interval(13,14)]) == Interval(6,22.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(14,15)]) == Interval(6.5,24.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(15,16)]) == Interval(7.5,26.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(16,17)]) == Interval(8.5,28.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(17,18)]) == Interval(9.5,30.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(18,19)]) == Interval(10.5,32.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(19,20)]) == Interval(11.5,34.5));
-    CHECK(ApproxIntv(tube_primitive[Interval(20,21)]) == Interval(12.5,36.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(0,1))) == Interval(0,2));
+    CHECK(ApproxIntv(tube_primitive(Interval(1,2))) == Interval(1,4));
+    CHECK(ApproxIntv(tube_primitive(Interval(2,3))) == Interval(2,6));
+    CHECK(ApproxIntv(tube_primitive(Interval(3,4))) == Interval(3,8));
+    CHECK(ApproxIntv(tube_primitive(Interval(4,5))) == Interval(4,10));
+    CHECK(ApproxIntv(tube_primitive(Interval(5,6))) == Interval(5,12));
+    CHECK(ApproxIntv(tube_primitive(Interval(6,7))) == Interval(6,14));
+    CHECK(ApproxIntv(tube_primitive(Interval(7,8))) == Interval(7,16));
+    CHECK(ApproxIntv(tube_primitive(Interval(8,9))) == Interval(8,18));
+    CHECK(ApproxIntv(tube_primitive(Interval(9,10))) == Interval(9,19.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(10,11))) == Interval(8.5,20.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(11,12))) == Interval(7,20.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(12,13))) == Interval(6,21));
+    CHECK(ApproxIntv(tube_primitive(Interval(13,14))) == Interval(6,22.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(14,15))) == Interval(6.5,24.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(15,16))) == Interval(7.5,26.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(16,17))) == Interval(8.5,28.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(17,18))) == Interval(9.5,30.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(18,19))) == Interval(10.5,32.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(19,20))) == Interval(11.5,34.5));
+    CHECK(ApproxIntv(tube_primitive(Interval(20,21))) == Interval(12.5,36.5));
 
-    CHECK(ApproxIntv(tube_primitive[0]) == Interval(0,2));
-    CHECK(ApproxIntv(tube_primitive[1]) == Interval(1,4));
-    CHECK(ApproxIntv(tube_primitive[2]) == Interval(2,6));
-    CHECK(ApproxIntv(tube_primitive[3]) == Interval(3,8));
-    CHECK(ApproxIntv(tube_primitive[4]) == Interval(4,10));
-    CHECK(ApproxIntv(tube_primitive[5]) == Interval(5,12));
-    CHECK(ApproxIntv(tube_primitive[6]) == Interval(6,14));
-    CHECK(ApproxIntv(tube_primitive[7]) == Interval(7,16));
-    CHECK(ApproxIntv(tube_primitive[8]) == Interval(8,18));
-    CHECK(ApproxIntv(tube_primitive[9]) == Interval(9,19.5)); // domain [9,10]
-    CHECK(ApproxIntv(tube_primitive[10.]) == Interval(9.5,19.5)); // singleton
-    CHECK(ApproxIntv(tube_primitive[10+1]) == Interval(8.5,20.5)); // domain [10,10.2]
-    CHECK(ApproxIntv(tube_primitive[11+1]) == Interval(7,20.5));
-    CHECK(ApproxIntv(tube_primitive[12+1]) == Interval(6,21));
-    CHECK(ApproxIntv(tube_primitive[13+1]) == Interval(6,22.5));
-    CHECK(ApproxIntv(tube_primitive[14+1]) == Interval(6.5,24.5));
-    CHECK(ApproxIntv(tube_primitive[15+1]) == Interval(7.5,26.5));
-    CHECK(ApproxIntv(tube_primitive[16+1]) == Interval(8.5,28.5));
-    CHECK(ApproxIntv(tube_primitive[17+1]) == Interval(9.5,30.5));
-    CHECK(ApproxIntv(tube_primitive[18+1]) == Interval(10.5,32.5));
-    CHECK(ApproxIntv(tube_primitive[19+1]) == Interval(11.5,34.5));
-    CHECK(ApproxIntv(tube_primitive[20+1]) == Interval(12.5,36.5));
+    CHECK(ApproxIntv(tube_primitive(0)) == Interval(0,2));
+    CHECK(ApproxIntv(tube_primitive(1)) == Interval(1,4));
+    CHECK(ApproxIntv(tube_primitive(2)) == Interval(2,6));
+    CHECK(ApproxIntv(tube_primitive(3)) == Interval(3,8));
+    CHECK(ApproxIntv(tube_primitive(4)) == Interval(4,10));
+    CHECK(ApproxIntv(tube_primitive(5)) == Interval(5,12));
+    CHECK(ApproxIntv(tube_primitive(6)) == Interval(6,14));
+    CHECK(ApproxIntv(tube_primitive(7)) == Interval(7,16));
+    CHECK(ApproxIntv(tube_primitive(8)) == Interval(8,18));
+    CHECK(ApproxIntv(tube_primitive(9)) == Interval(9,19.5)); // domain [9,10]
+    CHECK(ApproxIntv(tube_primitive(10.)) == Interval(9.5,19.5)); // singleton
+    CHECK(ApproxIntv(tube_primitive(10+1)) == Interval(8.5,20.5)); // domain [10,10.2]
+    CHECK(ApproxIntv(tube_primitive(11+1)) == Interval(7,20.5));
+    CHECK(ApproxIntv(tube_primitive(12+1)) == Interval(6,21));
+    CHECK(ApproxIntv(tube_primitive(13+1)) == Interval(6,22.5));
+    CHECK(ApproxIntv(tube_primitive(14+1)) == Interval(6.5,24.5));
+    CHECK(ApproxIntv(tube_primitive(15+1)) == Interval(7.5,26.5));
+    CHECK(ApproxIntv(tube_primitive(16+1)) == Interval(8.5,28.5));
+    CHECK(ApproxIntv(tube_primitive(17+1)) == Interval(9.5,30.5));
+    CHECK(ApproxIntv(tube_primitive(18+1)) == Interval(10.5,32.5));
+    CHECK(ApproxIntv(tube_primitive(19+1)) == Interval(11.5,34.5));
+    CHECK(ApproxIntv(tube_primitive(20+1)) == Interval(12.5,36.5));
   }
 
   SECTION("Test tube1")
@@ -83,29 +83,29 @@ TEST_CASE("Computing tube's primitive", "[core]")
     Tube tube = tube_test_1();
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     Tube tube_primitive = tube.primitive();
-    CHECK(ApproxIntv(tube_primitive[0]) == Interval(0,8));
-    CHECK(ApproxIntv(tube_primitive[1]) == Interval(4,15));
-    CHECK(ApproxIntv(tube_primitive[2]) == Interval(6,21));
+    CHECK(ApproxIntv(tube_primitive(0)) == Interval(0,8));
+    CHECK(ApproxIntv(tube_primitive(1)) == Interval(4,15));
+    CHECK(ApproxIntv(tube_primitive(2)) == Interval(6,21));
   }
 
   SECTION("Test tube4(05)")
   {
     Tube tube = tube_test4_05();
     Tube tube_primitive = tube.primitive();
-    CHECK(ApproxIntv(tube_primitive[0]) == Interval(0.0,1));
-    CHECK(ApproxIntv(tube_primitive[1]) == Interval(0.5,2));
-    CHECK(ApproxIntv(tube_primitive[2]) == Interval(1.0,3));
-    CHECK(ApproxIntv(tube_primitive[3]) == Interval(1.5,4));
-    CHECK(ApproxIntv(tube_primitive[4]) == Interval(2.0,5));
-    CHECK(ApproxIntv(tube_primitive[5]) == Interval(2.5,6));
-    CHECK(ApproxIntv(tube_primitive[6]) == Interval(3.0,7));
-    CHECK(ApproxIntv(tube_primitive[7]) == Interval(3.5,8));
-    CHECK(ApproxIntv(tube_primitive[8]) == Interval(4.0,9));
-    CHECK(ApproxIntv(tube_primitive[9]) == Interval(4.5,10));
-    CHECK(ApproxIntv(tube_primitive[10]) == Interval(5.0,11));
-    CHECK(ApproxIntv(tube_primitive[11]) == Interval(5.5,12));
-    CHECK(ApproxIntv(tube_primitive[12]) == Interval(6.0,13));
-    CHECK(ApproxIntv(tube_primitive[13]) == Interval(6.5,14));
+    CHECK(ApproxIntv(tube_primitive(0)) == Interval(0.0,1));
+    CHECK(ApproxIntv(tube_primitive(1)) == Interval(0.5,2));
+    CHECK(ApproxIntv(tube_primitive(2)) == Interval(1.0,3));
+    CHECK(ApproxIntv(tube_primitive(3)) == Interval(1.5,4));
+    CHECK(ApproxIntv(tube_primitive(4)) == Interval(2.0,5));
+    CHECK(ApproxIntv(tube_primitive(5)) == Interval(2.5,6));
+    CHECK(ApproxIntv(tube_primitive(6)) == Interval(3.0,7));
+    CHECK(ApproxIntv(tube_primitive(7)) == Interval(3.5,8));
+    CHECK(ApproxIntv(tube_primitive(8)) == Interval(4.0,9));
+    CHECK(ApproxIntv(tube_primitive(9)) == Interval(4.5,10));
+    CHECK(ApproxIntv(tube_primitive(10)) == Interval(5.0,11));
+    CHECK(ApproxIntv(tube_primitive(11)) == Interval(5.5,12));
+    CHECK(ApproxIntv(tube_primitive(12)) == Interval(6.0,13));
+    CHECK(ApproxIntv(tube_primitive(13)) == Interval(6.5,14));
   }
 }
 
