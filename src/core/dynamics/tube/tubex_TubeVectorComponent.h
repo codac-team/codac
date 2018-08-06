@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DelayFunction class
+ *  tubex-lib - TubeVectorComponent class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -7,28 +7,29 @@
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -
- *  Created   : 2018
+ *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_DelayFunction.h"
-#include "tubex_TubeVector.h"
+#ifndef __TUBEX_TUBEVECTORCOMPONENT_H__
+#define __TUBEX_TUBEVECTORCOMPONENT_H__
 
-using namespace std;
-using namespace ibex;
+#include "tubex_Tube.h"
+#include "tubex_TubeVector.h"
 
 namespace tubex
 {
-  DelayFunction::DelayFunction(double delay) : Fnc(1, 1), m_delay(delay)
+  class TubeVectorComponent : public Tube
   {
+    public:
+      TubeVectorComponent();
 
-  }
+      TubeVectorComponent(TubeVector *tubevector, int component_id);
 
-  const IntervalVector DelayFunction::eval(const Interval& t, const TubeVector& x) const
-  {
-    if((t - m_delay).is_subset(x.domain()))
-      return x(t - m_delay);
+      const std::string class_name() const { return "TubeVectorComponent"; };
 
-    else
-      return IntervalVector(x.dim(), Interval::ALL_REALS);
-  }
+    protected:
+    	
+  };
 }
+
+#endif

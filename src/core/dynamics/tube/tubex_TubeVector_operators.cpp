@@ -59,9 +59,9 @@ namespace tubex
           IntervalVector input_gate = slice_copy->input_gate(); \
           IntervalVector envelope = slice_copy->codomain(); \
           IntervalVector output_gate = slice_copy->output_gate(); \
-          slice->set_envelope(envelope.f(x[slice->domain()])); \
-          slice->set_input_gate(input_gate.f(x[slice->domain().lb()])); \
-          slice->set_output_gate(output_gate.f(x[slice->domain().ub()])); \
+          slice->set_envelope(envelope.f(x(slice->domain()))); \
+          slice->set_input_gate(input_gate.f(x(slice->domain().lb()))); \
+          slice->set_output_gate(output_gate.f(x(slice->domain().ub()))); \
           slice = slice->next_slice(); \
           slice_copy = slice_copy->next_slice(); \
         } \
@@ -81,9 +81,9 @@ namespace tubex
         IntervalVector input_gate = slice_copy->input_gate(); \
         IntervalVector envelope = slice_copy->codomain(); \
         IntervalVector output_gate = slice_copy->output_gate(); \
-        slice->set_envelope(envelope.f(x[slice->domain()])); \
-        slice->set_input_gate(input_gate.f(x[slice->domain().lb()])); \
-        slice->set_output_gate(output_gate.f(x[slice->domain().ub()])); \
+        slice->set_envelope(envelope.f(x(slice->domain()))); \
+        slice->set_input_gate(input_gate.f(x(slice->domain().lb()))); \
+        slice->set_output_gate(output_gate.f(x(slice->domain().ub()))); \
         slice = slice->next_slice(); \
         slice_copy = slice_copy->next_slice(); \
       } \
@@ -160,9 +160,9 @@ namespace tubex
         IntervalVector input_gate = slice_copy->input_gate(); \
         IntervalVector envelope = slice_copy->codomain(); \
         IntervalVector output_gate = slice_copy->output_gate(); \
-        slice->set_envelope(envelope.f(IntervalVector(n, x[slice->domain()]))); \
-        slice->set_input_gate(input_gate.f(IntervalVector(n, x[slice->domain().lb()]))); \
-        slice->set_output_gate(output_gate.f(IntervalVector(n, x[slice->domain().ub()]))); \
+        slice->set_envelope(envelope.f(IntervalVector(n, x(slice->domain())))); \
+        slice->set_input_gate(input_gate.f(IntervalVector(n, x(slice->domain().lb())))); \
+        slice->set_output_gate(output_gate.f(IntervalVector(n, x(slice->domain().ub())))); \
         slice = slice->next_slice(); \
         slice_copy = slice_copy->next_slice(); \
       } \
@@ -229,9 +229,9 @@ namespace tubex
         IntervalVector input_gate = slice_copy->input_gate(); \
         IntervalVector envelope = slice_copy->codomain(); \
         IntervalVector output_gate = slice_copy->output_gate(); \
-        slice->set_envelope(envelope.f(x[slice->domain()])); \
-        slice->set_input_gate(input_gate.f(x[slice->domain().lb()])); \
-        slice->set_output_gate(output_gate.f(x[slice->domain().ub()])); \
+        slice->set_envelope(envelope.f(x(slice->domain()))); \
+        slice->set_input_gate(input_gate.f(x(slice->domain().lb()))); \
+        slice->set_output_gate(output_gate.f(x(slice->domain().ub()))); \
         slice = slice->next_slice(); \
         slice_copy = slice_copy->next_slice(); \
       } \

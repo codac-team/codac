@@ -168,7 +168,7 @@ namespace tubex
       //  return m_domain.diam() * m_codomain.diam();
     }
 
-    const IntervalVector TubeSlice::operator[](double t) const
+    const IntervalVector TubeSlice::operator()(double t) const
     {
       // Write access is not allowed for this operator
       // For write access: use set()
@@ -183,13 +183,13 @@ namespace tubex
       return m_codomain;
     }
 
-    const IntervalVector TubeSlice::operator[](const Interval& t) const
+    const IntervalVector TubeSlice::operator()(const Interval& t) const
     {
       // Write access is not allowed for this operator
       // For write access: use set()
       DomainException::check(*this, t);
       if(t.is_degenerated())
-        return (*this)[t.lb()];
+        return (*this)(t.lb());
       return m_codomain;
     }
 
@@ -367,9 +367,9 @@ namespace tubex
     {
       DomainException::check(*this, x);
       DimensionException::check(*this, x);
-      return x[m_domain].is_subset(m_codomain)
-          && input_gate().contains(x[m_domain.lb()])
-          && output_gate().contains(x[m_domain.ub()]);
+      return x(m_domain).is_subset(m_codomain)
+          && input_gate().contains(x(m_domain.lb()))
+          && output_gate().contains(x(m_domain.ub()));
     }
 
     // Setting values

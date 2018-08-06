@@ -34,8 +34,8 @@ namespace tubex
       using TrajectoryVector::get_function;
       using TrajectoryVector::domain;
       const ibex::Interval codomain() const;
-      double operator[](double t) const;
-      const ibex::Interval operator[](const ibex::Interval& t) const;
+      double operator()(double t) const;
+      const ibex::Interval operator()(const ibex::Interval& t) const;
 
       // Tests
       using TrajectoryVector::not_defined;

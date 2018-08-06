@@ -31,10 +31,7 @@ namespace tubex
 
   bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w) const
   {
-    IntervalVector z_(1, z);
-    bool contraction = contract(t, z_, y, w);
-    z &= z_[0];
-    return contraction;
+    // todo
   }
 
   bool CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w) const
@@ -84,10 +81,10 @@ namespace tubex
 
   bool CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w) const
   {
-    IntervalVector z_(1, z);
-    bool contraction = contract(t, z_, y, w);
-    z &= z_[0];
-    return contraction;
+    // todo IntervalVector z_(1, z);
+    // todo bool contraction = contract(t, z_, y, w);
+    // todo z &= z_[0];
+    // todo return contraction;
   }
 
   bool CtcEval::contract(Interval& t, IntervalVector& z, TubeVector& y, TubeVector& w) const

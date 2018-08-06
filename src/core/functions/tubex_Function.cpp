@@ -143,13 +143,13 @@ namespace tubex
       return eval(t);
 
     // todo: check dim x regarding f
-    if(x[t].is_empty())
+    if(x(t).is_empty())
       return IntervalVector(image_dim(), Interval::EMPTY_SET);
 
     IntervalVector box(nb_vars() + 1); // +1 for system variable (t)
     box[0] = t;
     if(nb_vars() != 0)
-      box.put(1, x[t]);
+      box.put(1, x(t));
     return m_ibex_f->eval_vector(box);
   }
 

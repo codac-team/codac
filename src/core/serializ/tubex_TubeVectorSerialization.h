@@ -14,12 +14,13 @@
 #define __TUBEX_TUBEVECTORSERIALIZATION_H__
 
 #include <fstream>
-#include "tubex_TubeVector.h"
-
-#define SERIALIZATION_VERSION 2
 
 namespace tubex
 {
+  #define SERIALIZATION_VERSION 2
+  
+  class TubeVector;
+
   void serialize_tubevector(std::ofstream& bin_file, const TubeVector& tube, int version_number = SERIALIZATION_VERSION);
   void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
 }

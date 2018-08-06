@@ -150,9 +150,9 @@ namespace tubex
       const TubeSlice *slice_x1 = x1.get_first_slice(); \
       while(slice != NULL) \
       { \
-        slice->set_envelope(IntervalVector(1, f(slice_x1->codomain()[0], Interval(x2[slice->domain()])))); \
-        slice->set_input_gate(IntervalVector(1, f(slice_x1->input_gate()[0], Interval(x2[slice->domain().lb()])))); \
-        slice->set_output_gate(IntervalVector(1, f(slice_x1->output_gate()[0], Interval(x2[slice->domain().ub()])))); \
+        slice->set_envelope(IntervalVector(1, f(slice_x1->codomain()[0], Interval(x2(slice->domain()))))); \
+        slice->set_input_gate(IntervalVector(1, f(slice_x1->input_gate()[0], Interval(x2(slice->domain().lb()))))); \
+        slice->set_output_gate(IntervalVector(1, f(slice_x1->output_gate()[0], Interval(x2(slice->domain().ub()))))); \
         slice = slice->next_slice(); \
         slice_x1 = slice_x1->next_slice(); \
       } \
@@ -167,9 +167,9 @@ namespace tubex
       const TubeSlice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
-        slice->set_envelope(IntervalVector(1, f(Interval(x1[slice->domain()]), slice_x2->codomain()[0]))); \
-        slice->set_input_gate(IntervalVector(1, f(Interval(x1[slice->domain().lb()]), slice_x2->input_gate()[0]))); \
-        slice->set_output_gate(IntervalVector(1, f(Interval(x1[slice->domain().ub()]), slice_x2->output_gate()[0]))); \
+        slice->set_envelope(IntervalVector(1, f(Interval(x1(slice->domain())), slice_x2->codomain()[0]))); \
+        slice->set_input_gate(IntervalVector(1, f(Interval(x1(slice->domain().lb())), slice_x2->input_gate()[0]))); \
+        slice->set_output_gate(IntervalVector(1, f(Interval(x1(slice->domain().ub())), slice_x2->output_gate()[0]))); \
         slice = slice->next_slice(); \
         slice_x2 = slice_x2->next_slice(); \
       } \
@@ -303,9 +303,9 @@ namespace tubex
       const TubeSlice *slice_x1 = x1.get_first_slice(); \
       while(slice != NULL) \
       { \
-        slice->set_envelope(f(slice_x1->codomain(), x2[slice->domain()])); \
-        slice->set_input_gate(f(slice_x1->input_gate(), x2[slice->domain().lb()])); \
-        slice->set_output_gate(f(slice_x1->output_gate(), x2[slice->domain().ub()])); \
+        slice->set_envelope(f(slice_x1->codomain(), x2(slice->domain()))); \
+        slice->set_input_gate(f(slice_x1->input_gate(), x2(slice->domain().lb()))); \
+        slice->set_output_gate(f(slice_x1->output_gate(), x2(slice->domain().ub()))); \
         slice = slice->next_slice(); \
         slice_x1 = slice_x1->next_slice(); \
       } \
@@ -320,9 +320,9 @@ namespace tubex
       const TubeSlice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
-        slice->set_envelope(f(x1[slice->domain()], slice_x2->codomain())); \
-        slice->set_input_gate(f(x1[slice->domain().lb()], slice_x2->input_gate())); \
-        slice->set_output_gate(f(x1[slice->domain().ub()], slice_x2->output_gate())); \
+        slice->set_envelope(f(x1(slice->domain()), slice_x2->codomain())); \
+        slice->set_input_gate(f(x1(slice->domain().lb()), slice_x2->input_gate())); \
+        slice->set_output_gate(f(x1(slice->domain().ub()), slice_x2->output_gate())); \
         slice = slice->next_slice(); \
         slice_x2 = slice_x2->next_slice(); \
       } \
@@ -396,9 +396,9 @@ namespace tubex
       const TubeSlice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
-        slice->set_envelope(ibex::f(Interval(x1[slice->domain()]), slice_x2->codomain())); \
-        slice->set_input_gate(ibex::f(Interval(x1[slice->domain().lb()]), slice_x2->input_gate())); \
-        slice->set_output_gate(ibex::f(Interval(x1[slice->domain().ub()]), slice_x2->output_gate())); \
+        slice->set_envelope(ibex::f(Interval(x1(slice->domain())), slice_x2->codomain())); \
+        slice->set_input_gate(ibex::f(Interval(x1(slice->domain().lb())), slice_x2->input_gate())); \
+        slice->set_output_gate(ibex::f(Interval(x1(slice->domain().ub())), slice_x2->output_gate())); \
         slice = slice->next_slice(); \
         slice_x2 = slice_x2->next_slice(); \
       } \

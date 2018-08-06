@@ -16,6 +16,7 @@
 #include "tubex_Exception.h"
 #include "tubex_TubeSlice.h"
 #include "tubex_TubeVector.h"
+#include "tubex_AbstractTube.h"
 
 namespace tubex
 {
@@ -30,11 +31,15 @@ namespace tubex
     public:
 
       SlicingException(const TubeSlice& x1, const TubeSlice& x2);
-      SlicingException(const TubeVector& x, int slice_index);
-      SlicingException(const TubeVector& x1, const TubeVector& x2);
+      //SlicingException(const TubeVector& x, int slice_index);
+      //SlicingException(const TubeVector& x1, const TubeVector& x2);
+      SlicingException(const AbstractTube& x, int slice_index);
+      SlicingException(const AbstractTube& x1, const AbstractTube& x2);
       
-      static void check(const TubeVector& x1, const TubeVector& x2);
-      static void check(const TubeVector& x, int slice_index);
+      //static void check(const TubeVector& x1, const TubeVector& x2);
+      //static void check(const TubeVector& x, int slice_index);
+      static void check(const AbstractTube& x, int slice_index);
+      static void check(const AbstractTube& x1, const AbstractTube& x2);
   };
 }
 

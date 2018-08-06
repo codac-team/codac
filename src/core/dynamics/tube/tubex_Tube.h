@@ -13,12 +13,15 @@
 #ifndef __TUBEX_TUBE_H__
 #define __TUBEX_TUBE_H__
 
-#include "tubex_TubeVector.h"
+#include "tubex_AbstractTube.h"
 #include "tubex_Trajectory.h"
+#include "tubex_TubeVectorSerialization.h"
 
 namespace tubex
 {
-  class Tube : public TubeVector
+  class TubeVector;
+
+  class Tube : public AbstractTube
   {
     public:
 
@@ -38,29 +41,36 @@ namespace tubex
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
       ~Tube();
       const Tube primitive() const;
-      using TubeVector::operator=;
-      using TubeVector::domain;
-      using TubeVector::dim;
+      const Tube& operator=(const Tube& x);
+      const ibex::Interval domain() const;
+      int dim() const;
 
       // Slices structure
-      using TubeVector::nb_slices;
-      using TubeVector::get_slice;
-      using TubeVector::get_first_slice;
-      using TubeVector::get_last_slice;
-      using TubeVector::get_wider_slice;
-      using TubeVector::get_largest_slice;
-      using TubeVector::input2index;
-      using TubeVector::index;
-      using TubeVector::sample;
+      int nb_slices() const;
+      TubeSlice* get_slice(int slice_id);
+      const TubeSlice* get_slice(int slice_id) const;
+      TubeSlice* get_slice(double t);
+      const TubeSlice* get_slice(double t) const;
+      TubeSlice* get_first_slice();
+      const TubeSlice* get_first_slice() const;
+      TubeSlice* get_last_slice();
+      const TubeSlice* get_last_slice() const;
+      TubeSlice* get_wider_slice();
+      const TubeSlice* get_wider_slice() const;
+      TubeSlice* get_largest_slice();
+      const TubeSlice* get_largest_slice() const;
+      int input2index(double t) const;
+      int index(const TubeSlice* slice) const;
+      void sample(double t);
       void sample(double t, const ibex::Interval& gate);
-      using TubeVector::share_same_slicing;
+      //static bool share_same_slicing(const Tube& x1, const Tube& x2);
 
       // Access values
       const ibex::Interval codomain() const;
-      using TubeVector::volume;
-      const ibex::Interval operator[](int slice_id) const;
-      const ibex::Interval operator[](double t) const;
-      const ibex::Interval operator[](const ibex::Interval& t) const;
+      double volume() const;
+      const ibex::Interval operator()(int slice_id) const;
+      const ibex::Interval operator()(double t) const;
+      const ibex::Interval operator()(const ibex::Interval& t) const;
       const ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       const ibex::Interval invert(const ibex::Interval& y, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
@@ -76,16 +86,17 @@ namespace tubex
       bool operator!=(const Tube& x) const;
       bool is_subset(const Tube& x) const;
       bool is_strict_subset(const Tube& x) const;
-      using TubeVector::is_empty;
-      using TubeVector::encloses;
+      bool is_empty() const;
+      bool encloses(const Trajectory& x) const;
 
       // Setting values
       void set(const ibex::Interval& y);
       void set(const ibex::Interval& y, int slice_id);
       void set(const ibex::Interval& y, double t);
       void set(const ibex::Interval& y, const ibex::Interval& t);
-      using TubeVector::set_empty;
-      using TubeVector::inflate;
+      void set_empty();
+      const Tube& inflate(double rad);
+      const Tube& inflate(const Trajectory& rad);
 
       // Bisection
       const std::pair<Tube,Tube> bisect(double t, float ratio = 0.55) const;
@@ -94,11 +105,26 @@ namespace tubex
 
         // Assignments
 
-        using TubeVector::operator+=;
-        using TubeVector::operator-=;
-        using TubeVector::operator|=;
-        using TubeVector::operator&=;
-        using TubeVector::operator*=;
+        const Tube& operator+=(const Tube& x);
+        const Tube& operator+=(const Trajectory& x);
+        const Tube& operator+=(const ibex::Interval& x);
+
+        const Tube& operator-=(const Tube& x);
+        const Tube& operator-=(const Trajectory& x);
+        const Tube& operator-=(const ibex::Interval& x);
+
+        const Tube& operator|=(const Tube& x);
+        const Tube& operator|=(const Trajectory& x);
+        const Tube& operator|=(const ibex::Interval& x);
+
+        const Tube& operator&=(const Tube& x);
+        const Tube& operator&=(const Trajectory& x);
+        const Tube& operator&=(const ibex::Interval& x);
+
+        const Tube& operator*=(const Tube& x);
+        const Tube& operator*=(const Trajectory& x);
+        const Tube& operator*=(const ibex::Interval& x);
+
         const Tube& operator/=(const Tube& x);
         const Tube& operator/=(const Trajectory& x);
         const Tube& operator/=(const ibex::Interval& x);
@@ -108,7 +134,7 @@ namespace tubex
         // Note: operator| and operator& for Tube are defined in Arithmetic.* files
 
       // String
-      friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
+      friend std::ostream& operator<<(std::ostream& str, const Tube& x);
       const std::string class_name() const { return "Tube"; };
 
     /** Integration: **/
@@ -121,7 +147,7 @@ namespace tubex
 
     /** Contractors: **/
 
-      using TubeVector::ctc_deriv;
+      bool ctc_deriv(const Tube& v);
       bool ctc_eval(ibex::Interval& t, ibex::Interval& z, Tube& w);
 
     /** Serialization: **/
@@ -129,6 +155,16 @@ namespace tubex
       void serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
       void serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
       void serialize(const std::string& binary_file_name, const std::vector<Trajectory>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
+
+    protected:
+
+      Tube(TubeVector *tubevector, int component_id);
+      const ibex::IntervalVector codomain_box() const;
+
+    /** Class variables **/
+
+      TubeVector *m_tubevector = NULL;
+      int m_component_id = 0;
   };
 }
 

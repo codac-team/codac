@@ -45,8 +45,8 @@ namespace tubex
       const ibex::Interval domain() const;
       const ibex::IntervalVector codomain() const;
       const ibex::IntervalVector codomain_box() const;
-      const ibex::Vector operator[](double t) const;
-      const ibex::IntervalVector operator[](const ibex::Interval& t) const;
+      const ibex::Vector operator()(double t) const;
+      const ibex::IntervalVector operator()(const ibex::Interval& t) const;
 
       // Tests
       bool not_defined() const;

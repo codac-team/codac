@@ -13,7 +13,6 @@
 #include "tubex_TubeVector.h"
 #include "tubex_Exception.h"
 #include "tubex_DomainException.h"
-#include "tubex_TubeVectorSerialization.h"
 #include "tubex_TrajectoryVectorSerialization.h"
 #include "tubex_DimensionException.h"
 #include "tubex_SlicingException.h"
@@ -179,7 +178,7 @@ namespace tubex
       TubeVector primitive(*this, IntervalVector(dim(), Interval::ALL_REALS));
       primitive.set(IntervalVector(dim(), 0.), primitive.domain().lb());
       CtcDeriv ctc_deriv;
-      ctc_deriv.contract(primitive, *this, FORWARD);
+      ctc_deriv.contract(primitive, static_cast<const TubeVector&>(*this), FORWARD);
       return primitive;
     }
 
@@ -467,7 +466,7 @@ namespace tubex
         slice->set_output_gate(gate);
     }
 
-    bool TubeVector::share_same_slicing(const TubeVector& x1, const TubeVector& x2)
+    /*bool TubeVector::share_same_slicing(const TubeVector& x1, const TubeVector& x2)
     {
       DomainException::check(x1, x2);
 
@@ -483,7 +482,7 @@ namespace tubex
       }
 
       return true;
-    }
+    }*/
 
     // Access values
 
@@ -500,24 +499,39 @@ namespace tubex
       return volume;
     }
 
-    const IntervalVector TubeVector::operator[](int slice_id) const
+    TubeVectorComponent& TubeVector::operator[](int index)
+    {
+      return const_cast<TubeVectorComponent&>(static_cast<const TubeVector&>(*this)[index]);
+    }
+
+    const TubeVectorComponent& TubeVector::operator[](int index) const
+    {
+      // todo: check index
+      map<int,TubeVectorComponent>::iterator it;
+      if(it == m_m_tube_components.end())
+        m_m_tube_components[index] = TubeVectorComponent(const_cast<TubeVector*>(this), index);
+
+      return m_m_tube_components.at(index);
+    }
+
+    const IntervalVector TubeVector::operator()(int slice_id) const
     {
       SlicingException::check(*this, slice_id);
       return get_slice(slice_id)->codomain();
     }
 
-    const IntervalVector TubeVector::operator[](double t) const
+    const IntervalVector TubeVector::operator()(double t) const
     {
       DomainException::check(*this, t);
-      return get_slice(t)->operator[](t);
+      return get_slice(t)->operator()(t);
     }
 
-    const IntervalVector TubeVector::operator[](const Interval& t) const
+    const IntervalVector TubeVector::operator()(const Interval& t) const
     {
       DomainException::check(*this, t);
 
       if(t.is_degenerated())
-        return operator[](t.lb());
+        return operator()(t.lb());
 
       const TubeSlice *slice = get_slice(t.lb());
       const TubeSlice *last_slice = get_slice(t.ub());
@@ -636,7 +650,7 @@ namespace tubex
 
       const TubeSlice *slice_x = get_slice(t);
       if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
-        return (*slice_x)[t];
+        return (*slice_x)(t);
 
       return interpol(Interval(t), v);
       // todo: check a faster implementation for this degenerate case?
@@ -854,13 +868,13 @@ namespace tubex
 
       // Setting envelopes before gates' inflation
       for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
-        s->set_envelope(s->codomain() + Interval(-1.,1.) * rad[s->domain()]);
+        s->set_envelope(s->codomain() + Interval(-1.,1.) * rad(s->domain()));
 
       for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
       {
         if(s == get_first_slice())
-          s->set_input_gate(s->input_gate() + Interval(-1.,1.) * rad[s->domain().lb()]);
-        s->set_output_gate(s->output_gate() + Interval(-1.,1.) * rad[s->domain().ub()]);
+          s->set_input_gate(s->input_gate() + Interval(-1.,1.) * rad(s->domain().lb()));
+        s->set_output_gate(s->output_gate() + Interval(-1.,1.) * rad(s->domain().ub()));
       }
 
       return *this;
@@ -877,7 +891,7 @@ namespace tubex
 
       try
       {
-        pair<IntervalVector,IntervalVector> p_codomain = bisector.bisect((*this)[t]);
+        pair<IntervalVector,IntervalVector> p_codomain = bisector.bisect((*this)(t));
         p.first.set(p_codomain.first, t);
         p.second.set(p_codomain.second, t);
       }

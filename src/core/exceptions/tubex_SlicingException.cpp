@@ -33,17 +33,17 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  SlicingException::SlicingException(const TubeVector& x, int slice_index)
+  SlicingException::SlicingException(const AbstractTube& x, int slice_index)
   {
-    ostringstream os;
+    /*ostringstream os;
     os << "slice index out of range: ";
     os << "i=" << slice_index << " not in " << Interval(0,(x.nb_slices()-1)) << endl;
-    m_what_msg = os.str();
+    m_what_msg = os.str();*/
   }
 
-  SlicingException::SlicingException(const TubeVector& x1, const TubeVector& x2)
+  SlicingException::SlicingException(const AbstractTube& x1, const AbstractTube& x2)
   {
-    ostringstream os;
+    /*ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
 
     if(x1.nb_slices() != x2.nb_slices())
@@ -51,19 +51,19 @@ namespace tubex
          << "n1=" << x1.nb_slices() << " and n2=" << x2.nb_slices();
 
     os << endl;
-    m_what_msg = os.str();
+    m_what_msg = os.str();*/
   }
 
-  void SlicingException::check(const TubeVector& x1, const TubeVector& x2)
+  void SlicingException::check(const AbstractTube& x1, const AbstractTube& x2)
   {
-    DomainException::check(x1, x2);
+    /*DomainException::check(x1, x2);
     if(!TubeVector::share_same_slicing(x1, x2))
-      throw SlicingException(x1, x2);
+      throw SlicingException(x1, x2);*/
   }
 
-  void SlicingException::check(const TubeVector& x, int slice_index)
+  void SlicingException::check(const AbstractTube& x, int slice_index)
   {
-    if(slice_index < 0 || slice_index >= x.nb_slices())
-      throw SlicingException(x, slice_index);
+    /*if(slice_index < 0 || slice_index >= x.nb_slices())
+      throw SlicingException(x, slice_index);*/
   }
 }

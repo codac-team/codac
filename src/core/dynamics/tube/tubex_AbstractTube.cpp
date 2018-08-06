@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DelayFunction class
+ *  tubex-lib - AbstractTube class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -7,28 +7,18 @@
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -
- *  Created   : 2018
+ *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_DelayFunction.h"
-#include "tubex_TubeVector.h"
+#include "tubex_AbstractTube.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  DelayFunction::DelayFunction(double delay) : Fnc(1, 1), m_delay(delay)
+  bool AbstractTube::share_same_slicing(const AbstractTube& x1, const AbstractTube& x2)
   {
-
-  }
-
-  const IntervalVector DelayFunction::eval(const Interval& t, const TubeVector& x) const
-  {
-    if((t - m_delay).is_subset(x.domain()))
-      return x(t - m_delay);
-
-    else
-      return IntervalVector(x.dim(), Interval::ALL_REALS);
+  	// todo
   }
 }

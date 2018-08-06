@@ -28,7 +28,21 @@ namespace tubex
 
   }
 
-  bool CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa) const
+  bool CtcDeriv::contract(Tube& x, Tube& v, TPropagation t_propa) const
+  {
+    // todo
+  }
+
+  bool CtcDeriv::contract(Tube& x, const Tube& v, TPropagation t_propa) const
+  {
+    // todo
+  }
+  bool CtcDeriv::contract(const Tube& x, const Tube& v, TPropagation t_propa) const
+  {
+    // todo
+  }
+
+  bool CtcDeriv::contract(TubeVector& x, TubeVector& v, TPropagation t_propa) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
@@ -39,7 +53,7 @@ namespace tubex
     if(t_propa & FORWARD)
     {
       TubeSlice *x_slice = x.get_first_slice();
-      const TubeSlice *v_slice = v.get_first_slice();
+      TubeSlice *v_slice = v.get_first_slice();
 
       while(x_slice != NULL)
       {
@@ -52,7 +66,7 @@ namespace tubex
     if(t_propa & BACKWARD)
     {
       TubeSlice *x_slice = x.get_last_slice();
-      const TubeSlice *v_slice = v.get_last_slice();
+      TubeSlice *v_slice = v.get_last_slice();
 
       while(x_slice != NULL)
       {
@@ -65,7 +79,12 @@ namespace tubex
     return ctc;
   }
 
-  bool CtcDeriv::contract(TubeSlice& x, const TubeSlice& v) const
+  bool CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa) const
+  {
+
+  }
+
+  bool CtcDeriv::contract(TubeSlice& x, TubeSlice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
@@ -112,7 +131,7 @@ namespace tubex
     return old_x != x;
   }
 
-  bool CtcDeriv::contract_gates(TubeSlice& x, const TubeSlice& v) const
+  bool CtcDeriv::contract_gates(TubeSlice& x, TubeSlice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);

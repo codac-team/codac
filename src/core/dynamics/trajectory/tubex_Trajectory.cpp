@@ -65,14 +65,14 @@ namespace tubex
     return codomain_box()[0];
   }
 
-  double Trajectory::operator[](double t) const
+  double Trajectory::operator()(double t) const
   {
-    return TrajectoryVector::operator[](t)[0];
+    return TrajectoryVector::operator()(t)[0];
   }
   
-  const Interval Trajectory::operator[](const Interval& t) const
+  const Interval Trajectory::operator()(const Interval& t) const
   {
-    return TrajectoryVector::operator[](t)[0];
+    return TrajectoryVector::operator()(t)[0];
   }
   
   // Tests

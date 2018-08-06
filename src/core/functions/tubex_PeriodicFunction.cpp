@@ -38,8 +38,8 @@ namespace tubex
     }
 
     IntervalVector result(x.dim(), Interval::EMPTY_SET);
-    if(!a.is_empty()) result |= x[a];
-    if(!b.is_empty()) result |= x[b];
+    if(!a.is_empty()) result |= x(a);
+    if(!b.is_empty()) result |= x(b);
     return result;
   }
 }

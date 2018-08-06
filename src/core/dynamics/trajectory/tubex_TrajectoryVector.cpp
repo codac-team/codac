@@ -113,7 +113,7 @@ namespace tubex
     return m_codomain;
   }
 
-  const Vector TrajectoryVector::operator[](double t) const
+  const Vector TrajectoryVector::operator()(double t) const
   {
     DomainException::check(*this, t);
 
@@ -142,7 +142,7 @@ namespace tubex
     }
   }
   
-  const IntervalVector TrajectoryVector::operator[](const Interval& t) const
+  const IntervalVector TrajectoryVector::operator()(const Interval& t) const
   {
     DomainException::check(*this, t);
 
@@ -155,8 +155,8 @@ namespace tubex
     else
     {
       IntervalVector eval(dim(), Interval::EMPTY_SET);
-      eval |= (*this)[t.lb()];
-      eval |= (*this)[t.ub()];
+      eval |= (*this)(t.lb());
+      eval |= (*this)(t.ub());
 
       for(map<double,Vector>::const_iterator it = m_map_values.lower_bound(t.lb()) ;
           it != m_map_values.upper_bound(t.ub()) ; it++)

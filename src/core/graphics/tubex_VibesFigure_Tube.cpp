@@ -323,7 +323,7 @@ namespace tubex
 
           for(int i = 0 ; i < tube->nb_slices() ; i++) // todo: slice ptr iteration
           {
-            Interval slice = (*tube)[i][m_current_layer];
+            Interval slice = (*tube)(i)[m_current_layer];
             if(!slice.is_unbounded())
             {
               image_lb = std::isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
@@ -520,16 +520,16 @@ namespace tubex
         for(double t = traj->domain().lb() ; t <= traj->domain().ub() ; t+=traj->domain().diam()/TRAJ_NB_DISPLAYED_POINTS)
         {
           if(points_size != 0.)
-            vibes::drawPoint(t, (*traj)[t][m_current_layer], points_size, vibesParams("figure", name(), "group", group_name));
+            vibes::drawPoint(t, (*traj)(t)[m_current_layer], points_size, vibesParams("figure", name(), "group", group_name));
 
           else
           {
             v_x.push_back(t);
-            v_y.push_back((*traj)[t][m_current_layer]);
+            v_y.push_back((*traj)(t)[m_current_layer]);
           }
 
           viewbox[0] |= t;
-          viewbox[m_current_layer+1] |= (*traj)[t][m_current_layer];
+          viewbox[m_current_layer+1] |= (*traj)(t)[m_current_layer];
         }
       }
 

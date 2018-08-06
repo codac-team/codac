@@ -41,15 +41,15 @@ namespace tubex
     {
       intv_t = slice_y->domain().lb() - a;
       if(intv_t.is_subset(y.domain()))
-        slice_y->set_input_gate(slice_y->input_gate() & x[intv_t]);
+        slice_y->set_input_gate(slice_y->input_gate() & x(intv_t));
 
       intv_t = slice_y->domain() - a;
       if(intv_t.is_subset(y.domain()))
-        slice_y->set_envelope(slice_y->codomain() & x[intv_t]);
+        slice_y->set_envelope(slice_y->codomain() & x(intv_t));
 
       intv_t = slice_y->domain().ub() - a;
       if(intv_t.is_subset(y.domain()))
-        slice_y->set_output_gate(slice_y->output_gate() & x[intv_t]);
+        slice_y->set_output_gate(slice_y->output_gate() & x(intv_t));
 
       slice_x = slice_x->next_slice();
       slice_y = slice_y->next_slice();

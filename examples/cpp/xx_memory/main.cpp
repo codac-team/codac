@@ -6,6 +6,36 @@ using namespace tubex;
 
 int main()
 {
+  Interval domain(0.,10.);
+  const TubeVector x(domain, IntervalVector(4, 1.));
+
+  //Tube a(domain);
+  //cout << "# " << a << endl;
+  //a = x;
+  //cout << "# " << a << endl;
+
+  /*cout << x << endl;
+
+  x(3).set(Interval(2.));
+  //x(1) = x(2) + x(3);
+
+  cout << x << endl;
+  x(1).set_empty();
+  cout << x << endl;*/
+
+  //CtcDeriv ctc_deriv;
+  //ctc_deriv.contract(x[0], x[3]);
+
+
+  
+
+
+
+
+
+
+/*
+
   float delta = 0.001;
   Interval domain(1.,4.5);
   Tube y(domain, delta, tubex::Function("sin(t)+sin(2*t)+sin(3*t)+sin(4*t)+(3-t)*[0.01,0.3]+[0,0.2]"));

@@ -57,9 +57,9 @@ namespace tubex
         Interval input_gate = slice_copy->input_gate()[0]; \
         Interval envelope = slice_copy->codomain()[0]; \
         Interval output_gate = slice_copy->output_gate()[0]; \
-        slice->set_envelope(IntervalVector(1, envelope.f(x[slice->domain()]))); \
-        slice->set_input_gate(IntervalVector(1, input_gate.f(x[slice->domain().lb()]))); \
-        slice->set_output_gate(IntervalVector(1, output_gate.f(x[slice->domain().ub()]))); \
+        slice->set_envelope(IntervalVector(1, envelope.f(x(slice->domain())))); \
+        slice->set_input_gate(IntervalVector(1, input_gate.f(x(slice->domain().lb())))); \
+        slice->set_output_gate(IntervalVector(1, output_gate.f(x(slice->domain().ub())))); \
         slice = slice->next_slice(); \
         slice_copy = slice_copy->next_slice(); \
       } \
