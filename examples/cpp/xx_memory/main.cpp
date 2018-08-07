@@ -7,7 +7,11 @@ using namespace tubex;
 int main()
 {
   Interval domain(0.,10.);
-  const TubeVector x(domain, IntervalVector(4, 1.));
+  TubeVector x(domain, IntervalVector(4, 1.));
+
+  Tube x_scalar(domain);
+
+  x[0];//.set_empty();
 
   //Tube a(domain);
   //cout << "# " << a << endl;

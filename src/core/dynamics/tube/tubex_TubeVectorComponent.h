@@ -22,8 +22,8 @@ namespace tubex
   {
     public:
       TubeVectorComponent();
-
       TubeVectorComponent(TubeVector *tubevector, int component_id);
+      ~TubeVectorComponent();
 
       const std::string class_name() const { return "TubeVectorComponent"; };
 

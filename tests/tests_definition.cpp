@@ -160,7 +160,7 @@ TEST_CASE("Tube definition")
     Trajectory traj_lb(Interval(-1.,10.), tubex::Function("t^2"));
     Trajectory traj_ub(Interval(-1.,10.), tubex::Function("t^2-2"));
     
-    Tube tube_1slice(traj_lb, traj_ub);
+    Tube tube_1slice(traj_lb, traj_ub, traj_lb.domain().diam());
     CHECK(tube_1slice.nb_slices() == 1);
     CHECK(tube_1slice.domain() == Interval(-1.,10.));
     CHECK(tube_1slice.codomain() == Interval(-2.,100.));

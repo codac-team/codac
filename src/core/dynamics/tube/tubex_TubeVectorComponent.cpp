@@ -20,12 +20,17 @@ namespace tubex
   TubeVectorComponent::TubeVectorComponent()
     : Tube(NULL, -1)
   {
-
+    m_destroy_tubevector = false;
   }
 
   TubeVectorComponent::TubeVectorComponent(TubeVector *tubevector, int component_id)
     : Tube(tubevector, component_id)
   {
+    m_destroy_tubevector = false;
+  }
 
+  TubeVectorComponent::~TubeVectorComponent()
+  {
+    
   }
 }

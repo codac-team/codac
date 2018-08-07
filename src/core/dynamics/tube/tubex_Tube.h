@@ -165,6 +165,7 @@ namespace tubex
 
       TubeVector *m_tubevector = NULL;
       int m_component_id = 0;
+      bool m_destroy_tubevector = true;
   };
 }
 

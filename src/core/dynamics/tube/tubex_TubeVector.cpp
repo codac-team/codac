@@ -508,10 +508,10 @@ namespace tubex
     {
       // todo: check index
       map<int,TubeVectorComponent>::iterator it;
-      if(it == m_m_tube_components.end())
+      if(it == m_m_tube_components.end()) // if not found
         m_m_tube_components[index] = TubeVectorComponent(const_cast<TubeVector*>(this), index);
 
-      return m_m_tube_components.at(index);
+      return m_m_tube_components[index];
     }
 
     const IntervalVector TubeVector::operator()(int slice_id) const

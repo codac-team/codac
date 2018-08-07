@@ -140,7 +140,8 @@ namespace tubex
 
     Tube::~Tube()
     {
-      delete m_tubevector;
+      if(m_destroy_tubevector)
+        delete m_tubevector;
     }
     
     const Tube Tube::primitive() const
