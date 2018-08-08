@@ -20,23 +20,21 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*#define assignment_op_slice(f) \
+  #define assignment_op_slice(f) \
     \
     TubeSlice& TubeSlice::f(const TubeSlice& slice_x) \
     { \
       DomainException::check(*this, slice_x); \
-      DimensionException::check(*this, slice_x); \
-      IntervalVector y = codomain(); y.f(slice_x.codomain()); set_envelope(y); \
+      Interval y = codomain(); y.f(slice_x.codomain()); set_envelope(y); \
       y = input_gate(); y.f(slice_x.input_gate()); set_input_gate(y); \
       y = output_gate(); y.f(slice_x.output_gate()); set_output_gate(y); \
       return *this; \
     } \
     \
-    TubeSlice& TubeSlice::f(const TrajectoryVector& traj_x) \
+    TubeSlice& TubeSlice::f(const Trajectory& traj_x) \
     { \
       DomainException::check(*this, traj_x); \
-      DimensionException::check(*this, traj_x); \
-      IntervalVector y = codomain(); y.f(traj_x(domain())); set_envelope(y); \
+      Interval y = codomain(); y.f(traj_x(domain())); set_envelope(y); \
       y = input_gate(); y.f(traj_x(Interval(domain().lb()))); set_input_gate(y); \
       y = output_gate(); y.f(traj_x(Interval(domain().ub()))); set_output_gate(y); \
       return *this; \
@@ -44,8 +42,10 @@ namespace tubex
 
   assignment_op_slice(operator+=);
   assignment_op_slice(operator-=);
+  assignment_op_slice(operator*=);
+  assignment_op_slice(operator/=);
   assignment_op_slice(operator|=);
   assignment_op_slice(operator&=);
 
-  // Note: operator*= and operator/= are not defined for vector items*/
+  // Note: operator*= and operator/= are not defined for vector items
 }

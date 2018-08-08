@@ -25,12 +25,6 @@ namespace tubex
 
     // Definition
 
-    /*TubeSlice::TubeSlice(const Interval& domain)
-      : TubeSlice(domain)
-    {
-      DomainException::check(domain);
-    }
-
     TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain)
       : m_domain(domain), m_codomain(codomain)
     {
@@ -103,8 +97,6 @@ namespace tubex
 
       if(first_slice != NULL && second_slice != NULL)
       {
-        DimensionException::check(*first_slice, *second_slice);
-
         if(second_slice->m_input_gate != NULL)
           *first_slice->m_output_gate &= *second_slice->m_input_gate;
         second_slice->m_input_gate = first_slice->m_output_gate;
@@ -205,15 +197,12 @@ namespace tubex
 
     const Interval TubeSlice::invert(const Interval& y, const Interval& search_domain) const
     {
-      DimensionException::check(*this, y);
       TubeSlice v(domain(), Interval::ALL_REALS); // todo: optimize this
       return invert(y, v, search_domain);
     }
 
     const Interval TubeSlice::invert(const Interval& y, const TubeSlice& v, const Interval& search_domain) const
     {
-      DimensionException::check(*this, y);
-
       // todo: use enclosed bounds also? in order to speed up computations
 
       if(!m_domain.intersects(search_domain))
@@ -282,7 +271,6 @@ namespace tubex
     
     bool TubeSlice::operator==(const TubeSlice& x) const
     {
-      DimensionException::check(*this, x);
       return domain() == x.domain() &&
              codomain() == x.codomain() &&
              input_gate() == x.input_gate() &&
@@ -291,7 +279,6 @@ namespace tubex
     
     bool TubeSlice::operator!=(const TubeSlice& x) const
     {
-      DimensionException::check(*this, x);
       return domain() != x.domain() ||
              codomain() != x.codomain() ||
              input_gate() != x.input_gate() ||
@@ -301,7 +288,6 @@ namespace tubex
     bool TubeSlice::is_subset(const TubeSlice& x) const
     {
       DomainException::check(*this, x);
-      DimensionException::check(*this, x);
       return codomain().is_subset(x.codomain())
           && input_gate().is_subset(x.input_gate())
           && output_gate().is_subset(x.output_gate());
@@ -310,7 +296,6 @@ namespace tubex
     bool TubeSlice::is_strict_subset(const TubeSlice& x) const
     {
       DomainException::check(*this, x);
-      DimensionException::check(*this, x);
       return is_subset(x) && (*this) != x;
     }
     
@@ -322,7 +307,6 @@ namespace tubex
     bool TubeSlice::encloses(const Trajectory& x) const
     {
       DomainException::check(*this, x);
-      DimensionException::check(*this, x);
       return x(m_domain).is_subset(m_codomain)
           && input_gate().contains(x(m_domain.lb()))
           && output_gate().contains(x(m_domain.ub()));
@@ -332,7 +316,6 @@ namespace tubex
 
     void TubeSlice::set(const Interval& y)
     {
-      DimensionException::check(*this, y);
       m_codomain = y;
 
       *m_input_gate = y;
@@ -411,6 +394,6 @@ namespace tubex
       return IntervalVector(m_codomain);
     }
 
-    // Setting values*/
+    // Setting values
     
 }

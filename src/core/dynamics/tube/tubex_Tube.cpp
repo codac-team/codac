@@ -13,7 +13,7 @@
 #include "tubex_Tube.h"
 #include "tubex_Exception.h"
 #include "tubex_DomainException.h"
-#include "tubex_TrajectoryVectorSerialization.h"
+#include "tubex_TrajectorySerialization.h"
 #include "tubex_DimensionException.h"
 #include "tubex_SlicingException.h"
 #include "tubex_CtcDeriv.h"
@@ -27,7 +27,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*// Public methods
+  // Public methods
 
     // Definition
 
@@ -61,7 +61,7 @@ namespace tubex
         lb = ub; // we guarantee all slices are adjacent
         ub = min(lb + timestep, domain.ub());
 
-        slice = new TubeSlice(Interval(lb,ub), dim);
+        slice = new TubeSlice(Interval(lb,ub));
         slice->set_tube_ref(this);
 
         if(prev_slice != NULL)
@@ -437,7 +437,7 @@ namespace tubex
         last_slice = last_slice->next_slice();
 
       Interval codomain = Interval::EMPTY_SET;
-      for(TubeSlice *s = first_slice ; s != last_slice ; s = s->next_slice())
+      for(const TubeSlice *s = first_slice ; s != last_slice ; s = s->next_slice())
         codomain |= s->codomain();
 
       return codomain;
@@ -564,7 +564,7 @@ namespace tubex
       return interpol;
     }
 
-    const Vector Tube::max_thickness() const
+    double Tube::max_thickness() const
     {
       const TubeSlice *largest = get_largest_slice();
 
@@ -575,7 +575,7 @@ namespace tubex
         return largest->codomain().diam();
     }
 
-    const Vector Tube::max_gate_thickness(double& t) const
+    double Tube::max_gate_thickness(double& t) const
     {
       const TubeSlice *slice = get_first_slice();
 
@@ -767,8 +767,8 @@ namespace tubex
       try
       {
         pair<IntervalVector,IntervalVector> p_codomain = bisector.bisect(IntervalVector((*this)(t)));
-        p.first.set(p_codomain.first, t);
-        p.second.set(p_codomain.second, t);
+        p.first.set(p_codomain.first[0], t);
+        p.second.set(p_codomain.second[0], t);
       }
 
       catch(ibex::NoBisectableVariableException&)
@@ -798,7 +798,7 @@ namespace tubex
       return integral(Interval(t));
     }
 
-    const IntervalVector Tube::integral(const Interval& t) const
+    const Interval Tube::integral(const Interval& t) const
     {
       // todo: more accurate output in case of unbounded tubes (evaluate each dimension separately)
       DomainException::check(*this, t);
@@ -837,13 +837,13 @@ namespace tubex
 
       else
       {
-        Vector lb = (integral_t2.first - integral_t1.first).lb();
-        Vector ub = (integral_t2.second - integral_t1.second).ub();
+        double lb = (integral_t2.first - integral_t1.first).lb();
+        double ub = (integral_t2.second - integral_t1.second).ub();
         return Interval(lb) | ub;
       }
     }
 
-    const pair<IntervalVector,IntervalVector> Tube::partial_integral(const Interval& t) const
+    const pair<Interval,Interval> Tube::partial_integral(const Interval& t) const
     {
       // todo: more accurate output in case of unbounded tubes (evaluate each dimension separately)
       DomainException::check(*this, t);
@@ -884,7 +884,7 @@ namespace tubex
           intv_t = slice->domain() & t;
           if(!intv_t.is_empty())
           {
-            pair<IntervalVector,IntervalVector> p_integ_temp(p_integ_uncertain);
+            pair<Interval,Interval> p_integ_temp(p_integ_uncertain);
             p_integ_uncertain.first += Interval(0., intv_t.diam()) * slice->codomain().lb();
             p_integ_uncertain.second += Interval(0., intv_t.diam()) * slice->codomain().ub();
           
@@ -995,5 +995,5 @@ namespace tubex
       }
 
       bin_file.close();
-    }*/
+    }
 }

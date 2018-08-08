@@ -39,10 +39,11 @@ namespace tubex
       const Function& operator=(const Function& f);
 
       using Fnc::eval;
-      const TubeVector eval(const TubeVector& x) const;
-      const ibex::IntervalVector eval(const ibex::Interval& t) const;
-      const ibex::IntervalVector eval(const TubeSlice& x) const;
-      const ibex::IntervalVector eval(const ibex::Interval& t, const TubeVector& x) const;
+      const TubeVector eval_vector(const TubeVector& x) const;
+      const Tube eval(const TubeVector& x) const;
+      const ibex::IntervalVector eval_vector(const ibex::Interval& t) const;
+      const ibex::IntervalVector eval_vector(const TubeSlice& x) const;
+      const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const;
 
     protected:
 

@@ -22,7 +22,7 @@ namespace tubex
 {
   // Definition
 
-  TrajectoryVector::TrajectoryVector()
+  /*TrajectoryVector::TrajectoryVector()
   {
     
   }
@@ -285,5 +285,5 @@ namespace tubex
 
     str << flush;
     return str;
-  }
+  }*/
 }

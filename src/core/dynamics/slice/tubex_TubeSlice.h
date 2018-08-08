@@ -97,20 +97,19 @@ namespace tubex
 
     protected:
 
-      void set_tube_ref(TubeVector *tube_ref);
+      void set_tube_ref(Tube *tube_ref);
       void set_domain(const ibex::Interval& domain);
       const ibex::IntervalVector codomain_box() const;
 
     /** Class variables **/
 
       ibex::Interval m_domain;
-      ibex::IntervalVector m_codomain = ibex::IntervalVector(1); // by default: 1-dim codomain
-      ibex::IntervalVector *m_input_gate = NULL, *m_output_gate = NULL;
+      ibex::Interval m_codomain = ibex::Interval::ALL_REALS;
+      ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
       TubeSlice *m_prev_slice = NULL, *m_next_slice = NULL;
-      TubeVector *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
+      Tube *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
 
       friend class Tube;
-      friend class TubeVector;
       friend void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
   };
 }
