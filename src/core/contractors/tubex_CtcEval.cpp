@@ -23,7 +23,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*CtcEval::CtcEval(bool preserve_slicing, bool enable_propagation)
+  CtcEval::CtcEval(bool preserve_slicing, bool enable_propagation)
     : Ctc(preserve_slicing), m_propagation_enabled(enable_propagation)
   {
 
@@ -31,21 +31,14 @@ namespace tubex
 
   bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w) const
   {
-    // todo
-  }
-
-  bool CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w) const
-  {
     SlicingException::check(y, w);
-    DimensionException::check(y, z);
-    DimensionException::check(y, w);
 
     if(z.is_empty() || y.is_empty())
       return false;
 
-    TubeVector y_first_slicing = y, w_first_slicing = w; // doto: instanciate this just in case
-    IntervalVector z_ = z;
-    TubeVector y_ = y;
+    Tube y_first_slicing = y, w_first_slicing = w; // doto: instanciate this just in case
+    Interval z_ = z;
+    Tube y_ = y;
 
     z &= y.interpol(t, w);
     y.set(z, t);
@@ -81,17 +74,7 @@ namespace tubex
 
   bool CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w) const
   {
-    // todo IntervalVector z_(1, z);
-    // todo bool contraction = contract(t, z_, y, w);
-    // todo z &= z_[0];
-    // todo return contraction;
-  }
-
-  bool CtcEval::contract(Interval& t, IntervalVector& z, TubeVector& y, TubeVector& w) const
-  {
     SlicingException::check(y, w);
-    DimensionException::check(y, z);
-    DimensionException::check(y, w);
     
     if(t.is_degenerated())
       return contract(t.lb(), z, y, w);
@@ -99,10 +82,10 @@ namespace tubex
     if(t.is_empty() || z.is_empty() || y.is_empty())
       return false;
 
-    TubeVector y_first_slicing(y), w_first_slicing(w);
+    Tube y_first_slicing(y), w_first_slicing(w);
     Interval t_ = t;
-    IntervalVector z_ = z;
-    TubeVector y_ = y;
+    Interval z_ = z;
+    Tube y_ = y;
 
     t &= y.domain();
     t &= y.invert(z, w ,t);
@@ -128,8 +111,8 @@ namespace tubex
         }
 
         CtcDeriv ctc_deriv;
-        IntervalVector front_gate(y.dim());
-        list<IntervalVector> l_gates;
+        Interval front_gate(y.dim());
+        list<Interval> l_gates;
         Slice *slice_y;
         Slice *slice_w;
 
@@ -144,12 +127,11 @@ namespace tubex
             // provides a wider enclosure t'. The evaluation of y[t'.lb()] may not
             // intersect z and so the front_gate becomes empty.
             // An epsilon inflation could be used to overcome this problem. Or:
-            for(int i = 0 ; i < y.dim() ; i++)
-              if(front_gate[i].is_empty())
-              {
-                if(slice_y->input_gate()[i].ub() < z[i].lb()) front_gate[i] = z[i].lb();
-                else front_gate[i] = z[i].ub();
-              }
+            if(front_gate.is_empty())
+            {
+              if(slice_y->input_gate().ub() < z.lb()) front_gate = z.lb();
+              else front_gate = z.ub();
+            }
 
           l_gates.push_front(front_gate);
 
@@ -175,12 +157,11 @@ namespace tubex
 
           front_gate = slice_y->output_gate() & z;
             // Overcoming numerical approximations, same remark as before:
-            for(int i = 0 ; i < y.dim() ; i++)
-              if(front_gate[i].is_empty())
-              {
-                if(slice_y->output_gate()[i].ub() < z[i].lb()) front_gate[i] = z[i].lb();
-                else front_gate[i] = z[i].ub();
-              }
+            if(front_gate.is_empty())
+            {
+              if(slice_y->output_gate().ub() < z.lb()) front_gate = z.lb();
+              else front_gate = z.ub();
+            }
 
           slice_y->set_output_gate(l_gates.front() | front_gate);
 
@@ -234,5 +215,19 @@ namespace tubex
     }
 
     return t != t_ || z != z_ || y.is_strict_subset(y_);
-  }*/
+  }
+
+  bool CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
+  {
+    DimensionException::check(y, z);
+    DimensionException::check(y, w);
+
+  }
+
+  bool CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
+  {
+    DimensionException::check(y, z);
+    DimensionException::check(y, w);
+
+  }
 }

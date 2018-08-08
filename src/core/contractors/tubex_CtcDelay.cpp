@@ -21,16 +21,15 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*CtcDelay::CtcDelay(bool preserve_slicing)
+  CtcDelay::CtcDelay(bool preserve_slicing)
     : Ctc(preserve_slicing)
   {
 
   }
 
-  bool CtcDelay::contract(const Interval& a, const TubeVector& x, TubeVector& y) const
+  bool CtcDelay::contract(const Interval& a, const Tube& x, Tube& y) const
   {
     DomainException::check(x, y);
-    DimensionException::check(x, y);
     SlicingException::check(x, y);
 
     Interval intv_t;
@@ -56,5 +55,5 @@ namespace tubex
     }
 
     // todo: return value
-  }*/
+  }
 }
