@@ -18,7 +18,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  Function::Function(int n, const char** x, const char* y)
+  /*Function::Function(int n, const char** x, const char* y)
   {
     construct_from_array(n, x, y);
   }
@@ -212,5 +212,5 @@ namespace tubex
     }
 
     return y;
-  }
+  }*/
 }

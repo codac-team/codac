@@ -21,7 +21,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDelay::CtcDelay(bool preserve_slicing)
+  /*CtcDelay::CtcDelay(bool preserve_slicing)
     : Ctc(preserve_slicing)
   {
 
@@ -56,5 +56,5 @@ namespace tubex
     }
 
     // todo: return value
-  }
+  }*/
 }

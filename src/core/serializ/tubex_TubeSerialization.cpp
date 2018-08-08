@@ -38,7 +38,7 @@ namespace tubex
                 ...
   */
 
-  void serialize_tubevector(ofstream& bin_file, const TubeVector& tube, int version_number)
+  /*void serialize_tubevector(ofstream& bin_file, const TubeVector& tube, int version_number)
   {
     if(!bin_file.is_open())
       throw Exception("serializeTube()", "ofstream& bin_file not open");
@@ -182,5 +182,5 @@ namespace tubex
       default:
         throw Exception("deserializeTube()", "deserialization version number not supported");
     }
-  }
+  }*/
 }

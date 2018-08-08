@@ -34,7 +34,7 @@ namespace tubex
                 ...
   */
 
-  void serialize_trajvector(ofstream& bin_file, const TrajectoryVector& traj, int version_number)
+  /*void serialize_trajvector(ofstream& bin_file, const TrajectoryVector& traj, int version_number)
   {
     if(!bin_file.is_open())
       throw Exception("serialize_trajvector()", "ofstream& bin_file not open");
@@ -124,5 +124,5 @@ namespace tubex
       default:
         throw Exception("deserialize_trajvector()", "deserialization version number not supported");
     }
-  }
+  }*/
 }

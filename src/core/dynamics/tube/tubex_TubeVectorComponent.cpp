@@ -17,7 +17,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  TubeVectorComponent::TubeVectorComponent()
+  /*TubeVectorComponent::TubeVectorComponent()
     : Tube(NULL, -1)
   {
     m_destroy_tubevector = false;
@@ -35,5 +35,5 @@ namespace tubex
   TubeVectorComponent::~TubeVectorComponent()
   {
     
-  }
+  }*/
 }

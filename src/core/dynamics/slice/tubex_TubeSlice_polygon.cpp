@@ -20,7 +20,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  Interval yilb(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  /*Interval yilb(int i, const Interval& t, const TubeSlice& x, const TubeSlice& v)
   {
     DimensionException::check(x, v);
     DimensionException::check(x, i);
@@ -221,5 +221,5 @@ namespace tubex
       v_pts.push_back(Point(t.lb(), input_gate()[i].ub()));
       return ConvexPolygon(v_pts);
     }
-  }
+  }*/
 }

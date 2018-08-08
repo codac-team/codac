@@ -27,7 +27,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*// Public methods
+  // Public methods
 
     // Definition
 
@@ -465,6 +465,24 @@ namespace tubex
       else
         slice->set_output_gate(gate);
     }
+
+    /*bool TubeVector::share_same_slicing(const TubeVector& x1, const TubeVector& x2)
+    {
+      DomainException::check(x1, x2);
+
+      if(x1.nb_slices() != x2.nb_slices())
+        return false;
+
+      const TubeSlice *s2 = x2.get_first_slice();
+      for(const TubeSlice *s1 = x1.get_first_slice() ; s1 != NULL ; s1 = s1->next_slice())
+      {
+        if(s1->domain() != s2->domain())
+          return false;
+        s2 = s2->next_slice();
+      }
+
+      return true;
+    }*/
 
     // Access values
 
@@ -1099,5 +1117,5 @@ cout << index << endl;
       }
 
       bin_file.close();
-    }*/
+    }
 }

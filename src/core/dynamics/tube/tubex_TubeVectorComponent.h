@@ -18,7 +18,7 @@
 
 namespace tubex
 {
-  class TubeVectorComponent : public Tube
+  /*class TubeVectorComponent : public Tube
   {
     public:
       TubeVectorComponent();
@@ -29,7 +29,7 @@ namespace tubex
 
     protected:
     	
-  };
+  };*/
 }
 
 #endif

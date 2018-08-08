@@ -19,6 +19,8 @@
 
 namespace tubex
 {
+  // todo: repeat these operations for slices? then iterations
+  
   // Unary operations
 
     #define header_unary_op(f) \

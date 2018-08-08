@@ -23,7 +23,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcEval::CtcEval(bool preserve_slicing, bool enable_propagation)
+  /*CtcEval::CtcEval(bool preserve_slicing, bool enable_propagation)
     : Ctc(preserve_slicing), m_propagation_enabled(enable_propagation)
   {
 
@@ -234,5 +234,5 @@ namespace tubex
     }
 
     return t != t_ || z != z_ || y.is_strict_subset(y_);
-  }
+  }*/
 }

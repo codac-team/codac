@@ -20,7 +20,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcPicard::CtcPicard(bool preserve_slicing, float delta)
+  /*CtcPicard::CtcPicard(bool preserve_slicing, float delta)
     : Ctc(preserve_slicing), m_delta(delta)
   {
 
@@ -199,5 +199,5 @@ namespace tubex
     // Restoring ending gate, contracted by setting the envelope
     if(t_propa & FORWARD)  slice.set_output_gate(xf);
     if(t_propa & BACKWARD) slice.set_input_gate(xf);
-  }
+  }*/
 }

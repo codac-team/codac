@@ -21,7 +21,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  #define assignment_op_scalar(f) \
+  /*#define assignment_op_scalar(f) \
     \
     const Tube& Tube::f(const Tube& x) \
     { \
@@ -92,5 +92,5 @@ namespace tubex
   assignment_op_scalar(operator|=);
   assignment_op_scalar(operator&=);
 
-  // Note: other operators are defined in the vector case
+  // Note: other operators are defined in the vector case*/
 }

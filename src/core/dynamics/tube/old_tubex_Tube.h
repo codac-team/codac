@@ -13,21 +13,14 @@
 #ifndef __TUBEX_TUBE_H__
 #define __TUBEX_TUBE_H__
 
-#include <map>
-#include <vector>
-#include "tubex_Fnc.h"
-#include "tubex_TubeSlice.h"
-#include "tubex_Trajectory.h"
 #include "tubex_AbstractTube.h"
-#include "tubex_TubeSerialization.h"
+#include "tubex_Trajectory.h"
+#include "tubex_TubeVectorSerialization.h"
 
 namespace tubex
 {
-  class Fnc;
-  class TubeSlice;
-  class Tube;
-  class Trajectory;
-  
+  class TubeVector;
+
   class Tube : public AbstractTube
   {
     public:
@@ -35,21 +28,22 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      Tube(const ibex::Interval& domain, const ibex::IntervalVector& codomain = ibex::Interval::ALL_REALS);
-      Tube(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain = ibex::Interval::ALL_REALS);
+      Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f);
       Tube(const Tube& x);
+      Tube(int dim, const TubeVector& x);
       Tube(const Tube& x, const ibex::Interval& codomain);
-      Tube(const Trajectory& traj, double timestep = 0.);
-      Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
+      Tube(const Trajectory& traj, double timestep);
+      Tube(const Trajectory& lb, const Trajectory& ub, double timestep);
       Tube(const std::string& binary_file_name);
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
       ~Tube();
-      int dim() const;
       const Tube primitive() const;
       const Tube& operator=(const Tube& x);
       const ibex::Interval domain() const;
+      int dim() const;
 
       // Slices structure
       int nb_slices() const;
@@ -69,6 +63,7 @@ namespace tubex
       int index(const TubeSlice* slice) const;
       void sample(double t);
       void sample(double t, const ibex::Interval& gate);
+      //static bool share_same_slicing(const Tube& x1, const Tube& x2);
 
       // Access values
       const ibex::Interval codomain() const;
@@ -130,15 +125,13 @@ namespace tubex
         const Tube& operator*=(const Trajectory& x);
         const Tube& operator*=(const ibex::Interval& x);
 
-      // Other mathematical operators
+        const Tube& operator/=(const Tube& x);
+        const Tube& operator/=(const Trajectory& x);
+        const Tube& operator/=(const ibex::Interval& x);
 
-        const Tube& operator|(const Tube& x);
-        const Tube& operator|(const Trajectory& x);
-        const Tube& operator|(const ibex::Interval& x);
+        // Other mathematical operators
 
-        const Tube& operator&(const Tube& x);
-        const Tube& operator&(const Trajectory& x);
-        const Tube& operator&(const ibex::Interval& x);
+        // Note: operator| and operator& for Tube are defined in Arithmetic.* files
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const Tube& x);
@@ -165,14 +158,14 @@ namespace tubex
 
     protected:
 
-      Tube();
+      Tube(TubeVector *tubevector, int component_id);
       const ibex::IntervalVector codomain_box() const;
-      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
 
     /** Class variables **/
 
-      TubeSlice *m_first_slice = NULL;
-      friend void deserialize_Tube(std::ifstream& bin_file, Tube& tube);
+      TubeVector *m_tubevector = NULL;
+      int m_component_id = 0;
+      bool m_destroy_tubevector = true;
   };
 }
 

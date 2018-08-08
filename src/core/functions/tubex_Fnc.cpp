@@ -18,7 +18,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  Fnc::Fnc()
+  /*Fnc::Fnc()
   {
 
   }
@@ -72,5 +72,5 @@ namespace tubex
     y_slice->set_output_gate(eval(x_slice->domain().ub(), x));
 
     return y;
-  }
+  }*/
 }

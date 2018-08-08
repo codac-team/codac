@@ -24,7 +24,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  #define assignment_op_vector(f) \
+  /*#define assignment_op_vector(f) \
     \
     const TubeVector& TubeVector::f(const TubeVector& x) \
     { \
@@ -257,5 +257,5 @@ namespace tubex
       return *this; \
     }
 
-  assignment_op_vector_with_scalar(operator*=);
+  assignment_op_vector_with_scalar(operator*=);*/
 }

@@ -22,7 +22,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDeriv::CtcDeriv(bool preserve_slicing)
+  /*CtcDeriv::CtcDeriv(bool preserve_slicing)
     : Ctc(preserve_slicing)
   {
 
@@ -150,5 +150,5 @@ namespace tubex
     x.set_input_gate(in_gate);
 
     return ctc;
-  }
+  }*/
 }

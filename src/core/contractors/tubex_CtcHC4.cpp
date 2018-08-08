@@ -20,7 +20,7 @@ namespace tubex
 {
   // todo: avoid redundant gate contractions
   
-  CtcHC4::CtcHC4(bool preserve_slicing)
+  /*CtcHC4::CtcHC4(bool preserve_slicing)
     : Ctc(preserve_slicing)
   {
 
@@ -61,5 +61,5 @@ namespace tubex
     x.set_output_gate(box.subvector(1, box.size() - 1));
 
     return x_old != x;
-  }
+  }*/
 }

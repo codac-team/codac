@@ -23,7 +23,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  #define unary_op(f) \
+  /*#define unary_op(f) \
     \
     const Tube f(const Tube& x) \
     { \
@@ -43,7 +43,7 @@ namespace tubex
     \
     const TubeVector f(const TubeVector& x) \
     { \
-      DimensionException::check_scalar(x.dim()); /* todo: improve error message */\
+      DimensionException::check_scalar(x.dim()); /* todo: improve error message *//*\
       TubeVector result(x); \
       TubeSlice *slice_result = result.get_first_slice(); \
       const TubeSlice *slice_x = x.get_first_slice(); \
@@ -451,5 +451,5 @@ namespace tubex
     // Overloading in order to overcome the !is_empty() ibex's assertion
     for(int i = 0 ; i < subvec.size() ; i++)
       box[i + start_index] = subvec[i];
-  }
+  }*/
 }

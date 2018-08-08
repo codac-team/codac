@@ -21,7 +21,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  // Static items
+  /*// Static items
 
     vector<VibesFigure_Tube*> VibesFigure_Tube::v_vibesfig_tube;
 
@@ -485,5 +485,5 @@ namespace tubex
         vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
 
       return viewbox;
-    }
+    }*/
 }
