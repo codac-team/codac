@@ -10,7 +10,7 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_TubeVectorSerialization.h"
+#include "tubex_TubeSerialization.h"
 #include "tubex_IntervalSerialization.h"
 #include "tubex_Exception.h"
 #include "tubex_DimensionException.h"
@@ -64,7 +64,7 @@ namespace tubex
 
         // Domains
         double lb;
-        for(const TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
         {
           lb = s->domain().lb();
           bin_file.write((const char*)&lb, sizeof(double));
@@ -73,12 +73,12 @@ namespace tubex
         bin_file.write((const char*)&lb, sizeof(double));
 
         // Codomains
-        for(const TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
           serialize_intervalvector(bin_file, s->codomain());
 
         // Gates
         serialize_intervalvector(bin_file, tube.get_first_slice()->input_gate());
-        for(const TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
           serialize_intervalvector(bin_file, s->output_gate());
 
         break;
@@ -125,7 +125,7 @@ namespace tubex
         double lb;
         bin_file.read((char*)&lb, sizeof(double));
 
-        TubeSlice *prev_slice = NULL, *slice = NULL;
+        Slice *prev_slice = NULL, *slice = NULL;
         for(int i = 0 ; i < slices_number ; i++)
         {
           double ub;
@@ -133,13 +133,13 @@ namespace tubex
 
           if(slice == NULL)
           {
-            slice = new TubeSlice(Interval(lb, ub), dim);
+            slice = new Slice(Interval(lb, ub), dim);
             tube.m_first_slice = slice;
           }
 
           else
           {
-            slice->m_next_slice = new TubeSlice(Interval(lb, ub), dim);
+            slice->m_next_slice = new Slice(Interval(lb, ub), dim);
             slice = slice->next_slice();
           }
 
@@ -149,7 +149,7 @@ namespace tubex
           {
             delete slice->m_input_gate;
             slice->m_input_gate = NULL;
-            TubeSlice::chain_slices(prev_slice, slice);
+            Slice::chain_slices(prev_slice, slice);
           }
 
           prev_slice = slice;
@@ -158,7 +158,7 @@ namespace tubex
 
         // Codomains
         IntervalVector slice_value(dim);
-        for(TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
         {
           deserialize_intervalvector(bin_file, slice_value);
           s->set(slice_value);
@@ -167,7 +167,7 @@ namespace tubex
         // Gates
 
         IntervalVector gate(dim);
-        for(TubeSlice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
         {
           deserialize_intervalvector(bin_file, gate);
           s->set_input_gate(gate);

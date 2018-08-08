@@ -28,9 +28,9 @@ namespace tubex
       SlicingException::check(*this, x); \
       DomainException::check(*this, x); \
       Tube copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
-      const TubeSlice *slice_x = x.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
+      const Slice *slice_x = x.get_first_slice(); \
       while(slice != NULL) \
       { \
         Interval input_gate = slice_copy->input_gate(); \
@@ -50,8 +50,8 @@ namespace tubex
     { \
       DomainException::check(*this, x); \
       Tube copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
         Interval input_gate = slice_copy->input_gate(); \
@@ -69,8 +69,8 @@ namespace tubex
     const Tube& Tube::f(const Interval& x) \
     { \
       Tube copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
         Interval input_gate = slice_copy->input_gate(); \

@@ -153,7 +153,7 @@ namespace tubex
     return m_ibex_f->eval_vector(box);
   }
 
-  const IntervalVector Function::eval(const TubeSlice& x) const
+  const IntervalVector Function::eval(const Slice& x) const
   {
     return m_ibex_f->eval_vector(x.box());
   }
@@ -179,8 +179,8 @@ namespace tubex
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
     TubeVector y(x, IntervalVector(image_dim()));
 
-    const TubeSlice *x_slice = x.get_first_slice();
-    TubeSlice *y_slice = y.get_first_slice();
+    const Slice *x_slice = x.get_first_slice();
+    Slice *y_slice = y.get_first_slice();
     IntervalVector box(x.dim() + 1);
 
     while(x_slice != NULL)

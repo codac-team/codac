@@ -16,7 +16,7 @@
 #include <map>
 #include <vector>
 #include "tubex_Fnc.h"
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
 #include "tubex_AbstractTube.h"
 #include "tubex_TubeSerialization.h"
@@ -24,7 +24,7 @@
 namespace tubex
 {
   class Fnc;
-  class TubeSlice;
+  class Slice;
   class Tube;
   class Trajectory;
   
@@ -53,20 +53,20 @@ namespace tubex
 
       // Slices structure
       int nb_slices() const;
-      TubeSlice* get_slice(int slice_id);
-      const TubeSlice* get_slice(int slice_id) const;
-      TubeSlice* get_slice(double t);
-      const TubeSlice* get_slice(double t) const;
-      TubeSlice* get_first_slice();
-      const TubeSlice* get_first_slice() const;
-      TubeSlice* get_last_slice();
-      const TubeSlice* get_last_slice() const;
-      TubeSlice* get_wider_slice();
-      const TubeSlice* get_wider_slice() const;
-      TubeSlice* get_largest_slice();
-      const TubeSlice* get_largest_slice() const;
+      Slice* get_slice(int slice_id);
+      const Slice* get_slice(int slice_id) const;
+      Slice* get_slice(double t);
+      const Slice* get_slice(double t) const;
+      Slice* get_first_slice();
+      const Slice* get_first_slice() const;
+      Slice* get_last_slice();
+      const Slice* get_last_slice() const;
+      Slice* get_wider_slice();
+      const Slice* get_wider_slice() const;
+      Slice* get_largest_slice();
+      const Slice* get_largest_slice() const;
       int input2index(double t) const;
-      int index(const TubeSlice* slice) const;
+      int index(const Slice* slice) const;
       void sample(double t);
       void sample(double t, const ibex::Interval& gate);
 
@@ -175,7 +175,7 @@ namespace tubex
 
     /** Class variables **/
 
-      TubeSlice *m_first_slice = NULL;
+      Slice *m_first_slice = NULL;
       friend void deserialize_Tube(std::ifstream& bin_file, Tube& tube);
   };
 }

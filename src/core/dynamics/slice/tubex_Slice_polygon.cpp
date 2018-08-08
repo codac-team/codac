@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - TubeSlice class (operators)
+ *  tubex-lib - Slice class (operators)
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 #include "tubex_DomainException.h"
 #include "tubex_SlicingException.h"
 #include "tubex_DimensionException.h"
@@ -20,75 +20,75 @@ using namespace ibex;
 
 namespace tubex
 {
-  Interval yilb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  Interval yilb(const Interval& t, const Slice& x, const Slice& v)
   {
     return x.input_gate().lb() + v.codomain().lb() * (t - x.domain().lb());
   }
 
-  Interval yilb_inv(const Interval& y, const TubeSlice& x, const TubeSlice& v)
+  Interval yilb_inv(const Interval& y, const Slice& x, const Slice& v)
   {
     return ((y - x.input_gate().lb()) / v.codomain().lb()) + x.domain().lb();
   }
 
-  Interval yiub(const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  Interval yiub(const Interval& t, const Slice& x, const Slice& v)
   {
     return x.input_gate().ub() + v.codomain().ub() * (t - x.domain().lb());
   }
 
-  Interval yiub_inv(const Interval& y, const TubeSlice& x, const TubeSlice& v)
+  Interval yiub_inv(const Interval& y, const Slice& x, const Slice& v)
   {
     return ((y - x.input_gate().ub()) / v.codomain().ub()) + x.domain().lb();
   }
 
-  Interval yolb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  Interval yolb(const Interval& t, const Slice& x, const Slice& v)
   {
     return x.output_gate().lb() + v.codomain().ub() * (t - x.domain().ub());
   }
 
-  Interval yolb_inv(const Interval& y, const TubeSlice& x, const TubeSlice& v)
+  Interval yolb_inv(const Interval& y, const Slice& x, const Slice& v)
   {
     return ((y - x.output_gate().lb()) / v.codomain().ub()) + x.domain().ub();
   }
 
-  Interval youb(const Interval& t, const TubeSlice& x, const TubeSlice& v)
+  Interval youb(const Interval& t, const Slice& x, const Slice& v)
   {
     return x.output_gate().ub() + v.codomain().lb() * (t - x.domain().ub());
   }
 
-  Interval youb_inv(const Interval& y, const TubeSlice& x, const TubeSlice& v)
+  Interval youb_inv(const Interval& y, const Slice& x, const Slice& v)
   {
     return ((y - x.output_gate().ub()) / v.codomain().lb()) + x.domain().ub();
   }
 
-  Interval ylb_inv(const Interval& y, const TubeSlice& x)
+  Interval ylb_inv(const Interval& y, const Slice& x)
   {
     if(x.input_gate().lb() == x.output_gate().lb())
       return Interval::ALL_REALS;
     return x.domain().lb() + (y - x.input_gate().lb()) / ((x.output_gate().lb() - x.input_gate().lb()) / (x.domain().diam()));
   }
 
-  Interval yub_inv(const Interval& y, const TubeSlice& x)
+  Interval yub_inv(const Interval& y, const Slice& x)
   {
     if(x.input_gate().ub() == x.output_gate().ub())
       return Interval::ALL_REALS;
     return x.domain().lb() + (y - x.input_gate().ub()) / ((x.output_gate().ub() - x.input_gate().ub()) / (x.domain().diam()));
   }
 
-  Interval lines_intersection_ub(const TubeSlice& x, const TubeSlice& v)
+  Interval lines_intersection_ub(const Slice& x, const Slice& v)
   {
     return (x.output_gate().ub() - x.input_gate().ub()
             + v.codomain().ub() * x.domain().lb()
             - v.codomain().lb() * x.domain().ub()) / v.codomain().diam();
   }
 
-  Interval lines_intersection_lb(const TubeSlice& x, const TubeSlice& v)
+  Interval lines_intersection_lb(const Slice& x, const Slice& v)
   {
     return (x.input_gate().lb() - x.output_gate().lb()
             + v.codomain().ub() * x.domain().ub()
             - v.codomain().lb() * x.domain().lb()) / v.codomain().diam();
   }
 
-  const ConvexPolygon TubeSlice::polygon(const TubeSlice& v) const
+  const ConvexPolygon Slice::polygon(const Slice& v) const
   {
     DomainException::check(*this, v);
 

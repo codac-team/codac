@@ -24,7 +24,7 @@ TEST_CASE("CtcPicard")
     Tube tube(t, 1);
     tube.set(Interval(1.5), t.lb());
     Tube tube_raw = tube;
-    TubeSlice *slice;
+    Slice *slice;
 
     tube = tube_raw;
     slice = tube.get_first_slice();
@@ -71,12 +71,12 @@ TEST_CASE("CtcPicard")
     CHECK(slice->codomain().is_superset(exp(-t)));
   }
 
-  SECTION("Test CtcPicard / TubeSlice - dim 1")
+  SECTION("Test CtcPicard / Slice - dim 1")
   {
     Interval domain(0.,0.1);
     Tube tube(domain, 1);
     tube.set(exp(domain.lb()), domain.lb());
-    TubeSlice *x = tube.get_first_slice();
+    Slice *x = tube.get_first_slice();
 
     tubex::Function f("x", "x");
     CtcPicard ctc_picard(1.1);

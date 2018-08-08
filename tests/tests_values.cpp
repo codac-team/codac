@@ -240,9 +240,9 @@ TEST_CASE("Testing enclosed bounds (x evaluations)")
 
 TEST_CASE("Testing set inversion")
 {
-  SECTION("Scalar set inversion (TubeSlice)")
+  SECTION("Scalar set inversion (Slice)")
   {
-    TubeSlice slice(Interval(0.,1.), Interval(0.,10.));
+    Slice slice(Interval(0.,1.), Interval(0.,10.));
     slice.set_input_gate(Interval(2.,3.));
     slice.set_output_gate(Interval(5.,6.));
     CHECK(slice.invert(Interval(4.,6.), Interval(0.)) == Interval::EMPTY_SET);
@@ -424,10 +424,10 @@ TEST_CASE("Testing thickness evaluation")
 
 TEST_CASE("Testing equalities")
 {
-  SECTION("TubeSlice")
+  SECTION("Slice")
   {
-    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
-    TubeSlice slice2(Interval(0.,1.), Interval(1.,3.));
+    Slice slice1(Interval(0.,1.), Interval(1.,3.));
+    Slice slice2(Interval(0.,1.), Interval(1.,3.));
     CHECK(slice1 == slice2);
     CHECK_FALSE(slice1 != slice2);
 
@@ -504,11 +504,11 @@ TEST_CASE("Testing equalities")
 
 TEST_CASE("Testing is_subset()")
 {
-  SECTION("TubeSlice")
+  SECTION("Slice")
   {
-    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
-    TubeSlice slice2(Interval(0.,1.), Interval(0.,4.));
-    TubeSlice slice3(Interval(0.,1.4), Interval(0.,4.));
+    Slice slice1(Interval(0.,1.), Interval(1.,3.));
+    Slice slice2(Interval(0.,1.), Interval(0.,4.));
+    Slice slice3(Interval(0.,1.4), Interval(0.,4.));
 
     CHECK_THROWS(slice1.is_subset(slice3));
     CHECK(slice1.is_subset(slice2));
@@ -553,9 +553,9 @@ TEST_CASE("Testing is_subset()")
 
 TEST_CASE("Testing encloses()")
 {
-  SECTION("TubeSlice")
+  SECTION("Slice")
   {
-    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
+    Slice slice1(Interval(0.,1.), Interval(1.,3.));
     // todo
   }
 
@@ -568,9 +568,9 @@ TEST_CASE("Testing encloses()")
 
 TEST_CASE("Testing is_empty()")
 {
-  SECTION("TubeSlice")
+  SECTION("Slice")
   {
-    TubeSlice slice1(Interval(0.,1.), Interval(1.,3.));
+    Slice slice1(Interval(0.,1.), Interval(1.,3.));
     CHECK(!slice1.is_empty());
     slice1.set_input_gate(Interval(5.));
     CHECK(slice1.is_empty());
@@ -618,9 +618,9 @@ TEST_CASE("Testing is_empty()")
 
 TEST_CASE("Testing inflate()")
 {
-  SECTION("TubeSlice")
+  SECTION("Slice")
   {
-    TubeSlice slice(Interval(0.,10.), Interval(0.));
+    Slice slice(Interval(0.,10.), Interval(0.));
 
     CHECK(slice.codomain() == Interval(0.));
 
@@ -676,9 +676,9 @@ TEST_CASE("Testing inflate()")
 
 TEST_CASE("Testing volume()")
 {
-  SECTION("TubeSlice")
+  SECTION("Slice")
   {
-    TubeSlice slice(Interval(0.,10.), Interval(4.,5.));
+    Slice slice(Interval(0.,10.), Interval(4.,5.));
     CHECK(slice.volume() == 10.);
   }
 
@@ -696,10 +696,10 @@ TEST_CASE("Interpol")
 {
   SECTION("Test slice, envelope contraction")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    Slice x(Interval(-1.,3.), Interval(-10.,20.));
     x.set_input_gate(Interval(-1.,2.));
     x.set_output_gate(Interval(-2.,0.));
-    TubeSlice v(x.domain(), Interval(-1.,1.));
+    Slice v(x.domain(), Interval(-1.,1.));
     
     bool contraction;
     Interval t;

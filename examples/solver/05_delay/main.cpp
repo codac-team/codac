@@ -38,8 +38,8 @@ class FncDelayCustom : public tubex::Fnc
       // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
       TubeVector y(x, IntervalVector(image_dim()));
 
-      const TubeSlice *x_slice = x.get_first_slice();
-      TubeSlice *y_slice = y.get_first_slice();
+      const Slice *x_slice = x.get_first_slice();
+      Slice *y_slice = y.get_first_slice();
 
       while(x_slice != NULL)
       {

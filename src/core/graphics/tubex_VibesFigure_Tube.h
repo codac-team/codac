@@ -15,7 +15,7 @@
 
 #include "tubex_VibesFigure.h"
 #include "tubex_Tube.h"
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
 
 namespace tubex
@@ -65,8 +65,8 @@ namespace tubex
 
       virtual const ibex::IntervalVector draw_tube(const Tube *tube, bool detail_slices = false);
       const Polygon polygon_envelope(const Tube *tube) const;
-      virtual void draw_slice(const TubeSlice& slice, const vibes::Params& params);
-      void draw_slice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon);
+      virtual void draw_slice(const Slice& slice, const vibes::Params& params);
+      void draw_slice(const Slice& slice, const Slice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon);
       void draw_gate(const ibex::Interval& gate, double t, const vibes::Params& params);
       virtual const ibex::IntervalVector draw_trajectory(const Trajectory *traj, float points_size = 0.);
 

@@ -52,8 +52,8 @@ namespace tubex
     
     if(t_propa & FORWARD)
     {
-      TubeSlice *x_slice = x.get_first_slice();
-      TubeSlice *v_slice = v.get_first_slice();
+      Slice *x_slice = x.get_first_slice();
+      Slice *v_slice = v.get_first_slice();
 
       while(x_slice != NULL)
       {
@@ -65,8 +65,8 @@ namespace tubex
     
     if(t_propa & BACKWARD)
     {
-      TubeSlice *x_slice = x.get_last_slice();
-      TubeSlice *v_slice = v.get_last_slice();
+      Slice *x_slice = x.get_last_slice();
+      Slice *v_slice = v.get_last_slice();
 
       while(x_slice != NULL)
       {
@@ -84,12 +84,12 @@ namespace tubex
 
   }
 
-  bool CtcDeriv::contract(TubeSlice& x, TubeSlice& v) const
+  bool CtcDeriv::contract(Slice& x, Slice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);
 
-    const TubeSlice old_x = x;
+    const Slice old_x = x;
     IntervalVector box = x.codomain(), ingate = x.input_gate(), outgate = x.output_gate();
 
     // todo: remove this:
@@ -131,7 +131,7 @@ namespace tubex
     return old_x != x;
   }
 
-  bool CtcDeriv::contract_gates(TubeSlice& x, TubeSlice& v) const
+  bool CtcDeriv::contract_gates(Slice& x, Slice& v) const
   {
     DomainException::check(x, v);
     DimensionException::check(x, v);

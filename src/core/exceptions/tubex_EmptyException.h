@@ -14,7 +14,7 @@
 #define __TUBEX_EMPTYEXCEPTION_H__
 
 #include "tubex_Exception.h"
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 #include "tubex_AbstractTube.h"
 
 namespace tubex
@@ -28,10 +28,10 @@ namespace tubex
   {
     public:
 
-      EmptyException(const TubeSlice& x);
+      EmptyException(const Slice& x);
       EmptyException(const AbstractTube& x);
 
-      static void check(const TubeSlice& x);
+      static void check(const Slice& x);
       static void check(const AbstractTube& x);
   };
 }

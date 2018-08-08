@@ -47,20 +47,20 @@ namespace tubex
 
       // Slices structure
       int nb_slices() const;
-      TubeSlice* get_slice(int slice_id);
-      const TubeSlice* get_slice(int slice_id) const;
-      TubeSlice* get_slice(double t);
-      const TubeSlice* get_slice(double t) const;
-      TubeSlice* get_first_slice();
-      const TubeSlice* get_first_slice() const;
-      TubeSlice* get_last_slice();
-      const TubeSlice* get_last_slice() const;
-      TubeSlice* get_wider_slice();
-      const TubeSlice* get_wider_slice() const;
-      TubeSlice* get_largest_slice();
-      const TubeSlice* get_largest_slice() const;
+      Slice* get_slice(int slice_id);
+      const Slice* get_slice(int slice_id) const;
+      Slice* get_slice(double t);
+      const Slice* get_slice(double t) const;
+      Slice* get_first_slice();
+      const Slice* get_first_slice() const;
+      Slice* get_last_slice();
+      const Slice* get_last_slice() const;
+      Slice* get_wider_slice();
+      const Slice* get_wider_slice() const;
+      Slice* get_largest_slice();
+      const Slice* get_largest_slice() const;
       int input2index(double t) const;
-      int index(const TubeSlice* slice) const;
+      int index(const Slice* slice) const;
       void sample(double t);
       void sample(double t, const ibex::Interval& gate);
       //static bool share_same_slicing(const Tube& x1, const Tube& x2);

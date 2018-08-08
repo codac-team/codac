@@ -16,7 +16,7 @@
 #include "tubex_DimensionException.h"
 #include "tubex_DomainException.h"
 #include "tubex_SlicingException.h"
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 
 using namespace std;
 using namespace ibex;
@@ -28,8 +28,8 @@ namespace tubex
     const Tube f(const Tube& x) \
     { \
       Tube result(x); \
-      TubeSlice *slice_result = result.get_first_slice(); \
-      const TubeSlice *slice_x = x.get_first_slice(); \
+      Slice *slice_result = result.get_first_slice(); \
+      const Slice *slice_x = x.get_first_slice(); \
       while(slice_result != NULL) \
       { \
         slice_result->set_envelope(IntervalVector(1, ibex::f(slice_x->codomain()[0]))); \
@@ -45,8 +45,8 @@ namespace tubex
     { \
       DimensionException::check_scalar(x.dim()); /* todo: improve error message *//*\
       TubeVector result(x); \
-      TubeSlice *slice_result = result.get_first_slice(); \
-      const TubeSlice *slice_x = x.get_first_slice(); \
+      Slice *slice_result = result.get_first_slice(); \
+      const Slice *slice_x = x.get_first_slice(); \
       while(slice_result != NULL) \
       { \
         slice_result->set_envelope(IntervalVector(1, ibex::f(slice_x->codomain()[0]))); \
@@ -89,8 +89,8 @@ namespace tubex
   const Tube operator-(const Tube& x)
   {
     Tube result(x);
-    TubeSlice *slice_result = result.get_first_slice();
-    const TubeSlice *slice_x = x.get_first_slice();
+    Slice *slice_result = result.get_first_slice();
+    const Slice *slice_x = x.get_first_slice();
     while(slice_result != NULL)
     {
       slice_result->set_envelope(-slice_x->codomain());
@@ -105,8 +105,8 @@ namespace tubex
   const TubeVector operator-(const TubeVector& x)
   {
     TubeVector result(x);
-    TubeSlice *slice_result = result.get_first_slice();
-    const TubeSlice *slice_x = x.get_first_slice();
+    Slice *slice_result = result.get_first_slice();
+    const Slice *slice_x = x.get_first_slice();
     while(slice_result != NULL)
     {
       slice_result->set_envelope(-slice_x->codomain());
@@ -123,8 +123,8 @@ namespace tubex
     const Tube f(const Tube& x, p param) \
     { \
       Tube result(x); \
-      TubeSlice *slice_result = result.get_first_slice(); \
-      const TubeSlice *slice_x = x.get_first_slice(); \
+      Slice *slice_result = result.get_first_slice(); \
+      const Slice *slice_x = x.get_first_slice(); \
       while(slice_result != NULL) \
       { \
         slice_result->set_envelope(IntervalVector(1, ibex::f(slice_x->codomain()[0], param))); \
@@ -148,9 +148,9 @@ namespace tubex
       SlicingException::check(x1, x2); \
       DomainException::check(x1, x2); \
       Tube result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(IntervalVector(1, f(slice_x1->codomain()[0], slice_x2->codomain()[0]))); \
@@ -167,8 +167,8 @@ namespace tubex
     { \
       DomainException::check(x1, x2); \
       Tube result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(IntervalVector(1, f(slice_x1->codomain()[0], Interval(x2(slice->domain()))))); \
@@ -184,8 +184,8 @@ namespace tubex
     { \
       DomainException::check(x2, x1); \
       Tube result(x2); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(IntervalVector(1, f(Interval(x1(slice->domain())), slice_x2->codomain()[0]))); \
@@ -200,8 +200,8 @@ namespace tubex
     const Tube f(const Tube& x1, const Interval& x2) \
     { \
       Tube result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(IntervalVector(1, f(slice_x1->codomain()[0], x2))); \
@@ -216,8 +216,8 @@ namespace tubex
     const Tube f(const Interval& x1, const Tube& x2) \
     { \
       Tube result(x2); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(IntervalVector(1, f(x1, slice_x2->codomain()[0]))); \
@@ -243,9 +243,9 @@ namespace tubex
       SlicingException::check(x1, x2); \
       DomainException::check(x1, x2); \
       Tube result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(IntervalVector(1, f(slice_x1->codomain()[0], slice_x2->codomain()[0]))); \
@@ -261,8 +261,8 @@ namespace tubex
     const Tube f(const Tube& x1, const Interval& x2) \
     { \
       Tube result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(IntervalVector(1, f(slice_x1->codomain()[0], x2))); \
@@ -278,8 +278,8 @@ namespace tubex
     { \
       DomainException::check(x1, x2); \
       Tube result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(IntervalVector(1, f(slice_x1->codomain()[0], Interval(x2[slice->domain()])))); \
@@ -301,9 +301,9 @@ namespace tubex
       SlicingException::check(x1, x2); \
       DomainException::check(x1, x2); \
       TubeVector result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(f(slice_x1->codomain(), slice_x2->codomain())); \
@@ -320,8 +320,8 @@ namespace tubex
     { \
       DimensionException::check(x1, x2); \
       TubeVector result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(f(slice_x1->codomain(), x2(slice->domain()))); \
@@ -337,8 +337,8 @@ namespace tubex
     { \
       DimensionException::check(x2, x1); \
       TubeVector result(x2); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(f(x1(slice->domain()), slice_x2->codomain())); \
@@ -354,8 +354,8 @@ namespace tubex
     { \
       DimensionException::check(x1, x2); \
       TubeVector result(x1); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(f(slice_x1->codomain(), x2)); \
@@ -371,8 +371,8 @@ namespace tubex
     { \
       DimensionException::check(x2, x1); \
       TubeVector result(x2); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(f(x1, slice_x2->codomain())); \
@@ -394,9 +394,9 @@ namespace tubex
       SlicingException::check(x1, x2); \
       DomainException::check(x1, x2); \
       TubeVector result(x2); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x1 = x1.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x1 = x1.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(ibex::f(slice_x1->codomain()[0], slice_x2->codomain())); \
@@ -413,8 +413,8 @@ namespace tubex
     { \
       DomainException::check(x2, x1); \
       TubeVector result(x2); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(ibex::f(Interval(x1(slice->domain())), slice_x2->codomain())); \
@@ -429,8 +429,8 @@ namespace tubex
     const TubeVector f(const Interval& x1, const TubeVector& x2) \
     { \
       TubeVector result(x2); \
-      TubeSlice *slice = result.get_first_slice(); \
-      const TubeSlice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice = result.get_first_slice(); \
+      const Slice *slice_x2 = x2.get_first_slice(); \
       while(slice != NULL) \
       { \
         slice->set_envelope(ibex::f(x1, slice_x2->codomain())); \

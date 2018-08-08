@@ -21,7 +21,7 @@ TEST_CASE("Exceptions")
     CHECK_THROWS(DomainException::check(tube1, 2));
     CHECK_THROWS(DomainException::check(tube1, Interval(-1.,5.)));
 
-    TubeSlice slice1(Interval(0.,1.)), slice2(Interval(0.,1.4));
+    Slice slice1(Interval(0.,1.)), slice2(Interval(0.,1.4));
     CHECK_THROWS(DomainException::check(slice1, slice2));
     CHECK_THROWS(DomainException::check(slice1, -3.));
     CHECK_THROWS(DomainException::check(slice1, 2));
@@ -33,7 +33,7 @@ TEST_CASE("Exceptions")
     Tube tube(Interval(0.,1.), Interval::EMPTY_SET);
     CHECK_THROWS(EmptyException::check(tube));
 
-    TubeSlice slice(Interval(0.,1.), Interval::EMPTY_SET);
+    Slice slice(Interval(0.,1.), Interval::EMPTY_SET);
     CHECK_THROWS(EmptyException::check(slice));
   }
 

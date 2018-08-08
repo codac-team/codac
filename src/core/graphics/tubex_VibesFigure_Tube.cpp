@@ -330,8 +330,8 @@ namespace tubex
 
           if(detail_slices)
           {
-            const TubeSlice *slice = tube->get_first_slice();
-            const TubeSlice *deriv_slice = NULL;
+            const Slice *slice = tube->get_first_slice();
+            const Slice *deriv_slice = NULL;
 
             if(m_map_tubes[tube].tube_derivative != NULL)
               deriv_slice = m_map_tubes[tube].tube_derivative->get_first_slice();
@@ -386,7 +386,7 @@ namespace tubex
       return Polygon(v_pts);
     }
 
-    void VibesFigure_Tube::draw_slice(const TubeSlice& slice, const vibes::Params& params)
+    void VibesFigure_Tube::draw_slice(const Slice& slice, const vibes::Params& params)
     {
       if(slice.codomain().is_empty())
         return; // no display
@@ -397,7 +397,7 @@ namespace tubex
       draw_box(boundedSlice, params);
     }
 
-    void VibesFigure_Tube::draw_slice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon)
+    void VibesFigure_Tube::draw_slice(const Slice& slice, const Slice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon)
     {
       if(slice.codomain().is_empty())
         return; // no display

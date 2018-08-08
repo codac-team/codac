@@ -15,7 +15,7 @@
 
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 
 namespace tubex
 {

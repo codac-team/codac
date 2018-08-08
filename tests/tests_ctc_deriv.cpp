@@ -18,11 +18,11 @@ TEST_CASE("CtcDeriv")
 {
   SECTION("Test slice, envelope contraction")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    Slice x(Interval(-1.,3.), Interval(-10.,20.));
     x.set_input_gate(Interval(-1.,2.));
     x.set_output_gate(Interval(-2.,0.));
 
-    TubeSlice v(x.domain(), Interval(-1.,1.));
+    Slice v(x.domain(), Interval(-1.,1.));
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
@@ -36,11 +36,11 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test slice, output gate contraction")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    Slice x(Interval(-1.,3.), Interval(-5.,3.));
     x.set_input_gate(Interval(-1.,3.));
     x.set_output_gate(Interval(-5.,0.5));
 
-    TubeSlice v(x.domain(), Interval(-1.));
+    Slice v(x.domain(), Interval(-1.));
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
@@ -54,11 +54,11 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test slice, complete contraction (degenerate tube)")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    Slice x(Interval(-1.,3.), Interval(-5.,3.));
     x.set_input_gate(Interval(1.,3.));
     x.set_output_gate(Interval(-4.,-3.));
 
-    TubeSlice v(x.domain(), Interval(-1.,1.));
+    Slice v(x.domain(), Interval(-1.,1.));
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
@@ -76,11 +76,11 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test slice, empty case")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    Slice x(Interval(-1.,3.), Interval(-10.,20.));
     x.set_input_gate(Interval(-1.,2.));
     x.set_output_gate(Interval(-2.,0.));
 
-    TubeSlice v(x.domain(), Interval::EMPTY_SET);
+    Slice v(x.domain(), Interval::EMPTY_SET);
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
@@ -94,11 +94,11 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test slice, empty case (bis)")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-10.,20.));
+    Slice x(Interval(-1.,3.), Interval(-10.,20.));
     x.set_input_gate(Interval(-1.,2.));
     x.set_output_gate(Interval::EMPTY_SET);
 
-    TubeSlice v(x.domain(), Interval(-1.,1.));
+    Slice v(x.domain(), Interval(-1.,1.));
 
     CtcDeriv ctc;
     bool contraction = ctc.contract(x,v);
@@ -112,8 +112,8 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test slice, unbounded slice")
   {
-    TubeSlice x(Interval(-1.,3.));
-    TubeSlice v(x.domain(), IntervalVector(1, Interval(0.,1.)));
+    Slice x(Interval(-1.,3.));
+    Slice v(x.domain(), IntervalVector(1, Interval(0.,1.)));
 
     CHECK(x.input_gate() == IntervalVector(1, Interval::ALL_REALS));
     CHECK(x.output_gate() == IntervalVector(1, Interval::ALL_REALS));
@@ -131,8 +131,8 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test slice, unbounded derivative (1)")
   {
-    TubeSlice x(Interval(-1.,3.));
-    TubeSlice v(x.domain());
+    Slice x(Interval(-1.,3.));
+    Slice v(x.domain());
 
     CHECK(x.input_gate()[0] == Interval::ALL_REALS);
     CHECK(x.output_gate()[0] == Interval::ALL_REALS);
@@ -150,10 +150,10 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test slice, unbounded derivative ([-oo,1])")
   {
-    TubeSlice x(Interval(-1.,3.));
+    Slice x(Interval(-1.,3.));
     x.set_input_gate(IntervalVector(1, Interval(-1.,2.)));
     x.set_output_gate(IntervalVector(1, Interval(-2.,0.)));
-    TubeSlice v(x.domain(), IntervalVector(1, Interval(NEG_INFINITY,1.)));
+    Slice v(x.domain(), IntervalVector(1, Interval(NEG_INFINITY,1.)));
 
     CHECK(x.input_gate()[0] == Interval(-1.,2.));
     CHECK(x.output_gate()[0] == Interval(-2.,0.));
@@ -173,10 +173,10 @@ TEST_CASE("CtcDeriv")
 
   SECTION("Test slice, unbounded derivative ([1,oo])")
   {
-    TubeSlice x(Interval(-1.,3.));
+    Slice x(Interval(-1.,3.));
     x.set_input_gate(IntervalVector(1, Interval(-1.,2.)));
     x.set_output_gate(IntervalVector(1, Interval(-2.,0.)));
-    TubeSlice v(x.domain(), IntervalVector(1, Interval(-1.,POS_INFINITY)));
+    Slice v(x.domain(), IntervalVector(1, Interval(-1.,POS_INFINITY)));
 
     CHECK(x.input_gate()[0] == Interval(-1.,2.));
     CHECK(x.output_gate()[0] == Interval(-2.,0.));
@@ -386,10 +386,10 @@ TEST_CASE("CtcDeriv")
 
   SECTION("From: Test slice, output gate contraction")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    Slice x(Interval(-1.,3.), Interval(-5.,3.));
     x.set_input_gate(Interval(-1.,3.));
     x.set_output_gate(Interval(-5.,0.5));
-    TubeSlice v(x.domain(), Interval(-1.));
+    Slice v(x.domain(), Interval(-1.));
 
     bool contraction;
     CtcDeriv ctc;
@@ -405,10 +405,10 @@ TEST_CASE("CtcDeriv")
 
   SECTION("From: Test slice, complete contraction (degenerate tube)")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    Slice x(Interval(-1.,3.), Interval(-5.,3.));
     x.set_input_gate(Interval(1.,3.));
     x.set_output_gate(Interval(-4.,-3.));
-    TubeSlice v(x.domain(), Interval(-1.,1.));
+    Slice v(x.domain(), Interval(-1.,1.));
 
     bool contraction;
     CtcDeriv ctc;

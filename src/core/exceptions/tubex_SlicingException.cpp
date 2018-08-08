@@ -20,13 +20,13 @@ using namespace ibex;
 
 namespace tubex
 {
-  SlicingException::SlicingException(const TubeSlice& x1, const TubeSlice& x2)
+  SlicingException::SlicingException(const Slice& x1, const Slice& x2)
   {
     ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
 
     if(x1.domain() != x2.domain())
-      os << endl << "TubeSlices with different domains: " 
+      os << endl << "Slices with different domains: " 
          << "t1=" << x1.domain() << " and t2=" << x2.domain();
 
     os << endl;

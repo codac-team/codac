@@ -57,18 +57,18 @@ namespace tubex
       /*m_tubevector = new TubeVector(x.domain());
 
       // todo: check dim
-      TubeSlice *prev_slice = NULL, *slice = NULL;
-      for(const TubeSlice *s = x.m_tubevector->get_first_slice() ; s != NULL ; s = s->next_slice())
+      Slice *prev_slice = NULL, *slice = NULL;
+      for(const Slice *s = x.m_tubevector->get_first_slice() ; s != NULL ; s = s->next_slice())
       {
         if(slice == NULL)
         {
-          slice = new TubeSlice(s->domain(), 1);
+          slice = new Slice(s->domain(), 1);
           m_first_slice = slice;
         }
 
         else
         {
-          slice->m_next_slice = new TubeSlice(s->domain(), 1);
+          slice->m_next_slice = new Slice(s->domain(), 1);
           slice = slice->next_slice();
         }
 
@@ -81,7 +81,7 @@ namespace tubex
         {
           delete slice->m_input_gate;
           slice->m_input_gate = NULL;
-          TubeSlice::chain_slices(prev_slice, slice);
+          Slice::chain_slices(prev_slice, slice);
         }
 
         prev_slice = slice;
@@ -175,62 +175,62 @@ namespace tubex
       return m_tubevector->nb_slices();
     }
 
-    TubeSlice* Tube::get_slice(int slice_id)
+    Slice* Tube::get_slice(int slice_id)
     {
       return m_tubevector->get_slice(slice_id);
     }
 
-    const TubeSlice* Tube::get_slice(int slice_id) const
+    const Slice* Tube::get_slice(int slice_id) const
     {
       return m_tubevector->get_slice(slice_id);
     }
 
-    TubeSlice* Tube::get_slice(double t)
+    Slice* Tube::get_slice(double t)
     {
       return m_tubevector->get_slice(t);
     }
 
-    const TubeSlice* Tube::get_slice(double t) const
+    const Slice* Tube::get_slice(double t) const
     {
       return m_tubevector->get_slice(t);
     }
 
-    TubeSlice* Tube::get_first_slice()
+    Slice* Tube::get_first_slice()
     {
       return m_tubevector->get_first_slice();
     }
 
-    const TubeSlice* Tube::get_first_slice() const
+    const Slice* Tube::get_first_slice() const
     {
       return m_tubevector->get_first_slice();
     }
 
-    TubeSlice* Tube::get_last_slice()
+    Slice* Tube::get_last_slice()
     {
       return m_tubevector->get_last_slice();
     }
 
-    const TubeSlice* Tube::get_last_slice() const
+    const Slice* Tube::get_last_slice() const
     {
       return m_tubevector->get_last_slice();
     }
 
-    TubeSlice* Tube::get_wider_slice()
+    Slice* Tube::get_wider_slice()
     {
       return m_tubevector->get_wider_slice();
     }
 
-    const TubeSlice* Tube::get_wider_slice() const
+    const Slice* Tube::get_wider_slice() const
     {
       return m_tubevector->get_wider_slice();
     }
 
-    TubeSlice* Tube::get_largest_slice()
+    Slice* Tube::get_largest_slice()
     {
       return m_tubevector->get_largest_slice();
     }
 
-    const TubeSlice* Tube::get_largest_slice() const
+    const Slice* Tube::get_largest_slice() const
     {
       return m_tubevector->get_largest_slice();
     }
@@ -240,7 +240,7 @@ namespace tubex
       return m_tubevector->input2index(t);
     }
 
-    int Tube::index(const TubeSlice* slice) const
+    int Tube::index(const Slice* slice) const
     {
       return m_tubevector->index(slice);
     }

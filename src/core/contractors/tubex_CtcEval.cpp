@@ -130,8 +130,8 @@ namespace tubex
         CtcDeriv ctc_deriv;
         IntervalVector front_gate(y.dim());
         list<IntervalVector> l_gates;
-        TubeSlice *slice_y;
-        TubeSlice *slice_w;
+        Slice *slice_y;
+        Slice *slice_w;
 
         // 1. Forward propagation
 

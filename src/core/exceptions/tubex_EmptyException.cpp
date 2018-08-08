@@ -19,14 +19,14 @@ using namespace ibex;
 
 namespace tubex
 {
-  EmptyException::EmptyException(const TubeSlice& x)
+  EmptyException::EmptyException(const Slice& x)
   {
     ostringstream os;
     os << "empty slice";    
     m_what_msg = os.str();
   }
 
-  void EmptyException::check(const TubeSlice& x)
+  void EmptyException::check(const Slice& x)
   {
     if(x.is_empty())
       throw EmptyException(x);
@@ -43,7 +43,7 @@ namespace tubex
     else
     {
       Interval intv_t_emptiness = Interval::EMPTY_SET;
-      const TubeSlice *slice = x.get_first_slice();
+      const Slice *slice = x.get_first_slice();
       while(slice != NULL)
       {
         if(slice->is_empty())

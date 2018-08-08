@@ -15,6 +15,7 @@
 
 #include <fstream>
 #include "tubex_Trajectory.h"
+#include "tubex_TubeSerialization.h"
 
 namespace tubex
 {

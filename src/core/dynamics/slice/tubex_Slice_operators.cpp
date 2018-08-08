@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - TubeSlice class (operators)
+ *  tubex-lib - Slice class (operators)
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 #include "tubex_DomainException.h"
 #include "tubex_SlicingException.h"
 #include "tubex_DimensionException.h"
@@ -22,7 +22,7 @@ namespace tubex
 {
   #define assignment_op_slice(f) \
     \
-    TubeSlice& TubeSlice::f(const TubeSlice& slice_x) \
+    Slice& Slice::f(const Slice& slice_x) \
     { \
       DomainException::check(*this, slice_x); \
       Interval y = codomain(); y.f(slice_x.codomain()); set_envelope(y); \
@@ -31,7 +31,7 @@ namespace tubex
       return *this; \
     } \
     \
-    TubeSlice& TubeSlice::f(const Trajectory& traj_x) \
+    Slice& Slice::f(const Trajectory& traj_x) \
     { \
       DomainException::check(*this, traj_x); \
       Interval y = codomain(); y.f(traj_x(domain())); set_envelope(y); \

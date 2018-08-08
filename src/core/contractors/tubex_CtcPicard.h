@@ -15,8 +15,8 @@
 
 #include "tubex_Ctc.h"
 #include "tubex_Fnc.h"
-#include "tubex_TubeSlice.h"
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
+#include "tubex_Slice.h"
 
 namespace tubex
 {
@@ -40,20 +40,20 @@ namespace tubex
 
       void contract(const tubex::Fnc& f,
                     const Tube& tube,
-                    TubeSlice& slice,
+                    Slice& slice,
                     TPropagation t_propa) const;
       void contract(const tubex::Fnc& f,
                     const TubeVector& tube,
-                    TubeSlice& slice,
+                    Slice& slice,
                     TPropagation t_propa) const;
 
       void guess_slice_envelope(const Fnc& f,
                                 const Tube& tube,
-                                TubeSlice& slice,
+                                Slice& slice,
                                 TPropagation t_propa) const;
       void guess_slice_envelope(const Fnc& f,
                                 const TubeVector& tube,
-                                TubeSlice& slice,
+                                Slice& slice,
                                 TPropagation t_propa) const;
 
       float m_delta;

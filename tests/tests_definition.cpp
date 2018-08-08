@@ -9,24 +9,24 @@ using namespace tubex;
 
 TEST_CASE("Tube definition")
 {
-  SECTION("TubeSlice class")
+  SECTION("Slice class")
   {
-    TubeSlice tubeslice(Interval(0.,1.), Interval(-1.,1.));
+    Slice tubeslice(Interval(0.,1.), Interval(-1.,1.));
     CHECK(tubeslice.domain() == Interval(0.,1.));
     CHECK(tubeslice.codomain() == Interval(-1.,1.));
 
-    TubeSlice tubeslice_copy1 = tubeslice;
+    Slice tubeslice_copy1 = tubeslice;
     CHECK(tubeslice_copy1.domain() == Interval(0.,1.));
     CHECK(tubeslice_copy1.codomain() == Interval(-1.,1.));
     CHECK(tubeslice_copy1 == tubeslice);
 
-    TubeSlice tubeslice_copy2(tubeslice);
+    Slice tubeslice_copy2(tubeslice);
     CHECK(tubeslice_copy2.domain() == Interval(0.,1.));
     CHECK(tubeslice_copy2.codomain() == Interval(-1.,1.));
     CHECK(tubeslice_copy2 == tubeslice);
 
-    CHECK_THROWS(TubeSlice(Interval::ALL_REALS));
-    CHECK_THROWS(TubeSlice(Interval::EMPTY_SET));
+    CHECK_THROWS(Slice(Interval::ALL_REALS));
+    CHECK_THROWS(Slice(Interval::EMPTY_SET));
   }
 
   SECTION("Tube class")

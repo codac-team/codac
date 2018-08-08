@@ -37,7 +37,7 @@ namespace tubex
       const ibex::IntervalVector draw_trajectory(const TrajectoryVector *traj, float points_size = 0.);
       void draw_tube_slices(const TubeVector *tube, const vibes::Params& params, bool background_tube);
       const std::string shaded_slice_color(float r) const;
-      void draw_slice(const TubeSlice& slice, const std::string& color, const vibes::Params& params);
+      void draw_slice(const Slice& slice, const std::string& color, const vibes::Params& params);
       void draw_beacon(const Beacon& beacon, const std::string& color, const vibes::Params& params);
       const ibex::IntervalVector keep_ratio(const ibex::IntervalVector& viewbox) const;
   };

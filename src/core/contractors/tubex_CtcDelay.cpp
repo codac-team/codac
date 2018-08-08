@@ -34,8 +34,8 @@ namespace tubex
     SlicingException::check(x, y);
 
     Interval intv_t;
-    const TubeSlice *slice_x = x.get_first_slice();
-    TubeSlice *slice_y = y.get_first_slice();
+    const Slice *slice_x = x.get_first_slice();
+    Slice *slice_y = y.get_first_slice();
 
     while(slice_x != NULL)
     {

@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - TubeSlice class
+ *  tubex-lib - Slice class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 #include "tubex_DomainException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_CtcDeriv.h"
@@ -25,7 +25,7 @@ namespace tubex
 
     // Definition
 
-    TubeSlice::TubeSlice(const Interval& domain, const Interval& codomain)
+    Slice::Slice(const Interval& domain, const Interval& codomain)
       : m_domain(domain), m_codomain(codomain)
     {
       DomainException::check(domain);
@@ -34,13 +34,13 @@ namespace tubex
       m_output_gate = new Interval(codomain);
     }
 
-    TubeSlice::TubeSlice(const TubeSlice& x)
-      : TubeSlice(x.domain(), x.codomain()) // in order to instantiate gates
+    Slice::Slice(const Slice& x)
+      : Slice(x.domain(), x.codomain()) // in order to instantiate gates
     {
       *this = x;
     }
 
-    TubeSlice::~TubeSlice()
+    Slice::~Slice()
     {
       // Links to other slices are destroyed
       if(m_prev_slice != NULL) m_prev_slice->m_next_slice = NULL;
@@ -51,7 +51,7 @@ namespace tubex
       if(m_next_slice == NULL) delete m_output_gate;
     }
 
-    const TubeSlice& TubeSlice::operator=(const TubeSlice& x)
+    const Slice& Slice::operator=(const Slice& x)
     {
       m_domain = x.m_domain;
       m_codomain = x.m_codomain;
@@ -60,34 +60,34 @@ namespace tubex
       return *this;
     }
     
-    const Interval TubeSlice::domain() const
+    const Interval Slice::domain() const
     {
       return m_domain;
     }
 
     // Slices structure
 
-    TubeSlice* TubeSlice::prev_slice()
+    Slice* Slice::prev_slice()
     {
-      return const_cast<TubeSlice*>(static_cast<const TubeSlice&>(*this).prev_slice());
+      return const_cast<Slice*>(static_cast<const Slice&>(*this).prev_slice());
     }
 
-    const TubeSlice* TubeSlice::prev_slice() const
+    const Slice* Slice::prev_slice() const
     {
       return m_prev_slice;
     }
 
-    TubeSlice* TubeSlice::next_slice()
+    Slice* Slice::next_slice()
     {
-      return const_cast<TubeSlice*>(static_cast<const TubeSlice&>(*this).next_slice());
+      return const_cast<Slice*>(static_cast<const Slice&>(*this).next_slice());
     }
 
-    const TubeSlice* TubeSlice::next_slice() const
+    const Slice* Slice::next_slice() const
     {
       return m_next_slice;
     }
 
-    void TubeSlice::chain_slices(TubeSlice *first_slice, TubeSlice *second_slice)
+    void Slice::chain_slices(Slice *first_slice, Slice *second_slice)
     {
       if(first_slice != NULL)
         first_slice->m_next_slice = second_slice;
@@ -103,29 +103,29 @@ namespace tubex
       }
     }
 
-    const Interval TubeSlice::input_gate() const
+    const Interval Slice::input_gate() const
     {
       return *m_input_gate;
     }
     
-    const Interval TubeSlice::output_gate() const
+    const Interval Slice::output_gate() const
     {
       return *m_output_gate;
     }
 
-    const Tube* TubeSlice::tube_reference() const
+    const Tube* Slice::tube_reference() const
     {
       return m_tube_ref;
     }
     
     // Access values
 
-    const Interval TubeSlice::codomain() const
+    const Interval Slice::codomain() const
     {
       return m_codomain;
     }
     
-    const IntervalVector TubeSlice::box() const
+    const IntervalVector Slice::box() const
     {
       IntervalVector box(2);
       box[0] = domain();
@@ -133,7 +133,7 @@ namespace tubex
       return box;
     }
     
-    double TubeSlice::volume() const
+    double Slice::volume() const
     {
       return m_domain.diam() * m_codomain.diam();
 
@@ -148,7 +148,7 @@ namespace tubex
       //  return m_domain.diam() * m_codomain.diam();
     }
 
-    const Interval TubeSlice::operator()(double t) const
+    const Interval Slice::operator()(double t) const
     {
       // Write access is not allowed for this operator
       // For write access: use set()
@@ -163,7 +163,7 @@ namespace tubex
       return m_codomain;
     }
 
-    const Interval TubeSlice::operator()(const Interval& t) const
+    const Interval Slice::operator()(const Interval& t) const
     {
       // Write access is not allowed for this operator
       // For write access: use set()
@@ -173,13 +173,13 @@ namespace tubex
       return m_codomain;
     }
 
-    const Interval TubeSlice::interpol(double t, const TubeSlice& v) const
+    const Interval Slice::interpol(double t, const Slice& v) const
     {
       DomainException::check(*this, v);
       return interpol(Interval(t), v);
     }
 
-    const Interval TubeSlice::interpol(const Interval& t, const TubeSlice& v) const
+    const Interval Slice::interpol(const Interval& t, const Slice& v) const
     {
       DomainException::check(*this, t);
       DomainException::check(*this, v);
@@ -195,13 +195,13 @@ namespace tubex
         return polygon(v).box()[1] & codomain();
     }
 
-    const Interval TubeSlice::invert(const Interval& y, const Interval& search_domain) const
+    const Interval Slice::invert(const Interval& y, const Interval& search_domain) const
     {
-      TubeSlice v(domain(), Interval::ALL_REALS); // todo: optimize this
+      Slice v(domain(), Interval::ALL_REALS); // todo: optimize this
       return invert(y, v, search_domain);
     }
 
-    const Interval TubeSlice::invert(const Interval& y, const TubeSlice& v, const Interval& search_domain) const
+    const Interval Slice::invert(const Interval& y, const Slice& v, const Interval& search_domain) const
     {
       // todo: use enclosed bounds also? in order to speed up computations
 
@@ -237,7 +237,7 @@ namespace tubex
       }
     }
 
-    const pair<Interval,Interval> TubeSlice::eval(const Interval& t) const
+    const pair<Interval,Interval> Slice::eval(const Interval& t) const
     {
       Interval intersection = t & m_domain;
       pair<Interval,Interval> p_eval = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
@@ -269,7 +269,7 @@ namespace tubex
 
     // Tests
     
-    bool TubeSlice::operator==(const TubeSlice& x) const
+    bool Slice::operator==(const Slice& x) const
     {
       return domain() == x.domain() &&
              codomain() == x.codomain() &&
@@ -277,7 +277,7 @@ namespace tubex
              output_gate() == x.output_gate();
     }
     
-    bool TubeSlice::operator!=(const TubeSlice& x) const
+    bool Slice::operator!=(const Slice& x) const
     {
       return domain() != x.domain() ||
              codomain() != x.codomain() ||
@@ -285,7 +285,7 @@ namespace tubex
              output_gate() != x.output_gate();
     }
 
-    bool TubeSlice::is_subset(const TubeSlice& x) const
+    bool Slice::is_subset(const Slice& x) const
     {
       DomainException::check(*this, x);
       return codomain().is_subset(x.codomain())
@@ -293,18 +293,18 @@ namespace tubex
           && output_gate().is_subset(x.output_gate());
     }
 
-    bool TubeSlice::is_strict_subset(const TubeSlice& x) const
+    bool Slice::is_strict_subset(const Slice& x) const
     {
       DomainException::check(*this, x);
       return is_subset(x) && (*this) != x;
     }
     
-    bool TubeSlice::is_empty() const
+    bool Slice::is_empty() const
     {
       return m_codomain.is_empty() || input_gate().is_empty() || output_gate().is_empty();
     }
 
-    bool TubeSlice::encloses(const Trajectory& x) const
+    bool Slice::encloses(const Trajectory& x) const
     {
       DomainException::check(*this, x);
       return x(m_domain).is_subset(m_codomain)
@@ -314,7 +314,7 @@ namespace tubex
 
     // Setting values
 
-    void TubeSlice::set(const Interval& y)
+    void Slice::set(const Interval& y)
     {
       m_codomain = y;
 
@@ -325,19 +325,19 @@ namespace tubex
       if(next_slice() != NULL) *m_output_gate &= next_slice()->codomain();
     }
     
-    void TubeSlice::set_empty()
+    void Slice::set_empty()
     {
       set(Interval::EMPTY_SET);
     }
 
-    void TubeSlice::set_envelope(const Interval& envelope)
+    void Slice::set_envelope(const Interval& envelope)
     {
       m_codomain = envelope;
       *m_input_gate &= m_codomain;
       *m_output_gate &= m_codomain;
     }
 
-    void TubeSlice::set_input_gate(const Interval& input_gate)
+    void Slice::set_input_gate(const Interval& input_gate)
     {
       *m_input_gate = input_gate;
       *m_input_gate &= m_codomain;
@@ -346,7 +346,7 @@ namespace tubex
         *m_input_gate &= prev_slice()->codomain();
     }
 
-    void TubeSlice::set_output_gate(const Interval& output_gate)
+    void Slice::set_output_gate(const Interval& output_gate)
     {
       *m_output_gate = output_gate;
       *m_output_gate &= m_codomain;
@@ -355,7 +355,7 @@ namespace tubex
         *m_output_gate &= next_slice()->codomain();
     }
     
-    const TubeSlice& TubeSlice::inflate(double rad)
+    const Slice& Slice::inflate(double rad)
     {
       Interval e(-rad,rad);
       set_envelope(m_codomain + e);
@@ -365,7 +365,7 @@ namespace tubex
     
     // String
 
-    ostream& operator<<(ostream& str, const TubeSlice& x)
+    ostream& operator<<(ostream& str, const Slice& x)
     {
       str << "Slice " << x.domain() << "↦(" << x.input_gate() << ")" << x.codomain() << "(" << x.output_gate() << ")" << flush;
       return str;
@@ -374,12 +374,12 @@ namespace tubex
 
   // Protected methods
 
-    void TubeSlice::set_tube_ref(Tube *tube_ref)
+    void Slice::set_tube_ref(Tube *tube_ref)
     {
       m_tube_ref = tube_ref;
     }
     
-    void TubeSlice::set_domain(const Interval& domain)
+    void Slice::set_domain(const Interval& domain)
     {
       DomainException::check(domain);
       m_domain = domain;
@@ -389,7 +389,7 @@ namespace tubex
 
     // Access values
 
-    const IntervalVector TubeSlice::codomain_box() const
+    const IntervalVector Slice::codomain_box() const
     {
       return IntervalVector(m_codomain);
     }

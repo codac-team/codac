@@ -33,9 +33,9 @@ namespace tubex
       if(TubeVector::share_same_slicing(*this, x)) \
       { \
         TubeVector copy(*this); \
-        TubeSlice *slice = get_first_slice(); \
-        TubeSlice *slice_copy = copy.get_first_slice(); \
-        const TubeSlice *slice_x = x.get_first_slice(); \
+        Slice *slice = get_first_slice(); \
+        Slice *slice_copy = copy.get_first_slice(); \
+        const Slice *slice_x = x.get_first_slice(); \
         while(slice != NULL) \
         { \
           IntervalVector input_gate = slice_copy->input_gate(); \
@@ -52,8 +52,8 @@ namespace tubex
       else \
       { \
         TubeVector copy(*this); \
-        TubeSlice *slice = get_first_slice(); \
-        TubeSlice *slice_copy = copy.get_first_slice(); \
+        Slice *slice = get_first_slice(); \
+        Slice *slice_copy = copy.get_first_slice(); \
         while(slice != NULL) \
         { \
           IntervalVector input_gate = slice_copy->input_gate(); \
@@ -74,8 +74,8 @@ namespace tubex
       DimensionException::check(*this, x); \
       DomainException::check(*this, x); \
       TubeVector copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
         IntervalVector input_gate = slice_copy->input_gate(); \
@@ -94,8 +94,8 @@ namespace tubex
     { \
       DimensionException::check(*this, x); \
       TubeVector copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
         IntervalVector input_gate = slice_copy->input_gate(); \
@@ -129,9 +129,9 @@ namespace tubex
       { \
         int n = dim(); \
         TubeVector copy(*this); \
-        TubeSlice *slice = get_first_slice(); \
-        TubeSlice *slice_copy = copy.get_first_slice(); \
-        const TubeSlice *slice_x = x.get_first_slice(); \
+        Slice *slice = get_first_slice(); \
+        Slice *slice_copy = copy.get_first_slice(); \
+        const Slice *slice_x = x.get_first_slice(); \
         while(slice != NULL) \
         { \
           IntervalVector input_gate = slice_copy->input_gate(); \
@@ -153,8 +153,8 @@ namespace tubex
       DomainException::check(*this, x); \
       int n = dim(); \
       TubeVector copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
         IntervalVector input_gate = slice_copy->input_gate(); \
@@ -173,8 +173,8 @@ namespace tubex
     { \
       TubeVector copy(*this); \
       int n = dim(); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
         IntervalVector input_gate = slice_copy->input_gate(); \
@@ -200,9 +200,9 @@ namespace tubex
     { \
       SlicingException::check(*this, x); \
       TubeVector copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
-      const TubeSlice *slice_x = x.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
+      const Slice *slice_x = x.get_first_slice(); \
       while(slice != NULL) \
       { \
         IntervalVector input_gate = slice_copy->input_gate(); \
@@ -222,8 +222,8 @@ namespace tubex
     { \
       DomainException::check(*this, x); \
       TubeVector copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
         IntervalVector input_gate = slice_copy->input_gate(); \
@@ -241,8 +241,8 @@ namespace tubex
     const TubeVector& TubeVector::f(const Interval& x) \
     { \
       TubeVector copy(*this); \
-      TubeSlice *slice = get_first_slice(); \
-      TubeSlice *slice_copy = copy.get_first_slice(); \
+      Slice *slice = get_first_slice(); \
+      Slice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
         IntervalVector input_gate = slice_copy->input_gate(); \

@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcDelay.h"
-#include "tubex_TubeSlice.h"
+#include "tubex_Slice.h"
 
 using namespace std;
 using namespace ibex;
@@ -34,7 +34,7 @@ namespace tubex
       // todo: gates
       volume = x.volume() + y.volume() + a.diam(); // todo: optimized version of this?
 
-      /*TubeSlice *x_slice = x.get_first_slice();
+      /*Slice *x_slice = x.get_first_slice();
       while(x_slice != NULL)
       {
         Interval inv = y.invert(x_slice->codomain()) & x.domain();
@@ -46,7 +46,7 @@ namespace tubex
         x_slice = x_slice->next_slice();
       }
 
-      TubeSlice *y_slice = y.get_first_slice();
+      Slice *y_slice = y.get_first_slice();
       while(y_slice != NULL)
       {
         Interval inv = x.invert(y_slice->codomain()) & x.domain();
@@ -57,7 +57,7 @@ namespace tubex
         y_slice = y_slice->next_slice();
       }*/
 
-      TubeSlice *x_slice = x.get_first_slice();
+      Slice *x_slice = x.get_first_slice();
       while(x_slice != NULL)
       {
         Interval inv = (x_slice->domain() + a) & y.domain();
@@ -70,7 +70,7 @@ namespace tubex
         x_slice = x_slice->next_slice();
       }
 
-      TubeSlice *y_slice = y.get_first_slice();
+      Slice *y_slice = y.get_first_slice();
       while(y_slice != NULL)
       {
         Interval inv = (y_slice->domain() - a) & x.domain();

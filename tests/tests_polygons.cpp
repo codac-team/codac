@@ -497,13 +497,13 @@ cout << "-------------" << endl;
     CHECK(ApproxIntv(box_inter[1]) == Interval(0.5,6.5));*/
   }
 
-  SECTION("Polygons from TubeSlice, test 1")
+  SECTION("Polygons from Slice, test 1")
   {
-    TubeSlice x(Interval(-1.,3.), 1); // unbounded
+    Slice x(Interval(-1.,3.), 1); // unbounded
     x.set_input_gate(Interval(-1.,2.));
     x.set_output_gate(Interval(-2.,0.));
 
-    TubeSlice v(Interval(-1.,3.), Interval(-1.,1.));
+    Slice v(Interval(-1.,3.), Interval(-1.,1.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
@@ -524,13 +524,13 @@ cout << "-------------" << endl;
     CHECK(ApproxPolygon(p1) == p2);
   }
 
-  SECTION("Polygons from TubeSlice, test 2")
+  SECTION("Polygons from Slice, test 2")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    Slice x(Interval(-1.,3.), Interval(-5.,3.));
     x.set_input_gate(Interval(-1.,3.));
     x.set_output_gate(Interval(-5.,0.5));
 
-    TubeSlice v(Interval(-1.,3.), Interval(-1.));
+    Slice v(Interval(-1.,3.), Interval(-1.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
@@ -550,13 +550,13 @@ cout << "-------------" << endl;
     CHECK(ApproxPolygon(p1) == p2);
   }
 
-  SECTION("Polygons from TubeSlice, test 3, degenerate case")
+  SECTION("Polygons from Slice, test 3, degenerate case")
   {
-    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    Slice x(Interval(-1.,3.), Interval(-5.,3.));
     x.set_input_gate(Interval(1.,3.));
     x.set_output_gate(Interval(-4.,-3.));
 
-    TubeSlice v(Interval(-1.,3.), Interval(-1.,1.));
+    Slice v(Interval(-1.,3.), Interval(-1.,1.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
@@ -573,13 +573,13 @@ cout << "-------------" << endl;
     CHECK(ApproxPolygon(p1) == p2);
   }
 
-  SECTION("Polygons from TubeSlice, test 4")
+  SECTION("Polygons from Slice, test 4")
   {
-    TubeSlice x(Interval(0.,4.), Interval(-1.,7.));
+    Slice x(Interval(0.,4.), Interval(-1.,7.));
     x.set_input_gate(Interval(2.,3.));
     x.set_output_gate(Interval(3.,4.));
 
-    TubeSlice v(Interval(0.,4.), Interval(-1.5,4.));
+    Slice v(Interval(0.,4.), Interval(-1.5,4.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
@@ -602,13 +602,13 @@ cout << "-------------" << endl;
     CHECK(ApproxPolygon(p1) == p2);
   }
 
-  SECTION("Polygons from TubeSlice, test 4")
+  SECTION("Polygons from Slice, test 4")
   {
-    TubeSlice x(Interval(4.,8.), Interval(-1.,7.));
+    Slice x(Interval(4.,8.), Interval(-1.,7.));
     x.set_input_gate(Interval(3.,4.));
     x.set_output_gate(Interval(1.));
 
-    TubeSlice v(Interval(4.,8.), Interval(-0.75,-0.5));
+    Slice v(Interval(4.,8.), Interval(-0.75,-0.5));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
@@ -626,13 +626,13 @@ cout << "-------------" << endl;
     CHECK(ApproxPolygon(p1) == p2);
   }
 
-  SECTION("Polygons from TubeSlice, test 5")
+  SECTION("Polygons from Slice, test 5")
   {
-    TubeSlice x(Interval(8.,12.), Interval(-1.,7.));
+    Slice x(Interval(8.,12.), Interval(-1.,7.));
     x.set_input_gate(Interval(1.));
     x.set_output_gate(Interval(1.));
 
-    TubeSlice v(Interval(8.,12.), Interval(-1./3.,1.));
+    Slice v(Interval(8.,12.), Interval(-1./3.,1.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
@@ -651,13 +651,13 @@ cout << "-------------" << endl;
     CHECK(ApproxPolygon(p1) == p2);
   }
 
-  SECTION("Polygons from TubeSlice, test 6")
+  SECTION("Polygons from Slice, test 6")
   {
-    TubeSlice x(Interval(12.,14.), Interval(-1.,7.));
+    Slice x(Interval(12.,14.), Interval(-1.,7.));
     x.set_input_gate(Interval(1.));
     x.set_output_gate(Interval(5.5));
 
-    TubeSlice v(Interval(12.,14.), Interval(4.5)/2.);
+    Slice v(Interval(12.,14.), Interval(4.5)/2.);
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);

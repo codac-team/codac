@@ -45,7 +45,7 @@ namespace tubex
 
     else if(t_propa & FORWARD)
     {
-      TubeSlice *slice_x = x.get_first_slice();
+      Slice *slice_x = x.get_first_slice();
 
       while(slice_x != NULL)
       {
@@ -54,7 +54,7 @@ namespace tubex
 
         if(unbounded_slice && slice_x->domain().diam() > x.domain().diam() / 5000.)
         {
-          TubeSlice *prev_slice_x = slice_x->prev_slice();
+          Slice *prev_slice_x = slice_x->prev_slice();
           x.sample(slice_x->domain().mid());
 
           if(prev_slice_x == NULL) slice_x = x.get_first_slice();
@@ -68,7 +68,7 @@ namespace tubex
 
     else if(t_propa & BACKWARD)
     {
-      TubeSlice *slice_x = x.get_last_slice();
+      Slice *slice_x = x.get_last_slice();
 
       while(slice_x != NULL)
       {
@@ -77,7 +77,7 @@ namespace tubex
 
         if(unbounded_slice && slice_x->domain().diam() > x.domain().diam() / 5000.)
         {
-          TubeSlice *prev_slice_x = slice_x->next_slice();
+          Slice *prev_slice_x = slice_x->next_slice();
           x.sample(slice_x->domain().mid());
 
           if(prev_slice_x == NULL) slice_x = x.get_last_slice();
@@ -99,12 +99,12 @@ namespace tubex
     // todo: return value
   }
 
-  void CtcPicard::contract(const tubex::Fnc& f, const Tube& tube, TubeSlice& slice, TPropagation t_propa) const
+  void CtcPicard::contract(const tubex::Fnc& f, const Tube& tube, Slice& slice, TPropagation t_propa) const
   {
     // todo
   }
 
-  void CtcPicard::contract(const tubex::Fnc& f, const TubeVector& tube, TubeSlice& slice, TPropagation t_propa) const
+  void CtcPicard::contract(const tubex::Fnc& f, const TubeVector& tube, Slice& slice, TPropagation t_propa) const
   {
     // todo: check that !((t_propa & FORWARD) && (t_propa & BACKWARD))
     DimensionException::check(tube, f);
@@ -134,7 +134,7 @@ namespace tubex
 
   void CtcPicard::guess_slice_envelope(const tubex::Fnc& f,
                                        const Tube& tube,
-                                       TubeSlice& slice,
+                                       Slice& slice,
                                        TPropagation t_propa) const
   {
     // todo
@@ -142,7 +142,7 @@ namespace tubex
 
   void CtcPicard::guess_slice_envelope(const tubex::Fnc& f,
                                        const TubeVector& tube,
-                                       TubeSlice& slice,
+                                       Slice& slice,
                                        TPropagation t_propa) const
   {
     DimensionException::check(tube, f);

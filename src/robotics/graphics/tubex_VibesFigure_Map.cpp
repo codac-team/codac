@@ -165,7 +165,7 @@ namespace tubex
     if(background_tube)
       color = DEFAULT_BCKGRND_COLOR;
 
-    for(const TubeSlice *s = tube->get_first_slice() ; s != NULL ; )
+    for(const Slice *s = tube->get_first_slice() ; s != NULL ; )
     {
       if(!background_tube)
         color = shaded_slice_color((1. * i) / tube->nb_slices());
@@ -207,7 +207,7 @@ namespace tubex
     return hex_color + "[" + hex_color + "]";
   }
 
-  void VibesFigure_Map::draw_slice(const TubeSlice& slice, const std::string& color, const vibes::Params& params)
+  void VibesFigure_Map::draw_slice(const Slice& slice, const std::string& color, const vibes::Params& params)
   {
     if(slice.codomain().subvector(0,1).is_empty())
       return; // no display
