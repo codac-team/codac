@@ -27,7 +27,6 @@ namespace tubex
   class Slice;
   class Tube;
   class Trajectory;
-  class TubeVectorComponent;
   
   class TubeVector : public AbstractTube
   {
@@ -82,8 +81,8 @@ namespace tubex
       // Access values
       const ibex::IntervalVector codomain() const;
       double volume() const;
-      TubeVectorComponent& operator[](int index);
-      const TubeVectorComponent& operator[](int index) const;
+      Tube& operator[](int index);
+      const Tube& operator[](int index) const;
       const ibex::IntervalVector operator()(int slice_id) const;
       const ibex::IntervalVector operator()(double t) const;
       const ibex::IntervalVector operator()(const ibex::Interval& t) const;
@@ -190,14 +189,13 @@ namespace tubex
 
     protected:
 
-      TubeVector();
+      TubeVector(); // todo: remove this?
       const ibex::IntervalVector codomain_box() const;
       void deserialize(const std::string& binary_file_name, std::vector<TrajectoryVector>& v_trajs);
 
     /** Class variables **/
 
       Slice *m_first_slice = NULL;
-      mutable std::map<int,TubeVectorComponent> m_m_tube_components;
 
       friend void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
   };

@@ -169,7 +169,7 @@ namespace tubex
 
     protected:
 
-      Tube();
+      Tube(); // todo: remove this?
       const ibex::IntervalVector codomain_box() const;
       void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
 

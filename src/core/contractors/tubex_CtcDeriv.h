@@ -30,16 +30,13 @@ namespace tubex
     public:
 
       CtcDeriv(bool preserve_slicing = false);
-      bool contract(Tube& x, Tube& v, TPropagation t_propa = FORWARD | BACKWARD) const;
-      bool contract(Tube& x, const Tube& v, TPropagation t_propa = FORWARD | BACKWARD) const;
-      bool contract(const Tube& x, const Tube& v, TPropagation t_propa = FORWARD | BACKWARD) const;
-      bool contract(TubeVector& x, TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD) const;
       bool contract(TubeVector& x, const TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD) const;
-      bool contract(Slice& x, Slice& v) const;
+      bool contract(Tube& x, const Tube& v, TPropagation t_propa = FORWARD | BACKWARD) const;
+      bool contract(Slice& x, const Slice& v) const;
 
     protected:
 
-      bool contract_gates(Slice& x, Slice& v) const;
+      bool contract_gates(Slice& x, const Slice& v) const;
       friend class CtcEval; // contract_gates used by CtcEval
   };
 }
