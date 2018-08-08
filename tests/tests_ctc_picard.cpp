@@ -30,45 +30,45 @@ TEST_CASE("CtcPicard")
     slice = tube.get_first_slice();
     tubex::Function f2("x", "3.");
     ctc_picard.guess_slice_envelope(f2, tube, *slice, FORWARD);
-    CHECK(slice->codomain()[0].is_superset(1.5 + Interval(0.,0.5) * 3.));
+    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * 3.));
 
     tube = tube_raw;
     slice = tube.get_first_slice();
     tubex::Function f3("x", "t");
     ctc_picard.guess_slice_envelope(f3, tube, *slice, FORWARD);
-    CHECK(slice->codomain()[0].is_superset(1.5 + Interval(0.,0.5) * t));
+    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * t));
 
     tube = tube_raw;
     slice = tube.get_first_slice();
     f3 = tubex::Function("x", "t^2"); // with operator= of class Function
     ctc_picard.guess_slice_envelope(f3, tube, *slice, FORWARD);
-    CHECK(slice->codomain()[0].is_superset(1.5 + Interval(0.,0.5) * t * t));
+    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * t * t));
 
     tube = tube_raw;
     slice = tube.get_first_slice();
     tubex::Function f5("x", "x");
     ctc_picard.guess_slice_envelope(f5, tube, *slice, FORWARD);
-    CHECK(slice->codomain()[0].is_superset(1.5 + Interval(0.,0.5) * Interval(1.,2.)));
+    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * Interval(1.,2.)));
 
     tube = tube_raw;
     slice = tube.get_first_slice();
     tubex::Function f6("x", "x*t");
     ctc_picard.guess_slice_envelope(f6, tube, *slice, FORWARD);
-    CHECK(slice->codomain()[0].is_superset(1.5 + Interval(0.,0.5) * Interval(1.,2.) * t));
+    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * Interval(1.,2.) * t));
 
     tube = tube_raw;
     tube.set(2.*atan(exp(-t.lb())*tan(0.5)), t.lb());
     slice = tube.get_first_slice();
     tubex::Function f7("x", "-sin(x)");
     ctc_picard.guess_slice_envelope(f7, tube, *slice, FORWARD);
-    CHECK(slice->codomain()[0].is_superset(2.*atan(exp(-t)*tan(0.5))));
+    CHECK(slice->codomain().is_superset(2.*atan(exp(-t)*tan(0.5))));
 
     tube = tube_raw;
     tube.set(exp(-t.lb()), t.lb());
     slice = tube.get_first_slice();
     tubex::Function f8("x", "-x");
     ctc_picard.guess_slice_envelope(f8, tube, *slice, FORWARD);
-    CHECK(slice->codomain()[0].is_superset(exp(-t)));
+    CHECK(slice->codomain().is_superset(exp(-t)));
   }
 
   SECTION("Test CtcPicard / TubeSlice - dim 1")
@@ -81,12 +81,12 @@ TEST_CASE("CtcPicard")
     tubex::Function f("x", "x");
     CtcPicard ctc_picard(1.1);
 
-    CHECK(x->codomain()[0] == Interval::ALL_REALS);
-    CHECK(x->input_gate()[0] == exp(0.));
-    CHECK(x->output_gate()[0] == Interval::ALL_REALS);
+    CHECK(x->codomain() == Interval::ALL_REALS);
+    CHECK(x->input_gate() == exp(0.));
+    CHECK(x->output_gate() == Interval::ALL_REALS);
     ctc_picard.contract(f, tube, *x, FORWARD);
-    CHECK(x->codomain()[0].is_superset(Interval(exp(domain))));
-    CHECK(x->output_gate()[0].is_superset(Interval(exp(domain.ub()))));
+    CHECK(x->codomain().is_superset(Interval(exp(domain))));
+    CHECK(x->output_gate().is_superset(Interval(exp(domain.ub()))));
     CHECK(ctc_picard.picard_iterations() < 4);
   }
 
@@ -108,14 +108,14 @@ TEST_CASE("CtcPicard")
     ctc_picard_auto.contract(f, x_auto_sampling);
     
     CHECK_FALSE(x_preserve_sampling.codomain().is_unbounded());
-    CHECK(x_preserve_sampling.codomain()[0].is_superset(exp(-domain)));
-    CHECK(x_preserve_sampling(0.)[0].is_superset(Interval(exp(-0.))));
-    CHECK(x_preserve_sampling(1.)[0].is_superset(Interval(exp(-1.))));
+    CHECK(x_preserve_sampling.codomain().is_superset(exp(-domain)));
+    CHECK(x_preserve_sampling(0.).is_superset(Interval(exp(-0.))));
+    CHECK(x_preserve_sampling(1.).is_superset(Interval(exp(-1.))));
     CHECK(x_preserve_sampling.nb_slices() == 1);
     
-    CHECK(x_auto_sampling.codomain()[0] == x_preserve_sampling.codomain()[0]);
-    CHECK(x_auto_sampling(0.)[0] == x_preserve_sampling(0.)[0]);
-    CHECK(x_auto_sampling(1.)[0] == x_preserve_sampling(1.)[0]);
+    CHECK(x_auto_sampling.codomain() == x_preserve_sampling.codomain());
+    CHECK(x_auto_sampling(0.) == x_preserve_sampling(0.));
+    CHECK(x_auto_sampling(1.) == x_preserve_sampling(1.));
     CHECK(x_auto_sampling.nb_slices() != 1);
 
     /*if(VIBES_DRAWING) // drawing results

@@ -11,18 +11,18 @@ TEST_CASE("Tube definition")
 {
   SECTION("TubeSlice class")
   {
-    TubeSlice tubeslice(Interval(0.,1.), IntervalVector(1, Interval(-1.,1.)));
+    TubeSlice tubeslice(Interval(0.,1.), Interval(-1.,1.));
     CHECK(tubeslice.domain() == Interval(0.,1.));
-    CHECK(tubeslice.codomain() == IntervalVector(1, Interval(-1.,1.)));
+    CHECK(tubeslice.codomain() == Interval(-1.,1.));
 
     TubeSlice tubeslice_copy1 = tubeslice;
     CHECK(tubeslice_copy1.domain() == Interval(0.,1.));
-    CHECK(tubeslice_copy1.codomain() == IntervalVector(1, Interval(-1.,1.)));
+    CHECK(tubeslice_copy1.codomain() == Interval(-1.,1.));
     CHECK(tubeslice_copy1 == tubeslice);
 
     TubeSlice tubeslice_copy2(tubeslice);
     CHECK(tubeslice_copy2.domain() == Interval(0.,1.));
-    CHECK(tubeslice_copy2.codomain() == IntervalVector(1, Interval(-1.,1.)));
+    CHECK(tubeslice_copy2.codomain() == Interval(-1.,1.));
     CHECK(tubeslice_copy2 == tubeslice);
 
     CHECK_THROWS(TubeSlice(Interval::ALL_REALS));
@@ -52,18 +52,18 @@ TEST_CASE("Tube definition")
 
   SECTION("TubeVector class")
   {
-    TubeVector tube(Interval(0.,1.), IntervalVector(1, Interval(-1.,1.)));
+    TubeVector tube(Interval(0.,1.), Interval(-1.,1.));
     CHECK(tube.domain() == Interval(0.,1.));
-    CHECK(tube.codomain() == IntervalVector(1, Interval(-1.,1.)));
+    CHECK(tube.codomain() == Interval(-1.,1.));
 
     TubeVector tube_copy1 = tube;
     CHECK(tube_copy1.domain() == Interval(0.,1.));
-    CHECK(tube_copy1.codomain() == IntervalVector(1, Interval(-1.,1.)));
+    CHECK(tube_copy1.codomain() == Interval(-1.,1.));
     CHECK(tube_copy1 == tube);
 
     TubeVector tube_copy2(tube);
     CHECK(tube_copy2.domain() == Interval(0.,1.));
-    CHECK(tube_copy2.codomain() == IntervalVector(1, Interval(-1.,1.)));
+    CHECK(tube_copy2.codomain() == Interval(-1.,1.));
     CHECK(tube_copy2 == tube);
 
     CHECK_THROWS(TubeVector(Interval::ALL_REALS));
@@ -111,10 +111,10 @@ TEST_CASE("Tube definition")
     //CHECK(tube_e.get_slice(3)->tube_reference() == &tube_e);
     CHECK(tube_e.codomain() == Interval(1.,2.));
     CHECK(tube_e.nb_slices() == tube_c.nb_slices());
-    CHECK(tube_e.get_slice(0)->codomain()[0] == Interval(1.,2.));
-    CHECK(tube_e.get_slice(1)->codomain()[0] == Interval(1.,2.));
-    CHECK(tube_e.get_slice(2)->codomain()[0] == Interval(1.,2.));
-    CHECK(tube_e.get_slice(3)->codomain()[0] == Interval(1.,2.));
+    CHECK(tube_e.get_slice(0)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.get_slice(1)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.get_slice(2)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.get_slice(3)->codomain() == Interval(1.,2.));
 
     CHECK_THROWS(Tube tube_f(Interval(0.,12.), -1.););
 
@@ -188,7 +188,7 @@ TEST_CASE("Tube definition")
 
     Interval t = tube0.get_last_slice()->prev_slice()->domain(); //(1.0,1.1);
     Interval slice_codomain = 2*pow(t,5)+pow(t,3)-3*pow(t,2);
-    CHECK(tube0.get_last_slice()->prev_slice()->codomain()[0] == slice_codomain);
+    CHECK(tube0.get_last_slice()->prev_slice()->codomain() == slice_codomain);
     CHECK(tube0.codomain().ub() == slice_codomain.ub());
 
     Tube tube2(traj2, 0.1);

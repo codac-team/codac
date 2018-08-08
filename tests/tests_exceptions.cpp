@@ -33,7 +33,7 @@ TEST_CASE("Exceptions")
     Tube tube(Interval(0.,1.), Interval::EMPTY_SET);
     CHECK_THROWS(EmptyException::check(tube));
 
-    TubeSlice slice(Interval(0.,1.), IntervalVector(1, Interval::EMPTY_SET));
+    TubeSlice slice(Interval(0.,1.), Interval::EMPTY_SET);
     CHECK_THROWS(EmptyException::check(slice));
   }
 

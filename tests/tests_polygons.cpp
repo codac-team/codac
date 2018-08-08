@@ -500,15 +500,15 @@ cout << "-------------" << endl;
   SECTION("Polygons from TubeSlice, test 1")
   {
     TubeSlice x(Interval(-1.,3.), 1); // unbounded
-    x.set_input_gate(IntervalVector(1, Interval(-1.,2.)));
-    x.set_output_gate(IntervalVector(1, Interval(-2.,0.)));
+    x.set_input_gate(Interval(-1.,2.));
+    x.set_output_gate(Interval(-2.,0.));
 
-    TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.,1.)));
+    TubeSlice v(Interval(-1.,3.), Interval(-1.,1.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 
-    ConvexPolygon p1 = x.polygon(0, v);
+    ConvexPolygon p1 = x.polygon(v);
     CHECK(p1.box()[0] == Interval(-1.,3.));
     CHECK(p1.box()[1] == Interval(-3.5,3.));
 
@@ -526,16 +526,16 @@ cout << "-------------" << endl;
 
   SECTION("Polygons from TubeSlice, test 2")
   {
-    TubeSlice x(Interval(-1.,3.), IntervalVector(1, Interval(-5.,3.)));
-    x.set_input_gate(IntervalVector(1, Interval(-1.,3.)));
-    x.set_output_gate(IntervalVector(1, Interval(-5.,0.5)));
+    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    x.set_input_gate(Interval(-1.,3.));
+    x.set_output_gate(Interval(-5.,0.5));
 
-    TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.)));
+    TubeSlice v(Interval(-1.,3.), Interval(-1.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 
-    ConvexPolygon p1 = x.polygon(0, v);
+    ConvexPolygon p1 = x.polygon(v);
     CHECK(p1.box()[0] == Interval(-1.,3.));
     CHECK(p1.box()[1] == Interval(-5.,3.));
 
@@ -552,16 +552,16 @@ cout << "-------------" << endl;
 
   SECTION("Polygons from TubeSlice, test 3, degenerate case")
   {
-    TubeSlice x(Interval(-1.,3.), IntervalVector(1, Interval(-5.,3.)));
-    x.set_input_gate(IntervalVector(1, Interval(1.,3.)));
-    x.set_output_gate(IntervalVector(1, Interval(-4.,-3.)));
+    TubeSlice x(Interval(-1.,3.), Interval(-5.,3.));
+    x.set_input_gate(Interval(1.,3.));
+    x.set_output_gate(Interval(-4.,-3.));
 
-    TubeSlice v(Interval(-1.,3.), IntervalVector(1, Interval(-1.,1.)));
+    TubeSlice v(Interval(-1.,3.), Interval(-1.,1.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 
-    ConvexPolygon p1 = x.polygon(0, v);
+    ConvexPolygon p1 = x.polygon(v);
     CHECK(p1.box()[0] == Interval(-1.,3.));
     CHECK(p1.box()[1] == Interval(-3.,1.));
 
@@ -575,16 +575,16 @@ cout << "-------------" << endl;
 
   SECTION("Polygons from TubeSlice, test 4")
   {
-    TubeSlice x(Interval(0.,4.), IntervalVector(1, Interval(-1.,7.)));
-    x.set_input_gate(IntervalVector(1, Interval(2.,3.)));
-    x.set_output_gate(IntervalVector(1, Interval(3.,4.)));
+    TubeSlice x(Interval(0.,4.), Interval(-1.,7.));
+    x.set_input_gate(Interval(2.,3.));
+    x.set_output_gate(Interval(3.,4.));
 
-    TubeSlice v(Interval(0.,4.), IntervalVector(1, Interval(-1.5,4.)));
+    TubeSlice v(Interval(0.,4.), Interval(-1.5,4.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 
-    ConvexPolygon p1 = x.polygon(0, v);
+    ConvexPolygon p1 = x.polygon(v);
     CHECK(p1.box()[0] == Interval(0.,4.));
     CHECK(p1.box()[1] == Interval(-1.,7.));
 
@@ -604,16 +604,16 @@ cout << "-------------" << endl;
 
   SECTION("Polygons from TubeSlice, test 4")
   {
-    TubeSlice x(Interval(4.,8.), IntervalVector(1, Interval(-1.,7.)));
-    x.set_input_gate(IntervalVector(1, Interval(3.,4.)));
-    x.set_output_gate(IntervalVector(1, Interval(1.)));
+    TubeSlice x(Interval(4.,8.), Interval(-1.,7.));
+    x.set_input_gate(Interval(3.,4.));
+    x.set_output_gate(Interval(1.));
 
-    TubeSlice v(Interval(4.,8.), IntervalVector(1, Interval(-0.75,-0.5)));
+    TubeSlice v(Interval(4.,8.), Interval(-0.75,-0.5));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 
-    ConvexPolygon p1 = x.polygon(0, v);
+    ConvexPolygon p1 = x.polygon(v);
     CHECK(p1.box()[0] == Interval(4.,8.));
     CHECK(p1.box()[1] == Interval(1.,4.));
 
@@ -628,16 +628,16 @@ cout << "-------------" << endl;
 
   SECTION("Polygons from TubeSlice, test 5")
   {
-    TubeSlice x(Interval(8.,12.), IntervalVector(1, Interval(-1.,7.)));
-    x.set_input_gate(IntervalVector(1, Interval(1.)));
-    x.set_output_gate(IntervalVector(1, Interval(1.)));
+    TubeSlice x(Interval(8.,12.), Interval(-1.,7.));
+    x.set_input_gate(Interval(1.));
+    x.set_output_gate(Interval(1.));
 
-    TubeSlice v(Interval(8.,12.), IntervalVector(1, Interval(-1./3.,1.)));
+    TubeSlice v(Interval(8.,12.), Interval(-1./3.,1.));
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 
-    ConvexPolygon p1 = x.polygon(0, v);
+    ConvexPolygon p1 = x.polygon(v);
     CHECK(p1.box()[0] == Interval(8.,12.));
     CHECK(ApproxIntv(p1.box()[1]) == Interval(0.,2.));
 
@@ -653,16 +653,16 @@ cout << "-------------" << endl;
 
   SECTION("Polygons from TubeSlice, test 6")
   {
-    TubeSlice x(Interval(12.,14.), IntervalVector(1, Interval(-1.,7.)));
-    x.set_input_gate(IntervalVector(1, Interval(1.)));
-    x.set_output_gate(IntervalVector(1, Interval(5.5)));
+    TubeSlice x(Interval(12.,14.), Interval(-1.,7.));
+    x.set_input_gate(Interval(1.));
+    x.set_output_gate(Interval(5.5));
 
-    TubeSlice v(Interval(12.,14.), IntervalVector(1, Interval(4.5)/2.));
+    TubeSlice v(Interval(12.,14.), Interval(4.5)/2.);
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 
-    ConvexPolygon p1 = x.polygon(0, v);
+    ConvexPolygon p1 = x.polygon(v);
     CHECK(p1.box()[0] == Interval(12.,14.));
     CHECK(ApproxIntv(p1.box()[1]) == Interval(1.,5.5));
 

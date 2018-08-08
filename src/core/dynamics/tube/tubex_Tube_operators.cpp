@@ -21,7 +21,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*#define assignment_op_scalar(f) \
+  #define assignment_op_scalar(f) \
     \
     const Tube& Tube::f(const Tube& x) \
     { \
@@ -33,12 +33,12 @@ namespace tubex
       const TubeSlice *slice_x = x.get_first_slice(); \
       while(slice != NULL) \
       { \
-        Interval input_gate = slice_copy->input_gate()[0]; \
-        Interval envelope = slice_copy->codomain()[0]; \
-        Interval output_gate = slice_copy->output_gate()[0]; \
-        slice->set_envelope(IntervalVector(1, envelope.f(slice_x->codomain()[0]))); \
-        slice->set_input_gate(IntervalVector(1, input_gate.f(slice_x->input_gate()[0]))); \
-        slice->set_output_gate(IntervalVector(1, output_gate.f(slice_x->output_gate()[0]))); \
+        Interval input_gate = slice_copy->input_gate(); \
+        Interval envelope = slice_copy->codomain(); \
+        Interval output_gate = slice_copy->output_gate(); \
+        slice->set_envelope(envelope.f(slice_x->codomain())); \
+        slice->set_input_gate(input_gate.f(slice_x->input_gate())); \
+        slice->set_output_gate(output_gate.f(slice_x->output_gate())); \
         slice = slice->next_slice(); \
         slice_x = slice_x->next_slice(); \
         slice_copy = slice_copy->next_slice(); \
@@ -54,12 +54,12 @@ namespace tubex
       TubeSlice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
-        Interval input_gate = slice_copy->input_gate()[0]; \
-        Interval envelope = slice_copy->codomain()[0]; \
-        Interval output_gate = slice_copy->output_gate()[0]; \
-        slice->set_envelope(IntervalVector(1, envelope.f(x(slice->domain())))); \
-        slice->set_input_gate(IntervalVector(1, input_gate.f(x(slice->domain().lb())))); \
-        slice->set_output_gate(IntervalVector(1, output_gate.f(x(slice->domain().ub())))); \
+        Interval input_gate = slice_copy->input_gate(); \
+        Interval envelope = slice_copy->codomain(); \
+        Interval output_gate = slice_copy->output_gate(); \
+        slice->set_envelope(envelope.f(x(slice->domain()))); \
+        slice->set_input_gate(input_gate.f(x(slice->domain().lb()))); \
+        slice->set_output_gate(output_gate.f(x(slice->domain().ub()))); \
         slice = slice->next_slice(); \
         slice_copy = slice_copy->next_slice(); \
       } \
@@ -73,12 +73,12 @@ namespace tubex
       TubeSlice *slice_copy = copy.get_first_slice(); \
       while(slice != NULL) \
       { \
-        Interval input_gate = slice_copy->input_gate()[0]; \
-        Interval envelope = slice_copy->codomain()[0]; \
-        Interval output_gate = slice_copy->output_gate()[0]; \
-        slice->set_envelope(IntervalVector(1, envelope.f(x))); \
-        slice->set_input_gate(IntervalVector(1, input_gate.f(x))); \
-        slice->set_output_gate(IntervalVector(1, output_gate.f(x))); \
+        Interval input_gate = slice_copy->input_gate(); \
+        Interval envelope = slice_copy->codomain(); \
+        Interval output_gate = slice_copy->output_gate(); \
+        slice->set_envelope(envelope.f(x)); \
+        slice->set_input_gate(input_gate.f(x)); \
+        slice->set_output_gate(output_gate.f(x)); \
         slice = slice->next_slice(); \
         slice_copy = slice_copy->next_slice(); \
       } \
