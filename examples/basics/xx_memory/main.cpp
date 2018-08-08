@@ -9,9 +9,21 @@ int main()
   Interval domain(0.,10.);
   TubeVector x(domain, IntervalVector(4, 1.));
 
-  Tube x_scalar(domain);
+  //Tube x_scalar(domain);
+  x[0];
+  
+  cout << x[0] << endl;
+  //x[0].set(Interval(-2.,2.));//.set_empty();
+  cout << x[0] << endl;
 
-  x[0];//.set_empty();
+
+  //VibesFigure_TubeVector fig_tubevector("e", &x);
+
+
+  //vibes::beginDrawing();
+  //VibesFigure_Tube fig_tube("e", &x[0]);
+  //fig_tube.show();
+  //vibes::endDrawing();
 
   //Tube a(domain);
   //cout << "# " << a << endl;

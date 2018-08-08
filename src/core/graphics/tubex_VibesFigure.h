@@ -29,7 +29,7 @@ namespace tubex
        *
        * \param figure_name a reference to the figure that will be displayed in the window's title
        */
-      VibesFigure(const std::string& figure_name, int nb_layers = 1);
+      VibesFigure(const std::string& figure_name);
 
       /**
        * \brief Delete this figure.
@@ -109,7 +109,6 @@ namespace tubex
        */
       const ibex::IntervalVector& axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio = false);
       const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, bool keep_ratio = false);
-      const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, int layer_id, bool keep_ratio = false);
 
       /**
        * \brief Save vibes-figure in SVG/PNG/... format.
@@ -133,7 +132,6 @@ namespace tubex
 
     protected:
 
-      void set_current_layer(int layer);
       static std::string add_suffix(const std::string& name, int id);
 
 
@@ -142,7 +140,6 @@ namespace tubex
       mutable std::string m_name;
       int m_x, m_y, m_width, m_height;
       ibex::IntervalVector m_view_box;
-      int m_nb_layers = 1, m_current_layer = 0;
   };
 }
 

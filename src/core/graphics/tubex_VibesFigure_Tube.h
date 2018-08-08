@@ -14,9 +14,9 @@
 #define __TUBEX_VIBESFIGURETUBE_H__
 
 #include "tubex_VibesFigure.h"
-#include "tubex_TubeVector.h"
+#include "tubex_Tube.h"
 #include "tubex_TubeSlice.h"
-#include "tubex_TrajectoryVector.h"
+#include "tubex_Trajectory.h"
 
 namespace tubex
 {
@@ -36,42 +36,39 @@ namespace tubex
   {
     public:
 
-      VibesFigure_Tube(const std::string& fig_name, int dim = 1);
-      VibesFigure_Tube(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj = NULL);
+      VibesFigure_Tube(const std::string& fig_name, const Tube *tube = NULL, const Trajectory *traj = NULL);
       ~VibesFigure_Tube();
-      int dim() const;
 
-      void add_tube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
-      void set_tube_name(const TubeVector *tube, const std::string& name);
-      void set_tube_derivative(const TubeVector *tube, const TubeVector *derivative);
-      void set_tube_color(const TubeVector *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd);
-      void set_tube_color(const TubeVector *tube, int color_type, const std::string& color);
-      void remove_tube(const TubeVector *tube);
+      void add_tube(const Tube *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
+      void set_tube_name(const Tube *tube, const std::string& name);
+      void set_tube_derivative(const Tube *tube, const Tube *derivative);
+      void set_tube_color(const Tube *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd);
+      void set_tube_color(const Tube *tube, int color_type, const std::string& color);
+      void remove_tube(const Tube *tube);
 
-      void add_trajectory(const TrajectoryVector *traj, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
-      void set_trajectory_name(const TrajectoryVector *traj, const std::string& name);
-      void set_trajectory_color(const TrajectoryVector *traj, const std::string& color);
-      void remove_trajectory(const TrajectoryVector *traj);
+      void add_trajectory(const Trajectory *traj, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
+      void set_trajectory_name(const Trajectory *traj, const std::string& name);
+      void set_trajectory_color(const Trajectory *traj, const std::string& color);
+      void remove_trajectory(const Trajectory *traj);
 
       virtual void show();
       void show(bool detail_slices);
-      void show(int dim, bool detail_slices);
 
       // Static methods (shortcuts for fast and simple use)
       static void draw(const std::string& fig_name, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const TubeVector *tube, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const TrajectoryVector *traj, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, const Tube *tube, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, const Trajectory *traj, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, const Tube *tube, const Trajectory *traj, int x = 0, int y = 0);
       static void end_drawing();
 
     protected:
 
-      virtual const ibex::IntervalVector draw_tube(const TubeVector *tube, bool detail_slices = false);
-      const Polygon polygon_envelope(const TubeVector *tube) const;
+      virtual const ibex::IntervalVector draw_tube(const Tube *tube, bool detail_slices = false);
+      const Polygon polygon_envelope(const Tube *tube) const;
       virtual void draw_slice(const TubeSlice& slice, const vibes::Params& params);
       void draw_slice(const TubeSlice& slice, const TubeSlice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon);
       void draw_gate(const ibex::Interval& gate, double t, const vibes::Params& params);
-      virtual const ibex::IntervalVector draw_trajectory(const TrajectoryVector *traj, float points_size = 0.);
+      virtual const ibex::IntervalVector draw_trajectory(const Trajectory *traj, float points_size = 0.);
 
     protected:
 
@@ -80,8 +77,8 @@ namespace tubex
       struct FigTubeParams
       {
         std::map<int,std::string> m_colors;
-        const TubeVector *tube_copy = NULL; // to display previous values in background
-        const TubeVector *tube_derivative = NULL; // to display polygons enclosed by slices
+        const Tube *tube_copy = NULL; // to display previous values in background
+        const Tube *tube_derivative = NULL; // to display polygons enclosed by slices
         std::string name;
       };
 
@@ -91,8 +88,8 @@ namespace tubex
         std::string name;
       };
 
-      std::map<const TubeVector*,FigTubeParams> m_map_tubes;
-      std::map<const TrajectoryVector*,FigTrajParams> m_map_trajs;
+      std::map<const Tube*,FigTubeParams> m_map_tubes;
+      std::map<const Trajectory*,FigTrajParams> m_map_trajs;
 
       static std::vector<VibesFigure_Tube*> v_vibesfig_tube;
   };

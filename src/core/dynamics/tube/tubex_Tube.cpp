@@ -421,10 +421,10 @@ namespace tubex
     
     std::ostream& operator<<(std::ostream& str, const Tube& x)
     {
-      str << "Tube " << x.domain() << "↦" << x.codomain()
+      str << "Tube " << x.domain() << flush;/* << "↦" << x.codomain()
           << ", " << x.nb_slices()
           << " slice" << (x.nb_slices() > 1 ? "s" : "")
-          << flush;
+          << flush;*/
       return str;
     }
 

@@ -26,6 +26,9 @@ namespace tubex
   TubeVectorComponent::TubeVectorComponent(TubeVector *tubevector, int component_id)
     : Tube(tubevector, component_id)
   {
+    cout << "constructor TubeVectorComponent" << endl;
+    cout << "-- " << *m_tubevector << endl;
+    cout << "-- " << m_tubevector->domain() << endl;
     m_destroy_tubevector = false;
   }
 

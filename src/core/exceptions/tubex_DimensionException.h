@@ -16,7 +16,7 @@
 #include "ibex_Fnc.h"
 #include "tubex_Exception.h"
 #include "tubex_DynamicalItem.h"
-#include "tubex_VibesFigure_Tube.h"
+#include "tubex_VibesFigure_TubeVector.h"
 
 namespace tubex
 {
@@ -35,7 +35,7 @@ namespace tubex
       DimensionException(const DynamicalItem& x, const ibex::IntervalVector& box);
       DimensionException(const DynamicalItem& x, const Fnc& f);
       DimensionException(const DynamicalItem& x1, const DynamicalItem& x2);
-      DimensionException(const VibesFigure_Tube& fig, const DynamicalItem& x);
+      DimensionException(const VibesFigure_TubeVector& fig, const DynamicalItem& x);
 
       static void check(int dim);
       static void check_scalar(int dim);
@@ -44,7 +44,7 @@ namespace tubex
       static void check(const DynamicalItem& x, const ibex::IntervalVector& box);
       static void check(const DynamicalItem& x, const Fnc& f);
       static void check(const DynamicalItem& x1, const DynamicalItem& x2);
-      static void check(const VibesFigure_Tube& fig, const DynamicalItem& x);
+      static void check(const VibesFigure_TubeVector& fig, const DynamicalItem& x);
   };
 }
 

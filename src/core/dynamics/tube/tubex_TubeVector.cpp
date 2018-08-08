@@ -507,10 +507,12 @@ namespace tubex
     const TubeVectorComponent& TubeVector::operator[](int index) const
     {
       // todo: check index
-      map<int,TubeVectorComponent>::iterator it;
-      if(it == m_m_tube_components.end()) // if not found
+      if(m_m_tube_components.find(index) == m_m_tube_components.end()) // if not found
+      {
+        cout << "ok" << endl;
         m_m_tube_components[index] = TubeVectorComponent(const_cast<TubeVector*>(this), index);
-
+      }
+cout << index << endl;
       return m_m_tube_components[index];
     }
 
@@ -792,13 +794,8 @@ namespace tubex
     void TubeVector::set(const IntervalVector& y)
     {
       DimensionException::check(*this, y);
-
-      TubeSlice *slice = get_first_slice();
-      while(slice != NULL)
-      {
-        slice->set(y);
-        slice = slice->next_slice();
-      }
+      for(TubeSlice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        s->set(y);
     }
 
     void TubeVector::set(const IntervalVector& y, int slice_id)

@@ -20,7 +20,7 @@ TEST_CASE("Functions")
     TubeVector y2(Interval(0.,10.), 0.01, tubex::Function("t/10.+sin(t)+[-0.01,0.01]"));
     CHECK(Approx(y1.volume()) == y2.volume());
 
-    if(VIBES_DRAWING) // drawing results
+    /*if(VIBES_DRAWING) // drawing results
     {
       vibes::beginDrawing();
 
@@ -37,6 +37,6 @@ TEST_CASE("Functions")
       fig_tube_y2.show(true);
 
       vibes::endDrawing();
-    }
+    }*/
   }
 }
