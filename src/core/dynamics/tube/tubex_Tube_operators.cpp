@@ -21,76 +21,65 @@ using namespace ibex;
 
 namespace tubex
 {
-  #define assignment_op_scalar(f) \
+  #define assign_scal(f) \
     \
-    const Tube& Tube::f(const Tube& x) \
+    const Tube& Tube::f(const Interval& x) \
     { \
-      SlicingException::check(*this, x); \
-      DomainException::check(*this, x); \
-      Tube copy(*this); \
-      Slice *slice = get_first_slice(); \
-      Slice *slice_copy = copy.get_first_slice(); \
-      const Slice *slice_x = x.get_first_slice(); \
-      while(slice != NULL) \
+      for(Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice()) \
       { \
-        Interval input_gate = slice_copy->input_gate(); \
-        Interval envelope = slice_copy->codomain(); \
-        Interval output_gate = slice_copy->output_gate(); \
-        slice->set_envelope(envelope.f(slice_x->codomain())); \
-        slice->set_input_gate(input_gate.f(slice_x->input_gate())); \
-        slice->set_output_gate(output_gate.f(slice_x->output_gate())); \
-        slice = slice->next_slice(); \
-        slice_x = slice_x->next_slice(); \
-        slice_copy = slice_copy->next_slice(); \
+        Interval envelope = s->codomain(); \
+        Interval ingate = s->input_gate(); \
+        s->set_envelope(envelope.f(x)); \
+        s->set_input_gate(ingate.f(x)); \
       } \
+      Slice *last_slice = get_last_slice(); \
+      Interval outgate = last_slice->output_gate(); \
+      last_slice->set_output_gate(outgate.f(x)); \
       return *this; \
     } \
     \
     const Tube& Tube::f(const Trajectory& x) \
     { \
       DomainException::check(*this, x); \
-      Tube copy(*this); \
-      Slice *slice = get_first_slice(); \
-      Slice *slice_copy = copy.get_first_slice(); \
-      while(slice != NULL) \
+      for(Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice()) \
       { \
-        Interval input_gate = slice_copy->input_gate(); \
-        Interval envelope = slice_copy->codomain(); \
-        Interval output_gate = slice_copy->output_gate(); \
-        slice->set_envelope(envelope.f(x(slice->domain()))); \
-        slice->set_input_gate(input_gate.f(x(slice->domain().lb()))); \
-        slice->set_output_gate(output_gate.f(x(slice->domain().ub()))); \
-        slice = slice->next_slice(); \
-        slice_copy = slice_copy->next_slice(); \
+        Interval envelope = s->codomain(); \
+        Interval ingate = s->input_gate(); \
+        s->set_envelope(envelope.f(x(s->domain()))); \
+        s->set_input_gate(ingate.f(x(s->domain().lb()))); \
       } \
+      Slice *last_slice = get_last_slice(); \
+      Interval outgate = last_slice->output_gate(); \
+      last_slice->set_output_gate(outgate.f(x(last_slice->domain().ub()))); \
       return *this; \
     } \
     \
-    const Tube& Tube::f(const Interval& x) \
+    const Tube& Tube::f(const Tube& x) \
     { \
-      Tube copy(*this); \
-      Slice *slice = get_first_slice(); \
-      Slice *slice_copy = copy.get_first_slice(); \
-      while(slice != NULL) \
+      DomainException::check(*this, x); \
+      SlicingException::check(*this, x); \
+      Slice *s = get_first_slice(); \
+      const Slice *s_x = x.get_first_slice(); \
+      while(s != NULL) \
       { \
-        Interval input_gate = slice_copy->input_gate(); \
-        Interval envelope = slice_copy->codomain(); \
-        Interval output_gate = slice_copy->output_gate(); \
-        slice->set_envelope(envelope.f(x)); \
-        slice->set_input_gate(input_gate.f(x)); \
-        slice->set_output_gate(output_gate.f(x)); \
-        slice = slice->next_slice(); \
-        slice_copy = slice_copy->next_slice(); \
+        Interval envelope = s->codomain(); \
+        Interval ingate = s->input_gate(); \
+        s->set_envelope(envelope.f(s_x->codomain())); \
+        s->set_input_gate(ingate.f(s_x->input_gate())); \
+        s = s->next_slice(); \
+        s_x = s_x->next_slice(); \
       } \
+      Slice *last_slice = get_last_slice(); \
+      Interval outgate = last_slice->output_gate(); \
+      last_slice->set_output_gate(outgate.f(x.get_last_slice()->output_gate())); \
       return *this; \
-    }
+    } \
+    \
 
-  assignment_op_scalar(operator+=);
-  assignment_op_scalar(operator-=);
-  assignment_op_scalar(operator*=);
-  assignment_op_scalar(operator/=);
-  assignment_op_scalar(operator|=);
-  assignment_op_scalar(operator&=);
-
-  // Note: other operators are defined in the vector case*/
+  assign_scal(operator+=);
+  assign_scal(operator-=);
+  assign_scal(operator*=);
+  assign_scal(operator/=);
+  assign_scal(operator&=);
+  assign_scal(operator|=);
 }

@@ -25,6 +25,7 @@
 namespace tubex
 {
   class Function;
+  class Trajectory;
 
   class TrajectoryVector : public DynamicalItem
   {
@@ -45,6 +46,8 @@ namespace tubex
       const ibex::Interval domain() const;
       const ibex::IntervalVector codomain() const;
       const ibex::IntervalVector codomain_box() const;
+      Trajectory& operator[](int index);
+      const Trajectory& operator[](int index) const;
       const ibex::Vector operator()(double t) const;
       const ibex::IntervalVector operator()(const ibex::Interval& t) const;
 

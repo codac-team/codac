@@ -113,6 +113,16 @@ namespace tubex
     return m_codomain;
   }
 
+  Trajectory& TrajectoryVector::operator[](int index)
+  {
+    // todo
+  }
+
+  const Trajectory& TrajectoryVector::operator[](int index) const
+  {
+    // todo
+  }
+
   const Vector TrajectoryVector::operator()(double t) const
   {
     DomainException::check(*this, t);

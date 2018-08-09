@@ -101,44 +101,22 @@ namespace tubex
       // Bisection
       const std::pair<TubeVector,TubeVector> bisect(double t, float ratio = 0.55) const;
 
-      // Operators
-        // Assignments
-        const TubeVector& operator+=(const TubeVector& x);
-        const TubeVector& operator+=(const Tube& x);
-        const TubeVector& operator+=(const TrajectoryVector& x);
-        const TubeVector& operator+=(const Trajectory& x);
-        const TubeVector& operator+=(const ibex::IntervalVector& x);
-        const TubeVector& operator+=(const ibex::Interval& x);
-        const TubeVector& operator-=(const TubeVector& x);
-        const TubeVector& operator-=(const Tube& x);
-        const TubeVector& operator-=(const TrajectoryVector& x);
-        const TubeVector& operator-=(const Trajectory& x);
-        const TubeVector& operator-=(const ibex::IntervalVector& x);
-        const TubeVector& operator-=(const ibex::Interval& x);
-        const TubeVector& operator|=(const TubeVector& x);
-        const TubeVector& operator|=(const Tube& x);
-        const TubeVector& operator|=(const TrajectoryVector& x);
-        const TubeVector& operator|=(const Trajectory& x);
-        const TubeVector& operator|=(const ibex::IntervalVector& x);
-        const TubeVector& operator|=(const ibex::Interval& x);
-        const TubeVector& operator&=(const TubeVector& x);
-        const TubeVector& operator&=(const Tube& x);
-        const TubeVector& operator&=(const TrajectoryVector& x);
-        const TubeVector& operator&=(const Trajectory& x);
-        const TubeVector& operator&=(const ibex::IntervalVector& x);
-        const TubeVector& operator&=(const ibex::Interval& x);
-        const TubeVector& operator*=(const Tube& x);
-        const TubeVector& operator*=(const Trajectory& x);
-        const TubeVector& operator*=(const ibex::Interval& x);
-        // Note: operation TubeVector*=(Tube|Trajectory|Interval)Vector not defined
-        // Note: operation TubeVector/= not defined, since IntervalVector not defined either
-      // Other mathematical operators
-        const TubeVector& operator|(const TubeVector& x);
-        const TubeVector& operator|(const TrajectoryVector& x);
-        const TubeVector& operator|(const ibex::IntervalVector& x);
-        const TubeVector& operator&(const TubeVector& x);
-        const TubeVector& operator&(const TrajectoryVector& x);
-        const TubeVector& operator&(const ibex::IntervalVector& x);
+      // Assignments operators
+      const TubeVector& operator+=(const TubeVector& x);
+      const TubeVector& operator+=(const TrajectoryVector& x);
+      const TubeVector& operator+=(const ibex::IntervalVector& x);
+      const TubeVector& operator-=(const TubeVector& x);
+      const TubeVector& operator-=(const TrajectoryVector& x);
+      const TubeVector& operator-=(const ibex::IntervalVector& x);
+      const TubeVector& operator|=(const TubeVector& x);
+      const TubeVector& operator|=(const TrajectoryVector& x);
+      const TubeVector& operator|=(const ibex::IntervalVector& x);
+      const TubeVector& operator&=(const TubeVector& x);
+      const TubeVector& operator&=(const TrajectoryVector& x);
+      const TubeVector& operator&=(const ibex::IntervalVector& x);
+      const TubeVector& operator*=(const Tube& x);
+      const TubeVector& operator*=(const Trajectory& x);
+      const TubeVector& operator*=(const ibex::Interval& x);
 
       // String
       const std::string class_name() const { return "TubeVector"; };
