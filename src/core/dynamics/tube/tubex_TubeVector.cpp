@@ -97,6 +97,19 @@ namespace tubex
       set(codomain);
     }
 
+    TubeVector::TubeVector(const Tube& x)
+      : TubeVector(1, x)
+    {
+      
+    }
+
+    TubeVector::TubeVector(int n, const Tube& x)
+      : TubeVector(x.domain(), n)
+    {
+      for(int i = 0 ; i < n ; i++)
+        (*this)[i] = x;
+    }
+
     TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)
       : TubeVector(traj.domain(), timestep, traj.size())
     {

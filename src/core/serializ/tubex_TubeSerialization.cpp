@@ -38,9 +38,9 @@ namespace tubex
                 ...
   */
 
-  /*void serialize_tubevector(ofstream& bin_file, const TubeVector& tube, int version_number)
+  void serialize_tube(ofstream& bin_file, const Tube& tube, int version_number)
   {
-    if(!bin_file.is_open())
+    /*if(!bin_file.is_open())
       throw Exception("serializeTube()", "ofstream& bin_file not open");
 
     // Version number for compliance purposes
@@ -86,12 +86,12 @@ namespace tubex
 
       default:
         throw Exception("serializeTube()", "unhandled case");
-    }
+    }*/
   }
 
-  void deserialize_tubevector(ifstream& bin_file, TubeVector& tube)
+  void deserialize_tube(ifstream& bin_file, Tube& tube)
   {
-    if(!bin_file.is_open())
+    /*if(!bin_file.is_open())
       throw Exception("deserializeTube()", "ifstream& bin_file not open");
 
     if(tube.nb_slices() != 0)
@@ -181,6 +181,6 @@ namespace tubex
 
       default:
         throw Exception("deserializeTube()", "deserialization version number not supported");
-    }
-  }*/
+    }*/
+  }
 }

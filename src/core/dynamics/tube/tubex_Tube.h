@@ -127,12 +127,12 @@ namespace tubex
         const Tube& operator&=(const Trajectory& x);
         const Tube& operator&=(const ibex::Interval& x);
         // Other mathematical operators
-        const Tube& operator|(const Tube& x);
-        const Tube& operator|(const Trajectory& x);
-        const Tube& operator|(const ibex::Interval& x);
-        const Tube& operator&(const Tube& x);
-        const Tube& operator&(const Trajectory& x);
-        const Tube& operator&(const ibex::Interval& x);
+        //const Tube& operator|(const Tube& x);
+        //const Tube& operator|(const Trajectory& x);
+        //const Tube& operator|(const ibex::Interval& x);
+        //const Tube& operator&(const Tube& x);
+        //const Tube& operator&(const Trajectory& x);
+        //const Tube& operator&(const ibex::Interval& x);
 
       // String
       const std::string class_name() const { return "Tube"; };

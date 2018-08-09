@@ -38,10 +38,10 @@ namespace tubex
       TubeVector(const ibex::Interval& domain, double timestep, int n = 1);
       TubeVector(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
       TubeVector(const ibex::Interval& domain, double timestep, const tubex::Fnc& f);
-      TubeVector(const Tube& x);
-      TubeVector(int n, const Tube& x);
       TubeVector(const TubeVector& x);
       TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
+      TubeVector(const Tube& x);
+      TubeVector(int n, const Tube& x);
       TubeVector(const TrajectoryVector& traj, double timestep = 0.);
       TubeVector(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep = 0.);
       TubeVector(const std::string& binary_file_name);

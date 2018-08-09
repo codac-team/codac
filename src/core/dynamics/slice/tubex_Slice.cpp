@@ -51,6 +51,11 @@ namespace tubex
       if(m_next_slice == NULL) delete m_output_gate;
     }
 
+    int Slice::size() const
+    {
+      return 1;
+    }
+
     const Slice& Slice::operator=(const Slice& x)
     {
       m_domain = x.m_domain;

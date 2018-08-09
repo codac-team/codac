@@ -160,6 +160,11 @@ namespace tubex
       }
     }
 
+    int Tube::size() const
+    {
+      return 1;
+    }
+
     const Tube Tube::primitive() const
     {
       Tube primitive(*this, Interval::ALL_REALS); // a copy of this initialized to [-oo,oo]

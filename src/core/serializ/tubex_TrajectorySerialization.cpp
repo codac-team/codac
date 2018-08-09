@@ -34,9 +34,9 @@ namespace tubex
                 ...
   */
 
-  /*void serialize_trajvector(ofstream& bin_file, const TrajectoryVector& traj, int version_number)
+  void serialize_traj(ofstream& bin_file, const Trajectory& traj, int version_number)
   {
-    if(!bin_file.is_open())
+    /*if(!bin_file.is_open())
       throw Exception("serialize_trajvector()", "ofstream& bin_file not open");
 
     if(traj.get_function() != NULL)
@@ -77,12 +77,12 @@ namespace tubex
 
       default:
         throw Exception("serialize_trajvector()", "unhandled case");
-    }
+    }*/
   }
 
-  void deserialize_trajvector(ifstream& bin_file, TrajectoryVector& traj)
+  void deserialize_traj(ifstream& bin_file, Trajectory& traj)
   {
-    if(!bin_file.is_open())
+    /*if(!bin_file.is_open())
       throw Exception("deserialize_trajvector()", "ifstream& bin_file not open");
 
     if(traj.get_map().size() != 0)
@@ -123,6 +123,6 @@ namespace tubex
 
       default:
         throw Exception("deserialize_trajvector()", "deserialization version number not supported");
-    }
-  }*/
+    }*/
+  }
 }
