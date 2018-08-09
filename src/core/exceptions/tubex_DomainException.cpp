@@ -12,6 +12,7 @@
 
 #include <string>
 #include <sstream>
+#include "tubex_Slice.h"
 #include "tubex_DomainException.h"
 
 using namespace std;
@@ -72,6 +73,7 @@ namespace tubex
 
   void DomainException::check(const DynamicalItem& x1, const DynamicalItem& x2)
   {
+    // todo: check the following
     if(typeid(x1) == typeid(Slice) && typeid(x2) != typeid(Slice))
     {
       if(!x1.domain().is_subset(x2.domain()))

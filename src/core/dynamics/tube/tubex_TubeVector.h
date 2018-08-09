@@ -16,7 +16,6 @@
 #include <map>
 #include <vector>
 #include "tubex_Fnc.h"
-#include "tubex_Slice.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_AbstractTube.h"
 #include "tubex_TubeSerialization.h"
@@ -24,7 +23,6 @@
 namespace tubex
 {
   class Fnc;
-  class Slice;
   class Tube;
   class Trajectory;
   
@@ -61,7 +59,6 @@ namespace tubex
       // Slices structure
       int nb_slices() const;
       int input2index(double t) const;
-      int index(const Slice* slice) const;
       void sample(double t);
       void sample(double t, const ibex::IntervalVector& gate);
       //static bool share_same_slicing(const TubeVector& x1, const TubeVector& x2);
@@ -82,7 +79,7 @@ namespace tubex
       const ibex::IntervalVector interpol(double t, const TubeVector& v) const;
       const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& v) const;
       const ibex::Vector max_thickness() const;
-      const ibex::Vector max_gate_thickness(double& t) const;
+      const ibex::Vector max_gate_thickness() const;
 
       // Tests
       bool operator==(const TubeVector& x) const;
@@ -174,7 +171,7 @@ namespace tubex
     /** Class variables **/
 
       int m_n;
-      Tube *m_v_tubes;
+      Tube *m_v_tubes = NULL;
 
       friend void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
   };
