@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_Function.h"
+#include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
 
 using namespace std;
@@ -18,7 +19,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*Function::Function(int n, const char** x, const char* y)
+  Function::Function(int n, const char** x, const char* y)
   {
     construct_from_array(n, x, y);
   }
@@ -131,16 +132,51 @@ namespace tubex
     Fnc::operator=(f);
   }
 
-  const IntervalVector Function::eval(const Interval& t) const
+  void Function::construct_from_array(int n, const char** x, const char* y)
+  {
+    const char* xdyn[n+1];
+    xdyn[0] = "t";
+    for(int i = 0 ; i < n ; i++) xdyn[i+1] = x[i];
+
+    m_ibex_f = new ibex::Function(n+1, xdyn, y);
+    m_nb_vars = n;
+    m_img_dim = m_ibex_f->image_dim();
+  }
+
+  const Interval Function::eval(const Interval& t) const
+  {
+    // todo: optimize this?
+    return eval_vector(t)[0];
+  }
+
+  const Interval Function::eval(const Interval& t, const TubeVector& x) const
+  {
+    // todo: optimize this?
+    return eval_vector(t, x)[0];
+  }
+
+  const Interval Function::eval(const Slice& x) const
+  {
+    // todo: optimize this?
+    return eval_vector(x)[0];
+  }
+
+  const Tube Function::eval(const TubeVector& x) const
+  {
+    // todo: optimize this?
+    return eval_vector(x)[0];
+  }
+
+  const IntervalVector Function::eval_vector(const Interval& t) const
   {
     IntervalVector box(1, t);
     return m_ibex_f->eval_vector(box);
   }
 
-  const IntervalVector Function::eval(const Interval& t, const TubeVector& x) const
+  const IntervalVector Function::eval_vector(const Interval& t, const TubeVector& x) const
   {
     if(nb_vars() == 0)
-      return eval(t);
+      return eval_vector(t);
 
     // todo: check dim x regarding f
     if(x(t).is_empty())
@@ -153,64 +189,55 @@ namespace tubex
     return m_ibex_f->eval_vector(box);
   }
 
-  const IntervalVector Function::eval(const Slice& x) const
+  const IntervalVector Function::eval_vector(const Slice& x) const
   {
     return m_ibex_f->eval_vector(x.box());
   }
 
-  void Function::construct_from_array(int n, const char** x, const char* y)
-  {
-    const char* xdyn[n+1];
-    xdyn[0] = "t";
-    for(int i = 0 ; i < n ; i++) xdyn[i+1] = x[i];
-
-    m_ibex_f = new ibex::Function(n+1, xdyn, y);
-    m_nb_vars = n;
-    m_img_dim = m_ibex_f->image_dim();
-  }
-
-  const TubeVector Function::eval(const TubeVector& x) const
+  const TubeVector Function::eval_vector(const TubeVector& x) const
   {
     // Faster evaluation than the generic Fnc::eval method
     // For now, Function class does not allow inter-temporal evaluations
     // such as delays or integral computations. Hence, the generic method
     // Fnc::eval(Interval t, TubeVector x) can be replaced by a dedicated evaluation
 
+    // todo: update this comment ^
+
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
     TubeVector y(x, IntervalVector(image_dim()));
 
-    const Slice *x_slice = x.get_first_slice();
-    Slice *y_slice = y.get_first_slice();
-    IntervalVector box(x.dim() + 1);
-
-    while(x_slice != NULL)
-    {
-      if(x_slice->is_empty())
-        y_slice->set_empty();
-
-      else
-      {
-        box = x_slice->box();
-        y_slice->set_envelope(m_ibex_f->eval_vector(box));
-        box[0] = box[0].lb();
-        box.put(1, x_slice->input_gate());
-        y_slice->set_input_gate(m_ibex_f->eval_vector(box));
-      }
-
-      x_slice = x_slice->next_slice();
-      y_slice = y_slice->next_slice();
-    }
-
-    x_slice = x.get_last_slice();
-    y_slice = y.get_last_slice();
-
-    if(!x_slice->is_empty())
-    {
-      box[0] = x_slice->domain().ub();
-      box.put(1, x_slice->output_gate());
-      y_slice->set_output_gate(m_ibex_f->eval_vector(box));
-    }
+    // todo: const Slice *x_slice = x.get_first_slice();
+    // todo: Slice *y_slice = y.get_first_slice();
+    // todo: IntervalVector box(x.dim() + 1);
+    // todo: 
+    // todo: while(x_slice != NULL)
+    // todo: {
+    // todo:   if(x_slice->is_empty())
+    // todo:     y_slice->set_empty();
+    // todo:   
+    // todo:   else
+    // todo:   {
+    // todo:     box = x_slice->box();
+    // todo:     y_slice->set_envelope(m_ibex_f->eval_vector(box));
+    // todo:     box[0] = box[0].lb();
+    // todo:     box.put(1, x_slice->input_gate());
+    // todo:     y_slice->set_input_gate(m_ibex_f->eval_vector(box));
+    // todo:   }
+    // todo:   
+    // todo:   x_slice = x_slice->next_slice();
+    // todo:   y_slice = y_slice->next_slice();
+    // todo: }
+    // todo: 
+    // todo: x_slice = x.get_last_slice();
+    // todo: y_slice = y.get_last_slice();
+    // todo: 
+    // todo: if(!x_slice->is_empty())
+    // todo: {
+    // todo:   box[0] = x_slice->domain().ub();
+    // todo:   box.put(1, x_slice->output_gate());
+    // todo:   y_slice->set_output_gate(m_ibex_f->eval_vector(box));
+    // todo: }
 
     return y;
-  }*/
+  }
 }

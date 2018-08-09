@@ -23,7 +23,13 @@ namespace tubex
 
   }
 
-  const IntervalVector DelayFunction::eval(const Interval& t, const TubeVector& x) const
+  const Interval DelayFunction::eval(const Interval& t, const TubeVector& x) const
+  {
+    // todo: optimize this?
+    return eval_vector(t, x)[0];
+  }
+
+  const IntervalVector DelayFunction::eval_vector(const Interval& t, const TubeVector& x) const
   {
     if((t - m_delay).is_subset(x.domain()))
       return x(t - m_delay);

@@ -23,7 +23,13 @@ namespace tubex
 
   }
 
-  const IntervalVector PeriodicFunction::eval(const Interval& t, const TubeVector& x) const
+  const Interval PeriodicFunction::eval(const Interval& t, const TubeVector& x) const
+  {
+    // todo: optimize this?
+    return eval_vector(t, x)[0];
+  }
+
+  const IntervalVector PeriodicFunction::eval_vector(const Interval& t, const TubeVector& x) const
   {
     double period = x.domain().diam();
     Interval a = Interval(t.lb(), x.domain().lb()) & t;

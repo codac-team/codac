@@ -12,13 +12,15 @@
 
 #include "tubex_Fnc.h"
 #include "tubex_Slice.h"
+#include "tubex_TubeVector.h"
+#include "tubex_Tube.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  /*Fnc::Fnc()
+  Fnc::Fnc()
   {
 
   }
@@ -49,28 +51,34 @@ namespace tubex
     return m_img_dim;
   }
 
-  const TubeVector Fnc::eval(const TubeVector& x) const
+  const Tube Fnc::eval(const TubeVector& x) const
+  {
+    // todo: optimize this?
+    return eval_vector(x)[0];
+  }
+
+  const TubeVector Fnc::eval_vector(const TubeVector& x) const
   {
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
     TubeVector y(x, IntervalVector(image_dim()));
 
-    const Slice *x_slice = x.get_first_slice();
-    Slice *y_slice = y.get_first_slice();
-
-    while(x_slice != NULL)
-    {
-      IntervalVector test = eval(x_slice->domain().lb(), x);
-      y_slice->set_input_gate(eval(x_slice->domain().lb(), x));
-      y_slice->set_envelope(eval(x_slice->domain(), x));
-
-      x_slice = x_slice->next_slice();
-      y_slice = y_slice->next_slice();
-    }
-
-    x_slice = x.get_last_slice();
-    y_slice = y.get_last_slice();
-    y_slice->set_output_gate(eval(x_slice->domain().ub(), x));
-
-    return y;
-  }*/
+    // todo: const Slice *x_slice = x.get_first_slice();
+    // todo: Slice *y_slice = y.get_first_slice();
+    // todo: 
+    // todo: while(x_slice != NULL)
+    // todo: {
+    // todo:   IntervalVector test = eval_vector(x_slice->domain().lb(), x);
+    // todo:   y_slice->set_input_gate(eval_vector(x_slice->domain().lb(), x));
+    // todo:   y_slice->set_envelope(eval_vector(x_slice->domain(), x));
+    // todo:   
+    // todo:   x_slice = x_slice->next_slice();
+    // todo:   y_slice = y_slice->next_slice();
+    // todo: }
+    // todo: 
+    // todo: x_slice = x.get_last_slice();
+    // todo: y_slice = y.get_last_slice();
+    // todo: y_slice->set_output_gate(eval_vector(x_slice->domain().ub(), x));
+    // todo: 
+    // todo: return y;
+  }
 }

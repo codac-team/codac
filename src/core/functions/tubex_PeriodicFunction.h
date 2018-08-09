@@ -24,7 +24,8 @@ namespace tubex
       PeriodicFunction();
 
       using Fnc::eval; // todo: is this relevant?
-      const ibex::IntervalVector eval(const ibex::Interval& t, const TubeVector& x) const;
+      const ibex::Interval eval(const ibex::Interval& t, const TubeVector& x) const;
+      const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const;
   };
 }
 
