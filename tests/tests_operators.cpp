@@ -110,75 +110,24 @@ TEST_CASE("Operators")
     
     // Now with scalar tubes...
     
-    // deprecated tube1.set(IntervalVector(2, Interval(-1.,1.)));
-    // deprecated tube1 += Tube(domain, Interval(2.,3.));
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(1.,4.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(1.,4.)));
-    
-    // deprecated tube1 -= Tube(domain, Interval(2.,3.));
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(-2.,2.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(-2.,2.)));
-    
     tube1.set(IntervalVector(2, Interval(-2.,2.)));
     tube1 *= Tube(domain, Interval(1.,2.));
     CHECK(tube1.codomain() == IntervalVector(2, Interval(-4.,4.)));
     CHECK(tube1(0.) == IntervalVector(2, Interval(-4.,4.)));
     
-    // deprecated tube1 &= Tube(domain, Interval(2.,6.));
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(2.,4.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(2.,4.)));
-    
-    // deprecated tube1 |= Tube(domain, Interval(6.));
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(2.,6.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(2.,6.)));
-    
     // Now with scalar trajectories...
 
-    // deprecated tube1.set(IntervalVector(2, Interval(-1.,1.)));
-    // deprecated tube1 += Trajectory(domain, tubex::Function("(2.)"));
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(1.,3.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(1.,3.)));
-    
-    // deprecated tube1 -= Trajectory(domain, tubex::Function("(4.)"));
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(-3.,-1.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(-3.,-1.)));
-    
     tube1.set(IntervalVector(2, Interval(-3.,-1.)));
     tube1 *= Trajectory(domain, tubex::Function("(4.)"));
     CHECK(tube1.codomain() == IntervalVector(2, Interval(-12.,-4.)));
     CHECK(tube1(0.) == IntervalVector(2, Interval(-12.,-4.)));
     
-    // deprecated tube1 |= Trajectory(domain, tubex::Function("(11.)"));
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(-12.,11.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(-12.,11.)));
-    
-    // deprecated tube1 &= Trajectory(domain, tubex::Function("(1.)"));
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(1.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(1.)));
-    
     // Now with scalar values...
 
-    // deprecated tube1.set(IntervalVector(2, Interval(-1.,1.)));
-    // deprecated tube1 += Interval(2.,3.);
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(1.,4.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(1.,4.)));
-    
-    // deprecated tube1 -= Interval(2.,3.);
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(-2.,2.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(-2.,2.)));
-    
     tube1.set(IntervalVector(2, Interval(-2.,2.)));
     tube1 *= Interval(1.,2.);
     CHECK(tube1.codomain() == IntervalVector(2, Interval(-4.,4.)));
     CHECK(tube1(0.) == IntervalVector(2, Interval(-4.,4.)));
-    
-    // deprecated tube1 &= Interval(2.,6.);
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(2.,4.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(2.,4.)));
-    
-    // deprecated tube1 |= Interval(6.);
-    // deprecated CHECK(tube1.codomain() == IntervalVector(2, Interval(2.,6.)));
-    // deprecated CHECK(tube1(0.) == IntervalVector(2, Interval(2.,6.)));
   }
 
   SECTION("Test assignment operators for Tube")

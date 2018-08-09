@@ -9,7 +9,7 @@ using namespace tubex;
 
 TEST_CASE("serialization/deserialization of Tube")
 {
-  SECTION("No gates")
+  /*SECTION("No gates")
   {
     Tube tube1 = tube_test_1();
     string filename = "test_serialization_nogates.tube";
@@ -193,5 +193,5 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
     CHECK(test_serialization(tube));
     tube.set(Interval::EMPTY_SET);
     CHECK(test_serialization(tube));
-  }
+  }*/
 }

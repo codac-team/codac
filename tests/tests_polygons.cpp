@@ -501,7 +501,7 @@ cout << "-------------" << endl;
 
   SECTION("Polygons from Slice, test 1")
   {
-    Slice x(Interval(-1.,3.), 1); // unbounded
+    Slice x(Interval(-1.,3.)); // unbounded
     x.set_input_gate(Interval(-1.,2.));
     x.set_output_gate(Interval(-2.,0.));
 
