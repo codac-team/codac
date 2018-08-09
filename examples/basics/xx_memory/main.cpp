@@ -7,15 +7,18 @@ using namespace tubex;
 int main()
 {
   Interval domain(0.,10.);
-  //TubeVector x(domain, IntervalVector(4, 1.));
+  TubeVector x(domain, IntervalVector(4, 1.));
 
-  //Tube x_scalar(domain);
-  //x[0];
+  cout << x << endl;
+
+  Tube x_scalar(domain);
+  x[0];
   
-  //cout << x[0] << endl;
-  //x[0].set(Interval(-2.,2.));//.set_empty();
-  //cout << x[0] << endl;
+  cout << x[0] << endl;
+  x[0].set(Interval(-2.,2.));//.set_empty();
+  cout << x[0] << endl;
 
+  cout << x << endl;
 
   //VibesFigure_TubeVector fig_tubevector("e", &x);
 
