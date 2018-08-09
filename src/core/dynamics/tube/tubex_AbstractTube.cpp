@@ -19,6 +19,17 @@ namespace tubex
 {
   bool AbstractTube::share_same_slicing(const AbstractTube& x1, const AbstractTube& x2)
   {
-  	// todo
+    // todo
+  }
+
+  // String
+  
+  ostream& operator<<(ostream& str, const AbstractTube& x)
+  {
+    str << x.class_name() << " " << x.domain() << "↦" << x.codomain_box()
+        << ", " << x.nb_slices()
+        << " slice" << (x.nb_slices() > 1 ? "s" : "")
+        << flush;
+    return str;
   }
 }

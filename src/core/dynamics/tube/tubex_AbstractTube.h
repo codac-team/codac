@@ -21,6 +21,23 @@ namespace tubex
   {
     public:
 
+      // Definition
+      virtual int dim() const = 0;
+      virtual const ibex::Interval domain() const = 0;
+
+      // Slices structure
+      virtual int nb_slices() const = 0;
+      virtual int input2index(double t) const = 0;
+      virtual void sample(double t) = 0;
+
+      // Access values
+      virtual double volume() const = 0;
+
+      // String
+      virtual const std::string class_name() const = 0;
+      friend std::ostream& operator<<(std::ostream& str, const AbstractTube& x);
+
+      // Tests
       static bool share_same_slicing(const AbstractTube& x1, const AbstractTube& x2);
   };
 }

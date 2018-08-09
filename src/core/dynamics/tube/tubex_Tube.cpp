@@ -779,17 +779,6 @@ namespace tubex
       return p;
     }
 
-    // String
-    
-    ostream& operator<<(ostream& str, const Tube& x)
-    {
-      str << "Tube " << x.domain() << "↦" << x.codomain()
-          << ", " << x.nb_slices()
-          << " slice" << (x.nb_slices() > 1 ? "s" : "")
-          << flush;
-      return str;
-    }
-
     // Integration
 
     const Interval Tube::integral(double t) const

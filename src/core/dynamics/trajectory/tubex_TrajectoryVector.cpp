@@ -22,7 +22,7 @@ namespace tubex
 {
   // Definition
 
-  /*TrajectoryVector::TrajectoryVector()
+  TrajectoryVector::TrajectoryVector()
   {
     
   }
@@ -37,7 +37,7 @@ namespace tubex
   {
     // todo: check thickness of f? (only thin functions should be allowed)
     DomainException::check(domain);
-    m_codomain = m_function->eval(domain);
+    m_codomain = m_function->eval_vector(domain);
   }
 
   TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)
@@ -118,7 +118,7 @@ namespace tubex
     DomainException::check(*this, t);
 
     if(m_function != NULL)
-      return m_function->eval(t).mid();
+      return m_function->eval_vector(t).mid();
 
     else if(m_map_values.find(t) != m_map_values.end())
       return m_map_values.at(t); // key exists
@@ -150,7 +150,7 @@ namespace tubex
       return m_codomain;
 
     else if(m_function != NULL)
-      return m_function->eval(t);
+      return m_function->eval_vector(t);
 
     else
     {
@@ -285,5 +285,5 @@ namespace tubex
 
     str << flush;
     return str;
-  }*/
+  }
 }
