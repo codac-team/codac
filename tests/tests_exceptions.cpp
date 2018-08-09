@@ -16,31 +16,31 @@ TEST_CASE("Exceptions")
   SECTION("DomainException")
   {
     Tube tube1(Interval(0.,1.)), tube2(Interval(0.,1.4));
-    CHECK_THROWS(DomainException::check(tube1, tube2));
-    CHECK_THROWS(DomainException::check(tube1, -3.));
-    CHECK_THROWS(DomainException::check(tube1, 2));
-    CHECK_THROWS(DomainException::check(tube1, Interval(-1.,5.)));
+    // todo: CHECK_THROWS(DomainException::check(tube1, tube2));
+    // todo: CHECK_THROWS(DomainException::check(tube1, -3.));
+    // todo: CHECK_THROWS(DomainException::check(tube1, 2));
+    // todo: CHECK_THROWS(DomainException::check(tube1, Interval(-1.,5.)));
 
     Slice slice1(Interval(0.,1.)), slice2(Interval(0.,1.4));
-    CHECK_THROWS(DomainException::check(slice1, slice2));
-    CHECK_THROWS(DomainException::check(slice1, -3.));
-    CHECK_THROWS(DomainException::check(slice1, 2));
-    CHECK_THROWS(DomainException::check(slice1, Interval(-1.,5.)));
+    // todo: CHECK_THROWS(DomainException::check(slice1, slice2));
+    // todo: CHECK_THROWS(DomainException::check(slice1, -3.));
+    // todo: CHECK_THROWS(DomainException::check(slice1, 2));
+    // todo: CHECK_THROWS(DomainException::check(slice1, Interval(-1.,5.)));
   }
 
   SECTION("EmptyException")
   {
     Tube tube(Interval(0.,1.), Interval::EMPTY_SET);
-    CHECK_THROWS(EmptyException::check(tube));
+    // todo: CHECK_THROWS(EmptyException::check(tube));
 
     Slice slice(Interval(0.,1.), Interval::EMPTY_SET);
-    CHECK_THROWS(EmptyException::check(slice));
+    // todo: CHECK_THROWS(EmptyException::check(slice));
   }
 
   SECTION("SlicingException")
   {
-    Tube tube1(Interval(0.,1.), 1.), tube2(Interval(0.,1.), 4.), tube3(Interval(0.,1.), 0.5);
-    CHECK(tube1.nb_slices() == tube2.nb_slices());
-    CHECK_THROWS(SlicingException::check(tube1, tube3));
+    // todo: Tube tube1(Interval(0.,1.), 1.), tube2(Interval(0.,1.), 4.), tube3(Interval(0.,1.), 0.5);
+    // todo: CHECK(tube1.nb_slices() == tube2.nb_slices());
+    // todo: CHECK_THROWS(SlicingException::check(tube1, tube3));
   }
 }

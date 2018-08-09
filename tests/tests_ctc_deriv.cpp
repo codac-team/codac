@@ -391,7 +391,7 @@ TEST_CASE("CtcDeriv")
     Slice x(Interval(-1.,3.), Interval(-5.,3.));
     x.set_input_gate(Interval(-1.,3.));
     x.set_output_gate(Interval(-5.,0.5));
-    Slice v(x.domain(), Interval(-1.));
+    const Slice v(x.domain(), Interval(-1.));
 
     bool contraction;
     CtcDeriv ctc;
@@ -410,7 +410,7 @@ TEST_CASE("CtcDeriv")
     Slice x(Interval(-1.,3.), Interval(-5.,3.));
     x.set_input_gate(Interval(1.,3.));
     x.set_output_gate(Interval(-4.,-3.));
-    Slice v(x.domain(), Interval(-1.,1.));
+    const Slice v(x.domain(), Interval(-1.,1.));
 
     bool contraction;
     CtcDeriv ctc;

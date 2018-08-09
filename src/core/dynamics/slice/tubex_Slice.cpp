@@ -197,7 +197,11 @@ namespace tubex
              & (input_gate() + (t - m_domain.lb()) * v.codomain());
 
       else
-        return polygon(v).box()[1] & codomain();
+      {
+        IntervalVector input_box = box();
+        input_box[0] &= t;
+        return (polygon(v) & input_box)[1];
+      }
     }
 
     const Interval Slice::invert(const Interval& y, const Interval& search_domain) const

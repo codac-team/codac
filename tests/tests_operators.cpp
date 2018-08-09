@@ -14,7 +14,7 @@ TEST_CASE("Operators")
     Tube tube1 = tube_test_1();
     tube1.set(Interval(-4,2), 14); // to test primitives pre-computation
     Tube tube2 = tube_test2();
-    tube1 |= tube2;
+    /*tube1 |= tube2;
 
     CHECK_THROWS(tube1 |= tube_test4_05(););
     CHECK(tube1.codomain() == Interval(-11,13));
@@ -41,7 +41,7 @@ TEST_CASE("Operators")
     tube2.set(Interval(-3.), 40.);
     tube1 |= tube2;
     CHECK(tube1(40.) == Interval(-3.,2.));
-    CHECK(tube1(40) == Interval(-3.,4.));
+    CHECK(tube1(40) == Interval(-3.,4.));*/
   }
 
   SECTION("Test assignment operators for TubeVector")
