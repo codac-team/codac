@@ -81,7 +81,8 @@ namespace tubex
         set(codomain);
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const tubex::Fnc& f)
+    Tube::Tube(const Interval& domain, double timestep, const tubex::Fnc& f, int image_id)
+      : Tube(domain, timestep)
     {
       // todo: check scalar f
       DomainException::check(domain);
@@ -91,8 +92,9 @@ namespace tubex
         throw Exception("Tube constructor",
                         "function's inputs not limited to system variable");
       // A copy of this is sent anyway in order to know the data structure to produce
-      Tube input(*this); // 1: one variable (system variable t)
+      Tube input(*this); // 1: one variable (system variable t), todo: update this comment
       *this = f.eval(input);
+      // todo: delete something here?
     }
 
     Tube::Tube(const Tube& x)
@@ -160,7 +162,7 @@ namespace tubex
 
     const Tube Tube::primitive() const
     {
-      Tube primitive(*this, Interval::ALL_REALS);
+      Tube primitive(*this, Interval::ALL_REALS); // a copy of this initialized to [-oo,oo]
       primitive.set(0., primitive.domain().lb());
       CtcDeriv ctc_deriv;
       ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), FORWARD);

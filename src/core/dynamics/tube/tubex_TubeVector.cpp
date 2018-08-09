@@ -46,85 +46,105 @@ namespace tubex
     }
 
     TubeVector::TubeVector(const Interval& domain, const IntervalVector& codomain)
+      : TubeVector(domain, codomain.size())
     {
       DomainException::check(domain);
-      DimensionException::check(codomain.size());
-
+      set(codomain);
     }
     
     TubeVector::TubeVector(const Interval& domain, double timestep, int n)
+      : m_n(n), m_v_tubes(new Tube[n])
     {
       DomainException::check(domain);
       DomainException::check(timestep);
       DimensionException::check(n);
-
+      for(int i = 0 ; i < size() ; i++)
+        m_v_tubes[i] = Tube(domain, timestep);
     }
     
     TubeVector::TubeVector(const Interval& domain, double timestep, const IntervalVector& codomain)
+      : TubeVector(domain, timestep, codomain.size())
     {
       DomainException::check(domain);
       DomainException::check(timestep);
-
+      set(codomain);
     }
     
     TubeVector::TubeVector(const Interval& domain, double timestep, const tubex::Fnc& f)
+      : TubeVector(domain, timestep, f.image_dim())
     {
+      // todo: check scalar f, image dim
       DomainException::check(domain);
       DomainException::check(timestep);
 
+      if(f.nb_vars() != 0)
+        throw Exception("TubeVector constructor",
+                        "function's inputs not limited to system variable");
+      // A copy of this is sent anyway in order to know the data structure to produce
+      TubeVector input(*this);
+      *this = f.eval_vector(input);
+      // todo: delete something here?
     }
 
     TubeVector::TubeVector(const TubeVector& x)
     {
-
+      *this = x;
     }
 
     TubeVector::TubeVector(const TubeVector& x, const IntervalVector& codomain)
+      : TubeVector(x)
     {
-
+      set(codomain);
     }
 
     TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)
+      : TubeVector(traj.domain(), timestep, traj.size())
     {
       DomainException::check(timestep);
-
+      set_empty();
+      *this |= traj;
     }
 
     TubeVector::TubeVector(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep)
+      : TubeVector(lb, timestep)
     {
       DomainException::check(timestep);
       DimensionException::check(lb, ub);
-
+      *this |= ub;
     }
 
     TubeVector::TubeVector(const string& binary_file_name)
     {
-
+      // todo
     }
     
     TubeVector::TubeVector(const string& binary_file_name, TrajectoryVector& traj)
     {
-
+      // todo
     }
 
     TubeVector::TubeVector(const string& binary_file_name, vector<TrajectoryVector>& v_trajs)
     {
-
+      // todo
     }
     
     TubeVector::~TubeVector()
     {
-
+      delete[] m_v_tubes;
     }
 
     const TubeVector TubeVector::primitive() const
     {
-
+      TubeVector primitive(*this, IntervalVector(size())); // a copy of this initialized to nx[-oo,oo]
+      primitive.set(Vector(size(), 0.), primitive.domain().lb());
+      CtcDeriv ctc_deriv;
+      ctc_deriv.contract(primitive, static_cast<const TubeVector&>(*this), FORWARD);
+      return primitive;
     }
 
     const TubeVector& TubeVector::operator=(const TubeVector& x)
     {
-
+      
     }
 
     const Interval TubeVector::domain() const
