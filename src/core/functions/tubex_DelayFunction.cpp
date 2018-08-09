@@ -29,6 +29,6 @@ namespace tubex
       return x(t - m_delay);
 
     else
-      return IntervalVector(x.dim(), Interval::ALL_REALS);
+      return IntervalVector(x.size(), Interval::ALL_REALS);
   }
 }

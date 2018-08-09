@@ -33,13 +33,16 @@ namespace tubex
 
     TubeVector::TubeVector()
     {
-      
+      // todo: remove this?
     }
 
-    TubeVector::TubeVector(const Interval& domain, int dim)
+    TubeVector::TubeVector(const Interval& domain, int n)
+      : m_n(n), m_v_tubes(new Tube[n])
     {
       DomainException::check(domain);
-      DimensionException::check(dim);
+      DimensionException::check(n);
+      for(int i = 0 ; i < size() ; i++)
+        m_v_tubes[i] = Tube(domain);
     }
 
     TubeVector::TubeVector(const Interval& domain, const IntervalVector& codomain)
@@ -49,11 +52,11 @@ namespace tubex
 
     }
     
-    TubeVector::TubeVector(const Interval& domain, double timestep, int dim)
+    TubeVector::TubeVector(const Interval& domain, double timestep, int n)
     {
       DomainException::check(domain);
       DomainException::check(timestep);
-      DimensionException::check(dim);
+      DimensionException::check(n);
 
     }
     
@@ -129,7 +132,7 @@ namespace tubex
 
     }
 
-    int TubeVector::dim() const
+    int TubeVector::size() const
     {
 
     }

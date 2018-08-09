@@ -150,7 +150,7 @@ namespace tubex
 
     float delta = m_delta;
     Interval h, t = slice.domain();
-    IntervalVector initial_x(slice.codomain()), x0(tube.dim()), xf(x0);
+    IntervalVector initial_x(slice.codomain()), x0(tube.size()), xf(x0);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
@@ -172,7 +172,7 @@ namespace tubex
       h = Interval(-t.diam(), 0.);
     }
 
-    IntervalVector x_guess(tube.dim()), x_enclosure = x0;
+    IntervalVector x_guess(tube.size()), x_enclosure = x0;
     m_picard_iterations = 0;
 
     do

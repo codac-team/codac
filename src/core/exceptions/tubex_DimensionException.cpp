@@ -42,7 +42,7 @@ namespace tubex
   {
     ostringstream os;
     os << "wrong dimension access: ";
-    os << x.class_name() << "(" << x.dim() << "), i=" << i << endl;
+    os << x.class_name() << "(" << x.size() << "), i=" << i << endl;
     m_what_msg = os.str();
   }
 
@@ -50,7 +50,7 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << x.class_name() << "(" << x.dim() << "), "
+    os << x.class_name() << "(" << x.size() << "), "
        << "IntervalVector(" << box.size() << ")" << endl;
     m_what_msg = os.str();
   }
@@ -59,8 +59,8 @@ namespace tubex
   {
     // todo: ostringstream os;
     // todo: os << "objects of different dimension: ";
-    // todo: os << x.class_name() << "(" << x.dim() << "), "
-    // todo:    << "Fnc(" << f.image_dim() << ")" << endl;
+    // todo: os << x.class_name() << "(" << x.size() << "), "
+    // todo:    << "Fnc(" << f.image_size() << ")" << endl;
     // todo: m_what_msg = os.str();
   }
 
@@ -68,8 +68,8 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << x1.class_name() << "(" << x1.dim() << "), "
-       << x2.class_name() << "(" << x2.dim() << ")" << endl;
+    os << x1.class_name() << "(" << x1.size() << "), "
+       << x2.class_name() << "(" << x2.size() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -77,8 +77,8 @@ namespace tubex
   {
     ostringstream os;
     os << "objects of different dimension: ";
-    os << "VibesFigure_TubeVector(" << fig.dim() << "), "
-       << x.class_name() << "(" << x.dim() << ")" << endl;
+    os << "VibesFigure_TubeVector(" << fig.size() << "), "
+       << x.class_name() << "(" << x.size() << ")" << endl;
     m_what_msg = os.str();
   }
 
@@ -102,32 +102,32 @@ namespace tubex
 
   void DimensionException::check(const DynamicalItem& x, int i)
   {
-    if(i >= x.dim() || i < 0)
+    if(i >= x.size() || i < 0)
       throw DimensionException(x, i);
   }
 
   void DimensionException::check(const DynamicalItem& x, const IntervalVector& box)
   {
-    if(x.dim() != box.size())
+    if(x.size() != box.size())
       throw DimensionException(x, box);
   }
 
   void DimensionException::check(const DynamicalItem& x, const Fnc& f)
   {
-    // todo: if(x.dim() != f.image_dim())
+    // todo: if(x.size() != f.image_size())
     // todo:   throw DimensionException(x, f);
   }
 
   void DimensionException::check(const DynamicalItem& x1, const DynamicalItem& x2)
   {
-    if(x1.dim() != x2.dim())
+    if(x1.size() != x2.size())
       throw DimensionException(x1, x2);
   }
 
   void DimensionException::check(const VibesFigure_TubeVector& fig, const DynamicalItem& x)
   {
-    int dim = fig.dim();
-    if(dim != 0 && x.dim() != dim)
+    int dim = fig.size();
+    if(dim != 0 && x.size() != dim)
       throw DimensionException(fig, x);
   }
 }

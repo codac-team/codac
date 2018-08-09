@@ -111,7 +111,7 @@ namespace tubex
         }
 
         CtcDeriv ctc_deriv;
-        Interval front_gate(y.dim());
+        Interval front_gate(y.size());
         list<Interval> l_gates;
         Slice *slice_y;
         Slice *slice_w;

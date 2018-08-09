@@ -35,13 +35,13 @@ namespace tubex
     /** Base: **/
 
       // Definition
-      TubeVector(const ibex::Interval& domain, int dim = 1);
+      TubeVector(const ibex::Interval& domain, int n = 1);
       TubeVector(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
-      TubeVector(const ibex::Interval& domain, double timestep, int dim = 1);
+      TubeVector(const ibex::Interval& domain, double timestep, int n = 1);
       TubeVector(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
       TubeVector(const ibex::Interval& domain, double timestep, const tubex::Fnc& f);
       TubeVector(const Tube& x);
-      TubeVector(int dim, const Tube& x);
+      TubeVector(int n, const Tube& x);
       TubeVector(const TubeVector& x);
       TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
       TubeVector(const TrajectoryVector& traj, double timestep = 0.);
@@ -53,7 +53,7 @@ namespace tubex
       const TubeVector primitive() const;
       const TubeVector& operator=(const TubeVector& x);
       const ibex::Interval domain() const;
-      int dim() const;
+      int size() const;
       void resize(int n);
       const TubeVector subvector(int start_index, int end_index) const;
       void put(int start_index, const TubeVector& subvec);
@@ -173,7 +173,8 @@ namespace tubex
 
     /** Class variables **/
 
-      Slice *m_first_slice = NULL;
+      int m_n;
+      Tube *m_v_tubes;
 
       friend void deserialize_tubevector(std::ifstream& bin_file, TubeVector& tube);
   };

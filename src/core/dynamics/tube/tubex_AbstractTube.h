@@ -22,7 +22,7 @@ namespace tubex
     public:
 
       // Definition
-      virtual int dim() const = 0;
+      virtual int size() const = 0;
       virtual const ibex::Interval domain() const = 0;
 
       // Slices structure

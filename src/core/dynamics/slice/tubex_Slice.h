@@ -33,7 +33,7 @@ namespace tubex
       Slice(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       Slice(const Slice& x);
       ~Slice();
-      int dim() const;
+      int size() const;
       const Slice& operator=(const Slice& x);
       const ibex::Interval domain() const;
 

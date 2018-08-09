@@ -74,7 +74,7 @@ namespace tubex
     return *this;
   }
 
-  int TrajectoryVector::dim() const
+  int TrajectoryVector::size() const
   {
     if(m_function != NULL)
       return m_function->image_dim();
@@ -130,10 +130,10 @@ namespace tubex
       it_upper = it_lower;
       it_lower--;
 
-      Vector p(dim());
+      Vector p(size());
 
       // Linear interpolation
-      for(int i = 0 ; i < dim() ; i++)
+      for(int i = 0 ; i < size() ; i++)
         p[i] = it_lower->second[i] +
                (t - it_lower->first) * (it_upper->second[i] - it_lower->second[i]) /
                (it_upper->first - it_lower->first);
@@ -154,7 +154,7 @@ namespace tubex
 
     else
     {
-      IntervalVector eval(dim(), Interval::EMPTY_SET);
+      IntervalVector eval(size(), Interval::EMPTY_SET);
       eval |= (*this)(t.lb());
       eval |= (*this)(t.ub());
 

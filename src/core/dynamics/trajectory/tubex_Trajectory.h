@@ -28,7 +28,7 @@ namespace tubex
       Trajectory(const TrajectoryVector& traj);
       ~Trajectory();
       const Trajectory& operator=(const Trajectory& x);
-      using TrajectoryVector::dim;
+      using TrajectoryVector::size;
 
       // Access values
       using TrajectoryVector::get_function;

@@ -46,7 +46,7 @@ namespace tubex
       Tube(const std::string& binary_file_name, Trajectory& traj);
       Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
       ~Tube();
-      int dim() const;
+      int size() const;
       const Tube primitive() const;
       const Tube& operator=(const Tube& x);
       const ibex::Interval domain() const;
@@ -166,6 +166,7 @@ namespace tubex
 
       Slice *m_first_slice = NULL;
       friend void deserialize_Tube(std::ifstream& bin_file, Tube& tube);
+      friend class TubeVector;
   };
 }
 

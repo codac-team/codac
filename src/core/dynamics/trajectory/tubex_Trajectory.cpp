@@ -43,7 +43,7 @@ namespace tubex
   
   Trajectory::Trajectory(const TrajectoryVector& traj)
   {
-    DimensionException::check_scalar(traj.dim());
+    DimensionException::check_scalar(traj.size());
     TrajectoryVector::operator=(traj);
   }
 

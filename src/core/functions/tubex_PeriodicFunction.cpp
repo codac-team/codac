@@ -37,7 +37,7 @@ namespace tubex
       a = Interval(min(a1,a2), max(a1,a2));
     }
 
-    IntervalVector result(x.dim(), Interval::EMPTY_SET);
+    IntervalVector result(x.size(), Interval::EMPTY_SET);
     if(!a.is_empty()) result |= x(a);
     if(!b.is_empty()) result |= x(b);
     return result;

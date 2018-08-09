@@ -17,7 +17,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  int VibesFigure_TubeVector::dim() const
+  int VibesFigure_TubeVector::size() const
   {
   	return -1; // todo
   }
