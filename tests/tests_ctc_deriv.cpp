@@ -1,8 +1,10 @@
 #include "tests.h"
 #include <cstdio>
-#include "tubex_CtcDeriv.h"
 #include "tubex_VibesFigure_Tube.h"
 #include "vibes.h"
+
+#define protected public     // Using #define so that we can access protected
+#include "tubex_CtcDeriv.h"
 
 using namespace Catch;
 using namespace Detail;

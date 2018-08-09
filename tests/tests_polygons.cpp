@@ -1,4 +1,6 @@
 #include "tests.h"
+
+#define protected public     // Using #define so that we can access protected
 #include "tubex_CtcDeriv.h"
 
 using namespace Catch;

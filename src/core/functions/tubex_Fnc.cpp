@@ -62,23 +62,17 @@ namespace tubex
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
     TubeVector y(x, IntervalVector(image_dim()));
 
-    // todo: const Slice *x_slice = x.get_first_slice();
-    // todo: Slice *y_slice = y.get_first_slice();
-    // todo: 
-    // todo: while(x_slice != NULL)
-    // todo: {
-    // todo:   IntervalVector test = eval_vector(x_slice->domain().lb(), x);
-    // todo:   y_slice->set_input_gate(eval_vector(x_slice->domain().lb(), x));
-    // todo:   y_slice->set_envelope(eval_vector(x_slice->domain(), x));
-    // todo:   
-    // todo:   x_slice = x_slice->next_slice();
-    // todo:   y_slice = y_slice->next_slice();
-    // todo: }
-    // todo: 
-    // todo: x_slice = x.get_last_slice();
-    // todo: y_slice = y.get_last_slice();
-    // todo: y_slice->set_output_gate(eval_vector(x_slice->domain().ub(), x));
-    // todo: 
-    // todo: return y;
+    // todo: optimize this? (slices iterations)
+
+    Interval t;
+    for(int i = 0 ; i < x.nb_slices() ; i++)
+    {
+      t = x[0].get_slice(i)->domain();
+      y.set(eval_vector(t, x), i);
+      y.set(eval_vector(t.lb(), x), t.lb());
+    }
+    
+    y.set(eval_vector(t.ub(), x), t.ub());
+    return y;
   }
 }

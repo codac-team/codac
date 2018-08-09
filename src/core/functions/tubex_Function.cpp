@@ -206,37 +206,32 @@ namespace tubex
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
     TubeVector y(x, IntervalVector(image_dim()));
 
-    // todo: const Slice *x_slice = x.get_first_slice();
-    // todo: Slice *y_slice = y.get_first_slice();
-    // todo: IntervalVector box(x.dim() + 1);
-    // todo: 
-    // todo: while(x_slice != NULL)
-    // todo: {
-    // todo:   if(x_slice->is_empty())
-    // todo:     y_slice->set_empty();
-    // todo:   
-    // todo:   else
-    // todo:   {
-    // todo:     box = x_slice->box();
-    // todo:     y_slice->set_envelope(m_ibex_f->eval_vector(box));
-    // todo:     box[0] = box[0].lb();
-    // todo:     box.put(1, x_slice->input_gate());
-    // todo:     y_slice->set_input_gate(m_ibex_f->eval_vector(box));
-    // todo:   }
-    // todo:   
-    // todo:   x_slice = x_slice->next_slice();
-    // todo:   y_slice = y_slice->next_slice();
-    // todo: }
-    // todo: 
-    // todo: x_slice = x.get_last_slice();
-    // todo: y_slice = y.get_last_slice();
-    // todo: 
-    // todo: if(!x_slice->is_empty())
-    // todo: {
-    // todo:   box[0] = x_slice->domain().ub();
-    // todo:   box.put(1, x_slice->output_gate());
-    // todo:   y_slice->set_output_gate(m_ibex_f->eval_vector(box));
-    // todo: }
+    // todo: optimize this? (slices iterations)
+
+    IntervalVector box(x.size() + 1);
+    
+    for(int i = 0 ; i < x.nb_slices() ; i++)
+    {
+      if(x(i).is_empty())
+        y.set(IntervalVector(y.size(), Interval::EMPTY_SET), i);
+      
+      else
+      {
+        box[0] = x[0].get_slice(i)->domain();
+        box.put(1, x(i));
+        y.set(m_ibex_f->eval_vector(box), i);
+        box[0] = box[0].lb();
+        box.put(1, x(box[0]));
+        y.set(m_ibex_f->eval_vector(box), box[0]);
+      }
+    }
+    
+    if(!x(x.nb_slices() - 1).is_empty())
+    {
+      box[0] = x[0].get_last_slice()->domain().ub();
+      box.put(1, x(box[0]));
+      y.set(m_ibex_f->eval_vector(box), box[0]);
+    }
 
     return y;
   }

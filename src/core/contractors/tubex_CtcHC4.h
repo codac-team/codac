@@ -28,10 +28,10 @@ namespace tubex
 
       CtcHC4(bool preserve_slicing = false);
       bool contract(ibex::CtcHC4& hc4, TubeVector& x) const;
-      bool contract(ibex::CtcHC4& hc4, Slice& x) const;
 
     protected:
-
+      
+      bool contract(ibex::CtcHC4& hc4, Slice& x) const;
   };
 }
 

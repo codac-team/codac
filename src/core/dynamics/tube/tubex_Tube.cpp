@@ -85,6 +85,7 @@ namespace tubex
       : Tube(domain, timestep)
     {
       // todo: check scalar f
+      // todo: check image_id
       DomainException::check(domain);
       DomainException::check(timestep);
 
@@ -92,8 +93,8 @@ namespace tubex
         throw Exception("Tube constructor",
                         "function's inputs not limited to system variable");
       // A copy of this is sent anyway in order to know the data structure to produce
-      Tube input(*this); // 1: one variable (system variable t), todo: update this comment
-      *this = f.eval(input);
+      TubeVector input(*this); // 1: one variable (system variable t), todo: update this comment
+      *this = f.eval_vector(input)[image_id];
       // todo: delete something here?
     }
 
