@@ -226,6 +226,16 @@ namespace tubex
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].sample(t, gate[i]);
     }
+    
+    bool TubeVector::share_same_slicing(const Tube& x1, const TubeVector& x2)
+    {
+      return Tube::share_same_slicing(x1, x2[0]);
+    }
+    
+    bool TubeVector::share_same_slicing(const TubeVector& x1, const TubeVector& x2)
+    {
+      return Tube::share_same_slicing(x1[0], x2[0]);
+    }
 
     // Access values
 
@@ -513,6 +523,17 @@ namespace tubex
       };
 
       return p;
+    }
+
+    // String
+    
+    ostream& operator<<(ostream& str, const TubeVector& x)
+    {
+      str << x.class_name() << " " << x.domain() << "↦" << x.codomain_box()
+          << ", " << x.nb_slices()
+          << " slice" << (x.nb_slices() > 1 ? "s" : "")
+          << flush;
+      return str;
     }
 
     // Integration

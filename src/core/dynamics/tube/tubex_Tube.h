@@ -18,7 +18,6 @@
 #include "tubex_Fnc.h"
 #include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
-#include "tubex_AbstractTube.h"
 #include "tubex_TubeSerialization.h"
 
 namespace tubex
@@ -28,7 +27,7 @@ namespace tubex
   class Tube;
   class Trajectory;
   
-  class Tube : public AbstractTube
+  class Tube : public DynamicalItem
   {
     public:
 
@@ -69,6 +68,7 @@ namespace tubex
       int index(const Slice* slice) const;
       void sample(double t);
       void sample(double t, const ibex::Interval& gate);
+      static bool share_same_slicing(const Tube& x1, const Tube& x2);
 
       // Access values
       const ibex::Interval codomain() const;
@@ -128,6 +128,7 @@ namespace tubex
 
       // String
       const std::string class_name() const { return "Tube"; };
+      friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
     /** Integration: **/
 

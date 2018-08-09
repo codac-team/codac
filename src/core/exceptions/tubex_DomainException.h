@@ -13,9 +13,9 @@
 #ifndef __TUBEX_DOMAINEXCEPTION_H__
 #define __TUBEX_DOMAINEXCEPTION_H__
 
+#include "ibex_Interval.h"
 #include "tubex_Exception.h"
 #include "tubex_DynamicalItem.h"
-#include "tubex_TubeVector.h"
 
 namespace tubex
 {

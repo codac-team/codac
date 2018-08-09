@@ -404,6 +404,22 @@ namespace tubex
       else
         slice->set_output_gate(gate);
     }
+    
+    bool Tube::share_same_slicing(const Tube& x1, const Tube& x2)
+    {
+      if(x1.nb_slices() != x2.nb_slices())
+        return false;
+
+      const Slice *s2 = x2.get_first_slice();
+      for(const Slice *s1 = x1.get_first_slice() ; s1 != NULL ; s1 = s1->next_slice())
+      {
+        if(s1->domain() != s2->domain())
+          return false;
+        s2 = s2->next_slice();
+      }
+
+      return true;
+    }
 
     // Access values
 
@@ -785,6 +801,17 @@ namespace tubex
       };
 
       return p;
+    }
+
+    // String
+    
+    ostream& operator<<(ostream& str, const Tube& x)
+    {
+      str << x.class_name() << " " << x.domain() << "↦" << x.codomain_box()
+          << ", " << x.nb_slices()
+          << " slice" << (x.nb_slices() > 1 ? "s" : "")
+          << flush;
+      return str;
     }
 
     // Integration

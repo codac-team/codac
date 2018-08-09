@@ -39,8 +39,8 @@ TEST_CASE("Exceptions")
 
   SECTION("SlicingException")
   {
-    // todo: Tube tube1(Interval(0.,1.), 1.), tube2(Interval(0.,1.), 4.), tube3(Interval(0.,1.), 0.5);
-    // todo: CHECK(tube1.nb_slices() == tube2.nb_slices());
-    // todo: CHECK_THROWS(SlicingException::check(tube1, tube3));
+    Tube tube1(Interval(0.,1.), 1.), tube2(Interval(0.,1.), 4.), tube3(Interval(0.,1.), 0.5);
+    CHECK(tube1.nb_slices() == tube2.nb_slices());
+    CHECK_THROWS(SlicingException::check(tube1, tube3));
   }
 }

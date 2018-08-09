@@ -492,7 +492,7 @@ TEST_CASE("Operators")
     Tube tube2 = tube_test2();
     tube1 &= tube2;
 
-    // todo: CHECK_THROWS(tube1 &= tube_test4_05(););
+    CHECK_THROWS(tube1 &= tube_test4_05(););
     CHECK(tube1.codomain() == Interval(-2,4));
     CHECK(tube1(0) == Interval::EMPTY_SET);
     CHECK(tube1(2.5) == Interval(1,3));

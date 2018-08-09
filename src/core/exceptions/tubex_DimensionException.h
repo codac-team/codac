@@ -14,6 +14,7 @@
 #define __TUBEX_DIMENSIONEXCEPTION_H__
 
 #include "ibex_Fnc.h"
+#include "ibex_Vector.h"
 #include "tubex_Exception.h"
 #include "tubex_DynamicalItem.h"
 #include "tubex_VibesFigure_TubeVector.h"

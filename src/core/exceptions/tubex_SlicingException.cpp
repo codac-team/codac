@@ -33,37 +33,59 @@ namespace tubex
     m_what_msg = os.str();
   }
 
-  SlicingException::SlicingException(const AbstractTube& x, int slice_index)
+  SlicingException::SlicingException(const Tube& x, int slice_index)
   {
-    /*ostringstream os;
+    ostringstream os;
     os << "slice index out of range: ";
     os << "i=" << slice_index << " not in " << Interval(0,(x.nb_slices()-1)) << endl;
-    m_what_msg = os.str();*/
+    m_what_msg = os.str();
   }
 
-  SlicingException::SlicingException(const AbstractTube& x1, const AbstractTube& x2)
+  SlicingException::SlicingException(const Tube& x1, const Tube& x2)
   {
-    /*ostringstream os;
+    ostringstream os;
     os << "unable to perform an operation over tubes of different structure";
 
     if(x1.nb_slices() != x2.nb_slices())
-      os << endl << "TubeVector of different slices number: " 
+      os << endl << "Tube(Vector) of different slices number: " 
          << "n1=" << x1.nb_slices() << " and n2=" << x2.nb_slices();
 
     os << endl;
-    m_what_msg = os.str();*/
+    m_what_msg = os.str();
   }
 
-  void SlicingException::check(const AbstractTube& x1, const AbstractTube& x2)
+  void SlicingException::check(const Tube& x, int slice_index)
   {
-    /*DomainException::check(x1, x2);
+    if(slice_index < 0 || slice_index >= x.nb_slices())
+      throw SlicingException(x, slice_index);
+  }
+
+  void SlicingException::check(const Tube& x1, const Tube& x2)
+  {
+    if(!Tube::share_same_slicing(x1, x2))
+      throw SlicingException(x1, x2);
+  }
+
+  void SlicingException::check(const Tube& x1, const TubeVector& x2)
+  {
     if(!TubeVector::share_same_slicing(x1, x2))
-      throw SlicingException(x1, x2);*/
+      throw SlicingException(x1, x2[0]);
   }
 
-  void SlicingException::check(const AbstractTube& x, int slice_index)
+  void SlicingException::check(const TubeVector& x, int slice_index)
   {
-    /*if(slice_index < 0 || slice_index >= x.nb_slices())
-      throw SlicingException(x, slice_index);*/
+    check(x[0], slice_index);
+  }
+
+  void SlicingException::check(const TubeVector& x1, const Tube& x2)
+  {
+    if(!TubeVector::share_same_slicing(x1, x2))
+      throw SlicingException(x1[0], x2);
+  }
+
+  void SlicingException::check(const TubeVector& x1, const TubeVector& x2)
+  {
+    if(!TubeVector::share_same_slicing(x1, x2))
+      throw SlicingException(x1[0], x2[0]);
   }
 }
