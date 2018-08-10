@@ -20,7 +20,7 @@ namespace tubex
 {
   // todo: avoid redundant gate contractions
   
-  /*CtcHC4::CtcHC4(bool preserve_slicing)
+  CtcHC4::CtcHC4(bool preserve_slicing)
     : Ctc(preserve_slicing)
   {
 
@@ -28,38 +28,43 @@ namespace tubex
   
   bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeVector& x) const
   {
-    bool ctc = false;
-    Slice *slice = x.get_first_slice();
-
-    while(slice != NULL)
-    {
-      ctc |= contract(hc4, *slice);
-      slice = slice->next_slice();
-    }
-
-    return ctc;
-  }
-
-  bool CtcHC4::contract(ibex::CtcHC4& hc4, Slice& x) const
-  {
     if(x.is_empty())
       return false;
-    
-    Slice x_old = x;
-    IntervalVector box = x.box();
-    hc4.contract(box);
-    x.set_envelope(box.subvector(1, box.size() - 1));
 
-    box[0] = x.domain().lb();
-    box.put(1, x_old.input_gate());
-    hc4.contract(box);
-    x.set_input_gate(box.subvector(1, box.size() - 1));
 
-    box[0] = x.domain().ub();
-    box.put(1, x_old.output_gate());
-    hc4.contract(box);
-    x.set_output_gate(box.subvector(1, box.size() - 1));
+    for(int k = 0 ; k < x.nb_slices() ; k++)
+    {
+      IntervalVector envelope(x.size() + 1);
+      IntervalVector ingate(x.size() + 1);
+      IntervalVector outgate(x.size() + 1);
 
-    return x_old != x;
-  }*/
+      Slice *slice;
+
+      for(int i = 0 ; i < x.size() ; i++) // accessing values
+      {
+        slice = x[i].get_slice(k);
+        envelope[i+1] = slice->codomain();
+        ingate[i+1] = slice->input_gate();
+        outgate[i+1] = slice->output_gate();
+      }
+      
+      envelope[0] = slice->domain();
+      ingate[0] = slice->domain().lb();
+      outgate[0] = slice->domain().ub();
+
+      hc4.contract(envelope);
+      hc4.contract(ingate);
+      hc4.contract(outgate);
+
+      for(int i = 0 ; i < x.size() ; i++) // updating values
+      {
+        slice = x[i].get_slice(k);
+        slice->set_envelope(envelope[i+1]);
+        slice->set_input_gate(ingate[i+1]);
+        slice->set_output_gate(outgate[i+1]);
+      }
+    }
+
+    // todo: return value
+  }
 }
