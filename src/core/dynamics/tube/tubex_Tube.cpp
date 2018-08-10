@@ -81,11 +81,11 @@ namespace tubex
         set(codomain);
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const tubex::Fnc& f, int image_id)
+    Tube::Tube(const Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id)
       : Tube(domain, timestep)
     {
       // todo: check scalar f
-      // todo: check image_id
+      // todo: check f_image_id
       DomainException::check(domain);
       DomainException::check(timestep);
 
@@ -94,7 +94,7 @@ namespace tubex
                         "function's inputs not limited to system variable");
       // A copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(*this); // 1: one variable (system variable t), todo: update this comment
-      *this = f.eval_vector(input)[image_id];
+      *this = f.eval_vector(input)[f_image_id];
       // todo: delete something here?
     }
 

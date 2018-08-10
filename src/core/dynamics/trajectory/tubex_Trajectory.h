@@ -13,43 +13,58 @@
 #ifndef __TUBEX_TRAJECTORY_H__
 #define __TUBEX_TRAJECTORY_H__
 
-#include "tubex_TrajectoryVector.h"
+#include <map>
+#include "tubex_DynamicalItem.h"
+#include "tubex_Function.h"
 
 namespace tubex
 {
-  class Trajectory : public TrajectoryVector
+  class Trajectory : public DynamicalItem
   {
     public:
 
       // Definition
       Trajectory();
-      Trajectory(const ibex::Interval& domain, const tubex::Function& f);
+      Trajectory(const ibex::Interval& domain, const tubex::Function& f, int f_image_id = 0);
       Trajectory(const std::map<double,double>& m_map_values);
-      Trajectory(const TrajectoryVector& traj);
+      Trajectory(const Trajectory& traj);
       ~Trajectory();
       const Trajectory& operator=(const Trajectory& x);
-      using TrajectoryVector::size;
+      int size() const;
 
       // Access values
-      using TrajectoryVector::get_function;
-      using TrajectoryVector::domain;
+      const std::map<double,double>& get_map() const;
+      const tubex::Function* get_function() const;
+      const ibex::Interval domain() const;
       const ibex::Interval codomain() const;
       double operator()(double t) const;
       const ibex::Interval operator()(const ibex::Interval& t) const;
 
       // Tests
-      using TrajectoryVector::not_defined;
+      bool not_defined() const;
       bool operator==(const Trajectory& x) const;
       bool operator!=(const Trajectory& x) const;
 
       // Setting values
-      double set(double t, double y);
-      using TrajectoryVector::truncate_domain;
-      using TrajectoryVector::shift_domain;
+      void set(double t, double y);
+      void truncate_domain(const ibex::Interval& domain);
+      void shift_domain(double shift_ref);
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const Trajectory& x);
       const std::string class_name() const { return "Trajectory"; };
+
+    protected:
+
+      const ibex::IntervalVector codomain_box() const;
+
+      /** Class variables **/
+
+        ibex::Interval m_domain = ibex::Interval::EMPTY_SET;
+        ibex::Interval m_codomain = ibex::Interval::EMPTY_SET;
+        // A trajectory is defined either by a Function or a map of values
+        tubex::Function *m_function = NULL;
+        std::map<double,double> m_map_values;
   };
 }
 

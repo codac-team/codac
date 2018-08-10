@@ -33,74 +33,70 @@ namespace tubex
   }
 
   TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f)
-    : m_domain(domain), m_function(new tubex::Function(f))
+    : m_n(f.image_dim()), m_v_trajs(new Trajectory[f.image_dim()])
   {
     // todo: check thickness of f? (only thin functions should be allowed)
     DomainException::check(domain);
-    m_codomain = m_function->eval_vector(domain);
+
+    // setting values for each component
+    for(int i = 0 ; i < size() ; i++)
+      (*this)[i] = Trajectory(domain, f, i);
   }
 
   TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)
   {
-    typename map<double,Vector>::const_iterator it_map;
-    for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
+    if(!map_values.empty())
     {
-      set(it_map->first, it_map->second);
-      DimensionException::check(map_values.begin()->second, it_map->second);
+      m_n = map_values.begin()->second.size();
+      m_v_trajs = new Trajectory[m_n];
+
+      typename map<double,Vector>::const_iterator it_map;
+      for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
+      {
+        for(int i = 0 ; i < size() ; i++)
+          (*this)[i].set(it_map->first, it_map->second[i]);
+
+        // todo: check m_n == it_map->second.size(), or:
+        DimensionException::check(map_values.begin()->second, it_map->second);
+      }
+
     }
   }
 
   TrajectoryVector::~TrajectoryVector()
   {
-    if(m_function != NULL)
-      delete m_function;
+    if(m_v_trajs != NULL)
+      delete[] m_v_trajs;
   }
 
   const TrajectoryVector& TrajectoryVector::operator=(const TrajectoryVector& x)
   {
-    m_domain = x.m_domain;
-    m_codomain = x.m_codomain;
-
-    if(m_function != NULL)
-      delete m_function;
-
-    if(x.m_function == NULL)
-      m_function = NULL;
-
-    else
-      m_function = new tubex::Function(*x.m_function);
-
-    m_map_values = x.m_map_values;
-    return *this;
+    m_n = x.size();
+    m_v_trajs = new Trajectory[m_n];
+    for(int i = 0 ; i < size() ; i++)
+      (*this)[i] = x[i];
   }
 
   int TrajectoryVector::size() const
   {
-    if(m_function != NULL)
-      return m_function->image_dim();
-
-    else if(m_map_values.size() == 0)
-      return 0;
-    
-    else
-      return m_map_values.begin()->second.size();
+    return m_n;
   }
 
   // Access values
 
-  const map<double,Vector>& TrajectoryVector::get_map() const
-  {
-    return m_map_values;
-  }
+  // deprecated: const map<double,Vector>& TrajectoryVector::get_map() const
+  // deprecated: {
+  // deprecated:   return m_map_values;
+  // deprecated: }
 
-  const tubex::Function* TrajectoryVector::get_function() const
-  {
-    return m_function;
-  }
+  // todo: where to store function? const tubex::Function* TrajectoryVector::get_function() const
+  // todo: where to store function? {
+  // todo: where to store function?   return m_function;
+  // todo: where to store function? }
 
   const Interval TrajectoryVector::domain() const
   {
-    return m_domain;
+    return (*this)[0].domain();
   }
 
   const IntervalVector TrajectoryVector::codomain() const
@@ -108,166 +104,88 @@ namespace tubex
     return codomain_box();
   }
 
-  const IntervalVector TrajectoryVector::codomain_box() const
-  {
-    return m_codomain;
-  }
-
   Trajectory& TrajectoryVector::operator[](int index)
   {
-    // todo
+    // todo: check index
+    return const_cast<Trajectory&>(static_cast<const TrajectoryVector&>(*this).operator[](index));
+    // todo: check quickness of cast instead of direct access to m_v_tubes[]
   }
 
   const Trajectory& TrajectoryVector::operator[](int index) const
   {
-    // todo
+    // todo: check index
+    return m_v_trajs[index];
   }
 
   const Vector TrajectoryVector::operator()(double t) const
   {
     DomainException::check(*this, t);
 
-    if(m_function != NULL)
-      return m_function->eval_vector(t).mid();
-
-    else if(m_map_values.find(t) != m_map_values.end())
-      return m_map_values.at(t); // key exists
-
-    else
-    {
-      typename map<double,Vector>::const_iterator it_lower, it_upper;
-      it_lower = m_map_values.lower_bound(t);
-      it_upper = it_lower;
-      it_lower--;
-
-      Vector p(size());
-
-      // Linear interpolation
-      for(int i = 0 ; i < size() ; i++)
-        p[i] = it_lower->second[i] +
-               (t - it_lower->first) * (it_upper->second[i] - it_lower->second[i]) /
-               (it_upper->first - it_lower->first);
-
-      return p;
-    }
+    Vector v(size());
+    for(int i = 0 ; i < size() ; i++)
+      v[i] = (*this)[i](t);
+    return v;
   }
   
   const IntervalVector TrajectoryVector::operator()(const Interval& t) const
   {
     DomainException::check(*this, t);
-
-    if(m_domain == t)
-      return m_codomain;
-
-    else if(m_function != NULL)
-      return m_function->eval_vector(t);
-
-    else
-    {
-      IntervalVector eval(size(), Interval::EMPTY_SET);
-      eval |= (*this)(t.lb());
-      eval |= (*this)(t.ub());
-
-      for(map<double,Vector>::const_iterator it = m_map_values.lower_bound(t.lb()) ;
-          it != m_map_values.upper_bound(t.ub()) ; it++)
-        eval |= it->second;
-
-      return eval;
-    }
+    IntervalVector v(size());
+    for(int i = 0 ; i < size() ; i++)
+      v[i] = (*this)[i](t);
+    return v;
   }
   
   // Tests
 
   bool TrajectoryVector::not_defined() const
   {
-    return m_function == NULL && m_map_values.empty();
+    for(int i = 0 ; i < size() ; i++)
+      if((*this)[i].not_defined())
+        return true;
+    return false;
   }
 
   bool TrajectoryVector::operator==(const TrajectoryVector& x) const
   {
     DimensionException::check(*this, x);
-
-    if(m_function == NULL && x.get_function() == NULL)
-    {
-      typename map<double,Vector>::const_iterator it_map;
-      for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
-      {
-        if(x.get_map().find(it_map->first) == x.get_map().end())
-          return false;
-
-        if(it_map->second != x.get_map().at(it_map->first))
-          return false;
-      }
-
-      return true;
-    }
-
-    else if(m_function != NULL && x.get_function() != NULL)
-    {
-      throw Exception("TrajectoryVector::operator==",
-                      "operator== not implemented in case of TrajectoryVector defined by a Function");
-    }
-
-    else
-      return false;
+    for(int i = 0 ; i < size() ; i++)
+      if((*this)[i] != x[i])
+        return false;
+    return true;
   }
   
   bool TrajectoryVector::operator!=(const TrajectoryVector& x) const
   {
     DimensionException::check(*this, x);
-    if(m_function != NULL)
-      throw Exception("TrajectoryVector::operator!=",
-                      "operator!= not implemented in case of TrajectoryVector defined by a Function");
-    return domain() != x.domain() || codomain() != x.codomain() || !(*this == x);
+    for(int i = 0 ; i < size() ; i++)
+      if((*this)[i] != x[i])
+        return true;
+    return false;
   }
 
   // Setting values
 
-  const Vector& TrajectoryVector::set(double t, const Vector& y)
+  void TrajectoryVector::set(double t, const Vector& y)
   {
-    if(not_defined())
-      m_codomain = IntervalVector(y);
+    // todo: do something in case of undefined traj vector
+    // todo: check size vector y
 
-    else
-    {
-      DimensionException::check(*this, y);
-      m_codomain |= y;
-    }
-
-    m_map_values.erase(t);
-    m_map_values.emplace(t, y);
-    m_domain |= t;
-    return m_map_values.at(t);
+    for(int i = 0 ; i < size() ; i++)
+      (*this)[i].set(t, y[i]);
   }
 
   void TrajectoryVector::truncate_domain(const Interval& domain)
   {
     DomainException::check(domain);
-
-    map<double,Vector>::iterator it = m_map_values.begin();
-    while(it != m_map_values.end())
-    {
-      if(!domain.contains(it->first)) it = m_map_values.erase(it);
-      else ++it;
-    }
-
-    m_codomain.set_empty();
-
-    for(map<double,Vector>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
-      m_codomain |= it->second;
-
-    m_domain &= domain;
+    for(int i = 0 ; i < size() ; i++)
+      (*this)[i].truncate_domain(domain);
   }
 
   void TrajectoryVector::shift_domain(double shift_ref)
   {
-    map<double,Vector> map_temp = m_map_values;
-    m_map_values.clear();
-
-    for(map<double,Vector>::iterator it = map_temp.begin() ; it != map_temp.end() ; it++)
-      m_map_values.emplace(it->first - shift_ref, it->second);
-
-    m_domain -= shift_ref;
+    for(int i = 0 ; i < size() ; i++)
+      (*this)[i].shift_domain(shift_ref);
   }
 
   // String
@@ -275,25 +193,16 @@ namespace tubex
   std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x)
   {
     str << "TrajectoryVector " << x.domain() << "↦" << x.codomain();
-
-    if(x.m_function != NULL)
-      str << " (Fnc object)";
-
-    else if(!x.m_map_values.empty())
-    {
-      if(x.m_map_values.size() < 10)
-      {
-        str << ", " << x.m_map_values.size() << " pts: { ";
-        for(map<double,Vector>::const_iterator it = x.m_map_values.begin() ; it != x.m_map_values.end() ; it++)
-          str << "(" << it->first << "," << it->second << ") ";
-        str << "} ";
-      }
-
-      else
-        str << ", " << x.m_map_values.size() << " points";
-    }
-
+    // todo: more info?
     str << flush;
     return str;
+  }
+
+  const IntervalVector TrajectoryVector::codomain_box() const
+  {
+    IntervalVector box(size(), Interval::EMPTY_SET);
+    for(int i = 0 ; i < size() ; i++)
+      box[i] |= (*this)[i].codomain();
+    return box;
   }
 }

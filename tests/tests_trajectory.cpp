@@ -6,6 +6,8 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
+// todo: test TrajectoryVector
+
 TEST_CASE("Trajectory base")
 {
   SECTION("Evaluation")

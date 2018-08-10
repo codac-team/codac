@@ -36,7 +36,7 @@ namespace tubex
       // Definition
       Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
-      Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f, int image_id = 0);
+      Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id = 0);
       Tube(const Tube& x);
       Tube(const Tube& x, const ibex::Interval& codomain);
       Tube(const Trajectory& traj, double timestep = 0.);
