@@ -14,15 +14,15 @@ int main()
   data_loader.load_data(x, x_truth);
   vector<Beacon> v_seamarks = data_loader.get_beacons();
 
-  vibes::beginDrawing();
-  VibesFigure_Tube fig_x("Redermor state", 2);
-  fig_x.add_tube(x, "x");
-  fig_x.add_trajectory(x_truth, "x_truth");
-  fig_x.set_properties(2000, 50, 500, 250);
+  //vibes::beginDrawing();
+  //VibesFigure_Tube fig_x("Redermor state", 2);
+  //fig_x.add_tube(x, "x");
+  //fig_x.add_trajectory(x_truth, "x_truth");
+  //fig_x.set_properties(2000, 50, 500, 250);
 
-  VibesFigure_Map fig_map("Redermor map", x, x_truth);
-  fig_map.add_beacons(v_seamarks);
-  fig_map.set_properties(1450, 50, 500, 500);
+  //VibesFigure_Map fig_map("Redermor map", x, x_truth);
+  //fig_map.add_beacons(v_seamarks);
+  //fig_map.set_properties(1450, 50, 500, 500);
 
   IntervalVector obs(2);
   map<int,vector<IntervalVector> > m_obs;
@@ -61,20 +61,15 @@ int main()
     m_x[i] = new TubeVector(*x);
     m_x[i]->resize(11);
 
-    // todo: optimize this block:
-    TubeVector b(*x);
-    b.resize(3);
-    b.set(v_seamarks[i].pos_box());
-    m_x[i]->put(6, b);
+    (*m_x[i])[6].set(v_seamarks[i].pos_box()[0]);
+    (*m_x[i])[7].set(v_seamarks[i].pos_box()[1]);
+    (*m_x[i])[8].set(v_seamarks[i].pos_box()[2]);
+
     m_x[i]->put(9, fg.eval(*m_x[i]));
 
-    Tube temp_g(9, *m_x[i]), temp_gdot(10, *m_x[i]);
     for(int k = 0 ; k < m_obs[i].size() ; k++)
-      ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], temp_g, temp_gdot);
-    temp_g.ctc_deriv(temp_gdot);
-
-    m_x[i]->put(9, temp_g);
-    m_x[i]->put(10, temp_gdot);
+      ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], (*m_x[i])[9], (*m_x[i])[10]);
+    (*m_x[i])[9].ctc_deriv((*m_x[i])[10]);
   }
 
   Variable vt, vx, vy, vz, vxdot, vydot, vzdot, vbx, vby, vbz, vg, vgdot;
@@ -102,45 +97,28 @@ int main()
   for(int i = 0 ; i < v_seamarks.size() ; i++)
   {
     cout << "Seamark " << (i+1) << endl;
-    fig_x.show();
-    fig_map.show();
+    //fig_x.show();
+    //fig_map.show();
 
     ctc_hc4.contract(hc4, *m_x[i]);
 
-    Tube x_temp(0, *m_x[i]);
-    Tube xdot_temp(3, *m_x[i]);
-    x_temp.ctc_deriv(xdot_temp);
-    m_x[i]->put(0, x_temp);
+    (*m_x[i])[0].ctc_deriv((*m_x[i])[1]);
+    (*m_x[i])[1].ctc_deriv((*m_x[i])[4]);
+    (*m_x[i])[9].ctc_deriv((*m_x[i])[10]);
 
-    Tube y_temp(1, *m_x[i]);
-    Tube ydot_temp(4, *m_x[i]);
-    y_temp.ctc_deriv(ydot_temp);
-    m_x[i]->put(1, y_temp);
-
-    //Tube z_temp(2, *m_x[i]);
-    //Tube zdot_temp(5, *m_x[i]);
-    //z_temp.ctc_deriv(zdot_temp);
-    //m_x[i]->put(2, z_temp);
-
-    Tube g_temp(9, *m_x[i]);
-    Tube gdot_temp(10, *m_x[i]);
-    g_temp.ctc_deriv(gdot_temp);
-    m_x[i]->put(9, g_temp);
-
-    TubeVector temp(*m_x[i]);
-    temp.resize(6);
-    *x &= temp;
+    for(int j = 0 ; j < 6 ; j++)
+      (*x)[j] &= (*m_x[i])[j];
   }
 
-  fig_x.show();
-  fig_map.show();
+  //fig_x.show();
+  //fig_map.show();
 
   for(int i = 0 ; i < v_seamarks.size() ; i++)
   {
     delete m_x[i];
   }
 
-  vibes::endDrawing();
+  //vibes::endDrawing();
 
   delete x;
   delete x_truth;
