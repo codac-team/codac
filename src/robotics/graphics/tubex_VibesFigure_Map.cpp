@@ -21,7 +21,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  VibesFigure_Map::VibesFigure_Map(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
+  /*VibesFigure_Map::VibesFigure_Map(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
     : VibesFigure_Tube(fig_name, 1) // one layer
   {
     add_tube(tube, DEFAULT_TUBE_NAME);
@@ -229,5 +229,5 @@ namespace tubex
     ratio_box[1] = viewbox[1].mid();
     ratio_box[1].inflate(viewbox.max_diam() / 2.);
     return ratio_box;
-  }
+  }*/
 }

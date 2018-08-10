@@ -14,6 +14,7 @@
 #include "tubex_DataLoader_Redermor.h"
 #include "tubex_Function.h"
 #include "tubex_Exception.h"
+#include "tubex_Tube.h"
 
 using namespace std;
 using namespace ibex;
@@ -98,21 +99,24 @@ namespace tubex
                           + vyr * (cos(psi) * cos(phi) + sin(theta) * sin(psi) * sin(phi)) \
                           - vzr * (cos(psi) * sin(phi) - sin(theta) * cos(phi) * sin(psi)) ; \
                           - vxr * sin(theta) + vyr * cos(theta)*sin(phi) + vzr * cos(theta) * cos(phi))");
-      TubeVector velocities = f.eval(data_x);
+      TubeVector velocities = f.eval_vector(data_x);
 
       // State vector:
       x = new TubeVector(data_x);
-      x->resize(6);
-      x->put(0, velocities.primitive());
-      x->put(3, velocities);
+
+      // Horizontal position
+      x[0] = velocities[0].primitive();
+      x[1] = velocities[1].primitive();
 
       // Case of the depth, directly sensed:
-      TubeVector depth(*x);
-      depth.resize(1);
-      depth.set_empty();
-      depth |= traj_depth;
-      depth.inflate(traj_ddepth);
-      x->put(2, depth);
+      x[2].set_empty();
+      x[2] |= traj_depth; // envelope of the trajectory
+      x[2].inflate(traj_ddepth);
+
+      // 3d velocities
+      x[3] = velocities[0].primitive();
+      x[4] = velocities[1].primitive();
+      x[5] = velocities[2].primitive();
 
       serialize_data(*x, *truth);
     }
