@@ -16,67 +16,62 @@ using namespace tubex;
 
 TEST_CASE("CtcPicard")
 {
-  /*SECTION("Test CtcPicard, eval base")
+  SECTION("Test CtcPicard, eval base")
   {
     CtcPicard ctc_picard(1.1);
 
     Interval t(0.5,1.0);
-    Tube tube(t, 1);
-    tube.set(Interval(1.5), t.lb());
-    Tube tube_raw = tube;
+    TubeVector tube(t, 1);
+    tube.set(IntervalVector(1, 1.5), t.lb());
+    TubeVector tube_raw = tube;
     Slice *slice;
 
     tube = tube_raw;
-    slice = tube.get_first_slice();
     tubex::Function f2("x", "3.");
-    ctc_picard.guess_slice_envelope(f2, tube, *slice, FORWARD);
-    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * 3.));
+    Interval dtest = tube[0].slice_domain(0);
+    IntervalVector test = f2.eval_vector(dtest, tube);
+    ctc_picard.guess_slice_envelope(f2, tube, 0, FORWARD);
+    CHECK(tube(0).is_superset(1.5 + Interval(0.,0.5) * 3.));
 
     tube = tube_raw;
-    slice = tube.get_first_slice();
     tubex::Function f3("x", "t");
-    ctc_picard.guess_slice_envelope(f3, tube, *slice, FORWARD);
-    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * t));
+    ctc_picard.guess_slice_envelope(f3, tube, 0, FORWARD);
+    CHECK(tube(0).is_superset(1.5 + Interval(0.,0.5) * t));
 
     tube = tube_raw;
-    slice = tube.get_first_slice();
     f3 = tubex::Function("x", "t^2"); // with operator= of class Function
-    ctc_picard.guess_slice_envelope(f3, tube, *slice, FORWARD);
-    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * t * t));
+    ctc_picard.guess_slice_envelope(f3, tube, 0, FORWARD);
+    CHECK(tube(0).is_superset(1.5 + Interval(0.,0.5) * t * t));
 
     tube = tube_raw;
-    slice = tube.get_first_slice();
     tubex::Function f5("x", "x");
-    ctc_picard.guess_slice_envelope(f5, tube, *slice, FORWARD);
-    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * Interval(1.,2.)));
+    ctc_picard.guess_slice_envelope(f5, tube, 0, FORWARD);
+    CHECK(tube(0).is_superset(1.5 + Interval(0.,0.5) * Interval(1.,2.)));
 
     tube = tube_raw;
-    slice = tube.get_first_slice();
     tubex::Function f6("x", "x*t");
-    ctc_picard.guess_slice_envelope(f6, tube, *slice, FORWARD);
-    CHECK(slice->codomain().is_superset(1.5 + Interval(0.,0.5) * Interval(1.,2.) * t));
+    ctc_picard.guess_slice_envelope(f6, tube, 0, FORWARD);
+    CHECK(tube(0).is_superset(1.5 + Interval(0.,0.5) * Interval(1.,2.) * t));
 
     tube = tube_raw;
-    tube.set(2.*atan(exp(-t.lb())*tan(0.5)), t.lb());
-    slice = tube.get_first_slice();
+    tube.set(IntervalVector(1, 2.*atan(exp(-t.lb())*tan(0.5))), t.lb());
     tubex::Function f7("x", "-sin(x)");
-    ctc_picard.guess_slice_envelope(f7, tube, *slice, FORWARD);
-    CHECK(slice->codomain().is_superset(2.*atan(exp(-t)*tan(0.5))));
+    ctc_picard.guess_slice_envelope(f7, tube, 0, FORWARD);
+    CHECK(tube(0).is_superset(2.*atan(exp(-t)*tan(0.5))));
 
     tube = tube_raw;
-    tube.set(exp(-t.lb()), t.lb());
-    slice = tube.get_first_slice();
+    tube.set(IntervalVector(1, exp(-t.lb())), t.lb());
     tubex::Function f8("x", "-x");
-    ctc_picard.guess_slice_envelope(f8, tube, *slice, FORWARD);
-    CHECK(slice->codomain().is_superset(exp(-t)));
+    ctc_picard.guess_slice_envelope(f8, tube, 0, FORWARD);
+    CHECK(tube(0).is_superset(exp(-t)));
   }
 
   SECTION("Test CtcPicard / Slice - dim 1")
   {
     Interval domain(0.,0.1);
-    Tube tube(domain, 1);
-    tube.set(exp(domain.lb()), domain.lb());
-    Slice *x = tube.get_first_slice();
+    TubeVector tube(domain, 1);
+    tube.set(IntervalVector(1, exp(domain.lb())), domain.lb());
+    Slice *x = tube[0].get_first_slice();
 
     tubex::Function f("x", "x");
     CtcPicard ctc_picard(1.1);
@@ -84,9 +79,11 @@ TEST_CASE("CtcPicard")
     CHECK(x->codomain() == Interval::ALL_REALS);
     CHECK(x->input_gate() == exp(0.));
     CHECK(x->output_gate() == Interval::ALL_REALS);
-    ctc_picard.contract(f, tube, *x, FORWARD);
+    ctc_picard.contract(f, tube, FORWARD);
+    x = tube[0].get_first_slice();
     CHECK(x->codomain().is_superset(Interval(exp(domain))));
     CHECK(x->output_gate().is_superset(Interval(exp(domain.ub()))));
+    CHECK(ctc_picard.picard_iterations() != 1);
     CHECK(ctc_picard.picard_iterations() < 4);
   }
 
@@ -104,8 +101,8 @@ TEST_CASE("CtcPicard")
     CtcPicard ctc_picard_preserve(true, 1.1);
     CtcPicard ctc_picard_auto(false, 1.1);
 
-    ctc_picard_preserve.contract(f, x_preserve_sampling);
-    ctc_picard_auto.contract(f, x_auto_sampling);
+    ctc_picard_preserve.contract(f, x_preserve_sampling, FORWARD); // todo: remove FORWARD
+    ctc_picard_auto.contract(f, x_auto_sampling, FORWARD); // todo: remove FORWARD
     
     CHECK_FALSE(x_preserve_sampling.codomain().is_unbounded());
     CHECK(x_preserve_sampling.codomain().is_superset(exp(-domain)));
@@ -128,7 +125,7 @@ TEST_CASE("CtcPicard")
     //}
   }
 
-  SECTION("Test CtcPicard / TubeVector - dim 2")
+  /*SECTION("Test CtcPicard / TubeVector - dim 2")
   {
     Interval domain(0.,1.);
     
@@ -138,8 +135,8 @@ TEST_CASE("CtcPicard")
     
     tubex::Function f("x", "y", "(-x ; y)");
     CtcPicard ctc_picard(1.1/*, false*//*);
-    ctc_picard.contract(f, x);
-    
+    ctc_picard.contract(f, x, BACKWARD); // todo: remove FORWARD
+
     CHECK_FALSE(x.codomain().is_unbounded());
     CHECK(x.codomain()[0].is_superset(exp(-domain)));
     CHECK(x(0.)[0].is_superset(Interval(exp(-0.))));
@@ -156,7 +153,7 @@ TEST_CASE("CtcPicard")
     //  fig_tube.show(true);
     //  vibes::endDrawing();
     //}
-  }
+  }*/
 
   SECTION("Test CtcPicard / TubeVector - dim 1 - forward")
   {
@@ -165,7 +162,7 @@ TEST_CASE("CtcPicard")
     x.set(1., 0.);
 
     tubex::Function f("x", "-x");
-    CtcPicard ctc_picard(1.1/*, false*//*);
+    CtcPicard ctc_picard(1.1/*, false*/);
 
     ctc_picard.contract(f, x, FORWARD);
     
@@ -184,7 +181,7 @@ TEST_CASE("CtcPicard")
     }
   }
 
-  SECTION("Test CtcPicard / TubeVector - dim 1 - backward")
+  /*SECTION("Test CtcPicard / TubeVector - dim 1 - backward")
   {
     Interval domain(0.,1.);
     Tube x(domain);
@@ -193,8 +190,9 @@ TEST_CASE("CtcPicard")
     tubex::Function f("x", "-x");
     CtcPicard ctc_picard(1.1/*, false*//*);
 
+    cout << x << endl;
     ctc_picard.contract(f, x, BACKWARD);
-    
+    cout << x << endl;
     CHECK_FALSE(x.codomain().is_unbounded());
     CHECK(x.codomain().is_superset(exp(-domain)));
     CHECK(x(0.).is_superset(Interval(exp(-0.))));

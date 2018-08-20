@@ -38,22 +38,13 @@ namespace tubex
 
     protected:
 
-      void contract(const tubex::Fnc& f,
-                    const Tube& tube,
-                    Slice& slice,
-                    TPropagation t_propa) const;
-      void contract(const tubex::Fnc& f,
-                    const TubeVector& tube,
-                    Slice& slice,
-                    TPropagation t_propa) const;
-
+      void contract_ith_slices(const tubex::Fnc& f,
+                               TubeVector& tube,
+                               int slice_id,
+                               TPropagation t_propa) const;
       void guess_slice_envelope(const Fnc& f,
-                                const Tube& tube,
-                                Slice& slice,
-                                TPropagation t_propa) const;
-      void guess_slice_envelope(const Fnc& f,
-                                const TubeVector& tube,
-                                Slice& slice,
+                                TubeVector& tube,
+                                int slice_id,
                                 TPropagation t_propa) const;
 
       float m_delta;

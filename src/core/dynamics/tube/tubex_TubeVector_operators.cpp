@@ -28,7 +28,6 @@ namespace tubex
     { \
       DimensionException::check(*this, x); \
       DomainException::check(*this, x); \
-      SlicingException::check(*this, x); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \

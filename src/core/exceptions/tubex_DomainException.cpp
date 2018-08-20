@@ -74,19 +74,19 @@ namespace tubex
   void DomainException::check(const DynamicalItem& x1, const DynamicalItem& x2)
   {
     // todo: check the following
-    //if(typeid(x1) == typeid(Slice) && typeid(x2) != typeid(Slice))
-    //{
-    //  if(!x1.domain().is_subset(x2.domain()))
-    //    throw DomainException(x1, x2);
-    //}
-    //
-    //else if(typeid(x2) == typeid(Slice) && typeid(x1) != typeid(Slice))
-    //{
-    //  if(!x2.domain().is_subset(x1.domain()))
-    //    throw DomainException(x1, x2);
-    //}
-    //
-    //else if(x1.domain() != x2.domain())
-    //  throw DomainException(x1, x2);
+    if(typeid(x1) == typeid(Slice) && typeid(x2) != typeid(Slice))
+    {
+      if(!x1.domain().is_subset(x2.domain()))
+        throw DomainException(x1, x2);
+    }
+    
+    else if(typeid(x2) == typeid(Slice) && typeid(x1) != typeid(Slice))
+    {
+      if(!x2.domain().is_subset(x1.domain()))
+        throw DomainException(x1, x2);
+    }
+    
+    else if(x1.domain() != x2.domain())
+      throw DomainException(x1, x2);
   }
 }

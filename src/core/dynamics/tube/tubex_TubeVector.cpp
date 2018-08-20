@@ -104,7 +104,7 @@ namespace tubex
     }
 
     TubeVector::TubeVector(int n, const Tube& x)
-      : TubeVector(x.domain(), n)
+      : m_n(n), m_v_tubes(new Tube[n])
     {
       for(int i = 0 ; i < n ; i++)
         (*this)[i] = x;

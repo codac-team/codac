@@ -57,21 +57,40 @@ namespace tubex
     const Tube& Tube::f(const Tube& x) \
     { \
       DomainException::check(*this, x); \
-      SlicingException::check(*this, x); \
-      Slice *s = get_first_slice(); \
-      const Slice *s_x = x.get_first_slice(); \
-      while(s != NULL) \
+      if(Tube::share_same_slicing(*this, x)) /* faster */ \
       { \
-        Interval envelope = s->codomain(); \
-        Interval ingate = s->input_gate(); \
-        s->set_envelope(envelope.f(s_x->codomain())); \
-        s->set_input_gate(ingate.f(s_x->input_gate())); \
-        s = s->next_slice(); \
-        s_x = s_x->next_slice(); \
+        Slice *s = get_first_slice(); \
+        const Slice *s_x = x.get_first_slice(); \
+        while(s != NULL) \
+        { \
+          Interval envelope = s->codomain(); \
+          Interval ingate = s->input_gate(); \
+          s->set_envelope(envelope.f(s_x->codomain())); \
+          s->set_input_gate(ingate.f(s_x->input_gate())); \
+          s = s->next_slice(); \
+          s_x = s_x->next_slice(); \
+        } \
+        Slice *last_slice = get_last_slice(); \
+        Interval outgate = last_slice->output_gate(); \
+        last_slice->set_output_gate(outgate.f(x.get_last_slice()->output_gate())); \
       } \
-      Slice *last_slice = get_last_slice(); \
-      Interval outgate = last_slice->output_gate(); \
-      last_slice->set_output_gate(outgate.f(x.get_last_slice()->output_gate())); \
+      else \
+      { \
+        Slice *s = get_first_slice(); \
+        Interval s_domain; \
+        while(s != NULL) \
+        { \
+          s_domain = s->domain(); \
+          Interval envelope = s->codomain(); \
+          Interval ingate = s->input_gate(); \
+          s->set_envelope(envelope.f(x(s_domain))); \
+          s->set_input_gate(ingate.f(x(s_domain.lb()))); \
+          s = s->next_slice(); \
+        } \
+        Slice *last_slice = get_last_slice(); \
+        Interval outgate = last_slice->output_gate(); \
+        last_slice->set_output_gate(outgate.f(x(s_domain.ub()))); \
+      } \
       return *this; \
     } \
     \

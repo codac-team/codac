@@ -64,6 +64,7 @@ namespace tubex
       const Slice* get_wider_slice() const;
       Slice* get_largest_slice();
       const Slice* get_largest_slice() const;
+      const ibex::Interval slice_domain(int slice_id) const;
       int input2index(double t) const;
       int index(const Slice* slice) const;
       void sample(double t);

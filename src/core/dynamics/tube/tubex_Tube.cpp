@@ -332,6 +332,12 @@ namespace tubex
 
       return largest;
     }
+    
+    const Interval Tube::slice_domain(int slice_id) const
+    {
+      // todo: check slice_id
+      return get_slice(slice_id)->domain();
+    }
 
     int Tube::input2index(double t) const
     {

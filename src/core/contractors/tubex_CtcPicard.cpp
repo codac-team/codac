@@ -20,7 +20,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*CtcPicard::CtcPicard(bool preserve_slicing, float delta)
+  CtcPicard::CtcPicard(bool preserve_slicing, float delta)
     : Ctc(preserve_slicing), m_delta(delta)
   {
 
@@ -28,13 +28,18 @@ namespace tubex
   
   bool CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa) const
   {
-    // todo
+    // todo: faster implementation in the scalar case?
+    TubeVector x_vect(x);
+    bool result = contract(f, x_vect, t_propa);
+    x = x_vect[0];
+    return result;
   }
-  
+
   bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa) const
   {
+    // Vector implementation:
+
     DimensionException::check(x, f);
-    TubeVector first_slicing(x);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
@@ -43,74 +48,66 @@ namespace tubex
       contract(f, x, BACKWARD);
     }
 
-    else if(t_propa & FORWARD)
+    else
     {
-      Slice *slice_x = x.get_first_slice();
+      TubeVector *first_slicing;
+      if(m_preserve_slicing)
+        first_slicing = new TubeVector(x);
 
-      while(slice_x != NULL)
+      if(t_propa & FORWARD)
       {
-        contract(f, x, *slice_x, t_propa);
-        bool unbounded_slice = slice_x->codomain().is_unbounded();
+        int nb_slices = x.nb_slices();
 
-        if(unbounded_slice && slice_x->domain().diam() > x.domain().diam() / 5000.)
+        for(int i = 0 ; i < nb_slices ; i++)
         {
-          Slice *prev_slice_x = slice_x->prev_slice();
-          x.sample(slice_x->domain().mid());
+          contract_ith_slices(f, x, i, t_propa);
 
-          if(prev_slice_x == NULL) slice_x = x.get_first_slice();
-          else slice_x = prev_slice_x->next_slice();
-          continue;
+          if(x(i).is_unbounded() && x[0].slice_domain(i).diam() > x.domain().diam() / 5000.)
+          {
+            // NB: all tube components share the same slicing
+            x.sample(x[0].slice_domain(i).mid()); // all of them are sampled
+            nb_slices ++;
+            i--; // the first subslice will be again computed
+          }
         }
-
-        slice_x = slice_x->next_slice();
       }
-    }
 
-    else if(t_propa & BACKWARD)
-    {
-      Slice *slice_x = x.get_last_slice();
-
-      while(slice_x != NULL)
+      else if(t_propa & BACKWARD)
       {
-        contract(f, x, *slice_x, t_propa);
-        bool unbounded_slice = slice_x->codomain().is_unbounded();
-
-        if(unbounded_slice && slice_x->domain().diam() > x.domain().diam() / 5000.)
+        for(int i = x.nb_slices() - 1 ; i >= 0 ; i--)
         {
-          Slice *prev_slice_x = slice_x->next_slice();
-          x.sample(slice_x->domain().mid());
+          contract_ith_slices(f, x, i, t_propa);
 
-          if(prev_slice_x == NULL) slice_x = x.get_last_slice();
-          else slice_x = prev_slice_x->prev_slice();
-          continue;
+          if(x(i).is_unbounded() && x[0].slice_domain(i).diam() > x.domain().diam() / 5000.)
+          {
+            // NB: all tube components share the same slicing
+            x.sample(x[0].slice_domain(i).mid()); // all of them are sampled
+            i ++; // the second subslice will be again computed
+          }
         }
-
-        slice_x = slice_x->prev_slice();
       }
-    }
 
-    if(m_preserve_slicing)
-    {
-      first_slicing.set_empty();
-      first_slicing |= x;
-      x = first_slicing;
+      if(m_preserve_slicing)
+      {
+        first_slicing->set_empty();
+        *first_slicing |= x;
+        x = *first_slicing;
+        delete first_slicing;
+      }
     }
 
     // todo: return value
   }
 
-  void CtcPicard::contract(const tubex::Fnc& f, const Tube& tube, Slice& slice, TPropagation t_propa) const
-  {
-    // todo
-  }
-
-  void CtcPicard::contract(const tubex::Fnc& f, const TubeVector& tube, Slice& slice, TPropagation t_propa) const
+  void CtcPicard::contract_ith_slices(const tubex::Fnc& f, TubeVector& tube, int slice_id, TPropagation t_propa) const
   {
     // todo: check that !((t_propa & FORWARD) && (t_propa & BACKWARD))
     DimensionException::check(tube, f);
-    DimensionException::check(tube, slice);
+    // todo: check slice_id
 
-    guess_slice_envelope(f, tube, slice, t_propa);
+    IntervalVector f_eval = f.eval_vector(tube[0].slice_domain(slice_id), tube); // computed only once
+
+    guess_slice_envelope(f, tube, slice_id, t_propa);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
@@ -119,12 +116,20 @@ namespace tubex
     }
 
     else if(t_propa & FORWARD)
-      slice.set_output_gate(slice.output_gate()
-        & (slice.input_gate() + slice.domain().diam() * f.eval(slice.domain(), tube)));
+      for(int i = 0 ; i < tube.size() ; i++)
+      {
+        Slice *slice = tube[i].get_slice(slice_id);
+        slice->set_output_gate(slice->output_gate()
+          & (slice->input_gate() + slice->domain().diam() * f_eval[i]));
+      }
 
     else if(t_propa & BACKWARD)
-      slice.set_input_gate(slice.input_gate()
-        & (slice.output_gate() - slice.domain().diam() * f.eval(slice.domain(), tube)));
+      for(int i = 0 ; i < tube.size() ; i++)
+      {
+        Slice *slice = tube[i].get_slice(slice_id);
+        slice->set_input_gate(slice->input_gate()
+          & (slice->output_gate() - slice->domain().diam() * f_eval[i]));
+      }
   }
 
   int CtcPicard::picard_iterations() const
@@ -133,24 +138,16 @@ namespace tubex
   }
 
   void CtcPicard::guess_slice_envelope(const tubex::Fnc& f,
-                                       const Tube& tube,
-                                       Slice& slice,
-                                       TPropagation t_propa) const
-  {
-    // todo
-  }
-
-  void CtcPicard::guess_slice_envelope(const tubex::Fnc& f,
-                                       const TubeVector& tube,
-                                       Slice& slice,
+                                       TubeVector& tube,
+                                       int slice_id,
                                        TPropagation t_propa) const
   {
     DimensionException::check(tube, f);
-    DimensionException::check(tube, slice);
+    // todo: check slice_id
 
     float delta = m_delta;
-    Interval h, t = slice.domain();
-    IntervalVector initial_x(slice.codomain()), x0(tube.size()), xf(x0);
+    Interval h, t = tube[0].slice_domain(slice_id);
+    IntervalVector initial_x = tube(slice_id), x0(tube.size()), xf(x0);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
@@ -160,15 +157,15 @@ namespace tubex
 
     else if(t_propa & FORWARD)
     {
-      x0 = slice.input_gate();
-      xf = slice.output_gate();
+      x0 = tube(t.lb());
+      xf = tube(t.ub());
       h = Interval(0., t.diam());
     }
 
     else if(t_propa & BACKWARD)
     {
-      x0 = slice.output_gate();
-      xf = slice.input_gate();
+      x0 = tube(t.ub());
+      xf = tube(t.lb());
       h = Interval(-t.diam(), 0.);
     }
 
@@ -185,19 +182,30 @@ namespace tubex
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      slice.set_envelope(x_guess & initial_x);
-      x_enclosure = x0 + h * f.eval(t, tube);
+      x_guess &= initial_x;
+
+      for(int i = 0 ; i < tube.size() ; i++)
+        tube[i].get_slice(slice_id)->set_envelope(x_guess[i]);
+
+      x_enclosure = x0 + h * f.eval_vector(t, tube);
 
       if(x_enclosure.is_unbounded())
       {
-        slice.set_envelope(initial_x); // coming back to the initial state
+        for(int i = 0 ; i < tube.size() ; i++)
+          tube[i].get_slice(slice_id)->set_envelope(initial_x[i]); // coming back to the initial state
+        // todo: do it only on the unbounded component?
         break;
       }
 
     } while(!x_enclosure.is_interior_subset(x_guess));
 
     // Restoring ending gate, contracted by setting the envelope
-    if(t_propa & FORWARD)  slice.set_output_gate(xf);
-    if(t_propa & BACKWARD) slice.set_input_gate(xf);
-  }*/
+    for(int i = 0 ; i < tube.size() ; i++)
+    {
+      Slice *slice = tube[i].get_slice(slice_id);
+      if(t_propa & FORWARD)  slice->set_output_gate(xf[i]);
+      if(t_propa & BACKWARD) slice->set_input_gate(xf[i]);
+      // todo: ^ check this ^
+    }
+  }
 }

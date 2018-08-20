@@ -186,6 +186,7 @@ namespace tubex
     box[0] = t;
     if(nb_vars() != 0)
       box.put(1, x(t));
+
     return m_ibex_f->eval_vector(box);
   }
 
