@@ -135,4 +135,23 @@ namespace tubex
     v_beacons.push_back(Beacon(127.3493723, 156.32803660, 20.));
     return v_beacons;
   }
+  
+  map<int,vector<IntervalVector> > DataLoader_Redermor::get_observations() const
+  {
+    IntervalVector obs(2);
+    map<int,vector<IntervalVector> > m_obs;
+    obs[0] = 1748.0; obs[1] = 52.68; m_obs[0].push_back(obs);
+    obs[0] = 1054.0; obs[1] = 52.42; m_obs[1].push_back(obs);
+    obs[0] = 1374.0; obs[1] = 54.40; m_obs[1].push_back(obs);
+    obs[0] = 3038.0; obs[1] = 27.73; m_obs[1].push_back(obs);
+    obs[0] = 5688.0; obs[1] = 15.05; m_obs[1].push_back(obs);
+    obs[0] = 1092.0; obs[1] = 12.47; m_obs[2].push_back(obs);
+    obs[0] = 4817.0; obs[1] = 36.71; m_obs[3].push_back(obs);
+    obs[0] = 5172.0; obs[1] = 37.37; m_obs[3].push_back(obs);
+    obs[0] = 4024.0; obs[1] = 37.90; m_obs[4].push_back(obs);
+    obs[0] = 5232.0; obs[1] = 31.03; m_obs[4].push_back(obs);
+    obs[0] = 3688.0; obs[1] = 26.98; m_obs[5].push_back(obs);
+    obs[0] = 5279.0; obs[1] = 33.51; m_obs[5].push_back(obs);
+    return m_obs;
+  }
 }
