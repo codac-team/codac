@@ -27,7 +27,7 @@ namespace tubex
 
     // Embedded graphics
     vibes::beginDrawing();
-    m_fig = new VibesFigure_Tube("Solver", max_thickness.size());
+    m_fig = new VibesFigure_TubeVector("Solver", max_thickness.size());
     m_fig->set_properties(100,100,700,500);
   }
 
@@ -62,7 +62,7 @@ namespace tubex
 
         // 1. Refining
 
-          double t_refining = x.get_wider_slice()->domain().mid();
+          double t_refining = x[0].get_wider_slice()->domain().mid();
           x.sample(t_refining);
 
         // 2. Propagations up to the fixed point
@@ -80,7 +80,7 @@ namespace tubex
 
       } while(!emptiness
            && !stopping_condition_met(x)
-           && !fixed_point_reached(x.dim(), volume_before_refining, x.volume(), m_refining_fxpt_ratio));
+           && !fixed_point_reached(x.size(), volume_before_refining, x.volume(), m_refining_fxpt_ratio));
 
       // 4. Bisection
 
@@ -100,7 +100,7 @@ namespace tubex
           else
           {
             cout << "Bisection..." << endl;
-            double t_bisection = x.get_largest_slice()->domain().mid();
+            double t_bisection = x[0].get_largest_slice()->domain().mid();
             pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
             s.push(p_x.first);
             s.push(p_x.second);
@@ -129,7 +129,7 @@ namespace tubex
     return l_solutions;
   }
 
-  VibesFigure_Tube* Solver::figure()
+  VibesFigure_TubeVector* Solver::figure()
   {
     return m_fig;
   }
@@ -137,7 +137,7 @@ namespace tubex
   bool Solver::stopping_condition_met(const TubeVector& x)
   {
     Vector x_max_thickness = x.max_thickness();
-    for(int i = 0 ; i < x.dim() ; i++)
+    for(int i = 0 ; i < x.size() ; i++)
       if(x_max_thickness[i] > m_max_thickness[i])
         return false;
     return true;
@@ -160,13 +160,13 @@ namespace tubex
       emptiness = x.is_empty();
     } while(!emptiness
          && !stopping_condition_met(x)
-         && !fixed_point_reached(x.dim(), volume_before_ctc, x.volume(), propa_fxpt_ratio));
+         && !fixed_point_reached(x.size(), volume_before_ctc, x.volume(), propa_fxpt_ratio));
   }
 
   void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
   {
     double t_bisection;
-    x.max_gate_thickness(t_bisection);
+    x[0].max_gate_thickness(t_bisection);
     pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
     pair<TubeVector,TubeVector> p_x_1 = p_x.first.bisect(t_bisection);
     pair<TubeVector,TubeVector> p_x_2 = p_x.second.bisect(t_bisection);

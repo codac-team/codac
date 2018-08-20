@@ -16,7 +16,7 @@
 #include <list>
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
-#include "tubex_VibesFigure_Tube.h"
+#include "tubex_VibesFigure_TubeVector.h"
 
 namespace tubex
 {
@@ -30,7 +30,7 @@ namespace tubex
              float cid_fxpt_ratio = 0.005);
       ~Solver();
       const std::list<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
-      VibesFigure_Tube* figure();
+      VibesFigure_TubeVector* figure();
       bool solution_encloses(const std::list<TubeVector>& v_solutions, const TrajectoryVector& truth);
 
     protected:
@@ -46,7 +46,7 @@ namespace tubex
       float m_cid_fxpt_ratio;
 
       // Embedded graphics
-      VibesFigure_Tube *m_fig = NULL;
+      VibesFigure_TubeVector *m_fig = NULL;
   };
 }
 
