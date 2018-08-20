@@ -81,9 +81,15 @@ namespace tubex
       for(int i = 0 ; i < v_vibesfig_tube.size() ; i++)
         delete v_vibesfig_tube[i];
       vibes::endDrawing();
-    }
+    }*/
 
   // Non-static items
+    
+    VibesFigure_Tube::VibesFigure_Tube()
+      : VibesFigure("")
+    {
+  
+    }
 
     VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const Tube *tube, const Trajectory *traj)
       : VibesFigure(fig_name)
@@ -336,7 +342,7 @@ namespace tubex
             if(m_map_tubes[tube].tube_derivative != NULL)
               deriv_slice = m_map_tubes[tube].tube_derivative->get_first_slice();
 
-            draw_gate(slice->input_gate()[0], tube->domain().lb(), params_foreground_gates);
+            draw_gate(slice->input_gate(), tube->domain().lb(), params_foreground_gates);
 
             while(slice != NULL)
             {
@@ -345,7 +351,7 @@ namespace tubex
               else
                 draw_slice(*slice, params_foreground);
 
-              draw_gate(slice->output_gate()[0], slice->domain().ub(), params_foreground_gates);
+              draw_gate(slice->output_gate(), slice->domain().ub(), params_foreground_gates);
               slice = slice->next_slice();
               
               if(deriv_slice != NULL)
@@ -390,11 +396,7 @@ namespace tubex
     {
       if(slice.codomain().is_empty())
         return; // no display
-
-      IntervalVector boundedSlice(2);
-      boundedSlice[0] = slice.domain();
-      boundedSlice[1] = trunc_inf(slice.codomain()[0]);
-      draw_box(boundedSlice, params);
+      draw_box(slice.box(), params);
     }
 
     void VibesFigure_Tube::draw_slice(const Slice& slice, const Slice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon)
@@ -403,7 +405,7 @@ namespace tubex
         return; // no display
 
       draw_slice(slice, params_slice);
-      draw_polygon(slice.polygon(0, deriv_slice), params_polygon);
+      draw_polygon(slice.polygon(deriv_slice), params_polygon);
     }
 
     void VibesFigure_Tube::draw_gate(const Interval& gate, double t, const vibes::Params& params)
@@ -445,21 +447,21 @@ namespace tubex
 
       if(traj->get_function() == NULL)
       {
-        typename map<double,Vector>::const_iterator it_scalar_values;
+        typename map<double,double>::const_iterator it_scalar_values;
         for(it_scalar_values = traj->get_map().begin(); it_scalar_values != traj->get_map().end(); it_scalar_values++)
         {
           if(points_size != 0.)
-            vibes::drawPoint(it_scalar_values->first, it_scalar_values->second[0],
+            vibes::drawPoint(it_scalar_values->first, it_scalar_values->second,
                              points_size, vibesParams("figure", name(), "group", group_name));
 
           else
           {
             v_x.push_back(it_scalar_values->first);
-            v_y.push_back(it_scalar_values->second[0]);
+            v_y.push_back(it_scalar_values->second);
           }
 
           viewbox[0] |= it_scalar_values->first;
-          viewbox[1] |= it_scalar_values->second[0];
+          viewbox[1] |= it_scalar_values->second;
         }
       }
 
@@ -485,5 +487,5 @@ namespace tubex
         vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
 
       return viewbox;
-    }*/
+    }
 }

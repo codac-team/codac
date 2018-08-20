@@ -23,10 +23,12 @@ namespace tubex
   {
     public:
 
-      VibesFigure_TubeVector(const std::string& fig_name, int dim = 1);
+      VibesFigure_TubeVector(const std::string& fig_name, int n = 1);
       VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj = NULL);
       ~VibesFigure_TubeVector();
       int size() const;
+      
+      void set_properties(int x, int y, int width, int height);
 
       void add_tube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
       void set_tube_name(const TubeVector *tube, const std::string& name);
@@ -51,7 +53,8 @@ namespace tubex
 
     protected:
 
-
+      int m_n;
+      VibesFigure_Tube *m_v_figs = NULL;
   };
 }
 

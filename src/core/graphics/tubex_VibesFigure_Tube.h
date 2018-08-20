@@ -63,6 +63,7 @@ namespace tubex
 
     protected:
 
+      VibesFigure_Tube(); // todo: remove this?
       virtual const ibex::IntervalVector draw_tube(const Tube *tube, bool detail_slices = false);
       const Polygon polygon_envelope(const Tube *tube) const;
       virtual void draw_slice(const Slice& slice, const vibes::Params& params);
@@ -92,6 +93,7 @@ namespace tubex
       std::map<const Trajectory*,FigTrajParams> m_map_trajs;
 
       static std::vector<VibesFigure_Tube*> v_vibesfig_tube;
+      friend class VibesFigure_TubeVector;
   };
 }
 
