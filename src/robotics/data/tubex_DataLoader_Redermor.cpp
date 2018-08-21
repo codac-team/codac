@@ -32,10 +32,10 @@ namespace tubex
     clock_t t_start = clock();
     cout << "Loading data..." << flush;
 
-    if(serialized_data_available())
-      deserialize_data(x, truth);
-
-    else // loading data from file
+    //if(serialized_data_available())
+    //  deserialize_data(x, truth);
+    //
+    //else // loading data from file
     {
       // todo: truncate domain
       if(!m_datafile->is_open())
@@ -43,8 +43,8 @@ namespace tubex
 
       int i = 0;
       string line;
-      TrajectoryVector traj_data_x, traj_data_dx, traj_depth, traj_ddepth;
-      truth = new TrajectoryVector();
+      TrajectoryVector traj_data_x(10), traj_data_dx(10);
+      truth = new TrajectoryVector(6);
 
       while(getline(*m_datafile, line))
       {
@@ -70,23 +70,20 @@ namespace tubex
           throw Exception("DataLoader_Redermor::load_data", "fail loading data");
 
         // Trajectory used for velocities evaluations:
-        traj_data_x.set(t, y.subvector(0,5));
-        traj_data_dx.set(t, dy.subvector(0,5));
-
-        // Trajectory used for depth enclosure:
-        traj_depth.set(t, y.subvector(6,6));
-        traj_ddepth.set(t, 0.01 * y.subvector(6,6));
+        traj_data_x.set(t, y);
+        traj_data_dx.set(t, dy);
 
         // Trajectory used as ground truth:
         Vector truth_vector(6);
-        truth_vector.put(0, y.subvector(8,9));
-        truth_vector[2] = y[6];
-        truth_vector.put(3, Vector(3, 0.));
+        truth_vector.put(0, y.subvector(8,9)); // position
+        truth_vector[2] = y[6]; // depth
+        truth_vector.put(3, Vector(3, 0.)); // unknown velocities
         truth->set(t, truth_vector);
       }
 
       // Data from sensors with uncertainties:
-      TubeVector data_x(traj_data_x, 1.);
+      float timestep = 10.;
+      TubeVector data_x(traj_data_x, timestep);
       data_x.inflate(traj_data_dx);
 
       // Computing robot's velocities:
@@ -105,20 +102,20 @@ namespace tubex
       x = new TubeVector(data_x);
 
       // Horizontal position
-      x[0] = velocities[0].primitive();
-      x[1] = velocities[1].primitive();
+      (*x)[0] = velocities[0].primitive();
+      (*x)[1] = velocities[1].primitive();
 
       // Case of the depth, directly sensed:
-      x[2].set_empty();
-      x[2] |= traj_depth; // envelope of the trajectory
-      x[2].inflate(traj_ddepth);
+      (*x)[2].set_empty();
+      (*x)[2] |= traj_data_x[6]; // envelope of the trajectory
+      (*x)[2].inflate(traj_data_dx[6]);
 
       // 3d velocities
-      x[3] = velocities[0].primitive();
-      x[4] = velocities[1].primitive();
-      x[5] = velocities[2].primitive();
+      (*x)[3] = velocities[0];
+      (*x)[4] = velocities[1];
+      (*x)[5] = velocities[2];
 
-      serialize_data(*x, *truth);
+      //serialize_data(*x, *truth);
     }
 
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
