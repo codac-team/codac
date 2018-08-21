@@ -3,7 +3,7 @@
 # ==================================================================
 
 add_subdirectory(01_picard)
-#add_subdirectory(02_xmsin_fwd)
+add_subdirectory(02_xmsin_fwd)
 #add_subdirectory(03_xmsin_bwd)
 add_subdirectory(04_bvp)
 #add_subdirectory(05_delay)

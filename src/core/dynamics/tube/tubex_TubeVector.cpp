@@ -441,11 +441,11 @@ namespace tubex
     bool TubeVector::encloses(const TrajectoryVector& x) const
     {
       DimensionException::check(*this, x);
-
-      // todo: for(int i = 0 ; i < size() ; i++)
-      // todo:   if(!(*this)[i].encloses(x[i]))
-      // todo:     return false;
-      // todo: return true;
+      
+      for(int i = 0 ; i < size() ; i++)
+        if(!(*this)[i].encloses(x[i]))
+          return false;
+      return true;
     }
 
     // Setting values

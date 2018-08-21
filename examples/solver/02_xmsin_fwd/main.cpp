@@ -21,17 +21,16 @@ int main()
 {
   /* =========== PARAMETERS =========== */
 
-    int n = 1;
-    Vector epsilon(n, 0.05);
+    Vector epsilon(1, 0.05);
     Interval domain(0.,10.);
-    TubeVector x(domain, n);
-    Trajectory truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
-    x.set(IntervalVector(n, truth[0.]), 0.); // initial condition
+    TubeVector x(domain);
+    TrajectoryVector truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
+    x.set(IntervalVector(truth(0.)), 0.); // initial condition
 
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon, 0.0001, 0.005, 0.005);
-    solver.figure()->add_trajectory(&truth, "truth", "blue");
+    solver.figure()->add_trajectoryvector(&truth, "truth", "blue");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 
