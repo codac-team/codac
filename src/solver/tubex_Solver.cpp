@@ -13,6 +13,8 @@
 #include <time.h>
 #include "tubex_Solver.h"
 
+#define GRAPHICS 1
+
 using namespace std;
 using namespace ibex;
 
@@ -25,23 +27,29 @@ namespace tubex
     m_propa_fxpt_ratio = propa_fxpt_ratio;
     m_cid_fxpt_ratio = cid_fxpt_ratio;
 
-    // Embedded graphics
-    vibes::beginDrawing();
-    m_fig = new VibesFigure_TubeVector("Solver", max_thickness.size());
-    m_fig->set_properties(100,100,700,500);
+    #if GRAPHICS // embedded graphics
+      vibes::beginDrawing();
+      m_fig = new VibesFigure_TubeVector("Solver", max_thickness.size());
+      m_fig->set_properties(100,100,700,500);
+    #endif
   }
 
   Solver::~Solver()
   {
-    delete m_fig;
-    vibes::endDrawing();
+    #if GRAPHICS
+      delete m_fig;
+      vibes::endDrawing();
+    #endif
   }
 
   const list<TubeVector> Solver::solve(const TubeVector& x0, void (*ctc_func)(TubeVector&))
   {
     int i = 0;
     clock_t t_start = clock();
-    m_fig->show(true);
+
+    #if GRAPHICS
+      m_fig->show(true);
+    #endif
 
     // todo: check dim max_thickness vector
     stack<TubeVector> s;
@@ -70,7 +78,7 @@ namespace tubex
           propagation(x, ctc_func, m_propa_fxpt_ratio);
 
         // 3. CID up to the fixed point
-      
+
           emptiness = x.is_empty();
           if(!emptiness)
           {
@@ -90,10 +98,12 @@ namespace tubex
           {
             l_solutions.push_back(x);
 
-            // Displaying solution
-            ostringstream o; o << "solution_" << i;
-            m_fig->add_tube(&l_solutions.back(), o.str());
-            m_fig->show(true);
+            #if GRAPHICS // displaying solution
+              ostringstream o; o << "solution_" << i;
+              m_fig->add_tube(&l_solutions.back(), o.str());
+              m_fig->show(true);
+            #endif
+
             i++;
           }
 
@@ -121,7 +131,7 @@ namespace tubex
     {
       j++;
       cout << j << ": "
-           << *it <<  ", tf↦" << (*it)[it->domain().ub()]
+           << *it <<  ", tf↦" << (*it)(it->domain().ub())
            << " (max thickness: " << it->max_thickness() << ")"
            << endl;
     }
