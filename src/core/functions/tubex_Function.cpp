@@ -185,7 +185,8 @@ namespace tubex
     IntervalVector box(nb_vars() + 1); // +1 for system variable (t)
     box[0] = t;
     if(nb_vars() != 0)
-      box.put(1, x(t));
+      for(int i = 0 ; i < x.size() ; i++)
+        box[i+1] = x[i](t);
 
     return m_ibex_f->eval_vector(box);
   }
@@ -211,18 +212,21 @@ namespace tubex
 
     IntervalVector box(x.size() + 1);
     
-    for(int i = 0 ; i < x.nb_slices() ; i++)
+    for(int k = 0 ; k < x.nb_slices() ; k++)
     {
-      if(x(i).is_empty())
-        y.set(IntervalVector(y.size(), Interval::EMPTY_SET), i);
+      if(x(k).is_empty())
+        y.set(IntervalVector(y.size(), Interval::EMPTY_SET), k);
       
       else
       {
-        box[0] = x[0].get_slice(i)->domain();
-        box.put(1, x(i));
-        y.set(m_ibex_f->eval_vector(box), i);
+        box[0] = x[0].get_slice(k)->domain();
+        for(int i = 0 ; i < x.size() ; i++)
+          box[i+1] = x[i](k);
+        y.set(m_ibex_f->eval_vector(box), k);
+
         box[0] = box[0].lb();
-        box.put(1, x(box[0]));
+        for(int i = 0 ; i < x.size() ; i++)
+          box[i+1] = x[i](box[0]);
         y.set(m_ibex_f->eval_vector(box), box[0]);
       }
     }
@@ -230,7 +234,8 @@ namespace tubex
     if(!x(x.nb_slices() - 1).is_empty())
     {
       box[0] = x[0].get_last_slice()->domain().ub();
-      box.put(1, x(box[0]));
+      for(int i = 0 ; i < x.size() ; i++)
+        box[i+1] = x[i](box[0]);
       y.set(m_ibex_f->eval_vector(box), box[0]);
     }
 

@@ -28,8 +28,8 @@ namespace tubex
 
       CtcDelay(bool preserve_slicing = false);
 
-      // Tube
       bool contract(const ibex::Interval& a, const Tube& x, Tube& y) const;
+      bool contract(const ibex::Interval& a, const TubeVector& x, TubeVector& y) const;
 
     protected:
 

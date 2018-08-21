@@ -24,31 +24,31 @@ namespace tubex
     public:
 
       VibesFigure_TubeVector(const std::string& fig_name, int n = 1);
-      VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj = NULL);
+      VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector = NULL);
       ~VibesFigure_TubeVector();
       int size() const;
       
       void set_properties(int x, int y, int width, int height);
 
-      void add_tube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
-      void set_tube_name(const TubeVector *tube, const std::string& name);
-      void set_tube_derivative(const TubeVector *tube, const TubeVector *derivative);
-      void set_tube_color(const TubeVector *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd);
-      void set_tube_color(const TubeVector *tube, int color_type, const std::string& color);
-      void remove_tube(const TubeVector *tube);
+      void add_tubevector(const TubeVector *tubevector, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
+      void set_tubevector_name(const TubeVector *tubevector, const std::string& name);
+      void set_tubevector_derivative(const TubeVector *tubevector, const TubeVector *derivative);
+      void set_tubevector_color(const TubeVector *tubevector, const std::string& color_frgrnd, const std::string& color_bckgrnd);
+      void set_tubevector_color(const TubeVector *tubevector, int color_type, const std::string& color);
+      void remove_tubevector(const TubeVector *tubevector);
 
-      void add_trajectory(const TrajectoryVector *traj, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
-      void set_trajectory_name(const TrajectoryVector *traj, const std::string& name);
-      void set_trajectory_color(const TrajectoryVector *traj, const std::string& color);
-      void remove_trajectory(const TrajectoryVector *traj);
+      void add_trajectoryvector(const TrajectoryVector *trajvector, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
+      void set_trajectoryvector_name(const TrajectoryVector *trajvector, const std::string& name);
+      void set_trajectoryvector_color(const TrajectoryVector *trajvector, const std::string& color);
+      void remove_trajectoryvector(const TrajectoryVector *trajvector);
 
       void show(bool detail_slices = false);
 
       // Static methods (shortcuts for fast and simple use)
       static void draw(const std::string& fig_name, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const TubeVector *tube, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const TrajectoryVector *traj, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, const TubeVector *tubevector, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, const TrajectoryVector *trajvector, int x = 0, int y = 0);
+      static void draw(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector, int x = 0, int y = 0);
       static void end_drawing();
 
     protected:

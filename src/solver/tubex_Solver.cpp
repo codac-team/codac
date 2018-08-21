@@ -30,7 +30,7 @@ namespace tubex
     #if GRAPHICS // embedded graphics
       vibes::beginDrawing();
       m_fig = new VibesFigure_TubeVector("Solver", max_thickness.size());
-      m_fig->set_properties(100,100,700,500);
+      m_fig->set_properties(100, 100, 700, 500);
     #endif
   }
 
@@ -99,12 +99,11 @@ namespace tubex
             l_solutions.push_back(x);
 
             #if GRAPHICS // displaying solution
+              i++;
               ostringstream o; o << "solution_" << i;
-              m_fig->add_tube(&l_solutions.back(), o.str());
+              m_fig->add_tubevector(&l_solutions.back(), o.str());
               m_fig->show(true);
             #endif
-
-            i++;
           }
 
           else

@@ -18,21 +18,21 @@ void contract(TubeVector& x)
     System sys(fac);
     ibex::CtcHC4 hc4(sys);
     IntervalVector bounds(2);
-    bounds[0] = x[0.][0];
-    bounds[1] = x[1.][0];
+    bounds[0] = x[0](0.);
+    bounds[1] = x[0](1.);
     hc4.contract(bounds);
-    x.set(IntervalVector(1,bounds[0]), 0.);
-    x.set(IntervalVector(1,bounds[1]), 1.);
+    x.set(IntervalVector(bounds[0]), 0.);
+    x.set(IntervalVector(bounds[1]), 1.);
   
   // Differential equation
 
     tubex::Function f("x", "x");
 
-    CtcPicard ctc_picard(true);
+    CtcPicard ctc_picard(true, 1.1);
     ctc_picard.contract(f, x);
     
     CtcDeriv ctc_deriv(true);
-    ctc_deriv.contract(x, f.eval(x));
+    ctc_deriv.contract(x, f.eval_vector(x));
 }
 
 int main()
@@ -43,14 +43,14 @@ int main()
     Vector epsilon(n, 0.05);
     Interval domain(0.,1.);
     TubeVector x(domain, n);
-    Trajectory truth1(domain, tubex::Function("exp(t)/sqrt(1+exp(2))"));
-    Trajectory truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
+    TrajectoryVector truth1(domain, tubex::Function("exp(t)/sqrt(1+exp(2))"));
+    TrajectoryVector truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
 
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon, 0.005, 0.005, 1.);
-    solver.figure()->add_trajectory(&truth1, "truth1", "blue");
-    solver.figure()->add_trajectory(&truth2, "truth2", "red");
+    solver.figure()->add_trajectoryvector(&truth1, "truth1", "blue");
+    solver.figure()->add_trajectoryvector(&truth2, "truth2", "red");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 

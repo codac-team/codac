@@ -56,4 +56,15 @@ namespace tubex
 
     // todo: return value
   }
+
+  bool CtcDelay::contract(const Interval& a, const TubeVector& x, TubeVector& y) const
+  {
+    // todo: check dim x, y
+    bool result = false;
+
+    for(int i = 0 ; i < x.size() ; i++)
+      result |= contract(a, x[i], y[i]);
+    
+    return result;
+  }
 }

@@ -28,8 +28,8 @@ namespace tubex
     }
   }
 
-  VibesFigure_TubeVector::VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
-    : VibesFigure_TubeVector(fig_name, tube->size())
+  VibesFigure_TubeVector::VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector)
+    : VibesFigure_TubeVector(fig_name, tubevector->size())
   {
     // todo: check dim tube, traj
   }
@@ -52,66 +52,66 @@ namespace tubex
       m_v_figs[i]->set_properties(x + i*200, y + i*200, width, height);
   }
 
-  void VibesFigure_TubeVector::add_tube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd, const std::string& color_bckgrnd)
+  void VibesFigure_TubeVector::add_tubevector(const TubeVector *tubevector, const std::string& name, const std::string& color_frgrnd, const std::string& color_bckgrnd)
   {
     // todo: check dim tube
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->add_tube(&(*tube)[i], name, color_frgrnd, color_bckgrnd);
+      m_v_figs[i]->add_tube(&(*tubevector)[i], name, color_frgrnd, color_bckgrnd);
   }
 
-  void VibesFigure_TubeVector::set_tube_name(const TubeVector *tube, const std::string& name)
+  void VibesFigure_TubeVector::set_tubevector_name(const TubeVector *tubevector, const std::string& name)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->set_tube_name(&(*tube)[i], name);
+      m_v_figs[i]->set_tube_name(&(*tubevector)[i], name);
   }
 
-  void VibesFigure_TubeVector::set_tube_derivative(const TubeVector *tube, const TubeVector *derivative)
+  void VibesFigure_TubeVector::set_tubevector_derivative(const TubeVector *tubevector, const TubeVector *derivative)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->set_tube_derivative(&(*tube)[i], &(*derivative)[i]);
+      m_v_figs[i]->set_tube_derivative(&(*tubevector)[i], &(*derivative)[i]);
   }
 
-  void VibesFigure_TubeVector::set_tube_color(const TubeVector *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd)
+  void VibesFigure_TubeVector::set_tubevector_color(const TubeVector *tubevector, const std::string& color_frgrnd, const std::string& color_bckgrnd)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->set_tube_color(&(*tube)[i], color_frgrnd, color_bckgrnd);
+      m_v_figs[i]->set_tube_color(&(*tubevector)[i], color_frgrnd, color_bckgrnd);
   }
 
-  void VibesFigure_TubeVector::set_tube_color(const TubeVector *tube, int color_type, const std::string& color)
+  void VibesFigure_TubeVector::set_tubevector_color(const TubeVector *tubevector, int color_type, const std::string& color)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->set_tube_color(&(*tube)[i], color_type, color);
+      m_v_figs[i]->set_tube_color(&(*tubevector)[i], color_type, color);
   }
 
-  void VibesFigure_TubeVector::remove_tube(const TubeVector *tube)
+  void VibesFigure_TubeVector::remove_tubevector(const TubeVector *tubevector)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->remove_tube(&(*tube)[i]);
+      m_v_figs[i]->remove_tube(&(*tubevector)[i]);
   }
 
-  void VibesFigure_TubeVector::add_trajectory(const TrajectoryVector *traj, const std::string& name, const std::string& color)
+  void VibesFigure_TubeVector::add_trajectoryvector(const TrajectoryVector *trajvector, const std::string& name, const std::string& color)
   {
     // todo: check dim traj
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->add_trajectory(&(*traj)[i], name, color);
+      m_v_figs[i]->add_trajectory(&(*trajvector)[i], name, color);
   }
 
-  void VibesFigure_TubeVector::set_trajectory_name(const TrajectoryVector *traj, const std::string& name)
+  void VibesFigure_TubeVector::set_trajectoryvector_name(const TrajectoryVector *trajvector, const std::string& name)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->set_trajectory_name(&(*traj)[i], name);
+      m_v_figs[i]->set_trajectory_name(&(*trajvector)[i], name);
   }
 
-  void VibesFigure_TubeVector::set_trajectory_color(const TrajectoryVector *traj, const std::string& color)
+  void VibesFigure_TubeVector::set_trajectoryvector_color(const TrajectoryVector *trajvector, const std::string& color)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->set_trajectory_color(&(*traj)[i], color);
+      m_v_figs[i]->set_trajectory_color(&(*trajvector)[i], color);
   }
 
-  void VibesFigure_TubeVector::remove_trajectory(const TrajectoryVector *traj)
+  void VibesFigure_TubeVector::remove_trajectoryvector(const TrajectoryVector *trajvector)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->remove_trajectory(&(*traj)[i]);
+      m_v_figs[i]->remove_trajectory(&(*trajvector)[i]);
   }
 
   void VibesFigure_TubeVector::show(bool detail_slices)

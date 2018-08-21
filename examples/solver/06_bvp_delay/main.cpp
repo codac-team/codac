@@ -11,17 +11,18 @@ class FncDelayCustom : public tubex::Fnc
   public: 
 
     FncDelayCustom(double delay) : Fnc(1,1), m_delay(delay) { };
-    const IntervalVector eval(const Interval& t, const IntervalVector& x) const { return x; };
 
-    const IntervalVector eval(const Interval& t, const TubeVector& x) const
+    const Interval eval(const Interval& t, const TubeVector& x) const { /* not defined */ };
+
+    const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
-      IntervalVector eval_result(x.dim(), Interval::EMPTY_SET);
+      IntervalVector eval_result(x.size(), Interval::EMPTY_SET);
 
       if((t - m_delay).lb() <= x.domain().lb())
-        eval_result |= eval(t, x[t]);
+        eval_result |= x(t);
 
       if((t - m_delay).ub() >= x.domain().lb())
-        eval_result |= exp(m_delay) * x[(t - m_delay) & x.domain()];
+        eval_result |= exp(m_delay) * x((t - m_delay) & x.domain());
 
       return eval_result;
     }
@@ -43,11 +44,11 @@ void contract(TubeVector& x)
     System sys(fac);
     ibex::CtcHC4 hc4(sys);
     IntervalVector bounds(2);
-    bounds[0] = x[0.][0];
-    bounds[1] = x[1.][0];
+    bounds[0] = x[0](0.);
+    bounds[1] = x[0](1.);
     hc4.contract(bounds);
-    x.set(IntervalVector(1,bounds[0]), 0.);
-    x.set(IntervalVector(1,bounds[1]), 1.);
+    x.set(IntervalVector(bounds[0]), 0.);
+    x.set(IntervalVector(bounds[1]), 1.);
 
   // Differential constraint
 
@@ -58,7 +59,7 @@ void contract(TubeVector& x)
     ctc_picard.contract(f, x);
 
     CtcDelay ctc_delay(true);
-    TubeVector y(x, IntervalVector(x.dim(), Interval::ALL_REALS));
+    TubeVector y(x, IntervalVector(x.size(), Interval::ALL_REALS));
     ctc_delay.contract(delay, x, y);
 
     CtcDeriv ctc_deriv(true);
@@ -73,14 +74,14 @@ int main()
     Vector epsilon(n, 0.05);
     Interval domain(0.,1.);
     TubeVector x(domain, n);
-    Trajectory truth1(domain, tubex::Function("exp(t)/sqrt(1+exp(2))"));
-    Trajectory truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
+    TrajectoryVector truth1(domain, tubex::Function("exp(t)/sqrt(1+exp(2))"));
+    TrajectoryVector truth2(domain, tubex::Function("-exp(t)/sqrt(1+exp(2))"));
 
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon, 0.005, 0.005, 1.);
-    solver.figure()->add_trajectory(&truth1, "truth1", "blue");
-    solver.figure()->add_trajectory(&truth2, "truth2", "red");
+    solver.figure()->add_trajectoryvector(&truth1, "truth1", "blue");
+    solver.figure()->add_trajectoryvector(&truth2, "truth2", "red");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 
