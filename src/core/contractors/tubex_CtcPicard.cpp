@@ -64,7 +64,7 @@ namespace tubex
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
           // then it is sampled and contracted again.
-          if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 5000.)
+          if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 500.)
           {
             
             x.sample(x[0].slice_domain(k).mid()); // all the tubes components are sampled
@@ -83,7 +83,7 @@ namespace tubex
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
           // then it is sampled and contracted again.
-          if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 5000.)
+          if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 500.)
           {
             x.sample(x[0].slice_domain(k).mid()); // all the tubes components are sampled
             k+=2; // the second subslice will be computed

@@ -15,11 +15,11 @@ using namespace tubex;
 
 TEST_CASE("CtcEval")
 {
-  /*SECTION("Test CtcEval, 1")
+  SECTION("Test CtcEval, 1")
   {
     Interval t(0.,6.), z(-1.,1.);
     Tube x(Interval(-1.,7.), 2.);
-      x &= Interval(-10.,10.);
+      x &= Interval(-10.,10.); // todo: remove this
     Tube v(x);
     v.set(Interval(-1.), 0);
     v.set(Interval(-1.,1.), 1);
@@ -31,16 +31,16 @@ TEST_CASE("CtcEval")
     ctc_eval.contract(t, z, x, v);
     CHECK(x.nb_slices() == 6);
 
-    CHECK(x.codomain() == Interval::ALL_REALS); // only gates should be affected
-    CHECK(x[-1.] == Interval::ALL_REALS);
-    CHECK(x[0.] == Interval(-2.,6.));
-    CHECK(x[1.] == Interval(-3.,5.));
-    CHECK(x[3.] == Interval(-4.,3.));
-    CHECK(x[5.] == Interval(-6.,1.));
-    CHECK(x[6.] == Interval(-5.,2.));
-    CHECK(x[7.] == Interval::ALL_REALS);
+    CHECK(x.codomain() == (Interval::ALL_REALS & Interval(-10.,10.))); // only gates should be affected
+    CHECK(x(-1.) == (Interval::ALL_REALS & Interval(-10.,10.)));
+    CHECK(x(0.) == Interval(-2.,6.));
+    CHECK(x(1.) == Interval(-3.,5.));
+    CHECK(x(3.) == Interval(-4.,3.));
+    CHECK(x(5.) == Interval(-6.,1.));
+    CHECK(x(6.) == Interval(-5.,2.));
+    CHECK(x(7.) == (Interval::ALL_REALS & Interval(-10.,10.)));
 
-    if(VIBES_DRAWING) // drawing results
+    if(false & VIBES_DRAWING) // drawing results
     {
       vibes::beginDrawing();
       x &= Interval(-10.,10.);
@@ -48,15 +48,15 @@ TEST_CASE("CtcEval")
       fig_tube.set_properties(100, 100, 500, 500);
       fig_tube.set_tube_derivative(&x, &v);
       fig_tube.show(true);
-      vibes::end_drawing();
+      vibes::endDrawing();
     }
   }
-/*
+
   SECTION("Test CtcEval, 2")
   {
     Interval t(0.,6.), z(-1.,1.);
     Tube x(Interval(-1.,7.), 2.);
-      x &= Interval(-10.,10.);
+      x &= Interval(-10.,10.); // todo: remove this
     Tube v(x);
     v.set(Interval(-1.), 0);
     v.set(Interval(-1.,1.), 1);
@@ -73,15 +73,15 @@ TEST_CASE("CtcEval")
 
     CHECK(x.nb_slices() == 7);
 
-    CHECK(x.codomain() == Interval::ALL_REALS); // only gates should be affected
-    CHECK(x[-1.] == Interval::ALL_REALS);
-    CHECK(x[0.] == Interval(0.,3.));
-    CHECK(x[1.] == Interval(-1.,2.));
-    CHECK(x[2.] == Interval(0.,1.));
-    CHECK(x[3.] == Interval(-1.,2.));
-    CHECK(x[5.] == Interval(-3.,1.));
-    CHECK(x[6.] == Interval(-2.,2.));
-    CHECK(x[7.] == Interval::ALL_REALS);
+    CHECK(x.codomain() == (Interval::ALL_REALS & Interval(-10.,10.))); // only gates should be affected
+    CHECK(x(-1.) == (Interval::ALL_REALS & Interval(-10.,10.)));
+    CHECK(x(0.) == Interval(0.,3.));
+    CHECK(x(1.) == Interval(-1.,2.));
+    CHECK(x(2.) == Interval(0.,1.));
+    CHECK(x(3.) == Interval(-1.,2.));
+    CHECK(x(5.) == Interval(-3.,1.));
+    CHECK(x(6.) == Interval(-2.,2.));
+    CHECK(x(7.) == (Interval::ALL_REALS & Interval(-10.,10.)));
 
     t = Interval(1.75,5.5);
     z = Interval(1.6);
@@ -89,30 +89,35 @@ TEST_CASE("CtcEval")
     ctc_eval = CtcEval(false, true);
     ctc_eval.contract(t, z, x, v);
 
+    VibesFigure_Tube *fig_tube;
     if(VIBES_DRAWING) // drawing results
     {
       vibes::beginDrawing();
       x &= Interval(-10.,10.);
-      VibesFigure_Tube fig_tube("ctceval", &x);
-      fig_tube.set_properties(100, 100, 500, 500);
-      fig_tube.set_tube_derivative(&x, &v);
-      fig_tube.show(true);
+      fig_tube = new VibesFigure_Tube("ctceval", &x);
+      fig_tube->set_properties(1500, 100, 500, 500);
+      fig_tube->set_tube_derivative(&x, &v);
+      fig_tube->show(true);
     }
 
     IntervalVector box(2);
     box[0] = Interval(1.75,5.5);
     box[1] = Interval(1.6);
 
-    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "ctceval", "red"));
+    if(VIBES_DRAWING) fig_tube->draw_box(box, vibesParams("figure", "ctceval", "red"));
     ctc_eval.contract(box[0], box[1], x, v);
-    if(VIBES_DRAWING) vibes::drawBox(box, vibesParams("figure", "ctceval", "blue"));
+    if(VIBES_DRAWING) fig_tube->draw_box(box, vibesParams("figure", "ctceval", "blue"));
 
-    CHECK(x.interpol(3.8,v) == Interval(-1.8,1.6));
-    CHECK(box[0] == Interval(2.6,3.8));
+    CHECK(ApproxIntv(x.interpol(3.4,v)) == Interval(0.8,1.6));
+    CHECK(box[0] == Interval(2.6,3.4));
     CHECK(box[1] == Interval(1.6));
 
-    if(VIBES_DRAWING) vibes::end_drawing();
-  }*/
+    if(VIBES_DRAWING)
+    {
+      delete fig_tube;
+      vibes::endDrawing();
+    }
+  }
 
   SECTION("Test CtcEval, special cases")
   {
