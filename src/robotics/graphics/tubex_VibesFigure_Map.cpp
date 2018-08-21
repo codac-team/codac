@@ -10,8 +10,12 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
+#include <string>
 #include "tubex_VibesFigure_Map.h"
 #include "tubex_Colors.h"
+#include "tubex_Tube.h"
+#include "tubex_Trajectory.h"
+#include "vibes.h"
 
 using namespace std;
 using namespace ibex;
@@ -21,13 +25,101 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*VibesFigure_Map::VibesFigure_Map(const string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
-    : VibesFigure_Tube(fig_name, 1) // one layer
+  VibesFigure_Map::VibesFigure_Map(const string& fig_name)
+    : VibesFigure(fig_name)
   {
-    add_tube(tube, DEFAULT_TUBE_NAME);
-    add_trajectory(traj, DEFAULT_TRAJ_NAME, GRAY_DISPLAY_MODE ? DEFAULT_TRAJ_COLOR : "white");
-
     vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
+  }
+
+  VibesFigure_Map::~VibesFigure_Map()
+  {
+    typename map<const TubeVector*,FigMapTubeParams>::const_iterator it;
+    for(it = m_map_tubes.begin(); it != m_map_tubes.end(); it++)
+      if(it->second.tube_copy != NULL)
+        delete it->second.tube_copy;
+  }
+
+  void VibesFigure_Map::add_tube(const TubeVector *tube, const string& name, int index_x, int index_y)
+  {
+    if(m_map_tubes.find(tube) != m_map_tubes.end())
+      cout << "Warning VibesFigure_Map::add_tube(): tube already added" << endl;
+
+    else
+      m_map_tubes[tube];
+
+    // todo: check index...
+    m_map_tubes[tube].index_x = index_x;
+    m_map_tubes[tube].index_y = index_y;
+    set_tube_name(tube, name);
+
+    vibes::newGroup("tube_" + name + "_bckgrnd", "lightgray[lightgray]", vibesParams("figure", this->name()));
+    vibes::newGroup("tube_" + name, "gray[gray]", vibesParams("figure", this->name()));
+  }
+
+  void VibesFigure_Map::set_tube_name(const TubeVector *tube, const string& name)
+  {
+    if(m_map_tubes.find(tube) == m_map_tubes.end())
+      cout << "Warning VibesFigure_Map::set_tube_name(): unknown tube" << endl;
+
+    m_map_tubes[tube].name = name;
+  }
+  
+  void VibesFigure_Map::remove_tube(const TubeVector *tube)
+  {
+    if(m_map_tubes.find(tube) == m_map_tubes.end())
+      cout << "Warning VibesFigure_Map::remove_tube(): unable to remove" << endl;
+
+    if(m_map_tubes[tube].tube_copy != NULL)
+      delete m_map_tubes[tube].tube_copy;
+    m_map_tubes.erase(tube);
+  }
+
+  void VibesFigure_Map::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
+  {
+    if(m_map_trajs.find(traj) != m_map_trajs.end())
+      cout << "Warning VibesFigure_Map::add_trajectory(): trajectory already added" << endl;
+
+    else
+      m_map_trajs[traj];
+
+    // todo: check index...
+    m_map_trajs[traj].index_x = index_x;
+    m_map_trajs[traj].index_y = index_y;
+    m_map_trajs[traj].index_heading = index_heading;
+
+    set_trajectory_name(traj, name);
+    set_trajectory_color(traj, color);
+  }
+
+  void VibesFigure_Map::set_trajectory_name(const TrajectoryVector *traj, const string& name)
+  {
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      cout << "Warning VibesFigure_Map::set_trajectory_name(): unknown trajectory" << endl;
+
+    m_map_trajs[traj].name = name;
+  }
+  
+  void VibesFigure_Map::set_trajectory_color(const TrajectoryVector *traj, const string& color)
+  {
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      cout << "Warning VibesFigure_Map::set_trajectory_color(): unknown trajectory" << endl;
+
+    if(GRAY_DISPLAY_MODE)
+      m_map_trajs[traj].color = color;
+
+    else
+      m_map_trajs[traj].color = "white";
+
+    // Related groups are created during the display procedure
+    // so that trajectories stay on top of the tubes.
+  }
+  
+  void VibesFigure_Map::remove_trajectory(const TrajectoryVector *traj)
+  {
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      cout << "Warning VibesFigure_Map::remove_trajectory(): unable to remove" << endl;
+
+    m_map_trajs.erase(traj);
   }
 
   void VibesFigure_Map::add_beacon(const Beacon& beacon, const string& color)
@@ -43,76 +135,66 @@ namespace tubex
       add_beacon(v_beacons[i], color);
   }
 
-  const IntervalVector VibesFigure_Map::draw_tube(const TubeVector *tube, bool detail_slices)
+  void VibesFigure_Map::show()
+  {
+    typename map<const TubeVector*,FigMapTubeParams>::const_iterator it_tubes;
+    for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
+      m_view_box |= draw_tube(it_tubes->first);
+
+    // Trajectories are drawn on top of the tubes
+    typename map<const TrajectoryVector*,FigMapTrajParams>::const_iterator it_trajs;
+    for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
+      m_view_box |= draw_trajectory(it_trajs->first);
+
+    axis_limits(m_view_box);
+  }
+
+  const IntervalVector VibesFigure_Map::draw_tube(const TubeVector *tube)
   {
     IntervalVector viewbox(2, Interval::EMPTY_SET);
 
     // Computing viewbox
 
-      Vector image_lb(2), image_ub(2);
+      Vector pos_lb(2), pos_ub(2);
       for(int i = 0 ; i < 2 ; i++)
       {
-        if(!tube->codomain().is_unbounded())
-        {
-          image_lb[i] = tube->codomain()[i].lb();
-          image_ub[i] = tube->codomain()[i].ub();
-        }
+        int index = (i == 0) ? m_map_tubes[tube].index_x : m_map_tubes[tube].index_y;
 
+        if(!(*tube)[index].codomain().is_unbounded())
+        {
+          pos_lb[i] = (*tube)[index].codomain().lb();
+          pos_ub[i] = (*tube)[index].codomain().ub();
+        }
+        
         else // some slices can be [-oo,+oo], maybe not all of them
         {
-          image_lb[i] = NAN;
-          image_ub[i] = NAN;
-
+          pos_lb[i] = NAN;
+          pos_ub[i] = NAN;
+          
           for(int k = 0 ; k < tube->nb_slices() ; k++) // todo: slice ptr iteration
           {
-            Interval slice = (*tube)[k][i];
+            Interval slice = (*tube)[index](k);
             if(!slice.is_unbounded())
             {
-              image_lb[i] = std::isnan(image_lb[i]) || image_lb[i] > slice.lb() ? slice.lb() : image_lb[i];
-              image_ub[i] = std::isnan(image_ub[i]) || image_ub[i] < slice.ub() ? slice.ub() : image_ub[i];
+              pos_lb[i] = std::isnan(pos_lb[i]) || pos_lb[i] > slice.lb() ? slice.lb() : pos_lb[i];
+              pos_ub[i] = std::isnan(pos_ub[i]) || pos_ub[i] < slice.ub() ? slice.ub() : pos_ub[i];
             }
           }
         }
       }
-
-      viewbox = IntervalVector(image_lb) | image_ub;
+     
+      viewbox = IntervalVector(pos_lb) | pos_ub;
 
     // Displaying tube
 
-      ostringstream o;
-      o << "tube_" << m_map_tubes[tube].name;
-      string group_name = o.str();
-      string group_name_bckgrnd = o.str() + "_old";
+      draw_tube_slices(tube);
 
-      // First, displaying background.
       // The background is the previous version of the tube (before contraction).
-      {
-        if(m_map_tubes[tube].tube_copy == NULL)
-        {
-          // If a copy of the tube has not been done,
-          // we make one and no display is done.
-          m_map_tubes[tube].tube_copy = new TubeVector(*tube);
-        }
-
-        else
-        {
-          // Otherwise, the copy is displayed and then updated
-          // with the current version of the tube.
-
-          vibes::clearGroup(name(), group_name_bckgrnd);
-          vibes::Params params_background = vibesParams("figure", name(), "group", group_name_bckgrnd);
-          draw_tube_slices(m_map_tubes[tube].tube_copy, params_background, true);
-
-          //delete m_map_tubes[tube].tube_copy;
-        }
-      }
-
-      // Second, the foreground: actual values of the tube.
-      {
-        vibes::Params params_foreground = vibesParams("group", group_name);
-        vibes::clearGroup(name(), group_name);
-        draw_tube_slices(tube, params_foreground, false);
-      }
+      // If a copy of the tube has not been done,
+      // we make one and no display is done.
+      if(m_map_tubes[tube].tube_copy == NULL)
+        m_map_tubes[tube].tube_copy = new TubeVector(*tube);
+        // todo: store only necesary components?
 
     return keep_ratio(viewbox);
   }
@@ -125,29 +207,40 @@ namespace tubex
     o << "traj_" << m_map_trajs[traj].name;
     string group_name = o.str();
     vibes::clearGroup(name(), group_name);
+    vibes::newGroup(group_name, m_map_trajs[traj].color, vibesParams("figure", name()));
 
     if(traj->domain().is_unbounded() || traj->domain().is_empty())
       return viewbox;
 
     vector<double> v_x, v_y;
+    int index_x = m_map_trajs[traj].index_x;
+    int index_y = m_map_trajs[traj].index_y;
 
-    if(traj->get_map().size() != 0)
+    if((*traj)[index_x].get_map().size() != 0)
     {
-      typename map<double,Vector>::const_iterator it_scalar_values;
-      for(it_scalar_values = traj->get_map().begin(); it_scalar_values != traj->get_map().end(); it_scalar_values++)
+      typename map<double,double>::const_iterator it_scalar_values_x, it_scalar_values_y;
+      it_scalar_values_x = (*traj)[index_x].get_map().begin();
+      it_scalar_values_y = (*traj)[index_y].get_map().begin();
+      // todo: display heading if available
+
+      while(it_scalar_values_x != (*traj)[index_x].get_map().end())
       {
         if(points_size != 0.)
-          vibes::drawPoint(it_scalar_values->second[0], it_scalar_values->second[1],
+          vibes::drawPoint(it_scalar_values_x->second, it_scalar_values_y->second,
                            points_size,
                            vibesParams("figure", name(), "group", group_name));
 
         else
         {
-          v_x.push_back(it_scalar_values->second[0]);
-          v_y.push_back(it_scalar_values->second[1]);
+          v_x.push_back(it_scalar_values_x->second);
+          v_y.push_back(it_scalar_values_y->second);
         }
 
-        viewbox |= it_scalar_values->second.subvector(0,1);
+        viewbox[0] |= Interval(it_scalar_values_x->second);
+        viewbox[1] |= Interval(it_scalar_values_y->second);
+
+        it_scalar_values_x++;
+        it_scalar_values_y++;
       }
 
       vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
@@ -156,26 +249,54 @@ namespace tubex
     return keep_ratio(viewbox);
   }
 
-  void VibesFigure_Map::draw_tube_slices(const TubeVector *tube, const vibes::Params& params, bool background_tube)
+  void VibesFigure_Map::draw_tube_slices(const TubeVector *tube)
   {
+    // Reduced number of slices:
     int step = max((int)(tube->nb_slices() / SLICES_NUMBER_TO_DISPLAY), 1);
 
-    int i = 0;
-    string color;
-    if(background_tube)
-      color = DEFAULT_BCKGRND_COLOR;
-
-    for(const Slice *s = tube->get_first_slice() ; s != NULL ; )
+    // 1. Background:
     {
-      if(!background_tube)
-        color = shaded_slice_color((1. * i) / tube->nb_slices());
-      draw_slice(*s, color, params);
+      ostringstream o;
+      o << "tube_" << m_map_tubes[tube].name << "_bckgrnd";
+      string group_name = o.str();
+      vibes::clearGroup(name(), group_name);
+      vibes::Params params = vibesParams("figure", name(), "group", group_name);
 
-      // Reduced number of slices
-      for(int j = 0 ; j < step && s != NULL ; j++)
+      // if available, the copy of the tube (old version) is displayed
+      if(m_map_tubes[tube].tube_copy != NULL)
       {
-        i++;
-        s = s->next_slice();
+        string color = DEFAULT_MAPBCKGRND_COLOR;
+
+        for(int k = 0 ; k < m_map_tubes[tube].tube_copy->nb_slices() ;
+            k += step * 3) // less slices for the background
+        {
+          IntervalVector box(2);
+          box[0] = (*m_map_tubes[tube].tube_copy)[m_map_tubes[tube].index_x](k);
+          box[1] = (*m_map_tubes[tube].tube_copy)[m_map_tubes[tube].index_y](k);
+          draw_box(box, color, params);
+        }
+      }
+    }
+
+    // 2. Foreground
+    {
+      if((*tube)[m_map_tubes[tube].index_x].is_empty() || (*tube)[m_map_tubes[tube].index_y].is_empty())
+        cout << "VibesFigure_Map: warning, empty tube " << m_map_tubes[tube].name << endl;
+
+      ostringstream o;
+      o << "tube_" << m_map_tubes[tube].name;
+      string group_name = o.str();
+      vibes::clearGroup(name(), group_name);
+      vibes::Params params = vibesParams("figure", name(), "group", group_name);
+
+      for(int k = 0 ; k < tube->nb_slices() ; k += step)
+      {
+        string color = shaded_slice_color((1. * k) / tube->nb_slices());
+
+        IntervalVector box(2);
+        box[0] = (*tube)[m_map_tubes[tube].index_x](k);
+        box[1] = (*tube)[m_map_tubes[tube].index_y](k);
+        draw_box(box, color, params);
       }
     }
   }
@@ -207,14 +328,6 @@ namespace tubex
     return hex_color + "[" + hex_color + "]";
   }
 
-  void VibesFigure_Map::draw_slice(const Slice& slice, const std::string& color, const vibes::Params& params)
-  {
-    if(slice.codomain().subvector(0,1).is_empty())
-      return; // no display
-
-    draw_box(slice.codomain().subvector(0,1), color, params);
-  }
-
   void VibesFigure_Map::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
   {
     IntervalVector drawn_box = beacon.pos().subvector(0,1);
@@ -223,11 +336,14 @@ namespace tubex
 
   const IntervalVector VibesFigure_Map::keep_ratio(const IntervalVector& viewbox) const
   {
+    if(viewbox.is_empty())
+      return m_view_box;
+
     IntervalVector ratio_box(2);
     ratio_box[0] = viewbox[0].mid();
     ratio_box[0].inflate(viewbox.max_diam() / 2.);
     ratio_box[1] = viewbox[1].mid();
     ratio_box[1].inflate(viewbox.max_diam() / 2.);
     return ratio_box;
-  }*/
+  }
 }
