@@ -37,13 +37,12 @@ namespace tubex
 
   bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa) const
   {
-    // Vector implementation:
-
+    // Vector implementation
     DimensionException::check(x, f);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
-      // todo: select best way
+      // todo: select best way according to initial conditions
       contract(f, x, FORWARD);
       contract(f, x, BACKWARD);
     }
@@ -58,31 +57,36 @@ namespace tubex
       {
         int nb_slices = x.nb_slices();
 
-        for(int i = 0 ; i < nb_slices ; i++)
+        for(int k = 0 ; k < nb_slices ; k++)
         {
-          contract_ith_slices(f, x, i, t_propa);
+          contract_kth_slices(f, x, k, FORWARD);
 
-          if(x(i).is_unbounded() && x[0].slice_domain(i).diam() > x.domain().diam() / 5000.)
+          // NB: all tube components share the same slicing
+          // If the slice stays unbounded after the contraction step,
+          // then it is sampled and contracted again.
+          if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 5000.)
           {
-            // NB: all tube components share the same slicing
-            x.sample(x[0].slice_domain(i).mid()); // all of them are sampled
+            
+            x.sample(x[0].slice_domain(k).mid()); // all the tubes components are sampled
             nb_slices ++;
-            i--; // the first subslice will be again computed
+            k--; // the first subslice will be computed
           }
         }
       }
 
       else if(t_propa & BACKWARD)
       {
-        for(int i = x.nb_slices() - 1 ; i >= 0 ; i--)
+        for(int k = x.nb_slices() - 1 ; k >= 0 ; k--)
         {
-          contract_ith_slices(f, x, i, t_propa);
+          contract_kth_slices(f, x, k, BACKWARD);
 
-          if(x(i).is_unbounded() && x[0].slice_domain(i).diam() > x.domain().diam() / 5000.)
+          // NB: all tube components share the same slicing
+          // If the slice stays unbounded after the contraction step,
+          // then it is sampled and contracted again.
+          if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 5000.)
           {
-            // NB: all tube components share the same slicing
-            x.sample(x[0].slice_domain(i).mid()); // all of them are sampled
-            i ++; // the second subslice will be again computed
+            x.sample(x[0].slice_domain(k).mid()); // all the tubes components are sampled
+            k+=2; // the second subslice will be computed
           }
         }
       }
@@ -99,15 +103,20 @@ namespace tubex
     // todo: return value
   }
 
-  void CtcPicard::contract_ith_slices(const tubex::Fnc& f, TubeVector& tube, int slice_id, TPropagation t_propa) const
+  int CtcPicard::picard_iterations() const
+  {
+    return m_picard_iterations;
+  }
+
+  void CtcPicard::contract_kth_slices(const tubex::Fnc& f, TubeVector& tube, int k, TPropagation t_propa) const
   {
     // todo: check that !((t_propa & FORWARD) && (t_propa & BACKWARD))
     DimensionException::check(tube, f);
-    // todo: check slice_id
+    // todo: check k
 
-    IntervalVector f_eval = f.eval_vector(tube[0].slice_domain(slice_id), tube); // computed only once
+    IntervalVector f_eval = f.eval_vector(tube[0].slice_domain(k), tube); // computed only once
 
-    guess_slice_envelope(f, tube, slice_id, t_propa);
+    guess_kth_slices_envelope(f, tube, k, t_propa);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
@@ -118,7 +127,7 @@ namespace tubex
     else if(t_propa & FORWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        Slice *slice = tube[i].get_slice(slice_id);
+        Slice *slice = tube[i].get_slice(k);
         slice->set_output_gate(slice->output_gate()
           & (slice->input_gate() + slice->domain().diam() * f_eval[i]));
       }
@@ -126,28 +135,23 @@ namespace tubex
     else if(t_propa & BACKWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        Slice *slice = tube[i].get_slice(slice_id);
+        Slice *slice = tube[i].get_slice(k);
         slice->set_input_gate(slice->input_gate()
           & (slice->output_gate() - slice->domain().diam() * f_eval[i]));
       }
   }
 
-  int CtcPicard::picard_iterations() const
-  {
-    return m_picard_iterations;
-  }
-
-  void CtcPicard::guess_slice_envelope(const tubex::Fnc& f,
-                                       TubeVector& tube,
-                                       int slice_id,
-                                       TPropagation t_propa) const
+  void CtcPicard::guess_kth_slices_envelope(const tubex::Fnc& f,
+                                            TubeVector& tube,
+                                            int k,
+                                            TPropagation t_propa) const
   {
     DimensionException::check(tube, f);
-    // todo: check slice_id
+    // todo: check k
 
     float delta = m_delta;
-    Interval h, t = tube[0].slice_domain(slice_id);
-    IntervalVector initial_x = tube(slice_id), x0(tube.size()), xf(x0);
+    Interval h, t = tube[0].slice_domain(k);
+    IntervalVector initial_x = tube(k), x0(tube.size()), xf(x0);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
@@ -182,17 +186,15 @@ namespace tubex
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      x_guess &= initial_x;
-
       for(int i = 0 ; i < tube.size() ; i++)
-        tube[i].get_slice(slice_id)->set_envelope(x_guess[i]);
+        tube[i].get_slice(k)->set_envelope(x_guess[i] & initial_x[i]);
 
       x_enclosure = x0 + h * f.eval_vector(t, tube);
 
       if(x_enclosure.is_unbounded())
       {
         for(int i = 0 ; i < tube.size() ; i++)
-          tube[i].get_slice(slice_id)->set_envelope(initial_x[i]); // coming back to the initial state
+          tube[i].get_slice(k)->set_envelope(initial_x[i]); // coming back to the initial state
         // todo: do it only on the unbounded component?
         break;
       }
@@ -202,7 +204,7 @@ namespace tubex
     // Restoring ending gate, contracted by setting the envelope
     for(int i = 0 ; i < tube.size() ; i++)
     {
-      Slice *slice = tube[i].get_slice(slice_id);
+      Slice *slice = tube[i].get_slice(k);
       if(t_propa & FORWARD)  slice->set_output_gate(xf[i]);
       if(t_propa & BACKWARD) slice->set_input_gate(xf[i]);
       // todo: ^ check this ^

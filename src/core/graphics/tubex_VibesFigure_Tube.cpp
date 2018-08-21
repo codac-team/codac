@@ -275,9 +275,9 @@ namespace tubex
           image_lb = NAN;
           image_ub = NAN;
 
-          for(int i = 0 ; i < tube->nb_slices() ; i++) // todo: slice ptr iteration
+          for(int k = 0 ; k < tube->nb_slices() ; k++) // todo: slice ptr iteration
           {
-            Interval slice = (*tube)(i);
+            Interval slice = (*tube)(k);
             if(!slice.is_unbounded())
             {
               image_lb = std::isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
@@ -373,17 +373,17 @@ namespace tubex
 
       vector<Point> v_pts;
 
-      for(int i = 0 ; i < tube->nb_slices() ; i++)
+      for(int k = 0 ; k < tube->nb_slices() ; k++)
       {
-        IntervalVector slice_box = tube->get_slice(i)->box();
+        IntervalVector slice_box = tube->get_slice(k)->box();
         slice_box[1] = trunc_inf(slice_box[1]);
         v_pts.push_back(Point(slice_box[0].lb(), slice_box[1].ub()));
         v_pts.push_back(Point(slice_box[0].ub(), slice_box[1].ub()));
       }
 
-      for(int i = tube->nb_slices() - 1 ; i >= 0 ; i--)
+      for(int k = tube->nb_slices() - 1 ; k >= 0 ; k--)
       {
-        IntervalVector slice_box = tube->get_slice(i)->box();
+        IntervalVector slice_box = tube->get_slice(k)->box();
         slice_box[1] = trunc_inf(slice_box[1]);
         v_pts.push_back(Point(slice_box[0].ub(), slice_box[1].lb()));
         v_pts.push_back(Point(slice_box[0].lb(), slice_box[1].lb()));

@@ -126,7 +126,7 @@ namespace tubex
         bin_file.read((char*)&lb, sizeof(double));
 
         Slice *prev_slice = NULL, *slice = NULL;
-        for(int i = 0 ; i < slices_number ; i++)
+        for(int k = 0 ; k < slices_number ; k++)
         {
           double ub;
           bin_file.read((char*)&ub, sizeof(double));

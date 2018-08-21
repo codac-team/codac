@@ -50,26 +50,26 @@ namespace tubex
     // Computing viewbox
 
       Vector image_lb(2), image_ub(2);
-      for(int k = 0 ; k < 2 ; k++)
+      for(int i = 0 ; i < 2 ; i++)
       {
         if(!tube->codomain().is_unbounded())
         {
-          image_lb[k] = tube->codomain()[k].lb();
-          image_ub[k] = tube->codomain()[k].ub();
+          image_lb[i] = tube->codomain()[i].lb();
+          image_ub[i] = tube->codomain()[i].ub();
         }
 
         else // some slices can be [-oo,+oo], maybe not all of them
         {
-          image_lb[k] = NAN;
-          image_ub[k] = NAN;
+          image_lb[i] = NAN;
+          image_ub[i] = NAN;
 
-          for(int i = 0 ; i < tube->nb_slices() ; i++) // todo: slice ptr iteration
+          for(int k = 0 ; k < tube->nb_slices() ; k++) // todo: slice ptr iteration
           {
-            Interval slice = (*tube)[i][k];
+            Interval slice = (*tube)[k][i];
             if(!slice.is_unbounded())
             {
-              image_lb[k] = std::isnan(image_lb[k]) || image_lb[k] > slice.lb() ? slice.lb() : image_lb[k];
-              image_ub[k] = std::isnan(image_ub[k]) || image_ub[k] < slice.ub() ? slice.ub() : image_ub[k];
+              image_lb[i] = std::isnan(image_lb[i]) || image_lb[i] > slice.lb() ? slice.lb() : image_lb[i];
+              image_ub[i] = std::isnan(image_ub[i]) || image_ub[i] < slice.ub() ? slice.ub() : image_ub[i];
             }
           }
         }

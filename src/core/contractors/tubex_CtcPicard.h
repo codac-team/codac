@@ -38,14 +38,14 @@ namespace tubex
 
     protected:
 
-      void contract_ith_slices(const tubex::Fnc& f,
+      void contract_kth_slices(const tubex::Fnc& f,
                                TubeVector& tube,
-                               int slice_id,
+                               int k,
                                TPropagation t_propa) const;
-      void guess_slice_envelope(const Fnc& f,
-                                TubeVector& tube,
-                                int slice_id,
-                                TPropagation t_propa) const;
+      void guess_kth_slices_envelope(const Fnc& f,
+                                     TubeVector& tube,
+                                     int k,
+                                     TPropagation t_propa) const;
 
       float m_delta;
       mutable int m_picard_iterations = 0;

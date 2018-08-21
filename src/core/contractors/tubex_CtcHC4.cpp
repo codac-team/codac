@@ -31,7 +31,6 @@ namespace tubex
     if(x.is_empty())
       return false;
 
-
     for(int k = 0 ; k < x.nb_slices() ; k++)
     {
       IntervalVector envelope(x.size() + 1);
