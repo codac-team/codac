@@ -54,7 +54,7 @@ namespace tubex
     protected:
 
       int m_n;
-      VibesFigure_Tube *m_v_figs = NULL;
+      VibesFigure_Tube **m_v_figs = NULL;
   };
 }
 

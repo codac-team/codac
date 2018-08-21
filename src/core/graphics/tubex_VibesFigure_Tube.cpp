@@ -85,12 +85,6 @@ namespace tubex
 
   // Non-static items
     
-    VibesFigure_Tube::VibesFigure_Tube()
-      : VibesFigure("")
-    {
-  
-    }
-
     VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const Tube *tube, const Trajectory *traj)
       : VibesFigure(fig_name)
     {
@@ -155,7 +149,6 @@ namespace tubex
       m_map_tubes[tube].m_colors[color_type] = color;
 
       // Creating group:
-
       ostringstream o;
       o << "tube_" << m_map_tubes[tube].name;
       string group_name = o.str();
@@ -222,11 +215,8 @@ namespace tubex
 
       m_map_trajs[traj].color = color;
 
-      // Creating group
-
-      ostringstream o;
-      o << "traj_" << m_map_trajs[traj].name;
-      vibes::newGroup(o.str(), m_map_trajs[traj].color, vibesParams("figure", name()));
+      // Related groups are created during the display procedure
+      // so that trajectories stay on top of the tubes.
     }
     
     void VibesFigure_Tube::remove_trajectory(const Trajectory *traj)
@@ -431,10 +421,13 @@ namespace tubex
     {
       IntervalVector viewbox(2, Interval::EMPTY_SET);
 
+      // Trajectories are drawn on top of the tubes,
+      // so related groups are created again:
       std::ostringstream o;
       o << "traj_" << m_map_trajs[traj].name;
       string group_name = o.str();
       vibes::clearGroup(name(), group_name);
+      vibes::newGroup(group_name, m_map_trajs[traj].color, vibesParams("figure", name()));
 
       if(traj->domain().is_unbounded() || traj->domain().is_empty())
         return viewbox;
