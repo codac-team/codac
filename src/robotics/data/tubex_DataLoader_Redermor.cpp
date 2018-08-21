@@ -82,7 +82,7 @@ namespace tubex
       }
 
       // Data from sensors with uncertainties:
-      float timestep = 10.;
+      float timestep = 1.;
       TubeVector data_x(traj_data_x, timestep);
       data_x.inflate(traj_data_dx);
 

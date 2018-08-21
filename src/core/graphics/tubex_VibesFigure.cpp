@@ -45,6 +45,7 @@ namespace tubex
     m_width = width; m_height = height;
 
     vibes::setFigureProperties(
+              name(),
               vibesParams("x", m_x,
                           "y", m_y,
                           "width", m_width,
