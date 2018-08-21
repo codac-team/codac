@@ -182,19 +182,42 @@ namespace tubex
 
     void TubeVector::resize(int n)
     {
-      // todo
+      // todo: check n
+
+      if(n == size())
+        return;
+
+      Tube *new_vec = new Tube[n];
+
+      int i = 0;
+      for(; i < size() && i < n ; i++)
+        new_vec[i] = m_v_tubes[i];
+
+      for(; i < n ; i++)
+        new_vec[i] = Tube(m_v_tubes[0], Interval::ALL_REALS); // same slicing is used
+
+      if(m_v_tubes != NULL) // (m_v_tubes == NULL) may happen when default constructor is used
+        delete[] m_v_tubes;
+
+      m_n = n;
+      m_v_tubes = new_vec;
     }
     
     const TubeVector TubeVector::subvector(int start_index, int end_index) const
     {
-      // todo
+      // todo: check start_index, end_index
+      TubeVector subvec(domain(), end_index - start_index + 1);
+      for(int i = 0 ; i < subvec.size() ; i++)
+        subvec[i] = (*this)[i + start_index];
+      return subvec;
     }
     
     void TubeVector::put(int start_index, const TubeVector& subvec)
     {
       // todo: check size subvec
       // todo: check structure tubes
-      // todo
+      for(int i = 0 ; i < subvec.size() ; i++)
+        (*this)[i + start_index] = subvec[i];
     }
   
     // Slices structure

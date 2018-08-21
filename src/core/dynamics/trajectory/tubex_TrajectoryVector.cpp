@@ -22,9 +22,10 @@ namespace tubex
 {
   // Definition
 
-  TrajectoryVector::TrajectoryVector()
+  TrajectoryVector::TrajectoryVector(int n)
+    : m_n(n), m_v_trajs(new Trajectory[n])
   {
-    
+    DimensionException::check(n);
   }
 
   TrajectoryVector::TrajectoryVector(const TrajectoryVector& traj)
@@ -33,7 +34,7 @@ namespace tubex
   }
 
   TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f)
-    : m_n(f.image_dim()), m_v_trajs(new Trajectory[f.image_dim()])
+    : TrajectoryVector(f.image_dim())
   {
     // todo: check thickness of f? (only thin functions should be allowed)
     DomainException::check(domain);

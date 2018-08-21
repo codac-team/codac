@@ -206,7 +206,8 @@ namespace tubex
     // todo: update this comment ^
 
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
-    TubeVector y(x, IntervalVector(image_dim()));
+    TubeVector y(x); // keeping x's slicing
+    y.resize(image_dim());
 
     // todo: optimize this? (slices iterations)
 
@@ -215,7 +216,8 @@ namespace tubex
     for(int k = 0 ; k < x.nb_slices() ; k++)
     {
       if(x(k).is_empty())
-        y.set(IntervalVector(y.size(), Interval::EMPTY_SET), k);
+        for(int i = 0 ; i < y.size() ; i++)
+          y[i].get_slice(k)->set_empty();
       
       else
       {
