@@ -51,19 +51,19 @@ namespace tubex
                           "height", m_height));
   }
 
-  const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
+  const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, bool keep_ratio)
   {
     if(keep_ratio && !m_view_box.is_empty())
     {
       float r = m_view_box[0].diam() / m_view_box[1].diam();
 
       IntervalVector b1(2);
-      b1[0] = Interval(x_min, x_max);
-      b1[1] = (y_min + y_max)/2. + (b1[0]-b1[0].mid())/r;
+      b1[0] = viewbox[0];
+      b1[1] = (viewbox[1].lb() + viewbox[1].ub()) / 2. + (b1[0] - b1[0].mid()) / r;
 
       IntervalVector b2(2);
-      b2[1] = Interval(y_min, y_max);
-      b2[0] = (x_min + x_max)/2. + (b2[1]-b2[1].mid())*r;
+      b2[1] = Interval(viewbox[1].lb(), viewbox[1].ub());
+      b2[0] = (viewbox[0].lb() + viewbox[0].ub()) / 2. + (b2[1] - b2[1].mid()) * r;
 
       if(b1.is_subset(b2))
         m_view_box = b2;
@@ -72,10 +72,7 @@ namespace tubex
     }
 
     else
-    {
-      m_view_box[0] = Interval(x_min, x_max);
-      m_view_box[1] = Interval(y_min, y_max);
-    }
+      m_view_box = viewbox;
 
     vibes::drawBox(m_view_box[0].lb(), m_view_box[0].ub(),
                    m_view_box[1].lb(), m_view_box[1].ub(),
@@ -86,8 +83,11 @@ namespace tubex
     return m_view_box;
   }
 
-  const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, bool keep_ratio)
+  const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
   {
+    IntervalVector viewbox(2);
+    viewbox[0] = Interval(x_min, x_max);
+    viewbox[1] = Interval(y_min, y_max);
     return axis_limits(viewbox, keep_ratio);
   }
 
