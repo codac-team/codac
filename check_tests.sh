@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./make/tests/tubelib_tests;
+./make/tests/core/tubelib_tests_core;
 ./make/examples/cpp/08_solver_01_picard/solver_01_picard > /dev/null ; echo $?;
 #./make/examples/cpp/08_solver_02_xmsin_fwd/solver_02_xmsin_fwd > /dev/null ; echo $?;
 #./make/examples/cpp/08_solver_03_xmsin_bwd/solver_03_xmsin_bwd > /dev/null ; echo $?;
