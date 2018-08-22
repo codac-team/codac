@@ -10,8 +10,8 @@
  *  Created   : 2017
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_INTERVALSERIALIZATION_H__
-#define __TUBEX_INTERVALSERIALIZATION_H__
+#ifndef __TUBEX_SERIALIZ_INTERVALS_H__
+#define __TUBEX_SERIALIZ_INTERVALS_H__
 
 #include <fstream>
 #include "ibex_Interval.h"
@@ -31,8 +31,7 @@ namespace tubex
    * \param bin_file binary file (ofstream object)
    * \param intv Interval object to be serialized
    */
-  void serialize_interval(std::ofstream& bin_file, const ibex::Interval& intv);
-  void serialize_intervalvector(std::ofstream& bin_file, const ibex::IntervalVector& box);
+  void serialize_Interval(std::ofstream& bin_file, const ibex::Interval& intv);
 
   /**
    * \brief Create an Interval object from a binary file.
@@ -42,8 +41,10 @@ namespace tubex
    * \param bin_file binary file (ifstream object)
    * \param intv Interval object to be deserialized
    */
-  void deserialize_interval(std::ifstream& bin_file, ibex::Interval& intv);
-  void deserialize_intervalvector(std::ifstream& bin_file, ibex::IntervalVector& box);
+  void deserialize_Interval(std::ifstream& bin_file, ibex::Interval& intv);
+  
+  void deserialize_IntervalVector(std::ifstream& bin_file, ibex::IntervalVector& box);
+  void serialize_IntervalVector(std::ofstream& bin_file, const ibex::IntervalVector& box);
 }
 
 #endif

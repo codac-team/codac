@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "tubex_Arithmetic.h"
+#include "tubex_arithmetic.h"
 
 using namespace Catch;
 using namespace Detail;

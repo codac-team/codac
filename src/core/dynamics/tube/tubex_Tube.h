@@ -18,13 +18,13 @@
 #include "tubex_Fnc.h"
 #include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
-#include "tubex_TubeSerialization.h"
+#include "tubex_serializ_tubes.h"
 
 namespace tubex
 {
   class Fnc;
-  class Slice;
   class Tube;
+  class Slice;
   class Trajectory;
   
   class Tube : public DynamicalItem
@@ -42,8 +42,7 @@ namespace tubex
       Tube(const Trajectory& traj, double timestep = 0.);
       Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
       Tube(const std::string& binary_file_name);
-      Tube(const std::string& binary_file_name, Trajectory& traj);
-      Tube(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      Tube(const std::string& binary_file_name, Trajectory *&traj);
       ~Tube();
       int size() const;
       const Tube primitive() const;
@@ -148,18 +147,19 @@ namespace tubex
 
       void serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
       void serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
-      void serialize(const std::string& binary_file_name, const std::vector<Trajectory>& v_trajs, int version_number = SERIALIZATION_VERSION) const;
 
     protected:
 
       Tube(); // todo: remove this?
       const ibex::IntervalVector codomain_box() const;
-      void deserialize(const std::string& binary_file_name, std::vector<Trajectory>& v_trajs);
+      void deserialize(const std::string& binary_file_name, Trajectory *&traj);
 
-    /** Class variables **/
+      /** Class variables **/
 
-      Slice *m_first_slice = NULL;
-      friend void deserialize_Tube(std::ifstream& bin_file, Tube& tube);
+        Slice *m_first_slice = NULL;
+        
+      friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
+      friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
       friend class TubeVector;
   };
 }

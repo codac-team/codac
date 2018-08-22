@@ -26,6 +26,7 @@ namespace tubex
 {
   class Function;
   class Trajectory;
+  class TubeVector;
 
   class TrajectoryVector : public DynamicalItem
   {
@@ -66,12 +67,16 @@ namespace tubex
 
     protected:
 
+      TrajectoryVector();
       const ibex::IntervalVector codomain_box() const;
 
-    /** Class variables **/
+      /** Class variables **/
 
-      int m_n;
-      Trajectory *m_v_trajs = NULL;
+        int m_n = 0;
+        Trajectory *m_v_trajs = NULL;
+
+      friend void deserialize_TrajectoryVector(std::ifstream& bin_file, TrajectoryVector *&traj);
+      friend class TubeVector; // for TubeVector::deserialize method
   };
 }
 

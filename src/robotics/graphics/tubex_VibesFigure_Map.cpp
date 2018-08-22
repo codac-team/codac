@@ -12,7 +12,7 @@
 
 #include <string>
 #include "tubex_VibesFigure_Map.h"
-#include "tubex_Colors.h"
+#include "tubex_colors.h"
 #include "tubex_Tube.h"
 #include "tubex_Trajectory.h"
 #include "vibes.h"

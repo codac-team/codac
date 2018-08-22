@@ -13,12 +13,12 @@
 #include "tubex_Tube.h"
 #include "tubex_Exception.h"
 #include "tubex_DomainException.h"
-#include "tubex_TrajectorySerialization.h"
 #include "tubex_DimensionException.h"
 #include "tubex_SlicingException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
-#include "tubex_Arithmetic.h"
+#include "tubex_arithmetic.h"
+#include "tubex_serializ_trajectories.h"
 #include "ibex_LargestFirst.h"
 #include "ibex_NoBisectableVariableException.h"
 
@@ -128,26 +128,16 @@ namespace tubex
 
     Tube::Tube(const string& binary_file_name)
     {
-      vector<Trajectory> v_trajs;
-      deserialize(binary_file_name, v_trajs);
+      Trajectory *traj;
+      deserialize(binary_file_name, traj);
     }
     
-    Tube::Tube(const string& binary_file_name, Trajectory& traj)
+    Tube::Tube(const string& binary_file_name, Trajectory *&traj)
     {
-      vector<Trajectory> v_trajs;
-      deserialize(binary_file_name, v_trajs);
-
-      if(v_trajs.size() == 0)
-        throw Exception("Tube constructor", "unable to deserialize a Trajectory");
-
-      traj = v_trajs[0];
-    }
-
-    Tube::Tube(const string& binary_file_name, vector<Trajectory>& v_trajs)
-    {
-      deserialize(binary_file_name, v_trajs);
-      if(v_trajs.size() == 0)
-        throw Exception("Tube constructor", "unable to deserialize some Trajectory");
+      deserialize(binary_file_name, traj);
+      if(traj == NULL)
+        throw Exception("Tube constructor",
+                        "unable to deserialize Trajectory object");
     }
     
     Tube::~Tube()
@@ -959,31 +949,24 @@ namespace tubex
 
     void Tube::serialize(const string& binary_file_name, int version_number) const
     {
-      vector<Trajectory> v_trajs;
-      serialize(binary_file_name, v_trajs, version_number);
+      ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
+
+      if(!bin_file.is_open())
+        throw Exception("Tube::serialize()", "error while writing file \"" + binary_file_name + "\"");
+
+      serialize_Tube(bin_file, *this, version_number);
+      bin_file.close();
     }
 
     void Tube::serialize(const string& binary_file_name, const Trajectory& traj, int version_number) const
-    {
-      vector<Trajectory> v_trajs;
-      v_trajs.push_back(traj);
-      serialize(binary_file_name, v_trajs, version_number);
-    }
-    
-    void Tube::serialize(const string& binary_file_name, const vector<Trajectory>& v_trajs, int version_number) const
     {
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
         throw Exception("Tube::serialize()", "error while writing file \"" + binary_file_name + "\"");
 
-      serialize_tube(bin_file, *this, version_number);
-
-      int nb_trajs = v_trajs.size();
-      bin_file.write((const char*)&nb_trajs, sizeof(int));
-      for(int i = 0 ; i < v_trajs.size() ; i++)
-        serialize_traj(bin_file, v_trajs[i], version_number);
-
+      serialize_Tube(bin_file, *this, version_number);
+      serialize_Trajectory(bin_file, traj, version_number);
       bin_file.close();
     }
 
@@ -1003,26 +986,22 @@ namespace tubex
 
     // Serialization
 
-    void Tube::deserialize(const string& binary_file_name, vector<Trajectory>& v_trajs)
+    void Tube::deserialize(const string& binary_file_name, Trajectory *&traj)
     {
       ifstream bin_file(binary_file_name.c_str(), ios::in | ios::binary);
 
       if(!bin_file.is_open())
         throw Exception("Tube::deserialize()", "error while opening file \"" + binary_file_name + "\"");
 
-      deserialize_tube(bin_file, *this);
+      Tube *ptr;
+      deserialize_Tube(bin_file, ptr);
+      *this = *ptr;
 
       if(!bin_file.eof())
-      {
-        int nb_trajs;
-        bin_file.read((char*)&nb_trajs, sizeof(int));
-        for(int i = 0 ; i < nb_trajs ; i++)
-        {
-          Trajectory traj;
-          deserialize_traj(bin_file, traj);
-          v_trajs.push_back(traj);
-        }
-      }
+        deserialize_Trajectory(bin_file, traj);
+
+      else
+        traj = NULL;
 
       bin_file.close();
     }

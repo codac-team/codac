@@ -12,7 +12,7 @@
 
 #include "ibex_Vector.h"
 #include "tubex_Exception.h"
-#include "tubex_TrajectorySerialization.h"
+#include "tubex_serializ_trajectories.h"
 
 using namespace std;
 using namespace ibex;
@@ -34,16 +34,16 @@ namespace tubex
                 ...
   */
 
-  void serialize_traj(ofstream& bin_file, const Trajectory& traj, int version_number)
+  void serialize_Trajectory(ofstream& bin_file, const Trajectory& traj, int version_number)
   {
-    /*if(!bin_file.is_open())
-      throw Exception("serialize_trajvector()", "ofstream& bin_file not open");
+    if(!bin_file.is_open())
+      throw Exception("serialize_Trajectory()", "ofstream& bin_file not open");
 
     if(traj.get_function() != NULL)
-      throw Exception("serialize_trajvector()", "Fnc serialization not implemented");
+      throw Exception("serialize_Trajectory()", "Fnc serialization not implemented");
 
     if(traj.get_map().size() == 0)
-      throw Exception("serialize_trajvector()", "trajectory not defined");
+      throw Exception("serialize_Trajectory()", "trajectory not defined");
 
     // Version number for compliance purposes
     bin_file.write((const char*)&version_number, sizeof(short int));
@@ -51,42 +51,34 @@ namespace tubex
     switch(version_number)
     {
       case 1:
-        throw Exception("serialize_trajvector()", "serialization version no more supported");
+        throw Exception("serialize_Trajectory()", "serialization version no more supported");
         break;
 
       case 2:
       {
-        // Dimension
-        short int dim = traj.dim();
-        bin_file.write((const char*)&dim, sizeof(short int));
-
         // Points number
         int pts_number = traj.get_map().size();
         bin_file.write((const char*)&pts_number, sizeof(int));
 
-        typename map<double,Vector>::const_iterator it_map;
+        typename map<double,double>::const_iterator it_map;
         for(it_map = traj.get_map().begin() ; it_map != traj.get_map().end() ; it_map++)
         {
           bin_file.write((const char*)&it_map->first, sizeof(double));
-          for(int i = 0 ; i < dim ; i++)
-            bin_file.write((const char*)&it_map->second[i], sizeof(double));
+          bin_file.write((const char*)&it_map->second, sizeof(double));
         }
 
         break;
       }
 
       default:
-        throw Exception("serialize_trajvector()", "unhandled case");
-    }*/
+        throw Exception("serialize_Trajectory()", "unhandled case");
+    }
   }
 
-  void deserialize_traj(ifstream& bin_file, Trajectory& traj)
+  void deserialize_Trajectory(ifstream& bin_file, Trajectory *&traj)
   {
-    /*if(!bin_file.is_open())
-      throw Exception("deserialize_trajvector()", "ifstream& bin_file not open");
-
-    if(traj.get_map().size() != 0)
-      throw Exception("deserialize_trajvector()", "trajectory already defined");
+    if(!bin_file.is_open())
+      throw Exception("deserialize_Trajectory()", "ifstream& bin_file not open");
 
     // Version number for compliance purposes
     short int version_number;
@@ -95,14 +87,12 @@ namespace tubex
     switch(version_number)
     {
       case 1:
-        throw Exception("deserialize_trajvector()", "serialization version no more supported");
+        throw Exception("deserialize_Trajectory()", "serialization version no more supported");
         break;
 
       case 2:
       {
-        // Dimension
-        short int dim;
-        bin_file.read((char*)&dim, sizeof(short int));
+        traj = new Trajectory();
 
         // Points number
         int pts_number;
@@ -110,19 +100,48 @@ namespace tubex
 
         for(int i = 0 ; i < pts_number ; i++)
         {
-          double t;
-          Vector y(dim);
+          double t, y;
           bin_file.read((char*)&t, sizeof(double));
-          for(int j = 0 ; j < dim ; j++)
-            bin_file.read((char*)&y[j], sizeof(double));
-          traj.set(t, y);
+          bin_file.read((char*)&y, sizeof(double));
+          traj->set(t, y);
         }
 
         break;
       }
 
       default:
-        throw Exception("deserialize_trajvector()", "deserialization version number not supported");
-    }*/
+        throw Exception("deserialize_Trajectory()", "deserialization version number not supported");
+    }
+  }
+
+  void serialize_TrajectoryVector(ofstream& bin_file, const TrajectoryVector& traj, int version_number)
+  {
+    if(!bin_file.is_open())
+      throw Exception("serialize_TrajectoryVector()", "ofstream& bin_file not open");
+
+    short int size = traj.size();
+    bin_file.write((const char*)&size, sizeof(short int));
+    for(int i = 0 ; i < size ; i++)
+      serialize_Trajectory(bin_file, traj[i], version_number);
+  }
+
+  void deserialize_TrajectoryVector(ifstream& bin_file, TrajectoryVector *&traj)
+  {
+    if(!bin_file.is_open())
+      throw Exception("deserialize_TrajectoryVector()", "ifstream& bin_file not open");
+
+    traj = new TrajectoryVector();
+
+    short int size;
+    bin_file.read((char*)&size, sizeof(short int));
+    
+    traj->m_n = size;
+    traj->m_v_trajs = new Trajectory[size];
+    
+    for(int i = 0 ; i < size ; i++)
+    {
+      Trajectory *test;
+      deserialize_Trajectory(bin_file, test);
+    }
   }
 }

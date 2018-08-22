@@ -10,7 +10,7 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_IntervalSerialization.h"
+#include "tubex_serializ_intervals.h"
 #include "tubex_Exception.h"
 
 using namespace std;
@@ -20,10 +20,10 @@ namespace tubex
 {
   enum IntervalType { BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS };
 
-  void serialize_interval(ofstream& bin_file, const Interval& intv)
+  void serialize_Interval(ofstream& bin_file, const Interval& intv)
   {
     if(!bin_file.is_open())
-      throw Exception("serialize_interval()", "ofstream& bin_file not open");
+      throw Exception("serialize_Interval()", "ofstream& bin_file not open");
 
     char intv_type;
 
@@ -52,21 +52,10 @@ namespace tubex
     }
   }
 
-  void serialize_intervalvector(ofstream& bin_file, const IntervalVector& box)
+  void deserialize_Interval(ifstream& bin_file, Interval& intv)
   {
     if(!bin_file.is_open())
-      throw Exception("serialize_intervalvector()", "ofstream& bin_file not open");
-
-    short int size = box.size();
-    bin_file.write((const char*)&size, sizeof(short int));
-    for(int i = 0 ; i < size ; i++)
-      serialize_interval(bin_file, box[i]);
-  }
-
-  void deserialize_interval(ifstream& bin_file, Interval& intv)
-  {
-    if(!bin_file.is_open())
-      throw Exception("serialize_interval()", "ifstream& bin_file not open");
+      throw Exception("deserialize_Interval()", "ifstream& bin_file not open");
 
     char intv_type;
     bin_file.read((char*)&intv_type, sizeof(char));
@@ -97,19 +86,30 @@ namespace tubex
         break;
 
       default:
-        throw Exception("deserialize_interval()", "unhandled case");
+        throw Exception("deserialize_Interval()", "unhandled case");
     }
   }
 
-  void deserialize_intervalvector(ifstream& bin_file, IntervalVector& box)
+  void serialize_IntervalVector(ofstream& bin_file, const IntervalVector& box)
   {
     if(!bin_file.is_open())
-      throw Exception("deserialize_intervalvector()", "ifstream& bin_file not open");
+      throw Exception("serialize_IntervalVector()", "ofstream& bin_file not open");
+
+    short int size = box.size();
+    bin_file.write((const char*)&size, sizeof(short int));
+    for(int i = 0 ; i < size ; i++)
+      serialize_Interval(bin_file, box[i]);
+  }
+
+  void deserialize_IntervalVector(ifstream& bin_file, IntervalVector& box)
+  {
+    if(!bin_file.is_open())
+      throw Exception("deserialize_IntervalVector()", "ifstream& bin_file not open");
 
     short int size;
     bin_file.read((char*)&size, sizeof(short int));
     box = IntervalVector(size);
     for(int i = 0 ; i < size ; i++)
-      deserialize_interval(bin_file, box[i]);
+      deserialize_Interval(bin_file, box[i]);
   }
 }

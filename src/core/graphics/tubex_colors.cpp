@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include <math.h>
-#include "tubex_Colors.h"
+#include "tubex_colors.h"
 
 using namespace std;
 

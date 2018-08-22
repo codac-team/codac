@@ -19,6 +19,8 @@
 
 namespace tubex
 {
+  class TrajectoryVector;
+  
   class Trajectory : public DynamicalItem
   {
     public:
@@ -65,6 +67,9 @@ namespace tubex
         // A trajectory is defined either by a Function or a map of values
         tubex::Function *m_function = NULL;
         std::map<double,double> m_map_values;
+
+      friend void deserialize_Trajectory(std::ifstream& bin_file, Trajectory *&traj);
+      friend void deserialize_TrajectoryVector(std::ifstream& bin_file, TrajectoryVector *&traj);
   };
 }
 

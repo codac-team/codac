@@ -52,6 +52,8 @@ namespace tubex
   
   void DataLoader::deserialize_data(TubeVector *&x, TrajectoryVector *&traj) const
   {
-    x = new TubeVector(m_file_path + DATA_FILE_EXTENSION, *traj);
+    cout << "A" << endl;
+    x = new TubeVector(m_file_path + DATA_FILE_EXTENSION, traj);
+    cout << "A" << endl;
   }
 }

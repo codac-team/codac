@@ -32,10 +32,10 @@ namespace tubex
     clock_t t_start = clock();
     cout << "Loading data..." << flush;
 
-    //if(serialized_data_available())
-    //  deserialize_data(x, truth);
-    //
-    //else // loading data from file
+    if(serialized_data_available())
+      deserialize_data(x, truth);
+    
+    else // loading data from file
     {
       // todo: truncate domain
       if(!m_datafile->is_open())
@@ -82,7 +82,7 @@ namespace tubex
       }
 
       // Data from sensors with uncertainties:
-      float timestep = 1.;
+      float timestep = 10.;
       TubeVector data_x(traj_data_x, timestep);
       data_x.inflate(traj_data_dx);
 
@@ -100,6 +100,7 @@ namespace tubex
 
       // State vector:
       x = new TubeVector(data_x);
+      x->resize(6);
 
       // Horizontal position
       (*x)[0] = velocities[0].primitive();
@@ -115,7 +116,7 @@ namespace tubex
       (*x)[4] = velocities[1];
       (*x)[5] = velocities[2];
 
-      //serialize_data(*x, *truth);
+      serialize_data(*x, *truth);
     }
 
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);

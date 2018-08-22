@@ -10,8 +10,8 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_TubeSerialization.h"
-#include "tubex_IntervalSerialization.h"
+#include "tubex_serializ_tubes.h"
+#include "tubex_serializ_intervals.h"
 #include "tubex_Exception.h"
 #include "tubex_DimensionException.h"
 
@@ -24,7 +24,6 @@ namespace tubex
     Tube binary files structure (VERSION 2)
       - minimal storage
       - format: [short_int_version_number]
-                [short_int_dim]
                 [int_nb_slices]
                 [double_t0]
                 [double_t1] // time input shared by 1rst and 2nd slices
@@ -38,25 +37,21 @@ namespace tubex
                 ...
   */
 
-  void serialize_tube(ofstream& bin_file, const Tube& tube, int version_number)
+  void serialize_Tube(ofstream& bin_file, const Tube& tube, int version_number)
   {
-    /*if(!bin_file.is_open())
-      throw Exception("serializeTube()", "ofstream& bin_file not open");
-
-    // Version number for compliance purposes
-    bin_file.write((const char*)&version_number, sizeof(short int));
+    if(!bin_file.is_open())
+      throw Exception("serialize_Tube()", "ofstream& bin_file not open");
 
     switch(version_number)
     {
       case 1:
-        throw Exception("serializeTube()", "serialization version no more supported");
+        throw Exception("serialize_Tube()", "serialization version no more supported");
         break;
 
       case 2:
       {
-        // Slices number
-        short int dim = tube.dim();
-        bin_file.write((const char*)&dim, sizeof(short int));
+        // Version number for compliance purposes
+        bin_file.write((const char*)&version_number, sizeof(short int));
 
         // Slices number
         int slices_number = tube.nb_slices();
@@ -74,28 +69,25 @@ namespace tubex
 
         // Codomains
         for(const Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
-          serialize_intervalvector(bin_file, s->codomain());
+          serialize_Interval(bin_file, s->codomain());
 
         // Gates
-        serialize_intervalvector(bin_file, tube.get_first_slice()->input_gate());
+        serialize_Interval(bin_file, tube.get_first_slice()->input_gate());
         for(const Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
-          serialize_intervalvector(bin_file, s->output_gate());
+          serialize_Interval(bin_file, s->output_gate());
 
         break;
       }
 
       default:
-        throw Exception("serializeTube()", "unhandled case");
-    }*/
+        throw Exception("serialize_Tube()", "unhandled case");
+    }
   }
 
-  void deserialize_tube(ifstream& bin_file, Tube& tube)
+  void deserialize_Tube(ifstream& bin_file, Tube *&tube)
   {
-    /*if(!bin_file.is_open())
-      throw Exception("deserializeTube()", "ifstream& bin_file not open");
-
-    if(tube.nb_slices() != 0)
-      throw Exception("deserializeTube()", "tube's already defined");
+    if(!bin_file.is_open())
+      throw Exception("deserialize_Tube()", "ifstream& bin_file not open");
 
     // Version number for compliance purposes
     short int version_number;
@@ -104,22 +96,19 @@ namespace tubex
     switch(version_number)
     {
       case 1:
-        throw Exception("deserializeTube()", "serialization version no more supported");
+        throw Exception("deserialize_Tube()", "serialization version no more supported");
         break;
 
       case 2:
       {
-        // Dimension
-        short int dim;
-        bin_file.read((char*)&dim, sizeof(short int));
-        DimensionException::check(dim);
+        tube = new Tube();
 
         // Slices number
         int slices_number;
         bin_file.read((char*)&slices_number, sizeof(int));
 
         if(slices_number < 1)
-          throw Exception("deserializeTube()", "wrong slices number");
+          throw Exception("deserialize_Tube()", "wrong slices number");
 
         // Creating slices
         double lb;
@@ -133,17 +122,17 @@ namespace tubex
 
           if(slice == NULL)
           {
-            slice = new Slice(Interval(lb, ub), dim);
-            tube.m_first_slice = slice;
+            slice = new Slice(Interval(lb, ub));
+            tube->m_first_slice = slice;
           }
 
           else
           {
-            slice->m_next_slice = new Slice(Interval(lb, ub), dim);
+            slice->m_next_slice = new Slice(Interval(lb, ub));
             slice = slice->next_slice();
           }
 
-          slice->set_tube_ref(&tube);
+          slice->set_tube_ref(tube);
 
           if(prev_slice != NULL)
           {
@@ -157,30 +146,60 @@ namespace tubex
         }
 
         // Codomains
-        IntervalVector slice_value(dim);
-        for(Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(Slice *s = tube->get_first_slice() ; s != NULL ; s = s->next_slice())
         {
-          deserialize_intervalvector(bin_file, slice_value);
+          Interval slice_value;
+          deserialize_Interval(bin_file, slice_value);
           s->set(slice_value);
         }
 
         // Gates
-
-        IntervalVector gate(dim);
-        for(Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        Interval gate;
+        deserialize_Interval(bin_file, gate);
+        tube->get_first_slice()->set_input_gate(gate);
+        for(Slice *s = tube->get_first_slice() ; s != NULL ; s = s->next_slice())
         {
-          deserialize_intervalvector(bin_file, gate);
-          s->set_input_gate(gate);
+          deserialize_Interval(bin_file, gate);
+          s->set_output_gate(gate);
         }
         
-        deserialize_intervalvector(bin_file, gate); // last gate
-        tube.get_last_slice()->set_output_gate(gate);
-
         break;
       }
 
       default:
-        throw Exception("deserializeTube()", "deserialization version number not supported");
-    }*/
+        throw Exception("deserialize_Tube()", "deserialization version number not supported");
+    }
+  }
+
+  void serialize_TubeVector(ofstream& bin_file, const TubeVector& tube, int version_number)
+  {
+    if(!bin_file.is_open())
+      throw Exception("serialize_TubeVector()", "ofstream& bin_file not open");
+
+    short int size = tube.size();
+    bin_file.write((const char*)&size, sizeof(short int));
+    for(int i = 0 ; i < size ; i++)
+      serialize_Tube(bin_file, tube[i], version_number);
+  }
+
+  void deserialize_TubeVector(ifstream& bin_file, TubeVector *&tube)
+  {
+    if(!bin_file.is_open())
+      throw Exception("deserialize_TubeVector()", "ifstream& bin_file not open");
+
+    tube = new TubeVector();
+
+    short int size;
+    bin_file.read((char*)&size, sizeof(short int));
+    
+    tube->m_n = size;
+    tube->m_v_tubes = new Tube[size];
+    
+    for(int i = 0 ; i < size ; i++)
+    {
+      Tube *ptr;
+      deserialize_Tube(bin_file, ptr);
+      (*tube)[i] = *ptr;
+    }
   }
 }

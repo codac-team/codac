@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_Arithmetic.h"
+#include "tubex_arithmetic.h"
 #include "tubex_DimensionException.h"
 #include "tubex_DomainException.h"
 #include "tubex_SlicingException.h"

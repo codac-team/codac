@@ -13,13 +13,13 @@
 #include "tubex_TubeVector.h"
 #include "tubex_Exception.h"
 #include "tubex_DomainException.h"
-#include "tubex_TrajectorySerialization.h"
 #include "tubex_DimensionException.h"
 #include "tubex_SlicingException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
-#include "tubex_Arithmetic.h"
+#include "tubex_arithmetic.h"
 #include "ibex_LargestFirst.h"
+#include "tubex_serializ_trajectories.h"
 #include "ibex_NoBisectableVariableException.h"
 
 using namespace std;
@@ -128,17 +128,16 @@ namespace tubex
 
     TubeVector::TubeVector(const string& binary_file_name)
     {
-      // todo
+      TrajectoryVector *traj;
+      deserialize(binary_file_name, traj);
     }
     
-    TubeVector::TubeVector(const string& binary_file_name, TrajectoryVector& traj)
+    TubeVector::TubeVector(const string& binary_file_name, TrajectoryVector *&traj)
     {
-      // todo
-    }
-
-    TubeVector::TubeVector(const string& binary_file_name, vector<TrajectoryVector>& v_trajs)
-    {
-      // todo
+      deserialize(binary_file_name, traj);
+      if(traj == NULL)
+        throw Exception("Tube constructor",
+                        "unable to deserialize Trajectory object");
     }
     
     TubeVector::~TubeVector()
@@ -167,6 +166,8 @@ namespace tubex
 
       for(int i = 0 ; i < size() ; i++)
         (*this)[i] = x[i]; // copy of each component
+
+      return *this;
     }
 
     const Interval TubeVector::domain() const
@@ -637,17 +638,27 @@ namespace tubex
 
     void TubeVector::serialize(const string& binary_file_name, int version_number) const
     {
-      // todo
+      // todo: check same dim TrajV, TubeV
+      ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
+
+      if(!bin_file.is_open())
+        throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
+
+      serialize_TubeVector(bin_file, *this, version_number);
+      bin_file.close();
     }
 
     void TubeVector::serialize(const string& binary_file_name, const TrajectoryVector& traj, int version_number) const
     {
-      // todo
-    }
-    
-    void TubeVector::serialize(const string& binary_file_name, const vector<TrajectoryVector>& v_trajs, int version_number) const
-    {
-      // todo
+      // todo: check same dim TrajV, TubeV
+      ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
+
+      if(!bin_file.is_open())
+        throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
+
+      serialize_TubeVector(bin_file, *this, version_number);
+      serialize_TrajectoryVector(bin_file, traj, version_number);
+      bin_file.close();
     }
 
   // Protected methods
@@ -666,8 +677,23 @@ namespace tubex
 
     // Serialization
 
-    void TubeVector::deserialize(const string& binary_file_name, vector<TrajectoryVector>& v_trajs)
+    void TubeVector::deserialize(const string& binary_file_name, TrajectoryVector *&traj)
     {
-      // todo
+      ifstream bin_file(binary_file_name.c_str(), ios::in | ios::binary);
+
+      if(!bin_file.is_open())
+        throw Exception("TubeVector::deserialize()", "error while opening file \"" + binary_file_name + "\"");
+      
+      TubeVector *ptr;
+      deserialize_TubeVector(bin_file, ptr);
+      *this = *ptr;
+
+      if(!bin_file.eof())
+        deserialize_TrajectoryVector(bin_file, traj);
+
+      else
+        traj = NULL;
+
+      bin_file.close();
     }
 }

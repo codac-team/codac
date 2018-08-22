@@ -14,7 +14,7 @@
 #include "tubex_DomainException.h"
 #include "tubex_EmptyException.h"
 #include "tubex_CtcDeriv.h"
-#include "tubex_Arithmetic.h"
+#include "tubex_arithmetic.h"
 
 using namespace std;
 using namespace ibex;

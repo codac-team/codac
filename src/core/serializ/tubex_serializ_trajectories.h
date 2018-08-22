@@ -10,17 +10,21 @@
  *  Created   : 2017
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_TRAJECTORYSERIALIZATION_H__
-#define __TUBEX_TRAJECTORYSERIALIZATION_H__
+#ifndef __TUBEX_SERIALIZ_TRAJECTORIES_H__
+#define __TUBEX_SERIALIZ_TRAJECTORIES_H__
 
 #include <fstream>
 #include "tubex_Trajectory.h"
-#include "tubex_TubeSerialization.h"
+#include "tubex_TrajectoryVector.h"
+#include "tubex_serializ_tubes.h"
 
 namespace tubex
 {
-  void serialize_traj(std::ofstream& bin_file, const Trajectory& traj, int version_number = SERIALIZATION_VERSION);
-  void deserialize_traj(std::ifstream& bin_file, Trajectory& traj);
+  void serialize_Trajectory(std::ofstream& bin_file, const Trajectory& traj, int version_number = SERIALIZATION_VERSION);
+  void deserialize_Trajectory(std::ifstream& bin_file, Trajectory *&traj);
+
+  void serialize_TrajectoryVector(std::ofstream& bin_file, const TrajectoryVector& traj, int version_number = SERIALIZATION_VERSION);
+  void deserialize_TrajectoryVector(std::ifstream& bin_file, TrajectoryVector *&traj);
 }
 
 #endif
