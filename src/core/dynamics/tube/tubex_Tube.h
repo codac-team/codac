@@ -19,6 +19,7 @@
 #include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
 #include "tubex_serializ_tubes.h"
+#include "tubex_arithmetic.h"
 
 namespace tubex
 {
@@ -107,24 +108,24 @@ namespace tubex
       const std::pair<Tube,Tube> bisect(double t, float ratio = 0.55) const;
 
       // Assignments operators
-      const Tube& operator+=(const Tube& x);
-      const Tube& operator+=(const Trajectory& x);
       const Tube& operator+=(const ibex::Interval& x);
-      const Tube& operator-=(const Tube& x);
-      const Tube& operator-=(const Trajectory& x);
+      const Tube& operator+=(const Trajectory& x);
+      const Tube& operator+=(const Tube& x);
       const Tube& operator-=(const ibex::Interval& x);
-      const Tube& operator*=(const Tube& x);
-      const Tube& operator*=(const Trajectory& x);
+      const Tube& operator-=(const Trajectory& x);
+      const Tube& operator-=(const Tube& x);
       const Tube& operator*=(const ibex::Interval& x);
-      const Tube& operator/=(const Tube& x);
-      const Tube& operator/=(const Trajectory& x);
+      const Tube& operator*=(const Trajectory& x);
+      const Tube& operator*=(const Tube& x);
       const Tube& operator/=(const ibex::Interval& x);
-      const Tube& operator|=(const Tube& x);
-      const Tube& operator|=(const Trajectory& x);
+      const Tube& operator/=(const Trajectory& x);
+      const Tube& operator/=(const Tube& x);
       const Tube& operator|=(const ibex::Interval& x);
-      const Tube& operator&=(const Tube& x);
-      const Tube& operator&=(const Trajectory& x);
+      const Tube& operator|=(const Trajectory& x);
+      const Tube& operator|=(const Tube& x);
       const Tube& operator&=(const ibex::Interval& x);
+      const Tube& operator&=(const Trajectory& x);
+      const Tube& operator&=(const Tube& x);
 
       // String
       const std::string class_name() const { return "Tube"; };

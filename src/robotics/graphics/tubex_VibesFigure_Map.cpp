@@ -242,10 +242,30 @@ namespace tubex
         it_scalar_values_x++;
         it_scalar_values_y++;
       }
-
-      vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
     }
 
+    else
+    {
+      for(double t = traj->domain().lb() ; t <= traj->domain().ub() ; t+=traj->domain().diam()/TRAJMAP_NB_DISPLAYED_POINTS)
+      {
+        double x = (*traj)[index_x](t);
+        double y = (*traj)[index_y](t);
+
+        if(points_size != 0.)
+          vibes::drawPoint(x, y, points_size, vibesParams("figure", name(), "group", group_name));
+
+        else
+        {
+          v_x.push_back(x);
+          v_y.push_back(y);
+        }
+
+        viewbox[0] |= x;
+        viewbox[1] |= y;
+      }
+    }
+
+    vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
     return keep_ratio(viewbox);
   }
 

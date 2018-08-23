@@ -154,7 +154,7 @@ namespace tubex
 
   bool Solver::fixed_point_reached(int n, double volume_before, double volume_after, float fxpt_ratio)
   {
-    return (pow(volume_after, 1./n) / pow(volume_before, 1./n)) > (1. - fxpt_ratio);
+    return (std::pow(volume_after, 1./n) / std::pow(volume_before, 1./n)) > (1. - fxpt_ratio);
   }
 
   void Solver::propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio)

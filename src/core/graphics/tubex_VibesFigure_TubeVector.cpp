@@ -20,7 +20,7 @@ namespace tubex
   VibesFigure_TubeVector::VibesFigure_TubeVector(const std::string& fig_name, int n)
     : m_n(n), m_v_figs(new VibesFigure_Tube*[n])
   {
-    for(int i = 0 ; i < n ; i++)
+    for(int i = n-1 ; i >= 0 ; i--)
     {
       std::ostringstream o;
       o << fig_name << " (dim " << (i + 1) << "/" << n << ")";
@@ -49,7 +49,7 @@ namespace tubex
   void VibesFigure_TubeVector::set_properties(int x, int y, int width, int height)
   {
     for(int i = 0 ; i < size() ; i++)
-      m_v_figs[i]->set_properties(x + i*200, y + i*200, width, height);
+      m_v_figs[i]->set_properties(x + i*50, y + i*50, width, height);
   }
 
   void VibesFigure_TubeVector::add_tubevector(const TubeVector *tubevector, const std::string& name, const std::string& color_frgrnd, const std::string& color_bckgrnd)

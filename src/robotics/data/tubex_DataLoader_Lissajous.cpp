@@ -36,15 +36,15 @@ namespace tubex
     if(t_domain.is_unbounded())
       t_domain = Interval(0., 6.);
 
-    Function f_lissajous("(120.*2.*cos(t) ; 120.*sin(2.*t) ; -120.*2.*sin(t) ; 240.*cos(2.*t))");
+    Function f_lissajous("(120.*2.*cos(t) - 240. ; 120.*sin(2.*t) ; -120.*2.*sin(t) ; 240.*cos(2.*t))");
     truth = new TrajectoryVector(t_domain, f_lissajous);
 
     //x = new TubeVector(t_domain, 0.01, f_lissajous);
     x = new TubeVector(*truth, 0.01);
     (*x)[2].inflate(0.1);
     (*x)[3].inflate(0.1);
-    //(*x)[0] = (*x)[2].primitive();
-    //(*x)[1] = (*x)[3].primitive();
+    (*x)[0] = (*x)[2].primitive();
+    (*x)[1] = (*x)[3].primitive();
 
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
