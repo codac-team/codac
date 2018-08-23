@@ -19,6 +19,11 @@ using namespace std;
 
 namespace tubex
 {
+  DataLoader::DataLoader()
+  {
+
+  }
+
   DataLoader::DataLoader(const string& file_path)
     : m_file_path(file_path)
   {
@@ -30,7 +35,8 @@ namespace tubex
 
   DataLoader::~DataLoader()
   {
-    delete m_datafile;
+    if(m_datafile != NULL)
+      delete m_datafile;
   }
 
   void DataLoader::serialize_data(const TubeVector& x, const TrajectoryVector& traj) const

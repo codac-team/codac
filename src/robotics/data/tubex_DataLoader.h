@@ -24,6 +24,7 @@ namespace tubex
   {
     public:
 
+      DataLoader();
       DataLoader(const std::string& file_path);
       ~DataLoader();
 
@@ -38,7 +39,7 @@ namespace tubex
     protected:
 
       std::string m_file_path;
-      std::ifstream *m_datafile;
+      std::ifstream *m_datafile = NULL;
   };
 }
 
