@@ -209,38 +209,58 @@ namespace tubex
     TubeVector y(x); // keeping x's slicing
     y.resize(image_dim());
 
-    // todo: optimize this? (slices iterations)
-
-    IntervalVector box(x.size() + 1);
-    
-    for(int k = 0 ; k < x.nb_slices() ; k++)
+    if(x.is_empty())
     {
-      if(x(k).is_empty())
-        for(int i = 0 ; i < y.size() ; i++)
-          y[i].get_slice(k)->set_empty();
-      
-      else
-      {
-        box[0] = x[0].get_slice(k)->domain();
-        for(int i = 0 ; i < x.size() ; i++)
-          box[i+1] = x[i](k);
-        y.set(m_ibex_f->eval_vector(box), k);
-
-        box[0] = box[0].lb();
-        for(int i = 0 ; i < x.size() ; i++)
-          box[i+1] = x[i](box[0]);
-        y.set(m_ibex_f->eval_vector(box), box[0]);
-      }
+      y.set_empty();
+      return y;
     }
+
+    IntervalVector box(x.size() + 1), result(y.size());
     
-    if(!x(x.nb_slices() - 1).is_empty())
+    const Slice **v_x_slices = new const Slice*[x.size()];
+    for(int i = 0 ; i < x.size() ; i++)
+      v_x_slices[i] = x[i].get_first_slice();
+
+    Slice **v_y_slices = new Slice*[y.size()];
+    for(int i = 0 ; i < y.size() ; i++)
+      v_y_slices[i] = y[i].get_first_slice();
+
+    while(v_x_slices[0] != NULL)
     {
-      box[0] = x[0].get_last_slice()->domain().ub();
+      box[0] = v_x_slices[0]->domain();
       for(int i = 0 ; i < x.size() ; i++)
-        box[i+1] = x[i](box[0]);
-      y.set(m_ibex_f->eval_vector(box), box[0]);
-    }
+        box[i+1] = v_x_slices[i]->codomain();
+      result = m_ibex_f->eval_vector(box);
+      for(int i = 0 ; i < y.size() ; i++)
+        v_y_slices[i]->set_envelope(result[i]);
 
+      box[0] = box[0].lb();
+      for(int i = 0 ; i < x.size() ; i++)
+        box[i+1] = v_x_slices[i]->input_gate();
+      result = m_ibex_f->eval_vector(box);
+      for(int i = 0 ; i < y.size() ; i++)
+        v_y_slices[i]->set_input_gate(result[i]);
+
+      for(int i = 0 ; i < x.size() ; i++)
+        v_x_slices[i] = v_x_slices[i]->next_slice();
+      for(int i = 0 ; i < y.size() ; i++)
+        v_y_slices[i] = v_y_slices[i]->next_slice();
+    }
+    
+    for(int i = 0 ; i < x.size() ; i++)
+      v_x_slices[i] = x[i].get_last_slice();
+    for(int i = 0 ; i < y.size() ; i++)
+      v_y_slices[i] = y[i].get_last_slice();
+
+    box[0] = v_x_slices[0]->domain().ub();
+    for(int i = 0 ; i < x.size() ; i++)
+      box[i+1] = v_x_slices[i]->output_gate();
+    result = m_ibex_f->eval_vector(box);
+    for(int i = 0 ; i < y.size() ; i++)
+      v_y_slices[i]->set_output_gate(result[i]);
+
+    delete[] v_x_slices;
+    delete[] v_y_slices;
     return y;
   }
 }

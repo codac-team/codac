@@ -61,7 +61,8 @@ int main()
       (*m_x[i])[7].set(v_seamarks[i].pos_box()[1]);
       (*m_x[i])[8].set(v_seamarks[i].pos_box()[2]);
 
-      m_x[i]->put(9, fg.eval_vector(*m_x[i]));
+      TubeVector temp = fg.eval_vector(*m_x[i]);
+      m_x[i]->put(9, temp);
 
       for(int k = 0 ; k < m_obs[i].size() ; k++)
         ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], (*m_x[i])[9], (*m_x[i])[10]);
