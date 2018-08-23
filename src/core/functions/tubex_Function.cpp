@@ -132,6 +132,16 @@ namespace tubex
     Fnc::operator=(f);
   }
 
+  const Function Function::operator[](int i) const
+  {
+    tubex::Function fi(*this);
+    ibex::Function ibex_fi((*fi.m_ibex_f)[i]);
+    delete fi.m_ibex_f;
+    fi.m_ibex_f = new ibex::Function(ibex_fi);
+    fi.m_img_dim = 1;
+    return fi;
+  }
+
   void Function::construct_from_array(int n, const char** x, const char* y)
   {
     const char* xdyn[n+1];

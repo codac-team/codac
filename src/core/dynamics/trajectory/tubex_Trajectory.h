@@ -27,7 +27,7 @@ namespace tubex
 
       // Definition
       Trajectory();
-      Trajectory(const ibex::Interval& domain, const tubex::Function& f, int f_image_id = 0);
+      Trajectory(const ibex::Interval& domain, const tubex::Function& f);
       Trajectory(const std::map<double,double>& m_map_values);
       Trajectory(const Trajectory& traj);
       ~Trajectory();

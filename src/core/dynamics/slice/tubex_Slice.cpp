@@ -328,10 +328,12 @@ namespace tubex
       m_codomain = y;
 
       *m_input_gate = y;
-      if(prev_slice() != NULL) *m_input_gate &= prev_slice()->codomain();
+      if(prev_slice() != NULL)
+        *m_input_gate &= prev_slice()->codomain();
 
       *m_output_gate = y;
-      if(next_slice() != NULL) *m_output_gate &= next_slice()->codomain();
+      if(next_slice() != NULL)
+        *m_output_gate &= next_slice()->codomain();
     }
     
     void Slice::set_empty()

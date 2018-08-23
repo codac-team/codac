@@ -46,7 +46,7 @@ namespace tubex
 
     // setting values for each component
     for(int i = 0 ; i < size() ; i++)
-      (*this)[i] = Trajectory(domain, f, i);
+      (*this)[i] = Trajectory(domain, f[i]);
   }
 
   TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)

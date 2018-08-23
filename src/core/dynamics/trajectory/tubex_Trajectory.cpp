@@ -32,7 +32,7 @@ namespace tubex
     *this = traj;
   }
 
-  Trajectory::Trajectory(const Interval& domain, const tubex::Function& f, int f_image_id)
+  Trajectory::Trajectory(const Interval& domain, const tubex::Function& f)
     : m_domain(domain), m_function(new tubex::Function(f))
   {
     // todo: check f_image_id
@@ -43,7 +43,7 @@ namespace tubex
       
     // todo: check thickness of f? (only thin functions should be allowed)
     DomainException::check(domain);
-    m_codomain = m_function->eval_vector(domain)[f_image_id];
+    m_codomain = m_function->eval(domain);
   }
 
   Trajectory::Trajectory(const map<double,double>& map_values)
