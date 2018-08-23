@@ -60,19 +60,43 @@ namespace tubex
   const TubeVector Fnc::eval_vector(const TubeVector& x) const
   {
     // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
-    TubeVector y(x, IntervalVector(image_dim()));
+    TubeVector y(x); // keeping x's slicing
+    y.resize(image_dim());
 
-    // todo: optimize this? (slices iterations)
-
-    Interval t;
-    for(int i = 0 ; i < x.nb_slices() ; i++)
+    if(x.is_empty())
     {
-      t = x[0].get_slice(i)->domain();
-      y.set(eval_vector(t, x), i);
-      y.set(eval_vector(t.lb(), x), t.lb());
+      y.set_empty();
+      return y;
+    }
+
+    IntervalVector result(y.size());
+    
+    Slice **v_y_slices = new Slice*[y.size()];
+    for(int i = 0 ; i < y.size() ; i++)
+      v_y_slices[i] = y[i].get_first_slice();
+
+    while(v_y_slices[0] != NULL)
+    {
+      result = eval_vector(v_y_slices[0]->domain(), x);
+      for(int i = 0 ; i < y.size() ; i++)
+        v_y_slices[i]->set_envelope(result[i]);
+
+      result = eval_vector(v_y_slices[0]->domain().lb(), x);
+      for(int i = 0 ; i < y.size() ; i++)
+        v_y_slices[i]->set_input_gate(result[i]);
+      
+      for(int i = 0 ; i < y.size() ; i++)
+        v_y_slices[i] = v_y_slices[i]->next_slice();
     }
     
-    y.set(eval_vector(t.ub(), x), t.ub());
+    for(int i = 0 ; i < y.size() ; i++)
+      v_y_slices[i] = y[i].get_last_slice();
+
+      result = eval_vector(v_y_slices[0]->domain().ub(), x);
+    for(int i = 0 ; i < y.size() ; i++)
+      v_y_slices[i]->set_output_gate(result[i]);
+
+    delete[] v_y_slices;
     return y;
   }
 }
