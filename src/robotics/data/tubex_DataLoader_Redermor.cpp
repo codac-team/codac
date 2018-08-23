@@ -30,7 +30,7 @@ namespace tubex
   void DataLoader_Redermor::load_data(TubeVector *&x, TrajectoryVector *&truth, const Interval& domain)
   {
     clock_t t_start = clock();
-    cout << "Loading data..." << flush;
+    cout << "Loading data... " << flush;
 
     if(serialized_data_available())
       deserialize_data(x, truth);

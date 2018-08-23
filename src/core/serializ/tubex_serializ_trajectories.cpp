@@ -134,7 +134,6 @@ namespace tubex
 
     short int size;
     bin_file.read((char*)&size, sizeof(short int));
-    
     traj->m_n = size;
     traj->m_v_trajs = new Trajectory[size];
     
