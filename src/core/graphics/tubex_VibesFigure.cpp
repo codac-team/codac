@@ -13,7 +13,6 @@
 #include <cstdio>
 #include <string>
 #include <iostream>
-#include "ibex_IntervalVector.h"
 #include "tubex_VibesFigure.h"
 
 // A real value to display unbounded slices:
@@ -52,9 +51,9 @@ namespace tubex
                           "height", m_height));
   }
 
-  const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, bool keep_ratio)
+  const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, bool same_ratio, float margin)
   {
-    if(keep_ratio && !m_view_box.is_empty())
+    if(same_ratio && !m_view_box.is_empty())
     {
       float r = m_view_box[0].diam() / m_view_box[1].diam();
 
@@ -75,21 +74,25 @@ namespace tubex
     else
       m_view_box = viewbox;
 
-    vibes::drawBox(m_view_box[0].lb(), m_view_box[0].ub(),
-                   m_view_box[1].lb(), m_view_box[1].ub(),
+    IntervalVector box_with_margin = m_view_box;
+    box_with_margin += margin * m_view_box.max_diam() * IntervalVector(2, Interval(-1.,1.));
+
+    vibes::clearGroup(name(), "transparent_box");
+    vibes::drawBox(box_with_margin[0].lb(), box_with_margin[0].ub(),
+                   box_with_margin[1].lb(), box_with_margin[1].ub(),
                    vibesParams("figure", name(), "group", "transparent_box"));
-    vibes::axisLimits(m_view_box[0].lb(), m_view_box[0].ub(),
-                      m_view_box[1].lb(), m_view_box[1].ub(),
+    vibes::axisLimits(box_with_margin[0].lb(), box_with_margin[0].ub(),
+                      box_with_margin[1].lb(), box_with_margin[1].ub(),
                       name());
     return m_view_box;
   }
 
-  const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio)
+  const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio, float margin)
   {
     IntervalVector viewbox(2);
     viewbox[0] = Interval(x_min, x_max);
     viewbox[1] = Interval(y_min, y_max);
-    return axis_limits(viewbox, keep_ratio);
+    return axis_limits(viewbox, keep_ratio, margin);
   }
 
   void VibesFigure::save_image(const string& suffix, const string& extension) const

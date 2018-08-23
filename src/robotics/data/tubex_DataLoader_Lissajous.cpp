@@ -39,8 +39,7 @@ namespace tubex
     Function f_lissajous("(120.*2.*cos(t) - 240. ; 120.*sin(2.*t) ; -120.*2.*sin(t) ; 240.*cos(2.*t))");
     truth = new TrajectoryVector(t_domain, f_lissajous);
 
-    //x = new TubeVector(t_domain, 0.01, f_lissajous);
-    x = new TubeVector(*truth, 0.01);
+    x = new TubeVector(t_domain, 0.01, f_lissajous);
     (*x)[2].inflate(0.1);
     (*x)[3].inflate(0.1);
     (*x)[0] = (*x)[2].primitive();

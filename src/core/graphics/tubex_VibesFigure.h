@@ -14,6 +14,7 @@
 #define __TUBEX_VIBESFIGURE_H__
 
 #include <string>
+#include "ibex_IntervalVector.h"
 #include "vibes.h"
 #include "ibex_IntervalVector.h"
 #include "tubex_Polygon.h"
@@ -104,11 +105,11 @@ namespace tubex
        * \param x_max 
        * \param y_min 
        * \param y_max 
-       * \param keep_ratio view box is set to fit with the params, without changing its ratio (false by default)
+       * \param same_ratio view box is set to fit with the params, without changing its ratio (false by default)
        * \return the limits box
        */
-      const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, bool keep_ratio = false);
-      const ibex::IntervalVector& axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio = false);
+      const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, bool same_ratio = false, float margin = 0.);
+      const ibex::IntervalVector& axis_limits(double x_min, double x_max, double y_min, double y_max, bool same_ratio = false, float margin = 0.);
       
       /**
        * \brief Save vibes-figure in SVG/PNG/... format.
@@ -133,7 +134,6 @@ namespace tubex
     protected:
 
       static std::string add_suffix(const std::string& name, int id);
-
 
     protected:
 

@@ -15,7 +15,6 @@
 #include "tubex_colors.h"
 #include "tubex_Tube.h"
 #include "tubex_Trajectory.h"
-#include "vibes.h"
 
 using namespace std;
 using namespace ibex;
@@ -146,7 +145,7 @@ namespace tubex
     for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
       m_view_box |= draw_trajectory(it_trajs->first);
 
-    axis_limits(m_view_box);
+    axis_limits(m_view_box, true, 0.05);
   }
 
   const IntervalVector VibesFigure_Map::draw_tube(const TubeVector *tube)
@@ -196,7 +195,7 @@ namespace tubex
         m_map_tubes[tube].tube_copy = new TubeVector(*tube);
         // todo: store only necesary components?
 
-    return keep_ratio(viewbox);
+    return viewbox;
   }
 
   const IntervalVector VibesFigure_Map::draw_trajectory(const TrajectoryVector *traj, float points_size)
@@ -266,7 +265,7 @@ namespace tubex
     }
 
     vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
-    return keep_ratio(viewbox);
+    return viewbox;
   }
 
   void VibesFigure_Map::draw_tube_slices(const TubeVector *tube)
@@ -352,18 +351,5 @@ namespace tubex
   {
     IntervalVector drawn_box = beacon.pos().subvector(0,1);
     draw_box(drawn_box.inflate(2.), color, params);
-  }
-
-  const IntervalVector VibesFigure_Map::keep_ratio(const IntervalVector& viewbox) const
-  {
-    if(viewbox.is_empty())
-      return m_view_box;
-
-    IntervalVector ratio_box(2);
-    ratio_box[0] = viewbox[0].mid();
-    ratio_box[0].inflate(viewbox.max_diam() / 2.);
-    ratio_box[1] = viewbox[1].mid();
-    ratio_box[1].inflate(viewbox.max_diam() / 2.);
-    return ratio_box;
   }
 }

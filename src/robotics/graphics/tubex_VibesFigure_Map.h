@@ -59,7 +59,6 @@ namespace tubex
       void draw_tube_slices(const TubeVector *tube);
       const std::string shaded_slice_color(float r) const;
       void draw_beacon(const Beacon& beacon, const std::string& color, const vibes::Params& params);
-      const ibex::IntervalVector keep_ratio(const ibex::IntervalVector& viewbox) const;
 
     protected:
 
