@@ -35,6 +35,12 @@ namespace tubex
                 [gate_t0] // value of 1rst gate
                 [gate_t1]
                 ...
+
+    TubeVector binary files structure (VERSION 2)
+      - format: [int_dim]
+                [Tube_traj1]
+                [Tube_traj2]
+                ...
   */
 
   void serialize_Tube(ofstream& bin_file, const Tube& tube, int version_number)
