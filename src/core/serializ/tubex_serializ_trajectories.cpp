@@ -140,8 +140,10 @@ namespace tubex
     
     for(int i = 0 ; i < size ; i++)
     {
-      Trajectory *test;
-      deserialize_Trajectory(bin_file, test);
+      Trajectory *ptr;
+      deserialize_Trajectory(bin_file, ptr);
+      (*traj)[i] = *ptr;
+      delete ptr;
     }
   }
 }

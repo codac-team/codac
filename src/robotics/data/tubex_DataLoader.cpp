@@ -54,6 +54,6 @@ namespace tubex
   {
     cout << "A" << endl;
     x = new TubeVector(m_file_path + DATA_FILE_EXTENSION, traj);
-    cout << "A" << endl;
+    cout << "A " << endl << "  " << *x << endl << "  " << *traj << endl;
   }
 }

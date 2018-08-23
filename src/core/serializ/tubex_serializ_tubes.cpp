@@ -200,6 +200,7 @@ namespace tubex
       Tube *ptr;
       deserialize_Tube(bin_file, ptr);
       (*tube)[i] = *ptr;
+      delete ptr;
     }
   }
 }

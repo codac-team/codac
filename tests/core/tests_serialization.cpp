@@ -13,64 +13,64 @@ using namespace tubex;
 
 TEST_CASE("serialization/deserialization of Tube")
 {
-  /*SECTION("Trajectories only")
+  SECTION("Trajectories only")
   {
+    string filename = "test_traj.tube";
     Trajectory traj1;
     traj1.set(3., 0.);
     traj1.set(4., 1.);
 
-    ofstream obin_file("test_traj.tube", ios::out | ios::binary);
+    ofstream obin_file(filename.c_str(), ios::out | ios::binary);
     serialize_Trajectory(obin_file, traj1);
     obin_file.close();
 
     Trajectory *traj2;
-    ifstream ibin_file("test_traj.tube", ios::in | ios::binary);
+    ifstream ibin_file(filename.c_str(), ios::in | ios::binary);
     deserialize_Trajectory(ibin_file, traj2);
+    remove(filename.c_str());
 
     CHECK(traj1 == *traj2);
     CHECK(traj1.domain() == traj2->domain());
     CHECK(traj2->domain() == Interval(3.,4.));
 
-    CHECK(ibin_file.eof());
     ibin_file.close();
   }
 
   SECTION("Tubes only")
   {
+    string filename = "test_tube.tube";
     Tube tube1(Interval(0.,11.), 0.02);
 
-    ofstream obin_file("test_tube.tube", ios::out | ios::binary);
+    ofstream obin_file(filename.c_str(), ios::out | ios::binary);
     serialize_Tube(obin_file, tube1);
     obin_file.close();
 
     Tube *tube2;
-    ifstream ibin_file("test_tube.tube", ios::in | ios::binary);
+    ifstream ibin_file(filename.c_str(), ios::in | ios::binary);
     deserialize_Tube(ibin_file, tube2);
+    remove(filename.c_str());
 
     CHECK(tube1 == *tube2);
     CHECK(tube1.domain() == tube2->domain());
     CHECK(tube2->domain() == Interval(0.,11.));
 
-    CHECK(ibin_file.eof());
     ibin_file.close();
   }
 
-  /*SECTION("No gates")
+  SECTION("No gates")
   {
     Tube tube1 = tube_test_1();
     string filename = "test_serialization_nogates.tube";
     tube1.serialize(filename);
 
     Trajectory *traj;
-    //vector<Trajectory> v_trajs;
     CHECK_THROWS(Tube tube2(filename, traj););
-    //CHECK_THROWS(Tube tube3(filename, v_trajs););
 
     Tube tube4(filename);
     remove(filename.c_str());
     CHECK(tube1 == tube4);
   }
-/*
+
   SECTION("With gates")
   {
     Tube tube1 = tube_test_1();
@@ -118,21 +118,6 @@ TEST_CASE("serialization/deserialization of Tube")
     remove(filename.c_str());
     CHECK(tube1 == tube2);
     CHECK(traj1 == *traj4);
-
-    //vector<Trajectory> v_trajs;
-    //v_trajs.push_back(traj1);
-    //v_trajs.push_back(traj2);
-    //v_trajs.push_back(traj3);
-    //
-    //filename = "test_serialization_trajs.tube";
-    //tube1.serialize(filename, v_trajs);
-    //vector<Trajectory> v_trajs_2;
-    //Tube tube3(filename, v_trajs_2);
-    //remove(filename.c_str());
-    //CHECK(v_trajs.size() == v_trajs_2.size());
-    //CHECK(tube1 == tube3);
-    //for(int i = 0 ; i < v_trajs.size() ; i++)
-    //  CHECK(v_trajs[i] == v_trajs_2[i]);
   }
 
   SECTION("Vector case, no gates")
@@ -142,9 +127,7 @@ TEST_CASE("serialization/deserialization of Tube")
     tube1.serialize(filename);
 
     TrajectoryVector *traj;
-    //vector<TrajectoryVector> v_trajs;
     CHECK_THROWS(TubeVector tube2(filename, traj););
-    //CHECK_THROWS(TubeVector tube3(filename, v_trajs););
     TubeVector tube4(filename);
     remove(filename.c_str());
     CHECK(tube1 == tube4);
@@ -195,61 +178,30 @@ TEST_CASE("serialization/deserialization of Tube")
     remove(filename.c_str());
     CHECK(tube1 == tube2);
     CHECK(traj1 == *traj4);
-
-    //vector<TrajectoryVector> v_trajs;
-    //v_trajs.push_back(traj1);
-    //v_trajs.push_back(traj2);
-    //v_trajs.push_back(traj3);
-    //
-    //filename = "test_serialization_trajs.tube";
-    //tube1.serialize(filename, v_trajs);
-    //vector<TrajectoryVector> v_trajs_2;
-    //TubeVector tube3(filename, v_trajs_2);
-    //remove(filename.c_str());
-    //CHECK(v_trajs.size() == v_trajs_2.size());
-    //CHECK(tube1 == tube3);
-    //for(int i = 0 ; i < v_trajs.size() ; i++)
-    //  CHECK(v_trajs[i] == v_trajs_2[i]);
-  }*/
+  }
 }
 
 bool test_serialization(const Tube& tube1)
 {
   string filename = "test_serialization.tube";
 
-  Trajectory traj_test1a, traj_test1b, *traj_test2a, traj_test2b;
+  Trajectory traj_test1, *traj_test2;
 
   for(int i = 0 ; i < tube1.nb_slices() ; i++)
-    traj_test1a.set(tube1.get_slice(i)->domain().mid(), tube1(i).is_unbounded() | tube1(i).is_empty() ? 1. : tube1(i).mid());
+    traj_test1.set(tube1.get_slice(i)->domain().mid(), tube1(i).is_unbounded() | tube1(i).is_empty() ? 1. : tube1(i).mid());
 
-  for(int i = 0 ; i < tube1.nb_slices() ; i++)
-    traj_test1b.set(tube1.get_slice(i)->domain().mid(), 42.);
+  tube1.serialize(filename, traj_test1); // serialization
 
-  //vector<Trajectory> v_trajs;
-  //v_trajs.push_back(traj_test1a);
-  //v_trajs.push_back(traj_test1b);
-  //tube1.serialize(filename, v_trajs); // serialization
-  tube1.serialize(filename, traj_test1a); // serialization
-
-  //v_trajs.clear();
-  //Tube tube2(filename, v_trajs); // deserialization
-  Tube tube2(filename, traj_test2a); // deserialization
+  Tube tube2(filename, traj_test2); // deserialization
   remove(filename.c_str());
 
   bool equality = tube1 == tube2;
-
-  //if(v_trajs.size() != 2)
-  //  return false;
-
-  //traj_test2a = v_trajs[0];
-  //traj_test2b = v_trajs[1];
-  equality &= traj_test1a == *traj_test2a;
-  //equality &= traj_test1b == traj_test2b;
+  equality &= traj_test1 == *traj_test2;
 
   return equality;
 }
 
-/*TEST_CASE("(de)serializations on bounded tubes", "[core]")
+TEST_CASE("(de)serializations on bounded tubes", "[core]")
 {
   SECTION("Test tube1")
   {
@@ -320,4 +272,4 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
     tube.set(Interval::EMPTY_SET);
     CHECK(test_serialization(tube));
   }
-}*/
+}
