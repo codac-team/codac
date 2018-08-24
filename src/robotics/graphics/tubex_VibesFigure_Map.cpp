@@ -322,7 +322,7 @@ namespace tubex
       vibes::clearGroup(name(), group_name);
       vibes::Params params = vibesParams("figure", name(), "group", group_name);
 
-      for(int k = 0 ; k < tube->nb_slices() ; k += step)
+      for(int k = tube->nb_slices() - 1 ; k >= 0 ; k -= step)
       {
         string color = shaded_slice_color((1. * k) / tube->nb_slices());
 
@@ -344,7 +344,7 @@ namespace tubex
       color_gray_max = 229.5;
     }
 
-    int g = color_gray_min + (color_gray_max - color_gray_min) * (1. - r);
+    int g = color_gray_min + (color_gray_max - color_gray_min) * r;
 
     hsv hsv_value;
     hsv_value.v = g / 255.;

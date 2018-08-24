@@ -20,7 +20,7 @@ int main()
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    VibesFigure_TubeVector fig_x("Redermor's state", 6);
+    VibesFigure_TubeVector fig_x("Redermor's state", 3, 4); // first two components
     fig_x.set_properties(2000, 50, 500, 250);
     fig_x.add_tubevector(x, "x");
     fig_x.add_trajectoryvector(x_truth, "x*");
@@ -87,8 +87,6 @@ int main()
     for(int i = 0 ; i < v_seamarks.size() ; i++)
     {
       cout << "Seamark " << (i+1) << endl;
-      fig_x.show();
-      fig_map.show();
 
       ctc_hc4.contract(hc4, *m_x[i]);
 

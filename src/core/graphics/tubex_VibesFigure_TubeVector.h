@@ -24,6 +24,7 @@ namespace tubex
     public:
 
       VibesFigure_TubeVector(const std::string& fig_name, int n = 1);
+      VibesFigure_TubeVector(const std::string& fig_name, int start_index, int end_index);
       VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector = NULL);
       ~VibesFigure_TubeVector();
       int size() const;
@@ -55,6 +56,7 @@ namespace tubex
 
       int m_n;
       VibesFigure_Tube **m_v_figs = NULL;
+      int m_start_index = 0, m_end_index = 0;
   };
 }
 
