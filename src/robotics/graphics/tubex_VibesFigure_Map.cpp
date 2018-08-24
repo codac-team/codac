@@ -133,17 +133,17 @@ namespace tubex
       add_beacon(v_beacons[i], color);
   }
   
-  void VibesFigure_Map::add_observation(const IntervalVector& obs, const TrajectoryVector& related_traj, const string& color)
+  void VibesFigure_Map::add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color)
   {
     // Simply directly drawn
-    draw_observation(obs, related_traj, color, vibesParams("figure", name(), "group", "obs"));
+    draw_observation(obs, traj, color, vibesParams("figure", name(), "group", "obs"));
   }
   
-  void VibesFigure_Map::add_observations(const vector<IntervalVector>& v_obs, const TrajectoryVector& related_traj, const string& color)
+  void VibesFigure_Map::add_observations(const vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const string& color)
   {
     // Simply directly drawn
     for(int i = 0 ; i < v_obs.size() ; i++)
-      add_observation(v_obs[i], related_traj, color);
+      add_observation(v_obs[i], traj, color);
   }
 
   void VibesFigure_Map::show()
@@ -276,7 +276,9 @@ namespace tubex
       }
     }
 
-    vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
+    vibes::Params params = vibesParams("figure", name(), "group", group_name);
+    vibes::drawLine(v_x, v_y, params);
+    draw_vehicle(traj->domain().ub(), traj, params);
     return viewbox;
   }
 
@@ -359,6 +361,24 @@ namespace tubex
     return hex_color + "[" + hex_color + "]";
   }
 
+  void VibesFigure_Map::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params)
+  {
+    double robot_x = (*traj)[m_map_trajs[traj].index_x](t);
+    double robot_y = (*traj)[m_map_trajs[traj].index_y](t);
+
+    double next_t;
+    float delta_t = traj->domain().diam() / 10000.;
+    if(t >= traj->domain().lb() + delta_t) next_t = t - delta_t;
+    else next_t = t + delta_t;
+
+    double robot_next_x = (*traj)[m_map_trajs[traj].index_x](next_t);
+    double robot_next_y = (*traj)[m_map_trajs[traj].index_y](next_t);
+    float angle = std::atan2(robot_y - robot_next_y, robot_x - robot_next_x);
+    if(next_t > t) angle += M_PI;
+
+    vibes::drawAUV(robot_x, robot_y, angle * 180. / M_PI, 5.5, "gray[yellow]", params);
+  }
+
   void VibesFigure_Map::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
   {
     vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
@@ -366,12 +386,12 @@ namespace tubex
     draw_box(drawn_box.inflate(2.), color, params);
   }
 
-  void VibesFigure_Map::draw_observation(const IntervalVector& obs, const TrajectoryVector& related_traj, const string& color, const vibes::Params& params)
+  void VibesFigure_Map::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)
   {
     vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
     vector<double> v_x, v_y;
-    v_x.push_back(related_traj[0](obs[0].mid()));
-    v_y.push_back(related_traj[1](obs[0].mid()));
+    v_x.push_back((*traj)[0](obs[0].mid()));
+    v_y.push_back((*traj)[1](obs[0].mid()));
     v_x.push_back(v_x[0] + std::cos(obs[2].mid()) * obs[1].mid());
     v_y.push_back(v_y[0] + std::sin(obs[2].mid()) * obs[1].mid());
     draw_line(v_x, v_y, color, params);

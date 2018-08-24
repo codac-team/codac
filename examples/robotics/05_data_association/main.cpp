@@ -37,7 +37,7 @@ int main()
     fig_map.add_tube(x, "x", 0, 1);
     fig_map.add_trajectory(x_truth, "x*", 0, 1);
     fig_map.add_beacons(v_seamarks);
-    fig_map.add_observations(v_obs, *x_truth);
+    fig_map.add_observations(v_obs, x_truth);
     fig_map.show();
 
   /* =========== DATA ASSOCIATION =========== */
@@ -92,7 +92,7 @@ int main()
 
         ctc_deriv.contract((*x)[0], (*x)[2]);
         ctc_deriv.contract((*x)[1], (*x)[3]);
-        
+
     } while(volume != x->volume());
 
   /* =========== ENDING =========== */
