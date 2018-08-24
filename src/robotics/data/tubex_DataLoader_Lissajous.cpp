@@ -48,16 +48,46 @@ namespace tubex
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
 
-  vector<Beacon> DataLoader_Lissajous::get_beacons() const
+  vector<Beacon> DataLoader_Lissajous::get_beacons(const IntervalVector& map_box) const
   {
+    // todo: check dim of map_box
     vector<Beacon> v_beacons;
+
+    srand(time(NULL));
+    int nb_random_beacons = 100;
+    for(int i = 0 ; i < nb_random_beacons ; i++)
+    {
+      double x = map_box[0].lb() + static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * map_box[0].diam();
+      double y = map_box[1].lb() + static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * map_box[1].diam();
+      v_beacons.push_back(Beacon(x, y));
+    }
 
     return v_beacons;
   }
   
-  vector<IntervalVector> DataLoader_Lissajous::get_observations() const
+  vector<IntervalVector> DataLoader_Lissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map) const
   {
+    // todo: check dim of x
     vector<IntervalVector> v_obs;
+
+    float max_range = 50.;
+    float timestep = 50.;
+
+    for(double t = x.domain().lb() ; t < x.domain().ub() ; t+= x.domain().diam() / timestep)
+    {
+      for(int i = 0 ; i < map.size() ; i++)
+      {
+        float r = std::sqrt(std::pow(x[0](t) - map[i].pos()[0], 2) + std::pow(x[1](t) - map[i].pos()[1], 2));
+        if(r < max_range) // if the beacon is seen by the robot
+        {
+          IntervalVector obs(3);
+          obs[0] = t;
+          obs[1] = r;
+          obs[2] = M_PI + std::atan2(x[1](t) - map[i].pos()[1], x[0](t) - map[i].pos()[0]);
+          v_obs.push_back(obs);
+        }
+      }
+    }
     
     return v_obs;
   }

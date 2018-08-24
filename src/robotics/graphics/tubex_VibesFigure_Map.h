@@ -29,6 +29,7 @@ namespace tubex
   #define DEFAULT_BEACON_COLOR      "#FF5D00"
   #define DEFAULT_TRAJMAP_COLOR     "#276279"
   #define DEFAULT_MAPBCKGRND_COLOR  "#d2d2d2[#d2d2d2]"
+  #define DEFAULT_OBS_COLOR         "gray"
 
   class VibesFigure_Map : public VibesFigure
   {
@@ -48,6 +49,9 @@ namespace tubex
 
       void add_beacon(const Beacon& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
       void add_beacons(const std::vector<Beacon>& v_beacons, const std::string& color = DEFAULT_BEACON_COLOR);
+
+      void add_observation(const ibex::IntervalVector& obs, const TrajectoryVector& related_traj, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const TrajectoryVector& related_traj, const std::string& color = DEFAULT_OBS_COLOR);
   
       virtual void show();
 
@@ -59,6 +63,7 @@ namespace tubex
       void draw_tube_slices(const TubeVector *tube);
       const std::string shaded_slice_color(float r) const;
       void draw_beacon(const Beacon& beacon, const std::string& color, const vibes::Params& params);
+      void draw_observation(const ibex::IntervalVector& obs, const TrajectoryVector& related_traj, const std::string& color, const vibes::Params& params);
 
     protected:
 

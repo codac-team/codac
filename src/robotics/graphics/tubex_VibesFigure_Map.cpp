@@ -28,6 +28,7 @@ namespace tubex
     : VibesFigure(fig_name)
   {
     vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
+    vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
   }
 
   VibesFigure_Map::~VibesFigure_Map()
@@ -132,6 +133,19 @@ namespace tubex
     // Simply directly drawn
     for(int i = 0 ; i < v_beacons.size() ; i++)
       add_beacon(v_beacons[i], color);
+  }
+  
+  void VibesFigure_Map::add_observation(const IntervalVector& obs, const TrajectoryVector& related_traj, const string& color)
+  {
+    // Simply directly drawn
+    draw_observation(obs, related_traj, color, vibesParams("figure", name(), "group", "obs"));
+  }
+  
+  void VibesFigure_Map::add_observations(const vector<IntervalVector>& v_obs, const TrajectoryVector& related_traj, const string& color)
+  {
+    // Simply directly drawn
+    for(int i = 0 ; i < v_obs.size() ; i++)
+      add_observation(v_obs[i], related_traj, color);
   }
 
   void VibesFigure_Map::show()
@@ -351,5 +365,15 @@ namespace tubex
   {
     IntervalVector drawn_box = beacon.pos().subvector(0,1);
     draw_box(drawn_box.inflate(2.), color, params);
+  }
+
+  void VibesFigure_Map::draw_observation(const IntervalVector& obs, const TrajectoryVector& related_traj, const string& color, const vibes::Params& params)
+  {
+    vector<double> v_x, v_y;
+    v_x.push_back(related_traj[0](obs[0].mid()));
+    v_y.push_back(related_traj[1](obs[0].mid()));
+    v_x.push_back(v_x[0] + std::cos(obs[2].mid()) * obs[1].mid());
+    v_y.push_back(v_y[0] + std::sin(obs[2].mid()) * obs[1].mid());
+    draw_line(v_x, v_y, color, params);
   }
 }

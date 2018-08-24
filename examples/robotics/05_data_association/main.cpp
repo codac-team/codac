@@ -14,8 +14,9 @@ int main()
     TrajectoryVector *x_truth;
     DataLoader_Lissajous data_loader;
     data_loader.load_data(x, x_truth);
-    vector<Beacon> v_seamarks = data_loader.get_beacons();
-    vector<IntervalVector> v_obs = data_loader.get_observations();
+
+    vector<Beacon> v_seamarks = data_loader.get_beacons(x->codomain().subvector(0,1));
+    vector<IntervalVector> v_obs = data_loader.get_observations(*x_truth, v_seamarks);
 
   /* =========== GRAPHICS =========== */
 
@@ -31,6 +32,7 @@ int main()
     fig_map.add_tube(x, "x", 0, 1);
     fig_map.add_trajectory(x_truth, "x*", 0, 1);
     fig_map.add_beacons(v_seamarks);
+    fig_map.add_observations(v_obs, *x_truth);
     fig_map.show();
 
   /* =========== STATE ESTIMATION =========== */
