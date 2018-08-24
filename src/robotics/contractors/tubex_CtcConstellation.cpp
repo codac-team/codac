@@ -21,18 +21,24 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcConstellation::CtcConstellation()
+  CtcConstellation::CtcConstellation(const vector<Beacon>& map)
+    : ibex::Ctc(2), m_map(map)
+  {
+    // todo: check dim map 2
+    // todo: binary tree for logarithmic complexity
+  }
+
+  CtcConstellation::~CtcConstellation()
   {
 
   }
 
-  bool CtcConstellation::contract(IntervalVector &beacon_box, const vector<Beacon>& map) const
+  void CtcConstellation::contract(IntervalVector &beacon_box)
   {
     IntervalVector envelope_beacons(2, Interval::EMPTY_SET);
-    for(int i = 0 ; i < map.size() ; i++)
-      if(beacon_box.contains(map[i].pos().subvector(0,1)))
-        envelope_beacons |= map[i].pos().subvector(0,1);
+    for(int i = 0 ; i < m_map.size() ; i++)
+      if(beacon_box.contains(m_map[i].pos().subvector(0,1)))
+        envelope_beacons |= m_map[i].pos().subvector(0,1);
     beacon_box = envelope_beacons;
-    // todo: return value
   }
 }

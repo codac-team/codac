@@ -13,7 +13,7 @@
 #ifndef __TUBEX_CTCCONSTELLATION_H__
 #define __TUBEX_CTCCONSTELLATION_H__
 
-#include "tubex_Ctc.h"
+#include "ibex_Ctc.h"
 #include "tubex_Beacon.h"
 
 namespace tubex
@@ -22,16 +22,17 @@ namespace tubex
    * \brief CtcConstellation class.
    *
    */
-  class CtcConstellation // todo: derive from ibex::Ctc
+  class CtcConstellation : public ibex::Ctc
   {
     public:
 
-      CtcConstellation();
-
-      bool contract(ibex::IntervalVector &beacon_box, const std::vector<Beacon>& map) const;
+      CtcConstellation(const std::vector<Beacon>& map);
+      ~CtcConstellation();
+      void contract(ibex::IntervalVector &beacon_box);
 
     protected:
 
+      const std::vector<Beacon> m_map;
   };
 }
 

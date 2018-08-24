@@ -43,7 +43,7 @@ int main()
   /* =========== DATA ASSOCIATION =========== */
 
     CtcPolar ctc_polar;
-    CtcConstellation ctc_constellation;
+    CtcConstellation ctc_constellation(v_seamarks);
     CtcDeriv ctc_deriv;
     CtcEval ctc_eval(false, false); // false: faster evaluation
 
@@ -70,7 +70,7 @@ int main()
 
         // Map / observation constraint (constellation contractor)
 
-          ctc_constellation.contract(v_obs_mapped[i], v_seamarks);
+          ctc_constellation.contract(v_obs_mapped[i]);
 
         // Polar constraint
 
@@ -104,8 +104,9 @@ int main()
     fig_x.show();
     fig_map.show();
     vibes::endDrawing();
+    bool success = x->encloses(*x_truth);
+    delete x; delete x_truth;
 
-    delete x;
-    delete x_truth;
-    return EXIT_SUCCESS;
+  // Checking if this example is still working:
+  return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
