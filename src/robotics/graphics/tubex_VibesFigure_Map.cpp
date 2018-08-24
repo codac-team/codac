@@ -20,7 +20,6 @@ using namespace std;
 using namespace ibex;
 
 #define GRAY_DISPLAY_MODE         0
-#define SLICES_NUMBER_TO_DISPLAY  1000
 
 namespace tubex
 {
@@ -284,7 +283,7 @@ namespace tubex
   void VibesFigure_Map::draw_tube_slices(const TubeVector *tube)
   {
     // Reduced number of slices:
-    int step = max((int)(tube->nb_slices() / SLICES_NUMBER_TO_DISPLAY), 1);
+    int step = max((int)(tube->nb_slices() / MAP_SLICES_NUMBER_TO_DISPLAY), 1);
 
     // 1. Background:
     {
@@ -300,7 +299,7 @@ namespace tubex
         string color = DEFAULT_MAPBCKGRND_COLOR;
 
         for(int k = 0 ; k < m_map_tubes[tube].tube_copy->nb_slices() ;
-            k += step * 3) // less slices for the background
+            k += step * 2) // less slices for the background
         {
           IntervalVector box(2);
           box[0] = (*m_map_tubes[tube].tube_copy)[m_map_tubes[tube].index_x](k);

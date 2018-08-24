@@ -45,6 +45,9 @@ namespace tubex
     (*x)[0] = (*x)[2].primitive();
     (*x)[1] = (*x)[3].primitive();
 
+    (*x)[0].inflate(100.);
+    (*x)[1].inflate(100.);
+
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
 
@@ -82,8 +85,8 @@ namespace tubex
         {
           IntervalVector obs(3);
           obs[0] = t;
-          obs[1] = r;
-          obs[2] = M_PI + std::atan2(x[1](t) - map[i].pos()[1], x[0](t) - map[i].pos()[0]);
+          obs[1] = r + Interval(-0.1,0.1);
+          obs[2] = M_PI + std::atan2(x[1](t) - map[i].pos()[1], x[0](t) - map[i].pos()[0]) + Interval(-0.1,0.1);
           v_obs.push_back(obs);
         }
       }

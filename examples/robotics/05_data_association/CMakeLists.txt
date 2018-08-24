@@ -13,13 +13,16 @@
 
   )
 
+  set(LIBS ${LIBS} -libex-geometry)
+  link_directories(/usr/local/lib/ibex-geometry/)
+  include_directories(/usr/local/include/ibex-geometry/)
+
   add_executable(ex_data_association ${SRC})
 
   target_link_libraries(ex_data_association
     ${LIBS}
     tubex-core
     tubex-robotics)
-
 
 # Tests
 
