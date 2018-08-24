@@ -27,8 +27,7 @@ namespace tubex
   VibesFigure_Map::VibesFigure_Map(const string& fig_name)
     : VibesFigure(fig_name)
   {
-    vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
-    vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
+    
   }
 
   VibesFigure_Map::~VibesFigure_Map()
@@ -363,12 +362,14 @@ namespace tubex
 
   void VibesFigure_Map::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
   {
+    vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
     IntervalVector drawn_box = beacon.pos().subvector(0,1);
     draw_box(drawn_box.inflate(2.), color, params);
   }
 
   void VibesFigure_Map::draw_observation(const IntervalVector& obs, const TrajectoryVector& related_traj, const string& color, const vibes::Params& params)
   {
+    vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
     vector<double> v_x, v_y;
     v_x.push_back(related_traj[0](obs[0].mid()));
     v_y.push_back(related_traj[1](obs[0].mid()));
