@@ -21,10 +21,7 @@ int main()
 
     vector<IntervalVector> v_obs_mapped;
     for(int i = 0 ; i < v_obs.size() ; i++)
-    {
-      x->sample(v_obs[i][0].mid()); // slicing compliance
       v_obs_mapped.push_back(IntervalVector(2)); // unknown position
-    }
 
   /* =========== GRAPHICS =========== */
 
@@ -48,7 +45,7 @@ int main()
     CtcPolar ctc_polar;
     CtcConstellation ctc_constellation;
     CtcDeriv ctc_deriv;
-    CtcEval ctc_eval(false, false);
+    CtcEval ctc_eval(false, false); // false: faster evaluation
 
     int k = 0;
     double volume;
@@ -63,33 +60,46 @@ int main()
       {
         double t = v_obs[i][0].mid();
 
-        v_obs_mapped[i][0] -= (*x)[0](t);
-        v_obs_mapped[i][1] -= (*x)[1](t);
-        ctc_polar.contract(v_obs_mapped[i][0], v_obs_mapped[i][1], v_obs[i][1], v_obs[i][2]);
-        v_obs_mapped[i][0] += (*x)[0](t);
-        v_obs_mapped[i][1] += (*x)[1](t);
-        ctc_constellation.contract(v_obs_mapped[i], v_seamarks);
+        // Polar constraint
 
-        Interval rob_px = (*x)[0](t) - v_obs_mapped[i][0];
-        Interval rob_py = (*x)[1](t) - v_obs_mapped[i][1];
-        v_obs[i][2] += M_PI;
-        ctc_polar.contract(rob_px, rob_py, v_obs[i][1], v_obs[i][2]);
-        v_obs[i][2] -= M_PI;
-        rob_px += v_obs_mapped[i][0];
-        rob_py += v_obs_mapped[i][1];
-        ctc_eval.contract(t, rob_px, (*x)[0], (*x)[2]);
-        ctc_eval.contract(t, rob_py, (*x)[1], (*x)[3]);
+          v_obs_mapped[i][0] -= (*x)[0](t);
+          v_obs_mapped[i][1] -= (*x)[1](t);
+          ctc_polar.contract(v_obs_mapped[i][0], v_obs_mapped[i][1], v_obs[i][1], v_obs[i][2]);
+          v_obs_mapped[i][0] += (*x)[0](t);
+          v_obs_mapped[i][1] += (*x)[1](t);
+
+        // Map / observation constraint (constellation contractor)
+
+          ctc_constellation.contract(v_obs_mapped[i], v_seamarks);
+
+        // Polar constraint
+
+          IntervalVector rob_pos(2);
+          rob_pos[0] = (*x)[0](t); rob_pos[1] = (*x)[1](t);
+          rob_pos -= v_obs_mapped[i]; // relative to the beacon
+          v_obs[i][2] += M_PI; // relative to the beacon
+          ctc_polar.contract(rob_pos[0], rob_pos[1], v_obs[i][1], v_obs[i][2]);
+          v_obs[i][2] -= M_PI; // relative to the map
+          rob_pos += v_obs_mapped[i]; // relative to the map
+
+        // Trajectory evaluation constraint
+
+          ctc_eval.contract(t, rob_pos[0], (*x)[0], (*x)[2]);
+          ctc_eval.contract(t, rob_pos[1], (*x)[1], (*x)[3]);
       }
 
-      ctc_deriv.contract((*x)[0], (*x)[2]);
-      ctc_deriv.contract((*x)[1], (*x)[3]);
+      // Evolution constraint (differential equation)
+
+        ctc_deriv.contract((*x)[0], (*x)[2]);
+        ctc_deriv.contract((*x)[1], (*x)[3]);
+        
     } while(volume != x->volume());
 
-    for(int i = 0 ; i < v_obs_mapped.size() ; i++)
-      if(v_obs_mapped[i].volume() != 0)
-        cout << v_obs_mapped[i] << " NOT IDENTIFIED" << endl;
-
   /* =========== ENDING =========== */
+
+    for(int i = 0 ; i < v_obs_mapped.size() ; i++)
+      if(v_obs_mapped[i].volume() != 0) // degenerate box
+        cout << v_obs_mapped[i] << " NOT IDENTIFIED" << endl;
 
     fig_x.show();
     fig_map.show();
