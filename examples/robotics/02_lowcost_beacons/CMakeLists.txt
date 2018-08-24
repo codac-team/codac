@@ -17,7 +17,8 @@
 
   target_link_libraries(ex_lowcost_beacons
     ${LIBS}
-    tubex-core)
+    tubex-core
+    tubex-robotics)
 
 
 # Tests
