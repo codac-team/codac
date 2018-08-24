@@ -55,27 +55,25 @@ namespace tubex
   {
     if(same_ratio && !m_view_box.is_empty())
     {
-      float r = m_view_box[0].diam() / m_view_box[1].diam();
+      float r = 1. * width() / height();
 
       IntervalVector b1(2);
       b1[0] = viewbox[0];
-      b1[1] = (viewbox[1].lb() + viewbox[1].ub()) / 2. + (b1[0] - b1[0].mid()) / r;
+      b1[1] = viewbox[1].mid() + Interval(-1.,1.) * b1[0].rad() / r;
 
       IntervalVector b2(2);
-      b2[1] = Interval(viewbox[1].lb(), viewbox[1].ub());
-      b2[0] = (viewbox[0].lb() + viewbox[0].ub()) / 2. + (b2[1] - b2[1].mid()) * r;
+      b2[1] = viewbox[1];
+      b2[0] = viewbox[0].mid() + Interval(-1.,1.) * b2[1].rad() * r;
 
-      if(b1.is_subset(b2))
-        m_view_box = b2;
-      else
-        m_view_box = b1;
+      m_view_box = b1 | b2;
     }
 
     else
       m_view_box = viewbox;
 
     IntervalVector box_with_margin = m_view_box;
-    box_with_margin += margin * m_view_box.max_diam() * IntervalVector(2, Interval(-1.,1.));
+    box_with_margin[0] += margin * m_view_box[0].diam() * Interval(-1.,1.);
+    box_with_margin[1] += margin * m_view_box[1].diam() * Interval(-1.,1.);
 
     vibes::clearGroup(name(), "transparent_box");
     vibes::drawBox(box_with_margin[0].lb(), box_with_margin[0].ub(),

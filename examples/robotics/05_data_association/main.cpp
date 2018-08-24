@@ -27,14 +27,13 @@ int main()
     fig_x.show();
 
     VibesFigure_Map fig_map("Map");
-    fig_map.set_properties(1450, 50, 500, 300);
+    fig_map.set_properties(1450, 50, 600, 400);
     fig_map.add_tube(x, "x", 0, 1);
     fig_map.add_trajectory(x_truth, "x*", 0, 1);
     fig_map.add_beacons(v_seamarks);
     fig_map.show();
 
   /* =========== STATE ESTIMATION =========== */
-
 
     fig_x.show();
     fig_map.show();
