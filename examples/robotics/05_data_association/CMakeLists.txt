@@ -19,6 +19,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME rob_05_data_association COMMAND rob_05_data_association 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME rob_05_data_association COMMAND rob_05_data_association 0)
+  endif(BUILD_TESTS)

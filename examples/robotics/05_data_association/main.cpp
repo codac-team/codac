@@ -40,12 +40,14 @@ int main()
     fig_map.add_observations(v_obs, x_truth);
     fig_map.show();
 
-  /* =========== DATA ASSOCIATION =========== */
+  /* =========== CREATING CONTRACTORS =========== */
 
     CtcPolar ctc_polar;
     CtcConstellation ctc_constellation(v_seamarks);
     CtcDeriv ctc_deriv;
     CtcEval ctc_eval(false, false); // false: faster evaluation
+
+  /* =========== DATA ASSOCIATION =========== */
 
     int k = 0;
     double volume;
