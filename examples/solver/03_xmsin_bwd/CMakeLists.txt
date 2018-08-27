@@ -2,24 +2,15 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
-
-  set(HEADERS
-
-  )
-
+  set(SRC main.cpp)
   add_executable(solver_03_xmsin_bwd ${SRC})
 
   target_link_libraries(solver_03_xmsin_bwd
     ${LIBS}
     tubex-core
     tubex-solver)
-
 
 # Tests
 

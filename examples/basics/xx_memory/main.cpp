@@ -6,7 +6,7 @@ using namespace tubex;
 
 int main()
 {
-  Interval domain(0.,10.);
+  /*Interval domain(0.,10.);
   TubeVector x(domain, IntervalVector(4, 1.));
 
   cout << x << endl;

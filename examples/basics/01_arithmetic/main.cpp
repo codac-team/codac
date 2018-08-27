@@ -32,36 +32,35 @@ int main()
   /* =========== INITIALIZATION =========== */
 
     Interval domain(0,10);
-    double timestep = 0.01;
+    TubeVector x(domain, 6);
 
-    // Creating tubes over the [0,10] temporal domain with some timestep:
-    Tube tube_x(domain, timestep,
+    double timestep = 0.01;
+    x[0] = Tube(domain, timestep, // tube [x](·)
                 tubex::Function("(t-5)^2 + [-0.5,0.5]"));
-    Tube tube_y(domain, timestep,
+    x[1] = Tube(domain, timestep, // tube [y](·)
                 tubex::Function("-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
 
   /* =========== ARITHMETIC =========== */
 
-    Tube tube_a = tube_x + tube_y;
-    Tube tube_b = sin(tube_x);
-    Tube tube_c = tube_x.primitive();
-    Tube tube_d = abs(tube_y);
+    x[2] = x[0] + x[1]; // tube [a](·)
+    x[3] = sin(x[0]); // tube [b](·)
+    x[4] = x[0].primitive(); // tube [c](·)
+    x[5] = abs(x[1]); // tube [d](·)
 
   /* =========== GRAPHICS =========== */
-    
-    VibesFigure_Tube::draw("Tube [x](·)", &tube_x, 100, 100);
-    VibesFigure_Tube::draw("Tube [y](·)", &tube_y, 200, 200);
-    VibesFigure_Tube::draw("Tube [a](·)", &tube_a, 300, 300);
-    VibesFigure_Tube::draw("Tube [b](·)", &tube_b, 400, 400);
-    VibesFigure_Tube::draw("Tube [c](·)", &tube_c, 500, 500);
-    VibesFigure_Tube::draw("Tube [d](·)", &tube_d, 600, 600);
-    VibesFigure_Tube::end_drawing();
 
+    vibes::beginDrawing();
+    VibesFigure_TubeVector fig_x("x", &x);
+    fig_x.set_properties(100, 100, 600, 250);
+    fig_x.show();
+    vibes::endDrawing();
+    
 
   // Checking if this example is still working:
-  return (fabs(tube_x.volume() - 10.5) < 1e-2
-       && fabs(tube_y.volume() - 55.267) < 1e-2
-       && fabs(tube_a.volume() - 65.767) < 1e-2
-       && fabs(tube_b.volume() - 6.8308) < 1e-2
-       && fabs(tube_c.volume() - 53.338) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (fabs(x[0].volume() - 10.5) < 1e-2
+       && fabs(x[1].volume() - 55.267) < 1e-2
+       && fabs(x[2].volume() - 65.767) < 1e-2
+       && fabs(x[3].volume() - 6.8308) < 1e-2
+       && fabs(x[4].volume() - 53.338) < 1e-2
+       && fabs(x[5].volume() - 42.060) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

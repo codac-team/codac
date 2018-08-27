@@ -2,26 +2,17 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
+  set(SRC main.cpp)
+  add_executable(basics_04_lissajous ${SRC})
 
-  set(HEADERS
-
-  )
-
-  add_executable(ex_lissajous ${SRC})
-
-  target_link_libraries(ex_lissajous
+  target_link_libraries(basics_04_lissajous
     ${LIBS}
     tubex-core)
 
-
 # Tests
 
-  if(BUILD_TESTS)
-  #  add_test(NAME ExampleLissajous COMMAND ex_lissajous 0)
-  endif(BUILD_TESTS)
+  #if(BUILD_TESTS)
+  #  add_test(NAME basics_04_lissajous COMMAND basics_04_lissajous 0)
+  #endif(BUILD_TESTS)

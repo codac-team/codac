@@ -2,26 +2,18 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
+  set(SRC main.cpp)
+  add_executable(rob_01_causal_chain ${SRC})
 
-  set(HEADERS
-
-  )
-
-  add_executable(ex_causal_chain ${SRC})
-
-  target_link_libraries(ex_causal_chain
+  target_link_libraries(rob_01_causal_chain
     ${LIBS}
-    tubex-core)
-
+    tubex-core
+    tubex-robotics)
 
 # Tests
 
-  if(BUILD_TESTS)
-  #  add_test(NAME ExampleCausalChain COMMAND ex_causal_chain 0)
-  endif(BUILD_TESTS)
+  #if(BUILD_TESTS)
+  #  add_test(NAME rob_01_causal_chain COMMAND rob_01_causal_chain 0)
+  #endif(BUILD_TESTS)

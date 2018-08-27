@@ -2,24 +2,15 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
-
-  set(HEADERS
-
-  )
-
+  set(SRC main.cpp)
   add_executable(solver_08_bvp_delay_2d ${SRC})
 
   target_link_libraries(solver_08_bvp_delay_2d
     ${LIBS}
     tubex-core
     tubex-solver)
-
 
 # Tests
 

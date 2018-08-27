@@ -2,24 +2,15 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
-
-  set(HEADERS
-
-  )
-
+  set(SRC main.cpp)
   add_executable(solver_05_delay ${SRC})
 
   target_link_libraries(solver_05_delay
     ${LIBS}
     tubex-core
     tubex-solver)
-
 
 # Tests
 

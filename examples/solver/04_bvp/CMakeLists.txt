@@ -2,17 +2,9 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
-
-  set(HEADERS
-
-  )
-
+  set(SRC main.cpp)
   add_executable(solver_04_bvp ${SRC})
 
   target_link_libraries(solver_04_bvp
@@ -20,9 +12,8 @@
     tubex-core
     tubex-solver)
 
-
 # Tests
 
-  if(BUILD_TESTS)
-    add_test(NAME solver_04_bvp COMMAND solver_04_bvp 0)
-  endif(BUILD_TESTS)
+  #if(BUILD_TESTS)
+  #  add_test(NAME solver_04_bvp COMMAND solver_04_bvp 0)
+  #endif(BUILD_TESTS)

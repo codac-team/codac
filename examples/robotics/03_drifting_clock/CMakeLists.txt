@@ -2,26 +2,18 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
+  set(SRC main.cpp)
+  add_executable(rob_03_drifting_clock ${SRC})
 
-  set(HEADERS
-
-  )
-
-  add_executable(ex_drifting_clock ${SRC})
-
-  target_link_libraries(ex_drifting_clock
+  target_link_libraries(rob_03_drifting_clock
     ${LIBS}
-    tubex-core)
-
+    tubex-core
+    tubex-robotics)
 
 # Tests
 
-  if(BUILD_TESTS)
-  #  add_test(NAME ExampleDriftingClock COMMAND ex_drifting_clock 0)
-  endif(BUILD_TESTS)
+  #if(BUILD_TESTS)
+  #  add_test(NAME rob_03_drifting_clock COMMAND rob_03_drifting_clock 0)
+  #endif(BUILD_TESTS)

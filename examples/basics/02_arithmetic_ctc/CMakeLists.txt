@@ -2,26 +2,17 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
+  set(SRC main.cpp)
+  add_executable(basics_02_arithmetic_ctc ${SRC})
 
-  set(HEADERS
-
-  )
-
-  add_executable(ex_arithmetic_ctc ${SRC})
-
-  target_link_libraries(ex_arithmetic_ctc
+  target_link_libraries(basics_02_arithmetic_ctc
     ${LIBS}
     tubex-core)
 
-
 # Tests
 
-  if(BUILD_TESTS)
-  #  add_test(NAME ExampleArithmeticsCtc COMMAND ex_arithmetic_ctc 0)
-  endif(BUILD_TESTS)
+  #if(BUILD_TESTS)
+  #  add_test(NAME basics_02_arithmetic_ctc COMMAND basics_02_arithmetic_ctc 0)
+  #endif(BUILD_TESTS)

@@ -2,24 +2,15 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
-
-  set(HEADERS
-
-  )
-
+  set(SRC main.cpp)
   add_executable(solver_07_integro_diff ${SRC})
 
   target_link_libraries(solver_07_integro_diff
     ${LIBS}
     tubex-core
     tubex-solver)
-
 
 # Tests
 

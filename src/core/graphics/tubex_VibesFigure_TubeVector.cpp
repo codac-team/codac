@@ -43,7 +43,12 @@ namespace tubex
   VibesFigure_TubeVector::VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector)
     : VibesFigure_TubeVector(fig_name, tubevector->size())
   {
-    // todo: check dim tube, traj
+    for(int i = 0 ; i < m_n ; i++)
+    {
+      std::ostringstream o;
+      o << fig_name << "[" << (i+1) << "]";
+      m_v_figs[i]->add_tube(&(*tubevector)[i], fig_name.c_str());
+    }
   }
 
   VibesFigure_TubeVector::~VibesFigure_TubeVector()

@@ -2,24 +2,15 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-
 # Sources
 
-  set(SRC
-    main.cpp
-  )
-
-  set(HEADERS
-
-  )
-
+  set(SRC main.cpp)
   add_executable(solver_09_csdp ${SRC})
 
   target_link_libraries(solver_09_csdp
     ${LIBS}
     tubex-core
     tubex-solver)
-
 
 # Tests
 
