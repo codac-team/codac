@@ -53,13 +53,6 @@ namespace tubex
 
       virtual void show();
       void show(bool detail_slices);
-      
-      // Static methods (shortcuts for fast and simple use)
-      static void draw(const std::string& fig_name, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const Tube *tube, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const Trajectory *traj, int x = 0, int y = 0);
-      static void draw(const std::string& fig_name, const Tube *tube, const Trajectory *traj, int x = 0, int y = 0);
-      static void end_drawing();
 
     protected:
 
@@ -91,7 +84,6 @@ namespace tubex
       std::map<const Tube*,FigTubeParams> m_map_tubes;
       std::map<const Trajectory*,FigTrajParams> m_map_trajs;
 
-      static std::vector<VibesFigure_Tube*> v_vibesfig_tube;
       friend class VibesFigure_TubeVector;
   };
 }

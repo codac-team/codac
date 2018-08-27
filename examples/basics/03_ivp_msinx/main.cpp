@@ -30,7 +30,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-int main()
+int main(int argc, char *argv[])
 {
   /* =========== PARAMETERS =========== */
 
@@ -40,15 +40,18 @@ int main()
 
   /* =========== INITIALIZATION =========== */
 
-    // Creating tubes over the [0,10] domain with some timestep:
-    Tube a(domain, timestep);
-    Tube b(domain, timestep);
-     // Initialization with [-1,1] values forall t:
-    Tube x(domain, timestep, Interval(-1,1));
+    // Creating the tube x over the [0,10] domain with some timestep:
+    Tube x(domain, timestep);
+    // Creating intermediate tubes based on x (same slicing)
+    Tube a(x), b(x);
 
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::draw("Tube [x](·)", &x, 200, 50);
+    vibes::beginDrawing();
+    Trajectory truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
+    VibesFigure_Tube fig_x("x", &x, &truth);
+    fig_x.set_properties(100, 100, 600, 600);
+    fig_x.show();
 
   /* =========== INTERVAL INTEGRATION =========== */
 
@@ -56,24 +59,24 @@ int main()
     double volume_x;
     do
     {
-      cout << "Step " << i << "... \tpress ENTER to continue" << flush;
       volume_x = x.volume(); // check tube's volume to detect a fixpoint
 
-      // Contractors based on elementary constraints:
+      // Trivial contractors based on elementary constraints:
       a &= sin(x);
       b &= a.primitive();
       x &= x0 - b;
 
-      VibesFigure_Tube::draw("Tube [x](·)");
       i++;
       
-      if(argc == 1) cin.ignore(); // press ENTER to continue
     } while(volume_x != x.volume()); // up to the fixpoint
+    cout << i << " iterations" << endl;
 
   /* =========== END =========== */
 
-    VibesFigure_Tube::end_drawing();
+    fig_x.show();
+    vibes::endDrawing();
+
 
   // Checking if this example is still working:
-  return (volume_x <= 9.15) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (volume_x <= 21.176) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -13,6 +13,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME basics_03_ivp_msinx COMMAND basics_03_ivp_msinx 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME basics_03_ivp_msinx COMMAND basics_03_ivp_msinx 0)
+  endif(BUILD_TESTS)

@@ -13,6 +13,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME basics_02_simple_ctc COMMAND basics_02_simple_ctc 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME basics_02_simple_ctc COMMAND basics_02_simple_ctc 0)
+  endif(BUILD_TESTS)
