@@ -45,6 +45,9 @@ namespace tubex
 
       void show(bool detail_slices = false);
 
+      void draw_box(const ibex::IntervalVector& box, const vibes::Params& params);
+      void draw_box(const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
       // Static methods (shortcuts for fast and simple use)
       static void draw(const std::string& fig_name, int x = 0, int y = 0);
       static void draw(const std::string& fig_name, const TubeVector *tubevector, int x = 0, int y = 0);
