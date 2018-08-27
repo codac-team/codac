@@ -760,7 +760,8 @@ TEST_CASE("Interpol")
     //CHECK(y == Interval::ALL_REALS);
     //CHECK(t == Interval(0.,5.));
 
-    x.ctc_deriv(v); // contraction of the x
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v); // contraction of the x
     //CHECK_FALSE(ctc_eval.contract(x, v)); // fixed point already reached
     CHECK(x.codomain() == Interval(0.,4.25));
     CHECK(x(0) == Interval(0.,2.));
@@ -903,7 +904,9 @@ TEST_CASE("Interpol")
     Tube v(x, Interval(-1./3.,1.));
     x.set(Interval(1.), 8.);
     x.set(Interval(1.), 12.);
-    x.ctc_deriv(v);
+
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v); // contraction of the x
 
     CHECK(x.nb_slices() == 1);
 
@@ -959,8 +962,9 @@ TEST_CASE("Interpol")
     v.set(Interval::ALL_REALS, 7);
     v.set(Interval::ALL_REALS, 8);
 
-    x.ctc_deriv(v);
     CtcEval ctc_eval;
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
 
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();

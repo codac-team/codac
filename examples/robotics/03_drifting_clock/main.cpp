@@ -75,6 +75,7 @@ int main()
   
   /* =========== CONTRACTIONS =========== */
 
+    CtcDeriv ctc_deriv;
     CtcEval ctc_eval(false, false);
     bool contraction;
     int k = 1;
@@ -90,8 +91,8 @@ int main()
         contraction |= ctc_eval.contract(v_obs[i][1], v_obs[i][0], h[0], h[1]);
       }
 
-      contraction |= h[0].ctc_deriv(h[1]);
-      contraction |= y[0].ctc_deriv(y[1]);
+      contraction |= ctc_deriv.contract(h[0], h[1]);
+      contraction |= ctc_deriv.contract(y[0], y[1]);
       k++;
     } while(contraction);
 

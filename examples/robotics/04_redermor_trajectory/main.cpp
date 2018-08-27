@@ -39,6 +39,7 @@ int main()
       for(int k = 0 ; k < m_obs[i].size() ; k++)
         x->sample(m_obs[i][k][0].mid());
 
+    CtcDeriv ctc_deriv;
     CtcEval ctc_eval(false, false);
 
     map<int,TubeVector*> m_x;
@@ -76,9 +77,9 @@ int main()
 
       ctc_hc4.contract(hc4, *m_x[i]);
 
-      (*m_x[i])[0].ctc_deriv((*m_x[i])[3]);
-      (*m_x[i])[1].ctc_deriv((*m_x[i])[4]);
-      (*m_x[i])[9].ctc_deriv((*m_x[i])[10]);
+      ctc_deriv.contract((*m_x[i])[0], (*m_x[i])[3]);
+      ctc_deriv.contract((*m_x[i])[1], (*m_x[i])[4]);
+      ctc_deriv.contract((*m_x[i])[9], (*m_x[i])[10]);
 
       for(int j = 0 ; j < 6 ; j++)
         (*x)[j] &= (*m_x[i])[j];

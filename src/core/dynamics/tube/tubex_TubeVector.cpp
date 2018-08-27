@@ -621,18 +621,6 @@ namespace tubex
       }
       return p_integ;
     }
-
-    // Contractors
-
-    bool TubeVector::ctc_deriv(const TubeVector& v)
-    {
-      // todo: remove this?
-    }
-
-    bool TubeVector::ctc_eval(Interval& t, IntervalVector& z, TubeVector& w)
-    {
-      // todo: remove this?
-    }
       
     // Serialization
 

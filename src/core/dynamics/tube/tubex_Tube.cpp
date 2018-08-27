@@ -930,20 +930,6 @@ namespace tubex
       return make_pair((integral_t2.first - integral_t1.first),
                        (integral_t2.second - integral_t1.second));
     }
-
-    // Contractors
-
-    bool Tube::ctc_deriv(const Tube& v)
-    {
-      CtcDeriv ctc;
-      return ctc.contract(*this, v);
-    }
-
-    bool Tube::ctc_eval(Interval& t, Interval& z, Tube& w)
-    {
-      CtcEval ctc;
-      return ctc.contract(t, z, *this, w);
-    }
       
     // Serialization
 

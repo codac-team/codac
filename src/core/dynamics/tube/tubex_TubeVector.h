@@ -130,11 +130,6 @@ namespace tubex
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t) const;
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
-    /** Contractors: **/
-
-      bool ctc_deriv(const TubeVector& v);
-      bool ctc_eval(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& w);
-
     /** Serialization: **/
 
       void serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;

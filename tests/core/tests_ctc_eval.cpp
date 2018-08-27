@@ -917,7 +917,9 @@ TEST_CASE("CtcEval")
   {
     Tube x(Interval(0.,20.), 0.1, tubex::Function("cos(t)+t*[-0.1,0.2]"));
     Tube v(Interval(0.,20.), 0.1, tubex::Function("-sin(t)+[-0.1,0.2]"));
-    x.ctc_deriv(v);
+    
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
 
     IntervalVector box(2);
     CtcEval ctc_eval(false, true);
@@ -951,9 +953,10 @@ TEST_CASE("CtcEval")
     Tube v(x);
     v.set(Interval(-1.5,-1.));
     x.set(Interval(6.,8.), 0);
-    x.ctc_deriv(v);
 
     CtcEval ctc_eval;
+    CtcDeriv ctc_deriv;
+    ctc_deriv.contract(x, v);
 
     CHECK(x(0) == Interval(6.,8.)); 
     CHECK(x(1) == Interval(4.5,7.));

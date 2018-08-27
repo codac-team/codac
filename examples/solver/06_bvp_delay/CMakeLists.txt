@@ -14,6 +14,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME solver_06_bvp_delay COMMAND solver_06_bvp_delay 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME solver_06_bvp_delay COMMAND solver_06_bvp_delay 0)
+  endif(BUILD_TESTS)

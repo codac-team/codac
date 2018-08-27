@@ -14,6 +14,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME solver_04_bvp COMMAND solver_04_bvp 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME solver_04_bvp COMMAND solver_04_bvp 0)
+  endif(BUILD_TESTS)
