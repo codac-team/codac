@@ -160,6 +160,12 @@ namespace tubex
     axis_limits(m_view_box, true, 0.05);
   }
 
+  void VibesFigure_Map::show(float robot_size)
+  {
+    m_robot_size = robot_size;
+    show();
+  }
+
   const IntervalVector VibesFigure_Map::draw_tube(const TubeVector *tube)
   {
     IntervalVector viewbox(2, Interval::EMPTY_SET);
@@ -376,7 +382,7 @@ namespace tubex
     float angle = std::atan2(robot_y - robot_next_y, robot_x - robot_next_x);
     if(next_t > t) angle += M_PI;
 
-    vibes::drawAUV(robot_x, robot_y, angle * 180. / M_PI, 5.5, "gray[yellow]", params);
+    vibes::drawAUV(robot_x, robot_y, angle * 180. / M_PI, m_robot_size, "gray[yellow]", params);
   }
 
   void VibesFigure_Map::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)

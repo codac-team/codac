@@ -55,6 +55,7 @@ namespace tubex
       void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
   
       virtual void show();
+      void show(float robot_size);
 
     protected:
 
@@ -85,6 +86,8 @@ namespace tubex
 
       std::map<const TubeVector*,FigMapTubeParams> m_map_tubes;
       std::map<const TrajectoryVector*,FigMapTrajParams> m_map_trajs;
+
+      float m_robot_size = 5.5;
   };
 }
 

@@ -14,94 +14,94 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex.h"
+#include "tubex-robotics.h"
 
 using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-void displayLissajousMap(const Tube& x, const Tube& y, int fig_x, int fig_y);
-
 int main()
 {
   /* =========== PARAMETERS =========== */
 
-    Interval domain(0,6);
-    double timestep = 0.001;
+    Interval domain(0., 6.);
+    float timestep = 0.001;
 
   /* =========== INITIALIZATION =========== */
 
     // Creating tubes over the [0,6] domain with some timestep:
-    Tube xddot(domain, timestep, Function("t", "-10*cos(t)+[-0.001,0.001]"));
-    Tube xdot(domain,timestep), x(domain, timestep), yddot(domain, timestep), ydot(domain, timestep), y(domain, timestep);
+    TubeVector x(domain, timestep, 6);
+    x &= IntervalVector(6, Interval(-999.,999.));
+    x[4] = Tube(x[5], tubex::Function("-10*cos(t)+[-0.001,0.001]"));
 
     // Initial conditions:
-    Interval xdot0 = 0., ydot0 = 10.;
-    Interval x0 = Interval(10.).inflate(0.2), y0 = Interval(0.).inflate(0.2);
+    IntervalVector x0(x.size());
+    x0[0] = Interval(10.).inflate(0.2);
+    x0[1] = Interval(0.).inflate(0.2);
+    x0[2] = 0.;
+    x0[3] = 10.;
+    x.set(x0, 0.);
 
-  /* =========== CONSTRAINT NETWORK =========== */
+  /* =========== CREATING CONTRACTORS =========== */
 
-    bool fixpoint;
+    CtcDeriv ctc_deriv;
+    CtcEval ctc_eval(false, false);
+    tubex::CtcFwdBwd ctc_fwdbwd(
+      tubex::Function("x", "y", "xdot", "ydot", "xddot", "yddot",
+                      "-0.4*xddot*xdot - yddot"));
+
+  /* =========== PROPAGATION =========== */
+
+    int i = 0;
+    double volume_x;
     do
     {
-      double vol_x = x.volume(), vol_y = y.volume();
+      volume_x = x.volume();
 
       // Contractors
-      xdot.ctcFwdBwd(xddot, xdot0);
-      ydot.ctcFwdBwd(yddot, ydot0);
-      x.ctcFwdBwd(xdot, x0);
-      y.ctcFwdBwd(ydot, y0);
+      ctc_deriv.contract(x[3], x[5]);
+      ctc_deriv.contract(x[2], x[4]);
+      ctc_deriv.contract(x[1], x[3]);
+      ctc_deriv.contract(x[0], x[2]);
 
-      // Further constraints that can be considered
+      // Further constraints that could be considered
       if(false)
       {
-        y.ctc_eval(ydot, y[M_PI/2.], 3.*M_PI/2.);
-        y.ctc_eval(ydot, y[3.*M_PI/2.], M_PI/2.);
-        x.ctc_eval(xdot, x[M_PI/2.], 3.*M_PI/2.);
-        x.ctc_eval(xdot, x[3.*M_PI/2.], M_PI/2.);
-        y.ctcPeriodic(M_PI);
+        ctc_eval.contract(x[1](M_PI/2.), 3.*M_PI/2., x[1], x[3]);
+        ctc_eval.contract(x[1](3.*M_PI/2.), M_PI/2., x[1], x[3]);
+        ctc_eval.contract(x[0](M_PI/2.), 3.*M_PI/2., x[0], x[2]);
+        ctc_eval.contract(x[0](3.*M_PI/2.), M_PI/2., x[0], x[2]);
+        // todo: ctc_periodic.contract(x[1], M_PI);
       }
 
-      yddot &= -0.4 * xddot * xdot;
+      ctc_fwdbwd.contract(x);
 
-      cout << "contraction step..." << endl;
-      // Fixpoint is detected when tubes are not contracted anymore
-      fixpoint = vol_x == x.volume() && vol_y == y.volume();
-
-    } while(!fixpoint);
+      i++;
+    } while(volume_x != x.volume());
 
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::draw("Tube [x](·)", &x, 100, 100);
-    VibesFigure_Tube::draw("Tube [y](·)", &y, 150, 150);
-    displayLissajousMap(x, y, 200, 200);
-    VibesFigure_Tube::end_drawing();
+    TrajectoryVector x_truth(6);
+    x_truth[0] = Trajectory(domain, tubex::Function("10*cos(t)"));
+    x_truth[1] = Trajectory(domain, tubex::Function("5*sin(2*t)"));
 
+    vibes::beginDrawing();
+
+    VibesFigure_TubeVector fig_x("x", 0, 1); // first two components
+    fig_x.add_tubevector(&x, "x");
+    fig_x.add_trajectoryvector(&x_truth, "x*");
+    fig_x.set_properties(100, 100, 600, 300);
+    fig_x.show();
+
+    VibesFigure_Map fig_map("Map");
+    fig_map.set_properties(50, 50, 500, 500);
+    fig_map.add_tubevector(&x, "x", 0, 1);
+    fig_map.add_trajectoryvector(&x_truth, "x*", 0, 1);
+    fig_map.show(1.2);
+
+    vibes::endDrawing();
+
+    
   // Checking if this example is still working:
-  return (fabs(x.volume() - 2.84844) < 1e-2
-       && fabs(y.volume() - 5.3149) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-
-void displayLissajousMap(const Tube& x, const Tube& y, int fig_x, int fig_y)
-{
-  const string fig_name = "Map (top view): [x](·)x[y](·)";
-  const int slices_number_to_display = 500;
-
-  vibes::newFigure(fig_name);
-  vibes::setFigureProperties(
-            vibesParams("figure", fig_name, "x", fig_x, "y", fig_y, "width", 900, "height", 600));
-  vibes::axis_limits(-12, 12, -8, 8);
-
-  // Robot's tubes projection
-  int startpoint;
-  for(int i = 0 ; i < x.size() ; i += max((int)(x.size() / slices_number_to_display), 1))
-    startpoint = i;
-
-  for(int i = startpoint ; i >= 0; i -= max((int)(x.size() / slices_number_to_display), 1))
-  {
-    Interval intv_x = x[i];
-    Interval intv_y = y[i];
-    if(!intv_x.is_unbounded() && !intv_y.is_unbounded())
-      vibes::drawBox(intv_x.lb(), intv_x.ub(), intv_y.lb(), intv_y.ub(),
-                     "lightGray[white]", vibesParams("figure", fig_name));
-  }
+  return fabs(x.volume() - 10.6313) < 1e-2 ? EXIT_SUCCESS : EXIT_FAILURE;
 }

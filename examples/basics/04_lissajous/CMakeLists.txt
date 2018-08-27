@@ -9,10 +9,11 @@
 
   target_link_libraries(basics_04_lissajous
     ${LIBS}
-    tubex-core)
+    tubex-core
+    tubex-robotics)
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME basics_04_lissajous COMMAND basics_04_lissajous 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME basics_04_lissajous COMMAND basics_04_lissajous 0)
+  endif(BUILD_TESTS)

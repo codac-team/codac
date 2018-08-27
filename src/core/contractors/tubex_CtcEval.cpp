@@ -217,17 +217,29 @@ namespace tubex
     return t != t_ || z != z_ || y.is_strict_subset(y_);
   }
 
+  bool CtcEval::contract(const Interval& t, const Interval& z, Tube& y, Tube& w) const
+  {
+    Interval _t(t), _z(z);
+    return contract(_t, _z, y, w);
+  }
+
   bool CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
   {
     DimensionException::check(y, z);
     DimensionException::check(y, w);
-
+    cout << "!!!! todo" << endl;
   }
 
   bool CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
   {
     DimensionException::check(y, z);
     DimensionException::check(y, w);
+    cout << "!!!! todo" << endl;
+  }
 
+  bool CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, TubeVector& w) const
+  {
+    Interval _t(t); IntervalVector _z(z);
+    return contract(_t, _z, y, w);
   }
 }
