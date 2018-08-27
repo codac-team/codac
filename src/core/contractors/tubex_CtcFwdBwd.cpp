@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - CtcHC4 class
+ *  tubex-lib - CtcFwdBwd class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,7 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_CtcHC4.h"
+#include "tubex_CtcFwdBwd.h"
 #include "tubex_SlicingException.h"
 
 using namespace std;
@@ -20,13 +20,13 @@ namespace tubex
 {
   // todo: avoid redundant gate contractions
   
-  CtcHC4::CtcHC4(bool preserve_slicing)
-    : Ctc(preserve_slicing)
+  CtcFwdBwd::CtcFwdBwd(const tubex::Function& f, bool preserve_slicing)
+    : Ctc(preserve_slicing), m_ctc_fwdbwd(f.ibex_function())
   {
 
   }
   
-  bool CtcHC4::contract(ibex::CtcHC4& hc4, TubeVector& x) const
+  bool CtcFwdBwd::contract(TubeVector& x)
   {
     if(x.is_empty())
       return false;
@@ -49,8 +49,8 @@ namespace tubex
         ingate[i+1] = v_x_slices[i]->input_gate();
       }
 
-      hc4.contract(envelope);
-      hc4.contract(ingate);
+      m_ctc_fwdbwd.contract(envelope);
+      m_ctc_fwdbwd.contract(ingate);
 
       for(int i = 0 ; i < x.size() ; i++)
       {
@@ -71,7 +71,7 @@ namespace tubex
     for(int i = 0 ; i < x.size() ; i++)
       outgate[i+1] = v_x_slices[i]->output_gate();
 
-    hc4.contract(outgate);
+    m_ctc_fwdbwd.contract(outgate);
 
     for(int i = 0 ; i < x.size() ; i++)
       v_x_slices[i]->set_output_gate(outgate[i+1]);

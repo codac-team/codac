@@ -39,14 +39,14 @@ namespace tubex
       VibesFigure_Map(const std::string& fig_name);
       ~VibesFigure_Map();
       
-      void add_tube(const TubeVector *tube, const std::string& name, int index_x, int index_y);
-      void set_tube_name(const TubeVector *tube, const std::string& name);
-      void remove_tube(const TubeVector *tube);
+      void add_tubevector(const TubeVector *tube, const std::string& name, int index_x, int index_y);
+      void set_tubevector_name(const TubeVector *tube, const std::string& name);
+      void remove_tubevector(const TubeVector *tube);
 
-      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, int index_heading = -1, const std::string& color = DEFAULT_TRAJMAP_COLOR);
-      void set_trajectory_name(const TrajectoryVector *traj, const std::string& name);
-      void set_trajectory_color(const TrajectoryVector *traj, const std::string& color);
-      void remove_trajectory(const TrajectoryVector *traj);
+      void add_trajectoryvector(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, int index_heading = -1, const std::string& color = DEFAULT_TRAJMAP_COLOR);
+      void set_trajectoryvector_name(const TrajectoryVector *traj, const std::string& name);
+      void set_trajectoryvector_color(const TrajectoryVector *traj, const std::string& color);
+      void remove_trajectoryvector(const TrajectoryVector *traj);
 
       void add_beacon(const Beacon& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
       void add_beacons(const std::vector<Beacon>& v_beacons, const std::string& color = DEFAULT_BEACON_COLOR);

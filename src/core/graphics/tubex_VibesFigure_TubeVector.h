@@ -23,11 +23,12 @@ namespace tubex
   {
     public:
 
-      VibesFigure_TubeVector(const std::string& fig_name, int n = 1);
+      VibesFigure_TubeVector(const std::string& fig_name);
       VibesFigure_TubeVector(const std::string& fig_name, int start_index, int end_index);
       VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector = NULL);
       ~VibesFigure_TubeVector();
       int size() const;
+      int subfigs_number() const;
       
       void set_properties(int x, int y, int width, int height);
 
@@ -57,9 +58,17 @@ namespace tubex
 
     protected:
 
-      int m_n;
+      void create_subfigures(int size);
+
+    protected:
+
+      int m_n = 0;
       VibesFigure_Tube **m_v_figs = NULL;
-      int m_start_index = 0, m_end_index = 0;
+      int m_start_index = -1, m_end_index = -1;
+
+      // todo: move the following attributes in some abstract class? (common with VibesFigure)
+      const std::string m_name;
+      int m_x = 100, m_y = 100, m_width = 600, m_height = 300;
   };
 }
 

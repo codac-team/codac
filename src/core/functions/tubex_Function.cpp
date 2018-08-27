@@ -134,12 +134,18 @@ namespace tubex
 
   const Function Function::operator[](int i) const
   {
+    // todo: check the following
     tubex::Function fi(*this);
     ibex::Function ibex_fi((*fi.m_ibex_f)[i]);
     delete fi.m_ibex_f;
     fi.m_ibex_f = new ibex::Function(ibex_fi);
     fi.m_img_dim = 1;
     return fi;
+  }
+
+  const ibex::Function& Function::ibex_function() const
+  {
+    return *m_ibex_f;
   }
 
   void Function::construct_from_array(int n, const char** x, const char* y)

@@ -29,7 +29,7 @@ namespace tubex
 
     #if GRAPHICS // embedded graphics
       vibes::beginDrawing();
-      m_fig = new VibesFigure_TubeVector("Solver", max_thickness.size());
+      m_fig = new VibesFigure_TubeVector("Solver");
       m_fig->set_properties(100, 100, 700, 500);
     #endif
   }

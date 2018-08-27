@@ -38,6 +38,7 @@ namespace tubex
       ~Function();
       const Function& operator=(const Function& f);
       const Function operator[](int i) const;
+      const ibex::Function& ibex_function() const;
 
       using Fnc::eval;
 

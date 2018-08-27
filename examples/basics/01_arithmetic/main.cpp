@@ -42,25 +42,21 @@ int main()
 
   /* =========== ARITHMETIC =========== */
 
-    x[2] = x[0] + x[1]; // tube [a](·)
-    x[3] = sin(x[0]); // tube [b](·)
+    x[2] = x[0] + x[1];      // tube [a](·)
+    x[3] = sin(x[0]);        // tube [b](·)
     x[4] = x[0].primitive(); // tube [c](·)
-    x[5] = abs(x[1]); // tube [d](·)
+    x[5] = abs(x[1]);        // tube [d](·)
 
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    VibesFigure_TubeVector fig_x("x", &x);
-    fig_x.set_properties(100, 100, 600, 250);
+    VibesFigure_TubeVector fig_x("x", 4, 4);
+    fig_x.set_properties(100, 100, 600, 300);
+    fig_x.add_tubevector(&x, "x");
     fig_x.show();
     vibes::endDrawing();
     
 
   // Checking if this example is still working:
-  return (fabs(x[0].volume() - 10.5) < 1e-2
-       && fabs(x[1].volume() - 55.267) < 1e-2
-       && fabs(x[2].volume() - 65.767) < 1e-2
-       && fabs(x[3].volume() - 6.8308) < 1e-2
-       && fabs(x[4].volume() - 53.338) < 1e-2
-       && fabs(x[5].volume() - 42.060) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (fabs(x.volume() - 233.765) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

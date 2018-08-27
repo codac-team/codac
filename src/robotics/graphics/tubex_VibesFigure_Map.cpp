@@ -19,7 +19,7 @@
 using namespace std;
 using namespace ibex;
 
-#define GRAY_DISPLAY_MODE         0
+#define GRAY_DISPLAY_MODE 0
 
 namespace tubex
 {
@@ -37,7 +37,7 @@ namespace tubex
         delete it->second.tube_copy;
   }
 
-  void VibesFigure_Map::add_tube(const TubeVector *tube, const string& name, int index_x, int index_y)
+  void VibesFigure_Map::add_tubevector(const TubeVector *tube, const string& name, int index_x, int index_y)
   {
     if(m_map_tubes.find(tube) != m_map_tubes.end())
       cout << "Warning VibesFigure_Map::add_tube(): tube already added" << endl;
@@ -48,13 +48,13 @@ namespace tubex
     // todo: check index...
     m_map_tubes[tube].index_x = index_x;
     m_map_tubes[tube].index_y = index_y;
-    set_tube_name(tube, name);
+    set_tubevector_name(tube, name);
 
     vibes::newGroup("tube_" + name + "_bckgrnd", "lightgray[lightgray]", vibesParams("figure", this->name()));
     vibes::newGroup("tube_" + name, "gray[gray]", vibesParams("figure", this->name()));
   }
 
-  void VibesFigure_Map::set_tube_name(const TubeVector *tube, const string& name)
+  void VibesFigure_Map::set_tubevector_name(const TubeVector *tube, const string& name)
   {
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       cout << "Warning VibesFigure_Map::set_tube_name(): unknown tube" << endl;
@@ -62,7 +62,7 @@ namespace tubex
     m_map_tubes[tube].name = name;
   }
   
-  void VibesFigure_Map::remove_tube(const TubeVector *tube)
+  void VibesFigure_Map::remove_tubevector(const TubeVector *tube)
   {
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       cout << "Warning VibesFigure_Map::remove_tube(): unable to remove" << endl;
@@ -72,7 +72,7 @@ namespace tubex
     m_map_tubes.erase(tube);
   }
 
-  void VibesFigure_Map::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
+  void VibesFigure_Map::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
   {
     if(m_map_trajs.find(traj) != m_map_trajs.end())
       cout << "Warning VibesFigure_Map::add_trajectory(): trajectory already added" << endl;
@@ -85,11 +85,11 @@ namespace tubex
     m_map_trajs[traj].index_y = index_y;
     m_map_trajs[traj].index_heading = index_heading;
 
-    set_trajectory_name(traj, name);
-    set_trajectory_color(traj, color);
+    set_trajectoryvector_name(traj, name);
+    set_trajectoryvector_color(traj, color);
   }
 
-  void VibesFigure_Map::set_trajectory_name(const TrajectoryVector *traj, const string& name)
+  void VibesFigure_Map::set_trajectoryvector_name(const TrajectoryVector *traj, const string& name)
   {
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       cout << "Warning VibesFigure_Map::set_trajectory_name(): unknown trajectory" << endl;
@@ -97,7 +97,7 @@ namespace tubex
     m_map_trajs[traj].name = name;
   }
   
-  void VibesFigure_Map::set_trajectory_color(const TrajectoryVector *traj, const string& color)
+  void VibesFigure_Map::set_trajectoryvector_color(const TrajectoryVector *traj, const string& color)
   {
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       cout << "Warning VibesFigure_Map::set_trajectory_color(): unknown trajectory" << endl;
@@ -112,7 +112,7 @@ namespace tubex
     // so that trajectories stay on top of the tubes.
   }
   
-  void VibesFigure_Map::remove_trajectory(const TrajectoryVector *traj)
+  void VibesFigure_Map::remove_trajectoryvector(const TrajectoryVector *traj)
   {
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       cout << "Warning VibesFigure_Map::remove_trajectory(): unable to remove" << endl;

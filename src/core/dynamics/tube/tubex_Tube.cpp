@@ -108,6 +108,14 @@ namespace tubex
     {
       set(codomain);
     }
+    
+    Tube::Tube(const Tube& x, const tubex::Fnc& f, int f_image_id)
+      : Tube(x)
+    {
+      // todo: check dim
+      TubeVector input(*this); // 1: one variable (system variable t), todo: update this comment
+      *this = f.eval_vector(input)[f_image_id];
+    }
 
     Tube::Tube(const Trajectory& traj, double timestep)
       : Tube(traj.domain(), timestep)
