@@ -150,6 +150,7 @@ namespace tubex
 
   void Function::construct_from_array(int n, const char** x, const char* y)
   {
+    // todo: check t not in variables
     const char* xdyn[n+1];
     xdyn[0] = "t";
     for(int i = 0 ; i < n ; i++) xdyn[i+1] = x[i];

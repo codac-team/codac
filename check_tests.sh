@@ -1,10 +1,15 @@
 #!/bin/bash
 
 ./make/tests/core/tubelib_tests_core;
+
+
+# Basics
+./make/examples/basics/01_arithmetic/basics_01_arithmetic > /dev/null ; echo $?;
+./make/examples/basics/02_simple_ctc/basics_02_simple_ctc > /dev/null ; echo $?;
+
+# Robotics
+
+# Solver
 ./make/examples/solver/01_picard/solver_01_picard > /dev/null ; echo $?;
-#./make/examples/solver/02_xmsin_fwd/solver_02_xmsin_fwd > /dev/null ; echo $?;
-#./make/examples/solver/03_xmsin_bwd/solver_03_xmsin_bwd > /dev/null ; echo $?;
 ./make/examples/solver/04_bvp/solver_04_bvp > /dev/null ; echo $?;
-#./make/examples/solver/05_delay/solver_05_delay > /dev/null ; echo $?;
 ./make/examples/solver/06_bvp_delay/solver_06_bvp_delay > /dev/null ; echo $?;
-#./make/examples/solver/07_path_planning/solver_07_path_planning > /dev/null ; echo $?;

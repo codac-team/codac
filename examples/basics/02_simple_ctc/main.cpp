@@ -1,11 +1,6 @@
 /* ============================================================================
- *  tubex-lib - Arithmetic on tubes involving local contractions: simple example
+ *  tubex-lib - Contractors on tubes: simple example
  *
- *  Here we consider the following tubes:
- *    [x](·)
- *    [y](·), [ydot](·)
- *    [a](·) = [x](·) + [y](·)
- *    [b](·) = sin([x](·))
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -24,11 +19,22 @@ using namespace tubex;
 
 void contract(TubeVector& x)
 {
+  // Creating contractors
   CtcDeriv ctc_deriv;
-  ctc_deriv.contract(x[1], Tube(x[1], tubex::Function("4*sin(t-5) + (t-3.3)*[-0.1,0.1]")));
-  x[2] &= x[0] + x[1];
-  x[3] &= atan(x[1]);
-  x[4] &= 2*sin(0.5*x[2]) + sqr(x[3]*2);
+  tubex::CtcFwdBwd ctc_fwdbwd(
+    tubex::Function("x", "y", "a", "p", "q",
+                    "(x + y - a ; \
+                      atan(y) - p ; \
+                      2*sin(0.5*a) + sqrt(exp(p^2)) - q)"));
+
+  // Contractions up to the fixed point
+  TubeVector old_x(x);
+  do
+  {
+    old_x = x;
+    ctc_deriv.contract(x[1], Tube(x[1], tubex::Function("4*sin(t-5) + (t-3.3)*[-0.1,0.1]")));
+    ctc_fwdbwd.contract(x);
+  } while(old_x != x);
 }
 
 int main()
@@ -46,8 +52,6 @@ int main()
     x[1] = Tube(x[1], tubex::Function("[-0.5,0.5] - 4*cos(t-5) + [-0.2,0.2]*(t-3.3)^2"));
     contract(x); // applying constraints with contractors on tubes, before the evaluation
 
-    x[1].set(Interval(1.,1.8), 7.); // local evaluation on x[1]
-
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
@@ -57,11 +61,12 @@ int main()
 
   /* =========== PROPAGATION (CONTRACTORS) =========== */
 
+    x[1].set(Interval(1.,1.2), 7.); // local evaluation on x[1] to be propagated
     contract(x); // applying constraints with contractors on tubes
     fig_x.show();
     vibes::endDrawing();
 
 
   // Checking if this example is still working:
-  return (fabs(x.volume() - 10.5) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (fabs(x.volume() - 64.4152) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

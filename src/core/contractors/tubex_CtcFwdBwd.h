@@ -27,11 +27,12 @@ namespace tubex
     public:
 
       CtcFwdBwd(const tubex::Function& f, bool preserve_slicing = false);
+      ~CtcFwdBwd();
       bool contract(TubeVector& x);
 
     protected:
 
-      ibex::CtcFwdBwd m_ctc_fwdbwd;
+      tubex::Function *m_f = NULL;
   };
 }
 

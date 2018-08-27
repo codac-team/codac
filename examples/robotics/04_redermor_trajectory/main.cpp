@@ -35,7 +35,7 @@ int main()
 
   /* =========== STATE ESTIMATION =========== */
 
-    /*for(int i = 0 ; i < v_seamarks.size() ; i++)
+    for(int i = 0 ; i < v_seamarks.size() ; i++)
       for(int k = 0 ; k < m_obs[i].size() ; k++)
         x->sample(m_obs[i][k][0].mid());
 
@@ -54,7 +54,7 @@ int main()
 
       for(int k = 0 ; k < m_obs[i].size() ; k++)
         ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], (*m_x[i])[9], (*m_x[i])[10]);
-    }*/
+    }
 
     /*Variable vt, vx, vy, vz, vxdot, vydot, vzdot, vbx, vby, vbz, vg, vgdot;
     SystemFactory fac;
@@ -83,13 +83,12 @@ int main()
                                 + (zdot*sign(z-bz)/sqrt(1+(((y-by)^2+(x-bx)^2)/((z-bz)^2)))))");
     tubex::CtcFwdBwd ctc_fwdbwd(fg);
 
-
-    /*for(int i = 0 ; i < v_seamarks.size() ; i++)
+    for(int i = 0 ; i < v_seamarks.size() ; i++)
     {
       cout << "Seamark " << (i+1) << endl;
 
       //ctc_hc4.contract(hc4, *m_x[i]);
-      ctc_fwdbwd.contract(*m_x[i]);
+      //ctc_fwdbwd.contract(*m_x[i]);
 
       ctc_deriv.contract((*m_x[i])[0], (*m_x[i])[3]);
       ctc_deriv.contract((*m_x[i])[1], (*m_x[i])[4]);
@@ -97,10 +96,10 @@ int main()
 
       for(int j = 0 ; j < 6 ; j++)
         (*x)[j] &= (*m_x[i])[j];
-    }*/
+    }
 
-    //fig_x.show();
-    //fig_map.show();
+    fig_x.show();
+    fig_map.show();
 
   /* =========== ENDING =========== */
 
