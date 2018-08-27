@@ -134,23 +134,25 @@ namespace tubex
 
   void VibesFigure_TubeVector::draw_box(const IntervalVector& box, const vibes::Params& params)
   {
+    // todo: check dim box = dim vector + 1
     for(int i = 1 ; i < box.size() ; i++)
     {
       IntervalVector proj_box(2);
       proj_box[0] = box[0];
       proj_box[1] = box[i];
-      m_v_figs[i]->draw_box(proj_box, params);
+      m_v_figs[i-1]->draw_box(proj_box, params);
     }
   }
 
   void VibesFigure_TubeVector::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
   {
+    // todo: check dim box = dim vector + 1
     for(int i = 1 ; i < box.size() ; i++)
     {
       IntervalVector proj_box(2);
       proj_box[0] = box[0];
       proj_box[1] = box[i];
-      m_v_figs[i]->draw_box(proj_box, color, params);
+      m_v_figs[i-1]->draw_box(proj_box, color, params);
     }
   }
 }

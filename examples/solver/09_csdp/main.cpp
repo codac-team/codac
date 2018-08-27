@@ -20,10 +20,10 @@ void contract(TubeVector& x)
   CtcPicard ctc_picard(true);
   ctc_picard.contract(f, x, FORWARD);
 
-  TubeVector v = f.eval(x);
+  TubeVector v = f.eval_vector(x);
 
-  CtcDeriv ctc_deriv(true);
-  ctc_deriv.contract(x, v, FORWARD | BACKWARD);
+  //CtcDeriv ctc_deriv(true);
+  //ctc_deriv.contract(x, v, FORWARD | BACKWARD);
 
   CtcEval ctc_eval(true);
   Interval t(1.,3.);
@@ -38,9 +38,9 @@ int main()
   /* =========== PARAMETERS =========== */
 
     int n = 2;
-    Vector epsilon(n); epsilon[0] = 0.05; epsilon[1] = 0.1;
     Interval domain(0.,6.);
-    TubeVector x(domain, IntervalVector(n, Interval(-999.,999.)));
+    TubeVector x(domain, IntervalVector(n, Interval(-999.,999.))); // todo: remove bounds
+    Vector epsilon(n); epsilon[0] = 0.05; epsilon[1] = 0.1;
 
     IntervalVector init = x(x.domain().lb());
     init[0] &= Interval(1.25);
@@ -49,7 +49,6 @@ int main()
     IntervalVector max_enclosure(3);
     max_enclosure[0] = Interval(1.,3.);
     max_enclosure[2] = Interval(1.1,1.3);
-
     IntervalVector a = x(max_enclosure[0]);
     a[1] &= Interval(NEG_INFINITY, max_enclosure[2].ub());
     x.set(a, max_enclosure[0]);

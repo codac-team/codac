@@ -13,9 +13,9 @@
 
   )
 
-  add_executable(solver_08_integro_diff ${SRC})
+  add_executable(solver_07_integro_diff ${SRC})
 
-  target_link_libraries(solver_08_integro_diff
+  target_link_libraries(solver_07_integro_diff
     ${LIBS}
     tubex-core
     tubex-solver)
@@ -24,5 +24,5 @@
 # Tests
 
   #if(BUILD_TESTS)
-  #  add_test(NAME solver_08_integro_diff COMMAND solver_08_integro_diff 0)
+  #  add_test(NAME solver_07_integro_diff COMMAND solver_07_integro_diff 0)
   #endif(BUILD_TESTS)
