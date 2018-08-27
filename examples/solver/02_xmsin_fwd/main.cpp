@@ -14,7 +14,7 @@ void contract(TubeVector& x)
   ctc_picard.contract(f, x, FORWARD);
 
   CtcDeriv ctc_deriv(true);
-  ctc_deriv.contract(x, f.eval(x));
+  ctc_deriv.contract(x, f.eval_vector(x));
 }
 
 int main()

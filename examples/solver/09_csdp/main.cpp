@@ -42,7 +42,7 @@ int main()
     Interval domain(0.,6.);
     TubeVector x(domain, IntervalVector(n, Interval(-999.,999.)));
 
-    IntervalVector init = x[x.domain().lb()];
+    IntervalVector init = x(x.domain().lb());
     init[0] &= Interval(1.25);
     x.set(init, x.domain().lb());
 
@@ -50,7 +50,7 @@ int main()
     max_enclosure[0] = Interval(1.,3.);
     max_enclosure[2] = Interval(1.1,1.3);
 
-    IntervalVector a = x[max_enclosure[0]];
+    IntervalVector a = x(max_enclosure[0]);
     a[1] &= Interval(NEG_INFINITY, max_enclosure[2].ub());
     x.set(a, max_enclosure[0]);
 

@@ -11,11 +11,12 @@ class FncDelayCustom : public tubex::Fnc
   public: 
 
     FncDelayCustom() : Fnc(2,2) { };
-    const TubeVector eval(const TubeVector& x) const { return Fnc::eval(x); }
+    const Interval eval(const Interval& t, const TubeVector& x) const { /* scalar case not defined */ }
+    const TubeVector eval_vector(const TubeVector& x) const { return Fnc::eval(x); }
 
-    const IntervalVector eval(const Interval& t, const TubeVector& x) const
+    const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
-      IntervalVector eval_result(x.dim());
+      IntervalVector eval_result(x.size());
       PeriodicFunction pf;
 
       IntervalVector intv_1 = pf.eval(t - 1., x);
@@ -23,12 +24,12 @@ class FncDelayCustom : public tubex::Fnc
       IntervalVector intv_05 = pf.eval(t - 0.5, x);
       IntervalVector intv_025 = pf.eval(t - 0.25, x);
 
-      eval_result[0] = x[t][0]
-        * (3. - sin(t) - (3. - cos(t)) * x[t][0] 
-            - (((2. + sin(t)) / 24.) * (intv_1[1] + 6.*intv_075[1] + 4.*intv_05[1] + 10.*intv_025[1] + 3*x[t][1])));
-      eval_result[1] = x[t][1]
-        * (6. - cos(t) - (10. - sin(t)) * x[t][1]
-            - (((2. + sin(t)) / 24.) * (intv_1[0] + 6.*intv_075[0] + 4.*intv_05[0] + 10.*intv_025[0] + 3*x[t][0])));
+      eval_result[0] = x[0](t)
+        * (3. - sin(t) - (3. - cos(t)) * x[0](t)
+            - (((2. + sin(t)) / 24.) * (intv_1[1] + 6.*intv_075[1] + 4.*intv_05[1] + 10.*intv_025[1] + 3*x[1](t))));
+      eval_result[1] = x[1](t)
+        * (6. - cos(t) - (10. - sin(t)) * x[1](t)
+            - (((2. + sin(t)) / 24.) * (intv_1[0] + 6.*intv_075[0] + 4.*intv_05[0] + 10.*intv_025[0] + 3*x[0](t))));
 
       return eval_result;
     }
@@ -42,7 +43,7 @@ void contract(TubeVector& x)
   ctc_picard.contract(f, x, FORWARD | BACKWARD);
 
   CtcDeriv ctc_deriv(false);
-  ctc_deriv.contract(x, f.eval(x), FORWARD | BACKWARD);
+  ctc_deriv.contract(x, f.eval_vector(x), FORWARD | BACKWARD);
 }
 
 int main()

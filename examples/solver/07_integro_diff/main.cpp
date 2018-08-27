@@ -11,11 +11,12 @@ class FncIntegroDiff : public tubex::Fnc
   public: 
 
     FncIntegroDiff() : Fnc(1,1) {};
-    const TubeVector eval(const TubeVector& x) const { return Fnc::eval(x); }
+    const TubeVector eval_vector(const TubeVector& x) const { return Fnc::eval(x); }
+    const Interval eval(const Interval& t, const TubeVector& x) const { /* scalar case not defined */ }
 
-    const IntervalVector eval(const Interval& t, const TubeVector& x) const
+    const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
-      return Vector(1, 1.) - 2. * x[t] - 5. * x.integral(t);
+      return Vector(1, 1.) - 2. * x(t) - 5. * x.integral(t);
       //return Vector(1, 1.) - 2. * sin(x)[t] - 5. * x.integral(t); // unsolved by Mathematica
     }
 };
@@ -32,11 +33,11 @@ void contract(TubeVector& x)
     System sys(fac);
     ibex::CtcHC4 hc4(sys);
     IntervalVector bounds(2);
-    bounds[0] = x[0.][0];
-    bounds[1] = x[1.][0];
+    bounds[0] = x[0](0.);
+    bounds[1] = x[0](1.);
     hc4.contract(bounds);
-    x.set(IntervalVector(1,bounds[0]), 0.);
-    x.set(IntervalVector(1,bounds[1]), 1.);
+    x.set(IntervalVector(1, bounds[0]), 0.);
+    x.set(IntervalVector(1, bounds[1]), 1.);
 
   // Differential equation
 
@@ -46,7 +47,7 @@ void contract(TubeVector& x)
     ctc_picard.contract(f, x, FORWARD | BACKWARD);
 
     CtcDeriv ctc_deriv(true);
-    ctc_deriv.contract(x, f.eval(x), FORWARD | BACKWARD);
+    ctc_deriv.contract(x, f.eval_vector(x), FORWARD | BACKWARD);
 }
 
 int main()
@@ -57,14 +58,14 @@ int main()
     Vector epsilon(n, 0.1);
     Interval domain(0.,1.);
     TubeVector x(domain, n);
-    Trajectory truth1(domain, tubex::Function("0.5*exp(-t)*(-1.78315*cos(2*t)+1.89158*sin(2*t))"));
-    Trajectory truth2(domain, tubex::Function("0.5*exp(-t)*(1.97753*cos(2*t)+0.0112371*sin(2*t))"));
+    TrajectoryVector truth1(domain, tubex::Function("0.5*exp(-t)*(-1.78315*cos(2*t)+1.89158*sin(2*t))"));
+    TrajectoryVector truth2(domain, tubex::Function("0.5*exp(-t)*(1.97753*cos(2*t)+0.0112371*sin(2*t))"));
 
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon, 0.005, 0.1, 0.1);
-    solver.figure()->add_trajectory(&truth1, "truth", "blue");
-    solver.figure()->add_trajectory(&truth2, "truth", "red");
+    solver.figure()->add_trajectoryvector(&truth1, "truth", "blue");
+    solver.figure()->add_trajectoryvector(&truth2, "truth", "red");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 

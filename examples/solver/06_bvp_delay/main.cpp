@@ -11,7 +11,6 @@ class FncDelayCustom : public tubex::Fnc
   public: 
 
     FncDelayCustom(double delay) : Fnc(1,1), m_delay(delay) { };
-
     const Interval eval(const Interval& t, const TubeVector& x) const { /* not defined */ };
 
     const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const

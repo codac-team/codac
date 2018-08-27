@@ -10,51 +10,21 @@ class FncDelayCustom : public tubex::Fnc
 {
   public: 
 
-    FncDelayCustom(double delay) : Fnc(1,1), m_delay(delay)
-    {
+    FncDelayCustom(double delay) : Fnc(1,1), m_delay(delay) { }
+    const Interval eval(const Interval& t, const TubeVector& x) const { /* scalar case not defined */ }
+    const IntervalVector eval_vector(const Interval& t, const IntervalVector& x) const { return x; }
 
-    }
-
-    const IntervalVector eval(const Interval& t, const IntervalVector& x) const
+    const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
-      return x;
-    }
-
-    const IntervalVector eval(const Interval& t, const TubeVector& x) const
-    {
-      IntervalVector eval_result(x.dim(), Interval::EMPTY_SET);
+      IntervalVector eval_result(x.size(), Interval::EMPTY_SET);
 
       if((t - m_delay).lb() <= x.domain().lb())
-        eval_result |= eval(t, x[t]);
+        eval_result |= eval_vector(t, x(t));
 
       if((t - m_delay).ub() >= x.domain().lb())
-        eval_result |= exp(m_delay) * x[(t - m_delay) & x.domain()];
+        eval_result |= exp(m_delay) * x((t - m_delay) & x.domain());
 
       return eval_result;
-    }
-
-    const TubeVector eval(const TubeVector& x) const
-    {
-      // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
-      TubeVector y(x, IntervalVector(image_dim()));
-
-      const Slice *x_slice = x.get_first_slice();
-      Slice *y_slice = y.get_first_slice();
-
-      while(x_slice != NULL)
-      {
-        y_slice->set_input_gate(eval(x_slice->domain().lb(), x));
-        y_slice->set_envelope(eval(x_slice->domain(), x));
-
-        x_slice = x_slice->next_slice();
-        y_slice = y_slice->next_slice();
-      }
-
-      x_slice = x.get_last_slice();
-      y_slice = y.get_last_slice();
-      y_slice->set_output_gate(eval(x_slice->domain().ub(), x));
-
-      return y;
     }
 
   protected:
@@ -71,7 +41,7 @@ void contract(TubeVector& x)
   ctc_picard.contract(f, x);
 
   CtcDelay ctc_delay(true);
-  TubeVector y(x, IntervalVector(x.dim(), Interval::ALL_REALS));
+  TubeVector y(x, IntervalVector(x.size(), Interval::ALL_REALS));
   ctc_delay.contract(delay, x, y);
 
   CtcDeriv ctc_deriv(true);
@@ -86,7 +56,7 @@ int main()
     Vector epsilon(n, 0.05);
     Interval domain(0.,5.);
     TubeVector x(domain, n);
-    Trajectory truth(domain, tubex::Function("exp(t)"));
+    TrajectoryVector truth(domain, tubex::Function("exp(t)"));
     //delete?
       double t_value = domain.lb();
       IntervalVector init_value(1, exp(t_value));
@@ -95,7 +65,7 @@ int main()
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon, 0.005, 0.005, 1.);
-    solver.figure()->add_trajectory(&truth, "truth", "blue");
+    solver.figure()->add_trajectoryvector(&truth, "truth", "blue");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 
