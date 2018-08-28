@@ -23,15 +23,15 @@ namespace tubex
   /**
    * \brief CtcPicard class.
    */
-  class CtcPicard : Ctc
+  class CtcPicard : public Ctc
   {
     public:
 
-      CtcPicard(bool preserve_slicing = false, float delta = 1.1);
-      bool contract(const tubex::Fnc& f,
+      CtcPicard(float delta = 1.1);
+      void contract(const tubex::Fnc& f,
                     Tube& x,
                     TPropagation t_propa = FORWARD | BACKWARD) const;
-      bool contract(const tubex::Fnc& f,
+      void contract(const tubex::Fnc& f,
                     TubeVector& x,
                     TPropagation t_propa = FORWARD | BACKWARD) const;
       int picard_iterations() const;

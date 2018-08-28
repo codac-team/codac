@@ -98,8 +98,10 @@ TEST_CASE("CtcPicard")
     TubeVector x_auto_sampling(x_preserve_sampling);
 
     tubex::Function f("x", "-x");
-    CtcPicard ctc_picard_preserve(true, 1.1);
-    CtcPicard ctc_picard_auto(false, 1.1);
+    CtcPicard ctc_picard_preserve(1.1);
+    ctc_picard_preserve.preserve_slicing(true);
+    CtcPicard ctc_picard_auto(1.1);
+    ctc_picard_auto.preserve_slicing(false);
 
     ctc_picard_preserve.contract(f, x_preserve_sampling, FORWARD); // todo: remove FORWARD
     ctc_picard_auto.contract(f, x_auto_sampling, FORWARD); // todo: remove FORWARD

@@ -22,21 +22,22 @@ namespace tubex
    *
    * Constraint: z=y(t)
    */
-  class CtcEval : Ctc
+  class CtcEval : public Ctc
   {
     public:
 
-      CtcEval(bool preserve_slicing = false, bool enable_propagation = true);
+      CtcEval();
+      void enable_temporal_propagation(bool enable_propagation);
 
       // Tube
-      bool contract(double t, ibex::Interval& z, Tube& y, Tube& w) const;
-      bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w) const;
-      bool contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y, const Tube& w) const;
+      void contract(double t, ibex::Interval& z, Tube& y, Tube& w) const;
+      void contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w) const;
+      void contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y, const Tube& w) const;
 
       // TubeVector
-      bool contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
-      bool contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
-      bool contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, const TubeVector& w) const;
+      void contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
+      void contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
+      void contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, const TubeVector& w) const;
 
     protected:
 

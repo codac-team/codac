@@ -21,13 +21,12 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDelay::CtcDelay(bool preserve_slicing)
-    : Ctc(preserve_slicing)
+  CtcDelay::CtcDelay() : Ctc()
   {
 
   }
 
-  bool CtcDelay::contract(const Interval& a, const Tube& x, Tube& y) const
+  void CtcDelay::contract(const Interval& a, const Tube& x, Tube& y) const
   {
     DomainException::check(x, y);
     SlicingException::check(x, y);
@@ -53,18 +52,13 @@ namespace tubex
       slice_x = slice_x->next_slice();
       slice_y = slice_y->next_slice();
     }
-
-    // todo: return value
   }
 
-  bool CtcDelay::contract(const Interval& a, const TubeVector& x, TubeVector& y) const
+  void CtcDelay::contract(const Interval& a, const TubeVector& x, TubeVector& y) const
   {
     // todo: check dim x, y
-    bool result = false;
 
     for(int i = 0 ; i < x.size() ; i++)
-      result |= contract(a, x[i], y[i]);
-    
-    return result;
+      contract(a, x[i], y[i]);
   }
 }

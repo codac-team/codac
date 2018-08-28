@@ -45,7 +45,8 @@ int main()
     CtcPolar ctc_polar;
     CtcConstellation ctc_constellation(v_seamarks);
     CtcDeriv ctc_deriv;
-    CtcEval ctc_eval(false, false); // false: faster evaluation
+    CtcEval ctc_eval;
+    ctc_eval.enable_temporal_propagation(false); // faster use
 
   /* =========== DATA ASSOCIATION =========== */
 

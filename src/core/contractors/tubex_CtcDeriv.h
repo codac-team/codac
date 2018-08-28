@@ -25,18 +25,18 @@ namespace tubex
    *
    * Constraint: \dot{x}=v
    */
-  class CtcDeriv : Ctc
+  class CtcDeriv : public Ctc
   {
     public:
 
-      CtcDeriv(bool preserve_slicing = false);
-      bool contract(Tube& x, const Tube& v, TPropagation t_propa = FORWARD | BACKWARD) const;
-      bool contract(TubeVector& x, const TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD) const;
+      CtcDeriv();
+      void contract(Tube& x, const Tube& v, TPropagation t_propa = FORWARD | BACKWARD) const;
+      void contract(TubeVector& x, const TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD) const;
 
     protected:
 
-      bool contract(Slice& x, const Slice& v) const;
-      bool contract_gates(Slice& x, const Slice& v) const;
+      void contract(Slice& x, const Slice& v, TPropagation t_propa = FORWARD | BACKWARD) const;
+      void contract_gates(Slice& x, const Slice& v) const;
       
       friend class CtcEval; // contract_gates used by CtcEval
   };

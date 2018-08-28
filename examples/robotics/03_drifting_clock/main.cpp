@@ -76,25 +76,29 @@ int main()
   /* =========== CONTRACTIONS =========== */
 
     CtcDeriv ctc_deriv;
-    CtcEval ctc_eval(false, false);
-    bool contraction;
-    int k = 1;
+    CtcEval ctc_eval;
+    ctc_eval.enable_temporal_propagation(false); // faster use
+
+    int k = 0;
+    double volume;
+
     do
     {
+      k++;
+      volume = y.volume() + h.volume();
       cout << "Computation step " << k << "..." << endl;
-      contraction = false;
 
       for(int i = 0 ; i < v_obs.size() ; i++)
       {
-        contraction |= ctc_eval.contract(v_obs[i][1], v_obs[i][0], h[0], h[1]);
-        contraction |= ctc_eval.contract(v_obs[i][1], v_obs[i][2], y[0], y[1]);
-        contraction |= ctc_eval.contract(v_obs[i][1], v_obs[i][0], h[0], h[1]);
+        ctc_eval.contract(v_obs[i][1], v_obs[i][0], h[0], h[1]);
+        ctc_eval.contract(v_obs[i][1], v_obs[i][2], y[0], y[1]);
+        ctc_eval.contract(v_obs[i][1], v_obs[i][0], h[0], h[1]);
       }
 
-      contraction |= ctc_deriv.contract(h[0], h[1]);
-      contraction |= ctc_deriv.contract(y[0], y[1]);
-      k++;
-    } while(contraction);
+      ctc_deriv.contract(h[0], h[1]);
+      ctc_deriv.contract(y[0], y[1]);
+
+    } while(volume != y.volume() + h.volume());
 
   /* =========== GRAPHICS =========== */
 

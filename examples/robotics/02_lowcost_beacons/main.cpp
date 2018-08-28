@@ -21,61 +21,26 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-//void displayBeaconsMap(const Tube& x, const Tube& y, int fig_x, int fig_y);
-
-/*bool ctcLoc(const pair<float,float>& beacon,
-            Tube& x, Tube& xdot,
-            Tube& y, Tube& ydot,
-            Tube& theta, const Tube& thetadot,
-            Tube& v, const Tube& vdot,
-            Tube& g, Tube& gdot)
-{
-  Tube x_old(x), xdot_old(xdot),
-       y_old(y), ydot_old(ydot),
-       theta_old(theta), thetadot_old(thetadot),
-       v_old(v), vdot_old(vdot),
-       g_old(g), gdot_old(gdot);
-
-  Tube beacon_x(x, beacon.first);
-  Tube beacon_y(y, beacon.second);
-
-  CtcArithmetic::contract(xdot, v, theta, Function("xdot", "v", "theta", "xdot - v*cos(theta)"));
-  CtcArithmetic::contract(ydot, v, theta, Function("ydot", "v", "theta", "ydot - v*sin(theta)"));
-
-  CtcArithmetic::contract(x, y, g, beacon_x, beacon_y,
-      Function("x", "y", "g", "bx", "by", "g - sqrt((x-bx)^2+(y-by)^2)"));
-  CtcArithmetic::contract(x, xdot, y, ydot, gdot, beacon_x, beacon_y,
-      Function("x", "xdot", "y", "ydot", "gdot", "bx", "by",
-               "gdot - ((sign(x-bx)/sqrt(1+(((y-by)/(x-bx))^2)))*xdot + (sign(y-by)/sqrt(1+(((x-bx)/(y-by))^2)))*ydot)"));
-
-  x.ctcFwdBwd(xdot);
-  y.ctcFwdBwd(ydot);
-  g.ctcFwdBwd(gdot);
-
-  Interval theta0 = Interval(M_PI/2.).inflate(0.01);
-  Interval v0 = Interval(0.).inflate(0.01);
-
-  theta.ctcFwdBwd(thetadot, theta0);
-  v.ctcFwdBwd(vdot, v0);
-
-  return x_old != x || xdot_old != xdot || y_old != y || ydot_old != ydot || theta_old != theta || thetadot_old != thetadot || v_old != v || vdot_old != vdot || g_old != g || gdot_old != gdot;
-}*/
-
 int main()
 {
-  /* =========== PARAMETERS =========== */
+  /* =========== INITIALIZATION =========== */
 
-    double tube_dt = 0.01;
+    float tube_dt = 0.01;
     Interval domain(0., 64.);
 
-  /* =========== MAP =========== */
+    TubeVector x(domain, tube_dt, 4); // state vector
+
+    IntervalVector x0(4);
+    x0[2] = Interval(M_PI/2.).inflate(0.01);
+    x0[3] = Interval(0.).inflate(0.01);
+    x.set(x0, 0.);
+
+  /* =========== DATA (MAP + MEASUREMENTS) =========== */
 
     vector<Beacon> v_beacons;
     v_beacons.push_back(Beacon(30.,20.));
     v_beacons.push_back(Beacon(80.,-5.));
     v_beacons.push_back(Beacon(125.,20.));
-
-  /* =========== MEASUREMENTS =========== */
 
     IntervalVector ti_zi(2);
     map<int,vector<IntervalVector> > m_obs;
@@ -93,131 +58,84 @@ int main()
 
   /* =========== STATE ESTIMATION =========== */
 
-    TubeVector x(domain, tube_dt, 4); // state vector
-    TubeVector xdot(domain, tube_dt, 4); // state vector
-    TubeVector u(domain, tube_dt,     // command vector
-      tubex::Function("(-0.45 * cos(0.2*t) + [-0.001,0.001] ; 0.1 + sin(0.25*t) + [-0.001,0.001])"));
-
-    xdot.put(2, u);
-
-    IntervalVector x0(4);
-    x0[2] = (M_PI / 2.) + Interval(-0.01, 0.01);
-    x0[3] = Interval(-0.01, 0.01);
-
-    x.set(x0, 0.);
-
-
-    // One observation tube by beacon:
-   // vector<TubeVector> v_g;
-   // for(int i = 0 ; i < v_beacons.size() ; i++)
-   //   v_g.push_back(TubeVector(domain, tube_dt, 2));
-
-    int k = 0;
-    bool contraction;
-    CtcEval ctc_eval(false, false);
+    CtcEval ctc_eval;
+    CtcDeriv ctc_deriv;
 
     const char* xdyn[8];
     xdyn[0] = "x"; xdyn[1] = "y";
-    xdyn[2] = "xdot"; xdyn[3] = "ydot";
+    xdyn[2] = "phi"; xdyn[3] = "v";
     xdyn[4] = "bx"; xdyn[5] = "by";
     xdyn[6] = "g"; xdyn[7] = "gdot";
-    tubex::Function f_g(8, xdyn, "(sqrt((x-bx)^2+(y-by)^2) ; \
-                                  xdot*sign(x-bx)/sqrt(1+((y-by)^2)/((x-bx)^2)) \
-                                + ydot*sign(y-by)/sqrt(1+((x-bx)^2)/((y-by)^2)))");
 
-    xdyn[0] = "x"; xdyn[1] = "y";
-    xdyn[2] = "v"; xdyn[3] = "theta";
-    tubex::Function f_f(4, xdyn, "(v*cos(theta) ; \
-                                   v*sin(theta) ; \
-                                   -0.45 * cos(0.2*t) + [-0.001,0.001] ; \
-                                   0.1 + sin(0.25*t) + [-0.001,0.001])");
+    tubex::Function f_obs(8, xdyn, "(sqrt((x-bx)^2+(y-by)^2) - g ; \
+                                     v*cos(phi)*sign(x-bx)/sqrt(1+((y-by)^2)/((x-bx)^2)) \
+                                   + v*sin(phi)*sign(y-by)/sqrt(1+((x-bx)^2)/((y-by)^2)) - gdot)");
+    tubex::Function f_evol(8, xdyn, "(v*cos(phi) ; \
+                                      v*sin(phi) ; \
+                                      -0.45 * cos(0.2*t) + [-0.001,0.001] ; \
+                                      0.1 + sin(0.25*t) + [-0.001,0.001])");
+
+    tubex::CtcFwdBwd ctc_obs_fwdbwd(f_obs);
 
     map<int,TubeVector*> m_x;
     for(int i = 0 ; i < v_beacons.size() ; i++)
     {
       m_x[i] = new TubeVector(x);
       m_x[i]->resize(8);
+      (*m_x[i]) &= IntervalVector(8, Interval(-999.,999.)); // todo: remove this
 
       (*m_x[i])[4].set(v_beacons[i].pos_box()[0]);
       (*m_x[i])[5].set(v_beacons[i].pos_box()[1]);
-
-      for(int k = 0 ; k < m_obs[i].size() ; k++)
-        ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], (*m_x[i])[6], (*m_x[i])[7]);
     }
 
-    Variable vt, vx, vy, vxdot, vydot, vbx, vby, vg, vgdot, vv, vtheta;
+    int a = 0;
+    double volume_x;
 
-    SystemFactory fac_f;
-    fac_f.add_var(vt);
-    fac_f.add_var(vx); fac_g.add_var(vy);
-    fac_f.add_var(vxdot); fac_g.add_var(vydot);
-    fac_f.add_var(vbx); fac_g.add_var(vby);
-    fac_f.add_var(vg); fac_g.add_var(vgdot);
-    fac_f.add_ctr(vxdot = v*cos(theta));
-    fac_f.add_ctr(vydot = v*sin(theta));
-    System sys_f(fac_f);
-    ibex::CtcHC4 hc4(sys_f);
-
-    SystemFactory fac_g;
-    fac_g.add_var(vt);
-    fac_g.add_var(vx); fac_g.add_var(vy);
-    fac_g.add_var(vxdot); fac_g.add_var(vydot);
-    fac_g.add_var(vbx); fac_g.add_var(vby);
-    fac_g.add_var(vg); fac_g.add_var(vgdot);
-    fac_g.add_ctr(vg = sqrt(sqr(vx-vbx)+sqr(vy-vby)));
-    fac_g.add_ctr(vgdot = (vxdot*sign(vx-vbx)/sqrt(1+(sqr(vy-vby)/sqr(vx-vbx)))) 
-                      + (vydot*sign(vy-vby)/sqrt(1+(sqr(vx-vbx)/sqr(vy-vby)))));
-    System sys_g(fac_g);
-    ibex::CtcHC4 hc4(sys_g);
-
-    tubex::CtcHC4 ctc_hc4;
-/*
-    for(int i = 0 ; i < v_beacons.size() ; i++)
+    clock_t t_start = clock();
+    do
     {
-      cout << "Seamark " << (i+1) << endl;
+      a++;
+      volume_x = x.volume();
+      cout << "Iteration " << a << endl;
 
-      ctc_hc4.contract(hc4, *m_x[i]);
+      for(int i = 0 ; i < v_beacons.size() ; i++)
+      {
+        cout << "  - seamark " << (i+1) << endl;
 
-      (*m_x[i])[0].ctc_deriv((*m_x[i])[3]);
-      (*m_x[i])[1].ctc_deriv((*m_x[i])[4]);
-      (*m_x[i])[6].ctc_deriv((*m_x[i])[7]);
+        for(int j = 0 ; j < 4 ; j++)
+          (*m_x[i])[j] &= x[j];
 
-      for(int j = 0 ; j < 4 ; j++)
-        x[j] &= (*m_x[i])[j];
-    }
+        for(int k = 0 ; k < m_obs[i].size() ; k++)
+          ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], (*m_x[i])[6], (*m_x[i])[7]);
+
+        ctc_obs_fwdbwd.contract(*m_x[i]);
+
+        TubeVector xdot = f_evol.eval_vector((*m_x[i]));
+        for(int j = 0 ; j < xdot.size() ; j++)
+          ctc_deriv.contract((*m_x[i])[j], xdot[j]);
+
+        for(int j = 0 ; j < 4 ; j++)
+          x[j] &= (*m_x[i])[j];
+      }
+
+    } while(a < 3 && volume_x != x.volume());
+    printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
 
   /* =========== GRAPHICS =========== */
 
-    //VibesFigure_Tube::draw("Tube [x](·)", &x, 100, 100);
-    //VibesFigure_Tube::draw("Tube [y](·)", &y, 150, 150);
-    //displayBeaconsMap(x, y, 200, 200);
-    //VibesFigure_Tube::end_drawing();
-    
+    vibes::beginDrawing();
+
+    VibesFigure_Map fig_map("Map");
+    fig_map.set_properties(50, 50, 550, 350);
+    fig_map.add_tubevector(&x, "x", 0, 1);
+    fig_map.add_beacons(v_beacons);
+    fig_map.show();
+
+    vibes::endDrawing();
+
+cout << x.volume() << endl;
+
   // Checking if this example is still working:
   //return (fabs(x.volume() - 604.8) < 1e-2
   //     && fabs(y.volume() - 665.358) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
-
-/*void displayBeaconsMap(const Tube& x, const Tube& y, int fig_x, int fig_y)
-{
-  const string fig_name = "Map (top view): [x](·)x[y](·)";
-  const int slices_number_to_display = 500;
-
-  vibes::newFigure(fig_name);
-  vibes::setFigureProperties(
-            vibesParams("figure", fig_name, "x", fig_x, "y", fig_y, "width", 900, "height", 600));
-
-  // Robot's tubes projection
-  int startpoint;
-  for(int i = 0 ; i < x.size() ; i += max((int)(x.size() / slices_number_to_display), 1))
-    startpoint = i;
-
-  for(int i = startpoint ; i >= 0; i -= max((int)(x.size() / slices_number_to_display), 1))
-  {
-    Interval intv_x = x[i];
-    Interval intv_y = y[i];
-    if(!intv_x.is_unbounded() && !intv_y.is_unbounded())
-      vibes::drawBox(intv_x.lb(), intv_x.ub(), intv_y.lb(), intv_y.ub(),
-                     "lightGray[white]", vibesParams("figure", fig_name));
-  }
-}*/

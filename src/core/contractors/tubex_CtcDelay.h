@@ -22,14 +22,14 @@ namespace tubex
    *
    * Constraint: y=x(t-a)
    */
-  class CtcDelay : Ctc
+  class CtcDelay : public Ctc
   {
     public:
 
-      CtcDelay(bool preserve_slicing = false);
+      CtcDelay();
 
-      bool contract(const ibex::Interval& a, const Tube& x, Tube& y) const;
-      bool contract(const ibex::Interval& a, const TubeVector& x, TubeVector& y) const;
+      void contract(const ibex::Interval& a, const Tube& x, Tube& y) const;
+      void contract(const ibex::Interval& a, const TubeVector& x, TubeVector& y) const;
 
     protected:
 

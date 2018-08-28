@@ -20,8 +20,8 @@ namespace tubex
 {
   // todo: avoid redundant gate contractions
   
-  CtcFwdBwd::CtcFwdBwd(const tubex::Function& f, bool preserve_slicing)
-    : Ctc(preserve_slicing), m_f(new tubex::Function(f))
+  CtcFwdBwd::CtcFwdBwd(const tubex::Function& f)
+    : Ctc(), m_f(new tubex::Function(f))
   {
 
   }
@@ -31,13 +31,14 @@ namespace tubex
     delete m_f;
   }
 
-  bool CtcFwdBwd::contract(TubeVector& x)
+  void CtcFwdBwd::contract(TubeVector& x)
   {
     // todo: check x size
     ibex::CtcFwdBwd ctc_fwdbwd(m_f->ibex_function()); // todo: build the following in constructor? (bug)
 
-    if(x.is_empty())
-      return false;
+    // todo: check if the following is needed
+    //if(x.is_empty())
+    //  return;
 
     Slice **v_x_slices = new Slice*[x.size()];
     for(int i = 0 ; i < x.size() ; i++)
@@ -83,7 +84,5 @@ namespace tubex
 
     for(int i = 0 ; i < x.size() ; i++)
       v_x_slices[i]->set_output_gate(outgate[i+1]);
-
-    // todo: return value*/
   }
 }

@@ -22,13 +22,13 @@ namespace tubex
   /**
    * \brief CtcFwdBwd class.
    */
-  class CtcFwdBwd : Ctc
+  class CtcFwdBwd : public Ctc
   {
     public:
 
-      CtcFwdBwd(const tubex::Function& f, bool preserve_slicing = false);
+      CtcFwdBwd(const tubex::Function& f);
       ~CtcFwdBwd();
-      bool contract(TubeVector& x);
+      void contract(TubeVector& x);
 
     protected:
 

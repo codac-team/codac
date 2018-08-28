@@ -20,22 +20,21 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcPicard::CtcPicard(bool preserve_slicing, float delta)
-    : Ctc(preserve_slicing), m_delta(delta)
+  CtcPicard::CtcPicard(float delta)
+    : Ctc(), m_delta(delta)
   {
 
   }
   
-  bool CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa) const
+  void CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa) const
   {
     // todo: faster implementation in the scalar case?
     TubeVector x_vect(x);
-    bool result = contract(f, x_vect, t_propa);
+    contract(f, x_vect, t_propa);
     x = x_vect[0];
-    return result;
   }
 
-  bool CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa) const
+  void CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa) const
   {
     // Vector implementation
     DimensionException::check(x, f);
@@ -99,8 +98,6 @@ namespace tubex
         delete first_slicing;
       }
     }
-
-    // todo: return value
   }
 
   int CtcPicard::picard_iterations() const

@@ -16,9 +16,18 @@ using namespace std;
 
 namespace tubex
 {
-  Ctc::Ctc(bool preserve_slicing)
-  	: m_preserve_slicing(preserve_slicing)
+  Ctc::Ctc()
   {
 
+  }
+
+  void Ctc::preserve_slicing(bool preserve)
+  {
+    m_preserve_slicing = preserve;
+  }
+
+  void Ctc::set_fast_mode(bool fast_mode)
+  {
+    m_fast_mode = fast_mode;
   }
 }

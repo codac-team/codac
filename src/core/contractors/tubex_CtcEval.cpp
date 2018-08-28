@@ -23,27 +23,32 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcEval::CtcEval(bool preserve_slicing, bool enable_propagation)
-    : Ctc(preserve_slicing), m_propagation_enabled(enable_propagation)
+  CtcEval::CtcEval() : Ctc()
   {
 
   }
 
-  bool CtcEval::contract(double t, Interval& z, Tube& y, Tube& w) const
+  void CtcEval::enable_temporal_propagation(bool enable_propagation)
+  {
+    m_propagation_enabled = enable_propagation;
+  }
+
+  void CtcEval::contract(double t, Interval& z, Tube& y, Tube& w) const
   {
     SlicingException::check(y, w);
 
     if(z.is_empty() || y.is_empty())
-      return false;
+    {
+      z.set_empty();
+      y.set_empty();
+      return;
+    }
 
     Tube y_first_slicing = y, w_first_slicing = w; // doto: instanciate this just in case
-    Interval z_ = z;
-    Tube y_ = y;
 
     z &= y.interpol(t, w);
     y.set(z, t);
     w.sample(t); // w is also sampled to stay compliant with y
-    y_.sample(t); // the same for future comparison
 
     if(m_propagation_enabled)
     {
@@ -55,7 +60,7 @@ namespace tubex
     {
       z.set_empty();
       y.set_empty();
-      return true;
+      return;
     }
 
     if(m_preserve_slicing)
@@ -68,11 +73,9 @@ namespace tubex
       w_first_slicing |= w;
       w = w_first_slicing;
     }
-    
-    return z != z_ || y.is_strict_subset(y_);
   }
 
-  bool CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w) const
+  void CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w) const
   {
     SlicingException::check(y, w);
     
@@ -80,7 +83,12 @@ namespace tubex
       return contract(t.lb(), z, y, w);
 
     if(t.is_empty() || z.is_empty() || y.is_empty())
-      return false;
+    {
+      t.set_empty();
+      z.set_empty();
+      y.set_empty();
+      return;
+    }
 
     Tube y_first_slicing(y), w_first_slicing(w);
     Interval t_ = t;
@@ -211,53 +219,46 @@ namespace tubex
       t.set_empty();
       z.set_empty();
       y.set_empty();
-      return true;
     }
-
-    return t != t_ || z != z_ || y.is_strict_subset(y_);
   }
 
-  bool CtcEval::contract(const Interval& t, const Interval& z, Tube& y, const Tube& w) const
+  void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, const Tube& w) const
   {
     Interval _t(t), _z(z);
     Tube _w(w);
-    return contract(_t, _z, y, _w);
+    contract(_t, _z, y, _w);
   }
 
-  bool CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
+  void CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
   {
     DimensionException::check(y, z);
     DimensionException::check(y, w);
 
-    bool result = false;
     for(int i = 0 ; i < y.size() ; i++)
-      result |= contract(t, z[i], y[i], w[i]);
-    return result;
+      contract(t, z[i], y[i], w[i]);
   }
 
-  bool CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
+  void CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
   {
     DimensionException::check(y, z);
     DimensionException::check(y, w);
 
-    bool result = false;
     Interval t_result = Interval::EMPTY_SET;
 
     for(int i = 0 ; i < y.size() ; i++)
     {
       Interval _t(t);
-      result |= contract(_t, z[i], y[i], w[i]);
+      contract(_t, z[i], y[i], w[i]);
       t_result |= _t;
     }
 
     t &= t_result;
-    return result;
   }
 
-  bool CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, const TubeVector& w) const
+  void CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, const TubeVector& w) const
   {
-    Interval _t(t); IntervalVector _z(z);
     TubeVector _w(w);
-    return contract(_t, _z, y, _w);
+    Interval _t(t); IntervalVector _z(z);
+    contract(_t, _z, y, _w);
   }
 }

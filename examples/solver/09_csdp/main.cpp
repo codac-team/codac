@@ -17,7 +17,8 @@ void contract(TubeVector& x)
   y1 = ((b/a) - 1.)*k*exp(-a*t)
   */
 
-  CtcPicard ctc_picard(true);
+  CtcPicard ctc_picard;
+  ctc_picard.preserve_slicing(true);
   ctc_picard.contract(f, x, FORWARD);
 
   TubeVector v = f.eval_vector(x);
@@ -25,7 +26,8 @@ void contract(TubeVector& x)
   //CtcDeriv ctc_deriv(true);
   //ctc_deriv.contract(x, v, FORWARD | BACKWARD);
 
-  CtcEval ctc_eval(true);
+  CtcEval ctc_eval;
+  ctc_eval.preserve_slicing(true);
   Interval t(1.,3.);
   IntervalVector z(2);
   z[1] = Interval(1.1,1.3);

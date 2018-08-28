@@ -45,7 +45,8 @@ int main()
   /* =========== CREATING CONTRACTORS =========== */
 
     CtcDeriv ctc_deriv;
-    CtcEval ctc_eval(false, false);
+    CtcEval ctc_eval;
+    ctc_eval.enable_temporal_propagation(false); // faster use
     tubex::CtcFwdBwd ctc_fwdbwd(
       tubex::Function("x", "y", "xdot", "ydot", "xddot", "yddot",
                       "-0.4*xddot*xdot - yddot"));

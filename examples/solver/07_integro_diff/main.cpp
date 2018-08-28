@@ -43,10 +43,12 @@ void contract(TubeVector& x)
 
     FncIntegroDiff f;
 
-    CtcPicard ctc_picard(true, 1.1);
+    CtcPicard ctc_picard(1.1);
+    ctc_picard.preserve_slicing(true);
     ctc_picard.contract(f, x, FORWARD | BACKWARD);
 
-    CtcDeriv ctc_deriv(true);
+    CtcDeriv ctc_deriv;
+    ctc_deriv.preserve_slicing(true);
     ctc_deriv.contract(x, f.eval_vector(x), FORWARD | BACKWARD);
 }
 

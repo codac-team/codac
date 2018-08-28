@@ -54,14 +54,17 @@ void contract(TubeVector& x)
     double delay = 0.5;
     FncDelayCustom f(delay);
 
-    CtcPicard ctc_picard(true, 1.1);
+    CtcPicard ctc_picard(1.1);
+    ctc_picard.preserve_slicing(true);
     ctc_picard.contract(f, x);
 
-    CtcDelay ctc_delay(true);
+    CtcDelay ctc_delay;
+    ctc_delay.preserve_slicing(true);
     TubeVector y(x, IntervalVector(x.size(), Interval::ALL_REALS));
     ctc_delay.contract(delay, x, y);
 
-    CtcDeriv ctc_deriv(true);
+    CtcDeriv ctc_deriv;
+    ctc_deriv.preserve_slicing(true);
     ctc_deriv.contract(x, exp(delay) * y);
 }
 
