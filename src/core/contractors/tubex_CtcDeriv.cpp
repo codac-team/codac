@@ -28,12 +28,6 @@ namespace tubex
 
   }
 
-  bool CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa) const
-  {
-    DimensionException::check(x, v);
-    // todo
-  }
-
   bool CtcDeriv::contract(Tube& x, const Tube& v, TPropagation t_propa) const
   {
     DomainException::check(x, v);
@@ -131,5 +125,14 @@ namespace tubex
     x.set_input_gate(in_gate);
 
     return ctc;
+  }
+
+  bool CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa) const
+  {
+    DimensionException::check(x, v);
+    bool result = false;
+    for(int i = 0 ; i < x.size() ; i++)
+      result |= contract(x[i], v[i], t_propa);
+    return result;
   }
 }

@@ -31,12 +31,12 @@ namespace tubex
       // Tube
       bool contract(double t, ibex::Interval& z, Tube& y, Tube& w) const;
       bool contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w) const;
-      bool contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y, Tube& w) const;
+      bool contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y, const Tube& w) const;
 
       // TubeVector
       bool contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
       bool contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
-      bool contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
+      bool contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, const TubeVector& w) const;
 
     protected:
 

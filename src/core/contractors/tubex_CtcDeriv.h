@@ -37,6 +37,7 @@ namespace tubex
 
       bool contract(Slice& x, const Slice& v) const;
       bool contract_gates(Slice& x, const Slice& v) const;
+      
       friend class CtcEval; // contract_gates used by CtcEval
   };
 }

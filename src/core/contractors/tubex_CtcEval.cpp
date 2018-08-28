@@ -217,29 +217,47 @@ namespace tubex
     return t != t_ || z != z_ || y.is_strict_subset(y_);
   }
 
-  bool CtcEval::contract(const Interval& t, const Interval& z, Tube& y, Tube& w) const
+  bool CtcEval::contract(const Interval& t, const Interval& z, Tube& y, const Tube& w) const
   {
     Interval _t(t), _z(z);
-    return contract(_t, _z, y, w);
+    Tube _w(w);
+    return contract(_t, _z, y, _w);
   }
 
   bool CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
   {
     DimensionException::check(y, z);
     DimensionException::check(y, w);
-    cout << "!!!! todo" << endl;
+
+    bool result = false;
+    for(int i = 0 ; i < y.size() ; i++)
+      result |= contract(t, z[i], y[i], w[i]);
+    return result;
   }
 
   bool CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
   {
     DimensionException::check(y, z);
     DimensionException::check(y, w);
-    cout << "!!!! todo" << endl;
+
+    bool result = false;
+    Interval t_result = Interval::EMPTY_SET;
+
+    for(int i = 0 ; i < y.size() ; i++)
+    {
+      Interval _t(t);
+      result |= contract(_t, z[i], y[i], w[i]);
+      t_result |= _t;
+    }
+
+    t &= t_result;
+    return result;
   }
 
-  bool CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, TubeVector& w) const
+  bool CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, const TubeVector& w) const
   {
     Interval _t(t); IntervalVector _z(z);
-    return contract(_t, _z, y, w);
+    TubeVector _w(w);
+    return contract(_t, _z, y, _w);
   }
 }
