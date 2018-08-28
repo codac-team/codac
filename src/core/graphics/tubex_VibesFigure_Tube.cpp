@@ -177,7 +177,7 @@ namespace tubex
     typename map<const Trajectory*,FigTrajParams>::const_iterator it_trajs;
     for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
       m_view_box |= draw_trajectory(it_trajs->first);
-
+    
     axis_limits(m_view_box);
   }
 

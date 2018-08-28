@@ -12,17 +12,17 @@ class FncDelayCustom : public tubex::Fnc
 
     FncDelayCustom() : Fnc(2,2) { };
     const Interval eval(const Interval& t, const TubeVector& x) const { /* scalar case not defined */ }
-    const TubeVector eval_vector(const TubeVector& x) const { return Fnc::eval(x); }
+    const TubeVector eval_vector(const TubeVector& x) const { return Fnc::eval_vector(x); }
 
     const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
       IntervalVector eval_result(x.size());
       PeriodicFunction pf;
 
-      IntervalVector intv_1 = pf.eval(t - 1., x);
-      IntervalVector intv_075 = pf.eval(t - 0.75, x);
-      IntervalVector intv_05 = pf.eval(t - 0.5, x);
-      IntervalVector intv_025 = pf.eval(t - 0.25, x);
+      IntervalVector intv_1 = pf.eval_vector(t - 1., x);
+      IntervalVector intv_075 = pf.eval_vector(t - 0.75, x);
+      IntervalVector intv_05 = pf.eval_vector(t - 0.5, x);
+      IntervalVector intv_025 = pf.eval_vector(t - 0.25, x);
 
       eval_result[0] = x[0](t)
         * (3. - sin(t) - (3. - cos(t)) * x[0](t)

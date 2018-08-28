@@ -11,8 +11,10 @@ printf "Basics\n"
 
 printf "\nSolver\n"
 ./make/examples/solver/01_picard/solver_01_picard > /dev/null ; echo $?;
+./make/examples/solver/02_xmsin_fwd/solver_02_xmsin_fwd > /dev/null ; echo $?;
 ./make/examples/solver/04_bvp/solver_04_bvp > /dev/null ; echo $?;
 ./make/examples/solver/06_bvp_delay/solver_06_bvp_delay > /dev/null ; echo $?;
+./make/examples/solver/07_integro_diff/solver_07_integro_diff > /dev/null ; echo $?;
 
 printf "\nRobotics\n"
 ./make/examples/robotics/01_causal_chain/rob_01_causal_chain > /dev/null ; echo $?;

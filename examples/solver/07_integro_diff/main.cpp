@@ -66,8 +66,8 @@ int main()
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon, 0.005, 0.1, 0.1);
-    solver.figure()->add_trajectoryvector(&truth1, "truth", "blue");
-    solver.figure()->add_trajectoryvector(&truth2, "truth", "red");
+    solver.figure()->add_trajectoryvector(&truth1, "truth1", "blue");
+    solver.figure()->add_trajectoryvector(&truth2, "truth2", "red");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 
