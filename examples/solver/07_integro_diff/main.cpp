@@ -17,7 +17,7 @@ class FncIntegroDiff : public tubex::Fnc
     const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
       return Vector(1, 1.) - 2. * x(t) - 5. * x.integral(t);
-      //return Vector(1, 1.) - 2. * sin(x)[t] - 5. * x.integral(t); // unsolved by Mathematica
+      //return Vector(1, 1.) - 2. * sin(x(t)[0]) - 5. * x.integral(t); // unsolved by Mathematica
     }
 };
 
