@@ -65,38 +65,45 @@ namespace tubex
 
     Interval envelope = x.codomain(), ingate = x.input_gate(), outgate = x.output_gate();
 
-    // todo: remove this:
-      envelope &= Interval(-99999.,99999.);
-      x.set_envelope(envelope);
-
-    if(outgate == Interval::ALL_REALS || (m_fast_mode & (t_propa & FORWARD)))
+    if(m_fast_mode) // Faster contraction without polygons
     {
-      // Faster evaluation without polygons
-      envelope &= ingate + Interval(0.,x.domain().diam()) * v.codomain();
-      outgate &= ingate + x.domain().diam() * v.codomain();
-    }
-
-    else if(ingate == Interval::ALL_REALS || (m_fast_mode & (t_propa & BACKWARD)))
-    {
-      // Faster evaluation without polygons
-      envelope &= outgate - Interval(0.,x.domain().diam()) * v.codomain();
-      ingate &= outgate - x.domain().diam() * v.codomain();
-    }
-
-    else
-    {
-      // Gates contraction
-      outgate &= ingate + x.domain().diam() * v.codomain();
-      ingate &= outgate - x.domain().diam() * v.codomain();
-
-      if(m_fast_mode)
+      if(t_propa & FORWARD)
       {
-        envelope &= outgate - Interval(0., x.domain().diam()) * v.codomain()
-                  & ingate + Interval(0., x.domain().diam()) * v.codomain();
+        x.set_envelope(envelope & (ingate + Interval(0.,x.domain().diam()) * v.codomain()));
+        x.set_output_gate(outgate & (ingate + x.domain().diam() * v.codomain()));
       }
 
-      else
+      if(t_propa & BACKWARD)
       {
+        x.set_envelope(envelope & (outgate - Interval(0.,x.domain().diam()) * v.codomain()));
+        x.set_input_gate(ingate & (outgate - x.domain().diam() * v.codomain()));
+      }
+    }
+
+    else // Optimal contraction
+    {
+        // todo: remove this:
+        envelope &= Interval(-99999.,99999.);
+        x.set_envelope(envelope);
+
+      if(outgate == Interval::ALL_REALS) // Direct evaluation, polygons not needed
+      {
+        envelope &= ingate + Interval(0.,x.domain().diam()) * v.codomain();
+        outgate &= ingate + x.domain().diam() * v.codomain();
+      }
+
+      else if(ingate == Interval::ALL_REALS) // Direct evaluation, polygons not needed
+      {
+        envelope &= outgate - Interval(0.,x.domain().diam()) * v.codomain();
+        ingate &= outgate - x.domain().diam() * v.codomain();
+      }
+
+      else // Using polygons to compute the envelope
+      {
+        // Gates contraction
+        outgate &= ingate + x.domain().diam() * v.codomain();
+        ingate &= outgate - x.domain().diam() * v.codomain();
+
         // Gates needed for polygon computation
         x.set_input_gate(ingate);
         x.set_output_gate(outgate);
@@ -104,11 +111,11 @@ namespace tubex
         // Optimal envelope
         envelope &= x.polygon(v).box()[1];
       }
-    }
 
-    x.set_envelope(envelope);
-    x.set_input_gate(ingate);
-    x.set_output_gate(outgate);
+      x.set_envelope(envelope);
+      x.set_input_gate(ingate);
+      x.set_output_gate(outgate);
+    }
   }
 
   void CtcDeriv::contract_gates(Slice& x, const Slice& v) const
@@ -119,12 +126,10 @@ namespace tubex
 
     Interval in_gate_proj = in_gate + x.domain().diam() * v.codomain();
     out_gate &= in_gate_proj;
-    out_gate != x.output_gate();
     x.set_output_gate(out_gate);
 
     Interval out_gate_proj = out_gate - x.domain().diam() * v.codomain();
     in_gate &= out_gate_proj;
-    in_gate != x.input_gate();
     x.set_input_gate(in_gate);
   }
 

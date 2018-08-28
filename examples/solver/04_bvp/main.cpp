@@ -56,7 +56,7 @@ int main()
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 
-  // Checking if this example is still working:
+  // Checking if this example still works:
   return (solver.solution_encloses(l_solutions, truth1)
        && solver.solution_encloses(l_solutions, truth2)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

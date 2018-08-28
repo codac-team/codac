@@ -14,6 +14,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME rob_03_drifting_clock COMMAND rob_03_drifting_clock 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME rob_03_drifting_clock COMMAND rob_03_drifting_clock 0)
+  endif(BUILD_TESTS)

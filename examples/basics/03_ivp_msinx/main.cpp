@@ -77,6 +77,6 @@ int main(int argc, char *argv[])
     vibes::endDrawing();
 
 
-  // Checking if this example is still working:
+  // Checking if this example still works:
   return (volume_x <= 21.176) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

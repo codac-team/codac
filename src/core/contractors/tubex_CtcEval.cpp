@@ -53,6 +53,7 @@ namespace tubex
     if(m_propagation_enabled)
     {
       CtcDeriv ctc_deriv;
+      ctc_deriv.set_fast_mode(m_fast_mode);
       ctc_deriv.contract(y, w);
     }
 
@@ -119,6 +120,8 @@ namespace tubex
         }
 
         CtcDeriv ctc_deriv;
+        ctc_deriv.set_fast_mode(m_fast_mode);
+
         Interval front_gate(y.size());
         list<Interval> l_gates;
         Slice *slice_y;

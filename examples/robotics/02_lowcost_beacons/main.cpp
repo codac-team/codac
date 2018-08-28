@@ -61,6 +61,9 @@ int main()
     CtcEval ctc_eval;
     CtcDeriv ctc_deriv;
 
+    ctc_eval.set_fast_mode(true);
+    ctc_deriv.set_fast_mode(true);
+
     const char* xdyn[8];
     xdyn[0] = "x"; xdyn[1] = "y";
     xdyn[2] = "phi"; xdyn[3] = "v";
@@ -91,7 +94,6 @@ int main()
     int a = 0;
     double volume_x;
 
-    clock_t t_start = clock();
     do
     {
       a++;
@@ -118,8 +120,7 @@ int main()
           x[j] &= (*m_x[i])[j];
       }
 
-    } while(a < 3 && volume_x != x.volume());
-    printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
+    } while(a < 4 && volume_x != x.volume());
 
   /* =========== GRAPHICS =========== */
 
@@ -133,9 +134,7 @@ int main()
 
     vibes::endDrawing();
 
-cout << x.volume() << endl;
 
-  // Checking if this example is still working:
-  //return (fabs(x.volume() - 604.8) < 1e-2
-  //     && fabs(y.volume() - 665.358) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  // Checking if this example still works:
+  return (fabs(x.volume() - 1354.26) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

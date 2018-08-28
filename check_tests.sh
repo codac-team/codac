@@ -16,4 +16,6 @@ printf "\nSolver\n"
 
 printf "\nRobotics\n"
 ./make/examples/robotics/01_causal_chain/rob_01_causal_chain > /dev/null ; echo $?;
+./make/examples/robotics/02_lowcost_beacons/rob_02_lowcost_beacons > /dev/null ; echo $?;
+./make/examples/robotics/03_drifting_clock/rob_03_drifting_clock > /dev/null ; echo $?;
 ./make/examples/robotics/05_data_association/rob_05_data_association > /dev/null ; echo $?;

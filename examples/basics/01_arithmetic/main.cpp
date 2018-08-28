@@ -57,6 +57,6 @@ int main()
     vibes::endDrawing();
     
 
-  // Checking if this example is still working:
+  // Checking if this example still works:
   return (fabs(x.volume() - 233.765) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

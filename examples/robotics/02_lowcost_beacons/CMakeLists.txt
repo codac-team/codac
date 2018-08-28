@@ -14,6 +14,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME rob_02_lowcost_beacons COMMAND rob_02_lowcost_beacons 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME rob_02_lowcost_beacons COMMAND rob_02_lowcost_beacons 0)
+  endif(BUILD_TESTS)

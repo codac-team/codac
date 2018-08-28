@@ -106,6 +106,7 @@ int main()
     fig_h.show();
     vibes::endDrawing();
 
-  // Checking if this example is still working:
+
+  // Checking if this example still works:
   return (y[0].encloses(y_truth) && h[0].encloses(h_truth)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

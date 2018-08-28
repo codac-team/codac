@@ -110,6 +110,7 @@ int main()
     bool success = x->encloses(*x_truth);
     delete x; delete x_truth;
 
-  // Checking if this example is still working:
+
+  // Checking if this example still works:
   return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
