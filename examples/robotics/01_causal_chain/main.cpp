@@ -20,104 +20,72 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define BACKWARD_EXAMPLE 1
-
-void displayCausalMap(const Tube& x, const Tube& y, int fig_x, int fig_y);
+#define FINAL_CONDITION 0
 
 int main()
 {
-  /* =========== PARAMETERS =========== */
-
-    Interval domain(0,14);
-    double timestep = 0.001;
-    float speed = 10.;
-
   /* =========== INITIALIZATION =========== */
 
+    Interval domain(0., 14.);
+    float timestep = 0.001;
+
     // Creating a tube over the [0,14] domain with some timestep:
-    Tube u(domain, timestep, Function("t", "-cos((t+33)/5)+[-0.02,0.02]"));
-    // Initial conditions:
-    Interval x0 = Interval(0.).inflate(1.), y0 = x0;
-    Interval theta0 = Interval((-6./5.)*M_PI).inflate(0.02);
+    TubeVector x(domain, timestep, 3);
 
-  /* =========== CONSTRAINT NETWORK =========== */
+    // Initial condition:
+    IntervalVector x0(x.size());
+    x0[0] = Interval(0.).inflate(1.);
+    x0[1] = Interval(0.).inflate(1.);
+    x0[2] = Interval((-6./5.)*M_PI).inflate(0.02);
+    x.set(x0, 0.);
 
-    Tube theta = u.primitive(theta0);
-    Tube xdot = speed * cos(theta);
-    Tube ydot = speed * sin(theta);
-    Tube x = xdot.primitive(x0);
-    Tube y = ydot.primitive(y0);
+    if(FINAL_CONDITION)
+    {
+      // Final condition:
+      IntervalVector xf(x.size());
+      xf[0] = Interval(53.9,55.9);
+      xf[1] = Interval(6.9,8.9);
+      xf[2] = Interval(-2.36,-2.32);
+      x.set(xf, 14.);
+    }
 
-  #if BACKWARD_EXAMPLE
+  /* =========== PROPAGATION (CONTRACTORS) =========== */
 
-    /* =========== BACKWARD PROPAGATION =========== */
+    tubex::Function f("x", "y", "theta",
+                      "(10.*cos(theta) ;\
+                        10.*sin(theta) ;\
+                        -cos((t+33)/5)+[-0.02,0.02])");
 
-      theta.ctc_eval(u, 14., Interval(-2.36,-2.32));
-      x.ctc_eval(xdot, 14., Interval(53.9,55.9));
-      y.ctc_eval(ydot, 14., Interval(6.9,8.9));
+    CtcDeriv ctc_deriv;
 
-    /* =========== CONSTRAINT NETWORK =========== */
-
-      xdot &= speed * cos(theta);
-      ydot &= speed * sin(theta);
-      x.ctcFwdBwd(xdot);
-      y.ctcFwdBwd(ydot);
-
-  #endif
+    ctc_deriv.contract(x, f.eval_vector(x));
+    ctc_deriv.contract(x, f.eval_vector(x));
 
   /* =========== GRAPHICS =========== */
 
-    VibesFigure_Tube::draw("Tube [x](·)", &x, 100, 100);
-    VibesFigure_Tube::draw("Tube [y](·)", &y, 150, 150);
-    displayCausalMap(x, y, 200, 200);
+    vibes::beginDrawing();
 
-    #if !BACKWARD_EXAMPLE
+    VibesFigure_Map fig_map("Map");
+    fig_map.set_properties(50, 50, 550, 350);
+    fig_map.add_tubevector(&x, "x", 0, 1);
+    fig_map.show();
 
-      // Tubes result
-      IntervalVector last_slice(2);
-      last_slice[0] = x[x.size() - 1];
-      last_slice[1] = y[y.size() - 1];
-      vibes::drawBox(last_slice, "#008000", vibesParams("figure", "Map (top view): [x](·)x[y](·)"));
+    if(!FINAL_CONDITION)
+    {
+      // Tubex result
+      fig_map.draw_box(x(x.domain().ub()).subvector(0,1), "#008000");
 
       // CAPD result
       IntervalVector capd_box(2);
       capd_box[0] = Interval(38.1545777835, 71.7221807908);
       capd_box[1] = Interval(-11.4056594783, 27.2737690279);
-      vibes::drawBox(capd_box, "#DC4F2C", vibesParams("figure", "Map (top view): [x](·)x[y](·)"));
+      fig_map.draw_box(capd_box, "#DC4F2C");
+    }
 
-    #endif
+    vibes::endDrawing();
 
-  /* =========== END =========== */
-
-    VibesFigure_Tube::end_drawing();
 
   // Checking if this example is still working:
-  return (BACKWARD_EXAMPLE && fabs(x.volume() - 65.5594) < 1e-2 && fabs(y.volume() - 74.9425) < 1e-2)
-      || (!BACKWARD_EXAMPLE && fabs(x.volume() - 158.839) < 1e-2 && fabs(y.volume() - 190.126) < 1e-2)
-        ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-
-void displayCausalMap(const Tube& x, const Tube& y, int fig_x, int fig_y)
-{
-  const string fig_name = "Map (top view): [x](·)x[y](·)";
-  const int slices_number_to_display = 500;
-
-  vibes::newFigure(fig_name);
-  vibes::setFigureProperties(
-            vibesParams("figure", fig_name, "x", fig_x, "y", fig_y, "width", 900, "height", 600));
-  vibes::axis_limits(-20, 100, -40, 40);
-
-  // Robot's tubes projection
-  int startpoint;
-  for(int i = 0 ; i < x.size() ; i += max((int)(x.size() / slices_number_to_display), 1))
-    startpoint = i;
-
-  for(int i = startpoint ; i >= 0; i -= max((int)(x.size() / slices_number_to_display), 1))
-  {
-    Interval intv_x = x[i];
-    Interval intv_y = y[i];
-    if(!intv_x.is_unbounded() && !intv_y.is_unbounded())
-      vibes::drawBox(intv_x.lb(), intv_x.ub(), intv_y.lb(), intv_y.ub(),
-                     "lightGray[white]", vibesParams("figure", fig_name));
-  }
+  return (FINAL_CONDITION && fabs(x.volume() - 143.027) < 1e-2)
+      || (!FINAL_CONDITION && fabs(x.volume() - 353.406)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

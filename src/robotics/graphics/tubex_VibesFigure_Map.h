@@ -23,8 +23,8 @@
 
 namespace tubex
 {
-  #define TRAJMAP_NB_DISPLAYED_POINTS   10000
-  #define MAP_SLICES_NUMBER_TO_DISPLAY  10000
+  #define TRAJMAP_NB_DISPLAYED_POINTS   1000
+  #define MAP_SLICES_NUMBER_TO_DISPLAY  1000
 
   // HTML color codes:
   #define DEFAULT_BEACON_COLOR      "#FF5D00[white]"
