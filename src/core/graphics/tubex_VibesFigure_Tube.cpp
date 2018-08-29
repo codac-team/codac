@@ -23,6 +23,7 @@ namespace tubex
   VibesFigure_Tube::VibesFigure_Tube(const string& fig_name, const Tube *tube, const Trajectory *traj)
     : VibesFigure(fig_name)
   {
+    set_properties(100, 100, 600, 300); // default properties
     if(tube != NULL) add_tube(tube, DEFAULT_TUBE_NAME);
     if(traj != NULL) add_trajectory(traj, DEFAULT_TRAJ_NAME);
   }

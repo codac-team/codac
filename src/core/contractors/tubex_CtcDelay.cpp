@@ -31,13 +31,12 @@ namespace tubex
     DomainException::check(x, y);
     SlicingException::check(x, y);
 
-    Interval intv_t;
     const Slice *slice_x = x.get_first_slice();
     Slice *slice_y = y.get_first_slice();
 
     while(slice_x != NULL)
     {
-      intv_t = slice_y->domain().lb() - a;
+      Interval intv_t = slice_y->domain().lb() - a;
       if(intv_t.is_subset(y.domain()))
         slice_y->set_input_gate(slice_y->input_gate() & x(intv_t));
 

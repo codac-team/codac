@@ -147,8 +147,7 @@ namespace tubex
   {
     DimensionException::check(tube, f);
     // todo: check k
-if(tube.is_empty())
-  return;
+
     float delta = m_delta;
     Interval h, t = tube[0].slice_domain(k);
     IntervalVector initial_x = tube(k), x0(tube.size()), xf(x0);

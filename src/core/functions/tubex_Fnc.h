@@ -31,10 +31,10 @@ namespace tubex
       int nb_vars() const;
       int image_dim() const;
 
-      const Tube eval(const TubeVector& x) const;
+      virtual const Tube eval(const TubeVector& x) const;
       virtual const ibex::Interval eval(const ibex::Interval& t, const TubeVector& x) const = 0;
       
-      const TubeVector eval_vector(const TubeVector& x) const;
+      virtual const TubeVector eval_vector(const TubeVector& x) const;
       virtual const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const = 0;
 
     protected:

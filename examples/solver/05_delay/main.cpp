@@ -19,7 +19,7 @@ class FncDelayCustom : public tubex::Fnc
       IntervalVector eval_result(x.size(), Interval::EMPTY_SET);
 
       if((t - m_delay).lb() <= x.domain().lb())
-        eval_result |= eval_vector(t, x(t));
+        eval_result |= x(t);
 
       if((t - m_delay).ub() >= x.domain().lb())
         eval_result |= exp(m_delay) * x((t - m_delay) & x.domain());
@@ -56,7 +56,7 @@ int main()
   /* =========== PARAMETERS =========== */
 
     int n = 1;
-    Vector epsilon(n, 0.05);
+    Vector epsilon(n, 0.5);
     Interval domain(0.,5.);
     TubeVector x(domain, n);
     TrajectoryVector truth(domain, tubex::Function("exp(t)"));

@@ -25,7 +25,7 @@ int main()
 
     Vector epsilon(1, 0.05);
     Interval domain(0.,10.);
-    TubeVector x(domain);
+    TubeVector x(domain, 1);
     TrajectoryVector truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
     x.set(IntervalVector(truth(Interval(0.))), 0.); // initial condition
     // Note: use truth(Interval(0.)) instead of truth(0.) for a reliable evaluation

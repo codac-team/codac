@@ -42,8 +42,6 @@ namespace tubex
       int size() const;
 
       // Access values
-      // deprecated? const std::map<double,ibex::Vector>& get_map() const;
-      const tubex::Function* get_function() const;
       const ibex::Interval domain() const;
       const ibex::IntervalVector codomain() const;
       Trajectory& operator[](int index);
