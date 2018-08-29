@@ -48,7 +48,7 @@ namespace tubex
       const ConvexPolygon polygon(const Slice& v) const; // todo: store polygon in cache memory?
       const Tube* tube_reference() const;
 
-      // Access values
+      // Accessing values
       const ibex::Interval codomain() const;
       const ibex::IntervalVector box() const;
       double volume() const;

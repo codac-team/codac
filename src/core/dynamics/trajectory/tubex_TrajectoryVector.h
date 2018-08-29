@@ -41,7 +41,7 @@ namespace tubex
       const TrajectoryVector& operator=(const TrajectoryVector& x);
       int size() const;
 
-      // Access values
+      // Accessing values
       const ibex::Interval domain() const;
       const ibex::IntervalVector codomain() const;
       Trajectory& operator[](int index);

@@ -34,7 +34,7 @@ namespace tubex
       const Trajectory& operator=(const Trajectory& x);
       int size() const;
 
-      // Access values
+      // Accessing values
       const std::map<double,double>& get_map() const;
       const tubex::Function* get_function() const;
       const ibex::Interval domain() const;

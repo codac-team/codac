@@ -72,7 +72,7 @@ namespace tubex
       void sample(double t, const ibex::Interval& gate);
       static bool share_same_slicing(const Tube& x1, const Tube& x2);
 
-      // Access values
+      // Accessing values
       const ibex::Interval codomain() const;
       double volume() const;
       const ibex::Interval operator()(int slice_id) const;

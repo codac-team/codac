@@ -425,7 +425,7 @@ namespace tubex
       return true;
     }
 
-    // Access values
+    // Accessing values
 
     const Interval Tube::codomain() const
     {

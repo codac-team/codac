@@ -123,7 +123,7 @@ namespace tubex
       return m_tube_ref;
     }
     
-    // Access values
+    // Accessing values
 
     const Interval Slice::codomain() const
     {

@@ -63,7 +63,7 @@ namespace tubex
       static bool share_same_slicing(const Tube& x1, const TubeVector& x2);
       static bool share_same_slicing(const TubeVector& x1, const TubeVector& x2);
 
-      // Access values
+      // Accessing values
       const ibex::IntervalVector codomain() const;
       double volume() const;
       Tube& operator[](int index);

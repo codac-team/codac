@@ -261,7 +261,7 @@ namespace tubex
       return Tube::share_same_slicing(x1[0], x2[0]);
     }
 
-    // Access values
+    // Accessing values
 
     const IntervalVector TubeVector::codomain() const
     {

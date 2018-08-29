@@ -84,7 +84,7 @@ namespace tubex
       return 1;
     }
 
-    // Access values
+    // Accessing values
 
     const map<double,double>& Trajectory::get_map() const
     {

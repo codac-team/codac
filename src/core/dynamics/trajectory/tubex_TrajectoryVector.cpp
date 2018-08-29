@@ -98,7 +98,7 @@ namespace tubex
       return m_n;
     }
 
-    // Access values
+    // Accessing values
 
     const Interval TrajectoryVector::domain() const
     {
