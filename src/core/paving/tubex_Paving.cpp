@@ -19,6 +19,8 @@ using namespace ibex;
 
 namespace tubex
 {
+  // Definition
+  
   Paving::Paving(const IntervalVector& box, int value)
     : m_box(box), m_value(value)
   {

@@ -51,7 +51,7 @@ namespace tubex
       void set_trajectory_color(const Trajectory *traj, const std::string& color);
       void remove_trajectory(const Trajectory *traj);
 
-      virtual void show();
+      void show();
       void show(bool detail_slices);
 
     protected:
