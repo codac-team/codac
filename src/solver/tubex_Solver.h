@@ -24,11 +24,11 @@ namespace tubex
   {
     public:
 
-      Solver(const ibex::Vector& max_thickness,
-             float refining_fxpt_ratio = 0.005,
-             float propa_fxpt_ratio = 0.005,
-             float cid_fxpt_ratio = 0.005);
+      Solver(const ibex::Vector& max_thickness);
       ~Solver();
+      void set_refining_fxpt_ratio(float refining_fxpt_ratio);
+      void set_propa_fxpt_ratio(float propa_fxpt_ratio);
+      void set_cid_fxpt_ratio(float cid_fxpt_ratio);
       const std::list<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
       VibesFigure_TubeVector* figure();
       bool solutions_contain(const std::list<TubeVector>& v_solutions, const TrajectoryVector& truth);
@@ -41,9 +41,9 @@ namespace tubex
       void cid(TubeVector &x, void (*ctc_func)(TubeVector&));
 
       ibex::Vector m_max_thickness = ibex::Vector(1);
-      float m_refining_fxpt_ratio;
-      float m_propa_fxpt_ratio;
-      float m_cid_fxpt_ratio;
+      float m_refining_fxpt_ratio = 0.005;
+      float m_propa_fxpt_ratio = 0.005;
+      float m_cid_fxpt_ratio = 0.005;
 
       // Embedded graphics
       VibesFigure_TubeVector *m_fig = NULL;

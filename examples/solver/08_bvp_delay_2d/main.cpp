@@ -70,7 +70,10 @@ int main()
 
   /* =========== SOLVER =========== */
 
-    tubex::Solver solver(epsilon, 0.01, 0.01, 1.);
+    tubex::Solver solver(epsilon);
+    solver.set_refining_fxpt_ratio(0.01);
+    solver.set_propa_fxpt_ratio(0.01);
+    solver.set_cid_fxpt_ratio(1.);
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 

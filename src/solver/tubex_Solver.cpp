@@ -20,12 +20,9 @@ using namespace ibex;
 
 namespace tubex
 {
-  Solver::Solver(const Vector& max_thickness, float refining_fxpt_ratio, float propa_fxpt_ratio, float cid_fxpt_ratio)
+  Solver::Solver(const Vector& max_thickness)
   {
     m_max_thickness = max_thickness;
-    m_refining_fxpt_ratio = refining_fxpt_ratio;
-    m_propa_fxpt_ratio = propa_fxpt_ratio;
-    m_cid_fxpt_ratio = cid_fxpt_ratio;
 
     #if GRAPHICS // embedded graphics
       vibes::beginDrawing();
@@ -40,6 +37,21 @@ namespace tubex
       delete m_fig;
       vibes::endDrawing();
     #endif
+  }
+
+  void Solver::set_refining_fxpt_ratio(float refining_fxpt_ratio)
+  {
+    m_refining_fxpt_ratio = refining_fxpt_ratio;
+  }
+
+  void Solver::set_propa_fxpt_ratio(float propa_fxpt_ratio)
+  {
+    m_propa_fxpt_ratio = propa_fxpt_ratio;
+  }
+
+  void Solver::set_cid_fxpt_ratio(float cid_fxpt_ratio)
+  {
+    m_cid_fxpt_ratio = cid_fxpt_ratio;
   }
 
   const list<TubeVector> Solver::solve(const TubeVector& x0, void (*ctc_func)(TubeVector&))

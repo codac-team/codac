@@ -32,7 +32,10 @@ int main()
 
   /* =========== SOLVER =========== */
 
-    tubex::Solver solver(epsilon, 0.0001, 0.005, 0.005);
+    tubex::Solver solver(epsilon);
+    solver.set_refining_fxpt_ratio(0.0001);
+    solver.set_propa_fxpt_ratio(0.005);
+    solver.set_cid_fxpt_ratio(0.005);
     solver.figure()->add_trajectoryvector(&truth, "truth", "blue");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 

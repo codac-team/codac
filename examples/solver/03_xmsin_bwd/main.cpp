@@ -12,28 +12,30 @@ void contract(TubeVector& x)
 
   CtcPicard ctc_picard;
   ctc_picard.preserve_slicing(true);
-  ctc_picard.contract(f, x, BACKWARD);
+  ctc_picard.contract(f, x, FORWARD | BACKWARD);
 
   CtcDeriv ctc_deriv;
   ctc_deriv.preserve_slicing(true);
-  ctc_deriv.contract(x, f.eval_vector(x), BACKWARD);
+  ctc_deriv.contract(x, f.eval_vector(x), FORWARD | BACKWARD);
 }
 
 int main()
 {
   /* =========== PARAMETERS =========== */
 
-    int n = 1;
-    Vector epsilon(n, 0.05);
+    Vector epsilon(1, 0.05);
     Interval domain(0.,10.);
-    TubeVector x(domain, n);
+    TubeVector x(domain, 1);
     TrajectoryVector truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
     x.set(IntervalVector(truth(Interval(10.))), 10.); // final condition
     // Note: use truth(Interval(10.)) instead of truth(10.) for a reliable evaluation
 
   /* =========== SOLVER =========== */
 
-    tubex::Solver solver(epsilon, 0.005, 0.005, 1.);
+    tubex::Solver solver(epsilon);
+    solver.set_refining_fxpt_ratio(0.005);
+    solver.set_propa_fxpt_ratio(0.005);
+    solver.set_cid_fxpt_ratio(1.);
     solver.figure()->add_trajectoryvector(&truth, "truth", "blue");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 

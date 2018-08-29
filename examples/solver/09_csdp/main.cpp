@@ -54,11 +54,16 @@ int main()
 
   /* =========== SOLVER =========== */
 
-    tubex::Solver solver(epsilon, 0.001, 0.005, 0.01);
+    tubex::Solver solver(epsilon);
+    solver.set_refining_fxpt_ratio(0.001);
+    solver.set_propa_fxpt_ratio(0.005);
+    solver.set_cid_fxpt_ratio(0.01);
+
     IntervalVector max_restrict_box(3);
     max_restrict_box[0] = Interval(1.,3.);
     max_restrict_box.put(1, max_restriction);
     solver.figure()->draw_box(max_restrict_box, "blue");
+
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 
