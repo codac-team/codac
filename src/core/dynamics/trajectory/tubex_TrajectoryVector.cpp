@@ -77,33 +77,17 @@ namespace tubex
 
   const TrajectoryVector& TrajectoryVector::operator=(const TrajectoryVector& x)
   {
-    /*if(m_v_trajs != NULL)
-      delete[] m_v_trajs;
-    cout << "E1" << endl;
-    cout << "E1" << x << endl;
-    cout << "E1" << x.size() << endl;
-    m_n = 6;
-    cout << "E5 " << endl;
-    cout << "E4 " << m_n << endl;
-    m_v_trajs = new Trajectory[m_n];
-    cout << "E3" << endl;
-    for(int i = 0 ; i < 6 ; i++)
-      (*this)[i] = x[i];
-    cout << "E2" << endl;
-    return *this;*/
-
     { // Destroying already existing components
       if(m_v_trajs != NULL)
         delete[] m_v_trajs;
     }
-cout << "e" << endl;
-    m_n = x.size();
-    m_v_trajs = new Trajectory[m_n];
 
+    m_n = x.size();
+    
+    m_v_trajs = new Trajectory[m_n];
     for(int i = 0 ; i < size() ; i++)
       (*this)[i] = x[i]; // copy of each component
 
-cout << "g" << endl;
     return *this;
   }
 
@@ -160,6 +144,7 @@ cout << "g" << endl;
   const IntervalVector TrajectoryVector::operator()(const Interval& t) const
   {
     DomainException::check(*this, t);
+
     IntervalVector v(size());
     for(int i = 0 ; i < size() ; i++)
       v[i] = (*this)[i](t);

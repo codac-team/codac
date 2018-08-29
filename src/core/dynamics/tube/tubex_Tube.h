@@ -94,7 +94,7 @@ namespace tubex
       bool is_subset(const Tube& x) const;
       bool is_strict_subset(const Tube& x) const;
       bool is_empty() const;
-      bool encloses(const Trajectory& x) const;
+      bool contains(const Trajectory& x) const;
 
       // Setting values
       void set(const ibex::Interval& y);

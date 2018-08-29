@@ -9,7 +9,7 @@
  *  Bug fixes : -
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
-
+#include <iomanip>
 #include "tubex_Slice.h"
 #include "tubex_DomainException.h"
 #include "tubex_EmptyException.h"
@@ -313,12 +313,13 @@ namespace tubex
       return m_codomain.is_empty() || input_gate().is_empty() || output_gate().is_empty();
     }
 
-    bool Slice::encloses(const Trajectory& x) const
+    bool Slice::contains(const Trajectory& x) const
     {
       DomainException::check(*this, x);
       return x(m_domain).is_subset(m_codomain)
-          && input_gate().contains(x(m_domain.lb()))
-          && output_gate().contains(x(m_domain.ub()));
+          // the gates should contain double values, but we use x(Interval(double)) for reliable evaluation
+          && x(Interval(m_domain.lb())).is_subset(input_gate())
+          && x(Interval(m_domain.ub())).is_subset(output_gate());
     }
 
     // Setting values

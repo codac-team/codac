@@ -39,5 +39,5 @@ int main()
 
   // Checking if this example still works:
   return (l_solutions.size() == 1
-       && solver.solution_encloses(l_solutions, truth)) ? EXIT_SUCCESS : EXIT_FAILURE;
+       && solver.solutions_contain(l_solutions, truth)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

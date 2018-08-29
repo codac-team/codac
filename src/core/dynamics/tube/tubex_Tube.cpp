@@ -687,14 +687,14 @@ namespace tubex
       return false;
     }
 
-    bool Tube::encloses(const Trajectory& x) const
+    bool Tube::contains(const Trajectory& x) const
     {
       DomainException::check(*this, x);
 
       const Slice *slice = get_first_slice();
       while(slice != NULL)
       {
-        if(!slice->encloses(x)) return false;
+        if(!slice->contains(x)) return false;
         slice = slice->next_slice();
       }
       

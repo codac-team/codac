@@ -109,7 +109,7 @@ namespace tubex
     DomainException::check(*this, t);
 
     if(m_function != NULL)
-      return m_function->eval(t).mid();
+      return m_function->eval(t).mid(); // /!\ an approximation is made here
 
     else if(m_map_values.find(t) != m_map_values.end())
       return m_map_values.at(t); // key exists
@@ -127,7 +127,7 @@ namespace tubex
              (it_upper->first - it_lower->first);
     }
   }
-  
+
   const Interval Trajectory::operator()(const Interval& t) const
   {
     DomainException::check(*this, t);

@@ -107,7 +107,7 @@ int main()
     fig_x.show();
     fig_map.show();
     vibes::endDrawing();
-    bool success = x->encloses(*x_truth);
+    bool success = x->contains(*x_truth);
     delete x; delete x_truth;
 
 

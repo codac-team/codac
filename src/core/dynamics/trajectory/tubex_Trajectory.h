@@ -39,7 +39,7 @@ namespace tubex
       const tubex::Function* get_function() const;
       const ibex::Interval domain() const;
       const ibex::Interval codomain() const;
-      double operator()(double t) const;
+      double operator()(double t) const; // /!\ approx here, if traj defined by Function, use operator(Interval(double)) for reliable approx
       const ibex::Interval operator()(const ibex::Interval& t) const;
 
       // Tests

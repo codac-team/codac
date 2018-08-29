@@ -16,7 +16,7 @@ void contract(TubeVector& x)
 
   CtcDeriv ctc_deriv;
   ctc_deriv.preserve_slicing(true);
-  ctc_deriv.contract(x, f.eval_vector(x));
+  ctc_deriv.contract(x, f.eval_vector(x), BACKWARD);
 }
 
 int main()
@@ -28,7 +28,8 @@ int main()
     Interval domain(0.,10.);
     TubeVector x(domain, n);
     TrajectoryVector truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
-    x.set(IntervalVector(truth(10.)), 10.); // initial condition
+    x.set(IntervalVector(truth(Interval(10.))), 10.); // final condition
+    // Note: use truth(Interval(10.)) instead of truth(10.) for a reliable evaluation
 
   /* =========== SOLVER =========== */
 
@@ -38,5 +39,5 @@ int main()
 
 
   // Checking if this example still works:
-  return (solver.solution_encloses(l_solutions, truth)) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (solver.solutions_contain(l_solutions, truth)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

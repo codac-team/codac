@@ -39,6 +39,9 @@ namespace tubex
     // Vector implementation
     DimensionException::check(x, f);
 
+    if(x.is_empty())
+      return;
+
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
     {
       // todo: select best way according to initial conditions
@@ -68,12 +71,12 @@ namespace tubex
             
             x.sample(x[0].slice_domain(k).mid()); // all the tubes components are sampled
             nb_slices ++;
-            k--; // the first subslice will be computed
+            k --; // the first subslice will be computed
           }
         }
       }
 
-      else if(t_propa & BACKWARD)
+      if(t_propa & BACKWARD)
       {
         for(int k = x.nb_slices() - 1 ; k >= 0 ; k--)
         {
@@ -85,7 +88,7 @@ namespace tubex
           if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 500.)
           {
             x.sample(x[0].slice_domain(k).mid()); // all the tubes components are sampled
-            k+=2; // the second subslice will be computed
+            k += 2; // the second subslice will be computed
           }
         }
       }
@@ -112,7 +115,6 @@ namespace tubex
     // todo: check k
 
     IntervalVector f_eval = f.eval_vector(tube[0].slice_domain(k), tube); // computed only once
-
     guess_kth_slices_envelope(f, tube, k, t_propa);
 
     if((t_propa & FORWARD) && (t_propa & BACKWARD))
@@ -145,7 +147,8 @@ namespace tubex
   {
     DimensionException::check(tube, f);
     // todo: check k
-
+if(tube.is_empty())
+  return;
     float delta = m_delta;
     Interval h, t = tube[0].slice_domain(k);
     IntervalVector initial_x = tube(k), x0(tube.size()), xf(x0);
@@ -187,15 +190,14 @@ namespace tubex
         tube[i].get_slice(k)->set_envelope(x_guess[i] & initial_x[i]);
 
       x_enclosure = x0 + h * f.eval_vector(t, tube);
-
-      if(x_enclosure.is_unbounded())
+      
+      if(x_enclosure.is_unbounded() || x_enclosure.is_empty() || x_guess.is_empty())
       {
         for(int i = 0 ; i < tube.size() ; i++)
           tube[i].get_slice(k)->set_envelope(initial_x[i]); // coming back to the initial state
         // todo: do it only on the unbounded component?
         break;
       }
-
     } while(!x_enclosure.is_interior_subset(x_guess));
 
     // Restoring ending gate, contracted by setting the envelope

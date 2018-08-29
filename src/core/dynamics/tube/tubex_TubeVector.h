@@ -87,7 +87,7 @@ namespace tubex
       bool is_subset(const TubeVector& x) const;
       bool is_strict_subset(const TubeVector& x) const;
       bool is_empty() const;
-      bool encloses(const TrajectoryVector& x) const;
+      bool contains(const TrajectoryVector& x) const;
 
       // Setting values
       void set(const ibex::IntervalVector& y);

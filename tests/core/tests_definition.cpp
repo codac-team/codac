@@ -129,8 +129,8 @@ TEST_CASE("Tube definition")
     Trajectory traj1_inside(Interval(-1.,10.), tubex::Function("t^2"));
     Trajectory traj1_outside(Interval(-1.,10.), tubex::Function("t^2+2"));
 
-    CHECK(tube1.encloses(traj1_inside));
-    CHECK_FALSE(tube1.encloses(traj1_outside));
+    CHECK(tube1.contains(traj1_inside));
+    CHECK_FALSE(tube1.contains(traj1_outside));
 
     Tube tube2(Interval(-1.,10.), 0.01, tubex::Function("t^2+[-1,1]"));
     Trajectory traj3_lb(Interval(-1.,10.), tubex::Function("(t^2)-1"));

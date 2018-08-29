@@ -108,5 +108,5 @@ int main()
 
 
   // Checking if this example still works:
-  return (y[0].encloses(y_truth) && h[0].encloses(h_truth)) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (y[0].contains(y_truth) && h[0].contains(h_truth)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

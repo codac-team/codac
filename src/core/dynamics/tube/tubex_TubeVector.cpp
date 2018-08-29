@@ -457,17 +457,17 @@ namespace tubex
     bool TubeVector::is_empty() const
     {
       for(int i = 0 ; i < size() ; i++)
-        if(!(*this)[i].is_empty())
-          return false;
-      return true;
+        if((*this)[i].is_empty())
+          return true;
+      return false;
     }
 
-    bool TubeVector::encloses(const TrajectoryVector& x) const
+    bool TubeVector::contains(const TrajectoryVector& x) const
     {
       DimensionException::check(*this, x);
       
       for(int i = 0 ; i < size() ; i++)
-        if(!(*this)[i].encloses(x[i]))
+        if(!(*this)[i].contains(x[i]))
           return false;
       return true;
     }
