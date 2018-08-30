@@ -31,7 +31,8 @@ namespace tubex
       void set_cid_fxpt_ratio(float cid_fxpt_ratio);
       const std::list<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
       VibesFigure_TubeVector* figure();
-      bool solutions_contain(const std::list<TubeVector>& v_solutions, const TrajectoryVector& truth);
+      static bool solutions_contain(const std::list<TubeVector>& l_solutions, const TrajectoryVector& truth);
+      static const TubeVector hull(const std::list<TubeVector>& l_solutions);
 
     protected:
       

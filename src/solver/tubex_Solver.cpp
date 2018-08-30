@@ -213,9 +213,18 @@ namespace tubex
   bool Solver::solutions_contain(const list<TubeVector>& l_solutions, const TrajectoryVector& truth)
   {
     list<TubeVector>::const_iterator it;
-    for(it = l_solutions.begin(); it != l_solutions.end(); ++it)
+    for(it = l_solutions.begin() ; it != l_solutions.end() ; ++it)
       if(it->contains(truth))
         return true;
     return false;
+  }
+
+  const TubeVector Solver::hull(const list<TubeVector>& l_solutions)
+  {
+    list<TubeVector>::const_iterator it = l_solutions.begin();
+    TubeVector hull = *it;
+    for(++it ; it != l_solutions.end() ; ++it)
+      hull |= *it;
+    return hull;
   }
 }
