@@ -26,13 +26,13 @@ void contract(TubeVector& x)
   ctc_deriv.contract(x, v, FORWARD | BACKWARD);
 
   // Check if the following is useful:
-  //CtcEval ctc_eval;
-  //ctc_eval.preserve_slicing(true);
-  //Interval t(1.,3.);
-  //IntervalVector z(2);
-  //z[0] = Interval(-999.,999.);
-  //z[1] = Interval(1.1,1.3);
-  //ctc_eval.contract(Interval(1.,3.), Interval(1.1,1.3), x[1], v[1]);
+  CtcEval ctc_eval;
+  ctc_eval.preserve_slicing(true);
+  Interval t(1.,3.);
+  IntervalVector z(2);
+  z[0] = Interval(-999.,999.);
+  z[1] = Interval(1.1,1.3);
+  ctc_eval.contract(Interval(1.,3.), Interval(1.1,1.3), x[1], v[1]);
 }
 
 int main()

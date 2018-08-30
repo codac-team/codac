@@ -33,7 +33,7 @@ namespace tubex
     m_propagation_enabled = enable_propagation;
   }
 
-  void CtcEval::contract(double t, Interval& z, Tube& y, Tube& w) const
+  void CtcEval::contract(double t, Interval& z, Tube& y, Tube& w)
   {
     SlicingException::check(y, w);
 
@@ -76,7 +76,7 @@ namespace tubex
     }
   }
 
-  void CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w) const
+  void CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w)
   {
     SlicingException::check(y, w);
     
@@ -225,14 +225,14 @@ namespace tubex
     }
   }
 
-  void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, const Tube& w) const
+  void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, const Tube& w)
   {
     Interval _t(t), _z(z);
     Tube _w(w);
     contract(_t, _z, y, _w);
   }
 
-  void CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
+  void CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)
   {
     DimensionException::check(y, z);
     DimensionException::check(y, w);
@@ -241,7 +241,7 @@ namespace tubex
       contract(t, z[i], y[i], w[i]);
   }
 
-  void CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const
+  void CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)
   {
     DimensionException::check(y, z);
     DimensionException::check(y, w);
@@ -258,7 +258,7 @@ namespace tubex
     t &= t_result;
   }
 
-  void CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, const TubeVector& w) const
+  void CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, const TubeVector& w)
   {
     TubeVector _w(w);
     Interval _t(t); IntervalVector _z(z);

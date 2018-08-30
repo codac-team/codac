@@ -30,14 +30,14 @@ namespace tubex
       void enable_temporal_propagation(bool enable_propagation);
 
       // Tube
-      void contract(double t, ibex::Interval& z, Tube& y, Tube& w) const;
-      void contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w) const;
-      void contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y, const Tube& w) const;
+      void contract(double t, ibex::Interval& z, Tube& y, Tube& w);
+      void contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w);
+      void contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y, const Tube& w);
 
       // TubeVector
-      void contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
-      void contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w) const;
-      void contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, const TubeVector& w) const;
+      void contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w);
+      void contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w);
+      void contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, const TubeVector& w);
 
     protected:
 

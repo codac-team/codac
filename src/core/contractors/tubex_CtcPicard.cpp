@@ -26,7 +26,7 @@ namespace tubex
 
   }
   
-  void CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa) const
+  void CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa)
   {
     // todo: faster implementation in the scalar case?
     TubeVector x_vect(x);
@@ -34,7 +34,7 @@ namespace tubex
     x = x_vect[0];
   }
 
-  void CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa) const
+  void CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa)
   {
     // Vector implementation
     DimensionException::check(x, f);
@@ -108,11 +108,17 @@ namespace tubex
     return m_picard_iterations;
   }
 
-  void CtcPicard::contract_kth_slices(const tubex::Fnc& f, TubeVector& tube, int k, TPropagation t_propa) const
+  void CtcPicard::contract_kth_slices(const tubex::Fnc& f,
+                                      TubeVector& tube,
+                                      int k,
+                                      TPropagation t_propa)
   {
     // todo: check that !((t_propa & FORWARD) && (t_propa & BACKWARD))
     DimensionException::check(tube, f);
     // todo: check k
+
+    if(tube.is_empty())
+      return;
 
     IntervalVector f_eval = f.eval_vector(tube[0].slice_domain(k), tube); // computed only once
     guess_kth_slices_envelope(f, tube, k, t_propa);
@@ -143,11 +149,14 @@ namespace tubex
   void CtcPicard::guess_kth_slices_envelope(const tubex::Fnc& f,
                                             TubeVector& tube,
                                             int k,
-                                            TPropagation t_propa) const
+                                            TPropagation t_propa)
   {
     DimensionException::check(tube, f);
     // todo: check k
 
+    if(tube.is_empty())
+      return;
+    
     float delta = m_delta;
     Interval h, t = tube[0].slice_domain(k);
     IntervalVector initial_x = tube(k), x0(tube.size()), xf(x0);

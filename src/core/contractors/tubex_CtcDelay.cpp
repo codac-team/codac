@@ -26,7 +26,7 @@ namespace tubex
 
   }
 
-  void CtcDelay::contract(const Interval& a, const Tube& x, Tube& y) const
+  void CtcDelay::contract(const Interval& a, const Tube& x, Tube& y)
   {
     DomainException::check(x, y);
     SlicingException::check(x, y);
@@ -53,7 +53,7 @@ namespace tubex
     }
   }
 
-  void CtcDelay::contract(const Interval& a, const TubeVector& x, TubeVector& y) const
+  void CtcDelay::contract(const Interval& a, const TubeVector& x, TubeVector& y)
   {
     // todo: check dim x, y
 

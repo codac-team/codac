@@ -27,7 +27,7 @@ namespace tubex
 
   }
 
-  void CtcDeriv::contract(Tube& x, const Tube& v, TPropagation t_propa) const
+  void CtcDeriv::contract(Tube& x, const Tube& v, TPropagation t_propa)
   {
     DomainException::check(x, v);
     SlicingException::check(x, v);
@@ -59,7 +59,7 @@ namespace tubex
     }
   }
 
-  void CtcDeriv::contract(Slice& x, const Slice& v, TPropagation t_propa) const
+  void CtcDeriv::contract(Slice& x, const Slice& v, TPropagation t_propa)
   {
     DomainException::check(x, v);
 
@@ -118,7 +118,7 @@ namespace tubex
     }
   }
 
-  void CtcDeriv::contract_gates(Slice& x, const Slice& v) const
+  void CtcDeriv::contract_gates(Slice& x, const Slice& v)
   {
     DomainException::check(x, v);
     
@@ -133,7 +133,7 @@ namespace tubex
     x.set_input_gate(in_gate);
   }
 
-  void CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa) const
+  void CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa)
   {
     DimensionException::check(x, v);
 

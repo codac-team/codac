@@ -28,8 +28,8 @@ namespace tubex
 
       CtcDelay();
 
-      void contract(const ibex::Interval& a, const Tube& x, Tube& y) const;
-      void contract(const ibex::Interval& a, const TubeVector& x, TubeVector& y) const;
+      void contract(const ibex::Interval& a, const Tube& x, Tube& y);
+      void contract(const ibex::Interval& a, const TubeVector& x, TubeVector& y);
 
     protected:
 

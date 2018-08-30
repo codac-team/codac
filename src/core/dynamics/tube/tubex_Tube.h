@@ -147,7 +147,7 @@ namespace tubex
 
     protected:
 
-      Tube(); // todo: remove this?
+      Tube();
       const ibex::IntervalVector codomain_box() const;
       void deserialize(const std::string& binary_file_name, Trajectory *&traj);
 

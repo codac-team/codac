@@ -33,7 +33,7 @@ namespace tubex
 
     TubeVector::TubeVector()
     {
-      // todo: remove this?
+
     }
 
     TubeVector::TubeVector(const Interval& domain, int n)

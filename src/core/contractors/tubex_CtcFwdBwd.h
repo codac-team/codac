@@ -28,6 +28,7 @@ namespace tubex
 
       CtcFwdBwd(const tubex::Function& f);
       ~CtcFwdBwd();
+      
       void contract(TubeVector& x);
 
     protected:

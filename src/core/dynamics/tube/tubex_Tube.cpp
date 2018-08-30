@@ -828,7 +828,6 @@ namespace tubex
 
     const Interval Tube::integral(const Interval& t) const
     {
-      // todo: more accurate output in case of unbounded tubes (evaluate each dimension separately)
       DomainException::check(*this, t);
       pair<Interval,Interval> partial_ti = partial_integral(t);
 
@@ -844,7 +843,6 @@ namespace tubex
 
     const Interval Tube::integral(const Interval& t1, const Interval& t2) const
     {
-      // todo: more accurate output in case of unbounded tubes (evaluate each dimension separately)
       DomainException::check(*this, t1);
       DomainException::check(*this, t2);
 
@@ -873,7 +871,6 @@ namespace tubex
 
     const pair<Interval,Interval> Tube::partial_integral(const Interval& t) const
     {
-      // todo: more accurate output in case of unbounded tubes (evaluate each dimension separately)
       DomainException::check(*this, t);
 
       Interval intv_t;

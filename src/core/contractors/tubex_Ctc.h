@@ -35,7 +35,6 @@ namespace tubex
     public:
 
       Ctc();
-      virtual void contract() {};
 
       void preserve_slicing(bool preserve);
       void set_fast_mode(bool fast_mode);
