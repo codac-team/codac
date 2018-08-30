@@ -117,11 +117,6 @@ namespace tubex
     {
       return *m_output_gate;
     }
-
-    const Tube* Slice::tube_reference() const
-    {
-      return m_tube_ref;
-    }
     
     // Accessing values
 
@@ -385,11 +380,6 @@ namespace tubex
 
 
   // Protected methods
-
-    void Slice::set_tube_ref(Tube *tube_ref)
-    {
-      m_tube_ref = tube_ref;
-    }
     
     void Slice::set_domain(const Interval& domain)
     {

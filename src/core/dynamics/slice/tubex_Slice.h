@@ -17,6 +17,7 @@
 #include "tubex_Trajectory.h"
 #include "tubex_DynamicalItem.h"
 #include "tubex_ConvexPolygon.h"
+#include "tubex_TubeTreeSynthesis.h"
 
 namespace tubex
 {
@@ -46,7 +47,6 @@ namespace tubex
       const ibex::Interval input_gate() const;
       const ibex::Interval output_gate() const;
       const ConvexPolygon polygon(const Slice& v) const; // todo: store polygon in cache memory?
-      const Tube* tube_reference() const;
 
       // Accessing values
       const ibex::Interval codomain() const;
@@ -97,7 +97,6 @@ namespace tubex
 
     protected:
 
-      void set_tube_ref(Tube *tube_ref);
       void set_domain(const ibex::Interval& domain);
       const ibex::IntervalVector codomain_box() const;
 
@@ -107,7 +106,7 @@ namespace tubex
         ibex::Interval m_codomain = ibex::Interval::ALL_REALS;
         ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
         Slice *m_prev_slice = NULL, *m_next_slice = NULL;
-        Tube *m_tube_ref = NULL; // a reference to the tube owning the node (used for data-structure's auto updates)
+        TubeTreeSynthesis *m_leaf_reference;
 
       friend class Tube;
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);

@@ -64,20 +64,20 @@ TEST_CASE("Tube slices structure")
     CHECK(tube_a.domain() == Interval(0.,1.));
     CHECK(tube_a.codomain() == Interval(-1.,1.));
     CHECK(tube_a.nb_slices() == 1);
-    CHECK(tube_a.get_slice(0)->tube_reference() == &tube_a);
+    //CHECK(tube_a.get_slice(0)->tube_reference() == &tube_a);
 
     Tube tube_b(tube_a);
     CHECK(tube_b.domain() == Interval(0.,1.));
     CHECK(tube_b.codomain() == Interval(-1.,1.));
     CHECK(tube_b.nb_slices() == 1);
     CHECK(tube_b.get_slice(0) != NULL);
-    CHECK(tube_b.get_slice(0)->tube_reference() == &tube_b);
+    //CHECK(tube_b.get_slice(0)->tube_reference() == &tube_b);
 
     Tube tube_c = tube_a;
     CHECK(tube_c.domain() == Interval(0.,1.));
     CHECK(tube_c.codomain() == Interval(-1.,1.));
     CHECK(tube_c.nb_slices() == 1);
-    CHECK(tube_c.get_slice(0)->tube_reference() == &tube_c);
+    //CHECK(tube_c.get_slice(0)->tube_reference() == &tube_c);
   }
 
   SECTION("Tube class (several slices)")
@@ -85,7 +85,7 @@ TEST_CASE("Tube slices structure")
     Tube tube_a(Interval(0.,1.), Interval(-1.,1.));
     CHECK(tube_a.nb_slices() == 1);
     CHECK(tube_a.domain() == Interval(0.,1.));
-    CHECK(tube_a.get_slice(0)->tube_reference() == &tube_a);
+    //CHECK(tube_a.get_slice(0)->tube_reference() == &tube_a);
 
     CHECK_THROWS(tube_a.sample(-1.0););
 
@@ -235,11 +235,11 @@ TEST_CASE("Tube slices structure")
     CHECK(tube.get_slice(4) == tube.get_last_slice());
 
     // Checking root references
-    CHECK(tube.get_slice(0)->tube_reference() == &tube);
-    CHECK(tube.get_slice(1)->tube_reference() == &tube);
-    CHECK(tube.get_slice(2)->tube_reference() == &tube);
-    CHECK(tube.get_slice(3)->tube_reference() == &tube);
-    CHECK(tube.get_slice(4)->tube_reference() == &tube);
+    //CHECK(tube.get_slice(0)->tube_reference() == &tube);
+    //CHECK(tube.get_slice(1)->tube_reference() == &tube);
+    //CHECK(tube.get_slice(2)->tube_reference() == &tube);
+    //CHECK(tube.get_slice(3)->tube_reference() == &tube);
+    //CHECK(tube.get_slice(4)->tube_reference() == &tube);
 
     // get_slices
     CHECK(tube.get_slice(0.1)->box()[0] == Interval(0.1,0.6));

@@ -138,8 +138,6 @@ namespace tubex
             slice = slice->next_slice();
           }
 
-          slice->set_tube_ref(tube);
-
           if(prev_slice != NULL)
           {
             delete slice->m_input_gate;

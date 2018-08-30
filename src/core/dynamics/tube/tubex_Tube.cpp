@@ -42,7 +42,6 @@ namespace tubex
 
       // By default, the tube is defined as one single slice
       m_first_slice = new Slice(domain, codomain);
-      m_first_slice->set_tube_ref(this);
     }
     
     Tube::Tube(const Interval& domain, double timestep, const Interval& codomain)
@@ -62,7 +61,6 @@ namespace tubex
         ub = min(lb + timestep, domain.ub());
 
         slice = new Slice(Interval(lb,ub));
-        slice->set_tube_ref(this);
 
         if(prev_slice != NULL)
         {
@@ -200,8 +198,6 @@ namespace tubex
           slice->m_next_slice = new Slice(*s);
           slice = slice->next_slice();
         }
-
-        slice->set_tube_ref(this);
 
         if(prev_slice != NULL)
         {
@@ -382,7 +378,6 @@ namespace tubex
 
       // Creating new slice
       Slice *new_slice = new Slice(*slice_to_be_sampled);
-      new_slice->set_tube_ref(this);
       new_slice->set_domain(Interval(t, slice_to_be_sampled->domain().ub()));
       slice_to_be_sampled->set_domain(Interval(slice_to_be_sampled->domain().lb(), t));
 
@@ -678,6 +673,9 @@ namespace tubex
 
     bool Tube::is_empty() const
     {
+      //if(m_data_tree != NULL) // faster computation from binary tree
+      //  return m_data_tree->emptiness_synthesis().emptiness();
+
       const Slice *slice = get_first_slice();
       while(slice != NULL)
       {
@@ -697,7 +695,6 @@ namespace tubex
         if(!slice->contains(x)) return false;
         slice = slice->next_slice();
       }
-      
       return true;
     }
 
