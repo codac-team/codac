@@ -14,6 +14,7 @@
 #define __TUBEX_TUBE_H__
 
 #include <map>
+#include <list>
 #include <vector>
 #include "tubex_Fnc.h"
 #include "tubex_Slice.h"
@@ -132,6 +133,9 @@ namespace tubex
       // String
       const std::string class_name() const { return "Tube"; };
       friend std::ostream& operator<<(std::ostream& str, const Tube& x);
+
+      // Static methods
+      static const Tube hull(const std::list<Tube>& l_tubes);
 
     /** Integration: **/
 

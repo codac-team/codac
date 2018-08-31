@@ -14,6 +14,7 @@
 #define __TUBEX_TUBEVECTOR_H__
 
 #include <map>
+#include <list>
 #include <vector>
 #include "tubex_Fnc.h"
 #include "tubex_TrajectoryVector.h"
@@ -121,6 +122,9 @@ namespace tubex
       // String
       const std::string class_name() const { return "TubeVector"; };
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
+
+      // Static methods
+      static const TubeVector hull(const std::list<TubeVector>& l_tubes);
 
     /** Integration: **/
 

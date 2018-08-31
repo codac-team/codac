@@ -560,6 +560,17 @@ namespace tubex
       return str;
     }
 
+    // Static methods
+
+    const TubeVector TubeVector::hull(const list<TubeVector>& l_tubes)
+    {
+      list<TubeVector>::const_iterator it = l_tubes.begin();
+      TubeVector hull = *it;
+      for(++it ; it != l_tubes.end() ; ++it)
+        hull |= *it;
+      return hull;
+    }
+
     // Integration
 
     const IntervalVector TubeVector::integral(double t) const

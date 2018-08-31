@@ -218,13 +218,4 @@ namespace tubex
         return true;
     return false;
   }
-
-  const TubeVector Solver::hull(const list<TubeVector>& l_solutions)
-  {
-    list<TubeVector>::const_iterator it = l_solutions.begin();
-    TubeVector hull = *it;
-    for(++it ; it != l_solutions.end() ; ++it)
-      hull |= *it;
-    return hull;
-  }
 }

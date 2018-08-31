@@ -815,6 +815,17 @@ namespace tubex
       return str;
     }
 
+    // Static methods
+
+    const Tube Tube::hull(const list<Tube>& l_tubes)
+    {
+      list<Tube>::const_iterator it = l_tubes.begin();
+      Tube hull = *it;
+      for(++it ; it != l_tubes.end() ; ++it)
+        hull |= *it;
+      return hull;
+    }
+
     // Integration
 
     const Interval Tube::integral(double t) const

@@ -44,5 +44,5 @@ int main()
 
 
   // Checking if this example still works:
-  return (TubeVector(domain, 0.01, tubex::Function("[0.5,1.0]*exp(-t)")).is_subset(tubex::Solver::hull(l_solutions))) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (TubeVector(domain, 0.01, tubex::Function("[0.5,1.0]*exp(-t)")).is_subset(TubeVector::hull(l_solutions))) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

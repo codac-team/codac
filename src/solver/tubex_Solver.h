@@ -32,7 +32,6 @@ namespace tubex
       const std::list<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
       VibesFigure_TubeVector* figure();
       static bool solutions_contain(const std::list<TubeVector>& l_solutions, const TrajectoryVector& truth);
-      static const TubeVector hull(const std::list<TubeVector>& l_solutions);
 
     protected:
       
