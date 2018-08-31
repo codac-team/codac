@@ -73,8 +73,8 @@ namespace tubex
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       cout << "Warning VibesFigure_Tube::set_tube_color(): unknown tube" << endl;
 
-    set_tube_color(tube, TubeColorType::FOREGROUND, color_frgrnd);
     set_tube_color(tube, TubeColorType::BACKGROUND, color_bckgrnd);
+    set_tube_color(tube, TubeColorType::FOREGROUND, color_frgrnd);
   }
 
   void VibesFigure_Tube::set_tube_color(const Tube *tube, int color_type, const string& color)
