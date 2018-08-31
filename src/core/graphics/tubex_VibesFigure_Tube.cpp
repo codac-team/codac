@@ -92,8 +92,12 @@ namespace tubex
     string suffix;
     switch(color_type)
     {
-      case TubeColorType::SLICES:
+      case TubeColorType::FOREGROUND:
         suffix = "";
+        break;
+
+      case TubeColorType::SLICES:
+        suffix = "_slices";
         break;
 
       case TubeColorType::POLYGONS:
@@ -253,15 +257,17 @@ namespace tubex
       // Second, the foreground: actual values of the tube.
       // Can be either displayed slice by slice or with a polygon envelope.
       {
-        vibes::Params params_foreground = vibesParams("group", group_name);
-        vibes::Params params_foreground_polygons = vibesParams("group", group_name + "_polygons");
-        vibes::Params params_foreground_gates = vibesParams("group", group_name + "_gates", "FixedScale", true);
         vibes::clearGroup(name(), group_name);
         vibes::clearGroup(name(), group_name + "_polygons");
         vibes::clearGroup(name(), group_name + "_gates");
+        vibes::clearGroup(name(), group_name + "_slices");
 
         if(detail_slices)
         {
+          vibes::Params params_foreground_slices = vibesParams("group", group_name + "_slices");
+          vibes::Params params_foreground_polygons = vibesParams("group", group_name + "_polygons");
+          vibes::Params params_foreground_gates = vibesParams("group", group_name + "_gates", "FixedScale", true);
+
           const Slice *slice = tube->get_first_slice();
           const Slice *deriv_slice = NULL;
 
@@ -273,9 +279,9 @@ namespace tubex
           while(slice != NULL)
           {
             if(deriv_slice != NULL)
-              draw_slice(*slice, *deriv_slice, params_foreground, params_foreground_polygons);
+              draw_slice(*slice, *deriv_slice, params_foreground_slices, params_foreground_polygons);
             else
-              draw_slice(*slice, params_foreground);
+              draw_slice(*slice, params_foreground_slices);
 
             draw_gate(slice->output_gate(), slice->domain().ub(), params_foreground_gates);
             slice = slice->next_slice();
@@ -286,7 +292,10 @@ namespace tubex
         }
 
         else
+        {
+          vibes::Params params_foreground = vibesParams("group", group_name);
           draw_polygon(polygon_envelope(tube), params_foreground);
+        }
       }
 
     return viewbox;
