@@ -29,7 +29,7 @@ namespace tubex
   void CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa)
   {
     // todo: faster implementation in the scalar case?
-    TubeVector x_vect(x);
+    TubeVector x_vect(1, x);
     contract(f, x_vect, t_propa);
     x = x_vect[0];
   }

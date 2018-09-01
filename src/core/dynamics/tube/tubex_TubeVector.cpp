@@ -39,8 +39,8 @@ namespace tubex
     TubeVector::TubeVector(const Interval& domain, int n)
       : m_n(n), m_v_tubes(new Tube[n])
     {
-      DomainException::check(domain);
-      DimensionException::check(n);
+      assert(n > 0);
+      assert(valid_domain(domain));
       for(int i = 0 ; i < size() ; i++)
         (*this)[i] = Tube(domain);
     }
@@ -48,16 +48,16 @@ namespace tubex
     TubeVector::TubeVector(const Interval& domain, const IntervalVector& codomain)
       : TubeVector(domain, codomain.size())
     {
-      DomainException::check(domain);
+      assert(valid_domain(domain));
       set(codomain);
     }
     
     TubeVector::TubeVector(const Interval& domain, double timestep, int n)
       : m_n(n), m_v_tubes(new Tube[n])
     {
-      DomainException::check(domain);
-      DomainException::check(timestep);
-      DimensionException::check(n);
+      assert(n > 0);
+      assert(timestep >= 0.);
+      assert(valid_domain(domain));
       for(int i = 0 ; i < size() ; i++)
         (*this)[i] = Tube(domain, timestep);
     }
@@ -65,21 +65,18 @@ namespace tubex
     TubeVector::TubeVector(const Interval& domain, double timestep, const IntervalVector& codomain)
       : TubeVector(domain, timestep, codomain.size())
     {
-      DomainException::check(domain);
-      DomainException::check(timestep);
+      assert(timestep >= 0.);
+      assert(valid_domain(domain));
       set(codomain);
     }
     
     TubeVector::TubeVector(const Interval& domain, double timestep, const tubex::Fnc& f)
       : TubeVector(domain, timestep, f.image_dim())
     {
-      // todo: check scalar f, image dim
-      DomainException::check(domain);
-      DomainException::check(timestep);
+      assert(timestep >= 0.);
+      assert(valid_domain(domain));
+      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
 
-      if(f.nb_vars() != 0)
-        throw Exception("TubeVector constructor",
-                        "function's inputs not limited to system variable");
       // A copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(*this);
       *this = f.eval_vector(input);
@@ -95,12 +92,6 @@ namespace tubex
       : TubeVector(x)
     {
       set(codomain);
-    }
-
-    TubeVector::TubeVector(const Tube& x)
-      : TubeVector(1, x)
-    {
-      
     }
 
     TubeVector::TubeVector(int n, const Tube& x)

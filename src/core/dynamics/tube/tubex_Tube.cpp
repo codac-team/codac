@@ -87,8 +87,8 @@ namespace tubex
       assert(f_image_id >= 0 && f_image_id < f.image_dim());
       assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
 
-      // A copy of this is sent anyway in order to know the data structure to produce
-      TubeVector input(*this);
+      // A scalar copy of this is sent anyway in order to know the data structure to produce
+      TubeVector input(1, *this);
       *this = f.eval_vector(input)[f_image_id];
       // todo: delete something here?
     }
@@ -110,8 +110,8 @@ namespace tubex
       assert(f_image_id >= 0 && f_image_id < f.image_dim());
       assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
 
-      // A copy of this is sent anyway in order to know the data structure to produce
-      TubeVector input(*this);
+      // A scalar copy of this is sent anyway in order to know the data structure to produce
+      TubeVector input(1, *this);
       *this = f.eval_vector(input)[f_image_id];
     }
 

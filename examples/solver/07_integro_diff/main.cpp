@@ -11,7 +11,7 @@ class FncIntegroDiff : public tubex::Fnc
   public: 
 
     FncIntegroDiff() : Fnc(1,1) {};
-    const TubeVector eval_vector(const TubeVector& x) const { return Fnc::eval(x); }
+    const TubeVector eval_vector(const TubeVector& x) const { return Fnc::eval_vector(x); }
     const Interval eval(const Interval& t, const TubeVector& x) const { /* scalar case not defined */ }
 
     const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const

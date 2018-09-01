@@ -68,7 +68,7 @@ namespace tubex
 
   void SlicingException::check(const Tube& x1, const TubeVector& x2)
   {
-    if(!TubeVector::same_slicing(x1, x2))
+    if(!TubeVector::same_slicing(x2, x1))
       throw SlicingException(x1, x2[0]);
   }
 
