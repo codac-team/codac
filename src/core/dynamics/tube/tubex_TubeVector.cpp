@@ -251,14 +251,22 @@ namespace tubex
         (*this)[i].sample(t, gate[i]);
     }
     
-    bool TubeVector::share_same_slicing(const Tube& x1, const TubeVector& x2)
+    bool TubeVector::same_slicing(const TubeVector& x1, const Tube& x2)
     {
-      return Tube::share_same_slicing(x1, x2[0]);
+      for(int i = 0 ; i < x1.size() ; i++)
+        if(!Tube::same_slicing(x1[i], x2))
+          return false;
+      return true;
     }
     
-    bool TubeVector::share_same_slicing(const TubeVector& x1, const TubeVector& x2)
+    bool TubeVector::same_slicing(const TubeVector& x1, const TubeVector& x2)
     {
-      return Tube::share_same_slicing(x1[0], x2[0]);
+      assert(x1.size() == x2.size());
+
+      for(int i = 0 ; i < x1.size() ; i++)
+        if(!Tube::same_slicing(x1[i], x2[i]))
+          return false;
+      return true;
     }
 
     // Accessing values

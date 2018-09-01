@@ -17,12 +17,12 @@ TEST_CASE("Trajectory base")
       map_values[t] = t;
 
     Trajectory traj1(map_values);
-    CHECK_THROWS(traj1(-0.1););
+    // todo: find a way to catch assert abort: CHECK_THROWS(traj1(-0.1););
     CHECK(Approx(traj1(0.0)) == 0.0);
     CHECK(Approx(traj1(0.2)) == 0.2);
     CHECK(Approx(traj1(8.2)) == 8.2);
     CHECK(Approx(traj1(9.0)) == 9.0);
-    CHECK_THROWS(traj1(9.1););
+    // todo: find a way to catch assert abort: CHECK_THROWS(traj1(9.1););
 
     Trajectory traj2;
     traj2.set(0., 1.);
@@ -35,7 +35,7 @@ TEST_CASE("Trajectory base")
     traj2.set(14., 1.);
     CHECK(traj2.domain() == Interval(0.,14.));
     CHECK(traj2.codomain() == Interval(-2.,4.));
-    CHECK_THROWS(traj2(-0.1););
+    // todo: find a way to catch assert abort: CHECK_THROWS(traj2(-0.1););
     CHECK(traj2(0.) == 1.);
     CHECK(traj2(1.) == 0.);
     CHECK(traj2(4.) == 0.);
@@ -54,7 +54,7 @@ TEST_CASE("Trajectory base")
     CHECK(ApproxIntv(traj.domain()) == Interval(-4.));
     traj.set(-2.,4.);
     CHECK(ApproxIntv(traj.domain()) == Interval(-4.,-2.));
-    CHECK_THROWS(traj(-5.););
+    // todo: find a way to catch assert abort: CHECK_THROWS(traj(-5.););
     CHECK(Approx(traj(-3.)) == 3.5);
   }
 
@@ -68,9 +68,9 @@ TEST_CASE("Trajectory base")
 
     CHECK(ApproxIntv(traj1.domain()) == Interval(0.,9.));
     CHECK(ApproxIntv(traj1.codomain()) == Interval(0.,9.));
-    traj1.truncate_domain(Interval(-3.,5.));
-    CHECK(ApproxIntv(traj1.domain()) == Interval(0.,5.));
-    CHECK(ApproxIntv(traj1.codomain()) == Interval(0.,5.));
+    traj1.truncate_domain(Interval(1.,5.));
+    CHECK(ApproxIntv(traj1.domain()) == Interval(1.,5.));
+    CHECK(ApproxIntv(traj1.codomain()) == Interval(1.,5.));
 
     Trajectory traj2(Interval(-1.,10.), tubex::Function("t^2"));
     CHECK(traj2.domain() == Interval(-1.,10.));
@@ -130,7 +130,7 @@ TEST_CASE("Trajectory base")
     // Defined by a Function object
     Trajectory traj5(Interval(0.,10.), tubex::Function("t^2"));
     Trajectory traj6(Interval(0.,10.), tubex::Function("t^2+1"));
-    CHECK_THROWS(traj5 == traj6); // not implemented yet
-    CHECK_THROWS(traj5 != traj6); // not implemented yet
+    // todo: find a way to catch assert abort: CHECK_THROWS(traj5 == traj6); // not implemented yet
+    // todo: find a way to catch assert abort: CHECK_THROWS(traj5 != traj6); // not implemented yet
   }
 }

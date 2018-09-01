@@ -62,13 +62,13 @@ namespace tubex
 
   void SlicingException::check(const Tube& x1, const Tube& x2)
   {
-    if(!Tube::share_same_slicing(x1, x2))
+    if(!Tube::same_slicing(x1, x2))
       throw SlicingException(x1, x2);
   }
 
   void SlicingException::check(const Tube& x1, const TubeVector& x2)
   {
-    if(!TubeVector::share_same_slicing(x1, x2))
+    if(!TubeVector::same_slicing(x1, x2))
       throw SlicingException(x1, x2[0]);
   }
 
@@ -79,13 +79,13 @@ namespace tubex
 
   void SlicingException::check(const TubeVector& x1, const Tube& x2)
   {
-    if(!TubeVector::share_same_slicing(x1, x2))
+    if(!TubeVector::same_slicing(x1, x2))
       throw SlicingException(x1[0], x2);
   }
 
   void SlicingException::check(const TubeVector& x1, const TubeVector& x2)
   {
-    if(!TubeVector::share_same_slicing(x1, x2))
+    if(!TubeVector::same_slicing(x1, x2))
       throw SlicingException(x1[0], x2[0]);
   }
 }

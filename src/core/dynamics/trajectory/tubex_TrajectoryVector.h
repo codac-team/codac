@@ -17,6 +17,7 @@
 #include "ibex_Vector.h"
 #include "ibex_Interval.h"
 #include "tubex_Function.h"
+#include "tubex_Trajectory.h"
 #include "tubex_DynamicalItem.h"
 
 // todo:
@@ -25,7 +26,6 @@
 namespace tubex
 {
   class Function;
-  class Trajectory;
   class TubeVector;
 
   class TrajectoryVector : public DynamicalItem

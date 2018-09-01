@@ -26,6 +26,8 @@ namespace tubex
       virtual const ibex::Interval domain() const = 0;
       virtual const ibex::IntervalVector codomain_box() const = 0;
       virtual const std::string class_name() const = 0;
+
+      static bool valid_domain(const ibex::Interval& domain);
   };
 }
 

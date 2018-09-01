@@ -37,14 +37,11 @@ namespace tubex
     Trajectory::Trajectory(const Interval& domain, const tubex::Function& f)
       : m_domain(domain), m_function(new tubex::Function(f))
     {
-      // todo: check f_image_id
-
-      if(f.nb_vars() != 0)
-        throw Exception("Trajectory constructor",
-                        "function's inputs not limited to system variable");
-        
+      assert(valid_domain(domain));
+      assert(f.image_dim() == 1);
+      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
       // todo: check thickness of f? (only thin functions should be allowed)
-      DomainException::check(domain);
+
       m_codomain = m_function->eval(domain);
     }
 
@@ -108,7 +105,7 @@ namespace tubex
 
     double Trajectory::operator()(double t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
 
       if(m_function != NULL)
         return m_function->eval(t).mid(); // /!\ an approximation is made here
@@ -132,7 +129,7 @@ namespace tubex
 
     const Interval Trajectory::operator()(const Interval& t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
 
       if(m_domain == t)
         return m_codomain;
@@ -163,10 +160,14 @@ namespace tubex
 
     bool Trajectory::operator==(const Trajectory& x) const
     {
-      DimensionException::check(*this, x);
+      assert(m_function == NULL || x.get_function() == NULL
+        && "operator== not implemented in case of a Trajectory defined by a Function");
 
       if(m_function == NULL && x.get_function() == NULL)
       {
+        if(m_domain != x.domain() || m_codomain != x.codomain())
+          return false;
+
         typename map<double,double>::const_iterator it_map;
         for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
         {
@@ -180,22 +181,14 @@ namespace tubex
         return true;
       }
 
-      else if(m_function != NULL && x.get_function() != NULL)
-      {
-        throw Exception("Trajectory::operator==",
-                        "operator== not implemented in case of Trajectory defined by a Function");
-      }
-
       else
         return false;
     }
     
     bool Trajectory::operator!=(const Trajectory& x) const
     {
-      DimensionException::check(*this, x);
-      if(m_function != NULL)
-        throw Exception("Trajectory::operator!=",
-                        "operator!= not implemented in case of Trajectory defined by a Function");
+      assert(m_function == NULL && x.get_function() == NULL
+        && "operator!= not implemented in case of a Trajectory defined by a Function");
       return domain() != x.domain() || codomain() != x.codomain() || !(*this == x);
     }
 
@@ -203,20 +196,22 @@ namespace tubex
 
     void Trajectory::set(double t, double y)
     {
+      assert(m_function == NULL && "Trajectory already defined by a Function");
       m_domain |= t;
       m_codomain |= y;
       m_map_values.erase(t);
       m_map_values.emplace(t, y);
     }
 
-    void Trajectory::truncate_domain(const Interval& domain)
+    void Trajectory::truncate_domain(const Interval& t)
     {
-      DomainException::check(domain);
+      assert(valid_domain(t));
+      assert(domain().is_superset(t));
 
       map<double,double>::iterator it = m_map_values.begin();
       while(it != m_map_values.end())
       {
-        if(!domain.contains(it->first)) it = m_map_values.erase(it);
+        if(!t.contains(it->first)) it = m_map_values.erase(it);
         else ++it;
       }
 
@@ -225,7 +220,7 @@ namespace tubex
       for(map<double,double>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
         m_codomain |= it->second;
 
-      m_domain &= domain;
+      m_domain &= t;
     }
 
     void Trajectory::shift_domain(double shift_ref)

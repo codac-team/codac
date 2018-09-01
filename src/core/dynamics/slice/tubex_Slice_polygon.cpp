@@ -90,7 +90,7 @@ namespace tubex
 
   const ConvexPolygon Slice::polygon(const Slice& v) const
   {
-    DomainException::check(*this, v);
+    assert(domain() == v.domain());
 
     Interval t = domain();
     

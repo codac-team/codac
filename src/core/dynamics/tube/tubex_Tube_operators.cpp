@@ -57,7 +57,7 @@ namespace tubex
     const Tube& Tube::f(const Tube& x) \
     { \
       DomainException::check(*this, x); \
-      if(Tube::share_same_slicing(*this, x)) /* faster */ \
+      if(Tube::same_slicing(*this, x)) /* faster */ \
       { \
         Slice *s = get_first_slice(); \
         const Slice *s_x = x.get_first_slice(); \

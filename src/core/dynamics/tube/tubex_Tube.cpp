@@ -404,7 +404,7 @@ namespace tubex
         slice->set_output_gate(gate);
     }
     
-    bool Tube::share_same_slicing(const Tube& x1, const Tube& x2)
+    bool Tube::same_slicing(const Tube& x1, const Tube& x2)
     {
       if(x1.nb_slices() != x2.nb_slices())
         return false;
@@ -668,7 +668,7 @@ namespace tubex
 
     #define sets_comparison(f) \
       \
-      if(Tube::share_same_slicing(*this, x)) /* faster */ \
+      if(Tube::same_slicing(*this, x)) /* faster */ \
       { \
         const Slice *slice = get_first_slice(), *slice_x = x.get_first_slice(); \
         while(slice != NULL) \

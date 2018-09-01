@@ -28,8 +28,7 @@ namespace tubex
     Slice::Slice(const Interval& domain, const Interval& codomain)
       : m_domain(domain), m_codomain(codomain)
     {
-      DomainException::check(domain);
-      
+      assert(valid_domain(domain));
       m_input_gate = new Interval(codomain);
       m_output_gate = new Interval(codomain);
     }
@@ -152,7 +151,7 @@ namespace tubex
     {
       // Write access is not allowed for this operator
       // For write access: use set()
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
 
       if(t == m_domain.lb())
         return input_gate();
@@ -167,7 +166,7 @@ namespace tubex
     {
       // Write access is not allowed for this operator
       // For write access: use set()
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
       if(t.is_degenerated())
         return (*this)(t.lb());
       return m_codomain;
@@ -175,14 +174,15 @@ namespace tubex
 
     const Interval Slice::interpol(double t, const Slice& v) const
     {
-      DomainException::check(*this, v);
+      assert(domain() == v.domain());
+      assert(domain().contains(t));
       return interpol(Interval(t), v);
     }
 
     const Interval Slice::interpol(const Interval& t, const Slice& v) const
     {
-      DomainException::check(*this, t);
-      DomainException::check(*this, v);
+      assert(domain() == v.domain());
+      assert(domain().is_superset(t));
 
       if(domain().is_subset(t))
         return codomain();
@@ -207,6 +207,7 @@ namespace tubex
 
     const Interval Slice::invert(const Interval& y, const Slice& v, const Interval& search_domain) const
     {
+      assert(domain() == v.domain());
       // todo: use enclosed bounds also? in order to speed up computations
 
       if(!m_domain.intersects(search_domain))
@@ -291,7 +292,7 @@ namespace tubex
 
     #define sets_comparison(f) \
       \
-      DomainException::check(*this, x); \
+      assert(domain() == x.domain()); \
       return codomain().f(x.codomain()) \
           && input_gate().f(x.input_gate()) \
           && output_gate().f(x.output_gate()); \
@@ -333,7 +334,7 @@ namespace tubex
 
     bool Slice::contains(const Trajectory& x) const
     {
-      DomainException::check(*this, x);
+      assert(domain().is_subset(x.domain()));
       return x(m_domain).is_subset(m_codomain)
           // the gates should contain double values, but we use x(Interval(double)) for reliable evaluation
           && x(Interval(m_domain.lb())).is_subset(input_gate())
@@ -387,6 +388,7 @@ namespace tubex
     
     const Slice& Slice::inflate(double rad)
     {
+      assert(rad >= 0.);
       Interval e(-rad,rad);
       set_envelope(m_codomain + e);
       set_input_gate(*m_input_gate + e);
@@ -406,7 +408,7 @@ namespace tubex
     
     void Slice::set_domain(const Interval& domain)
     {
-      DomainException::check(domain);
+      assert(valid_domain(domain));
       m_domain = domain;
     }
 

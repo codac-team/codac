@@ -32,7 +32,7 @@ namespace tubex
     TrajectoryVector::TrajectoryVector(int n)
       : m_n(n), m_v_trajs(new Trajectory[n])
     {
-      DimensionException::check(n);
+      assert(n > 0);
     }
 
     TrajectoryVector::TrajectoryVector(const TrajectoryVector& traj)
@@ -43,8 +43,9 @@ namespace tubex
     TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f)
       : TrajectoryVector(f.image_dim())
     {
+      assert(valid_domain(domain));
+      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
       // todo: check thickness of f? (only thin functions should be allowed)
-      DomainException::check(domain);
 
       // Setting values for each component
       for(int i = 0 ; i < size() ; i++)
@@ -53,21 +54,11 @@ namespace tubex
 
     TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)
     {
-      if(!map_values.empty())
+      typename map<double,Vector>::const_iterator it_map;
+      for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
       {
-        m_n = map_values.begin()->second.size();
-        m_v_trajs = new Trajectory[m_n];
-
-        typename map<double,Vector>::const_iterator it_map;
-        for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
-        {
-          for(int i = 0 ; i < size() ; i++)
-            (*this)[i].set(it_map->first, it_map->second[i]);
-
-          // todo: check m_n == it_map->second.size(), or:
-          DimensionException::check(map_values.begin()->second, it_map->second);
-        }
-
+        assert(size() == it_map->second.size() && "vectors of map_values of different dimensions");
+        set(it_map->first, it_map->second);
       }
     }
 
@@ -112,21 +103,20 @@ namespace tubex
 
     Trajectory& TrajectoryVector::operator[](int index)
     {
-      // todo: check index
+      assert(index >= 0 && index < size());
       return const_cast<Trajectory&>(static_cast<const TrajectoryVector&>(*this).operator[](index));
       // todo: check quickness of cast instead of direct access to m_v_tubes[]
     }
 
     const Trajectory& TrajectoryVector::operator[](int index) const
     {
-      // todo: check index
+      assert(index >= 0 && index < size());
       return m_v_trajs[index];
     }
 
     const Vector TrajectoryVector::operator()(double t) const
     {
-      DomainException::check(*this, t);
-
+      assert(domain().contains(t));
       Vector v(size());
       for(int i = 0 ; i < size() ; i++)
         v[i] = (*this)[i](t);
@@ -135,8 +125,7 @@ namespace tubex
     
     const IntervalVector TrajectoryVector::operator()(const Interval& t) const
     {
-      DomainException::check(*this, t);
-
+      assert(domain().is_superset(t));
       IntervalVector v(size());
       for(int i = 0 ; i < size() ; i++)
         v[i] = (*this)[i](t);
@@ -155,7 +144,8 @@ namespace tubex
 
     bool TrajectoryVector::operator==(const TrajectoryVector& x) const
     {
-      DimensionException::check(*this, x);
+      if(size() != x.size())
+        return false;
       for(int i = 0 ; i < size() ; i++)
         if((*this)[i] != x[i])
           return false;
@@ -164,7 +154,8 @@ namespace tubex
     
     bool TrajectoryVector::operator!=(const TrajectoryVector& x) const
     {
-      DimensionException::check(*this, x);
+      if(size() != x.size())
+        return true;
       for(int i = 0 ; i < size() ; i++)
         if((*this)[i] != x[i])
           return true;
@@ -175,18 +166,23 @@ namespace tubex
 
     void TrajectoryVector::set(double t, const Vector& y)
     {
-      // todo: do something in case of undefined traj vector
-      // todo: check size vector y
+      if(m_n == 0)
+      {
+        m_n = y.size();
+        m_v_trajs = new Trajectory[m_n];
+      }
 
+      assert(size() == y.size());
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(t, y[i]);
     }
 
-    void TrajectoryVector::truncate_domain(const Interval& domain)
+    void TrajectoryVector::truncate_domain(const Interval& t)
     {
-      DomainException::check(domain);
+      assert(valid_domain(t));
+      assert(domain().is_superset(t));
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i].truncate_domain(domain);
+        (*this)[i].truncate_domain(t);
     }
 
     void TrajectoryVector::shift_domain(double shift_ref)
@@ -199,9 +195,7 @@ namespace tubex
     
     std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x)
     {
-      str << "TrajectoryVector " << x.domain() << "↦" << x.codomain();
-      // todo: more info?
-      str << flush;
+      str << "TrajectoryVector " << x.domain() << "↦" << x.codomain() << flush;
       return str;
     }
 

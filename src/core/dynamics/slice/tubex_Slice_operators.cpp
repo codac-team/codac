@@ -24,7 +24,7 @@ namespace tubex
     \
     Slice& Slice::f(const Slice& slice_x) \
     { \
-      DomainException::check(*this, slice_x); \
+      assert(domain() == slice_x.domain()); \
       Interval y = codomain(); y.f(slice_x.codomain()); set_envelope(y); \
       y = input_gate(); y.f(slice_x.input_gate()); set_input_gate(y); \
       y = output_gate(); y.f(slice_x.output_gate()); set_output_gate(y); \
@@ -33,7 +33,7 @@ namespace tubex
     \
     Slice& Slice::f(const Trajectory& traj_x) \
     { \
-      DomainException::check(*this, traj_x); \
+      assert(domain().is_subset(traj_x.domain())); \
       Interval y = codomain(); y.f(traj_x(domain())); set_envelope(y); \
       y = input_gate(); y.f(traj_x(Interval(domain().lb()))); set_input_gate(y); \
       y = output_gate(); y.f(traj_x(Interval(domain().ub()))); set_output_gate(y); \

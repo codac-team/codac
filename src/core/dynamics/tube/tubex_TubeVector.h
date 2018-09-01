@@ -61,8 +61,8 @@ namespace tubex
       int input2index(double t) const;
       void sample(double t);
       void sample(double t, const ibex::IntervalVector& gate);
-      static bool share_same_slicing(const Tube& x1, const TubeVector& x2);
-      static bool share_same_slicing(const TubeVector& x1, const TubeVector& x2);
+      static bool same_slicing(const TubeVector& x1, const Tube& x2);
+      static bool same_slicing(const TubeVector& x1, const TubeVector& x2);
 
       // Accessing values
       const ibex::IntervalVector codomain() const;

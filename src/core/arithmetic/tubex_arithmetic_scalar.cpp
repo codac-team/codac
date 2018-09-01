@@ -104,7 +104,8 @@ namespace tubex
     \
     const Tube f(const Tube& x1, const Tube& x2) \
     { \
-      SlicingException::check(x1, x2); \
+      assert(x1.domain() == x2.domain()); \
+      assert(Tube::same_slicing(x1, x2)); \
       Tube y(x1); \
       Slice *slice_y = y.get_first_slice(); \
       const Slice *slice_x1 = x1.get_first_slice(); \
