@@ -20,6 +20,8 @@ namespace tubex
   VibesFigure_Paving::VibesFigure_Paving(const string& fig_name, const Paving *paving)
     : VibesFigure(fig_name), m_paving(paving)
   {
+    assert(paving != NULL);
+
     set_properties(100, 100, 500, 500); // default properties
     axis_limits(paving->box());
 
@@ -48,6 +50,8 @@ namespace tubex
 
   void VibesFigure_Paving::draw_paving(const Paving *paving)
   {
+    assert(paving != NULL);
+    
     if(paving->is_leaf())
     {
       string color_group;

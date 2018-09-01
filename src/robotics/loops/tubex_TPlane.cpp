@@ -20,14 +20,14 @@ namespace tubex
   TPlane::TPlane(const IntervalVector& tbox)
     : Paving(tbox, VALUE_MAYBE)
   {
-    // todo: check tbox dim 2
-
+    assert(tbox.size() == 2);
   }
 
   void TPlane::compute(float precision, const TubeVector& x, const TubeVector& v)
   {
-    // todo: check precision, x, v
-    // todo: check dim 2, x, v
+    assert(precision > 0.);
+    assert(x.size() == 2);
+    assert(v.size() == 2);
 
     if(value() == VALUE_OUT)
       return;

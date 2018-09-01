@@ -60,8 +60,8 @@ namespace tubex
 
   void Paving::bisect(float ratio)
   {
-    // todo: check is_leaf
-    // todo: check ratio
+    assert(Interval(0.,1.).interior_contains(ratio));
+    assert(is_leaf() && "only leaves can be bisected");
 
     LargestFirst bisector(0., ratio);
     pair<IntervalVector,IntervalVector> subboxes = bisector.bisect(m_box);

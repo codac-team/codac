@@ -23,11 +23,13 @@ namespace tubex
   CtcPicard::CtcPicard(float delta)
     : Ctc(), m_delta(delta)
   {
-
+    assert(delta > 0.);
   }
   
   void CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa)
   {
+    assert(f.nb_vars() == f.image_dim());
+    assert(f.nb_vars() == 1 && "scalar case");
     // todo: faster implementation in the scalar case?
     TubeVector x_vect(1, x);
     contract(f, x_vect, t_propa);
@@ -36,8 +38,8 @@ namespace tubex
 
   void CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa)
   {
-    // Vector implementation
-    DimensionException::check(x, f);
+    assert(f.nb_vars() == f.image_dim());
+    assert(f.nb_vars() == x.size());
 
     if(x.is_empty())
       return;
@@ -113,9 +115,10 @@ namespace tubex
                                       int k,
                                       TPropagation t_propa)
   {
-    // todo: check that !((t_propa & FORWARD) && (t_propa & BACKWARD))
-    DimensionException::check(tube, f);
-    // todo: check k
+    assert(!((t_propa & FORWARD) && (t_propa & BACKWARD)) && "forward/backward case not implemented yet");
+    assert(f.nb_vars() == f.image_dim());
+    assert(f.nb_vars() == tube.size());
+    assert(k >= 0 && k < tube.nb_slices());
 
     if(tube.is_empty())
       return;
@@ -123,13 +126,7 @@ namespace tubex
     IntervalVector f_eval = f.eval_vector(tube[0].slice_domain(k), tube); // computed only once
     guess_kth_slices_envelope(f, tube, k, t_propa);
 
-    if((t_propa & FORWARD) && (t_propa & BACKWARD))
-    {
-      // todo: exception
-      cout << "exception (todo)" << endl;
-    }
-
-    else if(t_propa & FORWARD)
+    if(t_propa & FORWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
         Slice *slice = tube[i].get_slice(k);
@@ -151,8 +148,10 @@ namespace tubex
                                             int k,
                                             TPropagation t_propa)
   {
-    DimensionException::check(tube, f);
-    // todo: check k
+    assert(!((t_propa & FORWARD) && (t_propa & BACKWARD)) && "forward/backward case not implemented yet");
+    assert(f.nb_vars() == f.image_dim());
+    assert(f.nb_vars() == tube.size());
+    assert(k >= 0 && k < tube.nb_slices());
 
     if(tube.is_empty())
       return;
@@ -161,13 +160,7 @@ namespace tubex
     Interval h, t = tube[0].slice_domain(k);
     IntervalVector initial_x = tube(k), x0(tube.size()), xf(x0);
 
-    if((t_propa & FORWARD) && (t_propa & BACKWARD))
-    {
-      // todo: exception
-      cout << "exception (todo)" << endl;
-    }
-
-    else if(t_propa & FORWARD)
+    if(t_propa & FORWARD)
     {
       x0 = tube(t.lb());
       xf = tube(t.ub());

@@ -29,6 +29,8 @@ namespace tubex
 
   void DataLoader_Lissajous::load_data(TubeVector *&x, TrajectoryVector *&truth, const Interval& domain)
   {
+    assert(DynamicalItem::valid_domain(domain) || domain == Interval::ALL_REALS);
+
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 
@@ -56,10 +58,10 @@ namespace tubex
 
   vector<Beacon> DataLoader_Lissajous::get_beacons(const IntervalVector& map_box) const
   {
-    // todo: check dim of map_box
-    vector<Beacon> v_beacons;
+    assert(map_box.size() == 2);
 
     srand(time(NULL));
+    vector<Beacon> v_beacons;
     int nb_random_beacons = 100;
     for(int i = 0 ; i < nb_random_beacons ; i++)
     {
@@ -73,11 +75,11 @@ namespace tubex
   
   vector<IntervalVector> DataLoader_Lissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map) const
   {
-    // todo: check dim of x
-    vector<IntervalVector> v_obs;
+    assert(x.size() >= 2);
 
-    float max_range = 50.;
     float timestep = 50.;
+    float max_range = 50.;
+    vector<IntervalVector> v_obs;
 
     for(double t = x.domain().lb() ; t < x.domain().ub() ; t+= x.domain().diam() / timestep)
     {

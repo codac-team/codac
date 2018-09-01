@@ -21,7 +21,7 @@ namespace tubex
   Beacon::Beacon(const Vector& pos)
     : m_pos(pos), m_pos_box(pos)
   {
-
+    assert(pos.size() == 3);
   }
 
   Beacon::Beacon(double x, double y, double z)

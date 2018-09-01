@@ -42,21 +42,26 @@ namespace tubex
 
   void Solver::set_refining_fxpt_ratio(float refining_fxpt_ratio)
   {
+    assert(Interval(0.,1.).contains(refining_fxpt_ratio));
     m_refining_fxpt_ratio = refining_fxpt_ratio;
   }
 
   void Solver::set_propa_fxpt_ratio(float propa_fxpt_ratio)
   {
+    assert(Interval(0.,1.).contains(propa_fxpt_ratio));
     m_propa_fxpt_ratio = propa_fxpt_ratio;
   }
 
   void Solver::set_cid_fxpt_ratio(float cid_fxpt_ratio)
   {
+    assert(Interval(0.,1.).contains(cid_fxpt_ratio));
     m_cid_fxpt_ratio = cid_fxpt_ratio;
   }
 
   const list<TubeVector> Solver::solve(const TubeVector& x0, void (*ctc_func)(TubeVector&))
   {
+    assert(x0.size() == m_max_thickness.size());
+
     int i = 0;
     clock_t t_start = clock();
 
@@ -64,7 +69,6 @@ namespace tubex
       m_fig->show(true);
     #endif
 
-    // todo: check dim max_thickness vector
     stack<TubeVector> s;
     s.push(x0);
     list<TubeVector> l_solutions;
@@ -101,7 +105,7 @@ namespace tubex
 
       } while(!emptiness
            && !stopping_condition_met(x)
-           && !fixed_point_reached(x.size(), volume_before_refining, x.volume(), m_refining_fxpt_ratio));
+           && !fixed_point_reached(volume_before_refining, x.volume(), m_refining_fxpt_ratio));
 
       // 4. Bisection
 
@@ -158,6 +162,8 @@ namespace tubex
 
   bool Solver::stopping_condition_met(const TubeVector& x)
   {
+    assert(x.size() == m_max_thickness.size());
+
     Vector x_max_thickness = x.max_thickness();
     for(int i = 0 ; i < x.size() ; i++)
       if(x_max_thickness[i] > m_max_thickness[i])
@@ -165,13 +171,17 @@ namespace tubex
     return true;
   }
 
-  bool Solver::fixed_point_reached(int n, double volume_before, double volume_after, float fxpt_ratio)
+  bool Solver::fixed_point_reached(double volume_before, double volume_after, float fxpt_ratio)
   {
+    assert(Interval(0.,1.).contains(fxpt_ratio));
+    int n = m_max_thickness.size();
     return (std::pow(volume_after, 1./n) / std::pow(volume_before, 1./n)) > (1. - fxpt_ratio);
   }
 
   void Solver::propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio)
   {
+    assert(Interval(0.,1.).contains(propa_fxpt_ratio));
+
     bool emptiness;
     double volume_before_ctc;
 
@@ -182,7 +192,7 @@ namespace tubex
       emptiness = x.is_empty();
     } while(!emptiness
          && !stopping_condition_met(x)
-         && !fixed_point_reached(x.size(), volume_before_ctc, x.volume(), propa_fxpt_ratio));
+         && !fixed_point_reached(volume_before_ctc, x.volume(), propa_fxpt_ratio));
   }
 
   void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
@@ -213,10 +223,14 @@ namespace tubex
   
   bool Solver::solutions_contain(const list<TubeVector>& l_solutions, const TrajectoryVector& truth)
   {
+    assert(!l_solutions.empty());
     list<TubeVector>::const_iterator it;
     for(it = l_solutions.begin() ; it != l_solutions.end() ; ++it)
+    {
+      assert(truth.size() == it->size());
       if(it->contains(truth))
         return true;
+    }
     return false;
   }
 }

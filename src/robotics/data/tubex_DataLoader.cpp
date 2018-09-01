@@ -41,6 +41,7 @@ namespace tubex
 
   void DataLoader::serialize_data(const TubeVector& x, const TrajectoryVector& traj) const
   {
+    assert(x.size() == traj.size());
     x.serialize(m_file_path + DATA_FILE_EXTENSION, traj);
   }
   

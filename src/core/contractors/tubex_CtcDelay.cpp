@@ -28,8 +28,8 @@ namespace tubex
 
   void CtcDelay::contract(const Interval& a, const Tube& x, Tube& y)
   {
-    DomainException::check(x, y);
-    SlicingException::check(x, y);
+    assert(x.domain() == y.domain());
+    assert(Tube::same_slicing(x, y));
 
     const Slice *slice_x = x.get_first_slice();
     Slice *slice_y = y.get_first_slice();
@@ -55,7 +55,9 @@ namespace tubex
 
   void CtcDelay::contract(const Interval& a, const TubeVector& x, TubeVector& y)
   {
-    // todo: check dim x, y
+    assert(x.size() == y.size());
+    assert(x.domain() == y.domain());
+    assert(TubeVector::same_slicing(x, y));
 
     for(int i = 0 ; i < x.size() ; i++)
       contract(a, x[i], y[i]);

@@ -40,6 +40,8 @@ namespace tubex
 
   void VibesFigure::set_properties(int x, int y, int width, int height)
   {
+    assert(x >= 0 && y >= 0 && width > 0 && height > 0);
+
     m_x = x; m_y = y;
     m_width = width; m_height = height;
 
@@ -53,6 +55,9 @@ namespace tubex
 
   const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, bool same_ratio, float margin)
   {
+    assert(viewbox.size() == 2);
+    assert(margin >= 0.);
+
     if(same_ratio && !m_view_box.is_empty())
     {
       float r = 1. * width() / height();
@@ -87,6 +92,9 @@ namespace tubex
 
   const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio, float margin)
   {
+    assert(margin > 0.);
+    assert(x_min > 0. && x_max > 0. && y_min > 0. && y_max > 0.);
+
     IntervalVector viewbox(2);
     viewbox[0] = Interval(x_min, x_max);
     viewbox[1] = Interval(y_min, y_max);
@@ -125,11 +133,13 @@ namespace tubex
 
   void VibesFigure::draw_box(const IntervalVector& box, const vibes::Params& params)
   {
+    assert(box.size() == 2);
     draw_box(box, "", params);
   }
 
   void VibesFigure::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
   {
+    assert(box.size() == 2);
     vibes::Params params_this_fig(params);
     m_view_box |= box;
     params_this_fig["figure"] = name();
@@ -139,11 +149,13 @@ namespace tubex
   
   void VibesFigure::draw_line(const vector<double>& v_x, const vector<double>& v_y, const vibes::Params& params)
   {
+    assert(v_x.size() == v_y.size());
     draw_line(v_x, v_y, "", params);
   }
   
   void VibesFigure::draw_line(const vector<double>& v_x, const vector<double>& v_y, const string& color, const vibes::Params& params)
   {
+    assert(v_x.size() == v_y.size());
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
     vibes::drawLine(v_x, v_y, params_this_fig);

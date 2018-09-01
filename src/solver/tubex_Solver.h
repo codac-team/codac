@@ -36,7 +36,7 @@ namespace tubex
     protected:
       
       bool stopping_condition_met(const TubeVector& x);
-      bool fixed_point_reached(int n, double volume_before, double volume_after, float fxpt_ratio);
+      bool fixed_point_reached(double volume_before, double volume_after, float fxpt_ratio);
       void propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio);
       void cid(TubeVector &x, void (*ctc_func)(TubeVector&));
 

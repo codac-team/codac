@@ -35,7 +35,9 @@ namespace tubex
 
   void CtcEval::contract(double t, Interval& z, Tube& y, Tube& w)
   {
-    SlicingException::check(y, w);
+    assert(y.domain().contains(t));
+    assert(y.domain() == w.domain());
+    assert(Tube::same_slicing(y, w));
 
     if(z.is_empty() || y.is_empty())
     {
@@ -78,7 +80,8 @@ namespace tubex
 
   void CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w)
   {
-    SlicingException::check(y, w);
+    assert(y.domain() == w.domain());
+    assert(Tube::same_slicing(y, w));
     
     if(t.is_degenerated())
       return contract(t.lb(), z, y, w);
@@ -225,26 +228,32 @@ namespace tubex
     }
   }
 
-  void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, const Tube& w)
-  {
-    Interval _t(t), _z(z);
-    Tube _w(w);
-    contract(_t, _z, y, _w);
-  }
-
   void CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)
   {
-    DimensionException::check(y, z);
-    DimensionException::check(y, w);
+    assert(y.domain().contains(t));
+    assert(y.domain() == w.domain());
+    assert(TubeVector::same_slicing(y, w));
 
     for(int i = 0 ; i < y.size() ; i++)
       contract(t, z[i], y[i], w[i]);
   }
 
+  void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, const Tube& w)
+  {
+    assert(y.domain() == w.domain());
+    assert(Tube::same_slicing(y, w));
+
+    Interval _t(t), _z(z);
+    Tube _w(w);
+    contract(_t, _z, y, _w);
+  }
+
   void CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)
   {
-    DimensionException::check(y, z);
-    DimensionException::check(y, w);
+    assert(y.size() == z.size());
+    assert(y.size() == w.size());
+    assert(y.domain() == w.domain());
+    assert(TubeVector::same_slicing(y, w));
 
     Interval t_result = Interval::EMPTY_SET;
 
@@ -260,6 +269,11 @@ namespace tubex
 
   void CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, const TubeVector& w)
   {
+    assert(y.size() == z.size());
+    assert(y.size() == w.size());
+    assert(y.domain() == w.domain());
+    assert(TubeVector::same_slicing(y, w));
+
     TubeVector _w(w);
     Interval _t(t); IntervalVector _z(z);
     contract(_t, _z, y, _w);

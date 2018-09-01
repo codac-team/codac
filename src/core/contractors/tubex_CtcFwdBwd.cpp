@@ -33,8 +33,9 @@ namespace tubex
 
   void CtcFwdBwd::contract(TubeVector& x)
   {
-    // todo: check x size
-    ibex::CtcFwdBwd ctc_fwdbwd(m_f->ibex_function()); // todo: build the following in constructor? (bug)
+    assert(x.size() == m_f->nb_vars());
+
+    ibex::CtcFwdBwd ctc_fwdbwd(m_f->ibex_function()); // todo: build the following into the constructor? (bug)
 
     // todo: check if the following is needed
     //if(x.is_empty())

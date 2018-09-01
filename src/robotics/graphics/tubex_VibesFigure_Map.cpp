@@ -39,13 +39,14 @@ namespace tubex
 
   void VibesFigure_Map::add_tubevector(const TubeVector *tube, const string& name, int index_x, int index_y)
   {
-    if(m_map_tubes.find(tube) != m_map_tubes.end())
-      cout << "Warning VibesFigure_Map::add_tube(): tube already added" << endl;
+    assert(tube != NULL);
+    assert(index_x != index_y);
+    assert(index_x >= 0 && index_x < tube->size());
+    assert(index_y >= 0 && index_y < tube->size());
+    assert(m_map_tubes.find(tube) == m_map_tubes.end()
+      && "tube must not have been previously added");
 
-    else
-      m_map_tubes[tube];
-
-    // todo: check index...
+    m_map_tubes[tube];
     m_map_tubes[tube].index_x = index_x;
     m_map_tubes[tube].index_y = index_y;
     set_tubevector_name(tube, name);
@@ -56,16 +57,18 @@ namespace tubex
 
   void VibesFigure_Map::set_tubevector_name(const TubeVector *tube, const string& name)
   {
-    if(m_map_tubes.find(tube) == m_map_tubes.end())
-      cout << "Warning VibesFigure_Map::set_tube_name(): unknown tube" << endl;
+    assert(tube != NULL);
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unknown tube, must be added beforehand");
 
     m_map_tubes[tube].name = name;
   }
   
   void VibesFigure_Map::remove_tubevector(const TubeVector *tube)
   {
-    if(m_map_tubes.find(tube) == m_map_tubes.end())
-      cout << "Warning VibesFigure_Map::remove_tube(): unable to remove" << endl;
+    assert(tube != NULL);
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unable to remove, unknown tube");
 
     if(m_map_tubes[tube].tube_copy != NULL)
       delete m_map_tubes[tube].tube_copy;
@@ -74,13 +77,15 @@ namespace tubex
 
   void VibesFigure_Map::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
   {
-    if(m_map_trajs.find(traj) != m_map_trajs.end())
-      cout << "Warning VibesFigure_Map::add_trajectory(): trajectory already added" << endl;
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) == m_map_trajs.end()
+      && "traj must not have been previously added");
+    assert(index_x != index_y && index_x != index_heading && index_y != index_heading);
+    assert(index_x >= 0 && index_x < traj->size());
+    assert(index_y >= 0 && index_y < traj->size());
+    assert(index_heading == -1 || (index_heading >= 0 && index_heading < traj->size()));
 
-    else
-      m_map_trajs[traj];
-
-    // todo: check index...
+    m_map_trajs[traj];
     m_map_trajs[traj].index_x = index_x;
     m_map_trajs[traj].index_y = index_y;
     m_map_trajs[traj].index_heading = index_heading;
@@ -91,16 +96,18 @@ namespace tubex
 
   void VibesFigure_Map::set_trajectoryvector_name(const TrajectoryVector *traj, const string& name)
   {
-    if(m_map_trajs.find(traj) == m_map_trajs.end())
-      cout << "Warning VibesFigure_Map::set_trajectory_name(): unknown trajectory" << endl;
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unknown traj, must be added beforehand");
 
     m_map_trajs[traj].name = name;
   }
   
   void VibesFigure_Map::set_trajectoryvector_color(const TrajectoryVector *traj, const string& color)
   {
-    if(m_map_trajs.find(traj) == m_map_trajs.end())
-      cout << "Warning VibesFigure_Map::set_trajectory_color(): unknown trajectory" << endl;
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unable to remove, unknown traj");
 
     if(GRAY_DISPLAY_MODE)
       m_map_trajs[traj].color = color;
@@ -114,8 +121,9 @@ namespace tubex
   
   void VibesFigure_Map::remove_trajectoryvector(const TrajectoryVector *traj)
   {
-    if(m_map_trajs.find(traj) == m_map_trajs.end())
-      cout << "Warning VibesFigure_Map::remove_trajectory(): unable to remove" << endl;
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unable to remove, unknown traj");
 
     m_map_trajs.erase(traj);
   }
@@ -135,12 +143,20 @@ namespace tubex
   
   void VibesFigure_Map::add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color)
   {
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unknown traj, must be added beforehand");
+
     // Simply directly drawn
     draw_observation(obs, traj, color, vibesParams("figure", name(), "group", "obs"));
   }
   
   void VibesFigure_Map::add_observations(const vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const string& color)
   {
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unknown traj, must be added beforehand");
+
     // Simply directly drawn
     for(int i = 0 ; i < v_obs.size() ; i++)
       add_observation(v_obs[i], traj, color);
@@ -162,12 +178,17 @@ namespace tubex
 
   void VibesFigure_Map::show(float robot_size)
   {
+    assert(robot_size > 0.);
     m_robot_size = robot_size;
     show();
   }
 
   const IntervalVector VibesFigure_Map::draw_tube(const TubeVector *tube)
   {
+    assert(tube != NULL);
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unknown tube, must be added beforehand");
+
     IntervalVector viewbox(2, Interval::EMPTY_SET);
 
     // Computing viewbox
@@ -218,7 +239,10 @@ namespace tubex
 
   const IntervalVector VibesFigure_Map::draw_trajectory(const TrajectoryVector *traj, float points_size)
   {
-    IntervalVector viewbox(2, Interval::EMPTY_SET);
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unknown traj, must be added beforehand");
+    assert(points_size >= 0.);
 
     std::ostringstream o;
     o << "traj_" << m_map_trajs[traj].name;
@@ -226,6 +250,7 @@ namespace tubex
     vibes::clearGroup(name(), group_name);
     vibes::newGroup(group_name, m_map_trajs[traj].color, vibesParams("figure", name()));
 
+    IntervalVector viewbox(2, Interval::EMPTY_SET);
     if(traj->domain().is_unbounded() || traj->domain().is_empty())
       return viewbox;
 
@@ -290,6 +315,10 @@ namespace tubex
 
   void VibesFigure_Map::draw_tube_slices(const TubeVector *tube)
   {
+    assert(tube != NULL);
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unknown tube, must be added beforehand");
+
     // Reduced number of slices:
     int step = max((int)(tube->nb_slices() / MAP_SLICES_NUMBER_TO_DISPLAY), 1);
 
@@ -342,6 +371,8 @@ namespace tubex
 
   const string VibesFigure_Map::shaded_slice_color(float r) const
   {
+    assert(Interval(0.,1.).contains(r));
+
     float color_gray_min = 128, color_gray_max = 220;
 
     if(!GRAY_DISPLAY_MODE)
@@ -369,6 +400,11 @@ namespace tubex
 
   void VibesFigure_Map::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params)
   {
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unknown traj, must be added beforehand");
+    assert(traj->domain().contains(t));
+
     double robot_x = (*traj)[m_map_trajs[traj].index_x](t);
     double robot_y = (*traj)[m_map_trajs[traj].index_y](t);
 
@@ -394,10 +430,15 @@ namespace tubex
 
   void VibesFigure_Map::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)
   {
+    assert(obs.size() == 3);
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unknown traj, must be added beforehand");
+
     vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
     vector<double> v_x, v_y;
-    v_x.push_back((*traj)[0](obs[0].mid()));
-    v_y.push_back((*traj)[1](obs[0].mid()));
+    v_x.push_back((*traj)[m_map_trajs[traj].index_x](obs[0].mid()));
+    v_y.push_back((*traj)[m_map_trajs[traj].index_y](obs[0].mid()));
     v_x.push_back(v_x[0] + std::cos(obs[2].mid()) * obs[1].mid());
     v_y.push_back(v_y[0] + std::sin(obs[2].mid()) * obs[1].mid());
     draw_line(v_x, v_y, color, params);

@@ -24,7 +24,6 @@ namespace tubex
   CtcConstellation::CtcConstellation(const vector<Beacon>& map)
     : ibex::Ctc(2), m_map(map)
   {
-    // todo: check dim map 2
     // todo: binary tree for logarithmic complexity
   }
 
@@ -35,6 +34,7 @@ namespace tubex
 
   void CtcConstellation::contract(IntervalVector &beacon_box)
   {
+    assert(beacon_box.size() == 2);
     IntervalVector envelope_beacons(2, Interval::EMPTY_SET);
     for(int i = 0 ; i < m_map.size() ; i++)
       if(beacon_box.contains(m_map[i].pos().subvector(0,1)))

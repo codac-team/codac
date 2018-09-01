@@ -58,7 +58,7 @@ namespace tubex
 
     protected:
 
-      void create_subfigures(int size);
+      void create_subfigures(int n);
 
     protected:
 

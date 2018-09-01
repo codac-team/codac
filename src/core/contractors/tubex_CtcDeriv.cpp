@@ -29,8 +29,8 @@ namespace tubex
 
   void CtcDeriv::contract(Tube& x, const Tube& v, TPropagation t_propa)
   {
-    DomainException::check(x, v);
-    SlicingException::check(x, v);
+    assert(x.domain() == v.domain());
+    assert(Tube::same_slicing(x, v));
     
     if(t_propa & FORWARD)
     {
@@ -61,7 +61,7 @@ namespace tubex
 
   void CtcDeriv::contract(Slice& x, const Slice& v, TPropagation t_propa)
   {
-    DomainException::check(x, v);
+    assert(x.domain() == v.domain());
 
     Interval envelope = x.codomain(), ingate = x.input_gate(), outgate = x.output_gate();
 
@@ -120,7 +120,7 @@ namespace tubex
 
   void CtcDeriv::contract_gates(Slice& x, const Slice& v)
   {
-    DomainException::check(x, v);
+    assert(x.domain() == v.domain());
     
     Interval in_gate = x.input_gate(), out_gate = x.output_gate();
 
@@ -135,7 +135,9 @@ namespace tubex
 
   void CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa)
   {
-    DimensionException::check(x, v);
+    assert(x.size() == v.size());
+    assert(x.domain() == v.domain());
+    assert(TubeVector::same_slicing(x, v));
 
     for(int i = 0 ; i < x.size() ; i++)
       contract(x[i], v[i], t_propa);
