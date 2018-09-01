@@ -12,9 +12,6 @@
 
 #include "tubex_Tube.h"
 #include "tubex_Exception.h"
-#include "tubex_DomainException.h"
-#include "tubex_DimensionException.h"
-#include "tubex_SlicingException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
 #include "tubex_arithmetic.h"

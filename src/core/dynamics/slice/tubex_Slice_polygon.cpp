@@ -11,9 +11,6 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_Slice.h"
-#include "tubex_DomainException.h"
-#include "tubex_SlicingException.h"
-#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;

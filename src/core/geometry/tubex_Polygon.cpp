@@ -12,7 +12,6 @@
 
 #include <iostream>
 #include "tubex_Polygon.h"
-#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;

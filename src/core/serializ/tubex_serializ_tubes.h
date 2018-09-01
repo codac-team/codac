@@ -18,7 +18,7 @@
 namespace tubex
 {
   #define SERIALIZATION_VERSION 2
-  
+
   class Tube;
   class TubeVector;
 

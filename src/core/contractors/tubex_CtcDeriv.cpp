@@ -11,10 +11,6 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcDeriv.h"
-#include "tubex_SlicingException.h"
-#include "tubex_EmptyException.h"
-#include "tubex_DomainException.h"
-#include "tubex_DimensionException.h"
 #include "tubex_ConvexPolygon.h"
 
 using namespace std;

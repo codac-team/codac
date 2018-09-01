@@ -11,7 +11,6 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcFwdBwd.h"
-#include "tubex_SlicingException.h"
 
 using namespace std;
 using namespace ibex;

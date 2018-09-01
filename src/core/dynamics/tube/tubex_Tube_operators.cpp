@@ -12,9 +12,6 @@
 
 #include "tubex_Tube.h"
 #include "tubex_Trajectory.h"
-#include "tubex_DomainException.h"
-#include "tubex_DimensionException.h"
-#include "tubex_SlicingException.h"
 
 using namespace std;
 using namespace ibex;

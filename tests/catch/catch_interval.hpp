@@ -22,7 +22,6 @@
 #include "tubex_Polygon.h"
 #include "tubex_TubeVector.h"
 #include "tubex_Slice.h"
-#include "tubex_DimensionException.h"
 
 namespace Catch
 {
@@ -127,7 +126,6 @@ namespace Catch
 
         friend bool operator ==(tubex::Slice lhs, ApproxSlice const& rhs)
         {
-          tubex::DimensionException::check(lhs, rhs.m_value);
           return lhs.domain() == ApproxIntv(rhs.m_value.domain()) &&
                  lhs.codomain() == ApproxIntvVector(rhs.m_value.codomain()) &&
                  lhs.input_gate() == ApproxIntvVector(rhs.m_value.input_gate()) &&
@@ -171,8 +169,6 @@ namespace Catch
 
         friend bool operator ==(tubex::Tube lhs, ApproxTube const& rhs)
         {
-          tubex::DimensionException::check(lhs, rhs.m_value);
-
           if(lhs.nb_slices() != rhs.m_value.nb_slices())
             return false;
 
@@ -225,21 +221,12 @@ namespace Catch
 
         friend bool operator ==(tubex::TubeVector lhs, ApproxTubeVector const& rhs)
         {
-          /*tubex::DimensionException::check(lhs, rhs.m_value);
-
-          if(lhs.nb_slices() != rhs.m_value.nb_slices())
+          if((lhs.nb_slices() != rhs.m_value.nb_slices()) || (lhs.size() != rhs.m_value.size()))
             return false;
-
-          const tubex::Slice *slice = lhs.get_first_slice(), *slice_x = rhs.m_value.get_first_slice();
-          while(slice != NULL)
-          {
-            if(*slice != ApproxSlice(*slice_x))
+          for(int i = 0 ; i < lhs.size() ; i++)
+            if(lhs[i] != ApproxTube(rhs.m_value[i]))
               return false;
-            slice = slice->next_slice();
-            slice_x = slice_x->next_slice();
-          }
-
-          return true;*/return false; // todo
+          return true;
         }
 
         friend bool operator ==(ApproxTubeVector const& lhs, tubex::TubeVector rhs)

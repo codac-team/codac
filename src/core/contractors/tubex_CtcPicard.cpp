@@ -11,7 +11,6 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_CtcPicard.h"
-#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;

@@ -12,9 +12,6 @@
 
 #include "tubex_TubeVector.h"
 #include "tubex_Exception.h"
-#include "tubex_DomainException.h"
-#include "tubex_DimensionException.h"
-#include "tubex_SlicingException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
 #include "tubex_arithmetic.h"
@@ -425,8 +422,6 @@ namespace tubex
       if(size() != x.size())
         return false;
 
-      SlicingException::check(*this, x);
-
       for(int i = 0 ; i < size() ; i++)
         if((*this)[i] != x[i])
           return false;
@@ -438,8 +433,6 @@ namespace tubex
     {
       if(size() != x.size())
         return true;
-
-      SlicingException::check(*this, x);
 
       for(int i = 0 ; i < size() ; i++)
         if((*this)[i] != x[i])

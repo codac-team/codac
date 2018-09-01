@@ -11,8 +11,6 @@
  * ---------------------------------------------------------------------------- */
 #include <iomanip>
 #include "tubex_Slice.h"
-#include "tubex_DomainException.h"
-#include "tubex_EmptyException.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_arithmetic.h"
 

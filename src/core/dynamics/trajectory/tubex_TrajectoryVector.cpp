@@ -12,8 +12,6 @@
 
 #include <sstream>
 #include "tubex_TrajectoryVector.h"
-#include "tubex_DomainException.h"
-#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;

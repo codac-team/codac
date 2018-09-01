@@ -12,7 +12,6 @@
 
 #include <iostream>
 #include "tubex_Edge.h"
-#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -74,6 +73,8 @@ namespace tubex
   
   const Point Edge::operator&(const Edge& e) const
   {
+    assert(e.box().is_flat() && "edge should be vertical or horizontal");
+
     if(e.box()[0].is_degenerated()) // vertical edge e
     {
       if(box().is_flat()) // vertical or horizontal polygon's line
@@ -111,9 +112,6 @@ namespace tubex
                      e.box()[1] & box()[1]);
       }
     }
-
-    else
-      throw Exception("Edge::operator&", "edge should be vertical or horizontal");
   }
   
   ostream& operator<<(ostream& str, const Edge& e)

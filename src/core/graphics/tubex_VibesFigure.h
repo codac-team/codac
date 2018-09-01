@@ -16,7 +16,6 @@
 #include <string>
 #include "ibex_IntervalVector.h"
 #include "vibes.h"
-#include "ibex_IntervalVector.h"
 #include "tubex_Polygon.h"
 
 namespace tubex

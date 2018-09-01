@@ -13,7 +13,6 @@
 #include <time.h>
 #include "tubex_DataLoader_Lissajous.h"
 #include "tubex_Function.h"
-#include "tubex_Exception.h"
 #include "tubex_Tube.h"
 
 using namespace std;

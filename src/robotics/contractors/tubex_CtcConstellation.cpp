@@ -12,9 +12,6 @@
 
 #include <list>
 #include "tubex_CtcConstellation.h"
-#include "tubex_SlicingException.h"
-#include "tubex_DomainException.h"
-#include "tubex_DimensionException.h"
 
 using namespace std;
 using namespace ibex;

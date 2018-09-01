@@ -11,9 +11,6 @@
  * ---------------------------------------------------------------------------- */
 
 #include "tubex_arithmetic.h"
-#include "tubex_DimensionException.h"
-#include "tubex_DomainException.h"
-#include "tubex_SlicingException.h"
 #include "tubex_Slice.h"
 
 using namespace std;

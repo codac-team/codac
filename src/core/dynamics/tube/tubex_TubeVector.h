@@ -18,8 +18,8 @@
 #include <vector>
 #include "tubex_Fnc.h"
 #include "tubex_TrajectoryVector.h"
-#include "tubex_serializ_tubes.h"
 #include "tubex_arithmetic.h"
+#include "tubex_serializ_tubes.h"
 
 namespace tubex
 {
