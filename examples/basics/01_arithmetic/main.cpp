@@ -30,7 +30,7 @@ using namespace tubex;
 int main()
 {
   /* =========== INITIALIZATION =========== */
-
+  
     Interval domain(0,10);
     TubeVector x(domain, 6);
 
