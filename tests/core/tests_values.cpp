@@ -528,9 +528,8 @@ TEST_CASE("Testing is_subset()")
   {
     Tube x1(Interval(0.,10.), 1., Interval(0.,5.));
     Tube x2(Interval(0.,10.), 1., Interval(0.,5.));
-    Tube x3(Interval(0.,10.), 0.5);
 
-    // todo: CHECK_THROWS(x1.is_subset(x3));
+    CHECK(Interval(0.,5.).is_subset(Interval(0.,5.)));
     CHECK(x1.is_subset(x2));
     CHECK(!x1.is_strict_subset(x2));
     x1.set(Interval(1.,4.));
@@ -548,6 +547,32 @@ TEST_CASE("Testing is_subset()")
     CHECK(x1.is_subset(x2));
     CHECK(!x1.is_strict_subset(x2));
     x1.set(Interval(1.,5.), 2.); // strict subset due to a gate only
+    CHECK(x1.is_subset(x2));
+    CHECK(x1.is_strict_subset(x2));
+  }
+
+  SECTION("TubeVector")
+  {
+    TubeVector x1(Interval(0.,10.), 1., IntervalVector(2, Interval(0.,5.)));
+    TubeVector x2(Interval(0.,10.), 1., IntervalVector(2, Interval(0.,5.)));
+
+    CHECK(x1.is_subset(x2));
+    CHECK(!x1.is_strict_subset(x2));
+    x1[0].set(Interval(1.,4.));
+    CHECK(x1.is_subset(x2));
+
+    x1 = x2;
+    CHECK(x1.is_subset(x2));
+    CHECK(!x1.is_strict_subset(x2));
+    x1[1].set(Interval(1.,5.), 2); // strict subset due to a slice only
+    CHECK(x1.is_subset(x2));
+    CHECK(x1 != x2);
+    CHECK(x1.is_strict_subset(x2));
+
+    x1 = x2;
+    CHECK(x1.is_subset(x2));
+    CHECK(!x1.is_strict_subset(x2));
+    x1[1].set(Interval(1.,5.), 2.); // strict subset due to a gate only
     CHECK(x1.is_subset(x2));
     CHECK(x1.is_strict_subset(x2));
   }

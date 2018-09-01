@@ -14,6 +14,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME solver_10_large_initial_condition COMMAND solver_10_large_initial_condition 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME solver_10_large_initial_condition COMMAND solver_10_large_initial_condition 0)
+  endif(BUILD_TESTS)

@@ -24,10 +24,9 @@ namespace tubex
 {
   #define assign_vect_vect(f) \
     \
-    const TubeVector& TubeVector::f(const TubeVector& x) \
+    const TubeVector& TubeVector::f(const IntervalVector& x) \
     { \
       DimensionException::check(*this, x); \
-      DomainException::check(*this, x); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \
@@ -42,9 +41,10 @@ namespace tubex
       return *this; \
     } \
     \
-    const TubeVector& TubeVector::f(const IntervalVector& x) \
+    const TubeVector& TubeVector::f(const TubeVector& x) \
     { \
       DimensionException::check(*this, x); \
+      DomainException::check(*this, x); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \
@@ -58,10 +58,8 @@ namespace tubex
 
   #define assign_vect_scal(f) \
     \
-    const TubeVector& TubeVector::f(const Tube& x) \
+    const TubeVector& TubeVector::f(const Interval& x) \
     { \
-      DomainException::check(*this, x); \
-      SlicingException::check(*this, x); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x); \
       return *this; \
@@ -75,8 +73,10 @@ namespace tubex
       return *this; \
     } \
     \
-    const TubeVector& TubeVector::f(const Interval& x) \
+    const TubeVector& TubeVector::f(const Tube& x) \
     { \
+      DomainException::check(*this, x); \
+      SlicingException::check(*this, x); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x); \
       return *this; \

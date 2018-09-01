@@ -289,18 +289,41 @@ namespace tubex
              output_gate() != x.output_gate();
     }
 
+    #define sets_comparison(f) \
+      \
+      DomainException::check(*this, x); \
+      return codomain().f(x.codomain()) \
+          && input_gate().f(x.input_gate()) \
+          && output_gate().f(x.output_gate()); \
+
     bool Slice::is_subset(const Slice& x) const
     {
-      DomainException::check(*this, x);
-      return codomain().is_subset(x.codomain())
-          && input_gate().is_subset(x.input_gate())
-          && output_gate().is_subset(x.output_gate());
+      sets_comparison(is_subset);
     }
 
     bool Slice::is_strict_subset(const Slice& x) const
     {
-      DomainException::check(*this, x);
-      return is_subset(x) && (*this) != x;
+      return is_subset(x) && *this != x;
+    }
+
+    bool Slice::is_interior_subset(const Slice& x) const
+    {
+      sets_comparison(is_interior_subset);
+    }
+
+    bool Slice::is_strict_interior_subset(const Slice& x) const
+    {
+      return is_interior_subset(x) && *this != x;
+    }
+
+    bool Slice::is_superset(const Slice& x) const
+    {
+      sets_comparison(is_superset);
+    }
+
+    bool Slice::is_strict_superset(const Slice& x) const
+    {
+      return is_superset(x) && *this != x;
     }
     
     bool Slice::is_empty() const

@@ -634,41 +634,98 @@ namespace tubex
 
     // Tests
 
-    #define test_content(f, bool_output) \
-      \
-      SlicingException::check(*this, x); \
-      const Slice *slice = get_first_slice(), *slice_x = x.get_first_slice(); \
-      while(slice != NULL) \
-      { \
-        if(slice->f(*slice_x)) \
-          return bool_output; \
-        slice = slice->next_slice(); \
-        slice_x = slice_x->next_slice(); \
-      } \
-      return !bool_output;
-
     bool Tube::operator==(const Tube& x) const
     {
       if(x.nb_slices() != nb_slices())
         return false;
-      test_content(operator!=, false);
+
+      const Slice *slice = get_first_slice(), *slice_x = x.get_first_slice();
+      while(slice != NULL)
+      {
+        if(*slice != *slice_x)
+          return false;
+        slice = slice->next_slice();
+        slice_x = slice_x->next_slice();
+      }
+      return true;
     }
 
     bool Tube::operator!=(const Tube& x) const
     {
       if(x.nb_slices() != nb_slices())
         return true;
-      test_content(operator!=, true);
+
+      const Slice *slice = get_first_slice(), *slice_x = x.get_first_slice();
+      while(slice != NULL)
+      {
+        if(*slice != *slice_x)
+          return true;
+        slice = slice->next_slice();
+        slice_x = slice_x->next_slice();
+      }
+      return false;
     }
+
+    #define sets_comparison(f) \
+      \
+      if(Tube::share_same_slicing(*this, x)) /* faster */ \
+      { \
+        const Slice *slice = get_first_slice(), *slice_x = x.get_first_slice(); \
+        while(slice != NULL) \
+        { \
+          if(!slice->f(*slice_x)) \
+            return false; \
+          slice = slice->next_slice(); \
+          slice_x = slice_x->next_slice(); \
+        } \
+        return true; \
+      } \
+      \
+      else \
+      { \
+        const Slice *slice = get_first_slice(); \
+        while(slice != NULL) \
+        { \
+          Interval s_domain= slice->domain(); \
+          if(!slice->input_gate().f(x(s_domain.lb())) || \
+             !slice->codomain().f(x(s_domain))) \
+            return false; \
+          slice = slice->next_slice(); \
+        } \
+        slice = get_last_slice(); \
+        if(!slice->output_gate().f(x(slice->domain().ub()))) \
+          return false; \
+        return true; \
+      } \
 
     bool Tube::is_subset(const Tube& x) const
     {
-      test_content(is_subset, true);
+      sets_comparison(is_subset);
     }
 
     bool Tube::is_strict_subset(const Tube& x) const
     {
-      test_content(is_strict_subset, true);
+      return is_subset(x) && *this != x;
+    }
+
+    bool Tube::is_interior_subset(const Tube& x) const
+    {
+      sets_comparison(is_interior_subset);
+    }
+
+    bool Tube::is_strict_interior_subset(const Tube& x) const
+    {
+      return is_interior_subset(x) && *this != x;
+    }
+
+    bool Tube::is_superset(const Tube& x) const
+    {
+      sets_comparison(is_superset);
+    }
+
+    bool Tube::is_strict_superset(const Tube& x) const
+    {
+      return is_superset(x) && *this != x;
     }
 
     bool Tube::is_empty() const

@@ -95,6 +95,10 @@ namespace tubex
       bool operator!=(const Tube& x) const;
       bool is_subset(const Tube& x) const;
       bool is_strict_subset(const Tube& x) const;
+      bool is_interior_subset(const Tube& x) const;
+      bool is_strict_interior_subset(const Tube& x) const;
+      bool is_superset(const Tube& x) const;
+      bool is_strict_superset(const Tube& x) const;
       bool is_empty() const;
       bool contains(const Trajectory& x) const;
 

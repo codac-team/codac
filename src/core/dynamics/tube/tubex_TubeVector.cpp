@@ -432,26 +432,42 @@ namespace tubex
       return false;
     }
 
+    #define sets_comparison(f) \
+      \
+      DimensionException::check(*this, x); \
+      for(int i = 0 ; i < size() ; i++) \
+        if(!(*this)[i].f(x[i])) \
+          return false; \
+      return true; \
+
     bool TubeVector::is_subset(const TubeVector& x) const
     {
-      DimensionException::check(*this, x);
-      SlicingException::check(*this, x);
-
-      for(int i = 0 ; i < size() ; i++)
-        if(!(*this)[i].is_subset(x[i]))
-          return false;
-      return true;
+      sets_comparison(is_subset);
     }
 
     bool TubeVector::is_strict_subset(const TubeVector& x) const
     {
-      DimensionException::check(*this, x);
-      SlicingException::check(*this, x);
+      return is_subset(x) && *this != x;
+    }
 
-      for(int i = 0 ; i < size() ; i++)
-        if(!(*this)[i].is_strict_subset(x[i]))
-          return false;
-      return true;
+    bool TubeVector::is_interior_subset(const TubeVector& x) const
+    {
+      sets_comparison(is_interior_subset);
+    }
+
+    bool TubeVector::is_strict_interior_subset(const TubeVector& x) const
+    {
+      return is_interior_subset(x) && *this != x;
+    }
+
+    bool TubeVector::is_superset(const TubeVector& x) const
+    {
+      sets_comparison(is_superset);
+    }
+
+    bool TubeVector::is_strict_superset(const TubeVector& x) const
+    {
+      return is_superset(x) && *this != x;
     }
 
     bool TubeVector::is_empty() const
