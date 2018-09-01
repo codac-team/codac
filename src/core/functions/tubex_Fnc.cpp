@@ -25,9 +25,9 @@ namespace tubex
 
   }
 
-  Fnc::Fnc(int n, int m) : m_nb_vars(n), m_img_dim(m)
+  Fnc::Fnc(int nb_vars, int img_dim) : m_nb_vars(nb_vars), m_img_dim(img_dim)
   {
-
+    assert(img_dim > 0);
   }
 
   Fnc::~Fnc()
@@ -59,7 +59,9 @@ namespace tubex
 
   const TubeVector Fnc::eval_vector(const TubeVector& x) const
   {
-    // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
+    if(nb_vars() != 0)
+      assert(x.size() == nb_vars());
+
     TubeVector y(x); // keeping x's slicing
     y.resize(image_dim());
 

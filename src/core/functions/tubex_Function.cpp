@@ -134,6 +134,7 @@ namespace tubex
 
   const Function Function::operator[](int i) const
   {
+    assert(i >= 0 && i < image_dim());
     // todo: check the following
     tubex::Function fi(*this);
     ibex::Function ibex_fi((*fi.m_ibex_f)[i]);
@@ -150,10 +151,16 @@ namespace tubex
 
   void Function::construct_from_array(int n, const char** x, const char* y)
   {
-    // todo: check t not in variables
+    assert(n >= 0);
+    assert(y != NULL && "function's output must be defined");
+
     const char* xdyn[n+1];
     xdyn[0] = "t";
-    for(int i = 0 ; i < n ; i++) xdyn[i+1] = x[i];
+    for(int i = 0 ; i < n ; i++)
+    {
+      assert(x[i] != "t" && "forbidden variable name \"t\"");
+      xdyn[i+1] = x[i];
+    }
 
     m_ibex_f = new ibex::Function(n+1, xdyn, y);
     m_nb_vars = n;
@@ -162,30 +169,35 @@ namespace tubex
 
   const Interval Function::eval(const Interval& t) const
   {
-    // todo: optimize this?
+    assert(nb_vars() == 0);
+    assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(t)[0];
   }
 
   const Interval Function::eval(const Interval& t, const TubeVector& x) const
   {
-    // todo: optimize this?
+    assert(x.size() == nb_vars());
+    assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(t, x)[0];
   }
 
   const Interval Function::eval(const Slice& x) const
   {
-    // todo: optimize this?
+    assert(nb_vars() == 1);
+    assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(x)[0];
   }
 
   const Tube Function::eval(const TubeVector& x) const
   {
-    // todo: optimize this?
+    assert(x.size() == nb_vars());
+    assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(x)[0];
   }
 
   const IntervalVector Function::eval_vector(const Interval& t) const
   {
+    assert(nb_vars() == 0);
     IntervalVector box(1, t);
     return m_ibex_f->eval_vector(box);
   }
@@ -195,7 +207,8 @@ namespace tubex
     if(nb_vars() == 0)
       return eval_vector(t);
 
-    // todo: check dim x regarding f
+    assert(nb_vars() == x.size());
+
     if(x(t).is_empty())
       return IntervalVector(image_dim(), Interval::EMPTY_SET);
 
@@ -210,6 +223,7 @@ namespace tubex
 
   const IntervalVector Function::eval_vector(const Slice& x) const
   {
+    assert(nb_vars() == 1);
     return m_ibex_f->eval_vector(x.box());
   }
 
@@ -222,7 +236,9 @@ namespace tubex
 
     // todo: update this comment ^
 
-    // todo: check dim x regarding f. f.imgdim can be of 0 and then x 1 in order to keep slicing pattern
+    if(nb_vars() != 0)
+      assert(x.size() == nb_vars());
+    
     TubeVector y(x); // keeping x's slicing
     y.resize(image_dim());
 

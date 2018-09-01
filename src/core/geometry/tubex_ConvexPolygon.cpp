@@ -26,7 +26,7 @@ namespace tubex
   
   ConvexPolygon::ConvexPolygon(const IntervalVector& box) : Polygon(box)
   {
-    
+    assert(box.size() == 2);
   }
   
   ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points) : Polygon(v_points)
@@ -36,6 +36,8 @@ namespace tubex
   
   const IntervalVector ConvexPolygon::operator&(const IntervalVector& x) const
   {
+    assert(x.size() == 2);
+
     // todo: the following could be easily optimized
 
     IntervalVector reduced_x = x & box();

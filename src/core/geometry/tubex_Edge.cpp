@@ -26,6 +26,8 @@ namespace tubex
 
   const IntervalVector Edge::operator&(const IntervalVector& x) const
   {
+    assert(x.size() == 2);
+
     IntervalVector inter(2, Interval::EMPTY_SET);
 
     if(box().is_flat())
@@ -122,6 +124,8 @@ namespace tubex
 
   void push_edges(const IntervalVector& box, vector<Edge>& v_edges)
   {
+    assert(box.size() == 2);
+    
     Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
     Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
 

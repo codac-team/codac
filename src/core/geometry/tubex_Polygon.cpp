@@ -26,6 +26,7 @@ namespace tubex
 
   Polygon::Polygon(const IntervalVector& box)
   {
+    assert(box.size() == 2);
     push_points(box, m_v_vertices);
     delete_redundant_points();
   }
@@ -57,8 +58,7 @@ namespace tubex
 
   const Point Polygon::operator[](int vertex_id) const
   {
-    if(vertex_id < 0 || vertex_id >= nb_vertices())
-      throw Exception("Polygon::operator[]", "invalid vertex id");
+    assert(vertex_id >= 0 && vertex_id < m_v_vertices.size());
     return m_v_vertices[vertex_id];
   }
 
