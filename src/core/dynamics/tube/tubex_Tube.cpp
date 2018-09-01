@@ -883,7 +883,7 @@ namespace tubex
 
     const Tube Tube::hull(const list<Tube>& l_tubes)
     {
-      assert(l_tubes.size() != 0);
+      assert(!l_tubes.empty());
       list<Tube>::const_iterator it = l_tubes.begin();
       Tube hull = *it;
       for(++it ; it != l_tubes.end() ; ++it)

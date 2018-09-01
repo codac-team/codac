@@ -26,7 +26,7 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const IntervalVector& x) \
     { \
-      DimensionException::check(*this, x); \
+      assert(size() == x.size()); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \
@@ -34,8 +34,8 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const TrajectoryVector& x) \
     { \
-      DimensionException::check(*this, x); \
-      DomainException::check(*this, x); \
+      assert(size() == x.size()); \
+      assert(domain() == x.domain()); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \
@@ -43,8 +43,8 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const TubeVector& x) \
     { \
-      DimensionException::check(*this, x); \
-      DomainException::check(*this, x); \
+      assert(size() == x.size()); \
+      assert(domain() == x.domain()); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \
@@ -67,7 +67,7 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const Trajectory& x) \
     { \
-      DomainException::check(*this, x); \
+      assert(domain() == x.domain()); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x); \
       return *this; \
@@ -75,8 +75,8 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
-      DomainException::check(*this, x); \
-      SlicingException::check(*this, x); \
+      assert(domain() == x.domain()); \
+      assert(same_slicing(*this, x)); \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x); \
       return *this; \

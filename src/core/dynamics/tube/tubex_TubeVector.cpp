@@ -97,6 +97,7 @@ namespace tubex
     TubeVector::TubeVector(int n, const Tube& x)
       : m_n(n), m_v_tubes(new Tube[n])
     {
+      assert(n > 0);
       for(int i = 0 ; i < size() ; i++)
         (*this)[i] = x;
     }
@@ -104,7 +105,7 @@ namespace tubex
     TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)
       : TubeVector(traj.domain(), timestep, traj.size())
     {
-      DomainException::check(timestep);
+      assert(timestep >= 0.);
       set_empty();
       *this |= traj;
     }
@@ -112,8 +113,9 @@ namespace tubex
     TubeVector::TubeVector(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep)
       : TubeVector(lb, timestep)
     {
-      DomainException::check(timestep);
-      DimensionException::check(lb, ub);
+      assert(timestep >= 0.);
+      assert(lb.domain() == ub.domain());
+      assert(lb.size() == ub.size());
       *this |= ub;
     }
 
@@ -163,8 +165,10 @@ namespace tubex
 
     const Interval TubeVector::domain() const
     {
-      // All components share the same domain
-      return (*this)[0].domain();
+      Interval t = (*this)[0].domain();
+      for(int i = 1 ; i < size() ; i++)
+        assert(t == (*this)[i].domain() && "all components do not have the same definition domain");
+      return t;
     }
 
     int TubeVector::size() const
@@ -174,7 +178,7 @@ namespace tubex
 
     void TubeVector::resize(int n)
     {
-      // todo: check n
+      assert(n > 0);
 
       if(n == size())
         return;
@@ -197,7 +201,9 @@ namespace tubex
     
     const TubeVector TubeVector::subvector(int start_index, int end_index) const
     {
-      // todo: check start_index, end_index
+      assert(start_index >= 0);
+      assert(end_index < size());
+      assert(start_index <= end_index);
       TubeVector subvec(domain(), end_index - start_index + 1);
       for(int i = 0 ; i < subvec.size() ; i++)
         subvec[i] = (*this)[i + start_index];
@@ -206,8 +212,8 @@ namespace tubex
     
     void TubeVector::put(int start_index, const TubeVector& subvec)
     {
-      // todo: check size subvec
-      // todo: check structure tubes
+      assert(start_index >= 0);
+      assert(start_index + subvec.size() <= size());
       for(int i = 0 ; i < subvec.size() ; i++)
         (*this)[i + start_index] = subvec[i];
     }
@@ -216,28 +222,32 @@ namespace tubex
 
     int TubeVector::nb_slices() const
     {
-      // All components share the same slicing
-      return (*this)[0].nb_slices();
+      int n = (*this)[0].nb_slices();
+      for(int i = 1 ; i < size() ; i++)
+        assert(n == (*this)[i].nb_slices() && "all components do not have the same number of slices");
+      return n;
     }
 
     int TubeVector::input2index(double t) const
     {
-      DomainException::check(*this, t);
-      // All components share the same slicing
-      return (*this)[0].input2index(t);
+      assert(domain().contains(t));
+      int index = (*this)[0].input2index(t);
+      for(int i = 1 ; i < size() ; i++)
+        assert((*this)[0].nb_slices() == (*this)[i].nb_slices() && "all components do not have the same number of slices");
+      return index;
     }
 
     void TubeVector::sample(double t)
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].sample(t);
     }
 
     void TubeVector::sample(double t, const IntervalVector& gate)
     {
-      DomainException::check(*this, t);
-      DimensionException::check(*this, gate);
+      assert(domain().contains(t));
+      assert(size() == gate.size());
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].sample(t, gate[i]);
     }
@@ -253,7 +263,6 @@ namespace tubex
     bool TubeVector::same_slicing(const TubeVector& x1, const TubeVector& x2)
     {
       assert(x1.size() == x2.size());
-
       for(int i = 0 ; i < x1.size() ; i++)
         if(!Tube::same_slicing(x1[i], x2[i]))
           return false;
@@ -277,20 +286,20 @@ namespace tubex
 
     Tube& TubeVector::operator[](int index)
     {
-      // todo: check index
+      assert(index >= 0 && index < size());
       return const_cast<Tube&>(static_cast<const TubeVector&>(*this).operator[](index));
       // todo: check quickness of cast instead of direct access to m_v_tubes[]
     }
 
     const Tube& TubeVector::operator[](int index) const
     {
-      // todo: check index
+      assert(index >= 0 && index < size());
       return m_v_tubes[index];
     }
 
     const IntervalVector TubeVector::operator()(int slice_id) const
     {
-      SlicingException::check(*this, slice_id);
+      assert(slice_id >= 0 && slice_id < nb_slices());
       IntervalVector box(size());
       for(int i = 0 ; i < size() ; i++)
         box[i] = (*this)[i](slice_id);
@@ -299,7 +308,7 @@ namespace tubex
 
     const IntervalVector TubeVector::operator()(double t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
       IntervalVector box(size());
       for(int i = 0 ; i < size() ; i++)
         box[i] = (*this)[i](t);
@@ -308,7 +317,7 @@ namespace tubex
 
     const IntervalVector TubeVector::operator()(const Interval& t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
       IntervalVector box(size());
       for(int i = 0 ; i < size() ; i++)
         box[i] = (*this)[i](t);
@@ -317,7 +326,7 @@ namespace tubex
 
     const Interval TubeVector::invert(const IntervalVector& y, const Interval& search_domain) const
     {
-      DimensionException::check(*this, y);
+      assert(size() == y.size());
       Interval t;
       for(int i = 0 ; i < size() ; i++)
         t &= (*this)[i].invert(y[i], search_domain);
@@ -326,26 +335,32 @@ namespace tubex
 
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
     {
-      DimensionException::check(*this, y);
+      assert(size() == y.size());
       // todo
     }
 
     const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& v, const Interval& search_domain) const
     {
-      DimensionException::check(*this, y);
-      SlicingException::check(*this, v);
-      DomainException::check(*this, v);
+      assert(size() == y.size());
+      assert(size() == v.size());
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
       // todo
     }
 
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const TubeVector& v, const Interval& search_domain) const
     {
-      DimensionException::check(*this, y);
+      assert(size() == y.size());
+      assert(size() == v.size());
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
       // todo
     }
 
     const pair<IntervalVector,IntervalVector> TubeVector::eval(const Interval& t) const
     {
+      assert(domain().is_superset(t));
+
       pair<IntervalVector,IntervalVector> p_eval
         = make_pair(IntervalVector(size()), IntervalVector(size()));
 
@@ -361,9 +376,10 @@ namespace tubex
 
     const IntervalVector TubeVector::interpol(double t, const TubeVector& v) const
     {
-      DomainException::check(*this, t);
-      DimensionException::check(*this, v);
-      SlicingException::check(*this, v);
+      assert(domain().contains(t));
+      assert(size() == v.size());
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
 
       // In Tube class, Tube::interpol(double, Tube) faster than Tube::interpol(Interval, Tube)
       IntervalVector eval(size());
@@ -374,9 +390,10 @@ namespace tubex
 
     const IntervalVector TubeVector::interpol(const Interval& t, const TubeVector& v) const
     {
-      DomainException::check(*this, t);
-      DimensionException::check(*this, v);
-      SlicingException::check(*this, v);
+      assert(domain().is_superset(t));
+      assert(size() == v.size());
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
 
       IntervalVector eval(size());
       for(int i = 0 ; i < size() ; i++)
@@ -433,7 +450,7 @@ namespace tubex
 
     #define sets_comparison(f) \
       \
-      DimensionException::check(*this, x); \
+      assert(size() == x.size()); \
       for(int i = 0 ; i < size() ; i++) \
         if(!(*this)[i].f(x[i])) \
           return false; \
@@ -479,8 +496,7 @@ namespace tubex
 
     bool TubeVector::contains(const TrajectoryVector& x) const
     {
-      DimensionException::check(*this, x);
-      
+      assert(size() == x.size());
       for(int i = 0 ; i < size() ; i++)
         if(!(*this)[i].contains(x[i]))
           return false;
@@ -491,31 +507,31 @@ namespace tubex
 
     void TubeVector::set(const IntervalVector& y)
     {
-      DimensionException::check(*this, y);
+      assert(size() == y.size());
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(y[i]);
     }
 
     void TubeVector::set(const IntervalVector& y, int slice_id)
     {
-      DimensionException::check(*this, y);
-      SlicingException::check(*this, slice_id);
+      assert(size() == y.size());
+      assert(slice_id >= 0 && slice_id < nb_slices());
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(y[i], slice_id);
     }
 
     void TubeVector::set(const IntervalVector& y, double t)
     {
-      DimensionException::check(*this, y);
-      DomainException::check(*this, t);
+      assert(size() == y.size());
+      assert(domain().contains(t));
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(y[i], t);
     }
 
     void TubeVector::set(const IntervalVector& y, const Interval& t)
     {
-      DimensionException::check(*this, y);
-      DomainException::check(*this, t);
+      assert(size() == y.size());
+      assert(domain().is_superset(t));
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(y[i], t);
     }
@@ -526,16 +542,22 @@ namespace tubex
         (*this)[i].set_empty();
     }
 
-    const TubeVector& TubeVector::inflate(double rad)
+    const TubeVector& TubeVector::inflate(const Vector& rad)
     {
+      assert(size() && rad.size());
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i].inflate(rad);
+      {
+        assert(rad[i] >= 0.);
+        (*this)[i].inflate(rad[i]);
+      }
     }
 
     const TubeVector& TubeVector::inflate(const TrajectoryVector& rad)
     {
-      DimensionException::check(*this, rad);
-      DomainException::check(*this, rad);
+      assert(size() == rad.size());
+      assert(domain() == rad.domain());
+      assert(rad.codomain().is_subset(IntervalVector(rad.size(), Interval::POS_REALS))
+        && "positive TrajectoryVector");
       // todo: for(int i = 0 ; i < size() ; i++)
       // todo:   (*this)[i].inflate(rad[i]);
     }
@@ -544,9 +566,10 @@ namespace tubex
     
     const pair<TubeVector,TubeVector> TubeVector::bisect(double t, float ratio) const
     {
-      DomainException::check(*this, t);
-      pair<TubeVector,TubeVector> p = make_pair(*this,*this);
+      assert(domain().contains(t));
+      assert(Interval(0.,1.).interior_contains(ratio));
 
+      pair<TubeVector,TubeVector> p = make_pair(*this,*this);
       LargestFirst bisector(0., ratio); // todo: bisect according to another rule than largest first?
 
       try
@@ -579,6 +602,7 @@ namespace tubex
 
     const TubeVector TubeVector::hull(const list<TubeVector>& l_tubes)
     {
+      assert(!l_tubes.empty());
       list<TubeVector>::const_iterator it = l_tubes.begin();
       TubeVector hull = *it;
       for(++it ; it != l_tubes.end() ; ++it)
@@ -590,7 +614,7 @@ namespace tubex
 
     const IntervalVector TubeVector::integral(double t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
 
       // In Tube class, Tube::integral(double) faster than Tube::integral(Interval)
       // todo: deprecated comment
@@ -602,7 +626,7 @@ namespace tubex
 
     const IntervalVector TubeVector::integral(const Interval& t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
       IntervalVector integ_box(size());
       for(int i = 0 ; i < size() ; i++)
         integ_box[i] = (*this)[i].integral(t);
@@ -611,8 +635,8 @@ namespace tubex
 
     const IntervalVector TubeVector::integral(const Interval& t1, const Interval& t2) const
     {
-      DomainException::check(*this, t1);
-      DomainException::check(*this, t2);
+      assert(domain().is_superset(t1));
+      assert(domain().is_superset(t2));
       IntervalVector integ_box(size());
       for(int i = 0 ; i < size() ; i++)
         integ_box[i] = (*this)[i].integral(t1, t2);
@@ -621,7 +645,7 @@ namespace tubex
 
     const pair<IntervalVector,IntervalVector> TubeVector::partial_integral(const Interval& t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
       pair<IntervalVector,IntervalVector> p_integ
         = make_pair(IntervalVector(size()), IntervalVector(size()));
       for(int i = 0 ; i < size() ; i++)
@@ -635,8 +659,8 @@ namespace tubex
 
     const pair<IntervalVector,IntervalVector> TubeVector::partial_integral(const Interval& t1, const Interval& t2) const
     {
-      DomainException::check(*this, t1);
-      DomainException::check(*this, t2);
+      assert(domain().is_superset(t1));
+      assert(domain().is_superset(t2));
       pair<IntervalVector,IntervalVector> p_integ
         = make_pair(IntervalVector(size()), IntervalVector(size()));
       for(int i = 0 ; i < size() ; i++)
@@ -652,7 +676,6 @@ namespace tubex
 
     void TubeVector::serialize(const string& binary_file_name, int version_number) const
     {
-      // todo: check same dim TrajV, TubeV
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
@@ -664,7 +687,7 @@ namespace tubex
 
     void TubeVector::serialize(const string& binary_file_name, const TrajectoryVector& traj, int version_number) const
     {
-      // todo: check same dim TrajV, TubeV
+      assert(size() == traj.size());
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())

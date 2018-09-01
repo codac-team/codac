@@ -40,7 +40,7 @@ namespace tubex
     \
     const Tube& Tube::f(const Trajectory& x) \
     { \
-      DomainException::check(*this, x); \
+      assert(domain() == x.domain()); \
       for(Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice()) \
       { \
         Interval envelope = s->codomain(); \
@@ -56,7 +56,7 @@ namespace tubex
     \
     const Tube& Tube::f(const Tube& x) \
     { \
-      DomainException::check(*this, x); \
+      assert(domain() == x.domain()); \
       if(Tube::same_slicing(*this, x)) /* faster */ \
       { \
         Slice *s = get_first_slice(); \

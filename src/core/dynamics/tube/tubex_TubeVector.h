@@ -99,7 +99,7 @@ namespace tubex
       void set(const ibex::IntervalVector& y, double t);
       void set(const ibex::IntervalVector& y, const ibex::Interval& t);
       void set_empty();
-      const TubeVector& inflate(double rad);
+      const TubeVector& inflate(const ibex::Vector& rad);
       const TubeVector& inflate(const TrajectoryVector& rad);
 
       // Bisection
