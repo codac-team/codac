@@ -38,7 +38,7 @@ namespace tubex
 
     Tube::Tube(const Interval& domain, const Interval& codomain)
     {
-      DomainException::check(domain);
+      assert(valid_domain(domain));
 
       // By default, the tube is defined as one single slice
       m_first_slice = new Slice(domain, codomain);
@@ -46,8 +46,8 @@ namespace tubex
     
     Tube::Tube(const Interval& domain, double timestep, const Interval& codomain)
     {
-      DomainException::check(domain);
-      DomainException::check(timestep);
+      assert(valid_domain(domain));
+      assert(timestep >= 0.); // if 0., equivalent to no sampling
 
       Slice *prev_slice = NULL, *slice;
       double lb, ub = domain.lb();
@@ -82,16 +82,13 @@ namespace tubex
     Tube::Tube(const Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id)
       : Tube(domain, timestep)
     {
-      // todo: check scalar f
-      // todo: check f_image_id
-      DomainException::check(domain);
-      DomainException::check(timestep);
+      assert(valid_domain(domain));
+      assert(timestep >= 0.); // if 0., equivalent to no sampling
+      assert(f_image_id >= 0 && f_image_id < f.image_dim());
+      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
 
-      if(f.nb_vars() != 0)
-        throw Exception("Tube constructor",
-                        "function's inputs not limited to system variable");
       // A copy of this is sent anyway in order to know the data structure to produce
-      TubeVector input(*this); // 1: one variable (system variable t), todo: update this comment
+      TubeVector input(*this);
       *this = f.eval_vector(input)[f_image_id];
       // todo: delete something here?
     }
@@ -110,15 +107,18 @@ namespace tubex
     Tube::Tube(const Tube& x, const tubex::Fnc& f, int f_image_id)
       : Tube(x)
     {
-      // todo: check dim
-      TubeVector input(*this); // 1: one variable (system variable t), todo: update this comment
+      assert(f_image_id >= 0 && f_image_id < f.image_dim());
+      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+
+      // A copy of this is sent anyway in order to know the data structure to produce
+      TubeVector input(*this);
       *this = f.eval_vector(input)[f_image_id];
     }
 
     Tube::Tube(const Trajectory& traj, double timestep)
       : Tube(traj.domain(), timestep)
     {
-      DomainException::check(timestep);
+      assert(timestep >= 0.); // if 0., equivalent to no sampling
       set_empty();
       *this |= traj;
     }
@@ -126,10 +126,10 @@ namespace tubex
     Tube::Tube(const Trajectory& lb, const Trajectory& ub, double timestep)
       : Tube(lb.domain(), timestep)
     {
-      DomainException::check(timestep);
+      assert(timestep >= 0.); // if 0., equivalent to no sampling
+      assert(lb.domain() == ub.domain());
       set_empty();
-      *this |= lb;
-      *this |= ub;
+      *this |= lb; *this |= ub;
     }
 
     Tube::Tube(const string& binary_file_name)
@@ -230,13 +230,13 @@ namespace tubex
 
     Slice* Tube::get_slice(int slice_id)
     {
-      SlicingException::check(*this, slice_id);
+      assert(slice_id >= 0 && slice_id < nb_slices());
       return const_cast<Slice*>(static_cast<const Tube&>(*this).get_slice(slice_id));
     }
 
     const Slice* Tube::get_slice(int slice_id) const
     {
-      SlicingException::check(*this, slice_id);
+      assert(slice_id >= 0 && slice_id < nb_slices());
       int i = 0;
       for(const Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
       {
@@ -249,13 +249,13 @@ namespace tubex
 
     Slice* Tube::get_slice(double t)
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
       return const_cast<Slice*>(static_cast<const Tube&>(*this).get_slice(t));
     }
 
     const Slice* Tube::get_slice(double t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
       return get_slice(input2index(t));
     }
 
@@ -329,13 +329,13 @@ namespace tubex
     
     const Interval Tube::slice_domain(int slice_id) const
     {
-      // todo: check slice_id
+      assert(slice_id >= 0 && slice_id < nb_slices());
       return get_slice(slice_id)->domain();
     }
 
     int Tube::input2index(double t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
 
       int i = -1;
       for(const Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
@@ -363,10 +363,9 @@ namespace tubex
 
     void Tube::sample(double t)
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
 
       Slice *slice_to_be_sampled = get_slice(t);
-
       if(slice_to_be_sampled->domain().lb() == t || slice_to_be_sampled->domain().ub() == t)
       {
         // No degenerate slice,
@@ -394,8 +393,8 @@ namespace tubex
 
     void Tube::sample(double t, const Interval& gate)
     {
-      DomainException::check(*this, t);
-      DimensionException::check(*this, gate);
+      assert(domain().contains(t));
+
       sample(t);
       Slice *slice = get_slice(t);
       if(t == slice->domain().lb())
@@ -437,19 +436,19 @@ namespace tubex
 
     const Interval Tube::operator()(int slice_id) const
     {
-      SlicingException::check(*this, slice_id);
+      assert(slice_id >= 0 && slice_id < nb_slices());
       return get_slice(slice_id)->codomain();
     }
 
     const Interval Tube::operator()(double t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
       return get_slice(t)->operator()(t);
     }
 
     const Interval Tube::operator()(const Interval& t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
 
       if(t.is_degenerated())
         return operator()(t.lb());
@@ -481,8 +480,8 @@ namespace tubex
 
     const Interval Tube::invert(const Interval& y, const Tube& v, const Interval& search_domain) const
     {
-      SlicingException::check(*this, v);
-      DomainException::check(*this, v);
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
 
       Interval invert = Interval::EMPTY_SET;
       Interval intersection = search_domain & domain();
@@ -505,6 +504,8 @@ namespace tubex
 
     void Tube::invert(const Interval& y, vector<Interval> &v_t, const Tube& v, const Interval& search_domain) const
     {
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
       v_t.clear();
 
       Interval invert = Interval::EMPTY_SET;
@@ -557,8 +558,9 @@ namespace tubex
 
     const Interval Tube::interpol(double t, const Tube& v) const
     {
-      DomainException::check(*this, t);
-      SlicingException::check(*this, v);
+      assert(domain().contains(t));
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
 
       const Slice *slice_x = get_slice(t);
       if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
@@ -570,8 +572,9 @@ namespace tubex
 
     const Interval Tube::interpol(const Interval& t, const Tube& v) const
     {
-      DomainException::check(*this, t);
-      SlicingException::check(*this, v);
+      assert(domain().is_superset(t));
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
 
       Interval interpol = Interval::EMPTY_SET;
 
@@ -668,7 +671,7 @@ namespace tubex
 
     #define sets_comparison(f) \
       \
-      if(Tube::same_slicing(*this, x)) /* faster */ \
+      if(same_slicing(*this, x)) /* faster */ \
       { \
         const Slice *slice = get_first_slice(), *slice_x = x.get_first_slice(); \
         while(slice != NULL) \
@@ -744,7 +747,7 @@ namespace tubex
 
     bool Tube::contains(const Trajectory& x) const
     {
-      DomainException::check(*this, x);
+      assert(domain() == x.domain());
 
       const Slice *slice = get_first_slice();
       while(slice != NULL)
@@ -752,6 +755,7 @@ namespace tubex
         if(!slice->contains(x)) return false;
         slice = slice->next_slice();
       }
+
       return true;
     }
 
@@ -765,19 +769,19 @@ namespace tubex
 
     void Tube::set(const Interval& y, int slice_id)
     {
-      SlicingException::check(*this, slice_id);
+      assert(slice_id >= 0 && slice_id < nb_slices());
       get_slice(slice_id)->set(y);
     }
 
     void Tube::set(const Interval& y, double t)
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
       sample(t, y);
     }
 
     void Tube::set(const Interval& y, const Interval& t)
     {
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
 
       if(t.is_degenerated())
         set(y, t.lb());
@@ -803,6 +807,7 @@ namespace tubex
 
     const Tube& Tube::inflate(double rad)
     {
+      assert(rad >= 0.);
       Interval e(-rad,rad);
 
       // Setting envelopes before gates' inflation
@@ -821,7 +826,8 @@ namespace tubex
 
     const Tube& Tube::inflate(const Trajectory& rad)
     {
-      DomainException::check(*this, rad);
+      assert(rad.codomain().lb() >= 0.);
+      assert(domain() == rad.domain());
 
       // Setting envelopes before gates' inflation
       for(Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
@@ -841,9 +847,10 @@ namespace tubex
     
     const pair<Tube,Tube> Tube::bisect(double t, float ratio) const
     {
-      DomainException::check(*this, t);
-      pair<Tube,Tube> p = make_pair(*this,*this);
+      assert(domain().contains(t));
+      assert(Interval(0.,1.).interior_contains(ratio));
 
+      pair<Tube,Tube> p = make_pair(*this,*this);
       LargestFirst bisector(0., ratio); // todo: bisect according to another rule than largest first?
 
       try
@@ -876,6 +883,7 @@ namespace tubex
 
     const Tube Tube::hull(const list<Tube>& l_tubes)
     {
+      assert(l_tubes.size() != 0);
       list<Tube>::const_iterator it = l_tubes.begin();
       Tube hull = *it;
       for(++it ; it != l_tubes.end() ; ++it)
@@ -887,13 +895,13 @@ namespace tubex
 
     const Interval Tube::integral(double t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().contains(t));
       return integral(Interval(t));
     }
 
     const Interval Tube::integral(const Interval& t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
       pair<Interval,Interval> partial_ti = partial_integral(t);
 
       if(partial_ti.first.is_empty() || partial_ti.second.is_empty())
@@ -908,8 +916,8 @@ namespace tubex
 
     const Interval Tube::integral(const Interval& t1, const Interval& t2) const
     {
-      DomainException::check(*this, t1);
-      DomainException::check(*this, t2);
+      assert(domain().is_superset(t1));
+      assert(domain().is_superset(t2));
 
       pair<Interval,Interval> integral_t1 = partial_integral(t1);
       pair<Interval,Interval> integral_t2 = partial_integral(t2);
@@ -936,7 +944,7 @@ namespace tubex
 
     const pair<Interval,Interval> Tube::partial_integral(const Interval& t) const
     {
-      DomainException::check(*this, t);
+      assert(domain().is_superset(t));
 
       Interval intv_t;
       const Slice *slice = get_first_slice();
@@ -993,8 +1001,8 @@ namespace tubex
 
     const pair<Interval,Interval> Tube::partial_integral(const Interval& t1, const Interval& t2) const
     {
-      DomainException::check(*this, t1);
-      DomainException::check(*this, t2);
+      assert(domain().is_superset(t1));
+      assert(domain().is_superset(t2));
       pair<Interval,Interval> integral_t1 = partial_integral(t1);
       pair<Interval,Interval> integral_t2 = partial_integral(t2);
       return make_pair((integral_t2.first - integral_t1.first),
