@@ -45,10 +45,13 @@ namespace tubex
 
     m_map_tubes[tube];
     set_tube_name(tube, name);
-    set_tube_color(tube, color_frgrnd, color_bckgrnd);
-    set_tube_color(tube, TubeColorType::SLICES, DEFAULT_SLICES_COLOR);
-    set_tube_color(tube, TubeColorType::GATES, DEFAULT_GATES_COLOR);
-    set_tube_color(tube, TubeColorType::POLYGONS, DEFAULT_POLYGONS_COLOR);
+
+    m_map_tubes[tube].m_colors[TubeColorType::BACKGROUND] = color_bckgrnd;
+    m_map_tubes[tube].m_colors[TubeColorType::FOREGROUND] = color_frgrnd;
+    m_map_tubes[tube].m_colors[TubeColorType::SLICES] = DEFAULT_SLICES_COLOR;
+    m_map_tubes[tube].m_colors[TubeColorType::POLYGONS] = DEFAULT_POLYGONS_COLOR;
+    m_map_tubes[tube].m_colors[TubeColorType::GATES] = DEFAULT_GATES_COLOR;
+    create_groups_color(tube);
   }
 
   void VibesFigure_Tube::set_tube_name(const Tube *tube, const string& name)
@@ -75,8 +78,9 @@ namespace tubex
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
       && "unknown tube, must be added beforehand");
 
-    set_tube_color(tube, TubeColorType::BACKGROUND, color_bckgrnd);
-    set_tube_color(tube, TubeColorType::FOREGROUND, color_frgrnd);
+    m_map_tubes[tube].m_colors[TubeColorType::BACKGROUND] = color_bckgrnd;
+    m_map_tubes[tube].m_colors[TubeColorType::FOREGROUND] = color_frgrnd;
+    create_groups_color(tube);
   }
 
   void VibesFigure_Tube::set_tube_color(const Tube *tube, int color_type, const string& color)
@@ -86,6 +90,14 @@ namespace tubex
       && "unknown tube, must be added beforehand");
 
     m_map_tubes[tube].m_colors[color_type] = color;
+    create_groups_color(tube);
+  }
+
+  void VibesFigure_Tube::create_group_color(const Tube *tube, int color_type)
+  {
+    assert(tube != NULL);
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unknown tube, must be added beforehand");
 
     // Creating group:
     ostringstream o;
@@ -119,6 +131,16 @@ namespace tubex
     vibes::newGroup(group_name + suffix,
                     m_map_tubes[tube].m_colors[color_type],
                     vibesParams("figure", name()));
+  }
+
+  void VibesFigure_Tube::create_groups_color(const Tube *tube)
+  {
+    // All groups are created again to keep a correct display order
+    create_group_color(tube, TubeColorType::BACKGROUND);
+    create_group_color(tube, TubeColorType::FOREGROUND);
+    create_group_color(tube, TubeColorType::SLICES);
+    create_group_color(tube, TubeColorType::POLYGONS);
+    create_group_color(tube, TubeColorType::GATES); // layer on top of the other
   }
   
   void VibesFigure_Tube::remove_tube(const Tube *tube)

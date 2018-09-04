@@ -54,6 +54,8 @@ namespace tubex
       void show();
       void show(bool detail_slices);
 
+      enum TubeColorType { FOREGROUND, BACKGROUND, SLICES, GATES, POLYGONS };
+
     protected:
 
       const ibex::IntervalVector draw_tube(const Tube *tube, bool detail_slices = false);
@@ -62,10 +64,10 @@ namespace tubex
       void draw_slice(const Slice& slice, const Slice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon);
       void draw_gate(const ibex::Interval& gate, double t, const vibes::Params& params);
       const ibex::IntervalVector draw_trajectory(const Trajectory *traj, float points_size = 0.);
+      void create_group_color(const Tube *tube, int color_type);
+      void create_groups_color(const Tube *tube);
 
     protected:
-
-      enum TubeColorType { FOREGROUND, BACKGROUND, SLICES, GATES, POLYGONS };
 
       struct FigTubeParams
       {
