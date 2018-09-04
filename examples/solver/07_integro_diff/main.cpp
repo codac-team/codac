@@ -45,7 +45,7 @@ void contract(TubeVector& x)
 
     CtcPicard ctc_picard(1.1);
     ctc_picard.preserve_slicing(true);
-    ctc_picard.contract(f, x, FORWARD | BACKWARD);
+    ctc_picard.contract(f, x, FORWARD);
 
     CtcDeriv ctc_deriv;
     ctc_deriv.preserve_slicing(true);
@@ -60,9 +60,9 @@ int main()
     Vector epsilon(n, 0.1);
     Interval domain(0.,1.);
     TubeVector x(domain, n);
-    TrajectoryVector truth1(domain, tubex::Function("0.5*exp(-t)*(-1.78315*cos(2*t)+1.89158*sin(2*t))"));
-    TrajectoryVector truth2(domain, tubex::Function("0.5*exp(-t)*(1.97753*cos(2*t)+0.0112371*sin(2*t))"));
-
+    TrajectoryVector truth1(domain, tubex::Function("(exp(-t)*(-(cos(2*t)*(-1 + cos(4) + 2*sin(4) + 4*exp(1)*sqrt(2*(1 + cos(4) + 2*exp(2) - sin(4))))) + sin(2*t)*(2 + 2*cos(4) - sin(4) + 2*exp(1)*(2*exp(1) + sqrt(2*(1 + cos(4) + 2*exp(2) - sin(4)))))))/(5 + 3*cos(4) + 8*exp(2) - 4*sin(4))"));
+    TrajectoryVector truth2(domain, tubex::Function("(exp(-t)*(-(cos(2*t)*(-1 + cos(4) + 2*sin(4) - 4*exp(1)*sqrt(2*(1 + cos(4) + 2*exp(2) - sin(4))))) + sin(2*t)*(2 + 2*cos(4) + 4*exp(2) - sin(4) - 2*exp(1)*sqrt(2*(1 + cos(4) + 2*exp(2) - sin(4))))))/(5 + 3*cos(4) + 8*exp(2) - 4*sin(4))"));
+    
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon);
@@ -72,7 +72,7 @@ int main()
     solver.figure()->add_trajectoryvector(&truth1, "truth1", "blue");
     solver.figure()->add_trajectoryvector(&truth2, "truth2", "red");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
-
+    
 
   // Checking if this example still works:
   return (solver.solutions_contain(l_solutions, truth1)
