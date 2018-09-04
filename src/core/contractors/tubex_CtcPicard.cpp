@@ -70,7 +70,9 @@ namespace tubex
           if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 500.)
           {
             
-            x.sample(x[0].slice_domain(k).mid()); // all the tubes components are sampled
+            x.sample(x[0].slice_domain(k).mid()); // all the components of the tube are sampled,
+            // and sampling time is selected according to the first slice of one of the components,
+            // for instance the first one x[0]
             nb_slices ++;
             k --; // the first subslice will be computed
           }
@@ -88,7 +90,9 @@ namespace tubex
           // then it is sampled and contracted again.
           if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 500.)
           {
-            x.sample(x[0].slice_domain(k).mid()); // all the tubes components are sampled
+            x.sample(x[0].slice_domain(k).mid()); // all the components of the tube are sampled,
+            // and sampling time is selected according to the first slice of one of the components,
+            // for instance the first one x[0]
             k += 2; // the second subslice will be computed
           }
         }
