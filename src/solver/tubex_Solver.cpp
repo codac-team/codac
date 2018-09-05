@@ -79,7 +79,7 @@ namespace tubex
 
       bool emptiness;
       double volume_before_refining;
-
+      
       do
       {
         volume_before_refining = x.volume();
@@ -101,7 +101,6 @@ namespace tubex
             cid(x, ctc_func);
             emptiness = x.is_empty();
           }
-
       } while(!emptiness
            && !stopping_condition_met(x)
            && !fixed_point_reached(volume_before_refining, x.volume(), m_refining_fxpt_ratio));
@@ -172,6 +171,9 @@ namespace tubex
 
   bool Solver::fixed_point_reached(double volume_before, double volume_after, float fxpt_ratio)
   {
+    if(volume_after == volume_before)
+      return true;
+
     assert(Interval(0.,1.).contains(fxpt_ratio));
     int n = m_max_thickness.size();
     return (std::pow(volume_after, 1./n) / std::pow(volume_before, 1./n)) > (1. - fxpt_ratio);
@@ -181,6 +183,9 @@ namespace tubex
   {
     assert(Interval(0.,1.).contains(propa_fxpt_ratio));
 
+    if(propa_fxpt_ratio == 1.)
+      return;
+    
     bool emptiness;
     double volume_before_ctc;
 
@@ -196,6 +201,9 @@ namespace tubex
 
   void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
   {
+    if(m_cid_fxpt_ratio == 1.)
+      return;
+
     double t_bisection;
     x[0].max_gate_thickness(t_bisection);
     pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
