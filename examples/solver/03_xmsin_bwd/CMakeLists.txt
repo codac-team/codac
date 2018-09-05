@@ -14,6 +14,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME solver_03_xmsin_bwd COMMAND solver_03_xmsin_bwd 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME solver_03_xmsin_bwd COMMAND solver_03_xmsin_bwd 0)
+  endif(BUILD_TESTS)

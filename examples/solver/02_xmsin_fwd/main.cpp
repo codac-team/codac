@@ -11,12 +11,11 @@ void contract(TubeVector& x)
   tubex::Function f("x", "-sin(x)");
 
   CtcPicard ctc_picard;
-  ctc_picard.preserve_slicing(true);
-  ctc_picard.contract(f, x, FORWARD);
+  ctc_picard.contract(f, x, FORWARD | BACKWARD);
 
   CtcDeriv ctc_deriv;
-  ctc_deriv.preserve_slicing(true);
-  ctc_deriv.contract(x, f.eval_vector(x), FORWARD);
+  ctc_deriv.set_fast_mode(true);
+  ctc_deriv.contract(x, f.eval_vector(x), FORWARD | BACKWARD);
 }
 
 int main()
@@ -33,9 +32,9 @@ int main()
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon);
-    solver.set_refining_fxpt_ratio(0.0001);
-    solver.set_propa_fxpt_ratio(0.005);
-    solver.set_cid_fxpt_ratio(0.005);
+    solver.set_refining_fxpt_ratio(0.8);
+    solver.set_propa_fxpt_ratio(1.);
+    solver.set_cid_fxpt_ratio(0.);
     solver.figure()->add_trajectoryvector(&truth, "truth", "blue");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 

@@ -26,9 +26,14 @@ namespace tubex
 
       Solver(const ibex::Vector& max_thickness);
       ~Solver();
+
+      // Ratio:
+      // 0 = no iteration (feature disabled)
+      // 1 = fixed point reached up to the floating point representation
       void set_refining_fxpt_ratio(float refining_fxpt_ratio);
       void set_propa_fxpt_ratio(float propa_fxpt_ratio);
       void set_cid_fxpt_ratio(float cid_fxpt_ratio);
+      
       const std::list<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
       VibesFigure_TubeVector* figure();
       static bool solutions_contain(const std::list<TubeVector>& l_solutions, const TrajectoryVector& truth);

@@ -58,7 +58,7 @@ TEST_CASE("CtcPicard")
     tubex::Function f7("x", "-sin(x)");
     ctc_picard.guess_kth_slices_envelope(f7, tube, 0, FORWARD);
     CHECK(tube(0).is_superset(2.*atan(exp(-t)*tan(0.5))));
-
+    
     tube = tube_raw;
     tube.set(IntervalVector(1, exp(-t.lb())), t.lb());
     tubex::Function f8("x", "-x");

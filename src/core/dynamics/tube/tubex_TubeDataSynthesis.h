@@ -81,6 +81,18 @@ namespace tubex
 
       std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
   };
+
+  class TubeDataSynthesis_Volume : public TubeDataSynthesis
+  {
+    public:
+
+      TubeDataSynthesis_Volume();
+      double volume() const;
+
+    protected:
+
+      double m_volume;
+  };
 }
 
 #endif

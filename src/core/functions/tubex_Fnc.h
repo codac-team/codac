@@ -37,6 +37,9 @@ namespace tubex
       virtual const TubeVector eval_vector(const TubeVector& x) const;
       virtual const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const = 0;
 
+virtual const ibex::IntervalVector eval_test(const ibex::IntervalVector& x) const { std::cout << "ERROR" << std::endl; return x;};
+
+
     protected:
       
       Fnc();

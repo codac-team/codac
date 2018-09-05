@@ -86,8 +86,11 @@ namespace tubex
 
         // 1. Refining
 
-          double t_refining = x[0].get_wider_slice()->domain().mid();
-          x.sample(t_refining);
+          if(m_refining_fxpt_ratio != 0.)
+          {
+            double t_refining = x[0].get_wider_slice()->domain().mid();
+            x.sample(t_refining);
+          }
 
         // 2. Propagations up to the fixed point
 
@@ -101,6 +104,7 @@ namespace tubex
             cid(x, ctc_func);
             emptiness = x.is_empty();
           }
+          
       } while(!emptiness
            && !stopping_condition_met(x)
            && !fixed_point_reached(volume_before_refining, x.volume(), m_refining_fxpt_ratio));
@@ -171,19 +175,19 @@ namespace tubex
 
   bool Solver::fixed_point_reached(double volume_before, double volume_after, float fxpt_ratio)
   {
-    if(volume_after == volume_before)
+    if(fxpt_ratio == 0. || volume_after == volume_before)
       return true;
 
     assert(Interval(0.,1.).contains(fxpt_ratio));
     int n = m_max_thickness.size();
-    return (std::pow(volume_after, 1./n) / std::pow(volume_before, 1./n)) > (1. - fxpt_ratio);
+    return (std::pow(volume_after, 1./n) / std::pow(volume_before, 1./n)) >= fxpt_ratio;
   }
 
   void Solver::propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio)
   {
     assert(Interval(0.,1.).contains(propa_fxpt_ratio));
 
-    if(propa_fxpt_ratio == 1.)
+    if(propa_fxpt_ratio == 0.)
       return;
     
     bool emptiness;
@@ -201,7 +205,7 @@ namespace tubex
 
   void Solver::cid(TubeVector &x, void (*ctc_func)(TubeVector&))
   {
-    if(m_cid_fxpt_ratio == 1.)
+    if(m_cid_fxpt_ratio == 0.)
       return;
 
     double t_bisection;

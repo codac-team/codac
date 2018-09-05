@@ -41,11 +41,15 @@ namespace tubex
       const ibex::Function& ibex_function() const;
 
       using Fnc::eval;
+      // todo: using Fnc::eval_vector?
+      // todo: keep using Fnc::eval?
 
       const Tube eval(const TubeVector& x) const;
       const ibex::Interval eval(const ibex::Interval& t) const;
       const ibex::Interval eval(const Slice& x) const;
       const ibex::Interval eval(const ibex::Interval& t, const TubeVector& x) const;
+
+const ibex::IntervalVector eval_test(const ibex::IntervalVector& x) const;
 
       const TubeVector eval_vector(const TubeVector& x) const;
       const ibex::IntervalVector eval_vector(const ibex::Interval& t) const;

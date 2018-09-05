@@ -126,8 +126,14 @@ namespace tubex
     if(tube.is_empty())
       return;
 
-    IntervalVector f_eval = f.eval_vector(tube[0].slice_domain(k), tube); // computed only once
     guess_kth_slices_envelope(f, tube, k, t_propa);
+    //IntervalVector f_eval = f.eval_vector(tube[0].slice_domain(k), tube); // computed only once
+
+IntervalVector boxtemp(tube.size() + 1);
+boxtemp[0] = tube[0].slice_domain(k);
+boxtemp.put(1, tube(k));
+IntervalVector f_eval = f.eval_test(boxtemp);
+
 
     if(t_propa & FORWARD)
       for(int i = 0 ; i < tube.size() ; i++)
@@ -179,7 +185,7 @@ namespace tubex
 
     IntervalVector x_guess(tube.size()), x_enclosure = x0;
     m_picard_iterations = 0;
-
+//x_guess = x0;
     do
     {
       m_picard_iterations++;
@@ -190,27 +196,36 @@ namespace tubex
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      for(int i = 0 ; i < tube.size() ; i++)
-        tube[i].get_slice(k)->set_envelope(x_guess[i] & initial_x[i]);
+//TubeVector temp(tube);
+//      for(int i = 0 ; i < temp.size() ; i++)
+//        temp[i].get_slice(k)->set_envelope(x_guess[i]);
 
-      x_enclosure = x0 + h * f.eval_vector(t, tube);
+IntervalVector boxtemp(x_guess.size() + 1);
+boxtemp[0] = t;
+boxtemp.put(1, x_guess);
+      x_enclosure = x0 + h * f.eval_test(boxtemp);
+      //x_enclosure = x0 + h * f.eval_vector(t, temp);
       
       if(x_enclosure.is_unbounded() || x_enclosure.is_empty() || x_guess.is_empty())
       {
-        for(int i = 0 ; i < tube.size() ; i++)
-          tube[i].get_slice(k)->set_envelope(initial_x[i]); // coming back to the initial state
+        //for(int i = 0 ; i < tube.size() ; i++)
+        //  tube[i].get_slice(k)->set_envelope(initial_x[i]); // coming back to the initial state
         // todo: do it only on the unbounded component?
         break;
       }
     } while(!x_enclosure.is_interior_subset(x_guess));
 
+      if(!(x_enclosure.is_unbounded() || x_enclosure.is_empty() || x_guess.is_empty()))
+      for(int i = 0 ; i < tube.size() ; i++)
+        tube[i].get_slice(k)->set_envelope(tube[i].get_slice(k)->codomain() & x_guess[i]);
+
     // Restoring ending gate, contracted by setting the envelope
-    for(int i = 0 ; i < tube.size() ; i++)
-    {
-      Slice *slice = tube[i].get_slice(k);
-      if(t_propa & FORWARD)  slice->set_output_gate(xf[i]);
-      if(t_propa & BACKWARD) slice->set_input_gate(xf[i]);
-      // todo: ^ check this ^
-    }
+    //for(int i = 0 ; i < tube.size() ; i++)
+    //{
+    //  Slice *slice = tube[i].get_slice(k);
+    //  if(t_propa & FORWARD)  slice->set_output_gate(xf[i]);
+    //  if(t_propa & BACKWARD) slice->set_input_gate(xf[i]);
+    //  // todo: ^ check this ^
+    //}
   }
 }

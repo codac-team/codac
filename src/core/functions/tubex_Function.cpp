@@ -19,6 +19,13 @@ using namespace ibex;
 
 namespace tubex
 {
+  const ibex::IntervalVector Function::eval_test(const ibex::IntervalVector& x) const
+  {
+    return m_ibex_f->eval_vector(x);
+  }
+
+
+
   Function::Function(int n, const char** x, const char* y)
   {
     construct_from_array(n, x, y);

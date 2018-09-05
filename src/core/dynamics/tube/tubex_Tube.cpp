@@ -55,7 +55,7 @@ namespace tubex
       do
       {
         lb = ub; // we guarantee all slices are adjacent
-        ub = min(lb + timestep, domain.ub());
+        ub = min(lb + timestep, domain.ub()); // the domain of the last slice may be smaller
 
         slice = new Slice(Interval(lb,ub));
 
@@ -376,9 +376,6 @@ namespace tubex
       Slice *new_slice = new Slice(*slice_to_be_sampled);
       new_slice->set_domain(Interval(t, slice_to_be_sampled->domain().ub()));
       slice_to_be_sampled->set_domain(Interval(slice_to_be_sampled->domain().lb(), t));
-
-      // todo: remove this? vector<Slice*>::iterator it = find(m_v_slices.begin(), m_v_slices.end(), slice_to_be_sampled);
-      // todo: remove this? m_v_slices.insert(++it, new_slice);
 
       // Updated slices structure
       delete new_slice->m_input_gate;

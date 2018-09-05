@@ -27,6 +27,7 @@ namespace tubex
       TubeDataSynthesis_Emptiness& emptiness_synthesis();
       TubeDataSynthesis_Codomain& codomain_synthesis();
       TubeDataSynthesis_Primitive& primitive_synthesis();
+      TubeDataSynthesis_Volume& volume_synthesis();
 
     protected:
 
@@ -34,6 +35,7 @@ namespace tubex
       TubeDataSynthesis_Emptiness m_syn_emptiness;
       TubeDataSynthesis_Codomain m_syn_codomain;
       TubeDataSynthesis_Primitive m_syn_primitive;
+      TubeDataSynthesis_Volume m_syn_volume;
 
       // Binary tree structure
       TubeTreeSynthesis *m_first_subtree = NULL;
