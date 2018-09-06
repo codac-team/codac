@@ -25,11 +25,11 @@ namespace tubex
   #define TRAJ_NB_DISPLAYED_POINTS  10000
   
   // HTML color codes:
-  #define DEFAULT_TRAJ_COLOR        "#276279"
+  #define DEFAULT_TRAJ_COLOR        "#004257"
   #define DEFAULT_FRGRND_COLOR      "#a2a2a2[#a2a2a2]"
   #define DEFAULT_BCKGRND_COLOR     "#d2d2d2[#d2d2d2]"
-  #define DEFAULT_SLICES_COLOR      "lightGray[#a2a2a2]"
-  #define DEFAULT_GATES_COLOR       "#004668[#004668]"
+  #define DEFAULT_SLICES_COLOR      "#828282[#F0F0F0]"
+  #define DEFAULT_GATES_COLOR       "#0084AF[#0084AF]"
   #define DEFAULT_POLYGONS_COLOR    "#00536E[#2696BA]"
 
   class VibesFigure_Tube : public VibesFigure
