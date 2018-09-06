@@ -28,12 +28,13 @@ void contract(TubeVector& x)
 
     tubex::Function f("x", "x");
 
-    CtcPicard ctc_picard(1.1);
-    ctc_picard.preserve_slicing(true);
+    CtcPicard ctc_picard;
+    //ctc_picard.preserve_slicing(true);
     ctc_picard.contract(f, x);
     
     CtcDeriv ctc_deriv;
-    ctc_deriv.preserve_slicing(true);
+    //ctc_deriv.preserve_slicing(true);
+    ctc_deriv.set_fast_mode(true);
     ctc_deriv.contract(x, f.eval_vector(x));
 }
 
@@ -51,11 +52,11 @@ int main()
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon);
-    solver.set_refining_fxpt_ratio(0.99);
-    solver.set_propa_fxpt_ratio(0.7);
+    solver.set_refining_fxpt_ratio(0.999);
+    solver.set_propa_fxpt_ratio(0.5);
     solver.set_cid_fxpt_ratio(0.);
-    solver.figure()->add_trajectoryvector(&truth1, "truth1", "blue");
-    solver.figure()->add_trajectoryvector(&truth2, "truth2", "red");
+    solver.figure()->add_trajectoryvector(&truth1, "truth1");
+    solver.figure()->add_trajectoryvector(&truth2, "truth2");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 

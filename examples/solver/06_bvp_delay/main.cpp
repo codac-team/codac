@@ -10,8 +10,17 @@ class FncDelayCustom : public tubex::Fnc
 {
   public: 
 
-    FncDelayCustom(double delay) : Fnc(1,1), m_delay(delay) { };
-    const Interval eval(const Interval& t, const TubeVector& x) const { /* not defined */ };
+    FncDelayCustom(double delay) : Fnc(1, 1, true), m_delay(delay) { }
+    const Interval eval(int slice_id, const TubeVector& x) const { cout << "not defined 1" << endl; }
+    const Interval eval(const Interval& t, const TubeVector& x) const { cout << "not defined 2" << endl; }
+    const Interval eval(const IntervalVector& x) const { cout << "not defined 3" << endl; }
+    const IntervalVector eval_vector(const IntervalVector& x) const { cout << "not defined 4" << endl; }
+
+    const IntervalVector eval_vector(int slice_id, const TubeVector& x) const
+    {
+      Interval t = x[0].slice(slice_id)->domain();
+      return eval_vector(t, x);
+    }
 
     const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
@@ -58,6 +67,7 @@ void contract(TubeVector& x)
     ctc_picard.preserve_slicing(true);
     ctc_picard.contract(f, x);
 
+    // todo: check if this is useful:
     CtcDelay ctc_delay;
     ctc_delay.preserve_slicing(true);
     TubeVector y(x, IntervalVector(x.size(), Interval::ALL_REALS));
@@ -82,11 +92,11 @@ int main()
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon);
-    solver.set_refining_fxpt_ratio(0.005);
-    solver.set_propa_fxpt_ratio(0.005);
-    solver.set_cid_fxpt_ratio(1.);
-    solver.figure()->add_trajectoryvector(&truth1, "truth1", "blue");
-    solver.figure()->add_trajectoryvector(&truth2, "truth2", "red");
+    solver.set_refining_fxpt_ratio(0.99);
+    solver.set_propa_fxpt_ratio(0.7);
+    solver.set_cid_fxpt_ratio(0.);
+    solver.figure()->add_trajectoryvector(&truth1, "truth1");
+    solver.figure()->add_trajectoryvector(&truth2, "truth2");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 

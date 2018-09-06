@@ -55,9 +55,9 @@ int main()
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon);
-    solver.set_refining_fxpt_ratio(0.001);
-    solver.set_propa_fxpt_ratio(0.005);
-    solver.set_cid_fxpt_ratio(0.01);
+    solver.set_refining_fxpt_ratio(0.99);
+    solver.set_propa_fxpt_ratio(0.8);
+    solver.set_cid_fxpt_ratio(0.);
 
     IntervalVector max_restrict_box(3);
     max_restrict_box[0] = Interval(1.,3.);

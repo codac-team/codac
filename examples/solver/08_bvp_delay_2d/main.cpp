@@ -10,9 +10,18 @@ class FncDelayCustom : public tubex::Fnc
 {
   public: 
 
-    FncDelayCustom() : Fnc(2,2) { };
+    FncDelayCustom() : Fnc(2, 2, true) { };
+    const Interval eval(const IntervalVector& x) const { /* scalar case not defined */ }
+    const Interval eval(int slice_id, const TubeVector& x) const { /* scalar case not defined */ }
     const Interval eval(const Interval& t, const TubeVector& x) const { /* scalar case not defined */ }
-    const TubeVector eval_vector(const TubeVector& x) const { return Fnc::eval_vector(x); }
+    const TubeVector eval_vector(const TubeVector& x) const {  /* scalar case not defined */ }
+    const IntervalVector eval_vector(const IntervalVector& x) const { /* scalar case not defined */ }
+
+    const IntervalVector eval_vector(int slice_id, const TubeVector& x) const
+    {
+      Interval t = x[0].slice(slice_id)->domain();
+      return eval_vector(t, x);
+    }
 
     const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
@@ -54,26 +63,26 @@ int main()
 
     int n = 2;
     Vector epsilon(n, 0.4);
-    Interval domain(0.,2.*M_PI);
+    Interval domain(0., 2.*M_PI);
     IntervalVector codomain(2);
-    codomain[0] = Interval(0.3,1.4);
-    codomain[1] = Interval(0.2,0.625);
+    codomain[0] = Interval(0.3, 1.4);
+    codomain[1] = Interval(0.2, 0.625);
     TubeVector x(domain, codomain);
 
     IntervalVector init(2);
-    init[0] = Interval(1.25,1.3);
-    init[1] = Interval(0.25,0.3);
+    init[0] = Interval(1.25, 1.3);
+    init[1] = Interval(0.25, 0.3);
     x.set(init, x.domain().lb());
-    init[0] = Interval(1.25,1.3);
-    init[1] = Interval(0.25,0.3);
+    init[0] = Interval(1.25, 1.3);
+    init[1] = Interval(0.25, 0.3);
     x.set(init, x.domain().ub());
 
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon);
-    solver.set_refining_fxpt_ratio(0.01);
-    solver.set_propa_fxpt_ratio(0.01);
-    solver.set_cid_fxpt_ratio(1.);
+    solver.set_refining_fxpt_ratio(0.9);
+    solver.set_propa_fxpt_ratio(0.9);
+    solver.set_cid_fxpt_ratio(0.);
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 
 

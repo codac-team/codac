@@ -10,9 +10,18 @@ class FncIntegroDiff : public tubex::Fnc
 {
   public: 
 
-    FncIntegroDiff() : Fnc(1,1) {};
+    FncIntegroDiff() : Fnc(1, 1, true) {};
     const TubeVector eval_vector(const TubeVector& x) const { return Fnc::eval_vector(x); }
+    const Interval eval(const IntervalVector& x) const { /* scalar case not defined */ }
+    const Interval eval(int slice_id, const TubeVector& x) const { /* scalar case not defined */ }
     const Interval eval(const Interval& t, const TubeVector& x) const { /* scalar case not defined */ }
+    const IntervalVector eval_vector(const IntervalVector& x) const { /* scalar case not defined */ }
+
+    const IntervalVector eval_vector(int slice_id, const TubeVector& x) const
+    {
+      Interval t = x[0].slice(slice_id)->domain();
+      return eval_vector(t, x);
+    }
 
     const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
@@ -45,7 +54,7 @@ void contract(TubeVector& x)
 
     CtcPicard ctc_picard(1.1);
     ctc_picard.preserve_slicing(true);
-    ctc_picard.contract(f, x, FORWARD);
+    ctc_picard.contract(f, x, FORWARD | BACKWARD);
 
     CtcDeriv ctc_deriv;
     ctc_deriv.preserve_slicing(true);
@@ -66,15 +75,18 @@ int main()
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon);
-    solver.set_refining_fxpt_ratio(0.005);
-    solver.set_propa_fxpt_ratio(0.1);
-    solver.set_cid_fxpt_ratio(0.1);
-    solver.figure()->add_trajectoryvector(&truth1, "truth1", "blue");
-    solver.figure()->add_trajectoryvector(&truth2, "truth2", "red");
+    solver.set_refining_fxpt_ratio(0.99);
+    solver.set_propa_fxpt_ratio(0.9);
+    solver.set_cid_fxpt_ratio(0.8);
+    solver.figure()->add_trajectoryvector(&truth1, "truth1");
+    solver.figure()->add_trajectoryvector(&truth2, "truth2");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
     
+    bool solution_found = (solver.solutions_contain(l_solutions, truth1)
+                        && solver.solutions_contain(l_solutions, truth2));
+    cout << solution_found << endl;
+
 
   // Checking if this example still works:
-  return (solver.solutions_contain(l_solutions, truth1)
-       && solver.solutions_contain(l_solutions, truth2)) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return solution_found ? EXIT_SUCCESS : EXIT_FAILURE;
 }
