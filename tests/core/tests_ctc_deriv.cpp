@@ -325,15 +325,15 @@ TEST_CASE("CtcDeriv")
     #endif
 
     CtcDeriv ctc;
-    ctc.contract(*(tube.get_slice(0)), *(tubedot.get_slice(0)));
-    ctc.contract(*(tube.get_slice(1)), *(tubedot.get_slice(1)));
-    ctc.contract(*(tube.get_slice(2)), *(tubedot.get_slice(2)));
-    ctc.contract(*(tube.get_slice(3)), *(tubedot.get_slice(3)));
-    ctc.contract(*(tube.get_slice(4)), *(tubedot.get_slice(4)));
-    ctc.contract(*(tube.get_slice(5)), *(tubedot.get_slice(5)));
-    ctc.contract(*(tube.get_slice(6)), *(tubedot.get_slice(6)));
-    ctc.contract(*(tube.get_slice(7)), *(tubedot.get_slice(7)));
-    ctc.contract(*(tube.get_slice(8)), *(tubedot.get_slice(8)));
+    ctc.contract(*(tube.slice(0)), *(tubedot.slice(0)));
+    ctc.contract(*(tube.slice(1)), *(tubedot.slice(1)));
+    ctc.contract(*(tube.slice(2)), *(tubedot.slice(2)));
+    ctc.contract(*(tube.slice(3)), *(tubedot.slice(3)));
+    ctc.contract(*(tube.slice(4)), *(tubedot.slice(4)));
+    ctc.contract(*(tube.slice(5)), *(tubedot.slice(5)));
+    ctc.contract(*(tube.slice(6)), *(tubedot.slice(6)));
+    ctc.contract(*(tube.slice(7)), *(tubedot.slice(7)));
+    ctc.contract(*(tube.slice(8)), *(tubedot.slice(8)));
 
     CHECK(tube(0.) == Interval(2.,3.));
     CHECK(tube(0) == Interval(-1.,7.));

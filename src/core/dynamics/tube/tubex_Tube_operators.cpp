@@ -22,32 +22,32 @@ namespace tubex
     \
     const Tube& Tube::f(const Interval& x) \
     { \
-      for(Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice()) \
+      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice()) \
       { \
         Interval envelope = s->codomain(); \
         Interval ingate = s->input_gate(); \
         s->set_envelope(envelope.f(x)); \
         s->set_input_gate(ingate.f(x)); \
       } \
-      Slice *last_slice = get_last_slice(); \
-      Interval outgate = last_slice->output_gate(); \
-      last_slice->set_output_gate(outgate.f(x)); \
+      Slice *s = last_slice(); \
+      Interval outgate = s->output_gate(); \
+      s->set_output_gate(outgate.f(x)); \
       return *this; \
     } \
     \
     const Tube& Tube::f(const Trajectory& x) \
     { \
       assert(domain() == x.domain()); \
-      for(Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice()) \
+      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice()) \
       { \
         Interval envelope = s->codomain(); \
         Interval ingate = s->input_gate(); \
         s->set_envelope(envelope.f(x(s->domain()))); \
         s->set_input_gate(ingate.f(x(s->domain().lb()))); \
       } \
-      Slice *last_slice = get_last_slice(); \
-      Interval outgate = last_slice->output_gate(); \
-      last_slice->set_output_gate(outgate.f(x(last_slice->domain().ub()))); \
+      Slice *s = last_slice(); \
+      Interval outgate = s->output_gate(); \
+      s->set_output_gate(outgate.f(x(s->domain().ub()))); \
       return *this; \
     } \
     \
@@ -56,8 +56,8 @@ namespace tubex
       assert(domain() == x.domain()); \
       if(Tube::same_slicing(*this, x)) /* faster */ \
       { \
-        Slice *s = get_first_slice(); \
-        const Slice *s_x = x.get_first_slice(); \
+        Slice *s = first_slice(); \
+        const Slice *s_x = x.first_slice(); \
         while(s != NULL) \
         { \
           Interval envelope = s->codomain(); \
@@ -67,13 +67,13 @@ namespace tubex
           s = s->next_slice(); \
           s_x = s_x->next_slice(); \
         } \
-        Slice *last_slice = get_last_slice(); \
-        Interval outgate = last_slice->output_gate(); \
-        last_slice->set_output_gate(outgate.f(x.get_last_slice()->output_gate())); \
+        s = last_slice(); \
+        Interval outgate = s->output_gate(); \
+        s->set_output_gate(outgate.f(x.last_slice()->output_gate())); \
       } \
       else \
       { \
-        Slice *s = get_first_slice(); \
+        Slice *s = first_slice(); \
         Interval s_domain; \
         while(s != NULL) \
         { \
@@ -84,9 +84,9 @@ namespace tubex
           s->set_input_gate(ingate.f(x(s_domain.lb()))); \
           s = s->next_slice(); \
         } \
-        Slice *last_slice = get_last_slice(); \
-        Interval outgate = last_slice->output_gate(); \
-        last_slice->set_output_gate(outgate.f(x(s_domain.ub()))); \
+        s = last_slice(); \
+        Interval outgate = s->output_gate(); \
+        s->set_output_gate(outgate.f(x(s_domain.ub()))); \
       } \
       return *this; \
     } \

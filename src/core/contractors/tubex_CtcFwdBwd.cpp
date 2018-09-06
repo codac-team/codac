@@ -42,7 +42,7 @@ namespace tubex
 
     Slice **v_x_slices = new Slice*[x.size()];
     for(int i = 0 ; i < x.size() ; i++)
-      v_x_slices[i] = x[i].get_first_slice();
+      v_x_slices[i] = x[i].first_slice();
 
     IntervalVector envelope(x.size() + 1);
     IntervalVector ingate(x.size() + 1);
@@ -74,7 +74,7 @@ namespace tubex
     IntervalVector outgate(x.size() + 1);
 
     for(int i = 0 ; i < x.size() ; i++)
-      v_x_slices[i] = x[i].get_last_slice();
+      v_x_slices[i] = x[i].last_slice();
 
     outgate[0] = v_x_slices[0]->domain().ub();
     for(int i = 0 ; i < x.size() ; i++)

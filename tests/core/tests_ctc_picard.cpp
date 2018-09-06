@@ -71,7 +71,7 @@ TEST_CASE("CtcPicard")
     Interval domain(0.,0.1);
     TubeVector tube(domain, 1);
     tube.set(IntervalVector(1, exp(domain.lb())), domain.lb());
-    Slice *x = tube[0].get_first_slice();
+    Slice *x = tube[0].first_slice();
 
     tubex::Function f("x", "x");
     CtcPicard ctc_picard(1.1);
@@ -80,7 +80,7 @@ TEST_CASE("CtcPicard")
     CHECK(x->input_gate() == exp(0.));
     CHECK(x->output_gate() == Interval::ALL_REALS);
     ctc_picard.contract(f, tube, FORWARD);
-    x = tube[0].get_first_slice();
+    x = tube[0].first_slice();
     CHECK(x->codomain().is_superset(Interval(exp(domain))));
     CHECK(x->output_gate().is_superset(Interval(exp(domain.ub()))));
     CHECK(ctc_picard.picard_iterations() != 1);

@@ -172,13 +172,13 @@ namespace Catch
           if(lhs.nb_slices() != rhs.m_value.nb_slices())
             return false;
 
-          const tubex::Slice *slice = lhs.get_first_slice(), *slice_x = rhs.m_value.get_first_slice();
-          while(slice != NULL)
+          const tubex::Slice *s = lhs.first_slice(), *s_x = rhs.m_value.first_slice();
+          while(s != NULL)
           {
-            if(*slice != ApproxSlice(*slice_x)) // todo
+            if(*s != ApproxSlice(*s_x)) // todo
               return false;
-            slice = slice->next_slice();
-            slice_x = slice_x->next_slice();
+            s = s->next_slice();
+            s_x = s_x->next_slice();
           }
 
           return true;

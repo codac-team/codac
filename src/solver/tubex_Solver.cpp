@@ -88,7 +88,7 @@ namespace tubex
 
           if(m_refining_fxpt_ratio != 0.)
           {
-            double t_refining = x[0].get_wider_slice()->domain().mid();
+            double t_refining = x[0].wider_slice()->domain().mid();
             x.sample(t_refining);
           }
 
@@ -128,7 +128,7 @@ namespace tubex
           else
           {
             cout << "Bisection..." << endl;
-            double t_bisection = x[0].get_largest_slice()->domain().mid();
+            double t_bisection = x[0].largest_slice()->domain().mid();
             pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
             s.push(p_x.first);
             s.push(p_x.second);

@@ -44,10 +44,10 @@ namespace tubex
     if(!bin_file.is_open())
       throw Exception("serialize_Trajectory()", "ofstream& bin_file not open");
 
-    if(traj.get_function() != NULL)
+    if(traj.function() != NULL)
       throw Exception("serialize_Trajectory()", "Fnc serialization not implemented");
 
-    if(traj.get_map().size() == 0)
+    if(traj.sampled_map().size() == 0)
       throw Exception("serialize_Trajectory()", "trajectory not defined");
 
     // Version number for compliance purposes
@@ -62,11 +62,11 @@ namespace tubex
       case 2:
       {
         // Points number
-        int pts_number = traj.get_map().size();
+        int pts_number = traj.sampled_map().size();
         bin_file.write((const char*)&pts_number, sizeof(int));
 
         typename map<double,double>::const_iterator it_map;
-        for(it_map = traj.get_map().begin() ; it_map != traj.get_map().end() ; it_map++)
+        for(it_map = traj.sampled_map().begin() ; it_map != traj.sampled_map().end() ; it_map++)
         {
           bin_file.write((const char*)&it_map->first, sizeof(double));
           bin_file.write((const char*)&it_map->second, sizeof(double));

@@ -81,7 +81,7 @@ namespace tubex
     
     Slice **v_y_slices = new Slice*[y.size()];
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i] = y[i].get_first_slice();
+      v_y_slices[i] = y[i].first_slice();
 
     while(v_y_slices[0] != NULL)
     {
@@ -98,7 +98,7 @@ namespace tubex
     }
     
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i] = y[i].get_last_slice();
+      v_y_slices[i] = y[i].last_slice();
 
       result = eval_vector(v_y_slices[0]->domain().ub(), x);
     for(int i = 0 ; i < y.size() ; i++)

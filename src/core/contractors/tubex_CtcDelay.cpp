@@ -28,8 +28,8 @@ namespace tubex
     assert(x.domain() == y.domain());
     assert(Tube::same_slicing(x, y));
 
-    const Slice *slice_x = x.get_first_slice();
-    Slice *slice_y = y.get_first_slice();
+    const Slice *slice_x = x.first_slice();
+    Slice *slice_y = y.first_slice();
 
     while(slice_x != NULL)
     {

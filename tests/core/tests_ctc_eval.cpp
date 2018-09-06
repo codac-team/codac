@@ -245,9 +245,9 @@ TEST_CASE("CtcEval")
     CHECK(x(0.5) == Interval(-4.,-1.));
     CHECK(x(1) == Interval(-4.,-1.));
     CHECK(x(1.) == Interval(-3.5,-1.25));
-    CHECK(x.get_slice(0.6)->domain() == Interval(0.5,1.));
-    CHECK(x.get_slice(0.6)->input_gate() == Interval(-4.,-1.));
-    CHECK(x.get_slice(0.6)->output_gate() == Interval(-3.5,-1.25));
+    CHECK(x.slice(0.6)->domain() == Interval(0.5,1.));
+    CHECK(x.slice(0.6)->input_gate() == Interval(-4.,-1.));
+    CHECK(x.slice(0.6)->output_gate() == Interval(-3.5,-1.25));
     CHECK(xdot(2) == Interval(-0.5,1.));
     //CHECK(x(2) == Interval(-3.5,-0.5)); // todo: optimal implementation?
     CHECK(x(2.) == Interval(-2.75,-0.5));

@@ -67,7 +67,7 @@ namespace tubex
 
         // Domains
         double lb;
-        for(const Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube.first_slice() ; s != NULL ; s = s->next_slice())
         {
           lb = s->domain().lb();
           bin_file.write((const char*)&lb, sizeof(double));
@@ -76,12 +76,12 @@ namespace tubex
         bin_file.write((const char*)&lb, sizeof(double));
 
         // Codomains
-        for(const Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube.first_slice() ; s != NULL ; s = s->next_slice())
           serialize_Interval(bin_file, s->codomain());
 
         // Gates
-        serialize_Interval(bin_file, tube.get_first_slice()->input_gate());
-        for(const Slice *s = tube.get_first_slice() ; s != NULL ; s = s->next_slice())
+        serialize_Interval(bin_file, tube.first_slice()->input_gate());
+        for(const Slice *s = tube.first_slice() ; s != NULL ; s = s->next_slice())
           serialize_Interval(bin_file, s->output_gate());
 
         break;
@@ -152,7 +152,7 @@ namespace tubex
         }
 
         // Codomains
-        for(Slice *s = tube->get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(Slice *s = tube->first_slice() ; s != NULL ; s = s->next_slice())
         {
           Interval slice_value;
           deserialize_Interval(bin_file, slice_value);
@@ -162,8 +162,8 @@ namespace tubex
         // Gates
         Interval gate;
         deserialize_Interval(bin_file, gate);
-        tube->get_first_slice()->set_input_gate(gate);
-        for(Slice *s = tube->get_first_slice() ; s != NULL ; s = s->next_slice())
+        tube->first_slice()->set_input_gate(gate);
+        for(Slice *s = tube->first_slice() ; s != NULL ; s = s->next_slice())
         {
           deserialize_Interval(bin_file, gate);
           s->set_output_gate(gate);

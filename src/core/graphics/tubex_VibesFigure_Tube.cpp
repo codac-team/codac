@@ -300,11 +300,11 @@ namespace tubex
           vibes::Params params_foreground_polygons = vibesParams("group", group_name + "_polygons");
           vibes::Params params_foreground_gates = vibesParams("group", group_name + "_gates", "FixedScale", true);
 
-          const Slice *slice = tube->get_first_slice();
+          const Slice *slice = tube->first_slice();
           const Slice *deriv_slice = NULL;
 
           if(m_map_tubes[tube].tube_derivative != NULL)
-            deriv_slice = m_map_tubes[tube].tube_derivative->get_first_slice();
+            deriv_slice = m_map_tubes[tube].tube_derivative->first_slice();
 
           draw_gate(slice->input_gate(), tube->domain().lb(), params_foreground_gates);
 
@@ -343,7 +343,7 @@ namespace tubex
 
     for(int k = 0 ; k < tube->nb_slices() ; k++)
     {
-      IntervalVector slice_box = tube->get_slice(k)->box();
+      IntervalVector slice_box = tube->slice(k)->box();
       slice_box[1] = trunc_inf(slice_box[1]);
       v_pts.push_back(Point(slice_box[0].lb(), slice_box[1].ub()));
       v_pts.push_back(Point(slice_box[0].ub(), slice_box[1].ub()));
@@ -351,7 +351,7 @@ namespace tubex
 
     for(int k = tube->nb_slices() - 1 ; k >= 0 ; k--)
     {
-      IntervalVector slice_box = tube->get_slice(k)->box();
+      IntervalVector slice_box = tube->slice(k)->box();
       slice_box[1] = trunc_inf(slice_box[1]);
       v_pts.push_back(Point(slice_box[0].ub(), slice_box[1].lb()));
       v_pts.push_back(Point(slice_box[0].lb(), slice_box[1].lb()));
@@ -421,10 +421,10 @@ namespace tubex
 
     vector<double> v_x, v_y;
 
-    if(traj->get_function() == NULL)
+    if(traj->function() == NULL)
     {
       typename map<double,double>::const_iterator it_scalar_values;
-      for(it_scalar_values = traj->get_map().begin(); it_scalar_values != traj->get_map().end(); it_scalar_values++)
+      for(it_scalar_values = traj->sampled_map().begin(); it_scalar_values != traj->sampled_map().end(); it_scalar_values++)
       {
         if(points_size != 0.)
           vibes::drawPoint(it_scalar_values->first, it_scalar_values->second,

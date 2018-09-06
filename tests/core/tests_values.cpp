@@ -99,17 +99,17 @@ TEST_CASE("Tube values")
     // Unbounded interval domain
     x.set(Interval(6.,10.));
     CHECK(x.nb_slices() == 1);
-    CHECK(x.get_slice(0)->domain() == Interval(0.,10.));
-    CHECK(x.get_slice(0)->codomain() == Interval(6.,10.));
+    CHECK(x.slice(0)->domain() == Interval(0.,10.));
+    CHECK(x.slice(0)->codomain() == Interval(6.,10.));
 
     // Bounded interval domain
     x.set(Interval(2.,4.), Interval(2.,3.));
     CHECK(x.nb_slices() == 3);
-    CHECK(x.get_slice(0)->domain() == Interval(0.,2.));
+    CHECK(x.slice(0)->domain() == Interval(0.,2.));
     CHECK(x(0) == Interval(6.,10.));
-    CHECK(x.get_slice(1)->domain() == Interval(2.,3.));
+    CHECK(x.slice(1)->domain() == Interval(2.,3.));
     CHECK(x(1) == Interval(2.,4.));
-    CHECK(x.get_slice(2)->domain() == Interval(3.,10.));
+    CHECK(x.slice(2)->domain() == Interval(3.,10.));
     CHECK(x(2) == Interval(6.,10.));
 
     // Gates, slices intersection
@@ -193,8 +193,8 @@ TEST_CASE("Tube values")
     Tube x(Interval(0.,10.));
     x.set(Interval(3.,4.), 2.);
     CHECK(x.nb_slices() == 2);
-    CHECK(x.get_slice(0)->domain() == Interval(0.,2.));
-    CHECK(x.get_slice(1)->domain() == Interval(2.,10.));
+    CHECK(x.slice(0)->domain() == Interval(0.,2.));
+    CHECK(x.slice(1)->domain() == Interval(2.,10.));
     CHECK(x(0) == Interval::ALL_REALS);
     CHECK(x(1) == Interval::ALL_REALS);
     CHECK(x(2.) == Interval(3.,4.));
@@ -412,7 +412,7 @@ TEST_CASE("Testing thickness evaluation")
   {
     Tube x = tube_test_1();
     CHECK(x.max_thickness() == 8.);
-    CHECK(x.index(x.get_largest_slice()) == 3);
+    CHECK(x.index(x.largest_slice()) == 3);
   }
 
   SECTION("tube_test2")
@@ -420,7 +420,7 @@ TEST_CASE("Testing thickness evaluation")
     Tube x = tube_test2();
     int slice_id;
     CHECK(x.max_thickness() == 4.);
-    CHECK(x.index(x.get_largest_slice()) == 1);
+    CHECK(x.index(x.largest_slice()) == 1);
   }
 }
 
@@ -679,17 +679,17 @@ TEST_CASE("Testing inflate()")
     Tube x(Interval(0.,10.), 0.8, Interval(0.));
     CHECK(x.codomain() == Interval(0.));
     CHECK(x(3) == Interval(0.));
-    CHECK(x.get_slice(3)->input_gate() == Interval(0.));
-    CHECK(x.get_slice(6)->input_gate() == Interval(0.));
+    CHECK(x.slice(3)->input_gate() == Interval(0.));
+    CHECK(x.slice(6)->input_gate() == Interval(0.));
     x.inflate(0.2);
     CHECK(x.codomain() == Interval(-0.2,0.2));
     CHECK(x(6) == Interval(-0.2,0.2));
-    CHECK(x.get_slice(6)->input_gate() == Interval(-0.2,0.2));
+    CHECK(x.slice(6)->input_gate() == Interval(-0.2,0.2));
     x.inflate(1.);
     CHECK(ApproxIntv(x.codomain()) == Interval(-1.2,1.2));
     CHECK(ApproxIntv(x(9)) == Interval(-1.2,1.2));
-    CHECK(ApproxIntv(x.get_slice(9)->input_gate()) == Interval(-1.2,1.2));
-    double t = x.get_slice(9)->domain().lb();
+    CHECK(ApproxIntv(x.slice(9)->input_gate()) == Interval(-1.2,1.2));
+    double t = x.slice(9)->domain().lb();
     x.set(Interval(3.,7.), 8);
     x.set(Interval(3.,7.), 9);
     x.set(Interval(4.,6.), t);

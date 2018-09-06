@@ -286,11 +286,11 @@ namespace tubex
     
     const Slice **v_x_slices = new const Slice*[x.size()];
     for(int i = 0 ; i < x.size() ; i++)
-      v_x_slices[i] = x[i].get_first_slice();
+      v_x_slices[i] = x[i].first_slice();
 
     Slice **v_y_slices = new Slice*[y.size()];
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i] = y[i].get_first_slice();
+      v_y_slices[i] = y[i].first_slice();
 
     while(v_x_slices[0] != NULL)
     {
@@ -315,9 +315,9 @@ namespace tubex
     }
     
     for(int i = 0 ; i < x.size() ; i++)
-      v_x_slices[i] = x[i].get_last_slice();
+      v_x_slices[i] = x[i].last_slice();
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i] = y[i].get_last_slice();
+      v_y_slices[i] = y[i].last_slice();
 
     box[0] = v_x_slices[0]->domain().ub();
     for(int i = 0 ; i < x.size() ; i++)

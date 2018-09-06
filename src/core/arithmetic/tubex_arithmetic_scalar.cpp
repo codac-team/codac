@@ -26,15 +26,15 @@ namespace tubex
   const Tube operator-(const Tube& x)
   {
     Tube y(x);
-    Slice *slice_y = y.get_first_slice();
-    const Slice *slice_x = x.get_first_slice();
+    Slice *slice_y = y.first_slice();
+    const Slice *slice_x = x.first_slice();
     while(slice_y != NULL)
     {
       slice_y->set_envelope(-slice_x->codomain());
       slice_y->set_input_gate(-slice_x->input_gate());
       slice_y = slice_y->next_slice(); slice_x = slice_x->next_slice();
     }
-    y.get_last_slice()->set_output_gate(-x.get_last_slice()->output_gate());
+    y.last_slice()->set_output_gate(-x.last_slice()->output_gate());
     return y;
   }
     
@@ -43,15 +43,15 @@ namespace tubex
     const Tube f(const Tube& x) \
     { \
       Tube y(x); \
-      Slice *slice_y = y.get_first_slice(); \
-      const Slice *slice_x = x.get_first_slice(); \
+      Slice *slice_y = y.first_slice(); \
+      const Slice *slice_x = x.first_slice(); \
       while(slice_y != NULL) \
       { \
         slice_y->set_envelope(ibex::f(slice_x->codomain())); \
         slice_y->set_input_gate(ibex::f(slice_x->input_gate())); \
         slice_y = slice_y->next_slice(); slice_x = slice_x->next_slice(); \
       } \
-      y.get_last_slice()->set_output_gate(ibex::f(x.get_last_slice()->output_gate())); \
+      y.last_slice()->set_output_gate(ibex::f(x.last_slice()->output_gate())); \
       return y; \
     } \
     \
@@ -79,15 +79,15 @@ namespace tubex
     const Tube f(const Tube& x, p param) \
     { \
       Tube y(x); \
-      Slice *slice_y = y.get_first_slice(); \
-      const Slice *slice_x = x.get_first_slice(); \
+      Slice *slice_y = y.first_slice(); \
+      const Slice *slice_x = x.first_slice(); \
       while(slice_y != NULL) \
       { \
         slice_y->set_envelope(ibex::f(slice_x->codomain(), param)); \
         slice_y->set_input_gate(ibex::f(slice_x->input_gate(), param)); \
         slice_y = slice_y->next_slice(); slice_x = slice_x->next_slice(); \
       } \
-      y.get_last_slice()->set_output_gate(ibex::f(x.get_last_slice()->output_gate(), param)); \
+      y.last_slice()->set_output_gate(ibex::f(x.last_slice()->output_gate(), param)); \
       return y; \
     } \
     \
@@ -104,46 +104,46 @@ namespace tubex
       assert(x1.domain() == x2.domain()); \
       assert(Tube::same_slicing(x1, x2)); \
       Tube y(x1); \
-      Slice *slice_y = y.get_first_slice(); \
-      const Slice *slice_x1 = x1.get_first_slice(); \
-      const Slice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice_y = y.first_slice(); \
+      const Slice *slice_x1 = x1.first_slice(); \
+      const Slice *slice_x2 = x2.first_slice(); \
       while(slice_y != NULL) \
       { \
         slice_y->set_envelope(ibex::f(slice_x1->codomain(), slice_x2->codomain())); \
         slice_y->set_input_gate(ibex::f(slice_x1->input_gate(), slice_x2->input_gate())); \
         slice_y = slice_y->next_slice(); slice_x1 = slice_x1->next_slice(); slice_x2 = slice_x2->next_slice(); \
       } \
-      y.get_last_slice()->set_output_gate(ibex::f(x1.get_last_slice()->output_gate(), x2.get_last_slice()->output_gate())); \
+      y.last_slice()->set_output_gate(ibex::f(x1.last_slice()->output_gate(), x2.last_slice()->output_gate())); \
       return y; \
     } \
     \
     const Tube f(const Tube& x1, const Interval& x2) \
     { \
       Tube y(x1); \
-      Slice *slice_y = y.get_first_slice(); \
-      const Slice *slice_x1 = x1.get_first_slice(); \
+      Slice *slice_y = y.first_slice(); \
+      const Slice *slice_x1 = x1.first_slice(); \
       while(slice_y != NULL) \
       { \
         slice_y->set_envelope(ibex::f(slice_x1->codomain(), x2)); \
         slice_y->set_input_gate(ibex::f(slice_x1->input_gate(), x2)); \
         slice_y = slice_y->next_slice(); slice_x1 = slice_x1->next_slice(); \
       } \
-      y.get_last_slice()->set_output_gate(ibex::f(x1.get_last_slice()->output_gate(), x2)); \
+      y.last_slice()->set_output_gate(ibex::f(x1.last_slice()->output_gate(), x2)); \
       return y; \
     } \
     \
     const Tube f(const Interval& x1, const Tube& x2) \
     { \
       Tube y(x2); \
-      Slice *slice_y = y.get_first_slice(); \
-      const Slice *slice_x2 = x2.get_first_slice(); \
+      Slice *slice_y = y.first_slice(); \
+      const Slice *slice_x2 = x2.first_slice(); \
       while(slice_y != NULL) \
       { \
         slice_y->set_envelope(ibex::f(x1, slice_x2->codomain())); \
         slice_y->set_input_gate(ibex::f(x1, slice_x2->input_gate())); \
         slice_y = slice_y->next_slice(); slice_x2 = slice_x2->next_slice(); \
       } \
-      y.get_last_slice()->set_output_gate(ibex::f(x1, x2.get_last_slice()->output_gate())); \
+      y.last_slice()->set_output_gate(ibex::f(x1, x2.last_slice()->output_gate())); \
       return y; \
     } \
     \

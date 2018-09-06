@@ -81,12 +81,12 @@ namespace tubex
 
     // Accessing values
 
-    const map<double,double>& Trajectory::get_map() const
+    const map<double,double>& Trajectory::sampled_map() const
     {
       return m_map_values;
     }
 
-    const tubex::Function* Trajectory::get_function() const
+    const tubex::Function* Trajectory::function() const
     {
       return m_function;
     }
@@ -158,10 +158,10 @@ namespace tubex
 
     bool Trajectory::operator==(const Trajectory& x) const
     {
-      assert(m_function == NULL || x.get_function() == NULL
+      assert(m_function == NULL || x.function() == NULL
         && "operator== not implemented in case of a Trajectory defined by a Function");
 
-      if(m_function == NULL && x.get_function() == NULL)
+      if(m_function == NULL && x.function() == NULL)
       {
         if(m_domain != x.domain() || m_codomain != x.codomain())
           return false;
@@ -169,10 +169,10 @@ namespace tubex
         typename map<double,double>::const_iterator it_map;
         for(it_map = m_map_values.begin() ; it_map != m_map_values.end() ; it_map++)
         {
-          if(x.get_map().find(it_map->first) == x.get_map().end())
+          if(x.sampled_map().find(it_map->first) == x.sampled_map().end())
             return false;
 
-          if(it_map->second != x.get_map().at(it_map->first))
+          if(it_map->second != x.sampled_map().at(it_map->first))
             return false;
         }
 
@@ -185,7 +185,7 @@ namespace tubex
     
     bool Trajectory::operator!=(const Trajectory& x) const
     {
-      assert(m_function == NULL && x.get_function() == NULL
+      assert(m_function == NULL && x.function() == NULL
         && "operator!= not implemented in case of a Trajectory defined by a Function");
       return domain() != x.domain() || codomain() != x.codomain() || !(*this == x);
     }

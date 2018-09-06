@@ -132,7 +132,7 @@ namespace tubex
     if(t_propa & FORWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        Slice *slice = tube[i].get_slice(k);
+        Slice *slice = tube[i].slice(k);
         slice->set_output_gate(slice->output_gate()
           & (slice->input_gate() + slice->domain().diam() * f_eval[i]));
       }
@@ -140,7 +140,7 @@ namespace tubex
     else if(t_propa & BACKWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        Slice *slice = tube[i].get_slice(k);
+        Slice *slice = tube[i].slice(k);
         slice->set_input_gate(slice->input_gate()
           & (slice->output_gate() - slice->domain().diam() * f_eval[i]));
       }
@@ -195,7 +195,7 @@ namespace tubex
         // Update needed for further computations
         // that may be related to this slice k
         for(int i = 0 ; i < tube.size() ; i++)
-          tube[i].get_slice(k)->set_envelope(x_guess[i] & initial_x[i]);
+          tube[i].slice(k)->set_envelope(x_guess[i] & initial_x[i]);
         x_enclosure = x0 + h * f.eval_vector(k, tube);
       }
 
@@ -211,7 +211,7 @@ namespace tubex
       {
         if(f.is_intertemporal())
           for(int i = 0 ; i < tube.size() ; i++)
-            tube[i].get_slice(k)->set_envelope(initial_x[i]); // coming back to the initial state
+            tube[i].slice(k)->set_envelope(initial_x[i]); // coming back to the initial state
         break;
       }
     } while(!x_enclosure.is_interior_subset(x_guess));
@@ -219,14 +219,14 @@ namespace tubex
     // Setting tube's values
     if(!(x_enclosure.is_unbounded() || x_enclosure.is_empty() || x_guess.is_empty()))
       for(int i = 0 ; i < tube.size() ; i++)
-        tube[i].get_slice(k)->set_envelope(initial_x[i] & x_guess[i]);
+        tube[i].slice(k)->set_envelope(initial_x[i] & x_guess[i]);
 
     if(f.is_intertemporal())
     {
       // Restoring ending gate, contracted by setting the envelope
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        Slice *slice = tube[i].get_slice(k);
+        Slice *slice = tube[i].slice(k);
         if(t_propa & FORWARD)  slice->set_output_gate(xf[i]);
         if(t_propa & BACKWARD) slice->set_input_gate(xf[i]);
         // todo: ^ check this ^

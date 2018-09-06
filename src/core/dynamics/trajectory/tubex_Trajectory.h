@@ -35,8 +35,8 @@ namespace tubex
       int size() const;
 
       // Accessing values
-      const std::map<double,double>& get_map() const;
-      const tubex::Function* get_function() const;
+      const std::map<double,double>& sampled_map() const;
+      const tubex::Function* function() const;
       const ibex::Interval domain() const;
       const ibex::Interval codomain() const;
       double operator()(double t) const; // /!\ approx here, if traj defined by Function, use operator(Interval(double)) for reliable approx

@@ -128,8 +128,8 @@ namespace tubex
 
         // 1. Forward propagation
 
-          slice_y = y.get_slice(t.lb());
-          slice_w = w.get_slice(t.lb());
+          slice_y = y.slice(t.lb());
+          slice_w = w.slice(t.lb());
 
           front_gate = slice_y->input_gate() & z;
             // Mathematically, front_gate should not be empty at this point.
@@ -162,8 +162,8 @@ namespace tubex
 
         // 2. Backward propagation
 
-          slice_y = y.get_slice(previous_float(t.ub()));
-          slice_w = w.get_slice(previous_float(t.ub()));
+          slice_y = y.slice(previous_float(t.ub()));
+          slice_w = w.slice(previous_float(t.ub()));
 
           front_gate = slice_y->output_gate() & z;
             // Overcoming numerical approximations, same remark as before:

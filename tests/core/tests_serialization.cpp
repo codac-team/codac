@@ -106,9 +106,9 @@ TEST_CASE("serialization/deserialization of Tube")
     Trajectory traj1, traj2, traj3;
     for(int i = 0 ; i < tube1.nb_slices() ; i++)
     {
-      traj1.set(tube1.get_slice(i)->domain().mid(), tube1(i).mid());
-      traj2.set(tube1.get_slice(i)->domain().mid(), tube1(i).lb());
-      traj3.set(tube1.get_slice(i)->domain().mid(), tube1(i).ub());
+      traj1.set(tube1.slice(i)->domain().mid(), tube1(i).mid());
+      traj2.set(tube1.slice(i)->domain().mid(), tube1(i).lb());
+      traj3.set(tube1.slice(i)->domain().mid(), tube1(i).ub());
     }
 
     string filename = "test_serialization_traj.tube";
@@ -165,9 +165,9 @@ TEST_CASE("serialization/deserialization of Tube")
     {
       for(int i = 0 ; i < 10 ; i++)
       {
-        traj1[i].set(tube1[i].get_slice(k)->domain().mid(), tube1[i](k).mid());
-        traj2[i].set(tube1[i].get_slice(k)->domain().mid(), tube1[i](k).lb());
-        traj3[i].set(tube1[i].get_slice(k)->domain().mid(), tube1[i](k).ub());
+        traj1[i].set(tube1[i].slice(k)->domain().mid(), tube1[i](k).mid());
+        traj2[i].set(tube1[i].slice(k)->domain().mid(), tube1[i](k).lb());
+        traj3[i].set(tube1[i].slice(k)->domain().mid(), tube1[i](k).ub());
       }
     }
 
@@ -188,7 +188,7 @@ bool test_serialization(const Tube& tube1)
   Trajectory traj_test1, *traj_test2;
 
   for(int i = 0 ; i < tube1.nb_slices() ; i++)
-    traj_test1.set(tube1.get_slice(i)->domain().mid(), tube1(i).is_unbounded() | tube1(i).is_empty() ? 1. : tube1(i).mid());
+    traj_test1.set(tube1.slice(i)->domain().mid(), tube1(i).is_unbounded() | tube1(i).is_empty() ? 1. : tube1(i).mid());
 
   tube1.serialize(filename, traj_test1); // serialization
 

@@ -85,36 +85,36 @@ TEST_CASE("Tube definition")
 
     Tube tube_c(Interval(0.,4.), 1.1);
     CHECK(tube_c.nb_slices() == 4);
-    //CHECK(tube_c.get_slice(0)->tube_reference() == &tube_c);
-    //CHECK(tube_c.get_slice(1)->tube_reference() == &tube_c);
-    //CHECK(tube_c.get_slice(2)->tube_reference() == &tube_c);
-    //CHECK(tube_c.get_slice(3)->tube_reference() == &tube_c);
-    CHECK(ApproxIntv(tube_c.get_slice(0)->domain()) == Interval(0.,1.1));
-    CHECK(ApproxIntv(tube_c.get_slice(1)->domain()) == Interval(1.1,2.2));
-    CHECK(ApproxIntv(tube_c.get_slice(2)->domain()) == Interval(2.2,3.3));
-    CHECK(ApproxIntv(tube_c.get_slice(3)->domain()) == Interval(3.3,4.));
+    //CHECK(tube_c.slice(0)->tube_reference() == &tube_c);
+    //CHECK(tube_c.slice(1)->tube_reference() == &tube_c);
+    //CHECK(tube_c.slice(2)->tube_reference() == &tube_c);
+    //CHECK(tube_c.slice(3)->tube_reference() == &tube_c);
+    CHECK(ApproxIntv(tube_c.slice(0)->domain()) == Interval(0.,1.1));
+    CHECK(ApproxIntv(tube_c.slice(1)->domain()) == Interval(1.1,2.2));
+    CHECK(ApproxIntv(tube_c.slice(2)->domain()) == Interval(2.2,3.3));
+    CHECK(ApproxIntv(tube_c.slice(3)->domain()) == Interval(3.3,4.));
 
     Tube tube_d(tube_c);
     CHECK(tube_d == tube_c);
     CHECK(tube_d.codomain() == tube_c.codomain());
     CHECK(tube_d.nb_slices() == tube_c.nb_slices());
-    //CHECK(tube_d.get_slice(0)->tube_reference() == &tube_d);
-    //CHECK(tube_d.get_slice(0)->tube_reference() == tube_d.get_slice(1)->tube_reference());
-    //CHECK(tube_d.get_slice(1)->tube_reference() == &tube_d);
-    //CHECK(tube_d.get_slice(2)->tube_reference() == &tube_d);
-    //CHECK(tube_d.get_slice(3)->tube_reference() == &tube_d);
+    //CHECK(tube_d.slice(0)->tube_reference() == &tube_d);
+    //CHECK(tube_d.slice(0)->tube_reference() == tube_d.slice(1)->tube_reference());
+    //CHECK(tube_d.slice(1)->tube_reference() == &tube_d);
+    //CHECK(tube_d.slice(2)->tube_reference() == &tube_d);
+    //CHECK(tube_d.slice(3)->tube_reference() == &tube_d);
 
     Tube tube_e(tube_c, Interval(1.,2.));
-    //CHECK(tube_e.get_slice(0)->tube_reference() == &tube_e);
-    //CHECK(tube_e.get_slice(1)->tube_reference() == &tube_e);
-    //CHECK(tube_e.get_slice(2)->tube_reference() == &tube_e);
-    //CHECK(tube_e.get_slice(3)->tube_reference() == &tube_e);
+    //CHECK(tube_e.slice(0)->tube_reference() == &tube_e);
+    //CHECK(tube_e.slice(1)->tube_reference() == &tube_e);
+    //CHECK(tube_e.slice(2)->tube_reference() == &tube_e);
+    //CHECK(tube_e.slice(3)->tube_reference() == &tube_e);
     CHECK(tube_e.codomain() == Interval(1.,2.));
     CHECK(tube_e.nb_slices() == tube_c.nb_slices());
-    CHECK(tube_e.get_slice(0)->codomain() == Interval(1.,2.));
-    CHECK(tube_e.get_slice(1)->codomain() == Interval(1.,2.));
-    CHECK(tube_e.get_slice(2)->codomain() == Interval(1.,2.));
-    CHECK(tube_e.get_slice(3)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.slice(0)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.slice(1)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.slice(2)->codomain() == Interval(1.,2.));
+    CHECK(tube_e.slice(3)->codomain() == Interval(1.,2.));
 
     // todo: find a way to catch assert abort: CHECK_THROWS(Tube tube_f(Interval(0.,12.), -1.););
 
@@ -152,7 +152,7 @@ TEST_CASE("Tube definition")
     CHECK(tube(-1.) == Interval(1.));
     CHECK(tube(1.) == Interval(1.));
     CHECK(tube(-0.9) == tube(0));
-    CHECK(ApproxIntv(tube(1)) == Interval(0., pow(tube.get_slice(1)->domain().ub(), 2)));
+    CHECK(ApproxIntv(tube(1)) == Interval(0., pow(tube.slice(1)->domain().ub(), 2)));
   }
 
   SECTION("Tube class - 2 Trajectory")
@@ -186,9 +186,9 @@ TEST_CASE("Tube definition")
     CHECK(tube0.codomain() == Interval::EMPTY_SET);
     tube0 |= traj2;
 
-    Interval t = tube0.get_last_slice()->prev_slice()->domain(); //(1.0,1.1);
+    Interval t = tube0.last_slice()->prev_slice()->domain(); //(1.0,1.1);
     Interval slice_codomain = 2*pow(t,5)+pow(t,3)-3*pow(t,2);
-    CHECK(tube0.get_last_slice()->prev_slice()->codomain() == slice_codomain);
+    CHECK(tube0.last_slice()->prev_slice()->codomain() == slice_codomain);
     CHECK(tube0.codomain().ub() == slice_codomain.ub());
 
     Tube tube2(traj2, 0.1);

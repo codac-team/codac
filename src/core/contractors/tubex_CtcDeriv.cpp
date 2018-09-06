@@ -30,8 +30,8 @@ namespace tubex
     
     if(t_propa & FORWARD)
     {
-      Slice *x_slice = x.get_first_slice();
-      const Slice *v_slice = v.get_first_slice();
+      Slice *x_slice = x.first_slice();
+      const Slice *v_slice = v.first_slice();
 
       while(x_slice != NULL)
       {
@@ -43,8 +43,8 @@ namespace tubex
     
     if(t_propa & BACKWARD)
     {
-      Slice *x_slice = x.get_last_slice();
-      const Slice *v_slice = v.get_last_slice();
+      Slice *x_slice = x.last_slice();
+      const Slice *v_slice = v.last_slice();
 
       while(x_slice != NULL)
       {

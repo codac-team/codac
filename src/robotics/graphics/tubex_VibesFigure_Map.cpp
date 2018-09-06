@@ -258,14 +258,14 @@ namespace tubex
     int index_x = m_map_trajs[traj].index_x;
     int index_y = m_map_trajs[traj].index_y;
 
-    if((*traj)[index_x].get_map().size() != 0)
+    if((*traj)[index_x].sampled_map().size() != 0)
     {
       typename map<double,double>::const_iterator it_scalar_values_x, it_scalar_values_y;
-      it_scalar_values_x = (*traj)[index_x].get_map().begin();
-      it_scalar_values_y = (*traj)[index_y].get_map().begin();
+      it_scalar_values_x = (*traj)[index_x].sampled_map().begin();
+      it_scalar_values_y = (*traj)[index_y].sampled_map().begin();
       // todo: display heading if available
 
-      while(it_scalar_values_x != (*traj)[index_x].get_map().end())
+      while(it_scalar_values_x != (*traj)[index_x].sampled_map().end())
       {
         if(points_size != 0.)
           vibes::drawPoint(it_scalar_values_x->second, it_scalar_values_y->second,
