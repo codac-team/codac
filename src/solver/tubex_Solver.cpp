@@ -135,20 +135,18 @@ namespace tubex
           }
         }
 
-      cout << "\rsolutions: " << l_solutions.size() << "  (" << (int)((double)(clock() - t_start)/CLOCKS_PER_SEC) << "s)   " << flush;
+      cout << "\rSolutions: " << l_solutions.size() << "  (" << (int)((double)(clock() - t_start)/CLOCKS_PER_SEC) << "s)   " << flush;
     }
 
     cout << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
-    if(l_solutions.size() == 0)
-      cout << "no solution found" << endl;
 
     int j = 0;
     list<TubeVector>::iterator it;
     for(it = l_solutions.begin(); it != l_solutions.end(); ++it)
     {
       j++;
-      cout << j << ": "
+      cout << "  " << j << ": "
            << *it <<  ", tf↦" << (*it)(it->domain().ub())
            << " (max thickness: " << it->max_thickness() << ")"
            << endl;

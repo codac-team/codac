@@ -36,8 +36,8 @@ namespace tubex
       Function(int n, const char** x, const char* y);
       Function(const tubex::Function& f);
       ~Function();
-      const Function& operator=(const Function& f);
-      const Function operator[](int i) const;
+      const tubex::Function& operator=(const tubex::Function& f);
+      const tubex::Function operator[](int i) const;
       const ibex::Function& ibex_function() const;
 
       using Fnc::eval;
@@ -46,14 +46,14 @@ namespace tubex
 
       const Tube eval(const TubeVector& x) const;
       const ibex::Interval eval(const ibex::Interval& t) const;
-      const ibex::Interval eval(const Slice& x) const;
+      const ibex::Interval eval(const ibex::IntervalVector& x) const;
+      const ibex::Interval eval(int slice_id, const TubeVector& x) const;
       const ibex::Interval eval(const ibex::Interval& t, const TubeVector& x) const;
-
-const ibex::IntervalVector eval_test(const ibex::IntervalVector& x) const;
 
       const TubeVector eval_vector(const TubeVector& x) const;
       const ibex::IntervalVector eval_vector(const ibex::Interval& t) const;
-      const ibex::IntervalVector eval_vector(const Slice& x) const;
+      const ibex::IntervalVector eval_vector(const ibex::IntervalVector& x) const;
+      const ibex::IntervalVector eval_vector(int slice_id, const TubeVector& x) const;
       const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const;
 
     protected:

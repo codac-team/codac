@@ -18,7 +18,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  PeriodicFunction::PeriodicFunction() : Fnc(1, 1) // todo: change input/output dim
+  PeriodicFunction::PeriodicFunction() : Fnc(1, 1, true) // todo: change input/output dim
   {
 
   }

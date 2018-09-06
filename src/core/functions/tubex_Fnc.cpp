@@ -25,7 +25,8 @@ namespace tubex
 
   }
 
-  Fnc::Fnc(int nb_vars, int img_dim) : m_nb_vars(nb_vars), m_img_dim(img_dim)
+  Fnc::Fnc(int nb_vars, int img_dim, bool is_intertemporal)
+    : m_nb_vars(nb_vars), m_img_dim(img_dim), m_is_intertemporal(is_intertemporal)
   {
     assert(img_dim > 0);
   }
@@ -49,6 +50,11 @@ namespace tubex
   int Fnc::image_dim() const
   {
     return m_img_dim;
+  }
+
+  bool Fnc::is_intertemporal() const
+  {
+    return m_is_intertemporal;
   }
 
   const Tube Fnc::eval(const TubeVector& x) const

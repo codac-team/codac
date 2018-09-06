@@ -19,13 +19,6 @@ using namespace ibex;
 
 namespace tubex
 {
-  const ibex::IntervalVector Function::eval_test(const ibex::IntervalVector& x) const
-  {
-    return m_ibex_f->eval_vector(x);
-  }
-
-
-
   Function::Function(int n, const char** x, const char* y)
   {
     construct_from_array(n, x, y);
@@ -121,7 +114,7 @@ namespace tubex
   }
 
   Function::Function(const tubex::Function& f)
-    : tubex::Fnc(f.nb_vars(), f.image_dim())
+    : tubex::Fnc(f.nb_vars(), f.image_dim(), false)
   {
     *this = f;
   }
@@ -172,6 +165,7 @@ namespace tubex
     m_ibex_f = new ibex::Function(n+1, xdyn, y);
     m_nb_vars = n;
     m_img_dim = m_ibex_f->image_dim();
+    m_is_intertemporal = false; // not supported yet
   }
 
   const Interval Function::eval(const Interval& t) const
@@ -181,18 +175,28 @@ namespace tubex
     return eval_vector(t)[0];
   }
 
+  const Interval Function::eval(const IntervalVector& x) const
+  {
+    assert(nb_vars() == x.size() - 1);
+    assert(image_dim() == 1 && "scalar evaluation");
+    assert(!is_intertemporal());
+    return eval_vector(x)[0];
+  }
+
+  const Interval Function::eval(int slice_id, const TubeVector& x) const
+  {
+    assert(x.size() == nb_vars());
+    assert(slice_id >= 0 && slice_id < x.nb_slices());
+    assert(image_dim() == 1 && "scalar evaluation");
+    return eval_vector(slice_id, x)[0];
+  }
+
   const Interval Function::eval(const Interval& t, const TubeVector& x) const
   {
     assert(x.size() == nb_vars());
+    assert(x.domain().is_superset(t));
     assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(t, x)[0];
-  }
-
-  const Interval Function::eval(const Slice& x) const
-  {
-    assert(nb_vars() == 1);
-    assert(image_dim() == 1 && "scalar evaluation");
-    return eval_vector(x)[0];
   }
 
   const Tube Function::eval(const TubeVector& x) const
@@ -209,11 +213,40 @@ namespace tubex
     return m_ibex_f->eval_vector(box);
   }
 
+  const IntervalVector Function::eval_vector(const IntervalVector& x) const
+  {
+    assert(nb_vars() == x.size() - 1);
+    assert(!is_intertemporal());
+    return m_ibex_f->eval_vector(x);
+  }
+
+  const IntervalVector Function::eval_vector(int slice_id, const TubeVector& x) const
+  {
+    assert(slice_id >= 0 && slice_id < x.nb_slices());
+
+    Interval t = x[0].slice_domain(slice_id);
+
+    if(nb_vars() == 0)
+      return eval_vector(t);
+
+    assert(nb_vars() == x.size());
+
+    if(x(slice_id).is_empty())
+      return IntervalVector(image_dim(), Interval::EMPTY_SET);
+
+    IntervalVector box(nb_vars() + 1); // +1 for system variable (t)
+    box[0] = t;
+    box.put(1, x(slice_id));
+
+    return m_ibex_f->eval_vector(box);
+  }
+
   const IntervalVector Function::eval_vector(const Interval& t, const TubeVector& x) const
   {
     if(nb_vars() == 0)
       return eval_vector(t);
 
+    assert(x.domain().is_superset(t));
     assert(nb_vars() == x.size());
 
     if(x(t).is_empty())
@@ -226,12 +259,6 @@ namespace tubex
         box[i+1] = x[i](t);
 
     return m_ibex_f->eval_vector(box);
-  }
-
-  const IntervalVector Function::eval_vector(const Slice& x) const
-  {
-    assert(nb_vars() == 1);
-    return m_ibex_f->eval_vector(x.box());
   }
 
   const TubeVector Function::eval_vector(const TubeVector& x) const
