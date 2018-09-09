@@ -208,14 +208,14 @@ namespace tubex
         {
           pos_lb[i] = NAN;
           pos_ub[i] = NAN;
-          
-          for(int k = 0 ; k < tube->nb_slices() ; k++) // todo: slice ptr iteration
+
+          for(const Slice *s = (*tube)[index].first_slice() ; s != NULL ; s = s->next_slice())
           {
-            Interval slice = (*tube)[index](k);
-            if(!slice.is_unbounded())
+            Interval codomain = s->codomain();
+            if(!codomain.is_unbounded())
             {
-              pos_lb[i] = std::isnan(pos_lb[i]) || pos_lb[i] > slice.lb() ? slice.lb() : pos_lb[i];
-              pos_ub[i] = std::isnan(pos_ub[i]) || pos_ub[i] < slice.ub() ? slice.ub() : pos_ub[i];
+              pos_lb[i] = std::isnan(pos_lb[i]) || pos_lb[i] > codomain.lb() ? codomain.lb() : pos_lb[i];
+              pos_ub[i] = std::isnan(pos_ub[i]) || pos_ub[i] < codomain.ub() ? codomain.ub() : pos_ub[i];
             }
           }
         }
