@@ -17,28 +17,22 @@ using namespace ibex;
 
 namespace tubex
 {
-  // todo: avoid redundant gate contractions
-  
   CtcFwdBwd::CtcFwdBwd(const tubex::Function& f)
-    : Ctc(), m_f(new tubex::Function(f))
+    : Ctc(), m_f(new tubex::Function(f)),
+      m_ctc_fwdbwd(new ibex::CtcFwdBwd(m_f->ibex_function()))
   {
 
   }
   
   CtcFwdBwd::~CtcFwdBwd()
   {
+    delete m_ctc_fwdbwd;
     delete m_f;
   }
 
   void CtcFwdBwd::contract(TubeVector& x)
   {
-    assert(x.size() == m_f->nb_vars());
-
-    ibex::CtcFwdBwd ctc_fwdbwd(m_f->ibex_function()); // todo: build the following into the constructor? (bug)
-
-    // todo: check if the following is needed
-    //if(x.is_empty())
-    //  return;
+    assert(x.size()+1 == m_ctc_fwdbwd->nb_var);
 
     Slice **v_x_slices = new Slice*[x.size()];
     for(int i = 0 ; i < x.size() ; i++)
@@ -58,8 +52,8 @@ namespace tubex
         ingate[i+1] = v_x_slices[i]->input_gate();
       }
 
-      ctc_fwdbwd.contract(envelope);
-      ctc_fwdbwd.contract(ingate);
+      m_ctc_fwdbwd->contract(envelope);
+      m_ctc_fwdbwd->contract(ingate);
 
       for(int i = 0 ; i < x.size() ; i++)
       {
@@ -80,7 +74,7 @@ namespace tubex
     for(int i = 0 ; i < x.size() ; i++)
       outgate[i+1] = v_x_slices[i]->output_gate();
 
-    ctc_fwdbwd.contract(outgate);
+    m_ctc_fwdbwd->contract(outgate);
 
     for(int i = 0 ; i < x.size() ; i++)
       v_x_slices[i]->set_output_gate(outgate[i+1]);

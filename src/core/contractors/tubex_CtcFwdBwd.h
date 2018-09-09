@@ -15,7 +15,7 @@
 
 #include "tubex_Ctc.h"
 #include "ibex_CtcFwdBwd.h"
-#include "tubex_Slice.h"
+#include "tubex_Function.h"
 
 namespace tubex
 {
@@ -33,7 +33,8 @@ namespace tubex
 
     protected:
 
-      tubex::Function *m_f = NULL;
+      tubex::Function *m_f; // note: function need to be stored to keep the ctc working
+      ibex::CtcFwdBwd *m_ctc_fwdbwd;
   };
 }
 
