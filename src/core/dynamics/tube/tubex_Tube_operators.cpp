@@ -18,7 +18,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  #define assign_scal(f) \
+  #define macro_assign_scal(f) \
     \
     const Tube& Tube::f(const Interval& x) \
     { \
@@ -92,10 +92,10 @@ namespace tubex
     } \
     \
 
-  assign_scal(operator+=);
-  assign_scal(operator-=);
-  assign_scal(operator*=);
-  assign_scal(operator/=);
-  assign_scal(operator&=);
-  assign_scal(operator|=);
+  macro_assign_scal(operator+=);
+  macro_assign_scal(operator-=);
+  macro_assign_scal(operator*=);
+  macro_assign_scal(operator/=);
+  macro_assign_scal(operator&=);
+  macro_assign_scal(operator|=);
 }

@@ -38,7 +38,7 @@ namespace tubex
     return y;
   }
     
-  #define scal_unary(f) \
+  #define macro_scal_unary(f) \
     \
     const Tube f(const Tube& x) \
     { \
@@ -56,25 +56,25 @@ namespace tubex
     } \
     \
 
-  scal_unary(cos);
-  scal_unary(sin);
-  scal_unary(abs);
-  scal_unary(sqr);
-  scal_unary(sqrt);
-  scal_unary(exp);
-  scal_unary(log);
-  scal_unary(tan);
-  scal_unary(acos);
-  scal_unary(asin);
-  scal_unary(atan);
-  scal_unary(cosh);
-  scal_unary(sinh);
-  scal_unary(tanh);
-  scal_unary(acosh);
-  scal_unary(asinh);
-  scal_unary(atanh);
+  macro_scal_unary(cos);
+  macro_scal_unary(sin);
+  macro_scal_unary(abs);
+  macro_scal_unary(sqr);
+  macro_scal_unary(sqrt);
+  macro_scal_unary(exp);
+  macro_scal_unary(log);
+  macro_scal_unary(tan);
+  macro_scal_unary(acos);
+  macro_scal_unary(asin);
+  macro_scal_unary(atan);
+  macro_scal_unary(cosh);
+  macro_scal_unary(sinh);
+  macro_scal_unary(tanh);
+  macro_scal_unary(acosh);
+  macro_scal_unary(asinh);
+  macro_scal_unary(atanh);
     
-  #define scal_unary_param(f, p) \
+  #define macro_scal_unary_param(f, p) \
     \
     const Tube f(const Tube& x, p param) \
     { \
@@ -92,12 +92,12 @@ namespace tubex
     } \
     \
 
-  scal_unary_param(pow, int);
-  scal_unary_param(pow, double);
-  scal_unary_param(pow, const Interval&);
-  scal_unary_param(root, int);
+  macro_scal_unary_param(pow, int);
+  macro_scal_unary_param(pow, double);
+  macro_scal_unary_param(pow, const Interval&);
+  macro_scal_unary_param(root, int);
 
-  #define scal_binary(f) \
+  #define macro_scal_binary(f) \
     \
     const Tube f(const Tube& x1, const Tube& x2) \
     { \
@@ -148,11 +148,11 @@ namespace tubex
     } \
     \
 
-  scal_binary(operator+);
-  scal_binary(operator-);
-  scal_binary(operator*);
-  scal_binary(operator/);
-  scal_binary(operator|);
-  scal_binary(operator&);
-  scal_binary(atan2);
+  macro_scal_binary(operator+);
+  macro_scal_binary(operator-);
+  macro_scal_binary(operator*);
+  macro_scal_binary(operator/);
+  macro_scal_binary(operator|);
+  macro_scal_binary(operator&);
+  macro_scal_binary(atan2);
 }

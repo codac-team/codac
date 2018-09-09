@@ -17,7 +17,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  #define assignment_op_slice(f) \
+  #define macro_assignment_op_slice(f) \
     \
     Slice& Slice::f(const Slice& slice_x) \
     { \
@@ -37,12 +37,12 @@ namespace tubex
       return *this; \
     }
 
-  assignment_op_slice(operator+=);
-  assignment_op_slice(operator-=);
-  assignment_op_slice(operator*=);
-  assignment_op_slice(operator/=);
-  assignment_op_slice(operator|=);
-  assignment_op_slice(operator&=);
+  macro_assignment_op_slice(operator+=);
+  macro_assignment_op_slice(operator-=);
+  macro_assignment_op_slice(operator*=);
+  macro_assignment_op_slice(operator/=);
+  macro_assignment_op_slice(operator|=);
+  macro_assignment_op_slice(operator&=);
 
   // Note: operator*= and operator/= are not defined for vector items
 }

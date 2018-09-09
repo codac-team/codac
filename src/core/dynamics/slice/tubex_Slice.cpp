@@ -288,7 +288,7 @@ namespace tubex
              output_gate() != x.output_gate();
     }
 
-    #define sets_comparison(f) \
+    #define macro_sets_comparison(f) \
       \
       assert(domain() == x.domain()); \
       return codomain().f(x.codomain()) \
@@ -297,7 +297,7 @@ namespace tubex
 
     bool Slice::is_subset(const Slice& x) const
     {
-      sets_comparison(is_subset);
+      macro_sets_comparison(is_subset);
     }
 
     bool Slice::is_strict_subset(const Slice& x) const
@@ -307,7 +307,7 @@ namespace tubex
 
     bool Slice::is_interior_subset(const Slice& x) const
     {
-      sets_comparison(is_interior_subset);
+      macro_sets_comparison(is_interior_subset);
     }
 
     bool Slice::is_strict_interior_subset(const Slice& x) const
@@ -317,7 +317,7 @@ namespace tubex
 
     bool Slice::is_superset(const Slice& x) const
     {
-      sets_comparison(is_superset);
+      macro_sets_comparison(is_superset);
     }
 
     bool Slice::is_strict_superset(const Slice& x) const

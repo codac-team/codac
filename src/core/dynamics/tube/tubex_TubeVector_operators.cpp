@@ -19,7 +19,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  #define assign_vect_vect(f) \
+  #define macro_assign_vect_vect(f) \
     \
     const TubeVector& TubeVector::f(const IntervalVector& x) \
     { \
@@ -48,12 +48,12 @@ namespace tubex
     } \
     \
 
-  assign_vect_vect(operator+=);
-  assign_vect_vect(operator-=);
-  assign_vect_vect(operator|=);
-  assign_vect_vect(operator&=);
+  macro_assign_vect_vect(operator+=);
+  macro_assign_vect_vect(operator-=);
+  macro_assign_vect_vect(operator|=);
+  macro_assign_vect_vect(operator&=);
 
-  #define assign_vect_scal(f) \
+  #define macro_assign_vect_scal(f) \
     \
     const TubeVector& TubeVector::f(const Interval& x) \
     { \
@@ -80,5 +80,5 @@ namespace tubex
     } \
     \
 
-  assign_vect_scal(operator*=);
+  macro_assign_vect_scal(operator*=);
 }

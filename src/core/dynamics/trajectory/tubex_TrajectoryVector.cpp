@@ -103,7 +103,6 @@ namespace tubex
     {
       assert(index >= 0 && index < size());
       return const_cast<Trajectory&>(static_cast<const TrajectoryVector&>(*this).operator[](index));
-      // todo: check quickness of cast instead of direct access to m_v_tubes[]
     }
 
     const Trajectory& TrajectoryVector::operator[](int index) const

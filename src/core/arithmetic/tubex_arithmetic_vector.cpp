@@ -31,7 +31,7 @@ namespace tubex
     return y;
   }
 
-  #define vect_binary(f) \
+  #define macro_vect_binary(f) \
     \
     const TubeVector f(const TubeVector& x1, const TubeVector& x2) \
     { \
@@ -63,10 +63,10 @@ namespace tubex
     } \
     \
 
-  vect_binary(operator+);
-  vect_binary(operator-);
-  vect_binary(operator|);
-  vect_binary(operator&);
+  macro_vect_binary(operator+);
+  macro_vect_binary(operator-);
+  macro_vect_binary(operator|);
+  macro_vect_binary(operator&);
 
   const TubeVector operator*(const Interval& x1, const TubeVector& x2)
   {

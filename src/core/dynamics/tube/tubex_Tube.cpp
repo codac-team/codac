@@ -663,7 +663,7 @@ namespace tubex
       return false;
     }
 
-    #define sets_comparison(f) \
+    #define macro_sets_comparison(f) \
       \
       if(same_slicing(*this, x)) /* faster */ \
       { \
@@ -697,7 +697,7 @@ namespace tubex
 
     bool Tube::is_subset(const Tube& x) const
     {
-      sets_comparison(is_subset);
+      macro_sets_comparison(is_subset);
     }
 
     bool Tube::is_strict_subset(const Tube& x) const
@@ -707,7 +707,7 @@ namespace tubex
 
     bool Tube::is_interior_subset(const Tube& x) const
     {
-      sets_comparison(is_interior_subset);
+      macro_sets_comparison(is_interior_subset);
     }
 
     bool Tube::is_strict_interior_subset(const Tube& x) const
@@ -717,7 +717,7 @@ namespace tubex
 
     bool Tube::is_superset(const Tube& x) const
     {
-      sets_comparison(is_superset);
+      macro_sets_comparison(is_superset);
     }
 
     bool Tube::is_strict_superset(const Tube& x) const
@@ -962,6 +962,9 @@ namespace tubex
             p_integ.first += intv_t.diam() * slice->codomain().lb();
             p_integ.second += intv_t.diam() * slice->codomain().ub();
             p_integ_uncertain = p_integ;
+
+            if(intv_t.ub() == t.ub())
+              return p_integ; // end of the integral evalution
           }
 
         // From tlb to tub

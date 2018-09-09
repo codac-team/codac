@@ -77,7 +77,6 @@ namespace tubex
       // A copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(*this);
       *this = f.eval_vector(input);
-      // todo: delete something here?
     }
 
     TubeVector::TubeVector(const TubeVector& x)
@@ -285,7 +284,6 @@ namespace tubex
     {
       assert(index >= 0 && index < size());
       return const_cast<Tube&>(static_cast<const TubeVector&>(*this).operator[](index));
-      // todo: check quickness of cast instead of direct access to m_v_tubes[]
     }
 
     const Tube& TubeVector::operator[](int index) const
@@ -470,7 +468,7 @@ namespace tubex
       return false;
     }
 
-    #define sets_comparison(f) \
+    #define macro_sets_comparison(f) \
       \
       assert(size() == x.size()); \
       for(int i = 0 ; i < size() ; i++) \
@@ -480,7 +478,7 @@ namespace tubex
 
     bool TubeVector::is_subset(const TubeVector& x) const
     {
-      sets_comparison(is_subset);
+      macro_sets_comparison(is_subset);
     }
 
     bool TubeVector::is_strict_subset(const TubeVector& x) const
@@ -490,7 +488,7 @@ namespace tubex
 
     bool TubeVector::is_interior_subset(const TubeVector& x) const
     {
-      sets_comparison(is_interior_subset);
+      macro_sets_comparison(is_interior_subset);
     }
 
     bool TubeVector::is_strict_interior_subset(const TubeVector& x) const
@@ -500,7 +498,7 @@ namespace tubex
 
     bool TubeVector::is_superset(const TubeVector& x) const
     {
-      sets_comparison(is_superset);
+      macro_sets_comparison(is_superset);
     }
 
     bool TubeVector::is_strict_superset(const TubeVector& x) const
@@ -580,8 +578,8 @@ namespace tubex
       assert(domain() == rad.domain());
       assert(rad.codomain().is_subset(IntervalVector(rad.size(), Interval::POS_REALS))
         && "positive TrajectoryVector");
-      // todo: for(int i = 0 ; i < size() ; i++)
-      // todo:   (*this)[i].inflate(rad[i]);
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].inflate(rad[i]);
     }
 
     // Bisection
@@ -592,7 +590,7 @@ namespace tubex
       assert(Interval(0.,1.).interior_contains(ratio));
 
       pair<TubeVector,TubeVector> p = make_pair(*this,*this);
-      LargestFirst bisector(0., ratio); // todo: bisect according to another rule than largest first?
+      LargestFirst bisector(0., ratio);
 
       try
       {
@@ -637,9 +635,6 @@ namespace tubex
     const IntervalVector TubeVector::integral(double t) const
     {
       assert(domain().contains(t));
-
-      // In Tube class, Tube::integral(double) faster than Tube::integral(Interval)
-      // todo: deprecated comment
       IntervalVector integ_box(size());
       for(int i = 0 ; i < size() ; i++)
         integ_box[i] = (*this)[i].integral(t);
