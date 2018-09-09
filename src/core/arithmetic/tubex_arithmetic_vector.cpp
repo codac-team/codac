@@ -37,7 +37,6 @@ namespace tubex
     { \
       assert(x1.size() == x2.size()); \
       assert(x1.domain() == x2.domain()); \
-      assert(TubeVector::same_slicing(x1, x2)); \
       TubeVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
         y[i] = tubex::f(x1[i], x2[i]); \
@@ -87,7 +86,6 @@ namespace tubex
   const TubeVector operator*(const Tube& x1, const TubeVector& x2)
   {
     assert(x1.domain() == x2.domain()); \
-    assert(TubeVector::same_slicing(x2, x1)); \
     TubeVector y(x2);
     for(int i = 0 ; i < y.size() ; i++)
       y[i] = operator*(x1, y[i]);

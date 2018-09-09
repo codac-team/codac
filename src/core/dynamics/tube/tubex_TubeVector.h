@@ -92,6 +92,7 @@ namespace tubex
       bool is_strict_superset(const TubeVector& x) const;
       bool is_empty() const;
       bool contains(const TrajectoryVector& x) const;
+      bool overlaps(const TubeVector& x, float ratio = 1.) const;
 
       // Setting values
       void set(const ibex::IntervalVector& y);

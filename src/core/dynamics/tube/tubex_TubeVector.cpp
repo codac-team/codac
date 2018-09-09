@@ -524,6 +524,15 @@ namespace tubex
       return true;
     }
 
+    bool TubeVector::overlaps(const TubeVector& x, float ratio) const
+    {
+      assert(domain() == x.domain());
+      for(int i = 0 ; i < size() ; i++)
+        if(!(*this)[i].overlaps(x[i]))
+          return false;
+      return true;
+    }
+
     // Setting values
 
     void TubeVector::set(const IntervalVector& y)

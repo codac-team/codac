@@ -102,11 +102,27 @@ namespace tubex
     const Tube f(const Tube& x1, const Tube& x2) \
     { \
       assert(x1.domain() == x2.domain()); \
-      assert(Tube::same_slicing(x1, x2)); \
       Tube y(x1); \
+      const Slice *slice_x1, *slice_x2; \
+      \
+      if(Tube::same_slicing(x1, x2)) /* faster, no sampling computation needed */ \
+      { \
+        slice_x1 = x1.first_slice(); \
+        slice_x2 = x2.first_slice(); \
+      } \
+      \
+      else \
+      { \
+        Tube x1_resampled(x1); \
+        Tube x2_resampled(x2); \
+        x1_resampled.sample(x2); \
+        x2_resampled.sample(x1); \
+        y.sample(x2); \
+        slice_x1 = x1_resampled.first_slice(); \
+        slice_x2 = x2_resampled.first_slice(); \
+      } \
+      \
       Slice *slice_y = y.first_slice(); \
-      const Slice *slice_x1 = x1.first_slice(); \
-      const Slice *slice_x2 = x2.first_slice(); \
       while(slice_y != NULL) \
       { \
         slice_y->set_envelope(ibex::f(slice_x1->codomain(), slice_x2->codomain())); \

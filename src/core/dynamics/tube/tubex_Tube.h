@@ -72,6 +72,7 @@ namespace tubex
       int index(const Slice* slice) const;
       void sample(double t);
       void sample(double t, const ibex::Interval& gate);
+      void sample(const Tube& x);
       static bool same_slicing(const Tube& x1, const Tube& x2);
 
       // Accessing values
@@ -101,6 +102,7 @@ namespace tubex
       bool is_strict_superset(const Tube& x) const;
       bool is_empty() const;
       bool contains(const Trajectory& x) const;
+      bool overlaps(const Tube& x, float ratio = 1.) const;
 
       // Setting values
       void set(const ibex::Interval& y);

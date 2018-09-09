@@ -395,6 +395,14 @@ namespace tubex
       else
         s->set_output_gate(gate);
     }
+
+    void Tube::sample(const Tube& x)
+    {
+      assert(domain() == x.domain());
+
+      for(const Slice *s = x.first_slice() ; s != NULL ; s = s->next_slice())
+        sample(s->domain().ub());
+    }
     
     bool Tube::same_slicing(const Tube& x1, const Tube& x2)
     {
@@ -762,6 +770,22 @@ namespace tubex
       }
 
       return true;
+    }
+
+    bool Tube::overlaps(const Tube& x, float ratio) const
+    {
+      assert(domain() == x.domain());
+
+      Tube inter = *this & x;
+
+      double overlaping_range = 0.;
+      for(const Slice *s = inter.first_slice() ; s != NULL ; s = s->next_slice())
+      {
+        if(!s->codomain().is_empty())
+          overlaping_range += s->domain().diam();
+      }
+
+      return overlaping_range / domain().diam() >= ratio;
     }
 
     // Setting values
