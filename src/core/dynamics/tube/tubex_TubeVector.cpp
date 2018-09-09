@@ -342,7 +342,11 @@ namespace tubex
       assert(size() == v.size());
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
-      // todo
+      
+      Interval t;
+      for(int i = 0 ; i < size() ; i++)
+        t &= (*this)[i].invert(y, v[i], search_domain);
+      return t;
     }
 
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const TubeVector& v, const Interval& search_domain) const
