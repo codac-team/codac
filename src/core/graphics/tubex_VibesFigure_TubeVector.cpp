@@ -18,7 +18,7 @@ using namespace ibex;
 namespace tubex
 {
   VibesFigure_TubeVector::VibesFigure_TubeVector(const std::string& fig_name)
-    : m_name(fig_name), m_n(0), m_v_figs(NULL)
+    : Figure(fig_name), m_n(0), m_v_figs(NULL)
   {
 
   }
@@ -63,12 +63,7 @@ namespace tubex
   void VibesFigure_TubeVector::set_properties(int x, int y, int width, int height)
   {
     assert(x >= 0 && y >= 0 && width > 0 && height > 0);
-
-    m_x = x;
-    m_y = y;
-    m_width = width;
-    m_height = height;
-
+    Figure::set_properties(x, y, width, height);
     for(int i = subfigs_number() - 1 ; i >= 0 ; i--) // if subfigures already instantiated, properties are applied
       m_v_figs[i]->set_properties(m_x + (i - m_start_index)*50, m_y + (i - m_start_index)*50, m_width, m_height);
   }

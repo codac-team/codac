@@ -10,15 +10,7 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include <cstdio>
-#include <string>
-#include <iostream>
 #include "tubex_VibesFigure.h"
-
-// A real value to display unbounded slices:
-#include <limits>
-#define BOUNDED_INFINITY 99999. //numeric_limits<float>::max()
-// Note: numeric_limits<float>::max() seems unusable with vibes::drawPolygon
 
 using namespace std;
 using namespace ibex;
@@ -26,25 +18,16 @@ using namespace ibex;
 namespace tubex
 {
   VibesFigure::VibesFigure(const string& figure_name)
-    : m_view_box(2, Interval::EMPTY_SET)
+    : Figure(figure_name), m_view_box(2, Interval::EMPTY_SET)
   {
-    m_name = figure_name;
     vibes::newFigure(m_name);
     vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));
-  }
-
-  const string VibesFigure::name() const
-  {
-    return m_name;
   }
 
   void VibesFigure::set_properties(int x, int y, int width, int height)
   {
     assert(x >= 0 && y >= 0 && width > 0 && height > 0);
-
-    m_x = x; m_y = y;
-    m_width = width; m_height = height;
-
+    Figure::set_properties(x, y, width, height);
     vibes::setFigureProperties(
               name(),
               vibesParams("x", m_x,
@@ -104,26 +87,6 @@ namespace tubex
   void VibesFigure::save_image(const string& suffix, const string& extension) const
   {
     vibes::saveImage(name() + suffix + extension, name());
-  }
-
-  int VibesFigure::x() const
-  {
-    return m_x;
-  }
-
-  int VibesFigure::y() const
-  {
-    return m_y;
-  }
-
-  int VibesFigure::width() const
-  {
-    return m_width;
-  }
-
-  int VibesFigure::height() const
-  {
-    return m_height;
   }
 
   const IntervalVector& VibesFigure::view_box() const
@@ -192,22 +155,5 @@ namespace tubex
 
     if(v_t.size() > 0)
       vibes::drawPolygon(v_t, v_x, params_this_fig);
-  }
-
-  string VibesFigure::add_suffix(const string& name, int id)
-  {
-    std::ostringstream o;
-    o << name << "_" << id;
-    return o.str();
-  }
-
-  double VibesFigure::trunc_inf(double x)
-  {
-    return (x == POS_INFINITY ? BOUNDED_INFINITY : (x == NEG_INFINITY ? -BOUNDED_INFINITY : x));
-  }
-
-  const Interval VibesFigure::trunc_inf(const ibex::Interval& x)
-  {
-    return Interval(trunc_inf(x.lb()),trunc_inf(x.ub()));
   }
 }

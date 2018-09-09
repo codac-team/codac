@@ -16,11 +16,12 @@
 #include <string>
 #include "ibex_IntervalVector.h"
 #include "vibes.h"
+#include "tubex_Figure.h"
 #include "tubex_Polygon.h"
 
 namespace tubex
 {
-  class VibesFigure
+  class VibesFigure : public Figure
   {
     public:
 
@@ -35,41 +36,16 @@ namespace tubex
        * \brief Delete this figure.
        */
       ~VibesFigure() {};
-
+      
       /**
-       * \brief Return the name of the figure.
+       * \brief Set figure's properties: position and dimensions.
        *
-       * \return figure's name
+       * \param x x-position
+       * \param y y-position
+       * \param width width value (px)
+       * \param height height value (px)
        */
-      const std::string name() const;
-
-      /**
-       * \brief Return x-position of the figure.
-       *
-       * \return x-position
-       */
-      int x() const;
-
-      /**
-       * \brief Return y-position of the figure.
-       *
-       * \return y-position
-       */
-      int y() const;
-
-      /**
-       * \brief Return figure's width.
-       *
-       * \return width
-       */
-      int width() const;
-
-      /**
-       * \brief Return figure's height.
-       *
-       * \return height
-       */
-      int height() const;
+      void set_properties(int x, int y, int width, int height);
 
       /**
        * \brief Return figure's view box.
@@ -86,16 +62,6 @@ namespace tubex
       void draw_circle(double x, double y, double r, const std::string& color = "", const vibes::Params& params = vibes::Params());
       void draw_polygon(const Polygon& p, const vibes::Params& params);
       void draw_polygon(const Polygon& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
-
-      /**
-       * \brief Set figure's properties: position and dimensions.
-       *
-       * \param x x-position
-       * \param y y-position
-       * \param width width value (px)
-       * \param height height value (px)
-       */
-      void set_properties(int x, int y, int width, int height);
 
       /**
        * \brief Set figure's axis limits.
@@ -127,17 +93,8 @@ namespace tubex
        */
       virtual void show() = 0;
 
-      static double trunc_inf(double x);
-      static const ibex::Interval trunc_inf(const ibex::Interval& x);
-
     protected:
 
-      static std::string add_suffix(const std::string& name, int id);
-
-    protected:
-
-      mutable std::string m_name;
-      int m_x, m_y, m_width, m_height;
       ibex::IntervalVector m_view_box;
   };
 }

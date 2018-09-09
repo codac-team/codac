@@ -13,13 +13,14 @@
 #ifndef __TUBEX_VIBESFIGURETUBEVECTOR_H__
 #define __TUBEX_VIBESFIGURETUBEVECTOR_H__
 
+#include "tubex_Figure.h"
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_VibesFigure_Tube.h"
 
 namespace tubex
 {
-  class VibesFigure_TubeVector
+  class VibesFigure_TubeVector : public Figure
   {
     public:
 
@@ -65,10 +66,6 @@ namespace tubex
       int m_n = 0;
       VibesFigure_Tube **m_v_figs = NULL;
       int m_start_index = -1, m_end_index = -1;
-
-      // todo: move the following attributes in some abstract class? (common with VibesFigure)
-      const std::string m_name;
-      int m_x = 100, m_y = 100, m_width = 600, m_height = 300;
   };
 }
 

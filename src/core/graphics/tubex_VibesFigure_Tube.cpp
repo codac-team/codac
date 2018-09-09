@@ -237,13 +237,13 @@ namespace tubex
         image_lb = NAN;
         image_ub = NAN;
 
-        for(int k = 0 ; k < tube->nb_slices() ; k++) // todo: slice ptr iteration
+        for(const Slice *s = tube->first_slice() ; s != NULL ; s = s->next_slice())
         {
-          Interval slice = (*tube)(k);
-          if(!slice.is_unbounded())
+          Interval codomain = s->codomain();
+          if(!codomain.is_unbounded())
           {
-            image_lb = std::isnan(image_lb) || image_lb > slice.lb() ? slice.lb() : image_lb;
-            image_ub = std::isnan(image_ub) || image_ub < slice.ub() ? slice.ub() : image_ub;
+            image_lb = std::isnan(image_lb) || image_lb > codomain.lb() ? codomain.lb() : image_lb;
+            image_ub = std::isnan(image_ub) || image_ub < codomain.ub() ? codomain.ub() : image_ub;
           }
         }
       }
