@@ -330,10 +330,36 @@ namespace tubex
       return t;
     }
 
+    #define macro_invert(invert_method) \
+      assert(size() == y.size()); \
+       \
+      v_t.clear(); \
+      for(int i = 0 ; i < size() ; i++) \
+      { \
+        vector<Interval> v_t_i, v_t_new; \
+        invert_method; \
+        \
+        if(i > 0) \
+        { \
+          v_t = v_t_i; \
+          continue; \
+        } \
+        \
+        for(int a = 0 ; a < v_t.size() ; a++) \
+          for(int b = 0 ; b < v_t_i.size() ; b++) \
+          { \
+            Interval t = v_t[a] & v_t_i[b]; \
+            if(!t.is_empty()) \
+              v_t_new.push_back(t); \
+          } \
+        \
+        v_t = v_t_new; \
+      } \
+
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
     {
       assert(size() == y.size());
-      // todo
+      macro_invert((*this)[i].invert(y[i], v_t_i, search_domain));
     }
 
     const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& v, const Interval& search_domain) const
@@ -342,20 +368,19 @@ namespace tubex
       assert(size() == v.size());
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
-      
+
       Interval t;
       for(int i = 0 ; i < size() ; i++)
-        t &= (*this)[i].invert(y, v[i], search_domain);
+        t &= (*this)[i].invert(y[i], v[i], search_domain);
       return t;
     }
 
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const TubeVector& v, const Interval& search_domain) const
     {
-      assert(size() == y.size());
       assert(size() == v.size());
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
-      // todo
+      macro_invert((*this)[i].invert(y[i], v_t_i, v[i], search_domain));
     }
 
     const pair<IntervalVector,IntervalVector> TubeVector::eval(const Interval& t) const
