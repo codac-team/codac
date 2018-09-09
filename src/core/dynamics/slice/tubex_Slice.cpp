@@ -132,17 +132,14 @@ namespace tubex
     
     double Slice::volume() const
     {
-      return m_domain.diam() * m_codomain.diam();
-
-      // todo: check the following:
-      //if(m_codomain.is_empty()) // ibex::diam(EMPTY_SET) is not 0, todo: check this
-      //  return 0.;
-      //
-      //else if(m_codomain.is_unbounded())
-      //  return INFINITY;
-      //
-      //else
-      //  return m_domain.diam() * m_codomain.diam();
+      if(m_codomain.is_empty())
+        return 0.;
+      
+      else if(m_codomain.is_unbounded())
+        return POS_INFINITY;
+      
+      else
+        return m_domain.diam() * m_codomain.diam();
     }
 
     const Interval Slice::operator()(double t) const

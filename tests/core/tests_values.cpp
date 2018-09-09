@@ -705,8 +705,21 @@ TEST_CASE("Testing volume()")
 {
   SECTION("Slice")
   {
-    Slice slice(Interval(0.,10.), Interval(4.,5.));
-    CHECK(slice.volume() == 10.);
+    Slice empty_slice(Interval(0.,1.), Interval::EMPTY_SET);
+    CHECK(empty_slice.codomain().is_empty());
+    CHECK(empty_slice.volume() == 0.);
+
+    Slice unbounded_slice(Interval(0.,1.));
+    CHECK(unbounded_slice.codomain().is_unbounded());
+    CHECK(unbounded_slice.volume() == POS_INFINITY);
+
+    Slice flat_slice(Interval(0.,1.), Interval(3.));
+    CHECK_FALSE(flat_slice.codomain().is_unbounded());
+    CHECK(flat_slice.volume() == 0.);
+
+    Slice bounded_slice(Interval(0.,2.), Interval(2.,12.));
+    CHECK_FALSE(bounded_slice.codomain().is_unbounded());
+    CHECK(bounded_slice.volume() == 20.);
   }
 
   SECTION("Tube")
@@ -714,8 +727,31 @@ TEST_CASE("Testing volume()")
     Tube x1 = tube_test_1();
     x1.set(Interval(-4,2), 14);
     CHECK(x1.volume() == 197.);
+
     Tube x4 = tube_test4();
     CHECK(x4.volume() == 9.+2.+1.+2.+1.+(21.-14.)*1.);
+    x4.set(Interval::NEG_REALS, Interval(3.,4.));
+    CHECK(x4.volume() == POS_INFINITY);
+    x4.set(Interval::EMPTY_SET, Interval(3.,3.2));
+    CHECK(x4.volume() == POS_INFINITY);
+    x4.set(Interval::EMPTY_SET, Interval(3.,4.));
+    CHECK_FALSE(x4.volume() == POS_INFINITY);
+
+    Tube empty_tube(Interval(0.,1.), 0.1, Interval::EMPTY_SET);
+    CHECK(empty_tube.codomain().is_empty());
+    CHECK(empty_tube.volume() == 0.);
+
+    Tube unbounded_tube(Interval(0.,1.), 0.1);
+    CHECK(unbounded_tube.codomain().is_unbounded());
+    CHECK(unbounded_tube.volume() == POS_INFINITY);
+
+    Tube flat_tube(Interval(0.,1.), 0.1, Interval(3.));
+    CHECK_FALSE(flat_tube.codomain().is_unbounded());
+    CHECK(flat_tube.volume() == 0.);
+
+    Tube bounded_tube(Interval(0.,2.), 0.1, Interval(2.,12.));
+    CHECK_FALSE(bounded_tube.codomain().is_unbounded());
+    CHECK(Approx(bounded_tube.volume()) == 20.);
   }
 }
 

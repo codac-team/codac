@@ -353,6 +353,7 @@ namespace tubex
         \
         v_t = v_t_new; \
       } \
+      /* todo: merge v_t items? */ \
 
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
     {

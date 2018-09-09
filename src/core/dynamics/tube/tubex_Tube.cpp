@@ -87,7 +87,6 @@ namespace tubex
       // A scalar copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(1, *this);
       *this = f.eval_vector(input)[f_image_id];
-      // todo: delete something here?
     }
 
     Tube::Tube(const Tube& x)
@@ -855,7 +854,7 @@ namespace tubex
       assert(Interval(0.,1.).interior_contains(ratio));
 
       pair<Tube,Tube> p = make_pair(*this,*this);
-      LargestFirst bisector(0., ratio); // todo: bisect according to another rule than largest first?
+      LargestFirst bisector(0., ratio);
 
       try
       {
