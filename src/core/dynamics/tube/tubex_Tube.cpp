@@ -730,21 +730,38 @@ namespace tubex
       //if(m_data_tree != NULL) // faster computation from binary tree
       //  return m_data_tree->emptiness_synthesis().emptiness();
 
-      // todo: faster implementation without redundant gate evaluations?
-      for(const Slice *slice = first_slice() ; slice != NULL ; slice = slice->next_slice())
-        if(slice->is_empty())
+      // Fast implementation without redundant gate evaluations:
+      const Slice *slice = first_slice();
+
+      if(slice->input_gate().is_empty())
+        return true;
+
+      for( ; slice != NULL ; slice = slice->next_slice())
+      {
+        if(slice->codomain().is_empty() || slice->output_gate().is_empty())
           return true;
+      }
+      
       return false;
     }
 
     bool Tube::contains(const Trajectory& x) const
     {
       assert(domain() == x.domain());
-      // todo: faster implementation without redundant gate evaluations?
 
-      for(const Slice *slice = first_slice() ; slice != NULL ; slice = slice->next_slice())
-        if(!slice->contains(x))
+      // Fast implementation without redundant gate evaluations:
+      const Slice *slice = first_slice();
+
+      if(!x(Interval(slice->domain().lb())).is_subset(slice->input_gate()))
+        return false;
+
+      for( ; slice != NULL ; slice = slice->next_slice())
+      {
+        if(!x(slice->domain()).is_subset(slice->codomain())
+        || !x(Interval(slice->domain().ub())).is_subset(slice->output_gate()))
           return false;
+      }
+
       return true;
     }
 
