@@ -72,7 +72,7 @@ namespace tubex
 
       struct FigMapTubeParams
       {
-        const TubeVector *tube_copy = NULL; // to display previous values in background
+        const Tube *tube_x_copy = NULL, *tube_y_copy; // to display previous values in background
         std::string name;
         int index_x, index_y;
       };

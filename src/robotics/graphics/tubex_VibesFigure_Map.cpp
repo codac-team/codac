@@ -33,8 +33,11 @@ namespace tubex
   {
     typename map<const TubeVector*,FigMapTubeParams>::const_iterator it;
     for(it = m_map_tubes.begin(); it != m_map_tubes.end(); it++)
-      if(it->second.tube_copy != NULL)
-        delete it->second.tube_copy;
+      if(it->second.tube_x_copy != NULL)
+      {
+        delete it->second.tube_x_copy;
+        delete it->second.tube_y_copy;
+      }
   }
 
   void VibesFigure_Map::add_tubevector(const TubeVector *tube, const string& name, int index_x, int index_y)
@@ -70,8 +73,12 @@ namespace tubex
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
       && "unable to remove, unknown tube");
 
-    if(m_map_tubes[tube].tube_copy != NULL)
-      delete m_map_tubes[tube].tube_copy;
+    if(m_map_tubes[tube].tube_x_copy != NULL)
+    {
+      delete m_map_tubes[tube].tube_x_copy;
+      delete m_map_tubes[tube].tube_y_copy;
+    }
+
     m_map_tubes.erase(tube);
   }
 
@@ -230,9 +237,11 @@ namespace tubex
       // The background is the previous version of the tube (before contraction).
       // If a copy of the tube has not been done,
       // we make one and no display is done.
-      if(m_map_tubes[tube].tube_copy == NULL)
-        m_map_tubes[tube].tube_copy = new TubeVector(*tube);
-        // todo: store only necesary components?
+      if(m_map_tubes[tube].tube_x_copy == NULL)
+      {
+        m_map_tubes[tube].tube_x_copy = new Tube((*tube)[m_map_tubes[tube].index_x]);
+        m_map_tubes[tube].tube_y_copy = new Tube((*tube)[m_map_tubes[tube].index_y]);
+      }
 
     return viewbox;
   }
@@ -331,16 +340,16 @@ namespace tubex
       vibes::Params params = vibesParams("figure", name(), "group", group_name);
 
       // if available, the copy of the tube (old version) is displayed
-      if(m_map_tubes[tube].tube_copy != NULL)
+      if(m_map_tubes[tube].tube_x_copy != NULL)
       {
         string color = DEFAULT_MAPBCKGRND_COLOR;
 
-        for(int k = 0 ; k < m_map_tubes[tube].tube_copy->nb_slices() ;
+        for(int k = 0 ; k < m_map_tubes[tube].tube_x_copy->nb_slices() ;
             k += step * 2) // less slices for the background
         {
           IntervalVector box(2);
-          box[0] = (*m_map_tubes[tube].tube_copy)[m_map_tubes[tube].index_x](k);
-          box[1] = (*m_map_tubes[tube].tube_copy)[m_map_tubes[tube].index_y](k);
+          box[0] = (*m_map_tubes[tube].tube_x_copy)(k);
+          box[1] = (*m_map_tubes[tube].tube_y_copy)(k);
           draw_box(box, color, params);
         }
       }
