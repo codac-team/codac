@@ -272,7 +272,6 @@ namespace tubex
       typename map<double,double>::const_iterator it_scalar_values_x, it_scalar_values_y;
       it_scalar_values_x = (*traj)[index_x].sampled_map().begin();
       it_scalar_values_y = (*traj)[index_y].sampled_map().begin();
-      // todo: display heading if available
 
       while(it_scalar_values_x != (*traj)[index_x].sampled_map().end())
       {
@@ -416,18 +415,25 @@ namespace tubex
 
     double robot_x = (*traj)[m_map_trajs[traj].index_x](t);
     double robot_y = (*traj)[m_map_trajs[traj].index_y](t);
+    double robot_heading;
 
-    double next_t;
-    float delta_t = traj->domain().diam() / 10000.;
-    if(t >= traj->domain().lb() + delta_t) next_t = t - delta_t;
-    else next_t = t + delta_t;
+    if(m_map_trajs[traj].index_heading == -1) // heading traj not available
+    {
+      double next_t;
+      float delta_t = traj->domain().diam() / 10000.;
+      if(t >= traj->domain().lb() + delta_t) next_t = t - delta_t;
+      else next_t = t + delta_t;
 
-    double robot_next_x = (*traj)[m_map_trajs[traj].index_x](next_t);
-    double robot_next_y = (*traj)[m_map_trajs[traj].index_y](next_t);
-    float angle = std::atan2(robot_y - robot_next_y, robot_x - robot_next_x);
-    if(next_t > t) angle += M_PI;
+      double robot_next_x = (*traj)[m_map_trajs[traj].index_x](next_t);
+      double robot_next_y = (*traj)[m_map_trajs[traj].index_y](next_t);
+      robot_heading = std::atan2(robot_y - robot_next_y, robot_x - robot_next_x);
+      if(next_t > t) robot_heading += M_PI;
+    }
 
-    vibes::drawAUV(robot_x, robot_y, angle * 180. / M_PI, m_robot_size, "gray[yellow]", params);
+    else
+      robot_heading = (*traj)[m_map_trajs[traj].index_heading](t);
+
+    vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, m_robot_size, "gray[yellow]", params);
   }
 
   void VibesFigure_Map::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
