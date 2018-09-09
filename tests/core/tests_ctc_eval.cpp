@@ -19,7 +19,6 @@ TEST_CASE("CtcEval")
   {
     Interval t(0.,6.), z(-1.,1.);
     Tube x(Interval(-1.,7.), 2.);
-      x &= Interval(-10.,10.); // todo: remove this
     Tube v(x);
     v.set(Interval(-1.), 0);
     v.set(Interval(-1.,1.), 1);
@@ -32,14 +31,14 @@ TEST_CASE("CtcEval")
     ctc_eval.contract(t, z, x, v);
     CHECK(x.nb_slices() == 6);
 
-    CHECK(x.codomain() == (Interval::ALL_REALS & Interval(-10.,10.))); // only gates should be affected
-    CHECK(x(-1.) == (Interval::ALL_REALS & Interval(-10.,10.)));
+    CHECK(x.codomain() == Interval::ALL_REALS); // only gates should be affected
+    CHECK(x(-1.) == Interval::ALL_REALS);
     CHECK(x(0.) == Interval(-2.,6.));
     CHECK(x(1.) == Interval(-3.,5.));
     CHECK(x(3.) == Interval(-4.,3.));
     CHECK(x(5.) == Interval(-6.,1.));
     CHECK(x(6.) == Interval(-5.,2.));
-    CHECK(x(7.) == (Interval::ALL_REALS & Interval(-10.,10.)));
+    CHECK(x(7.) == Interval::ALL_REALS);
 
     if(false & VIBES_DRAWING) // drawing results
     {
@@ -57,7 +56,6 @@ TEST_CASE("CtcEval")
   {
     Interval t(0.,6.), z(-1.,1.);
     Tube x(Interval(-1.,7.), 2.);
-      x &= Interval(-10.,10.); // todo: remove this
     Tube v(x);
     v.set(Interval(-1.), 0);
     v.set(Interval(-1.,1.), 1);
@@ -75,15 +73,15 @@ TEST_CASE("CtcEval")
 
     CHECK(x.nb_slices() == 7);
 
-    CHECK(x.codomain() == (Interval::ALL_REALS & Interval(-10.,10.))); // only gates should be affected
-    CHECK(x(-1.) == (Interval::ALL_REALS & Interval(-10.,10.)));
+    CHECK(x.codomain() == Interval::ALL_REALS); // only gates should be affected
+    CHECK(x(-1.) == Interval::ALL_REALS);
     CHECK(x(0.) == Interval(0.,3.));
     CHECK(x(1.) == Interval(-1.,2.));
     CHECK(x(2.) == Interval(0.,1.));
     CHECK(x(3.) == Interval(-1.,2.));
     CHECK(x(5.) == Interval(-3.,1.));
     CHECK(x(6.) == Interval(-2.,2.));
-    CHECK(x(7.) == (Interval::ALL_REALS & Interval(-10.,10.)));
+    CHECK(x(7.) == Interval::ALL_REALS);
 
     t = Interval(1.75,5.5);
     z = Interval(1.6);
@@ -127,8 +125,7 @@ TEST_CASE("CtcEval")
     xdot.set(Interval(-0.5,1.));
 
     Tube x(xdot);
-    x.set(Interval(-10.,10.));
-    // todo: apply this: x.set(Interval::ALL_REALS);
+    x.set(Interval::ALL_REALS);
     x.set(Interval(-1.5,1.), 4);
     x.set(Interval(-1.,1.5), 5);
     CHECK(x.nb_slices() == 10);

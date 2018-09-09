@@ -100,24 +100,23 @@ TEST_CASE("CtcDeriv")
     CHECK(x.input_gate().is_empty());
     CHECK(x.output_gate().is_empty());
     CHECK(x.codomain().is_empty());
-  }/*
-}
+  }
 
   SECTION("Test slice, unbounded slice")
   {
     Slice x(Interval(-1.,3.));
-    Slice v(x.domain(), IntervalVector(1, Interval(0.,1.)));
+    Slice v(x.domain(), Interval(0.,1.));
 
-    CHECK(x.input_gate() == IntervalVector(1, Interval::ALL_REALS));
-    CHECK(x.output_gate() == IntervalVector(1, Interval::ALL_REALS));
-    CHECK(x.codomain() == IntervalVector(1, Interval::ALL_REALS));
+    CHECK(x.input_gate() == Interval::ALL_REALS);
+    CHECK(x.output_gate() == Interval::ALL_REALS);
+    CHECK(x.codomain() == Interval::ALL_REALS);
 
     CtcDeriv ctc;
     ctc.contract(x,v);
 
-    CHECK(x.input_gate()[0] == Interval::ALL_REALS);
-    CHECK(x.output_gate()[0] == Interval::ALL_REALS);
-    CHECK(x.codomain()[0] == Interval::ALL_REALS);
+    CHECK(x.input_gate() == Interval::ALL_REALS);
+    CHECK(x.output_gate() == Interval::ALL_REALS);
+    CHECK(x.codomain() == Interval::ALL_REALS);
   }
 
   SECTION("Test slice, unbounded derivative (1)")
@@ -125,59 +124,59 @@ TEST_CASE("CtcDeriv")
     Slice x(Interval(-1.,3.));
     Slice v(x.domain());
 
-    CHECK(x.input_gate()[0] == Interval::ALL_REALS);
-    CHECK(x.output_gate()[0] == Interval::ALL_REALS);
-    CHECK(x.codomain()[0] == Interval::ALL_REALS);
+    CHECK(x.input_gate() == Interval::ALL_REALS);
+    CHECK(x.output_gate() == Interval::ALL_REALS);
+    CHECK(x.codomain() == Interval::ALL_REALS);
 
     CtcDeriv ctc;
     ctc.contract(x,v);
 
-    CHECK(x.input_gate()[0] == Interval::ALL_REALS);
-    CHECK(x.output_gate()[0] == Interval::ALL_REALS);
-    CHECK(x.codomain()[0] == Interval::ALL_REALS);
+    CHECK(x.input_gate() == Interval::ALL_REALS);
+    CHECK(x.output_gate() == Interval::ALL_REALS);
+    CHECK(x.codomain() == Interval::ALL_REALS);
   }
 
   SECTION("Test slice, unbounded derivative ([-oo,1])")
   {
     Slice x(Interval(-1.,3.));
-    x.set_input_gate(IntervalVector(1, Interval(-1.,2.)));
-    x.set_output_gate(IntervalVector(1, Interval(-2.,0.)));
-    Slice v(x.domain(), IntervalVector(1, Interval(NEG_INFINITY,1.)));
+    x.set_input_gate(Interval(-1.,2.));
+    x.set_output_gate(Interval(-2.,0.));
+    Slice v(x.domain(), Interval(NEG_INFINITY,1.));
 
-    CHECK(x.input_gate()[0] == Interval(-1.,2.));
-    CHECK(x.output_gate()[0] == Interval(-2.,0.));
-    CHECK(x.codomain()[0] == Interval::ALL_REALS);
-    CHECK(v.codomain()[0] == Interval(NEG_INFINITY,1.));
+    CHECK(x.input_gate() == Interval(-1.,2.));
+    CHECK(x.output_gate() == Interval(-2.,0.));
+    CHECK(x.codomain() == Interval::ALL_REALS);
+    CHECK(v.codomain() == Interval(NEG_INFINITY,1.));
 
     CtcDeriv ctc;
     ctc.contract(x,v);
 
-    CHECK(x.input_gate()[0] == Interval(-1.,2.));
-    CHECK(x.output_gate()[0] == Interval(-2.,0.));
-    CHECK(x.codomain()[0] == Interval(-6.,6.));
-    CHECK(v.codomain()[0] == Interval(NEG_INFINITY,1.));
+    CHECK(x.input_gate() == Interval(-1.,2.));
+    CHECK(x.output_gate() == Interval(-2.,0.));
+    CHECK(x.codomain() == Interval(-6.,6.));
+    CHECK(v.codomain() == Interval(NEG_INFINITY,1.));
   }
 
   SECTION("Test slice, unbounded derivative ([1,oo])")
   {
     Slice x(Interval(-1.,3.));
-    x.set_input_gate(IntervalVector(1, Interval(-1.,2.)));
-    x.set_output_gate(IntervalVector(1, Interval(-2.,0.)));
-    Slice v(x.domain(), IntervalVector(1, Interval(-1.,POS_INFINITY)));
+    x.set_input_gate(Interval(-1.,2.));
+    x.set_output_gate(Interval(-2.,0.));
+    Slice v(x.domain(), Interval(-1.,POS_INFINITY));
 
-    CHECK(x.input_gate()[0] == Interval(-1.,2.));
-    CHECK(x.output_gate()[0] == Interval(-2.,0.));
-    CHECK(x.codomain()[0] == Interval::ALL_REALS);
-    CHECK(v.codomain()[0] == Interval(-1.,POS_INFINITY));
+    CHECK(x.input_gate() == Interval(-1.,2.));
+    CHECK(x.output_gate() == Interval(-2.,0.));
+    CHECK(x.codomain() == Interval::ALL_REALS);
+    CHECK(v.codomain() == Interval(-1.,POS_INFINITY));
 
     CtcDeriv ctc;
     ctc.contract(x,v);
 
-    CHECK(x.input_gate()[0] == Interval(-1.,2.));
-    CHECK(x.output_gate()[0] == Interval(-2.,0.));
-    CHECK(x.codomain()[0] == Interval(-5.,4.));
-    CHECK(v.codomain()[0] == Interval(-1.,POS_INFINITY));
-  }*/
+    CHECK(x.input_gate() == Interval(-1.,2.));
+    CHECK(x.output_gate() == Interval(-2.,0.));
+    CHECK(x.codomain() == Interval(-5.,4.));
+    CHECK(v.codomain() == Interval(-1.,POS_INFINITY));
+  }
 
   SECTION("Test fwd")
   {
@@ -352,9 +351,10 @@ TEST_CASE("CtcDeriv")
     CHECK(tube(20.) == Interval(5.5));
     CHECK(tube(7) == Interval(-1.,7.));
     CHECK(tube(23.) == Interval(5.5));
-    // todo: CHECK(tube(8) == Interval::ALL_REALS);
-    // todo: CHECK(tube(26.) == Interval::ALL_REALS);
-    // todo: CHECK(tube.codomain() == Interval::ALL_REALS);
+
+    CHECK(tube(8) == Interval::ALL_REALS);
+    CHECK(tube(26.) == Interval::ALL_REALS);
+    CHECK(tube.codomain() == Interval::ALL_REALS);
 
     #if VIBES_DRAWING // drawing results
       fig_tube.show(true);

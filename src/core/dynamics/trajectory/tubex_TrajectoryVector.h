@@ -20,8 +20,7 @@
 #include "tubex_Trajectory.h"
 #include "tubex_DynamicalItem.h"
 
-// todo:
-// - arithmetic operators for trajectories?
+// todo: arithmetic operators for trajectories?
 
 namespace tubex
 {

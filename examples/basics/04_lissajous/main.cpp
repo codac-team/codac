@@ -31,7 +31,7 @@ int main()
 
     // Creating tubes over the [0,6] domain with some timestep:
     TubeVector x(domain, timestep, 6);
-    x &= IntervalVector(6, Interval(-999.,999.));
+    x &= IntervalVector(6, Interval(-999.,999.)); // todo: remove this
     x[4] = Tube(x[5], tubex::Function("-10*cos(t)+[-0.001,0.001]"));
 
     // Initial conditions:

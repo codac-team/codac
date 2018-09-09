@@ -14,6 +14,10 @@
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 
+// todo: remove this (polygons in unbounded case)
+#include <limits>
+#define BOUNDED_INFINITY numeric_limits<float>::max()
+
 using namespace std;
 using namespace ibex;
 
@@ -94,6 +98,8 @@ namespace tubex
     Interval t_ = t;
     Interval z_ = z;
     Tube y_ = y;
+
+    y &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY); // todo: remove this
 
     t &= y.domain();
     t &= y.invert(z, w ,t);
@@ -203,6 +209,26 @@ namespace tubex
           if(!t.is_empty())
             z &= y.interpol(t, w);
       }
+
+      // todo: remove this
+
+        for(Slice *s = y.first_slice() ; s != NULL ; s = s->next_slice())
+        {
+          Interval envelope = s->codomain();
+          if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
+          if(envelope.lb() == -BOUNDED_INFINITY) envelope |= Interval(NEG_INFINITY,envelope.ub());
+          s->set_envelope(envelope);
+
+          Interval ingate = s->input_gate();
+          if(ingate.ub() == BOUNDED_INFINITY) ingate = Interval(ingate.lb(),POS_INFINITY);
+          if(ingate.lb() == -BOUNDED_INFINITY) ingate = Interval(NEG_INFINITY,ingate.ub());
+          s->set_input_gate(ingate);
+
+          Interval outgate = s->output_gate();
+          if(outgate.ub() == BOUNDED_INFINITY) outgate = Interval(outgate.lb(),POS_INFINITY);
+          if(outgate.lb() == -BOUNDED_INFINITY) outgate = Interval(NEG_INFINITY,outgate.ub());
+          s->set_output_gate(outgate);
+        }
     }
 
     if(m_preserve_slicing)

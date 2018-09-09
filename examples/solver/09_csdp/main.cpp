@@ -41,7 +41,7 @@ int main()
 
     int n = 2;
     Interval domain(0.,6.);
-    TubeVector x(domain, IntervalVector(n, Interval(-999.,999.))); // todo: remove bounds
+    TubeVector x(domain, n); // todo: remove bounds
     Vector epsilon(n); epsilon[0] = 0.05; epsilon[1] = 0.1;
 
     IntervalVector init = x(x.domain().lb());

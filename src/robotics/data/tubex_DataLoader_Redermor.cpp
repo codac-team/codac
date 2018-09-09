@@ -38,7 +38,6 @@ namespace tubex
     
     else // loading data from file
     {
-      // todo: truncate domain
       if(!m_datafile->is_open())
         throw Exception("DataLoader_Redermor::load_data", "data file not already opened");
 

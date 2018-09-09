@@ -13,6 +13,10 @@
 #include "tubex_CtcDeriv.h"
 #include "tubex_ConvexPolygon.h"
 
+// todo: remove this (polygons in unbounded case)
+#include <limits>
+#define BOUNDED_INFINITY numeric_limits<float>::max()
+
 using namespace std;
 using namespace ibex;
 
@@ -78,10 +82,6 @@ namespace tubex
 
     else // Optimal contraction
     {
-        // todo: remove this:
-        envelope &= Interval(-99999.,99999.);
-        x.set_envelope(envelope);
-
       if(outgate == Interval::ALL_REALS) // Direct evaluation, polygons not needed
       {
         envelope &= ingate + Interval(0.,x.domain().diam()) * v.codomain();
@@ -96,6 +96,11 @@ namespace tubex
 
       else // Using polygons to compute the envelope
       {
+        // todo: remove this:
+        envelope &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
+
+        x.set_envelope(envelope);
+
         // Gates contraction
         outgate &= ingate + x.domain().diam() * v.codomain();
         ingate &= outgate - x.domain().diam() * v.codomain();
@@ -106,6 +111,14 @@ namespace tubex
 
         // Optimal envelope
         envelope &= x.polygon(v).box()[1];
+
+        // todo: remove this:
+        if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
+        if(envelope.lb() == -BOUNDED_INFINITY) envelope |= Interval(NEG_INFINITY,envelope.ub());
+        if(ingate.ub() == BOUNDED_INFINITY) ingate = Interval(ingate.lb(),POS_INFINITY);
+        if(ingate.lb() == -BOUNDED_INFINITY) ingate = Interval(NEG_INFINITY,ingate.ub());
+        if(outgate.ub() == BOUNDED_INFINITY) outgate = Interval(outgate.lb(),POS_INFINITY);
+        if(outgate.lb() == -BOUNDED_INFINITY) outgate = Interval(NEG_INFINITY,outgate.ub());
       }
 
       x.set_envelope(envelope);
