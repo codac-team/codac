@@ -68,14 +68,23 @@ namespace tubex
       m_fig->show(true);
     #endif
 
-    stack<TubeVector> s;
-    s.push(x0);
+    int prev_level = 0;
+    list<pair<int,TubeVector> > s;
+    s.push_back(make_pair(0, x0));
     list<TubeVector> l_solutions;
 
     while(!s.empty())
     {
-      TubeVector x = s.top();
-      s.pop();
+      int level = s.front().first;
+      if(level != prev_level && s.size() >= 8)
+      {
+        cout << "clustering (" << s.size() << " items)" << endl;
+        //clustering(s);
+        prev_level = level;
+      }
+
+      TubeVector x = s.front().second;
+      s.pop_front();
 
       bool emptiness;
       double volume_before_refining;
@@ -127,11 +136,12 @@ namespace tubex
 
           else
           {
-            cout << "Bisection..." << endl;
+            cout << "Bisection... (level " << level << ")" << endl;
             double t_bisection = x[0].largest_slice()->domain().mid();
             pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
-            s.push(p_x.first);
-            s.push(p_x.second);
+            level++; // deeper
+            s.push_back(make_pair(level, p_x.first));
+            s.push_back(make_pair(level, p_x.second));
           }
         }
 
@@ -153,6 +163,31 @@ namespace tubex
     }
 
     return l_solutions;
+  }
+
+  void Solver::clustering(list<pair<int,TubeVector> >& l_tubes)
+  {
+    assert(!l_tubes.empty());
+
+    list<pair<int,TubeVector> > l_clustered;
+    list<pair<int,TubeVector> >::iterator it1, it2;
+    for(it1 = l_tubes.begin(); it1 != l_tubes.end(); ++it1)
+    {
+      bool clustering = false;
+      for(it2 = l_clustered.begin(); it2 != l_clustered.end(); ++it2)
+      {
+        if(it1->second.overlaps(it2->second, 0.9))
+        {
+          it2->second = it2->second | it1->second;
+          clustering = true;
+        }
+      }
+
+      if(!clustering)
+        l_clustered.push_back(*it1);
+    }
+
+    l_tubes = l_clustered;
   }
 
   VibesFigure_TubeVector* Solver::figure()

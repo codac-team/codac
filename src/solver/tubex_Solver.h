@@ -40,6 +40,7 @@ namespace tubex
 
     protected:
       
+      void clustering(std::list<std::pair<int,TubeVector> >& l_tubes);
       bool stopping_condition_met(const TubeVector& x);
       bool fixed_point_reached(double volume_before, double volume_after, float fxpt_ratio);
       void propagation(TubeVector &x, void (*ctc_func)(TubeVector&), float propa_fxpt_ratio);
