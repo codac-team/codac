@@ -52,6 +52,8 @@ namespace tubex
       const Tube primitive() const;
       const Tube& operator=(const Tube& x);
       const ibex::Interval domain() const;
+      const Trajectory lb() const;
+      const Trajectory ub() const;
 
       // Slices structure
       int nb_slices() const;

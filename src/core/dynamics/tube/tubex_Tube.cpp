@@ -213,6 +213,16 @@ namespace tubex
       return Interval(first_slice()->domain().lb(),
                       last_slice()->domain().ub());
     }
+
+    const Trajectory Tube::lb() const
+    {
+      // todo
+    }
+
+    const Trajectory Tube::ub() const
+    {
+      // todo
+    }
   
     // Slices structure
 

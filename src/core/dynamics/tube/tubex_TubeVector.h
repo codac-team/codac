@@ -50,6 +50,8 @@ namespace tubex
       const TubeVector primitive() const;
       const TubeVector& operator=(const TubeVector& x);
       const ibex::Interval domain() const;
+      const TrajectoryVector lb() const;
+      const TrajectoryVector ub() const;
       int size() const;
       void resize(int n);
       const TubeVector subvector(int start_index, int end_index) const;

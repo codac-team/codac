@@ -116,11 +116,7 @@ namespace tubex
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
       && "unable to remove, unknown traj");
 
-    if(GRAY_DISPLAY_MODE)
-      m_map_trajs[traj].color = color;
-
-    else
-      m_map_trajs[traj].color = "white";
+    m_map_trajs[traj].color = color;
 
     // Related groups are created during the display procedure
     // so that trajectories stay on top of the tubes.
