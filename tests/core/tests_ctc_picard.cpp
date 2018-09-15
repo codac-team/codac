@@ -57,13 +57,13 @@ TEST_CASE("CtcPicard")
     tube.set(IntervalVector(1, 2.*atan(exp(-t.lb())*tan(0.5))), t.lb());
     tubex::Function f7("x", "-sin(x)");
     ctc_picard.guess_kth_slices_envelope(f7, tube, 0, FORWARD);
-    CHECK(tube(0).is_superset(2.*atan(exp(-t)*tan(0.5))));
+    CHECK(tube(0).is_superset(Interval(2.*atan(exp(-t.lb())*tan(0.5))) | 2.*atan(exp(-t.ub())*tan(0.5))));
     
     tube = tube_raw;
     tube.set(IntervalVector(1, exp(-t.lb())), t.lb());
     tubex::Function f8("x", "-x");
     ctc_picard.guess_kth_slices_envelope(f8, tube, 0, FORWARD);
-    CHECK(tube(0).is_superset(exp(-t)));
+    CHECK(tube(0).is_superset(IntervalVector(Interval(exp(-t.lb()))) | IntervalVector(Interval(exp(-t.ub())))));
   }
 
   SECTION("Test CtcPicard / Slice - dim 1")
@@ -194,7 +194,7 @@ TEST_CASE("CtcPicard")
 
     ctc_picard.contract(f, x, BACKWARD);
     CHECK_FALSE(x.codomain().is_unbounded());
-    CHECK(x.codomain().is_superset(exp(-domain)));
+    CHECK(x.codomain().is_superset(Interval(exp(-domain.lb())) | exp(-domain.ub())));
     CHECK(x(0.).is_superset(Interval(exp(-0.))));
     CHECK(x(1.).is_superset(Interval(exp(-1))));
 
