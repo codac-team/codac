@@ -62,6 +62,9 @@ namespace tubex
 
         for(int k = 0 ; k < nb_slices ; k++)
         {
+          if(!x(k).is_unbounded())
+            continue;
+
           contract_kth_slices(f, x, k, FORWARD);
 
           // NB: all tube components share the same slicing
@@ -83,6 +86,9 @@ namespace tubex
       {
         for(int k = x.nb_slices() - 1 ; k >= 0 ; k--)
         {
+          if(!x(k).is_unbounded())
+            continue;
+
           contract_kth_slices(f, x, k, BACKWARD);
 
           // NB: all tube components share the same slicing
