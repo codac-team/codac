@@ -129,7 +129,7 @@ int main()
     VibesFigure_Map fig_map("Map");
     fig_map.set_properties(50, 50, 550, 350);
     fig_map.add_tubevector(&x, "x", 0, 1);
-    //fig_map.add_trajectoryvector(&x_truth, "x*", 1, 0, -1, "white");
+    //fig_map.add_trajectoryvector(&x_truth, "x*", 1, 0, "white");
     fig_map.add_beacons(v_beacons);
     fig_map.show(2.5);
 

@@ -82,6 +82,18 @@ namespace tubex
     m_map_tubes.erase(tube);
   }
 
+  void VibesFigure_Map::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color)
+  {
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) == m_map_trajs.end()
+      && "traj must not have been previously added");
+    assert(index_x != index_y);
+    assert(index_x >= 0 && index_x < traj->size());
+    assert(index_y >= 0 && index_y < traj->size());
+
+    add_trajectoryvector(traj, name, index_x, index_y, -1, color);
+  }
+
   void VibesFigure_Map::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
   {
     assert(traj != NULL);

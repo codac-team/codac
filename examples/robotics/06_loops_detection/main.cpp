@@ -29,7 +29,7 @@ int main()
     VibesFigure_Map fig_map("Map");
     fig_map.set_properties(1450, 50, 500, 500);
     fig_map.add_tubevector(x, "x", 0, 1);
-    fig_map.add_trajectoryvector(x_truth, "x*", 0, 1);
+    fig_map.add_trajectoryvector(x_truth, "x*", 0, 1, "white");
     fig_map.show();
 
     VibesFigure_Paving fig_tplane("t-plane", &tplane);

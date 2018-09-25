@@ -82,9 +82,8 @@ int main()
 
   /* =========== GRAPHICS =========== */
 
-    TrajectoryVector x_truth(6);
-    x_truth[0] = Trajectory(domain, tubex::Function("10*cos(t)"));
-    x_truth[1] = Trajectory(domain, tubex::Function("5*sin(2*t)"));
+    TrajectoryVector x_truth(domain, tubex::Function("(10*cos(t);5*sin(2*t))"));
+    x_truth.resize(x.size());
 
     vibes::beginDrawing();
 
@@ -97,7 +96,7 @@ int main()
     VibesFigure_Map fig_map("Map");
     fig_map.set_properties(50, 50, 500, 500);
     fig_map.add_tubevector(&x, "x", 0, 1);
-    fig_map.add_trajectoryvector(&x_truth, "x*", 0, 1);
+    fig_map.add_trajectoryvector(&x_truth, "x*", 0, 1, "white");
     fig_map.show(1.2);
 
     vibes::endDrawing();

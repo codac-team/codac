@@ -35,7 +35,7 @@ int main()
     VibesFigure_Map fig_map("Map");
     fig_map.set_properties(1450, 50, 600, 400);
     fig_map.add_tubevector(x, "x", 0, 1);
-    fig_map.add_trajectoryvector(x_truth, "x*", 0, 1);
+    fig_map.add_trajectoryvector(x_truth, "x*", 0, 1, "white");
     fig_map.add_beacons(v_seamarks);
     fig_map.add_observations(v_obs, x_truth);
     fig_map.show();

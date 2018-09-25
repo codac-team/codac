@@ -43,7 +43,8 @@ namespace tubex
       void set_tubevector_name(const TubeVector *tube, const std::string& name);
       void remove_tubevector(const TubeVector *tube);
 
-      void add_trajectoryvector(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, int index_heading = -1, const std::string& color = DEFAULT_TRAJMAP_COLOR);
+      void add_trajectoryvector(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, const std::string& color = DEFAULT_TRAJMAP_COLOR);
+      void add_trajectoryvector(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, int index_heading, const std::string& color = DEFAULT_TRAJMAP_COLOR);
       void set_trajectoryvector_name(const TrajectoryVector *traj, const std::string& name);
       void set_trajectoryvector_color(const TrajectoryVector *traj, const std::string& color);
       void remove_trajectoryvector(const TrajectoryVector *traj);
