@@ -92,9 +92,11 @@ int main()
 
     vibes::endDrawing();
 
+    bool success = x->subvector(0,1).contains(x_truth->subvector(0,1)) != NO;
     for(int i = 0 ; i < v_seamarks.size() ; i++)
       delete m_x[i];
     delete x;
     delete x_truth;
-    return EXIT_SUCCESS;
+
+    return success;
 }

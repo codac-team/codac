@@ -39,6 +39,9 @@ namespace tubex
       ~TrajectoryVector();
       const TrajectoryVector& operator=(const TrajectoryVector& x);
       int size() const;
+      void resize(int n);
+      const TrajectoryVector subvector(int start_index, int end_index) const;
+      void put(int start_index, const TrajectoryVector& subvec);
 
       // Accessing values
       const ibex::Interval domain() const;
@@ -54,7 +57,7 @@ namespace tubex
       bool operator!=(const TrajectoryVector& x) const;
 
       // Setting values
-      void set(double t, const ibex::Vector& y);
+      void set(const ibex::Vector& y, double t);
       void truncate_domain(const ibex::Interval& domain);
       void shift_domain(double shift_ref);
 

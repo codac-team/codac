@@ -47,7 +47,7 @@ namespace tubex
     {
       typename map<double,double>::const_iterator it_map;
       for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
-        set(it_map->first, it_map->second);
+        set(it_map->second, it_map->first);
     }
 
     Trajectory::~Trajectory()
@@ -192,7 +192,7 @@ namespace tubex
 
     // Setting values
 
-    void Trajectory::set(double t, double y)
+    void Trajectory::set(double y, double t)
     {
       assert(m_function == NULL && "Trajectory already defined by a Function");
       m_domain |= t;

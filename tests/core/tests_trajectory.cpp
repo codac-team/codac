@@ -25,14 +25,14 @@ TEST_CASE("Trajectory base")
     // todo: find a way to catch assert abort: CHECK_THROWS(traj1(9.1););
 
     Trajectory traj2;
-    traj2.set(0., 1.);
-    traj2.set(2., -1.);
-    traj2.set(6., 1.);
-    traj2.set(7., 2.);
-    traj2.set(8., 4.);
-    traj2.set(10., 4.);
-    traj2.set(11., -2.);
-    traj2.set(14., 1.);
+    traj2.set(1., 0.);
+    traj2.set(-1., 2.);
+    traj2.set(1., 6.);
+    traj2.set(2., 7.);
+    traj2.set(4., 8.);
+    traj2.set(4., 10.);
+    traj2.set(-2., 11.);
+    traj2.set(1., 14.);
     CHECK(traj2.domain() == Interval(0.,14.));
     CHECK(traj2.codomain() == Interval(-2.,4.));
     // todo: find a way to catch assert abort: CHECK_THROWS(traj2(-0.1););
@@ -50,9 +50,9 @@ TEST_CASE("Trajectory base")
   SECTION("Update")
   {
     Trajectory traj;
-    traj.set(-4.,3.);
+    traj.set(3.,-4.);
     CHECK(ApproxIntv(traj.domain()) == Interval(-4.));
-    traj.set(-2.,4.);
+    traj.set(4.,-2.);
     CHECK(ApproxIntv(traj.domain()) == Interval(-4.,-2.));
     // todo: find a way to catch assert abort: CHECK_THROWS(traj(-5.););
     CHECK(Approx(traj(-3.)) == 3.5);
@@ -107,7 +107,7 @@ TEST_CASE("Trajectory base")
     CHECK(traj1.domain() == Interval(0.,9.));
     CHECK_FALSE(traj1 != traj2);
 
-    traj1.set(3.2, 4.5);
+    traj1.set(4.5, 3.2);
     CHECK(traj1.domain() == Interval(0.,9.));
     CHECK_FALSE(traj1 == traj2);
     CHECK(traj1 != traj2);
@@ -117,7 +117,7 @@ TEST_CASE("Trajectory base")
     CHECK(traj1 == traj2);
     CHECK_FALSE(traj1 != traj2);
 
-    traj1.set(0., 4.4);
+    traj1.set(4.4, 0.);
     CHECK(traj1.domain() == Interval(0.,9.));
     CHECK_FALSE(traj1 == traj2);
     CHECK(traj1 != traj2);

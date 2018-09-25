@@ -17,6 +17,8 @@
 #include "tubex_DynamicalItem.h"
 #include "tubex_Function.h"
 
+// todo: arithmetic operators for trajectories?
+
 namespace tubex
 {
   class TrajectoryVector;
@@ -48,7 +50,7 @@ namespace tubex
       bool operator!=(const Trajectory& x) const;
 
       // Setting values
-      void set(double t, double y); // todo: invert parameters
+      void set(double y, double t);
       void truncate_domain(const ibex::Interval& domain);
       void shift_domain(double shift_ref);
 

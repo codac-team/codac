@@ -108,7 +108,7 @@ namespace tubex
           double t, y;
           bin_file.read((char*)&t, sizeof(double));
           bin_file.read((char*)&y, sizeof(double));
-          traj->set(t, y);
+          traj->set(y, t);
         }
 
         break;

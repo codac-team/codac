@@ -29,7 +29,7 @@ namespace tubex
 
   void DataLoader_Redermor::load_data(TubeVector *&x, TrajectoryVector *&truth, const Interval& domain)
   {
-    assert(DynamicalItem::valid_domain(domain));
+    assert(domain == Interval::ALL_REALS | DynamicalItem::valid_domain(domain));
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 
@@ -70,21 +70,22 @@ namespace tubex
           throw Exception("DataLoader_Redermor::load_data", "fail loading data");
 
         // Trajectory used for velocities evaluations:
-        traj_data_x.set(t, y);
-        traj_data_dx.set(t, dy);
+        traj_data_x.set(y, t);
+        traj_data_dx.set(dy, t);
 
         // Trajectory used as ground truth:
         Vector truth_vector(6);
         truth_vector.put(0, y.subvector(8,9)); // position
         truth_vector[2] = y[6]; // depth
         truth_vector.put(3, Vector(3, 0.)); // unknown velocities
-        truth->set(t, truth_vector);
+        truth->set(truth_vector, t);
       }
 
       // Data from sensors with uncertainties:
       float timestep = 1.;
-      TubeVector data_x(traj_data_x, timestep);
-      data_x.inflate(traj_data_dx);
+      x = new TubeVector(traj_data_x, timestep); // state vector:
+      x->inflate(traj_data_dx);
+      x->resize(6);
 
       // Computing robot's velocities:
       tubex::Function f("phi", "theta", "psi", "vxr", "vyr", "vzr", 
@@ -96,14 +97,10 @@ namespace tubex
                           + vyr * (cos(psi) * cos(phi) + sin(theta) * sin(psi) * sin(phi)) \
                           - vzr * (cos(psi) * sin(phi) - sin(theta) * cos(phi) * sin(psi)) ; \
                           - vxr * sin(theta) + vyr * cos(theta)*sin(phi) + vzr * cos(theta) * cos(phi))");
-      TubeVector velocities = f.eval_vector(data_x);
-
-      // State vector:
-      x = new TubeVector(data_x);
-      x->resize(6);
+      TubeVector velocities = f.eval_vector(*x);
 
       // Horizontal position
-      (*x)[0] = velocities[0].primitive();
+      (*x)[0] = velocities[0].primitive() + 0.06; // datafile: robot starts at (0.06,0.)
       (*x)[1] = velocities[1].primitive();
 
       // Case of the depth, directly sensed:
@@ -150,6 +147,12 @@ namespace tubex
     obs[0] = 5232.0; obs[1] = 31.03; m_obs[4].push_back(obs);
     obs[0] = 3688.0; obs[1] = 26.98; m_obs[5].push_back(obs);
     obs[0] = 5279.0; obs[1] = 33.51; m_obs[5].push_back(obs);
+
+    // Inflations
+    for(map<int,vector<IntervalVector> >::iterator it = m_obs.begin(); it != m_obs.end(); it++)
+      for(int i = 0 ; i < it->second.size() ; i++)
+        it->second[i][1].inflate(8.);
+
     return m_obs;
   }
 }

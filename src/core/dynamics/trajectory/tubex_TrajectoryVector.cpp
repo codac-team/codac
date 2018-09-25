@@ -56,7 +56,7 @@ namespace tubex
       for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
       {
         assert(size() == it_map->second.size() && "vectors of map_values of different dimensions");
-        set(it_map->first, it_map->second);
+        set(it_map->second, it_map->first);
       }
     }
 
@@ -86,6 +86,49 @@ namespace tubex
     {
       return m_n;
     }
+
+    void TrajectoryVector::resize(int n)
+    {
+      assert(n > 0);
+
+      if(n == size())
+        return;
+
+      Trajectory *new_vec = new Trajectory[n];
+
+      int i = 0;
+      for(; i < size() && i < n ; i++)
+        new_vec[i] = m_v_trajs[i];
+
+      for(; i < n ; i++)
+        new_vec[i] = Trajectory();
+
+      if(m_v_trajs != NULL) // (m_v_trajs == NULL) may happen when default constructor is used
+        delete[] m_v_trajs;
+
+      m_n = n;
+      m_v_trajs = new_vec;
+    }
+
+    const TrajectoryVector TrajectoryVector::subvector(int start_index, int end_index) const
+    {
+      assert(start_index >= 0);
+      assert(end_index < size());
+      assert(start_index <= end_index);
+      TrajectoryVector subvec(end_index - start_index + 1);
+      for(int i = 0 ; i < subvec.size() ; i++)
+        subvec[i] = (*this)[i + start_index];
+      return subvec;
+    }
+
+    void TrajectoryVector::put(int start_index, const TrajectoryVector& subvec)
+    {
+      assert(start_index >= 0);
+      assert(start_index + subvec.size() <= size());
+      for(int i = 0 ; i < subvec.size() ; i++)
+        (*this)[i + start_index] = subvec[i];
+    }
+
 
     // Accessing values
 
@@ -161,7 +204,7 @@ namespace tubex
 
     // Setting values
 
-    void TrajectoryVector::set(double t, const Vector& y)
+    void TrajectoryVector::set(const Vector& y, double t)
     {
       if(m_n == 0)
       {
@@ -171,7 +214,7 @@ namespace tubex
 
       assert(size() == y.size());
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i].set(t, y[i]);
+        (*this)[i].set(y[i], t);
     }
 
     void TrajectoryVector::truncate_domain(const Interval& t)
