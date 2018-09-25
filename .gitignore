@@ -45,3 +45,6 @@ CMakeLists.txt.user
 *._py
 *~
 __pycache__
+
+# Tubes serialization files
+*.tubex
