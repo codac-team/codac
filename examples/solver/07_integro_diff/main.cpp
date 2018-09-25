@@ -85,7 +85,7 @@ int main()
     list<TubeVector> l_solutions = solver.solve(x, &contract);
     
     bool solution_found = (solver.solutions_contain(l_solutions, truth1) == YES);
-                       // && solver.solutions_contain(l_solutions, truth2));
+                       // && solver.solutions_contain(l_solutions, truth2) == YES);
     cout << solution_found << endl;
 
 

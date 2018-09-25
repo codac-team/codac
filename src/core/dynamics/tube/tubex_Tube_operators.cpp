@@ -43,11 +43,11 @@ namespace tubex
         Interval envelope = s->codomain(); \
         Interval ingate = s->input_gate(); \
         s->set_envelope(envelope.f(x(s->domain()))); \
-        s->set_input_gate(ingate.f(x(s->domain().lb()))); \
+        s->set_input_gate(ingate.f(x(Interval(s->domain().lb())))); \
       } \
       Slice *s = last_slice(); \
       Interval outgate = s->output_gate(); \
-      s->set_output_gate(outgate.f(x(s->domain().ub()))); \
+      s->set_output_gate(outgate.f(x(Interval(s->domain().ub())))); \
       return *this; \
     } \
     \
