@@ -1062,7 +1062,7 @@ namespace tubex
 
   // Protected methods
 
-    // Access values
+    // Accessing values
 
     const IntervalVector Tube::codomain_box() const
     {
@@ -1073,6 +1073,12 @@ namespace tubex
     }
 
     // Integration
+
+    pair<Interval,Interval> Tube::tree__get_partial_primitive(const Interval& t) const
+    {
+      if(m_data_tree != NULL)
+        return m_data_tree->partial_primitive_bounds(t);
+    }
 
     // Serialization
 

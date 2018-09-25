@@ -13,6 +13,8 @@
 #ifndef __TUBEX_TUBEDATASYNTHESIS_H__
 #define __TUBEX_TUBEDATASYNTHESIS_H__
 
+#include "ibex_Interval.h"
+
 namespace tubex
 {
   class TubeTreeSynthesis;

@@ -30,6 +30,7 @@ namespace tubex
   class Tube;
   class Slice;
   class Trajectory;
+  class TubeTreeSynthesis;
   
   class Tube : public DynamicalItem
   {
@@ -159,9 +160,18 @@ namespace tubex
 
     protected:
 
+      // Definition
       Tube();
+
+      // Accessing values
       const ibex::IntervalVector codomain_box() const;
+
+      // Serialization
       void deserialize(const std::string& binary_file_name, Trajectory *&traj);
+
+      // Integration
+      std::pair<ibex::Interval,ibex::Interval> tree__get_partial_primitive(const ibex::Interval& t) const;
+  
 
       /** Class variables **/
 
