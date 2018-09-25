@@ -6,13 +6,17 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-int main()
+int main(int argc, char** argv)
 {
   /* =========== LOADING DATA =========== */
 
     TubeVector *x;
     TrajectoryVector *x_truth;
-    DataLoader_Redermor data_loader("./data/redermor/gesmi.txt");
+
+    string file_path = "./data/redermor/gesmi.txt";
+    if(argc > 1) file_path = argv[1];
+    
+    DataLoader_Redermor data_loader(file_path);
     data_loader.load_data(x, x_truth);
     vector<Beacon> v_seamarks = data_loader.get_beacons();
     map<int,vector<IntervalVector> > m_obs = data_loader.get_observations();
