@@ -1,6 +1,7 @@
 #include "ibex.h"
 #include "tubex.h"
 #include "tubex-solver.h"
+#include <iomanip>
 
 using namespace std;
 using namespace ibex;
@@ -11,7 +12,7 @@ void contract(TubeVector& x)
   tubex::Function f("x", "-sin(x)");
 
   CtcPicard ctc_picard;
-  ctc_picard.contract(f, x, FORWARD | BACKWARD);
+  ctc_picard.contract(f, x, BACKWARD);
 
   CtcDeriv ctc_deriv;
   ctc_deriv.set_fast_mode(true);
@@ -40,5 +41,5 @@ int main()
 
 
   // Checking if this example still works:
-  return (solver.solutions_contain(l_solutions, truth) == YES) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (solver.solutions_contain(l_solutions, truth) != NO) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
