@@ -20,6 +20,7 @@
 #include "tubex_TrajectoryVector.h"
 #include "tubex_arithmetic.h"
 #include "tubex_serializ_tubes.h"
+#include "ibex_BoolInterval.h"
 
 namespace tubex
 {
@@ -50,8 +51,6 @@ namespace tubex
       const TubeVector primitive() const;
       const TubeVector& operator=(const TubeVector& x);
       const ibex::Interval domain() const;
-      const TrajectoryVector lb() const;
-      const TrajectoryVector ub() const;
       int size() const;
       void resize(int n);
       const TubeVector subvector(int start_index, int end_index) const;
@@ -93,7 +92,7 @@ namespace tubex
       bool is_superset(const TubeVector& x) const;
       bool is_strict_superset(const TubeVector& x) const;
       bool is_empty() const;
-      bool contains(const TrajectoryVector& x) const;
+      const ibex::BoolInterval contains(const TrajectoryVector& x) const;
       bool overlaps(const TubeVector& x, float ratio = 1.) const;
 
       // Setting values

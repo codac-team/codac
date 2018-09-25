@@ -265,16 +265,20 @@ namespace tubex
     }
   }
   
-  bool Solver::solutions_contain(const list<TubeVector>& l_solutions, const TrajectoryVector& truth)
+  const BoolInterval Solver::solutions_contain(const list<TubeVector>& l_solutions, const TrajectoryVector& truth)
   {
     assert(!l_solutions.empty());
+
+    BoolInterval result = NO;
     list<TubeVector>::const_iterator it;
     for(it = l_solutions.begin() ; it != l_solutions.end() ; ++it)
     {
       assert(truth.size() == it->size());
-      if(it->contains(truth))
-        return true;
+      BoolInterval b = it->contains(truth);
+      if(b == YES) return YES;
+      else if(b == MAYBE) result = MAYBE;
     }
-    return false;
+    
+    return result;
   }
 }

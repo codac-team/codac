@@ -225,7 +225,7 @@ namespace tubex
     // Setting tube's values
     if(!(x_enclosure.is_unbounded() || x_enclosure.is_empty() || x_guess.is_empty()))
       for(int i = 0 ; i < tube.size() ; i++)
-        tube[i].slice(k)->set_envelope(initial_x[i] & x_guess[i]);
+        tube[i].slice(k)->set_envelope(initial_x[i] & x_enclosure[i]);
 
     if(f.is_intertemporal())
     {

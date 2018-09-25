@@ -129,8 +129,9 @@ int main()
     VibesFigure_Map fig_map("Map");
     fig_map.set_properties(50, 50, 550, 350);
     fig_map.add_tubevector(&x, "x", 0, 1);
+    //fig_map.add_trajectoryvector(&x_truth, "x*", 1, 0, -1, "white");
     fig_map.add_beacons(v_beacons);
-    fig_map.show();
+    fig_map.show(2.5);
 
     vibes::endDrawing();
 
@@ -138,3 +139,29 @@ int main()
   // Checking if this example still works:
   return (fabs(x.volume() - 1354.26) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
+
+/*
+  // Truth
+
+  TrajectoryVector x_truth(8);
+  x_truth.set(domain.lb(), Vector(8, 0.));
+  double simu_dt = 0.01;
+  double prev_t = domain.lb();
+  for(double t = domain.lb() + simu_dt ; t < domain.ub() ; t+= simu_dt)
+  {
+    Vector x_temp(9, t);
+    x_temp.put(1, x_truth(prev_t));
+
+    Vector x_current(8, 0.);
+    x_current.put(0, f_evol.eval_vector(x_temp).mid());
+    x_truth.set(t, x_truth(prev_t) + simu_dt * x_current);
+    prev_t = t;
+  }
+
+  for(double t = domain.lb() + simu_dt ; t < domain.ub() ; t+= simu_dt)
+  {
+    Vector vect_x = x_truth(t);
+    vect_x[1] = -vect_x[1];
+    x_truth.set(t, vect_x);
+  }
+*/

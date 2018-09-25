@@ -327,13 +327,60 @@ namespace tubex
       return m_codomain.is_empty() || input_gate().is_empty() || output_gate().is_empty();
     }
 
-    bool Slice::contains(const Trajectory& x) const
+    const BoolInterval Slice::contains(const Trajectory& x) const
     {
       assert(domain().is_subset(x.domain()));
-      return x(m_domain).is_subset(m_codomain)
-          // the gates should contain double values, but we use x(Interval(double)) for reliable evaluation
-          && x(Interval(m_domain.lb())).is_subset(input_gate())
-          && x(Interval(m_domain.ub())).is_subset(output_gate());
+
+      Interval traj_domain = x(m_domain);
+      // We use x(Interval(double)) for reliable evaluation:
+      Interval traj_input = x(Interval(m_domain.lb()));
+      Interval traj_output = x(Interval(m_domain.ub()));
+
+      if(!traj_domain.intersects(m_codomain)
+      || !traj_input.intersects(input_gate())
+      || !traj_output.intersects(output_gate()))
+        return NO;
+
+      else
+      {
+        if(!traj_input.is_subset(input_gate()) || !traj_output.is_subset(output_gate()))
+          return MAYBE;
+
+        else if(traj_domain.is_subset(m_codomain))
+          return YES;
+
+        else // too much pessimism for the trajectory evaluation on m_domain
+        {
+          // Bissections are performed to reach an accurate evaluation
+
+          list<Interval> s_subdomains;
+          s_subdomains.push_front(m_domain);
+
+          while(!s_subdomains.empty())
+          {
+            Interval t = s_subdomains.front();
+            s_subdomains.pop_front();
+
+            Interval thinner_eval = x(t);
+
+            if(!thinner_eval.intersects(m_codomain))
+            {
+              return NO;
+            }
+
+            else if(!thinner_eval.is_subset(m_codomain))
+            {
+              if(t.diam() < EPSILON_CONTAINS)
+                return MAYBE;
+
+              s_subdomains.push_front(Interval(t.lb(), t.lb() + t.diam() / 2.));
+              s_subdomains.push_front(Interval(t.lb() + t.diam() / 2., t.ub()));
+            }
+          }
+
+          return YES;
+        }
+      }
     }
 
     // Setting values

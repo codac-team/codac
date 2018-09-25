@@ -22,6 +22,7 @@
 #include "tubex_serializ_tubes.h"
 #include "tubex_arithmetic.h"
 #include "tubex_TubeTreeSynthesis.h"
+#include "ibex_BoolInterval.h"
 
 namespace tubex
 {
@@ -52,8 +53,6 @@ namespace tubex
       const Tube primitive() const;
       const Tube& operator=(const Tube& x);
       const ibex::Interval domain() const;
-      const Trajectory lb() const;
-      const Trajectory ub() const;
 
       // Slices structure
       int nb_slices() const;
@@ -103,7 +102,7 @@ namespace tubex
       bool is_superset(const Tube& x) const;
       bool is_strict_superset(const Tube& x) const;
       bool is_empty() const;
-      bool contains(const Trajectory& x) const;
+      const ibex::BoolInterval contains(const Trajectory& x) const;
       bool overlaps(const Tube& x, float ratio = 1.) const;
 
       // Setting values

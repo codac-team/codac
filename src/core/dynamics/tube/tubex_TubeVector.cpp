@@ -167,22 +167,6 @@ namespace tubex
       return t;
     }
 
-    const TrajectoryVector TubeVector::lb() const
-    {
-      TrajectoryVector vec_lb(size());
-      for(int i = 0 ; i < size() ; i++)
-        vec_lb[i] = (*this)[i].lb();
-      return vec_lb;
-    }
-
-    const TrajectoryVector TubeVector::ub() const
-    {
-      TrajectoryVector vec_ub(size());
-      for(int i = 0 ; i < size() ; i++)
-        vec_ub[i] = (*this)[i].ub();
-      return vec_ub;
-    }
-
     int TubeVector::size() const
     {
       return m_n;
@@ -531,13 +515,19 @@ namespace tubex
       return false;
     }
 
-    bool TubeVector::contains(const TrajectoryVector& x) const
+    const BoolInterval TubeVector::contains(const TrajectoryVector& x) const
     {
       assert(size() == x.size());
+
+      BoolInterval result = YES;
       for(int i = 0 ; i < size() ; i++)
-        if(!(*this)[i].contains(x[i]))
-          return false;
-      return true;
+      {
+        BoolInterval b = (*this)[i].contains(x[i]);
+        if(b == NO) return NO;
+        else if(b == MAYBE) result = MAYBE;
+      }
+
+      return result;
     }
 
     bool TubeVector::overlaps(const TubeVector& x, float ratio) const

@@ -61,6 +61,6 @@ int main()
 
 
   // Checking if this example still works:
-  return (solver.solutions_contain(l_solutions, truth1)
-       && solver.solutions_contain(l_solutions, truth2)) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (solver.solutions_contain(l_solutions, truth1) == YES
+       && solver.solutions_contain(l_solutions, truth2) == YES) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

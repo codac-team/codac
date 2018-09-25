@@ -18,9 +18,12 @@
 #include "tubex_DynamicalItem.h"
 #include "tubex_ConvexPolygon.h"
 #include "tubex_TubeTreeSynthesis.h"
+#include "ibex_BoolInterval.h"
 
 namespace tubex
 {
+  #define EPSILON_CONTAINS ibex::next_float(0.) * 1000.
+
   class Tube;
   class Trajectory;
 
@@ -70,7 +73,7 @@ namespace tubex
       bool is_superset(const Slice& x) const;
       bool is_strict_superset(const Slice& x) const;
       bool is_empty() const;
-      bool contains(const Trajectory& x) const;
+      const ibex::BoolInterval contains(const Trajectory& x) const;
 
       // Setting values
       void set(const ibex::Interval& y);

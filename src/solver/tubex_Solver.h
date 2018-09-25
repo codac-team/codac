@@ -17,6 +17,7 @@
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_VibesFigure_TubeVector.h"
+#include "ibex_BoolInterval.h"
 
 namespace tubex
 {
@@ -36,7 +37,7 @@ namespace tubex
       
       const std::list<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
       VibesFigure_TubeVector* figure();
-      static bool solutions_contain(const std::list<TubeVector>& l_solutions, const TrajectoryVector& truth);
+      static const ibex::BoolInterval solutions_contain(const std::list<TubeVector>& l_solutions, const TrajectoryVector& truth);
 
     protected:
       

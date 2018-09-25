@@ -213,16 +213,6 @@ namespace tubex
       return Interval(first_slice()->domain().lb(),
                       last_slice()->domain().ub());
     }
-
-    const Trajectory Tube::lb() const
-    {
-      // todo
-    }
-
-    const Trajectory Tube::ub() const
-    {
-      // todo
-    }
   
     // Slices structure
 
@@ -762,24 +752,19 @@ namespace tubex
       return false;
     }
 
-    bool Tube::contains(const Trajectory& x) const
+    const BoolInterval Tube::contains(const Trajectory& x) const
     {
       assert(domain() == x.domain());
 
-      // Fast implementation without redundant gate evaluations:
-      const Slice *slice = first_slice();
-
-      if(!x(Interval(slice->domain().lb())).is_subset(slice->input_gate()))
-        return false;
-
-      for( ; slice != NULL ; slice = slice->next_slice())
+      BoolInterval result = YES;
+      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
       {
-        if(!x(slice->domain()).is_subset(slice->codomain())
-        || !x(Interval(slice->domain().ub())).is_subset(slice->output_gate()))
-          return false;
+        BoolInterval b = s->contains(x);
+        if(b == NO) return NO;
+        else if(b == MAYBE) result = MAYBE; 
       }
 
-      return true;
+      return result;
     }
 
     bool Tube::overlaps(const Tube& x, float ratio) const
