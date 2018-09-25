@@ -9,14 +9,12 @@
   set(CMAKE_CXX_STANDARD 11)
   set(PACKAGE_NAME       tubex-lib)
   set(PACKAGE_VERSION    "2.0")
-  set(DATA_DIRECTORY     "${TUBELIB_DATA_DIR}" CACHE PATH "")
   set(CMAKE_MODULE_PATH  "${PROJECT_SOURCE_DIR}/scripts/cmake_modules")
 
   project(${PACKAGE_NAME})
 
   get_filename_component(TUBELIB_BIN_DIR   "./bin"   ABSOLUTE)
   get_filename_component(TUBELIB_LIB_DIR   "./lib"   ABSOLUTE)
-  get_filename_component(TUBELIB_DATA_DIR  "./data"  ABSOLUTE)
   get_filename_component(TUBELIB_BUILD_DIR "./make" ABSOLUTE)
   get_filename_component(TUBELIB_SRC_DIR   "./build" ABSOLUTE)
 
