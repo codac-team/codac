@@ -45,18 +45,18 @@ void contract(TubeVector& x)
   double delay = 0.5;
   FncDelayCustom f(delay);
 
-  CtcPicard ctc_picard(1.1);
-  ctc_picard.preserve_slicing(true);
+  CtcPicard ctc_picard;
   ctc_picard.contract(f, x, FORWARD | BACKWARD);
 
+  // Computing the derivative v from a delay of x
   CtcDelay ctc_delay;
-  ctc_delay.preserve_slicing(true);
-  TubeVector y(x, IntervalVector(x.size(), Interval::ALL_REALS));
-  ctc_delay.contract(delay, x, y);
+  TubeVector v(x, IntervalVector(x.size(), Interval::ALL_REALS));
+  ctc_delay.contract(delay, x, v);
+  v *= exp(delay);
 
   CtcDeriv ctc_deriv;
-  ctc_deriv.preserve_slicing(true);
-  ctc_deriv.contract(x, exp(delay) * y, FORWARD | BACKWARD);
+  ctc_deriv.set_fast_mode(true);
+  ctc_deriv.contract(x, v, FORWARD | BACKWARD);
 }
 
 int main()
@@ -64,7 +64,7 @@ int main()
   /* =========== PARAMETERS =========== */
 
     int n = 1;
-    Vector epsilon(n, 0.5);
+    Vector epsilon(n, 10.);
     Interval domain(0.,5.);
     TubeVector x(domain, n);
     TrajectoryVector truth(domain, tubex::Function("exp(t)"));
@@ -76,8 +76,8 @@ int main()
   /* =========== SOLVER =========== */
 
     tubex::Solver solver(epsilon);
-    solver.set_refining_fxpt_ratio(0.9);
-    solver.set_propa_fxpt_ratio(0.5);
+    solver.set_refining_fxpt_ratio(1.);
+    solver.set_propa_fxpt_ratio(1.);
     solver.set_cid_fxpt_ratio(0.);
     solver.figure()->add_trajectoryvector(&truth, "truth");
     list<TubeVector> l_solutions = solver.solve(x, &contract);
