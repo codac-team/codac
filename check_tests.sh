@@ -16,6 +16,7 @@ printf "\nSolver\n"
 ./make/examples/solver/04_bvp/solver_04_bvp > /dev/null ; echo $?;
 #./make/examples/solver/06_bvp_delay/solver_06_bvp_delay > /dev/null ; echo $?;
 ./make/examples/solver/07_integro_diff/solver_07_integro_diff > /dev/null ; echo $?;
+./make/examples/solver/09_csdp/solver_09_csdp > /dev/null ; echo $?;
 ./make/examples/solver/10_large_initvalue/solver_10_large_initvalue > /dev/null ; echo $?;
 
 printf "\nRobotics\n"
