@@ -14,6 +14,6 @@
 
 # Tests
 
-  #if(BUILD_TESTS)
-  #  add_test(NAME solver_07_integro_diff COMMAND solver_07_integro_diff 0)
-  #endif(BUILD_TESTS)
+  if(BUILD_TESTS)
+    add_test(NAME solver_07_integro_diff COMMAND solver_07_integro_diff 0)
+  endif(BUILD_TESTS)
