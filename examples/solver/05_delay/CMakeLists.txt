@@ -14,6 +14,6 @@
 
 # Tests
 
-  if(BUILD_TESTS)
-    add_test(NAME solver_05_delay COMMAND solver_05_delay 0)
-  endif(BUILD_TESTS)
+  #if(BUILD_TESTS)
+  #  add_test(NAME solver_05_delay COMMAND solver_05_delay 0)
+  #endif(BUILD_TESTS)

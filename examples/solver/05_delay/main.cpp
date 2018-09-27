@@ -50,7 +50,7 @@ void contract(TubeVector& x)
 
   // Computing the derivative v from a delay of x
   CtcDelay ctc_delay;
-  TubeVector v(x, IntervalVector(x.size(), Interval::ALL_REALS));
+  TubeVector v(x, IntervalVector(x.size()));
   ctc_delay.contract(delay, x, v);
   v *= exp(delay);
 
