@@ -62,8 +62,7 @@ namespace tubex
       ibex::Interval m_domain;
       std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 
-      bool m_update_needed;
-
+      bool m_update_needed = true;
   };
 }
 

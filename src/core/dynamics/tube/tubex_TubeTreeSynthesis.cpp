@@ -18,7 +18,7 @@ using namespace ibex;
 namespace tubex
 {
   TubeTreeSynthesis::TubeTreeSynthesis(const Tube* tube, int k0, int kf)
-    : m_tube_ref(tube), m_parent(NULL)
+    : m_tube_ref(tube), m_parent(NULL), m_update_needed(true)
   {
     assert(k0 >= 0 && k0 < tube->nb_slices());
     assert(kf >= 0 && kf < tube->nb_slices());
@@ -29,6 +29,7 @@ namespace tubex
       m_second_subtree = NULL;
       m_slice_ref = tube->slice(k0);
       m_slice_ref->m_synthesis_reference = this;
+      m_domain = m_slice_ref->domain();
     }
 
     else
@@ -141,7 +142,12 @@ namespace tubex
           m_partial_primitive.first |= pp_second.first;
           m_partial_primitive.second |= pp_second.second;
         }
-          
+        
+        // todo: update the following only once?
+        m_domain = m_first_subtree->domain();
+        if(m_second_subtree != NULL)
+          m_domain |= m_second_subtree->domain();
+
         m_update_needed = false;
     }
   }
@@ -167,7 +173,14 @@ namespace tubex
 
     // Part A
     {
-      pair<Interval,Interval> partial_primitive_first = make_pair(slice_lb->codomain(), slice_lb->codomain());
+      pair<Interval,Interval> partial_primitive_first = slice_lb->m_synthesis_reference->m_partial_primitive;
+      
+      if(partial_primitive_first.first.is_empty() || partial_primitive_first.second.is_empty())
+        return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+      if(partial_primitive_first.first.is_unbounded() || partial_primitive_first.second.is_unbounded())
+        return make_pair(Interval::ALL_REALS, Interval::ALL_REALS);
+
       Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
 
       Interval y_first = slice_lb->codomain();
@@ -204,7 +217,14 @@ namespace tubex
     // Part C
     if(index_lb != index_ub)
     {
-      pair<Interval,Interval> partial_primitive_second = make_pair(slice_ub->codomain(), slice_ub->codomain());
+      pair<Interval,Interval> partial_primitive_second = slice_ub->m_synthesis_reference->m_partial_primitive;
+      
+      if(partial_primitive_second.first.is_empty() || partial_primitive_second.second.is_empty())
+        return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+      if(partial_primitive_second.first.is_unbounded() || partial_primitive_second.second.is_unbounded())
+        return make_pair(Interval::ALL_REALS, Interval::ALL_REALS);
+
       Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
 
       Interval y_second = slice_ub->codomain();
@@ -237,33 +257,36 @@ namespace tubex
     if(m_update_needed)
       root()->update_values();
 
+    if(t == Interval::ALL_REALS)
+      return m_partial_primitive; // pre-computed values
+
     //assert(!m_update_needed);
     // ? assert(domain().is_superset(t));
 
     //if(t.is_degenerated()) // todo: check this:
-    //  return make_pair(Interval((*this)(t.lb()).lb()), Interval((*this)(t.lb()).ub()));
+    //  return make_pair(Interval((*m_tube_ref)(t.lb()).lb()), Interval((*m_tube_ref)(t.lb()).ub()));
 
     Interval intersection = domain() & t;
 
     if(intersection.is_empty())
       return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-    else if(is_leaf() || t == domain() || t.is_unbounded() || t.is_superset(domain()))
+    else if(is_leaf() || t == domain() || t.is_superset(domain()))
       return m_partial_primitive; // pre-computed values
 
     else
     {
       Interval inter_firstsubtree = m_first_subtree->domain() & intersection;
       Interval inter_secondsubtree = m_second_subtree->domain() & intersection;
-
-      if(inter_firstsubtree.lb() == inter_firstsubtree.ub() && inter_secondsubtree.lb() == inter_secondsubtree.ub())
+      
+      if(inter_firstsubtree.is_degenerated() && inter_secondsubtree.is_degenerated())
         return make_pair(m_first_subtree->partial_primitive_bounds().first & m_second_subtree->partial_primitive_bounds().first,
                          m_first_subtree->partial_primitive_bounds().second & m_second_subtree->partial_primitive_bounds().second);
-
-      else if(inter_firstsubtree.is_empty() || inter_firstsubtree.lb() == inter_firstsubtree.ub())
+     
+      else if(inter_firstsubtree.is_empty() || inter_firstsubtree.is_degenerated())
         return m_second_subtree->partial_primitive_bounds(inter_secondsubtree);
-
-      else if(inter_secondsubtree.is_empty() || inter_secondsubtree.lb() == inter_secondsubtree.ub())
+      
+      else if(inter_secondsubtree.is_empty() || inter_secondsubtree.is_degenerated())
         return m_first_subtree->partial_primitive_bounds(inter_firstsubtree);
 
       else

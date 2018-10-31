@@ -1008,18 +1008,10 @@ namespace tubex
         while(slice != NULL && slice->domain().lb() < t.ub())
         {
           if(slice->codomain().is_empty())
-          {
-            p_integ.first.set_empty();
-            p_integ.second.set_empty();
-            return p_integ;
-          }
+            return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
           if(slice->codomain().is_unbounded())
-          {
-            p_integ.first = Interval::ALL_REALS;
-            p_integ.second = Interval::ALL_REALS;
-            return p_integ;
-          }
+            return make_pair(Interval::ALL_REALS, Interval::ALL_REALS);
 
           // From t0 to tlb
 
