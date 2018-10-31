@@ -22,7 +22,7 @@ namespace tubex
   {
     public:
 
-      TubeTreeSynthesis(const Tube* tube);
+      TubeTreeSynthesis(const Tube* tube, int k0, int kf);
       ~TubeTreeSynthesis();
 
       const ibex::Interval domain();
@@ -30,7 +30,7 @@ namespace tubex
       bool is_leaf() const;
       bool is_root() const;
       TubeTreeSynthesis* get_root();
-      Slice* get_first_slice();
+      const Slice* get_first_slice();
 
       //TubeDataSynthesis_Slicing& slicing_synthesis();
       //TubeDataSynthesis_Emptiness& emptiness_synthesis();
@@ -56,8 +56,9 @@ namespace tubex
       TubeTreeSynthesis *m_first_subtree = NULL, *m_second_subtree = NULL;
 
       // Slices connections
-      Slice *m_slice_ref = NULL;
-      Tube *m_tube_ref = NULL;
+      const Slice *m_first_slice = NULL;
+      const Slice *m_second_slice = NULL;
+      const Tube *m_tube_ref = NULL;
 
       int m_slices_number;
       ibex::Interval m_domain;

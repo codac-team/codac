@@ -137,6 +137,7 @@ namespace tubex
     Tube::Tube(const string& binary_file_name, Trajectory *&traj)
     {
       deserialize(binary_file_name, traj);
+
       if(traj == NULL)
         throw Exception("Tube constructor",
                         "unable to deserialize Trajectory object");
@@ -144,6 +145,8 @@ namespace tubex
     
     Tube::~Tube()
     {
+      delete_synthesis_tree();
+
       Slice *slice = first_slice();
       while(slice != NULL)
       {
@@ -169,41 +172,45 @@ namespace tubex
 
     const Tube& Tube::operator=(const Tube& x)
     {
-      { // Destroying already existing slices
-        Slice *slice = first_slice();
+      // Destroying already existing structure
+
+        Slice *prev_slice, *slice = first_slice();
         while(slice != NULL)
         {
           Slice *next_slice = slice->next_slice();
           delete slice;
           slice = next_slice;
         }
-      }
 
-      Slice *prev_slice = NULL, *slice = NULL;
+        delete_synthesis_tree();
+      
+      // Creating new structure
 
-      for(const Slice *s = x.first_slice() ; s != NULL ; s = s->next_slice())
-      {
-        if(slice == NULL)
+        prev_slice = NULL; slice = NULL;
+
+        for(const Slice *s = x.first_slice() ; s != NULL ; s = s->next_slice())
         {
-          slice = new Slice(*s);
-          m_first_slice = slice;
-        }
+          if(slice == NULL)
+          {
+            slice = new Slice(*s);
+            m_first_slice = slice;
+          }
 
-        else
-        {
-          slice->m_next_slice = new Slice(*s);
-          slice = slice->next_slice();
-        }
+          else
+          {
+            slice->m_next_slice = new Slice(*s);
+            slice = slice->next_slice();
+          }
 
-        if(prev_slice != NULL)
-        {
-          delete slice->m_input_gate;
-          slice->m_input_gate = NULL;
-          Slice::chain_slices(prev_slice, slice);
-        }
+          if(prev_slice != NULL)
+          {
+            delete slice->m_input_gate;
+            slice->m_input_gate = NULL;
+            Slice::chain_slices(prev_slice, slice);
+          }
 
-        prev_slice = slice;
-      }
+          prev_slice = slice;
+        }
 
       return *this;
     }
@@ -369,19 +376,22 @@ namespace tubex
         return;
       }
 
-      Slice *next_slice = slice_to_be_sampled->next_slice();
+      else
+      {
+        Slice *next_slice = slice_to_be_sampled->next_slice();
 
-      // Creating new slice
-      Slice *new_slice = new Slice(*slice_to_be_sampled);
-      new_slice->set_domain(Interval(t, slice_to_be_sampled->domain().ub()));
-      slice_to_be_sampled->set_domain(Interval(slice_to_be_sampled->domain().lb(), t));
+        // Creating new slice
+        Slice *new_slice = new Slice(*slice_to_be_sampled);
+        new_slice->set_domain(Interval(t, slice_to_be_sampled->domain().ub()));
+        slice_to_be_sampled->set_domain(Interval(slice_to_be_sampled->domain().lb(), t));
 
-      // Updated slices structure
-      delete new_slice->m_input_gate;
-      new_slice->m_input_gate = NULL;
-      Slice::chain_slices(new_slice, next_slice);
-      Slice::chain_slices(slice_to_be_sampled, new_slice);
-      new_slice->set_input_gate(new_slice->codomain());
+        // Updated slices structure
+        delete new_slice->m_input_gate;
+        new_slice->m_input_gate = NULL;
+        Slice::chain_slices(new_slice, next_slice);
+        Slice::chain_slices(slice_to_be_sampled, new_slice);
+        new_slice->set_input_gate(new_slice->codomain());
+      }
     }
 
     void Tube::sample(double t, const Interval& gate)
@@ -905,10 +915,17 @@ namespace tubex
     
     void Tube::create_synthesis_tree() const
     {
+      delete_synthesis_tree();
+      m_synthesis_tree = new TubeTreeSynthesis(this, 0, nb_slices() - 1);
+    }
+    
+    void Tube::delete_synthesis_tree() const
+    {
       if(m_synthesis_tree != NULL)
+      {
         delete m_synthesis_tree;
-
-      m_synthesis_tree = new TubeTreeSynthesis(this);
+        m_synthesis_tree = NULL;
+      }
     }
 
     // Static methods
@@ -978,10 +995,10 @@ namespace tubex
     {
       assert(domain().is_superset(t));
 
-      if(m_synthesis_tree != NULL) // fast evaluation
-        return m_synthesis_tree->partial_integral(t);
-
-      else
+      //if(m_synthesis_tree != NULL) // fast evaluation
+      //  return m_synthesis_tree->partial_integral(t);
+      //
+      //else
       {
         Interval intv_t;
         const Slice *slice = first_slice();

@@ -153,6 +153,7 @@ namespace tubex
 
       // Tree synthesis structure
       void create_synthesis_tree() const;
+      void delete_synthesis_tree() const;
 
       // Static methods
       static const Tube hull(const std::list<Tube>& l_tubes);

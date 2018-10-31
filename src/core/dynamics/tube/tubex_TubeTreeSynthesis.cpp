@@ -17,14 +17,48 @@ using namespace ibex;
 
 namespace tubex
 {
-  TubeTreeSynthesis::TubeTreeSynthesis(const Tube* tube)
+  TubeTreeSynthesis::TubeTreeSynthesis(const Tube* tube, int k0, int kf)
+    : m_tube_ref(tube), m_parent(NULL)
   {
+    assert(k0 >= 0 && k0 < tube->nb_slices());
+    assert(kf >= 0 && kf < tube->nb_slices());
 
+    if(kf - k0 <= 1) // leaf
+    {
+      m_first_subtree = NULL;
+      m_second_subtree = NULL;
+      m_first_slice = tube->slice(k0);
+      m_second_slice = (k0 != kf) ? tube->slice(kf) : NULL;
+    }
+
+    else
+    {
+      // In the first subtree: [t0,thalf[
+      // In the second subtree: [thalf,tf]
+
+      int nb_slices = kf - k0 + 1;
+      int kmid = k0 + floor(nb_slices / 2.);
+
+      m_first_subtree = new TubeTreeSynthesis(tube, k0, kmid);
+      m_first_subtree->m_parent = this;
+
+      if(kmid != kf)
+      {
+        m_second_subtree = new TubeTreeSynthesis(tube, kmid + 1, kf);
+        m_second_subtree->m_parent = this;
+      }
+
+      m_first_slice = NULL;
+      m_second_slice = NULL;
+    }
   }
 
   TubeTreeSynthesis::~TubeTreeSynthesis()
   {
-    // todo
+    if(m_first_subtree != NULL)
+      delete m_first_subtree;
+    if(m_second_subtree != NULL)
+      delete m_second_subtree;
   }
 
   const Interval TubeTreeSynthesis::domain()
@@ -34,20 +68,26 @@ namespace tubex
 
   void TubeTreeSynthesis::request_updates()
   {
-    m_update_needed = true;
-    if(m_parent != NULL) // todo: check request_updates of parent? (avoid unnecessary request)
-      m_parent->request_updates();
-    // todo: is it useful to flag the slices before the one updated?
+  //  m_update_needed = true;
+  //  if(m_parent != NULL) // todo: check request_updates of parent? (avoid unnecessary request)
+  //    m_parent->request_updates();
+  //  // todo: is it useful to flag the slices before the one updated?
   }
 
   bool TubeTreeSynthesis::is_leaf() const
   {
-    return m_first_subtree == NULL && m_second_subtree == NULL;
+    bool is_leaf_ = (m_first_subtree == NULL && m_second_subtree == NULL);
+    if(is_leaf_)
+      assert(m_first_slice != NULL);
+    return is_leaf_;
   }
 
   bool TubeTreeSynthesis::is_root() const
   {
-    return m_parent == NULL;
+    bool is_root_ = (m_parent == NULL);
+    if(is_root_)
+      assert(m_first_slice == NULL && m_second_slice == NULL);
+    return is_root_;
   }
 
   TubeTreeSynthesis* TubeTreeSynthesis::get_root()
@@ -58,17 +98,17 @@ namespace tubex
       return m_parent->get_root();
   }
 
-  Slice* TubeTreeSynthesis::get_first_slice()
+  const Slice* TubeTreeSynthesis::get_first_slice()
   {
     TubeTreeSynthesis *subtree = this;
     while(!subtree->is_leaf())
       subtree = subtree->m_first_subtree;
-    return subtree->m_slice_ref;
+    return subtree->m_first_slice;
   }
 
   void TubeTreeSynthesis::update_values()
   {
-    if(m_update_needed)
+  /*  if(m_update_needed)
     {
       // 1. Updating leafs values (leaf nodes)
 
@@ -78,7 +118,7 @@ namespace tubex
         // (because computation starts from 0)
 
         Interval sum = Interval(0);
-        for(Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
         {
           double dt = s->domain().diam();
           Interval slice_value = s->codomain();
@@ -102,14 +142,14 @@ namespace tubex
         m_partial_primitive = make_pair(pp_past.first | pp_future.first,
                                         pp_past.second | pp_future.second);
         m_update_needed = false;
-    }
+    }*/
   }
 
   pair<Interval,Interval> TubeTreeSynthesis::partial_integral(const Interval& t)
   {
     assert(is_root());
 
-    if(m_update_needed)
+  /*  if(m_update_needed)
       get_root()->update_values();
     
     int index_lb = m_tube_ref->input2index(t.lb());
@@ -118,8 +158,8 @@ namespace tubex
     Interval integrale_lb = Interval::EMPTY_SET;
     Interval integrale_ub = Interval::EMPTY_SET;
 
-    Slice *slice_lb = m_tube_ref->slice(index_lb);
-    Slice *slice_ub = m_tube_ref->slice(index_ub);
+    const Slice *slice_lb = m_tube_ref->slice(index_lb);
+    const Slice *slice_ub = m_tube_ref->slice(index_ub);
 
     Interval intv_t_lb = slice_lb->domain();
     Interval intv_t_ub = slice_ub->domain();
@@ -188,19 +228,19 @@ namespace tubex
                                  primitive_ub.ub() - y_second.ub() * tb2.diam());
     }
 
-    return make_pair(integrale_lb, integrale_ub);
+    return make_pair(integrale_lb, integrale_ub);*/
   }
 
   const pair<Interval,Interval> TubeTreeSynthesis::partial_primitive_bounds(const Interval& t)
   {
-    if(m_update_needed)
+    /*if(m_update_needed)
       get_root()->update_values();
 
     //assert(!m_update_needed);
     // ? assert(domain().is_superset(t));
 
-    /*if(t.is_degenerated()) // todo: check this:
-      return make_pair(Interval((*this)(t.lb()).lb()), Interval((*this)(t.lb()).ub()));*/
+    //if(t.is_degenerated()) // todo: check this:
+    //  return make_pair(Interval((*this)(t.lb()).lb()), Interval((*this)(t.lb()).ub()));
 
     Interval intersection = domain() & t;
 
@@ -231,6 +271,6 @@ namespace tubex
         pair<Interval,Interval> pp_future = m_second_subtree->partial_primitive_bounds(inter_secondsubtree);
         return make_pair(pp_past.first | pp_future.first, pp_past.second | pp_future.second);
       }
-    }
+    }*/
   }
 }
