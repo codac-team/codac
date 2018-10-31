@@ -901,6 +901,16 @@ namespace tubex
       return str;
     }
 
+    // Synthesis tree
+    
+    void Tube::create_synthesis_tree() const
+    {
+      if(m_synthesis_tree != NULL)
+        delete m_synthesis_tree;
+
+      m_synthesis_tree = new TubeTreeSynthesis(this);
+    }
+
     // Static methods
 
     const Tube Tube::hull(const list<Tube>& l_tubes)
@@ -968,8 +978,8 @@ namespace tubex
     {
       assert(domain().is_superset(t));
 
-      if(m_data_tree != NULL) // fast evaluation
-        return m_data_tree->partial_integral(t);
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->partial_integral(t);
 
       else
       {
@@ -1079,12 +1089,6 @@ namespace tubex
     }
 
     // Integration
-
-    pair<Interval,Interval> Tube::tree__get_partial_primitive(const Interval& t) const
-    {
-      if(m_data_tree != NULL)
-        return m_data_tree->partial_primitive_bounds(t);
-    }
 
     // Serialization
 

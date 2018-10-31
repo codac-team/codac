@@ -151,6 +151,9 @@ namespace tubex
       const std::string class_name() const { return "Tube"; };
       friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
+      // Tree synthesis structure
+      void create_synthesis_tree() const;
+
       // Static methods
       static const Tube hull(const std::list<Tube>& l_tubes);
 
@@ -179,13 +182,11 @@ namespace tubex
       void deserialize(const std::string& binary_file_name, Trajectory *&traj);
 
       // Integration
-      std::pair<ibex::Interval,ibex::Interval> tree__get_partial_primitive(const ibex::Interval& t) const;
-  
 
       /** Class variables **/
 
         Slice *m_first_slice = NULL; //!< 
-        mutable TubeTreeSynthesis *m_data_tree = NULL; //!< 
+        mutable TubeTreeSynthesis *m_synthesis_tree = NULL; //!< 
         
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);

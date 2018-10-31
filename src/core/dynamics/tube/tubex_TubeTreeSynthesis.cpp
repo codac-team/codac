@@ -17,6 +17,16 @@ using namespace ibex;
 
 namespace tubex
 {
+  TubeTreeSynthesis::TubeTreeSynthesis(const Tube* tube)
+  {
+
+  }
+
+  TubeTreeSynthesis::~TubeTreeSynthesis()
+  {
+    // todo
+  }
+
   const Interval TubeTreeSynthesis::domain()
   {
     return m_domain;

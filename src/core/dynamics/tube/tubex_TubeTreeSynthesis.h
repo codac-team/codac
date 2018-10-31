@@ -22,7 +22,9 @@ namespace tubex
   {
     public:
 
-      TubeTreeSynthesis();
+      TubeTreeSynthesis(const Tube* tube);
+      ~TubeTreeSynthesis();
+
       const ibex::Interval domain();
 
       bool is_leaf() const;
