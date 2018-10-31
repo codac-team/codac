@@ -1,14 +1,14 @@
-/* ============================================================================
+/* ================================================================
  *  tubex-lib - Tube class
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
+ * ================================================================
+ *  Copyright : ENSTA Bretagne (France)
  *  License   : This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  *
  *  Author(s) : Simon Rohou
  *  Bug fixes : -
  *  Created   : 2015
- * ---------------------------------------------------------------------------- */
+ * ------------------------------------------------------------- */
 
 #ifndef __TUBEX_TUBE_H__
 #define __TUBEX_TUBE_H__
@@ -26,6 +26,15 @@
 
 namespace tubex
 {
+  /**
+  * \class Tube
+  * \brief Interval of one-dimensional trajectories
+  *
+  * One dimensional tube, defined as an interval of scalar trajectories.
+  *
+  * \note Use TubeVector for the multi-dimensional case
+  */
+
   class Fnc;
   class Tube;
   class Slice;
@@ -175,8 +184,8 @@ namespace tubex
 
       /** Class variables **/
 
-        Slice *m_first_slice = NULL;
-        TubeTreeSynthesis *m_data_tree = NULL;
+        Slice *m_first_slice = NULL; //!< 
+        TubeTreeSynthesis *m_data_tree = NULL; //!< 
         
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
