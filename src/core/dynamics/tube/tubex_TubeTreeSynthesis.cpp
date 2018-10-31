@@ -23,12 +23,12 @@ namespace tubex
     assert(k0 >= 0 && k0 < tube->nb_slices());
     assert(kf >= 0 && kf < tube->nb_slices());
 
-    if(kf - k0 <= 1) // leaf
+    if(k0 == kf) // leaf, pointer to a slice
     {
       m_first_subtree = NULL;
       m_second_subtree = NULL;
-      m_first_slice = tube->slice(k0);
-      m_second_slice = (k0 != kf) ? tube->slice(kf) : NULL;
+      m_slice_ref = tube->slice(k0);
+      m_slice_ref->m_synthesis_reference = this;
     }
 
     else
@@ -39,17 +39,19 @@ namespace tubex
       int nb_slices = kf - k0 + 1;
       int kmid = k0 + floor(nb_slices / 2.);
 
-      m_first_subtree = new TubeTreeSynthesis(tube, k0, kmid);
+      m_first_subtree = new TubeTreeSynthesis(tube, k0, kmid - 1);
       m_first_subtree->m_parent = this;
 
-      if(kmid != kf)
+      if(kmid - 1 < kf)
       {
-        m_second_subtree = new TubeTreeSynthesis(tube, kmid + 1, kf);
+        m_second_subtree = new TubeTreeSynthesis(tube, kmid, kf);
         m_second_subtree->m_parent = this;
       }
 
-      m_first_slice = NULL;
-      m_second_slice = NULL;
+      else
+        m_second_subtree = NULL;
+
+      m_slice_ref = NULL;
     }
   }
 
@@ -68,17 +70,17 @@ namespace tubex
 
   void TubeTreeSynthesis::request_updates()
   {
-  //  m_update_needed = true;
-  //  if(m_parent != NULL) // todo: check request_updates of parent? (avoid unnecessary request)
-  //    m_parent->request_updates();
-  //  // todo: is it useful to flag the slices before the one updated?
+    m_update_needed = true;
+    if(m_parent != NULL) // todo: check request_updates of parent? (avoid unnecessary request)
+      m_parent->request_updates();
+    // todo: is it useful to flag the slices before the one updated?
   }
 
   bool TubeTreeSynthesis::is_leaf() const
   {
     bool is_leaf_ = (m_first_subtree == NULL && m_second_subtree == NULL);
     if(is_leaf_)
-      assert(m_first_slice != NULL);
+      assert(m_slice_ref != NULL);
     return is_leaf_;
   }
 
@@ -86,43 +88,36 @@ namespace tubex
   {
     bool is_root_ = (m_parent == NULL);
     if(is_root_)
-      assert(m_first_slice == NULL && m_second_slice == NULL);
+      assert(m_slice_ref == NULL);
     return is_root_;
   }
 
-  TubeTreeSynthesis* TubeTreeSynthesis::get_root()
+  TubeTreeSynthesis* TubeTreeSynthesis::root()
   {
     if(m_parent == NULL)
       return this;
     else
-      return m_parent->get_root();
-  }
-
-  const Slice* TubeTreeSynthesis::get_first_slice()
-  {
-    TubeTreeSynthesis *subtree = this;
-    while(!subtree->is_leaf())
-      subtree = subtree->m_first_subtree;
-    return subtree->m_first_slice;
+      return m_parent->root();
   }
 
   void TubeTreeSynthesis::update_values()
   {
-  /*  if(m_update_needed)
+    if(m_update_needed)
     {
       // 1. Updating leafs values (leaf nodes)
 
-      if(m_parent == NULL) // if root
+      if(is_root())
       {
         // This part can only be executed from the root
-        // (because computation starts from 0)
+        // (because integral computation starts from k=0)
 
         Interval sum = Interval(0);
-        for(const Slice *s = get_first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = m_tube_ref->first_slice() ; s != NULL ; s = s->next_slice())
         {
           double dt = s->domain().diam();
           Interval slice_value = s->codomain();
           Interval integrale = sum + slice_value * Interval(0., dt);
+          assert(s->m_synthesis_reference != NULL);
           s->m_synthesis_reference->m_partial_primitive =
                 make_pair(Interval(integrale.lb(), integrale.lb() + fabs(slice_value.lb() * dt)),
                           Interval(integrale.ub() - fabs(slice_value.ub() * dt), integrale.ub()));
@@ -133,25 +128,31 @@ namespace tubex
 
       // 2. Upper synthesis (tree nodes)
 
-        assert(!is_leaf());
+        assert(!is_leaf()); // flag already set to false in step 1.
         m_first_subtree->update_values();
-        m_second_subtree->update_values();
+        if(m_second_subtree != NULL)
+          m_second_subtree->update_values();
 
-        pair<Interval,Interval> pp_past = m_first_subtree->m_partial_primitive;
-        pair<Interval,Interval> pp_future = m_second_subtree->m_partial_primitive;
-        m_partial_primitive = make_pair(pp_past.first | pp_future.first,
-                                        pp_past.second | pp_future.second);
+        m_partial_primitive = m_first_subtree->m_partial_primitive;
+
+        if(m_second_subtree != NULL)
+        {
+          pair<Interval,Interval> pp_second = m_second_subtree->m_partial_primitive;
+          m_partial_primitive.first |= pp_second.first;
+          m_partial_primitive.second |= pp_second.second;
+        }
+          
         m_update_needed = false;
-    }*/
+    }
   }
 
   pair<Interval,Interval> TubeTreeSynthesis::partial_integral(const Interval& t)
   {
     assert(is_root());
 
-  /*  if(m_update_needed)
-      get_root()->update_values();
-    
+    if(m_update_needed)
+      root()->update_values();
+
     int index_lb = m_tube_ref->input2index(t.lb());
     int index_ub = m_tube_ref->input2index(t.ub());
 
@@ -228,13 +229,13 @@ namespace tubex
                                  primitive_ub.ub() - y_second.ub() * tb2.diam());
     }
 
-    return make_pair(integrale_lb, integrale_ub);*/
+    return make_pair(integrale_lb, integrale_ub);
   }
 
   const pair<Interval,Interval> TubeTreeSynthesis::partial_primitive_bounds(const Interval& t)
   {
-    /*if(m_update_needed)
-      get_root()->update_values();
+    if(m_update_needed)
+      root()->update_values();
 
     //assert(!m_update_needed);
     // ? assert(domain().is_superset(t));
@@ -271,6 +272,6 @@ namespace tubex
         pair<Interval,Interval> pp_future = m_second_subtree->partial_primitive_bounds(inter_secondsubtree);
         return make_pair(pp_past.first | pp_future.first, pp_past.second | pp_future.second);
       }
-    }*/
+    }
   }
 }

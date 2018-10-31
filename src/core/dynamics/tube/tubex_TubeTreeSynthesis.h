@@ -29,8 +29,7 @@ namespace tubex
 
       bool is_leaf() const;
       bool is_root() const;
-      TubeTreeSynthesis* get_root();
-      const Slice* get_first_slice();
+      TubeTreeSynthesis* root();
 
       //TubeDataSynthesis_Slicing& slicing_synthesis();
       //TubeDataSynthesis_Emptiness& emptiness_synthesis();
@@ -56,8 +55,7 @@ namespace tubex
       TubeTreeSynthesis *m_first_subtree = NULL, *m_second_subtree = NULL;
 
       // Slices connections
-      const Slice *m_first_slice = NULL;
-      const Slice *m_second_slice = NULL;
+      const Slice *m_slice_ref = NULL;
       const Tube *m_tube_ref = NULL;
 
       int m_slices_number;

@@ -995,10 +995,10 @@ namespace tubex
     {
       assert(domain().is_superset(t));
 
-      //if(m_synthesis_tree != NULL) // fast evaluation
-      //  return m_synthesis_tree->partial_integral(t);
-      //
-      //else
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->partial_integral(t);
+      
+      else
       {
         Interval intv_t;
         const Slice *slice = first_slice();
