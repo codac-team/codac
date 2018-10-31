@@ -968,60 +968,66 @@ namespace tubex
     {
       assert(domain().is_superset(t));
 
-      Interval intv_t;
-      const Slice *slice = first_slice();
-      pair<Interval,Interval> p_integ
-        = make_pair(0., 0.), p_integ_uncertain(p_integ);
+      if(m_data_tree != NULL) // fast evaluation
+        return m_data_tree->partial_integral(t);
 
-      while(slice != NULL && slice->domain().lb() < t.ub())
+      else
       {
-        if(slice->codomain().is_empty())
+        Interval intv_t;
+        const Slice *slice = first_slice();
+        pair<Interval,Interval> p_integ
+          = make_pair(0., 0.), p_integ_uncertain(p_integ);
+
+        while(slice != NULL && slice->domain().lb() < t.ub())
         {
-          p_integ.first.set_empty();
-          p_integ.second.set_empty();
-          return p_integ;
-        }
-
-        if(slice->codomain().is_unbounded())
-        {
-          p_integ.first = Interval::ALL_REALS;
-          p_integ.second = Interval::ALL_REALS;
-          return p_integ;
-        }
-
-        // From t0 to tlb
-
-          intv_t = slice->domain() & Interval(domain().lb(), t.lb());
-          if(!intv_t.is_empty())
+          if(slice->codomain().is_empty())
           {
-            p_integ.first += intv_t.diam() * slice->codomain().lb();
-            p_integ.second += intv_t.diam() * slice->codomain().ub();
-            p_integ_uncertain = p_integ;
-
-            if(intv_t.ub() == t.ub())
-              return p_integ; // end of the integral evalution
+            p_integ.first.set_empty();
+            p_integ.second.set_empty();
+            return p_integ;
           }
 
-        // From tlb to tub
-
-          intv_t = slice->domain() & t;
-          if(!intv_t.is_empty())
+          if(slice->codomain().is_unbounded())
           {
-            pair<Interval,Interval> p_integ_temp(p_integ_uncertain);
-            p_integ_uncertain.first += Interval(0., intv_t.diam()) * slice->codomain().lb();
-            p_integ_uncertain.second += Interval(0., intv_t.diam()) * slice->codomain().ub();
-          
-            p_integ.first |= p_integ_uncertain.first;
-            p_integ.second |= p_integ_uncertain.second;
-
-            p_integ_uncertain.first = p_integ_temp.first + intv_t.diam() * slice->codomain().lb();
-            p_integ_uncertain.second = p_integ_temp.second + intv_t.diam() * slice->codomain().ub();
+            p_integ.first = Interval::ALL_REALS;
+            p_integ.second = Interval::ALL_REALS;
+            return p_integ;
           }
 
-        slice = slice->next_slice();
+          // From t0 to tlb
+
+            intv_t = slice->domain() & Interval(domain().lb(), t.lb());
+            if(!intv_t.is_empty())
+            {
+              p_integ.first += intv_t.diam() * slice->codomain().lb();
+              p_integ.second += intv_t.diam() * slice->codomain().ub();
+              p_integ_uncertain = p_integ;
+
+              if(intv_t.ub() == t.ub())
+                return p_integ; // end of the integral evalution
+            }
+
+          // From tlb to tub
+
+            intv_t = slice->domain() & t;
+            if(!intv_t.is_empty())
+            {
+              pair<Interval,Interval> p_integ_temp(p_integ_uncertain);
+              p_integ_uncertain.first += Interval(0., intv_t.diam()) * slice->codomain().lb();
+              p_integ_uncertain.second += Interval(0., intv_t.diam()) * slice->codomain().ub();
+            
+              p_integ.first |= p_integ_uncertain.first;
+              p_integ.second |= p_integ_uncertain.second;
+
+              p_integ_uncertain.first = p_integ_temp.first + intv_t.diam() * slice->codomain().lb();
+              p_integ_uncertain.second = p_integ_temp.second + intv_t.diam() * slice->codomain().ub();
+            }
+
+          slice = slice->next_slice();
+        }
+
+        return p_integ;
       }
-
-      return p_integ;
     }
 
     const pair<Interval,Interval> Tube::partial_integral(const Interval& t1, const Interval& t2) const

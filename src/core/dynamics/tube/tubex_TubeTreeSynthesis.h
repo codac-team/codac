@@ -23,8 +23,12 @@ namespace tubex
     public:
 
       TubeTreeSynthesis();
-      bool is_leaf() const;
       const ibex::Interval domain();
+
+      bool is_leaf() const;
+      bool is_root() const;
+      TubeTreeSynthesis* get_root();
+      Slice* get_first_slice();
 
       //TubeDataSynthesis_Slicing& slicing_synthesis();
       //TubeDataSynthesis_Emptiness& emptiness_synthesis();
@@ -34,6 +38,7 @@ namespace tubex
 
       void request_updates();
       void update_values();
+      std::pair<ibex::Interval,ibex::Interval> partial_integral(const ibex::Interval& t);
       const std::pair<ibex::Interval,ibex::Interval> partial_primitive_bounds(const ibex::Interval& t = ibex::Interval::ALL_REALS);
 
     protected:
@@ -45,8 +50,12 @@ namespace tubex
       //TubeDataSynthesis_Volume m_syn_volume;
 
       // Binary tree structure
-      TubeTreeSynthesis *m_first_subtree = NULL;
-      TubeTreeSynthesis *m_second_subtree = NULL;
+      TubeTreeSynthesis *m_parent = NULL;
+      TubeTreeSynthesis *m_first_subtree = NULL, *m_second_subtree = NULL;
+
+      // Slices connections
+      Slice *m_slice_ref = NULL;
+      Tube *m_tube_ref = NULL;
 
       int m_slices_number;
       ibex::Interval m_domain;
@@ -54,7 +63,6 @@ namespace tubex
 
       bool m_update_needed;
 
-      Slice *m_slice_ref = NULL;
   };
 }
 

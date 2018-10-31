@@ -113,9 +113,10 @@ namespace tubex
         ibex::Interval m_codomain = ibex::Interval::ALL_REALS;
         ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
         Slice *m_prev_slice = NULL, *m_next_slice = NULL;
-        TubeTreeSynthesis *m_leaf_reference;
+        TubeTreeSynthesis *m_synthesis_reference;
 
       friend class Tube;
+      friend class TubeTreeSynthesis;
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
   };
 }

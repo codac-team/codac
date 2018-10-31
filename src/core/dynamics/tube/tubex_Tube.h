@@ -185,7 +185,7 @@ namespace tubex
       /** Class variables **/
 
         Slice *m_first_slice = NULL; //!< 
-        TubeTreeSynthesis *m_data_tree = NULL; //!< 
+        mutable TubeTreeSynthesis *m_data_tree = NULL; //!< 
         
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);

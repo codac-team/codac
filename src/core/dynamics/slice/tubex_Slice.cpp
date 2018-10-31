@@ -29,6 +29,7 @@ namespace tubex
       assert(valid_domain(domain));
       m_input_gate = new Interval(codomain);
       m_output_gate = new Interval(codomain);
+      m_synthesis_reference->request_updates();
     }
 
     Slice::Slice(const Slice& x)
@@ -59,6 +60,7 @@ namespace tubex
       m_codomain = x.m_codomain;
       *m_input_gate = *x.m_input_gate;
       *m_output_gate = *x.m_output_gate;
+      m_synthesis_reference->request_updates();
       return *this;
     }
     
@@ -396,6 +398,8 @@ namespace tubex
       *m_output_gate = y;
       if(next_slice() != NULL)
         *m_output_gate &= next_slice()->codomain();
+
+      m_synthesis_reference->request_updates();
     }
     
     void Slice::set_empty()
@@ -408,6 +412,8 @@ namespace tubex
       m_codomain = envelope;
       *m_input_gate &= m_codomain;
       *m_output_gate &= m_codomain;
+
+      m_synthesis_reference->request_updates();
     }
 
     void Slice::set_input_gate(const Interval& input_gate)
@@ -417,6 +423,8 @@ namespace tubex
 
       if(prev_slice() != NULL)
         *m_input_gate &= prev_slice()->codomain();
+
+      m_synthesis_reference->request_updates();
     }
 
     void Slice::set_output_gate(const Interval& output_gate)
@@ -426,15 +434,20 @@ namespace tubex
 
       if(next_slice() != NULL)
         *m_output_gate &= next_slice()->codomain();
+
+      m_synthesis_reference->request_updates();
     }
     
     const Slice& Slice::inflate(double rad)
     {
       assert(rad >= 0.);
+      
       Interval e(-rad,rad);
       set_envelope(m_codomain + e);
       set_input_gate(*m_input_gate + e);
       set_output_gate(*m_output_gate + e);
+
+      m_synthesis_reference->request_updates();
     }
     
     // String
