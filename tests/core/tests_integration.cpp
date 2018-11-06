@@ -7,33 +7,44 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
+#define TEST_COMPUTATION_TIMES 0
+
 TEST_CASE("Computing tube's primitive", "[core]")
 {
   SECTION("Test tube3")
   {
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
       Tube tube = tube_test3();
       if(i == 0) tube.create_synthesis_tree();
 
+      t_start = clock();
       CHECK(ApproxIntv(tube(0)) == Interval(1,3));
       CHECK(ApproxIntv(tube(1)) == Interval(0,2));
       CHECK(ApproxIntv(tube(2)) == Interval(-1,1));
       CHECK(ApproxIntv(tube(3)) == Interval(-2,0));
       CHECK(ApproxIntv(tube(4)) == Interval(-3,-1));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       Tube tube_primitive = tube.primitive();
       if(i == 0) tube_primitive.create_synthesis_tree();
 
+      t_start = clock();
       CHECK(ApproxIntv(tube_primitive(0)) == Interval(0,3));
       CHECK(ApproxIntv(tube_primitive(1)) == Interval(1,5));
       CHECK(ApproxIntv(tube_primitive(2)) == Interval(0,6));
       CHECK(ApproxIntv(tube_primitive(3)) == Interval(-2,6));
       CHECK(ApproxIntv(tube_primitive(4)) == Interval(-5,6));
+      t[i] += (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree();
       tube_primitive.delete_synthesis_tree();
     }
+
+    //if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube4")
@@ -156,8 +167,12 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(0)) == Interval(0));
       CHECK(ApproxIntv(tube.integral(0.1)) == Interval(0.4,0.8));
       CHECK(ApproxIntv(tube.integral(1.1)) == Interval(4.2,8.7));
@@ -170,9 +185,12 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
       CHECK(ApproxIntv(tube.integral(3.0)) == Interval(7,21));
       CHECK(ApproxIntv(tube.integral(3.1)) == Interval(6.6,21.4));
       CHECK(ApproxIntv(tube.integral(4.0)) == Interval(3,25));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -180,8 +198,12 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
     Tube tube = tube_test_1_01();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(0)) == Interval(0));
       CHECK(ApproxIntv(tube.integral(0.1)) == Interval(0.4,0.8));
       CHECK(ApproxIntv(tube.integral(1.1)) == Interval(4.2,8.7));
@@ -194,8 +216,12 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
       CHECK(ApproxIntv(tube.integral(3.0)) == Interval(7,21));
       CHECK(ApproxIntv(tube.integral(3.1)) == Interval(6.6,21.4));
       CHECK(ApproxIntv(tube.integral(4.0)) == Interval(3,25));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
   
   SECTION("Test tube4")
@@ -204,8 +230,12 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(0.0)) == Interval(0.0));
       CHECK(ApproxIntv(tube.integral(0.1)) == Interval(0.1,0.2));
       CHECK(ApproxIntv(tube.integral(0.9)) == Interval(0.9,1.8));
@@ -223,8 +253,12 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
       CHECK(ApproxIntv(tube.integral(12.5)) == Interval(6.5,20.5));
       CHECK(ApproxIntv(tube.integral(12.6)) == Interval(6.4,20.6));
       CHECK(ApproxIntv(tube.integral(14.5)) == Interval(7,23.5));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 }
 
@@ -236,8 +270,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(Interval(0))) == Interval(0));
       CHECK(ApproxIntv(tube.integral(Interval(0.1))) == Interval(0.4,0.8));
       CHECK(ApproxIntv(tube.integral(Interval(0.5))) == Interval(2,4));
@@ -259,9 +297,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
       CHECK(ApproxIntv(tube.integral(Interval(1.1,2.1))) == Interval(4.2,15.6));
       CHECK(ApproxIntv(tube.integral(Interval(6,7))) == Interval(-23,19));
       CHECK(ApproxIntv(tube.integral(Interval(0,46))) == Interval(-85,194));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -269,8 +310,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
     Tube tube = tube_test_1_01();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(Interval(0))) == Interval(0));
       CHECK(ApproxIntv(tube.integral(Interval(0.1))) == Interval(0.4,0.8));
       CHECK(ApproxIntv(tube.integral(Interval(0.5))) == Interval(2,4));
@@ -292,9 +337,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
       CHECK(ApproxIntv(tube.integral(Interval(1.1,2.1))) == Interval(4.2,15.6));
       CHECK(ApproxIntv(tube.integral(Interval(6,7))) == Interval(-23,19));
       CHECK(ApproxIntv(tube.integral(Interval(0,46))) == Interval(-85,194));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube4")
@@ -303,8 +351,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(Interval(12.5))) == Interval(6.5,20.5));
       CHECK(ApproxIntv(tube.integral(Interval(14.5))) == Interval(7,23.5));
       pair<Interval,Interval> p_intv = tube.partial_integral(Interval(12.5,14.5));
@@ -315,9 +367,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
       CHECK(ApproxIntv(tube.integral(Interval(10.2))) == Interval(9.3,19.7));
       CHECK(ApproxIntv(tube.integral(Interval(1.5,3.5))) == Interval(1.5,7));
       CHECK(ApproxIntv(tube.integral(Interval(9,21))) == Interval(6,36.5));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube4(05)")
@@ -326,8 +381,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(Interval(12.5))) == Interval(6.5,20.5));
       CHECK(ApproxIntv(tube.integral(Interval(14.5))) == Interval(7,23.5));
       pair<Interval,Interval> p_intv = tube.partial_integral(Interval(12.5,14.5));
@@ -338,9 +397,12 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
       CHECK(ApproxIntv(tube.integral(Interval(10.2))) == Interval(9.3,19.7));
       CHECK(ApproxIntv(tube.integral(Interval(1.5,3.5))) == Interval(1.5,7));
       CHECK(ApproxIntv(tube.integral(Interval(9,21))) == Interval(6,36.5));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 }
 
@@ -352,8 +414,12 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0))) == make_pair(Interval(0.), Interval(0.)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.2))) == make_pair(Interval(0.2), Interval(0.4)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1))) == make_pair(Interval(0.1), Interval(0.2)));
@@ -377,9 +443,12 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.5,14.5))) == make_pair(Interval(6.0,7.0), Interval(20.5,23.5)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(1.5,3.5))) == make_pair(Interval(1.5,3.5), Interval(3,7)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(9,21))) == make_pair(Interval(6,13.5), Interval(18,36.5)));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube4(05)")
@@ -387,8 +456,12 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
     Tube tube = tube_test4_05();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0))) == make_pair(Interval(0.), Interval(0.)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.2))) == make_pair(Interval(0.2), Interval(0.4)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1))) == make_pair(Interval(0.1), Interval(0.2)));
@@ -412,9 +485,12 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(12.5,14.5))) == make_pair(Interval(6.0,7.0), Interval(20.5,23.5)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(1.5,3.5))) == make_pair(Interval(1.5,3.5), Interval(3,7)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(9,21))) == make_pair(Interval(6,13.5), Interval(18,36.5)));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube1")
@@ -423,8 +499,12 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntvPair(tube.partial_integral(tube.domain())) == make_pair(Interval(-85,7), Interval(-16,194)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
@@ -441,8 +521,12 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
       }
       CHECK(integrale_lb.is_subset(Interval(-85,7)));
       CHECK(integrale_ub.is_subset(Interval(-16,194)));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -450,16 +534,23 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
     Tube tube = tube_test_1_01();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(2.,6.))) == make_pair(Interval(-13,7), Interval(15,25)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(6.,7.))) == make_pair(Interval(-23,-13), Interval(13,19)));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 }
 
@@ -471,8 +562,12 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(Interval(20), Interval(20))) == Interval(0.));
       CHECK(ApproxIntv(tube.integral(Interval(2.1), Interval(2.1))) == Interval(0.));
       CHECK(ApproxIntv(tube.integral(Interval(12.2), Interval(12.2))) == Interval(0.));
@@ -496,8 +591,12 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
       CHECK(ApproxIntv(tube.integral(Interval(13), Interval(17,20))) == Interval(-11,35));
       CHECK(ApproxIntv(tube.integral(Interval(10,13), Interval(17,20))) == Interval(-32,35));
       CHECK(ApproxIntv(tube.integral(Interval(5,10), Interval(31,42))) == Interval(-6,180));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -505,8 +604,12 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
     Tube tube = tube_test_1_01();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(Interval(20), Interval(20))) == Interval(0.));
       CHECK(ApproxIntv(tube.integral(Interval(2.1), Interval(2.1))) == Interval(0.));
       CHECK(ApproxIntv(tube.integral(Interval(12.2), Interval(12.2))) == Interval(0.));
@@ -530,8 +633,12 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
       CHECK(ApproxIntv(tube.integral(Interval(13), Interval(17,20))) == Interval(-11,35));
       CHECK(ApproxIntv(tube.integral(Interval(10,13), Interval(17,20))) == Interval(-32,35));
       CHECK(ApproxIntv(tube.integral(Interval(5,10), Interval(31,42))) == Interval(-6,180));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube4")
@@ -540,12 +647,20 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(Interval(0,8), Interval(15,21))) == Interval(-0.5,36.5));
       CHECK(ApproxIntv(tube.integral(Interval(0,8), Interval(9,21))) == Interval(-2,36.5));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube4(05)")
@@ -553,12 +668,20 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
     Tube tube = tube_test4_05();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntv(tube.integral(Interval(0,8), Interval(15,21))) == Interval(-0.5,36.5));
       CHECK(ApproxIntv(tube.integral(Interval(0,8), Interval(9,21))) == Interval(-2,36.5));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 }
 
@@ -570,8 +693,12 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     tube.set(Interval(-4,2), 14); // to test primitives pre-computation
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
@@ -581,8 +708,12 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0,2), Interval(6,7))) == make_pair(Interval(-29,-13), Interval(-2,19)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(10,13), Interval(17,20))) == make_pair(Interval(-32,1), Interval(0,35)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.), Interval(46.))) == make_pair(Interval(-3), Interval(194)));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -590,8 +721,12 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     Tube tube = tube_test_1_01();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0), Interval(0))) == make_pair(Interval(0.), Interval(0.)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(20), Interval(20))) == make_pair(Interval(0.), Interval(0.)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(22,23), Interval(24,25))) == make_pair(Interval(8,24), Interval(13,37)));
@@ -601,8 +736,12 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0,2), Interval(6,7))) == make_pair(Interval(-29,-13), Interval(-2,19)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(10,13), Interval(17,20))) == make_pair(Interval(-32,1), Interval(0,35)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.), Interval(46.))) == make_pair(Interval(-3), Interval(194)));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube4")
@@ -611,12 +750,20 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     tube.set(Interval(-1,1), Interval(10,11));
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 
   SECTION("Test tube4(05)")
@@ -624,11 +771,19 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     Tube tube = tube_test4_05();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
 
+    double t[2];
+    clock_t t_start;
+
     for(int i = 0 ; i < 2 ; i++)
     {
+      t_start = clock();
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.1,1.1), Interval(2.6,3.2))) == make_pair(Interval(1.5,3.1), Interval(3.0,6.2)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(8.6,9.9), Interval(13.2,13.6))) == make_pair(Interval(-3.35,-2.3), Interval(1.95,4.7)));
+      t[i] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
+
+    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
   }
 }
