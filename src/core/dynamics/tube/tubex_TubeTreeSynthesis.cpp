@@ -171,7 +171,7 @@ namespace tubex
     Interval intv_t_lb = slice_lb->domain();
     Interval intv_t_ub = slice_ub->domain();
 
-    // Part A
+    // Part A: integral along the temporal domain [t]&[intv_t_lb]
     {
       pair<Interval,Interval> partial_primitive_first = slice_lb->m_synthesis_reference->m_partial_primitive;
       
@@ -181,32 +181,41 @@ namespace tubex
       if(partial_primitive_first.first.is_unbounded() || partial_primitive_first.second.is_unbounded())
         return make_pair(Interval::ALL_REALS, Interval::ALL_REALS);
 
-      Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
+      if(intv_t_lb.is_subset(t)) // slice entirely considered
+      {
+        integrale_lb |= partial_primitive_first.first;
+        integrale_ub |= partial_primitive_first.second;
+      }
+      
+      else // partial integral (on [t]&[intv_t_lb]) rebuilt from precomputation
+      {
+        Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
 
-      Interval y_first = slice_lb->codomain();
-      Interval ta1 = Interval(intv_t_lb.lb(), t.lb());
-      Interval ta2 = Interval(intv_t_lb.lb(), min(t.ub(), intv_t_lb.ub()));
-      Interval tb1 = Interval(t.lb(), intv_t_lb.ub());
-      Interval tb2 = Interval(min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
+        Interval y_first = slice_lb->codomain();
+        Interval ta1 = Interval(intv_t_lb.lb(), t.lb());
+        Interval ta2 = Interval(intv_t_lb.lb(), min(t.ub(), intv_t_lb.ub()));
+        Interval tb1 = Interval(t.lb(), intv_t_lb.ub());
+        Interval tb2 = Interval(min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
 
-      if(y_first.lb() < 0)
-        integrale_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),
-                                 primitive_lb.lb() - y_first.lb() * tb1.diam());
+        if(y_first.lb() < 0)
+          integrale_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),
+                                   primitive_lb.lb() - y_first.lb() * tb1.diam());
 
-      else if(y_first.lb() > 0)
-        integrale_lb |= Interval(primitive_lb.lb() + y_first.lb() * ta1.diam(),
-                                 primitive_lb.lb() + y_first.lb() * ta2.diam());
+        else if(y_first.lb() > 0)
+          integrale_lb |= Interval(primitive_lb.lb() + y_first.lb() * ta1.diam(),
+                                   primitive_lb.lb() + y_first.lb() * ta2.diam());
 
-      if(y_first.ub() < 0)
-        integrale_ub |= Interval(primitive_lb.ub() + y_first.ub() * ta2.diam(),
-                                 primitive_lb.ub() + y_first.ub() * ta1.diam());
+        if(y_first.ub() < 0)
+          integrale_ub |= Interval(primitive_lb.ub() + y_first.ub() * ta2.diam(),
+                                   primitive_lb.ub() + y_first.ub() * ta1.diam());
 
-      else if(y_first.ub() > 0)
-        integrale_ub |= Interval(primitive_lb.ub() - y_first.ub() * tb1.diam(),
-                                 primitive_lb.ub() - y_first.ub() * tb2.diam());
+        else if(y_first.ub() > 0)
+          integrale_ub |= Interval(primitive_lb.ub() - y_first.ub() * tb1.diam(),
+                                   primitive_lb.ub() - y_first.ub() * tb2.diam());
+      }
     }
 
-    // Part B
+    // Part B: in between, integral along the temporal domain [ub(intv_t_lb),lb(intv_t_ub)]
     if(index_ub - index_lb > 1)
     {
       pair<Interval,Interval> partial_primitive = partial_primitive_bounds(Interval(intv_t_lb.ub(), intv_t_ub.lb()));
@@ -214,7 +223,7 @@ namespace tubex
       integrale_ub |= partial_primitive.second;
     }
 
-    // Part C
+    // Part C: integral along the temporal domain [t]&[intv_t_ub]
     if(index_lb != index_ub)
     {
       pair<Interval,Interval> partial_primitive_second = slice_ub->m_synthesis_reference->m_partial_primitive;
@@ -224,29 +233,38 @@ namespace tubex
 
       if(partial_primitive_second.first.is_unbounded() || partial_primitive_second.second.is_unbounded())
         return make_pair(Interval::ALL_REALS, Interval::ALL_REALS);
+      
+      if(intv_t_ub.is_subset(t)) // slice entirely considered
+      {
+        integrale_lb |= partial_primitive_second.first;
+        integrale_ub |= partial_primitive_second.second;
+      }
+      
+      else // partial integral (on [t]&[intv_t_ub]) rebuilt from precomputation
+      {
+        Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
 
-      Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
+        Interval y_second = slice_ub->codomain();
+        Interval ta = Interval(intv_t_ub.lb(), t.ub());
+        Interval tb1 = intv_t_ub;
+        Interval tb2 = Interval(t.ub(), intv_t_ub.ub());
 
-      Interval y_second = slice_ub->codomain();
-      Interval ta = Interval(intv_t_ub.lb(), t.ub());
-      Interval tb1 = intv_t_ub;
-      Interval tb2 = Interval(t.ub(), intv_t_ub.ub());
+        if(y_second.lb() < 0)
+          integrale_lb |= Interval(primitive_ub.lb() - y_second.lb() * tb2.diam(),
+                                   primitive_ub.lb() - y_second.lb() * tb1.diam());
 
-      if(y_second.lb() < 0)
-        integrale_lb |= Interval(primitive_ub.lb() - y_second.lb() * tb2.diam(),
-                                 primitive_ub.lb() - y_second.lb() * tb1.diam());
+        else if(y_second.lb() > 0)
+          integrale_lb |= Interval(primitive_ub.lb(),
+                                   primitive_ub.lb() + y_second.lb() * ta.diam());
 
-      else if(y_second.lb() > 0)
-        integrale_lb |= Interval(primitive_ub.lb(),
-                                 primitive_ub.lb() + y_second.lb() * ta.diam());
+        if(y_second.ub() < 0)
+          integrale_ub |= Interval(primitive_ub.ub() + y_second.ub() * ta.diam(),
+                                   primitive_ub.ub());
 
-      if(y_second.ub() < 0)
-        integrale_ub |= Interval(primitive_ub.ub() + y_second.ub() * ta.diam(),
-                                 primitive_ub.ub());
-
-      else if(y_second.ub() > 0)
-        integrale_ub |= Interval(primitive_ub.ub() - y_second.ub() * tb1.diam(),
-                                 primitive_ub.ub() - y_second.ub() * tb2.diam());
+        else if(y_second.ub() > 0)
+          integrale_ub |= Interval(primitive_ub.ub() - y_second.ub() * tb1.diam(),
+                                   primitive_ub.ub() - y_second.ub() * tb2.diam());
+      }
     }
 
     return make_pair(integrale_lb, integrale_ub);

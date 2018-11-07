@@ -8,6 +8,7 @@ using namespace ibex;
 using namespace tubex;
 
 #define TEST_COMPUTATION_TIMES 0
+#define COEFF_COMPUTATION_TIME 1.
 
 TEST_CASE("Computing tube's primitive", "[core]")
 {
@@ -44,7 +45,7 @@ TEST_CASE("Computing tube's primitive", "[core]")
       tube_primitive.delete_synthesis_tree();
     }
 
-    //if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    //if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube4")
@@ -190,7 +191,7 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -221,7 +222,7 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
   
   SECTION("Test tube4")
@@ -258,7 +259,7 @@ TEST_CASE("Computing integration from 0, double argument", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 }
 
@@ -302,7 +303,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -342,7 +343,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube4")
@@ -372,7 +373,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube4(05)")
@@ -402,7 +403,7 @@ TEST_CASE("Computing integration from 0, interval argument", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 }
 
@@ -448,7 +449,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube4(05)")
@@ -490,7 +491,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube1")
@@ -526,7 +527,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -550,7 +551,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 }
 
@@ -596,7 +597,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -638,7 +639,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube4")
@@ -660,7 +661,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube4(05)")
@@ -681,7 +682,7 @@ TEST_CASE("Computing integration, two interval bounds", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 }
 
@@ -713,7 +714,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube1(01)")
@@ -741,7 +742,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube4")
@@ -763,7 +764,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
   }
 
   SECTION("Test tube4(05)")
@@ -784,6 +785,36 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
       tube.delete_synthesis_tree(); // second: without tree synthesis
     }
 
-    if(TEST_COMPUTATION_TIMES) CHECK(1.*t[0] < t[1]);
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
+  }
+
+  SECTION("Test heavy integral computation")
+  {
+    double t[2];
+    clock_t t_start;
+
+    Tube tube(Interval(0.,10.), 0.01, tubex::Function("sin(t)"));
+
+    t_start = clock();
+    tube.create_synthesis_tree(); // first: testing with tree synthesis
+    cout << ((double)(clock() - t_start)/CLOCKS_PER_SEC) << endl;
+
+    Interval intv_t = Interval(tube.domain().lb() + tube.domain().diam() / 4.,
+                               tube.domain().ub() - tube.domain().diam() / 4.);
+    intv_t = tube.domain();
+
+    t_start = clock();
+    tube.integral(intv_t);
+    t[0] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
+    tube.delete_synthesis_tree(); // second: without tree synthesis
+
+    t_start = clock();
+    tube.integral(intv_t);
+    t[1] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
+
+    if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
+
+    cout << t[0] << " " << t[1] << endl;
   }
 }
