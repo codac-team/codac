@@ -793,12 +793,9 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     double t[2];
     clock_t t_start;
 
-    Tube tube(Interval(0.,10.), 0.01, tubex::Function("sin(t)"));
+    Tube tube(Interval(0.,10.), 0.1, tubex::Function("sin(t)"));
 
-    t_start = clock();
     tube.create_synthesis_tree(); // first: testing with tree synthesis
-    cout << ((double)(clock() - t_start)/CLOCKS_PER_SEC) << endl;
-
     Interval intv_t = Interval(tube.domain().lb() + tube.domain().diam() / 4.,
                                tube.domain().ub() - tube.domain().diam() / 4.);
     intv_t = tube.domain();
@@ -814,7 +811,5 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     t[1] = (double)(clock() - t_start)/CLOCKS_PER_SEC;
 
     if(TEST_COMPUTATION_TIMES) CHECK(COEFF_COMPUTATION_TIME*t[0] < t[1]);
-
-    cout << t[0] << " " << t[1] << endl;
   }
 }

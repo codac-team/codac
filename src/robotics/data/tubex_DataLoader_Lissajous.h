@@ -26,6 +26,7 @@ namespace tubex
       DataLoader_Lissajous();
       void load_data(TubeVector *&x,
                      TrajectoryVector *&truth,
+                     float timestep = 0.01,
                      const ibex::Interval& domain = ibex::Interval::ALL_REALS);
       std::vector<Beacon> get_beacons(const ibex::IntervalVector& map_box) const;
       std::vector<ibex::IntervalVector> get_observations(const TrajectoryVector& x, const std::vector<Beacon>& map) const;

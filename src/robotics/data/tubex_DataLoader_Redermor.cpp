@@ -27,7 +27,7 @@ namespace tubex
 
   }
 
-  void DataLoader_Redermor::load_data(TubeVector *&x, TrajectoryVector *&truth, const Interval& domain)
+  void DataLoader_Redermor::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
   {
     assert(domain == Interval::ALL_REALS | DynamicalItem::valid_domain(domain));
     clock_t t_start = clock();
@@ -82,7 +82,6 @@ namespace tubex
       }
 
       // Data from sensors with uncertainties:
-      float timestep = 1.;
       x = new TubeVector(traj_data_x, timestep); // state vector:
       x->inflate(traj_data_dx);
       x->resize(6);

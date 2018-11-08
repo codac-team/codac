@@ -26,6 +26,7 @@ namespace tubex
       DataLoader_Redermor(const std::string& file_path);
       void load_data(TubeVector *&x,
                      TrajectoryVector *&truth,
+                     float timestep = 1.,
                      const ibex::Interval& domain = ibex::Interval::ALL_REALS);
       std::vector<Beacon> get_beacons() const;
       std::map<int,std::vector<ibex::IntervalVector> > get_observations() const;

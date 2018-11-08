@@ -22,10 +22,18 @@ namespace tubex
   {
     public:
 
-      TubeTreeSynthesis(const Tube* tube, int k0, int kf);
+      TubeTreeSynthesis(const Tube* tube, int k0, int kf, const std::vector<const Slice*>& v_slices);
       ~TubeTreeSynthesis();
 
-      const ibex::Interval domain();
+      const ibex::Interval domain() const;
+      int nb_slices() const;
+      double volume() const;
+      const ibex::Interval operator()(const ibex::Interval& t) const;
+      const ibex::Interval codomain() const;
+
+      int input2index(double t) const;
+      Slice* slice(int slice_id);
+      const Slice* slice(int slice_id) const;
 
       bool is_leaf() const;
       bool is_root() const;
@@ -58,7 +66,7 @@ namespace tubex
       const Slice *m_slice_ref = NULL;
       const Tube *m_tube_ref = NULL;
 
-      int m_slices_number;
+      int m_nb_slices;
       ibex::Interval m_domain;
       std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 

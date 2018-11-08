@@ -26,7 +26,7 @@ namespace tubex
 
   }
 
-  void DataLoader_Lissajous::load_data(TubeVector *&x, TrajectoryVector *&truth, const Interval& domain)
+  void DataLoader_Lissajous::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
   {
     assert(DynamicalItem::valid_domain(domain) || domain == Interval::ALL_REALS);
 

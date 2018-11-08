@@ -30,6 +30,7 @@ namespace tubex
 
       virtual void load_data(TubeVector *&x,
                              TrajectoryVector *&truth,
+                             float timestep,
                              const ibex::Interval& domain = ibex::Interval::ALL_REALS) = 0;
 
       bool serialized_data_available() const;

@@ -59,7 +59,7 @@ namespace tubex
       
       // Based on primitive information (<=> kernel)
 
-        const pair<IntervalVector,IntervalVector> uy1 = x.eval(t1), uy2 = x.eval(t2);
+        /*const pair<IntervalVector,IntervalVector> uy1 = x.eval(t1), uy2 = x.eval(t2);
         const pair<IntervalVector,IntervalVector> enc_bounds =
           make_pair(IntervalVector(uy1.first.lb() - uy2.second.ub()) | ( uy1.first.ub() - uy2.second.lb()),
                     IntervalVector(uy1.second.lb() - uy2.first.ub()) | (uy1.second.ub() - uy2.first.lb()));
@@ -70,14 +70,14 @@ namespace tubex
 
         bool primitive_in = Interval::NEG_REALS.is_strict_superset(t1 - t2)
                          && box_neg_reals.is_strict_superset(enc_bounds.first)
-                         && box_pos_reals.is_strict_superset(enc_bounds.second);
+                         && box_pos_reals.is_strict_superset(enc_bounds.second);*/
 
       // Conclusion
 
-        if(derivative_out || primitive_out)
+        if(derivative_out/* || primitive_out*/)
           set_value(VALUE_OUT);
 
-        else if(derivative_in && primitive_in)
+        else if(derivative_in/* && primitive_in*/)
           set_value(VALUE_IN);
 
         else if(max(t1.diam(), t2.diam()) < precision)

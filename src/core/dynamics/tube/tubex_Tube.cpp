@@ -158,7 +158,7 @@ namespace tubex
 
     int Tube::size() const
     {
-      return 1;
+      return 1; // scalar object
     }
 
     const Tube Tube::primitive() const
@@ -217,18 +217,28 @@ namespace tubex
 
     const Interval Tube::domain() const
     {
-      return Interval(first_slice()->domain().lb(),
-                      last_slice()->domain().ub());
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->domain();
+      
+      else
+        return Interval(first_slice()->domain().lb(),
+                        last_slice()->domain().ub());
     }
   
     // Slices structure
 
     int Tube::nb_slices() const
     {
-      int size = 0;
-      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-        size ++;
-      return size;
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->nb_slices();
+      
+      else
+      {
+        int size = 0;
+        for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+          size ++;
+        return size;
+      }
     }
 
     Slice* Tube::slice(int slice_id)
@@ -240,14 +250,23 @@ namespace tubex
     const Slice* Tube::slice(int slice_id) const
     {
       assert(slice_id >= 0 && slice_id < nb_slices());
-      int i = 0;
-      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+
+      // todo: if(m_synthesis_tree != NULL) // fast access
+      // todo:   return m_synthesis_tree->slice(slice_id);
+      // todo: 
+      // todo: else
       {
-        if(i == slice_id)
-          return s;
-        i++;
+        int i = 0;
+
+        for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+        {
+          if(i == slice_id)
+            return s;
+          i++;
+        }
+
+        return NULL;
       }
-      return NULL;
     }
 
     Slice* Tube::slice(double t)
@@ -279,10 +298,16 @@ namespace tubex
 
     const Slice* Tube::last_slice() const
     {
-      for(const Slice *s = first_slice() ; true ; s = s->next_slice())
-        if(s->next_slice() == NULL)
-          return s;
-      return NULL;
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->slice(nb_slices() - 1);
+      
+      else
+      {
+        for(const Slice *s = first_slice() ; true ; s = s->next_slice())
+          if(s->next_slice() == NULL)
+            return s;
+        return NULL;
+      }
     }
 
     Slice* Tube::wider_slice()
@@ -340,15 +365,21 @@ namespace tubex
     {
       assert(domain().contains(t));
 
-      int i = -1;
-      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->input2index(t);
+      
+      else
       {
-        i++;
-        if(t < s->domain().ub())
-          return i;
-      }
+        int i = -1;
+        for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+        {
+          i++;
+          if(t < s->domain().ub())
+            return i;
+        }
 
-      return i;
+        return i;
+      }
     }
 
     int Tube::index(const Slice* slice) const
@@ -378,6 +409,8 @@ namespace tubex
 
       else
       {
+        delete_synthesis_tree(); // todo: update tree if created, instead of delete
+
         Slice *next_slice = slice_to_be_sampled->next_slice();
 
         // Creating new slice
@@ -397,6 +430,8 @@ namespace tubex
     void Tube::sample(double t, const Interval& gate)
     {
       assert(domain().contains(t));
+
+      delete_synthesis_tree(); // todo: update tree if created, instead of delete
 
       sample(t);
       Slice *s = slice(t);
@@ -439,10 +474,16 @@ namespace tubex
 
     double Tube::volume() const
     {
-      double volume = 0.;
-      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-        volume += s->volume();
-      return volume;
+      // todo: if(m_synthesis_tree != NULL) // fast evaluation
+      // todo:   return m_synthesis_tree->volume();
+      // todo: 
+      // todo: else
+      {
+        double volume = 0.;
+        for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+          volume += s->volume();
+        return volume;
+      }
     }
 
     const Interval Tube::operator()(int slice_id) const
@@ -464,16 +505,22 @@ namespace tubex
       if(t.is_degenerated())
         return operator()(t.lb());
 
-      const Slice *first_slice = slice(t.lb());
-      const Slice *last_slice = slice(t.ub());
-      if(last_slice->domain().lb() != t.ub())
-        last_slice = last_slice->next_slice();
+      //if(m_synthesis_tree != NULL) // fast evaluation
+      //  return m_synthesis_tree->operator()(t);
+      //
+      //else
+      {
+        const Slice *first_slice = slice(t.lb());
+        const Slice *last_slice = slice(t.ub());
+        if(last_slice->domain().lb() != t.ub())
+          last_slice = last_slice->next_slice();
 
-      Interval codomain = Interval::EMPTY_SET;
-      for(const Slice *s = first_slice ; s != last_slice ; s = s->next_slice())
-        codomain |= s->codomain();
+        Interval codomain = Interval::EMPTY_SET;
+        for(const Slice *s = first_slice ; s != last_slice ; s = s->next_slice())
+          codomain |= s->codomain();
 
-      return codomain;
+        return codomain;
+      }
     }
 
     const Interval Tube::invert(const Interval& y, const Interval& search_domain) const
@@ -493,6 +540,8 @@ namespace tubex
     {
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
+
+      // todo: tree computations
 
       Interval invert = Interval::EMPTY_SET;
       Interval intersection = search_domain & domain();
@@ -518,6 +567,8 @@ namespace tubex
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
       v_t.clear();
+
+      // todo: tree computations
 
       Interval invert = Interval::EMPTY_SET;
       Interval intersection = search_domain & domain();
@@ -548,6 +599,8 @@ namespace tubex
 
     const pair<Interval,Interval> Tube::eval(const Interval& t) const
     {
+      // todo: tree computations
+
       pair<Interval,Interval> enclosed_bounds
         = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
@@ -744,7 +797,7 @@ namespace tubex
 
     bool Tube::is_empty() const
     {
-      //if(m_data_tree != NULL) // faster computation from binary tree
+      //if(m_data_tree != NULL) // todo: faster computation from binary tree
       //  return m_data_tree->emptiness_synthesis().emptiness();
 
       // Fast implementation without redundant gate evaluations:
@@ -916,7 +969,12 @@ namespace tubex
     void Tube::create_synthesis_tree() const
     {
       delete_synthesis_tree();
-      m_synthesis_tree = new TubeTreeSynthesis(this, 0, nb_slices() - 1);
+
+      vector<const Slice*> v_slices;
+      for(const Slice* s = first_slice() ; s != NULL ; s = s->next_slice())
+        v_slices.push_back(s);
+
+      m_synthesis_tree = new TubeTreeSynthesis(this, 0, nb_slices() - 1, v_slices);
     }
     
     void Tube::delete_synthesis_tree() const
@@ -1091,10 +1149,16 @@ namespace tubex
 
     const IntervalVector Tube::codomain_box() const
     {
-      IntervalVector codomain(1, Interval::EMPTY_SET);
-      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-        codomain |= s->codomain_box();
-      return codomain;
+      // todo: if(m_synthesis_tree != NULL) // fast evaluation
+      // todo:   return m_synthesis_tree->codomain();
+      // todo: 
+      // todo: else
+      {
+        IntervalVector codomain(1, Interval::EMPTY_SET);
+        for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+          codomain |= s->codomain_box();
+        return codomain;
+      }
     }
 
     // Integration

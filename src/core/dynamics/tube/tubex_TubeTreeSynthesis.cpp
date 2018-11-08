@@ -17,19 +17,21 @@ using namespace ibex;
 
 namespace tubex
 {
-  TubeTreeSynthesis::TubeTreeSynthesis(const Tube* tube, int k0, int kf)
+  TubeTreeSynthesis::TubeTreeSynthesis(const Tube* tube, int k0, int kf, const vector<const Slice*>& v_slices)
     : m_tube_ref(tube), m_parent(NULL), m_update_needed(true)
   {
-    assert(k0 >= 0 && k0 < tube->nb_slices());
-    assert(kf >= 0 && kf < tube->nb_slices());
+    assert(tube != NULL);
+    assert(k0 >= 0 && k0 < v_slices.size());
+    assert(kf >= 0 && kf < v_slices.size());
 
     if(k0 == kf) // leaf, pointer to a slice
     {
       m_first_subtree = NULL;
       m_second_subtree = NULL;
-      m_slice_ref = tube->slice(k0);
+      m_slice_ref = v_slices[k0];
       m_slice_ref->m_synthesis_reference = this;
       m_domain = m_slice_ref->domain();
+      m_nb_slices = 1;
     }
 
     else
@@ -37,21 +39,22 @@ namespace tubex
       // In the first subtree: [t0,thalf[
       // In the second subtree: [thalf,tf]
 
-      int nb_slices = kf - k0 + 1;
-      int kmid = k0 + floor(nb_slices / 2.);
+      m_nb_slices = kf - k0 + 1;
+      int kmid = k0 + floor(m_nb_slices / 2.);
 
-      m_first_subtree = new TubeTreeSynthesis(tube, k0, kmid - 1);
+      m_first_subtree = new TubeTreeSynthesis(tube, k0, kmid - 1, v_slices);
       m_first_subtree->m_parent = this;
 
       if(kmid - 1 < kf)
       {
-        m_second_subtree = new TubeTreeSynthesis(tube, kmid, kf);
+        m_second_subtree = new TubeTreeSynthesis(tube, kmid, kf, v_slices);
         m_second_subtree->m_parent = this;
       }
 
       else
         m_second_subtree = NULL;
 
+      m_domain = m_first_subtree->domain() | m_second_subtree->domain();
       m_slice_ref = NULL;
     }
   }
@@ -64,9 +67,77 @@ namespace tubex
       delete m_second_subtree;
   }
 
-  const Interval TubeTreeSynthesis::domain()
+  const Interval TubeTreeSynthesis::domain() const
   {
     return m_domain;
+  }
+
+  int TubeTreeSynthesis::nb_slices() const
+  {
+    return m_nb_slices;
+  }
+
+  double TubeTreeSynthesis::volume() const
+  {
+    assert(false);
+    // todo
+    return 0.;
+  }
+
+  const Interval TubeTreeSynthesis::operator()(const Interval& t) const
+  {
+    assert(false);
+    // todo
+    return Interval(0.);
+  }
+  
+  const Interval TubeTreeSynthesis::codomain() const
+  {
+    assert(false);
+    // todo: check update needed
+    return Interval(0.);
+  }
+
+  int TubeTreeSynthesis::input2index(double t) const
+  {
+    assert(domain().contains(t));
+
+    if(t == m_domain.ub())
+      return m_nb_slices - 1;
+
+    if(is_leaf())
+      return 0;
+
+    if(t < m_first_subtree->domain().ub())
+      return m_first_subtree->input2index(t);
+
+    else
+      return m_second_subtree->input2index(t) + m_first_subtree->nb_slices();
+  }
+
+  Slice* TubeTreeSynthesis::slice(int slice_id)
+  {
+    assert(slice_id >= 0 && slice_id < nb_slices());
+    return const_cast<Slice*>(static_cast<const TubeTreeSynthesis&>(*this).slice(slice_id));
+  }
+
+  const Slice* TubeTreeSynthesis::slice(int slice_id) const
+  {
+    assert(slice_id >= 0 && slice_id < nb_slices());
+
+    if(is_leaf())
+      return m_slice_ref;
+
+    else
+    {
+      int mid_id = ceil(nb_slices() / 2.);
+
+      if(slice_id < mid_id)
+        return m_first_subtree->slice(slice_id);
+
+      else
+        return m_second_subtree->slice(slice_id - mid_id);
+    }
   }
 
   void TubeTreeSynthesis::request_updates()
