@@ -39,6 +39,7 @@ namespace tubex
 
       while(x_slice != NULL)
       {
+        assert(v_slice != NULL);
         contract(*x_slice, *v_slice, t_propa);
         x_slice = x_slice->next_slice();
         v_slice = v_slice->next_slice();
@@ -52,6 +53,7 @@ namespace tubex
 
       while(x_slice != NULL)
       {
+        assert(v_slice != NULL);
         contract(*x_slice, *v_slice, t_propa);
         x_slice = x_slice->prev_slice();
         v_slice = v_slice->prev_slice();

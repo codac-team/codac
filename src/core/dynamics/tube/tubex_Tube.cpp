@@ -74,6 +74,8 @@ namespace tubex
 
       if(codomain != Interval::ALL_REALS)
         set(codomain);
+
+      create_synthesis_tree();
     }
     
     Tube::Tube(const Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id)
@@ -92,6 +94,7 @@ namespace tubex
     Tube::Tube(const Tube& x)
     {
       *this = x;
+      create_synthesis_tree();
     }
 
     Tube::Tube(const Tube& x, const Interval& codomain)
@@ -132,11 +135,13 @@ namespace tubex
     {
       Trajectory *traj;
       deserialize(binary_file_name, traj);
+      create_synthesis_tree();
     }
     
     Tube::Tube(const string& binary_file_name, Trajectory *&traj)
     {
       deserialize(binary_file_name, traj);
+      create_synthesis_tree();
 
       if(traj == NULL)
         throw Exception("Tube constructor",
@@ -212,6 +217,7 @@ namespace tubex
           prev_slice = slice;
         }
 
+      // todo: create_synthesis_tree();
       return *this;
     }
 

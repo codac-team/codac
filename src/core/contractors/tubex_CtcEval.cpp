@@ -51,6 +51,7 @@ namespace tubex
     z &= y.interpol(t, w);
     y.set(z, t);
     w.sample(t); // w is also sampled to stay compliant with y
+    assert(Tube::same_slicing(y, w));
 
     if(m_propagation_enabled)
     {

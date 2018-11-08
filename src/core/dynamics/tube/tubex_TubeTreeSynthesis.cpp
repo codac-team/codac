@@ -40,14 +40,14 @@ namespace tubex
       // In the second subtree: [thalf,tf]
 
       m_nb_slices = kf - k0 + 1;
-      int kmid = k0 + floor(m_nb_slices / 2.);
+      int kmid = k0 + ceil(m_nb_slices / 2.) - 1;
 
-      m_first_subtree = new TubeTreeSynthesis(tube, k0, kmid - 1, v_slices);
+      m_first_subtree = new TubeTreeSynthesis(tube, k0, kmid, v_slices);
       m_first_subtree->m_parent = this;
 
-      if(kmid - 1 < kf)
+      if(kmid + 1 <= kf)
       {
-        m_second_subtree = new TubeTreeSynthesis(tube, kmid, kf, v_slices);
+        m_second_subtree = new TubeTreeSynthesis(tube, kmid + 1, kf, v_slices);
         m_second_subtree->m_parent = this;
       }
 
@@ -62,9 +62,18 @@ namespace tubex
   TubeTreeSynthesis::~TubeTreeSynthesis()
   {
     if(m_first_subtree != NULL)
+    {
+      if(m_first_subtree->is_leaf()) // removing reference from slice's part
+        m_first_subtree->m_slice_ref->m_synthesis_reference = NULL;
       delete m_first_subtree;
+    }
+
     if(m_second_subtree != NULL)
+    {
+      if(m_second_subtree->is_leaf()) // removing reference from slice's part
+        m_second_subtree->m_slice_ref->m_synthesis_reference = NULL;
       delete m_second_subtree;
+    }
   }
 
   const Interval TubeTreeSynthesis::domain() const
