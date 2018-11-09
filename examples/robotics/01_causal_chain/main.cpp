@@ -26,6 +26,7 @@ int main()
 {
   /* =========== INITIALIZATION =========== */
 
+    clock_t t_start = clock();
     Interval domain(0., 14.);
     float timestep = 0.001;
 
@@ -85,6 +86,7 @@ int main()
     vibes::endDrawing();
 
 
+  printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   // Checking if this example still works:
   return (FINAL_CONDITION && fabs(x.volume() - 143.027) < 1e-2)
       || (!FINAL_CONDITION && fabs(x.volume() - 353.406)) ? EXIT_SUCCESS : EXIT_FAILURE;

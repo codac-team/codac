@@ -61,7 +61,10 @@ namespace tubex
       *m_output_gate = *x.m_output_gate;
       
       if(m_synthesis_reference != NULL)
-        m_synthesis_reference->request_updates();
+      {
+        m_synthesis_reference->request_values_update();
+        m_synthesis_reference->request_integrals_update();
+      }
       
       return *this;
     }
@@ -402,7 +405,10 @@ namespace tubex
         *m_output_gate &= next_slice()->codomain();
 
       if(m_synthesis_reference != NULL)
-        m_synthesis_reference->request_updates();
+      {
+        m_synthesis_reference->request_values_update();
+        m_synthesis_reference->request_integrals_update();
+      }
     }
     
     void Slice::set_empty()
@@ -417,7 +423,10 @@ namespace tubex
       *m_output_gate &= m_codomain;
 
       if(m_synthesis_reference != NULL)
-        m_synthesis_reference->request_updates();
+      {
+        m_synthesis_reference->request_values_update();
+        m_synthesis_reference->request_integrals_update();
+      }
     }
 
     void Slice::set_input_gate(const Interval& input_gate)
@@ -429,7 +438,10 @@ namespace tubex
         *m_input_gate &= prev_slice()->codomain();
 
       if(m_synthesis_reference != NULL)
-        m_synthesis_reference->request_updates();
+      {
+        m_synthesis_reference->request_values_update();
+        // Note: integrals are not impacted by gates
+      }
     }
 
     void Slice::set_output_gate(const Interval& output_gate)
@@ -441,7 +453,10 @@ namespace tubex
         *m_output_gate &= next_slice()->codomain();
 
       if(m_synthesis_reference != NULL)
-        m_synthesis_reference->request_updates();
+      {
+        m_synthesis_reference->request_values_update();
+        // Note: integrals are not impacted by gates
+      }
     }
     
     const Slice& Slice::inflate(double rad)
@@ -452,9 +467,6 @@ namespace tubex
       set_envelope(m_codomain + e);
       set_input_gate(*m_input_gate + e);
       set_output_gate(*m_output_gate + e);
-
-      if(m_synthesis_reference != NULL)
-        m_synthesis_reference->request_updates();
     }
     
     // String

@@ -63,6 +63,7 @@ int main()
 {
   /* =========== PARAMETERS =========== */
 
+    Tube::enable_syntheses(false);
     int n = 1;
     Vector epsilon(n, 10.);
     Interval domain(0.,5.);

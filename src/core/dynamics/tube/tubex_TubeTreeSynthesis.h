@@ -14,7 +14,6 @@
 #define __TUBEX_TUBETREESYNTHESIS_H__
 
 #include "tubex_Slice.h"
-//#include "tubex_TubeDataSynthesis.h"
 
 namespace tubex
 {
@@ -22,15 +21,16 @@ namespace tubex
   {
     public:
 
-      TubeTreeSynthesis(const Tube* tube, int k0, int kf, const std::vector<const Slice*>& v_slices);
+      TubeTreeSynthesis(const Tube* tube, int k0, int kf, const std::vector<const Slice*>& v_tube_slices);
       ~TubeTreeSynthesis();
 
       const ibex::Interval domain() const;
       int nb_slices() const;
-      double volume() const;
-      const ibex::Interval operator()(const ibex::Interval& t) const;
-      const ibex::Interval codomain() const;
-
+      const ibex::Interval operator()(const ibex::Interval& t);
+      const ibex::Interval codomain();
+      const std::pair<ibex::Interval,ibex::Interval> codomain_bounds();
+      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS);
+      
       int input2index(double t) const;
       Slice* slice(int slice_id);
       const Slice* slice(int slice_id) const;
@@ -39,24 +39,14 @@ namespace tubex
       bool is_root() const;
       TubeTreeSynthesis* root();
 
-      //TubeDataSynthesis_Slicing& slicing_synthesis();
-      //TubeDataSynthesis_Emptiness& emptiness_synthesis();
-      //TubeDataSynthesis_Codomain& codomain_synthesis();
-      //TubeDataSynthesis_Primitive& primitive_synthesis();
-      //TubeDataSynthesis_Volume& volume_synthesis();
-
-      void request_updates();
+      void request_values_update();
+      void request_integrals_update(bool propagate_to_other_slices = true);
       void update_values();
+      void update_integrals();
       std::pair<ibex::Interval,ibex::Interval> partial_integral(const ibex::Interval& t);
       const std::pair<ibex::Interval,ibex::Interval> partial_primitive_bounds(const ibex::Interval& t = ibex::Interval::ALL_REALS);
 
     protected:
-
-      //TubeDataSynthesis_Slicing m_syn_slicing;
-      //TubeDataSynthesis_Emptiness m_syn_emptiness;
-      //TubeDataSynthesis_Codomain m_syn_codomain;
-      //TubeDataSynthesis_Primitive m_syn_primitive;
-      //TubeDataSynthesis_Volume m_syn_volume;
 
       // Binary tree structure
       TubeTreeSynthesis *m_parent = NULL;
@@ -67,10 +57,12 @@ namespace tubex
       const Tube *m_tube_ref = NULL;
 
       int m_nb_slices;
-      ibex::Interval m_domain;
+      ibex::Interval m_domain, m_codomain;
+      std::pair<ibex::Interval,ibex::Interval> m_codomain_bounds;
       std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;
 
-      bool m_update_needed = true;
+      bool m_integrals_update_needed = true;
+      bool m_values_update_needed = true;
   };
 }
 

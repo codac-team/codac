@@ -82,7 +82,7 @@ namespace tubex
       }
 
       // Data from sensors with uncertainties:
-      x = new TubeVector(traj_data_x, timestep); // state vector:
+      x = new TubeVector(traj_data_x, timestep); // state vector
       x->inflate(traj_data_dx);
       x->resize(6);
 

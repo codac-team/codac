@@ -128,6 +128,9 @@ namespace tubex
       const std::string class_name() const { return "TubeVector"; };
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
 
+      // Tree synthesis structure
+      void enable_synthesis(bool enable = true) const;
+
       // Static methods
       static const TubeVector hull(const std::list<TubeVector>& l_tubes);
 

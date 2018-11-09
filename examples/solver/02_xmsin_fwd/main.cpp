@@ -23,6 +23,7 @@ int main()
 {
   /* =========== PARAMETERS =========== */
 
+    Tube::enable_syntheses(false);
     Vector epsilon(1, 0.05);
     Interval domain(0.,10.);
     TubeVector x(domain, 0.01, 1);

@@ -75,7 +75,8 @@ namespace tubex
       if(codomain != Interval::ALL_REALS)
         set(codomain);
 
-      create_synthesis_tree();
+      if(m_enable_synthesis)
+        create_synthesis_tree();
     }
     
     Tube::Tube(const Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id)
@@ -94,7 +95,6 @@ namespace tubex
     Tube::Tube(const Tube& x)
     {
       *this = x;
-      create_synthesis_tree();
     }
 
     Tube::Tube(const Tube& x, const Interval& codomain)
@@ -135,13 +135,11 @@ namespace tubex
     {
       Trajectory *traj;
       deserialize(binary_file_name, traj);
-      create_synthesis_tree();
     }
     
     Tube::Tube(const string& binary_file_name, Trajectory *&traj)
     {
       deserialize(binary_file_name, traj);
-      create_synthesis_tree();
 
       if(traj == NULL)
         throw Exception("Tube constructor",
@@ -217,7 +215,8 @@ namespace tubex
           prev_slice = slice;
         }
 
-      // todo: create_synthesis_tree();
+      if(m_enable_synthesis)
+        create_synthesis_tree();
       return *this;
     }
 
@@ -257,10 +256,10 @@ namespace tubex
     {
       assert(slice_id >= 0 && slice_id < nb_slices());
 
-      // todo: if(m_synthesis_tree != NULL) // fast access
-      // todo:   return m_synthesis_tree->slice(slice_id);
-      // todo: 
-      // todo: else
+      if(m_synthesis_tree != NULL) // fast access
+        return m_synthesis_tree->slice(slice_id);
+      
+      else
       {
         int i = 0;
 
@@ -480,16 +479,10 @@ namespace tubex
 
     double Tube::volume() const
     {
-      // todo: if(m_synthesis_tree != NULL) // fast evaluation
-      // todo:   return m_synthesis_tree->volume();
-      // todo: 
-      // todo: else
-      {
-        double volume = 0.;
-        for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-          volume += s->volume();
-        return volume;
-      }
+      double volume = 0.;
+      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+        volume += s->volume();
+      return volume;
     }
 
     const Interval Tube::operator()(int slice_id) const
@@ -511,10 +504,10 @@ namespace tubex
       if(t.is_degenerated())
         return operator()(t.lb());
 
-      //if(m_synthesis_tree != NULL) // fast evaluation
-      //  return m_synthesis_tree->operator()(t);
-      //
-      //else
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->operator()(t);
+      
+      else
       {
         const Slice *first_slice = slice(t.lb());
         const Slice *last_slice = slice(t.ub());
@@ -605,25 +598,29 @@ namespace tubex
 
     const pair<Interval,Interval> Tube::eval(const Interval& t) const
     {
-      // todo: tree computations
-
-      pair<Interval,Interval> enclosed_bounds
-        = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
-
-      Interval intersection = t & domain();
-      if(t.is_empty())
-        return enclosed_bounds;
-
-      const Slice *s = slice(intersection.lb());
-      while(s != NULL && s->domain().lb() <= intersection.ub())
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->eval(t);
+      
+      else
       {
-        pair<Interval,Interval> local_eval = s->eval(intersection);
-        enclosed_bounds.first |= local_eval.first;
-        enclosed_bounds.second |= local_eval.second;
-        s = s->next_slice();
-      }
+        pair<Interval,Interval> enclosed_bounds
+          = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-      return enclosed_bounds;
+        Interval intersection = t & domain();
+        if(t.is_empty())
+          return enclosed_bounds;
+
+        const Slice *s = slice(intersection.lb());
+        while(s != NULL && s->domain().lb() <= intersection.ub())
+        {
+          pair<Interval,Interval> local_eval = s->eval(intersection);
+          enclosed_bounds.first |= local_eval.first;
+          enclosed_bounds.second |= local_eval.second;
+          s = s->next_slice();
+        }
+
+        return enclosed_bounds;
+      }
     }
 
     const Interval Tube::interpol(double t, const Tube& v) const
@@ -971,25 +968,18 @@ namespace tubex
     }
 
     // Synthesis tree
-    
-    void Tube::create_synthesis_tree() const
+
+    void Tube::enable_synthesis(bool enable) const
     {
-      delete_synthesis_tree();
-
-      vector<const Slice*> v_slices;
-      for(const Slice* s = first_slice() ; s != NULL ; s = s->next_slice())
-        v_slices.push_back(s);
-
-      m_synthesis_tree = new TubeTreeSynthesis(this, 0, nb_slices() - 1, v_slices);
+      m_enable_synthesis = enable;
+      if(enable)
+        create_synthesis_tree();
     }
-    
-    void Tube::delete_synthesis_tree() const
+
+    bool Tube::s_enable_syntheses = AUTO_SYNTHESIS_BY_DEFAULT;
+    void Tube::enable_syntheses(bool enable)
     {
-      if(m_synthesis_tree != NULL)
-      {
-        delete m_synthesis_tree;
-        m_synthesis_tree = NULL;
-      }
+      Tube::s_enable_syntheses = enable;
     }
 
     // Static methods
@@ -1155,10 +1145,10 @@ namespace tubex
 
     const IntervalVector Tube::codomain_box() const
     {
-      // todo: if(m_synthesis_tree != NULL) // fast evaluation
-      // todo:   return m_synthesis_tree->codomain();
-      // todo: 
-      // todo: else
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->codomain();
+      
+      else
       {
         IntervalVector codomain(1, Interval::EMPTY_SET);
         for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
@@ -1191,5 +1181,28 @@ namespace tubex
         traj = NULL;
 
       bin_file.close();
+    }
+
+    // Synthesis tree
+    
+    void Tube::create_synthesis_tree() const
+    {
+      m_enable_synthesis = true;
+      delete_synthesis_tree();
+
+      vector<const Slice*> v_slices;
+      for(const Slice* s = first_slice() ; s != NULL ; s = s->next_slice())
+        v_slices.push_back(s);
+
+      m_synthesis_tree = new TubeTreeSynthesis(this, 0, nb_slices() - 1, v_slices);
+    }
+    
+    void Tube::delete_synthesis_tree() const
+    {
+      if(m_synthesis_tree != NULL)
+      {
+        delete m_synthesis_tree;
+        m_synthesis_tree = NULL;
+      }
     }
 }

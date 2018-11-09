@@ -634,6 +634,14 @@ namespace tubex
       return str;
     }
 
+    // Tree synthesis structure
+
+    void TubeVector::enable_synthesis(bool enable) const
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].enable_synthesis(enable);
+    }
+
     // Static methods
 
     const TubeVector TubeVector::hull(const list<TubeVector>& l_tubes)

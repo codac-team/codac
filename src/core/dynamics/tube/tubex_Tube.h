@@ -24,6 +24,8 @@
 #include "tubex_TubeTreeSynthesis.h"
 #include "ibex_BoolInterval.h"
 
+#define AUTO_SYNTHESIS_BY_DEFAULT false
+
 namespace tubex
 {
   /**
@@ -152,8 +154,8 @@ namespace tubex
       friend std::ostream& operator<<(std::ostream& str, const Tube& x);
 
       // Tree synthesis structure
-      void create_synthesis_tree() const;
-      void delete_synthesis_tree() const;
+      void enable_synthesis(bool enable = true) const;
+      static void enable_syntheses(bool enable = true);
 
       // Static methods
       static const Tube hull(const std::list<Tube>& l_tubes);
@@ -184,14 +186,21 @@ namespace tubex
 
       // Integration
 
+      // Tree synthesis structure
+      void create_synthesis_tree() const;
+      void delete_synthesis_tree() const;
+
       /** Class variables **/
 
         Slice *m_first_slice = NULL; //!< 
         mutable TubeTreeSynthesis *m_synthesis_tree = NULL; //!< 
+        mutable bool m_enable_synthesis = Tube::s_enable_syntheses;
         
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
       friend class TubeVector;
+
+      static bool s_enable_syntheses;
   };
 }
 

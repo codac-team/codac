@@ -61,6 +61,7 @@ int main()
 {
   /* =========== PARAMETERS =========== */
 
+    Tube::enable_syntheses(false);
     int n = 2;
     Vector epsilon(n, 0.4);
     Interval domain(0., 2.*M_PI);

@@ -9,6 +9,8 @@ using namespace tubex;
 
 int main()
 {
+  clock_t t_start = clock();
+  
   /* =========== LOADING DATA =========== */
 
     TubeVector *x;
@@ -111,6 +113,7 @@ int main()
     delete x; delete x_truth;
 
 
+  printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   // Checking if this example still works:
   return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -8,6 +8,9 @@ using namespace tubex;
 
 int main()
 {
+  Tube::enable_syntheses(); // faster integral computations
+  clock_t t_start_all = clock();
+
   /* =========== LOADING DATA =========== */
 
     TubeVector *x;
@@ -23,17 +26,7 @@ int main()
     TubeVector px = x->subvector(0,1);
     TubeVector vx = x->subvector(3,4);
 
-    t_start = clock();
-    cout << "Building trees... " << flush;
-    px[0].create_synthesis_tree();
-    px[1].create_synthesis_tree();
-    vx[0].create_synthesis_tree();
-    vx[1].create_synthesis_tree();
-    printf("%.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
-
-    t_start = clock();
-    tplane.compute(500., px, vx);
-    printf("t-plane computation time: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
+    tplane.compute(10., px, vx);
 
   /* =========== GRAPHICS =========== */
 
@@ -53,6 +46,7 @@ int main()
 
   /* =========== ENDING =========== */
 
+    printf("Time taken: %.2fs\n", (double)(clock() - t_start_all)/CLOCKS_PER_SEC);
     delete x;
     delete x_truth;
     return EXIT_SUCCESS;

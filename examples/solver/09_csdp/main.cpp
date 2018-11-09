@@ -27,6 +27,7 @@ int main()
 {
   /* =========== PARAMETERS =========== */
 
+    Tube::enable_syntheses(false);
     int n = 2;
     Interval domain(0.,6.);
     TubeVector x(domain, IntervalVector(n, Interval(-9999.,9999.))); // todo: remove bounds
