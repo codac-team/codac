@@ -9,7 +9,6 @@ using namespace tubex;
 int main()
 {
   Tube::enable_syntheses(); // faster integral computations
-  clock_t t_start_all = clock();
 
   /* =========== LOADING DATA =========== */
 
@@ -46,7 +45,7 @@ int main()
 
   /* =========== ENDING =========== */
 
-    printf("Time taken: %.2fs\n", (double)(clock() - t_start_all)/CLOCKS_PER_SEC);
+    printf("t-plane computation time: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
     delete x;
     delete x_truth;
     return EXIT_SUCCESS;
