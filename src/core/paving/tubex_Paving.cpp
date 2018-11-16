@@ -22,7 +22,7 @@ namespace tubex
   // Definition
   
   Paving::Paving(const IntervalVector& box, int value)
-    : m_box(box), m_value(value)
+    : Set(box, value)
   {
 
   }
@@ -74,22 +74,5 @@ namespace tubex
   bool Paving::is_leaf() const
   {
     return m_first_subpaving == NULL;
-  }
-
-  int Paving::value() const
-  {
-    return m_value;
-  }
-
-  const IntervalVector& Paving::box() const
-  {
-    return m_box;
-  }
-
-  // Setting values
-
-  void Paving::set_value(int value)
-  {
-    m_value = value;
   }
 }
