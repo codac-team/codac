@@ -29,13 +29,13 @@
 namespace tubex
 {
   /**
-  * \class Tube
-  * \brief Interval of one-dimensional trajectories
-  *
-  * One dimensional tube, defined as an interval of scalar trajectories.
-  *
-  * \note Use TubeVector for the multi-dimensional case
-  */
+   * \class Tube
+   * \brief Interval of one-dimensional trajectories
+   *
+   * One dimensional tube, defined as an interval of scalar trajectories.
+   *
+   * \note Use TubeVector for the multi-dimensional case
+   */
 
   class Fnc;
   class Tube;
@@ -49,7 +49,11 @@ namespace tubex
 
     /** Base: **/
 
-      // Definition
+      /**
+       * \brief Create a scalar tube made of one slice
+       * \param domain Interval domain [t0,tf]
+       * \param codomain Interval value of the slice (all reals by default)
+       */
       Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
       Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id = 0);
