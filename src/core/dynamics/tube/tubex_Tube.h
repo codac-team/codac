@@ -50,8 +50,8 @@ namespace tubex
     /** Base: **/
 
       /**
-       * \brief Create a scalar tube made of one slice
-       * \param domain Interval domain [t0,tf]
+       * \brief Creates a scalar tube made of one slice
+       * \param domain Interval domain \f$[t_0,t_f]\f$
        * \param codomain Interval value of the slice (all reals by default)
        */
       Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);

@@ -23,7 +23,7 @@ namespace tubex
   /**
    * \brief CtcDeriv class.
    *
-   * Constraint: \dot{x}=v
+   * Constraint: \f$\dot{x}=v\f$
    */
   class CtcDeriv : public Ctc
   {

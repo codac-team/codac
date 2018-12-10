@@ -18,6 +18,7 @@ addons:
     - pkg-config
     - g++-5
     - libboost-dev
+    #- doxygen # for documentation
 
 sudo: required
 
@@ -38,6 +39,7 @@ matrix:
 install:
   - sudo sh ./scripts/ibex/build_IbexLib.sh
   - sudo sh ./scripts/ibex/build_IbexGeometryLib.sh
+  #- sudo pip install breathe # for documentation
   #- export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/ibex
 
 script:
