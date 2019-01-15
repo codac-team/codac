@@ -143,17 +143,17 @@ namespace tubex
     m_map_trajs.erase(traj);
   }
 
-  void VibesFigure_Map::add_beacon(const Beacon& beacon, const string& color)
+  void VibesFigure_Map::add_beacon(const Beacon& beacon, double width, const string& color)
   {
     // Simply directly drawn
-    draw_beacon(beacon, color, vibesParams("figure", name(), "group", "beacons"));
+    draw_beacon(beacon, width, color, vibesParams("figure", name(), "group", "beacons"));
   }
 
-  void VibesFigure_Map::add_beacons(const vector<Beacon>& v_beacons, const string& color)
+  void VibesFigure_Map::add_beacons(const vector<Beacon>& v_beacons, double width, const string& color)
   {
     // Simply directly drawn
     for(int i = 0 ; i < v_beacons.size() ; i++)
-      add_beacon(v_beacons[i], color);
+      add_beacon(v_beacons[i], width, color);
   }
   
   void VibesFigure_Map::add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color)
@@ -444,11 +444,11 @@ namespace tubex
     vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, m_robot_size, "gray[yellow]", params);
   }
 
-  void VibesFigure_Map::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
+  void VibesFigure_Map::draw_beacon(const Beacon& beacon, double width, const string& color, const vibes::Params& params)
   {
     vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
     IntervalVector drawn_box = beacon.pos().subvector(0,1);
-    draw_box(drawn_box.inflate(2.), color, params);
+    draw_box(drawn_box.inflate(width), color, params);
   }
 
   void VibesFigure_Map::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)

@@ -49,8 +49,8 @@ namespace tubex
       void set_trajectoryvector_color(const TrajectoryVector *traj, const std::string& color);
       void remove_trajectoryvector(const TrajectoryVector *traj);
 
-      void add_beacon(const Beacon& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
-      void add_beacons(const std::vector<Beacon>& v_beacons, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const Beacon& beacon, double width = 2., const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacons(const std::vector<Beacon>& v_beacons, double width = 2., const std::string& color = DEFAULT_BEACON_COLOR);
 
       void add_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
       void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
@@ -66,7 +66,7 @@ namespace tubex
       void draw_tube_slices(const TubeVector *tube);
       const std::string shaded_slice_color(float r) const;
       void draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params);
-      void draw_beacon(const Beacon& beacon, const std::string& color, const vibes::Params& params);
+      void draw_beacon(const Beacon& beacon, double width, const std::string& color, const vibes::Params& params);
       void draw_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color, const vibes::Params& params);
 
     protected:
