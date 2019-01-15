@@ -230,6 +230,29 @@ namespace tubex
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].shift_domain(shift_ref);
     }
+    
+    // Integration
+    
+    const TrajectoryVector TrajectoryVector::integrate() const
+    {
+      TrajectoryVector x(size());
+
+      for(int i = 0 ; i < size() ; i++)
+        x[i] = (*this)[i].integrate();
+
+      return x;
+    }
+    
+    const TrajectoryVector TrajectoryVector::integrate(double dt) const
+    {
+      assert(dt > 0.);
+      TrajectoryVector x(size());
+
+      for(int i = 0 ; i < size() ; i++)
+        x[i] = (*this)[i].integrate(dt);
+
+      return x;
+    }
 
     // String
     

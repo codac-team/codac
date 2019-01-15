@@ -206,6 +206,13 @@ namespace tubex
     return eval_vector(x)[0];
   }
 
+  const Trajectory Function::traj_eval(const TrajectoryVector& x) const
+  {
+    assert(x.size() == nb_vars());
+    assert(image_dim() == 1 && "scalar evaluation");
+    return traj_eval_vector(x)[0];
+  }
+
   const IntervalVector Function::eval_vector(const Interval& t) const
   {
     assert(nb_vars() == 0);
@@ -328,6 +335,34 @@ namespace tubex
 
     delete[] v_x_slices;
     delete[] v_y_slices;
+    return y;
+  }
+
+  const TrajectoryVector Function::traj_eval_vector(const TrajectoryVector& x) const
+  {
+    // Faster evaluation than the generic Fnc::eval method
+    // For now, Function class does not allow inter-temporal evaluations
+    // such as delays or integral computations. Hence, the generic method
+    // Fnc::eval(Interval t, TubeVector x) can be replaced by a dedicated evaluation
+
+    // todo: update this comment ^
+
+    if(nb_vars() != 0)
+      assert(x.size() == nb_vars());
+
+    assert(x[0].function() == NULL && "eval function not supported for analytical trajectories");
+    
+    TrajectoryVector y(image_dim());
+    for(map<double,double>::const_iterator it = x[0].sampled_map().begin() ;
+        it != x[0].sampled_map().end() ; it++)
+    {
+      Vector v(nb_vars() + 1);
+      v[0] = it->first;
+      v.put(1, x(it->first));
+
+      y.set(m_ibex_f->eval_vector(v).mid(), it->first);
+    }
+
     return y;
   }
 }

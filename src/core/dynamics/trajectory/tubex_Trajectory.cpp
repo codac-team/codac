@@ -231,6 +231,45 @@ namespace tubex
 
       m_domain -= shift_ref;
     }
+    
+    // Integration
+    
+    const Trajectory Trajectory::integrate() const
+    {
+      assert(m_function == NULL && "integration timestep requested for trajectories defined by Function");
+      
+      Trajectory x;
+      double prev_x = 0., prev_t;
+      x.set(prev_x, domain().lb());
+
+      map<double,double>::const_iterator it = m_map_values.begin();
+      it++;
+      for( ; it != m_map_values.end() ; it++)
+      {
+        prev_x += it->second * (it->first - prev_t);
+        prev_t = it->first;
+        x.set(prev_x, it->first);
+      }
+
+      return x;
+    }
+    
+    const Trajectory Trajectory::integrate(double dt) const
+    {
+      assert(dt > 0.);
+
+      Trajectory x;
+      double prev_x = 0.;
+      x.set(prev_x, domain().lb());
+
+      for(double t = domain().lb() + dt ; t < domain().ub() ; t+=dt)
+      {
+        prev_x += (*this)(t)*dt;
+        x.set(prev_x, t);
+      }
+
+      return x;
+    }
 
     // String
     

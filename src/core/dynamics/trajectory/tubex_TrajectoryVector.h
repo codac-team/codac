@@ -26,6 +26,7 @@ namespace tubex
 {
   class Function;
   class TubeVector;
+  class Trajectory;
 
   class TrajectoryVector : public DynamicalItem
   {
@@ -60,6 +61,10 @@ namespace tubex
       void set(const ibex::Vector& y, double t);
       void truncate_domain(const ibex::Interval& domain);
       void shift_domain(double shift_ref);
+
+      // Integration
+      const TrajectoryVector integrate() const;
+      const TrajectoryVector integrate(double dt) const;
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x);
