@@ -116,19 +116,13 @@ namespace tubex
             Interval t_inter_lb, y_inter_lb;
 
             if(v.codomain().lb() == NEG_INFINITY)
-            {
               t_inter_lb = t.lb();
-            }
 
             else if(v.codomain().ub() == POS_INFINITY)
-            {
               t_inter_lb = t.ub();
-            }
 
             else
-            {
               t_inter_lb = lines_intersection_lb(*this, v);
-            }
 
             if(t_inter_lb.lb() >= t.lb() && t_inter_lb.ub() <= t.ub())
             {
@@ -158,19 +152,13 @@ namespace tubex
             Interval t_inter_ub, y_inter_ub;
 
             if(v.codomain().lb() == NEG_INFINITY)
-            {
               t_inter_ub = t.ub();
-            }
 
             else if(v.codomain().ub() == POS_INFINITY)
-            {
               t_inter_ub = t.lb();
-            }
 
             else
-            {
               t_inter_ub = lines_intersection_ub(*this, v);
-            }
 
             if(t_inter_ub.lb() >= t.lb() && t_inter_ub.ub() <= t.ub())
             {

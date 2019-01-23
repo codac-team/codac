@@ -76,8 +76,6 @@ void contract(TubeVector& x)
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
-
-    cout << x << endl;
 }
 
 int main()

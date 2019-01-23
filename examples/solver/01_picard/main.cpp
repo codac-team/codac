@@ -27,7 +27,7 @@ int main()
     Interval domain(0.,10.);
     TubeVector x(domain, 1);
     TrajectoryVector truth(domain, tubex::Function("exp(-t)"));
-    x.set(IntervalVector(truth(Interval(10.))), 10.); // initial condition
+    x.set(IntervalVector(truth(Interval(10.))), 10.); // final condition
 
   /* =========== SOLVER =========== */
 
