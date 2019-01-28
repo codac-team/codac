@@ -52,44 +52,293 @@ namespace tubex
       /**
        * \brief Creates a scalar tube made of one slice
        * \param domain Interval domain \f$[t_0,t_f]\f$
-       * \param codomain Interval value of the slice (all reals by default)
+       * \param codomain Interval value of the slice (all reals \f$[-\infty,\infty]\f$ by default)
        */
       Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+
+      /**
+       * \brief Creates a scalar tube with some temporal discretization
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param timestep sampling value for the temporal discretization (double)
+       * \param codomain Interval value of the slices (all reals \f$[-\infty,\infty]\f$ by default)
+       */
       Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+
+      /**
+       * \brief Creates a scalar tube from a tubex::Fnc object and with some temporal discretization
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param timestep sampling value for the temporal discretization (double)
+       * \param f tubex::Fnc object that will be enclosed by the tube
+       * \param f_image_id component index of the evaluated function \f$f\f$ (int, first component by default)
+       */
       Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id = 0);
+
+      /**
+       * \brief Creates a copy of a scalar tube, with the same time discretization
+       *
+       * \param x Tube to be duplicated
+       */
       Tube(const Tube& x);
+
+      /**
+       * \brief Creates a copy of a scalar tube, with the same time discretization but a specific constant codomain
+       *
+       * \param x Tube from which the sampling will be duplicated
+       * \param codomain Interval value of the slices
+       */
       Tube(const Tube& x, const ibex::Interval& codomain);
+
+      /**
+       * \brief Creates a copy of a scalar tube, with the same time discretization but a specific codomain defined by a tubex::Fnc object
+       *
+       * \Note Due to the slicing implementation of the tube, a wrapping effect will occur to reliably enclose the tubex::Fnc object 
+       *
+       * \param x Tube from which the sampling will be duplicated
+       * \param f tubex::Fnc object that will be enclosed by the tube
+       * \param f_image_id component index of the evaluated function \f$f\f$ (int, first component by default)
+       */
       Tube(const Tube& x, const tubex::Fnc& f, int f_image_id = 0);
+
+      /**
+       * \brief Creates a scalar tube enclosing a Trajectory, possibly with some temporal discretization
+       *
+       * \Note Due to the slicing implementation of the tube, a wrapping effect will occur to reliably enclose the Trajectory object 
+       *
+       * \param traj Trajectory to enclose
+       * \param timestep sampling value for the temporal discretization (double, no discretization by default: one slice only)
+       */
       Tube(const Trajectory& traj, double timestep = 0.);
+
+      /**
+       * \brief Creates a scalar tube defined as an interval of two Trajectory objects
+       *
+       * \Note Due to the slicing implementation of the tube, a wrapping effect will occur to reliably enclose the Trajectory object 
+       *
+       * \param lb Trajectory defining the lower bound of the tube
+       * \param ub Trajectory defining the upper bound of the tube
+       * \param timestep sampling value for the temporal discretization (double, no discretization by default: one slice only)
+       */
       Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
+
+      /**
+       * \brief Restore a scalar tube from serialization
+       *
+       * \Note The Tube must have been serialized beforehand by the appropriate method serialize()
+       *
+       * \param binary_file_name path to the binary file
+       */
       Tube(const std::string& binary_file_name);
+
+      /**
+       * \brief Restore a scalar tube from serialization, together with a Trajectory object
+       *
+       * \Note The Tube and the Trajectory must have been serialized beforehand by the appropriate method serialize()
+       *
+       * \param binary_file_name path to the binary file
+       * \param traj a pointer to the Trajectory object to be instantiated
+       */
       Tube(const std::string& binary_file_name, Trajectory *&traj);
+
+      /**
+       * \brief Tube destructor
+       */
       ~Tube();
+
+      /**
+       * \brief Returns the dimension of the scalar tube (always 1)
+       *
+       * \return 1
+       */
       int size() const;
+
+      /**
+       * \brief Returns the primitive Tube of this
+       *
+       * \return a new Tube object with same slicing, enclosing the feasible primitives of this
+       */
       const Tube primitive() const;
+
+      /**
+       * \brief Returns a copy of a Tube
+       *
+       * \param x the Tube object to be copied
+       * \return a new Tube object with same slicing and values
+       */
       const Tube& operator=(const Tube& x);
+
+      /**
+       * \brief Returns the temporal definition domain of this
+       *
+       * \return an Interval object \f$[t_0,t_f]\f$
+       */
       const ibex::Interval domain() const;
 
       // Slices structure
+
+      /**
+       * \brief Returns the number of slices of this
+       *
+       * \return an integer
+       */
       int nb_slices() const;
+
+      /**
+       * \brief Returns a pointer to the ith Slice object of this
+       *
+       * \param slice_id the index of the ith Slice
+       * \return a pointer to the corresponding Slice
+       */
       Slice* slice(int slice_id);
+
+      /**
+       * \brief Returns a constant pointer to the ith Slice object of this
+       *
+       * \param slice_id the index of the ith Slice
+       * \return a const pointer to the corresponding Slice
+       */
       const Slice* slice(int slice_id) const;
+
+      /**
+       * \brief Returns a pointer to the Slice object of this that is defined at \f$t\f$
+       *
+       * \note if two Slices are defined at \f$t\f$ (common domain), then the first Slice is considered
+       *
+       * \param t the temporal key (double, must belong to the Tube domain)
+       * \return a pointer to the corresponding Slice
+       */
       Slice* slice(double t);
+
+      /**
+       * \brief Returns a constant pointer to the Slice object of this that is defined at \f$t\f$
+       *
+       * \note if two Slices are defined at \f$t\f$ (common domain), then the first Slice is considered
+       *
+       * \param t the temporal key (double, must belong to the Tube domain)
+       * \return a const pointer to the corresponding Slice
+       */
       const Slice* slice(double t) const;
+
+      /**
+       * \brief Returns a pointer to the first Slice object of this
+       *
+       * \return a pointer to the corresponding Slice
+       */
       Slice* first_slice();
+
+      /**
+       * \brief Returns a constant pointer to the first Slice object of this
+       *
+       * \return a const pointer to the corresponding Slice
+       */
       const Slice* first_slice() const;
+
+      /**
+       * \brief Returns a pointer to the last Slice object of this
+       *
+       * \return a pointer to the corresponding Slice
+       */
       Slice* last_slice();
+
+      /**
+       * \brief Returns a constant pointer to the last Slice object of this
+       *
+       * \return a const pointer to the corresponding Slice
+       */
       const Slice* last_slice() const;
+
+      /**
+       * \brief Returns a pointer to the Slice defined over the wider temporal domain
+       *
+       * \note If two Slice objects have the same domain's width, then the first one is considered
+       *
+       * \return a pointer to the corresponding Slice
+       */
       Slice* wider_slice();
+
+      /**
+       * \brief Returns a constant pointer to the Slice defined over the wider temporal domain
+       *
+       * \note If two Slice objects have the same domain's width, then the first one is considered
+       *
+       * \return a const pointer to the corresponding Slice
+       */
       const Slice* wider_slice() const;
+
+      /**
+       * \brief Returns a pointer to the Slice object of this for which the interval value is the more uncertain
+       *
+       * \return a pointer to the corresponding Slice
+       */
       Slice* largest_slice();
+
+      /**
+       * \brief Returns a constant pointer to the Slice object of this for which the interval value is the more uncertain
+       *
+       * \return a const pointer to the corresponding Slice
+       */
       const Slice* largest_slice() const;
+
+      /**
+       * \brief Returns the temporal definition domain of the ith Slice of this
+       *
+       * \param slice_id the index of the ith Slice
+       * \return an Interval object \f$[t_0^i,t_f^i]\f$
+       */
       const ibex::Interval slice_domain(int slice_id) const;
+
+      /**
+       * \brief Returns the Slice index related to the temporal key \f$t\f$
+       *
+       * \param t the temporal key (double, must belong to the Tube domain)
+       * \return an integer
+       */
       int input2index(double t) const;
+
+      /**
+       * \brief Returns the Slice index related to Slice pointer
+       *
+       * \param slice a const pointer to a Slice object of this
+       * \return an integer
+       */
       int index(const Slice* slice) const;
+
+      /**
+       * \brief Samples this at \f$t\f$
+       *
+       * \note without any effect if two Slice objects are already defined at \f$t\f$
+       *
+       * \param t the temporal key (double, must belong to the Tube domain)
+       */
       void sample(double t);
+
+      /**
+       * \brief Samples this at \f$t\f$ with a specific gate value
+       *
+       * \note Without any sampling effect if two Slice objects are already defined at \f$t\f$
+       *
+       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param gate the Interval value of this at \f$t\f$
+       */
       void sample(double t, const ibex::Interval& gate);
+
+      /**
+       * \brief Samples this so that it will share the same sampling of Tube x
+       *
+       * \note The previous sampling of this is preserved
+       *
+       * \param x the Tube from which the new sampling will come from
+       */
       void sample(const Tube& x);
+
+      /**
+       * \brief Tests whether the two Tube objects are sharing the same slicing
+       *
+       * \note If true, it means the two tubes are defined with the same amount of slices and identical sampling
+       *
+       * \param x1 the first Tube
+       * \param x2 the first Tube
+       * \return true in case of same slicing
+       */
       static bool same_slicing(const Tube& x1, const Tube& x2);
 
       // Accessing values
