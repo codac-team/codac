@@ -68,8 +68,10 @@ namespace tubex
        * \brief Creates a scalar tube from a tubex::Fnc object and with some temporal discretization
        * \param domain Interval domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
-       * \param f tubex::Fnc object that will be enclosed by the tube: \f$\forall t\in[t_0,t_f], f(t)\in[x](t)\f$
-       * \param f_image_id component index of the evaluated function \f$f\f$ (int, first component by default)
+       * \param f tubex::Fnc object that will be enclosed by the tube:
+       *          \f$\forall t\in[t_0,t_f], f(t)\in[x](t)\f$
+       * \param f_image_id component index of the evaluated function
+       *                   \f$f\f$ (int, first component by default)
        */
       Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id = 0);
 
@@ -81,7 +83,8 @@ namespace tubex
       Tube(const Tube& x);
 
       /**
-       * \brief Creates a copy of a scalar tube, with the same time discretization but a specific constant codomain
+       * \brief Creates a copy of a scalar tube, with the same time
+       *        discretization but a specific constant codomain
        *
        * \param x Tube from which the sampling will be duplicated
        * \param codomain Interval value of the slices
@@ -89,34 +92,43 @@ namespace tubex
       Tube(const Tube& x, const ibex::Interval& codomain);
 
       /**
-       * \brief Creates a copy of a scalar tube, with the same time discretization but a specific codomain defined by a tubex::Fnc object
+       * \brief Creates a copy of a scalar tube, with the same time
+       *        discretization but a specific codomain defined by a tubex::Fnc object
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping effect will occur to reliably enclose the tubex::Fnc object 
+       * \Note Due to the slicing implementation of the tube, a wrapping
+       *       effect will occur to reliably enclose the tubex::Fnc object 
        *
        * \param x Tube from which the sampling will be duplicated
-       * \param f tubex::Fnc object that will be enclosed by the tube: \f$\forall t\in[t_0,t_f], f(t)\in[x](t)\f$
-       * \param f_image_id component index of the evaluated function \f$f\f$ (int, first component by default)
+       * \param f tubex::Fnc object that will be enclosed by the tube:
+       *                     \f$\forall t\in[t_0,t_f], f(t)\in[x](t)\f$
+       * \param f_image_id component index of the evaluated function \f$f\f$
+       *                   (int, first component by default)
        */
       Tube(const Tube& x, const tubex::Fnc& f, int f_image_id = 0);
 
       /**
-       * \brief Creates a scalar tube enclosing a Trajectory, possibly with some temporal discretization
+       * \brief Creates a scalar tube enclosing a Trajectory, possibly with
+       *        some temporal discretization
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping effect will occur to reliably enclose the Trajectory object 
+       * \Note Due to the slicing implementation of the tube, a wrapping
+       *       effect will occur to reliably enclose the Trajectory object 
        *
        * \param traj Trajectory \f$a(\cdot)\f$ to enclose
-       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double, no discretization by default: one slice only)
+       * \param timestep sampling value \f$\delta\f$ for the temporal
+       *        discretization (double, no discretization by default: one slice only)
        */
       Tube(const Trajectory& traj, double timestep = 0.);
 
       /**
        * \brief Creates a scalar tube defined as an interval of two Trajectory objects
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping effect will occur to reliably enclose the Trajectory object 
+       * \Note Due to the slicing implementation of the tube, a wrapping
+       *       effect will occur to reliably enclose the Trajectory object 
        *
        * \param lb Trajectory defining the lower bound \f$x^{-}(\cdot)\f$ of the tube
        * \param ub Trajectory defining the upper bound \f$x^{+}(\cdot)\f$of the tube
-       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double, no discretization by default: one slice only)
+       * \param timestep sampling value \f$\delta\f$ for the temporal
+       *        discretization (double, no discretization by default: one slice only)
        */
       Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
 
@@ -132,7 +144,8 @@ namespace tubex
       /**
        * \brief Restore a scalar tube from serialization, together with a Trajectory object
        *
-       * \Note The Tube and the Trajectory must have been serialized beforehand by the appropriate method serialize()
+       * \Note The Tube and the Trajectory must have been serialized
+       *       beforehand by the appropriate method serialize()
        *
        * \param binary_file_name path to the binary file
        * \param traj a pointer to the Trajectory object to be instantiated
@@ -201,7 +214,8 @@ namespace tubex
       /**
        * \brief Returns a pointer to the Slice object of this that is defined at \f$t\f$
        *
-       * \note if two Slices are defined at \f$t\f$ (common domain), then the first Slice is considered
+       * \note If two Slices are defined at \f$t\f$ (common domain),
+       *       then the first Slice is considered
        *
        * \param t the temporal key (double, must belong to the Tube domain)
        * \return a pointer to the corresponding Slice
@@ -211,7 +225,8 @@ namespace tubex
       /**
        * \brief Returns a constant pointer to the Slice object of this that is defined at \f$t\f$
        *
-       * \note if two Slices are defined at \f$t\f$ (common domain), then the first Slice is considered
+       * \note If two Slices are defined at \f$t\f$ (common domain),
+       *       then the first Slice is considered
        *
        * \param t the temporal key (double, must belong to the Tube domain)
        * \return a const pointer to the corresponding Slice
@@ -265,14 +280,16 @@ namespace tubex
       const Slice* wider_slice() const;
 
       /**
-       * \brief Returns a pointer to the Slice object of this for which the interval value is the more uncertain
+       * \brief Returns a pointer to the Slice object of this for which
+       *        the interval value is the more uncertain
        *
        * \return a pointer to the corresponding Slice
        */
       Slice* largest_slice();
 
       /**
-       * \brief Returns a constant pointer to the Slice object of this for which the interval value is the more uncertain
+       * \brief Returns a constant pointer to the Slice object of this for
+       *        which the interval value is the more uncertain
        *
        * \return a const pointer to the corresponding Slice
        */
@@ -333,7 +350,8 @@ namespace tubex
       /**
        * \brief Tests whether the two Tube objects are sharing the same slicing
        *
-       * \note If true, it means the two tubes are defined with the same amount of slices and identical sampling
+       * \note If true, it means the two tubes are defined with the same
+       *       amount of slices and identical sampling
        *
        * \param x1 the first Tube
        * \param x2 the first Tube
@@ -399,7 +417,8 @@ namespace tubex
        * \brief Computes the set of continuous values of the inversion \f$[x]^{-1}([y])\f$
        *
        * \param y the interval codomain
-       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which \f$\exists t\in[t_k] \mid x(t)\in[y], x(\cdot)\in[x](\cdot)\f$
+       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which
+       *            \f$\exists t\in[t_k] \mid x(t)\in[y], x(\cdot)\in[x](\cdot)\f$
        * \param search_domain the optional interval domain on which the inversion will be performed
        */
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
@@ -424,7 +443,8 @@ namespace tubex
        * \note If the inversion results in several pre-images, their union is returned
        *
        * \param y the interval codomain
-       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which \f$\exists t\in[t_k] \mid x(t)\in[y], x(\cdot)\in[x](\cdot), \dot{x}(\cdot)\in[v](\cdot)\f$
+       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which
+       *            \f$\exists t\in[t_k] \mid x(t)\in[y], x(\cdot)\in[x](\cdot), \dot{x}(\cdot)\in[v](\cdot)\f$
        * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
        * \param search_domain the optional interval domain on which the inversion will be performed
        * \return the hull of \f$[x]^{-1}([y])\f$
@@ -432,7 +452,8 @@ namespace tubex
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       
       /**
-       * \brief Returns the interval evaluations of the bounds of the tube \f$x^-(\cdot)\f$ and \f$x^+(\cdot)\f$ over \f$[t]\f$
+       * \brief Returns the interval evaluations of the bounds of the
+       *        tube \f$x^-(\cdot)\f$ and \f$x^+(\cdot)\f$ over \f$[t]\f$
        *
        * \param t the subdomain (Interval, must be a subset of the Tube domain)
        * \return the pair \f$\big([x^-]([t]),[x^+]([t])\big)\f$
@@ -440,7 +461,8 @@ namespace tubex
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       
       /**
-       * \brief Returns the optimal evaluation of this at \f$t\f$, based on the derivative information \f$\dot{x}(\cdot)\f$
+       * \brief Returns the optimal evaluation of this at \f$t\f$,
+       *        based on the derivative information \f$\dot{x}(\cdot)\f$
        *
        * \todo Change the name of this method?
        *
@@ -451,7 +473,8 @@ namespace tubex
       const ibex::Interval interpol(double t, const Tube& v) const;
 
       /**
-       * \brief Returns the optimal interval evaluation of this over \f$[t]\f$, based on the derivative information \f$\dot{x}(\cdot)\f$
+       * \brief Returns the optimal interval evaluation of this over \f$[t]\f$,
+       *        based on the derivative information \f$\dot{x}(\cdot)\f$
        *
        * \todo Change the name of this method?
        *
@@ -477,16 +500,127 @@ namespace tubex
       double max_gate_thickness(double& t) const;
 
       // Tests
+
+      /**
+       * \brief Returns true if this is equal to x
+       *
+       * \note Equality is obtained if the tubes share
+       *       the same bounds, domain and sampling
+       *
+       * \param x the Tube object
+       * \return true in case of equality
+       */
       bool operator==(const Tube& x) const;
+
+      /**
+       * \brief Returns true if this is different from x
+       *
+       * \note The two tubes are different if they do not share
+       *       the same bounds, domain or sampling
+       *
+       * \param x the Tube object
+       * \return true in case of difference
+       */
       bool operator!=(const Tube& x) const;
+
+      /**
+       * \brief Returns true if this is a subset of x
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the Tube object
+       * \return true in case of subset
+       */
       bool is_subset(const Tube& x) const;
+
+      /**
+       * \brief Returns true if this is a subset of x, and not x itself
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the Tube object
+       * \return true in case of strict subset
+       */
       bool is_strict_subset(const Tube& x) const;
+
+      /**
+       * \brief Returns true if this is a subset of the interior of x
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the Tube object
+       * \return true in case of interior subset
+       */
       bool is_interior_subset(const Tube& x) const;
+
+      /**
+       * \brief Returns true if this is a subset of the interior of x, and not x itself
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the Tube object
+       * \return true in case of strict interior subset
+       */
       bool is_strict_interior_subset(const Tube& x) const;
+
+      /**
+       * \brief Returns true if this is a superset of x
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the Tube object
+       * \return true in case of superset
+       */
       bool is_superset(const Tube& x) const;
+
+      /**
+       * \brief Returns true if this is a superset of x, and not x itself
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the Tube object
+       * \return true in case of strict superset
+       */
       bool is_strict_superset(const Tube& x) const;
+
+      /**
+       * \brief Returns true if this is empty
+       *
+       * \note If \f$[x](t)=\emptyset\f$ for some \f$t\f$, then the tube
+       *       \f$[x](\cdot)\f$ is considered empty
+       *
+       * \return true in case of emptiness
+       */
       bool is_empty() const;
+
+      /**
+       * \brief Returns true if this contains the trajectory \f$x(\cdot)\f$
+       *
+       * \note Due to the reliable numerical representation of a trajectory, some wrapping effect
+       *       may appear for its evaluations (either if it is defined by a map of values
+       *       or an analytical function). Hence, this "contains" test may not be able to
+       *       conclude, if the thin envelope of \f$x(\cdot)\f$ overlaps a boundary of the tube.
+       *
+       * \return BoolInterval::YES (or BoolInterval::NO) if this contains \f$x(\cdot)\f$
+       *         (or does not contain) and BoolInterval::MAYBE in case of ambiguity
+       */
       const ibex::BoolInterval contains(const Trajectory& x) const;
+
+      /**
+       * \brief Returns true if this overlaps the tube x
+       *
+       * \param x the other tube
+       * \param ratio an optional overlapping ratio between 0 and 1 (1 by default).
+       *              For instance, if ratio=0.3 and there is an overlapping of at least 30%,
+       *              then the function returns true
+       * \return true in case of overlapping with respect to the defined ratio
+       */
       bool overlaps(const Tube& x, float ratio = 1.) const;
 
       // Setting values

@@ -760,7 +760,7 @@ namespace tubex
         const Slice *slice = first_slice(); \
         while(slice != NULL) \
         { \
-          Interval s_domain= slice->domain(); \
+          Interval s_domain = slice->domain(); \
           if(!slice->input_gate().f(x(s_domain.lb())) || \
              !slice->codomain().f(x(s_domain))) \
             return false; \
