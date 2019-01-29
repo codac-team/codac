@@ -481,7 +481,11 @@ namespace tubex
     {
       double volume = 0.;
       for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+      {
+        if(s->volume() == POS_INFINITY)
+          return POS_INFINITY;
         volume += s->volume();
+      }
       return volume;
     }
 
