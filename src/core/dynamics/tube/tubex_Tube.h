@@ -133,7 +133,7 @@ namespace tubex
        *       effect will occur to reliably enclose the Trajectory object 
        *
        * \param lb Trajectory defining the lower bound \f$x^{-}(\cdot)\f$ of the tube
-       * \param ub Trajectory defining the upper bound \f$x^{+}(\cdot)\f$of the tube
+       * \param ub Trajectory defining the upper bound \f$x^{+}(\cdot)\f$ of the tube
        * \param timestep sampling value \f$\delta\f$ for the temporal
        *        discretization (double, no discretization by default: one slice only)
        */
@@ -460,10 +460,10 @@ namespace tubex
       
       /**
        * \brief Returns the interval evaluations of the bounds of the
-       *        tube \f$x^-(\cdot)\f$ and \f$x^+(\cdot)\f$ over \f$[t]\f$
+       *        tube \f$\underline{x^-}(\cdot)\f$ and \f$\overline{x^+}(\cdot)\f$ over \f$[t]\f$
        *
        * \param t the subdomain (Interval, must be a subset of the Tube domain)
-       * \return the pair \f$\big([x^-]([t]),[x^+]([t])\big)\f$
+       * \return the pair \f$\big([\underline{x^-}]([t]),[\overline{x^+}]([t])\big)\f$
        */
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
       
@@ -623,7 +623,7 @@ namespace tubex
       const ibex::BoolInterval contains(const Trajectory& x) const;
 
       /**
-       * \brief Returns true if this tube overlaps the tube x
+       * \brief Returns true if this tube overlaps the tube \f$[x](\cdot)\f$
        *
        * \param x the other tube
        * \param ratio an optional overlapping ratio between 0 and 1 (1 by default).
@@ -922,7 +922,7 @@ namespace tubex
        * \brief Computes the interval integral \f$\int_0^t[x](\tau)d\tau\f$
        *
        * \note From the monotonicity of the integral operator, 
-       *       \f$\int_0^t[x](\tau)d\tau=[\int_0^tx^-(\tau)d\tau,\int_0^tx^+(\tau)d\tau]\f$
+       *       \f$\int_0^t[x](\tau)d\tau=[\int_0^t x^-(\tau)d\tau,\int_0^t x^+(\tau)d\tau]\f$
        *
        * \param t the temporal key (double, must belong to the Tube domain)
        * \return the set of feasible integral values
@@ -1029,7 +1029,7 @@ namespace tubex
       // Serialization
 
       /**
-       * \brief Restore a scalar tube from serialization, together with a Trajectory object
+       * \brief Restores a scalar tube from serialization, together with a Trajectory object
        *
        * \Note The Tube and the Trajectory must have been serialized
        *       beforehand by the appropriate method serialize()

@@ -434,15 +434,6 @@ namespace tubex
       return thickness;
     }
 
-    const Vector TubeVector::max_gate_thickness() const
-    {
-      double t; // unused
-      Vector thickness(size());
-      for(int i = 0 ; i < size() ; i++)
-        thickness[i] = (*this)[i].max_gate_thickness(t);
-      return thickness;
-    }
-
     // Tests
 
     bool TubeVector::operator==(const TubeVector& x) const

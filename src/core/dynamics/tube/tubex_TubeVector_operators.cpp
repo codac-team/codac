@@ -48,11 +48,6 @@ namespace tubex
     } \
     \
 
-  macro_assign_vect_vect(operator+=);
-  macro_assign_vect_vect(operator-=);
-  macro_assign_vect_vect(operator|=);
-  macro_assign_vect_vect(operator&=);
-
   #define macro_assign_vect_scal(f) \
     \
     const TubeVector& TubeVector::f(const Interval& x) \
@@ -80,5 +75,9 @@ namespace tubex
     } \
     \
 
+  macro_assign_vect_vect(operator+=);
+  macro_assign_vect_vect(operator-=);
   macro_assign_vect_scal(operator*=);
+  macro_assign_vect_vect(operator|=);
+  macro_assign_vect_vect(operator&=);
 }

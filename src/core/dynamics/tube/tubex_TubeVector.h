@@ -229,106 +229,717 @@ namespace tubex
       const ibex::Interval domain() const;
 
       // Slices structure
+
+      /**
+       * \brief Returns the number of slices of this tube
+       *
+       * \return an integer
+       */
       int nb_slices() const;
+
+      /**
+       * \brief Returns the Slice index related to the temporal key \f$t\f$
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \return an integer
+       */
       int input2index(double t) const;
+
+      /**
+       * \brief Samples this tube at \f$t\f$
+       *
+       * \note Without any effect on one component that has two Slice objects
+       *       already defined at \f$t\f$ (if the gate \f$[x](t)\f$ already exists)
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       */
       void sample(double t);
+
+      /**
+       * \brief Samples this tube at \f$t\f$ with a specific gate value
+       *
+       * \note Without any effect on one component that has two Slice objects
+       *       already defined at \f$t\f$ (if the gate \f$[x](t)\f$ already exists)
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param gate the IntervalVector value of this tube at \f$t\f$
+       */
       void sample(double t, const ibex::IntervalVector& gate);
+
+      /**
+       * \brief Tests whether a TubeVector object shares the slicing of another Tube object
+       *
+       * \note If true, it means the two tubes are defined with the same
+       *       amount of slices and identical sampling
+       *
+       * \param x1 the TubeVector
+       * \param x2 the Tube
+       * \return true in case of same slicing
+       */
       static bool same_slicing(const TubeVector& x1, const Tube& x2);
+
+      /**
+       * \brief Tests whether the two TubeVector objects are sharing the same slicing
+       *
+       * \note If true, it means the two tubes are defined with the same
+       *       amount of slices and identical sampling
+       *
+       * \param x1 the first TubeVector
+       * \param x2 the second TubeVector
+       * \return true in case of same slicing
+       */
       static bool same_slicing(const TubeVector& x1, const TubeVector& x2);
 
       // Accessing values
+
+      /**
+       * \brief Returns the box of feasible values
+       *
+       * \return an IntervalVector object \f$[\mathbf{x}]([t_0,t_f])\f$
+       */
       const ibex::IntervalVector codomain() const;
+
+      /**
+       * \brief Returns the volume of this tube
+       *
+       * \note returns POS_INFINITY if the codomain is unbounded
+       * \note returns 0 if the tube is flat (and so without wrapping effect)
+       *
+       * \return volume defined as \f$w([t_0,t_f])\times w([x_1]([t_0,t_f]))\times\dots\times w([x_n]([t_0,t_f]))\f$
+       */
       double volume() const;
+
+      /**
+       * \brief Returns the ith Tube of this TubeVector
+       *
+       * \param index the index of this ith component
+       * \return a reference to the ith component
+       */
       Tube& operator[](int index);
+
+      /**
+       * \brief Returns a const reference to the ith Tube of this TubeVector
+       *
+       * \param index the index of this ith component
+       * \return a const reference to the ith component
+       */
       const Tube& operator[](int index) const;
+
+      /**
+       * \brief Returns the value of the ith slice
+       *
+       * \param slice_id the index of the ith slice
+       * \return IntervalVector value of \f$[\mathbf{x}](i)\f$
+       */
       const ibex::IntervalVector operator()(int slice_id) const;
+
+      /**
+       * \brief Returns the evaluation of this tube at \f$t\f$
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \return IntervalVector value of \f$[\mathbf{x}](t)\f$
+       */
       const ibex::IntervalVector operator()(double t) const;
+
+      /**
+       * \brief Returns the interval evaluation of this tube over \f$[t]\f$
+       *
+       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \return IntervalVector envelope \f$[\mathbf{x}]([t])\f$
+       */
       const ibex::IntervalVector operator()(const ibex::Interval& t) const;
+
+      /**
+       * \brief Returns the interval inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
+       *
+       * \note If the inversion results in several pre-images, their union is returned
+       *
+       * \param y the box codomain
+       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \return the hull of \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
+       */
       const ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+
+      /**
+       * \brief Computes the set of continuous values of the inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
+       *
+       * \param y the interval codomain
+       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which
+       *            \f$\forall t\in[t_k] \mid \mathbf{x}(t)\in[\mathbf{y}], \mathbf{x}(\cdot)\in[\mathbf{x}](\cdot)\f$
+       * \param search_domain the optional interval domain on which the inversion will be performed
+       */
       void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+
+      /**
+       * \brief Returns the optimal interval inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
+       *
+       * \note The knowledge of the derivative tube \f$[\mathbf{v}](\cdot)\f$ allows a finer inversion
+       * \note If the inversion results in several pre-images, their union is returned
+       *
+       * \param y the interval codomain
+       * \param v the derivative tube vector such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
+       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \return the hull of \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
+       */
       const ibex::Interval invert(const ibex::IntervalVector& y, const TubeVector& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+
+      /**
+       * \brief Computes the set of continuous values of the optimal inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
+       *
+       * \note The knowledge of the derivative tube \f$[\mathbf{v}](\cdot)\f$ allows finer inversions
+       *
+       * \param y the interval codomain
+       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which
+       *            \f$\exists t\in[t_k] \mid \mathbf{x}(t)\in[\mathbf{y}], \mathbf{x}(\cdot)\in[\mathbf{x}](\cdot), \dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
+       * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
+       * \param search_domain the optional interval domain on which the inversion will be performed
+       */
       void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const TubeVector& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      
+      /**
+       * \brief Returns the interval evaluations of the bounds of the
+       *        tube \f$\underline{\mathbf{x}^-}(\cdot)\f$ and \f$\overline{\mathbf{x}^+}(\cdot)\f$ over \f$[t]\f$
+       *
+       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \return the pair \f$\big([\underline{\mathbf{x}^-}]([t]),[\overline{\mathbf{x}^+}]([t])\big)\f$
+       */
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      
+      /**
+       * \brief Returns the optimal evaluation of this tube at \f$t\f$,
+       *        based on the derivative information \f$\dot{\mathbf{x}}(\cdot)\f$
+       *
+       * \todo Change the name of this method?
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
+       * \return IntervalVector value of \f$[\mathbf{x}](t)\f$
+       */
       const ibex::IntervalVector interpol(double t, const TubeVector& v) const;
+
+      /**
+       * \brief Returns the optimal interval evaluation of this tube over \f$[t]\f$,
+       *        based on the derivative information \f$\dot{\mathbf{x}}(\cdot)\f$
+       *
+       * \todo Change the name of this method?
+       *
+       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
+       * \return IntervalVector value of \f$[\mathbf{x}]([t])\f$
+       */
       const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& v) const;
+
+      /**
+       * \brief Returns a vector of the maximum diameters of the tube for each component
+       *
+       * \return the maximal thicknesses of this tube
+       */
       const ibex::Vector max_thickness() const;
-      const ibex::Vector max_gate_thickness() const;
 
       // Tests
+
+      /**
+       * \brief Returns true if this tube is equal to \f$[\mathbf{x}](\cdot)\f$
+       *
+       * \note Equality is obtained if the tubes share
+       *       the same bounds, domain and sampling
+       *
+       * \param x the TubeVector object
+       * \return true in case of equality
+       */
       bool operator==(const TubeVector& x) const;
+
+      /**
+       * \brief Returns true if this tube is different from \f$[\mathbf{x}](\cdot)\f$
+       *
+       * \note The two tubes are different if they do not share
+       *       the same bounds, domain or sampling
+       *
+       * \param x the TubeVector object
+       * \return true in case of difference
+       */
       bool operator!=(const TubeVector& x) const;
+
+      /**
+       * \brief Returns true if this tube is a subset of \f$[\mathbf{x}](\cdot)\f$
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the TubeVector object
+       * \return true in case of subset
+       */
       bool is_subset(const TubeVector& x) const;
+
+      /**
+       * \brief Returns true if this tube is a subset of \f$[\mathbf{x}](\cdot)\f$,
+       *        and not \f$[\mathbf{x}](\cdot)\f$ itself
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the TubeVector object
+       * \return true in case of strict subset
+       */
       bool is_strict_subset(const TubeVector& x) const;
+
+      /**
+       * \brief Returns true if this tube is a subset of the interior of \f$[\mathbf{x}](\cdot)\f$
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the TubeVector object
+       * \return true in case of interior subset
+       */
       bool is_interior_subset(const TubeVector& x) const;
+
+      /**
+       * \brief Returns true if this tube is a subset of the interior
+       *        of \f$[\mathbf{x}](\cdot)\f$, and not \f$[\mathbf{x}](\cdot)\f$ itself
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the TubeVector object
+       * \return true in case of strict interior subset
+       */
       bool is_strict_interior_subset(const TubeVector& x) const;
+
+      /**
+       * \brief Returns true if this tube is a superset of \f$[\mathbf{x}](\cdot)\f$
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the TubeVector object
+       * \return true in case of superset
+       */
       bool is_superset(const TubeVector& x) const;
+
+      /**
+       * \brief Returns true if this tube is a superset of \f$[\mathbf{x}](\cdot)\f$,
+       *        and not \f$[\mathbf{x}](\cdot)\f$ itself
+       *
+       * \note The two tubes may not share the same slicing,
+       *       but must have the same definition domain
+       *
+       * \param x the TubeVector object
+       * \return true in case of strict superset
+       */
       bool is_strict_superset(const TubeVector& x) const;
+
+      /**
+       * \brief Returns true if this tube is empty
+       *
+       * \note If \f$[\mathbf{x}](t)=\emptyset\f$ for some \f$t\f$, then the tube
+       *       \f$[\mathbf{x}](\cdot)\f$ is considered empty
+       *
+       * \return true in case of emptiness
+       */
       bool is_empty() const;
+
+      /**
+       * \brief Returns true if this tube contains the trajectory \f$\mathbf{x}(\cdot)\f$
+       *
+       * \note Due to the reliable numerical representation of a trajectory, some wrapping effect
+       *       may appear for its evaluations (either if it is defined by a map of values
+       *       or an analytical function). Hence, this "contains" test may not be able to
+       *       conclude, if the thin envelope of \f$\mathbf{x}(\cdot)\f$ overlaps a boundary of the tube.
+       *
+       * \return BoolInterval::YES (or BoolInterval::NO) if this tube contains \f$\mathbf{x}(\cdot)\f$
+       *         (or does not contain) and BoolInterval::MAYBE in case of ambiguity
+       */
       const ibex::BoolInterval contains(const TrajectoryVector& x) const;
+
+      /**
+       * \brief Returns true if this tube overlaps the tube \f$[\mathbf{x}](\cdot)\f$
+       *
+       * \param x the other tube
+       * \param ratio an optional overlapping ratio between 0 and 1 (1 by default).
+       *              For instance, if ratio=0.3 and there is an overlapping of at least 30%,
+       *              then the function returns true
+       * \return true in case of overlapping with respect to the defined ratio
+       */
       bool overlaps(const TubeVector& x, float ratio = 1.) const;
 
       // Setting values
+
+      /**
+       * \brief Sets a constant box value for this tube: \f$\forall t, [\mathbf{x}](t)=[\mathbf{y}]\f$
+       *
+       * \note The sampling of this tube is preserved
+       *
+       * \param y IntervalVector value of the slices
+       */
       void set(const ibex::IntervalVector& y);
+
+      /**
+       * \brief Sets the box value of the ith slice of this tube
+       *
+       * \param y IntervalVector value of the ith slice
+       * \param slice_id index of the ith Slice
+       */
       void set(const ibex::IntervalVector& y, int slice_id);
+
+      /**
+       * \brief Sets the box value of this tube at \f$t\f$: \f$[\mathbf{x}](t)=[\mathbf{y}]\f$
+       *
+       * \note It may create a gate (and so one more slice) if the tube
+       *       is not already sampled at \f$t\f$. Otherwise, it will
+       *       update the value of the already existing gate.
+       *
+       * \param y IntervalVector value of the gate
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       */
       void set(const ibex::IntervalVector& y, double t);
+
+      /**
+       * \brief Sets the box value of this tube over \f$[t]\f$: \f$\forall t\in[t], [\mathbf{x}](t)=[\mathbf{y}]\f$
+       *
+       * \note It may create two gates (and so further slices) if the tube
+       *       is not already sampled at \f$t^-\f$ and \f$t^+\f$. This is
+       *       done to ensure that \f$\forall t\in[t], [\mathbf{x}](t)=[\mathbf{y}]\f$.
+       *
+       * \param y IntervalVector value of the gate
+       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       */
       void set(const ibex::IntervalVector& y, const ibex::Interval& t);
+
+      /**
+       * \brief Sets this tube to the empty set
+       *
+       * \note By convention, all slices will be set to the empty set
+       */
       void set_empty();
+
+      /**
+       * \brief Inflates this tube by adding \f$[-\mathbf{rad},+\mathbf{rad}]\f$ to all its codomain components
+       *
+       * \note All slices and gates will be inflated
+       *
+       * \param rad half of the inflation
+       * \return *this
+       */
       const TubeVector& inflate(const ibex::Vector& rad);
+
+      /**
+       * \brief Inflates this tube by adding non-constant uncertainties defined in a trajectory 
+       *
+       * \note From the trajectory \f$\mathbf{a}(\cdot)\f$, the function will 
+       *       inflate this tube such that \f$\forall t, [\mathbf{x}](t):=[\mathbf{x}](t)+[-\mathbf{a}(t),+\mathbf{a}(t)]\f$
+       * \note All slices and gates will be inflated
+       *
+       * \param rad the TrajectoryVector object defining the non-constant inflation
+       * \return *this
+       */
       const TubeVector& inflate(const TrajectoryVector& rad);
 
       // Bisection
+
+      /**
+       * \brief Bisects this tube
+       *
+       * \note The tube is bisected along the codomain and according to a defined ratio
+       * \note The bisection is performed on the largest component of the gate \f$[\mathbf{x}](t)\f$
+       * \note If the tube is not already sampled at \f$t\f$, then a sampling is performed
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param ratio the bisection ratio (default value: 0.55)
+       * \return a pair of two TubeVector objects resulting from the bisection
+       */
       const std::pair<TubeVector,TubeVector> bisect(double t, float ratio = 0.55) const;
 
       // Assignments operators
-      const TubeVector& operator+=(const TubeVector& x);
-      const TubeVector& operator+=(const TrajectoryVector& x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x IntervalVector
+       * \return (*this)+=x
+       */
       const TubeVector& operator+=(const ibex::IntervalVector& x);
-      const TubeVector& operator-=(const TubeVector& x);
-      const TubeVector& operator-=(const TrajectoryVector& x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x TrajectoryVector
+       * \return (*this)+=x
+       */
+      const TubeVector& operator+=(const TrajectoryVector& x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x TubeVector
+       * \return (*this)+=x
+       */
+      const TubeVector& operator+=(const TubeVector& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x IntervalVector
+       * \return (*this)-=x
+       */
       const TubeVector& operator-=(const ibex::IntervalVector& x);
-      const TubeVector& operator|=(const TubeVector& x);
-      const TubeVector& operator|=(const TrajectoryVector& x);
-      const TubeVector& operator|=(const ibex::IntervalVector& x);
-      const TubeVector& operator&=(const TubeVector& x);
-      const TubeVector& operator&=(const TrajectoryVector& x);
-      const TubeVector& operator&=(const ibex::IntervalVector& x);
-      const TubeVector& operator*=(const Tube& x);
-      const TubeVector& operator*=(const Trajectory& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x TrajectoryVector
+       * \return (*this)-=x
+       */
+      const TubeVector& operator-=(const TrajectoryVector& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x TubeVector
+       * \return (*this)-=x
+       */
+      const TubeVector& operator-=(const TubeVector& x);
+
+      /**
+       * \brief Operates *=
+       *
+       * \param x Interval
+       * \return (*this)*=x
+       */
       const TubeVector& operator*=(const ibex::Interval& x);
 
+      /**
+       * \brief Operates *=
+       *
+       * \param x Trajectory
+       * \return (*this)*=x
+       */
+      const TubeVector& operator*=(const Trajectory& x);
+
+      /**
+       * \brief Operates *=
+       *
+       * \param x Tube
+       * \return (*this)*=x
+       */
+      const TubeVector& operator*=(const Tube& x);
+
+      /**
+       * \brief Operates |=
+       *
+       * \param x IntervalVector
+       * \return (*this)|=x
+       */
+      const TubeVector& operator|=(const ibex::IntervalVector& x);
+
+      /**
+       * \brief Operates |=
+       *
+       * \param x TrajectoryVector
+       * \return (*this)|=x
+       */
+      const TubeVector& operator|=(const TrajectoryVector& x);
+
+      /**
+       * \brief Operates |=
+       *
+       * \param x TubeVector
+       * \return (*this)|=x
+       */
+      const TubeVector& operator|=(const TubeVector& x);
+
+      /**
+       * \brief Operates &=
+       *
+       * \param x IntervalVector
+       * \return (*this)&=x
+       */
+      const TubeVector& operator&=(const ibex::IntervalVector& x);
+
+      /**
+       * \brief Operates &=
+       *
+       * \param x TrajectoryVector
+       * \return (*this)&=x
+       */
+      const TubeVector& operator&=(const TrajectoryVector& x);
+
+      /**
+       * \brief Operates &=
+       *
+       * \param x TubeVector
+       * \return (*this)&=x
+       */
+      const TubeVector& operator&=(const TubeVector& x);
+
       // String
+
+      /**
+       * \brief Returns the name of this class
+       *
+       * \note Only used for some generic display method
+       *
+       * \return the predefined name
+       */
       const std::string class_name() const { return "TubeVector"; };
+
+      /**
+       * \brief Displays a synthesis of this tube
+       *
+       * \param str ostream
+       * \param x tube to be displayed
+       * \return ostream
+       */
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
 
       // Tree synthesis structure
+
+      /**
+       * \brief Enables the computation of a synthesis tree
+       *
+       * \note The synthesis tree speeds up computations such as integrals or evaluations
+       *
+       * \param enable boolean
+       */
       void enable_synthesis(bool enable = true) const;
 
       // Static methods
+
+      /**
+       * \brief Computes the hull of several tubes
+       *
+       * \param l_tubes list of tubes
+       * \return the tube vector enveloping the other ones
+       */
       static const TubeVector hull(const std::list<TubeVector>& l_tubes);
 
     // Integration:
 
+      /**
+       * \brief Computes the box integral \f$\int_0^t[\mathbf{x}](\tau)d\tau\f$
+       *
+       * \note From the monotonicity of the integral operator, 
+       *       \f$\int_0^t[\mathbf{x}](\tau)d\tau=[\int_0^t\mathbf{x}^-(\tau)d\tau,\int_0^t\mathbf{x}^+(\tau)d\tau]\f$
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \return the set of feasible integral vectors
+       */
       const ibex::IntervalVector integral(double t) const;
+
+      /**
+       * \brief Computes the box integral \f$\int_0^{[t]}[\mathbf{x}](\tau)d\tau\f$
+       *
+       * \note From the monotonicity of the integral operator, 
+       *       \f$\int_0^{[t]}[\mathbf{x}](\tau)d\tau=[\int_0^{[t]}\mathbf{x}^-(\tau)d\tau,\int_0^{[t]}\mathbf{x}^+(\tau)d\tau]\f$
+       *
+       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \return the set of feasible integral vectors
+       */
       const ibex::IntervalVector integral(const ibex::Interval& t) const;
+
+      /**
+       * \brief Computes the box integral \f$\int_{[t_1]}^{[t_2]}[\mathbf{x}](\tau)d\tau\f$
+       *
+       * \note From the monotonicity of the integral operator, 
+       *       \f$\int_{[t_1]}^{[t_2]}[\mathbf{x}](\tau)d\tau=[\int_{[t_1]}^{[t_2]}\mathbf{x}^-(\tau)d\tau,\int_{[t_1]}^{[t_2]}\mathbf{x}^+(\tau)d\tau]\f$
+       *
+       * \param t1 lower bound, subset of the TubeVector domain
+       * \param t2 upper bound, subset of the TubeVector domain
+       * \return the set of feasible integral vectors
+       */
       const ibex::IntervalVector integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+
+      /**
+       * \brief Computes the partial box integral \f$\int_{0}^{[t]}[\mathbf{x}](\tau)d\tau\f$
+       *
+       * \note From the monotonicity of the integral operator, 
+       *       \f$\int_{0}^{[t]}[\mathbf{x}](\tau)d\tau=[\int_{0}^{[t]}\mathbf{x}^-(\tau)d\tau,\int_{0}^{[t]}\mathbf{x}^+(\tau)d\tau]\f$
+       *
+       * \param t interval upper bound, subset of the TubeVector domain
+       * \return the pair \f$\big([i^-],[i^+]\big)\f$,
+       *         where \f$[i^-]=\int_{0}^{[t]}\mathbf{x}^-(\tau)d\tau\f$ 
+       *         and \f$[i^+]=\int_{0}^{[t]}\mathbf{x}^+(\tau)d\tau\f$
+       */
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t) const;
+
+      /**
+       * \brief Computes the partial box integral \f$\int_{[t_1]}^{[t_2]}[\mathbf{x}](\tau)d\tau\f$
+       *
+       * \note From the monotonicity of the integral operator, 
+       *       \f$\int_{[t_1]}^{[t_2]}[\mathbf{x}](\tau)d\tau=[\int_{[t_1]}^{[t_2]}\mathbf{x}^-(\tau)d\tau,\int_{[t_1]}^{[t_2]}\mathbf{x}^+(\tau)d\tau]\f$
+       *
+       * \param t1 interval lower bound, subset of the TubeVector domain
+       * \param t2 interval upper bound, subset of the TubeVector domain
+       * \return the pair \f$\big([i^-],[i^+]\big)\f$,
+       *         where \f$[i^-]=\int_{[t_1]}^{[t_2]}\mathbf{x}^-(\tau)d\tau\f$ 
+       *         and \f$[i^+]=\int_{[t_1]}^{[t_2]}\mathbf{x}^+(\tau)d\tau\f$
+       */
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
     // Serialization:
 
+      /**
+       * \brief Serializes this tube
+       *
+       * \note The values and sampling (slices and gates) are serialized
+       *
+       * \param binary_file_name name of the output file (default value: "x.tube")
+       * \param version_number serialization version (used for tests purposes, default value: last version)
+       */
       void serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
+
+      /**
+       * \brief Serializes this tube together with a TrajectoryVector object
+       *
+       * \note The values and sampling (slices and gates) are serialized
+       * \note The serialization of a TrajectoryVector defined from a tubex::Function object is not supported
+       * \note The output file will appear in the executable current directory
+       *
+       * \param binary_file_name name of the output file (default value: "x.tube")
+       * \param traj the TrajectoryVector object to serialize (for instance, actual but unknown values)
+       * \param version_number serialization version (used for tests purposes, default value: last version)
+       */
       void serialize(const std::string& binary_file_name, const TrajectoryVector& traj, int version_number = SERIALIZATION_VERSION) const;
 
     protected:
 
+      // Definition
+
+      /**
+       * \brief Creates a not-defined n-dimensional tube
+       *
+       * \note Constructor necessary for the deserialize_TubeVector method
+       */
       TubeVector();
+
+      // Accessing values
+
+      /**
+       * \brief Returns the box \f$[\mathbf{x}]([t_0,t_f])\f$
+       *
+       * \note Used for genericity purposes
+       *
+       * \return the envelope of codomain values
+       */
       const ibex::IntervalVector codomain_box() const;
+
+      // Serialization
+
+      /**
+       * \brief Restores a n-dimensional tube from serialization, together with a TrajectoryVector object
+       *
+       * \Note The TubeVector and the TrajectoryVector must have been serialized
+       *       beforehand by the appropriate method serialize()
+       *
+       * \param binary_file_name path to the binary file
+       * \param traj a pointer to the TrajectoryVector object to be instantiated
+       */
       void deserialize(const std::string& binary_file_name, TrajectoryVector *&traj);
 
       // Class variables:
 
-        int m_n = 0;
-        Tube *m_v_tubes = NULL;
+        int m_n = 0; //!< dimension of this tube
+        Tube *m_v_tubes = NULL; //!< array of components (scalar tubes)
 
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
   };
