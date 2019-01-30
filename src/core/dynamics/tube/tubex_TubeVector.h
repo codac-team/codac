@@ -24,6 +24,13 @@
 
 namespace tubex
 {
+  /**
+   * \class TubeVector
+   * \brief n-dimensional tube, defined as an interval of n-dimensional trajectories
+   *
+   * \note Use Tube for the one-dimensional case
+   */
+
   class Fnc;
   class Tube;
   class Trajectory;
@@ -32,29 +39,194 @@ namespace tubex
   {
     public:
 
-    /** Base: **/
+    // Base:
 
       // Definition
+
+      /**
+       * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ made of one slice
+       *
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param n dimension of this tube (default value: 1)
+       */
       TubeVector(const ibex::Interval& domain, int n = 1);
+
+      /**
+       * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ made of one slice
+       *
+       * \note The dimension of the tube is specified by the codomain box
+       *
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param codomain IntervalVector value of the slice
+       */
       TubeVector(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
+
+      /**
+       * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ with some temporal discretization
+       *
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
+       * \param n dimension of this tube (default value: 1)
+       */
       TubeVector(const ibex::Interval& domain, double timestep, int n = 1);
+
+      /**
+       * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ with some temporal discretization
+       *
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
+       * \param codomain IntervalVector value of the slices
+       */
       TubeVector(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
+
+      /**
+       * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
+       *        from a tubex::Fnc object and with some temporal discretization
+       *
+       * \Note Due to the slicing implementation of the tube, a wrapping
+       *       effect will occur to reliably enclose the tubex::Fnc object
+       * \note The dimension of the tube is specified by the output of \f$[\mathbf{f}]\f$
+       *
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
+       * \param f tubex::Fnc object that will be enclosed by the tube:
+       *          \f$\forall t\in[t_0,t_f], [\mathbf{f}](t)\subseteq[\mathbf{x}](t)\f$
+       */
       TubeVector(const ibex::Interval& domain, double timestep, const tubex::Fnc& f);
+
+      /**
+       * \brief Creates a copy of a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$, with the same time discretization
+       *
+       * \param x TubeVector to be duplicated
+       */
       TubeVector(const TubeVector& x);
+
+      /**
+       * \brief Creates a copy of a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$, with the same time
+       *        discretization but a specific constant codomain
+       *
+       * \param x TubeVector from which the sampling will be duplicated
+       * \param codomain IntervalVector value of the slices
+       */
       TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
+
+      /**
+       * \brief Creates a n-dimensional tube with all the components initialized to \f$[x](\cdot)\f$
+       *
+       * \note The TubeVector object will have the same slicing as the tube \f$[x](\cdot)\f$
+       *
+       * \param n dimension of this tube
+       * \param x Tube to be copied for all the components
+       */
       TubeVector(int n, const Tube& x);
+
+      /**
+       * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ enclosing a n-dimensional
+       *        trajectory \f$\mathbf{x}(\cdot)\f$, possibly with some temporal discretization
+       *
+       * \Note Due to the slicing implementation of the tube, a wrapping
+       *       effect will occur to reliably enclose the TrajectoryVector object 
+       *
+       * \param traj TrajectoryVector \f$\mathbf{x}(\cdot)\f$ to enclose
+       * \param timestep sampling value \f$\delta\f$ for the temporal
+       *        discretization (double, no discretization by default: one slice only)
+       */
       TubeVector(const TrajectoryVector& traj, double timestep = 0.);
+
+      /**
+       * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ defined as an interval
+       *        of two n-dimensional trajectories \f$[\mathbf{lb}(\cdot),\mathbf{ub}(\cdot)]\f$
+       *
+       * \Note Due to the slicing implementation of the tube, a wrapping
+       *       effect will occur to reliably enclose the TrajectoryVector object 
+       *
+       * \param lb TrajectoryVector defining the lower bound \f$\mathbf{x}^{-}(\cdot)\f$ of the tube
+       * \param ub TrajectoryVector defining the upper bound \f$\mathbf{x}^{+}(\cdot)\f$ of the tube
+       * \param timestep sampling value \f$\delta\f$ for the temporal
+       *        discretization (double, no discretization by default: one slice only)
+       */
       TubeVector(const TrajectoryVector& lb, const TrajectoryVector& ub, double timestep = 0.);
+
+      /**
+       * \brief Restore a n-dimensional tube from serialization
+       *
+       * \Note The TubeVector must have been serialized beforehand by the appropriate method serialize()
+       *
+       * \param binary_file_name path to the binary file
+       */
       TubeVector(const std::string& binary_file_name);
+
+      /**
+       * \brief Restore a n-dimensional tube from serialization, together with a TrajectoryVector object
+       *
+       * \Note The TubeVector and the TrajectoryVector must have been serialized
+       *       beforehand by the appropriate method serialize()
+       *
+       * \param binary_file_name path to the binary file
+       * \param traj a pointer to the TrajectoryVector object to be instantiated
+       */
       TubeVector(const std::string& binary_file_name, TrajectoryVector *&traj);
+
+      /**
+       * \brief TubeVector destructor
+       */
       ~TubeVector();
-      const TubeVector primitive() const;
-      const TubeVector& operator=(const TubeVector& x);
-      const ibex::Interval domain() const;
+
+      /**
+       * \brief Returns the dimension of the tube
+       *
+       * \return n
+       */
       int size() const;
+
+      /**
+       * \brief Resizes this TubeVector
+       *
+       * \note If the size is increased, the existing components are not
+       *       modified and the new ones are set to \f$[t_0,t_f]\mapsto[-\infty,\infty]\f$
+       *
+       * \param n the new size to be set
+       */
       void resize(int n);
+
+      /**
+       * \brief Returns a subvector of this TubeVector
+       *
+       * \param start_index first component index of the subvector to be returned
+       * \param end_index last component index of the subvector to be returned
+       * \return a TubeVector extracted from this TubeVector
+       */
       const TubeVector subvector(int start_index, int end_index) const;
+
+      /**
+       * \brief Puts a subvector into this TubeVector at a given position
+       *
+       * \param start_index position where the subvector will be put
+       * \param subvec the TubeVector to put from start_index
+       */
       void put(int start_index, const TubeVector& subvec);
+
+      /**
+       * \brief Returns the primitive TubeVector of this tube
+       *
+       * \return a new TubeVector object with same slicing, enclosing the feasible primitives of this tube
+       */
+      const TubeVector primitive() const;
+
+      /**
+       * \brief Returns a copy of a TubeVector
+       *
+       * \param x the TubeVector object to be copied
+       * \return a new TubeVector object with same slicing and values
+       */
+      const TubeVector& operator=(const TubeVector& x);
+
+      /**
+       * \brief Returns the temporal definition domain of this tube
+       *
+       * \return an Interval object \f$[t_0,t_f]\f$
+       */
+      const ibex::Interval domain() const;
 
       // Slices structure
       int nb_slices() const;
@@ -134,7 +306,7 @@ namespace tubex
       // Static methods
       static const TubeVector hull(const std::list<TubeVector>& l_tubes);
 
-    /** Integration: **/
+    // Integration:
 
       const ibex::IntervalVector integral(double t) const;
       const ibex::IntervalVector integral(const ibex::Interval& t) const;
@@ -142,7 +314,7 @@ namespace tubex
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t) const;
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
-    /** Serialization: **/
+    // Serialization:
 
       void serialize(const std::string& binary_file_name = "x.tube", int version_number = SERIALIZATION_VERSION) const;
       void serialize(const std::string& binary_file_name, const TrajectoryVector& traj, int version_number = SERIALIZATION_VERSION) const;
@@ -153,7 +325,7 @@ namespace tubex
       const ibex::IntervalVector codomain_box() const;
       void deserialize(const std::string& binary_file_name, TrajectoryVector *&traj);
 
-      /** Class variables **/
+      // Class variables:
 
         int m_n = 0;
         Tube *m_v_tubes = NULL;

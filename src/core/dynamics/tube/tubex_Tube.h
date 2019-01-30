@@ -47,6 +47,8 @@ namespace tubex
 
     // Base:
 
+      // Definition
+
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ made of one slice
        *
@@ -68,14 +70,14 @@ namespace tubex
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ from a tubex::Fnc object and with some temporal discretization
        *
        * \Note Due to the slicing implementation of the tube, a wrapping
-       *       effect will occur to reliably enclose the Trajectory object 
+       *       effect will occur to reliably enclose the tubex::Fnc object 
 
        * \param domain Interval domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param f tubex::Fnc object that will be enclosed by the tube:
-       *          \f$\forall t\in[t_0,t_f], f(t)\in[x](t)\f$
-       * \param f_image_id component index of the evaluated function
-       *                   \f$f\f$ (that is possibly multidimensional, first component by default)
+       *          \f$\forall t\in[t_0,t_f], [f](t)\subseteq[x](t)\f$
+       * \param f_image_id component index of the interval function
+       *                   \f$[f]\f$ (that is possibly multidimensional, first component by default)
        */
       Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id = 0);
 
@@ -104,8 +106,8 @@ namespace tubex
        *
        * \param x Tube from which the sampling will be duplicated
        * \param f tubex::Fnc object that will be enclosed by the tube:
-       *                     \f$\forall t\in[t_0,t_f], f(t)\in[x](t)\f$
-       * \param f_image_id component index of the evaluated function \f$f\f$
+       *                     \f$\forall t\in[t_0,t_f], [f](t)\subseteq[x](t)\f$
+       * \param f_image_id component index of the interval function \f$[f]\f$
        *                   (that is possibly multidimensional, first component by default)
        */
       Tube(const Tube& x, const tubex::Fnc& f, int f_image_id = 0);
@@ -1053,7 +1055,7 @@ namespace tubex
        */
       void delete_synthesis_tree() const;
 
-      /** Class variables **/
+      // Class variables:
 
         Slice *m_first_slice = NULL; //!< pointer to the first Slice object of this tube
         mutable TubeTreeSynthesis *m_synthesis_tree = NULL; //!< pointer to the optional synthesis tree
