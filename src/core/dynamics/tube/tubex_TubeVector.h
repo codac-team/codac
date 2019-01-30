@@ -532,7 +532,7 @@ namespace tubex
       /**
        * \brief Returns true if this tube is empty
        *
-       * \note If \f$[\mathbf{x}](t)=\emptyset\f$ for some \f$t\f$, then the tube
+       * \note If \f$[\mathbf{x}](t)=\varnothing\f$ for some \f$t\f$, then the tube
        *       \f$[\mathbf{x}](\cdot)\f$ is considered empty
        *
        * \return true in case of emptiness
