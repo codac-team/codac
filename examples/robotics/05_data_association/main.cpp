@@ -1,4 +1,3 @@
-#include "ibex.h"
 #include "tubex.h"
 #include "tubex-robotics.h"
 #include "ibex_CtcPolar.h"

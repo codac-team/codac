@@ -1,4 +1,3 @@
-#include "ibex.h"
 #include "tubex.h"
 #include "tubex-solver.h"
 

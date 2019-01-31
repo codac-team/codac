@@ -13,7 +13,6 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "ibex.h"
 #include "tubex.h"
 #include "tubex-robotics.h"
 

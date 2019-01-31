@@ -1,6 +1,7 @@
-#include "ibex.h"
 #include "tubex.h"
 #include "tubex-solver.h"
+#include "ibex_CtcHC4.h"
+#include "ibex_SystemFactory.h"
 
 using namespace std;
 using namespace ibex;
