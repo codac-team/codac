@@ -10,8 +10,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_TUBESLICE_H__
-#define __TUBEX_TUBESLICE_H__
+#ifndef __TUBEX_SLICE_H__
+#define __TUBEX_SLICE_H__
 
 #include "tubex_Tube.h"
 #include "tubex_Trajectory.h"
@@ -27,7 +27,7 @@ namespace tubex
    * \brief Slice of a one dimensional tube and made of an envelope and two gates
    */
 
-  #define EPSILON_CONTAINS ibex::next_float(0.) * 1000.
+  #define EPSILON_CONTAINS ibex::next_float(0.) * 1000. //!< epsilon limit of the contains() algorithm
 
   class Tube;
   class Trajectory;
@@ -339,7 +339,7 @@ namespace tubex
        * \note Due to the reliable numerical representation of a trajectory, some wrapping effect
        *       may appear for its evaluations (either if it is defined by a map of values
        *       or an analytical function). Hence, this "contains" test may not be able to
-       *       conclude, if the thin envelope of \f$x(\cdot)\f$ overlaps a boundary of the tube.
+       *       conclude, if the thin envelope of \f$x(\cdot)\f$ overlaps a boundary of the slice.
        * \note The domain of this slice must be a subset of the domain of \f$x(\cdot)\f$
        *
        * \return BoolInterval::YES (or BoolInterval::NO) if this slice contains \f$x(\cdot)\f$
@@ -348,45 +348,218 @@ namespace tubex
       const ibex::BoolInterval contains(const Trajectory& x) const;
 
       // Setting values
+
+      /**
+       * \brief Sets a constant interval value for this slice: \f$\forall t, \llbracket x\rrbracket(t)=[y]\f$
+       *
+       * \note The gates and the envelope will be set to \f$[y]\f$
+       *
+       * \param y Interval value of the slice
+       */
       void set(const ibex::Interval& y);
+
+      /**
+       * \brief Sets this slice to the empty set
+       *
+       * \note The domain will not be affected
+       */
       void set_empty();
+
+      /**
+       * \brief Sets the interval value of the envelope of this slice
+       *
+       * \note The gates may be contracted if the new envelope is not their superset
+       *
+       * \param envelope Interval value of the envelope
+       */
       void set_envelope(const ibex::Interval& envelope);
+
+      /**
+       * \brief Sets the interval value of the input gate of this slice
+       *
+       * \note The value to be set will be intersected by the envelopes of the related slices
+       * \note The envelopes of the related slices will not be affected
+       *
+       * \param envelope Interval value of the input gate
+       */
       void set_input_gate(const ibex::Interval& input_gate);
+
+      /**
+       * \brief Sets the interval value of the output gate of this slice
+       *
+       * \note The value to be set will be intersected by the envelopes of the related slices
+       * \note The envelopes of the related slices will not be affected
+       *
+       * \param envelope Interval value of the output gate
+       */
       void set_output_gate(const ibex::Interval& output_gate);
+
+      /**
+       * \brief Inflates this slice by adding \f$[-rad,+rad]\f$ to all its codomain components
+       *
+       * \note The envelope and the gates will be inflated
+       *
+       * \param rad half of the inflation
+       * \return *this
+       */
       const Slice& inflate(double rad);
 
-      // Operators
+      // Assignments operators
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x Trajectory
+       * \return (*this)+=x
+       */
       Slice& operator+=(const Trajectory& x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x Slice
+       * \return (*this)+=x
+       */
       Slice& operator+=(const Slice& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x Trajectory
+       * \return (*this)-=x
+       */
       Slice& operator-=(const Trajectory& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x Slice
+       * \return (*this)-=x
+       */
       Slice& operator-=(const Slice& x);
+
+      /**
+       * \brief Operates *=
+       *
+       * \param x Trajectory
+       * \return (*this)*=x
+       */
       Slice& operator*=(const Trajectory& x);
+
+      /**
+       * \brief Operates *=
+       *
+       * \param x Slice
+       * \return (*this)*=x
+       */
       Slice& operator*=(const Slice& x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x Trajectory
+       * \return (*this)/=x
+       */
       Slice& operator/=(const Trajectory& x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x Slice
+       * \return (*this)/=x
+       */
       Slice& operator/=(const Slice& x);
+
+      /**
+       * \brief Operates |=
+       *
+       * \param x Trajectory
+       * \return (*this)|=x
+       */
       Slice& operator|=(const Trajectory& x);
+
+      /**
+       * \brief Operates |=
+       *
+       * \param x Slice
+       * \return (*this)|=x
+       */
       Slice& operator|=(const Slice& x);
+
+      /**
+       * \brief Operates &=
+       *
+       * \param x Trajectory
+       * \return (*this)&=x
+       */
       Slice& operator&=(const Trajectory& x);
+
+      /**
+       * \brief Operates &=
+       *
+       * \param x Slice
+       * \return (*this)&=x
+       */
       Slice& operator&=(const Slice& x);
 
       // String
-      friend std::ostream& operator<<(std::ostream& str, const Slice& x);
+
+      /**
+       * \brief Returns the name of this class
+       *
+       * \note Only used for some generic display method
+       *
+       * \return the predefined name
+       */
       const std::string class_name() const { return "Slice"; };
-      
+
+      /**
+       * \brief Displays a synthesis of this slice
+       *
+       * \param str ostream
+       * \param x slice to be displayed
+       * \return ostream
+       */
+      friend std::ostream& operator<<(std::ostream& str, const Slice& x);
+
 
     protected:
 
+      /**
+       * \brief Specifies the temporal domain \f$[t_0,t_f]\$ of this slice
+       *
+       * \note Method necesary for Tube::sample()
+       *
+       * \param domain the new temporal domain to be set
+       */
       void set_domain(const ibex::Interval& domain);
-      const ibex::IntervalVector codomain_box() const;
+
+      /**
+       * \brief Chains the two slices so that they share pointers and a common gate
+       *
+       * \note Links to other slices will be lost
+       *
+       * \param first_slice a pointer to the first Slice object
+       * \param second_slice a pointer to the second Slice object
+       */
       static void chain_slices(Slice *first_slice, Slice *second_slice);
+
+      /**
+       * \brief Returns the box \f$\llbracket x\rrbracket([t_0,t_f])\f$
+       *
+       * \note Used for genericity purposes
+       *
+       * \return the envelope of codomain values
+       */
+      const ibex::IntervalVector codomain_box() const;
 
       // Class variables:
 
-        ibex::Interval m_domain;
-        ibex::Interval m_codomain = ibex::Interval::ALL_REALS;
-        ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL;
-        Slice *m_prev_slice = NULL, *m_next_slice = NULL;
-        mutable TubeTreeSynthesis *m_synthesis_reference = NULL;
+        ibex::Interval m_domain; //!< temporal domain \f$[t_0,t_f]\f$ of the slice
+        ibex::Interval m_codomain = ibex::Interval::ALL_REALS; //!< envelope of the slice
+        ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL; //!< input and output gates
+        Slice *m_prev_slice = NULL, *m_next_slice = NULL; //!< pointers to previous and next slices of the related tube
+        mutable TubeTreeSynthesis *m_synthesis_reference = NULL; //!< pointer to a leaf of the optional synthesis tree of the related tube
 
       friend class Tube;
       friend class TubeTreeSynthesis;

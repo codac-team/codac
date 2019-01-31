@@ -96,22 +96,6 @@ namespace tubex
       return m_next_slice;
     }
 
-    void Slice::chain_slices(Slice *first_slice, Slice *second_slice)
-    {
-      if(first_slice != NULL)
-        first_slice->m_next_slice = second_slice;
-
-      if(second_slice != NULL)
-        second_slice->m_prev_slice = first_slice;
-
-      if(first_slice != NULL && second_slice != NULL)
-      {
-        if(second_slice->m_input_gate != NULL)
-          *first_slice->m_output_gate &= *second_slice->m_input_gate;
-        second_slice->m_input_gate = first_slice->m_output_gate;
-      }
-    }
-
     const Interval Slice::input_gate() const
     {
       return *m_input_gate;
@@ -487,6 +471,22 @@ namespace tubex
     }
 
     // Slices structure
+
+    void Slice::chain_slices(Slice *first_slice, Slice *second_slice)
+    {
+      if(first_slice != NULL)
+        first_slice->m_next_slice = second_slice;
+
+      if(second_slice != NULL)
+        second_slice->m_prev_slice = first_slice;
+
+      if(first_slice != NULL && second_slice != NULL)
+      {
+        if(second_slice->m_input_gate != NULL)
+          *first_slice->m_output_gate &= *second_slice->m_input_gate;
+        second_slice->m_input_gate = first_slice->m_output_gate;
+      }
+    }
 
     // Access values
 

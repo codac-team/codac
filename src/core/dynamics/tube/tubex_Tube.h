@@ -671,7 +671,7 @@ namespace tubex
        *       is not already sampled at \f$t^-\f$ and \f$t^+\f$. This is
        *       done to ensure that \f$\forall t\in[t], [x](t)=[y]\f$.
        *
-       * \param y Interval value of the gate
+       * \param y Interval value to be set
        * \param t the subdomain (Interval, must be a subset of the Tube domain)
        */
       void set(const ibex::Interval& y, const ibex::Interval& t);
