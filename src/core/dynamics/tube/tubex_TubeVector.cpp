@@ -319,6 +319,50 @@ namespace tubex
       return box;
     }
 
+    const pair<IntervalVector,IntervalVector> TubeVector::eval(const Interval& t) const
+    {
+      assert(domain().is_superset(t));
+
+      pair<IntervalVector,IntervalVector> p_eval
+        = make_pair(IntervalVector(size()), IntervalVector(size()));
+
+      for(int i = 0 ; i < size() ; i++)
+      {
+        pair<Interval,Interval> p_eval_i = (*this)[i].eval(t);
+        p_eval.first[i] = p_eval_i.first;
+        p_eval.second[i] = p_eval_i.second;
+      }
+
+      return p_eval;
+    }
+
+    const IntervalVector TubeVector::interpol(double t, const TubeVector& v) const
+    {
+      assert(domain().contains(t));
+      assert(size() == v.size());
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
+
+      // In Tube class, Tube::interpol(double, Tube) faster than Tube::interpol(Interval, Tube)
+      IntervalVector eval(size());
+      for(int i = 0 ; i < size() ; i++)
+        eval[i] = (*this)[i].interpol(t, v[i]);
+      return eval;
+    }
+
+    const IntervalVector TubeVector::interpol(const Interval& t, const TubeVector& v) const
+    {
+      assert(domain().is_superset(t));
+      assert(size() == v.size());
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
+
+      IntervalVector eval(size());
+      for(int i = 0 ; i < size() ; i++)
+        eval[i] = (*this)[i].interpol(t, v[i]);
+      return eval;
+    }
+
     const Interval TubeVector::invert(const IntervalVector& y, const Interval& search_domain) const
     {
       assert(size() == y.size());
@@ -380,50 +424,6 @@ namespace tubex
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
       macro_invert((*this)[i].invert(y[i], v_t_i, v[i], search_domain));
-    }
-
-    const pair<IntervalVector,IntervalVector> TubeVector::eval(const Interval& t) const
-    {
-      assert(domain().is_superset(t));
-
-      pair<IntervalVector,IntervalVector> p_eval
-        = make_pair(IntervalVector(size()), IntervalVector(size()));
-
-      for(int i = 0 ; i < size() ; i++)
-      {
-        pair<Interval,Interval> p_eval_i = (*this)[i].eval(t);
-        p_eval.first[i] = p_eval_i.first;
-        p_eval.second[i] = p_eval_i.second;
-      }
-
-      return p_eval;
-    }
-
-    const IntervalVector TubeVector::interpol(double t, const TubeVector& v) const
-    {
-      assert(domain().contains(t));
-      assert(size() == v.size());
-      assert(domain() == v.domain());
-      assert(same_slicing(*this, v));
-
-      // In Tube class, Tube::interpol(double, Tube) faster than Tube::interpol(Interval, Tube)
-      IntervalVector eval(size());
-      for(int i = 0 ; i < size() ; i++)
-        eval[i] = (*this)[i].interpol(t, v[i]);
-      return eval;
-    }
-
-    const IntervalVector TubeVector::interpol(const Interval& t, const TubeVector& v) const
-    {
-      assert(domain().is_superset(t));
-      assert(size() == v.size());
-      assert(domain() == v.domain());
-      assert(same_slicing(*this, v));
-
-      IntervalVector eval(size());
-      for(int i = 0 ; i < size() ; i++)
-        eval[i] = (*this)[i].interpol(t, v[i]);
-      return eval;
     }
 
     const Vector TubeVector::max_thickness() const

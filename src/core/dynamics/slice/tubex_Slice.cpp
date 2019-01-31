@@ -174,6 +174,36 @@ namespace tubex
       return m_codomain;
     }
 
+    const pair<Interval,Interval> Slice::eval(const Interval& t) const
+    {
+      Interval intersection = t & m_domain;
+      pair<Interval,Interval> p_eval = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+      if(!intersection.is_empty())
+      {
+        if(intersection.contains(m_domain.lb()))
+        {
+          p_eval.first |= input_gate().lb();
+          p_eval.second |= input_gate().ub();
+        }
+
+        if(intersection.contains(m_domain.ub()))
+        {
+          p_eval.first |= output_gate().lb();
+          p_eval.second |= output_gate().ub();
+        }
+
+        if(!intersection.is_degenerated()
+          || (intersection != m_domain.lb() && intersection != m_domain.ub()))
+        {
+          p_eval.first |= m_codomain.lb();
+          p_eval.second |= m_codomain.ub();
+        }
+      }
+      
+      return p_eval;
+    }
+
     const Interval Slice::interpol(double t, const Slice& v) const
     {
       assert(domain() == v.domain());
@@ -242,36 +272,6 @@ namespace tubex
         box = p & box;
         return box[0];
       }
-    }
-
-    const pair<Interval,Interval> Slice::eval(const Interval& t) const
-    {
-      Interval intersection = t & m_domain;
-      pair<Interval,Interval> p_eval = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
-
-      if(!intersection.is_empty())
-      {
-        if(intersection.contains(m_domain.lb()))
-        {
-          p_eval.first |= input_gate().lb();
-          p_eval.second |= input_gate().ub();
-        }
-
-        if(intersection.contains(m_domain.ub()))
-        {
-          p_eval.first |= output_gate().lb();
-          p_eval.second |= output_gate().ub();
-        }
-
-        if(!intersection.is_degenerated()
-          || (intersection != m_domain.lb() && intersection != m_domain.ub()))
-        {
-          p_eval.first |= m_codomain.lb();
-          p_eval.second |= m_codomain.ub();
-        }
-      }
-      
-      return p_eval;
     }
 
     // Tests

@@ -412,6 +412,39 @@ namespace tubex
       const ibex::Interval operator()(const ibex::Interval& t) const;
 
       /**
+       * \brief Returns the interval evaluations of the bounds of the
+       *        tube \f$\underline{x^-}(\cdot)\f$ and \f$\overline{x^+}(\cdot)\f$ over \f$[t]\f$
+       *
+       * \param t the subdomain (Interval, must be a subset of the Tube domain)
+       * \return the pair \f$\big([\underline{x^-}]([t]),[\overline{x^+}]([t])\big)\f$
+       */
+      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      
+      /**
+       * \brief Returns the optimal evaluation of this tube at \f$t\f$,
+       *        based on the derivative information \f$\dot{x}(\cdot)\f$
+       *
+       * \todo Change the name of this method?
+       *
+       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
+       * \return Interval value of \f$[x](t)\f$
+       */
+      const ibex::Interval interpol(double t, const Tube& v) const;
+
+      /**
+       * \brief Returns the optimal interval evaluation of this tube over \f$[t]\f$,
+       *        based on the derivative information \f$\dot{x}(\cdot)\f$
+       *
+       * \todo Change the name of this method?
+       *
+       * \param t the subdomain (Interval, must be a subset of the Tube domain)
+       * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
+       * \return Interval value of \f$[x]([t])\f$
+       */
+      const ibex::Interval interpol(const ibex::Interval& t, const Tube& v) const;
+
+      /**
        * \brief Returns the interval inversion \f$[x]^{-1}([y])\f$
        *
        * \note If the inversion results in several pre-images, their union is returned
@@ -458,39 +491,6 @@ namespace tubex
        */
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       
-      /**
-       * \brief Returns the interval evaluations of the bounds of the
-       *        tube \f$\underline{x^-}(\cdot)\f$ and \f$\overline{x^+}(\cdot)\f$ over \f$[t]\f$
-       *
-       * \param t the subdomain (Interval, must be a subset of the Tube domain)
-       * \return the pair \f$\big([\underline{x^-}]([t]),[\overline{x^+}]([t])\big)\f$
-       */
-      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-      
-      /**
-       * \brief Returns the optimal evaluation of this tube at \f$t\f$,
-       *        based on the derivative information \f$\dot{x}(\cdot)\f$
-       *
-       * \todo Change the name of this method?
-       *
-       * \param t the temporal key (double, must belong to the Tube domain)
-       * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
-       * \return Interval value of \f$[x](t)\f$
-       */
-      const ibex::Interval interpol(double t, const Tube& v) const;
-
-      /**
-       * \brief Returns the optimal interval evaluation of this tube over \f$[t]\f$,
-       *        based on the derivative information \f$\dot{x}(\cdot)\f$
-       *
-       * \todo Change the name of this method?
-       *
-       * \param t the subdomain (Interval, must be a subset of the Tube domain)
-       * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
-       * \return Interval value of \f$[x]([t])\f$
-       */
-      const ibex::Interval interpol(const ibex::Interval& t, const Tube& v) const;
-
       /**
        * \brief Returns the diameter of the interval value \f$[x](t)\f$ that is the more uncertain
        *

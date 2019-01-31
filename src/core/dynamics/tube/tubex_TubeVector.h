@@ -350,6 +350,39 @@ namespace tubex
       const ibex::IntervalVector operator()(const ibex::Interval& t) const;
 
       /**
+       * \brief Returns the interval evaluations of the bounds of the
+       *        tube \f$\underline{\mathbf{x}^-}(\cdot)\f$ and \f$\overline{\mathbf{x}^+}(\cdot)\f$ over \f$[t]\f$
+       *
+       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \return the pair \f$\big([\underline{\mathbf{x}^-}]([t]),[\overline{\mathbf{x}^+}]([t])\big)\f$
+       */
+      const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      
+      /**
+       * \brief Returns the optimal evaluation of this tube at \f$t\f$,
+       *        based on the derivative information \f$\dot{\mathbf{x}}(\cdot)\f$
+       *
+       * \todo Change the name of this method?
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
+       * \return IntervalVector value of \f$[\mathbf{x}](t)\f$
+       */
+      const ibex::IntervalVector interpol(double t, const TubeVector& v) const;
+
+      /**
+       * \brief Returns the optimal interval evaluation of this tube over \f$[t]\f$,
+       *        based on the derivative information \f$\dot{\mathbf{x}}(\cdot)\f$
+       *
+       * \todo Change the name of this method?
+       *
+       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
+       * \return IntervalVector value of \f$[\mathbf{x}]([t])\f$
+       */
+      const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& v) const;
+
+      /**
        * \brief Returns the interval inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
        *
        * \note If the inversion results in several pre-images, their union is returned
@@ -396,39 +429,6 @@ namespace tubex
        */
       void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const TubeVector& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       
-      /**
-       * \brief Returns the interval evaluations of the bounds of the
-       *        tube \f$\underline{\mathbf{x}^-}(\cdot)\f$ and \f$\overline{\mathbf{x}^+}(\cdot)\f$ over \f$[t]\f$
-       *
-       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
-       * \return the pair \f$\big([\underline{\mathbf{x}^-}]([t]),[\overline{\mathbf{x}^+}]([t])\big)\f$
-       */
-      const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
-      
-      /**
-       * \brief Returns the optimal evaluation of this tube at \f$t\f$,
-       *        based on the derivative information \f$\dot{\mathbf{x}}(\cdot)\f$
-       *
-       * \todo Change the name of this method?
-       *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
-       * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
-       * \return IntervalVector value of \f$[\mathbf{x}](t)\f$
-       */
-      const ibex::IntervalVector interpol(double t, const TubeVector& v) const;
-
-      /**
-       * \brief Returns the optimal interval evaluation of this tube over \f$[t]\f$,
-       *        based on the derivative information \f$\dot{\mathbf{x}}(\cdot)\f$
-       *
-       * \todo Change the name of this method?
-       *
-       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
-       * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
-       * \return IntervalVector value of \f$[\mathbf{x}]([t])\f$
-       */
-      const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& v) const;
-
       /**
        * \brief Returns a vector of the maximum diameters of the tube for each component
        *

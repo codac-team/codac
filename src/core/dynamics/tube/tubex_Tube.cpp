@@ -526,6 +526,67 @@ namespace tubex
       }
     }
 
+    const pair<Interval,Interval> Tube::eval(const Interval& t) const
+    {
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->eval(t);
+      
+      else
+      {
+        pair<Interval,Interval> enclosed_bounds
+          = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+        Interval intersection = t & domain();
+        if(t.is_empty())
+          return enclosed_bounds;
+
+        const Slice *s = slice(intersection.lb());
+        while(s != NULL && s->domain().lb() <= intersection.ub())
+        {
+          pair<Interval,Interval> local_eval = s->eval(intersection);
+          enclosed_bounds.first |= local_eval.first;
+          enclosed_bounds.second |= local_eval.second;
+          s = s->next_slice();
+        }
+
+        return enclosed_bounds;
+      }
+    }
+
+    const Interval Tube::interpol(double t, const Tube& v) const
+    {
+      assert(domain().contains(t));
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
+
+      const Slice *slice_x = slice(t);
+      if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
+        return (*slice_x)(t);
+
+      return interpol(Interval(t), v);
+      // todo: check a faster implementation for this degenerate case?
+    }
+
+    const Interval Tube::interpol(const Interval& t, const Tube& v) const
+    {
+      assert(domain().is_superset(t));
+      assert(domain() == v.domain());
+      assert(same_slicing(*this, v));
+
+      Interval interpol = Interval::EMPTY_SET;
+
+      const Slice *slice_x = slice(t.lb());
+      const Slice *slice_xdot = v.slice(t.lb());
+      while(slice_x != NULL && slice_x->domain().lb() < t.ub())
+      {
+        interpol |= slice_x->interpol(t & slice_x->domain(), *slice_xdot);
+        slice_x = slice_x->next_slice();
+        slice_xdot = slice_xdot->next_slice();
+      }
+
+      return interpol;
+    }
+
     const Interval Tube::invert(const Interval& y, const Interval& search_domain) const
     {
       Tube v(*this, Interval::ALL_REALS); // todo: optimize this
@@ -598,67 +659,6 @@ namespace tubex
 
       if(!invert.is_empty())
         v_t.push_back(invert);
-    }
-
-    const pair<Interval,Interval> Tube::eval(const Interval& t) const
-    {
-      if(m_synthesis_tree != NULL) // fast evaluation
-        return m_synthesis_tree->eval(t);
-      
-      else
-      {
-        pair<Interval,Interval> enclosed_bounds
-          = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
-
-        Interval intersection = t & domain();
-        if(t.is_empty())
-          return enclosed_bounds;
-
-        const Slice *s = slice(intersection.lb());
-        while(s != NULL && s->domain().lb() <= intersection.ub())
-        {
-          pair<Interval,Interval> local_eval = s->eval(intersection);
-          enclosed_bounds.first |= local_eval.first;
-          enclosed_bounds.second |= local_eval.second;
-          s = s->next_slice();
-        }
-
-        return enclosed_bounds;
-      }
-    }
-
-    const Interval Tube::interpol(double t, const Tube& v) const
-    {
-      assert(domain().contains(t));
-      assert(domain() == v.domain());
-      assert(same_slicing(*this, v));
-
-      const Slice *slice_x = slice(t);
-      if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
-        return (*slice_x)(t);
-
-      return interpol(Interval(t), v);
-      // todo: check a faster implementation for this degenerate case?
-    }
-
-    const Interval Tube::interpol(const Interval& t, const Tube& v) const
-    {
-      assert(domain().is_superset(t));
-      assert(domain() == v.domain());
-      assert(same_slicing(*this, v));
-
-      Interval interpol = Interval::EMPTY_SET;
-
-      const Slice *slice_x = slice(t.lb());
-      const Slice *slice_xdot = v.slice(t.lb());
-      while(slice_x != NULL && slice_x->domain().lb() < t.ub())
-      {
-        interpol |= slice_x->interpol(t & slice_x->domain(), *slice_xdot);
-        slice_x = slice_x->next_slice();
-        slice_xdot = slice_xdot->next_slice();
-      }
-
-      return interpol;
     }
 
     double Tube::max_thickness() const
