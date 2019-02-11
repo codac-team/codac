@@ -906,7 +906,7 @@ namespace tubex
       // Definition
 
       /**
-       * \brief Creates a not-defined n-dimensional tube
+       * \brief Creates an undefined n-dimensional tube
        *
        * \note Constructor necessary for the deserialize_TubeVector method
        */
