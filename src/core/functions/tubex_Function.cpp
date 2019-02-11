@@ -350,7 +350,7 @@ namespace tubex
     if(nb_vars() != 0)
       assert(x.size() == nb_vars());
 
-    assert(x[0].function() == NULL && "eval function not supported for analytical trajectories");
+    assert(x[0].function() == NULL && "eval function not supported for analytic trajectories");
     
     TrajectoryVector y(image_dim());
     for(map<double,double>::const_iterator it = x[0].sampled_map().begin() ;

@@ -79,6 +79,11 @@ namespace tubex
       return 1;
     }
 
+    const Interval Trajectory::domain() const
+    {
+      return m_domain;
+    }
+
     // Accessing values
 
     const map<double,double>& Trajectory::sampled_map() const
@@ -89,11 +94,6 @@ namespace tubex
     const tubex::Function* Trajectory::function() const
     {
       return m_function;
-    }
-
-    const Interval Trajectory::domain() const
-    {
-      return m_domain;
     }
 
     const Interval Trajectory::codomain() const
@@ -234,7 +234,7 @@ namespace tubex
     
     // Integration
     
-    const Trajectory Trajectory::integrate() const
+    const Trajectory Trajectory::primitive() const
     {
       assert(m_function == NULL && "integration timestep requested for trajectories defined by Function");
       
@@ -254,7 +254,7 @@ namespace tubex
       return x;
     }
     
-    const Trajectory Trajectory::integrate(double dt) const
+    const Trajectory Trajectory::primitive(double dt) const
     {
       assert(dt > 0.);
 

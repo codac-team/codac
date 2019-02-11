@@ -233,23 +233,23 @@ namespace tubex
     
     // Integration
     
-    const TrajectoryVector TrajectoryVector::integrate() const
+    const TrajectoryVector TrajectoryVector::primitive() const
     {
       TrajectoryVector x(size());
 
       for(int i = 0 ; i < size() ; i++)
-        x[i] = (*this)[i].integrate();
+        x[i] = (*this)[i].primitive();
 
       return x;
     }
     
-    const TrajectoryVector TrajectoryVector::integrate(double dt) const
+    const TrajectoryVector TrajectoryVector::primitive(double dt) const
     {
       assert(dt > 0.);
       TrajectoryVector x(size());
 
       for(int i = 0 ; i < size() ; i++)
-        x[i] = (*this)[i].integrate(dt);
+        x[i] = (*this)[i].primitive(dt);
 
       return x;
     }

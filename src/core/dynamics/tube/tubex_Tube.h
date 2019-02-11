@@ -614,7 +614,7 @@ namespace tubex
        *
        * \note Due to the reliable numerical representation of a trajectory, some wrapping effect
        *       may appear for its evaluations (either if it is defined by a map of values
-       *       or an analytical function). Hence, this "contains" test may not be able to
+       *       or an analytic function). Hence, this "contains" test may not be able to
        *       conclude, if the thin envelope of \f$x(\cdot)\f$ overlaps a boundary of the tube.
        *
        * \return BoolInterval::YES (or BoolInterval::NO) if this tube contains \f$x(\cdot)\f$

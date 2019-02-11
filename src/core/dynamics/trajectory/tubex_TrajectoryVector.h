@@ -63,8 +63,8 @@ namespace tubex
       void shift_domain(double shift_ref);
 
       // Integration
-      const TrajectoryVector integrate() const;
-      const TrajectoryVector integrate(double dt) const;
+      const TrajectoryVector primitive() const;
+      const TrajectoryVector primitive(double dt) const;
 
       // String
       friend std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x);
