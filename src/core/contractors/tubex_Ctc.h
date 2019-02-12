@@ -18,25 +18,51 @@
 
 namespace tubex
 {
-  enum TPropagation
+  /**
+   * \enum TPropagation
+   * \brief Specifies the temporal propagation way (forward or backward in time)
+   */
+  enum TPropagation 
   {
     FORWARD = 0x01,
     BACKWARD = 0x02
   };
   
+  /**
+   * \brief Allows a combination of propagation ways
+   *
+   * \note For instance: FORWARD | BACKWARD
+   */
   inline TPropagation operator|(TPropagation a, TPropagation b)
   { return static_cast<TPropagation>(static_cast<int>(a) | static_cast<int>(b)); }
 
   /**
-   * \brief Ctc class.
+   * \class Ctc
+   * \brief Contractor interface
    */
   class Ctc
   {
     public:
 
+      /**
+       * \brief Creates a contractor
+       */
       Ctc();
 
+      /**
+       * \brief Specifies whether the contractor can impact the tube's slicing or not
+       *
+       * \param preserve if true, the slicing will remain the same
+       */
       void preserve_slicing(bool preserve);
+
+      /**
+       * \brief Specifies an optional fast mode of contraction
+       *
+       * \note For some contractors, pessimistic but faster contractions can be achieved.
+       *
+       * \param fast_mode if true, fast mode enabled
+       */
       void set_fast_mode(bool fast_mode);
 
     protected:

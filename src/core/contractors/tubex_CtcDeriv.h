@@ -16,26 +16,68 @@
 #include "tubex_Ctc.h"
 #include "tubex_Slice.h"
 
-// todo: contract v if x degenerated
-
 namespace tubex
 {
   /**
-   * \brief CtcDeriv class.
-   *
-   * Constraint: \f$\dot{x}=v\f$
+   * \class CtcDeriv
+   * \brief Contracts a tube \f$[x](\cdot)\f$ with respect to its derivative tube \f$[v](\cdot)\f$
+   *        according to the constraint \f$\dot{x}(\cdot)=v(\cdot), x(\cdot)\in[x](\cdot), v(\cdot)\in[v](\cdot)\f$
+   * \note  This contractor is called \f$\mathcal{C}_{\frac{d}{dt}}\f$ in the literature.
+   * \todo  Contract the tube \f$[v](\cdot)\f$ if \f$[x](\cdot)\f$ degenerated?
    */
   class CtcDeriv : public Ctc
   {
     public:
 
+      /**
+       * \brief Creates a contractor object \f$\mathcal{C}_{\frac{d}{dt}}\f$
+       */
       CtcDeriv();
+
+      /**
+       * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big([x](\cdot),[v](\cdot)\big)\f$:
+       *        contracts the tube \f$[x](\cdot)\f$ with respect to its derivative \f$[v](\cdot)\f$.
+       *
+       * \param x the scalar tube \f$[x](\cdot)\f$
+       * \param v the scalar derivative tube \f$[v](\cdot)\f$
+       * \param t_propa an optional temporal way of propagation
+       *                (forward or backward in time, both ways by default)
+       */
       void contract(Tube& x, const Tube& v, TPropagation t_propa = FORWARD | BACKWARD);
+
+      /**
+       * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big([\mathbf{x}](\cdot),[\mathbf{v}](\cdot)\big)\f$:
+       *        contracts the tube \f$[\mathbf{x}](\cdot)\f$ with respect to its derivative \f$[\mathbf{v}](\cdot)\f$.
+       *
+       * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
+       * \param v the n-dimensional derivative tube \f$[\mathbf{v}](\cdot)\f$
+       * \param t_propa an optional temporal way of propagation
+       *                (forward or backward in time, both ways by default)
+       */
       void contract(TubeVector& x, const TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD);
 
     protected:
 
+      /**
+       * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big(\llbracket\mathbf{x}\rrbracket(\cdot),\llbracket\mathbf{v}\rrbracket(\cdot)\big)\f$:
+       *        contracts the slice \f$\llbracket\mathbf{x}\rrbracket(\cdot)\f$ with respect to its derivative \f$\llbracket\mathbf{v}\rrbracket(\cdot)\f$.
+       *
+       * \param x the slice \f$\llbracket\mathbf{x}\rrbracket(\cdot)\f$
+       * \param v the derivative slice \f$\llbracket\mathbf{v}\rrbracket(\cdot)\f$
+       * \param t_propa an optional temporal way of propagation
+       *                (forward or backward in time, both ways by default)
+       */
       void contract(Slice& x, const Slice& v, TPropagation t_propa = FORWARD | BACKWARD);
+
+      /**
+       * \brief Contracts input and ouput gates of a slice regarding its derivative set
+       *
+       * \note Only the gates may be affected.
+       *       This method is used for the \f$\mathcal{C}_\textrm{eval}\f$ contractor.
+       *
+       * \param x the slice \f$\llbracket\mathbf{x}\rrbracket(\cdot)\f$
+       * \param v the derivative slice \f$\llbracket\mathbf{v}\rrbracket(\cdot)\f$
+       */
       void contract_gates(Slice& x, const Slice& v);
       
       friend class CtcEval; // contract_gates used by CtcEval
