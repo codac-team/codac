@@ -1,5 +1,6 @@
-/* ================================================================
- *  tubex-lib - Tube class
+/** 
+ *  @file
+ *  Tube class
  * ================================================================
  *  Copyright : ENSTA Bretagne (France)
  *  License   : This program is distributed under the terms of
@@ -19,7 +20,7 @@
 #include "tubex_Fnc.h"
 #include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
-#include "tubex_serializ_tubes.h"
+#include "tubex_serialize_tubes.h"
 #include "tubex_arithmetic.h"
 #include "tubex_TubeTreeSynthesis.h"
 #include "ibex_BoolInterval.h"

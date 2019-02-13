@@ -1,5 +1,6 @@
-/* ============================================================================
- *  tubex-lib - Serialization tools
+/** 
+ *  @file
+ *  Serialization tools
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -16,7 +17,7 @@
 #include <fstream>
 #include "tubex_Trajectory.h"
 #include "tubex_TrajectoryVector.h"
-#include "tubex_serializ_tubes.h"
+#include "tubex_serialize_tubes.h"
 
 namespace tubex
 {

@@ -1,5 +1,6 @@
-/* ============================================================================
- *  tubex-lib - Trajectory class
+/** 
+ *  @file
+ *  Trajectory class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of

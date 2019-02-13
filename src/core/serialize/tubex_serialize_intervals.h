@@ -1,5 +1,6 @@
-/* ============================================================================
- *  tubex-lib - Serialization tools
+/** 
+ *  @file
+ *  Serialization tools
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -22,11 +23,13 @@ namespace tubex
   /**
    * \brief Writes an Interval object into a binary file
    * 
-   * Interval binary structure
-   *   format: [char_intv_type][double_lb][double_ub]
-   *   char_intv_type refers the type of Interval:
+   * Interval binary structure:
+   * [char_intv_type][double_lb][double_ub]
+   * 
+   * char_intv_type refers the type of Interval:
    *   either BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS.
-   *   In case of unbounded intervals, the two last fields disappear.
+   *
+   * In case of unbounded intervals, the two last fields disappear.
    *
    * \param bin_file binary file (ofstream object)
    * \param intv Interval object to be serialized
@@ -46,8 +49,8 @@ namespace tubex
   /**
    * \brief Writes an IntervalVector object into a binary file
    * 
-   * IntervalVector binary structure
-   *   format: [short_int_size][Interval_1][...][Interval_n]
+   * IntervalVector binary structure:
+   * [short_int_size][Interval_1][...][Interval_n]
    *
    * \param bin_file binary file (ofstream object)
    * \param box IntervalVector object to be serialized

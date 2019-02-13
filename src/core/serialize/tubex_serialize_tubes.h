@@ -1,5 +1,6 @@
-/* ============================================================================
- *  tubex-lib - Serialization tools
+/** 
+ *  @file
+ *  Serialization tools
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of

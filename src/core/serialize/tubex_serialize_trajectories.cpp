@@ -12,7 +12,7 @@
 
 #include "ibex_Vector.h"
 #include "tubex_Exception.h"
-#include "tubex_serializ_trajectories.h"
+#include "tubex_serialize_trajectories.h"
 
 using namespace std;
 using namespace ibex;

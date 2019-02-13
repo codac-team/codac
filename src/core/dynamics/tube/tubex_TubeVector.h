@@ -1,5 +1,6 @@
-/* ============================================================================
- *  tubex-lib - TubeVector class
+/** 
+ *  @file
+ *  TubeVector class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -19,7 +20,7 @@
 #include "tubex_Fnc.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_arithmetic.h"
-#include "tubex_serializ_tubes.h"
+#include "tubex_serialize_tubes.h"
 #include "ibex_BoolInterval.h"
 
 namespace tubex

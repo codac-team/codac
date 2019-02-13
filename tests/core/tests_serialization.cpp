@@ -1,7 +1,7 @@
 #define protected public     // Using #define so that we can access protected
 #include "tubex_TrajectoryVector.h" // methods of TrajectoryVector for tests purposes
-#include "tubex_serializ_trajectories.h"
-#include "tubex_serializ_tubes.h"
+#include "tubex_serialize_trajectories.h"
+#include "tubex_serialize_tubes.h"
 #include "tests.h"
 #include <cstdio>
 

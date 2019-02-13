@@ -16,7 +16,7 @@
 #include "tubex_CtcEval.h"
 #include "tubex_arithmetic.h"
 #include "ibex_LargestFirst.h"
-#include "tubex_serializ_trajectories.h"
+#include "tubex_serialize_trajectories.h"
 #include "ibex_NoBisectableVariableException.h"
 
 using namespace std;

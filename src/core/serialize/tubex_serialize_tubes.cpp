@@ -10,8 +10,8 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_serializ_tubes.h"
-#include "tubex_serializ_intervals.h"
+#include "tubex_serialize_tubes.h"
+#include "tubex_serialize_intervals.h"
 #include "tubex_Exception.h"
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"

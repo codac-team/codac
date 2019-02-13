@@ -10,7 +10,7 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_serializ_intervals.h"
+#include "tubex_serialize_intervals.h"
 #include "tubex_Exception.h"
 
 using namespace std;
