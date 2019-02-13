@@ -23,8 +23,8 @@ namespace tubex
   /**
    * \brief Writes an Interval object into a binary file
    * 
-   * Interval binary structure:
-   * [char_intv_type][double_lb][double_ub]
+   * Interval binary structure: <br>
+   *   [char_intv_type][double_lb][double_ub]
    * 
    * char_intv_type refers the type of Interval:
    *   either BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS.
@@ -49,8 +49,11 @@ namespace tubex
   /**
    * \brief Writes an IntervalVector object into a binary file
    * 
-   * IntervalVector binary structure:
-   * [short_int_size][Interval_1][...][Interval_n]
+   * IntervalVector binary structure: <br>
+   *   [short_int_size] <br>
+   *   [Interval_1] <br>
+   *   ... <br>
+   *   [Interval_n]
    *
    * \param bin_file binary file (ofstream object)
    * \param box IntervalVector object to be serialized

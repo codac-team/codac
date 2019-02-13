@@ -22,29 +22,6 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*
-    Tube binary files structure (VERSION 2)
-      - minimal storage
-      - format: [short_int_version_number]
-                [int_nb_slices]
-                [double_t0]
-                [double_t1] // time input shared by 1rst and 2nd slices
-                [double_t2]
-                ...
-                [interval_y0] // value of 1rst slice
-                [interval_y1]
-                ...
-                [gate_t0] // value of 1rst gate
-                [gate_t1]
-                ...
-
-    TubeVector binary files structure (VERSION 2)
-      - format: [int_dim]
-                [Tube_traj1]
-                [Tube_traj2]
-                ...
-  */
-
   void serialize_Tube(ofstream& bin_file, const Tube& tube, int version_number)
   {
     if(!bin_file.is_open())
