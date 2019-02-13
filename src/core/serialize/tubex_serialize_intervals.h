@@ -20,7 +20,7 @@
 namespace tubex
 {
   /**
-   * \brief Write an Interval object into a binary file.
+   * \brief Writes an Interval object into a binary file
    * 
    * Interval binary structure
    *   format: [char_intv_type][double_lb][double_ub]
@@ -34,16 +34,34 @@ namespace tubex
   void serialize_Interval(std::ofstream& bin_file, const ibex::Interval& intv);
 
   /**
-   * \brief Create an Interval object from a binary file.
+   * \brief Creates an Interval object from a binary file.
    *
-   * The binary file has to be written by the serialize_interval() function.
+   * The binary file has to be written by the serialize_Interval() function.
    *
    * \param bin_file binary file (ifstream object)
    * \param intv Interval object to be deserialized
    */
   void deserialize_Interval(std::ifstream& bin_file, ibex::Interval& intv);
-  
+
+  /**
+   * \brief Writes an IntervalVector object into a binary file
+   * 
+   * IntervalVector binary structure
+   *   format: [short_int_size][Interval_1][...][Interval_n]
+   *
+   * \param bin_file binary file (ofstream object)
+   * \param box IntervalVector object to be serialized
+   */
   void deserialize_IntervalVector(std::ifstream& bin_file, ibex::IntervalVector& box);
+
+  /**
+   * \brief Creates an IntervalVector object from a binary file.
+   *
+   * The binary file has to be written by the serialize_IntervalVector() function.
+   *
+   * \param bin_file binary file (ifstream object)
+   * \param box IntervalVector object to be deserialized
+   */
   void serialize_IntervalVector(std::ofstream& bin_file, const ibex::IntervalVector& box);
 }
 
