@@ -24,7 +24,9 @@ namespace tubex
    * \brief Writes an Interval object into a binary file
    * 
    * Interval binary structure: <br>
-   *   [char_intv_type][double_lb][double_ub]
+   *   [char_intv_type] <br>
+   *   [double_lb] <br>
+   *   [double_ub]
    * 
    * char_intv_type refers the type of Interval:
    *   either BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS.

@@ -19,26 +19,6 @@ using namespace ibex;
 
 namespace tubex
 {
-  /*
-    Trajectory binary files structure (VERSION 2)
-      - minimal storage
-      - note: only map valued trajectories are serializable
-      - format: [short_int_version_number]
-                [int_nb_points]
-                [double_t_pt1]
-                [double_y_pt1]
-                [double_t_pt2]
-                [double_y_pt2]
-                [double_t_pt3]
-                ...
-
-    TrajectoryVector binary files structure (VERSION 2)
-      - format: [int_dim]
-                [Trajectory_traj1]
-                [Trajectory_traj2]
-                ...
-  */
-
   void serialize_Trajectory(ofstream& bin_file, const Trajectory& traj, int version_number)
   {
     if(!bin_file.is_open())
