@@ -17,43 +17,43 @@ using namespace ibex;
 
 namespace tubex
 {
-  Point::Point(const Interval& t, const Interval& x)
-    : m_t(t), m_x(x)
+  Point::Point(const Interval& x, const Interval& y)
+    : m_x(x), m_y(y)
   {
-    if(m_t.is_empty()) m_x.set_empty();
-    if(m_x.is_empty()) m_t.set_empty();
-  }
-
-  const Interval& Point::t() const
-  {
-    return m_t;
+    if(m_x.is_empty()) m_y.set_empty();
+    if(m_y.is_empty()) m_x.set_empty();
   }
 
   const Interval& Point::x() const
   {
     return m_x;
   }
+
+  const Interval& Point::y() const
+  {
+    return m_y;
+  }
   
   const IntervalVector Point::box() const
   {
     IntervalVector box(2);
-    box[0] = m_t; box[1] = m_x;
+    box[0] = m_x; box[1] = m_y;
     return box;
   }
 
   bool Point::operator==(const Point& p) const
   {
-    return m_t == p.m_t && m_x == p.m_x;
+    return m_x == p.m_x && m_y == p.m_y;
   }
 
   bool Point::operator!=(const Point& p) const
   {
-    return m_t != p.m_t || m_x != p.m_x;
+    return m_x != p.m_x || m_y != p.m_y;
   }
 
   ostream& operator<<(ostream& str, const Point& p)
   {
-    str << "(" << p.m_t << "," << p.m_x << ")";
+    str << "(" << p.m_x << "," << p.m_y << ")";
     return str;
   }
 

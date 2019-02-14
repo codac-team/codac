@@ -358,7 +358,7 @@ namespace Catch
         friend bool operator ==(tubex::Point lhs, ApproxPoint const& rhs)
         {
           return lhs == rhs.m_value ||
-            lhs.t() == ApproxIntv(rhs.m_value.t()) && lhs.x() == ApproxIntv(rhs.m_value.x());
+            lhs.x() == ApproxIntv(rhs.m_value.x()) && lhs.y() == ApproxIntv(rhs.m_value.y());
         }
 
         friend bool operator ==(ApproxPoint const& lhs, tubex::Point rhs)

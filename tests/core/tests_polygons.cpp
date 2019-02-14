@@ -212,22 +212,22 @@ TEST_CASE("Polygon")
     Edge edge1(Point(2.,0.), Point(9.,4.));
     Edge edge2(Point(3.,2.), Point(7.,2.));
     Point pt_inter = edge1 & edge2;
-    CHECK(ApproxIntv(pt_inter.t()) == Point(5.5,2.).t());
     CHECK(ApproxIntv(pt_inter.x()) == Point(5.5,2.).x());
+    CHECK(ApproxIntv(pt_inter.y()) == Point(5.5,2.).y());
 
     // Vertical edge
     edge1 = Edge(Point(1.,4.), Point(3.,2.));
     edge2 = Edge(Point(2.,1.), Point(2.,7.));
     pt_inter = edge1 & edge2;
-    CHECK(ApproxIntv(pt_inter.t()) == Point(2.,3.).t());
     CHECK(ApproxIntv(pt_inter.x()) == Point(2.,3.).x());
+    CHECK(ApproxIntv(pt_inter.y()) == Point(2.,3.).y());
 
     // No intersection
     edge1 = Edge(Point(2.,0.), Point(4.,2.));
     edge2 = Edge(Point(0.,-1.), Point(4.,-1.));
     pt_inter = edge1 & edge2;
-    CHECK(ApproxIntv(pt_inter.t()) == Interval::EMPTY_SET);
     CHECK(ApproxIntv(pt_inter.x()) == Interval::EMPTY_SET);
+    CHECK(ApproxIntv(pt_inter.y()) == Interval::EMPTY_SET);
 
     edge = p.get_edges()[1];
     inter = edge & x;

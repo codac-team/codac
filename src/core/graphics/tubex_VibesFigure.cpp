@@ -145,15 +145,15 @@ namespace tubex
   {
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
-    vector<double> v_t, v_x;
+    vector<double> v_x, v_y;
 
     for(int i = 0 ; i < p.nb_vertices() ; i++)
     {
-      v_t.push_back(trunc_inf(p[i].t().mid()));
       v_x.push_back(trunc_inf(p[i].x().mid()));
+      v_y.push_back(trunc_inf(p[i].y().mid()));
     } 
 
-    if(v_t.size() > 0)
-      vibes::drawPolygon(v_t, v_x, params_this_fig);
+    if(v_x.size() > 0)
+      vibes::drawPolygon(v_x, v_y, params_this_fig);
   }
 }

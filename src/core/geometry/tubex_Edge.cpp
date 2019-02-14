@@ -85,12 +85,12 @@ namespace tubex
       else // oblique polygon's line
       {
         // Line equation x=a*t+b
-        Interval a = (m_p2.x() - m_p1.x()) / (m_p2.t() - m_p1.t()); // slope
-        Interval b = m_p1.x();
+        Interval a = (m_p2.y() - m_p1.y()) / (m_p2.x() - m_p1.x()); // slope
+        Interval b = m_p1.y();
 
         // Intersecting polygon's line and edge's line
         return Point(e.box()[0] & box()[0],
-                     e.box()[1] & (b + a * (e.box()[0] - m_p1.t())));
+                     e.box()[1] & (b + a * (e.box()[0] - m_p1.x())));
       }
     }
 
@@ -104,11 +104,11 @@ namespace tubex
       else // oblique polygon's line
       {
         // Line equation x=a*t+b
-        Interval a = (m_p2.x() - m_p1.x()) / (m_p2.t() - m_p1.t()); // slope
-        Interval b = m_p1.x();
+        Interval a = (m_p2.y() - m_p1.y()) / (m_p2.x() - m_p1.x()); // slope
+        Interval b = m_p1.y();
 
         // Intersecting polygon's line and edge's line
-        return Point(e.box()[0] & (m_p1.t() + ((e.box()[1] - b) / a)),
+        return Point(e.box()[0] & (m_p1.x() + ((e.box()[1] - b) / a)),
                      e.box()[1] & box()[1]);
       }
     }

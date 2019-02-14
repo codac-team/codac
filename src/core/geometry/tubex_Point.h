@@ -23,9 +23,9 @@ namespace tubex
   {
     public:
 
-      Point(const ibex::Interval& t, const ibex::Interval& x);
-      const ibex::Interval& t() const;
+      Point(const ibex::Interval& x, const ibex::Interval& y);
       const ibex::Interval& x() const;
+      const ibex::Interval& y() const;
       const ibex::IntervalVector box() const;
       bool operator==(const Point& p) const;
       bool operator!=(const Point& p) const;
@@ -34,8 +34,8 @@ namespace tubex
     public:
 
       // Reliable representation of points:
-      ibex::Interval m_t;
       ibex::Interval m_x;
+      ibex::Interval m_y;
   };
 
   void push_points(const ibex::IntervalVector& box, std::vector<Point>& v_points);
