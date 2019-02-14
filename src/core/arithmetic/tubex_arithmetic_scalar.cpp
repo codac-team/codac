@@ -6,7 +6,7 @@
  *              the GNU Lesser General Public License (LGPL).
  *
  *  Author(s) : Simon Rohou
- *  Bug fixes : -
+ *  Bug fixes : Bertrand Neveu
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
@@ -106,7 +106,7 @@ namespace tubex
       const Slice *slice_x1, *slice_x2; \
       \
       Tube *x1_resampled = NULL; /* In case of different slicing between x1 and x2, */ \
-      Tube *x2_resampled = NULL; /* copies of x1 and x2 will be made and equally resampled. */\
+      Tube *x2_resampled = NULL; /* copies of x1 and x2 will be made and equally resampled. */ \
       \
       if(Tube::same_slicing(x1, x2)) /* faster, no sampling computation needed */ \
       { \
