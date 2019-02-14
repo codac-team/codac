@@ -521,4 +521,30 @@ TEST_CASE("Operators")
     tube1 &= tube2;
     CHECK(tube1(40.) == Interval::EMPTY_SET);
   }
+
+  SECTION("Test operation with different slicing")
+  {
+    Tube tube1(Interval(0.,1.), 0.5, Interval(2.,4.));
+    CHECK(tube1.nb_slices() == 2);
+
+    Tube tube2(tube1);
+    tube2.set(Interval(1.,2.));
+
+    Tube tube3 = tube1 + tube2;
+
+    CHECK(tube3.codomain() == Interval(3.,6.));
+    CHECK(tube3(0) == Interval(3.,6.));
+
+    // New slicing for tube2
+
+    tube2.sample(0.01);
+    tube2.set(Interval(1.,4.), 0);
+    CHECK(tube1.nb_slices() == 2);
+    CHECK(tube2.nb_slices() == 3);
+    tube3 = tube1 + tube2;
+
+    CHECK(tube3.codomain() == Interval(3.,8.));
+    CHECK(tube3(0) == Interval(3.,8.));
+    CHECK(tube3(1) == Interval(3.,6.));
+  }
 }

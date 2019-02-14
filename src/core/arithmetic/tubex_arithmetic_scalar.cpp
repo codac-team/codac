@@ -105,6 +105,9 @@ namespace tubex
       Tube y(x1); \
       const Slice *slice_x1, *slice_x2; \
       \
+      Tube *x1_resampled = NULL; /* In case of different slicing between x1 and x2, */ \
+      Tube *x2_resampled = NULL; /* copies of x1 and x2 will be made and equally resampled. */\
+      \
       if(Tube::same_slicing(x1, x2)) /* faster, no sampling computation needed */ \
       { \
         slice_x1 = x1.first_slice(); \
@@ -113,13 +116,13 @@ namespace tubex
       \
       else \
       { \
-        Tube x1_resampled(x1); \
-        Tube x2_resampled(x2); \
-        x1_resampled.sample(x2); \
-        x2_resampled.sample(x1); \
+        x1_resampled = new Tube(x1); \
+        x2_resampled = new Tube(x2); \
+        x1_resampled->sample(x2); /* common sampling */ \
+        x2_resampled->sample(x1); \
         y.sample(x2); \
-        slice_x1 = x1_resampled.first_slice(); \
-        slice_x2 = x2_resampled.first_slice(); \
+        slice_x1 = x1_resampled->first_slice(); \
+        slice_x2 = x2_resampled->first_slice(); \
       } \
       \
       Slice *slice_y = y.first_slice(); \
@@ -130,6 +133,9 @@ namespace tubex
         slice_y = slice_y->next_slice(); slice_x1 = slice_x1->next_slice(); slice_x2 = slice_x2->next_slice(); \
       } \
       y.last_slice()->set_output_gate(ibex::f(x1.last_slice()->output_gate(), x2.last_slice()->output_gate())); \
+      \
+      if(x1_resampled != NULL) delete x1_resampled; \
+      if(x2_resampled != NULL) delete x2_resampled; \
       return y; \
     } \
     \
