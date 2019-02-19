@@ -330,17 +330,34 @@ TEST_CASE("Polygon")
     ConvexPolygon p(v_p);
     IntervalVector x(2), box_inter(2);
 
-    CHECK(p.encloses(Point(7.,7.)));
-    CHECK(p.encloses(Point(1.,4.)));
-    CHECK(p.encloses(Point(3.,10.)));
-    CHECK(p.encloses(Point(8.,14.)));
-    CHECK(p.encloses(Point(2.,8.)));
-    CHECK(p.encloses(Point(2.5,9.)));
-    CHECK_FALSE(p.encloses(Point(10.,2.)));
-    CHECK_FALSE(p.encloses(Point(0.0,0.0)));
-    CHECK_FALSE(p.encloses(Point(0.0,0.9)));
-    CHECK_FALSE(p.encloses(Point(0.9,0.0)));
-    CHECK_FALSE(p.encloses(Point(0.9,0.9)));
+    CHECK(p.encloses(Point(7.,7.)) == YES);
+    CHECK(p.encloses(Point(2.,7.)) == YES);
+    CHECK(p.encloses(Point(10.,3.)) == YES);
+    CHECK(p.encloses(Point(11.,9.)) == YES);
+    CHECK(p.encloses(Point(13.5,9.)) == YES);
+    CHECK(p.encloses(Point(5.8,12.2)) == YES);
+
+    CHECK(p.encloses(Point(1.,4.)) == MAYBE);
+    CHECK(p.encloses(Point(3.,10.)) == MAYBE);
+    CHECK(p.encloses(Point(8.,14.)) == MAYBE);
+    CHECK(p.encloses(Point(2.,8.)) == MAYBE);
+    CHECK(p.encloses(Point(2.5,9.)) == MAYBE);
+    CHECK(p.encloses(Point(5.5,12.5)) == MAYBE);
+    CHECK(p.encloses(Point(1.,5.)) == MAYBE);
+    CHECK(p.encloses(Point(1.,1.)) == MAYBE);
+
+    CHECK(p.encloses(Point(10.,2.)) == NO);
+    CHECK(p.encloses(Point(0.0,0.0)) == NO);
+    CHECK(p.encloses(Point(0.0,0.9)) == NO);
+    CHECK(p.encloses(Point(0.9,0.0)) == NO);
+    CHECK(p.encloses(Point(0.9,0.9)) == NO);
+    CHECK(p.encloses(Point(0.5,1.)) == NO);
+    CHECK(p.encloses(Point(5.2,12.8)) == NO);
+    CHECK(p.encloses(Point(1.,14.)) == NO);
+    CHECK(p.encloses(Point(1.,13.5)) == NO);
+    CHECK(p.encloses(Point(14.,1.)) == NO);
+    CHECK(p.encloses(Point(14.,14.)) == NO);
+    CHECK(p.encloses(Point(5.,14.)) == NO);
 
     x[0] = Interval(0.,2.); x[1] = Interval(0.,2.);
     box_inter = p & x;
@@ -674,5 +691,150 @@ cout << "-------------" << endl;
     ConvexPolygon p2(v_pts);
 
     CHECK(ApproxPolygon(p1) == p2);
+  }
+
+  SECTION("Polygons intersections, test 1")
+  {
+    IntervalVector box(2, Interval(0.,4.));
+
+    vector<Point> v_points;
+    v_points.push_back(Point(3.,2.));
+    v_points.push_back(Point(1.,6.));
+    v_points.push_back(Point(6.,5.));
+    ConvexPolygon p(v_points);
+
+    ConvexPolygon box_inter = p & box;
+    CHECK(box_inter.box() == IntervalVector(2, Interval(2.,4.)));
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    CHECK(p_inter.nb_vertices() == 4);
+
+    v_points.clear();
+    v_points.push_back(Point(3.,2.));
+    v_points.push_back(Point(2.,4.));
+    v_points.push_back(Point(4.,4.));
+    v_points.push_back(Point(4.,3.));
+    ConvexPolygon p_truth(v_points);
+    CHECK(p_truth == p_inter);
+  }
+
+  SECTION("Polygons intersections, test 2")
+  {
+    IntervalVector box(2, Interval(2.,6.));
+
+    vector<Point> v_points;
+    v_points.push_back(Point(1.,2.));
+    v_points.push_back(Point(3.,4.));
+    v_points.push_back(Point(5.,1.));
+    v_points.push_back(Point(2.,1.));
+    ConvexPolygon p(v_points);
+
+    ConvexPolygon box_inter = p & box;
+    IntervalVector box_truth(2);
+    box_truth[0] = Interval(2.,4.+1./3.);
+    box_truth[1] = Interval(2.,4.);
+    CHECK(ApproxIntvVector(box_inter.box()) == box_truth);
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    CHECK(p_inter.nb_vertices() == 4);
+
+    v_points.clear();
+    v_points.push_back(Point(2.,2.));
+    v_points.push_back(Point(2.,3.));
+    v_points.push_back(Point(3.,4.));
+    v_points.push_back(Point(4.+1./3.,2.));
+    ConvexPolygon p_truth(v_points);
+    CHECK(ApproxPolygon(p_truth) == p_inter);
+  }
+
+  SECTION("Polygons intersections, test 3 (big box)")
+  {
+    IntervalVector box(2, Interval(-10.,10.));
+
+    vector<Point> v_points;
+    v_points.push_back(Point(1.,2.));
+    v_points.push_back(Point(3.,4.));
+    v_points.push_back(Point(5.,1.));
+    v_points.push_back(Point(2.,1.));
+    ConvexPolygon p(v_points);
+
+    ConvexPolygon box_inter = p & box;
+    v_points.clear();
+    v_points.push_back(Point(1.,1.));
+    v_points.push_back(Point(1.,4.));
+    v_points.push_back(Point(5.,4.));
+    v_points.push_back(Point(5.,1.));
+    ConvexPolygon p_truth(v_points);
+    CHECK(box_inter == p_truth);
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    CHECK(p_inter == p); // same polygon
+  }
+
+  SECTION("Polygons intersections, test 4 (inner box)")
+  {
+    IntervalVector box(2, Interval(2.8,3.));
+
+    vector<Point> v_points;
+    v_points.push_back(Point(1.,2.));
+    v_points.push_back(Point(3.,4.));
+    v_points.push_back(Point(5.,1.));
+    v_points.push_back(Point(2.,1.));
+    ConvexPolygon p(v_points);
+
+    ConvexPolygon box_inter = p & box;
+    ConvexPolygon p_truth(box);
+    CHECK(box_inter == p_truth);
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    CHECK(p_inter == p_truth);
+  }
+
+  SECTION("Polygons intersections, test 5")
+  {
+    IntervalVector box(2, Interval(1.,4.));
+
+    vector<Point> v_points;
+    v_points.push_back(Point(2.,1.));
+    v_points.push_back(Point(3.,1.));
+    v_points.push_back(Point(4.,2.));
+    v_points.push_back(Point(4.,3.));
+    v_points.push_back(Point(3.,4.));
+    v_points.push_back(Point(2.,4.));
+    v_points.push_back(Point(1.,3.));
+    v_points.push_back(Point(1.,2.));
+    reverse(v_points.begin(), v_points.end());
+    ConvexPolygon p(v_points);
+
+    ConvexPolygon box_inter = p & box;
+    ConvexPolygon p_truth(box);
+    CHECK(box_inter == p_truth);
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    CHECK(p_inter == p); // same polygon
+  }
+
+  SECTION("Polygons intersections, test 6 (shited polygon points declaration)")
+  {
+    IntervalVector box(2, Interval(1.,4.));
+
+    vector<Point> v_points;
+    v_points.push_back(Point(3.,4.));
+    v_points.push_back(Point(2.,4.));
+    v_points.push_back(Point(1.,3.));
+    v_points.push_back(Point(1.,2.));
+    v_points.push_back(Point(2.,1.));
+    v_points.push_back(Point(3.,1.));
+    v_points.push_back(Point(4.,2.));
+    v_points.push_back(Point(4.,3.));
+    reverse(v_points.begin(), v_points.end());
+    ConvexPolygon p(v_points);
+
+    ConvexPolygon box_inter = p & box;
+    ConvexPolygon p_truth(box);
+    CHECK(box_inter == p_truth);
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    CHECK(p_inter == p); // same polygon
   }
 }

@@ -53,7 +53,17 @@ namespace tubex
 
   ostream& operator<<(ostream& str, const Point& p)
   {
-    str << "(" << p.m_x << "," << p.m_y << ")";
+    str << "(";
+    
+    if(p.m_x.is_degenerated()) str << p.m_x.lb();
+    else str << p.m_x;
+
+    str << ",";
+
+    if(p.m_y.is_degenerated()) str << p.m_y.lb();
+    else str << p.m_y;
+
+    str << ")";
     return str;
   }
 
@@ -61,12 +71,15 @@ namespace tubex
   {
     assert(box.size() == 2);
 
-    Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
-    Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
+    Interval xlb = box[0].lb() != NEG_INFINITY ? box[0].lb() : Interval(NEG_INFINITY, box[0].ub());
+    Interval xub = box[0].ub() != POS_INFINITY ? box[0].ub() : Interval(box[0].lb(), POS_INFINITY);
 
-    v_points.push_back(Point(box[0].lb(), xlb));
-    v_points.push_back(Point(box[0].lb(), xub));
-    v_points.push_back(Point(box[0].ub(), xub));
-    v_points.push_back(Point(box[0].ub(), xlb));
+    Interval ylb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
+    Interval yub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
+
+    v_points.push_back(Point(xlb, ylb));
+    v_points.push_back(Point(xlb, yub));
+    v_points.push_back(Point(xub, yub));
+    v_points.push_back(Point(xub, ylb));
   }
 }

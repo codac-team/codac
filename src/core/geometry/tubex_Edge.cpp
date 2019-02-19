@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include <iostream>
+#include <iomanip>
 #include "tubex_Edge.h"
 
 using namespace std;
@@ -21,6 +22,16 @@ namespace tubex
   Edge::Edge(const Point& p1, const Point& p2) : m_p1(p1), m_p2(p2)
   {
 
+  }
+  
+  const Point& Edge::p1() const
+  {
+    return m_p1;
+  }
+  
+  const Point& Edge::p2() const
+  {
+    return m_p2;
   }
 
   const IntervalVector Edge::operator&(const IntervalVector& x) const
@@ -73,7 +84,7 @@ namespace tubex
   
   const Point Edge::operator&(const Edge& e) const
   {
-    assert(e.box().is_flat() && "edge should be vertical or horizontal");
+    //assert(e.box().is_flat() && "second edge should be vertical or horizontal");
 
     if(e.box()[0].is_degenerated()) // vertical edge e
     {
@@ -112,6 +123,17 @@ namespace tubex
                      e.box()[1] & box()[1]);
       }
     }
+
+    else
+    {
+      Interval x1 = m_p1.x(), y1 = m_p1.y();
+      Interval x2 = m_p2.x(), y2 = m_p2.y();
+      Interval x3 = e.p1().x(), y3 = e.p1().y();
+      Interval x4 = e.p2().x(), y4 = e.p2().y();
+
+      return Point(((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4)),
+                   ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4)));
+    }
   }
   
   ostream& operator<<(ostream& str, const Edge& e)
@@ -131,5 +153,17 @@ namespace tubex
     v_edges.push_back(Edge(Point(box[0].ub(), xlb), Point(box[0].ub(), xub)));
     v_edges.push_back(Edge(Point(box[0].ub(), xub), Point(box[0].lb(), xub)));
     v_edges.push_back(Edge(Point(box[0].lb(), xub), Point(box[0].lb(), xlb)));
+  }
+
+  BoolInterval Edge::parallel(const Edge& e1, const Edge& e2)
+  {
+    if(e1.box()[0].is_degenerated() && e2.box()[0].is_degenerated())
+      return YES; // vertical lines 
+
+    if(e1.box()[1].is_degenerated() && e2.box()[1].is_degenerated())
+      return YES; // horizontal lines 
+
+    // Trying to compute the intersection point
+    return (e1 & e2).box().is_unbounded() ? MAYBE : NO;
   }
 }

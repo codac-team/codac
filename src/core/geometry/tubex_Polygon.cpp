@@ -126,32 +126,43 @@ namespace tubex
     return false;
   }
   
-  bool Polygon::encloses(const Point& p) const
+  const BoolInterval Polygon::encloses(const Point& p) const
   {
-    // Note: code patterned after [Franklin, 2000]
+    // Using the ray tracing method:
+    //   A ray is defined from p to the right ; if it crosses
+    //   'a' times one of the edges, and (a & 1), then p is inside
 
-    int cn = 0; // the  crossing number counter
-    vector<Point> v_vertices = get_vertices();
-    int n = v_vertices.size();
+    vector<Edge> v_edges = get_edges();
+    int a = 0; // the crossing number counter
+    int n = v_edges.size();
+    Edge ray(p, Point(box()[0].ub() + 1., p.y())); // horizontal edge to the right
+    Point prev_e = v_edges[n-1] & ray;
 
-    // Loop through all edges of the polygon
+    // Loop through all edges of the polygon, looking for intersections
     for(int i = 0 ; i < n ; i++)
     {
-      if(p.box().is_subset(v_vertices[i].box()))
-        return true;
+      if(!v_edges[i].box()[1].intersects(p.y())) // no feasible intersection
+        continue;
 
-      // Edge from v[i] to v[i+1]
-      if(((v_vertices[i].y().mid() <= p.y().mid()) && (v_vertices[(i+1)%n].y().mid() > p.y().mid())) // an upward crossing
-      || ((v_vertices[i].y().mid() > p.y().mid()) && (v_vertices[(i+1)%n].y().mid() <= p.y().mid()))) // a downward crossing
-      {
-        // Compute  the actual edge-ray intersect t-coordinate
-        float vt = (float)(p.y().mid() - v_vertices[i].y().mid()) / (v_vertices[(i+1)%n].y().mid() - v_vertices[i].y().mid());
-        if(p.x().mid() < v_vertices[i].x().mid() + vt * (v_vertices[(i+1)%n].x().mid() - v_vertices[i].x().mid())) // p.x() < intersect
-          ++cn; // a valid crossing of x=p.y() right of p.x()
-      }
+      // Intersecting point
+      Point e = v_edges[i] & ray;
+
+      if(e.x().intersects(p.x()))
+        return MAYBE; // uncertainty
+
+      if(e.y().intersects(box()[1].lb()) || e.y().intersects(box()[1].ub()))
+        continue; // the ray is horizontaly tangent to the polygon
+
+      if(prev_e.x().intersects(e.x()))
+        continue; // point already dealt
+      
+      prev_e = e;
+
+      if(e.x().lb() > p.x().ub()) // intersection on the right
+        a++;
     }
 
-    return (cn & 1); // 0 if even (out), and 1 if odd (in)
+    return (a & 1) ? YES : NO;
   }
 
   ostream& operator<<(ostream& str, const Polygon& p)
@@ -177,10 +188,24 @@ namespace tubex
   void Polygon::delete_redundant_points()
   {
     vector<Point> v_vertices;
-    for(int i = 0 ; i < m_v_vertices.size() ; i++)
-      if(m_v_vertices[i].y().is_unbounded()
-        || m_v_vertices[i] != m_v_vertices[(i+1) % m_v_vertices.size()])
+    int n = m_v_vertices.size();
+
+    for(int i = 0 ; i < n ; i++)
+    {
+      if(m_v_vertices[i].box().is_unbounded())
+      {
         v_vertices.push_back(m_v_vertices[i]);
+        continue;
+      }
+
+      bool diff_from_all_prev_points = true;
+      for(int j = i-1 ; j >= 0 ; j--)
+        diff_from_all_prev_points &= m_v_vertices[i] != m_v_vertices[j];
+      
+      if(diff_from_all_prev_points)
+        v_vertices.push_back(m_v_vertices[i]);
+    }
+
     m_v_vertices = v_vertices;
   }
 }

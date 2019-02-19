@@ -14,6 +14,7 @@
 #define __TUBEX_EDGE_H__
 
 #include "tubex_Point.h"
+#include "ibex_BoolInterval.h"
 
 namespace tubex
 {
@@ -22,12 +23,15 @@ namespace tubex
     public:
 
       Edge(const Point& p1, const Point& p2);
+      const Point& p1() const;
+      const Point& p2() const;
       const ibex::IntervalVector box() const;
       const ibex::IntervalVector operator&(const ibex::IntervalVector& box) const;
       bool operator==(const Edge& e) const;
       bool operator!=(const Edge& e) const;
       const Point operator&(const Edge& e) const;
       friend std::ostream& operator<<(std::ostream& str, const Edge& e);
+      static ibex::BoolInterval parallel(const Edge& e1, const Edge& e2);
 
     protected:
 

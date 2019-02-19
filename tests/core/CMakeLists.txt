@@ -1,5 +1,8 @@
 file(GLOB_RECURSE TESTS_SOURCES "tests_*.cpp")
 set(TESTS_SOURCES ${TESTS_SOURCES} main.cpp)
+
+#set(TESTS_SOURCES tests_polygons.cpp main.cpp)
+
 add_executable(tubelib_tests_core ${TESTS_SOURCES})
 target_link_libraries(tubelib_tests_core ${LIBS} tubex-core)
 add_test(NAME Test COMMAND tubelib_tests_core)
