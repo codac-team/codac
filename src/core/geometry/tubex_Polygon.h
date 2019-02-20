@@ -41,6 +41,7 @@ namespace tubex
       bool operator==(const Polygon& p) const;
       bool operator!=(const Polygon& p) const;
       const ibex::BoolInterval encloses(const Point& p) const;
+      bool does_not_exist() const;
 
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
 

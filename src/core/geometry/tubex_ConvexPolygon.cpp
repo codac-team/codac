@@ -33,8 +33,10 @@ namespace tubex
   const IntervalVector ConvexPolygon::operator&(const IntervalVector& x) const
   {
     assert(x.size() == 2);
-
     // todo: the following could be easily optimized
+
+    if(does_not_exist())
+      return IntervalVector(2, Interval::EMPTY_SET);
 
     IntervalVector reduced_x = x & box();
     IntervalVector inter(2, Interval::EMPTY_SET);
@@ -61,6 +63,9 @@ namespace tubex
     // todo: the following could be easily optimized
 
     IntervalVector reduced_x = x & p.box();
+    
+    if(x.is_empty() || p.does_not_exist() || reduced_x.is_empty())
+      return ConvexPolygon(IntervalVector(2, Interval::EMPTY_SET));
 
     vector<Point> v_points;
     vector<Edge> p_edges = p.get_edges();
@@ -70,7 +75,7 @@ namespace tubex
     Point c(reduced_x[0].ub(), reduced_x[1].lb());
     Point d(reduced_x[0].lb(), reduced_x[1].lb());
 
-    int j = 0, k;
+    int j = 0, k = 0;
     int n = p_edges.size();
 
     if(p.encloses(a) != NO)
@@ -83,7 +88,7 @@ namespace tubex
       if(Edge::parallel(p_edges[i%n], ab) == NO)
       {
         Point e = p_edges[i%n] & ab;
-        if(p.encloses(e) != NO)
+        if(!e.does_not_exist() && p.encloses(e) != NO)
         {
           v_points.push_back(e);
           k = i;
@@ -102,7 +107,7 @@ namespace tubex
       if(Edge::parallel(p_edges[i%n], bc) == NO)
       {
         Point e = p_edges[i%n] & bc;
-        if(p.encloses(e) != NO)
+        if(!e.does_not_exist() && p.encloses(e) != NO)
         {
           v_points.push_back(e);
           k = i%n;
@@ -121,7 +126,7 @@ namespace tubex
       if(Edge::parallel(p_edges[i%n], cd) == NO)
       {
         Point e = p_edges[i%n] & cd;
-        if(p.encloses(e) != NO)
+        if(!e.does_not_exist() && p.encloses(e) != NO)
         {
           v_points.push_back(e);
           k = i%n;
@@ -140,7 +145,7 @@ namespace tubex
       if(Edge::parallel(p_edges[i%n], da) == NO)
       {
         Point e = p_edges[i%n] & da;
-        if(p.encloses(e) != NO)
+        if(!e.does_not_exist() && p.encloses(e) != NO)
         {
           v_points.push_back(e);
           k = i%n;
@@ -148,7 +153,7 @@ namespace tubex
       }
     }
 
-    //assert(v_points.size() > 2);
+    assert(!v_points.empty());
     return ConvexPolygon(v_points);
   }
 }

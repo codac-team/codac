@@ -51,6 +51,11 @@ namespace tubex
     return m_x != p.m_x || m_y != p.m_y;
   }
 
+  bool Point::does_not_exist() const
+  {
+    return m_x.is_empty() || m_y.is_empty();
+  }
+
   ostream& operator<<(ostream& str, const Point& p)
   {
     str << "(";
@@ -70,16 +75,18 @@ namespace tubex
   void push_points(const IntervalVector& box, vector<Point>& v_points)
   {
     assert(box.size() == 2);
+    if(!box.is_empty())
+    {
+      Interval xlb = box[0].lb() != NEG_INFINITY ? box[0].lb() : Interval(NEG_INFINITY, box[0].ub());
+      Interval xub = box[0].ub() != POS_INFINITY ? box[0].ub() : Interval(box[0].lb(), POS_INFINITY);
 
-    Interval xlb = box[0].lb() != NEG_INFINITY ? box[0].lb() : Interval(NEG_INFINITY, box[0].ub());
-    Interval xub = box[0].ub() != POS_INFINITY ? box[0].ub() : Interval(box[0].lb(), POS_INFINITY);
+      Interval ylb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
+      Interval yub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
 
-    Interval ylb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
-    Interval yub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
-
-    v_points.push_back(Point(xlb, ylb));
-    v_points.push_back(Point(xlb, yub));
-    v_points.push_back(Point(xub, yub));
-    v_points.push_back(Point(xub, ylb));
+      v_points.push_back(Point(xlb, ylb));
+      v_points.push_back(Point(xlb, yub));
+      v_points.push_back(Point(xub, yub));
+      v_points.push_back(Point(xub, ylb));
+    }
   }
 }

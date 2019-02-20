@@ -27,7 +27,6 @@ namespace tubex
 
   Polygon::Polygon(const vector<Point>& v_points)
   {
-    assert(!v_points.empty());
     for(int i = 0 ; i < v_points.size() ; i++)
       m_v_vertices.push_back(v_points[i]);
     delete_redundant_points();
@@ -97,6 +96,8 @@ namespace tubex
       if(m_v_vertices[j] != p.m_v_vertices[(i+way*j+n) % n])
         return false;
 
+    // todo: test undefined case
+
     return true;
   }
 
@@ -119,11 +120,16 @@ namespace tubex
       if(m_v_vertices[j] != p.m_v_vertices[(i+way*j+n) % n])
         return true;
 
+    // todo: test undefined case
+
     return false;
   }
   
   const BoolInterval Polygon::encloses(const Point& p) const
   {
+    if(p.does_not_exist() || does_not_exist())
+      return NO;
+
     // Using the ray tracing method:
     //   A ray is defined from p to the right ; if it crosses
     //   'a' times one of the edges, and (a & 1), then p is inside
@@ -142,31 +148,43 @@ namespace tubex
 
       // Intersecting point
       Point e = v_edges[i] & ray;
+      if(!e.does_not_exist()) // intersection to the left of p, not considered
+      {
+        if(e.x().intersects(p.x()))
+          return MAYBE; // uncertainty
 
-      if(e.x().intersects(p.x()))
-        return MAYBE; // uncertainty
+        if(e.y().intersects(box()[1].lb()) || e.y().intersects(box()[1].ub()))
+          continue; // the ray is horizontaly tangent to the polygon
 
-      if(e.y().intersects(box()[1].lb()) || e.y().intersects(box()[1].ub()))
-        continue; // the ray is horizontaly tangent to the polygon
+        if(prev_e.x().intersects(e.x()))
+          continue; // point already dealt
 
-      if(prev_e.x().intersects(e.x()))
-        continue; // point already dealt
-      
+        if(e.x().lb() > p.x().ub()) // intersection on the right
+          a++;
+      }
+
       prev_e = e;
-
-      if(e.x().lb() > p.x().ub()) // intersection on the right
-        a++;
     }
 
     return (a & 1) ? YES : NO;
+  }
+
+  bool Polygon::does_not_exist() const
+  {
+    if(m_v_vertices.size() == 0)
+      return true;
+    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+      if(m_v_vertices[i].does_not_exist())
+        return true;
+    return false;
   }
 
   ostream& operator<<(ostream& str, const Polygon& p)
   {
     str << "{";
 
-    if(p.nb_vertices() == 0)
-      str << " empty ";
+    if(p.nb_vertices() == 0 || p.does_not_exist())
+      str << " undefined ";
 
     else
     {

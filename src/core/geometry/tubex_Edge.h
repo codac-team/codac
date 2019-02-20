@@ -32,6 +32,7 @@ namespace tubex
       const Point operator&(const Edge& e) const;
       friend std::ostream& operator<<(std::ostream& str, const Edge& e);
       static ibex::BoolInterval parallel(const Edge& e1, const Edge& e2);
+      bool does_not_exist() const;
 
     protected:
 

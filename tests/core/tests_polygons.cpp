@@ -851,4 +851,91 @@ cout << "-------------" << endl;
     ConvexPolygon inter = ConvexPolygon::intersect(p, x);
     CHECK(p == inter);
   }
+
+  SECTION("Polygons intersections, test 8")
+  {
+    IntervalVector box(2);
+    box[0] = Interval(2.,6.);
+    box[1] = Interval(1.,5.);
+
+    vector<Point> v_points;
+    v_points.push_back(Point(1.,1.));
+    v_points.push_back(Point(2.,4.));
+    v_points.push_back(Point(7.,5.));
+    v_points.push_back(Point(6.,2.));
+    ConvexPolygon p(v_points);
+
+    IntervalVector box_inter = p & box;
+    IntervalVector box_truth(2);
+    box_truth[0] = Interval(2.,6.);
+    box_truth[1] = Interval(1.+(1./5.),4.+(4./5.));
+    CHECK(ApproxIntvVector(box_inter) == box_truth);
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    v_points.clear();
+    v_points.push_back(Point(2.,1.+(1./5.)));
+    v_points.push_back(Point(2.,4.));
+    v_points.push_back(Point(6.,4.+(4./5.)));
+    v_points.push_back(Point(6.,2.));
+    ConvexPolygon p_truth(v_points);
+    CHECK(ApproxPolygon(p_inter) == p_truth);
+  }
+
+  /*SECTION("Polygons intersections, test 9")
+  {
+    IntervalVector box(2);
+    box[0] = 4.;
+    box[0].inflate(1.);
+    box[1] = Interval(1.,5.);
+
+    vector<Point> v_points;
+    v_points.push_back(Point(1.,1.));
+    v_points.push_back(Point(2.,4.));
+    v_points.push_back(Point(7.,5.));
+    v_points.push_back(Point(6.,2.));
+    ConvexPolygon p(v_points);
+
+    IntervalVector box_inter = p & box;
+    IntervalVector box_truth(2);
+    box_truth[0] = 4.;
+    box_truth[1] = Interval(1.+(2./5.),4.+(3./5.));
+    CHECK(ApproxIntvVector(box_inter) == box_truth);
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    v_points.clear();
+    v_points.push_back(Point(3.,4.+(1./5.)));
+    v_points.push_back(Point(5.,4.+(3./5.)));
+    v_points.push_back(Point(5.,1.+(4./5.)));
+    v_points.push_back(Point(3.,1.+(2./5.)));
+    ConvexPolygon p_truth(v_points);
+    CHECK(ApproxPolygon(p_inter) == p_truth);
+  }
+
+  SECTION("Polygons intersections, test 10 (degenerated box)")
+  {
+    IntervalVector box(2);
+    box[0] = 4.;
+    box[0].inflate(0.5);
+    box[1] = Interval(1.,5.);
+
+    vector<Point> v_points;
+    v_points.push_back(Point(1.,1.));
+    v_points.push_back(Point(2.,4.));
+    v_points.push_back(Point(7.,5.));
+    v_points.push_back(Point(6.,2.));
+    ConvexPolygon p(v_points);
+
+    IntervalVector box_inter = p & box;
+    IntervalVector box_truth(2);
+    box_truth[0] = 4.;
+    box_truth[1] = Interval(1.+(3./5.),4.+(2./5.));
+    CHECK(ApproxIntvVector(box_inter) == box_truth);
+
+    ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
+    v_points.clear();
+    v_points.push_back(Point(4.,1.+(3./5.)));
+    v_points.push_back(Point(4.,4.+(2./5.)));
+    ConvexPolygon p_truth(v_points);
+    CHECK(ApproxPolygon(p_inter) == p_truth);
+  }*/
 }
