@@ -11,18 +11,15 @@
  * ---------------------------------------------------------------------------- */
 
 #include <iostream>
+#include <iomanip>
 #include "tubex_ConvexPolygon.h"
+#include "tubex_VibesFigure.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  ConvexPolygon::ConvexPolygon() : Polygon()
-  {
-
-  }
-  
   ConvexPolygon::ConvexPolygon(const IntervalVector& box) : Polygon(box)
   {
     assert(box.size() == 2);
@@ -151,6 +148,7 @@ namespace tubex
       }
     }
 
+    //assert(v_points.size() > 2);
     return ConvexPolygon(v_points);
   }
 }

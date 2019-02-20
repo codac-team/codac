@@ -22,7 +22,6 @@ namespace tubex
   {
     public:
 
-      ConvexPolygon();
       ConvexPolygon(const ibex::IntervalVector& box);
       ConvexPolygon(const std::vector<Point>& v_points);
 

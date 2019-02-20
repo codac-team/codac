@@ -64,6 +64,7 @@ namespace tubex
       }
     }
 
+    assert(inter.is_empty());
     return inter;
   }
 

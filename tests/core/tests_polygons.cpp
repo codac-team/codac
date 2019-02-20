@@ -837,4 +837,18 @@ cout << "-------------" << endl;
     ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
     CHECK(p_inter == p); // same polygon
   }
+
+  SECTION("Polygons intersections, test 7 (degenerate case)")
+  {
+    IntervalVector x(2);
+    x[0] = 4000.;
+    x[1] = 200.;
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(4000.,200.));
+    ConvexPolygon p(v_pts);
+
+    ConvexPolygon inter = ConvexPolygon::intersect(p, x);
+    CHECK(p == inter);
+  }
 }

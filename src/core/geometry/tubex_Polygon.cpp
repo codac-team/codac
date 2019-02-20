@@ -18,11 +18,6 @@ using namespace ibex;
 
 namespace tubex
 {
-  Polygon::Polygon()
-  {
-
-  }
-
   Polygon::Polygon(const IntervalVector& box)
   {
     assert(box.size() == 2);
@@ -32,6 +27,7 @@ namespace tubex
 
   Polygon::Polygon(const vector<Point>& v_points)
   {
+    assert(!v_points.empty());
     for(int i = 0 ; i < v_points.size() ; i++)
       m_v_vertices.push_back(v_points[i]);
     delete_redundant_points();

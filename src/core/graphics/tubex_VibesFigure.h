@@ -86,7 +86,8 @@ namespace tubex
        *
        * This is a virtual method to overload.
        */
-      virtual void show() = 0;
+      //virtual void show() = 0;
+      void show() {};
 
     protected:
 
