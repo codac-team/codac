@@ -453,22 +453,6 @@ namespace tubex
       for(const Slice *s = x.first_slice() ; s != NULL ; s = s->next_slice())
         sample(s->domain().ub());
     }
-    
-    bool Tube::same_slicing(const Tube& x1, const Tube& x2)
-    {
-      if(x1.nb_slices() != x2.nb_slices())
-        return false;
-
-      const Slice *s2 = x2.first_slice();
-      for(const Slice *s1 = x1.first_slice() ; s1 != NULL ; s1 = s1->next_slice())
-      {
-        if(s1->domain() != s2->domain())
-          return false;
-        s2 = s2->next_slice();
-      }
-
-      return true;
-    }
 
     // Accessing values
 
@@ -973,29 +957,10 @@ namespace tubex
 
     // Synthesis tree
 
-    void Tube::enable_synthesis(bool enable) const
-    {
-      m_enable_synthesis = enable;
-      if(enable)
-        create_synthesis_tree();
-    }
-
     bool Tube::s_enable_syntheses = AUTO_SYNTHESIS_BY_DEFAULT;
     void Tube::enable_syntheses(bool enable)
     {
       Tube::s_enable_syntheses = enable;
-    }
-
-    // Static methods
-
-    const Tube Tube::hull(const list<Tube>& l_tubes)
-    {
-      assert(!l_tubes.empty());
-      list<Tube>::const_iterator it = l_tubes.begin();
-      Tube hull = *it;
-      for(++it ; it != l_tubes.end() ; ++it)
-        hull |= *it;
-      return hull;
     }
 
     // Integration
@@ -1141,6 +1106,39 @@ namespace tubex
       char c; bin_file.write(&c, 1); // writing a bit to separate the two objects
       serialize_Trajectory(bin_file, traj, version_number);
       bin_file.close();
+    }
+    
+    bool Tube::same_slicing(const Tube& x1, const Tube& x2)
+    {
+      if(x1.nb_slices() != x2.nb_slices())
+        return false;
+
+      const Slice *s2 = x2.first_slice();
+      for(const Slice *s1 = x1.first_slice() ; s1 != NULL ; s1 = s1->next_slice())
+      {
+        if(s1->domain() != s2->domain())
+          return false;
+        s2 = s2->next_slice();
+      }
+
+      return true;
+    }
+
+    void Tube::enable_synthesis(bool enable) const
+    {
+      m_enable_synthesis = enable;
+      if(enable)
+        create_synthesis_tree();
+    }
+
+    const Tube Tube::hull(const list<Tube>& l_tubes)
+    {
+      assert(!l_tubes.empty());
+      list<Tube>::const_iterator it = l_tubes.begin();
+      Tube hull = *it;
+      for(++it ; it != l_tubes.end() ; ++it)
+        hull |= *it;
+      return hull;
     }
 
   // Protected methods

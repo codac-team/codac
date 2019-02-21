@@ -40,7 +40,8 @@ namespace tubex
   {
     public:
 
-      // Definition
+      /// \name Definition
+      /// @{
 
       /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$
@@ -125,7 +126,9 @@ namespace tubex
        */
       void put(int start_index, const TrajectoryVector& subvec);
 
-      // Accessing values
+      /// @}
+      /// \name Accessing values
+      /// @{
 
       /**
        * \brief Returns the box of feasible values
@@ -171,7 +174,9 @@ namespace tubex
        */
       const ibex::IntervalVector operator()(const ibex::Interval& t) const;
 
-      // Tests
+      /// @}
+      /// \name Tests
+      /// @{
 
       /**
        * \brief Tests whether this trajectory is defined or not
@@ -197,7 +202,9 @@ namespace tubex
        */
       bool operator!=(const TrajectoryVector& x) const;
 
-      // Setting values
+      /// @}
+      /// \name Setting values
+      /// @{
 
       /**
        * \brief Sets a value \f$\mathbf{y}\f$ at \f$t\f$: \f$\mathbf{x}(t)=\mathbf{y}\f$
@@ -227,7 +234,9 @@ namespace tubex
        */
       void shift_domain(double a);
 
-      // Integration
+      /// @}
+      /// \name Integration
+      /// @{
 
       /**
        * \brief Computes an approximative primitive of \f$\mathbf{x}(\cdot)\f$
@@ -247,7 +256,9 @@ namespace tubex
        */
       const TrajectoryVector primitive(double dt) const;
 
-      // String
+      /// @}
+      /// \name String
+      /// @{
 
       /**
        * \brief Returns the name of this class
@@ -267,6 +278,8 @@ namespace tubex
        */
       friend std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x);
 
+      /// @}
+      
     protected:
 
       /**

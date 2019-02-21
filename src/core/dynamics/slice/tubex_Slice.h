@@ -39,7 +39,8 @@ namespace tubex
 
     // Base:
 
-      // Definition
+      /// \name Definition
+      /// @{
 
       /**
        * \brief Creates a slice \f$\llbracket x\rrbracket\f$
@@ -83,7 +84,9 @@ namespace tubex
        */
       const ibex::Interval domain() const;
 
-      // Slices structure
+      /// @}
+      /// \name Slices structure
+      /// @{
 
       /**
        * \brief Points to the previous slice \f$\llbracket x\rrbracket(k-1)\f$
@@ -138,7 +141,9 @@ namespace tubex
        */
       const ConvexPolygon polygon(const Slice& v) const;
 
-      // Accessing values
+      /// @}
+      /// \name Accessing values
+      /// @{
 
       /**
        * \brief Returns the envelope of the slice
@@ -237,7 +242,9 @@ namespace tubex
        */
       const ibex::Interval invert(const ibex::Interval& y, const Slice& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
 
-      // Tests
+      /// @}
+      /// \name Tests
+      /// @{
 
       /**
        * \brief Returns true if this slice is equal to \f$\llbracket x\rrbracket(\cdot)\f$
@@ -348,7 +355,9 @@ namespace tubex
        */
       const ibex::BoolInterval contains(const Trajectory& x) const;
 
-      // Setting values
+      /// @}
+      /// \name Setting values
+      /// @{
 
       /**
        * \brief Sets a constant interval value for this slice: \f$\forall t, \llbracket x\rrbracket(t)=[y]\f$
@@ -405,7 +414,9 @@ namespace tubex
        */
       const Slice& inflate(double rad);
 
-      // Assignments operators
+      /// @}
+      /// \name Assignments operators
+      /// @{
 
       /**
        * \brief Operates +=
@@ -503,7 +514,9 @@ namespace tubex
        */
       Slice& operator&=(const Slice& x);
 
-      // String
+      /// @}
+      /// \name String
+      /// @{
 
       /**
        * \brief Returns the name of this class
@@ -522,7 +535,8 @@ namespace tubex
        * \return ostream
        */
       friend std::ostream& operator<<(std::ostream& str, const Slice& x);
-
+      
+      /// @}
 
     protected:
 

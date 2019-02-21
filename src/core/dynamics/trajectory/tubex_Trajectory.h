@@ -36,7 +36,8 @@ namespace tubex
   {
     public:
 
-      // Definition
+      /// \name Definition
+      /// @{
 
       /**
        * \brief Creates an undefined scalar trajectory \f$x(\cdot)\f$
@@ -92,7 +93,9 @@ namespace tubex
        */
       const ibex::Interval domain() const;
 
-      // Accessing values
+      /// @}
+      /// \name Accessing values
+      /// @{
 
       /**
        * \brief Returns the map of values, if the object is defined as a map
@@ -136,7 +139,9 @@ namespace tubex
        */
       const ibex::Interval operator()(const ibex::Interval& t) const;
 
-      // Tests
+      /// @}
+      /// \name Tests
+      /// @{
 
       /**
        * \brief Tests whether this trajectory is defined or not
@@ -162,7 +167,9 @@ namespace tubex
        */
       bool operator!=(const Trajectory& x) const;
 
-      // Setting values
+      /// @}
+      /// \name Setting values
+      /// @{
 
       /**
        * \brief Sets a value \f$y\f$ at \f$t\f$: \f$x(t)=y\f$
@@ -194,7 +201,9 @@ namespace tubex
        */
       void shift_domain(double a);
 
-      // Integration
+      /// @}
+      /// \name Integration
+      /// @{
 
       /**
        * \brief Computes an approximative primitive of \f$x(\cdot)\f$
@@ -214,7 +223,9 @@ namespace tubex
        */
       const Trajectory primitive(double dt) const;
 
-      // String
+      /// @}
+      /// \name String
+      /// @{
 
       /**
        * \brief Returns the name of this class
@@ -233,6 +244,8 @@ namespace tubex
        * \return ostream
        */
       friend std::ostream& operator<<(std::ostream& str, const Trajectory& x);
+
+      /// @}
 
     protected:
 

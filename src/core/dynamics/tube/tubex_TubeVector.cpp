@@ -247,23 +247,6 @@ namespace tubex
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].sample(t, gate[i]);
     }
-    
-    bool TubeVector::same_slicing(const TubeVector& x1, const Tube& x2)
-    {
-      for(int i = 0 ; i < x1.size() ; i++)
-        if(!Tube::same_slicing(x1[i], x2))
-          return false;
-      return true;
-    }
-    
-    bool TubeVector::same_slicing(const TubeVector& x1, const TubeVector& x2)
-    {
-      assert(x1.size() == x2.size());
-      for(int i = 0 ; i < x1.size() ; i++)
-        if(!Tube::same_slicing(x1[i], x2[i]))
-          return false;
-      return true;
-    }
 
     // Accessing values
 
@@ -633,18 +616,6 @@ namespace tubex
         (*this)[i].enable_synthesis(enable);
     }
 
-    // Static methods
-
-    const TubeVector TubeVector::hull(const list<TubeVector>& l_tubes)
-    {
-      assert(!l_tubes.empty());
-      list<TubeVector>::const_iterator it = l_tubes.begin();
-      TubeVector hull = *it;
-      for(++it ; it != l_tubes.end() ; ++it)
-        hull |= *it;
-      return hull;
-    }
-
     // Integration
 
     const IntervalVector TubeVector::integral(double t) const
@@ -729,6 +700,33 @@ namespace tubex
       char c; bin_file.write(&c, 1); // writing a bit to separate the two objects
       serialize_TrajectoryVector(bin_file, traj, version_number);
       bin_file.close();
+    }
+    
+    bool TubeVector::same_slicing(const TubeVector& x1, const Tube& x2)
+    {
+      for(int i = 0 ; i < x1.size() ; i++)
+        if(!Tube::same_slicing(x1[i], x2))
+          return false;
+      return true;
+    }
+    
+    bool TubeVector::same_slicing(const TubeVector& x1, const TubeVector& x2)
+    {
+      assert(x1.size() == x2.size());
+      for(int i = 0 ; i < x1.size() ; i++)
+        if(!Tube::same_slicing(x1[i], x2[i]))
+          return false;
+      return true;
+    }
+
+    const TubeVector TubeVector::hull(const list<TubeVector>& l_tubes)
+    {
+      assert(!l_tubes.empty());
+      list<TubeVector>::const_iterator it = l_tubes.begin();
+      TubeVector hull = *it;
+      for(++it ; it != l_tubes.end() ; ++it)
+        hull |= *it;
+      return hull;
     }
 
   // Protected methods

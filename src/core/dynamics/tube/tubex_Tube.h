@@ -46,9 +46,8 @@ namespace tubex
   {
     public:
 
-    // Base:
-
-      // Definition
+      /// \name Definition
+      /// @{
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ made of one slice
@@ -194,7 +193,9 @@ namespace tubex
        */
       const ibex::Interval domain() const;
 
-      // Slices structure
+      /// @}
+      /// \name Slices structure
+      /// @{
 
       /**
        * \brief Returns the number of slices of this tube
@@ -357,19 +358,9 @@ namespace tubex
        */
       void sample(const Tube& x);
 
-      /**
-       * \brief Tests whether the two Tube objects are sharing the same slicing
-       *
-       * \note If true, it means the two tubes are defined with the same
-       *       amount of slices and identical sampling
-       *
-       * \param x1 the first Tube
-       * \param x2 the second Tube
-       * \return true in case of same slicing
-       */
-      static bool same_slicing(const Tube& x1, const Tube& x2);
-
-      // Accessing values
+      /// @}
+      /// \name Accessing values
+      /// @{
 
       /**
        * \brief Returns the interval of feasible values
@@ -507,7 +498,9 @@ namespace tubex
        */
       double max_gate_thickness(double& t) const;
 
-      // Tests
+      /// @}
+      /// \name Tests
+      /// @{
 
       /**
        * \brief Returns true if this tube is equal to \f$[x](\cdot)\f$
@@ -634,7 +627,9 @@ namespace tubex
        */
       bool overlaps(const Tube& x, float ratio = 1.) const;
 
-      // Setting values
+      /// @}
+      /// \name Setting values
+      /// @{
 
       /**
        * \brief Sets a constant interval value for this tube: \f$\forall t, [x](t)=[y]\f$
@@ -706,7 +701,9 @@ namespace tubex
        */
       const Tube& inflate(const Trajectory& rad);
 
-      // Bisection
+      /// @}
+      /// \name Bisection
+      /// @{
 
       /**
        * \brief Bisects this tube
@@ -721,7 +718,9 @@ namespace tubex
        */
       const std::pair<Tube,Tube> bisect(double t, float ratio = 0.55) const;
 
-      // Assignments operators
+      /// @}
+      /// \name Assignments operators
+      /// @{
 
       /**
        * \brief Operates +=
@@ -867,7 +866,9 @@ namespace tubex
        */
       const Tube& operator&=(const Tube& x);
 
-      // String
+      /// @}
+      /// \name String
+      /// @{
 
       /**
        * \brief Returns the name of this class
@@ -898,26 +899,9 @@ namespace tubex
        */
       void enable_synthesis(bool enable = true) const;
 
-      /**
-       * \brief Enables the computation of a synthesis tree for any Tube object
-       *
-       * \note A synthesis tree speeds up computations such as integrals or evaluations
-       *
-       * \param enable boolean
-       */
-      static void enable_syntheses(bool enable = true);
-
-      // Static methods
-
-      /**
-       * \brief Computes the hull of several tubes
-       *
-       * \param l_tubes list of tubes
-       * \return the tube enveloping the other ones
-       */
-      static const Tube hull(const std::list<Tube>& l_tubes);
-
-    // Integration:
+      /// @}
+      /// \name Integration
+      /// @{
 
       /**
        * \brief Computes the interval integral \f$\int_0^t[x](\tau)d\tau\f$
@@ -980,7 +964,9 @@ namespace tubex
        */
       const std::pair<ibex::Interval,ibex::Interval> partial_integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
-    // Serialization:
+      /// @}
+      /// \name Serialization
+      /// @{
 
       /**
        * \brief Serializes this tube
@@ -1005,9 +991,38 @@ namespace tubex
        */
       void serialize(const std::string& binary_file_name, const Trajectory& traj, int version_number = SERIALIZATION_VERSION) const;
 
-    protected:
+      /// @}
 
-      // Definition
+      /**
+       * \brief Tests whether the two Tube objects are sharing the same slicing
+       *
+       * \note If true, it means the two tubes are defined with the same
+       *       amount of slices and identical sampling
+       *
+       * \param x1 the first Tube
+       * \param x2 the second Tube
+       * \return true in case of same slicing
+       */
+      static bool same_slicing(const Tube& x1, const Tube& x2);
+
+      /**
+       * \brief Enables the computation of a synthesis tree for any Tube object
+       *
+       * \note A synthesis tree speeds up computations such as integrals or evaluations
+       *
+       * \param enable boolean
+       */
+      static void enable_syntheses(bool enable = true);
+
+      /**
+       * \brief Computes the hull of several tubes
+       *
+       * \param l_tubes list of tubes
+       * \return the tube enveloping the other ones
+       */
+      static const Tube hull(const std::list<Tube>& l_tubes);
+
+    protected:
 
       /**
        * \brief Creates a not-defined scalar tube
@@ -1015,8 +1030,6 @@ namespace tubex
        * \note Constructor necessary for the TubeVector class
        */
       Tube();
-
-      // Accessing values
 
       /**
        * \brief Returns the box \f$[x]([t_0,t_f])\f$
@@ -1026,8 +1039,6 @@ namespace tubex
        * \return the envelope of codomain values
        */
       const ibex::IntervalVector codomain_box() const;
-
-      // Serialization
 
       /**
        * \brief Restores a scalar tube from serialization, together with a Trajectory object
@@ -1039,10 +1050,6 @@ namespace tubex
        * \param traj a pointer to the Trajectory object to be instantiated
        */
       void deserialize(const std::string& binary_file_name, Trajectory *&traj);
-
-      // Integration
-
-      // Tree synthesis structure
 
       /**
        * \brief Creates the synthesis tree associated to the values of this tube

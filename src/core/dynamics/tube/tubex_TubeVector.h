@@ -40,9 +40,8 @@ namespace tubex
   {
     public:
 
-    // Base:
-
-      // Definition
+      /// \name Definition
+      /// @{
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ made of one slice
@@ -229,7 +228,9 @@ namespace tubex
        */
       const ibex::Interval domain() const;
 
-      // Slices structure
+      /// @}
+      /// \name Slices structure
+      /// @{
 
       /**
        * \brief Returns the number of slices of this tube
@@ -267,31 +268,9 @@ namespace tubex
        */
       void sample(double t, const ibex::IntervalVector& gate);
 
-      /**
-       * \brief Tests whether a TubeVector object shares the slicing of another Tube object
-       *
-       * \note If true, it means the two tubes are defined with the same
-       *       amount of slices and identical sampling
-       *
-       * \param x1 the TubeVector
-       * \param x2 the Tube
-       * \return true in case of same slicing
-       */
-      static bool same_slicing(const TubeVector& x1, const Tube& x2);
-
-      /**
-       * \brief Tests whether the two TubeVector objects are sharing the same slicing
-       *
-       * \note If true, it means the two tubes are defined with the same
-       *       amount of slices and identical sampling
-       *
-       * \param x1 the first TubeVector
-       * \param x2 the second TubeVector
-       * \return true in case of same slicing
-       */
-      static bool same_slicing(const TubeVector& x1, const TubeVector& x2);
-
-      // Accessing values
+      /// @}
+      /// \name Accessing values
+      /// @{
 
       /**
        * \brief Returns the box of feasible values
@@ -437,7 +416,9 @@ namespace tubex
        */
       const ibex::Vector max_thickness() const;
 
-      // Tests
+      /// @}
+      /// \name Tests
+      /// @{
 
       /**
        * \brief Returns true if this tube is equal to \f$[\mathbf{x}](\cdot)\f$
@@ -564,7 +545,9 @@ namespace tubex
        */
       bool overlaps(const TubeVector& x, float ratio = 1.) const;
 
-      // Setting values
+      /// @}
+      /// \name Setting values
+      /// @{
 
       /**
        * \brief Sets a constant box value for this tube: \f$\forall t, [\mathbf{x}](t)=[\mathbf{y}]\f$
@@ -636,7 +619,9 @@ namespace tubex
        */
       const TubeVector& inflate(const TrajectoryVector& rad);
 
-      // Bisection
+      /// @}
+      /// \name Bisection
+      /// @{
 
       /**
        * \brief Bisects this tube
@@ -651,7 +636,9 @@ namespace tubex
        */
       const std::pair<TubeVector,TubeVector> bisect(double t, float ratio = 0.55) const;
 
-      // Assignments operators
+      /// @}
+      /// \name Assignments operators
+      /// @{
 
       /**
        * \brief Operates +=
@@ -773,7 +760,9 @@ namespace tubex
        */
       const TubeVector& operator&=(const TubeVector& x);
 
-      // String
+      /// @}
+      /// \name String
+      /// @{
 
       /**
        * \brief Returns the name of this class
@@ -793,7 +782,9 @@ namespace tubex
        */
       friend std::ostream& operator<<(std::ostream& str, const TubeVector& x);
 
-      // Tree synthesis structure
+      /// @}
+      /// \name Tree synthesis structure
+      /// @{
 
       /**
        * \brief Enables the computation of a synthesis tree
@@ -804,17 +795,9 @@ namespace tubex
        */
       void enable_synthesis(bool enable = true) const;
 
-      // Static methods
-
-      /**
-       * \brief Computes the hull of several tubes
-       *
-       * \param l_tubes list of tubes
-       * \return the tube vector enveloping the other ones
-       */
-      static const TubeVector hull(const std::list<TubeVector>& l_tubes);
-
-    // Integration:
+      /// @}
+      /// \name Integration
+      /// @{
 
       /**
        * \brief Computes the box integral \f$\int_0^t[\mathbf{x}](\tau)d\tau\f$
@@ -877,7 +860,9 @@ namespace tubex
        */
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
 
-    // Serialization:
+      /// @}
+      /// \name Serialization
+      /// @{
 
       /**
        * \brief Serializes this tube
@@ -902,9 +887,41 @@ namespace tubex
        */
       void serialize(const std::string& binary_file_name, const TrajectoryVector& traj, int version_number = SERIALIZATION_VERSION) const;
 
-    protected:
+      /// @}
 
-      // Definition
+      /**
+       * \brief Tests whether a TubeVector object shares the slicing of another Tube object
+       *
+       * \note If true, it means the two tubes are defined with the same
+       *       amount of slices and identical sampling
+       *
+       * \param x1 the TubeVector
+       * \param x2 the Tube
+       * \return true in case of same slicing
+       */
+      static bool same_slicing(const TubeVector& x1, const Tube& x2);
+
+      /**
+       * \brief Tests whether the two TubeVector objects are sharing the same slicing
+       *
+       * \note If true, it means the two tubes are defined with the same
+       *       amount of slices and identical sampling
+       *
+       * \param x1 the first TubeVector
+       * \param x2 the second TubeVector
+       * \return true in case of same slicing
+       */
+      static bool same_slicing(const TubeVector& x1, const TubeVector& x2);
+      
+      /**
+       * \brief Computes the hull of several tubes
+       *
+       * \param l_tubes list of tubes
+       * \return the tube vector enveloping the other ones
+       */
+      static const TubeVector hull(const std::list<TubeVector>& l_tubes);
+
+    protected:
 
       /**
        * \brief Creates an undefined n-dimensional tube
@@ -912,8 +929,6 @@ namespace tubex
        * \note Constructor necessary for the deserialize_TubeVector method
        */
       TubeVector();
-
-      // Accessing values
 
       /**
        * \brief Returns the box \f$[\mathbf{x}]([t_0,t_f])\f$
@@ -923,8 +938,6 @@ namespace tubex
        * \return the envelope of codomain values
        */
       const ibex::IntervalVector codomain_box() const;
-
-      // Serialization
 
       /**
        * \brief Restores a n-dimensional tube from serialization, together with a TrajectoryVector object

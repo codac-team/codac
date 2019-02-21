@@ -21,7 +21,8 @@
 
 namespace tubex
 {
-  // Scalar outputs
+  /// \name Scalar outputs
+  /// @{
 
     /** \brief \f$\cos([x](\cdot))\f$ */
     const Tube cos(const Tube& x);
@@ -120,7 +121,9 @@ namespace tubex
     /** \brief \f$[x]\cap[y](\cdot)\f$ */
     const Tube operator&(const ibex::Interval& x, const Tube& y);
 
-  // Vector outputs
+  /// @}
+  /// \name Vector outputs
+  /// @{
 
     /** \brief \f$[\mathbf{x}](\cdot)\f$ */
     const TubeVector operator+(const TubeVector& x);
@@ -160,6 +163,8 @@ namespace tubex
     const TubeVector operator&(const TubeVector& x, const ibex::IntervalVector& y);
     /** \brief \f$[\mathbf{x}]\cap[\mathbf{y}](\cdot)\f$ */
     const TubeVector operator&(const ibex::IntervalVector& x, const TubeVector& y);
+
+  /// @}
 }
 
 #endif

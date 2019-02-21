@@ -153,6 +153,23 @@ namespace tubex
       }
     }
 
+    if(v_points.size() <= 2)
+    {
+    vibes::beginDrawing();
+      cout << endl << "DEBUG" << endl << endl;
+      cout << setprecision(40) << "   x=" << x << ", p=" << p << endl;
+      VibesFigure fig("poly");
+      fig.set_properties(100, 100, 400, 400);
+      fig.draw_polygon(p);
+      fig.draw_box(x);
+      fig.axis_limits(x | p.box());
+      fig.show();
+
+      cout << "detail des points: (nb: " << v_points.size() << ")" << endl;
+      for(int i = 0 ; i < v_points.size() ; i++)
+        cout << "  " << v_points[i] << endl;
+    }
+
     assert(!v_points.empty());
     return ConvexPolygon(v_points);
   }
