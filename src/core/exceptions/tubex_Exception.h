@@ -1,6 +1,7 @@
-/* ============================================================================
- *  tubex-lib - Exception class
- * ============================================================================
+/** 
+ *  @file
+ *  Exception class
+ * ================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
@@ -21,18 +22,31 @@
 namespace tubex
 {
   /**
-   * \brief Exception abstract class.
-   *
-   * Thrown when necessary.
+   * \class Exception
+   * \brief Root class of all exceptions raised by Tubex
    */
   class Exception : public std::exception
   {
     public:
 
-      Exception() {};
+      /**
+       * \brief Creates an `std::exception` related to a C++ function and some custom error message
+       *
+       * \param function_name the name of the function raising the Exception
+       * \param custom_message the related error message
+       */
       Exception(const std::string& function_name, const std::string& custom_message);
-      ~Exception() throw() {};
 
+      /**
+       * \brief Exception destructor
+       */
+      ~Exception() throw() {};
+      
+      /**
+       * \brief Returns the exception message
+       *
+       * \return exception message
+       */
       virtual const char* what() const throw();
 
     protected:

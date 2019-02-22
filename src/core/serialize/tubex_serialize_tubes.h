@@ -23,6 +23,9 @@ namespace tubex
   class Tube;
   class TubeVector;
 
+  /// \name Tube
+  /// @{
+
   /**
    * \brief Writes a Tube object into a binary file (version 2)
    * 
@@ -56,6 +59,10 @@ namespace tubex
    */
   void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
 
+  /// @}
+  /// \name TubeVector
+  /// @{
+
   /**
    * \brief Writes a TubeVector object into a binary file
    * 
@@ -80,6 +87,8 @@ namespace tubex
    * \param tube TubeVector object to be deserialized
    */
   void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
+  
+  /// @}
 }
 
 #endif

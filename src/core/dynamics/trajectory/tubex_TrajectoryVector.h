@@ -25,7 +25,7 @@ namespace tubex
 {
   /**
    * \class TrajectoryVector
-   * \brief n-dimensional trajectory, defined as a temporal map of vector values
+   * \brief n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$, defined as a temporal map of vector values
    *
    * \todo Implement arithmetic operators for trajectories?
    *
@@ -250,11 +250,12 @@ namespace tubex
 
       /**
        * \brief Computes an approximative primitive of \f$\mathbf{x}(\cdot)\f$
-       *        whith some time discretization
+       *        whith some time discretization \f$\delta\f$
        *
+       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \return a new TrajectoryVector object with the specified time discretization
        */
-      const TrajectoryVector primitive(double dt) const;
+      const TrajectoryVector primitive(double timestep) const;
 
       /// @}
       /// \name String

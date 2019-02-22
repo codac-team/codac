@@ -25,7 +25,7 @@ namespace tubex
 {
   /**
    * \class Slice
-   * \brief Slice of a one dimensional tube and made of an envelope and two gates
+   * \brief Slice \f$\llbracket x\rrbracket(\cdot)\f$ of a one dimensional tube and made of an envelope and two gates
    */
 
   #define EPSILON_CONTAINS ibex::next_float(0.) * 1000. //!< epsilon limit of the contains() algorithm
@@ -350,6 +350,7 @@ namespace tubex
        *       conclude, if the thin envelope of \f$x(\cdot)\f$ overlaps a boundary of the slice.
        * \note The domain of this slice must be a subset of the domain of \f$x(\cdot)\f$
        *
+       * \param x the trajectory that might be crossing this slice
        * \return BoolInterval::YES (or BoolInterval::NO) if this slice contains \f$x(\cdot)\f$
        *         (or does not contain) and BoolInterval::MAYBE in case of ambiguity
        */
@@ -390,7 +391,7 @@ namespace tubex
        * \note The value to be set will be intersected by the envelopes of the related slices
        * \note The envelopes of the related slices will not be affected
        *
-       * \param envelope Interval value of the input gate
+       * \param input_gate Interval value of the input gate
        */
       void set_input_gate(const ibex::Interval& input_gate);
 
@@ -400,7 +401,7 @@ namespace tubex
        * \note The value to be set will be intersected by the envelopes of the related slices
        * \note The envelopes of the related slices will not be affected
        *
-       * \param envelope Interval value of the output gate
+       * \param output_gate Interval value of the output gate
        */
       void set_output_gate(const ibex::Interval& output_gate);
 
@@ -541,7 +542,7 @@ namespace tubex
     protected:
 
       /**
-       * \brief Specifies the temporal domain \f$[t_0,t_f]\$ of this slice
+       * \brief Specifies the temporal domain \f$[t_0,t_f]\f$ of this slice
        *
        * \note Method necesary for Tube::sample()
        *

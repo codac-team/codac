@@ -20,8 +20,8 @@ namespace tubex
 {
   /**
    * \class CtcEval
-   * \brief Contracts a tube \f$[y](\cdot)\f$ with respect to its derivative tube \f$[w](\cdot)\f$
-   *        and a measurement \f$[t]\times[z]\f$
+   * \brief \f$\mathcal{C}_\textrm{eval}\f$ that contracts a tube \f$[y](\cdot)\f$ with
+   *        respect to its derivative tube \f$[w](\cdot)\f$ and a measurement \f$[t]\times[z]\f$
    *        according to the constraints \f$z=y(t)\f$ and \f$\dot{y}(\cdot)=w(\cdot)\f$
    * \note  This contractor is denoted \f$\mathcal{C}_\textrm{eval}\f$ in the literature.
    */

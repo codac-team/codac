@@ -21,8 +21,8 @@ namespace tubex
 {
   /**
    * \class CtcDeriv
-   * \brief Contracts a tube \f$[x](\cdot)\f$ with respect to its derivative tube \f$[v](\cdot)\f$
-   *        according to the constraint \f$\dot{x}(\cdot)=v(\cdot)\f$
+   * \brief \f$\mathcal{C}_{\frac{d}{dt}}\f$ that contracts a tube \f$[x](\cdot)\f$ with respect
+   *        to its derivative tube \f$[v](\cdot)\f$ according to the constraint \f$\dot{x}(\cdot)=v(\cdot)\f$
    * \note  This contractor is called \f$\mathcal{C}_{\frac{d}{dt}}\f$ in the literature.
    * \todo  Contract the tube \f$[v](\cdot)\f$ if \f$[x](\cdot)\f$ degenerated?
    */

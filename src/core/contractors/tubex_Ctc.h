@@ -32,7 +32,11 @@ namespace tubex
   /**
    * \brief Allows a combination of propagation ways
    *
-   * \note For instance: FORWARD | BACKWARD
+   * \note For instance: `FORWARD | BACKWARD`
+   *
+   * \param a first TPropagation operand
+   * \param b second TPropagation operand
+   * \return union of propagation ways, such as `FORWARD | BACKWARD`
    */
   inline TPropagation operator|(TPropagation a, TPropagation b)
   { return static_cast<TPropagation>(static_cast<int>(a) | static_cast<int>(b)); }

@@ -66,6 +66,7 @@ namespace tubex
        * \note The domain must be non-empty, bounded and not degenerated
        * \todo Allow unbounded domains such as \f$[t_0,\infty]\f$?
        *
+       * \param domain Interval domain \f$[t_0,t_f]\f$ to be tested
        * \return true in case of valid temporal domain
        */
       static bool valid_domain(const ibex::Interval& domain);

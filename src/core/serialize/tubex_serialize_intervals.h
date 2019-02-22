@@ -20,6 +20,9 @@
 
 namespace tubex
 {
+  /// \name Interval
+  /// @{
+
   /**
    * \brief Writes an Interval object into a binary file
    * 
@@ -48,6 +51,10 @@ namespace tubex
    */
   void deserialize_Interval(std::ifstream& bin_file, ibex::Interval& intv);
 
+  /// @}
+  /// \name IntervalVector
+  /// @{
+
   /**
    * \brief Writes an IntervalVector object into a binary file
    * 
@@ -71,6 +78,8 @@ namespace tubex
    * \param box IntervalVector object to be deserialized
    */
   void serialize_IntervalVector(std::ofstream& bin_file, const ibex::IntervalVector& box);
+  
+  /// @}
 }
 
 #endif

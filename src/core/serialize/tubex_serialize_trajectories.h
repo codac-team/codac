@@ -21,6 +21,9 @@
 
 namespace tubex
 {
+  /// \name Trajectory
+  /// @{
+
   /**
    * \brief Writes a Trajectory object into a binary file
    * 
@@ -52,6 +55,10 @@ namespace tubex
    */
   void deserialize_Trajectory(std::ifstream& bin_file, Trajectory *&traj);
 
+  /// @}
+  /// \name TrajectoryVector
+  /// @{
+
   /**
    * \brief Writes a TrajectoryVector object into a binary file
    * 
@@ -76,6 +83,8 @@ namespace tubex
    * \param traj TrajectoryVector object to be deserialized
    */
   void deserialize_TrajectoryVector(std::ifstream& bin_file, TrajectoryVector *&traj);
+
+  /// @}
 }
 
 #endif

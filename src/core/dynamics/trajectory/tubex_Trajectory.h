@@ -22,7 +22,7 @@ namespace tubex
 {
   /**
    * \class Trajectory
-   * \brief One dimensional trajectory, defined as a temporal map of values
+   * \brief One dimensional trajectory \f$x(\cdot)\f$, defined as a temporal map of values
    *
    * \todo Implement arithmetic operators for trajectories?
    *
@@ -217,11 +217,12 @@ namespace tubex
 
       /**
        * \brief Computes an approximative primitive of \f$x(\cdot)\f$
-       *        whith some time discretization
+       *        whith some time discretization \f$\delta\f$
        *
+       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \return a new Trajectory object with the specified time discretization
        */
-      const Trajectory primitive(double dt) const;
+      const Trajectory primitive(double timestep) const;
 
       /// @}
       /// \name String

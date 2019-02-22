@@ -27,7 +27,7 @@ namespace tubex
 {
   /**
    * \class TubeVector
-   * \brief n-dimensional tube, defined as an interval of n-dimensional trajectories
+   * \brief n-dimensional tube \f$[\mathbf{x}](\cdot)\f$, defined as an interval of n-dimensional trajectories
    *
    * \note Use Tube for the one-dimensional case
    */
@@ -83,7 +83,7 @@ namespace tubex
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
        *        from a tubex::Fnc object and with some temporal discretization
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping
+       * \note Due to the slicing implementation of the tube, a wrapping
        *       effect will occur to reliably enclose the tubex::Fnc object
        * \note The dimension of the tube is specified by the output of \f$[\mathbf{f}]\f$
        *
@@ -124,7 +124,7 @@ namespace tubex
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ enclosing a n-dimensional
        *        trajectory \f$\mathbf{x}(\cdot)\f$, possibly with some temporal discretization
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping
+       * \note Due to the slicing implementation of the tube, a wrapping
        *       effect will occur to reliably enclose the TrajectoryVector object 
        *
        * \param traj TrajectoryVector \f$\mathbf{x}(\cdot)\f$ to enclose
@@ -137,7 +137,7 @@ namespace tubex
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ defined as an interval
        *        of two n-dimensional trajectories \f$[\mathbf{lb}(\cdot),\mathbf{ub}(\cdot)]\f$
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping
+       * \note Due to the slicing implementation of the tube, a wrapping
        *       effect will occur to reliably enclose the TrajectoryVector object 
        *
        * \param lb TrajectoryVector defining the lower bound \f$\mathbf{x}^{-}(\cdot)\f$ of the tube
@@ -150,7 +150,7 @@ namespace tubex
       /**
        * \brief Restore a n-dimensional tube from serialization
        *
-       * \Note The TubeVector must have been serialized beforehand by the appropriate method serialize()
+       * \note The TubeVector must have been serialized beforehand by the appropriate method serialize()
        *
        * \param binary_file_name path to the binary file
        */
@@ -159,7 +159,7 @@ namespace tubex
       /**
        * \brief Restore a n-dimensional tube from serialization, together with a TrajectoryVector object
        *
-       * \Note The TubeVector and the TrajectoryVector must have been serialized
+       * \note The TubeVector and the TrajectoryVector must have been serialized
        *       beforehand by the appropriate method serialize()
        *
        * \param binary_file_name path to the binary file
@@ -529,6 +529,7 @@ namespace tubex
        *       or an analytic function). Hence, this "contains" test may not be able to
        *       conclude, if the thin envelope of \f$\mathbf{x}(\cdot)\f$ overlaps a boundary of the tube.
        *
+       * \param x the trajectory that might be contained by this tube
        * \return BoolInterval::YES (or BoolInterval::NO) if this tube contains \f$\mathbf{x}(\cdot)\f$
        *         (or does not contain) and BoolInterval::MAYBE in case of ambiguity
        */
@@ -942,7 +943,7 @@ namespace tubex
       /**
        * \brief Restores a n-dimensional tube from serialization, together with a TrajectoryVector object
        *
-       * \Note The TubeVector and the TrajectoryVector must have been serialized
+       * \note The TubeVector and the TrajectoryVector must have been serialized
        *       beforehand by the appropriate method serialize()
        *
        * \param binary_file_name path to the binary file

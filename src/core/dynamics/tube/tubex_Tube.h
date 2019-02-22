@@ -31,7 +31,7 @@ namespace tubex
 {
   /**
    * \class Tube
-   * \brief One dimensional tube, defined as an interval of scalar trajectories
+   * \brief One dimensional tube \f$[x](\cdot)\f$, defined as an interval of scalar trajectories
    *
    * \note Use TubeVector for the multi-dimensional case
    */
@@ -69,7 +69,7 @@ namespace tubex
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ from a tubex::Fnc object and with some temporal discretization
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping
+       * \note Due to the slicing implementation of the tube, a wrapping
        *       effect will occur to reliably enclose the tubex::Fnc object 
 
        * \param domain Interval domain \f$[t_0,t_f]\f$
@@ -101,7 +101,7 @@ namespace tubex
        * \brief Creates a copy of a scalar tube \f$[x](\cdot)\f$, with the same time
        *        discretization but a specific codomain defined by a tubex::Fnc object
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping
+       * \note Due to the slicing implementation of the tube, a wrapping
        *       effect will occur to reliably enclose the tubex::Fnc object 
        *
        * \param x Tube from which the sampling will be duplicated
@@ -116,7 +116,7 @@ namespace tubex
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ enclosing a trajectory \f$x(\cdot)\f$,
        *        possibly with some temporal discretization
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping
+       * \note Due to the slicing implementation of the tube, a wrapping
        *       effect will occur to reliably enclose the Trajectory object 
        *
        * \param traj Trajectory \f$x(\cdot)\f$ to enclose
@@ -129,7 +129,7 @@ namespace tubex
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ defined as an interval
        *        of two trajectories \f$[lb(\cdot),ub(\cdot)]\f$
        *
-       * \Note Due to the slicing implementation of the tube, a wrapping
+       * \note Due to the slicing implementation of the tube, a wrapping
        *       effect will occur to reliably enclose the Trajectory object 
        *
        * \param lb Trajectory defining the lower bound \f$x^{-}(\cdot)\f$ of the tube
@@ -142,7 +142,7 @@ namespace tubex
       /**
        * \brief Restore a scalar tube from serialization
        *
-       * \Note The Tube must have been serialized beforehand by the appropriate method serialize()
+       * \note The Tube must have been serialized beforehand by the appropriate method serialize()
        *
        * \param binary_file_name path to the binary file
        */
@@ -151,7 +151,7 @@ namespace tubex
       /**
        * \brief Restore a scalar tube from serialization, together with a Trajectory object
        *
-       * \Note The Tube and the Trajectory must have been serialized
+       * \note The Tube and the Trajectory must have been serialized
        *       beforehand by the appropriate method serialize()
        *
        * \param binary_file_name path to the binary file
@@ -611,6 +611,7 @@ namespace tubex
        *       or an analytic function). Hence, this "contains" test may not be able to
        *       conclude, if the thin envelope of \f$x(\cdot)\f$ overlaps a boundary of the tube.
        *
+       * \param x the trajectory that might be contained by this tube
        * \return BoolInterval::YES (or BoolInterval::NO) if this tube contains \f$x(\cdot)\f$
        *         (or does not contain) and BoolInterval::MAYBE in case of ambiguity
        */
@@ -1043,7 +1044,7 @@ namespace tubex
       /**
        * \brief Restores a scalar tube from serialization, together with a Trajectory object
        *
-       * \Note The Tube and the Trajectory must have been serialized
+       * \note The Tube and the Trajectory must have been serialized
        *       beforehand by the appropriate method serialize()
        *
        * \param binary_file_name path to the binary file
