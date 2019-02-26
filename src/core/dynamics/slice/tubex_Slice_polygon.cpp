@@ -92,7 +92,7 @@ namespace tubex
     Interval t = domain();
     
     if(t.is_empty() || codomain().is_empty())
-      return ConvexPolygon(IntervalVector(2, Interval::EMPTY_SET));
+      return ConvexPolygon(); // empty polygon
 
     else if(v.codomain() == Interval::ALL_REALS)
     {

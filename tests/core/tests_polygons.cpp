@@ -9,6 +9,40 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
+TEST_CASE("Point")
+{
+  SECTION("Alignements")
+  {
+    Point p1(0.,0.);
+    Point p2(0.,1.);
+    Point p3(0.,10.);
+    Point p4(1.,10.);
+    Point p5(0.,9.+0.00000001*Interval(-1.,1.));
+    Point p6(0.+0.00000001*Interval(-1.,1.),9.);
+    Point p7(0.+0.00000001*Interval(-1.,1.),9.+0.00000001*Interval(-1.,1.));
+
+    CHECK(Point::aligned(p1, p2, p3) == YES);
+    CHECK(Point::aligned(p1, p2, p4) == NO);
+    CHECK(Point::aligned(p1, p1, p4) == YES);
+    CHECK(Point::aligned(p1, p2, p5) == YES);
+    CHECK(Point::aligned(p1, p2, p6) == MAYBE);
+    CHECK(Point::aligned(p1, p2, p7) == MAYBE);
+  }
+
+  SECTION("Contains")
+  {
+    Point p1(0.,0.), p2(1.5,3.), p3(0.,2.);
+    Edge e1(Point(-10.,-10.), Point(10.,10.));
+    Edge e2(Point(1.,1.), Point(10.,10.));
+    Edge e3(Point(0.,0.), Point(2.,4.));
+
+    CHECK(e1.contains(p1) != NO);
+    CHECK(e2.contains(p1) == NO);
+    CHECK(e3.contains(p2) != NO);
+    CHECK(e3.contains(p3) == NO);
+  }
+}
+
 TEST_CASE("Polygon")
 {
   // todo: test Polygon constructor with redundant points
@@ -197,12 +231,12 @@ TEST_CASE("Polygon")
     ConvexPolygon p(v_p);
     CHECK(p.nb_vertices() == 8);
 
-    CHECK(p.get_edges()[0] == Edge(Point(1.,0.), Point(2.,0.)));
-    CHECK(p.get_edges()[1] == Edge(Point(2.,0.), Point(4.,2.)));
+    //CHECK(p.edges()[0] == Edge(Point(1.,0.), Point(2.,0.)));
+    //CHECK(p.edges()[1] == Edge(Point(2.,0.), Point(4.,2.)));
 
     IntervalVector inter(2), x(2);
     
-    Edge edge = p.get_edges()[0];
+    Edge edge = Edge(Point(1.,0.), Point(2.,0.));//p.edges()[0];
     x[0] = Interval(0.5,4.); x[1] = Interval(-1.,1.);
     inter = edge & x;
     CHECK(inter[0] == Interval(1.,2.));
@@ -229,17 +263,17 @@ TEST_CASE("Polygon")
     CHECK(ApproxIntv(pt_inter.x()) == Interval::EMPTY_SET);
     CHECK(ApproxIntv(pt_inter.y()) == Interval::EMPTY_SET);
 
-    edge = p.get_edges()[1];
+    edge = Edge(Point(2.,0.), Point(4.,2.)); //p.edges()[1];
     inter = edge & x;
     CHECK(inter[0] == Interval(2.,3.));
     CHECK(inter[1] == Interval(0.,1.));
 
-    edge = p.get_edges()[2];
+    edge = Edge(Point(4.,2.), Point(4.,4.)); //p.edges()[2];
     inter = edge & x;
     CHECK(inter[0] == Interval::EMPTY_SET);
     CHECK(inter[1] == Interval::EMPTY_SET);
 
-    edge = p.get_edges()[3];
+    edge = Edge(Point(4.,4.), Point(3.,7.)); //p.edges()[3];
     inter = edge & x;
     CHECK(inter[0] == Interval::EMPTY_SET);
     CHECK(inter[1] == Interval::EMPTY_SET);

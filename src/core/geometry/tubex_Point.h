@@ -16,6 +16,7 @@
 #include <vector>
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
+#include "ibex_BoolInterval.h"
 
 namespace tubex
 {
@@ -29,7 +30,10 @@ namespace tubex
       const ibex::IntervalVector box() const;
       bool operator==(const Point& p) const;
       bool operator!=(const Point& p) const;
+      const Point operator|=(const Point& p);
       bool does_not_exist() const;
+
+      static const ibex::BoolInterval aligned(const Point& a, const Point& b, const Point& c);
       friend std::ostream& operator<<(std::ostream& str, const Point& p);
 
     public:

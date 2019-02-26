@@ -10,6 +10,7 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
+#include <iomanip>
 #include "tubex_Point.h"
 
 using namespace std;
@@ -55,6 +56,11 @@ namespace tubex
   {
     return m_x.is_empty() || m_y.is_empty();
   }
+  
+  const Point Point::operator|=(const Point& p)
+  {
+    return Point(m_x | p.m_x, m_y | p.m_y);
+  }
 
   ostream& operator<<(ostream& str, const Point& p)
   {
@@ -70,6 +76,12 @@ namespace tubex
 
     str << ")";
     return str;
+  }
+
+  const BoolInterval Point::aligned(const Point& a, const Point& b, const Point& c)
+  {
+    Interval cross_product = (b.x()-a.x()) * (c.y()-a.y()) - (b.y() - a.y()) * (c.x() - a.x());
+    return (cross_product == Interval(0.)) ? YES : (cross_product.contains(0.) ? MAYBE : NO);
   }
 
   void push_points(const IntervalVector& box, vector<Point>& v_points)

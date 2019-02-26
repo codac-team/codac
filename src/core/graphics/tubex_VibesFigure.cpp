@@ -156,4 +156,9 @@ namespace tubex
     if(v_x.size() > 0)
       vibes::drawPolygon(v_x, v_y, params_this_fig);
   }
+  
+  void VibesFigure::clear()
+  {
+    vibes::clearFigure();
+  }
 }

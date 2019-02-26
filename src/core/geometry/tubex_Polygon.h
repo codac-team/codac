@@ -27,12 +27,13 @@ namespace tubex
   {
     public:
 
+      Polygon(){};
       Polygon(const ibex::IntervalVector& box);
       Polygon(const std::vector<Point>& v_points);
 
       int nb_vertices() const;
-      const std::vector<Point>& get_vertices() const;
-      const std::vector<Edge> get_edges() const;
+      const std::vector<Point>& vertices() const;
+      const std::vector<Edge> edges() const;
       const Point operator[](int vertex_id) const;
       const ibex::IntervalVector box() const;
 
@@ -42,12 +43,15 @@ namespace tubex
       bool operator!=(const Polygon& p) const;
       const ibex::BoolInterval encloses(const Point& p) const;
       bool does_not_exist() const;
+      bool operator()(const Point& p1, const Point& p2);
 
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
 
     protected:
 
       void delete_redundant_points();
+      static void order_points(std::vector<Point>& v_pts);
+      bool sort_points_function(const Point& pt1, const Point& pt2);
       
       std::vector<Point> m_v_vertices;
   };

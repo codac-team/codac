@@ -89,6 +89,8 @@ namespace tubex
       //virtual void show() = 0;
       void show() {};
 
+      void clear();
+
     protected:
 
       ibex::IntervalVector m_view_box;

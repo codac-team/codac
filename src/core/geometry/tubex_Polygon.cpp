@@ -27,8 +27,7 @@ namespace tubex
 
   Polygon::Polygon(const vector<Point>& v_points)
   {
-    for(int i = 0 ; i < v_points.size() ; i++)
-      m_v_vertices.push_back(v_points[i]);
+    m_v_vertices = v_points;
     delete_redundant_points();
   }
 
@@ -37,12 +36,12 @@ namespace tubex
     return m_v_vertices.size();
   }
 
-  const vector<Point>& Polygon::get_vertices() const
+  const vector<Point>& Polygon::vertices() const
   {
     return m_v_vertices;
   }
 
-  const vector<Edge> Polygon::get_edges() const
+  const vector<Edge> Polygon::edges() const
   {
     vector<Edge> v_edges;
     for(int i = 0 ; i < m_v_vertices.size() ; i++)
@@ -134,7 +133,7 @@ namespace tubex
     //   A ray is defined from p to the right ; if it crosses
     //   'a' times one of the edges, and (a & 1), then p is inside
 
-    vector<Edge> v_edges = get_edges();
+    vector<Edge> v_edges = edges();
     int a = 0; // the crossing number counter
     int n = v_edges.size();
     Edge ray(p, Point(box()[0].ub() + 1., p.y())); // horizontal edge to the right
@@ -191,7 +190,7 @@ namespace tubex
       for(int i = 0 ; i < p.nb_vertices() ; i++)
       {
         if(i != 0) str << ",";
-        str << p.get_vertices()[i];
+        str << p.vertices()[i];
       }
     }
 
@@ -202,24 +201,64 @@ namespace tubex
   void Polygon::delete_redundant_points()
   {
     vector<Point> v_vertices;
-    int n = m_v_vertices.size();
 
-    for(int i = 0 ; i < n ; i++)
+    for(int i = 0 ; i < m_v_vertices.size() ; i++)
     {
-      if(m_v_vertices[i].box().is_unbounded())
-      {
-        v_vertices.push_back(m_v_vertices[i]);
-        continue;
-      }
+      if(m_v_vertices[i].does_not_exist())
+        continue; // no empty points
 
       bool diff_from_all_prev_points = true;
-      for(int j = i-1 ; j >= 0 ; j--)
-        diff_from_all_prev_points &= m_v_vertices[i] != m_v_vertices[j];
+      for(int j = 0 ; j < v_vertices.size() && diff_from_all_prev_points ; j++)
+        diff_from_all_prev_points &= !(m_v_vertices[i] == v_vertices[j]
+                                     & m_v_vertices[i].x().is_degenerated()
+                                     & m_v_vertices[i].y().is_degenerated());
       
       if(diff_from_all_prev_points)
         v_vertices.push_back(m_v_vertices[i]);
     }
 
     m_v_vertices = v_vertices;
+  }
+
+  class PointsSorter
+  {
+    public:
+
+      PointsSorter(const Point& center)
+      {
+        m_center = center;
+      }
+
+      bool operator()(const Point& pt1, const Point& pt2)
+      {
+        assert(!m_center.does_not_exist());
+
+        Interval theta1 = atan2(pt1.y() - m_center.y(), pt1.x() - m_center.x());
+        Interval theta2 = atan2(pt2.y() - m_center.y(), pt2.x() - m_center.x());
+
+        return theta1.mid() < theta2.mid();
+      }
+
+      Point m_center = Point(Interval::EMPTY_SET, Interval::EMPTY_SET);
+  };
+
+  void Polygon::order_points(vector<Point>& v_pts)
+  {
+    if(v_pts.empty())
+      return;
+
+    // Computing center point for the sort function
+    Interval x = 0., y = 0.;
+    for(int i = 0 ; i < v_pts.size() ; i++)
+    {
+      assert(!v_pts[i].does_not_exist());
+      x += v_pts[i].x();
+      y += v_pts[i].y();
+    }
+
+    Point center = Point(x / v_pts.size(), y / v_pts.size());
+    assert(!center.does_not_exist());
+
+    sort(v_pts.begin(), v_pts.end(), PointsSorter(center));
   }
 }

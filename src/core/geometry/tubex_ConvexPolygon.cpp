@@ -23,17 +23,18 @@ namespace tubex
   ConvexPolygon::ConvexPolygon(const IntervalVector& box) : Polygon(box)
   {
     assert(box.size() == 2);
+    order_points(m_v_vertices);
   }
   
   ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points) : Polygon(v_points)
   {
     // todo: (test convexity, or make it convex)
+    order_points(m_v_vertices);
   }
   
   const IntervalVector ConvexPolygon::operator&(const IntervalVector& x) const
   {
     assert(x.size() == 2);
-    // todo: the following could be easily optimized
 
     if(does_not_exist())
       return IntervalVector(2, Interval::EMPTY_SET);
@@ -41,7 +42,7 @@ namespace tubex
     IntervalVector reduced_x = x & box();
     IntervalVector inter(2, Interval::EMPTY_SET);
 
-    vector<Edge> v_edges = get_edges();
+    vector<Edge> v_edges = edges();
     for(int i = 0 ; i < v_edges.size() ; i++)
       inter |= v_edges[i] & reduced_x;
 
@@ -56,121 +57,75 @@ namespace tubex
     return inter;
   }
   
+  const ConvexPolygon ConvexPolygon::intersect(const ConvexPolygon& p1, const ConvexPolygon& p2)
+  {
+    vector<Point> v_pts;
+
+    // Add all corners of p1 that are inside p2
+    for(int i = 0 ; i < p1.vertices().size() ; i++)
+      if(p2.encloses(p1.vertices()[i]) != NO)
+        v_pts.push_back(p1.vertices()[i]);
+
+    // Add all corners of p2 that are inside p1
+    for(int i = 0 ; i < p2.vertices().size() ; i++)
+      if(p1.encloses(p2.vertices()[i]) != NO)
+        v_pts.push_back(p2.vertices()[i]);
+
+    // Add all intersection points
+    for(int i = 0 ; i < p1.edges().size() ; i++)
+      for(int j = 0 ; j < p2.edges().size() ; j++)
+      {
+        Point intersection_pt = p1.edges()[i] & p2.edges()[j];
+
+        if(!intersection_pt.does_not_exist())
+        {
+          if(Edge::parallel(p1.edges()[i], p2.edges()[j]) != NO)
+          {
+            if(p1.edges()[i].contains(p2.edges()[j].p1()) != NO)
+              v_pts.push_back(p2.edges()[j].p1());
+
+            if(p1.edges()[i].contains(p2.edges()[j].p2()) != NO)
+              v_pts.push_back(p2.edges()[j].p2());
+
+            if(p2.edges()[j].contains(p1.edges()[i].p1()) != NO)
+              v_pts.push_back(p1.edges()[i].p1());
+
+            if(p2.edges()[j].contains(p1.edges()[i].p2()) != NO)
+              v_pts.push_back(p1.edges()[i].p2());
+          }
+
+          else
+            v_pts.push_back(intersection_pt);
+        }
+      }
+
+    // Merge equivalent points
+
+      vector<Point> merged_points;
+      order_points(v_pts);
+
+      int i = 0, n = v_pts.size();
+      while(i < n)
+      {
+        Point p = v_pts[i];
+
+        int j = i + 1;
+        while(j < n && v_pts[i].x().intersects(v_pts[j].x()) && v_pts[i].y().intersects(v_pts[j].y()))
+        {
+          p |= v_pts[j];
+          j++;
+        }
+
+        merged_points.push_back(p);
+        i = j;
+      }
+
+    return ConvexPolygon(merged_points);
+  }
+  
   const ConvexPolygon ConvexPolygon::intersect(const ConvexPolygon& p, const ibex::IntervalVector& x)
   {
     assert(x.size() == 2);
-
-    // todo: the following could be easily optimized
-
-    IntervalVector reduced_x = x & p.box();
-    
-    if(x.is_empty() || p.does_not_exist() || reduced_x.is_empty())
-      return ConvexPolygon(IntervalVector(2, Interval::EMPTY_SET));
-
-    vector<Point> v_points;
-    vector<Edge> p_edges = p.get_edges();
-
-    Point a(reduced_x[0].lb(), reduced_x[1].ub());
-    Point b(reduced_x[0].ub(), reduced_x[1].ub());
-    Point c(reduced_x[0].ub(), reduced_x[1].lb());
-    Point d(reduced_x[0].lb(), reduced_x[1].lb());
-
-    int j = 0, k = 0;
-    int n = p_edges.size();
-
-    if(p.encloses(a) != NO)
-      v_points.push_back(a);
-
-    // A-B
-    Edge ab(a, b);
-    for(int i = j ; i-j < n ; i++)
-    {
-      if(Edge::parallel(p_edges[i%n], ab) == NO)
-      {
-        Point e = p_edges[i%n] & ab;
-        if(!e.does_not_exist() && p.encloses(e) != NO)
-        {
-          v_points.push_back(e);
-          k = i;
-        }
-      }
-    }
-    j = k;
-
-    if(p.encloses(b) != NO)
-      v_points.push_back(b);
-
-    // B-C
-    Edge bc(b, c);
-    for(int i = j ; i < n+j ; i++)
-    {
-      if(Edge::parallel(p_edges[i%n], bc) == NO)
-      {
-        Point e = p_edges[i%n] & bc;
-        if(!e.does_not_exist() && p.encloses(e) != NO)
-        {
-          v_points.push_back(e);
-          k = i%n;
-        }
-      }
-    }
-    j = k;
-
-    if(p.encloses(c) != NO)
-      v_points.push_back(c);
-
-    // C-D
-    Edge cd(c, d);
-    for(int i = j ; i < n+j ; i++)
-    {
-      if(Edge::parallel(p_edges[i%n], cd) == NO)
-      {
-        Point e = p_edges[i%n] & cd;
-        if(!e.does_not_exist() && p.encloses(e) != NO)
-        {
-          v_points.push_back(e);
-          k = i%n;
-        }
-      }
-    }
-    j = k;
-
-    if(p.encloses(d) != NO)
-      v_points.push_back(d);
-
-    // D-A
-    Edge da(d, a);
-    for(int i = j ; i < n+j ; i++)
-    {
-      if(Edge::parallel(p_edges[i%n], da) == NO)
-      {
-        Point e = p_edges[i%n] & da;
-        if(!e.does_not_exist() && p.encloses(e) != NO)
-        {
-          v_points.push_back(e);
-          k = i%n;
-        }
-      }
-    }
-
-    if(v_points.size() <= 2)
-    {
-    vibes::beginDrawing();
-      cout << endl << "DEBUG" << endl << endl;
-      cout << setprecision(40) << "   x=" << x << ", p=" << p << endl;
-      VibesFigure fig("poly");
-      fig.set_properties(100, 100, 400, 400);
-      fig.draw_polygon(p);
-      fig.draw_box(x);
-      fig.axis_limits(x | p.box());
-      fig.show();
-
-      cout << "detail des points: (nb: " << v_points.size() << ")" << endl;
-      for(int i = 0 ; i < v_points.size() ; i++)
-        cout << "  " << v_points[i] << endl;
-    }
-
-    assert(!v_points.empty());
-    return ConvexPolygon(v_points);
+    return intersect(p, ConvexPolygon(x));
   }
 }

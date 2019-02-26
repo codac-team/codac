@@ -91,7 +91,6 @@ namespace tubex
   const Point Edge::operator&(const Edge& e) const
   {
     assert(!e.does_not_exist());
-    //assert(e.box().is_flat() && "second edge should be vertical or horizontal");
     Point p(Interval::ALL_REALS, Interval::ALL_REALS);
 
     if(e.box()[0].is_degenerated()) // vertical edge e
@@ -148,6 +147,18 @@ namespace tubex
 
     return p;
   }
+
+  const BoolInterval Edge::contains(const Point& p) const
+  {
+    if(Point::aligned(p, m_p1, m_p2) == NO)
+      return NO;
+
+    // Testing if p is between m_p1 and m_p2
+    Interval k_p1p = (m_p2.x() - m_p1.x()) * (m_p2.x() - p.x()) + (m_p2.y() - m_p1.y()) * (m_p2.y() - p.y());
+    Interval k_p1p2 = pow(m_p2.x() - m_p1.x(), 2) + pow(m_p2.y() - m_p1.y(), 2);
+
+    return k_p1p.is_subset(k_p1p2 | 0.) ? MAYBE : NO;
+  }
   
   ostream& operator<<(ostream& str, const Edge& e)
   {
@@ -171,7 +182,7 @@ namespace tubex
     }
   }
 
-  BoolInterval Edge::parallel(const Edge& e1, const Edge& e2)
+  const BoolInterval Edge::parallel(const Edge& e1, const Edge& e2)
   {
     assert(!e1.does_not_exist() && !e2.does_not_exist());
 
