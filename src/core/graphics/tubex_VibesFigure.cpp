@@ -121,7 +121,7 @@ namespace tubex
     assert(v_x.size() == v_y.size());
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
-    vibes::drawLine(v_x, v_y, params_this_fig);
+    vibes::drawLine(v_x, v_y, color, params_this_fig);
   }
   
   void VibesFigure::draw_circle(double x, double y, double r, const vibes::Params& params)
@@ -133,7 +133,7 @@ namespace tubex
   {
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
-    vibes::drawCircle(x, y, r, params_this_fig);
+    vibes::drawCircle(x, y, r, color, params_this_fig);
   }
   
   void VibesFigure::draw_polygon(const Polygon& p, const vibes::Params& params)
@@ -154,7 +154,7 @@ namespace tubex
     } 
 
     if(v_x.size() > 0)
-      vibes::drawPolygon(v_x, v_y, params_this_fig);
+      vibes::drawPolygon(v_x, v_y, color, params_this_fig);
   }
   
   void VibesFigure::clear()

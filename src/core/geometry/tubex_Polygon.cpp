@@ -18,6 +18,11 @@ using namespace ibex;
 
 namespace tubex
 {
+  Polygon::Polygon()
+  {
+
+  }
+
   Polygon::Polygon(const IntervalVector& box)
   {
     assert(box.size() == 2);
@@ -129,6 +134,9 @@ namespace tubex
     if(p.does_not_exist() || does_not_exist())
       return NO;
 
+    if(!p.box().intersects(box()))
+      return NO; // fast test
+
     // Using the ray tracing method:
     //   A ray is defined from p to the right ; if it crosses
     //   'a' times one of the edges, and (a & 1), then p is inside
@@ -197,6 +205,36 @@ namespace tubex
     str << "}";
     return str;
   }
+  
+  const Point Polygon::center(const vector<Point> v_pts)
+  {
+    Interval x = 0., y = 0.;
+    for(int i = 0 ; i < v_pts.size() ; i++)
+    {
+      assert(!v_pts[i].does_not_exist());
+      x += v_pts[i].x();
+      y += v_pts[i].y();
+    }
+
+    return Point(x / v_pts.size(), y / v_pts.size());
+  }
+
+  void Polygon::rotate(double angle)
+  {
+    rotate(angle, Polygon::center(m_v_vertices));
+  }
+
+  void Polygon::rotate(double angle, const Point& center)
+  {
+    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+    {
+      Interval dx = m_v_vertices[i].x() - center.x();
+      Interval dy = m_v_vertices[i].y() - center.y();
+
+      m_v_vertices[i] = Point(center.x() + dx*cos(angle) - dy*sin(angle),
+                              center.y() + dx*sin(angle) + dy*cos(angle));
+    }
+  }
 
   void Polygon::delete_redundant_points()
   {
@@ -218,47 +256,5 @@ namespace tubex
     }
 
     m_v_vertices = v_vertices;
-  }
-
-  class PointsSorter
-  {
-    public:
-
-      PointsSorter(const Point& center)
-      {
-        m_center = center;
-      }
-
-      bool operator()(const Point& pt1, const Point& pt2)
-      {
-        assert(!m_center.does_not_exist());
-
-        Interval theta1 = atan2(pt1.y() - m_center.y(), pt1.x() - m_center.x());
-        Interval theta2 = atan2(pt2.y() - m_center.y(), pt2.x() - m_center.x());
-
-        return theta1.mid() < theta2.mid();
-      }
-
-      Point m_center = Point(Interval::EMPTY_SET, Interval::EMPTY_SET);
-  };
-
-  void Polygon::order_points(vector<Point>& v_pts)
-  {
-    if(v_pts.empty())
-      return;
-
-    // Computing center point for the sort function
-    Interval x = 0., y = 0.;
-    for(int i = 0 ; i < v_pts.size() ; i++)
-    {
-      assert(!v_pts[i].does_not_exist());
-      x += v_pts[i].x();
-      y += v_pts[i].y();
-    }
-
-    Point center = Point(x / v_pts.size(), y / v_pts.size());
-    assert(!center.does_not_exist());
-
-    sort(v_pts.begin(), v_pts.end(), PointsSorter(center));
   }
 }

@@ -27,7 +27,7 @@ namespace tubex
   {
     public:
 
-      Polygon(){};
+      Polygon();
       Polygon(const ibex::IntervalVector& box);
       Polygon(const std::vector<Point>& v_points);
 
@@ -37,6 +37,8 @@ namespace tubex
       const Point operator[](int vertex_id) const;
       const ibex::IntervalVector box() const;
 
+      static const Point center(const std::vector<Point> v_pts);
+
       bool is_point() const;
       bool is_segment() const;
       bool operator==(const Polygon& p) const;
@@ -45,13 +47,14 @@ namespace tubex
       bool does_not_exist() const;
       bool operator()(const Point& p1, const Point& p2);
 
+      void rotate(double angle);
+      void rotate(double angle, const Point& center);
+
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
 
     protected:
 
       void delete_redundant_points();
-      static void order_points(std::vector<Point>& v_pts);
-      bool sort_points_function(const Point& pt1, const Point& pt2);
       
       std::vector<Point> m_v_vertices;
   };

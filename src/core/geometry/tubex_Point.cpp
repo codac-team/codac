@@ -80,7 +80,7 @@ namespace tubex
 
   const BoolInterval Point::aligned(const Point& a, const Point& b, const Point& c)
   {
-    Interval cross_product = (b.x()-a.x()) * (c.y()-a.y()) - (b.y() - a.y()) * (c.x() - a.x());
+    Interval cross_product = (b.x()-a.x()) * (c.y()-a.y()) - (b.y()-a.y()) * (c.x()-a.x());
     return (cross_product == Interval(0.)) ? YES : (cross_product.contains(0.) ? MAYBE : NO);
   }
 

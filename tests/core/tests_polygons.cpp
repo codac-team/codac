@@ -1,5 +1,8 @@
 #include "tests.h"
 
+#include "tubex_GrahamScan.h"
+#include "tubex_VibesFigure.h"
+
 #define protected public     // Using #define so that we can access protected
 #include "tubex_CtcDeriv.h"
 
@@ -972,4 +975,45 @@ cout << "-------------" << endl;
     ConvexPolygon p_truth(v_points);
     CHECK(ApproxPolygon(p_inter) == p_truth);
   }*/
+
+  SECTION("Polygons , orientations")
+  {
+    Point p1(0.,0.);
+    Point p2(1.,1.);
+    Point p3(0.,2.);
+    Point p4(2.,2.);
+    Point p5(2.2,2.);
+    CHECK(GrahamScan::orientation(p1, p2, p3) == COUNTERCLOCKWISE);
+    CHECK(GrahamScan::orientation(p1, p2, p4) == UNDEFINED);
+    CHECK(GrahamScan::orientation(p1, p2, p5) == CLOCKWISE);
+  }
+
+  SECTION("Polygons , Graham scan")
+  {
+    vector<Point> v_pts;
+    v_pts.push_back(Point(0.,3.));
+    v_pts.push_back(Point(1.,1.));
+    v_pts.push_back(Point(2.,2.));
+    v_pts.push_back(Point(4.,4.));
+    v_pts.push_back(Point(0.,0.));
+    v_pts.push_back(Point(1.,2.));
+    v_pts.push_back(Point(3.,1.));
+    v_pts.push_back(Point(3.,3.));
+    ConvexPolygon hull = GrahamScan::convex_hull(v_pts);
+
+    CHECK(hull.vertices()[0] == Point(0.,0.));
+    CHECK(hull.vertices()[1] == Point(3.,1.));
+    CHECK(hull.vertices()[2] == Point(4.,4.));
+    CHECK(hull.vertices()[3] == Point(0.,3.));
+
+    //vibes::beginDrawing();
+    //VibesFigure fig("poly");
+    //fig.set_properties(100, 100, 400, 400);
+    //fig.clear();
+    //fig.draw_polygon(ConvexPolygon(v_pts));
+    //fig.draw_polygon(GrahamScan::convex_hull(v_pts), "red");
+    //fig.axis_limits(IntervalVector(2, Interval(-1.,5.)));
+    //fig.show();
+    //vibes::endDrawing();
+  }
 }

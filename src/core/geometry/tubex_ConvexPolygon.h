@@ -22,13 +22,15 @@ namespace tubex
   {
     public:
 
-      ConvexPolygon(){};
+      ConvexPolygon();
       ConvexPolygon(const ibex::IntervalVector& box);
       ConvexPolygon(const std::vector<Point>& v_points);
 
       const ibex::IntervalVector operator&(const ibex::IntervalVector& x) const;
       static const ConvexPolygon intersect(const ConvexPolygon& p, const ibex::IntervalVector& x);
       static const ConvexPolygon intersect(const ConvexPolygon& p1, const ConvexPolygon& p2);
+
+      void simplify();
   };
 }
 

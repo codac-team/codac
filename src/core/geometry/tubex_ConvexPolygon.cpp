@@ -14,22 +14,29 @@
 #include <iomanip>
 #include "tubex_ConvexPolygon.h"
 #include "tubex_VibesFigure.h"
+#include "tubex_GrahamScan.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
+  ConvexPolygon::ConvexPolygon() : Polygon()
+  {
+
+  }
+
   ConvexPolygon::ConvexPolygon(const IntervalVector& box) : Polygon(box)
   {
     assert(box.size() == 2);
-    order_points(m_v_vertices);
+    m_v_vertices = GrahamScan::convex_hull(m_v_vertices);
+    delete_redundant_points(); // todo: do this only once (check Polygon constructor)
   }
   
   ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points) : Polygon(v_points)
   {
-    // todo: (test convexity, or make it convex)
-    order_points(m_v_vertices);
+    m_v_vertices = GrahamScan::convex_hull(v_points);
+    delete_redundant_points(); // todo: do this only once (check Polygon constructor)
   }
   
   const IntervalVector ConvexPolygon::operator&(const IntervalVector& x) const
@@ -102,7 +109,7 @@ namespace tubex
     // Merge equivalent points
 
       vector<Point> merged_points;
-      order_points(v_pts);
+      v_pts = GrahamScan::convex_hull(v_pts);
 
       int i = 0, n = v_pts.size();
       while(i < n)
@@ -120,6 +127,8 @@ namespace tubex
         i = j;
       }
 
+      // todo: two convex computations are performed: do only one
+
     return ConvexPolygon(merged_points);
   }
   
@@ -127,5 +136,29 @@ namespace tubex
   {
     assert(x.size() == 2);
     return intersect(p, ConvexPolygon(x));
+  }
+
+  void ConvexPolygon::simplify()
+  {
+    vector<Point> v_pts = m_v_vertices;
+    Point c = Polygon::center(v_pts);
+
+    ConvexPolygon p(box()), pf = p;
+
+    double da = M_PI/12.;
+    for(double a = da ; a < M_PI ; a+=da)
+    {
+      ConvexPolygon p1 = p;
+      p1.rotate(a, c);
+
+      IntervalVector hull = p1.box();
+
+      ConvexPolygon p2(hull);
+      p2.rotate(-a, c);
+
+      pf = ConvexPolygon::intersect(pf, p2);
+    }
+
+    m_v_vertices = pf.vertices();
   }
 }
