@@ -1,32 +1,46 @@
 # [Tubex library](http://simon-rohou.fr/research/tubex-lib) [![Build Status](https://travis-ci.org/SimonRohou/tubex-lib.svg)](https://travis-ci.org/SimonRohou/tubex-lib)
 
-*Tubex* is a C++ library providing tools to guarantee computations over sets of trajectories. 
+Tubex is a C++ library providing tools for computations over sets of trajectories.
+It has been designed to deal with **dynamical systems** defined by **non-linear differential equations** and involving constraints such as time uncertainties or **delays**.
 
-In the field of *constraint programming*, problems are defined thanks to a constraint network involving variables submitted to rules and known to belong to given domains. When dealing with dynamical systems, differential constraints have to be considered.
-This library is a proposal to solve such problem. A *tube* is a domain for a trajectory variable (*e.g.* a signal evolving with time) for which several numerical, algebraic, non-linear, differential constraints will apply.
+The building blocks of this library are *tubes*, that represent domains for **trajectory** variables (*e.g.* signals evolving with time). When a trajectory comes with uncertainties (due to numerical approximations or errors coming from sensors), a reliable enclosure of it can be made thanks to a tube.
 
-Functions called *contractors* are available to reduce these sets of trajectories given several constraints.
+A tube is defined as an interval of two trajectories. Its bounds delineate the **uncertainties** of a dynamical system, thus defining a solution set.
+Then, any operation related to the trajectory will be made on its reliable enclosure, which allows **guaranteed outputs**. These computations stand on interval analysis, a well suited tool that reliably propagates uncertainties.
 
-Computations stands on interval analysis and are, therefore, performed in a guaranteed way.
-Tubex is compatible with the [IBEX library](http://www.ibex-lib.org), itself relying on reliable numerical libraries such as [Filib](http://www2.math.uni-wuppertal.de/~xsc/software/filib.html).
+**Mobile robotics** has been the initial motivation of this project: the mathematical tools provided in Tubex come together with robotic applications.
+
+Computations stands on the [IBEX library](http://www.ibex-lib.org/) that provides reliable tools for static systems.
+
+**See the [official page](http://simon-rohou.fr/research/tubex-lib)**.
+
+![Image of Tube](https://cdn.rawgit.com/SimonRohou/tubex-lib/master/doc/img/tube_slices_small.png)
+
+
+
+Related publications
+--------------------
+
+* [Guaranteed computation of robot trajectories](http://simon-rohou.fr/research/tubint/tubint_paper.pdf), *Robotics and Autonomous Systems*, 93:76-84, Rohou, S., Jaulin, L., Mihaylova, L., Le Bars, F., and Veres, S. M. (2017)
+
+* [Reliable non-linear state estimation involving time uncertainties](http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf), *Automatica*, 93:379-388, Rohou, S., Jaulin, L., Mihaylova, L., Le Bars, F., and Veres, S. M. (2017)
+
+* [Proving the existence of loops in robot trajectories](http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf), *The International Journal of Robotics Research*, Rohou, S., Franek, P., Aubry, C., and Jaulin, L. (2018)
+
 
 
 Documentation
 -------------
 
-**See the [official page](http://simon-rohou.fr/research/tubex-lib)**.
+* [User guide](http://simon-rohou.fr/research/tubex-lib)
+* [API technical documentation](http://simon-rohou.fr/research/tubex-lib/api)
 
 
-![Image of Tube](https://cdn.rawgit.com/SimonRohou/tubex-lib/master/doc/img/tube_slices_small.png)
 
-
-Licence
--------
+Licence and development
+-----------------------
 
 This software is under [GNU Lesser General Public License](https://www.gnu.org/copyleft/lgpl.html).
 
-
-Python extension
-----------------
-
+For recent improvements and activities, see the [Github Tubex repository](https://github.com/SimonRohou/tubex-lib).
 A Python version ([pyIbex](http://www.ensta-bretagne.fr/desrochers/pyibex) wrapping) is planned.
