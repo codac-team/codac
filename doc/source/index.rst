@@ -40,11 +40,12 @@ Documentation
 .. toctree::
    :maxdepth: 1
 
-   theory
    installation
+   basics
    how_to
    graphics
    examples/index
+   development
 
 - `API technical documentation <./doxygen/html/annotated.html>`_ 
 

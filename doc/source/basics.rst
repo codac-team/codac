@@ -1,7 +1,7 @@
-.. _theory:
+.. _basics:
 
-Tubes: basics
-=============
+Quick start
+===========
 
 The following is an extract from the paper `Guaranteed computation of robot trajectories <http://simon-rohou.fr/research/tubint/tubint_paper.pdf>`_.
 
@@ -10,18 +10,17 @@ Definition
 
 A tube :math:`[\mathbf{x}](\cdot)` is defined 
 as an envelope enclosing an uncertain trajectory :math:`\mathbf{x}(\cdot):\mathbb{R}\rightarrow\mathbb{R}^{n}`.
-It is built as an interval of two functions
+It is built as an interval of two trajectories
 :math:`[\mathbf{x}^{-}(\cdot),\mathbf{x}^{+}(\cdot)]` such that :math:`\forall t,~\mathbf{x}^{-}(t)\leqslant\mathbf{x}^{+}(t)`.
-A trajectory :math:`\mathbf{x}(\cdot)` belongs to the tube :math:`[\mathbf{x}](\cdot)`
+Hence, a trajectory :math:`\mathbf{x}(\cdot)` belongs to the tube :math:`[\mathbf{x}](\cdot)`
 if :math:`\forall t,\mathbf{~x}(t)\in[\mathbf{x}](t)`.
-:numref:`tubeslices` illustrates a tube implemented with
-a set of boxes. This sliced implementation is detailed hereinafter.
+:numref:`tubeslices` illustrates a tube implemented as a set of slices. In this example, the slices share the same temporal resolution, but a custom time discretization is possible. This sliced implementation is detailed hereinafter.
 
 .. _tubeslices:
 .. figure:: ../img/tube_slices.png
 
-  A tube :math:`[x](\cdot)` represented by a set of slices. This representation
-  can be used to enclose signals such as :math:`x^{*}(\cdot)`.
+  A one-dimensional tube :math:`[x](\cdot)` implemented as a set of slices. This representation
+  can be used to enclose signals such as the unknown trajectory :math:`x^{*}(\cdot)`.
 
 **Code example:**
 

@@ -1,26 +1,41 @@
 Installing the Tubex library
 ============================
 
-Prerequisites
--------------
+For now, the installation is supported on Linux systems only. Any help for Windows support is more than welcome.
 
-The installation assumes you have already installed the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_.
 
-For a fast installation of IBEX:
+Requirements
+------------
+
+Tubex assumes a set of requirements you can meet with the following command line:
 
 .. code-block:: none
 
-  sh ./scripts/ibex/build_IbexLib.sh
-  export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/ibex
+  sudo apt-get install -y cmake time pkg-config g++-5 git
 
 
-Installation
+IBEX library
 ------------
 
-Compiling the Tube class
-^^^^^^^^^^^^^^^^^^^^^^^^
+Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first.
+You can then install the last version of IBEX from `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
 
-**Linux:**
+.. code-block:: none
+
+  git clone https://github.com/ibex-team/ibex-lib
+  cd ibex-lib
+  ./waf configure --with-debug --interval-lib=filib
+  sudo ./waf install
+
+Note that the :code:`--with-debug` option will slow down your computations, but display useful error messages in case of failure conditions such as access violations.
+
+.. \todo: clarify the use of either GAOL or Filib
+
+
+Tubex library
+-------------
+
+The last sources are available on `the official Tubex development repository <https://github.com/SimonRohou/tubex-lib>`_. 
 
 .. code-block:: none
 
@@ -29,55 +44,26 @@ Compiling the Tube class
   ./build.sh
 
 
-**Windows:**
+Graphical tools
+---------------
 
-The code has not been tested on Windows yet.
+`VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ is a visualization system that aims at providing people working with interval methods a way to display results (boxes, pavings), without worrying with GUI programming.
+Some methods have been implemented in Tubex in order to extend VIBes' features to tubes purposes.
 
-Graphics
-^^^^^^^^
-
-Graphical tools are provided in this library. These require the installation of the `Vibes viewer <http://enstabretagnerobotics.github.io/VIBES/>`_. See the installation requirements.
-
-Multi-threading
-^^^^^^^^^^^^^^^
-
-The Tube class provides multi-threaded features implemented with the `OpenMP library <http://www.openmp.org/>`_.
-
-**Note:** several functions running with OpenMP have not be fully tested yet.
-
-Development
------------
-
-Documentation
-^^^^^^^^^^^^^
-
-The documentation is generated thanks to `Sphinx <http://www.sphinx-doc.org/en/stable/>`_.
+The last sources are available on `the official VIBes development repository <https://github.com/ENSTABretagneRobotics/VIBES>`_. A fast installation can be made using the following command lines:
 
 .. code-block:: none
 
-  pip install Sphinx
-  pip install sphinx_rtd_theme
+  git clone https://github.com/ENSTABretagneRobotics/VIBES
+  cd VIBES/viewer ; mkdir make ; cd make ; cmake .. ; sudo make install
 
-Then, run:
+.. \todo: test sudo make install and executable access
 
-.. code-block:: none
+Then, the VIBes viewer can be launch independently by executing the `VIBes-viewer`.
+You may have to update the :code:`$PATH` environment variable in order to reach the `VIBes-viewer` program.
 
-  cd doc ; make html
 
-Tests
-^^^^^
+Build the examples
+------------------
 
-For now, we are using `Catch <https://github.com/philsquared/Catch>`_ to implement tests.
-
-Note that the *cmake* project file may need to be configured in order to set :code:`BUILD_TESTS`.
-
-To launch tests:
-
-.. code-block:: none
-
-  cd build
-  cmake -DBUILD_TESTS=ON ..
-  make
-  make test
-
-These tests include the run of C++ examples.
+todo
