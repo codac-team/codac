@@ -151,10 +151,29 @@ namespace tubex
     {
       v_x.push_back(trunc_inf(p[i].x().mid()));
       v_y.push_back(trunc_inf(p[i].y().mid()));
-    } 
+    }
 
     if(v_x.size() > 0)
       vibes::drawPolygon(v_x, v_y, color, params_this_fig);
+  }
+  
+  void VibesFigure::draw_points(const vector<Point>& v_pts, float size, const vibes::Params& params)
+  {
+    draw_points(v_pts, size, "", params);
+  }
+  
+  void VibesFigure::draw_points(const vector<Point>& v_pts, float size, const string& color, const vibes::Params& params)
+  {
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+    vector<double> v_x, v_y;
+
+    for(int i = 0 ; i < v_pts.size() ; i++)
+    {
+      IntervalVector pbox = v_pts[i].box();
+      pbox.inflate(size);
+      vibes::drawBox(pbox, color, params_this_fig);
+    }
   }
   
   void VibesFigure::clear()

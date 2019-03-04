@@ -37,6 +37,11 @@ namespace Catch
             m_value(value)
         {}
 
+        explicit ApproxIntv(ibex::Interval value, double epsilon) :
+            m_epsilon(epsilon),
+            m_value(value)
+        {}
+
         friend bool operator ==(ibex::Interval lhs, ApproxIntv const& rhs)
         {
           double e = rhs.m_epsilon;
@@ -75,7 +80,6 @@ namespace Catch
     {
       public:
         explicit ApproxIntvVector(ibex::IntervalVector value) :
-            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
@@ -112,7 +116,6 @@ namespace Catch
         }
 
       private:
-        double m_epsilon;
         ibex::IntervalVector m_value;
     };
 
@@ -120,7 +123,6 @@ namespace Catch
     {
       public:
         explicit ApproxSlice(tubex::Slice value) :
-            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
@@ -155,7 +157,6 @@ namespace Catch
         }
 
       private:
-        double m_epsilon;
         tubex::Slice m_value;
     };
 
@@ -163,7 +164,6 @@ namespace Catch
     {
       public:
         explicit ApproxTube(tubex::Tube value) :
-            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
@@ -207,7 +207,6 @@ namespace Catch
         }
 
       private:
-        double m_epsilon;
         tubex::Tube m_value;
     };
 
@@ -215,7 +214,6 @@ namespace Catch
     {
       public:
         explicit ApproxTubeVector(tubex::TubeVector value) :
-            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
@@ -252,7 +250,6 @@ namespace Catch
         }
 
       private:
-        double m_epsilon;
         tubex::TubeVector m_value;
     };
 
@@ -309,13 +306,11 @@ namespace Catch
     {
       public:
         explicit ApproxIntvPair(std::pair<ibex::Interval,ibex::Interval> value) :
-            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
         friend bool operator ==(std::pair<ibex::Interval,ibex::Interval> lhs, ApproxIntvPair const& rhs)
         {
-          double e = rhs.m_epsilon;
           return lhs == rhs.m_value ||
                  (ApproxIntv(lhs.first) == rhs.m_value.first && ApproxIntv(lhs.second) == rhs.m_value.second);
         }
@@ -351,14 +346,13 @@ namespace Catch
     {
       public:
         explicit ApproxPoint(tubex::Point value) :
-            m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
         friend bool operator ==(tubex::Point lhs, ApproxPoint const& rhs)
         {
           return lhs == rhs.m_value ||
-            lhs.x() == ApproxIntv(rhs.m_value.x()) && lhs.y() == ApproxIntv(rhs.m_value.y());
+            lhs.x() == ApproxIntv(rhs.m_value.x(), DEFAULT_EPSILON * 10.) && lhs.y() == ApproxIntv(rhs.m_value.y(), DEFAULT_EPSILON * 10.);
         }
 
         friend bool operator ==(ApproxPoint const& lhs, tubex::Point rhs)

@@ -25,7 +25,7 @@ Related publications
 
 * [Reliable non-linear state estimation involving time uncertainties](http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf), *Automatica*, 93:379-388, Rohou, S., Jaulin, L., Mihaylova, L., Le Bars, F., and Veres, S. M. (2017)
 
-* [Proving the existence of loops in robot trajectories](http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf), *The International Journal of Robotics Research*, Rohou, S., Franek, P., Aubry, C., and Jaulin, L. (2018)
+* [Proving the existence of loops in robot trajectories](http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf), *The International Journal of Robotics Research*, 37(12):1500-1516, Rohou, S., Franek, P., Aubry, C., and Jaulin, L. (2018)
 
 
 

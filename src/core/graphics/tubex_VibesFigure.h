@@ -62,6 +62,8 @@ namespace tubex
       void draw_circle(double x, double y, double r, const std::string& color = "", const vibes::Params& params = vibes::Params());
       void draw_polygon(const Polygon& p, const vibes::Params& params);
       void draw_polygon(const Polygon& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_points(const std::vector<Point>& v_pts, float size, const vibes::Params& params);
+      void draw_points(const std::vector<Point>& v_pts, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Set figure's axis limits.
