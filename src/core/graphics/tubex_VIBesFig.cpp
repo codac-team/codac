@@ -17,8 +17,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  VIBesFig::VIBesFig(const string& figure_name)
-    : Figure(figure_name)
+  VIBesFig::VIBesFig(const string& fig_name)
+    : Figure(fig_name)
   {
     vibes::newFigure(m_name);
     vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));

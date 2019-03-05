@@ -35,9 +35,9 @@ namespace tubex
       /**
        * \brief Creates a VIBesFig
        *
-       * \param figure_name a reference to the figure that will be displayed in the window's title
+       * \param fig_name a reference to the figure that will be displayed in the window's title
        */
-      VIBesFig(const std::string& figure_name);
+      VIBesFig(const std::string& fig_name);
 
       /**
        * \brief VIBesFig destructor

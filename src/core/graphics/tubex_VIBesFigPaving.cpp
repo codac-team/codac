@@ -33,19 +33,21 @@ namespace tubex
     set_color_map(color_map);
   }
 
+  void VIBesFigPaving::set_color_map(const map<int,string>& color_map)
+  {
+    // todo: deal with color maps defined with any kind of values
+    vibes::newGroup("val_in", color_map.at(VALUE_IN), vibesParams("figure", name()));
+    vibes::newGroup("val_maybe", color_map.at(VALUE_MAYBE), vibesParams("figure", name()));
+    vibes::newGroup("val_out", color_map.at(VALUE_OUT), vibesParams("figure", name()));
+  }
+
   void VIBesFigPaving::show()
   {
+    // todo: deal with color maps defined with any kind of values
     vibes::clearGroup(name(), "val_in");
     vibes::clearGroup(name(), "val_maybe");
     vibes::clearGroup(name(), "val_out");
     draw_paving(m_paving);
-  }
-
-  void VIBesFigPaving::set_color_map(const map<int,string> color_map)
-  {
-    vibes::newGroup("val_in", color_map.at(VALUE_IN), vibesParams("figure", name()));
-    vibes::newGroup("val_maybe", color_map.at(VALUE_MAYBE), vibesParams("figure", name()));
-    vibes::newGroup("val_out", color_map.at(VALUE_OUT), vibesParams("figure", name()));
   }
 
   void VIBesFigPaving::draw_paving(const Paving *paving)

@@ -26,7 +26,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  Figure::Figure(const string& figure_name) : m_name(figure_name)
+  Figure::Figure(const string& fig_name) : m_name(fig_name)
   {
     
   }

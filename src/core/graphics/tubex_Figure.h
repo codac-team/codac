@@ -31,9 +31,9 @@ namespace tubex
       /**
        * \brief Creates a Figure
        *
-       * \param figure_name name of the figure as displayed in the window title
+       * \param fig_name name of the figure as displayed in the window title
        */
-      Figure(const std::string& figure_name);
+      Figure(const std::string& fig_name);
 
       /**
        * \brief Figure destructor
