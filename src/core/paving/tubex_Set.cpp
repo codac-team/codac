@@ -18,8 +18,6 @@ using namespace ibex;
 
 namespace tubex
 {
-  // Definition
-  
   Set::Set(const IntervalVector& box, int value)
     : m_box(box), m_value(value)
   {
@@ -31,8 +29,6 @@ namespace tubex
 
   }
 
-  // Accessing values
-
   int Set::value() const
   {
     return m_value;
@@ -42,8 +38,6 @@ namespace tubex
   {
     return m_box;
   }
-
-  // Setting values
 
   void Set::set_value(int value)
   {

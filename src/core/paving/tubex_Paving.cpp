@@ -35,9 +35,6 @@ namespace tubex
       delete m_second_subpaving;
     }
   }
-
-  // Binary tree structure
-
   Paving* Paving::get_first_subpaving()
   {
     return const_cast<Paving*>(static_cast<const Paving&>(*this).get_first_subpaving());
@@ -68,9 +65,6 @@ namespace tubex
     m_first_subpaving = new Paving(subboxes.first, m_value);
     m_second_subpaving = new Paving(subboxes.second, m_value);
   }
-
-  // Accessing values
-
   bool Paving::is_leaf() const
   {
     return m_first_subpaving == NULL;
