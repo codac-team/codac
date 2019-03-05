@@ -109,12 +109,40 @@ namespace tubex
        * \f$[x](\cdot)\f$ as polygons, thus displaying a thinner envelope of the tube \f$[x](\cdot)\f$. 
        *
        * \param tube the const pointer to the Tube object that will be displayed
-       * \param derivative the const pointer its derivative
+       * \param derivative the const pointer its derivative set
        */
       void set_tube_derivative(const Tube *tube, const Tube *derivative);
-      
+
+      /**
+       * \brief Sets color properties for a given tube
+       *
+       * \param tube the const pointer to the Tube object for which the colors will be set
+       * \param color_frgrnd a color for the current values of the tube
+       * \param color_bckgrnd a color for the previous values of the tube, before any new contraction
+       */
       void set_tube_color(const Tube *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd);
+
+      /**
+       * \brief Sets color properties for a given tube
+       *
+       * This method allows to change the display of slices, borders, gates, etc.
+       *
+       * \param tube the const pointer to the Tube object for which the colors will be set
+       * \param color_type the `TubeColorType` key for which the value will be set
+       * \param color the new color to be specified for the given type
+       */
       void set_tube_color(const Tube *tube, int color_type, const std::string& color);
+
+      /**
+       * \brief Removes a tube from this figure
+       *
+       * \todo automatically clear the figure (for now, the tube is only removed
+       *       from the list of objects to be shown afterwards)
+       *
+       * \note the object will not be deleted
+       *
+       * \param tube the const pointer to the Tube object to be removed
+       */
       void remove_tube(const Tube *tube);
 
       /// @}
@@ -137,39 +165,118 @@ namespace tubex
        * \param name a new name to identify this object
        */
       void set_trajectory_name(const Trajectory *traj, const std::string& name);
+
+      /**
+       * \brief Sets color properties for a given trajectory
+       *
+       * \param traj the const pointer to the Trajectory object for which the color will be set
+       * \param color a color to draw this trajectory
+       */
       void set_trajectory_color(const Trajectory *traj, const std::string& color);
+
+      /**
+       * \brief Removes a trajectory from this figure
+       *
+       * \todo automatically clear the figure (for now, the trajectory is only removed
+       *       from the list of objects to be shown afterwards)
+       *
+       * \note the object will not be deleted
+       *
+       * \param traj the const pointer to the Trajectory object to be removed
+       */
       void remove_trajectory(const Trajectory *traj);
 
       /// @}
 
     protected:
 
+      /**
+       * \brief Creates the VIBes group of `color_type` related to the given tube
+       *
+       * \param tube the const pointer to the Tube object for which a group will be created
+       * \param color_type the `TubeColorType` key related to the new group
+       */
       void create_group_color(const Tube *tube, int color_type);
+
+      /**
+       * \brief Creates all the VIBes groups related to the given tube
+       *
+       * \param tube the const pointer to the Tube object for which the groups will be created
+       */
       void create_groups_color(const Tube *tube);
+
+      /**
+       * \brief Draws a tube
+       *
+       * \param tube a const pointer to a Tube object to be shown
+       * \param detail_slices if `true`, each slice will be displayed as a box,
+       *        otherwise, only polygon envelopes of the tubes will be shown (fast display)
+       * \return the box hull of the displayed object
+       */
       const ibex::IntervalVector draw_tube(const Tube *tube, bool detail_slices = false);
+
+      /**
+       * \brief Draws a slice
+       *
+       * \param slice the slice to be displayed
+       * \param params VIBes parameters related to the slice (for groups)
+       */
       void draw_slice(const Slice& slice, const vibes::Params& params);
+
+      /**
+       * \brief Draws a slice knowing its derivative
+       *
+       * \param slice the slice to be displayed
+       * \param deriv_slice its derivative set
+       * \param params_slice VIBes parameters related to the slice (for groups)
+       * \param params_polygon VIBes parameters related to the polygon computed from the derivative
+       */
       void draw_slice(const Slice& slice, const Slice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon);
+
+      /**
+       * \brief Draws a gate
+       *
+       * \param gate the codomain
+       * \param t the domain input
+       * \param params VIBes parameters related to the gate (for groups)
+       */
       void draw_gate(const ibex::Interval& gate, double t, const vibes::Params& params);
+
+      /**
+       * \brief Draws a trajectory
+       *
+       * \param traj the const pointer to the Trajectory object to be shown
+       * \param points_size optional display mode, for which the trajectory is not a line but a set of points of a given size
+       * \return the box hull of the displayed object
+       */
       const ibex::IntervalVector draw_trajectory(const Trajectory *traj, float points_size = 0.);
 
     protected:
 
+      /**
+       * \struct FigTubeParams
+       * \brief Specifies some parameters related to a Tube display
+       */
       struct FigTubeParams
       {
-        std::map<int,std::string> m_colors;
-        const Tube *tube_copy = NULL; // to display previous values in background
-        const Tube *tube_derivative = NULL; // to display polygons enclosed by slices
-        std::string name;
+        std::string name; //!< string identifier of the tube
+        std::map<int,std::string> m_colors; //!< map of colors `<TubeColorType,html_color_code>`
+        const Tube *tube_copy = NULL; //!< to display previous values in background, before any new contraction
+        const Tube *tube_derivative = NULL; //!< to display thinner envelopes (polygons) enclosed by the slices
       };
 
+      /**
+       * \struct FigTrajParams
+       * \brief Specifies some parameters related to a Trajectory display
+       */
       struct FigTrajParams
       {
-        std::string color;
-        std::string name;
+        std::string name; //!< string identifier of the trajectory
+        std::string color; //!< color of the trajectory
       };
 
-      std::map<const Tube*,FigTubeParams> m_map_tubes;
-      std::map<const Trajectory*,FigTrajParams> m_map_trajs;
+      std::map<const Tube*,FigTubeParams> m_map_tubes; //!< map of Tube objects to be displayed, together with parameters
+      std::map<const Trajectory*,FigTrajParams> m_map_trajs; //!< map of Trajectory objects to be displayed, together with parameters
 
       friend class VIBesFigTubeVector;
   };
