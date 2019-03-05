@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DataLoader_Lissajous class
+ *  tubex-lib - DataLoaderLissajous class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include <time.h>
-#include "tubex_DataLoader_Lissajous.h"
+#include "tubex_DataLoaderLissajous.h"
 #include "tubex_Function.h"
 #include "tubex_Tube.h"
 
@@ -20,13 +20,13 @@ using namespace ibex;
 
 namespace tubex
 {
-  DataLoader_Lissajous::DataLoader_Lissajous()
+  DataLoaderLissajous::DataLoaderLissajous()
     : DataLoader()
   {
 
   }
 
-  void DataLoader_Lissajous::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
+  void DataLoaderLissajous::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
   {
     assert(DynamicalItem::valid_domain(domain) || domain == Interval::ALL_REALS);
 
@@ -55,7 +55,7 @@ namespace tubex
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
 
-  vector<Beacon> DataLoader_Lissajous::get_beacons(const IntervalVector& map_box) const
+  vector<Beacon> DataLoaderLissajous::get_beacons(const IntervalVector& map_box) const
   {
     assert(map_box.size() == 2);
 
@@ -72,7 +72,7 @@ namespace tubex
     return v_beacons;
   }
   
-  vector<IntervalVector> DataLoader_Lissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map) const
+  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map) const
   {
     assert(x.size() >= 2);
 

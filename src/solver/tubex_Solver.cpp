@@ -26,7 +26,7 @@ namespace tubex
 
     #if GRAPHICS // embedded graphics
       vibes::beginDrawing();
-      m_fig = new VIBesFigure_TubeVector("Solver");
+      m_fig = new VIBesFigTubeVector("Solver");
       m_fig->set_properties(100, 100, 700, 500);
     #endif
   }
@@ -190,7 +190,7 @@ namespace tubex
     l_tubes = l_clustered;
   }
 
-  VIBesFigure_TubeVector* Solver::figure()
+  VIBesFigTubeVector* Solver::figure()
   {
     return m_fig;
   }

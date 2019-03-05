@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DataLoader_Redermor class
+ *  tubex-lib - DataLoaderRedermor class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include <time.h>
-#include "tubex_DataLoader_Redermor.h"
+#include "tubex_DataLoaderRedermor.h"
 #include "tubex_Function.h"
 #include "tubex_Exception.h"
 #include "tubex_Tube.h"
@@ -21,13 +21,13 @@ using namespace ibex;
 
 namespace tubex
 {
-  DataLoader_Redermor::DataLoader_Redermor(const string& file_path)
+  DataLoaderRedermor::DataLoaderRedermor(const string& file_path)
     : DataLoader(file_path)
   {
 
   }
 
-  void DataLoader_Redermor::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
+  void DataLoaderRedermor::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
   {
     assert(domain == Interval::ALL_REALS | DynamicalItem::valid_domain(domain));
     clock_t t_start = clock();
@@ -39,7 +39,7 @@ namespace tubex
     else // loading data from file
     {
       if(!m_datafile->is_open())
-        throw Exception("DataLoader_Redermor::load_data", "data file not already opened");
+        throw Exception("DataLoaderRedermor::load_data", "data file not already opened");
 
       int i = 0;
       string line;
@@ -67,7 +67,7 @@ namespace tubex
                  >> y[7] >> dy[7]   // alt
                  >> y[8] >> dy[8]   // x
                  >> y[9] >> dy[9])) // y
-          throw Exception("DataLoader_Redermor::load_data", "fail loading data");
+          throw Exception("DataLoaderRedermor::load_data", "fail loading data");
 
         // Trajectory used for velocities evaluations:
         traj_data_x.set(y, t);
@@ -118,7 +118,7 @@ namespace tubex
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
 
-  vector<Beacon> DataLoader_Redermor::get_beacons() const
+  vector<Beacon> DataLoaderRedermor::get_beacons() const
   {
     vector<Beacon> v_beacons;
     v_beacons.push_back(Beacon(594.0533723, 374.72930350, 19.));
@@ -130,7 +130,7 @@ namespace tubex
     return v_beacons;
   }
   
-  map<int,vector<IntervalVector> > DataLoader_Redermor::get_observations() const
+  map<int,vector<IntervalVector> > DataLoaderRedermor::get_observations() const
   {
     IntervalVector obs(2);
     map<int,vector<IntervalVector> > m_obs;

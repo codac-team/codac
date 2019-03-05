@@ -1,6 +1,6 @@
 #include "tests.h"
 #include <cstdio>
-#include "tubex_VIBesFigure_Tube.h"
+#include "tubex_VIBesFigTube.h"
 #include "vibes.h"
 
 #define protected public     // Using #define so that we can access protected
@@ -120,7 +120,7 @@ TEST_CASE("CtcPicard")
     //if(VIBES_DRAWING) // drawing results
     //{
     //  vibes::beginDrawing();
-    //  VIBesFigure_Tube fig_tube("picard", &x_auto_sampling);
+    //  VIBesFigTube fig_tube("picard", &x_auto_sampling);
     //  fig_tube.set_properties(100, 100, 500, 500);
     //  fig_tube.show(true);
     //  vibes::endDrawing();
@@ -150,7 +150,7 @@ TEST_CASE("CtcPicard")
     //if(false & VIBES_DRAWING) // drawing results
     //{
     //  vibes::beginDrawing();
-    //  VIBesFigure_Tube fig_tube("picard", &x);
+    //  VIBesFigTube fig_tube("picard", &x);
     //  fig_tube.set_properties(100, 100, 500, 500);
     //  fig_tube.show(true);
     //  vibes::endDrawing();
@@ -176,7 +176,7 @@ TEST_CASE("CtcPicard")
     if(false & VIBES_DRAWING) // drawing results
     {
       //vibes::beginDrawing();
-      //VIBesFigure_Tube fig_tube("picard", &x);
+      //VIBesFigTube fig_tube("picard", &x);
       //fig_tube.set_properties(100, 100, 500, 500);
       //fig_tube.show(true);
       //vibes::endDrawing();
@@ -201,7 +201,7 @@ TEST_CASE("CtcPicard")
     if(false & VIBES_DRAWING) // drawing results
     {
       //vibes::beginDrawing();
-      //VIBesFigure_Tube fig_tube("picard", &x);
+      //VIBesFigTube fig_tube("picard", &x);
       //fig_tube.set_properties(100, 100, 500, 500);
       //fig_tube.show(true);
       //vibes::endDrawing();

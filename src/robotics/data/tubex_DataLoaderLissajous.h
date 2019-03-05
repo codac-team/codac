@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DataLoader_Lissajous class
+ *  tubex-lib - DataLoaderLissajous class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_DATALOADER_LISSAJOUS_H__
-#define __TUBEX_DATALOADER_LISSAJOUS_H__
+#ifndef __TUBEX_DATALOADERLISSAJOUS_H__
+#define __TUBEX_DATALOADERLISSAJOUS_H__
 
 #include "ibex_Interval.h"
 #include "tubex_DataLoader.h"
@@ -19,11 +19,11 @@
 
 namespace tubex
 {
-  class DataLoader_Lissajous : DataLoader
+  class DataLoaderLissajous : DataLoader
   {
     public:
 
-      DataLoader_Lissajous();
+      DataLoaderLissajous();
       void load_data(TubeVector *&x,
                      TrajectoryVector *&truth,
                      float timestep = 0.01,

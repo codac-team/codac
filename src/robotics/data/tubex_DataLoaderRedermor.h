@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - DataLoader_Redermor class
+ *  tubex-lib - DataLoaderRedermor class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,8 +10,8 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_DATALOADER_REDERMOR_H__
-#define __TUBEX_DATALOADER_REDERMOR_H__
+#ifndef __TUBEX_DATALOADERREDERMOR_H__
+#define __TUBEX_DATALOADERREDERMOR_H__
 
 #include "ibex_Interval.h"
 #include "tubex_DataLoader.h"
@@ -19,11 +19,11 @@
 
 namespace tubex
 {
-  class DataLoader_Redermor : DataLoader
+  class DataLoaderRedermor : DataLoader
   {
     public:
 
-      DataLoader_Redermor(const std::string& file_path);
+      DataLoaderRedermor(const std::string& file_path);
       void load_data(TubeVector *&x,
                      TrajectoryVector *&truth,
                      float timestep = 1.,

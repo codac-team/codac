@@ -1,6 +1,6 @@
 /** 
  *  @file
- *  VIBesFigure class
+ *  VIBesFig class
  * ================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -11,8 +11,8 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_VIBESFIGURE_H__
-#define __TUBEX_VIBESFIGURE_H__
+#ifndef __TUBEX_VIBESFIG_H__
+#define __TUBEX_VIBESFIG_H__
 
 #include "tubex_Figure.h"
 #include "tubex_Polygon.h"
@@ -21,11 +21,11 @@
 namespace tubex
 {
   /**
-   * \class VIBesFigure
+   * \class VIBesFig
    * \brief Two-dimensional graphical item based on the VIBes viewer
    */
 
-  class VIBesFigure : public Figure
+  class VIBesFig : public Figure
   {
     public:
 
@@ -33,16 +33,16 @@ namespace tubex
       /// @{
 
       /**
-       * \brief Creates a VIBesFigure
+       * \brief Creates a VIBesFig
        *
        * \param figure_name a reference to the figure that will be displayed in the window's title
        */
-      VIBesFigure(const std::string& figure_name);
+      VIBesFig(const std::string& figure_name);
 
       /**
-       * \brief VIBesFigure destructor
+       * \brief VIBesFig destructor
        */
-      ~VIBesFigure() {};
+      ~VIBesFig() {};
       
       /**
        * \brief Sets the properties (coordinates and dimensions) of this figure

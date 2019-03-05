@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - VIBesFigure_Tube class
+ *  tubex-lib - VIBesFigTube class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -13,22 +13,22 @@
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
 #include "tubex_Polygon.h"
-#include "tubex_VIBesFigure_Tube.h"
+#include "tubex_VIBesFigTube.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  VIBesFigure_Tube::VIBesFigure_Tube(const string& fig_name, const Tube *tube, const Trajectory *traj)
-    : VIBesFigure(fig_name)
+  VIBesFigTube::VIBesFigTube(const string& fig_name, const Tube *tube, const Trajectory *traj)
+    : VIBesFig(fig_name)
   {
     set_properties(100, 100, 600, 300); // default properties
     if(tube != NULL) add_tube(tube, DEFAULT_TUBE_NAME);
     if(traj != NULL) add_trajectory(traj, DEFAULT_TRAJ_NAME);
   }
 
-  VIBesFigure_Tube::~VIBesFigure_Tube()
+  VIBesFigTube::~VIBesFigTube()
   {
     typename map<const Tube*,FigTubeParams>::const_iterator it;
     for(it = m_map_tubes.begin(); it != m_map_tubes.end(); it++)
@@ -36,7 +36,7 @@ namespace tubex
         delete it->second.tube_copy;
   }
 
-  void VIBesFigure_Tube::add_tube(const Tube *tube, const string& name,
+  void VIBesFigTube::add_tube(const Tube *tube, const string& name,
                                   const string& color_frgrnd, const string& color_bckgrnd)
   {
     assert(tube != NULL);
@@ -54,7 +54,7 @@ namespace tubex
     create_groups_color(tube);
   }
 
-  void VIBesFigure_Tube::set_tube_name(const Tube *tube, const string& name)
+  void VIBesFigTube::set_tube_name(const Tube *tube, const string& name)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -63,7 +63,7 @@ namespace tubex
     m_map_tubes[tube].name = name;
   }
   
-  void VIBesFigure_Tube::set_tube_derivative(const Tube *tube, const Tube *derivative)
+  void VIBesFigTube::set_tube_derivative(const Tube *tube, const Tube *derivative)
   {
     assert(tube != NULL && derivative != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -72,7 +72,7 @@ namespace tubex
     m_map_tubes[tube].tube_derivative = derivative;
   }
 
-  void VIBesFigure_Tube::set_tube_color(const Tube *tube, const string& color_frgrnd, const string& color_bckgrnd)
+  void VIBesFigTube::set_tube_color(const Tube *tube, const string& color_frgrnd, const string& color_bckgrnd)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -83,7 +83,7 @@ namespace tubex
     create_groups_color(tube);
   }
 
-  void VIBesFigure_Tube::set_tube_color(const Tube *tube, int color_type, const string& color)
+  void VIBesFigTube::set_tube_color(const Tube *tube, int color_type, const string& color)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -93,7 +93,7 @@ namespace tubex
     create_groups_color(tube);
   }
 
-  void VIBesFigure_Tube::create_group_color(const Tube *tube, int color_type)
+  void VIBesFigTube::create_group_color(const Tube *tube, int color_type)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -133,7 +133,7 @@ namespace tubex
                     vibesParams("figure", name()));
   }
 
-  void VIBesFigure_Tube::create_groups_color(const Tube *tube)
+  void VIBesFigTube::create_groups_color(const Tube *tube)
   {
     // All groups are created again to keep a correct display order
     create_group_color(tube, TubeColorType::BACKGROUND);
@@ -143,7 +143,7 @@ namespace tubex
     create_group_color(tube, TubeColorType::GATES); // layer on top of the other
   }
   
-  void VIBesFigure_Tube::remove_tube(const Tube *tube)
+  void VIBesFigTube::remove_tube(const Tube *tube)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -154,7 +154,7 @@ namespace tubex
     m_map_tubes.erase(tube);
   }
 
-  void VIBesFigure_Tube::add_trajectory(const Trajectory *traj, const string& name, const string& color)
+  void VIBesFigTube::add_trajectory(const Trajectory *traj, const string& name, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) == m_map_trajs.end()
@@ -165,7 +165,7 @@ namespace tubex
     set_trajectory_color(traj, color);
   }
 
-  void VIBesFigure_Tube::set_trajectory_name(const Trajectory *traj, const string& name)
+  void VIBesFigTube::set_trajectory_name(const Trajectory *traj, const string& name)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -174,7 +174,7 @@ namespace tubex
     m_map_trajs[traj].name = name;
   }
   
-  void VIBesFigure_Tube::set_trajectory_color(const Trajectory *traj, const string& color)
+  void VIBesFigTube::set_trajectory_color(const Trajectory *traj, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -186,7 +186,7 @@ namespace tubex
     // so that trajectories stay on top of the tubes.
   }
   
-  void VIBesFigure_Tube::remove_trajectory(const Trajectory *traj)
+  void VIBesFigTube::remove_trajectory(const Trajectory *traj)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -195,12 +195,12 @@ namespace tubex
     m_map_trajs.erase(traj);
   }
   
-  void VIBesFigure_Tube::show()
+  void VIBesFigTube::show()
   {
     show(false);
   }
   
-  void VIBesFigure_Tube::show(bool detail_slices)
+  void VIBesFigTube::show(bool detail_slices)
   {
     typename map<const Tube*,FigTubeParams>::const_iterator it_tubes;
     for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
@@ -214,7 +214,7 @@ namespace tubex
     axis_limits(m_view_box);
   }
 
-  const IntervalVector VIBesFigure_Tube::draw_tube(const Tube *tube, bool detail_slices)
+  const IntervalVector VIBesFigTube::draw_tube(const Tube *tube, bool detail_slices)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -333,7 +333,7 @@ namespace tubex
     return viewbox;
   }
 
-  const Polygon VIBesFigure_Tube::polygon_envelope(const Tube *tube) const
+  const Polygon VIBesFigTube::polygon_envelope(const Tube *tube) const
   {
     assert(tube != NULL);
     if(tube->is_empty())
@@ -360,14 +360,14 @@ namespace tubex
     return Polygon(v_pts);
   }
 
-  void VIBesFigure_Tube::draw_slice(const Slice& slice, const vibes::Params& params)
+  void VIBesFigTube::draw_slice(const Slice& slice, const vibes::Params& params)
   {
     if(slice.codomain().is_empty())
       return; // no display
     draw_box(slice.box(), params);
   }
 
-  void VIBesFigure_Tube::draw_slice(const Slice& slice, const Slice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon)
+  void VIBesFigTube::draw_slice(const Slice& slice, const Slice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon)
   {
     assert(slice.domain() == deriv_slice.domain());
 
@@ -378,7 +378,7 @@ namespace tubex
     draw_polygon(slice.polygon(deriv_slice), params_polygon);
   }
 
-  void VIBesFigure_Tube::draw_gate(const Interval& gate, double t, const vibes::Params& params)
+  void VIBesFigTube::draw_gate(const Interval& gate, double t, const vibes::Params& params)
   {
     if(gate.is_empty())
       return; // no display
@@ -395,7 +395,7 @@ namespace tubex
     }
   }
   
-  const IntervalVector VIBesFigure_Tube::draw_trajectory(const Trajectory *traj, float points_size)
+  const IntervalVector VIBesFigTube::draw_trajectory(const Trajectory *traj, float points_size)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()

@@ -13,7 +13,6 @@
 #include <iostream>
 #include <iomanip>
 #include "tubex_GrahamScan.h"
-#include "tubex_VIBesFigure.h"
 
 using namespace std;
 using namespace ibex;

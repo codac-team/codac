@@ -1,6 +1,7 @@
-/* ============================================================================
- *  tubex-lib - VIBesFigure_Paving class
- * ============================================================================
+/** 
+ *  @file
+ *  VIBesFigPaving class
+ * ================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
@@ -10,19 +11,19 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_VIBESFIGUREPAVING_H__
-#define __TUBEX_VIBESFIGUREPAVING_H__
+#ifndef __TUBEX_VIBESFIGPAVING_H__
+#define __TUBEX_VIBESFIGPAVING_H__
 
-#include "tubex_VIBesFigure.h"
+#include "tubex_VIBesFig.h"
 #include "tubex_Paving.h"
 
 namespace tubex
 {
-  class VIBesFigure_Paving : public VIBesFigure
+  class VIBesFigPaving : public VIBesFig
   {
     public:
 
-      VIBesFigure_Paving(const std::string& fig_name, const Paving *paving);
+      VIBesFigPaving(const std::string& fig_name, const Paving *paving);
 
       void show();
       void set_color_map(const std::map<int,std::string> color_map);

@@ -1,6 +1,6 @@
 #include "tests.h"
 #include "tubex_Function.h"
-#include "tubex_VIBesFigure_Tube.h"
+#include "tubex_VIBesFigTube.h"
 
 using namespace Catch;
 using namespace Detail;
@@ -24,15 +24,15 @@ TEST_CASE("Functions")
     //{
     //  vibes::beginDrawing();
     //  
-    //  VIBesFigure_Tube fig_tube_x("x", &x);
+    //  VIBesFigTube fig_tube_x("x", &x);
     //  fig_tube_x.set_properties(400, 400, 600, 300);
     //  fig_tube_x.show(true);
     //  
-    //  VIBesFigure_Tube fig_tube_y1("y1", &y1);
+    //  VIBesFigTube fig_tube_y1("y1", &y1);
     //  fig_tube_y1.set_properties(400, 400, 600, 300);
     //  fig_tube_y1.show(true);
     //  
-    //  VIBesFigure_Tube fig_tube_y2("y2", &y2);
+    //  VIBesFigTube fig_tube_y2("y2", &y2);
     //  fig_tube_y2.set_properties(400, 400, 600, 300);
     //  fig_tube_y2.show(true);
     //  

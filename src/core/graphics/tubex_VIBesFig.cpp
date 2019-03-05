@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - VIBesFigure class
+ *  tubex-lib - VIBesFig class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,21 +10,21 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_VIBesFigure.h"
+#include "tubex_VIBesFig.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  VIBesFigure::VIBesFigure(const string& figure_name)
+  VIBesFig::VIBesFig(const string& figure_name)
     : Figure(figure_name)
   {
     vibes::newFigure(m_name);
     vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));
   }
 
-  void VIBesFigure::set_properties(int x, int y, int width, int height)
+  void VIBesFig::set_properties(int x, int y, int width, int height)
   {
     assert(x >= 0 && y >= 0 && width > 0 && height > 0);
     Figure::set_properties(x, y, width, height);
@@ -36,7 +36,7 @@ namespace tubex
                           "height", m_height));
   }
 
-  const IntervalVector& VIBesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio, float margin)
+  const IntervalVector& VIBesFig::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio, float margin)
   {
     assert(margin > 0.);
     assert(x_min > 0. && x_max > 0. && y_min > 0. && y_max > 0.);
@@ -47,7 +47,7 @@ namespace tubex
     return axis_limits(viewbox, keep_ratio, margin);
   }
 
-  const IntervalVector& VIBesFigure::axis_limits(const IntervalVector& viewbox, bool same_ratio, float margin)
+  const IntervalVector& VIBesFig::axis_limits(const IntervalVector& viewbox, bool same_ratio, float margin)
   {
     assert(viewbox.size() == 2);
     assert(margin >= 0.);
@@ -84,23 +84,23 @@ namespace tubex
     return m_view_box;
   }
 
-  void VIBesFigure::save_image(const string& suffix, const string& extension) const
+  void VIBesFig::save_image(const string& suffix, const string& extension) const
   {
     vibes::saveImage(name() + suffix + "." + extension, name());
   }
   
-  void VIBesFigure::clear()
+  void VIBesFig::clear()
   {
     vibes::clearFigure();
   }
 
-  void VIBesFigure::draw_box(const IntervalVector& box, const vibes::Params& params)
+  void VIBesFig::draw_box(const IntervalVector& box, const vibes::Params& params)
   {
     assert(box.size() == 2);
     draw_box(box, "", params);
   }
 
-  void VIBesFigure::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
   {
     assert(box.size() == 2);
     vibes::Params params_this_fig(params);
@@ -110,13 +110,13 @@ namespace tubex
     else vibes::drawBox(box, params_this_fig);
   }
   
-  void VIBesFigure::draw_line(const vector<double>& v_x, const vector<double>& v_y, const vibes::Params& params)
+  void VIBesFig::draw_line(const vector<double>& v_x, const vector<double>& v_y, const vibes::Params& params)
   {
     assert(v_x.size() == v_y.size());
     draw_line(v_x, v_y, "", params);
   }
   
-  void VIBesFigure::draw_line(const vector<double>& v_x, const vector<double>& v_y, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_line(const vector<double>& v_x, const vector<double>& v_y, const string& color, const vibes::Params& params)
   {
     assert(v_x.size() == v_y.size());
     vibes::Params params_this_fig(params);
@@ -124,24 +124,24 @@ namespace tubex
     vibes::drawLine(v_x, v_y, color, params_this_fig);
   }
   
-  void VIBesFigure::draw_circle(double x, double y, double r, const vibes::Params& params)
+  void VIBesFig::draw_circle(double x, double y, double r, const vibes::Params& params)
   {
     draw_circle(x, y, r, "", params);
   }
   
-  void VIBesFigure::draw_circle(double x, double y, double r, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_circle(double x, double y, double r, const string& color, const vibes::Params& params)
   {
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
     vibes::drawCircle(x, y, r, color, params_this_fig);
   }
   
-  void VIBesFigure::draw_polygon(const Polygon& p, const vibes::Params& params)
+  void VIBesFig::draw_polygon(const Polygon& p, const vibes::Params& params)
   {
     draw_polygon(p, "", params);
   }
   
-  void VIBesFigure::draw_polygon(const Polygon& p, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_polygon(const Polygon& p, const string& color, const vibes::Params& params)
   {
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
@@ -157,12 +157,12 @@ namespace tubex
       vibes::drawPolygon(v_x, v_y, color, params_this_fig);
   }
   
-  void VIBesFigure::draw_points(const vector<Point>& v_pts, float size, const vibes::Params& params)
+  void VIBesFig::draw_points(const vector<Point>& v_pts, float size, const vibes::Params& params)
   {
     draw_points(v_pts, size, "", params);
   }
   
-  void VIBesFigure::draw_points(const vector<Point>& v_pts, float size, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_points(const vector<Point>& v_pts, float size, const string& color, const vibes::Params& params)
   {
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();

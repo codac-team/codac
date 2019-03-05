@@ -55,7 +55,7 @@ int main()
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    VIBesFigure_TubeVector fig_x("x", &x);
+    VIBesFigTubeVector fig_x("x", &x);
     fig_x.set_properties(100, 100, 600, 250);
     fig_x.show();
 

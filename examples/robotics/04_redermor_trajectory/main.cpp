@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     string file_path = "./data/redermor/gesmi.txt";
     if(argc > 1) file_path = argv[1];
     
-    DataLoader_Redermor data_loader(file_path);
+    DataLoaderRedermor data_loader(file_path);
     data_loader.load_data(x, x_truth);
     vector<Beacon> v_seamarks = data_loader.get_beacons();
     map<int,vector<IntervalVector> > m_obs = data_loader.get_observations();
@@ -27,13 +27,13 @@ int main(int argc, char** argv)
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    VIBesFigure_TubeVector fig_x("Redermor's state", 0, 1); // first two components
+    VIBesFigTubeVector fig_x("Redermor's state", 0, 1); // first two components
     fig_x.set_properties(2000, 50, 500, 250);
     fig_x.add_tubevector(x, "x");
     fig_x.add_trajectoryvector(x_truth, "x*");
     fig_x.show();
 
-    VIBesFigure_Map fig_map("Map");
+    VIBesFigMap fig_map("Map");
     fig_map.set_properties(1450, 50, 500, 500);
     fig_map.add_tubevector(x, "x", 0, 1);
     fig_map.add_trajectoryvector(x_truth, "x*", 0, 1, "white");

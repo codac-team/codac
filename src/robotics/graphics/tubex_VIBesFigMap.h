@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - VIBesFigure_Map class
+ *  tubex-lib - VIBesFigMap class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,13 +10,13 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_VIBESFIGUREMAP_H__
-#define __TUBEX_VIBESFIGUREMAP_H__
+#ifndef __TUBEX_VIBESFIGMAP_H__
+#define __TUBEX_VIBESFIGMAP_H__
 
 #include <map>
 #include <vector>
 
-#include "tubex_VIBesFigure.h"
+#include "tubex_VIBesFig.h"
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_Beacon.h"
@@ -32,12 +32,12 @@ namespace tubex
   #define DEFAULT_MAPBCKGRND_COLOR  "#d2d2d2[#d2d2d2]"
   #define DEFAULT_OBS_COLOR         "gray"
 
-  class VIBesFigure_Map : public VIBesFigure
+  class VIBesFigMap : public VIBesFig
   {
     public:
 
-      VIBesFigure_Map(const std::string& fig_name);
-      ~VIBesFigure_Map();
+      VIBesFigMap(const std::string& fig_name);
+      ~VIBesFigMap();
       
       void add_tubevector(const TubeVector *tube, const std::string& name, int index_x, int index_y);
       void set_tubevector_name(const TubeVector *tube, const std::string& name);

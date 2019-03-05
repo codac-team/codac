@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - VIBesFigure_TubeVector class
+ *  tubex-lib - VIBesFigTubeVector class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,24 +10,24 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_VIBESFIGURETUBEVECTOR_H__
-#define __TUBEX_VIBESFIGURETUBEVECTOR_H__
+#ifndef __TUBEX_VIBESFIGTUBEVECTOR_H__
+#define __TUBEX_VIBESFIGTUBEVECTOR_H__
 
 #include "tubex_Figure.h"
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
-#include "tubex_VIBesFigure_Tube.h"
+#include "tubex_VIBesFigTube.h"
 
 namespace tubex
 {
-  class VIBesFigure_TubeVector : public Figure
+  class VIBesFigTubeVector : public Figure
   {
     public:
 
-      VIBesFigure_TubeVector(const std::string& fig_name);
-      VIBesFigure_TubeVector(const std::string& fig_name, int start_index, int end_index);
-      VIBesFigure_TubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector = NULL);
-      ~VIBesFigure_TubeVector();
+      VIBesFigTubeVector(const std::string& fig_name);
+      VIBesFigTubeVector(const std::string& fig_name, int start_index, int end_index);
+      VIBesFigTubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector = NULL);
+      ~VIBesFigTubeVector();
       int size() const;
       int subfigs_number() const;
       
@@ -64,7 +64,7 @@ namespace tubex
     protected:
 
       int m_n = 0;
-      VIBesFigure_Tube **m_v_figs = NULL;
+      VIBesFigTube **m_v_figs = NULL;
       int m_start_index = -1, m_end_index = -1;
   };
 }

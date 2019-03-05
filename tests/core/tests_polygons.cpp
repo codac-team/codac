@@ -1,7 +1,7 @@
 #include "tests.h"
 
 #include "tubex_GrahamScan.h"
-#include "tubex_VIBesFigure.h"
+#include "tubex_VIBesFig.h"
 
 #define protected public     // Using #define so that we can access protected
 #include "tubex_CtcDeriv.h"
@@ -1036,7 +1036,7 @@ cout << "-------------" << endl;
     CHECK(hull.vertices()[6] == Point(1.,3.));
 
     //vibes::beginDrawing();
-    //VIBesFigure fig("poly");
+    //VIBesFig fig("poly");
     //fig.set_properties(100, 100, 400, 400);
     //fig.clear();
     //fig.draw_points(v_pts, 0.1, "blue");
@@ -1074,7 +1074,7 @@ cout << "-------------" << endl;
     ConvexPolygon s(v_pts);
 
     vibes::beginDrawing();
-    VIBesFigure fig("test");
+    VIBesFig fig("test");
     fig.set_properties(100, 100, 400, 400);
     fig.draw_polygon(s, "red");
     fig.draw_points(v_pts, 0.01, "blue");

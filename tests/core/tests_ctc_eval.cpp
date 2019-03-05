@@ -3,7 +3,7 @@
 #include "tubex_Function.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
-#include "tubex_VIBesFigure_Tube.h"
+#include "tubex_VIBesFigTube.h"
 
 using namespace Catch;
 using namespace Detail;
@@ -44,7 +44,7 @@ TEST_CASE("CtcEval")
     {
       vibes::beginDrawing();
       x &= Interval(-10.,10.);
-      VIBesFigure_Tube fig_tube("ctceval", &x);
+      VIBesFigTube fig_tube("ctceval", &x);
       fig_tube.set_properties(100, 100, 500, 500);
       fig_tube.set_tube_derivative(&x, &v);
       fig_tube.show(true);
@@ -89,12 +89,12 @@ TEST_CASE("CtcEval")
     ctc_eval.enable_temporal_propagation(true);
     ctc_eval.contract(t, z, x, v);
 
-    VIBesFigure_Tube *fig_tube;
+    VIBesFigTube *fig_tube;
     if(VIBES_DRAWING) // drawing results
     {
       vibes::beginDrawing();
       x &= Interval(-10.,10.);
-      fig_tube = new VIBesFigure_Tube("ctceval", &x);
+      fig_tube = new VIBesFigTube("ctceval", &x);
       fig_tube->set_properties(1500, 100, 500, 500);
       fig_tube->set_tube_derivative(&x, &v);
       fig_tube->show(true);
@@ -317,7 +317,7 @@ TEST_CASE("CtcEval")
       //box[0] = Interval(0.5,3.5);
       //box[1] = Interval(-4.);
       //vibes::beginDrawing();
-      //VIBesFigure_Tube fig_tube("ctceval", &x);
+      //VIBesFigTube fig_tube("ctceval", &x);
       //fig_tube.set_properties(100, 100, 500, 500);
       //fig_tube.set_tube_derivative(&x, &xdot);
       //fig_tube.show(true);
@@ -900,7 +900,7 @@ TEST_CASE("CtcEval")
     if(VIBES_DRAWING) // drawing results
     {
       //vibes::beginDrawing();
-      //VIBesFigure_Tube fig_tube("ctceval", &x);
+      //VIBesFigTube fig_tube("ctceval", &x);
       //fig_tube.set_properties(100, 100, 800, 400);
       //fig_tube.set_tube_derivative(&x, &v);
       //fig_tube.show(true);

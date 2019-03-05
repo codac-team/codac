@@ -87,13 +87,13 @@ int main()
 
     vibes::beginDrawing();
 
-    VIBesFigure_TubeVector fig_x("x", 0, 1); // first two components
+    VIBesFigTubeVector fig_x("x", 0, 1); // first two components
     fig_x.add_tubevector(&x, "x");
     fig_x.add_trajectoryvector(&x_truth, "x*");
     fig_x.set_properties(100, 100, 600, 300);
     fig_x.show();
 
-    VIBesFigure_Map fig_map("Map");
+    VIBesFigMap fig_map("Map");
     fig_map.set_properties(50, 50, 500, 500);
     fig_map.add_tubevector(&x, "x", 0, 1);
     fig_map.add_trajectoryvector(&x_truth, "x*", 0, 1, "white");

@@ -51,11 +51,11 @@ int main()
 
     vibes::beginDrawing();
 
-    VIBesFigure_Tube fig_y("Tube [y](·)", &y[0], &y_truth);
+    VIBesFigTube fig_y("Tube [y](·)", &y[0], &y_truth);
     fig_y.set_properties(100, 100, 500, 250);
     fig_y.show();
 
-    VIBesFigure_Tube fig_h("Tube [h](·)", &h[0], &h_truth);
+    VIBesFigTube fig_h("Tube [h](·)", &h[0], &h_truth);
     fig_h.set_properties(150, 150, 500, 250);
     fig_h.show();
 

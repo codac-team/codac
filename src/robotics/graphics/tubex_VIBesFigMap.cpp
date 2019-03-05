@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - VIBesFigure_Map class
+ *  tubex-lib - VIBesFigMap class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -11,7 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 #include <string>
-#include "tubex_VIBesFigure_Map.h"
+#include "tubex_VIBesFigMap.h"
 #include "tubex_colors.h"
 #include "tubex_Tube.h"
 #include "tubex_Trajectory.h"
@@ -23,13 +23,13 @@ using namespace ibex;
 
 namespace tubex
 {
-  VIBesFigure_Map::VIBesFigure_Map(const string& fig_name)
-    : VIBesFigure(fig_name)
+  VIBesFigMap::VIBesFigMap(const string& fig_name)
+    : VIBesFig(fig_name)
   {
     
   }
 
-  VIBesFigure_Map::~VIBesFigure_Map()
+  VIBesFigMap::~VIBesFigMap()
   {
     typename map<const TubeVector*,FigMapTubeParams>::const_iterator it;
     for(it = m_map_tubes.begin(); it != m_map_tubes.end(); it++)
@@ -40,7 +40,7 @@ namespace tubex
       }
   }
 
-  void VIBesFigure_Map::add_tubevector(const TubeVector *tube, const string& name, int index_x, int index_y)
+  void VIBesFigMap::add_tubevector(const TubeVector *tube, const string& name, int index_x, int index_y)
   {
     assert(tube != NULL);
     assert(index_x != index_y);
@@ -58,7 +58,7 @@ namespace tubex
     vibes::newGroup("tube_" + name, "gray[gray]", vibesParams("figure", this->name()));
   }
 
-  void VIBesFigure_Map::set_tubevector_name(const TubeVector *tube, const string& name)
+  void VIBesFigMap::set_tubevector_name(const TubeVector *tube, const string& name)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -67,7 +67,7 @@ namespace tubex
     m_map_tubes[tube].name = name;
   }
   
-  void VIBesFigure_Map::remove_tubevector(const TubeVector *tube)
+  void VIBesFigMap::remove_tubevector(const TubeVector *tube)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -82,7 +82,7 @@ namespace tubex
     m_map_tubes.erase(tube);
   }
 
-  void VIBesFigure_Map::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color)
+  void VIBesFigMap::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) == m_map_trajs.end()
@@ -94,7 +94,7 @@ namespace tubex
     add_trajectoryvector(traj, name, index_x, index_y, -1, color);
   }
 
-  void VIBesFigure_Map::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
+  void VIBesFigMap::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) == m_map_trajs.end()
@@ -113,7 +113,7 @@ namespace tubex
     set_trajectoryvector_color(traj, color);
   }
 
-  void VIBesFigure_Map::set_trajectoryvector_name(const TrajectoryVector *traj, const string& name)
+  void VIBesFigMap::set_trajectoryvector_name(const TrajectoryVector *traj, const string& name)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -122,7 +122,7 @@ namespace tubex
     m_map_trajs[traj].name = name;
   }
   
-  void VIBesFigure_Map::set_trajectoryvector_color(const TrajectoryVector *traj, const string& color)
+  void VIBesFigMap::set_trajectoryvector_color(const TrajectoryVector *traj, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -134,7 +134,7 @@ namespace tubex
     // so that trajectories stay on top of the tubes.
   }
   
-  void VIBesFigure_Map::remove_trajectoryvector(const TrajectoryVector *traj)
+  void VIBesFigMap::remove_trajectoryvector(const TrajectoryVector *traj)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -143,20 +143,20 @@ namespace tubex
     m_map_trajs.erase(traj);
   }
 
-  void VIBesFigure_Map::add_beacon(const Beacon& beacon, double width, const string& color)
+  void VIBesFigMap::add_beacon(const Beacon& beacon, double width, const string& color)
   {
     // Simply directly drawn
     draw_beacon(beacon, width, color, vibesParams("figure", name(), "group", "beacons"));
   }
 
-  void VIBesFigure_Map::add_beacons(const vector<Beacon>& v_beacons, double width, const string& color)
+  void VIBesFigMap::add_beacons(const vector<Beacon>& v_beacons, double width, const string& color)
   {
     // Simply directly drawn
     for(int i = 0 ; i < v_beacons.size() ; i++)
       add_beacon(v_beacons[i], width, color);
   }
   
-  void VIBesFigure_Map::add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color)
+  void VIBesFigMap::add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -166,7 +166,7 @@ namespace tubex
     draw_observation(obs, traj, color, vibesParams("figure", name(), "group", "obs"));
   }
   
-  void VIBesFigure_Map::add_observations(const vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const string& color)
+  void VIBesFigMap::add_observations(const vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -177,7 +177,7 @@ namespace tubex
       add_observation(v_obs[i], traj, color);
   }
 
-  void VIBesFigure_Map::show()
+  void VIBesFigMap::show()
   {
     typename map<const TubeVector*,FigMapTubeParams>::const_iterator it_tubes;
     for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
@@ -191,14 +191,14 @@ namespace tubex
     axis_limits(m_view_box, true, 0.05);
   }
 
-  void VIBesFigure_Map::show(float robot_size)
+  void VIBesFigMap::show(float robot_size)
   {
     assert(robot_size > 0.);
     m_robot_size = robot_size;
     show();
   }
 
-  const IntervalVector VIBesFigure_Map::draw_tube(const TubeVector *tube)
+  const IntervalVector VIBesFigMap::draw_tube(const TubeVector *tube)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -254,7 +254,7 @@ namespace tubex
     return viewbox;
   }
 
-  const IntervalVector VIBesFigure_Map::draw_trajectory(const TrajectoryVector *traj, float points_size)
+  const IntervalVector VIBesFigMap::draw_trajectory(const TrajectoryVector *traj, float points_size)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -329,7 +329,7 @@ namespace tubex
     return viewbox;
   }
 
-  void VIBesFigure_Map::draw_tube_slices(const TubeVector *tube)
+  void VIBesFigMap::draw_tube_slices(const TubeVector *tube)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -365,7 +365,7 @@ namespace tubex
     // 2. Foreground
     {
       if((*tube)[m_map_tubes[tube].index_x].is_empty() || (*tube)[m_map_tubes[tube].index_y].is_empty())
-        cout << "VIBesFigure_Map: warning, empty tube " << m_map_tubes[tube].name << endl;
+        cout << "VIBesFigMap: warning, empty tube " << m_map_tubes[tube].name << endl;
 
       ostringstream o;
       o << "tube_" << m_map_tubes[tube].name;
@@ -385,7 +385,7 @@ namespace tubex
     }
   }
 
-  const string VIBesFigure_Map::shaded_slice_color(float r) const
+  const string VIBesFigMap::shaded_slice_color(float r) const
   {
     assert(Interval(0.,1.).contains(r));
 
@@ -414,7 +414,7 @@ namespace tubex
     return hex_color + "[" + hex_color + "]";
   }
 
-  void VIBesFigure_Map::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params)
+  void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -444,14 +444,14 @@ namespace tubex
     vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, m_robot_size, "gray[yellow]", params);
   }
 
-  void VIBesFigure_Map::draw_beacon(const Beacon& beacon, double width, const string& color, const vibes::Params& params)
+  void VIBesFigMap::draw_beacon(const Beacon& beacon, double width, const string& color, const vibes::Params& params)
   {
     vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
     IntervalVector drawn_box = beacon.pos().subvector(0,1);
     draw_box(drawn_box.inflate(width), color, params);
   }
 
-  void VIBesFigure_Map::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)
+  void VIBesFigMap::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)
   {
     assert(obs.size() == 3);
     assert(traj != NULL);

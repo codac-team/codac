@@ -1,6 +1,6 @@
 #include "tests.h"
 #include <cstdio>
-#include "tubex_VIBesFigure_Tube.h"
+#include "tubex_VIBesFigTube.h"
 #include "vibes.h"
 
 #define protected public     // Using #define so that we can access protected
@@ -275,7 +275,7 @@ TEST_CASE("CtcDeriv")
     if(VIBES_DRAWING) // drawing results
     {
       //vibes::beginDrawing();
-      //VIBesFigure_Tube fig_tube("tubint", &tube);
+      //VIBesFigTube fig_tube("tubint", &tube);
       //fig_tube.set_properties(100, 100, 500, 500);
       //fig_tube.set_tube_derivative(&tube, &tubedot);
       //fig_tube.show(true);
@@ -316,7 +316,7 @@ TEST_CASE("CtcDeriv")
 
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
-      VIBesFigure_Tube fig_tube("test", &tube);
+      VIBesFigTube fig_tube("test", &tube);
       fig_tube.set_properties(100, 100, 500, 500);
       fig_tube.set_tube_derivative(&tube, &tubedot);
       fig_tube.show(true);
