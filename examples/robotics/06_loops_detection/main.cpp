@@ -30,13 +30,13 @@ int main()
 
     vibes::beginDrawing();
 
-    VibesFigure_Map fig_map("Map");
+    VIBesFigure_Map fig_map("Map");
     fig_map.set_properties(1450, 50, 500, 500);
     fig_map.add_tubevector(x, "x", 0, 1);
     fig_map.add_trajectoryvector(x_truth, "x*", 0, 1, "white");
     fig_map.show();
 
-    VibesFigure_Paving fig_tplane("t-plane", &tplane);
+    VIBesFigure_Paving fig_tplane("t-plane", &tplane);
     fig_tplane.set_properties(1550, 150, 500, 500);
     fig_tplane.show();
 

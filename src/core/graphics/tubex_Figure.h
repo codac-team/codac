@@ -36,7 +36,7 @@ namespace tubex
       Figure(const std::string& figure_name);
 
       /**
-       * \brief Tube destructor
+       * \brief Figure destructor
        */
       ~Figure() {};
 

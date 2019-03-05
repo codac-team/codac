@@ -13,7 +13,6 @@
 #include <iostream>
 #include <iomanip>
 #include "tubex_ConvexPolygon.h"
-#include "tubex_VibesFigure.h"
 #include "tubex_GrahamScan.h"
 
 using namespace std;
@@ -30,17 +29,33 @@ namespace tubex
   {
     assert(box.size() == 2);
     m_v_vertices = GrahamScan::convex_hull(m_v_vertices);
-    delete_redundant_points(); // todo: do this only once (check Polygon constructor)
   }
   
   ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points) : Polygon(v_points)
   {
-    m_v_vertices = GrahamScan::convex_hull(v_points);
-    delete_redundant_points(); // todo: do this only once (check Polygon constructor)
+    vector<Point> v_pts;
+    for(int i = 0 ; i < m_v_vertices.size() ; i++) // uncertain points are cut
+    {
+      /*if(m_v_vertices[i].x().is_degenerated() || m_v_vertices[i].y().is_degenerated())
+      {
+        v_pts.push_back(Point(m_v_vertices[i].x().lb(), m_v_vertices[i].y().lb()));
+        v_pts.push_back(Point(m_v_vertices[i].x().ub(), m_v_vertices[i].y().lb()));
+        v_pts.push_back(Point(m_v_vertices[i].x().ub(), m_v_vertices[i].y().ub()));
+        v_pts.push_back(Point(m_v_vertices[i].x().lb(), m_v_vertices[i].y().ub()));
+      }
+
+      else*/
+        v_pts.push_back(m_v_vertices[i]);
+    }
+
+    v_pts = delete_redundant_points(v_pts);
+    m_v_vertices = GrahamScan::convex_hull(v_pts);
   }
   
   const IntervalVector ConvexPolygon::operator&(const IntervalVector& x) const
   {
+    // todo: keep this?
+
     assert(x.size() == 2);
 
     if(does_not_exist())
@@ -110,8 +125,9 @@ namespace tubex
 
       vector<Point> merged_points;
       v_pts = GrahamScan::convex_hull(v_pts);
+      merged_points = delete_redundant_points(v_pts);
 
-      int i = 0, n = v_pts.size();
+      /*int i = 0, n = v_pts.size();
       while(i < n)
       {
         Point p = v_pts[i];
@@ -125,7 +141,7 @@ namespace tubex
 
         merged_points.push_back(p);
         i = j;
-      }
+      }*/
 
       // todo: two convex computations are performed: do only one
 
@@ -135,7 +151,7 @@ namespace tubex
   const ConvexPolygon ConvexPolygon::intersect(const ConvexPolygon& p, const ibex::IntervalVector& x)
   {
     assert(x.size() == 2);
-    return intersect(p, ConvexPolygon(x));
+    return ConvexPolygon(intersect(p, ConvexPolygon(x)).vertices());
   }
 
   void ConvexPolygon::simplify()
@@ -143,9 +159,10 @@ namespace tubex
     vector<Point> v_pts = m_v_vertices;
     Point c = Polygon::center(v_pts);
 
-    ConvexPolygon p(box()), pf = p;
+    ConvexPolygon p(v_pts);
+    ConvexPolygon pf(box());
 
-    double da = M_PI/12.;
+    double da = M_PI/6.;
     for(double a = da ; a < M_PI ; a+=da)
     {
       ConvexPolygon p1 = p;

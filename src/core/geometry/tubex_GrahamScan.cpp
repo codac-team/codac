@@ -13,6 +13,7 @@
 #include <iostream>
 #include <iomanip>
 #include "tubex_GrahamScan.h"
+#include "tubex_VIBesFigure.h"
 
 using namespace std;
 using namespace ibex;
@@ -87,7 +88,21 @@ namespace tubex
     vector<Point> v_pts;
     for(int i = 0 ; i < v_points.size() ; i++)
       if(!v_points[i].does_not_exist())
-        v_pts.push_back(v_points[i]);
+      {
+        // todo: optimize this
+        if(!v_points[i].x().is_degenerated() || !v_points[i].y().is_degenerated())
+        {
+          v_pts.push_back(Point(v_points[i].x().lb(), v_points[i].y().lb()));
+          v_pts.push_back(Point(v_points[i].x().ub(), v_points[i].y().lb()));
+          v_pts.push_back(Point(v_points[i].x().ub(), v_points[i].y().ub()));
+          v_pts.push_back(Point(v_points[i].x().lb(), v_points[i].y().ub()));
+        }
+        
+        else
+          v_pts.push_back(v_points[i]);
+      }
+
+    v_pts = Polygon::delete_redundant_points(v_pts);
 
     if(v_pts.size() <= 3)
       return v_pts;

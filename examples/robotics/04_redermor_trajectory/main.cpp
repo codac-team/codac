@@ -27,13 +27,13 @@ int main(int argc, char** argv)
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    VibesFigure_TubeVector fig_x("Redermor's state", 0, 1); // first two components
+    VIBesFigure_TubeVector fig_x("Redermor's state", 0, 1); // first two components
     fig_x.set_properties(2000, 50, 500, 250);
     fig_x.add_tubevector(x, "x");
     fig_x.add_trajectoryvector(x_truth, "x*");
     fig_x.show();
 
-    VibesFigure_Map fig_map("Map");
+    VIBesFigure_Map fig_map("Map");
     fig_map.set_properties(1450, 50, 500, 500);
     fig_map.add_tubevector(x, "x", 0, 1);
     fig_map.add_trajectoryvector(x_truth, "x*", 0, 1, "white");

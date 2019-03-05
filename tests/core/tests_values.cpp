@@ -1,6 +1,6 @@
 #include "tests.h"
 #include "tubex_CtcEval.h"
-#include "tubex_VibesFigure_Tube.h"
+#include "tubex_VIBesFigure_Tube.h"
 #include "vibes.h"
 
 #define protected public     // Using #define so that we can access protected
@@ -834,7 +834,7 @@ TEST_CASE("Interpol")
     if(VIBES_DRAWING) // drawing results
     {
       //vibes::beginDrawing();
-      //VibesFigure_Tube fig_x("tubint", &x);
+      //VIBesFigure_Tube fig_x("tubint", &x);
       //fig_x.set_properties(100, 100, 500, 500);
       //fig_x.set_tube_derivative(&x, &v);
       //fig_x.show(true);
@@ -973,7 +973,7 @@ TEST_CASE("Interpol")
 
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
-      VibesFigure_Tube fig_x("test", &x);
+      VIBesFigure_Tube fig_x("test", &x);
       fig_x.set_properties(100, 100, 1000, 500);
       fig_x.set_tube_derivative(&x, &v);
       fig_x.show(true);
@@ -1030,7 +1030,7 @@ TEST_CASE("Interpol")
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
       x &= Interval(-1.,7.);
-      VibesFigure_Tube fig_x("test", &x);
+      VIBesFigure_Tube fig_x("test", &x);
       fig_x.set_properties(100, 100, 1000, 500);
       fig_x.set_tube_derivative(&x, &v);
       fig_x.show(true);

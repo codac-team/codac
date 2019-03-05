@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     vibes::beginDrawing();
     Trajectory truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
-    VibesFigure_Tube fig_x("x", &x, &truth);
+    VIBesFigure_Tube fig_x("x", &x, &truth);
     fig_x.set_properties(100, 100, 600, 600);
     fig_x.show();
 

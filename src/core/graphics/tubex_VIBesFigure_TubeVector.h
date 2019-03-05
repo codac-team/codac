@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - VibesFigure_TubeVector class
+ *  tubex-lib - VIBesFigure_TubeVector class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -16,18 +16,18 @@
 #include "tubex_Figure.h"
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
-#include "tubex_VibesFigure_Tube.h"
+#include "tubex_VIBesFigure_Tube.h"
 
 namespace tubex
 {
-  class VibesFigure_TubeVector : public Figure
+  class VIBesFigure_TubeVector : public Figure
   {
     public:
 
-      VibesFigure_TubeVector(const std::string& fig_name);
-      VibesFigure_TubeVector(const std::string& fig_name, int start_index, int end_index);
-      VibesFigure_TubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector = NULL);
-      ~VibesFigure_TubeVector();
+      VIBesFigure_TubeVector(const std::string& fig_name);
+      VIBesFigure_TubeVector(const std::string& fig_name, int start_index, int end_index);
+      VIBesFigure_TubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector = NULL);
+      ~VIBesFigure_TubeVector();
       int size() const;
       int subfigs_number() const;
       
@@ -64,7 +64,7 @@ namespace tubex
     protected:
 
       int m_n = 0;
-      VibesFigure_Tube **m_v_figs = NULL;
+      VIBesFigure_Tube **m_v_figs = NULL;
       int m_start_index = -1, m_end_index = -1;
   };
 }

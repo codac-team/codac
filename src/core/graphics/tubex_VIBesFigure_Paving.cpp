@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - VibesFigure_Paving class
+ *  tubex-lib - VIBesFigure_Paving class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -10,15 +10,15 @@
  *  Created   : 2015
  * ---------------------------------------------------------------------------- */
 
-#include "tubex_VibesFigure_Paving.h"
+#include "tubex_VIBesFigure_Paving.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  VibesFigure_Paving::VibesFigure_Paving(const string& fig_name, const Paving *paving)
-    : VibesFigure(fig_name), m_paving(paving)
+  VIBesFigure_Paving::VIBesFigure_Paving(const string& fig_name, const Paving *paving)
+    : VIBesFigure(fig_name), m_paving(paving)
   {
     assert(paving != NULL);
 
@@ -33,7 +33,7 @@ namespace tubex
     set_color_map(color_map);
   }
 
-  void VibesFigure_Paving::show()
+  void VIBesFigure_Paving::show()
   {
     vibes::clearGroup(name(), "val_in");
     vibes::clearGroup(name(), "val_maybe");
@@ -41,14 +41,14 @@ namespace tubex
     draw_paving(m_paving);
   }
 
-  void VibesFigure_Paving::set_color_map(const map<int,string> color_map)
+  void VIBesFigure_Paving::set_color_map(const map<int,string> color_map)
   {
     vibes::newGroup("val_in", color_map.at(VALUE_IN), vibesParams("figure", name()));
     vibes::newGroup("val_maybe", color_map.at(VALUE_MAYBE), vibesParams("figure", name()));
     vibes::newGroup("val_out", color_map.at(VALUE_OUT), vibesParams("figure", name()));
   }
 
-  void VibesFigure_Paving::draw_paving(const Paving *paving)
+  void VIBesFigure_Paving::draw_paving(const Paving *paving)
   {
     assert(paving != NULL);
     

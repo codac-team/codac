@@ -1,6 +1,6 @@
 #include "tests.h"
 #include <cstdio>
-#include "tubex_VibesFigure_Tube.h"
+#include "tubex_VIBesFigure_Tube.h"
 #include "tubex_CtcDelay.h"
 #include "vibes.h"
 
@@ -26,9 +26,9 @@ TEST_CASE("CtcDelay")
     if(false)
     {
       vibes::beginDrawing();
-      VibesFigure_Tube fig_x("delay x", &x);
+      VIBesFigure_Tube fig_x("delay x", &x);
       fig_x.show();
-      VibesFigure_Tube fig_y("delay y", &y);
+      VIBesFigure_Tube fig_y("delay y", &y);
       fig_y.show();
       vibes::endDrawing();
     }

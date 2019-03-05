@@ -52,9 +52,9 @@ namespace tubex
 
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
 
-    protected:
+      static const std::vector<Point> delete_redundant_points(const std::vector<Point>& v_pts);
 
-      void delete_redundant_points();
+    protected:
       
       std::vector<Point> m_v_vertices;
   };

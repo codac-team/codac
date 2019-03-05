@@ -1,5 +1,5 @@
 /* ============================================================================
- *  tubex-lib - VibesFigure_Tube class
+ *  tubex-lib - VIBesFigure_Tube class
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -13,7 +13,7 @@
 #ifndef __TUBEX_VIBESFIGURETUBE_H__
 #define __TUBEX_VIBESFIGURETUBE_H__
 
-#include "tubex_VibesFigure.h"
+#include "tubex_VIBesFigure.h"
 #include "tubex_Tube.h"
 #include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
@@ -32,12 +32,12 @@ namespace tubex
   #define DEFAULT_GATES_COLOR       "#0084AF[#0084AF]"
   #define DEFAULT_POLYGONS_COLOR    "#00536E[#2696BA]"
 
-  class VibesFigure_Tube : public VibesFigure
+  class VIBesFigure_Tube : public VIBesFigure
   {
     public:
 
-      VibesFigure_Tube(const std::string& fig_name, const Tube *tube = NULL, const Trajectory *traj = NULL);
-      ~VibesFigure_Tube();
+      VIBesFigure_Tube(const std::string& fig_name, const Tube *tube = NULL, const Trajectory *traj = NULL);
+      ~VIBesFigure_Tube();
 
       void add_tube(const Tube *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
       void set_tube_name(const Tube *tube, const std::string& name);
@@ -86,7 +86,7 @@ namespace tubex
       std::map<const Tube*,FigTubeParams> m_map_tubes;
       std::map<const Trajectory*,FigTrajParams> m_map_trajs;
 
-      friend class VibesFigure_TubeVector;
+      friend class VIBesFigure_TubeVector;
   };
 }
 

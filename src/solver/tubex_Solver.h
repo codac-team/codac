@@ -16,7 +16,7 @@
 #include <list>
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
-#include "tubex_VibesFigure_TubeVector.h"
+#include "tubex_VIBesFigure_TubeVector.h"
 #include "ibex_BoolInterval.h"
 
 namespace tubex
@@ -36,7 +36,7 @@ namespace tubex
       void set_cid_fxpt_ratio(float cid_fxpt_ratio);
       
       const std::list<TubeVector> solve(const TubeVector& x0, void (*ctc_func)(TubeVector&));
-      VibesFigure_TubeVector* figure();
+      VIBesFigure_TubeVector* figure();
       static const ibex::BoolInterval solutions_contain(const std::list<TubeVector>& l_solutions, const TrajectoryVector& truth);
 
     protected:
@@ -53,7 +53,7 @@ namespace tubex
       float m_cid_fxpt_ratio = 0.005;
 
       // Embedded graphics
-      VibesFigure_TubeVector *m_fig = NULL;
+      VIBesFigure_TubeVector *m_fig = NULL;
   };
 }
 
