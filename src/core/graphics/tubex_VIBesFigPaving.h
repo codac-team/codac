@@ -26,7 +26,6 @@ namespace tubex
    * One figure is linked to one paving, so that any update on this object
    * can be easily displayed on the figure.
    */
-
   class VIBesFigPaving : public VIBesFig
   {
     public:

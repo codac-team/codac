@@ -23,25 +23,25 @@
 #include "tubex_serialize_tubes.h"
 #include "tubex_arithmetic.h"
 #include "tubex_TubeTreeSynthesis.h"
+#include "tubex_Polygon.h"
 #include "ibex_BoolInterval.h"
 
 #define AUTO_SYNTHESIS_BY_DEFAULT false
 
 namespace tubex
 {
+  class Fnc;
+  class Tube;
+  class Slice;
+  class Trajectory;
+  class TubeTreeSynthesis;
+
   /**
    * \class Tube
    * \brief One dimensional tube \f$[x](\cdot)\f$, defined as an interval of scalar trajectories
    *
    * \note Use TubeVector for the multi-dimensional case
    */
-
-  class Fnc;
-  class Tube;
-  class Slice;
-  class Trajectory;
-  class TubeTreeSynthesis;
-  
   class Tube : public DynamicalItem
   {
     public:
@@ -192,6 +192,13 @@ namespace tubex
        * \return an Interval object \f$[t_0,t_f]\f$
        */
       const ibex::Interval domain() const;
+
+      /**
+       * \brief Returns the polygon envelope of this tube
+       *
+       * \return a Polygon object enclosing the slices
+       */
+      const Polygon polygon_envelope() const;
 
       /// @}
       /// \name Slices structure

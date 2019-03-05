@@ -23,16 +23,15 @@
 
 namespace tubex
 {
-  /**
-   * \class Slice
-   * \brief Slice \f$\llbracket x\rrbracket(\cdot)\f$ of a one dimensional tube and made of an envelope and two gates
-   */
-
   #define EPSILON_CONTAINS ibex::next_float(0.) * 1000. //!< epsilon limit of the contains() algorithm
 
   class Tube;
   class Trajectory;
 
+  /**
+   * \class Slice
+   * \brief Slice \f$\llbracket x\rrbracket(\cdot)\f$ of a one dimensional tube and made of an envelope and two gates
+   */
   class Slice : public DynamicalItem
   {
     public:

@@ -23,7 +23,6 @@ namespace tubex
    * \class Figure
    * \brief Two-dimensional graphical item
    */
-
   class Figure
   {
     public:

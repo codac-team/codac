@@ -24,7 +24,6 @@ namespace tubex
    * \class VIBesFig
    * \brief Two-dimensional graphical item based on the VIBes viewer
    */
-
   class VIBesFig : public Figure
   {
     public:

@@ -35,6 +35,25 @@ namespace tubex
       if(it->second.tube_copy != NULL)
         delete it->second.tube_copy;
   }
+  
+  void VIBesFigTube::show()
+  {
+    show(false);
+  }
+  
+  void VIBesFigTube::show(bool detail_slices)
+  {
+    typename map<const Tube*,FigTubeParams>::const_iterator it_tubes;
+    for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
+      m_view_box |= draw_tube(it_tubes->first, detail_slices);
+
+    // Trajectories are drawn on top of the tubes
+    typename map<const Trajectory*,FigTrajParams>::const_iterator it_trajs;
+    for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
+      m_view_box |= draw_trajectory(it_trajs->first);
+    
+    axis_limits(m_view_box);
+  }
 
   void VIBesFigTube::add_tube(const Tube *tube, const string& name,
                                   const string& color_frgrnd, const string& color_bckgrnd)
@@ -92,56 +111,6 @@ namespace tubex
     m_map_tubes[tube].m_colors[color_type] = color;
     create_groups_color(tube);
   }
-
-  void VIBesFigTube::create_group_color(const Tube *tube, int color_type)
-  {
-    assert(tube != NULL);
-    assert(m_map_tubes.find(tube) != m_map_tubes.end()
-      && "unknown tube, must be added beforehand");
-
-    // Creating group:
-    ostringstream o;
-    o << "tube_" << m_map_tubes[tube].name;
-    string group_name = o.str();
-
-    string suffix;
-    switch(color_type)
-    {
-      case TubeColorType::FOREGROUND:
-        suffix = "";
-        break;
-
-      case TubeColorType::SLICES:
-        suffix = "_slices";
-        break;
-
-      case TubeColorType::POLYGONS:
-        suffix = "_polygons";
-        break;
-
-      case TubeColorType::GATES:
-        suffix = "_gates";
-        break;
-
-      case TubeColorType::BACKGROUND:
-        suffix = "_old";
-        break;
-    }
-
-    vibes::newGroup(group_name + suffix,
-                    m_map_tubes[tube].m_colors[color_type],
-                    vibesParams("figure", name()));
-  }
-
-  void VIBesFigTube::create_groups_color(const Tube *tube)
-  {
-    // All groups are created again to keep a correct display order
-    create_group_color(tube, TubeColorType::BACKGROUND);
-    create_group_color(tube, TubeColorType::FOREGROUND);
-    create_group_color(tube, TubeColorType::SLICES);
-    create_group_color(tube, TubeColorType::POLYGONS);
-    create_group_color(tube, TubeColorType::GATES); // layer on top of the other
-  }
   
   void VIBesFigTube::remove_tube(const Tube *tube)
   {
@@ -194,24 +163,55 @@ namespace tubex
 
     m_map_trajs.erase(traj);
   }
-  
-  void VIBesFigTube::show()
-  {
-    show(false);
-  }
-  
-  void VIBesFigTube::show(bool detail_slices)
-  {
-    typename map<const Tube*,FigTubeParams>::const_iterator it_tubes;
-    for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
-      m_view_box |= draw_tube(it_tubes->first, detail_slices);
 
-    // Trajectories are drawn on top of the tubes
-    typename map<const Trajectory*,FigTrajParams>::const_iterator it_trajs;
-    for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
-      m_view_box |= draw_trajectory(it_trajs->first);
-    
-    axis_limits(m_view_box);
+  void VIBesFigTube::create_group_color(const Tube *tube, int color_type)
+  {
+    assert(tube != NULL);
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unknown tube, must be added beforehand");
+
+    // Creating group:
+    ostringstream o;
+    o << "tube_" << m_map_tubes[tube].name;
+    string group_name = o.str();
+
+    string suffix;
+    switch(color_type)
+    {
+      case TubeColorType::FOREGROUND:
+        suffix = "";
+        break;
+
+      case TubeColorType::SLICES:
+        suffix = "_slices";
+        break;
+
+      case TubeColorType::POLYGONS:
+        suffix = "_polygons";
+        break;
+
+      case TubeColorType::GATES:
+        suffix = "_gates";
+        break;
+
+      case TubeColorType::BACKGROUND:
+        suffix = "_old";
+        break;
+    }
+
+    vibes::newGroup(group_name + suffix,
+                    m_map_tubes[tube].m_colors[color_type],
+                    vibesParams("figure", name()));
+  }
+
+  void VIBesFigTube::create_groups_color(const Tube *tube)
+  {
+    // All groups are created again to keep a correct display order
+    create_group_color(tube, TubeColorType::BACKGROUND);
+    create_group_color(tube, TubeColorType::FOREGROUND);
+    create_group_color(tube, TubeColorType::SLICES);
+    create_group_color(tube, TubeColorType::POLYGONS);
+    create_group_color(tube, TubeColorType::GATES); // layer on top of the other
   }
 
   const IntervalVector VIBesFigTube::draw_tube(const Tube *tube, bool detail_slices)
@@ -280,7 +280,8 @@ namespace tubex
 
           vibes::clearGroup(name(), group_name_bckgrnd);
           vibes::Params params_background = vibesParams("figure", name(), "group", group_name_bckgrnd);
-          draw_polygon(polygon_envelope(m_map_tubes[tube].tube_copy), params_background);
+          if(!m_map_tubes[tube].tube_copy->is_empty())
+            draw_polygon(m_map_tubes[tube].tube_copy->polygon_envelope(), params_background);
 
           //delete m_map_tubes[tube].tube_copy;
         }
@@ -326,38 +327,14 @@ namespace tubex
         else
         {
           vibes::Params params_foreground = vibesParams("group", group_name);
-          draw_polygon(polygon_envelope(tube), params_foreground);
+          if(tube->is_empty())
+            cout << "Tube graphics: warning, empty tube (" << name() << ")" << endl;
+          else
+            draw_polygon(tube->polygon_envelope(), params_foreground);
         }
       }
 
     return viewbox;
-  }
-
-  const Polygon VIBesFigTube::polygon_envelope(const Tube *tube) const
-  {
-    assert(tube != NULL);
-    if(tube->is_empty())
-      cout << "Tube graphics: warning, empty tube (" << name() << ")" << endl;
-
-    vector<Point> v_pts;
-
-    for(int k = 0 ; k < tube->nb_slices() ; k++)
-    {
-      IntervalVector slice_box = tube->slice(k)->box();
-      slice_box[1] = trunc_inf(slice_box[1]);
-      v_pts.push_back(Point(slice_box[0].lb(), slice_box[1].ub()));
-      v_pts.push_back(Point(slice_box[0].ub(), slice_box[1].ub()));
-    }
-
-    for(int k = tube->nb_slices() - 1 ; k >= 0 ; k--)
-    {
-      IntervalVector slice_box = tube->slice(k)->box();
-      slice_box[1] = trunc_inf(slice_box[1]);
-      v_pts.push_back(Point(slice_box[0].ub(), slice_box[1].lb()));
-      v_pts.push_back(Point(slice_box[0].lb(), slice_box[1].lb()));
-    }
-    
-    return Polygon(v_pts);
   }
 
   void VIBesFigTube::draw_slice(const Slice& slice, const vibes::Params& params)

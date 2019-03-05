@@ -229,6 +229,28 @@ namespace tubex
         return Interval(first_slice()->domain().lb(),
                         last_slice()->domain().ub());
     }
+    
+    const Polygon Tube::polygon_envelope() const
+    {
+      if(is_empty())
+        return Polygon();
+
+      vector<Point> v_pts;
+
+      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+      {
+        v_pts.push_back(Point(s->domain().lb(), s->codomain().ub()));
+        v_pts.push_back(Point(s->domain().ub(), s->codomain().ub()));
+      }
+
+      for(const Slice *s = last_slice() ; s != NULL ; s = s->prev_slice())
+      {
+        v_pts.push_back(Point(s->domain().ub(), s->codomain().lb()));
+        v_pts.push_back(Point(s->domain().lb(), s->codomain().lb()));
+      }
+      
+      return Polygon(v_pts);
+    }
   
     // Slices structure
 

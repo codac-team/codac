@@ -25,17 +25,16 @@
 
 namespace tubex
 {
+  class Fnc;
+  class Tube;
+  class Trajectory;
+  
   /**
    * \class TubeVector
    * \brief n-dimensional tube \f$[\mathbf{x}](\cdot)\f$, defined as an interval of n-dimensional trajectories
    *
    * \note Use Tube for the one-dimensional case
    */
-
-  class Fnc;
-  class Tube;
-  class Trajectory;
-  
   class TubeVector : public DynamicalItem
   {
     public:

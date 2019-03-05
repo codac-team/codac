@@ -24,7 +24,6 @@ namespace tubex
    * \brief Abstract class for common properties of Tube, TubeVector,
    *        Slice, Trajectory, TrajectoryVector objects
    */
-
   class DynamicalItem
   {
     public:

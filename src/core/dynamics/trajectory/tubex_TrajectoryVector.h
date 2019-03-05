@@ -23,6 +23,10 @@
 
 namespace tubex
 {
+  class Function;
+  class TubeVector;
+  class Trajectory;
+
   /**
    * \class TrajectoryVector
    * \brief n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$, defined as a temporal map of vector values
@@ -31,11 +35,6 @@ namespace tubex
    *
    * \note Use Trajectory for the one-dimensional case
    */
-
-  class Function;
-  class TubeVector;
-  class Trajectory;
-
   class TrajectoryVector : public DynamicalItem
   {
     public:
