@@ -19,6 +19,7 @@
 namespace tubex
 {
   /**
+   * \struct rgb
    * \brief Represents an RGB value
    */
   typedef struct
@@ -29,6 +30,7 @@ namespace tubex
   } rgb;
 
   /**
+   * \struct hsv
    * \brief Represents an HSV value
    */
   typedef struct

@@ -1,6 +1,7 @@
-/* ============================================================================
- *  tubex-lib - DynamicalItem class
- * ============================================================================
+/** 
+ *  @file
+ *  DynamicalItem class
+ * ================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).

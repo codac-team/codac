@@ -25,8 +25,8 @@ namespace tubex
    */
   enum TPropagation 
   {
-    FORWARD = 0x01,
-    BACKWARD = 0x02
+    FORWARD = 0x01, ///< forward in time (from \f$t^-\f$ to \f$t^+\f$)
+    BACKWARD = 0x02 ///< backward in time (from \f$t^+\f$ to \f$t^-\f$)
   };
   
   /**

@@ -17,8 +17,7 @@ Tubex assumes a set of requirements you can meet with the following command line
 IBEX library
 ------------
 
-Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first.
-You can then install the last version of IBEX from `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
+Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is available on `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
 
 .. code-block:: none
 
@@ -27,7 +26,7 @@ You can then install the last version of IBEX from `the official development rep
   ./waf configure --with-debug --interval-lib=filib
   sudo ./waf install
 
-Note that the :code:`--with-debug` option will slow down your computations, but display useful error messages in case of failure conditions such as access violations.
+Note that the :code:`--with-debug` option will slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
 
 .. \todo: clarify the use of either GAOL or Filib
 
@@ -40,8 +39,7 @@ The last sources are available on `the official Tubex development repository <ht
 .. code-block:: none
 
   git clone https://github.com/SimonRohou/tubex-lib
-  cd tubex-lib
-  ./build.sh
+  cd tubex-lib ; mkdir make ; cd make ; cmake .. ; make
 
 
 Graphical tools

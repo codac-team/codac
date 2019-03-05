@@ -717,7 +717,7 @@ namespace tubex
        * \param ratio the bisection ratio (default value: 0.55)
        * \return a pair of two Tube objects resulting from the bisection
        */
-      const std::pair<Tube,Tube> bisect(double t, float ratio = 0.55) const;
+      const std::pair<Tube,Tube> bisect(double t, float ratio = 0.49) const;
 
       /// @}
       /// \name Assignments operators

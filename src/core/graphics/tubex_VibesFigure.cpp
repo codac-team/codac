@@ -18,7 +18,7 @@ using namespace ibex;
 namespace tubex
 {
   VibesFigure::VibesFigure(const string& figure_name)
-    : Figure(figure_name), m_view_box(2, Interval::EMPTY_SET)
+    : Figure(figure_name)
   {
     vibes::newFigure(m_name);
     vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));
@@ -34,6 +34,17 @@ namespace tubex
                           "y", m_y,
                           "width", m_width,
                           "height", m_height));
+  }
+
+  const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio, float margin)
+  {
+    assert(margin > 0.);
+    assert(x_min > 0. && x_max > 0. && y_min > 0. && y_max > 0.);
+
+    IntervalVector viewbox(2);
+    viewbox[0] = Interval(x_min, x_max);
+    viewbox[1] = Interval(y_min, y_max);
+    return axis_limits(viewbox, keep_ratio, margin);
   }
 
   const IntervalVector& VibesFigure::axis_limits(const IntervalVector& viewbox, bool same_ratio, float margin)
@@ -73,25 +84,14 @@ namespace tubex
     return m_view_box;
   }
 
-  const IntervalVector& VibesFigure::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio, float margin)
-  {
-    assert(margin > 0.);
-    assert(x_min > 0. && x_max > 0. && y_min > 0. && y_max > 0.);
-
-    IntervalVector viewbox(2);
-    viewbox[0] = Interval(x_min, x_max);
-    viewbox[1] = Interval(y_min, y_max);
-    return axis_limits(viewbox, keep_ratio, margin);
-  }
-
   void VibesFigure::save_image(const string& suffix, const string& extension) const
   {
     vibes::saveImage(name() + suffix + extension, name());
   }
-
-  const IntervalVector& VibesFigure::view_box() const
+  
+  void VibesFigure::clear()
   {
-    return m_view_box;
+    vibes::clearFigure();
   }
 
   void VibesFigure::draw_box(const IntervalVector& box, const vibes::Params& params)
@@ -174,10 +174,5 @@ namespace tubex
       pbox.inflate(size);
       vibes::drawBox(pbox, color, params_this_fig);
     }
-  }
-  
-  void VibesFigure::clear()
-  {
-    vibes::clearFigure();
   }
 }

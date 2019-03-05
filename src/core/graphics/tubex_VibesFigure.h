@@ -13,11 +13,9 @@
 #ifndef __TUBEX_VIBESFIGURE_H__
 #define __TUBEX_VIBESFIGURE_H__
 
-#include <string>
-#include "ibex_IntervalVector.h"
-#include "vibes.h"
 #include "tubex_Figure.h"
 #include "tubex_Polygon.h"
+#include "vibes.h"
 
 namespace tubex
 {
@@ -48,31 +46,13 @@ namespace tubex
       void set_properties(int x, int y, int width, int height);
 
       /**
-       * \brief Return figure's view box.
-       *
-       * \return IntervalVector
-       */
-      const ibex::IntervalVector& view_box() const;
-
-      void draw_box(const ibex::IntervalVector& box, const vibes::Params& params);
-      void draw_box(const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
-      void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const vibes::Params& params);
-      void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const std::string& color = "", const vibes::Params& params = vibes::Params());
-      void draw_circle(double x, double y, double r, const vibes::Params& params);
-      void draw_circle(double x, double y, double r, const std::string& color = "", const vibes::Params& params = vibes::Params());
-      void draw_polygon(const Polygon& p, const vibes::Params& params);
-      void draw_polygon(const Polygon& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
-      void draw_points(const std::vector<Point>& v_pts, float size, const vibes::Params& params);
-      void draw_points(const std::vector<Point>& v_pts, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
-
-      /**
        * \brief Set figure's axis limits.
        *
        * same_ratio view box is set to fit with the params, without changing its ratio (false by default)
        */
       const ibex::IntervalVector& axis_limits(double x_min, double x_max, double y_min, double y_max, bool same_ratio = false, float margin = 0.);
       const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, bool same_ratio = false, float margin = 0.);
-      
+
       /**
        * \brief Save vibes-figure in SVG/PNG/... format.
        *
@@ -85,17 +65,22 @@ namespace tubex
 
       /**
        * \brief Display the figure.
-       *
-       * This is a virtual method to overload.
        */
-      //virtual void show() = 0;
       void show() {};
 
       void clear();
+      
+      void draw_box(const ibex::IntervalVector& box, const vibes::Params& params);
+      void draw_box(const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const vibes::Params& params);
+      void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_circle(double x, double y, double r, const vibes::Params& params);
+      void draw_circle(double x, double y, double r, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_polygon(const Polygon& p, const vibes::Params& params);
+      void draw_polygon(const Polygon& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_points(const std::vector<Point>& v_pts, float size, const vibes::Params& params);
+      void draw_points(const std::vector<Point>& v_pts, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
-    protected:
-
-      ibex::IntervalVector m_view_box;
   };
 }
 

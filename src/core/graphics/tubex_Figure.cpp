@@ -31,18 +31,6 @@ namespace tubex
     
   }
 
-  const string Figure::name() const
-  {
-    return m_name;
-  }
-
-  void Figure::set_properties(int x, int y, int width, int height)
-  {
-    assert(x >= 0 && y >= 0 && width > 0 && height > 0);
-    m_x = x; m_y = y;
-    m_width = width; m_height = height;
-  }
-
   int Figure::x() const
   {
     return m_x;
@@ -63,11 +51,21 @@ namespace tubex
     return m_height;
   }
 
-  string Figure::add_suffix(const string& name, int id)
+  const string Figure::name() const
   {
-    ostringstream o;
-    o << name << "_" << id;
-    return o.str();
+    return m_name;
+  }
+
+  const IntervalVector& Figure::view_box() const
+  {
+    return m_view_box;
+  }
+
+  void Figure::set_properties(int x, int y, int width, int height)
+  {
+    assert(x >= 0 && y >= 0 && width > 0 && height > 0);
+    m_x = x; m_y = y;
+    m_width = width; m_height = height;
   }
 
   double Figure::trunc_inf(double x)
@@ -77,6 +75,13 @@ namespace tubex
 
   const Interval Figure::trunc_inf(const ibex::Interval& x)
   {
-    return Interval(trunc_inf(x.lb()),trunc_inf(x.ub()));
+    return Interval(trunc_inf(x.lb()), trunc_inf(x.ub()));
+  }
+
+  string Figure::add_suffix(const string& name, int id)
+  {
+    ostringstream o;
+    o << name << "_" << id;
+    return o.str();
   }
 }
