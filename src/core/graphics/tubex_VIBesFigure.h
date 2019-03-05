@@ -29,6 +29,9 @@ namespace tubex
   {
     public:
 
+      /// \name Definition and properties
+      /// @{
+
       /**
        * \brief Creates a VIBesFigure
        *
@@ -42,10 +45,10 @@ namespace tubex
       ~VIBesFigure() {};
       
       /**
-       * \brief Sets the properties (position and dimensions) of this figure
+       * \brief Sets the properties (coordinates and dimensions) of this figure
        *
-       * \param x horizontal position (in pixels)
-       * \param y vertical position (in pixels)
+       * \param x horizontal coordinate (in pixels)
+       * \param y vertical coordinate (in pixels)
        * \param width width value (in pixels)
        * \param height height value (in pixels)
        */
@@ -80,6 +83,10 @@ namespace tubex
        */
       const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, bool same_ratio = false, float margin = 0.);
 
+      /// @}
+      /// \name Saving this figure
+      /// @{
+
       /**
        * \brief Saves the figure in SVG/PNG/... format
        *
@@ -89,6 +96,10 @@ namespace tubex
        * \param extension optional part to specify the type of the image ("svg" by default)
        */
       void save_image(const std::string& suffix = "", const std::string& extension = "svg") const;
+
+      /// @}
+      /// \name Figure's content
+      /// @{
 
       /**
        * \brief Displays this figure
@@ -100,17 +111,104 @@ namespace tubex
        */
       void clear();
       
+      /// @}
+      /// \name Displaying objects
+      /// @{
+
+      /**
+       * \brief Draws a box
+       *
+       * \param box the 2d IntervalVector to be displayed
+       * \param params VIBes parameters related to the box
+       */
       void draw_box(const ibex::IntervalVector& box, const vibes::Params& params);
+
+      /**
+       * \brief Draws a box
+       *
+       * \param box the 2d IntervalVector to be displayed
+       * \param color the optional color of the box (black by default) 
+       * \param params VIBes parameters related to the box (none by default)
+       */
       void draw_box(const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a line of points
+       *
+       * \param v_x vector of horizontal coordinates
+       * \param v_y vector of vertical coordinates
+       * \param params VIBes parameters related to the line
+       */
       void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const vibes::Params& params);
+
+      /**
+       * \brief Draws a line of points
+       *
+       * \param v_x vector of horizontal coordinates
+       * \param v_y vector of vertical coordinates
+       * \param color the optional color of the line (black by default) 
+       * \param params VIBes parameters related to the line (none by default)
+       */
       void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a circle
+       *
+       * \param x horizontal coordinate
+       * \param y vertical coordinate
+       * \param r radius
+       * \param params VIBes parameters related to the circle
+       */
       void draw_circle(double x, double y, double r, const vibes::Params& params);
+
+      /**
+       * \brief Draws a circle
+       *
+       * \param x horizontal coordinate
+       * \param y vertical coordinate
+       * \param r radius
+       * \param color the optional color of the circle (black by default) 
+       * \param params VIBes parameters related to the circle (none by default)
+       */
       void draw_circle(double x, double y, double r, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a polygon
+       *
+       * \param p polygon
+       * \param params VIBes parameters related to the polygon (none by default)
+       */
       void draw_polygon(const Polygon& p, const vibes::Params& params);
+
+      /**
+       * \brief Draws a polygon
+       *
+       * \param p polygon
+       * \param color the optional color of the polygon (black by default) 
+       * \param params VIBes parameters related to the polygon (none by default)
+       */
       void draw_polygon(const Polygon& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a set of points
+       *
+       * \param v_pts vector of Point objects
+       * \param size display size of the points
+       * \param params VIBes parameters related to the set (none by default)
+       */
       void draw_points(const std::vector<Point>& v_pts, float size, const vibes::Params& params);
+
+      /**
+       * \brief Draws a set of points
+       *
+       * \param v_pts vector of Point objects
+       * \param size display size of the points
+       * \param color the optional color of the set (black by default) 
+       * \param params VIBes parameters related to the set (none by default)
+       */
       void draw_points(const std::vector<Point>& v_pts, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
+      /// @}
   };
 }
 

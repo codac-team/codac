@@ -41,16 +41,16 @@ namespace tubex
       ~Figure() {};
 
       /**
-       * \brief Returns the horizontal position of this figure
+       * \brief Returns the horizontal coordinate of this figure
        *
-       * \return x-position in pixels coordinates
+       * \return x-coordinate in pixels coordinates
        */
       int x() const;
 
       /**
-       * \brief Returns the vertical position of this figure
+       * \brief Returns the vertical coordinate of this figure
        *
-       * \return y-position in pixels coordinates
+       * \return y-coordinate in pixels coordinates
        */
       int y() const;
 
@@ -83,10 +83,10 @@ namespace tubex
       const ibex::IntervalVector& view_box() const;
       
       /**
-       * \brief Sets the properties (position and dimensions) of this figure
+       * \brief Sets the properties (coordinates and dimensions) of this figure
        *
-       * \param x horizontal position (in pixels)
-       * \param y vertical position (in pixels)
+       * \param x horizontal coordinate (in pixels)
+       * \param y vertical coordinate (in pixels)
        * \param width width value (in pixels)
        * \param height height value (in pixels)
        */
