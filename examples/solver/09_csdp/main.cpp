@@ -38,9 +38,10 @@ int main()
     x.set(init, x.domain().lb());
 
     // Additional restriction (maximum value):
+    Interval domain_restriction(1.,3.);
     IntervalVector max_restriction(2);
     max_restriction[1] = Interval(1.1,1.3);
-    x.set(max_restriction, Interval(1.,3.));
+    x.set(max_restriction, domain_restriction);
 
   /* =========== SOLVER =========== */
 
@@ -50,10 +51,7 @@ int main()
     solver.set_cid_fxpt_ratio(0.);
 
     // Displaying the additional restriction:
-    IntervalVector max_restrict_box(3);
-    max_restrict_box[0] = Interval(1.,3.);
-    max_restrict_box.put(1, max_restriction);
-    solver.figure()->draw_box(max_restrict_box, "blue");
+    solver.figure()->draw_box(domain_restriction, max_restriction, "blue");
 
     list<TubeVector> l_solutions = solver.solve(x, &contract);
 

@@ -68,6 +68,38 @@ namespace tubex
       m_v_figs[i]->set_properties(m_x + (i - m_start_index)*50, m_y + (i - m_start_index)*50, m_width, m_height);
   }
 
+  void VIBesFigTubeVector::show(bool detail_slices)
+  {
+    for(int i = 0 ; i < subfigs_number() ; i++)
+      m_v_figs[i]->show(detail_slices);
+  }
+
+  void VIBesFigTubeVector::draw_box(const Interval& domain, const IntervalVector& box, const vibes::Params& params)
+  {
+    if(m_n != 0)
+      assert(size() == box.size() && "box and fig must be of same dimension");
+    draw_box(domain, box, "", params);
+  }
+
+  void VIBesFigTubeVector::draw_box(const Interval& domain, const IntervalVector& box, const string& color, const vibes::Params& params)
+  {
+    if(m_n == 0) // if the figure is still empty
+      create_subfigures(box.size());
+
+    assert(size() == box.size() && "box and fig must be of same dimension");
+
+    for(int i = 0 ; i < subfigs_number() ; i++)
+    {
+      if(box[i + m_start_index].is_unbounded())
+        continue;
+      
+      IntervalVector proj_box(2); // projected box
+      proj_box[0] = domain;
+      proj_box[1] = box[i + m_start_index];
+      m_v_figs[i]->draw_box(proj_box, color, params);
+    }
+  }
+
   void VIBesFigTubeVector::add_tubevector(const TubeVector *tubevector, const std::string& name, const std::string& color_frgrnd, const std::string& color_bckgrnd)
   {
     assert(tubevector != NULL);
@@ -148,38 +180,6 @@ namespace tubex
     assert(trajvector != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->remove_trajectory(&(*trajvector)[i + m_start_index]);
-  }
-
-  void VIBesFigTubeVector::show(bool detail_slices)
-  {
-    for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->show(detail_slices);
-  }
-
-  void VIBesFigTubeVector::draw_box(const IntervalVector& box, const vibes::Params& params)
-  {
-    if(m_n != 0)
-      assert(size() == box.size() - 1 && "box must be of dimension (n+1) (time)");
-    draw_box(box, "", params);
-  }
-
-  void VIBesFigTubeVector::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
-  {
-    if(m_n == 0) // if the figure is still empty
-      create_subfigures(box.size() - 1);
-
-    assert(size() == box.size() - 1 && "box must be of dimension (n+1) (time)");
-
-    for(int i = 1 ; i < box.size() ; i++)
-    {
-      if(box[i].is_unbounded())
-        continue;
-      
-      IntervalVector proj_box(2);
-      proj_box[0] = box[0];
-      proj_box[1] = box[i];
-      m_v_figs[i-1]->draw_box(proj_box, color, params);
-    }
   }
 
   void VIBesFigTubeVector::create_subfigures(int n)
