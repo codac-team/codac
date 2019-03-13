@@ -943,7 +943,7 @@ cout << "-------------" << endl;
     CHECK(ApproxPoint(p_inter.vertices()[1]) == p_inter.vertices()[2]);
   }
 
-  /*SECTION("Polygons intersections, test 9")
+  SECTION("Polygons intersections, test 9")
   {
     IntervalVector box(2);
     box[0] = 4.;
@@ -959,16 +959,16 @@ cout << "-------------" << endl;
 
     IntervalVector box_inter = p & box;
     IntervalVector box_truth(2);
-    box_truth[0] = 4.;
+    box_truth[0] = Interval(3.,5.);
     box_truth[1] = Interval(1.+(2./5.),4.+(3./5.));
     CHECK(ApproxIntvVector(box_inter) == box_truth);
 
     ConvexPolygon p_inter = ConvexPolygon::intersect(p, box);
     v_points.clear();
-    v_points.push_back(Point(3.,4.+(1./5.)));
-    v_points.push_back(Point(5.,4.+(3./5.)));
-    v_points.push_back(Point(5.,1.+(4./5.)));
     v_points.push_back(Point(3.,1.+(2./5.)));
+    v_points.push_back(Point(5.,1.+(4./5.)));
+    v_points.push_back(Point(5.,4.+(3./5.)));
+    v_points.push_back(Point(3.,4.+(1./5.)));
     ConvexPolygon p_truth(v_points);
     CHECK(ApproxPolygon(p_inter) == p_truth);
   }
@@ -977,7 +977,6 @@ cout << "-------------" << endl;
   {
     IntervalVector box(2);
     box[0] = 4.;
-    box[0].inflate(0.5);
     box[1] = Interval(1.,5.);
 
     vector<Point> v_points;
@@ -999,7 +998,7 @@ cout << "-------------" << endl;
     v_points.push_back(Point(4.,4.+(2./5.)));
     ConvexPolygon p_truth(v_points);
     CHECK(ApproxPolygon(p_inter) == p_truth);
-  }*/
+  }
 
   SECTION("Polygons, orientations")
   {
@@ -1079,22 +1078,6 @@ cout << "-------------" << endl;
     v_pts.push_back(Point(0.2,0.1));
     v_pts.push_back(Point(0.1,0.1));
 
-
-
-//{([0.307007, 0.307007],[0.0340742, 0.0340742])
-// ([0.0340742, 0.0340742],[0.307007, 0.307007])
-// ([0.0999004, 0.0999004],[0.192993, 0.192993])
-// (0.0999004,0.192993)
-// ([0.192993, 0.192993],[0.0999004, 0.0999004])
-// (0.192993,0.0999004)
-// (0.0999004,0.0999004)}
-
-//{([0.307007, 0.307007],[0.0340742, 0.0340742]),([0.0340742, 0.0340742],[0.307007, 0.307007]),([0.0999004, 0.0999004],[0.192993, 0.192993]),(0.0999004,0.192993),([0.192993, 0.192993],[0.0999004, 0.0999004]),(0.192993,0.0999004),(0.0999004,0.0999004)}
-
-
-
-
-
     ConvexPolygon s(v_pts);
 
     vibes::beginDrawing();
@@ -1119,14 +1102,6 @@ cout << "-------------" << endl;
       ConvexPolygon q(box);
       q.rotate(a);
       p = ConvexPolygon::intersect(p, q);
-
-      //k++;
-      //if(k == 10)
-      //  break;
-
-      //vector<Point> v_pts = p.vertices();
-      //for(int i = 0 ; i < v_pts.size() ; i++)
-      //  CHECK(sqrt(pow(v_pts[i].x() - 0.5, 2) + pow(v_pts[i].y() - 0.5, 2)).is_subset(Interval(0.48,0.52)));
     }
 
     vector<Point> v_pts = p.vertices();
