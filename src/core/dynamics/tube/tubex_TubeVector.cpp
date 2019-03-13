@@ -136,8 +136,14 @@ namespace tubex
 
     const TubeVector TubeVector::primitive() const
     {
+      Vector c(size(), 0.);
+      return primitive(c);
+    }
+
+    const TubeVector TubeVector::primitive(const IntervalVector& c) const
+    {
       TubeVector primitive(*this, IntervalVector(size())); // a copy of this initialized to nx[-oo,oo]
-      primitive.set(Vector(size(), 0.), primitive.domain().lb());
+      primitive.set(c, primitive.domain().lb());
       CtcDeriv ctc_deriv;
       ctc_deriv.contract(primitive, static_cast<const TubeVector&>(*this), FORWARD);
       return primitive;

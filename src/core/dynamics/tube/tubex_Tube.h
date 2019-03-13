@@ -174,9 +174,10 @@ namespace tubex
       /**
        * \brief Returns the primitive Tube of this tube
        *
+       * \param c the constant of integration (0. by default)
        * \return a new Tube object with same slicing, enclosing the feasible primitives of this tube
        */
-      const Tube primitive() const;
+      const Tube primitive(const ibex::Interval& c = ibex::Interval(0.)) const;
 
       /**
        * \brief Returns a copy of a Tube

@@ -206,11 +206,19 @@ namespace tubex
       void put(int start_index, const TubeVector& subvec);
 
       /**
-       * \brief Returns the primitive TubeVector of this tube
+       * \brief Returns the primitive TubeVector of this tube, with a zero constant of integration
        *
        * \return a new TubeVector object with same slicing, enclosing the feasible primitives of this tube
        */
       const TubeVector primitive() const;
+
+      /**
+       * \brief Returns the primitive TubeVector of this tube
+       *
+       * \param c the constant of integration
+       * \return a new TubeVector object with same slicing, enclosing the feasible primitives of this tube
+       */
+      const TubeVector primitive(const ibex::IntervalVector& c) const;
 
       /**
        * \brief Returns a copy of a TubeVector

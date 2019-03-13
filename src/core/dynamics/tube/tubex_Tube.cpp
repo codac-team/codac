@@ -164,10 +164,10 @@ namespace tubex
       return 1; // scalar object
     }
 
-    const Tube Tube::primitive() const
+    const Tube Tube::primitive(const Interval& c) const
     {
       Tube primitive(*this, Interval::ALL_REALS); // a copy of this initialized to [-oo,oo]
-      primitive.set(0., primitive.domain().lb());
+      primitive.set(c, primitive.domain().lb());
       CtcDeriv ctc_deriv;
       ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), FORWARD);
       return primitive;
