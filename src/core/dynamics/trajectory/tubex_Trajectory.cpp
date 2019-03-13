@@ -234,12 +234,12 @@ namespace tubex
     
     // Integration
     
-    const Trajectory Trajectory::primitive() const
+    const Trajectory Trajectory::primitive(double c) const
     {
       assert(m_function == NULL && "integration timestep requested for trajectories defined by Function");
       
       Trajectory x;
-      double prev_x = 0., prev_t;
+      double prev_x = c, prev_t;
       x.set(prev_x, domain().lb());
 
       map<double,double>::const_iterator it = m_map_values.begin();
@@ -254,12 +254,12 @@ namespace tubex
       return x;
     }
     
-    const Trajectory Trajectory::primitive(double dt) const
+    const Trajectory Trajectory::primitive(double c, double dt) const
     {
       assert(dt > 0.);
 
       Trajectory x;
-      double prev_x = 0.;
+      double prev_x = c;
       x.set(prev_x, domain().lb());
 
       for(double t = domain().lb() + dt ; t < domain().ub() ; t+=dt)

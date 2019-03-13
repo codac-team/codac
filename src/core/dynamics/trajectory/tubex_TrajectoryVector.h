@@ -243,18 +243,20 @@ namespace tubex
        * \note The trajectory must not be defined from an analytic function.
        *       Please use the other method with time discretization for such case.
        *
+       * \param c the constant of integration
        * \return a new TrajectoryVector object with the same temporal keys
        */
-      const TrajectoryVector primitive() const;
+      const TrajectoryVector primitive(const ibex::Vector& c) const;
 
       /**
        * \brief Computes an approximative primitive of \f$\mathbf{x}(\cdot)\f$
        *        whith some time discretization \f$\delta\f$
        *
+       * \param c the constant of integration
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \return a new TrajectoryVector object with the specified time discretization
        */
-      const TrajectoryVector primitive(double timestep) const;
+      const TrajectoryVector primitive(const ibex::Vector& c, double timestep) const;
 
       /// @}
       /// \name String
