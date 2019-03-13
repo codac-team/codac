@@ -18,6 +18,12 @@ using namespace ibex;
 
 namespace tubex
 {
+  Point::Point()
+    : m_x(Interval::EMPTY_SET), m_y(Interval::EMPTY_SET)
+  {
+
+  }
+
   Point::Point(const Interval& x, const Interval& y)
     : m_x(x), m_y(y)
   {
@@ -56,6 +62,14 @@ namespace tubex
   {
     return m_x.is_empty() || m_y.is_empty();
   }
+
+  const Point& Point::inflate(double rad)
+  {
+    assert(rad >= 0.);
+    m_x.inflate(rad);
+    m_y.inflate(rad);
+    return *this;
+  }
   
   const Point Point::operator|=(const Point& p)
   {
@@ -82,6 +96,69 @@ namespace tubex
   {
     Interval cross_product = (b.x()-a.x()) * (c.y()-a.y()) - (b.y()-a.y()) * (c.x()-a.x());
     return (cross_product == Interval(0.)) ? YES : (cross_product.contains(0.) ? MAYBE : NO);
+  }
+
+  const vector<Point> Point::merge_close_points(const vector<Point>& v_pts)
+  {
+    vector<Point> v_vertices, v_pts_copy = v_pts;
+
+    while(!v_pts_copy.empty())
+    {
+      v_vertices.push_back(*v_pts_copy.begin());
+      v_pts_copy.erase(v_pts_copy.begin());
+      bool merge;
+
+      do
+      {
+        merge = false;
+
+        for(vector<Point>::iterator it = v_pts_copy.begin() ; it != v_pts_copy.end() ; )
+        {
+          bool similar_pts = v_vertices.back().x().intersects(it->x())
+                          && v_vertices.back().y().intersects(it->y());
+
+          if(similar_pts)
+          {
+            v_vertices.back() = v_vertices.back() | *it;
+            it = v_pts_copy.erase(it);
+            merge = true;
+            break;
+          }
+
+          else
+            ++it;
+        }
+      } while(merge);
+    }
+
+    return v_vertices;
+  }
+
+  const vector<Point> Point::delete_redundant_points(const vector<Point>& v_pts)
+  {
+    vector<Point> v_vertices;
+
+    for(int i = 0 ; i < v_pts.size() ; i++)
+    {
+      if(v_pts[i].does_not_exist())
+        continue; // no empty points
+
+      bool diff_from_all_prev_points = true;
+      for(int j = 0 ; j < v_vertices.size() && diff_from_all_prev_points ; j++)
+        diff_from_all_prev_points &= !(v_pts[i] == v_vertices[j]
+                                     & v_pts[i].x().is_degenerated()
+                                     & v_pts[i].y().is_degenerated());
+      
+      if(diff_from_all_prev_points)
+        v_vertices.push_back(v_pts[i]);
+    }
+
+    return v_vertices;
+  }
+
+  const Point operator|(const Point& p1, const Point& p2)
+  {
+    return Point(p1.x() | p2.x(), p1.y() | p2.y());
   }
 
   void push_points(const IntervalVector& box, vector<Point>& v_points)

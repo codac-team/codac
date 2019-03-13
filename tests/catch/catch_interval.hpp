@@ -347,12 +347,14 @@ namespace Catch
       public:
         explicit ApproxPoint(tubex::Point value) :
             m_value(value)
-        {}
+        {
+          m_value.inflate(100.*DEFAULT_EPSILON);
+        }
 
         friend bool operator ==(tubex::Point lhs, ApproxPoint const& rhs)
         {
           return lhs == rhs.m_value ||
-            lhs.x() == ApproxIntv(rhs.m_value.x(), DEFAULT_EPSILON * 10.) && lhs.y() == ApproxIntv(rhs.m_value.y(), DEFAULT_EPSILON * 10.);
+            lhs.x().intersects(rhs.m_value.x()) && lhs.y().intersects(rhs.m_value.y());
         }
 
         friend bool operator ==(ApproxPoint const& lhs, tubex::Point rhs)
@@ -378,7 +380,6 @@ namespace Catch
         }
 
       private:
-        double m_epsilon;
         tubex::Point m_value;
     };
 
@@ -388,7 +389,15 @@ namespace Catch
         explicit ApproxPolygon(tubex::Polygon value) :
             m_epsilon(DEFAULT_EPSILON),
             m_value(value)
-        {}
+        {
+          m_value.inflate_vertices(100.*DEFAULT_EPSILON);
+          m_value.merge_close_vertices();
+        }
+
+        const tubex::Polygon& polygon() const
+        {
+          return m_value;
+        }
 
         friend bool operator ==(tubex::Polygon lhs, ApproxPolygon const& rhs)
         {

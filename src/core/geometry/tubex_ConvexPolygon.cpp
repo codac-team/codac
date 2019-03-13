@@ -48,7 +48,7 @@ namespace tubex
         v_pts.push_back(m_v_vertices[i]);
     }
 
-    v_pts = delete_redundant_points(v_pts);
+    v_pts = Point::delete_redundant_points(v_pts);
     m_v_vertices = GrahamScan::convex_hull(v_pts);
   }
   
@@ -101,6 +101,7 @@ namespace tubex
 
         if(!intersection_pt.does_not_exist())
         {
+          // If edges are possibly parallel:
           if(Edge::parallel(p1.edges()[i], p2.edges()[j]) != NO)
           {
             if(p1.edges()[i].contains(p2.edges()[j].p1()) != NO)
@@ -123,25 +124,9 @@ namespace tubex
 
     // Merge equivalent points
 
-      vector<Point> merged_points;
-      v_pts = GrahamScan::convex_hull(v_pts);
-      merged_points = delete_redundant_points(v_pts);
-
-      /*int i = 0, n = v_pts.size();
-      while(i < n)
-      {
-        Point p = v_pts[i];
-
-        int j = i + 1;
-        while(j < n && v_pts[i].x().intersects(v_pts[j].x()) && v_pts[i].y().intersects(v_pts[j].y()))
-        {
-          p |= v_pts[j];
-          j++;
-        }
-
-        merged_points.push_back(p);
-        i = j;
-      }*/
+      vector<Point> merged_points = Point::merge_close_points(v_pts);
+      merged_points = GrahamScan::convex_hull(merged_points);
+      //merged_points = Point::delete_redundant_points(merged_points); // todo: keep this?
 
       // todo: two convex computations are performed: do only one
 

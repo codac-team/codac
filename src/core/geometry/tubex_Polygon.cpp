@@ -27,13 +27,13 @@ namespace tubex
   {
     assert(box.size() == 2);
     push_points(box, m_v_vertices);
-    m_v_vertices = delete_redundant_points(m_v_vertices);
+    m_v_vertices = Point::delete_redundant_points(m_v_vertices);
   }
 
   Polygon::Polygon(const vector<Point>& v_points)
   {
     m_v_vertices = v_points;
-    m_v_vertices = delete_redundant_points(m_v_vertices);
+    m_v_vertices = Point::delete_redundant_points(m_v_vertices);
   }
 
   int Polygon::nb_vertices() const
@@ -236,25 +236,16 @@ namespace tubex
     }
   }
 
-  const vector<Point> Polygon::delete_redundant_points(const vector<Point>& v_pts)
+  const Polygon& Polygon::inflate_vertices(double rad)
   {
-    vector<Point> v_vertices;
+    assert(rad >= 0.);
+    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+      m_v_vertices[i].inflate(rad);
+    return *this;
+  }
 
-    for(int i = 0 ; i < v_pts.size() ; i++)
-    {
-      if(v_pts[i].does_not_exist())
-        continue; // no empty points
-
-      bool diff_from_all_prev_points = true;
-      for(int j = 0 ; j < v_vertices.size() && diff_from_all_prev_points ; j++)
-        diff_from_all_prev_points &= !(v_pts[i] == v_vertices[j]
-                                     & v_pts[i].x().is_degenerated()
-                                     & v_pts[i].y().is_degenerated());
-      
-      if(diff_from_all_prev_points)
-        v_vertices.push_back(v_pts[i]);
-    }
-
-    return v_vertices;
+  void Polygon::merge_close_vertices()
+  {
+    m_v_vertices = Point::merge_close_points(m_v_vertices);
   }
 }

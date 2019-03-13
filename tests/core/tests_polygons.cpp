@@ -234,12 +234,12 @@ TEST_CASE("Polygon")
     ConvexPolygon p(v_p);
     CHECK(p.nb_vertices() == 8);
 
-    //CHECK(p.edges()[0] == Edge(Point(1.,0.), Point(2.,0.)));
-    //CHECK(p.edges()[1] == Edge(Point(2.,0.), Point(4.,2.)));
+    CHECK(p.edges()[0] == Edge(Point(1.,0.), Point(2.,0.)));
+    CHECK(p.edges()[1] == Edge(Point(2.,0.), Point(4.,2.)));
 
     IntervalVector inter(2), x(2);
     
-    Edge edge = Edge(Point(1.,0.), Point(2.,0.));//p.edges()[0];
+    Edge edge = Edge(Point(1.,0.), Point(2.,0.));
     x[0] = Interval(0.5,4.); x[1] = Interval(-1.,1.);
     inter = edge & x;
     CHECK(inter[0] == Interval(1.,2.));
@@ -266,17 +266,17 @@ TEST_CASE("Polygon")
     CHECK(ApproxIntv(pt_inter.x()) == Interval::EMPTY_SET);
     CHECK(ApproxIntv(pt_inter.y()) == Interval::EMPTY_SET);
 
-    edge = Edge(Point(2.,0.), Point(4.,2.)); //p.edges()[1];
+    edge = Edge(Point(2.,0.), Point(4.,2.));
     inter = edge & x;
     CHECK(inter[0] == Interval(2.,3.));
     CHECK(inter[1] == Interval(0.,1.));
 
-    edge = Edge(Point(4.,2.), Point(4.,4.)); //p.edges()[2];
+    edge = Edge(Point(4.,2.), Point(4.,4.));
     inter = edge & x;
     CHECK(inter[0] == Interval::EMPTY_SET);
     CHECK(inter[1] == Interval::EMPTY_SET);
 
-    edge = Edge(Point(4.,4.), Point(3.,7.)); //p.edges()[3];
+    edge = Edge(Point(4.,4.), Point(3.,7.));
     inter = edge & x;
     CHECK(inter[0] == Interval::EMPTY_SET);
     CHECK(inter[1] == Interval::EMPTY_SET);
@@ -889,6 +889,29 @@ cout << "-------------" << endl;
     CHECK(p == inter);
   }
 
+  SECTION("Merging similar points")
+  {
+    Point p1(Interval(2.,4.), Interval(3.,4.));
+    Point p2(Interval(4.,5.), Interval(2.,3.));
+    CHECK(p1.x().intersects(p2.x()));
+    CHECK(p1.y().intersects(p2.y()));
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(Interval(2.,3.), Interval(3.,6.)));
+    v_pts.push_back(Point(Interval(3.,4.), Interval(3.,4.)));
+    v_pts.push_back(Point(Interval(4.,5.), Interval(2.,3.)));
+    v_pts.push_back(Point(Interval(3.,5.), Interval(0.,1.)));
+    v_pts.push_back(Point(Interval(7.,8.), Interval(4.,6.)));
+    v_pts.push_back(Point(Interval(7.5,9.), Interval(3.,4.5)));
+
+    CHECK(v_pts.size() == 6);
+    v_pts = Point::merge_close_points(v_pts);
+    CHECK(v_pts.size() == 3);
+    CHECK(v_pts[0] == Point(Interval(2.,5.), Interval(2.,6.)));
+    CHECK(v_pts[1] == Point(Interval(3.,5.), Interval(0.,1.)));
+    CHECK(v_pts[2] == Point(Interval(7.,9.), Interval(3.,6.)));
+  }
+
   SECTION("Polygons intersections, test 8")
   {
     IntervalVector box(2);
@@ -915,8 +938,9 @@ cout << "-------------" << endl;
     v_points.push_back(Point(6.,4.+(4./5.)));
     v_points.push_back(Point(6.,2.));
     ConvexPolygon p_truth(v_points);
-    // todo: CHECK(ApproxPolygon(p_inter) == p_truth);
-    // todo: CHECK(p_inter.vertices()[1] == p_inter.vertices()[2]);
+    CHECK(ApproxPolygon(p_inter).polygon().nb_vertices() == p_truth.nb_vertices());
+    CHECK(ApproxPolygon(p_inter) == p_truth);
+    CHECK(ApproxPoint(p_inter.vertices()[1]) == p_inter.vertices()[2]);
   }
 
   /*SECTION("Polygons intersections, test 9")

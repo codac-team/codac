@@ -50,9 +50,10 @@ namespace tubex
       void rotate(double angle);
       void rotate(double angle, const Point& center);
 
-      friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
+      const Polygon& inflate_vertices(double rad);
+      void merge_close_vertices();
 
-      static const std::vector<Point> delete_redundant_points(const std::vector<Point>& v_pts);
+      friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
 
     protected:
       

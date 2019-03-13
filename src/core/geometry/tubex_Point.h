@@ -24,6 +24,7 @@ namespace tubex
   {
     public:
 
+      Point(); // undefined point
       Point(const ibex::Interval& x, const ibex::Interval& y);
       const ibex::Interval& x() const;
       const ibex::Interval& y() const;
@@ -32,9 +33,13 @@ namespace tubex
       bool operator!=(const Point& p) const;
       const Point operator|=(const Point& p);
       bool does_not_exist() const;
+      const Point& inflate(double rad);
 
       static const ibex::BoolInterval aligned(const Point& a, const Point& b, const Point& c);
       friend std::ostream& operator<<(std::ostream& str, const Point& p);
+
+      static const std::vector<Point> merge_close_points(const std::vector<Point>& v_pts);
+      static const std::vector<Point> delete_redundant_points(const std::vector<Point>& v_pts);
 
     public:
 
@@ -43,6 +48,7 @@ namespace tubex
       ibex::Interval m_y;
   };
 
+  const Point operator|(const Point& p1, const Point& p2);
   void push_points(const ibex::IntervalVector& box, std::vector<Point>& v_points);
 }
 

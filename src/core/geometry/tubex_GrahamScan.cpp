@@ -101,7 +101,7 @@ namespace tubex
           v_pts.push_back(v_points[i]);
       }
 
-    v_pts = Polygon::delete_redundant_points(v_pts);
+    v_pts = Point::delete_redundant_points(v_pts);
 
     if(v_pts.size() <= 3)
       return v_pts;
