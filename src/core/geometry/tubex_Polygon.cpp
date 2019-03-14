@@ -205,23 +205,10 @@ namespace tubex
     str << "}";
     return str;
   }
-  
-  const Point Polygon::center(const vector<Point> v_pts)
-  {
-    Interval x = 0., y = 0.;
-    for(int i = 0 ; i < v_pts.size() ; i++)
-    {
-      assert(!v_pts[i].does_not_exist());
-      x += v_pts[i].x();
-      y += v_pts[i].y();
-    }
-
-    return Point(x / v_pts.size(), y / v_pts.size());
-  }
 
   void Polygon::rotate(double angle)
   {
-    rotate(angle, Polygon::center(m_v_vertices));
+    rotate(angle, Point::center(m_v_vertices));
   }
 
   void Polygon::rotate(double angle, const Point& center)

@@ -149,6 +149,7 @@ namespace tubex
 
     for(int i = 0 ; i < p.nb_vertices() ; i++)
     {
+      vibes::drawBox(p[i].box(), "gray[gray]", params_this_fig); // showing uncertainties
       v_x.push_back(trunc_inf(p[i].x().mid()));
       v_y.push_back(trunc_inf(p[i].y().mid()));
     }

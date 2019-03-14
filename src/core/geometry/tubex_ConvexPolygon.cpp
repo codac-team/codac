@@ -142,7 +142,7 @@ namespace tubex
   void ConvexPolygon::simplify()
   {
     vector<Point> v_pts = m_v_vertices;
-    Point c = Polygon::center(v_pts);
+    Point c = Point::center(v_pts);
 
     ConvexPolygon p(v_pts);
     ConvexPolygon pf(box());
@@ -161,6 +161,6 @@ namespace tubex
       pf = ConvexPolygon::intersect(pf, p2);
     }
 
-    m_v_vertices = pf.vertices();
+    m_v_vertices = GrahamScan::convex_hull(pf.vertices());
   }
 }

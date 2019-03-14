@@ -1108,4 +1108,103 @@ cout << "-------------" << endl;
     for(int i = 0 ; i < v_pts.size() ; i++)
       CHECK(sqrt(pow(v_pts[i].x() - 0.5, 2) + pow(v_pts[i].y() - 0.5, 2)).is_subset(Interval(0.48,0.52)));
   }
+
+  SECTION("Polygons, Graham scan, step by step")
+  {
+    vector<Point> v_pts;
+    v_pts.push_back(Point(0.,0.));
+    v_pts.push_back(Point(8.,8.));
+    v_pts.push_back(Point(10.,1.));
+    v_pts.push_back(Point(4.,4.));
+    v_pts.push_back(Point(-10.,1.));
+    v_pts.push_back(Point(2.,2.));
+    v_pts.push_back(Point(6.,3.));
+    v_pts.push_back(Point(6.,1.));
+    v_pts.push_back(Point(10.,4.));
+
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(2.,2.)) == UNDEFINED);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(4.,4.)) == UNDEFINED);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(8.,8.), Point(4.,4.)) == UNDEFINED);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(10.,1.), Point(4.,4.)) == COUNTERCLOCKWISE);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(10.,1.)) == CLOCKWISE);
+
+    // Sort n-1 points with respect to the first point.
+
+      // A point p1 comes before p2 in sorted ouput if p2
+      // has larger polar angle (in counterclockwise
+      // direction) than p1
+
+    Point p0 = v_pts[0];
+    sort(v_pts.begin(), v_pts.end(), PointsSorter(p0));
+
+    CHECK(v_pts.size() == 9);
+    CHECK(v_pts[0] == Point(0.,0.));
+    CHECK(v_pts[1] == Point(10.,1.));
+    CHECK(v_pts[2] == Point(6.,1.));
+    CHECK(v_pts[3] == Point(10.,4.));
+    CHECK(v_pts[4] == Point(6.,3.));
+    CHECK(v_pts[5] == Point(2.,2.));
+    CHECK(v_pts[6] == Point(4.,4.));
+    CHECK(v_pts[7] == Point(8.,8.));
+    CHECK(v_pts[8] == Point(-10.,1.));
+
+    // If two or more points make same angle with p0,
+    // remove all but the one that is farthest from p0
+
+      // Remember that, in above sorting, our criteria was
+      // to keep the farthest point at the end when more than
+      // one points have same angle.
+      int m = 1; // Initialize size of modified array
+      for(int i = 1 ; i < v_pts.size() ; i ++)
+      {
+        // Keep removing i while angle of i and i+1 is same
+        // with respect to p0
+        while(i < v_pts.size()-1 && Point::aligned(p0, v_pts[i], v_pts[i+1]) == YES)
+          i++; 
+        v_pts[m] = v_pts[i];
+        m++; // Update size of modified array
+      }
+
+    CHECK(m == 7);
+    CHECK(v_pts[0] == Point(0.,0.));
+    CHECK(v_pts[1] == Point(10.,1.));
+    CHECK(v_pts[2] == Point(6.,1.));
+    CHECK(v_pts[3] == Point(10.,4.));
+    CHECK(v_pts[4] == Point(6.,3.));
+    CHECK(v_pts[5] == Point(8.,8.));
+    CHECK(v_pts[6] == Point(-10.,1.));
+
+    // Create an empty stack and push first three points to it.
+
+      vector<Point> v_hull;
+
+      stack<Point> s;
+      s.push(v_pts[0]);
+      s.push(v_pts[1]);
+      s.push(v_pts[2]);
+
+    CHECK(s.top() == v_pts[2]);
+    CHECK(GrahamScan::next_to_top(s) == v_pts[1]);
+
+    // Process remaining n-3 points
+
+      for(int i = 3 ; i < m ; i++)
+      {
+        // Keep removing top while the angle formed by
+        // points next-to-top, top, and v_pts[i] makes
+        // a non-left turn
+        while(s.size() > 1 && GrahamScan::orientation(GrahamScan::next_to_top(s), s.top(), v_pts[i]) == CLOCKWISE)
+          s.pop();
+        s.push(v_pts[i]);
+      }
+
+      while(!s.empty())
+      {
+        v_hull.push_back(s.top());
+        s.pop();
+      }
+      reverse(v_hull.begin(), v_hull.end());
+
+    CHECK(v_hull.size() == 5);
+  }
 }

@@ -19,6 +19,8 @@ using namespace ibex;
 
 namespace tubex
 {
+  // Class GrahamScan
+
   const Point GrahamScan::next_to_top(const stack<Point>& s)
   {
     stack<Point> stemp = s;
@@ -56,32 +58,6 @@ namespace tubex
     return (val.lb() > 0.) ? CLOCKWISE : COUNTERCLOCKWISE;
   }
 
-  class PointsSorter
-  {
-    public:
-
-      PointsSorter(const Point& p0)
-      {
-        m_p0 = p0;
-      }
-
-      bool operator()(const Point& p1, const Point& p2)
-      {
-        // Find orientation
-        OrientationInterval o = GrahamScan::orientation(m_p0, p1, p2);
-
-        if(o == COUNTERCLOCKWISE)
-          return true;
-
-        else if(o == UNDEFINED && GrahamScan::dist(m_p0, p2).mid() >= GrahamScan::dist(m_p0, p1).mid())
-          return true;
-
-        return false;
-      }
-
-      Point m_p0 = Point(Interval::EMPTY_SET, Interval::EMPTY_SET);
-  };
-
   const vector<Point> GrahamScan::convex_hull(const vector<Point>& v_points)
   {
     vector<Point> v_pts;
@@ -106,26 +82,28 @@ namespace tubex
     if(v_pts.size() <= 3)
       return v_pts;
 
+    // Based on some sources from OpenGenus Foundation
+
     // Find the bottommost point
 
-      int min = 0;
-      Interval ymin = v_pts[0].y();
+      int id_min = 0;
+      double y_min = v_pts[0].y().lb();
 
       for(int i = 1 ; i < v_pts.size() ; i++)
       {
-        Interval y = v_pts[i].y();
+        double y = v_pts[i].y().lb();
 
         // Pick the bottom-most or chose the left most point in case of tie
-        if((y.lb() < ymin.lb()) || (ymin.lb() == y.lb() && v_pts[i].x().lb() < v_pts[min].x().lb()))
+        if((y < y_min) || (y_min == y && v_pts[i].x().lb() < v_pts[id_min].x().lb()))
         {
-          ymin = v_pts[i].y();
-          min = i;
+          y_min = v_pts[i].y().lb();
+          id_min = i;
         }
       }
 
     // Place the bottom-most point at first position
     
-      GrahamScan::swap(v_pts[0], v_pts[min]);
+      GrahamScan::swap(v_pts[0], v_pts[id_min]);
 
     // Sort n-1 points with respect to the first point.
 
@@ -137,7 +115,7 @@ namespace tubex
       sort(v_pts.begin(), v_pts.end(), PointsSorter(p0));
 
     // If two or more points make same angle with p0,
-    // Remove all but the one that is farthest from p0
+    // remove all but the one that is farthest from p0
 
       // Remember that, in above sorting, our criteria was
       // to keep the farthest point at the end when more than
@@ -182,5 +160,31 @@ namespace tubex
       reverse(v_hull.begin(), v_hull.end());
 
     return v_hull;
+  }
+
+  // Class PointsSorter
+
+  PointsSorter::PointsSorter(const Point& p0)
+  {
+    assert(p0.x().is_degenerated() && p0.y().is_degenerated());
+    m_p0 = p0;
+  }
+
+  bool PointsSorter::operator()(const Point& p1, const Point& p2)
+  {
+    // Uncertain points should be divided by GrahamScan
+    assert(p1.x().is_degenerated() && p1.y().is_degenerated());
+    assert(p2.x().is_degenerated() && p2.y().is_degenerated());
+
+    // Find orientation
+    OrientationInterval o = GrahamScan::orientation(m_p0, p1, p2);
+
+    if(o == COUNTERCLOCKWISE)
+      return true;
+
+    else if(o == UNDEFINED && GrahamScan::dist(m_p0, p1).lb() <= GrahamScan::dist(m_p0, p2).lb())
+      return true;
+
+    return false;
   }
 }

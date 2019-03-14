@@ -45,6 +45,18 @@ namespace tubex
 
     protected:
   };
+
+  class PointsSorter
+  {
+    public:
+
+      PointsSorter(const Point& p0);
+      bool operator()(const Point& p1, const Point& p2);
+
+    protected:
+
+      Point m_p0 = Point(ibex::Interval::EMPTY_SET, ibex::Interval::EMPTY_SET);
+  };
 }
 
 #endif

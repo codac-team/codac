@@ -91,6 +91,19 @@ namespace tubex
     str << ")";
     return str;
   }
+  
+  const Point Point::center(const vector<Point> v_pts)
+  {
+    Interval x = 0., y = 0.;
+    for(int i = 0 ; i < v_pts.size() ; i++)
+    {
+      assert(!v_pts[i].does_not_exist());
+      x += v_pts[i].x();
+      y += v_pts[i].y();
+    }
+
+    return Point(x / v_pts.size(), y / v_pts.size());
+  }
 
   const BoolInterval Point::aligned(const Point& a, const Point& b, const Point& c)
   {

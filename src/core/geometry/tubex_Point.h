@@ -35,9 +35,10 @@ namespace tubex
       bool does_not_exist() const;
       const Point& inflate(double rad);
 
-      static const ibex::BoolInterval aligned(const Point& a, const Point& b, const Point& c);
       friend std::ostream& operator<<(std::ostream& str, const Point& p);
 
+      static const ibex::BoolInterval aligned(const Point& a, const Point& b, const Point& c);
+      static const Point center(const std::vector<Point> v_pts);
       static const std::vector<Point> merge_close_points(const std::vector<Point>& v_pts);
       static const std::vector<Point> delete_redundant_points(const std::vector<Point>& v_pts);
 

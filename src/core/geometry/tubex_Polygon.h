@@ -37,8 +37,6 @@ namespace tubex
       const Point operator[](int vertex_id) const;
       const ibex::IntervalVector box() const;
 
-      static const Point center(const std::vector<Point> v_pts);
-
       bool is_point() const;
       bool is_segment() const;
       bool operator==(const Polygon& p) const;
