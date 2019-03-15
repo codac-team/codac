@@ -1207,4 +1207,56 @@ cout << "-------------" << endl;
 
     CHECK(v_hull.size() == 5);
   }
+
+  SECTION("Polygons, Graham scan, other example")
+  {
+    vector<Point> v_pts;
+
+    Point p1(-4041.935273669676917052129283547401428223,-5492.667604696881426207255572080612182617);
+    Point p2(9206.843580880462468485347926616668701172,6551.674997467660432448610663414001464844);
+    Point p3(-4041.935273669676917052129283547401428223+0.,-5492.667604696874150249641388654708862305+0.);
+
+    CHECK(Point::aligned(p1, p2, p3) == NO);
+
+    v_pts.push_back(p1);
+    v_pts.push_back(Point(-2103.177277725693329557543620467185974121,-5492.667604696881426207255572080612182617));
+    v_pts.push_back(Point(5720.923292917194885376375168561935424805,-975.4210340695084369144751690328121185303));
+    v_pts.push_back(Point(9206.843580880462468485347926616668701172,5062.370015818080901226494461297988891602));
+    v_pts.push_back(Point(52.79381299725321952109879930503666400909,5062.370015818080901226494461297988891602));
+    v_pts.push_back(p3);
+    v_pts.push_back(p2);
+    v_pts.push_back(Point(52.79381299725321952109879930503666400909,6551.674997467660432448610663414001464844));
+    v_pts.push_back(Point(-4041.935273669676917052129283547401428223,-540.603823869623056452837772667407989502));
+
+    // Find the bottommost point
+
+      int id_min = 0;
+      double y_min = v_pts[0].y().lb();
+
+      for(int i = 1 ; i < v_pts.size() ; i++)
+      {
+        double y = v_pts[i].y().lb();
+
+        // Pick the bottom-most or chose the left most point in case of tie
+        if((y < y_min) || (y_min == y && v_pts[i].x().lb() < v_pts[id_min].x().lb()))
+        {
+          y_min = v_pts[i].y().lb();
+          id_min = i;
+        }
+      }
+
+    //CHECK(p1 == v_pts[id_min]);
+
+    Polygon nc_polyg(v_pts);
+    //CHECK(nc_polyg.vertices().size() == 8);
+    ConvexPolygon polyg(v_pts);
+    //CHECK(polyg.vertices().size() == 7);
+
+    vibes::beginDrawing();
+    VIBesFig fig("polytest");
+    fig.set_properties(100, 1000, 400, 400);
+    fig.draw_polygon(polyg, "black[#FD9335]");
+    fig.axis_limits(fig.view_box() | polyg.box());
+    vibes::endDrawing();
+  }
 }
