@@ -10,6 +10,7 @@
  *  Created   : 2018
  * ---------------------------------------------------------------------------- */
 
+#include <algorithm>
 #include <iostream>
 #include <iomanip>
 #include "tubex_GrahamScan.h"

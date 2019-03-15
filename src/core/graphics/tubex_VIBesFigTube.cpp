@@ -366,7 +366,7 @@ namespace tubex
     else
     {
       IntervalVector gate_box(2);
-      gate_box[0] = t; gate_box[0].inflate(next_float(0.));
+      gate_box[0] = t; gate_box[0].inflate(ibex::next_float(0.));
       gate_box[1] = trunc_inf(gate);
       draw_box(gate_box, params);
     }

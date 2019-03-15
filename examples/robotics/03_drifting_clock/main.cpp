@@ -37,7 +37,7 @@ int main()
     x[3] = Tube(domain, tube_dt, tubex::Function("100*cos(t)+[-0.1,0.1]"));
     
     TubeVector y(domain, 2);
-    y[0] = sqrt(sqr(x[0]) + sqr(x[1]) + sqr(beacon_depth));
+    y[0] = sqrt(sqr(x[0]) + sqr(x[1]) + ibex::sqr(beacon_depth));
     y[1] = (x[0]*x[2] + x[1]*x[3]) / y[0];
     
     TubeVector h(domain, 2);

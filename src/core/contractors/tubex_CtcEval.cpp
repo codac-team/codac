@@ -169,8 +169,8 @@ namespace tubex
 
         // 2. Backward propagation
 
-          slice_y = y.slice(previous_float(t.ub()));
-          slice_w = w.slice(previous_float(t.ub()));
+          slice_y = y.slice(ibex::previous_float(t.ub()));
+          slice_w = w.slice(ibex::previous_float(t.ub()));
 
           front_gate = slice_y->output_gate() & z;
             // Overcoming numerical approximations, same remark as before:
