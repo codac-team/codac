@@ -10,6 +10,7 @@
   set(PACKAGE_NAME       tubex-lib)
   set(PACKAGE_VERSION    "2.0")
   set(CMAKE_MODULE_PATH  "${PROJECT_SOURCE_DIR}/scripts/cmake_modules")
+  set(CMAKE_CXX_COMPILER g++-5)
 
   project(${PACKAGE_NAME})
 
@@ -34,8 +35,7 @@
   add_subdirectory(src)
 
 # Tests
-
-  option(BUILD_TESTS "Build test" ON)
+  option(BUILD_TESTS "Build test" OFF)
   if(BUILD_TESTS)
     enable_testing(true)
     add_subdirectory(tests)

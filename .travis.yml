@@ -19,6 +19,7 @@ addons:
     - g++-5
     - libboost-dev
     #- doxygen # for documentation
+    #- graphviz # for documentation
 
 sudo: required
 
@@ -52,6 +53,6 @@ script:
   #    cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DIBEX_ROOT=${HOME}/ibex -DCMAKE_CXX_COMPILER=g++-5 -DBUILD_TESTS=ON ../ ;
   #  fi
   #- make
-  - ./build.sh
+  - ./build.sh tests
   - cd make
   - make test

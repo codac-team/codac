@@ -4,15 +4,15 @@
 
 #!/bin/bash
 
-TUBELIB_DIR="$(pwd)"
-
-#cd ..
-#sh $TUBELIB_DIR/scripts/ibex/build_IbexLib.sh
-#cd $TUBELIB_DIR
-
 mkdir make -p
 cd make
-#cmake -DCMAKE_INSTALL_PREFIX=~/ -DIBEX_ROOT=~/ibex -DCMAKE_CXX_COMPILER=g++-5 ..
-cmake -DCMAKE_INSTALL_PREFIX=~/ -DCMAKE_CXX_COMPILER=g++-5 ..
+
+if [ $# -ne 0 ] && ([ $1 = "tests" ] || [ $1 = "all" ]) # build tests
+then
+  cmake -DBUILD_TESTS=ON ..
+else
+  cmake -DBUILD_TESTS=OFF ..
+fi
+
 make
 cd ..
