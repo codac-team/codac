@@ -52,6 +52,8 @@ namespace tubex
       void merge_close_vertices();
 
       friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
+      
+      static const std::vector<Point> delete_redundant_points(const std::vector<Point>& v_pts);
 
     protected:
       

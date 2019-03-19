@@ -27,13 +27,12 @@ namespace tubex
   {
     assert(box.size() == 2);
     push_points(box, m_v_vertices);
-    m_v_vertices = Point::delete_redundant_points(m_v_vertices);
   }
 
   Polygon::Polygon(const vector<Point>& v_points)
   {
     m_v_vertices = v_points;
-    m_v_vertices = Point::delete_redundant_points(m_v_vertices);
+    //m_v_vertices = Polygon::delete_redundant_points(m_v_vertices);
   }
 
   int Polygon::nb_vertices() const
@@ -234,5 +233,29 @@ namespace tubex
   void Polygon::merge_close_vertices()
   {
     m_v_vertices = Point::merge_close_points(m_v_vertices);
+  }
+
+  const vector<Point> Polygon::delete_redundant_points(const vector<Point>& v_pts)
+  {
+    vector<Point> v_vertices;
+
+    for(int i = 0 ; i < v_pts.size() ; )
+    {
+      if(v_pts[i].does_not_exist())
+        continue; // no empty points
+
+      v_vertices.push_back(v_pts[i]);
+
+      int j;
+      for(j = i+1 ; j < v_vertices.size() ; j++)
+        if(!(v_pts[i] == v_vertices[j]
+            && v_pts[i].x().is_degenerated()
+            && v_pts[i].y().is_degenerated()))
+          break; // until next different point
+
+      i = j;
+    }
+
+    return v_vertices;
   }
 }
