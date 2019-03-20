@@ -39,7 +39,7 @@ matrix:
 
 install:
   - sudo sh ./scripts/ibex/build_IbexLib.sh
-  - sudo sh ./scripts/ibex/build_IbexGeometryLib.sh
+  #- sudo sh ./scripts/ibex/build_IbexGeometryLib.sh
   #- sudo pip install breathe # for documentation
   #- export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/ibex
 
@@ -53,6 +53,5 @@ script:
   #    cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DIBEX_ROOT=${HOME}/ibex -DCMAKE_CXX_COMPILER=g++-5 -DBUILD_TESTS=ON ../ ;
   #  fi
   #- make
-  - ./build.sh tests
-  - cd make
-  - make test
+  - ./build.sh all
+  - cd make ; make test

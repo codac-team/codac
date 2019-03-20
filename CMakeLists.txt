@@ -4,32 +4,45 @@
 
 # Settings:
 
-  cmake_minimum_required(VERSION 2.8.7)
+  cmake_minimum_required(VERSION 3.0)
 
   set(CMAKE_CXX_STANDARD 11)
   set(PACKAGE_NAME       tubex-lib)
   set(PACKAGE_VERSION    "2.0")
-  set(CMAKE_MODULE_PATH  "${PROJECT_SOURCE_DIR}/scripts/cmake_modules")
+  #set(CMAKE_MODULE_PATH  "./cmake/modules")
   set(CMAKE_CXX_COMPILER g++-5)
 
   project(${PACKAGE_NAME})
 
+  get_filename_component(TUBELIB_CMAKE_DIR   "./cmake"   ABSOLUTE)
   get_filename_component(TUBELIB_BIN_DIR   "./bin"   ABSOLUTE)
   get_filename_component(TUBELIB_LIB_DIR   "./lib"   ABSOLUTE)
   get_filename_component(TUBELIB_BUILD_DIR "./make" ABSOLUTE)
   get_filename_component(TUBELIB_SRC_DIR   "./build" ABSOLUTE)
 
+
+  list(APPEND CMAKE_MODULE_PATH "${TUBELIB_CMAKE_DIR}/modules")
+
+
+  set(TUBEX_ROOT ./)
+  find_package(IbexLib REQUIRED)
+
+
+
   #set(CMAKE_CXX_FLAGS ${CMAKE_CSS_FLAGS} "-DNDEBUG") # Comment for debug
 
 # IBEX-lib package
 
-  link_directories(/usr/local/lib/ibex/3rd/)
-  include_directories(/usr/local/include/ibex/)
-  include_directories(/usr/local/include/ibex/3rd/)
+  #link_directories(/usr/local/lib/ibex/3rd/)
+  #include_directories(/usr/local/include/ibex/)
+  #include_directories(/usr/local/include/ibex/3rd/)
   #set(LIBS ${LIBS} -libex -lm -lgaol -lgdtoa -lultim) # using library Gaol
-  set(LIBS ${LIBS} -libex -lm -lprim) # using library Filib
+  #set(LIBS ${LIBS} -libex -lm -lprim) # using library Filib
 
 # Sources
+
+include_directories("${IBEX_INCLUDE_DIR}")
+
 
   include_directories(${TUBELIB_BUILD_DIR}/include/)
   add_subdirectory(src)
@@ -44,7 +57,7 @@
 
 # Examples
 
-  add_subdirectory(examples)
+  #add_subdirectory(examples)
 
 # Uninstallation
 

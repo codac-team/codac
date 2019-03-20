@@ -16,7 +16,7 @@
   file(GLOB_RECURSE HEADERS ${TUBELIB_SRC_DIR} "tubex_*.h" "vibes.h")
   file(COPY ${HEADERS} DESTINATION ${HEADERS_DIR})
   add_library(tubex-core ${SRC})
-  target_link_libraries(tubex-core ${LIBS})
+  target_link_libraries(tubex-core ${IBEX_LIBRARY})
 
 
 # Write Header tubex.h
