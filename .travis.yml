@@ -38,10 +38,28 @@ matrix:
 #  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install clang-omp; fi
 
 install:
-  - sudo sh ./scripts/ibex/build_IbexLib.sh
-  #- sudo sh ./scripts/ibex/build_IbexGeometryLib.sh
   #- sudo pip install breathe # for documentation
-  #- export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/ibex
+
+  # IBEX
+  
+  - echo 'Installing IBEX...';
+  - git clone https://github.com/ibex-team/ibex-lib
+  - cd ibex-lib
+  - ./waf configure --with-debug --interval-lib=filib
+  - sudo ./waf install
+  - cd ..
+
+  # IBEX-Geometry:
+
+  #- echo 'Installing IBEX-geometry...';
+  #- git clone https://github.com/benEnsta/ibex-geometry
+  #- cd ibex-geometry
+  #- mkdir make
+  #- cd make
+  #- cmake -DWITH_PYTHON=OFF -DBUILD_TESTS=OFF -DIBEX_INCLUDE_DIR=/usr/local/include/ibex/ -DFILIB_INCLUDE_DIR=/usr/local/include/ibex/3rd/ -DPC_IBEX_LIBRARY_DIRS=/usr/local/lib/ibex/3rd/ -DCMAKE_CXX_STANDARD=11 ..
+  #- sudo make install
+  #- cd ..
+  #- cd ..
 
 script:
   #- mkdir make
@@ -55,5 +73,5 @@ script:
   #- make
   - pwd
   - ls
-  - ./build.sh all
+  - ./build.sh all clean
   - cd make ; make test

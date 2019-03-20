@@ -2,64 +2,99 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-# Settings:
+# Settings
 
   cmake_minimum_required(VERSION 3.0)
 
-  set(CMAKE_CXX_STANDARD 11)
-  set(PACKAGE_NAME       tubex-lib)
-  set(PACKAGE_VERSION    "2.0")
-  #set(CMAKE_MODULE_PATH  "./cmake/modules")
-  set(CMAKE_CXX_COMPILER g++-5)
+  set(CMAKE_CXX_STANDARD  11)
+  set(PACKAGE_NAME        tubex-lib)
+  set(PACKAGE_VERSION     "2.0")
+  set(CMAKE_CXX_COMPILER  g++-5)
+  #set(CMAKE_CXX_FLAGS    ${CMAKE_CSS_FLAGS} "-DNDEBUG") # Comment for debug
 
   project(${PACKAGE_NAME})
 
-  get_filename_component(TUBELIB_CMAKE_DIR   "./cmake"   ABSOLUTE)
-  get_filename_component(TUBELIB_BIN_DIR   "./bin"   ABSOLUTE)
-  get_filename_component(TUBELIB_LIB_DIR   "./lib"   ABSOLUTE)
-  get_filename_component(TUBELIB_BUILD_DIR "./make" ABSOLUTE)
-  get_filename_component(TUBELIB_SRC_DIR   "./build" ABSOLUTE)
+  get_filename_component(TUBEX_ROOT          "./"         ABSOLUTE) # used for find_packages modules
+  get_filename_component(TUBELIB_CMAKE_DIR   "./cmake"    ABSOLUTE)
+  get_filename_component(TUBELIB_EXAMPLE_DIR "./examples" ABSOLUTE)
+  get_filename_component(TUBELIB_BUILD_DIR   "./make"     ABSOLUTE)
+  get_filename_component(TUBELIB_DATA_DIR    "./data"     ABSOLUTE)
 
-
+  # Location of find_package modules
   list(APPEND CMAKE_MODULE_PATH "${TUBELIB_CMAKE_DIR}/modules")
 
 
-  set(TUBEX_ROOT ./)
-  find_package(IbexLib REQUIRED)
+# Dependencies
+
+  find_package(IbexLib REQUIRED) # will set variables IBEX_INCLUDE_DIR, IBEX_LIBRARY
+  include_directories("${IBEX_INCLUDE_DIR}")
 
 
+# Tubex sources
 
-  #set(CMAKE_CXX_FLAGS ${CMAKE_CSS_FLAGS} "-DNDEBUG") # Comment for debug
-
-# IBEX-lib package
-
-  #link_directories(/usr/local/lib/ibex/3rd/)
-  #include_directories(/usr/local/include/ibex/)
-  #include_directories(/usr/local/include/ibex/3rd/)
-  #set(LIBS ${LIBS} -libex -lm -lgaol -lgdtoa -lultim) # using library Gaol
-  #set(LIBS ${LIBS} -libex -lm -lprim) # using library Filib
-
-# Sources
-
-include_directories("${IBEX_INCLUDE_DIR}")
-
-
+  add_subdirectory(src) # sources of core, robotics, solver...
   include_directories(${TUBELIB_BUILD_DIR}/include/)
-  add_subdirectory(src)
 
-# Tests
+
+# Tests (unit tests + examples)
+
   option(BUILD_TESTS "Build test" OFF)
   if(BUILD_TESTS)
     enable_testing(true)
+
+    # Unit tests
     add_subdirectory(tests)
     include(CTest)
+
+    # Basics
+    add_test(NAME basics_01
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/basics/ex_01_arithmetic/make/basics_01_arithmetic 0)
+    add_test(NAME basics_02
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/basics/ex_02_simple_ctc/make/basics_02_simple_ctc 0)
+    add_test(NAME basics_03
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/basics/ex_03_ivp_msinx/make/basics_03_ivp_msinx 0)
+    add_test(NAME basics_04
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/basics/ex_04_lissajous/make/basics_04_lissajous 0)
+    
+    # Robotics
+    add_test(NAME robotics_01
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_01_causal_chain/make/rob_01_causal_chain 0)
+    add_test(NAME robotics_02
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_02_lowcost_beacons/make/rob_02_lowcost_beacons 0)
+    add_test(NAME robotics_03
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_03_drifting_clock/make/rob_03_drifting_clock 0)
+    add_test(NAME robotics_04
+             COMMAND sh -c "rm -f ${TUBELIB_DATA_DIR}/redermor/gesmi.txt.tubex ; ${TUBELIB_EXAMPLE_DIR}/robotics/ex_04_redermor_traj/make/rob_04_redermor_traj ${TUBELIB_DATA_DIR}/redermor/gesmi.txt 0")
+    add_test(NAME robotics_04_with_serializ
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_04_redermor_traj/make/rob_04_redermor_traj ${TUBELIB_DATA_DIR}/redermor/gesmi.txt 0)
+    add_test(NAME robotics_05
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_05_loops_detec/make/rob_05_loops_detec ${TUBELIB_DATA_DIR}/redermor/gesmi.txt 0)
+
+    # Solver
+    add_test(NAME solver_01
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_01_picard/make/solver_01_picard 0)
+    add_test(NAME solver_02
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_02_xmsin_fwd/make/solver_02_xmsin_fwd 0)
+    add_test(NAME solver_03
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_03_xmsin_bwd/make/solver_03_xmsin_bwd 0)
+    add_test(NAME solver_04
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_04_bvp/make/solver_04_bvp 0)
+    # add_test(NAME solver_05
+    #          COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_05_delay/make/solver_05_delay 0)
+    # add_test(NAME solver_06
+    #          COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_06_bvp_delay/make/solver_06_bvp_delay 0)
+    add_test(NAME solver_07
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_07_integro_diff/make/solver_07_integro_diff 0)
+    # add_test(NAME solver_08
+    #          COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_08_bvp_delay_2d/make/solver_08_bvp_delay_2d 0)
+    add_test(NAME solver_09
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_09_csdp/make/solver_09_csdp 0)
+    add_test(NAME solver_10
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_10_large_initvalue/make/solver_10_large_initvalue 0)
+
   endif()
 
-# Examples
-
-  #add_subdirectory(examples)
 
 # Uninstallation
 
-  configure_file("${CMAKE_HOME_DIRECTORY}/scripts/cmake_modules/cmake_uninstall.cmake.in" "cmake_uninstall.cmake" IMMEDIATE @ONLY)
-  add_custom_target(uninstall "${CMAKE_COMMAND}" -P "cmake_uninstall.cmake")
+  # todo

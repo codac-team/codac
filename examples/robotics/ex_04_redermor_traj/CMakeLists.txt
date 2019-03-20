@@ -14,5 +14,5 @@ find_package(IbexLib REQUIRED)
 
 include_directories("${TUBEX_INCLUDE_DIR}" "${IBEX_INCLUDE_DIR}")
 
-add_executable(rob_05_loops_detection main.cpp)
-target_link_libraries(rob_05_loops_detection ${IBEX_LIBRARY} ${TUBEX_LIBRARY} ${IBEX_LIBRARY})
+add_executable(rob_04_redermor_traj main.cpp)
+target_link_libraries(rob_04_redermor_traj ${IBEX_LIBRARY} ${TUBEX_LIBRARY} ${IBEX_LIBRARY})

@@ -5,7 +5,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-int main()
+int main(int argc, char** argv)
 {
   Tube::enable_syntheses(); // faster integral computations
 
@@ -13,7 +13,7 @@ int main()
 
     TubeVector *x;
     TrajectoryVector *x_truth;
-    DataLoaderRedermor data_loader("./data/redermor/gesmi.txt");
+    DataLoaderRedermor data_loader(argv[1]);
     data_loader.load_data(x, x_truth, 0.2);
 
   /* =========== LOOPS DETECTION =========== */

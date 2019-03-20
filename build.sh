@@ -18,7 +18,7 @@ TUBEX_DIR="$(pwd)"
 
 # Cleaning before build
 
-  if [ $# -ne 0 ] && ([ $1 = "clean" ] || [ $2 = "clean" ])
+  if [ $# -ne 0 ] && ([ "$1" = "clean" ] || [ "$2" = "clean" ])
   then
     find . -name make | xargs rm -fr
   fi
@@ -30,7 +30,7 @@ TUBEX_DIR="$(pwd)"
 
   # Possibly with tests
 
-    if [ $# -ne 0 ] && ([ $1 = "tests" ] || [ $1 = "all" ])
+    if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
     then
       cmake -DBUILD_TESTS=ON ..
     else
@@ -43,7 +43,7 @@ TUBEX_DIR="$(pwd)"
 # Building examples independently
 
   cd examples
-  if [ $# -ne 0 ] && ([ $1 = "examples" ] || [ $1 = "all" ])
+  if [ $# -ne 0 ] && ([ "$1" = "examples" ] || [ "$1" = "all" ])
   then
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd "$TUBEX_DIR"/'
   fi
