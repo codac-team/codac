@@ -1,5 +1,5 @@
 # ==================================================================
-#  tubex-lib - cmake configuration file
+#  tubex-lib / tests - cmake configuration file
 # ==================================================================
 
 add_subdirectory(core)

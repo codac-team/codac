@@ -8,8 +8,10 @@
 #  sudo pip install sphinx_rtd_theme
 #  sudo apt-get install doxygen graphviz
 
-cd doc/doxygen
-doxygen Doxyfile > /dev/null
+cd doc
+make html
+cd doxygen
+doxygen Doxyfile
 cd ../../
 
 

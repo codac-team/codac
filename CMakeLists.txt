@@ -10,7 +10,7 @@
   set(PACKAGE_NAME        tubex-lib)
   set(PACKAGE_VERSION     "2.0")
   set(CMAKE_CXX_COMPILER  g++-5)
-  #set(CMAKE_CXX_FLAGS    ${CMAKE_CSS_FLAGS} "-DNDEBUG") # Comment for debug
+  #set(CMAKE_CXX_FLAGS    ${CMAKE_CSS_FLAGS} "-DNDEBUG") # comment for debug
 
   project(${PACKAGE_NAME})
 
@@ -20,19 +20,17 @@
   get_filename_component(TUBELIB_BUILD_DIR   "./make"     ABSOLUTE)
   get_filename_component(TUBELIB_DATA_DIR    "./data"     ABSOLUTE)
 
-  # Location of find_package modules
-  list(APPEND CMAKE_MODULE_PATH "${TUBELIB_CMAKE_DIR}/modules")
-
 
 # Dependencies
 
+  list(APPEND CMAKE_MODULE_PATH "${TUBELIB_CMAKE_DIR}/modules") # location of find_package modules
   find_package(IbexLib REQUIRED) # will set variables IBEX_INCLUDE_DIR, IBEX_LIBRARY
   include_directories("${IBEX_INCLUDE_DIR}")
 
 
 # Tubex sources
 
-  add_subdirectory(src) # sources of core, robotics, solver...
+  add_subdirectory(src) # sources of core, robotics, solver
   include_directories(${TUBELIB_BUILD_DIR}/include/)
 
 
