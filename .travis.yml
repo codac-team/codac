@@ -53,5 +53,7 @@ script:
   #    cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DIBEX_ROOT=${HOME}/ibex -DCMAKE_CXX_COMPILER=g++-5 -DBUILD_TESTS=ON ../ ;
   #  fi
   #- make
+  - pwd
+  - ls
   - ./build.sh all
   - cd make ; make test
