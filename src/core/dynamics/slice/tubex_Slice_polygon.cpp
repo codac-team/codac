@@ -175,7 +175,7 @@ namespace tubex
         }
       
       v_pts.push_back(Point(t.lb(), input_gate().ub()));
-      return ConvexPolygon(v_pts, false); // todo: for faster computations, set bool to true
+      return ConvexPolygon(v_pts, true);
     }
   }
 }

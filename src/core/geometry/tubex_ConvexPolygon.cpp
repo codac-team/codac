@@ -49,6 +49,7 @@ namespace tubex
     v_pts = Point::delete_redundant_points(v_pts);
     if(!convex_points)
       m_v_vertices = GrahamScan::convex_hull(v_pts);
+    m_v_vertices = Point::merge_close_points(m_v_vertices); // todo: remove this, should be useless
   }
   
   const IntervalVector ConvexPolygon::operator&(const IntervalVector& x) const

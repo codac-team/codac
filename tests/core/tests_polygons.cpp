@@ -12,6 +12,8 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
+#define VIBES_DRAWING 0
+
 TEST_CASE("Point")
 {
   SECTION("Alignements")
@@ -1080,13 +1082,15 @@ cout << "-------------" << endl;
 
     ConvexPolygon s(v_pts);
 
-    vibes::beginDrawing();
-    VIBesFig fig("test");
-    fig.set_properties(100, 100, 400, 400);
-    fig.draw_polygon(s, "red");
-    fig.draw_points(v_pts, 0.01, "blue");
-    fig.axis_limits(fig.view_box() | s.box());
-    vibes::endDrawing();
+    #if VIBES_DRAWING // drawing results
+      vibes::beginDrawing();
+      VIBesFig fig("test");
+      fig.set_properties(100, 100, 400, 400);
+      fig.draw_polygon(s, "red");
+      fig.draw_points(v_pts, 0.01, "blue");
+      fig.axis_limits(fig.view_box() | s.box());
+      vibes::endDrawing();
+    #endif
   }
 
   SECTION("Polygons, Graham scan, circle")
@@ -1252,11 +1256,13 @@ cout << "-------------" << endl;
     ConvexPolygon polyg(v_pts);
     //CHECK(polyg.vertices().size() == 7);
 
-    vibes::beginDrawing();
-    VIBesFig fig("polytest");
-    fig.set_properties(100, 1000, 400, 400);
-    fig.draw_polygon(polyg, "black[#FD9335]");
-    fig.axis_limits(fig.view_box() | polyg.box());
-    vibes::endDrawing();
+    #if VIBES_DRAWING // drawing results
+      vibes::beginDrawing();
+      VIBesFig fig("polytest");
+      fig.set_properties(100, 1000, 400, 400);
+      fig.draw_polygon(polyg, "black[#FD9335]");
+      fig.axis_limits(fig.view_box() | polyg.box());
+      vibes::endDrawing();
+    #endif
   }
 }
