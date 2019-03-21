@@ -21,12 +21,12 @@ Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
 
 .. code-block:: none
 
-  git clone https://github.com/ibex-team/ibex-lib
-  cd ibex-lib
-  ./waf configure --with-debug --interval-lib=filib
-  sudo ./waf install
+  git clone https://github.com/ibex-team/ibex-lib      # download the sources from Github
+  cd ibex-lib                                          # move to the IBEX directory
+  ./waf configure --with-debug --interval-lib=filib    # configure IBEX before installation
+  sudo ./waf install                                   # building + installing
 
-Note that the :code:`--with-debug` option will slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
+Note that the :code:`--with-debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
 
 The use of `GAOL library <http://frederic.goualard.net/#research-software>`_ (instead of Filib++) is not completely supported yet.
 
@@ -34,14 +34,14 @@ The use of `GAOL library <http://frederic.goualard.net/#research-software>`_ (in
 Tubex library
 -------------
 
-The last sources are available on `the official Tubex development repository <https://github.com/SimonRohou/tubex-lib>`_. 
+The last sources are available on `the official Tubex development repository <https://github.com/SimonRohou/tubex-lib>`_. You can download the files and compile the sources with:
 
 .. code-block:: none
 
   git clone https://github.com/SimonRohou/tubex-lib
   cd tubex-lib ; mkdir make ; cd make ; cmake .. ; make
 
-Or you can use the :code:`build.sh` script with one of the following command lines:
+To build the library, you can also use the :code:`build.sh` script with one of the following command lines:
 
 .. code-block:: none
 
