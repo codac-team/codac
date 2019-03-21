@@ -167,9 +167,9 @@ namespace tubex
        *
        * \param tubevector the const pointer to the TubeVector object for which the colors will be set
        * \param color_frgrnd a color for the current values of the tube
-       * \param color_bckgrnd a color for the previous values of the tube, before any new contraction
+       * \param color_bckgrnd a color for the previous values of the tube, before any new contraction (gray by default)
        */
-      void set_tubevector_color(const TubeVector *tubevector, const std::string& color_frgrnd, const std::string& color_bckgrnd);
+      void set_tubevector_color(const TubeVector *tubevector, const std::string& color_frgrnd, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
 
       /**
        * \brief Sets color properties for a given tube vector
