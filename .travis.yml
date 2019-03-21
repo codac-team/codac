@@ -14,7 +14,6 @@ addons:
 
     packages:
     - cmake
-    - time
     - g++-5
     #- doxygen # for documentation
     #- graphviz # for documentation
