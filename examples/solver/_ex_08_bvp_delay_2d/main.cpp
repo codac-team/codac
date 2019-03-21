@@ -37,7 +37,7 @@ class FncDelayCustom : public tubex::Fnc
     const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const
     {
       IntervalVector eval_result(x.size());
-      PeriodicFunction pf;
+      /*PeriodicFunction pf; // has been removed
 
       IntervalVector intv_1 = pf.eval_vector(t - 1., x);
       IntervalVector intv_075 = pf.eval_vector(t - 0.75, x);
@@ -50,7 +50,7 @@ class FncDelayCustom : public tubex::Fnc
       eval_result[1] = x[1](t)
         * (6. - cos(t) - (10. - sin(t)) * x[1](t)
             - (((2. + sin(t)) / 24.) * (intv_1[0] + 6.*intv_075[0] + 4.*intv_05[0] + 10.*intv_025[0] + 3*x[0](t))));
-
+      */
       return eval_result;
     }
 };
