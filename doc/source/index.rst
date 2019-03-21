@@ -4,8 +4,8 @@ Tubex library
 =============
 
 
-Introduction
-------------
+In a nutshell
+-------------
 
 Tubex is a C++ library providing tools for computations over sets of trajectories.
 It has been designed to deal with **dynamical systems** defined by **non-linear differential equations** and involving constraints such as time uncertainties or **delays**.
@@ -38,6 +38,7 @@ Documentation
 .. toctree::
    :maxdepth: 1
 
+   introduction
    installation
    basics
    how_to

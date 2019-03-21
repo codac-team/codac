@@ -28,7 +28,7 @@ Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
 
 Note that the :code:`--with-debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
 
-The use of `GAOL library <http://frederic.goualard.net/#research-software>`_ (instead of Filib++) is not completely supported yet.
+The use of `GAOL library <http://frederic.goualard.net/#research-software>`_ (instead of `Filib++ <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_) is not completely supported yet.
 
 
 Tubex library
