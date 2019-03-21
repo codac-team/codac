@@ -48,7 +48,7 @@ namespace tubex
       /**
        * \brief \f$\mathcal{C}_{\textrm{FwdBwd}}\big([\mathbf{x}](\cdot)\big)\f$
        *
-       * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)$ to be contracted
+       * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ to be contracted
        */
       void contract(TubeVector& x);
 

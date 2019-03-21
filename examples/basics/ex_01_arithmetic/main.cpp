@@ -33,8 +33,8 @@ int main()
   
     Interval domain(0,10);
     TubeVector x(domain, 6);
-
     double timestep = 0.01;
+
     x[0] = Tube(domain, timestep, // tube [x](·)
                 tubex::Function("(t-5)^2 + [-0.5,0.5]"));
     x[1] = Tube(domain, timestep, // tube [y](·)
