@@ -11,7 +11,7 @@ Tubex assumes a set of requirements you can meet with the following command line
 
 .. code-block:: none
 
-  sudo apt-get install -y cmake time pkg-config g++-5 git
+  sudo apt-get install -y cmake time g++-5 git
 
 
 IBEX library

@@ -15,9 +15,7 @@ addons:
     packages:
     - cmake
     - time
-    - pkg-config
     - g++-5
-    - libboost-dev
     #- doxygen # for documentation
     #- graphviz # for documentation
 
