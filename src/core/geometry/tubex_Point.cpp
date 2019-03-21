@@ -184,9 +184,9 @@ namespace tubex
       Interval yub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
 
       v_points.push_back(Point(xlb, ylb));
-      v_points.push_back(Point(xlb, yub));
-      v_points.push_back(Point(xub, yub));
       v_points.push_back(Point(xub, ylb));
+      v_points.push_back(Point(xub, yub));
+      v_points.push_back(Point(xlb, yub));
     }
   }
 }

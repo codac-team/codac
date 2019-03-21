@@ -12,11 +12,11 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define VIBES_DRAWING 0
+#define VIBES_DRAWING 1
 
 TEST_CASE("Tube values")
 {
-  SECTION("Test x1")
+  /*SECTION("Test x1")
   {
     Tube x = tube_test_1();
     x.set(Interval(-4,2), 14); // to test primitives pre-computation
@@ -994,7 +994,7 @@ TEST_CASE("Interpol")
       vibes::drawBox(box, vibesParams("figure", "test", "red"));
       vibes::end_drawing();
     #endif
-  }
+  }*/
 
   SECTION("Interpolation over a x (other example)")
   {

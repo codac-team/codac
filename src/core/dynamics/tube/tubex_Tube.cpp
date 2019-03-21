@@ -620,9 +620,7 @@ namespace tubex
       const Slice *slice_xdot = v.slice(intersection.lb());
       while(slice_x != NULL && slice_x->domain().lb() < intersection.ub())
       {
-        if(slice_x->codomain().intersects(y))
-          invert |= slice_x->invert(y, *slice_xdot, intersection);
-
+        invert |= slice_x->invert(y, *slice_xdot, intersection);
         slice_x = slice_x->next_slice();
         slice_xdot = slice_xdot->next_slice();
       }

@@ -19,8 +19,6 @@
 
 namespace tubex
 {
-  // Note: clockwise polygon
-  
   class Polygon
   {
     public:

@@ -26,10 +26,10 @@ namespace tubex
   ConvexPolygon::ConvexPolygon(const IntervalVector& box) : Polygon(box)
   {
     assert(box.size() == 2);
-    m_v_vertices = GrahamScan::convex_hull(m_v_vertices);
+    //m_v_vertices = GrahamScan::convex_hull(m_v_vertices);
   }
   
-  ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points) : Polygon(v_points)
+  ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points, bool convex_points) : Polygon(v_points)
   {
     vector<Point> v_pts;
     for(int i = 0 ; i < m_v_vertices.size() ; i++) // uncertain points are cut
@@ -47,17 +47,20 @@ namespace tubex
     }
 
     v_pts = Point::delete_redundant_points(v_pts);
-    m_v_vertices = GrahamScan::convex_hull(v_pts);
+    if(!convex_points)
+      m_v_vertices = GrahamScan::convex_hull(v_pts);
   }
   
   const IntervalVector ConvexPolygon::operator&(const IntervalVector& x) const
   {
-    // todo: keep this?
+    // todo: keep this? is it faster than the generic one?
 
     assert(x.size() == 2);
 
     if(does_not_exist())
       return IntervalVector(2, Interval::EMPTY_SET);
+
+    //return intersect(*this, x).box();
 
     IntervalVector reduced_x = x & box();
     IntervalVector inter(2, Interval::EMPTY_SET);
@@ -70,7 +73,7 @@ namespace tubex
     push_points(reduced_x, v_x_vertices);
     for(int i = 0 ; i < v_x_vertices.size() ; i++)
     {
-      if(this->encloses(v_x_vertices[i]) != NO)
+      if(encloses(v_x_vertices[i]) != NO)
         inter |= v_x_vertices[i].box();
     }
 
@@ -123,10 +126,8 @@ namespace tubex
     // Merge equivalent points
 
       vector<Point> merged_points = Point::merge_close_points(v_pts);
-      merged_points = GrahamScan::convex_hull(merged_points);
+      //merged_points = GrahamScan::convex_hull(merged_points);
       //merged_points = Point::delete_redundant_points(merged_points); // todo: keep this?
-
-      // todo: two convex computations are performed: do only one
 
     return ConvexPolygon(merged_points);
   }
@@ -134,7 +135,7 @@ namespace tubex
   const ConvexPolygon ConvexPolygon::intersect(const ConvexPolygon& p, const ibex::IntervalVector& x)
   {
     assert(x.size() == 2);
-    return ConvexPolygon(intersect(p, ConvexPolygon(x)).vertices());
+    return intersect(p, ConvexPolygon(x));
   }
 
   void ConvexPolygon::simplify()

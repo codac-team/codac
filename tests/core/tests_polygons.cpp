@@ -60,9 +60,9 @@ TEST_CASE("Polygon")
     CHECK(p.nb_vertices() == 4);
     CHECK(p.box() == iv);
     CHECK(p[0] == Point(-1.,10.));
-    CHECK(p[1] == Point(-1.,11.));
+    CHECK(p[1] == Point(5.,10.));
     CHECK(p[2] == Point(5.,11.));
-    CHECK(p[3] == Point(5.,10.));
+    CHECK(p[3] == Point(-1.,11.));
   }
 
   SECTION("Polygon from IntervalVector (unbounded case)")
@@ -72,9 +72,9 @@ TEST_CASE("Polygon")
     Polygon p(iv1);
     
     CHECK(p[0] == Point(-1.,Interval::ALL_REALS));
-    CHECK(p[1] == Point(-1.,Interval::ALL_REALS));
+    CHECK(p[1] == Point(5.,Interval::ALL_REALS));
     CHECK(p[2] == Point(5.,Interval::ALL_REALS));
-    CHECK(p[3] == Point(5.,Interval::ALL_REALS));
+    CHECK(p[3] == Point(-1.,Interval::ALL_REALS));
   }
 
   SECTION("Polygon from points (box shape)")
