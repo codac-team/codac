@@ -111,7 +111,7 @@ namespace tubex
 
     protected:
 
-      bool m_propagation_enabled = true;
+      bool m_propagation_enabled = true; //!< if `true`, a complete temporal propagation will be performed
   };
 }
 

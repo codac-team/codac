@@ -72,8 +72,8 @@ namespace tubex
 
     protected:
 
-      bool m_preserve_slicing = false;
-      bool m_fast_mode = false;
+      bool m_preserve_slicing = false; //!< if `true`, tube's slicing will not be affected by the contractor
+      bool m_fast_mode = false; //!< some contractors may propose more pessimistic but faster execution modes
   };
 }
 
