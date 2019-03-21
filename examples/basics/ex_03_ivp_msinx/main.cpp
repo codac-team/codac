@@ -1,28 +1,23 @@
-/* ============================================================================
- *  tubex-lib - Guaranteed integration example: xdot = -sin(x)
+/** 
+ *  tubex-lib - Examples
+ *  Guaranteed integration: xdot = -sin(x)
+ * ----------------------------------------------------------------------------
  *
- *  Example from the paper "Guaranteed Computation of Robot Trajectories"
- *  Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
+ *  \brief      Here we consider the following initial value problem:
+ *                xdot = -sin(x)
+ *                x0   = 1
+ *            
+ *              This code will show successive contractions of tube [x](·): first five
+ *              computations and final result when reaching a fixed point. Light gray
+ *              areas represent the tube part that has been contracted during
+ *              the contraction step.
  *
- *  Here we consider the following initial value problem:
- *    xdot = -sin(x)
- *    x0   = 1
- *
- *  This code will show successive contractions of tube [x](·): first five
- *  computations and final result when reaching a fix point. Light gray
- *  areas represent the tube part that has been contracted during
- *  the contraction step.
- *
- *  Note: example replaced by the Lissajous example in the paper
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
- *  License   : This program is distributed under the terms of
+ *  \date       2016
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
- *
- *  Author(s) : Simon Rohou
- *  Bug fixes : -
- *  Created   : 2016
- * ---------------------------------------------------------------------------- */
+ */
 
 #include "tubex.h"
 

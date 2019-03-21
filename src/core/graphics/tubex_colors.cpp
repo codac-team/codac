@@ -1,14 +1,12 @@
-/* ============================================================================
- *  tubex-lib - Colors functions
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
- *  License   : This program is distributed under the terms of
+/** 
+ *  Color features
+ * ----------------------------------------------------------------------------
+ *  \date       2016
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
- *
- *  Author(s) : Simon Rohou
- *  Bug fixes : -
- *  Created   : 2015
- * ---------------------------------------------------------------------------- */
+ */
 
 #include <math.h>
 #include "tubex_colors.h"

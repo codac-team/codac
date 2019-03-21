@@ -1,14 +1,12 @@
-/* ============================================================================
- *  tubex-lib - Set class
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
- *  License   : This program is distributed under the terms of
+/** 
+ *  Set class
+ * ----------------------------------------------------------------------------
+ *  \date       2015
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
- *
- *  Author(s) : Simon Rohou
- *  Bug fixes : -
- *  Created   : 2018
- * ---------------------------------------------------------------------------- */
+ */
 
 #include <iostream>
 #include "tubex_Set.h"

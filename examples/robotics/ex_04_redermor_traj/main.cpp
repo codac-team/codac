@@ -1,3 +1,15 @@
+/** 
+ *  tubex-lib - Examples
+ *  Localization of the Autonomous Underwater Vehicle (AUV) Redermor
+ * ----------------------------------------------------------------------------
+ *
+ *  \date       2016
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
+
 #include "tubex.h"
 #include "tubex-robotics.h"
 

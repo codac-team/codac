@@ -1,25 +1,17 @@
-/* ============================================================================
- *  tubex-lib - Arithmetic on tubes: simple example
+/** 
+ *  tubex-lib - Examples
+ *  Arithmetic on tubes: simple example
+ * ----------------------------------------------------------------------------
  *
- *  Example from the paper "Guaranteed Computation of Robot Trajectories"
- *  Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
+ *  \brief      Example from the paper "Guaranteed Computation of Robot Trajectories"
+ *              Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
  *
- *  Here we consider the following tubes:
- *    [x](·)
- *    [y](·)
- *    [a](·) = [x](·) + [y](·)
- *    [b](·) = sin([x](·))
- *    [c](·) = integ([x](tau)dtau)
- *    [d](·) = |[y](·)|
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
- *  License   : This program is distributed under the terms of
+ *  \date       2016
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
- *
- *  Author(s) : Simon Rohou
- *  Bug fixes : -
- *  Created   : 2016
- * ---------------------------------------------------------------------------- */
+ */
 
 #include "tubex.h"
 

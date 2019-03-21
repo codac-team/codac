@@ -1,14 +1,12 @@
-/* ============================================================================
- *  tubex-lib - Slice class (operators)
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
- *  License   : This program is distributed under the terms of
+/** 
+ *  Slice class (polygons)
+ * ----------------------------------------------------------------------------
+ *  \date       2018
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
- *
- *  Author(s) : Simon Rohou
- *  Bug fixes : -
- *  Created   : 2015
- * ---------------------------------------------------------------------------- */
+ */
 
 #include "tubex_Slice.h"
 

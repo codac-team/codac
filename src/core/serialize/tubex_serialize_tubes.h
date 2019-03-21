@@ -1,15 +1,13 @@
 /** 
- *  @file
- *  Serialization tools
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
- *  License   : This program is distributed under the terms of
+ *  \file
+ *  Serialization tools (tubes)
+ * ----------------------------------------------------------------------------
+ *  \date       2016
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
- *
- *  Author(s) : Simon Rohou
- *  Bug fixes : -
- *  Created   : 2017
- * ---------------------------------------------------------------------------- */
+ */
 
 #ifndef __TUBEX_SERIALIZ_TUBES_H__
 #define __TUBEX_SERIALIZ_TUBES_H__

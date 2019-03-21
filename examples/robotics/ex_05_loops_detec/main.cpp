@@ -1,3 +1,22 @@
+/** 
+ *  tubex-lib - Examples
+ *  Reliable loop detection of a mobile robot
+ * ----------------------------------------------------------------------------
+ *
+ *  \brief      Example from the papers:
+ *              "Proving the existence of loops in robot trajectories"
+ *              Simon Rohou, Peter Franek, Clément Aubry, Luc Jaulin
+ *              and
+ *              "Loop detection of mobile robots using interval analysis"
+ *              Clément Aubry, Rozenn Desmare, Luc Jaulin
+ *
+ *  \date       2016
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
+
 #include "tubex.h"
 #include "tubex-robotics.h"
 

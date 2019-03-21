@@ -1,17 +1,17 @@
-/* ============================================================================
- *  tubex-lib - Drifting clock example
+/** 
+ *  tubex-lib - Examples
+ *  Driftint clock
+ * ----------------------------------------------------------------------------
  *
- *  Example from the paper "Reliable Non-Linear State Estimation Involving Time Uncertainties"
- *  Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
- * ============================================================================
- *  Copyright : Copyright 2017 Simon Rohou
- *  License   : This program is distributed under the terms of
+ *  \brief      Example from the paper "Reliable non-linear state estimation involving time uncertainties"
+ *              Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
+ *
+ *  \date       2016
+ *  \author     Simon Rohou
+ *  \copyright  Copyright 2019 Simon Rohou
+ *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
- *
- *  Author(s) : Simon Rohou
- *  Bug fixes : -
- *  Created   : 2016
- * ---------------------------------------------------------------------------- */
+ */
 
 #include "tubex.h"
 #include "tubex-robotics.h"
