@@ -8,12 +8,12 @@ To write a program with Tubex, use the following canvas:
 
 .. code-block:: c++
 
-  #include "Tube.h"
+  #include "tubex.h"
 
   using namespace std;
   using namespace tubex;
 
-  int main(int argc, char *argv[])
+  int main()
   {
     // write your own code here
 

@@ -28,7 +28,7 @@ if :math:`\forall t,\mathbf{~x}(t)\in[\mathbf{x}](t)`.
 
   float timestep = 0.1;
   Interval domain(0,10);
-  Tube x(domain, timestep, Function("t", "(t-5)^2 + [-0.5,0.5]"));
+  Tube x(domain, timestep, Function("(t-5)^2 + [-0.5,0.5]"));
 
 
 Arithmetics on tubes
@@ -192,63 +192,63 @@ with the constraint :math:`a(\cdot)=x(\cdot)+y(\cdot)` is:
 In this way, information on either :math:`[a](\cdot)`, :math:`[x](\cdot)` or
 :math:`[y](\cdot)` can be propagated to the other tubes. 
 
-**Code example:**
+.. **Code example:**
+.. 
+.. .. code-block:: c++
+.. 
+..   // Example for the minimal contractor C+ presented hereinbefore:
+..   Tube::contract(a, x, y,
+..                  Function("a", "x", "y", "a - (x + y)"));
+.. 
+..   // Contracting the tubes [x](t), [y](t), [d](t),
+..   // according a distance constraint:
+..   Tube::contract(x, y, d,
+..                  Function("x", "y", "d", "d - sqrt(x^2+y^2)"));
 
-.. code-block:: c++
+.. Implementation
+.. --------------
+.. 
+.. There are several ways to implement a tube.
+.. Our choice is to build it with a set of boxes representing slices
+.. of identical width. :numref:`tubeslices` illustrates such
+.. implementation with a list of boxes, while keeping enclosed an unknown
+.. trajectory :math:`x^{*}(t):\mathbb{R}\rightarrow\mathbb{R}`.
+.. More precisely, a tube :math:`[\mathbf{x}](t)`, with
+.. a sampling time :math:`\delta>0`, is a box-valued function which is constant
+.. for all :math:`t` inside intervals :math:`[k\delta,k\delta+\delta]`, :math:`k\in\mathbb{Z}`.
+.. The box :math:`[k\delta,k\delta+\delta]\times\left[\mathbf{x}\right]\left(t_{k}\right)`,
+.. with :math:`t_{k}\in[k\delta,k\delta+\delta]` is called the :math:`k`-th
+.. *slice* of the tube :math:`[\mathbf{x}](\cdot)`
+.. and is denoted by :math:`[\mathbf{x}](k)`. The resulting
+.. approximation of a tube encloses :math:`[\mathbf{x}^{-}(\cdot),\mathbf{x}^{+}(\cdot)]`
+.. inside an interval of step functions :math:`[\underline{\mathbf{x}^{-}}(\cdot),\overline{\mathbf{x}^{+}}(\cdot)]`
+.. such that:
+.. 
+.. .. math::
+.. 
+..   \forall t,~\underline{\mathbf{x}^{-}}(t)\leqslant\mathbf{x}^{-}(t)\leqslant\mathbf{x}^{+}(t)\leqslant\overline{\mathbf{x}^{+}}(t).
 
-  // Example for the minimal contractor C+ presented hereinbefore:
-  Tube::contract(a, x, y,
-                 Function("a", "x", "y", "a - (x + y)"));
-
-  // Contracting the tubes [x](t), [y](t), [d](t),
-  // according a distance constraint:
-  Tube::contract(x, y, d,
-                 Function("x", "y", "d", "d - sqrt(x^2+y^2)"));
-
-Implementation
---------------
-
-There are several ways to implement a tube.
-Our choice is to build it with a set of boxes representing slices
-of identical width. :numref:`tubeslices` illustrates such
-implementation with a list of boxes, while keeping enclosed an unknown
-trajectory :math:`x^{*}(t):\mathbb{R}\rightarrow\mathbb{R}`.
-More precisely, a tube :math:`[\mathbf{x}](t)`, with
-a sampling time :math:`\delta>0`, is a box-valued function which is constant
-for all :math:`t` inside intervals :math:`[k\delta,k\delta+\delta]`, :math:`k\in\mathbb{Z}`.
-The box :math:`[k\delta,k\delta+\delta]\times\left[\mathbf{x}\right]\left(t_{k}\right)`,
-with :math:`t_{k}\in[k\delta,k\delta+\delta]` is called the :math:`k`-th
-*slice* of the tube :math:`[\mathbf{x}](\cdot)`
-and is denoted by :math:`[\mathbf{x}](k)`. The resulting
-approximation of a tube encloses :math:`[\mathbf{x}^{-}(\cdot),\mathbf{x}^{+}(\cdot)]`
-inside an interval of step functions :math:`[\underline{\mathbf{x}^{-}}(\cdot),\overline{\mathbf{x}^{+}}(\cdot)]`
-such that:
-
-.. math::
-
-  \forall t,~\underline{\mathbf{x}^{-}}(t)\leqslant\mathbf{x}^{-}(t)\leqslant\mathbf{x}^{+}(t)\leqslant\overline{\mathbf{x}^{+}}(t).
-
-Such implementation then takes rigorously into account floating point
-precision when building a tube, thanks to reliable numerical libraries
-such as `filib <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_.
-
-Further computations involving :math:`[\mathbf{x}](\cdot)` will be based
-on its slices, thus giving an outer approximation of the solution
-set. For instance, the lower bound of the integral of a tube, defined
-in Equation :eq:`eqintegtube`, is simply computed as
-the signed area of the region in the :math:`tx`-plane that is bounded by
-the graph of :math:`\underline{\mathbf{x}^{-}}(t)` and the :math:`t`-axis, as pictured
-in :numref:`tubelbintegralslices`. The lower slice width
-:math:`\delta`, the higher the precision of the approximation.
-
-.. _tubelbintegralslices:
-.. figure:: ../img/tube_lb_integral_slices.png
-
-  Outer approximation of the lower bound of :math:`\int_{a}^{b}[x](\tau)d\tau`.
-
-*Note:* this data structure stands on a binary tree, thus improving several computations such as tube evaluations. For instance, the bounded value :math:`[y]=[x]([t])` requires an access to each slice over the interval :math:`[t]`. With a tree structure, information is stored within high level nodes, thus preventing from a systematic evaluation of each slice over :math:`[t]`. See :numref:`tubetreeanimation`.
-
-.. _tubetreeanimation:
-.. figure:: ../img/tube_tree_animation.gif
-
-  Illustration of the binary tree structure, implemented in this library.
+.. Such implementation then takes rigorously into account floating point
+.. precision when building a tube, thanks to reliable numerical libraries
+.. such as `filib <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_.
+.. 
+.. Further computations involving :math:`[\mathbf{x}](\cdot)` will be based
+.. on its slices, thus giving an outer approximation of the solution
+.. set. For instance, the lower bound of the integral of a tube, defined
+.. in Equation :eq:`eqintegtube`, is simply computed as
+.. the signed area of the region in the :math:`tx`-plane that is bounded by
+.. the graph of :math:`\underline{\mathbf{x}^{-}}(t)` and the :math:`t`-axis, as pictured
+.. in :numref:`tubelbintegralslices`. The lower slice width
+.. :math:`\delta`, the higher the precision of the approximation.
+.. 
+.. .. _tubelbintegralslices:
+.. .. figure:: ../img/tube_lb_integral_slices.png
+.. 
+..   Outer approximation of the lower bound of :math:`\int_{a}^{b}[x](\tau)d\tau`.
+.. 
+.. *Note:* this data structure stands on a binary tree, thus improving several computations such as tube evaluations. For instance, the bounded value :math:`[y]=[x]([t])` requires an access to each slice over the interval :math:`[t]`. With a tree structure, information is stored within high level nodes, thus preventing from a systematic evaluation of each slice over :math:`[t]`. See :numref:`tubetreeanimation`.
+.. 
+.. .. _tubetreeanimation:
+.. .. figure:: ../img/tube_tree_animation.gif
+.. 
+..   Illustration of the binary tree structure, implemented in this library.
