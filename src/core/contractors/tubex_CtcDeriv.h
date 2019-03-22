@@ -55,8 +55,6 @@ namespace tubex
        */
       void contract(TubeVector& x, const TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD);
 
-    protected:
-
       /**
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big(\llbracket\mathbf{x}\rrbracket(\cdot),\llbracket\mathbf{v}\rrbracket(\cdot)\big)\f$:
        *        contracts the slice \f$\llbracket\mathbf{x}\rrbracket(\cdot)\f$ with respect to its derivative \f$\llbracket\mathbf{v}\rrbracket(\cdot)\f$.
@@ -67,6 +65,8 @@ namespace tubex
        *                (forward or backward in time, both ways by default)
        */
       void contract(Slice& x, const Slice& v, TPropagation t_propa = FORWARD | BACKWARD);
+
+    protected:
 
       /**
        * \brief Contracts input and ouput gates of a slice regarding its derivative set
