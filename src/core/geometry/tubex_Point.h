@@ -48,6 +48,7 @@ namespace tubex
   };
 
   const Point operator|(const Point& p1, const Point& p2);
+  const Point operator-(const Point& p1, const Point& p2);
   void push_points(const ibex::IntervalVector& box, std::vector<Point>& v_points);
 }
 

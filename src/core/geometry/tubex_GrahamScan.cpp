@@ -45,16 +45,17 @@ namespace tubex
     return pow(p1.x() - p2.x(), 2) + pow(p1.y() - p2.y(), 2);
   }
 
-  OrientationInterval GrahamScan::orientation(const Point& a, const Point& b, const Point& c)
+  OrientationInterval GrahamScan::orientation(const Point& p0, const Point& p1, const Point& p2)
   {
-    assert(!a.does_not_exist());
-    assert(!b.does_not_exist());
-    assert(!c.does_not_exist());
+    assert(!p0.does_not_exist());
+    assert(!p1.does_not_exist());
+    assert(!p2.does_not_exist());
 
-    const Interval val = (b.y()-a.y()) * (c.x()-b.x()) - (b.x()-a.x()) * (c.y()-b.y());
+    const Point pa = p1 - p0, pb = p2 - p0;
+    const Interval cross_prod = pa.x()*pb.y() - pa.y()*pb.x();
 
-    if(val.contains(0.)) return UNDEFINED; // possibly colinear
-    return (val.lb() > 0.) ? CLOCKWISE : COUNTERCLOCKWISE;
+    if(cross_prod.contains(0.)) return UNDEFINED; // possibly colinear
+    return (cross_prod.lb() > 0.) ? COUNTERCLOCKWISE : CLOCKWISE;
   }
 
   const vector<Point> GrahamScan::convex_hull(const vector<Point>& v_points)

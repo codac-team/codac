@@ -171,6 +171,11 @@ namespace tubex
   {
     return Point(p1.x() | p2.x(), p1.y() | p2.y());
   }
+  
+  const Point operator-(const Point& p1, const Point& p2)
+  {
+    return Point(p1.m_x - p2.m_x, p1.m_y - p2.m_y);
+  }
 
   void push_points(const IntervalVector& box, vector<Point>& v_points)
   {

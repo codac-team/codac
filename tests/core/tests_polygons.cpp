@@ -12,7 +12,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define VIBES_DRAWING 0
+#define VIBES_DRAWING 1
 
 TEST_CASE("Point")
 {
@@ -1082,15 +1082,15 @@ cout << "-------------" << endl;
 
     ConvexPolygon s(v_pts);
 
-    #if VIBES_DRAWING // drawing results
-      vibes::beginDrawing();
-      VIBesFig fig("test");
-      fig.set_properties(100, 100, 400, 400);
-      fig.draw_polygon(s, "red");
-      fig.draw_points(v_pts, 0.01, "blue");
-      fig.axis_limits(fig.view_box() | s.box());
-      vibes::endDrawing();
-    #endif
+    //#if VIBES_DRAWING // drawing results
+    //  vibes::beginDrawing();
+    //  VIBesFig fig("test");
+    //  fig.set_properties(100, 100, 400, 400);
+    //  fig.draw_polygon(s, "red");
+    //  fig.draw_points(v_pts, 0.01, "blue");
+    //  fig.axis_limits(fig.view_box() | s.box());
+    //  vibes::endDrawing();
+    //#endif
   }
 
   SECTION("Polygons, Graham scan, circle")
@@ -1218,19 +1218,45 @@ cout << "-------------" << endl;
 
     Point p1(-4041.935273669676917052129283547401428223,-5492.667604696881426207255572080612182617);
     Point p2(9206.843580880462468485347926616668701172,6551.674997467660432448610663414001464844);
-    Point p3(-4041.935273669676917052129283547401428223+0.,-5492.667604696874150249641388654708862305+0.);
+    Point p3(-4041.935273669676917052129283547401428223,-5492.667604696874150249641388654708862305);
 
+    CHECK(p1.x() == p3.x());
     CHECK(Point::aligned(p1, p2, p3) == NO);
 
+    // 0
     v_pts.push_back(p1);
+    // 1
     v_pts.push_back(Point(-2103.177277725693329557543620467185974121,-5492.667604696881426207255572080612182617));
+    // 2
     v_pts.push_back(Point(5720.923292917194885376375168561935424805,-975.4210340695084369144751690328121185303));
+    // 3
     v_pts.push_back(Point(9206.843580880462468485347926616668701172,5062.370015818080901226494461297988891602));
+    // 4
     v_pts.push_back(Point(52.79381299725321952109879930503666400909,5062.370015818080901226494461297988891602));
+    // 5
     v_pts.push_back(p3);
+    // 6
     v_pts.push_back(p2);
+    // 7
     v_pts.push_back(Point(52.79381299725321952109879930503666400909,6551.674997467660432448610663414001464844));
+    // 8
     v_pts.push_back(Point(-4041.935273669676917052129283547401428223,-540.603823869623056452837772667407989502));
+
+    vector<Point> v_save(v_pts);
+
+    vector<Point> v_pts_bis;
+    v_pts_bis.push_back(v_pts[4]);
+    v_pts_bis.push_back(v_pts[6]);
+    v_pts_bis.push_back(v_pts[3]);
+    v_pts_bis.push_back(p1);
+    v_pts_bis.push_back(p3);
+    sort(v_pts_bis.begin(), v_pts_bis.end(), PointsSorter(p1));
+
+    CHECK(v_pts_bis[0] == p1);
+    CHECK(v_pts_bis[1] == v_pts[3]);
+    CHECK(v_pts_bis[2] == v_pts[6]);
+    CHECK(v_pts_bis[3] == v_pts[4]);
+    CHECK(v_pts_bis[4] == p3);
 
     // Find the bottommost point
 
@@ -1249,7 +1275,22 @@ cout << "-------------" << endl;
         }
       }
 
-    //CHECK(p1 == v_pts[id_min]);
+    CHECK(p1 == v_pts[id_min]);
+
+    sort(v_pts.begin(), v_pts.end(), PointsSorter(p1));
+
+    CHECK(GrahamScan::orientation(p1, v_save[2], v_save[3]) == COUNTERCLOCKWISE);
+    CHECK(GrahamScan::orientation(p1, v_save[6], v_save[5]) == COUNTERCLOCKWISE);
+
+    CHECK(v_pts[0] == p1);
+    CHECK(v_pts[1] == v_save[1]);
+    CHECK(v_pts[2] == v_save[2]);
+    CHECK(v_pts[3] == v_save[3]);
+    CHECK(v_pts[4] == v_save[6]);
+    CHECK(v_pts[5] == v_save[4]);
+    CHECK(v_pts[6] == v_save[7]);
+    CHECK(v_pts[7] == v_save[5]);
+    CHECK(v_pts[8] == v_save[8]);
 
     Polygon nc_polyg(v_pts);
     //CHECK(nc_polyg.vertices().size() == 8);
@@ -1259,7 +1300,7 @@ cout << "-------------" << endl;
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();
       VIBesFig fig("polytest");
-      fig.set_properties(100, 1000, 400, 400);
+      fig.set_properties(100+1000, 1000+500, 400, 400);
       fig.draw_polygon(polyg, "black[#FD9335]");
       fig.axis_limits(fig.view_box() | polyg.box());
       vibes::endDrawing();

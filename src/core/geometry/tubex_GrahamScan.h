@@ -39,7 +39,7 @@ namespace tubex
       static const ibex::Interval dist(const Point& p1, const Point& p2);
 
       // To find orientation of ordered triplet (p, q, r).
-      static OrientationInterval orientation(const Point& a, const Point& b, const Point& c);
+      static OrientationInterval orientation(const Point& p0, const Point& p1, const Point& p2);
 
     protected:
   };
