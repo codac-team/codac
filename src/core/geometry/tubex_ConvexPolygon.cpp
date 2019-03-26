@@ -23,6 +23,11 @@ namespace tubex
 
   }
 
+  ConvexPolygon::ConvexPolygon(const ConvexPolygon& p) : Polygon(p.vertices())
+  {
+
+  }
+
   ConvexPolygon::ConvexPolygon(const IntervalVector& box) : Polygon(box)
   {
     assert(box.size() == 2);
@@ -33,18 +38,7 @@ namespace tubex
   {
     vector<Point> v_pts;
     for(int i = 0 ; i < m_v_vertices.size() ; i++) // uncertain points are cut
-    {
-      /*if(m_v_vertices[i].x().is_degenerated() || m_v_vertices[i].y().is_degenerated())
-      {
-        v_pts.push_back(Point(m_v_vertices[i].x().lb(), m_v_vertices[i].y().lb()));
-        v_pts.push_back(Point(m_v_vertices[i].x().ub(), m_v_vertices[i].y().lb()));
-        v_pts.push_back(Point(m_v_vertices[i].x().ub(), m_v_vertices[i].y().ub()));
-        v_pts.push_back(Point(m_v_vertices[i].x().lb(), m_v_vertices[i].y().ub()));
-      }
-
-      else*/
-        v_pts.push_back(m_v_vertices[i]);
-    }
+      v_pts.push_back(m_v_vertices[i]);
 
     v_pts = Point::delete_redundant_points(v_pts);
     if(!convex_points)
@@ -139,15 +133,18 @@ namespace tubex
     return intersect(p, ConvexPolygon(x));
   }
 
-  void ConvexPolygon::simplify()
+  void ConvexPolygon::simplify(float n)
   {
+    if(n == 0.)
+      return;
+
     vector<Point> v_pts = m_v_vertices;
     Point c = Point::center(v_pts);
 
     ConvexPolygon p(v_pts);
     ConvexPolygon pf(box());
 
-    double da = M_PI/6.;
+    double da = M_PI/n;
     for(double a = da ; a < M_PI ; a+=da)
     {
       ConvexPolygon p1 = p;
@@ -161,6 +158,7 @@ namespace tubex
       pf = ConvexPolygon::intersect(pf, p2);
     }
 
-    m_v_vertices = GrahamScan::convex_hull(pf.vertices());
+    if(pf.vertices().size() < m_v_vertices.size())
+      m_v_vertices = ConvexPolygon(pf.vertices()).vertices();
   }
 }

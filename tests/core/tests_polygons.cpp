@@ -12,7 +12,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define VIBES_DRAWING 1
+#define VIBES_DRAWING 0
 
 TEST_CASE("Point")
 {
@@ -1293,9 +1293,9 @@ cout << "-------------" << endl;
     CHECK(v_pts[8] == v_save[8]);
 
     Polygon nc_polyg(v_pts);
-    //CHECK(nc_polyg.vertices().size() == 8);
+    CHECK(nc_polyg.vertices().size() == 9);
     ConvexPolygon polyg(v_pts);
-    //CHECK(polyg.vertices().size() == 7);
+    CHECK(polyg.vertices().size() == 7);
 
     #if VIBES_DRAWING // drawing results
       vibes::beginDrawing();

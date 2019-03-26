@@ -173,8 +173,8 @@ namespace tubex
   bool PointsSorter::operator()(const Point& p1, const Point& p2)
   {
     // Uncertain points should be divided by GrahamScan
-    assert(p1.x().is_degenerated() && p1.y().is_degenerated());
-    assert(p2.x().is_degenerated() && p2.y().is_degenerated());
+    //assert(p1.x().is_degenerated() && p1.y().is_degenerated());
+    //assert(p2.x().is_degenerated() && p2.y().is_degenerated());
 
     // Find orientation
     OrientationInterval o = GrahamScan::orientation(m_p0, p1, p2);

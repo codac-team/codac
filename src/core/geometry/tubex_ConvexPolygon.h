@@ -21,6 +21,7 @@ namespace tubex
     public:
 
       ConvexPolygon();
+      ConvexPolygon(const ConvexPolygon& p);
       ConvexPolygon(const ibex::IntervalVector& box);
       ConvexPolygon(const std::vector<Point>& v_points, bool convex_points = false);
 
@@ -28,7 +29,7 @@ namespace tubex
       static const ConvexPolygon intersect(const ConvexPolygon& p, const ibex::IntervalVector& x);
       static const ConvexPolygon intersect(const ConvexPolygon& p1, const ConvexPolygon& p2);
 
-      void simplify();
+      void simplify(float n = 6.);
   };
 }
 
