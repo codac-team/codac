@@ -49,8 +49,30 @@ namespace tubex
     typename map<const Trajectory*,FigTrajParams>::const_iterator it_trajs;
     for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
       m_view_box |= draw_trajectory(it_trajs->first);
+
+    // Cursor is drawn over the tubes
+    vibes::clearGroup(name(), "cursor");
+    vibes::newGroup("cursor", "#B13200", vibesParams("figure", name()));
+    if(m_display_cursor)
+    {
+      vector<double> v_x, v_y;
+      v_x.push_back(m_cursor); v_y.push_back(m_view_box[1].lb());
+      v_x.push_back(m_cursor); v_y.push_back(m_view_box[1].ub());
+      draw_line(v_x, v_y, vibesParams("figure", name(), "group", "cursor"));
+    }
     
     axis_limits(m_view_box);
+  }
+
+  void VIBesFigTube::set_cursor(double t)
+  {
+    m_cursor = t;
+    show_cursor(true);
+  }
+
+  void VIBesFigTube::show_cursor(bool display)
+  {
+    m_display_cursor = display;
   }
 
   void VIBesFigTube::add_tube(const Tube *tube, const string& name,

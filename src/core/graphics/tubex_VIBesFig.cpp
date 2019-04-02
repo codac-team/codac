@@ -19,7 +19,7 @@ namespace tubex
     : Figure(fig_name)
   {
     vibes::newFigure(m_name);
-    vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));
+    vibes::newGroup("transparent_box", "#ffffff00", vibesParams("figure", m_name));
   }
 
   VIBesFig::~VIBesFig()

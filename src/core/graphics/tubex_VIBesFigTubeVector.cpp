@@ -72,6 +72,18 @@ namespace tubex
       m_v_figs[i]->show(detail_slices);
   }
 
+  void VIBesFigTubeVector::set_cursor(double t)
+  {
+    for(int i = 0 ; i < subfigs_number() ; i++)
+      m_v_figs[i]->set_cursor(t);
+  }
+
+  void VIBesFigTubeVector::show_cursor(bool display)
+  {
+    for(int i = 0 ; i < subfigs_number() ; i++)
+      m_v_figs[i]->show_cursor(display);
+  }
+
   void VIBesFigTubeVector::draw_box(const Interval& domain, const IntervalVector& box, const vibes::Params& params)
   {
     if(m_n != 0)

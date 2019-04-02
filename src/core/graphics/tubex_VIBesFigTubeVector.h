@@ -104,6 +104,20 @@ namespace tubex
        */
       void show(bool detail_slices = false);
 
+      /**
+       * \brief Set the position of the temporal cursor of this figure
+       *
+       * \param t position on the temporal domain
+       */
+      void set_cursor(double t);
+
+      /**
+       * \brief Displays the cursor on this figure
+       *
+       * \param display parameter (`true` by default)
+       */
+      void show_cursor(bool display = true);
+
       /// @}
       /// \name Simple drawings
       /// @{

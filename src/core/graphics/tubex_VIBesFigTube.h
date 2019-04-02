@@ -78,6 +78,20 @@ namespace tubex
        */
       void show(bool detail_slices);
 
+      /**
+       * \brief Set the position of the temporal cursor of this figure
+       *
+       * \param t position on the temporal domain
+       */
+      void set_cursor(double t);
+
+      /**
+       * \brief Displays the cursor on this figure
+       *
+       * \param display parameter (`true` by default)
+       */
+      void show_cursor(bool display = true);
+
       /// @}
       /// \name Handling tubes
       /// @{
@@ -275,6 +289,8 @@ namespace tubex
 
       std::map<const Tube*,FigTubeParams> m_map_tubes; //!< map of Tube objects to be displayed, together with parameters
       std::map<const Trajectory*,FigTrajParams> m_map_trajs; //!< map of Trajectory objects to be displayed, together with parameters
+      bool m_display_cursor = false; //!< boolean to display a temporal cursor
+      double m_cursor; //!< the temporal cursor's position
 
       friend class VIBesFigTubeVector;
   };
