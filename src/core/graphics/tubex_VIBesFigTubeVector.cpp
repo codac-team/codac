@@ -151,6 +151,13 @@ namespace tubex
       m_v_figs[i]->set_tube_color(&(*tubevector)[i + m_start_index], color_type, color);
   }
 
+  void VIBesFigTubeVector::reset_tubevector_background(const TubeVector *tubevector)
+  {
+    assert(tubevector != NULL);
+    for(int i = 0 ; i < subfigs_number() ; i++)
+      m_v_figs[i]->reset_tube_background(&(*tubevector)[i + m_start_index]);
+  }
+
   void VIBesFigTubeVector::remove_tubevector(const TubeVector *tubevector)
   {
     assert(tubevector != NULL);

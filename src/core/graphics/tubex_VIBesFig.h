@@ -194,7 +194,7 @@ namespace tubex
       /**
        * \brief Draws a point
        *
-       * \param point the 2d Point to be displayed
+       * \param p the 2d Point to be displayed
        * \param params VIBes parameters related to the point
        */
       void draw_point(const Point& p, const vibes::Params& params);
@@ -202,7 +202,7 @@ namespace tubex
       /**
        * \brief Draws a point
        *
-       * \param point the 2d Point to be displayed
+       * \param p the 2d Point to be displayed
        * \param color the optional color of the point (black by default) 
        * \param params VIBes parameters related to the point (none by default)
        */
@@ -211,7 +211,7 @@ namespace tubex
       /**
        * \brief Draws a point
        *
-       * \param point the 2d Point to be displayed
+       * \param p the 2d Point to be displayed
        * \param size display size of the points
        * \param params VIBes parameters related to the point
        */
@@ -220,7 +220,7 @@ namespace tubex
       /**
        * \brief Draws a point
        *
-       * \param point the 2d Point to be displayed
+       * \param p the 2d Point to be displayed
        * \param size display size of the points
        * \param color the optional color of the point (black by default) 
        * \param params VIBes parameters related to the point (none by default)

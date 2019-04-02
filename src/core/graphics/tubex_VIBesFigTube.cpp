@@ -132,6 +132,15 @@ namespace tubex
     create_groups_color(tube);
   }
   
+  void VIBesFigTube::reset_tube_background(const Tube *tube)
+  {
+    assert(tube != NULL);
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unable to reset the background, unknown tube");
+    delete m_map_tubes[tube].tube_copy;
+    m_map_tubes[tube].tube_copy = NULL;
+  }
+  
   void VIBesFigTube::remove_tube(const Tube *tube)
   {
     assert(tube != NULL);
@@ -302,8 +311,6 @@ namespace tubex
           vibes::Params params_background = vibesParams("figure", name(), "group", group_name_bckgrnd);
           if(!m_map_tubes[tube].tube_copy->is_empty())
             draw_polygon(m_map_tubes[tube].tube_copy->polygon_envelope(), params_background);
-
-          //delete m_map_tubes[tube].tube_copy;
         }
       }
 

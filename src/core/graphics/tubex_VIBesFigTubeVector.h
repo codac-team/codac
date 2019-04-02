@@ -195,6 +195,15 @@ namespace tubex
       void set_tubevector_color(const TubeVector *tubevector, int color_type, const std::string& color);
 
       /**
+       * \brief Reset the background of a given tube vector
+       *
+       * \todo automatically clear the figure (for now, the pointer is only deleted)
+       *
+       * \param tubevector the const pointer to the TubeVector object for which the background will be deleted
+       */
+      void reset_tubevector_background(const TubeVector *tubevector);
+
+      /**
        * \brief Removes a tube vector from this figure
        *
        * \todo automatically clear the figure (for now, the tube is only removed

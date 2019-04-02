@@ -146,6 +146,15 @@ namespace tubex
       void set_tube_color(const Tube *tube, int color_type, const std::string& color);
 
       /**
+       * \brief Reset the background of a given tube
+       *
+       * \todo automatically clear the figure (for now, the pointer is only deleted)
+       *
+       * \param tube the const pointer to the Tube object for which the background will be deleted
+       */
+      void reset_tube_background(const Tube *tube);
+
+      /**
        * \brief Removes a tube from this figure
        *
        * \todo automatically clear the figure (for now, the tube is only removed
