@@ -12,10 +12,6 @@
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 
-// todo: remove this (polygons in unbounded case)
-#include <limits>
-#define BOUNDED_INFINITY numeric_limits<float>::max()
-
 using namespace std;
 using namespace ibex;
 
@@ -209,7 +205,7 @@ namespace tubex
             z &= y.interpol(t, w);
       }
 
-      // todo: remove this
+      // todo: remove this (or use Polygons with truncature)
 
         for(Slice *s = y.first_slice() ; s != NULL ; s = s->next_slice())
         {

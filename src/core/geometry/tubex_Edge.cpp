@@ -32,6 +32,47 @@ namespace tubex
     return m_p2;
   }
 
+  const Interval Edge::length() const
+  {
+    return sqrt(sqr(m_p1.x() - m_p2.x()) + sqr(m_p1.y() - m_p2.y()));
+  }
+
+  const BoolInterval Edge::is_horizontal() const
+  {
+    if(box()[1].is_degenerated())
+      return YES;
+
+    else if(m_p1.y().intersects(m_p2.y()))
+      return MAYBE;
+
+    else
+      return NO;
+  }
+
+  const BoolInterval Edge::is_vertical() const
+  {
+    if(box()[0].is_degenerated())
+      return YES;
+
+    else if(m_p1.x().intersects(m_p2.x()))
+      return MAYBE;
+
+    else
+      return NO;
+  }
+
+  const BoolInterval Edge::is_degenerated() const
+  {
+    if(m_p1.x() == m_p2.x() && m_p1.y() == m_p2.y())
+      return YES;
+
+    else if(m_p1.x().intersects(m_p2.x()) && m_p1.y().intersects(m_p2.y()))
+      return MAYBE;
+
+    else
+      return NO;
+  }
+
   const IntervalVector Edge::operator&(const IntervalVector& x) const
   {
     assert(x.size() == 2);
@@ -88,59 +129,75 @@ namespace tubex
   
   const Point Edge::operator&(const Edge& e) const
   {
-    assert(!e.does_not_exist());
-    Point p(Interval::ALL_REALS, Interval::ALL_REALS);
+    const Point proj = proj_intersection(*this, e);
+    return Point(proj.x() & box()[0] & e.box()[0], proj.y() & box()[1] & e.box()[1]);
+  }
 
-    if(e.box()[0].is_degenerated()) // vertical edge e
+  const Point Edge::proj_intersection(const Edge& e1, const Edge& e2)
+  {
+    assert(!e1.does_not_exist() && !e2.does_not_exist());
+
+    Point p;
+
+    if(e1.is_degenerated() == NO && e2.is_degenerated() != NO)
+      p = proj_intersection(e2, e1); // permutation
+
+    else if(e1.is_degenerated() != NO && e2.is_degenerated() != NO)
+      p = Point(e1.box()[0] & e2.box()[0], e1.box()[1] & e2.box()[1]);
+
+    else if(e2.is_vertical() != NO)
     {
-      if(box().is_flat()) // vertical or horizontal polygon's line
-      {
-        p = Point(box()[0] & e.box()[0], box()[1] & e.box()[1]);
-      }
+      if(e1.is_degenerated() != NO)
+        p = Point(e1.box()[0] & e2.box()[0], e1.box()[1]);
 
-      else // oblique polygon's line
+      else if(e1.is_vertical() != NO)
+        p = Point(e1.box()[0] & e2.box()[0], Interval::ALL_REALS); // undefined intersection
+
+      else if(e1.is_horizontal() != NO)
+        p = Point(e2.box()[0], e1.box()[1]);
+
+      else // oblique e1
       {
         // Line equation x=a*t+b
-        Interval a = (m_p2.y() - m_p1.y()) / (m_p2.x() - m_p1.x()); // slope
-        Interval b = m_p1.y();
+        Interval a = (e1.p2().y() - e1.p1().y()) / (e1.p2().x() - e1.p1().x()); // slope
+        Interval b = e1.p1().y();
 
         // Intersecting polygon's line and edge's line
-        p = Point(e.box()[0] & box()[0],
-                  e.box()[1] & (b + a * (e.box()[0] - m_p1.x())));
+        p = Point(e2.box()[0], b + a * (e2.box()[0] - e1.p1().x()));
       }
     }
 
-    else if(e.box()[1].is_degenerated()) // horizontal edge e
+    else if(e2.is_horizontal() != NO)
     {
-      if(box().is_flat()) // vertical or horizontal polygon's line
-      {
-        p = Point(box()[0] & e.box()[0], box()[1] & e.box()[1]);
-      }
+      if(e1.is_degenerated() != NO)
+        p = Point(e1.box()[0], e1.box()[1] & e2.box()[1]);
 
-      else // oblique polygon's line
+      else if(e1.is_horizontal() != NO)
+        p = Point(Interval::ALL_REALS, e1.box()[1] & e2.box()[1]); // undefined intersection
+
+      else if(e1.is_vertical() != NO)
+        p = Point(e1.box()[0], e2.box()[1]);
+
+      else // oblique e1
       {
         // Line equation x=a*t+b
-        Interval a = (m_p2.y() - m_p1.y()) / (m_p2.x() - m_p1.x()); // slope
-        Interval b = m_p1.y();
+        Interval a = (e1.p2().y() - e1.p1().y()) / (e1.p2().x() - e1.p1().x()); // slope
+        Interval b = e1.p1().y();
 
         // Intersecting polygon's line and edge's line
-        p = Point(e.box()[0] & (m_p1.x() + ((e.box()[1] - b) / a)),
-                  e.box()[1] & box()[1]);
+        p = Point(e1.p1().x() + ((e2.box()[1] - b) / a), e2.box()[1]);
       }
     }
 
     else
     {
-      Interval x1 = m_p1.x(), y1 = m_p1.y();
-      Interval x2 = m_p2.x(), y2 = m_p2.y();
-      Interval x3 = e.p1().x(), y3 = e.p1().y();
-      Interval x4 = e.p2().x(), y4 = e.p2().y();
+      Interval x1 = e1.p1().x(), y1 = e1.p1().y();
+      Interval x2 = e1.p2().x(), y2 = e1.p2().y();
+      Interval x3 = e2.p1().x(), y3 = e2.p1().y();
+      Interval x4 = e2.p2().x(), y4 = e2.p2().y();
 
-      p = Point((((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4)))
-                & box()[0] & e.box()[0],
-                (((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4)))
-                & box()[1] & e.box()[1]);
-
+      p = Point((((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))),
+                (((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))));
     }
 
     return p;

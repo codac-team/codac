@@ -12,7 +12,7 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-#define VIBES_DRAWING 0
+#define VIBES_DRAWING 1
 
 TEST_CASE("Point")
 {
@@ -1297,13 +1297,130 @@ cout << "-------------" << endl;
     ConvexPolygon polyg(v_pts);
     CHECK(polyg.vertices().size() == 7);
 
-    #if VIBES_DRAWING // drawing results
-      vibes::beginDrawing();
-      VIBesFig fig("polytest");
-      fig.set_properties(100+1000, 1000+500, 400, 400);
-      fig.draw_polygon(polyg, "black[#FD9335]");
-      fig.axis_limits(fig.view_box() | polyg.box());
-      vibes::endDrawing();
-    #endif
+    //#if VIBES_DRAWING // drawing results
+    //  vibes::beginDrawing();
+    //  VIBesFig fig("polytest");
+    //  fig.set_properties(100+1000, 1000+500, 400, 400);
+    //  fig.draw_polygon(polyg, "black[#FD9335]");
+    //  fig.axis_limits(fig.view_box() | polyg.box());
+    //  vibes::endDrawing();
+    //#endif
+  }
+
+  SECTION("Polygons, simplification, test1")
+  {
+    vector<Point> v_pts;
+    v_pts.push_back(Point(2.,0.));
+    v_pts.push_back(Point(6.,4.));
+    v_pts.push_back(Point(6.,5.));
+    v_pts.push_back(Point(5.,6.));
+    v_pts.push_back(Point(4.,6.));
+    v_pts.push_back(Point(2.,3.));
+
+    ConvexPolygon p(v_pts);
+    ConvexPolygon simple_p5(p), simple_p4(p), simple_p3(p);
+    simple_p5.simplify(5);
+    simple_p4.simplify(4);
+    simple_p3.simplify(3);
+
+    CHECK(p.nb_vertices() == 6);
+    CHECK(simple_p3.nb_vertices() == 3);
+    CHECK(simple_p4.nb_vertices() == 4);
+    CHECK(simple_p5.nb_vertices() == 5);
+
+    //#if VIBES_DRAWING // drawing results
+    //  vibes::beginDrawing();
+    //  VIBesFig fig("polytest 1");
+    //  fig.set_properties(100+1000, 1000+500, 400, 400);
+    //  fig.draw_polygon(p, "black[#B8DDFF]");
+    //  fig.draw_polygon(simple_p3, "red");
+    //  fig.draw_polygon(simple_p4, "green");
+    //  fig.draw_polygon(simple_p5, "blue");
+    //  fig.axis_limits(simple_p3.box() | simple_p4.box() | simple_p5.box() | p.box());
+    //  vibes::endDrawing();
+    //#endif
+  }
+
+  SECTION("Polygons, simplification, test2")
+  {
+    vector<Point> v_pts;
+    v_pts.push_back(Point(2.,0.));
+    v_pts.push_back(Point(0.,0.));
+    v_pts.push_back(Point(0.,2.));
+    v_pts.push_back(Point(2., 2.));
+
+    ConvexPolygon p(v_pts), p_simple(p);
+    CHECK(p.nb_vertices() == 4);
+    p_simple.simplify(3);
+    CHECK(p_simple.nb_vertices() == 4);
+
+    //#if VIBES_DRAWING // drawing results
+    //  vibes::beginDrawing();
+    //  VIBesFig fig("polytest 2");
+    //  fig.set_properties(100+1000, 1000+500, 400, 400);
+    //  fig.draw_polygon(p, "black[#B8DDFF]");
+    //  fig.draw_polygon(p_simple, "red");
+    //  fig.axis_limits(p_simple.box() | p.box());
+    //  vibes::endDrawing();
+    //#endif
+  }
+
+  SECTION("Edges, proj intersection")
+  {
+    //Point p1(-0.707106781186547461715008466854,0.707106781186547572737310929369);
+    //Point p2(6.12323399573676603586882014729e-17,1);
+    //Point p3(-1,1.22464679914735320717376402946e-16);
+    //Point p4(-0.707106781186547683759613391885,-0.707106781186547461715008466854);
+
+    Point p1(-0.7,0.7);
+    Point p2(0.,1.);
+    Point p3(-1,0.);
+    Point p4(-0.7,-0.7);
+
+    Edge e1(p1,p2), e2(p3,p4);
+
+    Point inter = Edge::proj_intersection(e1, e2);
+    CHECK(!inter.does_not_exist());
+    CHECK(ApproxPoint(inter) == Point(-1.2068965517241383445, 0.48275862068965491591));
+  }
+
+  SECTION("Polygons, simplification, test3")
+  {
+    vector<Point> v_pts;
+    int nb_pts = 8;
+    for(int a = 0 ; a < nb_pts ; a++)
+      v_pts.push_back(Point(cos(a*2.*M_PI/nb_pts),sin(a*2.*M_PI/nb_pts)));
+
+    ConvexPolygon p(v_pts);
+    ConvexPolygon simple_p8(p), simple_p7(p), simple_p6(p), simple_p5(p), simple_p4(p), simple_p3(p);
+    simple_p8.simplify(8);
+    simple_p7.simplify(7);
+    simple_p6.simplify(6);
+    simple_p5.simplify(5);
+    simple_p4.simplify(4);
+    simple_p3.simplify(3);
+
+    CHECK(p.nb_vertices() == 8);
+    CHECK(simple_p3.nb_vertices() == 4);
+    CHECK(simple_p4.nb_vertices() == 4);
+    CHECK(simple_p5.nb_vertices() == 5);
+    CHECK(simple_p6.nb_vertices() == 6);
+    CHECK(simple_p7.nb_vertices() == 7);
+    CHECK(simple_p8.nb_vertices() == 8);
+
+    //#if VIBES_DRAWING // drawing results
+    //  vibes::beginDrawing();
+    //  VIBesFig fig("polytest");
+    //  fig.set_properties(100, 1000, 400, 400);
+    //  fig.draw_polygon(p, "white[#B8DDFF]");
+    //  fig.draw_polygon(simple_p8, "red");
+    //  fig.draw_polygon(simple_p7, "blue");
+    //  fig.draw_polygon(simple_p6, "green");
+    //  fig.draw_polygon(simple_p5, "black");
+    //  fig.draw_polygon(simple_p4, "purple");
+    //  fig.draw_polygon(simple_p3, "yellow");
+    //  fig.axis_limits(p.box());
+    //  vibes::endDrawing();
+    //#endif
   }
 }

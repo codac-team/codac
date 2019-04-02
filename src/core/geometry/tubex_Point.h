@@ -16,6 +16,10 @@
 #include "ibex_IntervalVector.h"
 #include "ibex_BoolInterval.h"
 
+// todo: remove this (polygons in unbounded case)
+#include <limits>
+#define BOUNDED_INFINITY numeric_limits<float>::max()
+
 namespace tubex
 {
   class Point
@@ -27,10 +31,12 @@ namespace tubex
       const ibex::Interval& x() const;
       const ibex::Interval& y() const;
       const ibex::IntervalVector box() const;
+      const Point& operator=(const Point& p);
       bool operator==(const Point& p) const;
       bool operator!=(const Point& p) const;
       const Point operator|=(const Point& p);
       bool does_not_exist() const;
+      bool is_unbounded() const;
       const Point& inflate(double rad);
 
       friend std::ostream& operator<<(std::ostream& str, const Point& p);
@@ -47,6 +53,7 @@ namespace tubex
       ibex::Interval m_y;
   };
 
+  const Point operator&(const Point& p1, const Point& p2);
   const Point operator|(const Point& p1, const Point& p2);
   const Point operator-(const Point& p1, const Point& p2);
   void push_points(const ibex::IntervalVector& box, std::vector<Point>& v_points);

@@ -11,10 +11,6 @@
 #include "tubex_CtcDeriv.h"
 #include "tubex_ConvexPolygon.h"
 
-// todo: remove this (polygons in unbounded case)
-#include <limits>
-#define BOUNDED_INFINITY numeric_limits<float>::max()
-
 using namespace std;
 using namespace ibex;
 
@@ -96,7 +92,7 @@ namespace tubex
 
       else // Using polygons to compute the envelope
       {
-        // todo: remove this:
+        // todo: remove this: (or use Polygons with truncature)
         envelope &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
 
         x.set_envelope(envelope);
@@ -112,7 +108,7 @@ namespace tubex
         // Optimal envelope
         envelope &= x.polygon(v).box()[1];
 
-        // todo: remove this:
+        // todo: remove this: (or use Polygons with truncature)
         if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
         if(envelope.lb() == -BOUNDED_INFINITY) envelope |= Interval(NEG_INFINITY,envelope.ub());
         if(ingate.ub() == BOUNDED_INFINITY) ingate = Interval(ingate.lb(),POS_INFINITY);

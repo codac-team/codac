@@ -29,7 +29,8 @@ namespace tubex
       static const ConvexPolygon intersect(const ConvexPolygon& p, const ibex::IntervalVector& x);
       static const ConvexPolygon intersect(const ConvexPolygon& p1, const ConvexPolygon& p2);
 
-      void simplify(float n = 6.);
+      //void simplify(float n = 6.);
+      void simplify(int max_edges);
   };
 }
 

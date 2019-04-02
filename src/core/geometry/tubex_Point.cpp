@@ -46,6 +46,12 @@ namespace tubex
     return box;
   }
 
+  const Point& Point::operator=(const Point& p)
+  {
+    m_x = p.x();
+    m_y = p.y();
+  }
+
   bool Point::operator==(const Point& p) const
   {
     return m_x == p.m_x && m_y == p.m_y;
@@ -59,6 +65,11 @@ namespace tubex
   bool Point::does_not_exist() const
   {
     return m_x.is_empty() || m_y.is_empty();
+  }
+
+  bool Point::is_unbounded() const
+  {
+    return m_x.is_unbounded() || m_y.is_unbounded();
   }
 
   const Point& Point::inflate(double rad)
@@ -165,6 +176,11 @@ namespace tubex
     }
 
     return v_vertices;
+  }
+
+  const Point operator&(const Point& p1, const Point& p2)
+  {
+    return Point(p1.x() & p2.x(), p1.y() & p2.y());
   }
 
   const Point operator|(const Point& p1, const Point& p2)

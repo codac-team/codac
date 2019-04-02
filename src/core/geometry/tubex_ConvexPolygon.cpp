@@ -12,6 +12,7 @@
 #include <iomanip>
 #include "tubex_ConvexPolygon.h"
 #include "tubex_GrahamScan.h"
+#include "tubex_VIBesFig.h"
 
 using namespace std;
 using namespace ibex;
@@ -36,13 +37,9 @@ namespace tubex
   
   ConvexPolygon::ConvexPolygon(const std::vector<Point>& v_points, bool convex_points) : Polygon(v_points)
   {
-    vector<Point> v_pts;
-    for(int i = 0 ; i < m_v_vertices.size() ; i++) // uncertain points are cut
-      v_pts.push_back(m_v_vertices[i]);
-
-    v_pts = Point::delete_redundant_points(v_pts);
+    m_v_vertices = Point::delete_redundant_points(m_v_vertices);
     if(!convex_points)
-      m_v_vertices = GrahamScan::convex_hull(v_pts);
+      m_v_vertices = GrahamScan::convex_hull(m_v_vertices);
     m_v_vertices = Point::merge_close_points(m_v_vertices); // todo: remove this, should be useless
   }
   
@@ -133,7 +130,7 @@ namespace tubex
     return intersect(p, ConvexPolygon(x));
   }
 
-  void ConvexPolygon::simplify(float n)
+  /*void ConvexPolygon::simplify(float n)
   {
     if(n == 0.)
       return;
@@ -160,5 +157,78 @@ namespace tubex
 
     if(pf.vertices().size() < m_v_vertices.size())
       m_v_vertices = ConvexPolygon(pf.vertices()).vertices();
+  }*/
+
+  const Interval surface(const Point& p1, const Point& p2, const Point& p3)
+  {
+    assert(!p1.does_not_exist() && !p2.does_not_exist() && !p3.does_not_exist());
+
+    // Shoelace formula
+    return 0.5*abs(p1.x()*p2.y() + p2.x()*p3.y() + p3.x()*p1.y() - p2.x()*p1.y() - p3.x()*p2.y() - p1.x()*p3.y());
+  }
+
+  void ConvexPolygon::simplify(int max_edges)
+  {
+    //vibes::beginDrawing();
+    //VIBesFig fig("polytestloc");
+    //fig.set_properties(100, 1000, 400, 400);
+    //fig.draw_polygon(*this, "white[#B8DDFF]");
+    //fig.axis_limits(box());
+
+    assert(max_edges >= 3);
+
+    while(m_v_vertices.size() > max_edges)
+    {
+      // Removing the shortest edge
+      int n = m_v_vertices.size();
+
+      // Finding shortest edge
+      double min_surf;
+      int min_i = -1;
+      Point min_inter;
+
+      for(int i = 0 ; i < n ; i++)
+      {
+        Edge e1(m_v_vertices[(i-1+n)%n], m_v_vertices[i]);
+        Edge e2(m_v_vertices[(i+1)%n], m_v_vertices[(i+2)%n]);
+
+        if(Edge::parallel(e1, e2) == NO)
+        {
+          // Computing new vertex: intersection of neighbour edges
+          Point inter = Edge::proj_intersection(e1, e2);
+
+          if(inter.is_unbounded() || inter.does_not_exist()) // todo: this should not happen
+            continue;
+
+          if(GrahamScan::orientation(m_v_vertices[i], inter, m_v_vertices[(i+1)%n]) != COUNTERCLOCKWISE)
+            continue;
+
+          assert(!inter.does_not_exist() && !inter.is_unbounded());
+          double surf = surface(m_v_vertices[i], inter, m_v_vertices[(i+1)%n]).lb();
+
+          if(min_i == -1 || surf < min_surf)
+          {
+            min_inter = inter;
+            min_surf = surf;
+            min_i = i;
+          }
+        }
+      }
+
+      if(min_i == -1) // unable to simplify at this step
+        break;
+
+      assert(!min_inter.does_not_exist());
+
+      // Updating one of the vertices, removing the other one
+      m_v_vertices[min_i] = min_inter;
+      m_v_vertices.erase(m_v_vertices.begin() + ((min_i+1)%n));
+      //fig.draw_polygon(*this, "red");
+    }
+
+    //vector<Point> v_temp = m_v_vertices;
+    //m_v_vertices = GrahamScan::convex_hull(v_temp);
+
+    //vibes::endDrawing();
   }
 }

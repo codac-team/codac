@@ -23,6 +23,10 @@ namespace tubex
       Edge(const Point& p1, const Point& p2);
       const Point& p1() const;
       const Point& p2() const;
+      const ibex::Interval length() const;
+      const ibex::BoolInterval is_horizontal() const;
+      const ibex::BoolInterval is_vertical() const;
+      const ibex::BoolInterval is_degenerated() const;
       const ibex::IntervalVector box() const;
       const ibex::IntervalVector operator&(const ibex::IntervalVector& box) const;
       bool operator==(const Edge& e) const;
@@ -32,6 +36,8 @@ namespace tubex
       static const ibex::BoolInterval parallel(const Edge& e1, const Edge& e2);
       const ibex::BoolInterval contains(const Point& p) const;
       bool does_not_exist() const;
+
+      static const Point proj_intersection(const Edge& e1, const Edge& e2);
 
     protected:
 
