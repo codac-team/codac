@@ -24,6 +24,11 @@ namespace tubex
 
   VIBesFig::~VIBesFig()
   {
+
+  }
+
+  void VIBesFig::close()
+  {
     vibes::closeFigure(name());
   }
 

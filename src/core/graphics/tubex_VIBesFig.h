@@ -40,6 +40,11 @@ namespace tubex
        * \brief VIBesFig destructor
        */
       ~VIBesFig();
+
+      /**
+       * \brief Closes this figure
+       */
+      void close();
       
       /**
        * \brief Sets the properties (coordinates and dimensions) of this figure
