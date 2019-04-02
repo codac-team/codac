@@ -39,7 +39,7 @@ namespace tubex
       /**
        * \brief VIBesFig destructor
        */
-      ~VIBesFig() {};
+      ~VIBesFig();
       
       /**
        * \brief Sets the properties (coordinates and dimensions) of this figure
@@ -185,6 +185,42 @@ namespace tubex
        * \param params VIBes parameters related to the polygon (none by default)
        */
       void draw_polygon(const Polygon& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a point
+       *
+       * \param point the 2d Point to be displayed
+       * \param params VIBes parameters related to the point
+       */
+      void draw_point(const Point& p, const vibes::Params& params);
+
+      /**
+       * \brief Draws a point
+       *
+       * \param point the 2d Point to be displayed
+       * \param color the optional color of the point (black by default) 
+       * \param params VIBes parameters related to the point (none by default)
+       */
+      void draw_point(const Point& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a point
+       *
+       * \param point the 2d Point to be displayed
+       * \param size display size of the points
+       * \param params VIBes parameters related to the point
+       */
+      void draw_point(const Point& p, float size, const vibes::Params& params);
+
+      /**
+       * \brief Draws a point
+       *
+       * \param point the 2d Point to be displayed
+       * \param size display size of the points
+       * \param color the optional color of the point (black by default) 
+       * \param params VIBes parameters related to the point (none by default)
+       */
+      void draw_point(const Point& p, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a set of points

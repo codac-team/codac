@@ -114,6 +114,17 @@ namespace tubex
       static const ibex::Interval trunc_inf(const ibex::Interval& x);
       
       /**
+       * \brief Returns a representable value of any interval vector \f$[\mathbf{x}]\f$
+       *
+       * A double bound may be defined as `POS_INFINITY` or `NEG_INFINITY`, which is
+       * not displayable. The function returns `BOUNDED_INFINITY` values in these cases.
+       *
+       * \param x the interval vector for which the bounds will be truncated if necessary
+       * \return truncated value
+       */
+      static const ibex::IntervalVector trunc_inf(const ibex::IntervalVector& x);
+      
+      /**
        * \brief Adds an integer suffix to a string
        *
        * \param name the string to be updated

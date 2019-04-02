@@ -76,6 +76,14 @@ namespace tubex
     return Interval(trunc_inf(x.lb()), trunc_inf(x.ub()));
   }
 
+  const IntervalVector Figure::trunc_inf(const ibex::IntervalVector& x)
+  {
+    IntervalVector trunc_x = x;
+    for(int i = 0 ; i < trunc_x.size() ; i++)
+      trunc_x[i] = trunc_inf(trunc_x[i]);
+    return trunc_x;
+  }
+
   string Figure::add_suffix(const string& name, int id)
   {
     ostringstream o;

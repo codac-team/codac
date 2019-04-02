@@ -22,6 +22,11 @@ namespace tubex
     vibes::newGroup("transparent_box", "#ffffffff", vibesParams("figure", m_name));
   }
 
+  VIBesFig::~VIBesFig()
+  {
+    vibes::closeFigure(name());
+  }
+
   void VIBesFig::set_properties(int x, int y, int width, int height)
   {
     assert(x >= 0 && y >= 0 && width > 0 && height > 0);
@@ -89,7 +94,7 @@ namespace tubex
   
   void VIBesFig::clear()
   {
-    vibes::clearFigure();
+    vibes::clearFigure(name());
   }
 
   void VIBesFig::draw_box(const IntervalVector& box, const vibes::Params& params)
@@ -155,6 +160,42 @@ namespace tubex
     if(v_x.size() > 0)
       vibes::drawPolygon(v_x, v_y, color, params_this_fig);
   }
+
+  void VIBesFig::draw_point(const Point& p, float size, const vibes::Params& params)
+  {
+    assert(!p.does_not_exist());
+    Point inflated_pt = p;
+    inflated_pt.inflate(size);
+    draw_point(inflated_pt, "", params);
+  }
+
+  void VIBesFig::draw_point(const Point& p, float size, const string& color, const vibes::Params& params)
+  {
+    assert(!p.does_not_exist());
+    Point inflated_pt = p;
+    inflated_pt.inflate(size);
+    draw_point(inflated_pt, color, params);
+  }
+
+  void VIBesFig::draw_point(const Point& p, const vibes::Params& params)
+  {
+    assert(!p.does_not_exist());
+    draw_point(p, "", params);
+  }
+
+  void VIBesFig::draw_point(const Point& p, const string& color, const vibes::Params& params)
+  {
+    assert(!p.does_not_exist());
+    vibes::Params params_this_fig(params);
+    m_view_box |= p.box();
+    params_this_fig["figure"] = name();
+
+    if(p.x().is_degenerated() && p.y().is_degenerated())
+      vibes::drawPoint(p.x().lb(), p.y().lb(), 1, color, params_this_fig);
+
+    else
+      draw_box(trunc_inf(p.box()), color, params_this_fig);
+  }
   
   void VIBesFig::draw_points(const vector<Point>& v_pts, float size, const vibes::Params& params)
   {
@@ -163,15 +204,7 @@ namespace tubex
   
   void VIBesFig::draw_points(const vector<Point>& v_pts, float size, const string& color, const vibes::Params& params)
   {
-    vibes::Params params_this_fig(params);
-    params_this_fig["figure"] = name();
-    vector<double> v_x, v_y;
-
     for(int i = 0 ; i < v_pts.size() ; i++)
-    {
-      IntervalVector pbox = v_pts[i].box();
-      pbox.inflate(size);
-      vibes::drawBox(pbox, color, params_this_fig);
-    }
+      draw_point(v_pts[i], size, color, params);
   }
 }

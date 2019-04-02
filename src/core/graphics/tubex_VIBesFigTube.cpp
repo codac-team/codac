@@ -359,7 +359,7 @@ namespace tubex
       return; // no display
     
     else if(gate.is_degenerated())
-      vibes::drawPoint(t, gate.lb(), 1, params);
+      draw_point(Point(t, gate.lb()), params);
 
     else
     {
@@ -402,8 +402,7 @@ namespace tubex
       for(it_scalar_values = traj->sampled_map().begin(); it_scalar_values != traj->sampled_map().end(); it_scalar_values++)
       {
         if(points_size != 0.)
-          vibes::drawPoint(it_scalar_values->first, it_scalar_values->second,
-                           points_size, vibesParams("figure", name(), "group", group_name));
+          draw_point(Point(it_scalar_values->first, it_scalar_values->second), points_size, vibesParams("figure", name(), "group", group_name));
 
         else
         {
@@ -421,7 +420,7 @@ namespace tubex
       for(double t = traj->domain().lb() ; t <= traj->domain().ub() ; t+=traj->domain().diam()/TRAJ_NB_DISPLAYED_POINTS)
       {
         if(points_size != 0.)
-          vibes::drawPoint(t, (*traj)(t), points_size, vibesParams("figure", name(), "group", group_name));
+          draw_point(Point(t, (*traj)(t)), points_size, vibesParams("figure", name(), "group", group_name));
 
         else
         {
