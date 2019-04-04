@@ -49,8 +49,16 @@ namespace tubex
        * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ to be contracted
        */
       void contract(TubeVector& x);
+      void contract(Tube& x1);
+      void contract(Tube& x1, Tube& x2);
+      void contract(Tube& x1, Tube& x2, Tube& x3);
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4);
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5);
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6);
 
     protected:
+
+      void contract(Slice **v_x_slices, int n);
 
       tubex::Function *m_f; //!< the function need to be stored in order to keep the contractor working
       ibex::CtcFwdBwd *m_ctc_fwdbwd; //!< related IBEX contractor
