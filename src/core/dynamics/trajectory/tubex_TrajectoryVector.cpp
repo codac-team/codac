@@ -228,6 +228,12 @@ namespace tubex
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].shift_domain(shift_ref);
     }
+
+    void TrajectoryVector::discretize(double dt)
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].discretize(dt);
+    }
     
     // Integration
     

@@ -230,6 +230,18 @@ namespace tubex
       m_domain -= shift_ref;
     }
     
+    void Trajectory::discretize(double dt)
+    {
+      assert(dt > 0.);
+      assert(m_function != NULL && "discretization available for analytic functions only");
+
+      for(double t = m_domain.lb() ; t < m_domain.ub() ; t+=dt)
+        m_map_values[t] = (*this)(t);
+
+      delete m_function;
+      m_function = NULL;
+    }
+
     // Integration
     
     const Trajectory Trajectory::primitive(double c) const
