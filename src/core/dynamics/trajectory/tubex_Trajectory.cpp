@@ -193,10 +193,7 @@ namespace tubex
     void Trajectory::set(double y, double t)
     {
       assert(m_function == NULL && "Trajectory already defined by a Function");
-      m_domain |= t;
-      m_codomain |= y;
-      m_map_values.erase(t);
-      m_map_values.emplace(t, y);
+      set_map_value(y, t);
     }
 
     void Trajectory::truncate_domain(const Interval& t)
@@ -211,11 +208,7 @@ namespace tubex
         else ++it;
       }
 
-      m_codomain.set_empty();
-
-      for(map<double,double>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
-        m_codomain |= it->second;
-
+      compute_codomain();
       m_domain &= t;
     }
 
@@ -228,6 +221,7 @@ namespace tubex
         m_map_values.emplace(it->first - shift_ref, it->second);
 
       m_domain -= shift_ref;
+      compute_codomain();
     }
     
     void Trajectory::discretize(double dt)
@@ -236,7 +230,7 @@ namespace tubex
       assert(m_function != NULL && "discretization available for analytic functions only");
 
       for(double t = m_domain.lb() ; t < m_domain.ub() ; t+=dt)
-        m_map_values[t] = (*this)(t);
+        set_map_value((*this)(t), t);
 
       delete m_function;
       m_function = NULL;
@@ -272,11 +266,18 @@ namespace tubex
       double prev_x = c;
       x.set(prev_x, domain().lb());
 
-      for(double t = domain().lb() + dt ; t < domain().ub() ; t+=dt)
+      double t;
+      for(t = domain().lb() + dt ; t < domain().ub() ; t+=dt)
       {
         prev_x += (*this)(t)*dt;
         x.set(prev_x, t);
       }
+
+      // Last value
+      double last_dt = domain().ub() - t;
+      t = domain().ub();
+      prev_x += (*this)(t)*dt;
+      x.set(prev_x, t);
 
       return x;
     }
@@ -313,5 +314,29 @@ namespace tubex
     const IntervalVector Trajectory::codomain_box() const
     {
       return IntervalVector(m_codomain);
+    }
+
+    void Trajectory::set_map_value(double y, double t)
+    {
+      m_domain |= t;
+
+      bool update_codomain = m_map_values.find(t) != m_map_values.end() // key already exists
+                          && m_codomain.contains(y); // and new value is inside the current enclosure
+
+      m_map_values.erase(t);
+      m_map_values.emplace(t, y);
+
+      if(update_codomain) // the new codomain is a subset of the old one
+        compute_codomain();
+
+      else
+        m_codomain |= y; // simple union
+    }
+
+    void Trajectory::compute_codomain()
+    {
+      m_codomain.set_empty();
+      for(map<double,double>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
+        m_codomain |= it->second;
     }
 }

@@ -267,6 +267,21 @@ namespace tubex
        */
       const ibex::IntervalVector codomain_box() const;
 
+      /**
+       * \brief Sets a value \f$y\f$ at \f$t\f$: \f$x(t)=y\f$
+       *
+       * \note This protected method updates the map even in case of analytic definition
+       *
+       * \param y local value of the trajectory
+       * \param t the temporal key (double, must belong to the trajectory domain)
+       */
+      void set_map_value(double y, double t);
+
+      /**
+       * \brief Computes the envelope of trajectory values
+       */
+      void compute_codomain();
+
       // Class variables:
 
         ibex::Interval m_domain = ibex::Interval::EMPTY_SET; //!< temporal domain \f$[t_0,t_f]\f$ of the trajectory

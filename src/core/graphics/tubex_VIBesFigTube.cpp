@@ -299,7 +299,9 @@ namespace tubex
         {
           // If a copy of the tube has not been done,
           // we make one and no display is done.
-          m_map_tubes[tube].tube_copy = new Tube(*tube);
+
+          if(!tube->codomain().is_unbounded())
+            m_map_tubes[tube].tube_copy = new Tube(*tube);
         }
 
         else

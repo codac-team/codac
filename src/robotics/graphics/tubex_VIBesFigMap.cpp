@@ -9,6 +9,7 @@
  */
 
 #include <string>
+#include <iomanip>
 #include "tubex_VIBesFigMap.h"
 #include "tubex_colors.h"
 #include "tubex_Tube.h"
@@ -437,7 +438,11 @@ namespace tubex
     }
 
     else
+    {
+      assert((*traj)[m_map_trajs[traj].index_heading].domain() == (*traj)[m_map_trajs[traj].index_x].domain());
+      assert((*traj)[m_map_trajs[traj].index_heading].domain().contains(t));
       robot_heading = (*traj)[m_map_trajs[traj].index_heading](t);
+    }
 
     vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, m_robot_size, "gray[yellow]", params);
   }
