@@ -28,6 +28,21 @@ namespace tubex
     m_pos_box = IntervalVector(m_pos);
   }
 
+  double Beacon::x() const
+  {
+    return m_pos[0];
+  }
+
+  double Beacon::y() const
+  {
+    return m_pos[1];
+  }
+
+  double Beacon::z() const
+  {
+    return m_pos[2];
+  }
+
   const ibex::Vector& Beacon::pos() const
   {
     return m_pos;

@@ -21,6 +21,9 @@ namespace tubex
 
       Beacon(const ibex::Vector& pos);
       Beacon(double x, double y, double z = 0.);
+      double x() const;
+      double y() const;
+      double z() const;
       const ibex::Vector& pos() const;
       const ibex::IntervalVector& pos_box() const;
 
