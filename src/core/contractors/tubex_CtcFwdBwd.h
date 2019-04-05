@@ -12,8 +12,7 @@
 #ifndef __TUBEX_CTCFWDBWD_H__
 #define __TUBEX_CTCFWDBWD_H__
 
-#include "tubex_Ctc.h"
-#include "ibex_CtcFwdBwd.h"
+#include "tubex_CtcIbex.h"
 #include "tubex_Function.h"
 
 namespace tubex
@@ -27,7 +26,7 @@ namespace tubex
    * \todo  Implement propagation methods?
    * \todo  Allow \f$f(\mathbf{x})\leq 0\f$ ?
    */
-  class CtcFwdBwd : public Ctc
+  class CtcFwdBwd : public CtcIbex
   {
     public:
 
@@ -42,26 +41,10 @@ namespace tubex
        * \brief Constractor destructor
        */
       ~CtcFwdBwd();
-
-      /**
-       * \brief \f$\mathcal{C}_{\textrm{FwdBwd}}\big([\mathbf{x}](\cdot)\big)\f$
-       *
-       * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ to be contracted
-       */
-      void contract(TubeVector& x);
-      void contract(Tube& x1);
-      void contract(Tube& x1, Tube& x2);
-      void contract(Tube& x1, Tube& x2, Tube& x3);
-      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4);
-      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5);
-      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6);
-
+      
     protected:
 
-      void contract(Slice **v_x_slices, int n);
-
       tubex::Function *m_f; //!< the function need to be stored in order to keep the contractor working
-      ibex::CtcFwdBwd *m_ctc_fwdbwd; //!< related IBEX contractor
   };
 }
 
