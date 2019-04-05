@@ -17,7 +17,7 @@ using namespace ibex;
 namespace tubex
 {
   CtcFwdBwd::CtcFwdBwd(const tubex::Function& f)
-    : CtcIbex(NULL)
+    : CtcIbex(NULL, true)
   {
     m_f = new tubex::Function(f);
     m_ibex_ctc = new ibex::CtcFwdBwd(m_f->ibex_function());

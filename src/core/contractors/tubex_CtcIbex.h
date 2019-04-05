@@ -31,8 +31,10 @@ namespace tubex
        * \brief Creates a static contractor object \f$\mathcal{C}\f$ for tubes
        *
        * \param ibex_ctc the IBEX contractor for boxes
+       * \param dynamic_ctc if true, the contraction will include the
+       *        temporal domain as first dimension of the (n+1) box
        */
-      CtcIbex(ibex::Ctc *ibex_ctc);
+      CtcIbex(ibex::Ctc *ibex_ctc, bool dynamic_ctc = false);
 
       /**
        * \brief Constractor destructor
@@ -114,6 +116,7 @@ namespace tubex
       void contract(Slice **v_x_slices, int n);
 
       ibex::Ctc *m_ibex_ctc; //!< related IBEX contractor
+      int m_dynamic_ctc; //!< specifies either the temporal domain is part of the contraction or not
   };
 }
 
