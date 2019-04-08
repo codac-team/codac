@@ -1,16 +1,14 @@
 /** 
  *  tubex-lib - Examples
- *  Guaranteed integration: xdot = -sin(x)
+ *  Guaranteed integration: xdot = -sin(x), x(0)=1
  * ----------------------------------------------------------------------------
  *
  *  \brief      Here we consider the following initial value problem:
  *                xdot = -sin(x)
  *                x0   = 1
  *            
- *              This code will show successive contractions of tube [x](·): first five
- *              computations and final result when reaching a fixed point. Light gray
- *              areas represent the tube part that has been contracted during
- *              the contraction step.
+ *              This IVP problem is solved using contractors and a
+ *              fixed point resolution method.
  *
  *  \date       2016
  *  \author     Simon Rohou
