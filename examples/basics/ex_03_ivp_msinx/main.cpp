@@ -27,46 +27,44 @@ using namespace tubex;
 
 int main(int argc, char *argv[])
 {
-  /* =========== PARAMETERS =========== */
-
-    double x0 = 1.;
-    Interval domain(0,10);
-    double timestep = 0.01;
-
   /* =========== INITIALIZATION =========== */
 
-    // Creating the tube x over the [0,10] domain with some timestep:
-    Tube x(domain, timestep);
-    // Creating intermediate tubes based on x (same slicing)
-    Tube a(x), b(x);
+    // Tubes parameters
+    Interval domain(0,10); // temporal definition domain
+    double timestep = 0.01;
+
+    // Creating the tubes (x, xdot) over the [0,10] domain with some timestep:
+    TubeVector x(domain, timestep, 2);
+    x[0].set(1., 0.); // setting initial condition x(0)=1
 
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
     Trajectory truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
-    VIBesFigTube fig_x("x", &x, &truth);
+    VIBesFigTube fig_x("x", &x[0], &truth);
     fig_x.set_properties(100, 100, 600, 600);
-    fig_x.show();
 
   /* =========== INTERVAL INTEGRATION =========== */
+
+    // Defining contractors
+
+    tubex::CtcFwdBwd ctc_fwdbwd(tubex::Function("x", "xdot", "xdot+sin(x)")); // algebraic contractor
+    CtcDeriv ctc_deriv; // differential contractor
+
+    // Calling contractors (iterative resolution)
 
     int i = 0;
     double volume_x;
     do
     {
-      volume_x = x.volume(); // check tube's volume to detect a fixpoint
-
-      // Trivial contractors based on elementary constraints:
-      a &= sin(x);
-      b &= a.primitive();
-      x &= x0 - b;
-
+      volume_x = x[0].volume(); // check tube's volume to detect a fixpoint
+      ctc_fwdbwd.contract(x[0], x[1]);
+      ctc_deriv.contract(x[0], x[1]);
       i++;
-      
-    } while(volume_x != x.volume()); // up to the fixpoint
+    } while(volume_x != x[0].volume()); // up to the fixpoint
     cout << i << " iterations" << endl;
 
-  /* =========== END =========== */
+  /* =========== ENDING =========== */
 
     fig_x.show();
     vibes::endDrawing();
