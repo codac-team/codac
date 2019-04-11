@@ -78,6 +78,42 @@ namespace tubex
     return nb_vertices() == 2;
   }
 
+  const BoolInterval Polygon::is_convex() const
+  {
+    int n = m_v_vertices.size();
+    bool all_positive = true, all_negative = true;
+
+    for(int i = 0 ; i < n ; i++)
+    {
+      Interval dx1 = m_v_vertices[(i+1)%n].x() - m_v_vertices[i].x();
+      Interval dy1 = m_v_vertices[(i+1)%n].y() - m_v_vertices[i].y();
+      Interval dx2 = m_v_vertices[(i+2)%n].x() - m_v_vertices[(i+1)%n].x();
+      Interval dy2 = m_v_vertices[(i+2)%n].y() - m_v_vertices[(i+1)%n].y();
+
+      Interval z_cross_product = dx1*dy2 - dy1*dx2;
+      assert(!z_cross_product.interior_contains(0.));
+
+      // If points are aligned with some uncertainty
+      if(z_cross_product.contains(0.) && !z_cross_product.is_degenerated())
+        return MAYBE;
+
+      else if(z_cross_product == 0.) // perfect alignment
+        continue;
+
+      else
+      {
+        all_positive &= z_cross_product.lb() >= 0.;
+        all_negative &= z_cross_product.ub() <= 0.;
+        assert(!(all_positive && all_negative));
+
+        if((all_positive || all_negative) == false)
+          return NO;
+      }
+    }
+
+    return YES; // same sign for each computed cross product
+  }
+
   bool Polygon::operator==(const Polygon& p) const
   {
     int n = m_v_vertices.size();

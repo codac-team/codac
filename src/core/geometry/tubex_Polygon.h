@@ -35,6 +35,7 @@ namespace tubex
 
       bool is_point() const;
       bool is_segment() const;
+      const ibex::BoolInterval is_convex() const;
       bool operator==(const Polygon& p) const;
       bool operator!=(const Polygon& p) const;
       const ibex::BoolInterval encloses(const Point& p) const;
