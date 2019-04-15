@@ -906,10 +906,7 @@ namespace tubex
 
       // Setting envelopes before gates' inflation
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-      {
-        assert(!s->is_empty());
         s->set_envelope(s->codomain() + e);
-      }
 
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
       {
@@ -928,10 +925,7 @@ namespace tubex
 
       // Setting envelopes before gates' inflation
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-      {
-        assert(!s->is_empty());
         s->set_envelope(s->codomain() + Interval(-1.,1.) * rad(s->domain()));
-      }
 
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
       {
