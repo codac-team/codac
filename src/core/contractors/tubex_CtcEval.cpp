@@ -40,7 +40,12 @@ namespace tubex
       return;
     }
 
-    Tube y_first_slicing = y, w_first_slicing = w; // doto: instanciate this just in case
+    Tube *y_first_slicing, *w_first_slicing;
+    if(m_preserve_slicing)
+    {
+      y_first_slicing = new Tube(y);
+      w_first_slicing = new Tube(w);
+    }
 
     z &= y.interpol(t, w);
     y.set(z, t);
@@ -63,13 +68,15 @@ namespace tubex
 
     if(m_preserve_slicing)
     {
-      y_first_slicing.set_empty();
-      y_first_slicing |= y;
-      y = y_first_slicing;
+      y_first_slicing->set_empty();
+      *y_first_slicing |= y;
+      y = *y_first_slicing;
+      delete y_first_slicing;
 
-      w_first_slicing.set_empty();
-      w_first_slicing |= w;
-      w = w_first_slicing;
+      w_first_slicing->set_empty();
+      *w_first_slicing |= w;
+      w = *w_first_slicing;
+      delete w_first_slicing;
     }
   }
 
@@ -89,10 +96,12 @@ namespace tubex
       return;
     }
 
-    Tube y_first_slicing(y), w_first_slicing(w);
-    Interval t_ = t;
-    Interval z_ = z;
-    Tube y_ = y;
+    Tube *y_first_slicing, *w_first_slicing;
+    if(m_preserve_slicing)
+    {
+      y_first_slicing = new Tube(y);
+      w_first_slicing = new Tube(w);
+    }
 
     y &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY); // todo: remove this
 
@@ -112,12 +121,6 @@ namespace tubex
         y.set(y.interpol(t.ub(), w), t.ub()); w.sample(t.ub());
           
         // Note: w is also sampled to stay compliant with y.
-        // The same for future comparison:
-        if(!m_preserve_slicing)
-        {
-          y_.sample(t.lb());
-          y_.sample(t.ub());
-        }
 
         CtcDeriv ctc_deriv;
         ctc_deriv.set_fast_mode(m_fast_mode);
@@ -228,13 +231,15 @@ namespace tubex
 
     if(m_preserve_slicing)
     {
-      y_first_slicing.set_empty();
-      y_first_slicing |= y;
-      y = y_first_slicing;
+      y_first_slicing->set_empty();
+      *y_first_slicing |= y;
+      y = *y_first_slicing;
+      delete y_first_slicing;
 
-      w_first_slicing.set_empty();
-      w_first_slicing |= w;
-      w = w_first_slicing;
+      w_first_slicing->set_empty();
+      *w_first_slicing |= w;
+      w = *w_first_slicing;
+      delete w_first_slicing;
     }
 
     if(t.is_empty() || z.is_empty() || y.is_empty())
