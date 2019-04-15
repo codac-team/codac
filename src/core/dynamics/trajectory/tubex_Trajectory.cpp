@@ -201,12 +201,18 @@ namespace tubex
       assert(valid_domain(t));
       assert(domain().is_superset(t));
 
+      double y_lb = (*this)(t.lb());
+      double y_ub = (*this)(t.ub());
+
       map<double,double>::iterator it = m_map_values.begin();
       while(it != m_map_values.end())
       {
         if(!t.contains(it->first)) it = m_map_values.erase(it);
         else ++it;
       }
+
+      m_map_values[t.lb()] = y_lb;
+      m_map_values[t.ub()] = y_ub;
 
       compute_codomain();
       m_domain &= t;
