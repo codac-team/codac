@@ -66,6 +66,13 @@ namespace tubex
     m_width = width; m_height = height;
   }
 
+  string Figure::add_suffix(const string& name, int id)
+  {
+    ostringstream o;
+    o << name << "_" << id;
+    return o.str();
+  }
+
   double Figure::trunc_inf(double x)
   {
     return (x == POS_INFINITY ? BOUNDED_INFINITY : (x == NEG_INFINITY ? -BOUNDED_INFINITY : x));
@@ -82,12 +89,5 @@ namespace tubex
     for(int i = 0 ; i < trunc_x.size() ; i++)
       trunc_x[i] = trunc_inf(trunc_x[i]);
     return trunc_x;
-  }
-
-  string Figure::add_suffix(const string& name, int id)
-  {
-    ostringstream o;
-    o << name << "_" << id;
-    return o.str();
   }
 }

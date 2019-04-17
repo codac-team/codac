@@ -88,6 +88,15 @@ namespace tubex
        * \param height height value (in pixels)
        */
       void set_properties(int x, int y, int width, int height);
+      
+      /**
+       * \brief Adds an integer suffix to a string
+       *
+       * \param name the string to be updated
+       * \param id the integer to add
+       * \return the string value `string`_`id`
+       */
+      static std::string add_suffix(const std::string& name, int id);
 
     protected:
       
@@ -123,15 +132,6 @@ namespace tubex
        * \return truncated value
        */
       static const ibex::IntervalVector trunc_inf(const ibex::IntervalVector& x);
-      
-      /**
-       * \brief Adds an integer suffix to a string
-       *
-       * \param name the string to be updated
-       * \param id the integer to add
-       * \return the string value `string`_`id`
-       */
-      static std::string add_suffix(const std::string& name, int id);
 
     protected:
 
