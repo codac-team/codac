@@ -85,6 +85,22 @@ namespace tubex
        * \return the number of subfigures
        */
       int subfigs_number() const;
+
+      /**
+       * \brief Returns a pointer to the ith VIBesFigTube of this figure
+       *
+       * \param index the index of this ith component
+       * \return a pointer to the ith component
+       */
+      VIBesFigTube* operator[](int index);
+
+      /**
+       * \brief Returns a const pointer to the ith VIBesFigTube of this figure
+       *
+       * \param index the index of this ith component
+       * \return a const pointer to the ith component
+       */
+      const VIBesFigTube* operator[](int index) const;
       
       /**
        * \brief Sets the properties (coordinates and dimensions) of this figure
