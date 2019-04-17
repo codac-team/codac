@@ -57,7 +57,19 @@ namespace tubex
   {
     return (m_v_figs != NULL) ? (m_end_index - m_start_index + 1) : -1;
   }
-    
+
+  VIBesFigTube* VIBesFigTubeVector::operator[](int index)
+  {
+    assert(index >= 0 && index < size());
+    return const_cast<VIBesFigTube*>(static_cast<const VIBesFigTubeVector&>(*this).operator[](index));
+  }
+
+  const VIBesFigTube* VIBesFigTubeVector::operator[](int index) const
+  {
+    assert(index >= 0 && index < size());
+    return m_v_figs[index];
+  }
+  
   void VIBesFigTubeVector::set_properties(int x, int y, int width, int height)
   {
     assert(x >= 0 && y >= 0 && width > 0 && height > 0);
