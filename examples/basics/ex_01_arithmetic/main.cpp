@@ -42,7 +42,7 @@ int main()
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    VIBesFigTubeVector fig_x("x", 4, 4);
+    VIBesFigTubeVector fig_x("x", 0, 4);
     fig_x.set_properties(100, 100, 600, 300);
     fig_x.add_tubevector(&x, "x");
     fig_x.show();
