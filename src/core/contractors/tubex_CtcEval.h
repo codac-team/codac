@@ -45,6 +45,8 @@ namespace tubex
        * \brief \f$\mathcal{C}_\textrm{eval}\big(t,[z],[y](\cdot),[w](\cdot)\big)\f$:
        *        contracts the tube \f$[y](\cdot)\f$ and the evaluation \f$[z]\f$.
        *
+       * \note The slicing of \f$[y](\cdot)\f$ and \f$[w](\cdot)\f$ may be changed.
+       *
        * \param t the date \f$t\f$ of the evaluation
        * \param z the bounded evaluation \f$[z]\f$
        * \param y the scalar tube \f$[y](\cdot)\f$
@@ -55,6 +57,8 @@ namespace tubex
       /**
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[z],[y](\cdot),[w](\cdot)\big)\f$:
        *        contracts the tube \f$[y](\cdot)\f$ and the evaluation \f$[t]\times[z]\f$.
+       *
+       * \note The slicing of \f$[y](\cdot)\f$ and \f$[w](\cdot)\f$ may be changed.
        *
        * \param t the uncertain domain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[z]\f$
@@ -72,11 +76,13 @@ namespace tubex
        * \param y the scalar tube \f$[y](\cdot)\f$
        * \param w the scalar derivative tube \f$[w](\cdot)\f$
        */
-      void contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y, const Tube& w);
+      void contract(const ibex::Interval& t, const ibex::Interval& z, Tube& y, Tube& w);
 
       /**
        * \brief \f$\mathcal{C}_\textrm{eval}\big(t,[\mathbf{z}],[\mathbf{y}](\cdot),[\mathbf{w}](\cdot)\big)\f$:
        *        contracts the tube \f$[\mathbf{y}](\cdot)\f$ and the evaluation \f$[\mathbf{z}]\f$.
+       *
+       * \note The slicing of \f$[\mathbf{y}](\cdot)\f$ and \f$[\mathbf{w}](\cdot)\f$ may be changed.
        *
        * \param t the date \f$t\f$ of the evaluation
        * \param z the bounded evaluation \f$[\mathbf{z}]\f$
@@ -89,6 +95,8 @@ namespace tubex
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[\mathbf{z}],[\mathbf{y}](\cdot),[\mathbf{w}](\cdot)\big)\f$:
        *        contracts the tube \f$[\mathbf{y}](\cdot)\f$ and the evaluation \f$[t]\times[\mathbf{z}]\f$.
        *
+       * \note The slicing of \f$[\mathbf{y}](\cdot)\f$ and \f$[\mathbf{w}](\cdot)\f$ may be changed.
+       *
        * \param t the uncertain domain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[\mathbf{z}]\f$
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
@@ -100,12 +108,14 @@ namespace tubex
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[\mathbf{z}],[\mathbf{y}](\cdot),[\mathbf{w}](\cdot)\big)\f$:
        *        contracts the tube \f$[\mathbf{y}](\cdot)\f$ only.
        *
+       * \note The slicing of \f$[\mathbf{y}](\cdot)\f$ and \f$[\mathbf{w}](\cdot)\f$ may be changed.
+       *
        * \param t the uncertain domain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[\mathbf{z}]\f$
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
        * \param w the n-dimensional derivative tube \f$[\mathbf{w}](\cdot)\f$
        */
-      void contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, const TubeVector& w);
+      void contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, TubeVector& w);
 
     protected:
 

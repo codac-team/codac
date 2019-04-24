@@ -260,14 +260,13 @@ namespace tubex
       contract(t, z[i], y[i], w[i]);
   }
 
-  void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, const Tube& w)
+  void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, Tube& w)
   {
     assert(y.domain() == w.domain());
     assert(Tube::same_slicing(y, w));
 
     Interval _t(t), _z(z);
-    Tube _w(w);
-    contract(_t, _z, y, _w);
+    contract(_t, _z, y, w);
   }
 
   void CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)
@@ -289,15 +288,14 @@ namespace tubex
     t &= t_result;
   }
 
-  void CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, const TubeVector& w)
+  void CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, TubeVector& w)
   {
     assert(y.size() == z.size());
     assert(y.size() == w.size());
     assert(y.domain() == w.domain());
     assert(TubeVector::same_slicing(y, w));
 
-    TubeVector _w(w);
     Interval _t(t); IntervalVector _z(z);
-    contract(_t, _z, y, _w);
+    contract(_t, _z, y, w);
   }
 }
