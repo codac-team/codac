@@ -53,6 +53,8 @@
              COMMAND ${TUBELIB_EXAMPLE_DIR}/basics/ex_03_ivp_msinx/make/basics_03_ivp_msinx 0)
     add_test(NAME basics_04
              COMMAND ${TUBELIB_EXAMPLE_DIR}/basics/ex_04_lissajous/make/basics_04_lissajous 0)
+    add_test(NAME basics_05
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/basics/ex_05_simple_eval/make/basics_05_simple_eval 0)
     
     # Robotics
     add_test(NAME robotics_01
