@@ -59,6 +59,9 @@ namespace tubex
   {
     assert(x.domain() == v.domain());
 
+    if(!x.domain().intersects(m_restricted_domain))
+      return;
+
     Interval envelope = x.codomain(), ingate = x.input_gate(), outgate = x.output_gate();
 
     if(m_fast_mode) // Faster contraction without polygons

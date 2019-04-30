@@ -132,6 +132,14 @@ namespace tubex
 
     while(v_x_slices[0] != NULL)
     {
+      // If this slice should not be impacted by the contractor
+      if(!v_x_slices[0]->domain().intersects(m_restricted_domain))
+      {
+        for(int i = 0 ; i < n ; i++)
+          v_x_slices[i] = v_x_slices[i]->next_slice();
+        continue; // moving to next slice
+      }
+
       if(m_dynamic_ctc)
       {
         envelope[0] = v_x_slices[0]->domain();

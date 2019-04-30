@@ -11,6 +11,7 @@
 #include "tubex_Ctc.h"
 
 using namespace std;
+using namespace ibex;
 
 namespace tubex
 {
@@ -27,5 +28,10 @@ namespace tubex
   void Ctc::set_fast_mode(bool fast_mode)
   {
     m_fast_mode = fast_mode;
+  }
+
+  void Ctc::set_restricted_domain(const Interval& domain)
+  {
+    m_restricted_domain = domain;
   }
 }

@@ -68,10 +68,20 @@ namespace tubex
        */
       void set_fast_mode(bool fast_mode);
 
+      /**
+       * \brief Limits the temporal domain of contractions
+       *
+       * \todo thin contraction with respect to tube's slicing
+       *
+       * \param domain Interval domain of restriction \f$[t_1,t_2]\f$
+       */
+      void set_restricted_domain(const ibex::Interval& domain);
+
     protected:
 
       bool m_preserve_slicing = false; //!< if `true`, tube's slicing will not be affected by the contractor
       bool m_fast_mode = false; //!< some contractors may propose more pessimistic but faster execution modes
+      ibex::Interval m_restricted_domain;
   };
 }
 
