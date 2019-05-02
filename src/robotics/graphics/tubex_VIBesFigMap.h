@@ -22,7 +22,7 @@
 namespace tubex
 {
   #define TRAJMAP_NB_DISPLAYED_POINTS   1000
-  #define MAP_SLICES_NUMBER_TO_DISPLAY  1000
+  #define MAP_SLICES_NUMBER_TO_DISPLAY  10000
 
   // HTML color codes:
   #define DEFAULT_BEACON_COLOR      "#FF5D00[white]"
@@ -36,6 +36,9 @@ namespace tubex
 
       VIBesFigMap(const std::string& fig_name);
       ~VIBesFigMap();
+
+      void set_restricted_tdomain(const ibex::Interval& restricted_domain);
+      void enable_tubes_backgrounds(bool enable = true);
       
       void add_tubevector(const TubeVector *tube, const std::string& name, int index_x, int index_y);
       void set_tubevector_name(const TubeVector *tube, const std::string& name);
@@ -86,6 +89,8 @@ namespace tubex
       std::map<const TubeVector*,FigMapTubeParams> m_map_tubes;
       std::map<const TrajectoryVector*,FigMapTrajParams> m_map_trajs;
 
+      ibex::Interval m_restricted_domain;
+      bool m_draw_tubes_backgrounds = true;
       float m_robot_size = 5.5;
   };
 }

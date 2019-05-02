@@ -38,6 +38,16 @@ namespace tubex
         delete it->second.tube_y_copy;
       }
   }
+  
+  void VIBesFigMap::set_restricted_tdomain(const Interval& restricted_domain)
+  {
+    m_restricted_domain = restricted_domain;
+  }
+  
+  void VIBesFigMap::enable_tubes_backgrounds(bool enable)
+  {
+    m_draw_tubes_backgrounds = enable;
+  }
 
   void VIBesFigMap::add_tubevector(const TubeVector *tube, const string& name, int index_x, int index_y)
   {
@@ -187,7 +197,7 @@ namespace tubex
     for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
       m_view_box |= draw_trajectory(it_trajs->first);
 
-    axis_limits(m_view_box, true, 0.05);
+    axis_limits(m_view_box, true, 0.02);
   }
 
   void VIBesFigMap::show(float robot_size)
@@ -282,15 +292,18 @@ namespace tubex
 
       while(it_scalar_values_x != (*traj)[index_x].sampled_map().end())
       {
-        if(points_size != 0.)
-          vibes::drawPoint(it_scalar_values_x->second, it_scalar_values_y->second,
-                           points_size,
-                           vibesParams("figure", name(), "group", group_name));
-
-        else
+        if(m_restricted_domain.contains(it_scalar_values_x->first))
         {
-          v_x.push_back(it_scalar_values_x->second);
-          v_y.push_back(it_scalar_values_y->second);
+          if(points_size != 0.)
+            vibes::drawPoint(it_scalar_values_x->second, it_scalar_values_y->second,
+                             points_size,
+                             vibesParams("figure", name(), "group", group_name));
+
+          else
+          {
+            v_x.push_back(it_scalar_values_x->second);
+            v_y.push_back(it_scalar_values_y->second);
+          }
         }
 
         viewbox[0] |= Interval(it_scalar_values_x->second);
@@ -308,6 +321,12 @@ namespace tubex
         double x = (*traj)[index_x](t);
         double y = (*traj)[index_y](t);
 
+        viewbox[0] |= x;
+        viewbox[1] |= y;
+
+        if(!m_restricted_domain.contains(t))
+          continue;
+
         if(points_size != 0.)
           vibes::drawPoint(x, y, points_size, vibesParams("figure", name(), "group", group_name));
 
@@ -316,15 +335,13 @@ namespace tubex
           v_x.push_back(x);
           v_y.push_back(y);
         }
-
-        viewbox[0] |= x;
-        viewbox[1] |= y;
       }
     }
 
     vibes::Params params = vibesParams("figure", name(), "group", group_name);
     vibes::drawLine(v_x, v_y, params);
-    draw_vehicle(traj->domain().ub(), traj, params);
+    draw_vehicle((traj->domain() & m_restricted_domain).ub(), traj, params);
+
     return viewbox;
   }
 
@@ -338,6 +355,7 @@ namespace tubex
     int step = max((int)(tube->nb_slices() / MAP_SLICES_NUMBER_TO_DISPLAY), 1);
 
     // 1. Background:
+    if(m_draw_tubes_backgrounds)
     {
       ostringstream o;
       o << "tube_" << m_map_tubes[tube].name << "_bckgrnd";
@@ -374,6 +392,9 @@ namespace tubex
 
       for(int k = tube->nb_slices() - 1 ; k >= 0 ; k -= step)
       {
+        if(!m_restricted_domain.intersects((*tube)[0].slice(k)->domain()))
+          continue;
+        
         string color = shaded_slice_color((1. * k) / tube->nb_slices());
 
         IntervalVector box(2);
@@ -381,6 +402,12 @@ namespace tubex
         box[1] = (*tube)[m_map_tubes[tube].index_y](k);
         draw_box(box, color, params);
       }
+
+      IntervalVector last_box(2);
+      double tub = (m_restricted_domain & tube->domain()).ub();
+      last_box[0] = (*tube)[m_map_tubes[tube].index_x](tub);
+      last_box[1] = (*tube)[m_map_tubes[tube].index_y](tub);
+      draw_box(last_box, "white", params);
     }
   }
 
