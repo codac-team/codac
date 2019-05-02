@@ -234,10 +234,16 @@ TEST_CASE("Tube definition")
     CHECK(tube_from_boxes.domain() == Interval(-1.,14.));
     CHECK(tube_from_boxes.codomain() == Interval(2.,7.));
     CHECK(tube_from_boxes.nb_slices() == 4);
+
     CHECK(tube_from_boxes(0) == Interval(3.,4.));
     CHECK(tube_from_boxes(1) == Interval(2.,7.));
     CHECK(tube_from_boxes(2) == Interval(5.,6.));
     CHECK(tube_from_boxes(3) == Interval(5.5));
+
+    CHECK(tube_from_boxes.slice(0)->domain() == Interval(-1.,10.));
+    CHECK(tube_from_boxes.slice(1)->domain() == Interval(10.,10.5));
+    CHECK(tube_from_boxes.slice(2)->domain() == Interval(10.5,12.));
+    CHECK(tube_from_boxes.slice(3)->domain() == Interval(12.,14.));
   }
 
   SECTION("Tube class - vector of boxes - n-dim case")
@@ -286,9 +292,19 @@ TEST_CASE("Tube definition")
     CHECK(tube_from_boxes[0](2) == Interval(5.,6.));
     CHECK(tube_from_boxes[0](3) == Interval(5.5));
 
+    CHECK(tube_from_boxes[0].slice(0)->domain() == Interval(-1.,10.));
+    CHECK(tube_from_boxes[0].slice(1)->domain() == Interval(10.,10.5));
+    CHECK(tube_from_boxes[0].slice(2)->domain() == Interval(10.5,12.));
+    CHECK(tube_from_boxes[0].slice(3)->domain() == Interval(12.,14.));
+
     CHECK(tube_from_boxes[1](0) == Interval(0.,2.));
     CHECK(tube_from_boxes[1](1) == Interval(1.,3.));
     CHECK(tube_from_boxes[1](2) == Interval(2.,4.));
     CHECK(tube_from_boxes[1](3) == Interval(3.,5.));
+
+    CHECK(tube_from_boxes[1].slice(0)->domain() == Interval(-1.,10.));
+    CHECK(tube_from_boxes[1].slice(1)->domain() == Interval(10.,10.5));
+    CHECK(tube_from_boxes[1].slice(2)->domain() == Interval(10.5,12.));
+    CHECK(tube_from_boxes[1].slice(3)->domain() == Interval(12.,14.));
   }
 }
