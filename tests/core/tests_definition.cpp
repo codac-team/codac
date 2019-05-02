@@ -200,4 +200,95 @@ TEST_CASE("Tube definition")
     CHECK(tube2.is_subset(tube1));
     CHECK(tube2.is_strict_subset(tube1));
   }
+
+  SECTION("Tube class - vector of boxes")
+  {
+    IntervalVector box1(2), box2(2), box3(2), box4(2);
+
+    box1[0] = Interval(-1.,10.);
+    box1[1] = Interval(3.,4.);
+
+    box2[0] = Interval(10.,10.5);
+    box2[1] = Interval(2.,7.);
+
+    box3[0] = Interval(10.5,12.);
+    box3[1] = Interval(5.,6.);
+
+    box4[0] = Interval(12.,14.);
+    box4[1] = Interval(5.5);
+
+    vector<Interval> v_domains, v_codomains;
+
+    v_domains.push_back(box1[0]);
+    v_domains.push_back(box2[0]);
+    v_domains.push_back(box3[0]);
+    v_domains.push_back(box4[0]);
+
+    v_codomains.push_back(box1[1]);
+    v_codomains.push_back(box2[1]);
+    v_codomains.push_back(box3[1]);
+    v_codomains.push_back(box4[1]);
+
+    Tube tube_from_boxes(v_domains, v_codomains);
+
+    CHECK(tube_from_boxes.domain() == Interval(-1.,14.));
+    CHECK(tube_from_boxes.codomain() == Interval(2.,7.));
+    CHECK(tube_from_boxes.nb_slices() == 4);
+    CHECK(tube_from_boxes(0) == Interval(3.,4.));
+    CHECK(tube_from_boxes(1) == Interval(2.,7.));
+    CHECK(tube_from_boxes(2) == Interval(5.,6.));
+    CHECK(tube_from_boxes(3) == Interval(5.5));
+  }
+
+  SECTION("Tube class - vector of boxes - n-dim case")
+  {
+    IntervalVector box1(3), box2(3), box3(3), box4(3);
+
+    box1[0] = Interval(-1.,10.);
+    box1[1] = Interval(3.,4.);
+    box1[2] = Interval(0.,2.);
+
+    box2[0] = Interval(10.,10.5);
+    box2[1] = Interval(2.,7.);
+    box2[2] = Interval(1.,3.);
+
+    box3[0] = Interval(10.5,12.);
+    box3[1] = Interval(5.,6.);
+    box3[2] = Interval(2.,4.);
+
+    box4[0] = Interval(12.,14.);
+    box4[1] = Interval(5.5);
+    box4[2] = Interval(3.,5.);
+
+    vector<Interval> v_domains;
+    vector<IntervalVector> v_codomains;
+
+    v_domains.push_back(box1[0]);
+    v_domains.push_back(box2[0]);
+    v_domains.push_back(box3[0]);
+    v_domains.push_back(box4[0]);
+
+    v_codomains.push_back(box1.subvector(1,2));
+    v_codomains.push_back(box2.subvector(1,2));
+    v_codomains.push_back(box3.subvector(1,2));
+    v_codomains.push_back(box4.subvector(1,2));
+
+    TubeVector tube_from_boxes(v_domains, v_codomains);
+
+    CHECK(tube_from_boxes.size() == 2);
+    CHECK(tube_from_boxes.domain() == Interval(-1.,14.));
+    CHECK(tube_from_boxes.codomain()[0] == Interval(2.,7.));
+    CHECK(tube_from_boxes.codomain()[1] == Interval(0.,5.));
+    CHECK(tube_from_boxes.nb_slices() == 4);
+
+    CHECK(tube_from_boxes[0](0) == Interval(3.,4.));
+    CHECK(tube_from_boxes[0](1) == Interval(2.,7.));
+    CHECK(tube_from_boxes[0](2) == Interval(5.,6.));
+    CHECK(tube_from_boxes[0](3) == Interval(5.5));
+
+    CHECK(tube_from_boxes[1](0) == Interval(0.,2.));
+    CHECK(tube_from_boxes[1](1) == Interval(1.,3.));
+    CHECK(tube_from_boxes[1](2) == Interval(2.,4.));
+    CHECK(tube_from_boxes[1](3) == Interval(3.,5.));
+  }
 }

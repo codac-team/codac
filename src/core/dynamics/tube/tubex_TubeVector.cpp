@@ -77,6 +77,26 @@ namespace tubex
       *this = f.eval_vector(input);
     }
 
+    TubeVector::TubeVector(const std::vector<ibex::Interval>& v_domains, const std::vector<ibex::IntervalVector>& v_codomains)
+      : m_n(v_codomains[0].size()), m_v_tubes(new Tube[m_n])
+    {
+      assert(v_domains.size() == v_codomains.size());
+      assert(!v_domains.empty());
+
+      vector<Interval> v_scalar_codomains[size()];
+
+      for(int i = 0 ; i < v_codomains.size() ; i++)
+      {
+        if(i > 0) assert(v_codomains[i].size() == v_codomains[i-1].size());
+
+        for(int j = 0 ; j < size() ; j++)
+          v_scalar_codomains[j].push_back(v_codomains[i][j]);
+      }
+
+      for(int j = 0 ; j < size() ; j++)
+        (*this)[j] = Tube(v_domains, v_scalar_codomains[j]);
+    }
+
     TubeVector::TubeVector(const TubeVector& x)
     {
       *this = x;

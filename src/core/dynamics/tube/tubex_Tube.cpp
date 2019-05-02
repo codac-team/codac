@@ -89,6 +89,30 @@ namespace tubex
       TubeVector input(1, *this);
       *this = f.eval_vector(input)[f_image_id];
     }
+    
+    Tube::Tube(const vector<Interval>& v_domains, const vector<Interval>& v_codomains)
+    {
+      assert(v_domains.size() == v_codomains.size());
+      assert(!v_domains.empty());
+
+      Interval tube_domain = Interval::EMPTY_SET;
+      for(int i = 0 ; i < v_domains.size() ; i++)
+      {
+        assert(valid_domain(v_domains[i]));
+        if(i > 0) assert(v_domains[i].lb() == v_domains[i-1].ub()); // domains continuity
+        tube_domain |= v_domains[i];
+      }
+
+      m_first_slice = new Slice(tube_domain, Interval::ALL_REALS);
+      Slice *s = m_first_slice;
+
+      for(int i = 0 ; i < v_domains.size() ; i++)
+      {
+        sample(v_domains[i].ub());
+        s->set_envelope(v_codomains[i]);
+        s = s->next_slice();
+      }
+    }
 
     Tube::Tube(const Tube& x)
     {

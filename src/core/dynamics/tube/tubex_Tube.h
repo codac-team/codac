@@ -80,6 +80,17 @@ namespace tubex
       Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id = 0);
 
       /**
+       * \brief Creates a tube \f$[x](\cdot)\f$ from a list of \f$k\f$ boxes \f$\big([t_1]\times[x_1],\dots,[t_k]\times[x_k]\big)\f$
+       *
+       * \note The slicing will be based on the vector of temporal domains.
+       * \note The \f$[t_i]\f$'s must cover continuously the domain of \f$[x](\cdot)\f$.
+       *
+       * \param v_domains vector of temporal domains \f$[t_i]\f$
+       * \param v_codomains vector of codomains \f$[x_i]\f$ related to the \f$[t_i]\f$'s
+       */
+      Tube(const std::vector<ibex::Interval>& v_domains, const std::vector<ibex::Interval>& v_codomains);
+
+      /**
        * \brief Creates a copy of a scalar tube \f$[x](\cdot)\f$, with the same time discretization
        *
        * \param x Tube to be duplicated
