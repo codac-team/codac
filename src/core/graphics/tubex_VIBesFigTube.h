@@ -107,6 +107,32 @@ namespace tubex
       void add_tube(const Tube *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
 
       /**
+       * \brief Adds a subset of a vector of tubes to this figure
+       * 
+       * Each selected component will be projected on the same figure.
+       *
+       * \param tubevector a const pointer to a TubeVector object to be displayed
+       * \param name a name to identify this set of tubes
+       * \param color_frgrnd an optional color for the current values of the tubes
+       * \param color_bckgrnd an optional color for the previous values of the tubes, before any new contraction
+       */
+      void add_tubes(const TubeVector *tubevector, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
+
+      /**
+       * \brief Adds a subset of a vector of tubes to this figure
+       * 
+       * Each selected component will be projected on the same figure.
+       *
+       * \param tubevector a const pointer to a TubeVector object to be displayed
+       * \param start_index the first dimension to be displayed
+       * \param end_index the last dimension to be displayed
+       * \param name a name to identify this set of tubes
+       * \param color_frgrnd an optional color for the current values of the tubes
+       * \param color_bckgrnd an optional color for the previous values of the tubes, before any new contraction
+       */
+      void add_tubes(const TubeVector *tubevector, int start_index, int end_index, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
+
+      /**
        * \brief Sets a new name for a tube
        *
        * \param tube the const pointer to the Tube object to be renamed
@@ -178,6 +204,30 @@ namespace tubex
        * \param color an optional color to draw this trajectory
        */
       void add_trajectory(const Trajectory *traj, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
+
+      /**
+       * \brief Adds a vector of trajectories to this figure
+       * 
+       * Each component will be projected on the same figure.
+       *
+       * \param trajvector a const pointer to a TrajectoryVector object to be displayed
+       * \param name a name to identify this set of trajectories
+       * \param color an optional color to draw these trajectories
+       */
+      void add_trajectories(const TrajectoryVector *trajvector, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
+
+      /**
+       * \brief Adds a subset of a vector of trajectories to this figure
+       * 
+       * Each selected component will be projected on the same figure.
+       *
+       * \param trajvector a const pointer to a TrajectoryVector object to be displayed
+       * \param start_index the first dimension to be displayed
+       * \param end_index the last dimension to be displayed
+       * \param name a name to identify this set of trajectories
+       * \param color an optional color to draw these trajectories
+       */
+      void add_trajectories(const TrajectoryVector *trajvector, int start_index, int end_index, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
 
       /**
        * \brief Sets a new name for a trajectory

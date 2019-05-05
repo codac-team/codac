@@ -75,8 +75,7 @@ namespace tubex
     m_display_cursor = display;
   }
 
-  void VIBesFigTube::add_tube(const Tube *tube, const string& name,
-                                  const string& color_frgrnd, const string& color_bckgrnd)
+  void VIBesFigTube::add_tube(const Tube *tube, const string& name, const string& color_frgrnd, const string& color_bckgrnd)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) == m_map_tubes.end()
@@ -91,6 +90,20 @@ namespace tubex
     m_map_tubes[tube].m_colors[TubeColorType::POLYGONS] = DEFAULT_POLYGONS_COLOR;
     m_map_tubes[tube].m_colors[TubeColorType::GATES] = DEFAULT_GATES_COLOR;
     create_groups_color(tube);
+  }
+  
+  void VIBesFigTube::add_tubes(const TubeVector *tubevector, const string& name, const string& color_frgrnd, const string& color_bckgrnd)
+  {
+    assert(tubevector != NULL);
+    add_tubes(tubevector, 0, tubevector->size()-1, name, color_frgrnd, color_bckgrnd);
+  }
+  
+  void VIBesFigTube::add_tubes(const TubeVector *tubevector, int start_index, int end_index, const string& name, const string& color_frgrnd, const string& color_bckgrnd)
+  {
+    assert(tubevector != NULL);
+    assert(start_index <= end_index && start_index >= 0 && end_index < tubevector->size());
+    for(int i = start_index ; i <= end_index ; i++)
+      add_tube(&(*tubevector)[i], Figure::add_suffix(name, i+1), color_frgrnd, color_bckgrnd);
   }
 
   void VIBesFigTube::set_tube_name(const Tube *tube, const string& name)
@@ -161,6 +174,20 @@ namespace tubex
     m_map_trajs[traj];
     set_trajectory_name(traj, name);
     set_trajectory_color(traj, color);
+  }
+  
+  void VIBesFigTube::add_trajectories(const TrajectoryVector *trajvector, const string& name, const string& color)
+  {
+    assert(trajvector != NULL);
+    add_trajectories(trajvector, 0, trajvector->size()-1, name, color);
+  }
+  
+  void VIBesFigTube::add_trajectories(const TrajectoryVector *trajvector, int start_index, int end_index, const string& name, const string& color)
+  {
+    assert(trajvector != NULL);
+    assert(start_index <= end_index && start_index >= 0 && end_index < trajvector->size());
+    for(int i = start_index ; i <= end_index ; i++)
+      add_trajectory(&(*trajvector)[i], Figure::add_suffix(name, i+1), color);
   }
 
   void VIBesFigTube::set_trajectory_name(const Trajectory *traj, const string& name)
