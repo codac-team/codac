@@ -25,7 +25,7 @@ int main()
     CtcEval ctc_eval;
     ctc_eval.contract(3.125, sin(3.125), x, xdot);
 
-    Trajectory thicknesses = x.diam();
+    Trajectory thicknesses = x.diam(false);
     Trajectory thicknesses_dot = x.diam(xdot);
 
   /* =========== GRAPHICS =========== */
