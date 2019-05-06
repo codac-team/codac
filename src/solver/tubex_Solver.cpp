@@ -156,7 +156,7 @@ namespace tubex
       j++;
       cout << "  " << j << ": "
            << *it <<  ", tf↦" << (*it)(it->domain().ub())
-           << " (max thickness: " << it->max_thickness() << ")"
+           << " (max thickness: " << it->max_diam() << ")"
            << endl;
     }
 
@@ -197,7 +197,7 @@ namespace tubex
   {
     assert(x.size() == m_max_thickness.size());
 
-    Vector x_max_thickness = x.max_thickness();
+    Vector x_max_thickness = x.max_diam();
     for(int i = 0 ; i < x.size() ; i++)
       if(x_max_thickness[i] > m_max_thickness[i])
         return false;
@@ -240,7 +240,7 @@ namespace tubex
       return;
 
     double t_bisection;
-    x[0].max_gate_thickness(t_bisection);
+    x[0].max_gate_diam(t_bisection);
     pair<TubeVector,TubeVector> p_x = x.bisect(t_bisection);
     pair<TubeVector,TubeVector> p_x_1 = p_x.first.bisect(t_bisection);
     pair<TubeVector,TubeVector> p_x_2 = p_x.second.bisect(t_bisection);

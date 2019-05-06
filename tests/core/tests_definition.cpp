@@ -165,7 +165,7 @@ TEST_CASE("Tube definition")
     CHECK(tube_1slice.domain() == Interval(-1.,10.));
     CHECK(tube_1slice.codomain() == Interval(-2.,100.));
     CHECK(Interval(28.25,30.25).is_subset(tube_1slice(5.5)));
-    CHECK(tube_1slice.max_thickness() > 2.);
+    CHECK(tube_1slice.max_diam() > 2.);
     
     Tube tube_100slices(traj_lb, traj_ub, traj_ub.domain().diam() / 100.);
     CHECK(tube_100slices.nb_slices() == 100);
@@ -173,7 +173,7 @@ TEST_CASE("Tube definition")
     CHECK(tube_100slices.codomain() == Interval(-2.,100.));
     CHECK(Interval(28.25,30.25).is_subset(tube_100slices(5.5)));
     CHECK(tube_100slices(5.5).is_subset(Interval(28.,32.)));
-    CHECK(tube_100slices.max_thickness() > 2.);
+    CHECK(tube_100slices.max_diam() > 2.);
   }
 
   SECTION("Tube class - 1 Trajectory")

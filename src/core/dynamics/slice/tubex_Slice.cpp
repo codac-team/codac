@@ -120,16 +120,26 @@ namespace tubex
       return box;
     }
     
-    double Slice::volume() const
+    double Slice::diam(const Interval& interval)
     {
-      if(m_codomain.is_empty())
+      if(interval.is_empty())
         return 0.;
       
-      else if(m_codomain.is_unbounded())
+      else if(interval.is_unbounded())
         return POS_INFINITY;
       
       else
-        return m_domain.diam() * m_codomain.diam();
+        return interval.diam();
+    }
+    
+    double Slice::diam() const
+    {
+      return diam(m_codomain);
+    }
+    
+    double Slice::volume() const
+    {
+      return m_domain.diam() * diam(m_codomain);
     }
 
     const Interval Slice::operator()(double t) const

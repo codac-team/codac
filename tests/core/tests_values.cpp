@@ -411,7 +411,7 @@ TEST_CASE("Testing thickness evaluation")
   SECTION("tube_test_1")
   {
     Tube x = tube_test_1();
-    CHECK(x.max_thickness() == 8.);
+    CHECK(x.max_diam() == 8.);
     CHECK(x.index(x.largest_slice()) == 3);
   }
 
@@ -419,7 +419,7 @@ TEST_CASE("Testing thickness evaluation")
   {
     Tube x = tube_test2();
     int slice_id;
-    CHECK(x.max_thickness() == 4.);
+    CHECK(x.max_diam() == 4.);
     CHECK(x.index(x.largest_slice()) == 1);
   }
 }

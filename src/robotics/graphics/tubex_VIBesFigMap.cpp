@@ -202,7 +202,7 @@ namespace tubex
 
   void VIBesFigMap::show(float robot_size)
   {
-    assert(robot_size > 0.);
+    assert(robot_size >= 0.);
     m_robot_size = robot_size;
     show();
   }

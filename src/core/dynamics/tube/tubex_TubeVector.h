@@ -430,7 +430,31 @@ namespace tubex
        *
        * \return the maximal thicknesses of this tube
        */
-      const ibex::Vector max_thickness() const;
+      const ibex::Vector max_diam() const;
+
+      /**
+       * \brief Returns the diameters of the tube as a trajectory
+       *
+       * \note Without derivative knowledge, and because the tube is made of boxed slices,
+       *       the trajectory will be discontinuous and so the returned object will not
+       *       reliably represent the diameters. It can be mainly used for display purposes.
+       *
+       * \param gates_thicknesses if true, the diameters of the gates will be evaluated too
+       * \return the set of diameters associated to temporal inputs
+       */
+      const TrajectoryVector diam(bool gates_thicknesses = false) const;
+
+      /**
+       * \brief Returns the diameters of the tube as a trajectory
+       *
+       * \note Because the tube is made of boxed slices,
+       *       the trajectory may be discontinuous and so the returned object will not
+       *       reliably represent the diameters. It can be mainly used for display purposes.
+       *
+       * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
+       * \return the set of diameters associated to temporal inputs
+       */
+      const TrajectoryVector diam(const TubeVector& v) const;
 
       /// @}
       /// \name Tests

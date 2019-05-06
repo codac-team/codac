@@ -505,7 +505,7 @@ namespace tubex
        *
        * \return the maximal thickness of this tube
        */
-      double max_thickness() const;
+      double max_diam() const;
 
       /**
        * \brief Returns the diameter of the gate of this tube that is the more uncertain
@@ -513,7 +513,31 @@ namespace tubex
        * \param t the temporal key of the corresponding uncertain gate
        * \return the maximal thickness of the gate
        */
-      double max_gate_thickness(double& t) const;
+      double max_gate_diam(double& t) const;
+
+      /**
+       * \brief Returns the diameters of the tube as a trajectory
+       *
+       * \note Without derivative knowledge, and because the tube is made of boxed slices,
+       *       the trajectory will be discontinuous and so the returned object will not
+       *       reliably represent the diameters. It can be mainly used for display purposes.
+       *
+       * \param gates_thicknesses if true, the diameters of the gates will be evaluated too
+       * \return the set of diameters associated to temporal inputs
+       */
+      const Trajectory diam(bool gates_thicknesses = false) const;
+
+      /**
+       * \brief Returns the diameters of the tube as a trajectory
+       *
+       * \note Because the tube is made of boxed slices,
+       *       the trajectory may be discontinuous and so the returned object will not
+       *       reliably represent the diameters. It can be mainly used for display purposes.
+       *
+       * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
+       * \return the set of diameters associated to temporal inputs
+       */
+      const Trajectory diam(const Tube& v) const;
 
       /// @}
       /// \name Tests

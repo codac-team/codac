@@ -157,6 +157,26 @@ namespace tubex
       const ibex::IntervalVector box() const;
 
       /**
+       * \brief Returns the diameter of an interval (IBEX overload)
+       *
+       * \note returns POS_INFINITY if the interval is unbounded
+       * \note returns 0 if the interval is empty
+       *
+       * \return the diameter
+       */
+      static double diam(const ibex::Interval& interval);
+
+      /**
+       * \brief Returns the diameter of this slice
+       *
+       * \note returns POS_INFINITY if the codomain is unbounded
+       * \note returns 0 if the slice is empty
+       *
+       * \return the diameter
+       */
+      double diam() const;
+
+      /**
        * \brief Returns the volume of this slice
        *
        * \note returns POS_INFINITY if the codomain is unbounded

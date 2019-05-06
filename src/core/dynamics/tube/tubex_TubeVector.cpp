@@ -433,11 +433,27 @@ namespace tubex
       macro_invert((*this)[i].invert(y[i], v_t_i, v[i], search_domain));
     }
 
-    const Vector TubeVector::max_thickness() const
+    const Vector TubeVector::max_diam() const
     {
       Vector thickness(size());
       for(int i = 0 ; i < size() ; i++)
-        thickness[i] = (*this)[i].max_thickness();
+        thickness[i] = (*this)[i].max_diam();
+      return thickness;
+    }
+
+    const TrajectoryVector TubeVector::diam(bool gates_thicknesses) const
+    {
+      TrajectoryVector thickness(size());
+      for(int i = 0 ; i < size() ; i++)
+        thickness[i] = (*this)[i].diam(gates_thicknesses);
+      return thickness;
+    }
+
+    const TrajectoryVector TubeVector::diam(const TubeVector& v) const
+    {
+      TrajectoryVector thickness(size());
+      for(int i = 0 ; i < size() ; i++)
+        thickness[i] = (*this)[i].diam(v[i]);
       return thickness;
     }
 

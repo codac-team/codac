@@ -687,7 +687,7 @@ namespace tubex
         v_t.push_back(invert);
     }
 
-    double Tube::max_thickness() const
+    double Tube::max_diam() const
     {
       const Slice *largest = largest_slice();
 
@@ -698,7 +698,7 @@ namespace tubex
         return largest->codomain().diam();
     }
 
-    double Tube::max_gate_thickness(double& t) const
+    double Tube::max_gate_diam(double& t) const
     {
       const Slice *slice = first_slice();
 
@@ -730,6 +730,46 @@ namespace tubex
       }
 
       return max_thickness;
+    }
+    
+    const Trajectory Tube::diam(bool gates_thicknesses) const
+    {
+      Trajectory thicknesses;
+
+      const Slice *s_x = first_slice();
+      if(gates_thicknesses)
+        thicknesses.set(Slice::diam(s_x->input_gate()), s_x->domain().lb());
+
+      while(s_x != NULL)
+      {
+        thicknesses.set(Slice::diam(s_x->codomain()), ibex::next_float(s_x->domain().lb()));
+        thicknesses.set(Slice::diam(s_x->codomain()), ibex::previous_float(s_x->domain().ub()));
+        if(gates_thicknesses)
+          thicknesses.set(Slice::diam(s_x->output_gate()), s_x->domain().ub());
+        s_x = s_x->next_slice();
+      }
+
+      return thicknesses;
+    }
+    
+    const Trajectory Tube::diam(const Tube& v) const
+    {
+      Trajectory thicknesses;
+
+      const Slice *s_x = first_slice(), *s_v = v.first_slice();
+
+      while(s_x != NULL)
+      {
+        ConvexPolygon p = s_x->polygon(*s_v);
+
+        for(int i = 0 ; i < p.vertices().size() ; i++)
+          thicknesses.set(Slice::diam(s_x->interpol(p[i].x().mid(), *s_v)), p[i].x().mid());
+
+        s_x = s_x->next_slice();
+        s_v = s_v->next_slice();
+      }
+
+      return thicknesses;
     }
 
     // Tests
