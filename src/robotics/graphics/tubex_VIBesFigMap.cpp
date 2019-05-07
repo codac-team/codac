@@ -390,28 +390,99 @@ namespace tubex
       vibes::clearGroup(name(), group_name);
       vibes::Params params = vibesParams("figure", name(), "group", group_name);
 
-      for(int k = tube->nb_slices() - 1 ; k >= 0 ; k -= step)
-      {
-        if(!m_restricted_domain.intersects((*tube)[0].slice(k)->domain()))
-          continue;
-        
-        string color = shaded_slice_color((1. * k) / tube->nb_slices());
+      // Those two parameters should be put as argument
+      int transparency = 50;
+      bool reversed = false; 
 
-        IntervalVector box(2);
-        box[0] = (*tube)[m_map_tubes[tube].index_x](k);
-        box[1] = (*tube)[m_map_tubes[tube].index_y](k);
-        draw_box(box, color, params);
+      IntervalVector first_box(2);
+      double tlb = (m_restricted_domain & tube->domain()).lb();
+      first_box[0] = (*tube)[m_map_tubes[tube].index_x](tlb);
+      first_box[1] = (*tube)[m_map_tubes[tube].index_y](tlb);
+      draw_box(first_box, "green[]", params);
+
+
+      if (reversed) //Drawing from last to first box
+      {
+        for(int k = tube->nb_slices() - 1 ; k >= 0 ; k -= step)
+        {
+          IntervalVector box(2);
+          box[0] = (*tube)[m_map_tubes[tube].index_x](k);
+          box[1] = (*tube)[m_map_tubes[tube].index_y](k);
+
+          string color = shaded_slice_color((1. * k) / tube->nb_slices(), transparency);
+
+          if (k < tube->nb_slices() - 1)
+          {
+            
+            IntervalVector prevBox(2);
+            prevBox[0] = (*tube)[m_map_tubes[tube].index_x](k+1);
+            prevBox[1] = (*tube)[m_map_tubes[tube].index_y](k+1);
+            IntervalVector* diffList;
+            int nb_box = box.diff(prevBox, diffList);
+
+            for (int i = 0; i < nb_box; i++ )
+            {
+              draw_box(*(diffList+i), color, params);
+            }
+
+            delete[] diffList;
+          }
+
+          else
+          {
+            draw_box(box, color, params);
+          }
+          
+        }
       }
 
+      else //Drawing from first to last box
+      {
+        for(int k = 0; k < tube->nb_slices() ; k += step)
+        {
+          if(!m_restricted_domain.intersects((*tube)[0].slice(k)->domain()))
+            continue;
+          
+          string color = shaded_slice_color((1. * k) / tube->nb_slices(), transparency);
+
+          IntervalVector box(2);
+          box[0] = (*tube)[m_map_tubes[tube].index_x](k);
+          box[1] = (*tube)[m_map_tubes[tube].index_y](k);
+
+          if (k > 0)
+          {
+
+            IntervalVector prevBox(2);
+            prevBox[0] = (*tube)[m_map_tubes[tube].index_x](k-1);
+            prevBox[1] = (*tube)[m_map_tubes[tube].index_y](k-1);
+            IntervalVector* diffList;
+            int nb_box = box.diff(prevBox, diffList);
+
+            for (int i = 0; i < nb_box; i++ )
+            {
+              draw_box(*(diffList+i), color, params);
+            }
+
+            delete[] diffList;
+
+          }
+
+          else
+          {
+            draw_box(box, color, params);
+          }
+        }
+      }
+      
       IntervalVector last_box(2);
       double tub = (m_restricted_domain & tube->domain()).ub();
       last_box[0] = (*tube)[m_map_tubes[tube].index_x](tub);
       last_box[1] = (*tube)[m_map_tubes[tube].index_y](tub);
-      draw_box(last_box, "white", params);
+      draw_box(last_box, "red[]", params);
     }
   }
 
-  const string VIBesFigMap::shaded_slice_color(float r) const
+  const string VIBesFigMap::shaded_slice_color(float r, int transparency) const
   {
     assert(Interval(0.,1.).contains(r));
 
@@ -436,7 +507,7 @@ namespace tubex
       hsv_value.s = 0.40;
     }
 
-    string hex_color = rgb2hex(hsv2rgb(hsv_value));
+    string hex_color = rgb2hex(hsv2rgb(hsv_value), transparency);
     return hex_color + "[" + hex_color + "]";
   }
 
