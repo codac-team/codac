@@ -232,6 +232,17 @@ namespace tubex
        */
       const Trajectory primitive(double c, double timestep) const;
 
+      /**
+       * \brief Differentiates this trajectory
+       *
+       * \note If the trajectory is defined from an analytic function,
+       *       the exact differentiation is returned. Otherwise, from a map
+       *       of values, finite differences are computed.
+       * 
+       * \return a derivative trajectory
+       */
+      const Trajectory diff() const;
+
       /// @}
       /// \name String
       /// @{

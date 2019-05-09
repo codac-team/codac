@@ -288,6 +288,44 @@ namespace tubex
       return x;
     }
 
+    const Trajectory Trajectory::diff() const
+    {
+      if(m_function != NULL)
+        return Trajectory(domain(), m_function->diff());
+
+      else // finite difference computation
+      {
+        assert(m_map_values.size() > 1);
+
+        Trajectory d;
+        double prev_diff;
+
+        for(map<double,double>::const_iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
+        {
+          if(next(it) == m_map_values.end()) // the last point
+          {
+            d.set(prev_diff, it->first);
+            break;
+          }
+
+          else
+          {
+            double diff = (next(it)->second - it->second) / (next(it)->first - it->first);
+          
+            if(it != m_map_values.begin())
+              d.set((diff + prev_diff) / 2., it->first); // mean value
+
+            else
+              d.set(diff, it->first);
+
+            prev_diff = diff;
+          }
+        }
+
+        return d;
+      }
+    }
+
     // String
     
     std::ostream& operator<<(std::ostream& str, const Trajectory& x)

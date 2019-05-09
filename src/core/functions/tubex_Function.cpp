@@ -363,4 +363,12 @@ namespace tubex
 
     return y;
   }
+
+  const Function Function::diff() const
+  {
+    Function diff_f = *this;
+    delete diff_f.m_ibex_f;
+    diff_f.m_ibex_f = new ibex::Function(m_ibex_f->diff());
+    return diff_f;
+  }
 }

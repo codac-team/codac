@@ -45,7 +45,7 @@ namespace tubex
       Fnc();
 
       int m_nb_vars = -1, m_img_dim = -1;
-      bool m_is_intertemporal;
+      bool m_is_intertemporal = false;
   };
 }
 

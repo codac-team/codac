@@ -259,6 +259,16 @@ namespace tubex
 
       return x;
     }
+    
+    const TrajectoryVector TrajectoryVector::diff() const
+    {
+      TrajectoryVector x(size());
+
+      for(int i = 0 ; i < size() ; i++)
+        x[i] = (*this)[i].diff();
+
+      return x;
+    }
 
     // String
     

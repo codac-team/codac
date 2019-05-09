@@ -162,6 +162,7 @@ namespace tubex
        * \note returns POS_INFINITY if the interval is unbounded
        * \note returns 0 if the interval is empty
        *
+       * \param interval set to be evaluated
        * \return the diameter
        */
       static double diam(const ibex::Interval& interval);
