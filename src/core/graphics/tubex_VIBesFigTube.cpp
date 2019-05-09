@@ -384,7 +384,8 @@ namespace tubex
         {
           vibes::Params params_foreground = vibesParams("group", group_name);
           if(tube->is_empty())
-            cout << "Tube graphics: warning, empty tube (" << name() << ")" << endl;
+            cout << "Tube graphics: warning, empty tube (" << name() << "),"
+                 << " try again by drawing slices" << endl;
           else
             draw_polygon(tube->polygon_envelope(), params_foreground);
         }
