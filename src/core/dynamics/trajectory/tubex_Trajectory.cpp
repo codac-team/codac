@@ -211,7 +211,7 @@ namespace tubex
         else ++it;
       }
 
-      m_map_values[t.lb()] = y_lb;
+      m_map_values[t.lb()] = y_lb; // clean truncature
       m_map_values[t.ub()] = y_ub;
 
       compute_codomain();
@@ -248,17 +248,18 @@ namespace tubex
     {
       assert(m_function == NULL && "integration timestep requested for trajectories defined by Function");
       
+      double val;
       Trajectory x;
-      double prev_x = c, prev_t;
-      x.set(prev_x, domain().lb());
 
-      map<double,double>::const_iterator it = m_map_values.begin();
-      it++;
-      for( ; it != m_map_values.end() ; it++)
+      for(map<double,double>::const_iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
       {
-        prev_x += it->second * (it->first - prev_t);
-        prev_t = it->first;
-        x.set(prev_x, it->first);
+        if(it == m_map_values.begin())
+          val = c;
+
+        else
+          val += (prev(it)->second + it->second) * (it->first - prev(it)->first) / 2.;
+
+        x.set(val, it->first);
       }
 
       return x;
@@ -268,22 +269,19 @@ namespace tubex
     {
       assert(dt > 0.);
 
+      double val;
       Trajectory x;
-      double prev_x = c;
-      x.set(prev_x, domain().lb());
 
-      double t;
-      for(t = domain().lb() + dt ; t < domain().ub() ; t+=dt)
+      for(double t = domain().lb() ; t < domain().ub() ; t+=dt)
       {
-        prev_x += (*this)(t)*dt;
-        x.set(prev_x, t);
-      }
+        if(t == domain().lb())
+          val = c;
 
-      // Last value
-      double last_dt = domain().ub() - t;
-      t = domain().ub();
-      prev_x += (*this)(t)*dt;
-      x.set(prev_x, t);
+        else
+          val += ((*this)(t-dt) + (*this)(t)) * dt / 2.;
+
+        x.set(val, t);
+      }
 
       return x;
     }
@@ -296,29 +294,24 @@ namespace tubex
       else // finite difference computation
       {
         assert(m_map_values.size() > 1);
-
         Trajectory d;
-        double prev_diff;
 
         for(map<double,double>::const_iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
         {
-          if(next(it) == m_map_values.end()) // the last point
-          {
-            d.set(prev_diff, it->first);
-            break;
-          }
+          double t = it->first;
+          double x = it->second;
+
+          if(it == m_map_values.begin()) // first point
+            d.set((next(it)->second - x) / (next(it)->first - t), t);
+
+          else if(next(it) == m_map_values.end()) // last point
+            d.set((x - prev(it)->second) / (t - prev(it)->first), t);
 
           else
           {
-            double diff = (next(it)->second - it->second) / (next(it)->first - it->first);
-          
-            if(it != m_map_values.begin())
-              d.set((diff + prev_diff) / 2., it->first); // mean value
-
-            else
-              d.set(diff, it->first);
-
-            prev_diff = diff;
+            double h = min(t - prev(it)->first, next(it)->first - t);
+            double diff = ((*this)(t + h) - (*this)(t - h)) / (2.*h);
+            d.set(diff, t);
           }
         }
 
