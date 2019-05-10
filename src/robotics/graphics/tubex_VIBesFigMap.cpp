@@ -507,7 +507,8 @@ namespace tubex
       hsv_value.s = 0.40;
     }
 
-    string hex_color = rgb2hex(hsv2rgb(hsv_value), transparency);
+    hsv_value.alpha = transparency/255.;
+    string hex_color = rgb2hex(hsv2rgb(hsv_value));
     return hex_color + "[" + hex_color + "]";
   }
 

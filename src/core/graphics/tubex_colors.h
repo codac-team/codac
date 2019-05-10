@@ -22,9 +22,10 @@ namespace tubex
    */
   typedef struct
   {
-    float r; ///< red, a value between 0 and 1
-    float g; ///< green, a value between 0 and 1
-    float b; ///< blue, a value between 0 and 1
+    float r;      ///< red, value between 0 and 1
+    float g;      ///< green, value between 0 and 1
+    float b;      ///< blue, value between 0 and 1
+    float alpha;  ///< opacity, value between 0 (transparent) and 1 (opaque)
   } rgb;
 
   /**
@@ -33,20 +34,20 @@ namespace tubex
    */
   typedef struct
   {
-    float h; ///< hue, angle value in degrees between 0 and 359
-    float s; ///< saturation, a value between 0 and 1
-    float v; ///< value (lightness), a value between 0 and 1
+    float h;      ///< hue, angle value in degrees between 0 and 359
+    float s;      ///< saturation, a value between 0 and 1
+    float v;      ///< value (lightness), a value between 0 and 1
+    float alpha;  ///< opacity, value between 0 (transparent) and 1 (opaque)
   } hsv;
 
   /**
    * \brief Represents an RGB value in a HTML standard
    *
    * \param rgb_value
-   * \param alpha optional transparency component, between 0 and 255, (-1 if disabled)
    * \param prefix optional caracters ("#" by default)
    * \return the HTML string
    */
-  const std::string rgb2hex(rgb rgb_value, int alpha = -1, const char* prefix = "#");
+  const std::string rgb2hex(rgb rgb_value, const char* prefix = "#");
 
   /**
    * \brief Converts HSV to RGB
@@ -70,9 +71,10 @@ namespace tubex
    * \param r red value, integer between 0 and 255
    * \param g green value, integer between 0 and 255
    * \param b blue value, integer between 0 and 255
+   * \param alpha opacity value, integer between 0 (transparent) and 255 (opaque)
    * \return RGB value
    */
-  rgb make_rgb(int r, int g, int b);
+  rgb make_rgb(int r, int g, int b, int alpha = 255);
 
   /**
    * \brief Makes an RGV value from floats
@@ -80,9 +82,10 @@ namespace tubex
    * \param r red value, float between 0. and 1.
    * \param g green value, float between 0. and 1.
    * \param b blue value, float between 0. and 1.
+   * \param alpha opacity value, float between 0. (transparent) and 1. (opaque)
    * \return RGB value
    */
-  rgb make_rgb(float r, float g, float b);
+  rgb make_rgb(float r, float g, float b, float alpha = 1.);
 
   /**
    * \brief Returns the RGB value of the Haxby color map corresponding to some ratio

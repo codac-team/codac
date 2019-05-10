@@ -17,7 +17,7 @@ using namespace std;
 
 namespace tubex
 {
-  const string rgb2hex(rgb rgb_value, int alpha, const char* prefix)
+  const string rgb2hex(rgb rgb_value, const char* prefix)
   {
     string result;
     result.append(prefix);
@@ -32,10 +32,10 @@ namespace tubex
     sprintf(char_b, "%.2X", (int)(rgb_value.b * 255));
     result.append(char_b);
 
-    if(alpha != -1)
+    if(rgb_value.alpha != 1.)
     {
       char char_alpha[255];
-      sprintf(char_alpha, "%.2X", alpha);
+      sprintf(char_alpha, "%.2X", (int)(rgb_value.alpha * 255));
       result.append(char_alpha);
     }
 
@@ -46,6 +46,8 @@ namespace tubex
   {
     hsv hsv_value;
     float min, max, delta;
+
+    hsv_value.alpha = rgb_value.alpha;
 
     min = rgb_value.r < rgb_value.g ? rgb_value.r : rgb_value.g;
     min = min < rgb_value.b ? min : rgb_value.b;
@@ -100,6 +102,8 @@ namespace tubex
     float hh, p, q, t, ff;
     int i;
     rgb rgb_value;
+
+    rgb_value.alpha = hsv_value.alpha;
 
     if(hsv_value.s <= 0.0)
     {
@@ -162,19 +166,19 @@ namespace tubex
     return rgb_value;     
   }
 
-  rgb make_rgb(int r, int g, int b)
+  rgb make_rgb(int r, int g, int b, int alpha)
   {
-    assert(r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255);
+    assert(r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255 && alpha >= 0 && alpha <= 255);
     rgb rgb_val;
-    rgb_val.r = r/255.; rgb_val.g = g/255.; rgb_val.b = b/255.;
+    rgb_val.r = r/255.; rgb_val.g = g/255.; rgb_val.b = b/255.; rgb_val.alpha = alpha/255.;
     return rgb_val;
   }
 
-  rgb make_rgb(float r, float g, float b)
+  rgb make_rgb(float r, float g, float b, float alpha)
   {
-    assert(r >= 0. && r <= 1. && g >= 0. && g <= 1. && b >= 0. && b <= 1.);
+    assert(r >= 0. && r <= 1. && g >= 0. && g <= 1. && b >= 0. && b <= 1. && alpha >= 0. && alpha <= 1.);
     rgb rgb_val;
-    rgb_val.r = r; rgb_val.g = g; rgb_val.b = b;
+    rgb_val.r = r; rgb_val.g = g; rgb_val.b = b; rgb_val.alpha = alpha;
     return rgb_val;
   }
     
