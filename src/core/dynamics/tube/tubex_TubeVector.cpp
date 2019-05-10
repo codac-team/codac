@@ -636,6 +636,31 @@ namespace tubex
 
       return p;
     }
+    
+    const pair<TubeVector,TubeVector> TubeVector::bisect(double t, int dim_id, float ratio) const
+    {
+      assert(domain().contains(t));
+      assert(Interval(0.,1.).interior_contains(ratio));
+      assert(dim_id >= 0 && dim_id < size());
+
+      pair<TubeVector,TubeVector> p = make_pair(*this,*this);
+      LargestFirst bisector(0., ratio);
+
+      try
+      {
+        // Note: LargestFirst is useless here (bisection on one-dimensional interval vector)
+        pair<IntervalVector,IntervalVector> p_codomain = bisector.bisect(IntervalVector(1, (*this)[dim_id](t)));
+        p.first[dim_id].set(p_codomain.first[0], t);
+        p.second[dim_id].set(p_codomain.second[0], t);
+      }
+
+      catch(ibex::NoBisectableVariableException&)
+      {
+        throw Exception("TubeVector::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
+      };
+
+      return p;
+    }
 
     // String
     

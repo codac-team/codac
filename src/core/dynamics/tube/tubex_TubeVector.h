@@ -672,10 +672,24 @@ namespace tubex
        * \note If the tube is not already sampled at \f$t\f$, then a sampling is performed
        *
        * \param t the temporal key (double, must belong to the TubeVector domain)
-       * \param ratio the bisection ratio (default value: 0.55)
+       * \param ratio the bisection ratio (default value: 0.49)
        * \return a pair of two TubeVector objects resulting from the bisection
        */
       const std::pair<TubeVector,TubeVector> bisect(double t, float ratio = 0.49) const;
+
+      /**
+       * \brief Bisects this tube along a specific dimension
+       *
+       * \note The tube is bisected along the codomain and according to a defined ratio
+       * \note The bisection is performed on the gate \f$[x_i](t)\f$
+       * \note If the tube is not already sampled at \f$t\f$, then a sampling is performed
+       *
+       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param dim the dimension id
+       * \param ratio the bisection ratio (default value: 0.49)
+       * \return a pair of two TubeVector objects resulting from the bisection
+       */
+      const std::pair<TubeVector,TubeVector> bisect(double t, int dim, float ratio = 0.49) const;
 
       /// @}
       /// \name Assignments operators
