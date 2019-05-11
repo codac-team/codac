@@ -39,7 +39,7 @@ int main()
     Vector epsilon(n, 0.1);
     Interval domain(0.,1.);
     TubeVector x(domain, n);
-    x.set(IntervalVector(n, Interval(0.5,1.)), 0.); // initial condition
+    x.set(IntervalVector(n, Interval(0.5,1.)*exp(Interval(-0.))), 0.); // initial condition
     TrajectoryVector truth1(domain, tubex::Function("1.0*exp(-t)"));
     TrajectoryVector truth2(domain, tubex::Function("0.5*exp(-t)"));
 

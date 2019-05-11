@@ -148,7 +148,7 @@ TEST_CASE("Tube definition")
   {
     Tube tube(Interval(-1.,1.), 0.667, tubex::Function("t^2"));
     CHECK(tube.nb_slices() == 3);
-    CHECK(tube(0) == Interval(pow(-1. + 0.667, 2), 1.));
+    CHECK(ApproxIntv(tube(0)) == Interval(pow(-1. + 0.667, 2), 1.));
     CHECK(tube(-1.) == Interval(1.));
     CHECK(tube(1.) == Interval(1.));
     CHECK(tube(-0.9) == tube(0));
@@ -182,13 +182,13 @@ TEST_CASE("Tube definition")
     Trajectory traj2(Interval(0.,1.1), tubex::Function("2*(t^5)+(t^3)-3*(t^2)"));
     
     Tube tube0(Interval(0.,1.1), 0.1, Interval::EMPTY_SET);
-    CHECK(tube0.nb_slices() == 12);
+    CHECK(tube0.nb_slices() == 11);
     CHECK(tube0.codomain() == Interval::EMPTY_SET);
     tube0 |= traj2;
 
-    Interval t = tube0.last_slice()->prev_slice()->domain(); //(1.0,1.1);
+    Interval t = tube0.last_slice()->domain(); //(1.0,1.1);
     Interval slice_codomain = 2*pow(t,5)+pow(t,3)-3*pow(t,2);
-    CHECK(tube0.last_slice()->prev_slice()->codomain() == slice_codomain);
+    CHECK(tube0.last_slice()->codomain() == slice_codomain);
     CHECK(tube0.codomain().ub() == slice_codomain.ub());
 
     Tube tube2(traj2, 0.1);

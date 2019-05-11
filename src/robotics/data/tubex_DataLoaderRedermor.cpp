@@ -97,8 +97,8 @@ namespace tubex
       TubeVector velocities = f.eval_vector(*x);
 
       // Horizontal position
-      (*x)[0] = velocities[0].primitive() + 0.06; // datafile: robot starts at (0.06,0.)
-      (*x)[1] = velocities[1].primitive();
+      (*x)[0] = velocities[0].primitive(traj_data_x[8](traj_data_x.domain().lb())); // datafile: robot starts at (0.06,0.)
+      (*x)[1] = velocities[1].primitive(traj_data_x[9](traj_data_x.domain().lb()));
 
       // Case of the depth, directly sensed:
       (*x)[2].set_empty();

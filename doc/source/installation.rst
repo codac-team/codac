@@ -23,12 +23,12 @@ Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
 
   git clone https://github.com/ibex-team/ibex-lib      # download the sources from Github
   cd ibex-lib                                          # move to the IBEX directory
-  ./waf configure --with-debug --interval-lib=filib    # configure IBEX before installation
+  ./waf configure --with-debug --interval-lib=gaol     # configure IBEX before installation
   sudo ./waf install                                   # building + installing
 
 Note that the :code:`--with-debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
 
-The use of `GAOL library <http://frederic.goualard.net/#research-software>`_ (instead of `Filib++ <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_) is not completely supported yet.
+Tubex uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_ is also supported. Use :code:`--interval-lib=filib` during the configuration of IBEX to use it.
 
 
 Tubex library

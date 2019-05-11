@@ -10,12 +10,37 @@ find_library(IBEX_LIBRARY NAMES ibex
              HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}
              PATH_SUFFIXES lib)
 
-find_library(FILIB_LIBRARY NAMES prim
-             HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}
-             PATH_SUFFIXES lib lib/ibex/3rd/
-             )
+# With FILIB interval library
 
-list(APPEND IBEX_LIBRARY "${FILIB_LIBRARY}")
+  find_library(FILIB_LIBRARY NAMES prim
+               HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}
+               PATH_SUFFIXES lib lib/ibex/3rd/
+               )
+
+  list(APPEND IBEX_LIBRARY "${FILIB_LIBRARY}")
+
+# With GAOL interval library
+
+  find_library(GAOL_LIBRARY NAMES gaol
+               HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}
+               PATH_SUFFIXES lib lib/ibex/3rd/
+               )
+
+  find_library(GDTOA_LIBRARY NAMES gdtoa
+               HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}
+               PATH_SUFFIXES lib lib/ibex/3rd/
+               )
+
+  find_library(ULTIM_LIBRARY NAMES ultim
+               HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}
+               PATH_SUFFIXES lib lib/ibex/3rd/
+               )
+
+  list(APPEND IBEX_LIBRARY "${GDTOA_LIBRARY}")
+  list(APPEND IBEX_LIBRARY "${ULTIM_LIBRARY}")
+  list(APPEND IBEX_LIBRARY "${GAOL_LIBRARY}")
+
+##
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(IbexLib DEFAULT_MSG

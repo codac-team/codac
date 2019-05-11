@@ -469,6 +469,7 @@ TEST_CASE("Testing equalities")
     CHECK_FALSE(x1 != x2);
 
     x1.set(Interval(2.,3.), 0.5);
+    x2.sample(0.5);
     CHECK(x1 != x2);
     CHECK_FALSE(x1 == x2);
 

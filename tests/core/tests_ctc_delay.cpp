@@ -34,7 +34,7 @@ TEST_CASE("CtcDelay")
     }
     
     CHECK(y(Interval(0.,M_PI)) == Interval::ALL_REALS);
-    CHECK(y(Interval(M_PI+0.01,10.)) == Interval(-1.,1.));
+    CHECK(ApproxIntv(y(Interval(M_PI+0.01,10.))) == Interval(-1.,1.));
     CHECK(y(5.).is_superset(x(5. - M_PI)));
   }
 }

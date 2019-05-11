@@ -42,7 +42,7 @@ install:
   - echo 'Installing IBEX...';
   - git clone https://github.com/ibex-team/ibex-lib
   - cd ibex-lib
-  - ./waf configure --with-debug --interval-lib=filib
+  - ./waf configure --with-debug --interval-lib=gaol
   - sudo ./waf install
   - cd ..
 
