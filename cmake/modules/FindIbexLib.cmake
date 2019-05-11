@@ -12,12 +12,12 @@ find_library(IBEX_LIBRARY NAMES ibex
 
 # With FILIB interval library
 
-  find_library(FILIB_LIBRARY NAMES prim
-               HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}
-               PATH_SUFFIXES lib lib/ibex/3rd/
-               )
-
-  list(APPEND IBEX_LIBRARY "${FILIB_LIBRARY}")
+  #find_library(FILIB_LIBRARY NAMES prim
+  #             HINTS ${PC_IBEX_LIBDIR} ${PC_IBEX_LIBRARY_DIRS}
+  #             PATH_SUFFIXES lib lib/ibex/3rd/
+  #             )
+  
+  #list(APPEND IBEX_LIBRARY "${FILIB_LIBRARY}")
 
 # With GAOL interval library
 
