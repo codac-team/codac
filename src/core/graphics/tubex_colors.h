@@ -22,10 +22,10 @@ namespace tubex
    */
   typedef struct
   {
-    float r;      ///< red, value between 0 and 1
-    float g;      ///< green, value between 0 and 1
-    float b;      ///< blue, value between 0 and 1
-    float alpha;  ///< opacity, value between 0 (transparent) and 1 (opaque)
+    float r;      ///< red, value between 0. and 1.
+    float g;      ///< green, value between 0. and 1.
+    float b;      ///< blue, value between 0. and 1.
+    float alpha;  ///< opacity, value between 0. (transparent) and 1. (opaque)
   } rgb;
 
   /**
@@ -34,10 +34,10 @@ namespace tubex
    */
   typedef struct
   {
-    float h;      ///< hue, angle value in degrees between 0 and 359
-    float s;      ///< saturation, a value between 0 and 1
-    float v;      ///< value (lightness), a value between 0 and 1
-    float alpha;  ///< opacity, value between 0 (transparent) and 1 (opaque)
+    float h;      ///< hue, angle value in degrees between 0. and 360.
+    float s;      ///< saturation, a value between 0. and 1.
+    float v;      ///< value (lightness), a value between 0. and 1.
+    float alpha;  ///< opacity, value between 0. (transparent) and 1. (opaque)
   } hsv;
 
   /**
@@ -90,18 +90,18 @@ namespace tubex
   /**
    * \brief Makes an HSV value from integers
    *
-   * \param h hue value, integer between 0 and 255
-   * \param s saturation value, integer between 0 and 255
-   * \param v value (lightness), integer between 0 and 255
-   * \param alpha opacity value, integer between 0 (transparent) and 255 (opaque)
+   * \param h hue value, integer between 0 and 360
+   * \param s saturation value, integer between 0 and 100
+   * \param v value (lightness), integer between 0 and 100
+   * \param alpha opacity value, integer between 0 (transparent) and 100 (opaque)
    * \return HSV value
    */
-  hsv make_hsv(int h, int s, int v, int alpha = 255);
+  hsv make_hsv(int h, int s, int v, int alpha = 100);
 
   /**
    * \brief Makes an HSV value from floats
    *
-   * \param h hue value, float between 0. and 1.
+   * \param h hue value, float between 0. and 360.
    * \param s saturation value, float between 0. and 1.
    * \param v value (lightness), float between 0. and 1.
    * \param alpha opacity value, float between 0. (transparent) and 1. (opaque)

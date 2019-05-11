@@ -51,6 +51,11 @@ namespace tubex
       /**
        * \brief 
        */
+      void add_color_point(hsv color, float index);
+
+      /**
+       * \brief 
+       */
       rgb color(double ratio) const;
 
       /**
@@ -58,9 +63,14 @@ namespace tubex
        */
       rgb color(double t, const Trajectory& traj) const;
 
+      /**
+       * \brief 
+       */
+      void displayColorMap() const;
+
     protected:
 
-      int m_interpol_mode = InterpolationMode::RGB;
+      const int m_interpol_mode = InterpolationMode::RGB;
       std::map<float,rgb> m_colormap;
   };
 }

@@ -184,15 +184,15 @@ namespace tubex
 
   hsv make_hsv(int h, int s, int v, int alpha)
   {
-    assert(h >= 0 && h <= 255 && s >= 0 && s <= 255 && v >= 0 && v <= 255 && alpha >= 0 && alpha <= 255);
+    assert(h >= 0 && h <= 360. && s >= 0 && s <= 100 && v >= 0 && v <= 100 && alpha >= 0 && alpha <= 100);
     hsv hsv_val;
-    hsv_val.h = h/255.; hsv_val.s = s/255.; hsv_val.v = v/255.; hsv_val.alpha = alpha/255.;
+    hsv_val.h = h; hsv_val.s = s/100.; hsv_val.v = v/100.; hsv_val.alpha = alpha/100.;
     return hsv_val;
   }
 
   hsv make_hsv(float h, float s, float v, float alpha)
   {
-    assert(h >= 0. && h <= 1. && s >= 0. && s <= 1. && v >= 0. && v <= 1. && alpha >= 0. && alpha <= 1.);
+    assert(h >= 0. && h <= 360. && s >= 0. && s <= 1. && v >= 0. && v <= 1. && alpha >= 0. && alpha <= 1.);
     hsv hsv_val;
     hsv_val.h = h; hsv_val.s = s; hsv_val.v = v; hsv_val.alpha = alpha;
     return hsv_val;
@@ -202,7 +202,7 @@ namespace tubex
   {
     assert(ratio >= 0. && ratio <= 1.);
 
-    rgb haxby_cm[32];
+    /*rgb haxby_cm[32];
     haxby_cm[ 0] = make_rgb(10,0,121);
     haxby_cm[ 1] = make_rgb(40,0,150);
     haxby_cm[ 2] = make_rgb(20,5,175);
@@ -247,14 +247,14 @@ namespace tubex
     
     return make_rgb((float)(rgb_lb.r + (rgb_ub.r - rgb_lb.r) * local_ratio),
                     (float)(rgb_lb.g + (rgb_ub.g - rgb_lb.g) * local_ratio),
-                    (float)(rgb_lb.b + (rgb_ub.b - rgb_lb.b) * local_ratio));
+                    (float)(rgb_lb.b + (rgb_ub.b - rgb_lb.b) * local_ratio));*/
   }
     
   rgb dem_color_map(float ratio)
   {
     assert(ratio >= 0. && ratio <= 1.);
 
-    rgb haxby_cm[16];
+    /*rgb haxby_cm[16];
     haxby_cm[ 0] = make_rgb(39,90,211);
     haxby_cm[ 1] = make_rgb(40,123,245);
     haxby_cm[ 2] = make_rgb(45,155,253);
@@ -283,6 +283,6 @@ namespace tubex
     
     return make_rgb((float)(rgb_lb.r + (rgb_ub.r - rgb_lb.r) * local_ratio),
                     (float)(rgb_lb.g + (rgb_ub.g - rgb_lb.g) * local_ratio),
-                    (float)(rgb_lb.b + (rgb_ub.b - rgb_lb.b) * local_ratio));
+                    (float)(rgb_lb.b + (rgb_ub.b - rgb_lb.b) * local_ratio));*/
   }
 }
