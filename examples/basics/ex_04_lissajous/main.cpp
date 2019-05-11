@@ -94,9 +94,9 @@ int main()
     fig_x.show();
 
     VIBesFigMap fig_map("Map");
-    fig_map.set_properties(50, 50, 500, 500);
-    fig_map.add_tubevector(&x, "x", 0, 1);
-    fig_map.add_trajectoryvector(&x_truth, "x*", 0, 1, "white");
+    fig_map.set_properties(50, 50, 800, 500);
+    fig_map.add_tube(&x, "x", 0, 1);
+    fig_map.add_trajectory(&x_truth, "x*", 0, 1, "white");
     fig_map.show(1.2);
 
     vibes::endDrawing();

@@ -68,7 +68,7 @@ int main()
 
     VIBesFigMap fig_map("Map");
     fig_map.set_properties(50, 50, 550, 350);
-    fig_map.add_tubevector(&x, "x", 0, 1);
+    fig_map.add_tube(&x, "x", 0, 1);
     fig_map.show();
 
     if(!FINAL_CONDITION)

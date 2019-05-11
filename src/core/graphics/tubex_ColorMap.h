@@ -18,23 +18,25 @@
 namespace tubex
 {
   /**
-   * \enum TubeColorType
-   * \brief Defines a set of colors for tube display
+   * \enum InterpolationMode
+   * \brief Defines in which color space (HSV, RGB) the
+   *        color interpolation will be made.
    */
   enum InterpolationMode { RGB, HSV };
 
   /**
    * \class ColorMap
-   * \brief ...
+   * \brief Associates colors to a range of values.
    */
   class ColorMap
   {
     public:
 
       /**
-       * \brief 
+       * \brief Creates a color map
        *
-       * \param 
+       * \param interpol_mode mode defining in which color space the
+       *        color interpolation will be made (RGB by default)
        */
       ColorMap(int interpol_mode = InterpolationMode::RGB);
 
@@ -44,38 +46,81 @@ namespace tubex
       ~ColorMap() {};
 
       /**
-       * \brief 
+       * \brief Returns a copy of a ColorMap
+       *
+       * \param x the ColorMap object to be copied
+       * \return a new ColorMap object with same values
+       */
+      const ColorMap& operator=(const ColorMap& x);
+
+      /**
+       * \brief Adds a RGB color point to the map
+       *
+       * \param color RGB color to be added
+       * \param index key associated to the color (any float value)
        */
       void add_color_point(rgb color, float index);
 
       /**
-       * \brief 
+       * \brief Adds a HSV color point to the map
+       *
+       * \param color HSV color to be added
+       * \param index key associated to the color (any float value)
        */
       void add_color_point(hsv color, float index);
 
       /**
-       * \brief 
+       * \brief Sets a constant opacity to all colors of the map
+       *
+       * \param alpha opacity value, between 0. (transparent) and 1. (opaque)
        */
-      rgb color(double ratio) const;
+      void set_opacity(float alpha);
 
       /**
-       * \brief 
+       * \brief Returns `true` of all colors are opaque
+       *
+       * \return opacity test of the map
        */
-      rgb color(double t, const Trajectory& traj) const;
+      bool is_opaque() const;
 
       /**
-       * \brief 
+       * \brief Evaluates the color map at \f$r\f$, \f$r\in[0,1]\f$
+       *
+       * If `r` is not a key of the map, an interpolation is made to compute
+       * the corresponding color, according to the selected mode.
+       *
+       * \param r input, between 0 and 1
+       * \return an RGB color
+       */
+      rgb color(double r) const;
+
+      /**
+       * \brief Evaluates the color map at \f$f(t)\f$, \f$t\in[t_0,t_f]\f$
+       *
+       * If \f$f(t)\f$ is not a key of the map, an interpolation is made to compute
+       * the corresponding color, according to the selected mode.
+       *
+       * \param t input, between 0 and 1
+       * \param f the trajectory function
+       * \return an RGB color
+       */
+      rgb color(double t, const Trajectory& f) const;
+
+      /**
+       * \brief Creates a VIBesFig with the colors of the map
+       *
+       * \param fig_name a reference to the figure that will be displayed in the window's title
        */
       void displayColorMap(const std::string& fig_name = "Color map") const;
 
-      static const ColorMap HAXBY;
-      static const ColorMap DEFAULT;
-      static const ColorMap BLUE_TUBE;
+      static const ColorMap HAXBY; //!< predefined HAXBY color map (namely used for DEM)
+      static const ColorMap DEFAULT; //!< a predefined default color map
+      static const ColorMap BLUE_TUBE; //!< a predefined color map for tubes
 
     protected:
 
-      const int m_interpol_mode = InterpolationMode::RGB;
-      std::map<float,rgb> m_colormap;
+      int m_interpol_mode = InterpolationMode::RGB; //!< interpolation mode
+      std::map<float,rgb> m_colormap; //!< map of colors
   };
 }
 

@@ -49,7 +49,7 @@ namespace tubex
     m_draw_tubes_backgrounds = enable;
   }
 
-  void VIBesFigMap::add_tubevector(const TubeVector *tube, const string& name, int index_x, int index_y)
+  void VIBesFigMap::add_tube(const TubeVector *tube, const string& name, int index_x, int index_y)
   {
     assert(tube != NULL);
     assert(index_x != index_y);
@@ -61,13 +61,14 @@ namespace tubex
     m_map_tubes[tube];
     m_map_tubes[tube].index_x = index_x;
     m_map_tubes[tube].index_y = index_y;
-    set_tubevector_name(tube, name);
+    set_tube_color(tube, ColorMap::BLUE_TUBE);
+    set_tube_name(tube, name);
 
     vibes::newGroup("tube_" + name + "_bckgrnd", "lightgray[lightgray]", vibesParams("figure", this->name()));
     vibes::newGroup("tube_" + name, "gray[gray]", vibesParams("figure", this->name()));
   }
 
-  void VIBesFigMap::set_tubevector_name(const TubeVector *tube, const string& name)
+  void VIBesFigMap::set_tube_name(const TubeVector *tube, const string& name)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -76,7 +77,27 @@ namespace tubex
     m_map_tubes[tube].name = name;
   }
   
-  void VIBesFigMap::remove_tubevector(const TubeVector *tube)
+  void VIBesFigMap::set_tube_color(const TubeVector *tube, const string& color)
+  {
+    assert(tube != NULL);
+    assert(color != "");
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unknown tube, must be added beforehand");
+
+    m_map_tubes[tube].color = color;
+  }
+  
+  void VIBesFigMap::set_tube_color(const TubeVector *tube, const ColorMap& colormap, const Trajectory *traj_colormap)
+  {
+    assert(tube != NULL);
+    assert(m_map_tubes.find(tube) != m_map_tubes.end()
+      && "unknown tube, must be added beforehand");
+
+    m_map_tubes[tube].color = ""; // removing constant color
+    m_map_tubes[tube].color_map = make_pair(colormap, traj_colormap);
+  }
+  
+  void VIBesFigMap::remove_tube(const TubeVector *tube)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -91,7 +112,7 @@ namespace tubex
     m_map_tubes.erase(tube);
   }
 
-  void VIBesFigMap::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color)
+  void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) == m_map_trajs.end()
@@ -100,10 +121,10 @@ namespace tubex
     assert(index_x >= 0 && index_x < traj->size());
     assert(index_y >= 0 && index_y < traj->size());
 
-    add_trajectoryvector(traj, name, index_x, index_y, -1, color);
+    add_trajectory(traj, name, index_x, index_y, -1, color);
   }
 
-  void VIBesFigMap::add_trajectoryvector(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
+  void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) == m_map_trajs.end()
@@ -118,11 +139,11 @@ namespace tubex
     m_map_trajs[traj].index_y = index_y;
     m_map_trajs[traj].index_heading = index_heading;
 
-    set_trajectoryvector_name(traj, name);
-    set_trajectoryvector_color(traj, color);
+    set_trajectory_name(traj, name);
+    set_trajectory_color(traj, color);
   }
 
-  void VIBesFigMap::set_trajectoryvector_name(const TrajectoryVector *traj, const string& name)
+  void VIBesFigMap::set_trajectory_name(const TrajectoryVector *traj, const string& name)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -131,9 +152,10 @@ namespace tubex
     m_map_trajs[traj].name = name;
   }
   
-  void VIBesFigMap::set_trajectoryvector_color(const TrajectoryVector *traj, const string& color)
+  void VIBesFigMap::set_trajectory_color(const TrajectoryVector *traj, const string& color)
   {
     assert(traj != NULL);
+    assert(color != "");
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
       && "unable to remove, unknown traj");
 
@@ -143,7 +165,20 @@ namespace tubex
     // so that trajectories stay on top of the tubes.
   }
   
-  void VIBesFigMap::remove_trajectoryvector(const TrajectoryVector *traj)
+  void VIBesFigMap::set_trajectory_color(const TrajectoryVector *traj, const ColorMap& colormap, const Trajectory *traj_colormap)
+  {
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unable to remove, unknown traj");
+
+    m_map_trajs[traj].color = ""; // removing constant color
+    m_map_trajs[traj].color_map = make_pair(colormap, traj_colormap);
+
+    // Related groups are created during the display procedure
+    // so that trajectories stay on top of the tubes.
+  }
+  
+  void VIBesFigMap::remove_trajectory(const TrajectoryVector *traj)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -284,6 +319,17 @@ namespace tubex
     int index_x = m_map_trajs[traj].index_x;
     int index_y = m_map_trajs[traj].index_y;
 
+    // Color maps
+
+      vector<string> v_colors;
+      Trajectory identity_traj;
+      identity_traj.set(traj->domain().lb(), traj->domain().lb());
+      identity_traj.set(traj->domain().ub(), traj->domain().ub());
+
+      const Trajectory *traj_colormap = &identity_traj;
+      if(m_map_trajs[traj].color_map.second != NULL)
+        traj_colormap = m_map_trajs[traj].color_map.second;
+
     if((*traj)[index_x].sampled_map().size() != 0)
     {
       typename map<double,double>::const_iterator it_scalar_values_x, it_scalar_values_y;
@@ -303,6 +349,8 @@ namespace tubex
           {
             v_x.push_back(it_scalar_values_x->second);
             v_y.push_back(it_scalar_values_y->second);
+            if(m_map_trajs[traj].color == "")
+              v_colors.push_back(rgb2hex(m_map_trajs[traj].color_map.first.color(it_scalar_values_x->first, *traj_colormap)));
           }
         }
 
@@ -334,12 +382,27 @@ namespace tubex
         {
           v_x.push_back(x);
           v_y.push_back(y);
+          if(m_map_trajs[traj].color == "")
+            v_colors.push_back(rgb2hex(m_map_trajs[traj].color_map.first.color(t, *traj_colormap)));
         }
       }
     }
 
     vibes::Params params = vibesParams("figure", name(), "group", group_name);
-    vibes::drawLine(v_x, v_y, params);
+
+    if(m_map_trajs[traj].color == "")
+      for(int i = 0 ; i < v_x.size()-1 ; i++) // shaded lines
+      {
+        vector<double> v_local_x, v_local_y;
+        v_local_x.push_back(v_x[i]); v_local_x.push_back(v_x[i+1]);
+        v_local_y.push_back(v_y[i]); v_local_y.push_back(v_y[i+1]);
+
+        vibes::drawLine(v_local_x, v_local_y, v_colors[i], params);
+      }
+
+    else
+      vibes::drawLine(v_x, v_y, params);
+
     draw_vehicle((traj->domain() & m_restricted_domain).ub(), traj, params);
 
     return viewbox;
@@ -390,126 +453,78 @@ namespace tubex
       vibes::clearGroup(name(), group_name);
       vibes::Params params = vibesParams("figure", name(), "group", group_name);
 
-      // Those two parameters should be put as argument
-      int transparency = 50;
-      bool reversed = false; 
+      // Color map and related trajectory
 
+        const ColorMap *color_map = &m_map_tubes[tube].color_map.first;
+
+        Trajectory identity_traj;
+        identity_traj.set(tube->domain().lb(), tube->domain().lb());
+        identity_traj.set(tube->domain().ub(), tube->domain().ub());
+
+        const Trajectory *traj_colormap = &identity_traj;
+        if(m_map_tubes[tube].color_map.second != NULL)
+          traj_colormap = m_map_tubes[tube].color_map.second;
+
+      int k0, kf, kstep;
+      bool from_first_to_last = m_map_tubes[tube].from_first_to_last;
+      IntervalVector prev_box(2); // used for diff display
+
+      if(from_first_to_last) // Drawing from last to first box
+      {
+        k0 = 0;
+        kf = tube->nb_slices()-1;
+      }
+
+      else
+      {
+        k0 = tube->nb_slices()-1;
+        kf = 0;
+      }
+
+      for(int k = k0 ;
+          (from_first_to_last && k <= kf) || (!from_first_to_last && k >= kf) ;
+          k+= from_first_to_last ? max(1,min(step,kf-k)) : -max(1,min(step,k)))
+      {
+        IntervalVector box(2);
+        box[0] = (*tube)[m_map_tubes[tube].index_x](k);
+        box[1] = (*tube)[m_map_tubes[tube].index_y](k);
+
+        string color = m_map_tubes[tube].color;
+        if(color == "") // then defined by a color map
+        {
+          color = rgb2hex(color_map->color((*tube)[0].slice(k)->domain().mid(), *traj_colormap));
+          color = color + "[" + color + "]";
+        }
+
+        if(!color_map->is_opaque() && k != k0)
+        {
+          IntervalVector* diff_list;
+          int nb_box = box.diff(prev_box, diff_list);
+
+          for (int i = 0; i < nb_box; i++ )
+            draw_box(*(diff_list+i), color, params);
+
+          delete[] diff_list;
+        }
+
+        else
+          draw_box(box, color, params);
+
+        prev_box = box;
+      }
+      
       IntervalVector first_box(2);
       double tlb = (m_restricted_domain & tube->domain()).lb();
       first_box[0] = (*tube)[m_map_tubes[tube].index_x](tlb);
       first_box[1] = (*tube)[m_map_tubes[tube].index_y](tlb);
-      draw_box(first_box, "green[]", params);
-
-
-      if (reversed) //Drawing from last to first box
-      {
-        for(int k = tube->nb_slices() - 1 ; k >= 0 ; k -= step)
-        {
-          IntervalVector box(2);
-          box[0] = (*tube)[m_map_tubes[tube].index_x](k);
-          box[1] = (*tube)[m_map_tubes[tube].index_y](k);
-
-          string color = shaded_slice_color((1. * k) / tube->nb_slices(), transparency);
-
-          if (k < tube->nb_slices() - 1)
-          {
-            
-            IntervalVector prevBox(2);
-            prevBox[0] = (*tube)[m_map_tubes[tube].index_x](k+1);
-            prevBox[1] = (*tube)[m_map_tubes[tube].index_y](k+1);
-            IntervalVector* diffList;
-            int nb_box = box.diff(prevBox, diffList);
-
-            for (int i = 0; i < nb_box; i++ )
-            {
-              draw_box(*(diffList+i), color, params);
-            }
-
-            delete[] diffList;
-          }
-
-          else
-          {
-            draw_box(box, color, params);
-          }
-          
-        }
-      }
-
-      else //Drawing from first to last box
-      {
-        for(int k = 0; k < tube->nb_slices() ; k += step)
-        {
-          if(!m_restricted_domain.intersects((*tube)[0].slice(k)->domain()))
-            continue;
-          
-          string color = shaded_slice_color((1. * k) / tube->nb_slices(), transparency);
-
-          IntervalVector box(2);
-          box[0] = (*tube)[m_map_tubes[tube].index_x](k);
-          box[1] = (*tube)[m_map_tubes[tube].index_y](k);
-
-          if (k > 0)
-          {
-
-            IntervalVector prevBox(2);
-            prevBox[0] = (*tube)[m_map_tubes[tube].index_x](k-1);
-            prevBox[1] = (*tube)[m_map_tubes[tube].index_y](k-1);
-            IntervalVector* diffList;
-            int nb_box = box.diff(prevBox, diffList);
-
-            for (int i = 0; i < nb_box; i++ )
-            {
-              draw_box(*(diffList+i), color, params);
-            }
-
-            delete[] diffList;
-
-          }
-
-          else
-          {
-            draw_box(box, color, params);
-          }
-        }
-      }
+      draw_box(first_box, "#C02600[]", params); // red
       
       IntervalVector last_box(2);
       double tub = (m_restricted_domain & tube->domain()).ub();
       last_box[0] = (*tube)[m_map_tubes[tube].index_x](tub);
       last_box[1] = (*tube)[m_map_tubes[tube].index_y](tub);
-      draw_box(last_box, "red[]", params);
+      draw_box(last_box, "#47A040[]", params); // green
     }
-  }
-
-  const string VIBesFigMap::shaded_slice_color(float r, int transparency) const
-  {
-    assert(Interval(0.,1.).contains(r));
-
-    float color_gray_min = 128, color_gray_max = 220;
-
-    if(!GRAY_DISPLAY_MODE)
-    {
-      color_gray_min = 127.5;
-      color_gray_max = 229.5;
-    }
-
-    int g = color_gray_min + (color_gray_max - color_gray_min) * r;
-
-    hsv hsv_value;
-    hsv_value.v = g / 255.;
-    hsv_value.h = 0.;
-    hsv_value.s = 0.;
-
-    if(!GRAY_DISPLAY_MODE)
-    {
-      hsv_value.h = 200.;
-      hsv_value.s = 0.40;
-    }
-
-    hsv_value.alpha = transparency/255.;
-    string hex_color = rgb2hex(hsv2rgb(hsv_value));
-    return hex_color + "[" + hex_color + "]";
   }
 
   void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params)

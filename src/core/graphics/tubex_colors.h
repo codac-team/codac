@@ -108,22 +108,6 @@ namespace tubex
    * \return HSV value
    */
   hsv make_hsv(float h, float s, float v, float alpha = 1.);
-
-  /**
-   * \brief Returns the RGB value of the Haxby color map corresponding to some ratio
-   *
-   * \param ratio a value between 0 and 1
-   * \return RGB value in Haxby color map
-   */
-  rgb haxby_color_map(float ratio);
-
-  /**
-   * \brief Returns the RGB value of the DEM color map corresponding to some ratio
-   *
-   * \param ratio a value between 0 and 1
-   * \return RGB value in DEM color map
-   */
-  rgb dem_color_map(float ratio);
 }
 
 #endif

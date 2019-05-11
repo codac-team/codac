@@ -22,6 +22,13 @@ namespace tubex
   {
     assert(interpol_mode == InterpolationMode::RGB || interpol_mode == InterpolationMode::HSV);
   }
+  
+  const ColorMap& ColorMap::operator=(const ColorMap& x)
+  {
+    m_colormap = x.m_colormap;
+    m_interpol_mode = x.m_interpol_mode;
+    return *this;
+  }
 
   void ColorMap::add_color_point(rgb color, float index)
   {
@@ -33,13 +40,28 @@ namespace tubex
     m_colormap[index] = hsv2rgb(color);
   }
 
-  rgb ColorMap::color(double ratio) const
+  void ColorMap::set_opacity(float alpha)
+  {
+    assert(alpha >= 0. && alpha <= 1.);
+    for(map<float,rgb>::iterator it = m_colormap.begin() ; it != m_colormap.end() ; it++)
+      it->second.alpha = alpha;
+  }
+
+  bool ColorMap::is_opaque() const
+  {
+    for(map<float,rgb>::const_iterator it = m_colormap.begin() ; it != m_colormap.end() ; it++)
+      if(it->second.alpha != 1.)
+        return false;
+    return true;
+  }
+
+  rgb ColorMap::color(double r) const
   {
     assert(m_colormap.size() >= 2 && "color map defined by at least two colors");
-    assert(Interval(0.,1.).contains(ratio) && "ratio between 0 and 1");
+    assert(Interval(0.,1.).contains(r) && "r between 0 and 1");
 
     Interval map_domain = Interval(m_colormap.begin()->first,prev(m_colormap.end())->first);
-    float real_index = map_domain.lb() + ratio*map_domain.diam();
+    float real_index = map_domain.lb() + r*map_domain.diam();
 
     if(m_colormap.find(real_index) == m_colormap.end()) // color interpolation
     {
@@ -82,13 +104,13 @@ namespace tubex
       return m_colormap.at(real_index);
   }
 
-  rgb ColorMap::color(double t, const Trajectory& traj) const
+  rgb ColorMap::color(double t, const Trajectory& f) const
   {
-    assert(traj.domain().contains(t));
-    assert(!traj.not_defined());
+    assert(f.domain().contains(t));
+    assert(!f.not_defined());
 
-    Interval traj_envelope = traj.codomain();
-    return color(traj(t) - traj_envelope.lb() / traj_envelope.diam());
+    Interval traj_envelope = f.codomain();
+    return color((f(t) - traj_envelope.lb()) / traj_envelope.diam());
   }
 
   void ColorMap::displayColorMap(const string& fig_name) const

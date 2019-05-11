@@ -739,13 +739,20 @@ namespace tubex
       const Slice *s_x = first_slice();
       if(gates_thicknesses)
         thicknesses.set(Slice::diam(s_x->input_gate()), s_x->domain().lb());
+      else
+        thicknesses.set(Slice::diam(s_x->codomain()), s_x->domain().lb());
 
       while(s_x != NULL)
       {
         thicknesses.set(Slice::diam(s_x->codomain()), ibex::next_float(s_x->domain().lb()));
         thicknesses.set(Slice::diam(s_x->codomain()), ibex::previous_float(s_x->domain().ub()));
+
         if(gates_thicknesses)
           thicknesses.set(Slice::diam(s_x->output_gate()), s_x->domain().ub());
+
+        else if(s_x->next_slice() == NULL)
+          thicknesses.set(Slice::diam(s_x->codomain()), s_x->domain().ub());
+
         s_x = s_x->next_slice();
       }
 
