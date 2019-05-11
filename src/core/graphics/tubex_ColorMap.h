@@ -18,6 +18,12 @@
 namespace tubex
 {
   /**
+   * \enum TubeColorType
+   * \brief Defines a set of colors for tube display
+   */
+  enum InterpolationMode { RGB, HSV };
+
+  /**
    * \class ColorMap
    * \brief ...
    */
@@ -30,7 +36,7 @@ namespace tubex
        *
        * \param 
        */
-      ColorMap();
+      ColorMap(int interpol_mode = InterpolationMode::RGB);
 
       /**
        * \brief ColorMap destructor
@@ -54,6 +60,7 @@ namespace tubex
 
     protected:
 
+      int m_interpol_mode = InterpolationMode::RGB;
       std::map<float,rgb> m_colormap;
   };
 }

@@ -88,6 +88,28 @@ namespace tubex
   rgb make_rgb(float r, float g, float b, float alpha = 1.);
 
   /**
+   * \brief Makes an HSV value from integers
+   *
+   * \param h hue value, integer between 0 and 255
+   * \param s saturation value, integer between 0 and 255
+   * \param v value (lightness), integer between 0 and 255
+   * \param alpha opacity value, integer between 0 (transparent) and 255 (opaque)
+   * \return HSV value
+   */
+  hsv make_hsv(int h, int s, int v, int alpha = 255);
+
+  /**
+   * \brief Makes an HSV value from floats
+   *
+   * \param h hue value, float between 0. and 1.
+   * \param s saturation value, float between 0. and 1.
+   * \param v value (lightness), float between 0. and 1.
+   * \param alpha opacity value, float between 0. (transparent) and 1. (opaque)
+   * \return HSV value
+   */
+  hsv make_hsv(float h, float s, float v, float alpha = 1.);
+
+  /**
    * \brief Returns the RGB value of the Haxby color map corresponding to some ratio
    *
    * \param ratio a value between 0 and 1

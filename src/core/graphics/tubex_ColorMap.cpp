@@ -9,15 +9,17 @@
  */
 
 #include "tubex_ColorMap.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  ColorMap::ColorMap()
+  ColorMap::ColorMap(int interpol_mode)
+    : m_interpol_mode(interpol_mode)
   {
-    
+    assert(interpol_mode == InterpolationMode::RGB || interpol_mode == InterpolationMode::HSV);
   }
 
   void ColorMap::add_color_point(rgb color, float index)
@@ -41,11 +43,29 @@ namespace tubex
       rgb rgb_ub = it_ub->second;
 
       float local_ratio = (real_index - prev(it_ub)->first) / (it_ub->first - prev(it_ub)->first);
-  
-      return make_rgb((float)(rgb_lb.r + (rgb_ub.r - rgb_lb.r) * local_ratio),
-                      (float)(rgb_lb.g + (rgb_ub.g - rgb_lb.g) * local_ratio),
-                      (float)(rgb_lb.b + (rgb_ub.b - rgb_lb.b) * local_ratio),
-                      (float)(rgb_lb.alpha + (rgb_ub.alpha - rgb_lb.alpha) * local_ratio));
+      
+      switch(m_interpol_mode)
+      {
+        case InterpolationMode::RGB:
+          return make_rgb((float)(rgb_lb.r + (rgb_ub.r - rgb_lb.r) * local_ratio),
+                          (float)(rgb_lb.g + (rgb_ub.g - rgb_lb.g) * local_ratio),
+                          (float)(rgb_lb.b + (rgb_ub.b - rgb_lb.b) * local_ratio),
+                          (float)(rgb_lb.alpha + (rgb_ub.alpha - rgb_lb.alpha) * local_ratio));
+
+        case InterpolationMode::HSV:
+        {
+          hsv hsv_lb = rgb2hsv(rgb_lb);
+          hsv hsv_ub = rgb2hsv(rgb_ub);
+          return hsv2rgb(make_hsv((float)(hsv_lb.h + (hsv_ub.h - hsv_lb.h) * local_ratio),
+                                  (float)(hsv_lb.s + (hsv_ub.s - hsv_lb.s) * local_ratio),
+                                  (float)(hsv_lb.v + (hsv_ub.v - hsv_lb.v) * local_ratio),
+                                  (float)(hsv_lb.alpha + (hsv_ub.alpha - hsv_lb.alpha) * local_ratio)));
+        }
+
+        default:
+          throw Exception("ColorMap::color",
+                          "unable color interpolation mode");
+      }
     }
 
     else // color key

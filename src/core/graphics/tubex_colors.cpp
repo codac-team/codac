@@ -181,6 +181,22 @@ namespace tubex
     rgb_val.r = r; rgb_val.g = g; rgb_val.b = b; rgb_val.alpha = alpha;
     return rgb_val;
   }
+
+  hsv make_hsv(int h, int s, int v, int alpha)
+  {
+    assert(h >= 0 && h <= 255 && s >= 0 && s <= 255 && v >= 0 && v <= 255 && alpha >= 0 && alpha <= 255);
+    hsv hsv_val;
+    hsv_val.h = h/255.; hsv_val.s = s/255.; hsv_val.v = v/255.; hsv_val.alpha = alpha/255.;
+    return hsv_val;
+  }
+
+  hsv make_hsv(float h, float s, float v, float alpha)
+  {
+    assert(h >= 0. && h <= 1. && s >= 0. && s <= 1. && v >= 0. && v <= 1. && alpha >= 0. && alpha <= 1.);
+    hsv hsv_val;
+    hsv_val.h = h; hsv_val.s = s; hsv_val.v = v; hsv_val.alpha = alpha;
+    return hsv_val;
+  }
     
   rgb haxby_color_map(float ratio)
   {
