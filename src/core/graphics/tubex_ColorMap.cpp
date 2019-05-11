@@ -91,9 +91,9 @@ namespace tubex
     return color(traj(t) - traj_envelope.lb() / traj_envelope.diam());
   }
 
-  void ColorMap::displayColorMap() const
+  void ColorMap::displayColorMap(const string& fig_name) const
   {
-    VIBesFig fig_map("Colormap");
+    VIBesFig fig_map(fig_name);
     fig_map.set_properties(50, 50, 500, 500);
     fig_map.axis_limits(IntervalVector(2, Interval(0.,1.)));
 
@@ -107,4 +107,80 @@ namespace tubex
 
     fig_map.show();
   }
+
+  // Predefined color maps
+  
+  ColorMap make_haxby()
+  {
+    ColorMap map(RGB);
+    map.add_color_point(make_rgb(39,90,211), 0);
+    map.add_color_point(make_rgb(40,123,245), 1);
+    map.add_color_point(make_rgb(45,155,253), 2);
+    map.add_color_point(make_rgb(73,209,255), 3);
+    map.add_color_point(make_rgb(100,230,254), 4);
+    map.add_color_point(make_rgb(118,235,226), 5);
+    map.add_color_point(make_rgb(135,236,187), 6);
+    map.add_color_point(make_rgb(194,252,165), 7);
+    map.add_color_point(make_rgb(217,251,151), 8);
+    map.add_color_point(make_rgb(233,241,131), 9);
+    map.add_color_point(make_rgb(252,201,96), 10);
+    map.add_color_point(make_rgb(255,184,84), 11);
+    map.add_color_point(make_rgb(255,170,75), 12);
+    map.add_color_point(make_rgb(255,167,83), 13);
+    map.add_color_point(make_rgb(255,200,158), 14);
+    map.add_color_point(make_rgb(255,233,217), 15);
+    return map;
+  }
+
+  const ColorMap ColorMap::HAXBY = make_haxby();
+  
+  ColorMap make_default()
+  {
+    ColorMap map(RGB);
+    map.add_color_point(make_rgb(10,0,121), 0);
+    map.add_color_point(make_rgb(40,0,150), 1);
+    map.add_color_point(make_rgb(20,5,175), 2);
+    map.add_color_point(make_rgb(0,10,200), 3);
+    map.add_color_point(make_rgb(0,25,212), 4);
+    map.add_color_point(make_rgb(0,40,224), 5);
+    map.add_color_point(make_rgb(26,102,240), 6);
+    map.add_color_point(make_rgb(13,129,248), 7);
+    map.add_color_point(make_rgb(25,175,255), 8);
+    map.add_color_point(make_rgb(50,190,255), 9);
+    map.add_color_point(make_rgb(68,202,255), 10);
+    map.add_color_point(make_rgb(97,225,240), 11);
+    map.add_color_point(make_rgb(106,235,225), 12);
+    map.add_color_point(make_rgb(124,235,200), 13);
+    map.add_color_point(make_rgb(138,236,174), 14);
+    map.add_color_point(make_rgb(172,245,168), 15);
+    map.add_color_point(make_rgb(205,255,162), 16);
+    map.add_color_point(make_rgb(223,245,141), 17);
+    map.add_color_point(make_rgb(240,236,121), 18);
+    map.add_color_point(make_rgb(247,215,104), 19);
+    map.add_color_point(make_rgb(255,189,87), 20);
+    map.add_color_point(make_rgb(255,160,69), 21);
+    map.add_color_point(make_rgb(244,117,75), 22);
+    map.add_color_point(make_rgb(238,80,78), 23);
+    map.add_color_point(make_rgb(255,90,90), 24);
+    map.add_color_point(make_rgb(255,124,124), 25);
+    map.add_color_point(make_rgb(255,158,158), 26);
+    map.add_color_point(make_rgb(245,179,174), 27);
+    map.add_color_point(make_rgb(255,196,196), 28);
+    map.add_color_point(make_rgb(255,215,215), 29);
+    map.add_color_point(make_rgb(255,235,235), 31);
+    map.add_color_point(make_rgb(255,254,253), 32);
+    return map;
+  }
+
+  const ColorMap ColorMap::DEFAULT = make_default();
+  
+  ColorMap make_blue_tube()
+  {
+    ColorMap map(RGB);
+    map.add_color_point(make_rgb(76,110,127), 0);
+    map.add_color_point(make_rgb(136,197,228), 1);
+    return map;
+  }
+
+  const ColorMap ColorMap::BLUE_TUBE = make_blue_tube();
 }

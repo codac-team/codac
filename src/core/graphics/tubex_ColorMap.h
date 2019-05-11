@@ -66,7 +66,11 @@ namespace tubex
       /**
        * \brief 
        */
-      void displayColorMap() const;
+      void displayColorMap(const std::string& fig_name = "Color map") const;
+
+      static const ColorMap HAXBY;
+      static const ColorMap DEFAULT;
+      static const ColorMap BLUE_TUBE;
 
     protected:
 
