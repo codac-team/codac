@@ -243,6 +243,20 @@ namespace tubex
        */
       const Trajectory diff() const;
 
+      /**
+       * \brief Computes the finite difference at \f$t\f$,
+       *        with an automatic order of accuracy.
+       *
+       * Central, forward or backward finite differences are computed.
+       *
+       * \note This function only works with trajectories defined as a map of values.
+       * \note A uniform grid spacing is assumed.
+       * 
+       * \param t the temporal key (double, must belong to the trajectory domain)
+       * \return a derivative trajectory
+       */
+      double finite_diff(double t) const;
+
       /// @}
       /// \name String
       /// @{

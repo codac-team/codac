@@ -237,6 +237,7 @@ namespace tubex
 
       for(double t = m_domain.lb() ; t < m_domain.ub() ; t+=dt)
         set_map_value((*this)(t), t);
+      set_map_value((*this)(m_domain.ub()), m_domain.ub());
 
       delete m_function;
       m_function = NULL;
@@ -300,23 +301,92 @@ namespace tubex
         {
           double t = it->first;
           double x = it->second;
-
-          if(it == m_map_values.begin()) // first point
-            d.set((next(it)->second - x) / (next(it)->first - t), t);
-
-          else if(next(it) == m_map_values.end()) // last point
-            d.set((x - prev(it)->second) / (t - prev(it)->first), t);
-
-          else
-          {
-            double h = min(t - prev(it)->first, next(it)->first - t);
-            double diff = ((*this)(t + h) - (*this)(t - h)) / (2.*h);
-            d.set(diff, t);
-          }
+          d.set(finite_diff(t), t);
         }
 
+        assert(d.domain() == domain());
         return d;
       }
+    }
+
+    double Trajectory::finite_diff(double t) const
+    {
+      assert(m_function == NULL);
+      assert(m_map_values.find(t) != m_map_values.end()); // key exists
+      assert(m_map_values.size() > 2);
+
+      //double prev_t = t;
+      double h = next(m_map_values.begin())->first - m_map_values.begin()->first;
+
+      vector<double> fwd;
+      map<double,double>::const_iterator it_fwd = m_map_values.find(t);
+      double x = it_fwd->second;
+
+      it_fwd++;
+      while(fwd.size() < 4 && it_fwd != m_map_values.end())
+      {
+        //assert(it_fwd->first - prev_t == h && "constant timestep required");
+        //prev_t = it_fwd->first;
+        fwd.push_back(it_fwd->second);
+        it_fwd++;
+      }
+
+      //prev_t = t;
+      vector<double> bwd;
+      map<double,double>::const_iterator it_bwd = m_map_values.find(t);
+
+      if(it_bwd != m_map_values.begin())
+      {
+        it_bwd--;
+        while(bwd.size() < 4)
+        {
+          //assert(prev_t - it_bwd->first == h && "constant timestep required");
+          //prev_t = it_bwd->first;
+          bwd.push_back(it_bwd->second);
+          if(it_bwd == m_map_values.begin())
+            break;
+          it_bwd--;
+        }
+      }
+
+      if(fwd.size() == bwd.size()) // central finite difference
+        switch(fwd.size())
+        {
+          case 1:
+            return ((-1./2.)*bwd[0] + (1./2.)*fwd[0]) / h;
+          case 2:
+            return ((1./12.)*bwd[1] + (-2./3.)*bwd[0] + (2./3.)*fwd[0] + (-1./12.)*fwd[1]) / h;
+          case 3:
+            return ((-1./60.)*bwd[2] + (3./20.)*bwd[1] + (-3./4.)*bwd[0] + (3./4.)*fwd[0] + (-3./20.)*fwd[1] + (1./60.)*fwd[2]) / h;
+          case 4:
+            return ((1./280.)*bwd[3] + (-4./105.)*bwd[2] + (1./5.)*bwd[1] + (-4./5.)*bwd[0] + (4./5.)*fwd[0] + (-1./5.)*fwd[1] + (4./105.)*fwd[2] + (-1./280.)*fwd[3]) / h;
+        }
+
+      else if(fwd.size() > bwd.size()) // forward finite difference
+        switch(fwd.size())
+        {
+          case 1:
+            return ((-1./1.)*x + (1./1.)*fwd[0]) / h;
+          case 2:
+            return ((-3./2.)*x + (2./1.)*fwd[0] + (-1./2.)*fwd[1]) / h;
+          case 3:
+            return ((-11./6.)*x + (3./1.)*fwd[0] + (-3./2.)*fwd[1] + (1./3.)*fwd[2]) / h;
+          case 4:
+            return ((-25./12.)*x + (4./1.)*fwd[0] + (-3./1.)*fwd[1] + (4./3.)*fwd[2] + (-1./4.)*fwd[3]) / h;
+        }
+
+      else // backward finite difference
+        switch(bwd.size())
+        {
+          case 1:
+            return ((1./1.)*x + (-1./1.)*bwd[0]) / h;
+          case 2:
+            return ((3./2.)*x + (-2./1.)*bwd[0] + (1./2.)*bwd[1]) / h;
+          case 3:
+            return ((11./6.)*x + (-3./1.)*bwd[0] + (3./2.)*bwd[1] + (-1./3.)*bwd[2]) / h;
+          case 4:
+            return ((25./12.)*x + (-4./1.)*bwd[0] + (3./1.)*bwd[1] + (-4./3.)*bwd[2] + (1./4.)*bwd[3]) / h;
+        }
     }
 
     // String
