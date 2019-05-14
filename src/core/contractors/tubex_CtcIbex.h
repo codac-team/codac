@@ -105,15 +105,15 @@ namespace tubex
        */
       void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6);
 
-    protected:
-
       /**
        * \brief Contracts an array of slices (representing a slice vector)
        *
        * \param v_x_slices the slices to be contracted
-       * \param n the dimension of the vector
+       * \param n the dimension of the array
        */
       void contract(Slice **v_x_slices, int n);
+
+    protected:
 
       ibex::Ctc *m_ibex_ctc; //!< related IBEX contractor
       int m_dynamic_ctc; //!< specifies either the temporal domain is part of the contraction or not
