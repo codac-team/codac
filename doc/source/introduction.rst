@@ -11,7 +11,7 @@ The unknown solutions of a system are called **trajectories**, denoted by :math:
 In the literature, the dot notation :math:`(\cdot)` may be used to represent the independent system variable.
 This notation is chosen in order to clearly distinguish a whole trajectory :math:`\mathbf{x}(\cdot):\mathbb{R}\to\mathbb{R}^n` from a local evaluation: :math:`\mathbf{x}(t)\in\mathbb{R}^n`. Indeed, the time :math:`t` may also be a variable to be estimated.
 
-In this approach, the estimation of a trajectory :math:`x(\cdot)` consists in computing its reliable enclosure set, defined as an interval of trajectories: so-called **tubes**, denoted by :math:`[x](\cdot)`.
+In this approach, the estimation of a trajectory :math:`x(\cdot)` consists in computing its reliable enclosure set, defined as an interval of trajectories: a so-called **tube**, denoted by :math:`[x](\cdot)`.
 
 Constraints
 -----------
@@ -24,12 +24,12 @@ In the same way as with IBEX, we deal with a system by defining it as a set of *
 - time uncertainties: :math:`x(t)=y`, with :math:`t\in[t]`
 - *etc.*
 
-The aim of Tubex is to easily deal with these constraints in order to eventually characterize a tube of trajectories compliant with the defined relations.
+The aim of Tubex is to easily deal with these constraints in order to eventually characterize a tube of trajectories compliant with the defined rules.
 
 Reliable outputs
 ----------------
 
-One of the advantages of this set-membership approach is the **reliable outputs** that are obtained.
+One of the advantages of this set-membership approach is the **reliable output** that is obtained.
 By *reliable*, we mean that all sources of uncertainty are taken into account, including:
 
 - approximation of real numbers by floating-point numbers
