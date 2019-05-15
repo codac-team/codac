@@ -49,6 +49,27 @@ namespace tubex
     m_draw_tubes_backgrounds = enable;
   }
 
+  void VIBesFigMap::show()
+  {
+    typename map<const TubeVector*,FigMapTubeParams>::const_iterator it_tubes;
+    for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
+      m_view_box |= draw_tube(it_tubes->first);
+
+    // Trajectories are drawn on top of the tubes
+    typename map<const TrajectoryVector*,FigMapTrajParams>::const_iterator it_trajs;
+    for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
+      m_view_box |= draw_trajectory(it_trajs->first);
+
+    axis_limits(m_view_box, true, 0.02);
+  }
+
+  void VIBesFigMap::show(float robot_size)
+  {
+    assert(robot_size >= 0.);
+    m_robot_size = robot_size;
+    show();
+  }
+
   void VIBesFigMap::add_tube(const TubeVector *tube, const string& name, int index_x, int index_y)
   {
     assert(tube != NULL);
@@ -221,27 +242,6 @@ namespace tubex
       add_observation(v_obs[i], traj, color);
   }
 
-  void VIBesFigMap::show()
-  {
-    typename map<const TubeVector*,FigMapTubeParams>::const_iterator it_tubes;
-    for(it_tubes = m_map_tubes.begin(); it_tubes != m_map_tubes.end(); it_tubes++)
-      m_view_box |= draw_tube(it_tubes->first);
-
-    // Trajectories are drawn on top of the tubes
-    typename map<const TrajectoryVector*,FigMapTrajParams>::const_iterator it_trajs;
-    for(it_trajs = m_map_trajs.begin(); it_trajs != m_map_trajs.end(); it_trajs++)
-      m_view_box |= draw_trajectory(it_trajs->first);
-
-    axis_limits(m_view_box, true, 0.02);
-  }
-
-  void VIBesFigMap::show(float robot_size)
-  {
-    assert(robot_size >= 0.);
-    m_robot_size = robot_size;
-    show();
-  }
-
   const IntervalVector VIBesFigMap::draw_tube(const TubeVector *tube)
   {
     assert(tube != NULL);
@@ -284,7 +284,7 @@ namespace tubex
 
     // Displaying tube
 
-      draw_tube_slices(tube);
+      draw_slices(tube);
 
       // The background is the previous version of the tube (before contraction).
       // If a copy of the tube has not been done,
@@ -408,7 +408,7 @@ namespace tubex
     return viewbox;
   }
 
-  void VIBesFigMap::draw_tube_slices(const TubeVector *tube)
+  void VIBesFigMap::draw_slices(const TubeVector *tube)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -565,7 +565,7 @@ namespace tubex
   {
     vibes::newGroup("beacons", DEFAULT_BEACON_COLOR, vibesParams("figure", name()));
     IntervalVector drawn_box = beacon.pos().subvector(0,1);
-    draw_box(drawn_box.inflate(width), color, params);
+    draw_box(drawn_box.inflate(width/2.), color, params);
   }
 
   void VIBesFigMap::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)

@@ -214,21 +214,119 @@ namespace tubex
       /// \name Handling robotics objects
       /// @{
 
+      /**
+       * \brief Adds a Beacon object to the map
+       *
+       * \param beacon a const reference to the Beacon object to be drawn
+       * \param width the real width of the squared beacon
+       * \param color optional color of the beacon
+       */
       void add_beacon(const Beacon& beacon, double width = 2., const std::string& color = DEFAULT_BEACON_COLOR);
+
+      /**
+       * \brief Adds a set of Beacon objects to the map
+       *
+       * \param v_beacons a vector of const references to Beacon objects to be drawn
+       * \param width the real width of the squared beacons
+       * \param color optional color of the beacons
+       */
       void add_beacons(const std::vector<Beacon>& v_beacons, double width = 2., const std::string& color = DEFAULT_BEACON_COLOR);
+      
+      /**
+       * \brief Adds a range-and-bearing uncertain observation to the map
+       *
+       * The observation is a 3d interval vector: (time,range,bearing).
+       * It is associated to a trajectory, from which the observation has been made.
+       *
+       * \param obs the 3d interval vector enclosing the measurement
+       * \param traj the const pointer to the related TrajectoryVector object
+       * \param color optional color of the observation
+       */
       void add_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
+      
+      /**
+       * \brief Adds a set of range-and-bearing uncertain observations to the map
+       *
+       * The observation is a 3d interval vector: (time,range,bearing).
+       * It is associated to a trajectory, from which the observation has been made.
+       *
+       * \param v_obs a vector of 3d interval vectors enclosing the measurements
+       * \param traj the const pointer to the related TrajectoryVector object
+       * \param color optional color of the observation
+       */
       void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
   
       /// @}
 
     protected:
 
-      const ibex::IntervalVector draw_tube(const TubeVector *tube_ref);
-      const ibex::IntervalVector draw_tube_background(const TubeVector *tube_ref);
+      /**
+       * \brief Draws a tube
+       *
+       * \param tube the const pointer to the TubeVector object to be drawn
+       * \return the projected boxed envelope of the tube (used for figure calibration)
+       */
+      const ibex::IntervalVector draw_tube(const TubeVector *tube);
+
+      /**
+       * \brief Draws the background of a tube
+       *
+       * Backgrounds are previous versions of the tubes, before their last contraction.
+       * This is useful to highlight on the map the improvement provided by the contractions.
+       *
+       * \param tube the const pointer to the TubeVector object to be drawn
+       * \return the projected boxed envelope of the tube background (used for figure calibration)
+       */
+      const ibex::IntervalVector draw_tube_background(const TubeVector *tube);
+
+      /**
+       * \brief Draws a trajectory
+       *
+       * \todo ColorMap associated to point display (for now: constant color for points)
+       *
+       * \param traj the const pointer to the TrajectoryVector object to be drawn
+       * \param points_size optional size of points, 0 by default (line display instead of a list of points)
+       * \return the projected boxed envelope of the trajectory (used for figure calibration)
+       */
       const ibex::IntervalVector draw_trajectory(const TrajectoryVector *traj, float points_size = 0.);
-      void draw_tube_slices(const TubeVector *tube);
+
+      /**
+       * \brief Draws the slices of a tube
+       *
+       * \param tube the const pointer to the TubeVector object to be drawn
+       */
+      void draw_slices(const TubeVector *tube);
+
+      /**
+       * \brief Draws a vehicle on top of its trajectory
+       *
+       * \param t temporal key of the vehicle state to be drawn
+       * \param traj the const pointer to the related TrajectoryVector object
+       * \param params VIBes parameters related to the vehicle (for groups)
+       */
       void draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params);
+
+      /**
+       * \brief Draws a Beacon object
+       *
+       * \param beacon a const reference to the Beacon object to be drawn
+       * \param width the real width of the squared beacon
+       * \param color color of the beacon
+       * \param params VIBes parameters related to the beacon
+       */
       void draw_beacon(const Beacon& beacon, double width, const std::string& color, const vibes::Params& params);
+
+      /**
+       * \brief Draws a range-and-bearing uncertain observation on the map
+       *
+       * The observation is a 3d interval vector: (time,range,bearing).
+       * It is associated to a trajectory, from which the observation has been made.
+       *
+       * \param obs the 3d interval vector enclosing the measurement
+       * \param traj the const pointer to the related TrajectoryVector object
+       * \param color color of the observation
+       * \param params VIBes parameters related to the observation
+       */
       void draw_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color, const vibes::Params& params);
 
     protected:
