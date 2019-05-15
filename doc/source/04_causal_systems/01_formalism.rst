@@ -1,5 +1,5 @@
-Presentation
-============
+Formalism and Lissajous example
+===============================
 
   :math:`\dot{\mathbf{x}}=\mathbf{f}(\mathbf{u})`
   schéma

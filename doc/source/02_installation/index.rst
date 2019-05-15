@@ -4,8 +4,8 @@ Installing the Tubex library
 For now, the installation is supported on Linux systems only. Any help for Windows support is more than welcome.
 
 
-Requirements
-------------
+Requirements and dependencies
+-----------------------------
 
 Tubex assumes a set of requirements you can meet with the following command line:
 
@@ -13,11 +13,7 @@ Tubex assumes a set of requirements you can meet with the following command line
 
   sudo apt-get install -y cmake g++-5
 
-
-IBEX library
-------------
-
-Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is available on `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
+Tubex also uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is available on `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
 
 .. code-block:: none
 

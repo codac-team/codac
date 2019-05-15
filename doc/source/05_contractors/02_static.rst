@@ -1,5 +1,5 @@
-Static contractors for algebraic constraints
-============================================
+Algebraic static contractors
+============================
 
   ctc fwdbwd, contracteurs statiques d'ibex
   exemple sur une boite ? nonlinéaire ? range-only ?

@@ -1,5 +1,5 @@
-Hello tubes
-===========
+Hello tubes!
+============
 
   création d'un tube 1D
   affichage simple 1D

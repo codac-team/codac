@@ -1,5 +1,5 @@
-Causal dynamical systems
-========================
+Causal systems such as robots with open-loop controller
+=======================================================
 
 .. toctree::
   :maxdepth: 2

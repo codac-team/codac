@@ -1,5 +1,5 @@
-Evaluation contractor
-=====================
+Application: the Lissajous example
+==================================
 
   :math:`\mathcal{C}_{\textrm{eval}}`
   exemple théorique sin [t] + exemple page 116 these

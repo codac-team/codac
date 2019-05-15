@@ -1,5 +1,5 @@
-Looped dynamical systems
-========================
+Cyclic systems such as robots with closed-loop controller
+=========================================================
 
 .. toctree::
   :maxdepth: 2

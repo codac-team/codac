@@ -1,5 +1,5 @@
-Formalism
-=========
+Formalism and Lissajous example
+===============================
 
   TROUVER UN EXEMPLE DE BOUCLAGE: CONTROL ?
   schéma

@@ -35,8 +35,8 @@ Documentation
    05_contractors/index
    06_looped_systems/index
    07_graphics/index
-   08_slices/index
-   09_data/index
+   08_data/index
+   09_slices/index
    10_references/index
 
 - `API technical documentation <./doxygen/html/annotated.html>`_ 
