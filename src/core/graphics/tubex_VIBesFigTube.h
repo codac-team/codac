@@ -330,7 +330,7 @@ namespace tubex
        */
       struct FigTubeParams
       {
-        std::string name; //!< string identifier of the tube
+        std::string name; //!< human readable identifier of the tube
         std::map<int,std::string> m_colors; //!< map of colors `<TubeColorType,html_color_code>`
         const Tube *tube_copy = NULL; //!< to display previous values in background, before any new contraction
         const Tube *tube_derivative = NULL; //!< to display thinner envelopes (polygons) enclosed by the slices
@@ -342,7 +342,7 @@ namespace tubex
        */
       struct FigTrajParams
       {
-        std::string name; //!< string identifier of the trajectory
+        std::string name; //!< human readable identifier of the trajectory
         std::string color; //!< color of the trajectory
       };
 

@@ -39,9 +39,9 @@ namespace tubex
       }
   }
   
-  void VIBesFigMap::set_restricted_tdomain(const Interval& restricted_domain)
+  void VIBesFigMap::set_restricted_tdomain(const Interval& restricted_tdomain)
   {
-    m_restricted_domain = restricted_domain;
+    m_restricted_tdomain = restricted_tdomain;
   }
   
   void VIBesFigMap::enable_tubes_backgrounds(bool enable)
@@ -338,7 +338,7 @@ namespace tubex
 
       while(it_scalar_values_x != (*traj)[index_x].sampled_map().end())
       {
-        if(m_restricted_domain.contains(it_scalar_values_x->first))
+        if(m_restricted_tdomain.contains(it_scalar_values_x->first))
         {
           if(points_size != 0.)
             vibes::drawPoint(it_scalar_values_x->second, it_scalar_values_y->second,
@@ -372,7 +372,7 @@ namespace tubex
         viewbox[0] |= x;
         viewbox[1] |= y;
 
-        if(!m_restricted_domain.contains(t))
+        if(!m_restricted_tdomain.contains(t))
           continue;
 
         if(points_size != 0.)
@@ -403,7 +403,7 @@ namespace tubex
     else
       vibes::drawLine(v_x, v_y, params);
 
-    draw_vehicle((traj->domain() & m_restricted_domain).ub(), traj, params);
+    draw_vehicle((traj->domain() & m_restricted_tdomain).ub(), traj, params);
 
     return viewbox;
   }
@@ -514,13 +514,13 @@ namespace tubex
       }
       
       IntervalVector first_box(2);
-      double tlb = (m_restricted_domain & tube->domain()).lb();
+      double tlb = (m_restricted_tdomain & tube->domain()).lb();
       first_box[0] = (*tube)[m_map_tubes[tube].index_x](tlb);
       first_box[1] = (*tube)[m_map_tubes[tube].index_y](tlb);
       draw_box(first_box, "#C02600[]", params); // red
       
       IntervalVector last_box(2);
-      double tub = (m_restricted_domain & tube->domain()).ub();
+      double tub = (m_restricted_tdomain & tube->domain()).ub();
       last_box[0] = (*tube)[m_map_tubes[tube].index_x](tub);
       last_box[1] = (*tube)[m_map_tubes[tube].index_y](tub);
       draw_box(last_box, "#47A040[]", params); // green
