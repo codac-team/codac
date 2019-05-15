@@ -22,31 +22,34 @@ Computations stands on the `IBEX library <http://www.ibex-lib.org/>`_ that provi
 .. figure:: ../img/tube_slices_small.png
 
 
-Related publications
---------------------
+Documentation
+-------------
+
+.. toctree::
+   :maxdepth: 2
+
+   01_introduction/index
+   02_installation/index
+   03_basics/index
+   04_causal_systems/index
+   05_contractors/index
+   06_looped_systems/index
+   07_graphics/index
+   08_slices/index
+   09_data/index
+   10_references/index
+
+- `API technical documentation <./doxygen/html/annotated.html>`_ 
+
+
+Main related publications
+-------------------------
 
 - `Guaranteed computation of robot trajectories <http://simon-rohou.fr/research/tubint/tubint_paper.pdf>`_, *Robotics and Autonomous Systems*, 93:76-84 (2017), Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
 
 - `Reliable non-linear state estimation involving time uncertainties <http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf>`_, *Automatica*, 93:379-388 (2017), Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
 
 - `Proving the existence of loops in robot trajectories <http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf>`_, *The International Journal of Robotics Research*, 37(12):1500-1516 (2018), Simon Rohou, Peter Franek, Clément Aubry, Luc Jaulin
-
-
-Documentation
--------------
-
-.. toctree::
-   :maxdepth: 1
-
-   introduction
-   installation
-   basics
-   how_to
-   graphics
-   examples/index
-   development
-
-- `API technical documentation <./doxygen/html/annotated.html>`_ 
 
 
 Licence and development
