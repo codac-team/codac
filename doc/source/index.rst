@@ -45,11 +45,32 @@ Documentation
 Main related publications
 -------------------------
 
-- `Guaranteed computation of robot trajectories <http://simon-rohou.fr/research/tubint/tubint_paper.pdf>`_, *Robotics and Autonomous Systems*, 93:76-84 (2017), Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
+.. |tubint-pdf| replace:: PDF
+.. _tubint-pdf: http://simon-rohou.fr/research/tubint/tubint_paper.pdf
+.. |tubeval-pdf| replace:: PDF
+.. _tubeval-pdf: http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf
+.. |loopproof-pdf| replace:: PDF
+.. _loopproof-pdf: http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf
 
-- `Reliable non-linear state estimation involving time uncertainties <http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf>`_, *Automatica*, 93:379-388 (2017), Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
-
-- `Proving the existence of loops in robot trajectories <http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf>`_, *The International Journal of Robotics Research*, 37(12):1500-1516 (2018), Simon Rohou, Peter Franek, Clément Aubry, Luc Jaulin
++--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
+|                    | Title                           | Author(s)                    | Journal                 | Year | Link                |
++====================+=================================+==============================+=========================+======+=====================+
+|                    |                                 |                              |                         |      |                     |
+| .. _loopproof:     | Proving the existence of loops  | S. Rohou, P. Franek,         | IJRR                    | 2018 | |loopproof-pdf|_    |
+|                    | in robot trajectories           | C. Aubry, L. Jaulin          |                         |      |                     |
+| [Rohou,            |                                 |                              |                         |      |                     |
+| Franek et al. 2018]|                                 |                              |                         |      |                     |
++--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
+|                    |                                 |                              |                         |      |                     |
+| .. _tubeval:       | Reliable non-linear state       | S. Rohou, L. Jaulin,         | Automatica              | 2018 | |tubeval-pdf|_      |
+|                    | estimation involving time       | L. Mihaylova, F. Le Bars,    |                         |      |                     |
+| [Rohou et al. 2018]| uncertainties                   | S. M. Veres                  |                         |      |                     |
++--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
+|                    |                                 |                              |                         |      |                     |
+| .. _tubint:        | Guaranteed computation of       | S. Rohou, L. Jaulin,         | RAS                     | 2017 | |tubint-pdf|_       |
+|                    | robot trajectories              | L. Mihaylova, F. Le Bars,    |                         |      |                     |
+| [Rohou et al. 2017]|                                 |                              |                         |      |                     |
++--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
 
 
 Licence and development
