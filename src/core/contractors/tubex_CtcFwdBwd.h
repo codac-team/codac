@@ -12,7 +12,7 @@
 #ifndef __TUBEX_CTCFWDBWD_H__
 #define __TUBEX_CTCFWDBWD_H__
 
-#include "tubex_CtcIbex.h"
+#include "tubex_CtcStatic.h"
 #include "tubex_Function.h"
 
 namespace tubex
@@ -26,7 +26,7 @@ namespace tubex
    * \todo  Implement propagation methods?
    * \todo  Allow \f$f(\mathbf{x})\leq 0\f$ ?
    */
-  class CtcFwdBwd : public CtcIbex
+  class CtcFwdBwd : public CtcStatic
   {
     public:
 

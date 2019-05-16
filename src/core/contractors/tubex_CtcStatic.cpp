@@ -1,5 +1,5 @@
 /** 
- *  CtcIbex class
+ *  CtcStatic class
  * ----------------------------------------------------------------------------
  *  \date       2015
  *  \author     Simon Rohou
@@ -8,25 +8,25 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_CtcIbex.h"
+#include "tubex_CtcStatic.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  CtcIbex::CtcIbex(ibex::Ctc *ibex_ctc, bool dynamic_ctc)
+  CtcStatic::CtcStatic(ibex::Ctc *ibex_ctc, bool dynamic_ctc)
     : Ctc(), m_ibex_ctc(ibex_ctc), m_dynamic_ctc(dynamic_ctc ? 1 : 0)
   {
 
   }
   
-  CtcIbex::~CtcIbex()
+  CtcStatic::~CtcStatic()
   {
 
   }
 
-  void CtcIbex::contract(TubeVector& x)
+  void CtcStatic::contract(TubeVector& x)
   {
     assert(x.size()+m_dynamic_ctc == m_ibex_ctc->nb_var);
 
@@ -38,7 +38,7 @@ namespace tubex
     delete v_x_slices;
   }
 
-  void CtcIbex::contract(Tube& x1)
+  void CtcStatic::contract(Tube& x1)
   {
     int n = 1;
     assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
@@ -50,7 +50,7 @@ namespace tubex
     delete v_x_slices;
   }
 
-  void CtcIbex::contract(Tube& x1, Tube& x2)
+  void CtcStatic::contract(Tube& x1, Tube& x2)
   {
     int n = 2;
     assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
@@ -63,7 +63,7 @@ namespace tubex
     delete v_x_slices;
   }
 
-  void CtcIbex::contract(Tube& x1, Tube& x2, Tube& x3)
+  void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3)
   {
     int n = 3;
     assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
@@ -77,7 +77,7 @@ namespace tubex
     delete v_x_slices;
   }
 
-  void CtcIbex::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4)
+  void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4)
   {
     int n = 4;
     assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
@@ -92,7 +92,7 @@ namespace tubex
     delete v_x_slices;
   }
 
-  void CtcIbex::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5)
+  void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5)
   {
     int n = 5;
     assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
@@ -108,7 +108,7 @@ namespace tubex
     delete v_x_slices;
   }
 
-  void CtcIbex::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6)
+  void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6)
   {
     int n = 6;
     assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
@@ -125,7 +125,7 @@ namespace tubex
     delete v_x_slices;
   }
 
-  void CtcIbex::contract(Slice **v_x_slices, int n)
+  void CtcStatic::contract(Slice **v_x_slices, int n)
   {
     IntervalVector envelope(n + m_dynamic_ctc);
     IntervalVector ingate(n + m_dynamic_ctc);

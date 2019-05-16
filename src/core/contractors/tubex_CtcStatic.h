@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  CtcIbex class
+ *  CtcStatic class
  * ----------------------------------------------------------------------------
  *  \date       2015
  *  \author     Simon Rohou
@@ -9,8 +9,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_CTCIBEX_H__
-#define __TUBEX_CTCIBEX_H__
+#ifndef __TUBEX_CTCSTATIC_H__
+#define __TUBEX_CTCSTATIC_H__
 
 #include "tubex_Ctc.h"
 #include "ibex_Ctc.h"
@@ -18,12 +18,12 @@
 namespace tubex
 {
   /**
-   * \class CtcIbex
+   * \class CtcStatic
    * \brief Generic static \f$\mathcal{C}\f$ that contracts a tube \f$[\mathbf{x}](\cdot)\f$ 
    *        with some IBEX contractor (for boxes).
    *        The contractor will be applied on each slice and gate.
    */
-  class CtcIbex : public Ctc
+  class CtcStatic : public Ctc
   {
     public:
 
@@ -34,12 +34,12 @@ namespace tubex
        * \param dynamic_ctc if true, the contraction will include the
        *        temporal domain as first dimension of the (n+1) box
        */
-      CtcIbex(ibex::Ctc *ibex_ctc, bool dynamic_ctc = false);
+      CtcStatic(ibex::Ctc *ibex_ctc, bool dynamic_ctc = false);
 
       /**
        * \brief Constractor destructor
        */
-      ~CtcIbex();
+      ~CtcStatic();
 
       /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}](\cdot)\big)\f$
