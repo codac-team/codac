@@ -34,6 +34,8 @@ For the compilation of your project, you can use CMake with the following ``CMak
   add_executable(my_project main.cpp)
   target_link_libraries(my_project ${IBEX_LIBRARY} ${TUBEX_LIBRARY} ${IBEX_LIBRARY})
 
+Here we set the ``TUBEX_ROOT`` variable to ``~/tubex-lib``. Update this value according to your own installation. This variable is used to find the CMake modules located in the Tubex repository. These modules search for the libraries Tubex, IBEX and their dependencies on your system.
+
 The files ``main.cpp`` and ``CMakeLists.txt`` appear in the same directory and the compilation is made by the following command line::
 
   mkdir make -p ; cd make ; cmake .. ; make ; cd ..
