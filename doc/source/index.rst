@@ -31,13 +31,13 @@ Documentation
    01_introduction/index
    02_installation/index
    03_basics/index
-   04_causal_systems/index
-   05_contractors/index
-   06_looped_systems/index
-   07_graphics/index
-   08_data/index
-   09_slices/index
    10_references/index
+..   04_causal_systems/index
+..   05_contractors/index
+..   06_looped_systems/index
+..   07_graphics/index
+..   08_data/index
+..   09_slices/index
 
 - `API technical documentation <./doxygen/html/annotated.html>`_ 
 

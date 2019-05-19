@@ -1,9 +1,7 @@
 References
 ==========
 
----------------------------
-Papers in academic journals
----------------------------
+Papers in academic journals:
 
 .. |tubint-pdf| replace:: PDF
 .. _tubint-pdf: http://simon-rohou.fr/research/tubint/tubint_paper.pdf

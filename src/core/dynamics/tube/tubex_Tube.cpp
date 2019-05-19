@@ -386,7 +386,6 @@ namespace tubex
 
     const Slice* Tube::largest_slice() const
     {
-      int i = 0;
       double max_diam = 0.;
       const Slice *largest = first_slice();
       for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
