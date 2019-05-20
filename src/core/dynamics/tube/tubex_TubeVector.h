@@ -456,6 +456,18 @@ namespace tubex
        */
       const TrajectoryVector diam(const TubeVector& v) const;
 
+      /**
+       * \brief Returns the slices diagonals of the tube as a trajectory
+       *
+       * \note Without derivative knowledge, and because the tube is made of boxed slices,
+       *       the trajectory will be discontinuous and so the returned object will not
+       *       reliably represent the diagonals. It can be mainly used for display purposes.
+       *
+       * \param gates_thicknesses if true, the diagonals of the gates will be evaluated too
+       * \return the set of diagonals associated to temporal inputs
+       */
+      const Trajectory diag(bool gates_diag = false) const;
+
       /// @}
       /// \name Tests
       /// @{
