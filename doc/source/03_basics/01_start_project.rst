@@ -46,10 +46,14 @@ The files ``main.cpp`` and ``CMakeLists.txt`` appear in the same directory:
   ├── CMakeLists.txt
   └── main.cpp
 
-The compilation is made by the following command line::
+The compilation is made by the following command line:
+
+.. code-block:: bash
 
   mkdir make -p ; cd make ; cmake .. ; make ; cd ..
 
-Lastly, the project can be run with::
+Lastly, the project can be run with:
+
+.. code-block:: bash
 
   ./make/my_project

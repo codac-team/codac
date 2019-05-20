@@ -22,8 +22,8 @@ Computations stands on the `IBEX library <http://www.ibex-lib.org/>`_ that provi
 .. figure:: ../img/tube_slices_small.png
 
 
-Documentation
--------------
+Documentation (in progress)
+---------------------------
 
 .. toctree::
    :maxdepth: 2
