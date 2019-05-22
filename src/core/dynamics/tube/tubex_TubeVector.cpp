@@ -459,13 +459,22 @@ namespace tubex
 
     const Trajectory TubeVector::diag(bool gates_thicknesses) const
     {
+      return diag(0, size()-1, gates_thicknesses);
+    }
+
+    const Trajectory TubeVector::diag(int start_index, int end_index, bool gates_thicknesses) const
+    {
+      assert(start_index >= 0);
+      assert(end_index < size());
+      assert(start_index <= end_index);
+
       Trajectory diag_traj;
       TrajectoryVector diams = diam(gates_thicknesses);
 
       for(map<double,double>::const_iterator it = diams[0].sampled_map().begin() ; it != diams[0].sampled_map().end() ; it++)
       {
         double diag = 0.;
-        for(int i = 0 ; i < size() ; i++)
+        for(int i = start_index ; i <= end_index ; i++)
           diag += std::pow(it->second, 2);
         diag_traj.set(std::sqrt(diag), it->first);
       }

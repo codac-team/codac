@@ -463,10 +463,24 @@ namespace tubex
        *       the trajectory will be discontinuous and so the returned object will not
        *       reliably represent the diagonals. It can be mainly used for display purposes.
        *
-       * \param gates_thicknesses if true, the diagonals of the gates will be evaluated too
+       * \param gates_diag if true, the diagonals of the gates will be evaluated too
        * \return the set of diagonals associated to temporal inputs
        */
       const Trajectory diag(bool gates_diag = false) const;
+
+      /**
+       * \brief Returns the slices diagonals of a subvector of this tube as a trajectory
+       *
+       * \note Without derivative knowledge, and because the tube is made of boxed slices,
+       *       the trajectory will be discontinuous and so the returned object will not
+       *       reliably represent the diagonals. It can be mainly used for display purposes.
+       *
+       * \param start_index first component index of the subvector
+       * \param end_index last component index of the subvector
+       * \param gates_diag if true, the diagonals of the gates will be evaluated too
+       * \return the set of diagonals associated to temporal inputs
+       */
+      const Trajectory diag(int start_index, int end_index, bool gates_diag = false) const;
 
       /// @}
       /// \name Tests
