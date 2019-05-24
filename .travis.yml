@@ -42,7 +42,7 @@ install:
   - echo 'Installing IBEX...';
   - git clone https://github.com/ibex-team/ibex-lib
   - cd ibex-lib
-  - git checkout 41bc1a30afe1344746e57db286a0e11d1f82adab
+  - git checkout 81a0c0e930fbe158699e070fa39abc7d8082eb68
   - ./waf configure --with-debug --interval-lib=gaol
   - sudo ./waf install
   - cd ..
