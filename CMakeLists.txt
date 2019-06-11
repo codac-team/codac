@@ -9,7 +9,7 @@
   set(CMAKE_CXX_STANDARD  11)
   set(PACKAGE_NAME        tubex-lib)
   set(PACKAGE_VERSION     "2.0")
-  set(CMAKE_CXX_COMPILER  g++-5)
+  set(CMAKE_CXX_COMPILER  g++)
   #set(CMAKE_CXX_FLAGS    ${CMAKE_CSS_FLAGS} "-DNDEBUG") # comment for debug
 
   project(${PACKAGE_NAME})

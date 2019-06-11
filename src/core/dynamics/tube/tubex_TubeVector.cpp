@@ -691,7 +691,8 @@ namespace tubex
     
     ostream& operator<<(ostream& str, const TubeVector& x)
     {
-      str << x.class_name() << " " << x.domain() << "↦" << x.codomain_box()
+      str << x.class_name() << " (dim " << x.size() << ") "
+          << x.domain() << "↦" << x.codomain_box()
           << ", " << x.nb_slices()
           << " slice" << (x.nb_slices() > 1 ? "s" : "")
           << flush;

@@ -274,7 +274,8 @@ namespace tubex
     
     std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x)
     {
-      str << "TrajectoryVector " << x.domain() << "↦" << x.codomain() << flush;
+      str << "TrajectoryVector (dim " << x.size() << ") "
+          << x.domain() << "↦" << x.codomain() << flush;
       return str;
     }
 
