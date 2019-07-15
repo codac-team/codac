@@ -14,7 +14,6 @@
 #include "tubex_Ctc.h"
 #include "tubex_Fnc.h"
 #include "tubex_Slice.h"
-#include "tubex_Slice.h"
 
 namespace tubex
 {
