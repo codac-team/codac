@@ -19,10 +19,10 @@ The code from the previous section produces a one-slice scalar tube over the tem
     cout << "My first tube: " << x << endl;
   }
 
-No sampling parameter is specified yet, so the tube is defined as a single slice: one box :math:`[0,10]\times[-\infty,\infty]` encloses the set of feasible trajectories defined over the temporal domain :math:`[0,10]`.
+No sampling parameter is specified yet, so the tube is defined as a single slice: one box :math:`[0,10]\times[-\infty,\infty]` enclosing the set of all feasible trajectories defined over the temporal domain :math:`[0,10]`.
 
 The tube may be displayed using the graphical items provided with Tubex and standing on the VIBes viewer.
-For display purposes, we will bound the codomain of :math:`[x](\cdot)` to :math:`[-2,2]`:
+For display purposes, we will bound the codomain of :math:`[x](\cdot)` to :math:`[-2,2]` so that the bounds can be shown:
 
 .. code-block:: c++
 
@@ -59,7 +59,7 @@ This tube can be displayed on the same figure, on top of :math:`[x](\cdot)`, wit
 .. figure:: ../../img/03_02_y.png
 
 Trajectories may also be created and displayed in the same manner.
-For instance, let us consider a trajectory :math:`y^*(t):\cos(t)+0.02\sin(4t)\cdot t`. By definition, this trajectory is guaranteed to be bounded by :math:`[y](\cdot)` since :math:`\forall t`, :math:`\cos(t)+0.02\sin(4t)\cdot t \in \cos(t)+[-0.05,0.05]\cdot t`.
+For instance, let us consider a trajectory :math:`y^*(t):\cos(t)+0.02\cdot t\cdot\sin(4t)`. By definition, this trajectory is guaranteed to be bounded by :math:`[y](\cdot)` since :math:`\forall t`, :math:`\cos(t)+0.02\cdot t\cdot\sin(4t) \in \cos(t)+[-0.05,0.05]\cdot t`.
 
 .. code-block:: c++
 
