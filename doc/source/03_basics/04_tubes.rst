@@ -1,5 +1,5 @@
-Operations on sets
-==================
+Handling tubes
+==============
 
   intégrales avec bornes incertaines ?
   inversion de tube
