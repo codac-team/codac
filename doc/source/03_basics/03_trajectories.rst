@@ -118,3 +118,4 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
 .. code-block:: c++
 
   x[1] = Trajectory(domain, tubex::Function("exp(t)"));
+  cout << x[1] << endl;
