@@ -97,20 +97,74 @@ Which produces:
 .. figure:: ../../img/03_04_union.png
 
 
-Updates and evaluations
------------------------
+Evaluations
+-----------
 
-evaluations bornées
-functions?
-inversion de tube
+Once created, several evaluations of the tube can be made, as for trajectories. For instance:
+
+.. code-block:: c++
+
+  x.domain()         // temporal domain, returns [0, 10]
+  x.codomain()       // envelope of values, returns [-1, 1.79]
+  x(6.)              // evaluation of x(.) at 6, returns [-0.28, 1.56]
+  x(Interval(5.,6.)) // evaluation of x(.) over [5,6], returns [-0.96, 1.57]
+
+The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])` is also at hand and returns the set :math:`[t]` enclosing the preimages of :math:`[y]`. The ``invert()`` method returns the union of these subsets, or the set of solutions within a vector of ``Interval`` objects. The following example returns the different subsets of the inversion :math:`[x]^{-1}([0,0.2])` projected in red in next figure:
+
+.. code-block:: c++
+
+  vector<Interval> v_t;            // vector of preimages
+  x.invert(Interval(0.,0.2), v_t); // inversion
+
+  for(int i = 0 ; i < v_t.size() ; i++)
+  {
+    IntervalVector tbox(2, Interval(0.,0.2));
+    tbox[0] = v_t[i];
+    fig.draw_box(tbox, "red");     // boxes display
+  }
+
+.. figure:: ../../img/03_04_invert.png
+
+Furthermore, other methods related to sets are available:
+
+.. code-block:: c++
+
+  x.volume()         // returns the volume (surface) of the tube
+  x.max_diam()       // greater diameter of the tube
+  x.diam()           // a trajectory representing all diameters
 
 
 Operations on sets
 ------------------
 
-functions?
-unions, intersections
-tests is_subset, contains (BoolInterval), etc.
+Classical operations on sets are applicable on tubes.
+Note that the tubes may have to share the same domain and slicing for these operations.
+
+.. code-block:: c++
+
+  Tube x4 = (x1 | x2) & x3;
+
+The same for mathematical functions:
+
+.. code-block:: c++
+
+  Tube x2 = abs(x1);
+  Tube x3 = cos(x1) + sqrt(x2 + pow(x1, Interval(2,3)));
+
+Several methods available in IBEX can be used for tubes. For instance:
+
+.. code-block:: c++
+
+  x.is_subset(y)
+  x.is_interior_subset(y)
+  y.is_empty()
+  x.overlaps(y)
+
+It is also possible to test if a tube :math:`[x](\cdot)` contains a solution :math:`z(\cdot)`. The ``contains()`` method can be used for this purpose, but the answer is sometimes uncertain and so an ``ibex::BoolInterval`` is always used. Its values can be either ``YES``, ``NO`` or ``MAYBE``. The ``MAYBE`` case is rare but may appear due to the numerical representation of a trajectory. Indeed, some wrapping effect may occur for its reliable evaluations and so this `contains` test may not be able to conclude, if the thin envelope of :math:`z(\cdot)` overlaps a boundary of the tube :math:`[x](\cdot)`.
+
+.. code-block:: c++
+
+  BoolInterval b = x.contains(traj_z); // with traj_z a Trajectory object
 
 
 Integral computations
@@ -118,6 +172,12 @@ Integral computations
 
 intégrales avec bornes incertaines ?
 
+
+Updating values
+---------------
+
+set function
+link to contractors
 
 
 The vector case
