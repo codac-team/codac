@@ -119,7 +119,7 @@ namespace tubex
         x2_resampled = new Tube(x2); \
         x1_resampled->sample(x2); /* common sampling */ \
         x2_resampled->sample(x1); \
-        y.sample(x2); \
+        y.sample(*x2_resampled); \
         slice_x1 = x1_resampled->first_slice(); \
         slice_x2 = x2_resampled->first_slice(); \
       } \
@@ -167,6 +167,22 @@ namespace tubex
       y.last_slice()->set_output_gate(ibex::f(x1, x2.last_slice()->output_gate())); \
       return y; \
     } \
+
+  #define macro_scal_binary_traj(f, feq) \
+    \
+    const Tube f(const Tube& x1, const Trajectory& x2) \
+    { \
+      Tube y(x1); \
+      y.feq(x2); \
+      return y; \
+    } \
+    \
+    const Tube f(const Trajectory& x1, const Tube& x2) \
+    { \
+      Tube y(x2); \
+      y.feq(x1); \
+      return y; \
+    } \
     \
 
   macro_scal_binary(operator+);
@@ -176,4 +192,11 @@ namespace tubex
   macro_scal_binary(operator|);
   macro_scal_binary(operator&);
   macro_scal_binary(atan2);
+
+  macro_scal_binary_traj(operator+, operator+=);
+  macro_scal_binary_traj(operator-, operator-=);
+  macro_scal_binary_traj(operator*, operator*=);
+  macro_scal_binary_traj(operator/, operator/=);
+  macro_scal_binary_traj(operator|, operator|=);
+  macro_scal_binary_traj(operator&, operator&=);
 }

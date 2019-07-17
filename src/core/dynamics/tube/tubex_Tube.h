@@ -132,7 +132,7 @@ namespace tubex
        * \param timestep sampling value \f$\delta\f$ for the temporal
        *        discretization (double, no discretization by default: one slice only)
        */
-      Tube(const Trajectory& traj, double timestep = 0.);
+      Tube(const Trajectory& traj, double timestep);
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ defined as an interval
@@ -146,7 +146,7 @@ namespace tubex
        * \param timestep sampling value \f$\delta\f$ for the temporal
        *        discretization (double, no discretization by default: one slice only)
        */
-      Tube(const Trajectory& lb, const Trajectory& ub, double timestep = 0.);
+      Tube(const Trajectory& lb, const Trajectory& ub, double timestep);
 
       /**
        * \brief Restore a scalar tube from serialization
