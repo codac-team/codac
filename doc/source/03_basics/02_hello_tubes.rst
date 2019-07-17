@@ -69,7 +69,7 @@ For instance, let us consider a trajectory :math:`y^*(t):\cos(t)+0.02\cdot t\cdo
 .. figure:: ../../img/03_02_traj.png
 
 
-Full code:
+**Full code:**
 
 .. code-block:: c++
 
