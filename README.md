@@ -33,7 +33,7 @@ Documentation
 -------------
 
 * [User guide](http://simon-rohou.fr/research/tubex-lib)
-* [API technical documentation](http://simon-rohou.fr/research/tubex-lib/api)
+* [API technical documentation](http://simon-rohou.fr/research/tubex-lib/doxygen/html/annotated.html)
 
 
 
@@ -42,5 +42,4 @@ Licence and development
 
 This software is under [GNU Lesser General Public License](https://www.gnu.org/copyleft/lgpl.html).
 
-For recent improvements and activities, see the [Github Tubex repository](https://github.com/SimonRohou/tubex-lib).
 A Python version ([pyIbex](http://www.ensta-bretagne.fr/desrochers/pyibex) wrapping) is planned.
