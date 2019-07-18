@@ -1,7 +1,7 @@
 Hello tubes!
 ============
 
-The code from the previous section produces a one-slice scalar tube over the temporal domain :math:`[0,10]`:
+The code from the previous section produced a one-slice scalar tube over the temporal domain :math:`[0,10]`:
 
 .. code-block:: c++
 
@@ -44,7 +44,7 @@ Note that the VIBes viewer has to be executed prior to this code. The result is:
 
 By default, the tube appears in gray and the window fits its domain and codomain.
 
-Another tube :math:`[y](\cdot)` can be defined as an uncertain function on the same domain. For instance, :math:`[y](t)=\cos(t)+[-0.01,0.01]\cdot t`. In order to have an accurate enclosure of this analytical expression, we will also specify a sampling :math:`\delta=0.01`; now the tube :math:`[y](\cdot)` is made of 1000 slices:
+Another tube :math:`[y](\cdot)` can be defined as an uncertain function on the same domain. For instance, :math:`[y](t)=\cos(t)+[-0.01,0.01]\cdot t`. In order to have an accurate enclosure of this analytical expression, we will also specify a sampling :math:`\delta=0.01` in order to slice the tube into 1000 boxes:
 
 .. code-block:: c++
 
@@ -60,6 +60,8 @@ This tube can be displayed on the same figure, on top of :math:`[x](\cdot)`, wit
 
 Trajectories may also be created and displayed in the same manner.
 For instance, let us consider a trajectory :math:`y^*(t):\cos(t)+0.02\cdot t\cdot\sin(4t)`. By definition, this trajectory is guaranteed to be bounded by :math:`[y](\cdot)` since :math:`\forall t`, :math:`\cos(t)+0.02\cdot t\cdot\sin(4t) \in \cos(t)+[-0.05,0.05]\cdot t`.
+
+We will implement it with:
 
 .. code-block:: c++
 
@@ -103,3 +105,6 @@ For instance, let us consider a trajectory :math:`y^*(t):\cos(t)+0.02\cdot t\cdo
     fig.show();                             // display method
     vibes::endDrawing();                    // ends VIBes
   }
+
+
+This page provided a kick start with Tubex. We will now go into detail about how to build and use trajectories and tubes. 

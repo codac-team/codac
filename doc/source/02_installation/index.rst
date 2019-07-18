@@ -17,10 +17,10 @@ Tubex also uses several features of the `IBEX library <http://www.ibex-lib.org/d
 
 .. code-block:: bash
 
-  git clone https://github.com/ibex-team/ibex-lib      # download the sources from Github
-  cd ibex-lib                                          # move to the IBEX directory
-  ./waf configure --with-debug --interval-lib=gaol     # configure IBEX before installation
-  sudo ./waf install                                   # building + installing
+  git clone https://github.com/ibex-team/ibex-lib   # download the sources from Github
+  cd ibex-lib                                       # move to the IBEX directory
+  ./waf configure --with-debug --interval-lib=gaol  # configure IBEX before installation
+  sudo ./waf install                                # building + installing
 
 Note that the :code:`--with-debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
 
@@ -60,8 +60,8 @@ The last sources are available on `the official VIBes development repository <ht
 
 .. \todo: test sudo make install and executable access
 
-Then, the VIBes viewer can be launch independently by executing the `VIBes-viewer`.
-You may have to update the :code:`$PATH` environment variable in order to reach the `VIBes-viewer` program.
+Then, the VIBes viewer can be launch independently by executing the ``VIBes-viewer``.
+You may have to update the :code:`$PATH` environment variable in order to reach the ``VIBes-viewer`` program.
 
 
 Build the examples

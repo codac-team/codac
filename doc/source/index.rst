@@ -39,6 +39,10 @@ Documentation (in progress)
 ..   08_data/index
 ..   09_slices/index
 
+Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
+
+The technical documentation is also available here:
+
 - `API technical documentation <./doxygen/html/annotated.html>`_ 
 
 

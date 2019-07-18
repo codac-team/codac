@@ -119,3 +119,6 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
 
   x[1] = Trajectory(domain, tubex::Function("exp(t)"));
   cout << x[1] << endl;
+
+
+Next page presents several methods to use tubes, as envelopes of trajectories.

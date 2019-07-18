@@ -6,7 +6,7 @@ Uncertain trajectories can be handled by tubes. This page gives simple operation
 Tubes and slices
 ----------------
 
-In Tubex, tubes are necessarily implemented as lists of slices. The details about this choice are provided thereafter.
+In Tubex, tubes are necessarily implemented as lists of slices. The details about this choice will be provided thereafter.
 
 More precisely, a tube :math:`[x](\cdot)` with a sampling time :math:`\delta>0` is implemented as a box-valued function which is constant for all :math:`t` inside intervals :math:`[k\delta,k\delta+\delta]`, :math:`k\in\mathbb{N}`.
 
@@ -42,7 +42,8 @@ To create a ``Tube`` with a constant codomain:
   Tube x3(domain, timestep, Interval(0.,2.));     // [0,10]->[0,2]
   Tube x4(domain, timestep, Interval::POS_REALS); // [0,10]->[0,oo]
 
-The ``timestep`` variable defines 
+The ``timestep`` variable defines the temporal width of the slices. Note that it is also possible to create slices of different width; this will be explained afterwards.
+
 To create a copy of a tube with the same time discretization, use:
 
 .. code-block:: c++
@@ -54,6 +55,7 @@ As tubes are interval of trajectories, a ``Tube`` can be defined from ``Trajecto
 
 .. code-block:: c++
   
+  // Creating trajectories:
   Trajectory traj1(domain, tubex::Function("cos(t)"));
   Trajectory traj2(domain, tubex::Function("cos(t)+t/10"));
 
@@ -109,7 +111,7 @@ Once created, several evaluations of the tube can be made, as for trajectories. 
   x(6.)              // evaluation of [x](.) at 6, returns [-0.28, 1.56]
   x(Interval(5.,6.)) // evaluation of [x](.) over [5,6], returns [-0.96, 1.57]
 
-The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])` is also at hand and returns the set :math:`[t]` enclosing the preimages of :math:`[y]`. The ``invert()`` method returns the union of these subsets, or the set of solutions within a vector of ``Interval`` objects. The following example returns the different subsets of the inversion :math:`[x]^{-1}([0,0.2])` projected in red in next figure:
+The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])`, is also at hand and returns the set :math:`[t]` enclosing the preimages of :math:`[y]`. The ``invert()`` method returns the union of these subsets, or the set of solutions within a vector of ``Interval`` objects. The following example returns the different subsets of the inversion :math:`[x]^{-1}([0,0.2])` projected in red in next figure:
 
 .. code-block:: c++
 
@@ -190,7 +192,7 @@ Computation of :math:`[s]=\int_{[t_1]}^{[t_2]}[x](\tau)d\tau`:
   Interval t1, t2;
   Interval s = x.integral(t1, t2);
 
-A decomposition of the integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot)]` with :math:`[s^-]=\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau` and :math:`[s^+]=\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau` is computable by:
+Also, a decomposition of the integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot)]` with :math:`[s^-]=\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau` and :math:`[s^+]=\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau` is computable by:
 
 .. code-block:: c++
 
@@ -220,11 +222,11 @@ See also the following methods:
 
 .. code-block:: c++
   
-  x.set(Interval::POS_REALS); // set a codomain for all t
+  x.set(Interval::POS_REALS); // set a constant codomain for all t
   x.set(Interval(0.), 4.);    // set a value at some t: [x](4)=[0]
   x.set_empty();              // empty set for all t
 
-**Note:** be careful when updating a tube without the use of dedicated contractors. Tube discretization has to be kept in mind whenever an update is performed for some input :math:`t`. For guaranteed operations, please see the Contractors section.
+**Note:** be careful when updating a tube without the use of dedicated contractors. Tube discretization has to be kept in mind whenever an update is performed for some input :math:`t`. For guaranteed operations, please see the *Contractors* section.
 
 
 The vector case
@@ -302,3 +304,6 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
 
     vibes::endDrawing();
   }
+
+
+Further pages will be written soon, presenting contractors, bisections, fixed point resolutions, graphical tools and robotic applications.
