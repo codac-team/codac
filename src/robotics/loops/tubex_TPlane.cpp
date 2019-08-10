@@ -27,6 +27,8 @@ namespace tubex
     assert(x.size() == 2);
     assert(v.size() == 2);
 
+    m_precision = precision;
+
     if(value() == VALUE_OUT)
       return;
 
@@ -88,5 +90,37 @@ namespace tubex
           ((TPlane*)m_second_subpaving)->compute(precision, x, v);
         }
     }
+  }
+
+  Trajectory TPlane::traj_nb_detected_loops() const
+  {
+    assert(m_precision != 0. && "tplane not already computed");
+    
+    Trajectory traj;
+    traj.set(0., box()[0].lb());
+    traj.set(0., box()[0].ub());
+    traj.discretize(m_precision);
+    const map<double,double> map_values = traj.sampled_map();
+
+    vector<ConnectedSubset> v_loops = get_connected_subsets();
+    for(int i = 0 ; i < v_loops.size() ; i++)
+    {
+      for(int j = 0 ; j < 2 ; j++)
+      {
+        double t = v_loops[i].box()[j].lb();
+        typename map<double,double>::const_iterator it = map_values.lower_bound(t);
+
+        if(it->first != t && it != map_values.begin())
+          it--;
+
+        while(it != map_values.end() && it->first <= v_loops[i].box()[j].ub())
+        {
+          traj.set(traj(it->first) + 1., it->first);
+          it++;
+        }
+      }
+    }
+
+    return traj;
   }
 }

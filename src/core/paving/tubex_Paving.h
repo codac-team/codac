@@ -13,6 +13,7 @@
 #define __TUBEX_PAVING_H__
 
 #include "tubex_Set.h"
+#include "tubex_ConnectedSubset.h"
 
 namespace tubex
 {
@@ -68,6 +69,8 @@ namespace tubex
        */
       const Paving* get_second_subpaving() const;
 
+  Paving* get_root() const;
+
       /**
        * \brief Bisects this paving into two subpavings with some ratio bisection
        *
@@ -84,8 +87,21 @@ namespace tubex
        */
       bool is_leaf() const;
 
+
+      const Paving* get_first_leaf(int val, bool without_flag) const;
+      void get_pavings_intersecting(int val, const ibex::IntervalVector& box_to_intersect, std::vector<const Paving*>& v_subpavings, bool no_degenerated_intersection = false) const;
+      void get_neighbours(std::vector<const Paving*>& v_neighbours, int val = -1, bool without_flag = false) const; // -1 = all
+
+      bool flag() const;
+      void set_flag() const;
+      void reset_flags() const;
+
+      std::vector<ConnectedSubset> get_connected_subsets(bool sort_by_size = false) const;
+
     protected:
 
+      mutable bool m_flag;
+      Paving *m_root = NULL;
       Paving *m_first_subpaving = NULL, *m_second_subpaving = NULL; //!< tree structure
   };
 }

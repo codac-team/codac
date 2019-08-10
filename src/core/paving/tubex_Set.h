@@ -89,7 +89,7 @@ namespace tubex
     protected:
 
       int m_value; //!< integer value of this set
-      const ibex::IntervalVector m_box; //!< box representing this set
+      ibex::IntervalVector m_box; //!< box representing this set
   };
 }
 

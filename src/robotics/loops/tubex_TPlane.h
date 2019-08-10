@@ -22,9 +22,11 @@ namespace tubex
 
       TPlane(const ibex::IntervalVector& tbox);
       void compute(float precision, const TubeVector& x, const TubeVector& v);
+      Trajectory traj_nb_detected_loops() const;
 
     protected:
 
+      float m_precision = 0.;
   };
 }
 
