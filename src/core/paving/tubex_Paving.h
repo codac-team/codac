@@ -69,7 +69,19 @@ namespace tubex
        */
       const Paving* get_second_subpaving() const;
 
-  Paving* get_root() const;
+      /**
+       * \brief Returns a pointer to the root of the paving structure
+       *
+       * \return a pointer to the Paving object
+       */
+      Paving* get_root();
+
+      /**
+       * \brief Returns a pointer to the root of the paving structure
+       *
+       * \return a const pointer to the Paving object
+       */
+      const Paving* get_root() const;
 
       /**
        * \brief Bisects this paving into two subpavings with some ratio bisection

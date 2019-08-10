@@ -41,7 +41,7 @@ namespace tubex
     return box().is_strict_interior_subset(get_paving()->box());
   }
 
-  Paving* ConnectedSubset::get_paving() const
+  const Paving* ConnectedSubset::get_paving() const
   {
     assert(!m_v_subset_items.empty() && "no items in ConnectedSubset (empty items vector)");
     return m_v_subset_items[0]->get_root();

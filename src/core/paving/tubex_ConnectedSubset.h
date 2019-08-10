@@ -32,7 +32,7 @@ namespace tubex
 
       const ibex::IntervalVector box() const;
       bool is_strictly_included_in_paving() const;
-      Paving* get_paving() const;
+      const Paving* get_paving() const;
 
       const std::vector<const Paving*>& get_items() const; // items of type k
       std::vector<ibex::IntervalVector> get_boxes() const; // items of type k
@@ -44,8 +44,6 @@ namespace tubex
       int zeros_number(ibex::IntervalVector (*f)(const ibex::IntervalVector& b), ibex::IntervalMatrix (*Jf)(const ibex::IntervalVector& b), float precision);
 
     protected:
-
-      void compute_box();
 
       // Methods related to topological degree
 

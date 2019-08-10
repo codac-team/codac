@@ -52,7 +52,12 @@ namespace tubex
     return m_second_subpaving;
   }
 
-  Paving* Paving::get_root() const
+  Paving* Paving::get_root()
+  {
+    return const_cast<Paving*>(static_cast<const Paving&>(*this).get_root());
+  }
+
+  const Paving* Paving::get_root() const
   {
     return m_root;
   }
