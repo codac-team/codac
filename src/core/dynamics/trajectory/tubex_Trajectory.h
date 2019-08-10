@@ -199,9 +199,10 @@ namespace tubex
       void shift_domain(double a);
 
       /**
-       * \brief Transforms an analytic trajectory as a map of values
+       * \brief Discretizes the trajectory by adding new points to the map of values
        *
-       * \note Discretization only available for trajectories firstly defined as analytic functions
+       * \note If the trajectory is defined as an analytic function, then the object is
+       *       transformed into a map of values and the tubex::Function object is deleted.
        *
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        */

@@ -233,14 +233,16 @@ namespace tubex
     void Trajectory::discretize(double dt)
     {
       assert(dt > 0.);
-      assert(m_function != NULL && "discretization available for analytic functions only");
-
+      
       for(double t = m_domain.lb() ; t < m_domain.ub() ; t+=dt)
         set_map_value((*this)(t), t);
       set_map_value((*this)(m_domain.ub()), m_domain.ub());
 
-      delete m_function;
-      m_function = NULL;
+      if(m_function != NULL)
+      {
+        delete m_function;
+        m_function = NULL;
+      }
     }
 
     // Integration
