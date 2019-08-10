@@ -106,7 +106,7 @@ namespace tubex
        * \param without_flag optional research mode: select the first leaf among non-flagged items only
        * \return a const pointer to the Paving object
        */
-      const Paving* get_first_leaf(int val, bool without_flag, bool without_flag = false) const;
+      const Paving* get_first_leaf(int val, bool without_flag = false) const;
 
       /**
        * \brief Bisects this paving into two subpavings with some ratio bisection
