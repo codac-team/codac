@@ -18,6 +18,8 @@ using namespace ibex;
 
 namespace tubex
 {
+  // Basics
+  
   Paving::Paving(const IntervalVector& box, int value)
     : Set(box, value), m_root(this)
   {
@@ -32,6 +34,9 @@ namespace tubex
       delete m_second_subpaving;
     }
   }
+
+  // Binary tree structure
+
   Paving* Paving::get_first_subpaving()
   {
     return const_cast<Paving*>(static_cast<const Paving&>(*this).get_first_subpaving());
@@ -62,6 +67,25 @@ namespace tubex
     return m_root;
   }
 
+  Paving* Paving::get_first_leaf(int val, bool without_flag)
+  {
+    return const_cast<Paving*>(static_cast<const Paving&>(*this).get_first_leaf(val, without_flag));
+  }
+
+  const Paving* Paving::get_first_leaf(int val, bool without_flag) const
+  {
+    if(is_leaf() && (value() & val) && (!without_flag || (without_flag && !flag())))
+      return this;
+
+    const Paving* p = NULL;
+
+    if(m_first_subpaving != NULL) p = m_first_subpaving->get_first_leaf(val, without_flag);
+    if(p != NULL) return p;
+
+    if(m_second_subpaving != NULL) p = m_second_subpaving->get_first_leaf(val, without_flag);
+    return p;
+  }
+
   void Paving::bisect(float ratio)
   {
     assert(Interval(0.,1.).interior_contains(ratio));
@@ -80,19 +104,31 @@ namespace tubex
     return m_first_subpaving == NULL;
   }
 
-  const Paving* Paving::get_first_leaf(int val, bool without_flag) const
+  // Flags
+
+  bool Paving::flag() const
   {
-    if(is_leaf() && (value() & val) && (!without_flag || (without_flag && !flag())))
-      return this;
-
-    const Paving* p = NULL;
-
-    if(m_first_subpaving != NULL) p = m_first_subpaving->get_first_leaf(val, without_flag);
-    if(p != NULL) return p;
-
-    if(m_second_subpaving != NULL) p = m_second_subpaving->get_first_leaf(val, without_flag);
-    return p;
+    bool flag = m_flag;
+    if(!flag && m_first_subpaving != NULL) flag |= m_first_subpaving->flag();
+    if(!flag && m_second_subpaving != NULL) flag |= m_second_subpaving->flag();
+    return flag;
   }
+
+  void Paving::set_flag() const
+  {
+    m_flag = true;
+    if(m_first_subpaving != NULL) m_first_subpaving->set_flag();
+    if(m_second_subpaving != NULL) m_second_subpaving->set_flag();
+  }
+
+  void Paving::reset_flags() const
+  {
+    m_flag = false;
+    if(m_first_subpaving != NULL) m_first_subpaving->reset_flags();
+    if(m_second_subpaving != NULL) m_second_subpaving->reset_flags();
+  }
+
+  // Extract methods
 
   void Paving::get_pavings_intersecting(int val, const IntervalVector& box_to_intersect, vector<const Paving*>& v_subpavings, bool no_degenerated_intersection) const
   {
@@ -126,28 +162,6 @@ namespace tubex
       if(v[i] != this && (v[i]->value() & val) && (!without_flag || (without_flag && !v[i]->flag())))
         v_neighbours.push_back(v[i]);
     }
-  }
-
-  bool Paving::flag() const
-  {
-    bool flag = m_flag;
-    if(!flag && m_first_subpaving != NULL) flag |= m_first_subpaving->flag();
-    if(!flag && m_second_subpaving != NULL) flag |= m_second_subpaving->flag();
-    return flag;
-  }
-
-  void Paving::set_flag() const
-  {
-    m_flag = true;
-    if(m_first_subpaving != NULL) m_first_subpaving->set_flag();
-    if(m_second_subpaving != NULL) m_second_subpaving->set_flag();
-  }
-
-  void Paving::reset_flags() const
-  {
-    m_flag = false;
-    if(m_first_subpaving != NULL) m_first_subpaving->reset_flags();
-    if(m_second_subpaving != NULL) m_second_subpaving->reset_flags();
   }
 
   // todo: bool compare_subset(const ConnectedSubset* x1, const ConnectedSubset* x2)
