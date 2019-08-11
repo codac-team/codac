@@ -38,12 +38,11 @@ int main(int argc, char** argv)
   /* =========== LOOPS DETECTION =========== */
 
     clock_t t_start = clock();
-    TPlane tplane(IntervalVector(2, x->domain()));
-
     TubeVector px = x->subvector(0,1);
     TubeVector vx = x->subvector(3,4);
 
-    tplane.compute(10., px, vx);
+    TPlane tplane;
+    tplane.compute_detections(10., px, vx);
 
   /* =========== GRAPHICS =========== */
 
