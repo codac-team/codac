@@ -13,6 +13,7 @@
 
 #include "tubex_Paving.h"
 #include "tubex_TubeVector.h"
+#include "tubex_ConnectedSubset.h"
 
 namespace tubex
 {
@@ -20,13 +21,22 @@ namespace tubex
   {
     public:
 
-      TPlane(const ibex::IntervalVector& tbox);
-      void compute(float precision, const TubeVector& x, const TubeVector& v);
-      Trajectory traj_nb_detected_loops() const;
+      TPlane();
+      void compute_detections(float precision, const TubeVector& x, const TubeVector& v, bool extract_subsets = true);
+      void compute_proofs(ibex::IntervalVector (*f)(const ibex::IntervalVector& b));
+      int nb_loops_detections() const;
+      int nb_loops_proofs() const;
+      const std::vector<ConnectedSubset>& get_detected_loops() const;
+      const std::vector<ConnectedSubset>& get_proven_loops() const;
+      Trajectory traj_computed_loops() const;
 
     protected:
 
+      ibex::IntervalVector f(const ibex::IntervalVector& input);
+
       float m_precision = 0.;
+      std::vector<ConnectedSubset> m_v_detected_loops;
+      std::vector<ConnectedSubset> m_v_proven_loops;
   };
 }
 

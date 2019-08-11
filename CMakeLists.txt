@@ -71,6 +71,8 @@
              COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_04_redermor_traj/make/rob_04_redermor_traj ${TUBELIB_DATA_DIR}/redermor/gesmi.txt 0)
     add_test(NAME robotics_05
              COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_05_loops_detec/make/rob_05_loops_detec ${TUBELIB_DATA_DIR}/redermor/gesmi.txt 0)
+    add_test(NAME robotics_06
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_06_loops_proofs/make/rob_06_loops_proofs 0)
 
     # Solver
     add_test(NAME solver_01

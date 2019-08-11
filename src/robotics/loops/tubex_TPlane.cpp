@@ -15,27 +15,29 @@ using namespace ibex;
 
 namespace tubex
 {
-  TPlane::TPlane(const IntervalVector& tbox)
-    : Paving(tbox, VALUE_MAYBE)
+  TPlane::TPlane()
+    : Paving(IntervalVector(2), VALUE_MAYBE)
   {
-    assert(tbox.size() == 2);
+
   }
 
-  void TPlane::compute(float precision, const TubeVector& x, const TubeVector& v)
+  void TPlane::compute_detections(float precision, const TubeVector& x, const TubeVector& v, bool extract_subsets)
   {
     assert(precision > 0.);
-    assert(x.size() == 2);
-    assert(v.size() == 2);
+    assert(x.domain() == v.domain());
+    assert(x.size() == 2 && v.size() == 2);
 
+    if(m_box.is_unbounded())
+      m_box = IntervalVector(2, x.domain()); // initializing
     m_precision = precision;
-
+    
     if(value() == VALUE_OUT)
       return;
 
     else if(!is_leaf())
     {
-      ((TPlane*)m_first_subpaving)->compute(precision, x, v);
-      ((TPlane*)m_second_subpaving)->compute(precision, x, v);
+      ((TPlane*)m_first_subpaving)->compute_detections(precision, x, v, false);
+      ((TPlane*)m_second_subpaving)->compute_detections(precision, x, v, false);
     }
 
     else
@@ -86,36 +88,83 @@ namespace tubex
         else
         {
           bisect();
-          ((TPlane*)m_first_subpaving)->compute(precision, x, v);
-          ((TPlane*)m_second_subpaving)->compute(precision, x, v);
+          ((TPlane*)m_first_subpaving)->compute_detections(precision, x, v, false);
+          ((TPlane*)m_second_subpaving)->compute_detections(precision, x, v, false);
         }
     }
+
+    if(extract_subsets)
+      m_v_detected_loops = get_connected_subsets();
   }
 
-  Trajectory TPlane::traj_nb_detected_loops() const
+  void TPlane::compute_proofs(IntervalVector (*f)(const IntervalVector& b))
   {
-    assert(m_precision != 0. && "tplane not already computed");
-    
+    for(int i = 0 ; i < m_v_detected_loops.size() ; i++)
+      if(m_v_detected_loops[i].zero_proven(f))
+        m_v_proven_loops.push_back(m_v_detected_loops[i]);
+  }
+
+  int TPlane::nb_loops_detections() const
+  {
+    return m_v_detected_loops.size();
+  }
+
+  int TPlane::nb_loops_proofs() const
+  {
+    return m_v_proven_loops.size();
+  }
+
+  const vector<ConnectedSubset>& TPlane::get_detected_loops() const
+  {
+    return m_v_detected_loops;
+  }
+
+  const vector<ConnectedSubset>& TPlane::get_proven_loops() const
+  {
+    return m_v_proven_loops;
+  }
+
+  Trajectory TPlane::traj_computed_loops() const
+  {
     Trajectory traj;
     traj.set(0., box()[0].lb());
     traj.set(0., box()[0].ub());
     traj.discretize(m_precision);
     const map<double,double> map_values = traj.sampled_map();
 
-    vector<ConnectedSubset> v_loops = get_connected_subsets();
-    for(int i = 0 ; i < v_loops.size() ; i++)
+    // Detected loops: value set to 1
+    for(int i = 0 ; i < m_v_detected_loops.size() ; i++)
     {
       for(int j = 0 ; j < 2 ; j++)
       {
-        double t = v_loops[i].box()[j].lb();
+        double t = m_v_detected_loops[i].box()[j].lb();
         typename map<double,double>::const_iterator it = map_values.lower_bound(t);
 
         if(it->first != t && it != map_values.begin())
           it--;
 
-        while(it != map_values.end() && it->first <= v_loops[i].box()[j].ub())
+        while(it != map_values.end() && it->first <= m_v_detected_loops[i].box()[j].ub())
         {
-          traj.set(traj(it->first) + 1., it->first);
+          traj.set(1., it->first);
+          it++;
+        }
+      }
+    }
+
+    // Proven loops: value set to 2
+    for(int i = 0 ; i < m_v_proven_loops.size() ; i++)
+    {
+      for(int j = 0 ; j < 2 ; j++)
+      {
+        double t = m_v_proven_loops[i].box()[j].lb();
+        typename map<double,double>::const_iterator it = map_values.lower_bound(t);
+
+        if(it->first != t && it != map_values.begin())
+          it--;
+
+        while(it != map_values.end() && it->first <= m_v_proven_loops[i].box()[j].ub())
+        {
+          traj.set(2., it->first);
           it++;
         }
       }
