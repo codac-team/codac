@@ -40,7 +40,7 @@ namespace tubex
       Paving(const ibex::IntervalVector& box, int value = VALUE_MAYBE);
 
       /**
-       * \brief Set destructor
+       * \brief Paving destructor
        */
       ~Paving();
 
