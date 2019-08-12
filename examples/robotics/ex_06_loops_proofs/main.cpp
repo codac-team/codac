@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     colormap.add_color_point(make_rgb((float)0., 0., 0.), 0.5);
     colormap.add_color_point(make_rgb((float)0.28, 0.51, 0.), 1.);
 
-    Trajectory traj_colormap = tplane.traj_computed_loops();
+    Trajectory traj_colormap = tplane.traj_loops_summary();
 
     /*VIBesFigTube fig_colors("Colors");
     fig_colors.set_properties(450, 50, 800, 400);

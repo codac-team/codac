@@ -3,7 +3,7 @@
  *  ConnectedSubset class
  * ----------------------------------------------------------------------------
  *  \date       2018
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Peter Franek
  *  \copyright  Copyright 2019 Simon Rohou
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
@@ -161,7 +161,7 @@ namespace tubex
 
     protected:
 
-      std::vector<const Paving*> m_v_subset_items;
+      std::vector<const Paving*> m_v_subset_items; //!< set of leaves items
   };
 }
 

@@ -21,14 +21,19 @@ namespace tubex
 
   }
 
-  void TPlane::compute_detections(float precision, const TubeVector& x, const TubeVector& v, bool extract_subsets)
+  void TPlane::compute_detections(float precision, const TubeVector& p, const TubeVector& v)
+  {
+    compute_detections(precision, p, v, true);
+  }
+
+  void TPlane::compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool extract_subsets)
   {
     assert(precision > 0.);
-    assert(x.domain() == v.domain());
-    assert(x.size() == 2 && v.size() == 2);
+    assert(p.domain() == v.domain());
+    assert(p.size() == 2 && v.size() == 2);
 
     if(m_box.is_unbounded())
-      m_box = IntervalVector(2, x.domain()); // initializing
+      m_box = IntervalVector(2, p.domain()); // initializing
     m_precision = precision;
     
     if(value() == VALUE_OUT)
@@ -36,8 +41,8 @@ namespace tubex
 
     else if(!is_leaf())
     {
-      ((TPlane*)m_first_subpaving)->compute_detections(precision, x, v, false);
-      ((TPlane*)m_second_subpaving)->compute_detections(precision, x, v, false);
+      ((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, false);
+      ((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, false);
     }
 
     else
@@ -61,7 +66,7 @@ namespace tubex
       
       // Based on primitive information (<=> kernel)
 
-        const pair<IntervalVector,IntervalVector> uy1 = x.eval(t1), uy2 = x.eval(t2);
+        const pair<IntervalVector,IntervalVector> uy1 = p.eval(t1), uy2 = p.eval(t2);
         const pair<IntervalVector,IntervalVector> enc_bounds =
           make_pair(IntervalVector(uy1.first.lb() - uy2.second.ub()) | ( uy1.first.ub() - uy2.second.lb()),
                     IntervalVector(uy1.second.lb() - uy2.first.ub()) | (uy1.second.ub() - uy2.first.lb()));
@@ -88,8 +93,8 @@ namespace tubex
         else
         {
           bisect();
-          ((TPlane*)m_first_subpaving)->compute_detections(precision, x, v, false);
-          ((TPlane*)m_second_subpaving)->compute_detections(precision, x, v, false);
+          ((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, false);
+          ((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, false);
         }
     }
 
@@ -124,7 +129,7 @@ namespace tubex
     return m_v_proven_loops;
   }
 
-  Trajectory TPlane::traj_computed_loops() const
+  Trajectory TPlane::traj_loops_summary() const
   {
     Trajectory traj;
     traj.set(0., box()[0].lb());

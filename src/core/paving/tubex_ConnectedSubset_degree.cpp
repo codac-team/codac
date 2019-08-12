@@ -2,7 +2,7 @@
  *  ConnectedSubset class, methods related to topological degree computations
  * ----------------------------------------------------------------------------
  *  \date       2018
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Peter Franek
  *  \copyright  Copyright 2019 Simon Rohou
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
