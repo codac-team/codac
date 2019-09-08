@@ -217,20 +217,40 @@ namespace tubex
       /**
        * \brief Adds a Beacon object to the map
        *
+       * The width of the displayed box is related to the uncertainty of the Beacon object.
+       *
+       * \param beacon a const reference to the Beacon object to be drawn
+       * \param color optional color of the beacon
+       */
+      void add_beacon(const Beacon& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
+
+      /**
+       * \brief Adds a Beacon object to the map with a specific width
+       *
        * \param beacon a const reference to the Beacon object to be drawn
        * \param width the real width of the squared beacon
        * \param color optional color of the beacon
        */
-      void add_beacon(const Beacon& beacon, double width = 2., const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const Beacon& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a set of Beacon objects to the map
+       *
+       * The width of the displayed boxes is related to the uncertainty of the Beacon objects.
+       *
+       * \param v_beacons a vector of const references to Beacon objects to be drawn
+       * \param color optional color of the beacons
+       */
+      void add_beacons(const std::vector<Beacon>& v_beacons, const std::string& color = DEFAULT_BEACON_COLOR);
+
+      /**
+       * \brief Adds a set of Beacon objects to the map with a specific width
        *
        * \param v_beacons a vector of const references to Beacon objects to be drawn
        * \param width the real width of the squared beacons
        * \param color optional color of the beacons
        */
-      void add_beacons(const std::vector<Beacon>& v_beacons, double width = 2., const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacons(const std::vector<Beacon>& v_beacons, double width, const std::string& color = DEFAULT_BEACON_COLOR);
       
       /**
        * \brief Adds a range-and-bearing uncertain observation to the map
@@ -308,6 +328,17 @@ namespace tubex
 
       /**
        * \brief Draws a Beacon object
+       *
+       * The width of the displayed box is related to the uncertainty of the Beacon object.
+       *
+       * \param beacon a const reference to the Beacon object to be drawn
+       * \param color color of the beacon
+       * \param params VIBes parameters related to the beacon
+       */
+      void draw_beacon(const Beacon& beacon, const std::string& color, const vibes::Params& params);
+
+      /**
+       * \brief Draws a Beacon object with a specific width
        *
        * \param beacon a const reference to the Beacon object to be drawn
        * \param width the real width of the squared beacon

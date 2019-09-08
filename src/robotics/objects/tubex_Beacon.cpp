@@ -22,6 +22,12 @@ namespace tubex
     assert(pos.size() == 3);
   }
 
+  Beacon::Beacon(const IntervalVector& pos_box)
+    : m_pos(pos_box.mid()), m_pos_box(pos_box)
+  {
+    assert(!pos_box.is_unbounded());
+  }
+
   Beacon::Beacon(double x, double y, double z)
   {
     m_pos[0] = x; m_pos[1] = y; m_pos[2] = z;
