@@ -540,7 +540,12 @@ namespace tubex
     }
   }
 
-  void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params)
+  void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, float size)
+  {
+    draw_vehicle(t, traj, vibesParams("figure", name()), size);
+  }
+
+  void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params, float size)
   {
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
@@ -571,7 +576,8 @@ namespace tubex
       robot_heading = (*traj)[m_map_trajs[traj].index_heading](t);
     }
 
-    vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, m_robot_size, "gray[yellow]", params);
+    float robot_size = size == -1 ? m_robot_size : size;
+    vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, robot_size, "gray[yellow]", params);
   }
 
   void VIBesFigMap::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
@@ -599,8 +605,11 @@ namespace tubex
     vector<double> v_x, v_y;
     v_x.push_back((*traj)[m_map_trajs[traj].index_x](obs[0].mid()));
     v_y.push_back((*traj)[m_map_trajs[traj].index_y](obs[0].mid()));
-    v_x.push_back(v_x[0] + std::cos(obs[2].mid()) * obs[1].mid());
-    v_y.push_back(v_y[0] + std::sin(obs[2].mid()) * obs[1].mid());
+    float xo = v_x[0] + std::cos(obs[2].mid()) * obs[1].mid();
+    float yo = v_y[0] + std::sin(obs[2].mid()) * obs[1].mid();
+    v_x.push_back(xo);
+    v_y.push_back(yo);
     draw_line(v_x, v_y, color, params);
+    draw_circle(xo, yo, m_robot_size / 8., "blue", params);
   }
 }
