@@ -602,14 +602,18 @@ namespace tubex
       && "unknown traj, must be added beforehand");
 
     vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
-    vector<double> v_x, v_y;
-    v_x.push_back((*traj)[m_map_trajs[traj].index_x](obs[0].mid()));
-    v_y.push_back((*traj)[m_map_trajs[traj].index_y](obs[0].mid()));
-    float xo = v_x[0] + std::cos(obs[2].mid()) * obs[1].mid();
-    float yo = v_y[0] + std::sin(obs[2].mid()) * obs[1].mid();
-    v_x.push_back(xo);
-    v_y.push_back(yo);
-    draw_line(v_x, v_y, color, params);
-    draw_circle(xo, yo, m_robot_size / 8., "blue", params);
+
+    double x = (*traj)[m_map_trajs[traj].index_x](obs[0].mid());
+    double y = (*traj)[m_map_trajs[traj].index_y](obs[0].mid());
+
+    vibes::drawPie(x, y,
+                   0.001, obs[1].mid(),
+                   obs[2].lb() * 180. / M_PI, obs[2].ub() * 180. / M_PI,
+                   "lightGray", vibesParams("figure", name(), "group", "obs"));
+
+    vibes::drawPie(x, y,
+                   obs[1].lb(), obs[1].ub(),
+                   obs[2].lb() * 180. / M_PI, obs[2].ub() * 180. / M_PI,
+                   "lightGray[#828282]", vibesParams("figure", name(), "group", "obs"));
   }
 }
