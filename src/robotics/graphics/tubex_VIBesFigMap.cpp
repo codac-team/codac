@@ -447,6 +447,9 @@ namespace tubex
         for(int k = 0 ; k < m_map_tubes[tube].tube_x_copy->nb_slices() ;
             k += step * 2) // less slices for the background
         {
+          if(!(*m_map_tubes[tube].tube_x_copy).slice(k)->domain().intersects(m_restricted_tdomain))
+            continue;
+
           IntervalVector box(2);
           box[0] = (*m_map_tubes[tube].tube_x_copy)(k);
           box[1] = (*m_map_tubes[tube].tube_y_copy)(k);
@@ -498,6 +501,9 @@ namespace tubex
           (from_first_to_last && k <= kf) || (!from_first_to_last && k >= kf) ;
           k+= from_first_to_last ? max(1,min(step,kf-k)) : -max(1,min(step,k)))
       {
+        if(!(*tube)[m_map_tubes[tube].index_x].slice(k)->domain().intersects(m_restricted_tdomain))
+          continue;
+        
         IntervalVector box(2);
         box[0] = (*tube)[m_map_tubes[tube].index_x](k);
         box[1] = (*tube)[m_map_tubes[tube].index_y](k);

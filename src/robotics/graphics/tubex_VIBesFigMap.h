@@ -24,7 +24,7 @@
 namespace tubex
 {
   #define TRAJMAP_NB_DISPLAYED_POINTS   1000
-  #define MAP_SLICES_NUMBER_TO_DISPLAY  2000
+  #define MAP_SLICES_NUMBER_TO_DISPLAY  10000
 
   // HTML color codes:
   #define DEFAULT_BEACON_COLOR      "#FF5D00[white]"
@@ -225,6 +225,16 @@ namespace tubex
       void draw_vehicle(double t, const TrajectoryVector *traj, float size = -1);
 
       /**
+       * \brief Draws a vehicle on top of its trajectory
+       *
+       * \param t temporal key of the vehicle state to be drawn
+       * \param traj the const pointer to the related TrajectoryVector object
+       * \param params VIBes parameters related to the vehicle (for groups)
+       * \param size optional robot size (-1 = size of main vehicle by default)
+       */
+      void draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params, float size = -1);
+
+      /**
        * \brief Adds a Beacon object to the map
        *
        * The width of the displayed box is related to the uncertainty of the Beacon object.
@@ -289,16 +299,6 @@ namespace tubex
       /// @}
 
     protected:
-
-      /**
-       * \brief Draws a vehicle on top of its trajectory
-       *
-       * \param t temporal key of the vehicle state to be drawn
-       * \param traj the const pointer to the related TrajectoryVector object
-       * \param params VIBes parameters related to the vehicle (for groups)
-       * \param size optional robot size (-1 = size of main vehicle by default)
-       */
-      void draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params, float size = -1);
 
       /**
        * \brief Draws a tube

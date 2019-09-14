@@ -47,7 +47,7 @@ namespace tubex
   const IntervalVector& VIBesFig::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio, float margin)
   {
     assert(margin > 0.);
-    assert(x_min > 0. && x_max > 0. && y_min > 0. && y_max > 0.);
+    assert(x_min < x_max && y_min < y_max);
 
     IntervalVector viewbox(2);
     viewbox[0] = Interval(x_min, x_max);
