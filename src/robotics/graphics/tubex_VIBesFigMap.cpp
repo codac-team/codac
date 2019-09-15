@@ -602,7 +602,7 @@ namespace tubex
 
   void VIBesFigMap::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)
   {
-    assert(obs.size() == 3);
+    assert(obs.size() >= 3);
     assert(traj != NULL);
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
       && "unknown traj, must be added beforehand");
@@ -615,11 +615,11 @@ namespace tubex
     vibes::drawPie(x, y,
                    0.001, obs[1].mid(),
                    obs[2].lb() * 180. / M_PI, obs[2].ub() * 180. / M_PI,
-                   "lightGray", vibesParams("figure", name(), "group", "obs"));
+                   "#B9B9B9", vibesParams("figure", name(), "group", "obs"));
 
     vibes::drawPie(x, y,
                    obs[1].lb(), obs[1].ub(),
                    obs[2].lb() * 180. / M_PI, obs[2].ub() * 180. / M_PI,
-                   "lightGray[#828282]", vibesParams("figure", name(), "group", "obs"));
+                   "#B9B9B9[#DCDCDC]", vibesParams("figure", name(), "group", "obs"));
   }
 }
