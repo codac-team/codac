@@ -23,14 +23,14 @@
 
 namespace tubex
 {
-  #define TRAJMAP_NB_DISPLAYED_POINTS   1000
-  #define MAP_SLICES_NUMBER_TO_DISPLAY  300000
+  #define TRAJ_MAX_NB_DISPLAYED_POINTS  2000
+  #define TUBE_MAX_NB_DISPLAYED_SLICES  2000
 
   // HTML color codes:
-  #define DEFAULT_BEACON_COLOR      "#FF5D00[white]"
-  #define DEFAULT_TRAJMAP_COLOR     "#276279"
-  #define DEFAULT_MAPBCKGRND_COLOR  "#d2d2d2[#d2d2d2]"
-  #define DEFAULT_OBS_COLOR         "gray"
+  #define DEFAULT_BEACON_COLOR          "#FF5D00[white]"
+  #define DEFAULT_TRAJMAP_COLOR         "#276279"
+  #define DEFAULT_MAPBCKGRND_COLOR      "#d2d2d2[#d2d2d2]"
+  #define DEFAULT_OBS_COLOR             "gray"
 
   /**
    * \class VIBesFigMap
@@ -86,6 +86,33 @@ namespace tubex
        * \param robot_size length of the displayed robot
        */
       void show(float robot_size);
+
+      /**
+       * \brief Limits the number of slices to be displayed for tubes
+       *
+       * \param max the maximum number of slices
+       */
+      void set_tube_max_nb_disp_slices(int max);
+
+      /**
+       * \brief Limits the number of points to be displayed for trajectories
+       *
+       * Note that this will be applied for trajectories defined
+       * from tubex::Function objects (discretization).
+       *
+       * \param max the maximum number of points
+       */
+      void set_traj_max_nb_disp_points(int max);
+
+      /**
+       * \brief Enables the smoothing of tubes
+       *
+       * Instead of boxed slices, polygons will be drawn which will provide
+       * a smooth but non-reliable rendering.
+       *
+       * \param smooth `true` for smooth display
+       */
+      void smooth_tube_drawing(bool smooth);
       
       /// @}
       /// \name Handling tubes
@@ -219,7 +246,6 @@ namespace tubex
        *
        * \param t temporal key of the vehicle state to be drawn
        * \param traj the const pointer to the related TrajectoryVector object
-       * \param params VIBes parameters related to the vehicle (for groups)
        * \param size optional robot size (-1 = size of main vehicle by default)
        */
       void draw_vehicle(double t, const TrajectoryVector *traj, float size = -1);
@@ -404,7 +430,11 @@ namespace tubex
 
       ibex::Interval m_restricted_tdomain; //!< restricts the display to a part of the temporal domain
       bool m_draw_tubes_backgrounds = true; //!< if `true`, will highlight tubes contractions
+      bool m_smooth_drawing = false; //!< if `true`, a smooth rendering of tubes will be done
       float m_robot_size = 5.5; //!< if `0`, no robot display
+
+      int m_tube_max_nb_disp_slices = TUBE_MAX_NB_DISPLAYED_SLICES; //!< limit for slices display
+      int m_traj_max_nb_disp_points = TRAJ_MAX_NB_DISPLAYED_POINTS; //!< limit for traj points display
   };
 }
 
