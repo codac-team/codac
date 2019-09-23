@@ -788,7 +788,7 @@ namespace tubex
         throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
 
       serialize_TubeVector(bin_file, *this, version_number);
-      char c; bin_file.write(&c, 1); // writing a bit to separate the two objects
+      char c = 0; bin_file.write(&c, 1); // writing a bit to separate the two objects
       serialize_TrajectoryVector(bin_file, traj, version_number);
       bin_file.close();
     }
@@ -855,6 +855,7 @@ namespace tubex
       else
         traj = NULL;
 
+      delete ptr;
       bin_file.close();
     }
 }
