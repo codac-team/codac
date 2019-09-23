@@ -539,6 +539,9 @@ namespace tubex
           (from_first_to_last && k <= kf) || (!from_first_to_last && k >= kf) ;
           k+= from_first_to_last ? max(1,min(step,kf-k)) : -max(1,min(step,k)))
       {
+        if(!(*tube)[0].slice(k)->domain().intersects(m_restricted_tdomain))
+          continue;
+
         IntervalVector box(2);
         box[0] = (*tube)[m_map_tubes[tube].index_x](k);
         box[1] = (*tube)[m_map_tubes[tube].index_y](k);
@@ -584,7 +587,7 @@ namespace tubex
         prev_box = box;
       }
       
-      IntervalVector first_box(2);
+      /*IntervalVector first_box(2);
       double tlb = (m_restricted_tdomain & tube->domain()).lb();
       first_box[0] = (*tube)[m_map_tubes[tube].index_x](tlb);
       first_box[1] = (*tube)[m_map_tubes[tube].index_y](tlb);
@@ -594,7 +597,7 @@ namespace tubex
       double tub = (m_restricted_tdomain & tube->domain()).ub();
       last_box[0] = (*tube)[m_map_tubes[tube].index_x](tub);
       last_box[1] = (*tube)[m_map_tubes[tube].index_y](tub);
-      draw_box(last_box, "#47A040[]", params); // green
+      draw_box(last_box, "#47A040[]", params); // green*/
     }
   }
 
@@ -635,7 +638,7 @@ namespace tubex
     }
 
     float robot_size = size == -1 ? m_robot_size : size;
-    vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, robot_size, "gray[yellow]", params);
+    vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
   }
 
   void VIBesFigMap::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
@@ -667,11 +670,11 @@ namespace tubex
     vibes::drawPie(x, y,
                    0.001, obs[1].mid(),
                    obs[2].lb() * 180. / M_PI, obs[2].ub() * 180. / M_PI,
-                   "#B9B9B9", vibesParams("figure", name(), "group", "obs"));
+                   "#000"/*#B9B9B9*/, vibesParams("figure", name(), "group", "obs"));
 
     vibes::drawPie(x, y,
                    obs[1].lb(), obs[1].ub(),
                    obs[2].lb() * 180. / M_PI, obs[2].ub() * 180. / M_PI,
-                   "#B9B9B9[#DCDCDC]", vibesParams("figure", name(), "group", "obs"));
+                   "#000[#ffffff]"/*#B9B9B9[#DCDCDC]*/, vibesParams("figure", name(), "group", "obs"));
   }
 }
