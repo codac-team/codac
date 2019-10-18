@@ -637,6 +637,12 @@ namespace tubex
         (*this)[i].inflate(rad[i]);
     }
 
+    void TubeVector::shift_domain(double shift_ref)
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].shift_domain(shift_ref);
+    }
+
     // Bisection
     
     const pair<TubeVector,TubeVector> TubeVector::bisect(double t, float ratio) const
