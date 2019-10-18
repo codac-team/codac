@@ -1144,4 +1144,14 @@ TEST_CASE("Interpol")
 
     if(VIBES_DRAWING) vibes::endDrawing();
   }
+
+  SECTION("Shifting domains")
+  {
+    Tube x(Interval(0., 1.), 0.1, tubex::Function("cos(t)"));
+    CHECK(x.domain() == Interval(0.,1.));
+    CHECK(x(0.5).contains(cos(0.5)));
+    x.shift_domain(10.);
+    CHECK(x.domain() == Interval(0.,1.) - 10.);
+    CHECK(x(0.5-10.).contains(cos(0.5)));
+  }
 }
