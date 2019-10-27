@@ -55,6 +55,16 @@ namespace tubex
     }
   }
 
+  void CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa)
+  {
+    assert(x.size() == v.size());
+    assert(x.domain() == v.domain());
+    assert(TubeVector::same_slicing(x, v));
+
+    for(int i = 0 ; i < x.size() ; i++)
+      contract(x[i], v[i], t_propa);
+  }
+
   void CtcDeriv::contract(Slice& x, const Slice& v, TPropagation t_propa)
   {
     assert(x.domain() == v.domain());
@@ -139,15 +149,5 @@ namespace tubex
     Interval out_gate_proj = out_gate - x.domain().diam() * v.codomain();
     in_gate &= out_gate_proj;
     x.set_input_gate(in_gate);
-  }
-
-  void CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa)
-  {
-    assert(x.size() == v.size());
-    assert(x.domain() == v.domain());
-    assert(TubeVector::same_slicing(x, v));
-
-    for(int i = 0 ; i < x.size() ; i++)
-      contract(x[i], v[i], t_propa);
   }
 }

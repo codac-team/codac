@@ -686,6 +686,13 @@ namespace tubex
        */
       const TubeVector& inflate(const TrajectoryVector& rad);
 
+      /**
+       * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$[\mathbf{x}](\cdot)\f$
+       *
+       * \param a the offset value so that \f$[t_0,t_f]:=[t_0-a,t_f-a]\f$ 
+       */
+      void shift_domain(double a);
+
       /// @}
       /// \name Bisection
       /// @{

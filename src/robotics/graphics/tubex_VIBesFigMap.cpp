@@ -587,7 +587,7 @@ namespace tubex
         prev_box = box;
       }
       
-      IntervalVector first_box(2);
+      /*IntervalVector first_box(2);
       double tlb = (m_restricted_tdomain & tube->domain()).lb();
       first_box[0] = (*tube)[m_map_tubes[tube].index_x](tlb);
       first_box[1] = (*tube)[m_map_tubes[tube].index_y](tlb);
@@ -597,7 +597,7 @@ namespace tubex
       double tub = (m_restricted_tdomain & tube->domain()).ub();
       last_box[0] = (*tube)[m_map_tubes[tube].index_x](tub);
       last_box[1] = (*tube)[m_map_tubes[tube].index_y](tub);
-      draw_box(last_box, "#47A040[]", params); // green
+      draw_box(last_box, "#47A040[]", params); // green*/
     }
   }
 

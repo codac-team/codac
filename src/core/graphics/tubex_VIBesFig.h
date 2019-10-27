@@ -92,7 +92,7 @@ namespace tubex
       /**
        * \brief Saves the figure in SVG/PNG/... format
        *
-       * A file named {figure_name}{suffix}.{extension} will be created in the current directory.
+       * A file named {path}/{figure_name}{suffix}.{extension} will be created in the current directory.
        *
        * \param suffix optional part name that can be added to the figure name (none by default)
        * \param extension optional part to specify the type of the image ("svg" by default)

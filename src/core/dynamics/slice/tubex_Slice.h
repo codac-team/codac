@@ -433,6 +433,13 @@ namespace tubex
        */
       const Slice& inflate(double rad);
 
+      /**
+       * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$\llbracket x\rrbracket(\cdot)\f$
+       *
+       * \param a the offset value so that \f$[t^k_0,t^k_f]:=[t^k_0-a,t^k_f-a]\f$ 
+       */
+      void shift_domain(double a);
+
       /// @}
       /// \name Assignments operators
       /// @{

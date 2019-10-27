@@ -1007,6 +1007,13 @@ namespace tubex
       return *this;
     }
 
+    void Tube::shift_domain(double shift_ref)
+    {
+      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+        s->shift_domain(shift_ref);
+      delete_synthesis_tree();
+    }
+
     // Bisection
     
     const pair<Tube,Tube> Tube::bisect(double t, float ratio) const

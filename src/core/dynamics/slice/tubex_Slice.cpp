@@ -461,6 +461,16 @@ namespace tubex
       set_input_gate(*m_input_gate + e);
       set_output_gate(*m_output_gate + e);
     }
+
+    void Slice::shift_domain(double shift_ref)
+    {
+      set_domain(m_domain - shift_ref);
+
+      if(m_synthesis_reference != NULL)
+      {
+        // todo: update domain structure
+      }
+    }
     
     // String
 
