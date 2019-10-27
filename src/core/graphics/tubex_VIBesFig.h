@@ -96,8 +96,9 @@ namespace tubex
        *
        * \param suffix optional part name that can be added to the figure name (none by default)
        * \param extension optional part to specify the type of the image ("svg" by default)
+       * \param path optional path to a different directory ("." by default)
        */
-      void save_image(const std::string& suffix = "", const std::string& extension = "svg") const;
+      void save_image(const std::string& suffix = "", const std::string& extension = "svg", const std::string& path = ".") const;
 
       /// @}
       /// \name Figure's content

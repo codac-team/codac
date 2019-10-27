@@ -92,9 +92,9 @@ namespace tubex
     return m_view_box;
   }
 
-  void VIBesFig::save_image(const string& suffix, const string& extension) const
+  void VIBesFig::save_image(const string& suffix, const string& extension, const string& path) const
   {
-    vibes::saveImage(name() + suffix + "." + extension, name());
+    vibes::saveImage(path + "/" + name() + suffix + "." + extension, name());
   }
   
   void VIBesFig::clear()
