@@ -53,14 +53,14 @@ namespace tubex
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
 
-  vector<Beacon> DataLoaderLissajous::get_beacons(const IntervalVector& map_box) const
+  vector<Beacon> DataLoaderLissajous::get_beacons(const IntervalVector& map_box, int nb_beacons) const
   {
     assert(map_box.size() == 2);
+    assert(nb_beacons >= 0);
 
     srand(time(NULL));
     vector<Beacon> v_beacons;
-    int nb_random_beacons = 100;
-    for(int i = 0 ; i < nb_random_beacons ; i++)
+    for(int i = 0 ; i < nb_beacons ; i++)
     {
       double x = map_box[0].lb() + static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * map_box[0].diam();
       double y = map_box[1].lb() + static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * map_box[1].diam();
@@ -70,15 +70,19 @@ namespace tubex
     return v_beacons;
   }
   
-  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map) const
+  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs) const
   {
     assert(x.size() >= 2);
+    assert(nb_obs >= 0);
+    assert(map.size() > 0 || nb_obs == 0); // if no observation, no beacon needed
 
-    float timestep = 50.;
     float max_range = 50.;
     vector<IntervalVector> v_obs;
 
-    for(double t = x.domain().lb() ; t < x.domain().ub() ; t+= x.domain().diam() / timestep)
+    if(nb_obs == 0)
+      return v_obs;
+
+    for(double t = x.domain().lb() ; t < x.domain().ub() ; t+= x.domain().diam() / nb_obs)
     {
       for(int i = 0 ; i < map.size() ; i++)
       {

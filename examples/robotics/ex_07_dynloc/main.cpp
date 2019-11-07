@@ -3,10 +3,7 @@
  *  Simple asynchronous dynamic localization
  * ----------------------------------------------------------------------------
  *
- *  \brief      Example from the papers:
- *              "Proving the existence of loops in robot trajectories"
- *              Simon Rohou, Peter Franek, Clément Aubry, Luc Jaulin
- *
+ *  \brief      Simple example
  *  \date       2018
  *  \author     Simon Rohou
  *  \copyright  Copyright 2019 Simon Rohou

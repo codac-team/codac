@@ -113,7 +113,7 @@ namespace tubex
        */
       void displayColorMap(const std::string& fig_name = "Color map") const;
 
-      static const ColorMap HAXBY; //!< predefined HAXBY color map (namely used for DEM)
+      static const ColorMap HAXBY; //!< predefined HAXBY color map (mainly used for DEM)
       static const ColorMap DEFAULT; //!< a predefined default color map
       static const ColorMap BLUE_TUBE; //!< a predefined color map for tubes
 
