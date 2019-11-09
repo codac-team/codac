@@ -27,7 +27,7 @@ namespace tubex
                      float timestep = 0.01,
                      const ibex::Interval& domain = ibex::Interval::ALL_REALS);
       std::vector<Beacon> get_beacons(const ibex::IntervalVector& map_box, int nb_beacons = 100) const;
-      std::vector<ibex::IntervalVector> get_observations(const TrajectoryVector& x, const std::vector<Beacon>& map, int nb_obs = 50) const;
+      std::vector<ibex::IntervalVector> get_observations(const TrajectoryVector& x, const std::vector<Beacon>& map, int nb_obs = 50, const ibex::Interval& domain = ibex::Interval::ALL_REALS) const;
 
     protected:
 
