@@ -24,7 +24,7 @@ Tubex also uses several features of the `IBEX library <http://www.ibex-lib.org/d
 
 Note that the :code:`--with-debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
 
-Tubex uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_ is also supported. Use :code:`--interval-lib=filib` during the configuration of IBEX to use it.
+Tubex uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/~xsc/software/filib.html>`_ is also supported. Use :code:`--interval-lib=filib` during the configuration of IBEX to use it, and change the comments in the ``cmake/modules/FindIbexLib.cmake`` file to support `Filib++` instead of `GAOL`.
 
 
 Tubex library

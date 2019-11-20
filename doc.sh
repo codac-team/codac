@@ -5,8 +5,8 @@
 #!/bin/bash
 
 # install :
+#  sudo apt-get install python3-sphinx doxygen graphviz
 #  sudo pip install sphinx_rtd_theme
-#  sudo apt-get install doxygen graphviz
 
 cd doc
 make html
