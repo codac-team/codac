@@ -66,18 +66,23 @@ namespace tubex
       
       // Based on primitive information (<=> kernel)
 
-        const pair<IntervalVector,IntervalVector> uy1 = p.eval(t1), uy2 = p.eval(t2);
-        const pair<IntervalVector,IntervalVector> enc_bounds =
-          make_pair(IntervalVector(uy1.first.lb() - uy2.second.ub()) | ( uy1.first.ub() - uy2.second.lb()),
-                    IntervalVector(uy1.second.lb() - uy2.first.ub()) | (uy1.second.ub() - uy2.first.lb()));
+        pair<IntervalVector,IntervalVector> uy1 = p.eval(t1);
+        pair<IntervalVector,IntervalVector> uy2 = p.eval(t2);
+        pair<IntervalVector,IntervalVector> enc_bounds = make_pair(
+          IntervalVector(uy1.first.lb()  - uy2.second.ub()) | (uy1.first.ub()  - uy2.second.lb()),
+          IntervalVector(uy1.second.lb() - uy2.first.ub())  | (uy1.second.ub() - uy2.first.lb()));
 
         bool primitive_out = Interval::POS_REALS.is_strict_superset(t1 - t2)
-                          || box_pos_reals.is_strict_superset(enc_bounds.first)
-                          || box_neg_reals.is_strict_superset(enc_bounds.second);
+                             || Interval::POS_REALS.is_strict_superset(enc_bounds.first[0])
+                             || Interval::POS_REALS.is_strict_superset(enc_bounds.first[1])
+                             || Interval::NEG_REALS.is_strict_superset(enc_bounds.second[0])
+                             || Interval::NEG_REALS.is_strict_superset(enc_bounds.second[1]);
 
         bool primitive_in = Interval::NEG_REALS.is_strict_superset(t1 - t2)
-                         && box_neg_reals.is_strict_superset(enc_bounds.first)
-                         && box_pos_reals.is_strict_superset(enc_bounds.second);
+                             && Interval::NEG_REALS.is_strict_superset(enc_bounds.first[0])
+                             && Interval::NEG_REALS.is_strict_superset(enc_bounds.first[1])
+                             && Interval::POS_REALS.is_strict_superset(enc_bounds.second[0])
+                             && Interval::POS_REALS.is_strict_superset(enc_bounds.second[1]);
 
       // Conclusion
 
