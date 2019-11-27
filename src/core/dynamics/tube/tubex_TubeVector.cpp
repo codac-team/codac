@@ -272,6 +272,21 @@ namespace tubex
         (*this)[i].sample(t, gate[i]);
     }
 
+    void TubeVector::sample(const Tube& x)
+    {
+      assert(domain() == x.domain());
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].sample(x);
+    }
+
+    void TubeVector::sample(const TubeVector& x)
+    {
+      assert(domain() == x.domain());
+      assert(size() == x.size());
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].sample(x[i]);
+    }
+
     // Accessing values
 
     const IntervalVector TubeVector::codomain() const
