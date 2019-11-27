@@ -29,7 +29,7 @@ matrix:
   #- os: osx
   #  compiler: clang
   - os: linux
-    compiler: gcc-5
+    compiler: g++-5
 
 #before_install:
 #  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install clang-omp; fi
