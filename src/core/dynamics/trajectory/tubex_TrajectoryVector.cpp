@@ -53,7 +53,8 @@ namespace tubex
       typename map<double,Vector>::const_iterator it_map;
       for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
       {
-        assert(size() == it_map->second.size() && "vectors of map_values of different dimensions");
+        assert((size() == 0 // nothing added yet
+             || size() == it_map->second.size()) && "vectors of map_values of different dimensions");
         set(it_map->second, it_map->first);
       }
     }
