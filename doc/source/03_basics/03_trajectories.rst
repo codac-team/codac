@@ -55,7 +55,7 @@ Note that the items defining the trajectory (the map of values, or the function)
 .. code-block:: c++
 
   map<double,double> mapy = y.sampled_map(); // y(.) was defined as a map of values
-  tubex::Function fx = x.function();         // x(.) was defined from a formula
+  tubex::Function *fx = x.function();         // x(.) was defined from a formula
 
 Other methods exist such as:
 
