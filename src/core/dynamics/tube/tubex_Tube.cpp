@@ -108,7 +108,7 @@ namespace tubex
 
       for(int i = 0 ; i < v_domains.size() ; i++)
       {
-        sample(s, v_domains[i].ub());
+        sample(v_domains[i].ub(), s);
         s->set_envelope(v_codomains[i]);
         s = s->next_slice();
       }
