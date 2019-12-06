@@ -403,7 +403,7 @@ namespace tubex
         vector<Interval> v_t_i, v_t_new; \
         invert_method; \
         \
-        if(i > 0) \
+        if(i == 0) \
         { \
           v_t = v_t_i; \
           continue; \
