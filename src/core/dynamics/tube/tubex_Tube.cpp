@@ -108,7 +108,7 @@ namespace tubex
 
       for(int i = 0 ; i < v_domains.size() ; i++)
       {
-        sample(v_domains[i].ub());
+        sample(s, v_domains[i].ub());
         s->set_envelope(v_codomains[i]);
         s = s->next_slice();
       }
@@ -443,11 +443,10 @@ namespace tubex
       return i;
     }
 
-    void Tube::sample(double t)
+    void Tube::sample(double t, Slice *slice_to_be_sampled)
     {
-      assert(domain().contains(t));
+      assert(slice_to_be_sampled->domain().contains(t));
 
-      Slice *slice_to_be_sampled = slice(t);
       if(slice_to_be_sampled->domain().lb() == t || slice_to_be_sampled->domain().ub() == t)
       {
         // No degenerate slice,
@@ -473,6 +472,14 @@ namespace tubex
         Slice::chain_slices(slice_to_be_sampled, new_slice);
         new_slice->set_input_gate(new_slice->codomain());
       }
+    }
+
+    void Tube::sample(double t)
+    {
+      assert(domain().contains(t));
+
+      Slice *slice_to_be_sampled = slice(t);
+      sample(t, slice_to_be_sampled);
     }
 
     void Tube::sample(double t, const Interval& gate)
