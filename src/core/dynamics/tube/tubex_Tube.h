@@ -357,13 +357,16 @@ namespace tubex
       void sample(double t);
 
       /**
-       * \brief Samples the given Slice of this tube at \f$t\f$
+       * \brief Samples this tube at \f$t\f$ from a pointer to the corresponding slice
+       *
+       * Reduces the complexity of related methods by providing a direct access
+       * to the Slice object covering the input \f$t\f$.
        *
        * \note Without any effect if two Slice objects are already defined at \f$t\f$
        *       (if the gate \f$[x](t)\f$ already exists)
        *
        * \param t the temporal key (double, must belong to the Tube domain)
-       * \param slice_to_be_sampled a pointer to the Slice whose domain contains t
+       * \param slice_to_be_sampled a pointer to the Slice whose domain contains \f$t\f$
        */
       void sample(double t, Slice *slice_to_be_sampled);
 

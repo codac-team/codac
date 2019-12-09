@@ -443,8 +443,17 @@ namespace tubex
       return i;
     }
 
+    void Tube::sample(double t)
+    {
+      assert(domain().contains(t));
+
+      Slice *slice_to_be_sampled = slice(t);
+      sample(t, slice_to_be_sampled);
+    }
+
     void Tube::sample(double t, Slice *slice_to_be_sampled)
     {
+      assert(slice_to_be_sampled != NULL);
       assert(slice_to_be_sampled->domain().contains(t));
 
       if(slice_to_be_sampled->domain().lb() == t || slice_to_be_sampled->domain().ub() == t)
@@ -472,14 +481,6 @@ namespace tubex
         Slice::chain_slices(slice_to_be_sampled, new_slice);
         new_slice->set_input_gate(new_slice->codomain());
       }
-    }
-
-    void Tube::sample(double t)
-    {
-      assert(domain().contains(t));
-
-      Slice *slice_to_be_sampled = slice(t);
-      sample(t, slice_to_be_sampled);
     }
 
     void Tube::sample(double t, const Interval& gate)
