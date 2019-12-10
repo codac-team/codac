@@ -74,6 +74,8 @@
              COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_06_loops_proofs/make/rob_06_loops_proofs 0)
     add_test(NAME robotics_07
              COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_07_dynloc/make/rob_07_dynloc 0)
+    add_test(NAME robotics_08
+             COMMAND ${TUBELIB_EXAMPLE_DIR}/robotics/ex_08_tubepaving/make/ex_08_tubepaving 0)
 
     # Solver
     add_test(NAME solver_01
