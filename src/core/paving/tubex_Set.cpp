@@ -31,6 +31,11 @@ namespace tubex
   {
     return m_value;
   }
+  
+  int Set::size() const
+  {
+    return m_box.size();
+  }
 
   const IntervalVector& Set::box() const
   {

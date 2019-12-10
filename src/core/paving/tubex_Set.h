@@ -73,6 +73,13 @@ namespace tubex
       int value() const;
 
       /**
+       * \brief Returns the dimension of the paving
+       *
+       * \return n
+       */
+      int size() const;
+
+      /**
        * \brief Returns the n-dimensional box representing this set
        *
        * \return the box

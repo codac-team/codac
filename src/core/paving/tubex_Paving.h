@@ -19,7 +19,7 @@ namespace tubex
 {
   /**
    * \class Paving
-   * \brief Multi-dimensional paving representation of a set
+   * \brief Multi-dimensional paving as representation of a set
    *
    * The paving is made of a set of multi-dimensional boxes.
    * The implementation of this paving is made as a binary tree.
