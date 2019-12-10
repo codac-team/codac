@@ -1,6 +1,7 @@
 #include "tests.h"
 #include "tubex_CtcEval.h"
 #include "tubex_VIBesFigTube.h"
+#include "tubex_VIBesFigTubeVector.h"
 #include "vibes.h"
 
 #define protected public     // Using #define so that we can access protected
@@ -403,6 +404,56 @@ TEST_CASE("Testing set inversion")
     CHECK(x.invert(Interval(2.,3.), v) == Interval(1.,2.));
     CHECK(x.invert(Interval(1.), v) == Interval(0.5,0.75));
     CHECK(x.invert(Interval(3.5,4.), v) == Interval(2.,5.));
+  }
+}
+
+TEST_CASE("Testing set inversion in vector case")
+{
+  SECTION("test1")
+  {
+    TubeVector x(2, tube_test_1());
+    x[1] = x[1] - 3.; // shift
+
+    IntervalVector inv_val(2, 0.5);
+    vector<Interval> v_t;
+    x.invert(inv_val, v_t);
+
+    if(false & VIBES_DRAWING)
+    {
+      vibes::beginDrawing();
+      VIBesFigTubeVector fig_x("x", &x);
+      fig_x.set_properties(100, 100, 600, 250);
+      fig_x.draw_box(x.domain(), inv_val);
+      fig_x.show(true);
+
+      for(int i = 0 ; i < v_t.size() ; i++)
+        fig_x.draw_box(v_t[i], x.codomain(), "red[#FFD58C66]");
+
+      vibes::endDrawing();
+    }
+
+    CHECK(v_t.size() == 5);
+    CHECK(v_t[0] == Interval(3.,4.));
+    CHECK(v_t[1] == Interval(15.,17.));
+    CHECK(v_t[2] == Interval(37.,38.));
+    CHECK(v_t[3] == Interval(40.,42.));
+    CHECK(v_t[4] == Interval(43.,45.));
+
+    // Union inversion:
+    Interval inv = x.invert(inv_val);
+    CHECK(inv == Interval(3.,45.));
+
+    // Restricted domain
+
+    Interval restricted(15.2,39.);
+    x.invert(inv_val, v_t, restricted);
+
+    CHECK(v_t.size() == 2);
+    CHECK(v_t[0] == Interval(15.2,17.));
+    CHECK(v_t[2] == Interval(37.,38.));
+
+    inv = x.invert(inv_val, restricted);
+    CHECK(inv == Interval(15.2,38.));
   }
 }
 
