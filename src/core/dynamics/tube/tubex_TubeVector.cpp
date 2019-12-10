@@ -385,67 +385,151 @@ namespace tubex
       return eval;
     }
 
-    const Interval TubeVector::invert(const IntervalVector& y, const Interval& search_domain) const
-    {
-      assert(size() == y.size());
-      Interval t;
-      for(int i = 0 ; i < size() ; i++)
-        t &= (*this)[i].invert(y[i], search_domain);
-      return t;
-    }
-
-    #define macro_invert(invert_method) \
+    #define macro_invert_union(invert_method, slice_deriv_init_fwd, slice_deriv_init_bwd, slice_deriv_iter_fwd, slice_deriv_iter_bwd) \
       assert(size() == y.size()); \
+      assert(search_domain.intersects(domain())); \
        \
-      v_t.clear(); \
+      /* The method finds the lower bound in forward, */ \
+      /* then the upper one in backward, */ \
+      /* and returns their union. */ \
+       \
+      Interval restricted_domain = domain() & search_domain; \
+       \
+      const Slice **v_s = new const Slice*[size()]; \
+      const Slice **v_v = new const Slice*[size()]; \
       for(int i = 0 ; i < size() ; i++) \
       { \
-        vector<Interval> v_t_i, v_t_new; \
-        invert_method; \
-        \
-        if(i == 0) \
-        { \
-          v_t = v_t_i; \
-          continue; \
-        } \
-        \
-        for(int a = 0 ; a < v_t.size() ; a++) \
-          for(int b = 0 ; b < v_t_i.size() ; b++) \
-          { \
-            Interval t = v_t[a] & v_t_i[b]; \
-            if(!t.is_empty()) \
-              v_t_new.push_back(t); \
-          } \
-        \
-        v_t = v_t_new; \
+        v_s[i] = (*this)[i].slice(restricted_domain.lb()); \
+        slice_deriv_init_fwd; \
       } \
-      /* todo: merge v_t items? */ \
+       \
+      Interval inversion_lb = Interval::EMPTY_SET; \
+      Interval inversion_ub = Interval::EMPTY_SET; \
+       \
+      while(v_s[0] != NULL \
+        && v_s[0]->domain().lb() < restricted_domain.ub() \
+        && inversion_lb.is_empty()) \
+      { \
+        inversion_lb = v_s[0]->domain(); \
+        for(int i = 0 ; i < size() && !inversion_lb.is_empty() ; i++) \
+          inversion_lb &= invert_method; \
+         \
+        for(int i = 0 ; i < size() ; i++) \
+        { \
+          v_s[i] = v_s[i]->next_slice(); \
+          slice_deriv_iter_fwd; \
+        } \
+      } \
+       \
+      for(int i = 0 ; i < size() ; i++) \
+      { \
+        v_s[i] = (*this)[i].slice(restricted_domain.ub()); \
+        slice_deriv_init_bwd; \
+      } \
+       \
+      while(v_s[0] != NULL \
+        && v_s[0]->domain().ub() > restricted_domain.lb() \
+        && inversion_ub.is_empty()) \
+      { \
+        inversion_ub = v_s[0]->domain(); \
+        for(int i = 0 ; i < size() && !inversion_ub.is_empty() ; i++) \
+          inversion_ub &= invert_method; \
+         \
+        for(int i = 0 ; i < size() ; i++) \
+        { \
+          v_s[i] = v_s[i]->prev_slice(); \
+          slice_deriv_iter_bwd; \
+        } \
+      } \
+       \
+      delete[] v_s; \
+      delete[] v_v; \
+       \
+      return inversion_lb | inversion_ub; \
 
-    void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
+    const Interval TubeVector::invert(const IntervalVector& y, const Interval& search_domain) const
     {
-      assert(size() == y.size());
-      macro_invert((*this)[i].invert(y[i], v_t_i, search_domain));
+      macro_invert_union(
+        v_s[i]->invert(y[i], restricted_domain), 
+        {}, {}, {}, {});
     }
 
     const Interval TubeVector::invert(const IntervalVector& y, const TubeVector& v, const Interval& search_domain) const
     {
-      assert(size() == y.size());
-      assert(size() == v.size());
+      assert(v.size() == y.size());
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
 
-      Interval t;
-      for(int i = 0 ; i < size() ; i++)
-        t &= (*this)[i].invert(y[i], v[i], search_domain);
-      return t;
+      macro_invert_union(
+        v_s[i]->invert(y[i], *v_v[i], restricted_domain), 
+        v_v[i] = v[i].slice(restricted_domain.lb()),
+        v_v[i] = v[i].slice(restricted_domain.ub()),
+        v_v[i] = v_v[i]->next_slice(),
+        v_v[i] = v_v[i]->prev_slice());
+    }
+
+    #define macro_invert_subsets(invert_method, slice_deriv_init, slice_deriv_iter) \
+      assert(size() == y.size()); \
+      assert(search_domain.intersects(domain())); \
+       \
+      v_t.clear(); \
+      Interval restricted_domain = domain() & search_domain; \
+       \
+      const Slice **v_s = new const Slice*[size()]; \
+      const Slice **v_v = new const Slice*[size()]; \
+      for(int i = 0 ; i < size() ; i++) \
+      { \
+        v_s[i] = (*this)[i].slice(restricted_domain.lb()); \
+        slice_deriv_init; \
+      } \
+       \
+      Interval ti = Interval::EMPTY_SET; \
+       \
+      while(v_s[0] != NULL && v_s[0]->domain().lb() < restricted_domain.ub()) \
+      { \
+        Interval inversion; \
+        for(int i = 0 ; i < size() && !inversion.is_empty() ; i++) \
+          inversion &= invert_method; \
+         \
+        ti |= inversion; \
+         \
+        if(inversion.is_empty() && !ti.is_empty()) \
+        { \
+          v_t.push_back(ti); \
+          ti.set_empty(); \
+        } \
+         \
+        for(int i = 0 ; i < size() ; i++) \
+        { \
+          v_s[i] = v_s[i]->next_slice(); \
+          slice_deriv_iter; \
+        } \
+      } \
+       \
+      if(!ti.is_empty()) \
+        v_t.push_back(ti); \
+       \
+      delete[] v_s; \
+      delete[] v_v; \
+
+    void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_domain) const
+    {
+      macro_invert_subsets(
+        v_s[i]->invert(y[i], restricted_domain), 
+        {}, 
+        {});
     }
 
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const TubeVector& v, const Interval& search_domain) const
     {
-      assert(size() == v.size());
+      assert(v.size() == y.size());
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
-      macro_invert((*this)[i].invert(y[i], v_t_i, v[i], search_domain));
+
+      macro_invert_subsets(
+        v_s[i]->invert(y[i], *v_v[i], restricted_domain), 
+        v_v[i] = v[i].slice(restricted_domain.lb()),
+        v_v[i] = v_v[i]->next_slice());
     }
 
     const Vector TubeVector::max_diam() const
