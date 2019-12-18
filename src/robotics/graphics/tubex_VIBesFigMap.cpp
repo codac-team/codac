@@ -362,11 +362,38 @@ namespace tubex
 
     if((*traj)[index_x].sampled_map().size() != 0)
     {
-      typename map<double,double>::const_iterator it_scalar_values_x, it_scalar_values_y;
-      it_scalar_values_x = (*traj)[index_x].sampled_map().begin();
-      it_scalar_values_y = (*traj)[index_y].sampled_map().begin();
+      const Trajectory *displayed_traj_x, *displayed_traj_y;
+      Trajectory *temp_displayed_traj_x = NULL, *temp_displayed_traj_y = NULL; // possibly used in case of heavy trajectories
 
-      while(it_scalar_values_x != (*traj)[index_x].sampled_map().end())
+      if((*traj)[index_x].sampled_map().size() > m_traj_max_nb_disp_points) // heavy trajectories
+      {
+        // Computing a trajectory less discretized
+        
+          temp_displayed_traj_x = new Trajectory;
+          temp_displayed_traj_y = new Trajectory;
+
+          for(double t = traj->domain().lb() ; t <= traj->domain().ub() ; t+=traj->domain().diam()/m_traj_max_nb_disp_points)
+          {
+            temp_displayed_traj_x->set((*traj)[index_x](t), t);
+            temp_displayed_traj_y->set((*traj)[index_y](t), t);
+          }
+
+        displayed_traj_x = temp_displayed_traj_x;
+        displayed_traj_y = temp_displayed_traj_y;
+      }
+
+      else
+      {
+        // We will display the actual trajectories, entirely
+        displayed_traj_x = &(*traj)[index_x];
+        displayed_traj_y = &(*traj)[index_y];
+      }
+
+      typename map<double,double>::const_iterator it_scalar_values_x, it_scalar_values_y;
+      it_scalar_values_x = displayed_traj_x->sampled_map().begin();
+      it_scalar_values_y = displayed_traj_y->sampled_map().begin();
+
+      while(it_scalar_values_x != displayed_traj_x->sampled_map().end())
       {
         if(m_restricted_tdomain.contains(it_scalar_values_x->first))
         {
@@ -389,6 +416,12 @@ namespace tubex
 
         it_scalar_values_x++;
         it_scalar_values_y++;
+      }
+
+      if(temp_displayed_traj_x != NULL)
+      {
+        delete displayed_traj_x;
+        delete displayed_traj_y;
       }
     }
 
