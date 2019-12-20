@@ -230,7 +230,7 @@ namespace tubex
       compute_codomain();
     }
     
-    void Trajectory::discretize(double dt)
+    void Trajectory::sample(double dt)
     {
       assert(dt > 0.);
       
@@ -242,6 +242,17 @@ namespace tubex
       {
         delete m_function;
         m_function = NULL;
+      }
+    }
+    
+    void Trajectory::sample(const Trajectory& x)
+    {
+      assert(domain() == x.domain());
+      
+      for(map<double,double>::const_iterator it = x.sampled_map().begin() ; it != x.sampled_map().end() ; it++)
+      {
+        // todo: optimize this
+        set((*this)(it->first), it->first);
       }
     }
 

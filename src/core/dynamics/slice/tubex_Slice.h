@@ -398,30 +398,38 @@ namespace tubex
        * \brief Sets the interval value of the envelope of this slice
        *
        * \note The gates may be contracted if the new envelope is not their superset
+       *       and if the boolean parameter is set to true
        *
        * \param envelope Interval value of the envelope
+       * \param slice_consistency if 'true', the value of the gates may be affected
        */
-      void set_envelope(const ibex::Interval& envelope);
+      void set_envelope(const ibex::Interval& envelope, bool slice_consistency = true);
 
       /**
        * \brief Sets the interval value of the input gate of this slice
        *
        * \note The value to be set will be intersected by the envelopes of the related slices
+       *       if the boolean parameter is set to true
        * \note The envelopes of the related slices will not be affected
        *
        * \param input_gate Interval value of the input gate
+       * \param slice_consistency if 'true', the value of the gate will
+       *        be computed according to the connected slices
        */
-      void set_input_gate(const ibex::Interval& input_gate);
+      void set_input_gate(const ibex::Interval& input_gate, bool slice_consistency = true);
 
       /**
        * \brief Sets the interval value of the output gate of this slice
        *
        * \note The value to be set will be intersected by the envelopes of the related slices
+       *       if the boolean parameter is set to true
        * \note The envelopes of the related slices will not be affected
        *
        * \param output_gate Interval value of the output gate
+       * \param slice_consistency if 'true', the value of the gate will
+       *        be computed according to the connected slices
        */
-      void set_output_gate(const ibex::Interval& output_gate);
+      void set_output_gate(const ibex::Interval& output_gate, bool slice_consistency = true);
 
       /**
        * \brief Inflates this slice by adding \f$[-rad,+rad]\f$ to all its codomain components
@@ -447,6 +455,14 @@ namespace tubex
       /**
        * \brief Operates +=
        *
+       * \param x double
+       * \return (*this)+=x
+       */
+      Slice& operator+=(double x);
+
+      /**
+       * \brief Operates +=
+       *
        * \param x Trajectory
        * \return (*this)+=x
        */
@@ -459,6 +475,14 @@ namespace tubex
        * \return (*this)+=x
        */
       Slice& operator+=(const Slice& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x double
+       * \return (*this)-=x
+       */
+      Slice& operator-=(double x);
 
       /**
        * \brief Operates -=
@@ -479,6 +503,14 @@ namespace tubex
       /**
        * \brief Operates *=
        *
+       * \param x double
+       * \return (*this)*=x
+       */
+      Slice& operator*=(double x);
+
+      /**
+       * \brief Operates *=
+       *
        * \param x Trajectory
        * \return (*this)*=x
        */
@@ -491,6 +523,14 @@ namespace tubex
        * \return (*this)*=x
        */
       Slice& operator*=(const Slice& x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x double
+       * \return (*this)/=x
+       */
+      Slice& operator/=(double x);
 
       /**
        * \brief Operates /=
@@ -511,6 +551,14 @@ namespace tubex
       /**
        * \brief Operates |=
        *
+       * \param x double
+       * \return (*this)|=x
+       */
+      Slice& operator|=(double x);
+
+      /**
+       * \brief Operates |=
+       *
        * \param x Trajectory
        * \return (*this)|=x
        */
@@ -523,6 +571,14 @@ namespace tubex
        * \return (*this)|=x
        */
       Slice& operator|=(const Slice& x);
+
+      /**
+       * \brief Operates &=
+       *
+       * \param x double
+       * \return (*this)&=x
+       */
+      Slice& operator&=(double x);
 
       /**
        * \brief Operates &=

@@ -304,14 +304,14 @@ namespace tubex
         box[i+1] = v_x_slices[i]->codomain();
       result = m_ibex_f->eval_vector(box);
       for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i]->set_envelope(result[i]);
+        v_y_slices[i]->set_envelope(result[i], false);
 
       box[0] = box[0].lb();
       for(int i = 0 ; i < x.size() ; i++)
         box[i+1] = v_x_slices[i]->input_gate();
       result = m_ibex_f->eval_vector(box);
       for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i]->set_input_gate(result[i]);
+        v_y_slices[i]->set_input_gate(result[i], false);
 
       for(int i = 0 ; i < x.size() ; i++)
         v_x_slices[i] = v_x_slices[i]->next_slice();
@@ -329,7 +329,7 @@ namespace tubex
       box[i+1] = v_x_slices[i]->output_gate();
     result = m_ibex_f->eval_vector(box);
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i]->set_output_gate(result[i]);
+      v_y_slices[i]->set_output_gate(result[i], false);
 
     delete[] v_x_slices;
     delete[] v_y_slices;

@@ -139,7 +139,7 @@ namespace tubex
     Trajectory traj;
     traj.set(0., box()[0].lb());
     traj.set(0., box()[0].ub());
-    traj.discretize(m_precision);
+    traj.sample(m_precision);
     const map<double,double> map_values = traj.sampled_map();
 
     // Detected loops: value set to 1

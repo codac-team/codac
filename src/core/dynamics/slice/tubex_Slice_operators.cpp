@@ -17,21 +17,29 @@ namespace tubex
 {
   #define macro_assignment_op_slice(f) \
     \
+    Slice& Slice::f(double x) \
+    { \
+      Interval y = codomain(); y.f(x); set_envelope(y, false); \
+      y = input_gate(); y.f(x); set_input_gate(y, false); \
+      y = output_gate(); y.f(x); set_output_gate(y, false); \
+      return *this; \
+    } \
+    \
     Slice& Slice::f(const Slice& slice_x) \
     { \
       assert(domain() == slice_x.domain()); \
-      Interval y = codomain(); y.f(slice_x.codomain()); set_envelope(y); \
-      y = input_gate(); y.f(slice_x.input_gate()); set_input_gate(y); \
-      y = output_gate(); y.f(slice_x.output_gate()); set_output_gate(y); \
+      Interval y = codomain(); y.f(slice_x.codomain()); set_envelope(y, false); \
+      y = input_gate(); y.f(slice_x.input_gate()); set_input_gate(y, false); \
+      y = output_gate(); y.f(slice_x.output_gate()); set_output_gate(y, false); \
       return *this; \
     } \
     \
     Slice& Slice::f(const Trajectory& traj_x) \
     { \
       assert(domain().is_subset(traj_x.domain())); \
-      Interval y = codomain(); y.f(traj_x(domain())); set_envelope(y); \
-      y = input_gate(); y.f(traj_x(Interval(domain().lb()))); set_input_gate(y); \
-      y = output_gate(); y.f(traj_x(Interval(domain().ub()))); set_output_gate(y); \
+      Interval y = codomain(); y.f(traj_x(domain())); set_envelope(y, false); \
+      y = input_gate(); y.f(traj_x(Interval(domain().lb()))); set_input_gate(y, false); \
+      y = output_gate(); y.f(traj_x(Interval(domain().ub()))); set_output_gate(y, false); \
       return *this; \
     }
 

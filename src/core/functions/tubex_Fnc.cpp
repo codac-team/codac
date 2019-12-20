@@ -86,11 +86,11 @@ namespace tubex
     {
       result = eval_vector(v_y_slices[0]->domain(), x);
       for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i]->set_envelope(result[i]);
+        v_y_slices[i]->set_envelope(result[i], false);
 
       result = eval_vector(v_y_slices[0]->domain().lb(), x);
       for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i]->set_input_gate(result[i]);
+        v_y_slices[i]->set_input_gate(result[i], false);
       
       for(int i = 0 ; i < y.size() ; i++)
         v_y_slices[i] = v_y_slices[i]->next_slice();
@@ -101,7 +101,7 @@ namespace tubex
 
       result = eval_vector(v_y_slices[0]->domain().ub(), x);
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i]->set_output_gate(result[i]);
+      v_y_slices[i]->set_output_gate(result[i], false);
 
     delete[] v_y_slices;
     return y;

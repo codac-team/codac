@@ -17,7 +17,7 @@
 #include <vector>
 #include "tubex_Fnc.h"
 #include "tubex_TrajectoryVector.h"
-#include "tubex_arithmetic.h"
+#include "tubex_tube_arithmetic.h"
 #include "tubex_serialize_tubes.h"
 #include "ibex_BoolInterval.h"
 

@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  Arithmetic operations
+ *  Arithmetic operations on tubes
  * ----------------------------------------------------------------------------
  *  \date       2015
  *  \author     Simon Rohou
@@ -57,11 +57,11 @@ namespace tubex
     /** \brief \f$\mathrm{arctanh}([x](\cdot))\f$ */
     const Tube atanh(const Tube& x);
 
-    /** \brief \f$\mathrm{arctan2}([y](\cdot), [x](\cdot))\f$ */
+    /** \brief \f$\mathrm{arctan2}([y](\cdot),[x](\cdot))\f$ */
     const Tube atan2(const Tube& y, const Tube& x);
-    /** \brief \f$\mathrm{arctan2}([y](\cdot), [x])\f$ */
+    /** \brief \f$\mathrm{arctan2}([y](\cdot),[x])\f$ */
     const Tube atan2(const Tube& y, const ibex::Interval& x);
-    /** \brief \f$\mathrm{arctan2}([y], [x](\cdot))\f$ */
+    /** \brief \f$\mathrm{arctan2}([y],[x](\cdot))\f$ */
     const Tube atan2(const ibex::Interval& y, const Tube& x);
 
     /** \brief \f$[x]^p(\cdot)\f$ */

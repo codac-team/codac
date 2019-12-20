@@ -11,7 +11,6 @@
 #include <iomanip>
 #include "tubex_Slice.h"
 #include "tubex_CtcDeriv.h"
-#include "tubex_arithmetic.h"
 
 using namespace std;
 using namespace ibex;
@@ -409,11 +408,15 @@ namespace tubex
       set(Interval::EMPTY_SET);
     }
 
-    void Slice::set_envelope(const Interval& envelope)
+    void Slice::set_envelope(const Interval& envelope, bool slice_consistency)
     {
       m_codomain = envelope;
-      *m_input_gate &= m_codomain;
-      *m_output_gate &= m_codomain;
+
+      if(slice_consistency)
+      {
+        *m_input_gate &= m_codomain;
+        *m_output_gate &= m_codomain;
+      }
 
       if(m_synthesis_reference != NULL)
       {
@@ -422,13 +425,16 @@ namespace tubex
       }
     }
 
-    void Slice::set_input_gate(const Interval& input_gate)
+    void Slice::set_input_gate(const Interval& input_gate, bool slice_consistency)
     {
       *m_input_gate = input_gate;
-      *m_input_gate &= m_codomain;
 
-      if(prev_slice() != NULL)
-        *m_input_gate &= prev_slice()->codomain();
+      if(slice_consistency)
+      {
+        *m_input_gate &= m_codomain;
+        if(prev_slice() != NULL)
+          *m_input_gate &= prev_slice()->codomain();
+      }
 
       if(m_synthesis_reference != NULL)
       {
@@ -437,13 +443,16 @@ namespace tubex
       }
     }
 
-    void Slice::set_output_gate(const Interval& output_gate)
+    void Slice::set_output_gate(const Interval& output_gate, bool slice_consistency)
     {
       *m_output_gate = output_gate;
-      *m_output_gate &= m_codomain;
 
-      if(next_slice() != NULL)
-        *m_output_gate &= next_slice()->codomain();
+      if(slice_consistency)
+      {
+        *m_output_gate &= m_codomain;
+        if(next_slice() != NULL)
+          *m_output_gate &= next_slice()->codomain();
+      }
 
       if(m_synthesis_reference != NULL)
       {

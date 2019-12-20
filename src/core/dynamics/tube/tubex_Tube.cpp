@@ -12,7 +12,6 @@
 #include "tubex_Exception.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
-#include "tubex_arithmetic.h"
 #include "tubex_serialize_trajectories.h"
 #include "ibex_LargestFirst.h"
 #include "ibex_NoBisectableVariableException.h"
@@ -982,16 +981,15 @@ namespace tubex
       assert(rad >= 0.);
       Interval e(-rad,rad);
 
-      // Setting envelopes before gates' inflation
-      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-        s->set_envelope(s->codomain() + e);
-
+      Slice *last_slice = NULL;
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
       {
-        if(s == first_slice())
-          s->set_input_gate(s->input_gate() + e);
-        s->set_output_gate(s->output_gate() + e);
+        last_slice = s;
+        s->set_envelope(s->codomain() + e, false);
+        s->set_input_gate(s->input_gate() + e, false);
       }
+
+      last_slice->set_output_gate(last_slice->output_gate() + e, false);
 
       return *this;
     }
@@ -1001,16 +999,18 @@ namespace tubex
       assert(rad.codomain().lb() >= 0.);
       assert(domain() == rad.domain());
 
-      // Setting envelopes before gates' inflation
-      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-        s->set_envelope(s->codomain() + Interval(-1.,1.) * rad(s->domain()));
-
+      Slice *last_slice = NULL;
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
       {
-        if(s == first_slice())
-          s->set_input_gate(s->input_gate() + Interval(-1.,1.) * rad(s->domain().lb()));
-        s->set_output_gate(s->output_gate() + Interval(-1.,1.) * rad(s->domain().ub()));
+        last_slice = s;
+        s->set_envelope(s->codomain()
+          + Interval(-1.,1.) * rad(s->domain()), false);
+        s->set_input_gate(s->input_gate()
+          + Interval(-1.,1.) * rad(s->domain().lb()), false);
       }
+
+      last_slice->set_output_gate(last_slice->output_gate()
+        + Interval(-1.,1.) * rad(last_slice->domain().ub()), false);
 
       return *this;
     }

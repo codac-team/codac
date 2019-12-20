@@ -234,11 +234,11 @@ namespace tubex
       /**
        * \brief Transforms an analytic trajectory as a map of values
        *
-       * \note Discretization only available for trajectories firstly defined as analytic functions
+       * \note Sampling only available for trajectories firstly defined as analytic functions
        *
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        */
-      void discretize(double timestep);
+      void sample(double timestep);
 
       /// @}
       /// \name Integration

@@ -12,7 +12,6 @@
 #include "tubex_Exception.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
-#include "tubex_arithmetic.h"
 #include "ibex_LargestFirst.h"
 #include "tubex_serialize_trajectories.h"
 #include "ibex_NoBisectableVariableException.h"

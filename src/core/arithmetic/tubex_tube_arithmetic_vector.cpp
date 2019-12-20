@@ -1,5 +1,5 @@
 /** 
- *  Arithmetic operations
+ *  Arithmetic operations on tubes
  * ----------------------------------------------------------------------------
  *  \date       2015
  *  \author     Simon Rohou
@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_arithmetic.h"
+#include "tubex_tube_arithmetic.h"
 #include "tubex_Slice.h"
 
 using namespace std;

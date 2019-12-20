@@ -199,14 +199,26 @@ namespace tubex
       void shift_domain(double a);
 
       /**
-       * \brief Discretizes the trajectory by adding new points to the map of values
+       * \brief Samples the trajectory by adding new points to the map of values
        *
        * \note If the trajectory is defined as an analytic function, then the object is
        *       transformed into a map of values and the tubex::Function object is deleted.
        *
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        */
-      void discretize(double timestep);
+      void sample(double timestep);
+
+      /**
+       * \brief Samples this trajectory so that it will share the same sampling of \f$x(\cdot)\f$
+       *
+       * \note If the trajectory is defined as an analytic function, then the object is
+       *       transformed into a map of values and the tubex::Function object is deleted.
+       *
+       * \note The previous sampling of this tube is preserved
+       *
+       * \param x the Trajectory from which the new sampling will come from
+       */
+      void sample(const Trajectory& x);
 
       /// @}
       /// \name Integration

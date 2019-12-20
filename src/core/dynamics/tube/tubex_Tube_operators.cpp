@@ -20,16 +20,18 @@ namespace tubex
     \
     const Tube& Tube::f(const Interval& x) \
     { \
+      cout << *this << endl; \
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice()) \
       { \
         Interval envelope = s->codomain(); \
         Interval ingate = s->input_gate(); \
-        s->set_envelope(envelope.f(x)); \
-        s->set_input_gate(ingate.f(x)); \
+        s->set_envelope(envelope.f(x), false); \
+        s->set_input_gate(ingate.f(x), false); \
       } \
       Slice *s = last_slice(); \
       Interval outgate = s->output_gate(); \
-      s->set_output_gate(outgate.f(x)); \
+      s->set_output_gate(outgate.f(x), false); \
+      cout << *this << endl; \
       return *this; \
     } \
     \
@@ -40,12 +42,12 @@ namespace tubex
       { \
         Interval envelope = s->codomain(); \
         Interval ingate = s->input_gate(); \
-        s->set_envelope(envelope.f(x(s->domain()))); \
-        s->set_input_gate(ingate.f(x(Interval(s->domain().lb())))); \
+        s->set_envelope(envelope.f(x(s->domain())), false); \
+        s->set_input_gate(ingate.f(x(Interval(s->domain().lb()))), false); \
       } \
       Slice *s = last_slice(); \
       Interval outgate = s->output_gate(); \
-      s->set_output_gate(outgate.f(x(Interval(s->domain().ub())))); \
+      s->set_output_gate(outgate.f(x(Interval(s->domain().ub()))), false); \
       return *this; \
     } \
     \
@@ -60,14 +62,14 @@ namespace tubex
         { \
           Interval envelope = s->codomain(); \
           Interval ingate = s->input_gate(); \
-          s->set_envelope(envelope.f(s_x->codomain())); \
-          s->set_input_gate(ingate.f(s_x->input_gate())); \
+          s->set_envelope(envelope.f(s_x->codomain()), false); \
+          s->set_input_gate(ingate.f(s_x->input_gate()), false); \
           s = s->next_slice(); \
           s_x = s_x->next_slice(); \
         } \
         s = last_slice(); \
         Interval outgate = s->output_gate(); \
-        s->set_output_gate(outgate.f(x.last_slice()->output_gate())); \
+        s->set_output_gate(outgate.f(x.last_slice()->output_gate()), false); \
       } \
       else \
       { \
@@ -78,13 +80,13 @@ namespace tubex
           s_domain = s->domain(); \
           Interval envelope = s->codomain(); \
           Interval ingate = s->input_gate(); \
-          s->set_envelope(envelope.f(x(s_domain))); \
-          s->set_input_gate(ingate.f(x(s_domain.lb()))); \
+          s->set_envelope(envelope.f(x(s_domain)), false); \
+          s->set_input_gate(ingate.f(x(s_domain.lb())), false); \
           s = s->next_slice(); \
         } \
         s = last_slice(); \
         Interval outgate = s->output_gate(); \
-        s->set_output_gate(outgate.f(x(s_domain.ub()))); \
+        s->set_output_gate(outgate.f(x(s_domain.ub())), false); \
       } \
       return *this; \
     } \

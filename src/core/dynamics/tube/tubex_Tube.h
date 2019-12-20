@@ -19,7 +19,7 @@
 #include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
 #include "tubex_serialize_tubes.h"
-#include "tubex_arithmetic.h"
+#include "tubex_tube_arithmetic.h"
 #include "tubex_TubeTreeSynthesis.h"
 #include "tubex_Polygon.h"
 #include "ibex_BoolInterval.h"

@@ -230,10 +230,10 @@ namespace tubex
         (*this)[i].shift_domain(shift_ref);
     }
 
-    void TrajectoryVector::discretize(double dt)
+    void TrajectoryVector::sample(double dt)
     {
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i].discretize(dt);
+        (*this)[i].sample(dt);
     }
     
     // Integration
