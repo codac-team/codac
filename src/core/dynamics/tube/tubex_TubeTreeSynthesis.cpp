@@ -336,15 +336,15 @@ namespace tubex
     Interval integral_lb = Interval::EMPTY_SET;
     Interval integral_ub = Interval::EMPTY_SET;
 
-    const Slice *slice_lb = m_tube_ref->slice(index_lb);
-    const Slice *slice_ub = m_tube_ref->slice(index_ub);
+    const Slice *s_lb = m_tube_ref->slice(index_lb);
+    const Slice *s_ub = m_tube_ref->slice(index_ub);
 
-    Interval intv_t_lb = slice_lb->domain();
-    Interval intv_t_ub = slice_ub->domain();
+    Interval intv_t_lb = s_lb->domain();
+    Interval intv_t_ub = s_ub->domain();
 
     // Part A: integral along the temporal domain [t]&[intv_t_lb]
     {
-      pair<Interval,Interval> partial_primitive_first = slice_lb->m_synthesis_reference->m_partial_primitive;
+      pair<Interval,Interval> partial_primitive_first = s_lb->m_synthesis_reference->m_partial_primitive;
       
       if(partial_primitive_first.first.is_empty() || partial_primitive_first.second.is_empty())
         return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
@@ -362,7 +362,7 @@ namespace tubex
       {
         Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
 
-        Interval y_first = slice_lb->codomain();
+        Interval y_first = s_lb->codomain();
         Interval ta1 = Interval(intv_t_lb.lb(), t.lb());
         Interval ta2 = Interval(intv_t_lb.lb(), min(t.ub(), intv_t_lb.ub()));
         Interval tb1 = Interval(t.lb(), intv_t_lb.ub());
@@ -397,7 +397,7 @@ namespace tubex
     // Part C: integral along the temporal domain [t]&[intv_t_ub]
     if(index_lb != index_ub)
     {
-      pair<Interval,Interval> partial_primitive_second = slice_ub->m_synthesis_reference->m_partial_primitive;
+      pair<Interval,Interval> partial_primitive_second = s_ub->m_synthesis_reference->m_partial_primitive;
       
       if(partial_primitive_second.first.is_empty() || partial_primitive_second.second.is_empty())
         return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
@@ -415,7 +415,7 @@ namespace tubex
       {
         Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
 
-        Interval y_second = slice_ub->codomain();
+        Interval y_second = s_ub->codomain();
         Interval ta = Interval(intv_t_ub.lb(), t.ub());
         Interval tb1 = intv_t_ub;
         Interval tb2 = Interval(t.ub(), intv_t_ub.ub());

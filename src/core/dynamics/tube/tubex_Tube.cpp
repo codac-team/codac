@@ -257,17 +257,26 @@ namespace tubex
         return Polygon();
 
       vector<Point> v_pts;
+      const Slice *s = NULL;
 
-      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+      do
       {
+        if(s == NULL) // first iteration
+          s = first_slice();
+        else
+          s = s->next_slice();
+
         v_pts.push_back(Point(s->domain().lb(), s->codomain().ub()));
         v_pts.push_back(Point(s->domain().ub(), s->codomain().ub()));
-      }
 
-      for(const Slice *s = last_slice() ; s != NULL ; s = s->prev_slice())
+      } while(s->next_slice() != NULL);
+
+      while(s != NULL)
       {
         v_pts.push_back(Point(s->domain().ub(), s->codomain().lb()));
         v_pts.push_back(Point(s->domain().lb(), s->codomain().lb()));
+
+        s = s->prev_slice();
       }
       
       return Polygon(v_pts);
@@ -593,9 +602,9 @@ namespace tubex
       assert(domain() == v.domain());
       assert(same_slicing(*this, v));
 
-      const Slice *slice_x = slice(t);
-      if(slice_x->domain().lb() == t || slice_x->domain().ub() == t)
-        return (*slice_x)(t);
+      const Slice *s_x = slice(t);
+      if(s_x->domain().lb() == t || s_x->domain().ub() == t)
+        return (*s_x)(t);
 
       return interpol(Interval(t), v);
       // todo: check a faster implementation for this degenerate case?
@@ -609,13 +618,13 @@ namespace tubex
 
       Interval interpol = Interval::EMPTY_SET;
 
-      const Slice *slice_x = slice(t.lb());
-      const Slice *slice_xdot = v.slice(t.lb());
-      while(slice_x != NULL && slice_x->domain().lb() < t.ub())
+      const Slice *s_x = slice(t.lb());
+      const Slice *s_v = v.slice(t.lb());
+      while(s_x != NULL && s_x->domain().lb() < t.ub())
       {
-        interpol |= slice_x->interpol(t & slice_x->domain(), *slice_xdot);
-        slice_x = slice_x->next_slice();
-        slice_xdot = slice_xdot->next_slice();
+        interpol |= s_x->interpol(t & s_x->domain(), *s_v);
+        s_x = s_x->next_slice();
+        s_v = s_v->next_slice();
       }
 
       return interpol;
@@ -646,13 +655,13 @@ namespace tubex
       if(intersection.is_empty())
         return Interval::EMPTY_SET;
 
-      const Slice *slice_x = slice(intersection.lb());
-      const Slice *slice_xdot = v.slice(intersection.lb());
-      while(slice_x != NULL && slice_x->domain().lb() < intersection.ub())
+      const Slice *s_x = slice(intersection.lb());
+      const Slice *s_v = v.slice(intersection.lb());
+      while(s_x != NULL && s_x->domain().lb() < intersection.ub())
       {
-        invert |= slice_x->invert(y, *slice_xdot, intersection);
-        slice_x = slice_x->next_slice();
-        slice_xdot = slice_xdot->next_slice();
+        invert |= s_x->invert(y, *s_v, intersection);
+        s_x = s_x->next_slice();
+        s_v = s_v->next_slice();
       }
 
       return invert;
@@ -671,11 +680,11 @@ namespace tubex
       if(intersection.is_empty())
         return;
 
-      const Slice *slice_x = slice(intersection.lb());
-      const Slice *slice_xdot = v.slice(intersection.lb());
-      while(slice_x != NULL && slice_x->domain().lb() <= intersection.ub())
+      const Slice *s_x = slice(intersection.lb());
+      const Slice *s_v = v.slice(intersection.lb());
+      while(s_x != NULL && s_x->domain().lb() <= intersection.ub())
       {
-        Interval local_invert = slice_x->invert(y, *slice_xdot, intersection);
+        Interval local_invert = s_x->invert(y, *s_v, intersection);
         if(local_invert.is_empty() && !invert.is_empty())
         {
           v_t.push_back(invert);
@@ -685,8 +694,8 @@ namespace tubex
         else
           invert |= local_invert;
 
-        slice_x = slice_x->next_slice();
-        slice_xdot = slice_xdot->next_slice();
+        s_x = s_x->next_slice();
+        s_v = s_v->next_slice();
       }
 
       if(!invert.is_empty())
@@ -792,13 +801,13 @@ namespace tubex
       if(x.nb_slices() != nb_slices())
         return false;
 
-      const Slice *slice = first_slice(), *slice_x = x.first_slice();
-      while(slice != NULL)
+      const Slice *s = first_slice(), *s_x = x.first_slice();
+      while(s != NULL)
       {
-        if(*slice != *slice_x)
+        if(*s != *s_x)
           return false;
-        slice = slice->next_slice();
-        slice_x = slice_x->next_slice();
+        s = s->next_slice();
+        s_x = s_x->next_slice();
       }
       return true;
     }
@@ -808,13 +817,13 @@ namespace tubex
       if(x.nb_slices() != nb_slices())
         return true;
 
-      const Slice *slice = first_slice(), *slice_x = x.first_slice();
-      while(slice != NULL)
+      const Slice *s = first_slice(), *s_x = x.first_slice();
+      while(s != NULL)
       {
-        if(*slice != *slice_x)
+        if(*s != *s_x)
           return true;
-        slice = slice->next_slice();
-        slice_x = slice_x->next_slice();
+        s = s->next_slice();
+        s_x = s_x->next_slice();
       }
       return false;
     }
@@ -823,30 +832,34 @@ namespace tubex
       \
       if(same_slicing(*this, x)) /* faster */ \
       { \
-        const Slice *slice = first_slice(), *slice_x = x.first_slice(); \
-        while(slice != NULL) \
+        const Slice *s = first_slice(), *s_x = x.first_slice(); \
+        while(s != NULL) \
         { \
-          if(!slice->f(*slice_x)) \
+          if(!s->f(*s_x)) \
             return false; \
-          slice = slice->next_slice(); \
-          slice_x = slice_x->next_slice(); \
+          s = s->next_slice(); \
+          s_x = s_x->next_slice(); \
         } \
         return true; \
       } \
       \
       else \
       { \
-        const Slice *slice = first_slice(); \
-        while(slice != NULL) \
+        const Slice *s = NULL; \
+        do \
         { \
-          Interval s_domain = slice->domain(); \
-          if(!slice->input_gate().f(x(s_domain.lb())) || \
-             !slice->codomain().f(x(s_domain))) \
+          if(s == NULL) /* first iteration */ \
+            s = first_slice(); \
+          else \
+            s = s->next_slice(); \
+           \
+          if(!s->input_gate().f(x(s->domain().lb())) || \
+             !s->codomain().f(x(s->domain()))) \
             return false; \
-          slice = slice->next_slice(); \
-        } \
-        slice = last_slice(); \
-        if(!slice->output_gate().f(x(slice->domain().ub()))) \
+           \
+        } while(s->next_slice() != NULL); \
+         \
+        if(!s->output_gate().f(x(s->domain().ub()))) \
           return false; \
         return true; \
       } \
@@ -981,16 +994,20 @@ namespace tubex
       assert(rad >= 0.);
       Interval e(-rad,rad);
 
-      Slice *last_slice = NULL;
-      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+      Slice *s = NULL;
+      do
       {
-        last_slice = s;
+        if(s == NULL) // first iteration
+          s = first_slice();
+        else
+          s = s->next_slice();
+
         s->set_envelope(s->codomain() + e, false);
         s->set_input_gate(s->input_gate() + e, false);
-      }
 
-      last_slice->set_output_gate(last_slice->output_gate() + e, false);
+      } while(s->next_slice() != NULL);
 
+      s->set_output_gate(s->output_gate() + e, false);
       return *this;
     }
 
@@ -999,19 +1016,23 @@ namespace tubex
       assert(rad.codomain().lb() >= 0.);
       assert(domain() == rad.domain());
 
-      Slice *last_slice = NULL;
-      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+      Slice *s = NULL;
+      do
       {
-        last_slice = s;
+        if(s == NULL) // first iteration
+          s = first_slice();
+        else
+          s = s->next_slice();
+
         s->set_envelope(s->codomain()
           + Interval(-1.,1.) * rad(s->domain()), false);
         s->set_input_gate(s->input_gate()
           + Interval(-1.,1.) * rad(s->domain().lb()), false);
-      }
 
-      last_slice->set_output_gate(last_slice->output_gate()
-        + Interval(-1.,1.) * rad(last_slice->domain().ub()), false);
+      } while(s->next_slice() != NULL);
 
+      s->set_output_gate(s->output_gate()
+        + Interval(-1.,1.) * rad(s->domain().ub()), false);
       return *this;
     }
 

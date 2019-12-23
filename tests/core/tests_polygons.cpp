@@ -523,7 +523,7 @@ TEST_CASE("Polygon")
     x[0] = Interval(2.,3.); x[1] = Interval(3.,5.);
     box_inter = p & x;
     CHECK(box_inter == x);
-cout << "-------------" << endl;
+    
     x[0] = Interval(-99.,0.); x[1] = Interval(1.,7.);
     box_inter = p & x;
     CHECK(ApproxIntv(box_inter[0]) == Interval(0.));

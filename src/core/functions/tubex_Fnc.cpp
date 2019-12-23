@@ -76,34 +76,37 @@ namespace tubex
       return y;
     }
 
-    IntervalVector result(y.size());
-    
-    Slice **v_y_slices = new Slice*[y.size()];
+    IntervalVector res_codomain(y.size()), res_gate(y.size());
+    Slice **v_sy = new Slice*[y.size()];
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i] = y[i].first_slice();
+      v_sy[i] = NULL;
 
-    while(v_y_slices[0] != NULL)
+    do
     {
-      result = eval_vector(v_y_slices[0]->domain(), x);
-      for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i]->set_envelope(result[i], false);
+      if(v_sy[0] == NULL) // first iteration
+        for(int i = 0 ; i < y.size() ; i++)
+          v_sy[i] = y[i].first_slice();
 
-      result = eval_vector(v_y_slices[0]->domain().lb(), x);
+      else
+        for(int i = 0 ; i < y.size() ; i++)
+          v_sy[i] = v_sy[i]->next_slice();
+
+      res_codomain = eval_vector(v_sy[0]->domain(), x);
+      res_gate = eval_vector(v_sy[0]->domain().lb(), x);
+
       for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i]->set_input_gate(result[i], false);
-      
-      for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i] = v_y_slices[i]->next_slice();
-    }
+      {
+        v_sy[i]->set_envelope(res_codomain[i], false);
+        v_sy[i]->set_input_gate(res_gate[i], false);
+      }
+
+    } while(v_sy[0]->next_slice() != NULL);
     
+    res_gate = eval_vector(v_sy[0]->domain().ub(), x);
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i] = y[i].last_slice();
+      v_sy[i]->set_output_gate(res_gate[i], false);
 
-      result = eval_vector(v_y_slices[0]->domain().ub(), x);
-    for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i]->set_output_gate(result[i], false);
-
-    delete[] v_y_slices;
+    delete[] v_sy;
     return y;
   }
 }

@@ -288,51 +288,58 @@ namespace tubex
     }
 
     IntervalVector box(x.size() + 1), result(y.size());
-    
-    const Slice **v_x_slices = new const Slice*[x.size()];
+
+    const Slice **v_sx = new const Slice*[x.size()];
     for(int i = 0 ; i < x.size() ; i++)
-      v_x_slices[i] = x[i].first_slice();
+      v_sx[i] = NULL;
 
-    Slice **v_y_slices = new Slice*[y.size()];
+    Slice **v_sy = new Slice*[y.size()];
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i] = y[i].first_slice();
+      v_sy[i] = NULL;
 
-    while(v_x_slices[0] != NULL)
+    do
     {
-      box[0] = v_x_slices[0]->domain();
+      if(v_sx[0] == NULL) // first iteration
+      {
+        for(int i = 0 ; i < x.size() ; i++)
+          v_sx[i] = x[i].first_slice();
+        for(int i = 0 ; i < y.size() ; i++)
+          v_sy[i] = y[i].first_slice();
+      }
+
+      else
+      {
+        for(int i = 0 ; i < x.size() ; i++)
+          v_sx[i] = v_sx[i]->next_slice();
+        for(int i = 0 ; i < y.size() ; i++)
+          v_sy[i] = v_sy[i]->next_slice();
+      }
+
+      box[0] = v_sx[0]->domain();
       for(int i = 0 ; i < x.size() ; i++)
-        box[i+1] = v_x_slices[i]->codomain();
+        box[i+1] = v_sx[i]->codomain();
       result = m_ibex_f->eval_vector(box);
       for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i]->set_envelope(result[i], false);
+        v_sy[i]->set_envelope(result[i], false);
 
       box[0] = box[0].lb();
       for(int i = 0 ; i < x.size() ; i++)
-        box[i+1] = v_x_slices[i]->input_gate();
+        box[i+1] = v_sx[i]->input_gate();
       result = m_ibex_f->eval_vector(box);
       for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i]->set_input_gate(result[i], false);
+        v_sy[i]->set_input_gate(result[i], false);
 
-      for(int i = 0 ; i < x.size() ; i++)
-        v_x_slices[i] = v_x_slices[i]->next_slice();
-      for(int i = 0 ; i < y.size() ; i++)
-        v_y_slices[i] = v_y_slices[i]->next_slice();
-    }
+    } while(v_sx[0]->next_slice() != NULL);
     
+    box[0] = v_sx[0]->domain().ub();
     for(int i = 0 ; i < x.size() ; i++)
-      v_x_slices[i] = x[i].last_slice();
-    for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i] = y[i].last_slice();
-
-    box[0] = v_x_slices[0]->domain().ub();
-    for(int i = 0 ; i < x.size() ; i++)
-      box[i+1] = v_x_slices[i]->output_gate();
+      box[i+1] = v_sx[i]->output_gate();
     result = m_ibex_f->eval_vector(box);
     for(int i = 0 ; i < y.size() ; i++)
-      v_y_slices[i]->set_output_gate(result[i], false);
+      v_sy[i]->set_output_gate(result[i], false);
 
-    delete[] v_x_slices;
-    delete[] v_y_slices;
+    delete[] v_sx;
+    delete[] v_sy;
     return y;
   }
 

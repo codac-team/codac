@@ -136,17 +136,17 @@ namespace tubex
     if(t_propa & FORWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        Slice *slice = tube[i].slice(k);
-        slice->set_output_gate(slice->output_gate()
-          & (slice->input_gate() + slice->domain().diam() * f_eval[i]));
+        Slice *s = tube[i].slice(k);
+        s->set_output_gate(s->output_gate()
+          & (s->input_gate() + s->domain().diam() * f_eval[i]));
       }
 
     else if(t_propa & BACKWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        Slice *slice = tube[i].slice(k);
-        slice->set_input_gate(slice->input_gate()
-          & (slice->output_gate() - slice->domain().diam() * f_eval[i]));
+        Slice *s = tube[i].slice(k);
+        s->set_input_gate(s->input_gate()
+          & (s->output_gate() - s->domain().diam() * f_eval[i]));
       }
   }
 
@@ -230,9 +230,9 @@ namespace tubex
       // Restoring ending gate, contracted by setting the envelope
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        Slice *slice = tube[i].slice(k);
-        if(t_propa & FORWARD)  slice->set_output_gate(xf[i]);
-        if(t_propa & BACKWARD) slice->set_input_gate(xf[i]);
+        Slice *s = tube[i].slice(k);
+        if(t_propa & FORWARD)  s->set_output_gate(xf[i]);
+        if(t_propa & BACKWARD) s->set_input_gate(xf[i]);
         // todo: ^ check this ^
       }
     }

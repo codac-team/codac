@@ -25,15 +25,29 @@ namespace tubex
   const Tube operator-(const Tube& x)
   {
     Tube y(x);
-    Slice *slice_y = y.first_slice();
-    const Slice *slice_x = x.first_slice();
-    while(slice_y != NULL)
+    Slice *s_y = NULL;
+    const Slice *s_x = NULL;
+
+    do
     {
-      slice_y->set_envelope(-slice_x->codomain(), false);
-      slice_y->set_input_gate(-slice_x->input_gate(), false);
-      slice_y = slice_y->next_slice(); slice_x = slice_x->next_slice();
-    }
-    y.last_slice()->set_output_gate(-x.last_slice()->output_gate(), false);
+      if(s_y == NULL) // first iteration
+      {
+        s_y = y.first_slice();
+        s_x = x.first_slice();
+      }
+
+      else
+      {
+        s_y = s_y->next_slice();
+        s_x = s_x->next_slice();
+      }
+
+      s_y->set_envelope(-s_x->codomain(), false);
+      s_y->set_input_gate(-s_x->input_gate(), false);
+
+    } while(s_y->next_slice() != NULL);
+
+    s_y->set_output_gate(-s_x->output_gate(), false);
     return y;
   }
     
@@ -42,15 +56,29 @@ namespace tubex
     const Tube f(const Tube& x) \
     { \
       Tube y(x); \
-      Slice *slice_y = y.first_slice(); \
-      const Slice *slice_x = x.first_slice(); \
-      while(slice_y != NULL) \
+      Slice *s_y = NULL; \
+      const Slice *s_x = NULL; \
+      \
+      do \
       { \
-        slice_y->set_envelope(ibex::f(slice_x->codomain()), false); \
-        slice_y->set_input_gate(ibex::f(slice_x->input_gate()), false); \
-        slice_y = slice_y->next_slice(); slice_x = slice_x->next_slice(); \
-      } \
-      y.last_slice()->set_output_gate(ibex::f(x.last_slice()->output_gate()), false); \
+        if(s_y == NULL) /* first iteration */ \
+        { \
+          s_y = y.first_slice(); \
+          s_x = x.first_slice(); \
+        } \
+        \
+        else \
+        { \
+          s_y = s_y->next_slice(); \
+          s_x = s_x->next_slice(); \
+        } \
+        \
+        s_y->set_envelope(ibex::f(s_x->codomain()), false); \
+        s_y->set_input_gate(ibex::f(s_x->input_gate()), false); \
+        \
+      } while(s_y->next_slice() != NULL); \
+      \
+      s_y->set_output_gate(ibex::f(s_x->output_gate()), false); \
       return y; \
     } \
     \
@@ -78,15 +106,29 @@ namespace tubex
     const Tube f(const Tube& x, p param) \
     { \
       Tube y(x); \
-      Slice *slice_y = y.first_slice(); \
-      const Slice *slice_x = x.first_slice(); \
-      while(slice_y != NULL) \
+      Slice *s_y = NULL; \
+      const Slice *s_x = NULL; \
+      \
+      do \
       { \
-        slice_y->set_envelope(ibex::f(slice_x->codomain(), param), false); \
-        slice_y->set_input_gate(ibex::f(slice_x->input_gate(), param), false); \
-        slice_y = slice_y->next_slice(); slice_x = slice_x->next_slice(); \
-      } \
-      y.last_slice()->set_output_gate(ibex::f(x.last_slice()->output_gate(), param), false); \
+        if(s_y == NULL) /* first iteration */ \
+        { \
+          s_y = y.first_slice(); \
+          s_x = x.first_slice(); \
+        } \
+        \
+        else \
+        { \
+          s_y = s_y->next_slice(); \
+          s_x = s_x->next_slice(); \
+        } \
+        \
+        s_y->set_envelope(ibex::f(s_x->codomain(), param), false); \
+        s_y->set_input_gate(ibex::f(s_x->input_gate(), param), false); \
+        \
+      } while(s_y->next_slice() != NULL); \
+      \
+      s_y->set_output_gate(ibex::f(s_x->output_gate(), param), false); \
       return y; \
     } \
     \
@@ -101,16 +143,17 @@ namespace tubex
     const Tube f(const Tube& x1, const Tube& x2) \
     { \
       assert(x1.domain() == x2.domain()); \
+      \
       Tube y(x1); \
-      const Slice *slice_x1, *slice_x2; \
+      const Slice *s_x1, *s_x2; \
       \
       Tube *x1_resampled = NULL; /* In case of different slicing between x1 and x2, */ \
       Tube *x2_resampled = NULL; /* copies of x1 and x2 will be made and equally resampled. */ \
       \
       if(Tube::same_slicing(x1, x2)) /* faster, no sampling computation needed */ \
       { \
-        slice_x1 = x1.first_slice(); \
-        slice_x2 = x2.first_slice(); \
+        s_x1 = x1.first_slice(); \
+        s_x2 = x2.first_slice(); \
       } \
       \
       else \
@@ -120,18 +163,29 @@ namespace tubex
         x1_resampled->sample(x2); /* common sampling */ \
         x2_resampled->sample(x1); \
         y.sample(*x2_resampled); \
-        slice_x1 = x1_resampled->first_slice(); \
-        slice_x2 = x2_resampled->first_slice(); \
+        s_x1 = x1_resampled->first_slice(); \
+        s_x2 = x2_resampled->first_slice(); \
       } \
       \
-      Slice *slice_y = y.first_slice(); \
-      while(slice_y != NULL) \
+      Slice *s_y = NULL; \
+      do \
       { \
-        slice_y->set_envelope(ibex::f(slice_x1->codomain(), slice_x2->codomain()), false); \
-        slice_y->set_input_gate(ibex::f(slice_x1->input_gate(), slice_x2->input_gate()), false); \
-        slice_y = slice_y->next_slice(); slice_x1 = slice_x1->next_slice(); slice_x2 = slice_x2->next_slice(); \
-      } \
-      y.last_slice()->set_output_gate(ibex::f(x1.last_slice()->output_gate(), x2.last_slice()->output_gate()), false); \
+        if(s_y == NULL) /* first iteration */ \
+          s_y = y.first_slice(); \
+        \
+        else \
+        { \
+          s_y = s_y->next_slice(); \
+          s_x1 = s_x1->next_slice(); \
+          s_x2 = s_x2->next_slice(); \
+        } \
+        \
+        s_y->set_envelope(ibex::f(s_x1->codomain(), s_x2->codomain()), false); \
+        s_y->set_input_gate(ibex::f(s_x1->input_gate(), s_x2->input_gate()), false); \
+        \
+      } while(s_y->next_slice() != NULL); \
+      \
+      s_y->set_output_gate(ibex::f(s_x1->output_gate(), s_x2->output_gate()), false); \
       \
       if(x1_resampled != NULL) delete x1_resampled; \
       if(x2_resampled != NULL) delete x2_resampled; \
@@ -140,36 +194,71 @@ namespace tubex
     \
     const Tube f(const Tube& x1, const Interval& x2) \
     { \
-      cout << x1 << endl; \
       Tube y(x1); \
-      Slice *slice_y = y.first_slice(); \
-      const Slice *slice_x1 = x1.first_slice(); \
-      while(slice_y != NULL) \
+      Slice *s_y = NULL; \
+      const Slice *s_x1 = NULL; \
+      \
+      do \
       { \
-        slice_y->set_envelope(ibex::f(slice_x1->codomain(), x2), false); \
-        slice_y->set_input_gate(ibex::f(slice_x1->input_gate(), x2), false); \
-        slice_y = slice_y->next_slice(); slice_x1 = slice_x1->next_slice(); \
-      } \
-      y.last_slice()->set_output_gate(ibex::f(x1.last_slice()->output_gate(), x2), false); \
-       \
-      cout << y << endl; \
+        if(s_y == NULL) /* first iteration */ \
+        { \
+          s_y = y.first_slice(); \
+          s_x1 = x1.first_slice(); \
+        } \
+        \
+        else \
+        { \
+          s_y = s_y->next_slice(); \
+          s_x1 = s_x1->next_slice(); \
+        } \
+        \
+        s_y->set_envelope(ibex::f(s_x1->codomain(), x2), false); \
+        s_y->set_input_gate(ibex::f(s_x1->input_gate(), x2), false); \
+        \
+      } while(s_y->next_slice() != NULL); \
+      \
+      s_y->set_output_gate(ibex::f(s_x1->output_gate(), x2), false); \
+      \
       return y; \
     } \
     \
     const Tube f(const Interval& x1, const Tube& x2) \
     { \
       Tube y(x2); \
-      Slice *slice_y = y.first_slice(); \
-      const Slice *slice_x2 = x2.first_slice(); \
-      while(slice_y != NULL) \
+      Slice *s_y = NULL; \
+      const Slice *s_x2 = NULL; \
+      \
+      do \
       { \
-        slice_y->set_envelope(ibex::f(x1, slice_x2->codomain()), false); \
-        slice_y->set_input_gate(ibex::f(x1, slice_x2->input_gate()), false); \
-        slice_y = slice_y->next_slice(); slice_x2 = slice_x2->next_slice(); \
-      } \
-      y.last_slice()->set_output_gate(ibex::f(x1, x2.last_slice()->output_gate()), false); \
+        if(s_y == NULL) /* first iteration */ \
+        { \
+          s_y = y.first_slice(); \
+          s_x2 = x2.first_slice(); \
+        } \
+        \
+        else \
+        { \
+          s_y = s_y->next_slice(); \
+          s_x2 = s_x2->next_slice(); \
+        } \
+        \
+        s_y->set_envelope(ibex::f(x1, s_x2->codomain()), false); \
+        s_y->set_input_gate(ibex::f(x1, s_x2->input_gate()), false); \
+        \
+      } while(s_y->next_slice() != NULL); \
+      \
+      s_y->set_output_gate(ibex::f(x1, s_x2->output_gate()), false); \
+      \
       return y; \
     } \
+
+  macro_scal_binary(operator+);
+  macro_scal_binary(operator-);
+  macro_scal_binary(operator*);
+  macro_scal_binary(operator/);
+  macro_scal_binary(operator|);
+  macro_scal_binary(operator&);
+  macro_scal_binary(atan2);
 
   #define macro_scal_binary_traj(f, feq) \
     \
@@ -188,18 +277,63 @@ namespace tubex
     } \
     \
 
-  macro_scal_binary(operator+);
-  macro_scal_binary(operator-);
-  macro_scal_binary(operator*);
-  macro_scal_binary(operator/);
-  macro_scal_binary(operator|);
-  macro_scal_binary(operator&);
-  macro_scal_binary(atan2);
-
-  macro_scal_binary_traj(operator+, operator+=);
-  macro_scal_binary_traj(operator-, operator-=);
-  macro_scal_binary_traj(operator*, operator*=);
-  macro_scal_binary_traj(operator/, operator/=);
   macro_scal_binary_traj(operator|, operator|=);
   macro_scal_binary_traj(operator&, operator&=);
+
+  const Tube operator+(const Tube& x1, const Trajectory& x2)
+  {
+    Tube y(x1);
+    y.operator+=(x2);
+    return y;
+  }
+
+  const Tube operator+(const Trajectory& x1, const Tube& x2)
+  {
+    Tube y(x2);
+    y.operator+=(x1);
+    return y;
+  }
+
+  const Tube operator-(const Tube& x1, const Trajectory& x2)
+  {
+    Tube y(x1);
+    y.operator-=(x2);
+    return y;
+  }
+
+  const Tube operator-(const Trajectory& x1, const Tube& x2)
+  {
+    Tube y = -x2;
+    y.operator+=(x1);
+    return y;
+  }
+
+  const Tube operator*(const Tube& x1, const Trajectory& x2)
+  {
+    Tube y(x1);
+    y.operator*=(x2);
+    return y;
+  }
+
+  const Tube operator*(const Trajectory& x1, const Tube& x2)
+  {
+    Tube y(x2);
+    y.operator*=(x1);
+    return y;
+  }
+
+  const Tube operator/(const Tube& x1, const Trajectory& x2)
+  {
+    Tube y(x1);
+    y.operator/=(x2);
+    return y;
+  }
+
+  const Tube operator/(const Trajectory& x1, const Tube& x2)
+  {
+    Tube y(x2, 1.);
+    y.operator/=(x2);
+    y.operator*=(x1);
+    return y;
+  }
 }

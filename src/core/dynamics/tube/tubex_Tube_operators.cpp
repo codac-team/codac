@@ -20,74 +20,91 @@ namespace tubex
     \
     const Tube& Tube::f(const Interval& x) \
     { \
-      cout << *this << endl; \
-      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice()) \
+      Slice *s = NULL; \
+      do \
       { \
-        Interval envelope = s->codomain(); \
-        Interval ingate = s->input_gate(); \
-        s->set_envelope(envelope.f(x), false); \
-        s->set_input_gate(ingate.f(x), false); \
-      } \
-      Slice *s = last_slice(); \
-      Interval outgate = s->output_gate(); \
-      s->set_output_gate(outgate.f(x), false); \
-      cout << *this << endl; \
+        if(s == NULL) /* first iteration */ \
+          s = first_slice(); \
+        else \
+          s = s->next_slice(); \
+        \
+        s->set_envelope(Interval(s->codomain()).f(x), false); \
+        s->set_input_gate(Interval(s->input_gate()).f(x), false); \
+        \
+      } while(s->next_slice() != NULL); \
+      \
+      s->set_output_gate(Interval(s->output_gate()).f(x), false); \
       return *this; \
     } \
     \
     const Tube& Tube::f(const Trajectory& x) \
     { \
       assert(domain() == x.domain()); \
-      for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice()) \
+      \
+      Slice *s = NULL; \
+      do \
       { \
-        Interval envelope = s->codomain(); \
-        Interval ingate = s->input_gate(); \
-        s->set_envelope(envelope.f(x(s->domain())), false); \
-        s->set_input_gate(ingate.f(x(Interval(s->domain().lb()))), false); \
-      } \
-      Slice *s = last_slice(); \
-      Interval outgate = s->output_gate(); \
-      s->set_output_gate(outgate.f(x(Interval(s->domain().ub()))), false); \
+        if(s == NULL) /* first iteration */ \
+          s = first_slice(); \
+        else \
+          s = s->next_slice(); \
+        \
+        s->set_envelope(Interval(s->codomain()).f(x(s->domain())), false); \
+        s->set_input_gate(Interval(s->input_gate()).f(x(Interval(s->domain().lb()))), false); \
+         \
+      } while(s->next_slice() != NULL); \
+      \
+      s->set_output_gate(Interval(s->output_gate()).f(x(Interval(s->domain().ub()))), false); \
       return *this; \
     } \
     \
     const Tube& Tube::f(const Tube& x) \
     { \
       assert(domain() == x.domain()); \
+      \
       if(Tube::same_slicing(*this, x)) /* faster */ \
       { \
-        Slice *s = first_slice(); \
-        const Slice *s_x = x.first_slice(); \
-        while(s != NULL) \
+        Slice *s = NULL; \
+        const Slice *s_x = NULL; \
+        do \
         { \
-          Interval envelope = s->codomain(); \
-          Interval ingate = s->input_gate(); \
-          s->set_envelope(envelope.f(s_x->codomain()), false); \
-          s->set_input_gate(ingate.f(s_x->input_gate()), false); \
-          s = s->next_slice(); \
-          s_x = s_x->next_slice(); \
-        } \
-        s = last_slice(); \
-        Interval outgate = s->output_gate(); \
-        s->set_output_gate(outgate.f(x.last_slice()->output_gate()), false); \
+          if(s == NULL) /* first iteration */ \
+          { \
+            s = first_slice(); \
+            s_x = x.first_slice(); \
+          } \
+          \
+          else \
+          {  \
+            s = s->next_slice(); \
+            s_x = s_x->next_slice(); \
+          } \
+          \
+          s->set_envelope(Interval(s->codomain()).f(s_x->codomain()), false); \
+          s->set_input_gate(Interval(s->input_gate()).f(s_x->input_gate()), false); \
+        } while(s->next_slice() != NULL); \
+        \
+        s->set_output_gate(Interval(s->output_gate()).f((s_x->output_gate())), false); \
       } \
+      \
       else \
       { \
-        Slice *s = first_slice(); \
-        Interval s_domain; \
-        while(s != NULL) \
+        Slice *s = NULL; \
+        do \
         { \
-          s_domain = s->domain(); \
-          Interval envelope = s->codomain(); \
-          Interval ingate = s->input_gate(); \
-          s->set_envelope(envelope.f(x(s_domain)), false); \
-          s->set_input_gate(ingate.f(x(s_domain.lb())), false); \
-          s = s->next_slice(); \
-        } \
-        s = last_slice(); \
-        Interval outgate = s->output_gate(); \
-        s->set_output_gate(outgate.f(x(s_domain.ub())), false); \
+          if(s == NULL) /* first iteration */ \
+            s = first_slice(); \
+          else \
+            s = s->next_slice(); \
+          \
+          s->set_envelope(Interval(s->codomain()).f(x(s->domain())), false); \
+          s->set_input_gate(Interval(s->input_gate()).f(x(s->domain().lb())), false); \
+          \
+        } while(s->next_slice() != NULL); \
+        \
+        s->set_output_gate(Interval(s->output_gate()).f(x(s->domain().ub())), false); \
       } \
+      \
       return *this; \
     } \
     \

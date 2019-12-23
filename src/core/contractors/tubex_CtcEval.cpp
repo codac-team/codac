@@ -129,15 +129,15 @@ namespace tubex
 
         Interval front_gate(y.size());
         list<Interval> l_gates;
-        Slice *slice_y;
-        Slice *slice_w;
+        Slice *s_y;
+        Slice *s_w;
 
         // 1. Forward propagation
 
-          slice_y = y.slice(t.lb());
-          slice_w = w.slice(t.lb());
+          s_y = y.slice(t.lb());
+          s_w = w.slice(t.lb());
 
-          front_gate = slice_y->input_gate() & z;
+          front_gate = s_y->input_gate() & z;
             // Mathematically, front_gate should not be empty at this point.
             // Due to numerical approximations, the computation of t by the invert method
             // provides a wider enclosure t'. The evaluation of y[t'.lb()] may not
@@ -145,57 +145,57 @@ namespace tubex
             // An epsilon inflation could be used to overcome this problem. Or:
             if(front_gate.is_empty())
             {
-              if(slice_y->input_gate().ub() < z.lb()) front_gate = z.lb();
+              if(s_y->input_gate().ub() < z.lb()) front_gate = z.lb();
               else front_gate = z.ub();
             }
 
           l_gates.push_front(front_gate);
 
-          while(slice_y != NULL && slice_y->domain().lb() < t.ub())
+          while(s_y != NULL && s_y->domain().lb() < t.ub())
           {
             // Forward propagation of the evaluation
-            front_gate += slice_y->domain().diam() * slice_w->codomain(); // projection
+            front_gate += s_y->domain().diam() * s_w->codomain(); // projection
             front_gate |= z; // evaluation
-            front_gate &= slice_y->output_gate(); // contraction
+            front_gate &= s_y->output_gate(); // contraction
 
             // Storing temporarily fwd propagation 
             l_gates.push_front(front_gate);
 
             // Iteration
-            slice_y = slice_y->next_slice();
-            slice_w = slice_w->next_slice();
+            s_y = s_y->next_slice();
+            s_w = s_w->next_slice();
           }
 
         // 2. Backward propagation
 
-          slice_y = y.slice(ibex::previous_float(t.ub()));
-          slice_w = w.slice(ibex::previous_float(t.ub()));
+          s_y = y.slice(ibex::previous_float(t.ub()));
+          s_w = w.slice(ibex::previous_float(t.ub()));
 
-          front_gate = slice_y->output_gate() & z;
+          front_gate = s_y->output_gate() & z;
             // Overcoming numerical approximations, same remark as before:
             if(front_gate.is_empty())
             {
-              if(slice_y->output_gate().ub() < z.lb()) front_gate = z.lb();
+              if(s_y->output_gate().ub() < z.lb()) front_gate = z.lb();
               else front_gate = z.ub();
             }
 
-          slice_y->set_output_gate(l_gates.front() | front_gate);
+          s_y->set_output_gate(l_gates.front() | front_gate);
 
-          while(slice_y != NULL && slice_y->domain().lb() >= t.lb())
+          while(s_y != NULL && s_y->domain().lb() >= t.lb())
           {
             // Backward propagation of the evaluation
-            front_gate -= slice_y->domain().diam() * slice_w->codomain(); // projection
+            front_gate -= s_y->domain().diam() * s_w->codomain(); // projection
             front_gate |= z; // evaluation
-            front_gate &= slice_y->input_gate(); // contraction
+            front_gate &= s_y->input_gate(); // contraction
 
             // Updating tube
             l_gates.pop_front();
-            slice_y->set_input_gate(l_gates.front() | front_gate);
-            ctc_deriv.contract_gates(*slice_y, *slice_w);
+            s_y->set_input_gate(l_gates.front() | front_gate);
+            ctc_deriv.contract_gates(*s_y, *s_w);
 
             // Iteration
-            slice_y = slice_y->prev_slice();
-            slice_w = slice_w->prev_slice();
+            s_y = s_y->prev_slice();
+            s_w = s_w->prev_slice();
           }
 
         // 3. Envelopes contraction

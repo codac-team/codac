@@ -28,29 +28,29 @@ namespace tubex
     
     if(t_propa & FORWARD)
     {
-      Slice *x_slice = x.first_slice();
-      const Slice *v_slice = v.first_slice();
+      Slice *s_x = x.first_slice();
+      const Slice *s_v = v.first_slice();
 
-      while(x_slice != NULL)
+      while(s_x != NULL)
       {
-        assert(v_slice != NULL);
-        contract(*x_slice, *v_slice, t_propa);
-        x_slice = x_slice->next_slice();
-        v_slice = v_slice->next_slice();
+        assert(s_v != NULL);
+        contract(*s_x, *s_v, t_propa);
+        s_x = s_x->next_slice();
+        s_v = s_v->next_slice();
       }
     }
     
     if(t_propa & BACKWARD)
     {
-      Slice *x_slice = x.last_slice();
-      const Slice *v_slice = v.last_slice();
+      Slice *s_x = x.last_slice();
+      const Slice *s_v = v.last_slice();
 
-      while(x_slice != NULL)
+      while(s_x != NULL)
       {
-        assert(v_slice != NULL);
-        contract(*x_slice, *v_slice, t_propa);
-        x_slice = x_slice->prev_slice();
-        v_slice = v_slice->prev_slice();
+        assert(s_v != NULL);
+        contract(*s_x, *s_v, t_propa);
+        s_x = s_x->prev_slice();
+        s_v = s_v->prev_slice();
       }
     }
   }

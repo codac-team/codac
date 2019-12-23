@@ -109,10 +109,6 @@ namespace tubex
     const Tube operator*(const Tube& x, const Trajectory& y);
     /** \brief \f$x(\cdot)\cdot[y](\cdot)\f$ */
     const Tube operator*(const Trajectory& x, const Tube& y);
-    /** \brief \f$[x](\cdot)\cdot y(\cdot)\f$ */
-    const Tube operator*(const Tube& x, const Trajectory& y);
-    /** \brief \f$x(\cdot)\cdot[y](\cdot)\f$ */
-    const Tube operator*(const Trajectory& x, const Tube& y);
 
     /** \brief \f$[x](\cdot)/[y](\cdot)\f$ */
     const Tube operator/(const Tube& x, const Tube& y);
@@ -185,6 +181,15 @@ namespace tubex
     const TubeVector operator*(const Tube& x, const ibex::IntervalVector& y);
     /** \brief \f$x(\cdot)\cdot[\mathbf{y}](\cdot)\f$ */
     const TubeVector operator*(const Trajectory& x, const TubeVector& y);
+
+    /** \brief \f$[\mathbf{x}](\cdot)/[y](\cdot)\f$ */
+    const TubeVector operator/(const TubeVector& x, const Tube& y);
+    /** \brief \f$[\mathbf{x}](\cdot)/[y]\f$ */
+    const TubeVector operator/(const TubeVector& x, const ibex::Interval& y);
+    /** \brief \f$[\mathbf{x}]/[y](\cdot)\f$ */
+    const TubeVector operator/(const ibex::IntervalVector& x, const Tube& y);
+    /** \brief \f$[\mathbf{x}](\cdot)/y(\cdot)\f$ */
+    const TubeVector operator/(const TubeVector& x, const Trajectory& y);
 
     /** \brief \f$[\mathbf{x}](\cdot)\sqcup[\mathbf{y}](\cdot)\f$ */
     const TubeVector operator|(const TubeVector& x, const TubeVector& y);

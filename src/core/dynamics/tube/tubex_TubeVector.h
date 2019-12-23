@@ -751,6 +751,30 @@ namespace tubex
       /**
        * \brief Operates +=
        *
+       * \param x Interval
+       * \return (*this)+=x
+       */
+      const TubeVector& operator+=(const ibex::Interval& x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x Trajectory
+       * \return (*this)+=x
+       */
+      const TubeVector& operator+=(const Trajectory& x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x Tube
+       * \return (*this)+=x
+       */
+      const TubeVector& operator+=(const Tube& x);
+
+      /**
+       * \brief Operates +=
+       *
        * \param x IntervalVector
        * \return (*this)+=x
        */
@@ -771,6 +795,30 @@ namespace tubex
        * \return (*this)+=x
        */
       const TubeVector& operator+=(const TubeVector& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x Interval
+       * \return (*this)-=x
+       */
+      const TubeVector& operator-=(const ibex::Interval& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x Trajectory
+       * \return (*this)-=x
+       */
+      const TubeVector& operator-=(const Trajectory& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x Tube
+       * \return (*this)-=x
+       */
+      const TubeVector& operator-=(const Tube& x);
 
       /**
        * \brief Operates -=
@@ -819,6 +867,30 @@ namespace tubex
        * \return (*this)*=x
        */
       const TubeVector& operator*=(const Tube& x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x Interval
+       * \return (*this)/=x
+       */
+      const TubeVector& operator/=(const ibex::Interval& x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x Trajectory
+       * \return (*this)/=x
+       */
+      const TubeVector& operator/=(const Trajectory& x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x Tube
+       * \return (*this)/=x
+       */
+      const TubeVector& operator/=(const Tube& x);
 
       /**
        * \brief Operates |=

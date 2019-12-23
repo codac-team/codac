@@ -25,12 +25,12 @@ namespace tubex
       return *this; \
     } \
     \
-    Slice& Slice::f(const Slice& slice_x) \
+    Slice& Slice::f(const Slice& s_x) \
     { \
-      assert(domain() == slice_x.domain()); \
-      Interval y = codomain(); y.f(slice_x.codomain()); set_envelope(y, false); \
-      y = input_gate(); y.f(slice_x.input_gate()); set_input_gate(y, false); \
-      y = output_gate(); y.f(slice_x.output_gate()); set_output_gate(y, false); \
+      assert(domain() == s_x.domain()); \
+      Interval y = codomain(); y.f(s_x.codomain()); set_envelope(y, false); \
+      y = input_gate(); y.f(s_x.input_gate()); set_input_gate(y, false); \
+      y = output_gate(); y.f(s_x.output_gate()); set_output_gate(y, false); \
       return *this; \
     } \
     \

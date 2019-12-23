@@ -35,6 +35,7 @@ namespace tubex
     { \
       assert(x1.size() == x2.size()); \
       assert(x1.domain() == x2.domain()); \
+      \
       TubeVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
         y[i] = tubex::f(x1[i], x2[i]); \
@@ -44,6 +45,7 @@ namespace tubex
     const TubeVector f(const TubeVector& x1, const IntervalVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
+      \
       TubeVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
         y[i] = tubex::f(x1[i], x2[i]); \
@@ -53,6 +55,7 @@ namespace tubex
     const TubeVector f(const IntervalVector& x1, const TubeVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
+      \
       TubeVector y(x2); \
       for(int i = 0 ; i < y.size() ; i++) \
         y[i] = tubex::f(x1[i], x2[i]); \
@@ -62,6 +65,7 @@ namespace tubex
     const TubeVector f(const TubeVector& x1, const TrajectoryVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
+      \
       TubeVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
         y[i].feq(x2[i]); \
@@ -71,6 +75,7 @@ namespace tubex
     const TubeVector f(const TrajectoryVector& x1, const TubeVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
+      \
       TubeVector y(x2); \
       for(int i = 0 ; i < y.size() ; i++) \
         y[i].feq(x1[i]); \
@@ -82,6 +87,8 @@ namespace tubex
   macro_vect_binary(operator-, operator-=);
   macro_vect_binary(operator|, operator|=);
   macro_vect_binary(operator&, operator&=);
+
+  // Operator *
 
   const TubeVector operator*(const Interval& x1, const TubeVector& x2)
   {
@@ -114,6 +121,43 @@ namespace tubex
     TubeVector y(x2);
     for(int i = 0 ; i < y.size() ; i++)
       y[i] = operator*(x1, y[i]);
+    return y;
+  }
+
+  // Operator /
+
+  const TubeVector operator/(const TubeVector& x1, const Interval& x2)
+  {
+    TubeVector y(x1);
+    for(int i = 0 ; i < y.size() ; i++)
+      y[i] = operator/(y[i], x2);
+    return y;
+  }
+
+  const TubeVector operator/(const IntervalVector& x1, const Tube& x2)
+  {
+    TubeVector y(x1.size(), x2);
+    y.set(x1);
+    for(int i = 0 ; i < y.size() ; i++)
+      y[i] = operator/(y[i], x2);
+    return y;
+  }
+
+  const TubeVector operator/(const TubeVector& x1, const Tube& x2)
+  {
+    assert(x1.domain() == x2.domain()); \
+    TubeVector y(x1);
+    for(int i = 0 ; i < y.size() ; i++)
+      y[i] = operator/(y[i], x2);
+    return y;
+  }
+
+  const TubeVector operator/(const TubeVector& x1, const Trajectory& x2)
+  {
+    assert(x1.domain() == x2.domain()); \
+    TubeVector y(x1);
+    for(int i = 0 ; i < y.size() ; i++)
+      y[i] = operator/(y[i], x2);
     return y;
   }
 }

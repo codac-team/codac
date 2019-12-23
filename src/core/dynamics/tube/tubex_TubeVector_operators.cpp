@@ -22,6 +22,7 @@ namespace tubex
     const TubeVector& TubeVector::f(const IntervalVector& x) \
     { \
       assert(size() == x.size()); \
+      \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \
@@ -31,6 +32,7 @@ namespace tubex
     { \
       assert(size() == x.size()); \
       assert(domain() == x.domain()); \
+      \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \
@@ -40,6 +42,7 @@ namespace tubex
     { \
       assert(size() == x.size()); \
       assert(domain() == x.domain()); \
+      \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
       return *this; \
@@ -58,6 +61,7 @@ namespace tubex
     const TubeVector& TubeVector::f(const Trajectory& x) \
     { \
       assert(domain() == x.domain()); \
+      \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x); \
       return *this; \
@@ -67,6 +71,7 @@ namespace tubex
     { \
       assert(domain() == x.domain()); \
       assert(same_slicing(*this, x)); \
+      \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x); \
       return *this; \
@@ -75,7 +80,10 @@ namespace tubex
 
   macro_assign_vect_vect(operator+=);
   macro_assign_vect_vect(operator-=);
+  macro_assign_vect_scal(operator+=);
+  macro_assign_vect_scal(operator-=);
   macro_assign_vect_scal(operator*=);
+  macro_assign_vect_scal(operator/=);
   macro_assign_vect_vect(operator|=);
   macro_assign_vect_vect(operator&=);
 }
