@@ -9,7 +9,8 @@
   set(CMAKE_CXX_STANDARD  11)
   set(PACKAGE_NAME        tubex-lib)
   set(PACKAGE_VERSION     "2.0")
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG") # comment for debug
+  set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -O3")
+  #set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -DNDEBUG") # comment for debug
 
   project(${PACKAGE_NAME})
 
@@ -24,7 +25,7 @@
 
   list(APPEND CMAKE_MODULE_PATH "${TUBELIB_CMAKE_DIR}/modules") # location of find_package modules
   find_package(IbexLib REQUIRED) # will set variables IBEX_INCLUDE_DIR, IBEX_LIBRARY
-  include_directories("${IBEX_INCLUDE_DIR}")
+  include_directories(SYSTEM "${IBEX_INCLUDE_DIR}")
 
 
 # Tubex sources
