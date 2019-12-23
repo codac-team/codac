@@ -264,6 +264,7 @@ namespace tubex
     \
     const Tube f(const Tube& x1, const Trajectory& x2) \
     { \
+      assert(x1.domain() == x2.domain()); \
       Tube y(x1); \
       y.feq(x2); \
       return y; \
@@ -271,6 +272,7 @@ namespace tubex
     \
     const Tube f(const Trajectory& x1, const Tube& x2) \
     { \
+      assert(x1.domain() == x2.domain()); \
       Tube y(x2); \
       y.feq(x1); \
       return y; \
@@ -282,6 +284,7 @@ namespace tubex
 
   const Tube operator+(const Tube& x1, const Trajectory& x2)
   {
+    assert(x1.domain() == x2.domain());
     Tube y(x1);
     y.operator+=(x2);
     return y;
@@ -289,6 +292,7 @@ namespace tubex
 
   const Tube operator+(const Trajectory& x1, const Tube& x2)
   {
+    assert(x1.domain() == x2.domain());
     Tube y(x2);
     y.operator+=(x1);
     return y;
@@ -296,6 +300,7 @@ namespace tubex
 
   const Tube operator-(const Tube& x1, const Trajectory& x2)
   {
+    assert(x1.domain() == x2.domain());
     Tube y(x1);
     y.operator-=(x2);
     return y;
@@ -303,6 +308,7 @@ namespace tubex
 
   const Tube operator-(const Trajectory& x1, const Tube& x2)
   {
+    assert(x1.domain() == x2.domain());
     Tube y = -x2;
     y.operator+=(x1);
     return y;
@@ -310,6 +316,7 @@ namespace tubex
 
   const Tube operator*(const Tube& x1, const Trajectory& x2)
   {
+    assert(x1.domain() == x2.domain());
     Tube y(x1);
     y.operator*=(x2);
     return y;
@@ -317,6 +324,7 @@ namespace tubex
 
   const Tube operator*(const Trajectory& x1, const Tube& x2)
   {
+    assert(x1.domain() == x2.domain());
     Tube y(x2);
     y.operator*=(x1);
     return y;
@@ -324,6 +332,7 @@ namespace tubex
 
   const Tube operator/(const Tube& x1, const Trajectory& x2)
   {
+    assert(x1.domain() == x2.domain());
     Tube y(x1);
     y.operator/=(x2);
     return y;
@@ -331,6 +340,7 @@ namespace tubex
 
   const Tube operator/(const Trajectory& x1, const Tube& x2)
   {
+    assert(x1.domain() == x2.domain());
     Tube y(x2, 1.);
     y.operator/=(x2);
     y.operator*=(x1);

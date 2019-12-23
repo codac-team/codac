@@ -9,7 +9,7 @@
   set(CMAKE_CXX_STANDARD  11)
   set(PACKAGE_NAME        tubex-lib)
   set(PACKAGE_VERSION     "2.0")
-  set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -O3")
+  #set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -O3")
   #set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -DNDEBUG") # comment for debug
 
   project(${PACKAGE_NAME})

@@ -65,20 +65,22 @@ namespace tubex
     const TubeVector f(const TubeVector& x1, const TrajectoryVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
+      assert(x1.domain() == x2.domain()); \
       \
       TubeVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
-        y[i].feq(x2[i]); \
+        y[i] = tubex::f(x1[i], x2[i]); \
       return y; \
     } \
     \
     const TubeVector f(const TrajectoryVector& x1, const TubeVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
+      assert(x1.domain() == x2.domain()); \
       \
       TubeVector y(x2); \
       for(int i = 0 ; i < y.size() ; i++) \
-        y[i].feq(x1[i]); \
+        y[i] = tubex::f(x1[i], x2[i]); \
       return y; \
     } \
     \
