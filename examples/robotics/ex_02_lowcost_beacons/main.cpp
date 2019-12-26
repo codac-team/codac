@@ -24,15 +24,33 @@ int main()
 {
   /* =========== INITIALIZATION =========== */
 
-    float tube_dt = 0.01;
+    float dt = 0.01;
     Interval domain(0., 64.);
 
-    TubeVector x(domain, tube_dt, 4); // state vector
+    // Tube state vector
+      TubeVector x(domain, dt, 4);
 
-    IntervalVector x0(4);
-    x0[2] = Interval(M_PI/2.).inflate(0.01);
-    x0[3] = Interval(0.).inflate(0.01);
-    x.set(x0, 0.);
+    // Initial state x0
+      Vector x0(4, 0.);
+      x0[2] = M_PI/2.;
+      x0[3] = 0.;
+
+    // Bounded initial state x0 (with uncertainties)
+      IntervalVector ix0(x0);
+      ix0[2].inflate(0.01);
+      ix0[3].inflate(0.01);
+      x.set(ix0, 0.); // tube state vector with initial condition on v, phi
+
+    // Computing an approximation of the actual state trajectory
+      Trajectory traj_vdot(domain, tubex::Function("0.1 + sin(0.25*t)"), dt);
+      Trajectory traj_phidot(domain, tubex::Function("-0.45 * cos(0.2*t)"), dt);
+
+      TrajectoryVector traj_state(4); // state equations
+      traj_state[2] = traj_phidot.primitive(x0[2]);
+      traj_state[3] = traj_vdot.primitive(x0[3]);
+      traj_state[0] = (traj_state[3]*cos(traj_state[2])).primitive();
+      traj_state[1] = (traj_state[3]*sin(traj_state[2])).primitive();
+
 
   /* =========== DATA (MAP + MEASUREMENTS) =========== */
 
@@ -54,6 +72,7 @@ int main()
     ti_zi[0] = Interval(50.35, 51.15); ti_zi[1] = Interval(12.03, 13.03); m_obs[2].push_back(ti_zi);
     ti_zi[0] = Interval(53.35, 54.15); ti_zi[1] = Interval(15.98, 16.98); m_obs[2].push_back(ti_zi);
     ti_zi[0] = Interval(56.75, 57.55); ti_zi[1] = Interval(17.45, 18.45); m_obs[1].push_back(ti_zi);
+
 
   /* =========== STATE ESTIMATION =========== */
 
@@ -84,7 +103,6 @@ int main()
     {
       m_x[i] = new TubeVector(x);
       m_x[i]->resize(8);
-      (*m_x[i]) &= IntervalVector(8, Interval(-999.,999.)); // todo: remove this
 
       (*m_x[i])[4].set(v_beacons[i].pos_box()[0]);
       (*m_x[i])[5].set(v_beacons[i].pos_box()[1]);
@@ -113,13 +131,14 @@ int main()
 
         TubeVector xdot = f_evol.eval_vector((*m_x[i]));
         for(int j = 0 ; j < xdot.size() ; j++)
+        {
           ctc_deriv.contract((*m_x[i])[j], xdot[j]);
-
-        for(int j = 0 ; j < 4 ; j++)
           x[j] &= (*m_x[i])[j];
+        }
       }
 
     } while(a < 4 && volume_x != x.volume());
+
 
   /* =========== GRAPHICS =========== */
 
@@ -128,7 +147,7 @@ int main()
     VIBesFigMap fig_map("Map");
     fig_map.set_properties(50, 50, 550, 350);
     fig_map.add_tube(&x, "x", 0, 1);
-    //fig_map.add_trajectory(&x_truth, "x*", 1, 0, "white");
+    fig_map.add_trajectory(&traj_state, "x*", 0, 1, 2, "white");
     fig_map.add_beacons(v_beacons);
     fig_map.show(2.5);
 
@@ -136,31 +155,6 @@ int main()
 
 
   // Checking if this example still works:
-  return (fabs(x.volume() - 1354.26) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (fabs(x.volume() - 1354.26) < 1e-2
+    && x.subvector(0,3).contains(traj_state) == YES) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
-
-/*
-  // Truth
-
-  TrajectoryVector x_truth(8);
-  x_truth.set(domain.lb(), Vector(8, 0.));
-  double simu_dt = 0.01;
-  double prev_t = domain.lb();
-  for(double t = domain.lb() + simu_dt ; t < domain.ub() ; t+= simu_dt)
-  {
-    Vector x_temp(9, t);
-    x_temp.put(1, x_truth(prev_t));
-
-    Vector x_current(8, 0.);
-    x_current.put(0, f_evol.eval_vector(x_temp).mid());
-    x_truth.set(t, x_truth(prev_t) + simu_dt * x_current);
-    prev_t = t;
-  }
-
-  for(double t = domain.lb() + simu_dt ; t < domain.ub() ; t+= simu_dt)
-  {
-    Vector vect_x = x_truth(t);
-    vect_x[1] = -vect_x[1];
-    x_truth.set(t, vect_x);
-  }
-*/

@@ -27,27 +27,40 @@ int main()
   /* =========== INITIALIZATION =========== */
 
     clock_t t_start = clock();
+    float dt = 0.01;
     Interval domain(0., 14.);
-    float timestep = 0.001;
 
-    // Creating a tube over the [0,14] domain with some timestep:
-    TubeVector x(domain, timestep, 3);
+    // Tube state vector
+      TubeVector x(domain, dt, 3);
 
-    // Initial condition:
-    IntervalVector x0(x.size());
-    x0[0] = Interval(0.).inflate(1.);
-    x0[1] = Interval(0.).inflate(1.);
-    x0[2] = Interval((-6./5.)*M_PI).inflate(0.02);
-    x.set(x0, 0.);
+    // Initial state x0
+      Vector x0(3, 0.);
+      x0[2] = (-6./5.)*M_PI;
+
+    // Bounded initial state x0 (with uncertainties)
+      IntervalVector ix0(x0);
+      ix0[0].inflate(1.);
+      ix0[1].inflate(1.);
+      ix0[2].inflate(0.02);
+      x.set(ix0, 0.); // tube state vector with initial conditions
+
+    // Computing an approximation of the actual state trajectory
+      Trajectory traj_phidot(domain, tubex::Function("-cos((t+33)/5)"), dt);
+
+      TrajectoryVector traj_state(3); // state equations
+      traj_state[2] = traj_phidot.primitive(x0[2]);
+      traj_state[0] = (10.*cos(traj_state[2])).primitive();
+      traj_state[1] = (10.*sin(traj_state[2])).primitive();
+
 
     if(FINAL_CONDITION)
     {
       // Final condition:
-      IntervalVector xf(x.size());
-      xf[0] = Interval(53.9,55.9);
-      xf[1] = Interval(6.9,8.9);
-      xf[2] = Interval(-2.36,-2.32);
-      x.set(xf, 14.);
+      IntervalVector ixf(x.size());
+      ixf[0] = Interval(53.9,55.9);
+      ixf[1] = Interval(6.9,8.9);
+      ixf[2] = Interval(-2.36,-2.32);
+      x.set(ixf, 14.);
     }
 
   /* =========== PROPAGATION (CONTRACTORS) =========== */
@@ -69,7 +82,8 @@ int main()
     VIBesFigMap fig_map("Map");
     fig_map.set_properties(50, 50, 550, 350);
     fig_map.add_tube(&x, "x", 0, 1);
-    fig_map.show();
+    fig_map.add_trajectory(&traj_state, "x*", 0, 1, 2, "white");
+    fig_map.show(2.);
 
     if(!FINAL_CONDITION)
     {
@@ -88,6 +102,7 @@ int main()
 
   printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   // Checking if this example still works:
-  return (FINAL_CONDITION && fabs(x.volume() - 143.027) < 1e-2)
-      || (!FINAL_CONDITION && fabs(x.volume() - 353.406)) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return ((FINAL_CONDITION && fabs(x.volume() - 143.027) < 1e-2)
+       || (!FINAL_CONDITION && fabs(x.volume() - 353.406)))
+        && x.contains(traj_state) == YES ? EXIT_SUCCESS : EXIT_FAILURE;
 }
