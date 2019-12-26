@@ -40,6 +40,14 @@ namespace tubex
     m_colormap[index] = hsv2rgb(color);
   }
 
+  void ColorMap::reverse()
+  {
+    map<float,rgb> reversed_map;
+    for(map<float,rgb>::iterator it = m_colormap.begin() ; it != m_colormap.end() ; it++)
+      reversed_map[1.-it->first] = it->second;
+    m_colormap = reversed_map;
+  }
+
   void ColorMap::set_opacity(float alpha)
   {
     assert(alpha >= 0. && alpha <= 1.);

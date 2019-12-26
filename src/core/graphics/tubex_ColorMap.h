@@ -70,6 +70,11 @@ namespace tubex
       void add_color_point(hsv color, float index);
 
       /**
+       * \brief Reverses the keys of the color map
+       */
+      void reverse();
+
+      /**
        * \brief Sets a constant opacity to all colors of the map
        *
        * \param alpha opacity value, between 0. (transparent) and 1. (opaque)
