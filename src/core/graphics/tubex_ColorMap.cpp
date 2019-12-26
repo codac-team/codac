@@ -199,10 +199,20 @@ namespace tubex
   ColorMap make_blue_tube()
   {
     ColorMap map(RGB);
-    map.add_color_point(make_rgb(76,110,127), 0);
-    map.add_color_point(make_rgb(136,197,228), 1);
+    map.add_color_point(make_rgb(76,110,127), 0.);
+    map.add_color_point(make_rgb(136,197,228), 1.);
     return map;
   }
 
   const ColorMap ColorMap::BLUE_TUBE = make_blue_tube();
+  
+  ColorMap make_rainbow()
+  {
+    ColorMap map(HSV);
+    for(int h = 300 ; h > 0 ; h-=10)
+      map.add_color_point(make_hsv(h,100,100), (300.-h)/300.);
+    return map;
+  }
+
+  const ColorMap ColorMap::RAINBOW = make_rainbow();
 }
