@@ -38,6 +38,7 @@ namespace tubex
       Function(int n, const char** x, const char* y);
       Function(const tubex::Function& f);
       ~Function();
+      
       const tubex::Function& operator=(const tubex::Function& f);
       const tubex::Function operator[](int i) const;
       const ibex::Function& ibex_function() const;

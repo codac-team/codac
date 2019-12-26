@@ -31,11 +31,6 @@ namespace tubex
       assert(n > 0);
     }
 
-    TrajectoryVector::TrajectoryVector(const TrajectoryVector& traj)
-    {
-      *this = traj;
-    }
-
     TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f)
       : TrajectoryVector(f.image_dim())
     {
@@ -57,6 +52,19 @@ namespace tubex
              || size() == it_map->second.size()) && "vectors of map_values of different dimensions");
         set(it_map->second, it_map->first);
       }
+    }
+
+    TrajectoryVector::TrajectoryVector(int n, const Trajectory& x)
+      : TrajectoryVector(n)
+    {
+      assert(n > 0);
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i] = x;
+    }
+
+    TrajectoryVector::TrajectoryVector(const TrajectoryVector& traj)
+    {
+      *this = traj;
     }
 
     TrajectoryVector::~TrajectoryVector()

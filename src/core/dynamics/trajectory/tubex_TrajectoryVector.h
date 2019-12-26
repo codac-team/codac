@@ -70,6 +70,14 @@ namespace tubex
       TrajectoryVector(const TrajectoryVector& traj);
 
       /**
+       * \brief Creates a n-dimensional trajectory with all the components initialized to \f$x(\cdot)\f$
+       *
+       * \param n dimension of this trajectory
+       * \param x Trajectory to be copied for all the components
+       */
+      TrajectoryVector(int n, const Trajectory& x);
+
+      /**
        * \brief TrajectoryVector destructor
        */
       ~TrajectoryVector();
@@ -275,6 +283,106 @@ namespace tubex
        * \return a derivative trajectory vector
        */
       const TrajectoryVector diff() const;
+
+      /// @}
+      /// \name Assignments operators
+      /// @{
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x double
+       * \return (*this)+=x
+       */
+      const TrajectoryVector& operator+=(double x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x Trajectory
+       * \return (*this)+=x
+       */
+      const TrajectoryVector& operator+=(const Trajectory& x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x Vector
+       * \return (*this)+=x
+       */
+      const TrajectoryVector& operator+=(const ibex::Vector& x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x TrajectoryVector
+       * \return (*this)+=x
+       */
+      const TrajectoryVector& operator+=(const TrajectoryVector& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x double
+       * \return (*this)-=x
+       */
+      const TrajectoryVector& operator-=(double x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x Trajectory
+       * \return (*this)-=x
+       */
+      const TrajectoryVector& operator-=(const Trajectory& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x Vector
+       * \return (*this)-=x
+       */
+      const TrajectoryVector& operator-=(const ibex::Vector& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x TrajectoryVector
+       * \return (*this)-=x
+       */
+      const TrajectoryVector& operator-=(const TrajectoryVector& x);
+
+      /**
+       * \brief Operates *=
+       *
+       * \param x double
+       * \return (*this)*=x
+       */
+      const TrajectoryVector& operator*=(double x);
+
+      /**
+       * \brief Operates *=
+       *
+       * \param x Trajectory
+       * \return (*this)*=x
+       */
+      const TrajectoryVector& operator*=(const Trajectory& x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x double
+       * \return (*this)/=x
+       */
+      const TrajectoryVector& operator/=(double x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x Trajectory
+       * \return (*this)/=x
+       */
+      const TrajectoryVector& operator/=(const Trajectory& x);
 
       /// @}
       /// \name String

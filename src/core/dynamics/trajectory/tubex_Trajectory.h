@@ -50,6 +50,16 @@ namespace tubex
       Trajectory(const ibex::Interval& domain, const tubex::Function& f);
 
       /**
+       * \brief Creates a scalar trajectory \f$x(\cdot)\f$ from an analytic expression,
+       *        and transforms it as a map of values (sampling procedure)
+       *
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param f tubex::Function object defining the trajectory: \f$x(t)=f(t)\f$
+       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
+       */
+      Trajectory(const ibex::Interval& domain, const tubex::Function& f, double timestep);
+
+      /**
        * \brief Creates a scalar trajectory \f$x(\cdot)\f$ from a map of values
        *
        * \param m_map_values map<t,y> defining the trajectory: \f$x(t)=y\f$
@@ -269,6 +279,74 @@ namespace tubex
        * \return a derivative trajectory
        */
       double finite_diff(double t) const;
+
+      /// @}
+      /// \name Assignments operators
+      /// @{
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x double
+       * \return (*this)+=x
+       */
+      const Trajectory& operator+=(double x);
+
+      /**
+       * \brief Operates +=
+       *
+       * \param x Trajectory
+       * \return (*this)+=x
+       */
+      const Trajectory& operator+=(const Trajectory& x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x double
+       * \return (*this)-=x
+       */
+      const Trajectory& operator-=(double x);
+
+      /**
+       * \brief Operates -=
+       *
+       * \param x Trajectory
+       * \return (*this)-=x
+       */
+      const Trajectory& operator-=(const Trajectory& x);
+
+      /**
+       * \brief Operates *=
+       *
+       * \param x double
+       * \return (*this)*=x
+       */
+      const Trajectory& operator*=(double x);
+
+      /**
+       * \brief Operates *=
+       *
+       * \param x Trajectory
+       * \return (*this)*=x
+       */
+      const Trajectory& operator*=(const Trajectory& x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x double
+       * \return (*this)/=x
+       */
+      const Trajectory& operator/=(double x);
+
+      /**
+       * \brief Operates /=
+       *
+       * \param x Trajectory
+       * \return (*this)/=x
+       */
+      const Trajectory& operator/=(const Trajectory& x);
 
       /// @}
       /// \name String

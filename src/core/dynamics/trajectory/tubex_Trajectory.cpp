@@ -41,6 +41,13 @@ namespace tubex
       m_codomain = m_function->eval(domain);
     }
 
+    Trajectory::Trajectory(const Interval& domain, const tubex::Function& f, double timestep)
+      : Trajectory(domain, f)
+    {
+      assert(timestep > 0.);
+      sample(timestep);
+    }
+
     Trajectory::Trajectory(const map<double,double>& map_values)
     {
       typename map<double,double>::const_iterator it_map;

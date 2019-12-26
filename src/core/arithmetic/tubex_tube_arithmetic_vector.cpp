@@ -90,8 +90,6 @@ namespace tubex
   macro_vect_binary(operator|, operator|=);
   macro_vect_binary(operator&, operator&=);
 
-  // Operator *
-
   const TubeVector operator*(const Interval& x1, const TubeVector& x2)
   {
     TubeVector y(x2);
@@ -125,8 +123,6 @@ namespace tubex
       y[i] = operator*(x1, y[i]);
     return y;
   }
-
-  // Operator /
 
   const TubeVector operator/(const TubeVector& x1, const Interval& x2)
   {
