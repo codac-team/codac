@@ -37,6 +37,8 @@ int main()
 
     // Bounded initial state x0 (with uncertainties)
       IntervalVector ix0(x0);
+      ix0[0] = Interval::ALL_REALS; // no knowledge on initial position
+      ix0[1] = Interval::ALL_REALS;
       ix0[2].inflate(0.01);
       ix0[3].inflate(0.01);
       x.set(ix0, 0.); // tube state vector with initial condition on v, phi
@@ -103,6 +105,7 @@ int main()
     {
       m_x[i] = new TubeVector(x);
       m_x[i]->resize(8);
+      (*m_x[i]) &= IntervalVector(8, Interval(-999.,999.)); // todo: remove this
 
       (*m_x[i])[4].set(v_beacons[i].pos_box()[0]);
       (*m_x[i])[5].set(v_beacons[i].pos_box()[1]);
