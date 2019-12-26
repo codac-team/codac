@@ -1,5 +1,6 @@
 #include "tests.h"
 #include "tubex_tube_arithmetic.h"
+#include "tubex_traj_arithmetic.h"
 
 using namespace Catch;
 using namespace Detail;
@@ -7,11 +8,11 @@ using namespace std;
 using namespace ibex;
 using namespace tubex;
 
-TEST_CASE("Arithmetic")
+TEST_CASE("Arithmetic on tubes")
 {
   // todo: test tubes with different slicing
 
-  SECTION("Tests scalar")
+  SECTION("Tests scalar tube")
   {
     Interval domain(0.,10.);
     double dt = 0.1;
@@ -278,7 +279,7 @@ TEST_CASE("Arithmetic")
     CHECK(ApproxIntv(z.codomain()) == b);
   }
 
-  SECTION("Tests vector")
+  SECTION("Tests vector tube")
   {
     Interval domain(0.,10.);
     double dt = 0.1;
@@ -527,5 +528,272 @@ TEST_CASE("Arithmetic")
     z = x; z&=y;
     CHECK(ApproxIntv(z[0].codomain()) == Interval::EMPTY_SET); CHECK(ApproxIntv(z[1].codomain()) == a1); CHECK(ApproxIntv(z[2].codomain()) == a2); 
 
+  }
+}
+
+
+TEST_CASE("Arithmetic on trajs")
+{
+  SECTION("Tests scalar traj")
+  {
+    Interval domain(0.,10.);
+    double x = 0.8, y = 3.;
+
+    Trajectory trajx, trajy, trajz;
+    trajx.set(x, domain.lb()); trajx.set(x, domain.mid()); trajx.set(x, domain.ub());
+    trajy.set(y, domain.lb()); trajy.set(y, domain.mid()); trajy.set(y, domain.ub());
+
+    CHECK(trajx.codomain() == x);
+
+    //const Trajectory cos(const Trajectory& x);
+    CHECK(ApproxIntv(cos(trajx).codomain()) == cos(Interval(x)));
+    
+    //const Trajectory sin(const Trajectory& x);
+    CHECK(ApproxIntv(sin(trajx).codomain()) == sin(Interval(x)));
+    
+    //const Trajectory abs(const Trajectory& x);
+    CHECK(ApproxIntv(abs(trajx).codomain()) == abs(Interval(x)));
+    
+    //const Trajectory sqr(const Trajectory& x);
+    CHECK(ApproxIntv(sqr(trajx).codomain()) == pow(Interval(x),2));
+    
+    //const Trajectory sqrt(const Trajectory& x);
+    CHECK(ApproxIntv(sqrt(trajx).codomain()) == sqrt(Interval(x)));
+    
+    //const Trajectory exp(const Trajectory& x);
+    CHECK(ApproxIntv(exp(trajx).codomain()) == exp(Interval(x)));
+    
+    //const Trajectory log(const Trajectory& x);
+    CHECK(ApproxIntv(log(trajx).codomain()) == log(Interval(x)));
+    
+    //const Trajectory tan(const Trajectory& x);
+    CHECK(ApproxIntv(tan(trajx).codomain()) == tan(Interval(x)));
+    
+    //const Trajectory acos(const Trajectory& x);
+    CHECK(ApproxIntv(acos(trajx).codomain()) == acos(Interval(x)));
+    
+    //const Trajectory asin(const Trajectory& x);
+    CHECK(ApproxIntv(asin(trajx).codomain()) == asin(Interval(x)));
+    
+    //const Trajectory atan(const Trajectory& x);
+    CHECK(ApproxIntv(atan(trajx).codomain()) == atan(Interval(x)));
+    
+    //const Trajectory cosh(const Trajectory& x);
+    CHECK(ApproxIntv(cosh(trajx).codomain()) == cosh(Interval(x)));
+    
+    //const Trajectory sinh(const Trajectory& x);
+    CHECK(ApproxIntv(sinh(trajx).codomain()) == sinh(Interval(x)));
+    
+    //const Trajectory tanh(const Trajectory& x);
+    CHECK(ApproxIntv(tanh(trajx).codomain()) == tanh(Interval(x)));
+    
+    //const Trajectory acosh(const Trajectory& x);
+    CHECK(ApproxIntv(acosh(trajx).codomain()) == acosh(Interval(x)));
+    
+    //const Trajectory asinh(const Trajectory& x);
+    CHECK(ApproxIntv(asinh(trajx).codomain()) == asinh(Interval(x)));
+    
+    //const Trajectory atanh(const Trajectory& x);
+    CHECK(ApproxIntv(atanh(trajx).codomain()) == atanh(Interval(x)));
+    
+    //const Trajectory atan2(const Trajectory& y, const Trajectory& x);
+    CHECK(ApproxIntv(atan2(trajx,trajy).codomain()) == Interval(atan2(x,y)));
+    
+    //const Trajectory atan2(const Trajectory& y, double x);
+    CHECK(ApproxIntv(atan2(trajx,y).codomain()) == atan2(Interval(x),Interval(y)));
+    
+    //const Trajectory atan2(double y, const Trajectory& x);
+    CHECK(ApproxIntv(atan2(x,trajy).codomain()) == atan2(Interval(x),Interval(y)));
+    
+    //const Trajectory pow(const Trajectory& x, int p);
+    CHECK(ApproxIntv(pow(trajx,3).codomain()) == pow(Interval(x),3));
+    
+    //const Trajectory pow(const Trajectory& x, double p);
+    //CHECK(ApproxIntv(pow(trajx,7.2).codomain()) == pow(Interval(x),7.2)); // todo: not working with GAOL
+    
+    //const Trajectory root(const Trajectory& x, int p);
+    CHECK(ApproxIntv(root(trajx,6).codomain()) == root(Interval(x),6));
+    
+    //const Trajectory operator+(const Trajectory& x);
+    CHECK(ApproxIntv((+trajy).codomain()) == Interval(+y));
+    
+    //const Trajectory operator+(const Trajectory& x, const Trajectory& y);
+    CHECK(ApproxIntv((trajx+trajy).codomain()) == Interval(x+y));
+    
+    //const Trajectory operator+(const Trajectory& x, double y);
+    CHECK(ApproxIntv((trajx+y).codomain()) == Interval(x+y));
+    
+    //const Trajectory operator+(double x, const Trajectory& y);
+    CHECK(ApproxIntv((x+trajy).codomain()) == Interval(x+y));
+    
+    //const Trajectory operator-(const Trajectory& x);
+    CHECK(ApproxIntv((-trajx).codomain()) == Interval(-x));
+    
+    //const Trajectory operator-(const Trajectory& x, const Trajectory& y);
+    CHECK(ApproxIntv((trajx-trajy).codomain()) == Interval(x-y));
+    
+    //const Trajectory operator-(const Trajectory& x, double y);
+    CHECK(ApproxIntv((trajx-y).codomain()) == Interval(x-y));
+    
+    //const Trajectory operator-(double x, const Trajectory& y);
+    CHECK(ApproxIntv((x-trajy).codomain()) == Interval(x-y));
+    
+    //const Trajectory operator*(const Trajectory& x, const Trajectory& y);
+    CHECK(ApproxIntv((trajx*trajy).codomain()) == Interval(x*y));
+    
+    //const Trajectory operator*(const Trajectory& x, double y);
+    CHECK(ApproxIntv((trajx*y).codomain()) == Interval(x*y));
+    
+    //const Trajectory operator*(double x, const Trajectory& y);
+    CHECK(ApproxIntv((x*trajy).codomain()) == Interval(x*y));
+    
+    //const Trajectory operator/(const Trajectory& x, const Trajectory& y);
+    CHECK(ApproxIntv((trajx/trajy).codomain()) == Interval(x/y));
+    
+    //const Trajectory operator/(const Trajectory& x, double y);
+    CHECK(ApproxIntv((trajx/y).codomain()) == Interval(x/y));
+    
+    //const Trajectory operator/(double x, const Trajectory& y);
+    CHECK(ApproxIntv((x/trajy).codomain()) == Interval(x/y));
+
+    //const Trajectory& operator+=(double x);
+    trajz = trajx; trajz += y;
+    CHECK(ApproxIntv(trajz.codomain()) == Interval(x+y));
+    
+    //const Trajectory& operator+=(const Trajectory& x);
+    trajz = trajx; trajz += trajy;
+    CHECK(ApproxIntv(trajz.codomain()) == Interval(x+y));
+    
+    //const Trajectory& operator-=(double x);
+    trajz = trajx; trajz -= y;
+    CHECK(ApproxIntv(trajz.codomain()) == Interval(x-y));
+    
+    //const Trajectory& operator-=(const Trajectory& x);
+    trajz = trajx; trajz -= trajy;
+    CHECK(ApproxIntv(trajz.codomain()) == Interval(x-y));
+    
+    //const Trajectory& operator*=(double x);
+    trajz = trajx; trajz *= y;
+    CHECK(ApproxIntv(trajz.codomain()) == Interval(x*y));
+    
+    //const Trajectory& operator*=(const Trajectory& x);
+    trajz = trajx; trajz *= trajy;
+    CHECK(ApproxIntv(trajz.codomain()) == Interval(x*y));
+    
+    //const Trajectory& operator/=(double x);
+    trajz = trajx; trajz /= y;
+    CHECK(ApproxIntv(trajz.codomain()) == Interval(x/y));
+    
+    //const Trajectory& operator/=(const Trajectory& x);
+    trajz = trajx; trajz /= trajy;
+    CHECK(ApproxIntv(trajz.codomain()) == Interval(x/y));
+  }
+
+  SECTION("Tests vector traj")
+  {
+    Interval domain(0.,10.);
+    TrajectoryVector trajx(3), trajy(3), trajz(3);
+
+    Vector vx(3), vy(3);
+    vx[0] = 1.; vx[1] = 2.; vx[2] = 3.;
+    vy[0] = 10.; vy[1] = 20.; vy[2] = 30.;
+
+    trajx.set(vx, domain.lb()); trajx.set(vx, domain.mid()); trajx.set(vx, domain.ub());
+    trajy.set(vy, domain.lb()); trajy.set(vy, domain.mid()); trajy.set(vy, domain.ub());
+
+    CHECK(trajx.size() == 3); CHECK(trajy.size() == 3);
+
+    //const TrajectoryVector operator+(const TrajectoryVector& x);
+    CHECK(ApproxIntvVector((+trajx).codomain()) == IntervalVector(vx));
+    
+    //const TrajectoryVector operator+(const TrajectoryVector& x, const TrajectoryVector& y);
+    CHECK(ApproxIntvVector((trajx+trajy).codomain()) == IntervalVector(vx+vy));
+    
+    //const TrajectoryVector operator+(const TrajectoryVector& x, const ibex::Vector& y);
+    CHECK(ApproxIntvVector((trajx+vy).codomain()) == IntervalVector(vx+vy));
+    
+    //const TrajectoryVector operator+(const ibex::Vector& x, const TrajectoryVector& y);
+    CHECK(ApproxIntvVector((vx+trajy).codomain()) == IntervalVector(vx+vy));
+    
+    //const TrajectoryVector operator-(const TrajectoryVector& x);
+    CHECK(ApproxIntvVector((-trajx).codomain()) == IntervalVector(-vx));
+    
+    //const TrajectoryVector operator-(const TrajectoryVector& x, const TrajectoryVector& y);
+    CHECK(ApproxIntvVector((trajx-trajy).codomain()) == IntervalVector(vx-vy));
+    
+    //const TrajectoryVector operator-(const TrajectoryVector& x, const ibex::Vector& y);
+    CHECK(ApproxIntvVector((trajx-vy).codomain()) == IntervalVector(vx-vy));
+    
+    //const TrajectoryVector operator-(const ibex::Vector& x, const TrajectoryVector& y);
+    CHECK(ApproxIntvVector((vx-trajy).codomain()) == IntervalVector(vx-vy));
+    
+    //const TrajectoryVector operator*(const Trajectory& x, const TrajectoryVector& y);
+    CHECK(ApproxIntvVector((trajx[1]*trajy).codomain()) == IntervalVector(vx[1]*vy));
+    
+    //const TrajectoryVector operator*(double x, const TrajectoryVector& y);
+    CHECK(ApproxIntvVector((vx[1]*trajy).codomain()) == vx[1]*IntervalVector(vy));
+    
+    //const TrajectoryVector operator*(const Trajectory& x, const ibex::Vector& y);
+    CHECK(ApproxIntvVector((trajx[1]*vy).codomain()) == IntervalVector(vx[1]*vy));
+    
+    //const TrajectoryVector operator*(const Trajectory& x, const TrajectoryVector& y);
+    CHECK(ApproxIntvVector((trajx[1]*trajy).codomain()) == IntervalVector(vx[1]*vy));
+    
+    //const TrajectoryVector operator/(const TrajectoryVector& x, double y);
+    CHECK(ApproxIntvVector((trajx/vy[1]).codomain()) == IntervalVector((1./vy[1])*vx));
+    
+    //const TrajectoryVector operator/(const TrajectoryVector& x, const Trajectory& y);
+    CHECK(ApproxIntvVector((trajx/trajy[1]).codomain()) == IntervalVector((1./vy[1])*vx));
+    
+    //const TrajectoryVector operator/(const ibex::Vector& x, const Trajectory& y);
+    CHECK(ApproxIntvVector((vx/trajy[1]).codomain()) == IntervalVector((1./vy[1])*vx));
+    
+    //const Trajectory& operator+=(double x);
+    trajz = trajx; trajz += vy[1];
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx+Vector(3,vy[1])));
+    
+    //const Trajectory& operator+=(const Trajectory& x);
+    trajz = trajx; trajz += trajy[1];
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx+Vector(3,vy[1])));
+
+    //const TrajectoryVector& operator+=(const ibex::Vector& x);
+    trajz = trajx; trajz += vy;
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx+vy));
+
+    //const TrajectoryVector& operator+=(const TrajectoryVector& x);
+    trajz = trajx; trajz += trajy;
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx+vy));
+    
+    //const Trajectory& operator-=(double x);
+    trajz = trajx; trajz -= vy[1];
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx-Vector(3,vy[1])));
+    
+    //const Trajectory& operator-=(const Trajectory& x);
+    trajz = trajx; trajz -= trajy[1];
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx-Vector(3,vy[1])));
+
+    //const TrajectoryVector& operator-=(const ibex::Vector& x);
+    trajz = trajx; trajz -= vy;
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx-vy));
+
+    //const TrajectoryVector& operator-=(const TrajectoryVector& x);
+    trajz = trajx; trajz -= trajy;
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx-vy));
+
+    //const Trajectory& operator*=(double x);
+    trajz = trajx; trajz *= vy[1];
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vy[1]*vx));
+    
+    //const Trajectory& operator*=(const Trajectory& x);
+    trajz = trajx; trajz *= trajy[1];
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vy[1]*vx));
+
+    //const Trajectory& operator/=(double x);
+    trajz = trajx; trajz /= vy[1];
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector((1./vy[1])*vx));
+    
+    //const Trajectory& operator/=(const Trajectory& x);
+    trajz = trajx; trajz /= trajy[1];
+    CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector((1./vy[1])*vx));
   }
 }
