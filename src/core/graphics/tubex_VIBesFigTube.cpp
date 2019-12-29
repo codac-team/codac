@@ -432,6 +432,7 @@ namespace tubex
   const IntervalVector VIBesFigTube::draw_trajectory(const Trajectory *traj, float points_size)
   {
     assert(traj != NULL);
+    assert(!traj->not_defined());
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
       && "unknown traj, must be added beforehand");
     assert(points_size >= 0.);

@@ -153,7 +153,7 @@ namespace tubex
       /**
        * \brief Tests whether this trajectory is defined or not
        *
-       * \return false in case of non-empty map, or definition from a
+       * \return false in case of non-empty map, or missing definition from a
        *         tubex::Function object, true otherwise
        */
       bool not_defined() const;

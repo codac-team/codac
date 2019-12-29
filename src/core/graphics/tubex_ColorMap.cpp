@@ -66,6 +66,9 @@ namespace tubex
   rgb ColorMap::color(double r) const
   {
     assert(m_colormap.size() >= 2 && "color map defined by at least two colors");
+
+    if(isnan(r)) // undefined ratio
+      return make_rgb((float)0.5, 0.5, 0.5);
     assert(Interval(0.,1.).contains(r) && "r between 0 and 1");
 
     Interval map_domain = Interval(m_colormap.begin()->first,prev(m_colormap.end())->first);
