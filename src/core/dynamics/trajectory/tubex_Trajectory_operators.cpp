@@ -22,10 +22,9 @@ namespace tubex
       assert(function() == NULL && \
         "not supported yet for trajectories defined by a Function"); \
       \
-      for(map<double,double>::iterator it = m_map_values.begin() ; \
-        it != m_map_values.end() ; it++) \
-        set(it->second f x, it->first); \
-      \
+      for(auto& kv : m_map_values) \
+        m_map_values[kv.first] = kv.second f x; \
+      m_codomain.fdef(x); \
       return *this; \
     } \
     \
@@ -41,8 +40,9 @@ namespace tubex
       \
       for(map<double,double>::iterator it = m_map_values.begin() ; \
         it != m_map_values.end() ; it++) \
-        set(it->second f x_sampled(it->first), it->first); \
+        x_sampled.set(it->second f x_sampled(it->first), it->first); \
       \
+      *this = x_sampled; \
       return *this; \
     } \
     \

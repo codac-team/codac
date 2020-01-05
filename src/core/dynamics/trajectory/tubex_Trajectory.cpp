@@ -449,8 +449,7 @@ namespace tubex
     {
       m_domain |= t;
 
-      bool update_codomain = m_map_values.find(t) != m_map_values.end() // key already exists
-                          && m_codomain.contains(y); // and new value is inside the current enclosure
+      bool update_codomain = m_map_values.find(t) != m_map_values.end(); // key already exists
 
       m_map_values.erase(t);
       m_map_values.emplace(t, y);
