@@ -244,6 +244,15 @@ namespace tubex
        * \param color a color to draw this trajectory
        */
       void set_trajectory_color(const Trajectory *traj, const std::string& color);
+      
+      /**
+       * \brief Sets points size for a given trajectory, and activates
+       *        a display mode with points instead of a line for this trajectory
+       *
+       * \param traj the const pointer to the Trajectory object for which the points size will be set
+       * \param points_size size of the points (if 0, the display is done with a line)
+       */
+      void set_trajectory_points_size(const Trajectory *traj, float points_size);
 
       /**
        * \brief Removes a trajectory from this figure
@@ -317,10 +326,9 @@ namespace tubex
        * \brief Draws a trajectory
        *
        * \param traj the const pointer to the Trajectory object to be shown
-       * \param points_size optional display mode, for which the trajectory is not a line but a set of points of a given size
        * \return the box hull of the displayed object
        */
-      const ibex::IntervalVector draw_trajectory(const Trajectory *traj, float points_size = 0.);
+      const ibex::IntervalVector draw_trajectory(const Trajectory *traj);
 
     protected:
 
@@ -344,6 +352,7 @@ namespace tubex
       {
         std::string name; //!< human readable identifier of the trajectory
         std::string color; //!< color of the trajectory
+        float points_size = 0.; //!< size of points in specific display mode
       };
 
       std::map<const Tube*,FigTubeParams> m_map_tubes; //!< map of Tube objects to be displayed, together with parameters

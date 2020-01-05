@@ -211,6 +211,16 @@ namespace tubex
     // so that trajectories stay on top of the tubes.
   }
   
+  void VIBesFigTube::set_trajectory_points_size(const Trajectory *traj, float points_size)
+  {
+    assert(traj != NULL);
+    assert(m_map_trajs.find(traj) != m_map_trajs.end()
+      && "unknown traj, must be added beforehand");
+    assert(points_size >= 0.);
+
+    m_map_trajs[traj].points_size = points_size;
+  }
+  
   void VIBesFigTube::remove_trajectory(const Trajectory *traj)
   {
     assert(traj != NULL);
@@ -429,13 +439,12 @@ namespace tubex
     }
   }
   
-  const IntervalVector VIBesFigTube::draw_trajectory(const Trajectory *traj, float points_size)
+  const IntervalVector VIBesFigTube::draw_trajectory(const Trajectory *traj)
   {
     assert(traj != NULL);
     assert(!traj->not_defined());
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
       && "unknown traj, must be added beforehand");
-    assert(points_size >= 0.);
 
     IntervalVector viewbox(2, Interval::EMPTY_SET);
 
@@ -461,8 +470,8 @@ namespace tubex
       typename map<double,double>::const_iterator it_scalar_values;
       for(it_scalar_values = traj->sampled_map().begin(); it_scalar_values != traj->sampled_map().end(); it_scalar_values++)
       {
-        if(points_size != 0.)
-          draw_point(Point(it_scalar_values->first, it_scalar_values->second), points_size, vibesParams("figure", name(), "group", group_name));
+        if(m_map_trajs[traj].points_size != 0.)
+          draw_point(Point(it_scalar_values->first, it_scalar_values->second), m_map_trajs[traj].points_size, vibesParams("figure", name(), "group", group_name));
 
         else
         {
@@ -479,8 +488,8 @@ namespace tubex
     {
       for(double t = traj->domain().lb() ; t <= traj->domain().ub() ; t+=traj->domain().diam()/TRAJ_NB_DISPLAYED_POINTS)
       {
-        if(points_size != 0.)
-          draw_point(Point(t, (*traj)(t)), points_size, vibesParams("figure", name(), "group", group_name));
+        if(m_map_trajs[traj].points_size != 0.)
+          draw_point(Point(t, (*traj)(t)), m_map_trajs[traj].points_size, vibesParams("figure", name(), "group", group_name));
 
         else
         {

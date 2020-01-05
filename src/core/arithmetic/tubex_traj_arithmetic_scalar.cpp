@@ -129,7 +129,7 @@ namespace tubex
       Trajectory x1_sampled(x1), x2_sampled(x2); \
       x1_sampled.sample(x2); \
       x2_sampled.sample(x1); \
-      map<double,double> map_x1 = x1_sampled.sampled_map(), map_x2 = x2.sampled_map(); \
+      map<double,double> map_x1 = x1_sampled.sampled_map(), map_x2 = x2_sampled.sampled_map(); \
       \
       map<double,double>::iterator it_x1 = map_x1.begin(); \
       map<double,double>::iterator it_x2 = map_x2.begin(); \
