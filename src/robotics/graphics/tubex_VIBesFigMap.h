@@ -92,7 +92,7 @@ namespace tubex
        *
        * \param max the maximum number of slices
        */
-      void set_tube_max_nb_disp_slices(int max);
+      void set_tube_max_disp_slices(int max);
 
       /**
        * \brief Limits the number of points to be displayed for trajectories
@@ -102,7 +102,7 @@ namespace tubex
        *
        * \param max the maximum number of points
        */
-      void set_traj_max_nb_disp_points(int max);
+      void set_traj_max_disp_points(int max);
 
       /**
        * \brief Enables the smoothing of tubes

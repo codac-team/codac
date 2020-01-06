@@ -70,13 +70,13 @@ namespace tubex
     show();
   }
 
-  void VIBesFigMap::set_tube_max_nb_disp_slices(int max)
+  void VIBesFigMap::set_tube_max_disp_slices(int max)
   {
     assert(max > 0);
     m_tube_max_nb_disp_slices = max;
   }
 
-  void VIBesFigMap::set_traj_max_nb_disp_points(int max)
+  void VIBesFigMap::set_traj_max_disp_points(int max)
   {
     assert(max > 0);
     m_traj_max_nb_disp_points = max;
