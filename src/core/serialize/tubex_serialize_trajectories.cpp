@@ -25,9 +25,6 @@ namespace tubex
     if(traj.function() != NULL)
       throw Exception("serialize_Trajectory()", "Fnc serialization not implemented");
 
-    if(traj.sampled_map().size() == 0)
-      throw Exception("serialize_Trajectory()", "trajectory not defined");
-
     // Version number for compliance purposes
     bin_file.write((const char*)&version_number, sizeof(short int));
 

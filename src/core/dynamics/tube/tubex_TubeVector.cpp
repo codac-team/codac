@@ -885,7 +885,6 @@ namespace tubex
 
     void TubeVector::serialize(const string& binary_file_name, const TrajectoryVector& traj, int version_number) const
     {
-      assert(size() == traj.size());
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
