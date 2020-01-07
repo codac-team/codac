@@ -50,9 +50,16 @@ namespace tubex
 
     Trajectory::Trajectory(const map<double,double>& map_values)
     {
-      typename map<double,double>::const_iterator it_map;
-      for(it_map = map_values.begin() ; it_map != map_values.end() ; it_map++)
-        set(it_map->second, it_map->first);
+      assert(!map_values.empty());
+      m_map_values = map_values;
+
+      // Temporal domain:
+      map<double,double>::const_iterator
+        last_it = map_values.end(); last_it--; // accessing last value
+      m_domain = Interval(map_values.begin()->first, last_it->first);
+
+      // Codomain:
+      compute_codomain();
     }
 
     Trajectory::~Trajectory()
@@ -257,10 +264,10 @@ namespace tubex
       assert(domain() == x.domain());
       
       for(map<double,double>::const_iterator it = x.sampled_map().begin() ; it != x.sampled_map().end() ; it++)
-      {
-        // todo: optimize this
-        set((*this)(it->first), it->first);
-      }
+        if(m_map_values.find(it->first) == m_map_values.end()) // key does not exist already
+          m_map_values[it->first] = (*this)(it->first); // interpolation
+      // Note : no need to use set_map_value() method:
+      // the domain/codomain will not be changed by this method.
     }
 
     // Integration

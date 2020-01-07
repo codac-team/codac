@@ -129,18 +129,17 @@ namespace tubex
       Trajectory x1_sampled(x1), x2_sampled(x2); \
       x1_sampled.sample(x2); \
       x2_sampled.sample(x1); \
-      map<double,double> map_x1 = x1_sampled.sampled_map(), map_x2 = x2_sampled.sampled_map(); \
+      map<double,double> new_map; \
+      map<double,double>::const_iterator it_x1 = x1_sampled.sampled_map().begin(); \
+      map<double,double>::const_iterator it_x2 = x2_sampled.sampled_map().begin(); \
       \
-      map<double,double>::iterator it_x1 = map_x1.begin(); \
-      map<double,double>::iterator it_x2 = map_x2.begin(); \
-      \
-      while(it_x1 != map_x1.end()) \
+      while(it_x1 != x1_sampled.sampled_map().end()) \
       { \
-        it_x1->second = it_x1->second f it_x2->second; \
+        new_map[it_x1->first] = it_x1->second f it_x2->second; \
         it_x1++; it_x2++; \
       } \
       \
-      return Trajectory(map_x1); \
+      return Trajectory(new_map); \
     } \
     \
     const Trajectory operator f(const Trajectory& x1, double x2) \
