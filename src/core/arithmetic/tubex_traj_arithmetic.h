@@ -129,6 +129,8 @@ namespace tubex
     const TrajectoryVector operator*(const Trajectory& x, const TrajectoryVector& y);
     /** \brief \f$x(\cdot)\cdot\mathbf{y}\f$ */
     const TrajectoryVector operator*(const Trajectory& x, const ibex::Vector& y);
+    /** \brief \f$x(\cdot)\cdot\mathbf{y}\f$ */
+    const TrajectoryVector operator*(const ibex::Matrix& x, const TrajectoryVector& y);
 
     /** \brief \f$\mathbf{x}(\cdot)/y\f$ */
     const TrajectoryVector operator/(const TrajectoryVector& x, double y);

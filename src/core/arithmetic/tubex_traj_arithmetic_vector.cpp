@@ -85,6 +85,24 @@ namespace tubex
     return y;
   }
 
+  const TrajectoryVector operator*(const ibex::Matrix& x1, const TrajectoryVector& x2)
+  {
+    assert(x1.nb_cols() == x2.size());
+
+    TrajectoryVector x2_(x2);
+    // Same sampling for all components of this trajectory
+    for(int i = 0 ; i < x2_.size() ; i++)
+      for(int j = 0 ; j < x2_.size() ; j++)
+        if(i != j)
+          x2_[i].sample(x2_[j]);
+
+    TrajectoryVector result(x2.size());
+    for(auto const& it : x2_[0].sampled_map())
+      result.set(x1*x2_(it.first), it.first);
+    
+    return result;
+  }
+
   const TrajectoryVector operator/(const TrajectoryVector& x1, double x2)
   {
     TrajectoryVector y(x1);

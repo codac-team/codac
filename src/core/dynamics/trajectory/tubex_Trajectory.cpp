@@ -122,6 +122,7 @@ namespace tubex
 
       else if(m_map_values.find(t) != m_map_values.end())
         return m_map_values.at(t); // key exists
+        // todo: optimize this to avoid double reading of the map?
 
       else
       {
