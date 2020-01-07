@@ -38,11 +38,12 @@ namespace tubex
       Trajectory x_sampled(x); \
       x_sampled.sample(*this); \
       \
-      for(map<double,double>::iterator it = m_map_values.begin() ; \
-        it != m_map_values.end() ; it++) \
-        x_sampled.set(it->second f x_sampled(it->first), it->first); \
+      map<double,double> new_map; \
+      for(auto const& it : x_sampled.sampled_map()) \
+        new_map[it.first] = (*this)(it.first) f it.second; \
       \
-      *this = x_sampled; \
+      m_map_values = new_map; \
+      compute_codomain(); \
       return *this; \
     } \
     \

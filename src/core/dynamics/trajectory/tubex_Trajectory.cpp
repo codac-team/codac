@@ -264,9 +264,12 @@ namespace tubex
     {
       assert(domain() == x.domain());
       
-      for(map<double,double>::const_iterator it = x.sampled_map().begin() ; it != x.sampled_map().end() ; it++)
-        if(m_map_values.find(it->first) == m_map_values.end()) // key does not exist already
-          m_map_values[it->first] = (*this)(it->first); // interpolation
+      for(auto const& it : x.sampled_map())
+        if(m_map_values.find(it.first) == m_map_values.end()) // key does not exist already
+        {
+          double interpol = (*this)(it.first); // interpolation
+          m_map_values[it.first] = interpol;
+        }
       // Note : no need to use set_map_value() method:
       // the domain/codomain will not be changed by this method.
     }
