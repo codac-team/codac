@@ -335,7 +335,23 @@ namespace tubex
     const Slice* Tube::slice(double t) const
     {
       assert(domain().contains(t));
-      return slice(input2index(t));
+
+      if(m_synthesis_tree != NULL) // fast evaluation
+        return m_synthesis_tree->slice(m_synthesis_tree->input2index(t));
+      
+      else
+      {
+        const Slice *last_s = NULL;
+        for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
+        {
+          if(t < s->domain().ub())
+            return s;
+          last_s = s;
+        }
+        
+        assert(last_s != NULL);
+        return last_s;
+      }
     }
 
     Slice* Tube::first_slice()
