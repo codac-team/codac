@@ -96,12 +96,14 @@ namespace tubex
         // Creating slices
         double lb;
         bin_file.read((char*)&lb, sizeof(double));
+        Interval tube_domain(lb);
 
         Slice *prev_slice = NULL, *slice = NULL;
         for(int k = 0 ; k < slices_number ; k++)
         {
           double ub;
           bin_file.read((char*)&ub, sizeof(double));
+          tube_domain |= Interval(lb, ub);
 
           if(slice == NULL)
           {
@@ -133,6 +135,10 @@ namespace tubex
           deserialize_Interval(bin_file, slice_value);
           s->set(slice_value);
         }
+
+        // Domain
+        tube_domain |= lb;
+        tube->m_domain = tube_domain; // redundant information for fast access
 
         // Gates
         Interval gate;

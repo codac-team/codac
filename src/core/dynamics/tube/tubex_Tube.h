@@ -1132,7 +1132,8 @@ namespace tubex
         Slice *m_first_slice = NULL; //!< pointer to the first Slice object of this tube
         mutable TubeTreeSynthesis *m_synthesis_tree = NULL; //!< pointer to the optional synthesis tree
         mutable bool m_enable_synthesis = Tube::s_enable_syntheses; //!< enablement of the use of a synthesis tree
-        
+        ibex::Interval m_domain; //!< redundant information for fast evaluations
+
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
       friend class TubeVector;

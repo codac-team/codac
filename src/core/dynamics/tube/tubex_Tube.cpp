@@ -36,12 +36,18 @@ namespace tubex
 
       // By default, the tube is defined as one single slice
       m_first_slice = new Slice(domain, codomain);
+      
+      // Redundant information for fast access
+      m_domain = domain;
     }
     
     Tube::Tube(const Interval& domain, double timestep, const Interval& codomain)
     {
       assert(valid_domain(domain));
       assert(timestep >= 0.); // if 0., equivalent to no sampling
+
+      // Redundant information for fast access
+      m_domain = domain;
 
       Slice *prev_slice = NULL, *slice;
       double lb, ub = domain.lb();
@@ -111,6 +117,9 @@ namespace tubex
         s->set_envelope(v_codomains[i]);
         s = s->next_slice();
       }
+      
+      // Redundant information for fast access
+      m_domain = tube_domain;
     }
 
     Tube::Tube(const Tube& x)
@@ -236,8 +245,12 @@ namespace tubex
           prev_slice = slice;
         }
 
+        // Redundant information for fast access
+        m_domain = x.domain();
+
       if(m_enable_synthesis)
         create_synthesis_tree();
+
       return *this;
     }
 
@@ -247,6 +260,7 @@ namespace tubex
         return m_synthesis_tree->domain();
       
       else
+        return m_domain; // redundant information for fast access
         return Interval(first_slice()->domain().lb(),
                         last_slice()->domain().ub());
     }
@@ -1056,6 +1070,7 @@ namespace tubex
     {
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
         s->shift_domain(shift_ref);
+      m_domain -= shift_ref;
       delete_synthesis_tree();
     }
 
