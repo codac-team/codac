@@ -348,7 +348,6 @@ namespace tubex
       assert(m_map_values.find(t) != m_map_values.end()); // key exists
       assert(m_map_values.size() > 2);
 
-      //double prev_t = t;
       double h = next(m_map_values.begin())->first - m_map_values.begin()->first;
 
       vector<double> fwd;
@@ -358,13 +357,10 @@ namespace tubex
       it_fwd++;
       while(fwd.size() < 4 && it_fwd != m_map_values.end())
       {
-        //assert(it_fwd->first - prev_t == h && "constant timestep required");
-        //prev_t = it_fwd->first;
         fwd.push_back(it_fwd->second);
         it_fwd++;
       }
 
-      //prev_t = t;
       vector<double> bwd;
       map<double,double>::const_iterator it_bwd = m_map_values.find(t);
 
@@ -373,8 +369,6 @@ namespace tubex
         it_bwd--;
         while(bwd.size() < 4)
         {
-          //assert(prev_t - it_bwd->first == h && "constant timestep required");
-          //prev_t = it_bwd->first;
           bwd.push_back(it_bwd->second);
           if(it_bwd == m_map_values.begin())
             break;
