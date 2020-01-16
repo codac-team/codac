@@ -34,7 +34,7 @@
     SET(AUTO_SYNTHESIS_BY_DEFAULT false) # direct tubes by default
   endif()
   add_definitions(-DAUTO_SYNTHESIS_BY_DEFAULT=${AUTO_SYNTHESIS_BY_DEFAULT})
-  message(AUTO_SYNTHESIS_BY_DEFAULT ${AUTO_SYNTHESIS_BY_DEFAULT})
+  message("-- Using binary trees for tubes: " ${AUTO_SYNTHESIS_BY_DEFAULT})
 
 
 # Tubex sources

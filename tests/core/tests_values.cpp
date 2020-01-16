@@ -405,6 +405,14 @@ TEST_CASE("Testing set inversion")
     CHECK(x.invert(Interval(1.), v) == Interval(0.5,0.75));
     CHECK(x.invert(Interval(3.5,4.), v) == Interval(2.,5.));
   }
+
+  SECTION("Another test")
+  {
+    float dt = 0.00005;
+    Interval domain(-20., 20.);
+    Tube x(domain, dt, tubex::Function("[-1,1]*(t^2+1)"));
+    CHECK(x.invert(0.) == domain);
+  }
 }
 
 TEST_CASE("Testing set inversion in vector case")
