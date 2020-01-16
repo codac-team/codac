@@ -126,16 +126,22 @@ namespace tubex
 
   const pair<Interval,Interval> TubeTreeSynthesis::eval(const Interval& t)
   {
-    assert(!t.is_degenerated());
-    assert(domain().is_superset(t));
+    if(t.is_degenerated()) // faster to perform the evaluation over the related slice
+      return slice(input2index(t.lb()))->eval(t);
 
     Interval inter = m_domain & t;
 
     if(inter.is_empty())
       return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-    else if(is_leaf() || inter == m_domain)
-      return codomain_bounds();
+    else if(is_leaf() || inter == m_domain) // todo: this last condition useful?
+    {
+      if(inter == m_domain)
+        return codomain_bounds();
+
+      else
+        return m_slice_ref->eval(inter);
+    }
 
     else
     {
@@ -263,6 +269,10 @@ namespace tubex
       {
         m_codomain = m_slice_ref->codomain();
         m_codomain_bounds = make_pair(m_codomain.lb(), m_codomain.ub());
+        m_codomain_bounds.first |= m_slice_ref->input_gate().lb();
+        m_codomain_bounds.first |= m_slice_ref->output_gate().lb();
+        m_codomain_bounds.second |= m_slice_ref->input_gate().ub();
+        m_codomain_bounds.second |= m_slice_ref->output_gate().ub();
         m_values_update_needed = false;
       }
 
