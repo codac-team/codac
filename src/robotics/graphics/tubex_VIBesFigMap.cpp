@@ -576,8 +576,9 @@ namespace tubex
           continue;
 
         IntervalVector box(2);
-        box[0] = (*tube)[m_map_tubes[tube].index_x](k);
-        box[1] = (*tube)[m_map_tubes[tube].index_y](k);
+        box[0] = (*tube)[m_map_tubes[tube].index_x].slice(k)->input_gate();
+        box[1] = (*tube)[m_map_tubes[tube].index_y].slice(k)->input_gate();
+        // Note: the last output gate is never shown
 
         string color = m_map_tubes[tube].color;
         if(color == "") // then defined by a color map
@@ -619,18 +620,6 @@ namespace tubex
 
         prev_box = box;
       }
-      
-      /*IntervalVector first_box(2);
-      double tlb = (m_restricted_tdomain & tube->domain()).lb();
-      first_box[0] = (*tube)[m_map_tubes[tube].index_x](tlb);
-      first_box[1] = (*tube)[m_map_tubes[tube].index_y](tlb);
-      draw_box(first_box, "#C02600[]", params); // red
-      
-      IntervalVector last_box(2);
-      double tub = (m_restricted_tdomain & tube->domain()).ub();
-      last_box[0] = (*tube)[m_map_tubes[tube].index_x](tub);
-      last_box[1] = (*tube)[m_map_tubes[tube].index_y](tub);
-      draw_box(last_box, "#47A040[]", params); // green*/
     }
   }
 
