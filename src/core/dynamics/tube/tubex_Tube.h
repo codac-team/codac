@@ -390,6 +390,14 @@ namespace tubex
        */
       void sample(const Tube& x);
 
+      /**
+       * \brief Tests if a gate exists at time \f$t\f$
+       *
+       * \param t time input to test
+       * \return `true` if a gate exists
+       */
+      bool gate_exists(double t) const;
+
       /// @}
       /// \name Accessing values
       /// @{
@@ -765,6 +773,13 @@ namespace tubex
        */
       void shift_domain(double a);
 
+      /**
+       * \brief Removes the gate at \f$t\f$ and merges the two related slices
+       *
+       * \param t time input where the gate to remove is
+       */
+      void remove_gate(double t);
+
       /// @}
       /// \name Bisection
       /// @{
@@ -1137,6 +1152,7 @@ namespace tubex
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
       friend class TubeVector;
+      friend class CtcEval;
 
       static bool s_enable_syntheses;
   };

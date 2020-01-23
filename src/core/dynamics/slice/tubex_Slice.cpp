@@ -511,8 +511,40 @@ namespace tubex
       if(first_slice != NULL && second_slice != NULL)
       {
         if(second_slice->m_input_gate != NULL)
+        {
           *first_slice->m_output_gate &= *second_slice->m_input_gate;
+          // todo: memory leak there? second_slice->m_input_gate should be deleted
+        }
         second_slice->m_input_gate = first_slice->m_output_gate;
+      }
+    }
+
+    void Slice::merge_slices(Slice *first_slice, Slice *&second_slice)
+    {
+      assert(first_slice != NULL && second_slice != NULL);
+      assert(first_slice->next_slice() == second_slice);
+      assert(first_slice->domain().ub() == second_slice->domain().lb());
+      assert(first_slice->m_output_gate == second_slice->m_input_gate);
+
+      Slice *next_slice_after_merge = second_slice->next_slice(); // may be NULL
+
+      first_slice->set_envelope(first_slice->codomain() | second_slice->codomain());
+      first_slice->set_domain(first_slice->domain() | second_slice->domain());
+
+      // Deleting objects after fusion
+      first_slice->m_output_gate = new Interval(second_slice->output_gate());
+
+      second_slice->m_prev_slice = NULL;
+      second_slice->m_next_slice = NULL;
+      delete second_slice; // will destroy both input/output gates because
+                           // pointers to neighbour slices have been set to NULL
+
+      // Chaining slices
+      first_slice->m_next_slice = next_slice_after_merge;
+      if(next_slice_after_merge != NULL)
+      {
+        next_slice_after_merge->m_prev_slice = first_slice;
+        next_slice_after_merge->m_input_gate = first_slice->m_output_gate;
       }
     }
 

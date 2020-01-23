@@ -57,7 +57,7 @@ namespace tubex
        *
        * \param preserve if true, the slicing will remain the same
        */
-      void preserve_slicing(bool preserve);
+      void preserve_slicing(bool preserve = true);
 
       /**
        * \brief Specifies an optional fast mode of contraction
@@ -66,7 +66,7 @@ namespace tubex
        *
        * \param fast_mode if true, fast mode enabled
        */
-      void set_fast_mode(bool fast_mode);
+      void set_fast_mode(bool fast_mode = true);
 
       /**
        * \brief Limits the temporal domain of contractions

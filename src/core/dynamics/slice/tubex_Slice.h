@@ -642,6 +642,16 @@ namespace tubex
       static void chain_slices(Slice *first_slice, Slice *second_slice);
 
       /**
+       * \brief Merges the two slices to keep only one
+       *
+       * \note One slice object and gate will be removed during the operation.
+       *
+       * \param first_slice a pointer to the first Slice object
+       * \param second_slice a pointer to the second Slice object
+       */
+      static void merge_slices(Slice *first_slice, Slice *&second_slice);
+
+      /**
        * \brief Returns the box \f$\llbracket x\rrbracket([t_0,t_f])\f$
        *
        * \note Used for genericity purposes
@@ -660,6 +670,7 @@ namespace tubex
 
       friend class Tube;
       friend class TubeTreeSynthesis;
+      friend class CtcEval;
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
   };
 }

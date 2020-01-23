@@ -340,4 +340,16 @@ TEST_CASE("Tube slices structure")
     CHECK(tube_a.slice(tube_a.nb_slices()-1)->output_gate() == Interval(0.3));
     CHECK(tube_a(1.) == Interval(0.3));
   }
+
+  SECTION("Merge of slices")
+  {
+    Tube x(Interval(0.,10.), Interval(-1.,1.));
+    Tube xold(x);
+
+    x.sample(2.);
+    x.remove_gate(2.);
+
+    CHECK(x.nb_slices() == xold.nb_slices());
+    CHECK(x == xold);
+  }
 }

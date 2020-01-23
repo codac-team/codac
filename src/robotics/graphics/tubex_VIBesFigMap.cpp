@@ -594,7 +594,7 @@ namespace tubex
             vector<Point> v_pts;
             push_points(box, v_pts);
             push_points(prev_box, v_pts);
-            ConvexPolygon p(v_pts, false);
+            ConvexPolygon p(v_pts);
             draw_polygon(p, color, params);
           }
         }

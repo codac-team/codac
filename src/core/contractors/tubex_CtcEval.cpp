@@ -39,12 +39,15 @@ namespace tubex
       y.set_empty();
       return;
     }
-
-    Tube *y_first_slicing, *w_first_slicing;
+    
+    int slices_nb_before_ctc = y.nb_slices();
+    Slice *s_y = NULL, *s_w = NULL;
     if(m_preserve_slicing)
     {
-      y_first_slicing = new Tube(y);
-      w_first_slicing = new Tube(w);
+      // In case of preserved slicing, we keep a reference
+      // to the slices that will be contracted
+      s_y = y.slice(t);
+      s_w = w.slice(t);
     }
 
     z &= y.interpol(t, w);
@@ -60,24 +63,36 @@ namespace tubex
       ctc_deriv.contract(y, w);
     }
 
+    else if(m_preserve_slicing && 
+      slices_nb_before_ctc != y.nb_slices()) // only if a slice has been created
+    {
+      // The gate will be lost during the final operation for
+      // preserving the slicing. So we need to propagate localy
+      // the information on nearby slices, to keep the information,
+      // and then merge them.
+
+      // 1. Contration
+
+        CtcDeriv ctc_deriv;
+        ctc_deriv.contract(*s_y, *s_w);
+        // If the number of slices has not changed, the next slice should exist:
+        assert(s_y->next_slice() != NULL && s_w->next_slice() != NULL);
+        ctc_deriv.contract(*s_y->next_slice(), *s_w->next_slice());
+
+      // 2. Merge
+
+        y.remove_gate(t);
+        w.remove_gate(t);
+
+        y.delete_synthesis_tree(); // todo: update tree if created, instead of delete
+        w.delete_synthesis_tree(); // todo: update tree if created, instead of delete
+    }
+
     if(z.is_empty() || y.is_empty())
     {
       z.set_empty();
       y.set_empty();
       return;
-    }
-
-    if(m_preserve_slicing)
-    {
-      y_first_slicing->set_empty();
-      *y_first_slicing |= y;
-      y = *y_first_slicing;
-      delete y_first_slicing;
-
-      w_first_slicing->set_empty();
-      *w_first_slicing |= w;
-      w = *w_first_slicing;
-      delete w_first_slicing;
     }
   }
 
@@ -97,13 +112,6 @@ namespace tubex
       return;
     }
 
-    Tube *y_first_slicing, *w_first_slicing;
-    if(m_preserve_slicing)
-    {
-      y_first_slicing = new Tube(y);
-      w_first_slicing = new Tube(w);
-    }
-
     y &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY); // todo: remove this
 
     t &= y.domain();
@@ -118,6 +126,15 @@ namespace tubex
 
       if(!z.is_empty())
       {
+        vector<double> v_gates_to_remove;
+        if(m_preserve_slicing)
+        {
+          if(y.gate_exists(t.lb()))
+            v_gates_to_remove.push_back(t.lb());
+          if(y.gate_exists(t.ub()))
+            v_gates_to_remove.push_back(t.ub());
+        }
+
         y.set(y.interpol(t.lb(), w), t.lb()); w.sample(t.lb());
         y.set(y.interpol(t.ub(), w), t.ub()); w.sample(t.ub());
           
@@ -208,6 +225,35 @@ namespace tubex
           t &= y.invert(z, w ,t);
           if(!t.is_empty())
             z &= y.interpol(t, w);
+
+        // 5. If requested, preserving the initial slicing
+
+          for(int i = 0 ; i < v_gates_to_remove.size() ; i++)
+          {
+            // The gate will be lost during the final operation for
+            // preserving the slicing. So we need to propagate localy
+            // the information on nearby slices, to keep the information,
+            // and then merge them.
+
+            Slice *s_y = y.slice(v_gates_to_remove[i]);
+            Slice *s_w = w.slice(v_gates_to_remove[i]);
+
+            // 1. Contration
+
+              CtcDeriv ctc_deriv;
+              ctc_deriv.contract(*s_y, *s_w);
+              // If the number of slices has not changed, the next slice should exist:
+              assert(s_y->next_slice() != NULL && s_w->next_slice() != NULL);
+              ctc_deriv.contract(*s_y->next_slice(), *s_w->next_slice());
+
+            // 2. Merge
+
+              y.remove_gate(v_gates_to_remove[i]);
+              w.remove_gate(v_gates_to_remove[i]);
+
+              y.delete_synthesis_tree(); // todo: update tree if created, instead of delete
+              w.delete_synthesis_tree(); // todo: update tree if created, instead of delete
+          }
       }
 
       // todo: remove this (or use Polygons with truncature)
@@ -229,19 +275,6 @@ namespace tubex
           if(outgate.lb() == -BOUNDED_INFINITY) outgate = Interval(NEG_INFINITY,outgate.ub());
           s->set_output_gate(outgate);
         }
-    }
-
-    if(m_preserve_slicing)
-    {
-      y_first_slicing->set_empty();
-      *y_first_slicing |= y;
-      y = *y_first_slicing;
-      delete y_first_slicing;
-
-      w_first_slicing->set_empty();
-      *w_first_slicing |= w;
-      w = *w_first_slicing;
-      delete w_first_slicing;
     }
 
     if(t.is_empty() || z.is_empty() || y.is_empty())

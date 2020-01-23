@@ -97,5 +97,5 @@ int main(int argc, char** argv)
   /* =========== ENDING =========== */
 
   // Checking if this example still works:
-  return (fabs(x.volume() - 2.62768) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (fabs(x.volume() - 2.48593) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
