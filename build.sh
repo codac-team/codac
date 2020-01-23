@@ -16,6 +16,12 @@
 
 TUBEX_DIR="$(pwd)"
 
+if [ -z "${AUTO_SYNTHESIS_BY_DEFAULT}" ]
+then
+  # in case of undefined AUTO_SYNTHESIS_BY_DEFAULT variable
+  AUTO_SYNTHESIS_BY_DEFAULT=false
+fi
+
 # Cleaning before build
 
   if [ $# -ne 0 ] && ([ "$1" = "clean" ] || [ "$2" = "clean" ])
@@ -32,9 +38,9 @@ TUBEX_DIR="$(pwd)"
 
     if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
     then
-      cmake -DBUILD_TESTS=ON ..
+      cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
     else
-      cmake -DBUILD_TESTS=OFF ..
+      cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
     fi
 
   make

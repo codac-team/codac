@@ -667,12 +667,16 @@ namespace tubex
 
     const Interval Tube::invert(const Interval& y, const Interval& search_domain) const
     {
+      if(m_synthesis_tree != NULL) // fast inversion
+        return m_synthesis_tree->invert(y, search_domain);
+
       Tube v(*this, Interval::ALL_REALS); // todo: optimize this
       return invert(y, v, search_domain);
     }
 
     void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain) const
     {
+      // todo: fast inversion with binary tree considering derivative information
       Tube v(*this, Interval::ALL_REALS); // todo: optimize this
       v_t.clear();
       invert(y, v_t, v, search_domain);

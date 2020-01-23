@@ -28,6 +28,15 @@
   include_directories(SYSTEM "${IBEX_INCLUDE_DIR}")
 
 
+# Optional binary tree activation for all tubes (for tests purposes mainly)
+
+  if(NOT DEFINED AUTO_SYNTHESIS_BY_DEFAULT)
+    SET(AUTO_SYNTHESIS_BY_DEFAULT false) # direct tubes by default
+  endif()
+  add_definitions(-DAUTO_SYNTHESIS_BY_DEFAULT=${AUTO_SYNTHESIS_BY_DEFAULT})
+  message("-- Using binary trees for tubes: " ${AUTO_SYNTHESIS_BY_DEFAULT})
+
+
 # Tubex sources
 
   add_subdirectory(src) # sources of core, robotics, solver

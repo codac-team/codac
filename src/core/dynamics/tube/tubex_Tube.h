@@ -24,7 +24,8 @@
 #include "tubex_Polygon.h"
 #include "ibex_BoolInterval.h"
 
-#define AUTO_SYNTHESIS_BY_DEFAULT false
+// The following define constant is now set in CMake configuration file:
+//#define AUTO_SYNTHESIS_BY_DEFAULT false
 
 namespace tubex
 {

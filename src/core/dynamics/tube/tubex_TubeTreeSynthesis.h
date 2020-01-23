@@ -25,6 +25,7 @@ namespace tubex
       const ibex::Interval domain() const;
       int nb_slices() const;
       const ibex::Interval operator()(const ibex::Interval& t);
+      const ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain);
       const ibex::Interval codomain();
       const std::pair<ibex::Interval,ibex::Interval> codomain_bounds();
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS);

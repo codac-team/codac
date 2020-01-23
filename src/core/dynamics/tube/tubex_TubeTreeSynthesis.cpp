@@ -110,6 +110,29 @@ namespace tubex
     }
   }
   
+  const Interval TubeTreeSynthesis::invert(const Interval& y, const Interval& search_domain)
+  {
+    Interval inter = m_domain & search_domain;
+
+    if(inter.is_empty())
+      return Interval::EMPTY_SET;
+
+    else if(!codomain().intersects(y))
+      return Interval::EMPTY_SET;
+
+    else if(codomain_bounds().first.ub() < y.lb() && codomain_bounds().second.lb() > y.ub())
+      return inter;
+
+    else
+    {
+      if(is_leaf())
+        return inter;
+
+      else
+        return m_first_subtree->invert(y, inter) | m_second_subtree->invert(y, inter);
+    }
+  }
+  
   const Interval TubeTreeSynthesis::codomain()
   {
     if(m_values_update_needed)
