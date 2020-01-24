@@ -136,7 +136,6 @@ namespace tubex
         (*this)[i + start_index] = subvec[i];
     }
 
-
     // Accessing values
 
     const Interval TrajectoryVector::domain() const
@@ -176,6 +175,22 @@ namespace tubex
       IntervalVector v(size());
       for(int i = 0 ; i < size() ; i++)
         v[i] = (*this)[i](t);
+      return v;
+    }
+    
+    const Vector TrajectoryVector::first_value() const
+    {
+      Vector v(size());
+      for(int i = 0 ; i < size() ; i++)
+        v[i] = (*this)[i].first_value();
+      return v;
+    }
+
+    const Vector TrajectoryVector::last_value() const
+    {
+      Vector v(size());
+      for(int i = 0 ; i < size() ; i++)
+        v[i] = (*this)[i].last_value();
       return v;
     }
     

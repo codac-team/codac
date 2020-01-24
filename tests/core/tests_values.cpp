@@ -408,7 +408,8 @@ TEST_CASE("Testing set inversion")
 
   SECTION("Another test")
   {
-    float dt = 0.00005;
+    float dt = 0.05;
+    // to test the interest of trees, use a very small dt
     Interval domain(-20., 20.);
     Tube x(domain, dt, tubex::Function("[-1,1]*(t^2+1)"));
     CHECK(x.invert(0.) == domain);

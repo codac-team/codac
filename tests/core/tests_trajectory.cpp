@@ -133,4 +133,17 @@ TEST_CASE("Trajectory base")
     // todo: find a way to catch assert abort: CHECK_THROWS(traj5 == traj6); // not implemented yet
     // todo: find a way to catch assert abort: CHECK_THROWS(traj5 != traj6); // not implemented yet
   }
+
+  SECTION("First and last values")
+  {
+    // Defined by maps of values
+    map<double,double> map_values;
+    for(double t = 0. ; t <= 10. ; t++)
+      map_values[t] = t;
+    Trajectory test(map_values);
+
+    CHECK(test.codomain() == Interval(0.,10.));
+    CHECK(test.first_value() == 0.);
+    CHECK(test.last_value() == 10.);
+  }
 }

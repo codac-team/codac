@@ -162,6 +162,24 @@ namespace tubex
       }
     }
     
+    double Trajectory::first_value() const
+    {
+      if(m_function != NULL)
+        return m_function->eval(m_domain.lb()).mid(); // /!\ an approximation is made here
+      
+      else
+        return m_map_values.begin()->second;
+    }
+
+    double Trajectory::last_value() const
+    {
+      if(m_function != NULL)
+        return m_function->eval(m_domain.ub()).mid(); // /!\ an approximation is made here
+      
+      else
+        return m_map_values.rbegin()->second;
+    }
+
     // Tests
 
     bool Trajectory::not_defined() const

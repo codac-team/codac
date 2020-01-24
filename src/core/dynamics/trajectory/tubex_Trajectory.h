@@ -146,6 +146,20 @@ namespace tubex
        */
       const ibex::Interval operator()(const ibex::Interval& t) const;
 
+      /**
+       * \brief Returns the value \f$x(t_0)\f$
+       *
+       * \return real value \f$x(t_0)\f$
+       */
+      double first_value() const;
+
+      /**
+       * \brief Returns the value \f$x(t_f)\f$
+       *
+       * \return real value \f$x(t_f)\f$
+       */
+      double last_value() const;
+
       /// @}
       /// \name Tests
       /// @{
