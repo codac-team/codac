@@ -19,6 +19,8 @@ namespace tubex
 {
   /**
    * \brief CtcPicard class.
+   *
+   * \todo Restricted domain feature?
    */
   class CtcPicard : public Ctc
   {

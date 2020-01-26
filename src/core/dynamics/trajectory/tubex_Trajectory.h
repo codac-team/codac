@@ -25,8 +25,6 @@ namespace tubex
    * \class Trajectory
    * \brief One dimensional trajectory \f$x(\cdot)\f$, defined as a temporal map of values
    *
-   * \todo Implement arithmetic operators for trajectories?
-   *
    * \note Use TrajectoryVector for the multi-dimensional case
    */
   class Trajectory : public DynamicalItem

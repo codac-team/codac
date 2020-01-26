@@ -39,16 +39,8 @@ namespace tubex
       y.set_empty();
       return;
     }
-    
-    int slices_nb_before_ctc = y.nb_slices();
-    Slice *s_y = NULL, *s_w = NULL;
-    if(m_preserve_slicing)
-    {
-      // In case of preserved slicing, we keep a reference
-      // to the slices that will be contracted
-      s_y = y.slice(t);
-      s_w = w.slice(t);
-    }
+
+    bool merge_after_ctc = m_preserve_slicing && !y.gate_exists(t);
 
     z &= y.interpol(t, w);
     y.set(z, t);
@@ -63,8 +55,7 @@ namespace tubex
       ctc_deriv.contract(y, w);
     }
 
-    else if(m_preserve_slicing && 
-      slices_nb_before_ctc != y.nb_slices()) // only if a slice has been created
+    else if(merge_after_ctc)
     {
       // The gate will be lost during the final operation for
       // preserving the slicing. So we need to propagate localy
@@ -74,10 +65,8 @@ namespace tubex
       // 1. Contration
 
         CtcDeriv ctc_deriv;
-        ctc_deriv.contract(*s_y, *s_w);
-        // If the number of slices has not changed, the next slice should exist:
-        assert(s_y->next_slice() != NULL && s_w->next_slice() != NULL);
-        ctc_deriv.contract(*s_y->next_slice(), *s_w->next_slice());
+        ctc_deriv.contract(*y.slice(t)->prev_slice(), *w.slice(t)->prev_slice());
+        ctc_deriv.contract(*y.slice(t), *w.slice(t));
 
       // 2. Merge
 
@@ -100,6 +89,7 @@ namespace tubex
   {
     assert(y.domain() == w.domain());
     assert(Tube::same_slicing(y, w));
+    double volume = y.volume() + w.volume(); // for last assert
     
     if(t.is_degenerated())
       return contract(t.lb(), z, y, w);
@@ -129,9 +119,9 @@ namespace tubex
         vector<double> v_gates_to_remove;
         if(m_preserve_slicing)
         {
-          if(y.gate_exists(t.lb()))
+          if(!y.gate_exists(t.lb())) // will exist then
             v_gates_to_remove.push_back(t.lb());
-          if(y.gate_exists(t.ub()))
+          if(!y.gate_exists(t.ub())) // will exist then
             v_gates_to_remove.push_back(t.ub());
         }
 
@@ -283,6 +273,8 @@ namespace tubex
       z.set_empty();
       y.set_empty();
     }
+
+    assert(volume >= y.volume() + w.volume() && "contraction rule not respected");
   }
 
   void CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)

@@ -872,6 +872,7 @@ TEST_CASE("Interpol")
     Interval t ,y;
     bool contraction;
     CtcEval ctc_eval;
+    ctc_eval.preserve_slicing(false);
 
     // Tube evaluation before x contraction
     y = Interval::ALL_REALS;
@@ -1041,6 +1042,7 @@ TEST_CASE("Interpol")
     #endif
 
     CtcEval ctc_eval;
+    ctc_eval.preserve_slicing(false);
     IntervalVector box(2);
     box[0] = Interval(9.,11.8);
     box[1] = Interval(-1.,0.5);
@@ -1085,6 +1087,7 @@ TEST_CASE("Interpol")
     v.set(Interval::ALL_REALS, 8);
 
     CtcEval ctc_eval;
+    ctc_eval.preserve_slicing(false);
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 

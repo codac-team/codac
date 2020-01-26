@@ -68,9 +68,15 @@ namespace tubex
   void CtcDeriv::contract(Slice& x, const Slice& v, TPropagation t_propa)
   {
     assert(x.domain() == v.domain());
+    double volume = x.volume() + v.volume();
 
     if(!x.domain().intersects(m_restricted_domain))
+    {
+      // todo: Thin contraction with respect to tube's slicing:
+      // the contraction should not be optimal on purpose if the
+      // restricted domain does not cover the slice's domain
       return;
+    }
 
     Interval envelope = x.codomain(), ingate = x.input_gate(), outgate = x.output_gate();
 
@@ -123,7 +129,7 @@ namespace tubex
 
         // todo: remove this: (or use Polygons with truncature)
         if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
-        if(envelope.lb() == -BOUNDED_INFINITY) envelope |= Interval(NEG_INFINITY,envelope.ub());
+        if(envelope.lb() == -BOUNDED_INFINITY) envelope = Interval(NEG_INFINITY,envelope.ub());
         if(ingate.ub() == BOUNDED_INFINITY) ingate = Interval(ingate.lb(),POS_INFINITY);
         if(ingate.lb() == -BOUNDED_INFINITY) ingate = Interval(NEG_INFINITY,ingate.ub());
         if(outgate.ub() == BOUNDED_INFINITY) outgate = Interval(outgate.lb(),POS_INFINITY);
@@ -134,6 +140,8 @@ namespace tubex
       x.set_input_gate(ingate);
       x.set_output_gate(outgate);
     }
+
+    assert(volume >= x.volume() + v.volume() && "contraction rule not respected");
   }
 
   void CtcDeriv::contract_gates(Slice& x, const Slice& v)

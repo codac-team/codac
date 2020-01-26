@@ -27,6 +27,7 @@ TEST_CASE("CtcEval")
 
     CHECK(x.nb_slices() == 4);
     CtcEval ctc_eval;
+    ctc_eval.preserve_slicing(false);
     ctc_eval.enable_temporal_propagation(false);
     ctc_eval.contract(t, z, x, v);
     CHECK(x.nb_slices() == 6);
@@ -68,6 +69,7 @@ TEST_CASE("CtcEval")
     CHECK(x.nb_slices() == 5);
 
     CtcEval ctc_eval;
+    ctc_eval.preserve_slicing(false);
     ctc_eval.enable_temporal_propagation(false);
     ctc_eval.contract(t, z, x, v);
 
@@ -149,6 +151,8 @@ TEST_CASE("CtcEval")
 
     Interval intv_t, intv_y;
     CtcEval ctc_eval_propa, ctc_eval_nopropa;
+    ctc_eval_propa.preserve_slicing(false);
+    ctc_eval_nopropa.preserve_slicing(false);
     ctc_eval_propa.enable_temporal_propagation(true);
     ctc_eval_nopropa.enable_temporal_propagation(false);
 

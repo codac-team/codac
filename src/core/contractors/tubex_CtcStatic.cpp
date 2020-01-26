@@ -137,6 +137,11 @@ namespace tubex
       {
         for(int i = 0 ; i < n ; i++)
           v_x_slices[i] = v_x_slices[i]->next_slice();
+
+        // todo: Thin contraction with respect to tube's slicing:
+        // the contraction should not be optimal on purpose if the
+        // restricted domain does not cover the slice's domain
+        
         continue; // moving to next slice
       }
 

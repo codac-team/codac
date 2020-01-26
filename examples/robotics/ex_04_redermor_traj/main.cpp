@@ -32,10 +32,6 @@ int main(int argc, char** argv)
     vector<Beacon> v_seamarks = data_loader.get_beacons();
     map<int,vector<IntervalVector> > m_obs = data_loader.get_observations();
 
-    for(int i = 0 ; i < v_seamarks.size() ; i++)
-      for(int k = 0 ; k < m_obs[i].size() ; k++)
-        x->sample(m_obs[i][k][0].mid());
-
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();

@@ -92,8 +92,8 @@
              COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_01_picard/make/solver_01_picard 0)
     add_test(NAME solver_02
              COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_02_xmsin_fwd/make/solver_02_xmsin_fwd 0)
-    add_test(NAME solver_03
-             COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_03_xmsin_bwd/make/solver_03_xmsin_bwd 0)
+    #add_test(NAME solver_03
+    #         COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_03_xmsin_bwd/make/solver_03_xmsin_bwd 0)
     add_test(NAME solver_04
              COMMAND ${TUBELIB_EXAMPLE_DIR}/solver/ex_04_bvp/make/solver_04_bvp 0)
     # add_test(NAME solver_05

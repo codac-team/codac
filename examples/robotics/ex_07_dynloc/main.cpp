@@ -46,7 +46,6 @@ int main(int argc, char** argv)
   /* =========== SOLVING =========== */
 
     CtcEval ctc_eval; // differential observation contractor
-    ctc_eval.preserve_slicing(true); // the contraction will not change the slicing
     ibex::Function f("x", "y", "bx", "by", "range", "sqrt((x-bx)^2+(y-by)^2)-range"); // range-only observation function
     ibex::CtcFwdBwd ctc_rangeonly(f); // static contractor
 
@@ -63,10 +62,12 @@ int main(int argc, char** argv)
         m[2] = b[i].x(); m[3] = b[i].y();
         m[4] = d[i];
         ctc_rangeonly.contract(m);
+
         // Propagating the static contraction to tubes:
         ctc_eval.contract(t[i], m[0], x[0], v[0]);
         ctc_eval.contract(t[i], m[1], x[1], v[1]);
       }
+      
     } while(fabs(x.volume() / vol) < 0.01); // will a fixed point has not been reached
 
 
