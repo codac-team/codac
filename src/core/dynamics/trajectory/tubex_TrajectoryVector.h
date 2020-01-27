@@ -18,6 +18,7 @@
 #include "tubex_Function.h"
 #include "tubex_Trajectory.h"
 #include "tubex_DynamicalItem.h"
+#include "tubex_traj_arithmetic.h"
 
 namespace tubex
 {
@@ -43,7 +44,7 @@ namespace tubex
        *
        * \param n dimension of this trajectory
        */
-      TrajectoryVector(int n);
+      explicit TrajectoryVector(int n);
 
       /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from an analytic expression
@@ -58,7 +59,7 @@ namespace tubex
        *
        * \param m_map_values map<t,y> defining the trajectory: \f$\mathbf{x}(t)=\mathbf{y}\f$
        */
-      TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
+      explicit TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
 
       /**
        * \brief Creates a copy of a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$

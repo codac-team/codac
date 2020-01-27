@@ -54,7 +54,7 @@ namespace tubex
        * \param domain Interval domain \f$[t_0,t_f]\f$
        * \param codomain Interval value of the slice (all reals \f$[-\infty,\infty]\f$ by default)
        */
-      Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      explicit Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ with some temporal discretization
@@ -156,7 +156,7 @@ namespace tubex
        *
        * \param binary_file_name path to the binary file
        */
-      Tube(const std::string& binary_file_name);
+      explicit Tube(const std::string& binary_file_name);
 
       /**
        * \brief Restore a scalar tube from serialization, together with a Trajectory object

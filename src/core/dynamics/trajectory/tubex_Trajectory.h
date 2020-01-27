@@ -15,6 +15,7 @@
 #include <map>
 #include "tubex_DynamicalItem.h"
 #include "tubex_Function.h"
+#include "tubex_traj_arithmetic.h"
 
 namespace tubex
 {
@@ -62,7 +63,7 @@ namespace tubex
        *
        * \param m_map_values map<t,y> defining the trajectory: \f$x(t)=y\f$
        */
-      Trajectory(const std::map<double,double>& m_map_values);
+      explicit Trajectory(const std::map<double,double>& m_map_values);
 
       /**
        * \brief Creates a copy of a scalar trajectory \f$x(\cdot)\f$

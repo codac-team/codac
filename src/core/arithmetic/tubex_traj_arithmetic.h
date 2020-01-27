@@ -17,6 +17,9 @@
 
 namespace tubex
 {
+  class Trajectory;
+  class TrajectoryVector;
+
   /// \name Scalar outputs
   /// @{
 

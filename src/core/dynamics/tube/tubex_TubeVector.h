@@ -46,7 +46,7 @@ namespace tubex
        * \param domain Interval domain \f$[t_0,t_f]\f$
        * \param n dimension of this tube (default value: 1)
        */
-      TubeVector(const ibex::Interval& domain, int n = 1);
+      explicit TubeVector(const ibex::Interval& domain, int n = 1);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ made of one slice
@@ -139,7 +139,7 @@ namespace tubex
        * \param timestep sampling value \f$\delta\f$ for the temporal
        *        discretization (double, no discretization by default: one slice only)
        */
-      TubeVector(const TrajectoryVector& traj, double timestep = 0.);
+      explicit TubeVector(const TrajectoryVector& traj, double timestep = 0.);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ defined as an interval
@@ -162,7 +162,7 @@ namespace tubex
        *
        * \param binary_file_name path to the binary file
        */
-      TubeVector(const std::string& binary_file_name);
+      explicit TubeVector(const std::string& binary_file_name);
 
       /**
        * \brief Restore a n-dimensional tube from serialization, together with a TrajectoryVector object

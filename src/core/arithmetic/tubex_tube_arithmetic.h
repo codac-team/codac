@@ -9,8 +9,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_ARITHMETIC_H__
-#define __TUBEX_ARITHMETIC_H__
+#ifndef __TUBEX_TUBE_ARITHMETIC_H__
+#define __TUBEX_TUBE_ARITHMETIC_H__
 
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
