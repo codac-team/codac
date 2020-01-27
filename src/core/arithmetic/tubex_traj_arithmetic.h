@@ -142,6 +142,11 @@ namespace tubex
     /** \brief \f$\mathbf{x}/y(\cdot)\f$ */
     const TrajectoryVector operator/(const ibex::Vector& x, const Trajectory& y);
 
+    /** \brief \f$\mathbf{x}(\cdot)\times\mathbf{y}\f$ (or \f$\mathbf{x}(\cdot)\wedge\mathbf{y}\f$ in physics) */
+    const TrajectoryVector vecto_product(const TrajectoryVector& x, const ibex::Vector& y);
+    /** \brief \f$\mathbf{x}\times\mathbf{y}(\cdot)\f$ (or \f$\mathbf{x}\wedge\mathbf{y}(\cdot)\f$ in physics) */
+    const TrajectoryVector vecto_product(const ibex::Vector& x, const TrajectoryVector& y);
+
   /// @}
 }
 
