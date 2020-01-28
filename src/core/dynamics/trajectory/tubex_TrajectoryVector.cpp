@@ -254,7 +254,8 @@ namespace tubex
       assert(valid_domain(t));
       assert(domain().is_superset(t));
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i].truncate_domain(t);
+        if(!(*this)[i].not_defined())
+          (*this)[i].truncate_domain(t);
     }
 
     void TrajectoryVector::shift_domain(double shift_ref)
