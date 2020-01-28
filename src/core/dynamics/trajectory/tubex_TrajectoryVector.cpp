@@ -52,6 +52,16 @@ namespace tubex
              || size() == it_map->second.size()) && "vectors of map_values of different dimensions");
         set(it_map->second, it_map->first);
       }
+
+      // todo: optimize this by building Trajectory objects here directly?
+    }
+
+    TrajectoryVector::TrajectoryVector(const vector<map<double,double> >& v_map_values)
+      : TrajectoryVector(v_map_values.size())
+    {
+      assert(!v_map_values.empty());
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i] = Trajectory(v_map_values[i]);
     }
 
     TrajectoryVector::TrajectoryVector(int n, const Trajectory& x)

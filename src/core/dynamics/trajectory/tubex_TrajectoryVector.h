@@ -55,11 +55,18 @@ namespace tubex
       TrajectoryVector(const ibex::Interval& domain, const tubex::Function& f);
 
       /**
-       * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a map of values
+       * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a map of vector values
        *
        * \param m_map_values map<t,y> defining the trajectory: \f$\mathbf{x}(t)=\mathbf{y}\f$
        */
       explicit TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
+
+      /**
+       * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a vector of maps of scalar values
+       *
+       * \param v_map_values set of map<t,y> defining the trajectory: \f$\mathbf{x}(t)=\mathbf{y}\f$
+       */
+      explicit TrajectoryVector(const std::vector<std::map<double,double> >& v_map_values);
 
       /**
        * \brief Creates a copy of a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$
