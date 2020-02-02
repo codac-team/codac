@@ -78,6 +78,11 @@ namespace tubex
        * \return the view box
        */
       const ibex::IntervalVector& view_box() const;
+
+      /**
+       * \brief Reset the view box of this figure
+       */
+      void reset_view_box();
       
       /**
        * \brief Sets the properties (coordinates and dimensions) of this figure

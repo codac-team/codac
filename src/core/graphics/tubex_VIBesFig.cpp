@@ -44,6 +44,14 @@ namespace tubex
                           "height", m_height));
   }
 
+  void VIBesFig::set_background(const string& bg_color)
+  {
+    // todo: do better than this (possible with VIBes?)
+    vibes::drawBox(IntervalVector(2,Interval(-999999999.,999999999.)),
+                   "[" + bg_color + "]",
+                   vibesParams("figure", name()));
+  }
+
   const IntervalVector& VIBesFig::axis_limits(double x_min, double x_max, double y_min, double y_max, bool keep_ratio, float margin)
   {
     assert(margin >= 0.);
@@ -116,6 +124,22 @@ namespace tubex
     params_this_fig["figure"] = name();
     if(color != "") vibes::drawBox(box, color, params_this_fig);
     else vibes::drawBox(box, params_this_fig);
+  }
+  
+  void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const vibes::Params& params)
+  {
+    for(int i = 0 ; i < v_pts.size() ; i++)
+      assert(v_pts[i].size() == 2);
+    draw_line(v_pts, "", params);
+  }
+  
+  void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const string& color, const vibes::Params& params)
+  {
+    for(int i = 0 ; i < v_pts.size() ; i++)
+      assert(v_pts[i].size() == 2);
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+    vibes::drawLine(v_pts, color, params_this_fig);
   }
   
   void VIBesFig::draw_line(const vector<double>& v_x, const vector<double>& v_y, const vibes::Params& params)
