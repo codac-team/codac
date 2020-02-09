@@ -637,27 +637,7 @@ namespace tubex
 
     double robot_x = (*traj)[m_map_trajs[traj].index_x](t);
     double robot_y = (*traj)[m_map_trajs[traj].index_y](t);
-    double robot_heading;
-
-    if(m_map_trajs[traj].index_heading == -1) // heading traj not available
-    {
-      double next_t;
-      float delta_t = traj->domain().diam() / 10000.;
-      if(t >= traj->domain().lb() + delta_t) next_t = t - delta_t;
-      else next_t = t + delta_t;
-
-      double robot_next_x = (*traj)[m_map_trajs[traj].index_x](next_t);
-      double robot_next_y = (*traj)[m_map_trajs[traj].index_y](next_t);
-      robot_heading = std::atan2(robot_y - robot_next_y, robot_x - robot_next_x);
-      if(next_t > t) robot_heading += M_PI;
-    }
-
-    else
-    {
-      assert((*traj)[m_map_trajs[traj].index_heading].domain() == (*traj)[m_map_trajs[traj].index_x].domain());
-      assert((*traj)[m_map_trajs[traj].index_heading].domain().contains(t));
-      robot_heading = (*traj)[m_map_trajs[traj].index_heading](t);
-    }
+    double robot_heading = heading(t, traj);
 
     float robot_size = size == -1 ? m_robot_size : size;
     vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
@@ -688,15 +668,49 @@ namespace tubex
 
     double x = (*traj)[m_map_trajs[traj].index_x](obs[0].mid());
     double y = (*traj)[m_map_trajs[traj].index_y](obs[0].mid());
+    double theta = heading(obs[0].mid(), traj);
 
     vibes::drawPie(x, y,
                    0.001, obs[1].mid(),
-                   obs[2].lb() * 180. / M_PI, obs[2].ub() * 180. / M_PI,
+                   (theta+obs[2].lb()) * 180./M_PI, (theta+obs[2].ub()) * 180./M_PI,
                    "#000"/*#B9B9B9*/, vibesParams("figure", name(), "group", "obs"));
 
     vibes::drawPie(x, y,
                    obs[1].lb(), obs[1].ub(),
-                   obs[2].lb() * 180. / M_PI, obs[2].ub() * 180. / M_PI,
+                   (theta+obs[2].lb()) * 180./M_PI, (theta+obs[2].ub()) * 180./M_PI,
                    "#000[#ffffff]"/*#B9B9B9[#DCDCDC]*/, vibesParams("figure", name(), "group", "obs"));
+  }
+
+  double VIBesFigMap::heading(double t, const TrajectoryVector *traj) const
+  {
+    if(m_map_trajs.at(traj).index_heading == -1) // heading traj not available
+    {
+      float delta_t = traj->domain().diam() / 10000.;
+      double next_t;
+
+      if(t >= traj->domain().lb() + delta_t)
+        next_t = t - delta_t;
+      else
+        next_t = t + delta_t;
+
+      double robot_next_x = (*traj)[m_map_trajs.at(traj).index_x](next_t);
+      double robot_next_y = (*traj)[m_map_trajs.at(traj).index_y](next_t);
+
+      double robot_x = (*traj)[m_map_trajs.at(traj).index_x](t);
+      double robot_y = (*traj)[m_map_trajs.at(traj).index_y](t);
+      double robot_heading = std::atan2(robot_y - robot_next_y, robot_x - robot_next_x);
+
+      if(next_t > t)
+        robot_heading += M_PI;
+
+      return robot_heading;
+    }
+
+    else
+    {
+      assert((*traj)[m_map_trajs.at(traj).index_heading].domain() == (*traj)[m_map_trajs.at(traj).index_x].domain());
+      assert((*traj)[m_map_trajs.at(traj).index_heading].domain().contains(t));
+      return (*traj)[m_map_trajs.at(traj).index_heading](t);
+    }
   }
 }

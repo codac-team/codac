@@ -70,32 +70,31 @@ namespace tubex
     return v_beacons;
   }
   
-  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, const ibex::Interval& domain) const
+  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& domain) const
   {
     assert(x.size() >= 2);
     assert(nb_obs >= 0);
     assert(map.size() > 0 || nb_obs == 0); // if no observation, no beacon needed
 
-    float max_range = 50.;
+    float dt = 0.001;
     vector<IntervalVector> v_obs;
 
     if(nb_obs == 0)
       return v_obs;
 
     Interval domain_ = x.domain() & domain;
-    for(double t = domain_.lb() ; t < domain_.ub() ; t+= domain_.diam() / nb_obs)
+    for(double t = domain_.lb() ; t < domain_.ub()-dt ; t+= domain_.diam() / nb_obs)
     {
       for(int i = 0 ; i < map.size() ; i++)
       {
         float r = std::sqrt(std::pow(x[0](t) - map[i].pos()[0], 2) + std::pow(x[1](t) - map[i].pos()[1], 2));
-        float heading = std::atan2(x[1](t+0.001) - x[1](t), x[0](t+0.001) - x[0](t)) + M_PI;
-        float a = std::atan2(x[1](t) - map[i].pos()[1], x[0](t) - map[i].pos()[0]) - heading;
-        if(r < max_range && Interval(-M_PI/4.,M_PI/4.).contains(a)) // if the beacon is seen by the robot
+        float heading = std::atan2(x[1](t+dt) - x[1](t), x[0](t+dt) - x[0](t));
+        float a = std::atan2(map[i].pos()[1] - x[1](t), map[i].pos()[0] - x[0](t)) - heading;
+        
+        if(visi_range.contains(r) && visi_angle.contains(a)) // if the beacon is seen by the robot
         {
           IntervalVector obs(3);
-          obs[0] = t;
-          obs[1] = r + Interval(-0.1,0.1);
-          obs[2] = M_PI + std::atan2(x[1](t) - map[i].pos()[1], x[0](t) - map[i].pos()[0]) + Interval(-0.1,0.1);
+          obs[0] = t; obs[1] = r; obs[2] = a;
           v_obs.push_back(obs);
         }
       }
