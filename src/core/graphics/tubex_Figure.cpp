@@ -59,6 +59,11 @@ namespace tubex
     return m_view_box;
   }
 
+  void Figure::reset_view_box()
+  {
+    m_view_box = IntervalVector(2, Interval::EMPTY_SET);
+  }
+
   void Figure::set_properties(int x, int y, int width, int height)
   {
     assert(x >= 0 && y >= 0 && width > 0 && height > 0);

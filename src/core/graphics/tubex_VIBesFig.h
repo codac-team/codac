@@ -55,6 +55,13 @@ namespace tubex
        * \param height height value (in pixels)
        */
       void set_properties(int x, int y, int width, int height);
+      
+      /**
+       * \brief Sets the background color of this figure
+       *
+       * \param bg_color color of the background
+       */
+      void set_background(const std::string& bg_color);
 
       /**
        * \brief Sets the axis limits of this figure
@@ -153,6 +160,23 @@ namespace tubex
        * \param params VIBes parameters related to the line (none by default)
        */
       void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a line of points
+       *
+       * \param v_pts vector of points that are expressed as 2d std::vector of coordinates
+       * \param params VIBes parameters related to the line
+       */
+      void draw_line(const std::vector<std::vector<double> >& v_pts, const vibes::Params& params);
+
+      /**
+       * \brief Draws a line of points
+       *
+       * \param v_pts vector of points that are expressed as 2d std::vector of coordinates
+       * \param color the optional color of the line (black by default) 
+       * \param params VIBes parameters related to the line (none by default)
+       */
+      void draw_line(const std::vector<std::vector<double> >& v_pts, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a circle
