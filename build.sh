@@ -24,10 +24,10 @@ fi
 
 # Cleaning before build
 
-  if [ $# -ne 0 ] && ([ "$1" = "clean" ] || [ "$2" = "clean" ])
-  then
-    find . -name make | xargs rm -fr
-  fi
+#  if [ $# -ne 0 ] && ([ "$1" = "clean" ] || [ "$2" = "clean" ])
+#  then
+#    find . -name make | xargs rm -fr
+#  fi
 
 # Building Tubex library
 
