@@ -56,9 +56,11 @@ Main related publications
 .. _tubeval-pdf: http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf
 .. |loopproof-pdf| replace:: PDF
 .. _loopproof-pdf: http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf
+.. |robloc-pdf| replace:: PDF
+.. _robloc-pdf: http://simon-rohou.fr/research/robloc/robloc_toc.pdf
 
 +--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
-|                    | Title                           | Author(s)                    | Journal                 | Year | Link                |
+|                    | Title                           | Author(s)                    | Journal / Editor        | Year | Link                |
 +====================+=================================+==============================+=========================+======+=====================+
 |                    |                                 |                              |                         |      |                     |
 | .. _loopproof:     | Proving the existence of loops  | S. Rohou, P. Franek,         | IJRR                    | 2018 | |loopproof-pdf|_    |
@@ -74,7 +76,12 @@ Main related publications
 |                    |                                 |                              |                         |      |                     |
 | .. _tubint:        | Guaranteed computation of       | S. Rohou, L. Jaulin,         | RAS                     | 2017 | |tubint-pdf|_       |
 |                    | robot trajectories              | L. Mihaylova, F. Le Bars,    |                         |      |                     |
-| [Rohou et al. 2017]|                                 |                              |                         |      |                     |
+| [Rohou et al. 2017]|                                 | S. M. Veres                  |                         |      |                     |
++--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
+|                    |                                 |                              |                         |      |                     |
+| .. _robloc:        | Reliable robot localization: a  | S. Rohou, L. Jaulin,         | ISTE Ltd, Wiley         | 2019 | |robloc-pdf|_       |
+|                    | constraint-programming approach | L. Mihaylova, F. Le Bars,    |                         |      |                     |
+| [Rohou et al. 2019]| over dynamical systems          | S. M. Veres                  |                         |      |                     |
 +--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
 
 
