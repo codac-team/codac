@@ -50,7 +50,7 @@ The API of Tubex can be broken down into three layers:
 
 - an extended (symbolic-numeric) tube calculator
 - a contractor programming library
-- a system solver (currently in development, part of the *Contredo* project)
+- a system solver (currently in development, `part of the Contredo project <https://github.com/ibex-team/tubex-solve>`_)
 
 Each usage corresponds to a different layer and each layer is built on top of the previous one. This structure is similar to the one of IBEX, but dedicated to dynamic systems.
 

@@ -254,7 +254,7 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
 
 .. code-block:: c++
 
-  #include "tubex.h"
+  #include <tubex.h>
 
   using namespace std;
   using namespace ibex;

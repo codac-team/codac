@@ -5,7 +5,7 @@ The code from the previous section produced a one-slice scalar tube over the tem
 
 .. code-block:: c++
 
-  #include "tubex.h"
+  #include <tubex.h>
   
   using namespace std;
   using namespace ibex;
@@ -75,7 +75,7 @@ We will implement it with:
 
 .. code-block:: c++
 
-  #include "tubex.h"
+  #include <tubex.h>
   
   using namespace std;
   using namespace ibex;
