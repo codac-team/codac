@@ -9,13 +9,13 @@
  *
  *  \date       2018
  *  \author     Simon Rohou
- *  \copyright  Copyright 2019 Simon Rohou
+ *  \copyright  Copyright 2020 Simon Rohou
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex.h"
-#include "tubex-robotics.h"
+#include <tubex.h>
+#include <tubex-robotics.h>
 
 using namespace std;
 using namespace ibex;
