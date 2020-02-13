@@ -50,6 +50,9 @@ fi
 
   if [ $# -ne 0 ] && ([ "$1" = "examples" ] || [ "$1" = "all" ])
   then
+    cd make
+    sudo make install
+    cd ..
     cd examples/basics
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
     cd ../..
