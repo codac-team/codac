@@ -27,7 +27,7 @@ Related publications
 
 * [Proving the existence of loops in robot trajectories](http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf)<br />*The International Journal of Robotics Research*, 37(12):1500-1516 (2018)<br />Simon Rohou, Peter Franek, Clément Aubry, Luc Jaulin
 
-* [Reliable robot localization: a constraint-programming approach over dynamical systems](iste.co.uk/book.php?id=1553)<br />*ISTE Ltd*, *Wiley* (2019)<br />Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
+* [[book] Reliable robot localization: a constraint-programming approach over dynamical systems](http://iste.co.uk/book.php?id=1553)<br />*ISTE Ltd*, *Wiley* (2019)<br />Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
 
 
 Documentation
