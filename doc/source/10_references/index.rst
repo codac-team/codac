@@ -29,3 +29,18 @@ Papers in academic journals:
 |                    | robot trajectories              | L. Mihaylova, F. Le Bars,    |                         |      |                     |
 | [Rohou et al. 2017]|                                 |                              |                         |      |                     |
 +--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
+
+
+Related books:
+
+.. |robloc-pdf| replace:: PDF
+.. _robloc-pdf: http://simon-rohou.fr/research/robloc/robloc_toc.pdf
+
++--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
+|                    | Title                           | Author(s)                    | Editor                  | Year | Link                |
++====================+=================================+==============================+=========================+======+=====================+
+|                    |                                 |                              |                         |      |                     |
+| .. _robloc:        | Reliable robot localization: a  | S. Rohou, L. Jaulin,         | ISTE Ltd, Wiley         | 2019 | |robloc-pdf|_       |
+|                    | constraint-programming approach | L. Mihaylova, F. Le Bars,    |                         |      |                     |
+| [Rohou et al. 2019]| over dynamical systems          | S. M. Veres                  |                         |      |                     |
++--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
