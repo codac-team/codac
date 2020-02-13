@@ -4,93 +4,93 @@
 
 list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Function.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Function.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayFunction.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayFunction.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Function.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic_scalar.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic_vector.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic_vector.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic_scalar.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic_vector.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_Figure.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_Figure.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTube.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTube.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_ColorMap.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_ColorMap.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTubeVector.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTubeVector.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_colors.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTube.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_colors.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFig.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFig.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigPaving.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigPaving.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_Figure.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_ColorMap.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTubeVector.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFig.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_colors.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Paving.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Set.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset_degree.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Paving.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Paving.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Set.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Set.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset_degree.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_ConvexPolygon.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Edge.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_ConvexPolygon.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Edge.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Edge.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_GrahamScan.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_GrahamScan.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Point.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Point.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Point.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tubex_DynamicalItem.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tubex_DynamicalItem.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeVector.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeVector.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeVector_operators.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_Tube.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_Tube.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_Tube_operators.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_Tube.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeTreeSynthesis.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeVector_operators.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeVector.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeTreeSynthesis.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_polygon.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeTreeSynthesis.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_polygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_operators.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_TrajectoryVector_operators.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory_operators.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_TrajectoryVector.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_TrajectoryVector.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tubex_DynamicalItem.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_TrajectoryVector_operators.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_Exception.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_Exception.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_tubes.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_tubes.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_intervals.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_intervals.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_intervals.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_Ctc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_Ctc.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcPicard.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcPicard.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDelay.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDelay.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcStatic.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcStatic.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcEval.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcPicard.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_Ctc.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcStatic.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDelay.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcEval.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
                 )
 
 
@@ -124,6 +124,7 @@ target_link_libraries(tubex PUBLIC ${IBEX_LDFLAGS})
 foreach(srcfile ${SRC})
   if(srcfile MATCHES "\\.h$" OR srcfile MATCHES "\\.hpp$")
     list(APPEND HDR ${srcfile})
+    file(COPY ${srcfile} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
   endif()
 endforeach()
 

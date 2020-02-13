@@ -52,14 +52,17 @@ install:
   #- cd ..
 
 script:
+  
   - pwd
   - ls
+
   # Without synthesis tree
   - export AUTO_SYNTHESIS_BY_DEFAULT=false
-  - ./build.sh #all clean
-  #- cd make ; make test
+  - ./build.sh all clean
+  - cd make ; make test
   - cd ..
+  
   # With synthesis tree for all created tubes
   - export AUTO_SYNTHESIS_BY_DEFAULT=true
-  - ./build.sh #all clean
-  #- cd make ; make test
+  - ./build.sh all clean
+  - cd make ; make test

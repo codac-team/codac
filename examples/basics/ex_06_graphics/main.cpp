@@ -10,8 +10,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex.h"
-#include <iomanip>
+#include <tubex.h>
+
 using namespace std;
 using namespace ibex;
 using namespace tubex;

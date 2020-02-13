@@ -13,8 +13,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex.h"
-#include "tubex-robotics.h"
+#include <tubex.h>
+#include <tubex-rob.h>
 
 using namespace std;
 using namespace ibex;

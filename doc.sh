@@ -13,8 +13,3 @@ make html
 cd doxygen
 doxygen Doxyfile
 cd ../../
-
-
-# Lines 489, 497
-# HIDE_UNDOC_MEMBERS     = YES
-# HIDE_UNDOC_CLASSES     = YES

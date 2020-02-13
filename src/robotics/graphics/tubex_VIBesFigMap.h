@@ -15,11 +15,11 @@
 #include <map>
 #include <vector>
 
-#include "tubex_VIBesFig.h"
-#include "tubex_TubeVector.h"
-#include "tubex_TrajectoryVector.h"
-#include "tubex_Beacon.h"
-#include "tubex_ColorMap.h"
+#include <tubex_VIBesFig.h>
+#include <tubex_TubeVector.h>
+#include <tubex_TrajectoryVector.h>
+#include <tubex_Beacon.h>
+#include <tubex_ColorMap.h>
 
 namespace tubex
 {

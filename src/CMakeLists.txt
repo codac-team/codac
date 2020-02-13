@@ -3,6 +3,7 @@
 # ==================================================================
 
 add_subdirectory(core)
+add_subdirectory(robotics)
 
 file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/tubex.pc
               CONTENT "prefix=${CMAKE_INSTALL_PREFIX}
@@ -14,12 +15,8 @@ Description: ${TUBEX_DESCRIPTION}
 Url: ${TUBEX_URL}
 Version: ${TUBEX_VERSION}
 Requires: ibex
-Cflags: -I\${includedir}/tubex 
-Libs: -L\${libdir} -ltubex")
-
-# For several libraries:
-# Cflags: -I${includedir}/tubex-core -I${includedir}/tubex-solver
-# Libs: -L${libdir} -ltubex-core -ltubex-solver 
+Cflags: -I\${includedir}/tubex -I\${includedir}/tubex-rob
+Libs: -L\${libdir} -ltubex -ltubex-rob")
 
 # todo: specify minimum version of IBEX (in Requires field)
 
