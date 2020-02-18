@@ -67,7 +67,7 @@ namespace tubex
   {
     assert(m_colormap.size() >= 2 && "color map defined by at least two colors");
 
-    if(isnan(r)) // undefined ratio
+    if(std::isnan(r)) // undefined ratio
       return make_rgb((float)0.5, 0.5, 0.5);
     assert(Interval(0.,1.).contains(r) && "r between 0 and 1");
 
