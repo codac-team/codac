@@ -26,6 +26,7 @@
   # Check that the compiler supports c++11
   include(CheckCXXCompilerFlag)
   check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
+
   if(COMPILER_SUPPORTS_CXX11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   else()
@@ -35,9 +36,17 @@
   if(WIN32)
     # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
     add_definitions(-U__STRICT_ANSI__)
-  endif ()
+  endif()
 
   add_compile_options(-O3 -DNDEBUG) # comment for debug mode
+
+
+################################################################################
+# Python binding
+################################################################################
+
+  add_compile_options(-fPIC) # is it necessary for python binding?
+  add_subdirectory(pybind11)
 
 
 ################################################################################
@@ -77,13 +86,6 @@
 
 
 ################################################################################
-# Compile sources
-################################################################################
-
-  add_subdirectory (src)
-
-
-################################################################################
 # Tests
 ################################################################################
 
@@ -109,6 +111,14 @@
     add_test(NAME basics_06
              COMMAND ../examples/basics/ex_06_graphics/make/basics_06 0)
   endif()
+
+
+################################################################################
+# Compile sources
+################################################################################
+
+  add_subdirectory(src)
+  add_subdirectory(python)
 
 
 ################################################################################
