@@ -92,7 +92,7 @@ namespace tubex
           v_sy[i] = v_sy[i]->next_slice();
 
       res_codomain = eval_vector(v_sy[0]->domain(), x);
-      res_gate = eval_vector(v_sy[0]->domain().lb(), x);
+      res_gate = eval_vector(Interval(v_sy[0]->domain().lb()), x);
 
       for(int i = 0 ; i < y.size() ; i++)
       {
@@ -102,7 +102,7 @@ namespace tubex
 
     } while(v_sy[0]->next_slice() != NULL);
     
-    res_gate = eval_vector(v_sy[0]->domain().ub(), x);
+    res_gate = eval_vector(Interval(v_sy[0]->domain().ub()), x);
     for(int i = 0 ; i < y.size() ; i++)
       v_sy[i]->set_output_gate(res_gate[i], false);
 
