@@ -31,9 +31,9 @@ install:
   # IBEX
   
   - echo 'Installing IBEX...';
-  - git clone https://github.com/ibex-team/ibex-lib
+  - git clone https://github.com/SimonRohou/ibex-lib
   - cd ibex-lib
-  - git checkout 81a0c0e930fbe158699e070fa39abc7d8082eb68
+  - git checkout for_tubex_python
   - ./waf configure --with-debug --interval-lib=gaol
   - sudo ./waf install
   - cd ..
