@@ -3,7 +3,11 @@
 # ==================================================================
 
 language: c++
+language: python
 sudo: false
+
+python:
+  - "3.6"
 
 addons:
   apt:
@@ -24,7 +28,6 @@ matrix:
   include:
   - os: linux
     compiler: g++-5
-    env: PYTHON=3.6
 
 install:
   #- sudo pip install breathe # for documentation
