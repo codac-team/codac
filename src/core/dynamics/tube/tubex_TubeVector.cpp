@@ -715,9 +715,14 @@ namespace tubex
         (*this)[i].set_empty();
     }
 
+    const TubeVector& TubeVector::inflate(double rad)
+    {
+      return inflate(Vector(size(),rad));
+    }
+
     const TubeVector& TubeVector::inflate(const Vector& rad)
     {
-      assert(size() && rad.size());
+      assert(size() == rad.size());
       for(int i = 0 ; i < size() ; i++)
       {
         assert(rad[i] >= 0.);
