@@ -453,6 +453,27 @@ namespace tubex
       const ibex::Vector max_diam() const;
 
       /**
+       * \brief Returns the maximum diameter of a gate of the tube vector in all components
+       *
+       * \return the maximal diameter of a gate of this tube and the instant in the variable t
+       */
+      const double max_gate_diam( double & t) const;
+
+      /**
+       * \brief Returns the slice of the tube of this tubevector with the largest codomain in all components
+       *
+       * \return the largest slice
+       */
+        const Slice* largest_slice() const;
+       
+/**
+       * \brief Returns the slice of the tube of this tubevector with the largest difference between input and output gates in all components
+       *
+       * \return the steepest slice
+       */
+        const Slice* steepest_slice() const;
+
+      /**
        * \brief Returns the diameters of the tube as a trajectory
        *
        * \note Without derivative knowledge, and because the tube is made of boxed slices,

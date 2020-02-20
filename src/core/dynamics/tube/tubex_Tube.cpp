@@ -441,6 +441,30 @@ namespace tubex
       return largest;
     }
     
+  Slice* Tube::steepest_slice()
+    {
+      return const_cast<Slice*>(static_cast<const Tube&>(*this).steepest_slice());
+    }
+
+  const Slice* Tube::steepest_slice() const
+    {
+      double max_dif = 0.;
+      const Slice *steepest_slice;
+      steepest_slice=first_slice();
+      for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice()){
+	double dif = fabs (s->output_gate().mid() - s->input_gate().mid());
+        if( dif > max_dif)
+	  {
+	    steepest_slice = s;
+	    max_dif = dif;
+	  }
+      }
+      return steepest_slice;
+    }
+
+
+
+
     const Interval Tube::slice_domain(int slice_id) const
     {
       assert(slice_id >= 0 && slice_id < nb_slices());

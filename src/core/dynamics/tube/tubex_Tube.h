@@ -322,6 +322,21 @@ namespace tubex
        */
       const Slice* largest_slice() const;
 
+ /**
+       * \brief Returns a pointer to the Slice object of this tube for which
+       *        the difference between the input and outout gate midvalue is the largest
+       *
+       * \return a pointer to the corresponding Slice
+       */
+      Slice* steepest_slice();
+       /**
+       * \brief Returns a const pointer to the Slice object of this tube for which
+       *        the difference between the input and outout gate midvalue is the largest
+       *
+       * \return a const pointer to the corresponding Slice
+       */
+      const Slice* steepest_slice() const;
+
       /**
        * \brief Returns the temporal definition domain of the ith Slice of this tube
        *
@@ -525,14 +540,14 @@ namespace tubex
       void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
       
       /**
-       * \brief Returns the diameter of the interval value \f$[x](t)\f$ that is the more uncertain
+       * \brief Returns the diameter of the interval value \f$[x](t)\f$ that is the most uncertain
        *
        * \return the maximal thickness of this tube
        */
       double max_diam() const;
 
       /**
-       * \brief Returns the diameter of the gate of this tube that is the more uncertain
+       * \brief Returns the diameter of the gate of this tube that is the most uncertain
        *
        * \param t the temporal key of the corresponding uncertain gate
        * \return the maximal thickness of the gate
