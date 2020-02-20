@@ -3,11 +3,6 @@
 # ==================================================================
 
 language: c++
-language: python
-sudo: false
-
-python:
-  - "3.6"
 
 addons:
   apt:
@@ -27,6 +22,8 @@ sudo: required
 matrix:
   include:
   - os: linux
+    language: python
+    env: PYTHON=3.6 CPP_VERSION=11 GCC=5.0
     compiler: g++-5
 
 install:
