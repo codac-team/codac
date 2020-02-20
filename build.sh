@@ -56,4 +56,7 @@ fi
     cd examples/basics
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
     cd ../..
+    cd examples/robotics
+    find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    cd ../..
   fi

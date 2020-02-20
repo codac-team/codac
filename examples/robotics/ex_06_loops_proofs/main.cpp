@@ -15,7 +15,7 @@
  */
 
 #include <tubex.h>
-#include <tubex-robotics.h>
+#include <tubex-rob.h>
 
 using namespace std;
 using namespace ibex;
