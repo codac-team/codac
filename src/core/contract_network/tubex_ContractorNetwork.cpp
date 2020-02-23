@@ -39,8 +39,13 @@ namespace tubex
   double ContractorNetwork::domains_volume() const // todo: avoid redundant additions
   {
     double volume = 0.;
+    
     for(int i = 0 ; i < v_ctc.size() ; i++)
       volume += v_ctc[i].domains_volume();
+
+    for(const auto dom : v_interm_var)
+      volume += dom.volume();
+
     return volume;
   }
 
@@ -48,6 +53,7 @@ namespace tubex
   {
     int k = 0;
     double volume;
+    cout << "Contractor network has " << ctc_nb() << " contractors" << endl;
 
     do
     {
@@ -61,16 +67,24 @@ namespace tubex
     } while(domains_volume()/volume < 1.-r);
 
     cout << endl;
+
+    for(const auto& ctc : v_ctc)
+      for(const auto& dom : ctc.v_domains)
+        if(dom.is_empty())
+        {
+          cout << "  warning: empty set" << endl;
+          return;
+        }
   }
 
-  Interval* ContractorNetwork::interm_var(const Interval& i_)
+  Interval* ContractorNetwork::create_var(const Interval& i_)
   {
     Interval *i = new Interval(i_);
     v_interm_var.push_back(AbstractDomain(i));
     return i;
   }
 
-  IntervalVector* ContractorNetwork::interm_var(const IntervalVector& i_)
+  IntervalVector* ContractorNetwork::create_var(const IntervalVector& i_)
   {
     IntervalVector *i = new IntervalVector(i_);
     v_interm_var.push_back(AbstractDomain(i));
@@ -119,6 +133,24 @@ namespace tubex
     abstract_ctc.v_domains.push_back(AbstractDomain(i2));
     abstract_ctc.v_domains.push_back(AbstractDomain(i3));
     abstract_ctc.v_domains.push_back(AbstractDomain(i4));
+    v_ctc.push_back(abstract_ctc);
+  }
+
+  void ContractorNetwork::add(tubex::Ctc* ctc, Interval *i1, Interval *i2, Tube *i3)
+  {
+    AbstractContractor abstract_ctc(ctc);
+    abstract_ctc.v_domains.push_back(AbstractDomain(i1));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i2));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i3));
+    v_ctc.push_back(abstract_ctc);
+  }
+
+  void ContractorNetwork::add(tubex::Ctc* ctc, Interval *i1, IntervalVector *i2, TubeVector *i3)
+  {
+    AbstractContractor abstract_ctc(ctc);
+    abstract_ctc.v_domains.push_back(AbstractDomain(i1));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i2));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i3));
     v_ctc.push_back(abstract_ctc);
   }
 

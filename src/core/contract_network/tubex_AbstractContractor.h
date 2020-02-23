@@ -28,6 +28,7 @@ namespace tubex
 
       AbstractContractor(ibex::Ctc *ctc);
       AbstractContractor(tubex::Ctc *ctc);
+
       void contract();
       double domains_volume() const;
 

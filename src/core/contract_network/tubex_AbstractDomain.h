@@ -29,6 +29,9 @@ namespace tubex
       AbstractDomain(tubex::TubeVector *tv);
 
       double volume() const;
+      bool is_empty() const;
+      
+      friend std::ostream& operator<<(std::ostream& str, const AbstractDomain& x);
 
     //protected:
 

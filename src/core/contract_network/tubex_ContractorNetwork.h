@@ -34,8 +34,8 @@ namespace tubex
       double domains_volume() const;
       void contract(float r = 0.001);
 
-      ibex::Interval* interm_var(const ibex::Interval& i_);
-      ibex::IntervalVector* interm_var(const ibex::IntervalVector& i_);
+      ibex::Interval* create_var(const ibex::Interval& i_);
+      ibex::IntervalVector* create_var(const ibex::IntervalVector& i_);
 
       void add(ibex::Ctc* ctc, ibex::IntervalVector *iv);
       void add(ibex::Ctc* ctc, ibex::Interval *i1, ibex::Interval *i2, ibex::Interval *i3);
@@ -44,6 +44,8 @@ namespace tubex
       void add(tubex::Ctc* ctc, ibex::Interval *i1, ibex::IntervalVector *i2, tubex::TubeVector *i3, tubex::TubeVector *i4);
       void add(tubex::Ctc* ctc, tubex::Tube *i1, tubex::Tube *i2);
       void add(tubex::Ctc* ctc, tubex::TubeVector *i1, tubex::TubeVector *i2);
+      void add(tubex::Ctc* ctc, ibex::Interval *i1, ibex::Interval *i2, tubex::Tube *i3);
+      void add(tubex::Ctc* ctc, ibex::Interval *i1, ibex::IntervalVector *i2, tubex::TubeVector *i3);
 
 
     protected:

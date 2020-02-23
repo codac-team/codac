@@ -110,19 +110,19 @@ int main()
       Interval &rho = v_obs[i][1]; // range
 
       // Intermediate variables:
-      Interval *psi = cn.interm_var(heading(t)); // robot heading
-      Interval *alpha = cn.interm_var(Interval::ALL_REALS);
-      IntervalVector *a = cn.interm_var(IntervalVector(2));
-      IntervalVector *p = cn.interm_var(IntervalVector(2));
+      Interval *psi = cn.create_i_var(Interval::ALL_REALS); // robot heading
+      Interval *alpha = cn.create_i_var(Interval::ALL_REALS);
+      IntervalVector *a = cn.create_iv_var(IntervalVector(2));
+      IntervalVector *p = cn.create_iv_var(IntervalVector(2));
       
       cn.add(&ctc_constell, &m[i]); // (ii)
       cn.add(&ctc_algeb_diff, a, &m[i], p); // (iii)
       cn.add(&ctc_algeb_add, alpha, psi, &phi); // (iv)
       cn.add(&ctc_polar, &(*a)[0], &(*a)[1], &rho, alpha); // (v)
       cn.add(&ctc_eval, &t, p, &x, &v); // (vi)
+      cn.add(&ctc_eval, &t, psi, &heading); // (vii)
     }
 
-    cout << "Contractor network has " << cn.ctc_nb() << " contractors" << endl;
     cn.contract();
 
 
@@ -148,7 +148,7 @@ int main()
     cout << endl << v_map.size() << " landmarks" << endl;
     int identified = 0;
     for(int i = 0 ; i < m.size() ; i++)
-      if(m[i].volume() == 0) // degenerate box
+      if(m[i].volume() == 0 && !m[i].is_empty()) // degenerate box
         identified ++;
     cout << identified << "/" << m.size() << " observations identified" << endl << endl;
 

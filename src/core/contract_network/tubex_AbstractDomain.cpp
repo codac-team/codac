@@ -43,7 +43,7 @@ namespace tubex
         return 0.;
       
       else if(m_i->is_unbounded())
-        return POS_INFINITY;
+        return 999999.; // todo: manager the unbounded case for fixed point detection
       
       else
         return m_i->diam();
@@ -60,5 +60,43 @@ namespace tubex
 
     else
       assert(false && "unhandled case");
+  }
+
+  bool AbstractDomain::is_empty() const
+  {
+    if(m_i != NULL)
+      return m_i->is_empty();
+
+    else if(m_iv != NULL)
+      return m_iv->is_empty();
+
+    else if(m_t != NULL)
+      return m_t->is_empty();
+
+    else if(m_tv != NULL)
+      return m_tv->is_empty();
+
+    else
+      assert(false && "unhandled case");
+  }
+
+  ostream& operator<<(ostream& str, const AbstractDomain& x)
+  {
+    if(x.m_i != NULL)
+      str << *x.m_i << flush;
+
+    else if(x.m_iv != NULL)
+      str << *x.m_iv << flush;
+
+    else if(x.m_t != NULL)
+      str << *x.m_t << flush;
+
+    else if(x.m_tv != NULL)
+      str << *x.m_tv << flush;
+
+    else
+      assert(false && "unhandled case");
+
+    return str;
   }
 }

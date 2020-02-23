@@ -119,6 +119,26 @@ namespace tubex
        */
       void contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, TubeVector& w);
 
+      /**
+       * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[z],[y](\cdot)\big)\f$:
+       *        contracts the evaluation \f$[t]\times[z]\f$ only.
+       *
+       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param z the bounded evaluation \f$[z]\f$
+       * \param y the scalar tube \f$[y](\cdot)\f$
+       */
+      void contract(ibex::Interval& t, ibex::Interval& z, const Tube& y);
+
+      /**
+       * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[\mathbf{z}],[\mathbf{y}](\cdot)\big)\f$:
+       *        contracts the evaluation \f$[t]\times[\mathbf{z}]\f$ only.
+       *
+       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param z the bounded evaluation \f$[\mathbf{z}]\f$
+       * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
+       */
+      void contract(ibex::Interval& t, ibex::IntervalVector& z, const TubeVector& y);
+
     protected:
 
       bool m_propagation_enabled = true; //!< if `true`, a complete temporal propagation will be performed
