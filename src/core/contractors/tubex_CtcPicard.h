@@ -27,6 +27,9 @@ namespace tubex
     public:
 
       CtcPicard(float delta = 1.1);
+
+      void contract(std::vector<AbstractDomain>& v_domains);
+      
       void contract(const tubex::Fnc& f,
                     Tube& x,
                     TPropagation t_propa = FORWARD | BACKWARD);

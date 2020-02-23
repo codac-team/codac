@@ -132,6 +132,8 @@
                COMMAND ../examples/robotics/ex_08_tubepaving/make/tubex_rob_08 0)
       add_test(NAME rob_09
                COMMAND ../examples/robotics/ex_09_lissajous/make/tubex_rob_09 0)
+      add_test(NAME rob_10
+               COMMAND ../examples/robotics/ex_10_datasso/make/tubex_rob_10 0)
       
   endif()
 

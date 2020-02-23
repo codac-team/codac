@@ -52,26 +52,26 @@ int main()
         // Lissajous derivative
         tubex::Function("(-240*sin(t) ; \
                           240*cos(2*t))"));
-      v.inflate(0.1);
+      v.inflate(10.);
 
     // Sets of observations
 
       // Creating random map of landmarks
       const int nb_landmarks = 150;
-      const IntervalVector map_area(2, Interval(-300.,300.));
+      const IntervalVector map_area(2, Interval(-400.,400.));
       const vector<Beacon> v_map = DataLoader::generate_landmarks(map_area, nb_landmarks);
 
       // Generating observations obs=(t,range,bearing) of these landmarks
-      const int nb_obs = 10;
-      const Interval visi_range(0.,100.);
-      const Interval visi_angle(-M_PI/4.,M_PI/4.);
+      const int max_nb_obs = 50;
+      const Interval visi_range(0.,75.); // [0m,75m]
+      const Interval visi_angle(-M_PI/4.,M_PI/4.); // frontal sonar
       vector<IntervalVector> v_obs =
-        DataLoader::generate_observations(state_truth, v_map, nb_obs, visi_range, visi_angle);
+        DataLoader::generate_observations(state_truth, v_map, max_nb_obs, visi_range, visi_angle);
 
       // Adding uncertainties on the measurements
       for(auto& obs : v_obs) 
       {
-        obs[1].inflate(1.); // range
+        obs[1].inflate(2.); // range
         obs[2].inflate(0.1); // bearing
       }
 
@@ -134,8 +134,8 @@ int main()
     fig_map.set_properties(1450, 50, 600, 400);
     fig_map.add_tube(&x, "x", 0, 1);
     fig_map.add_trajectory(&state_truth, "x*", 0, 1, 2, "white");
-    fig_map.add_beacons(v_map, 2.);
     fig_map.add_observations(v_obs, &state_truth);
+    fig_map.add_beacons(v_map, 2.);
     fig_map.smooth_tube_drawing();
     fig_map.show();
     fig_map.axis_limits(-340., 340., 0., 0., true);

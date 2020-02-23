@@ -8,6 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <algorithm>
 #include "tubex_DataLoader.h"
 #include "tubex_Exception.h"
 
@@ -90,21 +91,26 @@ namespace tubex
     if(nb_obs == 0)
       return v_obs;
 
+    vector<Beacon> random_map(map);
+
     Interval domain_ = x.domain() & domain;
     for(double t = domain_.lb() ; t < domain_.ub()-dt ; t+= domain_.diam() / nb_obs)
     {
-      for(int i = 0 ; i < map.size() ; i++)
+      std::random_shuffle(random_map.begin(), random_map.end());
+
+      for(int i = 0 ; i < random_map.size() ; i++)
       {
         Interval t_(t);
-        Interval r = sqrt(pow(x[0](t_) - map[i].pos()[0], 2) + pow(x[1](t_) - map[i].pos()[1], 2));
+        Interval r = sqrt(pow(x[0](t_) - random_map[i].pos()[0], 2) + pow(x[1](t_) - random_map[i].pos()[1], 2));
         Interval heading = atan2(x[1](t+dt) - x[1](t_), x[0](t+dt) - x[0](t_));
-        Interval a = atan2(map[i].pos()[1] - x[1](t_), map[i].pos()[0] - x[0](t_)) - heading;
+        Interval a = atan2(random_map[i].pos()[1] - x[1](t_), random_map[i].pos()[0] - x[0](t_)) - heading;
         
         if(visi_range.intersects(r) && visi_angle.intersects(a)) // if the beacon is seen by the robot
         {
           IntervalVector obs(3);
           obs[0] = t; obs[1] = r; obs[2] = a;
           v_obs.push_back(obs);
+          break;
         }
       }
     }

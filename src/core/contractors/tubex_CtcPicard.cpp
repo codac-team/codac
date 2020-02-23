@@ -23,6 +23,11 @@ namespace tubex
     assert(delta > 0.);
   }
   
+  void CtcPicard::contract(vector<AbstractDomain>& v_domains)
+  {
+    // todo
+  }
+  
   void CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa)
   {
     assert(f.nb_vars() == f.image_dim());
