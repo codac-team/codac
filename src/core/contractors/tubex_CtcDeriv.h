@@ -33,6 +33,8 @@ namespace tubex
        */
       CtcDeriv();
 
+      void contract(std::vector<AbstractDomain>& v_domains);
+
       /**
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big([x](\cdot),[v](\cdot)\big)\f$:
        *        contracts the tube \f$[x](\cdot)\f$ with respect to its derivative \f$[v](\cdot)\f$.

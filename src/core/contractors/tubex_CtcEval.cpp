@@ -22,6 +22,22 @@ namespace tubex
 
   }
 
+  void CtcEval::contract(vector<AbstractDomain>& v_domains)
+  {
+    assert(v_domains.size() == 4 && v_domains[0].m_i != NULL);
+
+    // Scalar case:
+    if(v_domains[1].m_i != NULL && v_domains[2].m_t != NULL && v_domains[3].m_t != NULL)
+      contract(*v_domains[0].m_i, *v_domains[1].m_i, *v_domains[2].m_t, *v_domains[3].m_t);
+
+    // Vector case:
+    else if(v_domains[1].m_iv != NULL && v_domains[2].m_tv != NULL && v_domains[3].m_tv != NULL)
+      contract(*v_domains[0].m_i, *v_domains[1].m_iv, *v_domains[2].m_tv, *v_domains[3].m_tv);
+
+    else
+      assert(false && "unhandled case");
+  }
+
   void CtcEval::enable_temporal_propagation(bool enable_propagation)
   {
     m_propagation_enabled = enable_propagation;

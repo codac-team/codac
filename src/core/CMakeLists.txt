@@ -91,6 +91,12 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractDomain.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractDomain.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractContractor.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractContractor.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.h
                 )
 
 
@@ -113,7 +119,8 @@ target_include_directories(tubex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory
                                         ${CMAKE_CURRENT_SOURCE_DIR}/exceptions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/serialize
-                                        ${CMAKE_CURRENT_SOURCE_DIR}/contractors)
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/contractors
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/contract_network)
 target_link_libraries(tubex PUBLIC ${IBEX_LDFLAGS})
 
 

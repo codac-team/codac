@@ -32,6 +32,8 @@ namespace tubex
        */
       CtcEval();
 
+      void contract(std::vector<AbstractDomain>& v_domains);
+      
       /**
        * \brief Enables a forward/backward temporal propagation of the contraction
        *
