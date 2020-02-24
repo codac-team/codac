@@ -110,10 +110,10 @@ int main()
       Interval &rho = v_obs[i][1]; // range
 
       // Intermediate variables:
-      Interval *psi = cn.create_i_var(Interval::ALL_REALS); // robot heading
-      Interval *alpha = cn.create_i_var(Interval::ALL_REALS);
-      IntervalVector *a = cn.create_iv_var(IntervalVector(2));
-      IntervalVector *p = cn.create_iv_var(IntervalVector(2));
+      Interval *psi = cn.create_var(Interval::ALL_REALS); // robot heading
+      Interval *alpha = cn.create_var(Interval::ALL_REALS);
+      IntervalVector *a = cn.create_var(IntervalVector(2));
+      IntervalVector *p = cn.create_var(IntervalVector(2));
       
       cn.add(&ctc_constell, &m[i]); // (ii)
       cn.add(&ctc_algeb_diff, a, &m[i], p); // (iii)
