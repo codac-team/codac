@@ -6,6 +6,14 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_Catan2.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_CtcPolar.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_CtcPolar.h
                 )
+set (LIB_3RD ${IBEX_LDFLAGS} ${TUBEX_LDFLAGS})
+
+if (WITH_CAPD)
+  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/Capd2Tubex/json.hpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/Capd2Tubex/tubex_Capd2Tubex.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/Capd2Tubex/tubex_Capd2Tubex.h)
+  set (LIB_3RD ${LIB_3RD} ${PKG_CAPD_LDFLAGS})
+endif()
 
 
 ################################################################################
@@ -22,7 +30,7 @@ file(MAKE_DIRECTORY ${TUBEX_HEADERS_DIR})
 target_include_directories(tubex-3rd PUBLIC ${IBEX_INCLUDE_DIRS})
 target_include_directories(tubex-3rd PUBLIC ${TUBEX_HEADERS_DIR}
                                             ${CMAKE_CURRENT_SOURCE_DIR}/pyibex)
-target_link_libraries(tubex-3rd PUBLIC ${IBEX_LDFLAGS} ${TUBEX_LDFLAGS})
+target_link_libraries(tubex-3rd PUBLIC ${LIB_3RD})
 
 
 ################################################################################
