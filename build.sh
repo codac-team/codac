@@ -16,6 +16,7 @@
 
 TUBEX_DIR="$(pwd)"
 
+
 if [ -z "${AUTO_SYNTHESIS_BY_DEFAULT}" ]
 then
   # in case of undefined AUTO_SYNTHESIS_BY_DEFAULT variable
@@ -38,9 +39,9 @@ fi
 
   if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
   then
-    cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}"  -DWITH_CAPD=ON ..
   else
-    cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}"  -DWITH_CAPD=ON ..
   fi
 
   make
@@ -54,9 +55,6 @@ fi
     sudo make install
     cd ..
     cd examples/basics
-    find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-    cd ../..
-    cd examples/robotics
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
     cd ../..
   fi
