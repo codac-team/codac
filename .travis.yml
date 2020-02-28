@@ -1,3 +1,4 @@
+
 # ==================================================================
 #  tubex-lib - travis test script
 # ==================================================================
@@ -39,6 +40,18 @@ install:
   - cd ..
   # todo: use CMake to install IBEX
 
+  # CAPD
+  - echo 'Installing CAPD...';
+  - svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other
+  - cd capd
+  - svn co https://svn.capdnet.ii.uj.edu.pl/capdDynSys4 --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other
+  - autoreconf --install
+  - ./configure --with-filib=check --with-mpfr=check
+  - make
+  - sudo make install
+  - cd ..
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
   # IBEX-Geometry:
 
   #- echo 'Installing IBEX-geometry...';
@@ -55,7 +68,6 @@ script:
   
   - pwd
   - ls
-
   # Without synthesis tree
   - export AUTO_SYNTHESIS_BY_DEFAULT=false
   - ./build.sh all clean
