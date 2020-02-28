@@ -51,7 +51,7 @@ fi
 
   if [ $# -ne 0 ] && ([ "$1" = "examples" ] || [ "$1" = "all" ])
   then
-cd make
+    cd make
     sudo make install
     cd ..
     cd examples/basics
