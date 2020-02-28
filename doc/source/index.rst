@@ -39,6 +39,7 @@ Documentation (in progress)
 ..   07_graphics/index
 ..   08_data/index
 ..   09_slices/index
+..   10_CAPD_integration/index
 
 Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
 
