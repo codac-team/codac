@@ -1,6 +1,3 @@
-
-set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:~/libraries/user/capd/lib/pkgconfig")
-message(STATUS "[CAPD TUBEX INTERFACE] PKG_CONFIG_PATH = $ENV{PKG_CONFIG_PATH}")
 find_package(PkgConfig REQUIRED)
 pkg_search_module(PKG_CAPD REQUIRED  capd capd-gui mpcapd mpcapd-gui )  # this looks for capd.pc file
 include_directories(${PKG_CAPD_INCLUDE_DIRS})
