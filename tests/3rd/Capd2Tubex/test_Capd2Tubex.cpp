@@ -22,7 +22,6 @@ TEST_CASE("Capd2Tubex_1")
         json j;
         i >> j;
         vector<IntervalVector> ibex_curve = capd2ibex(j);
-
         TubeVector output = capd2tubex(j);
         IntervalVector a1 = output(1.0);
         IntervalVector expected(2);

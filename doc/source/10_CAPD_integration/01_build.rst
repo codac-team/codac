@@ -1,5 +1,6 @@
 CAPD Integration
-===============
+================
+
 It is now possible to use CAPD as a tool to generate a tube which is the result of a guaranteed integration
 performed by CAPD.
 
@@ -46,6 +47,15 @@ The following command allows you to install everything at once
     libboost-dev libboost1.65-dev liblog4cxx-dev liblog4cxx10v5
 
 For additional options on CAPD compilation and integration please visit CAPD official `documentation <http://capd.sourceforge.net/capdDynSys/docs/html/>`_
+
+You then need to compile Tubex again if it as already been done using  first cmake and the option WITH_CAPD .  Then
+compile and install the code with make an make install
+
+.. code-block:: bash
+
+    cmake <options> -DWITH_CAPD=ON
+    make
+    make install
 
 
 
