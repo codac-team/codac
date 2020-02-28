@@ -130,6 +130,28 @@ endif()
              COMMAND ../examples/basics/ex_04_simple_eval/make/tubex_basics_04 0)
     add_test(NAME basics_06
              COMMAND ../examples/basics/ex_05_graphics/make/tubex_basics_05 0)
+    # Robotics
+    add_test(NAME rob_01
+            COMMAND ../examples/robotics/ex_01_causal_chain/make/tubex_rob_01 0)
+    add_test(NAME rob_02
+            COMMAND ../examples/robotics/ex_02_lowcost_beacons/make/tubex_rob_02 0)
+    add_test(NAME rob_03
+            COMMAND ../examples/robotics/ex_03_drifting_clock/make/tubex_rob_03 0)
+    add_test(NAME rob_04
+            COMMAND sh -c "rm -f ../data/redermor/gesmi.txt.tubex ;
+                       ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0")
+    add_test(NAME rob_04_with_serializ
+            COMMAND ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0)
+    add_test(NAME rob_05
+            COMMAND ../examples/robotics/ex_05_loops_detec/make/tubex_rob_05 ../data/redermor/gesmi.txt  0)
+    add_test(NAME rob_06
+            COMMAND ../examples/robotics/ex_06_loops_proofs/make/tubex_rob_06 0)
+    add_test(NAME rob_07
+            COMMAND ../examples/robotics/ex_07_dynloc/make/tubex_rob_07 0)
+    add_test(NAME rob_08
+            COMMAND ../examples/robotics/ex_08_tubepaving/make/tubex_rob_08 0)
+    add_test(NAME rob_09
+            COMMAND ../examples/robotics/ex_09_lissajous/make/tubex_rob_09 0)
   endif()
 
 
