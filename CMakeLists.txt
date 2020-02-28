@@ -37,7 +37,18 @@
     add_definitions(-U__STRICT_ANSI__)
   endif ()
 
-  add_compile_options(-O3 -DNDEBUG) # comment for debug mode
+  option(OPTIMIZED ON)
+  option(DEBUG_MODE OFF)
+
+  if (OPTIMIZED AND NOT DEBUG_MODE)
+    add_compile_options(-O3 -DNDEBUG) # comment for debug mode
+  elseif(OPTIMIZED AND DEBUG_MODE)
+    add_compile_options(-O3)
+  elseif(NOT DEBUG_MODE AND NOT OPTIMIZED)
+    add_compile_options(-DNDEBUG)
+  endif()
+
+
 
 
 ################################################################################
@@ -47,9 +58,7 @@
   # Binary trees allow to speed up some computations. They can be activated
   # upon request according to the application. For tests purposes, the following
   # forces the use of binary trees for all computations.
-  if(NOT DEFINED AUTO_SYNTHESIS_BY_DEFAULT)
-    set(AUTO_SYNTHESIS_BY_DEFAULT false) # no synthesis of tubes
-  endif()
+  option(AUTO_SYNTHESIS_BY_DEFAULT "Binary tree auto synthesis" OFF)
   add_definitions(-DAUTO_SYNTHESIS_BY_DEFAULT=${AUTO_SYNTHESIS_BY_DEFAULT})
   message(STATUS "Using binary trees for tubes: " ${AUTO_SYNTHESIS_BY_DEFAULT})
 
@@ -71,7 +80,6 @@
 ################################################################################
 
   #find_package(IBEX 2.8.3 REQUIRED)
-  set(ENV{PKG_CONFIG_PATH} "~/libraries/user/ibex-lib-debug/share/pkgconfig")
   find_package(PkgConfig REQUIRED)
   include(FindPkgConfig)
   pkg_search_module(IBEX REQUIRED ibex) # todo: specify minimum version of IBEX
@@ -82,8 +90,6 @@
 ################################################################################
 option(WITH_CAPD "With CAPD" OFF)
 if (WITH_CAPD)
-  set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:~/libraries/user/capd/lib/pkgconfig")
-  message(STATUS "[CAPD TUBEX INTERFACE] PKG_CONFIG_PATH = $ENV{PKG_CONFIG_PATH}")
   find_package(PkgConfig REQUIRED)
   pkg_search_module(PKG_CAPD REQUIRED  capd capd-gui mpcapd mpcapd-gui )  # this looks for capd.pc file
   include_directories(${PKG_CAPD_INCLUDE_DIRS})
@@ -115,17 +121,15 @@ endif()
 
     #  Testing examples:
     add_test(NAME basics_01
-             COMMAND ../examples/basics/ex_01_arithmetic/make/basics_01 0)
+             COMMAND ../examples/basics/ex_01_arithmetic/make/tubex_basics_01 0)
     add_test(NAME basics_02
-             COMMAND ../examples/basics/ex_02_simple_ctc/make/basics_02 0)
+             COMMAND ../examples/basics/ex_02_simple_ctc/make/tubex_basics_02 0)
     add_test(NAME basics_03
-             COMMAND ../examples/basics/ex_03_ivp_msinx/make/basics_03 0)
-    # to be moved in robotics lib add_test(NAME basics_04
-    # to be moved in robotics lib          COMMAND ./examples/basics/ex_04_lissajous/make/basics_04 0)
+             COMMAND ../examples/basics/ex_03_ivp_msinx/make/tubex_basics_03 0)
     add_test(NAME basics_05
-             COMMAND ../examples/basics/ex_05_simple_eval/make/basics_05 0)
+             COMMAND ../examples/basics/ex_04_simple_eval/make/tubex_basics_04 0)
     add_test(NAME basics_06
-             COMMAND ../examples/basics/ex_06_graphics/make/basics_06 0)
+             COMMAND ../examples/basics/ex_05_graphics/make/tubex_basics_05 0)
   endif()
 
 
