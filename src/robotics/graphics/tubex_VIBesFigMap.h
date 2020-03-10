@@ -242,6 +242,23 @@ namespace tubex
       /// @{
 
       /**
+       * \brief Draws a vehicle with a given pose
+       *
+       * \param pose vector (x,y[,heading]) describing robot's pose (2d or 3d)
+       * \param size optional robot size (-1 = size of main vehicle by default)
+       */
+      void draw_vehicle(const ibex::Vector& pose, float size = -1);
+
+      /**
+       * \brief Draws a vehicle with a given pose
+       *
+       * \param pose vector (x,y[,heading]) describing robot's pose (2d or 3d)
+       * \param params VIBes parameters related to the vehicle (for groups)
+       * \param size optional robot size (-1 = size of main vehicle by default)
+       */
+      void draw_vehicle(const ibex::Vector& pose, const vibes::Params& params, float size = -1);
+
+      /**
        * \brief Draws a vehicle on top of its trajectory
        *
        * \param t temporal key of the vehicle state to be drawn
@@ -299,10 +316,37 @@ namespace tubex
       void add_beacons(const std::vector<Beacon>& v_beacons, double width, const std::string& color = DEFAULT_BEACON_COLOR);
       
       /**
-       * \brief Adds a range-and-bearing uncertain observation to the map
+       * \brief Adds a range-and-bearing uncertain observation to the map,
+       *        in a static context
+       *
+       * The observation is a 2d interval vector: (range,bearing).
+       * It is associated with the pose of a robot, from which the observation has been made.
+       *
+       * \param obs the 2d interval vector enclosing the measurement
+       * \param pose the related 3d Vector object representing the pose (x,y,heading)
+       * \param color optional color of the observation
+       */
+      void add_observation(const ibex::IntervalVector& obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
+      
+      /**
+       * \brief Adds a set of range-and-bearing uncertain observations to the map,
+       *        in a static context
+       *
+       * The observation is a 2d interval vector: (range,bearing).
+       * It is associated with the pose of a robot, from which the observation has been made.
+       *
+       * \param v_obs a vector of 2d interval vectors enclosing the measurements
+       * \param pose the related 3d Vector object representing the pose (x,y,heading)
+       * \param color optional color of the observation
+       */
+      void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
+      
+      /**
+       * \brief Adds a range-and-bearing uncertain observation to the map,
+       *        in a dynamic context
        *
        * The observation is a 3d interval vector: (time,range,bearing).
-       * It is associated to a trajectory, from which the observation has been made.
+       * It is associated with the trajectory of a robot, from which the observation has been made.
        *
        * \param obs the 3d interval vector enclosing the measurement
        * \param traj the const pointer to the related TrajectoryVector object
@@ -311,10 +355,11 @@ namespace tubex
       void add_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
-       * \brief Adds a set of range-and-bearing uncertain observations to the map
+       * \brief Adds a set of range-and-bearing uncertain observations to the map,
+       *        in a dynamic context
        *
        * The observation is a 3d interval vector: (time,range,bearing).
-       * It is associated to a trajectory, from which the observation has been made.
+       * It is associated with the trajectory of a robot, from which the observation has been made.
        *
        * \param v_obs a vector of 3d interval vectors enclosing the measurements
        * \param traj the const pointer to the related TrajectoryVector object
@@ -386,9 +431,24 @@ namespace tubex
 
       /**
        * \brief Draws a range-and-bearing uncertain observation on the map
+       *        in static situation
+       *
+       * The observation is a 2d interval vector: (range,bearing).
+       * It is associated with the pose of a robot, from which the observation has been made.
+       *
+       * \param obs the 2d interval vector enclosing the measurement
+       * \param pose the related 3d Vector object representing the pose (x,y,heading)
+       * \param color color of the observation
+       * \param params VIBes parameters related to the observation
+       */
+      void draw_observation(const ibex::IntervalVector& obs, const ibex::Vector& pose, const std::string& color, const vibes::Params& params);
+      
+      /**
+       * \brief Draws a range-and-bearing uncertain observation on the map
+       *        in dynamic situation
        *
        * The observation is a 3d interval vector: (time,range,bearing).
-       * It is associated to a trajectory, from which the observation has been made.
+       * It is associated with the trajectory of a robot, from which the observation has been made.
        *
        * \param obs the 3d interval vector enclosing the measurement
        * \param traj the const pointer to the related TrajectoryVector object
