@@ -79,6 +79,31 @@ namespace tubex
     return v_beacons;
   }
   
+  vector<IntervalVector> DataLoader::generate_observations(const Vector& x, const vector<Beacon>& map, const Interval& visi_range, const Interval& visi_angle)
+  {
+    assert(x.size() == 3);
+    assert(map.size() > 0);
+
+    vector<IntervalVector> v_obs;
+    vector<Beacon> random_map(map);
+    std::random_shuffle(random_map.begin(), random_map.end());
+
+    for(int i = 0 ; i < random_map.size() ; i++)
+    {
+      Interval r = sqrt(ibex::pow(x[0]-random_map[i].pos()[0],2) + ibex::pow(x[1]-random_map[i].pos()[1],2));
+      Interval a = ibex::atan2(random_map[i].pos()[1]-x[1], random_map[i].pos()[0]-x[0]) - x[2];
+      
+      if(visi_range.intersects(r) && visi_angle.intersects(a)) // if the beacon is seen by the robot
+      {
+        IntervalVector obs(2);
+        obs[0] = r; obs[1] = a;
+        v_obs.push_back(obs);
+      }
+    }
+    
+    return v_obs;
+  }
+  
   vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& domain)
   {
     assert(x.size() >= 2);
