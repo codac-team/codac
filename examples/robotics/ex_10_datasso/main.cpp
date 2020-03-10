@@ -97,27 +97,27 @@ int main()
   /* =========== CONTRACTOR NETWORK =========== */
 
     ContractorNetwork cn;
-    cn.add(&ctc_deriv, &x, &v); // (i)
+    cn.add(ctc_deriv, x, v); // (i)
 
     for(int i = 0 ; i < v_obs.size() ; i++)
     {
       // Measurement i
-      Interval &t   = v_obs[i][0]; // time
+      Interval &t  = v_obs[i][0]; // time
       Interval &y1 = v_obs[i][1]; // range
       Interval &y2 = v_obs[i][2]; // bearing
 
       // Intermediate variables:
-      Interval *psi = cn.create_var(Interval()); // robot heading
-      Interval *a = cn.create_var(Interval());
-      IntervalVector *d = cn.create_var(IntervalVector(2));
-      IntervalVector *p = cn.create_var(IntervalVector(2));
+      Interval& psi = cn.create_var(Interval()); // robot heading
+      Interval& a = cn.create_var(Interval());
+      IntervalVector& d = cn.create_var(IntervalVector(2));
+      IntervalVector& p = cn.create_var(IntervalVector(2));
       
-      cn.add(&ctc_constell, &m[i]); // (ii)
-      cn.add(&ctc_minus, d, &m[i], p); // (iii)
-      cn.add(&ctc_plus, a, psi, &y2); // (iv)
-      cn.add(&ctc_polar, &(*d)[0], &(*d)[1], &y1, a); // (v)
-      cn.add(&ctc_eval, &t, p, &x, &v); // (vi)
-      cn.add(&ctc_eval, &t, psi, &heading); // (vii)
+      cn.add(ctc_constell, m[i]); // (ii)
+      cn.add(ctc_minus, d, m[i], p); // (iii)
+      cn.add(ctc_plus, a, psi, y2); // (iv)
+      cn.add(ctc_polar, d[0], d[1], y1, a); // (v)
+      cn.add(ctc_eval, t, p, x, v); // (vi)
+      cn.add(ctc_eval, t, psi, heading); // (vii)
     }
 
     cn.contract();

@@ -22,12 +22,16 @@
 
 namespace tubex
 {
+  enum ContractorType { IBEX, TUBEX };
+
   class AbstractContractor
   {
     public:
 
-      AbstractContractor(ibex::Ctc *ctc);
-      AbstractContractor(tubex::Ctc *ctc);
+      AbstractContractor(ibex::Ctc& ctc);
+      AbstractContractor(tubex::Ctc& ctc);
+
+      ContractorType type() const;
 
       void contract();
       double domains_volume() const;
@@ -37,8 +41,10 @@ namespace tubex
 
     protected:
 
-      ibex::Ctc *m_ibex_ctc = NULL;
-      tubex::Ctc *m_tubex_ctc = NULL;
+      const ContractorType m_type;
+
+      ibex::Ctc& m_ibex_ctc;
+      tubex::Ctc& m_tubex_ctc;
   };
 }
 

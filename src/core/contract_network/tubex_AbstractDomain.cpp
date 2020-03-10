@@ -15,87 +15,113 @@ using namespace ibex;
 
 namespace tubex
 {
-  AbstractDomain::AbstractDomain(ibex::Interval *i) : m_i(i)
+  Interval AbstractDomain::m_dump_i = Interval();
+  IntervalVector AbstractDomain::m_dump_iv = IntervalVector(1);
+  Tube AbstractDomain::m_dump_t = Tube(Interval(0.,1.));
+  TubeVector AbstractDomain::m_dump_tv = TubeVector(Interval(0.,1.));
+
+  AbstractDomain::AbstractDomain(ibex::Interval& i)
+    : m_type(INTERVAL), m_i(i), m_iv(m_dump_iv), m_t(m_dump_t), m_tv(m_dump_tv)
   {
 
   }
 
-  AbstractDomain::AbstractDomain(ibex::IntervalVector *iv) : m_iv(iv)
+  AbstractDomain::AbstractDomain(ibex::IntervalVector& iv)
+    : m_type(INTERVAL_VECTOR), m_i(m_dump_i), m_iv(iv), m_t(m_dump_t), m_tv(m_dump_tv)
   {
 
   }
 
-  AbstractDomain::AbstractDomain(tubex::Tube *t) : m_t(t)
+  AbstractDomain::AbstractDomain(tubex::Tube& t)
+    : m_type(TUBE), m_i(m_dump_i), m_iv(m_dump_iv), m_t(t), m_tv(m_dump_tv)
   {
-    *m_t &= Interval(-99999.,99999.); // todo: remove this
+    m_t &= Interval(-99999.,99999.); // todo: remove this
   }
 
-  AbstractDomain::AbstractDomain(tubex::TubeVector *tv) : m_tv(tv)
+  AbstractDomain::AbstractDomain(tubex::TubeVector& tv)
+    : m_type(TUBE_VECTOR), m_i(m_dump_i), m_iv(m_dump_iv), m_t(m_dump_t), m_tv(tv)
   {
-    *m_tv &= IntervalVector(m_tv->size(), Interval(-99999.,99999.)); // todo: remove this
+    m_tv &= IntervalVector(m_tv.size(), Interval(-99999.,99999.)); // todo: remove this
+  }
+
+  DomainType AbstractDomain::type() const
+  {
+    return m_type;
   }
 
   double AbstractDomain::volume() const
   {
-    if(m_i != NULL)
+    switch(m_type)
     {
-      if(m_i->is_empty())
-        return 0.;
-      
-      else if(m_i->is_unbounded())
-        return 999999.; // todo: manager the unbounded case for fixed point detection
-      
-      else
-        return m_i->diam();
+      case INTERVAL:
+        if(m_i.is_empty())
+          return 0.;
+        
+        else if(m_i.is_unbounded())
+          return 999999.; // todo: manager the unbounded case for fixed point detection
+        
+        else
+          return m_i.diam();
+
+      case INTERVAL_VECTOR:
+        return m_iv.volume();
+
+      case TUBE:
+        return m_t.volume();
+
+      case TUBE_VECTOR:
+        return m_tv.volume();
+
+      default:
+        assert(false && "unhandled case");
     }
-
-    else if(m_iv != NULL)
-      return m_iv->volume();
-
-    else if(m_t != NULL)
-      return m_t->volume();
-
-    else if(m_tv != NULL)
-      return m_tv->volume();
-
-    else
-      assert(false && "unhandled case");
   }
 
   bool AbstractDomain::is_empty() const
   {
-    if(m_i != NULL)
-      return m_i->is_empty();
+    switch(m_type)
+    {
+      case INTERVAL:
+        return m_i.is_empty();
 
-    else if(m_iv != NULL)
-      return m_iv->is_empty();
+      case INTERVAL_VECTOR:
+        return m_iv.is_empty();
 
-    else if(m_t != NULL)
-      return m_t->is_empty();
+      case TUBE:
+        return m_t.is_empty();
 
-    else if(m_tv != NULL)
-      return m_tv->is_empty();
+      case TUBE_VECTOR:
+        return m_tv.is_empty();
 
-    else
-      assert(false && "unhandled case");
+      default:
+        assert(false && "unhandled case");
+    }
   }
 
   ostream& operator<<(ostream& str, const AbstractDomain& x)
   {
-    if(x.m_i != NULL)
-      str << *x.m_i << flush;
+    switch(x.m_type)
+    {
+      case INTERVAL:
+        str << x.m_i << flush;
+        break;
 
-    else if(x.m_iv != NULL)
-      str << *x.m_iv << flush;
+      case INTERVAL_VECTOR:
+        str << x.m_iv << flush;
+        break;
 
-    else if(x.m_t != NULL)
-      str << *x.m_t << flush;
+      case TUBE:
+        str << x.m_t << flush;
+        break;
 
-    else if(x.m_tv != NULL)
-      str << *x.m_tv << flush;
+      case TUBE_VECTOR:
+        str << x.m_tv << flush;
+        break;
 
-    else
-      assert(false && "unhandled case");
+      default:
+        assert(false && "unhandled case");
+        break;
+    }
 
     return str;
   }

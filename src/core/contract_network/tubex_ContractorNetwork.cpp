@@ -22,13 +22,13 @@ namespace tubex
 
   ContractorNetwork::~ContractorNetwork()
   {
-    for(int i = 0 ; i < v_interm_var.size() ; i++)
+    /*for(int i = 0 ; i < v_interm_var.size() ; i++)
     {
       if(v_interm_var[i].m_i != NULL)
         delete v_interm_var[i].m_i;
       if(v_interm_var[i].m_iv != NULL)
         delete v_interm_var[i].m_iv;
-    }
+    }*/
   }
 
   int ContractorNetwork::ctc_nb() const
@@ -77,28 +77,28 @@ namespace tubex
         }
   }
 
-  Interval* ContractorNetwork::create_var(const Interval& i_)
+  Interval& ContractorNetwork::create_var(const Interval& i_)
   {
     Interval *i = new Interval(i_);
-    v_interm_var.push_back(AbstractDomain(i));
-    return i;
+    v_interm_var.push_back(AbstractDomain(*i));
+    return *i;
   }
 
-  IntervalVector* ContractorNetwork::create_var(const IntervalVector& i_)
+  IntervalVector& ContractorNetwork::create_var(const IntervalVector& i_)
   {
     IntervalVector *i = new IntervalVector(i_);
-    v_interm_var.push_back(AbstractDomain(i));
-    return i;
+    v_interm_var.push_back(AbstractDomain(*i));
+    return *i;
   }
 
-  void ContractorNetwork::add(ibex::Ctc* ctc, IntervalVector *iv)
+  void ContractorNetwork::add(ibex::Ctc& ctc, IntervalVector& iv)
   {
     AbstractContractor abstract_ctc(ctc);
     abstract_ctc.v_domains.push_back(AbstractDomain(iv));
     v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add(ibex::Ctc* ctc, Interval *i1, Interval *i2, Interval *i3)
+  void ContractorNetwork::add(ibex::Ctc& ctc, Interval& i1, Interval& i2, Interval& i3)
   {
     AbstractContractor abstract_ctc(ctc);
     abstract_ctc.v_domains.push_back(AbstractDomain(i1));
@@ -107,7 +107,7 @@ namespace tubex
     v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add(ibex::Ctc* ctc, IntervalVector *i1, IntervalVector *i2, IntervalVector *i3)
+  void ContractorNetwork::add(ibex::Ctc& ctc, IntervalVector& i1, IntervalVector& i2, IntervalVector& i3)
   {
     AbstractContractor abstract_ctc(ctc);
     abstract_ctc.v_domains.push_back(AbstractDomain(i1));
@@ -116,17 +116,7 @@ namespace tubex
     v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add(ibex::Ctc* ctc, Interval *i1, Interval *i2, Interval *i3, Interval *i4)
-  {
-    AbstractContractor abstract_ctc(ctc);
-    abstract_ctc.v_domains.push_back(AbstractDomain(i1));
-    abstract_ctc.v_domains.push_back(AbstractDomain(i2));
-    abstract_ctc.v_domains.push_back(AbstractDomain(i3));
-    abstract_ctc.v_domains.push_back(AbstractDomain(i4));
-    v_ctc.push_back(abstract_ctc);
-  }
-
-  void ContractorNetwork::add(tubex::Ctc* ctc, Interval *i1, IntervalVector *i2, TubeVector *i3, TubeVector *i4)
+  void ContractorNetwork::add(ibex::Ctc& ctc, Interval& i1, Interval& i2, Interval& i3, Interval& i4)
   {
     AbstractContractor abstract_ctc(ctc);
     abstract_ctc.v_domains.push_back(AbstractDomain(i1));
@@ -136,7 +126,17 @@ namespace tubex
     v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add(tubex::Ctc* ctc, Interval *i1, Interval *i2, Tube *i3)
+  void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, IntervalVector& i2, TubeVector& i3, TubeVector& i4)
+  {
+    AbstractContractor abstract_ctc(ctc);
+    abstract_ctc.v_domains.push_back(AbstractDomain(i1));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i2));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i3));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i4));
+    v_ctc.push_back(abstract_ctc);
+  }
+
+  void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, Interval& i2, Tube& i3)
   {
     AbstractContractor abstract_ctc(ctc);
     abstract_ctc.v_domains.push_back(AbstractDomain(i1));
@@ -145,7 +145,7 @@ namespace tubex
     v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add(tubex::Ctc* ctc, Interval *i1, IntervalVector *i2, TubeVector *i3)
+  void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, IntervalVector& i2, TubeVector& i3)
   {
     AbstractContractor abstract_ctc(ctc);
     abstract_ctc.v_domains.push_back(AbstractDomain(i1));
@@ -154,7 +154,7 @@ namespace tubex
     v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add(tubex::Ctc* ctc, Tube *i1, Tube *i2)
+  void ContractorNetwork::add(tubex::Ctc& ctc, Tube& i1, Tube& i2)
   {
     AbstractContractor abstract_ctc(ctc);
     abstract_ctc.v_domains.push_back(AbstractDomain(i1));
@@ -162,7 +162,7 @@ namespace tubex
     v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add(tubex::Ctc* ctc, TubeVector *i1, TubeVector *i2)
+  void ContractorNetwork::add(tubex::Ctc& ctc, TubeVector& i1, TubeVector& i2)
   {
     AbstractContractor abstract_ctc(ctc);
     abstract_ctc.v_domains.push_back(AbstractDomain(i1));

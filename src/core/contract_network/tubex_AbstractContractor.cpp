@@ -9,60 +9,69 @@
  */
 
 #include "tubex_AbstractContractor.h"
+#include "tubex_CtcDeriv.h" // todo: remove this
+#include "ibex_CtcEmpty.h" // todo: remove this
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  AbstractContractor::AbstractContractor(ibex::Ctc *ctc) : m_ibex_ctc(ctc)
+  AbstractContractor::AbstractContractor(ibex::Ctc& ctc)
+    : m_type(IBEX), m_ibex_ctc(ctc), m_tubex_ctc(*new CtcDeriv)
   {
 
   }
 
-  AbstractContractor::AbstractContractor(tubex::Ctc *ctc) : m_tubex_ctc(ctc)
+  AbstractContractor::AbstractContractor(tubex::Ctc& ctc) 
+    : m_type(TUBEX), m_ibex_ctc(*new CtcEmpty(1)), m_tubex_ctc(ctc)
   {
     
   }
 
+  ContractorType AbstractContractor::type() const
+  {
+    return m_type;
+  }
+
   void AbstractContractor::contract()
   {
-    if(m_ibex_ctc != NULL)
+    if(m_type == IBEX)
     {
-      if(v_domains.size() == 1 && v_domains[0].m_iv != NULL)
-        m_ibex_ctc->contract(*v_domains[0].m_iv);
+      if(v_domains.size() == 1 && v_domains[0].m_type == INTERVAL_VECTOR)
+        m_ibex_ctc.contract(v_domains[0].m_iv);
 
-      else if(v_domains[0].m_i != NULL) // set of scalar values
+      else if(v_domains[0].m_type == INTERVAL) // set of scalar values
       {
         IntervalVector box(v_domains.size());
         for(int i = 0 ; i < v_domains.size() ; i++)
-          box[i] = *v_domains[i].m_i;
+          box[i] = v_domains[i].m_i;
 
-          m_ibex_ctc->contract(box);
+          m_ibex_ctc.contract(box);
 
         for(int i = 0 ; i < v_domains.size() ; i++)
-          *v_domains[i].m_i &= box[i];
+          v_domains[i].m_i &= box[i];
       }
 
-      else if(v_domains[0].m_iv != NULL) // set of vector values
+      else if(v_domains[0].m_type == INTERVAL_VECTOR) // set of vector values
       {
-        for(int k = 0 ; k < v_domains[0].m_iv->size() ; k++)
+        for(int k = 0 ; k < v_domains[0].m_iv.size() ; k++)
         {
           IntervalVector box(v_domains.size());
           for(int i = 0 ; i < v_domains.size() ; i++)
-            box[i] = (*v_domains[i].m_iv)[k];
+            box[i] = v_domains[i].m_iv[k];
 
-            m_ibex_ctc->contract(box);
+            m_ibex_ctc.contract(box);
 
           for(int i = 0 ; i < v_domains.size() ; i++)
-            (*v_domains[i].m_iv)[k] &= box[i];
+            v_domains[i].m_iv[k] &= box[i];
         }
       }
     }
 
-    else if(m_tubex_ctc != NULL)
+    else if(m_type == TUBEX)
     {
-      m_tubex_ctc->contract(v_domains);
+      m_tubex_ctc.contract(v_domains);
     }
 
     else

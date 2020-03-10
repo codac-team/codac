@@ -19,14 +19,18 @@
 
 namespace tubex
 {
+  enum DomainType { INTERVAL, INTERVAL_VECTOR, TUBE, TUBE_VECTOR };
+
   class AbstractDomain
   {
     public:
 
-      AbstractDomain(ibex::Interval *i);
-      AbstractDomain(ibex::IntervalVector *iv);
-      AbstractDomain(tubex::Tube *t);
-      AbstractDomain(tubex::TubeVector *tv);
+      AbstractDomain(ibex::Interval& i);
+      AbstractDomain(ibex::IntervalVector& iv);
+      AbstractDomain(tubex::Tube& t);
+      AbstractDomain(tubex::TubeVector& tv);
+
+      DomainType type() const;
 
       double volume() const;
       bool is_empty() const;
@@ -35,10 +39,17 @@ namespace tubex
 
     //protected:
 
-      ibex::Interval *m_i = NULL;
-      ibex::IntervalVector *m_iv = NULL;
-      tubex::Tube *m_t = NULL;
-      tubex::TubeVector *m_tv = NULL;
+      const DomainType m_type;
+
+      ibex::Interval& m_i;
+      ibex::IntervalVector& m_iv;
+      tubex::Tube& m_t;
+      tubex::TubeVector& m_tv;
+
+      static ibex::Interval m_dump_i;
+      static ibex::IntervalVector m_dump_iv;
+      static tubex::Tube m_dump_t;
+      static tubex::TubeVector m_dump_tv;
   };
 }
 
