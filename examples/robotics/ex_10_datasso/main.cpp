@@ -81,15 +81,12 @@ int main()
 
   /* =========== CREATING CONTRACTORS =========== */
 
-    ibex::Function f_add("a", "b", "c", "b+c-a");
-    ibex::CtcFwdBwd ctc_algeb_add(f_add); // algebraic constraint a=b+c
+    ibex::CtcFwdBwd ctc_plus(*new ibex::Function("a", "b", "c", "b+c-a")); // algebraic constraint a=b+c
+    ibex::CtcFwdBwd ctc_minus(*new ibex::Function("a", "b", "c", "b-c-a")); // algebraic constraint a=b-c
 
-    ibex::Function f_diff("a", "b", "c", "b-c-a");
-    ibex::CtcFwdBwd ctc_algeb_diff(f_diff); // algebraic constraint a=b-c
+    pyibex::CtcPolar ctc_polar; // polar constraint (px,py,rho,phi)
 
-    pyibex::CtcPolar ctc_polar; // constraint (px,py,rho,phi)
-
-    CtcConstellation ctc_constell(v_map); // data association constraint
+    CtcConstellation ctc_constell(v_map); // constellation constraint
 
     CtcDeriv ctc_deriv; // \dot{x}=v constraint
 
@@ -106,19 +103,19 @@ int main()
     {
       // Measurement i
       Interval &t   = v_obs[i][0]; // time
-      Interval &phi = v_obs[i][2]; // bearing
-      Interval &rho = v_obs[i][1]; // range
+      Interval &y1 = v_obs[i][1]; // range
+      Interval &y2 = v_obs[i][2]; // bearing
 
       // Intermediate variables:
-      Interval *psi = cn.create_var(Interval::ALL_REALS); // robot heading
-      Interval *alpha = cn.create_var(Interval::ALL_REALS);
-      IntervalVector *a = cn.create_var(IntervalVector(2));
+      Interval *psi = cn.create_var(Interval()); // robot heading
+      Interval *a = cn.create_var(Interval());
+      IntervalVector *d = cn.create_var(IntervalVector(2));
       IntervalVector *p = cn.create_var(IntervalVector(2));
       
       cn.add(&ctc_constell, &m[i]); // (ii)
-      cn.add(&ctc_algeb_diff, a, &m[i], p); // (iii)
-      cn.add(&ctc_algeb_add, alpha, psi, &phi); // (iv)
-      cn.add(&ctc_polar, &(*a)[0], &(*a)[1], &rho, alpha); // (v)
+      cn.add(&ctc_minus, d, &m[i], p); // (iii)
+      cn.add(&ctc_plus, a, psi, &y2); // (iv)
+      cn.add(&ctc_polar, &(*d)[0], &(*d)[1], &y1, a); // (v)
       cn.add(&ctc_eval, &t, p, &x, &v); // (vi)
       cn.add(&ctc_eval, &t, psi, &heading); // (vii)
     }
@@ -131,7 +128,7 @@ int main()
     vibes::beginDrawing();
 
     VIBesFigMap fig_map("Map");
-    fig_map.set_properties(1450, 50, 600, 400);
+    fig_map.set_properties(1450, 50, 1000, 600);
     fig_map.add_tube(&x, "x", 0, 1);
     fig_map.add_trajectory(&state_truth, "x*", 0, 1, 2, "white");
     fig_map.add_observations(v_obs, &state_truth);
@@ -140,8 +137,6 @@ int main()
     fig_map.show();
     fig_map.axis_limits(-340., 340., 0., 0., true);
     
-    vibes::endDrawing();
-
 
   /* =========== ENDING =========== */
 
@@ -149,10 +144,14 @@ int main()
     int identified = 0;
     for(int i = 0 ; i < m.size() ; i++)
       if(m[i].volume() == 0 && !m[i].is_empty()) // degenerate box
+      {
         identified ++;
+        fig_map.add_beacon(m[i], 2., "#00A53B[#00A53B]");
+      }
     cout << identified << "/" << m.size() << " observations identified" << endl << endl;
-
+    fig_map.show();
   
+  vibes::endDrawing();
   // Checking if this example still works:
   bool success = x.contains(state_truth.subvector(0,1)) == YES;
   return success ? EXIT_SUCCESS : EXIT_FAILURE;

@@ -68,7 +68,7 @@ int main(int argc, char** argv)
         ctc_eval.contract(t[i], m[1], x[1], v[1]);
       }
       
-    } while(fabs(x.volume() / vol) < 0.01); // will a fixed point has not been reached
+    } while(fabs(x.volume() / vol) < 0.01); // while a fixed point has not been reached
 
 
   /* =========== GRAPHICS =========== */
