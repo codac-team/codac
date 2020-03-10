@@ -1,5 +1,5 @@
 /** 
- *  CtcConstellation class
+ *  CtcConstell class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -8,8 +8,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_CTCCONSTELLATION_H__
-#define __TUBEX_CTCCONSTELLATION_H__
+#ifndef __TUBEX_CTCCONSTELL_H__
+#define __TUBEX_CTCCONSTELL_H__
 
 #include "ibex_Ctc.h"
 #include "tubex_Beacon.h"
@@ -17,15 +17,15 @@
 namespace tubex
 {
   /**
-   * \brief CtcConstellation class.
+   * \brief CtcConstell class.
    *
    */
-  class CtcConstellation : public ibex::Ctc
+  class CtcConstell : public ibex::Ctc
   {
     public:
 
-      CtcConstellation(const std::vector<Beacon>& map);
-      ~CtcConstellation();
+      CtcConstell(const std::vector<Beacon>& map);
+      ~CtcConstell();
       void contract(ibex::IntervalVector &beacon_box);
 
     protected:

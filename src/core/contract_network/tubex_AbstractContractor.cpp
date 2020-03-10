@@ -9,6 +9,7 @@
  */
 
 #include "tubex_AbstractContractor.h"
+#include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h" // todo: remove this
 #include "ibex_CtcEmpty.h" // todo: remove this
 
@@ -26,7 +27,11 @@ namespace tubex
   AbstractContractor::AbstractContractor(tubex::Ctc& ctc) 
     : m_type(TUBEX), m_ibex_ctc(*new CtcEmpty(1)), m_tubex_ctc(ctc)
   {
-    
+    if(typeid(ctc) == typeid(CtcEval))
+    {
+      static_cast<CtcEval&>(ctc).enable_temporal_propagation(false);
+      // todo: automatically add a CtcDeriv to the network
+    }
   }
 
   ContractorType AbstractContractor::type() const

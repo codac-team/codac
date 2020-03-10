@@ -83,21 +83,16 @@ int main()
 
     ibex::CtcFwdBwd ctc_plus(*new ibex::Function("a", "b", "c", "b+c-a")); // algebraic constraint a=b+c
     ibex::CtcFwdBwd ctc_minus(*new ibex::Function("a", "b", "c", "b-c-a")); // algebraic constraint a=b-c
-
     pyibex::CtcPolar ctc_polar; // polar constraint (px,py,rho,phi)
-
-    CtcConstellation ctc_constell(v_map); // constellation constraint
-
-    CtcDeriv ctc_deriv; // \dot{x}=v constraint
-
-    CtcEval ctc_eval; // p=x(t_i) constraint
-    ctc_eval.enable_temporal_propagation(false); // faster use // todo: remove this
+    tubex::CtcConstell ctc_constell(v_map); // constellation constraint
+    tubex::CtcDeriv ctc_deriv; // \dot{x}=v constraint
+    tubex::CtcEval ctc_eval; // p=x(t_i) constraint
 
 
   /* =========== CONTRACTOR NETWORK =========== */
 
     ContractorNetwork cn;
-    cn.add(ctc_deriv, x, v); // (i)
+    cn.add(ctc_deriv, x, v);
 
     for(int i = 0 ; i < v_obs.size() ; i++)
     {
@@ -112,12 +107,12 @@ int main()
       IntervalVector& d = cn.create_var(IntervalVector(2));
       IntervalVector& p = cn.create_var(IntervalVector(2));
       
-      cn.add(ctc_constell, m[i]); // (ii)
-      cn.add(ctc_minus, d, m[i], p); // (iii)
-      cn.add(ctc_plus, a, psi, y2); // (iv)
-      cn.add(ctc_polar, d[0], d[1], y1, a); // (v)
-      cn.add(ctc_eval, t, p, x, v); // (vi)
-      cn.add(ctc_eval, t, psi, heading); // (vii)
+      cn.add(ctc_constell, m[i]);
+      cn.add(ctc_minus, d, m[i], p);
+      cn.add(ctc_plus, a, psi, y2);
+      cn.add(ctc_polar, d[0], d[1], y1, a);
+      cn.add(ctc_eval, t, p, x, v);
+      cn.add(ctc_eval, t, psi, heading);
     }
 
     cn.contract();

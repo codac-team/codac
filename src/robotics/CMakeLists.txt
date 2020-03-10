@@ -14,8 +14,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigMap.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/data/tubex_DataLoaderRedermor.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/data/tubex_DataLoader.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/data/tubex_DataLoaderLissajous.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcConstellation.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcConstellation.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcConstell.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcConstell.h
                 )
 
 
