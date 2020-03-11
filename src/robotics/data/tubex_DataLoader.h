@@ -37,6 +37,7 @@ namespace tubex
       void serialize_data(const TubeVector& x, const TrajectoryVector& traj) const;
 
       static std::vector<Beacon> generate_landmarks(const ibex::IntervalVector& map_box, int nb_landmarks = 100);
+      static std::vector<ibex::IntervalVector> generate_landmarks_boxes(const ibex::IntervalVector& map_box, int nb_landmarks = 100);
       static std::vector<ibex::IntervalVector> generate_observations(
                      const ibex::Vector& x,
                      const std::vector<Beacon>& map,

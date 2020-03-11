@@ -78,6 +78,19 @@ namespace tubex
 
     return v_beacons;
   }
+
+  vector<IntervalVector> DataLoader::generate_landmarks_boxes(const IntervalVector& map_box, int nb_landmarks)
+  {
+    assert(map_box.size() == 2);
+    assert(nb_landmarks >= 0);
+
+    vector<Beacon> v_map = DataLoader::generate_landmarks(map_box, nb_landmarks);
+    vector<IntervalVector> v_boxes;
+    for(const auto& b : v_map)
+      v_boxes.push_back(b.pos_box());
+
+    return v_boxes;
+  }
   
   vector<IntervalVector> DataLoader::generate_observations(const Vector& x, const vector<Beacon>& map, const Interval& visi_range, const Interval& visi_angle)
   {

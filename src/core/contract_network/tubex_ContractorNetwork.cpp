@@ -126,6 +126,17 @@ namespace tubex
     v_ctc.push_back(abstract_ctc);
   }
 
+  void ContractorNetwork::add(ibex::Ctc& ctc, Interval& i1, Interval& i2, Interval& i3, Interval& i4, Interval& i5)
+  {
+    AbstractContractor abstract_ctc(ctc);
+    abstract_ctc.v_domains.push_back(AbstractDomain(i1));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i2));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i3));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i4));
+    abstract_ctc.v_domains.push_back(AbstractDomain(i5));
+    v_ctc.push_back(abstract_ctc);
+  }
+
   void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, IntervalVector& i2, TubeVector& i3, TubeVector& i4)
   {
     AbstractContractor abstract_ctc(ctc);

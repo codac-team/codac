@@ -41,6 +41,7 @@ namespace tubex
       void add(ibex::Ctc& ctc, ibex::Interval& i1, ibex::Interval& i2, ibex::Interval& i3);
       void add(ibex::Ctc& ctc, ibex::IntervalVector& i1, ibex::IntervalVector& i2, ibex::IntervalVector& i3);
       void add(ibex::Ctc& ctc, ibex::Interval& i1, ibex::Interval& i2, ibex::Interval& i3, ibex::Interval& i4);
+      void add(ibex::Ctc& ctc, ibex::Interval& i1, ibex::Interval& i2, ibex::Interval& i3, ibex::Interval& i4, ibex::Interval& i5);
       void add(tubex::Ctc& ctc, ibex::Interval& i1, ibex::IntervalVector& i2, tubex::TubeVector& i3, tubex::TubeVector& i4);
       void add(tubex::Ctc& ctc, tubex::Tube& i1, tubex::Tube& i2);
       void add(tubex::Ctc& ctc, tubex::TubeVector& i1, tubex::TubeVector& i2);
