@@ -539,6 +539,50 @@ namespace tubex
       return thickness;
     }
 
+const double TubeVector::max_gate_diam(double & t) const
+  {
+    double max_gate_diam=0; 
+    for (int i = 0 ; i < size() ; i++){
+      double ti;
+      double gate_diam= (*this)[i].max_gate_diam(ti);
+      if (gate_diam > max_gate_diam){
+	t=ti;
+	max_gate_diam=gate_diam;
+      }
+    }
+    return max_gate_diam;
+  }	
+
+  const Slice* TubeVector::largest_slice() const{
+    const Slice* s;
+    
+    double max_diam=0;
+    for (int k=0; k< size() ; k++){
+      const Slice*  s0= (*this)[k].largest_slice();
+      if (s0->codomain().diam() >= max_diam){
+	s=s0;
+	max_diam=s0->codomain().diam();
+      }
+    }
+    return s;
+  }
+    
+ 
+ const Slice* TubeVector::steepest_slice() const{
+    const Slice* s;
+    double maxdif=0;
+       for (int k=0; k< size(); k++){
+	const Slice* s0= (*this)[k].steepest_slice();
+	double dif=fabs(s0->output_gate().mid()-s0->input_gate().mid());
+	if (dif >= maxdif) {s=s0;
+	 maxdif=dif;}
+      }
+
+       return s;
+ }
+    
+
+
     const TrajectoryVector TubeVector::diam(bool gates_thicknesses) const
     {
       TrajectoryVector thickness(size());
