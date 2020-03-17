@@ -40,7 +40,7 @@ namespace tubex
     else
       intv_type = IntervalType::BOUNDED;
 
-    bin_file.write((const char*)&intv_type, sizeof(char));
+    bin_file.write((const char*)&intv_type, sizeof(IntervalType));
 
     if(intv_type == IntervalType::BOUNDED)
     {
@@ -56,7 +56,7 @@ namespace tubex
       throw Exception("deserialize_Interval()", "ifstream& bin_file not open");
 
     IntervalType intv_type;
-    bin_file.read((char*)&intv_type, sizeof(char));
+    bin_file.read((char*)&intv_type, sizeof(IntervalType));
 
     switch(intv_type)
     {
