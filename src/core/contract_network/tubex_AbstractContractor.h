@@ -22,21 +22,25 @@
 
 namespace tubex
 {
-  enum ContractorType { IBEX, TUBEX };
+  enum class ContractorType { IBEX, TUBEX };
 
   class AbstractContractor
   {
     public:
 
-      AbstractContractor(ibex::Ctc& ctc);
-      AbstractContractor(tubex::Ctc& ctc);
+      AbstractContractor(const AbstractContractor& ac);
+      explicit AbstractContractor(ibex::Ctc& ctc);
+      explicit AbstractContractor(tubex::Ctc& ctc);
 
       ContractorType type() const;
+      bool active() const;
+      void set_active(bool active = true);
 
       void contract();
       double domains_volume() const;
 
-      std::vector<AbstractDomain> v_domains;
+      //std::vector<pair<AbstractDomain*,ContractorType> > m_v_domains;
+      std::vector<AbstractDomain*> m_v_domains;
 
 
     protected:
@@ -45,6 +49,8 @@ namespace tubex
 
       ibex::Ctc& m_ibex_ctc;
       tubex::Ctc& m_tubex_ctc;
+
+      bool m_active = true;
   };
 }
 

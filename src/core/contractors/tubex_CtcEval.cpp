@@ -22,19 +22,19 @@ namespace tubex
 
   }
 
-  void CtcEval::contract(vector<AbstractDomain>& v_domains)
+  void CtcEval::contract(vector<AbstractDomain*>& v_domains)
   {
     assert(v_domains[0].m_i != NULL);
 
     if(v_domains.size() == 4) // full constraint with derivative
     {
       // Scalar case:
-      if(v_domains[1].type() == INTERVAL && v_domains[2].type() == TUBE && v_domains[3].type() == TUBE)
-        contract(v_domains[0].m_i, v_domains[1].m_i, v_domains[2].m_t, v_domains[3].m_t);
+      if(v_domains[1]->type() == DomainType::INTERVAL && v_domains[2]->type() == DomainType::TUBE && v_domains[3]->type() == DomainType::TUBE)
+        contract(v_domains[0]->m_i, v_domains[1]->m_i, v_domains[2]->m_t, v_domains[3]->m_t);
 
       // Vector case:
-      else if(v_domains[1].type() == INTERVAL_VECTOR && v_domains[2].type() == TUBE_VECTOR && v_domains[3].type() == TUBE_VECTOR)
-        contract(v_domains[0].m_i, v_domains[1].m_iv, v_domains[2].m_tv, v_domains[3].m_tv);
+      else if(v_domains[1]->type() == DomainType::INTERVAL_VECTOR && v_domains[2]->type() == DomainType::TUBE_VECTOR && v_domains[3]->type() == DomainType::TUBE_VECTOR)
+        contract(v_domains[0]->m_i, v_domains[1]->m_iv, v_domains[2]->m_tv, v_domains[3]->m_tv);
 
       else
         assert(false && "unhandled case");
@@ -43,12 +43,12 @@ namespace tubex
     else if(v_domains.size() == 3) // simple evaluation without tube contraction
     {
       // Scalar case:
-      if(v_domains[1].type() == INTERVAL && v_domains[2].type() == TUBE)
-        contract(v_domains[0].m_i, v_domains[1].m_i, v_domains[2].m_t);
+      if(v_domains[1]->type() == DomainType::INTERVAL && v_domains[2]->type() == DomainType::TUBE)
+        contract(v_domains[0]->m_i, v_domains[1]->m_i, v_domains[2]->m_t);
 
       // Vector case:
-      else if(v_domains[1].type() == INTERVAL_VECTOR && v_domains[2].type() == TUBE_VECTOR)
-        contract(v_domains[0].m_i, v_domains[1].m_iv, v_domains[2].m_tv);
+      else if(v_domains[1]->type() == DomainType::INTERVAL_VECTOR && v_domains[2]->type() == DomainType::TUBE_VECTOR)
+        contract(v_domains[0]->m_i, v_domains[1]->m_iv, v_domains[2]->m_tv);
 
       else
         assert(false && "unhandled case");

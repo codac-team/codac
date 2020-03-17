@@ -36,7 +36,7 @@ namespace tubex
        */
       CtcStatic(ibex::Ctc *ibex_ctc, bool dynamic_ctc = false);
 
-      void contract(std::vector<AbstractDomain>& v_domains);
+      void contract(std::vector<AbstractDomain*>& v_domains);
 
       /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}](\cdot)\big)\f$

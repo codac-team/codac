@@ -47,12 +47,16 @@ namespace tubex
       void add(tubex::Ctc& ctc, tubex::TubeVector& i1, tubex::TubeVector& i2);
       void add(tubex::Ctc& ctc, ibex::Interval& i1, ibex::Interval& i2, tubex::Tube& i3);
       void add(tubex::Ctc& ctc, ibex::Interval& i1, ibex::IntervalVector& i2, tubex::TubeVector& i3);
+      void add(tubex::Ctc& ctc, tubex::Slice& i1, tubex::Slice& i2);
 
 
     protected:
 
-      std::vector<AbstractContractor> v_ctc;
-      std::vector<AbstractDomain> v_interm_var;
+      void add_domain(AbstractDomain *ad, AbstractContractor *ac);
+
+      std::vector<AbstractContractor*> m_v_ctc;
+      //std::map<AbstractContractor*,double> m_ctc_comput_times;
+      std::vector<AbstractDomain*> m_v_domains;
   };
 }
 
