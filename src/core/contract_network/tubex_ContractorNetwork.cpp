@@ -63,20 +63,20 @@ namespace tubex
       {
         if(ctc->active())
         {
-          vector<double> v_vol(ctc->m_v_domains.size());
-          for(int i = 0 ; i < ctc->m_v_domains.size() ; i++)
-            v_vol[i] = ctc->m_v_domains[i]->volume();
+          vector<double> v_vol(ctc->m_domains.size());
+          for(int i = 0 ; i < ctc->m_domains.size() ; i++)
+            v_vol[i] = ctc->m_domains[i].first->volume();
 
           ctc->contract();
           ctc->set_active(false);
 
-          for(int i = 0 ; i < ctc->m_v_domains.size() ; i++)
+          for(int i = 0 ; i < ctc->m_domains.size() ; i++)
           {
-            if(ctc->m_v_domains[i]->volume() != v_vol[i]) // fixed point condition
+            if(ctc->m_domains[i].first->volume() != v_vol[i]) // fixed point condition
             {
               no_active_ctc = false; // something happened
 
-              for(auto& dom_ctc : ctc->m_v_domains[i]->m_v_ctc)
+              for(auto& dom_ctc : ctc->m_domains[i].first->m_v_ctc)
                 if(dom_ctc != ctc)
                   dom_ctc->set_active(true);
             }
@@ -90,8 +90,8 @@ namespace tubex
          << "  computation time: " << (double)(clock() - t_start)/CLOCKS_PER_SEC << "s" << endl;
 
     for(const auto& ctc : m_v_ctc)
-      for(const auto& dom : ctc->m_v_domains)
-        if(dom->is_empty())
+      for(const auto& dom : ctc->m_domains)
+        if(dom.first->is_empty())
         {
           cout << "  warning: empty set" << endl;
           exit(1);
@@ -211,7 +211,7 @@ namespace tubex
     m_v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add_domain(AbstractDomain *ad, AbstractContractor *ac)
+  void ContractorNetwork::add_domain(AbstractDomain *ad, AbstractContractor *ac, DomainRelation rel)
   {
     if(ad->is_empty())
     {
@@ -224,7 +224,7 @@ namespace tubex
       // Looking if this domain is not already added
       if(*m_v_domains[i] == *ad) // found
       {
-        ac->m_v_domains.push_back(m_v_domains[i]);
+        ac->m_domains.push_back(make_pair(m_v_domains[i],rel));
         m_v_domains[i]->m_v_ctc.push_back(ac);
         delete ad;
         return;
@@ -240,7 +240,7 @@ namespace tubex
     
     // Else: add this new domain
     m_v_domains.push_back(ad);
-    ac->m_v_domains.push_back(ad);
+    ac->m_domains.push_back(make_pair(ad,rel));
     ad->m_v_ctc.push_back(ac);
   }
 }

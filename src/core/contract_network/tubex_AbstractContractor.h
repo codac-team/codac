@@ -24,6 +24,7 @@ namespace tubex
 {
   enum class ContractorType { IBEX, TUBEX };
 
+
   class AbstractContractor
   {
     public:
@@ -39,8 +40,7 @@ namespace tubex
       void contract();
       double domains_volume() const;
 
-      //std::vector<pair<AbstractDomain*,ContractorType> > m_v_domains;
-      std::vector<AbstractDomain*> m_v_domains;
+      std::vector<std::pair<AbstractDomain*,DomainRelation> > m_domains;
 
 
     protected:

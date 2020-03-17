@@ -19,8 +19,22 @@
 #include "tubex_TubeVector.h"
 
 namespace tubex
-{  
+{
   enum class DomainType { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
+
+
+  enum class DomainRelation
+  {
+    IN = 0x01,
+    OUT = 0x02
+  };
+
+  inline int operator&(DomainRelation a, DomainRelation b)
+  { return static_cast<int>(static_cast<int>(a) & static_cast<int>(b)); }
+
+  inline DomainRelation operator|(DomainRelation a, DomainRelation b)
+  { return static_cast<DomainRelation>(static_cast<int>(a) | static_cast<int>(b)); }
+  
 
   class AbstractContractor;
 

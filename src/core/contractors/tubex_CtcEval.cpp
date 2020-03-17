@@ -22,19 +22,21 @@ namespace tubex
 
   }
 
-  void CtcEval::contract(vector<AbstractDomain*>& v_domains)
+  void CtcEval::contract(vector<pair<AbstractDomain*,DomainRelation> >& v_domains)
   {
-    assert(v_domains[0].m_i != NULL);
+    assert(v_domains[0].first.m_i != NULL);
 
     if(v_domains.size() == 4) // full constraint with derivative
     {
+      v_domains[3].second = DomainRelation::IN; // derivative cannot be contracted
+
       // Scalar case:
-      if(v_domains[1]->type() == DomainType::INTERVAL && v_domains[2]->type() == DomainType::TUBE && v_domains[3]->type() == DomainType::TUBE)
-        contract(v_domains[0]->m_i, v_domains[1]->m_i, v_domains[2]->m_t, v_domains[3]->m_t);
+      if(v_domains[1].first->type() == DomainType::INTERVAL && v_domains[2].first->type() == DomainType::TUBE && v_domains[3].first->type() == DomainType::TUBE)
+        contract(v_domains[0].first->m_i, v_domains[1].first->m_i, v_domains[2].first->m_t, v_domains[3].first->m_t);
 
       // Vector case:
-      else if(v_domains[1]->type() == DomainType::INTERVAL_VECTOR && v_domains[2]->type() == DomainType::TUBE_VECTOR && v_domains[3]->type() == DomainType::TUBE_VECTOR)
-        contract(v_domains[0]->m_i, v_domains[1]->m_iv, v_domains[2]->m_tv, v_domains[3]->m_tv);
+      else if(v_domains[1].first->type() == DomainType::INTERVAL_VECTOR && v_domains[2].first->type() == DomainType::TUBE_VECTOR && v_domains[3].first->type() == DomainType::TUBE_VECTOR)
+        contract(v_domains[0].first->m_i, v_domains[1].first->m_iv, v_domains[2].first->m_tv, v_domains[3].first->m_tv);
 
       else
         assert(false && "unhandled case");
@@ -42,13 +44,15 @@ namespace tubex
 
     else if(v_domains.size() == 3) // simple evaluation without tube contraction
     {
+      v_domains[2].second = DomainRelation::IN; // tube cannot be contracted without derivative
+
       // Scalar case:
-      if(v_domains[1]->type() == DomainType::INTERVAL && v_domains[2]->type() == DomainType::TUBE)
-        contract(v_domains[0]->m_i, v_domains[1]->m_i, v_domains[2]->m_t);
+      if(v_domains[1].first->type() == DomainType::INTERVAL && v_domains[2].first->type() == DomainType::TUBE)
+        contract(v_domains[0].first->m_i, v_domains[1].first->m_i, v_domains[2].first->m_t);
 
       // Vector case:
-      else if(v_domains[1]->type() == DomainType::INTERVAL_VECTOR && v_domains[2]->type() == DomainType::TUBE_VECTOR)
-        contract(v_domains[0]->m_i, v_domains[1]->m_iv, v_domains[2]->m_tv);
+      else if(v_domains[1].first->type() == DomainType::INTERVAL_VECTOR && v_domains[2].first->type() == DomainType::TUBE_VECTOR)
+        contract(v_domains[0].first->m_i, v_domains[1].first->m_iv, v_domains[2].first->m_tv);
 
       else
         assert(false && "unhandled case");

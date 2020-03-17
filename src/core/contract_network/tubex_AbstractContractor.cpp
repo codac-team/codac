@@ -19,7 +19,7 @@ using namespace ibex;
 namespace tubex
 {
   AbstractContractor::AbstractContractor(const AbstractContractor& ac)
-    : m_type(ac.m_type), m_ibex_ctc(ac.m_ibex_ctc), m_tubex_ctc(ac.m_tubex_ctc), m_active(ac.m_active), m_v_domains(ac.m_v_domains)
+    : m_type(ac.m_type), m_ibex_ctc(ac.m_ibex_ctc), m_tubex_ctc(ac.m_tubex_ctc), m_active(ac.m_active), m_domains(ac.m_domains)
   {
 
   }
@@ -57,46 +57,46 @@ namespace tubex
 
   void AbstractContractor::contract()
   {
-    assert(!m_v_domains.empty());
+    assert(!m_domains.empty());
 
     if(m_type == ContractorType::IBEX)
     {
-      if(m_v_domains.size() == 1 && m_v_domains[0]->m_type == DomainType::INTERVAL_VECTOR)
+      if(m_domains.size() == 1 && m_domains[0].first->m_type == DomainType::INTERVAL_VECTOR)
       {
-        m_ibex_ctc.contract(m_v_domains[0]->m_iv);
+        m_ibex_ctc.contract(m_domains[0].first->m_iv);
       }
 
-      else if(m_v_domains[0]->m_type == DomainType::INTERVAL) // set of scalar values
+      else if(m_domains[0].first->m_type == DomainType::INTERVAL) // set of scalar values
       {
-        IntervalVector box(m_v_domains.size());
-        for(int i = 0 ; i < m_v_domains.size() ; i++)
-          box[i] = m_v_domains[i]->m_i;
+        IntervalVector box(m_domains.size());
+        for(int i = 0 ; i < m_domains.size() ; i++)
+          box[i] = m_domains[i].first->m_i;
+
+        m_ibex_ctc.contract(box);
+
+        for(int i = 0 ; i < m_domains.size() ; i++)
+          m_domains[i].first->m_i &= box[i];
+      }
+
+      else if(m_domains[0].first->m_type == DomainType::INTERVAL_VECTOR) // set of vector values
+      {
+        for(int k = 0 ; k < m_domains[0].first->m_iv.size() ; k++)
+        {
+          IntervalVector box(m_domains.size());
+          for(int i = 0 ; i < m_domains.size() ; i++)
+            box[i] = m_domains[i].first->m_iv[k];
 
           m_ibex_ctc.contract(box);
 
-        for(int i = 0 ; i < m_v_domains.size() ; i++)
-          m_v_domains[i]->m_i &= box[i];
-      }
-
-      else if(m_v_domains[0]->m_type == DomainType::INTERVAL_VECTOR) // set of vector values
-      {
-        for(int k = 0 ; k < m_v_domains[0]->m_iv.size() ; k++)
-        {
-          IntervalVector box(m_v_domains.size());
-          for(int i = 0 ; i < m_v_domains.size() ; i++)
-            box[i] = m_v_domains[i]->m_iv[k];
-
-            m_ibex_ctc.contract(box);
-
-          for(int i = 0 ; i < m_v_domains.size() ; i++)
-            m_v_domains[i]->m_iv[k] &= box[i];
+          for(int i = 0 ; i < m_domains.size() ; i++)
+            m_domains[i].first->m_iv[k] &= box[i];
         }
       }
     }
 
     else if(m_type == ContractorType::TUBEX)
     {
-      m_tubex_ctc.contract(m_v_domains);
+      m_tubex_ctc.contract(m_domains);
     }
 
     else
@@ -106,8 +106,8 @@ namespace tubex
   double AbstractContractor::domains_volume() const
   {
     double volume = 0.;
-    for(int i = 0 ; i < m_v_domains.size() ; i++)
-      volume += m_v_domains[i]->volume();
+    for(int i = 0 ; i < m_domains.size() ; i++)
+      volume += m_domains[i].first->volume();
     return volume;
   }
 }

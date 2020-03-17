@@ -52,7 +52,7 @@ namespace tubex
 
     protected:
 
-      void add_domain(AbstractDomain *ad, AbstractContractor *ac);
+      void add_domain(AbstractDomain *ad, AbstractContractor *ac, DomainRelation rel = DomainRelation::IN | DomainRelation::OUT);
 
       std::vector<AbstractContractor*> m_v_ctc;
       //std::map<AbstractContractor*,double> m_ctc_comput_times;
