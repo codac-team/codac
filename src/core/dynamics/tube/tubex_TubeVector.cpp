@@ -162,7 +162,7 @@ namespace tubex
       TubeVector primitive(*this, IntervalVector(size())); // a copy of this initialized to nx[-oo,oo]
       primitive.set(c, primitive.domain().lb());
       CtcDeriv ctc_deriv;
-      ctc_deriv.contract(primitive, static_cast<const TubeVector&>(*this), FORWARD);
+      ctc_deriv.contract(primitive, static_cast<const TubeVector&>(*this), TimePropag::FORWARD);
       return primitive;
     }
 

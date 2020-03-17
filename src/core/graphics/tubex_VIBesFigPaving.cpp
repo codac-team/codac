@@ -24,19 +24,19 @@ namespace tubex
     axis_limits(paving->box());
 
     // Default color map
-    map<int,string> color_map;
-    color_map[VALUE_IN] = "#9C9C9C[green]";
-    color_map[VALUE_MAYBE] = "#9C9C9C[yellow]";
-    color_map[VALUE_OUT] = "#9C9C9C[cyan]";
+    map<SetValue,string> color_map;
+    color_map[SetValue::IN] = "#9C9C9C[green]";
+    color_map[SetValue::MAYBE] = "#9C9C9C[yellow]";
+    color_map[SetValue::OUT] = "#9C9C9C[cyan]";
     set_color_map(color_map);
   }
 
-  void VIBesFigPaving::set_color_map(const map<int,string>& color_map)
+  void VIBesFigPaving::set_color_map(const map<SetValue,string>& color_map)
   {
     // todo: deal with color maps defined with any kind of values
-    vibes::newGroup("val_in", color_map.at(VALUE_IN), vibesParams("figure", name()));
-    vibes::newGroup("val_maybe", color_map.at(VALUE_MAYBE), vibesParams("figure", name()));
-    vibes::newGroup("val_out", color_map.at(VALUE_OUT), vibesParams("figure", name()));
+    vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
+    vibes::newGroup("val_maybe", color_map.at(SetValue::MAYBE), vibesParams("figure", name()));
+    vibes::newGroup("val_out", color_map.at(SetValue::OUT), vibesParams("figure", name()));
   }
 
   void VIBesFigPaving::show()
@@ -57,15 +57,15 @@ namespace tubex
       string color_group;
       switch(paving->value())
       {
-        case VALUE_IN:
+        case SetValue::IN:
           color_group = "val_in";
           break;
 
-        case VALUE_OUT:
+        case SetValue::OUT:
           color_group = "val_out";
           break;
 
-        case VALUE_MAYBE:
+        case SetValue::MAYBE:
         default:
           color_group = "val_maybe";
       }

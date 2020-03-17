@@ -92,7 +92,7 @@ namespace tubex
        * \param value_out value of the items representing no-solution boxes in the paving
        * \return a vector of boxes
        */
-      std::vector<ibex::IntervalVector> get_boundary(int value_boundary = VALUE_MAYBE, int value_out = VALUE_OUT) const; // items of type k-1
+      std::vector<ibex::IntervalVector> get_boundary(SetValue value_boundary = SetValue::MAYBE, SetValue value_out = SetValue::OUT) const; // items of type k-1
 
       /// @}
       /// \name Methods related to topological degree

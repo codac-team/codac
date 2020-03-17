@@ -217,7 +217,7 @@ namespace tubex
       case 1: // edge
         {
           vector<const Paving*> v_subpavings;
-          get_paving()->get_pavings_intersecting(VALUE_OUT, b, v_subpavings, true);
+          get_paving()->get_pavings_intersecting(SetValue::OUT, b, v_subpavings, true);
           assert(v_subpavings.size() == 1 && "nb of cofaces for an edge should be 1");
           v_cofaces.push_back(v_subpavings[0]->box());
         }
