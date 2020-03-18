@@ -8,7 +8,9 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <deque>
 #include "tubex_ContractorNetwork.h"
+#include "tubex_CtcDeriv.h"
 
 using namespace std;
 using namespace ibex;
@@ -34,49 +36,46 @@ namespace tubex
     clock_t t_start = clock();
     cout << "Contractor network has " << m_v_ctc.size()
          << " contractors and " << m_v_domains.size() << " domains" << endl;
+    cout << "Computing..." << endl;
 
-    bool no_active_ctc;
+    deque<AbstractContractor*> deque;
+    for(auto& ctc : m_v_ctc)
+      deque.push_front(ctc); // all contractors are active at the beginning
 
-    do
+    while(!deque.empty())
     {
-      k++;
-      cout << "\r  contracting: iteration " << k << "...    " << flush;
+      AbstractContractor *ctc = deque.front();
+      deque.pop_front();
 
-      no_active_ctc = true;
+      ctc->contract();
 
-      for(auto& ctc : m_v_ctc)
+      for(auto& ctc_dom : ctc->m_domains) // for each domain related to this contractor
       {
-        if(ctc->active())
+        double current_volume = ctc_dom->volume(); // new volume after contraction
+
+        //if(current_volume != ctc_dom->m_volume) // if the domain has "changed" after the contraction
+        if(current_volume/ctc_dom->m_volume < 1.-r)
         {
-          ctc->contract();
-          ctc->set_active(false);
-
-          for(auto& ctc_dom : ctc->m_domains) // for each domain related to this contractor
-          {
-            double current_volume = ctc_dom->volume(); // new volume after contraction
-
-            //if(current_volume != ctc_dom->m_volume) // if the domain has "changed" after the contraction
-            if(current_volume/ctc_dom->m_volume < 1.-r)
+          // We activate each contractor related to these domains, according to graph orientation
+          for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
+            if(ctc_of_dom != ctc)
             {
-              // We keep in mind that at least one contractor is still active:
-              no_active_ctc = false; 
+              if(ctc_of_dom->type() == ContractorType::NONE)
+                deque.push_back(ctc_of_dom);
 
-              // And we activate each contractor related to these domains, according to graph orientation
-              for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
-                if(ctc_of_dom != ctc)
-                  ctc_of_dom->set_active(true);
+              else
+                deque.push_front(ctc_of_dom); // priority
             }
-
-            ctc_dom->m_volume = current_volume; // updated old volume
-          }
         }
-      }
 
-    } while(!no_active_ctc);
+        ctc_dom->m_volume = current_volume; // updated old volume
+      }
+    }
 
     cout << endl
          << "  computation time: " << (double)(clock() - t_start)/CLOCKS_PER_SEC << "s" << endl;
 
+    // Emptiness test
     for(const auto& ctc : m_v_ctc)
       for(const auto& dom : ctc->m_domains)
         if(dom->is_empty())
@@ -187,18 +186,42 @@ namespace tubex
 
   void ContractorNetwork::add(tubex::Ctc& ctc, Tube& i1, Tube& i2)
   {
-    AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
-    add_domain(new AbstractDomain(i1), abstract_ctc);
-    add_domain(new AbstractDomain(i2), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
+    if(typeid(ctc) == typeid(CtcDeriv))
+    {
+      Slice *s_x = i1.first_slice(), *s_v = i2.first_slice();
+      while(s_x != NULL)
+      {
+        add(ctc, *s_x, *s_v);
+        s_x = s_x->next_slice();
+        s_v = s_v->next_slice();
+      }
+    }
+
+    else
+    {
+      AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
+      add_domain(new AbstractDomain(i1), abstract_ctc);
+      add_domain(new AbstractDomain(i2), abstract_ctc);
+      m_v_ctc.push_back(abstract_ctc);
+    }
   }
 
   void ContractorNetwork::add(tubex::Ctc& ctc, TubeVector& i1, TubeVector& i2)
   {
-    AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
-    add_domain(new AbstractDomain(i1), abstract_ctc);
-    add_domain(new AbstractDomain(i2), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
+    if(typeid(ctc) == typeid(CtcDeriv))
+    {
+      assert(i1.size() == i2.size());
+      for(int i = 0 ; i < i1.size() ; i++)
+        add(ctc, i1[i], i2[i]);
+    }
+
+    else
+    {
+      AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
+      add_domain(new AbstractDomain(i1), abstract_ctc);
+      add_domain(new AbstractDomain(i2), abstract_ctc);
+      m_v_ctc.push_back(abstract_ctc);
+    }
   }
 
   void ContractorNetwork::add(tubex::Ctc& ctc, Slice& i1, Slice& i2)

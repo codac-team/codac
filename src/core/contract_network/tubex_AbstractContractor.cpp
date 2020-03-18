@@ -25,7 +25,7 @@ namespace tubex
   }
 
   AbstractContractor::AbstractContractor(const AbstractContractor& ac)
-    : m_type(ac.m_type), m_ibex_ctc(ac.m_ibex_ctc), m_tubex_ctc(ac.m_tubex_ctc), m_active(ac.m_active), m_domains(ac.m_domains)
+    : m_type(ac.m_type), m_ibex_ctc(ac.m_ibex_ctc), m_tubex_ctc(ac.m_tubex_ctc), m_domains(ac.m_domains)
   {
 
   }
@@ -49,16 +49,6 @@ namespace tubex
   ContractorType AbstractContractor::type() const
   {
     return m_type;
-  }
-
-  bool AbstractContractor::active() const
-  {
-    return m_active;
-  }
-
-  void AbstractContractor::set_active(bool active)
-  {
-    m_active = active;
   }
 
   void AbstractContractor::contract()

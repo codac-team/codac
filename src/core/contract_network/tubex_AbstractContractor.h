@@ -34,8 +34,6 @@ namespace tubex
       explicit AbstractContractor(tubex::Ctc& ctc);
 
       ContractorType type() const;
-      bool active() const;
-      void set_active(bool active = true);
 
       void contract();
 
@@ -48,8 +46,6 @@ namespace tubex
 
       ibex::Ctc& m_ibex_ctc;
       tubex::Ctc& m_tubex_ctc;
-
-      bool m_active = true;
   };
 }
 
