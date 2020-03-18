@@ -146,4 +146,18 @@ TEST_CASE("Trajectory base")
     CHECK(test.first_value() == 0.);
     CHECK(test.last_value() == 10.);
   }
+
+  SECTION("Trajectory vector")
+  {
+    // Defined by maps of values
+    map<double,Vector> map_values;
+    for(double t = 0. ; t <= 10. ; t++)
+      map_values.insert(make_pair(t, Vector(4,t)));
+    TrajectoryVector test(map_values);
+
+    CHECK(test.codomain() == IntervalVector(4,Interval(0.,10.)));
+    CHECK(test.first_value() == Vector(4,0.));
+    CHECK(test.last_value() == Vector(4,10.));
+    CHECK(test.size() == 4);
+  }
 }
