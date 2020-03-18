@@ -65,7 +65,7 @@ namespace tubex
        */
       Ctc();
 
-      virtual void contract(std::vector<DomainParams>& v_domains) = 0;
+      virtual void contract(std::vector<AbstractDomain*>& v_domains) = 0;
 
       /**
        * \brief Specifies whether the contractor can impact the tube's slicing or not

@@ -108,7 +108,13 @@ namespace tubex
       }
 
       case DomainType::TUBE:
-        return m_t.volume();
+      {
+        double vol = m_t.volume();
+        vol += m_t.first_slice()->input_gate().diam();
+        for(const Slice *s = m_t.first_slice() ; s != NULL ; s = s->next_slice())
+          vol += s->output_gate().diam();
+        return vol;
+      }
 
       case DomainType::TUBE_VECTOR:
         return m_tv.volume();

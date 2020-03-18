@@ -38,9 +38,8 @@ namespace tubex
       void set_active(bool active = true);
 
       void contract();
-      double domains_volume() const;
 
-      std::vector<DomainParams> m_domains;
+      std::vector<AbstractDomain*> m_domains;
 
 
     protected:

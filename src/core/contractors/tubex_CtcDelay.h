@@ -31,7 +31,7 @@ namespace tubex
        */
       CtcDelay();
       
-      void contract(std::vector<DomainParams>& v_domains);
+      void contract(std::vector<AbstractDomain*>& v_domains);
 
       /**
        * \brief \f$\mathcal{C}_{t-\tau}\big([a],[x](\cdot),[y](\cdot)\big)\f$:

@@ -22,19 +22,6 @@ namespace tubex
 {
   enum class DomainType { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
 
-  enum class DomainRelation
-  {
-    IN = 0x01,
-    OUT = 0x02
-  };
-
-  inline int operator&(DomainRelation a, DomainRelation b)
-  { return static_cast<int>(static_cast<int>(a) & static_cast<int>(b)); }
-
-  inline DomainRelation operator|(DomainRelation a, DomainRelation b)
-  { return static_cast<DomainRelation>(static_cast<int>(a) | static_cast<int>(b)); }
-  
-
   class AbstractContractor;
 
   class AbstractDomain
@@ -66,6 +53,8 @@ namespace tubex
 
     //protected:
 
+      double m_volume = 0.;
+
       const DomainType m_type;
 
       ibex::Interval& m_i;
@@ -79,13 +68,6 @@ namespace tubex
       static tubex::Slice m_dump_s;
       static tubex::Tube m_dump_t;
       static tubex::TubeVector m_dump_tv;
-  };
-
-  struct DomainParams
-  {
-    AbstractDomain *ad;
-    DomainRelation rel = DomainRelation::IN | DomainRelation::OUT;
-    double volume = 0.;
   };
 }
 

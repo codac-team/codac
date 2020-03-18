@@ -30,8 +30,6 @@ namespace tubex
       ContractorNetwork();
       ~ContractorNetwork();
 
-      int ctc_nb() const;
-      double domains_volume() const;
       void contract(float r = 0.001);
 
       ibex::Interval& create_var(const ibex::Interval& i_);
@@ -42,6 +40,7 @@ namespace tubex
       void add(ibex::Ctc& ctc, ibex::IntervalVector& i1, ibex::IntervalVector& i2, ibex::IntervalVector& i3);
       void add(ibex::Ctc& ctc, ibex::Interval& i1, ibex::Interval& i2, ibex::Interval& i3, ibex::Interval& i4);
       void add(ibex::Ctc& ctc, ibex::Interval& i1, ibex::Interval& i2, ibex::Interval& i3, ibex::Interval& i4, ibex::Interval& i5);
+      void add(tubex::Ctc& ctc, ibex::Interval& i1, ibex::Interval& i2, tubex::Tube& i3, tubex::Tube& i4);
       void add(tubex::Ctc& ctc, ibex::Interval& i1, ibex::IntervalVector& i2, tubex::TubeVector& i3, tubex::TubeVector& i4);
       void add(tubex::Ctc& ctc, tubex::Tube& i1, tubex::Tube& i2);
       void add(tubex::Ctc& ctc, tubex::TubeVector& i1, tubex::TubeVector& i2);
@@ -52,7 +51,9 @@ namespace tubex
 
     protected:
 
-      void add_domain(AbstractDomain *ad, AbstractContractor *ac, DomainRelation rel = DomainRelation::IN | DomainRelation::OUT);
+      AbstractDomain* add_domain(AbstractDomain *ad);
+      void add_domain(AbstractDomain *ad, AbstractContractor *ac);
+      void complete_graph();
 
       std::vector<AbstractContractor*> m_v_ctc;
       //std::map<AbstractContractor*,double> m_ctc_comput_times;

@@ -21,22 +21,21 @@ namespace tubex
 
   }
 
-  void CtcDeriv::contract(vector<DomainParams>& v_domains)
+  void CtcDeriv::contract(vector<AbstractDomain*>& v_domains)
   {
     assert(v_domains.size() == 2);
-    v_domains[1].rel = DomainRelation::IN; // derivative cannot be contracted
 
     // Slice case:
-    if(v_domains[0].ad->type() == DomainType::SLICE && v_domains[1].ad->type() == DomainType::SLICE)
-      contract(v_domains[0].ad->m_t, v_domains[1].ad->m_t);
+    if(v_domains[0]->type() == DomainType::SLICE && v_domains[1]->type() == DomainType::SLICE)
+      contract(v_domains[0]->m_s, v_domains[1]->m_s);
 
     // Tube scalar case:
-    else if(v_domains[0].ad->type() == DomainType::TUBE && v_domains[1].ad->type() == DomainType::TUBE)
-      contract(v_domains[0].ad->m_t, v_domains[1].ad->m_t);
+    else if(v_domains[0]->type() == DomainType::TUBE && v_domains[1]->type() == DomainType::TUBE)
+      contract(v_domains[0]->m_t, v_domains[1]->m_t);
 
     // Tube vector case:
-    else if(v_domains[0].ad->type() == DomainType::TUBE_VECTOR && v_domains[1].ad->type() == DomainType::TUBE_VECTOR)
-      contract(v_domains[0].ad->m_tv, v_domains[1].ad->m_tv);
+    else if(v_domains[0]->type() == DomainType::TUBE_VECTOR && v_domains[1]->type() == DomainType::TUBE_VECTOR)
+      contract(v_domains[0]->m_tv, v_domains[1]->m_tv);
 
     else
       assert(false && "unhandled case");

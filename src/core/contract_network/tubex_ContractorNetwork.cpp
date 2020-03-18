@@ -26,26 +26,13 @@ namespace tubex
       delete m_v_domains[i];
   }
 
-  int ContractorNetwork::ctc_nb() const
-  {
-    return m_v_ctc.size();
-  }
-
-  double ContractorNetwork::domains_volume() const // todo: avoid redundant additions
-  {
-    double volume = 0.;
-    
-    for(const auto dom : m_v_domains)
-      volume += dom->volume();
-
-    return volume;
-  }
-
   void ContractorNetwork::contract(float r)
   {
+    complete_graph();
+
     int k = 0;
     clock_t t_start = clock();
-    cout << "Contractor network has " << ctc_nb()
+    cout << "Contractor network has " << m_v_ctc.size()
          << " contractors and " << m_v_domains.size() << " domains" << endl;
 
     bool no_active_ctc;
@@ -64,22 +51,23 @@ namespace tubex
           ctc->contract();
           ctc->set_active(false);
 
-          for(int i = 0 ; i < ctc->m_domains.size() ; i++) // for each domain related to this contractor
+          for(auto& ctc_dom : ctc->m_domains) // for each domain related to this contractor
           {
-            double current_volume = ctc->m_domains[i].ad->volume();
+            double current_volume = ctc_dom->volume(); // new volume after contraction
 
-            if(current_volume != ctc->m_domains[i].volume) // if the domain has "changed"
+            //if(current_volume != ctc_dom->m_volume) // if the domain has "changed" after the contraction
+            if(current_volume/ctc_dom->m_volume < 1.-r)
             {
               // We keep in mind that at least one contractor is still active:
               no_active_ctc = false; 
 
               // And we activate each contractor related to these domains, according to graph orientation
-              for(auto& dom_ctc : ctc->m_domains[i].ad->m_v_ctc) 
-                if(dom_ctc != ctc)
-                  dom_ctc->set_active(true);
+              for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
+                if(ctc_of_dom != ctc)
+                  ctc_of_dom->set_active(true);
             }
 
-            ctc->m_domains[i].volume = current_volume; // updated old volume
+            ctc_dom->m_volume = current_volume; // updated old volume
           }
         }
       }
@@ -91,7 +79,7 @@ namespace tubex
 
     for(const auto& ctc : m_v_ctc)
       for(const auto& dom : ctc->m_domains)
-        if(dom.ad->is_empty())
+        if(dom->is_empty())
         {
           cout << "  warning: empty set" << endl;
           exit(1);
@@ -159,6 +147,16 @@ namespace tubex
     m_v_ctc.push_back(abstract_ctc);
   }
 
+  void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, Interval& i2, Tube& i3, Tube& i4)
+  {
+    AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
+    add_domain(new AbstractDomain(i1), abstract_ctc);
+    add_domain(new AbstractDomain(i2), abstract_ctc);
+    add_domain(new AbstractDomain(i3), abstract_ctc);
+    add_domain(new AbstractDomain(i4), abstract_ctc);
+    m_v_ctc.push_back(abstract_ctc);
+  }
+
   void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, IntervalVector& i2, TubeVector& i3, TubeVector& i4)
   {
     AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
@@ -211,7 +209,7 @@ namespace tubex
     m_v_ctc.push_back(abstract_ctc);
   }
 
-  void ContractorNetwork::add_domain(AbstractDomain *ad, AbstractContractor *ac, DomainRelation rel)
+  AbstractDomain* ContractorNetwork::add_domain(AbstractDomain *ad)
   {
     if(ad->is_empty())
     {
@@ -219,116 +217,77 @@ namespace tubex
       exit(1);
     }
 
-    // Looking if this domain is not already added
-    for(int i = 0 ; i < m_v_domains.size() ; i++)
-    {
-      if(*m_v_domains[i] == *ad) // found
+    // Looking if this domain is not already part of the graph
+    for(auto& dom : m_v_domains)
+      if(*dom == *ad) // found
       {
-        DomainParams dom_params;
-        dom_params.ad = m_v_domains[i];
-        dom_params.rel = rel;
-        ac->m_domains.push_back(dom_params);
-        m_v_domains[i]->m_v_ctc.push_back(ac);
         delete ad;
-        return;
+        return dom;
       }
-    }
     
-    // Else: add this new domain
+    // Else, add this new domain
+    m_v_domains.push_back(ad);
+    return ad;
+  }
 
-      // If this domain is a tube vector, each component is added.
-      // This allows dependencies between scalar tubes and slices
-      if(ad->type() == DomainType::TUBE_VECTOR)
+  void ContractorNetwork::add_domain(AbstractDomain *ad, AbstractContractor *ac)
+  {
+    // The domain ad may be already in the graph, we are looking for it,
+    // or we use the current pointer. The result is pointed by ad_.
+    AbstractDomain *ad_ = add_domain(ad);
+
+    ac->m_domains.push_back(ad_);
+    ad_->m_v_ctc.push_back(ac);
+  }
+
+  void ContractorNetwork::complete_graph()
+  {
+    // Vector components (dependencies between vector items)
+
+      for(auto& dom : m_v_domains)
       {
-        for(int i = 0 ; i < ad->m_tv.size() ; i++)
+        if(dom->type() == DomainType::TUBE_VECTOR)
         {
-          AbstractDomain *temp = new AbstractDomain(ad->m_tv[i]);
+          AbstractContractor *ac_link = new AbstractContractor();
+          add_domain(new AbstractDomain(dom->m_tv), ac_link); // adding vector
+          for(int i = 0 ; i < dom->m_tv.size() ; i++)
+            add_domain(new AbstractDomain(dom->m_tv[i]), ac_link); // adding its components
+          m_v_ctc.push_back(ac_link);
+        }
 
-          bool found = false;
-          for(int i = 0 ; i < m_v_domains.size() ; i++)
-          {
-            if(*m_v_domains[i] == *temp) // found
-              found = true;
-          }
-
-          if(found)
-            delete temp;
-
-          else
-          {
-            //cout << "added tube" << endl;
-            m_v_domains.push_back(temp);
-          }
+        else if(dom->type() == DomainType::INTERVAL_VECTOR)
+        {
+          AbstractContractor *ac_link = new AbstractContractor();
+          add_domain(new AbstractDomain(dom->m_iv), ac_link); // adding vector
+          for(int i = 0 ; i < dom->m_iv.size() ; i++)
+            add_domain(new AbstractDomain(dom->m_iv[i]), ac_link); // adding its components
+          m_v_ctc.push_back(ac_link);
         }
       }
 
+    // Tube components (dependencies between slices and their tube)
+    // (to be done once all tubes have been added)
 
-      // Then the domain is added
-      DomainParams dom_params;
-      dom_params.ad = ad;
-      dom_params.rel = rel;
-      ac->m_domains.push_back(dom_params);
-      ad->m_v_ctc.push_back(ac);
-
-      // Looking if this domain is not an item of some already known vector
-      /*for(int i = 0 ; i < m_v_domains.size() ; i++)
+      for(auto& dom : m_v_domains)
       {
-        if(ad->is_component_of(m_v_domains[i]))
+        if(dom->type() == DomainType::TUBE)
         {
-          // Adding relation between the domains
+          // Dependencies tube <-> slice
+          AbstractContractor *ac_link = new AbstractContractor();
+          add_domain(new AbstractDomain(dom->m_t), ac_link); // adding tube
+          for(Slice *s = dom->m_t.first_slice() ; s != NULL ; s = s->next_slice())
+            add_domain(new AbstractDomain(*s), ac_link); // adding one of its slices
+          m_v_ctc.push_back(ac_link);
 
-
-          //AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
-          //add_domain(new AbstractDomain(i1), abstract_ctc);
-          //add_domain(new AbstractDomain(i2), abstract_ctc);
-          //m_v_ctc.push_back(abstract_ctc);
-          //cout << "SUCCESS" << endl;
-          //exit(1);
+          // Dependencies slice <-> slice
+          for(Slice *s = dom->m_t.first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
+          {
+            AbstractContractor *ac_link_slices = new AbstractContractor();
+            add_domain(new AbstractDomain(*s), ac_link_slices);
+            add_domain(new AbstractDomain(*(s->next_slice())), ac_link_slices);
+            m_v_ctc.push_back(ac_link_slices);
+          }
         }
-
-        else if(ad->is_slice_of(m_v_domains[i]))
-        {
-          //cout << "slice of" << endl;
-          // Adding relation between the domains
-
-          AbstractContractor *ac_link_slices = new AbstractContractor();
-          ac_link_slices->m_domains.push_back(make_pair(ad,DomainRelation::IN | DomainRelation::OUT));
-          ac_link_slices->m_domains.push_back(make_pair(m_v_domains[i],DomainRelation::IN | DomainRelation::OUT));
-
-          ad->m_v_ctc.push_back(ac_link_slices);
-          m_v_domains[i]->m_v_ctc.push_back(ac_link_slices);
-
-          m_v_ctc.push_back(ac_link_slices);
-          //break;
-
-          //AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
-          //add_domain(new AbstractDomain(i1), abstract_ctc);
-          //add_domain(new AbstractDomain(i2), abstract_ctc);
-          //m_v_ctc.push_back(abstract_ctc);
-
-          //cout << "SUCCESS" << endl;
-          //exit(1);
-        }
-
-        else if(ad->is_prev_slice_of(m_v_domains[i]))
-        {
-          cout << "prev" << endl;
-        }
-
-        else if(ad->is_next_slice_of(m_v_domains[i]))
-        {
-          AbstractContractor *ac_link_slices = new AbstractContractor();
-          ac_link_slices->m_domains.push_back(make_pair(ad,DomainRelation::IN | DomainRelation::OUT));
-          ac_link_slices->m_domains.push_back(make_pair(m_v_domains[i],DomainRelation::IN | DomainRelation::OUT));
-
-          ad->m_v_ctc.push_back(ac_link_slices);
-          m_v_domains[i]->m_v_ctc.push_back(ac_link_slices);
-
-          m_v_ctc.push_back(ac_link_slices);
-          //break;
-        }
-      }*/
-
-      m_v_domains.push_back(ad);
+      }
   }
 }

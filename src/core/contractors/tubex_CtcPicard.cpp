@@ -23,7 +23,7 @@ namespace tubex
     assert(delta > 0.);
   }
   
-  void CtcPicard::contract(vector<DomainParams>& v_domains)
+  void CtcPicard::contract(vector<AbstractDomain*>& v_domains)
   {
     // todo
   }

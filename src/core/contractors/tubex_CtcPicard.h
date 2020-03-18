@@ -28,7 +28,7 @@ namespace tubex
 
       CtcPicard(float delta = 1.1);
 
-      void contract(std::vector<DomainParams>& v_domains);
+      void contract(std::vector<AbstractDomain*>& v_domains);
       
       void contract(const tubex::Fnc& f,
                     Tube& x,

@@ -21,7 +21,7 @@ namespace tubex
 
   }
   
-  void CtcStatic::contract(vector<DomainParams>& v_domains)
+  void CtcStatic::contract(vector<AbstractDomain*>& v_domains)
   {
     // todo
   }
