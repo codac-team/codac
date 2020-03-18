@@ -1,9 +1,9 @@
 # ==================================================================
-#  tubex-lib / example - cmake configuration file
+#  tubex-lib / robotics example - cmake configuration file
 # ==================================================================
 
 cmake_minimum_required(VERSION 3.0.2)
-project(TUBEX_BASICS_05 LANGUAGES CXX)
+project(tubex_rob_09 LANGUAGES CXX)
 
 # Compilation options
 set(CMAKE_CXX_STANDARD 11)
@@ -28,7 +28,7 @@ endif()
 ################################################################################
 
 # Compilation
-add_executable(basics_05 main.cpp)
-target_compile_options(basics_05 PUBLIC ${TUBEX_CFLAGS})
-target_include_directories(basics_05 PUBLIC ${TUBEX_INCLUDE_DIRS})
-target_link_libraries(basics_05 PUBLIC ${TUBEX_LDFLAGS})
+add_executable(${PROJECT_NAME} main.cpp)
+target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CFLAGS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${TUBEX_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LDFLAGS})

@@ -14,8 +14,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigMap.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/data/tubex_DataLoaderRedermor.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/data/tubex_DataLoader.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/data/tubex_DataLoaderLissajous.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcConstellation.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcConstellation.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcConstell.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcConstell.h
                 )
 
 
@@ -47,6 +47,7 @@ target_link_libraries(tubex-rob PUBLIC ${IBEX_LDFLAGS} ${TUBEX_LDFLAGS})
 foreach(srcfile ${SRC})
   if(srcfile MATCHES "\\.h$" OR srcfile MATCHES "\\.hpp$")
     list(APPEND HDR ${srcfile})
+    file(COPY ${srcfile} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
   endif()
 endforeach()
 
@@ -59,6 +60,7 @@ foreach(header_path ${HDR})
   file(APPEND ${TUBEX_ROB_MAIN_HEADER} "#include <${header_name}>\n")
 endforeach()
 file(APPEND ${TUBEX_ROB_MAIN_HEADER} "\n#endif /* __TUBEX_ROB_H__ */\n")
+file(COPY ${TUBEX_ROB_MAIN_HEADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
 
 # Install files in system directories
 install(TARGETS tubex-rob DESTINATION ${CMAKE_INSTALL_LIBDIR})

@@ -251,6 +251,27 @@ namespace tubex
       add_beacon(v_beacons[i], width, color);
   }
   
+  void VIBesFigMap::add_observation(const IntervalVector& obs, const Vector& pose, const string& color)
+  {
+    assert(obs.size() == 2);
+    assert(pose.size() == 3);
+
+    // Simply directly drawn
+    draw_observation(obs, pose, color, vibesParams("figure", name(), "group", "obs"));
+  }
+  
+  void VIBesFigMap::add_observations(const vector<IntervalVector>& v_obs, const Vector& pose, const string& color)
+  {
+    assert(pose.size() == 3);
+
+    // Simply directly drawn
+    for(int i = 0 ; i < v_obs.size() ; i++)
+    {
+      assert(v_obs[i].size() == 2);
+      add_observation(v_obs[i], pose, color);
+    }
+  }
+  
   void VIBesFigMap::add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color)
   {
     assert(traj != NULL);
@@ -623,6 +644,20 @@ namespace tubex
     }
   }
 
+  void VIBesFigMap::draw_vehicle(const Vector& pose, float size)
+  {
+    assert(pose.size() == 2 || pose.size() == 3);
+    draw_vehicle(pose, vibesParams("figure", name()), size);
+  }
+
+  void VIBesFigMap::draw_vehicle(const Vector& pose, const vibes::Params& params, float size)
+  {
+    assert(pose.size() == 2 || pose.size() == 3);
+    float robot_size = size == -1 ? m_robot_size : size;
+    double robot_heading = pose.size() == 3 ? pose[2] : 0.;
+    vibes::drawAUV(pose[0], pose[1], robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
+  }
+
   void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, float size)
   {
     draw_vehicle(t, traj, vibesParams("figure", name()), size);
@@ -635,12 +670,12 @@ namespace tubex
       && "unknown traj, must be added beforehand");
     assert(traj->domain().contains(t));
 
-    double robot_x = (*traj)[m_map_trajs[traj].index_x](t);
-    double robot_y = (*traj)[m_map_trajs[traj].index_y](t);
-    double robot_heading = heading(t, traj);
+    Vector pose(3);
+    pose[0] = (*traj)[m_map_trajs[traj].index_x](t);
+    pose[1] = (*traj)[m_map_trajs[traj].index_y](t);
+    pose[2] = heading(t, traj);
 
-    float robot_size = size == -1 ? m_robot_size : size;
-    vibes::drawAUV(robot_x, robot_y, robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
+    draw_vehicle(pose, params, size);
   }
 
   void VIBesFigMap::draw_beacon(const Beacon& beacon, const string& color, const vibes::Params& params)
@@ -657,6 +692,25 @@ namespace tubex
     draw_box(drawn_box.inflate(width/2.), color, params);
   }
 
+  void VIBesFigMap::draw_observation(const IntervalVector& obs, const Vector& pose, const string& color, const vibes::Params& params)
+  {
+    assert(obs.size() == 2);
+    assert(pose.size() == 3);
+    // todo: use color and params args
+
+    vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
+
+    vibes::drawPie(pose[0], pose[1],
+                   0.001, obs[0].mid(),
+                   (pose[2]+obs[1].lb()) * 180./M_PI, (pose[2]+obs[1].ub()) * 180./M_PI,
+                   "#000"/*#B9B9B9*/, vibesParams("figure", name(), "group", "obs"));
+
+    vibes::drawPie(pose[0], pose[1],
+                   obs[0].lb(), obs[0].ub(),
+                   (pose[2]+obs[1].lb()) * 180./M_PI, (pose[2]+obs[1].ub()) * 180./M_PI,
+                   "#000[#ffffff88]"/*#B9B9B9[#DCDCDC]*/, vibesParams("figure", name(), "group", "obs"));
+  }
+
   void VIBesFigMap::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)
   {
     assert(obs.size() >= 3);
@@ -666,19 +720,12 @@ namespace tubex
 
     vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
 
-    double x = (*traj)[m_map_trajs[traj].index_x](obs[0].mid());
-    double y = (*traj)[m_map_trajs[traj].index_y](obs[0].mid());
-    double theta = heading(obs[0].mid(), traj);
+    Vector pose(3);
+    pose[0] = (*traj)[m_map_trajs[traj].index_x](obs[0].mid());
+    pose[1] = (*traj)[m_map_trajs[traj].index_y](obs[0].mid());
+    pose[2] = heading(obs[0].mid(), traj);
 
-    vibes::drawPie(x, y,
-                   0.001, obs[1].mid(),
-                   (theta+obs[2].lb()) * 180./M_PI, (theta+obs[2].ub()) * 180./M_PI,
-                   "#000"/*#B9B9B9*/, vibesParams("figure", name(), "group", "obs"));
-
-    vibes::drawPie(x, y,
-                   obs[1].lb(), obs[1].ub(),
-                   (theta+obs[2].lb()) * 180./M_PI, (theta+obs[2].ub()) * 180./M_PI,
-                   "#000[#ffffff]"/*#B9B9B9[#DCDCDC]*/, vibesParams("figure", name(), "group", "obs"));
+    draw_observation(obs.subvector(1,2), pose, color, params);
   }
 
   double VIBesFigMap::heading(double t, const TrajectoryVector *traj) const

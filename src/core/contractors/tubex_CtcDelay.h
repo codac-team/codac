@@ -30,6 +30,8 @@ namespace tubex
        * \brief Creates a contractor object \f$\mathcal{C}_{t-\tau}\f$
        */
       CtcDelay();
+      
+      void contract(std::vector<AbstractDomain>& v_domains);
 
       /**
        * \brief \f$\mathcal{C}_{t-\tau}\big([a],[x](\cdot),[y](\cdot)\big)\f$:

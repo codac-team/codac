@@ -32,6 +32,8 @@ namespace tubex
        */
       CtcEval();
 
+      void contract(std::vector<AbstractDomain>& v_domains);
+      
       /**
        * \brief Enables a forward/backward temporal propagation of the contraction
        *
@@ -116,6 +118,26 @@ namespace tubex
        * \param w the n-dimensional derivative tube \f$[\mathbf{w}](\cdot)\f$
        */
       void contract(const ibex::Interval& t, const ibex::IntervalVector& z, TubeVector& y, TubeVector& w);
+
+      /**
+       * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[z],[y](\cdot)\big)\f$:
+       *        contracts the evaluation \f$[t]\times[z]\f$ only.
+       *
+       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param z the bounded evaluation \f$[z]\f$
+       * \param y the scalar tube \f$[y](\cdot)\f$
+       */
+      void contract(ibex::Interval& t, ibex::Interval& z, const Tube& y);
+
+      /**
+       * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[\mathbf{z}],[\mathbf{y}](\cdot)\big)\f$:
+       *        contracts the evaluation \f$[t]\times[\mathbf{z}]\f$ only.
+       *
+       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param z the bounded evaluation \f$[\mathbf{z}]\f$
+       * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
+       */
+      void contract(ibex::Interval& t, ibex::IntervalVector& z, const TubeVector& y);
 
     protected:
 

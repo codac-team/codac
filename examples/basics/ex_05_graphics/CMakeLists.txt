@@ -1,9 +1,9 @@
 # ==================================================================
-#  tubex-lib / robotics example - cmake configuration file
+#  tubex-lib / basics example - cmake configuration file
 # ==================================================================
 
 cmake_minimum_required(VERSION 3.0.2)
-project(tubex_rob_07 LANGUAGES CXX)
+project(tubex_basics_05 LANGUAGES CXX)
 
 # Compilation options
 set(CMAKE_CXX_STANDARD 11)

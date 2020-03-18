@@ -21,6 +21,22 @@ namespace tubex
 
   }
 
+  void CtcDeriv::contract(vector<AbstractDomain>& v_domains)
+  {
+    assert(v_domains.size() == 2);
+
+    // Scalar case:
+    if(v_domains[0].type() == TUBE && v_domains[1].type() == TUBE)
+      contract(v_domains[0].m_t, v_domains[1].m_t);
+
+    // Vector case:
+    else if(v_domains[0].type() == TUBE_VECTOR && v_domains[1].type() == TUBE_VECTOR)
+      contract(v_domains[0].m_tv, v_domains[1].m_tv);
+
+    else
+      assert(false && "unhandled case");
+  }
+
   void CtcDeriv::contract(Tube& x, const Tube& v, TPropagation t_propa)
   {
     assert(x.domain() == v.domain());

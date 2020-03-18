@@ -692,6 +692,16 @@ namespace tubex
        * \param rad half of the inflation
        * \return *this
        */
+      const TubeVector& inflate(double rad);
+
+      /**
+       * \brief Inflates this tube by adding \f$[-\mathbf{rad},+\mathbf{rad}]\f$ to all its codomain components
+       *
+       * \note All slices and gates will be inflated
+       *
+       * \param rad half of the inflation for each component
+       * \return *this
+       */
       const TubeVector& inflate(const ibex::Vector& rad);
 
       /**

@@ -4,6 +4,7 @@
 
 add_subdirectory(core)
 add_subdirectory(robotics)
+add_subdirectory(3rd) # 3rd party from pyibex (todo: make a clean dependency)
 
 file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/tubex.pc
               CONTENT "prefix=${CMAKE_INSTALL_PREFIX}
@@ -15,8 +16,8 @@ Description: ${TUBEX_DESCRIPTION}
 Url: ${TUBEX_URL}
 Version: ${TUBEX_VERSION}
 Requires: ibex
-Cflags: -I\${includedir}/tubex -I\${includedir}/tubex-rob
-Libs: -L\${libdir} -ltubex -ltubex-rob")
+Cflags: -I\${includedir}/tubex -I\${includedir}/tubex-rob -I\${includedir}/tubex-3rd
+Libs: -L\${libdir} -ltubex -ltubex-rob -ltubex-3rd -ltubex")
 
 # todo: specify minimum version of IBEX (in Requires field)
 

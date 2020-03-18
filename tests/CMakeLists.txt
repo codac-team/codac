@@ -2,6 +2,8 @@
 #  tubex-lib / tests - cmake configuration file
 # ==================================================================
 
+set(TESTS_NAME tubex-tests)
+
 list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_arithmetic.cpp
@@ -20,7 +22,7 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_values.cpp
                 )
 
-add_executable(tubelib_tests ${SRC})
-target_link_libraries(tubelib_tests tubex)
-add_dependencies(check tubelib_tests)
-add_test(NAME tubelib_tests COMMAND tubelib_tests)
+add_executable(${TESTS_NAME} ${SRC})
+target_link_libraries(${TESTS_NAME} tubex)
+add_dependencies(check ${TESTS_NAME})
+add_test(NAME ${TESTS_NAME} COMMAND ${TESTS_NAME})

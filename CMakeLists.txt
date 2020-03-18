@@ -9,6 +9,8 @@
   set(TUBEX_URL "http://simon-rohou.fr/research/tubex-lib")
 
 
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/)
+
 ################################################################################
 # Options for install directory
 ################################################################################
@@ -79,10 +81,20 @@
 # Looking for Ibex
 ################################################################################
 
-  #find_package(IBEX 2.8.3 REQUIRED)
-  include(FindPkgConfig)
-  pkg_search_module(IBEX REQUIRED ibex) # todo: specify minimum version of IBEX
-  message(STATUS "Found Ibex version ${IBEX_VERSION}")
+  # #find_package(IBEX 2.8.3 REQUIRED)
+  # include(FindPkgConfig)
+  # pkg_search_module(IBEX REQUIRED ibex) # todo: specify minimum version of IBEX
+  # message(STATUS "Found Ibex version ${IBEX_VERSION}")
+
+  FIND_PACKAGE(IbexLib REQUIRED)
+  if(IBEX_FOUND)
+    INCLUDE_DIRECTORIES(${IBEX_INCLUDE_DIRS})
+    SET(LIBS ${LIBS} ${IBEX_LIBRARIES} )
+  else()
+    MESSAGE(WARNING "Unable to find IbexLib. Maybe you need to set IBEX_ROOT ${IBEX_ROOT}")
+    MESSAGE(WARNING "If ibex is not installer run : \n\t sh travis_script/install_ibexlib.sh /path/to/your/install/dir")
+    #MESSAGE(FATAL_ERROR "where ")
+  endif()
 
 
 ################################################################################
@@ -97,21 +109,45 @@
                       DEPENDS tubex COMMENT "Running the tests")
     add_subdirectory(tests) # EXCLUDE_FROM_ALL)
 
-    #  Testing examples:
-    add_test(NAME basics_01
-             COMMAND ../examples/basics/ex_01_arithmetic/make/basics_01 0)
-    add_test(NAME basics_02
-             COMMAND ../examples/basics/ex_02_simple_ctc/make/basics_02 0)
-    add_test(NAME basics_03
-             COMMAND ../examples/basics/ex_03_ivp_msinx/make/basics_03 0)
-    # to be moved in robotics lib add_test(NAME basics_04
-    # to be moved in robotics lib          COMMAND ./examples/basics/ex_04_lissajous/make/basics_04 0)
-    add_test(NAME basics_05
-             COMMAND ../examples/basics/ex_05_simple_eval/make/basics_05 0)
-    add_test(NAME basics_06
-             COMMAND ../examples/basics/ex_06_graphics/make/basics_06 0)
-  endif()
+    # Testing examples:
+      # Basics
+      add_test(NAME basics_01
+               COMMAND ../examples/basics/ex_01_arithmetic/make/tubex_basics_01 0)
+      add_test(NAME basics_02
+               COMMAND ../examples/basics/ex_02_simple_ctc/make/tubex_basics_02 0)
+      add_test(NAME basics_03
+               COMMAND ../examples/basics/ex_03_ivp_msinx/make/tubex_basics_03 0)
+      add_test(NAME basics_04
+               COMMAND ../examples/basics/ex_04_simple_eval/make/tubex_basics_04 0)
+      add_test(NAME basics_05
+               COMMAND ../examples/basics/ex_05_graphics/make/tubex_basics_05 0)
 
+      # Robotics
+      add_test(NAME rob_01
+               COMMAND ../examples/robotics/ex_01_causal_chain/make/tubex_rob_01 0)
+      add_test(NAME rob_02
+               COMMAND ../examples/robotics/ex_02_lowcost_beacons/make/tubex_rob_02 0)
+      add_test(NAME rob_03
+               COMMAND ../examples/robotics/ex_03_drifting_clock/make/tubex_rob_03 0)
+      add_test(NAME rob_04
+               COMMAND sh -c "rm -f ../data/redermor/gesmi.txt.tubex ;
+                       ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0")
+      add_test(NAME rob_04_with_serializ
+               COMMAND ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0)
+      add_test(NAME rob_05
+               COMMAND ../examples/robotics/ex_05_loops_detec/make/tubex_rob_05 ../data/redermor/gesmi.txt  0)
+      add_test(NAME rob_06
+               COMMAND ../examples/robotics/ex_06_loops_proofs/make/tubex_rob_06 0)
+      add_test(NAME rob_07
+               COMMAND ../examples/robotics/ex_07_dynloc/make/tubex_rob_07 0)
+      add_test(NAME rob_08
+               COMMAND ../examples/robotics/ex_08_tubepaving/make/tubex_rob_08 0)
+      add_test(NAME rob_09
+               COMMAND ../examples/robotics/ex_09_lissajous/make/tubex_rob_09 0)
+      add_test(NAME rob_10
+               COMMAND ../examples/robotics/ex_10_datasso/make/tubex_rob_10 0)
+      
+  endif()
 
 ################################################################################
 # Compile sources

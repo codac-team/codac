@@ -24,31 +24,25 @@ namespace tubex
 
   }
 
-  void DataLoaderLissajous::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
+  void DataLoaderLissajous::load_data(TubeVector *&x, TubeVector *&xdot, TrajectoryVector *&truth, float timestep, const Interval& domain)
   {
-    assert(DynamicalItem::valid_domain(domain) || domain == Interval::ALL_REALS);
+    assert(DynamicalItem::valid_domain(domain));
 
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 
-    Interval t_domain = domain;
-    if(t_domain.is_unbounded())
-      t_domain = Interval(0., 6.);
-
-    Function f_lissajous("(120.*2.*cos(t) - 240. ; \
+    Function f_lissajous("(120.*2.*cos(t) ; \
                            120.*sin(2.*t) ; \
-                           -120.*2.*sin(t) ; \
-                           240.*cos(2.*t))");
-    truth = new TrajectoryVector(t_domain, f_lissajous);
+                           atan2(240.*cos(2.*t),-120.*2.*sin(t)))");
+    Function f_lissajous_dot("(-120.*2.*sin(t) ; \
+                               240.*cos(2.*t))");
+    // todo: derivative for heading
 
-    x = new TubeVector(t_domain, 0.01, f_lissajous);
-    (*x)[2].inflate(0.1);
-    (*x)[3].inflate(0.1);
-    (*x)[0] = (*x)[2].primitive();
-    (*x)[1] = (*x)[3].primitive();
+    truth = new TrajectoryVector(domain, f_lissajous);
+    x = new TubeVector(domain, 0.01, f_lissajous);
+    xdot = new TubeVector(domain, 0.01, f_lissajous_dot);
 
-    (*x)[0].inflate(50.);
-    (*x)[1].inflate(50.);
+    xdot->inflate(0.1); // uncertainties on velocities
 
     printf(" %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
@@ -87,11 +81,12 @@ namespace tubex
     {
       for(int i = 0 ; i < map.size() ; i++)
       {
-        float r = std::sqrt(std::pow(x[0](t) - map[i].pos()[0], 2) + std::pow(x[1](t) - map[i].pos()[1], 2));
-        float heading = std::atan2(x[1](t+dt) - x[1](t), x[0](t+dt) - x[0](t));
-        float a = std::atan2(map[i].pos()[1] - x[1](t), map[i].pos()[0] - x[0](t)) - heading;
+        Interval t_(t);
+        Interval r = sqrt(pow(x[0](t_) - map[i].pos()[0], 2) + pow(x[1](t_) - map[i].pos()[1], 2));
+        Interval heading = atan2(x[1](t+dt) - x[1](t_), x[0](t+dt) - x[0](t_));
+        Interval a = atan2(map[i].pos()[1] - x[1](t_), map[i].pos()[0] - x[0](t_)) - heading;
         
-        if(visi_range.contains(r) && visi_angle.contains(a)) // if the beacon is seen by the robot
+        if(visi_range.intersects(r) && visi_angle.intersects(a)) // if the beacon is seen by the robot
         {
           IntervalVector obs(3);
           obs[0] = t; obs[1] = r; obs[2] = a;

@@ -21,9 +21,9 @@ namespace tubex
 
   }
   
-  CtcStatic::~CtcStatic()
+  void CtcStatic::contract(vector<AbstractDomain>& v_domains)
   {
-
+    // todo
   }
 
   void CtcStatic::contract(TubeVector& x)

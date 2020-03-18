@@ -15,6 +15,7 @@
 #include <fstream>
 #include "tubex_TubeVector.h"
 #include "tubex_TrajectoryVector.h"
+#include "tubex_Beacon.h"
 
 namespace tubex
 {
@@ -34,6 +35,21 @@ namespace tubex
       bool serialized_data_available() const;
       void deserialize_data(TubeVector *&x, TrajectoryVector *&traj) const;
       void serialize_data(const TubeVector& x, const TrajectoryVector& traj) const;
+
+      static std::vector<Beacon> generate_landmarks(const ibex::IntervalVector& map_box, int nb_landmarks = 100);
+      static std::vector<ibex::IntervalVector> generate_landmarks_boxes(const ibex::IntervalVector& map_box, int nb_landmarks = 100);
+      static std::vector<ibex::IntervalVector> generate_observations(
+                     const ibex::Vector& x,
+                     const std::vector<Beacon>& map,
+                     const ibex::Interval& visi_range = ibex::Interval::POS_REALS,
+                     const ibex::Interval& visi_angle = ibex::Interval::ALL_REALS);
+      static std::vector<ibex::IntervalVector> generate_observations(
+                     const TrajectoryVector& x,
+                     const std::vector<Beacon>& map,
+                     int nb_obs = 50,
+                     const ibex::Interval& visi_range = ibex::Interval(0.,50.),
+                     const ibex::Interval& visi_angle = ibex::Interval(-M_PI/4.,M_PI/4.),
+                     const ibex::Interval& domain = ibex::Interval::ALL_REALS);
 
     protected:
 
