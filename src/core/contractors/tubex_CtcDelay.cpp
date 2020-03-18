@@ -21,7 +21,7 @@ namespace tubex
 
   }
 
-  void CtcDelay::contract(vector<pair<AbstractDomain*,DomainRelation> >& v_domains)
+  void CtcDelay::contract(vector<DomainParams>& v_domains)
   {
     assert(v_domains.size() == 3);
 

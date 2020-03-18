@@ -22,7 +22,6 @@ namespace tubex
 {
   enum class DomainType { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
 
-
   enum class DomainRelation
   {
     IN = 0x01,
@@ -57,6 +56,9 @@ namespace tubex
       
       bool operator==(const AbstractDomain& x) const;
       bool is_component_of(const AbstractDomain* x) const;
+      bool is_prev_slice_of(const AbstractDomain* x) const;
+      bool is_next_slice_of(const AbstractDomain* x) const;
+      bool is_slice_of(const AbstractDomain* x) const;
       
       friend std::ostream& operator<<(std::ostream& str, const AbstractDomain& x);
 
@@ -77,6 +79,13 @@ namespace tubex
       static tubex::Slice m_dump_s;
       static tubex::Tube m_dump_t;
       static tubex::TubeVector m_dump_tv;
+  };
+
+  struct DomainParams
+  {
+    AbstractDomain *ad;
+    DomainRelation rel = DomainRelation::IN | DomainRelation::OUT;
+    double volume = 0.;
   };
 }
 

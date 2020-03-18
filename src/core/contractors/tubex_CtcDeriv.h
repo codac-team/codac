@@ -33,7 +33,7 @@ namespace tubex
        */
       CtcDeriv();
 
-      void contract(std::vector<std::pair<AbstractDomain*,DomainRelation> >& v_domains);
+      void contract(std::vector<DomainParams>& v_domains);
 
       /**
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big([x](\cdot),[v](\cdot)\big)\f$:

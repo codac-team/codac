@@ -18,6 +18,12 @@ using namespace ibex;
 
 namespace tubex
 {
+  AbstractContractor::AbstractContractor()
+    : m_type(ContractorType::NONE), m_ibex_ctc(*new CtcEmpty(1)), m_tubex_ctc(*new CtcDeriv)
+  {
+
+  }
+
   AbstractContractor::AbstractContractor(const AbstractContractor& ac)
     : m_type(ac.m_type), m_ibex_ctc(ac.m_ibex_ctc), m_tubex_ctc(ac.m_tubex_ctc), m_active(ac.m_active), m_domains(ac.m_domains)
   {
@@ -61,35 +67,35 @@ namespace tubex
 
     if(m_type == ContractorType::IBEX)
     {
-      if(m_domains.size() == 1 && m_domains[0].first->m_type == DomainType::INTERVAL_VECTOR)
+      if(m_domains.size() == 1 && m_domains[0].ad->m_type == DomainType::INTERVAL_VECTOR)
       {
-        m_ibex_ctc.contract(m_domains[0].first->m_iv);
+        m_ibex_ctc.contract(m_domains[0].ad->m_iv);
       }
 
-      else if(m_domains[0].first->m_type == DomainType::INTERVAL) // set of scalar values
+      else if(m_domains[0].ad->m_type == DomainType::INTERVAL) // set of scalar values
       {
         IntervalVector box(m_domains.size());
         for(int i = 0 ; i < m_domains.size() ; i++)
-          box[i] = m_domains[i].first->m_i;
+          box[i] = m_domains[i].ad->m_i;
 
         m_ibex_ctc.contract(box);
 
         for(int i = 0 ; i < m_domains.size() ; i++)
-          m_domains[i].first->m_i &= box[i];
+          m_domains[i].ad->m_i &= box[i];
       }
 
-      else if(m_domains[0].first->m_type == DomainType::INTERVAL_VECTOR) // set of vector values
+      else if(m_domains[0].ad->m_type == DomainType::INTERVAL_VECTOR) // set of vector values
       {
-        for(int k = 0 ; k < m_domains[0].first->m_iv.size() ; k++)
+        for(int k = 0 ; k < m_domains[0].ad->m_iv.size() ; k++)
         {
           IntervalVector box(m_domains.size());
           for(int i = 0 ; i < m_domains.size() ; i++)
-            box[i] = m_domains[i].first->m_iv[k];
+            box[i] = m_domains[i].ad->m_iv[k];
 
           m_ibex_ctc.contract(box);
 
           for(int i = 0 ; i < m_domains.size() ; i++)
-            m_domains[i].first->m_iv[k] &= box[i];
+            m_domains[i].ad->m_iv[k] &= box[i];
         }
       }
     }
@@ -97,6 +103,11 @@ namespace tubex
     else if(m_type == ContractorType::TUBEX)
     {
       m_tubex_ctc.contract(m_domains);
+    }
+
+    else if(m_type == ContractorType::NONE)
+    {
+      // Symbolic
     }
 
     else
@@ -107,7 +118,7 @@ namespace tubex
   {
     double volume = 0.;
     for(int i = 0 ; i < m_domains.size() ; i++)
-      volume += m_domains[i].first->volume();
+      volume += m_domains[i].ad->volume();
     return volume;
   }
 }

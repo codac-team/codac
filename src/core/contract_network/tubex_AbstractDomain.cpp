@@ -172,14 +172,55 @@ namespace tubex
 
   bool AbstractDomain::is_component_of(const AbstractDomain* x) const
   {
-    if(x->type() != DomainType::INTERVAL_VECTOR || type() != DomainType::INTERVAL)
-      return false;
-    if(x->type() != DomainType::TUBE_VECTOR || type() != DomainType::TUBE)
-      return false;
+    if((x->type() == DomainType::INTERVAL_VECTOR && type() == DomainType::INTERVAL) ||
+       (x->type() == DomainType::TUBE_VECTOR && type() == DomainType::TUBE))
+    {
+      for(int i = 0 ; i < x->m_iv.size() ; i++)
+        if(&x->m_iv[i] == &m_i)
+          return true;
+    }
 
-    for(int i = 0 ; i < x->m_iv.size() ; i++)
-      if(&x->m_iv[i] == &m_i)
+    return false;
+  }
+
+  bool AbstractDomain::is_prev_slice_of(const AbstractDomain* x) const
+  {
+    if(x->type() == DomainType::SLICE && type() == DomainType::SLICE)
+    {
+      if(x->m_s.prev_slice() == &m_s)
+      {
+        assert(m_s->next_slice() == &x->m_s); // structure consistency
         return true;
+      }
+    }
+
+    return false;
+  }
+
+  bool AbstractDomain::is_next_slice_of(const AbstractDomain* x) const
+  {
+    if(x->type() == DomainType::SLICE && type() == DomainType::SLICE)
+    {
+      if(x->m_s.next_slice() == &m_s)
+      {
+        assert(m_s->prev_slice() == &x->m_s); // structure consistency
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  bool AbstractDomain::is_slice_of(const AbstractDomain* x) const
+  {
+    if(x->type() == DomainType::TUBE && type() == DomainType::SLICE)
+    {
+      for(const Slice *s = x->m_t.first_slice() ; s != NULL ; s = s->next_slice())
+      {
+        if(s == &m_s)
+          return true;
+      }
+    }
 
     return false;
   }
