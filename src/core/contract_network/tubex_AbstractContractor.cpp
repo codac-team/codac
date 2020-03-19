@@ -46,6 +46,11 @@ namespace tubex
     }
   }
 
+  AbstractContractor::~AbstractContractor()
+  {
+    
+  }
+
   ContractorType AbstractContractor::type() const
   {
     return m_type;

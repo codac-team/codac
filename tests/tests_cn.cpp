@@ -54,31 +54,33 @@ TEST_CASE("CN simple")
   SECTION("Observation in middle of tube")
   {
     double dt = 5.;
-    Interval domain(0.,10.);
+    Interval domain(0.,20.);
     Tube x(domain, dt, Interval(-10.,10.)), v(domain, dt, Interval(0.));
 
     CtcDeriv ctc_deriv;
 
     ContractorNetwork cn;
     cn.add(ctc_deriv, x, v);
+    cn.add(ctc_deriv, x, v); // redundant contractor that should not be added
     cn.contract();
     cn.contract();
 
     CHECK(v.codomain() == Interval(0.));
     CHECK(x.codomain() == Interval(-10.,10.));
-    CHECK(cn.nb_ctc() == 6);
-    CHECK(cn.nb_dom() == 6);
+    CHECK(cn.nb_ctc() == 12);
+    CHECK(cn.nb_dom() == 10);
 
     CtcEval ctc_eval;
     Interval t1(5.), t2(6.);
     Interval z(2.);
 
     cn.add(ctc_eval, t1, z, x, v);
+    cn.add(ctc_eval, t1, z, x, v); // redundant contractor that should not be added
     cn.contract();
 
     CHECK(v.codomain() == Interval(0.));
     CHECK(x.codomain() == Interval(2.));
-    CHECK(cn.nb_ctc() == 7);
-    CHECK(cn.nb_dom() == 8);
+    CHECK(cn.nb_ctc() == 13);
+    CHECK(cn.nb_dom() == 12);
   }
 }

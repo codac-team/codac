@@ -57,7 +57,7 @@ namespace tubex
 
       AbstractDomain* add_domain(AbstractDomain *ad);
       void add_domain(AbstractDomain *ad, AbstractContractor *ac);
-      void add_contractor(AbstractContractor *ac);
+      void add_contractor(AbstractContractor *&ac);
 
       std::vector<AbstractContractor*> m_v_ctc;
       //std::map<AbstractContractor*,double> m_ctc_comput_times;

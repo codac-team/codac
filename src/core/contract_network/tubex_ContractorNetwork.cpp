@@ -317,8 +317,16 @@ namespace tubex
     ad_->m_v_ctc.push_back(ac);
   }
 
-  void ContractorNetwork::add_contractor(AbstractContractor *ac)
+  void ContractorNetwork::add_contractor(AbstractContractor *&ac)
   {
+    // Looking if this contractor is not already part of the graph
+    for(auto& ctc : m_v_ctc)
+      if(*ctc == *ac) // found
+      {
+        // todo: delete ac
+        return;
+      }
+    
     m_v_ctc.push_back(ac);
 
     if(ac->type() == ContractorType::NONE)
