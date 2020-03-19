@@ -38,15 +38,29 @@ namespace tubex
     return m_v_domains.size();
   }
 
-  void ContractorNetwork::contract(float r)
+  void ContractorNetwork::set_fixedpoint_ratio(float r)
+  {
+    assert(Interval(0.,1).contains(r));
+    m_fixedpoint_ratio = r;
+  }
+
+  double ContractorNetwork::contract(bool verbose)
   {
     int k = 0;
     clock_t t_start = clock();
-    cout << "Contractor network has " << m_v_ctc.size()
-         << " contractors and " << m_v_domains.size() << " domains" << endl;
-    cout << "Computing, " << m_deque.size() << " contractors in m_deque" << endl;
 
-    while(!m_deque.empty())
+    if(verbose)
+    {
+      cout << "Contractor network has " << m_v_ctc.size()
+           << " contractors and " << m_v_domains.size() << " domains" << endl;
+      cout << "Computing, " << m_deque.size() << " contractors in m_deque";
+      if(m_contraction_duration_max != 0.)
+        cout << " during " << m_contraction_duration_max << "s";
+      cout << endl;
+    }
+
+    while(!m_deque.empty()
+      && (double)(clock() - t_start)/CLOCKS_PER_SEC < m_contraction_duration_max)
     {
       AbstractContractor *ctc = m_deque.front();
       m_deque.pop_front();
@@ -57,8 +71,8 @@ namespace tubex
       {
         double current_volume = ctc_dom->volume(); // new volume after contraction
 
-        //if(current_volume != ctc_dom->m_volume) // if the domain has "changed" after the contraction
-        if(current_volume/ctc_dom->m_volume < 1.-r)
+        // If the domain has "changed" after the contraction
+        if(current_volume/ctc_dom->m_volume < 1.-m_fixedpoint_ratio)
         {
           // We activate each contractor related to these domains, according to graph orientation
           for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
@@ -76,8 +90,9 @@ namespace tubex
       }
     }
 
-    cout << endl
-         << "  computation time: " << (double)(clock() - t_start)/CLOCKS_PER_SEC << "s" << endl;
+    if(verbose)
+      cout << endl
+           << "  computation time: " << (double)(clock() - t_start)/CLOCKS_PER_SEC << "s" << endl;
 
     // Emptiness test
     for(const auto& ctc : m_v_ctc)
@@ -86,8 +101,18 @@ namespace tubex
         {
           cout << "  warning: empty set" << endl;
           exit(1);
-          return;
         }
+
+    return (double)(clock() - t_start)/CLOCKS_PER_SEC;
+  }
+  
+  double ContractorNetwork::contract_during(double dt)
+  {
+    double prev_dt = m_contraction_duration_max;
+    m_contraction_duration_max = dt;
+    double contraction_time = contract();
+    m_contraction_duration_max = prev_dt;
+    return contraction_time;
   }
 
   Interval& ContractorNetwork::create_var(const Interval& i_)

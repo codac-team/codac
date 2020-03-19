@@ -33,8 +33,10 @@ namespace tubex
 
       int nb_ctc() const;
       int nb_dom() const;
+      void set_fixedpoint_ratio(float r);
 
-      void contract(float r = 0.0001);
+      double contract(bool verbose = false);
+      double contract_during(double dt);
 
       ibex::Interval& create_var(const ibex::Interval& i_);
       ibex::IntervalVector& create_var(const ibex::IntervalVector& i_);
@@ -64,6 +66,9 @@ namespace tubex
       std::vector<AbstractDomain*> m_v_domains;
 
       std::deque<AbstractContractor*> m_deque;
+
+      float m_fixedpoint_ratio = 0.0001;
+      double m_contraction_duration_max = std::numeric_limits<double>::infinity();
   };
 }
 
