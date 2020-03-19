@@ -12,6 +12,7 @@
 #ifndef __TUBEX_CONTRACTOR_NETWORK_H__
 #define __TUBEX_CONTRACTOR_NETWORK_H__
 
+#include <deque>
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
 #include "ibex_Ctc.h"
@@ -29,6 +30,9 @@ namespace tubex
 
       ContractorNetwork();
       ~ContractorNetwork();
+
+      int nb_ctc() const;
+      int nb_dom() const;
 
       void contract(float r = 0.001);
 
@@ -53,11 +57,12 @@ namespace tubex
 
       AbstractDomain* add_domain(AbstractDomain *ad);
       void add_domain(AbstractDomain *ad, AbstractContractor *ac);
-      void complete_graph();
 
       std::vector<AbstractContractor*> m_v_ctc;
       //std::map<AbstractContractor*,double> m_ctc_comput_times;
       std::vector<AbstractDomain*> m_v_domains;
+
+      std::deque<AbstractContractor*> m_deque;
   };
 }
 

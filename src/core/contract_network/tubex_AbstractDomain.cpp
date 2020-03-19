@@ -117,7 +117,20 @@ namespace tubex
       }
 
       case DomainType::TUBE_VECTOR:
-        return m_tv.volume();
+      {
+        // todo: improve this
+        double vol = 0.;
+
+        for(int i = 0 ; i < m_tv.size() ; i++)
+        {
+          vol += m_tv[i].volume();
+          vol += m_tv[i].first_slice()->input_gate().diam();
+          for(const Slice *s = m_tv[i].first_slice() ; s != NULL ; s = s->next_slice())
+            vol += s->output_gate().diam();
+        }
+        
+        return vol;
+      }
 
       default:
         assert(false && "unhandled case");

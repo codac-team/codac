@@ -40,7 +40,7 @@ namespace tubex
       std::vector<AbstractDomain*> m_domains;
 
 
-    protected:
+    //protected:
 
       const ContractorType m_type;
 
