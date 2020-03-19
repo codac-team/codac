@@ -34,6 +34,7 @@ namespace tubex
       explicit AbstractContractor(tubex::Ctc& ctc);
 
       ContractorType type() const;
+      bool operator==(const AbstractContractor& x) const;
 
       void contract();
 

@@ -51,6 +51,20 @@ namespace tubex
     return m_type;
   }
 
+  bool AbstractContractor::operator==(const AbstractContractor& x) const
+  {
+    if(m_type != x.m_type || m_domains.size() != x.m_domains.size())
+      return false;
+
+    for(int i = 0 ; i < m_domains.size() ; i++)
+    {
+      if(*m_domains[i] != *x.m_domains[i])
+        return false;
+    }
+
+    return true;
+  }
+
   void AbstractContractor::contract()
   {
     assert(!m_domains.empty());

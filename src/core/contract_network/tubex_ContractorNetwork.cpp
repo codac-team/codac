@@ -57,8 +57,8 @@ namespace tubex
       {
         double current_volume = ctc_dom->volume(); // new volume after contraction
 
-        if(current_volume != ctc_dom->m_volume) // if the domain has "changed" after the contraction
-        //if(current_volume/ctc_dom->m_volume < 1.-r)
+        //if(current_volume != ctc_dom->m_volume) // if the domain has "changed" after the contraction
+        if(current_volume/ctc_dom->m_volume < 1.-r)
         {
           // We activate each contractor related to these domains, according to graph orientation
           for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
@@ -92,24 +92,21 @@ namespace tubex
 
   Interval& ContractorNetwork::create_var(const Interval& i_)
   {
-    Interval *i = new Interval(i_);
-    m_v_domains.push_back(new AbstractDomain(*i));
-    return *i; // todo: allow to delete this
+    // todo: delete
+    return add_domain(new AbstractDomain(*new Interval(i_)))->m_i;
   }
 
   IntervalVector& ContractorNetwork::create_var(const IntervalVector& i_)
   {
-    IntervalVector *i = new IntervalVector(i_);
-    m_v_domains.push_back(new AbstractDomain(*i));
-    return *i; // todo: allow to delete this
+    // todo: delete
+    return add_domain(new AbstractDomain(*new IntervalVector(i_)))->m_iv;
   }
 
   void ContractorNetwork::add(ibex::Ctc& ctc, IntervalVector& i1)
   {
     AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
     add_domain(new AbstractDomain(i1), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(ibex::Ctc& ctc, Interval& i1, Interval& i2, Interval& i3)
@@ -118,8 +115,7 @@ namespace tubex
     add_domain(new AbstractDomain(i1), abstract_ctc);
     add_domain(new AbstractDomain(i2), abstract_ctc);
     add_domain(new AbstractDomain(i3), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(ibex::Ctc& ctc, IntervalVector& i1, IntervalVector& i2, IntervalVector& i3)
@@ -128,8 +124,7 @@ namespace tubex
     add_domain(new AbstractDomain(i1), abstract_ctc);
     add_domain(new AbstractDomain(i2), abstract_ctc);
     add_domain(new AbstractDomain(i3), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(ibex::Ctc& ctc, Interval& i1, Interval& i2, Interval& i3, Interval& i4)
@@ -139,8 +134,7 @@ namespace tubex
     add_domain(new AbstractDomain(i2), abstract_ctc);
     add_domain(new AbstractDomain(i3), abstract_ctc);
     add_domain(new AbstractDomain(i4), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(ibex::Ctc& ctc, Interval& i1, Interval& i2, Interval& i3, Interval& i4, Interval& i5)
@@ -151,8 +145,7 @@ namespace tubex
     add_domain(new AbstractDomain(i3), abstract_ctc);
     add_domain(new AbstractDomain(i4), abstract_ctc);
     add_domain(new AbstractDomain(i5), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, Interval& i2, Tube& i3, Tube& i4)
@@ -162,8 +155,7 @@ namespace tubex
     add_domain(new AbstractDomain(i2), abstract_ctc);
     add_domain(new AbstractDomain(i3), abstract_ctc);
     add_domain(new AbstractDomain(i4), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, IntervalVector& i2, TubeVector& i3, TubeVector& i4)
@@ -173,8 +165,7 @@ namespace tubex
     add_domain(new AbstractDomain(i2), abstract_ctc);
     add_domain(new AbstractDomain(i3), abstract_ctc);
     add_domain(new AbstractDomain(i4), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, Interval& i2, Tube& i3)
@@ -183,8 +174,7 @@ namespace tubex
     add_domain(new AbstractDomain(i1), abstract_ctc);
     add_domain(new AbstractDomain(i2), abstract_ctc);
     add_domain(new AbstractDomain(i3), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(tubex::Ctc& ctc, Interval& i1, IntervalVector& i2, TubeVector& i3)
@@ -193,8 +183,7 @@ namespace tubex
     add_domain(new AbstractDomain(i1), abstract_ctc);
     add_domain(new AbstractDomain(i2), abstract_ctc);
     add_domain(new AbstractDomain(i3), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   void ContractorNetwork::add(tubex::Ctc& ctc, Tube& i1, Tube& i2)
@@ -221,8 +210,7 @@ namespace tubex
       AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
       add_domain(new AbstractDomain(i1), abstract_ctc);
       add_domain(new AbstractDomain(i2), abstract_ctc);
-      m_v_ctc.push_back(abstract_ctc);
-      m_deque.push_front(abstract_ctc);
+      add_contractor(abstract_ctc);
     }
   }
 
@@ -245,8 +233,7 @@ namespace tubex
       AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
       add_domain(new AbstractDomain(i1), abstract_ctc);
       add_domain(new AbstractDomain(i2), abstract_ctc);
-      m_v_ctc.push_back(abstract_ctc);
-      m_deque.push_front(abstract_ctc);
+      add_contractor(abstract_ctc);
     }
   }
 
@@ -255,8 +242,7 @@ namespace tubex
     AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
     add_domain(new AbstractDomain(i1), abstract_ctc);
     add_domain(new AbstractDomain(i2), abstract_ctc);
-    m_v_ctc.push_back(abstract_ctc);
-    m_deque.push_front(abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   AbstractDomain* ContractorNetwork::add_domain(AbstractDomain *ad)
@@ -287,8 +273,7 @@ namespace tubex
         add_domain(new AbstractDomain(ad->m_tv), ac_link); // adding vector
         for(int i = 0 ; i < ad->m_tv.size() ; i++)
           add_domain(new AbstractDomain(ad->m_tv[i]), ac_link); // adding its components
-        m_v_ctc.push_back(ac_link);
-        m_deque.push_back(ac_link);
+        add_contractor(ac_link);
       }
 
       else if(ad->type() == DomainType::INTERVAL_VECTOR)
@@ -297,8 +282,7 @@ namespace tubex
         add_domain(new AbstractDomain(ad->m_iv), ac_link); // adding vector
         for(int i = 0 ; i < ad->m_iv.size() ; i++)
           add_domain(new AbstractDomain(ad->m_iv[i]), ac_link); // adding its components
-        m_v_ctc.push_back(ac_link);
-        m_deque.push_back(ac_link);
+        add_contractor(ac_link);
       }
 
       else if(ad->type() == DomainType::TUBE)
@@ -308,8 +292,7 @@ namespace tubex
         add_domain(new AbstractDomain(ad->m_t), ac_link); // adding tube
         for(Slice *s = ad->m_t.first_slice() ; s != NULL ; s = s->next_slice())
           add_domain(new AbstractDomain(*s), ac_link); // adding one of its slices
-        m_v_ctc.push_back(ac_link);
-        m_deque.push_back(ac_link);
+        add_contractor(ac_link);
 
         // Dependencies slice <-> slice
         for(Slice *s = ad->m_t.first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
@@ -317,8 +300,7 @@ namespace tubex
           AbstractContractor *ac_link_slices = new AbstractContractor();
           add_domain(new AbstractDomain(*s), ac_link_slices);
           add_domain(new AbstractDomain(*(s->next_slice())), ac_link_slices);
-          m_v_ctc.push_back(ac_link_slices);
-          m_deque.push_back(ac_link);
+          add_contractor(ac_link_slices);
         }
       }
 
@@ -333,5 +315,16 @@ namespace tubex
 
     ac->m_domains.push_back(ad_);
     ad_->m_v_ctc.push_back(ac);
+  }
+
+  void ContractorNetwork::add_contractor(AbstractContractor *ac)
+  {
+    m_v_ctc.push_back(ac);
+
+    if(ac->type() == ContractorType::NONE)
+      m_deque.push_back(ac);
+
+    else
+      m_deque.push_front(ac); // priority
   }
 }

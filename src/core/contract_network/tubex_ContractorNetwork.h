@@ -34,7 +34,7 @@ namespace tubex
       int nb_ctc() const;
       int nb_dom() const;
 
-      void contract(float r = 0.001);
+      void contract(float r = 0.0001);
 
       ibex::Interval& create_var(const ibex::Interval& i_);
       ibex::IntervalVector& create_var(const ibex::IntervalVector& i_);
@@ -57,6 +57,7 @@ namespace tubex
 
       AbstractDomain* add_domain(AbstractDomain *ad);
       void add_domain(AbstractDomain *ad, AbstractContractor *ac);
+      void add_contractor(AbstractContractor *ac);
 
       std::vector<AbstractContractor*> m_v_ctc;
       //std::map<AbstractContractor*,double> m_ctc_comput_times;

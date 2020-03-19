@@ -188,6 +188,34 @@ namespace tubex
         return false;
     }
   }
+  
+  bool AbstractDomain::operator!=(const AbstractDomain& x) const
+  {
+    if(m_type != x.m_type)
+      return true;
+
+    switch(m_type)
+    {
+      case DomainType::INTERVAL:
+        return &m_i != &x.m_i;
+
+      case DomainType::INTERVAL_VECTOR:
+        return &m_iv != &x.m_iv;
+
+      case DomainType::SLICE:
+        return &m_s != &x.m_s;
+
+      case DomainType::TUBE:
+        return &m_t != &x.m_t;
+
+      case DomainType::TUBE_VECTOR:
+        return &m_tv != &x.m_tv;
+
+      default:
+        assert(false && "unhandled case");
+        return false;
+    }
+  }
 
   bool AbstractDomain::is_component_of(const AbstractDomain* x) const
   {

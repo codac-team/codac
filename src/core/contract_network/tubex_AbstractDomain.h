@@ -42,6 +42,7 @@ namespace tubex
       bool is_empty() const;
       
       bool operator==(const AbstractDomain& x) const;
+      bool operator!=(const AbstractDomain& x) const;
       bool is_component_of(const AbstractDomain* x) const;
       bool is_prev_slice_of(const AbstractDomain* x) const;
       bool is_next_slice_of(const AbstractDomain* x) const;
