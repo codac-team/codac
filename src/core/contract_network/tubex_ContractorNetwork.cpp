@@ -54,7 +54,7 @@ namespace tubex
       cout << "Contractor network has " << m_v_ctc.size()
            << " contractors and " << m_v_domains.size() << " domains" << endl;
       cout << "Computing, " << m_deque.size() << " contractors in m_deque";
-      if(m_contraction_duration_max != 0.)
+      if(!isinf(m_contraction_duration_max))
         cout << " during " << m_contraction_duration_max << "s";
       cout << endl;
     }
