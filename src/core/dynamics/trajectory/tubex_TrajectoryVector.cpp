@@ -249,25 +249,43 @@ namespace tubex
         (*this)[i].set(y[i], t);
     }
 
-    void TrajectoryVector::truncate_domain(const Interval& t)
+    TrajectoryVector& TrajectoryVector::truncate_domain(const Interval& t)
     {
       assert(valid_domain(t));
       assert(domain().is_superset(t));
       for(int i = 0 ; i < size() ; i++)
         if(!(*this)[i].not_defined())
           (*this)[i].truncate_domain(t);
+      return *this;
     }
 
-    void TrajectoryVector::shift_domain(double shift_ref)
+    TrajectoryVector& TrajectoryVector::shift_domain(double shift_ref)
     {
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].shift_domain(shift_ref);
+      return *this;
     }
 
-    void TrajectoryVector::sample(double dt)
+    TrajectoryVector& TrajectoryVector::sample(double dt)
     {
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].sample(dt);
+      return *this;
+    }
+
+    TrajectoryVector& TrajectoryVector::sample(const Trajectory& x)
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].sample(x);
+      return *this;
+    }
+
+    TrajectoryVector& TrajectoryVector::sample(const TrajectoryVector& x)
+    {
+      assert(size() == x.size());
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].sample(x[i]);
+      return *this;
     }
     
     // Integration

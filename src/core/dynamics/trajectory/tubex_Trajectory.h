@@ -207,8 +207,9 @@ namespace tubex
        * \note The new domain must be a subset of the old one
        *
        * \param domain new Interval domain \f$[t_0,t_f]\f$
+       * \return a reference to this trajectory
        */
-      void truncate_domain(const ibex::Interval& domain);
+      Trajectory& truncate_domain(const ibex::Interval& domain);
 
       /**
        * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$x(\cdot)\f$
@@ -218,8 +219,9 @@ namespace tubex
        *       an analytic function, only the definition domain will be changed.
        *
        * \param a the offset value so that \f$[t_0,t_f]:=[t_0-a,t_f-a]\f$
+       * \return a reference to this trajectory
        */
-      void shift_domain(double a);
+      Trajectory& shift_domain(double a);
 
       /**
        * \brief Samples the trajectory by adding new points to the map of values
@@ -228,8 +230,9 @@ namespace tubex
        *       transformed into a map of values and the tubex::Function object is deleted.
        *
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
+       * \return a reference to this trajectory
        */
-      void sample(double timestep);
+      Trajectory& sample(double timestep);
 
       /**
        * \brief Samples this trajectory so that it will share the same sampling of \f$x(\cdot)\f$
@@ -237,11 +240,12 @@ namespace tubex
        * \note If the trajectory is defined as an analytic function, then the object is
        *       transformed into a map of values and the tubex::Function object is deleted.
        *
-       * \note The previous sampling of this tube is preserved
+       * \note The previous sampling of this trajectory is preserved
        *
        * \param x the Trajectory from which the new sampling will come from
+       * \return a reference to this trajectory
        */
-      void sample(const Trajectory& x);
+      Trajectory& sample(const Trajectory& x);
 
       /// @}
       /// \name Integration

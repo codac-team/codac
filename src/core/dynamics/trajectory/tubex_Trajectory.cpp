@@ -229,7 +229,7 @@ namespace tubex
       set_map_value(y, t);
     }
 
-    void Trajectory::truncate_domain(const Interval& t)
+    Trajectory& Trajectory::truncate_domain(const Interval& t)
     {
       assert(valid_domain(t));
       assert(domain().is_superset(t));
@@ -249,9 +249,10 @@ namespace tubex
 
       compute_codomain();
       m_domain &= t;
+      return *this;
     }
 
-    void Trajectory::shift_domain(double shift_ref)
+    Trajectory& Trajectory::shift_domain(double shift_ref)
     {
       map<double,double> map_temp = m_map_values;
       m_map_values.clear();
@@ -261,9 +262,10 @@ namespace tubex
 
       m_domain -= shift_ref;
       compute_codomain();
+      return *this;
     }
     
-    void Trajectory::sample(double dt)
+    Trajectory& Trajectory::sample(double dt)
     {
       assert(dt > 0.);
       
@@ -276,9 +278,11 @@ namespace tubex
         delete m_function;
         m_function = NULL;
       }
+
+      return *this;
     }
     
-    void Trajectory::sample(const Trajectory& x)
+    Trajectory& Trajectory::sample(const Trajectory& x)
     {
       assert(domain() == x.domain());
       
@@ -290,6 +294,8 @@ namespace tubex
         }
       // Note : no need to use set_map_value() method:
       // the domain/codomain will not be changed by this method.
+
+      return *this;
     }
 
     // Integration

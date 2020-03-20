@@ -42,7 +42,7 @@ namespace tubex
   AbstractDomain::AbstractDomain(tubex::Slice& s)
     : m_type(DomainType::SLICE), m_i(m_dump_i), m_iv(m_dump_iv), m_s(s), m_t(m_dump_t), m_tv(m_dump_tv)
   {
-    m_s &= Interval(-99999.,99999.); // todo: remove this
+    m_s &= Slice(m_s.domain(),Interval(-99999.,99999.)); // todo: remove this
   }
 
   AbstractDomain::AbstractDomain(tubex::Tube& t)
