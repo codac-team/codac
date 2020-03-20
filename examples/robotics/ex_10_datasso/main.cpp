@@ -66,7 +66,7 @@ int main()
       const Interval visi_range(0.,75.); // [0m,75m]
       const Interval visi_angle(-M_PI/4.,M_PI/4.); // frontal sonar
       vector<IntervalVector> v_obs =
-        DataLoader::generate_observations(state_truth, v_map, max_nb_obs, visi_range, visi_angle);
+        DataLoader::generate_observations(state_truth, v_map, max_nb_obs, true, visi_range, visi_angle);
 
       // Adding uncertainties on the measurements
       for(auto& obs : v_obs) 
