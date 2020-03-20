@@ -230,34 +230,6 @@ namespace tubex
     return false;
   }
 
-  bool AbstractDomain::is_prev_slice_of(const AbstractDomain* x) const
-  {
-    if(x->type() == DomainType::SLICE && type() == DomainType::SLICE)
-    {
-      if(x->m_s.prev_slice() == &m_s)
-      {
-        assert(m_s->next_slice() == &x->m_s); // structure consistency
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  bool AbstractDomain::is_next_slice_of(const AbstractDomain* x) const
-  {
-    if(x->type() == DomainType::SLICE && type() == DomainType::SLICE)
-    {
-      if(x->m_s.next_slice() == &m_s)
-      {
-        assert(m_s->prev_slice() == &x->m_s); // structure consistency
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   bool AbstractDomain::is_slice_of(const AbstractDomain* x) const
   {
     if(x->type() == DomainType::TUBE && type() == DomainType::SLICE)

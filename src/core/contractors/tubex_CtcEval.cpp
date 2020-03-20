@@ -24,7 +24,7 @@ namespace tubex
 
   void CtcEval::contract(vector<AbstractDomain*>& v_domains)
   {
-    assert(v_domains[0].m_i != NULL);
+    assert(v_domains[0]->type() == DomainType::INTERVAL);
 
     if(v_domains.size() == 4) // full constraint with derivative
     {
