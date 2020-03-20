@@ -115,7 +115,8 @@ int main()
       cn.add(ctc_eval, t, psi, heading);
     }
 
-    cn.contract();
+    cn.set_fixedpoint_ratio(0.0005);
+    cn.contract(true);
 
 
   /* =========== GRAPHICS =========== */
@@ -130,7 +131,7 @@ int main()
     fig_map.add_beacons(v_map, 2.);
     fig_map.smooth_tube_drawing();
     fig_map.show();
-    fig_map.axis_limits(-340., 340., 0., 0., true);
+    fig_map.axis_limits(-340., 340., -1., 1., true);
     
 
   /* =========== ENDING =========== */
