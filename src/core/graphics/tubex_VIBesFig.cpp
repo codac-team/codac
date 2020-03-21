@@ -119,11 +119,19 @@ namespace tubex
   void VIBesFig::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
   {
     assert(box.size() == 2);
+
+    if(box.is_unbounded())
+      return;
+
     vibes::Params params_this_fig(params);
     m_view_box |= box;
     params_this_fig["figure"] = name();
-    if(color != "") vibes::drawBox(box, color, params_this_fig);
-    else vibes::drawBox(box, params_this_fig);
+
+    if(color != "")
+      vibes::drawBox(box, color, params_this_fig);
+    
+    else
+      vibes::drawBox(box, params_this_fig);
   }
   
   void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const vibes::Params& params)
