@@ -112,7 +112,7 @@ namespace tubex
        *
        * \param smooth `true` for smooth display
        */
-      void smooth_tube_drawing(bool smooth = true);
+      void smooth_tube_drawing(bool smooth);
       
       /// @}
       /// \name Handling tubes

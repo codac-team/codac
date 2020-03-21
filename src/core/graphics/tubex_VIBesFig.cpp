@@ -91,9 +91,7 @@ namespace tubex
     box_with_margin[1] += margin * m_view_box[1].diam() * Interval(-1.,1.);
 
     vibes::clearGroup(name(), "transparent_box");
-    vibes::drawBox(box_with_margin[0].lb(), box_with_margin[0].ub(),
-                   box_with_margin[1].lb(), box_with_margin[1].ub(),
-                   vibesParams("figure", name(), "group", "transparent_box"));
+    vibes::drawBox(box_with_margin, vibesParams("figure", name(), "group", "transparent_box"));
     vibes::axisLimits(box_with_margin[0].lb(), box_with_margin[0].ub(),
                       box_with_margin[1].lb(), box_with_margin[1].ub(),
                       name());

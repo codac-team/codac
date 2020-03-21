@@ -129,7 +129,7 @@ int main()
     fig_map.add_trajectory(&state_truth, "x*", 0, 1, 2, "white");
     fig_map.add_observations(v_obs, &state_truth);
     fig_map.add_beacons(v_map, 2.);
-    fig_map.smooth_tube_drawing();
+    fig_map.smooth_tube_drawing(true);
     fig_map.show();
     fig_map.axis_limits(-340., 340., -1., 1., true);
     
