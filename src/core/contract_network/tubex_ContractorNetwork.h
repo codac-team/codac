@@ -33,10 +33,11 @@ namespace tubex
 
       int nb_ctc() const;
       int nb_dom() const;
+      int nb_ctc_in_stack() const;
       void set_fixedpoint_ratio(float r);
 
       double contract(bool verbose = false);
-      double contract_during(double dt);
+      double contract_during(double dt, bool verbose = false);
 
       ibex::Interval& create_var(const ibex::Interval& i_);
       ibex::IntervalVector& create_var(const ibex::IntervalVector& i_);

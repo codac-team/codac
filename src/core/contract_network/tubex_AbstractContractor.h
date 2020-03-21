@@ -45,6 +45,7 @@ namespace tubex
     //protected:
 
       const ContractorType m_type;
+      double m_active = true;
 
       ibex::Ctc& m_ibex_ctc;
       tubex::Ctc& m_tubex_ctc;

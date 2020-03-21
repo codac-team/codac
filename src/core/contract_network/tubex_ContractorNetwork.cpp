@@ -38,6 +38,11 @@ namespace tubex
     return m_v_domains.size();
   }
 
+  int ContractorNetwork::nb_ctc_in_stack() const
+  {
+    return m_deque.size();
+  }
+
   void ContractorNetwork::set_fixedpoint_ratio(float r)
   {
     assert(Interval(0.,1).contains(r));
@@ -53,7 +58,7 @@ namespace tubex
     {
       cout << "Contractor network has " << m_v_ctc.size()
            << " contractors and " << m_v_domains.size() << " domains" << endl;
-      cout << "Computing, " << m_deque.size() << " contractors in m_deque";
+      cout << "Computing, " << nb_ctc_in_stack() << " contractors in m_deque";
       if(!isinf(m_contraction_duration_max))
         cout << " during " << m_contraction_duration_max << "s";
       cout << endl;
@@ -66,6 +71,7 @@ namespace tubex
       m_deque.pop_front();
 
       ctc->contract();
+      ctc->m_active = false;
 
       for(auto& ctc_dom : ctc->m_domains) // for each domain related to this contractor
       {
@@ -76,8 +82,10 @@ namespace tubex
         {
           // We activate each contractor related to these domains, according to graph orientation
           for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
-            if(ctc_of_dom != ctc)
+            if(ctc_of_dom != ctc && !ctc_of_dom->m_active)
             {
+              ctc_of_dom->m_active = true;
+
               if(ctc_of_dom->type() == ContractorType::NONE)
                 m_deque.push_back(ctc_of_dom);
 
@@ -106,11 +114,11 @@ namespace tubex
     return (double)(clock() - t_start)/CLOCKS_PER_SEC;
   }
   
-  double ContractorNetwork::contract_during(double dt)
+  double ContractorNetwork::contract_during(double dt, bool verbose)
   {
     double prev_dt = m_contraction_duration_max;
     m_contraction_duration_max = dt;
-    double contraction_time = contract();
+    double contraction_time = contract(verbose);
     m_contraction_duration_max = prev_dt;
     return contraction_time;
   }
