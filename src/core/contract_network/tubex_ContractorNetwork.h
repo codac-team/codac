@@ -63,10 +63,9 @@ namespace tubex
       void add_contractor(AbstractContractor *&ac);
 
       std::vector<AbstractContractor*> m_v_ctc;
-      //std::map<AbstractContractor*,double> m_ctc_comput_times;
       std::vector<AbstractDomain*> m_v_domains;
-
       std::deque<AbstractContractor*> m_deque;
+      //std::map<AbstractContractor*,double> m_ctc_comput_times;
 
       float m_fixedpoint_ratio = 0.0001;
       double m_contraction_duration_max = std::numeric_limits<double>::infinity();

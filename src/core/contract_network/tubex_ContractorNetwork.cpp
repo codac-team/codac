@@ -81,19 +81,24 @@ namespace tubex
         if(current_volume/ctc_dom->m_volume < 1.-m_fixedpoint_ratio)
         {
           // We activate each contractor related to these domains, according to graph orientation
+          deque<AbstractContractor*> ctc_deque;
+
           for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
             if(ctc_of_dom != ctc && !ctc_of_dom->m_active)
             {
               ctc_of_dom->m_active = true;
 
               if(ctc_of_dom->type() == ContractorType::NONE)
-                m_deque.push_back(ctc_of_dom);
+                ctc_deque.push_back(ctc_of_dom);
 
               else
-                m_deque.push_front(ctc_of_dom); // priority
+                ctc_deque.push_front(ctc_of_dom); // priority
             }
-        }
 
+          deque<AbstractContractor*>::iterator it = m_deque.begin();
+          m_deque.insert(it,ctc_deque.begin(),ctc_deque.end());
+        }
+        
         ctc_dom->m_volume = current_volume; // updated old volume
       }
     }
