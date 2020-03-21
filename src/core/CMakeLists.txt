@@ -63,6 +63,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_polygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_operators.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_RandTrajectory.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_RandTrajectory.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory_operators.cpp
