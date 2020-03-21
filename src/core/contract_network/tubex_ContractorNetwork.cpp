@@ -81,6 +81,8 @@ namespace tubex
         if(current_volume/ctc_dom->m_volume < 1.-m_fixedpoint_ratio)
         {
           // We activate each contractor related to these domains, according to graph orientation
+
+          // Local deque, for specific order related to this domain
           deque<AbstractContractor*> ctc_deque;
 
           for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
@@ -95,8 +97,9 @@ namespace tubex
                 ctc_deque.push_front(ctc_of_dom); // priority
             }
 
-          deque<AbstractContractor*>::iterator it = m_deque.begin();
-          m_deque.insert(it,ctc_deque.begin(),ctc_deque.end());
+          // Merging this local deque in the CN one
+          for(auto& c : ctc_deque)
+            m_deque.push_front(c);
         }
         
         ctc_dom->m_volume = current_volume; // updated old volume

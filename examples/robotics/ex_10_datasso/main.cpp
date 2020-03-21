@@ -115,7 +115,7 @@ int main()
       cn.add(ctc_eval, t, psi, heading);
     }
 
-    cn.set_fixedpoint_ratio(0.0005);
+    cn.set_fixedpoint_ratio(0.);
     cn.contract(true);
 
 
