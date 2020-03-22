@@ -122,13 +122,14 @@ namespace tubex
     const Trajectory operator f(const Trajectory& x1, const Trajectory& x2) \
     { \
       assert(x1.domain() == x2.domain()); \
-      assert(x1.function() == NULL && x2.function() == NULL && \
-        "not supported yet for trajectories defined by a Function"); \
-      /* todo: x1 or x2 could be defined by a Function, in fact */ \
+      assert(!(x1.function() != NULL && x2.function() != NULL) && \
+        "not supported yet for two trajectories defined by a Function"); \
       \
       Trajectory x1_sampled(x1), x2_sampled(x2); \
-      x1_sampled.sample(x2); \
-      x2_sampled.sample(x1); \
+      if(x2.function() == NULL) \
+        x1_sampled.sample(x2); \
+      if(x1.function() == NULL) \
+        x2_sampled.sample(x1); \
       map<double,double> new_map; \
       map<double,double>::const_iterator it_x1 = x1_sampled.sampled_map().begin(); \
       map<double,double>::const_iterator it_x2 = x2_sampled.sampled_map().begin(); \
@@ -181,13 +182,14 @@ namespace tubex
   const Trajectory atan2(const Trajectory& x1, const Trajectory& x2)
   {
     assert(x1.domain() == x2.domain());
-    assert(x1.function() == NULL && x2.function() == NULL &&
+    assert(!(x1.function() != NULL && x2.function() != NULL) &&
       "not supported yet for trajectories defined by a Function");
-    /* todo: x1 or x2 could be defined by a Function, in fact */
 
     Trajectory x1_sampled(x1), x2_sampled(x2);
-    x1_sampled.sample(x2);
-    x2_sampled.sample(x1);
+    if(x2.function() == NULL)
+      x1_sampled.sample(x2);
+    if(x1.function() == NULL)
+      x2_sampled.sample(x1);
     map<double,double> map_x1 = x1.sampled_map(), map_x2 = x2.sampled_map();
 
     map<double,double>::iterator it_x1 = map_x1.begin();

@@ -31,12 +31,12 @@ namespace tubex
     const Trajectory& Trajectory::fdef(const Trajectory& x) \
     { \
       assert(domain() == x.domain()); \
-      assert(function() == NULL && x.function() == NULL && \
+      assert(!(function() != NULL && x.function() != NULL) && \
         "not supported yet for trajectories defined by a Function"); \
-      /* todo: x could be defined by a Function, in fact */ \
       \
       Trajectory x_sampled(x); \
-      x_sampled.sample(*this); \
+      if(this->function() == NULL) \
+        x_sampled.sample(*this); \
       \
       map<double,double> new_map; \
       for(auto const& it : x_sampled.sampled_map()) \
