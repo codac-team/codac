@@ -22,7 +22,7 @@ TEST_CASE("CN simple")
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2));
 
     ContractorNetwork cn;
-    cn.add(ctc_plus, a[0], b[0], c[0]);
+    cn.add(ctc_plus, {a[0], b[0], c[0]});
     cn.contract();
 
     CHECK(a[0] == Interval(0.5,1));
@@ -40,8 +40,8 @@ TEST_CASE("CN simple")
     // Contractors are added to the graph, 
     // the first one contracts the vector sets, the second one then contracts the components intervals,
     // and so it should trigger again the first one since components have changed.
-    cn.add(ctc_plus, b, d, e);
-    cn.add(ctc_plus, a[0], b[0], c[0]);
+    cn.add(ctc_plus, {b, d, e});
+    cn.add(ctc_plus, {a[0], b[0], c[0]});
     cn.contract();
 
     CHECK(a[0] == Interval(0.5,1));
@@ -60,8 +60,8 @@ TEST_CASE("CN simple")
     CtcDeriv ctc_deriv;
 
     ContractorNetwork cn;
-    cn.add(ctc_deriv, x, v);
-    cn.add(ctc_deriv, x, v); // redundant contractor that should not be added
+    cn.add(ctc_deriv, {x, v});
+    cn.add(ctc_deriv, {x, v}); // redundant contractor that should not be added
     cn.contract();
     cn.contract();
 
@@ -74,8 +74,8 @@ TEST_CASE("CN simple")
     Interval t1(5.), t2(6.);
     Interval z(2.);
 
-    cn.add(ctc_eval, t1, z, x, v);
-    cn.add(ctc_eval, t1, z, x, v); // redundant contractor that should not be added
+    cn.add(ctc_eval, {t1, z, x, v});
+    cn.add(ctc_eval, {t1, z, x, v}); // redundant contractor that should not be added
     cn.contract();
 
     CHECK(v.codomain() == Interval(0.));

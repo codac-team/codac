@@ -29,11 +29,11 @@ namespace tubex
     public:
 
       AbstractDomain(const AbstractDomain& ad);
-      explicit AbstractDomain(ibex::Interval& i);
-      explicit AbstractDomain(ibex::IntervalVector& iv);
-      explicit AbstractDomain(tubex::Slice& s);
-      explicit AbstractDomain(tubex::Tube& t);
-      explicit AbstractDomain(tubex::TubeVector& tv);
+      AbstractDomain(ibex::Interval& i);
+      AbstractDomain(ibex::IntervalVector& iv);
+      AbstractDomain(tubex::Slice& s);
+      AbstractDomain(tubex::Tube& t);
+      AbstractDomain(tubex::TubeVector& tv);
       ~AbstractDomain();
 
       DomainType type() const;

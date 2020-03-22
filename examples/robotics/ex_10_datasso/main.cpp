@@ -92,7 +92,7 @@ int main()
   /* =========== CONTRACTOR NETWORK =========== */
 
     ContractorNetwork cn;
-    cn.add(ctc_deriv, x, v);
+    cn.add(ctc_deriv, {x, v});
 
     for(int i = 0 ; i < v_obs.size() ; i++)
     {
@@ -107,12 +107,12 @@ int main()
       IntervalVector& d = cn.create_var(IntervalVector(2));
       IntervalVector& p = cn.create_var(IntervalVector(2));
       
-      cn.add(ctc_constell, m[i]);
-      cn.add(ctc_minus, d, m[i], p);
-      cn.add(ctc_plus, a, psi, y2);
-      cn.add(ctc_polar, d[0], d[1], y1, a);
-      cn.add(ctc_eval, t, p, x, v);
-      cn.add(ctc_eval, t, psi, heading);
+      cn.add(ctc_constell, {m[i]});
+      cn.add(ctc_minus, {d, m[i], p});
+      cn.add(ctc_plus, {a, psi, y2});
+      cn.add(ctc_polar, {d[0], d[1], y1, a});
+      cn.add(ctc_eval, {t, p, x, v});
+      cn.add(ctc_eval, {t, psi, heading});
     }
 
     cn.set_fixedpoint_ratio(0.);
