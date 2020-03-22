@@ -160,4 +160,28 @@ TEST_CASE("Trajectory base")
     CHECK(test.last_value() == Vector(4,10.));
     CHECK(test.size() == 4);
   }
+
+  SECTION("Constructor with list")
+  {
+    // Defined by maps of values
+
+    map<double,Vector> vector_map_values;
+    for(double t = 0. ; t <= 10. ; t++)
+      vector_map_values.insert(make_pair(t, Vector(4,t)));
+    TrajectoryVector test1(vector_map_values);
+    
+    map<double,double> scalar_map_values;
+    for(double t = 0. ; t <= 10. ; t++)
+      scalar_map_values.insert(make_pair(t, t));
+
+    TrajectoryVector test2({
+      Trajectory(scalar_map_values),
+      Trajectory(scalar_map_values),
+      Trajectory(scalar_map_values),
+      Trajectory(scalar_map_values)
+    });
+
+    CHECK(test1 == test2);
+    CHECK(test1[0] == test2[0]);
+  }
 }

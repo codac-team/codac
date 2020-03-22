@@ -13,6 +13,7 @@
 #define __TUBEX_TRAJECTORYVECTOR_H__
 
 #include <map>
+#include <initializer_list>
 #include "ibex_Vector.h"
 #include "ibex_Interval.h"
 #include "tubex_Function.h"
@@ -67,6 +68,13 @@ namespace tubex
        * \param v_map_values set of map<t,y> defining the trajectory: \f$\mathbf{x}(t)=\mathbf{y}\f$
        */
       explicit TrajectoryVector(const std::vector<std::map<double,double> >& v_map_values);
+
+      /**
+       * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a list of Trajectory objects
+       *
+       * \param list list of \f$x_i(\cdot)\f$ trajectories
+       */
+      TrajectoryVector(std::initializer_list<Trajectory> list);
 
       /**
        * \brief Creates a copy of a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$

@@ -72,6 +72,13 @@ namespace tubex
         (*this)[i] = x;
     }
 
+    TrajectoryVector::TrajectoryVector(initializer_list<Trajectory> list)
+      : TrajectoryVector(list.size())
+    {
+      assert(list.size() > 0);
+      std::copy(list.begin(), list.end(), m_v_trajs);
+    }
+
     TrajectoryVector::TrajectoryVector(const TrajectoryVector& traj)
     {
       *this = traj;

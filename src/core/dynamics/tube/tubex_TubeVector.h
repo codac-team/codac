@@ -15,6 +15,7 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <initializer_list>
 #include "tubex_Fnc.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_tube_arithmetic.h"
@@ -101,6 +102,13 @@ namespace tubex
        * \param v_codomains vector of codomains \f$[\mathbf{x}_i]\f$ related to the \f$[t_i]\f$'s
        */
       TubeVector(const std::vector<ibex::Interval>& v_domains, const std::vector<ibex::IntervalVector>& v_codomains);
+
+      /**
+       * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ from a list of Tube objects
+       *
+       * \param list list of \f$[x_i](\cdot)\f$ tubes
+       */
+      TubeVector(std::initializer_list<Tube> list);
 
       /**
        * \brief Creates a copy of a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$, with the same time discretization

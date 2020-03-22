@@ -96,6 +96,13 @@ namespace tubex
         (*this)[j] = Tube(v_domains, v_scalar_codomains[j]);
     }
 
+    TubeVector::TubeVector(initializer_list<Tube> list)
+      : m_n(list.size()), m_v_tubes(new Tube[list.size()])
+    {
+      assert(list.size() > 0);
+      std::copy(list.begin(), list.end(), m_v_tubes);
+    }
+
     TubeVector::TubeVector(const TubeVector& x)
     {
       *this = x;
