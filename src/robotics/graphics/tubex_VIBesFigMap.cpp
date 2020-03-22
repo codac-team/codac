@@ -250,6 +250,24 @@ namespace tubex
     for(int i = 0 ; i < v_beacons.size() ; i++)
       add_beacon(v_beacons[i], width, color);
   }
+
+  void VIBesFigMap::add_landmarks(const vector<IntervalVector>& v_beacons, const string& color)
+  {
+    // Simply directly drawn
+    for(int i = 0 ; i < v_beacons.size() ; i++)
+      add_beacon(v_beacons[i], color);
+  }
+
+  void VIBesFigMap::add_landmarks(const vector<Vector>& v_beacons, double width, const string& color)
+  {
+    // Simply directly drawn
+    for(int i = 0 ; i < v_beacons.size() ; i++)
+    {
+      IntervalVector b(v_beacons[i]);
+      b.inflate(width);
+      add_beacon(b, width, color);
+    }
+  }
   
   void VIBesFigMap::add_observation(const IntervalVector& obs, const Vector& pose, const string& color)
   {
