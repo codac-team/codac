@@ -17,6 +17,10 @@
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
 
+#ifdef INTERVAL
+#undef INTERVAL
+#endif
+
 namespace tubex
 {
   enum DomainType { INTERVAL, INTERVAL_VECTOR, TUBE, TUBE_VECTOR };
