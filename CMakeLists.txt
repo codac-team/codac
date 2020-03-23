@@ -8,6 +8,7 @@
   set(TUBEX_DESCRIPTION "Library providing tools to guarantee computations over sets of trajectories")
   set(TUBEX_URL "http://simon-rohou.fr/research/tubex-lib")
 
+  set(PACKAGE_VERSION "2.0.0")
 
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/)
 
