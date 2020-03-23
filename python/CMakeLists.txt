@@ -22,8 +22,14 @@ configure_file(
 # Generating a library tube.so containing the python binding:
 pybind11_add_module(tube SHARED
   pyibex_tube.cpp
+  pyibex_export_Function.cpp
+  pyibex_export_Slice.cpp
+  # pyibex_export_Trajectory.cpp
+  pyibex_export_Tube.cpp
+  pyibex_export_TubeVector.cpp
+
 )
-target_link_libraries(tube PRIVATE tubex)
+target_link_libraries(tube PRIVATE tubex ${LIBS})
 
   # ex: from pyibex_tube import tube
   #     tube.Tube

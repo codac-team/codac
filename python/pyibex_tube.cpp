@@ -8,30 +8,29 @@
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
-
-#include "tubex_Tube.h"
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/functional.h>
 
-namespace py = pybind11;
-using namespace pybind11::literals;
-using py::class_;
-using py::init;
+namespace py = pybind11;;
 
-using namespace tubex;
-using ibex::Interval;
-using ibex::IntervalVector;
+
+void export_Tube(py::module&m);
+void export_TubeVector(py::module& m);
+void export_Trajectory(py::module& m);
+void export_Function(py::module& m);
+void export_Slice(py::module& m);
 
 
 PYBIND11_MODULE(tube, m)
 {
-  py::class_<Tube>(m, "Tube")
-    .def(init<const Interval&, double, const Interval&>())
-    .def("codomain", &Tube::codomain)
-    .def("volume", &Tube::volume)
-  ;
+  // py::module m("pyibex", "python binding of ibex core fonctionnality");
+  // m.doc() = "python binding of ibex core fonctionnality";
+  export_Tube(m);
+  export_TubeVector(m);
+  // export_Trajectory(m);
+  export_Slice(m);
+  export_Function(m);
+  // m.attr("ibex_version") = _IBEX_VERSION_;
+  // return m.ptr();
 
-  //m.def("cos", [] (const Tube& x){ return cos(x); });
 }
+
