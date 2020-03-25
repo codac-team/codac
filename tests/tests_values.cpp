@@ -435,7 +435,7 @@ TEST_CASE("Testing set inversion in vector case")
       fig_x.draw_box(x.domain(), inv_val);
       fig_x.show(true);
 
-      for(int i = 0 ; i < v_t.size() ; i++)
+      for(size_t i = 0 ; i < v_t.size() ; i++)
         fig_x.draw_box(v_t[i], x.codomain(), "red[#FFD58C66]");
 
       vibes::endDrawing();

@@ -55,7 +55,6 @@ inline Interval Cmod_bwd(const Interval& x, const Interval& y){
 inline std::tuple<Interval, Interval, Interval> Catan2(const Interval&x, const Interval&y, const Interval& th){
   static const Interval iZeroPi2 = Interval(0) | (Interval::HALF_PI);
   static const Interval iPi2Pi = (Interval::HALF_PI) | Interval::PI;
-  const double ITV2PI = 2*Interval::PI.ub();
   // static const Interval 2PI_UB = 2*Interval::PI.ub();
   if (x.is_empty() || y.is_empty() || th.is_empty()) {
       return std::make_tuple(Interval::EMPTY_SET, Interval::EMPTY_SET, Interval::EMPTY_SET);

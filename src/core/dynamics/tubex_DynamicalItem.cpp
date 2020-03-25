@@ -15,6 +15,11 @@ using namespace ibex;
 
 namespace tubex
 {
+  DynamicalItem::~DynamicalItem()
+  {
+
+  }
+  
   bool DynamicalItem::valid_domain(const ibex::Interval& domain)
   {
     return !domain.is_empty() && !domain.is_unbounded() && !domain.is_degenerated();

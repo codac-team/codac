@@ -46,21 +46,21 @@ namespace tubex
   const vector<Edge> Polygon::edges() const
   {
     vector<Edge> v_edges;
-    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+    for(size_t i = 0 ; i < m_v_vertices.size() ; i++)
       v_edges.push_back(Edge(m_v_vertices[i], m_v_vertices[(i+1) % m_v_vertices.size()]));
     return v_edges;
   }
 
   const Point Polygon::operator[](int vertex_id) const
   {
-    assert(vertex_id >= 0 && vertex_id < m_v_vertices.size());
+    assert(vertex_id >= 0 && vertex_id < (int)m_v_vertices.size());
     return m_v_vertices[vertex_id];
   }
 
   const IntervalVector Polygon::box() const
   {
     IntervalVector box(2, Interval::EMPTY_SET);
-    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+    for(size_t i = 0 ; i < m_v_vertices.size() ; i++)
     {
       box[0] |= m_v_vertices[i].x();
       box[1] |= m_v_vertices[i].y();
@@ -117,7 +117,7 @@ namespace tubex
   bool Polygon::operator==(const Polygon& p) const
   {
     int n = m_v_vertices.size();
-    if(n != p.m_v_vertices.size())
+    if(n != (int)p.m_v_vertices.size())
       return false;
 
     int i; // looking for first same elements
@@ -141,7 +141,7 @@ namespace tubex
   bool Polygon::operator!=(const Polygon& p) const
   {
     int n = m_v_vertices.size();
-    if(n != p.m_v_vertices.size())
+    if(n != (int)p.m_v_vertices.size())
       return true;
 
     int i; // looking for first same elements
@@ -213,7 +213,7 @@ namespace tubex
   {
     if(m_v_vertices.size() == 0)
       return true;
-    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+    for(size_t i = 0 ; i < m_v_vertices.size() ; i++)
       if(m_v_vertices[i].does_not_exist())
         return true;
     return false;
@@ -246,7 +246,7 @@ namespace tubex
 
   void Polygon::rotate(double angle, const Point& center)
   {
-    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+    for(size_t i = 0 ; i < m_v_vertices.size() ; i++)
     {
       Interval dx = m_v_vertices[i].x() - center.x();
       Interval dy = m_v_vertices[i].y() - center.y();
@@ -259,7 +259,7 @@ namespace tubex
   const Polygon& Polygon::inflate_vertices(double rad)
   {
     assert(rad >= 0.);
-    for(int i = 0 ; i < m_v_vertices.size() ; i++)
+    for(size_t i = 0 ; i < m_v_vertices.size() ; i++)
       m_v_vertices[i].inflate(rad);
     return *this;
   }
@@ -273,14 +273,14 @@ namespace tubex
   {
     vector<Point> v_vertices;
 
-    for(int i = 0 ; i < v_pts.size() ; )
+    for(size_t i = 0 ; i < v_pts.size() ; )
     {
       if(v_pts[i].does_not_exist())
         continue; // no empty points
 
       v_vertices.push_back(v_pts[i]);
 
-      int j;
+      size_t j;
       for(j = i+1 ; j < v_vertices.size() ; j++)
         if(!(v_pts[i] == v_vertices[j]
             && v_pts[i].x().is_degenerated()

@@ -55,7 +55,7 @@ namespace tubex
 
     else
     {
-      TubeVector *first_slicing;
+      TubeVector *first_slicing = NULL;
       if(m_preserve_slicing)
         first_slicing = new TubeVector(x);
 
@@ -107,7 +107,7 @@ namespace tubex
         }
       }
 
-      if(m_preserve_slicing)
+      if(first_slicing != NULL)
       {
         first_slicing->set_empty();
         *first_slicing |= x;

@@ -61,7 +61,7 @@ namespace tubex
   const vector<Point> GrahamScan::convex_hull(const vector<Point>& v_points)
   {
     vector<Point> v_pts;
-    for(int i = 0 ; i < v_points.size() ; i++)
+    for(size_t i = 0 ; i < v_points.size() ; i++)
       if(!v_points[i].does_not_exist())
       {
         // todo: optimize this
@@ -89,7 +89,7 @@ namespace tubex
       int id_min = 0;
       double y_min = v_pts[0].y().lb();
 
-      for(int i = 1 ; i < v_pts.size() ; i++)
+      for(size_t i = 1 ; i < v_pts.size() ; i++)
       {
         double y = v_pts[i].y().lb();
 
@@ -120,8 +120,8 @@ namespace tubex
       // Remember that, in above sorting, our criteria was
       // to keep the farthest point at the end when more than
       // one points have same angle.
-      int m = 1; // Initialize size of modified array
-      for(int i = 1 ; i < v_pts.size() ; i ++)
+      size_t m = 1; // Initialize size of modified array
+      for(size_t i = 1 ; i < v_pts.size() ; i ++)
       {
         // Keep removing i while angle of i and i+1 is same
         // with respect to p0
@@ -142,7 +142,7 @@ namespace tubex
 
     // Process remaining n-3 points
 
-      for(int i = 3 ; i < m ; i++)
+      for(size_t i = 3 ; i < m ; i++)
       {
         // Keep removing top while the angle formed by
         // points next-to-top, top, and v_pts[i] makes

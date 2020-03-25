@@ -38,7 +38,7 @@
     add_definitions(-U__STRICT_ANSI__)
   endif()
 
-  add_compile_options(-O3)
+  add_compile_options(-O3 -Wall)
   #add_compile_options(-DNDEBUG) # comment for debug mode
 
 

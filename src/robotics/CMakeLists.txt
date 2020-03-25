@@ -30,7 +30,7 @@ target_compile_options(tubex-rob PUBLIC ${TUBEX_CFLAGS})
 set(TUBEX_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../include)
 file(MAKE_DIRECTORY ${TUBEX_HEADERS_DIR})
 
-target_include_directories(tubex-rob PUBLIC ${IBEX_INCLUDE_DIRS})
+target_include_directories(tubex-rob SYSTEM PUBLIC ${IBEX_INCLUDE_DIRS})
 target_include_directories(tubex-rob PUBLIC ${TUBEX_HEADERS_DIR}
                                             ${CMAKE_CURRENT_SOURCE_DIR}/graphics
                                             ${CMAKE_CURRENT_SOURCE_DIR}/objects

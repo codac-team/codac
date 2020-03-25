@@ -61,7 +61,7 @@ namespace tubex
     if(m_type != x.m_type || m_domains.size() != x.m_domains.size())
       return false;
 
-    for(int i = 0 ; i < m_domains.size() ; i++)
+    for(size_t i = 0 ; i < m_domains.size() ; i++)
       if(*m_domains[i] != *x.m_domains[i])
         return false;
 
@@ -82,12 +82,12 @@ namespace tubex
       else if(m_domains[0]->m_type == DomainType::INTERVAL) // set of scalar values
       {
         IntervalVector box(m_domains.size());
-        for(int i = 0 ; i < m_domains.size() ; i++)
+        for(size_t i = 0 ; i < m_domains.size() ; i++)
           box[i] = m_domains[i]->m_i;
 
         m_ibex_ctc.contract(box);
 
-        for(int i = 0 ; i < m_domains.size() ; i++)
+        for(size_t i = 0 ; i < m_domains.size() ; i++)
           m_domains[i]->m_i &= box[i];
       }
 
@@ -96,12 +96,12 @@ namespace tubex
         for(int k = 0 ; k < m_domains[0]->m_iv.size() ; k++)
         {
           IntervalVector box(m_domains.size());
-          for(int i = 0 ; i < m_domains.size() ; i++)
+          for(size_t i = 0 ; i < m_domains.size() ; i++)
             box[i] = m_domains[i]->m_iv[k];
 
           m_ibex_ctc.contract(box);
 
-          for(int i = 0 ; i < m_domains.size() ; i++)
+          for(size_t i = 0 ; i < m_domains.size() ; i++)
             m_domains[i]->m_iv[k] &= box[i];
         }
       }

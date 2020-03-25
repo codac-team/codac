@@ -105,7 +105,7 @@ namespace tubex
   const Point Point::center(const vector<Point> v_pts)
   {
     Interval x = 0., y = 0.;
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
     {
       assert(!v_pts[i].does_not_exist());
       x += v_pts[i].x();
@@ -161,13 +161,13 @@ namespace tubex
   {
     vector<Point> v_vertices;
 
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
     {
       if(v_pts[i].does_not_exist())
         continue; // no empty points
 
       bool diff_from_all_prev_points = true;
-      for(int j = 0 ; j < v_vertices.size() && diff_from_all_prev_points ; j++)
+      for(size_t j = 0 ; j < v_vertices.size() && diff_from_all_prev_points ; j++)
         diff_from_all_prev_points &= !((v_pts[i] == v_vertices[j])
                                        & v_pts[i].x().is_degenerated()
                                        & v_pts[i].y().is_degenerated());

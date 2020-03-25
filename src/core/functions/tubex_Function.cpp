@@ -157,7 +157,7 @@ namespace tubex
     xdyn[0] = "t";
     for(int i = 0 ; i < n ; i++)
     {
-      assert(x[i] != "t" && "forbidden variable name \"t\"");
+      assert(string(x[i]) != "t" && "forbidden variable name \"t\"");
       xdyn[i+1] = x[i];
     }
 

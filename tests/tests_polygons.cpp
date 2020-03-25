@@ -529,7 +529,7 @@ TEST_CASE("Polygon")
     CHECK(ApproxIntv(box_inter[0]) == Interval(0.));
     CHECK(ApproxIntv(box_inter[1]) == Interval(3.,7.));
 
-    /*x[0] = Interval(0.,2.); x[1] = Interval(3.); // degenerate case
+    x[0] = Interval(0.,2.); x[1] = Interval(3.); // degenerate case
     box_inter = p & x;
     CHECK(ApproxIntv(box_inter[0]) == Interval(0.,2.));
     CHECK(ApproxIntv(box_inter[1]) == Interval(3.));
@@ -1109,7 +1109,7 @@ TEST_CASE("Polygon")
     }
 
     vector<Point> v_pts = p.vertices();
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
       CHECK(sqrt(pow(v_pts[i].x() - 0.5, 2) + pow(v_pts[i].y() - 0.5, 2)).is_subset(Interval(0.48,0.52)));
   }
 
@@ -1158,8 +1158,8 @@ TEST_CASE("Polygon")
       // Remember that, in above sorting, our criteria was
       // to keep the farthest point at the end when more than
       // one points have same angle.
-      int m = 1; // Initialize size of modified array
-      for(int i = 1 ; i < v_pts.size() ; i ++)
+      size_t m = 1; // Initialize size of modified array
+      for(size_t i = 1 ; i < v_pts.size() ; i ++)
       {
         // Keep removing i while angle of i and i+1 is same
         // with respect to p0
@@ -1192,7 +1192,7 @@ TEST_CASE("Polygon")
 
     // Process remaining n-3 points
 
-      for(int i = 3 ; i < m ; i++)
+      for(size_t i = 3 ; i < m ; i++)
       {
         // Keep removing top while the angle formed by
         // points next-to-top, top, and v_pts[i] makes
@@ -1260,10 +1260,10 @@ TEST_CASE("Polygon")
 
     // Find the bottommost point
 
-      int id_min = 0;
+      size_t id_min = 0;
       double y_min = v_pts[0].y().lb();
 
-      for(int i = 1 ; i < v_pts.size() ; i++)
+      for(size_t i = 1 ; i < v_pts.size() ; i++)
       {
         double y = v_pts[i].y().lb();
 

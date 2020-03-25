@@ -528,8 +528,8 @@ namespace tubex
       bool m_smooth_drawing = false; //!< if `true`, a smooth rendering of tubes will be done
       float m_robot_size = 5.5; //!< if `0`, no robot display
 
-      int m_tube_max_nb_disp_slices = TUBE_MAX_NB_DISPLAYED_SLICES; //!< limit for slices display
-      int m_traj_max_nb_disp_points = TRAJ_MAX_NB_DISPLAYED_POINTS; //!< limit for traj points display
+      unsigned int m_tube_max_nb_disp_slices = TUBE_MAX_NB_DISPLAYED_SLICES; //!< limit for slices display
+      unsigned int m_traj_max_nb_disp_points = TRAJ_MAX_NB_DISPLAYED_POINTS; //!< limit for traj points display
   };
 }
 

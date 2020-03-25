@@ -1016,7 +1016,7 @@ TEST_CASE("CtcEval")
     CHECK(x(7) == Interval(-4.5,1.));
     CHECK(x(8) == Interval(-6.,0.));
     CHECK(x(9) == Interval(-7.5,-1.));
-    CHECK(x(10) == Interval(-9.,-2.));/*
+    CHECK(x(10) == Interval(-9.,-2.));
   }
 
   SECTION("Test CtcEval, non-zero derivative (positive case)")

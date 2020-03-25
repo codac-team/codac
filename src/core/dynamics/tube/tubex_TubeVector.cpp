@@ -84,7 +84,7 @@ namespace tubex
 
       vector<Interval> v_scalar_codomains[size()];
 
-      for(int i = 0 ; i < v_codomains.size() ; i++)
+      for(size_t i = 0 ; i < v_codomains.size() ; i++)
       {
         if(i > 0) assert(v_codomains[i].size() == v_codomains[i-1].size());
 

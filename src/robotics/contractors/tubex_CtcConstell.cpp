@@ -31,7 +31,7 @@ namespace tubex
   {
     assert(beacon_box.size() == 2);
     IntervalVector envelope_beacons(2, Interval::EMPTY_SET);
-    for(int i = 0 ; i < m_map.size() ; i++)
+    for(size_t i = 0 ; i < m_map.size() ; i++)
       if(beacon_box.contains(m_map[i].pos().subvector(0,1)))
         envelope_beacons |= m_map[i].pos().subvector(0,1);
     beacon_box = envelope_beacons;

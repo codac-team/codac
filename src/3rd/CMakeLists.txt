@@ -19,7 +19,7 @@ target_compile_options(tubex-3rd PUBLIC ${TUBEX_CFLAGS})
 set(TUBEX_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../include)
 file(MAKE_DIRECTORY ${TUBEX_HEADERS_DIR})
 
-target_include_directories(tubex-3rd PUBLIC ${IBEX_INCLUDE_DIRS})
+target_include_directories(tubex-3rd SYSTEM PUBLIC ${IBEX_INCLUDE_DIRS})
 target_include_directories(tubex-3rd PUBLIC ${TUBEX_HEADERS_DIR}
                                             ${CMAKE_CURRENT_SOURCE_DIR}/pyibex)
 target_link_libraries(tubex-3rd PUBLIC ${IBEX_LDFLAGS} ${TUBEX_LDFLAGS})

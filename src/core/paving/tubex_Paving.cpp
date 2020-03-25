@@ -157,7 +157,7 @@ namespace tubex
     vector<const Paving*> v;
     m_root->get_pavings_intersecting(val, m_box, v);
 
-    for(int i = 0 ; i < v.size() ; i++)
+    for(size_t i = 0 ; i < v.size() ; i++)
     {
       if(v[i] != this && (v[i]->value() & val) && (!without_flag || (without_flag && !v[i]->flag())))
         v_neighbours.push_back(v[i]);
@@ -194,7 +194,7 @@ namespace tubex
         vector<const Paving*> v_neighbours;
         e->get_neighbours(v_neighbours, val, true);
 
-        for(int i = 0 ; i < v_neighbours.size() ; i++)
+        for(size_t i = 0 ; i < v_neighbours.size() ; i++)
         {
           v_neighbours[i]->set_flag();
           l.push_back(v_neighbours[i]);

@@ -147,7 +147,7 @@ namespace tubex
 
     // Inflations
     for(map<int,vector<IntervalVector> >::iterator it = m_obs.begin(); it != m_obs.end(); it++)
-      for(int i = 0 ; i < it->second.size() ; i++)
+      for(size_t i = 0 ; i < it->second.size() ; i++)
         it->second[i][1].inflate(8.);
 
     return m_obs;

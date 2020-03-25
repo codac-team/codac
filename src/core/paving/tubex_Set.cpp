@@ -17,7 +17,7 @@ using namespace ibex;
 namespace tubex
 {
   Set::Set(const IntervalVector& box, SetValue value)
-    : m_box(box), m_value(value)
+    : m_value(value), m_box(box)
   {
 
   }

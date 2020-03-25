@@ -39,8 +39,6 @@ namespace tubex
 
       void contract();
 
-      std::vector<AbstractDomain*> m_domains;
-
 
     //protected:
 
@@ -49,6 +47,8 @@ namespace tubex
 
       ibex::Ctc& m_ibex_ctc;
       tubex::Ctc& m_tubex_ctc;
+
+      std::vector<AbstractDomain*> m_domains;
   };
 }
 

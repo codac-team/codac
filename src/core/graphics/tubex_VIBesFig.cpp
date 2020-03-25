@@ -134,14 +134,14 @@ namespace tubex
   
   void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const vibes::Params& params)
   {
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
       assert(v_pts[i].size() == 2);
     draw_line(v_pts, "", params);
   }
   
   void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const string& color, const vibes::Params& params)
   {
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
       assert(v_pts[i].size() == 2);
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
@@ -239,7 +239,7 @@ namespace tubex
   
   void VIBesFig::draw_points(const vector<Point>& v_pts, float size, const string& color, const vibes::Params& params)
   {
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
       draw_point(v_pts[i], size, color, params);
   }
 }

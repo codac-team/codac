@@ -58,12 +58,12 @@ namespace tubex
     IntervalVector inter(2, Interval::EMPTY_SET);
 
     vector<Edge> v_edges = edges();
-    for(int i = 0 ; i < v_edges.size() ; i++)
+    for(size_t i = 0 ; i < v_edges.size() ; i++)
       inter |= v_edges[i] & reduced_x;
 
     vector<Point> v_x_vertices;
     push_points(reduced_x, v_x_vertices);
-    for(int i = 0 ; i < v_x_vertices.size() ; i++)
+    for(size_t i = 0 ; i < v_x_vertices.size() ; i++)
     {
       if(encloses(v_x_vertices[i]) != NO)
         inter |= v_x_vertices[i].box();
@@ -77,18 +77,18 @@ namespace tubex
     vector<Point> v_pts;
 
     // Add all corners of p1 that are inside p2
-    for(int i = 0 ; i < p1.vertices().size() ; i++)
+    for(size_t i = 0 ; i < p1.vertices().size() ; i++)
       if(p2.encloses(p1.vertices()[i]) != NO)
         v_pts.push_back(p1.vertices()[i]);
 
     // Add all corners of p2 that are inside p1
-    for(int i = 0 ; i < p2.vertices().size() ; i++)
+    for(size_t i = 0 ; i < p2.vertices().size() ; i++)
       if(p1.encloses(p2.vertices()[i]) != NO)
         v_pts.push_back(p2.vertices()[i]);
 
     // Add all intersection points
-    for(int i = 0 ; i < p1.edges().size() ; i++)
-      for(int j = 0 ; j < p2.edges().size() ; j++)
+    for(size_t i = 0 ; i < p1.edges().size() ; i++)
+      for(size_t j = 0 ; j < p2.edges().size() ; j++)
       {
         Point intersection_pt = p1.edges()[i] & p2.edges()[j];
 
@@ -169,21 +169,15 @@ namespace tubex
 
   void ConvexPolygon::simplify(int max_edges)
   {
-    //vibes::beginDrawing();
-    //VIBesFig fig("polytestloc");
-    //fig.set_properties(100, 1000, 400, 400);
-    //fig.draw_polygon(*this, "white[#B8DDFF]");
-    //fig.axis_limits(box());
-
     assert(max_edges >= 3);
 
-    while(m_v_vertices.size() > max_edges)
+    while((int)m_v_vertices.size() > max_edges)
     {
       // Removing the shortest edge
       int n = m_v_vertices.size();
 
       // Finding shortest edge
-      double min_surf;
+      double min_surf = -1.;
       int min_i = -1;
       Point min_inter;
 
@@ -223,12 +217,6 @@ namespace tubex
       // Updating one of the vertices, removing the other one
       m_v_vertices[min_i] = min_inter;
       m_v_vertices.erase(m_v_vertices.begin() + ((min_i+1)%n));
-      //fig.draw_polygon(*this, "red");
     }
-
-    //vector<Point> v_temp = m_v_vertices;
-    //m_v_vertices = GrahamScan::convex_hull(v_temp);
-
-    //vibes::endDrawing();
   }
 }

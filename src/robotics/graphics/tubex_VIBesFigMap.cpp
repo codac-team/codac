@@ -240,28 +240,28 @@ namespace tubex
   void VIBesFigMap::add_beacons(const vector<Beacon>& v_beacons, const string& color)
   {
     // Simply directly drawn
-    for(int i = 0 ; i < v_beacons.size() ; i++)
+    for(size_t i = 0 ; i < v_beacons.size() ; i++)
       add_beacon(v_beacons[i], color);
   }
 
   void VIBesFigMap::add_beacons(const vector<Beacon>& v_beacons, double width, const string& color)
   {
     // Simply directly drawn
-    for(int i = 0 ; i < v_beacons.size() ; i++)
+    for(size_t i = 0 ; i < v_beacons.size() ; i++)
       add_beacon(v_beacons[i], width, color);
   }
 
   void VIBesFigMap::add_landmarks(const vector<IntervalVector>& v_beacons, const string& color)
   {
     // Simply directly drawn
-    for(int i = 0 ; i < v_beacons.size() ; i++)
+    for(size_t i = 0 ; i < v_beacons.size() ; i++)
       add_beacon(v_beacons[i], color);
   }
 
   void VIBesFigMap::add_landmarks(const vector<Vector>& v_beacons, double width, const string& color)
   {
     // Simply directly drawn
-    for(int i = 0 ; i < v_beacons.size() ; i++)
+    for(size_t i = 0 ; i < v_beacons.size() ; i++)
     {
       IntervalVector b(v_beacons[i]);
       b.inflate(width);
@@ -283,7 +283,7 @@ namespace tubex
     assert(pose.size() == 3);
 
     // Simply directly drawn
-    for(int i = 0 ; i < v_obs.size() ; i++)
+    for(size_t i = 0 ; i < v_obs.size() ; i++)
     {
       assert(v_obs[i].size() == 2);
       add_observation(v_obs[i], pose, color);
@@ -307,7 +307,7 @@ namespace tubex
       && "unknown traj, must be added beforehand");
 
     // Simply directly drawn
-    for(int i = 0 ; i < v_obs.size() ; i++)
+    for(size_t i = 0 ; i < v_obs.size() ; i++)
       add_observation(v_obs[i], traj, color);
   }
 
@@ -493,7 +493,7 @@ namespace tubex
     vibes::Params params = vibesParams("figure", name(), "group", group_name);
 
     if(m_map_trajs[traj].color == "")
-      for(int i = 0 ; i < v_x.size()-1 ; i++) // shaded lines
+      for(size_t i = 0 ; i < v_x.size()-1 ; i++) // shaded lines
       {
         vector<double> v_local_x, v_local_y;
         v_local_x.push_back(v_x[i]); v_local_x.push_back(v_x[i+1]);

@@ -109,7 +109,7 @@ namespace tubex
 
   void TPlane::compute_proofs(IntervalVector (*f)(const IntervalVector& b))
   {
-    for(int i = 0 ; i < m_v_detected_loops.size() ; i++)
+    for(size_t i = 0 ; i < m_v_detected_loops.size() ; i++)
       if(m_v_detected_loops[i].zero_proven(f))
         m_v_proven_loops.push_back(m_v_detected_loops[i]);
   }
@@ -143,7 +143,7 @@ namespace tubex
     const map<double,double> map_values = traj.sampled_map();
 
     // Detected loops: value set to 1
-    for(int i = 0 ; i < m_v_detected_loops.size() ; i++)
+    for(size_t i = 0 ; i < m_v_detected_loops.size() ; i++)
     {
       for(int j = 0 ; j < 2 ; j++)
       {
@@ -162,7 +162,7 @@ namespace tubex
     }
 
     // Proven loops: value set to 2
-    for(int i = 0 ; i < m_v_proven_loops.size() ; i++)
+    for(size_t i = 0 ; i < m_v_proven_loops.size() ; i++)
     {
       for(int j = 0 ; j < 2 ; j++)
       {

@@ -325,16 +325,17 @@ namespace tubex
     {
       assert(dt > 0.);
 
-      double t, prev_t, val = c;
+      double t = domain().lb(), prev_t = t, val = c;
       Trajectory x;
 
-      for(t = domain().lb() ; t < domain().ub() ; t+=dt)
+      while(t < domain().ub())
       {
         if(t != domain().lb())
           val += ((*this)(t-dt) + (*this)(t)) * dt / 2.;
 
         x.set(val, t);
         prev_t = t;
+        t += dt;
       }
 
       t = domain().ub();

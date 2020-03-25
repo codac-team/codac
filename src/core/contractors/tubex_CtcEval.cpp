@@ -254,7 +254,7 @@ namespace tubex
 
         // 5. If requested, preserving the initial slicing
 
-          for(int i = 0 ; i < v_gates_to_remove.size() ; i++)
+          for(size_t i = 0 ; i < v_gates_to_remove.size() ; i++)
           {
             // The gate will be lost during the final operation for
             // preserving the slicing. So we need to propagate localy

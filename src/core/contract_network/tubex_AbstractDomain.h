@@ -48,8 +48,6 @@ namespace tubex
       
       friend std::ostream& operator<<(std::ostream& str, const AbstractDomain& x);
 
-      std::vector<AbstractContractor*> m_v_ctc;
-
     //protected:
 
       double m_volume = 0.;
@@ -61,6 +59,8 @@ namespace tubex
       tubex::Slice& m_s;
       tubex::Tube& m_t;
       tubex::TubeVector& m_tv;
+
+      std::vector<AbstractContractor*> m_v_ctc;
 
       static ibex::Interval m_dump_i;
       static ibex::IntervalVector m_dump_iv;

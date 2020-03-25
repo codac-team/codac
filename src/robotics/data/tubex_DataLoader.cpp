@@ -102,7 +102,7 @@ namespace tubex
     if(random)
       std::random_shuffle(random_map.begin(), random_map.end());
 
-    for(int i = 0 ; i < random_map.size() ; i++)
+    for(size_t i = 0 ; i < random_map.size() ; i++)
     {
       Interval r = sqrt(ibex::pow(x[0]-random_map[i][0],2) + ibex::pow(x[1]-random_map[i][1],2));
       Interval a = ibex::atan2(random_map[i][1]-x[1], random_map[i][0]-x[0]) - x[2];
@@ -146,7 +146,7 @@ namespace tubex
       if(random)
         std::random_shuffle(random_map.begin(), random_map.end());
 
-      for(int i = 0 ; i < random_map.size() ; i++)
+      for(size_t i = 0 ; i < random_map.size() ; i++)
       {
         Interval t_(t);
         Interval r = sqrt(pow(x[0](t_) - random_map[i].pos()[0], 2) + pow(x[1](t_) - random_map[i].pos()[1], 2));
