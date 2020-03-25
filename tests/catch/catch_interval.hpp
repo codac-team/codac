@@ -354,7 +354,7 @@ namespace Catch
         friend bool operator ==(tubex::Point lhs, ApproxPoint const& rhs)
         {
           return lhs == rhs.m_value ||
-            lhs.x().intersects(rhs.m_value.x()) && lhs.y().intersects(rhs.m_value.y());
+            (lhs.x().intersects(rhs.m_value.x()) && lhs.y().intersects(rhs.m_value.y()));
         }
 
         friend bool operator ==(ApproxPoint const& lhs, tubex::Point rhs)

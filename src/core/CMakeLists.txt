@@ -108,7 +108,7 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
 
 add_library(tubex ${SRC})
 target_compile_options(tubex PUBLIC ${IBEX_CFLAGS})
-target_include_directories(tubex PUBLIC ${IBEX_INCLUDE_DIRS})
+target_include_directories(tubex SYSTEM PUBLIC ${IBEX_INCLUDE_DIRS})
 target_include_directories(tubex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic
                                         ${CMAKE_CURRENT_SOURCE_DIR}/graphics

@@ -52,7 +52,6 @@ namespace tubex
 
   double ContractorNetwork::contract(bool verbose)
   {
-    int k = 0;
     clock_t t_start = clock();
 
     if(verbose)

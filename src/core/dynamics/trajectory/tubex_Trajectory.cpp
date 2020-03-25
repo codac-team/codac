@@ -189,7 +189,7 @@ namespace tubex
 
     bool Trajectory::operator==(const Trajectory& x) const
     {
-      assert(m_function == NULL || x.function() == NULL
+      assert((m_function == NULL || x.function() == NULL)
         && "operator== not implemented in case of a Trajectory defined by a Function");
 
       if(m_function == NULL && x.function() == NULL)
@@ -355,11 +355,7 @@ namespace tubex
         Trajectory d;
 
         for(map<double,double>::const_iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
-        {
-          double t = it->first;
-          double x = it->second;
-          d.set(finite_diff(t), t);
-        }
+          d.set(finite_diff(it->first), it->first);
 
         assert(d.domain() == domain());
         return d;

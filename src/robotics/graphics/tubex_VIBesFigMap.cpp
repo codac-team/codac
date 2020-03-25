@@ -591,7 +591,7 @@ namespace tubex
         if(m_map_tubes[tube].color_map.second != NULL)
           traj_colormap = m_map_tubes[tube].color_map.second;
 
-      int k0, kf, kstep;
+      int k0, kf;
       bool from_first_to_last = m_map_tubes[tube].from_first_to_last;
       IntervalVector prev_box(2); // used for diff or polygon display
 

@@ -260,9 +260,11 @@ namespace tubex
         return m_synthesis_tree->domain();
       
       else
+      {
         return m_domain; // redundant information for fast access
         return Interval(first_slice()->domain().lb(),
                         last_slice()->domain().ub());
+      }
     }
     
     const Polygon Tube::polygon_envelope() const

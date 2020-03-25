@@ -27,7 +27,7 @@ namespace tubex
 
   void DataLoaderRedermor::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
   {
-    assert(domain == Interval::ALL_REALS | DynamicalItem::valid_domain(domain));
+    assert(domain == Interval::ALL_REALS || DynamicalItem::valid_domain(domain));
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 

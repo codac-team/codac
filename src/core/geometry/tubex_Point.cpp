@@ -168,9 +168,9 @@ namespace tubex
 
       bool diff_from_all_prev_points = true;
       for(int j = 0 ; j < v_vertices.size() && diff_from_all_prev_points ; j++)
-        diff_from_all_prev_points &= !(v_pts[i] == v_vertices[j]
-                                     & v_pts[i].x().is_degenerated()
-                                     & v_pts[i].y().is_degenerated());
+        diff_from_all_prev_points &= !((v_pts[i] == v_vertices[j])
+                                       & v_pts[i].x().is_degenerated()
+                                       & v_pts[i].y().is_degenerated());
       
       if(diff_from_all_prev_points)
         v_vertices.push_back(v_pts[i]);
