@@ -24,6 +24,6 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
                 )
 
 add_executable(${TESTS_NAME} ${SRC})
-target_link_libraries(${TESTS_NAME} tubex)
+target_link_libraries(${TESTS_NAME} tubex ${LIBS})
 add_dependencies(check ${TESTS_NAME})
 add_test(NAME ${TESTS_NAME} COMMAND ${TESTS_NAME})
