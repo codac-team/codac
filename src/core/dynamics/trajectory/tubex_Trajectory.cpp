@@ -411,6 +411,9 @@ namespace tubex
             return ((-1./60.)*bwd[2] + (3./20.)*bwd[1] + (-3./4.)*bwd[0] + (3./4.)*fwd[0] + (-3./20.)*fwd[1] + (1./60.)*fwd[2]) / h;
           case 4:
             return ((1./280.)*bwd[3] + (-4./105.)*bwd[2] + (1./5.)*bwd[1] + (-4./5.)*bwd[0] + (4./5.)*fwd[0] + (-1./5.)*fwd[1] + (4./105.)*fwd[2] + (-1./280.)*fwd[3]) / h;
+          default:
+            assert(false && "unhandled case");
+            return 0.;
         }
 
       else if(fwd.size() > bwd.size()) // forward finite difference
@@ -424,6 +427,9 @@ namespace tubex
             return ((-11./6.)*x + (3./1.)*fwd[0] + (-3./2.)*fwd[1] + (1./3.)*fwd[2]) / h;
           case 4:
             return ((-25./12.)*x + (4./1.)*fwd[0] + (-3./1.)*fwd[1] + (4./3.)*fwd[2] + (-1./4.)*fwd[3]) / h;
+          default:
+            assert(false && "unhandled case");
+            return 0.;
         }
 
       else // backward finite difference
@@ -437,6 +443,9 @@ namespace tubex
             return ((11./6.)*x + (-3./1.)*bwd[0] + (3./2.)*bwd[1] + (-1./3.)*bwd[2]) / h;
           case 4:
             return ((25./12.)*x + (-4./1.)*bwd[0] + (3./1.)*bwd[1] + (-4./3.)*bwd[2] + (1./4.)*bwd[3]) / h;
+          default:
+            assert(false && "unhandled case");
+            return 0.;
         }
     }
 

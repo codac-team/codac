@@ -730,11 +730,14 @@ namespace tubex
     const TubeVector& TubeVector::inflate(const Vector& rad)
     {
       assert(size() == rad.size());
+
       for(int i = 0 ; i < size() ; i++)
       {
         assert(rad[i] >= 0.);
         (*this)[i].inflate(rad[i]);
       }
+
+      return *this;
     }
 
     const TubeVector& TubeVector::inflate(const TrajectoryVector& rad)
@@ -743,8 +746,11 @@ namespace tubex
       assert(domain() == rad.domain());
       assert(rad.codomain().is_subset(IntervalVector(rad.size(), Interval::POS_REALS))
         && "positive TrajectoryVector");
+      
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].inflate(rad[i]);
+
+      return *this;
     }
 
     void TubeVector::shift_domain(double shift_ref)

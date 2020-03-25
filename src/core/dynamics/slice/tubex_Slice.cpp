@@ -469,6 +469,8 @@ namespace tubex
       set_envelope(m_codomain + e);
       set_input_gate(*m_input_gate + e);
       set_output_gate(*m_output_gate + e);
+      
+      return *this;
     }
     
     // String

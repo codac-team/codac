@@ -50,6 +50,7 @@ namespace tubex
   {
     m_x = p.x();
     m_y = p.y();
+    return *this;
   }
 
   bool Point::operator==(const Point& p) const
