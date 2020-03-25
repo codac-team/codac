@@ -16,7 +16,7 @@ using namespace ibex;
 namespace tubex
 {
   TPlane::TPlane()
-    : Paving(IntervalVector(2), VALUE_MAYBE)
+    : Paving(IntervalVector(2), SetValue::MAYBE)
   {
 
   }
@@ -36,7 +36,7 @@ namespace tubex
       m_box = IntervalVector(2, p.domain()); // initializing
     m_precision = precision;
     
-    if(value() == VALUE_OUT)
+    if(value() == SetValue::OUT)
       return;
 
     else if(!is_leaf())
@@ -87,13 +87,13 @@ namespace tubex
       // Conclusion
 
         if(derivative_out || primitive_out)
-          set_value(VALUE_OUT);
+          set_value(SetValue::OUT);
 
         else if(derivative_in && primitive_in)
-          set_value(VALUE_IN);
+          set_value(SetValue::IN);
 
         else if(max(t1.diam(), t2.diam()) < precision)
-          set_value(VALUE_MAYBE);
+          set_value(SetValue::MAYBE);
 
         else
         {

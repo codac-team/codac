@@ -92,19 +92,20 @@ namespace tubex
     return v_boxes;
   }
   
-  vector<IntervalVector> DataLoader::generate_observations(const Vector& x, const vector<Beacon>& map, const Interval& visi_range, const Interval& visi_angle)
+  vector<IntervalVector> DataLoader::generate_observations(const Vector& x, const vector<IntervalVector>& map, bool random, const Interval& visi_range, const Interval& visi_angle)
   {
     assert(x.size() == 3);
     assert(map.size() > 0);
 
     vector<IntervalVector> v_obs;
-    vector<Beacon> random_map(map);
-    std::random_shuffle(random_map.begin(), random_map.end());
+    vector<IntervalVector> random_map(map);
+    if(random)
+      std::random_shuffle(random_map.begin(), random_map.end());
 
     for(int i = 0 ; i < random_map.size() ; i++)
     {
-      Interval r = sqrt(ibex::pow(x[0]-random_map[i].pos()[0],2) + ibex::pow(x[1]-random_map[i].pos()[1],2));
-      Interval a = ibex::atan2(random_map[i].pos()[1]-x[1], random_map[i].pos()[0]-x[0]) - x[2];
+      Interval r = sqrt(ibex::pow(x[0]-random_map[i][0],2) + ibex::pow(x[1]-random_map[i][1],2));
+      Interval a = ibex::atan2(random_map[i][1]-x[1], random_map[i][0]-x[0]) - x[2];
       
       if(visi_range.intersects(r) && visi_angle.intersects(a)) // if the beacon is seen by the robot
       {
@@ -117,7 +118,15 @@ namespace tubex
     return v_obs;
   }
   
-  vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& domain)
+  vector<IntervalVector> DataLoader::generate_observations(const Vector& x, const vector<Beacon>& map, bool random, const Interval& visi_range, const Interval& visi_angle)
+  {
+    vector<IntervalVector> map_boxes;
+    for(auto& beacon : map)
+      map_boxes.push_back(beacon.pos());
+    return generate_observations(x, map_boxes, random, visi_range, visi_angle);
+  }
+  
+  vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, bool random, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& domain)
   {
     assert(x.size() >= 2);
     assert(nb_obs >= 0);
@@ -134,7 +143,8 @@ namespace tubex
     Interval domain_ = x.domain() & domain;
     for(double t = domain_.lb() ; t < domain_.ub()-dt ; t+= domain_.diam() / nb_obs)
     {
-      std::random_shuffle(random_map.begin(), random_map.end());
+      if(random)
+        std::random_shuffle(random_map.begin(), random_map.end());
 
       for(int i = 0 ; i < random_map.size() ; i++)
       {

@@ -11,8 +11,8 @@ Requirements and dependencies
 Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is available on `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
 
 .. code-block:: bash
-  
-  sudo apt-get install -y cmake g++-5               # requirements to compile IBEX
+
+  sudo apt-get install -y cmake g++-5 flex bison    # requirements to compile IBEX
   git clone https://github.com/ibex-team/ibex-lib   # download the sources from Github
   cd ibex-lib                                       # move to the IBEX directory
   ./waf configure --with-debug --interval-lib=gaol  # configure IBEX before installation

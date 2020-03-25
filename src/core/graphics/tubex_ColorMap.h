@@ -18,11 +18,11 @@
 namespace tubex
 {
   /**
-   * \enum InterpolationMode
+   * \enum InterpolMode
    * \brief Defines in which color space (HSV, RGB) the
    *        color interpolation will be made.
    */
-  enum InterpolationMode { RGB, HSV };
+  enum class InterpolMode { RGB, HSV };
 
   /**
    * \class ColorMap
@@ -38,7 +38,7 @@ namespace tubex
        * \param interpol_mode mode defining in which color space the
        *        color interpolation will be made (RGB by default)
        */
-      ColorMap(int interpol_mode = InterpolationMode::RGB);
+      ColorMap(InterpolMode interpol_mode = InterpolMode::RGB);
 
       /**
        * \brief ColorMap destructor
@@ -125,7 +125,7 @@ namespace tubex
 
     protected:
 
-      int m_interpol_mode = InterpolationMode::RGB; //!< interpolation mode
+      InterpolMode m_interpol_mode = InterpolMode::RGB; //!< interpolation mode
       std::map<float,rgb> m_colormap; //!< map of colors
   };
 }

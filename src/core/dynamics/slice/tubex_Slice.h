@@ -45,7 +45,7 @@ namespace tubex
        * \param domain Interval domain \f$[t^k_0,t^k_f]\f$
        * \param codomain Interval value of the slice (all reals \f$[-\infty,\infty]\f$ by default)
        */
-      Slice(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      explicit Slice(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
 
       /**
        * \brief Creates a copy of the slice \f$\llbracket x\rrbracket\f$

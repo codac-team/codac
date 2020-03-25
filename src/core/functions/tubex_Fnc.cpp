@@ -39,6 +39,7 @@ namespace tubex
     m_nb_vars = f.m_nb_vars;
     m_img_dim = f.m_img_dim;
     m_is_intertemporal = f.m_is_intertemporal;
+    return *this;
   }
 
   int Fnc::nb_vars() const

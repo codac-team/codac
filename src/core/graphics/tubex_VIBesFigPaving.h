@@ -41,7 +41,7 @@ namespace tubex
        *
        * \param color_map the color map `<paving_value,color_code>` to be set
        */
-      void set_color_map(const std::map<int,std::string>& color_map);
+      void set_color_map(const std::map<SetValue,std::string>& color_map);
 
       /**
        * \brief Updates the display of the Paving object
@@ -62,7 +62,7 @@ namespace tubex
     protected:
 
       const Paving *m_paving; //!< const pointer to the object to be displayed
-      std::map<int,std::string> m_color_map; //!< custom color map
+      std::map<SetValue,std::string> m_color_map; //!< custom color map
   };
 }
 

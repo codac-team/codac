@@ -156,7 +156,7 @@ namespace tubex
       m_v_figs[i]->set_tube_color(&(*tubevector)[i + m_start_index], color_frgrnd, color_bckgrnd);
   }
 
-  void VIBesFigTubeVector::set_tubevector_color(const TubeVector *tubevector, int color_type, const std::string& color)
+  void VIBesFigTubeVector::set_tubevector_color(const TubeVector *tubevector, TubeColorType color_type, const std::string& color)
   {
     assert(tubevector != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)

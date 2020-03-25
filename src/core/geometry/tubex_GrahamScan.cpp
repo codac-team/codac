@@ -54,8 +54,8 @@ namespace tubex
     const Point pa = p1 - p0, pb = p2 - p0;
     const Interval cross_prod = pa.x()*pb.y() - pa.y()*pb.x();
 
-    if(cross_prod.contains(0.)) return UNDEFINED; // possibly colinear
-    return (cross_prod.lb() > 0.) ? COUNTERCLOCKWISE : CLOCKWISE;
+    if(cross_prod.contains(0.)) return OrientationInterval::UNDEFINED; // possibly colinear
+    return (cross_prod.lb() > 0.) ? OrientationInterval::COUNTERCLOCKWISE : OrientationInterval::CLOCKWISE;
   }
 
   const vector<Point> GrahamScan::convex_hull(const vector<Point>& v_points)
@@ -147,7 +147,7 @@ namespace tubex
         // Keep removing top while the angle formed by
         // points next-to-top, top, and v_pts[i] makes
         // a non-left turn
-        while(s.size() > 1 && GrahamScan::orientation(next_to_top(s), s.top(), v_pts[i]) == CLOCKWISE)
+        while(s.size() > 1 && GrahamScan::orientation(next_to_top(s), s.top(), v_pts[i]) == OrientationInterval::CLOCKWISE)
           s.pop();
         s.push(v_pts[i]);
       }
@@ -179,10 +179,10 @@ namespace tubex
     // Find orientation
     OrientationInterval o = GrahamScan::orientation(m_p0, p1, p2);
 
-    if(o == COUNTERCLOCKWISE)
+    if(o == OrientationInterval::COUNTERCLOCKWISE)
       return true;
 
-    else if(o == UNDEFINED && GrahamScan::dist(m_p0, p1).lb() <= GrahamScan::dist(m_p0, p2).lb())
+    else if(o == OrientationInterval::UNDEFINED && GrahamScan::dist(m_p0, p1).lb() <= GrahamScan::dist(m_p0, p2).lb())
       return true;
 
     return false;

@@ -17,7 +17,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  TubePaving::TubePaving(const IntervalVector& init_box) : Paving(init_box, VALUE_MAYBE)
+  TubePaving::TubePaving(const IntervalVector& init_box) : Paving(init_box, SetValue::MAYBE)
   {
 
   }
@@ -55,13 +55,13 @@ namespace tubex
     }
 
     if(is_out)
-      set_value(VALUE_OUT);
+      set_value(SetValue::OUT);
 
     else if(is_in)
-      set_value(VALUE_IN);
+      set_value(SetValue::IN);
 
     else if(box().max_diam() < precision)
-      set_value(VALUE_MAYBE);
+      set_value(SetValue::MAYBE);
 
     else
     {

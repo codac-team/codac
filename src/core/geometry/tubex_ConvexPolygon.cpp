@@ -200,7 +200,7 @@ namespace tubex
           if(inter.is_unbounded() || inter.does_not_exist()) // todo: this should not happen
             continue;
 
-          if(GrahamScan::orientation(m_v_vertices[i], inter, m_v_vertices[(i+1)%n]) != COUNTERCLOCKWISE)
+          if(GrahamScan::orientation(m_v_vertices[i], inter, m_v_vertices[(i+1)%n]) != OrientationInterval::COUNTERCLOCKWISE)
             continue;
 
           assert(!inter.does_not_exist() && !inter.is_unbounded());

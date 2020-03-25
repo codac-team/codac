@@ -112,7 +112,7 @@ namespace tubex
        *
        * \param smooth `true` for smooth display
        */
-      void smooth_tube_drawing(bool smooth = true);
+      void smooth_tube_drawing(bool smooth);
       
       /// @}
       /// \name Handling tubes
@@ -301,6 +301,8 @@ namespace tubex
        *
        * The width of the displayed boxes is related to the uncertainty of the Beacon objects.
        *
+       * \deprecated to be removed
+       *
        * \param v_beacons a vector of const references to Beacon objects to be drawn
        * \param color optional color of the beacons
        */
@@ -309,11 +311,30 @@ namespace tubex
       /**
        * \brief Adds a set of Beacon objects to the map with a specific width
        *
+       * \deprecated to be removed
+       *
        * \param v_beacons a vector of const references to Beacon objects to be drawn
        * \param width the real width of the squared beacons
        * \param color optional color of the beacons
        */
       void add_beacons(const std::vector<Beacon>& v_beacons, double width, const std::string& color = DEFAULT_BEACON_COLOR);
+
+      /**
+       * \brief Adds a set of boxed landmarks to the map
+       *
+       * \param v_m a vector of boxes to be drawn
+       * \param color optional color of the beacons
+       */
+      void add_landmarks(const std::vector<ibex::IntervalVector>& v_m, const std::string& color = DEFAULT_BEACON_COLOR);
+      
+      /**
+       * \brief Adds a set of landmarks to the map with a specific width
+       *
+       * \param v_m a vector of 2d positions of landmarks
+       * \param width the width of the squared beacons
+       * \param color optional color of the beacons
+       */
+      void add_landmarks(const std::vector<ibex::Vector>& v_m, double width, const std::string& color = DEFAULT_BEACON_COLOR);
       
       /**
        * \brief Adds a range-and-bearing uncertain observation to the map,

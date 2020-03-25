@@ -66,7 +66,7 @@ int main()
       const Interval visi_range(0.,75.); // [0m,75m]
       const Interval visi_angle(-M_PI/4.,M_PI/4.); // frontal sonar
       vector<IntervalVector> v_obs =
-        DataLoader::generate_observations(state_truth, v_map, max_nb_obs, visi_range, visi_angle);
+        DataLoader::generate_observations(state_truth, v_map, max_nb_obs, true, visi_range, visi_angle);
 
       // Adding uncertainties on the measurements
       for(auto& obs : v_obs) 
@@ -92,7 +92,7 @@ int main()
   /* =========== CONTRACTOR NETWORK =========== */
 
     ContractorNetwork cn;
-    cn.add(ctc_deriv, x, v);
+    cn.add(ctc_deriv, {x, v});
 
     for(int i = 0 ; i < v_obs.size() ; i++)
     {
@@ -107,15 +107,16 @@ int main()
       IntervalVector& d = cn.create_var(IntervalVector(2));
       IntervalVector& p = cn.create_var(IntervalVector(2));
       
-      cn.add(ctc_constell, m[i]);
-      cn.add(ctc_minus, d, m[i], p);
-      cn.add(ctc_plus, a, psi, y2);
-      cn.add(ctc_polar, d[0], d[1], y1, a);
-      cn.add(ctc_eval, t, p, x, v);
-      cn.add(ctc_eval, t, psi, heading);
+      cn.add(ctc_constell, {m[i]});
+      cn.add(ctc_minus, {d, m[i], p});
+      cn.add(ctc_plus, {a, psi, y2});
+      cn.add(ctc_polar, {d[0], d[1], y1, a});
+      cn.add(ctc_eval, {t, p, x, v});
+      cn.add(ctc_eval, {t, psi, heading});
     }
 
-    cn.contract();
+    cn.set_fixedpoint_ratio(0.);
+    cn.contract(true);
 
 
   /* =========== GRAPHICS =========== */
@@ -128,9 +129,9 @@ int main()
     fig_map.add_trajectory(&state_truth, "x*", 0, 1, 2, "white");
     fig_map.add_observations(v_obs, &state_truth);
     fig_map.add_beacons(v_map, 2.);
-    fig_map.smooth_tube_drawing();
+    fig_map.smooth_tube_drawing(true);
     fig_map.show();
-    fig_map.axis_limits(-340., 340., 0., 0., true);
+    fig_map.axis_limits(-340., 340., -1., 1., true);
     
 
   /* =========== ENDING =========== */
