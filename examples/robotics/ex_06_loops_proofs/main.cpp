@@ -86,11 +86,11 @@ int main(int argc, char** argv)
     vector<ConnectedSubset> v_loops;
 
     v_loops = tplane.get_detected_loops();
-    for(int i = 0 ; i < v_loops.size() ; i++)
+    for(size_t i = 0 ; i < v_loops.size() ; i++)
       fig_tplane.draw_box(v_loops[i].box(), "red");
 
     v_loops = tplane.get_proven_loops();
-    for(int i = 0 ; i < v_loops.size() ; i++)
+    for(size_t i = 0 ; i < v_loops.size() ; i++)
       fig_tplane.draw_box(v_loops[i].box(), "green");
 
     vibes::endDrawing();

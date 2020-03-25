@@ -67,7 +67,7 @@ int main(int argc, char** argv)
   /* =========== STATE ESTIMATION =========== */
 
     map<int,TubeVector*> m_x;
-    for(int i = 0 ; i < v_seamarks.size() ; i++)
+    for(size_t i = 0 ; i < v_seamarks.size() ; i++)
     {
       m_x[i] = new TubeVector(*x);
       m_x[i]->resize(11);
@@ -76,11 +76,11 @@ int main(int argc, char** argv)
       (*m_x[i])[7].set(v_seamarks[i].pos_box()[1]);
       (*m_x[i])[8].set(v_seamarks[i].pos_box()[2]);
 
-      for(int k = 0 ; k < m_obs[i].size() ; k++)
+      for(size_t k = 0 ; k < m_obs[i].size() ; k++)
         ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], (*m_x[i])[9], (*m_x[i])[10]);
     }
 
-    for(int i = 0 ; i < v_seamarks.size() ; i++)
+    for(size_t i = 0 ; i < v_seamarks.size() ; i++)
     {
       cout << "Seamark " << (i+1) << endl;
 
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
 
     bool success = x->subvector(0,1).contains(x_truth->subvector(0,1)) != NO;
     
-    for(int i = 0 ; i < v_seamarks.size() ; i++)
+    for(size_t i = 0 ; i < v_seamarks.size() ; i++)
       delete m_x[i];
     delete x;
     delete x_truth;

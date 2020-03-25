@@ -117,7 +117,7 @@ namespace tubex
   bool Polygon::operator==(const Polygon& p) const
   {
     int n = m_v_vertices.size();
-    if(n != (int)p.m_v_vertices.size())
+    if(n != (int)p.m_v_vertices.size()) // todo: use size_t
       return false;
 
     int i; // looking for first same elements
@@ -141,7 +141,7 @@ namespace tubex
   bool Polygon::operator!=(const Polygon& p) const
   {
     int n = m_v_vertices.size();
-    if(n != (int)p.m_v_vertices.size())
+    if(n != (int)p.m_v_vertices.size()) // todo: use size_t
       return true;
 
     int i; // looking for first same elements

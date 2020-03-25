@@ -94,7 +94,7 @@ int main()
     ContractorNetwork cn;
     cn.add(ctc_deriv, {x, v});
 
-    for(int i = 0 ; i < v_obs.size() ; i++)
+    for(size_t i = 0 ; i < v_obs.size() ; i++)
     {
       // Measurement i
       Interval &t  = v_obs[i][0]; // time
@@ -138,7 +138,7 @@ int main()
 
     cout << endl << v_map.size() << " landmarks" << endl;
     int identified = 0;
-    for(int i = 0 ; i < m.size() ; i++)
+    for(size_t i = 0 ; i < m.size() ; i++)
       if(m[i].volume() == 0 && !m[i].is_empty()) // degenerate box
       {
         identified ++;
