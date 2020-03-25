@@ -44,8 +44,6 @@ namespace tubex
       
       bool operator==(const AbstractDomain& x) const;
       bool operator!=(const AbstractDomain& x) const;
-      bool is_component_of(const AbstractDomain* x) const;
-      bool is_slice_of(const AbstractDomain* x) const;
       
       friend std::ostream& operator<<(std::ostream& str, const AbstractDomain& x);
 

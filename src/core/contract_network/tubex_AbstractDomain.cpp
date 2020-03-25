@@ -235,33 +235,6 @@ namespace tubex
     }
   }
 
-  bool AbstractDomain::is_component_of(const AbstractDomain* x) const
-  {
-    if((x->type() == DomainType::INTERVAL_VECTOR && type() == DomainType::INTERVAL) ||
-       (x->type() == DomainType::TUBE_VECTOR && type() == DomainType::TUBE))
-    {
-      for(int i = 0 ; i < x->m_iv.get().size() ; i++)
-        if(&x->m_iv.get()[i] == &m_i.get())
-          return true;
-    }
-
-    return false;
-  }
-
-  bool AbstractDomain::is_slice_of(const AbstractDomain* x) const
-  {
-    if(x->type() == DomainType::TUBE && type() == DomainType::SLICE)
-    {
-      for(const Slice *s = x->m_t.get().first_slice() ; s != NULL ; s = s->next_slice())
-      {
-        if(s == &m_s.get())
-          return true;
-      }
-    }
-
-    return false;
-  }
-
   ostream& operator<<(ostream& str, const AbstractDomain& x)
   {
     switch(x.m_type)
