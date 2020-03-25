@@ -631,6 +631,20 @@ namespace vibes
       fflush(channel);
   }
 
+  void drawTank(const double &cx, const double &cy, const double &rot, const double &length, Params params)
+  {
+      Vec2d vc = { cx, cy };
+      Params msg;
+      msg["action"] = "draw";
+      msg["figure"] = params.pop("figure",current_fig);
+      msg["shape"] = (params, "type", "vehicle_tank",
+                              "center", vc,
+                              "length", length,
+                              "orientation", rot);
+
+      fputs(Value(msg).toJSONString().append("\n\n").c_str(), channel);
+      fflush(channel);
+  }
 
   void drawRaster(const std::string& rasterFilename, const double &xlb, const double &yub, const double &xres, const double &yres, Params params)
   {
