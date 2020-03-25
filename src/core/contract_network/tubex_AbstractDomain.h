@@ -12,6 +12,7 @@
 #ifndef __TUBEX_ABSTRACT_DOMAIN_H__
 #define __TUBEX_ABSTRACT_DOMAIN_H__
 
+#include <functional>
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
 #include "tubex_Slice.h"
@@ -50,23 +51,19 @@ namespace tubex
 
     //protected:
 
-      double m_volume = 0.;
-
       const DomainType m_type;
 
-      ibex::Interval& m_i;
-      ibex::IntervalVector& m_iv;
-      tubex::Slice& m_s;
-      tubex::Tube& m_t;
-      tubex::TubeVector& m_tv;
+      union
+      {
+        std::reference_wrapper<ibex::Interval> m_i;
+        std::reference_wrapper<ibex::IntervalVector> m_iv;
+        std::reference_wrapper<tubex::Slice> m_s;
+        std::reference_wrapper<tubex::Tube> m_t;
+        std::reference_wrapper<tubex::TubeVector> m_tv;
+      };
 
       std::vector<AbstractContractor*> m_v_ctc;
-
-      static ibex::Interval m_dump_i;
-      static ibex::IntervalVector m_dump_iv;
-      static tubex::Slice m_dump_s;
-      static tubex::Tube m_dump_t;
-      static tubex::TubeVector m_dump_tv;
+      double m_volume = 0.;
   };
 }
 

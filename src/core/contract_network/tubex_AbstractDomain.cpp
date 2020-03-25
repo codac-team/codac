@@ -15,46 +15,64 @@ using namespace ibex;
 
 namespace tubex
 {
-  Interval AbstractDomain::m_dump_i = Interval();
-  IntervalVector AbstractDomain::m_dump_iv = IntervalVector(1);
-  Slice AbstractDomain::m_dump_s = Slice(Interval(0.,1.));
-  Tube AbstractDomain::m_dump_t = Tube(Interval(0.,1.));
-  TubeVector AbstractDomain::m_dump_tv = TubeVector(Interval(0.,1.));
-
   AbstractDomain::AbstractDomain(const AbstractDomain& ad)
-    : m_type(ad.m_type), m_i(ad.m_i), m_iv(ad.m_iv), m_s(ad.m_s), m_t(ad.m_t), m_tv(ad.m_tv), m_v_ctc(ad.m_v_ctc)
+    : m_type(ad.m_type), m_v_ctc(ad.m_v_ctc), m_volume(ad.m_volume)
   {
+    switch(ad.m_type)
+    {
+      case DomainType::INTERVAL:
+        m_i = ad.m_i;
+        break;
 
+      case DomainType::INTERVAL_VECTOR:
+        m_iv = ad.m_iv;
+        break;
+
+      case DomainType::SLICE:
+        m_s = ad.m_s;
+        break;
+
+      case DomainType::TUBE:
+        m_t = ad.m_t;
+        break;
+
+      case DomainType::TUBE_VECTOR:
+        m_tv = ad.m_tv;
+        break;
+
+      default:
+        assert(false && "unhandled case");
+    }
   }
 
   AbstractDomain::AbstractDomain(ibex::Interval& i)
-    : m_type(DomainType::INTERVAL), m_i(i), m_iv(m_dump_iv), m_s(m_dump_s), m_t(m_dump_t), m_tv(m_dump_tv)
+    : m_type(DomainType::INTERVAL), m_i(i)
   {
 
   }
 
   AbstractDomain::AbstractDomain(ibex::IntervalVector& iv)
-    : m_type(DomainType::INTERVAL_VECTOR), m_i(m_dump_i), m_iv(iv), m_s(m_dump_s), m_t(m_dump_t), m_tv(m_dump_tv)
+    : m_type(DomainType::INTERVAL_VECTOR), m_iv(iv)
   {
 
   }
 
   AbstractDomain::AbstractDomain(tubex::Slice& s)
-    : m_type(DomainType::SLICE), m_i(m_dump_i), m_iv(m_dump_iv), m_s(s), m_t(m_dump_t), m_tv(m_dump_tv)
+    : m_type(DomainType::SLICE), m_s(s)
   {
-    m_s &= Slice(m_s.domain(),Interval(-99999.,99999.)); // todo: remove this
+    m_s.get() &= Slice(m_s.get().domain(),Interval(-99999.,99999.)); // todo: remove this
   }
 
   AbstractDomain::AbstractDomain(tubex::Tube& t)
-    : m_type(DomainType::TUBE), m_i(m_dump_i), m_iv(m_dump_iv), m_s(m_dump_s), m_t(t), m_tv(m_dump_tv)
+    : m_type(DomainType::TUBE), m_t(t)
   {
-    m_t &= Interval(-99999.,99999.); // todo: remove this
+    m_t.get() &= Interval(-99999.,99999.); // todo: remove this
   }
 
   AbstractDomain::AbstractDomain(tubex::TubeVector& tv)
-    : m_type(DomainType::TUBE_VECTOR), m_i(m_dump_i), m_iv(m_dump_iv), m_s(m_dump_s), m_t(m_dump_t), m_tv(tv)
+    : m_type(DomainType::TUBE_VECTOR), m_tv(tv)
   {
-    m_tv &= IntervalVector(m_tv.size(), Interval(-99999.,99999.)); // todo: remove this
+    m_tv.get() &= IntervalVector(m_tv.get().size(), Interval(-99999.,99999.)); // todo: remove this
   }
 
   AbstractDomain::~AbstractDomain()
@@ -72,46 +90,46 @@ namespace tubex
     switch(m_type)
     {
       case DomainType::INTERVAL:
-        if(m_i.is_empty())
+        if(m_i.get().is_empty())
           return 0.;
         
-        else if(m_i.is_unbounded())
+        else if(m_i.get().is_unbounded())
           return 999999.; // todo: manager the unbounded case for fixed point detection
         
         else
-          return m_i.diam();
+          return m_i.get().diam();
 
       case DomainType::INTERVAL_VECTOR:
-        return m_iv.volume();
+        return m_iv.get().volume();
 
       case DomainType::SLICE:
       {
-        double vol = m_s.volume();
+        double vol = m_s.get().volume();
 
         // todo: clean the following:
 
-        if(m_s.input_gate().is_empty())
+        if(m_s.get().input_gate().is_empty())
           vol += 0.;
-        else if(m_s.input_gate().is_unbounded())
+        else if(m_s.get().input_gate().is_unbounded())
           vol += 999999.; // todo: manager the unbounded case for fixed point detection
         else
-          vol += m_s.input_gate().diam();
+          vol += m_s.get().input_gate().diam();
 
-        if(m_s.output_gate().is_empty())
+        if(m_s.get().output_gate().is_empty())
           vol += 0.;
-        else if(m_s.output_gate().is_unbounded())
+        else if(m_s.get().output_gate().is_unbounded())
           vol += 999999.; // todo: manager the unbounded case for fixed point detection
         else
-          vol += m_s.output_gate().diam();
+          vol += m_s.get().output_gate().diam();
 
         return vol;
       }
 
       case DomainType::TUBE:
       {
-        double vol = m_t.volume();
-        vol += m_t.first_slice()->input_gate().diam();
-        for(const Slice *s = m_t.first_slice() ; s != NULL ; s = s->next_slice())
+        double vol = m_t.get().volume();
+        vol += m_t.get().first_slice()->input_gate().diam();
+        for(const Slice *s = m_t.get().first_slice() ; s != NULL ; s = s->next_slice())
           vol += s->output_gate().diam();
         return vol;
       }
@@ -121,11 +139,11 @@ namespace tubex
         // todo: improve this
         double vol = 0.;
 
-        for(int i = 0 ; i < m_tv.size() ; i++)
+        for(int i = 0 ; i < m_tv.get().size() ; i++)
         {
-          vol += m_tv[i].volume();
-          vol += m_tv[i].first_slice()->input_gate().diam();
-          for(const Slice *s = m_tv[i].first_slice() ; s != NULL ; s = s->next_slice())
+          vol += m_tv.get()[i].volume();
+          vol += m_tv.get()[i].first_slice()->input_gate().diam();
+          for(const Slice *s = m_tv.get()[i].first_slice() ; s != NULL ; s = s->next_slice())
             vol += s->output_gate().diam();
         }
         
@@ -142,19 +160,19 @@ namespace tubex
     switch(m_type)
     {
       case DomainType::INTERVAL:
-        return m_i.is_empty();
+        return m_i.get().is_empty();
 
       case DomainType::INTERVAL_VECTOR:
-        return m_iv.is_empty();
+        return m_iv.get().is_empty();
 
       case DomainType::SLICE:
-        return m_s.is_empty();
+        return m_s.get().is_empty();
 
       case DomainType::TUBE:
-        return m_t.is_empty();
+        return m_t.get().is_empty();
 
       case DomainType::TUBE_VECTOR:
-        return m_tv.is_empty();
+        return m_tv.get().is_empty();
 
       default:
         assert(false && "unhandled case");
@@ -169,19 +187,19 @@ namespace tubex
     switch(m_type)
     {
       case DomainType::INTERVAL:
-        return &m_i == &x.m_i;
+        return &m_i.get() == &x.m_i.get();
 
       case DomainType::INTERVAL_VECTOR:
-        return &m_iv == &x.m_iv;
+        return &m_iv.get() == &x.m_iv.get();
 
       case DomainType::SLICE:
-        return &m_s == &x.m_s;
+        return &m_s.get() == &x.m_s.get();
 
       case DomainType::TUBE:
-        return &m_t == &x.m_t;
+        return &m_t.get() == &x.m_t.get();
 
       case DomainType::TUBE_VECTOR:
-        return &m_tv == &x.m_tv;
+        return &m_tv.get() == &x.m_tv.get();
 
       default:
         assert(false && "unhandled case");
@@ -197,19 +215,19 @@ namespace tubex
     switch(m_type)
     {
       case DomainType::INTERVAL:
-        return &m_i != &x.m_i;
+        return &m_i.get() != &x.m_i.get();
 
       case DomainType::INTERVAL_VECTOR:
-        return &m_iv != &x.m_iv;
+        return &m_iv.get() != &x.m_iv.get();
 
       case DomainType::SLICE:
-        return &m_s != &x.m_s;
+        return &m_s.get() != &x.m_s.get();
 
       case DomainType::TUBE:
-        return &m_t != &x.m_t;
+        return &m_t.get() != &x.m_t.get();
 
       case DomainType::TUBE_VECTOR:
-        return &m_tv != &x.m_tv;
+        return &m_tv.get() != &x.m_tv.get();
 
       default:
         assert(false && "unhandled case");
@@ -222,8 +240,8 @@ namespace tubex
     if((x->type() == DomainType::INTERVAL_VECTOR && type() == DomainType::INTERVAL) ||
        (x->type() == DomainType::TUBE_VECTOR && type() == DomainType::TUBE))
     {
-      for(int i = 0 ; i < x->m_iv.size() ; i++)
-        if(&x->m_iv[i] == &m_i)
+      for(int i = 0 ; i < x->m_iv.get().size() ; i++)
+        if(&x->m_iv.get()[i] == &m_i.get())
           return true;
     }
 
@@ -234,9 +252,9 @@ namespace tubex
   {
     if(x->type() == DomainType::TUBE && type() == DomainType::SLICE)
     {
-      for(const Slice *s = x->m_t.first_slice() ; s != NULL ; s = s->next_slice())
+      for(const Slice *s = x->m_t.get().first_slice() ; s != NULL ; s = s->next_slice())
       {
-        if(s == &m_s)
+        if(s == &m_s.get())
           return true;
       }
     }
@@ -249,23 +267,23 @@ namespace tubex
     switch(x.m_type)
     {
       case DomainType::INTERVAL:
-        str << "Interval: " << x.m_i << flush;
+        str << "Interval: " << x.m_i.get() << flush;
         break;
 
       case DomainType::INTERVAL_VECTOR:
-        str << "IntervalVector: " << x.m_iv << flush;
+        str << "IntervalVector: " << x.m_iv.get() << flush;
         break;
 
       case DomainType::SLICE:
-        str << "Slice: " << x.m_s << flush;
+        str << "Slice: " << x.m_s.get() << flush;
         break;
 
       case DomainType::TUBE:
-        str << "Tube: " << x.m_t << flush;
+        str << "Tube: " << x.m_t.get() << flush;
         break;
 
       case DomainType::TUBE_VECTOR:
-        str << "TubeVector: " << x.m_tv << flush;
+        str << "TubeVector: " << x.m_tv.get() << flush;
         break;
 
       default:

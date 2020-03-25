@@ -76,33 +76,33 @@ namespace tubex
     {
       if(m_domains.size() == 1 && m_domains[0]->m_type == DomainType::INTERVAL_VECTOR)
       {
-        m_ibex_ctc.contract(m_domains[0]->m_iv);
+        m_ibex_ctc.contract(m_domains[0]->m_iv.get());
       }
 
       else if(m_domains[0]->m_type == DomainType::INTERVAL) // set of scalar values
       {
         IntervalVector box(m_domains.size());
         for(size_t i = 0 ; i < m_domains.size() ; i++)
-          box[i] = m_domains[i]->m_i;
+          box[i] = m_domains[i]->m_i.get();
 
         m_ibex_ctc.contract(box);
 
         for(size_t i = 0 ; i < m_domains.size() ; i++)
-          m_domains[i]->m_i &= box[i];
+          m_domains[i]->m_i.get() &= box[i];
       }
 
       else if(m_domains[0]->m_type == DomainType::INTERVAL_VECTOR) // set of vector values
       {
-        for(int k = 0 ; k < m_domains[0]->m_iv.size() ; k++)
+        for(int k = 0 ; k < m_domains[0]->m_iv.get().size() ; k++)
         {
           IntervalVector box(m_domains.size());
           for(size_t i = 0 ; i < m_domains.size() ; i++)
-            box[i] = m_domains[i]->m_iv[k];
+            box[i] = m_domains[i]->m_iv.get()[k];
 
           m_ibex_ctc.contract(box);
 
           for(size_t i = 0 ; i < m_domains.size() ; i++)
-            m_domains[i]->m_iv[k] &= box[i];
+            m_domains[i]->m_iv.get()[k] &= box[i];
         }
       }
     }

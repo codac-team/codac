@@ -27,15 +27,15 @@ namespace tubex
 
     // Slice case:
     if(v_domains[0]->type() == DomainType::SLICE && v_domains[1]->type() == DomainType::SLICE)
-      contract(v_domains[0]->m_s, v_domains[1]->m_s);
+      contract(v_domains[0]->m_s.get(), v_domains[1]->m_s.get());
 
     // Tube scalar case:
     else if(v_domains[0]->type() == DomainType::TUBE && v_domains[1]->type() == DomainType::TUBE)
-      contract(v_domains[0]->m_t, v_domains[1]->m_t);
+      contract(v_domains[0]->m_t.get(), v_domains[1]->m_t.get());
 
     // Tube vector case:
     else if(v_domains[0]->type() == DomainType::TUBE_VECTOR && v_domains[1]->type() == DomainType::TUBE_VECTOR)
-      contract(v_domains[0]->m_tv, v_domains[1]->m_tv);
+      contract(v_domains[0]->m_tv.get(), v_domains[1]->m_tv.get());
 
     else
       assert(false && "unhandled case");
