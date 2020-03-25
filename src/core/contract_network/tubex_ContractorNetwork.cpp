@@ -75,17 +75,17 @@ namespace tubex
 
       for(auto& ctc_dom : ctc->m_domains) // for each domain related to this contractor
       {
-        double current_volume = ctc_dom->volume(); // new volume after contraction
+        double current_volume = ctc_dom->compute_volume(); // new volume after contraction
 
         // If the domain has "changed" after the contraction
-        if(current_volume/ctc_dom->m_volume < 1.-m_fixedpoint_ratio)
+        if(current_volume/ctc_dom->get_saved_volume() < 1.-m_fixedpoint_ratio)
         {
           // We activate each contractor related to these domains, according to graph orientation
 
           // Local deque, for specific order related to this domain
           deque<AbstractContractor*> ctc_deque;
 
-          for(auto& ctc_of_dom : ctc_dom->m_v_ctc) 
+          for(auto& ctc_of_dom : ctc_dom->contractors()) 
             if(ctc_of_dom != ctc && !ctc_of_dom->m_active)
             {
               ctc_of_dom->m_active = true;
@@ -102,7 +102,7 @@ namespace tubex
             m_deque.push_front(c);
         }
         
-        ctc_dom->m_volume = current_volume; // updated old volume
+        ctc_dom->set_volume(current_volume); // updating old volume
       }
     }
 
@@ -134,13 +134,13 @@ namespace tubex
   Interval& ContractorNetwork::create_var(const Interval& i_)
   {
     // todo: manage delete
-    return add_domain(new AbstractDomain(*new Interval(i_)))->m_i;
+    return add_domain(new AbstractDomain(*new Interval(i_)))->interval();
   }
 
   IntervalVector& ContractorNetwork::create_var(const IntervalVector& i_)
   {
     // todo: manage delete
-    return add_domain(new AbstractDomain(*new IntervalVector(i_)))->m_iv;
+    return add_domain(new AbstractDomain(*new IntervalVector(i_)))->interval_vector();
   }
 
   void ContractorNetwork::add(ibex::Ctc& ctc, initializer_list<AbstractDomain> list)
@@ -164,13 +164,14 @@ namespace tubex
       for(auto& dom : list)
       {
         assert(dom.type() == DomainType::TUBE
-          && dom.m_t.get().nb_slices() == dom_tube1->m_t.get().nb_slices());
+          && dom.tube().nb_slices() == dom_tube1->tube().nb_slices());
         add_domain(new AbstractDomain(dom));
         dom_tube2 = &dom;
       }
 
       // Add dependencies between slices
-      Slice *s_x = dom_tube1->m_t.get().first_slice(), *s_v = dom_tube2->m_t.get().first_slice();
+      Slice *s_x = const_cast<Slice*>(dom_tube1->tube().first_slice());
+      Slice *s_v = const_cast<Slice*>(dom_tube2->tube().first_slice());
       while(s_x != NULL)
       {
         add(ctc, {*s_x,*s_v});
@@ -213,18 +214,18 @@ namespace tubex
       if(ad->type() == DomainType::TUBE_VECTOR)
       {
         AbstractContractor *ac_link = new AbstractContractor();
-        add_domain(new AbstractDomain(ad->m_tv), ac_link); // adding vector
-        for(int i = 0 ; i < ad->m_tv.get().size() ; i++)
-          add_domain(new AbstractDomain(ad->m_tv.get()[i]), ac_link); // adding its components
+        add_domain(new AbstractDomain(ad->tube_vector()), ac_link); // adding vector
+        for(int i = 0 ; i < ad->tube_vector().size() ; i++)
+          add_domain(new AbstractDomain(ad->tube_vector()[i]), ac_link); // adding its components
         add_contractor(ac_link);
       }
 
       else if(ad->type() == DomainType::INTERVAL_VECTOR)
       {
         AbstractContractor *ac_link = new AbstractContractor();
-        add_domain(new AbstractDomain(ad->m_iv.get()), ac_link); // adding vector
-        for(int i = 0 ; i < ad->m_iv.get().size() ; i++)
-          add_domain(new AbstractDomain(ad->m_iv.get()[i]), ac_link); // adding its components
+        add_domain(new AbstractDomain(ad->interval_vector()), ac_link); // adding vector
+        for(int i = 0 ; i < ad->interval_vector().size() ; i++)
+          add_domain(new AbstractDomain(ad->interval_vector()[i]), ac_link); // adding its components
         add_contractor(ac_link);
       }
 
@@ -232,13 +233,13 @@ namespace tubex
       {
         // Dependencies tube <-> slice
         AbstractContractor *ac_link = new AbstractContractor();
-        add_domain(new AbstractDomain(ad->m_t.get()), ac_link); // adding tube
-        for(Slice *s = ad->m_t.get().first_slice() ; s != NULL ; s = s->next_slice())
+        add_domain(new AbstractDomain(ad->tube()), ac_link); // adding tube
+        for(Slice *s = ad->tube().first_slice() ; s != NULL ; s = s->next_slice())
           add_domain(new AbstractDomain(*s), ac_link); // adding one of its slices
         add_contractor(ac_link);
 
         // Dependencies slice <-> slice
-        for(Slice *s = ad->m_t.get().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
+        for(Slice *s = ad->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
         {
           AbstractContractor *ac_link_slices = new AbstractContractor();
           add_domain(new AbstractDomain(*s), ac_link_slices);
@@ -257,7 +258,7 @@ namespace tubex
     AbstractDomain *ad_ = add_domain(ad);
 
     ac->m_domains.push_back(ad_);
-    ad_->m_v_ctc.push_back(ac);
+    ad_->contractors().push_back(ac);
   }
 
   void ContractorNetwork::add_contractor(AbstractContractor *&ac)

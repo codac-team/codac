@@ -85,7 +85,72 @@ namespace tubex
     return m_type;
   }
 
-  double AbstractDomain::volume() const
+  ibex::Interval& AbstractDomain::interval()
+  {
+    assert(m_type == DomainType::INTERVAL);
+    return const_cast<Interval&>(static_cast<const AbstractDomain&>(*this).interval());
+  }
+
+  const ibex::Interval& AbstractDomain::interval() const
+  {
+    assert(m_type == DomainType::INTERVAL);
+    return m_i.get();
+  }
+
+  ibex::IntervalVector& AbstractDomain::interval_vector()
+  {
+    assert(m_type == DomainType::INTERVAL_VECTOR);
+    return const_cast<IntervalVector&>(static_cast<const AbstractDomain&>(*this).interval_vector());
+  }
+
+  const ibex::IntervalVector& AbstractDomain::interval_vector() const
+  {
+    assert(m_type == DomainType::INTERVAL_VECTOR);
+    return m_iv.get();
+  }
+
+  tubex::Slice& AbstractDomain::slice()
+  {
+    assert(m_type == DomainType::SLICE);
+    return const_cast<Slice&>(static_cast<const AbstractDomain&>(*this).slice());
+  }
+
+  const tubex::Slice& AbstractDomain::slice() const
+  {
+    assert(m_type == DomainType::SLICE);
+    return m_s.get();
+  }
+
+  tubex::Tube& AbstractDomain::tube()
+  {
+    assert(m_type == DomainType::TUBE);
+    return const_cast<Tube&>(static_cast<const AbstractDomain&>(*this).tube());
+  }
+
+  const tubex::Tube& AbstractDomain::tube() const
+  {
+    assert(m_type == DomainType::TUBE);
+    return m_t.get();
+  }
+
+  tubex::TubeVector& AbstractDomain::tube_vector()
+  {
+    assert(m_type == DomainType::TUBE_VECTOR);
+    return const_cast<TubeVector&>(static_cast<const AbstractDomain&>(*this).tube_vector());
+  }
+
+  const tubex::TubeVector& AbstractDomain::tube_vector() const
+  {
+    assert(m_type == DomainType::TUBE_VECTOR);
+    return m_tv.get();
+  }
+
+  vector<AbstractContractor*>& AbstractDomain::contractors()
+  {
+    return m_v_ctc;
+  }
+
+  double AbstractDomain::compute_volume() const
   {
     switch(m_type)
     {
@@ -153,6 +218,16 @@ namespace tubex
       default:
         assert(false && "unhandled case");
     }
+  }
+
+  double AbstractDomain::get_saved_volume() const
+  {
+    return m_volume;
+  }
+
+  void AbstractDomain::set_volume(double vol)
+  {
+    m_volume = vol;
   }
 
   bool AbstractDomain::is_empty() const

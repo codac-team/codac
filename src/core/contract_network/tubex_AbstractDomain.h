@@ -39,7 +39,23 @@ namespace tubex
 
       DomainType type() const;
 
-      double volume() const;
+      ibex::Interval& interval();
+      const ibex::Interval& interval() const;
+      ibex::IntervalVector& interval_vector();
+      const ibex::IntervalVector& interval_vector() const;
+      tubex::Slice& slice();
+      const tubex::Slice& slice() const;
+      tubex::Tube& tube();
+      const tubex::Tube& tube() const;
+      tubex::TubeVector& tube_vector();
+      const tubex::TubeVector& tube_vector() const;
+
+      std::vector<AbstractContractor*>& contractors();
+
+      double compute_volume() const;
+      double get_saved_volume() const;
+      void set_volume(double vol);
+
       bool is_empty() const;
       
       bool operator==(const AbstractDomain& x) const;
@@ -47,7 +63,8 @@ namespace tubex
       
       friend std::ostream& operator<<(std::ostream& str, const AbstractDomain& x);
 
-    //protected:
+
+    protected:
 
       const DomainType m_type;
 

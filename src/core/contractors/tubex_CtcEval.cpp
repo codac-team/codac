@@ -30,11 +30,11 @@ namespace tubex
     {
       // Scalar case:
       if(v_domains[1]->type() == DomainType::INTERVAL && v_domains[2]->type() == DomainType::TUBE && v_domains[3]->type() == DomainType::TUBE)
-        contract(v_domains[0]->m_i.get(), v_domains[1]->m_i.get(), v_domains[2]->m_t.get(), v_domains[3]->m_t.get());
+        contract(v_domains[0]->interval(), v_domains[1]->interval(), v_domains[2]->tube(), v_domains[3]->tube());
 
       // Vector case:
       else if(v_domains[1]->type() == DomainType::INTERVAL_VECTOR && v_domains[2]->type() == DomainType::TUBE_VECTOR && v_domains[3]->type() == DomainType::TUBE_VECTOR)
-        contract(v_domains[0]->m_i.get(), v_domains[1]->m_iv.get(), v_domains[2]->m_tv.get(), v_domains[3]->m_tv.get());
+        contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector(), v_domains[3]->tube_vector());
 
       else
         assert(false && "unhandled case");
@@ -44,11 +44,11 @@ namespace tubex
     {
       // Scalar case:
       if(v_domains[1]->type() == DomainType::INTERVAL && v_domains[2]->type() == DomainType::TUBE)
-        contract(v_domains[0]->m_i.get(), v_domains[1]->m_i.get(), v_domains[2]->m_t.get());
+        contract(v_domains[0]->interval(), v_domains[1]->interval(), v_domains[2]->tube());
 
       // Vector case:
       else if(v_domains[1]->type() == DomainType::INTERVAL_VECTOR && v_domains[2]->type() == DomainType::TUBE_VECTOR)
-        contract(v_domains[0]->m_i.get(), v_domains[1]->m_iv.get(), v_domains[2]->m_tv.get());
+        contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector());
 
       else
         assert(false && "unhandled case");
