@@ -10,8 +10,6 @@
 
 #include "tubex_AbstractContractor.h"
 #include "tubex_CtcEval.h"
-#include "tubex_CtcDeriv.h" // todo: remove this
-#include "ibex_CtcEmpty.h" // todo: remove this
 
 using namespace std;
 using namespace ibex;
@@ -19,30 +17,42 @@ using namespace ibex;
 namespace tubex
 {
   AbstractContractor::AbstractContractor()
-    : m_type(ContractorType::NONE), m_ibex_ctc(*new CtcEmpty(1)), m_tubex_ctc(*new CtcDeriv)
+    : m_type(ContractorType::COMPONENT)
   {
 
   }
 
   AbstractContractor::AbstractContractor(const AbstractContractor& ac)
-    : m_type(ac.m_type), m_ibex_ctc(ac.m_ibex_ctc), m_tubex_ctc(ac.m_tubex_ctc), m_domains(ac.m_domains)
+    : m_type(ac.m_type), m_domains(ac.m_domains)
   {
+    switch(ac.m_type)
+    {
+      case ContractorType::IBEX:
+        m_ibex_ctc = ac.m_ibex_ctc;
+        break;
 
+      case ContractorType::TUBEX:
+        m_tubex_ctc = ac.m_tubex_ctc;
+        break;
+
+      default:
+        assert(false && "unhandled case");
+    }
   }
 
   AbstractContractor::AbstractContractor(ibex::Ctc& ctc)
-    : m_type(ContractorType::IBEX), m_ibex_ctc(ctc), m_tubex_ctc(*new CtcDeriv)
+    : m_type(ContractorType::IBEX), m_ibex_ctc(ctc)
   {
 
   }
 
   AbstractContractor::AbstractContractor(tubex::Ctc& ctc) 
-    : m_type(ContractorType::TUBEX), m_ibex_ctc(*new CtcEmpty(1)), m_tubex_ctc(ctc)
+    : m_type(ContractorType::TUBEX), m_tubex_ctc(ctc)
   {
     if(typeid(ctc) == typeid(CtcEval))
     {
       static_cast<CtcEval&>(ctc).enable_temporal_propagation(false);
-      // todo: automatically add a CtcDeriv to the network
+      // todo: automatically add a CtcDeriv to the network if derivative available
     }
   }
 
@@ -54,6 +64,21 @@ namespace tubex
   ContractorType AbstractContractor::type() const
   {
     return m_type;
+  }
+
+  bool AbstractContractor::is_active() const
+  {
+    return m_active;
+  }
+
+  void AbstractContractor::set_active(bool active)
+  {
+    m_active = active;
+  }
+
+  vector<AbstractDomain*>& AbstractContractor::domains()
+  {
+    return m_domains;
   }
 
   bool AbstractContractor::operator==(const AbstractContractor& x) const
@@ -76,7 +101,7 @@ namespace tubex
     {
       if(m_domains.size() == 1 && m_domains[0]->type() == DomainType::INTERVAL_VECTOR)
       {
-        m_ibex_ctc.contract(m_domains[0]->interval_vector());
+        m_ibex_ctc.get().contract(m_domains[0]->interval_vector());
       }
 
       else if(m_domains[0]->type() == DomainType::INTERVAL) // set of scalar values
@@ -85,7 +110,7 @@ namespace tubex
         for(size_t i = 0 ; i < m_domains.size() ; i++)
           box[i] = m_domains[i]->interval();
 
-        m_ibex_ctc.contract(box);
+        m_ibex_ctc.get().contract(box);
 
         for(size_t i = 0 ; i < m_domains.size() ; i++)
           m_domains[i]->interval() &= box[i];
@@ -99,7 +124,7 @@ namespace tubex
           for(size_t i = 0 ; i < m_domains.size() ; i++)
             box[i] = m_domains[i]->interval_vector()[k];
 
-          m_ibex_ctc.contract(box);
+          m_ibex_ctc.get().contract(box);
 
           for(size_t i = 0 ; i < m_domains.size() ; i++)
             m_domains[i]->interval_vector()[k] &= box[i];
@@ -109,10 +134,10 @@ namespace tubex
 
     else if(m_type == ContractorType::TUBEX)
     {
-      m_tubex_ctc.contract(m_domains);
+      m_tubex_ctc.get().contract(m_domains);
     }
 
-    else if(m_type == ContractorType::NONE)
+    else if(m_type == ContractorType::COMPONENT)
     {
       // Symbolic
     }

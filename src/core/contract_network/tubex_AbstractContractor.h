@@ -12,17 +12,14 @@
 #ifndef __TUBEX_ABSTRACT_CONTRACTOR_H__
 #define __TUBEX_ABSTRACT_CONTRACTOR_H__
 
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
+#include <functional>
 #include "ibex_Ctc.h"
-#include "tubex_Tube.h"
-#include "tubex_TubeVector.h"
-#include "tubex_AbstractDomain.h"
 #include "tubex_Ctc.h"
+#include "tubex_AbstractDomain.h"
 
 namespace tubex
 {
-  enum class ContractorType { NONE, IBEX, TUBEX };
+  enum class ContractorType { COMPONENT, IBEX, TUBEX };
 
   class AbstractContractor
   {
@@ -35,18 +32,27 @@ namespace tubex
       ~AbstractContractor();
 
       ContractorType type() const;
+
+      bool is_active() const;
+      void set_active(bool active);
+
+      std::vector<AbstractDomain*>& domains();
+
       bool operator==(const AbstractContractor& x) const;
 
       void contract();
 
 
-    //protected:
+    protected:
 
       const ContractorType m_type;
       double m_active = true;
 
-      ibex::Ctc& m_ibex_ctc;
-      tubex::Ctc& m_tubex_ctc;
+      union
+      {
+        std::reference_wrapper<ibex::Ctc> m_ibex_ctc;
+        std::reference_wrapper<tubex::Ctc> m_tubex_ctc;
+      };
 
       std::vector<AbstractDomain*> m_domains;
   };

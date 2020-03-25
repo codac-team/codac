@@ -14,14 +14,8 @@
 
 #include <deque>
 #include <initializer_list>
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
-#include "ibex_Ctc.h"
-#include "tubex_Tube.h"
-#include "tubex_TubeVector.h"
-#include "tubex_Ctc.h"
-#include "tubex_AbstractContractor.h"
 #include "tubex_AbstractDomain.h"
+#include "tubex_AbstractContractor.h"
 
 namespace tubex
 {
@@ -41,7 +35,7 @@ namespace tubex
       double contract_during(double dt, bool verbose = false);
 
       ibex::Interval& create_var(const ibex::Interval& i_);
-      ibex::IntervalVector& create_var(const ibex::IntervalVector& i_);
+      ibex::IntervalVector& create_var(const ibex::IntervalVector& iv_);
 
       void add(ibex::Ctc& ctc, std::initializer_list<AbstractDomain> list);
       void add(tubex::Ctc& ctc, std::initializer_list<AbstractDomain> list);

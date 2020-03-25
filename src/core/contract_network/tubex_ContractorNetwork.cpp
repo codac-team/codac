@@ -71,9 +71,9 @@ namespace tubex
       m_deque.pop_front();
 
       ctc->contract();
-      ctc->m_active = false;
+      ctc->set_active(false);
 
-      for(auto& ctc_dom : ctc->m_domains) // for each domain related to this contractor
+      for(auto& ctc_dom : ctc->domains()) // for each domain related to this contractor
       {
         double current_volume = ctc_dom->compute_volume(); // new volume after contraction
 
@@ -86,11 +86,11 @@ namespace tubex
           deque<AbstractContractor*> ctc_deque;
 
           for(auto& ctc_of_dom : ctc_dom->contractors()) 
-            if(ctc_of_dom != ctc && !ctc_of_dom->m_active)
+            if(ctc_of_dom != ctc && !ctc_of_dom->is_active())
             {
-              ctc_of_dom->m_active = true;
+              ctc_of_dom->set_active(true);
 
-              if(ctc_of_dom->type() == ContractorType::NONE)
+              if(ctc_of_dom->type() == ContractorType::COMPONENT)
                 ctc_deque.push_back(ctc_of_dom);
 
               else
@@ -112,7 +112,7 @@ namespace tubex
 
     // Emptiness test
     for(const auto& ctc : m_v_ctc)
-      for(const auto& dom : ctc->m_domains)
+      for(const auto& dom : ctc->domains())
         if(dom->is_empty())
         {
           cout << "  warning: empty set" << endl;
@@ -137,10 +137,10 @@ namespace tubex
     return add_domain(new AbstractDomain(*new Interval(i_)))->interval();
   }
 
-  IntervalVector& ContractorNetwork::create_var(const IntervalVector& i_)
+  IntervalVector& ContractorNetwork::create_var(const IntervalVector& iv_)
   {
     // todo: manage delete
-    return add_domain(new AbstractDomain(*new IntervalVector(i_)))->interval_vector();
+    return add_domain(new AbstractDomain(*new IntervalVector(iv_)))->interval_vector();
   }
 
   void ContractorNetwork::add(ibex::Ctc& ctc, initializer_list<AbstractDomain> list)
@@ -257,7 +257,7 @@ namespace tubex
     // or we use the current pointer. The result is pointed by ad_.
     AbstractDomain *ad_ = add_domain(ad);
 
-    ac->m_domains.push_back(ad_);
+    ac->domains().push_back(ad_);
     ad_->contractors().push_back(ac);
   }
 
@@ -273,7 +273,7 @@ namespace tubex
     
     m_v_ctc.push_back(ac);
 
-    if(ac->type() == ContractorType::NONE)
+    if(ac->type() == ContractorType::COMPONENT)
       m_deque.push_back(ac);
 
     else
