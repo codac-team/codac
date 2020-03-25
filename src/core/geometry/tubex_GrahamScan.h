@@ -18,7 +18,7 @@
 
 namespace tubex
 {
-  typedef enum { CLOCKWISE, COUNTERCLOCKWISE, UNDEFINED } OrientationInterval;
+  enum class OrientationInterval { CLOCKWISE, COUNTERCLOCKWISE, UNDEFINED } ;
 
   class GrahamScan
   {

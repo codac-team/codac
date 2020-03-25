@@ -63,6 +63,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_polygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_operators.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_RandTrajectory.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_RandTrajectory.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory_operators.cpp
@@ -91,6 +93,12 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractDomain.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractDomain.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractContractor.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractContractor.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.h
                 )
 
 
@@ -113,7 +121,8 @@ target_include_directories(tubex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory
                                         ${CMAKE_CURRENT_SOURCE_DIR}/exceptions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/serialize
-                                        ${CMAKE_CURRENT_SOURCE_DIR}/contractors)
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/contractors
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/contract_network)
 target_link_libraries(tubex PUBLIC ${IBEX_LDFLAGS})
 
 
@@ -137,6 +146,7 @@ foreach(header_path ${HDR})
   file(APPEND ${TUBEX_MAIN_HEADER} "#include <${header_name}>\n")
 endforeach()
 file(APPEND ${TUBEX_MAIN_HEADER} "\n#endif /* __TUBEX_H__ */\n")
+file(COPY ${TUBEX_MAIN_HEADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
 
 # Install files in system directories
 install(TARGETS tubex DESTINATION ${CMAKE_INSTALL_LIBDIR})

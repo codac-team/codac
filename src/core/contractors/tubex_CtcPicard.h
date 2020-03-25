@@ -27,12 +27,15 @@ namespace tubex
     public:
 
       CtcPicard(float delta = 1.1);
+
+      void contract(std::vector<AbstractDomain*>& v_domains);
+      
       void contract(const tubex::Fnc& f,
                     Tube& x,
-                    TPropagation t_propa = FORWARD | BACKWARD);
+                    TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract(const tubex::Fnc& f,
                     TubeVector& x,
-                    TPropagation t_propa = FORWARD | BACKWARD);
+                    TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       int picard_iterations() const;
 
     protected:
@@ -40,11 +43,11 @@ namespace tubex
       void contract_kth_slices(const tubex::Fnc& f,
                                TubeVector& tube,
                                int k,
-                               TPropagation t_propa);
+                               TimePropag t_propa);
       void guess_kth_slices_envelope(const Fnc& f,
-                                     TubeVector& tube,
-                                     int k,
-                                     TPropagation t_propa);
+                               TubeVector& tube,
+                               int k,
+                               TimePropag t_propa);
 
       float m_delta;
       int m_picard_iterations = 0;

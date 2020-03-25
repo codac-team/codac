@@ -33,6 +33,8 @@ namespace tubex
        */
       CtcDeriv();
 
+      void contract(std::vector<AbstractDomain*>& v_domains);
+
       /**
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big([x](\cdot),[v](\cdot)\big)\f$:
        *        contracts the tube \f$[x](\cdot)\f$ with respect to its derivative \f$[v](\cdot)\f$.
@@ -44,7 +46,7 @@ namespace tubex
        * \param t_propa an optional temporal way of propagation
        *                (forward or backward in time, both ways by default)
        */
-      void contract(Tube& x, const Tube& v, TPropagation t_propa = FORWARD | BACKWARD);
+      void contract(Tube& x, const Tube& v, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
       /**
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big([\mathbf{x}](\cdot),[\mathbf{v}](\cdot)\big)\f$:
@@ -57,7 +59,7 @@ namespace tubex
        * \param t_propa an optional temporal way of propagation
        *                (forward or backward in time, both ways by default)
        */
-      void contract(TubeVector& x, const TubeVector& v, TPropagation t_propa = FORWARD | BACKWARD);
+      void contract(TubeVector& x, const TubeVector& v, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
       /**
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big(\llbracket x\rrbracket(\cdot),\llbracket v\rrbracket(\cdot)\big)\f$:
@@ -70,7 +72,7 @@ namespace tubex
        * \param t_propa an optional temporal way of propagation
        *                (forward or backward in time, both ways by default)
        */
-      void contract(Slice& x, const Slice& v, TPropagation t_propa = FORWARD | BACKWARD);
+      void contract(Slice& x, const Slice& v, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
     protected:
 

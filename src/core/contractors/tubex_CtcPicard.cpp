@@ -23,7 +23,12 @@ namespace tubex
     assert(delta > 0.);
   }
   
-  void CtcPicard::contract(const tubex::Fnc& f, Tube& x, TPropagation t_propa)
+  void CtcPicard::contract(vector<AbstractDomain*>& v_domains)
+  {
+    // todo
+  }
+  
+  void CtcPicard::contract(const tubex::Fnc& f, Tube& x, TimePropag t_propa)
   {
     assert(f.nb_vars() == f.image_dim());
     assert(f.nb_vars() == 1 && "scalar case");
@@ -33,7 +38,7 @@ namespace tubex
     x = x_vect[0];
   }
 
-  void CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TPropagation t_propa)
+  void CtcPicard::contract(const tubex::Fnc& f, TubeVector& x, TimePropag t_propa)
   {
     assert(f.nb_vars() == f.image_dim());
     assert(f.nb_vars() == x.size());
@@ -41,11 +46,11 @@ namespace tubex
     if(x.is_empty())
       return;
 
-    if((t_propa & FORWARD) && (t_propa & BACKWARD))
+    if((t_propa & TimePropag::FORWARD) && (t_propa & TimePropag::BACKWARD))
     {
       // todo: select best way according to initial conditions
-      contract(f, x, FORWARD);
-      contract(f, x, BACKWARD);
+      contract(f, x, TimePropag::FORWARD);
+      contract(f, x, TimePropag::BACKWARD);
     }
 
     else
@@ -54,7 +59,7 @@ namespace tubex
       if(m_preserve_slicing)
         first_slicing = new TubeVector(x);
 
-      if(t_propa & FORWARD)
+      if(t_propa & TimePropag::FORWARD)
       {
         int nb_slices = x.nb_slices();
 
@@ -63,7 +68,7 @@ namespace tubex
           if(!x(k).is_unbounded())
             continue;
 
-          contract_kth_slices(f, x, k, FORWARD);
+          contract_kth_slices(f, x, k, TimePropag::FORWARD);
 
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
@@ -80,14 +85,14 @@ namespace tubex
         }
       }
 
-      if(t_propa & BACKWARD)
+      if(t_propa & TimePropag::BACKWARD)
       {
         for(int k = x.nb_slices() - 1 ; k >= 0 ; k--)
         {
           if(!x(k).is_unbounded())
             continue;
 
-          contract_kth_slices(f, x, k, BACKWARD);
+          contract_kth_slices(f, x, k, TimePropag::BACKWARD);
 
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
@@ -120,9 +125,9 @@ namespace tubex
   void CtcPicard::contract_kth_slices(const tubex::Fnc& f,
                                       TubeVector& tube,
                                       int k,
-                                      TPropagation t_propa)
+                                      TimePropag t_propa)
   {
-    assert(!((t_propa & FORWARD) && (t_propa & BACKWARD)) && "forward/backward case not implemented yet");
+    assert(!((t_propa & TimePropag::FORWARD) && (t_propa & TimePropag::BACKWARD)) && "forward/backward case not implemented yet");
     assert(f.nb_vars() == f.image_dim());
     assert(f.nb_vars() == tube.size());
     assert(k >= 0 && k < tube.nb_slices());
@@ -133,7 +138,7 @@ namespace tubex
     guess_kth_slices_envelope(f, tube, k, t_propa);
     IntervalVector f_eval = f.eval_vector(k, tube); // computed only once
 
-    if(t_propa & FORWARD)
+    if(t_propa & TimePropag::FORWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
         Slice *s = tube[i].slice(k);
@@ -141,7 +146,7 @@ namespace tubex
           & (s->input_gate() + s->domain().diam() * f_eval[i]));
       }
 
-    else if(t_propa & BACKWARD)
+    else if(t_propa & TimePropag::BACKWARD)
       for(int i = 0 ; i < tube.size() ; i++)
       {
         Slice *s = tube[i].slice(k);
@@ -153,9 +158,9 @@ namespace tubex
   void CtcPicard::guess_kth_slices_envelope(const tubex::Fnc& f,
                                             TubeVector& tube,
                                             int k,
-                                            TPropagation t_propa)
+                                            TimePropag t_propa)
   {
-    assert(!((t_propa & FORWARD) && (t_propa & BACKWARD)) && "forward/backward case not implemented yet");
+    assert(!((t_propa & TimePropag::FORWARD) && (t_propa & TimePropag::BACKWARD)) && "forward/backward case not implemented yet");
     assert(f.nb_vars() == f.image_dim());
     assert(f.nb_vars() == tube.size());
     assert(k >= 0 && k < tube.nb_slices());
@@ -167,14 +172,14 @@ namespace tubex
     Interval h, t = tube[0].slice_domain(k);
     IntervalVector initial_x = tube(k), x0(tube.size()), xf(x0);
 
-    if(t_propa & FORWARD)
+    if(t_propa & TimePropag::FORWARD)
     {
       x0 = tube(t.lb());
       xf = tube(t.ub());
       h = Interval(0., t.diam());
     }
 
-    else if(t_propa & BACKWARD)
+    else if(t_propa & TimePropag::BACKWARD)
     {
       x0 = tube(t.ub());
       xf = tube(t.lb());
@@ -231,8 +236,8 @@ namespace tubex
       for(int i = 0 ; i < tube.size() ; i++)
       {
         Slice *s = tube[i].slice(k);
-        if(t_propa & FORWARD)  s->set_output_gate(xf[i]);
-        if(t_propa & BACKWARD) s->set_input_gate(xf[i]);
+        if(t_propa & TimePropag::FORWARD)  s->set_output_gate(xf[i]);
+        if(t_propa & TimePropag::BACKWARD) s->set_input_gate(xf[i]);
         // todo: ^ check this ^
       }
     }

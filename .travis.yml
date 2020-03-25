@@ -8,12 +8,10 @@ addons:
   apt:
     sources:
     - deadsnakes
-    - ubuntu-toolchain-r-test
     - chef-current-precise
 
     packages:
     - cmake
-    - g++-5
     #- doxygen # for documentation
     #- graphviz # for documentation
 
@@ -22,9 +20,36 @@ sudo: required
 matrix:
   include:
   - os: linux
-    #language: python
-    #env: PYTHON=3.6 CPP_VERSION=11 GCC=5.0
-    #compiler: g++-5
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-5
+    env:
+       - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+  - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-7
+    env:
+       - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+  - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-8
+    env:
+       - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+
+
+before_install:
+  - eval "${MATRIX_EVAL}"
 
 install:
   #- sudo pip install breathe # for documentation

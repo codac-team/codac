@@ -23,12 +23,24 @@ namespace tubex
    * \note These values can be used as flags for boolean selections.
    * Example of use: `(VALUE_MAYBE | VALUE_IN)` to get items of these types
    */
-  enum SetValue
+  enum class SetValue
   {
-    VALUE_MAYBE = 0x01, ///< unable to conclude
-    VALUE_OUT = 0x02,   ///< outside the solution set
-    VALUE_IN = 0x04     ///< inside the solution set
+    MAYBE = 0x01, ///< unable to conclude
+    OUT = 0x02,   ///< outside the solution set
+    IN = 0x04     ///< inside the solution set
   };
+
+  /**
+   * \brief Allows tests on combinations of two SetValue.
+   *
+   * Used for tests such as `if(set_val & SetValue::OUT) { ... }`
+   *
+   * \param a first SetValue operand
+   * \param b second SetValue operand
+   * \return intersection of set values
+   */
+  inline int operator&(SetValue a, SetValue b)
+  { return static_cast<int>(static_cast<int>(a) & static_cast<int>(b)); }
 
   /**
    * \brief Union of two SetValue values.
@@ -58,7 +70,7 @@ namespace tubex
        * \param box n-dimensional box representing the set
        * \param value integer of the set, `SetValue::VALUE_MAYBE` by default
        */
-      Set(const ibex::IntervalVector& box, int value = VALUE_MAYBE);
+      Set(const ibex::IntervalVector& box, SetValue value = SetValue::MAYBE);
 
       /**
        * \brief Set destructor
@@ -70,7 +82,7 @@ namespace tubex
        *
        * \return the integer value
        */
-      int value() const;
+      SetValue value() const;
 
       /**
        * \brief Returns the dimension of the paving
@@ -91,11 +103,11 @@ namespace tubex
        *
        * \param value
        */
-      void set_value(int value);
+      void set_value(SetValue value);
 
     protected:
 
-      int m_value; //!< integer value of this set
+      SetValue m_value; //!< integer value of this set
       ibex::IntervalVector m_box; //!< box representing this set
   };
 }

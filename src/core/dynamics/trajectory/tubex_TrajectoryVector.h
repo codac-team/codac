@@ -13,6 +13,7 @@
 #define __TUBEX_TRAJECTORYVECTOR_H__
 
 #include <map>
+#include <initializer_list>
 #include "ibex_Vector.h"
 #include "ibex_Interval.h"
 #include "tubex_Function.h"
@@ -67,6 +68,13 @@ namespace tubex
        * \param v_map_values set of map<t,y> defining the trajectory: \f$\mathbf{x}(t)=\mathbf{y}\f$
        */
       explicit TrajectoryVector(const std::vector<std::map<double,double> >& v_map_values);
+
+      /**
+       * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a list of Trajectory objects
+       *
+       * \param list list of \f$x_i(\cdot)\f$ trajectories
+       */
+      TrajectoryVector(std::initializer_list<Trajectory> list);
 
       /**
        * \brief Creates a copy of a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$
@@ -245,8 +253,9 @@ namespace tubex
        * \note The new domain must be a subset of the old one
        *
        * \param domain new Interval domain \f$[t_0,t_f]\f$
+       * \return a reference to this trajectory
        */
-      void truncate_domain(const ibex::Interval& domain);
+      TrajectoryVector& truncate_domain(const ibex::Interval& domain);
 
       /**
        * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$\mathbf{x}(\cdot)\f$
@@ -256,8 +265,9 @@ namespace tubex
        *       an analytic function, only the definition domain will be changed.
        *
        * \param a the offset value so that \f$[t_0,t_f]:=[t_0-a,t_f-a]\f$
+       * \return a reference to this trajectory
        */
-      void shift_domain(double a);
+      TrajectoryVector& shift_domain(double a);
 
       /**
        * \brief Transforms an analytic trajectory as a map of values
@@ -265,8 +275,35 @@ namespace tubex
        * \note Sampling only available for trajectories firstly defined as analytic functions
        *
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
+       * \return a reference to this trajectory
        */
-      void sample(double timestep);
+      TrajectoryVector& sample(double timestep);
+
+      /**
+       * \brief Samples this trajectory so that it will share the same sampling of \f$x(\cdot)\f$
+       *
+       * \note If the trajectory is defined as an analytic function, then the object is
+       *       transformed into a map of values and the tubex::Function object is deleted.
+       *
+       * \note The previous sampling of this trajectory is preserved
+       *
+       * \param x the Trajectory from which the new sampling will come from
+       * \return a reference to this trajectory
+       */
+      TrajectoryVector& sample(const Trajectory& x);
+
+      /**
+       * \brief Samples this trajectory so that it will share the same sampling of \f$\mathbf{x}(\cdot)\f$
+       *
+       * \note If the trajectory is defined as an analytic function, then the object is
+       *       transformed into a map of values and the tubex::Function object is deleted.
+       *
+       * \note The previous sampling of this trajectory is preserved
+       *
+       * \param x the TrajectoryVector from which the new sampling will come from
+       * \return a reference to this trajectory
+       */
+      TrajectoryVector& sample(const TrajectoryVector& x);
 
       /// @}
       /// \name Integration

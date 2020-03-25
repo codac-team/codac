@@ -128,6 +128,7 @@ namespace tubex
       delete m_ibex_f;
     m_ibex_f = new ibex::Function(*f.m_ibex_f);
     Fnc::operator=(f);
+    return *this;
   }
 
   const Function Function::operator[](int i) const

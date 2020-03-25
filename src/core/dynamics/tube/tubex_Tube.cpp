@@ -199,7 +199,7 @@ namespace tubex
       Tube primitive(*this, Interval::ALL_REALS); // a copy of this initialized to [-oo,oo]
       primitive.set(c, primitive.domain().lb());
       CtcDeriv ctc_deriv;
-      ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), FORWARD);
+      ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), TimePropag::FORWARD);
       return primitive;
     }
 

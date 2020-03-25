@@ -1217,4 +1217,20 @@ TEST_CASE("Interpol")
     CHECK(x.domain() == Interval(0.,1.) - 10.);
     CHECK(x(0.5-10.).contains(cos(0.5)));
   }
+
+  SECTION("Constructor with list")
+  {
+    // Defined by maps of values
+
+    TubeVector test1(4, Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")));
+    TubeVector test2({
+        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)"))
+    });
+
+    CHECK(test1 == test2);
+    CHECK(test1[0] == test2[0]);
+  }
 }

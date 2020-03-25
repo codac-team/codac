@@ -16,33 +16,33 @@ using namespace ibex;
 
 namespace tubex
 {
-  enum IntervalType { BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS };
+  enum class IntervalType { BOUNDED, EMPTY_SET, ALL_REALS, POS_REALS, NEG_REALS };
 
   void serialize_Interval(ofstream& bin_file, const Interval& intv)
   {
     if(!bin_file.is_open())
       throw Exception("serialize_Interval()", "ofstream& bin_file not open");
 
-    char intv_type;
+    IntervalType intv_type;
 
     if(intv == Interval::EMPTY_SET)
-      intv_type = EMPTY_SET;
+      intv_type = IntervalType::EMPTY_SET;
 
     else if(intv == Interval::ALL_REALS)
-      intv_type = ALL_REALS;
+      intv_type = IntervalType::ALL_REALS;
 
     else if(intv == Interval::POS_REALS)
-      intv_type = POS_REALS;
+      intv_type = IntervalType::POS_REALS;
 
     else if(intv == Interval::NEG_REALS)
-      intv_type = NEG_REALS;
+      intv_type = IntervalType::NEG_REALS;
 
     else
-      intv_type = BOUNDED;
+      intv_type = IntervalType::BOUNDED;
 
-    bin_file.write((const char*)&intv_type, sizeof(char));
+    bin_file.write((const char*)&intv_type, sizeof(IntervalType));
 
-    if(intv_type == BOUNDED)
+    if(intv_type == IntervalType::BOUNDED)
     {
       double lb = intv.lb(), ub = intv.ub();
       bin_file.write((const char*)&lb, sizeof(double));
@@ -55,28 +55,28 @@ namespace tubex
     if(!bin_file.is_open())
       throw Exception("deserialize_Interval()", "ifstream& bin_file not open");
 
-    char intv_type;
-    bin_file.read((char*)&intv_type, sizeof(char));
+    IntervalType intv_type;
+    bin_file.read((char*)&intv_type, sizeof(IntervalType));
 
     switch(intv_type)
     {
-      case EMPTY_SET:
+      case IntervalType::EMPTY_SET:
         intv = Interval::EMPTY_SET;
         break;
 
-      case ALL_REALS:
+      case IntervalType::ALL_REALS:
         intv = Interval::ALL_REALS;
         break;
 
-      case POS_REALS:
+      case IntervalType::POS_REALS:
         intv = Interval::POS_REALS;
         break;
 
-      case NEG_REALS:
+      case IntervalType::NEG_REALS:
         intv = Interval::NEG_REALS;
         break;
 
-      case BOUNDED:
+      case IntervalType::BOUNDED:
         double lb, ub;
         bin_file.read((char*)&lb, sizeof(double));
         bin_file.read((char*)&ub, sizeof(double));

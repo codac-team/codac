@@ -18,7 +18,7 @@ using namespace ibex;
 namespace tubex
 {
   ConnectedSubset::ConnectedSubset(const vector<const Paving*>& v_subset_items)
-    : Set(IntervalVector(2, Interval::EMPTY_SET), VALUE_IN | VALUE_MAYBE),
+    : Set(IntervalVector(2, Interval::EMPTY_SET), SetValue::IN | SetValue::MAYBE),
       m_v_subset_items(v_subset_items)
   {
     m_box = IntervalVector(2, Interval::EMPTY_SET);
@@ -60,7 +60,7 @@ namespace tubex
     return v_boxes;
   }
 
-  vector<IntervalVector> ConnectedSubset::get_boundary(int value_boundary, int value_out) const // items of type k-1
+  vector<IntervalVector> ConnectedSubset::get_boundary(SetValue value_boundary, SetValue value_out) const // items of type k-1
   {
     assert(value_out != value_boundary);
     vector<IntervalVector> v_boundaries;
