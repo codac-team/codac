@@ -201,7 +201,12 @@ void export_Trajectory(py::module& m){
         .def("class_name", &TrajectoryVector::class_name,
             DOCS_TRAJECTORYVECTOR_CLASS_NAME)
 
-
+        .def("__getitem__", [](TrajectoryVector& s, size_t index){
+              if (index >= s.size()){
+                  throw py::index_error();
+              }
+                return s[static_cast<int>(index)];
+          }, DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT, py::return_value_policy::reference_internal)
         // .def("operator[]", [](TrajectoryVector& s,int o) { return s[o];}, 
         //     DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT)
         // .def("operator[]", [](TrajectoryVector& s,int o) { return s[o];}, 
