@@ -465,7 +465,7 @@ namespace tubex
 
     vector<double> v_x, v_y;
 
-    if(traj->function() == NULL)
+    if(traj->definition_type() == TrajDefnType::MAP_OF_VALUES)
     {
       typename map<double,double>::const_iterator it_scalar_values;
       for(it_scalar_values = traj->sampled_map().begin(); it_scalar_values != traj->sampled_map().end(); it_scalar_values++)

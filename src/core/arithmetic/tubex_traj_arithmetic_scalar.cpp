@@ -23,7 +23,7 @@ namespace tubex
 
   const Trajectory operator-(const Trajectory& x)
   {
-    assert(x.function() == NULL
+    assert(x.definition_type() == TrajDefnType::MAP_OF_VALUES
       && "not supported yet for trajectories defined by a Function");
 
     map<double,double> map_y = x.sampled_map();
@@ -39,7 +39,7 @@ namespace tubex
     \
     const Trajectory f(const Trajectory& x) \
     { \
-      assert(x.function() == NULL \
+      assert(x.definition_type() == TrajDefnType::MAP_OF_VALUES \
         && "not supported yet for trajectories defined by a Function"); \
       \
       map<double,double> map_y = x.sampled_map(); \
@@ -58,7 +58,7 @@ namespace tubex
     
   const Trajectory sqr(const Trajectory& x)
   {
-    assert(x.function() == NULL
+    assert(x.definition_type() == TrajDefnType::MAP_OF_VALUES
       && "not supported yet for trajectories defined by a Function");
 
     map<double,double> map_y = x.sampled_map();
@@ -88,7 +88,7 @@ namespace tubex
     \
     const Trajectory f(const Trajectory& x, p param) \
     { \
-      assert(x.function() == NULL && \
+      assert(x.definition_type() == TrajDefnType::MAP_OF_VALUES && \
         "not supported yet for trajectories defined by a Function"); \
       \
       map<double,double> map_y = x.sampled_map(); \
@@ -106,7 +106,7 @@ namespace tubex
 
   const Trajectory root(const Trajectory& x, int p)
   {
-    assert(x.function() == NULL &&
+    assert(x.definition_type() == TrajDefnType::MAP_OF_VALUES &&
       "not supported yet for trajectories defined by a Function");
 
     map<double,double> map_y = x.sampled_map();
@@ -122,13 +122,13 @@ namespace tubex
     const Trajectory operator f(const Trajectory& x1, const Trajectory& x2) \
     { \
       assert(x1.domain() == x2.domain()); \
-      assert(!(x1.function() != NULL && x2.function() != NULL) && \
+      assert(!(x1.definition_type() == TrajDefnType::ANALYTIC_FNC && x2.definition_type() == TrajDefnType::ANALYTIC_FNC) && \
         "not supported yet for two trajectories defined by a Function"); \
       \
       Trajectory x1_sampled(x1), x2_sampled(x2); \
-      if(x2.function() == NULL) \
+      if(x2.definition_type() == TrajDefnType::MAP_OF_VALUES) \
         x1_sampled.sample(x2); \
-      if(x1.function() == NULL) \
+      if(x1.definition_type() == TrajDefnType::MAP_OF_VALUES) \
         x2_sampled.sample(x1); \
       map<double,double> new_map; \
       map<double,double>::const_iterator it_x1 = x1_sampled.sampled_map().begin(); \
@@ -145,7 +145,7 @@ namespace tubex
     \
     const Trajectory operator f(const Trajectory& x1, double x2) \
     { \
-      assert(x1.function() == NULL && \
+      assert(x1.definition_type() == TrajDefnType::MAP_OF_VALUES && \
         "not supported yet for trajectories defined by a Function"); \
       \
       Trajectory y(x1); \
@@ -160,7 +160,7 @@ namespace tubex
     \
     const Trajectory operator f(double x1, const Trajectory& x2) \
     { \
-      assert(x2.function() == NULL && \
+      assert(x2.definition_type() == TrajDefnType::MAP_OF_VALUES && \
         "not supported yet for trajectories defined by a Function"); \
       \
       Trajectory y(x2); \
@@ -182,13 +182,13 @@ namespace tubex
   const Trajectory atan2(const Trajectory& x1, const Trajectory& x2)
   {
     assert(x1.domain() == x2.domain());
-    assert(!(x1.function() != NULL && x2.function() != NULL) &&
+    assert(!(x1.definition_type() == TrajDefnType::ANALYTIC_FNC && x2.definition_type() == TrajDefnType::ANALYTIC_FNC) &&
       "not supported yet for trajectories defined by a Function");
 
     Trajectory x1_sampled(x1), x2_sampled(x2);
-    if(x2.function() == NULL)
+    if(x2.definition_type() == TrajDefnType::MAP_OF_VALUES)
       x1_sampled.sample(x2);
-    if(x1.function() == NULL)
+    if(x1.definition_type() == TrajDefnType::MAP_OF_VALUES)
       x2_sampled.sample(x1);
     map<double,double> map_x1 = x1.sampled_map(), map_x2 = x2.sampled_map();
 
@@ -206,7 +206,7 @@ namespace tubex
 
   const Trajectory atan2(const Trajectory& x1, double x2)
   {
-    assert(x1.function() == NULL &&
+    assert(x1.definition_type() == TrajDefnType::MAP_OF_VALUES &&
       "not supported yet for trajectories defined by a Function");
 
     Trajectory y(x1);
@@ -221,7 +221,7 @@ namespace tubex
 
   const Trajectory atan2(double x1, const Trajectory& x2)
   {
-    assert(x2.function() == NULL &&
+    assert(x2.definition_type() == TrajDefnType::MAP_OF_VALUES &&
       "not supported yet for trajectories defined by a Function");
 
     Trajectory y(x2);

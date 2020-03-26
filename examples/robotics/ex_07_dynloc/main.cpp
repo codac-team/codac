@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     Interval d[3]; for(int i = 0 ; i < 3 ; i++) d[i] = dist(x_truth, b[i], t[i]) + Interval(-r,r); // range-only observations
 
     TubeVector x(domain, dt, 2); // no initial condition on x
-    TubeVector v(v_truth, dt); // velocities from the analytical expression
+    TubeVector v(v_truth, dt); // velocities from the analytic function
     v.inflate(Vector(2,0.01)); // some uncertainties added on the velocities
 
   /* =========== SOLVING =========== */

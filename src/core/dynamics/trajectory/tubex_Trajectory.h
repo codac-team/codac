@@ -21,6 +21,8 @@ namespace tubex
 {
   class Function;
   class TrajectoryVector;
+
+  enum class TrajDefnType { ANALYTIC_FNC, MAP_OF_VALUES };
   
   /**
    * \class Trajectory
@@ -36,7 +38,9 @@ namespace tubex
       /// @{
 
       /**
-       * \brief Creates an undefined scalar trajectory \f$x(\cdot)\f$
+       * \brief Creates an empty scalar trajectory \f$x(\cdot)\f$
+       *
+       * The trajectory is made of an empty map of values.
        */
       Trajectory();
 
@@ -99,6 +103,13 @@ namespace tubex
        */
       const ibex::Interval domain() const;
 
+      /**
+       * \brief Returns the definition type of this trajectory
+       *
+       * \return TrajDefnType::ANALYTIC_FNC or TrajDefnType::MAP_OF_VALUES
+       */
+      TrajDefnType definition_type() const;
+
       /// @}
       /// \name Accessing values
       /// @{
@@ -111,7 +122,7 @@ namespace tubex
       const std::map<double,double>& sampled_map() const;
 
       /**
-       * \brief Returns the temporal function, if the object is a analytic trajectory
+       * \brief Returns the temporal function, if the object is an analytic trajectory
        *
        * \return a pointer to a tubex::Function object
        */
@@ -401,16 +412,6 @@ namespace tubex
       const ibex::IntervalVector codomain_box() const;
 
       /**
-       * \brief Sets a value \f$y\f$ at \f$t\f$: \f$x(t)=y\f$
-       *
-       * \note This protected method updates the map even in case of analytic definition
-       *
-       * \param y local value of the trajectory
-       * \param t the temporal key (double, must belong to the trajectory domain)
-       */
-      void set_map_value(double y, double t);
-
-      /**
        * \brief Computes the envelope of trajectory values
        */
       void compute_codomain();
@@ -419,9 +420,15 @@ namespace tubex
 
         ibex::Interval m_domain = ibex::Interval::EMPTY_SET; //!< temporal domain \f$[t_0,t_f]\f$ of the trajectory
         ibex::Interval m_codomain = ibex::Interval::EMPTY_SET; //!< envelope of the values of the trajectory
+        
         // A trajectory is defined either by a Function or a map of values
-        tubex::Function *m_function = NULL; //!< optional pointer to the analytic expression of this trajectory
-        std::map<double,double> m_map_values; //!< optional map of values <t,y>: \f$x(t)=y\f$
+        TrajDefnType m_traj_def_type = TrajDefnType::MAP_OF_VALUES; //!< definition type
+
+        //union
+        //{
+          tubex::Function *m_function = NULL; //!< optional pointer to the analytic expression of this trajectory
+          std::map<double,double> m_map_values; //!< optional map of values <t,y>: \f$x(t)=y\f$
+        //};
 
       friend void deserialize_Trajectory(std::ifstream& bin_file, Trajectory *&traj);
       friend void deserialize_TrajectoryVector(std::ifstream& bin_file, TrajectoryVector *&traj);

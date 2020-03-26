@@ -22,7 +22,7 @@ namespace tubex
     if(!bin_file.is_open())
       throw Exception("serialize_Trajectory()", "ofstream& bin_file not open");
 
-    if(traj.function() != NULL)
+    if(traj.definition_type() == TrajDefnType::ANALYTIC_FNC)
       throw Exception("serialize_Trajectory()", "Fnc serialization not implemented");
 
     // Version number for compliance purposes

@@ -30,7 +30,7 @@ int main()
 
     const Interval domain(0.,6.);
 
-    // Truth (analytical expression)
+    // Truth (analytic function)
 
       const TrajectoryVector state_truth(domain,
         // Lissajous function (px,py,theta):
