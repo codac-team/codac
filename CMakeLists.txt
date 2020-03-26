@@ -46,7 +46,7 @@
 # Python binding
 ################################################################################
 
-  #add_compile_options(-fPIC) # is it necessary for python binding?
+  add_compile_options(-fPIC) # is it necessary for python binding?
   #add_subdirectory(pybind11)
 
 
@@ -84,14 +84,6 @@
   include(FindPkgConfig)
   pkg_search_module(IBEX REQUIRED ibex) # todo: specify minimum version of IBEX
   message(STATUS "Found Ibex version ${IBEX_VERSION}")
-
-
-################################################################################
-# Compile sources
-################################################################################
-
-  add_subdirectory(src)
-  #add_subdirectory(python)
 
 
 ################################################################################
@@ -147,6 +139,13 @@
                COMMAND ../examples/robotics/ex_10_datasso/make/tubex_rob_10 0)
       
   endif()
+
+################################################################################
+# Compile sources
+################################################################################
+
+  add_subdirectory(src)
+  add_subdirectory(python)
 
 
 ################################################################################
