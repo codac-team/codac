@@ -18,15 +18,16 @@ void export_TubeVector(py::module& m);
 void export_Trajectory(py::module& m);
 void export_Function(py::module& m);
 void export_Slice(py::module& m);
+void export_Contractors(py::module& m);
 
 
 PYBIND11_MODULE(tube, m)
 {
-  // py::module m("pyibex", "python binding of ibex core fonctionnality");
-  // m.doc() = "python binding of ibex core fonctionnality";
+  m.doc() = "python binding of tubex lib";
   export_Tube(m);
   export_TubeVector(m);
-  // export_Trajectory(m);
+  export_Trajectory(m);
+  export_Contractors(m);
   export_Slice(m);
   export_Function(m);
   // m.attr("ibex_version") = _IBEX_VERSION_;

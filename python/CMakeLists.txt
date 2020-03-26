@@ -27,6 +27,7 @@ pybind11_add_module(tube SHARED
   pyibex_export_Trajectory.cpp
   pyibex_export_Tube.cpp
   pyibex_export_TubeVector.cpp
+  pyibex_export_Contractors.cpp
 
 )
 target_link_libraries(tube PRIVATE tubex ${LIBS})
