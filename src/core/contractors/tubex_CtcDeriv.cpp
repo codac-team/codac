@@ -21,7 +21,7 @@ namespace tubex
 
   }
 
-  void CtcDeriv::contract(vector<AbstractDomain*>& v_domains)
+  void CtcDeriv::contract(vector<Domain*>& v_domains)
   {
     assert(v_domains.size() == 2);
 

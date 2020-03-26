@@ -14,8 +14,8 @@
 
 #include <deque>
 #include <initializer_list>
-#include "tubex_AbstractDomain.h"
-#include "tubex_AbstractContractor.h"
+#include "tubex_Domain.h"
+#include "tubex_Contractor.h"
 
 namespace tubex
 {
@@ -37,19 +37,19 @@ namespace tubex
       ibex::Interval& create_var(const ibex::Interval& i_);
       ibex::IntervalVector& create_var(const ibex::IntervalVector& iv_);
 
-      void add(ibex::Ctc& ctc, std::initializer_list<AbstractDomain> list);
-      void add(tubex::Ctc& ctc, std::initializer_list<AbstractDomain> list);
+      void add(ibex::Ctc& ctc, std::initializer_list<Domain> list);
+      void add(tubex::Ctc& ctc, std::initializer_list<Domain> list);
 
 
     protected:
 
-      AbstractDomain* add_domain(AbstractDomain *ad);
-      void add_domain(AbstractDomain *ad, AbstractContractor *ac);
-      void add_contractor(AbstractContractor *&ac);
+      Domain* add_domain(Domain *ad);
+      void add_domain(Domain *ad, Contractor *ac);
+      void add_contractor(Contractor *&ac);
 
-      std::vector<AbstractContractor*> m_v_ctc;
-      std::vector<AbstractDomain*> m_v_domains;
-      std::deque<AbstractContractor*> m_deque;
+      std::vector<Contractor*> m_v_ctc;
+      std::vector<Domain*> m_v_domains;
+      std::deque<Contractor*> m_deque;
 
       float m_fixedpoint_ratio = 0.0001;
       double m_contraction_duration_max = std::numeric_limits<double>::infinity();

@@ -67,7 +67,7 @@ namespace tubex
     while(!m_deque.empty()
       && (double)(clock() - t_start)/CLOCKS_PER_SEC < m_contraction_duration_max)
     {
-      AbstractContractor *ctc = m_deque.front();
+      Contractor *ctc = m_deque.front();
       m_deque.pop_front();
 
       ctc->contract();
@@ -83,7 +83,7 @@ namespace tubex
           // We activate each contractor related to these domains, according to graph orientation
 
           // Local deque, for specific order related to this domain
-          deque<AbstractContractor*> ctc_deque;
+          deque<Contractor*> ctc_deque;
 
           for(auto& ctc_of_dom : ctc_dom->contractors()) 
             if(ctc_of_dom != ctc && !ctc_of_dom->is_active())
@@ -134,38 +134,38 @@ namespace tubex
   Interval& ContractorNetwork::create_var(const Interval& i_)
   {
     // todo: manage delete
-    return add_domain(new AbstractDomain(*new Interval(i_)))->interval();
+    return add_domain(new Domain(*new Interval(i_)))->interval();
   }
 
   IntervalVector& ContractorNetwork::create_var(const IntervalVector& iv_)
   {
     // todo: manage delete
-    return add_domain(new AbstractDomain(*new IntervalVector(iv_)))->interval_vector();
+    return add_domain(new Domain(*new IntervalVector(iv_)))->interval_vector();
   }
 
-  void ContractorNetwork::add(ibex::Ctc& ctc, initializer_list<AbstractDomain> list)
+  void ContractorNetwork::add(ibex::Ctc& ctc, initializer_list<Domain> list)
   {
-    AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
+    Contractor *abstract_ctc = new Contractor(ctc);
     for(const auto& dom : list)
-      add_domain(new AbstractDomain(dom), abstract_ctc);
+      add_domain(new Domain(dom), abstract_ctc);
     add_contractor(abstract_ctc);
   }
 
-  void ContractorNetwork::add(tubex::Ctc& ctc, initializer_list<AbstractDomain> list)
+  void ContractorNetwork::add(tubex::Ctc& ctc, initializer_list<Domain> list)
   {
     // If adding CtcDeriv with two scalar tubes
     if(typeid(ctc) == typeid(CtcDeriv) && list.begin()->type() == DomainType::TUBE)
     {
       assert(list.size() == 2);
-      const AbstractDomain *dom_tube1 = list.begin();
-      const AbstractDomain *dom_tube2;
+      const Domain *dom_tube1 = list.begin();
+      const Domain *dom_tube2;
 
       // Add tube domains for dependencies
       for(auto& dom : list)
       {
         assert(dom.type() == DomainType::TUBE
           && dom.tube().nb_slices() == dom_tube1->tube().nb_slices());
-        add_domain(new AbstractDomain(dom));
+        add_domain(new Domain(dom));
         dom_tube2 = &dom;
       }
 
@@ -182,14 +182,14 @@ namespace tubex
 
     else
     {
-      AbstractContractor *abstract_ctc = new AbstractContractor(ctc);
+      Contractor *abstract_ctc = new Contractor(ctc);
       for(const auto& dom : list)
-        add_domain(new AbstractDomain(dom), abstract_ctc);
+        add_domain(new Domain(dom), abstract_ctc);
       add_contractor(abstract_ctc);
     }
   }
 
-  AbstractDomain* ContractorNetwork::add_domain(AbstractDomain *ad)
+  Domain* ContractorNetwork::add_domain(Domain *ad)
   {
     if(ad->is_empty())
     {
@@ -213,37 +213,37 @@ namespace tubex
 
       if(ad->type() == DomainType::TUBE_VECTOR)
       {
-        AbstractContractor *ac_link = new AbstractContractor();
-        add_domain(new AbstractDomain(ad->tube_vector()), ac_link); // adding vector
+        Contractor *ac_link = new Contractor();
+        add_domain(new Domain(ad->tube_vector()), ac_link); // adding vector
         for(int i = 0 ; i < ad->tube_vector().size() ; i++)
-          add_domain(new AbstractDomain(ad->tube_vector()[i]), ac_link); // adding its components
+          add_domain(new Domain(ad->tube_vector()[i]), ac_link); // adding its components
         add_contractor(ac_link);
       }
 
       else if(ad->type() == DomainType::INTERVAL_VECTOR)
       {
-        AbstractContractor *ac_link = new AbstractContractor();
-        add_domain(new AbstractDomain(ad->interval_vector()), ac_link); // adding vector
+        Contractor *ac_link = new Contractor();
+        add_domain(new Domain(ad->interval_vector()), ac_link); // adding vector
         for(int i = 0 ; i < ad->interval_vector().size() ; i++)
-          add_domain(new AbstractDomain(ad->interval_vector()[i]), ac_link); // adding its components
+          add_domain(new Domain(ad->interval_vector()[i]), ac_link); // adding its components
         add_contractor(ac_link);
       }
 
       else if(ad->type() == DomainType::TUBE)
       {
         // Dependencies tube <-> slice
-        AbstractContractor *ac_link = new AbstractContractor();
-        add_domain(new AbstractDomain(ad->tube()), ac_link); // adding tube
+        Contractor *ac_link = new Contractor();
+        add_domain(new Domain(ad->tube()), ac_link); // adding tube
         for(Slice *s = ad->tube().first_slice() ; s != NULL ; s = s->next_slice())
-          add_domain(new AbstractDomain(*s), ac_link); // adding one of its slices
+          add_domain(new Domain(*s), ac_link); // adding one of its slices
         add_contractor(ac_link);
 
         // Dependencies slice <-> slice
         for(Slice *s = ad->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
         {
-          AbstractContractor *ac_link_slices = new AbstractContractor();
-          add_domain(new AbstractDomain(*s), ac_link_slices);
-          add_domain(new AbstractDomain(*(s->next_slice())), ac_link_slices);
+          Contractor *ac_link_slices = new Contractor();
+          add_domain(new Domain(*s), ac_link_slices);
+          add_domain(new Domain(*(s->next_slice())), ac_link_slices);
           add_contractor(ac_link_slices);
         }
       }
@@ -251,17 +251,17 @@ namespace tubex
     return ad;
   }
 
-  void ContractorNetwork::add_domain(AbstractDomain *ad, AbstractContractor *ac)
+  void ContractorNetwork::add_domain(Domain *ad, Contractor *ac)
   {
     // The domain ad may be already in the graph, we are looking for it,
     // or we use the current pointer. The result is pointed by ad_.
-    AbstractDomain *ad_ = add_domain(ad);
+    Domain *ad_ = add_domain(ad);
 
     ac->domains().push_back(ad_);
     ad_->contractors().push_back(ac);
   }
 
-  void ContractorNetwork::add_contractor(AbstractContractor *&ac)
+  void ContractorNetwork::add_contractor(Contractor *&ac)
   {
     // Looking if this contractor is not already part of the graph
     for(auto& ctc : m_v_ctc)

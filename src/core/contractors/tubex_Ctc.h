@@ -14,7 +14,7 @@
 
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
-#include "tubex_AbstractDomain.h"
+#include "tubex_Domain.h"
 
 namespace tubex
 {
@@ -65,7 +65,7 @@ namespace tubex
        */
       Ctc();
 
-      virtual void contract(std::vector<AbstractDomain*>& v_domains) = 0;
+      virtual void contract(std::vector<Domain*>& v_domains) = 0;
 
       /**
        * \brief Specifies whether the contractor can impact the tube's slicing or not

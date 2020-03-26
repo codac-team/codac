@@ -1,5 +1,5 @@
 /** 
- *  AbstractDomain class
+ *  Domain class
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou
@@ -8,14 +8,14 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_AbstractDomain.h"
+#include "tubex_Domain.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  AbstractDomain::AbstractDomain(const AbstractDomain& ad)
+  Domain::Domain(const Domain& ad)
     : m_type(ad.m_type), m_v_ctc(ad.m_v_ctc), m_volume(ad.m_volume)
   {
     switch(ad.m_type)
@@ -45,112 +45,112 @@ namespace tubex
     }
   }
 
-  AbstractDomain::AbstractDomain(ibex::Interval& i)
+  Domain::Domain(ibex::Interval& i)
     : m_type(DomainType::INTERVAL), m_i(i)
   {
 
   }
 
-  AbstractDomain::AbstractDomain(ibex::IntervalVector& iv)
+  Domain::Domain(ibex::IntervalVector& iv)
     : m_type(DomainType::INTERVAL_VECTOR), m_iv(iv)
   {
 
   }
 
-  AbstractDomain::AbstractDomain(tubex::Slice& s)
+  Domain::Domain(tubex::Slice& s)
     : m_type(DomainType::SLICE), m_s(s)
   {
     m_s.get() &= Slice(m_s.get().domain(),Interval(-99999.,99999.)); // todo: remove this
   }
 
-  AbstractDomain::AbstractDomain(tubex::Tube& t)
+  Domain::Domain(tubex::Tube& t)
     : m_type(DomainType::TUBE), m_t(t)
   {
     m_t.get() &= Interval(-99999.,99999.); // todo: remove this
   }
 
-  AbstractDomain::AbstractDomain(tubex::TubeVector& tv)
+  Domain::Domain(tubex::TubeVector& tv)
     : m_type(DomainType::TUBE_VECTOR), m_tv(tv)
   {
     m_tv.get() &= IntervalVector(m_tv.get().size(), Interval(-99999.,99999.)); // todo: remove this
   }
 
-  AbstractDomain::~AbstractDomain()
+  Domain::~Domain()
   {
     
   }
 
-  DomainType AbstractDomain::type() const
+  DomainType Domain::type() const
   {
     return m_type;
   }
 
-  ibex::Interval& AbstractDomain::interval()
+  ibex::Interval& Domain::interval()
   {
     assert(m_type == DomainType::INTERVAL);
-    return const_cast<Interval&>(static_cast<const AbstractDomain&>(*this).interval());
+    return const_cast<Interval&>(static_cast<const Domain&>(*this).interval());
   }
 
-  const ibex::Interval& AbstractDomain::interval() const
+  const ibex::Interval& Domain::interval() const
   {
     assert(m_type == DomainType::INTERVAL);
     return m_i.get();
   }
 
-  ibex::IntervalVector& AbstractDomain::interval_vector()
+  ibex::IntervalVector& Domain::interval_vector()
   {
     assert(m_type == DomainType::INTERVAL_VECTOR);
-    return const_cast<IntervalVector&>(static_cast<const AbstractDomain&>(*this).interval_vector());
+    return const_cast<IntervalVector&>(static_cast<const Domain&>(*this).interval_vector());
   }
 
-  const ibex::IntervalVector& AbstractDomain::interval_vector() const
+  const ibex::IntervalVector& Domain::interval_vector() const
   {
     assert(m_type == DomainType::INTERVAL_VECTOR);
     return m_iv.get();
   }
 
-  tubex::Slice& AbstractDomain::slice()
+  tubex::Slice& Domain::slice()
   {
     assert(m_type == DomainType::SLICE);
-    return const_cast<Slice&>(static_cast<const AbstractDomain&>(*this).slice());
+    return const_cast<Slice&>(static_cast<const Domain&>(*this).slice());
   }
 
-  const tubex::Slice& AbstractDomain::slice() const
+  const tubex::Slice& Domain::slice() const
   {
     assert(m_type == DomainType::SLICE);
     return m_s.get();
   }
 
-  tubex::Tube& AbstractDomain::tube()
+  tubex::Tube& Domain::tube()
   {
     assert(m_type == DomainType::TUBE);
-    return const_cast<Tube&>(static_cast<const AbstractDomain&>(*this).tube());
+    return const_cast<Tube&>(static_cast<const Domain&>(*this).tube());
   }
 
-  const tubex::Tube& AbstractDomain::tube() const
+  const tubex::Tube& Domain::tube() const
   {
     assert(m_type == DomainType::TUBE);
     return m_t.get();
   }
 
-  tubex::TubeVector& AbstractDomain::tube_vector()
+  tubex::TubeVector& Domain::tube_vector()
   {
     assert(m_type == DomainType::TUBE_VECTOR);
-    return const_cast<TubeVector&>(static_cast<const AbstractDomain&>(*this).tube_vector());
+    return const_cast<TubeVector&>(static_cast<const Domain&>(*this).tube_vector());
   }
 
-  const tubex::TubeVector& AbstractDomain::tube_vector() const
+  const tubex::TubeVector& Domain::tube_vector() const
   {
     assert(m_type == DomainType::TUBE_VECTOR);
     return m_tv.get();
   }
 
-  vector<AbstractContractor*>& AbstractDomain::contractors()
+  vector<Contractor*>& Domain::contractors()
   {
     return m_v_ctc;
   }
 
-  double AbstractDomain::compute_volume() const
+  double Domain::compute_volume() const
   {
     switch(m_type)
     {
@@ -220,17 +220,17 @@ namespace tubex
     }
   }
 
-  double AbstractDomain::get_saved_volume() const
+  double Domain::get_saved_volume() const
   {
     return m_volume;
   }
 
-  void AbstractDomain::set_volume(double vol)
+  void Domain::set_volume(double vol)
   {
     m_volume = vol;
   }
 
-  bool AbstractDomain::is_empty() const
+  bool Domain::is_empty() const
   {
     switch(m_type)
     {
@@ -254,7 +254,7 @@ namespace tubex
     }
   }
   
-  bool AbstractDomain::operator==(const AbstractDomain& x) const
+  bool Domain::operator==(const Domain& x) const
   {
     if(m_type != x.m_type)
       return false;
@@ -282,7 +282,7 @@ namespace tubex
     }
   }
   
-  bool AbstractDomain::operator!=(const AbstractDomain& x) const
+  bool Domain::operator!=(const Domain& x) const
   {
     if(m_type != x.m_type)
       return true;
@@ -310,7 +310,7 @@ namespace tubex
     }
   }
 
-  ostream& operator<<(ostream& str, const AbstractDomain& x)
+  ostream& operator<<(ostream& str, const Domain& x)
   {
     switch(x.m_type)
     {

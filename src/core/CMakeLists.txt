@@ -93,10 +93,10 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractDomain.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractDomain.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractContractor.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_AbstractContractor.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Domain.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Domain.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.h
                 )

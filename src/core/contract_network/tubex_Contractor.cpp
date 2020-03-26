@@ -1,5 +1,5 @@
 /** 
- *  AbstractContractor class
+ *  Contractor class
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou
@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_AbstractContractor.h"
+#include "tubex_Contractor.h"
 #include "tubex_CtcEval.h"
 
 using namespace std;
@@ -16,13 +16,13 @@ using namespace ibex;
 
 namespace tubex
 {
-  AbstractContractor::AbstractContractor()
+  Contractor::Contractor()
     : m_type(ContractorType::COMPONENT)
   {
 
   }
 
-  AbstractContractor::AbstractContractor(const AbstractContractor& ac)
+  Contractor::Contractor(const Contractor& ac)
     : m_type(ac.m_type), m_domains(ac.m_domains)
   {
     switch(ac.m_type)
@@ -40,13 +40,13 @@ namespace tubex
     }
   }
 
-  AbstractContractor::AbstractContractor(ibex::Ctc& ctc)
+  Contractor::Contractor(ibex::Ctc& ctc)
     : m_type(ContractorType::IBEX), m_ibex_ctc(ctc)
   {
 
   }
 
-  AbstractContractor::AbstractContractor(tubex::Ctc& ctc) 
+  Contractor::Contractor(tubex::Ctc& ctc) 
     : m_type(ContractorType::TUBEX), m_tubex_ctc(ctc)
   {
     if(typeid(ctc) == typeid(CtcEval))
@@ -56,32 +56,32 @@ namespace tubex
     }
   }
 
-  AbstractContractor::~AbstractContractor()
+  Contractor::~Contractor()
   {
 
   }
 
-  ContractorType AbstractContractor::type() const
+  ContractorType Contractor::type() const
   {
     return m_type;
   }
 
-  bool AbstractContractor::is_active() const
+  bool Contractor::is_active() const
   {
     return m_active;
   }
 
-  void AbstractContractor::set_active(bool active)
+  void Contractor::set_active(bool active)
   {
     m_active = active;
   }
 
-  vector<AbstractDomain*>& AbstractContractor::domains()
+  vector<Domain*>& Contractor::domains()
   {
     return m_domains;
   }
 
-  bool AbstractContractor::operator==(const AbstractContractor& x) const
+  bool Contractor::operator==(const Contractor& x) const
   {
     if(m_type != x.m_type || m_domains.size() != x.m_domains.size())
       return false;
@@ -93,7 +93,7 @@ namespace tubex
     return true;
   }
 
-  void AbstractContractor::contract()
+  void Contractor::contract()
   {
     assert(!m_domains.empty());
 

@@ -22,7 +22,7 @@ namespace tubex
 
   }
 
-  void CtcEval::contract(vector<AbstractDomain*>& v_domains)
+  void CtcEval::contract(vector<Domain*>& v_domains)
   {
     assert(v_domains[0]->type() == DomainType::INTERVAL);
 

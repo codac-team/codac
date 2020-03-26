@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  AbstractDomain class
+ *  Domain class
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou
@@ -9,8 +9,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_ABSTRACT_DOMAIN_H__
-#define __TUBEX_ABSTRACT_DOMAIN_H__
+#ifndef __TUBEX_DOMAIN_H__
+#define __TUBEX_DOMAIN_H__
 
 #include <functional>
 #include "ibex_Interval.h"
@@ -23,19 +23,19 @@ namespace tubex
 {
   enum class DomainType { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
 
-  class AbstractContractor;
+  class Contractor;
 
-  class AbstractDomain
+  class Domain
   {
     public:
 
-      AbstractDomain(const AbstractDomain& ad);
-      AbstractDomain(ibex::Interval& i);
-      AbstractDomain(ibex::IntervalVector& iv);
-      AbstractDomain(tubex::Slice& s);
-      AbstractDomain(tubex::Tube& t);
-      AbstractDomain(tubex::TubeVector& tv);
-      ~AbstractDomain();
+      Domain(const Domain& ad);
+      Domain(ibex::Interval& i);
+      Domain(ibex::IntervalVector& iv);
+      Domain(tubex::Slice& s);
+      Domain(tubex::Tube& t);
+      Domain(tubex::TubeVector& tv);
+      ~Domain();
 
       DomainType type() const;
 
@@ -50,7 +50,7 @@ namespace tubex
       tubex::TubeVector& tube_vector();
       const tubex::TubeVector& tube_vector() const;
 
-      std::vector<AbstractContractor*>& contractors();
+      std::vector<Contractor*>& contractors();
 
       double compute_volume() const;
       double get_saved_volume() const;
@@ -58,10 +58,10 @@ namespace tubex
 
       bool is_empty() const;
       
-      bool operator==(const AbstractDomain& x) const;
-      bool operator!=(const AbstractDomain& x) const;
+      bool operator==(const Domain& x) const;
+      bool operator!=(const Domain& x) const;
       
-      friend std::ostream& operator<<(std::ostream& str, const AbstractDomain& x);
+      friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
 
     protected:
@@ -77,7 +77,7 @@ namespace tubex
         std::reference_wrapper<tubex::TubeVector> m_tv;
       };
 
-      std::vector<AbstractContractor*> m_v_ctc;
+      std::vector<Contractor*> m_v_ctc;
       double m_volume = 0.;
   };
 }
