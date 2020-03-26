@@ -24,7 +24,7 @@ pybind11_add_module(tube SHARED
   pyibex_tube.cpp
   pyibex_export_Function.cpp
   pyibex_export_Slice.cpp
-  # pyibex_export_Trajectory.cpp
+  pyibex_export_Trajectory.cpp
   pyibex_export_Tube.cpp
   pyibex_export_TubeVector.cpp
 
