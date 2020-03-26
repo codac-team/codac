@@ -13,6 +13,7 @@
 #include "tubex_Function.h"
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
+#include "pyibex_export_Function_docs.h"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -76,33 +77,89 @@ void export_Function(py::module& m){
 
 
    py::class_<Function> function(m, "Function");
-    function
-      .def(py::init< cc_ptr>(), "y"_a)
-      .def(py::init< cc_ptr, cc_ptr>(), "x1"_a, "y"_a)
-      .def(py::init< cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "y"_a)
-      .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "y"_a)
-      .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "y"_a)
-      .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "y"_a)
-      .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "y"_a)
-      .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "y"_a)
-      .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "x8"_a, "y"_a)
-      // .def(py::init<int, const char**, const char*>(), "n"_a, "x"_a, "y"_a)
+  function
+      .def(py::init<cc_ptr>(),DOCS_FUNCTION_FUNCTION_CHAR, "y"_a)
+      .def(py::init<cc_ptr,cc_ptr>(),
+          DOCS_FUNCTION_FUNCTION_CHAR_CHAR, "x1"_a, "y"_a)
+      .def(py::init<cc_ptr,cc_ptr,cc_ptr>(),
+          DOCS_FUNCTION_FUNCTION_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "y"_a)
+      .def(py::init<cc_ptr,cc_ptr,cc_ptr,cc_ptr>(),
+          DOCS_FUNCTION_FUNCTION_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "y"_a)
+      .def(py::init<cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr>(),
+          DOCS_FUNCTION_FUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "y"_a)
+      .def(py::init<cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr>(),
+          DOCS_FUNCTION_FUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "y"_a)
+      .def(py::init<cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr>(),
+          DOCS_FUNCTION_FUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "y"_a)
+      .def(py::init<cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr>(),
+          DOCS_FUNCTION_FUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "y"_a)
+      .def(py::init<cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr,cc_ptr>(),
+          DOCS_FUNCTION_FUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "x8"_a, "y"_a)
+      // .def(py::init<int,cc_ptr *,cc_ptr>(),
+          // DOCS_FUNCTION_FUNCTION_INT_CHAR_CHAR, "n"_a, "x"_a, "y"_a)
+      .def(py::init<const tubex::Function &>(),
+          DOCS_FUNCTION_FUNCTION_FUNCTION, "f"_a)
 
-      .def(py::init<tubex::Function>(), "f"_a)
+      .def("ibex_function", &Function::ibex_function,DOCS_FUNCTION_IBEX_FUNCTION)
+      .def("eval", (const Tube (Function::*)(const TubeVector &) const)&Function::eval,
+          DOCS_FUNCTION_EVAL_TUBEVECTOR, "x"_a)
+      .def("eval", (const ibex::Interval (Function::*)(const ibex::Interval &) const)&Function::eval,
+          DOCS_FUNCTION_EVAL_INTERVAL, "t"_a)
+      .def("eval", (const ibex::Interval (Function::*)(const ibex::IntervalVector &) const)&Function::eval,
+          DOCS_FUNCTION_EVAL_INTERVALVECTOR, "x"_a)
+      .def("eval", (const ibex::Interval (Function::*)(int,const TubeVector &) const)&Function::eval,
+          DOCS_FUNCTION_EVAL_INT_TUBEVECTOR, "slice_id"_a, "x"_a)
+      .def("eval", (const ibex::Interval (Function::*)(const ibex::Interval &,const TubeVector &) const)&Function::eval,
+          DOCS_FUNCTION_EVAL_INTERVAL_TUBEVECTOR, "t"_a, "x"_a)
+      .def("traj_eval", &Function::traj_eval,
+          DOCS_FUNCTION_TRAJ_EVAL_TRAJECTORYVECTOR, "x"_a)
+      .def("eval_vector", (const TubeVector (Function::*)(const TubeVector &) const)&Function::eval_vector,
+          DOCS_FUNCTION_EVAL_VECTOR_TUBEVECTOR, "x"_a)
+      .def("eval_vector", (const ibex::IntervalVector (Function::*)(const ibex::Interval &) const)&Function::eval_vector,
+          DOCS_FUNCTION_EVAL_VECTOR_INTERVAL, "t"_a)
+      .def("eval_vector", (const ibex::IntervalVector (Function::*)(const ibex::IntervalVector &) const)&Function::eval_vector,
+          DOCS_FUNCTION_EVAL_VECTOR_INTERVALVECTOR, "x"_a)
+      .def("eval_vector", (const ibex::IntervalVector (Function::*)(int,const TubeVector &) const)&Function::eval_vector,
+          DOCS_FUNCTION_EVAL_VECTOR_INT_TUBEVECTOR, "slice_id"_a, "x"_a)
+      .def("eval_vector", (const ibex::IntervalVector (Function::*)(const ibex::Interval &,const TubeVector &) const)&Function::eval_vector,
+          DOCS_FUNCTION_EVAL_VECTOR_INTERVAL_TUBEVECTOR, "t"_a, "x"_a)
+      .def("traj_eval_vector", &Function::traj_eval_vector,
+          DOCS_FUNCTION_TRAJ_EVAL_VECTOR_TRAJECTORYVECTOR, "x"_a)
+      .def("diff", &Function::diff,DOCS_FUNCTION_DIFF)
 
-      .def("ibex_function", &Function::ibex_function)
-      .def("eval", (const Tube (Function::*)( const TubeVector&) const)&Function::eval, "x"_a)
-      .def("eval", (const ibex::Interval (Function::*)( const ibex::Interval&) const)&Function::eval, "t"_a)
-      .def("eval", (const ibex::Interval (Function::*)( const ibex::IntervalVector&) const)&Function::eval, "x"_a)
-      .def("eval", (const ibex::Interval (Function::*)(int, const TubeVector&) const)&Function::eval, "slice_id"_a, "x"_a)
-      .def("eval", (const ibex::Interval (Function::*)( const ibex::Interval&, const TubeVector&) const)&Function::eval, "t"_a, "x"_a)
-      .def("traj_eval", &Function::traj_eval, "x"_a)
-      .def("eval_vector", (const TubeVector (Function::*)( const TubeVector&) const)&Function::eval_vector, "x"_a)
-      .def("eval_vector", (const ibex::IntervalVector (Function::*)( const ibex::Interval&) const)&Function::eval_vector, "t"_a)
-      .def("eval_vector", (const ibex::IntervalVector (Function::*)( const ibex::IntervalVector&) const)&Function::eval_vector, "x"_a)
-      .def("eval_vector", (const ibex::IntervalVector (Function::*)(int, const TubeVector&) const)&Function::eval_vector, "slice_id"_a, "x"_a)
-      .def("eval_vector", (const ibex::IntervalVector (Function::*)( const ibex::Interval&, const TubeVector&) const)&Function::eval_vector, "t"_a, "x"_a)
-      .def("traj_eval_vector", &Function::traj_eval_vector, "x"_a)
-      .def("diff", &Function::diff)
+      .def("__getitem__", [](Function& s, size_t index){
+              if (index >= s.nb_vars()){
+                  throw py::index_error();
+              }
+                return s[static_cast<int>(index)];
+          }, DOCS_FUNCTION_OPERATOR_INDEX_INT, py::return_value_policy::reference_internal)
+      
+      // .def(py::init< cc_ptr>(), "y"_a)
+      // .def(py::init< cc_ptr, cc_ptr>(), "x1"_a, "y"_a)
+      // .def(py::init< cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "y"_a)
+      // .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "y"_a)
+      // .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "y"_a)
+      // .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "y"_a)
+      // .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "y"_a)
+      // .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "y"_a)
+      // .def(py::init< cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr, cc_ptr>(), "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "x7"_a, "x8"_a, "y"_a)
+      // // .def(py::init<int, const char**, const char*>(), "n"_a, "x"_a, "y"_a)
+
+      // .def(py::init<tubex::Function>(), "f"_a)
+
+      // .def("ibex_function", &Function::ibex_function)
+      // .def("eval", (const Tube (Function::*)( const TubeVector&) const)&Function::eval, "x"_a)
+      // .def("eval", (const ibex::Interval (Function::*)( const ibex::Interval&) const)&Function::eval, "t"_a)
+      // .def("eval", (const ibex::Interval (Function::*)( const ibex::IntervalVector&) const)&Function::eval, "x"_a)
+      // .def("eval", (const ibex::Interval (Function::*)(int, const TubeVector&) const)&Function::eval, "slice_id"_a, "x"_a)
+      // .def("eval", (const ibex::Interval (Function::*)( const ibex::Interval&, const TubeVector&) const)&Function::eval, "t"_a, "x"_a)
+      // .def("traj_eval", &Function::traj_eval, "x"_a)
+      // .def("eval_vector", (const TubeVector (Function::*)( const TubeVector&) const)&Function::eval_vector, "x"_a)
+      // .def("eval_vector", (const ibex::IntervalVector (Function::*)( const ibex::Interval&) const)&Function::eval_vector, "t"_a)
+      // .def("eval_vector", (const ibex::IntervalVector (Function::*)( const ibex::IntervalVector&) const)&Function::eval_vector, "x"_a)
+      // .def("eval_vector", (const ibex::IntervalVector (Function::*)(int, const TubeVector&) const)&Function::eval_vector, "slice_id"_a, "x"_a)
+      // .def("eval_vector", (const ibex::IntervalVector (Function::*)( const ibex::Interval&, const TubeVector&) const)&Function::eval_vector, "t"_a, "x"_a)
+      // .def("traj_eval_vector", &Function::traj_eval_vector, "x"_a)
+      // .def("diff", &Function::diff)
     ;
 }
