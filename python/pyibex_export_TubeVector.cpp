@@ -40,10 +40,10 @@ void export_TubeVector(py::module& m){
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INTERVALVECTOR, "domain"_a, "timestep"_a, "codomain"_a)
       .def(py::init<const ibex::Interval &,double,const tubex::Fnc &>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_FNC, "domain"_a, "timestep"_a, "f"_a)
-      .def(py::init(
-          [](const ibex::Interval& domain,double timestep, const tubex::Function& f){
-              return new TubeVector(domain, timestep, f );
-          }), "domain"_a, "timestep"_a, "f"_a, py::keep_alive<1,4>())
+    //   .def(py::init(
+    //       [](const ibex::Interval& domain,double timestep, const tubex::Function& f){
+    //           return new TubeVector(domain, timestep, f );
+    //       }), "domain"_a, "timestep"_a, "f"_a, py::keep_alive<1,4>())
       .def(py::init<const std::vector<ibex::Interval> &,const std::vector<ibex::IntervalVector> &>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_VECTOR_INTERVAL__VECTOR_INTERVALVECTOR_, "v_domains"_a, "v_codomains"_a)
       .def(py::init<std::initializer_list<Tube>>(),
