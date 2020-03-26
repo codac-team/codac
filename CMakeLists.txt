@@ -8,9 +8,6 @@
   set(TUBEX_DESCRIPTION "Library providing tools to guarantee computations over sets of trajectories")
   set(TUBEX_URL "http://simon-rohou.fr/research/tubex-lib")
 
-  set(PACKAGE_VERSION "2.0.0")
-
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/)
 
 ################################################################################
 # Options for install directory
@@ -50,7 +47,7 @@
 ################################################################################
 
   add_compile_options(-fPIC) # is it necessary for python binding?
-  add_subdirectory(pybind11)
+  #add_subdirectory(pybind11)
 
 
 ################################################################################
@@ -83,20 +80,10 @@
 # Looking for Ibex
 ################################################################################
 
-  # #find_package(IBEX 2.8.3 REQUIRED)
-  # include(FindPkgConfig)
-  # pkg_search_module(IBEX REQUIRED ibex) # todo: specify minimum version of IBEX
-  # message(STATUS "Found Ibex version ${IBEX_VERSION}")
-
-  FIND_PACKAGE(IbexLib REQUIRED)
-  if(IBEX_FOUND)
-    INCLUDE_DIRECTORIES(${IBEX_INCLUDE_DIRS})
-    SET(LIBS ${LIBS} ${IBEX_LIBRARIES} )
-  else()
-    MESSAGE(WARNING "Unable to find IbexLib. Maybe you need to set IBEX_ROOT ${IBEX_ROOT}")
-    MESSAGE(WARNING "If ibex is not installer run : \n\t sh travis_script/install_ibexlib.sh /path/to/your/install/dir")
-    #MESSAGE(FATAL_ERROR "where ")
-  endif()
+  #find_package(IBEX 2.8.3 REQUIRED)
+  include(FindPkgConfig)
+  pkg_search_module(IBEX REQUIRED ibex) # todo: specify minimum version of IBEX
+  message(STATUS "Found Ibex version ${IBEX_VERSION}")
 
 
 ################################################################################
@@ -105,6 +92,7 @@
 
   option(BUILD_TESTS "Build test" OFF)
   if(BUILD_TESTS)
+
     include(CTest)
     add_custom_target(check
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
@@ -112,6 +100,7 @@
     add_subdirectory(tests) # EXCLUDE_FROM_ALL)
 
     # Testing examples:
+
       # Basics
       add_test(NAME basics_01
                COMMAND ../examples/basics/ex_01_arithmetic/make/tubex_basics_01 0)
