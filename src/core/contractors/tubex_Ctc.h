@@ -52,6 +52,9 @@ namespace tubex
        */
       Ctc();
 
+
+      virtual ~Ctc() {};
+
       /**
        * \brief Specifies whether the contractor can impact the tube's slicing or not
        *

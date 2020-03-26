@@ -91,10 +91,16 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcCidSlicing.h
-		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcCidSlicing.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_Ctc3BGuess.h
-		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_Ctc3BGuess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDynCid.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDynCid.h
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcIntegration.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcIntegration.h
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDynCidGuess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDynCidGuess.h
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcODE.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcODE.h
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDynBasic.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDynBasic.h	
                 )
 
 
