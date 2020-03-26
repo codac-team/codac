@@ -81,7 +81,7 @@ int main(int argc, char** argv)
     fig_map.add_tube(x, "x", 0, 1);
     fig_map.add_trajectory(&x_truth, "x*", 0, 1);
     fig_map.set_trajectory_color(&x_truth, colormap, &traj_colormap);
-    fig_map.show(0.);
+    fig_map.show(1.);
 
     vector<ConnectedSubset> v_loops;
 

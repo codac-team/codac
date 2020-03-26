@@ -399,7 +399,8 @@ namespace tubex
       if(m_map_trajs[traj].color_map.second != NULL)
         traj_colormap = m_map_trajs[traj].color_map.second;
 
-    if((*traj)[index_x].sampled_map().size() != 0)
+    if((*traj)[index_x].definition_type() == TrajDefnType::MAP_OF_VALUES
+        && (*traj)[index_x].sampled_map().size() != 0)
     {
       const Trajectory *displayed_traj_x, *displayed_traj_y;
       Trajectory *temp_displayed_traj_x = NULL, *temp_displayed_traj_y = NULL; // possibly used in case of heavy trajectories

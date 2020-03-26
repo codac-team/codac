@@ -352,7 +352,7 @@ namespace tubex
       for(t = m_domain.lb() ; t < m_domain.ub() ; t+=dt)
         if(new_map.find(t) == new_map.end()) // if key does not exist already
           new_map[t] = (*this)(t); // evaluation/interpolation
-      new_map[t] = (*this)(t);
+      new_map[m_domain.ub()] = (*this)(m_domain.ub());
 
       if(m_traj_def_type == TrajDefnType::ANALYTIC_FNC)
       {
