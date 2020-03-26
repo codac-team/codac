@@ -62,7 +62,6 @@ namespace tubex
 
   void CtcPicard::contract_picard_slice(const tubex::Fnc& f, TubeVector& x, int  k, TPropagation t_propa )
   {
-    cout << " x " << x << k << endl;
     assert (t_propa == FORWARD || t_propa ==BACKWARD);
     Interval initdomain=x[0].slice_domain(k) ;
     int kfinished;
@@ -73,7 +72,6 @@ namespace tubex
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
           // then it is sampled and contracted again.
-          cout << " k " << x(k) << endl;
           if(x(k).is_unbounded())
 	     {
 	      if (x[0].slice_domain(k).diam() > initdomain.diam() / m_picard_subslices)
@@ -155,12 +153,10 @@ namespace tubex
                                       int k,
                                       TPropagation t_propa)
   {
-    cout << " contract_kth_slices " << k <<  endl;
     assert(!((t_propa & FORWARD) && (t_propa & BACKWARD)) && "forward/backward case not implemented yet");
     assert(f.nb_vars() == f.image_dim());
     assert(f.nb_vars() == tube.size());
     assert(k >= 0 && k < tube.nb_slices());
-    cout << " after assert contract_kth_slices " << endl;
     if(tube.is_empty())
       return;
 
