@@ -8,8 +8,10 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <list>
 #include "tubex_ContractorNetwork.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_CtcFwdBwd.h"
 
 using namespace std;
 using namespace ibex;
@@ -143,78 +145,103 @@ namespace tubex
     return add_domain(new Domain(*new IntervalVector(iv_)))->interval_vector();
   }
 
-  void ContractorNetwork::add(ibex::Ctc& ctc, initializer_list<Domain> list)
+  void ContractorNetwork::add(ibex::Ctc& ctc, const vector<Domain>& v_domains)
   {
     Contractor *abstract_ctc = new Contractor(ctc);
-    for(const auto& dom : list)
+    for(const auto& dom : v_domains)
       add_domain(new Domain(dom), abstract_ctc);
     add_contractor(abstract_ctc);
   }
 
-  void ContractorNetwork::add(tubex::Ctc& ctc, initializer_list<Domain> list)
+  void ContractorNetwork::add(tubex::Ctc& ctc, const vector<Domain>& v_domains)
   {
-    if(typeid(ctc) == typeid(CtcDeriv)) // towards contractors on slices scale
+    bool breakdown_to_slice_level = false;
+
+    if(typeid(ctc) == typeid(CtcDeriv))
     {
-      assert(list.size() == 2);
+      if(v_domains[0].type() == DomainType::TUBE || v_domains[0].type() == DomainType::TUBE_VECTOR)
+        breakdown_to_slice_level = true; // todo: improve this
+    }
 
-      const Domain *dom_tube1 = list.begin();
-      const Domain *dom_tube2;
-      for(auto& dom : list)
-        dom_tube2 = &dom;
+    else if(typeid(ctc) == typeid(CtcFwdBwd) || typeid(ctc) == typeid(CtcStatic))
+    {
+      // todo: check that the related constraint is not intertemporal
 
-      switch(dom_tube1->type())
+      if(v_domains[0].type() == DomainType::TUBE || v_domains[0].type() == DomainType::TUBE_VECTOR)
       {
-        case DomainType::TUBE:
-        {
-          assert(dom_tube1->type() == DomainType::TUBE
-            && dom_tube2->type() == DomainType::TUBE);
-          assert(dom_tube1->tube().nb_slices() == dom_tube2->tube().nb_slices());
-          
-          // Add tube domains for dependencies
-          add_domain(new Domain(*dom_tube1));
-          add_domain(new Domain(*dom_tube2));
-
-          // Add dependencies between slices
-          Slice *s_x = const_cast<Slice*>(dom_tube1->tube().first_slice());
-          Slice *s_v = const_cast<Slice*>(dom_tube2->tube().first_slice());
-          while(s_x != NULL)
-          {
-            add(ctc, {*s_x,*s_v});
-            s_x = s_x->next_slice();
-            s_v = s_v->next_slice();
-          }
-
-          return;
-          break;
-        }
-
-        case DomainType::TUBE_VECTOR:
-        {
-          assert(dom_tube1->type() == DomainType::TUBE_VECTOR
-            && dom_tube2->type() == DomainType::TUBE_VECTOR);
-          assert(dom_tube1->tube_vector().size() == dom_tube2->tube_vector().size());
-
-          for(int i = 0 ; i < dom_tube1->tube_vector().size() ; i++)
-            add(ctc, {const_cast<Tube&>(dom_tube1->tube_vector()[i]),
-                      const_cast<Tube&>(dom_tube2->tube_vector()[i])});
-
-          return;
-          break;
-        }
-
-        case DomainType::SLICE:
-          // Contractor will be added afterwards
-          break;
-
-        default:
-          assert(false && "CtcDeriv not used on Tubes or TubeVectors");
+        breakdown_to_slice_level = true; // todo: improve this
       }
     }
 
-    Contractor *abstract_ctc = new Contractor(ctc);
-    for(const auto& dom : list)
-      add_domain(new Domain(dom), abstract_ctc);
-    add_contractor(abstract_ctc);
+    // Towards contractors on slices scale, if possible
+    // (in case of non-intertemporal constraints)
+    if(breakdown_to_slice_level)
+    {
+      // todo: add tube, tube vectors now? (for component dependencies)
+
+      vector<const Slice*> v_slices;
+
+      // Vector initialization with first slices of each tube
+      int nb_slices = -1;
+      for(const auto& dom : v_domains)
+      {
+        add_domain(new Domain(dom));
+
+        switch(dom.type())
+        {
+          case DomainType::TUBE:
+          {
+            if(nb_slices == -1)
+              nb_slices = dom.tube().nb_slices();
+
+            else
+              assert(nb_slices == dom.tube().nb_slices());
+
+            v_slices.push_back(dom.tube().first_slice());
+          }
+          break;
+
+          case DomainType::TUBE_VECTOR:
+          {            
+            for(int j = 0 ; j < dom.tube_vector().size() ; j++)
+            {
+              if(nb_slices == -1)
+                nb_slices = dom.tube_vector()[j].nb_slices();
+
+              else
+                assert(nb_slices == dom.tube_vector()[j].nb_slices());
+
+              v_slices.push_back(dom.tube_vector()[j].first_slice());
+            }
+          }
+          break;
+
+          default:
+            assert(false && "domain is not a tube or a tube vector");
+        }
+      }
+
+      // Adding each row of slices
+      for(int k = 0 ; k < nb_slices ; k++)
+      {
+        vector<Domain> v_slices_domains;
+        for(size_t i = 0 ; i < v_slices.size() ; i++)
+          v_slices_domains.push_back(Domain(const_cast<Slice&>(*v_slices[i])));
+
+        add(ctc, v_slices_domains); 
+
+        for(auto& s : v_slices)
+          s = s->next_slice();
+      }
+    }
+
+    else
+    {
+      Contractor *abstract_ctc = new Contractor(ctc);
+      for(const auto& dom : v_domains)
+        add_domain(new Domain(dom), abstract_ctc);
+      add_contractor(abstract_ctc);
+    }
   }
 
   Domain* ContractorNetwork::add_domain(Domain *ad)

@@ -37,6 +37,72 @@ namespace tubex
        */
       CtcFwdBwd(const tubex::Function& f);
 
+      void contract(std::vector<Domain*>& v_domains);
+
+      /**
+       * \brief \f$\mathcal{C}\big([\mathbf{x}](\cdot)\big)\f$
+       *
+       * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ to be contracted
+       */
+      void contract(TubeVector& x);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot),[x_3](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       * \param x3 the scalar tube \f$[x_3](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2, Tube& x3);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot),[x_3](\cdot),[x_4](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       * \param x3 the scalar tube \f$[x_3](\cdot)\f$ to be contracted
+       * \param x4 the scalar tube \f$[x_4](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot),[x_3](\cdot),[x_4](\cdot),[x_5](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       * \param x3 the scalar tube \f$[x_3](\cdot)\f$ to be contracted
+       * \param x4 the scalar tube \f$[x_4](\cdot)\f$ to be contracted
+       * \param x5 the scalar tube \f$[x_5](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot),[x_3](\cdot),[x_4](\cdot),[x_5](\cdot),[x_6](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       * \param x3 the scalar tube \f$[x_3](\cdot)\f$ to be contracted
+       * \param x4 the scalar tube \f$[x_4](\cdot)\f$ to be contracted
+       * \param x5 the scalar tube \f$[x_5](\cdot)\f$ to be contracted
+       * \param x6 the scalar tube \f$[x_6](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6);
+      
       /**
        * \brief Constractor destructor
        */

@@ -28,4 +28,44 @@ namespace tubex
     delete m_ibex_ctc;
     delete m_f;
   }
+  
+  void CtcFwdBwd::contract(vector<Domain*>& v_domains)
+  {
+    CtcStatic::contract(v_domains);
+  }
+
+  void CtcFwdBwd::contract(TubeVector& x)
+  {
+    return CtcStatic::contract(x);
+  }
+
+  void CtcFwdBwd::contract(Tube& x1)
+  {
+    return CtcStatic::contract(x1);
+  }
+
+  void CtcFwdBwd::contract(Tube& x1, Tube& x2)
+  {
+    return CtcStatic::contract(x1, x2);
+  }
+
+  void CtcFwdBwd::contract(Tube& x1, Tube& x2, Tube& x3)
+  {
+    return CtcStatic::contract(x1, x2, x3);
+  }
+
+  void CtcFwdBwd::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4)
+  {
+    return CtcStatic::contract(x1, x2, x3, x4);
+  }
+
+  void CtcFwdBwd::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5)
+  {
+    return CtcStatic::contract(x1, x2, x3, x4, x5);
+  }
+
+  void CtcFwdBwd::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6)
+  {
+    return CtcStatic::contract(x1, x2, x3, x4, x5, x6);
+  }
 }

@@ -45,8 +45,20 @@ namespace tubex
     }
   }
 
+  Domain::Domain(double d)
+    : m_type(DomainType::INTERVAL), m_i(*new Interval(d)) // todo: manage delete
+  {
+
+  }
+
   Domain::Domain(ibex::Interval& i)
     : m_type(DomainType::INTERVAL), m_i(i)
+  {
+
+  }
+
+  Domain::Domain(ibex::Vector& v)
+    : m_type(DomainType::INTERVAL_VECTOR), m_iv(*new IntervalVector(v)) // todo: manage delete
   {
 
   }

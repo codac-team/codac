@@ -30,7 +30,9 @@ namespace tubex
     public:
 
       Domain(const Domain& ad);
+      Domain(double d);
       Domain(ibex::Interval& i);
+      Domain(ibex::Vector& v);
       Domain(ibex::IntervalVector& iv);
       Domain(tubex::Slice& s);
       Domain(tubex::Tube& t);

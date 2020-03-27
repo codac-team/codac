@@ -23,19 +23,32 @@ namespace tubex
 
   void CtcDeriv::contract(vector<Domain*>& v_domains)
   {
-    assert(v_domains.size() == 2);
-
-    // Slice case:
-    if(v_domains[0]->type() == DomainType::SLICE && v_domains[1]->type() == DomainType::SLICE)
-      contract(v_domains[0]->slice(), v_domains[1]->slice());
-
     // Tube scalar case:
-    else if(v_domains[0]->type() == DomainType::TUBE && v_domains[1]->type() == DomainType::TUBE)
+    if(v_domains[0]->type() == DomainType::TUBE && v_domains[1]->type() == DomainType::TUBE)
+    {
+      assert(v_domains.size() == 2);
       contract(v_domains[0]->tube(), v_domains[1]->tube());
+    }
 
     // Tube vector case:
     else if(v_domains[0]->type() == DomainType::TUBE_VECTOR && v_domains[1]->type() == DomainType::TUBE_VECTOR)
+    {
+      assert(v_domains.size() == 2);
       contract(v_domains[0]->tube_vector(), v_domains[1]->tube_vector());
+    }
+
+    // Slice case:
+    else if(v_domains[0]->type() == DomainType::SLICE)
+    {
+      assert(v_domains.size() % 2 == 0);
+
+      for(int i = 0 ; i < floor(v_domains.size()/2) ; i++)
+      {
+        assert(v_domains[i]->type() == DomainType::SLICE);
+        assert(v_domains[i+v_domains.size()/2]->type() == DomainType::SLICE);
+        contract(v_domains[i]->slice(), v_domains[i+v_domains.size()/2]->slice());
+      }
+    }
 
     else
       assert(false && "unhandled case");

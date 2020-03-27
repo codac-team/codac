@@ -37,8 +37,8 @@ namespace tubex
       ibex::Interval& create_var(const ibex::Interval& i_);
       ibex::IntervalVector& create_var(const ibex::IntervalVector& iv_);
 
-      void add(ibex::Ctc& ctc, std::initializer_list<Domain> list);
-      void add(tubex::Ctc& ctc, std::initializer_list<Domain> list);
+      void add(ibex::Ctc& ctc, const std::vector<Domain>& v_domains);
+      void add(tubex::Ctc& ctc, const std::vector<Domain>& v_domains);
 
 
     protected:

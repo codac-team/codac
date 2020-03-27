@@ -105,6 +105,8 @@ namespace tubex
       /**
        * \brief Contracts an array of slices (representing a slice vector)
        *
+       * Propagates the contractions to the next slices
+       *
        * \param v_x_slices the slices to be contracted
        * \param n the dimension of the array
        */

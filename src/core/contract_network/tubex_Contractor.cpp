@@ -83,7 +83,29 @@ namespace tubex
 
   bool Contractor::operator==(const Contractor& x) const
   {
-    if(m_type != x.m_type || m_domains.size() != x.m_domains.size())
+    if(m_type != x.m_type)
+      return false;
+
+    switch(m_type)
+    {
+      case ContractorType::IBEX:
+        if(&m_ibex_ctc.get() != &x.m_ibex_ctc.get())
+          return false;
+
+      case ContractorType::TUBEX:
+        if(&m_tubex_ctc.get() != &x.m_tubex_ctc.get())
+          return false;
+
+      case ContractorType::COMPONENT:
+        // Nothing to compare
+        break;
+
+      default:
+        assert(false && "unhandled case");
+        return false;
+    }
+
+    if(m_domains.size() != x.m_domains.size())
       return false;
 
     for(size_t i = 0 ; i < m_domains.size() ; i++)
