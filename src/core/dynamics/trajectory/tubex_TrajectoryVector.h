@@ -56,6 +56,16 @@ namespace tubex
       TrajectoryVector(const ibex::Interval& domain, const tubex::Function& f);
 
       /**
+       * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from an analytic expression,
+       *        and transforms it as a map of values (sampling procedure)
+       *
+       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param f tubex::Function object defining the trajectory: \f$\mathbf{x}(t)=\mathbf{f}(t)\f$
+       * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
+       */
+      TrajectoryVector(const ibex::Interval& domain, const tubex::Function& f, double timestep);
+
+      /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a map of vector values
        *
        * \param m_map_values map<t,y> defining the trajectory: \f$\mathbf{x}(t)=\mathbf{y}\f$

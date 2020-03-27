@@ -43,6 +43,13 @@ namespace tubex
         (*this)[i] = Trajectory(domain, f[i]);
     }
 
+    TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f, double timestep)
+      : TrajectoryVector(domain, f)
+    {
+      assert(timestep > 0.);
+      sample(timestep);
+    }
+
     TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)
     {
       typename map<double,Vector>::const_iterator it_map;
