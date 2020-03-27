@@ -23,7 +23,37 @@ namespace tubex
   
   void CtcStatic::contract(vector<Domain*>& v_domains)
   {
-    // todo
+    int i = 0, nb_vars = 0;
+    Slice **v_x_slices = new Slice*[m_ibex_ctc->nb_var-m_dynamic_ctc];
+
+    for(const auto& dom : v_domains) // todo: improve this assertion
+    {
+      switch(dom->type())
+      {
+        case DomainType::TUBE:
+          nb_vars += 1;
+          v_x_slices[i] = dom->tube().first_slice();
+          i++;
+          break;
+
+        case DomainType::TUBE_VECTOR:
+          nb_vars += dom->tube_vector().size();
+          for(int j = 0 ; j < dom->tube_vector().size() ; j++)
+          {
+            v_x_slices[i] = dom->tube_vector()[j].first_slice();
+            i++;
+          }
+          break;
+
+        default:
+          assert(false && "domain is not a tube or tube vector");
+      }
+    }
+
+    assert(nb_vars+m_dynamic_ctc == m_ibex_ctc->nb_var);
+
+    contract(v_x_slices, nb_vars);
+    delete v_x_slices;
   }
 
   void CtcStatic::contract(TubeVector& x)

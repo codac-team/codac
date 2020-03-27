@@ -153,40 +153,68 @@ namespace tubex
 
   void ContractorNetwork::add(tubex::Ctc& ctc, initializer_list<Domain> list)
   {
-    // If adding CtcDeriv with two scalar tubes
-    if(typeid(ctc) == typeid(CtcDeriv) && list.begin()->type() == DomainType::TUBE)
+    if(typeid(ctc) == typeid(CtcDeriv)) // towards contractors on slices scale
     {
       assert(list.size() == 2);
+
       const Domain *dom_tube1 = list.begin();
       const Domain *dom_tube2;
-
-      // Add tube domains for dependencies
       for(auto& dom : list)
-      {
-        assert(dom.type() == DomainType::TUBE
-          && dom.tube().nb_slices() == dom_tube1->tube().nb_slices());
-        add_domain(new Domain(dom));
         dom_tube2 = &dom;
-      }
 
-      // Add dependencies between slices
-      Slice *s_x = const_cast<Slice*>(dom_tube1->tube().first_slice());
-      Slice *s_v = const_cast<Slice*>(dom_tube2->tube().first_slice());
-      while(s_x != NULL)
+      switch(dom_tube1->type())
       {
-        add(ctc, {*s_x,*s_v});
-        s_x = s_x->next_slice();
-        s_v = s_v->next_slice();
+        case DomainType::TUBE:
+        {
+          assert(dom_tube1->type() == DomainType::TUBE
+            && dom_tube2->type() == DomainType::TUBE);
+          assert(dom_tube1->tube().nb_slices() == dom_tube2->tube().nb_slices());
+          
+          // Add tube domains for dependencies
+          add_domain(new Domain(*dom_tube1));
+          add_domain(new Domain(*dom_tube2));
+
+          // Add dependencies between slices
+          Slice *s_x = const_cast<Slice*>(dom_tube1->tube().first_slice());
+          Slice *s_v = const_cast<Slice*>(dom_tube2->tube().first_slice());
+          while(s_x != NULL)
+          {
+            add(ctc, {*s_x,*s_v});
+            s_x = s_x->next_slice();
+            s_v = s_v->next_slice();
+          }
+
+          return;
+          break;
+        }
+
+        case DomainType::TUBE_VECTOR:
+        {
+          assert(dom_tube1->type() == DomainType::TUBE_VECTOR
+            && dom_tube2->type() == DomainType::TUBE_VECTOR);
+          assert(dom_tube1->tube_vector().size() == dom_tube2->tube_vector().size());
+
+          for(int i = 0 ; i < dom_tube1->tube_vector().size() ; i++)
+            add(ctc, {const_cast<Tube&>(dom_tube1->tube_vector()[i]),
+                      const_cast<Tube&>(dom_tube2->tube_vector()[i])});
+
+          return;
+          break;
+        }
+
+        case DomainType::SLICE:
+          // Contractor will be added afterwards
+          break;
+
+        default:
+          assert(false && "CtcDeriv not used on Tubes or TubeVectors");
       }
     }
 
-    else
-    {
-      Contractor *abstract_ctc = new Contractor(ctc);
-      for(const auto& dom : list)
-        add_domain(new Domain(dom), abstract_ctc);
-      add_contractor(abstract_ctc);
-    }
+    Contractor *abstract_ctc = new Contractor(ctc);
+    for(const auto& dom : list)
+      add_domain(new Domain(dom), abstract_ctc);
+    add_contractor(abstract_ctc);
   }
 
   Domain* ContractorNetwork::add_domain(Domain *ad)
