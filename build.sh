@@ -17,7 +17,6 @@
 TUBEX_DIR="$(pwd)"
 
 
-
 if [ -z "${AUTO_SYNTHESIS_BY_DEFAULT}" ]
 then
   # in case of undefined AUTO_SYNTHESIS_BY_DEFAULT variable
