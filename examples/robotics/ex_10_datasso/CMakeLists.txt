@@ -18,13 +18,6 @@ include(FindPkgConfig)
 pkg_search_module(TUBEX REQUIRED tubex)
 message(STATUS "Found Tubex version ${TUBEX_VERSION}")
 
-find_package(PkgConfig REQUIRED)
-pkg_search_module(PKG_CAPD REQUIRED  capd capd-gui mpcapd mpcapd-gui )  # this looks for capd.pc file
-include_directories(${PKG_CAPD_INCLUDE_DIRS})
-message(STATUS "[CAPD INTEGRATION] PKG_CAPD_INCLUDE_DIRS = ${PKG_CAPD_INCLUDE_DIRS}")
-message(STATUS "[CAPD INTEGRATION] PKG_CAPD_LDFLAGS = ${PKG_CAPD_LDFLAGS}")
-
-
 
 ################################################################################
 # (to be removed) With Gaol, we add "-Wno-deprecated" to remove lots of warnings
