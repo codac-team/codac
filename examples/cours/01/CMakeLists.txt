@@ -1,14 +1,9 @@
-# ==================================================================
-#  tubex-lib / basics example - cmake configuration file
-# ==================================================================
-
 cmake_minimum_required(VERSION 3.0.2)
-project(tubex_basics_03 LANGUAGES CXX)
+project(my_project LANGUAGES CXX)
 
 # Compilation options
 set(CMAKE_CXX_STANDARD 11)
-add_compile_options(-O3 -Wall)
-#add_compile_options(-DNDEBUG) # comment for debug mode
+add_compile_options(-O3 -DNDEBUG) # comment for debug mode
 if(WIN32)
   add_definitions(-U__STRICT_ANSI__)
 endif()
