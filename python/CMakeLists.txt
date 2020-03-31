@@ -14,7 +14,7 @@ configure_file(
   ${PYTHON_PACKAGE_DIR}/setup.py
 )
 
-
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/../include)
 ################################################################################
 # Library for Python binding
 ################################################################################
@@ -42,12 +42,35 @@ add_custom_command(TARGET tube POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:tube>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
 )
 
+pybind11_add_module(graphics SHARED
+  pyibex_VIBesFig.cpp
+)
+target_link_libraries(graphics PRIVATE tubex tubex-rob ${LIBS})
+add_custom_command(TARGET graphics POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:graphics>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+)
+
+
 
 ################################################################################
 # Tests related to the binding
 ################################################################################
 
-add_test(NAME python_binding
-  COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${PYTHON_PACKAGE_NAME}.tests
-  WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
-)
+# SET (CTEST_ENVIRONMENT PYTHONPATH=${PYTHON_PACKAGE_DIR})
+# add_test(NAME python_binding
+#   COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${PYTHON_PACKAGE_NAME}
+#   WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
+# )
+
+file(GLOB TESTS_FILES "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/test_*.py")
+foreach(TEST_FILE ${TESTS_FILES})
+	# FILE(COPY ${TEST_FILE} DESTINATION .)
+	GET_FILENAME_COMPONENT(baseName ${TEST_FILE} NAME_WE)
+	ADD_TEST(${baseName} ${PYTHON_EXECUTABLE} ${TEST_FILE})
+	SET_TESTS_PROPERTIES(${baseName}
+	PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHON_PACKAGE_DIR}")
+
+# PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHON_INSTDIR}:${CMAKE_CURRENT_BINARY_DIR}/../src/python_package")
+    # SET_TESTS_PROPERTIES(${baseName}
+        # PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${LIBRARY_OUTPUT_PATH}")
+ endforeach()
