@@ -87,7 +87,7 @@ namespace tubex
     vector<Beacon> v_map = DataLoader::generate_landmarks(map_box, nb_landmarks);
     vector<IntervalVector> v_boxes;
     for(const auto& b : v_map)
-      v_boxes.push_back(b.pos_box());
+      v_boxes.push_back(b.pos_box().subvector(0,1)); // todo: set everything in 2d
 
     return v_boxes;
   }
