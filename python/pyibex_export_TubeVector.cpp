@@ -40,6 +40,8 @@ void export_TubeVector(py::module& m){
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INTERVALVECTOR, "domain"_a, "timestep"_a, "codomain"_a)
       .def(py::init<const ibex::Interval &,double,const tubex::Fnc &>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_FNC, "domain"_a, "timestep"_a, "f"_a)
+      .def(py::init<const TrajectoryVector &,double>(),
+          DOCS_TUBEVECTOR_TUBEVECTOR_TRAJECTORYVECTOR_DOUBLE, "traj"_a, "timestep"_a=0)
     //   .def(py::init(
     //       [](const ibex::Interval& domain,double timestep, const tubex::Function& f){
     //           return new TubeVector(domain, timestep, f );
@@ -52,8 +54,6 @@ void export_TubeVector(py::module& m){
       .def(py::init<const TubeVector &,const ibex::IntervalVector &>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_TUBEVECTOR_INTERVALVECTOR, "x"_a, "codomain"_a)
       .def(py::init<int,const Tube &>(),DOCS_TUBEVECTOR_TUBEVECTOR_INT_TUBE, "n"_a, "x"_a)
-      .def(py::init<const TrajectoryVector &,double>(),
-          DOCS_TUBEVECTOR_TUBEVECTOR_TRAJECTORYVECTOR_DOUBLE, "traj"_a, "timestep"_a=0)
       .def(py::init<const TrajectoryVector &,const TrajectoryVector &,double>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_TRAJECTORYVECTOR_TRAJECTORYVECTOR_DOUBLE, "lb"_a, "ub"_a, "timestep"_a=0)
       .def(py::init<const std::string &>(),
