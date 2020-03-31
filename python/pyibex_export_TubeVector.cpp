@@ -227,7 +227,7 @@ void export_TubeVector(py::module& m){
     
         // allow [] operator
       .def("__len__", &TubeVector::size )
-      .def("__getitem__", [](TubeVector& s, size_t index){
+      .def("__getitem__", [](TubeVector& s, size_t index) -> Tube&{
               if (index >= s.size()){
                   throw py::index_error();
               }
