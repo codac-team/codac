@@ -135,7 +135,7 @@ namespace tubex
     create_groups_color(tube);
   }
 
-  void VIBesFigTube::set_tube_color(const Tube *tube, int color_type, const string& color)
+  void VIBesFigTube::set_tube_color(const Tube *tube, TubeColorType color_type, const string& color)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -230,7 +230,7 @@ namespace tubex
     m_map_trajs.erase(traj);
   }
 
-  void VIBesFigTube::create_group_color(const Tube *tube, int color_type)
+  void VIBesFigTube::create_group_color(const Tube *tube, TubeColorType color_type)
   {
     assert(tube != NULL);
     assert(m_map_tubes.find(tube) != m_map_tubes.end()
@@ -465,7 +465,7 @@ namespace tubex
 
     vector<double> v_x, v_y;
 
-    if(traj->function() == NULL)
+    if(traj->definition_type() == TrajDefnType::MAP_OF_VALUES)
     {
       typename map<double,double>::const_iterator it_scalar_values;
       for(it_scalar_values = traj->sampled_map().begin(); it_scalar_values != traj->sampled_map().end(); it_scalar_values++)

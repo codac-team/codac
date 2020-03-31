@@ -36,10 +36,7 @@ namespace tubex
        */
       CtcStatic(ibex::Ctc *ibex_ctc, bool dynamic_ctc = false);
 
-      /**
-       * \brief Constractor destructor
-       */
-      ~CtcStatic();
+      void contract(std::vector<Domain*>& v_domains);
 
       /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}](\cdot)\big)\f$
@@ -107,6 +104,8 @@ namespace tubex
 
       /**
        * \brief Contracts an array of slices (representing a slice vector)
+       *
+       * Propagates the contractions to the next slices
        *
        * \param v_x_slices the slices to be contracted
        * \param n the dimension of the array

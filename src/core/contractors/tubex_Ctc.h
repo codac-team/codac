@@ -14,30 +14,43 @@
 
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
+#include "tubex_Domain.h"
 
 namespace tubex
 {
   /**
-   * \enum TPropagation
+   * \enum TimePropag
    * \brief Specifies the temporal propagation way (forward or backward in time)
    */
-  enum TPropagation 
+  enum class TimePropag
   {
     FORWARD = 0x01, ///< forward in time (from \f$t^-\f$ to \f$t^+\f$)
     BACKWARD = 0x02 ///< backward in time (from \f$t^+\f$ to \f$t^-\f$)
   };
   
   /**
+   * \brief Allows tests on combinations of propagation ways
+   *
+   * Used for tests such as `if(time_propag & TimePropag::FORWARD) { ... }`
+   *
+   * \param a first TimePropag operand
+   * \param b second TimePropag operand
+   * \return intersection of propagation ways
+   */
+  inline int operator&(TimePropag a, TimePropag b)
+  { return static_cast<int>(static_cast<int>(a) & static_cast<int>(b)); }
+  
+  /**
    * \brief Allows a combination of propagation ways
    *
    * \note For instance: `FORWARD | BACKWARD`
    *
-   * \param a first TPropagation operand
-   * \param b second TPropagation operand
+   * \param a first TimePropag operand
+   * \param b second TimePropag operand
    * \return union of propagation ways, such as `FORWARD | BACKWARD`
    */
-  inline TPropagation operator|(TPropagation a, TPropagation b)
-  { return static_cast<TPropagation>(static_cast<int>(a) | static_cast<int>(b)); }
+  inline TimePropag operator|(TimePropag a, TimePropag b)
+  { return static_cast<TimePropag>(static_cast<int>(a) | static_cast<int>(b)); }
 
   /**
    * \class Ctc
@@ -51,6 +64,8 @@ namespace tubex
        * \brief Creates a contractor
        */
       Ctc();
+
+      virtual void contract(std::vector<Domain*>& v_domains) = 0;
 
       /**
        * \brief Specifies whether the contractor can impact the tube's slicing or not

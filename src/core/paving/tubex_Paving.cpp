@@ -20,7 +20,7 @@ namespace tubex
 {
   // Basics
   
-  Paving::Paving(const IntervalVector& box, int value)
+  Paving::Paving(const IntervalVector& box, SetValue value)
     : Set(box, value), m_root(this)
   {
 
@@ -67,12 +67,12 @@ namespace tubex
     return m_root;
   }
 
-  Paving* Paving::get_first_leaf(int val, bool without_flag)
+  Paving* Paving::get_first_leaf(SetValue val, bool without_flag)
   {
     return const_cast<Paving*>(static_cast<const Paving&>(*this).get_first_leaf(val, without_flag));
   }
 
-  const Paving* Paving::get_first_leaf(int val, bool without_flag) const
+  const Paving* Paving::get_first_leaf(SetValue val, bool without_flag) const
   {
     if(is_leaf() && (value() & val) && (!without_flag || (without_flag && !flag())))
       return this;
@@ -130,7 +130,7 @@ namespace tubex
 
   // Extract methods
 
-  void Paving::get_pavings_intersecting(int val, const IntervalVector& box_to_intersect, vector<const Paving*>& v_subpavings, bool no_degenerated_intersection) const
+  void Paving::get_pavings_intersecting(SetValue val, const IntervalVector& box_to_intersect, vector<const Paving*>& v_subpavings, bool no_degenerated_intersection) const
   {
     assert(box_to_intersect.size() == 2);
     IntervalVector inter = box_to_intersect & m_box;
@@ -151,13 +151,13 @@ namespace tubex
     }
   }
 
-  void Paving::get_neighbours(vector<const Paving*>& v_neighbours, int val, bool without_flag) const
+  void Paving::get_neighbours(vector<const Paving*>& v_neighbours, SetValue val, bool without_flag) const
   {
     v_neighbours.clear();
     vector<const Paving*> v;
     m_root->get_pavings_intersecting(val, m_box, v);
 
-    for(int i = 0 ; i < v.size() ; i++)
+    for(size_t i = 0 ; i < v.size() ; i++)
     {
       if(v[i] != this && (v[i]->value() & val) && (!without_flag || (without_flag && !v[i]->flag())))
         v_neighbours.push_back(v[i]);
@@ -174,7 +174,7 @@ namespace tubex
     reset_flags();
 
     const Paving *p;
-    int val = VALUE_MAYBE | VALUE_IN;
+    SetValue val = SetValue::MAYBE | SetValue::IN;
     vector<ConnectedSubset> v_connected_subsets;
 
     while((p = get_first_leaf(val, true)) != NULL)
@@ -194,7 +194,7 @@ namespace tubex
         vector<const Paving*> v_neighbours;
         e->get_neighbours(v_neighbours, val, true);
 
-        for(int i = 0 ; i < v_neighbours.size() ; i++)
+        for(size_t i = 0 ; i < v_neighbours.size() ; i++)
         {
           v_neighbours[i]->set_flag();
           l.push_back(v_neighbours[i]);

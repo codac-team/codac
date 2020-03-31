@@ -19,8 +19,8 @@ namespace tubex
     : m_tube_ref(tube), m_parent(NULL)
   {
     assert(tube != NULL);
-    assert(k0 >= 0 && k0 < v_tube_slices.size());
-    assert(kf >= 0 && kf < v_tube_slices.size());
+    assert(k0 >= 0 && k0 < (int)v_tube_slices.size()); // todo: use size_t
+    assert(kf >= 0 && kf < (int)v_tube_slices.size()); // todo: use size_t
 
     if(k0 == kf) // leaf, pointer to a slice
     {

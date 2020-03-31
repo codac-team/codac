@@ -63,6 +63,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_polygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_operators.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_RandTrajectory.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_RandTrajectory.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory_operators.cpp
@@ -91,6 +93,12 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Domain.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Domain.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.h
                 )
 
 
@@ -100,7 +108,7 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
 
 add_library(tubex ${SRC})
 target_compile_options(tubex PUBLIC ${IBEX_CFLAGS})
-target_include_directories(tubex PUBLIC ${IBEX_INCLUDE_DIRS})
+target_include_directories(tubex SYSTEM PUBLIC ${IBEX_INCLUDE_DIRS})
 target_include_directories(tubex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic
                                         ${CMAKE_CURRENT_SOURCE_DIR}/graphics
@@ -113,7 +121,8 @@ target_include_directories(tubex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory
                                         ${CMAKE_CURRENT_SOURCE_DIR}/exceptions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/serialize
-                                        ${CMAKE_CURRENT_SOURCE_DIR}/contractors)
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/contractors
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/contract_network)
 target_link_libraries(tubex PUBLIC ${IBEX_LDFLAGS})
 
 

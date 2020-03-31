@@ -18,11 +18,11 @@ using namespace ibex;
 namespace tubex
 {
   ConnectedSubset::ConnectedSubset(const vector<const Paving*>& v_subset_items)
-    : Set(IntervalVector(2, Interval::EMPTY_SET), VALUE_IN | VALUE_MAYBE),
+    : Set(IntervalVector(2, Interval::EMPTY_SET), SetValue::IN | SetValue::MAYBE),
       m_v_subset_items(v_subset_items)
   {
     m_box = IntervalVector(2, Interval::EMPTY_SET);
-    for(int i = 0 ; i < m_v_subset_items.size() ; i++)
+    for(size_t i = 0 ; i < m_v_subset_items.size() ; i++)
       m_box |= m_v_subset_items[i]->box();
   }
 
@@ -55,17 +55,17 @@ namespace tubex
   vector<IntervalVector> ConnectedSubset::get_boxes() const // items of type k
   {
     vector<IntervalVector> v_boxes;
-    for(int i = 0 ; i < m_v_subset_items.size() ; i++)
+    for(size_t i = 0 ; i < m_v_subset_items.size() ; i++)
       v_boxes.push_back(m_v_subset_items[i]->box());
     return v_boxes;
   }
 
-  vector<IntervalVector> ConnectedSubset::get_boundary(int value_boundary, int value_out) const // items of type k-1
+  vector<IntervalVector> ConnectedSubset::get_boundary(SetValue value_boundary, SetValue value_out) const // items of type k-1
   {
     assert(value_out != value_boundary);
     vector<IntervalVector> v_boundaries;
 
-    for(int i = 0 ; i < m_v_subset_items.size() ; i++)
+    for(size_t i = 0 ; i < m_v_subset_items.size() ; i++)
     {
       if(!(m_v_subset_items[i]->value() & value_boundary))
         continue;
@@ -73,7 +73,7 @@ namespace tubex
       vector<const Paving*> v_neighbours;
       m_v_subset_items[i]->get_neighbours(v_neighbours, value_out, false);
 
-      for(int j = 0 ; j < v_neighbours.size() ; j++)
+      for(size_t j = 0 ; j < v_neighbours.size() ; j++)
       {
         IntervalVector inter = m_v_subset_items[i]->box() & v_neighbours[j]->box();
 

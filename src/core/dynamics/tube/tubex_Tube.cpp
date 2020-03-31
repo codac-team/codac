@@ -101,7 +101,7 @@ namespace tubex
       assert(!v_domains.empty());
 
       Interval tube_domain = Interval::EMPTY_SET;
-      for(int i = 0 ; i < v_domains.size() ; i++)
+      for(size_t i = 0 ; i < v_domains.size() ; i++)
       {
         assert(valid_domain(v_domains[i]));
         if(i > 0) assert(v_domains[i].lb() == v_domains[i-1].ub()); // domains continuity
@@ -111,7 +111,7 @@ namespace tubex
       m_first_slice = new Slice(tube_domain, Interval::ALL_REALS);
       Slice *s = m_first_slice;
 
-      for(int i = 0 ; i < v_domains.size() ; i++)
+      for(size_t i = 0 ; i < v_domains.size() ; i++)
       {
         sample(v_domains[i].ub(), s);
         s->set_envelope(v_codomains[i]);
@@ -199,7 +199,7 @@ namespace tubex
       Tube primitive(*this, Interval::ALL_REALS); // a copy of this initialized to [-oo,oo]
       primitive.set(c, primitive.domain().lb());
       CtcDeriv ctc_deriv;
-      ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), FORWARD);
+      ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), TimePropag::FORWARD);
       return primitive;
     }
 
@@ -260,9 +260,11 @@ namespace tubex
         return m_synthesis_tree->domain();
       
       else
+      {
         return m_domain; // redundant information for fast access
         return Interval(first_slice()->domain().lb(),
                         last_slice()->domain().ub());
+      }
     }
     
     const Polygon Tube::polygon_envelope() const
@@ -405,7 +407,7 @@ namespace tubex
     const Slice* Tube::wider_slice() const
     {
       double max_domain_width = 0.;
-      const Slice *wider_slice;
+      const Slice *wider_slice = first_slice();
 
       for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
         if(s->domain().diam() > max_domain_width)
@@ -823,7 +825,7 @@ namespace tubex
       {
         ConvexPolygon p = s_x->polygon(*s_v);
 
-        for(int i = 0 ; i < p.vertices().size() ; i++)
+        for(size_t i = 0 ; i < p.vertices().size() ; i++)
           thicknesses.set(Slice::diam(s_x->interpol(p[i].x().mid(), *s_v)), p[i].x().mid());
 
         s_x = s_x->next_slice();

@@ -88,7 +88,7 @@ int main()
       volume = y.volume() + h.volume();
       cout << "Computation step " << k << "..." << endl;
 
-      for(int i = 0 ; i < v_obs.size() ; i++)
+      for(size_t i = 0 ; i < v_obs.size() ; i++)
       {
         ctc_eval.contract(v_obs[i][1], v_obs[i][0], h[0], h[1]);
         ctc_eval.contract(v_obs[i][1], v_obs[i][2], y[0], y[1]);

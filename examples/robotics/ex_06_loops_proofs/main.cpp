@@ -81,18 +81,16 @@ int main(int argc, char** argv)
     fig_map.add_tube(x, "x", 0, 1);
     fig_map.add_trajectory(&x_truth, "x*", 0, 1);
     fig_map.set_trajectory_color(&x_truth, colormap, &traj_colormap);
-    fig_map.show(0.);
+    fig_map.show(1.);
 
     vector<ConnectedSubset> v_loops;
 
     v_loops = tplane.get_detected_loops();
-    cout << v_loops.size() << endl;
-    for(int i = 0 ; i < v_loops.size() ; i++)
+    for(size_t i = 0 ; i < v_loops.size() ; i++)
       fig_tplane.draw_box(v_loops[i].box(), "red");
 
     v_loops = tplane.get_proven_loops();
-    cout << v_loops.size() << endl;
-    for(int i = 0 ; i < v_loops.size() ; i++)
+    for(size_t i = 0 ; i < v_loops.size() ; i++)
       fig_tplane.draw_box(v_loops[i].box(), "green");
 
     vibes::endDrawing();

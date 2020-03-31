@@ -26,6 +26,7 @@
   # Check that the compiler supports c++11
   include(CheckCXXCompilerFlag)
   check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
+
   if(COMPILER_SUPPORTS_CXX11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   else()
@@ -35,7 +36,15 @@
   if(WIN32)
     # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
     add_definitions(-U__STRICT_ANSI__)
-  endif ()
+  endif()
+
+  add_compile_options(-O3 -Wall)
+  #add_compile_options(-DNDEBUG) # comment for debug mode
+
+
+################################################################################
+# Python binding
+################################################################################
 
   option(OPTIMIZED ON)
   option(DEBUG_MODE OFF)
@@ -48,7 +57,8 @@
     add_compile_options(-DNDEBUG)
   endif()
 
-
+  #add_compile_options(-fPIC) # is it necessary for python binding?
+  #add_subdirectory(pybind11)
 
 
 ################################################################################
@@ -104,7 +114,9 @@ endif()
 # Compile sources
 ################################################################################
 
-  add_subdirectory (src)
+
+  add_subdirectory(src)
+  #add_subdirectory(python)
 
 
 ################################################################################
@@ -140,18 +152,21 @@ endif()
     add_test(NAME rob_04
             COMMAND sh -c "rm -f ../data/redermor/gesmi.txt.tubex ;
                        ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0")
-    add_test(NAME rob_04_with_serializ
-            COMMAND ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0)
-    add_test(NAME rob_05
-            COMMAND ../examples/robotics/ex_05_loops_detec/make/tubex_rob_05 ../data/redermor/gesmi.txt  0)
-    add_test(NAME rob_06
-            COMMAND ../examples/robotics/ex_06_loops_proofs/make/tubex_rob_06 0)
-    add_test(NAME rob_07
-            COMMAND ../examples/robotics/ex_07_dynloc/make/tubex_rob_07 0)
-    add_test(NAME rob_08
-            COMMAND ../examples/robotics/ex_08_tubepaving/make/tubex_rob_08 0)
-    add_test(NAME rob_09
-            COMMAND ../examples/robotics/ex_09_lissajous/make/tubex_rob_09 0)
+      add_test(NAME rob_04_with_serializ
+               COMMAND ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0)
+      add_test(NAME rob_05
+               COMMAND ../examples/robotics/ex_05_loops_detec/make/tubex_rob_05 ../data/redermor/gesmi.txt  0)
+      add_test(NAME rob_06
+               COMMAND ../examples/robotics/ex_06_loops_proofs/make/tubex_rob_06 0)
+      add_test(NAME rob_07
+               COMMAND ../examples/robotics/ex_07_dynloc/make/tubex_rob_07 0)
+      add_test(NAME rob_08
+               COMMAND ../examples/robotics/ex_08_tubepaving/make/tubex_rob_08 0)
+      add_test(NAME rob_09
+               COMMAND ../examples/robotics/ex_09_lissajous/make/tubex_rob_09 0)
+      add_test(NAME rob_10
+               COMMAND ../examples/robotics/ex_10_datasso/make/tubex_rob_10 0)
+
   endif()
 
 

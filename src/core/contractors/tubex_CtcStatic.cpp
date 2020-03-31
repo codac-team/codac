@@ -21,9 +21,45 @@ namespace tubex
 
   }
   
-  CtcStatic::~CtcStatic()
+  void CtcStatic::contract(vector<Domain*>& v_domains)
   {
+    assert(!v_domains.empty());
+    assert(!m_dynamic_ctc && "not implemented for intertemporal constraints");
 
+    for(size_t i = 0 ; i < v_domains.size() ; i++)
+    {
+      assert(v_domains[i]->type() == DomainType::SLICE);
+      if(i != 0)
+        assert(v_domains[i]->slice().domain() == v_domains[i-1]->slice().domain());
+    }
+
+    // If these slices should not be impacted by the contractor
+    if(!v_domains[0]->slice().domain().intersects(m_restricted_domain))
+      return;
+
+    int n = v_domains.size();
+
+    IntervalVector envelope(n);
+    IntervalVector ingate(n);
+    IntervalVector outgate(n);
+
+    for(int i = 0 ; i < n ; i++)
+    {
+      envelope[i] = v_domains[i]->slice().codomain();
+      ingate[i] = v_domains[i]->slice().input_gate();
+      outgate[i] = v_domains[i]->slice().output_gate();
+    }
+
+    m_ibex_ctc->contract(envelope);
+    m_ibex_ctc->contract(ingate);
+    m_ibex_ctc->contract(outgate);
+
+    for(int i = 0 ; i < n ; i++)
+    {
+      v_domains[i]->slice().set_envelope(envelope[i]);
+      v_domains[i]->slice().set_input_gate(ingate[i]);
+      v_domains[i]->slice().set_output_gate(outgate[i]);
+    }
   }
 
   void CtcStatic::contract(TubeVector& x)
@@ -132,7 +168,7 @@ namespace tubex
 
     while(v_x_slices[0] != NULL)
     {
-      // If this slice should not be impacted by the contractor
+      // If these slices should not be impacted by the contractor
       if(!v_x_slices[0]->domain().intersects(m_restricted_domain))
       {
         for(int i = 0 ; i < n ; i++)

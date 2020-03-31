@@ -128,6 +128,7 @@ namespace tubex
       delete m_ibex_f;
     m_ibex_f = new ibex::Function(*f.m_ibex_f);
     Fnc::operator=(f);
+    return *this;
   }
 
   const Function Function::operator[](int i) const
@@ -156,7 +157,7 @@ namespace tubex
     xdyn[0] = "t";
     for(int i = 0 ; i < n ; i++)
     {
-      assert(x[i] != "t" && "forbidden variable name \"t\"");
+      assert(string(x[i]) != "t" && "forbidden variable name \"t\"");
       xdyn[i+1] = x[i];
     }
 
@@ -355,7 +356,8 @@ namespace tubex
     if(nb_vars() != 0)
       assert(x.size() == nb_vars());
 
-    assert(x[0].function() == NULL && "eval function not supported for analytic trajectories");
+    assert(x[0].definition_type() == TrajDefnType::MAP_OF_VALUES
+      && "eval function not supported for analytic trajectories");
     
     TrajectoryVector y(image_dim());
     for(map<double,double>::const_iterator it = x[0].sampled_map().begin() ;

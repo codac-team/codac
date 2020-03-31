@@ -539,7 +539,8 @@ TEST_CASE("Arithmetic on trajs")
     Interval domain(0.,10.);
     double x = 0.8, y = 3.;
 
-    Trajectory trajx, trajy, trajz;
+    Trajectory trajx;
+    Trajectory trajy, trajz;
     trajx.set(x, domain.lb()); trajx.set(x, domain.mid()); trajx.set(x, domain.ub());
     trajy.set(y, domain.lb()); trajy.set(y, domain.mid()); trajy.set(y, domain.ub());
 

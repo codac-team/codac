@@ -23,7 +23,7 @@ namespace tubex
     public:
 
       Fnc(int n, int m, bool is_intertemporal);
-      ~Fnc();
+      virtual ~Fnc();
       const Fnc& operator=(const Fnc& f);
 
       int nb_vars() const;

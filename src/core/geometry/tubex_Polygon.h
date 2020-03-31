@@ -30,7 +30,7 @@ namespace tubex
       int nb_vertices() const;
       const std::vector<Point>& vertices() const;
       const std::vector<Edge> edges() const;
-      const Point operator[](int vertex_id) const;
+      const Point operator[](int vertex_id) const; // todo: use size_t
       const ibex::IntervalVector box() const;
 
       bool is_point() const;

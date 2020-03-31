@@ -101,7 +101,7 @@ int main()
     tubex::CtcFwdBwd ctc_obs_fwdbwd(f_obs);
 
     map<int,TubeVector*> m_x;
-    for(int i = 0 ; i < v_beacons.size() ; i++)
+    for(size_t i = 0 ; i < v_beacons.size() ; i++)
     {
       m_x[i] = new TubeVector(x);
       m_x[i]->resize(8);
@@ -111,7 +111,7 @@ int main()
       (*m_x[i])[5].set(v_beacons[i].pos_box()[1]);
     }
 
-    int a = 0;
+    size_t a = 0;
     double volume_x;
 
     do
@@ -120,14 +120,14 @@ int main()
       volume_x = x.volume();
       cout << "Iteration " << a << endl;
 
-      for(int i = 0 ; i < v_beacons.size() ; i++)
+      for(size_t i = 0 ; i < v_beacons.size() ; i++)
       {
         cout << "  - seamark " << (i+1) << endl;
 
         for(int j = 0 ; j < 4 ; j++)
           (*m_x[i])[j] &= x[j];
 
-        for(int k = 0 ; k < m_obs[i].size() ; k++)
+        for(size_t k = 0 ; k < m_obs[i].size() ; k++)
           ctc_eval.contract(m_obs[i][k][0], m_obs[i][k][1], (*m_x[i])[6], (*m_x[i])[7]);
 
         ctc_obs_fwdbwd.contract(*m_x[i]);

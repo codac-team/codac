@@ -435,7 +435,7 @@ TEST_CASE("Testing set inversion in vector case")
       fig_x.draw_box(x.domain(), inv_val);
       fig_x.show(true);
 
-      for(int i = 0 ; i < v_t.size() ; i++)
+      for(size_t i = 0 ; i < v_t.size() ; i++)
         fig_x.draw_box(v_t[i], x.codomain(), "red[#FFD58C66]");
 
       vibes::endDrawing();
@@ -1216,5 +1216,21 @@ TEST_CASE("Interpol")
     x.shift_domain(10.);
     CHECK(x.domain() == Interval(0.,1.) - 10.);
     CHECK(x(0.5-10.).contains(cos(0.5)));
+  }
+
+  SECTION("Constructor with list")
+  {
+    // Defined by maps of values
+
+    TubeVector test1(4, Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")));
+    TubeVector test2({
+        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)"))
+    });
+
+    CHECK(test1 == test2);
+    CHECK(test1[0] == test2[0]);
   }
 }

@@ -47,15 +47,15 @@ namespace tubex
 
     protected:
 
-      // Binary tree structure
-      TubeTreeSynthesis *m_parent = NULL;
-      TubeTreeSynthesis *m_first_subtree = NULL, *m_second_subtree = NULL;
-
       // Slices connections
       const Slice *m_slice_ref = NULL;
       const Tube *m_tube_ref = NULL;
 
-      int m_nb_slices;
+      // Binary tree structure
+      TubeTreeSynthesis *m_parent = NULL;
+      TubeTreeSynthesis *m_first_subtree = NULL, *m_second_subtree = NULL;
+
+      int m_nb_slices = 1;
       ibex::Interval m_domain, m_codomain;
       std::pair<ibex::Interval,ibex::Interval> m_codomain_bounds;
       std::pair<ibex::Interval,ibex::Interval> m_partial_primitive;

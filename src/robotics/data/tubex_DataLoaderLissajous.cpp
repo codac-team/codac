@@ -79,7 +79,7 @@ namespace tubex
     Interval domain_ = x.domain() & domain;
     for(double t = domain_.lb() ; t < domain_.ub()-dt ; t+= domain_.diam() / nb_obs)
     {
-      for(int i = 0 ; i < map.size() ; i++)
+      for(size_t i = 0 ; i < map.size() ; i++)
       {
         Interval t_(t);
         Interval r = sqrt(pow(x[0](t_) - map[i].pos()[0], 2) + pow(x[1](t_) - map[i].pos()[1], 2));

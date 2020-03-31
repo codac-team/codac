@@ -354,7 +354,7 @@ namespace Catch
         friend bool operator ==(tubex::Point lhs, ApproxPoint const& rhs)
         {
           return lhs == rhs.m_value ||
-            lhs.x().intersects(rhs.m_value.x()) && lhs.y().intersects(rhs.m_value.y());
+            (lhs.x().intersects(rhs.m_value.x()) && lhs.y().intersects(rhs.m_value.y()));
         }
 
         friend bool operator ==(ApproxPoint const& lhs, tubex::Point rhs)
@@ -404,11 +404,11 @@ namespace Catch
           if(lhs == rhs.m_value)
             return true;
 
-          int n = lhs.vertices().size();
+          size_t n = lhs.vertices().size();
           if(n != rhs.m_value.vertices().size())
             return false;
 
-          int i; // looking for first same elements
+          size_t i; // looking for first same elements
           for(i = 0 ; i < n ; i++)
             if(lhs.vertices()[0] == ApproxPoint(rhs.m_value.vertices()[i]))
               break;
@@ -417,7 +417,7 @@ namespace Catch
           if(n > 1)
             way = (lhs.vertices()[1] == ApproxPoint(rhs.m_value.vertices()[(i+1) % n])) ? 1 : -1;
 
-          for(int j = 0 ; j < n ; j++)
+          for(size_t j = 0 ; j < n ; j++)
           {
             if(lhs.vertices()[j] != ApproxPoint(rhs.m_value.vertices()[(i+way*j+n) % n]))
               return false;

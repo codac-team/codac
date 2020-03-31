@@ -43,6 +43,13 @@ namespace tubex
         (*this)[i] = Trajectory(domain, f[i]);
     }
 
+    TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f, double timestep)
+      : TrajectoryVector(domain, f)
+    {
+      assert(timestep > 0.);
+      sample(timestep);
+    }
+
     TrajectoryVector::TrajectoryVector(const map<double,Vector>& map_values)
     {
       typename map<double,Vector>::const_iterator it_map;
@@ -70,6 +77,13 @@ namespace tubex
       assert(n > 0);
       for(int i = 0 ; i < size() ; i++)
         (*this)[i] = x;
+    }
+
+    TrajectoryVector::TrajectoryVector(initializer_list<Trajectory> list)
+      : TrajectoryVector(list.size())
+    {
+      assert(list.size() > 0);
+      std::copy(list.begin(), list.end(), m_v_trajs);
     }
 
     TrajectoryVector::TrajectoryVector(const TrajectoryVector& traj)
@@ -249,25 +263,43 @@ namespace tubex
         (*this)[i].set(y[i], t);
     }
 
-    void TrajectoryVector::truncate_domain(const Interval& t)
+    TrajectoryVector& TrajectoryVector::truncate_domain(const Interval& t)
     {
       assert(valid_domain(t));
       assert(domain().is_superset(t));
       for(int i = 0 ; i < size() ; i++)
         if(!(*this)[i].not_defined())
           (*this)[i].truncate_domain(t);
+      return *this;
     }
 
-    void TrajectoryVector::shift_domain(double shift_ref)
+    TrajectoryVector& TrajectoryVector::shift_domain(double shift_ref)
     {
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].shift_domain(shift_ref);
+      return *this;
     }
 
-    void TrajectoryVector::sample(double dt)
+    TrajectoryVector& TrajectoryVector::sample(double dt)
     {
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].sample(dt);
+      return *this;
+    }
+
+    TrajectoryVector& TrajectoryVector::sample(const Trajectory& x)
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].sample(x);
+      return *this;
+    }
+
+    TrajectoryVector& TrajectoryVector::sample(const TrajectoryVector& x)
+    {
+      assert(size() == x.size());
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].sample(x[i]);
+      return *this;
     }
     
     // Integration

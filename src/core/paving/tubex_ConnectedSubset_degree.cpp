@@ -45,7 +45,7 @@ namespace tubex
 
     int degree = 0;
 
-    for(int i = 0 ; i < v_bi.size() ; i++)
+    for(size_t i = 0 ; i < v_bi.size() ; i++)
     {
       assert(box_dimension(v_bi[i]) == 1 && "wrong dimension");
 
@@ -60,7 +60,7 @@ namespace tubex
 
   bool ConnectedSubset::all_positive_signs(const vector<int>& v_s) const
   {
-    for(int i = 0 ; i < v_s.size() ; i++)
+    for(size_t i = 0 ; i < v_s.size() ; i++)
       if(v_s[i] != 1)
         return false;
     return true;
@@ -96,8 +96,8 @@ namespace tubex
   {
     assert(b.size() == 2 && common_cocoface.size() == 2 && "unhandled dimension case");
 
-    int n = b.size();
-    int k = box_dimension(b);
+    size_t n = b.size();
+    unsigned short k = box_dimension(b);
 
     vector<int> v_s = sign_vector(f, b, common_cocoface);
 
@@ -154,12 +154,12 @@ namespace tubex
         v_s.push_back(0);
 
       vector<IntervalVector> v_cofaces = get_cofaces(b, common_cocoface);
-      for(int j = 0 ; j < v_cofaces.size() ; j++)
+      for(size_t j = 0 ; j < v_cofaces.size() ; j++)
       {
         assert(box_dimension(v_cofaces[j]) == dim+1 && "unhandled dimension case");
         vector<int> v_sj = sign_vector(f, v_cofaces[j], common_cocoface);
 
-        for(int i = 0 ; i < v_sj.size() ; i++)
+        for(size_t i = 0 ; i < v_sj.size() ; i++)
           if(v_sj[i] != 0)
           {
             assert(!(v_s[i] != 0 && v_s[i] != v_sj[i]) && "unknown case?");
@@ -192,20 +192,20 @@ namespace tubex
           vector<IntervalVector> v_bi = get_boundary();
 
           int p = 0;
-          for(int i = 0 ; i < v_bi.size() ; i++)
+          for(size_t i = 0 ; i < v_bi.size() ; i++)
             if(v_bi[i].intersects(b) && (common_cocoface & v_bi[i]).max_diam() != 0.)
               p++;
 
           if(p == 2) // Case of two subsets joined by a single point
           {
-            for(int i = 0 ; i < v_bi.size() ; i++)
+            for(size_t i = 0 ; i < v_bi.size() ; i++)
               if(v_bi[i].intersects(b) && (common_cocoface & v_bi[i]).max_diam() != 0.)
                 v_cofaces.push_back(v_bi[i]);
           }
 
           else
           {
-            for(int i = 0 ; i < v_bi.size() ; i++)
+            for(size_t i = 0 ; i < v_bi.size() ; i++)
               if(v_bi[i].intersects(b))
                 v_cofaces.push_back(v_bi[i]);
           }
@@ -217,7 +217,7 @@ namespace tubex
       case 1: // edge
         {
           vector<const Paving*> v_subpavings;
-          get_paving()->get_pavings_intersecting(VALUE_OUT, b, v_subpavings, true);
+          get_paving()->get_pavings_intersecting(SetValue::OUT, b, v_subpavings, true);
           assert(v_subpavings.size() == 1 && "nb of cofaces for an edge should be 1");
           v_cofaces.push_back(v_subpavings[0]->box());
         }
@@ -245,7 +245,7 @@ namespace tubex
     
     // Inside the subpaving:
     list<Paving*> l;
-    for(int i = 0 ; i < m_v_subset_items.size() ; i++)
+    for(size_t i = 0 ; i < m_v_subset_items.size() ; i++)
       l.push_back((Paving*)m_v_subset_items[i]);
 
     while(!l.empty())

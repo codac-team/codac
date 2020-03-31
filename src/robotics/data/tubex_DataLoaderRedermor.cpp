@@ -27,7 +27,7 @@ namespace tubex
 
   void DataLoaderRedermor::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
   {
-    assert(domain == Interval::ALL_REALS | DynamicalItem::valid_domain(domain));
+    assert(domain == Interval::ALL_REALS || DynamicalItem::valid_domain(domain));
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 
@@ -147,7 +147,7 @@ namespace tubex
 
     // Inflations
     for(map<int,vector<IntervalVector> >::iterator it = m_obs.begin(); it != m_obs.end(); it++)
-      for(int i = 0 ; i < it->second.size() ; i++)
+      for(size_t i = 0 ; i < it->second.size() ; i++)
         it->second[i][1].inflate(8.);
 
     return m_obs;

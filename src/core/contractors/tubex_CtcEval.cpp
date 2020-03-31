@@ -22,6 +22,42 @@ namespace tubex
 
   }
 
+  void CtcEval::contract(vector<Domain*>& v_domains)
+  {
+    assert(v_domains[0]->type() == DomainType::INTERVAL);
+
+    if(v_domains.size() == 4) // full constraint with derivative
+    {
+      // Scalar case:
+      if(v_domains[1]->type() == DomainType::INTERVAL && v_domains[2]->type() == DomainType::TUBE && v_domains[3]->type() == DomainType::TUBE)
+        contract(v_domains[0]->interval(), v_domains[1]->interval(), v_domains[2]->tube(), v_domains[3]->tube());
+
+      // Vector case:
+      else if(v_domains[1]->type() == DomainType::INTERVAL_VECTOR && v_domains[2]->type() == DomainType::TUBE_VECTOR && v_domains[3]->type() == DomainType::TUBE_VECTOR)
+        contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector(), v_domains[3]->tube_vector());
+
+      else
+        assert(false && "unhandled case");
+    }
+
+    else if(v_domains.size() == 3) // simple evaluation without tube contraction
+    {
+      // Scalar case:
+      if(v_domains[1]->type() == DomainType::INTERVAL && v_domains[2]->type() == DomainType::TUBE)
+        contract(v_domains[0]->interval(), v_domains[1]->interval(), v_domains[2]->tube());
+
+      // Vector case:
+      else if(v_domains[1]->type() == DomainType::INTERVAL_VECTOR && v_domains[2]->type() == DomainType::TUBE_VECTOR)
+        contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector());
+
+      else
+        assert(false && "unhandled case");
+    }
+  
+    else
+      assert(false && "unhandled case");
+  }
+
   void CtcEval::enable_temporal_propagation(bool enable_propagation)
   {
     m_propagation_enabled = enable_propagation;
@@ -218,7 +254,7 @@ namespace tubex
 
         // 5. If requested, preserving the initial slicing
 
-          for(int i = 0 ; i < v_gates_to_remove.size() ; i++)
+          for(size_t i = 0 ; i < v_gates_to_remove.size() ; i++)
           {
             // The gate will be lost during the final operation for
             // preserving the slicing. So we need to propagate localy
@@ -324,5 +360,18 @@ namespace tubex
 
     Interval _t(t); IntervalVector _z(z);
     contract(_t, _z, y, w);
+  }
+
+  void CtcEval::contract(Interval& t, Interval& z, const Tube& y)
+  {
+    t &= y.invert(z);
+    z &= y(t);
+  }
+
+  void CtcEval::contract(Interval& t, IntervalVector& z, const TubeVector& y)
+  {
+    assert(y.size() == z.size());
+    t &= y.invert(z);
+    z &= y(t);
   }
 }

@@ -84,7 +84,7 @@ namespace tubex
 
       vector<Interval> v_scalar_codomains[size()];
 
-      for(int i = 0 ; i < v_codomains.size() ; i++)
+      for(size_t i = 0 ; i < v_codomains.size() ; i++)
       {
         if(i > 0) assert(v_codomains[i].size() == v_codomains[i-1].size());
 
@@ -94,6 +94,13 @@ namespace tubex
 
       for(int j = 0 ; j < size() ; j++)
         (*this)[j] = Tube(v_domains, v_scalar_codomains[j]);
+    }
+
+    TubeVector::TubeVector(initializer_list<Tube> list)
+      : m_n(list.size()), m_v_tubes(new Tube[list.size()])
+    {
+      assert(list.size() > 0);
+      std::copy(list.begin(), list.end(), m_v_tubes);
     }
 
     TubeVector::TubeVector(const TubeVector& x)
@@ -162,7 +169,7 @@ namespace tubex
       TubeVector primitive(*this, IntervalVector(size())); // a copy of this initialized to nx[-oo,oo]
       primitive.set(c, primitive.domain().lb());
       CtcDeriv ctc_deriv;
-      ctc_deriv.contract(primitive, static_cast<const TubeVector&>(*this), FORWARD);
+      ctc_deriv.contract(primitive, static_cast<const TubeVector&>(*this), TimePropag::FORWARD);
       return primitive;
     }
 
@@ -723,11 +730,14 @@ namespace tubex
     const TubeVector& TubeVector::inflate(const Vector& rad)
     {
       assert(size() == rad.size());
+
       for(int i = 0 ; i < size() ; i++)
       {
         assert(rad[i] >= 0.);
         (*this)[i].inflate(rad[i]);
       }
+
+      return *this;
     }
 
     const TubeVector& TubeVector::inflate(const TrajectoryVector& rad)
@@ -736,8 +746,11 @@ namespace tubex
       assert(domain() == rad.domain());
       assert(rad.codomain().is_subset(IntervalVector(rad.size(), Interval::POS_REALS))
         && "positive TrajectoryVector");
+      
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].inflate(rad[i]);
+
+      return *this;
     }
 
     void TubeVector::shift_domain(double shift_ref)

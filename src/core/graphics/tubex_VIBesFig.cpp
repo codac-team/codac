@@ -91,9 +91,7 @@ namespace tubex
     box_with_margin[1] += margin * m_view_box[1].diam() * Interval(-1.,1.);
 
     vibes::clearGroup(name(), "transparent_box");
-    vibes::drawBox(box_with_margin[0].lb(), box_with_margin[0].ub(),
-                   box_with_margin[1].lb(), box_with_margin[1].ub(),
-                   vibesParams("figure", name(), "group", "transparent_box"));
+    vibes::drawBox(box_with_margin, vibesParams("figure", name(), "group", "transparent_box"));
     vibes::axisLimits(box_with_margin[0].lb(), box_with_margin[0].ub(),
                       box_with_margin[1].lb(), box_with_margin[1].ub(),
                       name());
@@ -119,23 +117,31 @@ namespace tubex
   void VIBesFig::draw_box(const IntervalVector& box, const string& color, const vibes::Params& params)
   {
     assert(box.size() == 2);
+
+    if(box.is_unbounded())
+      return;
+
     vibes::Params params_this_fig(params);
     m_view_box |= box;
     params_this_fig["figure"] = name();
-    if(color != "") vibes::drawBox(box, color, params_this_fig);
-    else vibes::drawBox(box, params_this_fig);
+
+    if(color != "")
+      vibes::drawBox(box, color, params_this_fig);
+    
+    else
+      vibes::drawBox(box, params_this_fig);
   }
   
   void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const vibes::Params& params)
   {
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
       assert(v_pts[i].size() == 2);
     draw_line(v_pts, "", params);
   }
   
   void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const string& color, const vibes::Params& params)
   {
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
       assert(v_pts[i].size() == 2);
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
@@ -233,7 +239,7 @@ namespace tubex
   
   void VIBesFig::draw_points(const vector<Point>& v_pts, float size, const string& color, const vibes::Params& params)
   {
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
       draw_point(v_pts[i], size, color, params);
   }
 }

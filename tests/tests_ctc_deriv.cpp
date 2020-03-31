@@ -187,7 +187,7 @@ TEST_CASE("CtcDeriv")
     CtcDeriv ctc;
 
     Tube tube_test_fwd(tube);
-    ctc.contract(tube_test_fwd, tubedot, FORWARD);
+    ctc.contract(tube_test_fwd, tubedot, TimePropag::FORWARD);
 
     Tube tube_test_fwdbwd(tube);
     ctc.contract(tube_test_fwdbwd, tubedot);
@@ -212,7 +212,7 @@ TEST_CASE("CtcDeriv")
     CtcDeriv ctc;
 
     Tube tube_test_bwd(tube);
-    ctc.contract(tube_test_bwd, tubedot, BACKWARD);
+    ctc.contract(tube_test_bwd, tubedot, TimePropag::BACKWARD);
 
     Tube tube_test_fwdbwd(tube);
     ctc.contract(tube_test_fwdbwd, tubedot);

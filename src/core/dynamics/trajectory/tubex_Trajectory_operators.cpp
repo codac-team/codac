@@ -19,7 +19,7 @@ namespace tubex
     \
     const Trajectory& Trajectory::fdef(double x) \
     { \
-      assert(function() == NULL && \
+      assert(definition_type() == TrajDefnType::MAP_OF_VALUES && \
         "not supported yet for trajectories defined by a Function"); \
       \
       for(auto& kv : m_map_values) \
@@ -31,12 +31,12 @@ namespace tubex
     const Trajectory& Trajectory::fdef(const Trajectory& x) \
     { \
       assert(domain() == x.domain()); \
-      assert(function() == NULL && x.function() == NULL && \
+      assert(!(definition_type() == TrajDefnType::ANALYTIC_FNC && x.definition_type() == TrajDefnType::ANALYTIC_FNC) && \
         "not supported yet for trajectories defined by a Function"); \
-      /* todo: x could be defined by a Function, in fact */ \
       \
       Trajectory x_sampled(x); \
-      x_sampled.sample(*this); \
+      if(definition_type() == TrajDefnType::ANALYTIC_FNC) \
+        x_sampled.sample(*this); \
       \
       map<double,double> new_map; \
       for(auto const& it : x_sampled.sampled_map()) \

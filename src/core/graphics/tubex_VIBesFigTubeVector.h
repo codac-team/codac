@@ -208,7 +208,7 @@ namespace tubex
        * \param color_type the `TubeColorType` key for which the value will be set
        * \param color the new color to be specified for the given type
        */
-      void set_tubevector_color(const TubeVector *tubevector, int color_type, const std::string& color);
+      void set_tubevector_color(const TubeVector *tubevector, TubeColorType color_type, const std::string& color);
 
       /**
        * \brief Reset the background of a given tube vector

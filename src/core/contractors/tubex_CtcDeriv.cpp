@@ -21,12 +21,45 @@ namespace tubex
 
   }
 
-  void CtcDeriv::contract(Tube& x, const Tube& v, TPropagation t_propa)
+  void CtcDeriv::contract(vector<Domain*>& v_domains)
+  {
+    // Tube scalar case:
+    if(v_domains[0]->type() == DomainType::TUBE && v_domains[1]->type() == DomainType::TUBE)
+    {
+      assert(v_domains.size() == 2);
+      contract(v_domains[0]->tube(), v_domains[1]->tube());
+    }
+
+    // Tube vector case:
+    else if(v_domains[0]->type() == DomainType::TUBE_VECTOR && v_domains[1]->type() == DomainType::TUBE_VECTOR)
+    {
+      assert(v_domains.size() == 2);
+      contract(v_domains[0]->tube_vector(), v_domains[1]->tube_vector());
+    }
+
+    // Slice case:
+    else if(v_domains[0]->type() == DomainType::SLICE)
+    {
+      assert(v_domains.size() % 2 == 0);
+
+      for(int i = 0 ; i < floor(v_domains.size()/2) ; i++)
+      {
+        assert(v_domains[i]->type() == DomainType::SLICE);
+        assert(v_domains[i+v_domains.size()/2]->type() == DomainType::SLICE);
+        contract(v_domains[i]->slice(), v_domains[i+v_domains.size()/2]->slice());
+      }
+    }
+
+    else
+      assert(false && "unhandled case");
+  }
+
+  void CtcDeriv::contract(Tube& x, const Tube& v, TimePropag t_propa)
   {
     assert(x.domain() == v.domain());
     assert(Tube::same_slicing(x, v));
     
-    if(t_propa & FORWARD)
+    if(t_propa & TimePropag::FORWARD)
     {
       Slice *s_x = x.first_slice();
       const Slice *s_v = v.first_slice();
@@ -40,7 +73,7 @@ namespace tubex
       }
     }
     
-    if(t_propa & BACKWARD)
+    if(t_propa & TimePropag::BACKWARD)
     {
       Slice *s_x = x.last_slice();
       const Slice *s_v = v.last_slice();
@@ -55,7 +88,7 @@ namespace tubex
     }
   }
 
-  void CtcDeriv::contract(TubeVector& x, const TubeVector& v, TPropagation t_propa)
+  void CtcDeriv::contract(TubeVector& x, const TubeVector& v, TimePropag t_propa)
   {
     assert(x.size() == v.size());
     assert(x.domain() == v.domain());
@@ -65,7 +98,7 @@ namespace tubex
       contract(x[i], v[i], t_propa);
   }
 
-  void CtcDeriv::contract(Slice& x, const Slice& v, TPropagation t_propa)
+  void CtcDeriv::contract(Slice& x, const Slice& v, TimePropag t_propa)
   {
     assert(x.domain() == v.domain());
     double volume = x.volume() + v.volume();
@@ -82,13 +115,13 @@ namespace tubex
 
     if(m_fast_mode) // Faster contraction without polygons
     {
-      if(t_propa & FORWARD)
+      if(t_propa & TimePropag::FORWARD)
       {
         x.set_envelope(envelope & (ingate + Interval(0.,x.domain().diam()) * v.codomain()));
         x.set_output_gate(outgate & (ingate + x.domain().diam() * v.codomain()));
       }
 
-      if(t_propa & BACKWARD)
+      if(t_propa & TimePropag::BACKWARD)
       {
         x.set_envelope(envelope & (outgate - Interval(0.,x.domain().diam()) * v.codomain()));
         x.set_input_gate(ingate & (outgate - x.domain().diam() * v.codomain()));

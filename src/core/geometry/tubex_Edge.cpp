@@ -97,7 +97,7 @@ namespace tubex
       {
         vector<Edge> v_box_edges;
         push_edges(x, v_box_edges);
-        for(int i = 0 ; i < v_box_edges.size() ; i++)
+        for(size_t i = 0 ; i < v_box_edges.size() ; i++)
           inter |= (*this & v_box_edges[i]).box();
         return inter;
       }

@@ -17,10 +17,10 @@ using namespace ibex;
 
 namespace tubex
 {
-  ColorMap::ColorMap(int interpol_mode)
+  ColorMap::ColorMap(InterpolMode interpol_mode)
     : m_interpol_mode(interpol_mode)
   {
-    assert(interpol_mode == InterpolationMode::RGB || interpol_mode == InterpolationMode::HSV);
+    assert(interpol_mode == InterpolMode::RGB || interpol_mode == InterpolMode::HSV);
   }
   
   const ColorMap& ColorMap::operator=(const ColorMap& x)
@@ -85,13 +85,13 @@ namespace tubex
       
       switch(m_interpol_mode)
       {
-        case InterpolationMode::RGB:
+        case InterpolMode::RGB:
           return make_rgb((float)(rgb_lb.r + (rgb_ub.r - rgb_lb.r) * local_ratio),
                           (float)(rgb_lb.g + (rgb_ub.g - rgb_lb.g) * local_ratio),
                           (float)(rgb_lb.b + (rgb_ub.b - rgb_lb.b) * local_ratio),
                           (float)(rgb_lb.alpha + (rgb_ub.alpha - rgb_lb.alpha) * local_ratio));
 
-        case InterpolationMode::HSV:
+        case InterpolMode::HSV:
         {
           hsv hsv_lb = rgb2hsv(rgb_lb);
           hsv hsv_ub = rgb2hsv(rgb_ub);
@@ -145,7 +145,7 @@ namespace tubex
   
   ColorMap make_haxby()
   {
-    ColorMap map(RGB);
+    ColorMap map(InterpolMode::RGB);
     map.add_color_point(make_rgb(39,90,211), 0);
     map.add_color_point(make_rgb(40,123,245), 1);
     map.add_color_point(make_rgb(45,155,253), 2);
@@ -169,7 +169,7 @@ namespace tubex
   
   ColorMap make_default()
   {
-    ColorMap map(RGB);
+    ColorMap map(InterpolMode::RGB);
     map.add_color_point(make_rgb(10,0,121), 0);
     map.add_color_point(make_rgb(40,0,150), 1);
     map.add_color_point(make_rgb(20,5,175), 2);
@@ -209,7 +209,7 @@ namespace tubex
   
   ColorMap make_blue_tube()
   {
-    ColorMap map(RGB);
+    ColorMap map(InterpolMode::RGB);
     map.add_color_point(make_rgb(76,110,127), 0.);
     map.add_color_point(make_rgb(136,197,228), 1.);
     return map;
@@ -219,7 +219,7 @@ namespace tubex
   
   ColorMap make_rainbow()
   {
-    ColorMap map(HSV);
+    ColorMap map(InterpolMode::HSV);
     for(int h = 300 ; h > 0 ; h-=10)
       map.add_color_point(make_hsv(h,100,100), (300.-h)/300.);
     return map;

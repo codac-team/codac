@@ -27,6 +27,11 @@ namespace tubex
     public:
 
       /**
+       * \brief DynamicalItem destructor
+       */
+      virtual ~DynamicalItem();
+
+      /**
        * \brief Returns the dimension of the object
        *
        * \return n

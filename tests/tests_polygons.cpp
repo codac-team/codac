@@ -529,7 +529,7 @@ TEST_CASE("Polygon")
     CHECK(ApproxIntv(box_inter[0]) == Interval(0.));
     CHECK(ApproxIntv(box_inter[1]) == Interval(3.,7.));
 
-    /*x[0] = Interval(0.,2.); x[1] = Interval(3.); // degenerate case
+    x[0] = Interval(0.,2.); x[1] = Interval(3.); // degenerate case
     box_inter = p & x;
     CHECK(ApproxIntv(box_inter[0]) == Interval(0.,2.));
     CHECK(ApproxIntv(box_inter[1]) == Interval(3.));
@@ -1009,9 +1009,9 @@ TEST_CASE("Polygon")
     Point p3(0.,2.);
     Point p4(2.,2.);
     Point p5(2.2,2.);
-    CHECK(GrahamScan::orientation(p1, p2, p3) == COUNTERCLOCKWISE);
-    CHECK(GrahamScan::orientation(p1, p2, p4) == UNDEFINED);
-    CHECK(GrahamScan::orientation(p1, p2, p5) == CLOCKWISE);
+    CHECK(GrahamScan::orientation(p1, p2, p3) == OrientationInterval::COUNTERCLOCKWISE);
+    CHECK(GrahamScan::orientation(p1, p2, p4) == OrientationInterval::UNDEFINED);
+    CHECK(GrahamScan::orientation(p1, p2, p5) == OrientationInterval::CLOCKWISE);
   }
 
   SECTION("Polygons, Graham scan")
@@ -1109,7 +1109,7 @@ TEST_CASE("Polygon")
     }
 
     vector<Point> v_pts = p.vertices();
-    for(int i = 0 ; i < v_pts.size() ; i++)
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
       CHECK(sqrt(pow(v_pts[i].x() - 0.5, 2) + pow(v_pts[i].y() - 0.5, 2)).is_subset(Interval(0.48,0.52)));
   }
 
@@ -1126,11 +1126,11 @@ TEST_CASE("Polygon")
     v_pts.push_back(Point(6.,1.));
     v_pts.push_back(Point(10.,4.));
 
-    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(2.,2.)) == UNDEFINED);
-    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(4.,4.)) == UNDEFINED);
-    CHECK(GrahamScan::orientation(Point(0.,0.), Point(8.,8.), Point(4.,4.)) == UNDEFINED);
-    CHECK(GrahamScan::orientation(Point(0.,0.), Point(10.,1.), Point(4.,4.)) == COUNTERCLOCKWISE);
-    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(10.,1.)) == CLOCKWISE);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(2.,2.)) == OrientationInterval::UNDEFINED);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(4.,4.)) == OrientationInterval::UNDEFINED);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(8.,8.), Point(4.,4.)) == OrientationInterval::UNDEFINED);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(10.,1.), Point(4.,4.)) == OrientationInterval::COUNTERCLOCKWISE);
+    CHECK(GrahamScan::orientation(Point(0.,0.), Point(2.,2.), Point(10.,1.)) == OrientationInterval::CLOCKWISE);
 
     // Sort n-1 points with respect to the first point.
 
@@ -1158,8 +1158,8 @@ TEST_CASE("Polygon")
       // Remember that, in above sorting, our criteria was
       // to keep the farthest point at the end when more than
       // one points have same angle.
-      int m = 1; // Initialize size of modified array
-      for(int i = 1 ; i < v_pts.size() ; i ++)
+      size_t m = 1; // Initialize size of modified array
+      for(size_t i = 1 ; i < v_pts.size() ; i ++)
       {
         // Keep removing i while angle of i and i+1 is same
         // with respect to p0
@@ -1192,12 +1192,12 @@ TEST_CASE("Polygon")
 
     // Process remaining n-3 points
 
-      for(int i = 3 ; i < m ; i++)
+      for(size_t i = 3 ; i < m ; i++)
       {
         // Keep removing top while the angle formed by
         // points next-to-top, top, and v_pts[i] makes
         // a non-left turn
-        while(s.size() > 1 && GrahamScan::orientation(GrahamScan::next_to_top(s), s.top(), v_pts[i]) == CLOCKWISE)
+        while(s.size() > 1 && GrahamScan::orientation(GrahamScan::next_to_top(s), s.top(), v_pts[i]) == OrientationInterval::CLOCKWISE)
           s.pop();
         s.push(v_pts[i]);
       }
@@ -1260,10 +1260,10 @@ TEST_CASE("Polygon")
 
     // Find the bottommost point
 
-      int id_min = 0;
+      size_t id_min = 0;
       double y_min = v_pts[0].y().lb();
 
-      for(int i = 1 ; i < v_pts.size() ; i++)
+      for(size_t i = 1 ; i < v_pts.size() ; i++)
       {
         double y = v_pts[i].y().lb();
 
@@ -1279,8 +1279,8 @@ TEST_CASE("Polygon")
 
     sort(v_pts.begin(), v_pts.end(), PointsSorter(p1));
 
-    CHECK(GrahamScan::orientation(p1, v_save[2], v_save[3]) == COUNTERCLOCKWISE);
-    CHECK(GrahamScan::orientation(p1, v_save[6], v_save[5]) == COUNTERCLOCKWISE);
+    CHECK(GrahamScan::orientation(p1, v_save[2], v_save[3]) == OrientationInterval::COUNTERCLOCKWISE);
+    CHECK(GrahamScan::orientation(p1, v_save[6], v_save[5]) == OrientationInterval::COUNTERCLOCKWISE);
 
     CHECK(v_pts[0] == p1);
     CHECK(v_pts[1] == v_save[1]);

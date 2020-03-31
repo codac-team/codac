@@ -19,7 +19,7 @@ namespace tubex
   Beacon::Beacon(const Vector& pos)
     : m_pos(pos), m_pos_box(pos)
   {
-    assert(pos.size() == 3);
+    //assert(pos.size() == 3); // todo: clean this structure or remove this class
   }
 
   Beacon::Beacon(const IntervalVector& pos_box)
