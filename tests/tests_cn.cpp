@@ -4,6 +4,7 @@
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcFwdBwd.h"
+#include "tubex_CtcFunction.h"
 #include "vibes.h"
 
 using namespace Catch;
@@ -94,7 +95,7 @@ TEST_CASE("CN simple")
     Tube x(domain, dt, Interval(-10.,10.)), v(domain, dt, Interval(0.));
 
     CtcDeriv ctc_deriv;
-    tubex::CtcStatic ctc_f(new ibex::CtcFwdBwd(*new ibex::Function("x", "xdot", "xdot+sin(x)"))); // algebraic contractor
+    CtcFunction ctc_f("x", "xdot", "xdot=-sin(x)");
 
     ContractorNetwork cn;
     cn.add(ctc_deriv, {x, v});
@@ -109,5 +110,51 @@ TEST_CASE("CN simple")
 
     cn.set_fixedpoint_ratio(0.8);
     cn.contract();
+  }
+
+  SECTION("CtcFunction on scalar or vector cases")
+  {
+    Interval x(0,1), y(-2,3), a(1,20);
+    IntervalVector vx(2,x), vy(2,y), va(2,a);
+    
+    CtcFunction ctc_add("b", "c", "a", "b+c=a");
+
+    {
+      ContractorNetwork cn;
+
+      cn.add(ctc_add, {x,y,a});
+      cn.contract();
+
+      CHECK(x == Interval(0,1));
+      CHECK(y == Interval(0,3));
+      CHECK(a == Interval(1,4));
+    }
+
+    {
+      ContractorNetwork cn;
+
+      cn.add(ctc_add, {vx,vy,va});
+      cn.contract();
+
+      CHECK(vx == IntervalVector(2,Interval(0,1)));
+      CHECK(vy == IntervalVector(2,Interval(0,3)));
+      CHECK(va == IntervalVector(2,Interval(1,4)));
+    }
+  }
+
+  SECTION("CtcFunction on heterogeneous variables")
+  {
+    IntervalVector x{{0,1},{-2,3}};
+    Interval a(1,20);
+    
+    CtcFunction ctc_add("b[2]", "a", "b[0]+b[1]=a");
+
+    ContractorNetwork cn;
+    cn.add(ctc_add, {x,a});
+    cn.contract();
+
+    CHECK(x[0] == Interval(0,1));
+    CHECK(x[1] == Interval(0,3));
+    CHECK(a == Interval(1,4));
   }
 }
