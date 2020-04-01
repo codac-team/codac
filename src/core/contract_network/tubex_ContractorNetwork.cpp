@@ -8,7 +8,6 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <list>
 #include "tubex_ContractorNetwork.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcFwdBwd.h"
@@ -77,34 +76,8 @@ namespace tubex
 
       for(auto& ctc_dom : ctc->domains()) // for each domain related to this contractor
       {
-        double current_volume = ctc_dom->compute_volume(); // new volume after contraction
-
         // If the domain has "changed" after the contraction
-        if(current_volume/ctc_dom->get_saved_volume() < 1.-m_fixedpoint_ratio)
-        {
-          // We activate each contractor related to these domains, according to graph orientation
-
-          // Local deque, for specific order related to this domain
-          deque<Contractor*> ctc_deque;
-
-          for(auto& ctc_of_dom : ctc_dom->contractors()) 
-            if(ctc_of_dom != ctc && !ctc_of_dom->is_active())
-            {
-              ctc_of_dom->set_active(true);
-
-              if(ctc_of_dom->type() == ContractorType::COMPONENT)
-                ctc_deque.push_back(ctc_of_dom);
-
-              else
-                ctc_deque.push_front(ctc_of_dom); // priority
-            }
-
-          // Merging this local deque in the CN one
-          for(auto& c : ctc_deque)
-            m_deque.push_front(c);
-        }
-        
-        ctc_dom->set_volume(current_volume); // updating old volume
+        propagate_ctc_from_domain(ctc_dom, ctc);
       }
     }
 
@@ -123,7 +96,38 @@ namespace tubex
 
     return (double)(clock() - t_start)/CLOCKS_PER_SEC;
   }
-  
+
+  void ContractorNetwork::propagate_ctc_from_domain(Domain *dom, Contractor *ctc_to_avoid)
+  {
+    double current_volume = dom->compute_volume(); // new volume after contraction
+
+    if(current_volume/dom->get_saved_volume() < 1.-m_fixedpoint_ratio)
+    {
+      // We activate each contractor related to these domains, according to graph orientation
+
+      // Local deque, for specific order related to this domain
+      deque<Contractor*> ctc_deque;
+
+      for(auto& ctc_of_dom : dom->contractors()) 
+        if(ctc_of_dom != ctc_to_avoid && !ctc_of_dom->is_active())
+        {
+          ctc_of_dom->set_active(true);
+
+          if(ctc_of_dom->type() == ContractorType::COMPONENT)
+            ctc_deque.push_back(ctc_of_dom);
+
+          else
+            ctc_deque.push_front(ctc_of_dom); // priority
+        }
+
+      // Merging this local deque in the CN one
+      for(auto& c : ctc_deque)
+        m_deque.push_front(c);
+    }
+    
+    dom->set_volume(current_volume); // updating old volume
+  }
+
   double ContractorNetwork::contract_during(double dt, bool verbose)
   {
     double prev_dt = m_contraction_duration_max;
@@ -166,6 +170,7 @@ namespace tubex
     else if(typeid(ctc) == typeid(CtcFwdBwd) || typeid(ctc) == typeid(CtcStatic))
     {
       // todo: check that the related constraint is not intertemporal
+      // otherwise, tube level only
 
       if(v_domains[0].type() == DomainType::TUBE || v_domains[0].type() == DomainType::TUBE_VECTOR)
       {
@@ -177,8 +182,6 @@ namespace tubex
     // (in case of non-intertemporal constraints)
     if(breakdown_to_slice_level)
     {
-      // todo: add tube, tube vectors now? (for component dependencies)
-
       vector<const Slice*> v_slices;
 
       // Vector initialization with first slices of each tube
@@ -242,6 +245,20 @@ namespace tubex
         add_domain(new Domain(dom), abstract_ctc);
       add_contractor(abstract_ctc);
     }
+  }
+  
+  void ContractorNetwork::add_data(Tube& tube, double t, const Interval& y)
+  {
+    Domain *ad = add_domain(new Domain(tube));
+    assert(ad->type() == DomainType::TUBE);
+    ad->add_data(t, y, *this);
+  }
+  
+  void ContractorNetwork::add_data(TubeVector& tube, double t, const IntervalVector& y)
+  {
+    Domain *ad = add_domain(new Domain(tube));
+    assert(ad->type() == DomainType::TUBE_VECTOR);
+    ad->add_data(t, y, *this);
   }
 
   Domain* ContractorNetwork::add_domain(Domain *ad)

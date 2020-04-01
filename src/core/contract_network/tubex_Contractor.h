@@ -16,10 +16,20 @@
 #include "ibex_Ctc.h"
 #include "tubex_Ctc.h"
 #include "tubex_Domain.h"
+#include "tubex_ContractorNetwork.h"
+
+namespace ibex
+{
+  class Ctc;
+}
 
 namespace tubex
 {
   enum class ContractorType { COMPONENT, IBEX, TUBEX };
+
+  class Domain;
+  class ContractorNetwork;
+  class Ctc;
 
   class Contractor
   {

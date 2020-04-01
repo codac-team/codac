@@ -18,12 +18,16 @@
 #include "tubex_Slice.h"
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
+#include "tubex_Contractor.h"
+#include "tubex_ContractorNetwork.h"
 
 namespace tubex
 {
   enum class DomainType { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
 
+  class Ctc;
   class Contractor;
+  class ContractorNetwork;
 
   class Domain
   {
@@ -65,6 +69,8 @@ namespace tubex
       
       friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
+      void add_data(double t, const ibex::Interval& y, ContractorNetwork& cn);
+      void add_data(double t, const ibex::IntervalVector& y, ContractorNetwork& cn);
 
     protected:
 
@@ -78,6 +84,10 @@ namespace tubex
         std::reference_wrapper<tubex::Tube> m_t;
         std::reference_wrapper<tubex::TubeVector> m_tv;
       };
+
+      // todo: update this:
+      std::map<double,double> m_map_data_s_lb, m_map_data_s_ub;
+      std::map<double,ibex::Vector> m_map_data_lb, m_map_data_ub;
 
       std::vector<Contractor*> m_v_ctc;
       double m_volume = 0.;

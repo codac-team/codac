@@ -18,6 +18,8 @@
 
 namespace tubex
 {
+  class Domain;
+  
   /**
    * \enum TimePropag
    * \brief Specifies the temporal propagation way (forward or backward in time)

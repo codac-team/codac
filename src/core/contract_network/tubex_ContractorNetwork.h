@@ -14,11 +14,22 @@
 
 #include <deque>
 #include <initializer_list>
+#include "ibex_Ctc.h"
+#include "tubex_Ctc.h"
 #include "tubex_Domain.h"
 #include "tubex_Contractor.h"
 
+namespace ibex
+{
+  class Ctc;
+}
+
 namespace tubex
 {
+  class Domain;
+  class Contractor;
+  class Ctc;
+
   class ContractorNetwork
   {
     public:
@@ -40,12 +51,16 @@ namespace tubex
       void add(ibex::Ctc& ctc, const std::vector<Domain>& v_domains);
       void add(tubex::Ctc& ctc, const std::vector<Domain>& v_domains);
 
+      void add_data(Tube& tube, double t, const ibex::Interval& y);
+      void add_data(TubeVector& tube, double t, const ibex::IntervalVector& y);
+
 
     protected:
 
       Domain* add_domain(Domain *ad);
       void add_domain(Domain *ad, Contractor *ac);
       void add_contractor(Contractor *&ac);
+      void propagate_ctc_from_domain(Domain *dom, Contractor *ctc_to_avoid = NULL);
 
       std::vector<Contractor*> m_v_ctc;
       std::vector<Domain*> m_v_domains;
@@ -53,6 +68,8 @@ namespace tubex
 
       float m_fixedpoint_ratio = 0.0001;
       double m_contraction_duration_max = std::numeric_limits<double>::infinity();
+
+      friend class Domain;
   };
 }
 

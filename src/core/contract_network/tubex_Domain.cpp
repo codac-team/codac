@@ -353,4 +353,70 @@ namespace tubex
 
     return str;
   }
+  
+  void Domain::add_data(double t, const Interval& y, ContractorNetwork& cn)
+  {
+    assert(m_type == DomainType::TUBE);
+
+    m_map_data_s_lb.emplace(t, y.lb());
+    m_map_data_s_ub.emplace(t, y.ub());
+    Trajectory traj_lb(m_map_data_s_lb);
+    Trajectory traj_ub(m_map_data_s_ub);
+
+    Slice *prev_s = NULL;
+    if(m_t.get().domain().contains(t))
+      prev_s = m_t.get().slice(t)->prev_slice();
+    else if(t > m_t.get().domain().ub())
+      prev_s = m_t.get().last_slice();
+
+    while(prev_s != NULL && prev_s->domain().is_subset(traj_lb.domain()))
+    {
+      Interval new_slice_envelope = (traj_lb(prev_s->domain()) | traj_ub(prev_s->domain()));
+
+      if(!prev_s->codomain().is_superset(new_slice_envelope))
+        break;
+
+      prev_s->set_envelope(new_slice_envelope);
+
+      // Flags a new change on the domain
+      cn.propagate_ctc_from_domain(cn.add_domain(new Domain(*prev_s)));
+
+      prev_s = prev_s->prev_slice();
+    }
+  }
+  
+  void Domain::add_data(double t, const IntervalVector& y, ContractorNetwork& cn)
+  {
+    assert(m_type == DomainType::TUBE_VECTOR);
+    assert(m_tv.get().size() == y.size());
+
+    m_map_data_lb.emplace(t, y.lb());
+    m_map_data_ub.emplace(t, y.ub());
+    TrajectoryVector traj_lb(m_map_data_lb);
+    TrajectoryVector traj_ub(m_map_data_ub);
+
+    for(int i = 0 ; i < y.size() ; i++)
+    {
+      Slice *prev_s = NULL;
+      if(m_tv.get()[i].domain().contains(t))
+        prev_s = m_tv.get()[i].slice(t)->prev_slice();
+      else if(t > m_tv.get()[i].domain().ub())
+        prev_s = m_tv.get()[i].last_slice();
+
+      while(prev_s != NULL && prev_s->domain().is_subset(traj_lb.domain()))
+      {
+        Interval new_slice_envelope = (traj_lb[i](prev_s->domain()) | traj_ub[i](prev_s->domain()));
+
+        if(!prev_s->codomain().is_superset(new_slice_envelope))
+          break;
+
+        prev_s->set_envelope(new_slice_envelope);
+
+        // Flags a new change on the domain
+        cn.propagate_ctc_from_domain(cn.add_domain(new Domain(*prev_s)));
+
+        prev_s = prev_s->prev_slice();
+      }
+    }
+  }
 }
