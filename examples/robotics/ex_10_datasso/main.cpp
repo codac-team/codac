@@ -81,13 +81,13 @@ int main()
 
   /* =========== CREATING CONTRACTORS =========== */
 
-    ibex::CtcFwdBwd ctc_plus(*new ibex::Function("a", "b", "c", "b+c-a")); // algebraic constraint a=b+c
-    ibex::CtcFwdBwd ctc_minus(*new ibex::Function("a", "b", "c", "b-c-a")); // algebraic constraint a=b-c
+    CtcFunction ctc_plus("a", "b", "c", "b+c-a"); // algebraic constraint a=b+c
+    CtcFunction ctc_minus("a", "b", "c", "b-c-a"); // algebraic constraint a=b-c
     pyibex::CtcPolar ctc_polar; // polar constraint (px,py,rho,phi)
-    tubex::CtcConstell ctc_constell(v_map); // constellation constraint
-    tubex::CtcDeriv ctc_deriv; // \dot{x}=v constraint
-    tubex::CtcEval ctc_eval; // p=x(t_i) constraint
-
+    CtcConstell ctc_constell(v_map); // constellation constraint
+    CtcDeriv ctc_deriv; // \dot{x}=v constraint
+    CtcEval ctc_eval; // p=x(t_i) constraint
+    
 
   /* =========== CONTRACTOR NETWORK =========== */
 

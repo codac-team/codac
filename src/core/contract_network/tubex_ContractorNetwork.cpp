@@ -11,6 +11,7 @@
 #include "tubex_ContractorNetwork.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcFwdBwd.h"
+#include "tubex_CtcFunction.h"
 
 using namespace std;
 using namespace ibex;
@@ -167,14 +168,18 @@ namespace tubex
         breakdown_to_slice_level = true; // todo: improve this
     }
 
-    else if(typeid(ctc) == typeid(CtcFwdBwd) || typeid(ctc) == typeid(CtcStatic))
+    else if(typeid(ctc) == typeid(CtcFwdBwd)
+         || typeid(ctc) == typeid(CtcStatic)
+         || typeid(ctc) == typeid(CtcFunction))
     {
       // todo: check that the related constraint is not intertemporal
       // otherwise, tube level only
 
       if(v_domains[0].type() == DomainType::TUBE || v_domains[0].type() == DomainType::TUBE_VECTOR)
       {
-        breakdown_to_slice_level = true; // todo: improve this
+        breakdown_to_slice_level = true;
+        // todo: improve this ^
+        // and check that all domains are either tubes/tubevectors or interval/intervalvectors
       }
     }
 

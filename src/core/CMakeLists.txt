@@ -89,6 +89,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcStatic.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcEval.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcEval.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFunction.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFunction.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
