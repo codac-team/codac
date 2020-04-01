@@ -39,9 +39,9 @@ fi
 
   if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
   then
-    cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}"  -DWITH_CAPD=ON -DCMAKE_INSTALL_PREFIX=/home/julien-damers/libraries/dev/tubex-lib ..
   else
-    cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}"  ..
+    cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}"  -DWITH_CAPD=ON -DCMAKE_INSTALL_PREFIX=/home/julien-damers/libraries/dev/tubex-lib ..
   fi
 
   make
