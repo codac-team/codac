@@ -228,13 +228,26 @@ void export_TubeVector(py::module& m){
         // allow [] operator
       .def("__len__", &TubeVector::size )
       .def("__getitem__", [](TubeVector& s, size_t index) -> Tube&{
-              if (index >= s.size()){
+              if (index >= static_cast<size_t>(s.size())){
                   throw py::index_error();
               }
                 return s[static_cast<int>(index)];
           }, DOCS_TUBEVECTOR_OPERATOR_INDEX_INT, py::return_value_policy::reference_internal)
+
+      .def("__getitem__", [](const TubeVector& s, py::slice slice) -> TubeVector {
+            size_t start, stop, step, slicelength;
+            if (!slice.compute(s.size(), &start, &stop, &step, &slicelength))
+                throw py::error_already_set();
+            if (step != 1){
+                std::cout << "Warning slice step must be equal to 1\n";
+            }
+            
+            // to respect the python convention, the stop index 
+            // is not included in slice
+            return s.subvector(start, start + slicelength-1);
+        })
       .def("__setitem__", [](TubeVector& s, size_t index, Tube& t){
-              if (index >= s.size()){
+              if (index >= static_cast<size_t>(s.size())){
                 throw py::index_error();
               }
               s[static_cast<int>(index)] = t;

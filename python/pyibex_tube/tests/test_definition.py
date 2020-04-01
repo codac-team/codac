@@ -134,30 +134,40 @@ class TestTubeClassFunction(unittest.TestCase):
   # def test_1(self):
   #   f = tubex.Function("t^2")
   #   f2 = tubex.Function("t^2")
-  #   # tube1 = Tube(Interval(-1.,10.), 0.01, f);
-  #   # f3 = tubex.Function("t^2+2")
-  #   print("titititi ")
+  #   tube1 = Tube(Interval(-1.,10.), 0.01, f);
+  #   f3 = tubex.Function("t^2+2")
   #   f4 = tubex.Function(f2)
-    # traj1_inside = Trajectory(Interval(-1.,10.), f2);
-    # print(f4.eval(Interval(-1.,10.)))
+  #   traj1_inside = Trajectory(Interval(-1.,10.), f2);
+  #   print(f4.eval(Interval(-1.,10.)))
 
-    # traj1_outside = Trajectory(Interval(-1.,10.), f3);
+  #   traj1_outside = Trajectory(Interval(-1.,10.), f3);
 
   #   self.assertEqual(tube1.contains(traj1_inside), tubex.YES);
   #   self.assertEqual(tube1.contains(traj1_outside), tubex.NO);
 
-  # def test_2(self):
-  #   tube2 = Tube(Interval(-1.,10.), 0.01, tubex.Function("t^2+[-1,1]"));
-  #   traj3_lb = Trajectory(Interval(-1.,10.), tubex.Function("(t^2)-1"));
-  #   traj3_ub = Trajectory(Interval(-1.,10.), tubex.Function("(t^2)+1"));
-  #   tube3 = Tube(traj3_lb, traj3_ub, 0.01);
-  #   self.assertEqual(tube2.nb_slices(), tube3.nb_slices());
-  #   self.assertEqual(tube2.domain(), tube3.domain());
-  #   self.assertEqual(tube2.codomain(), tube3.codomain());
-  #   self.assertEqual(tube2.volume(), tube3.volume());
-  #   for i in range(tube2.nb_slices()):
-  #     self.assertEqual(tube2(i), tube3(i));
+  def test_2(self):
+    tube2 = Tube(Interval(-1.,10.), 0.01, tubex.Function("t^2+[-1,1]"));
+    traj3_lb = Trajectory(Interval(-1.,10.), tubex.Function("(t^2)-1"));
+    traj3_ub = Trajectory(Interval(-1.,10.), tubex.Function("(t^2)+1"));
+    tube3 = Tube(traj3_lb, traj3_ub, 0.01);
+    self.assertEqual(tube2.nb_slices(), tube3.nb_slices());
+    self.assertEqual(tube2.domain(), tube3.domain());
+    self.assertEqual(tube2.codomain(), tube3.codomain());
+    self.assertEqual(tube2.volume(), tube3.volume());
+    for i in range(tube2.nb_slices()):
+      self.assertEqual(tube2(i), tube3(i)); 
       
+
+  def test_TubeVector_subvector(self):
+    
+    domain = Interval(-10, 10)
+    vtube = TubeVector(Interval(-10, 10), 0.1, tubex.Function("(t+[-1,1]; t^2+[-1,1]; t^3+[-1,1])"))
+    vtube2 = TubeVector(Interval(-10, 10), 0.1, tubex.Function("(t+[-1,1]; t^2+[-1,1])"))
+    
+    self.assertEqual(vtube[:].size(), 3)
+    self.assertEqual(vtube[:1].size(), 1)
+    self.assertEqual(vtube[:2].size(), 2)
+    self.assertTrue(vtube[:2] == vtube2)    
 
 # class TestTubeClassFunction_thick_slices(unittest.TestCase):
 #   SECTION("Tube class - Function (thick slices)")
