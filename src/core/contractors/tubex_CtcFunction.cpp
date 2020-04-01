@@ -16,37 +16,37 @@ using namespace ibex;
 namespace tubex
 {
   CtcFunction::CtcFunction(const char* x1, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, f)), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : m_ibex_fnc(new ibex::Function(x1, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
     assert(m_ibex_fnc->image_dim() == 1);
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, f)), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : m_ibex_fnc(new ibex::Function(x1, x2, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
     assert(m_ibex_fnc->image_dim() == 1);
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, x3, f)), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : m_ibex_fnc(new ibex::Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
     assert(m_ibex_fnc->image_dim() == 1);
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, f)), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
     assert(m_ibex_fnc->image_dim() == 1);
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, f)), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
     assert(m_ibex_fnc->image_dim() == 1);
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, x6, f)), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
     assert(m_ibex_fnc->image_dim() == 1);
   }
@@ -61,7 +61,6 @@ namespace tubex
   {
     assert(!v_domains.empty());
     // todo: check that the constraint is not temporal/intertemporal
-    // todo: allow this constraint for tubes and boxes together?
 
     // Dynamical case (tubes/tubevectors)
     if(v_domains[0]->type() == DomainType::SLICE)
@@ -214,5 +213,21 @@ namespace tubex
     {
       assert(false && "unhandled case (wrong domain type)");
     }
+  }
+
+  const string CtcFunction::parse_f(const char* f)
+  {
+    string str_f(f);
+    string str_eq("=");
+
+    if(str_f.find(str_eq) != string::npos)
+    {
+      str_f.replace(str_f.find(str_eq), str_eq.length(), "-(");
+      str_f += ")";
+    }
+
+    assert(str_f.find(str_eq) == string::npos && "more than one '='");
+
+    return str_f;
   }
 }

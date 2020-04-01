@@ -81,13 +81,13 @@ int main()
 
   /* =========== CREATING CONTRACTORS =========== */
 
-    CtcFunction ctc_plus("a", "b", "c", "b+c-a"); // algebraic constraint a=b+c
-    CtcFunction ctc_minus("a", "b", "c", "b-c-a"); // algebraic constraint a=b-c
+    CtcFunction ctc_plus("a", "b", "c", "a=b+c"); // algebraic constraint a=b+c
+    CtcFunction ctc_minus("a", "b", "c", "a=b-c"); // algebraic constraint a=b-c
     pyibex::CtcPolar ctc_polar; // polar constraint (px,py,rho,phi)
     CtcConstell ctc_constell(v_map); // constellation constraint
     CtcDeriv ctc_deriv; // \dot{x}=v constraint
     CtcEval ctc_eval; // p=x(t_i) constraint
-    
+
 
   /* =========== CONTRACTOR NETWORK =========== */
 

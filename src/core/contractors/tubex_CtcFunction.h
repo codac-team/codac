@@ -12,6 +12,7 @@
 #ifndef __TUBEX_CTCFUNCTION_H__
 #define __TUBEX_CTCFUNCTION_H__
 
+#include <string>
 #include "tubex_Ctc.h"
 #include "ibex_CtcFwdBwd.h"
 
@@ -36,6 +37,8 @@ namespace tubex
       ~CtcFunction();
 
       void contract(std::vector<Domain*>& v_domains);
+
+      static const std::string parse_f(const char* f);
 
     protected:
 
