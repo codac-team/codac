@@ -257,7 +257,6 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
   #include <tubex.h>
 
   using namespace std;
-  using namespace ibex;
   using namespace tubex;
 
   int main()

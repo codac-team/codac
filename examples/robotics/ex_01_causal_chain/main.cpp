@@ -17,7 +17,6 @@
 #include <tubex-rob.h>
 
 using namespace std;
-using namespace ibex;
 using namespace tubex;
 
 #define FINAL_CONDITION 0

@@ -11,12 +11,10 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <ibex.h>
 #include <tubex.h>
 #include <tubex-rob.h>
 
 using namespace std;
-using namespace ibex;
 using namespace tubex;
 
 

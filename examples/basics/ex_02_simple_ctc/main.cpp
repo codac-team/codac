@@ -16,7 +16,6 @@
 #include <tubex.h>
 
 using namespace std;
-using namespace ibex;
 using namespace tubex;
 
 void contract(TubeVector& x)

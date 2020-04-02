@@ -14,13 +14,12 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <ibex.h>
+
 #include <tubex.h>
 #include <tubex-rob.h>
 #include <tubex-3rd.h>
 
 using namespace std;
-using namespace ibex;
 using namespace tubex;
 
 

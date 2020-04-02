@@ -13,7 +13,6 @@
 #include <tubex.h>
 
 using namespace std;
-using namespace ibex;
 using namespace tubex;
 
 int main()

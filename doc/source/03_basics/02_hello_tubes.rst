@@ -8,7 +8,6 @@ The code from the previous section produced a one-slice scalar tube over the tem
   #include <tubex.h>
   
   using namespace std;
-  using namespace ibex;
   using namespace tubex;
   
   int main()
@@ -78,7 +77,6 @@ We will implement it with:
   #include <tubex.h>
   
   using namespace std;
-  using namespace ibex;
   using namespace tubex;
   
   int main()

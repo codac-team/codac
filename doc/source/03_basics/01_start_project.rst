@@ -8,7 +8,6 @@ Tubex is ready to be used on your computer. You can now copy-paste the following
   #include <tubex.h>
   
   using namespace std;
-  using namespace ibex;
   using namespace tubex;
   
   int main()
