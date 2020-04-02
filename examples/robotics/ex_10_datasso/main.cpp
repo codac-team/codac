@@ -91,7 +91,7 @@ int main()
   /* =========== CONTRACTOR NETWORK =========== */
 
     ContractorNetwork cn;
-    cn.add(ctc_deriv, {x, v});
+    //cn.add(ctc_deriv, {x, v});
 
     for(size_t i = 0 ; i < v_obs.size() ; i++)
     {

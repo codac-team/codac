@@ -167,13 +167,16 @@ namespace tubex
 
     if(typeid(ctc) == typeid(CtcEval))
     {
-      assert(v_domains.size() == 4);
+      assert(v_domains.size() == 3 || v_domains.size() == 4);
 
-      static_cast<CtcEval&>(ctc).enable_temporal_propagation(false);
+      if(v_domains.size() == 4) // with derivative information
+      {
+        static_cast<CtcEval&>(ctc).enable_temporal_propagation(false);
 
-      if(m_ctc_deriv == NULL)
-        m_ctc_deriv = new CtcDeriv();
-      add(*m_ctc_deriv, {v_domains[2], v_domains[3]});
+        if(m_ctc_deriv == NULL)
+          m_ctc_deriv = new CtcDeriv();
+        add(*m_ctc_deriv, {v_domains[2], v_domains[3]});
+      }
     }
 
     if(typeid(ctc) == typeid(CtcDeriv))
