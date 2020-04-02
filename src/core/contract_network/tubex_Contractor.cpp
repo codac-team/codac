@@ -9,7 +9,6 @@
  */
 
 #include "tubex_Contractor.h"
-#include "tubex_CtcEval.h"
 
 using namespace std;
 using namespace ibex;
@@ -49,11 +48,7 @@ namespace tubex
   Contractor::Contractor(tubex::Ctc& ctc) 
     : m_type(ContractorType::TUBEX), m_tubex_ctc(ctc)
   {
-    if(typeid(ctc) == typeid(CtcEval))
-    {
-      static_cast<CtcEval&>(ctc).enable_temporal_propagation(false);
-      // todo: automatically add a CtcDeriv to the network if derivative available
-    }
+    
   }
 
   Contractor::~Contractor()

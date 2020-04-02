@@ -18,6 +18,7 @@
 #include "tubex_Ctc.h"
 #include "tubex_Domain.h"
 #include "tubex_Contractor.h"
+#include "tubex_CtcDeriv.h"
 
 namespace ibex
 {
@@ -29,6 +30,7 @@ namespace tubex
   class Domain;
   class Contractor;
   class Ctc;
+  class CtcDeriv;
 
   class ContractorNetwork
   {
@@ -68,6 +70,8 @@ namespace tubex
 
       float m_fixedpoint_ratio = 0.0001;
       double m_contraction_duration_max = std::numeric_limits<double>::infinity();
+
+      CtcDeriv *m_ctc_deriv = NULL;
 
       friend class Domain;
   };

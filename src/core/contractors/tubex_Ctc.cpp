@@ -20,6 +20,11 @@ namespace tubex
 
   }
 
+  Ctc::~Ctc()
+  {
+
+  }
+
   void Ctc::preserve_slicing(bool preserve)
   {
     m_preserve_slicing = preserve;

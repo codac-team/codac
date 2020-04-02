@@ -17,6 +17,8 @@
 
 namespace tubex
 {
+  class Domain;
+
   /**
    * \class CtcDeriv
    * \brief \f$\mathcal{C}_{\frac{d}{dt}}\f$ that contracts a tube \f$[x](\cdot)\f$ with respect

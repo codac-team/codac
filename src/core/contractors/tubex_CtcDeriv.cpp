@@ -10,6 +10,7 @@
 
 #include "tubex_CtcDeriv.h"
 #include "tubex_ConvexPolygon.h"
+#include "tubex_Domain.h"
 
 using namespace std;
 using namespace ibex;
@@ -20,7 +21,7 @@ namespace tubex
   {
 
   }
-
+  
   void CtcDeriv::contract(vector<Domain*>& v_domains)
   {
     // Tube scalar case:

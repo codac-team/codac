@@ -14,7 +14,6 @@
 
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
-#include "tubex_Domain.h"
 
 namespace tubex
 {
@@ -66,6 +65,8 @@ namespace tubex
        * \brief Creates a contractor
        */
       Ctc();
+
+      virtual ~Ctc();
 
       virtual void contract(std::vector<Domain*>& v_domains) = 0;
 

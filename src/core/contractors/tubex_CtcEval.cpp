@@ -11,6 +11,7 @@
 #include <list>
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_Domain.h"
 
 using namespace std;
 using namespace ibex;

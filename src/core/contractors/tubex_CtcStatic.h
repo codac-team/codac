@@ -14,6 +14,7 @@
 
 #include "tubex_Ctc.h"
 #include "ibex_Ctc.h"
+#include "tubex_Domain.h"
 
 namespace tubex
 {

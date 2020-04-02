@@ -9,6 +9,7 @@
  */
 
 #include "tubex_CtcFunction.h"
+#include "tubex_Domain.h"
 
 using namespace std;
 using namespace ibex;

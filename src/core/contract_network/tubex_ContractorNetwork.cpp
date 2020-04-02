@@ -9,9 +9,9 @@
  */
 
 #include "tubex_ContractorNetwork.h"
-#include "tubex_CtcDeriv.h"
 #include "tubex_CtcFwdBwd.h"
 #include "tubex_CtcFunction.h"
+#include "tubex_CtcEval.h"
 
 using namespace std;
 using namespace ibex;
@@ -29,6 +29,9 @@ namespace tubex
       delete dom;
     for(auto& ctc : m_v_ctc)
       delete ctc;
+
+    if(m_ctc_deriv != NULL)
+      delete m_ctc_deriv;
   }
 
   int ContractorNetwork::nb_ctc() const
@@ -161,6 +164,17 @@ namespace tubex
   void ContractorNetwork::add(tubex::Ctc& ctc, const vector<Domain>& v_domains)
   {
     bool breakdown_to_slice_level = false;
+
+    if(typeid(ctc) == typeid(CtcEval))
+    {
+      assert(v_domains.size() == 4);
+
+      static_cast<CtcEval&>(ctc).enable_temporal_propagation(false);
+
+      if(m_ctc_deriv == NULL)
+        m_ctc_deriv = new CtcDeriv();
+      add(*m_ctc_deriv, {v_domains[2], v_domains[3]});
+    }
 
     if(typeid(ctc) == typeid(CtcDeriv))
     {
