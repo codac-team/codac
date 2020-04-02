@@ -226,7 +226,10 @@ namespace tubex
       str_f += ")";
     }
 
-    assert(str_f.find(str_eq) == string::npos && "more than one '='");
+    assert(str_f.find(str_eq) == string::npos && "only one '=' allowed");
+    assert(str_f.find(">") == string::npos
+        && str_f.find("<") == string::npos
+        && "inequalities not supported by this contractor");
 
     return str_f;
   }
