@@ -18,37 +18,37 @@ namespace tubex
   CtcFunction::CtcFunction(const char* x1, const char* f)
     : m_ibex_fnc(new ibex::Function(x1, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* f)
     : m_ibex_fnc(new ibex::Function(x1, x2, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* f)
     : m_ibex_fnc(new ibex::Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f)
     : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f)
     : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f)
     : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::~CtcFunction()
@@ -169,7 +169,8 @@ namespace tubex
             case DomainType::INTERVAL_VECTOR:
             {
               int n_ = dom->interval_vector().size();
-              dom->interval_vector() = box.subvector(i, i+n_);
+              for(int j = 0 ; j < n_ ; j++)
+                dom->interval_vector()[j] = box[i+j];
               i += n_;
             }
             break;
