@@ -35,7 +35,7 @@ In a nutshell, Tubex is a high-level **constraint programming framework** provid
 
 
 Getting started: 2 minutes to Tubex
------------------------------------
+===================================
 
 We only have to define **domains** for our variables and a set of **contractors** to implement our constraints.
 The core of Tubex stands on a **Contractor Network** representing a solver. 
@@ -62,12 +62,13 @@ The problem is summarized by classical state equations:
 
 | **First step.**
 | Defining domains for our variables.
+
 We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t)`, :math:`\dot{\mathbf{x}}(t)`, :math:`\mathbf{u}(t)`. We define three tubes to enclose them:
 
 .. code-block:: c++
   
   float dt = 0.01;                                  // timestep for tubes accuracy
-  Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]
+  Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]=[0,3]
 
   TubeVector x(tdomain, dt, 4);                     // 4d tube for state vectors
   TubeVector xdot(tdomain, dt, 4);                  // 4d tube for derivatives of the states
@@ -91,6 +92,7 @@ Finally, we define the domains for the three observations :math:`(t_i,y_i)` and 
 
 | **Second step.**
 | Defining contractors to deal with the state equations.
+
 We look at the state equations and use contractors to deal with them. The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a landmark, and the evolution function :math:`\mathbf{f}(\mathbf{x},\mathbf{u})=\big(x_4\cos(x_3),x_4\sin(x_3),u_1,u_2\big)` can be handled by custom-built contractors.
 Other contractors already exist in the catalog of contractors.
 
@@ -110,7 +112,7 @@ Other contractors already exist in the catalog of contractors.
   ContractorNetwork cn;                             // creating a network
   cn.add(ctc_f, {xdot, x, u});                      // adding the f constraint
 
-  for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation
+  for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation...
   {
     IntervalVector& p_i = cn.create_var(IntervalVector(2)); // intermediate variable
     cn.add(ctc_dist, {p_i, b[i], obs[i]});          // adding the g constraint
@@ -131,40 +133,60 @@ Other contractors already exist in the catalog of contractors.
 
 *You just solved a non-linear state-estimation without knowledge about initial condition.*
 
-In the examples folder of this library, you will find more advanced problems such as delayed systems, Simultaneous Localization And Mapping (SLAM) or data association problems.
+In the tutorial and in the examples folder of this library, you will find more advanced problems such as delayed systems, Simultaneous Localization And Mapping (SLAM) or data association problems.
 
 
-User manual
------------
+Documentation (/!\\ in progress /!\\)
+=====================================
 
-**User manual in progress**
+*Want to use Tubex?* The first thing to do is install the library:
 
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 1
+ 
+  01_installation/index
+  02_start_project/index
 
-   01_introduction/index
-   02_installation/index
-   03_basics/index
-   10_references/index
-..   04_causal_systems/index
-..   05_contractors/index
-..   06_looped_systems/index
-..   07_graphics/index
-..   08_data/index
-..   09_slices/index
+Then you have two options: read the standalone tutorial about how to use Tubex for mobile robotics (with telling examples), or read the details about the features of Tubex (domains, tubes, contractors, slices, and so on).
 
-Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
+.. toctree::
+  :caption: Tubex tutorial
+  :maxdepth: 1
+
+  tutorial/01_introduction/index
+  tutorial/02_interval_analysis/index
+  tutorial/03_static_rangeonly_loc/index
+  tutorial/04_static_loc/index
+  tutorial/05_dynamic_loc/index
+  tutorial/06_rangeonly_slam/index
+  tutorial/07_data_association/index
+  tutorial/08_realtime_localization/index
+  tutorial/09_distributed_localization/index
+
+.. sidebar:: IBEX
+
+  .. Figure:: ../img/ibex_logo.jpg
+    :align: center
+
+  Note that Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
+  `Read the documentation. <http://www.ibex-lib.org/doc/>`_
+
+.. toctree::
+  :caption: Complete user manual
+  :maxdepth: 1
+
+  manual/01_introduction/index
+  manual/02_variables/index
+  manual/03_domains/index
+  manual/04_contractors/index
+  manual/05_contractor_network/index
+  manual/06_graphics/index
+
+.. Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
 
 The technical documentation is also available here:
 
 - `API technical documentation <./doxygen/html/annotated.html>`_ 
-
-
-Support
--------
-
-You can post bug reports and feature requests on the `GitHub repository <https://github.com/SimonRohou/tubex-lib/>`_.
-
 
 
 Main related publications
@@ -178,37 +200,71 @@ Main related publications
 .. _loopproof-pdf: http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf
 .. |robloc-pdf| replace:: PDF
 .. _robloc-pdf: http://simon-rohou.fr/research/robloc/robloc_toc.pdf
+.. |datasso-pdf| replace:: PDF
+.. _datasso-pdf: http://simon-rohou.fr/research/datasso/datasso_paper.pdf
 
-+--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
-|                    | Title                           | Author(s)                    | Journal / Editor        | Year | Link                |
-+====================+=================================+==============================+=========================+======+=====================+
-|                    |                                 |                              |                         |      |                     |
-| .. _loopproof:     | Proving the existence of loops  | S. Rohou, P. Franek,         | IJRR                    | 2018 | |loopproof-pdf|_    |
-|                    | in robot trajectories           | C. Aubry, L. Jaulin          |                         |      |                     |
-| [Rohou,            |                                 |                              |                         |      |                     |
-| Franek et al. 2018]|                                 |                              |                         |      |                     |
-+--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
-|                    |                                 |                              |                         |      |                     |
-| .. _tubeval:       | Reliable non-linear state       | S. Rohou, L. Jaulin,         | Automatica              | 2018 | |tubeval-pdf|_      |
-|                    | estimation involving time       | L. Mihaylova, F. Le Bars,    |                         |      |                     |
-| [Rohou et al. 2018]| uncertainties                   | S. M. Veres                  |                         |      |                     |
-+--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
-|                    |                                 |                              |                         |      |                     |
-| .. _tubint:        | Guaranteed computation of       | S. Rohou, L. Jaulin,         | RAS                     | 2017 | |tubint-pdf|_       |
-|                    | robot trajectories              | L. Mihaylova, F. Le Bars,    |                         |      |                     |
-| [Rohou et al. 2017]|                                 | S. M. Veres                  |                         |      |                     |
-+--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
-|                    |                                 |                              |                         |      |                     |
-| .. _robloc:        | Reliable robot localization: a  | S. Rohou, L. Jaulin,         | ISTE Ltd, Wiley         | 2019 | |robloc-pdf|_       |
-|                    | constraint-programming approach | L. Mihaylova, F. Le Bars,    |                         |      |                     |
-| [Rohou et al. 2019]| over dynamical systems          | S. M. Veres                  |                         |      |                     |
-+--------------------+---------------------------------+------------------------------+-------------------------+------+---------------------+
++------+------------------+---------------------------------+------------------------------+-------------------------+
+|      |                  |                                 |                              |                         |
+| 2020 | |datasso-pdf|_   | Set-membership state            | S. Rohou, B. Desrochers,     | ICRA Conference         |
+|      |                  | estimation by solving           | L. Jaulin,                   |                         |
+|      |                  | data association                |                              |                         |
++------+------------------+---------------------------------+------------------------------+-------------------------+
+|      |                  |                                 |                              |                         |
+| 2019 | |robloc-pdf|_    | Reliable robot localization: a  | S. Rohou, L. Jaulin,         | ISTE Ltd, Wiley         |
+|      |                  | constraint-programming approach | L. Mihaylova, F. Le Bars,    |                         |
+|      |                  | over dynamical systems          | S. M. Veres                  |                         |
++------+------------------+---------------------------------+------------------------------+-------------------------+
+|      |                  |                                 |                              |                         |
+| 2018 | |loopproof-pdf|_ | Proving the existence of loops  | S. Rohou, P. Franek,         | International Journal   |
+|      |                  | in robot trajectories           | C. Aubry, L. Jaulin          | of Robotics Research    |
+|      |                  |                                 |                              |                         |
+|      |                  |                                 |                              |                         |
++------+------------------+---------------------------------+------------------------------+-------------------------+
+|      |                  |                                 |                              |                         |
+| 2018 | |tubeval-pdf|_   | Reliable non-linear state       | S. Rohou, L. Jaulin,         | Automatica              |
+|      |                  | estimation involving time       | L. Mihaylova, F. Le Bars,    |                         |
+|      |                  | uncertainties                   | S. M. Veres                  |                         |
++------+------------------+---------------------------------+------------------------------+-------------------------+
+|      |                  |                                 |                              |                         |
+| 2017 | |tubint-pdf|_    | Guaranteed computation of       | S. Rohou, L. Jaulin,         | Robotics and Autonomous |
+|      |                  | robot trajectories              | L. Mihaylova, F. Le Bars,    | Systems                 |
+|      |                  |                                 | S. M. Veres                  |                         |
++------+------------------+---------------------------------+------------------------------+-------------------------+
+
+.. --------------------+
+..                     |
+..  .. _datassp:       |
+..                     |
+..  [Rohou et al. 2020]|
+.. --------------------+
+..                     |
+..  .. _robloc:        |
+..                     |
+..  [Rohou et al. 2019]|
+.. --------------------+
+..                     |
+..  .. _loopproof:     |
+..                     |
+..  [Rohou,            |
+..  Franek et al. 2018]|
+.. --------------------+
+..                     |
+..  .. _tubeval:       |
+..                     |
+..  [Rohou et al. 2018]|
+.. --------------------+
+..                     |
+..  .. _tubint:        |
+..                     |
+..  [Rohou et al. 2017]|
+.. --------------------+
 
 
-Licence and development
------------------------
+Support and license
+-------------------
 
-This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
+You can post bug reports and feature requests on the `GitHub repository <https://github.com/SimonRohou/tubex-lib/>`_.
 
 For recent improvements and activities, see the `Github Tubex repository <https://github.com/SimonRohou/tubex-lib>`_.
 A Python version (`pyIbex <http://www.ensta-bretagne.fr/desrochers/pyibex>`_ wrapping) is planned.
+This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
