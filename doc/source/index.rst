@@ -9,10 +9,11 @@ In a nutshell
 
 Tubex is a library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
 
-In the paradigm of constraint programming, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a **reliable** set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
+| **What is constraint programming?**
+| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a **reliable** set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
-In the field of mobile robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapeed robot problems** can be solved in a very few steps.
-Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters.
+| **What about mobile robotics?**
+| In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapeed robot problems** can be solved in a very few steps. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters.
 
 In a nutshell, Tubex is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
 
@@ -45,7 +46,7 @@ In a few steps, a problem is solved by
 2. Take contractors from a catalog of already existing operators, provided in the library
 3. Add the contractors and domains to the Contractor Network
 4. Let the Contractor Network solve the problem 
-5. Obtain a reliable set of feasible variables for our problem
+5. Obtain a reliable set of feasible variables
 
 **For instance.** Let us consider the robotic problem of localization with range-only measurements.
 A robot is described by a state vector :math:`\mathbf{x}=\{x_1,x_2,\psi,\vartheta\}^\intercal` depicting its position, its heading and its speed.
@@ -59,7 +60,8 @@ The problem is summarized by classical state equations:
     y_i=g\big(\mathbf{x}(t_i),\mathbf{b}_i\big)
   \end{array}\right.
 
-**First step.** Defining domains for our variables.
+| **First step.**
+| Defining domains for our variables.
 We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t)`, :math:`\dot{\mathbf{x}}(t)`, :math:`\mathbf{u}(t)`. We define three tubes to enclose them:
 
 .. code-block:: c++
@@ -75,10 +77,10 @@ We assume that we have measurements on the headings :math:`\psi(t)` and :math:`\
 
 .. code-block:: c++
   
-  x[2] = Tube(measured_psi, dt).inflate(0.01);
+  x[2] = Tube(measured_psi, dt).inflate(0.01);      // measured_psi is a set of measurements
   x[3] = Tube(measured_speed, dt).inflate(0.01);
 
-Finally, we define the position of the landmarks and the domains for the observations :math:`(t_i,y_i)`. The distances :math:`y_i` are bounded by :math:`[e_y]=[-0.1,0.1]`.
+Finally, we define the domains for the three observations :math:`(t_i,y_i)` and the position of the landmarks. The distances :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]`.
 
 .. code-block:: c++
   
@@ -87,42 +89,43 @@ Finally, we define the position of the landmarks and the domains for the observa
   vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of 2d landmarks
   vector<double>   t = {0.3, 1.5, 2.0};             // times of measurements
 
-**Second step.** Defining contractors to deal with the state equations.
+| **Second step.**
+| Defining contractors to deal with the state equations.
 We look at the state equations and use contractors to deal with them. The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a landmark, and the evolution function :math:`\mathbf{f}(\mathbf{x},\mathbf{u})=\big(x_4\cos(x_3),x_4\sin(x_3),u_1,u_2\big)` can be handled by custom-built contractors.
 Other contractors already exist in the catalog of contractors.
 
 .. code-block:: c++
 
-  CtcEval ctc_eval;
-  CtcFunction ctc_dist("a[2]", "b[2]", "d", "d = sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)");
-  CtcFunction ctc_f("xdot[4]", "x[4]", "u[2]",
-                   "(xdot[0]-x[3]*cos(x[2]) ; \
-                     xdot[1]-x[3]*sin(x[2]) ; \
-                     xdot[2]-u[0] ; \
-                     xdot[3]-u[1])");
+  CtcEval ctc_eval; // evaluates a trajectory at a given instant
+  CtcFunction ctc_dist("a[2]", "b[2]", "d",
+                    "d = sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)");
+  CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
+                   "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
 
-**Third step.** Adding the contractors to a network, together with there related domains, is as easy as:
+| **Third step.**
+| Adding the contractors to a network, together with there related domains, is as easy as:
 
 .. code-block:: c++
 
-  ContractorNetwork cn;
-  cn.add(ctc_f, {xdot, x, u});
+  ContractorNetwork cn;                             // creating a network
+  cn.add(ctc_f, {xdot, x, u});                      // adding the f constraint
 
-  for(int i = 0 ; i < 3 ; i++) // for each range-only observation
+  for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation
   {
     IntervalVector& p_i = cn.create_var(IntervalVector(2)); // intermediate variable
-    cn.add(ctc_dist, {p_i, b[i], obs[i]});
-    cn.add(ctc_eval, {t[i], p_i, x, v});
-  }
+    cn.add(ctc_dist, {p_i, b[i], obs[i]});          // adding the g constraint
+    cn.add(ctc_eval, {t[i], p_i, x, v});            // link between an observation at t_i,
+  }                                                 //   and all states over [t_0,t_f]
 
-**Fourth step.** Solving the problem.
+| **Fourth step.**
+| Solving the problem.
 
 .. code-block:: c++
 
   cn.contract();
 
-**Fifth step.** Obtain a reliable set of feasible positions: a tube, depicted in blue.
-The three yellow robots illustrate the three instants of observation. The white line is the unknown truth.
+| **Fifth step.**
+| Obtain a reliable set of feasible positions: a tube, depicted in blue. The three yellow robots illustrate the three instants of observation. The white line is the unknown truth.
 
 .. figure:: ../img/rangeonly-nox0.png
 
