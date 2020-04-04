@@ -47,7 +47,7 @@
 ################################################################################
 
   add_compile_options(-fPIC) # is it necessary for python binding?
-  #add_subdirectory(pybind11)
+  add_subdirectory(pybind11)
 
 
 ################################################################################
@@ -80,10 +80,10 @@
 # Looking for Ibex
 ################################################################################
 
-  #find_package(IBEX 2.8.3 REQUIRED)
-  include(FindPkgConfig)
-  pkg_search_module(IBEX REQUIRED ibex) # todo: specify minimum version of IBEX
-  message(STATUS "Found Ibex version ${IBEX_VERSION}")
+  find_package (IBEX REQUIRED)
+  ibex_init_common() # Ibex should have installed this function
+  message (STATUS "Found Ibex version ${IBEX_VERSION}")
+  
 
 
 ################################################################################

@@ -99,11 +99,11 @@ void export_Tube(py::module& m){
       .def("codomain", &Tube::codomain,DOCS_TUBE_CODOMAIN)
       .def("volume", &Tube::volume,DOCS_TUBE_VOLUME)
       .def("__call__", [](Tube& s,int o) { return s(o);}, 
-          DOCS_TUBE_OPERATOR_CALL_INT)
+          DOCS_TUBE_OPERATOR_CALL_INT, py::return_value_policy::reference_internal)
       .def("__call__", [](Tube& s,double o) { return s(o);}, 
-          DOCS_TUBE_OPERATOR_CALL_DOUBLE)
+          DOCS_TUBE_OPERATOR_CALL_DOUBLE, py::return_value_policy::reference_internal)
       .def("__call__", [](Tube& s,const ibex::Interval & o) { return s(o);}, 
-          DOCS_TUBE_OPERATOR_CALL_INTERVAL)
+          DOCS_TUBE_OPERATOR_CALL_INTERVAL, py::return_value_policy::reference_internal)
       .def("eval", &Tube::eval,
           DOCS_TUBE_EVAL_INTERVAL, "t"_a=ibex::Interval::ALL_REALS)
       .def("interpol", (const ibex::Interval (Tube::*)(double,const Tube &) const)&Tube::interpol,

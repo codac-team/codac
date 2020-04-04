@@ -40,6 +40,8 @@ void export_TubeVector(py::module& m){
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INTERVALVECTOR, "domain"_a, "timestep"_a, "codomain"_a)
       .def(py::init<const ibex::Interval &,double,const tubex::Fnc &>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_FNC, "domain"_a, "timestep"_a, "f"_a)
+      .def(py::init<const TrajectoryVector &,double>(),
+          DOCS_TUBEVECTOR_TUBEVECTOR_TRAJECTORYVECTOR_DOUBLE, "traj"_a, "timestep"_a=0)
     //   .def(py::init(
     //       [](const ibex::Interval& domain,double timestep, const tubex::Function& f){
     //           return new TubeVector(domain, timestep, f );
@@ -52,8 +54,6 @@ void export_TubeVector(py::module& m){
       .def(py::init<const TubeVector &,const ibex::IntervalVector &>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_TUBEVECTOR_INTERVALVECTOR, "x"_a, "codomain"_a)
       .def(py::init<int,const Tube &>(),DOCS_TUBEVECTOR_TUBEVECTOR_INT_TUBE, "n"_a, "x"_a)
-      .def(py::init<const TrajectoryVector &,double>(),
-          DOCS_TUBEVECTOR_TUBEVECTOR_TRAJECTORYVECTOR_DOUBLE, "traj"_a, "timestep"_a=0)
       .def(py::init<const TrajectoryVector &,const TrajectoryVector &,double>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_TRAJECTORYVECTOR_TRAJECTORYVECTOR_DOUBLE, "lb"_a, "ub"_a, "timestep"_a=0)
       .def(py::init<const std::string &>(),
@@ -227,14 +227,27 @@ void export_TubeVector(py::module& m){
     
         // allow [] operator
       .def("__len__", &TubeVector::size )
-      .def("__getitem__", [](TubeVector& s, size_t index){
-              if (index >= s.size()){
+      .def("__getitem__", [](TubeVector& s, size_t index) -> Tube&{
+              if (index >= static_cast<size_t>(s.size())){
                   throw py::index_error();
               }
                 return s[static_cast<int>(index)];
           }, DOCS_TUBEVECTOR_OPERATOR_INDEX_INT, py::return_value_policy::reference_internal)
+
+      .def("__getitem__", [](const TubeVector& s, py::slice slice) -> TubeVector {
+            size_t start, stop, step, slicelength;
+            if (!slice.compute(s.size(), &start, &stop, &step, &slicelength))
+                throw py::error_already_set();
+            if (step != 1){
+                std::cout << "Warning slice step must be equal to 1\n";
+            }
+            
+            // to respect the python convention, the stop index 
+            // is not included in slice
+            return s.subvector(start, start + slicelength-1);
+        })
       .def("__setitem__", [](TubeVector& s, size_t index, Tube& t){
-              if (index >= s.size()){
+              if (index >= static_cast<size_t>(s.size())){
                 throw py::index_error();
               }
               s[static_cast<int>(index)] = t;
