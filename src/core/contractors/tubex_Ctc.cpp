@@ -15,7 +15,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  Ctc::Ctc()
+  Ctc::Ctc(bool intertemporal)
+    : m_intertemporal(intertemporal)
   {
 
   }
@@ -38,5 +39,10 @@ namespace tubex
   void Ctc::set_restricted_domain(const Interval& domain)
   {
     m_restricted_domain = domain;
+  }
+
+  bool Ctc::is_intertemporal() const
+  {
+    return m_intertemporal;
   }
 }

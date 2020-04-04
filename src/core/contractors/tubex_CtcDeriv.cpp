@@ -17,7 +17,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDeriv::CtcDeriv() : Ctc()
+  CtcDeriv::CtcDeriv()
+    : Ctc(false)
   {
 
   }

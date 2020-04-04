@@ -5,6 +5,7 @@
 list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_Catan2.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_CtcPolar.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_CtcPolar.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_predefined.h
                 )
 
 

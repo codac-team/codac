@@ -157,4 +157,32 @@ TEST_CASE("CN simple")
     CHECK(x[1] == Interval(0,3));
     CHECK(a == Interval(1,4));
   }
+
+  SECTION("Subvector")
+  {
+    IntervalVector x{{0,1},{-2,3},{1,20}};
+
+    CtcFunction ctc_add("b", "c", "a", "b+c=a");
+
+    ContractorNetwork cn;
+    IntervalVector& sub_x = cn.subvector(x,1,2);
+
+    CHECK(sub_x[0] == Interval(-2,3));
+    CHECK(sub_x[1] == Interval(1,20));
+
+    cn.add(ctc_add, {x[0],x[1],x[2]});
+    cn.contract();
+
+    CHECK(x[0] == Interval(0,1));
+    CHECK(x[1] == Interval(0,3));
+    CHECK(x[2] == Interval(1,4));
+
+    CHECK(sub_x[0] == Interval(0,3));
+    CHECK(sub_x[1] == Interval(1,4));
+
+    sub_x[0] = Interval(1,2);
+    cn.set_all_contractors_active();
+    cn.contract();
+    CHECK(x[1] == Interval(1,2));
+  }
 }

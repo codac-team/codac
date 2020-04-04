@@ -78,20 +78,16 @@ int main()
       vector<IntervalVector> m(v_obs.size(), IntervalVector(2)); // unknown association
     
 
-  /* =========== CREATING CONTRACTORS =========== */
+  /* =========== CUSTOM-BUILT CONTRACTORS =========== */
 
     CtcFunction ctc_plus("a", "b", "c", "a=b+c"); // algebraic constraint a=b+c
     CtcFunction ctc_minus("a", "b", "c", "a=b-c"); // algebraic constraint a=b-c
-    pyibex::CtcPolar ctc_polar; // polar constraint (px,py,rho,phi)
     CtcConstell ctc_constell(v_map); // constellation constraint
-    CtcDeriv ctc_deriv; // \dot{x}=v constraint
-    CtcEval ctc_eval; // p=x(t_i) constraint
 
 
   /* =========== CONTRACTOR NETWORK =========== */
 
     ContractorNetwork cn;
-    //cn.add(ctc_deriv, {x, v});
 
     for(size_t i = 0 ; i < v_obs.size() ; i++)
     {
@@ -109,9 +105,9 @@ int main()
       cn.add(ctc_constell, {m[i]});
       cn.add(ctc_minus, {d, m[i], p});
       cn.add(ctc_plus, {a, psi, y2});
-      cn.add(ctc_polar, {d[0], d[1], y1, a});
-      cn.add(ctc_eval, {t, p, x, v});
-      cn.add(ctc_eval, {t, psi, heading});
+      cn.add(pyibex::ctc::polar, {d[0], d[1], y1, a});
+      cn.add(ctc::eval, {t, p, x, v});
+      cn.add(ctc::eval, {t, psi, heading});
     }
 
     cn.set_fixedpoint_ratio(0.);

@@ -93,15 +93,12 @@ Finally, we define the domains for the three observations :math:`(t_i,y_i)` and 
 | **Second step.**
 | Defining contractors to deal with the state equations.
 
-We look at the state equations and use contractors to deal with them. The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a landmark, and the evolution function :math:`\mathbf{f}(\mathbf{x},\mathbf{u})=\big(x_4\cos(x_3),x_4\sin(x_3),u_1,u_2\big)` can be handled by custom-built contractors.
-Other contractors already exist in the catalog of contractors.
+We look at the state equations and use contractors to deal with them. The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a landmark corresponds to the ``ctc::dist`` contractor provided in the library, and the evolution function :math:`\mathbf{f}(\mathbf{x},\mathbf{u})=\big(x_4\cos(x_3),x_4\sin(x_3),u_1,u_2\big)` can be handled by a custom-built contractor:
 
 .. code-block:: c++
 
-  CtcFunction ctc_dist("a[4]", "b[2]", "d",
-                    "d = sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)");
   CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
-                   "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
+                    "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
 
 | **Third step.**
 | Adding the contractors to a network, together with there related domains, is as easy as:
@@ -114,9 +111,11 @@ Other contractors already exist in the catalog of contractors.
   for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation...
   {
     IntervalVector& p_i = cn.create_var(IntervalVector(4)); // intermediate variable
-    cn.add(ctc_dist, {p_i, b[i], obs[i]});          // adding the g constraint
-    cn.add(ctc::eval, {t[i], p_i, x, v});           // link between an observation at t_i,
-  }                                                 //   and all states over [t_0,t_f]
+    // Adding the distance constraint:
+    cn.add(ctc::dist, {cn.subvector(p_i,0,1), b[i], obs[i]});
+    // Link between an observation at t_i and all states over [t_0,t_f]
+    cn.add(ctc::eval, {t[i], p_i, x, v});
+  }
 
 | **Fourth step.**
 | Solving the problem.
