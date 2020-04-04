@@ -73,9 +73,11 @@ PYBIND11_MODULE(graphics, m){
       .def("show_cursor", &VIBesFigTube::show_cursor,
           DOCS_VIBESFIGTUBE_SHOW_CURSOR_BOOL, "display"_a=true)
       .def("add_tube", &VIBesFigTube::add_tube,
-          DOCS_VIBESFIGTUBE_ADD_TUBE_TUBE_STRING_STRING_STRING, "tube"_a, "name"_a, "color_frgrnd"_a=DEFAULT_FRGRND_COLOR, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR)
+          DOCS_VIBESFIGTUBE_ADD_TUBE_TUBE_STRING_STRING_STRING, "tube"_a, "name"_a, "color_frgrnd"_a=DEFAULT_FRGRND_COLOR, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR,
+          py::keep_alive<1,2>())
       .def("add_tubes", (void (VIBesFigTube::*)(const TubeVector *,const std::string &,const std::string &,const std::string &) )&VIBesFigTube::add_tubes,
-          DOCS_VIBESFIGTUBE_ADD_TUBES_TUBEVECTOR_STRING_STRING_STRING, "tubevector"_a, "name"_a, "color_frgrnd"_a=DEFAULT_FRGRND_COLOR, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR)
+          DOCS_VIBESFIGTUBE_ADD_TUBES_TUBEVECTOR_STRING_STRING_STRING, "tubevector"_a, "name"_a, "color_frgrnd"_a=DEFAULT_FRGRND_COLOR, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR,
+          py::keep_alive<1,2>())
       .def("add_tubes", (void (VIBesFigTube::*)(const TubeVector *,int,int,const std::string &,const std::string &,const std::string &) )&VIBesFigTube::add_tubes,
           DOCS_VIBESFIGTUBE_ADD_TUBES_TUBEVECTOR_INT_INT_STRING_STRING_STRING, "tubevector"_a, "start_index"_a, "end_index"_a, "name"_a, "color_frgrnd"_a=DEFAULT_FRGRND_COLOR, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR)
       .def("set_tube_name", &VIBesFigTube::set_tube_name,
@@ -91,9 +93,11 @@ PYBIND11_MODULE(graphics, m){
       .def("remove_tube", &VIBesFigTube::remove_tube,
           DOCS_VIBESFIGTUBE_REMOVE_TUBE_TUBE, "tube"_a)
       .def("add_trajectory", &VIBesFigTube::add_trajectory,
-          DOCS_VIBESFIGTUBE_ADD_TRAJECTORY_TRAJECTORY_STRING_STRING, "traj"_a, "name"_a, "color"_a=DEFAULT_TRAJ_COLOR)
+          DOCS_VIBESFIGTUBE_ADD_TRAJECTORY_TRAJECTORY_STRING_STRING, "traj"_a, "name"_a, "color"_a=DEFAULT_TRAJ_COLOR,
+          py::keep_alive<1,2>())
       .def("add_trajectories", (void (VIBesFigTube::*)(const TrajectoryVector *,const std::string &,const std::string &) )&VIBesFigTube::add_trajectories,
-          DOCS_VIBESFIGTUBE_ADD_TRAJECTORIES_TRAJECTORYVECTOR_STRING_STRING, "trajvector"_a, "name"_a, "color"_a=DEFAULT_TRAJ_COLOR)
+          DOCS_VIBESFIGTUBE_ADD_TRAJECTORIES_TRAJECTORYVECTOR_STRING_STRING, "trajvector"_a, "name"_a, "color"_a=DEFAULT_TRAJ_COLOR,
+          py::keep_alive<1,2>())
       .def("add_trajectories", (void (VIBesFigTube::*)(const TrajectoryVector *,int,int,const std::string &,const std::string &) )&VIBesFigTube::add_trajectories,
           DOCS_VIBESFIGTUBE_ADD_TRAJECTORIES_TRAJECTORYVECTOR_INT_INT_STRING_STRING, "trajvector"_a, "start_index"_a, "end_index"_a, "name"_a, "color"_a=DEFAULT_TRAJ_COLOR)
       .def("set_trajectory_name", &VIBesFigTube::set_trajectory_name,
