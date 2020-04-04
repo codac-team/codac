@@ -95,7 +95,7 @@ Finally, we define the domains for the three observations :math:`(t_i,y_i)` and 
 
 We look at the state equations and use contractors to deal with them. The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a landmark corresponds to the ``ctc::dist`` contractor provided in the library, and the evolution function :math:`\mathbf{f}(\mathbf{x},\mathbf{u})=\big(x_4\cos(x_3),x_4\sin(x_3),u_1,u_2\big)` can be handled by a custom-built contractor:
 
-.. code-block:: c++
+.. code-block:: 
 
   CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
                     "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
@@ -106,7 +106,7 @@ We look at the state equations and use contractors to deal with them. The distan
 .. code-block:: c++
 
   ContractorNetwork cn;                             // creating a network
-  cn.add(ctc_f, {v, x, u});                         // adding the f constraint
+  cn.add(ctc_f, {v, x, u});                         // adding the f constraint (custom ctc)
 
   for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation...
   {
