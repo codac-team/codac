@@ -1,4 +1,9 @@
-.. _sec-manual-contractor-network-label:
+.. _sec-manual-cn-label:
 
-Contractor Network
-==================
+Contractor Networks
+===================
+
+.. toctree::
+
+  01-cn-solver
+  02-cn-realtime

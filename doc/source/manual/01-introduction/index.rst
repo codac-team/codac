@@ -6,6 +6,9 @@ Introduction
 Tubex is a C++ numerical library based on **tube arithmetic** and **constraint programming**.
 It can be seen as an extension of the `IBEX library <http://www.ibex-lib.org>`_ for dynamical systems.
 
+Constraint programming
+^^^^^^^^^^^^^^^^^^^^^^
+
 Variables and domains
 ---------------------
 
@@ -45,8 +48,8 @@ This is well suited for **proof purposes** as we always consider worst-case poss
 
 ------------------------------------------------------
 
-The API
--------
+Using Tubex in C++ or Python
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The API of Tubex can be broken down into three layers:
 
@@ -75,3 +78,8 @@ Mobile robotics
 Finally, Tubex proposes various realistic applications based on the tools provided in this library. In particular, several examples present an original way to deal with state estimation and mobile robotics.
 
 Marine robotics and underwater exploration provide challenging academic problems to work on. This application field motivated the development of tools related to tubes, and then the proposal of such library.
+
+------------------------------------------------------
+
+What about the IBEX library?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^

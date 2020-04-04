@@ -1,7 +1,7 @@
-.. _sec-tuto-interval-analysis-label:
+.. _sec-manual-intervals-label:
 
-Interval Analysis
-=================
+Intervals and boxes
+===================
 
 We will first only focus on *static* variables that are not evolving with time.
 These variables are reals of :math:`\mathbb{R}` or vectors.

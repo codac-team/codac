@@ -71,7 +71,7 @@ We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t
   Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]=[0,3]
 
   TubeVector x(tdomain, dt, 4);                     // 4d tube for state vectors
-  TubeVector xdot(tdomain, dt, 4);                  // 4d tube for derivatives of the states
+  TubeVector v(tdomain, dt, 4);                     // 4d tube for derivatives of the states
   TubeVector u(tdomain, dt, 2);                     // 2d tube for inputs of the system
 
 We assume that we have measurements on the headings :math:`\psi(t)` and :math:`\vartheta(t)`, with some bounded uncertainties defined by intervals :math:`[e_\psi]=[-0.01,0.01]`, :math:`[e_\vartheta]=[-0.01,0.01]`:
@@ -99,7 +99,7 @@ Other contractors already exist in the catalog of contractors.
 .. code-block:: c++
 
   CtcEval ctc_eval; // evaluates a trajectory at a given instant
-  CtcFunction ctc_dist("a[2]", "b[2]", "d",
+  CtcFunction ctc_dist("a[4]", "b[2]", "d",
                     "d = sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)");
   CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
                    "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
@@ -110,11 +110,11 @@ Other contractors already exist in the catalog of contractors.
 .. code-block:: c++
 
   ContractorNetwork cn;                             // creating a network
-  cn.add(ctc_f, {xdot, x, u});                      // adding the f constraint
+  cn.add(ctc_f, {v, x, u});                         // adding the f constraint
 
   for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation...
   {
-    IntervalVector& p_i = cn.create_var(IntervalVector(2)); // intermediate variable
+    IntervalVector& p_i = cn.create_var(IntervalVector(4)); // intermediate variable
     cn.add(ctc_dist, {p_i, b[i], obs[i]});          // adding the g constraint
     cn.add(ctc_eval, {t[i], p_i, x, v});            // link between an observation at t_i,
   }                                                 //   and all states over [t_0,t_f]
@@ -147,21 +147,7 @@ Documentation (/!\\ in progress /!\\)
   01-installation/index
   02-start-project/index
 
-Then you have two options: read the standalone tutorial about how to use Tubex for mobile robotics (with telling examples), or read the details about the features of Tubex (domains, tubes, contractors, slices, and so on).
-
-.. toctree::
-  :caption: Tubex tutorial
-  :maxdepth: 1
-
-  tutorial/01-introduction/index
-  tutorial/02-interval-analysis/index
-  tutorial/03-static-rangeonly-loc/index
-  tutorial/04-static-loc/index
-  tutorial/05-dynamic-loc/index
-  tutorial/06-rangeonly-slam/index
-  tutorial/07-data-association/index
-  tutorial/08-realtime-loc/index
-  tutorial/09-distributed-loc/index
+Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to use Tubex for mobile robotics, with telling examples.
 
 .. sidebar:: IBEX
 
@@ -172,8 +158,8 @@ Then you have two options: read the standalone tutorial about how to use Tubex f
   `Read the documentation. <http://www.ibex-lib.org/doc/>`_
 
 .. toctree::
-  :caption: Complete user manual
-  :maxdepth: 1
+  :caption: User manual
+  :maxdepth: 2
 
   manual/01-introduction/index
   manual/02-variables/index
@@ -181,6 +167,26 @@ Then you have two options: read the standalone tutorial about how to use Tubex f
   manual/04-contractors/index
   manual/05-contractor-network/index
   manual/06-graphics/index
+
+.. toctree::
+  :caption: Using Tubex for mobile robotics
+  :maxdepth: 1
+
+  tutorial/01-introduction/index
+  tutorial/02-basics/index
+  tutorial/03-static-rangeonly-loc/index
+  tutorial/04-static-loc/index
+  tutorial/05-dynamic-loc/index
+  tutorial/06-rangeonly-slam/index
+  tutorial/07-data-association/index
+  tutorial/08-realtime-loc/index
+  tutorial/09-distributed-loc/index
+
+.. toctree::
+  :caption: Extensions of Tubex
+  :maxdepth: 1
+
+  extensions/01-capd/index
 
 .. Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
 
