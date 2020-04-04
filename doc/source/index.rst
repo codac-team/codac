@@ -98,7 +98,6 @@ Other contractors already exist in the catalog of contractors.
 
 .. code-block:: c++
 
-  CtcEval ctc_eval; // evaluates a trajectory at a given instant
   CtcFunction ctc_dist("a[4]", "b[2]", "d",
                     "d = sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)");
   CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
@@ -116,7 +115,7 @@ Other contractors already exist in the catalog of contractors.
   {
     IntervalVector& p_i = cn.create_var(IntervalVector(4)); // intermediate variable
     cn.add(ctc_dist, {p_i, b[i], obs[i]});          // adding the g constraint
-    cn.add(ctc_eval, {t[i], p_i, x, v});            // link between an observation at t_i,
+    cn.add(ctc::eval, {t[i], p_i, x, v});           // link between an observation at t_i,
   }                                                 //   and all states over [t_0,t_f]
 
 | **Fourth step.**
