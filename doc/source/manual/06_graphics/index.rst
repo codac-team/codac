@@ -1,2 +1,0 @@
-Graphical tools
-===============

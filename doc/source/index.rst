@@ -144,8 +144,8 @@ Documentation (/!\\ in progress /!\\)
 .. toctree::
   :maxdepth: 1
  
-  01_installation/index
-  02_start_project/index
+  01-installation/index
+  02-start-project/index
 
 Then you have two options: read the standalone tutorial about how to use Tubex for mobile robotics (with telling examples), or read the details about the features of Tubex (domains, tubes, contractors, slices, and so on).
 
@@ -153,15 +153,15 @@ Then you have two options: read the standalone tutorial about how to use Tubex f
   :caption: Tubex tutorial
   :maxdepth: 1
 
-  tutorial/01_introduction/index
-  tutorial/02_interval_analysis/index
-  tutorial/03_static_rangeonly_loc/index
-  tutorial/04_static_loc/index
-  tutorial/05_dynamic_loc/index
-  tutorial/06_rangeonly_slam/index
-  tutorial/07_data_association/index
-  tutorial/08_realtime_localization/index
-  tutorial/09_distributed_localization/index
+  tutorial/01-introduction/index
+  tutorial/02-interval-analysis/index
+  tutorial/03-static-rangeonly-loc/index
+  tutorial/04-static-loc/index
+  tutorial/05-dynamic-loc/index
+  tutorial/06-rangeonly-slam/index
+  tutorial/07-data-association/index
+  tutorial/08-realtime-loc/index
+  tutorial/09-distributed-loc/index
 
 .. sidebar:: IBEX
 
@@ -175,12 +175,12 @@ Then you have two options: read the standalone tutorial about how to use Tubex f
   :caption: Complete user manual
   :maxdepth: 1
 
-  manual/01_introduction/index
-  manual/02_variables/index
-  manual/03_domains/index
-  manual/04_contractors/index
-  manual/05_contractor_network/index
-  manual/06_graphics/index
+  manual/01-introduction/index
+  manual/02-variables/index
+  manual/03-domains/index
+  manual/04-contractors/index
+  manual/05-contractor-network/index
+  manual/06-graphics/index
 
 .. Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
 

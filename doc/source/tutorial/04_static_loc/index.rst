@@ -1,2 +1,0 @@
-Range-and-bearing localization
-==============================
