@@ -13,6 +13,8 @@
 #include "tubex_CtcFwdBwd.h"
 #include "tubex_CtcFunction.h"
 
+#include "ibex_IntervalVector.h"
+
 using namespace std;
 using namespace ibex;
 
@@ -50,6 +52,17 @@ namespace tubex
   {
     assert(Interval(0.,1).contains(r));
     m_fixedpoint_ratio = r;
+  }
+
+  void ContractorNetwork::set_all_contractors_active()
+  {
+    m_deque.clear();
+
+    for(auto& ctc : m_v_ctc)
+    {
+      ctc->set_active(true);
+      add_to_queue(ctc, m_deque);
+    }
   }
 
   double ContractorNetwork::contract(bool verbose)
@@ -113,12 +126,7 @@ namespace tubex
         if(ctc_of_dom != ctc_to_avoid && !ctc_of_dom->is_active())
         {
           ctc_of_dom->set_active(true);
-
-          if(ctc_of_dom->type() == ContractorType::COMPONENT)
-            ctc_deque.push_back(ctc_of_dom);
-
-          else
-            ctc_deque.push_front(ctc_of_dom); // priority
+          add_to_queue(ctc_of_dom, ctc_deque);
         }
 
       // Merging this local deque in the CN one
@@ -290,38 +298,38 @@ namespace tubex
 
       if(ad->type() == DomainType::TUBE_VECTOR)
       {
-        Contractor *ac_link = new Contractor();
-        add_domain(new Domain(ad->tube_vector()), ac_link); // adding vector
+        Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
+        add_domain(new Domain(ad->tube_vector()), ac_component); // adding vector
         for(int i = 0 ; i < ad->tube_vector().size() ; i++)
-          add_domain(new Domain(ad->tube_vector()[i]), ac_link); // adding its components
-        add_contractor(ac_link);
+          add_domain(new Domain(ad->tube_vector()[i]), ac_component); // adding its components
+        add_contractor(ac_component);
       }
 
       else if(ad->type() == DomainType::INTERVAL_VECTOR)
       {
-        Contractor *ac_link = new Contractor();
-        add_domain(new Domain(ad->interval_vector()), ac_link); // adding vector
+        Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
+        add_domain(new Domain(ad->interval_vector()), ac_component); // adding vector
         for(int i = 0 ; i < ad->interval_vector().size() ; i++)
-          add_domain(new Domain(ad->interval_vector()[i]), ac_link); // adding its components
-        add_contractor(ac_link);
+          add_domain(new Domain(ad->interval_vector()[i]), ac_component); // adding its components
+        add_contractor(ac_component);
       }
 
       else if(ad->type() == DomainType::TUBE)
       {
         // Dependencies tube <-> slice
-        Contractor *ac_link = new Contractor();
-        add_domain(new Domain(ad->tube()), ac_link); // adding tube
+        Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
+        add_domain(new Domain(ad->tube()), ac_component); // adding tube
         for(Slice *s = ad->tube().first_slice() ; s != NULL ; s = s->next_slice())
-          add_domain(new Domain(*s), ac_link); // adding one of its slices
-        add_contractor(ac_link);
+          add_domain(new Domain(*s), ac_component); // adding one of its slices
+        add_contractor(ac_component);
 
         // Dependencies slice <-> slice
         for(Slice *s = ad->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
         {
-          Contractor *ac_link_slices = new Contractor();
-          add_domain(new Domain(*s), ac_link_slices);
-          add_domain(new Domain(*(s->next_slice())), ac_link_slices);
-          add_contractor(ac_link_slices);
+          Contractor *ac_component_slices = new Contractor(ContractorType::COMPONENT);
+          add_domain(new Domain(*s), ac_component_slices);
+          add_domain(new Domain(*(s->next_slice())), ac_component_slices);
+          add_contractor(ac_component_slices);
         }
       }
 
@@ -349,11 +357,36 @@ namespace tubex
       }
     
     m_v_ctc.push_back(ac);
+    add_to_queue(ac, m_deque);
+  }
+
+  IntervalVector& ContractorNetwork::subvector(IntervalVector& iv, int start_index, int end_index)
+  {
+    // todo: assert here on indexes
+
+    IntervalVector *subvector = new IntervalVector(end_index - start_index + 1);
+
+    for(int i = start_index ; i <= end_index ; i++)
+    {
+      Contractor *ac_eq = new Contractor(ContractorType::EQUALITY);
+      add_domain(new Domain((*subvector)[i-start_index]), ac_eq); // adding vector
+      add_domain(new Domain(iv[i]), ac_eq); // adding vector
+      add_contractor(ac_eq);
+
+      (*subvector)[i-start_index] = iv[i];
+    }
+
+    return add_domain(new Domain(*subvector))->interval_vector();
+  }
+
+  void ContractorNetwork::add_to_queue(Contractor *ac, deque<Contractor*>& ctc_deque)
+  {
+    // todo: propagate for EQUALITY contractors even in case of poor contractions?
 
     if(ac->type() == ContractorType::COMPONENT)
-      m_deque.push_back(ac);
+      ctc_deque.push_back(ac);
 
     else
-      m_deque.push_front(ac); // priority
+      ctc_deque.push_front(ac); // priority
   }
 }
