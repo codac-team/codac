@@ -97,13 +97,33 @@ script:
   - cd build
   
   # Without synthesis tree
-  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
-  - make
-  - sudo make install
-  - make test
-  
+    # Building lib + tests
+    - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
+    - make
+    - sudo make install
+    # Building the examples
+    - cd ../examples
+    - find . -type d -name build -prune -exec rm -rf {} \;
+    - cd basics
+    - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    - cd ../robotics
+    - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    - cd ../../build
+    # Testing
+    - make test
+    
   # With synthesis tree for all created tubes
-  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
-  - make
-  - sudo make install
-  - make test
+    # Building lib + tests
+    - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
+    - make
+    - sudo make install
+    # Building the examples
+    - cd ../examples
+    - find . -type d -name build -prune -exec rm -rf {} \;
+    - cd basics
+    - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    - cd ../robotics
+    - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    - cd ../../build
+    # Testing
+    - make test
