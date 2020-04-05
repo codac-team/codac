@@ -52,7 +52,7 @@ before_install:
   - eval "${MATRIX_EVAL}"
 
 install:
-  #- sudo pip install breathe # for documentation
+  #- sudo pip install breathe sphinx-tabs # for documentation
 
   # IBEX
   
