@@ -4,7 +4,7 @@
 
   cmake_minimum_required(VERSION 3.0.2)
 
-  project(TUBEX VERSION 2.0.0 LANGUAGES CXX)
+  project(TUBEX VERSION 2.1.0 LANGUAGES CXX)
   set(TUBEX_DESCRIPTION "Library providing tools to guarantee computations over sets of trajectories")
   set(TUBEX_URL "http://simon-rohou.fr/research/tubex-lib")
 

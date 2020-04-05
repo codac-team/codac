@@ -1,5 +1,12 @@
 .. tubex-lib documentation master file
 
+..    # with overline, for parts
+..  * with overline, for chapters
+..  =, for sections
+..  -, for subsections
+..  ^, for subsubsections
+..  ", for paragraphs
+
 ##########################################
 Tubex: constraint-programming for robotics
 ##########################################
@@ -16,6 +23,23 @@ Tubex is a library providing tools for **constraint programming** over reals and
 | In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapeed robot problems** can be solved in a very few steps. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters.
 
 In a nutshell, Tubex is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
+
+
+.. rubric:: Keywords
+
+.. hlist::
+  :columns: 3
+
+  * constraint-programming
+  * mobile robotics
+  * interval-analysis
+  * dynamical-systems
+  * tubes
+  * localization
+  * state-estimation
+  * SLAM
+
+
 
 .. It is available in C++ and Python.
 
@@ -155,16 +179,23 @@ Then you have two options: read the details about the features of Tubex (domains
   Note that Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
   `Read the documentation. <http://www.ibex-lib.org/doc/>`_
 
+
 .. toctree::
   :caption: User manual
-  :maxdepth: 2
+  :maxdepth: 3
 
   manual/01-introduction/index
   manual/02-variables/index
   manual/03-domains/index
   manual/04-contractors/index
+
   manual/05-contractor-network/index
+    
   manual/06-graphics/index
+
+.. versionadded:: 2.1.0
+   The Contractor Network tool.
+
 
 .. toctree::
   :caption: Using Tubex for mobile robotics
@@ -180,6 +211,7 @@ Then you have two options: read the details about the features of Tubex (domains
   tutorial/08-realtime-loc/index
   tutorial/09-distributed-loc/index
 
+
 .. toctree::
   :caption: Extensions of Tubex
   :maxdepth: 1
@@ -188,24 +220,29 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
 
-The technical documentation is also available here:
 
-- `API technical documentation <./doxygen/html/annotated.html>`_ 
+.. seealso::
+
+  The `API technical documentation <./doxygen/html/annotated.html>`_  of the library.
+
 
 
 Main related publications
--------------------------
+=========================
 
-.. |tubint-pdf| replace:: PDF
-.. _tubint-pdf: http://simon-rohou.fr/research/tubint/tubint_paper.pdf
-.. |tubeval-pdf| replace:: PDF
-.. _tubeval-pdf: http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf
-.. |loopproof-pdf| replace:: PDF
-.. _loopproof-pdf: http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf
-.. |robloc-pdf| replace:: PDF
-.. _robloc-pdf: http://simon-rohou.fr/research/robloc/robloc_toc.pdf
+.. |polar-pdf| replace:: PDF
+.. _polar-pdf: https://www.ensta-bretagne.fr/jaulin/paper_polar.pdf
 .. |datasso-pdf| replace:: PDF
 .. _datasso-pdf: http://simon-rohou.fr/research/datasso/datasso_paper.pdf
+.. |robloc-pdf| replace:: PDF
+.. _robloc-pdf: http://simon-rohou.fr/research/robloc/robloc_toc.pdf
+.. |loopproof-pdf| replace:: PDF
+.. _loopproof-pdf: http://simon-rohou.fr/research/loopproof/loopproof_paper.pdf
+.. |tubeval-pdf| replace:: PDF
+.. _tubeval-pdf: http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf
+.. |tubint-pdf| replace:: PDF
+.. _tubint-pdf: http://simon-rohou.fr/research/tubint/tubint_paper.pdf
+
 
 +------+------------------+---------------------------------+------------------------------+-------------------------+
 |      |                  |                                 |                              |                         |
@@ -233,6 +270,11 @@ Main related publications
 | 2017 | |tubint-pdf|_    | Guaranteed computation of       | S. Rohou, L. Jaulin,         | Robotics and Autonomous |
 |      |                  | robot trajectories              | L. Mihaylova, F. Le Bars,    | Systems                 |
 |      |                  |                                 | S. M. Veres                  |                         |
++------+------------------+---------------------------------+------------------------------+-------------------------+
+|      |                  |                                 |                              |                         |
+| 2016 | |polar-pdf|_     | A Minimal contractor for the    | B. Desrochers,               | Engineering             |
+|      |                  | Polar equation                  | L. Jaulin                    | Applications of         |
+|      |                  |                                 |                              | Artificial Intelligence |
 +------+------------------+---------------------------------+------------------------------+-------------------------+
 
 .. --------------------+
@@ -265,7 +307,7 @@ Main related publications
 
 
 Support and license
--------------------
+===================
 
 You can post bug reports and feature requests on the `GitHub repository <https://github.com/SimonRohou/tubex-lib/>`_.
 
