@@ -1,15 +1,22 @@
+/** 
+ *  CAPD to Tubex
+ * ----------------------------------------------------------------------------
+ *  \date       2020
+ *  \author     Julien Damers
+ *  \copyright  Copyright 2020 Tubex
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
+
 #include "tubex_capd2tubex.h"
-#include "time.h"
+#include "capd/capdlib.h"
 
 using namespace std;
 using namespace capd;
 using namespace ibex;
 using namespace tubex;
 
-
-
 using json = nlohmann::json;
-
 
 namespace tubex
 {
@@ -172,7 +179,7 @@ namespace tubex
         IntervalVector current_box(ibex_curve[0].size());
         IntervalVector mid_box(ibex_curve[0].size());
 
-        for(int i=0; i<ibex_curve.size()-1;i++)
+        for(size_t i=0; i<ibex_curve.size()-1;i++)
         {   
             ibex::IntervalVector current_box = ibex_curve[i];
 
