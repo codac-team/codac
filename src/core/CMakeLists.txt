@@ -97,6 +97,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Domain.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Domain.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.cpp
@@ -140,8 +142,6 @@ foreach(srcfile ${SRC})
     file(COPY ${srcfile} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
   endif()
 endforeach()
-list(APPEND HDR ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predefined.h)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predefined.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
 
 # Generates a tubex.h file
 set(TUBEX_MAIN_HEADER ${CMAKE_CURRENT_BINARY_DIR}/tubex.h)

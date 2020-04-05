@@ -20,9 +20,9 @@ namespace tubex
 {
   namespace ctc
   {
-    CtcDeriv deriv; // derivative constraint (x,v)
-    CtcEval eval; // evaluation constraint (t,z,y,w)
-    CtcDistance dist; // distance constraint (a,b,d)
+    extern CtcDeriv deriv; // derivative constraint (x,v)
+    extern CtcEval eval; // evaluation constraint (t,z,y,w)
+    extern CtcDistance dist; // distance constraint (a,b,d)
   }
 }
 

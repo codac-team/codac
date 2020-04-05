@@ -5,7 +5,7 @@
 list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_Catan2.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_CtcPolar.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_CtcPolar.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_predefined.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_predef_contractors.h
                 )
 set (LIB_3RD ${IBEX_LDFLAGS} ${TUBEX_LDFLAGS})
 
@@ -82,7 +82,7 @@ file(COPY ${TUBEX_3RD_MAIN_HEADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../..
 
 if(WITH_CAPD)
   foreach(srcfile_CAPD ${SRC_CAPD})
-    if(srcfile_CAPD MATCHES "\\.h$" OR srcfile MATCHES "\\.hpp$")
+    if(srcfile_CAPD MATCHES "\\.h$" OR srcfile_CAPD MATCHES "\\.hpp$")
       list(APPEND HDR_CAPD ${srcfile_CAPD})
       file(COPY ${srcfile_CAPD} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
     endif()
