@@ -16,6 +16,10 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
+#ifndef __TUBEX_CATCH_H__
+#define __TUBEX_CATCH_H__
+
+#include "catch.hpp"
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
 #include "tubex_Point.h"
@@ -502,3 +506,5 @@ namespace Catch
     return value.toString();
   }
 }
+
+#endif

@@ -1,9 +1,13 @@
-#define protected public     // Using #define so that we can access protected
-#include "tubex_TrajectoryVector.h" // methods of TrajectoryVector for tests purposes
+#include <cstdio>
 #include "tubex_serialize_trajectories.h"
 #include "tubex_serialize_tubes.h"
-#include "tests.h"
-#include <cstdio>
+#include "catch_interval.hpp"
+#include "tests_predefined_tubes.h"
+
+// Using #define so that we can access protected methods
+// of the class for tests purposes
+#define protected public
+#include "tubex_TrajectoryVector.h"
 
 using namespace Catch;
 using namespace Detail;

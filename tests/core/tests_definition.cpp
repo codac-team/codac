@@ -1,4 +1,4 @@
-#include "tests.h"
+#include "catch_interval.hpp"
 #include "tubex_Function.h"
 
 using namespace Catch;

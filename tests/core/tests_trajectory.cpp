@@ -1,4 +1,4 @@
-#include "tests.h"
+#include "catch_interval.hpp"
 
 using namespace Catch;
 using namespace Detail;
