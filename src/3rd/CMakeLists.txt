@@ -10,7 +10,7 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/pyibex/pyibex_Catan2.h
 set (LIB_3RD ${IBEX_LDFLAGS} ${TUBEX_LDFLAGS})
 
 if (WITH_CAPD)
-  list(APPEND SRC_CAPD ${CMAKE_CURRENT_SOURCE_DIR}/Capd2Tubex/json.hpp
+  list(APPEND SRC_CAPD ${CMAKE_CURRENT_SOURCE_DIR}/Capd2Tubex/json/json.hpp
                        ${CMAKE_CURRENT_SOURCE_DIR}/Capd2Tubex/tubex_Capd2Tubex.cpp
                        ${CMAKE_CURRENT_SOURCE_DIR}/Capd2Tubex/tubex_Capd2Tubex.h)
   set (LIB_3RD_CAPD ${LIB_3RD} ${PKG_CAPD_LDFLAGS})
