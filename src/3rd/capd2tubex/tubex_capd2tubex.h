@@ -6,13 +6,12 @@
 #include <fstream>
 #include <iomanip>
 #include <stdlib.h>
-#include "ibex.h" 
-#include "tubex.h"
-#include "tubex-rob.h"
+#include "ibex.h"
 #include "capd/capdlib.h"
 #include "capd/mpcapdlib.h"
 #include "math.h"
-#include "json.hpp"
+#include "tubex_TubeVector.h"
+#include "json/json.hpp"
 
 namespace tubex
 {

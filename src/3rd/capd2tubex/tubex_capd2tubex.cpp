@@ -1,11 +1,10 @@
-#include "../include/tubex_Capd2Tubex.h"
+#include "tubex_capd2tubex.h"
 #include "time.h"
 
 using namespace std;
 using namespace capd;
 using namespace ibex;
 using namespace tubex;
-using namespace vibes;
 
 
 
