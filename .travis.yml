@@ -15,8 +15,6 @@ addons:
     #- doxygen # for documentation
     #- graphviz # for documentation
 
-sudo: required
-
 matrix:
   include:
   - os: linux
@@ -52,7 +50,7 @@ before_install:
   - eval "${MATRIX_EVAL}"
 
 install:
-  #- sudo pip install breathe sphinx-tabs # for documentation
+  #- pip install breathe sphinx-tabs # for documentation
 
   # IBEX
   
@@ -61,7 +59,7 @@ install:
   - cd ibex-lib
   - git checkout for_tubex_python
   - ./waf configure --with-debug --interval-lib=gaol
-  - sudo ./waf install
+  - ./waf install
   - cd ..
   # todo: use CMake to install IBEX
 
@@ -73,7 +71,7 @@ install:
   - autoreconf --install
   - ./configure --with-filib=check --with-mpfr=check
   - make
-  - sudo make install
+  - make install
   - cd ..
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
@@ -85,7 +83,7 @@ install:
   #- mkdir make
   #- cd make
   #- cmake -DWITH_PYTHON=OFF -DBUILD_TESTS=OFF -DIBEX_INCLUDE_DIR=/usr/local/include/ibex/ -DFILIB_INCLUDE_DIR=/usr/local/include/ibex/3rd/ -DPC_IBEX_LIBRARY_DIRS=/usr/local/lib/ibex/3rd/ -DCMAKE_CXX_STANDARD=11 ..
-  #- sudo make install
+  #- make install
   #- cd ..
   #- cd ..
 
@@ -100,7 +98,7 @@ script:
     # Building lib + tests
     - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
     - make
-    - sudo make install
+    - make install
     # Building the examples
     - cd ../examples
     - find . -type d -name build -prune -exec rm -rf {} \;
@@ -116,7 +114,7 @@ script:
     # Building lib + tests
     - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
     - make
-    - sudo make install
+    - make install
     # Building the examples
     - cd ../examples
     - find . -type d -name build -prune -exec rm -rf {} \;
