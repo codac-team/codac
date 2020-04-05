@@ -93,8 +93,8 @@ script:
   
   - pwd
   - ls
-  - mkdir make -p
-  - cd make
+  - mkdir build -p
+  - cd build
   
   # Without synthesis tree
   - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..

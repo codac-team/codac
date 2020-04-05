@@ -35,7 +35,7 @@ The last sources are available on `the official Tubex development repository <ht
 .. code-block:: bash
 
   git clone https://github.com/SimonRohou/tubex-lib
-  cd tubex-lib ; mkdir make ; cd make ; cmake .. ; make
+  cd tubex-lib ; mkdir build ; cd build ; cmake .. ; make
   sudo make install
 
 If you want to compile without debug mode, then you can configure CMake with the following option:
@@ -56,7 +56,7 @@ The last sources are available on `the official VIBes development repository <ht
 .. code-block:: bash
 
   git clone https://github.com/ENSTABretagneRobotics/VIBES
-  cd VIBES/viewer ; mkdir make ; cd make ; cmake .. ; sudo make install
+  cd VIBES/viewer ; mkdir build ; cd build ; cmake .. ; sudo make install
 
 .. \todo: test sudo make install and executable access
 
@@ -81,8 +81,8 @@ For instance:
 
 .. code-block:: bash
   
-  cd examples/basics/ex_01_arithmetic     # moving to the example directory
-  mkdir make ; cd make ; cmake .. ; make  # cmake compilation
-  ./basics_01                             # running example
+  cd examples/basics/ex_01_arithmetic       # moving to the example directory
+  mkdir build ; cd build ; cmake .. ; make  # cmake compilation
+  ./basics_01                               # running example
 
 Do not forget to launch the VIBes viewer before running the example.
