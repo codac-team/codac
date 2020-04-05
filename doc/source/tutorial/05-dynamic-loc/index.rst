@@ -1,4 +1,4 @@
 .. _sec-tuto-dynamic-loc-label:
 
-Dynamic localization
-====================
+Dynamic localization with asynchronous measurements
+===================================================

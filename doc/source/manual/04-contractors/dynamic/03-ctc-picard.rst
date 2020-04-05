@@ -1,4 +1,4 @@
 .. _sec-manual-ctcpicard-label:
 
-CtcPicard
-=========
+CtcPicard: :math:`\dot{x}=f(x)`
+===============================

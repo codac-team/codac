@@ -1,4 +1,4 @@
 .. _sec-manual-ctcderiv-label:
 
-CtcDeriv
-========
+CtcDeriv: :math:`\dot{x}=v`
+===========================

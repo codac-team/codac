@@ -1,4 +1,4 @@
 .. _sec-manual-ctcdelay-label:
 
-CtcDelay
-========
+CtcDelay: :math:`y(t)=x(t-a)`
+=============================

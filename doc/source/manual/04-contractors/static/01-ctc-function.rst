@@ -1,4 +1,4 @@
 .. _sec-manual-ctcfunction-label:
 
-CtcFunction
-===========
+CtcFunction: :math:`f(\mathbf{x})=0`
+====================================

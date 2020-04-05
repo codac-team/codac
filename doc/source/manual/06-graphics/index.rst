@@ -8,3 +8,4 @@ Graphical tools
   01-vibes
   02-figtube
   03-figmap
+  04-colormaps

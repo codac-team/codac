@@ -91,10 +91,6 @@ We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t
 
 .. tabs::
 
-  .. code-tab:: py
-
-    # todo
-
   .. code-tab:: c++
 
     float dt = 0.01;                                  // timestep for tubes accuracy
@@ -104,26 +100,26 @@ We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t
     TubeVector v(tdomain, dt, 4);                     // 4d tube for derivatives of the states
     TubeVector u(tdomain, dt, 2);                     // 2d tube for inputs of the system
 
-We assume that we have measurements on the headings :math:`\psi(t)` and :math:`\vartheta(t)`, with some bounded uncertainties defined by intervals :math:`[e_\psi]=[-0.01,0.01]`, :math:`[e_\vartheta]=[-0.01,0.01]`:
-
-.. tabs::
-
   .. code-tab:: py
 
     # todo
+
+We assume that we have measurements on the headings :math:`\psi(t)` and :math:`\vartheta(t)`, with some bounded uncertainties defined by intervals :math:`[e_\psi]=[-0.01,0.01]`, :math:`[e_\vartheta]=[-0.01,0.01]`:
+
+.. tabs::
 
   .. code-tab:: c++
 
     x[2] = Tube(measured_psi, dt).inflate(0.01);      // measured_psi is a set of measurements
     x[3] = Tube(measured_speed, dt).inflate(0.01);
 
-Finally, we define the domains for the three observations :math:`(t_i,y_i)` and the position of the landmarks. The distances :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]`.
-
-.. tabs::
-
   .. code-tab:: py
 
     # todo
+
+Finally, we define the domains for the three observations :math:`(t_i,y_i)` and the position of the landmarks. The distances :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]`.
+
+.. tabs::
 
   .. code-tab:: c++
 
@@ -132,6 +128,10 @@ Finally, we define the domains for the three observations :math:`(t_i,y_i)` and 
     vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of 2d landmarks
     vector<double>   t = {0.3, 1.5, 2.0};             // times of measurements
 
+  .. code-tab:: py
+
+    # todo
+
 | **Second step.**
 | Defining contractors to deal with the state equations.
 
@@ -139,23 +139,19 @@ We look at the state equations and use contractors to deal with them. The distan
 
 .. tabs::
 
-  .. code-tab:: py
-
-    # todo
-
   .. code-tab:: c++
 
     CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
                       "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
 
+  .. code-tab:: py
+
+    # todo
+
 | **Third step.**
 | Adding the contractors to a network, together with there related domains, is as easy as:
 
 .. tabs::
-
-  .. code-tab:: py
-
-    # todo
 
   .. code-tab:: c++
 
@@ -171,19 +167,23 @@ We look at the state equations and use contractors to deal with them. The distan
       cn.add(ctc::eval, {t[i], p_i, x, v});
     }
 
+  .. code-tab:: py
+
+    # todo
+
 
 | **Fourth step.**
 | Solving the problem.
 
 .. tabs::
 
-  .. code-tab:: py
-
-    # todo
-
   .. code-tab:: c++
 
     cn.contract();
+
+  .. code-tab:: py
+
+    # todo
 
 
 | **Fifth step.**
@@ -226,10 +226,9 @@ Then you have two options: read the details about the features of Tubex (domains
   manual/02-variables/index
   manual/03-domains/index
   manual/04-contractors/index
-
   manual/05-contractor-network/index
-    
   manual/06-graphics/index
+  manual/07-going-further/index
 
 .. versionadded:: 2.1.0
    The Contractor Network tool.
@@ -248,6 +247,7 @@ Then you have two options: read the details about the features of Tubex (domains
   tutorial/07-data-association/index
   tutorial/08-realtime-loc/index
   tutorial/09-distributed-loc/index
+  tutorial/10-loop-detections/index
 
 
 .. toctree::

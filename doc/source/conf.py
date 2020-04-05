@@ -62,7 +62,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'tubex-lib'
-copyright = u'2020, Simon Rohou'
+copyright = u'2020, Tubex Team'
 author = u'Simon Rohou'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -1,4 +1,4 @@
 .. _sec-tuto-static-rangeonly-loc-label:
 
-Range-only localization
-=======================
+Static range-only localization
+==============================

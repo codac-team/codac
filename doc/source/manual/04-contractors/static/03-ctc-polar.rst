@@ -1,4 +1,4 @@
 .. _sec-manual-ctcpolar-label:
 
-CtcPolar
-========
+CtcPolar: :math:`\big(x=\rho\cos\theta;y=\rho\sin\theta\big)`
+=================================================================

@@ -1,4 +1,4 @@
 .. _sec-manual-ctceval-label:
 
-CtcEval
-=======
+CtcEval: :math:`y=x(t)`
+=======================
