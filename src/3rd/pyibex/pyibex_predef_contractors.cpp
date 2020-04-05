@@ -8,9 +8,12 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_predef_contractors.h"
+#include "pyibex_predef_contractors.h"
 
-namespace tubex
+namespace pyibex
 {
-  pyibex::CtcPolar polar;
+  namespace ctc
+  {
+    pyibex::CtcPolar polar;
+  }
 }

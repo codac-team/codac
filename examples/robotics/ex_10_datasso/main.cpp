@@ -17,7 +17,7 @@
 
 #include <tubex.h>
 #include <tubex-rob.h>
-#include <tubex-3rd.h>
+#include <tubex-pyibex.h>
 
 using namespace std;
 using namespace tubex;

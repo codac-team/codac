@@ -9,8 +9,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_CTCPREDEFINED_H__
-#define __TUBEX_CTCPREDEFINED_H__
+#ifndef __TUBEX_PREDEF_CTC_H__
+#define __TUBEX_PREDEF_CTC_H__
 
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcDistance.h"

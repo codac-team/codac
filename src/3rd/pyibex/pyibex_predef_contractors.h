@@ -9,8 +9,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __PYIBEX_CTCPREDEFINED_H__
-#define __PYIBEX_CTCPREDEFINED_H__
+#ifndef __PYIBEX_PREDEF_CTC_H__
+#define __PYIBEX_PREDEF_CTC_H__
 
 #include "pyibex_CtcPolar.h"
 

@@ -12,7 +12,10 @@
 
 namespace tubex
 {
-  CtcDeriv deriv;
-  CtcEval eval;
-  CtcDistance dist;
+  namespace ctc
+  {
+    CtcDeriv deriv;
+    CtcEval eval;
+    CtcDistance dist;
+  }
 }

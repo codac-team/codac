@@ -93,14 +93,17 @@ script:
   
   - pwd
   - ls
+  - mkdir make -p
+  - cd make
   
   # Without synthesis tree
-  - export WITH_TUBE_TREE=OFF
-  - ./build.sh all clean
-  - cd make ; make test
-  - cd ..
+  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
+  - make
+  - sudo make install
+  - make test
   
   # With synthesis tree for all created tubes
-  - export WITH_TUBE_TREE=ON
-  - ./build.sh all clean
-  - cd make ; make test
+  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
+  - make
+  - sudo make install
+  - make test

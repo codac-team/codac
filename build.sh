@@ -54,10 +54,13 @@ fi
     cd make
     sudo make install
     cd ..
-    cd examples/basics
+    cd examples
+    find . -type d -name make -prune -exec rm -rf {} \;
+    cd basics
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-    cd ../..
-    cd examples/robotics
+    cd ..
+    cd robotics
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-    cd ../..
+    cd ..
+    cd ..
   fi
