@@ -16,10 +16,11 @@
 
 TUBEX_DIR="$(pwd)"
 
-if [ -z "${AUTO_SYNTHESIS_BY_DEFAULT}" ]
+
+if [ -z "${WITH_TUBE_TREE}" ]
 then
-  # in case of undefined AUTO_SYNTHESIS_BY_DEFAULT variable
-  AUTO_SYNTHESIS_BY_DEFAULT=false
+  # in case of undefined WITH_TUBE_TREE variable
+  WITH_TUBE_TREE=OFF
 fi
 
 # Cleaning before build
@@ -38,9 +39,9 @@ fi
 
   if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
   then
-    cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE="${WITH_TUBE_TREE}" ..
   else
-    cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    cmake -DBUILD_TESTS=OFF -DWITH_TUBE_TREE="${WITH_TUBE_TREE}" ..
   fi
 
   make
