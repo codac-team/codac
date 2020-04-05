@@ -57,10 +57,10 @@ The compilation is made by the following command line:
 
 .. code-block:: bash
 
-  mkdir make -p ; cd make ; cmake .. ; make ; cd ..
+  mkdir build -p ; cd build ; cmake .. ; make ; cd ..
 
 Lastly, the project can be run with:
 
 .. code-block:: bash
 
-  ./make/my_project
+  ./build/my_project

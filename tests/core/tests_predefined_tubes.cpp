@@ -1,6 +1,4 @@
-#define CATCH_CONFIG_MAIN
-
-#include "tests.h"
+#include "tests_predefined_tubes.h"
 
 using namespace std;
 using namespace ibex;

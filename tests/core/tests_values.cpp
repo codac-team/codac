@@ -1,10 +1,13 @@
-#include "tests.h"
+#include "catch_interval.hpp"
 #include "tubex_CtcEval.h"
 #include "tubex_VIBesFigTube.h"
 #include "tubex_VIBesFigTubeVector.h"
+#include "tests_predefined_tubes.h"
 #include "vibes.h"
 
-#define protected public     // Using #define so that we can access protected
+// Using #define so that we can access protected methods
+// of the class for tests purposes
+#define protected public
 #include "tubex_CtcDeriv.h"
 
 using namespace Catch;

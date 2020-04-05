@@ -1,5 +1,5 @@
-#include "tests.h"
 #include <cstdio>
+#include "catch_interval.hpp"
 #include "tubex_Function.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"

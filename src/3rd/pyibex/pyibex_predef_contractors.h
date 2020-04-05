@@ -9,20 +9,16 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_CTCPREDEFINED_H__
-#define __TUBEX_CTCPREDEFINED_H__
+#ifndef __PYIBEX_PREDEF_CTC_H__
+#define __PYIBEX_PREDEF_CTC_H__
 
-#include "tubex_CtcDeriv.h"
-#include "tubex_CtcDistance.h"
-#include "tubex_CtcEval.h"
+#include "pyibex_CtcPolar.h"
 
-namespace tubex
+namespace pyibex
 {
   namespace ctc
   {
-    CtcDeriv deriv; // derivative constraint (x,v)
-    CtcEval eval; // evaluation constraint (t,z,y,w)
-    CtcDistance dist; // distance constraint (a,b,d)
+    extern pyibex::CtcPolar polar; // polar constraint (px,py,rho,phi)
   }
 }
 

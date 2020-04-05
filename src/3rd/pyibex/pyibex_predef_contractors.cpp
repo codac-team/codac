@@ -1,5 +1,4 @@
 /** 
- *  \file
  *  Predefined contractors (shortcuts for ease of use)
  * ----------------------------------------------------------------------------
  *  \date       2020
@@ -9,17 +8,12 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __PYIBEX_CTCPREDEFINED_H__
-#define __PYIBEX_CTCPREDEFINED_H__
-
-#include "pyibex_CtcPolar.h"
+#include "pyibex_predef_contractors.h"
 
 namespace pyibex
 {
   namespace ctc
   {
-    pyibex::CtcPolar polar; // polar constraint (px,py,rho,phi)
+    pyibex::CtcPolar polar;
   }
 }
-
-#endif

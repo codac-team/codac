@@ -1,4 +1,5 @@
-#include "tests.h"
+#include "catch_interval.hpp"
+#include "tests_predefined_tubes.h"
 #include <cstdio>
 
 using namespace Catch;

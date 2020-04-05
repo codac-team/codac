@@ -1,4 +1,4 @@
-#include "tests.h"
+#include "catch_interval.hpp"
 #include "tubex_tube_arithmetic.h"
 #include "tubex_traj_arithmetic.h"
 

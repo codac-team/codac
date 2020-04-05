@@ -16,31 +16,32 @@
 
 TUBEX_DIR="$(pwd)"
 
-if [ -z "${AUTO_SYNTHESIS_BY_DEFAULT}" ]
+
+if [ -z "${WITH_TUBE_TREE}" ]
 then
-  # in case of undefined AUTO_SYNTHESIS_BY_DEFAULT variable
-  AUTO_SYNTHESIS_BY_DEFAULT=false
+  # in case of undefined WITH_TUBE_TREE variable
+  WITH_TUBE_TREE=OFF
 fi
 
 # Cleaning before build
 
   if [ $# -ne 0 ] && ([ "$1" = "clean" ] || [ "$2" = "clean" ])
   then
-    find . -name make | xargs rm -fr
+    find . -name build | xargs rm -fr
   fi
 
 # Building Tubex library
 
-  mkdir make -p
-  cd make
+  mkdir build -p
+  cd build
 
   # Possibly with tests
 
   if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
   then
-    cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE="${WITH_TUBE_TREE}" ..
   else
-    cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    cmake -DBUILD_TESTS=OFF -DWITH_TUBE_TREE="${WITH_TUBE_TREE}" ..
   fi
 
   make
@@ -50,13 +51,16 @@ fi
 
   if [ $# -ne 0 ] && ([ "$1" = "examples" ] || [ "$1" = "all" ])
   then
-    cd make
+    cd build
     sudo make install
     cd ..
-    cd examples/basics
+    cd examples
+    find . -type d -name build -prune -exec rm -rf {} \;
+    cd basics
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-    cd ../..
-    cd examples/robotics
+    cd ..
+    cd robotics
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-    cd ../..
+    cd ..
+    cd ..
   fi

@@ -1,5 +1,5 @@
-#include "tests.h"
 #include <cstdio>
+#include "catch_interval.hpp"
 #include "tubex_VIBesFigTube.h"
 #include "tubex_CtcDelay.h"
 #include "vibes.h"

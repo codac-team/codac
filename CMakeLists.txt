@@ -39,7 +39,11 @@
   endif()
 
   add_compile_options(-O3 -Wall)
-  #add_compile_options(-DNDEBUG) # comment for debug mode
+
+  option(OPTIMIZED ON)
+  if(OPTIMIZED)
+    add_compile_options(-O3)
+  endif()
 
 
 ################################################################################
@@ -57,21 +61,36 @@
   # Binary trees allow to speed up some computations. They can be activated
   # upon request according to the application. For tests purposes, the following
   # forces the use of binary trees for all computations.
-  if(NOT DEFINED AUTO_SYNTHESIS_BY_DEFAULT)
-    set(AUTO_SYNTHESIS_BY_DEFAULT false) # no synthesis of tubes
+  option(WITH_TUBE_TREE "Binary trees for fast tube evaluations" OFF)
+
+  if(WITH_TUBE_TREE)
+    message(STATUS "[binary trees] Using binary trees for fast tube evaluations")
+    add_definitions(-DUSE_TUBE_TREE)
   endif()
-  add_definitions(-DAUTO_SYNTHESIS_BY_DEFAULT=${AUTO_SYNTHESIS_BY_DEFAULT})
-  message(STATUS "Using binary trees for tubes: " ${AUTO_SYNTHESIS_BY_DEFAULT})
 
 
 ################################################################################
 # Looking for Ibex
 ################################################################################
 
-  #find_package(IBEX 2.8.3 REQUIRED)
+  find_package(PkgConfig REQUIRED)
   include(FindPkgConfig)
   pkg_search_module(IBEX REQUIRED ibex) # todo: specify minimum version of IBEX
   message(STATUS "Found Ibex version ${IBEX_VERSION}")
+
+
+################################################################################
+# Looking for CAPD (if needed)
+################################################################################
+
+  option(WITH_CAPD "Using CAPD for accurate integration of ODEs" OFF)
+
+  if(WITH_CAPD)
+    pkg_search_module(PKG_CAPD REQUIRED capd capd-gui mpcapd mpcapd-gui) # this looks for capd.pc file
+    include_directories(${PKG_CAPD_INCLUDE_DIRS})
+    message(STATUS "[capd2tubex] PKG_CAPD_INCLUDE_DIRS = ${PKG_CAPD_INCLUDE_DIRS}")
+    message(STATUS "[capd2tubex] PKG_CAPD_LDFLAGS = ${PKG_CAPD_LDFLAGS}")
+  endif()
 
 
 ################################################################################
@@ -99,40 +118,40 @@
 
       # Basics
       add_test(NAME basics_01
-               COMMAND ../examples/basics/ex_01_arithmetic/make/tubex_basics_01 0)
+               COMMAND ../examples/basics/ex_01_arithmetic/build/tubex_basics_01 0)
       add_test(NAME basics_02
-               COMMAND ../examples/basics/ex_02_simple_ctc/make/tubex_basics_02 0)
+               COMMAND ../examples/basics/ex_02_simple_ctc/build/tubex_basics_02 0)
       add_test(NAME basics_03
-               COMMAND ../examples/basics/ex_03_ivp_msinx/make/tubex_basics_03 0)
+               COMMAND ../examples/basics/ex_03_ivp_msinx/build/tubex_basics_03 0)
       add_test(NAME basics_04
-               COMMAND ../examples/basics/ex_04_simple_eval/make/tubex_basics_04 0)
+               COMMAND ../examples/basics/ex_04_simple_eval/build/tubex_basics_04 0)
       add_test(NAME basics_05
-               COMMAND ../examples/basics/ex_05_graphics/make/tubex_basics_05 0)
+               COMMAND ../examples/basics/ex_05_graphics/build/tubex_basics_05 0)
 
       # Robotics
       add_test(NAME rob_01
-               COMMAND ../examples/robotics/ex_01_causal_chain/make/tubex_rob_01 0)
+               COMMAND ../examples/robotics/ex_01_causal_chain/build/tubex_rob_01 0)
       add_test(NAME rob_02
-               COMMAND ../examples/robotics/ex_02_lowcost_beacons/make/tubex_rob_02 0)
+               COMMAND ../examples/robotics/ex_02_lowcost_beacons/build/tubex_rob_02 0)
       add_test(NAME rob_03
-               COMMAND ../examples/robotics/ex_03_drifting_clock/make/tubex_rob_03 0)
+               COMMAND ../examples/robotics/ex_03_drifting_clock/build/tubex_rob_03 0)
       add_test(NAME rob_04
                COMMAND sh -c "rm -f ../data/redermor/gesmi.txt.tubex ;
-                       ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0")
+                       ../examples/robotics/ex_04_redermor_traj/build/tubex_rob_04 ../data/redermor/gesmi.txt 0")
       add_test(NAME rob_04_with_serializ
-               COMMAND ../examples/robotics/ex_04_redermor_traj/make/tubex_rob_04 ../data/redermor/gesmi.txt 0)
+               COMMAND ../examples/robotics/ex_04_redermor_traj/build/tubex_rob_04 ../data/redermor/gesmi.txt 0)
       add_test(NAME rob_05
-               COMMAND ../examples/robotics/ex_05_loops_detec/make/tubex_rob_05 ../data/redermor/gesmi.txt  0)
+               COMMAND ../examples/robotics/ex_05_loops_detec/build/tubex_rob_05 ../data/redermor/gesmi.txt  0)
       add_test(NAME rob_06
-               COMMAND ../examples/robotics/ex_06_loops_proofs/make/tubex_rob_06 0)
+               COMMAND ../examples/robotics/ex_06_loops_proofs/build/tubex_rob_06 0)
       add_test(NAME rob_07
-               COMMAND ../examples/robotics/ex_07_dynloc/make/tubex_rob_07 0)
+               COMMAND ../examples/robotics/ex_07_dynloc/build/tubex_rob_07 0)
       add_test(NAME rob_08
-               COMMAND ../examples/robotics/ex_08_tubepaving/make/tubex_rob_08 0)
+               COMMAND ../examples/robotics/ex_08_tubepaving/build/tubex_rob_08 0)
       add_test(NAME rob_09
-               COMMAND ../examples/robotics/ex_09_lissajous/make/tubex_rob_09 0)
+               COMMAND ../examples/robotics/ex_09_lissajous/build/tubex_rob_09 0)
       add_test(NAME rob_10
-               COMMAND ../examples/robotics/ex_10_datasso/make/tubex_rob_10 0)
+               COMMAND ../examples/robotics/ex_10_datasso/build/tubex_rob_10 0)
       
   endif()
 

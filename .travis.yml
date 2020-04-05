@@ -15,8 +15,6 @@ addons:
     #- doxygen # for documentation
     #- graphviz # for documentation
 
-sudo: required
-
 matrix:
   include:
   - os: linux
@@ -52,7 +50,7 @@ before_install:
   - eval "${MATRIX_EVAL}"
 
 install:
-  #- sudo pip install breathe sphinx-tabs # for documentation
+  #- pip install breathe sphinx-tabs # for documentation
 
   # IBEX
   
@@ -61,9 +59,21 @@ install:
   - cd ibex-lib
   - git checkout for_tubex_python
   - ./waf configure --with-debug --interval-lib=gaol
-  - sudo ./waf install
+  - ./waf install
   - cd ..
   # todo: use CMake to install IBEX
+
+  # CAPD
+  - echo 'Installing CAPD...';
+  - svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other
+  - cd capd
+  - svn co https://svn.capdnet.ii.uj.edu.pl/capdDynSys4 --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other
+  - autoreconf --install
+  - ./configure --with-filib=check --with-mpfr=check
+  - make
+  - make install
+  - cd ..
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
   # IBEX-Geometry:
 
@@ -73,7 +83,7 @@ install:
   #- mkdir make
   #- cd make
   #- cmake -DWITH_PYTHON=OFF -DBUILD_TESTS=OFF -DIBEX_INCLUDE_DIR=/usr/local/include/ibex/ -DFILIB_INCLUDE_DIR=/usr/local/include/ibex/3rd/ -DPC_IBEX_LIBRARY_DIRS=/usr/local/lib/ibex/3rd/ -DCMAKE_CXX_STANDARD=11 ..
-  #- sudo make install
+  #- make install
   #- cd ..
   #- cd ..
 
@@ -81,14 +91,37 @@ script:
   
   - pwd
   - ls
-
-  # Without synthesis tree
-  - export AUTO_SYNTHESIS_BY_DEFAULT=false
-  - ./build.sh all clean
-  - cd make ; make test
-  - cd ..
+  - mkdir build -p
+  - cd build
   
+  # Without synthesis tree
+    # Building lib + tests
+    - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
+    - make
+    - make install
+    # Building the examples
+    - cd ../examples
+    - find . -type d -name build -prune -exec rm -rf {} \;
+    - cd basics
+    - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    - cd ../robotics
+    - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    - cd ../../build
+    # Testing
+    - make test
+    
   # With synthesis tree for all created tubes
-  - export AUTO_SYNTHESIS_BY_DEFAULT=true
-  - ./build.sh all clean
-  - cd make ; make test
+    # Building lib + tests
+    - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
+    - make
+    - make install
+    # Building the examples
+    - cd ../examples
+    - find . -type d -name build -prune -exec rm -rf {} \;
+    - cd basics
+    - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    - cd ../robotics
+    - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    - cd ../../build
+    # Testing
+    - make test

@@ -1,4 +1,4 @@
-#include "tests.h"
+#include "catch_interval.hpp"
 #include "tubex_ContractorNetwork.h"
 #include "ibex_CtcFwdBwd.h"
 #include "tubex_CtcDeriv.h"
