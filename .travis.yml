@@ -57,26 +57,33 @@ install:
   #- pip install breathe sphinx-tabs # for documentation
 
   # IBEX
-  
   - echo 'Installing IBEX...';
-  - git clone https://github.com/SimonRohou/ibex-lib
-  - cd ibex-lib
-  - git checkout for_tubex_python
-  - ./waf configure --with-debug --interval-lib=gaol
-  - sudo ./waf install
-  - cd ..
+  - if [ ! -e "ibex-lib" ]; then
+      git clone https://github.com/SimonRohou/ibex-lib ;
+      cd ibex-lib ;
+      git checkout for_tubex_python ;
+      ./waf configure --with-debug --interval-lib=gaol ;
+      sudo ./waf install ;
+      cd .. ;
+    else
+      echo 'Using cached directory.' ;
+    fi
   # todo: use CMake to install IBEX
 
   # CAPD
   - echo 'Installing CAPD...';
-  - svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other
-  - cd capd
-  - svn co https://svn.capdnet.ii.uj.edu.pl/capdDynSys4 --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other
-  - autoreconf --install
-  - ./configure --with-filib=check --with-mpfr=check
-  - make
-  - sudo make install
-  - cd ..
+  - if [ ! -e "capd" ]; then
+      svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
+      cd capd ;
+      svn co https://svn.capdnet.ii.uj.edu.pl/capdDynSys4 --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
+      autoreconf --install ;
+      ./configure --with-filib=check --with-mpfr=check ;
+      make ;
+      sudo make install ;
+      cd .. ;
+    else
+      echo 'Using cached directory.' ;
+    fi
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
   # IBEX-Geometry:
