@@ -111,7 +111,7 @@
     add_custom_target(check
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
                       DEPENDS tubex COMMENT "Running the tests")
-    add_subdirectory(tests) # EXCLUDE_FROM_ALL)
+    add_subdirectory(tests)
 
     # Testing examples:
 

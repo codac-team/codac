@@ -16,7 +16,7 @@ Description: ${TUBEX_DESCRIPTION}
 Url: ${TUBEX_URL}
 Version: ${TUBEX_VERSION}
 Requires: ibex
-Cflags: -I\${includedir}/tubex -I\${includedir}/tubex-rob -I\${includedir}/tubex-pyibex
+Cflags: -I\${includedir}/ibex -I\${includedir}/tubex -I\${includedir}/tubex-rob -I\${includedir}/tubex-pyibex
 Libs: -L\${libdir} -ltubex -ltubex-rob -ltubex-pyibex -ltubex")
 
 # todo: specify minimum version of IBEX (in Requires field)
