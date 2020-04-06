@@ -137,7 +137,7 @@ script:
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION=${py_version} ..
+  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
   - make
   - sudo make install
   # Building the examples
