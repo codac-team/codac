@@ -209,13 +209,23 @@ Documentation (/!\\ in progress /!\\)
 
 Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to use Tubex for mobile robotics, with telling examples.
 
-.. sidebar:: IBEX
+.. sidebar:: Dependencies
+  
+  .. rubric:: IBEX
 
   .. Figure:: ../img/ibex_logo.jpg
     :align: center
 
-  Note that Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
-  `Read the documentation. <http://www.ibex-lib.org/doc/>`_
+  | Note that Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
+  | `Read the IBEX documentation. <http://www.ibex-lib.org/doc/>`_
+
+  .. rubric:: pyibex
+
+  .. Figure:: ../img/pyibex_logo.jpg
+    :align: center
+
+  | The python API of Tubex is available thanks to the `pyibex library <http://benensta.github.io/pyIbex/>`_ providing python access to the IBEX library.
+  | `Read the pyibex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
 
 
 .. toctree::
@@ -232,6 +242,11 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. versionadded:: 2.1.0
    The Contractor Network tool.
+
+
+.. seealso::
+
+  The `API technical documentation <./doxygen/html/annotated.html>`_  of the library.
 
 
 .. toctree::
@@ -260,10 +275,13 @@ Then you have two options: read the details about the features of Tubex (domains
 .. Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
 
 
-.. seealso::
+Support and license
+===================
 
-  The `API technical documentation <./doxygen/html/annotated.html>`_  of the library.
+You can post bug reports and feature requests on the `GitHub repository <https://github.com/SimonRohou/tubex-lib/>`_.
 
+For recent improvements and activities, see the `Github Tubex repository <https://github.com/SimonRohou/tubex-lib>`_.
+This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 
 Main related publications
@@ -343,16 +361,6 @@ Main related publications
 ..                     |
 ..  [Rohou et al. 2017]|
 .. --------------------+
-
-
-Support and license
-===================
-
-You can post bug reports and feature requests on the `GitHub repository <https://github.com/SimonRohou/tubex-lib/>`_.
-
-For recent improvements and activities, see the `Github Tubex repository <https://github.com/SimonRohou/tubex-lib>`_.
-A Python version (`pyIbex <http://www.ensta-bretagne.fr/desrochers/pyibex>`_ wrapping) is planned.
-This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 
 How to cite this project?
