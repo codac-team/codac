@@ -53,15 +53,15 @@ cache:
     - capd
     - ibex-lib
 
-services:
-  - docker
-
-env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+#services:
+#  - docker
+#
+#env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
 
 install:
   #- pip install breathe sphinx-tabs # for documentation
 
-  - docker pull $DOCKER_IMAGE
+#  - docker pull $DOCKER_IMAGE
   
   - pwd
   - ls
