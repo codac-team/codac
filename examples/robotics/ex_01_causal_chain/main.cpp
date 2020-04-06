@@ -103,5 +103,5 @@ int main()
   // Checking if this example still works:
   return ((FINAL_CONDITION && fabs(x.volume() - 143.027) < 1e-2)
        || (!FINAL_CONDITION && fabs(x.volume() - 353.406)))
-        && x.contains(traj_state) == YES ? EXIT_SUCCESS : EXIT_FAILURE;
+        && x.contains(traj_state) == BoolInterval::YES ? EXIT_SUCCESS : EXIT_FAILURE;
 }
