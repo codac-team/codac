@@ -58,9 +58,6 @@ install:
 
   - pwd
   - ls
-  - cd ibex-lib
-  - ls
-  - cd ..
 
   # IBEX
   - echo 'Installing IBEX...';

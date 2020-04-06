@@ -64,7 +64,8 @@
 ################################################################################
 # Looking for Ibex
 ################################################################################
-
+  
+  include(FindPkgConfig)
   find_package(IBEX 2.8.6 REQUIRED)
   message(STATUS "Found Ibex version ${IBEX_VERSION}")
   ibex_init_common() # Ibex should have installed this function
