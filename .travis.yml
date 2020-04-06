@@ -45,9 +45,13 @@ matrix:
     env:
        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
-
 before_install:
   - eval "${MATRIX_EVAL}"
+
+cache:
+  directories:
+    - capd
+    - ibex-lib
 
 install:
   #- pip install breathe sphinx-tabs # for documentation
