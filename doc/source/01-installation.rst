@@ -48,10 +48,10 @@ If you want to compile without debug mode, then you can configure CMake with the
 Graphical tools
 ---------------
 
-`VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ is a visualization system that aims at providing people working with interval methods a way to display results (boxes, pavings), without worrying about GUI programming.
+`VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ is a visualization system that aims at providing people working with intervals a way to display results (boxes, pavings), without worrying about GUI programming.
 Some methods have been implemented in Tubex in order to extend VIBes' features to tubes purposes.
 
-The last sources are available on `the official VIBes development repository <https://github.com/ENSTABretagneRobotics/VIBES>`_. A fast installation can be made using the following command lines:
+You can `download the VIBes viewer directly from the website <http://enstabretagnerobotics.github.io/VIBES/>`_, or install the last version from the sources available on `the GitHub development repository <https://github.com/ENSTABretagneRobotics/VIBES>`_. In this case, a fast installation can be made using the following command lines:
 
 .. code-block:: bash
 
@@ -70,19 +70,13 @@ Then, the VIBes viewer can be launch independently by executing:
 Build the examples
 ------------------
 
-All the examples can be built using the following script:
-
-.. code-block:: bash
-
-  ./build.sh examples   # to compile both the library and examples
-
-Otherwise, to compile one specific example, use CMake in the example directory.
+To compile one specific example, use CMake in the example directory.
 For instance:
 
 .. code-block:: bash
   
-  cd examples/basics/ex_01_arithmetic       # moving to the example directory
-  mkdir build ; cd build ; cmake .. ; make  # cmake compilation
-  ./basics_01                               # running example
+  cd examples/basics/ex_01_arithmetic               # moving to the example directory
+  mkdir build -p ; cd build ; cmake .. ; make       # cmake compilation
+  ./basics_01                                       # running example
 
 Do not forget to launch the VIBes viewer before running the example.

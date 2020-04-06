@@ -204,8 +204,8 @@ Documentation (/!\\ in progress /!\\)
 .. toctree::
   :maxdepth: 1
  
-  01-installation/index
-  02-start-project/index
+  01-installation
+  02-start-project
 
 Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to use Tubex for mobile robotics, with telling examples.
 

@@ -43,22 +43,9 @@ In your new project, you can compute the following simple operations on interval
              + max(Interval(1,3) & Interval(6,7), Interval(1,2)); // f = [4,9]
 
 
-
-
-
-
-
-
-
-
-
-
 .. admonition:: Example
-   This is the second line of the first paragraph.
 
-   - The note contains all indented body elements
-     following.
-   - It includes this bullet list.
+  todo
 
 
 

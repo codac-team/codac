@@ -3,7 +3,8 @@
 Start a project
 ===============
 
-Tubex is ready to be used on your computer. You can now copy-paste the following example code in a file named :file:`main.cpp`:
+| Tubex is ready to be used on your computer.
+| You can now copy-paste the following example code in a file named :file:`main.cpp`:
 
 .. code-block:: c++
 
@@ -20,7 +21,7 @@ Tubex is ready to be used on your computer. You can now copy-paste the following
     cout << "My first tube: " << x << endl;
   }
 
-For the compilation of your project, you can use CMake with the following :file:`CMakeLists.txt` that you will add in the same directory:
+For the compilation of your project, you can use CMake with the following file :file:`CMakeLists.txt` that you will add in the same directory:
 
 .. code-block:: cmake
 
