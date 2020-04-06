@@ -56,6 +56,9 @@ cache:
 install:
   #- pip install breathe sphinx-tabs # for documentation
 
+  - pwd
+  - ls
+
   # IBEX
   - echo 'Installing IBEX...';
   - if [ ! -e "ibex-lib" ]; then
@@ -65,7 +68,7 @@ install:
       mkdir build && cd build ;
       cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" .. ;
       make ;
-      cd .. ;
+      cd ../.. ;
     else
       echo 'Using cached directory.' ;
     fi
