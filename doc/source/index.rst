@@ -353,3 +353,18 @@ You can post bug reports and feature requests on the `GitHub repository <https:/
 For recent improvements and activities, see the `Github Tubex repository <https://github.com/SimonRohou/tubex-lib>`_.
 A Python version (`pyIbex <http://www.ensta-bretagne.fr/desrochers/pyibex>`_ wrapping) is planned.
 This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
+
+
+How to cite this project?
+=========================
+
+We suggest the following BibTeX template to cite Tubex in scientific discourse:
+
+.. code-block:: none
+
+  @misc{tubex,
+     author = {Simon Rohou},
+     year = {2017},
+     note = {http://simon-rohou.fr/research/tubex-lib/},
+     title = {Tubex -- Constraint-programming for robotics}
+  }
