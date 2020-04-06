@@ -58,10 +58,13 @@ install:
 
   - pwd
   - ls
+  - cd ibex-lib
+  - ls
+  - cd ..
 
   # IBEX
   - echo 'Installing IBEX...';
-  - if [ ! -e "ibex-lib" ]; then
+  - if [ ! -e "ibex-lib/README.md" ]; then
       git clone -b develop https://github.com/ibex-team/ibex-lib.git ;
       cd ibex-lib ;
       git checkout fd820d1ed0a85b8a11f54e9ca7ebc8bb4ffa4335 ;
@@ -79,7 +82,7 @@ install:
 
   # CAPD
   - echo 'Installing CAPD...';
-  - if [ ! -e "capd" ]; then
+  - if [ ! -e "capd/README.md" ]; then
       svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
       cd capd ;
       svn co https://svn.capdnet.ii.uj.edu.pl/capdDynSys4 --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
