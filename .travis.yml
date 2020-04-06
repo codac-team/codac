@@ -63,7 +63,7 @@ install:
       cd ibex-lib ;
       git checkout for_tubex_python ;
       ./waf configure --with-debug --interval-lib=gaol ;
-      sudo ./waf install
+      sudo ./waf install ;
       cd .. ;
     else
       echo 'Using cached directory.' ;
