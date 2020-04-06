@@ -59,7 +59,7 @@ install:
   - cd ibex-lib
   - git checkout for_tubex_python
   - ./waf configure --with-debug --interval-lib=gaol
-  - ./waf install
+  - sudo ./waf install
   - cd ..
   # todo: use CMake to install IBEX
 
@@ -71,7 +71,7 @@ install:
   - autoreconf --install
   - ./configure --with-filib=check --with-mpfr=check
   - make
-  - make install
+  - sudo make install
   - cd ..
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
@@ -99,7 +99,7 @@ script:
   # Building lib + tests
   - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
   - make
-  - make install
+  - sudo make install
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
@@ -116,7 +116,7 @@ script:
   # Building lib + tests
   - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
   - make
-  - make install
+  - sudo make install
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
