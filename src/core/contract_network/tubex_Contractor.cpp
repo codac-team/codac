@@ -9,17 +9,28 @@
  */
 
 #include "tubex_Contractor.h"
-#include "tubex_CtcEval.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  Contractor::Contractor()
-    : m_type(ContractorType::COMPONENT)
+  Contractor::Contractor(ContractorType type)
+    : m_type(type)
+  {
+    assert(type == ContractorType::COMPONENT || type == ContractorType::EQUALITY);
+  }
+
+  Contractor::Contractor(ibex::Ctc& ctc)
+    : m_type(ContractorType::IBEX), m_ibex_ctc(ctc)
   {
 
+  }
+
+  Contractor::Contractor(tubex::Ctc& ctc) 
+    : m_type(ContractorType::TUBEX), m_tubex_ctc(ctc)
+  {
+    
   }
 
   Contractor::Contractor(const Contractor& ac)
@@ -39,23 +50,7 @@ namespace tubex
         assert(false && "unhandled case");
     }
   }
-
-  Contractor::Contractor(ibex::Ctc& ctc)
-    : m_type(ContractorType::IBEX), m_ibex_ctc(ctc)
-  {
-
-  }
-
-  Contractor::Contractor(tubex::Ctc& ctc) 
-    : m_type(ContractorType::TUBEX), m_tubex_ctc(ctc)
-  {
-    if(typeid(ctc) == typeid(CtcEval))
-    {
-      static_cast<CtcEval&>(ctc).enable_temporal_propagation(false);
-      // todo: automatically add a CtcDeriv to the network if derivative available
-    }
-  }
-
+  
   Contractor::~Contractor()
   {
 
@@ -97,6 +92,7 @@ namespace tubex
           return false;
 
       case ContractorType::COMPONENT:
+      case ContractorType::EQUALITY:
         // Nothing to compare
         break;
 
@@ -162,6 +158,50 @@ namespace tubex
     else if(m_type == ContractorType::COMPONENT)
     {
       // Symbolic
+    }
+
+    else if(m_type == ContractorType::EQUALITY)
+    {
+      assert(m_domains.size() == 2);
+      assert(m_domains[0]->type() == m_domains[1]->type());
+
+      switch(m_domains[0]->type())
+      {
+        case DomainType::INTERVAL:
+        {
+          Interval inter = m_domains[0]->interval() & m_domains[1]->interval();
+          m_domains[0]->interval() = inter;
+          m_domains[1]->interval() = inter;
+        }
+        break;
+      
+        case DomainType::INTERVAL_VECTOR:
+        {
+          IntervalVector inter = m_domains[0]->interval_vector() & m_domains[1]->interval_vector();
+          m_domains[0]->interval_vector() = inter;
+          m_domains[1]->interval_vector() = inter;
+        }
+        break;
+    
+        case DomainType::TUBE:
+        {
+          Tube inter = m_domains[0]->tube() & m_domains[1]->tube();
+          m_domains[0]->tube() = inter;
+          m_domains[1]->tube() = inter;
+        }
+        break;
+        
+        case DomainType::TUBE_VECTOR:
+        {
+          TubeVector inter = m_domains[0]->tube_vector() & m_domains[1]->tube_vector();
+          m_domains[0]->tube_vector() = inter;
+          m_domains[1]->tube_vector() = inter;
+        }
+        break;
+
+        default:
+          assert(false && "unhandled case");
+      }
     }
 
     else

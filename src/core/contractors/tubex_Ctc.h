@@ -14,7 +14,6 @@
 
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
-#include "tubex_Domain.h"
 
 namespace tubex
 {
@@ -65,7 +64,9 @@ namespace tubex
       /**
        * \brief Creates a contractor
        */
-      Ctc();
+      Ctc(bool intertemporal = true);
+
+      virtual ~Ctc();
 
       virtual void contract(std::vector<Domain*>& v_domains) = 0;
 
@@ -92,11 +93,14 @@ namespace tubex
        */
       void set_restricted_domain(const ibex::Interval& domain);
 
+      bool is_intertemporal() const;
+
     protected:
 
       bool m_preserve_slicing = true; //!< if `true`, tube's slicing will not be affected by the contractor
       bool m_fast_mode = false; //!< some contractors may propose more pessimistic but faster execution modes
       ibex::Interval m_restricted_domain; //!< limits the contractions to the specified temporal domain
+      const bool m_intertemporal = true; //!< defines if the related constraint is inter-temporal or not (true by default)
   };
 }
 

@@ -9,6 +9,7 @@
  */
 
 #include "tubex_CtcFunction.h"
+#include "tubex_Domain.h"
 
 using namespace std;
 using namespace ibex;
@@ -16,39 +17,39 @@ using namespace ibex;
 namespace tubex
 {
   CtcFunction::CtcFunction(const char* x1, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f)
-    : m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
   {
-    assert(m_ibex_fnc->image_dim() == 1);
+
   }
 
   CtcFunction::~CtcFunction()
@@ -169,7 +170,8 @@ namespace tubex
             case DomainType::INTERVAL_VECTOR:
             {
               int n_ = dom->interval_vector().size();
-              dom->interval_vector() = box.subvector(i, i+n_);
+              for(int j = 0 ; j < n_ ; j++)
+                dom->interval_vector()[j] = box[i+j];
               i += n_;
             }
             break;
@@ -204,8 +206,8 @@ namespace tubex
 
       else
       {
-        cout << "p " << p << ", n " << n << endl;
-        assert(false && "unhandled case");
+        cout << "Input dim: " << p << ", expected dim: " << n << endl;
+        assert(false && "unhandled case, probably a wrong dimension of inputs");
       }
     }
 

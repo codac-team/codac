@@ -102,7 +102,7 @@ int main(int argc, char** argv)
 
     vibes::endDrawing();
 
-    bool success = x->subvector(0,1).contains(x_truth->subvector(0,1)) != NO;
+    bool success = x->subvector(0,1).contains(x_truth->subvector(0,1)) != BoolInterval::NO;
     
     for(size_t i = 0 ; i < v_seamarks.size() ; i++)
       delete m_x[i];

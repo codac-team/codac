@@ -3,7 +3,6 @@
 # ==================================================================
 
 language: c++
-sudo: false
 
 addons:
   apt:
@@ -15,8 +14,6 @@ addons:
     - cmake
     #- doxygen # for documentation
     #- graphviz # for documentation
-
-sudo: required
 
 matrix:
   include:
@@ -48,23 +45,51 @@ matrix:
     env:
        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
-
 before_install:
   - eval "${MATRIX_EVAL}"
 
+cache:
+  directories:
+    - capd
+    - ibex-lib
+
 install:
-  #- sudo pip install breathe # for documentation
+  #- pip install breathe sphinx-tabs # for documentation
 
   # IBEX
-  
   - echo 'Installing IBEX...';
-  - git clone https://github.com/ibex-team/ibex-lib
+  - if [ ! -e "ibex-lib" ]; then
+      git clone https://github.com/ibex-team/ibex-lib ;
+      cd ibex-lib ;
+      git checkout 81a0c0e930fbe158699e070fa39abc7d8082eb68 ;
+      ./waf configure --with-debug --interval-lib=gaol ;
+      sudo ./waf install ;
+      cd .. ;
+    else
+      echo 'Using cached directory.' ;
+    fi
   - cd ibex-lib
-  - git checkout 81a0c0e930fbe158699e070fa39abc7d8082eb68
-  - ./waf configure --with-debug --interval-lib=gaol
   - sudo ./waf install
   - cd ..
   # todo: use CMake to install IBEX
+
+  # CAPD
+  - echo 'Installing CAPD...';
+  - if [ ! -e "capd" ]; then
+      svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
+      cd capd ;
+      svn co https://svn.capdnet.ii.uj.edu.pl/capdDynSys4 --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
+      autoreconf --install ;
+      ./configure --with-filib=check --with-mpfr=check ;
+      make ;
+      cd .. ;
+    else
+      echo 'Using cached directory.' ;
+    fi
+  - cd capd
+  - sudo make install
+  - cd ..
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
   # IBEX-Geometry:
 
@@ -74,7 +99,7 @@ install:
   #- mkdir make
   #- cd make
   #- cmake -DWITH_PYTHON=OFF -DBUILD_TESTS=OFF -DIBEX_INCLUDE_DIR=/usr/local/include/ibex/ -DFILIB_INCLUDE_DIR=/usr/local/include/ibex/3rd/ -DPC_IBEX_LIBRARY_DIRS=/usr/local/lib/ibex/3rd/ -DCMAKE_CXX_STANDARD=11 ..
-  #- sudo make install
+  #- make install
   #- cd ..
   #- cd ..
 
@@ -82,14 +107,39 @@ script:
   
   - pwd
   - ls
-
-  # Without synthesis tree
-  - export AUTO_SYNTHESIS_BY_DEFAULT=false
-  - ./build.sh all clean
-  - cd make ; make test
-  - cd ..
+  - mkdir build -p
+  - cd build
   
+  # Without synthesis tree
+  
+  # Building lib + tests
+  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
+  - make
+  - sudo make install
+  # Building the examples
+  - cd ../examples
+  - find . -type d -name build -prune -exec rm -rf {} \;
+  - cd basics
+  - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - cd ../robotics
+  - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - cd ../../build
+  # Testing
+  - make test
+    
   # With synthesis tree for all created tubes
-  - export AUTO_SYNTHESIS_BY_DEFAULT=true
-  - ./build.sh all clean
-  - cd make ; make test
+  
+  # Building lib + tests
+  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
+  - make
+  - sudo make install
+  # Building the examples
+  - cd ../examples
+  - find . -type d -name build -prune -exec rm -rf {} \;
+  - cd basics
+  - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - cd ../robotics
+  - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - cd ../../build
+  # Testing
+  - make test

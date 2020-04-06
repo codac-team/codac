@@ -23,6 +23,8 @@
 
 namespace tubex
 {
+  // todo: assert if structure of referenced domain changes (size, nb slices)
+  
   enum class DomainType { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
 
   class Ctc;

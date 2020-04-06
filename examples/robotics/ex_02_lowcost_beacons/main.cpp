@@ -157,5 +157,5 @@ int main()
 
   // Checking if this example still works:
   return (fabs(x.volume() - 1367.94) < 1e-2
-    && x.subvector(0,3).contains(traj_state) == YES) ? EXIT_SUCCESS : EXIT_FAILURE;
+    && x.subvector(0,3).contains(traj_state) == BoolInterval::YES) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

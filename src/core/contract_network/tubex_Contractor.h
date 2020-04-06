@@ -25,7 +25,7 @@ namespace ibex
 
 namespace tubex
 {
-  enum class ContractorType { COMPONENT, IBEX, TUBEX };
+  enum class ContractorType { COMPONENT, EQUALITY, IBEX, TUBEX };
 
   class Domain;
   class ContractorNetwork;
@@ -35,10 +35,10 @@ namespace tubex
   {
     public:
 
-      Contractor(const Contractor& ac);
-      explicit Contractor();
+      explicit Contractor(ContractorType type);
       explicit Contractor(ibex::Ctc& ctc);
       explicit Contractor(tubex::Ctc& ctc);
+      Contractor(const Contractor& ac);
       ~Contractor();
 
       ContractorType type() const;

@@ -12,6 +12,7 @@
 #include "tubex_Ctc.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_Domain.h"
 #include "pyibex_export_Ctc_docs.h"
 #include "pyibex_export_CtcEval_docs.h"
 #include "pyibex_export_CtcDeriv_docs.h"
@@ -39,7 +40,7 @@ public:
   using Ctc::Ctc;
 
   /* Trampoline (need one for each virtual function) */
-  void contract(std::vector<AbstractDomain*>& v_domains) override {
+  void contract(std::vector<Domain*>& v_domains) override {
     // py::gil_scoped_acquire acquire;
     PYBIND11_OVERLOAD_PURE(
       void,       /* return type */
@@ -76,7 +77,7 @@ void export_Contractors(py::module& m){
   py::class_<CtcEval> ctceval(m, "CtcEval", ctc);
   ctceval
     .def(py::init<>(),DOCS_CTCEVAL_CTCEVAL)
-    .def("contract", (void (CtcEval::*)(std::vector<AbstractDomain *> &) )&CtcEval::contract,
+    .def("contract", (void (CtcEval::*)(std::vector<Domain *> &) )&CtcEval::contract,
         DOCS_CTCEVAL_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
     .def("contract", (void (CtcEval::*)(double,ibex::Interval &,Tube &,Tube &) )&CtcEval::contract,
         DOCS_CTCEVAL_CONTRACT_DOUBLE_INTERVAL_TUBE_TUBE, "t"_a, "z"_a, "y"_a, "w"_a)
@@ -101,7 +102,7 @@ void export_Contractors(py::module& m){
     py::class_<CtcDeriv> ctcderiv(m, "CtcDeriv", DOCS_CTCDERIV);
     ctcderiv
         .def(py::init<>(),DOCS_CTCDERIV_CTCDERIV)
-        // .def("contract", (void (CtcDeriv::*)(std::vector<AbstractDomain> &) )&CtcDeriv::contract,
+        // .def("contract", (void (CtcDeriv::*)(std::vector<Domain> &) )&CtcDeriv::contract,
             // DOCS_CTCDERIV_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
         .def("contract", (void (CtcDeriv::*)(Tube &,const Tube &,TimePropag) )&CtcDeriv::contract,
             DOCS_CTCDERIV_CONTRACT_TUBE_TUBE_TIMEPROPAG, "x"_a, "v"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)

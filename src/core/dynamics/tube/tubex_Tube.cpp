@@ -1134,8 +1134,13 @@ namespace tubex
     }
 
     // Synthesis tree
-
-    bool Tube::s_enable_syntheses = AUTO_SYNTHESIS_BY_DEFAULT;
+    
+    #ifdef USE_TUBE_TREE
+    bool Tube::s_enable_syntheses = true;
+    #else
+    bool Tube::s_enable_syntheses = false;
+    #endif
+    
     void Tube::enable_syntheses(bool enable)
     {
       Tube::s_enable_syntheses = enable;

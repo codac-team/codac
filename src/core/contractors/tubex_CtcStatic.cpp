@@ -16,7 +16,7 @@ using namespace ibex;
 namespace tubex
 {
   CtcStatic::CtcStatic(ibex::Ctc *ibex_ctc, bool dynamic_ctc)
-    : Ctc(), m_ibex_ctc(ibex_ctc), m_dynamic_ctc(dynamic_ctc ? 1 : 0)
+    : Ctc(false), m_ibex_ctc(ibex_ctc), m_dynamic_ctc(dynamic_ctc ? 1 : 0)
   {
 
   }
