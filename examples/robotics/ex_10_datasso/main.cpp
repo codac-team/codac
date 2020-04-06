@@ -144,6 +144,6 @@ int main()
   
   vibes::endDrawing();
   // Checking if this example still works:
-  bool success = x.contains(state_truth.subvector(0,1)) == YES;
+  bool success = x.contains(state_truth.subvector(0,1)) == BoolInterval::YES;
   return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }

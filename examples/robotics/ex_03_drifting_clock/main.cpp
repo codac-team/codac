@@ -106,5 +106,5 @@ int main()
     vibes::endDrawing();
 
   // Checking if this example still works:
-  return (y[0].contains(y_truth) == YES && h[0].contains(h_truth) == YES) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (y[0].contains(y_truth) == BoolInterval::YES && h[0].contains(h_truth) == BoolInterval::YES) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
