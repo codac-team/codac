@@ -47,14 +47,6 @@
 
 
 ################################################################################
-# Python binding
-################################################################################
-
-  add_compile_options(-fPIC) # is it necessary for python binding?
-  add_subdirectory(pybind11)
-
-
-################################################################################
 # Optional binary tree activation for all tubes (for tests purposes mainly)
 ################################################################################
   
@@ -90,6 +82,14 @@
     message(STATUS "[capd2tubex] PKG_CAPD_INCLUDE_DIRS = ${PKG_CAPD_INCLUDE_DIRS}")
     message(STATUS "[capd2tubex] PKG_CAPD_LDFLAGS = ${PKG_CAPD_LDFLAGS}")
   endif()
+
+
+################################################################################
+# Python binding
+################################################################################
+
+  add_compile_options(-fPIC) # is it necessary for python binding?
+  add_subdirectory(pybind11)
 
 
 ################################################################################

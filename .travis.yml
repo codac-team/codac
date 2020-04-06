@@ -59,17 +59,18 @@ install:
   # IBEX
   - echo 'Installing IBEX...';
   - if [ ! -e "ibex-lib" ]; then
-      git clone https://github.com/ibex-team/ibex-lib ;
+      git clone -b develop https://github.com/ibex-team/ibex-lib.git ;
       cd ibex-lib ;
-      git checkout 81a0c0e930fbe158699e070fa39abc7d8082eb68 ;
-      ./waf configure --with-debug --interval-lib=gaol ;
-      sudo ./waf install ;
+      git checkout fd820d1ed0a85b8a11f54e9ca7ebc8bb4ffa4335 ;
+      mkdir build && cd build ;
+      cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" .. ;
+      make ;
       cd .. ;
     else
       echo 'Using cached directory.' ;
     fi
   - cd ibex-lib
-  - sudo ./waf install
+  - sudo make install
   - cd ..
   # todo: use CMake to install IBEX
 
@@ -107,6 +108,7 @@ script:
   
   - pwd
   - ls
+  - git submodule init ; git submodule update # for pybind11 submodule
   - mkdir build -p
   - cd build
   
