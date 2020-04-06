@@ -25,7 +25,7 @@ matrix:
         packages:
           - g++-5
     env:
-       - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+      - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
   - os: linux
     addons:
       apt:
@@ -34,7 +34,7 @@ matrix:
         packages:
           - g++-7
     env:
-       - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
   - os: linux
     addons:
       apt:
@@ -43,7 +43,7 @@ matrix:
         packages:
           - g++-8
     env:
-       - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+      - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -53,9 +53,16 @@ cache:
     - capd
     - ibex-lib
 
+services:
+  - docker
+
+env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+
 install:
   #- pip install breathe sphinx-tabs # for documentation
 
+  - docker pull $DOCKER_IMAGE
+  
   - pwd
   - ls
 

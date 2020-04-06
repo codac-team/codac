@@ -47,11 +47,11 @@ The last sources are available on `the official Tubex development repository <ht
   mkdir build ; cd build ; cmake .. ; make          # build the sources
   sudo make install                                 # install the library
 
-If you want to compile without debug mode, then you can configure CMake with the following option:
+If you want to compile with debug mode, then you can configure CMake with the following option:
 
 .. code-block:: bash
 
-  cmake -DCMAKE_BUILD_TYPE=Release ..
+  cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 
 Graphical tools
