@@ -108,6 +108,8 @@ install:
   #- cd ..
 
 script:
+
+  - py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
   
   - pwd
   - ls
@@ -118,7 +120,7 @@ script:
   # Without synthesis tree
   
   # Building lib + tests
-  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
+  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION=${py_version} ..
   - make
   - sudo make install
   # Building the examples
@@ -135,7 +137,7 @@ script:
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
+  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION=${py_version} ..
   - make
   - sudo make install
   # Building the examples
