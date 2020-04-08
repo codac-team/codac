@@ -121,21 +121,32 @@ TEST_CASE("CtcEval")
     }
   }
 
-  SECTION("Test CtcEval, special cases")
+  #define macro_init_special_cases() \
+    \
+    Tube xdot(Interval(0., 10.), 1.0); \
+    xdot.set(Interval(-0.5,1.)); \
+    \
+    Tube x(xdot); \
+    x.set(Interval::ALL_REALS); \
+    x.set(Interval(-1.5,1.), 4); \
+    x.set(Interval(-1.,1.5), 5); \
+    CHECK(x.nb_slices() == 10); \
+    \
+    CtcDeriv ctc_deriv; \
+    ctc_deriv.contract(x, xdot); \
+    \
+    Tube x_raw(x), xdot_raw(xdot); \
+    \
+    Interval intv_t, intv_y; \
+    CtcEval ctc_eval_propa, ctc_eval_nopropa; \
+    ctc_eval_propa.preserve_slicing(false); \
+    ctc_eval_nopropa.preserve_slicing(false); \
+    ctc_eval_propa.enable_temporal_propagation(true); \
+    ctc_eval_nopropa.enable_temporal_propagation(false); \
+
+  SECTION("Test CtcEval, special cases (0, test init)")
   {
-    Tube xdot(Interval(0., 10.), 1.0);
-    xdot.set(Interval(-0.5,1.));
-
-    Tube x(xdot);
-    x.set(Interval::ALL_REALS);
-    x.set(Interval(-1.5,1.), 4);
-    x.set(Interval(-1.,1.5), 5);
-    CHECK(x.nb_slices() == 10);
-    
-    CtcDeriv ctc_deriv;
-    ctc_deriv.contract(x, xdot);
-
-    Tube x_raw(x), xdot_raw(xdot);
+    macro_init_special_cases();
 
     // Checking the tube...
     CHECK(x_raw(0) == Interval(-5.5,3.));
@@ -148,13 +159,11 @@ TEST_CASE("CtcEval")
     CHECK(x_raw(7) == Interval(-2.,3.5));
     CHECK(x_raw(8) == Interval(-2.5,4.5));
     CHECK(x_raw(9) == Interval(-3.,5.5));
+  }
 
-    Interval intv_t, intv_y;
-    CtcEval ctc_eval_propa, ctc_eval_nopropa;
-    ctc_eval_propa.preserve_slicing(false);
-    ctc_eval_nopropa.preserve_slicing(false);
-    ctc_eval_propa.enable_temporal_propagation(true);
-    ctc_eval_nopropa.enable_temporal_propagation(false);
+  SECTION("Test CtcEval, special cases (case A no propa)")
+  {
+    macro_init_special_cases();
 
     // Test A (no propa)
     x = x_raw;
@@ -177,7 +186,12 @@ TEST_CASE("CtcEval")
     CHECK(x(7) == Interval(-2.,3.5));
     CHECK(x(8) == Interval(-2.5,4.5));
     CHECK(x(9) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case A propa)")
+  {
+    macro_init_special_cases();
+    
     // Test A (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -199,14 +213,24 @@ TEST_CASE("CtcEval")
     CHECK(x(7) == Interval(-2.,3.5));
     CHECK(x(8) == Interval(-2.5,4.5));
     CHECK(x(9) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case A, deriv)")
+  {
+    macro_init_special_cases();
+    
     // Test A: ctc_deriv should not be effective after ctc_eval(true)
     x = x_raw;
     xdot = xdot_raw;
     intv_t = 1.;
     intv_y = Interval(-0.5,1.);
     ctc_eval_propa.contract(intv_t, intv_y, x, xdot);
+  }
 
+  SECTION("Test CtcEval, special cases (case B no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test B (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -232,7 +256,12 @@ TEST_CASE("CtcEval")
     CHECK(x(9) == Interval(-2.,3.5));
     CHECK(x(10) == Interval(-2.5,4.5));
     CHECK(x(11) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case B propa)")
+  {
+    macro_init_special_cases();
+    
     // Test B (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -262,7 +291,12 @@ TEST_CASE("CtcEval")
     CHECK(x(9) == Interval(-2.,3.5));
     CHECK(x(10) == Interval(-2.5,4.5));
     CHECK(x(11) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case C no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test C (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -287,7 +321,12 @@ TEST_CASE("CtcEval")
     CHECK(x(9) == Interval(-2.,3.5));
     CHECK(x(10) == Interval(-2.5,4.5));
     CHECK(x(11) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case C propa)")
+  {
+    macro_init_special_cases();
+    
     // Test C (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -330,7 +369,12 @@ TEST_CASE("CtcEval")
       //vibes::drawBox(box, vibesParams("figure", "ctceval", "blue"));
       //vibes::endDrawing();
     }
+  }
 
+  SECTION("Test CtcEval, special cases (case D no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test D (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -353,7 +397,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval(-2.,3.5));
     CHECK(x(9) == Interval(-2.5,4.5));
     CHECK(x(10) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case D, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test D (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -376,7 +425,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval(-2.,3.5));
     CHECK(x(9) == Interval(-2.5,4.5));
     CHECK(x(10) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case E, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test E (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -400,7 +454,12 @@ TEST_CASE("CtcEval")
     CHECK(x(9) == Interval(-2.5,4.5));
     CHECK(x(10) == Interval(-2.5,4.5));
     CHECK(x(11) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case E, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test E (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -424,7 +483,12 @@ TEST_CASE("CtcEval")
     CHECK(x(9) == Interval(-2.25,-0.75));
     CHECK(x(10) == Interval(-2.5,-0.25));
     CHECK(x(11) == Interval(-3.,0.75));
+  }
 
+  SECTION("Test CtcEval, special cases (case F, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test F (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -448,7 +512,12 @@ TEST_CASE("CtcEval")
     CHECK(x(10) == Interval(-3.,5.5));
     CHECK(x(9.5) == Interval(-1.,3.5));
     CHECK(x(11) == Interval(-3,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case F, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test F (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -472,7 +541,12 @@ TEST_CASE("CtcEval")
     //CHECK(x(10) == Interval(-1.,3.5)); // optimality
     CHECK(x(9.5) == Interval(-1.,3.5));
     CHECK(x(11) == Interval(-1.25,4.));
+  }
 
+  SECTION("Test CtcEval, special cases (case G, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test G (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -493,7 +567,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval(-2.,3.5));
     CHECK(x(9) == Interval(-2.5,4.5));
     CHECK(x(10) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case G, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test G (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -514,7 +593,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval(2.75,3.5));
     CHECK(x(9) == Interval(2.25,4.5));
     CHECK(x(10) == Interval(1.75,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case H, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test H (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -535,7 +619,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval::EMPTY_SET);
     CHECK(x(9) == Interval::EMPTY_SET);
     CHECK(x.is_empty());
+  }
 
+  SECTION("Test CtcEval, special cases (case H, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test H (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -556,7 +645,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval::EMPTY_SET);
     CHECK(x(9) == Interval::EMPTY_SET);
     CHECK(x.is_empty());
+  }
 
+  SECTION("Test CtcEval, special cases (case I, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test I (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -578,7 +672,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval(-2.,3.5));
     CHECK(x(9) == Interval(-2.5,4.5));
     CHECK(x(10) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case I, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test I (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -600,7 +699,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval(-2.,3.5));
     CHECK(x(9) == Interval(-2.5,4.5));
     CHECK(x(10) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case J, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test J (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -622,7 +726,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval(-2.,3.5));
     CHECK(x(9) == Interval(-2.5,4.5));
     CHECK(x(10) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case J, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test J (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -644,7 +753,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval(0.125-0.5,2.75));
     CHECK(x(9) == Interval(0.125-1.,3.75));
     CHECK(x(10) == Interval(0.125-1.5,4.75));
+  }
 
+  SECTION("Test CtcEval, special cases (case K, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test K (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -668,7 +782,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8.25) == Interval(-2.,3.));
     CHECK(x(10) == Interval(-2.5,4.5));
     CHECK(x(11) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case K, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test K (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -692,7 +811,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8.25) == Interval(-2.,3.));
     CHECK(x(10) == Interval(-2.375,3.75));
     CHECK(x(11) == Interval(-2.875,4.75));
+  }
 
+  SECTION("Test CtcEval, special cases (case L, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test L (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -716,7 +840,12 @@ TEST_CASE("CtcEval")
     CHECK(x(9) == Interval(-2.,3.5));
     CHECK(x(10) == Interval(-2.5,4.5));
     CHECK(x(11) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case L, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test L (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -740,7 +869,12 @@ TEST_CASE("CtcEval")
     CHECK(x(9) == Interval(-1.5,3.5));
     CHECK(x(10) == Interval(-2.,4.5));
     CHECK(x(11) == Interval(-2.5,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case M, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test M (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -761,7 +895,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval::EMPTY_SET);
     CHECK(x(9) == Interval::EMPTY_SET);
     CHECK(x.is_empty());
+  }
 
+  SECTION("Test CtcEval, special cases (case M, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test M (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -782,7 +921,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8) == Interval::EMPTY_SET);
     CHECK(x(9) == Interval::EMPTY_SET);
     CHECK(x.is_empty());
+  }
 
+  SECTION("Test CtcEval, special cases (case N, no propa)")
+  {
+    macro_init_special_cases();
+    
     // Test N (no propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -806,7 +950,12 @@ TEST_CASE("CtcEval")
     CHECK(x(8.5) == Interval(1.,4.));
     CHECK(x(10) == Interval(-2.5,4.5));
     CHECK(x(11) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case N, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test N (propa)
     x = x_raw;
     xdot = xdot_raw;
@@ -830,8 +979,13 @@ TEST_CASE("CtcEval")
     CHECK(x(8.5) == Interval(1.,4.));
     CHECK(x(10) == Interval(0.75,4.5));
     CHECK(x(11) == Interval(0.25,5.5));
+  }
 
-    // Test 0 (no propa)
+  SECTION("Test CtcEval, special cases (case O, no propa)")
+  {
+    macro_init_special_cases();
+    
+    // Test O (no propa)
     x = x_raw;
     xdot = xdot_raw;
     intv_t = Interval(2.5,9.5);
@@ -854,7 +1008,12 @@ TEST_CASE("CtcEval")
     CHECK(x(10) == Interval(-3.,5.5));
     CHECK(x(9.5) == Interval(-2.75,4.5));
     CHECK(x(11) == Interval(-3.,5.5));
+  }
 
+  SECTION("Test CtcEval, special cases (case O, propa)")
+  {
+    macro_init_special_cases();
+    
     // Test 0 (propa)
     x = x_raw;
     xdot = xdot_raw;
