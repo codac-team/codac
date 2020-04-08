@@ -193,7 +193,10 @@ namespace tubex
     }
 
     if(v_x.size() > 0)
+    {
       vibes::drawPolygon(v_x, v_y, color, params_this_fig);
+      m_view_box |= p.box();
+    }
   }
 
   void VIBesFig::draw_point(const Point& p, float size, const vibes::Params& params)
