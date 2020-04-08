@@ -284,6 +284,20 @@ For recent improvements and activities, see the `Github Tubex repository <https:
 This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 
+Contributors
+============
+
+.. hlist::
+  :columns: 3
+
+  * `Simon Rohou <http://simon-rohou.fr/research/>`_
+  * `Benoît Desrochers <www.ensta-bretagne.fr/desrochers>`_
+  * `Gilles Chabert <https://web.imt-atlantique.fr/x-info/gchabe08/>`_
+  * Julien Damers
+  * Raphael Voges
+  * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
+
+
 Main related publications
 =========================
 
