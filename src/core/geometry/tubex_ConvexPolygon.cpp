@@ -24,6 +24,11 @@ namespace tubex
 
   }
 
+  ConvexPolygon::ConvexPolygon(const Polygon& p) : ConvexPolygon(p.vertices(), false)
+  {
+
+  }
+
   ConvexPolygon::ConvexPolygon(const ConvexPolygon& p) : Polygon(p.vertices())
   {
 
