@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include "tubex_Polygon.h"
+#include "ibex_IntervalMatrix.h"
 
 using namespace std;
 using namespace ibex;
@@ -239,21 +240,48 @@ namespace tubex
     return str;
   }
 
-  void Polygon::rotate(double angle)
+  void Polygon::rotate(const Interval& theta)
   {
-    rotate(angle, Point::center(m_v_vertices));
+    rotate(theta, Point::center(m_v_vertices));
   }
 
-  void Polygon::rotate(double angle, const Point& center)
+  void Polygon::rotate(const Interval& theta, const Point& center)
   {
-    for(size_t i = 0 ; i < m_v_vertices.size() ; i++)
-    {
-      Interval dx = m_v_vertices[i].x() - center.x();
-      Interval dy = m_v_vertices[i].y() - center.y();
+    IntervalMatrix rot(3,3);
+    rot[0][0] = cos(theta); rot[0][1] = -sin(theta); rot[0][2] = 0.; 
+    rot[1][0] = sin(theta); rot[1][1] = cos(theta);  rot[1][2] = 0.; 
+    rot[2][0] = 0.;         rot[2][1] = 0.;          rot[2][2] = 1.; 
 
-      m_v_vertices[i] = Point(center.x() + dx*cos(angle) - dy*sin(angle),
-                              center.y() + dx*sin(angle) + dy*cos(angle));
+    IntervalMatrix tra(3,3);
+    tra[0][0] = 1.; tra[0][1] = 0.; tra[0][2] = center.x(); 
+    tra[1][0] = 0.; tra[1][1] = 1.; tra[1][2] = center.y(); 
+    tra[2][0] = 0.; tra[2][1] = 0.; tra[2][2] = 1.; 
+
+    IntervalMatrix rtra(3,3);
+    rtra[0][0] = 1.; rtra[0][1] = 0.; rtra[0][2] = -center.x(); 
+    rtra[1][0] = 0.; rtra[1][1] = 1.; rtra[1][2] = -center.y(); 
+    rtra[2][0] = 0.; rtra[2][1] = 0.; rtra[2][2] = 1.; 
+
+    IntervalMatrix compo = tra * rot * rtra;
+
+    for(auto& pt : m_v_vertices)
+    {
+      IntervalVector v({pt.x(), pt.y(), 1.});
+
+      v = compo * v;
+      pt = Point(v[0]/v[2], v[1]/v[2]);
     }
+
+    // todo: check the performances with respect to this direct implementation:
+
+    //for(size_t i = 0 ; i < m_v_vertices.size() ; i++)
+    //{
+    //  Interval dx = m_v_vertices[i].x() - center.x();
+    //  Interval dy = m_v_vertices[i].y() - center.y();
+    //  
+    //  m_v_vertices[i] = Point(center.x() + dx*cos(angle) - dy*sin(angle),
+    //                          center.y() + dx*sin(angle) + dy*cos(angle));
+    //}
   }
 
   const Polygon& Polygon::inflate_vertices(double rad)

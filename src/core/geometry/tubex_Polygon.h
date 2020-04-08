@@ -42,8 +42,8 @@ namespace tubex
       bool does_not_exist() const;
       bool operator()(const Point& p1, const Point& p2);
 
-      void rotate(double angle);
-      void rotate(double angle, const Point& center);
+      void rotate(const ibex::Interval& theta);
+      void rotate(const ibex::Interval& theta, const Point& center);
 
       const Polygon& inflate_vertices(double rad);
       void merge_close_vertices();

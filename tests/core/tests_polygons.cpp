@@ -1114,6 +1114,26 @@ TEST_CASE("Polygon")
       CHECK(sqrt(pow(v_pts[i].x() - 0.5, 2) + pow(v_pts[i].y() - 0.5, 2)).is_subset(Interval(0.48,0.52)));
   }
 
+  SECTION("Polygons, rotation")
+  {
+    vector<Point> v_pts;
+    v_pts.push_back(Point(1.,1.));
+    v_pts.push_back(Point(3.,2.));
+    v_pts.push_back(Point(2.,4.));
+
+    ConvexPolygon p(v_pts);
+    p.rotate(-M_PI/2., Point(3.,1.));
+
+    // Rotated polygon truth
+    vector<Point> v_pts_rot_truth;
+    v_pts_rot_truth.push_back(Point(4.,1.));
+    v_pts_rot_truth.push_back(Point(3.,3.));
+    v_pts_rot_truth.push_back(Point(6.,2.));
+    ConvexPolygon p_rot_truth(v_pts_rot_truth);
+
+    CHECK(ApproxPolygon(p) == p_rot_truth);
+  }
+
   SECTION("Polygons, Graham scan, step by step")
   {
     vector<Point> v_pts;
