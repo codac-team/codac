@@ -8,10 +8,12 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Function.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayFunction.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayFunction.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_polygon_arithmetic.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_polygon_arithmetic.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic_scalar.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic_vector.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic_scalar.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic_vector.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_Figure.h

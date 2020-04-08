@@ -1,6 +1,7 @@
 #include "catch_interval.hpp"
 #include "tubex_GrahamScan.h"
 #include "tubex_VIBesFig.h"
+#include "tubex_polygon_arithmetic.h"
 
 // Using #define so that we can access protected methods
 // of the class for tests purposes
@@ -1132,6 +1133,52 @@ TEST_CASE("Polygon")
     ConvexPolygon p_rot_truth(v_pts_rot_truth);
 
     CHECK(ApproxPolygon(p) == p_rot_truth);
+  }
+
+  SECTION("Polygons, arithmetic")
+  {
+    vector<Point> v_truth(3);
+
+    double theta = -M_PI/2.;
+
+    IntervalMatrix rot_mat(2,2);
+    rot_mat[0][0] = cos(theta); rot_mat[0][1] = -sin(theta);
+    rot_mat[1][0] = sin(theta); rot_mat[1][1] =  cos(theta);
+
+    IntervalVector c(2);
+    c[0] = 3.; c[1] = 1.;
+
+    vector<Point> v_pts;
+    v_pts.push_back(Point(1.,1.));
+    v_pts.push_back(Point(3.,2.));
+    v_pts.push_back(Point(2.,4.));
+    Polygon p(v_pts);
+
+    v_truth[0] = Point(1.,1.);
+    v_truth[1] = Point(3.,2.);
+    v_truth[2] = Point(2.,4.);
+    CHECK(ApproxPolygon(p) == Polygon(v_truth));
+
+    p = p - c;
+
+    v_truth[0] = Point(1.-3.,1.-1.);
+    v_truth[1] = Point(3.-3.,2.-1.);
+    v_truth[2] = Point(2.-3.,4.-1.);
+    CHECK(ApproxPolygon(p) == Polygon(v_truth));
+
+    p = rot_mat * p;
+
+    v_truth[0] = Point(4.-3.,1.-1.);
+    v_truth[1] = Point(3.-3.,3.-1.);
+    v_truth[2] = Point(6.-3.,2.-1.);
+    CHECK(ApproxPolygon(p) == Polygon(v_truth));
+
+    p = p + c;
+
+    v_truth[0] = Point(4.,1.);
+    v_truth[1] = Point(3.,3.);
+    v_truth[2] = Point(6.,2.);
+    CHECK(ApproxPolygon(p) == Polygon(v_truth));
   }
 
   SECTION("Polygons, Graham scan, step by step")

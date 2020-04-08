@@ -34,6 +34,11 @@ namespace tubex
     //m_v_vertices = Polygon::delete_redundant_points(m_v_vertices);
   }
 
+  int Polygon::size() const
+  {
+    return 2; // for now, only 2d polygons are supported
+  }
+
   int Polygon::nb_vertices() const
   {
     return m_v_vertices.size();

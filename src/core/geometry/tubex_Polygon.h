@@ -27,6 +27,7 @@ namespace tubex
       Polygon(const ibex::IntervalVector& box);
       Polygon(const std::vector<Point>& v_points);
 
+      int size() const;
       int nb_vertices() const;
       const std::vector<Point>& vertices() const;
       const std::vector<Edge> edges() const;
