@@ -29,7 +29,9 @@ Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
   make
   sudo make install
 
-Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
+.. admonition:: Debug/development mode
+  
+  Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
 
 Tubex uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/wrswt/preprints/prep_01_4.pdf>`_ is also supported. Use :code:`-DINTERVAL_LIB=filib` during the CMake configuration to use it.
 
@@ -47,11 +49,9 @@ The last sources are available on `the official Tubex development repository <ht
   mkdir build ; cd build ; cmake .. ; make          # build the sources
   sudo make install                                 # install the library
 
-If you want to compile with debug mode, then you can configure CMake with the following option:
-
-.. code-block:: bash
-
-  cmake -DCMAKE_BUILD_TYPE=Debug ..
+.. admonition:: Debug/development mode
+  
+  Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option is enabled by default. As for IBEX, it will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments. You can otherwise use the :code:`-DCMAKE_BUILD_TYPE=Release` option. Note also that O3 optimizations are always activated.
 
 
 Graphical tools
