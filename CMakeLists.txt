@@ -40,9 +40,8 @@
 
   add_compile_options(-O3 -Wall)
 
-  option(OPTIMIZED ON)
-  if(OPTIMIZED)
-    add_compile_options(-O3)
+  if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
   endif()
 
 
