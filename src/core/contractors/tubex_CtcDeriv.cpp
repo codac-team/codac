@@ -103,7 +103,9 @@ namespace tubex
   void CtcDeriv::contract(Slice& x, const Slice& v, TimePropag t_propa)
   {
     assert(x.domain() == v.domain());
-    double volume = x.volume() + v.volume();
+    #ifndef NDEBUG
+      double volume = x.volume() + v.volume(); // for last assert
+    #endif
 
     if(!x.domain().intersects(m_restricted_domain))
     {

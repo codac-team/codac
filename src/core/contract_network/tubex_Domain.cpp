@@ -230,6 +230,8 @@ namespace tubex
       default:
         assert(false && "unhandled case");
     }
+
+    return 0.;
   }
 
   double Domain::get_saved_volume() const
@@ -264,6 +266,8 @@ namespace tubex
       default:
         assert(false && "unhandled case");
     }
+
+    return false;
   }
   
   bool Domain::operator==(const Domain& x) const

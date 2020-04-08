@@ -126,7 +126,9 @@ namespace tubex
   {
     assert(y.domain() == w.domain());
     assert(Tube::same_slicing(y, w));
-    double volume = y.volume() + w.volume(); // for last assert
+    #ifndef NDEBUG
+      double volume = y.volume() + w.volume(); // for last assert
+    #endif
     
     if(t.is_degenerated())
       return contract(t.lb(), z, y, w);
