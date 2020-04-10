@@ -8,7 +8,9 @@
   set(TUBEX_DESCRIPTION "Library providing tools to guarantee computations over sets of trajectories")
   set(TUBEX_URL "http://simon-rohou.fr/research/tubex-lib")
 
-set(CMAKE_BUILD_TYPE Debug)
+  set(CMAKE_BUILD_TYPE Debug)
+
+  
 ################################################################################
 # Options for install directory
 ################################################################################
