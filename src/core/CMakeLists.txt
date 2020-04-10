@@ -41,12 +41,12 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset_degree.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_ConvexPolygon.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_ConvexPolygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Edge.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Edge.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_GrahamScan.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_GrahamScan.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Point.h

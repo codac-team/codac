@@ -25,35 +25,37 @@ namespace tubex
     public:
 
       // Prints convex hull of a set of n points.
-      static const std::vector<Point> convex_hull(const std::vector<Point>& v_points);
+      static const std::vector<ibex::Vector> convex_hull(const std::vector<ibex::Vector>& v_points);
 
-    //protected:
-
-      // A utility function to find next to top in a stack
-      static const Point next_to_top(const std::stack<Point>& s);
-      
-      // A utility function to swap two points
-      static void swap(Point& p1, Point& p2);
-
-      // A utility function to return square of distance between p1 and p2
-      static const ibex::Interval dist(const Point& p1, const Point& p2);
-
-      // To find orientation of ordered triplet (p, q, r).
-      static OrientationInterval orientation(const Point& p0, const Point& p1, const Point& p2);
 
     protected:
+
+      // A utility function to find next to top in a stack
+      static const ibex::Vector next_to_top(const std::stack<ibex::Vector>& s);
+      
+      // A utility function to swap two points
+      static void swap(ibex::Vector& p1, ibex::Vector& p2);
+
+      // A utility function to return square of distance between p1 and p2
+      static const ibex::Interval dist(const ibex::IntervalVector& p1, const ibex::IntervalVector& p2);
+
+      // To find orientation of ordered triplet (p, q, r).
+      static OrientationInterval orientation(const ibex::IntervalVector& p0, const ibex::IntervalVector& p1, const ibex::IntervalVector& p2);
+
+      friend class PointsSorter;
+      friend class ConvexPolygon;
   };
 
   class PointsSorter
   {
     public:
 
-      PointsSorter(const Point& p0);
-      bool operator()(const Point& p1, const Point& p2);
+      PointsSorter(const ibex::Vector& p0);
+      bool operator()(const ibex::Vector& p1, const ibex::Vector& p2);
 
     protected:
 
-      Point m_p0 = Point(ibex::Interval::EMPTY_SET, ibex::Interval::EMPTY_SET);
+      ibex::Vector m_p0 = ibex::Vector(2);
   };
 }
 

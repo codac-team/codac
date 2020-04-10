@@ -272,7 +272,7 @@ namespace tubex
       if(is_empty())
         return Polygon();
 
-      vector<Point> v_pts;
+      vector<Vector> v_pts;
       const Slice *s = NULL;
 
       do
@@ -282,15 +282,15 @@ namespace tubex
         else
           s = s->next_slice();
 
-        v_pts.push_back(Point(s->domain().lb(), s->codomain().ub()));
-        v_pts.push_back(Point(s->domain().ub(), s->codomain().ub()));
+        v_pts.push_back(Vector({s->domain().lb(), s->codomain().ub()}));
+        v_pts.push_back(Vector({s->domain().ub(), s->codomain().ub()}));
 
       } while(s->next_slice() != NULL);
 
       while(s != NULL)
       {
-        v_pts.push_back(Point(s->domain().ub(), s->codomain().lb()));
-        v_pts.push_back(Point(s->domain().lb(), s->codomain().lb()));
+        v_pts.push_back(Vector({s->domain().ub(), s->codomain().lb()}));
+        v_pts.push_back(Vector({s->domain().lb(), s->codomain().lb()}));
 
         s = s->prev_slice();
       }
@@ -826,7 +826,7 @@ namespace tubex
         ConvexPolygon p = s_x->polygon(*s_v);
 
         for(size_t i = 0 ; i < p.vertices().size() ; i++)
-          thicknesses.set(Slice::diam(s_x->interpol(p[i].x().mid(), *s_v)), p[i].x().mid());
+          thicknesses.set(Slice::diam(s_x->interpol(p[i][0], *s_v)), p[i][1]);
 
         s_x = s_x->next_slice();
         s_v = s_v->next_slice();

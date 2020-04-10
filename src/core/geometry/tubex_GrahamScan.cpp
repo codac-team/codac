@@ -20,83 +20,31 @@ namespace tubex
 {
   // Class GrahamScan
 
-  const Point GrahamScan::next_to_top(const stack<Point>& s)
+  const vector<Vector> GrahamScan::convex_hull(const vector<Vector>& v_pts_)
   {
-    stack<Point> stemp = s;
-    Point p = stemp.top();
-    stemp.pop();
-    Point q = stemp.top();
-    stemp.push(p);
-    return q;
-  }
-
-  void GrahamScan::swap(Point& p1, Point& p2)
-  {
-    Point temp = p1;
-    p1 = p2;
-    p2 = temp;
-  }
-
-  const Interval GrahamScan::dist(const Point& p1, const Point& p2)
-  {
-    assert(!p1.does_not_exist());
-    assert(!p2.does_not_exist());
-
-    return pow(p1.x() - p2.x(), 2) + pow(p1.y() - p2.y(), 2);
-  }
-
-  OrientationInterval GrahamScan::orientation(const Point& p0, const Point& p1, const Point& p2)
-  {
-    assert(!p0.does_not_exist());
-    assert(!p1.does_not_exist());
-    assert(!p2.does_not_exist());
-
-    const Point pa = p1 - p0, pb = p2 - p0;
-    const Interval cross_prod = pa.x()*pb.y() - pa.y()*pb.x();
-
-    if(cross_prod.contains(0.)) return OrientationInterval::UNDEFINED; // possibly colinear
-    return (cross_prod.lb() > 0.) ? OrientationInterval::COUNTERCLOCKWISE : OrientationInterval::CLOCKWISE;
-  }
-
-  const vector<Point> GrahamScan::convex_hull(const vector<Point>& v_points)
-  {
-    vector<Point> v_pts;
-    for(size_t i = 0 ; i < v_points.size() ; i++)
-      if(!v_points[i].does_not_exist())
-      {
-        // todo: optimize this
-        if(!v_points[i].x().is_degenerated() || !v_points[i].y().is_degenerated())
-        {
-          v_pts.push_back(Point(v_points[i].x().lb(), v_points[i].y().lb()));
-          v_pts.push_back(Point(v_points[i].x().ub(), v_points[i].y().lb()));
-          v_pts.push_back(Point(v_points[i].x().ub(), v_points[i].y().ub()));
-          v_pts.push_back(Point(v_points[i].x().lb(), v_points[i].y().ub()));
-        }
-        
-        else
-          v_pts.push_back(v_points[i]);
-      }
-
-    v_pts = Point::delete_redundant_points(v_pts);
+    vector<Vector> v_pts = Point::remove_identical_pts(v_pts_);
 
     if(v_pts.size() <= 3)
       return v_pts;
+    
+    for(const auto& pt : v_pts)
+      assert(pt.size() == 2 && "operation not supported for other dimensions");
 
     // Based on some sources from OpenGenus Foundation
 
     // Find the bottommost point
 
       int id_min = 0;
-      double y_min = v_pts[0].y().lb();
+      double y_min = v_pts[0][1];
 
       for(size_t i = 1 ; i < v_pts.size() ; i++)
       {
-        double y = v_pts[i].y().lb();
+        double y = v_pts[i][1];
 
         // Pick the bottom-most or chose the left most point in case of tie
-        if((y < y_min) || (y_min == y && v_pts[i].x().lb() < v_pts[id_min].x().lb()))
+        if((y < y_min) || (y_min == y && v_pts[i][0] < v_pts[id_min][0]))
         {
-          y_min = v_pts[i].y().lb();
+          y_min = v_pts[i][1];
           id_min = i;
         }
       }
@@ -111,7 +59,7 @@ namespace tubex
       // has larger polar angle (in counterclockwise
       // direction) than p1
 
-      Point p0 = v_pts[0];
+      Vector p0 = v_pts[0];
       sort(v_pts.begin(), v_pts.end(), PointsSorter(p0));
 
     // If two or more points make same angle with p0,
@@ -125,7 +73,7 @@ namespace tubex
       {
         // Keep removing i while angle of i and i+1 is same
         // with respect to p0
-        while(i < v_pts.size()-1 && Point::aligned(p0, v_pts[i], v_pts[i+1]) == YES)
+        while(i < v_pts.size()-1 && Point::aligned(Point(p0), Point(v_pts[i]), Point(v_pts[i+1])) == YES)
           i++; 
         v_pts[m] = v_pts[i];
         m++; // Update size of modified array
@@ -133,9 +81,9 @@ namespace tubex
 
     // Create an empty stack and push first three points to it.
 
-      vector<Point> v_hull;
+      vector<Vector> v_hull;
 
-      stack<Point> s;
+      stack<Vector> s;
       s.push(v_pts[0]);
       s.push(v_pts[1]);
       s.push(v_pts[2]);
@@ -162,27 +110,53 @@ namespace tubex
     return v_hull;
   }
 
+  const Vector GrahamScan::next_to_top(const stack<Vector>& s)
+  {
+    stack<Vector> stemp = s;
+    Vector p = stemp.top();
+    stemp.pop();
+    Vector q = stemp.top();
+    stemp.push(p);
+    return q;
+  }
+
+  void GrahamScan::swap(Vector& p1, Vector& p2)
+  {
+    Vector temp = p1;
+    p1 = p2;
+    p2 = temp;
+  }
+
+  const Interval GrahamScan::dist(const IntervalVector& p1, const IntervalVector& p2)
+  {
+    return pow(p1[0] - p2[0], 2) + pow(p1[1] - p2[1], 2);
+  }
+
+  OrientationInterval GrahamScan::orientation(const IntervalVector& p0, const IntervalVector& p1, const IntervalVector& p2)
+  {
+    const IntervalVector pa = p1 - p0, pb = p2 - p0;
+    const Interval cross_prod = pa[0]*pb[1] - pa[1]*pb[0];
+
+    if(cross_prod.contains(0.)) return OrientationInterval::UNDEFINED; // possibly colinear
+    return (cross_prod.lb() > 0.) ? OrientationInterval::COUNTERCLOCKWISE : OrientationInterval::CLOCKWISE;
+  }
+
   // Class PointsSorter
 
-  PointsSorter::PointsSorter(const Point& p0)
+  PointsSorter::PointsSorter(const Vector& p0)
   {
-    assert(p0.x().is_degenerated() && p0.y().is_degenerated());
     m_p0 = p0;
   }
 
-  bool PointsSorter::operator()(const Point& p1, const Point& p2)
+  bool PointsSorter::operator()(const Vector& p1, const Vector& p2)
   {
-    // Uncertain points should be divided by GrahamScan
-    //assert(p1.x().is_degenerated() && p1.y().is_degenerated());
-    //assert(p2.x().is_degenerated() && p2.y().is_degenerated());
-
     // Find orientation
     OrientationInterval o = GrahamScan::orientation(m_p0, p1, p2);
 
     if(o == OrientationInterval::COUNTERCLOCKWISE)
       return true;
 
-    else if(o == OrientationInterval::UNDEFINED && GrahamScan::dist(m_p0, p1).lb() <= GrahamScan::dist(m_p0, p2).lb())
+    else if(o == OrientationInterval::UNDEFINED && GrahamScan::dist(m_p0, p1).ub() <= GrahamScan::dist(m_p0, p2).lb())
       return true;
 
     return false;

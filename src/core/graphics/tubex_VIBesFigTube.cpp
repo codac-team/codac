@@ -10,7 +10,7 @@
 
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
-#include "tubex_Polygon.h"
+#include "tubex_ConvexPolygon.h"
 #include "tubex_VIBesFigTube.h"
 
 using namespace std;

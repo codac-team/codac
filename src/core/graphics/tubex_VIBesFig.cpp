@@ -174,6 +174,23 @@ namespace tubex
     vibes::drawCircle(x, y, r, color, params_this_fig);
   }
   
+  void VIBesFig::draw_edge(const Edge& e, const vibes::Params& params)
+  {
+    draw_edge(e, "", params);
+  }
+  
+  void VIBesFig::draw_edge(const Edge& e, const string& color, const vibes::Params& params)
+  {
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+
+    vector<double> v_x, v_y;
+    v_x.push_back(e.p1()[0].mid()); v_x.push_back(e.p2()[0].mid());
+    v_y.push_back(e.p1()[1].mid()); v_y.push_back(e.p2()[1].mid());
+    vibes::drawLine(v_x, v_y, color, params_this_fig);
+    m_view_box |= e.p1().box() | e.p2().box();
+  }
+  
   void VIBesFig::draw_polygon(const Polygon& p, const vibes::Params& params)
   {
     draw_polygon(p, "", params);
@@ -187,9 +204,8 @@ namespace tubex
 
     for(int i = 0 ; i < p.nb_vertices() ; i++)
     {
-      vibes::drawBox(p[i].box(), "gray[gray]", params_this_fig); // showing uncertainties
-      v_x.push_back(trunc_inf(p[i].x().mid()));
-      v_y.push_back(trunc_inf(p[i].y().mid()));
+      v_x.push_back(trunc_inf(p[i][0]));
+      v_y.push_back(trunc_inf(p[i][1]));
     }
 
     if(v_x.size() > 0)

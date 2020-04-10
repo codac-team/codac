@@ -11,8 +11,9 @@
 #ifndef __TUBEX_CONVEXPOLYGON_H__
 #define __TUBEX_CONVEXPOLYGON_H__
 
+#include <vector>
 #include "tubex_Polygon.h"
-#include "ibex_IntervalVector.h"
+#include "ibex_BoolInterval.h"
 
 namespace tubex
 {
@@ -20,18 +21,37 @@ namespace tubex
   {
     public:
 
-      ConvexPolygon();
-      ConvexPolygon(const Polygon& p);
-      ConvexPolygon(const ConvexPolygon& p);
-      ConvexPolygon(const ibex::IntervalVector& box);
-      ConvexPolygon(const std::vector<Point>& v_points, bool convex_points = false);
+      /// \name Definition
+      /// @{
 
-      const ibex::IntervalVector operator&(const ibex::IntervalVector& x) const;
-      static const ConvexPolygon intersect(const ConvexPolygon& p, const ibex::IntervalVector& x);
-      static const ConvexPolygon intersect(const ConvexPolygon& p1, const ConvexPolygon& p2);
+        ConvexPolygon();
+        ConvexPolygon(const ConvexPolygon& p);
+        explicit ConvexPolygon(const ibex::IntervalVector& box);
+        ConvexPolygon(const std::vector<Point>& v_thick_pts);
+        ConvexPolygon(const std::vector<ibex::Vector>& v_floating_pts, bool convex_and_convention_order = false);
 
-      //void simplify(float n = 6.);
-      void simplify(int max_edges);
+      /// @}
+      /// \name Tests
+      /// @{
+
+        const ibex::BoolInterval is_subset(const ConvexPolygon& p) const;
+        const ibex::BoolInterval encloses(const Point& p) const;
+
+      /// @}
+      /// \name Setting values
+      /// @{
+
+        const ConvexPolygon& inflate(double rad);
+        const ConvexPolygon& simplify(size_t max_edges);
+        const ConvexPolygon& rotate(const ibex::Interval& theta, const ibex::IntervalVector& center);
+
+      /// @}
+      /// \name Operators
+      /// @{
+
+        const ibex::IntervalVector fast_intersection(const ibex::IntervalVector& x) const;
+
+      /// @}
   };
 }
 

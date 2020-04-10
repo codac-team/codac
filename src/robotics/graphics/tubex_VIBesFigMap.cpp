@@ -550,9 +550,9 @@ namespace tubex
             // Display using polygons
             if(!prev_box.is_unbounded())
             {
-              vector<Point> v_pts;
-              push_points(box, v_pts);
-              push_points(prev_box, v_pts);
+              vector<Vector> v_pts;
+              Point::push(box, v_pts);
+              Point::push(prev_box, v_pts);
               ConvexPolygon p(v_pts, false);
               draw_polygon(p, color, params);
             }
@@ -632,10 +632,10 @@ namespace tubex
           // Display using polygons
           if(!prev_box.is_unbounded())
           {
-            vector<Point> v_pts;
-            push_points(box, v_pts);
-            push_points(prev_box, v_pts);
-            ConvexPolygon p(v_pts);
+            vector<Vector> v_pts;
+            Point::push(box, v_pts);
+            Point::push(prev_box, v_pts);
+            ConvexPolygon p(v_pts, false);
             draw_polygon(p, color, params);
           }
         }

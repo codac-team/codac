@@ -219,7 +219,7 @@ namespace tubex
       {
         IntervalVector input_box = box();
         input_box[0] &= t;
-        return (polygon(v) & input_box)[1];
+        return polygon(v).fast_intersection(input_box)[1];
       }
     }
 
@@ -261,7 +261,7 @@ namespace tubex
         ConvexPolygon p = polygon(v);
         IntervalVector box(2);
         box[0] = search_domain; box[1] = y;
-        box = p & box;
+        box = p.fast_intersection(box);
         return box[0];
       }
     }

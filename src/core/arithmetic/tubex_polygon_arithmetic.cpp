@@ -1,5 +1,5 @@
 /** 
- *  Arithmetic operations on polygons
+ *  Arithmetic operations on convex polygons
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou
@@ -16,61 +16,117 @@ using namespace ibex;
 
 namespace tubex
 {
-  const Polygon operator+(const Polygon& x)
+  const ConvexPolygon operator+(const ConvexPolygon& x)
   {
     return x;
   }
 
-  const Polygon operator+(const Polygon& x, const ibex::IntervalVector& v)
+  const ConvexPolygon operator+(const ConvexPolygon& x, const ibex::IntervalVector& v)
   {
     return operator+(v, x);
   }
 
-  const Polygon operator+(const ibex::IntervalVector& v, const Polygon& x)
+  const ConvexPolygon operator+(const ibex::IntervalVector& v, const ConvexPolygon& x)
   {
     assert(x.size() == v.size());
 
-    vector<Point> v_result_pts = x.vertices();
-    for(auto& pt : v_result_pts)
-    {
-      IntervalVector y({pt.x(), pt.y()});
-      y = v + y;
-      pt = Point(y[0], y[1]);
-    }
+    vector<Point> v_result_thick_pts = Point::to_Points(x.vertices());
+    for(auto& pt : v_result_thick_pts)
+      pt = Point(pt.box() + v);
 
-    return Polygon(v_result_pts);
+    return ConvexPolygon(v_result_thick_pts);
   }
 
-  const Polygon operator-(const Polygon& x)
+  const ConvexPolygon operator-(const ConvexPolygon& x)
   {
-    vector<Point> v_result_pts = x.vertices();
+    vector<Vector> v_result_pts = x.vertices();
     for(auto& pt : v_result_pts)
-      pt = Point(-pt.x(), -pt.y());
-    return Polygon(v_result_pts);
+      pt *= -1.;
+    return ConvexPolygon(v_result_pts, true);
   }
 
-  const Polygon operator-(const Polygon& x, const ibex::IntervalVector& v)
+  const ConvexPolygon operator-(const ConvexPolygon& x, const ibex::IntervalVector& v)
   {
     return operator+(x, -v);
   }
 
-  const Polygon operator-(const ibex::IntervalVector& v, const Polygon& x)
+  const ConvexPolygon operator-(const ibex::IntervalVector& v, const ConvexPolygon& x)
   {
     return operator+(-x, v);
   }
 
-  const Polygon operator*(const ibex::IntervalMatrix& m, const Polygon& x)
+  const ConvexPolygon operator*(const ibex::IntervalMatrix& m, const ConvexPolygon& x)
   {
     assert(x.size() == m.nb_cols() && x.size() == m.nb_rows());
 
-    vector<Point> v_result_pts = x.vertices();
-    for(auto& pt : v_result_pts)
+    vector<Point> v_result_thick_pts = Point::to_Points(x.vertices());
+    for(auto& pt : v_result_thick_pts)
+      pt = Point(m * pt.box());
+
+    return ConvexPolygon(v_result_thick_pts);
+  }
+  
+  const ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2)
+  {
+    vector<Point> v_pts;
+
+    // Add all vertices of p1 that are inside p2
+    for(const auto& pt_ : p1.vertices())
     {
-      IntervalVector y({pt.x(), pt.y()});
-      y = m * y;
-      pt = Point(y[0], y[1]);
+      Point pt(pt_);
+      if(p2.encloses(pt) != NO)
+        v_pts.push_back(pt);
     }
 
-    return Polygon(v_result_pts);
+    // Add all vertices of p2 that are inside p1
+    for(const auto& pt_ : p2.vertices())
+    {
+      Point pt(pt_);
+      if(p1.encloses(pt) != NO)
+        v_pts.push_back(pt);
+    }
+
+    // Add all intersection points
+    for(const auto& e1 : p1.edges())
+      for(const auto& e2 : p2.edges())
+      {
+        const Point intersection_pt = e1 & e2;
+
+        if(!intersection_pt.does_not_exist())
+        {
+          // If edges are possibly parallel:
+          if(Edge::parallel(e1, e2) != NO)
+          {
+            if(e1.contains(e2.p1()) != NO)
+              v_pts.push_back(e2.p1());
+
+            if(e1.contains(e2.p2()) != NO)
+              v_pts.push_back(e2.p2());
+
+            if(e2.contains(e1.p1()) != NO)
+              v_pts.push_back(e1.p1());
+
+            if(e2.contains(e1.p2()) != NO)
+              v_pts.push_back(e1.p2());
+          }
+
+          else
+            v_pts.push_back(intersection_pt);
+        }
+      }
+
+    return ConvexPolygon(v_pts);
+  }
+
+  const ConvexPolygon operator&(const IntervalVector& p1, const ConvexPolygon& p2)
+  {
+    assert(p1.size() == 2 && "other dimensions not supported");
+    return operator&(p2, ConvexPolygon(p1));
+  }
+
+  const ConvexPolygon operator&(const ConvexPolygon& p1, const IntervalVector& p2)
+  {
+    assert(p2.size() == 2 && "other dimensions not supported");
+    return operator&(p1, ConvexPolygon(p2));
   }
 }

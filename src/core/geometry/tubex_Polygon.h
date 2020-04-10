@@ -12,10 +12,10 @@
 #define __TUBEX_POLYGON_H__
 
 #include <vector>
+#include "ibex_Vector.h"
 #include "ibex_IntervalVector.h"
-#include "ibex_BoolInterval.h"
-#include "tubex_Point.h"
 #include "tubex_Edge.h"
+#include "tubex_Point.h"
 
 namespace tubex
 {
@@ -23,39 +23,48 @@ namespace tubex
   {
     public:
 
-      Polygon();
-      Polygon(const ibex::IntervalVector& box);
-      Polygon(const std::vector<Point>& v_points);
+      /// \name Definition
+      /// @{
 
-      int size() const;
-      int nb_vertices() const;
-      const std::vector<Point>& vertices() const;
-      const std::vector<Edge> edges() const;
-      const Point operator[](int vertex_id) const; // todo: use size_t
-      const ibex::IntervalVector box() const;
+        Polygon();
+        Polygon(const Polygon& p);
+        Polygon(const std::vector<ibex::Vector>& v_floating_pts);
 
-      bool is_point() const;
-      bool is_segment() const;
-      const ibex::BoolInterval is_convex() const;
-      bool operator==(const Polygon& p) const;
-      bool operator!=(const Polygon& p) const;
-      const ibex::BoolInterval encloses(const Point& p) const;
-      bool does_not_exist() const;
-      bool operator()(const Point& p1, const Point& p2);
+      /// @}
+      /// \name Accessing values
+      /// @{
 
-      void rotate(const ibex::Interval& theta);
-      void rotate(const ibex::Interval& theta, const Point& center);
+        int size() const;
+        int nb_edges() const;
+        int nb_vertices() const;
+        const std::vector<Edge> edges() const;
+        const std::vector<ibex::Vector>& vertices() const;
+        const ibex::Vector& operator[](size_t vertex_id) const;
+        const ibex::IntervalVector box() const;
+        const Point center() const;
 
-      const Polygon& inflate_vertices(double rad);
-      void merge_close_vertices();
+      /// @}
+      /// \name Tests
+      /// @{
 
-      friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
+        bool is_empty() const;
+        bool is_point() const;
+        bool is_segment() const;
+        bool operator==(const Polygon& p) const;
+        bool operator!=(const Polygon& p) const;
+
+      /// @}
+      /// \name String
+      /// @{
+
+        friend std::ostream& operator<<(std::ostream& str, const Polygon& p);
+
+      /// @}
+
       
-      static const std::vector<Point> delete_redundant_points(const std::vector<Point>& v_pts);
-
     protected:
       
-      std::vector<Point> m_v_vertices;
+      std::vector<ibex::Vector> m_v_floating_pts;
   };
 }
 

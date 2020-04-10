@@ -14,19 +14,23 @@
 
 #include "ibex_IntervalVector.h"
 #include "ibex_IntervalMatrix.h"
-#include "tubex_Polygon.h"
+#include "tubex_ConvexPolygon.h"
 
 namespace tubex
 {
-  const Polygon operator+(const Polygon& x);
-  const Polygon operator+(const Polygon& x, const ibex::IntervalVector& v);
-  const Polygon operator+(const ibex::IntervalVector& v, const Polygon& x);
+  const ConvexPolygon operator+(const ConvexPolygon& x);
+  const ConvexPolygon operator+(const ConvexPolygon& x, const ibex::IntervalVector& v);
+  const ConvexPolygon operator+(const ibex::IntervalVector& v, const ConvexPolygon& x);
 
-  const Polygon operator-(const Polygon& x);
-  const Polygon operator-(const Polygon& x, const ibex::IntervalVector& v);
-  const Polygon operator-(const ibex::IntervalVector& v, const Polygon& x);
+  const ConvexPolygon operator-(const ConvexPolygon& x);
+  const ConvexPolygon operator-(const ConvexPolygon& x, const ibex::IntervalVector& v);
+  const ConvexPolygon operator-(const ibex::IntervalVector& v, const ConvexPolygon& x);
 
-  const Polygon operator*(const ibex::IntervalMatrix& m, const Polygon& x);
+  const ConvexPolygon operator*(const ibex::IntervalMatrix& m, const ConvexPolygon& x);
+
+  const ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2);
+  const ConvexPolygon operator&(const ibex::IntervalVector& p1, const ConvexPolygon& p2);
+  const ConvexPolygon operator&(const ConvexPolygon& p1, const ibex::IntervalVector& p2);
 }
 
 #endif

@@ -13,6 +13,7 @@
 #define __TUBEX_VIBESFIG_H__
 
 #include "tubex_Figure.h"
+#include "tubex_Point.h"
 #include "tubex_Polygon.h"
 #include "vibes.h"
 
@@ -198,6 +199,23 @@ namespace tubex
        * \param params VIBes parameters related to the circle (none by default)
        */
       void draw_circle(double x, double y, double r, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws an edge
+       *
+       * \param e edge
+       * \param params VIBes parameters related to the edge (none by default)
+       */
+      void draw_edge(const Edge& e, const vibes::Params& params);
+
+      /**
+       * \brief Draws an edge
+       *
+       * \param e edge
+       * \param color the optional color of the edge (black by default) 
+       * \param params VIBes parameters related to the edge (none by default)
+       */
+      void draw_edge(const Edge& e, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a polygon

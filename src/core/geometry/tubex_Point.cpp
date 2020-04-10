@@ -16,199 +16,218 @@ using namespace ibex;
 
 namespace tubex
 {
+  // Definition
+
   Point::Point()
-    : m_x(Interval::EMPTY_SET), m_y(Interval::EMPTY_SET)
   {
 
+  }
+
+  Point::Point(const IntervalVector& p)
+    : Point(p[0], p[1])
+  {
+    assert(p.size() == 2);
   }
 
   Point::Point(const Interval& x, const Interval& y)
-    : m_x(x), m_y(y)
   {
-    if(m_x.is_empty()) m_y.set_empty();
-    if(m_y.is_empty()) m_x.set_empty();
-  }
+    m_pt[0] = x;
+    m_pt[1] = y;
 
-  const Interval& Point::x() const
-  {
-    return m_x;
-  }
-
-  const Interval& Point::y() const
-  {
-    return m_y;
-  }
-  
-  const IntervalVector Point::box() const
-  {
-    IntervalVector box(2);
-    box[0] = m_x; box[1] = m_y;
-    return box;
+    if(x.is_empty()) m_pt[1].set_empty();
+    if(y.is_empty()) m_pt[0].set_empty();
   }
 
   const Point& Point::operator=(const Point& p)
   {
-    m_x = p.x();
-    m_y = p.y();
+    m_pt = p.box();
     return *this;
   }
 
-  bool Point::operator==(const Point& p) const
+
+  // Accessing values
+
+  const Interval& Point::x() const
   {
-    return m_x == p.m_x && m_y == p.m_y;
+    return m_pt[0];
   }
 
-  bool Point::operator!=(const Point& p) const
+  const Interval& Point::y() const
   {
-    return m_x != p.m_x || m_y != p.m_y;
+    return m_pt[1];
+  }
+
+  const Interval& Point::operator[](size_t id) const
+  {
+    assert(id >= 0 && (int)id < m_pt.size());
+    return m_pt[id];
+  }
+
+  const IntervalVector& Point::box() const
+  {
+    return m_pt;
+  }
+
+  const Vector Point::mid() const
+  {
+    return m_pt.mid();
+  }
+
+  double Point::max_diam() const
+  {
+    return m_pt.max_diam();
+  }
+  
+  const vector<Vector> Point::bounds_pts() const
+  {
+    vector<Vector> v_pts;
+
+    if(!m_pt[0].is_empty() && !m_pt[1].is_empty())
+    {
+      v_pts.push_back(Vector({m_pt[0].lb(),m_pt[1].lb()}));
+      v_pts.push_back(Vector({m_pt[0].lb(),m_pt[1].ub()}));
+      v_pts.push_back(Vector({m_pt[0].ub(),m_pt[1].lb()}));
+      v_pts.push_back(Vector({m_pt[0].ub(),m_pt[1].ub()}));
+    }
+
+    return Point::remove_identical_pts(v_pts);
+  }
+
+
+  // Tests
+
+  bool Point::is_unbounded() const
+  {
+    return m_pt.is_unbounded();
   }
 
   bool Point::does_not_exist() const
   {
-    return m_x.is_empty() || m_y.is_empty();
+    return m_pt.is_empty();
   }
 
-  bool Point::is_unbounded() const
+  bool Point::operator==(const Point& p) const
   {
-    return m_x.is_unbounded() || m_y.is_unbounded();
+    return m_pt == p.m_pt;
   }
+
+  bool Point::operator!=(const Point& p) const
+  {
+    return m_pt != p.m_pt;
+  }
+
+
+  // Setting values
 
   const Point& Point::inflate(double rad)
   {
     assert(rad >= 0.);
-    m_x.inflate(rad);
-    m_y.inflate(rad);
+    m_pt.inflate(rad);
     return *this;
   }
-  
-  const Point Point::operator|=(const Point& p)
-  {
-    return Point(m_x | p.m_x, m_y | p.m_y);
-  }
+
+
+  // String
 
   ostream& operator<<(ostream& str, const Point& p)
   {
     str << "(";
     
-    if(p.m_x.is_degenerated()) str << p.m_x.lb();
-    else str << p.m_x;
+    if(p.m_pt[0].is_degenerated()) str << p.m_pt[0].lb();
+    else str << p.m_pt[0];
 
     str << ",";
 
-    if(p.m_y.is_degenerated()) str << p.m_y.lb();
-    else str << p.m_y;
+    if(p.m_pt[1].is_degenerated()) str << p.m_pt[1].lb();
+    else str << p.m_pt[1];
 
     str << ")";
     return str;
   }
-  
-  const Point Point::center(const vector<Point> v_pts)
-  {
-    Interval x = 0., y = 0.;
-    for(size_t i = 0 ; i < v_pts.size() ; i++)
-    {
-      assert(!v_pts[i].does_not_exist());
-      x += v_pts[i].x();
-      y += v_pts[i].y();
-    }
 
-    return Point(x / v_pts.size(), y / v_pts.size());
-  }
+
+  // Static methods
 
   const BoolInterval Point::aligned(const Point& a, const Point& b, const Point& c)
   {
-    Interval cross_product = (b.x()-a.x()) * (c.y()-a.y()) - (b.y()-a.y()) * (c.x()-a.x());
+    const Interval cross_product = (b[0]-a[0]) * (c[1]-a[1]) - (b[1]-a[1]) * (c[0]-a[0]);
     return (cross_product == Interval(0.)) ? YES : (cross_product.contains(0.) ? MAYBE : NO);
   }
 
-  const vector<Point> Point::merge_close_points(const vector<Point>& v_pts)
+  const Point Point::center(const vector<Point> v_pts)
   {
-    vector<Point> v_vertices, v_pts_copy = v_pts;
+    assert(!v_pts.empty());
 
-    while(!v_pts_copy.empty())
+    IntervalVector center(2, 0.);
+    for(const auto& pt : v_pts)
     {
-      v_vertices.push_back(*v_pts_copy.begin());
-      v_pts_copy.erase(v_pts_copy.begin());
-      bool merge;
-
-      do
-      {
-        merge = false;
-
-        for(vector<Point>::iterator it = v_pts_copy.begin() ; it != v_pts_copy.end() ; )
-        {
-          bool similar_pts = v_vertices.back().x().intersects(it->x())
-                          && v_vertices.back().y().intersects(it->y());
-
-          if(similar_pts)
-          {
-            v_vertices.back() = v_vertices.back() | *it;
-            it = v_pts_copy.erase(it);
-            merge = true;
-            break;
-          }
-
-          else
-            ++it;
-        }
-      } while(merge);
+      assert(!pt.does_not_exist());
+      center += pt.box();
     }
 
-    return v_vertices;
+    return Point((1./v_pts.size())*center.mid());
   }
 
-  const vector<Point> Point::delete_redundant_points(const vector<Point>& v_pts)
-  {
-    vector<Point> v_vertices;
-
-    for(size_t i = 0 ; i < v_pts.size() ; i++)
-    {
-      if(v_pts[i].does_not_exist())
-        continue; // no empty points
-
-      bool diff_from_all_prev_points = true;
-      for(size_t j = 0 ; j < v_vertices.size() && diff_from_all_prev_points ; j++)
-        diff_from_all_prev_points &= !((v_pts[i] == v_vertices[j])
-                                       & v_pts[i].x().is_degenerated()
-                                       & v_pts[i].y().is_degenerated());
-      
-      if(diff_from_all_prev_points)
-        v_vertices.push_back(v_pts[i]);
-    }
-
-    return v_vertices;
-  }
-
-  const Point operator&(const Point& p1, const Point& p2)
-  {
-    return Point(p1.x() & p2.x(), p1.y() & p2.y());
-  }
-
-  const Point operator|(const Point& p1, const Point& p2)
-  {
-    return Point(p1.x() | p2.x(), p1.y() | p2.y());
-  }
-  
-  const Point operator-(const Point& p1, const Point& p2)
-  {
-    return Point(p1.m_x - p2.m_x, p1.m_y - p2.m_y);
-  }
-
-  void push_points(const IntervalVector& box, vector<Point>& v_points)
+  void Point::push(const IntervalVector& box, vector<Point>& v_pts)
   {
     assert(box.size() == 2);
-    if(!box.is_empty())
-    {
-      Interval xlb = box[0].lb() != NEG_INFINITY ? box[0].lb() : Interval(NEG_INFINITY, box[0].ub());
-      Interval xub = box[0].ub() != POS_INFINITY ? box[0].ub() : Interval(box[0].lb(), POS_INFINITY);
+    assert(!box.is_empty());
 
-      Interval ylb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
-      Interval yub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
+    const Interval xlb = box[0].lb() != NEG_INFINITY ? box[0].lb() : Interval(NEG_INFINITY, box[0].ub());
+    const Interval xub = box[0].ub() != POS_INFINITY ? box[0].ub() : Interval(box[0].lb(), POS_INFINITY);
 
-      v_points.push_back(Point(xlb, ylb));
-      v_points.push_back(Point(xub, ylb));
-      v_points.push_back(Point(xub, yub));
-      v_points.push_back(Point(xlb, yub));
-    }
+    const Interval ylb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
+    const Interval yub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
+
+    v_pts.push_back(Point(xlb, ylb));
+    v_pts.push_back(Point(xub, ylb));
+    v_pts.push_back(Point(xub, yub));
+    v_pts.push_back(Point(xlb, yub));
+  }
+
+  void Point::push(const IntervalVector& box, vector<Vector>& v_pts)
+  {
+    assert(box.size() == 2);
+    assert(!box.is_empty());
+    assert(!box.is_unbounded());
+
+    const double xlb = box[0].lb();
+    const double xub = box[0].ub();
+
+    const double ylb = box[1].lb();
+    const double yub = box[1].ub();
+
+    v_pts.push_back(Vector({xlb, ylb}));
+    v_pts.push_back(Vector({xub, ylb}));
+    v_pts.push_back(Vector({xub, yub}));
+    v_pts.push_back(Vector({xlb, yub}));
+  }
+
+  vector<Point> Point::to_Points(const vector<Vector>& v_pts)
+  {
+    vector<Point> v_pts_(v_pts.size());
+    for(size_t i = 0 ; i < v_pts.size() ; i++)
+      v_pts_[i] = Point(v_pts[i]);
+    return v_pts_;
+  }
+  
+  vector<Point> Point::remove_identical_pts(const vector<Point>& v_pts_)
+  {
+    // Removing possible redundant points
+    vector<Point> v_pts;
+    for(const auto& pt : v_pts_)
+      if(find(v_pts.begin(),v_pts.end(),pt) == v_pts.end())
+        v_pts.push_back(pt);
+    return v_pts;
+  }
+  
+  vector<Vector> Point::remove_identical_pts(const vector<Vector>& v_pts_)
+  {
+    // Removing possible redundant points
+    vector<Vector> v_pts;
+    for(const auto& pt : v_pts_)
+      if(find(v_pts.begin(),v_pts.end(),pt) == v_pts.end())
+        v_pts.push_back(pt);
+    return v_pts;
   }
 }
