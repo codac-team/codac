@@ -4,7 +4,7 @@
 
 set(TESTS_NAME tubex-tests-core)
 
-list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+list(APPEND SRC_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_predefined_tubes.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_predefined_tubes.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_arithmetic.cpp
@@ -17,6 +17,7 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_functions.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_integration.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_operators.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/tests_geometry.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_polygons.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_serialization.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_slices_structure.cpp
@@ -24,7 +25,7 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_values.cpp
                 )
 
-add_executable(${TESTS_NAME} ${SRC})
+add_executable(${TESTS_NAME} ${SRC_TESTS})
 target_include_directories(${TESTS_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../catch)
 target_link_libraries(${TESTS_NAME} tubex)
 add_dependencies(check ${TESTS_NAME})

@@ -81,29 +81,12 @@ TEST_CASE("Geometry")
 
   }
 
-  SECTION("Merging similar points")
+  SECTION("Intersection, line/line, another case")
   {
-    // todo: keep this?
-
-    Point p1(Interval(2.,4.), Interval(3.,4.));
-    Point p2(Interval(4.,5.), Interval(2.,3.));
-    CHECK(p1.x().intersects(p2.x()));
-    CHECK(p1.y().intersects(p2.y()));
-
-    vector<Point> v_pts;
-    v_pts.push_back(Point(Interval(2.,3.), Interval(3.,6.)));
-    v_pts.push_back(Point(Interval(3.,4.), Interval(3.,4.)));
-    v_pts.push_back(Point(Interval(4.,5.), Interval(2.,3.)));
-    v_pts.push_back(Point(Interval(3.,5.), Interval(0.,1.)));
-    v_pts.push_back(Point(Interval(7.,8.), Interval(4.,6.)));
-    v_pts.push_back(Point(Interval(7.5,9.), Interval(3.,4.5)));
-
-    CHECK(v_pts.size() == 6);
-    v_pts = Point::merge_close_points(v_pts);
-    CHECK(v_pts.size() == 3);
-    CHECK(v_pts[0] == Point(Interval(2.,5.), Interval(2.,6.)));
-    CHECK(v_pts[1] == Point(Interval(3.,5.), Interval(0.,1.)));
-    CHECK(v_pts[2] == Point(Interval(7.,9.), Interval(3.,6.)));
+    Edge e1(Point(2,0), Point(6,4));
+    Edge e2(Point(6,5), Point(5,6));
+    Point p = Edge::proj_intersection(e1,e2);
+    CHECK(p == Point(6.5,4.5));
   }
 
   SECTION("Edges, proj intersection")

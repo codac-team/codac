@@ -23,7 +23,7 @@
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
 #include "tubex_Point.h"
-#include "tubex_Polygon.h"
+#include "tubex_ConvexPolygon.h"
 #include "tubex_TubeVector.h"
 #include "tubex_Slice.h"
 
@@ -260,8 +260,8 @@ namespace Catch
     class ApproxVector
     {
       public:
-        explicit ApproxVector(ibex::Vector value) :
-            m_epsilon(DEFAULT_EPSILON),
+        explicit ApproxVector(ibex::Vector value, double epsilon = 100.*DEFAULT_EPSILON) :
+            m_epsilon(epsilon),
             m_value(value)
         {}
 
@@ -269,8 +269,8 @@ namespace Catch
         {
           double e = rhs.m_epsilon;
 
-          if(lhs != rhs.m_value)
-            return false;
+          if(lhs == rhs.m_value)
+            return true;
 
           for(int i = 0 ; i < lhs.size() ; i++)
             if(fabs(lhs[i] - rhs.m_value[i]) >= e)
@@ -387,23 +387,22 @@ namespace Catch
         tubex::Point m_value;
     };
 
-    class ApproxPolygon
+    class ApproxConvexPolygon
     {
       public:
-        explicit ApproxPolygon(tubex::Polygon value) :
-            m_epsilon(DEFAULT_EPSILON),
+        explicit ApproxConvexPolygon(tubex::ConvexPolygon value, double epsilon = 100.*DEFAULT_EPSILON) :
+            m_epsilon(epsilon),
             m_value(value)
         {
-          m_value.inflate_vertices(100.*DEFAULT_EPSILON);
-          m_value.merge_close_vertices();
+
         }
 
-        const tubex::Polygon& polygon() const
+        const tubex::ConvexPolygon& polygon() const
         {
           return m_value;
         }
 
-        friend bool operator ==(tubex::Polygon lhs, ApproxPolygon const& rhs)
+        friend bool operator ==(tubex::ConvexPolygon lhs, ApproxConvexPolygon const& rhs)
         {
           if(lhs == rhs.m_value)
             return true;
@@ -412,35 +411,40 @@ namespace Catch
           if(n != rhs.m_value.vertices().size())
             return false;
 
+          bool found = false;
           size_t i; // looking for first same elements
           for(i = 0 ; i < n ; i++)
-            if(lhs.vertices()[0] == ApproxPoint(rhs.m_value.vertices()[i]))
+            if(lhs.vertices()[0] == ApproxVector(rhs.m_value.vertices()[i], rhs.m_epsilon))
+            {
+              found = true;
               break;
+            }
+
+          if(!found)
+            return false; // no common first element
 
           int way = 1;
           if(n > 1)
-            way = (lhs.vertices()[1] == ApproxPoint(rhs.m_value.vertices()[(i+1) % n])) ? 1 : -1;
+            way = (lhs.vertices()[1] == ApproxVector(rhs.m_value.vertices()[(i+1) % n], rhs.m_epsilon)) ? 1 : -1;
 
           for(size_t j = 0 ; j < n ; j++)
-          {
-            if(lhs.vertices()[j] != ApproxPoint(rhs.m_value.vertices()[(i+way*j+n) % n]))
+            if(lhs.vertices()[j] != ApproxVector(rhs.m_value.vertices()[(i+way*j+n) % n], rhs.m_epsilon))
               return false;
-          }
 
           return true;
         }
 
-        friend bool operator ==(ApproxPolygon const& lhs, tubex::Polygon rhs)
+        friend bool operator ==(ApproxConvexPolygon const& lhs, tubex::ConvexPolygon rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(tubex::Polygon lhs, ApproxPolygon const& rhs)
+        friend bool operator !=(tubex::ConvexPolygon lhs, ApproxConvexPolygon const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxPolygon const& lhs, tubex::Polygon rhs)
+        friend bool operator !=(ApproxConvexPolygon const& lhs, tubex::ConvexPolygon rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -448,13 +452,13 @@ namespace Catch
         std::string toString() const
         {
           std::ostringstream oss;
-          oss << "ApproxPolygon(" << Catch::toString(m_value) << ")";
+          oss << "ApproxConvexPolygon(" << Catch::toString(m_value) << ")";
           return oss.str();
         }
 
       private:
         double m_epsilon;
-        tubex::Polygon m_value;
+        tubex::ConvexPolygon m_value;
     };
   }
 
@@ -501,7 +505,7 @@ namespace Catch
   }
 
   template<>
-  inline std::string toString<Detail::ApproxPolygon>(Detail::ApproxPolygon const& value)
+  inline std::string toString<Detail::ApproxConvexPolygon>(Detail::ApproxConvexPolygon const& value)
   {
     return value.toString();
   }
