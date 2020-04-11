@@ -14,7 +14,6 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-
 #include <tubex.h>
 #include <tubex-rob.h>
 #include <tubex-pyibex.h>
