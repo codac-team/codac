@@ -20,7 +20,7 @@ Tubex is a library providing tools for **constraint programming** over reals and
 | In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a **reliable** set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
 | **What about mobile robotics?**
-| In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapeed robot problems** can be solved in a very few steps. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters.
+| In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapeed robot problems** can be solved in a very few steps by using constraint programming. Even though the Tubex library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
 
 In a nutshell, Tubex is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
 
@@ -162,7 +162,7 @@ We look at the state equations and use contractors to deal with them. The distan
     {
       IntervalVector& p_i = cn.create_var(IntervalVector(4)); // intermediate variable
       // Adding the distance constraint:
-      cn.add(ctc::dist, {cn.subvector(p_i,0,1), b[i], obs[i]});
+      cn.add(ctc::dist, {cn.subvector(p_i,0,1), b[i], y[i]});
       // Link between an observation at t_i and all states over [t_0,t_f]
       cn.add(ctc::eval, {t[i], p_i, x, v});
     }
@@ -193,7 +193,7 @@ We look at the state equations and use contractors to deal with them. The distan
 
 *You just solved a non-linear state-estimation without knowledge about initial condition.*
 
-In the tutorial and in the examples folder of this library, you will find more advanced problems such as delayed systems, Simultaneous Localization And Mapping (SLAM) or data association problems.
+In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
 
 Documentation (/!\\ in progress /!\\)

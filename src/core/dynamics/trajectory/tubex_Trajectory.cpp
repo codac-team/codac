@@ -389,6 +389,36 @@ namespace tubex
       // Note : no need to update the codomain, it will not be changed by this method.
       return *this;
     }
+    
+    Trajectory& Trajectory::make_continuous()
+    {
+      assert(m_traj_def_type == TrajDefnType::MAP_OF_VALUES
+        && "not usable for trajectories defined by Function");
+
+      const Interval periodicity = codomain();
+      m_codomain = Interval::EMPTY_SET;
+
+      double prev_value = 0., value_mod = 0.;
+      map<double,double> m_continuous_values(m_map_values);
+
+      for(const auto& it : m_map_values)
+      {
+        if(!m_continuous_values.empty())
+        {
+          if(prev_value - it.second > periodicity.ub())
+            value_mod += periodicity.diam();
+          else if(prev_value - it.second < periodicity.lb())
+            value_mod -= periodicity.diam();
+        }
+
+        prev_value = it.second;
+        m_continuous_values[it.first] += value_mod;
+        m_codomain |= m_continuous_values[it.first];
+      }
+
+      m_map_values = m_continuous_values;
+      return *this;
+    }
 
     // Integration
     
