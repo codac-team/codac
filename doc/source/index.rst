@@ -288,14 +288,16 @@ Contributors
 ============
 
 .. hlist::
-  :columns: 3
+  :columns: 4
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
   * `Benoît Desrochers <www.ensta-bretagne.fr/desrochers>`_
   * `Gilles Chabert <https://web.imt-atlantique.fr/x-info/gchabe08/>`_
+  * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * Julien Damers
   * Raphael Voges
-  * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
+  * `Thomas Le Mézo <https://www.ensta-bretagne.fr/lemezo/>`_
+  * `Cyril Bouvier <http://www.lirmm.fr/~bouvier/index.en.html>`_
 
 
 Main related publications
@@ -313,6 +315,8 @@ Main related publications
 .. _tubeval-pdf: http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf
 .. |tubint-pdf| replace:: PDF
 .. _tubint-pdf: http://simon-rohou.fr/research/tubint/tubint_paper.pdf
+.. |loopdetect-pdf| replace:: PDF
+.. _loopdetect-pdf: https://www.ensta-bretagne.fr/jaulin/paper_loop.pdf
 
 
 +------+------------------+---------------------------------+------------------------------+-------------------------+
@@ -347,34 +351,11 @@ Main related publications
 |      |                  | Polar equation                  | L. Jaulin                    | Applications of         |
 |      |                  |                                 |                              | Artificial Intelligence |
 +------+------------------+---------------------------------+------------------------------+-------------------------+
-
-.. --------------------+
-..                     |
-..  .. _datassp:       |
-..                     |
-..  [Rohou et al. 2020]|
-.. --------------------+
-..                     |
-..  .. _robloc:        |
-..                     |
-..  [Rohou et al. 2019]|
-.. --------------------+
-..                     |
-..  .. _loopproof:     |
-..                     |
-..  [Rohou,            |
-..  Franek et al. 2018]|
-.. --------------------+
-..                     |
-..  .. _tubeval:       |
-..                     |
-..  [Rohou et al. 2018]|
-.. --------------------+
-..                     |
-..  .. _tubint:        |
-..                     |
-..  [Rohou et al. 2017]|
-.. --------------------+
+|      |                  |                                 |                              |                         |
+| 2013 | |loopdetect-pdf|_| Loop detection of mobile robots | C. Aubry, R. Desmare,        | Automatica              |
+|      |                  | using interval analysis         | L. Jaulin                    |                         |
+|      |                  |                                 |                              |                         |
++------+------------------+---------------------------------+------------------------------+-------------------------+
 
 
 How to cite this project?
@@ -385,8 +366,8 @@ We suggest the following BibTeX template to cite Tubex in scientific discourse:
 .. code-block:: none
 
   @misc{tubex,
-     author = {Simon Rohou},
+     author = {Simon Rohou and others},
      year = {2017},
      note = {http://simon-rohou.fr/research/tubex-lib/},
-     title = {Tubex -- Constraint-programming for robotics}
+     title = {The Tubex library -- Constraint-programming for robotics}
   }
