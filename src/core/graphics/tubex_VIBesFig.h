@@ -201,6 +201,27 @@ namespace tubex
       void draw_circle(double x, double y, double r, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
+       * \brief Draws a ring
+       *
+       * \param x horizontal coordinate
+       * \param y vertical coordinate
+       * \param r interval radius
+       * \param params VIBes parameters related to the ring
+       */
+      void draw_ring(double x, double y, const ibex::Interval& r, const vibes::Params& params);
+
+      /**
+       * \brief Draws a ring
+       *
+       * \param x horizontal coordinate
+       * \param y vertical coordinate
+       * \param r interval radius
+       * \param color the optional color of the ring (black by default) 
+       * \param params VIBes parameters related to the ring (none by default)
+       */
+      void draw_ring(double x, double y, const ibex::Interval& r, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
        * \brief Draws an edge
        *
        * \param e edge

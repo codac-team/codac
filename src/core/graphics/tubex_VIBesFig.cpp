@@ -174,6 +174,19 @@ namespace tubex
     vibes::drawCircle(x, y, r, color, params_this_fig);
   }
   
+  void VIBesFig::draw_ring(double x, double y, const Interval& r, const vibes::Params& params)
+  {
+    draw_ring(x, y, r, "", params);
+  }
+  
+  void VIBesFig::draw_ring(double x, double y, const Interval& r, const string& color, const vibes::Params& params)
+  {
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+    vibes::drawCircle(x, y, r.lb(), color, params_this_fig);
+    vibes::drawCircle(x, y, r.ub(), color, params_this_fig);
+  }
+  
   void VIBesFig::draw_edge(const Edge& e, const vibes::Params& params)
   {
     draw_edge(e, "", params);
