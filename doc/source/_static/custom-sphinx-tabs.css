@@ -1,0 +1,4 @@
+.rst-content .sphinx-tabs div[class^="highlight"]
+{
+  margin-bottom: 0;
+}
