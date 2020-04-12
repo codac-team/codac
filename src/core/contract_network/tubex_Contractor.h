@@ -28,6 +28,7 @@ namespace tubex
   enum class ContractorType { COMPONENT, EQUALITY, IBEX, TUBEX };
 
   class Domain;
+  class DomainSingleton;
   class ContractorNetwork;
   class Ctc;
 
@@ -35,9 +36,9 @@ namespace tubex
   {
     public:
 
-      explicit Contractor(ContractorType type);
-      explicit Contractor(ibex::Ctc& ctc);
-      explicit Contractor(tubex::Ctc& ctc);
+      Contractor(ContractorType type);
+      Contractor(ibex::Ctc& ctc);
+      Contractor(tubex::Ctc& ctc);
       Contractor(const Contractor& ac);
       ~Contractor();
 
@@ -49,8 +50,12 @@ namespace tubex
       std::vector<Domain*>& domains();
 
       bool operator==(const Contractor& x) const;
+      bool comes_from(const Contractor& x) const;
 
       void contract();
+
+      const std::string& name();
+      void set_name(const std::string& name);
 
 
     protected:
@@ -65,6 +70,8 @@ namespace tubex
       };
 
       std::vector<Domain*> m_domains;
+
+      std::string m_name = "?";
   };
 }
 

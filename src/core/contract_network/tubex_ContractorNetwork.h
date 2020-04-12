@@ -28,6 +28,7 @@ namespace ibex
 namespace tubex
 {
   class Domain;
+  class DomainSingleton;
   class Contractor;
   class Ctc;
   class CtcDeriv;
@@ -48,8 +49,10 @@ namespace tubex
       double contract(bool verbose = false);
       double contract_during(double dt, bool verbose = false);
 
-      ibex::Interval& create_var(const ibex::Interval& i_);
-      ibex::IntervalVector& create_var(const ibex::IntervalVector& iv_);
+      ibex::Interval& create_var(const ibex::Interval& i);
+      ibex::IntervalVector& create_var(const ibex::IntervalVector& iv);
+      Tube& create_var(const Tube& t);
+      TubeVector& create_var(const TubeVector& tv);
 
       void add(ibex::Ctc& ctc, const std::vector<Domain>& v_domains);
       void add(tubex::Ctc& ctc, const std::vector<Domain>& v_domains);
@@ -58,13 +61,18 @@ namespace tubex
       void add_data(TubeVector& tube, double t, const ibex::IntervalVector& y);
 
       ibex::IntervalVector& subvector(ibex::IntervalVector& i, int start_index, int end_index);
+      TubeVector& subvector(TubeVector& i, int start_index, int end_index);
+
+      void set_name(Domain dom, const std::string& name);
+      void set_name(Contractor ctc, const std::string& name);
+      void print_dot_graph() const;
 
 
     protected:
 
       Domain* add_domain(Domain *ad);
       void add_domain(Domain *ad, Contractor *ac);
-      void add_contractor(Contractor *&ac);
+      Contractor* add_contractor(Contractor *&ac);
       void propagate_ctc_from_domain(Domain *dom, Contractor *ctc_to_avoid = NULL);
       void add_to_queue(Contractor *ac, std::deque<Contractor*>& ctc_deque);
 

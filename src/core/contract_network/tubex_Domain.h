@@ -24,8 +24,6 @@
 namespace tubex
 {
   // todo: assert if structure of referenced domain changes (size, nb slices)
-  
-  enum class DomainType { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
 
   class Ctc;
   class Contractor;
@@ -35,17 +33,24 @@ namespace tubex
   {
     public:
 
+      enum class Type { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
+      enum class ExternalRef { NONE, DOUBLE, INTERVAL, VECTOR, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
+
       Domain(const Domain& ad);
-      Domain(double d);
+      Domain(double& d);
       Domain(ibex::Interval& i);
+      Domain(const ibex::Interval& i);
       Domain(ibex::Vector& v);
       Domain(ibex::IntervalVector& iv);
+      Domain(const ibex::IntervalVector& iv);
       Domain(tubex::Slice& s);
       Domain(tubex::Tube& t);
+      Domain(const tubex::Tube& t);
       Domain(tubex::TubeVector& tv);
+      Domain(const tubex::TubeVector& tv);
       ~Domain();
 
-      DomainType type() const;
+      Type type() const;
 
       ibex::Interval& interval();
       const ibex::Interval& interval() const;
@@ -74,18 +79,48 @@ namespace tubex
       void add_data(double t, const ibex::Interval& y, ContractorNetwork& cn);
       void add_data(double t, const ibex::IntervalVector& y, ContractorNetwork& cn);
 
+      const std::string& name();
+      void set_name(const std::string& name);
+
     protected:
 
-      const DomainType m_type;
+      // Theoretical type of domain
 
-      union
-      {
-        std::reference_wrapper<ibex::Interval> m_i;
-        std::reference_wrapper<ibex::IntervalVector> m_iv;
-        std::reference_wrapper<tubex::Slice> m_s;
-        std::reference_wrapper<tubex::Tube> m_t;
-        std::reference_wrapper<tubex::TubeVector> m_tv;
-      };
+        const Type m_type;
+
+        union // reference to the values (in memory) this domain is made of
+        {
+          std::reference_wrapper<ibex::Interval> m_ref_values_i;
+          std::reference_wrapper<ibex::IntervalVector> m_ref_values_iv;
+          std::reference_wrapper<tubex::Slice> m_ref_values_s;
+          std::reference_wrapper<tubex::Tube> m_ref_values_t;
+          std::reference_wrapper<tubex::TubeVector> m_ref_values_tv;
+        };
+
+        //union // if locally stored (such as intermediate variables or doubles to intervals):
+        //{
+          ibex::Interval *m_i_ptr = NULL;
+          ibex::IntervalVector *m_iv_ptr = NULL;
+          Tube *m_t_ptr = NULL;
+          TubeVector *m_tv_ptr = NULL;
+        //};
+
+
+      // Origin type of the implementation of the domain
+
+        const ExternalRef m_extern_object_type;
+
+        union // reference to the unique object (in memory) this domain represents
+        {
+          std::reference_wrapper<double> m_ref_extern_object_d;
+          std::reference_wrapper<ibex::Interval> m_ref_extern_object_i;
+          std::reference_wrapper<ibex::Vector> m_ref_extern_object_v;
+          std::reference_wrapper<ibex::IntervalVector> m_ref_extern_object_iv;
+          std::reference_wrapper<tubex::Slice> m_ref_extern_object_s;
+          std::reference_wrapper<tubex::Tube> m_ref_extern_object_t;
+          std::reference_wrapper<tubex::TubeVector> m_ref_extern_object_tv;
+        };
+
 
       // todo: update this:
       std::map<double,double> m_map_data_s_lb, m_map_data_s_ub;
@@ -93,6 +128,8 @@ namespace tubex
 
       std::vector<Contractor*> m_v_ctc;
       double m_volume = 0.;
+
+      std::string m_name = "?";
   };
 }
 

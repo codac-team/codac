@@ -28,7 +28,7 @@ namespace tubex
 
     for(size_t i = 0 ; i < v_domains.size() ; i++)
     {
-      assert(v_domains[i]->type() == DomainType::SLICE);
+      assert(v_domains[i]->type() == Domain::Type::SLICE);
       if(i != 0)
         assert(v_domains[i]->slice().domain() == v_domains[i-1]->slice().domain());
     }

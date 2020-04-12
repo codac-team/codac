@@ -11,6 +11,7 @@
 #include "tubex_ContractorNetwork.h"
 #include "tubex_CtcFwdBwd.h"
 #include "tubex_CtcEval.h"
+#include "tubex_Figure.h" // for add_suffix
 
 #include "ibex_IntervalVector.h"
 
@@ -102,8 +103,9 @@ namespace tubex
            << "  computation time: " << (double)(clock() - t_start)/CLOCKS_PER_SEC << "s" << endl;
 
     // Emptiness test
-    for(const auto& ctc : m_v_ctc)
-      for(const auto& dom : ctc->domains())
+    // todo: test only contracted domains?
+    //for(const auto& ctc : m_v_ctc)
+      for(const auto& dom : m_v_domains)
         if(dom->is_empty())
         {
           cout << "  warning: empty set" << endl;
@@ -148,16 +150,24 @@ namespace tubex
     return contraction_time;
   }
 
-  Interval& ContractorNetwork::create_var(const Interval& i_)
+  Interval& ContractorNetwork::create_var(const Interval& i)
   {
-    // todo: manage delete
-    return add_domain(new Domain(*new Interval(i_)))->interval();
+    return add_domain(new Domain(i))->interval();
   }
 
-  IntervalVector& ContractorNetwork::create_var(const IntervalVector& iv_)
+  IntervalVector& ContractorNetwork::create_var(const IntervalVector& iv)
   {
-    // todo: manage delete
-    return add_domain(new Domain(*new IntervalVector(iv_)))->interval_vector();
+    return add_domain(new Domain(iv))->interval_vector();
+  }
+
+  Tube& ContractorNetwork::create_var(const Tube& t)
+  {
+    return add_domain(new Domain(t))->tube();
+  }
+
+  TubeVector& ContractorNetwork::create_var(const TubeVector& tv)
+  {
+    return add_domain(new Domain(tv))->tube_vector();
   }
 
   void ContractorNetwork::add(ibex::Ctc& ctc, const vector<Domain>& v_domains)
@@ -191,7 +201,7 @@ namespace tubex
       // todo: check that the related constraint is not intertemporal
       // otherwise, tube level only
 
-      if(v_domains[0].type() == DomainType::TUBE || v_domains[0].type() == DomainType::TUBE_VECTOR)
+      if(v_domains[0].type() == Domain::Type::TUBE || v_domains[0].type() == Domain::Type::TUBE_VECTOR)
         breakdown_to_slice_level = true;
       // todo: improve this ^
       // and check that all domains are either tubes/tubevectors or interval/intervalvectors
@@ -211,7 +221,7 @@ namespace tubex
 
         switch(dom.type())
         {
-          case DomainType::TUBE:
+          case Domain::Type::TUBE:
           {
             if(nb_slices == -1)
               nb_slices = dom.tube().nb_slices();
@@ -223,7 +233,7 @@ namespace tubex
           }
           break;
 
-          case DomainType::TUBE_VECTOR:
+          case Domain::Type::TUBE_VECTOR:
           {            
             for(int j = 0 ; j < dom.tube_vector().size() ; j++)
             {
@@ -269,14 +279,14 @@ namespace tubex
   void ContractorNetwork::add_data(Tube& tube, double t, const Interval& y)
   {
     Domain *ad = add_domain(new Domain(tube));
-    assert(ad->type() == DomainType::TUBE);
+    assert(ad->type() == Domain::Type::TUBE);
     ad->add_data(t, y, *this);
   }
   
   void ContractorNetwork::add_data(TubeVector& tube, double t, const IntervalVector& y)
   {
     Domain *ad = add_domain(new Domain(tube));
-    assert(ad->type() == DomainType::TUBE_VECTOR);
+    assert(ad->type() == Domain::Type::TUBE_VECTOR);
     ad->add_data(t, y, *this);
   }
 
@@ -284,7 +294,7 @@ namespace tubex
   {
     if(ad->is_empty())
     {
-      cout << "warning: adding empty domain" << endl;
+      cout << "warning: adding empty domain" << *ad << endl;
       exit(1);
     }
 
@@ -302,41 +312,55 @@ namespace tubex
 
     // And add possible dependencies
 
-      if(ad->type() == DomainType::TUBE_VECTOR)
+      switch(ad->type())
       {
-        Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
-        add_domain(new Domain(ad->tube_vector()), ac_component); // adding vector
-        for(int i = 0 ; i < ad->tube_vector().size() ; i++)
-          add_domain(new Domain(ad->tube_vector()[i]), ac_component); // adding its components
-        add_contractor(ac_component);
-      }
+        case Domain::Type::INTERVAL:
+          // nothing to do
+          break;
 
-      else if(ad->type() == DomainType::INTERVAL_VECTOR)
-      {
-        Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
-        add_domain(new Domain(ad->interval_vector()), ac_component); // adding vector
-        for(int i = 0 ; i < ad->interval_vector().size() ; i++)
-          add_domain(new Domain(ad->interval_vector()[i]), ac_component); // adding its components
-        add_contractor(ac_component);
-      }
+        case Domain::Type::SLICE:
+          // nothing to do
+          break;
 
-      else if(ad->type() == DomainType::TUBE)
-      {
-        // Dependencies tube <-> slice
-        Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
-        add_domain(new Domain(ad->tube()), ac_component); // adding tube
-        for(Slice *s = ad->tube().first_slice() ; s != NULL ; s = s->next_slice())
-          add_domain(new Domain(*s), ac_component); // adding one of its slices
-        add_contractor(ac_component);
-
-        // Dependencies slice <-> slice
-        for(Slice *s = ad->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
+        case Domain::Type::TUBE_VECTOR:
         {
-          Contractor *ac_component_slices = new Contractor(ContractorType::COMPONENT);
-          add_domain(new Domain(*s), ac_component_slices);
-          add_domain(new Domain(*(s->next_slice())), ac_component_slices);
-          add_contractor(ac_component_slices);
+          Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
+          add_domain(new Domain(ad->tube_vector()), ac_component); // adding vector
+          for(int i = 0 ; i < ad->tube_vector().size() ; i++)
+            add_domain(new Domain(ad->tube_vector()[i]), ac_component); // adding its components
+          add_contractor(ac_component);
         }
+        break;
+
+        case Domain::Type::INTERVAL_VECTOR:
+        {
+          Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
+          add_domain(new Domain(ad->interval_vector()), ac_component); // adding vector
+          for(int i = 0 ; i < ad->interval_vector().size() ; i++)
+            add_domain(new Domain(ad->interval_vector()[i]), ac_component); // adding its components
+          add_contractor(ac_component);
+        }
+        break;
+
+        case Domain::Type::TUBE:
+        {
+          // Dependencies tube <-> slice
+          Contractor *ac_component = new Contractor(ContractorType::COMPONENT);
+          add_domain(new Domain(ad->tube()), ac_component); // adding tube
+          for(Slice *s = ad->tube().first_slice() ; s != NULL ; s = s->next_slice())
+            add_domain(new Domain(*s), ac_component); // adding one of its slices
+          add_contractor(ac_component);
+
+          // Dependencies slice <-> slice
+          for(Slice *s = ad->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
+          {
+            Contractor *ac_component_slices = new Contractor(ContractorType::COMPONENT);
+            add_domain(new Domain(*s), ac_component_slices);
+            add_domain(new Domain(*(s->next_slice())), ac_component_slices);
+            add_contractor(ac_component_slices);
+          }
+        }
+        break;
       }
 
     return ad;
@@ -352,25 +376,27 @@ namespace tubex
     ad_->contractors().push_back(ac);
   }
 
-  void ContractorNetwork::add_contractor(Contractor *&ac)
+  Contractor* ContractorNetwork::add_contractor(Contractor *&ac)
   {
     // Looking if this contractor is not already part of the graph
     for(auto& ctc : m_v_ctc)
       if(*ctc == *ac) // found
       {
-        // todo: delete ac
-        return;
+        delete ac;
+        return ctc;
       }
-    
+
     m_v_ctc.push_back(ac);
     add_to_queue(ac, m_deque);
+    return ac;
   }
 
   IntervalVector& ContractorNetwork::subvector(IntervalVector& iv, int start_index, int end_index)
   {
     // todo: assert here on indexes
 
-    IntervalVector *subvector = new IntervalVector(end_index - start_index + 1);
+    IntervalVector *subvector = new IntervalVector(iv.subvector(start_index, end_index));
+    //m_intervalvectors_to_delete.push_front(subvector);
 
     for(int i = start_index ; i <= end_index ; i++)
     {
@@ -378,11 +404,32 @@ namespace tubex
       add_domain(new Domain((*subvector)[i-start_index]), ac_eq); // adding vector
       add_domain(new Domain(iv[i]), ac_eq); // adding vector
       add_contractor(ac_eq);
-
-      (*subvector)[i-start_index] = iv[i];
     }
 
     return add_domain(new Domain(*subvector))->interval_vector();
+  }
+
+  TubeVector& ContractorNetwork::subvector(TubeVector& iv, int start_index, int end_index)
+  {
+//    // todo: assert here on indexes
+//
+//    TubeVector *subvector = new TubeVector(iv.subvector(start_index, end_index));
+//    m_tubevectors_to_delete.push_front(subvector);
+//
+//    for(int i = start_index ; i <= end_index ; i++)
+//    {
+//      assert(Tube::same_slicing(iv[i], (*subvector)[i-start_index]));
+//      Contractor *ac_eq = new Contractor(ContractorType::EQUALITY);
+//      //add_domain(new Domain((*subvector)[i-start_index]), ac_eq); // adding vector
+//      //add_domain(new Domain(iv[i]), ac_eq); // adding vector
+//      //add_contractor(ac_eq);
+//
+//      // todo: add EQUALITY link to slices too? already done?
+//      // todo: check non reundant addition of domains
+//    }
+////add_domain(new Domain(*subvector));
+//    return *subvector;
+    return iv;
   }
 
   void ContractorNetwork::add_to_queue(Contractor *ac, deque<Contractor*>& ctc_deque)
@@ -394,5 +441,63 @@ namespace tubex
 
     else
       ctc_deque.push_front(ac); // priority
+  }
+  
+  void ContractorNetwork::set_name(Domain dom, const string& name)
+  {
+    Domain *temp_dom = new Domain(dom);
+    Domain *added_dom = add_domain(temp_dom);
+    assert(added_dom != temp_dom);
+    added_dom->set_name(name);
+  }
+  
+  void ContractorNetwork::set_name(Contractor ctc, const string& name)
+  {
+    bool contractor_found = false;
+    for(const auto& added_ctc: m_v_ctc)
+      if(added_ctc->comes_from(ctc))
+      {
+        added_ctc->set_name(name);
+        contractor_found = true;
+      }
+
+    assert(contractor_found);
+  }
+
+  void ContractorNetwork::print_dot_graph() const
+  {
+    cout << "graph graphname {" << endl;
+
+    int d = 0;
+    cout << endl << "  // Domains nodes" << endl;
+    for(const auto& dom : m_v_domains)
+    {
+      d++;
+      cout << "  " << Figure::add_suffix("dom",d) << " [shape=box,label=\"" << dom->name() << "\"];" << endl;
+    }
+
+    int c = 0;
+    cout << endl << "  // Contractors nodes" << endl;
+    for(const auto& ctc : m_v_ctc)
+    {
+      c++;
+      cout << "  " << Figure::add_suffix("ctc",c) << " [shape=circle,label=\"" << ctc->name() << "\"];" << endl;
+    }
+
+    cout << endl << "  // Relations" << endl;
+    c = 0;
+    for(const auto& ctc : m_v_ctc)
+    {
+      c++;
+      d = 0;
+      for(const auto& dom : m_v_domains)
+      {
+        d++;
+        if(find(dom->contractors().begin(), dom->contractors().end(), ctc) != dom->contractors().end())
+          cout << "  " << Figure::add_suffix("ctc",c) << " -- " << Figure::add_suffix("dom",d) << ";" << endl;
+      }
+    }
+
+    cout << "}" << endl;
   }
 }

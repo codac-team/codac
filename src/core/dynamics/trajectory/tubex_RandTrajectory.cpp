@@ -35,6 +35,9 @@ namespace tubex
 
       truncate_domain(domain);
       compute_codomain();
+
+      if(!(m_codomain.is_subset(bounds)))
+        cout << m_codomain << bounds << endl;
       assert(m_codomain.is_subset(bounds));
     }
 }
