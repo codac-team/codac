@@ -74,7 +74,8 @@ namespace tubex
       bool operator==(const Domain& x) const;
       bool operator!=(const Domain& x) const;
 
-      bool is_subset(const Domain& x, int& component_id) const;
+      bool is_component_of(const Domain& x) const;
+      bool is_component_of(const Domain& x, int& component_id) const;
       
       friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 

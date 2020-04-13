@@ -479,7 +479,13 @@ namespace tubex
     }
   }
   
-  bool Domain::is_subset(const Domain& x, int& component_id) const
+  bool Domain::is_component_of(const Domain& x) const
+  {
+    int id;
+    return is_component_of(x, id);
+  }
+
+  bool Domain::is_component_of(const Domain& x, int& component_id) const
   {
     if((m_type == Type::INTERVAL && x.type() == Type::INTERVAL_VECTOR) || (m_type == Type::TUBE && x.type() == Type::TUBE_VECTOR))
     {
@@ -609,7 +615,7 @@ namespace tubex
       for(const auto& dom : v_domains)
       {
         int component_id = 0;
-        if(is_subset(*dom, component_id))
+        if(is_component_of(*dom, component_id))
         {
           output_name = dom->name(v_domains); // parent name
           boost::algorithm::replace_all(output_name, "\\mathbf", ""); // removing bold font

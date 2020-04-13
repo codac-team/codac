@@ -473,37 +473,78 @@ namespace tubex
 
     dot_file << "graph graphname {" << endl;
 
-    int d = 0;
     dot_file << endl << "  // Domains nodes" << endl;
-    for(const auto& dom : m_v_domains)
-    {
-      d++;
-      dot_file << "  " << Figure::add_suffix("dom",d) << " [shape=box,label=\"" << dom->name(m_v_domains) << "\"];" << endl;
-    }
+    for(size_t d = 0 ; d < m_v_domains.size() ; d++)
+      dot_file << "  " << Figure::add_suffix("dom",d+1) << " [shape=box,label=\"" << m_v_domains[d]->name(m_v_domains) << "\"];" << endl;
 
-    int c = 0;
     dot_file << endl << "  // Contractors nodes" << endl;
-    for(const auto& ctc : m_v_ctc)
+    for(size_t c = 0 ; c < m_v_ctc.size() ; c++)
     {
-      c++;
-      dot_file << "  " << Figure::add_suffix("ctc",c) << " [shape=circle,label=\"\\mathcal{C}_{" << ctc->name() << "}\"];" << endl;
+      dot_file << "  " << Figure::add_suffix("ctc",c+1)
+               // Node style:
+               << " [shape=circle,"
+               << "label=\"\\mathcal{C}_{" << m_v_ctc[c]->name() << "}\"];" << endl;
     }
 
     dot_file << endl << "  // Relations" << endl;
-    c = 0;
-    for(const auto& ctc : m_v_ctc)
+    for(size_t c = 0 ; c < m_v_ctc.size() ; c++)
     {
-      c++;
-      d = 0;
-      for(const auto& dom : m_v_domains)
+      Contractor *ctc = m_v_ctc[c];
+      for(size_t d = 0 ; d < m_v_domains.size() ; d++)
       {
-        d++;
+        Domain *dom = m_v_domains[d];
         if(find(dom->contractors().begin(), dom->contractors().end(), ctc) != dom->contractors().end())
-          dot_file << "  " << Figure::add_suffix("ctc",c) << " -- " << Figure::add_suffix("dom",d) << ";" << endl;
+          dot_file << "  " << Figure::add_suffix("ctc",c+1) << " -- " << Figure::add_suffix("dom",d+1) << ";" << endl;
       }
     }
 
+    // Subgraph for clustering components of a same vector
+    for(size_t d = 0 ; d < m_v_domains.size() ; d++)
+    {
+      if(m_v_domains[d]->type() == Domain::Type::INTERVAL_VECTOR)
+      {
+        dot_file << endl;
+        dot_file << "  subgraph cluster_" << Figure::add_suffix("dom",d+1) << " {" << endl;
+        dot_file << "    color=\"#006680\";" << endl << "    ";
+
+        // Adding the main vector
+        dot_file << Figure::add_suffix("dom",d+1) + "; ";
+
+        // Adding its components
+        Domain *one_component = NULL;
+        for(size_t di = 0 ; di < m_v_domains.size() ; di++) // todo: a fast get_components method
+          if(m_v_domains[di]->is_component_of(*m_v_domains[d]))
+          {
+            one_component = m_v_domains[di];
+            dot_file << Figure::add_suffix("dom",di+1) + "; ";
+          }
+
+        // Adding their component-contractor
+        assert(one_component != NULL);
+        for(size_t c = 0 ; c < m_v_ctc.size() ; c++)
+          if(m_v_ctc[c]->type() == ContractorType::COMPONENT)
+            for(const auto& dom : m_v_ctc[c]->domains())
+              if(dom == one_component)
+              {
+                dot_file << Figure::add_suffix("ctc",c+1) + "; ";
+                break;
+              }
+
+        dot_file << endl << "  }" << endl;
+      }
+    }
+
+//    // Subgraph for COMPONENT contractors style
+//    dot_file << endl;
+//    dot_file << "  subgraph cluster_ctc_component {" << endl;
+//    dot_file << "    color=\"#006680\";" << endl << "    ";
+//    for(size_t d = 0 ; d < m_v_ctc.size() ; d++)
+//      if(m_v_ctc[d]->type() == ContractorType::COMPONENT)
+//        dot_file << Figure::add_suffix("ctc",d+1) + "; ";
+//    dot_file << endl << "  }" << endl;
+
     dot_file << "}" << endl;
+
     dot_file.close();
 
     return system((("dot2tex --crop --texmode=math --autosize --prog=" + prog + " -ftikz ") + cn_name + ".dot > "
