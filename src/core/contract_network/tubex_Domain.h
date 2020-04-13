@@ -73,13 +73,15 @@ namespace tubex
       
       bool operator==(const Domain& x) const;
       bool operator!=(const Domain& x) const;
+
+      bool is_subset(const Domain& x, int& component_id) const;
       
       friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
       void add_data(double t, const ibex::Interval& y, ContractorNetwork& cn);
       void add_data(double t, const ibex::IntervalVector& y, ContractorNetwork& cn);
 
-      const std::string& name();
+      const std::string name(const std::vector<Domain*>& v_domains);
       void set_name(const std::string& name);
 
     protected:
@@ -129,7 +131,7 @@ namespace tubex
       std::vector<Contractor*> m_v_ctc;
       double m_volume = 0.;
 
-      std::string m_name = "?";
+      std::string m_name;
   };
 }
 

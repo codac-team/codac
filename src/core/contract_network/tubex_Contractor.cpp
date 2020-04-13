@@ -227,8 +227,25 @@ namespace tubex
       assert(false && "unhandled case");
   }
   
-  const string& Contractor::name()
+  const string Contractor::name()
   {
+    if(m_name.empty())
+    {
+      switch(type())
+      {
+        case ContractorType::COMPONENT:
+          return "i";
+
+        case ContractorType::EQUALITY:
+          return "=";
+
+        case ContractorType::IBEX:
+        case ContractorType::TUBEX:
+        default:
+          return "?";
+      }
+    }
+
     return m_name;
   }
   

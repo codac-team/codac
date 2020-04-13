@@ -65,7 +65,13 @@ namespace tubex
 
       void set_name(Domain dom, const std::string& name);
       void set_name(Contractor ctc, const std::string& name);
-      void print_dot_graph() const;
+
+      // dot
+      // neato
+      // circo
+      // fdp
+      // twopi
+      int print_dot_graph(const std::string& cn_name = "cn", const std::string& prog = "neato") const;
 
 
     protected:

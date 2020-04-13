@@ -54,7 +54,7 @@ namespace tubex
 
       void contract();
 
-      const std::string& name();
+      const std::string name();
       void set_name(const std::string& name);
 
 
@@ -71,7 +71,7 @@ namespace tubex
 
       std::vector<Domain*> m_domains;
 
-      std::string m_name = "?";
+      std::string m_name;
   };
 }
 

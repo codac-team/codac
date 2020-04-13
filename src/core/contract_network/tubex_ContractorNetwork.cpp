@@ -8,6 +8,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <iostream>
+#include <fstream>
 #include "tubex_ContractorNetwork.h"
 #include "tubex_CtcFwdBwd.h"
 #include "tubex_CtcEval.h"
@@ -464,27 +466,30 @@ namespace tubex
     assert(contractor_found);
   }
 
-  void ContractorNetwork::print_dot_graph() const
+  int ContractorNetwork::print_dot_graph(const string& cn_name, const string& prog) const
   {
-    cout << "graph graphname {" << endl;
+    ofstream dot_file;
+    dot_file.open(cn_name + ".dot");
+
+    dot_file << "graph graphname {" << endl;
 
     int d = 0;
-    cout << endl << "  // Domains nodes" << endl;
+    dot_file << endl << "  // Domains nodes" << endl;
     for(const auto& dom : m_v_domains)
     {
       d++;
-      cout << "  " << Figure::add_suffix("dom",d) << " [shape=box,label=\"" << dom->name() << "\"];" << endl;
+      dot_file << "  " << Figure::add_suffix("dom",d) << " [shape=box,label=\"" << dom->name(m_v_domains) << "\"];" << endl;
     }
 
     int c = 0;
-    cout << endl << "  // Contractors nodes" << endl;
+    dot_file << endl << "  // Contractors nodes" << endl;
     for(const auto& ctc : m_v_ctc)
     {
       c++;
-      cout << "  " << Figure::add_suffix("ctc",c) << " [shape=circle,label=\"" << ctc->name() << "\"];" << endl;
+      dot_file << "  " << Figure::add_suffix("ctc",c) << " [shape=circle,label=\"\\mathcal{C}_{" << ctc->name() << "}\"];" << endl;
     }
 
-    cout << endl << "  // Relations" << endl;
+    dot_file << endl << "  // Relations" << endl;
     c = 0;
     for(const auto& ctc : m_v_ctc)
     {
@@ -494,10 +499,14 @@ namespace tubex
       {
         d++;
         if(find(dom->contractors().begin(), dom->contractors().end(), ctc) != dom->contractors().end())
-          cout << "  " << Figure::add_suffix("ctc",c) << " -- " << Figure::add_suffix("dom",d) << ";" << endl;
+          dot_file << "  " << Figure::add_suffix("ctc",c) << " -- " << Figure::add_suffix("dom",d) << ";" << endl;
       }
     }
 
-    cout << "}" << endl;
+    dot_file << "}" << endl;
+    dot_file.close();
+
+    return system((("dot2tex --crop --texmode=math --autosize --prog=" + prog + " -ftikz ") + cn_name + ".dot > "
+                   + cn_name + ".tex ; pdflatex " + cn_name + ".tex").c_str());    
   }
 }

@@ -8,7 +8,9 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <boost/algorithm/string/replace.hpp>
 #include "tubex_Domain.h"
+#include "tubex_Figure.h" // for add_suffix
 
 using namespace std;
 using namespace ibex;
@@ -476,6 +478,29 @@ namespace tubex
         return false;
     }
   }
+  
+  bool Domain::is_subset(const Domain& x, int& component_id) const
+  {
+    if((m_type == Type::INTERVAL && x.type() == Type::INTERVAL_VECTOR) || (m_type == Type::TUBE && x.type() == Type::TUBE_VECTOR))
+    {
+      switch(x.type())
+      {
+        case Type::INTERVAL_VECTOR:
+          for(int i = 0 ; i < x.m_ref_extern_object_iv.get().size() ; i++)
+            if(&x.m_ref_extern_object_iv.get()[i] == &m_ref_extern_object_i.get())
+            {
+              component_id = i;
+              return true;
+            }
+          break;
+
+        default:
+          return false;
+      }
+    }
+
+    return false;
+  }
 
   ostream& operator<<(ostream& str, const Domain& x)
   {
@@ -575,9 +600,31 @@ namespace tubex
     }
   }
   
-  const string& Domain::name()
+  const string Domain::name(const vector<Domain*>& v_domains)
   {
-    return m_name;
+    string output_name = m_name;
+
+    if(output_name.empty()) // looking for dependencies
+    {
+      for(const auto& dom : v_domains)
+      {
+        int component_id = 0;
+        if(is_subset(*dom, component_id))
+        {
+          output_name = dom->name(v_domains); // parent name
+          boost::algorithm::replace_all(output_name, "\\mathbf", ""); // removing bold font
+          output_name = Figure::add_suffix(output_name, component_id+1); // adding component id
+        }
+      }
+    }
+
+    if(m_type == Type::INTERVAL_VECTOR || m_type == Type::TUBE_VECTOR)
+      output_name = "\\mathbf{" + output_name + "}";
+
+    if(m_type == Type::TUBE || m_type == Type::TUBE_VECTOR)
+      output_name += "(\\cdot)";
+
+    return output_name;
   }
   
   void Domain::set_name(const string& name)
