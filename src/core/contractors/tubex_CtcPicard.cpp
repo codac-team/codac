@@ -9,6 +9,8 @@
  */
 
 #include "tubex_CtcPicard.h"
+#include<float.h>
+
 
 using namespace std;
 using namespace ibex;
@@ -50,7 +52,7 @@ namespace tubex
           // then it is sampled and contracted again.
           if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / m_picard_subslices)
           {
-            
+
             x.sample(x[0].slice_domain(k).mid()); // all the components of the tube are sampled,
             // and sampling time is selected according to the first slice of one of the components,
             // for instance the first one x[0]
@@ -63,7 +65,15 @@ namespace tubex
   void CtcPicard::contract_picard_slice(const tubex::Fnc& f, TubeVector& x, int  k, TPropagation t_propa )
   {
     assert (t_propa == FORWARD || t_propa ==BACKWARD);
-    Interval initdomain=x[0].slice_domain(k) ;
+    int unbounded_gate=false;
+    for (int i=0 ;i< x.size() ; i++)
+      if ((t_propa == FORWARD && x[i].slice(k)->input_gate().diam() >= DBL_MAX)
+	  ||
+	  (t_propa == BACKWARD && x[i].slice(k)->output_gate().diam() >= DBL_MAX)
+	  )
+	return;
+     Interval initdomain=x[0].slice_domain(k) ;
+    //    Interval initdomain=x[0].domain() ;
     int kfinished;
     if (t_propa == FORWARD) kfinished=k+1;
     else kfinished=k-1;
@@ -74,9 +84,10 @@ namespace tubex
           // then it is sampled and contracted again.
           if(x(k).is_unbounded())
 	     {
-	      if (x[0].slice_domain(k).diam() > initdomain.diam() / m_picard_subslices)
+	       //	       cout << " k " << k << x[0].slice_domain(k).diam() << " initdomain " <<  initdomain.diam() << " " << initdomain.diam() / m_picard_subslices << endl;
+	       if (x[0].slice_domain(k).diam() > initdomain.diam() / m_picard_subslices)
 		{
-            
+
 		  x.sample(x[0].slice_domain(k).mid()); // all the components of the tube are sampled,
             // and sampling time is selected according to the first slice of one of the components,
             // for instance the first one x[0]
@@ -89,6 +100,7 @@ namespace tubex
 	  else if  (t_propa == FORWARD) k++;
 	  else k--;
     }
+
   }
 
 
@@ -112,11 +124,11 @@ namespace tubex
       TubeVector *first_slicing;
       if(m_preserve_slicing)
         first_slicing = new TubeVector(x);
-      
+
 
       if(t_propa & FORWARD)
       {
-        
+
         for(int k = 0 ; k < x.nb_slices() ; k++)
         {
 	  contract_picard_tubeslice(f,x,k, FORWARD);
@@ -129,7 +141,7 @@ namespace tubex
         {
 
 	  contract_picard_tubeslice(f,x,k, BACKWARD);
-          
+
         }
       }
 
