@@ -99,9 +99,10 @@ namespace tubex
        *
        * \param name the string to be updated
        * \param id the integer to add
+       * \param sep string separator between name and id ("_" by default)
        * \return the string value `string`_`id`
        */
-      static std::string add_suffix(const std::string& name, int id);
+      static std::string add_suffix(const std::string& name, int id, const std::string& sep = "_");
 
     protected:
       

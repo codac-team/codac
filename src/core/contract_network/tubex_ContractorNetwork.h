@@ -28,7 +28,6 @@ namespace ibex
 namespace tubex
 {
   class Domain;
-  class DomainSingleton;
   class Contractor;
   class Ctc;
   class CtcDeriv;
@@ -54,33 +53,34 @@ namespace tubex
       Tube& create_var(const Tube& t);
       TubeVector& create_var(const TubeVector& tv);
 
+      ibex::IntervalVector& subvector(ibex::Vector& i, int start_index, int end_index);
+      ibex::IntervalVector& subvector(ibex::IntervalVector& i, int start_index, int end_index);
+      TubeVector& subvector(TubeVector& i, int start_index, int end_index);
+
       void add(ibex::Ctc& ctc, const std::vector<Domain>& v_domains);
       void add(tubex::Ctc& ctc, const std::vector<Domain>& v_domains);
 
       void add_data(Tube& tube, double t, const ibex::Interval& y);
       void add_data(TubeVector& tube, double t, const ibex::IntervalVector& y);
 
-      ibex::IntervalVector& subvector(ibex::IntervalVector& i, int start_index, int end_index);
-      TubeVector& subvector(TubeVector& i, int start_index, int end_index);
-
       void set_name(Domain dom, const std::string& name);
-      void set_name(Contractor ctc, const std::string& name);
+      void set_name(const Contractor& ctc, const std::string& name);
 
-      // dot
-      // neato
-      // circo
-      // fdp
-      // twopi
+      // dot / neato / circo / fdp / twopi
       int print_dot_graph(const std::string& cn_name = "cn", const std::string& prog = "neato") const;
 
 
     protected:
 
-      Domain* add_domain(Domain *ad);
-      void add_domain(Domain *ad, Contractor *ac);
-      Contractor* add_contractor(Contractor *&ac);
-      void propagate_ctc_from_domain(Domain *dom, Contractor *ctc_to_avoid = NULL);
-      void add_to_queue(Contractor *ac, std::deque<Contractor*>& ctc_deque);
+      Domain* add_dom(const Domain& ad);
+      Contractor* add_ctc(const Contractor& ac);
+      void add_ctc_to_queue(Contractor *ac, std::deque<Contractor*>& ctc_deque);
+      void link_dom_ctc(Domain *ad, Contractor *ac);
+
+      void propag_active_ctc_from_dom(Domain *dom, Contractor *ctc_to_avoid = NULL);
+
+
+    protected:
 
       std::vector<Contractor*> m_v_ctc;
       std::vector<Domain*> m_v_domains;

@@ -9,40 +9,55 @@
  */
 
 #include "tubex_Contractor.h"
+#include "tubex_CtcEval.h"
+#include "tubex_CtcDeriv.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
-  Contractor::Contractor(ContractorType type)
+  int Contractor::ctc_counter = 0;
+
+  Contractor::Contractor(Type type)
     : m_type(type)
   {
-    assert(type == ContractorType::COMPONENT || type == ContractorType::EQUALITY);
+    ctc_counter++;
+    m_ctc_id = ctc_counter;
   }
 
   Contractor::Contractor(ibex::Ctc& ctc)
-    : m_type(ContractorType::IBEX), m_ibex_ctc(ctc)
+    : Contractor(Type::IBEX)
   {
-
+    m_ibex_ctc = ctc;
   }
 
   Contractor::Contractor(tubex::Ctc& ctc) 
-    : m_type(ContractorType::TUBEX), m_tubex_ctc(ctc)
+    : Contractor(Type::TUBEX)
   {
+    m_tubex_ctc = ctc;
     m_tubex_ctc.get().preserve_slicing(true);
   }
 
   Contractor::Contractor(const Contractor& ac)
-    : m_type(ac.m_type), m_domains(ac.m_domains)
+    : Contractor(ac.m_type)
   {
+    m_v_domains = ac.m_v_domains;
+    m_name = ac.m_name;
+    m_ctc_id = ac.m_ctc_id;
+
     switch(ac.m_type)
     {
-      case ContractorType::IBEX:
+      case Type::EQUALITY:
+      case Type::COMPONENT:
+        // Nothing to do
+        break;
+        
+      case Type::IBEX:
         m_ibex_ctc = ac.m_ibex_ctc;
         break;
 
-      case ContractorType::TUBEX:
+      case Type::TUBEX:
         m_tubex_ctc = ac.m_tubex_ctc;
         break;
 
@@ -56,7 +71,12 @@ namespace tubex
 
   }
 
-  ContractorType Contractor::type() const
+  int Contractor::id() const
+  {
+    return m_ctc_id;
+  }
+
+  Contractor::Type Contractor::type() const
   {
     return m_type;
   }
@@ -73,26 +93,26 @@ namespace tubex
 
   vector<Domain*>& Contractor::domains()
   {
-    return m_domains;
+    return m_v_domains;
   }
 
   bool Contractor::operator==(const Contractor& x) const
-  {
+  {    
     if(m_type != x.m_type)
       return false;
 
     switch(m_type)
     {
-      case ContractorType::IBEX:
+      case Type::IBEX:
         if(&m_ibex_ctc.get() != &x.m_ibex_ctc.get())
           return false;
 
-      case ContractorType::TUBEX:
+      case Type::TUBEX:
         if(&m_tubex_ctc.get() != &x.m_tubex_ctc.get())
           return false;
 
-      case ContractorType::COMPONENT:
-      case ContractorType::EQUALITY:
+      case Type::COMPONENT:
+      case Type::EQUALITY:
         // Nothing to compare
         break;
 
@@ -101,11 +121,11 @@ namespace tubex
         return false;
     }
 
-    if(m_domains.size() != x.m_domains.size())
+    if(m_v_domains.size() != x.m_v_domains.size())
       return false;
 
-    for(size_t i = 0 ; i < m_domains.size() ; i++)
-      if(*m_domains[i] != *x.m_domains[i])
+    for(size_t i = 0 ; i < m_v_domains.size() ; i++)
+      if(*m_v_domains[i] != *x.m_v_domains[i])
         return false;
 
     return true;
@@ -118,10 +138,10 @@ namespace tubex
 
     switch(m_type)
     {
-      case ContractorType::IBEX:
+      case Type::IBEX:
         return &m_ibex_ctc.get() == &x.m_ibex_ctc.get();
 
-      case ContractorType::TUBEX:
+      case Type::TUBEX:
         return &m_tubex_ctc.get() == &x.m_tubex_ctc.get();
           return false;
 
@@ -132,89 +152,89 @@ namespace tubex
 
   void Contractor::contract()
   {
-    assert(!m_domains.empty());
+    assert(!m_v_domains.empty());
 
-    if(m_type == ContractorType::IBEX)
+    if(m_type == Type::IBEX)
     {
-      if(m_domains.size() == 1 && m_domains[0]->type() == Domain::Type::INTERVAL_VECTOR)
+      if(m_v_domains.size() == 1 && m_v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR)
       {
-        m_ibex_ctc.get().contract(m_domains[0]->interval_vector());
+        m_ibex_ctc.get().contract(m_v_domains[0]->interval_vector());
       }
 
-      else if(m_domains[0]->type() == Domain::Type::INTERVAL) // set of scalar values
+      else if(m_v_domains[0]->type() == Domain::Type::INTERVAL) // set of scalar values
       {
-        IntervalVector box(m_domains.size());
-        for(size_t i = 0 ; i < m_domains.size() ; i++)
-          box[i] = m_domains[i]->interval();
+        IntervalVector box(m_v_domains.size());
+        for(size_t i = 0 ; i < m_v_domains.size() ; i++)
+          box[i] = m_v_domains[i]->interval();
 
         m_ibex_ctc.get().contract(box);
 
-        for(size_t i = 0 ; i < m_domains.size() ; i++)
-          m_domains[i]->interval() &= box[i];
+        for(size_t i = 0 ; i < m_v_domains.size() ; i++)
+          m_v_domains[i]->interval() &= box[i];
       }
 
-      else if(m_domains[0]->type() == Domain::Type::INTERVAL_VECTOR) // set of vector values
+      else if(m_v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR) // set of vector values
       {
-        for(int k = 0 ; k < m_domains[0]->interval_vector().size() ; k++)
+        for(int k = 0 ; k < m_v_domains[0]->interval_vector().size() ; k++)
         {
-          IntervalVector box(m_domains.size());
-          for(size_t i = 0 ; i < m_domains.size() ; i++)
-            box[i] = m_domains[i]->interval_vector()[k];
+          IntervalVector box(m_v_domains.size());
+          for(size_t i = 0 ; i < m_v_domains.size() ; i++)
+            box[i] = m_v_domains[i]->interval_vector()[k];
 
           m_ibex_ctc.get().contract(box);
 
-          for(size_t i = 0 ; i < m_domains.size() ; i++)
-            m_domains[i]->interval_vector()[k] &= box[i];
+          for(size_t i = 0 ; i < m_v_domains.size() ; i++)
+            m_v_domains[i]->interval_vector()[k] &= box[i];
         }
       }
     }
 
-    else if(m_type == ContractorType::TUBEX)
+    else if(m_type == Type::TUBEX)
     {
-      m_tubex_ctc.get().contract(m_domains);
+      m_tubex_ctc.get().contract(m_v_domains);
     }
 
-    else if(m_type == ContractorType::COMPONENT)
+    else if(m_type == Type::COMPONENT)
     {
       // Symbolic
     }
 
-    else if(m_type == ContractorType::EQUALITY)
+    else if(m_type == Type::EQUALITY)
     {
-      assert(m_domains.size() == 2);
-      assert(m_domains[0]->type() == m_domains[1]->type());
+      assert(m_v_domains.size() == 2);
+      assert(m_v_domains[0]->type() == m_v_domains[1]->type());
 
-      switch(m_domains[0]->type())
+      switch(m_v_domains[0]->type())
       {
         case Domain::Type::INTERVAL:
         {
-          Interval inter = m_domains[0]->interval() & m_domains[1]->interval();
-          m_domains[0]->interval() = inter;
-          m_domains[1]->interval() = inter;
+          Interval inter = m_v_domains[0]->interval() & m_v_domains[1]->interval();
+          m_v_domains[0]->interval() = inter;
+          m_v_domains[1]->interval() = inter;
         }
         break;
       
         case Domain::Type::INTERVAL_VECTOR:
         {
-          IntervalVector inter = m_domains[0]->interval_vector() & m_domains[1]->interval_vector();
-          m_domains[0]->interval_vector() = inter;
-          m_domains[1]->interval_vector() = inter;
+          IntervalVector inter = m_v_domains[0]->interval_vector() & m_v_domains[1]->interval_vector();
+          m_v_domains[0]->interval_vector() = inter;
+          m_v_domains[1]->interval_vector() = inter;
         }
         break;
     
         case Domain::Type::TUBE:
         {
-          Tube inter = m_domains[0]->tube() & m_domains[1]->tube();
-          m_domains[0]->tube() = inter;
-          m_domains[1]->tube() = inter;
+          Tube inter = m_v_domains[0]->tube() & m_v_domains[1]->tube();
+          m_v_domains[0]->tube() = inter;
+          m_v_domains[1]->tube() = inter;
         }
         break;
         
         case Domain::Type::TUBE_VECTOR:
         {
-          TubeVector inter = m_domains[0]->tube_vector() & m_domains[1]->tube_vector();
-          m_domains[0]->tube_vector() = inter;
-          m_domains[1]->tube_vector() = inter;
+          TubeVector inter = m_v_domains[0]->tube_vector() & m_v_domains[1]->tube_vector();
+          m_v_domains[0]->tube_vector() = inter;
+          m_v_domains[1]->tube_vector() = inter;
         }
         break;
 
@@ -227,30 +247,41 @@ namespace tubex
       assert(false && "unhandled case");
   }
   
-  const string Contractor::name()
+  const string Contractor::name() const
   {
-    if(m_name.empty())
+    switch(type())
     {
-      switch(type())
-      {
-        case ContractorType::COMPONENT:
-          return "i";
+      case Type::COMPONENT:
+        return "";
 
-        case ContractorType::EQUALITY:
-          return "=";
+      case Type::EQUALITY:
+        return "=";
 
-        case ContractorType::IBEX:
-        case ContractorType::TUBEX:
-        default:
-          return "?";
-      }
+      case Type::TUBEX:
+        if(m_name.empty())
+        {
+          if(typeid(m_tubex_ctc.get()) == typeid(CtcEval))
+            return "\\mathcal{C}_{\\textrm{eval}}";
+
+          if(typeid(m_tubex_ctc.get()) == typeid(CtcDeriv))
+            return "\\mathcal{C}_{\\frac{d}{dt}}";
+        }
+        return "\\mathcal{C}_{" + m_name + "}";
+
+      case Type::IBEX:
+      default:
+        return "\\mathcal{C}_{" + m_name + "}";
     }
-
-    return m_name;
   }
   
   void Contractor::set_name(const string& name)
   {
     m_name = name;
+  }
+  
+  ostream& operator<<(ostream& str, const Contractor& x)
+  {
+    str << "Contractor " << x.name() << flush;
+    return str;
   }
 }

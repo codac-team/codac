@@ -71,10 +71,10 @@ namespace tubex
     m_width = width; m_height = height;
   }
 
-  string Figure::add_suffix(const string& name, int id)
+  string Figure::add_suffix(const string& name, int id, const string& sep)
   {
     ostringstream o;
-    o << name << "_" << id;
+    o << name << sep << id;
     return o.str();
   }
 

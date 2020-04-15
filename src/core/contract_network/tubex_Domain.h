@@ -50,6 +50,7 @@ namespace tubex
       Domain(const tubex::TubeVector& tv);
       ~Domain();
 
+      int id() const;
       Type type() const;
 
       ibex::Interval& interval();
@@ -76,16 +77,22 @@ namespace tubex
 
       bool is_component_of(const Domain& x) const;
       bool is_component_of(const Domain& x, int& component_id) const;
+
+      bool is_slice_of(const Domain& x) const;
+      bool is_slice_of(const Domain& x, int& slice_id) const;
       
       friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
       void add_data(double t, const ibex::Interval& y, ContractorNetwork& cn);
       void add_data(double t, const ibex::IntervalVector& y, ContractorNetwork& cn);
 
-      const std::string name(const std::vector<Domain*>& v_domains);
+      const std::string dom_name(const std::vector<Domain*>& v_domains) const;
       void set_name(const std::string& name);
 
     protected:
+
+      Domain(Type type, ExternalRef extern_object_type);
+      const std::string var_name(const std::vector<Domain*>& v_domains) const;
 
       // Theoretical type of domain
 
@@ -111,7 +118,7 @@ namespace tubex
 
       // Origin type of the implementation of the domain
 
-        const ExternalRef m_extern_object_type;
+        ExternalRef m_extern_object_type;
 
         union // reference to the unique object (in memory) this domain represents
         {
@@ -133,6 +140,11 @@ namespace tubex
       double m_volume = 0.;
 
       std::string m_name;
+      int m_dom_id;
+
+      static int dom_counter;
+
+      friend class ContractorNetwork; // todo: remove this
   };
 }
 

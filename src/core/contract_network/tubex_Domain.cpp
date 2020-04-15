@@ -17,11 +17,22 @@ using namespace ibex;
 
 namespace tubex
 {
+  int Domain::dom_counter = 0;
+
+  Domain::Domain(Type type, ExternalRef extern_object_type)
+    : m_type(type), m_extern_object_type(extern_object_type)
+  {
+    dom_counter++;
+    m_dom_id = dom_counter;
+  }
+
   Domain::Domain(const Domain& ad)
-    : m_type(ad.m_type), m_extern_object_type(ad.m_extern_object_type)
+    : Domain(ad.m_type, ad.m_extern_object_type)
   {
     m_volume = ad.m_volume;
     m_v_ctc = ad.m_v_ctc;
+    m_name = ad.m_name;
+    m_dom_id = ad.m_dom_id;
 
     // todo: verify the copy of the above pointers
     // todo: is this constructor useful?
@@ -37,6 +48,7 @@ namespace tubex
 
         else
         {
+          assert(ad.m_extern_object_type != ExternalRef::NONE);
           m_ref_values_i = reference_wrapper<Interval>(ad.m_ref_values_i);
         }
         break;
@@ -50,6 +62,7 @@ namespace tubex
 
         else
         {
+          assert(ad.m_extern_object_type != ExternalRef::NONE);
           m_ref_values_iv = reference_wrapper<IntervalVector>(ad.m_ref_values_iv);
         }
         break;
@@ -72,6 +85,10 @@ namespace tubex
     
     switch(ad.m_extern_object_type)
     {
+      case ExternalRef::NONE:
+        // Nothing to do
+        break;
+        
       case ExternalRef::DOUBLE:
         m_ref_extern_object_d = ad.m_ref_extern_object_d;
         break;
@@ -106,7 +123,7 @@ namespace tubex
   }
 
   Domain::Domain(double& d)
-    : m_type(Type::INTERVAL), m_extern_object_type(ExternalRef::DOUBLE)
+    : Domain(Type::INTERVAL, ExternalRef::DOUBLE)
   {
     m_i_ptr = new Interval(d);
     m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
@@ -114,22 +131,25 @@ namespace tubex
   }
 
   Domain::Domain(Interval& i)
-    : m_type(Type::INTERVAL), m_extern_object_type(ExternalRef::INTERVAL)
+    : Domain(Type::INTERVAL, ExternalRef::INTERVAL)
   {
     m_i_ptr = NULL;
     m_ref_values_i = reference_wrapper<Interval>(i);
     m_ref_extern_object_i = reference_wrapper<Interval>(i);
+    dom_counter++;
+    m_dom_id = dom_counter;
   }
 
   Domain::Domain(const Interval& i)
-    : m_type(Type::INTERVAL), m_extern_object_type(ExternalRef::NONE)
+    : Domain(Type::INTERVAL, ExternalRef::NONE)
   {
     m_i_ptr = new Interval(i);
     m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
+    m_ref_extern_object_i = reference_wrapper<Interval>(*m_i_ptr); // todo: remove this?
   }
 
   Domain::Domain(Vector& v)
-    : m_type(Type::INTERVAL_VECTOR), m_extern_object_type(ExternalRef::VECTOR)
+    : Domain(Type::INTERVAL_VECTOR, ExternalRef::VECTOR)
   {
     m_iv_ptr = new IntervalVector(v);
     m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
@@ -137,7 +157,7 @@ namespace tubex
   }
 
   Domain::Domain(IntervalVector& iv)
-    : m_type(Type::INTERVAL_VECTOR), m_extern_object_type(ExternalRef::INTERVAL_VECTOR)
+    : Domain(Type::INTERVAL_VECTOR, ExternalRef::INTERVAL_VECTOR)
   {
     m_iv_ptr = NULL;
     m_ref_values_iv = reference_wrapper<IntervalVector>(iv);
@@ -145,14 +165,15 @@ namespace tubex
   }
 
   Domain::Domain(const IntervalVector& iv)
-    : m_type(Type::INTERVAL_VECTOR), m_extern_object_type(ExternalRef::NONE)
+    : Domain(Type::INTERVAL_VECTOR, ExternalRef::NONE)
   {
     m_iv_ptr = new IntervalVector(iv);
     m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+    m_ref_extern_object_iv = reference_wrapper<IntervalVector>(*m_iv_ptr); // todo: remove this?
   }
 
   Domain::Domain(Slice& s)
-    : m_type(Type::SLICE), m_extern_object_type(ExternalRef::SLICE)
+    : Domain(Type::SLICE, ExternalRef::SLICE)
   {
     m_ref_values_s = reference_wrapper<Slice>(s);
     m_ref_extern_object_s = reference_wrapper<Slice>(s);
@@ -162,7 +183,7 @@ namespace tubex
   }
 
   Domain::Domain(Tube& t)
-    : m_type(Type::TUBE), m_extern_object_type(ExternalRef::TUBE)
+    : Domain(Type::TUBE, ExternalRef::TUBE)
   {
     m_ref_values_t = reference_wrapper<Tube>(t);
     m_ref_extern_object_t = reference_wrapper<Tube>(t);
@@ -172,7 +193,7 @@ namespace tubex
   }
 
   Domain::Domain(const Tube& t)
-    : m_type(Type::TUBE), m_extern_object_type(ExternalRef::NONE)
+    : Domain(Type::TUBE, ExternalRef::NONE)
   {
     m_t_ptr = new Tube(t);
     m_ref_values_t = reference_wrapper<Tube>(*m_t_ptr);
@@ -182,7 +203,7 @@ namespace tubex
   }
 
   Domain::Domain(TubeVector& tv)
-    : m_type(Type::TUBE_VECTOR), m_extern_object_type(ExternalRef::TUBE_VECTOR)
+    : Domain(Type::TUBE_VECTOR, ExternalRef::TUBE_VECTOR)
   {
     m_ref_values_tv = reference_wrapper<TubeVector>(tv);
     m_ref_extern_object_tv = reference_wrapper<TubeVector>(tv);
@@ -192,7 +213,7 @@ namespace tubex
   }
 
   Domain::Domain(const TubeVector& tv)
-    : m_type(Type::TUBE_VECTOR), m_extern_object_type(ExternalRef::NONE)
+    : Domain(Type::TUBE_VECTOR, ExternalRef::NONE)
   {
     m_tv_ptr = new TubeVector(tv);
     m_ref_values_tv = reference_wrapper<TubeVector>(*m_tv_ptr);
@@ -205,6 +226,11 @@ namespace tubex
   {
     if(m_i_ptr != NULL) delete m_i_ptr;
     if(m_iv_ptr != NULL) delete m_iv_ptr;
+  }
+
+  int Domain::id() const
+  {
+    return m_dom_id;
   }
 
   Domain::Type Domain::type() const
@@ -403,80 +429,97 @@ namespace tubex
   
   bool Domain::operator==(const Domain& x) const
   {
-    if(m_extern_object_type != x.m_extern_object_type)
-      return false;
+    // Possibilities of equality:
 
-    assert(m_type == x.m_type);
+    // - 1. The two objects point to the same external reference.
+    //
+    //    - 1.a. However, the domain is internally represented by a set.
+    //           For instance, a double is represented by an interval stored in the CN.
+    //   
+    //    - 1.b. The two objects point to the same external reference.
+    //           For instance, the same tubes, stored outside the CN.
+    //
+    // - 2. One is a created_var (points to a variable stored in the CN) and
+    //      the other one is external (it points to the previously created var)
 
-    switch(m_extern_object_type)
+
+    // Case 1: the two objects point to the same external reference.
+    if(m_extern_object_type == x.m_extern_object_type && m_extern_object_type != ExternalRef::NONE)
     {
-      case ExternalRef::NONE:
-        return false; // references cannot be compared
-        
-      case ExternalRef::DOUBLE:
-        return &m_ref_extern_object_d.get() == &x.m_ref_extern_object_d.get();
+      assert(m_type == x.m_type); // same external reference => same type of domain
 
-      case ExternalRef::INTERVAL:
-        return &m_ref_extern_object_i.get() == &x.m_ref_extern_object_i.get();
+      switch(m_extern_object_type)
+      {
+        case ExternalRef::DOUBLE:
+          return &m_ref_extern_object_d.get() == &x.m_ref_extern_object_d.get();
 
-      case ExternalRef::VECTOR:
-        return &m_ref_extern_object_v.get() == &x.m_ref_extern_object_v.get();
+        case ExternalRef::INTERVAL:
+          return &m_ref_extern_object_i.get() == &x.m_ref_extern_object_i.get();
 
-      case ExternalRef::INTERVAL_VECTOR:
-        return &m_ref_extern_object_iv.get() == &x.m_ref_extern_object_iv.get();
+        case ExternalRef::VECTOR:
+          return &m_ref_extern_object_v.get() == &x.m_ref_extern_object_v.get();
 
-      case ExternalRef::SLICE:
-        return &m_ref_extern_object_s.get() == &x.m_ref_extern_object_s.get();
+        case ExternalRef::INTERVAL_VECTOR:
+          return &m_ref_extern_object_iv.get() == &x.m_ref_extern_object_iv.get();
 
-      case ExternalRef::TUBE:
-        return &m_ref_extern_object_t.get() == &x.m_ref_extern_object_t.get();
+        case ExternalRef::SLICE:
+          return &m_ref_extern_object_s.get() == &x.m_ref_extern_object_s.get();
 
-      case ExternalRef::TUBE_VECTOR:
-        return &m_ref_extern_object_tv.get() == &x.m_ref_extern_object_tv.get();
+        case ExternalRef::TUBE:
+          return &m_ref_extern_object_t.get() == &x.m_ref_extern_object_t.get();
 
-      default:
-        assert(false && "unhandled case");
-        return false;
+        case ExternalRef::TUBE_VECTOR:
+          return &m_ref_extern_object_tv.get() == &x.m_ref_extern_object_tv.get();
+
+        default:
+          assert(false && "unhandled case");
+          return false;
+      }
     }
+
+    // Case 2: one is a created_var (points to a variable stored in the CN) and
+    // the other one is external (it points to the previously created var)
+    else if(m_extern_object_type != ExternalRef::NONE && x.m_extern_object_type == ExternalRef::NONE)
+    {
+      return x.operator==(*this); // permutation of arguments
+    }
+    
+    else if(m_extern_object_type == ExternalRef::NONE && x.m_extern_object_type != ExternalRef::NONE)
+    {
+      if(m_type != x.m_type)
+        return false;
+
+      switch(m_type)
+      {
+        case Type::INTERVAL:
+          return &m_ref_values_i.get() == &x.m_ref_extern_object_i.get();
+
+        case Type::INTERVAL_VECTOR:
+          return &m_ref_values_iv.get() == &x.m_ref_extern_object_iv.get();
+
+        case Type::SLICE:
+          return &m_ref_values_s.get() == &x.m_ref_extern_object_s.get();
+
+        case Type::TUBE:
+          return &m_ref_values_t.get() == &x.m_ref_extern_object_t.get();
+
+        case Type::TUBE_VECTOR:
+          return &m_ref_values_tv.get() == &x.m_ref_values_tv.get();
+
+        default:
+          assert(false && "unhandled case");
+          return false;
+      }
+    }
+
+    else
+      return false;
   }
   
   bool Domain::operator!=(const Domain& x) const
   {
-    if(m_extern_object_type != x.m_extern_object_type)
-      return true;
-
-    assert(m_type == x.m_type);
-
-    switch(m_extern_object_type)
-    {
-      case ExternalRef::NONE:
-        return true; // references cannot be compared
-        
-      case ExternalRef::DOUBLE:
-        return &m_ref_extern_object_d.get() != &x.m_ref_extern_object_d.get();
-
-      case ExternalRef::INTERVAL:
-        return &m_ref_extern_object_i.get() != &x.m_ref_extern_object_i.get();
-
-      case ExternalRef::VECTOR:
-        return &m_ref_extern_object_v.get() != &x.m_ref_extern_object_v.get();
-
-      case ExternalRef::INTERVAL_VECTOR:
-        return &m_ref_extern_object_iv.get() != &x.m_ref_extern_object_iv.get();
-
-      case ExternalRef::SLICE:
-        return &m_ref_extern_object_s.get() != &x.m_ref_extern_object_s.get();
-
-      case ExternalRef::TUBE:
-        return &m_ref_extern_object_t.get() != &x.m_ref_extern_object_t.get();
-
-      case ExternalRef::TUBE_VECTOR:
-        return &m_ref_extern_object_tv.get() != &x.m_ref_extern_object_tv.get();
-
-      default:
-        assert(false && "unhandled case");
-        return false;
-    }
+    return !operator==(x);
+    // todo: faster implementation?
   }
   
   bool Domain::is_component_of(const Domain& x) const
@@ -492,8 +535,8 @@ namespace tubex
       switch(x.type())
       {
         case Type::INTERVAL_VECTOR:
-          for(int i = 0 ; i < x.m_ref_extern_object_iv.get().size() ; i++)
-            if(&x.m_ref_extern_object_iv.get()[i] == &m_ref_extern_object_i.get())
+          for(int i = 0 ; i < x.interval_vector().size() ; i++)
+            if(&x.interval_vector()[i] == &interval())
             {
               component_id = i;
               return true;
@@ -507,9 +550,34 @@ namespace tubex
 
     return false;
   }
+  
+  bool Domain::is_slice_of(const Domain& x) const
+  {
+    int id;
+    return is_slice_of(x, id);
+  }
+
+  bool Domain::is_slice_of(const Domain& x, int& slice_id) const
+  {
+    if(m_type == Type::SLICE && x.type() == Type::TUBE)
+    {
+      slice_id = 0;
+      for(const Slice *s = x.tube().first_slice() ; s != NULL ; s=s->next_slice())
+      {
+        if(s == &slice())
+          return true;
+
+        slice_id++;
+      }
+    }
+
+    return false;
+  }
 
   ostream& operator<<(ostream& str, const Domain& x)
   {
+    str << "[" << Figure::add_suffix("type",(int)x.m_type) << "," << Figure::add_suffix("extern_type",(int)x.m_extern_object_type) << "]" << flush;
+
     switch(x.m_type)
     {
       case Domain::Type::INTERVAL:
@@ -565,7 +633,7 @@ namespace tubex
       prev_s->set_envelope(new_slice_envelope);
 
       // Flags a new change on the domain
-      cn.propagate_ctc_from_domain(cn.add_domain(new Domain(*prev_s)));
+      cn.propag_active_ctc_from_dom(cn.add_dom(Domain(*prev_s)));
 
       prev_s = prev_s->prev_slice();
     }
@@ -599,36 +667,85 @@ namespace tubex
         prev_s->set_envelope(new_slice_envelope);
 
         // Flags a new change on the domain
-        cn.propagate_ctc_from_domain(cn.add_domain(new Domain(*prev_s)));
+        cn.propag_active_ctc_from_dom(cn.add_dom(Domain(*prev_s)));
 
         prev_s = prev_s->prev_slice();
       }
     }
   }
   
-  const string Domain::name(const vector<Domain*>& v_domains)
+  const string Domain::var_name(const vector<Domain*>& v_domains) const
   {
     string output_name = m_name;
 
     if(output_name.empty()) // looking for dependencies
     {
-      for(const auto& dom : v_domains)
+      switch(m_type)
       {
-        int component_id = 0;
-        if(is_component_of(*dom, component_id))
-        {
-          output_name = dom->name(v_domains); // parent name
-          boost::algorithm::replace_all(output_name, "\\mathbf", ""); // removing bold font
-          output_name = Figure::add_suffix(output_name, component_id+1); // adding component id
-        }
+        // The variable may be a component of a vector one
+        case Type::INTERVAL:
+        case Type::TUBE:
+          for(const auto& dom : v_domains) // looking for this possible vector
+          {
+            if(dom->type() == Type::INTERVAL_VECTOR || dom->type() == Type::TUBE_VECTOR)
+            {
+              int component_id = 0;
+              if(is_component_of(*dom, component_id))
+              {
+                output_name = dom->var_name(v_domains); // parent name
+                boost::algorithm::replace_all(output_name, "\\mathbf", ""); // removing bold font
+                output_name = Figure::add_suffix(output_name, component_id+1); // adding component id
+              }
+            }
+          }
+          break;
+
+        // The variable may be a slice of a tube
+        case Type::SLICE:
+          for(const auto& dom : v_domains) // looking for this possible vector
+          {
+            if(dom->type() == Type::TUBE)
+            {
+              int slice_id = 0;
+              if(is_slice_of(*dom, slice_id))
+              {
+                output_name = dom->var_name(v_domains); // parent name
+                output_name = Figure::add_suffix(output_name, slice_id+1, "^{(") + ")}"; // adding slice id
+              }
+            }
+          }
+          break;
+
+        default:
+          // Nothing to do
+          break;
       }
     }
 
-    if(m_type == Type::INTERVAL_VECTOR || m_type == Type::TUBE_VECTOR)
-      output_name = "\\mathbf{" + output_name + "}";
-
-    if(m_type == Type::TUBE || m_type == Type::TUBE_VECTOR)
-      output_name += "(\\cdot)";
+    if(output_name.empty() || output_name.find("?") != string::npos) // looking for equalities
+    {
+      output_name = ""; //reset
+      
+      // The variable may be an alias of another one (equality)
+      for(const auto& ctc : m_v_ctc) // looking for a contractor of equality
+      {
+        if(ctc->type() == Contractor::Type::EQUALITY)
+        {
+          for(const auto& dom : ctc->domains())
+          {
+            if(dom != this)
+            {
+              string dom_var_name = dom->var_name(v_domains);
+              if(!dom_var_name.empty() && dom_var_name.find("?") == string::npos)
+                output_name += (!output_name.empty() ? "/" : "") + dom_var_name;
+            }
+          }
+        }
+      }
+    }
+    
+    if(output_name.empty())
+      output_name = "?";
 
     return output_name;
   }
@@ -636,5 +753,48 @@ namespace tubex
   void Domain::set_name(const string& name)
   {
     m_name = name;
+  }
+
+  const string Domain::dom_name(const vector<Domain*>& v_domains) const
+  {
+    string output_name = var_name(v_domains);
+
+    switch(m_type)
+    {
+      case Type::INTERVAL_VECTOR:
+      case Type::TUBE_VECTOR:
+        output_name = "\\mathbf{" + output_name + "}";
+        break;
+
+      default:
+      {
+        // Nothing
+      }
+    }
+
+    switch(m_extern_object_type)
+    {
+      case ExternalRef::INTERVAL:
+      case ExternalRef::INTERVAL_VECTOR:
+      case ExternalRef::TUBE:
+      case ExternalRef::TUBE_VECTOR:
+      case ExternalRef::NONE:
+        output_name = "[" + output_name + "]";
+        break;
+
+      case ExternalRef::SLICE:
+        output_name = "[\\![" + output_name + "]\\!]";
+        break;
+
+      default:
+      {
+        // Nothing
+      }
+    }
+
+    if(m_type == Type::TUBE || m_type == Type::TUBE_VECTOR)
+      output_name += "(\\cdot)";
+
+    return output_name;
   }
 }

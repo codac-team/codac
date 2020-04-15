@@ -25,10 +25,7 @@ namespace ibex
 
 namespace tubex
 {
-  enum class ContractorType { COMPONENT, EQUALITY, IBEX, TUBEX };
-
   class Domain;
-  class DomainSingleton;
   class ContractorNetwork;
   class Ctc;
 
@@ -36,13 +33,16 @@ namespace tubex
   {
     public:
 
-      Contractor(ContractorType type);
+      enum class Type { COMPONENT, EQUALITY, IBEX, TUBEX };
+
+      Contractor(Type type);
       Contractor(ibex::Ctc& ctc);
       Contractor(tubex::Ctc& ctc);
       Contractor(const Contractor& ac);
       ~Contractor();
 
-      ContractorType type() const;
+      int id() const;
+      Type type() const;
 
       bool is_active() const;
       void set_active(bool active);
@@ -54,13 +54,15 @@ namespace tubex
 
       void contract();
 
-      const std::string name();
+      const std::string name() const;
       void set_name(const std::string& name);
+
+      friend std::ostream& operator<<(std::ostream& str, const Contractor& x);
 
 
     protected:
 
-      const ContractorType m_type;
+      const Type m_type;
       double m_active = true;
 
       union
@@ -69,9 +71,14 @@ namespace tubex
         std::reference_wrapper<tubex::Ctc> m_tubex_ctc;
       };
 
-      std::vector<Domain*> m_domains;
+      std::vector<Domain*> m_v_domains;
 
       std::string m_name;
+      int m_ctc_id;
+
+      static int ctc_counter;
+
+      friend class ContractorNetwork; // todo: remove this
   };
 }
 

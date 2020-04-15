@@ -106,6 +106,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork_dot.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork_solve.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.h
                 )
 
