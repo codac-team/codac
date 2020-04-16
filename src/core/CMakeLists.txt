@@ -101,14 +101,14 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Domain.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Domain.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_Contractor.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork_dot.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork_solve.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/contract_network/tubex_ContractorNetwork.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Domain.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Domain.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_dot.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_solve.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.h
                 )
 
 
@@ -131,7 +131,7 @@ target_include_directories(tubex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/exceptions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/serialize
                                         ${CMAKE_CURRENT_SOURCE_DIR}/contractors
-                                        ${CMAKE_CURRENT_SOURCE_DIR}/contract_network)
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/cn)
 
 
 ################################################################################

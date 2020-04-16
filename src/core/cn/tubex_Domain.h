@@ -64,7 +64,8 @@ namespace tubex
       tubex::TubeVector& tube_vector();
       const tubex::TubeVector& tube_vector() const;
 
-      std::vector<Contractor*>& contractors();
+      const std::vector<Contractor*>& contractors();
+      void add_ctc(Contractor *ctc);
 
       double compute_volume() const;
       double get_saved_volume() const;

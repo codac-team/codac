@@ -12,6 +12,7 @@
 #ifndef __TUBEX_CONTRACTOR_H__
 #define __TUBEX_CONTRACTOR_H__
 
+#include <vector>
 #include <functional>
 #include "ibex_Ctc.h"
 #include "tubex_Ctc.h"
@@ -35,9 +36,9 @@ namespace tubex
 
       enum class Type { COMPONENT, EQUALITY, IBEX, TUBEX };
 
-      Contractor(Type type);
-      Contractor(ibex::Ctc& ctc);
-      Contractor(tubex::Ctc& ctc);
+      Contractor(Type type, const std::vector<Domain*>& v_domains);
+      Contractor(ibex::Ctc& ctc, const std::vector<Domain*>& v_domains);
+      Contractor(tubex::Ctc& ctc, const std::vector<Domain*>& v_domains);
       Contractor(const Contractor& ac);
       ~Contractor();
 
@@ -47,7 +48,7 @@ namespace tubex
       bool is_active() const;
       void set_active(bool active);
 
-      std::vector<Domain*>& domains();
+      const std::vector<Domain*>& domains();
 
       bool operator==(const Contractor& x) const;
       bool comes_from(const Contractor& x) const;
@@ -77,8 +78,6 @@ namespace tubex
       int m_ctc_id;
 
       static int ctc_counter;
-
-      friend class ContractorNetwork; // todo: remove this
   };
 }
 

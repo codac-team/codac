@@ -75,7 +75,6 @@ namespace tubex
       Domain* add_dom(const Domain& ad);
       Contractor* add_ctc(const Contractor& ac);
       void add_ctc_to_queue(Contractor *ac, std::deque<Contractor*>& ctc_deque);
-      void link_dom_ctc(Domain *ad, Contractor *ac);
 
       void propag_active_ctc_from_dom(Domain *dom, Contractor *ctc_to_avoid = NULL);
 

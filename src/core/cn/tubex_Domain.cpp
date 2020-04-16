@@ -314,9 +314,15 @@ namespace tubex
     return m_ref_values_tv.get();
   }
 
-  vector<Contractor*>& Domain::contractors()
+  const vector<Contractor*>& Domain::contractors()
   {
     return m_v_ctc;
+  }
+  
+  void Domain::add_ctc(Contractor *ctc)
+  {
+    assert(find(m_v_ctc.begin(), m_v_ctc.end(), ctc) == m_v_ctc.end()); // not already added
+    m_v_ctc.push_back(ctc);
   }
 
   double Domain::compute_volume() const

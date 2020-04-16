@@ -19,30 +19,41 @@ namespace tubex
 {
   int Contractor::ctc_counter = 0;
 
-  Contractor::Contractor(Type type)
-    : m_type(type)
+  Contractor::Contractor(Type type, const vector<Domain*>& v_domains)
+    : m_type(type), m_v_domains(v_domains)
   {
+    assert(!v_domains.empty());
+    assert(v_domains.size() != 8);
+
     ctc_counter++;
     m_ctc_id = ctc_counter;
   }
 
-  Contractor::Contractor(ibex::Ctc& ctc)
-    : Contractor(Type::IBEX)
+  Contractor::Contractor(ibex::Ctc& ctc, const vector<Domain*>& v_domains)
+    : Contractor(Type::IBEX, v_domains)
   {
+    assert(!v_domains.empty());
+    assert(v_domains.size() != 8);
+
     m_ibex_ctc = ctc;
   }
 
-  Contractor::Contractor(tubex::Ctc& ctc) 
-    : Contractor(Type::TUBEX)
+  Contractor::Contractor(tubex::Ctc& ctc, const vector<Domain*>& v_domains) 
+    : Contractor(Type::TUBEX, v_domains)
   {
+    assert(!v_domains.empty());
+    assert(v_domains.size() != 8);
+
     m_tubex_ctc = ctc;
     m_tubex_ctc.get().preserve_slicing(true);
   }
 
   Contractor::Contractor(const Contractor& ac)
-    : Contractor(ac.m_type)
+    : Contractor(ac.m_type, ac.m_v_domains)
   {
-    m_v_domains = ac.m_v_domains;
+    assert(!ac.m_v_domains.empty());
+    assert(ac.m_v_domains.size() != 8);
+
     m_name = ac.m_name;
     m_ctc_id = ac.m_ctc_id;
 
@@ -91,13 +102,15 @@ namespace tubex
     m_active = active;
   }
 
-  vector<Domain*>& Contractor::domains()
+  const vector<Domain*>& Contractor::domains()
   {
     return m_v_domains;
   }
 
   bool Contractor::operator==(const Contractor& x) const
-  {    
+  {
+    assert(!m_v_domains.empty() && !x.m_v_domains.empty());
+
     if(m_type != x.m_type)
       return false;
 
@@ -120,13 +133,23 @@ namespace tubex
         assert(false && "unhandled case");
         return false;
     }
-
+    
     if(m_v_domains.size() != x.m_v_domains.size())
       return false;
 
     for(size_t i = 0 ; i < m_v_domains.size() ; i++)
-      if(*m_v_domains[i] != *x.m_v_domains[i])
+    {
+      bool found = false;
+      for(size_t j = 0 ; j < x.m_v_domains.size() ; j++)
+        if(*m_v_domains[i] == *x.m_v_domains[j])
+        {
+          found = true;
+          break;
+        }
+
+      if(!found)
         return false;
+    }
 
     return true;
   }
@@ -281,7 +304,7 @@ namespace tubex
   
   ostream& operator<<(ostream& str, const Contractor& x)
   {
-    str << "Contractor " << x.name() << flush;
+    str << "Contractor " << x.name() << " (" << x.m_v_domains.size() << " doms)" << flush;
     return str;
   }
 }

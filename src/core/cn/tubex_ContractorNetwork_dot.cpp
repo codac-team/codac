@@ -42,7 +42,7 @@ namespace tubex
     dot_file.open(cn_name + ".dot");
 
     dot_file << "graph graphname {" << endl;
-    dot_file << "  overlap=\"prism4000\"" << endl;
+    dot_file << "  overlap=\"prism\"" << endl;
     dot_file << "  splines=\"compound\"" << endl;
 
     dot_file << endl << "  // Domains nodes" << endl;

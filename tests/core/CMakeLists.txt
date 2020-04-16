@@ -8,7 +8,7 @@ list(APPEND SRC_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_predefined_tubes.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_predefined_tubes.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_arithmetic.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/tests_cn.cpp
+                #${CMAKE_CURRENT_SOURCE_DIR}/tests_cn.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_ctc_delay.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_ctc_deriv.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests_ctc_eval.cpp

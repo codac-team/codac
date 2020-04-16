@@ -100,12 +100,12 @@ namespace tubex
       Domain *vec_i = add_dom(Domain(iv[i+start_index]));
 
       // Contractor to put them equal
-      Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::EQUALITY));
+      Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::EQUALITY, {subvec_i, vec_i}));
       // todo: prevent from adding identical contractors if several calls of this method
 
       // Linking the component domains through this contractor of equality
-      link_dom_ctc(subvec_i, ac_eq);
-      link_dom_ctc(vec_i, ac_eq);
+      subvec_i->add_ctc(ac_eq);
+      vec_i->add_ctc(ac_eq);
     }
 
     return subvec->interval_vector();
@@ -126,12 +126,12 @@ namespace tubex
       Domain *vec_i = add_dom(Domain(iv[i+start_index]));
 
       // Contractor to put them equal
-      Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::EQUALITY));
+      Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::EQUALITY, {subvec_i, vec_i}));
       // todo: prevent from adding identical contractors if several calls of this method
 
       // Linking the component domains through this contractor of equality
-      link_dom_ctc(subvec_i, ac_eq);
-      link_dom_ctc(vec_i, ac_eq);
+      subvec_i->add_ctc(ac_eq);
+      vec_i->add_ctc(ac_eq);
     }
 
     return subvec->interval_vector();
@@ -168,15 +168,14 @@ namespace tubex
       v_dom_ptr.push_back(add_dom(dom));
 
     // Creating what would be this new contractors (namely defined with domains)
-    Contractor ctc(ibex_ctc);
-    ctc.m_v_domains = v_dom_ptr;
+    Contractor ctc(ibex_ctc, v_dom_ptr);
 
     // Getting the actual contractor (maybe the same if not already added)
     Contractor *ctc_ptr = add_ctc(ctc);
 
     // Linking to the related domains
     for(auto& dom : v_dom_ptr)
-      link_dom_ctc(dom, ctc_ptr);
+      dom->add_ctc(ctc_ptr);
   }
 
   void ContractorNetwork::add(tubex::Ctc& tubex_ctc, const vector<Domain>& v_domains)
@@ -276,15 +275,14 @@ namespace tubex
         v_dom_ptr.push_back(add_dom(dom));
 
       // Creating what would be this new contractors (namely defined with domains)
-      Contractor ctc(tubex_ctc);
-      ctc.m_v_domains = v_dom_ptr;
+      Contractor ctc(tubex_ctc, v_dom_ptr);
 
       // Getting the actual contractor (maybe the same if not already added)
       Contractor *ctc_ptr = add_ctc(ctc);
 
       // Linking to the related domains
       for(auto& dom : v_dom_ptr)
-        link_dom_ctc(dom, ctc_ptr);
+        dom->add_ctc(ctc_ptr);
     }
   }
   
@@ -334,26 +332,23 @@ namespace tubex
 
         case Domain::Type::TUBE_VECTOR:
         {
-          Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT));
-
-          // Main vector
-          link_dom_ctc(dom, ac_component);
-
-          // And its components
+          vector<Domain*> v_doms;
+          v_doms.push_back(dom);
           for(int i = 0 ; i < dom->tube_vector().size() ; i++)
-          {
-            Domain *dom_i = add_dom(Domain(dom->tube_vector()[i]));
-            link_dom_ctc(dom_i, ac_component);
-          }
+            v_doms.push_back(add_dom(Domain(dom->tube_vector()[i])));
+
+          Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT, v_doms));
+
+          dom->add_ctc(ac_component); // main vector
+          for(auto& dom_i : v_doms)
+            dom_i->add_ctc(ac_component); // and its components
         }
         break;
 
         case Domain::Type::INTERVAL_VECTOR:
         {
-          Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT));
-
-          // Main vector
-          link_dom_ctc(dom, ac_component);
+          vector<Domain*> v_doms;
+          v_doms.push_back(dom);
 
           // And its components
           for(int i = 0 ; i < dom->interval_vector().size() ; i++)
@@ -382,51 +377,45 @@ namespace tubex
               }
             }
             
-            link_dom_ctc(dom_i, ac_component);
+            v_doms.push_back(dom_i);
           }
+
+          Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT, v_doms));
+          for(auto& dom_i : v_doms)
+            dom_i->add_ctc(ac_component);
         }
         break;
 
         case Domain::Type::TUBE:
         {
-          // Dependencies tube <-> slice
-          Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT));
-
-          // Main domain (tube)
-          link_dom_ctc(dom, ac_component);
-
-          // And its slices
+          vector<Domain*> v_doms;
+          v_doms.push_back(dom);
           for(Slice *s = dom->tube().first_slice() ; s != NULL ; s = s->next_slice())
-          {
-            Domain *dom_i = add_dom(Domain(*s));
-            link_dom_ctc(dom_i, ac_component);
-          }
+            v_doms.push_back(add_dom(Domain(*s)));
+
+          // Dependencies tube <-> slice
+          Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT, v_doms));
+
+          dom->add_ctc(ac_component);
+          for(auto& dom_i : v_doms)
+            dom_i->add_ctc(ac_component);
 
           // Dependencies slice <-> slice
           for(Slice *s = dom->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
           {
-            Contractor *ac_component_slices = add_ctc(Contractor(Contractor::Type::COMPONENT));
-
             Domain *dom_i1 = add_dom(Domain(*s));
-            link_dom_ctc(dom_i1, ac_component_slices);
-
             Domain *dom_i2 = add_dom(Domain(*(s->next_slice())));
-            link_dom_ctc(dom_i2, ac_component_slices);
+
+            Contractor *ac_component_slices = add_ctc(Contractor(Contractor::Type::COMPONENT, {dom_i1, dom_i2}));
+
+            dom_i1->add_ctc(ac_component_slices);
+            dom_i2->add_ctc(ac_component_slices);
           }
         }
         break;
       }
 
     return dom;
-  }
-
-  void ContractorNetwork::link_dom_ctc(Domain *ad, Contractor *ac)
-  {
-    assert(find(m_v_ctc.begin(), m_v_ctc.end(), ac) != m_v_ctc.end());
-    assert(find(m_v_domains.begin(), m_v_domains.end(), ad) != m_v_domains.end());
-
-    ac->domains().push_back(ad);
-    ad->contractors().push_back(ac);
   }
 
   Contractor* ContractorNetwork::add_ctc(const Contractor& ac)
@@ -440,7 +429,6 @@ namespace tubex
     Contractor *ctc = new Contractor(ac);
     m_v_ctc.push_back(ctc);
     add_ctc_to_queue(ctc, m_deque);
-
     return ctc;
   }
 
