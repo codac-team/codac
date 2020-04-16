@@ -20,5 +20,6 @@
   Libs: -L\${libdir} -ltubex -ltubex-rob -ltubex-pyibex -ltubex")
 
   # todo: specify minimum version of IBEX (in Requires field)
+  # todo: update in case of optional 3rd party (ex: CAPD)
 
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tubex.pc DESTINATION ${CMAKE_INSTALL_PKGCONFIG})
