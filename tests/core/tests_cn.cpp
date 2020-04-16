@@ -51,6 +51,13 @@ TEST_CASE("CN simple")
     CHECK(c[0] == Interval(1.5,2));
     CHECK(d[0] == Interval(0));
     CHECK(e[0] == Interval(0.5,1));
+
+    cn.set_name(a, "a");
+    cn.set_name(b, "b");
+    cn.set_name(c, "c");
+    cn.set_name(d, "d");
+    cn.set_name(e, "e");
+    cn.print_dot_graph();//exit(1);
   }
 
   SECTION("Observation in middle of tube")
@@ -79,8 +86,16 @@ TEST_CASE("CN simple")
     Interval z(2.);
 
     cn.add(ctc_eval, {t1, z, x, v});
+    cn.add(ctc_eval, {t1, z, x, v});
+    cn.add(ctc_eval, {t1, z, x, v});
     cn.add(ctc_eval, {t1, z, x, v}); // redundant contractor that should not be added
-    cn.contract();
+    //cn.contract();
+
+    cn.set_name(t1, "t_1");
+    cn.set_name(z, "z");
+    cn.set_name(x, "x");
+    cn.set_name(v, "v");
+    //cn.print_dot_graph();
 
     CHECK(v.codomain() == Interval(0.));
     CHECK(x.codomain() == Interval(2.));
@@ -116,29 +131,37 @@ TEST_CASE("CN simple")
   {
     Interval x(0,1), y(-2,3), a(1,20);
     IntervalVector vx(2,x), vy(2,y), va(2,a);
+    Vector vec(4,0.5);
     
     CtcFunction ctc_add("b", "c", "a", "b+c=a");
+    CtcFunction ctc_cos("b", "c", "a", "b+c=a");
+    CtcFunction ctc_minus("b", "c", "b-c=0");
 
     {
       ContractorNetwork cn;
 
+      cn.add(ctc_add, {x,y,a});
       cn.add(ctc_add, {x,y,a});
       cn.contract();
 
       CHECK(x == Interval(0,1));
       CHECK(y == Interval(0,3));
       CHECK(a == Interval(1,4));
+      CHECK(cn.nb_dom() == 3);
+      CHECK(cn.nb_ctc() == 1);
     }
 
     {
       ContractorNetwork cn;
-
       cn.add(ctc_add, {vx,vy,va});
       cn.contract();
 
       CHECK(vx == IntervalVector(2,Interval(0,1)));
       CHECK(vy == IntervalVector(2,Interval(0,3)));
       CHECK(va == IntervalVector(2,Interval(1,4)));
+
+      CHECK(cn.nb_dom() == 3*3);
+      CHECK(cn.nb_ctc() == 3+2);
     }
   }
 
@@ -184,5 +207,45 @@ TEST_CASE("CN simple")
     cn.set_all_contractors_active();
     cn.contract();
     CHECK(x[1] == Interval(1,2));
+  }
+
+  SECTION("Singleton variables: double or Vector")
+  {
+    Interval x(0,1), y(-2,3), a(1,20);
+    double double_y = 1.;
+    Vector vector_y(2, 1.);
+    IntervalVector vx(2,x), vy(2,y), va(2,a);
+    
+    CtcFunction ctc_add("b", "c", "a", "b+c=a");
+
+    {
+      ContractorNetwork cn;
+
+      cn.add(ctc_add, {x,double_y,a});
+      cn.add(ctc_add, {x,double_y,a}); // redundant adding
+      cn.add(ctc_add, {x,double_y,a});
+      cn.contract();
+
+      CHECK(x == Interval(0,1));
+      CHECK(double_y == 1.);
+      CHECK(a == Interval(1,2));
+      CHECK(cn.nb_dom() == 3);
+      CHECK(cn.nb_ctc() == 1);
+    }
+
+    {
+      ContractorNetwork cn;
+
+      cn.add(ctc_add, {vx,vector_y,va});
+      cn.add(ctc_add, {vx,vector_y,va}); // redundant adding
+      cn.add(ctc_add, {vx,vector_y,va});
+      cn.contract();
+
+      CHECK(vx == IntervalVector(2,Interval(0,1)));
+      CHECK(vector_y == Vector(2,1.));
+      CHECK(va == IntervalVector(2,Interval(1,4)));
+      CHECK(cn.nb_dom() == 6);
+      CHECK(cn.nb_ctc() == 3);
+    }
   }
 }
