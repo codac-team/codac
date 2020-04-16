@@ -49,9 +49,38 @@ The last sources are available on `the official Tubex development repository <ht
   mkdir build ; cd build ; cmake .. ; make          # build the sources
   sudo make install                                 # install the library
 
-.. admonition:: Debug/development mode
-  
-  Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option is enabled by default. As for IBEX, it will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments. You can otherwise use the :code:`-DCMAKE_BUILD_TYPE=Release` option. Note also that O3 optimizations are always activated.
+CMake supports the following options:
+
+======================  ======================================================================================
+Option                  Description
+======================  ======================================================================================
+CMAKE_INSTALL_PREFIX    | By default, the library will be installed in system files (:file:`/usr/local/` under Linux).
+                          Use ``CMAKE_INSTALL_PREFIX`` to specify another path.
+                        | Example:
+
+                        .. code-block:: bash
+
+                          cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install ..
+                        
+                        .. warning::
+                        
+                          The full path of the folder must not contain white space or weird characters like ``'"\()`*[]``.
+
+CMAKE_BUILD_TYPE        | Set the build mode either to ``Release`` or ``Debug``.
+                        | Default value is ``Debug``. Example:
+
+                        .. code-block:: bash
+
+                          cmake -DCMAKE_BUILD_TYPE=Release ..
+              
+                        The :code:`-DCMAKE_BUILD_TYPE=Debug` option is enabled by default. As for IBEX, it will slightly
+                        slow down your computations, but display useful error messages in case of failure conditions such
+                        as access violations. It is highly recommended for your developments. You can otherwise use the
+                        :code:`-DCMAKE_BUILD_TYPE=Release` option. Note also that O3 optimizations are always activated.
+                        
+                        Once Tubex has been compiled with this option, you should also compile your executable
+                        in debug mode.
+======================  ======================================================================================
 
 
 Graphical tools

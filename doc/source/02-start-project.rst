@@ -54,6 +54,23 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
   ├── CMakeLists.txt
   └── main.cpp
 
+.. admonition:: Custom install directory of IBEX and Tubex
+  
+  If you installed IBEX and/or Tubex in a custom directory (instead of file system such as :file:`/usr/local/` under Linux),
+  then you need to specify the path to the `pkg-config` files. This can be done either by setting environment variables, for instance:
+
+  .. code-block:: bash
+
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/tubex-lib/build_install/share/pkgconfig
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/ibex-lib/build_install/share/pkgconfig
+
+  Or by adding the following lines in your :file:`CMakeLists.txt` file. For instance:
+
+  .. code-block:: cmake
+
+    set(PKG_CONFIG_PATH ${PKG_CONFIG_PATH} "${HOME}/tubex-lib/build_install/share/pkgconfig")
+    set(PKG_CONFIG_PATH ${PKG_CONFIG_PATH} "${HOME}/ibex-lib/build_install/share/pkgconfig")
+
 The compilation is made by the following command line:
 
 .. code-block:: bash
