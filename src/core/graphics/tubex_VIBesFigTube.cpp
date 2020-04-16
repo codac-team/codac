@@ -10,6 +10,7 @@
 
 #include "ibex_Interval.h"
 #include "ibex_IntervalVector.h"
+#include "tubex_Tools.h"
 #include "tubex_ConvexPolygon.h"
 #include "tubex_VIBesFigTube.h"
 
@@ -103,7 +104,7 @@ namespace tubex
     assert(tubevector != NULL);
     assert(start_index <= end_index && start_index >= 0 && end_index < tubevector->size());
     for(int i = start_index ; i <= end_index ; i++)
-      add_tube(&(*tubevector)[i], Figure::add_suffix(name, i+1), color_frgrnd, color_bckgrnd);
+      add_tube(&(*tubevector)[i], Tools::add_int(name, i+1), color_frgrnd, color_bckgrnd);
   }
 
   void VIBesFigTube::set_tube_name(const Tube *tube, const string& name)
@@ -187,7 +188,7 @@ namespace tubex
     assert(trajvector != NULL);
     assert(start_index <= end_index && start_index >= 0 && end_index < trajvector->size());
     for(int i = start_index ; i <= end_index ; i++)
-      add_trajectory(&(*trajvector)[i], Figure::add_suffix(name, i+1), color);
+      add_trajectory(&(*trajvector)[i], Tools::add_int(name, i+1), color);
   }
 
   void VIBesFigTube::set_trajectory_name(const Trajectory *traj, const string& name)

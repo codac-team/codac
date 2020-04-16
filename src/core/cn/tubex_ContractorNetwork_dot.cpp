@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <fstream>
+#include "tubex_Tools.h"
 #include "tubex_ContractorNetwork.h"
 #include "tubex_Figure.h" // for add_suffix
 
@@ -47,12 +48,12 @@ namespace tubex
 
     dot_file << endl << "  // Domains nodes" << endl;
     for(const auto dom : m_v_domains)
-      dot_file << "  " << Figure::add_suffix("dom",dom->id()) << " [shape=box, label=\"" << dom->dom_name(m_v_domains) << "\"];" << endl;
+      dot_file << "  " << Tools::add_int("dom",dom->id()) << " [shape=box, label=\"" << dom->dom_name(m_v_domains) << "\"];" << endl;
 
     dot_file << endl << "  // Contractors nodes" << endl;
     for(const auto ctc : m_v_ctc)
     {
-      dot_file << "  " << Figure::add_suffix("ctc",ctc->id())
+      dot_file << "  " << Tools::add_int("ctc",ctc->id())
                // Node style:
                << " [shape=circle, "
                << "label=\"" << ctc->name() << "\"];" << endl;
@@ -62,7 +63,7 @@ namespace tubex
     for(const auto ctc : m_v_ctc)
       for(const auto dom : m_v_domains)
         if(find(dom->contractors().begin(), dom->contractors().end(), ctc) != dom->contractors().end())
-          dot_file << "  " << Figure::add_suffix("ctc",ctc->id()) << " -- " << Figure::add_suffix("dom",dom->id()) << ";" << endl;
+          dot_file << "  " << Tools::add_int("ctc",ctc->id()) << " -- " << Tools::add_int("dom",dom->id()) << ";" << endl;
 
     // Subgraph for clustering components of a same vector
     for(const auto dom : m_v_domains)
@@ -70,11 +71,11 @@ namespace tubex
       if(dom->type() == Domain::Type::INTERVAL_VECTOR)
       {
         dot_file << endl;
-        dot_file << "  subgraph cluster_" << Figure::add_suffix("dom",dom->id()) << " {" << endl;
+        dot_file << "  subgraph cluster_" << Tools::add_int("dom",dom->id()) << " {" << endl;
         dot_file << "    color=\"#006680\";" << endl << "    ";
 
         // Adding the main vector
-        dot_file << Figure::add_suffix("dom",dom->id()) + "; ";
+        dot_file << Tools::add_int("dom",dom->id()) + "; ";
 
         // Adding its components
         Domain *one_component = NULL;
@@ -82,7 +83,7 @@ namespace tubex
           if(dom_i->is_component_of(*dom))
           {
             one_component = dom_i;
-            dot_file << Figure::add_suffix("dom",dom_i->id()) + "; ";
+            dot_file << Tools::add_int("dom",dom_i->id()) + "; ";
           }
 
         // Adding their component-contractor
@@ -92,7 +93,7 @@ namespace tubex
             for(const auto& dom : ctc->domains())
               if(dom == one_component)
               {
-                dot_file << Figure::add_suffix("ctc",ctc->id()) + "; ";
+                dot_file << Tools::add_int("ctc",ctc->id()) + "; ";
                 break;
               }
 
@@ -106,12 +107,12 @@ namespace tubex
       if(ctc->type() == Contractor::Type::EQUALITY)
       {
         dot_file << endl;
-        dot_file << "  " << Figure::add_suffix("subgraph cluster_ctc_equal",ctc->id()) << " {" << endl;
+        dot_file << "  " << Tools::add_int("subgraph cluster_ctc_equal",ctc->id()) << " {" << endl;
         dot_file << "  color=\"#006680\";" << endl;
-        dot_file << "  label=\"" + Figure::add_suffix("ctc_equal",ctc->id()) + "\";" << endl;
+        dot_file << "  label=\"" + Tools::add_int("ctc_equal",ctc->id()) + "\";" << endl;
         dot_file << "    ";
         for(const auto dom : ctc->domains())
-          dot_file << Figure::add_suffix("dom",dom->id()) + "; ";
+          dot_file << Tools::add_int("dom",dom->id()) + "; ";
         dot_file << endl << "  }" << endl;
       }
     }*/

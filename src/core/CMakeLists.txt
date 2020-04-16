@@ -109,6 +109,8 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_dot.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_solve.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.h
                 )
 
 
@@ -131,7 +133,8 @@ target_include_directories(tubex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/exceptions
                                         ${CMAKE_CURRENT_SOURCE_DIR}/serialize
                                         ${CMAKE_CURRENT_SOURCE_DIR}/contractors
-                                        ${CMAKE_CURRENT_SOURCE_DIR}/cn)
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/cn
+                                        ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 
 
 ################################################################################

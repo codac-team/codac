@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <boost/algorithm/string/replace.hpp>
+#include "tubex_Tools.h"
 #include "tubex_Domain.h"
 #include "tubex_Figure.h" // for add_suffix
 
@@ -321,7 +321,7 @@ namespace tubex
   
   void Domain::add_ctc(Contractor *ctc)
   {
-    assert(find(m_v_ctc.begin(), m_v_ctc.end(), ctc) == m_v_ctc.end()); // not already added
+    //assert(find(m_v_ctc.begin(), m_v_ctc.end(), ctc) == m_v_ctc.end()); // not already added
     m_v_ctc.push_back(ctc);
   }
 
@@ -582,7 +582,7 @@ namespace tubex
 
   ostream& operator<<(ostream& str, const Domain& x)
   {
-    str << "[" << Figure::add_suffix("type",(int)x.m_type) << "," << Figure::add_suffix("extern_type",(int)x.m_extern_object_type) << "]" << flush;
+    str << "[" << Tools::add_int("type",(int)x.m_type) << "," << Tools::add_int("extern_type",(int)x.m_extern_object_type) << "]" << flush;
 
     switch(x.m_type)
     {
@@ -697,11 +697,7 @@ namespace tubex
             {
               int component_id = 0;
               if(is_component_of(*dom, component_id))
-              {
-                output_name = dom->var_name(v_domains); // parent name
-                boost::algorithm::replace_all(output_name, "\\mathbf", ""); // removing bold font
-                output_name = Figure::add_suffix(output_name, component_id+1); // adding component id
-              }
+                output_name = Tools::add_int(dom->var_name(v_domains), component_id+1); // adding component id
             }
           }
           break;
@@ -714,10 +710,7 @@ namespace tubex
             {
               int slice_id = 0;
               if(is_slice_of(*dom, slice_id))
-              {
-                output_name = dom->var_name(v_domains); // parent name
-                output_name = Figure::add_suffix(output_name, slice_id+1, "^{(") + ")}"; // adding slice id
-              }
+                output_name = Tools::add_int(dom->var_name(v_domains), "^{(", slice_id+1, ")}"); // adding slice id
             }
           }
           break;
