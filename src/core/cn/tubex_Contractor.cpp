@@ -35,7 +35,7 @@ namespace tubex
     assert(!v_domains.empty());
     assert(v_domains.size() != 8);
 
-    m_ibex_ctc = ctc;
+    m_ibex_ctc = reference_wrapper<ibex::Ctc>(ctc);
   }
 
   Contractor::Contractor(tubex::Ctc& ctc, const vector<Domain*>& v_domains) 
@@ -44,7 +44,7 @@ namespace tubex
     assert(!v_domains.empty());
     assert(v_domains.size() != 8);
 
-    m_tubex_ctc = ctc;
+    m_tubex_ctc = reference_wrapper<tubex::Ctc>(ctc);
     m_tubex_ctc.get().preserve_slicing(true);
   }
 
@@ -65,11 +65,11 @@ namespace tubex
         break;
         
       case Type::IBEX:
-        m_ibex_ctc = ac.m_ibex_ctc;
+        m_ibex_ctc = reference_wrapper<ibex::Ctc>(ac.m_ibex_ctc);
         break;
 
       case Type::TUBEX:
-        m_tubex_ctc = ac.m_tubex_ctc;
+        m_tubex_ctc = reference_wrapper<tubex::Ctc>(ac.m_tubex_ctc);
         break;
 
       default:
@@ -90,6 +90,18 @@ namespace tubex
   Contractor::Type Contractor::type() const
   {
     return m_type;
+  }
+
+  ibex::Ctc& Contractor::ibex_ctc()
+  {
+    assert(m_type == Type::IBEX);
+    return m_ibex_ctc.get();
+  }
+
+  tubex::Ctc& Contractor::tubex_ctc()
+  {
+    assert(m_type == Type::TUBEX);
+    return m_tubex_ctc.get();
   }
 
   bool Contractor::is_active() const
@@ -152,25 +164,6 @@ namespace tubex
     }
 
     return true;
-  }
-
-  bool Contractor::comes_from(const Contractor& x) const
-  {
-    if(m_type != x.m_type)
-      return false;
-
-    switch(m_type)
-    {
-      case Type::IBEX:
-        return &m_ibex_ctc.get() == &x.m_ibex_ctc.get();
-
-      case Type::TUBEX:
-        return &m_tubex_ctc.get() == &x.m_tubex_ctc.get();
-          return false;
-
-      default:
-        return false;
-    }
   }
 
   void Contractor::contract()

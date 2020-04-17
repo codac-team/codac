@@ -64,7 +64,8 @@ namespace tubex
       void add_data(TubeVector& tube, double t, const ibex::IntervalVector& y);
 
       void set_name(Domain dom, const std::string& name);
-      void set_name(const Contractor& ctc, const std::string& name);
+      void set_name(ibex::Ctc& ctc, const std::string& name);
+      void set_name(tubex::Ctc& ctc, const std::string& name);
 
       // dot / neato / circo / fdp / twopi
       int print_dot_graph(const std::string& cn_name = "cn", const std::string& prog = "fdp") const;

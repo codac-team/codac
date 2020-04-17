@@ -45,13 +45,15 @@ namespace tubex
       int id() const;
       Type type() const;
 
+      ibex::Ctc& ibex_ctc();
+      tubex::Ctc& tubex_ctc();
+
       bool is_active() const;
       void set_active(bool active);
 
       const std::vector<Domain*>& domains();
 
       bool operator==(const Contractor& x) const;
-      bool comes_from(const Contractor& x) const;
 
       void contract();
 

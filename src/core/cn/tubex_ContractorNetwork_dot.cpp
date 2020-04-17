@@ -24,11 +24,24 @@ namespace tubex
     dom_ptr->set_name(name);
   }
   
-  void ContractorNetwork::set_name(const Contractor& ctc, const string& name)
+  void ContractorNetwork::set_name(ibex::Ctc& ctc, const string& name)
   {
     bool contractor_found = false;
     for(const auto& added_ctc: m_v_ctc)
-      if(added_ctc->comes_from(ctc))
+      if(added_ctc->type() == Contractor::Type::IBEX && &added_ctc->ibex_ctc() == &ctc)
+      {
+        added_ctc->set_name(name);
+        contractor_found = true;
+      }
+
+    assert(contractor_found);
+  }
+  
+  void ContractorNetwork::set_name(tubex::Ctc& ctc, const string& name)
+  {
+    bool contractor_found = false;
+    for(const auto& added_ctc: m_v_ctc)
+      if(added_ctc->type() == Contractor::Type::TUBEX && &added_ctc->tubex_ctc() == &ctc)
       {
         added_ctc->set_name(name);
         contractor_found = true;
