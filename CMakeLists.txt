@@ -155,12 +155,12 @@
                COMMAND ../examples/robotics/ex_08_tubepaving/build/tubex_rob_08 0)
       add_test(NAME rob_09
                COMMAND ../examples/robotics/ex_09_lissajous/build/tubex_rob_09 0)
-#      add_test(NAME rob_10
-#               COMMAND ../examples/robotics/ex_10_datasso/build/tubex_rob_10 0)
+      add_test(NAME rob_10
+               COMMAND ../examples/robotics/ex_10_datasso/build/tubex_rob_10 0)
 
       # Tuto
-#      add_test(NAME tuto_01
-#               COMMAND ../examples/tuto/ex_01_getting_started/build/tubex_tuto_01 0)
+      add_test(NAME tuto_01
+               COMMAND ../examples/tuto/ex_01_getting_started/build/tubex_tuto_01 0)
       
   endif()
 

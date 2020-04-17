@@ -24,7 +24,6 @@ namespace tubex
     : m_type(type), m_v_domains(v_domains)
   {
     assert(!v_domains.empty());
-    assert(v_domains.size() != 8);
 
     ctc_counter++;
     m_ctc_id = ctc_counter;
@@ -34,7 +33,6 @@ namespace tubex
     : Contractor(Type::IBEX, v_domains)
   {
     assert(!v_domains.empty());
-    assert(v_domains.size() != 8);
 
     m_ibex_ctc = reference_wrapper<ibex::Ctc>(ctc);
   }
@@ -43,7 +41,6 @@ namespace tubex
     : Contractor(Type::TUBEX, v_domains)
   {
     assert(!v_domains.empty());
-    assert(v_domains.size() != 8);
 
     m_tubex_ctc = reference_wrapper<tubex::Ctc>(ctc);
     m_tubex_ctc.get().preserve_slicing(true);
@@ -53,7 +50,6 @@ namespace tubex
     : Contractor(ac.m_type, ac.m_v_domains)
   {
     assert(!ac.m_v_domains.empty());
-    assert(ac.m_v_domains.size() != 8);
 
     m_name = ac.m_name;
     m_ctc_id = ac.m_ctc_id;
