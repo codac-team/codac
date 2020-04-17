@@ -693,11 +693,14 @@ namespace tubex
         case Type::TUBE:
           for(const auto& dom : v_domains) // looking for this possible vector
           {
-            if(dom->type() == Type::INTERVAL_VECTOR || dom->type() == Type::TUBE_VECTOR)
+            if(dom != this)
             {
-              int component_id = 0;
-              if(is_component_of(*dom, component_id))
-                output_name = Tools::add_int(dom->var_name(v_domains), component_id+1); // adding component id
+              if(dom->type() == Type::INTERVAL_VECTOR || dom->type() == Type::TUBE_VECTOR)
+              {
+                int component_id = 0;
+                if(is_component_of(*dom, component_id))
+                  output_name = Tools::add_int(dom->var_name(v_domains), component_id+1); // adding component id
+              }
             }
           }
           break;
@@ -706,11 +709,13 @@ namespace tubex
         case Type::SLICE:
           for(const auto& dom : v_domains) // looking for this possible vector
           {
-            if(dom->type() == Type::TUBE)
+            if(dom != this && dom->type() == Type::TUBE)
             {
               int slice_id = 0;
               if(is_slice_of(*dom, slice_id))
+              {
                 output_name = Tools::add_int(dom->var_name(v_domains), "^{(", slice_id+1, ")}"); // adding slice id
+              }
             }
           }
           break;
