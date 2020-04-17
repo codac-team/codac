@@ -127,6 +127,7 @@ namespace tubex
     if(m_ibex_f != NULL)
       delete m_ibex_f;
     m_ibex_f = new ibex::Function(*f.m_ibex_f);
+    m_exp = f.m_exp;
     Fnc::operator=(f);
     return *this;
   }
@@ -147,6 +148,18 @@ namespace tubex
   {
     return *m_ibex_f;
   }
+  
+  const string& Function::expr() const
+  {
+    return m_exp;
+  }
+  
+  const string Function::arg_name(int i) const
+  {
+    assert(i >= 0 && i < m_nb_vars);
+    // t is not considered as part of the arguments
+    return m_ibex_f->arg_name(i+1);
+  }
 
   void Function::construct_from_array(int n, const char** x, const char* y)
   {
@@ -165,6 +178,7 @@ namespace tubex
     m_nb_vars = n;
     m_img_dim = m_ibex_f->image_dim();
     m_is_intertemporal = false; // not supported yet
+    m_exp = y;
   }
 
   const Interval Function::eval(const Interval& t) const

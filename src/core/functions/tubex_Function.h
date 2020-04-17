@@ -11,6 +11,7 @@
 #ifndef __TUBEX_FUNCTION_H__
 #define __TUBEX_FUNCTION_H__
 
+#include <string>
 #include "ibex_Function.h"
 #include "tubex_Fnc.h"
 #include "tubex_Trajectory.h"
@@ -43,6 +44,9 @@ namespace tubex
       const tubex::Function operator[](int i) const;
       const ibex::Function& ibex_function() const;
 
+      const std::string& expr() const;
+      const std::string arg_name(int i) const;
+
       using Fnc::eval;
       // todo: using Fnc::eval_vector?
       // todo: keep using Fnc::eval?
@@ -68,6 +72,7 @@ namespace tubex
       void construct_from_array(int n, const char** x, const char* y);
 
       ibex::Function *m_ibex_f = NULL;
+      std::string m_exp; // stored here because impossible to get this value from ibex::Function
   };
 }
 
