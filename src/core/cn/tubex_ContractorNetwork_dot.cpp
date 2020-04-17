@@ -114,21 +114,43 @@ namespace tubex
       }
     }
 
-    // Subgraph for aliases (contractors EQUALITY)
-    /*for(const auto ctc : m_v_ctc)
+    // Subgraphs for tubes and their slices
+    for(const auto dom : m_v_domains)
     {
-      if(ctc->type() == Contractor::Type::EQUALITY)
+      if(dom->type() == Domain::Type::TUBE)
       {
         dot_file << endl;
-        dot_file << "  " << Tools::add_int("subgraph cluster_ctc_equal",ctc->id()) << " {" << endl;
-        dot_file << "  color=\"#006680\";" << endl;
-        dot_file << "  label=\"" + Tools::add_int("ctc_equal",ctc->id()) + "\";" << endl;
+        dot_file << "  " << Tools::add_int("subgraph cluster_tube",dom->id()) << " {" << endl;
+        dot_file << "    color=\"#BA4E00\";" << endl;
         dot_file << "    ";
-        for(const auto dom : ctc->domains())
-          dot_file << Tools::add_int("dom",dom->id()) + "; ";
+
+        // Looking for all domains and contractors exclusively related to this tube
+        for(const auto& ctc : dom->contractors())
+        {
+          for(const auto& dom_i : ctc->domains())
+          {
+            if(dom_i != dom && dom_i->type() != Domain::Type::SLICE)
+              break; // we are not dealing with the slice-component contractor
+
+            // At this point we are dealing with either the tube or its slices
+            if(dom_i->type() == Domain::Type::SLICE)
+            {
+              for(const auto& ctc_dom_i : dom_i->contractors())
+                if(ctc_dom_i->type() == Contractor::Type::COMPONENT
+                  && ctc_dom_i->domains().size() == 2
+                  && ((ctc_dom_i->domains()[0] == dom_i && ctc_dom_i->domains()[1]->type() == Domain::Type::SLICE) ||
+                      (ctc_dom_i->domains()[1] == dom_i && ctc_dom_i->domains()[0]->type() == Domain::Type::SLICE)))
+              dot_file << Tools::add_int("ctc",ctc_dom_i->id()) + "; "; // component contractor linking slices
+            }
+
+            dot_file << Tools::add_int("dom",dom_i->id()) + "; ";
+            dot_file << Tools::add_int("ctc",ctc->id()) + "; ";
+          }
+        }
+
         dot_file << endl << "  }" << endl;
       }
-    }*/
+    }
 
     dot_file << "}" << endl;
 

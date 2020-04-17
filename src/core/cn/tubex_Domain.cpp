@@ -314,7 +314,12 @@ namespace tubex
     return m_ref_values_tv.get();
   }
 
-  const vector<Contractor*>& Domain::contractors()
+  vector<Contractor*>& Domain::contractors()
+  {
+    return const_cast<vector<Contractor*>&>(static_cast<const Domain&>(*this).contractors());
+  }
+
+  const vector<Contractor*>& Domain::contractors() const
   {
     return m_v_ctc;
   }

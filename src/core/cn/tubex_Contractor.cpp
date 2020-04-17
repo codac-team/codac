@@ -11,6 +11,7 @@
 #include "tubex_Contractor.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_CtcDistance.h"
 
 using namespace std;
 using namespace ibex;
@@ -114,7 +115,12 @@ namespace tubex
     m_active = active;
   }
 
-  const vector<Domain*>& Contractor::domains()
+  vector<Domain*>& Contractor::domains()
+  {
+    return const_cast<vector<Domain*>&>(static_cast<const Contractor&>(*this).domains());
+  }
+
+  const vector<Domain*>& Contractor::domains() const
   {
     return m_v_domains;
   }
@@ -132,8 +138,17 @@ namespace tubex
         if(&m_ibex_ctc.get() != &x.m_ibex_ctc.get())
           return false;
 
+        if(typeid(m_ibex_ctc.get()) != typeid(x.m_ibex_ctc.get()))
+          return false;
+
       case Type::TUBEX:
-        if(&m_tubex_ctc.get() != &x.m_tubex_ctc.get())
+        if(typeid(m_tubex_ctc.get()) != typeid(x.m_tubex_ctc.get()))
+          return false;
+
+        if(&m_tubex_ctc.get() != &x.m_tubex_ctc.get() &&
+          (typeid(m_tubex_ctc.get()) != typeid(CtcEval) && 
+           typeid(m_tubex_ctc.get()) != typeid(CtcDeriv) && 
+           typeid(m_tubex_ctc.get()) != typeid(CtcDistance)))
           return false;
 
       case Type::COMPONENT:

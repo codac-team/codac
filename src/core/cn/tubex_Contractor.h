@@ -51,7 +51,8 @@ namespace tubex
       bool is_active() const;
       void set_active(bool active);
 
-      const std::vector<Domain*>& domains();
+      std::vector<Domain*>& domains();
+      const std::vector<Domain*>& domains() const;
 
       bool operator==(const Contractor& x) const;
 
