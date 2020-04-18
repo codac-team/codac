@@ -50,8 +50,8 @@ before_install:
 
 cache:
   directories:
-    - capd
-    - ibex-lib
+    - $HOME/capd
+    - $HOME/ibex-lib
 
 #services:
 #  - docker
@@ -67,6 +67,7 @@ install:
   - ls
 
   # IBEX
+  - cd $HOME
   - echo 'Installing IBEX...';
   - if [ ! -e "ibex-lib/README.md" ]; then
       git clone -b develop https://github.com/ibex-team/ibex-lib.git ;
@@ -76,12 +77,12 @@ install:
       cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install .. ;
       make ;
       make install ;
-      cd ../.. ;
     else
       echo 'Using cached directory.' ;
     fi
 
   # CAPD
+  - cd $HOME
   - echo 'Installing CAPD...';
   - if [ ! -e "capd/README.md" ]; then
       svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
@@ -90,13 +91,12 @@ install:
       autoreconf --install ;
       ./configure --with-filib=check --with-mpfr=check ;
       make ;
-      cd .. ;
     else
       echo 'Using cached directory.' ;
     fi
-  - cd capd
+  - cd $HOME/capd
   - sudo make install
-  - cd ..
+  - cd $HOME
 
   # Environment variables
   - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
