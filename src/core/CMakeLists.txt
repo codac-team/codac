@@ -134,6 +134,7 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/contractors
                                           ${CMAKE_CURRENT_SOURCE_DIR}/cn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools)
+  target_link_libraries(tubex PUBLIC Ibex::ibex)
 
 
 ################################################################################

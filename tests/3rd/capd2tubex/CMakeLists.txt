@@ -17,6 +17,6 @@
   target_include_directories(${TESTS_NAME} SYSTEM PUBLIC ${TUBEX_HEADERS_DIR}
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/../../catch
                                                          ${PKG_CAPD_INCLUDE_DIRS})
-  target_link_libraries(${TESTS_NAME} PRIVATE ${TUBEX_LDFLAGS} tubex tubex-capd ${IBEX_LDFLAGS} ${PKG_CAPD_LDFLAGS})
+  target_link_libraries(${TESTS_NAME} PUBLIC Ibex::ibex tubex tubex-capd ${PKG_CAPD_LDFLAGS})
   add_dependencies(check ${TESTS_NAME})
   add_test(NAME ${TESTS_NAME} COMMAND ${TESTS_NAME})

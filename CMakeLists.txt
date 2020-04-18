@@ -4,7 +4,7 @@
 
   cmake_minimum_required(VERSION 3.0.2)
 
-  project(TUBEX VERSION 3.0.0 LANGUAGES CXX)
+  project(TUBEX VERSION 2.5.0 LANGUAGES CXX)
   set(TUBEX_DESCRIPTION "Tubex is a library providing tools for constraint "
                         "programming over reals and trajectories.")
   set(TUBEX_URL "http://simon-rohou.fr/research/tubex-lib")
@@ -21,6 +21,7 @@
   set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "object code libraries (lib)")
   set(CMAKE_INSTALL_BINDIR "bin" CACHE PATH "user executables (bin)")
   set(CMAKE_INSTALL_PKGCONFIG "share/pkgconfig" CACHE PATH "pkg files (share/pkgconfig)")
+  set(CMAKE_INSTALL_CMAKE "share/tubex/cmake" CACHE PATH "cmake files (share/tubex/cmake)")
 
 
 ################################################################################
@@ -68,11 +69,9 @@
 # Looking for IBEX
 ################################################################################
   
-  include(FindPkgConfig)
-  pkg_search_module(IBEX REQUIRED ibex)
+  find_package(IBEX REQUIRED)
+  ibex_init_common() # IBEX should have installed this function
   message(STATUS "Found IBEX version ${IBEX_VERSION}")
-  # Adding includes for the entire project (all CMakeLists.txt):
-  include_directories(SYSTEM ${IBEX_INCLUDE_DIRS})
 
 
 ################################################################################
@@ -83,6 +82,7 @@
 
   if(WITH_CAPD)
     # This looks for capd.pc file
+    include(FindPkgConfig)
     pkg_search_module(PKG_CAPD REQUIRED capd capd-gui mpcapd mpcapd-gui)
     include_directories(${PKG_CAPD_INCLUDE_DIRS})
     message(STATUS "[capd2tubex] PKG_CAPD_INCLUDE_DIRS = ${PKG_CAPD_INCLUDE_DIRS}")

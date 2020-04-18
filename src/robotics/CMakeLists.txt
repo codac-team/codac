@@ -34,7 +34,7 @@
                                               ${CMAKE_CURRENT_SOURCE_DIR}/loops
                                               ${CMAKE_CURRENT_SOURCE_DIR}/data
                                               ${CMAKE_CURRENT_SOURCE_DIR}/contractors)
-  target_link_libraries(tubex-rob PUBLIC ${TUBEX_LDFLAGS})
+  target_link_libraries(tubex-rob PUBLIC Ibex::ibex tubex)
 
 
 ################################################################################

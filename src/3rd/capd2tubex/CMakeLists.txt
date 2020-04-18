@@ -18,7 +18,7 @@
   set(TUBEX_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../../include)
   target_include_directories(tubex-capd PUBLIC ${TUBEX_HEADERS_DIR}
                                                ${CMAKE_CURRENT_SOURCE_DIR})
-  target_link_libraries(tubex-capd PUBLIC ibex ${TUBEX_LDFLAGS})
+  target_link_libraries(tubex-capd PUBLIC Ibex::ibex tubex)
 
 
 ################################################################################

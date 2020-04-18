@@ -56,6 +56,7 @@ fi
     cd ..
     cd examples
     find . -type d -name build -prune -exec rm -rf {} \;
+    find . -type d -name make -prune -exec rm -rf {} \;
     cd basics
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
     cd ..

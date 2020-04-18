@@ -75,13 +75,11 @@ install:
       mkdir build && cd build ;
       cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" .. ;
       make ;
+      make install ;
       cd ../.. ;
     else
       echo 'Using cached directory.' ;
     fi
-  - cd ibex-lib/build
-  - sudo make install
-  - cd ../..
 
   # CAPD
   - echo 'Installing CAPD...';
@@ -101,21 +99,8 @@ install:
   - cd ..
 
   # Environment variables
-  - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/tubex-lib/build_install/share/pkgconfig
-#  - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$HOME/ibex-lib/build_install/share/pkgconfig
-#  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-
-  # IBEX-Geometry:
-
-  #- echo 'Installing IBEX-geometry...';
-  #- git clone https://github.com/benEnsta/ibex-geometry
-  #- cd ibex-geometry
-  #- mkdir make
-  #- cd make
-  #- cmake -DWITH_PYTHON=OFF -DBUILD_TESTS=OFF -DIBEX_INCLUDE_DIR=/usr/local/include/ibex/ -DFILIB_INCLUDE_DIR=/usr/local/include/ibex/3rd/ -DPC_IBEX_LIBRARY_DIRS=/usr/local/lib/ibex/3rd/ -DCMAKE_CXX_STANDARD=11 ..
-  #- make install
-  #- cd ..
-  #- cd ..
+  - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
+  - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
 
 script:
 
@@ -131,7 +116,7 @@ script:
   # Without synthesis tree
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
   - make
   - make install
   # Building the examples
@@ -150,7 +135,7 @@ script:
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
   - make
   - make install
   # Building the examples

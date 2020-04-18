@@ -30,6 +30,6 @@
   set(TUBEX_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../include)
   target_include_directories(${TESTS_NAME} SYSTEM PUBLIC ${TUBEX_HEADERS_DIR}
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/../catch)
-  target_link_libraries(${TESTS_NAME} tubex ${IBEX_LDFLAGS} ${TUBEX_LDFLAGS})
+  target_link_libraries(${TESTS_NAME} PUBLIC Ibex::ibex tubex)
   add_dependencies(check ${TESTS_NAME})
   add_test(NAME ${TESTS_NAME} COMMAND ${TESTS_NAME})

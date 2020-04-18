@@ -83,7 +83,25 @@ The last sources are available on `the official Tubex development repository <ht
                             
                             Once Tubex has been compiled with this option, you should also compile your executable
                             in debug mode.
+
+    CMAKE_PREFIX_PATH       | If IBEX has been installed in a local folder, say :file:`~/ibex-lib/build_install`, you need
+                              to indicate this path using the ``CMAKE_PREFIX_PATH`` option.
+                            | Example:
+
+                            .. code-block:: bash
+
+                              cmake -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install ..
     ======================  ======================================================================================
+
+
+.. admonition:: Custom install directory of IBEX and Tubex
+  
+  A convenient way to refer to custom install directories for IBEX and/or Tubex is to export the ``CMAKE_PREFIX_PATH`` environment variable. For instance:
+
+  .. code-block:: bash
+
+    export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
+    export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
 
 
 Graphical tools
