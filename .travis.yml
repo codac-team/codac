@@ -101,6 +101,7 @@ install:
   # Environment variables
   - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
   - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 script:
 
