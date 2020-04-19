@@ -33,12 +33,14 @@ namespace tubex
   {
     public:
 
-      enum class Type { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
-      enum class ExternalRef { NONE, DOUBLE, INTERVAL, VECTOR, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
+      enum class Type { INTERVAL=0, INTERVAL_VECTOR=1, SLICE=2, TUBE=3, TUBE_VECTOR=4 };
+      enum class ExternalRef { NONE=0, DOUBLE=1, INTERVAL=2, VECTOR=3, INTERVAL_VECTOR=4, SLICE=5, TUBE=6, TUBE_VECTOR=7 };
 
       Domain(const Domain& ad);
       Domain(double& d);
       Domain(ibex::Interval& i);
+      Domain(ibex::Interval& i, double& extern_d);
+      Domain(ibex::Interval& i, ibex::Interval& extern_i);
       Domain(const ibex::Interval& i);
       Domain(ibex::Vector& v);
       Domain(ibex::IntervalVector& iv);
@@ -109,14 +111,13 @@ namespace tubex
           std::reference_wrapper<tubex::TubeVector> m_ref_values_tv;
         };
 
-        //union // if locally stored (such as intermediate variables or doubles to intervals):
-        //{
-          ibex::Interval *m_i_ptr = NULL;
-          ibex::IntervalVector *m_iv_ptr = NULL;
-          Tube *m_t_ptr = NULL;
-          TubeVector *m_tv_ptr = NULL;
-        //};
-
+        union // if locally stored (such as intermediate variables or doubles to intervals):
+        {
+          ibex::Interval *m_i_ptr;
+          ibex::IntervalVector *m_iv_ptr;
+          Tube *m_t_ptr;
+          TubeVector *m_tv_ptr;
+        };
 
       // Origin type of the implementation of the domain
 

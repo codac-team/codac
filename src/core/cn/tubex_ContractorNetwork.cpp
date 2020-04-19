@@ -314,7 +314,6 @@ namespace tubex
         return dom;
     
     // Else, create and add this new domain
-
       Domain *dom = new Domain(ad);
       m_v_domains.push_back(dom);
 
@@ -348,35 +347,15 @@ namespace tubex
         case Domain::Type::INTERVAL_VECTOR:
         {
           vector<Domain*> v_doms;
-          v_doms.push_back(dom);
+          v_doms.push_back(dom); // main vector
 
           // And its components
           for(int i = 0 ; i < dom->interval_vector().size() ; i++)
           {
-            Domain *dom_i = add_dom(Domain(dom->interval_vector()[i]));
+            assert(dom->m_ref_extern_object_iv.get().size() == dom->interval_vector().size());
+            Domain *dom_i = add_dom(Domain(dom->interval_vector()[i],
+              dom->m_ref_extern_object_iv.get()[i])); // make it point to the component of the external reference
 
-            switch(dom->m_extern_object_type)
-            {
-              case Domain::ExternalRef::VECTOR:
-                assert(dom->m_ref_extern_object_v.get().size() == dom->interval_vector().size());
-                // Make it point to the component of the external reference
-                dom_i->m_extern_object_type = Domain::ExternalRef::DOUBLE;
-                dom_i->m_ref_extern_object_d = reference_wrapper<double>(dom->m_ref_extern_object_v.get()[i]);
-                break;
-
-              case Domain::ExternalRef::INTERVAL_VECTOR:
-                assert(dom->m_ref_extern_object_iv.get().size() == dom->interval_vector().size());
-                // Make it point to the component of the external reference
-                dom_i->m_extern_object_type = Domain::ExternalRef::INTERVAL;
-                dom_i->m_ref_extern_object_i = reference_wrapper<Interval>(dom->m_ref_extern_object_iv.get()[i]);
-                break;
-
-              default:
-              {
-
-              }
-            }
-            
             v_doms.push_back(dom_i);
           }
 

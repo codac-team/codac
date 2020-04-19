@@ -24,6 +24,29 @@ namespace tubex
   {
     dom_counter++;
     m_dom_id = dom_counter;
+
+    switch(m_type)
+    {
+      case Type::INTERVAL:
+        m_i_ptr = NULL;
+        break;
+
+      case Type::INTERVAL_VECTOR:
+        m_iv_ptr = NULL;
+        break;
+
+      case Type::TUBE:
+        m_t_ptr = NULL;
+        break;
+
+      case Type::TUBE_VECTOR:
+        m_tv_ptr = NULL;
+        break;
+
+      default:
+        m_i_ptr = NULL;
+        break;
+    }
   }
 
   Domain::Domain(const Domain& ad)
@@ -94,7 +117,10 @@ namespace tubex
         break;
 
       case ExternalRef::INTERVAL:
-        m_ref_extern_object_i = ad.m_ref_extern_object_i;
+        if(&ad.m_ref_extern_object_i.get() == ad.m_i_ptr)
+          m_ref_extern_object_i = reference_wrapper<Interval>(*m_i_ptr);
+        else
+          m_ref_extern_object_i = ad.m_ref_extern_object_i;
         break;
 
       case ExternalRef::VECTOR:
@@ -102,7 +128,10 @@ namespace tubex
         break;
 
       case ExternalRef::INTERVAL_VECTOR:
-        m_ref_extern_object_iv = ad.m_ref_extern_object_iv;
+        if(&ad.m_ref_extern_object_iv.get() == ad.m_iv_ptr)
+          m_ref_extern_object_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+        else
+          m_ref_extern_object_iv = ad.m_ref_extern_object_iv;
         break;
 
       case ExternalRef::SLICE:
@@ -136,8 +165,22 @@ namespace tubex
     m_i_ptr = NULL;
     m_ref_values_i = reference_wrapper<Interval>(i);
     m_ref_extern_object_i = reference_wrapper<Interval>(i);
-    dom_counter++;
-    m_dom_id = dom_counter;
+  }
+  
+  Domain::Domain(Interval& i, double& extern_d)
+    : Domain(Type::INTERVAL, ExternalRef::DOUBLE)
+  {
+    m_i_ptr = NULL;
+    m_ref_values_i = reference_wrapper<Interval>(i);
+    m_ref_extern_object_d = reference_wrapper<double>(extern_d);
+  }
+  
+  Domain::Domain(Interval& i, Interval& extern_i)
+    : Domain(Type::INTERVAL, ExternalRef::INTERVAL)
+  {
+    m_i_ptr = NULL;
+    m_ref_values_i = reference_wrapper<Interval>(i);
+    m_ref_extern_object_i = reference_wrapper<Interval>(extern_i);
   }
 
   Domain::Domain(const Interval& i)
@@ -165,7 +208,7 @@ namespace tubex
   }
 
   Domain::Domain(const IntervalVector& iv)
-    : Domain(Type::INTERVAL_VECTOR, ExternalRef::NONE)
+    : Domain(Type::INTERVAL_VECTOR, ExternalRef::INTERVAL_VECTOR)
   {
     m_iv_ptr = new IntervalVector(iv);
     m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
@@ -224,8 +267,28 @@ namespace tubex
 
   Domain::~Domain()
   {
-    if(m_i_ptr != NULL) delete m_i_ptr;
-    if(m_iv_ptr != NULL) delete m_iv_ptr;
+    switch(m_type)
+    {
+      case Type::INTERVAL:
+        if(m_i_ptr != NULL) delete m_i_ptr;
+        break;
+
+      case Type::INTERVAL_VECTOR:
+        if(m_iv_ptr != NULL) delete m_iv_ptr;
+        break;
+
+      case Type::TUBE:
+        if(m_t_ptr != NULL) delete m_t_ptr;
+        break;
+
+      case Type::TUBE_VECTOR:
+        if(m_tv_ptr != NULL) delete m_tv_ptr;
+        break;
+
+      default:
+        // Nothing else to manage
+        break;
+    }
   }
 
   int Domain::id() const
@@ -247,15 +310,7 @@ namespace tubex
   const Interval& Domain::interval() const
   {
     assert(m_type == Type::INTERVAL);
-
-    if(m_extern_object_type == ExternalRef::NONE)
-      return *m_i_ptr;
-
-    else
-    {
-      assert(m_extern_object_type == ExternalRef::DOUBLE || m_extern_object_type == ExternalRef::INTERVAL);
-      return m_ref_values_i.get();
-    }
+    return m_ref_values_i.get();
   }
 
   IntervalVector& Domain::interval_vector()
@@ -267,15 +322,7 @@ namespace tubex
   const IntervalVector& Domain::interval_vector() const
   {
     assert(m_type == Type::INTERVAL_VECTOR);
-
-    if(m_extern_object_type == ExternalRef::NONE)
-      return *m_iv_ptr;
-
-    else
-    {
-      assert(m_extern_object_type == ExternalRef::VECTOR || m_extern_object_type == ExternalRef::INTERVAL_VECTOR);
-      return m_ref_values_iv.get();
-    }
+    return m_ref_values_iv.get();
   }
 
   Slice& Domain::slice()
@@ -417,21 +464,39 @@ namespace tubex
     switch(m_type)
     {
       case Type::INTERVAL:
+        assert(m_extern_object_type == ExternalRef::NONE
+            || m_extern_object_type == ExternalRef::DOUBLE
+            || m_extern_object_type == ExternalRef::INTERVAL);
         return interval().is_empty();
+        break;
 
       case Type::INTERVAL_VECTOR:
+        assert(m_extern_object_type == ExternalRef::NONE
+            || m_extern_object_type == ExternalRef::VECTOR
+            || m_extern_object_type == ExternalRef::INTERVAL_VECTOR);
         return interval_vector().is_empty();
+        break;
 
       case Type::SLICE:
+        assert(m_extern_object_type == ExternalRef::NONE
+            || m_extern_object_type == ExternalRef::SLICE);
         return slice().is_empty();
+        break;
 
       case Type::TUBE:
+        assert(m_extern_object_type == ExternalRef::NONE
+            || m_extern_object_type == ExternalRef::TUBE);
         return tube().is_empty();
+        break;
 
       case Type::TUBE_VECTOR:
+        assert(m_extern_object_type == ExternalRef::NONE
+            || m_extern_object_type == ExternalRef::TUBE_VECTOR);
         return tube_vector().is_empty();
+        break;
 
       default:
+        cout << "type " << (int)m_type << endl;
         assert(false && "unhandled case");
     }
 

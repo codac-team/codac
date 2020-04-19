@@ -65,7 +65,7 @@ TEST_CASE("CN simple")
     cn.set_name(d, "d");
     cn.set_name(e, "e");
     cn.set_name(ctc_plus, "+");
-    //cn.print_dot_graph();
+    cn.print_dot_graph("cn_vector_dependencies");
 
     CHECK(cn.nb_dom() == 5*3);
     CHECK(cn.nb_ctc() == 2+5);
@@ -106,7 +106,7 @@ TEST_CASE("CN simple")
     cn.set_name(z, "z");
     cn.set_name(x, "x");
     cn.set_name(v, "v");
-    //cn.print_dot_graph();
+    cn.print_dot_graph("cn_observation");
 
     CHECK(v.codomain() == Interval(0.));
     CHECK(x.codomain() == Interval(2.));
@@ -178,7 +178,7 @@ TEST_CASE("CN simple")
       cn.set_name(va, "a");
       cn.set_name(vx, "x");
       cn.set_name(vy, "y");
-      //cn.print_dot_graph();
+      cn.print_dot_graph("cn_function");
     }
   }
 
@@ -268,7 +268,7 @@ TEST_CASE("CN simple")
       cn.set_name(vx, "x");
       cn.set_name(va, "a");
       cn.set_name(ctc_add, "+");
-      //cn.print_dot_graph();
+      cn.print_dot_graph("cn_singleton");
     }
   }
 }
