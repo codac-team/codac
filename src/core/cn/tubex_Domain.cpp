@@ -19,8 +19,8 @@ namespace tubex
 {
   int Domain::dom_counter = 0;
 
-  Domain::Domain(Type type, ExternalRef extern_object_type)
-    : m_type(type), m_extern_object_type(extern_object_type)
+  Domain::Domain(Type type, MemoryRef memory_type)
+    : m_type(type), m_memory_type(memory_type)
   {
     dom_counter++;
     m_dom_id = dom_counter;
@@ -44,13 +44,13 @@ namespace tubex
         break;
 
       default:
-        m_i_ptr = NULL;
+        m_i_ptr = NULL; // default value of the union
         break;
     }
   }
 
   Domain::Domain(const Domain& ad)
-    : Domain(ad.m_type, ad.m_extern_object_type)
+    : Domain(ad.m_type, ad.m_memory_type)
   {
     m_volume = ad.m_volume;
     m_v_ctc = ad.m_v_ctc;
@@ -71,7 +71,6 @@ namespace tubex
 
         else
         {
-          assert(ad.m_extern_object_type != ExternalRef::NONE);
           m_ref_values_i = reference_wrapper<Interval>(ad.m_ref_values_i);
         }
         break;
@@ -85,7 +84,6 @@ namespace tubex
 
         else
         {
-          assert(ad.m_extern_object_type != ExternalRef::NONE);
           m_ref_values_iv = reference_wrapper<IntervalVector>(ad.m_ref_values_iv);
         }
         break;
@@ -106,44 +104,40 @@ namespace tubex
         assert(false && "unhandled case");
     }
     
-    switch(ad.m_extern_object_type)
+    switch(ad.m_memory_type)
     {
-      case ExternalRef::NONE:
-        // Nothing to do
-        break;
-        
-      case ExternalRef::DOUBLE:
-        m_ref_extern_object_d = ad.m_ref_extern_object_d;
+      case MemoryRef::DOUBLE:
+        m_ref_memory_d = ad.m_ref_memory_d;
         break;
 
-      case ExternalRef::INTERVAL:
-        if(&ad.m_ref_extern_object_i.get() == ad.m_i_ptr)
-          m_ref_extern_object_i = reference_wrapper<Interval>(*m_i_ptr);
+      case MemoryRef::INTERVAL:
+        if(&ad.m_ref_memory_i.get() == ad.m_i_ptr)
+          m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr);
         else
-          m_ref_extern_object_i = ad.m_ref_extern_object_i;
+          m_ref_memory_i = ad.m_ref_memory_i;
         break;
 
-      case ExternalRef::VECTOR:
-        m_ref_extern_object_v = ad.m_ref_extern_object_v;
+      case MemoryRef::VECTOR:
+        m_ref_memory_v = ad.m_ref_memory_v;
         break;
 
-      case ExternalRef::INTERVAL_VECTOR:
-        if(&ad.m_ref_extern_object_iv.get() == ad.m_iv_ptr)
-          m_ref_extern_object_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+      case MemoryRef::INTERVAL_VECTOR:
+        if(&ad.m_ref_memory_iv.get() == ad.m_iv_ptr)
+          m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
         else
-          m_ref_extern_object_iv = ad.m_ref_extern_object_iv;
+          m_ref_memory_iv = ad.m_ref_memory_iv;
         break;
 
-      case ExternalRef::SLICE:
-        m_ref_extern_object_s = ad.m_ref_extern_object_s;
+      case MemoryRef::SLICE:
+        m_ref_memory_s = ad.m_ref_memory_s;
         break;
 
-      case ExternalRef::TUBE:
-        m_ref_extern_object_t = ad.m_ref_extern_object_t;
+      case MemoryRef::TUBE:
+        m_ref_memory_t = ad.m_ref_memory_t;
         break;
 
-      case ExternalRef::TUBE_VECTOR:
-        m_ref_extern_object_tv = ad.m_ref_extern_object_tv;
+      case MemoryRef::TUBE_VECTOR:
+        m_ref_memory_tv = ad.m_ref_memory_tv;
         break;
 
       default:
@@ -152,114 +146,116 @@ namespace tubex
   }
 
   Domain::Domain(double& d)
-    : Domain(Type::INTERVAL, ExternalRef::DOUBLE)
+    : Domain(Type::INTERVAL, MemoryRef::DOUBLE)
   {
     m_i_ptr = new Interval(d);
     m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
-    m_ref_extern_object_d = reference_wrapper<double>(d);
+    m_ref_memory_d = reference_wrapper<double>(d);
   }
 
   Domain::Domain(Interval& i)
-    : Domain(Type::INTERVAL, ExternalRef::INTERVAL)
+    : Domain(Type::INTERVAL, MemoryRef::INTERVAL)
   {
     m_i_ptr = NULL;
     m_ref_values_i = reference_wrapper<Interval>(i);
-    m_ref_extern_object_i = reference_wrapper<Interval>(i);
+    m_ref_memory_i = reference_wrapper<Interval>(i);
   }
   
   Domain::Domain(Interval& i, double& extern_d)
-    : Domain(Type::INTERVAL, ExternalRef::DOUBLE)
+    : Domain(Type::INTERVAL, MemoryRef::DOUBLE)
   {
     m_i_ptr = NULL;
     m_ref_values_i = reference_wrapper<Interval>(i);
-    m_ref_extern_object_d = reference_wrapper<double>(extern_d);
+    m_ref_memory_d = reference_wrapper<double>(extern_d);
   }
   
   Domain::Domain(Interval& i, Interval& extern_i)
-    : Domain(Type::INTERVAL, ExternalRef::INTERVAL)
+    : Domain(Type::INTERVAL, MemoryRef::INTERVAL)
   {
     m_i_ptr = NULL;
     m_ref_values_i = reference_wrapper<Interval>(i);
-    m_ref_extern_object_i = reference_wrapper<Interval>(extern_i);
+    m_ref_memory_i = reference_wrapper<Interval>(extern_i);
   }
 
   Domain::Domain(const Interval& i)
-    : Domain(Type::INTERVAL, ExternalRef::NONE)
+    : Domain(Type::INTERVAL, MemoryRef::INTERVAL)
   {
     m_i_ptr = new Interval(i);
     m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
-    m_ref_extern_object_i = reference_wrapper<Interval>(*m_i_ptr); // todo: remove this?
+    m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr);
   }
 
   Domain::Domain(Vector& v)
-    : Domain(Type::INTERVAL_VECTOR, ExternalRef::VECTOR)
+    : Domain(Type::INTERVAL_VECTOR, MemoryRef::VECTOR)
   {
     m_iv_ptr = new IntervalVector(v);
     m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
-    m_ref_extern_object_v = reference_wrapper<Vector>(v);
+    m_ref_memory_v = reference_wrapper<Vector>(v);
   }
 
   Domain::Domain(IntervalVector& iv)
-    : Domain(Type::INTERVAL_VECTOR, ExternalRef::INTERVAL_VECTOR)
+    : Domain(Type::INTERVAL_VECTOR, MemoryRef::INTERVAL_VECTOR)
   {
     m_iv_ptr = NULL;
     m_ref_values_iv = reference_wrapper<IntervalVector>(iv);
-    m_ref_extern_object_iv = reference_wrapper<IntervalVector>(iv);
+    m_ref_memory_iv = reference_wrapper<IntervalVector>(iv);
   }
 
   Domain::Domain(const IntervalVector& iv)
-    : Domain(Type::INTERVAL_VECTOR, ExternalRef::INTERVAL_VECTOR)
+    : Domain(Type::INTERVAL_VECTOR, MemoryRef::INTERVAL_VECTOR)
   {
     m_iv_ptr = new IntervalVector(iv);
     m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
-    m_ref_extern_object_iv = reference_wrapper<IntervalVector>(*m_iv_ptr); // todo: remove this?
+    m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
   }
 
   Domain::Domain(Slice& s)
-    : Domain(Type::SLICE, ExternalRef::SLICE)
+    : Domain(Type::SLICE, MemoryRef::SLICE)
   {
     m_ref_values_s = reference_wrapper<Slice>(s);
-    m_ref_extern_object_s = reference_wrapper<Slice>(s);
+    m_ref_memory_s = reference_wrapper<Slice>(s);
 
     // todo: remove this (unbounded domains not supported for some contractors)
     s &= Slice(s.domain(),Interval(-99999.,99999.)); 
   }
 
   Domain::Domain(Tube& t)
-    : Domain(Type::TUBE, ExternalRef::TUBE)
+    : Domain(Type::TUBE, MemoryRef::TUBE)
   {
     m_ref_values_t = reference_wrapper<Tube>(t);
-    m_ref_extern_object_t = reference_wrapper<Tube>(t);
+    m_ref_memory_t = reference_wrapper<Tube>(t);
 
     // todo: remove this (unbounded domains not supported for some contractors)
     t &= Interval(-99999.,99999.);
   }
 
   Domain::Domain(const Tube& t)
-    : Domain(Type::TUBE, ExternalRef::NONE)
+    : Domain(Type::TUBE, MemoryRef::TUBE)
   {
     m_t_ptr = new Tube(t);
     m_ref_values_t = reference_wrapper<Tube>(*m_t_ptr);
+    m_ref_memory_t = reference_wrapper<Tube>(*m_t_ptr);
 
     // todo: remove this (unbounded domains not supported for some contractors)
     *m_t_ptr &= Interval(-99999.,99999.);
   }
 
   Domain::Domain(TubeVector& tv)
-    : Domain(Type::TUBE_VECTOR, ExternalRef::TUBE_VECTOR)
+    : Domain(Type::TUBE_VECTOR, MemoryRef::TUBE_VECTOR)
   {
     m_ref_values_tv = reference_wrapper<TubeVector>(tv);
-    m_ref_extern_object_tv = reference_wrapper<TubeVector>(tv);
+    m_ref_memory_tv = reference_wrapper<TubeVector>(tv);
 
     // todo: remove this (unbounded domains not supported for some contractors)
     tv &= IntervalVector(tv.size(), Interval(-99999.,99999.));
   }
 
   Domain::Domain(const TubeVector& tv)
-    : Domain(Type::TUBE_VECTOR, ExternalRef::NONE)
+    : Domain(Type::TUBE_VECTOR, MemoryRef::TUBE_VECTOR)
   {
     m_tv_ptr = new TubeVector(tv);
     m_ref_values_tv = reference_wrapper<TubeVector>(*m_tv_ptr);
+    m_ref_memory_tv = reference_wrapper<TubeVector>(*m_tv_ptr);
 
     // todo: remove this (unbounded domains not supported for some contractors)
     *m_tv_ptr &= IntervalVector(tv.size(), Interval(-99999.,99999.));
@@ -373,7 +369,7 @@ namespace tubex
   
   void Domain::add_ctc(Contractor *ctc)
   {
-    //assert(find(m_v_ctc.begin(), m_v_ctc.end(), ctc) == m_v_ctc.end()); // not already added
+    //assert(find(m_v_ctc.begin(), m_v_ctc.end(), ctc) == m_v_ctc.end()); // not already added (todo?)
     m_v_ctc.push_back(ctc);
   }
 
@@ -464,34 +460,29 @@ namespace tubex
     switch(m_type)
     {
       case Type::INTERVAL:
-        assert(m_extern_object_type == ExternalRef::NONE
-            || m_extern_object_type == ExternalRef::DOUBLE
-            || m_extern_object_type == ExternalRef::INTERVAL);
+        assert(m_memory_type == MemoryRef::DOUBLE
+            || m_memory_type == MemoryRef::INTERVAL);
         return interval().is_empty();
         break;
 
       case Type::INTERVAL_VECTOR:
-        assert(m_extern_object_type == ExternalRef::NONE
-            || m_extern_object_type == ExternalRef::VECTOR
-            || m_extern_object_type == ExternalRef::INTERVAL_VECTOR);
+        assert(m_memory_type == MemoryRef::VECTOR
+            || m_memory_type == MemoryRef::INTERVAL_VECTOR);
         return interval_vector().is_empty();
         break;
 
       case Type::SLICE:
-        assert(m_extern_object_type == ExternalRef::NONE
-            || m_extern_object_type == ExternalRef::SLICE);
+        assert(m_memory_type == MemoryRef::SLICE);
         return slice().is_empty();
         break;
 
       case Type::TUBE:
-        assert(m_extern_object_type == ExternalRef::NONE
-            || m_extern_object_type == ExternalRef::TUBE);
+        assert(m_memory_type == MemoryRef::TUBE);
         return tube().is_empty();
         break;
 
       case Type::TUBE_VECTOR:
-        assert(m_extern_object_type == ExternalRef::NONE
-            || m_extern_object_type == ExternalRef::TUBE_VECTOR);
+        assert(m_memory_type == MemoryRef::TUBE_VECTOR);
         return tube_vector().is_empty();
         break;
 
@@ -507,45 +498,45 @@ namespace tubex
   {
     // Possibilities of equality:
 
-    // - 1. The two objects point to the same external reference.
+    // - 1. The two objects point to the same memory reference.
     //
     //    - 1.a. However, the domain is internally represented by a set.
     //           For instance, a double is represented by an interval stored in the CN.
     //   
-    //    - 1.b. The two objects point to the same external reference.
+    //    - 1.b. The two objects point to the same memory reference.
     //           For instance, the same tubes, stored outside the CN.
     //
     // - 2. One is a created_var (points to a variable stored in the CN) and
     //      the other one is external (it points to the previously created var)
 
 
-    // Case 1: the two objects point to the same external reference.
-    if(m_extern_object_type == x.m_extern_object_type && m_extern_object_type != ExternalRef::NONE)
+    // Case 1: the two objects point to the same memory reference.
+    if(m_memory_type == x.m_memory_type)
     {
-      assert(m_type == x.m_type); // same external reference => same type of domain
+      assert(m_type == x.m_type); // same memory reference => same type of domain
 
-      switch(m_extern_object_type)
+      switch(m_memory_type)
       {
-        case ExternalRef::DOUBLE:
-          return &m_ref_extern_object_d.get() == &x.m_ref_extern_object_d.get();
+        case MemoryRef::DOUBLE:
+          return &m_ref_memory_d.get() == &x.m_ref_memory_d.get();
 
-        case ExternalRef::INTERVAL:
-          return &m_ref_extern_object_i.get() == &x.m_ref_extern_object_i.get();
+        case MemoryRef::INTERVAL:
+          return &m_ref_memory_i.get() == &x.m_ref_memory_i.get();
 
-        case ExternalRef::VECTOR:
-          return &m_ref_extern_object_v.get() == &x.m_ref_extern_object_v.get();
+        case MemoryRef::VECTOR:
+          return &m_ref_memory_v.get() == &x.m_ref_memory_v.get();
 
-        case ExternalRef::INTERVAL_VECTOR:
-          return &m_ref_extern_object_iv.get() == &x.m_ref_extern_object_iv.get();
+        case MemoryRef::INTERVAL_VECTOR:
+          return &m_ref_memory_iv.get() == &x.m_ref_memory_iv.get();
 
-        case ExternalRef::SLICE:
-          return &m_ref_extern_object_s.get() == &x.m_ref_extern_object_s.get();
+        case MemoryRef::SLICE:
+          return &m_ref_memory_s.get() == &x.m_ref_memory_s.get();
 
-        case ExternalRef::TUBE:
-          return &m_ref_extern_object_t.get() == &x.m_ref_extern_object_t.get();
+        case MemoryRef::TUBE:
+          return &m_ref_memory_t.get() == &x.m_ref_memory_t.get();
 
-        case ExternalRef::TUBE_VECTOR:
-          return &m_ref_extern_object_tv.get() == &x.m_ref_extern_object_tv.get();
+        case MemoryRef::TUBE_VECTOR:
+          return &m_ref_memory_tv.get() == &x.m_ref_memory_tv.get();
 
         default:
           assert(false && "unhandled case");
@@ -555,41 +546,33 @@ namespace tubex
 
     // Case 2: one is a created_var (points to a variable stored in the CN) and
     // the other one is external (it points to the previously created var)
-    else if(m_extern_object_type != ExternalRef::NONE && x.m_extern_object_type == ExternalRef::NONE)
+    switch(m_type)
     {
-      return x.operator==(*this); // permutation of arguments
-    }
-    
-    else if(m_extern_object_type == ExternalRef::NONE && x.m_extern_object_type != ExternalRef::NONE)
-    {
-      if(m_type != x.m_type)
+      case Type::INTERVAL:
+        return &m_ref_values_i.get() == &x.m_ref_memory_i.get()
+          || &x.m_ref_values_i.get() == &m_ref_memory_i.get();
+
+      case Type::INTERVAL_VECTOR:
+        return &m_ref_values_iv.get() == &x.m_ref_memory_iv.get()
+          || &x.m_ref_values_iv.get() == &m_ref_memory_iv.get();
+
+      case Type::SLICE:
+        return &m_ref_values_s.get() == &x.m_ref_memory_s.get()
+          || &x.m_ref_values_s.get() == &m_ref_memory_s.get();
+
+      case Type::TUBE:
+        return &m_ref_values_t.get() == &x.m_ref_memory_t.get()
+          || &x.m_ref_values_t.get() == &m_ref_memory_t.get();
+
+      case Type::TUBE_VECTOR:
+        return &m_ref_values_tv.get() == &x.m_ref_values_tv.get()
+          || &x.m_ref_values_tv.get() == &m_ref_values_tv.get();
+
+      default:
+        assert(false && "unhandled case");
         return false;
 
-      switch(m_type)
-      {
-        case Type::INTERVAL:
-          return &m_ref_values_i.get() == &x.m_ref_extern_object_i.get();
-
-        case Type::INTERVAL_VECTOR:
-          return &m_ref_values_iv.get() == &x.m_ref_extern_object_iv.get();
-
-        case Type::SLICE:
-          return &m_ref_values_s.get() == &x.m_ref_extern_object_s.get();
-
-        case Type::TUBE:
-          return &m_ref_values_t.get() == &x.m_ref_extern_object_t.get();
-
-        case Type::TUBE_VECTOR:
-          return &m_ref_values_tv.get() == &x.m_ref_values_tv.get();
-
-        default:
-          assert(false && "unhandled case");
-          return false;
-      }
     }
-
-    else
-      return false;
   }
   
   bool Domain::operator!=(const Domain& x) const
@@ -652,7 +635,7 @@ namespace tubex
 
   ostream& operator<<(ostream& str, const Domain& x)
   {
-    str << "[" << Tools::add_int("type",(int)x.m_type) << "," << Tools::add_int("extern_type",(int)x.m_extern_object_type) << "]" << flush;
+    str << "[" << Tools::add_int("type",(int)x.m_type) << "," << Tools::add_int("memory",(int)x.m_memory_type) << "]" << flush;
 
     switch(x.m_type)
     {
@@ -846,17 +829,16 @@ namespace tubex
       }
     }
 
-    switch(m_extern_object_type)
+    switch(m_memory_type)
     {
-      case ExternalRef::INTERVAL:
-      case ExternalRef::INTERVAL_VECTOR:
-      case ExternalRef::TUBE:
-      case ExternalRef::TUBE_VECTOR:
-      case ExternalRef::NONE:
+      case MemoryRef::INTERVAL:
+      case MemoryRef::INTERVAL_VECTOR:
+      case MemoryRef::TUBE:
+      case MemoryRef::TUBE_VECTOR:
         output_name = "[" + output_name + "]";
         break;
 
-      case ExternalRef::SLICE:
+      case MemoryRef::SLICE:
         output_name = "[\\![" + output_name + "]\\!]";
         break;
 

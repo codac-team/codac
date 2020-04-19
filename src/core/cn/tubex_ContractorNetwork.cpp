@@ -352,9 +352,8 @@ namespace tubex
           // And its components
           for(int i = 0 ; i < dom->interval_vector().size() ; i++)
           {
-            assert(dom->m_ref_extern_object_iv.get().size() == dom->interval_vector().size());
             Domain *dom_i = add_dom(Domain(dom->interval_vector()[i],
-              dom->m_ref_extern_object_iv.get()[i])); // make it point to the component of the external reference
+              dom->m_ref_memory_iv.get()[i])); // make it point to the component of the memory reference
 
             v_doms.push_back(dom_i);
           }

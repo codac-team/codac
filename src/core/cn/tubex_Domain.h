@@ -33,8 +33,8 @@ namespace tubex
   {
     public:
 
-      enum class Type { INTERVAL=0, INTERVAL_VECTOR=1, SLICE=2, TUBE=3, TUBE_VECTOR=4 };
-      enum class ExternalRef { NONE=0, DOUBLE=1, INTERVAL=2, VECTOR=3, INTERVAL_VECTOR=4, SLICE=5, TUBE=6, TUBE_VECTOR=7 };
+      enum class Type { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
+      enum class MemoryRef { DOUBLE, INTERVAL, VECTOR, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
 
       Domain(const Domain& ad);
       Domain(double& d);
@@ -95,7 +95,7 @@ namespace tubex
 
     protected:
 
-      Domain(Type type, ExternalRef extern_object_type);
+      Domain(Type type, MemoryRef memory_type);
       const std::string var_name(const std::vector<Domain*>& v_domains) const;
 
       // Theoretical type of domain
@@ -119,19 +119,19 @@ namespace tubex
           TubeVector *m_tv_ptr;
         };
 
-      // Origin type of the implementation of the domain
+      // Memory implementation of the domain
 
-        ExternalRef m_extern_object_type;
+        const MemoryRef m_memory_type;
 
         union // reference to the unique object (in memory) this domain represents
         {
-          std::reference_wrapper<double> m_ref_extern_object_d;
-          std::reference_wrapper<ibex::Interval> m_ref_extern_object_i;
-          std::reference_wrapper<ibex::Vector> m_ref_extern_object_v;
-          std::reference_wrapper<ibex::IntervalVector> m_ref_extern_object_iv;
-          std::reference_wrapper<tubex::Slice> m_ref_extern_object_s;
-          std::reference_wrapper<tubex::Tube> m_ref_extern_object_t;
-          std::reference_wrapper<tubex::TubeVector> m_ref_extern_object_tv;
+          std::reference_wrapper<double> m_ref_memory_d;
+          std::reference_wrapper<ibex::Interval> m_ref_memory_i;
+          std::reference_wrapper<ibex::Vector> m_ref_memory_v;
+          std::reference_wrapper<ibex::IntervalVector> m_ref_memory_iv;
+          std::reference_wrapper<tubex::Slice> m_ref_memory_s;
+          std::reference_wrapper<tubex::Tube> m_ref_memory_t;
+          std::reference_wrapper<tubex::TubeVector> m_ref_memory_tv;
         };
 
 
