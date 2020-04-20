@@ -28,7 +28,7 @@ namespace tubex
   void CtcLinobs::contract(vector<Domain*>& v_domains)
   {
     assert(v_domains.size() == 2);
-    assert(v_domains[0]->type() == Domain::Type::TUBE_VECTOR && v_domains[0]->type() == Domain::Type::TUBE);
+    assert(v_domains[0]->type() == Domain::Type::TUBE_VECTOR && v_domains[1]->type() == Domain::Type::TUBE);
 
     contract(v_domains[0]->tube_vector(), v_domains[1]->tube());
   }
