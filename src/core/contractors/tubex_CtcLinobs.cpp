@@ -33,7 +33,7 @@ namespace tubex
     contract(v_domains[0]->tube_vector(), v_domains[1]->tube());
   }
 
-  void CtcLinobs::contract(TubeVector& x, const Tube& u)
+  void CtcLinobs::contract(TubeVector& x, const Tube& u, TimePropag t_propa)
   {
     assert(Tube::same_slicing(x[0], u));
     assert(Tube::same_slicing(x[1], u));
@@ -51,59 +51,81 @@ namespace tubex
         l++;
       }
       v_p_k[l] = ConvexPolygon(x(x.domain().ub()));
+      assert(l == k);
 
     // Forward contractions
 
-      int i = 1;
-      Slice *s0 = x[0].first_slice();
-      Slice *s1 = x[1].first_slice();
-      const Slice *su = u.first_slice();
-      while(s0 != NULL)
+      int i;
+      Slice *s0, *s1;
+      const Slice *su;
+
+      if(t_propa & TimePropag::FORWARD)
       {
-        const Interval tkm1_tk = s0->domain(); // [t_{k-1},t_k]
-        ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain());
+        i = 1;
+        s0 = x[0].first_slice();
+        s1 = x[1].first_slice();
+        su = u.first_slice();
 
-        IntervalVector ouputgate_box = v_p_k[i].box();
-        s0->set_output_gate(ouputgate_box[0]);
-        s1->set_output_gate(ouputgate_box[1]);
+        while(s0 != NULL)
+        {
+          const Interval tkm1_tk = s0->domain(); // [t_{k-1},t_k]
+          ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain());
 
-        IntervalVector envelope_box = polygon_envelope(v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain()).box();
-        s0->set_envelope(envelope_box[0]);
-        s1->set_envelope(envelope_box[1]);
+          IntervalVector ouputgate_box = v_p_k[i].box();
+          s0->set_output_gate(ouputgate_box[0]);
+          s1->set_output_gate(ouputgate_box[1]);
 
-        //for(const auto &[t, box] : m_obs) // observations at uncertain times
-        //  if(tkm1_tk.contains(t))
-        //    ctc_fwd(v_p_k[i], ConvexPolygon(box), tkm1_tk.ub()-t, A, b, u(i-1));
+          if(t_propa & TimePropag::BACKWARD)
+          {
+            // The slice envelope can be computed only from the gates,
+            // and so it will be computed during the backward process.
+          }
 
-        s0 = s0->next_slice(); s1 = s1->next_slice(); su = su->next_slice();
-        i++;
+          else
+          {
+            IntervalVector envelope_box = polygon_envelope(v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain()).box();
+            s0->set_envelope(envelope_box[0]);
+            s1->set_envelope(envelope_box[1]);
+          }
+
+          //for(const auto &[t, box] : m_obs) // observations at uncertain times
+          //  if(tkm1_tk.contains(t))
+          //    ctc_fwd(v_p_k[i], ConvexPolygon(box), tkm1_tk.ub()-t, A, b, u(i-1));
+
+          s0 = s0->next_slice(); s1 = s1->next_slice(); su = su->next_slice();
+          i++;
+        }
       }
 
     // Backward contractions
 
-      i = k-1;
-      s0 = x[0].last_slice();
-      s1 = x[1].last_slice();
-      su = u.last_slice();
-      while(s0 != NULL)
+      if(t_propa & TimePropag::BACKWARD)
       {
-        const Interval tk_kp1 = s0->domain(); // [t_k,t_{k+1}]
-        ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), m_A, m_b, su->codomain());
+        i = k-1;
+        s0 = x[0].last_slice();
+        s1 = x[1].last_slice();
+        su = u.last_slice();
 
-        IntervalVector polybox = v_p_k[i].box();
-        s0->set_input_gate(polybox[0]);
-        s1->set_input_gate(polybox[1]);
+        while(s0 != NULL)
+        {
+          const Interval tk_kp1 = s0->domain(); // [t_k,t_{k+1}]
+          ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), m_A, m_b, su->codomain());
 
-        IntervalVector envelope_box = polygon_envelope(v_p_k[i], tk_kp1.diam(), m_A, m_b, su->codomain()).box();
-        s0->set_envelope(envelope_box[0]);
-        s1->set_envelope(envelope_box[1]);
+          IntervalVector polybox = v_p_k[i].box();
+          s0->set_input_gate(polybox[0]);
+          s1->set_input_gate(polybox[1]);
 
-        //for(const auto &[t, box] : m_obs) // observations at uncertain times
-        //  if(tk_kp1.contains(t))
-        //    ctc_bwd(v_p_k[i], ConvexPolygon(box), t-tk_kp1.lb(), A, b, u(i));
-        
-        s0 = s0->next_slice(); s1 = s1->next_slice(); su = su->next_slice();
-        i--;
+          IntervalVector envelope_box = polygon_envelope(v_p_k[i], tk_kp1.diam(), m_A, m_b, su->codomain()).box();
+          s0->set_envelope(envelope_box[0]);
+          s1->set_envelope(envelope_box[1]);
+
+          //for(const auto &[t, box] : m_obs) // observations at uncertain times
+          //  if(tk_kp1.contains(t))
+          //    ctc_bwd(v_p_k[i], ConvexPolygon(box), t-tk_kp1.lb(), A, b, u(i));
+          
+          s0 = s0->prev_slice(); s1 = s1->prev_slice(); su = su->prev_slice();
+          i--;
+        }
       }
   }
 

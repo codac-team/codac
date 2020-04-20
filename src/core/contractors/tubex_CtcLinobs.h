@@ -31,7 +31,7 @@ namespace tubex
       CtcLinobs(const ibex::Matrix& A, const ibex::Vector& b, ibex::IntervalMatrix (*exp_At)(const ibex::Matrix& A, const ibex::Interval& t));
 
       void contract(std::vector<Domain*>& v_domains);
-      void contract(TubeVector& x, const Tube& u);
+      void contract(TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
     protected:
 
