@@ -15,6 +15,7 @@
 #include "tubex_Figure.h"
 #include "tubex_Point.h"
 #include "tubex_Polygon.h"
+#include "tubex_ConvexPolygon.h"
 #include "vibes.h"
 
 namespace tubex
@@ -144,6 +145,23 @@ namespace tubex
       void draw_box(const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
+       * \brief Draws a set of boxes
+       *
+       * \param v_boxes vector of 2d IntervalVector to be displayed
+       * \param params VIBes parameters related to the boxes
+       */
+      void draw_boxes(const std::vector<ibex::IntervalVector>& v_boxes, const vibes::Params& params);
+
+      /**
+       * \brief Draws a set of boxes
+       *
+       * \param v_boxes vector of 2d IntervalVector to be displayed
+       * \param color the optional color of the boxes (black by default) 
+       * \param params VIBes parameters related to the boxes (none by default)
+       */
+      void draw_boxes(const std::vector<ibex::IntervalVector>& v_boxes, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
        * \brief Draws a line of points
        *
        * \param v_x vector of horizontal coordinates
@@ -254,6 +272,23 @@ namespace tubex
        * \param params VIBes parameters related to the polygon (none by default)
        */
       void draw_polygon(const Polygon& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a set of polygons
+       *
+       * \param v_p vector of polygons
+       * \param params VIBes parameters related to the polygons (none by default)
+       */
+      void draw_polygons(const std::vector<ConvexPolygon>& v_p, const vibes::Params& params);
+
+      /**
+       * \brief Draws a set of polygons
+       *
+       * \param v_p vector of polygons
+       * \param color the optional color of the polygons (black by default) 
+       * \param params VIBes parameters related to the polygons (none by default)
+       */
+      void draw_polygons(const std::vector<ConvexPolygon>& v_p, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a point
