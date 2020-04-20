@@ -8,10 +8,6 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <cstdio>
-#include <string>
-#include <iostream>
-#include <sstream>
 #include "tubex_Figure.h"
 
 // A real value to display unbounded slices:
@@ -69,13 +65,6 @@ namespace tubex
     assert(x >= 0 && y >= 0 && width > 0 && height > 0);
     m_x = x; m_y = y;
     m_width = width; m_height = height;
-  }
-
-  string Figure::add_suffix(const string& name, int id)
-  {
-    ostringstream o;
-    o << name << "_" << id;
-    return o.str();
   }
 
   double Figure::trunc_inf(double x)

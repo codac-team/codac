@@ -51,3 +51,11 @@ __pycache__
 # Documentation files
 doc/doxygen/html/*
 doc/doxygen/xml/*
+
+# CMake files
+build/
+build_install/
+
+# Latex files
+*.aux
+*.log

@@ -43,6 +43,9 @@ TEST_CASE("CN simple")
     // the first one contracts the vector sets, the second one then contracts the components intervals,
     // and so it should trigger again the first one since components have changed.
     cn.add(ctc_plus, {b, d, e});
+    cn.add(ctc_plus, {b, d, e});
+    cn.add(ctc_plus, {b, d, e});
+    cn.add(ctc_plus, {a[0], b[0], c[0]});
     cn.add(ctc_plus, {a[0], b[0], c[0]});
     cn.contract();
 
@@ -51,6 +54,21 @@ TEST_CASE("CN simple")
     CHECK(c[0] == Interval(1.5,2));
     CHECK(d[0] == Interval(0));
     CHECK(e[0] == Interval(0.5,1));
+
+    // Before setting names (some vectors not added entirely):
+    CHECK(cn.nb_dom() == 3*3+2);
+    CHECK(cn.nb_ctc() == 2+3);
+
+    cn.set_name(a, "a");
+    cn.set_name(b, "b");
+    cn.set_name(c, "c");
+    cn.set_name(d, "d");
+    cn.set_name(e, "e");
+    cn.set_name(ctc_plus, "+");
+    cn.print_dot_graph("cn_vector_dependencies");
+
+    CHECK(cn.nb_dom() == 5*3);
+    CHECK(cn.nb_ctc() == 2+5);
   }
 
   SECTION("Observation in middle of tube")
@@ -79,12 +97,20 @@ TEST_CASE("CN simple")
     Interval z(2.);
 
     cn.add(ctc_eval, {t1, z, x, v});
+    cn.add(ctc_eval, {t1, z, x, v});
+    cn.add(ctc_eval, {t1, z, x, v});
     cn.add(ctc_eval, {t1, z, x, v}); // redundant contractor that should not be added
     cn.contract();
 
+    cn.set_name(t1, "t_1");
+    cn.set_name(z, "z");
+    cn.set_name(x, "x");
+    cn.set_name(v, "v");
+    cn.print_dot_graph("cn_observation");
+
     CHECK(v.codomain() == Interval(0.));
     CHECK(x.codomain() == Interval(2.));
-    //CHECK(cn.nb_ctc() == 13); // todo, check this
+    CHECK(cn.nb_ctc() == 13);
     CHECK(cn.nb_dom() == 12);
   }
 
@@ -116,29 +142,43 @@ TEST_CASE("CN simple")
   {
     Interval x(0,1), y(-2,3), a(1,20);
     IntervalVector vx(2,x), vy(2,y), va(2,a);
+    Vector vec(4,0.5);
     
     CtcFunction ctc_add("b", "c", "a", "b+c=a");
+    CtcFunction ctc_cos("b", "c", "a", "b+c=a");
+    CtcFunction ctc_minus("b", "c", "b-c=0");
 
     {
       ContractorNetwork cn;
 
+      cn.add(ctc_add, {x,y,a});
       cn.add(ctc_add, {x,y,a});
       cn.contract();
 
       CHECK(x == Interval(0,1));
       CHECK(y == Interval(0,3));
       CHECK(a == Interval(1,4));
+      CHECK(cn.nb_dom() == 3);
+      CHECK(cn.nb_ctc() == 1);
     }
 
     {
       ContractorNetwork cn;
-
       cn.add(ctc_add, {vx,vy,va});
+      cn.add(ctc_add, {vx[0],vy[0],va[0]});
       cn.contract();
 
       CHECK(vx == IntervalVector(2,Interval(0,1)));
       CHECK(vy == IntervalVector(2,Interval(0,3)));
       CHECK(va == IntervalVector(2,Interval(1,4)));
+
+      CHECK(cn.nb_dom() == 3*3);
+      CHECK(cn.nb_ctc() == 3+2);
+
+      cn.set_name(va, "a");
+      cn.set_name(vx, "x");
+      cn.set_name(vy, "y");
+      cn.print_dot_graph("cn_function");
     }
   }
 
@@ -184,5 +224,51 @@ TEST_CASE("CN simple")
     cn.set_all_contractors_active();
     cn.contract();
     CHECK(x[1] == Interval(1,2));
+  }
+
+  SECTION("Singleton variables: double or Vector")
+  {
+    Interval x(0,1), y(-2,3), a(1,20);
+    double double_y = 1.;
+    Vector vector_y(2, 1.);
+    IntervalVector vx(2,x), vy(2,y), va(2,a);
+    
+    CtcFunction ctc_add("b", "c", "a", "b+c=a");
+
+    {
+      ContractorNetwork cn;
+
+      cn.add(ctc_add, {x,double_y,a});
+      cn.add(ctc_add, {x,double_y,a}); // redundant adding
+      cn.add(ctc_add, {x,double_y,a}); // redundant adding
+      cn.contract();
+
+      CHECK(x == Interval(0,1));
+      CHECK(double_y == 1.);
+      CHECK(a == Interval(1,2));
+      CHECK(cn.nb_dom() == 3);
+      CHECK(cn.nb_ctc() == 1);
+    }
+
+    {
+      ContractorNetwork cn;
+
+      cn.add(ctc_add, {vx,vector_y,va});
+      cn.add(ctc_add, {vx,vector_y,va}); // redundant adding
+      cn.add(ctc_add, {vx,vector_y,va}); // redundant adding
+      cn.contract();
+
+      CHECK(vx == IntervalVector(2,Interval(0,1)));
+      CHECK(vector_y == Vector(2,1.));
+      CHECK(va == IntervalVector(2,Interval(1,2)));
+      CHECK(cn.nb_dom() == 3*3);
+      CHECK(cn.nb_ctc() == 3+1);
+
+      cn.set_name(vector_y, "y");
+      cn.set_name(vx, "x");
+      cn.set_name(va, "a");
+      cn.set_name(ctc_add, "+");
+      cn.print_dot_graph("cn_singleton");
+    }
   }
 }

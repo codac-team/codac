@@ -25,26 +25,40 @@ For the compilation of your project, you can use CMake with the following file :
 
 .. code-block:: cmake
 
-  cmake_minimum_required(VERSION 3.0.2)
-  project(my_project LANGUAGES CXX)
+    cmake_minimum_required(VERSION 3.0.2)
+    project(my_project LANGUAGES CXX)
 
   # Compilation options
-  set(CMAKE_CXX_STANDARD 11)
-  add_compile_options(-O3 -DNDEBUG) # comment for debug mode
-  if(WIN32)
-    add_definitions(-U__STRICT_ANSI__)
-  endif()
 
-  # Dependencies
-  include(FindPkgConfig)
-  pkg_search_module(TUBEX REQUIRED tubex)
-  message(STATUS "Found Tubex version ${TUBEX_VERSION}")
+    set(CMAKE_CXX_STANDARD 11)
+    add_compile_options(-O3 -Wall)
+    #add_compile_options(-DNDEBUG) # comment for debug mode
+
+  # Adding IBEX
+
+    # In case you installed IBEX in a local directory, you need 
+    # to specify its path with the CMAKE_PREFIX_PATH option.
+    # set(CMAKE_PREFIX_PATH "~/ibex-lib/build_install")
+
+    find_package(IBEX REQUIRED)
+    ibex_init_common() # IBEX should have installed this function
+    message(STATUS "Found IBEX version ${IBEX_VERSION}")
+
+  # Adding Tubex
+
+    # In case you installed Tubex in a local directory, you need 
+    # to specify its path with the CMAKE_PREFIX_PATH option.
+    # set(CMAKE_PREFIX_PATH "~/tubex-lib/build_install")
+
+    find_package(TUBEX REQUIRED)
+    message(STATUS "Found Tubex version ${TUBEX_VERSION}")
 
   # Compilation
-  add_executable(${PROJECT_NAME} main.cpp)
-  target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CFLAGS})
-  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LDFLAGS})
+
+    add_executable(${PROJECT_NAME} main.cpp)
+    target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})
+
 
 The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directory:
 
@@ -53,6 +67,18 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
   my_project
   ├── CMakeLists.txt
   └── main.cpp
+
+.. admonition:: Custom install directory of IBEX and Tubex
+  
+  If you installed IBEX and/or Tubex in a custom directory (instead of file system such as :file:`/usr/local/` under Linux),
+  then you need to specify the ``CMAKE_PREFIX_PATH`` option, as indicated in the above :file:`CMakeLists.txt` file.
+
+  Another way is to export the ``CMAKE_PREFIX_PATH`` environment variable. For instance:
+
+  .. code-block:: bash
+
+    export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
+    export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
 
 The compilation is made by the following command line:
 

@@ -628,7 +628,7 @@ namespace tubex
           break;
 
         case TrajDefnType::MAP_OF_VALUES:
-          m_codomain.set_empty();
+          m_codomain = Interval::EMPTY_SET;
           for(map<double,double>::iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
             m_codomain |= it->second;
           break;

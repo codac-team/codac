@@ -50,8 +50,8 @@ before_install:
 
 cache:
   directories:
-    - capd
-    - ibex-lib
+    - $HOME/capd
+    - $HOME/ibex-lib
 
 #services:
 #  - docker
@@ -67,24 +67,22 @@ install:
   - ls
 
   # IBEX
+  - cd $HOME
   - echo 'Installing IBEX...';
   - if [ ! -e "ibex-lib/README.md" ]; then
       git clone -b develop https://github.com/ibex-team/ibex-lib.git ;
       cd ibex-lib ;
-      git checkout fd820d1ed0a85b8a11f54e9ca7ebc8bb4ffa4335 ;
+      git checkout 47fc75a5e14eb2f353ae7e0b37ac0f9dad7801c0 ;
       mkdir build && cd build ;
-      cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" .. ;
+      cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install .. ;
       make ;
-      cd ../.. ;
+      make install ;
     else
       echo 'Using cached directory.' ;
     fi
-  - cd ibex-lib/build
-  - sudo make install
-  - cd ../..
-  # todo: use CMake to install IBEX
 
   # CAPD
+  - cd $HOME
   - echo 'Installing CAPD...';
   - if [ ! -e "capd/README.md" ]; then
       svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
@@ -93,32 +91,24 @@ install:
       autoreconf --install ;
       ./configure --with-filib=check --with-mpfr=check ;
       make ;
-      cd .. ;
     else
       echo 'Using cached directory.' ;
     fi
-  - cd capd
+  - cd $HOME/capd
   - sudo make install
-  - cd ..
+  - cd $HOME
+
+  # Environment variables
+  - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
+  - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-
-  # IBEX-Geometry:
-
-  #- echo 'Installing IBEX-geometry...';
-  #- git clone https://github.com/benEnsta/ibex-geometry
-  #- cd ibex-geometry
-  #- mkdir make
-  #- cd make
-  #- cmake -DWITH_PYTHON=OFF -DBUILD_TESTS=OFF -DIBEX_INCLUDE_DIR=/usr/local/include/ibex/ -DFILIB_INCLUDE_DIR=/usr/local/include/ibex/3rd/ -DPC_IBEX_LIBRARY_DIRS=/usr/local/lib/ibex/3rd/ -DCMAKE_CXX_STANDARD=11 ..
-  #- make install
-  #- cd ..
-  #- cd ..
 
 script:
 
   - py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
   - echo "$py_version"
   
+  - cd $HOME/build/SimonRohou/tubex-lib
   - pwd
   - ls
   - git submodule init ; git submodule update # for pybind11 submodule
@@ -128,9 +118,9 @@ script:
   # Without synthesis tree
   
   # Building lib + tests
-  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
   - make
-  - sudo make install
+  - make install
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
@@ -147,9 +137,9 @@ script:
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
   - make
-  - sudo make install
+  - make install
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;

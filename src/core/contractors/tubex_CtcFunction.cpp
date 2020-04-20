@@ -64,11 +64,11 @@ namespace tubex
     // todo: check that the constraint is not temporal/intertemporal
 
     // Dynamical case (tubes/tubevectors)
-    if(v_domains[0]->type() == DomainType::SLICE)
+    if(v_domains[0]->type() == Domain::Type::SLICE)
     {
       for(size_t i = 0 ; i < v_domains.size() ; i++)
       {
-        assert(v_domains[i]->type() == DomainType::SLICE);
+        assert(v_domains[i]->type() == Domain::Type::SLICE);
         if(i != 0)
           assert(v_domains[i]->slice().domain() == v_domains[i-1]->slice().domain());
       }
@@ -103,7 +103,7 @@ namespace tubex
     }
 
     // Static case (intervals/boxes)
-    else if(v_domains[0]->type() == DomainType::INTERVAL || v_domains[0]->type() == DomainType::INTERVAL_VECTOR)
+    else if(v_domains[0]->type() == Domain::Type::INTERVAL || v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR)
     {
       // Two implicit ways of using this contractor:
       // 1. with one constraint applied on n scalar variables over m dimensions
@@ -116,11 +116,11 @@ namespace tubex
       {
         switch(dom->type())
         {
-          case DomainType::INTERVAL:
+          case Domain::Type::INTERVAL:
             p++;
             break;
 
-          case DomainType::INTERVAL_VECTOR:
+          case Domain::Type::INTERVAL_VECTOR:
             p += dom->interval_vector().size();
             break;
 
@@ -138,12 +138,12 @@ namespace tubex
         {
           switch(dom->type())
           {
-            case DomainType::INTERVAL:
+            case Domain::Type::INTERVAL:
               box[i] = dom->interval();
               i++;
               break;
 
-            case DomainType::INTERVAL_VECTOR:
+            case Domain::Type::INTERVAL_VECTOR:
               box.put(i, dom->interval_vector());
               i += dom->interval_vector().size();
               break;
@@ -160,14 +160,14 @@ namespace tubex
         {
           switch(dom->type())
           {
-            case DomainType::INTERVAL:
+            case Domain::Type::INTERVAL:
             {
               dom->interval() = box[i];
               i++;
             }
             break;
 
-            case DomainType::INTERVAL_VECTOR:
+            case Domain::Type::INTERVAL_VECTOR:
             {
               int n_ = dom->interval_vector().size();
               for(int j = 0 ; j < n_ ; j++)
@@ -191,7 +191,7 @@ namespace tubex
 
           for(size_t j = 0 ; j < v_domains.size() ; j++)
           {
-            assert(v_domains[j]->type() == DomainType::INTERVAL_VECTOR);
+            assert(v_domains[j]->type() == Domain::Type::INTERVAL_VECTOR);
             assert(v_domains[j]->interval_vector().size() == m);
 
             box[j] = v_domains[j]->interval_vector()[i];

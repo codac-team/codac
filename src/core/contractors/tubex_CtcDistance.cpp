@@ -26,12 +26,12 @@ namespace tubex
   void CtcDistance::contract(vector<Domain*>& v_domains)
   {
     assert(v_domains.size() == 3);
-    assert((v_domains[0]->type() == DomainType::INTERVAL_VECTOR
-         && v_domains[1]->type() == DomainType::INTERVAL_VECTOR
-         && v_domains[2]->type() == DomainType::INTERVAL)
-        || (v_domains[0]->type() == DomainType::TUBE_VECTOR
-         && v_domains[1]->type() == DomainType::TUBE_VECTOR
-         && v_domains[2]->type() == DomainType::TUBE));
+    assert((v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR
+         && v_domains[1]->type() == Domain::Type::INTERVAL_VECTOR
+         && v_domains[2]->type() == Domain::Type::INTERVAL)
+        || (v_domains[0]->type() == Domain::Type::TUBE_VECTOR
+         && v_domains[1]->type() == Domain::Type::TUBE_VECTOR
+         && v_domains[2]->type() == Domain::Type::TUBE));
 
     CtcFunction::contract(v_domains);
   }

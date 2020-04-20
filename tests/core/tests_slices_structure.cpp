@@ -11,7 +11,7 @@ TEST_CASE("operator=")
 {
   SECTION("test")
   {
-    TubeVector tube_one_slice(Interval(0.,10.), 0.2);
+    TubeVector tube_one_slice(Interval(0.,10.), 0.2, 1);
     tube_one_slice.sample(5.);
 
     TubeVector tube1(Interval(0.,10.), 0.001, 4);

@@ -94,14 +94,6 @@ namespace tubex
        */
       void set_properties(int x, int y, int width, int height);
       
-      /**
-       * \brief Adds an integer suffix to a string
-       *
-       * \param name the string to be updated
-       * \param id the integer to add
-       * \return the string value `string`_`id`
-       */
-      static std::string add_suffix(const std::string& name, int id);
 
     protected:
       

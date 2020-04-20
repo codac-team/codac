@@ -7,8 +7,8 @@ The installation is supported on Linux systems. The current version of Tubex has
 Any support is more than welcome.
 
 
-Requirements and dependencies
------------------------------
+Requirements and dependencies (IBEX)
+------------------------------------
 
 Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is available on `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
 
@@ -33,7 +33,7 @@ Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
   
   Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
 
-Tubex uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/wrswt/preprints/prep_01_4.pdf>`_ is also supported. Use :code:`-DINTERVAL_LIB=filib` during the CMake configuration to use it.
+IBEX uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/wrswt/preprints/prep_01_4.pdf>`_ is also supported. Use :code:`-DINTERVAL_LIB=filib` during the CMake configuration to use it.
 
 
 Tubex library
@@ -49,9 +49,59 @@ The last sources are available on `the official Tubex development repository <ht
   mkdir build ; cd build ; cmake .. ; make          # build the sources
   sudo make install                                 # install the library
 
-.. admonition:: Debug/development mode
+
+.. rst-class:: fit-page
+
+  CMake supports the following options:
+
+    ======================  ======================================================================================
+    Option                  Description
+    ======================  ======================================================================================
+    CMAKE_INSTALL_PREFIX    | By default, the library will be installed in system files (:file:`/usr/local/` under Linux).
+                              Use ``CMAKE_INSTALL_PREFIX`` to specify another path.
+                            | Example:
+
+                            .. code-block:: bash
+
+                              cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install ..
+                            
+                            .. warning::
+                            
+                              The full path of the folder must not contain white space or weird characters like ``'"\()`*[]``.
+
+    CMAKE_BUILD_TYPE        | Set the build mode either to ``Release`` or ``Debug``.
+                            | Default value is ``Debug``. Example:
+
+                            .. code-block:: bash
+
+                              cmake -DCMAKE_BUILD_TYPE=Release ..
+                  
+                            The :code:`-DCMAKE_BUILD_TYPE=Debug` option is enabled by default. As for IBEX, it will slightly
+                            slow down your computations, but display useful error messages in case of failure conditions such
+                            as access violations. It is highly recommended for your developments. You can otherwise use the
+                            :code:`-DCMAKE_BUILD_TYPE=Release` option. Note also that O3 optimizations are always activated.
+                            
+                            Once Tubex has been compiled with this option, you should also compile your executable
+                            in debug mode.
+
+    CMAKE_PREFIX_PATH       | If IBEX has been installed in a local folder, say :file:`~/ibex-lib/build_install`, you need
+                              to indicate this path using the ``CMAKE_PREFIX_PATH`` option.
+                            | Example:
+
+                            .. code-block:: bash
+
+                              cmake -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install ..
+    ======================  ======================================================================================
+
+
+.. admonition:: Custom install directory of IBEX and Tubex
   
-  Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option is enabled by default. As for IBEX, it will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments. You can otherwise use the :code:`-DCMAKE_BUILD_TYPE=Release` option. Note also that O3 optimizations are always activated.
+  A convenient way to refer to custom install directories for IBEX and/or Tubex is to export the ``CMAKE_PREFIX_PATH`` environment variable. For instance:
+
+  .. code-block:: bash
+
+    export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
+    export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
 
 
 Graphical tools
