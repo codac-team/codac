@@ -69,7 +69,7 @@
 # Looking for IBEX
 ################################################################################
   
-  find_package(IBEX REQUIRED)
+  find_package(IBEX REQUIRED PATHS /home/julien-damers/libraries/user/ibex-lib-debug/share/ibex)
   ibex_init_common() # IBEX should have installed this function
   message(STATUS "Found IBEX version ${IBEX_VERSION}")
 
