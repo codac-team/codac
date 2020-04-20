@@ -3,9 +3,10 @@
 # ==================================================================
 
 
-  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd2tubex.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd2tubex.h
-                  )
+list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd2tubex.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd2tubex.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/tubex_TubeVectorODE.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/tubex_TubeVectorODE.cpp)
 
 list(APPEND JSON ${CMAKE_CURRENT_SOURCE_DIR}/json/json.hpp)
 
