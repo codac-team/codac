@@ -12,6 +12,9 @@
 #ifndef __TUBEX_CTCLINOBS_H__
 #define __TUBEX_CTCLINOBS_H__
 
+#include <map>
+#include <vector>
+#include <functional>
 #include "tubex_Ctc.h"
 #include "tubex_ConvexPolygon.h"
 
@@ -32,6 +35,16 @@ namespace tubex
 
       void contract(std::vector<Domain*>& v_domains);
       void contract(TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+
+      // todo: contraction of the observations
+      void contract(double& t, ibex::IntervalVector& y, TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(double& t, ibex::IntervalVector& y, TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+
+      // todo: contraction of the observations
+      void contract(std::vector<double>& v_t, std::vector<ibex::IntervalVector>& v_y, TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(std::vector<double>& v_t, std::vector<ibex::IntervalVector>& v_y, TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+
 
     protected:
 

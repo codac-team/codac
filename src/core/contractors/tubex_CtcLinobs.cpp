@@ -35,14 +35,62 @@ namespace tubex
 
   void CtcLinobs::contract(TubeVector& x, const Tube& u, TimePropag t_propa)
   {
+    vector<ConvexPolygon> v_p_k;
+    contract(x, u, v_p_k, t_propa);
+  }
+
+  void CtcLinobs::contract(TubeVector& x, const Tube& u, vector<ConvexPolygon>& v_p_k, TimePropag t_propa)
+  {
+    vector<double> v_t;
+    vector<IntervalVector> v_y;
+    contract(v_t, v_y, x, u, v_p_k, t_propa);
+  }
+
+  void CtcLinobs::contract(double& t, IntervalVector& y, TubeVector& x, const Tube& u, TimePropag t_propa)
+  {
+    vector<ConvexPolygon> v_p_k;
+    contract(t, y, x, u, v_p_k, t_propa);
+  }
+
+  void CtcLinobs::contract(double& t, IntervalVector& y, TubeVector& x, const Tube& u, vector<ConvexPolygon>& v_p_k, TimePropag t_propa)
+  {
+    vector<double> v_t(1, t);
+    vector<IntervalVector> v_y(1, y);
+
+    contract(v_t, v_y, x, u, v_p_k, t_propa);
+
+    y &= v_y[0];
+  }
+
+  void CtcLinobs::contract(vector<double>& v_t, vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, TimePropag t_propa)
+  {
+    vector<ConvexPolygon> v_p_k;
+    contract(v_t, v_y, x, u, v_p_k, t_propa);
+  }
+
+  void CtcLinobs::contract(vector<double>& v_t, vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, vector<ConvexPolygon>& v_p_k, TimePropag t_propa)
+  {
+    assert(x.size() == 2 && "operation not supported for other dimensions");
     assert(Tube::same_slicing(x[0], u));
     assert(Tube::same_slicing(x[1], u));
+    assert(v_t.size() == v_y.size());
+    for(const auto& t : v_t)
+      assert(x.domain().contains(t));
+    for(const auto& y : v_y)
+      assert(y.size() == x.size());
 
     int k = x[0].nb_slices();
 
+    // Unbounded polygons are not supported yet, so we limit their size
+    // (and so the envelope of the tube)
+    
+      IntervalVector box_domain(2, Interval(-9999.,9999.));
+      x &= box_domain;
+
     // Creating a vector of (k+1) polygons
 
-      vector<ConvexPolygon> v_p_k(k+1);
+      v_p_k.clear();
+      v_p_k = vector<ConvexPolygon>(k+1);
 
       int l = 0;
       for(const Slice* s = x[0].first_slice() ; s != NULL ; s = s->next_slice())
@@ -74,6 +122,11 @@ namespace tubex
           {
             ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain());
 
+            for(size_t j = 0 ; j < v_t.size() ; j++) // observations at uncertain times
+              if(tkm1_tk.contains(v_t[j]))
+                ctc_fwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), tkm1_tk.ub()-v_t[j], m_A, m_b, su->codomain());
+            // todo: contraction of the observations
+
             IntervalVector ouputgate_box = v_p_k[i].box();
             s0->set_output_gate(ouputgate_box[0]);
             s1->set_output_gate(ouputgate_box[1]);
@@ -91,10 +144,6 @@ namespace tubex
               s1->set_envelope(envelope_box[1]);
             }
           }
-
-          //for(const auto &[t, box] : m_obs) // observations at uncertain times
-          //  if(tkm1_tk.contains(t))
-          //    ctc_fwd(v_p_k[i], ConvexPolygon(box), tkm1_tk.ub()-t, A, b, u(i-1));
 
           s0 = s0->next_slice(); s1 = s1->next_slice(); su = su->next_slice();
           i++;
@@ -118,6 +167,11 @@ namespace tubex
           {
             ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), m_A, m_b, su->codomain());
 
+            for(size_t j = 0 ; j < v_t.size() ; j++) // observations at uncertain times
+              if(tk_kp1.contains(v_t[j]))
+                ctc_bwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), v_t[j]-tk_kp1.lb(), m_A, m_b, su->codomain());
+            // todo: contraction of the observations
+
             IntervalVector polybox = v_p_k[i].box();
             s0->set_input_gate(polybox[0]);
             s1->set_input_gate(polybox[1]);
@@ -127,10 +181,6 @@ namespace tubex
             s1->set_envelope(envelope_box[1]);
           }
 
-          //for(const auto &[t, box] : m_obs) // observations at uncertain times
-          //  if(tk_kp1.contains(t))
-          //    ctc_bwd(v_p_k[i], ConvexPolygon(box), t-tk_kp1.lb(), A, b, u(i));
-          
           s0 = s0->prev_slice(); s1 = s1->prev_slice(); su = su->prev_slice();
           i--;
         }
