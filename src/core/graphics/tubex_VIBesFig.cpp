@@ -251,6 +251,12 @@ namespace tubex
     for(const auto& p : v_p)
       draw_polygon(p, color, params);
   }
+  
+  void VIBesFig::draw_polygons(const vector<ConvexPolygon>& v_p, const ColorMap& color_map, const vibes::Params& params)
+  {
+    for(int i = v_p.size()-1 ; i >= 0 ; i--) // we usually prefer to display last poylgons first, that may be larger
+      draw_polygon(v_p[i], rgb2hex(color_map.color(i*1./(v_p.size()-1))));
+  }
 
   void VIBesFig::draw_point(const Point& p, float size, const vibes::Params& params)
   {

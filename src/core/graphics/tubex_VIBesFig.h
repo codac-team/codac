@@ -16,6 +16,7 @@
 #include "tubex_Point.h"
 #include "tubex_Polygon.h"
 #include "tubex_ConvexPolygon.h"
+#include "tubex_ColorMap.h"
 #include "vibes.h"
 
 namespace tubex
@@ -289,6 +290,15 @@ namespace tubex
        * \param params VIBes parameters related to the polygons (none by default)
        */
       void draw_polygons(const std::vector<ConvexPolygon>& v_p, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a set of polygons
+       *
+       * \param v_p vector of polygons
+       * \param color_map color map to draw polygons with a map of colors
+       * \param params VIBes parameters related to the polygons (none by default)
+       */
+      void draw_polygons(const std::vector<ConvexPolygon>& v_p, const ColorMap& color_map, const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a point
