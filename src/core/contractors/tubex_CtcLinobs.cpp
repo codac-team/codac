@@ -92,20 +92,20 @@ namespace tubex
       v_p_k.clear();
       v_p_k = vector<ConvexPolygon>(k+1);
 
-      int l = 0;
-      for(const Slice* s = x[0].first_slice() ; s != NULL ; s = s->next_slice())
+      int i = 0;
+      const Slice *su;
+      Slice *s0 = x[0].first_slice(), *s1 = x[1].first_slice();
+
+      v_p_k[i] = ConvexPolygon({s0->input_gate(), s1->input_gate()});
+      while(s0 != NULL)
       {
-        v_p_k[l] = ConvexPolygon(x(s->domain().lb()));
-        l++;
+        i++;
+        v_p_k[i] = ConvexPolygon({s0->output_gate(), s1->output_gate()});
+        s0 = s0->next_slice(); s1 = s1->next_slice();
       }
-      v_p_k[l] = ConvexPolygon(x(x.domain().ub()));
-      assert(l == k);
+      assert(i == k);
 
     // Forward contractions
-
-      int i;
-      Slice *s0, *s1;
-      const Slice *su;
 
       if(t_propa & TimePropag::FORWARD)
       {
