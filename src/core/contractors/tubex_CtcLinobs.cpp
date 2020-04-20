@@ -69,23 +69,27 @@ namespace tubex
         while(s0 != NULL)
         {
           const Interval tkm1_tk = s0->domain(); // [t_{k-1},t_k]
-          ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain());
 
-          IntervalVector ouputgate_box = v_p_k[i].box();
-          s0->set_output_gate(ouputgate_box[0]);
-          s1->set_output_gate(ouputgate_box[1]);
-
-          if(t_propa & TimePropag::BACKWARD)
+          if(tkm1_tk.intersects(m_restricted_domain))
           {
-            // The slice envelope can be computed only from the gates,
-            // and so it will be computed during the backward process.
-          }
+            ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain());
 
-          else
-          {
-            IntervalVector envelope_box = polygon_envelope(v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain()).box();
-            s0->set_envelope(envelope_box[0]);
-            s1->set_envelope(envelope_box[1]);
+            IntervalVector ouputgate_box = v_p_k[i].box();
+            s0->set_output_gate(ouputgate_box[0]);
+            s1->set_output_gate(ouputgate_box[1]);
+
+            if(t_propa & TimePropag::BACKWARD)
+            {
+              // The slice envelope can be computed only from the gates,
+              // and so it will be computed during the backward process.
+            }
+
+            else
+            {
+              IntervalVector envelope_box = polygon_envelope(v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain()).box();
+              s0->set_envelope(envelope_box[0]);
+              s1->set_envelope(envelope_box[1]);
+            }
           }
 
           //for(const auto &[t, box] : m_obs) // observations at uncertain times
@@ -109,15 +113,19 @@ namespace tubex
         while(s0 != NULL)
         {
           const Interval tk_kp1 = s0->domain(); // [t_k,t_{k+1}]
-          ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), m_A, m_b, su->codomain());
 
-          IntervalVector polybox = v_p_k[i].box();
-          s0->set_input_gate(polybox[0]);
-          s1->set_input_gate(polybox[1]);
+          if(tk_kp1.intersects(m_restricted_domain))
+          {
+            ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), m_A, m_b, su->codomain());
 
-          IntervalVector envelope_box = polygon_envelope(v_p_k[i], tk_kp1.diam(), m_A, m_b, su->codomain()).box();
-          s0->set_envelope(envelope_box[0]);
-          s1->set_envelope(envelope_box[1]);
+            IntervalVector polybox = v_p_k[i].box();
+            s0->set_input_gate(polybox[0]);
+            s1->set_input_gate(polybox[1]);
+
+            IntervalVector envelope_box = polygon_envelope(v_p_k[i], tk_kp1.diam(), m_A, m_b, su->codomain()).box();
+            s0->set_envelope(envelope_box[0]);
+            s1->set_envelope(envelope_box[1]);
+          }
 
           //for(const auto &[t, box] : m_obs) // observations at uncertain times
           //  if(tk_kp1.contains(t))
