@@ -220,13 +220,13 @@ Then you have two options: read the details about the features of Tubex (domains
   | Note that Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
   | `Read the IBEX documentation. <http://www.ibex-lib.org/doc/>`_
 
-  .. rubric:: pyibex
+  .. rubric:: pyIbex
 
   .. Figure:: ../img/pyibex_logo.jpg
     :align: center
 
-  | The python API of Tubex is available thanks to the `pyibex library <http://benensta.github.io/pyIbex/>`_ providing python access to the IBEX library.
-  | `Read the pyibex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
+  | The python API of Tubex is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing python access to the IBEX library.
+  | `Read the pyIbex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
 
 
 .. toctree::

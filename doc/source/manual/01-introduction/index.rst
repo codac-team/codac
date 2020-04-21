@@ -61,6 +61,13 @@ In mobile robotics, we usually have to deal with:
 
 The aim of Tubex is to easily deal with these constraints in order to eventually characterize sets of variables compliant with the defined rules.
 
+
+Contractors
+-----------
+
+Todo
+
+
 Reliable outputs
 ----------------
 
@@ -120,8 +127,14 @@ If the use of IBEX is transparent in several robotic applications presented in t
 
 ------------------------------------------------------
 
-****************************
-Using Tubex in C++ or Python
-****************************
+********************************
+Using IBEX in python with pyIbex
+********************************
 
-To do
+.. Figure:: ../../../img/pyibex_logo.jpg
+  :align: left
+
+A python API has been developped for IBEX: the `pyIbex library <http://benensta.github.io/pyIbex/>`_.
+It makes available in Python many C++ functionalities of IBEX that are used in robotic applications such as contractors and separators. It aims at combining the flexibility of Python with the speed of C++ algorithms.
+
+Tubex is available in both C++ and Python. It stands on pyIbex for the use of IBEX objects such as intervals and static contractors.
