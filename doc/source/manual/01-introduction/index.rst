@@ -1,12 +1,18 @@
 .. _sec-manual-introduction-label:
 
+.. warning::
+  
+  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
+  A new stable version of Tubex will be released in the coming weeks.
+
 ############
 Introduction
 ############
 
-Tubex is a C++ numerical library based on **tube arithmetic** and **constraint programming**.
-It can be seen as an extension of the `IBEX library <http://www.ibex-lib.org>`_ for dynamical systems.
+Tubex is a library providing tools for **constraint programming** over reals and trajectories.
+It has many applications in **state estimation** or **robot localization**.
 
+It can be seen as an extension of the `IBEX library <http://www.ibex-lib.org>`_ for dynamical systems and robotics applications.
 
 Constraint programming
 """"""""""""""""""""""

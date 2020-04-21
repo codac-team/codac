@@ -29,7 +29,7 @@ int main()
       atan2((10*cos(2*t)+1),(-10*sin(t)+1)) ; \
       sqrt((-10*sin(t)+1)^2+(10*cos(2*t)+1)^2))")); // actual trajectory
 
-    // Measurements coming from the truth
+    // Continuous measurements coming from the truth
     Trajectory& measured_psi = x_truth[2].sample(dt).make_continuous();
     measured_psi += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)); // adding some noise
     Trajectory& measured_speed = x_truth[3].sample(dt);
@@ -60,7 +60,7 @@ int main()
   /* =============== 3. Adding the contractors to a network =============== */
 
     ContractorNetwork cn;                             // creating a network
-    cn.add(ctc_f, {v, x, u});                         // adding the f constraint (custom ctc)
+    cn.add(ctc_f, {v, x, u});                         // adding the f constraint
 
     for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation...
     {

@@ -280,8 +280,8 @@ Support and license
 ===================
 
 You can post bug reports and feature requests on the `GitHub repository <https://github.com/SimonRohou/tubex-lib/>`_.
-
 For recent improvements and activities, see the `Github Tubex repository <https://github.com/SimonRohou/tubex-lib>`_.
+
 This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 
