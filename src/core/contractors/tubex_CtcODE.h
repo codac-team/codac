@@ -6,7 +6,7 @@
  */
 
 #ifndef __TUBEX_CTCODE_H__
-#define __TUBEX_CTCODE_H_
+#define __TUBEX_CTCODE_H__
 
 #include "tubex_CtcIntegration.h"
 #include "tubex_Ctc.h"
