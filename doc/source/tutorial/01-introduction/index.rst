@@ -8,6 +8,9 @@
 Introduction
 ============
 
+Tubex proposes various realistic applications based on the tools provided in this library.
+
+Marine robotics and underwater exploration provide challenging academic problems to work on. This application field motivated the development of tools related to tubes, and then the proposal of such library.
 
 
 Get ready

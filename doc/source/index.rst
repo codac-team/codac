@@ -160,11 +160,11 @@ We look at the state equations and use contractors to deal with them. The distan
 
     for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation...
     {
-      IntervalVector& p_i = cn.create_var(IntervalVector(4)); // intermediate variable
+      IntervalVector& p = cn.create_var(IntervalVector(4)); // intermediate variable
       // Adding the distance constraint:
-      cn.add(ctc::dist, {cn.subvector(p_i,0,1), b[i], y[i]});
+      cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
       // Link between an observation at t_i and all states over [t_0,t_f]
-      cn.add(ctc::eval, {t[i], p_i, x, v});
+      cn.add(ctc::eval, {t[i], p, x, v});
     }
 
   .. code-tab:: py

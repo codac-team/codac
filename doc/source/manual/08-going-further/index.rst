@@ -15,3 +15,4 @@ Going further
   02-bisections
   03-pavings
   04-tubes-implementation
+  05-functions
