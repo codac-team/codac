@@ -51,20 +51,20 @@ namespace tubex
          */
         try
         {
-            
+
             // This is the vector field we want to generate
-            IMap vectorField(j["config"]["function"]); // 
+            IMap vectorField(j["config"]["function"]); //
 
             // Fix value of the parameters of the vector field if needed
             if (j["config"]["nb_fixed_parameters"] > 0)
             {
                 for (int i=0; i<j["config"]["nb_fixed_parameters"]; i++)
                 {
-                    
+
                     capd::interval parameter_value = ((float)(j["config"]["parameters_value"][i][0]),(float)(j["config"]["parameters_value"][i][1]));
-                    vectorField.setParameter((string) (j["config"]["parameters_name"][i]),parameter_value); 
+                    vectorField.setParameter((string) (j["config"]["parameters_name"][i]),parameter_value);
                 }
-            
+
             }
 
             // The solver uses high order enclosure method to verify the existence
@@ -85,9 +85,9 @@ namespace tubex
             for (int i = 0; i<j["config"]["dimensions"]; i++)
             {
                 a_capd[i] = capd::interval((float)(j["config"]["initial_coordinates"][i][0]),
-                                  (float)(j["config"]["initial_coordinates"][i][1]));
+                                           (float)(j["config"]["initial_coordinates"][i][1]));
             }
-            
+
             // define a doubleton representation of the interval vector x
             C0Rect2Set s(a_capd);
 
@@ -97,12 +97,12 @@ namespace tubex
             capd::interval prevTime(0.);
 
 
-            do 
+            do
             {
                 timeMap(T,s);
                 capd::interval stepMade = solver.getStep();
                 //cout << "\nstep made: " << stepMade;
-                // This is how we can extract an information 
+                // This is how we can extract an information
                 // about the trajectory between time steps.
                 // The type CurveType is a function defined
                 // on the interval [0,stepMade].
@@ -111,7 +111,7 @@ namespace tubex
                 // We can also extract from it the 1-st order derivatives wrt.
                 const IOdeSolver::SolutionCurve& curve = solver.getCurve();
                 capd::interval domain = capd::interval(0,1)*stepMade;
-            
+
                 // Here we use a uniform grid of last time step made
                 // to enclose the trajectory between time steps.
                 // You can use your own favorite subdivision, perhaps nonuniform,
@@ -142,13 +142,13 @@ namespace tubex
                     output_file << "\n" ;
                     // Adding our computed box to the curve in IBEX format
                     ibex_curve.push_back(a_ibex);
-                                                
+
                 }
                 prevTime = timeMap.getCurrentTime();
-            }while(!timeMap.completed());   
-            
+            }while(!timeMap.completed());
+
         }
-    
+
         catch(exception& e)
         {
             cout << "\n\nException caught!\n" << e.what() << endl << endl;
@@ -157,6 +157,43 @@ namespace tubex
         output_file.close();
         return(ibex_curve);
     }
+
+    vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, const double timestep,
+                                                const tubex::Function& f,  const ibex::IntervalVector& x0)
+    {
+        int a_capd_dim = f.nb_vars();
+        int a_ibex_dim = a_capd_dim+1;
+
+        IntervalVector a_ibex(a_ibex_dim);
+        vector<ibex::IntervalVector> ibex_curve;
+
+        string capd_string ="var:";
+        string function_string = f.expr();
+        for(int i=0;i<a_capd_dim-1; i++)
+        {
+            capd_string.append(f.arg_name(i));
+            capd_string.append(",");
+
+        }
+        capd_string.append(f.arg_name(a_capd_dim-1));
+        capd_string.append(";fun:");
+
+        if (function_string.size()>2)
+        {
+            capd_string.append(function_string.substr(1, function_string.size() - 2));
+        }
+        else
+        {
+            // TODO return an empty vector
+        }
+
+        cout << capd_string <<endl;
+
+        return (ibex_curve);
+
+
+    }
+
 
     TubeVector ibex2tubex(vector<IntervalVector> ibex_curve)
     {
