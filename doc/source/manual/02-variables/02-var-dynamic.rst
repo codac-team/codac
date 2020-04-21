@@ -5,8 +5,12 @@
   This part of the documentation is deprecated. Several changes are currently perfomed on the library.
   A new stable version of Tubex will be released in the coming weeks.
 
+.. contents:: Table of Contents
+   :depth: 20
+
+********************************
 Dynamic variables (trajectories)
-================================
+********************************
 
 A trajectory :math:`x(\cdot):\mathbb{R}\to\mathbb{R}` is a set of values defined over some domain. When values are analytically defined, a ``Function`` object can be used for instantiating the trajectory. In Tubex, a ``Function`` is the extension of IBEX's ``Function`` objects, for the dynamical case (see more `about IBEX's functions <http://www.ibex-lib.org/doc/function.html>`_).
 
@@ -52,7 +56,7 @@ Another way to build :math:`x(\cdot)` would be to implement it as a map of value
 
     # todo
 
-.. figure:: 02_trajs.png
+.. figure:: img/02_trajs.png
 
 Note that when building a trajectory from a map, there is no need to specify the temporal domain; it will be evaluated as the envelope of the keys of the map.
 
@@ -160,7 +164,7 @@ The features presented above remain the same.
 
     # todo
 
-.. figure:: 02_trajvectors.png
+.. figure:: img/02_trajvectors.png
 
 Note that as in IBEX, each component of a vector object (``IntervalVector``, ``TrajectoryVector``, ``TubeVector``) is available by reference:
 

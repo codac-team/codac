@@ -231,15 +231,16 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. toctree::
   :caption: User manual
-  :maxdepth: 3
+  :maxdepth: 2
 
   manual/01-introduction/index
   manual/02-variables/index
   manual/03-domains/index
-  manual/04-contractors/index
-  manual/05-contractor-network/index
-  manual/06-graphics/index
-  manual/07-going-further/index
+  manual/04-static-contractors/index
+  manual/05-dynamic-contractors/index
+  manual/06-contractor-network/index
+  manual/07-graphics/index
+  manual/08-going-further/index
 
 .. versionadded:: 2.1.0
    The Contractor Network tool.

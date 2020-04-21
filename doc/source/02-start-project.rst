@@ -1,7 +1,8 @@
 .. _sec-start-project-label:
 
+###############
 Start a project
-===============
+###############
 
 | Tubex is ready to be used on your computer.
 | You can now copy-paste the following example code in a file named :file:`main.cpp`:

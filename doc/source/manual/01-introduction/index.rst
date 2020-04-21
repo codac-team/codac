@@ -5,6 +5,8 @@
   This part of the documentation is deprecated. Several changes are currently perfomed on the library.
   A new stable version of Tubex will be released in the coming weeks.
 
+.. contents:: Table of Contents
+
 ############
 Introduction
 ############
@@ -14,10 +16,12 @@ It has many applications in **state estimation** or **robot localization**.
 
 It can be seen as an extension of the `IBEX library <http://www.ibex-lib.org>`_ for dynamical systems and robotics applications.
 
+**********************
 Constraint programming
-""""""""""""""""""""""
+**********************
 
-.. rubric:: Variables and domains
+Variables and domains
+---------------------
 
 The unknown solutions of a system are called **trajectories**, denoted by :math:`x(\cdot)` (or :math:`\mathbf{x}(\cdot)` in the vector case).
 In the literature, the dot notation :math:`(\cdot)` may be used to represent the independent system variable.
@@ -25,7 +29,8 @@ This notation is chosen in order to clearly distinguish a whole trajectory :math
 
 In this approach, the estimation of a trajectory :math:`x(\cdot)` consists in computing its reliable enclosure set, defined as an interval of trajectories: a so-called **tube**, denoted by :math:`[x](\cdot)`.
 
-.. rubric:: Constraints
+Constraints
+-----------
 
 In the same way as with IBEX, we deal with a system by defining it as a set of **constraints**. In the case of dynamical systems, the constraints can be:
 
@@ -37,7 +42,8 @@ In the same way as with IBEX, we deal with a system by defining it as a set of *
 
 The aim of Tubex is to easily deal with these constraints in order to eventually characterize a tube of trajectories compliant with the defined rules.
 
-.. rubric:: Reliable outputs
+Reliable outputs
+----------------
 
 One of the advantages of this set-membership approach is the **reliable output** that is obtained.
 By *reliable*, we mean that all sources of uncertainty are taken into account, including:
@@ -53,8 +59,9 @@ This is well suited for **proof purposes** as we always consider worst-case poss
 
 ------------------------------------------------------
 
+****************************
 Using Tubex in C++ or Python
-""""""""""""""""""""""""""""
+****************************
 
 The API of Tubex can be broken down into three layers:
 
@@ -77,7 +84,8 @@ Each usage corresponds to a different layer and each layer is built on top of th
 
 ------------------------------------------------------
 
-.. rubric:: Mobile robotics
+Mobile robotics
+---------------
 
 Finally, Tubex proposes various realistic applications based on the tools provided in this library. In particular, several examples present an original way to deal with state estimation and mobile robotics.
 
@@ -85,7 +93,8 @@ Marine robotics and underwater exploration provide challenging academic problems
 
 ------------------------------------------------------
 
+****************************
 What about the IBEX library?
-""""""""""""""""""""""""""""
+****************************
 
 todo

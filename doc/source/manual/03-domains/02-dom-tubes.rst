@@ -5,13 +5,15 @@
   This part of the documentation is deprecated. Several changes are currently perfomed on the library.
   A new stable version of Tubex will be released in the coming weeks.
 
+*****
 Tubes
-=====
+*****
 
 Uncertain trajectories can be handled by tubes. This page gives simple operations that can be made on tubes. Next sections will provide concrete applications and show the main advantages of this framework.
 
 
-.. rubric:: Tubes and slices
+Tubes and slices
+----------------
 
 In Tubex, tubes are necessarily implemented as lists of slices. The details about this choice will be provided thereafter.
 
@@ -23,7 +25,7 @@ The box :math:`[k\delta,k\delta+\delta]\times\left[x\right]\left(t_{k}\right)`, 
 
   \forall t\in[t_0,t_f],~\underline{x^{-}}(t)\leqslant x^{-}(t)\leqslant x^{+}(t)\leqslant\overline{x^{+}}(t)
 
-.. figure:: 02_tube_slices.png
+.. figure:: img/02_tube_slices.png
 
   A tube :math:`[x](\cdot)` represented by a set of :math:`\delta`-width slices. This implementation can be used to enclose signals such as :math:`x^*(\cdot)`.
 
@@ -31,7 +33,8 @@ This implementation then takes rigorously into account floating point precision 
 Further computations involving :math:`[x](\cdot)` will be based on its slices, thus giving an outer approximation of the solution set. 
 
 
-.. rubric:: Creating tubes
+Creating tubes
+--------------
 
 To create a ``Tube`` with a constant codomain:
 
@@ -86,7 +89,7 @@ As tubes are interval of trajectories, a ``Tube`` can be defined from ``Trajecto
 
     # todo
 
-.. figure:: 02_interval_trajs.png
+.. figure:: img/02_interval_trajs.png
 
   Result of tube :math:`[x_9](\cdot)=[\cos(t),\cos(t)+\frac{t}{10}]`, made of 100 slices.
 
@@ -103,7 +106,7 @@ It is also possible to create a tube from an uncertain function:
 
     # todo
 
-.. figure:: 02_tube_fnc.png
+.. figure:: img/02_tube_fnc.png
 
   Result of tube :math:`[x_{10}](\cdot)` made of 1000 slices.
 
@@ -132,10 +135,11 @@ Finally, a tube can be seen as a union of trajectories. And so the following ope
     
 Which produces:
 
-.. figure:: 02_union.png
+.. figure:: img/02_union.png
 
 
-.. rubric:: Evaluations
+Evaluations
+-----------
 
 Once created, several evaluations of the tube can be made, as for trajectories. For instance:
 
@@ -172,7 +176,7 @@ The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])`, is al
 
     # todo
 
-.. figure:: 02_invert.png
+.. figure:: img/02_invert.png
 
 Furthermore, other methods related to sets are available:
 
@@ -189,7 +193,8 @@ Furthermore, other methods related to sets are available:
     # todo
 
 
-.. rubric:: Operations on sets
+Operations on sets
+------------------
 
 Classical operations on sets are applicable on tubes.
 Note that the tubes may have to share the same domain and slicing for these operations.
@@ -245,7 +250,8 @@ It is also possible to test if a tube :math:`[x](\cdot)` contains a solution :ma
     # todo
 
 
-.. rubric:: Integral computations
+Integral computations
+---------------------
 
 Computation of the primitive :math:`\int_{0}[x](\tau)d\tau`:
 
@@ -304,7 +310,8 @@ Also, a decomposition of the integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot
 *Note:* :math:`[s]=[s^-]\cup[s^+]`.
 
 
-.. rubric:: Updating values
+Updating values
+---------------
 
 The ``set()`` methods allow various updates on tubes. For instance:
 
@@ -320,7 +327,7 @@ The ``set()`` methods allow various updates on tubes. For instance:
     
 produces:
 
-.. figure:: 02_set.png
+.. figure:: img/02_set.png
 
 See also the following methods:
 
@@ -339,7 +346,8 @@ See also the following methods:
 **Note:** be careful when updating a tube without the use of dedicated contractors. Tube discretization has to be kept in mind whenever an update is performed for some input :math:`t`. For guaranteed operations, please see the *Contractors* section.
 
 
-.. rubric:: The vector case
+The vector case
+---------------
 
 The extension to the vector case is the class ``TubeVector``, allowing to create tubes :math:`[\mathbf{x}](\cdot):\mathbb{R}\to\mathbb{IR}^n`.
 The features presented above remain the same.
@@ -360,7 +368,7 @@ The features presented above remain the same.
 
     # todo
 
-.. figure:: 02_tubevectors.png
+.. figure:: img/02_tubevectors.png
 
 Note that as in IBEX, each component of a vector object (``IntervalVector``, ``TrajectoryVector``, ``TubeVector``) is available by reference.
 

@@ -1,7 +1,8 @@
 .. _sec-installation-label:
 
+############################
 Installing the Tubex library
-============================
+############################
 
 The installation is supported on Linux systems. The current version of Tubex has not been tested on Windows.
 Any support is more than welcome.

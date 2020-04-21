@@ -1,10 +1,17 @@
-.. _sec-manual-varstatic-label:
+.. _sec-manual-goingfurther-label:
 
 .. warning::
   
   This part of the documentation is deprecated. Several changes are currently perfomed on the library.
   A new stable version of Tubex will be released in the coming weeks.
 
-*********************************
-Static variables (reals, vectors)
-*********************************
+#############
+Going further
+#############
+
+.. toctree::
+
+  01-serialization
+  02-bisections
+  03-pavings
+  04-tubes-implementation
