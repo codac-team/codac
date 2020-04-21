@@ -24,6 +24,12 @@ It stands on constraint programming: a paradigm in which the properties of a sol
 
 Then, a solver performs constraint propagation on the variables and provides a reliable set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*. The strength of this declarative paradigm lies in its simpleness, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
+.. Figure:: img/cst.png
+
+  In this theoretical view, a domain :math:`\mathbb{X}` depicted in yellow is known to enclose a solution :math:`\mathbf{x}^*` pictured by a red dot and consistent with two constraints :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2`. The estimation of :math:`\mathbf{x}^*` consists in reducing :math:`\mathbb{X}` while satisfying :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2`. After the propagation process, the set of feasible solutions has been reduced, by removing vectors that were not consistent with the constraints.
+
+When working with finite domains, a propagation technique can be used to simplify a problem. The process is run several times up to a fixed point reached when the domains cannot be reduced anymore. Interval analysis can be efficiently used for this purpose, taking advantage of interval arithmetic and its capacity to preserve any feasible solution.
+
 Variables
 ---------
 
@@ -65,7 +71,11 @@ The aim of Tubex is to easily deal with these constraints in order to eventually
 Contractors
 -----------
 
-Todo
+The constraints are applied on sets by means of contractors: operators designed to reduce domains without losing any solution consistent with the related constraint. In Tubex, the contractors act on intervals, boxes and tubes.
+
+.. Figure:: img/ctc.png
+
+  Implementation of the constraints :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2` of the previous example by means of respective contractors :math:`\mathcal{C}_1` and :math:`\mathcal{C}_2`. On this theoretical example, the domain :math:`\mathbb{X}` is now a subset of a box :math:`[\mathbf{x}]`, easily representable and contractible.
 
 
 Reliable outputs
