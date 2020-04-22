@@ -11,10 +11,10 @@ file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/tubex.pc
 includedir=\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}
 libdir=\${prefix}/${CMAKE_INSTALL_LIBDIR}
 
-Name: tubex
-Description: ${TUBEX_DESCRIPTION}
-Url: ${TUBEX_URL}
-Version: ${TUBEX_VERSION}
+Name: ${PROJECT_NAME}
+Description: ${PROJECT_DESCRIPTION}
+Url: ${PROJECT_HOMEPAGE_URL}
+Version: ${PROJECT_VERSION}
 Requires: ibex
 Cflags: -I\${includedir}/tubex -I\${includedir}/tubex-rob -I\${includedir}/tubex-pyibex
 Libs: -L\${libdir} -ltubex -ltubex-rob -ltubex-pyibex -ltubex")

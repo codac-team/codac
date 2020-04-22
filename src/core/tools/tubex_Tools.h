@@ -27,7 +27,7 @@ namespace tubex
       /**
        * \brief Replaces all occurrences of the search string in the input with the format string. The input sequence is modified in-place.
        *
-       * \Note Same signature as boost::algorithm::replace_all
+       * \note Same signature as boost::algorithm::replace_all
        *
        * \param input an input string
        * \param search a substring to be searched for 

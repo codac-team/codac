@@ -45,6 +45,8 @@ fi
   fi
 
   make
+  make api
+  make doc
   cd ..
 
 # Building examples independently
