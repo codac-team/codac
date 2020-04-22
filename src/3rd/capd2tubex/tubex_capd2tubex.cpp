@@ -22,144 +22,10 @@ namespace tubex
 {
      // namespace tubex
 
-    vector<ibex::IntervalVector> capd2ibex(json j)
-    {
-
-        /* Initialisation of useful variables
-         * a_capd_dim: number of dimensions of the problem (without time)
-         * a_ibex_dim: number of dimensions of the problem (with time)
-         * a_ibex: an box that will the result of the integration at each step
-         * ibex_curve: the result of the full integration into an IBEX format
-        */
-        int a_capd_dim = j["config"]["dimensions"];
-        int a_ibex_dim = a_capd_dim + 1;
-        IntervalVector a_ibex(a_ibex_dim);
-        vector<ibex::IntervalVector> ibex_curve;
-
-        // Open and initialize a txt file in order to check the output (for debug only)
-        ofstream output_file;
-        output_file.open(j["config"]["output_file"]);
-        output_file << "==========================CAPD OUTPUT==========================\n";
-        output_file << "Time is the first interval given and then the different dimensions\n";
-        output_file << "number of dimensions: " << a_capd_dim << "\n";
-        output_file << "Max time: " << j["config"]["integration_time"] << "\n";
-        output_file << "fixed time step: " << j["config"]["fixed_step"] << "\n";
-        output_file << "time step: " << j["config"]["integration_step"] << "\n\n";
-
-        /*
-         * Performing the integration
-         */
-        try
-        {
-
-            // This is the vector field we want to generate
-            IMap vectorField(j["config"]["function"]); //
-
-            // Fix value of the parameters of the vector field if needed
-            if (j["config"]["nb_fixed_parameters"] > 0)
-            {
-                for (int i=0; i<j["config"]["nb_fixed_parameters"]; i++)
-                {
-
-                    capd::interval parameter_value = ((float)(j["config"]["parameters_value"][i][0]),(float)(j["config"]["parameters_value"][i][1]));
-                    vectorField.setParameter((string) (j["config"]["parameters_name"][i]),parameter_value);
-                }
-
-            }
-
-            // The solver uses high order enclosure method to verify the existence
-            // of the solution.
-            // The order will be set to 20.
-            IOdeSolver solver(vectorField,20);
-
-            // Set a fixed integration step if needed
-            if (j["config"]["fixed_step"])
-            {
-                solver.setStep((double)(j["config"]["integration_step"]));
-            }
-
-            ITimeMap timeMap(solver);
-
-            // This is our initial condition
-            IVector a_capd(a_capd_dim);
-            for (int i = 0; i<j["config"]["dimensions"]; i++)
-            {
-                a_capd[i] = capd::interval((float)(j["config"]["initial_coordinates"][i][0]),
-                                           (float)(j["config"]["initial_coordinates"][i][1]));
-            }
-
-            // define a doubleton representation of the interval vector x
-            C0Rect2Set s(a_capd);
-
-            // Here we start to integrate. The time of integration is set to the value given in the json file.
-            double T=j["config"]["integration_time"];
-            timeMap.stopAfterStep(true);
-            capd::interval prevTime(0.);
 
 
-            do
-            {
-                timeMap(T,s);
-                capd::interval stepMade = solver.getStep();
-                //cout << "\nstep made: " << stepMade;
-                // This is how we can extract an information
-                // about the trajectory between time steps.
-                // The type CurveType is a function defined
-                // on the interval [0,stepMade].
-                // It can be evaluated at a point (or interval).
-                // The curve can be also differentiated wrt to time.
-                // We can also extract from it the 1-st order derivatives wrt.
-                const IOdeSolver::SolutionCurve& curve = solver.getCurve();
-                capd::interval domain = capd::interval(0,1)*stepMade;
-
-                // Here we use a uniform grid of last time step made
-                // to enclose the trajectory between time steps.
-                // You can use your own favorite subdivision, perhaps nonuniform,
-                // depending on the problem you want to solve.
-                int grid=2;
-                for(int i=0;i<grid;++i)
-                {
-                    capd::interval subsetOfDomain = capd::interval(i,i+1)*stepMade/grid;
-                    // The above interval does not need to be a subset of domain.
-                    // This is due to rounding to floating point numbers.
-                    // We take the intersection with the domain.
-                    intersection(domain,subsetOfDomain,subsetOfDomain);
-                    // Here we evaluated curve at the interval subsetOfDomain.
-                    // v will contain rigorous bound for the trajectory for this time interval.
-                    IVector v = curve(subsetOfDomain);
-                    capd::interval currentTime = prevTime + subsetOfDomain;
-
-                    // Converting capd box into an IBEX one
-                    a_ibex[0] = ibex::Interval(currentTime.left().leftBound(),currentTime.right().rightBound());
-                    output_file << "reference: ";
-                    output_file << "[" << currentTime.left().leftBound() << "," << currentTime.right().rightBound() << "]; " ;
-                    for (int i=0; i< a_capd_dim; i++)
-                    {
-                        a_ibex[i+1] = ibex::Interval(v[i].left().leftBound(),v[i].right().rightBound());
-                        output_file << "[" << v[i].left().leftBound() << "," << v[i].right().rightBound() << "]; " ;
-
-                    }
-                    output_file << "\n" ;
-                    // Adding our computed box to the curve in IBEX format
-                    ibex_curve.push_back(a_ibex);
-
-                }
-                prevTime = timeMap.getCurrentTime();
-            }while(!timeMap.completed());
-
-        }
-
-        catch(exception& e)
-        {
-            cout << "\n\nException caught!\n" << e.what() << endl << endl;
-        }
-
-        output_file.close();
-        return(ibex_curve);
-    }
-
-    vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, const double timestep,
-                                                const tubex::Function& f,  const ibex::IntervalVector& x0)
+    vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, const tubex::Function& f,
+                                           const ibex::IntervalVector& x0, const double timestep)
     {
         int a_capd_dim = f.nb_vars();
         int a_ibex_dim = a_capd_dim+1;
@@ -368,19 +234,10 @@ namespace tubex
     }
 
 
-    TubeVector capd2tubex (json j)
+    int capd2tubex(TubeVector& result, const ibex::Interval& domain, const tubex::Function& f,
+                   const ibex::IntervalVector& x0, const double timestep)
     {
-        vector<IntervalVector> ibex_curve = capd2ibex(j);
-        TubeVector output_tube =  ibex2tubex(ibex_curve);
-        output_tube.serialize(j["config"]["tubex_output"]);
-        return(output_tube);
-    }
-
-
-    int capd2tubex(TubeVector& result, const ibex::Interval& domain, const double timestep,
-                          const tubex::Function& f,  const ibex::IntervalVector& x0)
-    {
-        vector<IntervalVector> ibex_curve = capd2ibex(domain, timestep, f, x0);
+        vector<IntervalVector> ibex_curve = capd2ibex(domain, f, x0, timestep);
         if (ibex_curve.size()>0)
         {
             result = ibex2tubex(ibex_curve);

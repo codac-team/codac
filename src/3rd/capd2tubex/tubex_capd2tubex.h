@@ -19,13 +19,15 @@
 namespace tubex
 {
   /** \brief  Returns a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD
-   * \param j json file that gives the parameter to CAPD to perform the guaranteed integration
+
+   * \param f function that we would like to integrate
+   * \param x0 The initial condition
+   * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timesep by itself
+   * to increase calculation speed
    */
-  std::vector<ibex::IntervalVector> capd2ibex(nlohmann::json j);
 
-
-  std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, const double timestep,
-                                              const tubex::Function& f, const ibex::IntervalVector& x0);
+  std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, const tubex::Function& f,
+                                              const ibex::IntervalVector& x0,const double timestep=0);
 
 
   /** \brief Convert a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD into a
@@ -36,12 +38,16 @@ namespace tubex
 
   /** \brief Combination of capd2ibex and ibex2tubex, to generate a tube from a curve obtained by
    * the guaranteed integration of CAPD
-   * \param j json file that gives the parameter to CAPD to perform the guaranteed integration
+   * \param result Tube Vector that will store the result of the integration
+   * \param domain period of tine on which we would like to perform the integration
+   * \param f function that we would like to integrate
+   * \param x0 The initial condition
+   * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timesep by itself
+   * to increase calculation speed
    */
-  tubex::TubeVector capd2tubex (nlohmann::json j);
 
-  int capd2tubex(tubex::TubeVector& result, const ibex::Interval& domain, const double timestep,
-                 const tubex::Function& f,  const ibex::IntervalVector& x0);
+  int capd2tubex(tubex::TubeVector& result, const ibex::Interval& domain, const tubex::Function& f,
+                 const ibex::IntervalVector& x0, const double timestep=0);
 }
 
 #endif
