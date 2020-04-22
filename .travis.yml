@@ -7,18 +7,19 @@ language: c++
 addons:
   apt:
     sources:
-      - deadsnakes
-      - chef-current-precise
-      - ubuntu-toolchain-r-test
+    - deadsnakes
+    - chef-current-precise
 
     packages:
-      - cmake
+    - cmake
 
 matrix:
   include:
   - os: linux
     addons:
       apt:
+        sources:
+          - ubuntu-toolchain-r-test
         packages:
           - g++-5
     env:
@@ -26,6 +27,8 @@ matrix:
   - os: linux
     addons:
       apt:
+        sources:
+          - ubuntu-toolchain-r-test
         packages:
           - g++-7
     env:
@@ -33,6 +36,8 @@ matrix:
   - os: linux
     addons:
       apt:
+        sources:
+          - ubuntu-toolchain-r-test
         packages:
           - g++-8
     env:

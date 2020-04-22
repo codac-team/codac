@@ -294,7 +294,7 @@ Contributors
   :columns: 4
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
-  * `Benoît Desrochers <www.ensta-bretagne.fr/desrochers>`_
+  * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
   * `Gilles Chabert <https://web.imt-atlantique.fr/x-info/gchabe08/>`_
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * Julien Damers
