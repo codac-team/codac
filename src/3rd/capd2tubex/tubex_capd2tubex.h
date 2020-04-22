@@ -14,7 +14,6 @@
 
 #include "tubex_TubeVector.h"
 #include "ibex_IntervalVector.h"
-#include "json/json.hpp"
 
 namespace tubex
 {
