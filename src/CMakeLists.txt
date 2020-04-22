@@ -16,17 +16,16 @@ Name: tubex
 Description: ${TUBEX_DESCRIPTION}
 Url: ${TUBEX_URL}
 Version: ${TUBEX_VERSION}
-<<<<<<< HEAD
 Requires: ibex\n")
 if(WITH_CAPD)
-    file(APPEND ${TUBEX_PKG_CONFIG_FILE} "Cflags: -I\${includedir}/ibex -I\${includedir}/tubex -I\${includedir}/tubex-rob -I\${includedir}/tubex-pyibex -I\${includedir}/tubex-capd\n")
-    file(APPEND  ${TUBEX_PKG_CONFIG_FILE} "Libs: -L\${libdir} -ltubex -ltubex-rob -ltubex-pyibex -ltubex-capd -ltubex")
+    file(APPEND ${TUBEX_PKG_CONFIG_FILE} "Cflags: -I\${includedir}/ibex -I\${includedir}/tubex -I\${includedir}/tubex-rob -I\${includedir}/tubex-pyibex -I\${includedir}/tubex-ode\n")
+    file(APPEND  ${TUBEX_PKG_CONFIG_FILE} "Libs: -L\${libdir} -ltubex -ltubex-rob -ltubex-pyibex -ltubex-ode -ltubex")
 else()
     file(APPEND ${TUBEX_PKG_CONFIG_FILE} "Cflags: -I\${includedir}/ibex -I\${includedir}/tubex -I\${includedir}/tubex-rob -I\${includedir}/tubex-pyibex\n")
     file(APPEND  ${TUBEX_PKG_CONFIG_FILE} "Libs: -L\${libdir} -ltubex -ltubex-rob -ltubex-pyibex -ltubex")
 endif()
 # todo: specify minimum version of IBEX (in Requires field)
-# todo: update in case of optional 3rd party (ex: CAPD)
+# todo: update in case of optional 3rd party (ex: ODE)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tubex.pc DESTINATION ${CMAKE_INSTALL_PKGCONFIG})
 install(FILES ${PROJECT_SOURCE_DIR}/tubex-config.cmake DESTINATION ${CMAKE_INSTALL_CMAKE})
