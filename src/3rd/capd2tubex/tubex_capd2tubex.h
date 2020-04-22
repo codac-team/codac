@@ -24,8 +24,8 @@ namespace tubex
   std::vector<ibex::IntervalVector> capd2ibex(nlohmann::json j);
 
 
-  std::vector<ibex::IntervalVector> capd2ibex(ibex::Interval& domain, double timestep,
-                                              tubex::Function& f, ibex::IntervalVector& x0);
+  std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, const double timestep,
+                                              const tubex::Function& f, const ibex::IntervalVector& x0);
 
 
   /** \brief Convert a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD into a
@@ -39,6 +39,9 @@ namespace tubex
    * \param j json file that gives the parameter to CAPD to perform the guaranteed integration
    */
   tubex::TubeVector capd2tubex (nlohmann::json j);
+
+  int capd2tubex(tubex::TubeVector& result, const ibex::Interval& domain, const double timestep,
+                 const tubex::Function& f,  const ibex::IntervalVector& x0);
 }
 
 #endif

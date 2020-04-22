@@ -167,8 +167,12 @@ namespace tubex
         IntervalVector a_ibex(a_ibex_dim);
         vector<ibex::IntervalVector> ibex_curve;
 
+        // Generate the string that CAPD will process to compute
         string capd_string ="var:";
-        string function_string = f.expr();
+        string function_string = f.expr().substr(1, f.expr().size() - 2); // removing outside parentheses
+        const char comma = ',';
+        const char semicolon = ';';
+        replace(function_string.begin(),function_string.end(),semicolon,comma);
         for(int i=0;i<a_capd_dim-1; i++)
         {
             capd_string.append(f.arg_name(i));
@@ -180,17 +184,100 @@ namespace tubex
 
         if (function_string.size()>2)
         {
-            capd_string.append(function_string.substr(1, function_string.size() - 2));
+            capd_string.append(function_string);
+            capd_string.append(";");
         }
         else
         {
-            // TODO return an empty vector
+            return ibex_curve;
         }
 
-        cout << capd_string <<endl;
+        try
+        {
 
-        return (ibex_curve);
+            // This is the vector field we want to generate
+            IMap vectorField(capd_string); //
 
+            // CAPD processing
+
+            // The solver uses high order enclosure method to verify the existence
+            // of the solution.
+            // The order will be set to 20.
+            IOdeSolver solver(vectorField,20);
+
+            // Set a fixed integration step if needed
+            if (timestep!=0)
+            {
+                solver.setStep(timestep);
+            }
+            ITimeMap timeMap(solver);
+
+            // This is our initial condition
+            IVector a_capd(a_capd_dim);
+            for (int i = 0; i<a_capd_dim; i++)
+            {
+                a_capd[i] = capd::interval(x0[i].lb(),x0[i].ub());
+            }
+            // define a doubleton representation of the interval vector x
+            C0Rect2Set s(a_capd);
+
+            // Here we start to integrate. The time of integration is set to the value given in the json file.
+            double T=domain.ub();
+            timeMap.stopAfterStep(true);
+            capd::interval prevTime(0.);
+
+            do
+            {
+                timeMap(T,s);
+                capd::interval stepMade = solver.getStep();
+                //cout << "\nstep made: " << stepMade;
+                // This is how we can extract an information
+                // about the trajectory between time steps.
+                // The type CurveType is a function defined
+                // on the interval [0,stepMade].
+                // It can be evaluated at a point (or interval).
+                // The curve can be also differentiated wrt to time.
+                // We can also extract from it the 1-st order derivatives wrt.
+                const IOdeSolver::SolutionCurve& curve = solver.getCurve();
+                capd::interval domain = capd::interval(0,1)*stepMade;
+
+                // Here we use a uniform grid of last time step made
+                // to enclose the trajectory between time steps.
+                // You can use your own favorite subdivision, perhaps nonuniform,
+                // depending on the problem you want to solve.
+                int grid=2;
+                for(int i=0;i<grid;++i)
+                {
+                    capd::interval subsetOfDomain = capd::interval(i,i+1)*stepMade/grid;
+                    // The above interval does not need to be a subset of domain.
+                    // This is due to rounding to floating point numbers.
+                    // We take the intersection with the domain.
+                    intersection(domain,subsetOfDomain,subsetOfDomain);
+                    // Here we evaluated curve at the interval subsetOfDomain.
+                    // v will contain rigorous bound for the trajectory for this time interval.
+                    IVector v = curve(subsetOfDomain);
+                    capd::interval currentTime = prevTime + subsetOfDomain;
+
+                    // Converting capd box into an IBEX one
+                    a_ibex[0] = ibex::Interval(currentTime.left().leftBound(),currentTime.right().rightBound());
+                    for (int i=0; i< a_capd_dim; i++)
+                    {
+                        a_ibex[i+1] = ibex::Interval(v[i].left().leftBound(),v[i].right().rightBound());
+                    }
+                    // Adding our computed box to the curve in IBEX format
+                    ibex_curve.push_back(a_ibex);
+
+                }
+                prevTime = timeMap.getCurrentTime();
+            }while(!timeMap.completed());
+
+        }
+
+        catch(exception& e)
+        {
+            cout << "\n\nException caught!\n" << e.what() << endl << endl;
+        }
+        return(ibex_curve);
 
     }
 
@@ -287,6 +374,22 @@ namespace tubex
         TubeVector output_tube =  ibex2tubex(ibex_curve);
         output_tube.serialize(j["config"]["tubex_output"]);
         return(output_tube);
+    }
+
+
+    int capd2tubex(TubeVector& result, const ibex::Interval& domain, const double timestep,
+                          const tubex::Function& f,  const ibex::IntervalVector& x0)
+    {
+        vector<IntervalVector> ibex_curve = capd2ibex(domain, timestep, f, x0);
+        if (ibex_curve.size()>0)
+        {
+            result = ibex2tubex(ibex_curve);
+            return(EXIT_SUCCESS);
+        }
+        else
+        {
+            return (EXIT_FAILURE);
+        }
     }
 }
 
