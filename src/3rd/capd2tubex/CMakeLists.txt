@@ -8,8 +8,6 @@ list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd2tubex.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/tubex_TubeVectorODE.h
                 ${CMAKE_CURRENT_SOURCE_DIR}/tubex_TubeVectorODE.cpp)
 
-list(APPEND JSON ${CMAKE_CURRENT_SOURCE_DIR}/json/json.hpp)
-
 ################################################################################
 # Create the target for libtubex-capd
 ################################################################################
@@ -53,6 +51,5 @@ list(APPEND JSON ${CMAKE_CURRENT_SOURCE_DIR}/json/json.hpp)
 # Install files in system directories
 install(TARGETS tubex-capd DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES ${HDR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tubex-capd)
-install(FILES ${JSON} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tubex-capd/json)
 install(FILES ${TUBEX_3RD_CAPD_MAIN_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tubex-capd)
 

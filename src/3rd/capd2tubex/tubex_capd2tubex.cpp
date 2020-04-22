@@ -16,17 +16,16 @@ using namespace capd;
 using namespace ibex;
 using namespace tubex;
 
-using json = nlohmann::json;
-
 namespace tubex
 {
      // namespace tubex
 
 
 
-    vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, const tubex::Function& f,
-                                           const ibex::IntervalVector& x0, const double timestep)
+    vector<ibex::IntervalVector> capd2ibex(const ibex::Interval domain, const tubex::Function& f, const ibex::IntervalVector& x0,
+                                           const double timestep)
     {
+
         int a_capd_dim = f.nb_vars();
         int a_ibex_dim = a_capd_dim+1;
 
@@ -234,10 +233,9 @@ namespace tubex
     }
 
 
-    int capd2tubex(TubeVector& result, const ibex::Interval& domain, const tubex::Function& f,
-                   const ibex::IntervalVector& x0, const double timestep)
+    int capd2tubex(TubeVector& result,const tubex::Function& f, const ibex::IntervalVector& x0, const double timestep)
     {
-        vector<IntervalVector> ibex_curve = capd2ibex(domain, f, x0, timestep);
+        vector<IntervalVector> ibex_curve = capd2ibex(result.domain(), f, x0, timestep);
         if (ibex_curve.size()>0)
         {
             result = ibex2tubex(ibex_curve);

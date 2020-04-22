@@ -25,8 +25,8 @@ namespace tubex
    * to increase calculation speed
    */
 
-  std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, const tubex::Function& f,
-                                              const ibex::IntervalVector& x0,const double timestep=0);
+  std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval domain, const tubex::Function& f, const ibex::IntervalVector& x0,
+                                              const double timestep=0);
 
 
   /** \brief Convert a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD into a
@@ -45,7 +45,7 @@ namespace tubex
    * to increase calculation speed
    */
 
-  int capd2tubex(tubex::TubeVector& result, const ibex::Interval& domain, const tubex::Function& f,
+  int capd2tubex(tubex::TubeVector& result,const tubex::Function& f,
                  const ibex::IntervalVector& x0, const double timestep=0);
 }
 
