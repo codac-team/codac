@@ -1,10 +1,5 @@
 .. _sec-manual-introduction-label:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
-
 ############
 Introduction
 ############
@@ -100,7 +95,7 @@ By *reliable*, we mean that all sources of uncertainties are taken into account,
 - measurement noise
 - uncertainties related to time discretization
 - linearization truncatures
-- approximation of real numbers by floating-point numbers
+- approximation of real numbers by floating-point values
 
 The outcomes are intervals and tubes that are guaranteed to contain the solutions of the system.
 This is well suited for proof purposes as we always consider worst-case possibilities when delineating the boundaries of the solution sets.
