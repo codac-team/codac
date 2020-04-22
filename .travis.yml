@@ -55,7 +55,7 @@ cache:
 install:
   
   # For documentation
-  - sudo pip install sphinx_rtd_theme breathe sphinx-tabs
+  - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
 
 #  - docker pull $DOCKER_IMAGE
