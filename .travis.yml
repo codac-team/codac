@@ -65,6 +65,7 @@ install:
   
   - pwd
   - ls
+  - export ORIGIN_DIR=$PWD
 
   # IBEX
   - cd $HOME
@@ -108,7 +109,7 @@ script:
   - py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
   - echo "$py_version"
   
-  - cd $HOME/build/SimonRohou/tubex-lib
+  - cd $ORIGIN_DIR
   - pwd
   - ls
   - git submodule init ; git submodule update # for pybind11 submodule
