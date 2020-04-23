@@ -1,4 +1,4 @@
-.. _sec-manual-intervals-label:
+.. _sec-manual-intervals:
 
 .. warning::
   

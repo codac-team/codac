@@ -1,4 +1,4 @@
-.. _sec-manual-domains-label:
+.. _sec-manual-domains:
 
 .. warning::
   

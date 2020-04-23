@@ -1,4 +1,4 @@
-.. _sec-manual-figmap-label:
+.. _sec-manual-figmap:
 
 .. warning::
   

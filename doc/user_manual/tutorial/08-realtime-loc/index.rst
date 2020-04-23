@@ -1,4 +1,4 @@
-.. _sec-tuto-realtime-loc-label:
+.. _sec-tuto-realtime-loc:
 
 .. warning::
   

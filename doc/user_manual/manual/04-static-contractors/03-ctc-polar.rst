@@ -1,4 +1,4 @@
-.. _sec-manual-ctcpolar-label:
+.. _sec-manual-ctcpolar:
 
 .. warning::
   

@@ -1,4 +1,4 @@
-.. _sec-tuto-static-rangeonly-loc-label:
+.. _sec-tuto-static-rangeonly-loc:
 
 .. warning::
   

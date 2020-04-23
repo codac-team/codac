@@ -1,4 +1,4 @@
-.. _sec-manual-realtime-label:
+.. _sec-manual-realtime:
 
 .. warning::
   

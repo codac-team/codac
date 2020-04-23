@@ -1,4 +1,4 @@
-.. _sec-tuto-interval-analysis-label:
+.. _sec-tuto-interval-analysis:
 
 .. warning::
   

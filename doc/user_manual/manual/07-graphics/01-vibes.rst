@@ -1,4 +1,4 @@
-.. _sec-manual-vibes-label:
+.. _sec-manual-vibes:
 
 .. warning::
   

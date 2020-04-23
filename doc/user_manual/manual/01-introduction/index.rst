@@ -1,4 +1,4 @@
-.. _sec-manual-introduction-label:
+.. _sec-manual-introduction:
 
 ############
 Introduction

@@ -1,4 +1,4 @@
-.. _sec-manual-vardyn-label:
+.. _sec-manual-vardyn:
 
 .. warning::
   

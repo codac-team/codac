@@ -1,4 +1,4 @@
-.. _sec-manual-goingfurther-label:
+.. _sec-manual-goingfurther:
 
 .. warning::
   

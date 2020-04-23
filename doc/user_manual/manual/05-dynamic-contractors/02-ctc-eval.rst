@@ -1,4 +1,4 @@
-.. _sec-manual-ctceval-label:
+.. _sec-manual-ctceval:
 
 .. warning::
   

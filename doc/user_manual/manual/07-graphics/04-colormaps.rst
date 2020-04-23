@@ -1,4 +1,4 @@
-.. _sec-manual-colormaps-label:
+.. _sec-manual-colormaps:
 
 .. warning::
   

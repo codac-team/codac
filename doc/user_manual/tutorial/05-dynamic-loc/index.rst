@@ -1,4 +1,4 @@
-.. _sec-tuto-dynamic-loc-label:
+.. _sec-tuto-dynamic-loc:
 
 .. warning::
   

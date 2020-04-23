@@ -1,4 +1,4 @@
-.. _sec-manual-ctcfunction-label:
+.. _sec-manual-ctcfunction:
 
 .. warning::
   

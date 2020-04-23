@@ -1,4 +1,4 @@
-.. _sec-extensions-capd-howto-label:
+.. _sec-extensions-capd-howto:
 
 .. warning::
   

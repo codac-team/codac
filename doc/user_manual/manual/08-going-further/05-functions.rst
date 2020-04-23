@@ -1,4 +1,4 @@
-.. _sec-manual-functions-label:
+.. _sec-manual-functions:
 
 .. warning::
   

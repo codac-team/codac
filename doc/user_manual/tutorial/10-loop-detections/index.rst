@@ -1,4 +1,4 @@
-.. _sec-tuto-loop-detections-label:
+.. _sec-tuto-loop-detections:
 
 .. warning::
   

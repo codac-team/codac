@@ -1,4 +1,4 @@
-.. _sec-manual-pavings-label:
+.. _sec-manual-pavings:
 
 .. warning::
   

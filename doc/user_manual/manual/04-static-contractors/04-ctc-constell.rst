@@ -1,4 +1,4 @@
-.. _sec-manual-ctcconstell-label:
+.. _sec-manual-ctcconstell:
 
 .. warning::
   

@@ -1,4 +1,4 @@
-.. _sec-manual-cn-label:
+.. _sec-manual-cn:
 
 .. warning::
   

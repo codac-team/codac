@@ -1,4 +1,4 @@
-.. _sec-manual-ctcderiv-label:
+.. _sec-manual-ctcderiv:
 
 .. warning::
   

@@ -1,4 +1,4 @@
-.. _sec-tuto-data-association-label:
+.. _sec-tuto-data-association:
 
 .. warning::
   

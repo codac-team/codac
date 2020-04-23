@@ -1,4 +1,4 @@
-.. _sec-tuto-static-loc-label:
+.. _sec-tuto-static-loc:
 
 .. warning::
   

@@ -1,4 +1,4 @@
-.. _sec-start-cpp-project-label:
+.. _sec-start-cpp-project:
 
 ###################
 Start a C++ project
@@ -6,7 +6,7 @@ Start a C++ project
 
 .. tip::
    | You are using Python?
-   | :ref:`sec-start-py-project-label`
+   | :ref:`sec-start-py-project`
 
 | Tubex is ready to be used on your computer.
 | You can now copy-paste the following example code in a file named :file:`main.cpp`:

@@ -1,4 +1,4 @@
-.. _sec-manual-ctcdelay-label:
+.. _sec-manual-ctcdelay:
 
 .. warning::
   

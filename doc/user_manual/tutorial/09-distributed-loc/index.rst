@@ -1,4 +1,4 @@
-.. _sec-tuto-distributed-loc-label:
+.. _sec-tuto-distributed-loc:
 
 .. warning::
   

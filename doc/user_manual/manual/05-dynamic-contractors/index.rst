@@ -1,4 +1,4 @@
-.. _sec-manual-contractors-dyn-label:
+.. _sec-manual-contractors-dyn:
 
 .. warning::
   

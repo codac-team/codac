@@ -1,4 +1,4 @@
-.. _sec-manual-figtube-label:
+.. _sec-manual-figtube:
 
 .. warning::
   

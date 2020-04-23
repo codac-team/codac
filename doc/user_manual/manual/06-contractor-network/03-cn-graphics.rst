@@ -1,4 +1,4 @@
-.. _sec-manual-graph-label:
+.. _sec-manual-graph:
 
 .. warning::
   

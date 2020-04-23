@@ -1,4 +1,4 @@
-.. _sec-manual-serializ-label:
+.. _sec-manual-serializ:
 
 .. warning::
   

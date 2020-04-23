@@ -1,4 +1,4 @@
-.. _sec-manual-ctcibex-label:
+.. _sec-manual-ctcibex:
 
 .. warning::
   

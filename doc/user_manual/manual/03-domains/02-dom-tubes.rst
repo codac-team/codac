@@ -1,4 +1,4 @@
-.. _sec-manual-tubes-label:
+.. _sec-manual-tubes:
 
 .. warning::
   

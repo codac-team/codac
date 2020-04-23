@@ -1,4 +1,4 @@
-.. _sec-tuto-rangeonly-slam-label:
+.. _sec-tuto-rangeonly-slam:
 
 .. warning::
   

@@ -1,4 +1,4 @@
-.. _sec-tuto-introduction-label:
+.. _sec-tuto-introduction:
 
 .. warning::
   
@@ -17,6 +17,6 @@ Get ready
 ---------
 
 Make sure that Tubex and its dependencies are installed on your computer.
-You also need the VIBes viewer for visualization. The details are provided in :ref:`sec-installation-label`.
+You also need the VIBes viewer for visualization. The details are provided in :ref:`sec-installation`.
 
-Then, start a new project as explained in :ref:`sec-start-cpp-project-label` or :ref:`sec-start-py-project-label` and verify that it is displaying information about a simple tube in the terminal.
+Then, start a new project as explained in :ref:`sec-start-cpp-project` or :ref:`sec-start-py-project` and verify that it is displaying information about a simple tube in the terminal.

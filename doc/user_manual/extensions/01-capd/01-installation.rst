@@ -1,4 +1,4 @@
-.. _sec-extensions-capd-install-label:
+.. _sec-extensions-capd-install:
 
 .. warning::
   

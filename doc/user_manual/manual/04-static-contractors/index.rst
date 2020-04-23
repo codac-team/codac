@@ -1,4 +1,4 @@
-.. _sec-manual-contractors-label:
+.. _sec-manual-contractors:
 
 .. warning::
   

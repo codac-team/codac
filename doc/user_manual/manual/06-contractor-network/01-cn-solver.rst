@@ -1,4 +1,4 @@
-.. _sec-manual-solver-label:
+.. _sec-manual-solver:
 
 .. warning::
   

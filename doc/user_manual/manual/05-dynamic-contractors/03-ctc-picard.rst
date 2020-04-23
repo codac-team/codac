@@ -1,4 +1,4 @@
-.. _sec-manual-ctcpicard-label:
+.. _sec-manual-ctcpicard:
 
 .. warning::
   

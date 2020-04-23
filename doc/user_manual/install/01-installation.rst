@@ -1,4 +1,4 @@
-.. _sec-installation-label:
+.. _sec-installation:
 
 ############################
 Installing the Tubex library

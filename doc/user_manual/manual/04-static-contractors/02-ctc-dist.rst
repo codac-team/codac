@@ -1,4 +1,4 @@
-.. _sec-manual-ctcdistance-label:
+.. _sec-manual-ctcdistance:
 
 .. warning::
   
