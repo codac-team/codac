@@ -1,63 +1,155 @@
 .. _sec-manual-vardyn:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
-
-********************************
-Dynamic variables (trajectories)
-********************************
+************
+Trajectories
+************
 
 .. contents::
 
-A trajectory :math:`x(\cdot):\mathbb{R}\to\mathbb{R}` is a set of values defined over some domain. When values are analytically defined, a ``Function`` object can be used for instantiating the trajectory. In Tubex, a ``Function`` is the extension of IBEX's ``Function`` objects, for the dynamical case (see more `about IBEX's functions <http://www.ibex-lib.org/doc/function.html>`_).
+A trajectory :math:`x(\cdot):[t_0,t_f]\to\mathbb{R}` is a set of real values defined over some temporal domain :math:`[t_0,t_f]`. There are two ways to define a trajectory:
 
-In Tubex, functions are defined with `variables` as in IBEX, but a system variable :math:`t` will be predefined. These temporal functions are interesting for inter-temporal evaluations such as integral computations, delays, time uncertainties, and so on. This will be detailed thereafter.
+* with some analytic formula, by using a ``Function`` object ;
+* from a map of values.
 
-A simple temporal function can be defined and used for building a trajectory:
+
+Defining a trajectory from an analytic function
+-----------------------------------------------
+
+It must be emphasized that the mathematical functions mentioned here are not related to programming functions in C++ or Python.
+
+A simple temporal function [#f1]_ can be defined and used for building a trajectory:
 
 .. tabs::
 
   .. code-tab:: c++
 
-    Interval domain(0.,10.);
-    tubex::Function f("cos(t)+sin(t*2)");
-    Trajectory x(domain, f);
+    Interval tdomain(0.,10.);                             // temporal domain: [t_0,t_f]
+    Trajectory x(tdomain, Function("cos(t)+sin(2*t)"));   // defining x(·) as: t ↦ cos(t)+sin(2t)
+
+  .. code-tab:: py
+
+    # todo
+
+Usual functions such as :math:`\cos`, :math:`\log`, *etc.* can be used to define a ``Function`` object. The convention used for these definitions is the one of IBEX (`read more <http://www.ibex-lib.org/doc/function.html>`_). Note that the system variable :math:`t` is a predefined variable of ``Function`` objects, that does not appear in IBEX's objects.
+
+The evaluation of a trajectory at some time :math:`t`, for instance :math:`y=x(t)`, is performed with parentheses:
+
+.. tabs::
+
+  .. code-tab:: c++
+
+    double y = x(M_PI);                                   // y = cos(π)+sin(2π) = -1
 
   .. code-tab:: py
 
     # todo
 
 In this code, :math:`x(\cdot)` is implemented from the expression :math:`t\mapsto\cos(t)+\sin(2t)`, and no numerical approximation is performed: the formula is embedded in the object and the representation is accurate.
+However, the evaluation of the trajectory may lead to numerical errors related to the approximation of real numbers by floating-point values.
+For instance, if we change the decimal precision to format floating-point values and then print the value of ``y``, we can see that the result is not exactly :math:`-1`:
 
-Another way to build :math:`x(\cdot)` would be to implement it as a map of values; :math:`x(\cdot)` will then be discontinuous. This is useful nonetheless, in case of actual data coming from sensors or numerical models. The following example shows the differences:
+.. tabs::
+
+  .. code-tab:: c++
+
+    #include <iomanip>                                    // for std::setprecision()
+
+    double y = x(M_PI);                                   // y = cos(π)+sin(2π) = -1
+    cout << setprecision(10) << y << endl;
+    // Output:
+    // -1.0000000000000006661338147750939242541790008544921875
+
+  .. code-tab:: py
+
+    # todo
+
+| This is not only due to the approximation made on :math:`\pi`, that could be reliably handled by some :math:`[\pi]`.
+| A reliable evaluation of :math:`x(\cdot)` can be done by specifying :math:`t` as a degenerate interval :math:`[t]`. This produces an interval evaluation that is reliable: the output is also an interval that is guaranteed to contain the actual value despite floating-point uncertainties: :math:`[y]=x([t])`.
+
+.. tabs::
+
+  .. code-tab:: c++
+
+    Interval y = x(Interval::pi());                       // y = cos(π)+sin(2π) = -1
+    cout << setprecision(10) << y << endl;
+    // Output:
+    // [-1.000000000000002, -0.9999999999999991]
+
+  .. code-tab:: py
+
+    # todo
+
+This also works for large temporal evaluations as long as :math:`[t]\subseteq[t_0,t_f]`.  
+
+
+Defining a trajectory from a map of values
+------------------------------------------
+
+Another way to build :math:`x(\cdot)` is to implement it as a map of discrete values. :math:`x(\cdot)` is supposed to be continuous and so linear interpolation is performed between each value of the map.
+These trajectories are useful in case of actual data coming from sensors or numerical models. The following example provides a comparison between the two kinds of trajectory definitions:
 
 .. tabs::
 
   .. code-tab:: c++
 
     // Trajectory from a formula
-    Trajectory x(Interval(0.,10.),
-                 tubex::Function("cos(t)+sin(t*2)"));
+    Trajectory x_f(Interval(0.,10.), Function("cos(t)+sin(2*t)"));
     
     // Trajectory from a map of values
     map<double,double> values;
     for(double t = 0. ; t <= 10. ; t+=0.5)
-      values[t] = cos(t)+sin(t*2);
-    Trajectory y(values);
+      values[t] = cos(t)+sin(2*t);
+    Trajectory x_m(values);
 
     // Graphics
-    fig.add_trajectory(&x, "x", "red");
-    fig.add_trajectory(&y, "y", "blue");
+    fig.add_trajectory(&x_f, "x_f", "red");
+    fig.add_trajectory(&x_m, "x_m", "blue");
 
   .. code-tab:: py
 
     # todo
 
 .. figure:: img/02_trajs.png
+  
+  In red, the trajectory defined from the analytical function. In blue, a trajectory made of 21 points with linear interpolation.
 
 Note that when building a trajectory from a map, there is no need to specify the temporal domain; it will be evaluated as the envelope of the keys of the map.
+
+It is also possible to define a trajectory from an analytical function and represent it with a map of values. This can be necessary for various operations on trajectories that are not available for analytical definitions, such as arithmetic operations.
+
+.. tabs::
+
+  .. code-tab:: c++
+
+    // Analytical definition but sampling representation with dt=0.5:
+    Trajectory x_1(Interval(0.,10.), Function("cos(t)+sin(2*t)"), 0.5);
+
+    // Same as before, in two steps. x_1 == x_2
+    Trajectory x_2(Interval(0.,10.), Function("cos(t)+sin(2*t)"));
+    x_2.sample(0.5);
+
+  .. code-tab:: py
+
+    # todo
+
+The following table summarizes the operations supported for each kind of trajectory definition.
+
+=================================  ================  ==================
+Operations                         Analytical def.   Map of values def.
+=================================  ================  ==================
+``codomain()``                     ✓                 ✓                 
+evaluations                        ✓                 ✓                 
+``first_value()``                  ✓                 ✓                 
+``last_value()``                   ✓                 ✓                 
+``set()``                                            ✓                 
+``truncate_domain()``              ✓                 ✓                 
+``shift_domain()``                 ✓                 ✓                 
+``sample()``                       ✓                 ✓                 
+``make_continuous()``                                ✓                 
+``primitive()``                    ✓                 ✓                 
+``diff()``                         ✓                 ✓                 
+arithmetics (:math:`+,-,\cdot,/`)                    ✓                 
+=================================  ================  ==================
 
 
 Operations on trajectories
@@ -180,3 +272,7 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
     # todo
 
 Next page presents several methods to use tubes, as envelopes of trajectories.
+
+
+.. rubric:: Footnotes
+.. [#f1] In Tubex, a ``tubex::Function`` is the extension of IBEX's ``ibex::Function`` objects, for the dynamical case (see more `about IBEX's functions <http://www.ibex-lib.org/doc/function.html>`_).

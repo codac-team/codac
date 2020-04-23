@@ -1,8 +1,8 @@
 .. _sec-manual-varstatic:
 
-************************************
-Static variables (vectors, matrices)
-************************************
+*****************
+Vectors, matrices
+*****************
 
 Basic structures such as vectors :math:`\mathbf{x}` or matrices :math:`\mathbf{X}` are proposed in order to handle constants, measurements or parameters.
 

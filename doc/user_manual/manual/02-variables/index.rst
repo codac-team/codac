@@ -1,8 +1,8 @@
 .. _sec-manual-variables:
 
-######################
-Variables: real values
-######################
+################################
+Basic structures for real values
+################################
 
 Tubex provides basic structures to handle real values such as vectors :math:`\mathbf{x}`, matrices :math:`\mathbf{X}` and trajectories :math:`x(\cdot)`. They can for instance represent variables we are looking for in our constraint networks, as well as measurements or parameters. The may also represent the bounds of our domains.
 

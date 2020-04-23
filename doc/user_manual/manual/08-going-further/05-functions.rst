@@ -11,6 +11,9 @@ Functions
 
 .. contents::
 
+Mathematical functions (that are not related to programming functions) are defined with `variables`.  These temporal functions are interesting for inter-temporal evaluations such as integral computations, delays, time uncertainties, and so on. This will be detailed thereafter.
+
+The system variable :math:`t` is a predefined variable of ``Function`` objects.
 
 An extended interval calculator
 -------------------------------

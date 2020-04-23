@@ -170,6 +170,7 @@ html_static_path = ['_static']
 html_css_files = [
     'custom-sphinx-tabs.css',
     'custom-sphinx-tables.css',
+    'custom-sphinx-lists.css',
 ]
 
 # Add any extra paths that contain custom files (such as robots.txt or
