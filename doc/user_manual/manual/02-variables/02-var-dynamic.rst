@@ -125,6 +125,7 @@ Finally, to add a point to a mapped trajectory, the following function can be us
 
 Other features and details can be found in the technical datasheet of the Trajectory class.
 
+.. _sec-manual-vardyn-trajectoryvector:
 
 The vector case
 ---------------

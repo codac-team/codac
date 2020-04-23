@@ -348,6 +348,8 @@ See also the following methods:
 **Note:** be careful when updating a tube without the use of dedicated contractors. Tube discretization has to be kept in mind whenever an update is performed for some input :math:`t`. For guaranteed operations, please see the *Contractors* section.
 
 
+.. _sec-manual-tubes-tubevector:
+
 The vector case
 ---------------
 
