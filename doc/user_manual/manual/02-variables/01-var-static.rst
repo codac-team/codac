@@ -63,7 +63,7 @@ Vector operations are available to handle ``Vector`` objects:
 
 Note that these operations are also available for other vector types: :ref:`matrices <sec-manual-varstatic-matrices>`, :ref:`boxes <sec-manual-intervals-boxes>`, :ref:`vectors of trajectories <sec-manual-vardyn-trajectoryvector>`, and :ref:`vectors of tubes <sec-manual-tubes-tubevector>`.
 
-Basic arithmetic operations are applicable on vectors such as binary operators (+,-,*,/):
+Basic arithmetic operations are applicable on vectors such as binary operators: :math:`+,-,\cdot,/`
 
 .. tabs::
 
