@@ -1,13 +1,10 @@
 .. _sec-manual-domains:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
-
 ###################################
 Domains: sets of feasible variables
 ###################################
+
+Constraint programming consists in reducing sets of feasible solutions by applying constraints. The constraints are dealt with by operators called *contractors*, presented in :ref:`the next part of this manual <sec-manual-contractors>`. The sets are called *domains*, introduced now.
 
 .. toctree::
 

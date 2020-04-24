@@ -134,25 +134,6 @@ It is also possible to define a trajectory from an analytical function while rep
 
 The ``Function`` object is only used for the initialization. The resulting trajectory is only defined as a map of values.
 
-The following table summarizes the operations supported for each kind of trajectory definition.
-
-=================================  ================  ==================
-Operations                         Analytical def.   Map of values def.
-=================================  ================  ==================
-``codomain()``                     ✓                 ✓                 
-evaluations                        ✓                 ✓                 
-``first_value()``                  ✓                 ✓                 
-``last_value()``                   ✓                 ✓                 
-``set()``                                            ✓                 
-``truncate_domain()``              ✓                 ✓                 
-``shift_domain()``                 ✓                 ✓                 
-``sample()``                       ✓                 ✓                 
-``make_continuous()``                                ✓                 
-``primitive()``                    ✓                 ✓                 
-``diff()``                         ✓                 ✓                 
-arithmetics (:math:`+,-,\cdot,/`)                    ✓                 
-=================================  ================  ==================
-
 
 Operations on trajectories
 --------------------------
@@ -218,6 +199,25 @@ Finally, to add a point to a mapped trajectory, the following function can be us
     # todo
 
 Other features and details can be found in the technical datasheet of the ``Trajectory`` class.
+
+Finally, we summarize in the following table the operations supported for each kind of trajectory definition.
+
+=================================  ================  ==================
+Operations                         Analytical def.   Map of values def.
+=================================  ================  ==================
+``codomain()``                     ✓                 ✓                 
+evaluations                        ✓                 ✓                 
+``first_value()``                  ✓                 ✓                 
+``last_value()``                   ✓                 ✓                 
+``set()``                                            ✓                 
+``truncate_domain()``              ✓                 ✓                 
+``shift_domain()``                 ✓                 ✓                 
+``sample()``                       ✓                 ✓                 
+``make_continuous()``                                ✓                 
+``primitive()``                    ✓                 ✓                 
+``diff()``                         ✓                 ✓                 
+arithmetics (:math:`+,-,\cdot,/`)                    ✓                 
+=================================  ================  ==================
 
 
 .. _sec-manual-vardyn-trajectoryvector:

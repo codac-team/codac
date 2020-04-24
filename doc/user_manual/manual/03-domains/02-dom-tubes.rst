@@ -11,7 +11,7 @@ Tubes
 
 .. contents::
 
-Uncertain trajectories can be handled by tubes. This page gives simple operations that can be made on tubes. Next sections will provide concrete applications and show the main advantages of this framework.
+Uncertain trajectories can be handled by tubes that are intervals of trajectories: a reliable way to handle uncertainties over time. This page gives simple operations that can be made on tubes. Next sections will provide concrete applications and show the main advantages of this framework.
 
 
 Tubes and slices
