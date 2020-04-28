@@ -89,7 +89,7 @@ Matrices
 
   .. code-tab:: c++
 
-    Matrix m1({{1,2,3},{4,5,6}});  // creates a 2x3 matrix
+    Matrix m1({{1,2,3},{4,5,6}});  // creates a 2×3 matrix
     cout << m1 << endl;
     // Outputs:
     // ((1 ; 2 ; 3)
@@ -101,8 +101,8 @@ Matrices
     //  (2 ; 5)
     //  (3 ; 6))
 
-    Matrix m2 = ones(2,2);         // a 2x2 matrix of ones
-    Matrix m3 = eye(3);            // a 3x3 identity matrix
+    Matrix m2 = ones(2,2);         // a 2×2 matrix of ones
+    Matrix m3 = eye(3);            // a 3×3 identity matrix
 
   .. code-tab:: py
 

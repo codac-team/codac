@@ -23,7 +23,7 @@ A simple temporal function [#f1]_ can be defined and used for building a traject
 
   .. code-tab:: c++
 
-    Interval tdomain(0.,10.);                    // temporal domain: [t_0,t_f]
+    Interval tdomain(0.,10.);                           // temporal domain: [t_0,t_f]
     Trajectory x(tdomain, Function("cos(t)+sin(2*t)")); // defining x(·) as: t ↦ cos(t)+sin(2t)
 
   .. code-tab:: py
@@ -205,18 +205,18 @@ Finally, we summarize in the following table the operations supported for each k
 =================================  ================  ==================
 Operations                         Analytical def.   Map of values def.
 =================================  ================  ==================
-``codomain()``                     ✓                 ✓                 
-evaluations                        ✓                 ✓                 
-``first_value()``                  ✓                 ✓                 
-``last_value()``                   ✓                 ✓                 
-``set()``                                            ✓                 
-``truncate_domain()``              ✓                 ✓                 
-``shift_domain()``                 ✓                 ✓                 
-``sample()``                       ✓                 ✓                 
-``make_continuous()``                                ✓                 
-``primitive()``                    ✓                 ✓                 
-``diff()``                         ✓                 ✓                 
-arithmetics (:math:`+,-,\cdot,/`)                    ✓                 
+``codomain()``                     ✓                 ✓
+evaluations                        ✓                 ✓
+``first_value()``                  ✓                 ✓
+``last_value()``                   ✓                 ✓
+``set()``                                            ✓
+``truncate_domain()``              ✓                 ✓
+``shift_domain()``                 ✓                 ✓
+``sample()``                       ✓                 ✓
+``make_continuous()``                                ✓
+``primitive()``                    ✓                 ✓
+``diff()``                         ✓                 ✓
+arithmetics (:math:`+,-,\cdot,/`)                    ✓
 =================================  ================  ==================
 
 

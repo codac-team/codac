@@ -322,43 +322,33 @@ Main related publications
 .. _loopdetect-pdf: https://www.ensta-bretagne.fr/jaulin/paper_loop.pdf
 
 
-+------+------------------+---------------------------------+------------------------------+-------------------------+
-|      |                  |                                 |                              |                         |
-| 2020 | |datasso-pdf|_   | Set-membership state            | S. Rohou, B. Desrochers,     | ICRA Conference         |
-|      |                  | estimation by solving           | L. Jaulin,                   |                         |
-|      |                  | data association                |                              |                         |
-+------+------------------+---------------------------------+------------------------------+-------------------------+
-|      |                  |                                 |                              |                         |
-| 2019 | |robloc-pdf|_    | Reliable robot localization: a  | S. Rohou, L. Jaulin,         | ISTE Ltd, Wiley         |
-|      |                  | constraint-programming approach | L. Mihaylova, F. Le Bars,    |                         |
-|      |                  | over dynamical systems          | S. M. Veres                  |                         |
-+------+------------------+---------------------------------+------------------------------+-------------------------+
-|      |                  |                                 |                              |                         |
-| 2018 | |loopproof-pdf|_ | Proving the existence of loops  | S. Rohou, P. Franek,         | International Journal   |
-|      |                  | in robot trajectories           | C. Aubry, L. Jaulin          | of Robotics Research    |
-|      |                  |                                 |                              |                         |
-|      |                  |                                 |                              |                         |
-+------+------------------+---------------------------------+------------------------------+-------------------------+
-|      |                  |                                 |                              |                         |
-| 2018 | |tubeval-pdf|_   | Reliable non-linear state       | S. Rohou, L. Jaulin,         | Automatica              |
-|      |                  | estimation involving time       | L. Mihaylova, F. Le Bars,    |                         |
-|      |                  | uncertainties                   | S. M. Veres                  |                         |
-+------+------------------+---------------------------------+------------------------------+-------------------------+
-|      |                  |                                 |                              |                         |
-| 2017 | |tubint-pdf|_    | Guaranteed computation of       | S. Rohou, L. Jaulin,         | Robotics and Autonomous |
-|      |                  | robot trajectories              | L. Mihaylova, F. Le Bars,    | Systems                 |
-|      |                  |                                 | S. M. Veres                  |                         |
-+------+------------------+---------------------------------+------------------------------+-------------------------+
-|      |                  |                                 |                              |                         |
-| 2016 | |polar-pdf|_     | A Minimal contractor for the    | B. Desrochers,               | Engineering             |
-|      |                  | Polar equation                  | L. Jaulin                    | Applications of         |
-|      |                  |                                 |                              | Artificial Intelligence |
-+------+------------------+---------------------------------+------------------------------+-------------------------+
-|      |                  |                                 |                              |                         |
-| 2013 | |loopdetect-pdf|_| Loop detection of mobile robots | C. Aubry, R. Desmare,        | Automatica              |
-|      |                  | using interval analysis         | L. Jaulin                    |                         |
-|      |                  |                                 |                              |                         |
-+------+------------------+---------------------------------+------------------------------+-------------------------+
+====  =================  ===============================  =========================  ========================
+2020  |datasso-pdf|_     Set-membership state             S. Rohou, B. Desrochers,   ICRA Conference         
+                         estimation by solving            L. Jaulin                                          
+                         data association                                                                    
+                                                                                                             
+2019  |robloc-pdf|_      Reliable robot localization: a   S. Rohou, L. Jaulin,       ISTE Ltd, Wiley         
+                         constraint-programming approach  L. Mihaylova, F. Le Bars,                          
+                         over dynamical systems           S. M. Veres                                        
+                                                                                                             
+2018  |loopproof-pdf|_   Proving the existence of loops   S. Rohou, P. Franek,       International Journal   
+                         in robot trajectories            C. Aubry, L. Jaulin        of Robotics Research    
+                                                                                                             
+2018  |tubeval-pdf|_     Reliable non-linear state        S. Rohou, L. Jaulin,       Automatica              
+                         estimation involving time        L. Mihaylova, F. Le Bars,                          
+                         uncertainties                    S. M. Veres                                        
+                                                                                                             
+2017  |tubint-pdf|_      Guaranteed computation of        S. Rohou, L. Jaulin,       Robotics and Autonomous 
+                         robot trajectories               L. Mihaylova, F. Le Bars,  Systems                 
+                                                          S. M. Veres                                        
+                                                                                                             
+2016  |polar-pdf|_       A Minimal contractor for the     B. Desrochers,             Engineering             
+                         Polar equation                   L. Jaulin                  Applications of         
+                                                                                     Artificial Intelligence 
+                                                                                                             
+2013  |loopdetect-pdf|_  Loop detection of mobile robots  C. Aubry, R. Desmare,      Automatica              
+                         using interval analysis          L. Jaulin                                          
+====  =================  ===============================  =========================  ========================
 
 
 How to cite this project?

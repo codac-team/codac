@@ -1,10 +1,5 @@
 .. _sec-manual-intervals:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
-
 *******************
 Intervals and boxes
 *******************
@@ -38,6 +33,7 @@ Intervals, boxes and interval matrices
 
       Interval x(0, 10);                          // [0,10]
       Interval x(1, POS_INFINITY);                // [1,∞]
+      Interval x(NEG_INFINITY, -10);              // [-∞,-10]
     
     .. code-tab:: py
 
@@ -62,16 +58,35 @@ Intervals, boxes and interval matrices
 
       # todo
 
-* | ``IntervalVector x(int n)`` is used for vectors of intervals, also called *boxes*.
+  Note that the constant ``Interval::pi()`` provides a reliable enclosure of the :math:`\pi` value, that cannot be exactly represented in a computer with a single floating-point value.
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      Interval x = Interval::pi();                // [π]
+      // x = [3.141592653589793, 3.141592653589794]
+    
+    .. code-tab:: py
+
+      # todo
+
+
+* | ``IntervalVector x(int n)`` is used for :math:`n`-d vectors of intervals, also called *boxes*.
   | For instance:
 
   .. tabs::
 
     .. code-tab:: c++
 
-      IntervalVector x(2, Interval(-1,3));        // creates [x]=[-1,3]x[-1,3]=[-1,3]^2
-      IntervalVector y{{3,4},{4,6}};              // creates [y]= [3,4]x[4,6]
+      IntervalVector x(2, Interval(-1,3));        // creates [x]=[-1,3]×[-1,3]=[-1,3]^2
+      IntervalVector y{{3,4},{4,6}};              // creates [y]= [3,4]×[4,6]
       IntervalVector z(3, Interval::pos_reals()); // creates [z]=[0,∞]^3
+      IntervalVector w(y);                        // creates a copy: [w]=[y]
+
+      Vector v(3, 0.42);                          // one vector (0.42;0.42;0.42)
+      IntervalVector iv(v);                       // creates one box that wraps v:
+                                                  //   [0.42,0.42]×[0.42,0.42]×[0.42,0.42]
     
     .. code-tab:: py
 
@@ -83,11 +98,30 @@ Intervals, boxes and interval matrices
 
     .. code-tab:: c++
 
-      x[1] = Interval(0,10);                      // updates to [x]=[-1,3]x[0,10]
+      x[1] = Interval(0,10);                      // updates to [x]=[-1,3]×[0,10]
     
     .. code-tab:: py
 
       # todo
+
+  The vector operations to handle ``Vector`` objects can also be used for boxes:
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      int n = x.size();             // box dimension (number of components): 2
+      x.resize(5);                  // updates [x] to [-1,3]×[0,10]×[-∞,∞]×[-∞,∞]×[-∞,∞]
+      IntervalVector m = x.subvector(1,2); // creates [m]=[0,10]×[-∞,∞]
+      x.put(y,2);                   // updates [x] to [-1,3]×[0,10]×[3,4]×[4,6]×[-∞,∞]
+
+    .. code-tab:: py
+
+      # todo
+
+
+* | ``IntervalMatrix`` is also available.
+  | One can refer to the `documentation of IBEX <http://www.ibex-lib.org/doc/interval.html#matrices-and-array-of-matrices>`_ for more information.
 
 
 .. _sec-manual-intervals-empty-set:
@@ -95,12 +129,105 @@ Intervals, boxes and interval matrices
 The empty set
 -------------
 
+In mathematics, the empty set is the unique set having no elements; it corresponds to one entity while in Tubex (as in IBEX/pyIbex) there exists one empty set representation for each class of domain.
+
+.. note::
+
+  In our framework, empty sets correspond to domains that do not contain feasible solutions. This may be the result of a **too restrictive definition** of the problem, for instance due to some errors in the model or because of **outliers in the dataset**.
+
+The empty set of an ``Interval`` object is given by:
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      Interval x = Interval::empty_set();         // ∅
+    
+    .. code-tab:: py
+
+      # todo
+
+For boxes (interval vectors), we have to specify their dimension even in case of empty set. This differs from mathematical definitions, by allows simple operations when programming with boxes.
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      IntervalVector x = IntervalVector::empty(3); // ∅×∅×∅
+    
+    .. code-tab:: py
+
+      # todo
+
 
 .. _sec-manual-intervals-operations:
 
 Set operations
 --------------
 
+Set operations are available for ``Interval`` and ``IntervalVector`` objects (see the `official reference <http://www.ibex-lib.org/doc/interval.html#set-membership-operations>`_). In the following table, if :math:`[x]` is an interval object, :math:`d` is a real value.
+
+====================================  =======================================================
+Code                                  Meaning
+====================================  =======================================================
+``x==y``                              :math:`[x]=[y]`
+``x!=y``                              :math:`[x]\neq [y]`
+``x.is_empty()``                      :math:`[x]=\emptyset`
+``x.is_subset(y)``                    :math:`[x]\subseteq [y]`
+``x.is_strict_subset(y)``             :math:`[x]\subseteq [y]\wedge [x]\neq [y]`
+``x.is_superset(y)``                  :math:`[x]\supseteq [y]`
+``x.is_strict_superset(y)``           :math:`[x]\supseteq [y]\wedge [x]\neq [y]`
+``x.contains(p)``                     :math:`d\in [x]`
+``x.intersects(y)``                   :math:`[x]\cap [y]\neq\emptyset`
+``x.is_disjoint(y)``                  :math:`[x]\cap [y]=\emptyset`
+``x.overlaps(y)``                     :math:`\mathring{[x]}\cap \mathring{[y]}\neq\emptyset`
+====================================  =======================================================
+
+| Where :math:`\mathring{[x]}` denotes the interior of :math:`[x]`.
+| In addition of these test functions, operations on sets are available:
+
+====================================  =======================================================
+Code                                  Meaning
+====================================  =======================================================
+``x&y``                               :math:`[x]\cap [y]`
+``x|y``                               :math:`[x]\sqcup[y]`
+``x.set_empty()``                     :math:`[x]\leftarrow \emptyset`
+``x=y``                               :math:`[x]\leftarrow [y]`
+``x&=y``                              :math:`[x]\leftarrow ([x]\cap [y])`
+``x|=y``                              :math:`[x]\leftarrow ([x]\sqcup[y])`
+====================================  =======================================================
+
+Finally, one can also access properties of the sets. First for ``Interval``:
+
+==================  =========================  ==================================================================
+Return type         Code                       Meaning
+==================  =========================  ==================================================================
+``double``          ``x.lb()``                 :math:`\underline{x}`, the lower (left) bound of :math:`[x]`
+``double``          ``x.ub()``                 :math:`\overline{x}`, the upper (right) bound of :math:`[x]`
+``double``          ``x.diam()``               diameter, :math:`|\overline{x}-\underline{x}|`
+``double``          ``x.rad()``                radius, half of the diameter
+``double``          ``x.mid()``                the midpoint, (:math:`(\underline{x}+\overline{x})/2`)
+``Interval``        ``x.inflate(eps)``         an interval with the same midpoint and radius increased by ``eps``
+``bool``            ``x.is_unbounded()``       true iff :math:`[x]` has one of its bounds infinite
+==================  =========================  ==================================================================
+
+Then for ``IntervalVector``:
+
+==================  =========================  ==================================================================
+Return type         Code                       Meaning
+==================  =========================  ==================================================================
+``Vector``          ``x.lb()``                 lower-left corner (vector of  lower bounds of :math:`[x]`)
+``Vector``          ``x.ub()``                 upper-right corner (vector of  upper bounds of :math:`[x]`)
+``Vector``          ``x.diam()``               vector of diameters, :math:`|\overline{x_i}-\underline{x_i}|`
+``double``          ``x.min_diam()``           minimal diameter, among all components of [x]
+``double``          ``x.max_diam()``           maximal diameter, among all components of [x]
+``Vector``          ``x.rad()``                vector of radii  (halves of diameters)
+``Vector``          ``x.mid()``                the midpoint, (:math:`(\underline{x}+\overline{x})/2`)
+``double``          ``x.volume()``             the volume of the box
+``bool``            ``x.is_flat()``            true if the volume is null (one dimension is degenerated)
+``IntervalVector``  ``x.inflate(eps)``         new box: same midpoint and each radius increased by ``eps``
+``bool``            ``x.is_unbounded()``       true iff :math:`[x]` has one of its bounds infinite
+==================  =========================  ==================================================================
 
 
 .. _sec-manual-intervals-arithmetic:
@@ -108,7 +235,48 @@ Set operations
 Interval arithmetic
 -------------------
 
-One can compute the following simple operations on intervals:
+Interval analysis is based on the extension of all classical real arithmetic operators.
+Consider two intervals :math:`[x]` and :math:`[y]` and an operator :math:`\diamond\in\left\{+,-,\cdot,/\right\}`. We define :math:`[x]\diamond[y]` as the smallest interval containing all feasible values for :math:`x\diamond y`, assuming that :math:`x\in[x]` and :math:`y\in[y]`.
+
+.. math::
+
+  [x]\diamond[y]&=&\left[\left\{x\diamond y\in\mathbb{R} \mid x\in[x],y\in[y]\right\}\right],\\
+  \left[x\right]\diamond\varnothing&=&\varnothing.
+
+Dealing with closed intervals, most of the operations can rely on their bounds. It is for instance the case of addition, difference, union, *etc.*:
+
+.. math::
+
+  \begin{eqnarray}
+    [x]+[y]&=&\left[\underline{x}+\underline{y},\overline{x}+\overline{y}\right],\\
+    \left[x\right]-\left[y\right]& = &\left[\underline{x}-\overline{y},\overline{x}-\underline{y}\right],\\
+    \left[x\right]\sqcup\left[y\right]& = &\left[\min\left(\underline{x},\underline{y}\right),\max\left(\overline{x},\overline{y}\right)\right],\\
+    \left[x\right]\cap\left[y\right]& = &\left[\max\left(\underline{x},\underline{y}\right),\min\left(\overline{x},\overline{y}\right)\right] \textrm{if} \max\left\{\underline{x},\underline{y}\right\}\leqslant\min\left\{\overline{x},\overline{y}\right\},\nonumber\\
+    ~ & = & \varnothing \textrm{ otherwise}.
+  \end{eqnarray}
+
+Low-level libraries upon which Tubex has been built provide functionnalities for computing arithmetic on intervals, involving basic operations as weel as non-linear functions. The following functions can be used:
+
+=========================  ==================================================================
+Code                       Meaning
+=========================  ==================================================================
+``sqr(x)``                 :math:`[x]^2`
+``sqrt(x)``                :math:`\sqrt{[x]}`
+``pow(x,n)``               :math:`[x]^n`
+``pow(x,y)``               :math:`[x]^{[y]} = e^{[y]\log([x])}`
+``root(x,n)``              :math:`\sqrt[n]{[x]}`
+``exp(x)``                 :math:`\exp([x])`
+``log(x)``                 :math:`\log([x])`
+``cos(x)``                 :math:`\cos([x])`
+``sin(x)``                 :math:`\sin([x])`
+``tan(x)``                 :math:`\tan([x])`
+``acos(x)``                :math:`\textrm{acos}([x])`
+``asin(x)``                :math:`\textrm{asin}([x])`
+``atan(x)``                :math:`\textrm{atan}([x])`
+``atan2(y,x)``             :math:`\textrm{atan2}([y],[x])`
+=========================  ==================================================================
+
+The use on intervals is transparent:
 
 .. tabs::
 
@@ -125,3 +293,6 @@ One can compute the following simple operations on intervals:
   .. code-tab:: py
 
     # todo
+
+
+If intervals and boxes are used to handle static variables, tubes provide a way to deal with trajectories.
