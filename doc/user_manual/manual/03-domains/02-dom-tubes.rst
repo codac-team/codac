@@ -1,31 +1,39 @@
 .. _sec-manual-tubes:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
-
 *****
 Tubes
 *****
 
+We now focus on *dynamical* items that are evolving with time.
+The trajectories :math:`x(\cdot)` and vector of trajectories :math:`\mathbf{x}(\cdot)`, presented :ref:`in the previous pages <sec-manual-vardyn>`, have also their interval counterpart: **tubes**. This page provides the main uses of these sets. They will be involved afterwards for solving problems related to differential equations.
+
 .. contents::
 
-Uncertain trajectories can be handled by tubes that are intervals of trajectories: a reliable way to handle uncertainties over time. This page gives simple operations that can be made on tubes. Next sections will provide concrete applications and show the main advantages of this framework.
+
+Definition
+----------
+
+A tube is defined over a temporal domain :math:`[t_0,t_f]` as an envelope of trajectories that are defined over the same domain :math:`[t_0,t_f]`. We speak about an *envelope* as it may exist trajectories enclosed in the tube that are not solutions of our problem.
+
+In this library, a tube :math:`[x](\cdot):[t_0,t_f]\rightarrow\mathbb{IR}` is an interval of two trajectories :math:`[\underline{x}(\cdot),\overline{x}(\cdot)]` such that :math:`\forall t\in[t_0,t_f]`, :math:`\underline{x}(t)\leqslant\overline{x}(t)`. We also consider empty tubes that depict an absence of solutions, denoted :math:`\varnothing(\cdot)`.
+A trajectory :math:`x(\cdot)` belongs to the tube :math:`\left[x\right](\cdot)` if :math:`\forall t\in[t_0,t_f], x\left(t\right)\in\left[x\right]\left(t\right)`. 
+
+.. figure:: img/tube_def.png
+
+  Illustration a one-dimensional tube enclosing a trajectory :math:`x^*(\cdot)` plotted in orange. The figure shows two interval evaluations: :math:`[x]([t_1])` and :math:`[x](t_2)`.
+
+.. note::
+
+  **Important:** we assume that all the tubes and/or the trajectories involved in a given resolution process share the same domain :math:`[t_0,t_f]`.
 
 
-Tubes and slices
-----------------
+Slices
+------
 
-In Tubex, tubes are necessarily implemented as lists of slices. The details about this choice will be provided thereafter.
+| In Tubex, tubes are implemented as lists of slices.
+| More precisely, a tube :math:`[x](\cdot)` with a sampling time :math:`\delta>0` is implemented as a box-valued function which is constant for all :math:`t` inside intervals :math:`[k\delta,k\delta+\delta]`, :math:`k\in\mathbb{N}`.
 
-More precisely, a tube :math:`[x](\cdot)` with a sampling time :math:`\delta>0` is implemented as a box-valued function which is constant for all :math:`t` inside intervals :math:`[k\delta,k\delta+\delta]`, :math:`k\in\mathbb{N}`.
-
-The box :math:`[k\delta,k\delta+\delta]\times\left[x\right]\left(t_{k}\right)`, with :math:`t_{k}\in[k\delta,k\delta+\delta]`, is called the :math:`k`-th slice of the tube :math:`[x](\cdot)` and is denoted by :math:`[x](k)`. The resulting approximation of a tube encloses :math:`[x^{-}(\cdot),x^{+}(\cdot)]` inside an interval of step functions :math:`[\underline{x^{-}}(\cdot),\overline{x^{+}}(\cdot)]` such that:
-
-.. math::
-
-  \forall t\in[t_0,t_f],~\underline{x^{-}}(t)\leqslant x^{-}(t)\leqslant x^{+}(t)\leqslant\overline{x^{+}}(t)
+The box :math:`[k\delta,k\delta+\delta]\times\left[x\right]\left(t_{k}\right)`, with :math:`t_{k}\in[k\delta,k\delta+\delta]`, is called the :math:`k`-th slice of the tube :math:`[x](\cdot)` and is denoted by :math:`[\![x]\!]^{(k)}`.
 
 .. figure:: img/02_tube_slices.png
 
@@ -94,6 +102,30 @@ As tubes are interval of trajectories, a ``Tube`` can be defined from ``Trajecto
 .. figure:: img/02_interval_trajs.png
 
   Result of tube :math:`[x_9](\cdot)=[\cos(t),\cos(t)+\frac{t}{10}]`, made of 100 slices.
+
+.. #include <tubex.h>
+.. 
+.. using namespace std;
+.. using namespace tubex;
+.. 
+.. int main()
+.. {
+..   float timestep = 0.1;
+..   Interval domain(0.,10.);
+.. 
+..   TrajectoryVector traj(domain, tubex::Function("(cos(t) ; cos(t)+t/10)"));
+..   Tube x(traj[0], traj[1], timestep);
+.. 
+..   vibes::beginDrawing();
+.. 
+..   VIBesFigTube fig("Tube");
+..   fig.set_properties(100, 100, 600, 300);
+..   fig.add_tube(&x, "x", "#376D7C[lightGray]");
+..   fig.add_trajectories(&traj, "trajs");
+..   fig.show(true);
+.. 
+..   vibes::endDrawing();
+.. }
 
 It is also possible to create a tube from an uncertain function:
 
@@ -439,3 +471,45 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
 
 
 Further pages will be written soon, presenting contractors, bisections, fixed point resolutions, graphical tools and robotic applications.
+
+.. _sec-manual-tubes-sampling:
+
+Sampling
+--------
+
+
+.. figure:: img/sampled_tube.png
+
+
+.. #include <tubex.h>
+.. 
+.. using namespace std;
+.. using namespace tubex;
+.. 
+.. int main()
+.. {
+..   float timestep = 0.2;
+..   Interval domain(0.,10.);
+.. 
+..   TrajectoryVector traj(domain, tubex::Function("(cos(t) ; cos(t)+t/10)"));
+..   Tube x(domain, Interval::empty_set());
+.. 
+..   double t = domain.lb();
+..   while(t < domain.ub())
+..   {
+..     x.sample(t);
+..     t += timestep/10. + fabs(cos(t)/10.);
+..   }
+.. 
+..   x |= traj[0]; x |= traj[1];
+.. 
+..   vibes::beginDrawing();
+.. 
+..   VIBesFigTube fig("Tube");
+..   fig.set_properties(100, 100, 600, 300);
+..   fig.add_tube(&x, "x", "#376D7C[lightGray]");
+..   fig.add_trajectories(&traj, "trajs");
+..   fig.show(true);
+.. 
+..   vibes::endDrawing();
+.. }
