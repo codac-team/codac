@@ -144,7 +144,7 @@ If the use of IBEX is transparent in several robotic applications presented in t
 ------------------------------------------------------
 
 ********************************
-Using IBEX in python with pyIbex
+Using IBEX in Python with pyIbex
 ********************************
 
 .. Figure:: ../../img/pyibex_logo.jpg

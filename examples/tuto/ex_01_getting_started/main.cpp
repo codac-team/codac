@@ -47,7 +47,7 @@ int main()
 
     Interval e_y(-0.1,0.1);
     vector<Interval> y = {1.9+e_y, 3.6+e_y, 2.8+e_y}; // set of range-only observations
-    vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of 2d landmarks
+    vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of the three 2d landmarks
     vector<double>   t = {0.3, 1.5, 2.0};             // times of measurements
 
 
@@ -59,15 +59,17 @@ int main()
 
   /* =============== 3. Adding the contractors to a network =============== */
 
-    ContractorNetwork cn;                             // creating a network
-    cn.add(ctc_f, {v, x, u});                         // adding the f constraint
+    ContractorNetwork cn;        // creating a network
+    cn.add(ctc_f, {v, x, u});    // adding the f constraint
 
-    for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation...
+    for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
     {
       IntervalVector& p = cn.create_var(IntervalVector(4)); // intermediate variable
-      // Adding the distance constraint:
+
+      // Distance constraint: relation between the state at t_1 and the range-only value
       cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
-      // Link between an observation at t_i and all states over [t_0,t_f]
+      
+      // Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
       cn.add(ctc::eval, {t[i], p, x, v});
     }
 

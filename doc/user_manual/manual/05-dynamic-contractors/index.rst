@@ -1,13 +1,10 @@
 .. _sec-manual-contractors-dyn:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
-
 ############################################
 Catalog of contractors for dynamical systems
 ############################################
+
+We now focus on time-related constraints. The following contractors provide a way to apply them on various domains including tubes, intervals and boxes.
 
 .. toctree::
 
