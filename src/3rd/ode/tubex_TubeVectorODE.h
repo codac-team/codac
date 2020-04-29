@@ -22,7 +22,7 @@
 
 namespace tubex
 {
-    int TubeVectorODE(tubex::TubeVector& result, const tubex::Function& f, const ibex::IntervalVector& x0,
+    tubex::TubeVector TubeVectorODE(const ibex::Interval& domain, const tubex::Function& f, const ibex::IntervalVector& x0,
                       const double timestep=DEFAULT_TIMESTEP, const int mode=CAPD_MODE);
 
 }

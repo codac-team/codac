@@ -45,8 +45,7 @@ namespace tubex
    * to increase calculation speed
    */
 
-  int capd2tubex(tubex::TubeVector& result,const tubex::Function& f,
-                 const ibex::IntervalVector& x0, const double timestep=0);
+  tubex::TubeVector capd2tubex(const ibex::Interval& domain, const tubex::Function& f, const ibex::IntervalVector& x0, const double timestep);
 }
 
 #endif

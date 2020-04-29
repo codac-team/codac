@@ -233,18 +233,10 @@ namespace tubex
     }
 
 
-    int capd2tubex(TubeVector& result,const tubex::Function& f, const ibex::IntervalVector& x0, const double timestep)
+    TubeVector capd2tubex(const ibex::Interval& domain, const tubex::Function& f, const ibex::IntervalVector& x0, const double timestep)
     {
-        vector<IntervalVector> ibex_curve = capd2ibex(result.domain(), f, x0, timestep);
-        if (ibex_curve.size()>0)
-        {
-            result = ibex2tubex(ibex_curve);
-            return(EXIT_SUCCESS);
-        }
-        else
-        {
-            return (EXIT_FAILURE);
-        }
+        vector<IntervalVector> ibex_curve = capd2ibex(domain, f, x0, timestep);
+        return(ibex2tubex(ibex_curve));
     }
 }
 

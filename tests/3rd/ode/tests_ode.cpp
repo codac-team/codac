@@ -19,9 +19,7 @@ TEST_CASE("Capd2Tubex_1")
         x0[0]=Interval(0.5,0.5);
         x0[1]=Interval(0,0);
         double timestep = 0.001;
-        TubeVector output(domain,f.nb_vars());
-        int success = capd2tubex(output,f,x0,timestep);
-        REQUIRE(success==EXIT_SUCCESS);
+        TubeVector output = capd2tubex(domain,f,x0,timestep);
         IntervalVector a1 = output(1.0);
         IntervalVector expected(2);
         expected[0] = Interval(0.1121125007098844, 0.1123948125529081);
@@ -41,10 +39,8 @@ TEST_CASE("TubeVectorODE_1")
         x0[0]=Interval(0.5,0.5);
         x0[1]=Interval(0,0);
         double timestep = 0.001;
-        TubeVector output(domain,f.nb_vars());
         int mode = CAPD_MODE;
-        int success = TubeVectorODE(output,f,x0,timestep,mode);
-        REQUIRE(success==EXIT_SUCCESS);
+        TubeVector output = TubeVectorODE(domain,f,x0,timestep,mode);
         IntervalVector a1 = output(1.0);
         IntervalVector expected(2);
         expected[0] = Interval(0.1121125007098844, 0.1123948125529081);
