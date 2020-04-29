@@ -71,6 +71,8 @@ Intervals, boxes and interval matrices
 
       # todo
 
+  
+.. _sec-manual-intervals-boxes:
 
 * | ``IntervalVector x(int n)`` is used for :math:`n`-d vectors of intervals, also called *boxes*.
   | For instance:
@@ -119,6 +121,8 @@ Intervals, boxes and interval matrices
 
       # todo
 
+
+.. _sec-manual-intervals-matrices:
 
 * | ``IntervalMatrix`` is also available.
   | One can refer to the `documentation of IBEX <http://www.ibex-lib.org/doc/interval.html#matrices-and-array-of-matrices>`_ for more information.
@@ -172,15 +176,15 @@ Code                                  Meaning
 ====================================  =======================================================
 ``x==y``                              :math:`[x]=[y]`
 ``x!=y``                              :math:`[x]\neq [y]`
-``x.is_empty()``                      :math:`[x]=\emptyset`
+``x.is_empty()``                      :math:`[x]=\varnothing`
 ``x.is_subset(y)``                    :math:`[x]\subseteq [y]`
 ``x.is_strict_subset(y)``             :math:`[x]\subseteq [y]\wedge [x]\neq [y]`
 ``x.is_superset(y)``                  :math:`[x]\supseteq [y]`
 ``x.is_strict_superset(y)``           :math:`[x]\supseteq [y]\wedge [x]\neq [y]`
 ``x.contains(p)``                     :math:`d\in [x]`
-``x.intersects(y)``                   :math:`[x]\cap [y]\neq\emptyset`
-``x.is_disjoint(y)``                  :math:`[x]\cap [y]=\emptyset`
-``x.overlaps(y)``                     :math:`\mathring{[x]}\cap \mathring{[y]}\neq\emptyset`
+``x.intersects(y)``                   :math:`[x]\cap [y]\neq\varnothing`
+``x.is_disjoint(y)``                  :math:`[x]\cap [y]=\varnothing`
+``x.overlaps(y)``                     :math:`\mathring{[x]}\cap \mathring{[y]}\neq\varnothing`
 ====================================  =======================================================
 
 | Where :math:`\mathring{[x]}` denotes the interior of :math:`[x]`.
@@ -191,7 +195,7 @@ Code                                  Meaning
 ====================================  =======================================================
 ``x&y``                               :math:`[x]\cap [y]`
 ``x|y``                               :math:`[x]\sqcup[y]`
-``x.set_empty()``                     :math:`[x]\leftarrow \emptyset`
+``x.set_empty()``                     :math:`[x]\leftarrow \varnothing`
 ``x=y``                               :math:`[x]\leftarrow [y]`
 ``x&=y``                              :math:`[x]\leftarrow ([x]\cap [y])`
 ``x|=y``                              :math:`[x]\leftarrow ([x]\sqcup[y])`
@@ -294,5 +298,7 @@ The use on intervals is transparent:
 
     # todo
 
+
+------------------------------------------------------
 
 If intervals and boxes are used to handle static variables, tubes provide a way to deal with trajectories.

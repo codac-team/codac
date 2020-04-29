@@ -13,7 +13,7 @@ The trajectories :math:`x(\cdot)` and vector of trajectories :math:`\mathbf{x}(\
 Definition
 ----------
 
-A tube is defined over a temporal domain :math:`[t_0,t_f]` as an envelope of trajectories that are defined over the same domain :math:`[t_0,t_f]`. We speak about an *envelope* as it may exist trajectories enclosed in the tube that are not solutions of our problem.
+A tube is defined over a temporal *t*-domain :math:`[t_0,t_f]` as an envelope of trajectories that are defined over the same *t*-domain :math:`[t_0,t_f]`. We speak about an *envelope* as it may exist trajectories enclosed in the tube that are not solutions of our problem.
 
 In this library, a tube :math:`[x](\cdot):[t_0,t_f]\rightarrow\mathbb{IR}` is an interval of two trajectories :math:`[\underline{x}(\cdot),\overline{x}(\cdot)]` such that :math:`\forall t\in[t_0,t_f]`, :math:`\underline{x}(t)\leqslant\overline{x}(t)`. We also consider empty tubes that depict an absence of solutions, denoted :math:`\varnothing(\cdot)`.
 A trajectory :math:`x(\cdot)` belongs to the tube :math:`\left[x\right](\cdot)` if :math:`\forall t\in[t_0,t_f], x\left(t\right)\in\left[x\right]\left(t\right)`. 
@@ -24,7 +24,7 @@ A trajectory :math:`x(\cdot)` belongs to the tube :math:`\left[x\right](\cdot)` 
 
 .. note::
 
-  **Important:** we assume that all the tubes and/or the trajectories involved in a given resolution process share the same domain :math:`[t_0,t_f]`.
+  **Important:** we assume that all the tubes and/or the trajectories involved in a given resolution process share the same *t*-domain :math:`[t_0,t_f]`.
 
 
 Slices
@@ -51,7 +51,7 @@ Creating tubes
 
 The vocabulary for tubes involves two notions:
 
-* the **domain**, that represents the temporal domain :math:`[t_0,t_f]`
+* the **t-domain**, that represents the temporal domain :math:`[t_0,t_f]`
 * the **codomain**, that represents the set of feasible values of the tube :math:`[x]([t_0,t_f])`
 
 To create a ``Tube`` with a constant codomain:
@@ -60,16 +60,16 @@ To create a ``Tube`` with a constant codomain:
 
   .. code-tab:: c++
 
-    Interval domain(0.,10.);
+    Interval tdomain(0.,10.);
     
     // One-slice tubes:
-    Tube x1(domain);                                // [0,10]→[-∞,∞]
-    Tube x2(domain, Interval(0.,2.));               // [0,10]→[0,2]
+    Tube x1(tdomain);                                // [0,10]→[-∞,∞]
+    Tube x2(tdomain, Interval(0.,2.));               // [0,10]→[0,2]
 
     // 100-slices tubes:
     float dt = 0.1;
-    Tube x3(domain, dt, Interval(0.,2.));           // [0,10]→[0,2]
-    Tube x4(domain, dt, Interval::pos_reals());     // [0,10]→[0,∞]
+    Tube x3(tdomain, dt, Interval(0.,2.));           // [0,10]→[0,2]
+    Tube x4(tdomain, dt, Interval::pos_reals());     // [0,10]→[0,∞]
 
   .. code-tab:: py
 
@@ -90,26 +90,24 @@ To create a copy of a tube with the same time discretization, use:
 
     # todo
 
-As tubes are interval of trajectories, a ``Tube`` can be defined from ``Trajectory`` objects:
+As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Trajectory`` objects:
 
 .. tabs::
 
   .. code-tab:: c++
 
-    // Creating trajectories:
-    Trajectory traj1(domain, Function("cos(t)"));
-    Trajectory traj2(domain, Function("cos(t)+t/10"));
+    TrajectoryVector traj(tdomain, Function("(sin(t) ; cos(t) ; cos(t)+t/10)"));
 
-    Tube x8(traj1, dt);              // 100 slices tube enclosing cos(t)
-    Tube x9(traj1, traj2, dt);       // 100 slices tube defined as [cos(t),cos(t)+t/10]
+    Tube x8(traj[0], dt);            // 100 slices tube enclosing sin(t)
+    Tube x9(traj[1], traj[2], dt);   // 100 slices tube defined as [cos(t),cos(t)+t/10]
 
   .. code-tab:: py
 
     # todo
 
-.. figure:: img/02_interval_trajs.png
+.. figure:: img/interval_trajs.png
 
-  Result of tube :math:`[x_9](\cdot)=[\cos(t),\cos(t)+\frac{t}{10}]`, made of 100 slices.
+  Result of tubes :math:`[x_8](\cdot)=[\sin(t)]`, :math:`[x_9](\cdot)=[\cos(t),\cos(t)+\frac{t}{10}]`, made of 100 slices.
 
 .. #include <tubex.h>
 .. 
@@ -119,16 +117,18 @@ As tubes are interval of trajectories, a ``Tube`` can be defined from ``Trajecto
 .. int main()
 .. {
 ..   float dt = 0.1;
-..   Interval domain(0.,10.);
+..   Interval tdomain(0.,10.);
 .. 
-..   TrajectoryVector traj(domain, Function("(cos(t) ; cos(t)+t/10)"));
-..   Tube x(traj[0], traj[1], dt);
+..   TrajectoryVector traj(tdomain, Function("(sin(t) ; cos(t) ; cos(t)+t/10)"));
+..   Tube y(traj[0], dt);
+..   Tube x(traj[1], traj[2], dt);
 .. 
 ..   vibes::beginDrawing();
 .. 
 ..   VIBesFigTube fig("Tube");
 ..   fig.set_properties(100, 100, 600, 300);
 ..   fig.add_tube(&x, "x", "#376D7C[lightGray]");
+..   fig.add_tube(&y, "y", "#7C4837[lightGray]");
 ..   fig.add_trajectories(&traj, "trajs");
 ..   fig.show(true);
 .. 
@@ -141,7 +141,7 @@ It is also possible to create a tube from a thick function, where the uncertaint
 
   .. code-tab:: c++
 
-    Tube x10(domain, dt/10.,
+    Tube x10(tdomain, dt/10.,
              Function("-abs(cos(t)+t/5)+(t/2)*[-0.1,0.1]"));
 
   .. code-tab:: py
@@ -159,10 +159,10 @@ Finally, a tube can be seen as an envelope (union) of trajectories. And so the f
   .. code-tab:: c++
 
     float dt = 0.01;
-    Interval domain(0.,10.);
+    Interval tdomain(0.,10.);
 
-    Function f("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"); // 4d function
-    TrajectoryVector traj(domain, f); // 4d trajectory defined over [0,10]
+    Function f("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"); // 4d temporal function
+    TrajectoryVector traj(tdomain, f); // 4d trajectory defined over [0,10]
 
     // 1d tube [x](·) defined as a union of the 4 trajectories
     Tube x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3];
@@ -176,65 +176,213 @@ Which produces:
 .. figure:: img/02_union.png
 
 
+.. _sec-manual-tubes-tubevector:
+
+The vector case
+---------------
+
+| The extension to the vector case is the class ``TubeVector``, allowing to create tubes :math:`[\mathbf{x}](\cdot):[t_0,t_f]\to\mathbb{IR}^n`.
+| The following example
+
+.. tabs::
+
+  .. code-tab:: c++
+
+    // TubeVector from a formula; the function's output is two-dimensional
+    TubeVector x(tdomain, dt,
+                 Function("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
+                            cos(t)+sin(t/0.2)*[-0.1,0.1])"));
+
+  .. code-tab:: py
+
+    # todo
+
+produces (each dimension displayed on the same figure):
+
+.. figure:: img/02_tubevectors.png
+
+.. #include <tubex.h>
+.. 
+.. using namespace std;
+.. using namespace tubex;
+.. 
+.. int main()
+.. {
+..   float dt = 0.01;
+..   Interval tdomain(0.,10.);
+.. 
+..   // TubeVector as a union of trajectories
+..   TrajectoryVector traj(tdomain, Function("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"));
+..   Tube x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3];
+.. 
+..   // Inversion
+..   vector<Interval> v_t;
+..   x.invert(Interval(0.,0.2), v_t);
+.. 
+..   // Update
+..   x.set(Interval(0.,2.), Interval(5.,6.)); // then x([5,6])=[0,2]
+.. 
+..   // TubeVector from a formula; the function's output is two-dimensional
+..   TubeVector y(Interval(0.,10.), dt,
+..                Function("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
+..                           cos(t)+sin(t/0.2)*[-0.1,0.1])"));
+.. 
+..   vibes::beginDrawing();
+.. 
+..   VIBesFigTube fig("Tube");
+..   fig.set_properties(100, 100, 600, 300);
+..   fig.add_tube(&x, "x", "#376D7C[lightGray]");
+..   fig.add_trajectories(&traj, "trajs");
+.. 
+..   for(auto& t : v_t)
+..   {
+..     IntervalVector tbox = {t,{0.,0.2}};
+..     fig.draw_box(tbox, "red");     // boxes display
+..   }
+.. 
+..   fig.show();
+.. 
+..   VIBesFigTube fig_vec("TubeVector");
+..   fig_vec.set_properties(200, 200, 600, 300);
+..   fig_vec.add_tubes(&y, "y", "#376D7C[lightGray]");
+..   fig_vec.show();
+.. 
+..   vibes::endDrawing();
+.. }
+
+As for ``Vector`` and ``IntervalVector`` objects, a ``Tube`` component of a ``TubeVector`` is available by reference with ``[]``.
+Vector operations are also at hand:
+
+==============  =================================  =======================================
+Return type     Code                               Meaning
+==============  =================================  =======================================
+``int``         ``x.size()``                       number of dimensions of the tube vector
+--              ``x.resize(n)``                    adds or removes dimensions
+``TubeVector``  ``x.subvector(start_id, end_id)``  extracts a subvector from ``x``
+--              ``x.put(start_id, v)``             puts a subvector at ``start_id``
+==============  =================================  =======================================
+
+
+
 Evaluations
 -----------
 
-Once created, several evaluations of the tube can be made, as for trajectories. For instance:
+Once created, several evaluations of the tubes can be made, as for trajectories.
 
-.. tabs::
+  .. rubric:: Accessing values with ``()``
 
-  .. code-tab:: c++
+  .. tabs::
 
-    x.domain()         // temporal domain, returns [0, 10]
-    x.codomain()       // envelope of values, returns [-1, 1.79]
-    x(6.)              // evaluation of [x](·) at 6, returns [-0.28, 1.56]
-    x(Interval(5.,6.)) // evaluation of [x](·) over [5,6], returns [-0.96, 1.57]
+    .. code-tab:: c++
 
-  .. code-tab:: py
+      x(6.)                            // evaluation of [x](·) at 6
+      x(Interval(5.,6.))               // evaluation of [x](·) over [5,6]
+      x.codomain()                     // envelope of values
 
-    # todo
+    .. code-tab:: py
 
-The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])`, is also at hand and returns the set :math:`[t]` enclosing the preimages of :math:`[y]`. The ``invert()`` method returns the union of these subsets, or the set of solutions within a vector of ``Interval`` objects. The following example returns the different subsets of the inversion :math:`[x]^{-1}([0,0.2])` projected in red in next figure:
+      # todo
 
-.. tabs::
 
-  .. code-tab:: c++
+  .. rubric:: Inversion of tubes
 
-    vector<Interval> v_t;            // vector of preimages
-    x.invert(Interval(0.,0.2), v_t); // inversion
+  The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])`, is also at hand and returns the set :math:`[t]` enclosing the preimages of :math:`[y]`. The ``invert()`` method returns the union of these subsets, or the set of solutions within a vector of ``Interval`` objects. The following example returns the different subsets of the inversion :math:`[x]^{-1}([0,0.2])` projected in red in next figure:
 
-    for(auto& t : v_t)
-    {
-      IntervalVector tbox = {t,{0.,0.2}};
-      fig.draw_box(tbox, "red");     // boxes display
-    }
+  .. tabs::
 
-  .. code-tab:: py
+    .. code-tab:: c++
 
-    # todo
+      vector<Interval> v_t;            // vector of preimages
+      x.invert(Interval(0.,0.2), v_t); // inversion
 
-.. figure:: img/02_invert.png
+      for(auto& t : v_t)
+      {
+        IntervalVector tbox = {t,{0.,0.2}};
+        fig.draw_box(tbox, "red");     // boxes display
+      }
 
-Furthermore, other methods related to sets are available:
+    .. code-tab:: py
 
-.. tabs::
+      # todo
 
-  .. code-tab:: c++
-
-    x.volume()         // returns the volume (surface) of the tube
-    x.max_diam()       // greater diameter of the tube
-    x.diam()           // a trajectory representing all diameters
-
-  .. code-tab:: py
-
-    # todo
+  .. figure:: img/02_invert.png
 
 
 Operations on sets
 ------------------
 
+Set operations are available for ``Tube`` and ``TubeVector`` objects. In the following table, if :math:`[x](\cdot)` is a tube object, :math:`z(\cdot)` is a trajectory.
+
+==================  ====================================  ======================================================================
+Return type         Code                                  Meaning, :math:`\forall t\in[t_0,t_f]`
+==================  ====================================  ======================================================================
+``bool``            ``x==y``                              :math:`[x](t)=[y](t)`
+``bool``            ``x!=y``                              :math:`[x](t)\neq [y](t)`
+``bool``            ``x.is_empty()``                      :math:`[x](t)=\varnothing`
+``bool``            ``x.is_subset(y)``                    :math:`[x](t)\subseteq [y](t)`
+``bool``            ``x.is_strict_subset(y)``             :math:`[x](t)\subseteq [y](t)\wedge [x](t)\neq [y](t)`
+``bool``            ``x.is_superset(y)``                  :math:`[x](t)\supseteq [y](t)`
+``bool``            ``x.is_strict_superset(y)``           :math:`[x](t)\supseteq [y](t)\wedge [x](t)\neq [y](t)`
+``BoolInterval``    ``x.contains(z)``                     :math:`z(t)\in [x](t)`
+``bool``            ``x.overlaps(y)``                     :math:`[x](t)\cap [y](t)\neq\varnothing`
+==================  ====================================  ======================================================================
+
+  .. rubric:: The ``contains()`` method
+    
+  Testing if a tube :math:`[x](\cdot)` contains a solution :math:`z(\cdot)` may lead to uncertainties. Indeed, the reliable representation of a ``Trajectory`` may lead to some wrapping effect, and so this `contains` test may not be able to conclude. Therefore, the ``contains()`` method returns a ``BoolInterval`` value. Its values can be either ``YES``, ``NO`` or ``MAYBE``. The ``MAYBE`` case is rare but may appear due to the numerical representation of a trajectory. In practice, this may happen if the thin envelope of :math:`z(\cdot)` overlaps a boundary of the tube :math:`[x](\cdot)`.
+
+In addition of these test functions, operations on sets are available:
+
+====================================  =======================================================
+Code                                  Meaning, :math:`\forall t\in[t_0,t_f]`
+====================================  =======================================================
+``x&y``                               :math:`[x](t)\cap [y](t)`
+``x|y``                               :math:`[x](t)\sqcup[y](t)`
+``x.set_empty()``                     :math:`[x](t)\leftarrow \varnothing`
+``x=y``                               :math:`[x](t)\leftarrow [y](t)`
+``x&=y``                              :math:`[x](t)\leftarrow ([x](t)\cap [y](t))`
+``x|=y``                              :math:`[x](t)\leftarrow ([x](t)\sqcup[y](t))`
+====================================  =======================================================
+
+Finally, one can also access properties of the sets. First for ``Tube``:
+
+====================  ==================  ====================================================================================
+Return type           Code                Meaning
+====================  ==================  ====================================================================================
+``Trajectory``        ``x.diam()``        diameters of the tube as a trajectory,
+                                          :math:`d(\cdot)=\overline{x}(\cdot)-\underline{x}(\cdot)`
+``double``            ``x.max_diam()``    maximal diameter
+``double``            ``x.volume()``      the volume (surface) of the tube
+``Tube``              ``x.inflate(eps)``  a Tube with the same midtraj and radius increased by ``eps``
+====================  ==================  ====================================================================================
+
+Then for ``TubeVector``:
+
+====================  ==================  ====================================================================================
+Return type           Code                Meaning
+====================  ==================  ====================================================================================
+``TrajectoryVector``  ``x.diam()``        diameters of the tube as a trajectory,
+                                          :math:`\mathbf{d}(\cdot)=\overline{\mathbf{x}}(\cdot)-\underline{\mathbf{x}}(\cdot)`
+``Vector``            ``x.max_diam()``    maximal diameter
+``Trajectory``        ``x.diag()``        approximated trajectory: list of diagonals of each slice
+``double``            ``x.volume()``      the volume of the tube
+``TubeVector``        ``x.inflate(eps)``  new tube: same midtraj, each dimension increased by ``eps``
+====================  ==================  ====================================================================================
+
+  .. rubric:: The ``diam()`` methods
+    
+  | These methods are used to evaluate the thickness of a ``Tube`` or a ``TubeVector``. They are mainly used for display purposes, for instance for displaying a tube with a color function depending on its thickness.
+  | However, without derivative knowledge, and because the tube is made of boxed slices, the trajectory will be discontinuous and so the returned object will not reliably represent the actual diameters.
+
+  .. rubric:: The ``diag()`` methods
+    
+  It holds the same of the ``diag()`` methods.
+
+  .. todo::
+    ``x.intersects(y)``, ``x.is_disjoint(y)``, ``x.is_unbounded()``, ``x.min_diam()``, ``x.is_flat()``.
+
 Classical operations on sets are applicable on tubes.
-Note that the tubes may have to share the same domain and slicing for these operations.
+We recall that the tubes and trajectories have to share the same *t*-domain for these operations.
 
 .. tabs::
 
@@ -259,50 +407,58 @@ The same for mathematical functions:
 
     # todo
 
-Several methods available in IBEX can be used for tubes. For instance:
+The following functions can be used:
 
-.. tabs::
-
-  .. code-tab:: c++
-
-    x.is_subset(y)
-    x.is_interior_subset(y)
-    y.is_empty()
-    x.overlaps(y)
-
-  .. code-tab:: py
-
-    # todo
-
-It is also possible to test if a tube :math:`[x](\cdot)` contains a solution :math:`z(\cdot)`. The ``contains()`` method can be used for this purpose, but the answer is sometimes uncertain and so an ``ibex::BoolInterval`` is always used. Its values can be either ``YES``, ``NO`` or ``MAYBE``. The ``MAYBE`` case is rare but may appear due to the numerical representation of a trajectory. Indeed, some wrapping effect may occur for its reliable evaluations and so this `contains` test may not be able to conclude, if the thin envelope of :math:`z(\cdot)` overlaps a boundary of the tube :math:`[x](\cdot)`.
-
-.. tabs::
-
-  .. code-tab:: c++
-
-    BoolInterval b = x.contains(traj_z); // with traj_z a Trajectory object
-
-  .. code-tab:: py
-
-    # todo
+=========================  ==================================================================
+Code                       Meaning
+=========================  ==================================================================
+``sqr(x)``                 :math:`[x](\cdot)^2`
+``sqrt(x)``                :math:`\sqrt{[x](\cdot)}`
+``pow(x,n)``               :math:`[x](\cdot)^n`
+``pow(x,y)``               :math:`[x](\cdot)^{[y]} = e^{[y]\log([x](\cdot))}`
+``root(x,n)``              :math:`\sqrt[n]{[x](\cdot)}`
+``exp(x)``                 :math:`\exp([x](\cdot))`
+``log(x)``                 :math:`\log([x](\cdot))`
+``cos(x)``                 :math:`\cos([x](\cdot))`
+``sin(x)``                 :math:`\sin([x](\cdot))`
+``tan(x)``                 :math:`\tan([x](\cdot))`
+``acos(x)``                :math:`\textrm{acos}([x](\cdot))`
+``asin(x)``                :math:`\textrm{asin}([x](\cdot))`
+``atan(x)``                :math:`\textrm{atan}([x](\cdot))`
+``atan2(y,x)``             | :math:`\textrm{atan2}([y](\cdot),[x](\cdot))`
+                           | :math:`\textrm{atan2}([y],[x](\cdot))`
+                           | :math:`\textrm{atan2}([y](\cdot),[x])`
+=========================  ==================================================================
 
 
 Integral computations
 ---------------------
 
-Computation of the primitive :math:`\int_{0}[x](\tau)d\tau`:
+Reliable integral computations are available on tubes.
+
+.. figure:: img/tube_integ_inf.png
+  
+  Hatched part depicts the lower bound of :math:`\displaystyle\int_{a}^{b}[x](\tau)d\tau`.
+
+The computation is *reliable* because it stands on the tube's slices. The result is an outer approximation of the integral of the tube represented by these slices:
+
+.. figure:: img/tube_lb_integral_slices.png
+
+  Outer approximation of the lower bound of :math:`\int_{a}^{b}[x](\tau)d\tau`.
+
+Computation of the tube primitive :math:`[p](\cdot)=\int_{0}^{\cdot}[x](\tau)d\tau`:
 
 .. tabs::
 
   .. code-tab:: c++
 
-    Tube primitive = x.primitive();
+    Tube p = x.primitive();
 
   .. code-tab:: py
 
     # todo
     
-Computation of :math:`[s]=\int_{0}^{[t]}[x](\tau)d\tau`:
+Computation of the interval-integral :math:`[s]=\int_{0}^{[t]}[x](\tau)d\tau`:
 
 .. tabs::
 
@@ -328,7 +484,7 @@ Computation of :math:`[s]=\int_{[t_1]}^{[t_2]}[x](\tau)d\tau`:
 
     # todo
 
-Also, a decomposition of the integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot)]` with :math:`[s^-]=\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau` and :math:`[s^+]=\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau` is computable by:
+Also, a decomposition of the interval-integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot)]` with :math:`[s^-]=\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau` and :math:`[s^+]=\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau` is computable by:
 
 .. tabs::
 
@@ -344,7 +500,7 @@ Also, a decomposition of the integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot
 
     # todo
 
-*Note:* :math:`[s]=[s^-]\cup[s^+]`.
+*Note:* :math:`[s]=[s^-]\sqcup[s^+]`.
 
 
 Updating values
@@ -366,118 +522,56 @@ produces:
 
 .. figure:: img/02_set.png
 
+.. warning::
+  
+  Be careful when updating a tube without the use of **dedicated contractors**. Tube discretization has to be kept in mind whenever an update is performed for some input :math:`t`. For reliable operations, please see the :ref:`contractors section<sec-manual-contractors-dyn>`.
+
 See also the following methods:
 
 .. tabs::
 
   .. code-tab:: c++
 
-    x.set(Interval::POS_REALS); // set a constant codomain for all t
-    x.set(Interval(0.), 4.);    // set a value at some t: [x](4)=[0]
-    x.set_empty();              // empty set for all t
-
-  .. code-tab:: py
-
-    # todo
-    
-**Note:** be careful when updating a tube without the use of dedicated contractors. Tube discretization has to be kept in mind whenever an update is performed for some input :math:`t`. For guaranteed operations, please see the *Contractors* section.
-
-
-.. _sec-manual-tubes-tubevector:
-
-The vector case
----------------
-
-The extension to the vector case is the class ``TubeVector``, allowing to create tubes :math:`[\mathbf{x}](\cdot):\mathbb{R}\to\mathbb{IR}^n`.
-The features presented above remain the same.
-
-.. tabs::
-
-  .. code-tab:: c++
-
-    // TubeVector from a formula; the function's output is two-dimensional
-    TubeVector x(Interval(0.,10.), dt,
-                 Function("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
-                            cos(t)+sin(t/0.2)*[-0.1,0.1])"));
+    x.set(Interval::pos_reals()); // set a constant codomain for all t
+    x.set(Interval(0.), 4.);      // set a value at some t: [x](4)=[0]
+    x.set_empty();                // empty set for all t
 
   .. code-tab:: py
 
     # todo
 
-.. figure:: img/02_tubevectors.png
-
-Note that as in IBEX, each component of a vector object (``IntervalVector``, ``TrajectoryVector``, ``TubeVector``) is available by reference.
-
-
-**Full code:**
-
-.. tabs::
-
-  .. code-tab:: c++
-
-    #include <tubex.h>
-
-    using namespace std;
-    using namespace tubex;
-
-    int main()
-    {
-      float dt = 0.01;
-      Interval domain(0.,10.);
-
-      // TubeVector as a union of trajectories
-      TrajectoryVector traj(domain, Function("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"));
-      Tube x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3];
-
-      // Inversion
-      vector<Interval> v_t;
-      x.invert(Interval(0.,0.2), v_t);
-
-      // Update
-      x.set(Interval(0.,2.), Interval(5.,6.)); // then x([5,6])=[0,2]
-
-      // TubeVector from a formula; the function's output is two-dimensional
-      TubeVector y(Interval(0.,10.), dt,
-                   Function("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
-                              cos(t)+sin(t/0.2)*[-0.1,0.1])"));
-
-      vibes::beginDrawing();
-
-      VIBesFigTube fig("Tube");
-      fig.set_properties(100, 100, 600, 300);
-      fig.add_tube(&x, "x", "#376D7C[lightGray]");
-      fig.add_trajectories(&traj, "trajs");
-
-      for(auto& t : v_t)
-      {
-        IntervalVector tbox = {t,{0.,0.2}};
-        fig.draw_box(tbox, "red");     // boxes display
-      }
-
-      fig.show();
-
-      VIBesFigTube fig_vec("TubeVector");
-      fig_vec.set_properties(200, 200, 600, 300);
-      fig_vec.add_tubes(&y, "y", "#376D7C[lightGray]");
-      fig_vec.show();
-
-      vibes::endDrawing();
-    }
-
-  .. code-tab:: py
-
-    # todo
-
-
-Further pages will be written soon, presenting contractors, bisections, fixed point resolutions, graphical tools and robotic applications.
 
 .. _sec-manual-tubes-sampling:
 
-Sampling
---------
+Sampling and *t*-domain
+-----------------------
+
+The following methods are related to domain definition and slices structure:
+
+==============  =================================  ==============================================================
+Return type     Code                               Meaning
+==============  =================================  ==============================================================
+``Interval``    ``x.tdomain()``                    temporal domain :math:`[t_0,t_f]`
+--              ``x.shift_domain(a)``              shifts the domain to :math:`[t_0-a,t_f-a]`
+``bool``        ``Tube::same_slicing(x, y)``       tests if ``x`` and ``y`` have the same slicing
+--              ``x.sample(t)``                    samples the tube at :math:`t` (adds a slice)
+--              ``x.sample(y)``                    samples ``x`` so that it shares the sampling of tube ``y``
+--              ``x.remove_gate(t)``               removes the sampling at :math:`t`, if it exists
+==============  =================================  ==============================================================
+
+  .. rubric:: The ``sample()`` methods
+    
+  Custom sampling of tubes is available. The ``sample(t)`` method allows to cut a slice defined over :math:`t` into two slices on each side of :math:`t`. If :math:`t` already separates two slices (if it corresponds to a *gate*), then nothing is changed.
+
+  .. figure:: img/sampled_tube.png
+    
+    Example of custom slicing of a tube.
 
 
-.. figure:: img/sampled_tube.png
+------------------------------------------------------
+
+Next pages will present reliable operators to reduce the range of the presented domains (intervals, boxes, tubes) in a reliable way and according to the constraints defining a problem.
+
 
 
 .. #include <tubex.h>
@@ -488,13 +582,13 @@ Sampling
 .. int main()
 .. {
 ..   float dt = 0.2;
-..   Interval domain(0.,10.);
+..   Interval tdomain(0.,10.);
 .. 
-..   TrajectoryVector traj(domain, Function("(cos(t) ; cos(t)+t/10)"));
+..   TrajectoryVector traj(tdomain, Function("(cos(t) ; cos(t)+t/10)"));
 ..   Tube x(domain, Interval::empty_set());
 .. 
-..   double t = domain.lb();
-..   while(t < domain.ub())
+..   double t = tdomain.lb();
+..   while(t < tdomain.ub())
 ..   {
 ..     x.sample(t);
 ..     t += dt/10. + fabs(cos(t)/10.);

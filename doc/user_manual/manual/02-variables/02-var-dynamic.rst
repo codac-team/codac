@@ -144,7 +144,7 @@ Once created, several evaluations of the trajectory can be made. For instance:
 
   .. code-tab:: c++
 
-    x.domain()         // temporal domain, returns [0, 10]
+    x.tdomain()        // temporal domain, returns [0, 10]
     x.codomain()       // envelope of values, returns [-2,2]
     x(6.)              // evaluation of x(·) at 6, returns 0.42..
     x(Interval(5.,6.)) // evaluation of x(·) over [5,6], returns [-0.72..,0.42..]
@@ -210,8 +210,8 @@ evaluations                        ✓                 ✓
 ``first_value()``                  ✓                 ✓
 ``last_value()``                   ✓                 ✓
 ``set()``                                            ✓
-``truncate_domain()``              ✓                 ✓
-``shift_domain()``                 ✓                 ✓
+``truncate_tdomain()``             ✓                 ✓
+``shift_tdomain()``                ✓                 ✓
 ``sample()``                       ✓                 ✓
 ``make_continuous()``                                ✓
 ``primitive()``                    ✓                 ✓
@@ -264,7 +264,7 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
 
   .. code-tab:: c++
 
-    x[1] = Trajectory(domain, Function("exp(t)"));
+    x[1] = Trajectory(tdomain, Function("exp(t)"));
     cout << x[1] << endl;
   
   .. code-tab:: py
@@ -285,8 +285,8 @@ Let us consider a robot following a Lissajous curve from :math:`t_0=0` to :math:
 
   .. code-tab:: c++
 
-    Interval domain(0.,5.);
-    TrajectoryVector x(domain, Function("(2*cos(t) ; sin(2*t))"), 0.01);
+    Interval tdomain(0.,5.);
+    TrajectoryVector x(tdomain, Function("(2*cos(t) ; sin(2*t))"), 0.01);
 
   .. code-tab:: py
 
@@ -325,7 +325,7 @@ As one can see, trajectories can be used to represent data. When it comes to con
   .. code-tab:: c++
 
     // Random values in [-0.2,0.2] at each dt=0.01
-    RandTrajectory n(domain, 0.01, Interval(-0.2,0.2));
+    RandTrajectory n(tdomain, 0.01, Interval(-0.2,0.2));
 
     dist += n; // added noise (sum of trajectories)
   
@@ -338,8 +338,8 @@ As one can see, trajectories can be used to represent data. When it comes to con
   Result of simulated range measurements with noise.
 
 
-..    Interval domain(0.,5.);
-..    TrajectoryVector x(domain, Function("(2*cos(t) ; sin(2*t))"), 0.01);
+..    Interval tdomain(0.,5.);
+..    TrajectoryVector x(tdomain, Function("(2*cos(t) ; sin(2*t))"), 0.01);
 ..    Trajectory dist = sqrt(sqr(x[0]-0.5)+sqr(x[1]-1));
 ..
 ..    vibes::beginDrawing();
@@ -353,7 +353,7 @@ As one can see, trajectories can be used to represent data. When it comes to con
 ..    fig_map.show(0.25);
 ..    
 ..    // Random values in [-0.1,0.1] at each dt=0.2
-..    RandTrajectory n(domain, 0.01, Interval(-0.2,0.2));
+..    RandTrajectory n(tdomain, 0.01, Interval(-0.2,0.2));
 ..    dist += n; // added noise (sum of trajectories)
 ..
 ..    VIBesFigTube fig_x("Noised trajectory");
@@ -363,6 +363,8 @@ As one can see, trajectories can be used to represent data. When it comes to con
 ..
 ..    vibes::endDrawing();
 
+
+------------------------------------------------------
 
 Next pages will present several methods to use *tubes* that are envelopes of trajectories: a reliable way to handle uncertainties over time.
 
