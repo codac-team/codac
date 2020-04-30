@@ -272,6 +272,7 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
     # todo
 
 
+.. _sec-manual-vardyn-lissajous:
 
 Arithmetic on trajectories
 --------------------------

@@ -1,12 +1,29 @@
 .. _sec-manual-ctcfunction:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
-
 ************************************
 CtcFunction: :math:`f(\mathbf{x})=0`
 ************************************
 
+Lot of constraints can be expressed under the form :math:`f(\mathbf{x})=0` with :math:`f` an analytic function possibly non-linear. The goal is to estimate the set of feasible vectors :math:`\mathbf{x}` of a domain :math:`[\mathbf{x}]` that satisfy this constraint.
+A dedicated contractor can be built from :math:`f` in order to contract boxes.
+
 .. contents::
+
+
+
+Definition
+----------
+
+
+Example
+-------
+
+Let us come back to :ref:`the Lissajous example<sec-manual-vardyn-lissajous>` introduced to present the use of trajectories.
+Our Lissajous trajectory is defined by
+
+.. math::
+
+  \left(\begin{array}{c}x_1(t)\\x_2(t)\end{array}\right) \mapsto \left(\begin{array}{c}2\cos(t)\\\sin(2t)\end{array}\right)
+
+
+.. figure:: ../02-variables/img/lissajous.png

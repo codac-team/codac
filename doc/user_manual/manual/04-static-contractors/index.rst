@@ -16,3 +16,10 @@ Therefore, the following contractors apply on intervals and boxes:
   03-ctc-polar
   04-ctc-constell
   05-ctc-ibex
+
+------------------------------------------------------
+
+How a contractor is implemented
+-------------------------------
+
+Contractors are C++/Python objects. Some of them can be instantiated according to the problem to deal with. All of them will contract domains with the ``.contract()`` method.
