@@ -259,6 +259,14 @@ TEST_CASE("Testing set inversion")
     CHECK(slice.invert(Interval(2.5,6.), Interval(0.2)) == Interval(0.2));
   }
 
+  SECTION("Scalar set inversion (Slice, unbounded derivative)")
+  {
+    Slice sx(Interval(0.,1.), Interval(0.,10.));
+    Slice sv(Interval(0.,1.), Interval::all_reals());
+    CHECK(sx.invert(5., sv) == Interval(0.,1.));
+    CHECK(sx.invert(15., sv) == Interval::empty_set());
+  }
+
   SECTION("Scalar set inversion (Tube)")
   {
     Tube x = tube_test_1();
@@ -1235,5 +1243,14 @@ TEST_CASE("Interpol")
 
     CHECK(test1 == test2);
     CHECK(test1[0] == test2[0]);
+  }
+
+  SECTION("is_empty")
+  {
+    Tube x1(Interval(0.,10.), 0.001);
+    CHECK(!x1.is_empty());
+
+    TubeVector x2(Interval(0.,10.), 0.001, 4);
+    CHECK(!x2.is_empty());
   }
 }

@@ -105,6 +105,9 @@ namespace tubex
     assert(x.domain() == v.domain());
     #ifndef NDEBUG
       double volume = x.volume() + v.volume(); // for last assert
+      // todo: remove this: (or use Polygons with truncature)
+      if(x.codomain().ub() == BOUNDED_INFINITY || x.codomain().lb() == -BOUNDED_INFINITY)
+        volume = std::numeric_limits<double>::infinity();
     #endif
 
     if(!x.domain().intersects(m_restricted_domain))

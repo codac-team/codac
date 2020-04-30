@@ -256,6 +256,14 @@ namespace tubex
           return Interval::EMPTY_SET;
       }
 
+      else if(v.codomain() == Interval::all_reals())
+      {
+        if(y.intersects(m_codomain))
+          return search_domain & m_domain;
+        else
+          return Interval::EMPTY_SET;
+      }
+
       else
       {
         ConvexPolygon p = polygon(v);
