@@ -321,6 +321,8 @@ namespace tubex
     assert(y.domain().contains(t));
     assert(y.domain() == w.domain());
     assert(TubeVector::same_slicing(y, w));
+    
+    z &= y(t);
 
     for(int i = 0 ; i < y.size() ; i++)
       contract(t, z[i], y[i], w[i]);
@@ -343,6 +345,9 @@ namespace tubex
     assert(TubeVector::same_slicing(y, w));
 
     Interval t_result = Interval::EMPTY_SET;
+
+    t &= y.invert(z);
+    z &= y(t);
 
     for(int i = 0 ; i < y.size() ; i++)
     {
