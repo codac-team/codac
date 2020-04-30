@@ -1,5 +1,5 @@
 /** 
- *  CtcDistance class
+ *  CtcDist class
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou
@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_CtcDistance.h"
+#include "tubex_CtcDist.h"
 #include "tubex_Domain.h"
 
 using namespace std;
@@ -16,14 +16,14 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDistance::CtcDistance()
+  CtcDist::CtcDist()
     : CtcFunction("a[2]", "b[2]", "d",
                   "d = sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)")
   {
     
   }
 
-  void CtcDistance::contract(vector<Domain*>& v_domains)
+  void CtcDist::contract(vector<Domain*>& v_domains)
   {
     assert(v_domains.size() == 3);
     assert((v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR

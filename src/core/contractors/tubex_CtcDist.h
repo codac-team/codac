@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  CtcDistance class
+ *  CtcDist class
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou
@@ -9,21 +9,21 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_CTCDISTANCE_H__
-#define __TUBEX_CTCDISTANCE_H__
+#ifndef __TUBEX_CTCDIST_H__
+#define __TUBEX_CTCDIST_H__
 
 #include "tubex_CtcFunction.h"
 
 namespace tubex
 {
   /**
-   * \class CtcDistance
+   * \class CtcDist
    */
-  class CtcDistance : public CtcFunction
+  class CtcDist : public CtcFunction
   {
     public:
 
-      CtcDistance();
+      CtcDist();
 
       void contract(std::vector<Domain*>& v_domains);
   };

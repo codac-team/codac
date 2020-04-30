@@ -11,7 +11,7 @@
 #include "tubex_Contractor.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
-#include "tubex_CtcDistance.h"
+#include "tubex_CtcDist.h"
 
 using namespace std;
 using namespace ibex;
@@ -144,7 +144,7 @@ namespace tubex
         if(&m_tubex_ctc.get() != &x.m_tubex_ctc.get() &&
           (typeid(m_tubex_ctc.get()) != typeid(CtcEval) && 
            typeid(m_tubex_ctc.get()) != typeid(CtcDeriv) && 
-           typeid(m_tubex_ctc.get()) != typeid(CtcDistance)))
+           typeid(m_tubex_ctc.get()) != typeid(CtcDist)))
           return false;
 
       case Type::COMPONENT:

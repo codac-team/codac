@@ -9,6 +9,33 @@
 CtcDeriv: :math:`\dot{x}(t)=v(t)`
 *********************************
 
+.. contents::
+
+
+Definition
+----------
+
+.. important::
+    
+  .. math::
+
+    \left.\begin{array}{r}\dot{x}(\cdot)=v(\cdot)\end{array}\right. \longrightarrow \mathcal{C}_{\frac{d}{dt}}\big([x](\cdot),[v](\cdot)\big)
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      ctc::deriv.contract(x, v);
+
+    .. code-tab:: py
+
+      # todo
+
+
+
+Related publication
+-------------------
+
 .. |tubint-pdf| replace:: **Download the paper**
 .. _tubint-pdf: http://simon-rohou.fr/research/tubint/tubint_paper.pdf
 
@@ -18,5 +45,3 @@ CtcDeriv: :math:`\dot{x}(t)=v(t)`
   | S. Rohou, L. Jaulin, L. Mihaylova, F. Le Bars, S. M. Veres
   | *Robotics and Autonomous Systems*, 93:76--84, 2017.
   | |tubint-pdf|_
-
-.. contents::

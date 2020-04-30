@@ -13,7 +13,7 @@
 #define __TUBEX_PREDEF_CTC_H__
 
 #include "tubex_CtcDeriv.h"
-#include "tubex_CtcDistance.h"
+#include "tubex_CtcDist.h"
 #include "tubex_CtcEval.h"
 
 namespace tubex
@@ -22,7 +22,7 @@ namespace tubex
   {
     extern CtcDeriv deriv; // derivative constraint (x,v)
     extern CtcEval eval; // evaluation constraint (t,z,y,w)
-    extern CtcDistance dist; // distance constraint (a,b,d)
+    extern CtcDist dist; // distance constraint (a,b,d)
   }
 }
 

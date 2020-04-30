@@ -9,6 +9,32 @@
 CtcPolar: :math:`\big(x=\rho\cos\theta;y=\rho\sin\theta\big)`
 *************************************************************
 
+.. contents::
+
+
+Definition
+----------
+
+.. important::
+    
+  .. math::
+
+    \left.\begin{array}{r}x=\rho\cos\theta\\y=\rho\sin\theta\end{array}\right\} \longrightarrow \mathcal{C}_{\textrm{polar}}\big([x],[y],[\rho],[\theta]\big)
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      ctc::polar.contract(x, y, rho, theta);
+
+    .. code-tab:: py
+
+      # todo
+
+
+Related publication
+-------------------
+
 .. |polar-pdf| replace:: **Download the paper**
 .. _polar-pdf: https://www.ensta-bretagne.fr/jaulin/paper_polar.pdf
 
@@ -18,5 +44,3 @@ CtcPolar: :math:`\big(x=\rho\cos\theta;y=\rho\sin\theta\big)`
   | B. Desrochers, L. Jaulin
   | *Engineering Applications of Artificial Intelligence*, 55(Supplement C):83–92, Oct. 2016.
   | |polar-pdf|_
-
-.. contents::

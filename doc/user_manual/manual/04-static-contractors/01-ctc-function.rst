@@ -10,9 +10,24 @@ A dedicated contractor can be built from :math:`f` in order to contract boxes.
 .. contents::
 
 
-
 Definition
 ----------
+
+.. important::
+    
+  .. math::
+
+    \left.\begin{array}{r}y_i=x(t_i)\\\dot{x}(\cdot)=v(\cdot)\end{array}\right\} \longrightarrow \mathcal{C}_{\textrm{eval}}\big([t_i],[y_i],[x](\cdot),[v](\cdot)\big)
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      ctc::eval.contract(t, y, x, v);
+
+    .. code-tab:: py
+
+      # todo
 
 
 Example

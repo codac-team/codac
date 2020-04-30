@@ -9,17 +9,28 @@
 CtcEval: :math:`y_i=x(t_i)`
 ***************************
 
-.. |tubeval-pdf| replace:: **Download the paper**
-.. _tubeval-pdf: http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf
-
-.. admonition:: Related publication
-  
-  | **Reliable non-linear state estimation involving time uncertainties**
-  | S. Rohou, L. Jaulin, L. Mihaylova, F. Le Bars, S. M. Veres
-  | *Automatica*, 93:379--388, July 2018.
-  | |tubeval-pdf|_
-
 .. contents::
+
+
+Definition
+----------
+
+.. important::
+    
+  .. math::
+
+    \left.\begin{array}{r}y_i=x(t_i)\\\dot{x}(\cdot)=v(\cdot)\end{array}\right\} \longrightarrow \mathcal{C}_{\textrm{eval}}\big([t_i],[y_i],[x](\cdot),[v](\cdot)\big)
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      ctc::eval.contract(t, y, x, v);
+
+    .. code-tab:: py
+
+      # todo
+
 
 
 Example
@@ -142,3 +153,17 @@ The tube is contracted over :math:`[t_0,t_f]` with its thick derivative :math:`[
 The obtained tube is blue painted on the figure, the contraction at :math:`t=4.35` is propagated over the whole domain:
 
 .. figure:: img/ceval_lissajous_tube.png
+
+
+Related publication
+-------------------
+
+.. |tubeval-pdf| replace:: **Download the paper**
+.. _tubeval-pdf: http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf
+
+.. admonition:: Related publication
+  
+  | **Reliable non-linear state estimation involving time uncertainties**
+  | S. Rohou, L. Jaulin, L. Mihaylova, F. Le Bars, S. M. Veres
+  | *Automatica*, 93:379--388, July 2018.
+  | |tubeval-pdf|_

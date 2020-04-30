@@ -9,6 +9,32 @@
 CtcConstellation: :math:`\mathbf{m}\in\mathbb{M}`
 *************************************************
 
+.. contents::
+
+
+Definition
+----------
+
+.. important::
+    
+  .. math::
+
+    \mathbf{m}\in\mathbb{M}=\big\{[\mathbf{m}_1],\dots,[\mathbf{m}_\ell]\big\} \longrightarrow \mathcal{C}_{\textrm{constell}}\big([\mathbf{m}]\big)
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      // todo
+
+    .. code-tab:: py
+
+      # todo
+
+
+Related publication
+-------------------
+
 .. |datasso-pdf| replace:: **Download the paper**
 .. _datasso-pdf: http://simon-rohou.fr/research/datasso/datasso_paper.pdf
 
@@ -18,5 +44,3 @@ CtcConstellation: :math:`\mathbf{m}\in\mathbb{M}`
   | S. Rohou, B. Desrochers, L. Jaulin
   | *IEEE International Conference on Robotics and Automation (ICRA)*, 2020.
   | |datasso-pdf|_
-
-.. contents::
