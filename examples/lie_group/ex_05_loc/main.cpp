@@ -1,14 +1,12 @@
 /** 
  *  tubex-lib - Examples
- *  Robot evolution equations: causal chain
+ *  Lie symmetries examples
  * ----------------------------------------------------------------------------
  *
- *  \brief      Example from the paper "Guaranteed Computation of Robot Trajectories"
- *              Simon Rohou, Luc Jaulin, Lyudmila Mihaylova, Fabrice Le Bars, Sandor M. Veres
  *
- *  \date       2016
- *  \author     Simon Rohou
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \date       2020
+ *  \author     Julien Damers
+ *  \copyright  Copyright 2020 Julien Damers
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
@@ -16,8 +14,6 @@
 #include <tubex.h>
 #include <tubex-rob.h>
 #include "tubex-ode.h"
-
-
 
 
 
