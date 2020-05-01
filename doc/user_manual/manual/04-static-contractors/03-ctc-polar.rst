@@ -11,6 +11,13 @@ CtcPolar: :math:`\big(x=\rho\cos\theta;y=\rho\sin\theta\big)`
 
 .. contents::
 
+.. note::
+
+  .. Figure:: ../../img/pyibex_logo.jpg
+    :align: right
+  
+  This contractor directly comes from the `pyIbex library <http://benensta.github.io/pyIbex/>`_ and is temporarily provided here for ease of integration.
+
 
 Definition
 ----------
@@ -25,6 +32,7 @@ Definition
 
     .. code-tab:: c++
 
+      #include <tubex-pyibex.h>
       ctc::polar.contract(x, y, rho, theta);
 
     .. code-tab:: py

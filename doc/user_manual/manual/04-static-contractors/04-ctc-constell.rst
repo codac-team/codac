@@ -5,9 +5,9 @@
   This part of the documentation is deprecated. Several changes are currently perfomed on the library.
   A new stable version of Tubex will be released in the coming weeks.
 
-*************************************************
-CtcConstellation: :math:`\mathbf{m}\in\mathbb{M}`
-*************************************************
+********************************************
+CtcConstell: :math:`\mathbf{m}\in\mathbb{M}`
+********************************************
 
 .. contents::
 
@@ -25,6 +25,7 @@ Definition
 
     .. code-tab:: c++
 
+      #include <tubex-rob.h>
       // todo
 
     .. code-tab:: py

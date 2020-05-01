@@ -1,11 +1,11 @@
 .. _sec-manual-ctcfunction:
 
-************************************
-CtcFunction: :math:`f(\mathbf{x})=0`
-************************************
+******************************************************
+CtcFunction: :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}`
+******************************************************
 
-Lot of constraints can be expressed under the form :math:`f(\mathbf{x})=0` with :math:`f` an analytic function possibly non-linear. The goal is to estimate the set of feasible vectors :math:`\mathbf{x}` of a domain :math:`[\mathbf{x}]` that satisfy this constraint.
-A dedicated contractor can be built from :math:`f` in order to contract boxes.
+Lot of constraints can be expressed under the form :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}` with :math:`\mathbf{f}` an analytic function possibly non-linear. The goal is to estimate the set of feasible vectors :math:`\mathbf{x}` of a domain :math:`[\mathbf{x}]` that satisfy this constraint.
+A dedicated contractor can be built from :math:`\mathbf{f}` in order to contract boxes.
 
 .. contents::
 
@@ -17,13 +17,14 @@ Definition
     
   .. math::
 
-    \left.\begin{array}{r}y_i=x(t_i)\\\dot{x}(\cdot)=v(\cdot)\end{array}\right\} \longrightarrow \mathcal{C}_{\textrm{eval}}\big([t_i],[y_i],[x](\cdot),[v](\cdot)\big)
+    \mathbf{f}(\mathbf{x})=\mathbf{0} \longrightarrow \mathcal{C}_{\mathbf{f}}\big([\mathbf{x}]\big)
 
   .. tabs::
 
     .. code-tab:: c++
 
-      ctc::eval.contract(t, y, x, v);
+      CtcFunction ctc_f(Function f("<var1>", "<var2...>", "<exp>"));
+      ctc_f.contract(x);
 
     .. code-tab:: py
 
