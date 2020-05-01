@@ -35,4 +35,20 @@ namespace tubex
 
     CtcFunction::contract(v_domains);
   }
+
+  void CtcDist::contract(IntervalVector& a, IntervalVector& b, Interval& d)
+  {
+    assert(a.size() == 2 && b.size() == 2);
+
+    IntervalVector box(5);
+    box.put(0, a);
+    box.put(2, b);
+    box[4] = d;
+
+    m_ibex_ctc->contract(box);
+
+    a &= box.subvector(0,1);
+    b &= box.subvector(2,3);
+    d &= box[4];
+  }
 }
