@@ -148,7 +148,7 @@
       add_test(NAME rob_04
                COMMAND sh -c "rm -f ../data/redermor/gesmi.txt.tubex ;
                        ../examples/robotics/ex_04_redermor_traj/build/tubex_rob_04 ../data/redermor/gesmi.txt 0")
-      add_test(NAME rob_04_with_serializ
+      add_test(NAME rob_04_with_serialize
                COMMAND ../examples/robotics/ex_04_redermor_traj/build/tubex_rob_04 ../data/redermor/gesmi.txt 0)
       add_test(NAME rob_05
                COMMAND ../examples/robotics/ex_05_loops_detec/build/tubex_rob_05 ../data/redermor/gesmi.txt  0)
@@ -166,6 +166,10 @@
       # Tuto
       add_test(NAME tuto_01
                COMMAND ../examples/tuto/ex_01_getting_started/build/tubex_tuto_01 0)
+
+      # Lie group
+      add_test(NAME lie_05
+               COMMAND ../examples/lie_group/ex_05_loc/build/tubex_lie_05 0)
       
   endif()
 
