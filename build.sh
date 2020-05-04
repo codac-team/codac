@@ -1,8 +1,8 @@
+#!/bin/bash
+
 # ==================================================================
 #  tubex-lib - build script
 # ==================================================================
-
-#!/bin/bash
 
 # Possible commands:
 #  ./build.sh
@@ -36,24 +36,21 @@ fi
 
   # Possibly with tests
 
-  if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
-  then
-    cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
-  else
-    cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
-  fi
+    if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
+    then
+      cmake -DBUILD_TESTS=ON -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    else
+      cmake -DBUILD_TESTS=OFF -DAUTO_SYNTHESIS_BY_DEFAULT="${AUTO_SYNTHESIS_BY_DEFAULT}" ..
+    fi
 
   make
   cd ..
 
 # Building examples independently
 
+  cd examples
   if [ $# -ne 0 ] && ([ "$1" = "examples" ] || [ "$1" = "all" ])
   then
-    cd make
-    sudo make install
-    cd ..
-    cd examples/basics
-    find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
-    cd ../..
+    find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd "$TUBEX_DIR"/'
   fi
+  cd ..

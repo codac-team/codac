@@ -84,8 +84,10 @@ namespace tubex
           // then it is sampled and contracted again.
           if(x(k).is_unbounded())
 	     {
-	       //	       cout << " k " << k << x[0].slice_domain(k).diam() << " initdomain " <<  initdomain.diam() << " " << initdomain.diam() / m_picard_subslices << endl;
-	       if (x[0].slice_domain(k).diam() > initdomain.diam() / m_picard_subslices)
+	       //	       cout << " k " << k << "  nb_slices " <<  x[0].nb_slices() << "  " << x[0].slice_domain(k) << " initdomain " <<  initdomain.diam() << " " << initdomain.diam() / m_picard_subslices << endl;
+	       if (x[0].slice_domain(k).diam() > initdomain.diam() / m_picard_subslices
+		 && x[0].slice_domain(k).mid() < x[0].slice_domain(k).ub()
+		   && x[0].slice_domain(k).mid() > x[0].slice_domain(k).lb())
 		{
 
 		  x.sample(x[0].slice_domain(k).mid()); // all the components of the tube are sampled,

@@ -12,7 +12,7 @@
 #include "tubex_Slice.h"
 #include "tubex_CtcDeriv.h"
 #include <vector>
-#include <ctime>
+
 
 namespace tubex
 {
@@ -22,12 +22,10 @@ namespace tubex
 	public:
 		/*
 		 * CtcDynCid is a contractor applied at the Slice level, based
-		 * on the famous Cid-consistency used in continuous domains. It divides the input (or output) gate
+		 * on the Cid-consistency used in continuous domains. It divides the input (or output) gate
 		 * on a given dimension of x by several subintervals of equal width (the number is
 		 * defined by the variable $s_{cid}$). Then two contractors are applied: $C_{Deriv}$
 		 * and C_{fwd}.
-		 * After all the s_cid are treated, the Hull is applied and intersected with the
-		 * corresponding slice. By default it uses scid=8 and prec=0
 		 */
 		CtcDynCid(tubex::Function& fnc,int scid=8, double prec=0.);
 		/*
@@ -44,6 +42,7 @@ namespace tubex
 		 * ctc_fwd manages to make an evaluation of the current Slices in order to contract and update v
 		 */
 		void ctc_fwd(Slice &x, Slice &v, std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, int pos);
+		void ctc_fwd(Slice &x, Slice &v, std::vector<Slice> x_slice, std::vector<Slice> v_slice, int pos);
 		/*
 		 * used to obtain the number of scid subslices.
 		 */
@@ -53,20 +52,36 @@ namespace tubex
 		 */
 		double get_prec();
 		/*
+		 * used to obtain what kind of propagation is going to be used-> 0: atomic (simple),
+		 *  1: complete (stronger, but slower)
+		 */
+		int get_propagation_engine();
+		/*
 		 * changes the value of scid
 		 */
 		void set_scid(int scid);
 		/*
-		 * changes the value of the precision
+		 * changes the propagator
 		 */
+		void set_propagation_engine(int engine);
+		/*
+		 * changes the value of the precision
+		*/
 		void set_prec(double prec);
-
-
+		/*
+		 * todo: add comments
+		*/
+		void FullPropagationEngine(std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TPropagation t_propa);
+		/*
+		 * todo: add comments
+		*/
+		void AtomicPropagationEngine(std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TPropagation t_propa);
 	private:
 		int scid;
 		double prec;
 		tubex::Function& fnc;
 		CtcDeriv ctc_deriv;
+		int engine = 0;  //by default the propagation engine is atomic (faster)
 	};
 }
 
