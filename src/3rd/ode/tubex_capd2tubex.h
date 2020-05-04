@@ -12,28 +12,35 @@
 #ifndef __TUBEX_CAPD_H__
 #define __TUBEX_CAPD_H__
 
+#include <capd/capdlib.h>
 #include "tubex_TubeVector.h"
 #include "ibex_IntervalVector.h"
 
+
 namespace tubex
 {
+
+    std::string tubexFnc2capdString(const tubex::Function& f);
+
+
   /** \brief  Returns a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD
 
-   * \param f function that we would like to integrate
+   * \param vectorField the vector field associated to the function that we would like to integrate
    * \param x0 The initial condition
    * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timesep by itself
    * to increase calculation speed
    */
 
-  std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval domain, const tubex::Function& f, const ibex::IntervalVector& x0,
-                                              const double timestep=0);
+    std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, capd::IMap& vectorField, const ibex::IntervalVector& x0,
+                                                const double& timestep=0);
 
 
   /** \brief Convert a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD into a
    * tubex::TubeVector
    * \param ibex_curve a vector of ibex::IntervalVectors representing the curve computed by CAPD
-   * */
-  tubex::TubeVector ibex2tubex(std::vector<ibex::IntervalVector> ibex_curve);
+   */
+
+    tubex::TubeVector ibex2tubex(std::vector<ibex::IntervalVector>& ibex_curve);
 
   /** \brief Combination of capd2ibex and ibex2tubex, to generate a tube from a curve obtained by
    * the guaranteed integration of CAPD
@@ -45,7 +52,8 @@ namespace tubex
    * to increase calculation speed
    */
 
-  tubex::TubeVector capd2tubex(const ibex::Interval& domain, const tubex::Function& f, const ibex::IntervalVector& x0, const double timestep);
+    tubex::TubeVector capd2tubex(const ibex::Interval& domain, const tubex::Function& f, const ibex::IntervalVector& x0, const double timestep);
+
 }
 
 #endif

@@ -21,9 +21,7 @@ namespace tubex
      // namespace tubex
 
 
-
-    vector<ibex::IntervalVector> capd2ibex(const ibex::Interval domain, const tubex::Function& f, const ibex::IntervalVector& x0,
-                                           const double timestep)
+    string tubexFnc2capdString(const tubex::Function& f)
     {
 
         int a_capd_dim = f.nb_vars();
@@ -46,23 +44,38 @@ namespace tubex
         }
         capd_string.append(f.arg_name(a_capd_dim-1));
         capd_string.append(";fun:");
+        try
+        {
+            if (function_string.size()>2)
+            {
+                capd_string.append(function_string);
+                capd_string.append(";");
 
-        if (function_string.size()>2)
-        {
-            capd_string.append(function_string);
-            capd_string.append(";");
+            }
         }
-        else
+        catch(exception& e)
         {
-            return ibex_curve;
+            cout << "\n\nException caught!\n" << e.what() << endl << endl;
         }
+
+        return (capd_string);
+
+    }
+
+
+
+    vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, IMap& vectorField, const ibex::IntervalVector& x0,
+                                           const double& timestep)
+    {
+        int a_capd_dim = x0.size();
+        int a_ibex_dim = a_capd_dim+1;
+
+        IntervalVector a_ibex(a_ibex_dim);
+        vector<ibex::IntervalVector> ibex_curve;
+
 
         try
         {
-
-            // This is the vector field we want to generate
-            IMap vectorField(capd_string); //
-
             // CAPD processing
 
             // The solver uses high order enclosure method to verify the existence
@@ -147,7 +160,7 @@ namespace tubex
     }
 
 
-    TubeVector ibex2tubex(vector<IntervalVector> ibex_curve)
+    TubeVector ibex2tubex(vector<IntervalVector>& ibex_curve)
     {
         /*
          * To create a tube we need to assert that for each slice, the end of the slice
@@ -235,8 +248,19 @@ namespace tubex
 
     TubeVector capd2tubex(const ibex::Interval& domain, const tubex::Function& f, const ibex::IntervalVector& x0, const double timestep)
     {
-        vector<IntervalVector> ibex_curve = capd2ibex(domain, f, x0, timestep);
-        return(ibex2tubex(ibex_curve));
+        string capd_string = tubexFnc2capdString(f);
+        try
+        {
+            IMap vectorField(capd_string);
+            vector<IntervalVector> ibex_curve = capd2ibex(domain, vectorField, x0, timestep);
+            return(ibex2tubex(ibex_curve));
+
+        }
+        catch(exception& e)
+        {
+            cout << "\n\nException caught!\n" << e.what() << endl << endl;
+        }
+
     }
 }
 
