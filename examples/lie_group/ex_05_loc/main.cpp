@@ -28,15 +28,13 @@ int main()
     // ----- Generate reference tube thanks to ODE integration -----
 
     Interval domain(0.,17.);
-    tubex::Function fa("x1","x2","x3","x4","(cos(x3);sin(x3);sin(0.4*x4);1)"); //function to be integrated
-    IntervalVector a0(4,Interval(0.,0.)); // inintial condition for reference tube
+    tubex::Function f("x1","x2","x3","(cos(x3);sin(x3);sin(0.4*t))"); //function to be integrated
+    IntervalVector a0(3,Interval(0.,0.)); // inintial condition for reference tube
     double timestep = 0.1;
-    TubeVector a = TubeVectorODE(domain,fa,a0,timestep,CAPD_MODE);
-    a.resize(3); // removing last component of the tube identical to the domain
-
+    TubeVector a = TubeVectorODE(domain,f,a0,timestep,CAPD_MODE);
     // ----- Generate derivative of [a](.) -----
-    tubex::Function fv("x1","x2","x3","(cos(x3);sin(x3);sin(0.4*t))"); // function for the derivative tube
-    TubeVector va= fv.eval_vector(a);
+    // function for the derivative tube
+    TubeVector va= f.eval_vector(a);
 
     // ----- Initialise estimate -----
     IntervalVector map(a.size());
@@ -46,7 +44,7 @@ int main()
     IntervalVector x0(3,Interval(-0.1,0.1)); // Initial condition for our estimate
 
     // ----- Initialise derivative of the estimate -----
-    TubeVector vx = fv.eval_vector(x);
+    TubeVector vx = f.eval_vector(x);
     assert(a.same_slicing(a,vx));
 
     // ----- Initial conditions -----

@@ -33,7 +33,7 @@ namespace tubex
         vector<ibex::IntervalVector> ibex_curve;
 
         // Generate the string that CAPD will process to compute
-        string capd_string ="var:";
+        string capd_string ="time:t;var:";
         string function_string = f.expr().substr(1, f.expr().size() - 2); // removing outside parentheses
         const char comma = ',';
         const char semicolon = ';';
