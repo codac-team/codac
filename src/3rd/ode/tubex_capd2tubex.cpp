@@ -262,5 +262,8 @@ namespace tubex
         }
 
     }
+
+    // TODO add version of capd2tubex that can handle parameters
+
 }
 
