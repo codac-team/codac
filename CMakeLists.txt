@@ -166,11 +166,12 @@
       # Tuto
       add_test(NAME tuto_01
                COMMAND ../examples/tuto/ex_01_getting_started/build/tubex_tuto_01 0)
-
+      if(WITH_CAPD)
       # Lie group
-      add_test(NAME lie_05
-               COMMAND ../examples/lie_group/ex_05_loc/build/tubex_lie_05 0)
-      
+        add_test(NAME lie_05
+                 COMMAND ../examples/lie_group/ex_05_loc/build/tubex_lie_05 0)
+      endif()
+
   endif()
 
 
