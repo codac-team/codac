@@ -541,6 +541,10 @@ namespace tubex
           if(!(*m_map_tubes[tube].tube_x_copy).slice(k)->domain().intersects(m_restricted_tdomain))
             continue;
 
+          if((*m_map_tubes[tube].tube_x_copy).slice(k)->codomain().is_empty()
+          || (*m_map_tubes[tube].tube_y_copy).slice(k)->codomain().is_empty())
+            continue;
+
           IntervalVector box(2);
           box[0] = (*m_map_tubes[tube].tube_x_copy)(k);
           box[1] = (*m_map_tubes[tube].tube_y_copy)(k);
@@ -619,6 +623,9 @@ namespace tubex
         box[0] = (*tube)[m_map_tubes[tube].index_x].slice(k)->input_gate();
         box[1] = (*tube)[m_map_tubes[tube].index_y].slice(k)->input_gate();
         // Note: the last output gate is never shown
+
+        if(box.is_empty())
+          continue;
 
         string color = m_map_tubes[tube].color;
         if(color == "") // then defined by a color map
