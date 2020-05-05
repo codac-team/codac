@@ -150,7 +150,7 @@ The tube is contracted over :math:`[t_0,t_f]` with its thick derivative :math:`[
 
     # todo
 
-The obtained tube is blue painted on the figure, the contraction at :math:`t=4.35` is propagated over the whole domain:
+The obtained tube is blue painted on the figure, the contraction at :math:`t=4.35` is propagated over the whole *t*-domain:
 
 .. figure:: img/ceval_lissajous_tube.png
 

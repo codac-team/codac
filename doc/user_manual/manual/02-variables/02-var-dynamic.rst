@@ -6,7 +6,7 @@ Trajectories (signals)
 
 .. contents::
 
-A trajectory :math:`x(\cdot):[t_0,t_f]\to\mathbb{R}` is a set of real values defined over some temporal domain :math:`[t_0,t_f]`. There are two ways to define a trajectory:
+A trajectory :math:`x(\cdot):[t_0,t_f]\to\mathbb{R}` is a set of real values defined over some temporal domain :math:`[t_0,t_f]`, called *t*-domain. There are two ways to define a trajectory:
 
 * with some analytic formula, by using a ``Function`` object ;
 * from a map of values.
@@ -113,7 +113,7 @@ These trajectories are useful in case of actual data coming from sensors or nume
   
   In red, the trajectory defined from the analytical function. In blue, a trajectory made of 21 points with linear interpolation.
 
-Note that when building a trajectory from a map, there is no need to specify the temporal domain; it will be evaluated as the envelope of the keys of the map.
+Note that when building a trajectory from a map, there is no need to specify the *t*-domain; it will be evaluated as the envelope of the keys of the map.
 
 It is also possible to define a trajectory from an analytical function while representing it with a map of values. This can be necessary for various operations on trajectories that are not available for analytical definitions, such as arithmetic operations.
 

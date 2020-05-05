@@ -546,13 +546,13 @@ See also the following methods:
 Sampling and *t*-domain
 -----------------------
 
-The following methods are related to domain definition and slices structure:
+The following methods are related to *t*-domains and slices structure:
 
 ==============  =================================  ==============================================================
 Return type     Code                               Meaning
 ==============  =================================  ==============================================================
-``Interval``    ``x.tdomain()``                    temporal domain :math:`[t_0,t_f]`
---              ``x.shift_domain(a)``              shifts the domain to :math:`[t_0-a,t_f-a]`
+``Interval``    ``x.tdomain()``                    temporal domain :math:`[t_0,t_f]` (*t*-domain)
+--              ``x.shift_tdomain(a)``             shifts the *t*-domain to :math:`[t_0-a,t_f-a]`
 ``bool``        ``Tube::same_slicing(x, y)``       tests if ``x`` and ``y`` have the same slicing
 --              ``x.sample(t)``                    samples the tube at :math:`t` (adds a slice)
 --              ``x.sample(y)``                    samples ``x`` so that it shares the sampling of tube ``y``
@@ -585,7 +585,7 @@ Next pages will present reliable operators to reduce the range of the presented 
 ..   Interval tdomain(0.,10.);
 .. 
 ..   TrajectoryVector traj(tdomain, Function("(cos(t) ; cos(t)+t/10)"));
-..   Tube x(domain, Interval::empty_set());
+..   Tube x(tdomain, Interval::empty_set());
 .. 
 ..   double t = tdomain.lb();
 ..   while(t < tdomain.ub())
