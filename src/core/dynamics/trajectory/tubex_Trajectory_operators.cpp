@@ -30,7 +30,7 @@ namespace tubex
     \
     const Trajectory& Trajectory::fdef(const Trajectory& x) \
     { \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       assert(!(definition_type() == TrajDefnType::ANALYTIC_FNC && x.definition_type() == TrajDefnType::ANALYTIC_FNC) && \
         "not supported yet for trajectories defined by a Function"); \
       \

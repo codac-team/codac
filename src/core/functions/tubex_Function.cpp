@@ -207,7 +207,7 @@ namespace tubex
   const Interval Function::eval(const Interval& t, const TubeVector& x) const
   {
     assert(x.size() == nb_vars());
-    assert(x.domain().is_superset(t));
+    assert(x.tdomain().is_superset(t));
     assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(t, x)[0];
   }
@@ -244,7 +244,7 @@ namespace tubex
   {
     assert(slice_id >= 0 && slice_id < x.nb_slices());
 
-    Interval t = x[0].slice_domain(slice_id);
+    Interval t = x[0].slice_tdomain(slice_id);
 
     if(nb_vars() == 0)
       return eval_vector(t);
@@ -266,7 +266,7 @@ namespace tubex
     if(nb_vars() == 0)
       return eval_vector(t);
 
-    assert(x.domain().is_superset(t));
+    assert(x.tdomain().is_superset(t));
     assert(nb_vars() == x.size());
 
     if(x(t).is_empty())
@@ -330,7 +330,7 @@ namespace tubex
           v_sy[i] = v_sy[i]->next_slice();
       }
 
-      box[0] = v_sx[0]->domain();
+      box[0] = v_sx[0]->tdomain();
       for(int i = 0 ; i < x.size() ; i++)
         box[i+1] = v_sx[i]->codomain();
       result = m_ibex_f->eval_vector(box);
@@ -346,7 +346,7 @@ namespace tubex
 
     } while(v_sx[0]->next_slice() != NULL);
     
-    box[0] = v_sx[0]->domain().ub();
+    box[0] = v_sx[0]->tdomain().ub();
     for(int i = 0 ; i < x.size() ; i++)
       box[i+1] = v_sx[i]->output_gate();
     result = m_ibex_f->eval_vector(box);

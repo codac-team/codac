@@ -26,11 +26,11 @@ int main()
 {
   /* =========== CREATING DATA =========== */
 
-    const Interval domain(0.,6.);
+    const Interval tdomain(0.,6.);
 
     // Truth (analytic function)
 
-      const TrajectoryVector state_truth(domain,
+      const TrajectoryVector state_truth(tdomain,
         // Lissajous function (px,py,theta):
         tubex::Function("(240*cos(t) ; \
                           120*sin(2*t) ; \
@@ -40,13 +40,13 @@ int main()
 
       const double dt = 0.01; // tube timestep
 
-      TubeVector x(domain, dt, 2); // unbounded 2d tube vector
+      TubeVector x(tdomain, dt, 2); // unbounded 2d tube vector
 
       Tube heading(state_truth[2], dt); // heading computed from truth...
       //heading.inflate(1.2); // ...with some uncertainty
 
       // Derivatives of positions, with uncertainties:
-      TubeVector v(domain, dt,
+      TubeVector v(tdomain, dt,
         // Lissajous derivative
         tubex::Function("(-240*sin(t) ; \
                           240*cos(2*t))"));

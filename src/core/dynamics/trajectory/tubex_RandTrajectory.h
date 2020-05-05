@@ -30,11 +30,11 @@ namespace tubex
       /**
        * \brief Creates a scalar trajectory \f$x(\cdot)\f$ made of random values
        *
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param bounds interval range for random values
        */
-      RandTrajectory(const ibex::Interval& domain, double timestep, const ibex::Interval& bounds);
+      RandTrajectory(const ibex::Interval& tdomain, double timestep, const ibex::Interval& bounds);
   };
 }
 

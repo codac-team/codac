@@ -66,8 +66,8 @@ namespace tubex
 
   void CtcEval::contract(double t, Interval& z, Tube& y, Tube& w)
   {
-    assert(y.domain().contains(t));
-    assert(y.domain() == w.domain());
+    assert(y.tdomain().contains(t));
+    assert(y.tdomain() == w.tdomain());
     assert(Tube::same_slicing(y, w));
 
     if(z.is_empty() || y.is_empty() || w.is_empty())
@@ -88,7 +88,7 @@ namespace tubex
     if(m_propagation_enabled)
     {
       CtcDeriv ctc_deriv;
-      ctc_deriv.set_restricted_domain(m_restricted_domain);
+      ctc_deriv.set_restricted_tdomain(m_restricted_tdomain);
       ctc_deriv.set_fast_mode(m_fast_mode);
       ctc_deriv.contract(y, w);
     }
@@ -125,7 +125,7 @@ namespace tubex
 
   void CtcEval::contract(Interval& t, Interval& z, Tube& y, Tube& w)
   {
-    assert(y.domain() == w.domain());
+    assert(y.tdomain() == w.tdomain());
     assert(Tube::same_slicing(y, w));
     #ifndef NDEBUG
       double volume = y.volume() + w.volume(); // for last assert
@@ -147,7 +147,7 @@ namespace tubex
     y &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY); // todo: remove this
     w &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY); // todo: remove this
 
-    t &= y.domain();
+    t &= y.tdomain();
     t &= y.invert(z, w ,t);
 
     if(!t.is_empty())
@@ -174,7 +174,7 @@ namespace tubex
         // Note: w is also sampled to stay compliant with y.
 
         CtcDeriv ctc_deriv;
-        ctc_deriv.set_restricted_domain(m_restricted_domain);
+        ctc_deriv.set_restricted_tdomain(m_restricted_tdomain);
         ctc_deriv.set_fast_mode(m_fast_mode);
 
         Interval front_gate(y.size());
@@ -201,10 +201,10 @@ namespace tubex
 
           l_gates.push_front(front_gate);
 
-          while(s_y != NULL && s_y->domain().lb() < t.ub())
+          while(s_y != NULL && s_y->tdomain().lb() < t.ub())
           {
             // Forward propagation of the evaluation
-            front_gate += s_y->domain().diam() * s_w->codomain(); // projection
+            front_gate += s_y->tdomain().diam() * s_w->codomain(); // projection
             front_gate |= z; // evaluation
             front_gate &= s_y->output_gate(); // contraction
 
@@ -231,10 +231,10 @@ namespace tubex
 
           s_y->set_output_gate(l_gates.front() | front_gate);
 
-          while(s_y != NULL && s_y->domain().lb() >= t.lb())
+          while(s_y != NULL && s_y->tdomain().lb() >= t.lb())
           {
             // Backward propagation of the evaluation
-            front_gate -= s_y->domain().diam() * s_w->codomain(); // projection
+            front_gate -= s_y->tdomain().diam() * s_w->codomain(); // projection
             front_gate |= z; // evaluation
             front_gate &= s_y->input_gate(); // contraction
 
@@ -322,8 +322,8 @@ namespace tubex
 
   void CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)
   {
-    assert(y.domain().contains(t));
-    assert(y.domain() == w.domain());
+    assert(y.tdomain().contains(t));
+    assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
 
     if(z.is_empty() || y.is_empty() || w.is_empty())
@@ -342,7 +342,7 @@ namespace tubex
 
   void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, Tube& w)
   {
-    assert(y.domain() == w.domain());
+    assert(y.tdomain() == w.tdomain());
     assert(Tube::same_slicing(y, w));
 
     if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())
@@ -360,7 +360,7 @@ namespace tubex
   {
     assert(y.size() == z.size());
     assert(y.size() == w.size());
-    assert(y.domain() == w.domain());
+    assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
 
     if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())
@@ -391,7 +391,7 @@ namespace tubex
   {
     assert(y.size() == z.size());
     assert(y.size() == w.size());
-    assert(y.domain() == w.domain());
+    assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
 
     if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())

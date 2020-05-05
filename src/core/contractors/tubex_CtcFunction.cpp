@@ -70,11 +70,11 @@ namespace tubex
       {
         assert(v_domains[i]->type() == Domain::Type::SLICE);
         if(i != 0)
-          assert(v_domains[i]->slice().domain() == v_domains[i-1]->slice().domain());
+          assert(v_domains[i]->slice().tdomain() == v_domains[i-1]->slice().tdomain());
       }
 
       // If these slices should not be impacted by the contractor
-      if(!v_domains[0]->slice().domain().intersects(m_restricted_domain))
+      if(!v_domains[0]->slice().tdomain().intersects(m_restricted_tdomain))
         return;
 
       int n = v_domains.size();

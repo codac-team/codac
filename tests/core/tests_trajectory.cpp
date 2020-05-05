@@ -33,7 +33,7 @@ TEST_CASE("Trajectory base")
     traj2.set(4., 10.);
     traj2.set(-2., 11.);
     traj2.set(1., 14.);
-    CHECK(traj2.domain() == Interval(0.,14.));
+    CHECK(traj2.tdomain() == Interval(0.,14.));
     CHECK(traj2.codomain() == Interval(-2.,4.));
     // todo: find a way to catch assert abort: CHECK_THROWS(traj2(-0.1););
     CHECK(traj2(0.) == 1.);
@@ -44,16 +44,16 @@ TEST_CASE("Trajectory base")
     CHECK(traj2(14.) == 1.);
     CHECK(traj2(Interval(2.,9.)) == Interval(-1.,4.));
     CHECK(traj2(Interval(3.,12.)) == Interval(-2.,4.));
-    CHECK(traj2(traj2.domain()) == Interval(-2.,4.));
+    CHECK(traj2(traj2.tdomain()) == Interval(-2.,4.));
   }
 
   SECTION("Update")
   {
     Trajectory traj;
     traj.set(3.,-4.);
-    CHECK(ApproxIntv(traj.domain()) == Interval(-4.));
+    CHECK(ApproxIntv(traj.tdomain()) == Interval(-4.));
     traj.set(4.,-2.);
-    CHECK(ApproxIntv(traj.domain()) == Interval(-4.,-2.));
+    CHECK(ApproxIntv(traj.tdomain()) == Interval(-4.,-2.));
     // todo: find a way to catch assert abort: CHECK_THROWS(traj(-5.););
     CHECK(Approx(traj(-3.)) == 3.5);
   }
@@ -66,14 +66,14 @@ TEST_CASE("Trajectory base")
 
     Trajectory traj1(map_values);
 
-    CHECK(ApproxIntv(traj1.domain()) == Interval(0.,9.));
+    CHECK(ApproxIntv(traj1.tdomain()) == Interval(0.,9.));
     CHECK(ApproxIntv(traj1.codomain()) == Interval(0.,9.));
-    traj1.truncate_domain(Interval(1.,5.));
-    CHECK(ApproxIntv(traj1.domain()) == Interval(1.,5.));
+    traj1.truncate_tdomain(Interval(1.,5.));
+    CHECK(ApproxIntv(traj1.tdomain()) == Interval(1.,5.));
     CHECK(ApproxIntv(traj1.codomain()) == Interval(1.,5.));
 
     Trajectory traj2(Interval(-1.,10.), tubex::Function("t^2"));
-    CHECK(traj2.domain() == Interval(-1.,10.));
+    CHECK(traj2.tdomain() == Interval(-1.,10.));
     CHECK(traj2.codomain() == Interval(0.,100.));
     CHECK(Approx(traj2(5.3)) == 28.09);
   }
@@ -86,10 +86,10 @@ TEST_CASE("Trajectory base")
 
     Trajectory traj(map_values);
 
-    CHECK(ApproxIntv(traj.domain()) == Interval(0.,9.));
+    CHECK(ApproxIntv(traj.tdomain()) == Interval(0.,9.));
     CHECK(Approx(traj(5.2)) == 5.2);
-    traj.shift_domain(2.);
-    CHECK(ApproxIntv(traj.domain()) == Interval(-2.,7.));
+    traj.shift_tdomain(2.);
+    CHECK(ApproxIntv(traj.tdomain()) == Interval(-2.,7.));
     CHECK(Approx(traj(5.2)) == 7.2);
     CHECK(Approx(traj(3.2)) == 5.2);
   }
@@ -104,21 +104,21 @@ TEST_CASE("Trajectory base")
     Trajectory traj1(map_values);
     Trajectory traj2(map_values);
     CHECK(traj1 == traj2);
-    CHECK(traj1.domain() == Interval(0.,9.));
+    CHECK(traj1.tdomain() == Interval(0.,9.));
     CHECK_FALSE(traj1 != traj2);
 
     traj1.set(4.5, 3.2);
-    CHECK(traj1.domain() == Interval(0.,9.));
+    CHECK(traj1.tdomain() == Interval(0.,9.));
     CHECK_FALSE(traj1 == traj2);
     CHECK(traj1 != traj2);
 
     traj1 = traj2;
-    CHECK(traj1.domain() == Interval(0.,9.));
+    CHECK(traj1.tdomain() == Interval(0.,9.));
     CHECK(traj1 == traj2);
     CHECK_FALSE(traj1 != traj2);
 
     traj1.set(4.4, 0.);
-    CHECK(traj1.domain() == Interval(0.,9.));
+    CHECK(traj1.tdomain() == Interval(0.,9.));
     CHECK_FALSE(traj1 == traj2);
     CHECK(traj1 != traj2);
 

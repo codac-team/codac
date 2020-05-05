@@ -41,7 +41,7 @@ namespace tubex
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big([x](\cdot),[v](\cdot)\big)\f$:
        *        contracts the tube \f$[x](\cdot)\f$ with respect to its derivative \f$[v](\cdot)\f$.
        *
-       * \pre \f$[x](\cdot)\f$ and \f$[v](\cdot)\f$ must share the same slicing and domain.
+       * \pre \f$[x](\cdot)\f$ and \f$[v](\cdot)\f$ must share the same slicing and tdomain.
        *
        * \param x the scalar tube \f$[x](\cdot)\f$
        * \param v the scalar derivative tube \f$[v](\cdot)\f$
@@ -54,7 +54,7 @@ namespace tubex
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big([\mathbf{x}](\cdot),[\mathbf{v}](\cdot)\big)\f$:
        *        contracts the tube \f$[\mathbf{x}](\cdot)\f$ with respect to its derivative \f$[\mathbf{v}](\cdot)\f$.
        *
-       * \pre \f$[\mathbf{x}](\cdot)\f$ and \f$[\mathbf{v}](\cdot)\f$ must share the same dimension, slicing and domain.
+       * \pre \f$[\mathbf{x}](\cdot)\f$ and \f$[\mathbf{v}](\cdot)\f$ must share the same dimension, slicing and tdomain.
        *
        * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
        * \param v the n-dimensional derivative tube \f$[\mathbf{v}](\cdot)\f$
@@ -67,7 +67,7 @@ namespace tubex
        * \brief \f$\mathcal{C}_{\frac{d}{dt}}\big(\llbracket x\rrbracket(\cdot),\llbracket v\rrbracket(\cdot)\big)\f$:
        *        contracts the slice \f$\llbracket x\rrbracket(\cdot)\f$ with respect to its derivative \f$\llbracket v\rrbracket(\cdot)\f$.
        *
-       * \pre \f$\llbracket x\rrbracket(\cdot)\f$ and \f$\llbracket v\rrbracket(\cdot)\f$ must share the same domain.
+       * \pre \f$\llbracket x\rrbracket(\cdot)\f$ and \f$\llbracket v\rrbracket(\cdot)\f$ must share the same tdomain.
        *
        * \param x the slice \f$\llbracket x\rrbracket(\cdot)\f$
        * \param v the derivative slice \f$\llbracket v\rrbracket(\cdot)\f$
@@ -81,7 +81,7 @@ namespace tubex
       /**
        * \brief Contracts input and ouput gates of a slice regarding its derivative set
        *
-       * \pre \f$\llbracket x\rrbracket(\cdot)\f$ and \f$\llbracket v\rrbracket(\cdot)\f$ must share the same domain.
+       * \pre \f$\llbracket x\rrbracket(\cdot)\f$ and \f$\llbracket v\rrbracket(\cdot)\f$ must share the same tdomain.
        *
        * \note Only the gates may be affected.
        *       This method is used for the \f$\mathcal{C}_\textrm{eval}\f$ contractor.

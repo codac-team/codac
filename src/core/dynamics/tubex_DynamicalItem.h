@@ -43,7 +43,7 @@ namespace tubex
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      virtual const ibex::Interval domain() const = 0;
+      virtual const ibex::Interval tdomain() const = 0;
 
       /**
        * \brief Returns the box of the feasible values along \f$[t_0,t_f]\f$
@@ -64,15 +64,15 @@ namespace tubex
       virtual const std::string class_name() const = 0;
 
       /**
-       * \brief Verifies that this interval is a feasible temporal domain
+       * \brief Verifies that this interval is a feasible tdomain
        *
-       * \note The domain must be non-empty, bounded and not degenerated
-       * \todo Allow unbounded domains such as \f$[t_0,\infty]\f$?
+       * \note The tdomain must be non-empty, bounded and not degenerated
+       * \todo Allow unbounded tdomains such as \f$[t_0,\infty]\f$?
        *
-       * \param domain Interval domain \f$[t_0,t_f]\f$ to be tested
-       * \return true in case of valid temporal domain
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$ to be tested
+       * \return true in case of valid temporal tdomain
        */
-      static bool valid_domain(const ibex::Interval& domain);
+      static bool valid_tdomain(const ibex::Interval& tdomain);
   };
 }
 

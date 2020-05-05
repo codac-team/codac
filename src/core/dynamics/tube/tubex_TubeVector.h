@@ -44,38 +44,38 @@ namespace tubex
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ made of one slice
        *
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param n dimension of this tube
        */
-      explicit TubeVector(const ibex::Interval& domain, int n);
+      explicit TubeVector(const ibex::Interval& tdomain, int n);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ made of one slice
        *
        * \note The dimension of the tube is specified by the codomain box
        *
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param codomain IntervalVector value of the slice
        */
-      explicit TubeVector(const ibex::Interval& domain, const ibex::IntervalVector& codomain);
+      explicit TubeVector(const ibex::Interval& tdomain, const ibex::IntervalVector& codomain);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ with some temporal discretization
        *
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param n dimension of this tube
        */
-      explicit TubeVector(const ibex::Interval& domain, double timestep, int n);
+      explicit TubeVector(const ibex::Interval& tdomain, double timestep, int n);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ with some temporal discretization
        *
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param codomain IntervalVector value of the slices
        */
-      explicit TubeVector(const ibex::Interval& domain, double timestep, const ibex::IntervalVector& codomain);
+      explicit TubeVector(const ibex::Interval& tdomain, double timestep, const ibex::IntervalVector& codomain);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
@@ -85,23 +85,23 @@ namespace tubex
        *       effect will occur to reliably enclose the tubex::Fnc object
        * \note The dimension of the tube is specified by the output of \f$[\mathbf{f}]\f$
        *
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param f tubex::Fnc object that will be enclosed by the tube:
        *          \f$\forall t\in[t_0,t_f], [\mathbf{f}](t)\subseteq[\mathbf{x}](t)\f$
        */
-      explicit TubeVector(const ibex::Interval& domain, double timestep, const tubex::Fnc& f);
+      explicit TubeVector(const ibex::Interval& tdomain, double timestep, const tubex::Fnc& f);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ from a list of \f$k\f$ boxes \f$\big([t_1]\times[\mathbf{x}_1],\dots,[t_k]\times[\mathbf{x}_k]\big)\f$
        *
        * \note The slicing will be based on the vector of temporal domains.
-       * \note The \f$[t_i]\f$'s must cover continuously the domain of \f$[\mathbf{x}](\cdot)\f$.
+       * \note The \f$[t_i]\f$'s must cover continuously the tdomain of \f$[\mathbf{x}](\cdot)\f$.
        *
-       * \param v_domains vector of temporal domains \f$[t_i]\f$
+       * \param v_tdomains vector of temporal domains \f$[t_i]\f$
        * \param v_codomains vector of codomains \f$[\mathbf{x}_i]\f$ related to the \f$[t_i]\f$'s
        */
-      explicit TubeVector(const std::vector<ibex::Interval>& v_domains, const std::vector<ibex::IntervalVector>& v_codomains);
+      explicit TubeVector(const std::vector<ibex::Interval>& v_tdomains, const std::vector<ibex::IntervalVector>& v_codomains);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ from a list of Tube objects
@@ -248,7 +248,7 @@ namespace tubex
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      const ibex::Interval domain() const;
+      const ibex::Interval tdomain() const;
 
       /// @}
       /// \name Slices structure
@@ -264,7 +264,7 @@ namespace tubex
       /**
        * \brief Returns the Slice index related to the temporal key \f$t\f$
        *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        * \return an integer
        */
       int input2index(double t) const;
@@ -275,7 +275,7 @@ namespace tubex
        * \note Without any effect on one component that has two Slice objects
        *       already defined at \f$t\f$ (if the gate \f$[\mathbf{x}](t)\f$ already exists)
        *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        */
       void sample(double t);
 
@@ -285,7 +285,7 @@ namespace tubex
        * \note Without any effect on one component that has two Slice objects
        *       already defined at \f$t\f$ (if the gate \f$[\mathbf{x}](t)\f$ already exists)
        *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        * \param gate the IntervalVector value of this tube at \f$t\f$
        */
       void sample(double t, const ibex::IntervalVector& gate);
@@ -358,7 +358,7 @@ namespace tubex
       /**
        * \brief Returns the evaluation of this tube at \f$t\f$
        *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        * \return IntervalVector value of \f$[\mathbf{x}](t)\f$
        */
       const ibex::IntervalVector operator()(double t) const;
@@ -366,7 +366,7 @@ namespace tubex
       /**
        * \brief Returns the interval evaluation of this tube over \f$[t]\f$
        *
-       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        * \return IntervalVector envelope \f$[\mathbf{x}]([t])\f$
        */
       const ibex::IntervalVector operator()(const ibex::Interval& t) const;
@@ -375,7 +375,7 @@ namespace tubex
        * \brief Returns the interval evaluations of the bounds of the
        *        tube \f$\underline{\mathbf{x}^-}(\cdot)\f$ and \f$\overline{\mathbf{x}^+}(\cdot)\f$ over \f$[t]\f$
        *
-       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        * \return the pair \f$\big([\underline{\mathbf{x}^-}]([t]),[\overline{\mathbf{x}^+}]([t])\big)\f$
        */
       const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
@@ -386,7 +386,7 @@ namespace tubex
        *
        * \todo Change the name of this method?
        *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
        * \return IntervalVector value of \f$[\mathbf{x}](t)\f$
        */
@@ -398,7 +398,7 @@ namespace tubex
        *
        * \todo Change the name of this method?
        *
-       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
        * \return IntervalVector value of \f$[\mathbf{x}]([t])\f$
        */
@@ -410,20 +410,20 @@ namespace tubex
        * \note If the inversion results in several pre-images, their union is returned
        *
        * \param y the box codomain
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional temporal domain on which the inversion will be performed
        * \return the hull of \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
        */
-      const ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
 
       /**
        * \brief Computes the set of continuous values of the inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
        *
        * \param y the interval codomain
-       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which
+       * \param v_t the vector of the sub-tdomains \f$[t_k]\f$ for which
        *            \f$\forall t\in[t_k] \mid \mathbf{x}(t)\in[\mathbf{y}], \mathbf{x}(\cdot)\in[\mathbf{x}](\cdot)\f$
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional temporal domain on which the inversion will be performed
        */
-      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
 
       /**
        * \brief Returns the optimal interval inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
@@ -433,10 +433,10 @@ namespace tubex
        *
        * \param y the interval codomain
        * \param v the derivative tube vector such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional temporal domain on which the inversion will be performed
        * \return the hull of \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
        */
-      const ibex::Interval invert(const ibex::IntervalVector& y, const TubeVector& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::IntervalVector& y, const TubeVector& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
 
       /**
        * \brief Computes the set of continuous values of the optimal inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
@@ -444,12 +444,12 @@ namespace tubex
        * \note The knowledge of the derivative tube \f$[\mathbf{v}](\cdot)\f$ allows finer inversions
        *
        * \param y the interval codomain
-       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which
+       * \param v_t the vector of the sub-tdomains \f$[t_k]\f$ for which
        *            \f$\exists t\in[t_k] \mid \mathbf{x}(t)\in[\mathbf{y}], \mathbf{x}(\cdot)\in[\mathbf{x}](\cdot), \dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
        * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional temporal domain on which the inversion will be performed
        */
-      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const TubeVector& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const TubeVector& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
       
       /**
        * \brief Returns a vector of the maximum diameters of the tube for each component
@@ -516,7 +516,7 @@ namespace tubex
        * \brief Returns true if this tube is equal to \f$[\mathbf{x}](\cdot)\f$
        *
        * \note Equality is obtained if the tubes share
-       *       the same bounds, domain and sampling
+       *       the same bounds, tdomain and sampling
        *
        * \param x the TubeVector object
        * \return true in case of equality
@@ -527,7 +527,7 @@ namespace tubex
        * \brief Returns true if this tube is different from \f$[\mathbf{x}](\cdot)\f$
        *
        * \note The two tubes are different if they do not share
-       *       the same bounds, domain or sampling
+       *       the same bounds, tdomain or sampling
        *
        * \param x the TubeVector object
        * \return true in case of difference
@@ -538,7 +538,7 @@ namespace tubex
        * \brief Returns true if this tube is a subset of \f$[\mathbf{x}](\cdot)\f$
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the TubeVector object
        * \return true in case of subset
@@ -550,7 +550,7 @@ namespace tubex
        *        and not \f$[\mathbf{x}](\cdot)\f$ itself
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the TubeVector object
        * \return true in case of strict subset
@@ -561,7 +561,7 @@ namespace tubex
        * \brief Returns true if this tube is a subset of the interior of \f$[\mathbf{x}](\cdot)\f$
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the TubeVector object
        * \return true in case of interior subset
@@ -573,7 +573,7 @@ namespace tubex
        *        of \f$[\mathbf{x}](\cdot)\f$, and not \f$[\mathbf{x}](\cdot)\f$ itself
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the TubeVector object
        * \return true in case of strict interior subset
@@ -584,7 +584,7 @@ namespace tubex
        * \brief Returns true if this tube is a superset of \f$[\mathbf{x}](\cdot)\f$
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the TubeVector object
        * \return true in case of superset
@@ -596,7 +596,7 @@ namespace tubex
        *        and not \f$[\mathbf{x}](\cdot)\f$ itself
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the TubeVector object
        * \return true in case of strict superset
@@ -667,7 +667,7 @@ namespace tubex
        *       update the value of the already existing gate.
        *
        * \param y IntervalVector value of the gate
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        */
       void set(const ibex::IntervalVector& y, double t);
 
@@ -679,7 +679,7 @@ namespace tubex
        *       done to ensure that \f$\forall t\in[t], [\mathbf{x}](t)=[\mathbf{y}]\f$.
        *
        * \param y IntervalVector value to be set
-       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        */
       void set(const ibex::IntervalVector& y, const ibex::Interval& t);
 
@@ -723,11 +723,11 @@ namespace tubex
       const TubeVector& inflate(const TrajectoryVector& rad);
 
       /**
-       * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$[\mathbf{x}](\cdot)\f$
+       * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$[\mathbf{x}](\cdot)\f$
        *
        * \param a the offset value so that \f$[t_0,t_f]:=[t_0-a,t_f-a]\f$ 
        */
-      void shift_domain(double a);
+      void shift_tdomain(double a);
 
       /// @}
       /// \name Bisection
@@ -740,7 +740,7 @@ namespace tubex
        * \note The bisection is performed on the largest component of the gate \f$[\mathbf{x}](t)\f$
        * \note If the tube is not already sampled at \f$t\f$, then a sampling is performed
        *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's domain)
        * \param ratio the bisection ratio (default value: 0.49)
        * \return a pair of two TubeVector objects resulting from the bisection
        */
@@ -753,7 +753,7 @@ namespace tubex
        * \note The bisection is performed on the gate \f$[x_i](t)\f$
        * \note If the tube is not already sampled at \f$t\f$, then a sampling is performed
        *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's domain)
        * \param dim the dimension id
        * \param ratio the bisection ratio (default value: 0.49)
        * \return a pair of two TubeVector objects resulting from the bisection
@@ -1001,7 +1001,7 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_0^t[\mathbf{x}](\tau)d\tau=[\int_0^t\mathbf{x}^-(\tau)d\tau,\int_0^t\mathbf{x}^+(\tau)d\tau]\f$
        *
-       * \param t the temporal key (double, must belong to the TubeVector domain)
+       * \param t the temporal key (double, must belong to the TubeVector's domain)
        * \return the set of feasible integral vectors
        */
       const ibex::IntervalVector integral(double t) const;
@@ -1012,7 +1012,7 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_0^{[t]}[\mathbf{x}](\tau)d\tau=[\int_0^{[t]}\mathbf{x}^-(\tau)d\tau,\int_0^{[t]}\mathbf{x}^+(\tau)d\tau]\f$
        *
-       * \param t the subdomain (Interval, must be a subset of the TubeVector domain)
+       * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        * \return the set of feasible integral vectors
        */
       const ibex::IntervalVector integral(const ibex::Interval& t) const;
@@ -1023,8 +1023,8 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_{[t_1]}^{[t_2]}[\mathbf{x}](\tau)d\tau=[\int_{[t_1]}^{[t_2]}\mathbf{x}^-(\tau)d\tau,\int_{[t_1]}^{[t_2]}\mathbf{x}^+(\tau)d\tau]\f$
        *
-       * \param t1 lower bound, subset of the TubeVector domain
-       * \param t2 upper bound, subset of the TubeVector domain
+       * \param t1 lower bound, subset of the TubeVector's tdomain
+       * \param t2 upper bound, subset of the TubeVector's tdomain
        * \return the set of feasible integral vectors
        */
       const ibex::IntervalVector integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
@@ -1035,7 +1035,7 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_{0}^{[t]}[\mathbf{x}](\tau)d\tau=[\int_{0}^{[t]}\mathbf{x}^-(\tau)d\tau,\int_{0}^{[t]}\mathbf{x}^+(\tau)d\tau]\f$
        *
-       * \param t interval upper bound, subset of the TubeVector domain
+       * \param t interval upper bound, subset of the TubeVector's tdomain
        * \return the pair \f$\big([i^-],[i^+]\big)\f$,
        *         where \f$[i^-]=\int_{0}^{[t]}\mathbf{x}^-(\tau)d\tau\f$ 
        *         and \f$[i^+]=\int_{0}^{[t]}\mathbf{x}^+(\tau)d\tau\f$
@@ -1048,8 +1048,8 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_{[t_1]}^{[t_2]}[\mathbf{x}](\tau)d\tau=[\int_{[t_1]}^{[t_2]}\mathbf{x}^-(\tau)d\tau,\int_{[t_1]}^{[t_2]}\mathbf{x}^+(\tau)d\tau]\f$
        *
-       * \param t1 interval lower bound, subset of the TubeVector domain
-       * \param t2 interval upper bound, subset of the TubeVector domain
+       * \param t1 interval lower bound, subset of the TubeVector's tdomain
+       * \param t2 interval upper bound, subset of the TubeVector's tdomain
        * \return the pair \f$\big([i^-],[i^+]\big)\f$,
        *         where \f$[i^-]=\int_{[t_1]}^{[t_2]}\mathbf{x}^-(\tau)d\tau\f$ 
        *         and \f$[i^+]=\int_{[t_1]}^{[t_2]}\mathbf{x}^+(\tau)d\tau\f$

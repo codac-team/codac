@@ -24,29 +24,29 @@ int main()
   /* =========== PARAMETERS =========== */
 
     double tube_dt = 0.005;
-    Interval domain(0., 13.5);
+    Interval tdomain(0., 13.5);
     float beacon_depth = 10.;
 
   /* =========== INITIALIZATION =========== */
 
-    TubeVector x(domain, 4);
-    x[0] = Tube(domain, tube_dt, tubex::Function("100*cos(t)+[80,100]"));
-    x[1] = Tube(domain, tube_dt, tubex::Function("100*sin(t)+[10,30]"));
-    x[2] = Tube(domain, tube_dt, tubex::Function("-100*sin(t)+[-0.1,0.1]"));
-    x[3] = Tube(domain, tube_dt, tubex::Function("100*cos(t)+[-0.1,0.1]"));
+    TubeVector x(tdomain, 4);
+    x[0] = Tube(tdomain, tube_dt, tubex::Function("100*cos(t)+[80,100]"));
+    x[1] = Tube(tdomain, tube_dt, tubex::Function("100*sin(t)+[10,30]"));
+    x[2] = Tube(tdomain, tube_dt, tubex::Function("-100*sin(t)+[-0.1,0.1]"));
+    x[3] = Tube(tdomain, tube_dt, tubex::Function("100*cos(t)+[-0.1,0.1]"));
     
-    TubeVector y(domain, 2);
+    TubeVector y(tdomain, 2);
     y[0] = sqrt(sqr(x[0]) + sqr(x[1]) + ibex::sqr(beacon_depth));
     y[1] = (x[0]*x[2] + x[1]*x[3]) / y[0];
     
-    TubeVector h(domain, 2);
-    h[1] = Tube(domain, tube_dt, tubex::Function("[0.08,0.12]*t+[0.97,1.08]"));
+    TubeVector h(tdomain, 2);
+    h[1] = Tube(tdomain, tube_dt, tubex::Function("[0.08,0.12]*t+[0.97,1.08]"));
     h[0] = h[1].primitive();
 
   /* =========== GRAPHICS =========== */
 
-    Trajectory y_truth(domain, tubex::Function("sqrt((90+100*cos(t))^2 + (20+100*sin(t))^2 + 100)"));
-    Trajectory h_truth(domain, tubex::Function("0.045*t^2+0.98*t"));
+    Trajectory y_truth(tdomain, tubex::Function("sqrt((90+100*cos(t))^2 + (20+100*sin(t))^2 + 100)"));
+    Trajectory h_truth(tdomain, tubex::Function("0.045*t^2+0.98*t"));
 
     vibes::beginDrawing();
 

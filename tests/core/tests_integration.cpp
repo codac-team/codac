@@ -507,7 +507,7 @@ TEST_CASE("Computing integration from 0, partial integration", "[core]")
     for(int i = 0 ; i < 2 ; i++)
     {
       t_start = clock();
-      CHECK(ApproxIntvPair(tube.partial_integral(tube.domain())) == make_pair(Interval(-85,7), Interval(-16,194)));
+      CHECK(ApproxIntvPair(tube.partial_integral(tube.tdomain())) == make_pair(Interval(-85,7), Interval(-16,194)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,46.))) == make_pair(Interval(-85,7), Interval(-16,194)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(7.))) == make_pair(Interval(-23), Interval(13)));
       CHECK(ApproxIntvPair(tube.partial_integral(Interval(0.,7.))) == make_pair(Interval(-23,7.0), Interval(0,25)));
@@ -797,9 +797,9 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     Tube tube(Interval(0.,10.), 0.1, tubex::Function("sin(t)"));
 
     tube.enable_synthesis(true); // first: testing with tree synthesis
-    Interval intv_t = Interval(tube.domain().lb() + tube.domain().diam() / 4.,
-                               tube.domain().ub() - tube.domain().diam() / 4.);
-    intv_t = tube.domain();
+    Interval intv_t = Interval(tube.tdomain().lb() + tube.tdomain().diam() / 4.,
+                               tube.tdomain().ub() - tube.tdomain().diam() / 4.);
+    intv_t = tube.tdomain();
 
     t_start = clock();
     tube.integral(intv_t);

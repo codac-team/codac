@@ -27,10 +27,10 @@ int main()
 
     clock_t t_start = clock();
     float dt = 0.01;
-    Interval domain(0., 14.);
+    Interval tdomain(0., 14.);
 
     // Tube state vector
-      TubeVector x(domain, dt, 3);
+      TubeVector x(tdomain, dt, 3);
 
     // Initial state x0
       Vector x0(3, 0.);
@@ -44,7 +44,7 @@ int main()
       x.set(ix0, 0.); // tube state vector with initial conditions
 
     // Computing an approximation of the actual state trajectory
-      Trajectory traj_phidot(domain, tubex::Function("-cos((t+33)/5)"), dt);
+      Trajectory traj_phidot(tdomain, tubex::Function("-cos((t+33)/5)"), dt);
 
       TrajectoryVector traj_state(3); // state equations
       traj_state[2] = traj_phidot.primitive(x0[2]);
@@ -87,7 +87,7 @@ int main()
     if(!FINAL_CONDITION)
     {
       // Tubex result
-      fig_map.draw_box(x(x.domain().ub()).subvector(0,1), "#008000");
+      fig_map.draw_box(x(x.tdomain().ub()).subvector(0,1), "#008000");
 
       // CAPD result
       IntervalVector capd_box(2);

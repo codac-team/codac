@@ -20,8 +20,8 @@ namespace tubex
 
   }
   
-  bool DynamicalItem::valid_domain(const ibex::Interval& domain)
+  bool DynamicalItem::valid_tdomain(const Interval& tdomain)
   {
-    return !domain.is_empty() && !domain.is_unbounded() && !domain.is_degenerated();
+    return !tdomain.is_empty() && !tdomain.is_unbounded() && !tdomain.is_degenerated();
   }
 }

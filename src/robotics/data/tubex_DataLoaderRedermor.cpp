@@ -25,9 +25,9 @@ namespace tubex
 
   }
 
-  void DataLoaderRedermor::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& domain)
+  void DataLoaderRedermor::load_data(TubeVector *&x, TrajectoryVector *&truth, float timestep, const Interval& tdomain)
   {
-    assert(domain == Interval::ALL_REALS || DynamicalItem::valid_domain(domain));
+    assert(tdomain == Interval::ALL_REALS || DynamicalItem::valid_tdomain(tdomain));
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 
@@ -97,8 +97,8 @@ namespace tubex
       TubeVector velocities = f.eval_vector(*x);
 
       // Horizontal position
-      (*x)[0] = velocities[0].primitive(traj_data_x[8](traj_data_x.domain().lb())); // datafile: robot starts at (0.06,0.)
-      (*x)[1] = velocities[1].primitive(traj_data_x[9](traj_data_x.domain().lb()));
+      (*x)[0] = velocities[0].primitive(traj_data_x[8](traj_data_x.tdomain().lb())); // datafile: robot starts at (0.06,0.)
+      (*x)[1] = velocities[1].primitive(traj_data_x[9](traj_data_x.tdomain().lb()));
 
       // Case of the depth, directly sensed:
       (*x)[2].set_empty();

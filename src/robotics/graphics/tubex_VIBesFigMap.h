@@ -61,7 +61,7 @@ namespace tubex
 
       /**
        * \brief Restricts the display of the dynamical items to a part
-       *        of their temporal domain only
+       *        of their tdomain only
        *
        * \param restricted_tdomain subset of the temporal domain of the referenced items
        */

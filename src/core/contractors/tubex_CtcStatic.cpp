@@ -30,11 +30,11 @@ namespace tubex
     {
       assert(v_domains[i]->type() == Domain::Type::SLICE);
       if(i != 0)
-        assert(v_domains[i]->slice().domain() == v_domains[i-1]->slice().domain());
+        assert(v_domains[i]->slice().tdomain() == v_domains[i-1]->slice().tdomain());
     }
 
     // If these slices should not be impacted by the contractor
-    if(!v_domains[0]->slice().domain().intersects(m_restricted_domain))
+    if(!v_domains[0]->slice().tdomain().intersects(m_restricted_tdomain))
       return;
 
     int n = v_domains.size();
@@ -169,22 +169,22 @@ namespace tubex
     while(v_x_slices[0] != NULL)
     {
       // If these slices should not be impacted by the contractor
-      if(!v_x_slices[0]->domain().intersects(m_restricted_domain))
+      if(!v_x_slices[0]->tdomain().intersects(m_restricted_tdomain))
       {
         for(int i = 0 ; i < n ; i++)
           v_x_slices[i] = v_x_slices[i]->next_slice();
 
         // todo: Thin contraction with respect to tube's slicing:
         // the contraction should not be optimal on purpose if the
-        // restricted domain does not cover the slice's domain
+        // restricted tdomain does not cover the slice's tdomain
         
         continue; // moving to next slice
       }
 
       if(m_dynamic_ctc)
       {
-        envelope[0] = v_x_slices[0]->domain();
-        ingate[0] = v_x_slices[0]->domain().lb();
+        envelope[0] = v_x_slices[0]->tdomain();
+        ingate[0] = v_x_slices[0]->tdomain().lb();
       }
 
       for(int i = 0 ; i < n ; i++)
@@ -207,7 +207,7 @@ namespace tubex
         IntervalVector outgate(n + m_dynamic_ctc);
 
         if(m_dynamic_ctc)
-          outgate[0] = v_x_slices[0]->domain().ub();
+          outgate[0] = v_x_slices[0]->tdomain().ub();
 
         for(int i = 0 ; i < n ; i++)
           outgate[i+m_dynamic_ctc] = v_x_slices[i]->output_gate();

@@ -30,7 +30,7 @@ namespace tubex
       void load_data(TubeVector *&x,
                      TrajectoryVector *&truth,
                      float timestep,
-                     const ibex::Interval& domain = ibex::Interval::ALL_REALS);
+                     const ibex::Interval& tdomain = ibex::Interval::ALL_REALS);
 
       bool serialized_data_available() const;
       void deserialize_data(TubeVector *&x, TrajectoryVector *&traj) const;
@@ -57,7 +57,7 @@ namespace tubex
                      bool random = true,
                      const ibex::Interval& visi_range = ibex::Interval(0.,50.),
                      const ibex::Interval& visi_angle = ibex::Interval(-M_PI/4.,M_PI/4.),
-                     const ibex::Interval& domain = ibex::Interval::ALL_REALS);
+                     const ibex::Interval& tdomain = ibex::Interval::ALL_REALS);
 
     protected:
 

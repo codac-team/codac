@@ -24,10 +24,10 @@ int main()
   /* =========== INITIALIZATION =========== */
 
     float dt = 0.01;
-    Interval domain(0., 64.);
+    Interval tdomain(0., 64.);
 
     // Tube state vector
-      TubeVector x(domain, dt, 4);
+      TubeVector x(tdomain, dt, 4);
 
     // Initial state x0
       Vector x0(4, 0.);
@@ -43,8 +43,8 @@ int main()
       x.set(ix0, 0.); // tube state vector with initial condition on v, phi
 
     // Computing an approximation of the actual state trajectory
-      Trajectory traj_vdot(domain, tubex::Function("0.1 + sin(0.25*t)"), dt);
-      Trajectory traj_phidot(domain, tubex::Function("-0.45 * cos(0.2*t)"), dt);
+      Trajectory traj_vdot(tdomain, tubex::Function("0.1 + sin(0.25*t)"), dt);
+      Trajectory traj_phidot(tdomain, tubex::Function("-0.45 * cos(0.2*t)"), dt);
 
       TrajectoryVector traj_state(4); // state equations
       traj_state[2] = traj_phidot.primitive(x0[2]);

@@ -96,14 +96,14 @@ namespace tubex
       m_v_figs[i]->show_cursor(display);
   }
 
-  void VIBesFigTubeVector::draw_box(const Interval& domain, const IntervalVector& box, const vibes::Params& params)
+  void VIBesFigTubeVector::draw_box(const Interval& tdomain, const IntervalVector& box, const vibes::Params& params)
   {
     if(m_n != 0)
       assert(size() == box.size() && "box and fig must be of same dimension");
-    draw_box(domain, box, "", params);
+    draw_box(tdomain, box, "", params);
   }
 
-  void VIBesFigTubeVector::draw_box(const Interval& domain, const IntervalVector& box, const string& color, const vibes::Params& params)
+  void VIBesFigTubeVector::draw_box(const Interval& tdomain, const IntervalVector& box, const string& color, const vibes::Params& params)
   {
     if(m_n == 0) // if the figure is still empty
       create_subfigures(box.size());
@@ -116,7 +116,7 @@ namespace tubex
         continue;
       
       IntervalVector proj_box(2); // projected box
-      proj_box[0] = domain;
+      proj_box[0] = tdomain;
       proj_box[1] = box[i + m_start_index];
       m_v_figs[i]->draw_box(proj_box, color, params);
     }

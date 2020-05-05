@@ -81,7 +81,7 @@ namespace tubex
       /**
        * \brief Set the position of the temporal cursor of this figure
        *
-       * \param t position on the temporal domain
+       * \param t position on the tdomain
        */
       void set_cursor(double t);
 
@@ -317,7 +317,7 @@ namespace tubex
        * \brief Draws a gate
        *
        * \param gate the codomain
-       * \param t the domain input
+       * \param t the tdomain input
        * \param params VIBes parameters related to the gate (for groups)
        */
       void draw_gate(const ibex::Interval& gate, double t, const vibes::Params& params);
