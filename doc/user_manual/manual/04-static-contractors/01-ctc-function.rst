@@ -1,8 +1,8 @@
 .. _sec-manual-ctcfunction:
 
-******************************************************
-CtcFunction: :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}`
-******************************************************
+**************************************************************
+Generic CtcFunction: :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}`
+**************************************************************
 
 Lot of constraints can be expressed under the form :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}` with :math:`\mathbf{f}` an analytic function possibly non-linear. The goal is to estimate the set of feasible vectors :math:`\mathbf{x}` of a domain :math:`[\mathbf{x}]` that satisfy this constraint.
 A dedicated contractor can be built from :math:`\mathbf{f}` in order to contract boxes.
