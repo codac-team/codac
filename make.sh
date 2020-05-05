@@ -66,5 +66,8 @@ fi
     cd tuto
     find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
     cd ..
+    cd lie_group
+    find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+    cd ..
     cd ..
   fi
