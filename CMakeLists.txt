@@ -5,8 +5,8 @@
   cmake_minimum_required(VERSION 3.0.2)
 
   project(tubex-lib VERSION 2.5.0 LANGUAGES CXX)
-  set(PROJECT_DESCRIPTION "Tubex is a library providing tools for constraint "
-                          "programming over reals and trajectories.")
+  set(PROJECT_DESCRIPTION
+      "Tubex is a library providing tools for constraint programming over reals and trajectories.")
   set(PROJECT_HOMEPAGE_URL "http://simon-rohou.fr/research/tubex-lib")
   message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
@@ -22,10 +22,6 @@
   set(CMAKE_INSTALL_BINDIR "bin" CACHE PATH "user executables (bin)")
   set(CMAKE_INSTALL_PKGCONFIG "share/pkgconfig" CACHE PATH "pkg files (share/pkgconfig)")
   set(CMAKE_INSTALL_CMAKE "share/tubex/cmake" CACHE PATH "cmake files (share/tubex/cmake)")
-
-
-
-
 
 
 ################################################################################
@@ -76,7 +72,6 @@
   find_package(IBEX REQUIRED)
   ibex_init_common() # IBEX should have installed this function
   message(STATUS "Found IBEX version ${IBEX_VERSION}")
-
 
 
 ################################################################################
@@ -160,8 +155,9 @@
       # Tuto
       add_test(NAME tuto_01
                COMMAND ../examples/tuto/ex_01_getting_started/build/tubex_tuto_01 0)
+
       if(WITH_CAPD)
-      # Lie group
+        # Lie group
         add_test(NAME lie_05
                  COMMAND ../examples/lie_group/ex_05_loc/build/tubex_lie_05 0)
       endif()
