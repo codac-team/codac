@@ -36,9 +36,9 @@ namespace tubex
     m_fast_mode = fast_mode;
   }
 
-  void Ctc::set_restricted_domain(const Interval& domain)
+  void Ctc::set_restricted_tdomain(const Interval& tdomain)
   {
-    m_restricted_domain = domain;
+    m_restricted_tdomain = tdomain;
   }
 
   bool Ctc::is_intertemporal() const

@@ -39,7 +39,7 @@ namespace tubex
     \
     const Tube& Tube::f(const Trajectory& x) \
     { \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       \
       Slice *s = NULL; \
       do \
@@ -49,18 +49,18 @@ namespace tubex
         else \
           s = s->next_slice(); \
         \
-        s->set_envelope(Interval(s->codomain()).f(x(s->domain())), false); \
-        s->set_input_gate(Interval(s->input_gate()).f(x(Interval(s->domain().lb()))), false); \
+        s->set_envelope(Interval(s->codomain()).f(x(s->tdomain())), false); \
+        s->set_input_gate(Interval(s->input_gate()).f(x(Interval(s->tdomain().lb()))), false); \
          \
       } while(s->next_slice() != NULL); \
       \
-      s->set_output_gate(Interval(s->output_gate()).f(x(Interval(s->domain().ub()))), false); \
+      s->set_output_gate(Interval(s->output_gate()).f(x(Interval(s->tdomain().ub()))), false); \
       return *this; \
     } \
     \
     const Tube& Tube::f(const Tube& x) \
     { \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       \
       if(Tube::same_slicing(*this, x)) /* faster */ \
       { \
@@ -97,12 +97,12 @@ namespace tubex
           else \
             s = s->next_slice(); \
           \
-          s->set_envelope(Interval(s->codomain()).f(x(s->domain())), false); \
-          s->set_input_gate(Interval(s->input_gate()).f(x(s->domain().lb())), false); \
+          s->set_envelope(Interval(s->codomain()).f(x(s->tdomain())), false); \
+          s->set_input_gate(Interval(s->input_gate()).f(x(s->tdomain().lb())), false); \
           \
         } while(s->next_slice() != NULL); \
         \
-        s->set_output_gate(Interval(s->output_gate()).f(x(s->domain().ub())), false); \
+        s->set_output_gate(Interval(s->output_gate()).f(x(s->tdomain().ub())), false); \
       } \
       \
       return *this; \

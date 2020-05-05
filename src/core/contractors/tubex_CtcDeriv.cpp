@@ -58,7 +58,7 @@ namespace tubex
 
   void CtcDeriv::contract(Tube& x, const Tube& v, TimePropag t_propa)
   {
-    assert(x.domain() == v.domain());
+    assert(x.tdomain() == v.tdomain());
     assert(Tube::same_slicing(x, v));
     
     if(t_propa & TimePropag::FORWARD)
@@ -93,7 +93,7 @@ namespace tubex
   void CtcDeriv::contract(TubeVector& x, const TubeVector& v, TimePropag t_propa)
   {
     assert(x.size() == v.size());
-    assert(x.domain() == v.domain());
+    assert(x.tdomain() == v.tdomain());
     assert(TubeVector::same_slicing(x, v));
 
     for(int i = 0 ; i < x.size() ; i++)
@@ -102,16 +102,19 @@ namespace tubex
 
   void CtcDeriv::contract(Slice& x, const Slice& v, TimePropag t_propa)
   {
-    assert(x.domain() == v.domain());
+    assert(x.tdomain() == v.tdomain());
     #ifndef NDEBUG
       double volume = x.volume() + v.volume(); // for last assert
+      // todo: remove this: (or use Polygons with truncature)
+      if(x.codomain().ub() == BOUNDED_INFINITY || x.codomain().lb() == -BOUNDED_INFINITY)
+        volume = std::numeric_limits<double>::infinity();
     #endif
 
-    if(!x.domain().intersects(m_restricted_domain))
+    if(!x.tdomain().intersects(m_restricted_tdomain))
     {
       // todo: Thin contraction with respect to tube's slicing:
       // the contraction should not be optimal on purpose if the
-      // restricted domain does not cover the slice's domain
+      // restricted tdomain does not cover the slice's domain
       return;
     }
 
@@ -121,14 +124,14 @@ namespace tubex
     {
       if(t_propa & TimePropag::FORWARD)
       {
-        x.set_envelope(envelope & (ingate + Interval(0.,x.domain().diam()) * v.codomain()));
-        x.set_output_gate(outgate & (ingate + x.domain().diam() * v.codomain()));
+        x.set_envelope(envelope & (ingate + Interval(0.,x.tdomain().diam()) * v.codomain()));
+        x.set_output_gate(outgate & (ingate + x.tdomain().diam() * v.codomain()));
       }
 
       if(t_propa & TimePropag::BACKWARD)
       {
-        x.set_envelope(envelope & (outgate - Interval(0.,x.domain().diam()) * v.codomain()));
-        x.set_input_gate(ingate & (outgate - x.domain().diam() * v.codomain()));
+        x.set_envelope(envelope & (outgate - Interval(0.,x.tdomain().diam()) * v.codomain()));
+        x.set_input_gate(ingate & (outgate - x.tdomain().diam() * v.codomain()));
       }
     }
 
@@ -136,14 +139,14 @@ namespace tubex
     {
       if(outgate == Interval::ALL_REALS) // Direct evaluation, polygons not needed
       {
-        envelope &= ingate + Interval(0.,x.domain().diam()) * v.codomain();
-        outgate &= ingate + x.domain().diam() * v.codomain();
+        envelope &= ingate + Interval(0.,x.tdomain().diam()) * v.codomain();
+        outgate &= ingate + x.tdomain().diam() * v.codomain();
       }
 
       else if(ingate == Interval::ALL_REALS) // Direct evaluation, polygons not needed
       {
-        envelope &= outgate - Interval(0.,x.domain().diam()) * v.codomain();
-        ingate &= outgate - x.domain().diam() * v.codomain();
+        envelope &= outgate - Interval(0.,x.tdomain().diam()) * v.codomain();
+        ingate &= outgate - x.tdomain().diam() * v.codomain();
       }
 
       else // Using polygons to compute the envelope
@@ -154,8 +157,8 @@ namespace tubex
         x.set_envelope(envelope);
 
         // Gates contraction
-        outgate &= ingate + x.domain().diam() * v.codomain();
-        ingate &= outgate - x.domain().diam() * v.codomain();
+        outgate &= ingate + x.tdomain().diam() * v.codomain();
+        ingate &= outgate - x.tdomain().diam() * v.codomain();
 
         // Gates needed for polygon computation
         x.set_input_gate(ingate);
@@ -183,15 +186,15 @@ namespace tubex
 
   void CtcDeriv::contract_gates(Slice& x, const Slice& v)
   {
-    assert(x.domain() == v.domain());
+    assert(x.tdomain() == v.tdomain());
     
     Interval in_gate = x.input_gate(), out_gate = x.output_gate();
 
-    Interval in_gate_proj = in_gate + x.domain().diam() * v.codomain();
+    Interval in_gate_proj = in_gate + x.tdomain().diam() * v.codomain();
     out_gate &= in_gate_proj;
     x.set_output_gate(out_gate);
 
-    Interval out_gate_proj = out_gate - x.domain().diam() * v.codomain();
+    Interval out_gate_proj = out_gate - x.tdomain().diam() * v.codomain();
     in_gate &= out_gate_proj;
     x.set_input_gate(in_gate);
   }

@@ -1,21 +1,19 @@
 # [Tubex library](http://simon-rohou.fr/research/tubex-lib) [![Build Status](https://travis-ci.org/SimonRohou/tubex-lib.svg)](https://travis-ci.org/SimonRohou/tubex-lib)
 
-Tubex is a C++ library providing tools for computations over sets of trajectories.
-It has been designed to deal with **dynamical systems** defined by **non-linear differential equations** and involving constraints such as trajectory evaluations, time uncertainties or **delays**.
 
-The building blocks of this library are *tubes*, that represent domains for **trajectory** variables (*e.g.* signals evolving with time). When a trajectory comes with uncertainties (due to numerical approximations or errors coming from sensors), a reliable enclosure of it can be made thanks to a tube.
+Tubex is a library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
 
-A tube is defined as an interval of two trajectories. Its bounds delineate the **uncertainties** of a dynamical system, thus defining a solution set.
-Then, any operation related to the trajectory will be made on its reliable enclosure, which allows **guaranteed outputs**. These computations stand on interval analysis, a well suited tool that reliably propagates uncertainties.
+| **What is constraint programming?**
+| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a **reliable** set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
-**Mobile robotics** has been the initial motivation of this project: the mathematical tools provided in Tubex come together with robotic applications.
+| **What about mobile robotics?**
+| In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapeed robot problems** can be solved in a very few steps by using constraint programming. Even though the Tubex library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
 
-Computations stands on the [IBEX library](http://www.ibex-lib.org/) that provides reliable tools for static systems.
+In a nutshell, Tubex is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
 
 **See the [official page](http://simon-rohou.fr/research/tubex-lib)**.
 
-![Image of Tube](https://cdn.rawgit.com/SimonRohou/tubex-lib/master/doc/img/tube_slices_small.png)
-
+![Image of Tube](https://cdn.rawgit.com/SimonRohou/tubex-lib/master/doc/user_manual/img/tube_slices_small.png)
 
 
 Related publications
@@ -35,7 +33,6 @@ Documentation
 
 * [User guide](http://simon-rohou.fr/research/tubex-lib)
 * [API technical documentation](http://simon-rohou.fr/research/tubex-lib/doxygen/html/annotated.html)
-
 
 
 Licence and development

@@ -33,7 +33,7 @@ namespace tubex
     const TrajectoryVector f(const TrajectoryVector& x1, const TrajectoryVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
-      assert(x1.domain() == x2.domain()); \
+      assert(x1.tdomain() == x2.tdomain()); \
       TrajectoryVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
         y[i] = tubex::f(x1[i], x2[i]); \

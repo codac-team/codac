@@ -43,7 +43,7 @@ void export_TubeVector(py::module& m){
       .def(py::init<const TrajectoryVector &,double>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_TRAJECTORYVECTOR_DOUBLE, "traj"_a, "timestep"_a=0)
     //   .def(py::init(
-    //       [](const ibex::Interval& domain,double timestep, const tubex::Function& f){
+    //       [](const ibex::Intervalconst ibex::Interval& domain tdomain,double timestep, const tubex::Function& f){
     //           return new TubeVector(domain, timestep, f );
     //       }), "domain"_a, "timestep"_a, "f"_a, py::keep_alive<1,4>())
       .def(py::init<const std::vector<ibex::Interval> &,const std::vector<ibex::IntervalVector> &>(),

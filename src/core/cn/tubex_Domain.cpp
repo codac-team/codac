@@ -216,7 +216,7 @@ namespace tubex
     m_ref_memory_s = reference_wrapper<Slice>(s);
 
     // todo: remove this (unbounded domains not supported for some contractors)
-    s &= Slice(s.domain(),Interval(-99999.,99999.)); 
+    s &= Slice(s.tdomain(),Interval(-99999.,99999.)); 
   }
 
   Domain::Domain(Tube& t)
@@ -677,14 +677,14 @@ namespace tubex
     Trajectory traj_ub(m_map_data_s_ub);
 
     Slice *prev_s = NULL;
-    if(tube().domain().contains(t))
+    if(tube().tdomain().contains(t))
       prev_s = tube().slice(t)->prev_slice();
-    else if(t > tube().domain().ub())
+    else if(t > tube().tdomain().ub())
       prev_s = tube().last_slice();
 
-    while(prev_s != NULL && prev_s->domain().is_subset(traj_lb.domain()))
+    while(prev_s != NULL && prev_s->tdomain().is_subset(traj_lb.tdomain()))
     {
-      Interval new_slice_envelope = (traj_lb(prev_s->domain()) | traj_ub(prev_s->domain()));
+      Interval new_slice_envelope = (traj_lb(prev_s->tdomain()) | traj_ub(prev_s->tdomain()));
 
       if(!prev_s->codomain().is_superset(new_slice_envelope))
         break;
@@ -711,14 +711,14 @@ namespace tubex
     for(int i = 0 ; i < y.size() ; i++)
     {
       Slice *prev_s = NULL;
-      if(tube_vector()[i].domain().contains(t))
+      if(tube_vector()[i].tdomain().contains(t))
         prev_s = tube_vector()[i].slice(t)->prev_slice();
-      else if(t > tube_vector()[i].domain().ub())
+      else if(t > tube_vector()[i].tdomain().ub())
         prev_s = tube_vector()[i].last_slice();
 
-      while(prev_s != NULL && prev_s->domain().is_subset(traj_lb.domain()))
+      while(prev_s != NULL && prev_s->tdomain().is_subset(traj_lb.tdomain()))
       {
-        Interval new_slice_envelope = (traj_lb[i](prev_s->domain()) | traj_ub[i](prev_s->domain()));
+        Interval new_slice_envelope = (traj_lb[i](prev_s->tdomain()) | traj_ub[i](prev_s->tdomain()));
 
         if(!prev_s->codomain().is_superset(new_slice_envelope))
           break;

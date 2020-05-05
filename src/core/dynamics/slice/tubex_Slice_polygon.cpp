@@ -17,77 +17,77 @@ namespace tubex
 {
   Interval yilb(const Interval& t, const Slice& x, const Slice& v)
   {
-    return x.input_gate().lb() + v.codomain().lb() * (t - x.domain().lb());
+    return x.input_gate().lb() + v.codomain().lb() * (t - x.tdomain().lb());
   }
 
   Interval yilb_inv(const Interval& y, const Slice& x, const Slice& v)
   {
-    return ((y - x.input_gate().lb()) / v.codomain().lb()) + x.domain().lb();
+    return ((y - x.input_gate().lb()) / v.codomain().lb()) + x.tdomain().lb();
   }
 
   Interval yiub(const Interval& t, const Slice& x, const Slice& v)
   {
-    return x.input_gate().ub() + v.codomain().ub() * (t - x.domain().lb());
+    return x.input_gate().ub() + v.codomain().ub() * (t - x.tdomain().lb());
   }
 
   Interval yiub_inv(const Interval& y, const Slice& x, const Slice& v)
   {
-    return ((y - x.input_gate().ub()) / v.codomain().ub()) + x.domain().lb();
+    return ((y - x.input_gate().ub()) / v.codomain().ub()) + x.tdomain().lb();
   }
 
   Interval yolb(const Interval& t, const Slice& x, const Slice& v)
   {
-    return x.output_gate().lb() + v.codomain().ub() * (t - x.domain().ub());
+    return x.output_gate().lb() + v.codomain().ub() * (t - x.tdomain().ub());
   }
 
   Interval yolb_inv(const Interval& y, const Slice& x, const Slice& v)
   {
-    return ((y - x.output_gate().lb()) / v.codomain().ub()) + x.domain().ub();
+    return ((y - x.output_gate().lb()) / v.codomain().ub()) + x.tdomain().ub();
   }
 
   Interval youb(const Interval& t, const Slice& x, const Slice& v)
   {
-    return x.output_gate().ub() + v.codomain().lb() * (t - x.domain().ub());
+    return x.output_gate().ub() + v.codomain().lb() * (t - x.tdomain().ub());
   }
 
   Interval youb_inv(const Interval& y, const Slice& x, const Slice& v)
   {
-    return ((y - x.output_gate().ub()) / v.codomain().lb()) + x.domain().ub();
+    return ((y - x.output_gate().ub()) / v.codomain().lb()) + x.tdomain().ub();
   }
 
   Interval ylb_inv(const Interval& y, const Slice& x)
   {
     if(x.input_gate().lb() == x.output_gate().lb())
       return Interval::ALL_REALS;
-    return x.domain().lb() + (y - x.input_gate().lb()) / ((x.output_gate().lb() - x.input_gate().lb()) / (x.domain().diam()));
+    return x.tdomain().lb() + (y - x.input_gate().lb()) / ((x.output_gate().lb() - x.input_gate().lb()) / (x.tdomain().diam()));
   }
 
   Interval yub_inv(const Interval& y, const Slice& x)
   {
     if(x.input_gate().ub() == x.output_gate().ub())
       return Interval::ALL_REALS;
-    return x.domain().lb() + (y - x.input_gate().ub()) / ((x.output_gate().ub() - x.input_gate().ub()) / (x.domain().diam()));
+    return x.tdomain().lb() + (y - x.input_gate().ub()) / ((x.output_gate().ub() - x.input_gate().ub()) / (x.tdomain().diam()));
   }
 
   Interval lines_intersection_ub(const Slice& x, const Slice& v)
   {
     return (x.output_gate().ub() - x.input_gate().ub()
-            + v.codomain().ub() * x.domain().lb()
-            - v.codomain().lb() * x.domain().ub()) / v.codomain().diam();
+            + v.codomain().ub() * x.tdomain().lb()
+            - v.codomain().lb() * x.tdomain().ub()) / v.codomain().diam();
   }
 
   Interval lines_intersection_lb(const Slice& x, const Slice& v)
   {
     return (x.input_gate().lb() - x.output_gate().lb()
-            + v.codomain().ub() * x.domain().ub()
-            - v.codomain().lb() * x.domain().lb()) / v.codomain().diam();
+            + v.codomain().ub() * x.tdomain().ub()
+            - v.codomain().lb() * x.tdomain().lb()) / v.codomain().diam();
   }
 
   const ConvexPolygon Slice::polygon(const Slice& v) const
   {
-    assert(domain() == v.domain());
+    assert(tdomain() == v.tdomain());
 
-    Interval t = domain();
+    Interval t = tdomain();
     assert(!t.is_degenerated());
     
     if(t.is_empty() || codomain().is_empty())
@@ -96,7 +96,7 @@ namespace tubex
     else if(v.codomain() == Interval::ALL_REALS)
     {
       IntervalVector box(2);
-      box[0] = domain();
+      box[0] = tdomain();
       box[1] = codomain();
       return ConvexPolygon(box);
     }

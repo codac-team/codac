@@ -73,10 +73,10 @@ namespace tubex
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
           // then it is sampled and contracted again.
-          if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 500.)
+          if(x(k).is_unbounded() && x[0].slice_tdomain(k).diam() > x.tdomain().diam() / 500.)
           {
             
-            x.sample(x[0].slice_domain(k).mid()); // all the components of the tube are sampled,
+            x.sample(x[0].slice_tdomain(k).mid()); // all the components of the tube are sampled,
             // and sampling time is selected according to the first slice of one of the components,
             // for instance the first one x[0]
             nb_slices ++;
@@ -97,9 +97,9 @@ namespace tubex
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
           // then it is sampled and contracted again.
-          if(x(k).is_unbounded() && x[0].slice_domain(k).diam() > x.domain().diam() / 500.)
+          if(x(k).is_unbounded() && x[0].slice_tdomain(k).diam() > x.tdomain().diam() / 500.)
           {
-            x.sample(x[0].slice_domain(k).mid()); // all the components of the tube are sampled,
+            x.sample(x[0].slice_tdomain(k).mid()); // all the components of the tube are sampled,
             // and sampling time is selected according to the first slice of one of the components,
             // for instance the first one x[0]
             k += 2; // the second subslice will be computed
@@ -143,7 +143,7 @@ namespace tubex
       {
         Slice *s = tube[i].slice(k);
         s->set_output_gate(s->output_gate()
-          & (s->input_gate() + s->domain().diam() * f_eval[i]));
+          & (s->input_gate() + s->tdomain().diam() * f_eval[i]));
       }
 
     else if(t_propa & TimePropag::BACKWARD)
@@ -151,7 +151,7 @@ namespace tubex
       {
         Slice *s = tube[i].slice(k);
         s->set_input_gate(s->input_gate()
-          & (s->output_gate() - s->domain().diam() * f_eval[i]));
+          & (s->output_gate() - s->tdomain().diam() * f_eval[i]));
       }
   }
 
@@ -169,7 +169,7 @@ namespace tubex
       return;
     
     float delta = m_delta;
-    Interval h, t = tube[0].slice_domain(k);
+    Interval h, t = tube[0].slice_tdomain(k);
     IntervalVector initial_x = tube(k), x0(tube.size()), xf(x0);
 
     if(t_propa & TimePropag::FORWARD)

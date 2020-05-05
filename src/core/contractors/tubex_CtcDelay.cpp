@@ -41,7 +41,7 @@ namespace tubex
 
   void CtcDelay::contract(const Interval& a, const Tube& x, Tube& y)
   {
-    assert(x.domain() == y.domain());
+    assert(x.tdomain() == y.tdomain());
     assert(Tube::same_slicing(x, y));
 
     const Slice *s_x = x.first_slice();
@@ -49,16 +49,16 @@ namespace tubex
 
     while(s_x != NULL)
     {
-      Interval intv_t = s_y->domain().lb() - a;
-      if(intv_t.is_subset(y.domain()))
+      Interval intv_t = s_y->tdomain().lb() - a;
+      if(intv_t.is_subset(y.tdomain()))
         s_y->set_input_gate(s_y->input_gate() & x(intv_t));
 
-      intv_t = s_y->domain() - a;
-      if(intv_t.is_subset(y.domain()))
+      intv_t = s_y->tdomain() - a;
+      if(intv_t.is_subset(y.tdomain()))
         s_y->set_envelope(s_y->codomain() & x(intv_t));
 
-      intv_t = s_y->domain().ub() - a;
-      if(intv_t.is_subset(y.domain()))
+      intv_t = s_y->tdomain().ub() - a;
+      if(intv_t.is_subset(y.tdomain()))
         s_y->set_output_gate(s_y->output_gate() & x(intv_t));
 
       s_x = s_x->next_slice();
@@ -69,7 +69,7 @@ namespace tubex
   void CtcDelay::contract(const Interval& a, const TubeVector& x, TubeVector& y)
   {
     assert(x.size() == y.size());
-    assert(x.domain() == y.domain());
+    assert(x.tdomain() == y.tdomain());
     assert(TubeVector::same_slicing(x, y));
 
     for(int i = 0 ; i < x.size() ; i++)

@@ -39,7 +39,7 @@ int main()
     // ----- Initialise estimate -----
     IntervalVector map(a.size());
     map.init(Interval(-100.,100.)); // space we consider
-    TubeVector x(a.domain(),map);
+    TubeVector x(a.tdomain(),map);
     x.sample(a); // make sure that our reference and our estimate have the same slices
     IntervalVector x0(3,Interval(-0.1,0.1)); // Initial condition for our estimate
 

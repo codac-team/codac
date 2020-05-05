@@ -34,8 +34,8 @@ TEST_CASE("serialization/deserialization of Tube")
     remove(filename.c_str());
 
     CHECK(traj1 == *traj2);
-    CHECK(traj1.domain() == traj2->domain());
-    CHECK(traj2->domain() == Interval(3.,4.));
+    CHECK(traj1.tdomain() == traj2->tdomain());
+    CHECK(traj2->tdomain() == Interval(3.,4.));
 
     ibin_file.close();
   }
@@ -55,8 +55,8 @@ TEST_CASE("serialization/deserialization of Tube")
     remove(filename.c_str());
 
     CHECK(tube1 == *tube2);
-    CHECK(tube1.domain() == tube2->domain());
-    CHECK(tube2->domain() == Interval(0.,11.));
+    CHECK(tube1.tdomain() == tube2->tdomain());
+    CHECK(tube2->tdomain() == Interval(0.,11.));
 
     ibin_file.close();
   }
@@ -110,9 +110,9 @@ TEST_CASE("serialization/deserialization of Tube")
     Trajectory traj1, traj2, traj3;
     for(int i = 0 ; i < tube1.nb_slices() ; i++)
     {
-      traj1.set(tube1(i).mid(), tube1.slice(i)->domain().mid());
-      traj2.set(tube1(i).lb(), tube1.slice(i)->domain().mid());
-      traj3.set(tube1(i).ub(), tube1.slice(i)->domain().mid());
+      traj1.set(tube1(i).mid(), tube1.slice(i)->tdomain().mid());
+      traj2.set(tube1(i).lb(), tube1.slice(i)->tdomain().mid());
+      traj3.set(tube1(i).ub(), tube1.slice(i)->tdomain().mid());
     }
 
     string filename = "test_serialization_traj.tube";
@@ -169,9 +169,9 @@ TEST_CASE("serialization/deserialization of Tube")
     {
       for(int i = 0 ; i < 10 ; i++)
       {
-        traj1[i].set(tube1[i](k).mid(), tube1[i].slice(k)->domain().mid());
-        traj2[i].set(tube1[i](k).lb(), tube1[i].slice(k)->domain().mid());
-        traj3[i].set(tube1[i](k).ub(), tube1[i].slice(k)->domain().mid());
+        traj1[i].set(tube1[i](k).mid(), tube1[i].slice(k)->tdomain().mid());
+        traj2[i].set(tube1[i](k).lb(), tube1[i].slice(k)->tdomain().mid());
+        traj3[i].set(tube1[i](k).ub(), tube1[i].slice(k)->tdomain().mid());
       }
     }
 
@@ -193,7 +193,7 @@ bool test_serialization(const Tube& tube1)
 
   for(int i = 0 ; i < tube1.nb_slices() ; i++)
     traj_test1.set(tube1(i).is_unbounded() | tube1(i).is_empty() ? 1. : tube1(i).mid(),
-                   tube1.slice(i)->domain().mid());
+                   tube1.slice(i)->tdomain().mid());
 
   tube1.serialize(filename, traj_test1); // serialization
 

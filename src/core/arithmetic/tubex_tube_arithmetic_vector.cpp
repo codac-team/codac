@@ -34,7 +34,7 @@ namespace tubex
     const TubeVector f(const TubeVector& x1, const TubeVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
-      assert(x1.domain() == x2.domain()); \
+      assert(x1.tdomain() == x2.tdomain()); \
       \
       TubeVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
@@ -65,7 +65,7 @@ namespace tubex
     const TubeVector f(const TubeVector& x1, const TrajectoryVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
-      assert(x1.domain() == x2.domain()); \
+      assert(x1.tdomain() == x2.tdomain()); \
       \
       TubeVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
@@ -76,7 +76,7 @@ namespace tubex
     const TubeVector f(const TrajectoryVector& x1, const TubeVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
-      assert(x1.domain() == x2.domain()); \
+      assert(x1.tdomain() == x2.tdomain()); \
       \
       TubeVector y(x2); \
       for(int i = 0 ; i < y.size() ; i++) \
@@ -108,7 +108,7 @@ namespace tubex
 
   const TubeVector operator*(const Tube& x1, const TubeVector& x2)
   {
-    assert(x1.domain() == x2.domain()); \
+    assert(x1.tdomain() == x2.tdomain()); \
     TubeVector y(x2);
     for(int i = 0 ; i < y.size() ; i++)
       y[i] = operator*(x1, y[i]);
@@ -117,7 +117,7 @@ namespace tubex
 
   const TubeVector operator*(const Trajectory& x1, const TubeVector& x2)
   {
-    assert(x1.domain() == x2.domain()); \
+    assert(x1.tdomain() == x2.tdomain()); \
     TubeVector y(x2);
     for(int i = 0 ; i < y.size() ; i++)
       y[i] = operator*(x1, y[i]);
@@ -143,7 +143,7 @@ namespace tubex
 
   const TubeVector operator/(const TubeVector& x1, const Tube& x2)
   {
-    assert(x1.domain() == x2.domain()); \
+    assert(x1.tdomain() == x2.tdomain()); \
     TubeVector y(x1);
     for(int i = 0 ; i < y.size() ; i++)
       y[i] = operator/(y[i], x2);
@@ -152,7 +152,7 @@ namespace tubex
 
   const TubeVector operator/(const TubeVector& x1, const Trajectory& x2)
   {
-    assert(x1.domain() == x2.domain()); \
+    assert(x1.tdomain() == x2.tdomain()); \
     TubeVector y(x1);
     for(int i = 0 ; i < y.size() ; i++)
       y[i] = operator/(y[i], x2);

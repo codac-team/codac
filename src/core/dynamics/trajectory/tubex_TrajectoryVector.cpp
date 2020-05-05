@@ -31,20 +31,20 @@ namespace tubex
       assert(n > 0);
     }
 
-    TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f)
+    TrajectoryVector::TrajectoryVector(const Interval& tdomain, const tubex::Function& f)
       : TrajectoryVector(f.image_dim())
     {
-      assert(valid_domain(domain));
+      assert(valid_tdomain(tdomain));
       assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
       // todo: check thickness of f? (only thin functions should be allowed)
 
       // Setting values for each component
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i] = Trajectory(domain, f[i]);
+        (*this)[i] = Trajectory(tdomain, f[i]);
     }
 
-    TrajectoryVector::TrajectoryVector(const Interval& domain, const tubex::Function& f, double timestep)
-      : TrajectoryVector(domain, f)
+    TrajectoryVector::TrajectoryVector(const Interval& tdomain, const tubex::Function& f, double timestep)
+      : TrajectoryVector(tdomain, f)
     {
       assert(timestep > 0.);
       sample(timestep);
@@ -162,9 +162,9 @@ namespace tubex
 
     // Accessing values
 
-    const Interval TrajectoryVector::domain() const
+    const Interval TrajectoryVector::tdomain() const
     {
-      return (*this)[0].domain();
+      return (*this)[0].tdomain();
     }
 
     const IntervalVector TrajectoryVector::codomain() const
@@ -186,7 +186,7 @@ namespace tubex
 
     const Vector TrajectoryVector::operator()(double t) const
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
       Vector v(size());
       for(int i = 0 ; i < size() ; i++)
         v[i] = (*this)[i](t);
@@ -195,7 +195,7 @@ namespace tubex
     
     const IntervalVector TrajectoryVector::operator()(const Interval& t) const
     {
-      assert(domain().is_superset(t));
+      assert(tdomain().is_superset(t));
       IntervalVector v(size());
       for(int i = 0 ; i < size() ; i++)
         v[i] = (*this)[i](t);
@@ -263,20 +263,20 @@ namespace tubex
         (*this)[i].set(y[i], t);
     }
 
-    TrajectoryVector& TrajectoryVector::truncate_domain(const Interval& t)
+    TrajectoryVector& TrajectoryVector::truncate_tdomain(const Interval& t)
     {
-      assert(valid_domain(t));
-      assert(domain().is_superset(t));
+      assert(valid_tdomain(t));
+      assert(tdomain().is_superset(t));
       for(int i = 0 ; i < size() ; i++)
         if(!(*this)[i].not_defined())
-          (*this)[i].truncate_domain(t);
+          (*this)[i].truncate_tdomain(t);
       return *this;
     }
 
-    TrajectoryVector& TrajectoryVector::shift_domain(double shift_ref)
+    TrajectoryVector& TrajectoryVector::shift_tdomain(double shift_ref)
     {
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i].shift_domain(shift_ref);
+        (*this)[i].shift_tdomain(shift_ref);
       return *this;
     }
 
@@ -342,7 +342,7 @@ namespace tubex
     std::ostream& operator<<(std::ostream& str, const TrajectoryVector& x)
     {
       str << "TrajectoryVector (dim " << x.size() << ") "
-          << x.domain() << "↦" << x.codomain() << flush;
+          << x.tdomain() << "↦" << x.codomain() << flush;
       return str;
     }
 

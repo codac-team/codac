@@ -27,17 +27,17 @@ int main(int argc, char *argv[])
   /* =========== INITIALIZATION =========== */
 
     // Tubes parameters
-    Interval domain(0,10); // temporal definition domain
+    Interval tdomain(0,10); // temporal definition domain
     double timestep = 0.01;
 
-    // Creating the tubes (x, xdot) over the [0,10] domain with some timestep:
-    TubeVector x(domain, timestep, 2);
+    // Creating the tubes (x, xdot) over the [0,10] tdomain with some timestep:
+    TubeVector x(tdomain, timestep, 2);
     x[0].set(1., 0.); // setting initial condition x(0)=1
 
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    Trajectory truth(domain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
+    Trajectory truth(tdomain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
     VIBesFigTube fig_x("x", &x[0], &truth);
     fig_x.set_properties(100, 100, 600, 600);
 

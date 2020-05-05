@@ -117,7 +117,7 @@ namespace tubex
 
   rgb ColorMap::color(double t, const Trajectory& f) const
   {
-    assert(f.domain().contains(t));
+    assert(f.tdomain().contains(t));
     assert(!f.not_defined());
 
     Interval traj_envelope = f.codomain();

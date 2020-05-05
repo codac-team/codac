@@ -31,7 +31,7 @@ namespace tubex
     const TrajectoryVector& TrajectoryVector::f(const TrajectoryVector& x) \
     { \
       assert(size() == x.size()); \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
@@ -50,7 +50,7 @@ namespace tubex
     \
     const TrajectoryVector& TrajectoryVector::f(const Trajectory& x) \
     { \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x); \

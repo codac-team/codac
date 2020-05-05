@@ -22,13 +22,13 @@ int main()
 {
   /* =========== INITIALIZATION =========== */
   
-    Interval domain(0,10);
-    TubeVector x(domain, 6);
+    Interval tdomain(0,10);
+    TubeVector x(tdomain, 6);
     double timestep = 0.01;
 
-    x[0] = Tube(domain, timestep, // tube [x](·)
+    x[0] = Tube(tdomain, timestep, // tube [x](·)
                 tubex::Function("(t-5)^2 + [-0.5,0.5]"));
-    x[1] = Tube(domain, timestep, // tube [y](·)
+    x[1] = Tube(tdomain, timestep, // tube [y](·)
                 tubex::Function("-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
 
   /* =========== ARITHMETIC =========== */

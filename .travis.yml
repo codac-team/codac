@@ -12,8 +12,6 @@ addons:
 
     packages:
     - cmake
-    #- doxygen # for documentation
-    #- graphviz # for documentation
 
 matrix:
   include:
@@ -59,7 +57,11 @@ cache:
 #env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
 
 install:
-  #- pip install breathe sphinx-tabs # for documentation
+  
+  # For documentation
+  - sudo apt-get install python3.5 python3-setuptools python3-pip
+  - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-tabs
+  - sudo apt-get install python3-sphinx doxygen graphviz
 
 #  - docker pull $DOCKER_IMAGE
   
@@ -121,6 +123,8 @@ script:
   # Building lib + tests
   - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
   - make
+  - make api
+  - make doc
   - make install
   # Building the examples
   - cd ../examples
@@ -142,6 +146,8 @@ script:
   # Building lib + tests
   - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
   - make
+  - make api
+  - make doc
   - make install
   # Building the examples
   - cd ../examples

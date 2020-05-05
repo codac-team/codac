@@ -42,9 +42,9 @@ int main()
 {
   /* =========== PARAMETERS =========== */
 
-    Interval domain(0,10);
+    Interval tdomain(0,10);
     double timestep = 0.01;
-    TubeVector x(domain, timestep, 5);
+    TubeVector x(tdomain, timestep, 5);
 
     // An evaluation will be made at t=7., so we sample the vector beforehand,
     x.sample(7.); // so that all components share the same slicing

@@ -16,6 +16,6 @@ namespace tubex
   {
     CtcDeriv deriv;
     CtcEval eval;
-    CtcDistance dist;
+    CtcDist dist;
   }
 }

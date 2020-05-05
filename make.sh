@@ -45,6 +45,8 @@ fi
   fi
 
   make
+  make api
+  make doc
   cd ..
 
 # Building examples independently
@@ -52,7 +54,7 @@ fi
   if [ $# -ne 0 ] && ([ "$1" = "examples" ] || [ "$1" = "all" ])
   then
     cd build
-    sudo make install
+    make install
     cd ..
     cd examples
     find . -type d -name build -prune -exec rm -rf {} \;

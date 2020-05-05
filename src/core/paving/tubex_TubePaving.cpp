@@ -40,7 +40,7 @@ namespace tubex
       for(int j = 0 ; j < size() ; j++)
         s[j] = x[j].slice(v_t_inv[i].lb());
 
-      while(!is_in && s[0] != NULL && s[0]->domain().ub() <= v_t_inv[i].ub())
+      while(!is_in && s[0] != NULL && s[0]->tdomain().ub() <= v_t_inv[i].ub())
       {
         bool is_in_i = true;
 

@@ -62,7 +62,7 @@ namespace tubex
        *
        * \note The slicing of \f$[y](\cdot)\f$ and \f$[w](\cdot)\f$ may be changed.
        *
-       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param t the uncertain tdomain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[z]\f$
        * \param y the scalar tube \f$[y](\cdot)\f$
        * \param w the scalar derivative tube \f$[w](\cdot)\f$
@@ -73,7 +73,7 @@ namespace tubex
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[z],[y](\cdot),[w](\cdot)\big)\f$:
        *        contracts the tube \f$[y](\cdot)\f$ only.
        *
-       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param t the uncertain tdomain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[z]\f$
        * \param y the scalar tube \f$[y](\cdot)\f$
        * \param w the scalar derivative tube \f$[w](\cdot)\f$
@@ -99,7 +99,7 @@ namespace tubex
        *
        * \note The slicing of \f$[\mathbf{y}](\cdot)\f$ and \f$[\mathbf{w}](\cdot)\f$ may be changed.
        *
-       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param t the uncertain tdomain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[\mathbf{z}]\f$
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
        * \param w the n-dimensional derivative tube \f$[\mathbf{w}](\cdot)\f$
@@ -112,7 +112,7 @@ namespace tubex
        *
        * \note The slicing of \f$[\mathbf{y}](\cdot)\f$ and \f$[\mathbf{w}](\cdot)\f$ may be changed.
        *
-       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param t the uncertain tdomain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[\mathbf{z}]\f$
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
        * \param w the n-dimensional derivative tube \f$[\mathbf{w}](\cdot)\f$
@@ -123,7 +123,7 @@ namespace tubex
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[z],[y](\cdot)\big)\f$:
        *        contracts the evaluation \f$[t]\times[z]\f$ only.
        *
-       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param t the uncertain tdomain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[z]\f$
        * \param y the scalar tube \f$[y](\cdot)\f$
        */
@@ -133,7 +133,7 @@ namespace tubex
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[\mathbf{z}],[\mathbf{y}](\cdot)\big)\f$:
        *        contracts the evaluation \f$[t]\times[\mathbf{z}]\f$ only.
        *
-       * \param t the uncertain domain \f$[t]\f$ of the evaluation
+       * \param t the uncertain tdomain \f$[t]\f$ of the evaluation
        * \param z the bounded evaluation \f$[\mathbf{z}]\f$
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
        */

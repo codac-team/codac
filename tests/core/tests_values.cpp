@@ -103,17 +103,17 @@ TEST_CASE("Tube values")
     // Unbounded interval domain
     x.set(Interval(6.,10.));
     CHECK(x.nb_slices() == 1);
-    CHECK(x.slice(0)->domain() == Interval(0.,10.));
+    CHECK(x.slice(0)->tdomain() == Interval(0.,10.));
     CHECK(x.slice(0)->codomain() == Interval(6.,10.));
 
     // Bounded interval domain
     x.set(Interval(2.,4.), Interval(2.,3.));
     CHECK(x.nb_slices() == 3);
-    CHECK(x.slice(0)->domain() == Interval(0.,2.));
+    CHECK(x.slice(0)->tdomain() == Interval(0.,2.));
     CHECK(x(0) == Interval(6.,10.));
-    CHECK(x.slice(1)->domain() == Interval(2.,3.));
+    CHECK(x.slice(1)->tdomain() == Interval(2.,3.));
     CHECK(x(1) == Interval(2.,4.));
-    CHECK(x.slice(2)->domain() == Interval(3.,10.));
+    CHECK(x.slice(2)->tdomain() == Interval(3.,10.));
     CHECK(x(2) == Interval(6.,10.));
 
     // Gates, slices intersection
@@ -197,8 +197,8 @@ TEST_CASE("Tube values")
     Tube x(Interval(0.,10.));
     x.set(Interval(3.,4.), 2.);
     CHECK(x.nb_slices() == 2);
-    CHECK(x.slice(0)->domain() == Interval(0.,2.));
-    CHECK(x.slice(1)->domain() == Interval(2.,10.));
+    CHECK(x.slice(0)->tdomain() == Interval(0.,2.));
+    CHECK(x.slice(1)->tdomain() == Interval(2.,10.));
     CHECK(x(0) == Interval::ALL_REALS);
     CHECK(x(1) == Interval::ALL_REALS);
     CHECK(x(2.) == Interval(3.,4.));
@@ -257,6 +257,14 @@ TEST_CASE("Testing set inversion")
     CHECK(slice.invert(Interval(2.5,6.), Interval(1.)) == 1.);
     CHECK(slice.invert(Interval(2.5,6.), Interval(0.2,0.5)) == Interval(0.2,0.5));
     CHECK(slice.invert(Interval(2.5,6.), Interval(0.2)) == Interval(0.2));
+  }
+
+  SECTION("Scalar set inversion (Slice, unbounded derivative)")
+  {
+    Slice sx(Interval(0.,1.), Interval(0.,10.));
+    Slice sv(Interval(0.,1.), Interval::all_reals());
+    CHECK(sx.invert(5., sv) == Interval(0.,1.));
+    CHECK(sx.invert(15., sv) == Interval::empty_set());
   }
 
   SECTION("Scalar set inversion (Tube)")
@@ -391,12 +399,12 @@ TEST_CASE("Testing set inversion")
     CtcDeriv ctc;
     ctc.contract(x, v);
 
-    CHECK(x.invert(x.codomain()) == x.domain());
-    CHECK(x.invert(Interval::ALL_REALS) == x.domain());
+    CHECK(x.invert(x.codomain()) == x.tdomain());
+    CHECK(x.invert(Interval::ALL_REALS) == x.tdomain());
 
     // Using derivative
-    CHECK(x.invert(x.codomain(), v) == x.domain());
-    CHECK(x.invert(Interval::ALL_REALS, v) == x.domain());
+    CHECK(x.invert(x.codomain(), v) == x.tdomain());
+    CHECK(x.invert(Interval::ALL_REALS, v) == x.tdomain());
     CHECK(x.invert(Interval(0.), v) == Interval(0.));
     CHECK(x.invert(Interval(4.25), v) == Interval(4.5));
     CHECK(x.invert(Interval(4.), v) == Interval(3.,5.));
@@ -435,7 +443,7 @@ TEST_CASE("Testing set inversion in vector case")
       vibes::beginDrawing();
       VIBesFigTubeVector fig_x("x", &x);
       fig_x.set_properties(100, 100, 600, 250);
-      fig_x.draw_box(x.domain(), inv_val);
+      fig_x.draw_box(x.tdomain(), inv_val);
       fig_x.show(true);
 
       for(size_t i = 0 ; i < v_t.size() ; i++)
@@ -753,7 +761,7 @@ TEST_CASE("Testing inflate()")
     CHECK(ApproxIntv(x.codomain()) == Interval(-1.2,1.2));
     CHECK(ApproxIntv(x(9)) == Interval(-1.2,1.2));
     CHECK(ApproxIntv(x.slice(9)->input_gate()) == Interval(-1.2,1.2));
-    double t = x.slice(9)->domain().lb();
+    double t = x.slice(9)->tdomain().lb();
     x.set(Interval(3.,7.), 8);
     x.set(Interval(3.,7.), 9);
     x.set(Interval(4.,6.), t);
@@ -826,7 +834,7 @@ TEST_CASE("Interpol")
     Slice x(Interval(-1.,3.), Interval(-10.,20.));
     x.set_input_gate(Interval(-1.,2.));
     x.set_output_gate(Interval(-2.,0.));
-    Slice v(x.domain(), Interval(-1.,1.));
+    Slice v(x.tdomain(), Interval(-1.,1.));
     
     bool contraction;
     Interval t;
@@ -854,7 +862,7 @@ TEST_CASE("Interpol")
     t = Interval(-1.,3.);
     CHECK(x.interpol(t, v) == Interval(-3.5,3.));
 
-    t = Interval(-10.,3.) & x.domain();
+    t = Interval(-10.,3.) & x.tdomain();
     CHECK(x.interpol(t, v) == Interval(-3.5,3.));
   }
 
@@ -912,7 +920,7 @@ TEST_CASE("Interpol")
     Tube x_raw = x, v_raw = v;
 
     CHECK(x.interpol(Interval(0.,5.), v) == Interval(0.,4.25));
-    CHECK(x.interpol(x.domain(), v) == Interval(0.,4.25));
+    CHECK(x.interpol(x.tdomain(), v) == Interval(0.,4.25));
     CHECK(x.interpol(Interval(1.,3.), v) == Interval(1.5,4.));
     CHECK(x.interpol(Interval(2.2,2.7), v) == Interval(3.1,3.85));
     CHECK(x.interpol(Interval(4.5), v) == Interval(3.75,4.25));
@@ -1214,10 +1222,10 @@ TEST_CASE("Interpol")
   SECTION("Shifting domains")
   {
     Tube x(Interval(0., 1.), 0.1, tubex::Function("cos(t)"));
-    CHECK(x.domain() == Interval(0.,1.));
+    CHECK(x.tdomain() == Interval(0.,1.));
     CHECK(x(0.5).contains(cos(0.5)));
-    x.shift_domain(10.);
-    CHECK(x.domain() == Interval(0.,1.) - 10.);
+    x.shift_tdomain(10.);
+    CHECK(x.tdomain() == Interval(0.,1.) - 10.);
     CHECK(x(0.5-10.).contains(cos(0.5)));
   }
 
@@ -1235,5 +1243,14 @@ TEST_CASE("Interpol")
 
     CHECK(test1 == test2);
     CHECK(test1[0] == test2[0]);
+  }
+
+  SECTION("is_empty")
+  {
+    Tube x1(Interval(0.,10.), 0.001);
+    CHECK(!x1.is_empty());
+
+    TubeVector x2(Interval(0.,10.), 0.001, 4);
+    CHECK(!x2.is_empty());
   }
 }

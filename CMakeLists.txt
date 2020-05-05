@@ -4,11 +4,11 @@
 
   cmake_minimum_required(VERSION 3.0.2)
 
-  project(TUBEX VERSION 2.5.0 LANGUAGES CXX)
-  set(TUBEX_DESCRIPTION "Tubex is a library providing tools for constraint "
-                        "programming over reals and trajectories.")
-  set(TUBEX_URL "http://simon-rohou.fr/research/tubex-lib")
-  message(STATUS ${TUBEX_DESCRIPTION})
+  project(tubex-lib VERSION 2.5.0 LANGUAGES CXX)
+  set(PROJECT_DESCRIPTION "Tubex is a library providing tools for constraint "
+                          "programming over reals and trajectories.")
+  set(PROJECT_HOMEPAGE_URL "http://simon-rohou.fr/research/tubex-lib")
+  message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
   set(CMAKE_BUILD_TYPE Debug)
 
@@ -96,19 +96,13 @@
 
 
 ################################################################################
-# Python binding
-################################################################################
-
-  add_compile_options(-fPIC) # is it necessary for python binding?
-  #add_subdirectory(pybind11)
-
-
-################################################################################
 # Compile sources
 ################################################################################
 
-  add_subdirectory(src)
-  #add_subdirectory(python)
+  add_compile_options(-fPIC) # is it necessary for python binding?
+  #add_subdirectory(pybind11) # Python binding
+  add_subdirectory(src) # C++ sources
+  add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
 
 ################################################################################

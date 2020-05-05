@@ -29,7 +29,7 @@ int main()
       atan2((10*cos(2*t)+1),(-10*sin(t)+1)) ; \
       sqrt((-10*sin(t)+1)^2+(10*cos(2*t)+1)^2))")); // actual trajectory
 
-    // Measurements coming from the truth
+    // Continuous measurements coming from the truth
     Trajectory& measured_psi = x_truth[2].sample(dt).make_continuous();
     measured_psi += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)); // adding some noise
     Trajectory& measured_speed = x_truth[3].sample(dt);
@@ -47,7 +47,7 @@ int main()
 
     Interval e_y(-0.1,0.1);
     vector<Interval> y = {1.9+e_y, 3.6+e_y, 2.8+e_y}; // set of range-only observations
-    vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of 2d landmarks
+    vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of the three 2d landmarks
     vector<double>   t = {0.3, 1.5, 2.0};             // times of measurements
 
 
@@ -59,16 +59,18 @@ int main()
 
   /* =============== 3. Adding the contractors to a network =============== */
 
-    ContractorNetwork cn;                             // creating a network
-    cn.add(ctc_f, {v, x, u});                         // adding the f constraint (custom ctc)
+    ContractorNetwork cn;        // creating a network
+    cn.add(ctc_f, {v, x, u});    // adding the f constraint
 
-    for(int i = 0 ; i < 3 ; i++)                      // for each range-only observation...
+    for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
     {
-      IntervalVector& p_i = cn.create_var(IntervalVector(4)); // intermediate variable
-      // Adding the distance constraint:
-      cn.add(ctc::dist, {cn.subvector(p_i,0,1), b[i], y[i]});
-      // Link between an observation at t_i and all states over [t_0,t_f]
-      cn.add(ctc::eval, {t[i], p_i, x, v});
+      IntervalVector& p = cn.create_var(IntervalVector(4)); // intermediate variable
+
+      // Distance constraint: relation between the state at t_1 and the range-only value
+      cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
+      
+      // Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
+      cn.add(ctc::eval, {t[i], p, x, v});
     }
 
 

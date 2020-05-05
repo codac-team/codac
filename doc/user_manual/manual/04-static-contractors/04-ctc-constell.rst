@@ -1,0 +1,47 @@
+.. _sec-manual-ctcconstell:
+
+.. warning::
+  
+  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
+  A new stable version of Tubex will be released in the coming weeks.
+
+********************************************
+CtcConstell: :math:`\mathbf{m}\in\mathbb{M}`
+********************************************
+
+.. contents::
+
+
+Definition
+----------
+
+.. important::
+    
+  .. math::
+
+    \mathbf{m}\in\mathbb{M}=\big\{[\mathbf{m}_1],\dots,[\mathbf{m}_\ell]\big\} \longrightarrow \mathcal{C}_{\textrm{constell}}\big([\mathbf{m}]\big)
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      #include <tubex-rob.h>
+      // todo
+
+    .. code-tab:: py
+
+      # todo
+
+
+Related publication
+-------------------
+
+.. |datasso-pdf| replace:: **Download the paper**
+.. _datasso-pdf: http://simon-rohou.fr/research/datasso/datasso_paper.pdf
+
+.. admonition:: Related publication
+  
+  | **Set-membership state estimation by solving data association**
+  | S. Rohou, B. Desrochers, L. Jaulin
+  | *IEEE International Conference on Robotics and Automation (ICRA)*, 2020.
+  | |datasso-pdf|_

@@ -30,7 +30,7 @@ TEST_CASE("CtcPicard")
 
     tube = tube_raw;
     tubex::Function f2("x", "3.");
-    Interval dtest = tube[0].slice_domain(0);
+    Interval dtest = tube[0].slice_tdomain(0);
     IntervalVector test = f2.eval_vector(dtest, tube);
     ctc_picard.guess_kth_slices_envelope(f2, tube, 0, TimePropag::FORWARD);
     CHECK(tube(0).is_superset(1.5 + Interval(0.,0.5) * 3.));

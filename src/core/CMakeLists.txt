@@ -85,8 +85,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_Ctc.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcPicard.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcPicard.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDistance.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDistance.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDist.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDist.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDelay.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDelay.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcStatic.h

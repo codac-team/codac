@@ -20,7 +20,7 @@ namespace tubex
   /**
    * \brief CtcPicard class.
    *
-   * \todo Restricted domain feature?
+   * \todo Restricted tdomain feature?
    */
   class CtcPicard : public Ctc
   {

@@ -35,12 +35,12 @@ int main(int argc, char** argv)
   /* =========== LOADING DATA =========== */
 
     float dt = 0.01;
-    Interval domain(-1., 10.);
-    TrajectoryVector x_truth(domain, tubex::Function("(10*cos(t)+t;5*sin(2*t)+t)"));
-    x = new TubeVector(domain, dt, 2);
-    v = new TubeVector(domain, dt, tubex::Function("(-10*sin(t)+1+[-0.2,0.2];10*cos(2*t)+1+[-0.2,0.2])"));
+    Interval tdomain(-1., 10.);
+    TrajectoryVector x_truth(tdomain, tubex::Function("(10*cos(t)+t;5*sin(2*t)+t)"));
+    x = new TubeVector(tdomain, dt, 2);
+    v = new TubeVector(tdomain, dt, tubex::Function("(-10*sin(t)+1+[-0.2,0.2];10*cos(2*t)+1+[-0.2,0.2])"));
 
-    x->set(x_truth(domain.lb()), domain.lb());
+    x->set(x_truth(tdomain.lb()), tdomain.lb());
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(*x, *v);

@@ -33,7 +33,7 @@ namespace tubex
        *
        * \param ibex_ctc the IBEX contractor for boxes
        * \param dynamic_ctc if true, the contraction will include the
-       *        temporal domain as first dimension of the (n+1) box
+       *        temporal tdomain as first dimension of the (n+1) box
        */
       CtcStatic(ibex::Ctc *ibex_ctc, bool dynamic_ctc = false);
 
@@ -116,7 +116,7 @@ namespace tubex
     protected:
 
       ibex::Ctc *m_ibex_ctc; //!< related IBEX contractor
-      int m_dynamic_ctc; //!< specifies either the temporal domain is part of the contraction or not
+      int m_dynamic_ctc; //!< specifies either the temporal tdomain is part of the contraction or not
   };
 }
 

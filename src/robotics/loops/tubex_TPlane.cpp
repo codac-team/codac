@@ -29,11 +29,11 @@ namespace tubex
   void TPlane::compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool extract_subsets)
   {
     assert(precision > 0.);
-    assert(p.domain() == v.domain());
+    assert(p.tdomain() == v.tdomain());
     assert(p.size() == 2 && v.size() == 2);
 
     if(m_box.is_unbounded())
-      m_box = IntervalVector(2, p.domain()); // initializing
+      m_box = IntervalVector(2, p.tdomain()); // initializing
     m_precision = precision;
     
     if(value() == SetValue::OUT)

@@ -315,7 +315,7 @@ namespace tubex
         }
       }
 
-      viewbox[0] = tube->domain();
+      viewbox[0] = tube->tdomain();
       viewbox[1] = Interval(image_lb, image_ub);
 
     // Displaying tube
@@ -374,7 +374,7 @@ namespace tubex
           if(m_map_tubes[tube].tube_derivative != NULL)
             deriv_slice = m_map_tubes[tube].tube_derivative->first_slice();
 
-          draw_gate(slice->input_gate(), tube->domain().lb(), params_foreground_gates);
+          draw_gate(slice->input_gate(), tube->tdomain().lb(), params_foreground_gates);
 
           while(slice != NULL)
           {
@@ -383,7 +383,7 @@ namespace tubex
             else
               draw_slice(*slice, params_foreground_slices);
 
-            draw_gate(slice->output_gate(), slice->domain().ub(), params_foreground_gates);
+            draw_gate(slice->output_gate(), slice->tdomain().ub(), params_foreground_gates);
             slice = slice->next_slice();
             
             if(deriv_slice != NULL)
@@ -414,7 +414,7 @@ namespace tubex
 
   void VIBesFigTube::draw_slice(const Slice& slice, const Slice& deriv_slice, const vibes::Params& params_slice, const vibes::Params& params_polygon)
   {
-    assert(slice.domain() == deriv_slice.domain());
+    assert(slice.tdomain() == deriv_slice.tdomain());
 
     if(slice.codomain().is_empty())
       return; // no display
@@ -457,7 +457,7 @@ namespace tubex
     vibes::clearGroup(name(), group_name);
     vibes::newGroup(group_name, m_map_trajs[traj].color, vibesParams("figure", name()));
 
-    if(traj->domain().is_unbounded() || traj->domain().is_empty())
+    if(traj->tdomain().is_unbounded() || traj->tdomain().is_empty())
       return viewbox;
 
     // Two display modes available:
@@ -487,7 +487,7 @@ namespace tubex
 
     else
     {
-      for(double t = traj->domain().lb() ; t <= traj->domain().ub() ; t+=traj->domain().diam()/TRAJ_NB_DISPLAYED_POINTS)
+      for(double t = traj->tdomain().lb() ; t <= traj->tdomain().ub() ; t+=traj->tdomain().diam()/TRAJ_NB_DISPLAYED_POINTS)
       {
         if(m_map_trajs[traj].points_size != 0.)
           draw_point(Point(t, (*traj)(t)), m_map_trajs[traj].points_size, vibesParams("figure", name(), "group", group_name));
