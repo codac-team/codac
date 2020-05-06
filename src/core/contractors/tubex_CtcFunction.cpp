@@ -17,37 +17,55 @@ using namespace ibex;
 namespace tubex
 {
   CtcFunction::CtcFunction(const char* x1, const char* f)
-    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(x1, CtcFunction::parse_f(f).c_str())),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* f)
-    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(x1, x2, CtcFunction::parse_f(f).c_str())),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* f)
-    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f)
-    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f)
-    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f)
-    : Ctc(false), m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())), m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc))
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
   {
 
   }
@@ -56,8 +74,15 @@ namespace tubex
   {
     delete m_ibex_fnc;
     delete m_ibex_ctc;
+    delete m_ibex_3bcid;
   }
   
+  void CtcFunction::contract(IntervalVector& x)
+  {
+    assert(x.size() == m_ibex_3bcid->nb_var);
+    m_ibex_3bcid->contract(x);
+  }
+
   void CtcFunction::contract(vector<Domain*>& v_domains)
   {
     assert(!v_domains.empty());
@@ -90,9 +115,9 @@ namespace tubex
         outgate[i] = v_domains[i]->slice().output_gate();
       }
 
-      m_ibex_ctc->contract(envelope);
-      m_ibex_ctc->contract(ingate);
-      m_ibex_ctc->contract(outgate);
+      m_ibex_3bcid->contract(envelope);
+      m_ibex_3bcid->contract(ingate);
+      m_ibex_3bcid->contract(outgate);
 
       for(int i = 0 ; i < n ; i++)
       {
@@ -153,7 +178,7 @@ namespace tubex
           }
         }
 
-        m_ibex_ctc->contract(box);
+        m_ibex_3bcid->contract(box);
 
         i = 0;
         for(auto& dom : v_domains)
