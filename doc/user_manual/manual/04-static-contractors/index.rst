@@ -19,6 +19,4 @@ Therefore, the following contractors apply on intervals and boxes:
 
 ------------------------------------------------------
 
-.. rubric:: How a contractor is implemented
-
-Contractors are C++/Python objects. Some of them can be instantiated according to the problem to deal with. All of them will contract domains with the ``.contract()`` method.
+.. include:: ../04-static-contractors/00-ctc-basics.rst

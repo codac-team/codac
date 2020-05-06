@@ -23,7 +23,7 @@ Definition
 
     .. code-tab:: c++
 
-      CtcFunction ctc_f(Function f("<var1>", "<var2...>", "<exp>"));
+      CtcFunction ctc_f(Function f("<var1>", "<var2...>", "<expr>"));
       ctc_f.contract(x);
 
     .. code-tab:: py

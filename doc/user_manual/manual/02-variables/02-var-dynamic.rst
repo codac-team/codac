@@ -4,9 +4,13 @@
 Trajectories (signals)
 **********************
 
+A trajectory :math:`x(\cdot):[t_0,t_f]\to\mathbb{R}` is a set of real values defined over some temporal domain :math:`[t_0,t_f]`, called *t*-domain.
+They are aimed at **representing temporal evolutions**.
+
 .. contents::
 
-A trajectory :math:`x(\cdot):[t_0,t_f]\to\mathbb{R}` is a set of real values defined over some temporal domain :math:`[t_0,t_f]`, called *t*-domain. There are two ways to define a trajectory:
+
+There are two ways to define a trajectory:
 
 * with some analytic formula, by using a ``Function`` object ;
 * from a map of values.
@@ -46,7 +50,7 @@ The evaluation of a trajectory at some time :math:`t`, for instance :math:`z=x(t
 
 In this code, :math:`x(\cdot)` is implemented from the expression :math:`t\mapsto\cos(t)+\sin(2t)`, and no numerical approximation is performed: the formula is embedded in the object and the representation is accurate.
 However, the evaluation of the trajectory may lead to numerical errors related to the approximation of real numbers by floating-point values.
-For instance, if we change the decimal precision to format floating-point values and then print the value of ``z``, we can see that the result is not exactly :math:`-1`:
+For instance, if we change the decimal precision in order to format floating-point values, and then print the value of ``z``, we can see that the result is not exactly :math:`-1`:
 
 .. tabs::
 
@@ -177,8 +181,8 @@ Other methods exist such as:
     Trajectory x_prim = x.primitive(0., 0.01); // when defined from a function,
                                                // params are (x0,dt)
     // Differentiations:
-    Trajectory y_prim = y.diff();              // finite differences on x(·)
-    Trajectory x_diff = x.diff();              // exact differentiation of y(·)
+    Trajectory y_prim = y.diff();              // finite differences on y(·)
+    Trajectory x_diff = x.diff();              // exact differentiation of x(·)
 
   .. code-tab:: py
 
@@ -200,7 +204,7 @@ Finally, to add a point to a mapped trajectory, the following function can be us
 
 Other features and details can be found in the technical datasheet of the ``Trajectory`` class.
 
-Finally, we summarize in the following table the operations supported for each kind of trajectory definition.
+We summarize in the following table the operations supported for each kind of trajectory definition.
 
 =================================  ================  ==================
 Operations                         Analytical def.   Map of values def.
@@ -304,8 +308,8 @@ We compute the *trajectory* of distances by:
 
   .. code-tab:: c++
 
-    double bx = 0.5, by = 1.; // landmark's position
-    Trajectory dist = sqrt(sqr(x[0]-bx)+sqr(x[1]-by)); // simple operations between trajectories
+    Vector b({0.5,1.}); // landmark's position
+    Trajectory dist = sqrt(sqr(x[0]-b[0])+sqr(x[1]-b[1])); // simple operations between traj.
 
   .. code-tab:: py
 
@@ -340,15 +344,16 @@ As one can see, trajectories can be used to represent data. When it comes to con
 
 
 ..    Interval tdomain(0.,5.);
+..    Vector b({0.5,1.});
 ..    TrajectoryVector x(tdomain, Function("(2*cos(t) ; sin(2*t))"), 0.01);
-..    Trajectory dist = sqrt(sqr(x[0]-0.5)+sqr(x[1]-1));
+..    Trajectory dist = sqrt(sqr(x[0]-b[0])+sqr(x[1]-b[1]));
 ..
 ..    vibes::beginDrawing();
 ..
 ..    VIBesFigMap fig_map("Map");
 ..    fig_map.set_properties(1450, 50, 600, 300);
 ..    fig_map.add_trajectory(&x, "x*", 0, 1);
-..    fig_map.add_beacon(Beacon(0.5,1), 0.1);
+..    fig_map.add_beacon(Beacon(b), 0.1);
 ..    fig_map.show(0.25);
 ..    fig_map.axis_limits(-2.5,2.5,-0.1,0.1, true);
 ..    fig_map.show(0.25);

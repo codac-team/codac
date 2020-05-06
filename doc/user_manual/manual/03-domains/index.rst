@@ -4,7 +4,7 @@
 Domains: sets of feasible values
 ################################
 
-Constraint programming consists in reducing sets of feasible solutions to are not compliant with constraints defining a problem. The constraints are dealt with by operators called **contractors**, presented in :ref:`the next part of this manual <sec-manual-contractors>`. The sets are called **domains**, introduced now.
+Constraint Programming consists in reducing sets of feasible solutions to are not compliant with constraints defining a problem. The constraints are dealt with by operators called **contractors**, presented in :ref:`the next part of this manual <sec-manual-contractors>`. The sets are called **domains**, introduced now.
 
 For now, we consider two kinds of domains corresponding to:
 

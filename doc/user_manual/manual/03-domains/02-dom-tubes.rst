@@ -13,7 +13,7 @@ The trajectories :math:`x(\cdot)` and vector of trajectories :math:`\mathbf{x}(\
 Definition
 ----------
 
-A tube is defined over a temporal *t*-domain :math:`[t_0,t_f]` as an envelope of trajectories that are defined over the same *t*-domain :math:`[t_0,t_f]`. We speak about an *envelope* as it may exist trajectories enclosed in the tube that are not solutions of our problem.
+A tube is defined over a temporal *t*-domain :math:`[t_0,t_f]` as an envelope of trajectories that are defined over the same *t*-domain. We speak about an *envelope* as it may exist trajectories enclosed in the tube that are not solutions of our problem.
 
 In this library, a tube :math:`[x](\cdot):[t_0,t_f]\rightarrow\mathbb{IR}` is an interval of two trajectories :math:`[\underline{x}(\cdot),\overline{x}(\cdot)]` such that :math:`\forall t\in[t_0,t_f]`, :math:`\underline{x}(t)\leqslant\overline{x}(t)`. We also consider empty tubes that depict an absence of solutions, denoted :math:`\varnothing(\cdot)`.
 A trajectory :math:`x(\cdot)` belongs to the tube :math:`\left[x\right](\cdot)` if :math:`\forall t\in[t_0,t_f], x\left(t\right)\in\left[x\right]\left(t\right)`. 
@@ -40,7 +40,7 @@ The box :math:`[k\delta,k\delta+\delta]\times\left[x\right]\left(t_{k}\right)`, 
   A tube :math:`[x](\cdot)` represented by a set of :math:`\delta`-width slices. This implementation can be used to enclose signals such as :math:`x^*(\cdot)`.
 
 .. versionadded:: 2.0
-   Custom discretization of tubes, they can be made of slices that are not all defined with the same sampling time :math:`\delta`.
+   Custom discretization of tubes is now at hand, they can be made of slices that are not all defined with the same sampling time :math:`\delta`.
 
 This implementation takes rigorously into account floating point precision when building a tube.
 Further computations involving :math:`[x](\cdot)` will be implicitely based on its slices, thus keeping a reliable outer approximation of the solution set. 
@@ -107,7 +107,7 @@ As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Traject
 
 .. figure:: img/interval_trajs.png
 
-  Result of tubes :math:`[x_8](\cdot)=[\sin(t)]`, :math:`[x_9](\cdot)=[\cos(t),\cos(t)+\frac{t}{10}]`, made of 100 slices.
+  Result of tubes :math:`[x_8](t)=[\sin(t),\sin(t)]`, :math:`[x_9](t)=[\cos(t),\cos(t)+\frac{t}{10}]`, made of 100 slices.
 
 .. #include <tubex.h>
 .. 
@@ -152,7 +152,7 @@ It is also possible to create a tube from a thick function, where the uncertaint
 
   Result of tube :math:`[x_{10}](\cdot)` made of 1000 slices.
 
-Finally, a tube can be seen as an envelope (union) of trajectories. And so the following operations are allowed:
+Finally, as tube is an envelope (union) of trajectories, the following operations are allowed:
 
 .. tabs::
 

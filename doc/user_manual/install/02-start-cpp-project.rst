@@ -20,8 +20,8 @@ Start a C++ project
   
   int main()
   {
-    Interval domain(0.,10.);
-    Tube x(domain);
+    Interval tdomain(0.,10.);
+    Tube x(tdomain);
   
     cout << "My first tube: " << x << endl;
   }
@@ -75,7 +75,7 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
 
 .. admonition:: Custom install directory of IBEX and Tubex
   
-  If you installed IBEX and/or Tubex in a custom directory (instead of file system such as :file:`/usr/local/` under Linux),
+  If you installed IBEX and/or Tubex in a custom directory (instead of the file system such as :file:`/usr/local/` under Linux),
   then you need to specify the ``CMAKE_PREFIX_PATH`` option, as indicated in the above :file:`CMakeLists.txt` file.
 
   Another way is to export the ``CMAKE_PREFIX_PATH`` environment variable. For instance:
@@ -85,7 +85,7 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
 
-The compilation is made by the following command line:
+The compilation of your project is made by the following command line:
 
 .. code-block:: bash
 
