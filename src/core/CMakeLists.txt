@@ -41,6 +41,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset_degree.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_SIVIAPaving.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_SIVIAPaving.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_ConvexPolygon.h
