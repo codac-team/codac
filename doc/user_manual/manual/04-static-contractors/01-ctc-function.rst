@@ -30,6 +30,15 @@ Definition
 
       # todo
 
+.. note::
+
+  .. Figure:: ../../img/ibex_logo.jpg
+    :align: right
+  .. Figure:: ../../img/pyibex_logo.jpg
+    :align: right
+  
+  This contractor originates from the `IBEX library <http://www.ibex-lib.org>`_. It is briefly presented here for the sake of consistency. For more information, please refer to the `IBEX documentation <http://www.ibex-lib.org/doc/contractor.html>`_ for C++ use or to the `pyIbex manual <http://benensta.github.io/pyIbex/sphinx/api.html#ctcfwdbwd>`_ for Python usage.
+
 
 Example
 -------
