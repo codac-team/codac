@@ -253,7 +253,7 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. seealso::
 
-  The `API technical documentation <./doxygen/html/annotated.html>`_  of the library.
+  The `API technical documentation <../api/html/annotated.html>`_  of the library.
 
 
 .. toctree::
