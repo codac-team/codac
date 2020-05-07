@@ -1,6 +1,6 @@
 /**
  *  \file
- *  CAPD to Tubex
+ *  TubeVectorODE class
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Julien Damers
@@ -9,12 +9,11 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef TUBEX_TUBEX_TUBEVECTORODE_H
-#define TUBEX_TUBEX_TUBEVECTORODE_H
+#ifndef __TUBEX_TUBEVECTORODE_H__
+#define __TUBEX_TUBEVECTORODE_H__
 
 #define DEFAULT_TIMESTEP 0
 #define CAPD_MODE 0
-
 
 #include "tubex_TubeVector.h"
 #include "ibex_IntervalVector.h"
@@ -22,10 +21,10 @@
 
 namespace tubex
 {
-    tubex::TubeVector TubeVectorODE(const ibex::Interval& domain, const tubex::Function& f, const ibex::IntervalVector& x0,
-                      const double timestep=DEFAULT_TIMESTEP, const int mode=CAPD_MODE);
+  TubeVector TubeVectorODE(const ibex::Interval& domain, const tubex::Function& f, const ibex::IntervalVector& x0,
+                           double timestep=DEFAULT_TIMESTEP, int mode=CAPD_MODE);
 
 }
 
 
-#endif //TUBEX_TUBEX_TUBEVECTORODE_H
+#endif
