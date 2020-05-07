@@ -3,7 +3,7 @@
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Raphael Voges
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \copyright  Copyright 2020 Tubex Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */

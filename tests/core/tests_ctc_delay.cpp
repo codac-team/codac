@@ -14,17 +14,17 @@ using namespace tubex;
 
 TEST_CASE("CtcDelay")
 {
-  SECTION("Test CtcDelay")
+  SECTION("Test CtcDelay, tube contraction")
   {
-    Interval domain(0.,10.);
-    Tube x(domain, 0.01, tubex::Function("cos(t)"));
-    Tube y(domain, 0.01);
+    Interval tdomain(0.,10.);
+    Tube x(tdomain, 0.01, tubex::Function("cos(t)"));
+    Tube y(tdomain, 0.01);
 
     CtcDelay ctc_delay;
     Interval pi = Interval::pi();
     ctc_delay.contract(pi, x, y);
 
-    if(true)
+    if(false)
     {
       vibes::beginDrawing();
       VIBesFigTube fig_x("delay x", &x);
@@ -37,5 +37,31 @@ TEST_CASE("CtcDelay")
     CHECK(y(Interval(0.,M_PI)) == Interval::ALL_REALS);
     CHECK(ApproxIntv(y(Interval(M_PI+0.01,10.))) == Interval(-1.,1.));
     CHECK(y(5.).is_superset(x(5. - M_PI)));
+  }
+
+  SECTION("Test CtcDelay, delay contraction")
+  {
+    double dt = 0.01;
+    Interval tdomain(0.,10.);
+    Tube x(tdomain, dt, tubex::Function("cos(t)"));
+    Tube y(tdomain, dt, tubex::Function("sin(t)"));
+
+    CtcDelay ctc_delay;
+    Interval delay(0., 2.*M_PI);
+    ctc_delay.contract(delay, x, y);
+    ctc_delay.contract(delay, x, y);
+
+    if(false)
+    {
+      vibes::beginDrawing();
+      VIBesFigTube fig_x("delay x", &x);
+      fig_x.show();
+      VIBesFigTube fig_y("delay y", &y);
+      fig_y.show();
+      vibes::endDrawing();
+    }
+    
+    CHECK(delay.contains(M_PI/2.));
+    CHECK(delay.diam() < 3.*dt);
   }
 }
