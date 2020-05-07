@@ -246,6 +246,7 @@ Then you have two options: read the details about the features of Tubex (domains
   manual/06-contractor-network/index
   manual/07-graphics/index
   manual/08-going-further/index
+  manual/09-dev/index
 
 .. versionadded:: 2.1.0
    The Contractor Network tool.
