@@ -17,5 +17,6 @@ namespace tubex
     CtcDeriv deriv;
     CtcEval eval;
     CtcDist dist;
+    CtcDelay delay;
   }
 }

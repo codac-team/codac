@@ -15,6 +15,7 @@
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcDist.h"
 #include "tubex_CtcEval.h"
+#include "tubex_CtcDelay.h"
 
 namespace tubex
 {
@@ -23,6 +24,7 @@ namespace tubex
     extern CtcDeriv deriv; // derivative constraint (x,v)
     extern CtcEval eval; // evaluation constraint (t,z,y,w)
     extern CtcDist dist; // distance constraint (a,b,d)
+    extern CtcDelay delay; // delay constraint (a,x,y)
   }
 }
 
