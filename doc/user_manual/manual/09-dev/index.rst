@@ -30,7 +30,7 @@ Information for developers
 
 .. rubric:: Tips
 
-To speed up the compilation with ``make`` and take benefit of, for example, 4 cores of your processor, one can use:
+To speed up the compilation with ``make`` and take benefit of, for example, 4 cores of your processor, use the ``-j`` option:
 
 .. code-block:: bash
   
@@ -57,6 +57,8 @@ Build this user manual using Sphinx:
   cd build
   make doc
 
+The website will be generated in :file:`build/doc/`.
+
 
 .. rubric:: API technical documentation
 
@@ -67,10 +69,12 @@ Build the API technical documentation using Doxygen:
   cd build
   make api
 
+The API pages will be generated in :file:`build/doc/api/html/`.
+
 
 .. rubric:: Script :file:`make.sh`
 
-One shortcut to build all the examples (including 3rd party parts) is given by:
+One shortcut to build all the examples (including 3rd parties) is given by:
 
 .. code-block:: bash
   
@@ -86,7 +90,7 @@ One shortcut to build the tests is given by:
   # From Tubex root
   ./make tests
 
-One shortcut to build both the examples and tests:
+One shortcut to build both the examples and tests is:
 
 .. code-block:: bash
 
