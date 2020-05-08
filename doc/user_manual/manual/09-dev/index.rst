@@ -9,6 +9,10 @@
 Information for developers
 ##########################
 
+| In case you are willing to contribute to Tubex, here are some information that may be useful.
+| Linux support.
+
+
 .. rubric:: Definition
 
 .. rst-class:: fit-page
@@ -53,7 +57,12 @@ Launch the tests:
 Build this user manual using Sphinx:
 
 .. code-block:: bash
+  
+  # Install Sphinx with
+  sudo apt install python3-sphinx
+  sudo python3 -m pip install sphinx_rtd_theme sphinx-tabs
 
+  # Build the doc
   cd build
   make doc
 
@@ -66,6 +75,10 @@ Build the API technical documentation using Doxygen:
 
 .. code-block:: bash
 
+  # Install Doxygen with
+  sudo apt install doxygen graphviz
+
+  # Build the doc
   cd build
   make api
 
