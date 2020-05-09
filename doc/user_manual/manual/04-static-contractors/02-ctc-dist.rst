@@ -31,6 +31,10 @@ Definition
 
       # todo
 
+.. todo::
+
+  | For now, this contractor is only available for :math:`[\mathbf{a}]\in\mathbb{IR}^2`, :math:`[\mathbf{b}]\in\mathbb{IR}^2`.
+  | Todo: implement the *n*-d version of :math:`\mathcal{C}_{\textrm{dist}}`.
 
 Example
 -------

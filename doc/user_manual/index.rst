@@ -27,6 +27,9 @@ Tubex is a library providing tools for **constraint programming** over reals and
 In a nutshell, Tubex is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
 
 
+.. contents:: Contents of this page
+
+
 .. rubric:: Keywords
 
 .. hlist::
@@ -40,6 +43,7 @@ In a nutshell, Tubex is a high-level **constraint programming framework** provid
   * localization
   * state-estimation
   * SLAM
+  * solver
 
 
 
@@ -201,8 +205,8 @@ We look at the state equations and use contractors to deal with them. The distan
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
 
-Documentation (/!\\ in progress /!\\)
-=====================================
+User manual
+===========
 
 *Want to use Tubex?* The first thing to do is to install the library:
 
@@ -213,7 +217,7 @@ Documentation (/!\\ in progress /!\\)
   install/02-start-cpp-project
   install/03-start-py-project
 
-Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to use Tubex for mobile robotics, with telling examples.
+Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Tubex for mobile robotics <sec-mainpage-tuto>`, with telling examples.
 
 .. sidebar:: Dependencies
   
@@ -235,7 +239,6 @@ Then you have two options: read the details about the features of Tubex (domains
 
 
 .. toctree::
-  :caption: User manual
   :maxdepth: 2
 
   manual/01-introduction/index
@@ -246,7 +249,8 @@ Then you have two options: read the details about the features of Tubex (domains
   manual/06-contractor-network/index
   manual/07-graphics/index
   manual/08-going-further/index
-  manual/09-dev/index
+  manual/09-extensions/index
+  manual/10-dev/index
 
 .. versionadded:: 2.1.0
    The Contractor Network tool.
@@ -257,8 +261,12 @@ Then you have two options: read the details about the features of Tubex (domains
   The `API technical documentation <../api/html/annotated.html>`_  of the library.
 
 
+.. _sec-mainpage-tuto:
+
+Tubex tutorial for mobile robotics
+==================================
+
 .. toctree::
-  :caption: Using Tubex for mobile robotics
   :maxdepth: 1
 
   tutorial/01-introduction/index
@@ -271,16 +279,6 @@ Then you have two options: read the details about the features of Tubex (domains
   tutorial/08-realtime-loc/index
   tutorial/09-distributed-loc/index
   tutorial/10-loop-detections/index
-
-
-.. toctree::
-  :caption: Extensions of Tubex
-  :maxdepth: 1
-
-  extensions/01-capd/index
-
-
-.. Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
 
 
 Support and license

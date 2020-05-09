@@ -14,4 +14,5 @@ Contractor                            Type     Code            Documentation
 :math:`\mathcal{C}_{\textrm{dist}}`   Static   ``ctc::dist``   :ref:`Link <sec-manual-ctcdistance>`
 :math:`\mathcal{C}_{\frac{d}{dt}}`    Dynam.   ``ctc::deriv``  :ref:`Link <sec-manual-ctcderiv>`
 :math:`\mathcal{C}_{\textrm{eval}}`   Dynam.   ``ctc::eval``   :ref:`Link <sec-manual-ctceval>`
+:math:`\mathcal{C}_{\textrm{delay}}`  Dynam.   ``ctc::delay``  --
 ====================================  =======  ==============  ====================================
