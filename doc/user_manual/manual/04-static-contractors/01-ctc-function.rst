@@ -30,6 +30,7 @@ Definition
 
       # todo
 
+
 .. note::
 
   .. Figure:: ../../img/ibex_logo.jpg
@@ -38,6 +39,11 @@ Definition
     :align: right
   
   This contractor originates from the `IBEX library <http://www.ibex-lib.org>`_. It is briefly presented here for the sake of consistency. For more information, please refer to the `IBEX documentation <http://www.ibex-lib.org/doc/contractor.html>`_ for C++ use or to the `pyIbex manual <http://benensta.github.io/pyIbex/sphinx/api.html#ctcfwdbwd>`_ for Python usage.
+
+
+.. rubric:: Optimality
+
+This contractor is not necessarily optimal, depending on the expression of :math:`\mathbf{f}`.
 
 
 Example
@@ -61,7 +67,19 @@ A contractor for the constraint :math:`f(\mathbf{x})=0` can be built by:
 
     # todo
 
-The first parameters are the variables names. The last one is the expression of :math:`f`.
+| The first parameters are the variables names. The last one is the expression of :math:`f`.
+| Note that it is also possible to write vector variables:
+
+.. tabs::
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_f("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]");
+
+  .. code-tab:: py
+
+    # todo
+
 
 Then, a box :math:`[\mathbf{x}]` can be contracted by:
 

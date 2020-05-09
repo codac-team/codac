@@ -15,7 +15,6 @@ Therefore, the following contractors apply on intervals and boxes:
   02-ctc-dist
   03-ctc-polar
   04-ctc-constell
-  05-ctc-ibex
 
 ------------------------------------------------------
 

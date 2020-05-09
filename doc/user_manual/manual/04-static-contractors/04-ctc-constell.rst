@@ -33,6 +33,11 @@ Definition
       # todo
 
 
+Example
+-------
+
+
+
 Related publication
 -------------------
 

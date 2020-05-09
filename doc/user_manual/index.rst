@@ -11,9 +11,6 @@
 Tubex: constraint-programming for robotics
 ##########################################
 
-In a nutshell
-=============
-
 Tubex is a library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
 
 | **What is constraint programming?**
