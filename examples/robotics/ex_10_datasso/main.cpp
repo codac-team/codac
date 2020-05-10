@@ -57,7 +57,7 @@ int main()
       // Creating random map of landmarks
       const int nb_landmarks = 150;
       const IntervalVector map_area(2, Interval(-400.,400.));
-      const vector<Beacon> v_map = DataLoader::generate_landmarks(map_area, nb_landmarks);
+      const vector<IntervalVector> v_map = DataLoader::generate_landmarks_boxes(map_area, nb_landmarks);
 
       // Generating observations obs=(t,range,bearing) of these landmarks
       const int max_nb_obs = 50;
@@ -122,7 +122,8 @@ int main()
     fig_map.add_tube(&x, "x", 0, 1);
     fig_map.add_trajectory(&state_truth, "x*", 0, 1, 2, "white");
     fig_map.add_observations(v_obs, &state_truth);
-    fig_map.add_beacons(v_map, 2.);
+    for(const auto& b : v_map)
+      fig_map.add_beacon(Beacon(b), 2.);
     fig_map.smooth_tube_drawing(true);
     fig_map.show();
     fig_map.axis_limits(-340., 340., -1., 1., true);

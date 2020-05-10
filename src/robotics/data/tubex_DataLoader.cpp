@@ -165,4 +165,12 @@ namespace tubex
     
     return v_obs;
   }
+  
+  vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<IntervalVector>& map, int nb_obs, bool random, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& tdomain)
+  {
+    vector<Beacon> map_beacons;
+    for(auto& b : map)
+      map_beacons.push_back(Beacon(b));
+    return generate_observations(x, map_beacons, nb_obs, random, visi_range, visi_angle, tdomain);
+  }
 }
