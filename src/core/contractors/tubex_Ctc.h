@@ -91,7 +91,7 @@ namespace tubex
        *
        * \param tdomain Interval tdomain of restriction \f$[t_1,t_2]\f$
        */
-      void set_restricted_tdomain(const ibex::Interval& tdomain);
+      void restrict_tdomain(const ibex::Interval& tdomain);
 
       bool is_intertemporal() const;
 

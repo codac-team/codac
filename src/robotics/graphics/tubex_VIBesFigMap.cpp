@@ -39,7 +39,7 @@ namespace tubex
       }
   }
   
-  void VIBesFigMap::set_restricted_tdomain(const Interval& restricted_tdomain)
+  void VIBesFigMap::restrict_tdomain(const Interval& restricted_tdomain)
   {
     m_restricted_tdomain = restricted_tdomain;
   }

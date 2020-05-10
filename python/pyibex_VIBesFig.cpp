@@ -164,7 +164,7 @@ PYBIND11_MODULE(graphics, m){
     py::class_<VIBesFigMap, VIBesFig>(m, "VIBesFigMap", DOCS_VIBESFIGMAP)
       .def(py::init<const std::string &>(),
           DOCS_VIBESFIGMAP_VIBESFIGMAP_STRING, "fig_name"_a)
-      .def("set_restricted_tdomain", &VIBesFigMap::set_restricted_tdomain,
+      .def("restrict_tdomain", &VIBesFigMap::restrict_tdomain,
           DOCS_VIBESFIGMAP_SET_RESTRICTED_TDOMAIN_INTERVAL, "restricted_tdomain"_a)
       .def("enable_tubes_backgrounds", &VIBesFigMap::enable_tubes_backgrounds,
           DOCS_VIBESFIGMAP_ENABLE_TUBES_BACKGROUNDS_BOOL, "enable"_a=true)
