@@ -43,7 +43,7 @@ int main()
     vibes::beginDrawing();
     VIBesFigTubeVector fig_x("x", 0, 4);
     fig_x.set_properties(100, 100, 600, 300);
-    fig_x.add_tubevector(&x, "x");
+    fig_x.add_tube(&x, "x");
     fig_x.show();
     vibes::endDrawing();
     

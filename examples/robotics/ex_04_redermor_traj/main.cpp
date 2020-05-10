@@ -36,8 +36,8 @@ int main(int argc, char** argv)
     vibes::beginDrawing();
     VIBesFigTubeVector fig_x("Redermor's state", 0, 1); // first two components
     fig_x.set_properties(2000, 50, 500, 250);
-    fig_x.add_tubevector(x, "x");
-    fig_x.add_trajectoryvector(x_truth, "x*");
+    fig_x.add_tube(x, "x");
+    fig_x.add_trajectory(x_truth, "x*");
     fig_x.show();
 
     VIBesFigMap fig_map("Map");

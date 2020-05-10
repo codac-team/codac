@@ -260,8 +260,8 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. _sec-mainpage-tuto:
 
-Tubex tutorial for mobile robotics
-==================================
+Tutorial for mobile robotics
+============================
 
 .. toctree::
   :maxdepth: 1
