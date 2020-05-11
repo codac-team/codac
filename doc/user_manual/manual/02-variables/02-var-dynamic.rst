@@ -377,3 +377,11 @@ Next pages will present several methods to use *tubes* that are envelopes of tra
 
 .. rubric:: Footnotes
 .. [#f1] In Tubex, a ``tubex::Function`` is the extension of IBEX's ``ibex::Function`` objects, for the dynamical case (see more `about IBEX's functions <http://www.ibex-lib.org/doc/function.html>`_).
+
+
+.. admonition:: Technical documentation
+
+  See the API documentation of this class:
+
+  * `Trajectory <../../../api/html/classtubex_1_1_trajectory.html>`_
+  * `TrajectoryVector <../../../api/html/classtubex_1_1_trajectory_vector.html>`_

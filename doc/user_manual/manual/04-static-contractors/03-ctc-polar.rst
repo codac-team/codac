@@ -156,8 +156,8 @@ Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the 
 .. }
 
 
-Related publication
--------------------
+Related content
+---------------
 
 .. |polar-pdf| replace:: **Download the paper**
 .. _polar-pdf: https://www.ensta-bretagne.fr/jaulin/paper_polar.pdf
@@ -168,3 +168,7 @@ Related publication
   | B. Desrochers, L. Jaulin
   | *Engineering Applications of Artificial Intelligence*, 55(Supplement C):83–92, Oct. 2016.
   | |polar-pdf|_
+
+.. admonition:: Technical documentation
+
+  See the `API documentation of this class <../../../api/html/classpyibex_1_1_ctc_polar.html>`_.

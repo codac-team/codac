@@ -31,3 +31,8 @@ Definition
     .. code-tab:: py
 
       # todo
+
+
+.. admonition:: Technical documentation
+
+  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_picard.html>`_.

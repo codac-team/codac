@@ -177,6 +177,7 @@ html_css_files = [
     'custom-sphinx-tabs.css',
     'custom-sphinx-tables.css',
     'custom-sphinx-lists.css',
+    'custom-sphinx-api.css',
 ]
 
 # Add any extra paths that contain custom files (such as robots.txt or

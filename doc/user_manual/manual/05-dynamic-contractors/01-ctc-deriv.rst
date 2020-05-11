@@ -82,8 +82,8 @@ Definition
 
 
 
-Related publication
--------------------
+Related content
+---------------
 
 .. |tubint-pdf| replace:: **Download the paper**
 .. _tubint-pdf: http://simon-rohou.fr/research/tubint/tubint_paper.pdf
@@ -96,9 +96,6 @@ Related publication
   | |tubint-pdf|_
 
 
-API technical documentation
----------------------------
+.. admonition:: Technical documentation
 
-.. doxygenclass:: tubex::CtcDeriv
-  :project: tubex-lib
-  :members:
+  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_deriv.html>`_.

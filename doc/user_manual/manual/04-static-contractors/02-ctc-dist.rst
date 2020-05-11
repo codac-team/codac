@@ -136,3 +136,8 @@ Several calls to :math:`\mathcal{C}_{\textrm{dist}}` will allow the contraction 
 .. 
 ..   vibes::endDrawing();
 .. }
+
+
+.. admonition:: Technical documentation
+
+  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_dist.html>`_.

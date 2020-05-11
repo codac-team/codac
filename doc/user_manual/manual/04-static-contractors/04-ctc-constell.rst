@@ -170,8 +170,8 @@ we can use the :math:`\mathcal{C}_\textrm{constell}` to contract them according 
 .. }
 
 
-Related publication
--------------------
+Related content
+---------------
 
 .. |datasso-pdf| replace:: **Download the paper**
 .. _datasso-pdf: http://simon-rohou.fr/research/datasso/datasso_paper.pdf
@@ -182,3 +182,8 @@ Related publication
   | S. Rohou, B. Desrochers, L. Jaulin
   | *IEEE International Conference on Robotics and Automation (ICRA)*, 2020.
   | |datasso-pdf|_
+
+
+.. admonition:: Technical documentation
+
+  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_constell.html>`_.

@@ -157,8 +157,8 @@ The obtained tube is blue painted on the figure, the contraction at :math:`t=4.3
 .. figure:: img/ceval_lissajous_tube.png
 
 
-Related publication
--------------------
+Related content
+---------------
 
 .. |tubeval-pdf| replace:: **Download the paper**
 .. _tubeval-pdf: http://simon-rohou.fr/research/tubeval/tubeval_paper.pdf
@@ -169,3 +169,8 @@ Related publication
   | S. Rohou, L. Jaulin, L. Mihaylova, F. Le Bars, S. M. Veres
   | *Automatica*, 93:379--388, July 2018.
   | |tubeval-pdf|_
+
+
+.. admonition:: Technical documentation
+
+  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_eval.html>`_.
