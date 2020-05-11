@@ -27,12 +27,19 @@ Definition
 
     .. code-tab:: c++
 
-      ctc::eval.contract(t, y, x, v);
+      ctc::eval.contract(ti, yi, x, v);
 
     .. code-tab:: py
 
       # todo
 
+  .. rubric:: Prerequisite
+
+  The tubes :math:`[x](\cdot)` and :math:`[v](\cdot)` must share:
+
+  * the same slicing (same sampling of time)
+  * the same *t*-domain :math:`[t_0,t_f]`
+  * the same dimension of :math:`[y_i]` in the vector case
 
 
 Example
