@@ -37,8 +37,8 @@ Definition
   * the same dimension in the vector case
 
 
-Theoretical example
--------------------
+Theoretical illustration
+------------------------
 
 Here is an example of a consistency state reached with :math:`\mathcal{C}_{\frac{d}{dt}}` over a set of trajectories and their feasible derivatives.
 
@@ -115,6 +115,8 @@ Only :math:`[x](\cdot)` is contracted (it can be theoretically proved that :math
 ..   return EXIT_SUCCESS;
 .. }
 
+
+.. _sec-manual-ctcderiv-localization:
 
 Localization example
 --------------------
