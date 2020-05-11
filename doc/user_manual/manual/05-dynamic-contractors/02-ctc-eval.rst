@@ -9,6 +9,8 @@
 CtcEval: :math:`y_i=x(t_i)`
 ***************************
 
+:math:`y_i=x(t_i)` is a constraint that links a value :math:`y_i` to the evaluation of the trajectory :math:`x(\cdot)` at time :math:`t_i`. A dedicated contractor :math:`\mathcal{C}_{\textrm{eval}}` implements this constraint. One of its applications is the correction of the positions of a robot based on observations.
+
 .. contents::
 
 
@@ -122,7 +124,7 @@ The :math:`\mathcal{C}_{\textrm{eval}}` can be used to evaluate the position tim
 
 We now assume that we have no knowledge on :math:`[\mathbf{x}](\cdot)`, except that the feasible trajectories go through the box :math:`[-0.73,-0.69]\times[0.64,0.68]` at :math:`t=4.35`.
 
-The tube is contracted over :math:`[t_0,t_f]` with its thick derivative :math:`[\mathbf{v}](\cdot)` given by:
+The tube is contracted over :math:`[t_0,t_f]` with its uncertain derivative :math:`[\mathbf{v}](\cdot)` given by:
 
 .. math::
 
@@ -150,7 +152,7 @@ The tube is contracted over :math:`[t_0,t_f]` with its thick derivative :math:`[
 
     # todo
 
-The obtained tube is blue painted on the figure, the contraction at :math:`t=4.35` is propagated over the whole *t*-domain:
+The obtained tube is blue painted on the figure, the contraction at :math:`t=4.35` (red box) is propagated over the whole *t*-domain:
 
 .. figure:: img/ceval_lissajous_tube.png
 

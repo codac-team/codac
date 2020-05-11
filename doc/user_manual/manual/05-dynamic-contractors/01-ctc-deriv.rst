@@ -9,6 +9,8 @@
 CtcDeriv: :math:`\dot{x}(t)=v(t)`
 *********************************
 
+:math:`\dot{x}(t)=v(t)` is the simplest differential constraint that binds a trajectory :math:`x(\cdot)` to its derivative :math:`v(\cdot)`. The related contractor :math:`\mathcal{C}_{\frac{d}{dt}}` allows contractions on the tube :math:`[x](\cdot)` to preserve only trajectories consistent with the derivatives enclosed in the tube :math:`[v](\cdot)`.
+
 .. contents::
 
 
@@ -30,6 +32,14 @@ Definition
     .. code-tab:: py
 
       # todo
+
+  .. rubric:: Prerequisite
+
+  The tubes :math:`[x](\cdot)` and :math:`[v](\cdot)` must share:
+
+  * the same slicing (same sampling of time)
+  * the same *t*-domain :math:`[t_0,t_f]`
+  * the same dimension in the vector case
 
 
 .. figure:: img/cderiv_v.png
@@ -84,3 +94,11 @@ Related publication
   | S. Rohou, L. Jaulin, L. Mihaylova, F. Le Bars, S. M. Veres
   | *Robotics and Autonomous Systems*, 93:76--84, 2017.
   | |tubint-pdf|_
+
+
+API technical documentation
+---------------------------
+
+.. doxygenclass:: tubex::CtcDeriv
+  :project: tubex-lib
+  :members:

@@ -37,12 +37,18 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx_tabs.tabs',
+    'breathe'
     #'sphinx.ext.autodoc'
 ]
 
+breathe_projects = {
+    "tubex-lib":"../api/xml",
+}
+
 numfig = True
 
-mathjax_path = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+# mathjax_path = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+mathjax_path = "../../mathjax_stmaryrd.js" # local, with stmaryrd package
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
