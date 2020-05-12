@@ -47,9 +47,6 @@ int main()
     TubeVector vx = f.eval_vector(x);
     assert(a.same_slicing(a,vx));
 
-    // ----- Initial conditions -----
-
-
 
     // ----- Contractors initialisation -----
     ibex::Function phi("x1","x2","x3","z1","z2","z3",
@@ -95,6 +92,6 @@ int main()
     cn.contract();
     fig.show();
 
-    return EXIT_SUCCESS;
+    return a.is_subset(x) ? EXIT_SUCCESS : EXIT_FAILURE;
 
 }
