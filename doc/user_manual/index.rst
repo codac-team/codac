@@ -11,18 +11,20 @@
 Tubex: constraint-programming for robotics
 ##########################################
 
-In a nutshell
-=============
-
 Tubex is a library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
 
 | **What is constraint programming?**
-| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a **reliable** set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
+| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a **reliable** set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*.
+
+.. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
 | **What about mobile robotics?**
 | In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapeed robot problems** can be solved in a very few steps by using constraint programming. Even though the Tubex library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
 
 In a nutshell, Tubex is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
+
+
+.. contents:: Contents of this page
 
 
 .. rubric:: Keywords
@@ -38,6 +40,7 @@ In a nutshell, Tubex is a high-level **constraint programming framework** provid
   * localization
   * state-estimation
   * SLAM
+  * solver
 
 
 
@@ -117,7 +120,7 @@ We assume that we have measurements on the headings :math:`\psi(t)` and the spee
 
     # todo
 
-Finally, we define the domains for the three observations :math:`(t_i,y_i)` and the position of the landmarks. The distances :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]`.
+Finally, we define the domains for the three range-only observations :math:`(t_i,y_i)` and the position of the landmarks. The distances :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]`.
 
 .. tabs::
 
@@ -160,9 +163,9 @@ We look at the state equations and use contractors to deal with them. The distan
 
     for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
     {
-      IntervalVector& p = cn.create_var(IntervalVector(4)); // intermediate variable
+      IntervalVector& p = cn.create_var(IntervalVector(4)); // intermed. variable (state at t_i)
 
-      // Distance constraint: relation between the state at t_1 and the range-only value
+      // Distance constraint: relation between the state at t_i and the ith beacon position
       cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
       
       // Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
@@ -199,10 +202,10 @@ We look at the state equations and use contractors to deal with them. The distan
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
 
-Documentation (/!\\ in progress /!\\)
-=====================================
+User manual
+===========
 
-*Want to use Tubex?* The first thing to do is install the library:
+*Want to use Tubex?* The first thing to do is to install the library:
 
 .. toctree::
   :maxdepth: 1
@@ -211,7 +214,7 @@ Documentation (/!\\ in progress /!\\)
   install/02-start-cpp-project
   install/03-start-py-project
 
-Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to use Tubex for mobile robotics, with telling examples.
+Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Tubex for mobile robotics <sec-mainpage-tuto>`, with telling examples.
 
 .. sidebar:: Dependencies
   
@@ -233,7 +236,6 @@ Then you have two options: read the details about the features of Tubex (domains
 
 
 .. toctree::
-  :caption: User manual
   :maxdepth: 2
 
   manual/01-introduction/index
@@ -244,6 +246,8 @@ Then you have two options: read the details about the features of Tubex (domains
   manual/06-contractor-network/index
   manual/07-graphics/index
   manual/08-going-further/index
+  manual/09-extensions/index
+  manual/10-dev/index
 
 .. versionadded:: 2.1.0
    The Contractor Network tool.
@@ -251,11 +255,15 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. seealso::
 
-  The `API technical documentation <./doxygen/html/annotated.html>`_  of the library.
+  The `API technical documentation <../api/html/annotated.html>`_  of the library.
 
+
+.. _sec-mainpage-tuto:
+
+Tutorial for mobile robotics
+============================
 
 .. toctree::
-  :caption: Using Tubex for mobile robotics
   :maxdepth: 1
 
   tutorial/01-introduction/index
@@ -270,21 +278,11 @@ Then you have two options: read the details about the features of Tubex (domains
   tutorial/10-loop-detections/index
 
 
-.. toctree::
-  :caption: Extensions of Tubex
-  :maxdepth: 1
-
-  extensions/01-capd/index
-
-
-.. Further pages will be written soon, presenting *contractors*, *bisections*, *fixed point resolutions*, *graphical tools* and *robotic applications*.
-
-
 Support and license
 ===================
 
-You can post bug reports and feature requests on the `GitHub repository <https://github.com/SimonRohou/tubex-lib/>`_.
-For recent improvements and activities, see the `Github Tubex repository <https://github.com/SimonRohou/tubex-lib>`_.
+For recent improvements and activities, see the `Tubex Github repository <https://github.com/SimonRohou/tubex-lib>`_.
+You can post bug reports and feature requests on the `Issues page <https://github.com/SimonRohou/tubex-lib/issues>`_.
 
 This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 

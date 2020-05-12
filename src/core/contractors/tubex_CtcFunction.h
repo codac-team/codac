@@ -15,6 +15,7 @@
 #include <string>
 #include "tubex_Ctc.h"
 #include "ibex_CtcFwdBwd.h"
+#include "ibex_Ctc3BCid.h"
 
 namespace tubex
 {
@@ -36,6 +37,7 @@ namespace tubex
       CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f);
       ~CtcFunction();
 
+      void contract(ibex::IntervalVector& x);
       void contract(std::vector<Domain*>& v_domains);
 
       static const std::string parse_f(const char* f);
@@ -44,6 +46,7 @@ namespace tubex
 
       ibex::Function *m_ibex_fnc = NULL;
       ibex::CtcFwdBwd *m_ibex_ctc = NULL;
+      ibex::Ctc3BCid *m_ibex_3bcid = NULL;
   };
 }
 

@@ -32,6 +32,45 @@ Definition
       # todo
 
 
+.. figure:: img/cderiv_v.png
+
+.. figure:: img/cderiv_x.png
+
+
+.. #include <tubex.h>
+.. 
+.. using namespace std;
+.. using namespace tubex;
+.. 
+.. int main()
+.. {
+..   double dt = 0.01;
+..   Interval tdomain(0., M_PI);
+.. 
+..   Tube v(tdomain, dt, Function("sin(t+3.14+(3.14/2))/5+[-0.05,0.05]+(3.14-t)*[-0.01,0.01]"));
+..   Tube x(tdomain, dt, Function("[-0.05,0.05]+2+t*t*[-0.01,0.01]"));
+.. 
+..   vibes::beginDrawing();
+.. 
+..   VIBesFigTube fig_x("Tube x");
+..   fig_x.set_properties(100, 100, 600, 300);
+..   fig_x.add_tube(&x, "x");
+..   fig_x.show();
+.. 
+..   VIBesFigTube fig_v("Tube v");
+..   fig_v.set_properties(100, 500, 600, 300);
+..   fig_v.add_tube(&v, "v");
+..   fig_v.show();
+.. 
+..   ctc::deriv.contract(x, v);
+..   fig_x.show();  
+.. 
+..   vibes::endDrawing();
+.. 
+..   return EXIT_SUCCESS;
+.. }
+
+
 
 Related publication
 -------------------

@@ -151,7 +151,7 @@ The empty set of an ``Interval`` object is given by:
 
       # todo
 
-For boxes (interval vectors), we have to specify their dimension even in case of empty set. This differs from mathematical definitions, by allows simple operations when programming with boxes.
+For boxes (interval vectors), we have to specify their dimension even in case of empty set. This differs from mathematical definitions, but allows simple operations when programming with boxes.
 
   .. tabs::
 
@@ -259,7 +259,7 @@ Dealing with closed intervals, most of the operations can rely on their bounds. 
     ~ & = & \varnothing \textrm{ otherwise}.
   \end{eqnarray}
 
-Low-level libraries upon which Tubex has been built provide functionnalities for computing arithmetic on intervals, involving basic operations as weel as non-linear functions. The following functions can be used:
+Low-level libraries upon which Tubex has been built provide functionnalities for computing arithmetic on intervals, involving basic operations as well as non-linear functions. The following functions can be used:
 
 =========================  ==================================================================
 Code                       Meaning
@@ -289,8 +289,8 @@ The use on intervals is transparent:
     Interval a = Interval(-2,4) * Interval(1,3);                    // a = [-6,12]
     Interval b = Interval(-2,4) & Interval(6,7);                    // b = [empty] (intersection)
     Interval c = max(Interval(2,7), Interval(1,9));                 // c = [2,9]
-    Interval d = max(Interval::EMPTY_SET,Interval(1,2));            // d = [empty]
-    Interval e = Interval(-1,3) / Interval::POS_REALS;              // e = [-oo,oo]
+    Interval d = max(Interval::empty_set(), Interval(1,2));         // d = [empty]
+    Interval e = Interval(-1,3) / Interval::pos_reals();            // e = [-oo,oo]
     Interval f = (Interval(1,2) * Interval(-1,3))
                + max(Interval(1,3) & Interval(6,7), Interval(1,2)); // f = [4,9]
   

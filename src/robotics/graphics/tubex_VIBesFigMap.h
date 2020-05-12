@@ -65,7 +65,7 @@ namespace tubex
        *
        * \param restricted_tdomain subset of the temporal domain of the referenced items
        */
-      void set_restricted_tdomain(const ibex::Interval& restricted_tdomain);
+      void restrict_tdomain(const ibex::Interval& restricted_tdomain);
 
       /**
        * \brief Enables the display of previous versions of the tubes,

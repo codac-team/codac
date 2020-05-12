@@ -187,6 +187,18 @@ namespace tubex
     vibes::drawCircle(x, y, r.ub(), color, params_this_fig);
   }
   
+  void VIBesFig::draw_pie(double x, double y, const Interval& r, const Interval& theta, const vibes::Params& params)
+  {
+    draw_pie(x, y, r, theta, "", params);
+  }
+  
+  void VIBesFig::draw_pie(double x, double y, const Interval& r, const Interval& theta, const string& color, const vibes::Params& params)
+  {
+    vibes::Params params_this_fig(params);
+    params_this_fig["figure"] = name();
+    vibes::drawPie(x, y, r.lb(), r.ub(), theta.lb() * 180. / M_PI, theta.ub() * 180. / M_PI, color, params_this_fig);
+  }
+  
   void VIBesFig::draw_edge(const Edge& e, const vibes::Params& params)
   {
     draw_edge(e, "", params);

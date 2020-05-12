@@ -36,7 +36,7 @@ namespace tubex
     m_fast_mode = fast_mode;
   }
 
-  void Ctc::set_restricted_tdomain(const Interval& tdomain)
+  void Ctc::restrict_tdomain(const Interval& tdomain)
   {
     m_restricted_tdomain = tdomain;
   }

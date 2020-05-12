@@ -88,7 +88,7 @@ namespace tubex
     if(m_propagation_enabled)
     {
       CtcDeriv ctc_deriv;
-      ctc_deriv.set_restricted_tdomain(m_restricted_tdomain);
+      ctc_deriv.restrict_tdomain(m_restricted_tdomain);
       ctc_deriv.set_fast_mode(m_fast_mode);
       ctc_deriv.contract(y, w);
     }
@@ -174,7 +174,7 @@ namespace tubex
         // Note: w is also sampled to stay compliant with y.
 
         CtcDeriv ctc_deriv;
-        ctc_deriv.set_restricted_tdomain(m_restricted_tdomain);
+        ctc_deriv.restrict_tdomain(m_restricted_tdomain);
         ctc_deriv.set_fast_mode(m_fast_mode);
 
         Interval front_gate(y.size());

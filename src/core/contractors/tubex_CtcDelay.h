@@ -2,9 +2,9 @@
  *  \file
  *  CtcDelay class
  * ----------------------------------------------------------------------------
- *  \date       2017
- *  \author     Simon Rohou
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \date       2020
+ *  \author     Raphael Voges
+ *  \copyright  Copyright 2020 Tubex Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
@@ -18,40 +18,42 @@ namespace tubex
 {
   /**
    * \class CtcDelay
-   * \brief \f$\mathcal{C}_{t-\tau}\f$ that contracts a tube \f$[\mathbf{y}](\cdot)\f$ with respect
-   *        to the delay constraint \f$\mathbf{y}(t)=\mathbf{x}(t-\tau)\f$
-   * \todo  Contract all members
+   * \brief \f$\mathcal{C}_{delay}\f$ that contracts the tubes \f$[x](\cdot)\f$ and \f$[y](\cdot)\f$
+   *        with respect to their delay \f$[\tau]\f$ according to
+   *        the delay constraint \f$\mathbf{x}(t)=\mathbf{y}(t+\tau)\f$
    */
   class CtcDelay : public Ctc
   {
     public:
 
       /**
-       * \brief Creates a contractor object \f$\mathcal{C}_{t-\tau}\f$
+       * \brief Creates a contractor object \f$\mathcal{C}_{delay}\f$
        */
       CtcDelay();
-      
+
       void contract(std::vector<Domain*>& v_domains);
 
       /**
-       * \brief \f$\mathcal{C}_{t-\tau}\big([a],[x](\cdot),[y](\cdot)\big)\f$:
-       *        contracts the tube \f$[y](\cdot)\f$ with respect to the constraint \f$y(t)=x(t-a)\f$
+       * \brief \f$\mathcal{C}_{delay}\big([a],[x](\cdot),[y](\cdot)\big)\f$:
+       *        contracts the tubes \f$[x](\cdot)\f$, \f$[y](\cdot)\f$ and the delay \f$[a]\f$
+       *        with respect to the constraint \f$x(t)=y(t+a)\f$
        *
-       * \param a delay value \f$\tau\f$
-       * \param x the scalar tube \f$[x](\cdot)\f$
+       * \param a the delay value \f$\tau\f$ to be contracted
+       * \param x the scalar tube \f$[x](\cdot)\f$ to be contracted
        * \param y the scalar tube \f$[y](\cdot)\f$ to be contracted
        */
-      void contract(const ibex::Interval& a, const Tube& x, Tube& y);
+      void contract(ibex::Interval& a, Tube& x, Tube& y);
 
       /**
-       * \brief \f$\mathcal{C}_{t-\tau}\big([a],[\mathbf{x}](\cdot),[\mathbf{y}](\cdot)\big)\f$:
-       *        contracts the tube \f$[\mathbf{y}](\cdot)\f$ with respect to the constraint \f$\mathbf{y}(t)=\mathbf{x}(t-a)\f$
+       * \brief \f$\mathcal{C}_{delay}\big([a],[\mathbf{x}](\cdot),[\mathbf{y}](\cdot)\big)\f$:
+       *        contracts the tube vectors \f$[\mathbf{x}](\cdot)\f$, \f$[\mathbf{y}](\cdot)\f$ and the delay \f$[a]\f$
+       *        with respect to the constraint \f$\mathbf{x}(t)=\mathbf{y}(t+a)\f$
        *
-       * \param a delay value \f$\tau\f$
-       * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
+       * \param a the delay value \f$\tau\f$ to be contracted
+       * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ to be contracted
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$ to be contracted
        */
-      void contract(const ibex::Interval& a, const TubeVector& x, TubeVector& y);
+      void contract(ibex::Interval& a, TubeVector& x, TubeVector& y);
 
     protected:
 

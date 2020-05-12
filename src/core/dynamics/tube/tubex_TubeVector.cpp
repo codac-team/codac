@@ -111,6 +111,7 @@ namespace tubex
     TubeVector::TubeVector(const TubeVector& x, const IntervalVector& codomain)
       : TubeVector(x)
     {
+      assert(codomain.size() == x.size());
       set(codomain);
     }
 

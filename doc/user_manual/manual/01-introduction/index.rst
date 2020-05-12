@@ -23,7 +23,7 @@ The following :numref:`fig-cst` presents a conceptual view of a constraint propa
 .. _fig-cst:
 .. Figure:: img/cst.png
 
-  In this theoretical view, a domain :math:`\mathbb{X}` depicted in yellow is known to enclose a solution :math:`\mathbf{x}^*` pictured by a red dot and consistent with two constraints :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2`. The estimation of :math:`\mathbf{x}^*` consists in reducing :math:`\mathbb{X}` while satisfying :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2`. After the propagation process, the set of feasible solutions has been reduced by removing vectors that were not consistent with the constraints.
+  In this theoretical view, a domain :math:`\mathbb{X}` depicted in yellow is known to enclose a solution :math:`\mathbf{x}^*` pictured by a red dot and consistent with two constraints :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2`. The estimation of :math:`\mathbf{x}^*` consists in reducing :math:`\mathbb{X}` while satisfying :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2`. After the propagation process, the set of feasible solutions has been reduced by removing vectors that were not consistent with the constraints: we obtain a finer approximation of :math:`\mathbf{x}^*`.
 
 .. When working with finite domains, a propagation technique can be used to simplify a problem. The process is run several times up to a fixed point reached when the domains cannot be reduced anymore. Interval analysis can be efficiently used for this purpose, taking advantage of interval arithmetic and its capacity to preserve any feasible solution.
 
@@ -57,7 +57,7 @@ Constraints
 The approach consists in defining the problem as a set of constraints. They usually come from state equations, numerical models, or measurements.
 In mobile robotics, we usually have to deal with:
 
-- non-linear functions: :math:`x_3(\cdot)=\cos\big(x_1(\cdot)+\exp(x_2(\cdot))\big)`
+- non-linear functions: :math:`x_3=\cos\big(x_1+\exp(x_2)\big)`
 - differential equations: :math:`\dot{x}(\cdot)=f\big(x(\cdot),u(\cdot)\big)`
 - temporal delays: :math:`x(t)=y(t-\tau)`
 - time uncertainties: :math:`x(t)=y`, with :math:`t\in[t]`
@@ -76,7 +76,7 @@ Contractors are operators designed to reduce domains without losing any solution
 
   Implementation of the constraints :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2` of the previous :numref:`fig-cst` by means of respective contractors :math:`\mathcal{C}_1` and :math:`\mathcal{C}_2`. On this theoretical example, the domain :math:`\mathbb{X}` is now a subset of a box :math:`[\mathbf{x}]`, easily representable and contractible.
 
-Tubex already provides a catalog a contractors that can be used to deal with many applications. New contractors can also be designed and embedded in this framework without difficulty.
+Tubex already provides a catalog a contractors that one can use to deal with many applications. New contractors can also be designed and embedded in this framework without difficulty.
 
 .. admonition:: Constraint programming *vs* probabilistic methods
 
@@ -138,7 +138,7 @@ It also proposes various tools such as the *IbexSolve* and *IbexOpt* plugins tha
 
 Tubex is built upon IBEX and uses the elementary components of this library such as interval objects, arithmetic implementations, or contractors for static constraints. More precisely, Tubex extends the *contractor programming* framework of IBEX to the dynamical case, introduces trajectories and tubes objects, and provides another kind of solver for heterogeneous systems made of both static and dynamical constraints.
 
-If the use of IBEX is transparent in several robotic applications presented in this manual, it is still possible to build complex static contractors with IBEX and use them in Tubex. Hence, IBEX can be used as a powerful contractor factory for static systems.
+If the use of IBEX is transparent in several robotic applications presented in this manual, it is still possible to build complex static contractors with IBEX and use them in Tubex. Hence, IBEX can be used as a **powerful contractor factory** for static systems.
 
 
 ------------------------------------------------------

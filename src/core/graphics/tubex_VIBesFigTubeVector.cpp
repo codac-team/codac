@@ -31,13 +31,13 @@ namespace tubex
     m_end_index = end_index;
   }
 
-  VIBesFigTubeVector::VIBesFigTubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector)
+  VIBesFigTubeVector::VIBesFigTubeVector(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
     : VIBesFigTubeVector(fig_name)
   {
-    assert(tubevector != NULL);
-    add_tubevector(tubevector, fig_name);
-    if(trajvector != NULL)
-      add_trajectoryvector(trajvector, fig_name);
+    assert(tube != NULL);
+    add_tube(tube, fig_name);
+    if(traj != NULL)
+      add_trajectory(traj, fig_name);
   }
 
   VIBesFigTubeVector::~VIBesFigTubeVector()
@@ -122,93 +122,93 @@ namespace tubex
     }
   }
 
-  void VIBesFigTubeVector::add_tubevector(const TubeVector *tubevector, const std::string& name, const std::string& color_frgrnd, const std::string& color_bckgrnd)
+  void VIBesFigTubeVector::add_tube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd, const std::string& color_bckgrnd)
   {
-    assert(tubevector != NULL);
+    assert(tube != NULL);
 
     if(m_n == 0) // if the figure is still empty
-      create_subfigures(tubevector->size());
+      create_subfigures(tube->size());
 
-    assert(size() == tubevector->size());
+    assert(size() == tube->size());
 
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->add_tube(&(*tubevector)[i + m_start_index], name, color_frgrnd, color_bckgrnd);
+      m_v_figs[i]->add_tube(&(*tube)[i + m_start_index], name, color_frgrnd, color_bckgrnd);
   }
 
-  void VIBesFigTubeVector::set_tubevector_name(const TubeVector *tubevector, const std::string& name)
+  void VIBesFigTubeVector::set_tube_name(const TubeVector *tube, const std::string& name)
   {
-    assert(tubevector != NULL);
+    assert(tube != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->set_tube_name(&(*tubevector)[i + m_start_index], name);
+      m_v_figs[i]->set_tube_name(&(*tube)[i + m_start_index], name);
   }
 
-  void VIBesFigTubeVector::set_tubevector_derivative(const TubeVector *tubevector, const TubeVector *derivative)
+  void VIBesFigTubeVector::set_tube_derivative(const TubeVector *tube, const TubeVector *derivative)
   {
-    assert(tubevector != NULL && derivative != NULL);
+    assert(tube != NULL && derivative != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->set_tube_derivative(&(*tubevector)[i + m_start_index], &(*derivative)[i + m_start_index]);
+      m_v_figs[i]->set_tube_derivative(&(*tube)[i + m_start_index], &(*derivative)[i + m_start_index]);
   }
 
-  void VIBesFigTubeVector::set_tubevector_color(const TubeVector *tubevector, const std::string& color_frgrnd, const std::string& color_bckgrnd)
+  void VIBesFigTubeVector::set_tube_color(const TubeVector *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd)
   {
-    assert(tubevector != NULL);
+    assert(tube != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->set_tube_color(&(*tubevector)[i + m_start_index], color_frgrnd, color_bckgrnd);
+      m_v_figs[i]->set_tube_color(&(*tube)[i + m_start_index], color_frgrnd, color_bckgrnd);
   }
 
-  void VIBesFigTubeVector::set_tubevector_color(const TubeVector *tubevector, TubeColorType color_type, const std::string& color)
+  void VIBesFigTubeVector::set_tube_color(const TubeVector *tube, TubeColorType color_type, const std::string& color)
   {
-    assert(tubevector != NULL);
+    assert(tube != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->set_tube_color(&(*tubevector)[i + m_start_index], color_type, color);
+      m_v_figs[i]->set_tube_color(&(*tube)[i + m_start_index], color_type, color);
   }
 
-  void VIBesFigTubeVector::reset_tubevector_background(const TubeVector *tubevector)
+  void VIBesFigTubeVector::reset_tube_background(const TubeVector *tube)
   {
-    assert(tubevector != NULL);
+    assert(tube != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->reset_tube_background(&(*tubevector)[i + m_start_index]);
+      m_v_figs[i]->reset_tube_background(&(*tube)[i + m_start_index]);
   }
 
-  void VIBesFigTubeVector::remove_tubevector(const TubeVector *tubevector)
+  void VIBesFigTubeVector::remove_tube(const TubeVector *tube)
   {
-    assert(tubevector != NULL);
+    assert(tube != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->remove_tube(&(*tubevector)[i + m_start_index]);
+      m_v_figs[i]->remove_tube(&(*tube)[i + m_start_index]);
   }
 
-  void VIBesFigTubeVector::add_trajectoryvector(const TrajectoryVector *trajvector, const std::string& name, const std::string& color)
+  void VIBesFigTubeVector::add_trajectory(const TrajectoryVector *traj, const std::string& name, const std::string& color)
   {
-    assert(trajvector != NULL);
+    assert(traj != NULL);
 
     if(m_n == 0) // if the figure is still empty
-      create_subfigures(trajvector->size());
+      create_subfigures(traj->size());
 
-    assert(size() == trajvector->size());
+    assert(size() == traj->size());
 
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->add_trajectory(&(*trajvector)[i + m_start_index], name, color);
+      m_v_figs[i]->add_trajectory(&(*traj)[i + m_start_index], name, color);
   }
 
-  void VIBesFigTubeVector::set_trajectoryvector_name(const TrajectoryVector *trajvector, const std::string& name)
+  void VIBesFigTubeVector::set_trajectory_name(const TrajectoryVector *traj, const std::string& name)
   {
-    assert(trajvector != NULL);
+    assert(traj != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->set_trajectory_name(&(*trajvector)[i + m_start_index], name);
+      m_v_figs[i]->set_trajectory_name(&(*traj)[i + m_start_index], name);
   }
 
-  void VIBesFigTubeVector::set_trajectoryvector_color(const TrajectoryVector *trajvector, const std::string& color)
+  void VIBesFigTubeVector::set_trajectory_color(const TrajectoryVector *traj, const std::string& color)
   {
-    assert(trajvector != NULL);
+    assert(traj != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->set_trajectory_color(&(*trajvector)[i + m_start_index], color);
+      m_v_figs[i]->set_trajectory_color(&(*traj)[i + m_start_index], color);
   }
 
-  void VIBesFigTubeVector::remove_trajectoryvector(const TrajectoryVector *trajvector)
+  void VIBesFigTubeVector::remove_trajectory(const TrajectoryVector *traj)
   {
-    assert(trajvector != NULL);
+    assert(traj != NULL);
     for(int i = 0 ; i < subfigs_number() ; i++)
-      m_v_figs[i]->remove_trajectory(&(*trajvector)[i + m_start_index]);
+      m_v_figs[i]->remove_trajectory(&(*traj)[i + m_start_index]);
   }
 
   void VIBesFigTubeVector::create_subfigures(int n)
