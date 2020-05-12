@@ -76,7 +76,7 @@ int main()
 
     CtcDeriv ctc_deriv;
     CtcEval ctc_eval;
-    ctc_eval.enable_temporal_propagation(false); // faster use
+    ctc_eval.enable_time_propag(false); // faster use
 
     int k = 0;
     double volume;

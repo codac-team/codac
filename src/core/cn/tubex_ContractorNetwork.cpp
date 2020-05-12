@@ -188,7 +188,7 @@ namespace tubex
 
       if(v_domains.size() == 4) // with derivative information
       {
-        static_cast<CtcEval&>(tubex_ctc).enable_temporal_propagation(false);
+        static_cast<CtcEval&>(tubex_ctc).enable_time_propag(false);
 
         if(m_ctc_deriv == NULL)
           m_ctc_deriv = new CtcDeriv();

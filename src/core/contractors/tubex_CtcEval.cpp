@@ -59,7 +59,7 @@ namespace tubex
       assert(false && "unhandled case");
   }
 
-  void CtcEval::enable_temporal_propagation(bool enable_propagation)
+  void CtcEval::enable_time_propag(bool enable_propagation)
   {
     m_propagation_enabled = enable_propagation;
   }
