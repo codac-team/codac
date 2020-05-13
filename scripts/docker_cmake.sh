@@ -1,5 +1,5 @@
 #!/bin/bash
-# Inspired from pyIbex
+# Inspired from pyIbex (Benoît Desrochers)
 
 mkdir -p /io/cache
 cd /io/cache
