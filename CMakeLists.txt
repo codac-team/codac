@@ -98,8 +98,10 @@
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
   # Python binding:
-  add_subdirectory(pybind11)
-  add_subdirectory(python)
+  if(WITH_PYTHON)
+    add_subdirectory(pybind11)
+    add_subdirectory(python)
+  endif()
 
 
 ################################################################################
