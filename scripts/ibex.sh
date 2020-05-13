@@ -14,5 +14,3 @@ else
   echo 'Using cached directory.' ;
 fi
 cd $HOME
-
-export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
