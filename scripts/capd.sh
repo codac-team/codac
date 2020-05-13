@@ -2,7 +2,7 @@
 
 cd $HOME
 echo 'Installing CAPD...';
-if [ ! -e "capd/README.md" ]; then
+if [ ! -d "capd" ]; then
   svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
   cd capd ;
   svn co https://svn.capdnet.ii.uj.edu.pl/capdDynSys4 --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
