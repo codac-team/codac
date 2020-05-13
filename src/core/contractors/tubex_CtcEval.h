@@ -41,7 +41,7 @@ namespace tubex
        *
        * \param enable_propagation if true, the contractions will be propagated as far as possible across \f$[t_0,t_f]\f$
        */
-      void enable_temporal_propagation(bool enable_propagation);
+      void enable_time_propag(bool enable_propagation);
 
       /**
        * \brief \f$\mathcal{C}_\textrm{eval}\big(t,[z],[y](\cdot),[w](\cdot)\big)\f$:

@@ -52,6 +52,9 @@ namespace tubex
 
   int ContractorNetwork::print_dot_graph(const string& cn_name, const string& prog) const
   {
+    if(m_v_domains.size() > 100 || m_v_ctc.size() > 100)
+      cout << "Warning: important number of domains/contractors in the graph, may not be able to generate the diagram." << endl;
+
     ofstream dot_file;
     dot_file.open(cn_name + ".dot");
 

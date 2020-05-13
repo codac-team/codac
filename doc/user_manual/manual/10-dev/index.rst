@@ -56,11 +56,13 @@ Launch the tests:
 
 Build this user manual using Sphinx:
 
+.. sudo apt install python3-sphinx
+.. sudo python3 -m pip install sphinx_rtd_theme sphinx-tabs
+
 .. code-block:: bash
   
   # Install Sphinx with
-  sudo apt install python3-sphinx
-  sudo python3 -m pip install sphinx_rtd_theme sphinx-tabs
+  pip3 install -U sphinx breathe sphinx_rtd_theme sphinx-tabs
 
   # Build the doc
   cd build

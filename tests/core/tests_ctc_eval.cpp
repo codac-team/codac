@@ -28,7 +28,7 @@ TEST_CASE("CtcEval")
     CHECK(x.nb_slices() == 4);
     CtcEval ctc_eval;
     ctc_eval.preserve_slicing(false);
-    ctc_eval.enable_temporal_propagation(false);
+    ctc_eval.enable_time_propag(false);
     ctc_eval.contract(t, z, x, v);
     CHECK(x.nb_slices() == 6);
 
@@ -70,7 +70,7 @@ TEST_CASE("CtcEval")
 
     CtcEval ctc_eval;
     ctc_eval.preserve_slicing(false);
-    ctc_eval.enable_temporal_propagation(false);
+    ctc_eval.enable_time_propag(false);
     ctc_eval.contract(t, z, x, v);
 
     CHECK(x.nb_slices() == 7);
@@ -88,7 +88,7 @@ TEST_CASE("CtcEval")
     t = Interval(1.75,5.5);
     z = Interval(1.6);
 
-    ctc_eval.enable_temporal_propagation(true);
+    ctc_eval.enable_time_propag(true);
     ctc_eval.contract(t, z, x, v);
 
     VIBesFigTube *fig_tube;
@@ -141,8 +141,8 @@ TEST_CASE("CtcEval")
     CtcEval ctc_eval_propa, ctc_eval_nopropa; \
     ctc_eval_propa.preserve_slicing(false); \
     ctc_eval_nopropa.preserve_slicing(false); \
-    ctc_eval_propa.enable_temporal_propagation(true); \
-    ctc_eval_nopropa.enable_temporal_propagation(false); \
+    ctc_eval_propa.enable_time_propag(true); \
+    ctc_eval_nopropa.enable_time_propag(false); \
 
   SECTION("Test CtcEval, special cases (0, test init)")
   {
@@ -1049,7 +1049,7 @@ TEST_CASE("CtcEval")
 
     IntervalVector box(2);
     CtcEval ctc_eval;
-    ctc_eval.enable_temporal_propagation(true);
+    ctc_eval.enable_time_propag(true);
     Tube x_c(x); Tube v_c(v);
 
     box[0] = Interval(11.98);

@@ -95,7 +95,7 @@ void export_Contractors(py::module& m){
         DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVAL_TUBE, "t"_a, "z"_a, "y"_a)
     .def("contract", (void (CtcEval::*)(ibex::Interval &,ibex::IntervalVector &,const TubeVector &) )&CtcEval::contract,
         DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVALVECTOR_TUBEVECTOR, "t"_a, "z"_a, "y"_a)
-    .def("enable_temporal_propagation", &CtcEval::enable_temporal_propagation,
+    .def("enable_time_propag", &CtcEval::enable_time_propag,
         DOCS_CTCEVAL_ENABLE_TEMPORAL_PROPAGATION_BOOL, "enable_propagation"_a)
   ;
 

@@ -153,3 +153,8 @@ This ``CtcFunction`` class is a generic shortcut to deal with :math:`\mathbf{f}(
 The user is invited to use an appropriate tool to deal with the constraint at stake.
 
 The IBEX contractor behind ``CtcFunction`` is a ``ibex::CtcFwdBwd`` coupled with a ``ibex::Ctc3BCid``.
+
+
+.. admonition:: Technical documentation
+
+  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_function.html>`_.

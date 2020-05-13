@@ -1,0 +1,32 @@
+/* Provides a custom style admonition for URL API */
+.rst-content .admonition-technical-documentation
+{
+  background-color: #EFE7FA;
+}
+
+div.admonition-technical-documentation
+{
+  color: #9B6ADE;
+  background-color: #EFE7FA;
+}
+
+div.admonition-technical-documentation p
+{
+  
+}
+
+div.admonition-technical-documentation p.admonition-title
+{
+  background-color: #9B6ADE;
+}
+
+div.admonition-technical-documentation p.admonition-title::before
+{
+  content: "API";
+  background-color: white;
+  color: #9B6ADE;
+  font-weight: bold;
+  padding: 2px;
+  font-size: 0.8em;
+  margin-right: 7px;
+}
