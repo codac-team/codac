@@ -71,7 +71,7 @@ void export_TubeVector(py::module& m){
       .def("primitive", (const TubeVector (TubeVector::*)(const ibex::IntervalVector &) const)&TubeVector::primitive,
           DOCS_TUBEVECTOR_PRIMITIVE_INTERVALVECTOR, "c"_a)
     
-      .def("domain", &TubeVector::domain,DOCS_TUBEVECTOR_DOMAIN)
+      .def("tdomain", &TubeVector::tdomain,DOCS_TUBEVECTOR_TDOMAIN)
       .def("nb_slices", &TubeVector::nb_slices,DOCS_TUBEVECTOR_NB_SLICES)
       .def("input2index", &TubeVector::input2index,DOCS_TUBEVECTOR_INPUT2INDEX_DOUBLE, "t"_a)
       .def("sample", (void (TubeVector::*)(double) )&TubeVector::sample,
@@ -147,8 +147,8 @@ void export_TubeVector(py::module& m){
           DOCS_TUBEVECTOR_INFLATE_VECTOR, "rad"_a)
       .def("inflate", (const TubeVector & (TubeVector::*)(const TrajectoryVector &) )&TubeVector::inflate,
           DOCS_TUBEVECTOR_INFLATE_TRAJECTORYVECTOR, "rad"_a)
-      .def("shift_domain", &TubeVector::shift_domain,
-          DOCS_TUBEVECTOR_SHIFT_DOMAIN_DOUBLE, "a"_a)
+      .def("shift_tdomain", &TubeVector::shift_tdomain,
+          DOCS_TUBEVECTOR_SHIFT_TDOMAIN_DOUBLE, "a"_a)
       .def("bisect", (const std::pair<TubeVector, TubeVector> (TubeVector::*)(double,float) const)&TubeVector::bisect,
           DOCS_TUBEVECTOR_BISECT_DOUBLE_FLOAT, "t"_a, "ratio"_a=0.49)
       .def("bisect", (const std::pair<TubeVector, TubeVector> (TubeVector::*)(double,int,float) const)&TubeVector::bisect,

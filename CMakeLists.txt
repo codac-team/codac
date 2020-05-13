@@ -94,9 +94,12 @@
 ################################################################################
 
   add_compile_options(-fPIC) # is it necessary for python binding?
-  #add_subdirectory(pybind11) # Python binding
   add_subdirectory(src) # C++ sources
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
+
+  # Python binding:
+  add_subdirectory(pybind11)
+  add_subdirectory(python)
 
 
 ################################################################################

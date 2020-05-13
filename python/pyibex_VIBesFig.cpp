@@ -132,28 +132,28 @@ PYBIND11_MODULE(graphics, m){
     //       DOCS_VIBESFIGTUBEVECTOR_DRAW_BOX_INTERVAL_INTERVALVECTOR_VIBES::PARAMS, "domain"_a, "box"_a, "params"_a)
     //   .def("draw_box", (void (VIBesFigTubeVector::*)(const ibex::Interval &,const ibex::IntervalVector &,const std::string &,const vibes::Params &) )&VIBesFigTubeVector::draw_box,
     //       DOCS_VIBESFIGTUBEVECTOR_DRAW_BOX_INTERVAL_INTERVALVECTOR_STRING_VIBES::PARAMS, "domain"_a, "box"_a, "color"_a="", "params"_a=vibes::Params())
-      .def("add_tubevector", &VIBesFigTubeVector::add_tubevector,
-          DOCS_VIBESFIGTUBEVECTOR_ADD_TUBEVECTOR_TUBEVECTOR_STRING_STRING_STRING, "tubevector"_a, "name"_a, "color_frgrnd"_a=DEFAULT_FRGRND_COLOR, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR)
-      .def("set_tubevector_name", &VIBesFigTubeVector::set_tubevector_name,
-          DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_NAME_TUBEVECTOR_STRING, "tubevector"_a, "name"_a)
-      .def("set_tubevector_derivative", &VIBesFigTubeVector::set_tubevector_derivative,
-          DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_DERIVATIVE_TUBEVECTOR_TUBEVECTOR, "tubevector"_a, "derivative"_a)
-      .def("set_tubevector_color", (void (VIBesFigTubeVector::*)(const TubeVector *,const std::string &,const std::string &) )&VIBesFigTubeVector::set_tubevector_color,
-          DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_COLOR_TUBEVECTOR_STRING_STRING, "tubevector"_a, "color_frgrnd"_a, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR)
-      .def("set_tubevector_color", (void (VIBesFigTubeVector::*)(const TubeVector *,TubeColorType,const std::string &) )&VIBesFigTubeVector::set_tubevector_color,
-          DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_COLOR_TUBEVECTOR_TUBECOLORTYPE_STRING, "tubevector"_a, "color_type"_a, "color"_a)
-      .def("reset_tubevector_background", &VIBesFigTubeVector::reset_tubevector_background,
-          DOCS_VIBESFIGTUBEVECTOR_RESET_TUBEVECTOR_BACKGROUND_TUBEVECTOR, "tubevector"_a)
-      .def("remove_tubevector", &VIBesFigTubeVector::remove_tubevector,
-          DOCS_VIBESFIGTUBEVECTOR_REMOVE_TUBEVECTOR_TUBEVECTOR, "tubevector"_a)
-      .def("add_trajectoryvector", &VIBesFigTubeVector::add_trajectoryvector,
-          DOCS_VIBESFIGTUBEVECTOR_ADD_TRAJECTORYVECTOR_TRAJECTORYVECTOR_STRING_STRING, "trajvector"_a, "name"_a, "color"_a=DEFAULT_TRAJ_COLOR)
-      .def("set_trajectoryvector_name", &VIBesFigTubeVector::set_trajectoryvector_name,
-          DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORYVECTOR_NAME_TRAJECTORYVECTOR_STRING, "trajvector"_a, "name"_a)
-      .def("set_trajectoryvector_color", &VIBesFigTubeVector::set_trajectoryvector_color,
-          DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORYVECTOR_COLOR_TRAJECTORYVECTOR_STRING, "trajvector"_a, "color"_a)
-      .def("remove_trajectoryvector", &VIBesFigTubeVector::remove_trajectoryvector,
-          DOCS_VIBESFIGTUBEVECTOR_REMOVE_TRAJECTORYVECTOR_TRAJECTORYVECTOR, "trajvector"_a)
+      .def("add_tube", &VIBesFigTubeVector::add_tube,
+          DOCS_VIBESFIGTUBEVECTOR_ADD_TUBE_TUBEVECTOR_STRING_STRING_STRING, "tubevector"_a, "name"_a, "color_frgrnd"_a=DEFAULT_FRGRND_COLOR, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR)
+      .def("set_tube_name", &VIBesFigTubeVector::set_tube_name,
+          DOCS_VIBESFIGTUBEVECTOR_SET_TUBE_NAME_TUBEVECTOR_STRING, "tubevector"_a, "name"_a)
+      .def("set_tube_derivative", &VIBesFigTubeVector::set_tube_derivative,
+          DOCS_VIBESFIGTUBEVECTOR_SET_TUBE_DERIVATIVE_TUBEVECTOR_TUBEVECTOR, "tubevector"_a, "derivative"_a)
+      .def("set_tube_color", (void (VIBesFigTubeVector::*)(const TubeVector *,const std::string &,const std::string &) )&VIBesFigTubeVector::set_tube_color,
+          DOCS_VIBESFIGTUBEVECTOR_SET_TUBE_COLOR_TUBEVECTOR_STRING_STRING, "tubevector"_a, "color_frgrnd"_a, "color_bckgrnd"_a=DEFAULT_BCKGRND_COLOR)
+      .def("set_tube_color", (void (VIBesFigTubeVector::*)(const TubeVector *,TubeColorType,const std::string &) )&VIBesFigTubeVector::set_tube_color,
+          DOCS_VIBESFIGTUBEVECTOR_SET_TUBE_COLOR_TUBEVECTOR_TUBECOLORTYPE_STRING, "tubevector"_a, "color_type"_a, "color"_a)
+      .def("reset_tube_background", &VIBesFigTubeVector::reset_tube_background,
+          DOCS_VIBESFIGTUBEVECTOR_RESET_TUBE_BACKGROUND_TUBEVECTOR, "tubevector"_a)
+      .def("remove_tube", &VIBesFigTubeVector::remove_tube,
+          DOCS_VIBESFIGTUBEVECTOR_REMOVE_TUBE_TUBEVECTOR, "tubevector"_a)
+      .def("add_trajectory", &VIBesFigTubeVector::add_trajectory,
+          DOCS_VIBESFIGTUBEVECTOR_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_STRING, "trajvector"_a, "name"_a, "color"_a=DEFAULT_TRAJ_COLOR)
+      .def("set_trajectory_name", &VIBesFigTubeVector::set_trajectory_name,
+          DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORY_NAME_TRAJECTORYVECTOR_STRING, "trajvector"_a, "name"_a)
+      .def("set_trajectory_color", &VIBesFigTubeVector::set_trajectory_color,
+          DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORY_COLOR_TRAJECTORYVECTOR_STRING, "trajvector"_a, "color"_a)
+      .def("remove_trajectory", &VIBesFigTubeVector::remove_trajectory,
+          DOCS_VIBESFIGTUBEVECTOR_REMOVE_TRAJECTORY_TRAJECTORYVECTOR, "trajvector"_a)
 
     // .def("operator[]", [](VIBesFigTubeVector& s,int o) { return s[o];}, 
     //     DOCS_VIBESFIGTUBEVECTOR_OPERATOR_INDEX_INT)

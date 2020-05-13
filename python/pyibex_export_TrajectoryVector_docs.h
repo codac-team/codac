@@ -85,7 +85,7 @@ const char* DOCS_TRAJECTORYVECTOR_SIZE=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_TRAJECTORYVECTOR_DOMAIN=R"_docs(/**
+const char* DOCS_TRAJECTORYVECTOR_TDOMAIN=R"_docs(/**
 * \brief Returns the temporal definition domain of this trajectory
 *
 * \return an Interval object \f$[t_0,t_f]\f$
@@ -215,7 +215,7 @@ const char* DOCS_TRAJECTORYVECTOR_SET_VECTOR_DOUBLE=R"_docs(/// @}
 */
 )_docs";
 
-const char* DOCS_TRAJECTORYVECTOR_TRUNCATE_DOMAIN_INTERVAL=R"_docs(/**
+const char* DOCS_TRAJECTORYVECTOR_TRUNCATE_TDOMAIN_INTERVAL=R"_docs(/**
 * \brief Truncates the domain of \f$\mathbf{x}(\cdot)\f$
 *
 * \note The new domain must be a subset of the old one
@@ -225,7 +225,7 @@ const char* DOCS_TRAJECTORYVECTOR_TRUNCATE_DOMAIN_INTERVAL=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_TRAJECTORYVECTOR_SHIFT_DOMAIN_DOUBLE=R"_docs(/**
+const char* DOCS_TRAJECTORYVECTOR_SHIFT_TDOMAIN_DOUBLE=R"_docs(/**
 * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$\mathbf{x}(\cdot)\f$
 *
 * \note If the trajectory is defined from a map of values, the key

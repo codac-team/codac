@@ -43,7 +43,7 @@ void export_Trajectory(py::module& m){
         DOCS_TRAJECTORY_TRAJECTORY_TRAJECTORY, "traj"_a)
 
     .def("size", &Trajectory::size,DOCS_TRAJECTORY_SIZE)
-    .def("domain", &Trajectory::domain,DOCS_TRAJECTORY_DOMAIN)
+    .def("tdomain", &Trajectory::tdomain,DOCS_TRAJECTORY_TDOMAIN)
     .def("sampled_map", &Trajectory::sampled_map,DOCS_TRAJECTORY_SAMPLED_MAP)
     .def("function", &Trajectory::function,DOCS_TRAJECTORY_FUNCTION)
     .def("codomain", &Trajectory::codomain,DOCS_TRAJECTORY_CODOMAIN)
@@ -59,10 +59,10 @@ void export_Trajectory(py::module& m){
     .def("__ne__", [](Trajectory& s,const Trajectory & o) { return s != o;}, 
         DOCS_TRAJECTORY_NE_TRAJECTORY)
     .def("set", &Trajectory::set,DOCS_TRAJECTORY_SET_DOUBLE_DOUBLE, "y"_a, "t"_a)
-    .def("truncate_domain", &Trajectory::truncate_domain,
-        DOCS_TRAJECTORY_TRUNCATE_DOMAIN_INTERVAL, "domain"_a)
-    .def("shift_domain", &Trajectory::shift_domain,
-        DOCS_TRAJECTORY_SHIFT_DOMAIN_DOUBLE, "a"_a)
+    .def("truncate_tdomain", &Trajectory::truncate_tdomain,
+        DOCS_TRAJECTORY_TRUNCATE_TDOMAIN_INTERVAL, "domain"_a)
+    .def("shift_tdomain", &Trajectory::shift_tdomain,
+        DOCS_TRAJECTORY_SHIFT_TDOMAIN_DOUBLE, "a"_a)
     .def("sample", (Trajectory & (Trajectory::*)(double) )&Trajectory::sample,
         DOCS_TRAJECTORY_SAMPLE_DOUBLE, "timestep"_a)
     .def("sample", (Trajectory & (Trajectory::*)(const Trajectory &) )&Trajectory::sample,
@@ -136,7 +136,7 @@ void export_Trajectory(py::module& m){
             DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT_TRAJECTORY, "n"_a, "x"_a)
 
         .def("size", &TrajectoryVector::size,DOCS_TRAJECTORYVECTOR_SIZE)
-        .def("domain", &TrajectoryVector::domain,DOCS_TRAJECTORYVECTOR_DOMAIN)
+        .def("tdomain", &TrajectoryVector::tdomain,DOCS_TRAJECTORYVECTOR_TDOMAIN)
         .def("resize", &TrajectoryVector::resize,
             DOCS_TRAJECTORYVECTOR_RESIZE_INT, "n"_a)
         .def("subvector", &TrajectoryVector::subvector,
@@ -160,10 +160,10 @@ void export_Trajectory(py::module& m){
             DOCS_TRAJECTORYVECTOR_NE_TRAJECTORYVECTOR)
         .def("set", &TrajectoryVector::set,
             DOCS_TRAJECTORYVECTOR_SET_VECTOR_DOUBLE, "y"_a, "t"_a)
-        .def("truncate_domain", &TrajectoryVector::truncate_domain,
-            DOCS_TRAJECTORYVECTOR_TRUNCATE_DOMAIN_INTERVAL, "domain"_a)
-        .def("shift_domain", &TrajectoryVector::shift_domain,
-            DOCS_TRAJECTORYVECTOR_SHIFT_DOMAIN_DOUBLE, "a"_a)
+        .def("truncate_tdomain", &TrajectoryVector::truncate_tdomain,
+            DOCS_TRAJECTORYVECTOR_TRUNCATE_TDOMAIN_INTERVAL, "domain"_a)
+        .def("shift_tdomain", &TrajectoryVector::shift_tdomain,
+            DOCS_TRAJECTORYVECTOR_SHIFT_TDOMAIN_DOUBLE, "a"_a)
         .def("sample", (TrajectoryVector & (TrajectoryVector::*)(double) )&TrajectoryVector::sample,
             DOCS_TRAJECTORYVECTOR_SAMPLE_DOUBLE, "timestep"_a)
         .def("sample", (TrajectoryVector & (TrajectoryVector::*)(const Trajectory &) )&TrajectoryVector::sample,
@@ -203,7 +203,7 @@ void export_Trajectory(py::module& m){
             DOCS_TRAJECTORYVECTOR_CLASS_NAME)
 
         .def("__getitem__", [](TrajectoryVector& s, size_t index) -> Trajectory&{
-              if (index >= s.size()){
+              if ((int)index >= s.size()){
                   throw py::index_error();
               }
                 return s[static_cast<int>(index)];

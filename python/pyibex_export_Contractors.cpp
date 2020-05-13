@@ -70,8 +70,8 @@ void export_Contractors(py::module& m){
         DOCS_CTC_PRESERVE_SLICING_BOOL, "preserve"_a=true)
     .def("set_fast_mode", &Ctc::set_fast_mode,
         DOCS_CTC_SET_FAST_MODE_BOOL, "fast_mode"_a=true)
-    .def("set_restricted_domain", &Ctc::set_restricted_domain,
-        DOCS_CTC_SET_RESTRICTED_DOMAIN_INTERVAL, "domain"_a)
+    .def("restrict_tdomain", &Ctc::restrict_tdomain,
+        DOCS_CTC_RESTRICT_TDOMAIN_INTERVAL, "domain"_a)
   ;
 
   py::class_<CtcEval> ctceval(m, "CtcEval", ctc);

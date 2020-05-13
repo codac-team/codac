@@ -47,7 +47,7 @@ const char* DOCS_SLICE_OPERATOR_SLICE=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_SLICE_DOMAIN=R"_docs(/**
+const char* DOCS_SLICE_TDOMAIN=R"_docs(/**
 * \brief Returns the temporal definition domain of this slice
 *
 * \return an Interval object \f$[t_0,t_f]\f$

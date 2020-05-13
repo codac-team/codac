@@ -34,7 +34,7 @@ void export_Slice(py::module& m){
     .def(py::init<const Slice &>(),DOCS_SLICE_SLICE_SLICE, "x"_a)
     .def("size", &Slice::size,DOCS_SLICE_SIZE)
   
-    .def("domain", &Slice::domain,DOCS_SLICE_DOMAIN)
+    .def("tdomain", &Slice::tdomain,DOCS_SLICE_TDOMAIN)
     .def("prev_slice", (Slice * (Slice::*)() )&Slice::prev_slice,
         DOCS_SLICE_PREV_SLICE)
     .def("prev_slice", (const Slice * (Slice::*)() const)&Slice::prev_slice,
