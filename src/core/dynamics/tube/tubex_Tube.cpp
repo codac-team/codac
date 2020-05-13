@@ -1081,7 +1081,7 @@ namespace tubex
     {
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
         s->shift_tdomain(shift_ref);
-      m_tdomain -= shift_ref;
+      m_tdomain += shift_ref;
       delete_synthesis_tree();
     }
 
