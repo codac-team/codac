@@ -53,7 +53,7 @@ int main()
                        "(x1 + cos(x3-z3)*(-z1) - sin(x3-z3)*(-z2); \
                           x2 + sin(x3-z3)*(-z1) + cos(x3-z3)*(-z2); \
                           x3  - z3)");
-    tubex::CtcFunction(phi,x0);
+    tubex::CtcFunction ctc_phi(phi,x0);
     tubex::CtcDeriv ctc_deriv;
     tubex::CtcEval ctc_eval;
 
