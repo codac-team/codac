@@ -23,6 +23,12 @@ namespace tubex
 
   }
 
+  Point::Point(const Vector& p)
+    : Point(p[0], p[1])
+  {
+    assert(p.size() == 2);
+  }
+
   Point::Point(const IntervalVector& p)
     : Point(p[0], p[1])
   {
