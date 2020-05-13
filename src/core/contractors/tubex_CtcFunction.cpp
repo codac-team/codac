@@ -70,6 +70,33 @@ namespace tubex
 
   }
 
+  CtcFunction::CtcFunction(const ibex::Function& f, const ibex::Domain& y)
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(f)),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc,y)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
+  {
+
+  }
+  CtcFunction::CtcFunction(const ibex::Function& f, const ibex::Interval& y)
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(f)),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc,y)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
+  {
+
+  }
+
+  CtcFunction::CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y)
+    : Ctc(false),
+      m_ibex_fnc(new ibex::Function(f)),
+      m_ibex_ctc(new ibex::CtcFwdBwd(*m_ibex_fnc,y)),
+      m_ibex_3bcid(new ibex::Ctc3BCid(*m_ibex_ctc))
+  {
+
+  }
+
+
   CtcFunction::~CtcFunction()
   {
     delete m_ibex_fnc;

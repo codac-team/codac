@@ -22,7 +22,7 @@ namespace tubex
   /**
    * \class CtcFunction
    * \brief Generic static \f$\mathcal{C}\f$ that contracts a box \f$[\mathbf{x}]\f$ 
-   *        according to the constraint \f$f(\mathbf{x})=0\f$.
+   *        according to the constraint \f$f(\mathbf{x})=0\f$ or \f$f(\mathbf{x})\subset[\mathbf{y}]\f$.
    *        It stands on the CtcFwdBwd of IBEX (HC4Revise).
    */
   class CtcFunction : public Ctc
@@ -35,6 +35,9 @@ namespace tubex
       CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f);
       CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f);
       CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f);
+      CtcFunction(const ibex::Function& f, const ibex::Domain& y);
+      CtcFunction(const ibex::Function& f, const ibex::Interval& y);
+      CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y);
       ~CtcFunction();
 
       void contract(ibex::IntervalVector& x);
@@ -49,5 +52,6 @@ namespace tubex
       ibex::Ctc3BCid *m_ibex_3bcid = NULL;
   };
 }
+
 
 #endif
