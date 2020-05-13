@@ -44,6 +44,7 @@ namespace tubex
       int nb_ctc_in_stack() const;
       void set_fixedpoint_ratio(float r);
       void set_all_contractors_active();
+      bool emptiness() const;
 
       double contract(bool verbose = false);
       double contract_during(double dt, bool verbose = false);

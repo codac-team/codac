@@ -64,6 +64,15 @@ namespace tubex
       add_ctc_to_queue(ctc, m_deque);
     }
   }
+  
+  bool ContractorNetwork::emptiness() const
+  {
+    for(const auto& dom : m_v_domains)
+      if(dom->is_empty())
+        return true;
+
+    return false;
+  }
 
   Interval& ContractorNetwork::create_var(const Interval& i)
   {
@@ -302,11 +311,11 @@ namespace tubex
 
   Domain* ContractorNetwork::add_dom(const Domain& ad)
   {
-    if(ad.is_empty())
-    {
-      cout << "warning: adding empty domain" << ad << endl;
-      exit(1);
-    }
+    //if(ad.is_empty())
+    //{
+    //  cout << "warning: adding empty domain" << ad << endl;
+    //  exit(1);
+    //}
 
     // Looking if this domain is not already part of the graph
     for(auto& dom : m_v_domains)
