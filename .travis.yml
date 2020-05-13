@@ -70,10 +70,10 @@ install:
   - export ORIGIN_DIR=$PWD
 
   # IBEX
-  - ./scripts/ibex.sh
+  - bash scripts/ibex.sh
 
   # CAPD
-  - ./scripts/capd.sh
+  - bash scripts/capd.sh
 
   # Environment variables
   - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
