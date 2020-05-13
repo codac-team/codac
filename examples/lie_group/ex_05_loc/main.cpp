@@ -49,10 +49,11 @@ int main()
 
 
     // ----- Contractors initialisation -----
-    tubex::CtcFunction ctc_phi("x1","x2","x3","z1","z2","z3",
-                       "(x1 + cos(x3-z3)*(-z1) - sin(x3-z3)*(-z2) - [-0.1,0.1]; \
-                          x2 + sin(x3-z3)*(-z1) + cos(x3-z3)*(-z2) - [-0.1,0.1]; \
-                          x3  - z3 - [-0.1,0.1])");
+    ibex::Function phi("x1","x2","x3","z1","z2","z3",
+                       "(x1 + cos(x3-z3)*(-z1) - sin(x3-z3)*(-z2); \
+                          x2 + sin(x3-z3)*(-z1) + cos(x3-z3)*(-z2); \
+                          x3  - z3)");
+    tubex::CtcFunction(phi,x0);
     tubex::CtcDeriv ctc_deriv;
     tubex::CtcEval ctc_eval;
 
