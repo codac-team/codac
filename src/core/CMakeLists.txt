@@ -179,6 +179,7 @@
     file(APPEND ${TUBEX_MAIN_HEADER} "#include <${header_name}>\n")
   endforeach()
   file(APPEND ${TUBEX_MAIN_HEADER} "\n#endif /* __TUBEX_H__ */\n")
+  file(COPY ${TUBEX_MAIN_HEADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
 
 # Install files in system directories
 
