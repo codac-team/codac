@@ -47,6 +47,10 @@ namespace tubex
   ConvexPolygon::ConvexPolygon(const vector<Point>& v_thick_pts)
     : Polygon()
   {
+    for(const auto& thick_pt : v_thick_pts)
+      if(thick_pt.does_not_exist())
+        return; // one undefined point means undefined polygon
+
     Vector center(2,0.);
     for(const auto& thick_pt : v_thick_pts)
       center += thick_pt.box().mid();
