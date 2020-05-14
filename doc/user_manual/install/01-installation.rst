@@ -30,6 +30,12 @@ Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
   make
   sudo make install
 
+For further CMake options, please refer to the documentation. For instance, for a debug version with local installation, one can configure:
+
+.. code-block:: bash
+
+  cmake -DCMAKE_CXX_FLAGS="-fPIC -msse3" -DCMAKE_C_FLAGS="-fPIC -msse3" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install ..
+
 .. admonition:: Debug/development mode
   
   Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. It is highly recommended for your developments.
