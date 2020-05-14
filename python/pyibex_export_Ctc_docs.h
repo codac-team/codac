@@ -48,7 +48,7 @@ const char* DOCS_CTC_SET_FAST_MODE_BOOL=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_CTC_SET_RESTRICTED_DOMAIN_INTERVAL=R"_docs(/**
+const char* DOCS_CTC_RESTRICT_TDOMAIN_INTERVAL=R"_docs(/**
 * \brief Limits the temporal domain of contractions
 *
 * \param domain Interval domain of restriction \f$[t_1,t_2]\f$

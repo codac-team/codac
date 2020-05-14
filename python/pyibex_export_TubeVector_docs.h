@@ -218,7 +218,7 @@ const char* DOCS_TUBEVECTOR_OPERATOR_TUBEVECTOR=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_TUBEVECTOR_DOMAIN=R"_docs(/**
+const char* DOCS_TUBEVECTOR_TDOMAIN=R"_docs(/**
 * \brief Returns the temporal definition domain of this tube
 *
 * \return an Interval object \f$[t_0,t_f]\f$
@@ -689,7 +689,7 @@ const char* DOCS_TUBEVECTOR_INFLATE_TRAJECTORYVECTOR=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_TUBEVECTOR_SHIFT_DOMAIN_DOUBLE=R"_docs(/**
+const char* DOCS_TUBEVECTOR_SHIFT_TDOMAIN_DOUBLE=R"_docs(/**
 * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$[\mathbf{x}](\cdot)\f$
 *
 * \param a the offset value so that \f$[t_0,t_f]:=[t_0-a,t_f-a]\f$ 

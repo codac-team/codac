@@ -770,7 +770,7 @@ namespace tubex
       /**
        * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$[x](\cdot)\f$
        *
-       * \param a the offset value so that \f$[t_0,t_f]:=[t_0-a,t_f-a]\f$ 
+       * \param a the offset value so that \f$[t_0,t_f]:=[t_0+a,t_f+a]\f$ 
        */
       void shift_tdomain(double a);
 

@@ -331,10 +331,10 @@ namespace tubex
         m_map_values.clear();
 
         for(map<double,double>::iterator it = map_temp.begin() ; it != map_temp.end() ; it++)
-          m_map_values.emplace(it->first - shift_ref, it->second);
+          m_map_values.emplace(it->first + shift_ref, it->second);
       }
 
-      m_tdomain -= shift_ref;
+      m_tdomain += shift_ref;
       compute_codomain();
       return *this;
     }

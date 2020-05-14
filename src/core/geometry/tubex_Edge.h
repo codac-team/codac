@@ -27,6 +27,7 @@ namespace tubex
       /// @{
 
         Edge(const Point& p1, const Point& p2);
+        Edge(const ibex::Vector& p1, const ibex::Vector& p2);
         const Edge& operator=(const Edge& e);
 
       /// @}

@@ -500,7 +500,7 @@ namespace tubex
 
     void Slice::shift_tdomain(double shift_ref)
     {
-      set_tdomain(m_tdomain - shift_ref);
+      set_tdomain(m_tdomain + shift_ref);
 
       if(m_synthesis_reference != NULL)
       {

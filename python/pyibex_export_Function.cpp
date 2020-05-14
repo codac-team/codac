@@ -160,7 +160,7 @@ void export_Function(py::module& m){
       .def("diff", &Function::diff,DOCS_FUNCTION_DIFF)
 
       .def("__getitem__", [](Function& s, size_t index){
-              if (index >= s.nb_vars()){
+              if ((int)index >= s.nb_vars()){
                   throw py::index_error();
               }
                 return s[static_cast<int>(index)];

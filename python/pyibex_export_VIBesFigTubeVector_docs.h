@@ -138,7 +138,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_SHOW_CURSOR_BOOL=R"_docs(/**
 // */
 // )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_ADD_TUBEVECTOR_TUBEVECTOR_STRING_STRING_STRING=R"_docs(/// @}
+const char* DOCS_VIBESFIGTUBEVECTOR_ADD_TUBE_TUBEVECTOR_STRING_STRING_STRING=R"_docs(/// @}
 /// \name Handling tubes
 /// @{/**
 * \brief Adds a tube vector object to this figure
@@ -150,7 +150,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_ADD_TUBEVECTOR_TUBEVECTOR_STRING_STRING_STRI
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_NAME_TUBEVECTOR_STRING=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBE_NAME_TUBEVECTOR_STRING=R"_docs(/**
 * \brief Sets a new name for a tube vector
 *
 * \param tubevector the const pointer to the TubeVector object to be renamed
@@ -158,7 +158,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_NAME_TUBEVECTOR_STRING=R"_doc
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_DERIVATIVE_TUBEVECTOR_TUBEVECTOR=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBE_DERIVATIVE_TUBEVECTOR_TUBEVECTOR=R"_docs(/**
 * \brief Links a tube vector to its derivative for display purposes
 *
 * When available, a derivative tube \f$[\dot{\mathbf{x}}](\cdot)\f$ allows to draw slices of
@@ -169,7 +169,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_DERIVATIVE_TUBEVECTOR_TUBEVEC
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_COLOR_TUBEVECTOR_STRING_STRING=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBE_COLOR_TUBEVECTOR_STRING_STRING=R"_docs(/**
 * \brief Sets color properties for a given tube vector
 *
 * \param tubevector the const pointer to the TubeVector object for which the colors will be set
@@ -178,7 +178,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_COLOR_TUBEVECTOR_STRING_STRIN
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_COLOR_TUBEVECTOR_TUBECOLORTYPE_STRING=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBE_COLOR_TUBEVECTOR_TUBECOLORTYPE_STRING=R"_docs(/**
 * \brief Sets color properties for a given tube vector
 *
 * This method allows to change the display of slices, borders, gates, etc.
@@ -189,7 +189,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_SET_TUBEVECTOR_COLOR_TUBEVECTOR_TUBECOLORTYP
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_RESET_TUBEVECTOR_BACKGROUND_TUBEVECTOR=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_RESET_TUBE_BACKGROUND_TUBEVECTOR=R"_docs(/**
 * \brief Reset the background of a given tube vector
 *
 * \todo automatically clear the figure (for now, the pointer is only deleted)
@@ -198,7 +198,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_RESET_TUBEVECTOR_BACKGROUND_TUBEVECTOR=R"_do
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_REMOVE_TUBEVECTOR_TUBEVECTOR=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_REMOVE_TUBE_TUBEVECTOR=R"_docs(/**
 * \brief Removes a tube vector from this figure
 *
 * \todo automatically clear the figure (for now, the tube is only removed
@@ -210,7 +210,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_REMOVE_TUBEVECTOR_TUBEVECTOR=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_ADD_TRAJECTORYVECTOR_TRAJECTORYVECTOR_STRING_STRING=R"_docs(/// @}
+const char* DOCS_VIBESFIGTUBEVECTOR_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_STRING=R"_docs(/// @}
 /// \name Handling trajectories
 /// @{/**
 * \brief Adds a trajectory vector object to this figure
@@ -221,7 +221,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_ADD_TRAJECTORYVECTOR_TRAJECTORYVECTOR_STRING
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORYVECTOR_NAME_TRAJECTORYVECTOR_STRING=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORY_NAME_TRAJECTORYVECTOR_STRING=R"_docs(/**
 * \brief Sets a new name for a trajectory vector
 *
 * \param trajvector the const pointer to the TrajectoryVector object to be renamed
@@ -229,7 +229,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORYVECTOR_NAME_TRAJECTORYVECTOR_S
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORYVECTOR_COLOR_TRAJECTORYVECTOR_STRING=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORY_COLOR_TRAJECTORYVECTOR_STRING=R"_docs(/**
 * \brief Sets color properties for a given trajectory vector
 *
 * \param trajvector the const pointer to the TrajectoryVector object for which the color will be set
@@ -237,7 +237,7 @@ const char* DOCS_VIBESFIGTUBEVECTOR_SET_TRAJECTORYVECTOR_COLOR_TRAJECTORYVECTOR_
 */
 )_docs";
 
-const char* DOCS_VIBESFIGTUBEVECTOR_REMOVE_TRAJECTORYVECTOR_TRAJECTORYVECTOR=R"_docs(/**
+const char* DOCS_VIBESFIGTUBEVECTOR_REMOVE_TRAJECTORY_TRAJECTORYVECTOR=R"_docs(/**
 * \brief Removes a trajectory vector from this figure
 *
 * \todo automatically clear the figure (for now, the trajectory is only removed

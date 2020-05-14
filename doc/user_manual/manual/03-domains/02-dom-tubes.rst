@@ -552,7 +552,7 @@ The following methods are related to *t*-domains and slices structure:
 Return type     Code                               Meaning
 ==============  =================================  ==============================================================
 ``Interval``    ``x.tdomain()``                    temporal domain :math:`[t_0,t_f]` (*t*-domain)
---              ``x.shift_tdomain(a)``             shifts the *t*-domain to :math:`[t_0-a,t_f-a]`
+--              ``x.shift_tdomain(a)``             shifts the *t*-domain to :math:`[t_0+a,t_f+a]`
 ``bool``        ``Tube::same_slicing(x, y)``       tests if ``x`` and ``y`` have the same slicing
 --              ``x.sample(t)``                    samples the tube at :math:`t` (adds a slice)
 --              ``x.sample(y)``                    samples ``x`` so that it shares the sampling of tube ``y``

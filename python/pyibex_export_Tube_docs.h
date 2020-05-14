@@ -162,7 +162,7 @@ const char* DOCS_TUBE_OPERATOR_TUBE=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_TUBE_DOMAIN=R"_docs(/**
+const char* DOCS_TUBE_TDOMAIN=R"_docs(/**
 * \brief Returns the temporal definition domain of this tube
 *
 * \return an Interval object \f$[t_0,t_f]\f$
@@ -285,7 +285,7 @@ const char* DOCS_TUBE_LARGEST_SLICE1=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_TUBE_SLICE_DOMAIN_INT=R"_docs(/**
+const char* DOCS_TUBE_SLICE_TDOMAIN_INT=R"_docs(/**
 * \brief Returns the temporal definition domain of the ith Slice of this tube
 *
 * \param slice_id the index of the ith Slice
@@ -723,7 +723,7 @@ const char* DOCS_TUBE_INFLATE_TRAJECTORY=R"_docs(/**
 */
 )_docs";
 
-const char* DOCS_TUBE_SHIFT_DOMAIN_DOUBLE=R"_docs(/**
+const char* DOCS_TUBE_SHIFT_TDOMAIN_DOUBLE=R"_docs(/**
 * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$[x](\cdot)\f$
 *
 * \param a the offset value so that \f$[t_0,t_f]:=[t_0-a,t_f-a]\f$ 

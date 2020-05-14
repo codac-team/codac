@@ -40,7 +40,7 @@ public:
     static handle cast(const ibex::Vector &src, return_value_policy policy, handle parent) {
         list l(src.size());
 
-        for (size_t i = 0; i < src.size(); i++){
+        for (int i = 0; i < src.size(); i++){
             auto value_ = reinterpret_steal<object>(type_caster<double>::cast(src[i], policy, parent));
             if (!value_) {
                 return handle();

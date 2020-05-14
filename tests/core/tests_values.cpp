@@ -1224,7 +1224,7 @@ TEST_CASE("Interpol")
     Tube x(Interval(0., 1.), 0.1, tubex::Function("cos(t)"));
     CHECK(x.tdomain() == Interval(0.,1.));
     CHECK(x(0.5).contains(cos(0.5)));
-    x.shift_tdomain(10.);
+    x.shift_tdomain(-10.);
     CHECK(x.tdomain() == Interval(0.,1.) - 10.);
     CHECK(x(0.5-10.).contains(cos(0.5)));
   }

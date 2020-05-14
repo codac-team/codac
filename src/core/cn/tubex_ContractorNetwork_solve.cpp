@@ -24,7 +24,7 @@ namespace tubex
       cout << "Contractor network has " << m_v_ctc.size()
            << " contractors and " << m_v_domains.size() << " domains" << endl;
       cout << "Computing, " << nb_ctc_in_stack() << " contractors in m_deque";
-      if(!isinf(m_contraction_duration_max))
+      if(!std::isinf(m_contraction_duration_max))
         cout << " during " << m_contraction_duration_max << "s";
       cout << endl;
     }
@@ -51,12 +51,12 @@ namespace tubex
 
     // Emptiness test
     // todo: test only contracted domains?
-    //for(const auto& ctc : m_v_ctc)
+    if(verbose)
       for(const auto& dom : m_v_domains)
         if(dom->is_empty())
         {
           cout << "  warning: empty set" << endl;
-          exit(1);
+          break;
         }
 
     return (double)(clock() - t_start)/CLOCKS_PER_SEC;

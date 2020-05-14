@@ -88,7 +88,7 @@ TEST_CASE("Trajectory base")
 
     CHECK(ApproxIntv(traj.tdomain()) == Interval(0.,9.));
     CHECK(Approx(traj(5.2)) == 5.2);
-    traj.shift_tdomain(2.);
+    traj.shift_tdomain(-2.);
     CHECK(ApproxIntv(traj.tdomain()) == Interval(-2.,7.));
     CHECK(Approx(traj(5.2)) == 7.2);
     CHECK(Approx(traj(3.2)) == 5.2);

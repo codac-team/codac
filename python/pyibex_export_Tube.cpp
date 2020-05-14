@@ -56,7 +56,7 @@ void export_Tube(py::module& m){
       .def("size", &Tube::size,DOCS_TUBE_SIZE)
       .def("primitive", &Tube::primitive,
           DOCS_TUBE_PRIMITIVE_INTERVAL, "c"_a=ibex::Interval(0))
-      .def("domain", &Tube::domain,DOCS_TUBE_DOMAIN)
+      .def("tdomain", &Tube::tdomain,DOCS_TUBE_TDOMAIN)
       .def("polygon_envelope", &Tube::polygon_envelope,DOCS_TUBE_POLYGON_ENVELOPE)
       .def("nb_slices", &Tube::nb_slices,DOCS_TUBE_NB_SLICES)
       .def("slice", (Slice * (Tube::*)(int) )&Tube::slice,
@@ -83,8 +83,8 @@ void export_Tube(py::module& m){
           DOCS_TUBE_LARGEST_SLICE, py::return_value_policy::reference_internal)
       .def("largest_slice", (const Slice * (Tube::*)() const)&Tube::largest_slice,
           DOCS_TUBE_LARGEST_SLICE1, py::return_value_policy::reference_internal)
-      .def("slice_domain", &Tube::slice_domain,
-          DOCS_TUBE_SLICE_DOMAIN_INT, "slice_id"_a)
+      .def("slice_tdomain", &Tube::slice_tdomain,
+          DOCS_TUBE_SLICE_TDOMAIN_INT, "slice_id"_a)
       .def("input2index", &Tube::input2index,DOCS_TUBE_INPUT2INDEX_DOUBLE, "t"_a)
       .def("index", &Tube::index,DOCS_TUBE_INDEX_SLICE, "slice"_a)
       .def("sample", (void (Tube::*)(double) )&Tube::sample,
@@ -156,7 +156,7 @@ void export_Tube(py::module& m){
           DOCS_TUBE_INFLATE_DOUBLE, "rad"_a)
       .def("inflate", (const Tube & (Tube::*)(const Trajectory &) )&Tube::inflate,
           DOCS_TUBE_INFLATE_TRAJECTORY, "rad"_a)
-      .def("shift_domain", &Tube::shift_domain,DOCS_TUBE_SHIFT_DOMAIN_DOUBLE, "a"_a)
+      .def("shift_tdomain", &Tube::shift_tdomain,DOCS_TUBE_SHIFT_TDOMAIN_DOUBLE, "a"_a)
       .def("remove_gate", &Tube::remove_gate,DOCS_TUBE_REMOVE_GATE_DOUBLE, "t"_a)
       .def("bisect", &Tube::bisect,
           DOCS_TUBE_BISECT_DOUBLE_FLOAT, "t"_a, "ratio"_a=0.49)
@@ -247,7 +247,7 @@ void export_Tube(py::module& m){
     //   .def("primitive", &Tube::primitive,
     //       DOCS_TUBE_PRIMITIVE_INTERV, "c"_a=ibex::Interval(0))
     
-    //   .def("domain", &Tube::domain,DOCS_TUBE_DOMAIN)
+    //   .def("domain", &Tube::domain,DOCS_TUBE_TDOMAIN)
     //   .def("polygon_envelope", &Tube::polygon_envelope,DOCS_TUBE_POLYGON_ENVELOPE)
     //   .def("nb_slices", &Tube::nb_slices,DOCS_TUBE_NB_SLICES)
     //   .def("slice", (Slice * (Tube::*)(int) )&Tube::slice,
@@ -271,7 +271,7 @@ void export_Tube(py::module& m){
     //       DOCS_TUBE_LARGEST_SLICE, py::return_value_policy::reference_internal)
     //   // .def("largest_slice", (const Slice * (Tube::*)() const)&Tube::largest_slice,
     //       // DOCS_TUBE_LARGEST_SLICE)
-    //   .def("slice_domain", &Tube::slice_domain,DOCS_TUBE_SLICE_DOMAIN_INT, "slice_id"_a)
+    //   .def("slice_domain", &Tube::slice_domain,DOCS_TUBE_SLICE_TDOMAIN_INT, "slice_id"_a)
     //   .def("input2index", &Tube::input2index,DOCS_TUBE_INPUT2INDEX_DOUBLE, "t"_a)
     //   .def("index", &Tube::index,DOCS_TUBE_INDEX_SLICE, "slice"_a)
     //   .def("sample", (void (Tube::*)(double) )&Tube::sample,
@@ -330,7 +330,7 @@ void export_Tube(py::module& m){
     //       DOCS_TUBE_INFLATE_DOUBLE, "rad"_a)
     //   .def("inflate", (const Tube & (Tube::*)( const tubex::Trajectory&) )&Tube::inflate,
     //       DOCS_TUBE_INFLATE_TRAJEC, "rad"_a)
-    //   .def("shift_domain", &Tube::shift_domain,DOCS_TUBE_SHIFT_DOMAIN_DOUBLE, "a"_a)
+    //   .def("shift_domain", &Tube::shift_domain,DOCS_TUBE_SHIFT_TDOMAIN_DOUBLE, "a"_a)
     //   .def("remove_gate", &Tube::remove_gate,DOCS_TUBE_REMOVE_GATE_DOUBLE, "t"_a)
     //   .def("bisect", &Tube::bisect,DOCS_TUBE_BISECT_DOUBLE_FLOAT, "t"_a, "ratio"_a=0.49)
 

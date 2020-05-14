@@ -5,12 +5,6 @@
   cmake_minimum_required(VERSION 3.0.2)
   project(tubex_lie_05 LANGUAGES CXX)
 
-# Compilation options
-
-  set(CMAKE_CXX_STANDARD 11)
-  add_compile_options(-O3 -Wall)
-  #add_compile_options(-DNDEBUG) # comment for debug mode
-
 # Adding IBEX
 
   # In case you installed IBEX in a local directory, you need 
@@ -30,14 +24,14 @@
   find_package(TUBEX REQUIRED)
   message(STATUS "Found Tubex version ${TUBEX_VERSION}")
 
-
 # Adding CAPD
+
   find_package(PkgConfig REQUIRED)
-  pkg_search_module(PKG_CAPD REQUIRED  capd capd-gui mpcapd mpcapd-gui capdRedHom )  # this looks for capd.pc file
-  include_directories(${PKG_CAPD_INCLUDE_DIRS})
+  pkg_search_module(PKG_CAPD REQUIRED capd capd-gui mpcapd mpcapd-gui capdRedHom)
 
 # Compilation
 
   add_executable(${PROJECT_NAME} main.cpp)
+  target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS} ${PKG_CAPD_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES} ${PKG_CAPD_LDFLAGS})
