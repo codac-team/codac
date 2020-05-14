@@ -22,8 +22,8 @@ namespace tubex
   /**
    * \class CtcFunction
    * \brief Generic static \f$\mathcal{C}\f$ that contracts a box \f$[\mathbf{x}]\f$ 
-   *        according to the constraint \f$f(\mathbf{x})=0\f$ or \f$f(\mathbf{x})\subset[\mathbf{y}]\f$.
-   *        It stands on the CtcFwdBwd of IBEX (HC4Revise).
+   *        according to the constraint \f$\mathbf{f}(\mathbf{x})=\mathbf{0}\f$ or \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$.
+   *        It stands on the CtcFwdBwd of IBEX (HC4Revise) combined with a Ctc3BCid.
    */
   class CtcFunction : public Ctc
   {

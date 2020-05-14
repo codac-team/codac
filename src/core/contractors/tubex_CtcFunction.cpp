@@ -78,6 +78,7 @@ namespace tubex
   {
 
   }
+  
   CtcFunction::CtcFunction(const ibex::Function& f, const ibex::Interval& y)
     : Ctc(false),
       m_ibex_fnc(new ibex::Function(f)),
@@ -95,7 +96,6 @@ namespace tubex
   {
 
   }
-
 
   CtcFunction::~CtcFunction()
   {
