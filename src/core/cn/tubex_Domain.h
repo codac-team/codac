@@ -93,6 +93,8 @@ namespace tubex
       const std::string dom_name(const std::vector<Domain*>& v_domains) const;
       void set_name(const std::string& name);
 
+      static bool dyn_same_slicing(const std::vector<Domain>& v_domains);
+
     protected:
 
       Domain(Type type, MemoryRef memory_type);

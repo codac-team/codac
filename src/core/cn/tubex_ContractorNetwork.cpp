@@ -171,6 +171,8 @@ namespace tubex
 
   void ContractorNetwork::add(ibex::Ctc& ibex_ctc, const vector<Domain>& v_domains)
   {
+    assert(Domain::dyn_same_slicing(v_domains));
+
     // Creating a vector of pointers to domains
     vector<Domain*> v_dom_ptr;
     for(const auto& dom : v_domains)

@@ -811,6 +811,39 @@ namespace tubex
   {
     m_name = name;
   }
+  
+  bool Domain::dyn_same_slicing(const vector<Domain>& v_domains)
+  {
+    // If domains are tubes or tube vectors, they must share the same slicing
+    const Tube *slicing_ref = NULL;
+    for(const auto& dom: v_domains)
+    {
+      switch(dom.type())
+      {
+        case Domain::Type::TUBE:
+          if(slicing_ref == NULL)
+            slicing_ref = &dom.tube();
+          else
+            if(!Tube::same_slicing(dom.tube(), *slicing_ref))
+              return false;
+          break;
+
+        case Domain::Type::TUBE_VECTOR:
+          if(slicing_ref == NULL)
+            slicing_ref = &dom.tube_vector()[0]; // first component is used as reference
+          else
+            if(!TubeVector::same_slicing(dom.tube_vector(), *slicing_ref))
+              return false;
+          break;
+
+        default:
+          // nothing to do
+          break;
+      }
+    }
+
+    return true;
+  }
 
   const string Domain::dom_name(const vector<Domain*>& v_domains) const
   {
