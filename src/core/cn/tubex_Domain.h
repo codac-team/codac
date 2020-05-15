@@ -91,6 +91,8 @@ namespace tubex
       const std::string dom_name(const std::vector<Domain*>& v_domains) const;
       void set_name(const std::string& name);
 
+      static bool all_dyn(const std::vector<Domain>& v_domains);
+      static bool all_slices(const std::vector<Domain>& v_domains);
       static bool dyn_same_slicing(const std::vector<Domain>& v_domains);
       static int total_size(const std::vector<Domain>& v_domains);
 
@@ -143,6 +145,8 @@ namespace tubex
       // todo: update this:
       std::map<double,double> m_map_data_s_lb, m_map_data_s_ub;
       std::map<double,ibex::Vector> m_map_data_lb, m_map_data_ub;
+
+      Trajectory m_traj_lb, m_traj_ub;
 
       std::vector<Contractor*> m_v_ctc;
       double m_volume = 0.;

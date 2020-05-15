@@ -41,7 +41,7 @@ namespace tubex
       for(auto& ctc_dom : ctc->domains()) // for each domain related to this contractor
       {
         // If the domain has "changed" after the contraction
-        propag_active_ctc_from_dom(ctc_dom, ctc);
+        trigger_ctc_related_to_dom(ctc_dom, ctc);
       }
     }
 
@@ -71,7 +71,7 @@ namespace tubex
     return contraction_time;
   }
 
-  void ContractorNetwork::propag_active_ctc_from_dom(Domain *dom, Contractor *ctc_to_avoid)
+  void ContractorNetwork::trigger_ctc_related_to_dom(Domain *dom, Contractor *ctc_to_avoid)
   {
     double current_volume = dom->compute_volume(); // new volume after contraction
 

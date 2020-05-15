@@ -43,7 +43,7 @@ namespace tubex
       int nb_dom() const;
       int nb_ctc_in_stack() const;
       void set_fixedpoint_ratio(float r);
-      void set_all_contractors_active();
+      void trigger_all_contractors();
       bool emptiness() const;
 
       double contract(bool verbose = false);
@@ -54,12 +54,12 @@ namespace tubex
       Tube& create_var(const Tube& t);
       TubeVector& create_var(const TubeVector& tv);
 
-      ibex::IntervalVector& subvector(ibex::Vector& i, int start_index, int end_index);
-      ibex::IntervalVector& subvector(ibex::IntervalVector& i, int start_index, int end_index);
-      TubeVector& subvector(TubeVector& i, int start_index, int end_index);
+      ibex::IntervalVector& subvector(ibex::Vector& v, int start_index, int end_index);
+      ibex::IntervalVector& subvector(ibex::IntervalVector& iv, int start_index, int end_index);
+      TubeVector& subvector(TubeVector& tv, int start_index, int end_index);
 
-      void add(ibex::Ctc& ctc, const std::vector<Domain>& v_domains);
-      void add(DynCtc& ctc, const std::vector<Domain>& v_domains);
+      void add(ibex::Ctc& static_ctc, const std::vector<Domain>& v_domains);
+      void add(DynCtc& dyn_ctc, const std::vector<Domain>& v_domains);
 
       void add_data(Tube& tube, double t, const ibex::Interval& y);
       void add_data(TubeVector& tube, double t, const ibex::IntervalVector& y);
@@ -79,7 +79,7 @@ namespace tubex
       Contractor* add_ctc(const Contractor& ac);
       void add_ctc_to_queue(Contractor *ac, std::deque<Contractor*>& ctc_deque);
 
-      void propag_active_ctc_from_dom(Domain *dom, Contractor *ctc_to_avoid = NULL);
+      void trigger_ctc_related_to_dom(Domain *dom, Contractor *ctc_to_avoid = NULL);
 
 
     protected:

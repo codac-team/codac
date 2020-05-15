@@ -49,11 +49,11 @@ namespace tubex
 
   void ContractorNetwork::set_fixedpoint_ratio(float r)
   {
-    assert(Interval(0.,1).contains(r));
+    assert(Interval(0.,1).contains(r) && "invalid ratio");
     m_fixedpoint_ratio = r;
   }
 
-  void ContractorNetwork::set_all_contractors_active()
+  void ContractorNetwork::trigger_all_contractors()
   {
     m_deque.clear();
 
@@ -93,19 +93,21 @@ namespace tubex
     return add_dom(Domain(tv))->tube_vector();
   }
 
-  IntervalVector& ContractorNetwork::subvector(Vector& iv, int start_index, int end_index)
+  IntervalVector& ContractorNetwork::subvector(Vector& v, int start_index, int end_index)
   {
-    // todo: assert here on indexes
+    assert(start_index >= 0);
+    assert(end_index < v.size());
+    assert(start_index <= end_index);
 
-    add_dom(Domain(iv));
-    Domain *subvec = add_dom(Domain(iv.subvector(start_index, end_index)));
+    add_dom(Domain(v));
+    Domain *subvec = add_dom(Domain(v.subvector(start_index, end_index)));
 
     // Adding links to the complete vector
     for(int i = 0 ; i < subvec->interval_vector().size() ; i++)
     {
       // Getting pointers to the components
       Domain *subvec_i = add_dom(Domain(subvec->interval_vector()[i]));
-      Domain *vec_i = add_dom(Domain(iv[i+start_index]));
+      Domain *vec_i = add_dom(Domain(v[i+start_index]));
 
       // Contractor to put them equal
       Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::EQUALITY, {subvec_i, vec_i}));
@@ -121,7 +123,9 @@ namespace tubex
 
   IntervalVector& ContractorNetwork::subvector(IntervalVector& iv, int start_index, int end_index)
   {
-    // todo: assert here on indexes
+    assert(start_index >= 0);
+    assert(end_index < iv.size());
+    assert(start_index <= end_index);
 
     add_dom(Domain(iv));
     Domain *subvec = add_dom(Domain(iv.subvector(start_index, end_index)));
@@ -145,31 +149,19 @@ namespace tubex
     return subvec->interval_vector();
   }
 
-  TubeVector& ContractorNetwork::subvector(TubeVector& iv, int start_index, int end_index)
-  {
-//    // todo: assert here on indexes
-//
-//    TubeVector *subvector = new TubeVector(iv.subvector(start_index, end_index));
-//    m_tubevectors_to_delete.push_front(subvector);
-//
-//    for(int i = start_index ; i <= end_index ; i++)
-//    {
-//      assert(Tube::same_slicing(iv[i], (*subvector)[i-start_index]));
-//      Contractor *ac_eq = new Contractor(Contractor::Type::EQUALITY);
-//      //add_dom(new Domain((*subvector)[i-start_index]), ac_eq); // adding vector
-//      //add_dom(new Domain(iv[i]), ac_eq); // adding vector
-//      //add_ctc(ac_eq);
-//
-//      // todo: add EQUALITY link to slices too? already done?
-//      // todo: check non reundant addition of domains
-//    }
-////add_dom(new Domain(*subvector));
-//    return *subvector;
-    return iv;
-  }
+  // not yet suported: TubeVector& ContractorNetwork::subvector(TubeVector& tv, int start_index, int end_index)
+  // not yet suported: {
+  // not yet suported:   assert(start_index >= 0);
+  // not yet suported:   assert(end_index < tv.size());
+  // not yet suported:   assert(start_index <= end_index);
+  // not yet suported:
+  // not yet suported:   return iv;
+  // not yet suported: }
 
   void ContractorNetwork::add(Ctc& static_ctc, const vector<Domain>& v_domains)
   {
+    assert(!v_domains.empty());
+
     // Static constraint: each slice (if dyn case) is dealt with in parallel,
     // so dynamic variables must share the same slicing
     assert(Domain::dyn_same_slicing(v_domains));
@@ -259,17 +251,22 @@ namespace tubex
     }
   }
 
-  void ContractorNetwork::add(DynCtc& tubex_ctc, const vector<Domain>& v_domains)
+  void ContractorNetwork::add(DynCtc& dyn_ctc, const vector<Domain>& v_domains)
   {
-    bool breakdown_to_slice_level = false;
+    assert(!v_domains.empty());
 
-    if(typeid(tubex_ctc) == typeid(CtcEval))
+    // If the CtcEval contractor is involved, its contracting impact is set
+    // to the minimal and we add the CtcDeriv contractor on top of that, in 
+    // order to reach thin propagations of contractions.
+    // todo: add CtcDeriv only if not already added?
+    // todo: prevent from several CtcDeriv on same couple of slices?
+    if(typeid(dyn_ctc) == typeid(CtcEval))
     {
       assert(v_domains.size() == 3 || v_domains.size() == 4);
 
       if(v_domains.size() == 4) // with derivative information
       {
-        static_cast<CtcEval&>(tubex_ctc).enable_time_propag(false);
+        static_cast<CtcEval&>(dyn_ctc).enable_time_propag(false);
 
         if(m_ctc_deriv == NULL)
           m_ctc_deriv = new CtcDeriv();
@@ -277,21 +274,13 @@ namespace tubex
       }
     }
 
-    if(!tubex_ctc.is_intertemporal())
+    // If possible, breaking down the constraint to slices level
+    if(!dyn_ctc.is_intertemporal() && !Domain::all_slices(v_domains))
     {
-      // todo: check that the related constraint is not intertemporal
-      // otherwise, tube level only
+      // Not intertemporal => 
+      assert(Domain::all_dyn(v_domains)); // all domains are slices or tubes or tube vectors
+      assert(Domain::dyn_same_slicing(v_domains)); // all domains share same slicing
 
-      if(v_domains[0].type() == Domain::Type::TUBE || v_domains[0].type() == Domain::Type::TUBE_VECTOR)
-        breakdown_to_slice_level = true;
-      // todo: improve this ^
-      // and check that all domains are either tubes/tubevectors or interval/intervalvectors
-    }
-
-    // Towards contractors on slices scale, if possible
-    // (in case of non-intertemporal constraints)
-    if(breakdown_to_slice_level)
-    {
       vector<const Slice*> v_slices;
 
       // Vector initialization with first slices of each tube
@@ -307,9 +296,6 @@ namespace tubex
             if(nb_slices == -1)
               nb_slices = dom.tube().nb_slices();
 
-            else
-              assert(nb_slices == dom.tube().nb_slices());
-
             v_slices.push_back(dom.tube().first_slice());
           }
           break;
@@ -320,9 +306,6 @@ namespace tubex
             {
               if(nb_slices == -1)
                 nb_slices = dom.tube_vector()[j].nb_slices();
-
-              else
-                assert(nb_slices == dom.tube_vector()[j].nb_slices());
 
               v_slices.push_back(dom.tube_vector()[j].first_slice());
             }
@@ -341,14 +324,14 @@ namespace tubex
         for(size_t i = 0 ; i < v_slices.size() ; i++)
           v_slices_domains.push_back(Domain(const_cast<Slice&>(*v_slices[i])));
 
-        add(tubex_ctc, v_slices_domains); 
+        add(dyn_ctc, v_slices_domains); 
 
         for(auto& s : v_slices)
           s = s->next_slice();
       }
     }
 
-    else
+    else // otherwise, dealing with the inter-temporal constraint as it is
     {
       // Creating a vector of pointers to domains
       vector<Domain*> v_dom_ptr;
@@ -356,7 +339,7 @@ namespace tubex
         v_dom_ptr.push_back(add_dom(dom));
 
       // Creating what would be this new contractors (namely defined with domains)
-      Contractor ctc(tubex_ctc, v_dom_ptr);
+      Contractor ctc(dyn_ctc, v_dom_ptr);
 
       // Getting the actual contractor (maybe the same if not already added)
       Contractor *ctc_ptr = add_ctc(ctc);

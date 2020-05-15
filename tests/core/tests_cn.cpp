@@ -229,7 +229,7 @@ TEST_CASE("CN simple")
     CHECK(sub_x[1] == Interval(1,4));
 
     sub_x[0] = Interval(1,2);
-    cn.set_all_contractors_active();
+    cn.trigger_all_contractors();
     cn.contract();
     CHECK(x[1] == Interval(1,2));
   }
@@ -347,5 +347,56 @@ TEST_CASE("CN simple")
       CHECK(x == Interval(2.,2.5));
       CHECK(b == result);
     }
+  }
+
+  SECTION("Adding continuous data")
+  {
+    double dt = 1.;
+    Interval tdomain(0.,5.);
+
+    Tube x(tdomain, dt), v(tdomain, dt);
+    x.set(0., 0.);
+
+    CtcDeriv ctc_deriv;
+    ContractorNetwork cn;
+    cn.add(ctc_deriv, {x,v});
+
+    cn.set_name(x, "x");
+    cn.set_name(v, "v");
+    cn.print_dot_graph("cn_adddata");
+
+    cn.contract();
+
+    CHECK((x.codomain() == Interval::all_reals()
+        || x.codomain() == Interval(-99999, 99999))); // todo: remove this
+    CHECK((v.codomain() == Interval::all_reals()
+        || x.codomain() == Interval(-99999, 99999))); // todo: remove this
+    CHECK(cn.nb_ctc_in_stack() == 0);
+
+    // Adding data
+    cn.add_data(v, 0., Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.add_data(v, 0.3, Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.add_data(v, 0.4, Interval(0.));
+    cn.add_data(v, 0.5, Interval(0.));
+    // cn.add_data(x, 0.5, Interval(0.5))); // should fail
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.add_data(v, 0.99, Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.add_data(v, 1.3, Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 3);
+    cn.add_data(v, 1.5, Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 3);
+    cn.add_data(v, 4.5, Interval(-3.)); // accross two slices
+    CHECK(cn.nb_ctc_in_stack() == 9);
+    cn.add_data(v, 5.5, Interval(1.)); // after tf
+    CHECK(cn.nb_ctc_in_stack() == 10);
+
+    CHECK(v(0) == Interval(0.));
+    CHECK(v(1) == Interval(-0.5,0.));
+    CHECK(v(2) == Interval(-1.5,-0.5));
+    CHECK(v(3) == Interval(-2.5,-1.5));
+    CHECK(v(4) == Interval(-3.,-1.));
   }
 }

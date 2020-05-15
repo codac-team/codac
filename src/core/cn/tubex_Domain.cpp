@@ -636,30 +636,59 @@ namespace tubex
   void Domain::add_data(double t, const Interval& y, ContractorNetwork& cn)
   {
     assert(m_type == Type::TUBE);
+    // Note: t may be defined outside the tube definition
 
-    m_map_data_s_lb.emplace(t, y.lb());
-    m_map_data_s_ub.emplace(t, y.ub());
-    Trajectory traj_lb(m_map_data_s_lb);
-    Trajectory traj_ub(m_map_data_s_ub);
-
-    Slice *prev_s = NULL;
-    if(tube().tdomain().contains(t))
-      prev_s = tube().slice(t)->prev_slice();
-    else if(t > tube().tdomain().ub())
-      prev_s = tube().last_slice();
-
-    while(prev_s != NULL && prev_s->tdomain().is_subset(traj_lb.tdomain()))
+    if(m_traj_lb.not_defined())
     {
-      Interval new_slice_envelope = (traj_lb(prev_s->tdomain()) | traj_ub(prev_s->tdomain()));
+      m_traj_lb.set(y.lb(), t);
+      m_traj_ub.set(y.ub(), t);
+      return; // cannot add data with a single point
+    }
 
-      if(!prev_s->codomain().is_superset(new_slice_envelope))
+    double prev_t = m_traj_lb.tdomain().ub();
+    assert(t > prev_t && "t does not represent new data since last call");
+
+    // Updating the trajectory
+    m_traj_lb.set(y.lb(), t);
+    m_traj_ub.set(y.ub(), t);
+
+    if(prev_t < tube().tdomain().lb())
+      return; // nothing can be done yet (outside tube definition)
+
+    Slice *prev_s;
+
+    if(t < tube().tdomain().ub())
+    {
+      prev_s = tube().slice(t);
+      if(prev_s == tube().first_slice())
+        return; // the slice is not complete yet, and the previous one does not exist
+
+      prev_s = prev_s->prev_slice();
+    }
+
+    else // if data goes beyond tube's definition domain
+    {
+      prev_s = tube().last_slice();
+    }
+
+    // Contracting the tube
+    // A jump may have been done: several slices may exist between the current
+    // t and the previous one.
+
+    // So we iterate:
+    while(prev_s != NULL && prev_s->tdomain().is_subset(m_traj_lb.tdomain()))
+    {
+      Interval new_slice_envelope = (m_traj_lb(prev_s->tdomain()) | m_traj_ub(prev_s->tdomain()));
+
+      if(prev_s->codomain().is_subset(new_slice_envelope))
         break;
 
       prev_s->set_envelope(new_slice_envelope);
 
-      // Flags a new change on the domain
-      cn.propag_active_ctc_from_dom(cn.add_dom(Domain(*prev_s)));
+      // Flags a new change on the slice domain
+      cn.trigger_ctc_related_to_dom(cn.add_dom(Domain(*prev_s)));
 
+      // Iterates
       prev_s = prev_s->prev_slice();
     }
   }
@@ -669,33 +698,10 @@ namespace tubex
     assert(m_type == Type::TUBE_VECTOR);
     assert(tube_vector().size() == y.size());
 
-    m_map_data_lb.emplace(t, y.lb());
-    m_map_data_ub.emplace(t, y.ub());
-    TrajectoryVector traj_lb(m_map_data_lb);
-    TrajectoryVector traj_ub(m_map_data_ub);
-
-    for(int i = 0 ; i < y.size() ; i++)
+    for(int i = 0 ; i < tube_vector().size() ; i++)
     {
-      Slice *prev_s = NULL;
-      if(tube_vector()[i].tdomain().contains(t))
-        prev_s = tube_vector()[i].slice(t)->prev_slice();
-      else if(t > tube_vector()[i].tdomain().ub())
-        prev_s = tube_vector()[i].last_slice();
-
-      while(prev_s != NULL && prev_s->tdomain().is_subset(traj_lb.tdomain()))
-      {
-        Interval new_slice_envelope = (traj_lb[i](prev_s->tdomain()) | traj_ub[i](prev_s->tdomain()));
-
-        if(!prev_s->codomain().is_superset(new_slice_envelope))
-          break;
-
-        prev_s->set_envelope(new_slice_envelope);
-
-        // Flags a new change on the domain
-        cn.propag_active_ctc_from_dom(cn.add_dom(Domain(*prev_s)));
-
-        prev_s = prev_s->prev_slice();
-      }
+      Domain *tube_i = cn.add_dom(Domain(tube_vector()[i]));
+      tube_i->add_data(t, y[i], cn);
     }
   }
   
@@ -776,6 +782,22 @@ namespace tubex
   void Domain::set_name(const string& name)
   {
     m_name = name;
+  }
+  
+  bool Domain::all_slices(const vector<Domain>& v_domains)
+  {
+    for(const auto& dom : v_domains)
+      if(dom.type() != Type::SLICE)
+        return false;
+    return true;
+  }
+  
+  bool Domain::all_dyn(const vector<Domain>& v_domains)
+  {
+    for(const auto& dom : v_domains)
+      if(dom.type() != Type::SLICE && dom.type() != Type::TUBE && dom.type() != Type::TUBE_VECTOR)
+        return false;
+    return true;
   }
   
   bool Domain::dyn_same_slicing(const vector<Domain>& v_domains)
