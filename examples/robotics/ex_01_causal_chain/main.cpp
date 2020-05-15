@@ -44,7 +44,7 @@ int main()
       x.set(ix0, 0.); // tube state vector with initial conditions
 
     // Computing an approximation of the actual state trajectory
-      Trajectory traj_phidot(tdomain, TimeFunction("-cos((t+33)/5)"), dt);
+      Trajectory traj_phidot(tdomain, TFunction("-cos((t+33)/5)"), dt);
 
       TrajectoryVector traj_state(3); // state equations
       traj_state[2] = traj_phidot.primitive(x0[2]);
@@ -64,7 +64,7 @@ int main()
 
   /* =========== PROPAGATION (CONTRACTORS) =========== */
 
-    TimeFunction f("x", "y", "theta",
+    TFunction f("x", "y", "theta",
                       "(10.*cos(theta) ;\
                         10.*sin(theta) ;\
                         -cos((t+33)/5)+[-0.02,0.02])");

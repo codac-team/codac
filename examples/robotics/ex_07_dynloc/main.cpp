@@ -28,8 +28,8 @@ int main(int argc, char** argv)
 
     float dt = 0.01;
     Interval tdomain(0., 3.);
-    TrajectoryVector x_truth(tdomain, TimeFunction("(10*cos(t)+t;5*sin(2*t)+t)")); // actual trajectory
-    TrajectoryVector v_truth(tdomain, TimeFunction("(-10*sin(t)+1;10*cos(2*t)+1)")); // actual velocity
+    TrajectoryVector x_truth(tdomain, TFunction("(10*cos(t)+t;5*sin(2*t)+t)")); // actual trajectory
+    TrajectoryVector v_truth(tdomain, TFunction("(-10*sin(t)+1;10*cos(2*t)+1)")); // actual velocity
 
     // Building beacons and related range-only measurements
     float r = 0.1;

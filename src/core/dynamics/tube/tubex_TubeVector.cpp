@@ -64,7 +64,7 @@ namespace tubex
       set(codomain);
     }
     
-    TubeVector::TubeVector(const Interval& tdomain, double timestep, const TimeFnc& f)
+    TubeVector::TubeVector(const Interval& tdomain, double timestep, const TFnc& f)
       : TubeVector(tdomain, timestep, f.image_dim())
     {
       assert(timestep >= 0.);

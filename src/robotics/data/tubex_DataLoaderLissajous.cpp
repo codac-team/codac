@@ -10,7 +10,7 @@
 
 #include <time.h>
 #include "tubex_DataLoaderLissajous.h"
-#include "tubex_Function.h"
+#include "tubex_TFunction.h"
 #include "tubex_Tube.h"
 
 using namespace std;
@@ -31,10 +31,10 @@ namespace tubex
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 
-    TimeFunction f_lissajous("(120.*2.*cos(t) ; \
+    TFunction f_lissajous("(120.*2.*cos(t) ; \
                                120.*sin(2.*t) ; \
                                atan2(240.*cos(2.*t),-120.*2.*sin(t)))");
-    TimeFunction f_lissajous_dot("(-120.*2.*sin(t) ; \
+    TFunction f_lissajous_dot("(-120.*2.*sin(t) ; \
                                    240.*cos(2.*t))");
     // todo: derivative for heading
 

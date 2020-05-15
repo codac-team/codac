@@ -10,7 +10,7 @@
 
 #include <time.h>
 #include "tubex_DataLoaderRedermor.h"
-#include "tubex_Function.h"
+#include "tubex_TFunction.h"
 #include "tubex_Exception.h"
 #include "tubex_Tube.h"
 
@@ -85,7 +85,7 @@ namespace tubex
       x->resize(6);
 
       // Computing robot's velocities:
-      TimeFunction f("phi", "theta", "psi", "vxr", "vyr", "vzr", 
+      TFunction f("phi", "theta", "psi", "vxr", "vyr", "vzr", 
        "(vxr * cos(theta) * cos(psi) \
          - vyr * (cos(phi) * sin(psi) - sin(theta) * cos(psi) * sin(phi)) \
          + vzr * (sin(phi) * sin(psi) + sin(theta) * cos(psi) * cos(phi)) \

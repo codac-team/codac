@@ -33,7 +33,7 @@ void contract(TubeVector& x)
   do
   {
     old_x = x;
-    ctc_deriv.contract(x[1], Tube(x[1], TimeFunction("4*sin(t-5) + (t-3.3)*[-0.1,0.1]")));
+    ctc_deriv.contract(x[1], Tube(x[1], TFunction("4*sin(t-5) + (t-3.3)*[-0.1,0.1]")));
     ctc_f.contract(x);
   } while(old_x != x);
 }
@@ -49,8 +49,8 @@ int main()
     // An evaluation will be made at t=7., so we sample the vector beforehand,
     x.sample(7.); // so that all components share the same slicing
 
-    x[0] = Tube(x[0], TimeFunction("(t-5)^2 + [-0.5,0.5]"));
-    x[1] = Tube(x[1], TimeFunction("[-0.5,0.5] - 4*cos(t-5) + [-0.2,0.2]*(t-3.3)^2"));
+    x[0] = Tube(x[0], TFunction("(t-5)^2 + [-0.5,0.5]"));
+    x[1] = Tube(x[1], TFunction("[-0.5,0.5] - 4*cos(t-5) + [-0.2,0.2]*(t-3.3)^2"));
     contract(x); // applying constraints with contractors on tubes, before the evaluation
 
   /* =========== GRAPHICS =========== */

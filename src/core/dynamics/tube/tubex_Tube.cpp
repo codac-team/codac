@@ -82,7 +82,7 @@ namespace tubex
         create_synthesis_tree();
     }
     
-    Tube::Tube(const Interval& tdomain, double timestep, const TimeFnc& f, int f_image_id)
+    Tube::Tube(const Interval& tdomain, double timestep, const TFnc& f, int f_image_id)
       : Tube(tdomain, timestep)
     {
       assert(valid_tdomain(tdomain));
@@ -133,7 +133,7 @@ namespace tubex
       set(codomain);
     }
     
-    Tube::Tube(const Tube& x, const TimeFnc& f, int f_image_id)
+    Tube::Tube(const Tube& x, const TFnc& f, int f_image_id)
       : Tube(x)
     {
       assert(f_image_id >= 0 && f_image_id < f.image_dim());

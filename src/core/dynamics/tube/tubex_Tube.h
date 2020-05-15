@@ -15,7 +15,7 @@
 #include <map>
 #include <list>
 #include <vector>
-#include "tubex_Fnc.h"
+#include "tubex_TFnc.h"
 #include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
 #include "tubex_serialize_tubes.h"
@@ -29,7 +29,7 @@
 
 namespace tubex
 {
-  class TimeFnc;
+  class TFnc;
   class Tube;
   class Slice;
   class Trajectory;
@@ -66,19 +66,19 @@ namespace tubex
       Tube(const ibex::Interval& tdomain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
 
       /**
-       * \brief Creates a scalar tube \f$[x](\cdot)\f$ from a TimeFnc object and with some temporal discretization
+       * \brief Creates a scalar tube \f$[x](\cdot)\f$ from a TFnc object and with some temporal discretization
        *
        * \note Due to the slicing implementation of the tube, a wrapping
-       *       effect will occur to reliably enclose the TimeFnc object 
+       *       effect will occur to reliably enclose the TFnc object 
 
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
-       * \param f TimeFnc object that will be enclosed by the tube:
+       * \param f TFnc object that will be enclosed by the tube:
        *          \f$\forall t\in[t_0,t_f], [f](t)\subseteq[x](t)\f$
        * \param f_image_id component index of the interval function
        *                   \f$[f]\f$ (that is possibly multidimensional, first component by default)
        */
-      Tube(const ibex::Interval& tdomain, double timestep, const TimeFnc& f, int f_image_id = 0);
+      Tube(const ibex::Interval& tdomain, double timestep, const TFnc& f, int f_image_id = 0);
 
       /**
        * \brief Creates a tube \f$[x](\cdot)\f$ from a list of \f$k\f$ boxes \f$\big([t_1]\times[x_1],\dots,[t_k]\times[x_k]\big)\f$
@@ -109,18 +109,18 @@ namespace tubex
 
       /**
        * \brief Creates a copy of a scalar tube \f$[x](\cdot)\f$, with the same time
-       *        discretization but a specific codomain defined by a TimeFnc object
+       *        discretization but a specific codomain defined by a TFnc object
        *
        * \note Due to the slicing implementation of the tube, a wrapping
-       *       effect will occur to reliably enclose the TimeFnc object 
+       *       effect will occur to reliably enclose the TFnc object 
        *
        * \param x Tube from which the sampling will be duplicated
-       * \param f TimeFnc object that will be enclosed by the tube:
+       * \param f TFnc object that will be enclosed by the tube:
        *                     \f$\forall t\in[t_0,t_f], [f](t)\subseteq[x](t)\f$
        * \param f_image_id component index of the interval function \f$[f]\f$
        *                   (that is possibly multidimensional, first component by default)
        */
-      Tube(const Tube& x, const TimeFnc& f, int f_image_id = 0);
+      Tube(const Tube& x, const TFnc& f, int f_image_id = 0);
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ enclosing a trajectory \f$x(\cdot)\f$,
@@ -1062,7 +1062,7 @@ namespace tubex
        * \brief Serializes this tube together with a Trajectory object
        *
        * \note The values and sampling (slices and gates) are serialized
-       * \note The serialization of a Trajectory defined from a TimeFunction object is not supported
+       * \note The serialization of a Trajectory defined from a TFunction object is not supported
        * \note The output file will appear in the executable current directory
        *
        * \param binary_file_name name of the output file (default value: "x.tube")

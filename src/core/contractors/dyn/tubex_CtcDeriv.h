@@ -12,7 +12,7 @@
 #ifndef __TUBEX_CTCDERIV_H__
 #define __TUBEX_CTCDERIV_H__
 
-#include "tubex_Ctc.h"
+#include "tubex_DynCtc.h"
 #include "tubex_Slice.h"
 
 namespace tubex

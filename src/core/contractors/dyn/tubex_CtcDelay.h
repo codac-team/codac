@@ -12,7 +12,7 @@
 #ifndef __TUBEX_CTCDELAY_H__
 #define __TUBEX_CTCDELAY_H__
 
-#include "tubex_Ctc.h"
+#include "tubex_DynCtc.h"
 
 namespace tubex
 {

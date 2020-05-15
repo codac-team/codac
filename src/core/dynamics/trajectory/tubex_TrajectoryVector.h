@@ -16,14 +16,14 @@
 #include <initializer_list>
 #include "ibex_Vector.h"
 #include "ibex_Interval.h"
-#include "tubex_Function.h"
+#include "tubex_TFunction.h"
 #include "tubex_Trajectory.h"
 #include "tubex_DynamicalItem.h"
 #include "tubex_traj_arithmetic.h"
 
 namespace tubex
 {
-  class TimeFunction;
+  class TFunction;
   class TubeVector;
   class Trajectory;
 
@@ -51,19 +51,19 @@ namespace tubex
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from an analytic expression
        *
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
-       * \param f TimeFunction object defining the trajectory: \f$\mathbf{x}(t)=\mathbf{f}(t)\f$
+       * \param f TFunction object defining the trajectory: \f$\mathbf{x}(t)=\mathbf{f}(t)\f$
        */
-      TrajectoryVector(const ibex::Interval& tdomain, const TimeFunction& f);
+      TrajectoryVector(const ibex::Interval& tdomain, const TFunction& f);
 
       /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from an analytic expression,
        *        and transforms it as a map of values (sampling procedure)
        *
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
-       * \param f TimeFunction object defining the trajectory: \f$\mathbf{x}(t)=\mathbf{f}(t)\f$
+       * \param f TFunction object defining the trajectory: \f$\mathbf{x}(t)=\mathbf{f}(t)\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        */
-      TrajectoryVector(const ibex::Interval& tdomain, const TimeFunction& f, double timestep);
+      TrajectoryVector(const ibex::Interval& tdomain, const TFunction& f, double timestep);
 
       /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a map of vector values
@@ -186,7 +186,7 @@ namespace tubex
        * \brief Returns the evaluation of this trajectory at \f$t\f$
        *
        * \note Be careful, if the trajectory is defined from an analytic function,
-       *       then an approximation will be made (since the TimeFunction returns
+       *       then an approximation will be made (since the TFunction returns
        *       a boxed evaluation, while the expected returned value is a real here).
        *       Please use the operator(Interval(double)) for a reliable evaluation.
        *
@@ -225,7 +225,7 @@ namespace tubex
        * \brief Tests whether this trajectory is defined or not
        *
        * \return false in case of non-empty map, or definition from a
-       *         TimeFunction object, true otherwise
+       *         TFunction object, true otherwise
        */
       bool not_defined() const;
 
@@ -293,7 +293,7 @@ namespace tubex
        * \brief Samples this trajectory so that it will share the same sampling of \f$x(\cdot)\f$
        *
        * \note If the trajectory is defined as an analytic function, then the object is
-       *       transformed into a map of values and the TimeFunction object is deleted.
+       *       transformed into a map of values and the TFunction object is deleted.
        *
        * \note The previous sampling of this trajectory is preserved
        *
@@ -306,7 +306,7 @@ namespace tubex
        * \brief Samples this trajectory so that it will share the same sampling of \f$\mathbf{x}(\cdot)\f$
        *
        * \note If the trajectory is defined as an analytic function, then the object is
-       *       transformed into a map of values and the TimeFunction object is deleted.
+       *       transformed into a map of values and the TFunction object is deleted.
        *
        * \note The previous sampling of this trajectory is preserved
        *

@@ -31,8 +31,8 @@ namespace tubex
       *this = traj;
     }
 
-    Trajectory::Trajectory(const Interval& tdomain, const TimeFunction& f)
-      : m_tdomain(tdomain), m_traj_def_type(TrajDefnType::ANALYTIC_FNC), m_function(new TimeFunction(f))
+    Trajectory::Trajectory(const Interval& tdomain, const TFunction& f)
+      : m_tdomain(tdomain), m_traj_def_type(TrajDefnType::ANALYTIC_FNC), m_function(new TFunction(f))
     {
       assert(valid_tdomain(tdomain));
       assert(f.image_dim() == 1);
@@ -42,7 +42,7 @@ namespace tubex
       m_codomain = m_function->eval(tdomain);
     }
 
-    Trajectory::Trajectory(const Interval& tdomain, const TimeFunction& f, double timestep)
+    Trajectory::Trajectory(const Interval& tdomain, const TFunction& f, double timestep)
       : Trajectory(tdomain, f)
     {
       assert(timestep > 0.);
@@ -79,7 +79,7 @@ namespace tubex
       {
         case TrajDefnType::ANALYTIC_FNC:
           delete m_function;
-          m_function = new TimeFunction(*x.m_function);
+          m_function = new TFunction(*x.m_function);
           break;
 
         case TrajDefnType::MAP_OF_VALUES:
@@ -116,7 +116,7 @@ namespace tubex
       return m_map_values;
     }
 
-    const TimeFunction* Trajectory::function() const
+    const TFunction* Trajectory::function() const
     {
       assert(m_traj_def_type == TrajDefnType::ANALYTIC_FNC);
       return m_function;
@@ -244,7 +244,7 @@ namespace tubex
     bool Trajectory::operator==(const Trajectory& x) const
     {
       assert((m_traj_def_type == TrajDefnType::MAP_OF_VALUES || x.m_traj_def_type == TrajDefnType::MAP_OF_VALUES)
-        && "operator== not implemented in case of a Trajectory defined by a TimeFunction");
+        && "operator== not implemented in case of a Trajectory defined by a TFunction");
 
       if(m_traj_def_type == TrajDefnType::MAP_OF_VALUES && x.m_traj_def_type == TrajDefnType::MAP_OF_VALUES)
       {
@@ -271,7 +271,7 @@ namespace tubex
     bool Trajectory::operator!=(const Trajectory& x) const
     {
       assert((m_traj_def_type == TrajDefnType::MAP_OF_VALUES && x.m_traj_def_type == TrajDefnType::MAP_OF_VALUES)
-        && "operator!= not implemented in case of a Trajectory defined by a TimeFunction");
+        && "operator!= not implemented in case of a Trajectory defined by a TFunction");
       return tdomain() != x.tdomain() || codomain() != x.codomain() || !(*this == x);
     }
 
@@ -280,7 +280,7 @@ namespace tubex
     void Trajectory::set(double y, double t)
     {
       assert(m_traj_def_type == TrajDefnType::MAP_OF_VALUES
-        && "Trajectory already defined by a TimeFunction");
+        && "Trajectory already defined by a TFunction");
       
       m_tdomain |= t;
 
@@ -393,7 +393,7 @@ namespace tubex
     Trajectory& Trajectory::make_continuous()
     {
       assert(m_traj_def_type == TrajDefnType::MAP_OF_VALUES
-        && "not usable for trajectories defined by TimeFunction");
+        && "not usable for trajectories defined by TFunction");
 
       const Interval periodicity = codomain();
       m_codomain = Interval::EMPTY_SET;
@@ -425,7 +425,7 @@ namespace tubex
     const Trajectory Trajectory::primitive(double c) const
     {
       assert(m_traj_def_type == TrajDefnType::MAP_OF_VALUES
-        && "integration timestep requested for trajectories defined by TimeFunction");
+        && "integration timestep requested for trajectories defined by TFunction");
       
       double val;
       Trajectory x;

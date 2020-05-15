@@ -36,9 +36,9 @@ int main(int argc, char** argv)
 
     float dt = 0.01;
     Interval tdomain(-1., 10.);
-    TrajectoryVector x_truth(tdomain, TimeFunction("(10*cos(t)+t;5*sin(2*t)+t)"));
+    TrajectoryVector x_truth(tdomain, TFunction("(10*cos(t)+t;5*sin(2*t)+t)"));
     x = new TubeVector(tdomain, dt, 2);
-    v = new TubeVector(tdomain, dt, TimeFunction("(-10*sin(t)+1+[-0.2,0.2];10*cos(2*t)+1+[-0.2,0.2])"));
+    v = new TubeVector(tdomain, dt, TFunction("(-10*sin(t)+1+[-0.2,0.2];10*cos(2*t)+1+[-0.2,0.2])"));
 
     x->set(x_truth(tdomain.lb()), tdomain.lb());
 

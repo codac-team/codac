@@ -28,7 +28,7 @@ namespace tubex
     // todo
   }
   
-  void CtcPicard::contract(const TimeFnc& f, Tube& x, TimePropag t_propa)
+  void CtcPicard::contract(const TFnc& f, Tube& x, TimePropag t_propa)
   {
     assert(f.nb_vars() == f.image_dim());
     assert(f.nb_vars() == 1 && "scalar case");
@@ -38,7 +38,7 @@ namespace tubex
     x = x_vect[0];
   }
 
-  void CtcPicard::contract(const TimeFnc& f, TubeVector& x, TimePropag t_propa)
+  void CtcPicard::contract(const TFnc& f, TubeVector& x, TimePropag t_propa)
   {
     assert(f.nb_vars() == f.image_dim());
     assert(f.nb_vars() == x.size());
@@ -122,7 +122,7 @@ namespace tubex
     return m_picard_iterations;
   }
 
-  void CtcPicard::contract_kth_slices(const TimeFnc& f,
+  void CtcPicard::contract_kth_slices(const TFnc& f,
                                       TubeVector& tube,
                                       int k,
                                       TimePropag t_propa)
@@ -155,7 +155,7 @@ namespace tubex
       }
   }
 
-  void CtcPicard::guess_kth_slices_envelope(const TimeFnc& f,
+  void CtcPicard::guess_kth_slices_envelope(const TFnc& f,
                                             TubeVector& tube,
                                             int k,
                                             TimePropag t_propa)

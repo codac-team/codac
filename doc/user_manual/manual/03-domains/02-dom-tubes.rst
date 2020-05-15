@@ -96,7 +96,7 @@ As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Traject
 
   .. code-tab:: c++
 
-    TrajectoryVector traj(tdomain, TimeFunction("(sin(t) ; cos(t) ; cos(t)+t/10)"));
+    TrajectoryVector traj(tdomain, TFunction("(sin(t) ; cos(t) ; cos(t)+t/10)"));
 
     Tube x8(traj[0], dt);            // 100 slices tube enclosing sin(t)
     Tube x9(traj[1], traj[2], dt);   // 100 slices tube defined as [cos(t),cos(t)+t/10]
@@ -119,7 +119,7 @@ As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Traject
 ..   float dt = 0.1;
 ..   Interval tdomain(0.,10.);
 .. 
-..   TrajectoryVector traj(tdomain, TimeFunction("(sin(t) ; cos(t) ; cos(t)+t/10)"));
+..   TrajectoryVector traj(tdomain, TFunction("(sin(t) ; cos(t) ; cos(t)+t/10)"));
 ..   Tube y(traj[0], dt);
 ..   Tube x(traj[1], traj[2], dt);
 .. 
@@ -142,7 +142,7 @@ It is also possible to create a tube from a thick function, where the uncertaint
   .. code-tab:: c++
 
     Tube x10(tdomain, dt/10.,
-             TimeFunction("-abs(cos(t)+t/5)+(t/2)*[-0.1,0.1]"));
+             TFunction("-abs(cos(t)+t/5)+(t/2)*[-0.1,0.1]"));
 
   .. code-tab:: py
 
@@ -161,7 +161,7 @@ Finally, as tube is an envelope (union) of trajectories, the following operation
     float dt = 0.01;
     Interval tdomain(0.,10.);
 
-    TimeFunction f("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"); // 4d temporal function
+    TFunction f("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"); // 4d temporal function
     TrajectoryVector traj(tdomain, f); // 4d trajectory defined over [0,10]
 
     // 1d tube [x](·) defined as a union of the 4 trajectories
@@ -190,7 +190,7 @@ The vector case
 
     // TubeVector from a formula; the function's output is two-dimensional
     TubeVector x(tdomain, dt,
-                 TimeFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
+                 TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
                             cos(t)+sin(t/0.2)*[-0.1,0.1])"));
 
   .. code-tab:: py
@@ -212,7 +212,7 @@ produces (each dimension displayed on the same figure):
 ..   Interval tdomain(0.,10.);
 .. 
 ..   // TubeVector as a union of trajectories
-..   TrajectoryVector traj(tdomain, TimeFunction("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"));
+..   TrajectoryVector traj(tdomain, TFunction("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"));
 ..   Tube x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3];
 .. 
 ..   // Inversion
@@ -224,7 +224,7 @@ produces (each dimension displayed on the same figure):
 .. 
 ..   // TubeVector from a formula; the function's output is two-dimensional
 ..   TubeVector y(Interval(0.,10.), dt,
-..                TimeFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
+..                TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
 ..                           cos(t)+sin(t/0.2)*[-0.1,0.1])"));
 .. 
 ..   vibes::beginDrawing();
@@ -584,7 +584,7 @@ Next pages will present reliable operators to reduce the range of the presented 
 ..   float dt = 0.2;
 ..   Interval tdomain(0.,10.);
 .. 
-..   TrajectoryVector traj(tdomain, TimeFunction("(cos(t) ; cos(t)+t/10)"));
+..   TrajectoryVector traj(tdomain, TFunction("(cos(t) ; cos(t)+t/10)"));
 ..   Tube x(tdomain, Interval::empty_set());
 .. 
 ..   double t = tdomain.lb();

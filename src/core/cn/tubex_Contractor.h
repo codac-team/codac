@@ -15,7 +15,7 @@
 #include <vector>
 #include <functional>
 #include "ibex_Ctc.h"
-#include "tubex_Ctc.h"
+#include "tubex_DynCtc.h"
 #include "tubex_Domain.h"
 #include "tubex_ContractorNetwork.h"
 

@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    Trajectory truth(tdomain, TimeFunction("2.*atan(exp(-t)*tan(0.5))"));
+    Trajectory truth(tdomain, TFunction("2.*atan(exp(-t)*tan(0.5))"));
     VIBesFigTube fig_x("x", &x[0], &truth);
     fig_x.set_properties(100, 100, 600, 600);
 

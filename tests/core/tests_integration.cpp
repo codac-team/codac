@@ -794,7 +794,7 @@ TEST_CASE("Computing partial integration, two interval bounds", "[core]")
     double t[2];
     clock_t t_start;
 
-    Tube tube(Interval(0.,10.), 0.1, TimeFunction("sin(t)"));
+    Tube tube(Interval(0.,10.), 0.1, TFunction("sin(t)"));
 
     tube.enable_synthesis(true); // first: testing with tree synthesis
     Interval intv_t = Interval(tube.tdomain().lb() + tube.tdomain().diam() / 4.,

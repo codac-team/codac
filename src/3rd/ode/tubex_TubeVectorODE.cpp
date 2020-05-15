@@ -18,7 +18,7 @@ using namespace tubex;
 
 namespace tubex
 {
-  TubeVector TubeVectorODE(const Interval& domain, const TimeFunction& f, const IntervalVector& x0,
+  TubeVector TubeVectorODE(const Interval& domain, const TFunction& f, const IntervalVector& x0,
                            double timestep, int mode)
   {
     switch(mode)

@@ -333,7 +333,7 @@ TEST_CASE("CN simple")
     }
     {
       Interval x(2.,2.5);
-      Tube a(tdomain, dt, TimeFunction("cos(t)")), b(tdomain, dt);
+      Tube a(tdomain, dt, TFunction("cos(t)")), b(tdomain, dt);
 
       CtcFunction ctc_add("x", "a", "b", "x+a=b");
 
@@ -341,7 +341,7 @@ TEST_CASE("CN simple")
       cn.add(ctc_add, {x,a,b});
       cn.contract();
       
-      Tube result(tdomain, dt, TimeFunction("cos(t)"));
+      Tube result(tdomain, dt, TFunction("cos(t)"));
       result += x;
 
       CHECK(x == Interval(2.,2.5));

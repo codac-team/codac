@@ -16,7 +16,7 @@
 #include <list>
 #include <vector>
 #include <initializer_list>
-#include "tubex_Fnc.h"
+#include "tubex_TFnc.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_tube_arithmetic.h"
 #include "tubex_serialize_tubes.h"
@@ -24,7 +24,7 @@
 
 namespace tubex
 {
-  class TimeFnc;
+  class TFnc;
   class Tube;
   class Trajectory;
   
@@ -79,18 +79,18 @@ namespace tubex
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
-       *        from a TimeFnc object and with some temporal discretization
+       *        from a TFnc object and with some temporal discretization
        *
        * \note Due to the slicing implementation of the tube, a wrapping
-       *       effect will occur to reliably enclose the TimeFnc object
+       *       effect will occur to reliably enclose the TFnc object
        * \note The dimension of the tube is specified by the output of \f$[\mathbf{f}]\f$
        *
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
-       * \param f TimeFnc object that will be enclosed by the tube:
+       * \param f TFnc object that will be enclosed by the tube:
        *          \f$\forall t\in[t_0,t_f], [\mathbf{f}](t)\subseteq[\mathbf{x}](t)\f$
        */
-      explicit TubeVector(const ibex::Interval& tdomain, double timestep, const TimeFnc& f);
+      explicit TubeVector(const ibex::Interval& tdomain, double timestep, const TFnc& f);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ from a list of \f$k\f$ boxes \f$\big([t_1]\times[\mathbf{x}_1],\dots,[t_k]\times[\mathbf{x}_k]\big)\f$

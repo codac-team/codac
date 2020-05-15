@@ -20,7 +20,7 @@ namespace tubex
      // namespace tubex
 
 
-    string tubexFnc2capdString(const TimeFunction& f)
+    string tubexFnc2capdString(const TFunction& f)
     {
 
         int a_capd_dim = f.nb_vars();
@@ -245,7 +245,7 @@ namespace tubex
     }
 
 
-    TubeVector capd2tubex(const Interval& domain, const TimeFunction& f, const IntervalVector& x0, const double timestep)
+    TubeVector capd2tubex(const Interval& domain, const TFunction& f, const IntervalVector& x0, const double timestep)
     {
         string capd_string = tubexFnc2capdString(f);
         try

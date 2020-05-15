@@ -12,7 +12,7 @@ They are aimed at **representing temporal evolutions**.
 
 There are two ways to define a trajectory:
 
-* with some analytic formula, by using a ``TimeFunction`` object ;
+* with some analytic formula, by using a ``TFunction`` object ;
 * from a map of values.
 
 
@@ -28,13 +28,13 @@ A simple temporal function [#f1]_ can be defined and used for building a traject
   .. code-tab:: c++
 
     Interval tdomain(0.,10.);                           // temporal domain: [t_0,t_f]
-    Trajectory x(tdomain, TimeFunction("cos(t)+sin(2*t)")); // defining x(·) as: t ↦ cos(t)+sin(2t)
+    Trajectory x(tdomain, TFunction("cos(t)+sin(2*t)")); // defining x(·) as: t ↦ cos(t)+sin(2t)
 
   .. code-tab:: py
 
     # todo
 
-Usual functions such as :math:`\cos`, :math:`\log`, *etc.* can be used to define a ``TimeFunction`` object. The convention used for these definitions is the one of IBEX (`read more <http://www.ibex-lib.org/doc/function.html>`_). Note that the system variable :math:`t` is a predefined variable of ``TimeFunction`` objects, that does not appear in IBEX's objects.
+Usual functions such as :math:`\cos`, :math:`\log`, *etc.* can be used to define a ``TFunction`` object. The convention used for these definitions is the one of IBEX (`read more <http://www.ibex-lib.org/doc/function.html>`_). Note that the system variable :math:`t` is a predefined variable of ``TFunction`` objects, that does not appear in IBEX's objects.
 
 The evaluation of a trajectory at some time :math:`t`, for instance :math:`z=x(t)`, is performed with parentheses:
 
@@ -97,7 +97,7 @@ These trajectories are useful in case of actual data coming from sensors or nume
   .. code-tab:: c++
 
     // Trajectory from a formula
-    Trajectory x(Interval(0.,10.), TimeFunction("cos(t)+sin(2*t)"));
+    Trajectory x(Interval(0.,10.), TFunction("cos(t)+sin(2*t)"));
     
     // Trajectory from a map of values
     map<double,double> values;
@@ -126,17 +126,17 @@ It is also possible to define a trajectory from an analytical function while rep
   .. code-tab:: c++
 
     // Analytical definition but sampling representation with dt=0.5:
-    Trajectory y_1(Interval(0.,10.), TimeFunction("cos(t)+sin(2*t)"), 0.5);
+    Trajectory y_1(Interval(0.,10.), TFunction("cos(t)+sin(2*t)"), 0.5);
 
     // Same as before, in two steps. y_1 == y_2
-    Trajectory y_2(Interval(0.,10.), TimeFunction("cos(t)+sin(2*t)"));
+    Trajectory y_2(Interval(0.,10.), TFunction("cos(t)+sin(2*t)"));
     y_2.sample(0.5);
 
   .. code-tab:: py
 
     # todo
 
-The ``TimeFunction`` object is only used for the initialization. The resulting trajectory is only defined as a map of values.
+The ``TFunction`` object is only used for the initialization. The resulting trajectory is only defined as a map of values.
 
 
 Operations on trajectories
@@ -163,7 +163,7 @@ Note that the items defining the trajectory (the map of values, or the function)
 
   .. code-tab:: c++
 
-    TimeFunction *f = x.function();                // x(·) was defined from a formula
+    TFunction *f = x.function();                // x(·) was defined from a formula
     map<double,double> m = y.sampled_map();    // y(·) was defined as a map of values
 
   .. code-tab:: py
@@ -188,7 +188,7 @@ Other methods exist such as:
 
     # todo
 
-Note that the result of these methods is inaccurate on trajectories defined from a map. For trajectories built on analytic functions, the exact differentiation is performed and returned in the form of a trajectory defined by a ``TimeFunction`` too.
+Note that the result of these methods is inaccurate on trajectories defined from a map. For trajectories built on analytic functions, the exact differentiation is performed and returned in the form of a trajectory defined by a ``TFunction`` too.
 
 Finally, to add a point to a mapped trajectory, the following function can be used:
 
@@ -237,7 +237,7 @@ The use of the features presented above remain the same.
   .. code-tab:: c++
 
     // Trajectory from a formula; the function's output is two-dimensional
-    TrajectoryVector x(Interval(0.,10.), TimeFunction("(cos(t);sin(t))"));
+    TrajectoryVector x(Interval(0.,10.), TFunction("(cos(t);sin(t))"));
 
     // Another example of discretized trajectory
     TrajectoryVector y(2);
@@ -268,7 +268,7 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
 
   .. code-tab:: c++
 
-    x[1] = Trajectory(tdomain, TimeFunction("exp(t)"));
+    x[1] = Trajectory(tdomain, TFunction("exp(t)"));
     cout << x[1] << endl;
   
   .. code-tab:: py
@@ -291,7 +291,7 @@ Let us consider a robot following a Lissajous curve from :math:`t_0=0` to :math:
   .. code-tab:: c++
 
     Interval tdomain(0.,5.);
-    TrajectoryVector x(tdomain, TimeFunction("(2*cos(t) ; sin(2*t))"), 0.01);
+    TrajectoryVector x(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), 0.01);
 
   .. code-tab:: py
 
@@ -345,7 +345,7 @@ As one can see, trajectories can be used to represent data. When it comes to con
 
 ..    Interval tdomain(0.,5.);
 ..    Vector b({0.5,1.});
-..    TrajectoryVector x(tdomain, TimeFunction("(2*cos(t) ; sin(2*t))"), 0.01);
+..    TrajectoryVector x(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), 0.01);
 ..    Trajectory dist = sqrt(sqr(x[0]-b[0])+sqr(x[1]-b[1]));
 ..
 ..    vibes::beginDrawing();
@@ -376,7 +376,7 @@ Next pages will present several methods to use *tubes* that are envelopes of tra
 
 
 .. rubric:: Footnotes
-.. [#f1] In Tubex, a ``tubex::TimeFunction`` is the extension of IBEX's ``ibex::Function`` objects, for the dynamical case (see more `about IBEX's functions <http://www.ibex-lib.org/doc/function.html>`_).
+.. [#f1] In Tubex, a ``tubex::TFunction`` is the extension of IBEX's ``ibex::Function`` objects, for the dynamical case (see more `about IBEX's functions <http://www.ibex-lib.org/doc/function.html>`_).
 
 
 .. admonition:: Technical documentation

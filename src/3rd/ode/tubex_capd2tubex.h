@@ -20,7 +20,7 @@
 namespace tubex
 {
 
-    std::string tubexFnc2capdString(const TimeFunction& f);
+    std::string tubexFnc2capdString(const TFunction& f);
 
 
   /** \brief  Returns a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD
@@ -52,7 +52,7 @@ namespace tubex
    * to increase calculation speed
    */
 
-    TubeVector capd2tubex(const ibex::Interval& domain, const TimeFunction& f, const ibex::IntervalVector& x0, const double timestep);
+    TubeVector capd2tubex(const ibex::Interval& domain, const TFunction& f, const ibex::IntervalVector& x0, const double timestep);
 
 }
 

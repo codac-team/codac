@@ -15,7 +15,7 @@
 #include <deque>
 #include <initializer_list>
 #include "ibex_Ctc.h"
-#include "tubex_Ctc.h"
+#include "tubex_DynCtc.h"
 #include "tubex_Domain.h"
 #include "tubex_Contractor.h"
 #include "tubex_CtcDeriv.h"

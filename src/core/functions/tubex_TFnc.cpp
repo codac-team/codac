@@ -1,5 +1,5 @@
 /** 
- *  TimeFnc class
+ *  TFnc class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_Fnc.h"
+#include "tubex_TFnc.h"
 #include "tubex_Slice.h"
 #include "tubex_TubeVector.h"
 #include "tubex_Tube.h"
@@ -18,23 +18,23 @@ using namespace ibex;
 
 namespace tubex
 {
-  TimeFnc::TimeFnc()
+  TFnc::TFnc()
   {
 
   }
 
-  TimeFnc::TimeFnc(int nb_vars, int img_dim, bool is_intertemporal)
+  TFnc::TFnc(int nb_vars, int img_dim, bool is_intertemporal)
     : m_nb_vars(nb_vars), m_img_dim(img_dim), m_is_intertemporal(is_intertemporal)
   {
     assert(img_dim > 0);
   }
 
-  TimeFnc::~TimeFnc()
+  TFnc::~TFnc()
   {
 
   }
   
-  const TimeFnc& TimeFnc::operator=(const TimeFnc& f)
+  const TFnc& TFnc::operator=(const TFnc& f)
   {
     m_nb_vars = f.m_nb_vars;
     m_img_dim = f.m_img_dim;
@@ -42,28 +42,28 @@ namespace tubex
     return *this;
   }
 
-  int TimeFnc::nb_vars() const
+  int TFnc::nb_vars() const
   {
     return m_nb_vars;
   }
 
-  int TimeFnc::image_dim() const
+  int TFnc::image_dim() const
   {
     return m_img_dim;
   }
 
-  bool TimeFnc::is_intertemporal() const
+  bool TFnc::is_intertemporal() const
   {
     return m_is_intertemporal;
   }
 
-  const Tube TimeFnc::eval(const TubeVector& x) const
+  const Tube TFnc::eval(const TubeVector& x) const
   {
     // todo: optimize this?
     return eval_vector(x)[0];
   }
 
-  const TubeVector TimeFnc::eval_vector(const TubeVector& x) const
+  const TubeVector TFnc::eval_vector(const TubeVector& x) const
   {
     if(nb_vars() != 0)
       assert(x.size() == nb_vars());

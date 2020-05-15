@@ -1,5 +1,5 @@
 /** 
- *  DelayFunction class
+ *  DelayTFunction class
  * ----------------------------------------------------------------------------
  *  \date       2017
  *  \author     Simon Rohou
@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_DelayFunction.h"
+#include "tubex_DelayTFunction.h"
 #include "tubex_TubeVector.h"
 
 using namespace std;
@@ -16,18 +16,18 @@ using namespace ibex;
 
 namespace tubex
 {
-  DelayFunction::DelayFunction(double delay) : TimeFnc(1, 1, true), m_delay(delay)
+  DelayTFunction::DelayTFunction(double delay) : TFnc(1, 1, true), m_delay(delay)
   {
 
   }
 
-  const Interval DelayFunction::eval(const Interval& t, const TubeVector& x) const
+  const Interval DelayTFunction::eval(const Interval& t, const TubeVector& x) const
   {
     assert(x.tdomain().is_superset(t));
     return eval_vector(t, x)[0];
   }
 
-  const IntervalVector DelayFunction::eval_vector(const Interval& t, const TubeVector& x) const
+  const IntervalVector DelayTFunction::eval_vector(const Interval& t, const TubeVector& x) const
   {
     assert(x.tdomain().is_superset(t));
     

@@ -12,8 +12,8 @@
 #ifndef __TUBEX_CTCSTATIC_H__
 #define __TUBEX_CTCSTATIC_H__
 
-#include "tubex_Ctc.h"
 #include "ibex_Ctc.h"
+#include "tubex_DynCtc.h"
 #include "tubex_Domain.h"
 
 namespace tubex

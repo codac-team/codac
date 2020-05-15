@@ -19,7 +19,7 @@ int main()
 {
   /* =========== INITIALIZATION =========== */
 
-    Tube xdot(Interval(0.,5.), 0.05, TimeFunction("cos(t)+[-0.10,0.10]"));
+    Tube xdot(Interval(0.,5.), 0.05, TFunction("cos(t)+[-0.10,0.10]"));
     Tube x = xdot.primitive(0.);
     CtcEval ctc_eval;
     ctc_eval.contract(3.125, sin(3.125), x, xdot);

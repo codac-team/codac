@@ -1,5 +1,5 @@
 /** 
- *  DelayFunction class
+ *  DelayTFunction class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -8,20 +8,20 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_DELAYFUNCTION_H__
-#define __TUBEX_DELAYFUNCTION_H__
+#ifndef __TUBEX_DELAYTFUNCTION_H__
+#define __TUBEX_DELAYTFUNCTION_H__
 
-#include "tubex_Fnc.h"
+#include "tubex_TFnc.h"
 
 namespace tubex
 {
-  class DelayFunction : public TimeFnc
+  class DelayTFunction : public TFnc
   {
     public:
 
-      DelayFunction(double delay);
+      DelayTFunction(double delay);
 
-      using TimeFnc::eval; // todo: check this
+      using TFnc::eval; // todo: check this
       const ibex::Interval eval(int slice_id, const TubeVector& x) const;
       const ibex::Interval eval(const ibex::Interval& t, const TubeVector& x) const;
       const ibex::IntervalVector eval_vector(int slice_id, const TubeVector& x) const;

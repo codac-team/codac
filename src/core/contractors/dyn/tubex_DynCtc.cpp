@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_Ctc.h"
+#include "tubex_DynCtc.h"
 
 using namespace std;
 using namespace ibex;

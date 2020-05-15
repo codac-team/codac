@@ -12,7 +12,7 @@
 #ifndef __TUBEX_CTCEVAL_H__
 #define __TUBEX_CTCEVAL_H__
 
-#include "tubex_Ctc.h"
+#include "tubex_DynCtc.h"
 
 namespace tubex
 {

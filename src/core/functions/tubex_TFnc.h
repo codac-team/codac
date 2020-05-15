@@ -1,5 +1,5 @@
 /** 
- *  Fnc class
+ *  TFnc class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -8,8 +8,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_TIMEFNC_H__
-#define __TUBEX_TIMEFNC_H__
+#ifndef __TUBEX_TFNC_H__
+#define __TUBEX_TFNC_H__
 
 #include "ibex_IntervalVector.h"
 
@@ -18,13 +18,13 @@ namespace tubex
   class Tube;
   class TubeVector;
   
-  class TimeFnc
+  class TFnc
   {
     public:
 
-      TimeFnc(int nb_vars, int img_dim, bool is_intertemporal);
-      virtual ~TimeFnc();
-      const TimeFnc& operator=(const TimeFnc& f);
+      TFnc(int nb_vars, int img_dim, bool is_intertemporal);
+      virtual ~TFnc();
+      const TFnc& operator=(const TFnc& f);
 
       int nb_vars() const;
       int image_dim() const;
@@ -42,7 +42,7 @@ namespace tubex
 
     protected:
       
-      TimeFnc();
+      TFnc();
 
       int m_nb_vars = -1, m_img_dim = -1;
       bool m_is_intertemporal = false;
