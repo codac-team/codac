@@ -7,6 +7,8 @@ Generic CtcFunction: :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}`
 Lot of constraints can be expressed under the form :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}` with :math:`\mathbf{f}` an analytic function possibly non-linear. The goal is to estimate the set of feasible vectors :math:`\mathbf{x}` of a domain :math:`[\mathbf{x}]` that satisfy this constraint.
 A dedicated contractor can be built from :math:`\mathbf{f}` in order to contract boxes.
 
+Note that the other form :math:`\mathbf{f}(\mathbf{x})\in[\mathbf{y}]` can also be treated by this contractor.
+
 .. contents::
 
 
@@ -18,12 +20,20 @@ Definition
   .. math::
 
     \mathbf{f}(\mathbf{x})=\mathbf{0} \longrightarrow \mathcal{C}_{\mathbf{f}}\big([\mathbf{x}]\big)
+    \mathrm{~~~~or~~~~}
+    \mathbf{f}(\mathbf{x})\in[\mathbf{y}] \longrightarrow \mathcal{C}_{\mathbf{f},[\mathbf{y}]}\big([\mathbf{x}]\big)
 
   .. tabs::
 
     .. code-tab:: c++
 
-      CtcFunction ctc_f(Function f("<var1>", "<var2...>", "<expr>"));
+      // For the constraint f(x)=0
+      CtcFunction ctc_f("<var1>", "<var2...>", "<expr>");
+      ctc_f.contract(x);
+
+      // For the constraint f(x)\in[y]
+      Interval y; // or IntervalVector if f is a vector function
+      CtcFunction ctc_f(Function("<var1>", "<var2...>", "<expr>"), y);
       ctc_f.contract(x);
 
     .. code-tab:: py
@@ -149,7 +159,7 @@ The boxes are contracted in order to remove some vectors that are not consistent
 Going further
 -------------
 
-This ``CtcFunction`` class is a generic shortcut to deal with :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}`. However, several algorithms exist to optimally deal with different classes of problems. A list of static contractors is provided in the IBEX library: `see more <http://www.ibex-lib.org/doc/contractor.html>`_.
+This ``CtcFunction`` class is a generic shortcut to deal with :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}` or :math:`\mathbf{f}(\mathbf{x})\in[\mathbf{y}]`. However, several algorithms exist to optimally deal with different classes of problems. A list of static contractors is provided in the IBEX library: `see more <http://www.ibex-lib.org/doc/contractor.html>`_.
 The user is invited to use an appropriate tool to deal with the constraint at stake.
 
 The IBEX contractor behind ``CtcFunction`` is a ``ibex::CtcFwdBwd`` coupled with a ``ibex::Ctc3BCid``.
