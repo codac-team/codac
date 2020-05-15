@@ -6,7 +6,13 @@ using namespace ibex;
 
 namespace tubex
 {
-	CtcDynBasic::CtcDynBasic(tubex::Function& fnc, double prec): fnc(fnc), prec(prec)
+	CtcDynBasic::CtcDynBasic(tubex::Function& fnc, double prec): fnc(fnc), prec(prec), fnc2(fnc2),slice_id(-1),tube_x(tube_x)
+	{
+		/*check input*/
+		assert(prec >= 0);
+	}
+
+	CtcDynBasic::CtcDynBasic(tubex::Fnc& fnc2, double prec): fnc(fnc), prec(prec), fnc2(fnc2),slice_id(slice_id),tube_x(tube_x)
 	{
 		/*check input*/
 		assert(prec >= 0);
@@ -25,6 +31,9 @@ namespace tubex
 	do{
 		fix_point_n = false;
 		for (int i = 0 ; i < x_slice.size() ; i++){
+			//just for integrodiff
+			TubeVector aux_vector_x = tube_x;
+
 			Slice aux_slice_x(*x_slice[i]);
 			Slice aux_slice_v(*v_slice[i]);
 
@@ -36,7 +45,12 @@ namespace tubex
 			{
 				sx = aux_slice_x.volume();
 				ctc_deriv.contract(aux_slice_x, aux_slice_v,t_propa);
-				ctc_fwd(aux_slice_x, aux_slice_v, x_slice, v_slice, i);
+				//For IVPs, BVPs
+				if (slice_id == -1)
+					ctc_fwd(aux_slice_x, aux_slice_v, x_slice, v_slice, i);
+				//For other kind of problems
+				else
+					ctc_fwd(aux_slice_x, aux_slice_v, x_slice, v_slice,aux_vector_x, slice_id,i);
 			} while (sx - aux_slice_x.volume() > get_prec());
 			double volume = x_slice[i]->volume();
 
@@ -58,6 +72,12 @@ namespace tubex
 		return true;
 	}
 
+	void CtcDynBasic::contract(std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TubeVector& x ,int slice_id, TPropagation t_propa){
+		this->slice_id = slice_id;
+		this->tube_x = x;
+		contract(x_slice,v_slice,t_propa);
+	}
+
 
 	void CtcDynBasic::ctc_fwd(Slice &x, Slice &v, std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, int pos)
 	{
@@ -70,6 +90,12 @@ namespace tubex
 				envelope[i] = x_slice[i]->codomain();
 		}
 		v.set_envelope(fnc.eval_slice(x.domain(),envelope)[pos]);
+	}
+
+	void CtcDynBasic::ctc_fwd(Slice &x, Slice &v, std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TubeVector& aux_vector_x,int slice_id, int pos)
+	{
+		IntervalVector envelope = fnc2.eval_vector(slice_id,aux_vector_x);
+		v.set_envelope(envelope[pos]);
 	}
 
 	double CtcDynBasic::get_prec()

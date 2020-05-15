@@ -35,6 +35,7 @@ namespace tubex
       {
         assert(s_v != NULL);
         contract(*s_x, *s_v, t_propa);
+	if ((s_x->output_gate()).is_empty()) return;
         s_x = s_x->next_slice();
         s_v = s_v->next_slice();
       }
@@ -49,6 +50,7 @@ namespace tubex
       {
         assert(s_v != NULL);
         contract(*s_x, *s_v, t_propa);
+	if ((s_x->input_gate()).is_empty()) return;
         s_x = s_x->prev_slice();
         s_v = s_v->prev_slice();
       }
@@ -140,6 +142,7 @@ namespace tubex
       x.set_input_gate(ingate);
       x.set_output_gate(outgate);
     }
+
 
     assert(volume >= x.volume() + v.volume() && "contraction rule not respected");
   }

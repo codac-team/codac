@@ -27,7 +27,7 @@ namespace tubex
 		/*
 		 * todo: add comments
 		 */
-		CtcDynCidGuess(tubex::Function& fnc, double prec=0.);
+		CtcDynCidGuess(tubex::Function& fnc, double prec=0.05);
 		/*
 		 * todo: add comments
 		 */

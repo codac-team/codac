@@ -9,7 +9,7 @@
  */
 
 #include "tubex_CtcPicard.h"
-#include<float.h>
+
 
 
 using namespace std;
@@ -46,6 +46,9 @@ namespace tubex
           if(!x(k).is_unbounded())
             continue;
 	  */
+
+
+
           contract_kth_slices(f, x, k, t_propa);
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
@@ -65,18 +68,24 @@ namespace tubex
   void CtcPicard::contract_picard_slice(const tubex::Fnc& f, TubeVector& x, int  k, TPropagation t_propa )
   {
     assert (t_propa == FORWARD || t_propa ==BACKWARD);
-    int unbounded_gate=false;
+
     for (int i=0 ;i< x.size() ; i++)
-      if ((t_propa == FORWARD && x[i].slice(k)->input_gate().diam() >= DBL_MAX)
+      if ((t_propa == FORWARD && x[i].slice(k)->input_gate().is_unbounded())
 	  ||
-	  (t_propa == BACKWARD && x[i].slice(k)->output_gate().diam() >= DBL_MAX)
+	  (t_propa == BACKWARD && x[i].slice(k)->output_gate().is_unbounded())
 	  )
 	return;
-     Interval initdomain=x[0].slice_domain(k) ;
+
+    TubeVector * first_slicing;
+    if (m_preserve_slicing)
+      first_slicing= new TubeVector(x);
+
+    Interval initdomain=x[0].slice_domain(k) ;
     //    Interval initdomain=x[0].domain() ;
     int kfinished;
     if (t_propa == FORWARD) kfinished=k+1;
     else kfinished=k-1;
+
     while (k!= kfinished){
           contract_kth_slices(f, x, k, t_propa);
           // NB: all tube components share the same slicing
@@ -102,7 +111,14 @@ namespace tubex
 	  else if  (t_propa == FORWARD) k++;
 	  else k--;
     }
-
+    if(m_preserve_slicing)
+    
+      {	first_slicing->set_empty();
+	*first_slicing |= x;
+	x=*first_slicing;
+	delete first_slicing;
+      }
+    
   }
 
 

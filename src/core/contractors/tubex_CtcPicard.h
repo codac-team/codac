@@ -59,7 +59,7 @@ namespace tubex
 
       float m_delta;
       int m_picard_iterations = 0;
-      int m_picard_subslices=5000;
+      int m_picard_subslices=500;
       double m_picard_minimum_domainsize=1.e-20;
   };
 }

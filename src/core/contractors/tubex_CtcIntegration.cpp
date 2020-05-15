@@ -76,7 +76,8 @@ namespace tubex
 
 		CtcPicard ctc_picard;
 		ctc_picard.set_picard_subslices(10); //todo: setter for nb of subslices
-
+		//		ctc_picard.preserve_slicing(1);   
+		ctc_picard.preserve_slicing(0);  
 		/*todo: how to start from any point inside the tube for picard?*/
 		if (m_slice_picard_mode){
 			if ((time_dom == x.domain().lb()) || (time_dom == x.domain().ub()))
@@ -87,33 +88,39 @@ namespace tubex
 
 		/*for each tube, go all over the slices*/
 		while(x_slice[0] != NULL){
-
-			/*if something is unbounded return*/
-			if (m_slice_picard_mode){
-				for (int i = 0 ; i < v_slice.size() ; i++){
-					if (v_slice[i]->codomain().is_unbounded()){
-						ctc_picard.contract_picard_slice(fnc,x,nb_slices,t_propa);
-						v=fnc.eval_vector(x);
-						v_slice.clear();
-						for (int i = 0 ; i < x.size() ; i++)
-							v_slice.push_back(v[i].slice(nb_slices));
-						break;
-					}
+		  /*if something is unbounded return*/
+		  if (m_slice_picard_mode){
+		    for (int i = 0 ; i < v_slice.size() ; i++){
+		      if (v_slice[i]->codomain().is_unbounded()){
+			ctc_picard.contract_picard_slice(fnc,x,nb_slices,t_propa);
+			v=fnc.eval_vector(x);
+			v_slice.clear();
+			for (int i = 0 ; i < x.size() ; i++)
+			  v_slice.push_back(v[i].slice(nb_slices));
+			break;
+		      }
+		      
+		    }
+		
+		    for (int i = 0 ; i < x_slice.size() ; i++){ // preserve slicing 
+		      x_slice[i]=x[i].slice(nb_slices);
+		    }
+		
+			}
+		  //		cout << " x after picard " << x[0] <<  " " << x[1] << endl;
+		  //		cout << " x after picard " << *(x[0].first_slice()) <<  " " << *(x[1].first_slice()) << endl;
+		bool contract_slice = true;
+		for (int i = 0 ; i < x_slice.size() ; i++){
+			if (v_slice[i]->codomain().is_unbounded()){
+				if (m_incremental_mode)
+					return;
+				else{
+					contract_slice = false;
+					break;
 				}
 			}
-
-			bool contract_slice = true;
-			for (int i = 0 ; i < x_slice.size() ; i++){
-				if (v_slice[i]->codomain().is_unbounded()){
-					if (m_incremental_mode)
-						return;
-					else{
-						contract_slice = false;
-						break;
-					}
-				}
-			}
-
+		}
+			//			cout << " contract_slice " << contract_slice << endl;
 			if (contract_slice){
 				if(dynamic_cast <CtcDynCid*> (slice_ctr)){
 					CtcDynCid * cid = dynamic_cast <CtcDynCid*> (slice_ctr);
@@ -170,8 +177,11 @@ namespace tubex
 			//for picard_slice
 			if (t_propa & FORWARD) nb_slices++;
 			else if (t_propa & BACKWARD) nb_slices--;
-		}
-
+			//			cout << " x_slice[0] " << (x_slice[0]) << endl;
+			//                        if (x_slice[0]==NULL) 
+			//			  cout << " end loop " << endl;
+		}	
+		//		cout << " end contract " << endl;
 
 		if (t_propa & FORWARD)
 			finaltime = x.domain().ub();
@@ -249,30 +259,25 @@ namespace tubex
 		double max_diameter = -1;
 		double gate_diam;
 		for (int it = 0 ; it < 2 ; it++){
-
-			/*push slices for forward phase*/
+			//clean
 			x_slice.clear(); v_slice.clear();
 			aux_x_slice.clear(); aux_v_slice.clear();
-
+			/*push slices for forward phase*/
 			//for forward
 			TPropagation t_propa;
 			if (it == 0){
 				t_propa = FORWARD;
 				for (int i = 0 ; i < x.size() ; i++){
-					x_slice.push_back(x[i].first_slice());
-					v_slice.push_back(v[i].first_slice());
-					aux_x_slice.push_back(aux_x[i].first_slice());
-					aux_v_slice.push_back(aux_v[i].first_slice());
+					x_slice.push_back(x[i].first_slice()); aux_x_slice.push_back(aux_x[i].first_slice());
+					v_slice.push_back(v[i].first_slice()); aux_v_slice.push_back(aux_v[i].first_slice());
 				}
 			}
 			//for backward
 			else{
 				t_propa = BACKWARD;
 				for (int i = 0 ; i < x.size() ; i++){
-					x_slice.push_back(x[i].last_slice());
-					v_slice.push_back(v[i].last_slice());
-					aux_x_slice.push_back(aux_x[i].last_slice());
-					aux_v_slice.push_back(aux_v[i].last_slice());
+					x_slice.push_back(x[i].last_slice()); aux_x_slice.push_back(aux_x[i].last_slice());
+					v_slice.push_back(v[i].last_slice()); aux_v_slice.push_back(aux_v[i].last_slice());
 				}
 			}
 
@@ -323,11 +328,11 @@ namespace tubex
 							}
 						}
 					}
-					//restore domains
+					//restore values for x and v
 					for (int k = 0 ; k < aux_x_slice.size() ; k++){
-						aux_x_slice[k]->set_envelope(x_slice[k]->codomain());
-						aux_x_slice[k]->set_input_gate(x_slice[k]->input_gate());
-						aux_x_slice[k]->set_output_gate(x_slice[k]->output_gate());
+						aux_x_slice[k]->set_envelope(x_slice[k]->codomain()); aux_v_slice[k]->set_envelope(v_slice[k]->codomain());
+						aux_x_slice[k]->set_input_gate(x_slice[k]->input_gate()); aux_v_slice[k]->set_input_gate(v_slice[k]->input_gate());
+						aux_x_slice[k]->set_output_gate(x_slice[k]->output_gate()); aux_v_slice[k]->set_output_gate(v_slice[k]->output_gate());
 					}
 				}
 
@@ -338,18 +343,14 @@ namespace tubex
 
 				if (t_propa & FORWARD){
 					for (int i = 0 ; i < x.size() ; i++){
-						x_slice[i] = x_slice[i]->next_slice();
-						v_slice[i] = v_slice[i]->next_slice();
-						aux_x_slice[i] = aux_x_slice[i]->next_slice();
-						aux_v_slice[i] = aux_v_slice[i]->next_slice();
+						x_slice[i] = x_slice[i]->next_slice(); aux_x_slice[i] = aux_x_slice[i]->next_slice();
+						v_slice[i] = v_slice[i]->next_slice(); aux_v_slice[i] = aux_v_slice[i]->next_slice();
 					}
 				}
 				else if (t_propa & BACKWARD){
 					for (int i = 0 ; i < x.size() ; i++){
-						x_slice[i] = x_slice[i]->prev_slice();
-						v_slice[i] = v_slice[i]->prev_slice();
-						aux_x_slice[i] = aux_x_slice[i]->prev_slice();
-						aux_v_slice[i] = aux_v_slice[i]->prev_slice();
+						x_slice[i] = x_slice[i]->prev_slice(); aux_x_slice[i] = aux_x_slice[i]->prev_slice();
+						v_slice[i] = v_slice[i]->prev_slice(); aux_v_slice[i] = aux_v_slice[i]->prev_slice();
 					}
 				}
 			}

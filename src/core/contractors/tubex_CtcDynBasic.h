@@ -23,6 +23,7 @@ namespace tubex
 
 	public:
 
+		CtcDynBasic(tubex::Fnc& fnc2, double prec = 0.);
 		CtcDynBasic(tubex::Function& fnc, double prec = 0.);
 		/*
 		 * This method performs a contraction for the TubeVector x.
@@ -30,9 +31,14 @@ namespace tubex
 		 */
 		bool contract(std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TPropagation t_propa);
 		/*
+		 * Only for non IVPs,BVPs
+		 */
+		void contract(std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TubeVector& x ,int slice_id, TPropagation t_propa);
+		/*
 		 * ctc_fwd manages to make an evaluation of the current Slices in order to contract and update v
 		 */
 		void ctc_fwd(Slice &x, Slice &v, std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, int pos);
+		void ctc_fwd(Slice &x, Slice &v, std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TubeVector& aux_vector_x,int slice_id, int pos);
 		/*
 		 *  used to obtain the current precision of the iterative method.
 		 */
@@ -49,6 +55,11 @@ namespace tubex
 		CtcDeriv ctc_deriv;
 		tubex::Function& fnc;
 		double prec;
+		//for integrodiff todo: make everything general..
+		tubex::Fnc& fnc2;
+		TubeVector tube_x;
+		int slice_id;
+
 	};
 }
 
