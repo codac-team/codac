@@ -22,7 +22,7 @@ namespace tubex
 {
   /**
    * \class CtcFunction
-   * \brief Generic static \f$\mathcal{C}\f$ that contracts a box \f$[\mathbf{x}]\f$ 
+   * \brief Generic static \f$\mathcal{C}\f$ that contracts a box \f$[\mathbf{x}]\f$ or a tube \f$[\mathbf{x}](\cdot)\f$
    *        according to the constraint \f$\mathbf{f}(\mathbf{x})=\mathbf{0}\f$ or \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$.
    *        It stands on the CtcFwdBwd of IBEX (HC4Revise) combined with a Ctc3BCid.
    */
@@ -39,8 +39,6 @@ namespace tubex
       CtcFunction(const ibex::Function& f, const ibex::Domain& y);
       CtcFunction(const ibex::Function& f, const ibex::Interval& y);
       CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y);
-
-      static const std::string parse_f(const char* f);
       
       /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}](\cdot)\big)\f$
@@ -112,9 +110,13 @@ namespace tubex
        * Propagates the contractions to the next slices
        *
        * \param v_x_slices the slices to be contracted
-       * \param n the dimension of the array
        */
       void contract(Slice **v_x_slices);
+
+
+    protected:
+
+      static const std::string parse_f(const char* f);
   };
 }
 

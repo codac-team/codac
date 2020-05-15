@@ -31,8 +31,8 @@ namespace tubex
   {
     assert(x.tdomain().is_superset(t));
     
-    if((t - m_delay).is_subset(x.tdomain()))
-      return x(t - m_delay);
+    if((t + m_delay).is_subset(x.tdomain()))
+      return x(t + m_delay);
 
     else
       return IntervalVector(x.size(), Interval::ALL_REALS);

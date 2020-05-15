@@ -42,14 +42,13 @@ namespace tubex
       
       const TFunction& operator=(const TFunction& f);
       const TFunction operator[](int i) const;
-      const ibex::Function& ibex_function() const;
 
       const std::string& expr() const;
       const std::string arg_name(int i) const;
 
       using TFnc::eval;
-      // todo: using Fnc::eval_vector?
-      // todo: keep using Fnc::eval?
+      // todo: using TFnc::eval_vector?
+      // todo: keep using TFnc::eval?
 
       const Tube eval(const TubeVector& x) const;
       const Trajectory traj_eval(const TrajectoryVector& x) const;
@@ -72,7 +71,7 @@ namespace tubex
       void construct_from_array(int n, const char** x, const char* y);
 
       ibex::Function *m_ibex_f = NULL;
-      std::string m_exp; // stored here because impossible to get this value from ibex::Function
+      std::string m_expr; // stored here because impossible to get this value from ibex::Function
   };
 }
 

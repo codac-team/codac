@@ -127,7 +127,7 @@ namespace tubex
     if(m_ibex_f != NULL)
       delete m_ibex_f;
     m_ibex_f = new Function(*f.m_ibex_f);
-    m_exp = f.m_exp;
+    m_expr = f.m_expr;
     TFnc::operator=(f);
     return *this;
   }
@@ -143,15 +143,10 @@ namespace tubex
     fi.m_img_dim = 1;
     return fi;
   }
-
-  const Function& TFunction::ibex_function() const
-  {
-    return *m_ibex_f;
-  }
   
   const string& TFunction::expr() const
   {
-    return m_exp;
+    return m_expr;
   }
   
   const string TFunction::arg_name(int i) const
@@ -178,7 +173,7 @@ namespace tubex
     m_nb_vars = n;
     m_img_dim = m_ibex_f->image_dim();
     m_is_intertemporal = false; // not supported yet
-    m_exp = y;
+    m_expr = y;
   }
 
   const Interval TFunction::eval(const Interval& t) const
