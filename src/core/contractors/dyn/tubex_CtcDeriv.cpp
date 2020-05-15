@@ -53,7 +53,7 @@ namespace tubex
     }
 
     else
-      assert(false && "unhandled case");
+      assert(false && "vector of domains not consistent with the contractor definition");
   }
 
   void CtcDeriv::contract(Tube& x, const Tube& v, TimePropag t_propa)

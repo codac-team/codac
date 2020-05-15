@@ -24,7 +24,7 @@ namespace tubex
   void CtcStatic::contract(vector<Domain*>& v_domains)
   {
     assert(!v_domains.empty());
-    assert(!m_dynamic_ctc && "not implemented for intertemporal constraints");
+    assert(!m_dynamic_ctc && "not implemented for inter-temporal constraints");
 
     for(size_t i = 0 ; i < v_domains.size() ; i++)
     {

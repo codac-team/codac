@@ -24,7 +24,7 @@ namespace tubex
   }
 
   TFnc::TFnc(int nb_vars, int img_dim, bool is_intertemporal)
-    : m_nb_vars(nb_vars), m_img_dim(img_dim), m_is_intertemporal(is_intertemporal)
+    : m_nb_vars(nb_vars), m_img_dim(img_dim), m_intertemporal(is_intertemporal)
   {
     assert(img_dim > 0);
   }
@@ -38,7 +38,7 @@ namespace tubex
   {
     m_nb_vars = f.m_nb_vars;
     m_img_dim = f.m_img_dim;
-    m_is_intertemporal = f.m_is_intertemporal;
+    m_intertemporal = f.m_intertemporal;
     return *this;
   }
 
@@ -54,7 +54,7 @@ namespace tubex
 
   bool TFnc::is_intertemporal() const
   {
-    return m_is_intertemporal;
+    return m_intertemporal;
   }
 
   const Tube TFnc::eval(const TubeVector& x) const

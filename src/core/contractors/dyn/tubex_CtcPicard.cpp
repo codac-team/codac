@@ -18,7 +18,7 @@ using namespace ibex;
 namespace tubex
 {
   CtcPicard::CtcPicard(float delta)
-    : DynCtc(), m_delta(delta)
+    : DynCtc(true), m_delta(delta)
   {
     assert(delta > 0.);
   }

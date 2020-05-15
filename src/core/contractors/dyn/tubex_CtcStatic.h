@@ -37,6 +37,13 @@ namespace tubex
        */
       CtcStatic(ibex::Ctc& ibex_ctc, bool dynamic_ctc = false);
 
+      /*
+       * \brief Contracts a set of abstract domains
+       *
+       * This method makes the contractor available in the CN framework.
+       *
+       * \param v_domains vector of Domain pointers
+       */
       void contract(std::vector<Domain*>& v_domains);
 
       /**

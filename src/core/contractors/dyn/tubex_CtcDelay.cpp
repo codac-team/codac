@@ -16,32 +16,30 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDelay::CtcDelay() : DynCtc()
+  CtcDelay::CtcDelay() : DynCtc(true)
   {
 
   }
 
   void CtcDelay::contract(vector<Domain*>& v_domains)
   {
-      assert(v_domains.size() == 3);
-      assert(v_domains[0]->type() == Domain::Type::INTERVAL);
+    assert(v_domains.size() == 3);
+    assert(v_domains[0]->type() == Domain::Type::INTERVAL);
 
-      // Scalar case:
-      if(v_domains[1]->type() == Domain::Type::TUBE && v_domains[2]->type() == Domain::Type::TUBE)
-        contract(v_domains[0]->interval(), v_domains[1]->tube(), v_domains[2]->tube());
+    // Scalar case:
+    if(v_domains[1]->type() == Domain::Type::TUBE && v_domains[2]->type() == Domain::Type::TUBE)
+      contract(v_domains[0]->interval(), v_domains[1]->tube(), v_domains[2]->tube());
 
-      // Vector case:
-      else if(v_domains[1]->type() == Domain::Type::TUBE_VECTOR && v_domains[2]->type() == Domain::Type::TUBE_VECTOR)
-        contract(v_domains[0]->interval(), v_domains[1]->tube_vector(), v_domains[2]->tube_vector());
+    // Vector case:
+    else if(v_domains[1]->type() == Domain::Type::TUBE_VECTOR && v_domains[2]->type() == Domain::Type::TUBE_VECTOR)
+      contract(v_domains[0]->interval(), v_domains[1]->tube_vector(), v_domains[2]->tube_vector());
 
-      else
-        assert(false && "unhandled case");
-
+    else
+      assert(false && "vector of domains not consistent with the contractor definition");
   }
 
   void CtcDelay::contract(Interval& a, Tube& x, Tube& y)
   {
-
     if(a.is_empty() || x.is_empty() || y.is_empty()){
         a.set_empty();
         x.set_empty();

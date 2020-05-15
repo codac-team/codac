@@ -32,6 +32,13 @@ namespace tubex
        */
       CtcEval();
 
+      /*
+       * \brief Contracts a set of abstract domains
+       *
+       * This method makes the contractor available in the CN framework.
+       *
+       * \param v_domains vector of Domain pointers
+       */
       void contract(std::vector<Domain*>& v_domains);
       
       /**

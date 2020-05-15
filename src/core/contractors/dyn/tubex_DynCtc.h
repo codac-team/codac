@@ -64,10 +64,21 @@ namespace tubex
       /**
        * \brief Creates a contractor
        */
-      DynCtc(bool intertemporal = true);
+      DynCtc(bool intertemporal);
 
+      /**
+       * \brief DynCtc destructor
+       */
       virtual ~DynCtc();
 
+      /*
+       * \brief Contracts a set of abstract domains
+       *
+       * This method has to be overridden in order to make the contractor
+       * available in the CN framework.
+       *
+       * \param v_domains vector of Domain pointers
+       */
       virtual void contract(std::vector<Domain*>& v_domains) = 0;
 
       /**
@@ -93,6 +104,11 @@ namespace tubex
        */
       void restrict_tdomain(const ibex::Interval& tdomain);
 
+      /**
+       * \brief Tests if the related constraint is inter-temporal or not
+       *
+       * \return `true` in case of inter-temporality
+       */
       bool is_intertemporal() const;
 
     protected:

@@ -172,7 +172,7 @@ namespace tubex
     m_ibex_f = new Function(n+1, xdyn, y);
     m_nb_vars = n;
     m_img_dim = m_ibex_f->image_dim();
-    m_is_intertemporal = false; // not supported yet
+    m_intertemporal = false; // not supported yet
     m_expr = y;
   }
 

@@ -18,7 +18,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcEval::CtcEval() : DynCtc()
+  CtcEval::CtcEval()
+    : DynCtc(true) // inter-temporal as [t] may involve several times
   {
 
   }
@@ -38,7 +39,7 @@ namespace tubex
         contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector(), v_domains[3]->tube_vector());
 
       else
-        assert(false && "unhandled case");
+        assert(false && "vector of domains not consistent with the contractor definition");
     }
 
     else if(v_domains.size() == 3) // simple evaluation without tube contraction
@@ -52,11 +53,11 @@ namespace tubex
         contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector());
 
       else
-        assert(false && "unhandled case");
+        assert(false && "vector of domains not consistent with the contractor definition");
     }
   
     else
-      assert(false && "unhandled case");
+      assert(false && "vector of domains not consistent with the contractor definition");
   }
 
   void CtcEval::enable_time_propag(bool enable_propagation)
