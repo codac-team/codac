@@ -26,10 +26,12 @@ namespace tubex
 
     if(v_pts.size() <= 3)
       return v_pts;
-    
-    for(const auto& pt : v_pts)
-      assert(pt.size() == 2 && "operation not supported for other dimensions");
 
+    #ifndef NDEBUG
+      for(const auto& pt : v_pts)
+        assert(pt.size() == 2 && "operation not supported for other dimensions");
+    #endif
+    
     // Based on some sources from OpenGenus Foundation
 
     // Find the bottommost point
