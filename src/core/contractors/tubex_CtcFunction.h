@@ -14,6 +14,7 @@
 
 #include <string>
 #include "tubex_Ctc.h"
+#include "ibex_Function.h"
 #include "ibex_CtcFwdBwd.h"
 #include "ibex_Ctc3BCid.h"
 
@@ -25,7 +26,7 @@ namespace tubex
    *        according to the constraint \f$\mathbf{f}(\mathbf{x})=\mathbf{0}\f$ or \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$.
    *        It stands on the CtcFwdBwd of IBEX (HC4Revise) combined with a Ctc3BCid.
    */
-  class CtcFunction : public Ctc
+  class CtcFunction : public ibex::Ctc3BCid
   {
     public:
 
@@ -38,18 +39,8 @@ namespace tubex
       CtcFunction(const ibex::Function& f, const ibex::Domain& y);
       CtcFunction(const ibex::Function& f, const ibex::Interval& y);
       CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y);
-      ~CtcFunction();
-
-      void contract(ibex::IntervalVector& x);
-      void contract(std::vector<Domain*>& v_domains);
 
       static const std::string parse_f(const char* f);
-
-    protected:
-
-      ibex::Function *m_ibex_fnc = NULL;
-      ibex::CtcFwdBwd *m_ibex_ctc = NULL;
-      ibex::Ctc3BCid *m_ibex_3bcid = NULL;
   };
 }
 

@@ -24,8 +24,6 @@ namespace tubex
     public:
 
       CtcDist();
-
-      void contract(std::vector<Domain*>& v_domains);
       void contract(ibex::IntervalVector& a, ibex::IntervalVector& b, ibex::Interval& d);
   };
 }
