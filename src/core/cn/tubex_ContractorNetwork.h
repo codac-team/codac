@@ -71,6 +71,7 @@ namespace tubex
       // dot / neato / circo / fdp / twopi
       int print_dot_graph(const std::string& cn_name = "cn", const std::string& prog = "fdp") const;
 
+      friend std::ostream& operator<<(std::ostream& str, const ContractorNetwork& x);
 
     protected:
 

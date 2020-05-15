@@ -84,8 +84,6 @@ namespace tubex
 
       bool is_slice_of(const Domain& x) const;
       bool is_slice_of(const Domain& x, int& slice_id) const;
-      
-      friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
       void add_data(double t, const ibex::Interval& y, ContractorNetwork& cn);
       void add_data(double t, const ibex::IntervalVector& y, ContractorNetwork& cn);
@@ -94,6 +92,11 @@ namespace tubex
       void set_name(const std::string& name);
 
       static bool dyn_same_slicing(const std::vector<Domain>& v_domains);
+      static int total_size(const std::vector<Domain>& v_domains);
+
+      static Domain vector_component(Domain& x, int i);
+
+      friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
     protected:
 

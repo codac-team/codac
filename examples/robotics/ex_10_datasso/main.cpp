@@ -140,7 +140,7 @@ int main()
         fig_map.add_beacon(m[i], 2., "#00A53B[#00A53B]");
       }
     cout << identified << "/" << m.size() << " observations identified" << endl << endl;
-    fig_map.show();
+    fig_map.show(20.);
   
   vibes::endDrawing();
   // Checking if this example still works:

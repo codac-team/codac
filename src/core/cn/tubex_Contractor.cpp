@@ -156,7 +156,7 @@ namespace tubex
         assert(false && "unhandled case");
         return false;
     }
-    
+
     if(m_v_domains.size() != x.m_v_domains.size())
       return false;
 
@@ -183,35 +183,137 @@ namespace tubex
 
     if(m_type == Type::IBEX)
     {
+      // Data may be presented in two ways:
+      // - all components in one vector box
+      // - a list of heterogeneous components
+
+      // Case: all components in one vector box
       if(m_v_domains.size() == 1 && m_v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR)
       {
         m_ibex_ctc.get().contract(m_v_domains[0]->interval_vector());
       }
 
-      else if(m_v_domains[0]->type() == Domain::Type::INTERVAL) // set of scalar values
+      // Case: list of heterogeneous components
+      else
       {
-        IntervalVector box(m_v_domains.size());
-        for(size_t i = 0 ; i < m_v_domains.size() ; i++)
-          box[i] = m_v_domains[i]->interval();
-
-        m_ibex_ctc.get().contract(box);
-
-        for(size_t i = 0 ; i < m_v_domains.size() ; i++)
-          m_v_domains[i]->interval() &= box[i];
-      }
-
-      else if(m_v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR) // set of vector values
-      {
-        for(int k = 0 ; k < m_v_domains[0]->interval_vector().size() ; k++)
+        for(int j = 0 ; j < 3 ; j++) // to possibly deal with 3 subdomains of a Slice (gates + envelope)
         {
-          IntervalVector box(m_v_domains.size());
-          for(size_t i = 0 ; i < m_v_domains.size() ; i++)
-            box[i] = m_v_domains[i]->interval_vector()[k];
+          bool at_least_one_slice = false;
+          // if this ^ stays false, then the for loop will break after the first iteration
 
-          m_ibex_ctc.get().contract(box);
+          // Building a temporary box for the contraction
+          
+            IntervalVector box(m_ibex_ctc.get().nb_var);
 
-          for(size_t i = 0 ; i < m_v_domains.size() ; i++)
-            m_v_domains[i]->interval_vector()[k] &= box[i];
+            int i = 0;
+            for(auto& dom : m_v_domains)
+            {
+              switch(dom->type())
+              {
+                case Domain::Type::INTERVAL:
+                  box[i] = dom->interval();
+                  i++;
+                  break;
+
+                case Domain::Type::INTERVAL_VECTOR:
+                  assert(false && "interval vectors should not be handled here");
+                  box.put(i, dom->interval_vector());
+                  i+=dom->interval_vector().size();
+                  break;
+
+                case Domain::Type::SLICE:
+                  switch(j)
+                  {
+                    case 0: // we start from the envelope
+                      box[i] = dom->slice().codomain();
+                      break;
+                    
+                    // Then the gates
+                    case 1:
+                      box[i] = dom->slice().input_gate();
+                      break;
+                      
+                    case 2:
+                      box[i] = dom->slice().output_gate();
+                      break;
+
+                    default:
+                      assert(false && "Slice domain already treated");
+                  }
+                  i++;
+                  at_least_one_slice = true;
+                  break;
+
+                case Domain::Type::TUBE:
+                case Domain::Type::TUBE_VECTOR:
+                  assert(false && "dynamic domains should not be handled here");
+                  break;
+
+                default:
+                  assert(false && "unhandled case");
+              }
+            }
+
+            assert(i == m_ibex_ctc.get().nb_var);
+
+          // Contracting
+
+            m_ibex_ctc.get().contract(box);
+            
+          // Updating the domains (reverse operation)
+
+            i = 0;
+            for(auto& dom : m_v_domains)
+            {
+              switch(dom->type())
+              {
+                case Domain::Type::INTERVAL:
+                {
+                  dom->interval() = box[i];
+                  i++;
+                }
+                break;
+
+                case Domain::Type::INTERVAL_VECTOR:
+                {
+                  int vector_size = dom->interval_vector().size();
+                  dom->interval_vector() = box.subvector(i, i+vector_size);
+                  i+=vector_size;
+                }
+                break;
+
+                case Domain::Type::SLICE:
+                {
+                  switch(j)
+                  {
+                    case 0:
+                      dom->slice().set_envelope(box[i]);
+                      break;
+
+                    case 1:
+                      dom->slice().set_input_gate(box[i]);
+                      break;
+
+                    case 2:
+                      dom->slice().set_output_gate(box[i]);
+                      break;
+
+                    default:
+                      assert(false && "Slice domain already treated");
+                  }
+                  i++;
+                }
+                break;
+
+                default:
+                  assert(false && "unhandled case");
+              }
+            }
+
+            assert(i == m_ibex_ctc.get().nb_var);
+
+          if(!at_least_one_slice)
+            break;
         }
       }
     }
