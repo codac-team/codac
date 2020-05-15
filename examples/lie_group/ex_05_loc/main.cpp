@@ -28,7 +28,7 @@ int main()
     // ----- Generate reference tube thanks to ODE integration -----
 
     Interval domain(0.,17.);
-    tubex::Function f("x1","x2","x3","(cos(x3);sin(x3);sin(0.4*t))"); //function to be integrated
+    tubex::TimeFunction f("x1","x2","x3","(cos(x3);sin(x3);sin(0.4*t))"); //function to be integrated
     IntervalVector a0(3,Interval(0.,0.)); // inintial condition for reference tube
     double timestep = 0.1;
     TubeVector a = TubeVectorODE(domain,f,a0,timestep,CAPD_MODE);

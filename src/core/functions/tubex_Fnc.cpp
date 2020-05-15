@@ -1,5 +1,5 @@
 /** 
- *  Fnc class
+ *  TimeFnc class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -18,23 +18,23 @@ using namespace ibex;
 
 namespace tubex
 {
-  Fnc::Fnc()
+  TimeFnc::TimeFnc()
   {
 
   }
 
-  Fnc::Fnc(int nb_vars, int img_dim, bool is_intertemporal)
+  TimeFnc::TimeFnc(int nb_vars, int img_dim, bool is_intertemporal)
     : m_nb_vars(nb_vars), m_img_dim(img_dim), m_is_intertemporal(is_intertemporal)
   {
     assert(img_dim > 0);
   }
 
-  Fnc::~Fnc()
+  TimeFnc::~TimeFnc()
   {
 
   }
   
-  const Fnc& Fnc::operator=(const Fnc& f)
+  const TimeFnc& TimeFnc::operator=(const TimeFnc& f)
   {
     m_nb_vars = f.m_nb_vars;
     m_img_dim = f.m_img_dim;
@@ -42,28 +42,28 @@ namespace tubex
     return *this;
   }
 
-  int Fnc::nb_vars() const
+  int TimeFnc::nb_vars() const
   {
     return m_nb_vars;
   }
 
-  int Fnc::image_dim() const
+  int TimeFnc::image_dim() const
   {
     return m_img_dim;
   }
 
-  bool Fnc::is_intertemporal() const
+  bool TimeFnc::is_intertemporal() const
   {
     return m_is_intertemporal;
   }
 
-  const Tube Fnc::eval(const TubeVector& x) const
+  const Tube TimeFnc::eval(const TubeVector& x) const
   {
     // todo: optimize this?
     return eval_vector(x)[0];
   }
 
-  const TubeVector Fnc::eval_vector(const TubeVector& x) const
+  const TubeVector TimeFnc::eval_vector(const TubeVector& x) const
   {
     if(nb_vars() != 0)
       assert(x.size() == nb_vars());

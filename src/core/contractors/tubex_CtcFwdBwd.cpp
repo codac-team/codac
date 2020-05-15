@@ -17,15 +17,14 @@ using namespace ibex;
 namespace tubex
 {
   CtcFwdBwd::CtcFwdBwd(const tubex::Function& f)
-    : CtcStatic(NULL, true)
+    : CtcStatic(*new ibex::CtcFwdBwd(*new ibex::Function(f.ibex_function())), true)
   {
-    m_f = new tubex::Function(f);
-    m_ibex_ctc = new ibex::CtcFwdBwd(m_f->ibex_function());
+    //m_f = new tubex::Function(f);
+    //m_ibex_ctc = ibex::CtcFwdBwd(m_f->ibex_function());
   }
   
   CtcFwdBwd::~CtcFwdBwd()
   {
-    delete m_ibex_ctc;
     delete m_f;
   }
   

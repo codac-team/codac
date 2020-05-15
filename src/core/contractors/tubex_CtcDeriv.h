@@ -26,7 +26,7 @@ namespace tubex
    * \note  This contractor is called \f$\mathcal{C}_{\frac{d}{dt}}\f$ in the literature.
    * \todo  Contract the tube \f$[v](\cdot)\f$ if \f$[x](\cdot)\f$ degenerated?
    */
-  class CtcDeriv : public Ctc
+  class CtcDeriv : public DynCtc
   {
     public:
 

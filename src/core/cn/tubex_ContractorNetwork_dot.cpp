@@ -42,7 +42,7 @@ namespace tubex
     assert(contractor_found);
   }
   
-  void ContractorNetwork::set_name(tubex::Ctc& ctc, const string& name)
+  void ContractorNetwork::set_name(tubex::DynCtc& ctc, const string& name)
   {
     #ifndef NDEBUG
       bool contractor_found = false;

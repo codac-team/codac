@@ -1,5 +1,5 @@
 /** 
- *  Ctc class
+ *  DynCtc class
  * ----------------------------------------------------------------------------
  *  \date       2015
  *  \author     Simon Rohou
@@ -15,33 +15,33 @@ using namespace ibex;
 
 namespace tubex
 {
-  Ctc::Ctc(bool intertemporal)
+  DynCtc::DynCtc(bool intertemporal)
     : m_intertemporal(intertemporal)
   {
 
   }
 
-  Ctc::~Ctc()
+  DynCtc::~DynCtc()
   {
 
   }
 
-  void Ctc::preserve_slicing(bool preserve)
+  void DynCtc::preserve_slicing(bool preserve)
   {
     m_preserve_slicing = preserve;
   }
 
-  void Ctc::set_fast_mode(bool fast_mode)
+  void DynCtc::set_fast_mode(bool fast_mode)
   {
     m_fast_mode = fast_mode;
   }
 
-  void Ctc::restrict_tdomain(const Interval& tdomain)
+  void DynCtc::restrict_tdomain(const Interval& tdomain)
   {
     m_restricted_tdomain = tdomain;
   }
 
-  bool Ctc::is_intertemporal() const
+  bool DynCtc::is_intertemporal() const
   {
     return m_intertemporal;
   }

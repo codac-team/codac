@@ -8,8 +8,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_FUNCTION_H__
-#define __TUBEX_FUNCTION_H__
+#ifndef __TUBEX_TIMEFUNCTION_H__
+#define __TUBEX_TIMEFUNCTION_H__
 
 #include <string>
 #include "ibex_Function.h"
@@ -23,31 +23,31 @@ namespace tubex
   class Trajectory;
   class TrajectoryVector;
   
-  class Function : public Fnc
+  class TimeFunction : public TimeFnc
   {
     public:
 
-      Function(const char* y);
-      Function(const char* x1, const char* y);
-      Function(const char* x1, const char* x2, const char* y);
-      Function(const char* x1, const char* x2, const char* x3, const char* y);
-      Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* y);
-      Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* y);
-      Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* y);
-      Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* y);
-      Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* x8, const char* y);
-      Function(int n, const char** x, const char* y);
-      Function(const tubex::Function& f);
-      ~Function();
+      TimeFunction(const char* y);
+      TimeFunction(const char* x1, const char* y);
+      TimeFunction(const char* x1, const char* x2, const char* y);
+      TimeFunction(const char* x1, const char* x2, const char* x3, const char* y);
+      TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* y);
+      TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* y);
+      TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* y);
+      TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* y);
+      TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* x8, const char* y);
+      TimeFunction(int n, const char** x, const char* y);
+      TimeFunction(const tubex::TimeFunction& f);
+      ~TimeFunction();
       
-      const tubex::Function& operator=(const tubex::Function& f);
-      const tubex::Function operator[](int i) const;
+      const tubex::TimeFunction& operator=(const tubex::TimeFunction& f);
+      const tubex::TimeFunction operator[](int i) const;
       const ibex::Function& ibex_function() const;
 
       const std::string& expr() const;
       const std::string arg_name(int i) const;
 
-      using Fnc::eval;
+      using TimeFnc::eval;
       // todo: using Fnc::eval_vector?
       // todo: keep using Fnc::eval?
 
@@ -65,7 +65,7 @@ namespace tubex
       const ibex::IntervalVector eval_vector(int slice_id, const TubeVector& x) const;
       const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const;
 
-      const Function diff() const;
+      const TimeFunction diff() const;
 
     protected:
 

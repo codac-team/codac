@@ -15,8 +15,8 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcStatic::CtcStatic(ibex::Ctc *ibex_ctc, bool dynamic_ctc)
-    : Ctc(false), m_ibex_ctc(ibex_ctc), m_dynamic_ctc(dynamic_ctc ? 1 : 0)
+  CtcStatic::CtcStatic(ibex::Ctc& ibex_ctc, bool dynamic_ctc)
+    : DynCtc(false), m_ibex_ctc(ibex_ctc), m_dynamic_ctc(dynamic_ctc ? 1 : 0)
   {
 
   }
@@ -50,9 +50,9 @@ namespace tubex
       outgate[i] = v_domains[i]->slice().output_gate();
     }
 
-    m_ibex_ctc->contract(envelope);
-    m_ibex_ctc->contract(ingate);
-    m_ibex_ctc->contract(outgate);
+    m_ibex_ctc.contract(envelope);
+    m_ibex_ctc.contract(ingate);
+    m_ibex_ctc.contract(outgate);
 
     for(int i = 0 ; i < n ; i++)
     {
@@ -64,7 +64,7 @@ namespace tubex
 
   void CtcStatic::contract(TubeVector& x)
   {
-    assert(x.size()+m_dynamic_ctc == m_ibex_ctc->nb_var);
+    assert(x.size()+m_dynamic_ctc == m_ibex_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[x.size()];
     for(int i = 0 ; i < x.size() ; i++)
@@ -77,7 +77,7 @@ namespace tubex
   void CtcStatic::contract(Tube& x1)
   {
     int n = 1;
-    assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
+    assert(n+m_dynamic_ctc == m_ibex_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -89,7 +89,7 @@ namespace tubex
   void CtcStatic::contract(Tube& x1, Tube& x2)
   {
     int n = 2;
-    assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
+    assert(n+m_dynamic_ctc == m_ibex_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -102,7 +102,7 @@ namespace tubex
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3)
   {
     int n = 3;
-    assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
+    assert(n+m_dynamic_ctc == m_ibex_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -116,7 +116,7 @@ namespace tubex
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4)
   {
     int n = 4;
-    assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
+    assert(n+m_dynamic_ctc == m_ibex_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -131,7 +131,7 @@ namespace tubex
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5)
   {
     int n = 5;
-    assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
+    assert(n+m_dynamic_ctc == m_ibex_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -147,7 +147,7 @@ namespace tubex
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6)
   {
     int n = 6;
-    assert(n+m_dynamic_ctc == m_ibex_ctc->nb_var);
+    assert(n+m_dynamic_ctc == m_ibex_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -193,8 +193,8 @@ namespace tubex
         ingate[i+m_dynamic_ctc] = v_x_slices[i]->input_gate();
       }
 
-      m_ibex_ctc->contract(envelope);
-      m_ibex_ctc->contract(ingate);
+      m_ibex_ctc.contract(envelope);
+      m_ibex_ctc.contract(ingate);
 
       for(int i = 0 ; i < n ; i++)
       {
@@ -212,7 +212,7 @@ namespace tubex
         for(int i = 0 ; i < n ; i++)
           outgate[i+m_dynamic_ctc] = v_x_slices[i]->output_gate();
 
-        m_ibex_ctc->contract(outgate);
+        m_ibex_ctc.contract(outgate);
 
         for(int i = 0 ; i < n ; i++)
           v_x_slices[i]->set_output_gate(outgate[i+m_dynamic_ctc]);

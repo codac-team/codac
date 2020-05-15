@@ -31,7 +31,7 @@ int main()
     // Creating tubes over the [0,6] tdomain with some timestep:
     TubeVector x(tdomain, timestep, 6);
     x &= IntervalVector(6, Interval(-999.,999.)); // todo: remove this
-    x[4] = Tube(x[5], tubex::Function("-10*cos(t)+[-0.001,0.001]"));
+    x[4] = Tube(x[5], tubex::TimeFunction("-10*cos(t)+[-0.001,0.001]"));
 
     // Initial conditions:
     IntervalVector x0(x.size());
@@ -46,9 +46,8 @@ int main()
     CtcDeriv ctc_deriv;
     CtcEval ctc_eval;
     ctc_eval.enable_time_propag(false); // faster use
-    tubex::CtcFwdBwd ctc_fwdbwd(
-      tubex::Function("x", "y", "xdot", "ydot", "xddot", "yddot",
-                      "-0.4*xddot*xdot - yddot"));
+    CtcFunction ctc_f("x", "y", "xdot", "ydot", "xddot", "yddot",
+                      "-0.4*xddot*xdot - yddot");
 
   /* =========== PROPAGATION =========== */
 
@@ -74,14 +73,14 @@ int main()
         // todo: ctc_periodic.contract(x[1], M_PI);
       }
 
-      ctc_fwdbwd.contract(x);
+      ctc_f.contract(x);
 
       i++;
     } while(volume_x != x.volume());
 
   /* =========== GRAPHICS =========== */
 
-    TrajectoryVector x_truth(tdomain, tubex::Function("(10*cos(t);5*sin(2*t))"));
+    TrajectoryVector x_truth(tdomain, tubex::TimeFunction("(10*cos(t);5*sin(2*t))"));
     x_truth.resize(x.size());
 
     vibes::beginDrawing();

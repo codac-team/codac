@@ -31,11 +31,11 @@ namespace tubex
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 
-    Function f_lissajous("(120.*2.*cos(t) ; \
-                           120.*sin(2.*t) ; \
-                           atan2(240.*cos(2.*t),-120.*2.*sin(t)))");
-    Function f_lissajous_dot("(-120.*2.*sin(t) ; \
-                               240.*cos(2.*t))");
+    TimeFunction f_lissajous("(120.*2.*cos(t) ; \
+                               120.*sin(2.*t) ; \
+                               atan2(240.*cos(2.*t),-120.*2.*sin(t)))");
+    TimeFunction f_lissajous_dot("(-120.*2.*sin(t) ; \
+                                   240.*cos(2.*t))");
     // todo: derivative for heading
 
     truth = new TrajectoryVector(tdomain, f_lissajous);

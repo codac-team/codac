@@ -1,5 +1,5 @@
 /** 
- *  Function class
+ *  TimeFunction class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -17,24 +17,24 @@ using namespace ibex;
 
 namespace tubex
 {
-  Function::Function(int n, const char** x, const char* y)
+  TimeFunction::TimeFunction(int n, const char** x, const char* y)
   {
     construct_from_array(n, x, y);
   }
 
-  Function::Function(const char* y)
+  TimeFunction::TimeFunction(const char* y)
   {
     construct_from_array(0, NULL, y);
   }
 
-  Function::Function(const char* x1, const char* y)
+  TimeFunction::TimeFunction(const char* x1, const char* y)
   {
     const char* xdyn[1];
     xdyn[0] = x1;
     construct_from_array(1, xdyn, y);
   }
 
-  Function::Function(const char* x1, const char* x2, const char* y)
+  TimeFunction::TimeFunction(const char* x1, const char* x2, const char* y)
   {
     const char* xdyn[2];
     xdyn[0] = x1;
@@ -42,7 +42,7 @@ namespace tubex
     construct_from_array(2, xdyn, y);
   }
 
-  Function::Function(const char* x1, const char* x2, const char* x3, const char* y)
+  TimeFunction::TimeFunction(const char* x1, const char* x2, const char* x3, const char* y)
   {
     const char* xdyn[3];
     xdyn[0] = x1;
@@ -51,7 +51,7 @@ namespace tubex
     construct_from_array(3, xdyn, y);
   }
 
-  Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* y)
+  TimeFunction::TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* y)
   {
     const char* xdyn[4];
     xdyn[0] = x1;
@@ -61,7 +61,7 @@ namespace tubex
     construct_from_array(4, xdyn, y);
   }
 
-  Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* y)
+  TimeFunction::TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* y)
   {
     const char* xdyn[5];
     xdyn[0] = x1;
@@ -72,7 +72,7 @@ namespace tubex
     construct_from_array(5, xdyn, y);
   }
 
-  Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* y)
+  TimeFunction::TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* y)
   {
     const char* xdyn[6];
     xdyn[0] = x1;
@@ -84,7 +84,7 @@ namespace tubex
     construct_from_array(6, xdyn, y);
   }
 
-  Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* y)
+  TimeFunction::TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* y)
   {
     const char* xdyn[7];
     xdyn[0] = x1;
@@ -97,7 +97,7 @@ namespace tubex
     construct_from_array(7, xdyn, y);
   }
 
-  Function::Function(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* x8, const char* y)
+  TimeFunction::TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* x8, const char* y)
   {
     const char* xdyn[8];
     xdyn[0] = x1;
@@ -111,32 +111,32 @@ namespace tubex
     construct_from_array(8, xdyn, y);
   }
 
-  Function::Function(const tubex::Function& f)
-    : tubex::Fnc(f.nb_vars(), f.image_dim(), false)
+  TimeFunction::TimeFunction(const tubex::TimeFunction& f)
+    : tubex::TimeFnc(f.nb_vars(), f.image_dim(), false)
   {
     *this = f;
   }
 
-  Function::~Function()
+  TimeFunction::~TimeFunction()
   {
     delete m_ibex_f;
   }
 
-  const Function& Function::operator=(const Function& f)
+  const TimeFunction& TimeFunction::operator=(const TimeFunction& f)
   {
     if(m_ibex_f != NULL)
       delete m_ibex_f;
     m_ibex_f = new ibex::Function(*f.m_ibex_f);
     m_exp = f.m_exp;
-    Fnc::operator=(f);
+    TimeFnc::operator=(f);
     return *this;
   }
 
-  const Function Function::operator[](int i) const
+  const TimeFunction TimeFunction::operator[](int i) const
   {
     assert(i >= 0 && i < image_dim());
     // todo: check the following
-    tubex::Function fi(*this);
+    tubex::TimeFunction fi(*this);
     ibex::Function ibex_fi((*fi.m_ibex_f)[i]);
     delete fi.m_ibex_f;
     fi.m_ibex_f = new ibex::Function(ibex_fi);
@@ -144,24 +144,24 @@ namespace tubex
     return fi;
   }
 
-  const ibex::Function& Function::ibex_function() const
+  const ibex::Function& TimeFunction::ibex_function() const
   {
     return *m_ibex_f;
   }
   
-  const string& Function::expr() const
+  const string& TimeFunction::expr() const
   {
     return m_exp;
   }
   
-  const string Function::arg_name(int i) const
+  const string TimeFunction::arg_name(int i) const
   {
     assert(i >= 0 && i < m_nb_vars);
     // t is not considered as part of the arguments
     return m_ibex_f->arg_name(i+1);
   }
 
-  void Function::construct_from_array(int n, const char** x, const char* y)
+  void TimeFunction::construct_from_array(int n, const char** x, const char* y)
   {
     assert(n >= 0);
     assert(y != NULL && "function's output must be defined");
@@ -181,14 +181,14 @@ namespace tubex
     m_exp = y;
   }
 
-  const Interval Function::eval(const Interval& t) const
+  const Interval TimeFunction::eval(const Interval& t) const
   {
     assert(nb_vars() == 0);
     assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(t)[0];
   }
 
-  const Interval Function::eval(const IntervalVector& x) const
+  const Interval TimeFunction::eval(const IntervalVector& x) const
   {
     assert(nb_vars() == x.size() - 1);
     assert(image_dim() == 1 && "scalar evaluation");
@@ -196,7 +196,7 @@ namespace tubex
     return eval_vector(x)[0];
   }
 
-  const Interval Function::eval(int slice_id, const TubeVector& x) const
+  const Interval TimeFunction::eval(int slice_id, const TubeVector& x) const
   {
     assert(x.size() == nb_vars());
     assert(slice_id >= 0 && slice_id < x.nb_slices());
@@ -204,7 +204,7 @@ namespace tubex
     return eval_vector(slice_id, x)[0];
   }
 
-  const Interval Function::eval(const Interval& t, const TubeVector& x) const
+  const Interval TimeFunction::eval(const Interval& t, const TubeVector& x) const
   {
     assert(x.size() == nb_vars());
     assert(x.tdomain().is_superset(t));
@@ -212,35 +212,35 @@ namespace tubex
     return eval_vector(t, x)[0];
   }
 
-  const Tube Function::eval(const TubeVector& x) const
+  const Tube TimeFunction::eval(const TubeVector& x) const
   {
     assert(x.size() == nb_vars());
     assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(x)[0];
   }
 
-  const Trajectory Function::traj_eval(const TrajectoryVector& x) const
+  const Trajectory TimeFunction::traj_eval(const TrajectoryVector& x) const
   {
     assert(x.size() == nb_vars());
     assert(image_dim() == 1 && "scalar evaluation");
     return traj_eval_vector(x)[0];
   }
 
-  const IntervalVector Function::eval_vector(const Interval& t) const
+  const IntervalVector TimeFunction::eval_vector(const Interval& t) const
   {
     assert(nb_vars() == 0);
     IntervalVector box(1, t);
     return m_ibex_f->eval_vector(box);
   }
 
-  const IntervalVector Function::eval_vector(const IntervalVector& x) const
+  const IntervalVector TimeFunction::eval_vector(const IntervalVector& x) const
   {
     assert(nb_vars() == x.size() - 1);
     assert(!is_intertemporal());
     return m_ibex_f->eval_vector(x);
   }
 
-  const IntervalVector Function::eval_vector(int slice_id, const TubeVector& x) const
+  const IntervalVector TimeFunction::eval_vector(int slice_id, const TubeVector& x) const
   {
     assert(slice_id >= 0 && slice_id < x.nb_slices());
 
@@ -261,7 +261,7 @@ namespace tubex
     return m_ibex_f->eval_vector(box);
   }
 
-  const IntervalVector Function::eval_vector(const Interval& t, const TubeVector& x) const
+  const IntervalVector TimeFunction::eval_vector(const Interval& t, const TubeVector& x) const
   {
     if(nb_vars() == 0)
       return eval_vector(t);
@@ -281,10 +281,10 @@ namespace tubex
     return m_ibex_f->eval_vector(box);
   }
 
-  const TubeVector Function::eval_vector(const TubeVector& x) const
+  const TubeVector TimeFunction::eval_vector(const TubeVector& x) const
   {
     // Faster evaluation than the generic Fnc::eval method
-    // For now, Function class does not allow inter-temporal evaluations
+    // For now, TimeFunction class does not allow inter-temporal evaluations
     // such as delays or integral computations. Hence, the generic method
     // Fnc::eval(Interval t, TubeVector x) can be replaced by a dedicated evaluation
 
@@ -358,10 +358,10 @@ namespace tubex
     return y;
   }
 
-  const TrajectoryVector Function::traj_eval_vector(const TrajectoryVector& x) const
+  const TrajectoryVector TimeFunction::traj_eval_vector(const TrajectoryVector& x) const
   {
     // Faster evaluation than the generic Fnc::eval method
-    // For now, Function class does not allow inter-temporal evaluations
+    // For now, TimeFunction class does not allow inter-temporal evaluations
     // such as delays or integral computations. Hence, the generic method
     // Fnc::eval(Interval t, TubeVector x) can be replaced by a dedicated evaluation
 
@@ -371,7 +371,7 @@ namespace tubex
       assert(x.size() == nb_vars());
 
     assert(x[0].definition_type() == TrajDefnType::MAP_OF_VALUES
-      && "eval function not supported for analytic trajectories");
+      && "eval TimeFunction not supported for analytic trajectories");
     
     TrajectoryVector y(image_dim());
     for(map<double,double>::const_iterator it = x[0].sampled_map().begin() ;
@@ -387,9 +387,9 @@ namespace tubex
     return y;
   }
 
-  const Function Function::diff() const
+  const TimeFunction TimeFunction::diff() const
   {
-    Function diff_f = *this;
+    TimeFunction diff_f = *this;
     delete diff_f.m_ibex_f;
     diff_f.m_ibex_f = new ibex::Function(m_ibex_f->diff());
     return diff_f;

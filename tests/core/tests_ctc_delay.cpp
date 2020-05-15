@@ -17,7 +17,7 @@ TEST_CASE("CtcDelay")
   SECTION("Test CtcDelay, tube contraction")
   {
     Interval tdomain(0.,10.);
-    Tube x(tdomain, 0.01, tubex::Function("cos(t)"));
+    Tube x(tdomain, 0.01, tubex::TimeFunction("cos(t)"));
     Tube y(tdomain, 0.01);
 
     CtcDelay ctc_delay;
@@ -43,8 +43,8 @@ TEST_CASE("CtcDelay")
   {
     double dt = 0.01;
     Interval tdomain(0.,10.);
-    Tube x(tdomain, dt, tubex::Function("cos(t)"));
-    Tube y(tdomain, dt, tubex::Function("sin(t)"));
+    Tube x(tdomain, dt, tubex::TimeFunction("cos(t)"));
+    Tube y(tdomain, dt, tubex::TimeFunction("sin(t)"));
 
     CtcDelay ctc_delay;
     Interval delay(0., 2.*M_PI);

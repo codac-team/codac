@@ -28,7 +28,7 @@ namespace tubex
 {
   class Domain;
   class ContractorNetwork;
-  class Ctc;
+  class DynCtc;
 
   class Contractor
   {
@@ -38,7 +38,7 @@ namespace tubex
 
       Contractor(Type type, const std::vector<Domain*>& v_domains);
       Contractor(ibex::Ctc& ctc, const std::vector<Domain*>& v_domains);
-      Contractor(tubex::Ctc& ctc, const std::vector<Domain*>& v_domains);
+      Contractor(tubex::DynCtc& ctc, const std::vector<Domain*>& v_domains);
       Contractor(const Contractor& ac);
       ~Contractor();
 
@@ -46,7 +46,7 @@ namespace tubex
       Type type() const;
 
       ibex::Ctc& ibex_ctc();
-      tubex::Ctc& tubex_ctc();
+      tubex::DynCtc& tubex_ctc();
 
       bool is_active() const;
       void set_active(bool active);
@@ -72,7 +72,7 @@ namespace tubex
       union
       {
         std::reference_wrapper<ibex::Ctc> m_ibex_ctc;
-        std::reference_wrapper<tubex::Ctc> m_tubex_ctc;
+        std::reference_wrapper<tubex::DynCtc> m_tubex_ctc;
       };
 
       std::vector<Domain*> m_v_domains;

@@ -18,7 +18,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcEval::CtcEval() : Ctc()
+  CtcEval::CtcEval() : DynCtc()
   {
 
   }

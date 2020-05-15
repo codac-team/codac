@@ -22,7 +22,7 @@ namespace tubex
    *        with respect to their delay \f$[\tau]\f$ according to
    *        the delay constraint \f$\mathbf{x}(t)=\mathbf{y}(t+\tau)\f$
    */
-  class CtcDelay : public Ctc
+  class CtcDelay : public DynCtc
   {
     public:
 

@@ -16,7 +16,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  DelayFunction::DelayFunction(double delay) : Fnc(1, 1, true), m_delay(delay)
+  DelayFunction::DelayFunction(double delay) : TimeFnc(1, 1, true), m_delay(delay)
   {
 
   }

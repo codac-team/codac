@@ -8,8 +8,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_FNC_H__
-#define __TUBEX_FNC_H__
+#ifndef __TUBEX_TIMEFNC_H__
+#define __TUBEX_TIMEFNC_H__
 
 #include "ibex_IntervalVector.h"
 
@@ -18,13 +18,13 @@ namespace tubex
   class Tube;
   class TubeVector;
   
-  class Fnc
+  class TimeFnc
   {
     public:
 
-      Fnc(int nb_vars, int img_dim, bool is_intertemporal);
-      virtual ~Fnc();
-      const Fnc& operator=(const Fnc& f);
+      TimeFnc(int nb_vars, int img_dim, bool is_intertemporal);
+      virtual ~TimeFnc();
+      const TimeFnc& operator=(const TimeFnc& f);
 
       int nb_vars() const;
       int image_dim() const;
@@ -42,7 +42,7 @@ namespace tubex
 
     protected:
       
-      Fnc();
+      TimeFnc();
 
       int m_nb_vars = -1, m_img_dim = -1;
       bool m_is_intertemporal = false;

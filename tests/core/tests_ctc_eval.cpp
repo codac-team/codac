@@ -1041,8 +1041,8 @@ TEST_CASE("CtcEval")
 
   SECTION("Test CtcEval, multi eval")
   {
-    Tube x(Interval(0.,20.), 0.1, tubex::Function("cos(t)+t*[-0.1,0.2]"));
-    Tube v(Interval(0.,20.), 0.1, tubex::Function("-sin(t)+[-0.1,0.2]"));
+    Tube x(Interval(0.,20.), 0.1, tubex::TimeFunction("cos(t)+t*[-0.1,0.2]"));
+    Tube v(Interval(0.,20.), 0.1, tubex::TimeFunction("-sin(t)+[-0.1,0.2]"));
     
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);

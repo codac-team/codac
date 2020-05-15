@@ -24,7 +24,7 @@
 
 namespace tubex
 {
-  class Fnc;
+  class TimeFnc;
   class Tube;
   class Trajectory;
   
@@ -79,18 +79,18 @@ namespace tubex
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
-       *        from a tubex::Fnc object and with some temporal discretization
+       *        from a TimeFnc object and with some temporal discretization
        *
        * \note Due to the slicing implementation of the tube, a wrapping
-       *       effect will occur to reliably enclose the tubex::Fnc object
+       *       effect will occur to reliably enclose the TimeFnc object
        * \note The dimension of the tube is specified by the output of \f$[\mathbf{f}]\f$
        *
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
-       * \param f tubex::Fnc object that will be enclosed by the tube:
+       * \param f TimeFnc object that will be enclosed by the tube:
        *          \f$\forall t\in[t_0,t_f], [\mathbf{f}](t)\subseteq[\mathbf{x}](t)\f$
        */
-      explicit TubeVector(const ibex::Interval& tdomain, double timestep, const tubex::Fnc& f);
+      explicit TubeVector(const ibex::Interval& tdomain, double timestep, const TimeFnc& f);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ from a list of \f$k\f$ boxes \f$\big([t_1]\times[\mathbf{x}_1],\dots,[t_k]\times[\mathbf{x}_k]\big)\f$
@@ -1074,7 +1074,7 @@ namespace tubex
        * \brief Serializes this tube together with a TrajectoryVector object
        *
        * \note The values and sampling (slices and gates) are serialized
-       * \note The serialization of a TrajectoryVector defined from a tubex::Function object is not supported
+       * \note The serialization of a TrajectoryVector defined from a Function object is not supported
        * \note The output file will appear in the executable current directory
        *
        * \param binary_file_name name of the output file (default value: "x.tube")

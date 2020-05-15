@@ -37,12 +37,12 @@ namespace tubex
     m_ibex_ctc = reference_wrapper<ibex::Ctc>(ctc);
   }
 
-  Contractor::Contractor(tubex::Ctc& ctc, const vector<Domain*>& v_domains) 
+  Contractor::Contractor(tubex::DynCtc& ctc, const vector<Domain*>& v_domains) 
     : Contractor(Type::TUBEX, v_domains)
   {
     assert(!v_domains.empty());
 
-    m_tubex_ctc = reference_wrapper<tubex::Ctc>(ctc);
+    m_tubex_ctc = reference_wrapper<tubex::DynCtc>(ctc);
     m_tubex_ctc.get().preserve_slicing(true);
   }
 
@@ -66,7 +66,7 @@ namespace tubex
         break;
 
       case Type::TUBEX:
-        m_tubex_ctc = reference_wrapper<tubex::Ctc>(ac.m_tubex_ctc);
+        m_tubex_ctc = reference_wrapper<tubex::DynCtc>(ac.m_tubex_ctc);
         break;
 
       default:
@@ -95,7 +95,7 @@ namespace tubex
     return m_ibex_ctc.get();
   }
 
-  tubex::Ctc& Contractor::tubex_ctc()
+  tubex::DynCtc& Contractor::tubex_ctc()
   {
     assert(m_type == Type::TUBEX);
     return m_tubex_ctc.get();

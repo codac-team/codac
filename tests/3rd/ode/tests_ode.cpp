@@ -14,7 +14,7 @@ TEST_CASE("TubeVectorODE_1")
     SECTION("CAPD_MODE")
     {
         Interval domain(0,5);
-        tubex::Function f("x","y", "(x^3+x*y^2-x+y; y^3+x^2*y-x-y)");
+        tubex::TimeFunction f("x","y", "(x^3+x*y^2-x+y; y^3+x^2*y-x-y)");
         IntervalVector x0(2);
         x0[0]=Interval(0.5,0.5);
         x0[1]=Interval(0,0);

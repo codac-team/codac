@@ -22,19 +22,19 @@ void contract(TubeVector& x)
 {
   // Creating contractors
   CtcDeriv ctc_deriv;
-  tubex::CtcFwdBwd ctc_fwdbwd(
-    tubex::Function("x", "y", "a", "p", "q",
-                    "(x + y - a ; \
-                      atan(y) - p ; \
-                      2*sin(0.5*a) + sqrt(exp(p^2)) - q)"));
+  CtcFunction ctc_f(ibex::Function("x", "y", "a", "p", "q",
+                            "(x + y - a ; \
+                              atan(y) - p ; \
+                              2*sin(0.5*a) + sqrt(exp(p^2)) - q)"),
+                    Vector(3,0.));
 
   // Contractions up to the fixed point
   TubeVector old_x(x);
   do
   {
     old_x = x;
-    ctc_deriv.contract(x[1], Tube(x[1], tubex::Function("4*sin(t-5) + (t-3.3)*[-0.1,0.1]")));
-    ctc_fwdbwd.contract(x);
+    ctc_deriv.contract(x[1], Tube(x[1], tubex::TimeFunction("4*sin(t-5) + (t-3.3)*[-0.1,0.1]")));
+    ctc_f.contract(x);
   } while(old_x != x);
 }
 
@@ -49,8 +49,8 @@ int main()
     // An evaluation will be made at t=7., so we sample the vector beforehand,
     x.sample(7.); // so that all components share the same slicing
 
-    x[0] = Tube(x[0], tubex::Function("(t-5)^2 + [-0.5,0.5]"));
-    x[1] = Tube(x[1], tubex::Function("[-0.5,0.5] - 4*cos(t-5) + [-0.2,0.2]*(t-3.3)^2"));
+    x[0] = Tube(x[0], tubex::TimeFunction("(t-5)^2 + [-0.5,0.5]"));
+    x[1] = Tube(x[1], tubex::TimeFunction("[-0.5,0.5] - 4*cos(t-5) + [-0.2,0.2]*(t-3.3)^2"));
     contract(x); // applying constraints with contractors on tubes, before the evaluation
 
   /* =========== GRAPHICS =========== */

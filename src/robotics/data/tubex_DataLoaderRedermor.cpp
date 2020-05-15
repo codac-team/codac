@@ -85,15 +85,15 @@ namespace tubex
       x->resize(6);
 
       // Computing robot's velocities:
-      tubex::Function f("phi", "theta", "psi", "vxr", "vyr", "vzr", 
-                        "(vxr * cos(theta) * cos(psi) \
-                          - vyr * (cos(phi) * sin(psi) - sin(theta) * cos(psi) * sin(phi)) \
-                          + vzr * (sin(phi) * sin(psi) + sin(theta) * cos(psi) * cos(phi)) \
-                          ; \
-                          vxr * cos(theta) * sin(psi) \
-                          + vyr * (cos(psi) * cos(phi) + sin(theta) * sin(psi) * sin(phi)) \
-                          - vzr * (cos(psi) * sin(phi) - sin(theta) * cos(phi) * sin(psi)) ; \
-                          - vxr * sin(theta) + vyr * cos(theta)*sin(phi) + vzr * cos(theta) * cos(phi))");
+      tubex::TimeFunction f("phi", "theta", "psi", "vxr", "vyr", "vzr", 
+       "(vxr * cos(theta) * cos(psi) \
+         - vyr * (cos(phi) * sin(psi) - sin(theta) * cos(psi) * sin(phi)) \
+         + vzr * (sin(phi) * sin(psi) + sin(theta) * cos(psi) * cos(phi)) \
+         ; \
+         vxr * cos(theta) * sin(psi) \
+         + vyr * (cos(psi) * cos(phi) + sin(theta) * sin(psi) * sin(phi)) \
+         - vzr * (cos(psi) * sin(phi) - sin(theta) * cos(phi) * sin(psi)) ; \
+         - vxr * sin(theta) + vyr * cos(theta)*sin(phi) + vzr * cos(theta) * cos(phi))");
       TubeVector velocities = f.eval_vector(*x);
 
       // Horizontal position

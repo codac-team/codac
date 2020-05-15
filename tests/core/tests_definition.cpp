@@ -123,18 +123,18 @@ TEST_CASE("Tube definition")
     CHECK(tube_f.nb_slices() == 1);
   }
 
-  SECTION("Tube class - Function")
+  SECTION("Tube class - TimeFunction")
   {
-    Tube tube1(Interval(-1.,10.), 0.01, tubex::Function("t^2"));
-    Trajectory traj1_inside(Interval(-1.,10.), tubex::Function("t^2"));
-    Trajectory traj1_outside(Interval(-1.,10.), tubex::Function("t^2+2"));
+    Tube tube1(Interval(-1.,10.), 0.01, tubex::TimeFunction("t^2"));
+    Trajectory traj1_inside(Interval(-1.,10.), tubex::TimeFunction("t^2"));
+    Trajectory traj1_outside(Interval(-1.,10.), tubex::TimeFunction("t^2+2"));
 
     CHECK(tube1.contains(traj1_inside) == YES);
     CHECK(tube1.contains(traj1_outside) == NO);
 
-    Tube tube2(Interval(-1.,10.), 0.01, tubex::Function("t^2+[-1,1]"));
-    Trajectory traj3_lb(Interval(-1.,10.), tubex::Function("(t^2)-1"));
-    Trajectory traj3_ub(Interval(-1.,10.), tubex::Function("(t^2)+1"));
+    Tube tube2(Interval(-1.,10.), 0.01, tubex::TimeFunction("t^2+[-1,1]"));
+    Trajectory traj3_lb(Interval(-1.,10.), tubex::TimeFunction("(t^2)-1"));
+    Trajectory traj3_ub(Interval(-1.,10.), tubex::TimeFunction("(t^2)+1"));
     Tube tube3(traj3_lb, traj3_ub, 0.01);
     CHECK(tube2.nb_slices() == tube3.nb_slices());
     CHECK(tube2.tdomain() == tube3.tdomain());
@@ -144,9 +144,9 @@ TEST_CASE("Tube definition")
       CHECK(tube2(i) == tube3(i));
   }
 
-  SECTION("Tube class - Function (thick slices)")
+  SECTION("Tube class - TimeFunction (thick slices)")
   {
-    Tube tube(Interval(-1.,1.), 0.667, tubex::Function("t^2"));
+    Tube tube(Interval(-1.,1.), 0.667, tubex::TimeFunction("t^2"));
     CHECK(tube.nb_slices() == 3);
     CHECK(ApproxIntv(tube(0)) == Interval(pow(-1. + 0.667, 2), 1.));
     CHECK(tube(-1.) == Interval(1.));
@@ -157,8 +157,8 @@ TEST_CASE("Tube definition")
 
   SECTION("Tube class - 2 Trajectory")
   {
-    Trajectory traj_lb(Interval(-1.,10.), tubex::Function("t^2"));
-    Trajectory traj_ub(Interval(-1.,10.), tubex::Function("t^2-2"));
+    Trajectory traj_lb(Interval(-1.,10.), tubex::TimeFunction("t^2"));
+    Trajectory traj_ub(Interval(-1.,10.), tubex::TimeFunction("t^2-2"));
     
     Tube tube_1slice(traj_lb, traj_ub, traj_lb.tdomain().diam());
     CHECK(tube_1slice.nb_slices() == 1);
@@ -178,8 +178,8 @@ TEST_CASE("Tube definition")
 
   SECTION("Tube class - 1 Trajectory")
   {
-    Trajectory traj1(Interval(0.,1.1), tubex::Function("(t^2)*(-3+t*(1+2*(t^2)))"));
-    Trajectory traj2(Interval(0.,1.1), tubex::Function("2*(t^5)+(t^3)-3*(t^2)"));
+    Trajectory traj1(Interval(0.,1.1), tubex::TimeFunction("(t^2)*(-3+t*(1+2*(t^2)))"));
+    Trajectory traj2(Interval(0.,1.1), tubex::TimeFunction("2*(t^5)+(t^3)-3*(t^2)"));
     
     Tube tube0(Interval(0.,1.1), 0.1, Interval::EMPTY_SET);
     CHECK(tube0.nb_slices() == 11);

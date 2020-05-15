@@ -23,7 +23,7 @@ namespace tubex
    *        according to the constraints \f$z=y(t)\f$ and \f$\dot{y}(\cdot)=w(\cdot)\f$
    * \note  This contractor is denoted \f$\mathcal{C}_\textrm{eval}\f$ in the literature.
    */
-  class CtcEval : public Ctc
+  class CtcEval : public DynCtc
   {
     public:
 

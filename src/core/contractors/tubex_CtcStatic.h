@@ -24,7 +24,7 @@ namespace tubex
    *        with some IBEX contractor (for boxes).
    *        The contractor will be applied on each slice and gate.
    */
-  class CtcStatic : public Ctc
+  class CtcStatic : public DynCtc
   {
     public:
 
@@ -35,7 +35,7 @@ namespace tubex
        * \param dynamic_ctc if true, the contraction will include the
        *        temporal tdomain as first dimension of the (n+1) box
        */
-      CtcStatic(ibex::Ctc *ibex_ctc, bool dynamic_ctc = false);
+      CtcStatic(ibex::Ctc& ibex_ctc, bool dynamic_ctc = false);
 
       void contract(std::vector<Domain*>& v_domains);
 
@@ -115,7 +115,7 @@ namespace tubex
 
     protected:
 
-      ibex::Ctc *m_ibex_ctc; //!< related IBEX contractor
+      ibex::Ctc& m_ibex_ctc; //!< related IBEX contractor
       int m_dynamic_ctc; //!< specifies either the temporal tdomain is part of the contraction or not
   };
 }

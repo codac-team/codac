@@ -9,7 +9,6 @@
  */
 
 #include "tubex_ContractorNetwork.h"
-#include "tubex_CtcFwdBwd.h"
 #include "tubex_CtcEval.h"
 
 using namespace std;
@@ -260,7 +259,7 @@ namespace tubex
     }
   }
 
-  void ContractorNetwork::add(tubex::Ctc& tubex_ctc, const vector<Domain>& v_domains)
+  void ContractorNetwork::add(tubex::DynCtc& tubex_ctc, const vector<Domain>& v_domains)
   {
     bool breakdown_to_slice_level = false;
 

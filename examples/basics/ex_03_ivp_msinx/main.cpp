@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-    Trajectory truth(tdomain, tubex::Function("2.*atan(exp(-t)*tan(0.5))"));
+    Trajectory truth(tdomain, tubex::TimeFunction("2.*atan(exp(-t)*tan(0.5))"));
     VIBesFigTube fig_x("x", &x[0], &truth);
     fig_x.set_properties(100, 100, 600, 600);
 
@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
 
     // Defining contractors
 
-    tubex::CtcFwdBwd ctc_fwdbwd(tubex::Function("x", "xdot", "xdot+sin(x)")); // algebraic contractor
+    CtcFunction ctc_f("x", "xdot", "xdot+sin(x)"); // algebraic contractor
+    x[1] &= Interval(-1.,1.); // xdot=-sin(..)
     CtcDeriv ctc_deriv; // differential contractor
 
     // Calling contractors (iterative resolution)
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
     do
     {
       volume_x = x[0].volume(); // check tube's volume to detect a fixpoint
-      ctc_fwdbwd.contract(x[0], x[1]);
+      ctc_f.contract(x[0], x[1]);
       ctc_deriv.contract(x[0], x[1]);
       i++;
     } while(volume_x != x[0].volume()); // up to the fixpoint

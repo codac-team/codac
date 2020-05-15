@@ -22,7 +22,7 @@ namespace tubex
    *
    * \todo Restricted tdomain feature?
    */
-  class CtcPicard : public Ctc
+  class CtcPicard : public DynCtc
   {
     public:
 
@@ -30,21 +30,21 @@ namespace tubex
 
       void contract(std::vector<Domain*>& v_domains);
       
-      void contract(const tubex::Fnc& f,
+      void contract(const tubex::TimeFnc& f,
                     Tube& x,
                     TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(const tubex::Fnc& f,
+      void contract(const tubex::TimeFnc& f,
                     TubeVector& x,
                     TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       int picard_iterations() const;
 
     protected:
 
-      void contract_kth_slices(const tubex::Fnc& f,
+      void contract_kth_slices(const tubex::TimeFnc& f,
                                TubeVector& tube,
                                int k,
                                TimePropag t_propa);
-      void guess_kth_slices_envelope(const Fnc& f,
+      void guess_kth_slices_envelope(const TimeFnc& f,
                                TubeVector& tube,
                                int k,
                                TimePropag t_propa);

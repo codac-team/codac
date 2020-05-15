@@ -3,7 +3,6 @@
 #include "ibex_CtcFwdBwd.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
-#include "tubex_CtcFwdBwd.h"
 #include "tubex_CtcFunction.h"
 #include "vibes.h"
 
@@ -334,7 +333,7 @@ TEST_CASE("CN simple")
     }
     {
       Interval x(2.,2.5);
-      Tube a(tdomain, dt, tubex::Function("cos(t)")), b(tdomain, dt);
+      Tube a(tdomain, dt, tubex::TimeFunction("cos(t)")), b(tdomain, dt);
 
       CtcFunction ctc_add("x", "a", "b", "x+a=b");
 
@@ -342,7 +341,7 @@ TEST_CASE("CN simple")
       cn.add(ctc_add, {x,a,b});
       cn.contract();
       
-      Tube result(tdomain, dt, tubex::Function("cos(t)"));
+      Tube result(tdomain, dt, tubex::TimeFunction("cos(t)"));
       result += x;
 
       CHECK(x == Interval(2.,2.5));

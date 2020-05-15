@@ -16,7 +16,7 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcDelay::CtcDelay() : Ctc()
+  CtcDelay::CtcDelay() : DynCtc()
   {
 
   }

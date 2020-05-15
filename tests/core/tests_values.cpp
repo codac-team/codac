@@ -422,7 +422,7 @@ TEST_CASE("Testing set inversion")
     float dt = 0.05;
     // to test the interest of trees, use a very small dt
     Interval domain(-20., 20.);
-    Tube x(domain, dt, tubex::Function("[-1,1]*(t^2+1)"));
+    Tube x(domain, dt, tubex::TimeFunction("[-1,1]*(t^2+1)"));
     CHECK(x.invert(0.) == domain);
   }
 }
@@ -1221,7 +1221,7 @@ TEST_CASE("Interpol")
 
   SECTION("Shifting domains")
   {
-    Tube x(Interval(0., 1.), 0.1, tubex::Function("cos(t)"));
+    Tube x(Interval(0., 1.), 0.1, tubex::TimeFunction("cos(t)"));
     CHECK(x.tdomain() == Interval(0.,1.));
     CHECK(x(0.5).contains(cos(0.5)));
     x.shift_tdomain(-10.);
@@ -1233,12 +1233,12 @@ TEST_CASE("Interpol")
   {
     // Defined by maps of values
 
-    TubeVector test1(4, Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")));
+    TubeVector test1(4, Tube(Interval(0., 1.), 0.1, tubex::TimeFunction("cos(t)")));
     TubeVector test2({
-        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
-        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
-        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)")),
-        Tube(Interval(0., 1.), 0.1, tubex::Function("cos(t)"))
+        Tube(Interval(0., 1.), 0.1, tubex::TimeFunction("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::TimeFunction("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::TimeFunction("cos(t)")),
+        Tube(Interval(0., 1.), 0.1, tubex::TimeFunction("cos(t)"))
     });
 
     CHECK(test1 == test2);

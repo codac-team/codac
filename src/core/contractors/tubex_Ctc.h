@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  Ctc class
+ *  DynCtc class
  * ----------------------------------------------------------------------------
  *  \date       2015
  *  \author     Simon Rohou
@@ -9,8 +9,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_CTC_H__
-#define __TUBEX_CTC_H__
+#ifndef __TUBEX_DYNCTC_H__
+#define __TUBEX_DYNCTC_H__
 
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
@@ -54,19 +54,19 @@ namespace tubex
   { return static_cast<TimePropag>(static_cast<int>(a) | static_cast<int>(b)); }
 
   /**
-   * \class Ctc
+   * \class DynCtc
    * \brief Contractor interface
    */
-  class Ctc
+  class DynCtc
   {
     public:
 
       /**
        * \brief Creates a contractor
        */
-      Ctc(bool intertemporal = true);
+      DynCtc(bool intertemporal = true);
 
-      virtual ~Ctc();
+      virtual ~DynCtc();
 
       virtual void contract(std::vector<Domain*>& v_domains) = 0;
 

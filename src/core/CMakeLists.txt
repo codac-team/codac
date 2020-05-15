@@ -99,8 +99,6 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFunction.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Domain.cpp
@@ -165,6 +163,8 @@
       file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Matrix.h>\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_IntervalMatrix.h>\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_BoolInterval.h>\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Ctc.h>\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Function.h>\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "namespace tubex\n{\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Interval;\n")
@@ -173,6 +173,8 @@
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Matrix;\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::IntervalMatrix;\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::BoolInterval;\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Ctc;\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Function;\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "}\n\n")
   foreach(header_path ${HDR})
     get_filename_component(header_name ${header_path} NAME)
