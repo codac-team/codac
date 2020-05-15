@@ -320,7 +320,7 @@ namespace tubex
     assert(volume >= y.volume() + w.volume() && "contraction rule not respected");
   }
 
-  void CtcEval::contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)
+  void CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w)
   {
     assert(y.tdomain().contains(t));
     assert(y.tdomain() == w.tdomain());
@@ -356,7 +356,7 @@ namespace tubex
     contract(_t, _z, y, w);
   }
 
-  void CtcEval::contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w)
+  void CtcEval::contract(Interval& t, IntervalVector& z, TubeVector& y, TubeVector& w)
   {
     assert(y.size() == z.size());
     assert(y.size() == w.size());

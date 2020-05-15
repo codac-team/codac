@@ -23,7 +23,7 @@ int main()
     float dt = 0.01;                                  // timestep for simulation/tubes accuracy
     Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]=[0,3]
 
-    TrajectoryVector x_truth(tdomain, tubex::TimeFunction("( \
+    TrajectoryVector x_truth(tdomain, TimeFunction("( \
       10*cos(t)+t ; \
       5*sin(2*t)+t ; \
       atan2((10*cos(2*t)+1),(-10*sin(t)+1)) ; \

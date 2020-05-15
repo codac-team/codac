@@ -17,55 +17,55 @@ using namespace ibex;
 namespace tubex
 {
   CtcFunction::CtcFunction(const char* x1, const char* f)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(x1, CtcFunction::parse_f(f).c_str())))
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, CtcFunction::parse_f(f).c_str())))
   {
     // todo: clean delete
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* f)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(x1, x2, CtcFunction::parse_f(f).c_str())))
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, CtcFunction::parse_f(f).c_str())))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* f)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())))
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())))
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())))
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())))
   {
 
   }
 
   CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())))
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())))
   {
 
   }
 
-  CtcFunction::CtcFunction(const ibex::Function& f, const ibex::Domain& y)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(f), y))
+  CtcFunction::CtcFunction(const Function& f, const Domain& y)
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(f), y))
   {
 
   }
   
-  CtcFunction::CtcFunction(const ibex::Function& f, const ibex::Interval& y)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(f), y))
+  CtcFunction::CtcFunction(const Function& f, const Interval& y)
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(f), y))
   {
 
   }
 
-  CtcFunction::CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y)
-    : Ctc3BCid(*new ibex::CtcFwdBwd(*new ibex::Function(f), y))
+  CtcFunction::CtcFunction(const Function& f, const IntervalVector& y)
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(f), y))
   {
 
   }

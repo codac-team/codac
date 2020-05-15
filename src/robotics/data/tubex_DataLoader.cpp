@@ -126,7 +126,7 @@ namespace tubex
     return generate_observations(x, map_boxes, random, visi_range, visi_angle);
   }
   
-  vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, bool random, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& tdomain)
+  vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, bool random, const Interval& visi_range, const Interval& visi_angle, const Interval& tdomain)
   {
     assert(x.size() >= 2);
     assert(nb_obs >= 0);
@@ -166,7 +166,7 @@ namespace tubex
     return v_obs;
   }
   
-  vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<IntervalVector>& map, int nb_obs, bool random, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& tdomain)
+  vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<IntervalVector>& map, int nb_obs, bool random, const Interval& visi_range, const Interval& visi_angle, const Interval& tdomain)
   {
     vector<Beacon> map_beacons;
     for(auto& b : map)

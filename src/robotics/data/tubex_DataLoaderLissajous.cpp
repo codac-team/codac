@@ -64,7 +64,7 @@ namespace tubex
     return v_beacons;
   }
   
-  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& tdomain) const
+  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, const Interval& visi_range, const Interval& visi_angle, const Interval& tdomain) const
   {
     assert(x.size() >= 2);
     assert(nb_obs >= 0);

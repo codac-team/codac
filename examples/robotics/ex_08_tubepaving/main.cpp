@@ -23,10 +23,10 @@ int main()
   /* =========== TUBE =========== */
 
     Interval tdomain(0., 2.*M_PI);
-    TrajectoryVector traj_bound_1(tdomain, tubex::TimeFunction("(2*sin(t)-0.2;sin(2*t)-0.2)"));
-    TrajectoryVector traj_bound_2(tdomain, tubex::TimeFunction("(2*sin(t)-0.2;sin(2*t)+0.2)"));
-    TrajectoryVector traj_bound_3(tdomain, tubex::TimeFunction("(2*sin(t)+0.2;sin(2*t)-0.2)"));
-    TrajectoryVector traj_bound_4(tdomain, tubex::TimeFunction("(2*sin(t)+0.2;sin(2*t)+0.2)"));
+    TrajectoryVector traj_bound_1(tdomain, TimeFunction("(2*sin(t)-0.2;sin(2*t)-0.2)"));
+    TrajectoryVector traj_bound_2(tdomain, TimeFunction("(2*sin(t)-0.2;sin(2*t)+0.2)"));
+    TrajectoryVector traj_bound_3(tdomain, TimeFunction("(2*sin(t)+0.2;sin(2*t)-0.2)"));
+    TrajectoryVector traj_bound_4(tdomain, TimeFunction("(2*sin(t)+0.2;sin(2*t)+0.2)"));
 
     TubeVector x(traj_bound_1, 0.1);
     x |= traj_bound_1;

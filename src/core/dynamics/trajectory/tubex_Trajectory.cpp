@@ -31,8 +31,8 @@ namespace tubex
       *this = traj;
     }
 
-    Trajectory::Trajectory(const Interval& tdomain, const tubex::TimeFunction& f)
-      : m_tdomain(tdomain), m_traj_def_type(TrajDefnType::ANALYTIC_FNC), m_function(new tubex::TimeFunction(f))
+    Trajectory::Trajectory(const Interval& tdomain, const TimeFunction& f)
+      : m_tdomain(tdomain), m_traj_def_type(TrajDefnType::ANALYTIC_FNC), m_function(new TimeFunction(f))
     {
       assert(valid_tdomain(tdomain));
       assert(f.image_dim() == 1);
@@ -42,7 +42,7 @@ namespace tubex
       m_codomain = m_function->eval(tdomain);
     }
 
-    Trajectory::Trajectory(const Interval& tdomain, const tubex::TimeFunction& f, double timestep)
+    Trajectory::Trajectory(const Interval& tdomain, const TimeFunction& f, double timestep)
       : Trajectory(tdomain, f)
     {
       assert(timestep > 0.);
@@ -79,7 +79,7 @@ namespace tubex
       {
         case TrajDefnType::ANALYTIC_FNC:
           delete m_function;
-          m_function = new tubex::TimeFunction(*x.m_function);
+          m_function = new TimeFunction(*x.m_function);
           break;
 
         case TrajDefnType::MAP_OF_VALUES:
@@ -116,7 +116,7 @@ namespace tubex
       return m_map_values;
     }
 
-    const tubex::TimeFunction* Trajectory::function() const
+    const TimeFunction* Trajectory::function() const
     {
       assert(m_traj_def_type == TrajDefnType::ANALYTIC_FNC);
       return m_function;

@@ -111,8 +111,8 @@ namespace tubex
     construct_from_array(8, xdyn, y);
   }
 
-  TimeFunction::TimeFunction(const tubex::TimeFunction& f)
-    : tubex::TimeFnc(f.nb_vars(), f.image_dim(), false)
+  TimeFunction::TimeFunction(const TimeFunction& f)
+    : TimeFnc(f.nb_vars(), f.image_dim(), false)
   {
     *this = f;
   }
@@ -126,7 +126,7 @@ namespace tubex
   {
     if(m_ibex_f != NULL)
       delete m_ibex_f;
-    m_ibex_f = new ibex::Function(*f.m_ibex_f);
+    m_ibex_f = new Function(*f.m_ibex_f);
     m_exp = f.m_exp;
     TimeFnc::operator=(f);
     return *this;
@@ -136,15 +136,15 @@ namespace tubex
   {
     assert(i >= 0 && i < image_dim());
     // todo: check the following
-    tubex::TimeFunction fi(*this);
-    ibex::Function ibex_fi((*fi.m_ibex_f)[i]);
+    TimeFunction fi(*this);
+    Function ibex_fi((*fi.m_ibex_f)[i]);
     delete fi.m_ibex_f;
-    fi.m_ibex_f = new ibex::Function(ibex_fi);
+    fi.m_ibex_f = new Function(ibex_fi);
     fi.m_img_dim = 1;
     return fi;
   }
 
-  const ibex::Function& TimeFunction::ibex_function() const
+  const Function& TimeFunction::ibex_function() const
   {
     return *m_ibex_f;
   }
@@ -174,7 +174,7 @@ namespace tubex
       xdyn[i+1] = x[i];
     }
 
-    m_ibex_f = new ibex::Function(n+1, xdyn, y);
+    m_ibex_f = new Function(n+1, xdyn, y);
     m_nb_vars = n;
     m_img_dim = m_ibex_f->image_dim();
     m_is_intertemporal = false; // not supported yet
@@ -391,7 +391,7 @@ namespace tubex
   {
     TimeFunction diff_f = *this;
     delete diff_f.m_ibex_f;
-    diff_f.m_ibex_f = new ibex::Function(m_ibex_f->diff());
+    diff_f.m_ibex_f = new Function(m_ibex_f->diff());
     return diff_f;
   }
 }

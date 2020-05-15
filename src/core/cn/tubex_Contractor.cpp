@@ -29,21 +29,21 @@ namespace tubex
     m_ctc_id = ctc_counter;
   }
 
-  Contractor::Contractor(ibex::Ctc& ctc, const vector<Domain*>& v_domains)
+  Contractor::Contractor(Ctc& ctc, const vector<Domain*>& v_domains)
     : Contractor(Type::IBEX, v_domains)
   {
     assert(!v_domains.empty());
 
-    m_ibex_ctc = reference_wrapper<ibex::Ctc>(ctc);
+    m_static_ctc = reference_wrapper<Ctc>(ctc);
   }
 
-  Contractor::Contractor(tubex::DynCtc& ctc, const vector<Domain*>& v_domains) 
+  Contractor::Contractor(DynCtc& ctc, const vector<Domain*>& v_domains) 
     : Contractor(Type::TUBEX, v_domains)
   {
     assert(!v_domains.empty());
 
-    m_tubex_ctc = reference_wrapper<tubex::DynCtc>(ctc);
-    m_tubex_ctc.get().preserve_slicing(true);
+    m_dyn_ctc = reference_wrapper<DynCtc>(ctc);
+    m_dyn_ctc.get().preserve_slicing(true);
   }
 
   Contractor::Contractor(const Contractor& ac)
@@ -62,11 +62,11 @@ namespace tubex
         break;
         
       case Type::IBEX:
-        m_ibex_ctc = reference_wrapper<ibex::Ctc>(ac.m_ibex_ctc);
+        m_static_ctc = reference_wrapper<Ctc>(ac.m_static_ctc);
         break;
 
       case Type::TUBEX:
-        m_tubex_ctc = reference_wrapper<tubex::DynCtc>(ac.m_tubex_ctc);
+        m_dyn_ctc = reference_wrapper<DynCtc>(ac.m_dyn_ctc);
         break;
 
       default:
@@ -89,16 +89,16 @@ namespace tubex
     return m_type;
   }
 
-  ibex::Ctc& Contractor::ibex_ctc()
+  Ctc& Contractor::ibex_ctc()
   {
     assert(m_type == Type::IBEX);
-    return m_ibex_ctc.get();
+    return m_static_ctc.get();
   }
 
-  tubex::DynCtc& Contractor::tubex_ctc()
+  DynCtc& Contractor::tubex_ctc()
   {
     assert(m_type == Type::TUBEX);
-    return m_tubex_ctc.get();
+    return m_dyn_ctc.get();
   }
 
   bool Contractor::is_active() const
@@ -131,20 +131,20 @@ namespace tubex
     switch(m_type)
     {
       case Type::IBEX:
-        if(&m_ibex_ctc.get() != &x.m_ibex_ctc.get())
+        if(&m_static_ctc.get() != &x.m_static_ctc.get())
           return false;
 
-        if(typeid(m_ibex_ctc.get()) != typeid(x.m_ibex_ctc.get()))
+        if(typeid(m_static_ctc.get()) != typeid(x.m_static_ctc.get()))
           return false;
 
       case Type::TUBEX:
-        if(typeid(m_tubex_ctc.get()) != typeid(x.m_tubex_ctc.get()))
+        if(typeid(m_dyn_ctc.get()) != typeid(x.m_dyn_ctc.get()))
           return false;
 
-        if(&m_tubex_ctc.get() != &x.m_tubex_ctc.get() &&
-          (typeid(m_tubex_ctc.get()) != typeid(CtcEval) && 
-           typeid(m_tubex_ctc.get()) != typeid(CtcDeriv) && 
-           typeid(m_tubex_ctc.get()) != typeid(CtcDist)))
+        if(&m_dyn_ctc.get() != &x.m_dyn_ctc.get() &&
+          (typeid(m_dyn_ctc.get()) != typeid(CtcEval) && 
+           typeid(m_dyn_ctc.get()) != typeid(CtcDeriv) && 
+           typeid(m_dyn_ctc.get()) != typeid(CtcDist)))
           return false;
 
       case Type::COMPONENT:
@@ -190,7 +190,7 @@ namespace tubex
       // Case: all components in one vector box
       if(m_v_domains.size() == 1 && m_v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR)
       {
-        m_ibex_ctc.get().contract(m_v_domains[0]->interval_vector());
+        m_static_ctc.get().contract(m_v_domains[0]->interval_vector());
       }
 
       // Case: list of heterogeneous components
@@ -203,7 +203,7 @@ namespace tubex
 
           // Building a temporary box for the contraction
           
-            IntervalVector box(m_ibex_ctc.get().nb_var);
+            IntervalVector box(m_static_ctc.get().nb_var);
 
             int i = 0;
             for(auto& dom : m_v_domains)
@@ -254,11 +254,11 @@ namespace tubex
               }
             }
 
-            assert(i == m_ibex_ctc.get().nb_var);
+            assert(i == m_static_ctc.get().nb_var);
 
           // Contracting
 
-            m_ibex_ctc.get().contract(box);
+            m_static_ctc.get().contract(box);
             
           // Updating the domains (reverse operation)
 
@@ -310,7 +310,7 @@ namespace tubex
               }
             }
 
-            assert(i == m_ibex_ctc.get().nb_var);
+            assert(i == m_static_ctc.get().nb_var);
 
           if(!at_least_one_slice)
             break;
@@ -320,7 +320,7 @@ namespace tubex
 
     else if(m_type == Type::TUBEX)
     {
-      m_tubex_ctc.get().contract(m_v_domains);
+      m_dyn_ctc.get().contract(m_v_domains);
     }
 
     else if(m_type == Type::COMPONENT)
@@ -389,10 +389,10 @@ namespace tubex
       case Type::TUBEX:
         if(m_name.empty())
         {
-          if(typeid(m_tubex_ctc.get()) == typeid(CtcEval))
+          if(typeid(m_dyn_ctc.get()) == typeid(CtcEval))
             return "\\mathcal{C}_{\\textrm{eval}}";
 
-          if(typeid(m_tubex_ctc.get()) == typeid(CtcDeriv))
+          if(typeid(m_dyn_ctc.get()) == typeid(CtcDeriv))
             return "\\mathcal{C}_{\\frac{d}{dt}}";
         }
         return "\\mathcal{C}_{" + m_name + "}";

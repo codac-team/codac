@@ -168,20 +168,20 @@ namespace tubex
     return iv;
   }
 
-  void ContractorNetwork::add(ibex::Ctc& ibex_ctc, const vector<Domain>& v_domains)
+  void ContractorNetwork::add(Ctc& static_ctc, const vector<Domain>& v_domains)
   {
     // Static constraint: each slice (if dyn case) is dealt with in parallel,
     // so dynamic variables must share the same slicing
     assert(Domain::dyn_same_slicing(v_domains));
 
     int n = Domain::total_size(v_domains);
-    assert((n % ibex_ctc.nb_var == 0) && "invalid total dimension of domains");
+    assert((n % static_ctc.nb_var == 0) && "invalid total dimension of domains");
 
     // Adding domains to the CN
     for(auto& dom : v_domains)
       add_dom(dom);
 
-    for(int i = 0 ; i < n/ibex_ctc.nb_var ; i++) // in case we are dealing with array data
+    for(int i = 0 ; i < n/static_ctc.nb_var ; i++) // in case we are dealing with array data
     {
       int k = 0; // k-th slice
       int slices_nb = -1; // will be determined during the dowhile loop, if one dyn domain is present
@@ -195,13 +195,13 @@ namespace tubex
           switch(dom.type())
           {
             case Domain::Type::INTERVAL:
-              assert(n/ibex_ctc.nb_var == 1); // no array configuration with scalar type
+              assert(n/static_ctc.nb_var == 1); // no array configuration with scalar type
             case Domain::Type::SLICE:
               v_dom_ptr.push_back(add_dom(dom));
               break;
 
             case Domain::Type::INTERVAL_VECTOR:
-              if(n/ibex_ctc.nb_var == 1) // heterogeneous case
+              if(n/static_ctc.nb_var == 1) // heterogeneous case
               {
                 // todo: ? add the vector itself, or each component as it is now:
                 for(int j = 0 ; j < dom.interval_vector().size() ; j++)
@@ -210,19 +210,19 @@ namespace tubex
 
               else // array data case
               {
-                assert((dom.interval_vector().size() == n/ibex_ctc.nb_var) && "wrong vector dimension");
+                assert((dom.interval_vector().size() == n/static_ctc.nb_var) && "wrong vector dimension");
                 v_dom_ptr.push_back(add_dom(Domain::vector_component(const_cast<Domain&>(dom), i)));
               }
               break;
 
             case Domain::Type::TUBE:
-              assert(n/ibex_ctc.nb_var == 1); // no array configuration with scalar type
+              assert(n/static_ctc.nb_var == 1); // no array configuration with scalar type
               v_dom_ptr.push_back(add_dom(Domain(const_cast<Slice&>(*dom.tube().slice(k)))));
               slices_nb = dom.tube().nb_slices();
               break;
 
             case Domain::Type::TUBE_VECTOR:
-              if(n/ibex_ctc.nb_var == 1) // heterogeneous case
+              if(n/static_ctc.nb_var == 1) // heterogeneous case
               {
                 for(int j = 0 ; j < dom.tube_vector().size() ; j++)
                   v_dom_ptr.push_back(add_dom(Domain(const_cast<Slice&>(*dom.tube_vector()[j].slice(k)))));
@@ -230,7 +230,7 @@ namespace tubex
 
               else // array data case
               {
-                assert((dom.tube_vector().size() == n/ibex_ctc.nb_var) && "wrong vector dimension");
+                assert((dom.tube_vector().size() == n/static_ctc.nb_var) && "wrong vector dimension");
                 v_dom_ptr.push_back(add_dom(Domain(const_cast<Slice&>(*dom.tube_vector()[i].slice(k)))));
               }
 
@@ -242,10 +242,10 @@ namespace tubex
           }
         }
 
-        assert((int)v_dom_ptr.size() == ibex_ctc.nb_var);
+        assert((int)v_dom_ptr.size() == static_ctc.nb_var);
 
         // Creating what would be this new contractor (defined with domains)
-        Contractor ctc(ibex_ctc, v_dom_ptr);
+        Contractor ctc(static_ctc, v_dom_ptr);
 
         // Getting the actual contractor (maybe the same if not already added)
         Contractor *ctc_ptr = add_ctc(ctc);
@@ -259,7 +259,7 @@ namespace tubex
     }
   }
 
-  void ContractorNetwork::add(tubex::DynCtc& tubex_ctc, const vector<Domain>& v_domains)
+  void ContractorNetwork::add(DynCtc& tubex_ctc, const vector<Domain>& v_domains)
   {
     bool breakdown_to_slice_level = false;
 

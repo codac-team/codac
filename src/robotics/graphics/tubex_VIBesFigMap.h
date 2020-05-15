@@ -98,7 +98,7 @@ namespace tubex
        * \brief Limits the number of points to be displayed for trajectories
        *
        * Note that this will be applied for trajectories defined
-       * from tubex::Function objects (discretization).
+       * from TimeFunction objects (discretization).
        *
        * \param max the maximum number of points
        */

@@ -15,6 +15,7 @@
 #include "tubex_Figure.h" // for add_suffix
 
 using namespace std;
+using namespace ibex;
 
 namespace tubex
 {
@@ -24,7 +25,7 @@ namespace tubex
     dom_ptr->set_name(name);
   }
   
-  void ContractorNetwork::set_name(ibex::Ctc& ctc, const string& name)
+  void ContractorNetwork::set_name(Ctc& ctc, const string& name)
   {
     #ifndef NDEBUG
       bool contractor_found = false;
@@ -42,7 +43,7 @@ namespace tubex
     assert(contractor_found);
   }
   
-  void ContractorNetwork::set_name(tubex::DynCtc& ctc, const string& name)
+  void ContractorNetwork::set_name(DynCtc& ctc, const string& name)
   {
     #ifndef NDEBUG
       bool contractor_found = false;

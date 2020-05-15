@@ -85,7 +85,7 @@ namespace tubex
       x->resize(6);
 
       // Computing robot's velocities:
-      tubex::TimeFunction f("phi", "theta", "psi", "vxr", "vyr", "vzr", 
+      TimeFunction f("phi", "theta", "psi", "vxr", "vyr", "vzr", 
        "(vxr * cos(theta) * cos(psi) \
          - vyr * (cos(phi) * sin(psi) - sin(theta) * cos(psi) * sin(phi)) \
          + vzr * (sin(phi) * sin(psi) + sin(theta) * cos(psi) * cos(phi)) \

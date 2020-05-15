@@ -17,7 +17,7 @@ using namespace ibex;
 namespace tubex
 {
   CtcConstell::CtcConstell(const vector<IntervalVector>& map)
-    : ibex::Ctc(2), m_map(map)
+    : Ctc(2), m_map(map)
   {
     // todo: binary tree for logarithmic complexity
   }

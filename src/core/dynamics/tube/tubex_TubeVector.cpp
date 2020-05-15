@@ -64,7 +64,7 @@ namespace tubex
       set(codomain);
     }
     
-    TubeVector::TubeVector(const Interval& tdomain, double timestep, const tubex::TimeFnc& f)
+    TubeVector::TubeVector(const Interval& tdomain, double timestep, const TimeFnc& f)
       : TubeVector(tdomain, timestep, f.image_dim())
     {
       assert(timestep >= 0.);
@@ -76,7 +76,7 @@ namespace tubex
       *this = f.eval_vector(input);
     }
 
-    TubeVector::TubeVector(const std::vector<ibex::Interval>& v_tdomains, const std::vector<ibex::IntervalVector>& v_codomains)
+    TubeVector::TubeVector(const std::vector<Interval>& v_tdomains, const std::vector<IntervalVector>& v_codomains)
       : m_n(v_codomains[0].size()), m_v_tubes(new Tube[m_n])
     {
       assert(v_tdomains.size() == v_codomains.size());

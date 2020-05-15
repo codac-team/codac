@@ -31,7 +31,7 @@ int main()
     // Creating tubes over the [0,6] tdomain with some timestep:
     TubeVector x(tdomain, timestep, 6);
     x &= IntervalVector(6, Interval(-999.,999.)); // todo: remove this
-    x[4] = Tube(x[5], tubex::TimeFunction("-10*cos(t)+[-0.001,0.001]"));
+    x[4] = Tube(x[5], TimeFunction("-10*cos(t)+[-0.001,0.001]"));
 
     // Initial conditions:
     IntervalVector x0(x.size());
@@ -80,7 +80,7 @@ int main()
 
   /* =========== GRAPHICS =========== */
 
-    TrajectoryVector x_truth(tdomain, tubex::TimeFunction("(10*cos(t);5*sin(2*t))"));
+    TrajectoryVector x_truth(tdomain, TimeFunction("(10*cos(t);5*sin(2*t))"));
     x_truth.resize(x.size());
 
     vibes::beginDrawing();

@@ -72,7 +72,7 @@ TEST_CASE("Trajectory base")
     CHECK(ApproxIntv(traj1.tdomain()) == Interval(1.,5.));
     CHECK(ApproxIntv(traj1.codomain()) == Interval(1.,5.));
 
-    Trajectory traj2(Interval(-1.,10.), tubex::TimeFunction("t^2"));
+    Trajectory traj2(Interval(-1.,10.), TimeFunction("t^2"));
     CHECK(traj2.tdomain() == Interval(-1.,10.));
     CHECK(traj2.codomain() == Interval(0.,100.));
     CHECK(Approx(traj2(5.3)) == 28.09);
@@ -128,8 +128,8 @@ TEST_CASE("Trajectory base")
     CHECK_FALSE(traj3 != traj4);
 
     // Defined by a TimeFunction object
-    Trajectory traj5(Interval(0.,10.), tubex::TimeFunction("t^2"));
-    Trajectory traj6(Interval(0.,10.), tubex::TimeFunction("t^2+1"));
+    Trajectory traj5(Interval(0.,10.), TimeFunction("t^2"));
+    Trajectory traj6(Interval(0.,10.), TimeFunction("t^2+1"));
     // todo: find a way to catch assert abort: CHECK_THROWS(traj5 == traj6); // not implemented yet
     // todo: find a way to catch assert abort: CHECK_THROWS(traj5 != traj6); // not implemented yet
   }

@@ -72,12 +72,12 @@ namespace tubex
     return (x == POS_INFINITY ? BOUNDED_INFINITY : (x == NEG_INFINITY ? -BOUNDED_INFINITY : x));
   }
 
-  const Interval Figure::trunc_inf(const ibex::Interval& x)
+  const Interval Figure::trunc_inf(const Interval& x)
   {
     return Interval(trunc_inf(x.lb()), trunc_inf(x.ub()));
   }
 
-  const IntervalVector Figure::trunc_inf(const ibex::IntervalVector& x)
+  const IntervalVector Figure::trunc_inf(const IntervalVector& x)
   {
     IntervalVector trunc_x = x;
     for(int i = 0 ; i < trunc_x.size() ; i++)

@@ -30,17 +30,17 @@ namespace tubex
 
       void contract(std::vector<Domain*>& v_domains);
       
-      void contract(const tubex::TimeFnc& f,
+      void contract(const TimeFnc& f,
                     Tube& x,
                     TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(const tubex::TimeFnc& f,
+      void contract(const TimeFnc& f,
                     TubeVector& x,
                     TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       int picard_iterations() const;
 
     protected:
 
-      void contract_kth_slices(const tubex::TimeFnc& f,
+      void contract_kth_slices(const TimeFnc& f,
                                TubeVector& tube,
                                int k,
                                TimePropag t_propa);

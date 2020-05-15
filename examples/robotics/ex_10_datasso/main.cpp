@@ -32,7 +32,7 @@ int main()
 
       const TrajectoryVector state_truth(tdomain,
         // Lissajous function (px,py,theta):
-        tubex::TimeFunction("(240*cos(t) ; \
+        TimeFunction("(240*cos(t) ; \
                           120*sin(2*t) ; \
                           atan2(240*cos(2*t),-240*sin(t)))"));
 
@@ -48,7 +48,7 @@ int main()
       // Derivatives of positions, with uncertainties:
       TubeVector v(tdomain, dt,
         // Lissajous derivative
-        tubex::TimeFunction("(-240*sin(t) ; \
+        TimeFunction("(-240*sin(t) ; \
                           240*cos(2*t))"));
       v.inflate(10.);
 

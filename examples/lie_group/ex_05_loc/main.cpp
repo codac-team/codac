@@ -13,12 +13,9 @@
 
 #include <tubex.h>
 #include <tubex-rob.h>
-#include "tubex-ode.h"
-
-
+#include <tubex-ode.h>
 
 using namespace std;
-using namespace ibex;
 using namespace tubex;
 using namespace vibes;
 
@@ -28,7 +25,7 @@ int main()
     // ----- Generate reference tube thanks to ODE integration -----
 
     Interval domain(0.,17.);
-    tubex::TimeFunction f("x1","x2","x3","(cos(x3);sin(x3);sin(0.4*t))"); //function to be integrated
+    TimeFunction f("x1","x2","x3","(cos(x3);sin(x3);sin(0.4*t))"); //function to be integrated
     IntervalVector a0(3,Interval(0.,0.)); // inintial condition for reference tube
     double timestep = 0.1;
     TubeVector a = TubeVectorODE(domain,f,a0,timestep,CAPD_MODE);
@@ -49,20 +46,20 @@ int main()
 
 
     // ----- Contractors initialisation -----
-    ibex::Function phi("x1","x2","x3","z1","z2","z3",
-                       "(x1 + cos(x3-z3)*(-z1) - sin(x3-z3)*(-z2); \
-                          x2 + sin(x3-z3)*(-z1) + cos(x3-z3)*(-z2); \
-                          x3  - z3)");
-    tubex::CtcFunction ctc_phi(phi,x0);
-    tubex::CtcDeriv ctc_deriv;
-    tubex::CtcEval ctc_eval;
+    Function phi("x1","x2","x3","z1","z2","z3",
+                 "(x1 + cos(x3-z3)*(-z1) - sin(x3-z3)*(-z2); \
+                    x2 + sin(x3-z3)*(-z1) + cos(x3-z3)*(-z2); \
+                    x3  - z3)");
+    CtcFunction ctc_phi(phi,x0);
+    CtcDeriv ctc_deriv;
+    CtcEval ctc_eval;
 
 
     // ----- Graphics initialisation -----
     beginDrawing();
     VIBesFigMap fig("Map");
-    tubex::rgb red = make_rgb(255,0,0,50);
-    tubex::rgb green = make_rgb(0,255,0,50);
+    rgb red = make_rgb(255,0,0,50);
+    rgb green = make_rgb(0,255,0,50);
     ColorMap estimateColorMap(InterpolMode::RGB);
     estimateColorMap.add_color_point(red,0);
     estimateColorMap.add_color_point(green,1);

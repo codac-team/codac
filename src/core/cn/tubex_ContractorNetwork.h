@@ -59,14 +59,14 @@ namespace tubex
       TubeVector& subvector(TubeVector& i, int start_index, int end_index);
 
       void add(ibex::Ctc& ctc, const std::vector<Domain>& v_domains);
-      void add(tubex::DynCtc& ctc, const std::vector<Domain>& v_domains);
+      void add(DynCtc& ctc, const std::vector<Domain>& v_domains);
 
       void add_data(Tube& tube, double t, const ibex::Interval& y);
       void add_data(TubeVector& tube, double t, const ibex::IntervalVector& y);
 
       void set_name(Domain dom, const std::string& name);
       void set_name(ibex::Ctc& ctc, const std::string& name);
-      void set_name(tubex::DynCtc& ctc, const std::string& name);
+      void set_name(DynCtc& ctc, const std::string& name);
 
       // dot / neato / circo / fdp / twopi
       int print_dot_graph(const std::string& cn_name = "cn", const std::string& prog = "fdp") const;

@@ -115,7 +115,7 @@ namespace tubex
 
     protected:
 
-      ibex::Ctc& m_ibex_ctc; //!< related IBEX contractor
+      ibex::Ctc& m_static_ctc; //!< related static contractor
       int m_dynamic_ctc; //!< specifies either the temporal tdomain is part of the contraction or not
   };
 }

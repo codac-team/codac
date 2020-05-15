@@ -31,7 +31,7 @@ namespace tubex
       assert(n > 0);
     }
 
-    TrajectoryVector::TrajectoryVector(const Interval& tdomain, const tubex::TimeFunction& f)
+    TrajectoryVector::TrajectoryVector(const Interval& tdomain, const TimeFunction& f)
       : TrajectoryVector(f.image_dim())
     {
       assert(valid_tdomain(tdomain));
@@ -43,7 +43,7 @@ namespace tubex
         (*this)[i] = Trajectory(tdomain, f[i]);
     }
 
-    TrajectoryVector::TrajectoryVector(const Interval& tdomain, const tubex::TimeFunction& f, double timestep)
+    TrajectoryVector::TrajectoryVector(const Interval& tdomain, const TimeFunction& f, double timestep)
       : TrajectoryVector(tdomain, f)
     {
       assert(timestep > 0.);

@@ -18,7 +18,7 @@ TEST_CASE("CN simple")
 {
   SECTION("Simple static case")
   {
-    ibex::CtcFwdBwd ctc_plus(*new ibex::Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
+    CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2));
 
@@ -36,7 +36,7 @@ TEST_CASE("CN simple")
 
   SECTION("Dependencies on vector components")
   {
-    ibex::CtcFwdBwd ctc_plus(*new ibex::Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
+    CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2)), d(2, Interval(0.)), e(2);
 
@@ -333,7 +333,7 @@ TEST_CASE("CN simple")
     }
     {
       Interval x(2.,2.5);
-      Tube a(tdomain, dt, tubex::TimeFunction("cos(t)")), b(tdomain, dt);
+      Tube a(tdomain, dt, TimeFunction("cos(t)")), b(tdomain, dt);
 
       CtcFunction ctc_add("x", "a", "b", "x+a=b");
 
@@ -341,7 +341,7 @@ TEST_CASE("CN simple")
       cn.add(ctc_add, {x,a,b});
       cn.contract();
       
-      Tube result(tdomain, dt, tubex::TimeFunction("cos(t)"));
+      Tube result(tdomain, dt, TimeFunction("cos(t)"));
       result += x;
 
       CHECK(x == Interval(2.,2.5));

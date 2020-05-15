@@ -37,11 +37,11 @@ namespace tubex
       TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* y);
       TimeFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* x7, const char* x8, const char* y);
       TimeFunction(int n, const char** x, const char* y);
-      TimeFunction(const tubex::TimeFunction& f);
+      TimeFunction(const TimeFunction& f);
       ~TimeFunction();
       
-      const tubex::TimeFunction& operator=(const tubex::TimeFunction& f);
-      const tubex::TimeFunction operator[](int i) const;
+      const TimeFunction& operator=(const TimeFunction& f);
+      const TimeFunction operator[](int i) const;
       const ibex::Function& ibex_function() const;
 
       const std::string& expr() const;
