@@ -100,13 +100,18 @@ script:
   - cd build
   
   # Without synthesis tree
-  
+
   # Building lib + tests
   - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_EXECUTABLE=/usr/bin/python3 ..
   - make
   - make api
   - make doc
   - make install
+  - cd python/python_package
+  - python3 setup.py develop --user
+  - python3 pytubex/tests/test_arithmetic.py 
+  - cd ../../
+
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
@@ -119,6 +124,7 @@ script:
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../../build
+
   # Testing
   - make test
     
@@ -130,6 +136,11 @@ script:
   - make api
   - make doc
   - make install
+  - cd python/python_package
+  - python3 setup.py develop --user
+  - python3 pytubex/tests/test_arithmetic.py 
+  - cd ../../
+
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
@@ -142,5 +153,6 @@ script:
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../../build
+  
   # Testing
   - make test
