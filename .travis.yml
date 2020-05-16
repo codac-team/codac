@@ -63,6 +63,12 @@ install:
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
 
+  # For Python wrapping
+  - sudo python3 -m pip install --upgrade pip
+  - sudo python3 -m pip install pyibex
+  - sudo python3 -m pip install --upgrade pyibex==1.8.0
+
+
 #  - docker pull $DOCKER_IMAGE
   
   - pwd
@@ -95,7 +101,7 @@ script:
   # Without synthesis tree
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
   - make
   - make api
   - make doc

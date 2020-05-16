@@ -29,6 +29,7 @@
   set(CMAKE_INSTALL_PKGCONFIG "share/pkgconfig" CACHE PATH "pkg files (share/pkgconfig)")
   set(CMAKE_INSTALL_CMAKE "share/tubex/cmake" CACHE PATH "cmake files (share/tubex/cmake)")
 
+
 ################################################################################
 # Compilation configuration
 ################################################################################
