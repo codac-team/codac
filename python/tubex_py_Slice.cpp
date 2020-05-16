@@ -14,7 +14,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
 #include "tubex_Slice.h"
-#include "pyibex_export_Slice_docs.h"
+#include "tubex_py_Slice_docs.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;

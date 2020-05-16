@@ -64,7 +64,7 @@ namespace tubex
       /**
        * \brief Creates a contractor
        */
-      DynCtc(bool intertemporal);
+      DynCtc(bool intertemporal = true); // todo: remove default value
 
       /**
        * \brief DynCtc destructor

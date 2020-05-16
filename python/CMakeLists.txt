@@ -21,14 +21,13 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/../include)
 
 # Generating a library tube.so containing the python binding:
 pybind11_add_module(tube SHARED
-  pyibex_tube.cpp
-  pyibex_export_Function.cpp
-  pyibex_export_Slice.cpp
-  pyibex_export_Trajectory.cpp
-  pyibex_export_Tube.cpp
-  pyibex_export_TubeVector.cpp
-  pyibex_export_Contractors.cpp
-
+  tubex_py.cpp
+  tubex_py_contractors.cpp
+  tubex_py_Slice.cpp
+  tubex_py_TFunction.cpp
+  tubex_py_Trajectory.cpp
+  tubex_py_Tube.cpp
+  tubex_py_TubeVector.cpp
 )
 target_link_libraries(tube PRIVATE tubex ${LIBS})
 
@@ -43,7 +42,7 @@ add_custom_command(TARGET tube POST_BUILD
 )
 
 pybind11_add_module(graphics SHARED
-  pyibex_VIBesFig.cpp
+  tubex_py_VIBesFig.cpp
 )
 target_link_libraries(graphics PRIVATE tubex tubex-rob ${LIBS})
 add_custom_command(TARGET graphics POST_BUILD

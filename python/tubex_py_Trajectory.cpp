@@ -17,8 +17,8 @@
 
 #include "tubex_Trajectory.h"
 #include "tubex_TrajectoryVector.h"
-#include "pyibex_export_Trajectory_docs.h"
-#include "pyibex_export_TrajectoryVector_docs.h"
+#include "tubex_py_Trajectory_docs.h"
+#include "tubex_py_TrajectoryVector_docs.h"
 namespace py = pybind11;
 using namespace pybind11::literals;
 using py::class_;
@@ -33,9 +33,9 @@ void export_Trajectory(py::module& m){
   py::class_<Trajectory> trajectory(m, "Trajectory");
   trajectory
     .def(py::init<>(),DOCS_TRAJECTORY_TRAJECTORY)
-    .def(py::init<const ibex::Interval &,const tubex::Function &>(),
+    .def(py::init<const ibex::Interval &,const TFunction &>(),
         DOCS_TRAJECTORY_TRAJECTORY_INTERVAL_FUNCTION, "domain"_a, "f"_a, py::keep_alive<1,3>())
-    .def(py::init<const ibex::Interval &,const tubex::Function &,double>(),
+    .def(py::init<const ibex::Interval &,const TFunction &,double>(),
         DOCS_TRAJECTORY_TRAJECTORY_INTERVAL_FUNCTION_DOUBLE, "domain"_a, "f"_a, "timestep"_a, py::keep_alive<1,3>())
     .def(py::init<const std::map<double, double> &>(),
         DOCS_TRAJECTORY_TRAJECTORY_MAP_DOUBLE_DOUBLE_, "m_map_values"_a)
@@ -93,8 +93,8 @@ void export_Trajectory(py::module& m){
     .def("class_name", &Trajectory::class_name,DOCS_TRAJECTORY_CLASS_NAME)
 
       // .def(py::init<>())
-      // .def(py::init< const ibex::Interval&, const tubex::Function&>(), "domain"_a, "f"_a, py::keep_alive<1,3>())
-      // .def(py::init< const ibex::Interval&, const tubex::Function&,double>(), "domain"_a, "f"_a, "timestep"_a, py::keep_alive<1,3>())
+      // .def(py::init< const ibex::Interval&, const TFunction&>(), "domain"_a, "f"_a, py::keep_alive<1,3>())
+      // .def(py::init< const ibex::Interval&, const TFunction&,double>(), "domain"_a, "f"_a, "timestep"_a, py::keep_alive<1,3>())
       // .def(py::init< const std::map<double, double>&>(), "m_map_values"_a)
       // .def(py::init< const tubex::Trajectory&>(), "traj"_a)
 
@@ -122,7 +122,7 @@ void export_Trajectory(py::module& m){
     py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector");
     trajectoryvector
         .def(py::init<int>(),DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT, "n"_a)
-        .def(py::init<const ibex::Interval &,const tubex::Function &>(),
+        .def(py::init<const ibex::Interval &,const TFunction &>(),
             DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION, "domain"_a, "f"_a)
         .def(py::init<const std::map<double, ibex::Vector> &>(),
             DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_MAP_DOUBLE_VECTOR_, "m_map_values"_a)
@@ -214,7 +214,7 @@ void export_Trajectory(py::module& m){
         //     DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT1)
 ;
       // .def(py::init<int>(), "n"_a)
-      // .def(py::init< const ibex::Interval&, const tubex::Function&>(), "domain"_a, "f"_a)
+      // .def(py::init< const ibex::Interval&, const TFunction&>(), "domain"_a, "f"_a)
       // .def(py::init< const std::map<double, ibex::Vector>&>(), "m_map_values"_a)
       // .def(py::init< const std::vector<std::map<double, double> >&>(), "v_map_values"_a)
       // .def(py::init< const tubex::TrajectoryVector&>(), "traj"_a)

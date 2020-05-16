@@ -17,10 +17,10 @@
 #include "tubex_VIBesFigMap.h"
 // #include "tubex_VIBesFigMap.h"
 // #include <tubex-rob.h>
-#include "pyibex_VIBesFig_docs.h"
-#include "pyibex_export_VIBesFigTube_docs.h"
-#include "pyibex_export_VIBesFigTubeVector_docs.h"
-#include "pyibex_export_VIBesFigMap_docs.h"
+#include "tubex_py_VIBesFig_docs.h"
+#include "tubex_py_VIBesFigTube_docs.h"
+#include "tubex_py_VIBesFigTubeVector_docs.h"
+#include "tubex_py_VIBesFigMap_docs.h"
 
 
 #include <pybind11/pybind11.h>

@@ -15,7 +15,7 @@
 #include <pybind11/functional.h>
 
 #include "tubex_TubeVector.h"
-#include "pyibex_export_TubeVector_docs.h"
+#include "tubex_py_TubeVector_docs.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -38,7 +38,7 @@ void export_TubeVector(py::module& m){
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INT, "domain"_a, "timestep"_a, "n"_a=1)
       .def(py::init<const ibex::Interval &,double,const ibex::IntervalVector &>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INTERVALVECTOR, "domain"_a, "timestep"_a, "codomain"_a)
-      .def(py::init<const ibex::Interval &,double,const tubex::Fnc &>(),
+      .def(py::init<const ibex::Interval &,double,const TFnc &>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_FNC, "domain"_a, "timestep"_a, "f"_a)
       .def(py::init<const TrajectoryVector &,double>(),
           DOCS_TUBEVECTOR_TUBEVECTOR_TRAJECTORYVECTOR_DOUBLE, "traj"_a, "timestep"_a=0)

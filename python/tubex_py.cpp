@@ -16,9 +16,9 @@ namespace py = pybind11;;
 void export_Tube(py::module&m);
 void export_TubeVector(py::module& m);
 void export_Trajectory(py::module& m);
-void export_Function(py::module& m);
+void export_TFunction(py::module& m);
 void export_Slice(py::module& m);
-void export_Contractors(py::module& m);
+void export_contractors(py::module& m);
 
 
 PYBIND11_MODULE(tube, m)
@@ -27,9 +27,9 @@ PYBIND11_MODULE(tube, m)
   export_Tube(m);
   export_TubeVector(m);
   export_Trajectory(m);
-  export_Contractors(m);
+  export_contractors(m);
   export_Slice(m);
-  export_Function(m);
+  export_TFunction(m);
   // m.attr("ibex_version") = _IBEX_VERSION_;
   // return m.ptr();
 

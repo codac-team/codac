@@ -15,7 +15,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
 
-#include "pyibex_export_Tube_docs.h"
+#include "tubex_py_Tube_docs.h"
 namespace py = pybind11;
 using namespace pybind11::literals;
 using py::class_;
@@ -37,12 +37,12 @@ void export_Tube(py::module& m){
           DOCS_TUBE_TUBE_INTERVAL_DOUBLE_INTERVAL, "domain"_a, "timestep"_a, "codomain"_a=ibex::Interval::ALL_REALS)
       .def(py::init<const Tube &,const ibex::Interval &>(),
           DOCS_TUBE_TUBE_TUBE_INTERVAL, "x"_a, "codomain"_a)
-      .def(py::init<const ibex::Interval &,double,const tubex::Fnc &,int>(),
+      .def(py::init<const ibex::Interval &,double,const TFnc &,int>(),
           DOCS_TUBE_TUBE_INTERVAL_DOUBLE_FNC_INT, "domain"_a, "timestep"_a, "f"_a, "f_image_id"_a=0)
       .def(py::init<const std::vector<ibex::Interval> &,const std::vector<ibex::Interval> &>(),
           DOCS_TUBE_TUBE_VECTOR_INTERVAL__VECTOR_INTERVAL_, "v_domains"_a, "v_codomains"_a)
       .def(py::init<const Tube &>(),DOCS_TUBE_TUBE_TUBE, "x"_a)
-      .def(py::init<const Tube &,const tubex::Fnc &,int>(),
+      .def(py::init<const Tube &,const TFnc &,int>(),
           DOCS_TUBE_TUBE_TUBE_FNC_INT, "x"_a, "f"_a, "f_image_id"_a=0)
       .def(py::init<const Trajectory &,double>(),
           DOCS_TUBE_TUBE_TRAJECTORY_DOUBLE, "traj"_a, "timestep"_a)
@@ -227,12 +227,12 @@ void export_Tube(py::module& m){
     //       DOCS_TUBE_TUBE_INTERV_INTERV, "domain"_a, "codomain"_a=ibex::Interval::ALL_REALS)
     //   .def(py::init< const ibex::Interval&,double, const ibex::Interval&>(),
     //       DOCS_TUBE_TUBE_INTERV_DOUBLE_INTERV, "domain"_a, "timestep"_a, "codomain"_a=ibex::Interval::ALL_REALS)
-    //   .def(py::init< const ibex::Interval&,double, const tubex::Fnc&,int>(),
+    //   .def(py::init< const ibex::Interval&,double, const TFnc&,int>(),
     //       DOCS_TUBE_TUBE_INTERV_DOUBLE_FNC_INT, "domain"_a, "timestep"_a, "f"_a, "f_image_id"_a=0)
     //   .def(py::init< const std::vector<ibex::Interval>&, const std::vector<ibex::Interval>&>(),
     //       DOCS_TUBE_TUBE_INTERV_INTERV_VEC, "v_domains"_a, "v_codomains"_a)
     //   .def(py::init< const tubex::Tube&>(),DOCS_TUBE_TUBE_TUBE, "x"_a, py::keep_alive<1,2>())
-    //   .def(py::init< const tubex::Tube&, const tubex::Fnc&,int>(),
+    //   .def(py::init< const tubex::Tube&, const TFnc&,int>(),
     //       DOCS_TUBE_TUBE_TUBE_FNC_INT, "x"_a, "f"_a, "f_image_id"_a=0)
     //   .def(py::init< const tubex::Trajectory&,double>(),
     //       DOCS_TUBE_TUBE_TRAJEC_DOUBLE, "traj"_a, "timestep"_a)

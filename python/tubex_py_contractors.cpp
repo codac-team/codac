@@ -9,13 +9,13 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_Ctc.h"
+#include "tubex_DynCtc.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_Domain.h"
-#include "pyibex_export_Ctc_docs.h"
-#include "pyibex_export_CtcEval_docs.h"
-#include "pyibex_export_CtcDeriv_docs.h"
+#include "tubex_py_DynCtc_docs.h"
+#include "tubex_py_CtcEval_docs.h"
+#include "tubex_py_CtcDeriv_docs.h"
 
 
 #include <pybind11/pybind11.h>
@@ -33,18 +33,18 @@ using ibex::Interval;
 using ibex::IntervalVector;
 
 
-class pyCtc : public Ctc {
+class pyCtc : public DynCtc {
 public:
   // pyCtc(int v): Ctc(v){}
   /* Inherit the constructors */
-  using Ctc::Ctc;
+  using DynCtc::DynCtc;
 
   /* Trampoline (need one for each virtual function) */
   void contract(std::vector<Domain*>& v_domains) override {
     // py::gil_scoped_acquire acquire;
     PYBIND11_OVERLOAD_PURE(
       void,       /* return type */
-      Ctc,        /* Parent class */
+      DynCtc,        /* Parent class */
       contract,   /* Name of function */
       v_domains         /* Argument(s) */
     );
@@ -61,16 +61,16 @@ void export_Contractors(py::module& m){
       .value("BACKWARD", TimePropag::BACKWARD)
   ;
     
-  py::class_<Ctc, pyCtc> ctc(m, "Ctc");
+  py::class_<DynCtc, pyCtc> ctc(m, "DynCtc");
   ctc
     .def(py::init<>(),DOCS_CTC_CTC)
-    // .def("contract", &Ctc::contract,
+    // .def("contract", &DynCtc::contract,
         // DOCS_CTC_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
-    .def("preserve_slicing", &Ctc::preserve_slicing,
+    .def("preserve_slicing", &DynCtc::preserve_slicing,
         DOCS_CTC_PRESERVE_SLICING_BOOL, "preserve"_a=true)
-    .def("set_fast_mode", &Ctc::set_fast_mode,
+    .def("set_fast_mode", &DynCtc::set_fast_mode,
         DOCS_CTC_SET_FAST_MODE_BOOL, "fast_mode"_a=true)
-    .def("restrict_tdomain", &Ctc::restrict_tdomain,
+    .def("restrict_tdomain", &DynCtc::restrict_tdomain,
         DOCS_CTC_RESTRICT_TDOMAIN_INTERVAL, "domain"_a)
   ;
 
