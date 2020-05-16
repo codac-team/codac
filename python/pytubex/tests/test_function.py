@@ -2,8 +2,8 @@
 
 import unittest
 import pyibex
-from pyibex_tube import *
-import pyibex_tube as tubex
+from pytubex import *
+import pytubex as tubex
 import numpy as np
 
 class TestFunctionOnTube(unittest.TestCase):

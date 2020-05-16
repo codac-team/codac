@@ -29,8 +29,8 @@ done
 
 # Install packages and test
 for PYBIN in /opt/python/*/bin; do
-  "${PYBIN}/python" -m pip install pyibex_tube --no-deps --no-index -f /io/wheelhouse
-  (cd "$HOME"; "${PYBIN}/python" -m unittest discover pyibex_tube.tests)
+  "${PYBIN}/python" -m pip install pytubex --no-deps --no-index -f /io/wheelhouse
+  (cd "$HOME"; "${PYBIN}/python" -m unittest discover pytubex.tests)
 
   break
 done

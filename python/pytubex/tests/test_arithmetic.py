@@ -2,7 +2,7 @@
 
 import unittest
 import pyibex
-from pyibex_tube import *
+from pytubex import *
 import numpy as np
 
 class TestArithmeticOnTube(unittest.TestCase):
