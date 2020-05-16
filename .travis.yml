@@ -12,6 +12,7 @@ addons:
 
     packages:
     - cmake
+    - python3.6
 
 matrix:
   include:
@@ -68,7 +69,6 @@ install:
   - sudo python3 -m pip install pyibex
   - sudo python3 -m pip install --upgrade pyibex==1.8.0
 
-
 #  - docker pull $DOCKER_IMAGE
   
   - pwd
@@ -88,6 +88,7 @@ install:
 
 script:
 
+  - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1 # using python3 as default version
   - py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
   - echo "$py_version"
   
@@ -101,7 +102,7 @@ script:
   # Without synthesis tree
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_EXECUTABLE=/usr/bin/python3 ..
   - make
   - make api
   - make doc
@@ -124,7 +125,7 @@ script:
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_EXECUTABLE=/usr/bin/python3 ..
   - make
   - make api
   - make doc
