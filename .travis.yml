@@ -66,6 +66,7 @@ install:
   - sudo apt-get install python3-sphinx doxygen graphviz
 
   # For Python wrapping
+  - sudo python3 -m pip install wheel
   - sudo python3 -m pip install --upgrade pip
   - sudo python3 -m pip install pyibex
   - sudo python3 -m pip install --upgrade pyibex==1.8.0
