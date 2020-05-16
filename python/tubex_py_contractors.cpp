@@ -54,7 +54,7 @@ public:
 
 
 
-void export_Contractors(py::module& m){
+void export_contractors(py::module& m){
 
   py::enum_<TimePropag>(m, "TimePropag", DOCS_TIMEPROPAG)
       .value("FORWARD", TimePropag::FORWARD)

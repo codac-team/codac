@@ -17,10 +17,10 @@ class TestFunctionOnTube(unittest.TestCase):
             self.assertEqual(first, second)
     def test_Functions_1(self):
 
-        x = TubeVector(Interval(0.,10.), 0.01, tubex.Function("sin(t)+[-0.01,0.01]"));
-        f = tubex.Function("x", "t/10.+x");
+        x = TubeVector(Interval(0.,10.), 0.01, TFunction("sin(t)+[-0.01,0.01]"));
+        f = TFunction("x", "t/10.+x");
         y1 = TubeVector(f.eval_vector(x));
-        y2 = TubeVector(Interval(0.,10.), 0.01, tubex.Function("t/10.+sin(t)+[-0.01,0.01]"));
+        y2 = TubeVector(Interval(0.,10.), 0.01, TFunction("t/10.+sin(t)+[-0.01,0.01]"));
         self.assertAlmostEqual(y1.volume(), y2.volume());
 
     

@@ -30,10 +30,8 @@ class TestCtcEval(unittest.TestCase):
         self.assertEqual(x.nb_slices(), 4);
         ctc_eval = CtcEval();
         ctc_eval.preserve_slicing(False);
-        ctc_eval.enable_temporal_propagation(False);
-        print("ctc_eval")
+        ctc_eval.enable_time_propag(False);
         ctc_eval.contract(t, z, x, v);
-        print("ctc_eval...DONE")
         self.assertEqual(x.nb_slices(), 6);
 
         self.assertEqual(x.codomain(), Interval.ALL_REALS); # only gates should be affected
@@ -62,7 +60,7 @@ class TestCtcEval(unittest.TestCase):
 
         ctc_eval = CtcEval();
         ctc_eval.preserve_slicing(False);
-        ctc_eval.enable_temporal_propagation(False);
+        ctc_eval.enable_time_propag(False);
         ctc_eval.contract(t, z, x, v);
 
         self.assertEqual(x.nb_slices(), 7);
@@ -80,7 +78,7 @@ class TestCtcEval(unittest.TestCase):
         t = Interval(1.75,5.5);
         z = Interval(1.6);
 
-        ctc_eval.enable_temporal_propagation(True);
+        ctc_eval.enable_time_propag(True);
         ctc_eval.contract(t, z, x, v);
 
 
@@ -91,8 +89,8 @@ class TestCtcEval(unittest.TestCase):
         # if(VIBES_DRAWING) fig_tube->draw_box(box, vibesParams("figure", "ctceval", "blue"));
 
         self.assertApproxIntv(x.interpol(3.4,v), Interval(0.8,1.6));
-        self.assertAlmostEqual(box[0], Interval(2.6,3.4));
-        self.assertAlmostEqual(box[1], Interval(1.6));
+        self.assertApproxIntv(box[0], Interval(2.6,3.4));
+        self.assertApproxIntv(box[1], Interval(1.6));
 
 
 class TestCtcEval2(unittest.TestCase):
@@ -125,8 +123,8 @@ class TestCtcEval2(unittest.TestCase):
     self.ctc_eval_nopropa = CtcEval()
     self.ctc_eval_propa.preserve_slicing(False);
     self.ctc_eval_nopropa.preserve_slicing(False);
-    self.ctc_eval_propa.enable_temporal_propagation(True);
-    self.ctc_eval_nopropa.enable_temporal_propagation(False);
+    self.ctc_eval_propa.enable_time_propag(True);
+    self.ctc_eval_nopropa.enable_time_propag(False);
 
   def test_1(self):
     # Checking the tube...
@@ -238,7 +236,7 @@ class TestCtcEval2(unittest.TestCase):
     self.assertEqual(x(0.5), Interval(-4.,-1.));
     self.assertEqual(x(1), Interval(-4.,-1.));
     self.assertEqual(x(1.), Interval(-3.5,-1.25));
-    self.assertEqual(x.slice(0.6).domain(), Interval(0.5,1.));
+    self.assertEqual(x.slice(0.6).tdomain(), Interval(0.5,1.));
     self.assertEqual(x.slice(0.6).input_gate(), Interval(-4.,-1.));
     self.assertEqual(x.slice(0.6).output_gate(), Interval(-3.5,-1.25));
     self.assertEqual(xdot(2), Interval(-0.5,1.));
@@ -875,15 +873,15 @@ class TestCtcEval2(unittest.TestCase):
 
   def Test_CtcEval_multi_eval(self):
 
-    x = Tube(Interval(0.,20.), 0.1, tubex.Function("cos(t)+t*[-0.1,0.2]"));
-    v = Tube(Interval(0.,20.), 0.1, tubex.Function("-sin(t)+[-0.1,0.2]"));
+    x = Tube(Interval(0.,20.), 0.1, TFunction("cos(t)+t*[-0.1,0.2]"));
+    v = Tube(Interval(0.,20.), 0.1, TFunction("-sin(t)+[-0.1,0.2]"));
     
     ctc_deriv = CtcDeriv();
     ctc_deriv.contract(x, v);
 
     box = IntervalVector(2);
     ctc_eval = CtcEval();
-    ctc_eval.enable_temporal_propagation(True);
+    ctc_eval.enable_time_propag(True);
     x_c = Tube(x); 
     v_c = Tube(v);
 

@@ -17,11 +17,11 @@ class TestArithmeticOnTube(unittest.TestCase):
     
     def tests_scalar_tube(self):
 
-        domain = Interval(0.,10.);
+        tdomain = Interval(0.,10.);
         dt = 0.1;
         a, b = Interval(-0.8), Interval(3.)
 
-        x = Tube(domain, dt, Interval(a))
+        x = Tube(tdomain, dt, Interval(a))
         y = Tube(x, Interval(b));
         self.assertEqual(x.codomain(), Interval(a));
         self.assertEqual(y.codomain(), Interval(b));
@@ -115,8 +115,8 @@ class TestArithmeticOnTube(unittest.TestCase):
         self.assertApproxIntv((Interval(a)+y).codomain(), a+b);
 
         # Trajectory trajx, trajy;
-        # trajx.set(a, domain.lb()); trajx.set(a, domain.mid()); trajx.set(a, domain.ub());
-        # trajy.set(b, domain.lb()); trajy.set(b, domain.mid()); trajy.set(b, domain.ub());
+        # trajx.set(a, tdomain.lb()); trajx.set(a, tdomain.mid()); trajx.set(a, tdomain.ub());
+        # trajy.set(b, tdomain.lb()); trajy.set(b, tdomain.mid()); trajy.set(b, tdomain.ub());
 
         #     //const Tube operator+(const Tube& x, const Trajectory& y);
         # self.assertApproxIntv((x+trajy).codomain(), a+b);
@@ -295,10 +295,10 @@ class TestArithmeticOnVectorTube(unittest.TestCase):
             self.assertEqual(first, second)
 
     def setUp(self):
-        domain = Interval(0.,10.);
+        tdomain = Interval(0.,10.);
         dt = 0.1;
 
-        self.x = TubeVector(domain, dt, 3)
+        self.x = TubeVector(tdomain, dt, 3)
         self.y = TubeVector(self.x)
         self.z = TubeVector(self.x)
 
@@ -315,8 +315,8 @@ class TestArithmeticOnVectorTube(unittest.TestCase):
         self.x.set(self.ix);
         self.y.set(self.iy);
 
-    # trajx.set(ix.mid(), domain.lb()); trajx.set(ix.mid(), domain.mid()); trajx.set(ix.mid(), domain.ub());
-    # trajy.set(iy.mid(), domain.lb()); trajy.set(iy.mid(), domain.mid()); trajy.set(iy.mid(), domain.ub());
+    # trajx.set(ix.mid(), tdomain.lb()); trajx.set(ix.mid(), tdomain.mid()); trajx.set(ix.mid(), tdomain.ub());
+    # trajy.set(iy.mid(), tdomain.lb()); trajy.set(iy.mid(), tdomain.mid()); trajy.set(iy.mid(), tdomain.ub());
     def test_vector_size(self):
         self.assertEqual(self.x.size(), 3);
         self.assertEqual(self.y.size(), 3); 
@@ -545,10 +545,10 @@ class TestArithmeticOnVectorTubeIops(unittest.TestCase):
             self.assertEqual(first, second)
 
     def setUp(self):
-        domain = Interval(0.,10.);
+        tdomain = Interval(0.,10.);
         dt = 0.1;
 
-        self.x = TubeVector(domain, dt, 3)
+        self.x = TubeVector(tdomain, dt, 3)
         self.y = TubeVector(self.x)
         self.z = TubeVector(self.x)
 
