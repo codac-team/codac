@@ -4,7 +4,12 @@
 
   cmake_minimum_required(VERSION 3.0.2)
 
-  project(tubex-lib VERSION 2.5.0 LANGUAGES CXX)
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/CMakeModules/)
+  include(version_from_git)
+  version_from_git() # Obtains the version number from Git tags
+
+  project(tubex-lib VERSION ${VERSION} LANGUAGES CXX)
+
   set(PROJECT_DESCRIPTION
       "Tubex is a library providing tools for constraint programming over reals and trajectories.")
   set(PROJECT_LONG_DESCRIPTION
