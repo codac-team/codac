@@ -220,7 +220,7 @@ Then you have two options: read the details about the features of Tubex (domains
   
   .. rubric:: IBEX
 
-  .. Figure:: img/ibex_logo.jpg
+  .. Figure:: img/logo_ibex.jpg
     :align: center
 
   | Note that Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
@@ -228,7 +228,7 @@ Then you have two options: read the details about the features of Tubex (domains
 
   .. rubric:: pyIbex
 
-  .. Figure:: img/pyibex_logo.jpg
+  .. Figure:: img/logo_pyibex.jpg
     :align: center
 
   | The python API of Tubex is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing python access to the IBEX library.
@@ -260,8 +260,18 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. _sec-mainpage-tuto:
 
+.. sidebar:: ICRA 2020 tutorial
+
+  .. Figure:: img/logo_icra.png
+    :align: center
+
+  This tutorial is proposed in the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ (International Conference on Robotics and Automation), 4th June -- 30th June.
+
+
 Tutorial for mobile robotics
 ============================
+
+The following tutorial is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples.
 
 .. toctree::
   :maxdepth: 1
