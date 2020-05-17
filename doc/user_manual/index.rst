@@ -249,7 +249,7 @@ Then you have two options: read the details about the features of Tubex (domains
   manual/09-extensions/index
   manual/10-dev/index
 
-.. versionadded:: 2.1.0
+.. versionadded:: 3.0.0
    The Contractor Network tool.
 
 
@@ -288,13 +288,13 @@ The following tutorial is standalone and tells about how to use Tubex for mobile
   tutorial/10-loop-detections/index
 
 
-Support and license
+License and support
 ===================
+
+This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 For recent improvements and activities, see the `Tubex Github repository <https://github.com/SimonRohou/tubex-lib>`_.
 You can post bug reports and feature requests on the `Issues page <https://github.com/SimonRohou/tubex-lib/issues>`_.
-
-This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 
 Contributors

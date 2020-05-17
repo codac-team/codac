@@ -1,8 +1,8 @@
 .. _sec-manual-tubes:
 
-*****
-Tubes
-*****
+***************************
+Tubes: sets of trajectories
+***************************
 
 We now focus on *dynamical* items that are evolving with time.
 The trajectories :math:`x(\cdot)` and vector of trajectories :math:`\mathbf{x}(\cdot)`, presented :ref:`in the previous pages <sec-manual-vardyn>`, have also their interval counterpart: **tubes**. This page provides the main uses of these sets. They will be involved afterwards for solving problems related to differential equations.
