@@ -106,8 +106,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_dot.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_solve.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_visu.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.h

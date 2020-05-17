@@ -96,10 +96,10 @@ int main()
       Interval &y2 = v_obs[i][2]; // bearing
 
       // Intermediate variables:
-      Interval& psi = cn.create_var(Interval()); // robot heading
-      Interval& a = cn.create_var(Interval());
-      IntervalVector& d = cn.create_var(IntervalVector(2));
-      IntervalVector& p = cn.create_var(IntervalVector(2));
+      Interval& psi = cn.create_dom(Interval()); // robot heading
+      Interval& a = cn.create_dom(Interval());
+      IntervalVector& d = cn.create_dom(IntervalVector(2));
+      IntervalVector& p = cn.create_dom(IntervalVector(2));
       
       cn.add(ctc_constell, {m[i]});
       cn.add(ctc_minus, {d, m[i], p});

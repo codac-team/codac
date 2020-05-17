@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import unittest
-import pyibex
+from pyibex import *
 from pytubex import *
 import pytubex as tubex
 import numpy as np
