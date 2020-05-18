@@ -210,9 +210,9 @@ User manual
 .. toctree::
   :maxdepth: 1
  
-  install/01-installation
-  install/02-start-cpp-project
-  install/03-start-py-project
+  /install/01-installation
+  /install/02-start-cpp-project
+  /install/03-start-py-project
 
 Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Tubex for mobile robotics <sec-mainpage-tuto>`, with telling examples.
 
@@ -235,19 +235,19 @@ Then you have two options: read the details about the features of Tubex (domains
   | `Read the pyIbex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
 
 
-.. toctree::
+.. toctree:: 
   :maxdepth: 2
 
-  manual/01-introduction/index
-  manual/02-variables/index
-  manual/03-domains/index
-  manual/04-static-contractors/index
-  manual/05-dynamic-contractors/index
-  manual/06-contractor-network/index
-  manual/07-graphics/index
-  manual/08-going-further/index
-  manual/09-extensions/index
-  manual/10-dev/index
+  /manual/01-introduction/index
+  /manual/02-variables/index
+  /manual/03-domains/index
+  /manual/04-static-contractors/index
+  /manual/05-dynamic-contractors/index
+  /manual/06-contractor-network/index
+  /manual/07-graphics/index
+  /manual/08-going-further/index
+  /manual/09-extensions/index
+  /manual/10-dev/index
 
 .. versionadded:: 3.0.0
    The Contractor Network tool.
@@ -273,19 +273,19 @@ Tutorial for mobile robotics
 
 The following tutorial is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples.
 
-.. toctree::
+.. toctree:: 
   :maxdepth: 1
 
-  tutorial/01-introduction/index
-  tutorial/02-basics/index
-  tutorial/03-static-rangeonly-loc/index
-  tutorial/04-static-loc/index
-  tutorial/05-dynamic-loc/index
-  tutorial/06-rangeonly-slam/index
-  tutorial/07-data-association/index
-  tutorial/08-realtime-loc/index
-  tutorial/09-distributed-loc/index
-  tutorial/10-loop-detections/index
+  /tutorial/01-introduction/index
+  /tutorial/02-basics/index
+  /tutorial/03-static-rangeonly-loc/index
+  /tutorial/04-static-loc/index
+  /tutorial/05-dynamic-loc/index
+  /tutorial/06-rangeonly-slam/index
+  /tutorial/07-data-association/index
+  /tutorial/08-realtime-loc/index
+  /tutorial/09-distributed-loc/index
+  /tutorial/10-loop-detections/index
 
 
 License and support
