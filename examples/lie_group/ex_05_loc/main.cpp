@@ -26,7 +26,7 @@ int main()
 
     Interval domain(0.,17.);
     TFunction f("x1","x2","x3","(cos(x3);sin(x3);sin(0.4*t))"); //function to be integrated
-    IntervalVector a0(3,Interval(0.,0.)); // inintial condition for reference tube
+    IntervalVector a0(3,Interval(0.,0.)); // initial condition for reference tube
     double timestep = 0.1;
     TubeVector a = TubeVectorODE(domain,f,a0,timestep,CAPD_MODE);
     // ----- Generate derivative of [a](.) -----
@@ -66,7 +66,7 @@ int main()
     fig.set_properties(100,100,800,800);
     fig.set_tube_max_disp_slices(20000);
     fig.smooth_tube_drawing(true);
-    fig.add_tube(&x, "estimate_hand", 0,1);
+    fig.add_tube(&x, "estimate", 0,1);
     fig.set_tube_color(&x,estimateColorMap);
 
 
