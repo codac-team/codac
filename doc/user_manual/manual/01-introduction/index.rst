@@ -128,7 +128,7 @@ Tubex has been designed by robotic researchers but provides a generic solver tha
 What about the IBEX library?
 ****************************
 
-.. Figure:: ../../img/ibex_logo.jpg
+.. Figure:: ../../img/logo_ibex.jpg
   :align: left
 
 The `IBEX library <http://www.ibex-lib.org>`_ is a C++ software for constraint processing over real numbers.
@@ -147,7 +147,7 @@ If the use of IBEX is transparent in several robotic applications presented in t
 Using IBEX in Python with pyIbex
 ********************************
 
-.. Figure:: ../../img/pyibex_logo.jpg
+.. Figure:: ../../img/logo_pyibex.jpg
   :align: left
 
 A python API has been developped for IBEX: the `pyIbex library <http://benensta.github.io/pyIbex/>`_.

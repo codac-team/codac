@@ -22,7 +22,7 @@ namespace tubex
 
   }
 
-  void SIVIAPaving::compute(const ibex::Function& f, const IntervalVector& y, float precision)
+  void SIVIAPaving::compute(const Function& f, const IntervalVector& y, float precision)
   {
     assert(precision > 0.);
     assert(f.nb_var() == box().size());

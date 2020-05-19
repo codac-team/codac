@@ -32,7 +32,7 @@ int main()
 
       const TrajectoryVector state_truth(tdomain,
         // Lissajous function (px,py,theta):
-        tubex::Function("(240*cos(t) ; \
+        TFunction("(240*cos(t) ; \
                           120*sin(2*t) ; \
                           atan2(240*cos(2*t),-240*sin(t)))"));
 
@@ -48,7 +48,7 @@ int main()
       // Derivatives of positions, with uncertainties:
       TubeVector v(tdomain, dt,
         // Lissajous derivative
-        tubex::Function("(-240*sin(t) ; \
+        TFunction("(-240*sin(t) ; \
                           240*cos(2*t))"));
       v.inflate(10.);
 
@@ -96,10 +96,10 @@ int main()
       Interval &y2 = v_obs[i][2]; // bearing
 
       // Intermediate variables:
-      Interval& psi = cn.create_var(Interval()); // robot heading
-      Interval& a = cn.create_var(Interval());
-      IntervalVector& d = cn.create_var(IntervalVector(2));
-      IntervalVector& p = cn.create_var(IntervalVector(2));
+      Interval& psi = cn.create_dom(Interval()); // robot heading
+      Interval& a = cn.create_dom(Interval());
+      IntervalVector& d = cn.create_dom(IntervalVector(2));
+      IntervalVector& p = cn.create_dom(IntervalVector(2));
       
       cn.add(ctc_constell, {m[i]});
       cn.add(ctc_minus, {d, m[i], p});
@@ -140,7 +140,7 @@ int main()
         fig_map.add_beacon(m[i], 2., "#00A53B[#00A53B]");
       }
     cout << identified << "/" << m.size() << " observations identified" << endl << endl;
-    fig_map.show();
+    fig_map.show(20.);
   
   vibes::endDrawing();
   // Checking if this example still works:

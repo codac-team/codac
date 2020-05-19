@@ -9,24 +9,29 @@ class BinaryDistribution(Distribution):
 
 setup(
   name='${PYTHON_PACKAGE_NAME}',
-  version='${PACKAGE_VERSION}',
+  version='${PROJECT_VERSION}',
   author='Simon Rohou, Benoît Desrochers',
   author_email='simon.rohou@ensta-bretagne.fr',
   url='http://simon-rohou.fr/research/tubex-lib',
-  description='A python interface of the Tubex library',
-  long_description='',
+  description='${PROJECT_DESCRIPTION}',
+  long_description='${PROJECT_LONG_DESCRIPTION}',
   ext_modules=[],
-  packages=['pyibex_tube', "pyibex_tube.tests"],
+  packages=['${PYTHON_PACKAGE_NAME}'],
   package_data={
-      '${PYTHON_PACKAGE_NAME}': ['tube${PYTHON_MODULE_EXTENSION}',
-                ],
-
+    '${PYTHON_PACKAGE_NAME}': [
+      'tube${PYTHON_MODULE_EXTENSION}',
+      'graphics${PYTHON_MODULE_EXTENSION}',
+    ],
   },
+  install_requires=[
+    'pip>=19.0.0',
+    'pyibex>=1.8.0'
+  ],
   license="LGPLv3+",
   classifiers=[
-      "Development Status :: 3 - Alpha",
-      "Topic :: Scientific/Engineering :: Mathematics",
-      "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Development Status :: 3 - Alpha",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
   ],
   include_package_data=True,
   zip_safe=False

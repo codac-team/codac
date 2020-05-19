@@ -1,6 +1,6 @@
 #include <cstdio>
 #include "catch_interval.hpp"
-#include "tubex_Function.h"
+#include "tubex_TFunction.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_VIBesFigTube.h"
@@ -1041,8 +1041,8 @@ TEST_CASE("CtcEval")
 
   SECTION("Test CtcEval, multi eval")
   {
-    Tube x(Interval(0.,20.), 0.1, tubex::Function("cos(t)+t*[-0.1,0.2]"));
-    Tube v(Interval(0.,20.), 0.1, tubex::Function("-sin(t)+[-0.1,0.2]"));
+    Tube x(Interval(0.,20.), 0.1, TFunction("cos(t)+t*[-0.1,0.2]"));
+    Tube v(Interval(0.,20.), 0.1, TFunction("-sin(t)+[-0.1,0.2]"));
     
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);

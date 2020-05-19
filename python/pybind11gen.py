@@ -384,8 +384,8 @@ def process_module(module_name, header, hooks):
 
     pybind_dict = process_header(header, hooks)
     m_name = Path(header.name.split("_")[-1]).stem
-    outModuleFile = Path("/tmp") / f"pyibex_export_{m_name}.cpp"
-    outModuleDocsFile = Path("/tmp") / f"pyibex_export_{m_name}_docs.h"
+    outModuleFile = Path("/tmp") / f"tubex_py_{m_name}.cpp"
+    outModuleDocsFile = Path("/tmp") / f"tubex_py_{m_name}_docs.h"
     
     with outModuleDocsFile.open("w") as fout:
         fout.write(doc_header % m_name )

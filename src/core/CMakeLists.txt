@@ -2,12 +2,12 @@
 #  tubex-lib - cmake configuration file
 # ==================================================================
 
-  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Fnc.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Function.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_Function.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayFunction.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayFunction.cpp
+  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_TFnc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_TFnc.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_TFunction.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_TFunction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayTFunction.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayTFunction.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_polygon_arithmetic.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_polygon_arithmetic.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic.h
@@ -83,24 +83,22 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_tubes.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_intervals.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_intervals.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_Ctc.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_Ctc.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcPicard.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcPicard.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDist.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDist.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDelay.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDelay.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcStatic.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcStatic.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcEval.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcEval.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFunction.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFunction.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcDeriv.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_CtcFwdBwd.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/tubex_CtcDist.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/tubex_CtcDist.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/tubex_CtcFunction.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/tubex_CtcFunction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_DynCtc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_DynCtc.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcPicard.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcPicard.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDelay.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDelay.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcStatic.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcStatic.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcEval.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcEval.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDeriv.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDeriv.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Domain.cpp
@@ -108,8 +106,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_dot.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_solve.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_visu.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.h
@@ -134,6 +132,8 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/exceptions
                                           ${CMAKE_CURRENT_SOURCE_DIR}/serialize
                                           ${CMAKE_CURRENT_SOURCE_DIR}/contractors
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/cn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools)
   target_link_libraries(tubex PUBLIC Ibex::ibex)
@@ -165,6 +165,8 @@
       file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Matrix.h>\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_IntervalMatrix.h>\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_BoolInterval.h>\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Ctc.h>\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Function.h>\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "namespace tubex\n{\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Interval;\n")
@@ -173,6 +175,8 @@
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Matrix;\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::IntervalMatrix;\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::BoolInterval;\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Ctc;\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Function;\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "}\n\n")
   foreach(header_path ${HDR})
     get_filename_component(header_name ${header_path} NAME)

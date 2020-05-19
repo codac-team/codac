@@ -3,7 +3,6 @@
 #include "ibex_CtcFwdBwd.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
-#include "tubex_CtcFwdBwd.h"
 #include "tubex_CtcFunction.h"
 #include "vibes.h"
 
@@ -19,22 +18,25 @@ TEST_CASE("CN simple")
 {
   SECTION("Simple static case")
   {
-    ibex::CtcFwdBwd ctc_plus(*new ibex::Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
+    CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2));
 
     ContractorNetwork cn;
-    cn.add(ctc_plus, {a[0], b[0], c[0]});
+    cn.add(ctc_plus, {a[0], b[0], c[0]}); 
     cn.contract();
 
     CHECK(a[0] == Interval(0.5,1));
     CHECK(b[0] == Interval(0.5,1));
     CHECK(c[0] == Interval(1.5,2));
+
+    CHECK(cn.nb_dom() == 3);
+    CHECK(cn.nb_ctc() == 1);
   }
 
   SECTION("Dependencies on vector components")
   {
-    ibex::CtcFwdBwd ctc_plus(*new ibex::Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
+    CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2)), d(2, Interval(0.)), e(2);
 
@@ -47,6 +49,8 @@ TEST_CASE("CN simple")
     cn.add(ctc_plus, {b, d, e});
     cn.add(ctc_plus, {a[0], b[0], c[0]});
     cn.add(ctc_plus, {a[0], b[0], c[0]});
+    cn.add(ctc_plus, {a[0], b[0], c[0]});
+    cn.add(ctc_plus, {a[0], b[0], c[0]});
     cn.contract();
 
     CHECK(a[0] == Interval(0.5,1));
@@ -57,7 +61,9 @@ TEST_CASE("CN simple")
 
     // Before setting names (some vectors not added entirely):
     CHECK(cn.nb_dom() == 3*3+2);
-    CHECK(cn.nb_ctc() == 2+3);
+    CHECK(cn.nb_ctc() == 3   // vector items contractors
+                        +2   // ctc_plus in array mode
+                        +1); // ctc_plus on scalar values);
 
     cn.set_name(a, "a");
     cn.set_name(b, "b");
@@ -67,8 +73,10 @@ TEST_CASE("CN simple")
     cn.set_name(ctc_plus, "+");
     cn.print_dot_graph("cn_vector_dependencies");
 
-    CHECK(cn.nb_dom() == 5*3);
-    CHECK(cn.nb_ctc() == 2+5);
+    CHECK(cn.nb_dom() == 3*5);
+    CHECK(cn.nb_ctc() == 5   // vector items contractors
+                        +2   // ctc_plus in array mode
+                        +1); // ctc_plus on scalar values);
   }
 
   SECTION("Observation in middle of tube")
@@ -221,7 +229,7 @@ TEST_CASE("CN simple")
     CHECK(sub_x[1] == Interval(1,4));
 
     sub_x[0] = Interval(1,2);
-    cn.set_all_contractors_active();
+    cn.trigger_all_contractors();
     cn.contract();
     CHECK(x[1] == Interval(1,2));
   }
@@ -231,7 +239,7 @@ TEST_CASE("CN simple")
     Interval x(0,1), y(-2,3), a(1,20);
     double double_y = 1.;
     Vector vector_y(2, 1.);
-    IntervalVector vx(2,x), vy(2,y), va(2,a);
+    IntervalVector ivx(2,x), ivy(2,y), iva(2,a);
     
     CtcFunction ctc_add("b", "c", "a", "b+c=a");
 
@@ -253,22 +261,142 @@ TEST_CASE("CN simple")
     {
       ContractorNetwork cn;
 
-      cn.add(ctc_add, {vx,vector_y,va});
-      cn.add(ctc_add, {vx,vector_y,va}); // redundant adding
-      cn.add(ctc_add, {vx,vector_y,va}); // redundant adding
+      cn.add(ctc_add, {ivx,vector_y,iva});
+      cn.add(ctc_add, {ivx,vector_y,iva}); // redundant adding
+      cn.add(ctc_add, {ivx,vector_y,iva}); // redundant adding
       cn.contract();
 
-      CHECK(vx == IntervalVector(2,Interval(0,1)));
+      CHECK(ivx == IntervalVector(2,Interval(0,1)));
       CHECK(vector_y == Vector(2,1.));
-      CHECK(va == IntervalVector(2,Interval(1,2)));
+      CHECK(iva == IntervalVector(2,Interval(1,2)));
       CHECK(cn.nb_dom() == 3*3);
-      CHECK(cn.nb_ctc() == 3+1);
+      CHECK(cn.nb_ctc() == 3+2);
 
       cn.set_name(vector_y, "y");
-      cn.set_name(vx, "x");
-      cn.set_name(va, "a");
+      cn.set_name(ivx, "x");
+      cn.set_name(iva, "a");
       cn.set_name(ctc_add, "+");
       cn.print_dot_graph("cn_singleton");
     }
+  }
+
+  SECTION("Heterogeneous variables with CtcFunction")
+  {
+    double dt = 0.1;
+    Interval tdomain(0.,10.);
+    
+    {
+      Interval x(2,3);
+      Tube a(tdomain, dt, Interval(4.,5.)), b(tdomain, dt, Interval(5.,9.));
+
+      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+
+      ContractorNetwork cn;
+      cn.add(ctc_add, {x,a,b});
+      cn.contract();
+
+      CHECK(x == Interval(2.,3.));
+      CHECK(a.codomain() == Interval(4.,5.));
+      CHECK(b.codomain() == Interval(6.,8.));
+    }
+    {
+      Interval x(-1.,3.);
+      Tube a(tdomain, dt, Interval(6.,7.)), b(tdomain, dt, Interval(7.));
+
+      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+
+      ContractorNetwork cn;
+      cn.add(ctc_add, {x,a,b});
+      cn.contract();
+
+      cn.set_name(x, "x");
+      cn.set_name(a, "a");
+      cn.set_name(b, "b");
+
+      CHECK(x == Interval(0.,1.));
+      CHECK(a.codomain() == Interval(6.,7.));
+      CHECK(b.codomain() == Interval(7.));
+    }
+    {
+      Interval x(2.,2.5);
+      Tube a(tdomain, dt, Interval(0.,10.)), b(tdomain, dt, Interval(7.));
+
+      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+
+      ContractorNetwork cn;
+      cn.add(ctc_add, {x,a,b});
+      cn.contract();
+
+      CHECK(x == Interval(2.,2.5));
+      CHECK(a.codomain() == Interval(4.5,5.));
+      CHECK(b.codomain() == Interval(7.));
+    }
+    {
+      Interval x(2.,2.5);
+      Tube a(tdomain, dt, TFunction("cos(t)")), b(tdomain, dt);
+
+      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+
+      ContractorNetwork cn;
+      cn.add(ctc_add, {x,a,b});
+      cn.contract();
+      
+      Tube result(tdomain, dt, TFunction("cos(t)"));
+      result += x;
+
+      CHECK(x == Interval(2.,2.5));
+      CHECK(b == result);
+    }
+  }
+
+  SECTION("Adding continuous data")
+  {
+    double dt = 1.;
+    Interval tdomain(0.,5.);
+
+    Tube x(tdomain, dt), v(tdomain, dt);
+    x.set(0., 0.);
+
+    CtcDeriv ctc_deriv;
+    ContractorNetwork cn;
+    cn.add(ctc_deriv, {x,v});
+
+    cn.set_name(x, "x");
+    cn.set_name(v, "v");
+    cn.print_dot_graph("cn_adddata");
+
+    cn.contract();
+
+    CHECK((x.codomain() == Interval::all_reals()
+        || x.codomain() == Interval(-99999, 99999))); // todo: remove this
+    CHECK((v.codomain() == Interval::all_reals()
+        || x.codomain() == Interval(-99999, 99999))); // todo: remove this
+    CHECK(cn.nb_ctc_in_stack() == 0);
+
+    // Adding data
+    cn.add_data(v, 0., Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.add_data(v, 0.3, Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.add_data(v, 0.4, Interval(0.));
+    cn.add_data(v, 0.5, Interval(0.));
+    // cn.add_data(x, 0.5, Interval(0.5))); // should fail
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.add_data(v, 0.99, Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.add_data(v, 1.3, Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 3);
+    cn.add_data(v, 1.5, Interval(0.));
+    CHECK(cn.nb_ctc_in_stack() == 3);
+    cn.add_data(v, 4.5, Interval(-3.)); // accross two slices
+    CHECK(cn.nb_ctc_in_stack() == 9);
+    cn.add_data(v, 5.5, Interval(1.)); // after tf
+    CHECK(cn.nb_ctc_in_stack() == 10);
+
+    CHECK(v(0) == Interval(0.));
+    CHECK(v(1) == Interval(-0.5,0.));
+    CHECK(v(2) == Interval(-1.5,-0.5));
+    CHECK(v(3) == Interval(-2.5,-1.5));
+    CHECK(v(4) == Interval(-3.,-1.));
   }
 }

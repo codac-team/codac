@@ -23,7 +23,7 @@ int main()
     float dt = 0.01;                                  // timestep for simulation/tubes accuracy
     Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]=[0,3]
 
-    TrajectoryVector x_truth(tdomain, tubex::Function("( \
+    TrajectoryVector x_truth(tdomain, TFunction("( \
       10*cos(t)+t ; \
       5*sin(2*t)+t ; \
       atan2((10*cos(2*t)+1),(-10*sin(t)+1)) ; \
@@ -64,7 +64,7 @@ int main()
 
     for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
     {
-      IntervalVector& p = cn.create_var(IntervalVector(4)); // intermed. variable (state at t_i)
+      IntervalVector& p = cn.create_dom(IntervalVector(4)); // intermed. variable (state at t_i)
 
       // Distance constraint: relation between the state at t_i and the ith beacon position
       cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});

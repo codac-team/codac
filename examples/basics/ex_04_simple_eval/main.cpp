@@ -19,7 +19,7 @@ int main()
 {
   /* =========== INITIALIZATION =========== */
 
-    Tube xdot(Interval(0.,5.), 0.05, tubex::Function("cos(t)+[-0.10,0.10]"));
+    Tube xdot(Interval(0.,5.), 0.05, TFunction("cos(t)+[-0.10,0.10]"));
     Tube x = xdot.primitive(0.);
 
   /* =========== GRAPHICS =========== */

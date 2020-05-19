@@ -163,7 +163,7 @@ We look at the state equations and use contractors to deal with them. The distan
 
     for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
     {
-      IntervalVector& p = cn.create_var(IntervalVector(4)); // intermed. variable (state at t_i)
+      IntervalVector& p = cn.create_dom(IntervalVector(4)); // intermed. variable (state at t_i)
 
       // Distance constraint: relation between the state at t_i and the ith beacon position
       cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
@@ -210,9 +210,9 @@ User manual
 .. toctree::
   :maxdepth: 1
  
-  install/01-installation
-  install/02-start-cpp-project
-  install/03-start-py-project
+  /install/01-installation
+  /install/02-start-cpp-project
+  /install/03-start-py-project
 
 Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Tubex for mobile robotics <sec-mainpage-tuto>`, with telling examples.
 
@@ -220,7 +220,7 @@ Then you have two options: read the details about the features of Tubex (domains
   
   .. rubric:: IBEX
 
-  .. Figure:: img/ibex_logo.jpg
+  .. Figure:: img/logo_ibex.jpg
     :align: center
 
   | Note that Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
@@ -228,28 +228,28 @@ Then you have two options: read the details about the features of Tubex (domains
 
   .. rubric:: pyIbex
 
-  .. Figure:: img/pyibex_logo.jpg
+  .. Figure:: img/logo_pyibex.jpg
     :align: center
 
   | The python API of Tubex is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing python access to the IBEX library.
   | `Read the pyIbex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
 
 
-.. toctree::
+.. toctree:: 
   :maxdepth: 2
 
-  manual/01-introduction/index
-  manual/02-variables/index
-  manual/03-domains/index
-  manual/04-static-contractors/index
-  manual/05-dynamic-contractors/index
-  manual/06-contractor-network/index
-  manual/07-graphics/index
-  manual/08-going-further/index
-  manual/09-extensions/index
-  manual/10-dev/index
+  /manual/01-introduction/index
+  /manual/02-variables/index
+  /manual/03-domains/index
+  /manual/04-static-contractors/index
+  /manual/05-dynamic-contractors/index
+  /manual/06-contractor-network/index
+  /manual/07-graphics/index
+  /manual/08-going-further/index
+  /manual/09-extensions/index
+  /manual/10-dev/index
 
-.. versionadded:: 2.1.0
+.. versionadded:: 3.0.0
    The Contractor Network tool.
 
 
@@ -260,31 +260,41 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. _sec-mainpage-tuto:
 
+.. sidebar:: ICRA 2020 tutorial
+
+  .. Figure:: img/logo_icra.png
+    :align: center
+
+  This tutorial is proposed in the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ (International Conference on Robotics and Automation), 4th June -- 30th June.
+
+
 Tutorial for mobile robotics
 ============================
 
-.. toctree::
+The following tutorial is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples.
+
+.. toctree:: 
   :maxdepth: 1
 
-  tutorial/01-introduction/index
-  tutorial/02-basics/index
-  tutorial/03-static-rangeonly-loc/index
-  tutorial/04-static-loc/index
-  tutorial/05-dynamic-loc/index
-  tutorial/06-rangeonly-slam/index
-  tutorial/07-data-association/index
-  tutorial/08-realtime-loc/index
-  tutorial/09-distributed-loc/index
-  tutorial/10-loop-detections/index
+  /tutorial/01-introduction/index
+  /tutorial/02-basics/index
+  /tutorial/03-static-rangeonly-loc/index
+  /tutorial/04-static-loc/index
+  /tutorial/05-dynamic-loc/index
+  /tutorial/06-rangeonly-slam/index
+  /tutorial/07-data-association/index
+  /tutorial/08-realtime-loc/index
+  /tutorial/09-distributed-loc/index
+  /tutorial/10-loop-detections/index
 
 
-Support and license
+License and support
 ===================
+
+This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 For recent improvements and activities, see the `Tubex Github repository <https://github.com/SimonRohou/tubex-lib>`_.
 You can post bug reports and feature requests on the `Issues page <https://github.com/SimonRohou/tubex-lib/issues>`_.
-
-This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
 
 Contributors

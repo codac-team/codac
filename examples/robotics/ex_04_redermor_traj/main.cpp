@@ -54,11 +54,11 @@ int main(int argc, char** argv)
     xdyn[3] = "xdot"; xdyn[4] = "ydot"; xdyn[5] = "zdot";
     xdyn[6] = "bx"; xdyn[7] = "by"; xdyn[8] = "bz";
     xdyn[9] = "g"; xdyn[10] = "gdot";
-    tubex::Function f_obs(11, xdyn, "(sqrt((x-bx)^2+(y-by)^2+(z-bz)^2) - g ; \
-                                      (xdot*sign(x-bx)/sqrt(1+(((y-by)^2+(z-bz)^2)/((x-bx)^2)))) \
-                                    + (ydot*sign(y-by)/sqrt(1+(((x-bx)^2+(z-bz)^2)/((y-by)^2)))) \
-                                    + (zdot*sign(z-bz)/sqrt(1+(((y-by)^2+(x-bx)^2)/((z-bz)^2)))) - gdot)");
-    tubex::CtcFwdBwd ctc_fwdbwd(f_obs);
+    Function f_obs(11, xdyn, "(sqrt((x-bx)^2+(y-by)^2+(z-bz)^2) - g ; \
+                                     (xdot*sign(x-bx)/sqrt(1+(((y-by)^2+(z-bz)^2)/((x-bx)^2)))) \
+                                   + (ydot*sign(y-by)/sqrt(1+(((x-bx)^2+(z-bz)^2)/((y-by)^2)))) \
+                                   + (zdot*sign(z-bz)/sqrt(1+(((y-by)^2+(x-bx)^2)/((z-bz)^2)))) - gdot)");
+    CtcFunction ctc_fwdbwd(f_obs, Vector(2,0.));
     CtcDeriv ctc_deriv;
     CtcEval ctc_eval;
     ctc_eval.enable_time_propag(false); // faster use

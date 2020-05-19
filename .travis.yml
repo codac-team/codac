@@ -12,6 +12,7 @@ addons:
 
     packages:
     - cmake
+    - python3.5
 
 matrix:
   include:
@@ -60,8 +61,15 @@ install:
   
   # For documentation
   - sudo apt-get install python3.5 python3-setuptools python3-pip
+  - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 # using python3 as default version
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
+
+  # For Python wrapping
+  - sudo python3 -m pip install wheel
+  - sudo python3 -m pip install --upgrade pip
+  - sudo python3 -m pip install pyibex
+  - sudo python3 -m pip install --upgrade pyibex==1.8.0
 
 #  - docker pull $DOCKER_IMAGE
   
@@ -93,13 +101,18 @@ script:
   - cd build
   
   # Without synthesis tree
-  
+
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
   - make api
   - make doc
   - make install
+  - cd python/python_package
+  - /usr/bin/python3.5 setup.py develop --user
+  - /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
+  - cd ../../
+
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
@@ -112,17 +125,23 @@ script:
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../../build
+
   # Testing
   - make test
     
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
   - make api
   - make doc
   - make install
+  - cd python/python_package
+  - /usr/bin/python3.5 setup.py develop --user
+  - /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
+  - cd ../../
+
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
@@ -135,5 +154,6 @@ script:
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../../build
+
   # Testing
   - make test

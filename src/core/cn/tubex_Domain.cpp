@@ -632,68 +632,63 @@ namespace tubex
 
     return false;
   }
-
-  ostream& operator<<(ostream& str, const Domain& x)
-  {
-    str << "[" << Tools::add_int("type",(int)x.m_type) << "," << Tools::add_int("memory",(int)x.m_memory_type) << "]" << flush;
-
-    switch(x.m_type)
-    {
-      case Domain::Type::INTERVAL:
-        str << "Interval: " << x.interval() << flush;
-        break;
-
-      case Domain::Type::INTERVAL_VECTOR:
-        str << "IntervalVector: " << x.interval_vector() << flush;
-        break;
-
-      case Domain::Type::SLICE:
-        str << "Slice: " << x.slice() << flush;
-        break;
-
-      case Domain::Type::TUBE:
-        str << "Tube: " << x.tube() << flush;
-        break;
-
-      case Domain::Type::TUBE_VECTOR:
-        str << "TubeVector: " << x.tube_vector() << flush;
-        break;
-
-      default:
-        assert(false && "unhandled case");
-        break;
-    }
-
-    return str;
-  }
   
   void Domain::add_data(double t, const Interval& y, ContractorNetwork& cn)
   {
     assert(m_type == Type::TUBE);
+    // Note: t may be defined outside the tube definition
 
-    m_map_data_s_lb.emplace(t, y.lb());
-    m_map_data_s_ub.emplace(t, y.ub());
-    Trajectory traj_lb(m_map_data_s_lb);
-    Trajectory traj_ub(m_map_data_s_ub);
-
-    Slice *prev_s = NULL;
-    if(tube().tdomain().contains(t))
-      prev_s = tube().slice(t)->prev_slice();
-    else if(t > tube().tdomain().ub())
-      prev_s = tube().last_slice();
-
-    while(prev_s != NULL && prev_s->tdomain().is_subset(traj_lb.tdomain()))
+    if(m_traj_lb.not_defined())
     {
-      Interval new_slice_envelope = (traj_lb(prev_s->tdomain()) | traj_ub(prev_s->tdomain()));
+      m_traj_lb.set(y.lb(), t);
+      m_traj_ub.set(y.ub(), t);
+      return; // cannot add data with a single point
+    }
 
-      if(!prev_s->codomain().is_superset(new_slice_envelope))
+    double prev_t = m_traj_lb.tdomain().ub();
+    assert(t > prev_t && "t does not represent new data since last call");
+
+    // Updating the trajectory
+    m_traj_lb.set(y.lb(), t);
+    m_traj_ub.set(y.ub(), t);
+
+    if(prev_t < tube().tdomain().lb())
+      return; // nothing can be done yet (outside tube definition)
+
+    Slice *prev_s;
+
+    if(t < tube().tdomain().ub())
+    {
+      prev_s = tube().slice(t);
+      if(prev_s == tube().first_slice())
+        return; // the slice is not complete yet, and the previous one does not exist
+
+      prev_s = prev_s->prev_slice();
+    }
+
+    else // if data goes beyond tube's definition domain
+    {
+      prev_s = tube().last_slice();
+    }
+
+    // Contracting the tube
+    // A jump may have been done: several slices may exist between the current
+    // t and the previous one.
+
+    // So we iterate:
+    while(prev_s != NULL && prev_s->tdomain().is_subset(m_traj_lb.tdomain()))
+    {
+      Interval new_slice_envelope = (m_traj_lb(prev_s->tdomain()) | m_traj_ub(prev_s->tdomain()));
+
+      if(prev_s->codomain().is_subset(new_slice_envelope))
         break;
 
       prev_s->set_envelope(new_slice_envelope);
 
-      // Flags a new change on the domain
-      cn.propag_active_ctc_from_dom(cn.add_dom(Domain(*prev_s)));
+      // Flags a new change on the slice domain
+      cn.trigger_ctc_related_to_dom(cn.add_dom(Domain(*prev_s)));
 
+      // Iterates
       prev_s = prev_s->prev_slice();
     }
   }
@@ -703,33 +698,10 @@ namespace tubex
     assert(m_type == Type::TUBE_VECTOR);
     assert(tube_vector().size() == y.size());
 
-    m_map_data_lb.emplace(t, y.lb());
-    m_map_data_ub.emplace(t, y.ub());
-    TrajectoryVector traj_lb(m_map_data_lb);
-    TrajectoryVector traj_ub(m_map_data_ub);
-
-    for(int i = 0 ; i < y.size() ; i++)
+    for(int i = 0 ; i < tube_vector().size() ; i++)
     {
-      Slice *prev_s = NULL;
-      if(tube_vector()[i].tdomain().contains(t))
-        prev_s = tube_vector()[i].slice(t)->prev_slice();
-      else if(t > tube_vector()[i].tdomain().ub())
-        prev_s = tube_vector()[i].last_slice();
-
-      while(prev_s != NULL && prev_s->tdomain().is_subset(traj_lb.tdomain()))
-      {
-        Interval new_slice_envelope = (traj_lb[i](prev_s->tdomain()) | traj_ub[i](prev_s->tdomain()));
-
-        if(!prev_s->codomain().is_superset(new_slice_envelope))
-          break;
-
-        prev_s->set_envelope(new_slice_envelope);
-
-        // Flags a new change on the domain
-        cn.propag_active_ctc_from_dom(cn.add_dom(Domain(*prev_s)));
-
-        prev_s = prev_s->prev_slice();
-      }
+      Domain *tube_i = cn.add_dom(Domain(tube_vector()[i]));
+      tube_i->add_data(t, y[i], cn);
     }
   }
   
@@ -811,6 +783,87 @@ namespace tubex
   {
     m_name = name;
   }
+  
+  bool Domain::all_slices(const vector<Domain>& v_domains)
+  {
+    for(const auto& dom : v_domains)
+      if(dom.type() != Type::SLICE)
+        return false;
+    return true;
+  }
+  
+  bool Domain::all_dyn(const vector<Domain>& v_domains)
+  {
+    for(const auto& dom : v_domains)
+      if(dom.type() != Type::SLICE && dom.type() != Type::TUBE && dom.type() != Type::TUBE_VECTOR)
+        return false;
+    return true;
+  }
+  
+  bool Domain::dyn_same_slicing(const vector<Domain>& v_domains)
+  {
+    // If domains are tubes or tube vectors, they must share the same slicing
+    const Tube *slicing_ref = NULL;
+    for(const auto& dom: v_domains)
+    {
+      switch(dom.type())
+      {
+        case Domain::Type::TUBE:
+          if(slicing_ref == NULL)
+            slicing_ref = &dom.tube();
+          else
+            if(!Tube::same_slicing(dom.tube(), *slicing_ref))
+              return false;
+          break;
+
+        case Domain::Type::TUBE_VECTOR:
+          if(slicing_ref == NULL)
+            slicing_ref = &dom.tube_vector()[0]; // first component is used as reference
+          else
+            if(!TubeVector::same_slicing(dom.tube_vector(), *slicing_ref))
+              return false;
+          break;
+
+        default:
+          // nothing to do
+          break;
+      }
+    }
+
+    return true;
+  }
+  
+  int Domain::total_size(const vector<Domain>& v_domains)
+  {
+    int n = 0;
+
+    for(const auto& dom: v_domains)
+    {
+      switch(dom.type())
+      {
+        // Scalar types:
+        case Domain::Type::TUBE:
+        case Domain::Type::INTERVAL:
+        case Domain::Type::SLICE:
+          n++;
+          break;
+
+        // Vector types:
+        case Domain::Type::INTERVAL_VECTOR:
+          n+=dom.interval_vector().size();
+          break;
+
+        case Domain::Type::TUBE_VECTOR:
+          n+=dom.tube_vector().size();
+          break;
+
+        default:
+          assert(false && "unhandled case");
+      }
+    }
+
+    return n;
+  }
 
   const string Domain::dom_name(const vector<Domain*>& v_domains) const
   {
@@ -852,5 +905,122 @@ namespace tubex
       output_name += "(\\cdot)";
 
     return output_name;
+  }
+
+  ostream& operator<<(ostream& str, const Domain& x)
+  {
+    str << "Domain:";
+
+    str << "  type=";
+    switch(x.m_type)
+    {
+      case Domain::Type::INTERVAL:
+        str << "Interval  ";
+        break;
+      case Domain::Type::INTERVAL_VECTOR:
+        str << "IntVector ";
+        break;
+      case Domain::Type::SLICE:
+        str << "Slice     ";
+        break;
+      case Domain::Type::TUBE:
+        str << "Tube      ";
+        break;
+      case Domain::Type::TUBE_VECTOR:
+        str << "TubeVector";
+        break;
+      default:
+        assert(false && "unhandled case");
+    }
+
+    str << "  mem=";
+    switch(x.m_memory_type)
+    {
+      case Domain::MemoryRef::DOUBLE:
+        str << "double    ";
+        break;
+      case Domain::MemoryRef::INTERVAL:
+        str << "Interval  ";
+        break;
+      case Domain::MemoryRef::VECTOR:
+        str << "Vector    ";
+        break;
+      case Domain::MemoryRef::INTERVAL_VECTOR:
+        str << "IntVector ";
+        break;
+      case Domain::MemoryRef::SLICE:
+        str << "Slice     ";
+        break;
+      case Domain::MemoryRef::TUBE:
+        str << "Tube      ";
+        break;
+      case Domain::MemoryRef::TUBE_VECTOR:
+        str << "TubeVector";
+        break;
+      default:
+        assert(false && "unhandled case");
+    }
+
+    str << "  name=\"" << (x.m_name == "" ? "?" : x.m_name) << "\"";
+
+    str << "\tval=";
+    switch(x.m_type)
+    {
+      case Domain::Type::INTERVAL:
+        str << x.interval();
+        break;
+      case Domain::Type::INTERVAL_VECTOR:
+        str << x.interval_vector();
+        break;
+      case Domain::Type::SLICE:
+        str << x.slice();
+        break;
+      case Domain::Type::TUBE:
+        str << x.tube();
+        break;
+      case Domain::Type::TUBE_VECTOR:
+        str << x.tube_vector();
+        break;
+      default:
+        assert(false && "unhandled case");
+    }
+
+    return str;
+  }
+  
+  Domain Domain::vector_component(Domain& x, int i)
+  {
+    assert(x.type() == Type::INTERVAL_VECTOR || x.type() == Type::TUBE_VECTOR);
+
+    // Builds a Domain object for the ith component of this vector Domain,
+    // and makes it point to the component of the memory reference
+
+    switch(x.type())
+    {
+      case Type::INTERVAL_VECTOR:
+        switch(x.m_memory_type)
+        {
+          case MemoryRef::VECTOR:
+            return Domain(x.interval_vector()[i], x.m_ref_memory_v.get()[i]);
+            break;
+
+          case MemoryRef::INTERVAL_VECTOR:
+            return Domain(x.interval_vector()[i], x.m_ref_memory_iv.get()[i]);
+            break;
+
+          default:
+            assert(false && "unhandled case");
+        }
+        break;
+
+      case Type::TUBE_VECTOR:
+
+        break;
+
+      default:
+        assert(false && "domain is not a vector");
+    }
+
+    return x; // should not reach this point
   }
 }

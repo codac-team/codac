@@ -25,7 +25,7 @@ namespace tubex
 {
   // todo: assert if structure of referenced domain changes (size, nb slices)
 
-  class Ctc;
+  class DynCtc;
   class Contractor;
   class ContractorNetwork;
 
@@ -45,11 +45,11 @@ namespace tubex
       Domain(ibex::Vector& v);
       Domain(ibex::IntervalVector& iv);
       Domain(const ibex::IntervalVector& iv);
-      Domain(tubex::Slice& s);
-      Domain(tubex::Tube& t);
-      Domain(const tubex::Tube& t);
-      Domain(tubex::TubeVector& tv);
-      Domain(const tubex::TubeVector& tv);
+      Domain(Slice& s);
+      Domain(Tube& t);
+      Domain(const Tube& t);
+      Domain(TubeVector& tv);
+      Domain(const TubeVector& tv);
       ~Domain();
 
       int id() const;
@@ -59,12 +59,12 @@ namespace tubex
       const ibex::Interval& interval() const;
       ibex::IntervalVector& interval_vector();
       const ibex::IntervalVector& interval_vector() const;
-      tubex::Slice& slice();
-      const tubex::Slice& slice() const;
-      tubex::Tube& tube();
-      const tubex::Tube& tube() const;
-      tubex::TubeVector& tube_vector();
-      const tubex::TubeVector& tube_vector() const;
+      Slice& slice();
+      const Slice& slice() const;
+      Tube& tube();
+      const Tube& tube() const;
+      TubeVector& tube_vector();
+      const TubeVector& tube_vector() const;
 
       std::vector<Contractor*>& contractors();
       const std::vector<Contractor*>& contractors() const;
@@ -84,14 +84,21 @@ namespace tubex
 
       bool is_slice_of(const Domain& x) const;
       bool is_slice_of(const Domain& x, int& slice_id) const;
-      
-      friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
       void add_data(double t, const ibex::Interval& y, ContractorNetwork& cn);
       void add_data(double t, const ibex::IntervalVector& y, ContractorNetwork& cn);
 
       const std::string dom_name(const std::vector<Domain*>& v_domains) const;
       void set_name(const std::string& name);
+
+      static bool all_dyn(const std::vector<Domain>& v_domains);
+      static bool all_slices(const std::vector<Domain>& v_domains);
+      static bool dyn_same_slicing(const std::vector<Domain>& v_domains);
+      static int total_size(const std::vector<Domain>& v_domains);
+
+      static Domain vector_component(Domain& x, int i);
+
+      friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
     protected:
 
@@ -106,9 +113,9 @@ namespace tubex
         {
           std::reference_wrapper<ibex::Interval> m_ref_values_i;
           std::reference_wrapper<ibex::IntervalVector> m_ref_values_iv;
-          std::reference_wrapper<tubex::Slice> m_ref_values_s;
-          std::reference_wrapper<tubex::Tube> m_ref_values_t;
-          std::reference_wrapper<tubex::TubeVector> m_ref_values_tv;
+          std::reference_wrapper<Slice> m_ref_values_s;
+          std::reference_wrapper<Tube> m_ref_values_t;
+          std::reference_wrapper<TubeVector> m_ref_values_tv;
         };
 
         union // if locally stored (such as intermediate variables or doubles to intervals):
@@ -129,15 +136,17 @@ namespace tubex
           std::reference_wrapper<ibex::Interval> m_ref_memory_i;
           std::reference_wrapper<ibex::Vector> m_ref_memory_v;
           std::reference_wrapper<ibex::IntervalVector> m_ref_memory_iv;
-          std::reference_wrapper<tubex::Slice> m_ref_memory_s;
-          std::reference_wrapper<tubex::Tube> m_ref_memory_t;
-          std::reference_wrapper<tubex::TubeVector> m_ref_memory_tv;
+          std::reference_wrapper<Slice> m_ref_memory_s;
+          std::reference_wrapper<Tube> m_ref_memory_t;
+          std::reference_wrapper<TubeVector> m_ref_memory_tv;
         };
 
 
       // todo: update this:
       std::map<double,double> m_map_data_s_lb, m_map_data_s_ub;
       std::map<double,ibex::Vector> m_map_data_lb, m_map_data_ub;
+
+      Trajectory m_traj_lb, m_traj_ub;
 
       std::vector<Contractor*> m_v_ctc;
       double m_volume = 0.;

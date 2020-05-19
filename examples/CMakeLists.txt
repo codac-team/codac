@@ -48,8 +48,8 @@ if(BUILD_TESTS)
   # Robotics
   add_test(NAME rob_01
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_01_causal_chain/build/tubex_rob_01 0)
-  add_test(NAME rob_02
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_02_lowcost_beacons/build/tubex_rob_02 0)
+  #add_test(NAME rob_02
+  #         COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_02_lowcost_beacons/build/tubex_rob_02 0)
   add_test(NAME rob_03
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_03_drifting_clock/build/tubex_rob_03 0)
   add_test(NAME rob_04

@@ -28,8 +28,8 @@ int main(int argc, char** argv)
 
     float dt = 0.01;
     Interval tdomain(0., 3.);
-    TrajectoryVector x_truth(tdomain, tubex::Function("(10*cos(t)+t;5*sin(2*t)+t)")); // actual trajectory
-    TrajectoryVector v_truth(tdomain, tubex::Function("(-10*sin(t)+1;10*cos(2*t)+1)")); // actual velocity
+    TrajectoryVector x_truth(tdomain, TFunction("(10*cos(t)+t;5*sin(2*t)+t)")); // actual trajectory
+    TrajectoryVector v_truth(tdomain, TFunction("(-10*sin(t)+1;10*cos(2*t)+1)")); // actual velocity
 
     // Building beacons and related range-only measurements
     float r = 0.1;
@@ -44,8 +44,6 @@ int main(int argc, char** argv)
   /* =========== SOLVING =========== */
 
     CtcEval ctc_eval; // differential observation contractor
-    ibex::Function f("x", "y", "bx", "by", "range", "sqrt((x-bx)^2+(y-by)^2)-range"); // range-only observation function
-    ibex::CtcFwdBwd ctc_rangeonly(f); // static contractor
 
     double vol;
 
@@ -55,15 +53,14 @@ int main(int argc, char** argv)
 
       for(int i = 0 ; i < 3 ; i++)
       {
-        IntervalVector m(5); // preparing static contraction in a 5d box
-        m[0] = x[0](t[i]); m[1] = x[1](t[i]);
-        m[2] = b[i].x(); m[3] = b[i].y();
-        m[4] = d[i];
-        ctc_rangeonly.contract(m);
+        IntervalVector box_x = x(t[i]);
+        IntervalVector box_b = b[i].pos_box().subvector(0,1);
+        
+        ctc::dist.contract(box_x, box_b, d[i]);
 
         // Propagating the static contraction to tubes:
-        ctc_eval.contract(t[i], m[0], x[0], v[0]);
-        ctc_eval.contract(t[i], m[1], x[1], v[1]);
+        ctc_eval.contract(t[i], box_x[0], x[0], v[0]);
+        ctc_eval.contract(t[i], box_x[1], x[1], v[1]);
       }
       
     } while(fabs(x.volume() / vol) < 0.01); // while a fixed point has not been reached

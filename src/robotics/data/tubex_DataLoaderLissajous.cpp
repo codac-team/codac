@@ -10,7 +10,7 @@
 
 #include <time.h>
 #include "tubex_DataLoaderLissajous.h"
-#include "tubex_Function.h"
+#include "tubex_TFunction.h"
 #include "tubex_Tube.h"
 
 using namespace std;
@@ -31,11 +31,11 @@ namespace tubex
     clock_t t_start = clock();
     cout << "Loading data... " << flush;
 
-    Function f_lissajous("(120.*2.*cos(t) ; \
-                           120.*sin(2.*t) ; \
-                           atan2(240.*cos(2.*t),-120.*2.*sin(t)))");
-    Function f_lissajous_dot("(-120.*2.*sin(t) ; \
-                               240.*cos(2.*t))");
+    TFunction f_lissajous("(120.*2.*cos(t) ; \
+                               120.*sin(2.*t) ; \
+                               atan2(240.*cos(2.*t),-120.*2.*sin(t)))");
+    TFunction f_lissajous_dot("(-120.*2.*sin(t) ; \
+                                   240.*cos(2.*t))");
     // todo: derivative for heading
 
     truth = new TrajectoryVector(tdomain, f_lissajous);
@@ -64,7 +64,7 @@ namespace tubex
     return v_beacons;
   }
   
-  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, const Interval& visi_range, const Interval& visi_angle, const ibex::Interval& tdomain) const
+  vector<IntervalVector> DataLoaderLissajous::get_observations(const TrajectoryVector& x, const vector<Beacon>& map, int nb_obs, const Interval& visi_range, const Interval& visi_angle, const Interval& tdomain) const
   {
     assert(x.size() >= 2);
     assert(nb_obs >= 0);

@@ -10,7 +10,7 @@ The :math:`\mathcal{C}_{\textrm{polar}}` contractor is mainly used in robotics t
 
 .. note::
 
-  .. Figure:: ../../img/pyibex_logo.jpg
+  .. Figure:: ../../img/logo_pyibex.jpg
     :align: right
   
   This contractor directly comes from the `pyIbex library <http://benensta.github.io/pyIbex/>`_ and is temporarily provided here for ease of integration.

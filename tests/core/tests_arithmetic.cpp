@@ -79,10 +79,10 @@ TEST_CASE("Arithmetic on tubes")
     //const Tube atan2(const Tube& y, const Tube& x);
     CHECK(ApproxIntv(atan2(y,x).codomain()) == atan2(b,a));
 
-    //const Tube atan2(const Tube& y, const ibex::Interval& x);
+    //const Tube atan2(const Tube& y, const Interval& x);
     CHECK(ApproxIntv(atan2(y,Interval(a)).codomain()) == atan2(b,a));
 
-    //const Tube atan2(const ibex::Interval& y, const Tube& x);
+    //const Tube atan2(const Interval& y, const Tube& x);
     CHECK(ApproxIntv(atan2(Interval(b),x).codomain()) == atan2(b,a));
 
     //const Tube pow(const Tube& x, int p);
@@ -91,7 +91,7 @@ TEST_CASE("Arithmetic on tubes")
     //const Tube pow(const Tube& x, double p);
     // CHECK(ApproxIntv(pow(x,7.2).codomain()) == pow(a,7.2)); // todo: not working with GAOL
 
-    //const Tube pow(const Tube& x, const ibex::Interval& p);
+    //const Tube pow(const Tube& x, const Interval& p);
     CHECK(ApproxIntv(pow(x,Interval(4.,5.2)).codomain()) == Interval(pow(a,5.2),pow(a,4.)));
 
     //const Tube root(const Tube& x, int p);
@@ -104,10 +104,10 @@ TEST_CASE("Arithmetic on tubes")
     //const Tube operator+(const Tube& x, const Tube& y);
     CHECK(ApproxIntv((x+y).codomain()) == a+b);
 
-    //const Tube operator+(const Tube& x, const ibex::Interval& y);
+    //const Tube operator+(const Tube& x, const Interval& y);
     CHECK(ApproxIntv((x+Interval(b)).codomain()) == a+b);
 
-    //const Tube operator+(const ibex::Interval& x, const Tube& y);
+    //const Tube operator+(const Interval& x, const Tube& y);
     CHECK(ApproxIntv((Interval(a)+y).codomain()) == a+b);
 
     Trajectory trajx, trajy;
@@ -128,10 +128,10 @@ TEST_CASE("Arithmetic on tubes")
     //const Tube operator-(const Tube& x, const Tube& y);
     CHECK(ApproxIntv((x-y).codomain()) == a-b);
 
-    //const Tube operator-(const Tube& x, const ibex::Interval& y);
+    //const Tube operator-(const Tube& x, const Interval& y);
     CHECK(ApproxIntv((x-Interval(b)).codomain()) == a-b);
 
-    //const Tube operator-(const ibex::Interval& x, const Tube& y);
+    //const Tube operator-(const Interval& x, const Tube& y);
     CHECK(ApproxIntv((Interval(a)-y).codomain()) == a-b);
 
     //const Tube operator-(const Tube& x, const Trajectory& y);
@@ -144,10 +144,10 @@ TEST_CASE("Arithmetic on tubes")
     //const Tube operator*(const Tube& x, const Tube& y);
     CHECK(ApproxIntv((x*y).codomain()) == a*b);
 
-    //const Tube operator*(const Tube& x, const ibex::Interval& y);
+    //const Tube operator*(const Tube& x, const Interval& y);
     CHECK(ApproxIntv((x*Interval(b)).codomain()) == a*b);
 
-    //const Tube operator*(const ibex::Interval& x, const Tube& y);
+    //const Tube operator*(const Interval& x, const Tube& y);
     CHECK(ApproxIntv((Interval(a)*y).codomain()) == a*b);
 
     //const Tube operator*(const Tube& x, const Trajectory& y);
@@ -159,10 +159,10 @@ TEST_CASE("Arithmetic on tubes")
     //const Tube operator/(const Tube& x, const Tube& y);
     CHECK(ApproxIntv((x/y).codomain()) == a/b);
 
-    //const Tube operator/(const Tube& x, const ibex::Interval& y);
+    //const Tube operator/(const Tube& x, const Interval& y);
     CHECK(ApproxIntv((x/Interval(b)).codomain()) == a/b);
 
-    //const Tube operator/(const ibex::Interval& x, const Tube& y);
+    //const Tube operator/(const Interval& x, const Tube& y);
     CHECK(ApproxIntv((Interval(a)/y).codomain()) == a/b);
 
     //const Tube operator/(const Tube& x, const Trajectory& y);
@@ -174,10 +174,10 @@ TEST_CASE("Arithmetic on tubes")
     //const Tube operator|(const Tube& x, const Tube& y);
     CHECK(ApproxIntv((x|y).codomain()) == Interval(a,b));
 
-    //const Tube operator|(const Tube& x, const ibex::Interval& y);
+    //const Tube operator|(const Tube& x, const Interval& y);
     CHECK(ApproxIntv((x|Interval(b)).codomain()) == Interval(a,b));
 
-    //const Tube operator|(const ibex::Interval& x, const Tube& y);
+    //const Tube operator|(const Interval& x, const Tube& y);
     CHECK(ApproxIntv((Interval(a)|y).codomain()) == Interval(a,b));
 
     //const Tube operator|(const Tube& x, const Trajectory& y);
@@ -191,10 +191,10 @@ TEST_CASE("Arithmetic on tubes")
     //const Tube operator&(const Tube& x, const Tube& y);
     CHECK(ApproxIntv((x&y).codomain()) == b);
 
-    //const Tube operator&(const Tube& x, const ibex::Interval& y);
+    //const Tube operator&(const Tube& x, const Interval& y);
     CHECK(ApproxIntv((x&Interval(b)).codomain()) == b);
 
-    //const Tube operator&(const ibex::Interval& x, const Tube& y);
+    //const Tube operator&(const Interval& x, const Tube& y);
     CHECK(ApproxIntv((Interval(a)&x).codomain()) == a);
 
     //const Tube operator&(const Tube& x, const Trajectory& y);
@@ -206,7 +206,7 @@ TEST_CASE("Arithmetic on tubes")
     x.set(a);
     Tube z(x);
 
-    //const Tube& operator+=(const ibex::Interval& x);
+    //const Tube& operator+=(const Interval& x);
     z = x; z += Interval(b);
     CHECK(ApproxIntv(z.codomain()) == a+b);
 
@@ -218,7 +218,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z += y;
     CHECK(ApproxIntv(z.codomain()) == a+b);
 
-    //const Tube& operator-=(const ibex::Interval& x);
+    //const Tube& operator-=(const Interval& x);
     z = x; z -= Interval(b);
     CHECK(ApproxIntv(z.codomain()) == a-b);
 
@@ -230,7 +230,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z -= y;
     CHECK(ApproxIntv(z.codomain()) == a-b);
 
-    //const Tube& operator*=(const ibex::Interval& x);
+    //const Tube& operator*=(const Interval& x);
     z = x; z *= Interval(b);
     CHECK(ApproxIntv(z.codomain()) == a*b);
 
@@ -242,7 +242,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z *= y;
     CHECK(ApproxIntv(z.codomain()) == a*b);
 
-    //const Tube& operator/=(const ibex::Interval& x);
+    //const Tube& operator/=(const Interval& x);
     z = x; z /= Interval(b);
     CHECK(ApproxIntv(z.codomain()) == a/b);
 
@@ -254,7 +254,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z /= y;
     CHECK(ApproxIntv(z.codomain()) == a/b);
 
-    //const Tube& operator|=(const ibex::Interval& x);
+    //const Tube& operator|=(const Interval& x);
     z = x; z |= Interval(b);
     CHECK(ApproxIntv(z.codomain()) == Interval(a,b));
 
@@ -266,7 +266,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z |= y;
     CHECK(ApproxIntv(z.codomain()) == Interval(a,b));
 
-    //const Tube& operator&=(const ibex::Interval& x);
+    //const Tube& operator&=(const Interval& x);
     z.set(Interval(-10.,10.)); z &= Interval(b);
     CHECK(ApproxIntv(z.codomain()) == b);
 
@@ -311,11 +311,11 @@ TEST_CASE("Arithmetic on tubes")
     z = x + y;
     CHECK(z[0].codomain() == a0+b0); CHECK(z[1].codomain() == a1+b1); CHECK(z[2].codomain() == a2+b2); 
 
-    //const TubeVector operator+(const TubeVector& x, const ibex::IntervalVector& y);
+    //const TubeVector operator+(const TubeVector& x, const IntervalVector& y);
     z = x + iy;
     CHECK(z[0].codomain() == a0+b0); CHECK(z[1].codomain() == a1+b1); CHECK(z[2].codomain() == a2+b2); 
 
-    //const TubeVector operator+(const ibex::IntervalVector& x, const TubeVector& y);
+    //const TubeVector operator+(const IntervalVector& x, const TubeVector& y);
     z = ix + y;
     CHECK(z[0].codomain() == a0+b0); CHECK(z[1].codomain() == a1+b1); CHECK(z[2].codomain() == a2+b2); 
 
@@ -335,11 +335,11 @@ TEST_CASE("Arithmetic on tubes")
     z = x - y;
     CHECK(z[0].codomain() == a0-b0); CHECK(z[1].codomain() == a1-b1); CHECK(z[2].codomain() == a2-b2); 
 
-    //const TubeVector operator-(const TubeVector& x, const ibex::IntervalVector& y);
+    //const TubeVector operator-(const TubeVector& x, const IntervalVector& y);
     z = x - iy;
     CHECK(z[0].codomain() == a0-b0); CHECK(z[1].codomain() == a1-b1); CHECK(z[2].codomain() == a2-b2); 
 
-    //const TubeVector operator-(const ibex::IntervalVector& x, const TubeVector& y);
+    //const TubeVector operator-(const IntervalVector& x, const TubeVector& y);
     z = ix - y;
     CHECK(z[0].codomain() == a0-b0); CHECK(z[1].codomain() == a1-b1); CHECK(z[2].codomain() == a2-b2); 
 
@@ -355,11 +355,11 @@ TEST_CASE("Arithmetic on tubes")
     z = x[1] * y;
     CHECK(z[0].codomain() == a1*b0); CHECK(z[1].codomain() == a1*b1); CHECK(z[2].codomain() == a1*b2); 
 
-    //const TubeVector operator*(const ibex::Interval& x, const TubeVector& y);
+    //const TubeVector operator*(const Interval& x, const TubeVector& y);
     z = Interval(2) * y;
     CHECK(z[0].codomain() == 2*b0); CHECK(z[1].codomain() == 2*b1); CHECK(z[2].codomain() == 2*b2); 
 
-    //const TubeVector operator*(const Tube& x, const ibex::IntervalVector& y);
+    //const TubeVector operator*(const Tube& x, const IntervalVector& y);
     z = x[1] * iy;
     CHECK(z[0].codomain() == a1*b0); CHECK(z[1].codomain() == a1*b1); CHECK(z[2].codomain() == a1*b2); 
 
@@ -371,11 +371,11 @@ TEST_CASE("Arithmetic on tubes")
     z = x / y[0];
     CHECK(z[0].codomain() == a0/b0); CHECK(z[1].codomain() == a1/b0); CHECK(z[2].codomain() == a2/b0); 
 
-    //const TubeVector operator/(const TubeVector& x, const ibex::Interval& y);
+    //const TubeVector operator/(const TubeVector& x, const Interval& y);
     z = x / iy[0];
     CHECK(z[0].codomain() == a0/b0); CHECK(z[1].codomain() == a1/b0); CHECK(z[2].codomain() == a2/b0); 
 
-    //const TubeVector operator/(const ibex::IntervalVector& x, const Tube& y);
+    //const TubeVector operator/(const IntervalVector& x, const Tube& y);
     z = ix / y[0];
     CHECK(z[0].codomain() == a0/b0); CHECK(z[1].codomain() == a1/b0); CHECK(z[2].codomain() == a2/b0); 
 
@@ -387,11 +387,11 @@ TEST_CASE("Arithmetic on tubes")
     z = x | y;
     CHECK(z[0].codomain() == (Interval(a0) | b0)); CHECK(z[1].codomain() == (Interval(a1) | b1)); CHECK(z[2].codomain() == (Interval(a2) | b2)); 
 
-    //const TubeVector operator|(const TubeVector& x, const ibex::IntervalVector& y);
+    //const TubeVector operator|(const TubeVector& x, const IntervalVector& y);
     z = x | iy;
     CHECK(z[0].codomain() == (Interval(a0) | b0)); CHECK(z[1].codomain() == (Interval(a1) | b1)); CHECK(z[2].codomain() == (Interval(a2) | b2)); 
 
-    //const TubeVector operator|(const ibex::IntervalVector& x, const TubeVector& y);
+    //const TubeVector operator|(const IntervalVector& x, const TubeVector& y);
     z = ix | y;
     CHECK(z[0].codomain() == (Interval(a0) | b0)); CHECK(z[1].codomain() == (Interval(a1) | b1)); CHECK(z[2].codomain() == (Interval(a2) | b2)); 
 
@@ -410,11 +410,11 @@ TEST_CASE("Arithmetic on tubes")
     z = x & y;
     CHECK(z[0].codomain() == Interval::EMPTY_SET); CHECK(z[1].codomain() == a1); CHECK(z[2].codomain() == a2); 
 
-    //const TubeVector operator&(const TubeVector& x, const ibex::IntervalVector& y);
+    //const TubeVector operator&(const TubeVector& x, const IntervalVector& y);
     z = x & iy;
     CHECK(z[0].codomain() == Interval::EMPTY_SET); CHECK(z[1].codomain() == a1); CHECK(z[2].codomain() == a2); 
 
-    //const TubeVector operator&(const ibex::IntervalVector& x, const TubeVector& y);
+    //const TubeVector operator&(const IntervalVector& x, const TubeVector& y);
     z = ix & y;
     CHECK(z[0].codomain() == Interval::EMPTY_SET); CHECK(z[1].codomain() == a1); CHECK(z[2].codomain() == a2); 
 
@@ -429,7 +429,7 @@ TEST_CASE("Arithmetic on tubes")
     iy[0] = b0; iy[1] = b1; iy[2] = b2;
     y.set(iy);
 
-    //const TubeVector& operator+=(const ibex::Interval& x);
+    //const TubeVector& operator+=(const Interval& x);
     z = x; z+=iy[1];
     CHECK(z[0].codomain() == a0+b1); CHECK(z[1].codomain() == a1+b1); CHECK(z[2].codomain() == a2+b1); 
 
@@ -441,7 +441,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z+=y[1];
     CHECK(z[0].codomain() == a0+b1); CHECK(z[1].codomain() == a1+b1); CHECK(z[2].codomain() == a2+b1); 
 
-    //const TubeVector& operator+=(const ibex::IntervalVector& x);
+    //const TubeVector& operator+=(const IntervalVector& x);
     z = x; z+=iy;
     CHECK(z[0].codomain() == a0+b0); CHECK(z[1].codomain() == a1+b1); CHECK(z[2].codomain() == a2+b2); 
 
@@ -453,7 +453,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z+=y;
     CHECK(z[0].codomain() == a0+b0); CHECK(z[1].codomain() == a1+b1); CHECK(z[2].codomain() == a2+b2); 
 
-    //const TubeVector& operator-=(const ibex::Interval& x);
+    //const TubeVector& operator-=(const Interval& x);
     z = x; z-=iy[1];
     CHECK(z[0].codomain() == a0-b1); CHECK(z[1].codomain() == a1-b1); CHECK(z[2].codomain() == a2-b1); 
 
@@ -465,7 +465,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z-=y[1];
     CHECK(z[0].codomain() == a0-b1); CHECK(z[1].codomain() == a1-b1); CHECK(z[2].codomain() == a2-b1); 
 
-    //const TubeVector& operator-=(const ibex::IntervalVector& x);
+    //const TubeVector& operator-=(const IntervalVector& x);
     z = x; z-=iy;
     CHECK(z[0].codomain() == a0-b0); CHECK(z[1].codomain() == a1-b1); CHECK(z[2].codomain() == a2-b2); 
 
@@ -477,7 +477,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z-=y;
     CHECK(z[0].codomain() == a0-b0); CHECK(z[1].codomain() == a1-b1); CHECK(z[2].codomain() == a2-b2); 
 
-    //const TubeVector& operator*=(const ibex::Interval& x);
+    //const TubeVector& operator*=(const Interval& x);
     z = x; z*=iy[1];
     CHECK(z[0].codomain() == a0*b1); CHECK(z[1].codomain() == a1*b1); CHECK(z[2].codomain() == a2*b1); 
 
@@ -489,7 +489,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z*=y[1];
     CHECK(z[0].codomain() == a0*b1); CHECK(z[1].codomain() == a1*b1); CHECK(z[2].codomain() == a2*b1); 
 
-    //const TubeVector& operator/=(const ibex::Interval& x);
+    //const TubeVector& operator/=(const Interval& x);
     z = x; z/=iy[1];
     CHECK(ApproxIntv(z[0].codomain()) == a0/b1); CHECK(ApproxIntv(z[1].codomain()) == a1/b1); CHECK(ApproxIntv(z[2].codomain()) == a2/b1); 
 
@@ -501,7 +501,7 @@ TEST_CASE("Arithmetic on tubes")
     z = x; z/=y[1];
     CHECK(ApproxIntv(z[0].codomain()) == a0/b1); CHECK(ApproxIntv(z[1].codomain()) == a1/b1); CHECK(ApproxIntv(z[2].codomain()) == a2/b1); 
 
-    //const TubeVector& operator|=(const ibex::IntervalVector& x);
+    //const TubeVector& operator|=(const IntervalVector& x);
     z = x; z|=iy;
     CHECK(ApproxIntv(z[0].codomain()) == (Interval(a0) | b0)); CHECK(ApproxIntv(z[1].codomain()) == (Interval(a1) | b1)); CHECK(ApproxIntv(z[2].codomain()) == (Interval(a2) | b2)); 
 
@@ -516,7 +516,7 @@ TEST_CASE("Arithmetic on tubes")
     iy |= IntervalVector(3, -1);
     y.set(iy);
 
-    //const TubeVector& operator&=(const ibex::IntervalVector& x);
+    //const TubeVector& operator&=(const IntervalVector& x);
     z = x; z&=iy;
     CHECK(ApproxIntv(z[0].codomain()) == Interval::EMPTY_SET); CHECK(ApproxIntv(z[1].codomain()) == a1); CHECK(ApproxIntv(z[2].codomain()) == a2); 
 
@@ -710,10 +710,10 @@ TEST_CASE("Arithmetic on trajs")
     //const TrajectoryVector operator+(const TrajectoryVector& x, const TrajectoryVector& y);
     CHECK(ApproxIntvVector((trajx+trajy).codomain()) == IntervalVector(vx+vy));
     
-    //const TrajectoryVector operator+(const TrajectoryVector& x, const ibex::Vector& y);
+    //const TrajectoryVector operator+(const TrajectoryVector& x, const Vector& y);
     CHECK(ApproxIntvVector((trajx+vy).codomain()) == IntervalVector(vx+vy));
     
-    //const TrajectoryVector operator+(const ibex::Vector& x, const TrajectoryVector& y);
+    //const TrajectoryVector operator+(const Vector& x, const TrajectoryVector& y);
     CHECK(ApproxIntvVector((vx+trajy).codomain()) == IntervalVector(vx+vy));
     
     //const TrajectoryVector operator-(const TrajectoryVector& x);
@@ -722,10 +722,10 @@ TEST_CASE("Arithmetic on trajs")
     //const TrajectoryVector operator-(const TrajectoryVector& x, const TrajectoryVector& y);
     CHECK(ApproxIntvVector((trajx-trajy).codomain()) == IntervalVector(vx-vy));
     
-    //const TrajectoryVector operator-(const TrajectoryVector& x, const ibex::Vector& y);
+    //const TrajectoryVector operator-(const TrajectoryVector& x, const Vector& y);
     CHECK(ApproxIntvVector((trajx-vy).codomain()) == IntervalVector(vx-vy));
     
-    //const TrajectoryVector operator-(const ibex::Vector& x, const TrajectoryVector& y);
+    //const TrajectoryVector operator-(const Vector& x, const TrajectoryVector& y);
     CHECK(ApproxIntvVector((vx-trajy).codomain()) == IntervalVector(vx-vy));
     
     //const TrajectoryVector operator*(const Trajectory& x, const TrajectoryVector& y);
@@ -734,7 +734,7 @@ TEST_CASE("Arithmetic on trajs")
     //const TrajectoryVector operator*(double x, const TrajectoryVector& y);
     CHECK(ApproxIntvVector((vx[1]*trajy).codomain()) == vx[1]*IntervalVector(vy));
     
-    //const TrajectoryVector operator*(const Trajectory& x, const ibex::Vector& y);
+    //const TrajectoryVector operator*(const Trajectory& x, const Vector& y);
     CHECK(ApproxIntvVector((trajx[1]*vy).codomain()) == IntervalVector(vx[1]*vy));
     
     //const TrajectoryVector operator*(const Trajectory& x, const TrajectoryVector& y);
@@ -746,7 +746,7 @@ TEST_CASE("Arithmetic on trajs")
     //const TrajectoryVector operator/(const TrajectoryVector& x, const Trajectory& y);
     CHECK(ApproxIntvVector((trajx/trajy[1]).codomain()) == IntervalVector((1./vy[1])*vx));
     
-    //const TrajectoryVector operator/(const ibex::Vector& x, const Trajectory& y);
+    //const TrajectoryVector operator/(const Vector& x, const Trajectory& y);
     CHECK(ApproxIntvVector((vx/trajy[1]).codomain()) == IntervalVector((1./vy[1])*vx));
     
     //const Trajectory& operator+=(double x);
@@ -757,7 +757,7 @@ TEST_CASE("Arithmetic on trajs")
     trajz = trajx; trajz += trajy[1];
     CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx+Vector(3,vy[1])));
 
-    //const TrajectoryVector& operator+=(const ibex::Vector& x);
+    //const TrajectoryVector& operator+=(const Vector& x);
     trajz = trajx; trajz += vy;
     CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx+vy));
 
@@ -773,7 +773,7 @@ TEST_CASE("Arithmetic on trajs")
     trajz = trajx; trajz -= trajy[1];
     CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx-Vector(3,vy[1])));
 
-    //const TrajectoryVector& operator-=(const ibex::Vector& x);
+    //const TrajectoryVector& operator-=(const Vector& x);
     trajz = trajx; trajz -= vy;
     CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector(vx-vy));
 
