@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 import unittest
-from pyibex import *
+from pyibex import Interval, IntervalVector
 from pytubex import *
 import pytubex as tubex
-import numpy as np
 
 class TestFunctionOnTube(unittest.TestCase):
 
