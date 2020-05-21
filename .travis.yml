@@ -43,6 +43,17 @@ matrix:
           - g++-8
     env:
       - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+  - sudo: true
+    services:
+    - docker
+    env: DOCKER_IMAGE=benensta/pyibex-docker
+    install:
+    - docker pull $DOCKER_IMAGE
+    script:
+    - chmod a+x scripts/docker_build.sh
+    - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker_build.sh
+    - ls wheelhouse
+
 
 before_install:
   - eval "${MATRIX_EVAL}"
