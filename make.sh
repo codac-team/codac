@@ -39,7 +39,7 @@ fi
 
   if [ $# -ne 0 ] && ([ "$1" = "tests" ] || [ "$1" = "all" ])
   then
-    cmake -DBUILD_TESTS=ON -DWITH_TUBE_TREE="${WITH_TUBE_TREE}" ..
+    cmake -DBUILD_TESTS=ON -DTEST_EXAMPLES=ON -DWITH_TUBE_TREE="${WITH_TUBE_TREE}" ..
   else
     cmake -DBUILD_TESTS=OFF -DWITH_TUBE_TREE="${WITH_TUBE_TREE}" ..
   fi

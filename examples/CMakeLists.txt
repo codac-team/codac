@@ -4,7 +4,7 @@
 
 # Testing examples:
 
-if(BUILD_TESTS)
+if(BUILD_TESTS AND TEST_EXAMPLES)
 
 #  todo: compilation of the examples from CMake (remove ./make all alternative)
 

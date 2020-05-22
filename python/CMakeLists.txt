@@ -20,7 +20,6 @@
     ${PYTHON_PACKAGE_DIR}/setup.py
   )
 
-  include_directories(${CMAKE_CURRENT_BINARY_DIR}/../include)
 
   ################################################################################
   # Library for Python binding
@@ -37,7 +36,12 @@
     tubex_py_TubeVector.cpp
     tubex_py_VIBesFig.cpp
   )
-  target_link_libraries(tube PRIVATE tubex tubex-rob ${LIBS})
+
+  target_include_directories(tube
+    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include)
+
+  target_link_libraries(tube
+    PRIVATE tubex tubex-rob ${LIBS})
 
     # ex: from pytubex import tube
     #     tube.Tube
@@ -57,12 +61,11 @@
   #  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:graphics>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
   #)
 
-add_custom_target(pip_package)
-add_custom_command(TARGET pip_package PRE_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
-    WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
-)
-  
+  add_custom_target(pip_package)
+  add_custom_command(TARGET pip_package PRE_BUILD
+      COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
+      WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
+  )
 
 
 ################################################################################

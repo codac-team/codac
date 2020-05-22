@@ -120,10 +120,8 @@
     add_subdirectory(tests)
   endif()
 
-  option(BUILD_EXAMPLES "Build examples" OFF)
-  if(BUILD_EXAMPLES)
-    add_subdirectory(examples) # examples are tested as integration tests
-  endif()
+  option(TEST_EXAMPLES "Testing examples" OFF)
+  add_subdirectory(examples) # examples are tested as integration tests
 
 
 ################################################################################
