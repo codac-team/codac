@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import unittest
-from pyibex import *
+import pyibex 
+from pyibex import Interval, IntervalVector
 from pytubex import *
-import numpy as np
 
 class TestArithmeticOnTube(unittest.TestCase):
 

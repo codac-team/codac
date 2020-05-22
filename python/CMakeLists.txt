@@ -8,6 +8,12 @@
   file(MAKE_DIRECTORY ${PYTHON_PACKAGE_DIR})
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${PYTHON_PACKAGE_NAME}/" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}")
 
+  if(NOT WIN32)
+    set(FORCE_PYTHON_EXT "ext_modules=[Extension(\"pyibex.empty\", sources=[\"empty.c\"])],")
+    # trick to generate a correct wheel.
+    file(WRITE "${PYTHON_PACKAGE_DIR}/empty.c" "// empty source file")
+  endif()
+
   # Installation process is handled by setup.py
   configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in
@@ -50,6 +56,13 @@
   #add_custom_command(TARGET graphics POST_BUILD
   #  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:graphics>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
   #)
+
+add_custom_target(pip_package)
+add_custom_command(TARGET pip_package PRE_BUILD
+    COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
+    WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
+)
+  
 
 
 ################################################################################

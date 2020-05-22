@@ -1,22 +1,27 @@
-from setuptools import setup, Distribution
+from setuptools import setup, Distribution, Extension
 import distutils
 from distutils.util import get_platform
 from glob import glob
+
 # force External module
 class BinaryDistribution(Distribution):
   def has_ext_modules(self):
     return True
+  
+  def is_pure(self):
+    return False
+
 
 setup(
   name='${PYTHON_PACKAGE_NAME}',
   version='${PROJECT_VERSION}',
-  author='Simon Rohou, Benoît Desrochers',
+  author='Simon Rohou, Benoit Desrochers',
   author_email='simon.rohou@ensta-bretagne.fr',
   url='http://simon-rohou.fr/research/tubex-lib',
   description='${PROJECT_DESCRIPTION}',
   long_description='${PROJECT_LONG_DESCRIPTION}',
-  ext_modules=[],
-  packages=['${PYTHON_PACKAGE_NAME}'],
+  ${FORCE_PYTHON_EXT}
+  packages=['${PYTHON_PACKAGE_NAME}', 'pytubex.tests'],
   package_data={
     '${PYTHON_PACKAGE_NAME}': [
       'tube${PYTHON_MODULE_EXTENSION}',
