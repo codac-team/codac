@@ -167,5 +167,6 @@ function( version_from_git )
   set( VERSION_MAJOR ${version_major} PARENT_SCOPE )
   set( VERSION_MINOR ${version_minor} PARENT_SCOPE )
   set( VERSION_PATCH ${version_patch} PARENT_SCOPE )
+  set( VERSION_ID    ${identifiers}   PARENT_SCOPE )
 
 endfunction( version_from_git )

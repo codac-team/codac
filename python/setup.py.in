@@ -14,7 +14,7 @@ class BinaryDistribution(Distribution):
 
 setup(
   name='${PYTHON_PACKAGE_NAME}',
-  version='${PROJECT_VERSION}',
+  version='${PROJECT_VERSION_FULL}',
   author='Simon Rohou, Benoit Desrochers',
   author_email='simon.rohou@ensta-bretagne.fr',
   url='http://simon-rohou.fr/research/tubex-lib',

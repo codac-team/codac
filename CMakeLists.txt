@@ -10,6 +10,13 @@
 
   project(tubex-lib VERSION ${VERSION} LANGUAGES CXX)
 
+  if(NOT VERSION_ID)
+    set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
+  else()
+    set(PROJECT_VERSION_FULL "${PROJECT_VERSION}-${VERSION_ID}")
+  endif()
+  message(STATUS "Full project version is ${PROJECT_VERSION_FULL}")
+
   set(PROJECT_DESCRIPTION
       "Tubex is a library providing tools for constraint programming over reals and trajectories.")
   set(PROJECT_LONG_DESCRIPTION
