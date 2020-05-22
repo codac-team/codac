@@ -9,6 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <sstream>
 #include "tubex_Tube.h"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -25,6 +26,13 @@ using namespace tubex;
 using ibex::Interval;
 using ibex::IntervalVector;
 
+
+std::string to_string(const Tube& x)
+{
+  std::ostringstream str;
+  str << x;
+  return str.str();
+}
 
 void export_Tube(py::module& m){
 
@@ -380,7 +388,7 @@ void export_Tube(py::module& m){
     //   .def("__iand__", [](Tube& s, const ibex::Interval& o) { return s &= o;}, DOCS_TUBE_IAND_INTERV)
     //   .def("__iand__", [](Tube& s, const tubex::Trajectory& o) { return s &= o;}, DOCS_TUBE_IAND_TRAJEC)
     //   .def("__iand__", [](Tube& s, const tubex::Tube& o) { return s &= o;}, DOCS_TUBE_IAND_TUBE)
-    //   // .def("__repr__", [](Tube& s,std::ostream&, const tubex::Tube& o) { s << o;});
+      .def("__repr__", &to_string)
 
       // .def("__add__", [](const Tube& x){return +x;})
       .def("__add__", [](const Tube& x, const Tube& y){return x+y;})

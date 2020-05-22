@@ -9,6 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <sstream>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
@@ -27,6 +28,14 @@ using py::init;
 using namespace tubex;
 using ibex::Interval;
 using ibex::IntervalVector;
+
+
+std::string to_string(const Trajectory& x)
+{
+  std::ostringstream str;
+  str << x;
+  return str.str();
+}
 
 void export_Trajectory(py::module& m){
 
@@ -91,6 +100,7 @@ void export_Trajectory(py::module& m){
     .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o;}, 
         DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
     .def("class_name", &Trajectory::class_name,DOCS_TRAJECTORY_CLASS_NAME)
+      .def("__repr__", &to_string)
 
       // .def(py::init<>())
       // .def(py::init< const ibex::Interval&, const TFunction&>(), "domain"_a, "f"_a, py::keep_alive<1,3>())

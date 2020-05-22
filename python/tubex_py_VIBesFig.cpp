@@ -38,7 +38,9 @@ using ibex::Interval;
 using ibex::IntervalVector;
 
 
-PYBIND11_MODULE(graphics, m){
+//PYBIND11_MODULE(graphics, m){
+
+void export_VIBesFig(py::module& m){
 
     m.def("beginDrawing", [](){vibes::beginDrawing();});
 
