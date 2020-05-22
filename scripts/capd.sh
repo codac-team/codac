@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd $HOME
-echo 'Installing CAPD...';
+echo 'Installing CAPD in ' $HOME '...';
 if [ ! -d "capd" ]; then
   svn co https://svn.capdnet.ii.uj.edu.pl/capd/ --non-interactive --trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other ;
   cd capd ;

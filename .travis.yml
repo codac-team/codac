@@ -83,6 +83,10 @@ install:
   - pwd
   - ls
   - export ORIGIN_DIR=$PWD
+  - cd ..
+  - pwd
+  - ls
+  - cd $ORIGIN_DIR
 
   # IBEX
   - bash scripts/ibex.sh
