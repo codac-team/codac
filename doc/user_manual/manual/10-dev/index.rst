@@ -111,3 +111,26 @@ One shortcut to build both the examples and tests is:
 
   # From Tubex root
   ./make all
+
+
+.. rubric:: [For admins] Upload Python binding on PyPi (`see Tubex repo <https://pypi.org/project/pytubex/>`_)
+
+Tag the current version:
+
+.. code-block:: bash
+
+  git tag -a v3.0.0-beta1
+  git push origin v3.0.0-beta1
+
+Create the *wheels* with a Docker:
+
+.. code-block:: bash
+
+  docker pull benensta/pyibex-docker
+  docker run --rm -v `pwd`:/io benensta/pyibex-docker /io/scripts/docker_build.sh
+
+Upload the *wheels* on PyPi:
+
+.. code-block:: bash
+
+  python3 -m twine upload --repository pypi wheelhouse/*
