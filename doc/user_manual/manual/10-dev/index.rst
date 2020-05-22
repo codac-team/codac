@@ -127,7 +127,7 @@ Create the *wheels* with a Docker:
 .. code-block:: bash
 
   docker pull benensta/pyibex-docker
-  docker run --rm -v `pwd`:/io benensta/pyibex-docker /io/scripts/docker_build.sh
+  docker run --rm -v `pwd`:/io benensta/pyibex-docker /io/scripts/docker/build_pybinding.sh
 
 Upload the *wheels* on PyPi:
 

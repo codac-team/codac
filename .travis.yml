@@ -24,8 +24,8 @@ matrix:
     install:
       - docker pull $DOCKER_IMAGE
     script:
-      - chmod a+x scripts/docker_build.sh
-      - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker_build.sh
+      - chmod a+x scripts/docker/build_pybinding.sh
+      - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker/build_pybinding.sh
       - ls wheelhouse
   # Other environments for C++ tests (g++ versions, trees..)
   - os: linux
@@ -89,10 +89,10 @@ install:
   - cd $ORIGIN_DIR
 
   # IBEX
-  - bash scripts/ibex.sh
+  - bash scripts/dependencies/install_ibex.sh
 
   # CAPD
-  - bash scripts/capd.sh
+  - bash scripts/dependencies/install_capd.sh
 
   # Environment variables
   - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install

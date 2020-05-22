@@ -34,7 +34,7 @@ For further CMake options, please refer to the documentation. For instance, for 
 
 .. code-block:: bash
 
-  cmake -DCMAKE_CXX_FLAGS="-fPIC -msse3" -DCMAKE_C_FLAGS="-fPIC -msse3" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install ..
+  cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install ..
 
 .. admonition:: Debug/development mode
   
