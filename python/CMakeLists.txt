@@ -9,7 +9,7 @@
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${PYTHON_PACKAGE_NAME}/" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}")
 
   if(NOT WIN32)
-    set(FORCE_PYTHON_EXT "ext_modules=[Extension(\"pyibex.empty\", sources=[\"empty.c\"])],")
+    set(FORCE_PYTHON_EXT "ext_modules=[Extension(\"pytubex.empty\", sources=[\"empty.c\"])],")
     # trick to generate a correct wheel.
     file(WRITE "${PYTHON_PACKAGE_DIR}/empty.c" "// empty source file")
   endif()

@@ -113,6 +113,16 @@ One shortcut to build both the examples and tests is:
   ./make all
 
 
+.. rubric:: Installing local Python binding
+
+After having configured ``-DWITH_PYTHON=ON`` and compiled:
+
+.. code-block:: bash
+  
+  cd build/python/python_package
+  python3 setup.py develop --user
+
+
 .. rubric:: [For admins] Upload Python binding on PyPi (`see Tubex repo <https://pypi.org/project/pytubex/>`_)
 
 Tag the current version:
