@@ -54,7 +54,6 @@ matrix:
     - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker_build.sh
     - ls wheelhouse
 
-
 before_install:
   - eval "${MATRIX_EVAL}"
 
@@ -62,11 +61,6 @@ cache:
   directories:
     - $HOME/capd
     - $HOME/ibex-lib
-
-#services:
-#  - docker
-#
-#env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
 
 install:
   
@@ -82,8 +76,6 @@ install:
   - sudo python3 -m pip install pyibex
   - sudo python3 -m pip install --upgrade pyibex==1.8.0
 
-#  - docker pull $DOCKER_IMAGE
-  
   - pwd
   - ls
   - export ORIGIN_DIR=$PWD
