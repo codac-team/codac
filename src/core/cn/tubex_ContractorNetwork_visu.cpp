@@ -173,8 +173,9 @@ namespace tubex
 
       dot_file.close();
 
-      return system((("dot2tex --crop --texmode=math --autosize --prog=" + layer_model + " -ftikz ") + cn_name + ".dot > "
-                     + cn_name + ".tex ; pdflatex " + cn_name + ".tex > /dev/null").c_str());    
+      return 0;
+      //return system((("dot2tex --crop --texmode=math --autosize --prog=" + layer_model + " -ftikz ") + cn_name + ".dot > "
+      //               + cn_name + ".tex ; pdflatex " + cn_name + ".tex > /dev/null").c_str());    
     }
 
     ostream& operator<<(ostream& str, const ContractorNetwork& cn)
