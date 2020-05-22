@@ -16,6 +16,18 @@ addons:
 
 matrix:
   include:
+  # One environment for python binding:
+  - sudo: true
+    services:
+      - docker
+    env: DOCKER_IMAGE=benensta/pyibex-docker
+    install:
+      - docker pull $DOCKER_IMAGE
+    script:
+      - chmod a+x scripts/docker_build.sh
+      - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker_build.sh
+      - ls wheelhouse
+  # Other environments for C++ tests (g++ versions, trees..)
   - os: linux
     addons:
       apt:
@@ -43,16 +55,8 @@ matrix:
           - g++-8
     env:
       - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
-  - sudo: true
-    services:
-    - docker
-    env: DOCKER_IMAGE=benensta/pyibex-docker
-    install:
-    - docker pull $DOCKER_IMAGE
-    script:
-    - chmod a+x scripts/docker_build.sh
-    - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker_build.sh
-    - ls wheelhouse
+
+# Configuration for C++ tests:
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -71,10 +75,10 @@ install:
   - sudo apt-get install python3-sphinx doxygen graphviz
 
   # For Python wrapping
-  - sudo python3 -m pip install wheel
-  - sudo python3 -m pip install --upgrade pip
-  - sudo python3 -m pip install pyibex
-  - sudo python3 -m pip install --upgrade pyibex==1.8.0
+  #- sudo python3 -m pip install wheel
+  #- sudo python3 -m pip install --upgrade pip
+  #- sudo python3 -m pip install pyibex
+  #- sudo python3 -m pip install --upgrade pyibex==1.8.0
 
   - pwd
   - ls
@@ -93,28 +97,29 @@ install:
 
 script:
 
-  - py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
-  - echo "$py_version"
+  #- py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
+  #- echo "$py_version"
   
   - cd $ORIGIN_DIR
   - pwd
   - ls
-  - git submodule init ; git submodule update # for pybind11 submodule
+  #- git submodule init ; git submodule update # for pybind11 submodule
   - mkdir build -p
   - cd build
   
   # Without synthesis tree
 
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON ..
+  ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
   - make api
   - make doc
   - make install
-  - cd python/python_package
-  - /usr/bin/python3.5 setup.py develop --user
-  - /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
-  - cd ../../
+  #- cd python/python_package
+  #- /usr/bin/python3.5 setup.py develop --user
+  #- /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
+  #- cd ../../
 
   # Building the examples
   - cd ../examples
@@ -135,15 +140,16 @@ script:
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=ON -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON ..
+  ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
   - make api
   - make doc
   - make install
-  - cd python/python_package
-  - /usr/bin/python3.5 setup.py develop --user
-  - /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
-  - cd ../../
+  #- cd python/python_package
+  #- /usr/bin/python3.5 setup.py develop --user
+  #- /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
+  #- cd ../../
 
   # Building the examples
   - cd ../examples
