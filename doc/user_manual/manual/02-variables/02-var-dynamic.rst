@@ -27,12 +27,13 @@ A simple temporal function [#f1]_ can be defined and used for building a traject
 
   .. code-tab:: c++
 
-    Interval tdomain(0.,10.);                           // temporal domain: [t_0,t_f]
+    Interval tdomain(0.,10.);                            // temporal domain: [t_0,t_f]
     Trajectory x(tdomain, TFunction("cos(t)+sin(2*t)")); // defining x(·) as: t ↦ cos(t)+sin(2t)
 
   .. code-tab:: py
 
-    # todo
+    tdomain = Interval(0,10)                               # temporal domain: [t_0,t_f]
+    x = Trajectory(tdomain, TFunction("cos(t)+sin(2*t)")); # defining x(·) as: t ↦ cos(t)+sin(2t)
 
 Usual functions such as :math:`\cos`, :math:`\log`, *etc.* can be used to define a ``TFunction`` object. The convention used for these definitions is the one of IBEX (`read more <http://www.ibex-lib.org/doc/function.html>`_). Note that the system variable :math:`t` is a predefined variable of ``TFunction`` objects, that does not appear in IBEX's objects.
 
@@ -46,7 +47,7 @@ The evaluation of a trajectory at some time :math:`t`, for instance :math:`z=x(t
 
   .. code-tab:: py
 
-    # todo
+    z = x(math.pi)                               # z = cos(π)+sin(2π) = -1
 
 In this code, :math:`x(\cdot)` is implemented from the expression :math:`t\mapsto\cos(t)+\sin(2t)`, and no numerical approximation is performed: the formula is embedded in the object and the representation is accurate.
 However, the evaluation of the trajectory may lead to numerical errors related to the approximation of real numbers by floating-point values.
@@ -65,7 +66,12 @@ For instance, if we change the decimal precision in order to format floating-poi
 
   .. code-tab:: py
 
-    # todo
+    from decimal import *
+
+    z = x(math.pi)                               # z = cos(π)+sin(2π) = -1
+    print(Decimal(z))
+    // Output:
+    // -1.0000000000000006661338147750939242541790008544921875
 
 | This is not only due to the approximation made on :math:`\pi`, that could be reliably handled by some :math:`[\pi]`.
 | A reliable evaluation of :math:`x(\cdot)` can be done by specifying :math:`t` as a degenerate interval :math:`[t]`. This produces an interval evaluation that is reliable: the output is also an interval that is guaranteed to contain the actual value despite floating-point uncertainties:
@@ -81,7 +87,10 @@ For instance, if we change the decimal precision in order to format floating-poi
 
   .. code-tab:: py
 
-    # todo
+    z = x(Interval.PI)                           # z = cos(π)+sin(2π) = -1
+    print(z)
+    // Output:
+    // [-1.000000000000002, -0.9999999999999991]
 
 This also works for large temporal evaluations as long as :math:`[t]\subseteq[t_0,t_f]`.  
 
@@ -107,11 +116,25 @@ These trajectories are useful in case of actual data coming from sensors or nume
 
   .. code-tab:: py
 
-    # todo
+    # Trajectory from a formula
+    x = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"));
+
+    # Trajectory from a map of values
+    values = {}
+    for t in np.arange(0., 10., 0.5):
+      values[t] = np.cos(t)+np.sin(2*t)
+    y = Trajectory(values)
 
 ..    // Graphics (will be detailed later on)
 ..    fig.add_trajectory(&x_f, "x_f", "red");
 ..    fig.add_trajectory(&x_m, "x_m", "blue");
+
+..    beginDrawing()
+..    fig = VIBesFigTube("fig")
+..    fig.add_trajectory(x, "x", "red");
+..    fig.add_trajectory(y, "y", "blue");
+..    fig.show()
+..    endDrawing()
 
 .. figure:: img/trajs.png
   
@@ -134,7 +157,12 @@ It is also possible to define a trajectory from an analytical function while rep
 
   .. code-tab:: py
 
-    # todo
+    # Analytical definition but sampling representation with dt=0.5:
+    y_1 = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"), 0.5);
+
+    # Same as before, in two steps. y_1 == y_2
+    y_2 = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"));
+    y_2.sample(0.5);
 
 The ``TFunction`` object is only used for the initialization. The resulting trajectory is only defined as a map of values.
 
@@ -155,7 +183,10 @@ Once created, several evaluations of the trajectory can be made. For instance:
 
   .. code-tab:: py
 
-    # todo
+    x.tdomain())       # temporal domain, returns [0, 10]
+    x.codomain())      # envelope of values, returns [-2,2]
+    x(6.))             # evaluation of x(·) at 6, returns 0.42..
+    x(Interval(5,6)))  # evaluation of x(·) over [5,6], returns [-0.72..,0.42..]
 
 Note that the items defining the trajectory (the map of values, or the function) are accessible from the object:
 
@@ -163,12 +194,13 @@ Note that the items defining the trajectory (the map of values, or the function)
 
   .. code-tab:: c++
 
-    TFunction *f = x.function();                // x(·) was defined from a formula
+    TFunction *f = x.tfunction();              // x(·) was defined from a formula
     map<double,double> m = y.sampled_map();    // y(·) was defined as a map of values
 
   .. code-tab:: py
 
-    # todo
+    f = x.tfunction()                          # x(·) was defined from a formula
+    m = y.sampled_map()                        # y(·) was defined as a map of values
 
 Other methods exist such as:
 
@@ -181,12 +213,18 @@ Other methods exist such as:
     Trajectory x_prim = x.primitive(0., 0.01); // when defined from a function,
                                                // params are (x0,dt)
     // Differentiations:
-    Trajectory y_prim = y.diff();              // finite differences on y(·)
+    Trajectory y_diff = y.diff();              // finite differences on y(·)
     Trajectory x_diff = x.diff();              // exact differentiation of x(·)
 
   .. code-tab:: py
 
-    # todo
+    # Approximation of primitives:
+    y_prim = y.primitive()                     # when defined from a map of values
+    x_prim = x.primitive(0, 0.01)              # when defined from a function,
+                                               # params are (x0,dt)
+    # Differentiations:
+    y_diff = y.diff()                          # finite differences on y(·)
+    x_diff = x.diff()                          # exact differentiation of x(·)
 
 Note that the result of these methods is inaccurate on trajectories defined from a map. For trajectories built on analytic functions, the exact differentiation is performed and returned in the form of a trajectory defined by a ``TFunction`` too.
 
@@ -200,7 +238,7 @@ Finally, to add a point to a mapped trajectory, the following function can be us
 
   .. code-tab:: py
 
-    # todo
+    y.set(1, 4)                                # add the value y(4)=1
 
 Other features and details can be found in the technical datasheet of the ``Trajectory`` class.
 
@@ -246,7 +284,13 @@ The use of the features presented above remain the same.
 
   .. code-tab:: py
 
-    # todo
+    # Trajectory from a formula; the function's output is two-dimensional
+    x = TrajectoryVector(Interval(0,10), TFunction("(cos(t);sin(t))"))
+
+    # Trajectory from a map of values
+    y = TrajectoryVector(2)
+    for t in np.arange(0., 10., 0.6):
+      y.set([np.cos(t),np.sin(t)], t)
 
 ..    // ...
 ..
