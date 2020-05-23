@@ -54,7 +54,7 @@ void export_Trajectory(py::module& m){
     .def("size", &Trajectory::size,DOCS_TRAJECTORY_SIZE)
     .def("tdomain", &Trajectory::tdomain,DOCS_TRAJECTORY_TDOMAIN)
     .def("sampled_map", &Trajectory::sampled_map,DOCS_TRAJECTORY_SAMPLED_MAP)
-    .def("function", &Trajectory::function,DOCS_TRAJECTORY_FUNCTION)
+    .def("tfunction", &Trajectory::tfunction,DOCS_TRAJECTORY_TFUNCTION,py::return_value_policy::reference_internal)
     .def("codomain", &Trajectory::codomain,DOCS_TRAJECTORY_CODOMAIN)
     .def("__call__", [](Trajectory& s,double o) { return s(o);}, 
         DOCS_TRAJECTORY_OPERATOR_CALL_DOUBLE)

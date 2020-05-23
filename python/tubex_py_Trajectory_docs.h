@@ -87,10 +87,10 @@ const char* DOCS_TRAJECTORY_SAMPLED_MAP=R"_docs(/// @}
 */
 )_docs";
 
-const char* DOCS_TRAJECTORY_FUNCTION=R"_docs(/**
+const char* DOCS_TRAJECTORY_TFUNCTION=R"_docs(/**
 * \brief Returns the temporal function, if the object is a analytic trajectory
 *
-* \return a pointer to a tubex::Function object
+* \return a pointer to a tubex::TFunction object
 */
 )_docs";
 

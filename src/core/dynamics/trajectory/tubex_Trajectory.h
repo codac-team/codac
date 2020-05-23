@@ -126,7 +126,7 @@ namespace tubex
        *
        * \return a pointer to a TFunction object
        */
-      const TFunction* function() const;
+      const TFunction* tfunction() const;
 
       /**
        * \brief Returns the interval of feasible values
