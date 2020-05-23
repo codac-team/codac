@@ -37,7 +37,9 @@ Intervals, boxes and interval matrices
     
     .. code-tab:: py
 
-      # todo
+      x = Interval(0, 10)                         # [0,10]
+      x = Interval(1, oo)                         # [1,∞]
+      x = Interval(-oo, -10)                      # [-∞,-10]
 
   Some pre-defined values are also at hand:
 
@@ -56,9 +58,16 @@ Intervals, boxes and interval matrices
     
     .. code-tab:: py
 
-      # todo
+      x = Interval()                              # [-∞,∞] (default value)
+      x = Interval.ALL_REALS                      # [-∞,∞]
+      x = Interval.POS_REALS                      # [0,∞]
+      x = Interval.NEG_REALS                      # [-∞,0]
+      x = Interval.EMPTY_SET                      # ∅
+      x = Interval.PI                             # [π]
+      x = Interval.TWO_PI                         # [2π]
+      x = Interval.HALF_PI                        # [π/2]
 
-  Note that the constant ``Interval::pi()`` provides a reliable enclosure of the :math:`\pi` value, that cannot be exactly represented in a computer with a single floating-point value.
+  Note that the constant :math:`[\pi]` is a reliable enclosure of the :math:`\pi` value, that cannot be exactly represented in a computer with a single floating-point value.
 
   .. tabs::
 
@@ -69,7 +78,8 @@ Intervals, boxes and interval matrices
     
     .. code-tab:: py
 
-      # todo
+      x = Interval.PI                             # [π]
+      # x = [3.141592653589793, 3.141592653589794]
 
   
 .. _sec-manual-intervals-boxes:
@@ -92,7 +102,14 @@ Intervals, boxes and interval matrices
     
     .. code-tab:: py
 
-      # todo
+      x = IntervalVector(2, [-1,3])               # creates [x]=[-1,3]×[-1,3]=[-1,3]^2
+      y = IntervalVector([[3,4],[4,6]])           # creates [y]= [3,4]×[4,6]
+      z = IntervalVector(3, Interval.POS_REALS)   # creates [z]=[0,∞]^3
+      w = IntervalVector(y)                       # creates a copy: [w]=[y]
+
+      v = (0.42,0.42,0.42)                        # one vector (0.42;0.42;0.42)
+      iv = IntervalVector(v)                      # creates one box that wraps v:
+                                                  #   [0.42,0.42]×[0.42,0.42]×[0.42,0.42]
   
   One can access vector components as we do for ``Vector`` objects:
 
@@ -104,7 +121,7 @@ Intervals, boxes and interval matrices
     
     .. code-tab:: py
 
-      # todo
+      x[1] = Interval(0,10)                       # updates to [x]=[-1,3]×[0,10]
 
   The vector operations to handle ``Vector`` objects can also be used for boxes:
 
@@ -115,11 +132,14 @@ Intervals, boxes and interval matrices
       int n = x.size();             // box dimension (number of components): 2
       x.resize(5);                  // updates [x] to [-1,3]×[0,10]×[-∞,∞]×[-∞,∞]×[-∞,∞]
       IntervalVector m = x.subvector(1,2); // creates [m]=[0,10]×[-∞,∞]
-      x.put(y,2);                   // updates [x] to [-1,3]×[0,10]×[3,4]×[4,6]×[-∞,∞]
+      x.put(2,y);                   // updates [x] to [-1,3]×[0,10]×[3,4]×[4,6]×[-∞,∞]
 
     .. code-tab:: py
 
-      # todo
+      n = x.size()                  # box dimension (number of components): 2
+      x.resize(5)                   # updates [x] to [-1,3]×[0,10]×[-∞,∞]×[-∞,∞]×[-∞,∞]
+      m = x.subvector(1,2)          # creates [m]=[0,10]×[-∞,∞]
+      x.put(2,y)                    # updates [x] to [-1,3]×[0,10]×[3,4]×[4,6]×[-∞,∞]
 
 
 .. _sec-manual-intervals-matrices:
@@ -149,7 +169,7 @@ The empty set of an ``Interval`` object is given by:
     
     .. code-tab:: py
 
-      # todo
+      x = Interval.EMPTY_SET                      # ∅
 
 For boxes (interval vectors), we have to specify their dimension even in case of empty set. This differs from mathematical definitions, but allows simple operations when programming with boxes.
 
@@ -161,7 +181,7 @@ For boxes (interval vectors), we have to specify their dimension even in case of
     
     .. code-tab:: py
 
-      # todo
+      x = IntervalVector.empty(3) # ∅×∅×∅
 
 
 .. _sec-manual-intervals-operations:
@@ -177,6 +197,7 @@ Code                                  Meaning
 ``x==y``                              :math:`[x]=[y]`
 ``x!=y``                              :math:`[x]\neq [y]`
 ``x.is_empty()``                      :math:`[x]=\varnothing`
+``x.is_unbounded()``                  true iff :math:`[x]` has one of its bounds infinite
 ``x.is_subset(y)``                    :math:`[x]\subseteq [y]`
 ``x.is_strict_subset(y)``             :math:`[x]\subseteq [y]\wedge [x]\neq [y]`
 ``x.is_superset(y)``                  :math:`[x]\supseteq [y]`
@@ -212,7 +233,6 @@ Return type         Code                       Meaning
 ``double``          ``x.rad()``                radius, half of the diameter
 ``double``          ``x.mid()``                the midpoint, (:math:`(\underline{x}+\overline{x})/2`)
 ``Interval``        ``x.inflate(eps)``         an interval with the same midpoint and radius increased by ``eps``
-``bool``            ``x.is_unbounded()``       true iff :math:`[x]` has one of its bounds infinite
 ==================  =========================  ==================================================================
 
 Then for ``IntervalVector``:
@@ -296,7 +316,13 @@ The use on intervals is transparent:
   
   .. code-tab:: py
 
-    # todo
+    a = Interval(-2,4) * Interval(1,3)                              # a = [-6,12]
+    b = Interval(-2,4) & Interval(6,7)                              # b = [empty] (intersection)
+    c = max(Interval(2,7), Interval(1,9))                           # c = [2,9]
+    d = max(Interval.EMPTY_SET, Interval(1,2))                      # d = [empty]
+    e = Interval(-1,3) / Interval.POS_REALS                         # e = [-oo,oo]
+    f = (Interval(1,2) * Interval(-1,3)) \
+      + max(Interval(1,3) & Interval(6,7), Interval(1,2))           # f = [4,9]
 
 
 ------------------------------------------------------
