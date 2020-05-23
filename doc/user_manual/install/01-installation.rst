@@ -7,9 +7,39 @@ Installing the Tubex library
 The installation is supported on Linux systems. The current version of Tubex has not been tested on Windows.
 Any support is more than welcome.
 
+.. contents::
+
+
+Very fast installation for Python use
+-------------------------------------
+
+In case you want to use Tubex only with Python, then the installation procedure is simply:
+
+.. code-block:: bash
+
+  pip3 install pyibex pytubex
+
+where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Tubex is based.
+
+The ``✓`` configurations are officially supported at the moment:
+
+=================================  =============  =============  =============
+Python version                     Linux          Windows        macOS
+=================================  =============  =============  =============
+Python 3.4                         ✓              ?              ?
+Python 3.5                         ✓              ?              ?
+Python 3.6                         ✓              ?              ?
+Python 3.7                         ✓              ?              ?
+Python 3.8                         ✓              ?              ?
+=================================  =============  =============  =============
+
+
+
+Full installation for C++ use or developpers
+--------------------------------------------
 
 Requirements and dependencies (IBEX)
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is available on `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
 
@@ -43,8 +73,8 @@ For further CMake options, please refer to the documentation. For instance, for 
 IBEX uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/wrswt/preprints/prep_01_4.pdf>`_ is also supported. Use :code:`-DINTERVAL_LIB=filib` during the CMake configuration to use it.
 
 
-Tubex library
--------------
+Building the Tubex library
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The last sources are available on `the official Tubex development repository <https://github.com/SimonRohou/tubex-lib>`_. You can download the files and compile the sources with:
 
@@ -111,6 +141,21 @@ The last sources are available on `the official Tubex development repository <ht
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
 
 
+Compiling the examples
+^^^^^^^^^^^^^^^^^^^^^^
+
+To compile one specific example, use CMake in the example directory.
+For instance:
+
+.. code-block:: bash
+  
+  cd examples/basics/ex_01_arithmetic               # moving to the example directory
+  mkdir build -p ; cd build ; cmake .. ; make       # cmake compilation
+  ./basics_01                                       # running example
+
+Do not forget to launch the VIBes viewer before running your program.
+
+
 Graphical tools
 ---------------
 
@@ -131,18 +176,3 @@ Then, the VIBes viewer can be launch independently by executing:
 .. code-block:: bash
 
   VIBes-viewer
-
-
-Build the examples
-------------------
-
-To compile one specific example, use CMake in the example directory.
-For instance:
-
-.. code-block:: bash
-  
-  cd examples/basics/ex_01_arithmetic               # moving to the example directory
-  mkdir build -p ; cd build ; cmake .. ; make       # cmake compilation
-  ./basics_01                                       # running example
-
-Do not forget to launch the VIBes viewer before running your program.
