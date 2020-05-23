@@ -43,6 +43,7 @@ using ibex::IntervalVector;
 void export_VIBesFig(py::module& m){
 
     m.def("beginDrawing", [](){vibes::beginDrawing();});
+    m.def("endDrawing", [](){vibes::endDrawing();});
 
     py::class_<VIBesFig>(m, "VIBesFig", DOCS_VIBESFIG)
       .def(py::init<const std::string &>(),

@@ -273,7 +273,6 @@ void export_TubeVector(py::module& m){
         // .def("__rmul__", [](const TubeVector& y, const Tube& x){return x*y;})
         // .def("__mul__", [](const ibex::Interval& x, const TubeVector& y){return x*y;})
         .def("__rmul__", [](const TubeVector& y, const ibex::Interval& x){return x*y;})
-        .def("__mul__", [](const Tube& x, const ibex::IntervalVector& y){return x*y;})
         // .def("__mul__", [](const Trajectory& x, const TubeVector& y){return x*y})
 
         .def("__truediv__", [](const TubeVector& x, const Tube& y){return x/y;})
