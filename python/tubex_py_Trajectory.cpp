@@ -83,22 +83,22 @@ void export_Trajectory(py::module& m){
     .def("diff", &Trajectory::diff,DOCS_TRAJECTORY_DIFF)
     .def("finite_diff", &Trajectory::finite_diff,
         DOCS_TRAJECTORY_FINITE_DIFF_DOUBLE, "t"_a)
-    .def("__iadd__", [](Trajectory& s,double o) { return s += o;}, 
-        DOCS_TRAJECTORY_IADD_DOUBLE)
-    .def("__iadd__", [](Trajectory& s,const Trajectory & o) { return s += o;}, 
-        DOCS_TRAJECTORY_IADD_TRAJECTORY)
-    .def("__isub__", [](Trajectory& s,double o) { return s -= o;}, 
-        DOCS_TRAJECTORY_ISUB_DOUBLE)
-    .def("__isub__", [](Trajectory& s,const Trajectory & o) { return s -= o;}, 
-        DOCS_TRAJECTORY_ISUB_TRAJECTORY)
-    .def("__imul__", [](Trajectory& s,double o) { return s *= o;}, 
-        DOCS_TRAJECTORY_IMUL_DOUBLE)
-    .def("__imul__", [](Trajectory& s,const Trajectory & o) { return s *= o;}, 
-        DOCS_TRAJECTORY_IMUL_TRAJECTORY)
-    .def("__itruediv__", [](Trajectory& s,double o) { return s /= o;}, 
-        DOCS_TRAJECTORY_ITRUEDIV_DOUBLE)
-    .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o;}, 
-        DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
+//    .def("__iadd__", [](Trajectory& s,double o) { return s += o;}, 
+//        DOCS_TRAJECTORY_IADD_DOUBLE)
+//    .def("__iadd__", [](Trajectory& s,const Trajectory & o) { return s += o;}, 
+//        DOCS_TRAJECTORY_IADD_TRAJECTORY)
+//    .def("__isub__", [](Trajectory& s,double o) { return s -= o;}, 
+//        DOCS_TRAJECTORY_ISUB_DOUBLE)
+//    .def("__isub__", [](Trajectory& s,const Trajectory & o) { return s -= o;}, 
+//        DOCS_TRAJECTORY_ISUB_TRAJECTORY)
+//    .def("__imul__", [](Trajectory& s,double o) { return s *= o;}, 
+//        DOCS_TRAJECTORY_IMUL_DOUBLE)
+//    .def("__imul__", [](Trajectory& s,const Trajectory & o) { return s *= o;}, 
+//        DOCS_TRAJECTORY_IMUL_TRAJECTORY)
+//    .def("__itruediv__", [](Trajectory& s,double o) { return s /= o;}, 
+//        DOCS_TRAJECTORY_ITRUEDIV_DOUBLE)
+//    .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o;}, 
+//        DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
     .def("class_name", &Trajectory::class_name,DOCS_TRAJECTORY_CLASS_NAME)
       .def("__repr__", &to_string)
 
@@ -127,13 +127,67 @@ void export_Trajectory(py::module& m){
       // .def("diff", &Trajectory::diff)
       // .def("finite_diff", &Trajectory::finite_diff, "t"_a)
       // .def("class_name", &Trajectory::class_name)
+
+  // Operators
+
+    .def("__add__",      [](const Trajectory& x) { return +x; })
+    .def("__add__",      [](const Trajectory& x, const Trajectory& y) { return x+y; })
+    .def("__add__",      [](const Trajectory& x, double y) { return x+y; })
+    .def("__radd__",     [](const Trajectory& x, double y) { return x+y; })
+
+    .def("__neg__",      [](const Trajectory& x) { return -x; })
+    .def("__sub__",      [](const Trajectory& x, const Trajectory& y) { return x-y; })
+    .def("__sub__",      [](const Trajectory& x, double y) { return x-y; })
+    .def("__rsub__",     [](const Trajectory& x, double y) { return y-x; })
+
+    .def("__mul__",      [](const Trajectory& x, const Trajectory& y) { return x*y; }, "y"_a.noconvert())
+    .def("__mul__",      [](const Trajectory& x, double y) { return x*y; }, "y"_a.noconvert())
+    .def("__rmul__",     [](const Trajectory& x, double y) { return x*y; }, "y"_a.noconvert())
+    // Vector case
+    .def("__mul__",      [](const Trajectory& x, const ibex::Vector& y) { return x*y; }, "y"_a.noconvert())
+
+    .def("__truediv__",  [](const Trajectory& x, const Trajectory& y) { return x/y; }) //, "x"_a.noconvert(), "y"_a.noconvert())
+    .def("__truediv__",  [](const Trajectory& x, double y) { return x/y; }) //, "x"_a.noconvert(), "y"_a.noconvert())
+    .def("__rtruediv__", [](const Trajectory& x, double y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
+    // Vector case
+    .def("__rtruediv__", [](const Trajectory& x, const ibex::Vector& y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
   ;
+
+  m.def("cos",   (const Trajectory (*) (const Trajectory&)) &cos);
+  m.def("sin",   (const Trajectory (*) (const Trajectory&)) &sin);
+  m.def("abs",   (const Trajectory (*) (const Trajectory&)) &abs);
+  m.def("sqr",   (const Trajectory (*) (const Trajectory&)) &sqr);
+  m.def("sqrt",  (const Trajectory (*) (const Trajectory&)) &sqrt);
+  m.def("exp",   (const Trajectory (*) (const Trajectory&)) &exp);
+  m.def("log",   (const Trajectory (*) (const Trajectory&)) &log);
+  m.def("tan",   (const Trajectory (*) (const Trajectory&)) &tan);
+  m.def("acos",  (const Trajectory (*) (const Trajectory&)) &acos);
+  m.def("asin",  (const Trajectory (*) (const Trajectory&)) &asin);
+  m.def("atan",  (const Trajectory (*) (const Trajectory&)) &atan);
+  m.def("cosh",  (const Trajectory (*) (const Trajectory&)) &cosh);
+  m.def("sinh",  (const Trajectory (*) (const Trajectory&)) &sinh);
+  m.def("tanh",  (const Trajectory (*) (const Trajectory&)) &tanh);
+  m.def("acosh", (const Trajectory (*) (const Trajectory&)) &acosh);
+  m.def("asinh", (const Trajectory (*) (const Trajectory&)) &asinh);
+  m.def("atanh", (const Trajectory (*) (const Trajectory&)) &atanh);
+
+  m.def("atan2", (const Trajectory (*) (const Trajectory&, const Trajectory&)) &atan2, "y"_a, "x"_a);
+  m.def("atan2", (const Trajectory (*) (const Trajectory&, double)) &atan2, "y"_a, "x"_a);
+  m.def("atan2", (const Trajectory (*) (double, const Trajectory&)) &atan2, "y"_a, "x"_a);
+
+  m.def("pow",   (const Trajectory (*) (const Trajectory& x, int p)) &pow, "x"_a, "p"_a);
+  m.def("pow",   (const Trajectory (*) (const Trajectory& x, double p)) &pow, "x"_a, "p"_a);
+  m.def("pow",   (const Trajectory (*) (const Trajectory& x, double p)) &pow, "x"_a, "p"_a);
+  m.def("root",  (const Trajectory (*) (const Trajectory& x, int p)) &root, "x"_a, "p"_a);
+
 
     py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector");
     trajectoryvector
         .def(py::init<int>(),DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT, "n"_a)
         .def(py::init<const ibex::Interval &,const TFunction &>(),
             DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION, "domain"_a, "f"_a)
+        .def(py::init<const ibex::Interval &,const TFunction &,double>(),
+            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION_DOUBLE, "domain"_a, "f"_a, "timestep"_a)
         .def(py::init<const std::map<double, ibex::Vector> &>(),
             DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_MAP_DOUBLE_VECTOR_, "m_map_values"_a)
         .def(py::init<const std::vector<std::map<double, double> > &>(),
@@ -212,12 +266,32 @@ void export_Trajectory(py::module& m){
         .def("class_name", &TrajectoryVector::class_name,
             DOCS_TRAJECTORYVECTOR_CLASS_NAME)
 
-        .def("__getitem__", [](TrajectoryVector& s, size_t index) -> Trajectory&{
-              if ((int)index >= s.size()){
+
+      .def("__getitem__", [](TrajectoryVector& s, size_t index) -> Trajectory&{
+              if (index >= static_cast<size_t>(s.size())){
                   throw py::index_error();
               }
                 return s[static_cast<int>(index)];
           }, DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT, py::return_value_policy::reference_internal)
+
+      .def("__getitem__", [](const TrajectoryVector& s, py::slice slice) -> TrajectoryVector {
+            size_t start, stop, step, slicelength;
+            if (!slice.compute(s.size(), &start, &stop, &step, &slicelength))
+                throw py::error_already_set();
+            if (step != 1){
+                std::cout << "Warning slice step must be equal to 1\n";
+            }
+            
+            // to respect the python convention, the stop index 
+            // is not included in slice
+            return s.subvector(start, start + slicelength-1);
+        },DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT1)
+      .def("__setitem__", [](TrajectoryVector& s, size_t index, Trajectory& t){
+              if (index >= static_cast<size_t>(s.size())){
+                throw py::index_error();
+              }
+              s[static_cast<int>(index)] = t;
+          }, DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT)
         // .def("operator[]", [](TrajectoryVector& s,int o) { return s[o];}, 
         //     DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT)
         // .def("operator[]", [](TrajectoryVector& s,int o) { return s[o];}, 

@@ -306,7 +306,7 @@ The use of the features presented above remain the same.
 
   In red and blue, the ``TrajectoryVector`` defined from the analytical function. In gray, the sampled one.
 
-Note that as in IBEX, each component of a vector object (``IntervalVector``, ``TrajectoryVector``, ``TubeVector``) is available by reference:
+Note that each component of a vector object (``IntervalVector``, ``TrajectoryVector``, ``TubeVector``) is available by reference:
 
 .. tabs::
 
@@ -317,7 +317,8 @@ Note that as in IBEX, each component of a vector object (``IntervalVector``, ``T
   
   .. code-tab:: py
 
-    # todo
+    x[1] = Trajectory(tdomain, TFunction("exp(t)"))
+    print(x[1])
 
 
 .. _sec-manual-vardyn-lissajous:
@@ -339,7 +340,8 @@ Let us consider a robot following a Lissajous curve from :math:`t_0=0` to :math:
 
   .. code-tab:: py
 
-    # todo
+    tdomain = Interval(0,5)
+    x = TrajectoryVector(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), 0.01)
 
 .. figure:: img/lissajous.png
 
@@ -357,11 +359,12 @@ We compute the *trajectory* of distances by:
 
   .. code-tab:: py
 
-    # todo
+    b = (0.5,1) # landmark's position
+    dist = sqrt(sqr(x[0]-b[0])+sqr(x[1]-b[1])) # simple operations between traj.
 
 .. figure:: img/distances.png
 
-  Result of simulated range measurements.
+  Result of simulated range measurements: the ``dist`` trajectory object.
 
 
 Random trajectories
