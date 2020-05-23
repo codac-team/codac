@@ -383,7 +383,10 @@ As one can see, trajectories can be used to represent data. When it comes to con
   
   .. code-tab:: py
 
-    # todo
+    # Random values in [-0.2,0.2] at each dt=0.01
+    n = RandTrajectory(tdomain, 0.01, Interval(-0.2,0.2))
+
+    dist += n # added noise (sum of trajectories)
 
 .. figure:: img/distances_noise.png
 

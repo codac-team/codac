@@ -123,6 +123,16 @@ After having configured ``-DWITH_PYTHON=ON`` and compiled:
   python3 setup.py develop --user
 
 
+.. rubric:: Script to create a first draft of binding
+
+Copy the :file:`pybind11gen.py` script in the sources folder. Then, for instance:
+
+.. code-block:: bash
+  
+  python3 pybind11gen.py module_name=RandTrajectory tubex_RandTrajectory.h
+  # get the files in /tmp
+
+
 .. rubric:: [For admins] Upload Python binding on PyPi (`see Tubex repo <https://pypi.org/project/pytubex/>`_)
 
 Tag the current version:

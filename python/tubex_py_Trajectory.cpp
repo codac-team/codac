@@ -18,8 +18,10 @@
 
 #include "tubex_Trajectory.h"
 #include "tubex_TrajectoryVector.h"
+#include "tubex_RandTrajectory.h"
 #include "tubex_py_Trajectory_docs.h"
 #include "tubex_py_TrajectoryVector_docs.h"
+#include "tubex_py_RandTrajectory_docs.h"
 namespace py = pybind11;
 using namespace pybind11::literals;
 using py::class_;
@@ -127,6 +129,32 @@ void export_Trajectory(py::module& m){
       // .def("diff", &Trajectory::diff)
       // .def("finite_diff", &Trajectory::finite_diff, "t"_a)
       // .def("class_name", &Trajectory::class_name)
+
+  // Assignments operators
+
+    .def("__iadd__", [](Trajectory& s,double o) { return s += o; },
+      DOCS_TRAJECTORY_IADD_DOUBLE)
+
+    .def("__iadd__", [](Trajectory& s,const Trajectory & o) { return s += o; },
+      DOCS_TRAJECTORY_IADD_TRAJECTORY)
+
+    .def("__isub__", [](Trajectory& s,double o) { return s -= o; },
+      DOCS_TRAJECTORY_ISUB_DOUBLE)
+
+    .def("__isub__", [](Trajectory& s,const Trajectory & o) { return s -= o; },
+      DOCS_TRAJECTORY_ISUB_TRAJECTORY)
+
+    .def("__imul__", [](Trajectory& s,double o) { return s *= o; },
+      DOCS_TRAJECTORY_IMUL_DOUBLE)
+
+    .def("__imul__", [](Trajectory& s,const Trajectory & o) { return s *= o; },
+      DOCS_TRAJECTORY_IMUL_TRAJECTORY)
+
+    .def("__itruediv__", [](Trajectory& s,double o) { return s /= o; },
+      DOCS_TRAJECTORY_ITRUEDIV_DOUBLE)
+
+    .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o; },
+      DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
 
   // Operators
 
@@ -341,6 +369,11 @@ void export_Trajectory(py::module& m){
       // .def("class_name", &TrajectoryVector::class_name)
     // ;
       // .def("__repr__", [](TrajectoryVector& s,std::ostream&, const tubex::TrajectoryVector& o) { s << o;});
-    
 
+    py::class_<RandTrajectory> randtrajectory(m, "RandTrajectory", trajectory, DOCS_RANDTRAJECTORY);
+    randtrajectory
+      .def(py::init<const ibex::Interval &,double,const ibex::Interval &>(),
+          DOCS_RANDTRAJECTORY_RANDTRAJECTORY_INTERVAL_DOUBLE_INTERVAL, "tdomain"_a, "timestep"_a, "bounds"_a);
+
+    //py::implicitly_convertible<Trajectory,RandTrajectory>();
 }
