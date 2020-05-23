@@ -73,7 +73,16 @@ To create a ``Tube`` with a constant codomain:
 
   .. code-tab:: py
 
-    # todo
+    tdomain = Interval(0,10)
+
+    # One-slice tubes:
+    x1 = Tube(tdomain)                               # [0,10]→[-∞,∞]
+    x2 = Tube(tdomain, Interval(0,2))                # [0,10]→[0,2]
+
+    # 100-slices tubes:
+    dt = 0.1 
+    x3 = Tube(tdomain, dt, Interval(0,2))            # [0,10]→[0,2]
+    x4 = Tube(tdomain, dt, Interval.POS_REALS)       # [0,10]→[0,∞]
 
 The ``dt`` variable defines the temporal width of the slices. Note that it is also possible to create slices of different width; this will be explained afterwards.
 
@@ -88,7 +97,8 @@ To create a copy of a tube with the same time discretization, use:
 
   .. code-tab:: py
 
-    # todo
+    x5 = Tube(x4)                    # identical tube (100 slices, [0,10]→[0,∞])
+    x6 = Tube(x4, Interval(5))       # 100 slices, same timestep, but [0,10]→[5]
 
 As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Trajectory`` objects:
 
@@ -103,7 +113,10 @@ As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Traject
 
   .. code-tab:: py
 
-    # todo
+    traj = TrajectoryVector(tdomain, TFunction("(sin(t) ; cos(t) ; cos(t)+t/10)"))
+
+    x8 = Tube(traj[0], dt)           # 100 slices tube enclosing sin(t)
+    x9 = Tube(traj[1], traj[2], dt)  # 100 slices tube defined as [cos(t),cos(t)+t/10]
 
 .. figure:: img/interval_trajs.png
 
@@ -141,12 +154,15 @@ It is also possible to create a tube from a thick function, where the uncertaint
 
   .. code-tab:: c++
 
-    Tube x10(tdomain, dt/10.,
+    dt = 0.01;
+    Tube x10(tdomain, dt,
              TFunction("-abs(cos(t)+t/5)+(t/2)*[-0.1,0.1]"));
 
   .. code-tab:: py
 
-    # todo
+    dt = 0.01
+    x10 = Tube(tdomain, dt, \
+               TFunction("-abs(cos(t)+t/5)+(t/2)*[-0.1,0.1]"))
 
 .. figure:: img/02_tube_fnc.png
 
@@ -158,9 +174,6 @@ Finally, as tube is an envelope (union) of trajectories, the following operation
 
   .. code-tab:: c++
 
-    float dt = 0.01;
-    Interval tdomain(0.,10.);
-
     TFunction f("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"); // 4d temporal function
     TrajectoryVector traj(tdomain, f); // 4d trajectory defined over [0,10]
 
@@ -169,7 +182,11 @@ Finally, as tube is an envelope (union) of trajectories, the following operation
 
   .. code-tab:: py
 
-    # todo
+    f = TFunction("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))") # 4d temporal function
+    traj = TrajectoryVector(tdomain, f) # 4d trajectory defined over [0,10]
+
+    # 1d tube [x](·) defined as a union of the 4 trajectories
+    x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3]
     
 Which produces:
 
@@ -195,7 +212,10 @@ The vector case
 
   .. code-tab:: py
 
-    # todo
+    # TubeVector from a formula; the function's output is two-dimensional
+    x = TubeVector(tdomain, dt, \
+                   TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
+                              cos(t)+sin(t/0.2)*[-0.1,0.1])"))
 
 produces (each dimension displayed on the same figure):
 
@@ -281,7 +301,9 @@ Once created, several evaluations of the tubes can be made, as for trajectories.
 
     .. code-tab:: py
 
-      # todo
+      x(6.)                            # evaluation of [x](·) at 6
+      x(Interval(5,6))                 # evaluation of [x](·) over [5,6]
+      x.codomain()                     # envelope of values
 
 
   .. rubric:: Inversion of tubes
@@ -303,7 +325,12 @@ Once created, several evaluations of the tubes can be made, as for trajectories.
 
     .. code-tab:: py
 
-      # todo
+      v_t = []
+      x.invert(Interval(0,0.2), v_t)   # inversion
+      
+      for t in v_t:
+        tbox = IntervalVector([t,[0,0.2]])
+        fig.draw_box(tbox, "red")      # boxes display
 
   .. figure:: img/02_invert.png
 
@@ -392,7 +419,7 @@ We recall that the tubes and trajectories have to share the same *t*-domain for 
     
   .. code-tab:: py
 
-    # todo
+    x4 = (x1 | x2) & x3
 
 The same for mathematical functions:
 
@@ -405,7 +432,8 @@ The same for mathematical functions:
 
   .. code-tab:: py
 
-    # todo
+    x2 = abs(x1)
+    x3 = cos(x1) + sqrt(x2 + pow(x1, Interval(2,3)))
 
 The following functions can be used:
 
@@ -456,7 +484,7 @@ Computation of the tube primitive :math:`[p](\cdot)=\int_{0}^{\cdot}[x](\tau)d\t
 
   .. code-tab:: py
 
-    # todo
+    p = x.primitive()
     
 Computation of the interval-integral :math:`[s]=\int_{0}^{[t]}[x](\tau)d\tau`:
 
@@ -464,12 +492,13 @@ Computation of the interval-integral :math:`[s]=\int_{0}^{[t]}[x](\tau)d\tau`:
 
   .. code-tab:: c++
 
-    Interval t;
+    Interval t(...);
     Interval s = x.integral(t);
 
   .. code-tab:: py
 
-    # todo
+    t = Interval(...)
+    s = x.integral(t)
 
 Computation of :math:`[s]=\int_{[t_1]}^{[t_2]}[x](\tau)d\tau`:
 
@@ -477,12 +506,14 @@ Computation of :math:`[s]=\int_{[t_1]}^{[t_2]}[x](\tau)d\tau`:
 
   .. code-tab:: c++
 
-    Interval t1, t2;
+    Interval t1(...), t2(...);
     Interval s = x.integral(t1, t2);
 
   .. code-tab:: py
 
-    # todo
+    t1 = Interval(...)
+    t2 = Interval(...)
+    s = x.integral(t1, t2)
 
 Also, a decomposition of the interval-integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot)]` with :math:`[s^-]=\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau` and :math:`[s^+]=\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau` is computable by:
 
@@ -498,7 +529,11 @@ Also, a decomposition of the interval-integral of :math:`[x](\cdot)=[x^-(\cdot),
 
   .. code-tab:: py
 
-    # todo
+    t1 = Interval(...)
+    t2 = Interval(...)
+    s = x.partial_integral(t1, t2)
+    # s[0] is [s^-]
+    # s[1] is [s^+]
 
 *Note:* :math:`[s]=[s^-]\sqcup[s^+]`.
 
@@ -516,7 +551,7 @@ The ``set()`` methods allow various updates on tubes. For instance:
 
   .. code-tab:: py
 
-    # todo
+    x.set(Interval(0,2), Interval(5,6)) # then [x]([5,6])=[0,2]
     
 produces:
 
@@ -538,7 +573,9 @@ See also the following methods:
 
   .. code-tab:: py
 
-    # todo
+    x.set(Interval.POS_REALS)     # set a constant codomain for all t
+    x.set(Interval(0), 4.)        # set a value at some t: [x](4)=[0]
+    x.set_empty()                 # empty set for all t
 
 
 .. _sec-manual-tubes-sampling:
@@ -548,16 +585,16 @@ Sampling and *t*-domain
 
 The following methods are related to *t*-domains and slices structure:
 
-==============  =================================  ==============================================================
-Return type     Code                               Meaning
-==============  =================================  ==============================================================
-``Interval``    ``x.tdomain()``                    temporal domain :math:`[t_0,t_f]` (*t*-domain)
---              ``x.shift_tdomain(a)``             shifts the *t*-domain to :math:`[t_0+a,t_f+a]`
-``bool``        ``Tube::same_slicing(x, y)``       tests if ``x`` and ``y`` have the same slicing
---              ``x.sample(t)``                    samples the tube at :math:`t` (adds a slice)
---              ``x.sample(y)``                    samples ``x`` so that it shares the sampling of tube ``y``
---              ``x.remove_gate(t)``               removes the sampling at :math:`t`, if it exists
-==============  =================================  ==============================================================
+==============  ===========================================  ==============================================================
+Return type     Code                                         Meaning
+==============  ===========================================  ==============================================================
+``Interval``    ``x.tdomain()``                              temporal domain :math:`[t_0,t_f]` (*t*-domain)
+--              ``x.shift_tdomain(a)``                       shifts the *t*-domain to :math:`[t_0+a,t_f+a]`
+``bool``        ``same_slicing(x, y)``                       tests if ``x`` and ``y`` have the same slicing **(static)**
+--              ``x.sample(t)``                              samples the tube at :math:`t` (adds a slice)
+--              ``x.sample(y)``                              samples ``x`` so that it shares the sampling of tube ``y``
+--              ``x.remove_gate(t)``                         removes the sampling at :math:`t`, if it exists
+==============  ===========================================  ==============================================================
 
   .. rubric:: The ``sample()`` methods
     

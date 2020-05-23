@@ -45,6 +45,9 @@ void export_VIBesFig(py::module& m){
     m.def("beginDrawing", [](){vibes::beginDrawing();});
     m.def("endDrawing", [](){vibes::endDrawing();});
 
+
+    py::class_<vibes::Params> params(m, "Params");
+
     py::class_<VIBesFig>(m, "VIBesFig", DOCS_VIBESFIG)
       .def(py::init<const std::string &>(),
           DOCS_VIBESFIG_VIBESFIG_STRING, "fig_name"_a)
@@ -61,6 +64,10 @@ void export_VIBesFig(py::module& m){
           DOCS_VIBESFIG_SAVE_IMAGE_STRING_STRING_STRING, "suffix"_a="", "extension"_a="svg", "path"_a=".")
       .def("show", &VIBesFig::show,DOCS_VIBESFIG_SHOW)
       .def("clear", &VIBesFig::clear,DOCS_VIBESFIG_CLEAR)
+      .def("draw_box", (void (VIBesFig::*)(const ibex::IntervalVector &,const std::string &,const vibes::Params &))&VIBesFig::draw_box,
+           "todo", "box"_a, "color"_a, "params"_a=vibes::Params())
+    //   .def("draw_box", (void (VIBesFigTubeVector::*)(const ibex::Interval &,const ibex::IntervalVector &,const std::string &,const vibes::Params &) )&VIBesFigTubeVector::draw_box,
+    //       DOCS_VIBESFIGTUBEVECTOR_DRAW_BOX_INTERVAL_INTERVALVECTOR_STRING_VIBES::PARAMS, "domain"_a, "box"_a, "color"_a="", "params"_a=vibes::Params())
     ;
 
     // py::class_<TubeColorType> tubecolortype(m, "TubeColorType" DOCS_TUBECOLORTYPE);
