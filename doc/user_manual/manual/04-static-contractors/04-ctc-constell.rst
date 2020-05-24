@@ -49,7 +49,8 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
     .. code-tab:: py
 
-      # todo
+      ctc_constell = CtcConstell(v_b) # with v_b, the vector defining
+                                      # the constellation of points
 
 
 Example
@@ -78,7 +79,9 @@ The :math:`\mathcal{C}_\textrm{constell}` can be instantiated with
 
   .. code-tab:: py
 
-    # todo
+    v_b = [...  // vector defining the constellation of points
+
+    ctc_constell = CtcConstell(v_b)
 
 Now, if we define three boxes:
 
@@ -93,7 +96,9 @@ Now, if we define three boxes:
 
   .. code-tab:: py
 
-    # todo
+    v_x = [IntervalVector([[1.25,3],[1.6,2.75]]), \
+           IntervalVector([[2.,3.5],[0.6,1.2]]), \
+           IntervalVector([[1.1,3.25],[0.2,1.4]])]
 
 we can use the :math:`\mathcal{C}_\textrm{constell}` to contract them according to the constellation.
 
@@ -106,7 +111,8 @@ we can use the :math:`\mathcal{C}_\textrm{constell}` to contract them according 
 
   .. code-tab:: py
 
-    # todo
+    for x in v_x:
+      ctc_constell.contract(x)
 
 .. figure:: img/CtcConstell_ctc.png
 

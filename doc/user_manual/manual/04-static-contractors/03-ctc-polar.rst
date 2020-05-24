@@ -34,7 +34,7 @@ Definition
 
     .. code-tab:: py
 
-      # todo
+      ctc.polar.contract(x, y, rho, theta)
 
 
 .. rubric:: Optimality
@@ -71,7 +71,15 @@ We define domains (intervals and boxes):
 
   .. code-tab:: py
 
-    # todo
+    x = IntervalVector(2,Interval(0))
+
+    d = [Interval(7,8), Interval(9,10), Interval(10,11)]
+
+    theta = [Interval(0.6,1.45), Interval(1.15,1.2), Interval(0.8,1)]
+
+    b = [IntervalVector([[1.5,2.5],[4,11]]), \
+         IntervalVector([[3,4.5],[8,10.5]]), \
+         IntervalVector([[5,6.5],[6.5,8]])]
 
 
 Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the :math:`[\mathbf{b}^i]`, :math:`[d^i]` and :math:`[\theta^i]`:
@@ -90,11 +98,18 @@ Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the 
     ctc_polar.contract(b2[0], b2[1], d2, theta2);
     ctc_polar.contract(b3[0], b3[1], d3, theta3);
 
-    // note that we could also use directly the ctc::polar already available
+    // note that we could also use directly the ctc::polar object already available
 
   .. code-tab:: py
 
-    # todo
+    ctc_polar = CtcPolar()
+
+    for i in range(0,3):
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+
+    # note that we could also use directly the ctc.polar object already available
 
 
 .. figure:: img/CtcPolar.png

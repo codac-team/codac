@@ -44,7 +44,7 @@ Definition
 
       # For the constraint f(x)\in[y]
       y = Interval(...) # or IntervalVector if f is a vector function
-      CtcFunction ctc_f(Function("<var1>", "<var2...>", "<expr>"), y)
+      ctc_f = CtcFunction(Function("<var1>", "<var2...>", "<expr>"), y)
       ctc_f.contract(x)
 
 

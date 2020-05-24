@@ -26,7 +26,7 @@ Definition
 
     .. code-tab:: py
 
-      ctc.eval.contract(ti, yi, x, v);
+      ctc.eval.contract(ti, yi, x, v)
 
   .. rubric:: Prerequisite
 

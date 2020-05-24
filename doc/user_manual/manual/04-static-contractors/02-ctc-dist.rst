@@ -26,7 +26,7 @@ Definition
 
     .. code-tab:: py
 
-      # todo
+      ctc.dist.contract(a, b, d)
 
 .. todo::
 
@@ -63,7 +63,11 @@ We define domains (intervals and boxes):
 
   .. code-tab:: py
 
-    # todo
+    d = Interval(7,8)
+    x = IntervalVector(2,Interval(0))
+    b1 = IntervalVector([[1.5,2.5],[4,11]])
+    b2 = IntervalVector([[3,4],[4,6.5]])
+    b3 = IntervalVector([[5,7],[5.5,8]])
 
 Several calls to :math:`\mathcal{C}_{\textrm{dist}}` will allow the contraction of both the :math:`[\mathbf{b}^i]` and :math:`[d]`. Because domains are involved in several contractions, an iterative contraction loop is necessary in order to reach a consistency state (in our case, two iterations are sufficient):
 
@@ -80,11 +84,18 @@ Several calls to :math:`\mathcal{C}_{\textrm{dist}}` will allow the contraction 
       ctc_dist.contract(x, b3, d);
     }
 
-    // note that we could also use directly the ctc::dist already available
+    // note that we could also use directly the ctc::dist object already available
 
   .. code-tab:: py
 
-    # todo
+    ctc_dist = CtcDist()
+
+    for i in range(0,2): # iterative contractions
+      ctc_dist.contract(x, b1, d)
+      ctc_dist.contract(x, b2, d)
+      ctc_dist.contract(x, b3, d)
+
+    # note that we could also use directly the ctc.dist object already available
 
 .. figure:: img/CtcDist.png
 
