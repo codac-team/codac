@@ -89,6 +89,12 @@ namespace tubex
     return str_f;
   }
 
+  void CtcFunction::contract(IntervalVector& x)
+  {
+    assert(x.size() == nb_var);
+    contract(x);
+  }
+
   void CtcFunction::contract(TubeVector& x)
   {
     assert(x.size() == nb_var);

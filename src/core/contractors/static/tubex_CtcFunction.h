@@ -41,6 +41,13 @@ namespace tubex
       CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y);
       
       /**
+       * \brief \f$\mathcal{C}\big([\mathbf{x}]\big)\f$
+       *
+       * \param x the n-dimensional box \f$[\mathbf{x}]\f$ to be contracted
+       */
+      void contract(ibex::IntervalVector& x);
+      
+      /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}](\cdot)\big)\f$
        *
        * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ to be contracted
