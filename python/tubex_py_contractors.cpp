@@ -15,6 +15,7 @@
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcPicard.h"
+#include "tubex_CtcConstell.h"
 #include "tubex_Domain.h"
 #include "tubex_CtcFunction.h"
 #include "tubex_py_CtcFunction_docs.h"
@@ -23,6 +24,7 @@
 #include "tubex_py_CtcDeriv_docs.h"
 #include "tubex_py_CtcEval_docs.h"
 #include "tubex_py_CtcPicard_docs.h"
+#include "tubex_py_CtcConstell_docs.h"
 
 
 #include <pybind11/pybind11.h>
@@ -211,5 +213,14 @@ void export_contractors(py::module& m){
       .def("contract", &CtcDist::contract,
           DOCS_CTCDIST_CONTRACT_INTERVALVECTOR_INTERVALVECTOR_INTERVAL, "a"_a, "b"_a, "d"_a)
 
+    ;
+
+
+    py::class_<CtcConstell> ctc_constell(m, "CtcConstell", DOCS_CTCCONSTELL);
+    ctc_constell
+      .def(py::init<const std::vector<ibex::IntervalVector> &>(),
+          DOCS_CTCCONSTELL_CTCCONSTELL_VECTOR_INTERVALVECTOR_, "map"_a)
+      .def("contract", &CtcConstell::contract,
+          DOCS_CTCCONSTELL_CONTRACT_INTERVALVECTOR, "beacon_box"_a)
     ;
 }
