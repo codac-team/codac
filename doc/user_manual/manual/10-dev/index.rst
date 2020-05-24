@@ -9,8 +9,7 @@
 Information for developers
 ##########################
 
-| In case you are willing to contribute to Tubex, here are some information that may be useful.
-| Linux support.
+In case you are willing to contribute to Tubex, here are some information that may be useful.
 
 
 .. rubric:: Definition

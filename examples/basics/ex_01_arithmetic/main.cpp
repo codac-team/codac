@@ -20,34 +20,23 @@ using namespace tubex;
 
 int main()
 {
-  /* =========== INITIALIZATION =========== */
-  
-    Interval tdomain(0,10);
-    TubeVector x(tdomain, 6);
-    double timestep = 0.01;
 
-    x[0] = Tube(tdomain, timestep, // tube [x](·)
-                TFunction("(t-5)^2 + [-0.5,0.5]"));
-    x[1] = Tube(tdomain, timestep, // tube [y](·)
-                TFunction("-4*cos(t-5) + [-0.5,0.5] + 0.1*(t-3.3)^2*[-2,2]"));
+  float dt = 0.001;
+  Interval tdomain(0.,10.);
 
-  /* =========== ARITHMETIC =========== */
+  TFunction f("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"); // 4d temporal function
+  TrajectoryVector traj(tdomain, f); // 4d trajectory defined over [0,10]
 
-    x[2] = x[0] + x[1];      // tube [a](·)
-    x[3] = sin(x[0]);        // tube [b](·)
-    x[4] = x[0].primitive(); // tube [c](·)
-    x[5] = abs(x[1]);        // tube [d](·)
+  // 1d tube [x](·) defined as a union of the 4 trajectories
+  Tube x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3];
 
-  /* =========== GRAPHICS =========== */
+  vibes::beginDrawing();
 
-    vibes::beginDrawing();
-    VIBesFigTubeVector fig_x("x", 0, 4);
-    fig_x.set_properties(100, 100, 600, 300);
-    fig_x.add_tube(&x, "x");
-    fig_x.show();
-    vibes::endDrawing();
-    
+  VIBesFigTube fig("Tube");
+  fig.set_properties(100, 100, 600, 300);
+  fig.add_tube(&x, "x", "#376D7C[lightGray]");
+  fig.add_trajectories(&traj, "trajs");
+  fig.show();
 
-  // Checking if this example still works:
-  return (fabs(x.volume() - 233.765) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  vibes::endDrawing();
 }

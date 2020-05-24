@@ -156,6 +156,8 @@ For instance:
 Do not forget to launch the VIBes viewer before running your program.
 
 
+.. _sec-installation-graphics:
+
 Graphical tools
 ---------------
 

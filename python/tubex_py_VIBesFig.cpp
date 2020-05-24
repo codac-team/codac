@@ -66,6 +66,8 @@ void export_VIBesFig(py::module& m){
       .def("clear", &VIBesFig::clear,DOCS_VIBESFIG_CLEAR)
       .def("draw_box", (void (VIBesFig::*)(const ibex::IntervalVector &,const std::string &,const vibes::Params &))&VIBesFig::draw_box,
            "todo", "box"_a, "color"_a, "params"_a=vibes::Params())
+      .def("draw_circle", (void (VIBesFig::*)(double,double,double,const std::string &,const vibes::Params &))&VIBesFig::draw_circle,
+           "todo", "x"_a, "y"_a, "r"_a, "color"_a, "params"_a=vibes::Params())
       .def("draw_pie", (void (VIBesFig::*)(double,double,const ibex::Interval &,const ibex::Interval &,const std::string &,const vibes::Params &))&VIBesFig::draw_pie,
            "todo", "x"_a, "y"_a, "r"_a, "theta"_a, "color"_a, "params"_a=vibes::Params())
     //   .def("draw_box", (void (VIBesFigTubeVector::*)(const ibex::Interval &,const ibex::IntervalVector &,const std::string &,const vibes::Params &) )&VIBesFigTubeVector::draw_box,

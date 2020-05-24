@@ -1,13 +1,10 @@
 .. _sec-manual-graphics:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently perfomed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
-
 ###############
 Graphical tools
 ###############
+
+This chapter introduces the main graphical tools proposed in the library for displaying the computed boxes, trajectories, tubes, as well as graphical items commonly used in robotics.
 
 .. toctree::
 
