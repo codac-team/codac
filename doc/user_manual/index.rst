@@ -253,7 +253,7 @@ Then you have two options: read the details about the features of Tubex (domains
   .. Figure:: img/logo_pyibex.jpg
     :align: center
 
-  | The python API of Tubex is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing python access to the IBEX library.
+  | The Python API of Tubex is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing Python access to the IBEX library.
   | `Read the pyIbex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
 
 

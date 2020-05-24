@@ -3,7 +3,7 @@
 import unittest
 import pyibex 
 from pyibex import Interval, IntervalVector
-from pytubex import *
+from tubex_lib import *
 
 class TestArithmeticOnTube(unittest.TestCase):
 

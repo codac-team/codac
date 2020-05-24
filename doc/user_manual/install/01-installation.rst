@@ -17,7 +17,7 @@ In case you want to use Tubex only with Python, then the installation procedure 
 
 .. code-block:: bash
 
-  pip3 install pyibex pytubex
+  pip3 install pyibex tubex-lib
 
 where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Tubex is based.
 

@@ -133,7 +133,7 @@ Copy the :file:`pybind11gen.py` script in the sources folder. Then, for instance
   # get the files in /tmp
 
 
-.. rubric:: [For admins] Upload Python binding on PyPi (`see Tubex repo <https://pypi.org/project/pytubex/>`_)
+.. rubric:: [For admins] Upload Python binding on PyPi (`see Tubex repo <https://pypi.org/project/tubex_lib/>`_)
 
 Tag the current version:
 

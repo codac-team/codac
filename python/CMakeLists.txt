@@ -2,14 +2,14 @@
 #  tubex-lib / Python binding - cmake configuration file
 # ==================================================================
 
-  set(PYTHON_PACKAGE_NAME "pytubex")
+  set(PYTHON_PACKAGE_NAME "tubex_lib")
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
 
   file(MAKE_DIRECTORY ${PYTHON_PACKAGE_DIR})
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${PYTHON_PACKAGE_NAME}/" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}")
 
   if(NOT WIN32)
-    set(FORCE_PYTHON_EXT "ext_modules=[Extension(\"pytubex.empty\", sources=[\"empty.c\"])],")
+    set(FORCE_PYTHON_EXT "ext_modules=[Extension(\"${PYTHON_PACKAGE_NAME}.empty\", sources=[\"empty.c\"])],")
     # trick to generate a correct wheel.
     file(WRITE "${PYTHON_PACKAGE_DIR}/empty.c" "// empty source file")
   endif()
@@ -44,9 +44,9 @@
   target_link_libraries(tube
     PRIVATE tubex tubex-rob ${LIBS})
 
-    # ex: from pytubex import tube
+    # ex: from tubex_lib import tube
     #     tube.Tube
-    # ex: from pytubex.tube import Tube
+    # ex: from tubex_lib.tube import Tube
     #     Tube
 
   # Copy the generated library in the package folder

@@ -9,11 +9,11 @@ Start a Python project
    | :ref:`sec-start-cpp-project`
 
 | Tubex is ready to be used on your computer.
-| You can now import the ``pytubex`` package and start using it:
+| You can now import the ``tubex_lib`` package and start using it:
 
 .. code-block:: py
 
-  from pytubex import *
+  from tubex_lib import *
 
   tdomain = Interval(0,10)
   x = Tube(tdomain);

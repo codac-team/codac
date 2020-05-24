@@ -21,7 +21,7 @@ setup(
   description='${PROJECT_DESCRIPTION}',
   long_description='${PROJECT_LONG_DESCRIPTION}',
   ${FORCE_PYTHON_EXT}
-  packages=['${PYTHON_PACKAGE_NAME}', 'pytubex.tests'],
+  packages=['${PYTHON_PACKAGE_NAME}', '${PYTHON_PACKAGE_NAME}.tests'],
   package_data={
     '${PYTHON_PACKAGE_NAME}': [
       'tube${PYTHON_MODULE_EXTENSION}',

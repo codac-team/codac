@@ -1,6 +1,6 @@
 from pyibex import Interval, IntervalVector
 from pyibex.geometry import CtcPolar
-from pytubex.tube import *
+from tubex_lib.tube import *
 
 # Predefined contractor objects
 
