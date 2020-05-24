@@ -10,12 +10,19 @@
  */
 
 #include "tubex_DynCtc.h"
-#include "tubex_CtcEval.h"
+#include "tubex_CtcFunction.h"
+#include "tubex_CtcDist.h"
 #include "tubex_CtcDeriv.h"
+#include "tubex_CtcEval.h"
+#include "tubex_CtcPicard.h"
 #include "tubex_Domain.h"
+#include "tubex_CtcFunction.h"
+#include "tubex_py_CtcFunction_docs.h"
+#include "tubex_py_CtcDist_docs.h"
 #include "tubex_py_DynCtc_docs.h"
-#include "tubex_py_CtcEval_docs.h"
 #include "tubex_py_CtcDeriv_docs.h"
+#include "tubex_py_CtcEval_docs.h"
+#include "tubex_py_CtcPicard_docs.h"
 
 
 #include <pybind11/pybind11.h>
@@ -31,9 +38,30 @@ using py::init;
 using namespace tubex;
 using ibex::Interval;
 using ibex::IntervalVector;
+using ibex::Ctc;
 
 
-class pyCtc : public DynCtc {
+class pyStaticCtc : public Ctc {
+  // protected:
+public:
+  pyStaticCtc(int v): Ctc(v){}
+  /* Inherit the constructors */
+  // using Ctc::Ctc;
+
+  /* Trampoline (need one for each virtual function) */
+  void contract(IntervalVector& box) override {
+    // py::gil_scoped_acquire acquire;
+    PYBIND11_OVERLOAD_PURE(
+      void,       /* return type */
+      Ctc,        /* Parent class */
+      contract,   /* Name of function */
+      box         /* Argument(s) */
+    );
+    // py::gil_scoped_release release;
+  }
+};
+
+class pyDynCtc : public DynCtc {
 public:
   // pyCtc(int v): Ctc(v){}
   /* Inherit the constructors */
@@ -56,13 +84,14 @@ public:
 
 void export_contractors(py::module& m){
 
+
   py::enum_<TimePropag>(m, "TimePropag", DOCS_TIMEPROPAG)
       .value("FORWARD", TimePropag::FORWARD)
       .value("BACKWARD", TimePropag::BACKWARD)
   ;
     
-  py::class_<DynCtc, pyCtc> ctc(m, "DynCtc");
-  ctc
+  py::class_<DynCtc, pyDynCtc> dyn_ctc(m, "DynCtc");
+  dyn_ctc
     .def(py::init<>(),DOCS_CTC_CTC)
     // .def("contract", &DynCtc::contract,
         // DOCS_CTC_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
@@ -74,8 +103,8 @@ void export_contractors(py::module& m){
         DOCS_CTC_RESTRICT_TDOMAIN_INTERVAL, "domain"_a)
   ;
 
-  py::class_<CtcEval> ctceval(m, "CtcEval", ctc);
-  ctceval
+  py::class_<CtcEval> ctc_eval(m, "CtcEval", dyn_ctc);
+  ctc_eval
     .def(py::init<>(),DOCS_CTCEVAL_CTCEVAL)
     .def("contract", (void (CtcEval::*)(std::vector<Domain *> &) )&CtcEval::contract,
         DOCS_CTCEVAL_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
@@ -99,8 +128,8 @@ void export_contractors(py::module& m){
         DOCS_CTCEVAL_ENABLE_TEMPORAL_PROPAGATION_BOOL, "enable_propagation"_a)
   ;
 
-    py::class_<CtcDeriv> ctcderiv(m, "CtcDeriv", DOCS_CTCDERIV);
-    ctcderiv
+    py::class_<CtcDeriv> ctc_deriv(m, "CtcDeriv", dyn_ctc, DOCS_CTCDERIV);
+    ctc_deriv
         .def(py::init<>(),DOCS_CTCDERIV_CTCDERIV)
         // .def("contract", (void (CtcDeriv::*)(std::vector<Domain> &) )&CtcDeriv::contract,
             // DOCS_CTCDERIV_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
@@ -112,4 +141,75 @@ void export_contractors(py::module& m){
             DOCS_CTCDERIV_CONTRACT_SLICE_SLICE_TIMEPROPAG, "x"_a, "v"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
     ;
 
+    py::class_<CtcPicard> ctc_picard(m, "CtcPicard", dyn_ctc, DOCS_CTCPICARD);
+    ctc_picard
+      .def(py::init<float>(),DOCS_CTCPICARD_CTCPICARD_FLOAT, "delta"_a=1.1)
+      .def("contract", (void (CtcPicard::*)(std::vector<Domain *> &) )&CtcPicard::contract,
+          DOCS_CTCPICARD_CONTRACT_VECTOR_DOMAIN, "v_domains"_a)
+      .def("contract", (void (CtcPicard::*)(const TFnc &,Tube &,TimePropag) )&CtcPicard::contract,
+          DOCS_CTCPICARD_CONTRACT_TFNC_TUBE_TIMEPROPAG, "f"_a, "x"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+      .def("contract", (void (CtcPicard::*)(const TFnc &,TubeVector &,TimePropag) )&CtcPicard::contract,
+          DOCS_CTCPICARD_CONTRACT_TFNC_TUBEVECTOR_TIMEPROPAG, "f"_a, "x"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+      .def("picard_iterations", &CtcPicard::picard_iterations,
+          DOCS_CTCPICARD_PICARD_ITERATIONS)
+    ;
+
+
+
+
+  /*py::class_<Ctc, std::unique_ptr<Ctc>, pyStaticCtc > static_ctc(m, "Ctc", "todo");
+  static_ctc.def(py::init<int>())
+    // .def("contract",(void (ibex::Ctc::*)(IntervalVector&)) &Ctc::contract, DOC_CTC_CONTRACT)
+    .def_readonly("nb_var", &Ctc::nb_var, "todo")
+    //.def("__or__", &__or, "todo", py::return_value_policy::take_ownership, py::keep_alive<0,1>(),py::keep_alive<0,2>()  )
+    //.def("__and__", &__and, "todo", py::return_value_policy::take_ownership, py::keep_alive<0,1>(),py::keep_alive<0,2>())
+  ;*/
+
+    py::class_<CtcFunction> ctc_function(m, "CtcFunction", /*static_ctc,*/ DOCS_CTCFUNCTION);
+    ctc_function
+      .def(py::init<const char *,const char *>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR, "x1"_a, "f"_a)
+      .def(py::init<const char *,const char *,const char *>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "f"_a)
+      .def(py::init<const char *,const char *,const char *,const char *>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "f"_a)
+      .def(py::init<const char *,const char *,const char *,const char *,const char *>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "f"_a)
+      .def(py::init<const char *,const char *,const char *,const char *,const char *,const char *>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "f"_a)
+      .def(py::init<const char *,const char *,const char *,const char *,const char *,const char *,const char *>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "f"_a)
+      .def(py::init<const ibex::Function &,const ibex::Domain &>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_FUNCTION_DOMAIN, "f"_a, "y"_a)
+      .def(py::init<const ibex::Function &,const ibex::Interval &>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_FUNCTION_INTERVAL, "f"_a, "y"_a)
+      .def(py::init<const ibex::Function &,const ibex::IntervalVector &>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_FUNCTION_INTERVALVECTOR, "f"_a, "y"_a)
+      .def("contract", (void (CtcFunction::*)(ibex::IntervalVector &) )&CtcFunction::contract,
+          DOCS_CTCFUNCTION_CONTRACT_INTERVALVECTOR, "x"_a.noconvert())
+      .def("contract", (void (CtcFunction::*)(TubeVector &) )&CtcFunction::contract,
+          DOCS_CTCFUNCTION_CONTRACT_TUBEVECTOR, "x"_a)
+      .def("contract", (void (CtcFunction::*)(Tube &) )&CtcFunction::contract,
+          DOCS_CTCFUNCTION_CONTRACT_TUBE, "x1"_a)
+      .def("contract", (void (CtcFunction::*)(Tube &,Tube &) )&CtcFunction::contract,
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE, "x1"_a, "x2"_a)
+      .def("contract", (void (CtcFunction::*)(Tube &,Tube &,Tube &) )&CtcFunction::contract,
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE, "x1"_a, "x2"_a, "x3"_a)
+      .def("contract", (void (CtcFunction::*)(Tube &,Tube &,Tube &,Tube &) )&CtcFunction::contract,
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE, "x1"_a, "x2"_a, "x3"_a, "x4"_a)
+      .def("contract", (void (CtcFunction::*)(Tube &,Tube &,Tube &,Tube &,Tube &) )&CtcFunction::contract,
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE_TUBE, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a)
+      .def("contract", (void (CtcFunction::*)(Tube &,Tube &,Tube &,Tube &,Tube &,Tube &) )&CtcFunction::contract,
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE_TUBE_TUBE, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a)
+      //.def("contract", (void (CtcFunction::*)(Slice * *) )&CtcFunction::contract,
+      //    DOCS_CTCFUNCTION_CONTRACT_SLICE, "v_x_slices"_a)
+    ;
+
+    py::class_<CtcDist> ctc_dist(m, "CtcDist", /*static_ctc,*/ DOCS_CTCDIST);
+    ctc_dist
+      .def(py::init<>(),DOCS_CTCDIST_CTCDIST)
+      .def("contract", &CtcDist::contract,
+          DOCS_CTCDIST_CONTRACT_INTERVALVECTOR_INTERVALVECTOR_INTERVAL, "a"_a, "b"_a, "d"_a)
+
+    ;
 }
