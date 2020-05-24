@@ -140,4 +140,4 @@ Several calls to :math:`\mathcal{C}_{\textrm{dist}}` will allow the contraction 
 
 .. admonition:: Technical documentation
 
-  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_dist.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_dist.html>`_.

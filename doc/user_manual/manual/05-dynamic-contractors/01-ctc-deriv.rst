@@ -26,7 +26,7 @@ Definition
 
     .. code-tab:: py
 
-      # todo
+      ctc.deriv.contract(x,v)
 
   .. rubric:: Prerequisite
 
@@ -51,12 +51,16 @@ Let us consider two arbitrary tubes :math:`[x](\cdot)` and :math:`[v](\cdot)` an
     double dt = 0.01;
     Interval tdomain(0., M_PI);
 
-    Tube v(tdomain, dt, Function("sin(t+3.14+(3.14/2))/5+[-0.05,0.05]+(3.14-t)*[-0.01,0.01]"));
-    Tube x(tdomain, dt, Function("[-0.05,0.05]+2+t*t*[-0.01,0.01]"));
+    Tube v(tdomain, dt, TFunction("sin(t+3.14+(3.14/2))/5+[-0.05,0.05]+(3.14-t)*[-0.01,0.01]"));
+    Tube x(tdomain, dt, TFunction("[-0.05,0.05]+2+t*t*[-0.01,0.01]"));
 
   .. code-tab:: py
 
-    # todo
+    dt = 0.01
+    tdomain = Interval(0., math.pi)
+
+    v = Tube(tdomain, dt, TFunction("sin(t+3.14+(3.14/2))/5+[-0.05,0.05]+(3.14-t)*[-0.01,0.01]"))
+    x = Tube(tdomain, dt, TFunction("[-0.05,0.05]+2+t*t*[-0.01,0.01]"))
 
 The following images depict the tubes. The dark gray parts are the obtained tubes after the contraction performed by:
 
@@ -66,11 +70,13 @@ The following images depict the tubes. The dark gray parts are the obtained tube
 
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
-    // one could also directly use ctc::deriv.contract(x, v);
+    // one could also directly use: ctc::deriv.contract(x, v);
 
   .. code-tab:: py
 
-    # todo
+    ctc_deriv = CtcDeriv()
+    ctc_deriv.contract(x,v)
+    # one could also directly use: ctc.deriv.contract(x,v)
 
 .. figure:: img/cderiv_v.png
   
@@ -92,8 +98,8 @@ Only :math:`[x](\cdot)` is contracted (it can be theoretically proved that :math
 ..   double dt = 0.01;
 ..   Interval tdomain(0., M_PI);
 .. 
-..   Tube v(tdomain, dt, Function("sin(t+3.14+(3.14/2))/5+[-0.05,0.05]+(3.14-t)*[-0.01,0.01]"));
-..   Tube x(tdomain, dt, Function("[-0.05,0.05]+2+t*t*[-0.01,0.01]"));
+..   Tube v(tdomain, dt, TFunction("sin(t+3.14+(3.14/2))/5+[-0.05,0.05]+(3.14-t)*[-0.01,0.01]"));
+..   Tube x(tdomain, dt, TFunction("[-0.05,0.05]+2+t*t*[-0.01,0.01]"));
 .. 
 ..   vibes::beginDrawing();
 .. 
@@ -133,7 +139,7 @@ We assume that we have no knowledge on :math:`[\mathbf{x}](\cdot)`, except that 
     Interval tdomain = Interval(0.,M_PI).inflate(M_PI/3.);
 
     // The unknown truth is given by:
-    TrajectoryVector x_truth(tdomain, Function("(2*cos(t) ; sin(2*t))"));
+    TrajectoryVector x_truth(tdomain, TFunction("(2*cos(t) ; sin(2*t))"));
 
     // From the truth we build the initial and final conditions
     IntervalVector x0 = x_truth(tdomain.lb());
@@ -149,7 +155,23 @@ We assume that we have no knowledge on :math:`[\mathbf{x}](\cdot)`, except that 
 
   .. code-tab:: py
 
-    # todo
+    dt = 0.01
+    tdomain = Interval(0,math.pi).inflate(math.pi/3)
+
+    # The unknown truth is given by:
+    x_truth = TrajectoryVector(tdomain, TFunction("(2*cos(t) ; sin(2*t))"))
+
+    # From the truth we build the initial and final conditions
+    # with some uncertainties (inflate)
+    x0 = IntervalVector(x_truth(tdomain.lb())).inflate(0.05)
+    xf = IntervalVector(x_truth(tdomain.ub())).inflate(0.05)
+
+    # No initial knowledge on [x](·)..
+    x = TubeVector(tdomain, dt, 2) # 2d tube defined over [t_0,t_f] with dt sampling
+
+    # ..except for initial and final conditions
+    x.set(x0, tdomain.lb())
+    x.set(xf, tdomain.ub())
 
 The feasible derivatives are enclosed in :math:`[\mathbf{v}](\cdot)` given by:
 
@@ -162,12 +184,14 @@ The feasible derivatives are enclosed in :math:`[\mathbf{v}](\cdot)` given by:
   .. code-tab:: c++
 
     // Derivative of [x](·)
-    TubeVector v(tdomain, dt, Function("(-2*sin(t) ; 2*cos(2*t))"));
+    TubeVector v(tdomain, dt, TFunction("(-2*sin(t) ; 2*cos(2*t))"));
     v.inflate(0.02);
 
   .. code-tab:: py
 
-    # todo
+    # Derivative of [x](·)
+    v = TubeVector(tdomain, dt, TFunction("(-2*sin(t) ; 2*cos(2*t))"))
+    v.inflate(0.02)
 
 We can smooth the 2d tube :math:`[\mathbf{x}](\cdot)` in order to keep the envelope of trajectories starting in :math:`[\mathbf{x}_0]` at :math:`t_0` and ending in :math:`[\mathbf{x}_f]` at :math:`t_f`. For this, we use the :math:`\mathcal{C}_{\frac{d}{dt}}`:
 
@@ -179,7 +203,7 @@ We can smooth the 2d tube :math:`[\mathbf{x}](\cdot)` in order to keep the envel
 
   .. code-tab:: py
 
-    # todo
+    ctc.deriv.contract(x, v)
 
 Which leads to:
 
@@ -196,8 +220,8 @@ Which leads to:
 ..   double dt = 0.01;
 ..   Interval tdomain = Interval(0.,M_PI).inflate(M_PI/3.);
 .. 
-..   TrajectoryVector x_truth(tdomain, Function("(2*cos(t) ; sin(2*t))"));
-..   TubeVector v(tdomain, dt, Function("(-2*sin(t) ; 2*cos(2*t))"));
+..   TrajectoryVector x_truth(tdomain, TFunction("(2*cos(t) ; sin(2*t))"));
+..   TubeVector v(tdomain, dt, TFunction("(-2*sin(t) ; 2*cos(2*t))"));
 ..   v.inflate(0.02);
 ..   TubeVector x(tdomain, dt, 2);
 .. 
@@ -238,7 +262,7 @@ A third argument of the ``contract()`` method can be used to restrict the propag
 
   .. code-tab:: py
 
-    # todo
+    ctc.deriv.contract(x, v, TimePropag.BACKWARD) # or TimePropag.FORWARD
 
 Which produces, for instance, backward contractions from :math:`[\mathbf{x}_f]` only (in light blue):
 
@@ -261,4 +285,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_deriv.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_deriv.html>`_.

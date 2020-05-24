@@ -25,14 +25,15 @@ Definition
 
     .. code-tab:: c++
 
-      CtcPicard ctc_picard(Function f("<var1>", "<var2...>", "<exp>"));
+      CtcPicard ctc_picard(TFunction("<var1>", "<var2...>", "<exp>"));
       ctc_picard.contract(x);
 
     .. code-tab:: py
 
-      # todo
+      ctc_picard = CtcPicard(TFunction("<var1>", "<var2...>", "<exp>"))
+      ctc_picard.contract(x)
 
 
 .. admonition:: Technical documentation
 
-  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_picard.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_picard.html>`_.

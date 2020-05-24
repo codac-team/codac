@@ -647,7 +647,7 @@ Next pages will present reliable operators to reduce the range of the presented 
 
 .. admonition:: Technical documentation
 
-  See the API documentation of this class:
+  See the C++ API documentation of this class:
 
   * `Tube <../../../api/html/classtubex_1_1_tube.html>`_
   * `TubeVector <../../../api/html/classtubex_1_1_tube_vector.html>`_

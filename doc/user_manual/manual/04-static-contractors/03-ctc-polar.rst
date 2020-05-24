@@ -171,4 +171,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `API documentation of this class <../../../api/html/classpyibex_1_1_ctc_polar.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classpyibex_1_1_ctc_polar.html>`_.

@@ -186,4 +186,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_constell.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_constell.html>`_.

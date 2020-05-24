@@ -32,13 +32,20 @@ Definition
       ctc_f.contract(x);
 
       // For the constraint f(x)\in[y]
-      Interval y; // or IntervalVector if f is a vector function
+      Interval y(...); // or IntervalVector if f is a vector function
       CtcFunction ctc_f(Function("<var1>", "<var2...>", "<expr>"), y);
       ctc_f.contract(x);
 
     .. code-tab:: py
 
-      # todo
+      # For the constraint f(x)=0
+      ctc_f = CtcFunction("<var1>", "<var2...>", "<expr>")
+      ctc_f.contract(x)
+
+      # For the constraint f(x)\in[y]
+      y = Interval(...) # or IntervalVector if f is a vector function
+      CtcFunction ctc_f(Function("<var1>", "<var2...>", "<expr>"), y)
+      ctc_f.contract(x)
 
 
 .. note::
@@ -75,7 +82,7 @@ A contractor for the constraint :math:`f(\mathbf{x})=0` can be built by:
 
   .. code-tab:: py
 
-    # todo
+    ctc_f = CtcFunction("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2")
 
 | The first parameters are the variables names. The last one is the expression of :math:`f`.
 | Note that it is also possible to write vector variables:
@@ -88,7 +95,7 @@ A contractor for the constraint :math:`f(\mathbf{x})=0` can be built by:
 
   .. code-tab:: py
 
-    # todo
+    ctc_f = CtcFunction("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]")
 
 
 Then, a box :math:`[\mathbf{x}]` can be contracted by:
@@ -102,7 +109,8 @@ Then, a box :math:`[\mathbf{x}]` can be contracted by:
 
   .. code-tab:: py
 
-    # todo
+    x = IntervalVector([[-2,-1],[1,2.5]])
+    ctc_f.contract(x)
 
 The boxes are contracted in order to remove some vectors that are not consistent with :math:`f(\mathbf{x})=0`. In the following figure, the exact solution for :math:`f(\mathbf{x})=0` is black painted. The initial boxes are depicted in blue, their contraction is represented in red.
 
@@ -167,4 +175,4 @@ The IBEX contractor behind ``CtcFunction`` is a ``ibex::CtcFwdBwd`` coupled with
 
 .. admonition:: Technical documentation
 
-  See the `API documentation of this class <../../../api/html/classtubex_1_1_ctc_function.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_function.html>`_.

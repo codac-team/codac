@@ -431,7 +431,7 @@ Next pages will present several methods to use *tubes* that are envelopes of tra
 
 .. admonition:: Technical documentation
 
-  See the API documentation of this class:
+  See the C++ API documentation of this class:
 
   * `Trajectory <../../../api/html/classtubex_1_1_trajectory.html>`_
   * `TrajectoryVector <../../../api/html/classtubex_1_1_trajectory_vector.html>`_
