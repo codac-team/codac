@@ -36,6 +36,7 @@ namespace tubex
       enum class Type { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
       enum class MemoryRef { DOUBLE, INTERVAL, VECTOR, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
 
+      Domain();
       Domain(const Domain& ad);
       Domain(double& d);
       Domain(ibex::Interval& i);
@@ -51,6 +52,8 @@ namespace tubex
       Domain(TubeVector& tv);
       Domain(const TubeVector& tv);
       ~Domain();
+
+      const Domain& operator=(const Domain& ad);
 
       int id() const;
       Type type() const;

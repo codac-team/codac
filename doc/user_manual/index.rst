@@ -105,7 +105,12 @@ We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t
 
   .. code-tab:: py
 
-    # todo
+    dt = 0.01                                         # timestep for tubes accuracy
+    tdomain = Interval(0, 3)                          # temporal limits [t_0,t_f]=[0,3]
+
+    x = TubeVector(tdomain, dt, 4)                    # 4d tube for state vectors
+    v = TubeVector(tdomain, dt, 4)                    # 4d tube for derivatives of the states
+    u = TubeVector(tdomain, dt, 2)                    # 2d tube for inputs of the system
 
 We assume that we have measurements on the headings :math:`\psi(t)` and the speeds :math:`\vartheta(t)`, with some bounded uncertainties defined by intervals :math:`[e_\psi]=[-0.01,0.01]`, :math:`[e_\vartheta]=[-0.01,0.01]`:
 
@@ -118,7 +123,8 @@ We assume that we have measurements on the headings :math:`\psi(t)` and the spee
 
   .. code-tab:: py
 
-    # todo
+    x[2] = Tube(measured_psi, dt).inflate(0.01)       # measured_psi is a set of measurements
+    x[3] = Tube(measured_speed, dt).inflate(0.01)
 
 Finally, we define the domains for the three range-only observations :math:`(t_i,y_i)` and the position of the landmarks. The distances :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]`.
 
@@ -133,7 +139,11 @@ Finally, we define the domains for the three range-only observations :math:`(t_i
 
   .. code-tab:: py
 
-    # todo
+    e_y = Interval(-0.1,0.1)
+    y = [Interval(1.9+e_y), Interval(3.6+e_y), \
+         Interval(2.8+e_y)]                           # set of range-only observations
+    b = [[8,3],[0,5],[-2,1]]                          # positions of the three 2d landmarks
+    t = [0.3, 1.5, 2.0]                               # times of measurements
 
 | **Second step.**
 | Defining contractors to deal with the state equations.
@@ -149,7 +159,8 @@ We look at the state equations and use contractors to deal with them. The distan
 
   .. code-tab:: py
 
-    # todo
+    ctc_f = CtcFunction("v[4]", "x[4]", "u[2]",
+                        "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])")
 
 | **Third step.**
 | Adding the contractors to a network, together with there related domains, is as easy as:
@@ -174,7 +185,18 @@ We look at the state equations and use contractors to deal with them. The distan
 
   .. code-tab:: py
 
-    # todo
+    cn = ContractorNetwork()     # creating a network
+    cn.add(ctc_f, [v, x, u])     # adding the f constraint
+
+    for i in range(0,3):         # we add the observ. constraint for each range-only measurement
+
+      p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
+    
+      # Distance constraint: relation between the state at t_i and the ith beacon position
+      cn.add(ctc.dist, [cn.subvector(p,0,1), b[i], y[i]])
+
+      # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
+      cn.add(ctc.eval, [t[i], p, x, v])
 
 
 | **Fourth step.**
@@ -188,7 +210,7 @@ We look at the state equations and use contractors to deal with them. The distan
 
   .. code-tab:: py
 
-    # todo
+    cn.contract()
 
 
 | **Fifth step.**
@@ -273,19 +295,30 @@ Tutorial for mobile robotics
 
 The following tutorial is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples.
 
-.. toctree:: 
-  :maxdepth: 1
+  * Introduction
+  * Basics
+  * Static range-only localization
+  * Static range-and-bearing localization
+  * Dynamic localization with asynchronous measurements
+  * Range-only SLAM
+  * Localization by solving data association
+  * Real-time state estimation
+  * Distributed localization
+  * Proving loops in robot trajectories
 
-  /tutorial/01-introduction/index
-  /tutorial/02-basics/index
-  /tutorial/03-static-rangeonly-loc/index
-  /tutorial/04-static-loc/index
-  /tutorial/05-dynamic-loc/index
-  /tutorial/06-rangeonly-slam/index
-  /tutorial/07-data-association/index
-  /tutorial/08-realtime-loc/index
-  /tutorial/09-distributed-loc/index
-  /tutorial/10-loop-detections/index
+.. .. toctree:: 
+..   :maxdepth: 1
+.. 
+..   /tutorial/01-introduction/index
+..   /tutorial/02-basics/index
+..   /tutorial/03-static-rangeonly-loc/index
+..   /tutorial/04-static-loc/index
+..   /tutorial/05-dynamic-loc/index
+..   /tutorial/06-rangeonly-slam/index
+..   /tutorial/07-data-association/index
+..   /tutorial/08-realtime-loc/index
+..   /tutorial/09-distributed-loc/index
+..   /tutorial/10-loop-detections/index
 
 
 License and support

@@ -19,6 +19,7 @@ void export_TFunction(py::module& m);
 void export_Slice(py::module& m);
 void export_contractors(py::module& m);
 void export_VIBesFig(py::module& m);
+void export_ContractorNetwork(py::module& m);
 
 PYBIND11_MODULE(tube, m)
 {
@@ -30,6 +31,7 @@ PYBIND11_MODULE(tube, m)
   export_Slice(m);
   export_TFunction(m);
   export_VIBesFig(m);
+  export_ContractorNetwork(m);
   // m.attr("ibex_version") = _IBEX_VERSION_;
   // return m.ptr();
 }

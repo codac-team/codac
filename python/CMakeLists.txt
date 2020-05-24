@@ -29,6 +29,7 @@
   pybind11_add_module(tube SHARED
     tubex_py.cpp
     tubex_py_contractors.cpp
+    tubex_py_ContractorNetwork.cpp
     tubex_py_Slice.cpp
     tubex_py_TFunction.cpp
     tubex_py_Trajectory.cpp

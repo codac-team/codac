@@ -78,6 +78,8 @@ void export_Trajectory(py::module& m){
         DOCS_TRAJECTORY_SAMPLE_DOUBLE, "timestep"_a)
     .def("sample", (Trajectory & (Trajectory::*)(const Trajectory &) )&Trajectory::sample,
         DOCS_TRAJECTORY_SAMPLE_TRAJECTORY, "x"_a)
+    .def("make_continuous", (Trajectory & (Trajectory::*)() )&Trajectory::make_continuous,
+        "todo")
     .def("primitive", (const Trajectory (Trajectory::*)(double) const)&Trajectory::primitive,
         DOCS_TRAJECTORY_PRIMITIVE_DOUBLE, "c"_a=0)
     .def("primitive", (const Trajectory (Trajectory::*)(double,double) const)&Trajectory::primitive,

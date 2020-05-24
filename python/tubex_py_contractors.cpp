@@ -92,6 +92,19 @@ void export_contractors(py::module& m){
       .value("BACKWARD", TimePropag::BACKWARD)
   ;
     
+  py::class_<Ctc, pyStaticCtc> static_ctc(m, "StaticCtc", py::module_local());
+  /*static_ctc
+    .def(py::init<>(),DOCS_CTC_CTC)
+    // .def("contract", &DynCtc::contract,
+        // DOCS_CTC_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
+    .def("preserve_slicing", &DynCtc::preserve_slicing,
+        DOCS_CTC_PRESERVE_SLICING_BOOL, "preserve"_a=true)
+    .def("set_fast_mode", &DynCtc::set_fast_mode,
+        DOCS_CTC_SET_FAST_MODE_BOOL, "fast_mode"_a=true)
+    .def("restrict_tdomain", &DynCtc::restrict_tdomain,
+        DOCS_CTC_RESTRICT_TDOMAIN_INTERVAL, "domain"_a)
+  ;*/
+    
   py::class_<DynCtc, pyDynCtc> dyn_ctc(m, "DynCtc");
   dyn_ctc
     .def(py::init<>(),DOCS_CTC_CTC)
@@ -167,7 +180,7 @@ void export_contractors(py::module& m){
     //.def("__and__", &__and, "todo", py::return_value_policy::take_ownership, py::keep_alive<0,1>(),py::keep_alive<0,2>())
   ;*/
 
-    py::class_<CtcFunction> ctc_function(m, "CtcFunction", /*static_ctc,*/ DOCS_CTCFUNCTION);
+    py::class_<CtcFunction> ctc_function(m, "CtcFunction", static_ctc, DOCS_CTCFUNCTION);
     ctc_function
       .def(py::init<const char *,const char *>(),
           DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR, "x1"_a, "f"_a)
@@ -207,7 +220,7 @@ void export_contractors(py::module& m){
       //    DOCS_CTCFUNCTION_CONTRACT_SLICE, "v_x_slices"_a)
     ;
 
-    py::class_<CtcDist> ctc_dist(m, "CtcDist", /*static_ctc,*/ DOCS_CTCDIST);
+    py::class_<CtcDist> ctc_dist(m, "CtcDist", static_ctc, DOCS_CTCDIST);
     ctc_dist
       .def(py::init<>(),DOCS_CTCDIST_CTCDIST)
       .def("contract", &CtcDist::contract,
@@ -216,7 +229,7 @@ void export_contractors(py::module& m){
     ;
 
 
-    py::class_<CtcConstell> ctc_constell(m, "CtcConstell", DOCS_CTCCONSTELL);
+    py::class_<CtcConstell> ctc_constell(m, "CtcConstell", static_ctc, DOCS_CTCCONSTELL);
     ctc_constell
       .def(py::init<const std::vector<ibex::IntervalVector> &>(),
           DOCS_CTCCONSTELL_CTCCONSTELL_VECTOR_INTERVALVECTOR_, "map"_a)

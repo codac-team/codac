@@ -28,13 +28,13 @@ Tubex: constraint-programming for robotics
   :caption: Tutorial for mobile robotics
   :maxdepth: 1
 
-  /tutorial/01-introduction/index
-  /tutorial/02-basics/index
-  /tutorial/03-static-rangeonly-loc/index
-  /tutorial/04-static-loc/index
-  Dynamic localization </tutorial/05-dynamic-loc/index>
-  /tutorial/06-rangeonly-slam/index
-  /tutorial/07-data-association/index
-  /tutorial/08-realtime-loc/index
-  /tutorial/09-distributed-loc/index
-  /tutorial/10-loop-detections/index
+..  /tutorial/01-introduction/index
+..  /tutorial/02-basics/index
+..  /tutorial/03-static-rangeonly-loc/index
+..  /tutorial/04-static-loc/index
+..  Dynamic localization </tutorial/05-dynamic-loc/index>
+..  /tutorial/06-rangeonly-slam/index
+..  /tutorial/07-data-association/index
+..  /tutorial/08-realtime-loc/index
+..  /tutorial/09-distributed-loc/index
+..  /tutorial/10-loop-detections/index
