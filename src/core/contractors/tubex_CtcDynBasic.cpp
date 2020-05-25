@@ -6,13 +6,7 @@ using namespace ibex;
 
 namespace tubex
 {
-	CtcDynBasic::CtcDynBasic(tubex::Function& fnc, double prec): fnc(fnc), prec(prec), fnc2(fnc2),slice_id(-1),tube_x(tube_x)
-	{
-		/*check input*/
-		assert(prec >= 0);
-	}
-
-	CtcDynBasic::CtcDynBasic(tubex::Fnc& fnc2, double prec): fnc(fnc), prec(prec), fnc2(fnc2),slice_id(slice_id),tube_x(tube_x)
+	CtcDynBasic::CtcDynBasic(tubex::Fnc& fnc, double prec): fnc(fnc), prec(prec)
 	{
 		/*check input*/
 		assert(prec >= 0);
@@ -25,14 +19,20 @@ namespace tubex
 		for (int i = 1 ; i < x_slice.size(); i++)
 			assert(to_try == x_slice[i]->domain());
 
+		//check if the gates used to contract are bounded
+		for (int i = 0 ; i < x_slice.size(); i++){
+			if ((t_propa & FORWARD) && (x_slice[0]->input_gate().is_unbounded()))
+				return false;
+			else if ((t_propa & BACKWARD) && (x_slice[0]->output_gate().is_unbounded()))
+				return false;
+		}
+
 		bool fix_point_n;
 		bool first_iteration = true;
 
 	do{
 		fix_point_n = false;
 		for (int i = 0 ; i < x_slice.size() ; i++){
-			//just for integrodiff
-			TubeVector aux_vector_x = tube_x;
 
 			Slice aux_slice_x(*x_slice[i]);
 			Slice aux_slice_v(*v_slice[i]);
@@ -41,17 +41,18 @@ namespace tubex
 			/*without polygons*/
 			if(m_fast_mode)
 				ctc_deriv.set_fast_mode(true);
-			do
-			{
-				sx = aux_slice_x.volume();
-				ctc_deriv.contract(aux_slice_x, aux_slice_v,t_propa);
-				//For IVPs, BVPs
-				if (slice_id == -1)
+			if (get_reasoning_slice()){
+				do
+				{
+					sx = aux_slice_x.volume();
+					ctc_deriv.contract(aux_slice_x, aux_slice_v,t_propa);
 					ctc_fwd(aux_slice_x, aux_slice_v, x_slice, v_slice, i);
-				//For other kind of problems
-				else
-					ctc_fwd(aux_slice_x, aux_slice_v, x_slice, v_slice,aux_vector_x, slice_id,i);
-			} while (sx - aux_slice_x.volume() > get_prec());
+				} while ((1-(aux_slice_x.volume()/sx)) > get_prec());
+			}
+			else{
+				ctc_deriv.contract(aux_slice_x, aux_slice_v,t_propa);
+				ctc_fwd(aux_slice_x, aux_slice_v, x_slice, v_slice, i);
+			}
 			double volume = x_slice[i]->volume();
 
 			/*Replacing the old domains with the new ones*/
@@ -66,36 +67,26 @@ namespace tubex
 		if ((first_iteration) && !(fix_point_n))
 			return false;
 		first_iteration = false;
+		if (!get_reasoning_slice()) fix_point_n=false;
 
 	} while(fix_point_n);
 
 		return true;
 	}
 
-	void CtcDynBasic::contract(std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TubeVector& x ,int slice_id, TPropagation t_propa){
-		this->slice_id = slice_id;
-		this->tube_x = x;
-		contract(x_slice,v_slice,t_propa);
-	}
-
-
 	void CtcDynBasic::ctc_fwd(Slice &x, Slice &v, std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, int pos)
 	{
 		/*envelope*/
-		IntervalVector envelope(x_slice.size());
+		IntervalVector envelope(x_slice.size()+1);
+		envelope[0] = x.domain();
+
 		for (int i = 0 ; i < x_slice.size() ; i++){
 			if (i==pos)
-				envelope[i] = x.codomain();
+				envelope[i+1] = x.codomain();
 			else
-				envelope[i] = x_slice[i]->codomain();
+				envelope[i+1] = x_slice[i]->codomain();
 		}
-		v.set_envelope(fnc.eval_slice(x.domain(),envelope)[pos]);
-	}
-
-	void CtcDynBasic::ctc_fwd(Slice &x, Slice &v, std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, TubeVector& aux_vector_x,int slice_id, int pos)
-	{
-		IntervalVector envelope = fnc2.eval_vector(slice_id,aux_vector_x);
-		v.set_envelope(envelope[pos]);
+		v.set_envelope(fnc.eval_vector(envelope)[pos]);
 	}
 
 	double CtcDynBasic::get_prec()
@@ -106,6 +97,10 @@ namespace tubex
 	void CtcDynBasic::set_prec(double prec)
 	{
 		this->prec = prec;
+	}
+
+	bool CtcDynBasic::get_reasoning_slice(){
+		return this->m_reasoning_slice;
 	}
 
 	void CtcDynBasic::set_reasoning_slice(bool reasoning_slice){

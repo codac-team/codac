@@ -60,7 +60,6 @@ namespace tubex
       const ibex::IntervalVector eval_vector(const ibex::IntervalVector& x) const;
       const ibex::IntervalVector eval_vector(int slice_id, const TubeVector& x) const;
       const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const;
-      const ibex::IntervalVector eval_slice(const ibex::Interval& t, const ibex::IntervalVector& x) const;
       const Function diff() const;
 
     protected:

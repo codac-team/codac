@@ -27,7 +27,7 @@ namespace tubex
 		/*
 		 * todo: add comments
 		 */
-		CtcDynCidGuess(tubex::Function& fnc, double prec=0.05);
+		CtcDynCidGuess(tubex::Fnc& fnc, double prec=0.05);
 		/*
 		 * todo: add comments
 		 */
@@ -78,12 +78,22 @@ namespace tubex
 		void create_corners(std::vector<Slice> x_slices, std::vector< std::vector<double> > & points, TPropagation t_propa);
 		std::vector<std::vector<double>> cart_product (const std::vector<std::vector<double>>& v);
 
+		void set_s_corn(int s_strategy);
+		int get_s_corn();
+
+		void set_dpolicy(int d_policy);
+		int get_dpolicy();
+
+		void set_variant(int variation);
+
 	private:
 		double prec;
-		tubex::Function& fnc;
+		tubex::Fnc& fnc;
 		CtcDeriv ctc_deriv;
 		int engine = 0;  //by default the propagation engine is atomic (faster)
+		int s_strategy = 0 ;
 		bool max_it = false;
+		int d_policy = 0; // 0: nothing , 1: small , 2:big
 	};
 }
 

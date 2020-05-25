@@ -27,7 +27,7 @@ namespace tubex
 		 * defined by the variable $s_{cid}$). Then two contractors are applied: $C_{Deriv}$
 		 * and C_{fwd}.
 		 */
-		CtcDynCid(tubex::Function& fnc,int scid=8, double prec=0.);
+		CtcDynCid(tubex::Fnc& fnc,int scid=8, double prec=0.);
 		/*
 		 * This method performs a contraction at the Slice level.
 		 * Note that the timesteps between the Tubes of x and v must be identically the same.
@@ -79,7 +79,7 @@ namespace tubex
 	private:
 		int scid;
 		double prec;
-		tubex::Function& fnc;
+		tubex::Fnc& fnc;
 		CtcDeriv ctc_deriv;
 		int engine = 0;  //by default the propagation engine is atomic (faster)
 	};

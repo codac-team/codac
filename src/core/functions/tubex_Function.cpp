@@ -246,17 +246,6 @@ namespace tubex
     return m_ibex_f->eval_vector(box);
   }
 
-  const IntervalVector Function::eval_slice(const Interval& t, const IntervalVector& x) const
-  {
-
-	  IntervalVector box(nb_vars() + 1);
-	  box[0] = t;
-	  for(int i = 0 ; i < x.size() ; i++)
-		  box[i+1] = x[i];
-
-	  return m_ibex_f->eval_vector(box);
-  }
-
   const IntervalVector Function::eval_vector(const Interval& t, const TubeVector& x) const
   {
 

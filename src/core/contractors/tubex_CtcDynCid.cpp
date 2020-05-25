@@ -15,7 +15,7 @@ using namespace ibex;
 
 namespace tubex
 {
-	CtcDynCid::CtcDynCid(tubex::Function& fnc,int scid, double prec): fnc(fnc), scid(scid), prec(prec)
+	CtcDynCid::CtcDynCid(tubex::Fnc& fnc,int scid, double prec): fnc(fnc), scid(scid), prec(prec)
 	{
 		/*check inputs*/
 		assert(scid > 0.);
@@ -79,29 +79,33 @@ namespace tubex
 	void CtcDynCid::ctc_fwd(Slice &x, Slice &v, std::vector<Slice*> x_slice, std::vector<Slice*> v_slice, int pos)
 	{
 		/*envelope*/
-		IntervalVector envelope(x_slice.size());
+		IntervalVector envelope(x_slice.size()+1);
+		envelope[0] = x.domain();
+
 		for (int i = 0 ; i < x_slice.size() ; i++){
 			if (i==pos)
-				envelope[i] = x.codomain();
+				envelope[i+1] = x.codomain();
 			else
-				envelope[i] = x_slice[i]->codomain();
+				envelope[i+1] = x_slice[i]->codomain();
 		}
-		v.set_envelope(fnc.eval_slice(x.domain(),envelope)[pos]);
+		v.set_envelope(fnc.eval_vector(envelope)[pos]);
 	}
 
 
 	void CtcDynCid::ctc_fwd(Slice &x, Slice &v, std::vector<Slice> x_slice, std::vector<Slice> v_slice, int pos)
 	{
 		/*envelope*/
-		IntervalVector envelope(x_slice.size());
+		IntervalVector envelope(x_slice.size()+1);
+		envelope[0] = x.domain();
+
 		for (int i = 0 ; i < x_slice.size() ; i++){
 			if (i==pos)
-				envelope[i] = x.codomain();
+				envelope[i+1] = x.codomain();
 			else
-				envelope[i] = x_slice[i].codomain();
+				envelope[i+1] = x_slice[i].codomain();
 		}
 
-		v.set_envelope(fnc.eval_slice(x.domain(),envelope)[pos]);
+		v.set_envelope(fnc.eval_vector(envelope)[pos]);
 	}
 
 	double CtcDynCid::get_scid()
