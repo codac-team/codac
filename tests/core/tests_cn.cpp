@@ -16,6 +16,23 @@ using namespace tubex;
 
 TEST_CASE("CN simple")
 {
+  SECTION("Most simple case")
+  {
+    CtcFunction ctc_plus("a", "b", "c", "a+b-c");
+    Interval a(0,1), b(-1,1), c(1.5,2);
+
+    ContractorNetwork cn;
+    cn.add(ctc_plus, {a, b, c}); 
+    cn.contract();
+
+    CHECK(a == Interval(0.5,1));
+    CHECK(b == Interval(0.5,1));
+    CHECK(c == Interval(1.5,2));
+
+    CHECK(cn.nb_dom() == 3);
+    CHECK(cn.nb_ctc() == 1);
+  }
+
   SECTION("Simple static case")
   {
     CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
