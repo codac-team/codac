@@ -186,18 +186,23 @@ We look at the state equations and use contractors to deal with them. The distan
   .. code-tab:: py
 
     cn = ContractorNetwork()     # creating a network
-    cn.add(ctc_f, [v, x, u])     # adding the f constraint
-
-    for i in range(0,3):         # we add the observ. constraint for each range-only measurement
-
-      p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
     
-      # Distance constraint: relation between the state at t_i and the ith beacon position
-      cn.add(ctc.dist, [cn.subvector(p,0,1), b[i], y[i]])
+    # Warning: Python binding for ContractorNetworks will be released next week
+    
+    # ...
+    # ...
 
-      # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
-      cn.add(ctc.eval, [t[i], p, x, v])
-
+..    cn.add(ctc_f, [v, x, u])     # adding the f constraint
+..
+..    for i in range(0,3):         # we add the observ. constraint for each range-only measurement
+..
+..      p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
+..    
+..      # Distance constraint: relation between the state at t_i and the ith beacon position
+..      cn.add(ctc.dist, [cn.subvector(p,0,1), b[i], y[i]])
+..
+..      # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
+..      cn.add(ctc.eval, [t[i], p, x, v])
 
 | **Fourth step.**
 | Solving the problem.
