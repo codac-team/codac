@@ -41,6 +41,6 @@ Simple example:
     cn.add(ctc_plus, [a, b, c])
     cn.contract()
 
-    // a == [0.5,1]
-    // b == [0.5,1]
-    // c == [1.5,2]
+    # a == [0.5,1]
+    # b == [0.5,1]
+    # c == [1.5,2]
