@@ -416,4 +416,48 @@ TEST_CASE("CN simple")
     CHECK(v(3) == Interval(-2.5,-1.5));
     CHECK(v(4) == Interval(-3.,-1.));
   }
+
+  SECTION("create_dom Tube")
+  {
+    double dt = 0.1;
+    Interval tdomain(0.,10.);
+    Tube x(tdomain, dt);
+    x.set(0., 0.);
+
+    CHECK(x.codomain() == Interval());
+
+    ContractorNetwork cn;
+    CtcDeriv ctc_deriv;
+
+    {
+      Tube v_local(tdomain, dt, TFunction("0"));
+      Tube &v_inside = cn.create_dom(v_local);
+      //cn.add(ctc_deriv, {x,v_inside});
+    }
+
+    //cn.contract();
+    //CHECK(x.codomain() == Interval(0.));
+  }
+
+  /*SECTION("create_dom TubeVector")
+  {
+    double dt = 0.1;
+    Interval tdomain(0.,10.);
+    TubeVector x(tdomain, dt, 2);
+    x.set(Vector(2,0.), 0.);
+
+    CHECK(x.codomain() == IntervalVector(2));
+
+    ContractorNetwork cn;
+    CtcDeriv ctc_deriv;
+
+    {
+      TubeVector v_local(tdomain, dt, TFunction("(0.;0.)"));
+      TubeVector &v_inside = cn.create_dom(v_local);
+      cn.add(ctc_deriv, {x,v_inside});
+    }
+
+    //cn.contract();
+    CHECK(x.codomain() == IntervalVector(2, 0.));
+  }*/
 }
