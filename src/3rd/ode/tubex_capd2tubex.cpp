@@ -117,34 +117,19 @@ namespace tubex
                 // We can also extract from it the 1-st order derivatives wrt.
                 const capd::IOdeSolver::SolutionCurve& curve = solver.getCurve();
                 capd::interval domain = capd::interval(0,1)*stepMade;
+                capd::IVector v = curve(domain);
+                capd::interval currentTime = prevTime + domain;
 
-                // Here we use a uniform grid of last time step made
-                // to enclose the trajectory between time steps.
-                // You can use your own favorite subdivision, perhaps nonuniform,
-                // depending on the problem you want to solve.
-                int grid=1;
-                for(int i=0;i<grid;++i)
+                // Converting capd box into an IBEX one
+                a_ibex[0] = Interval(currentTime.left().leftBound(),currentTime.right().rightBound());
+                for (int i=0; i< a_capd_dim; i++)
                 {
-                    capd::interval subsetOfDomain = capd::interval(i,i+1)*stepMade/grid;
-                    // The above interval does not need to be a subset of domain.
-                    // This is due to rounding to floating point numbers.
-                    // We take the intersection with the domain.
-                    intersection(domain,subsetOfDomain,subsetOfDomain);
-                    // Here we evaluated curve at the interval subsetOfDomain.
-                    // v will contain rigorous bound for the trajectory for this time interval.
-                    capd::IVector v = curve(subsetOfDomain);
-                    capd::interval currentTime = prevTime + subsetOfDomain;
-
-                    // Converting capd box into an IBEX one
-                    a_ibex[0] = Interval(currentTime.left().leftBound(),currentTime.right().rightBound());
-                    for (int i=0; i< a_capd_dim; i++)
-                    {
-                        a_ibex[i+1] = Interval(v[i].left().leftBound(),v[i].right().rightBound());
-                    }
-                    // Adding our computed box to the curve in IBEX format
-                    ibex_curve.push_back(a_ibex);
-
+                    a_ibex[i+1] = Interval(v[i].left().leftBound(),v[i].right().rightBound());
                 }
+                // Adding our computed box to the curve in IBEX format
+                ibex_curve.push_back(a_ibex);
+
+
                 prevTime = timeMap.getCurrentTime();
             }while(!timeMap.completed());
 
