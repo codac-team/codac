@@ -4,11 +4,17 @@ set -e -x
 
 cd /io
 for PYBIN in /opt/python/cp3*/bin; do
+  
+#  if [ "${PYBIN}" == "/opt/python/cp34-cp34m/bin" ]; then
+#    continue
+#  fi
+
   "${PYBIN}/python" -m pip install --upgrade pip
   "${PYBIN}/python" -m pip install --upgrade pyibex
   mkdir -p build_dir && cd build_dir
   cmake3 -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" ..
   make -j
+
   make test ARGS="-V"s
   make pip_package
   echo "copy wheel and clean build_dir"
@@ -20,4 +26,5 @@ for PYBIN in /opt/python/cp3*/bin; do
   (cd "$HOME"; "${PYBIN}/python" -m unittest discover tubex_lib.tests)
   cd /io
   rm -fr build_dir
+
 done

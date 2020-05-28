@@ -23,18 +23,18 @@ class TestFunctionOnCN(unittest.TestCase):
         b = Interval(-1,1)
         # c = Interval(1.5,2)
         c = cn.create_dom(Interval(1.5,2))
-        print(f"[python] a = {a}")
-        print(f"[python] b = {b}")
-        print(f"[python] c = {c}")
+        #print(f"[python] a = {a}")
+        #print(f"[python] b = {b}")
+        #print(f"[python] c = {c}")
         cn.add(ctc_plus, [a, b, c])
         cn.contract()
         self.assertEqual(a, Interval(0.5,1))
         self.assertEqual(b, Interval(0.5,1))
         self.assertEqual(c, Interval(1.5,2))
 
-        print(f"[python] a = {a}")
-        print(f"[python] b = {b}")
-        print(f"[python] c = {c}")
+        #print(f"[python] a = {a}")
+        #print(f"[python] b = {b}")
+        #print(f"[python] c = {c}")
         # a == [0.5,1]
         # b == [0.5,1]
         # c == [1.5,2]
