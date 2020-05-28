@@ -72,7 +72,6 @@ namespace tubex
         IntervalVector a_ibex(a_ibex_dim);
         vector<IntervalVector> ibex_curve;
 
-
         try
         {
             // CAPD processing
@@ -160,7 +159,6 @@ namespace tubex
          */
         vector<Interval> v_domains; // Store the time interval of each slice of the tube
         vector<IntervalVector> v_codomains; // Store the other dimensions of the slice of the tube
-
 
         IntervalVector current_box(ibex_curve[0].size());
         for(size_t i=0; i<ibex_curve.size()-1;i++)
