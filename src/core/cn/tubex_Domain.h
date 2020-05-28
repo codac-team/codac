@@ -110,7 +110,7 @@ namespace tubex
 
       // Theoretical type of domain
 
-        const Type m_type;
+        Type m_type;
 
         union // reference to the values (in memory) this domain is made of
         {
@@ -131,7 +131,7 @@ namespace tubex
 
       // Memory implementation of the domain
 
-        const MemoryRef m_memory_type;
+        MemoryRef m_memory_type;
 
         union // reference to the unique object (in memory) this domain represents
         {

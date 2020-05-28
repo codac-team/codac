@@ -22,7 +22,7 @@ namespace tubex
   Domain::Domain()
     : m_type(Type::INTERVAL), m_memory_type(MemoryRef::DOUBLE)
   {
-
+    // todo: change these parameters ^
   }
 
   Domain::Domain(Type type, MemoryRef memory_type)
@@ -210,6 +210,9 @@ namespace tubex
     m_v_ctc = ad.m_v_ctc;
     m_name = ad.m_name;
     m_dom_id = ad.m_dom_id;
+
+    m_type = ad.m_type;
+    m_memory_type = ad.m_memory_type;
 
     // todo: verify the copy of the above pointers
     // todo: is this constructor useful?
