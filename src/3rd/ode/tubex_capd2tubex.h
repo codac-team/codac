@@ -32,7 +32,7 @@ namespace tubex
    */
 
     std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, capd::IMap& vectorField, const ibex::IntervalVector& x0,
-                                                const double& timestep=0);
+                                                const double& timestep=0.);
 
 
   /** \brief Convert a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD into a

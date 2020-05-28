@@ -122,7 +122,7 @@ namespace tubex
                 // to enclose the trajectory between time steps.
                 // You can use your own favorite subdivision, perhaps nonuniform,
                 // depending on the problem you want to solve.
-                int grid=2;
+                int grid=1;
                 for(int i=0;i<grid;++i)
                 {
                     capd::interval subsetOfDomain = capd::interval(i,i+1)*stepMade/grid;
@@ -178,12 +178,10 @@ namespace tubex
 
 
         IntervalVector current_box(ibex_curve[0].size());
-        IntervalVector mid_box(ibex_curve[0].size());
-
         for(size_t i=0; i<ibex_curve.size()-1;i++)
-        {   
+        {
             IntervalVector current_box = ibex_curve[i];
-
+            assert(current_box.subvector(1,current_box.size()-1).intersects(ibex_curve[i+1].subvector(1,current_box.size()-1)));
             if((current_box[0].ub() == ibex_curve[i+1][0].lb()))
             {
                 /*
@@ -210,29 +208,19 @@ namespace tubex
                  *
                  *  condition verified? No
                  *
-                 * --> Truncating boxes and creating a link in the middle
-                 * |##############||##########||###########|
-                 * |current_box[0]||mid_box[0]||next box[0]|
-                 * |##############||##########||###########|
+                 * --> As adjacent boxes have a non empty intersection we keep on each dimension we do:
+                 * |##########################||###########|
+                 * |      current_box[0]      ||next box[0]|
+                 * |##########################||###########|
                  *
-                 * --> convert current_box and mid_box to slices
+                 * --> convert current_box to a tube slice
                  */
 
 
-                mid_box[0] = current_box[0]&ibex_curve[i+1][0]; // storing time dimension of the mid box
-                for (int k=1;k<mid_box.size();k++)
-                {
-                    // Ensure that we keep the convex hull so that our computation is guaranteed (may add pessimism)
-                    mid_box[k] = current_box[k]|ibex_curve[i+1][k];
-
-                }
-                current_box[0] = Interval(current_box[0].lb(), mid_box[0].lb());
-                ibex_curve[i+1][0] = Interval(mid_box[0].ub(),ibex_curve[i+1][0].ub());
+                ibex_curve[i+1][0] = Interval(current_box[0].ub(),ibex_curve[i+1][0].ub());
 
                 v_domains.push_back(current_box[0]);
                 v_codomains.push_back(current_box.subvector(1,current_box.size()-1));
-                v_domains.push_back(mid_box[0]);
-                v_codomains.push_back(mid_box.subvector(1,current_box.size()-1));
             }
 
         }
