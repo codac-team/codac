@@ -151,6 +151,8 @@ namespace tubex
       assert(Domain::dyn_same_slicing(v_domains));
 
       int n = Domain::total_size(v_domains);
+      if(n % static_ctc.nb_var != 0)
+        cout << "n=" << n << ", static_ctc.nb_var=" << static_ctc.nb_var << endl;
       assert((n % static_ctc.nb_var == 0) && "invalid total dimension of domains");
 
       // Adding domains to the CN

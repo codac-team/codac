@@ -42,15 +42,42 @@ void create_domain_from_vector_as_list(py::list lst, std::vector<Domain>& domain
 {
   if(lst.size() < 1)
     throw std::invalid_argument("Size of the input list is 0");
-  std::cout << "create_domain_from_vector_as_list " << lst.size() << std::endl;
+  //std::cout << "create_domain_from_vector_as_list " << lst.size() << std::endl;
   //std::vector<Domain> domains = new std::vector<Domain>();
   for(size_t i = 0 ; i < lst.size() ; i++){
-    std::cout << "Is Interval "<< py::isinstance<ibex::Interval>(lst[i]) << "\n";
-    Interval &itv  = lst[i].cast<Interval&>();
-    domains.push_back(Domain(itv));
+    //std::cout << "Is Interval "<< py::isinstance<ibex::Interval>(lst[i]) << "\n";
+
+    if(py::isinstance<ibex::Interval>(lst[i]))
+    {
+      Interval &itv  = lst[i].cast<Interval&>();
+      //std::cout << "is intance: Interval" << std::endl;
+      domains.push_back(Domain(itv));
+    }
+    else if(py::isinstance<ibex::IntervalVector>(lst[i]))
+    {
+      IntervalVector &itv  = lst[i].cast<IntervalVector&>();
+      //std::cout << "is intance: IntervalVector (dim " << itv.size() << ")" << std::endl;
+      domains.push_back(Domain(itv));
+    }
+    else if(py::isinstance<tubex::Tube>(lst[i]))
+    {
+      //std::cout << "is intance: Tube" << std::endl;
+      Tube &itv  = lst[i].cast<Tube&>();
+      domains.push_back(Domain(itv));
+    }
+    else if(py::isinstance<tubex::TubeVector>(lst[i]))
+    {
+      TubeVector &itv  = lst[i].cast<TubeVector&>();
+      //std::cout << "is intance: TubeVector (dim " << itv.size() << ")" << std::endl;
+      domains.push_back(Domain(itv));
+    }
+    else
+    {
+      std::cout << "error" << std::endl;
+    }
     //   (*itv).set_empty();
   }
-  std::cout << "ICI OK \n";
+  //std::cout << "ICI OK \n";
   //return domains;
 }
 
@@ -156,10 +183,10 @@ void export_ContractorNetwork(py::module& m){
           DOCS_CONTRACTORNETWORK_CREATE_DOM_TUBEVECTOR, "tv"_a,
           py::return_value_policy::reference_internal,
           py::keep_alive<1,0>())
-      .def("subvector", (ibex::IntervalVector & (ContractorNetwork::*)(ibex::Vector &,int,int) )&ContractorNetwork::subvector,
-          DOCS_CONTRACTORNETWORK_SUBVECTOR_VECTOR_INT_INT, "v"_a, "start_index"_a, "end_index"_a,
-          py::return_value_policy::reference_internal,
-          py::keep_alive<1,0>())
+      //.def("subvector", (ibex::IntervalVector & (ContractorNetwork::*)(ibex::Vector &,int,int) )&ContractorNetwork::subvector,
+      //    DOCS_CONTRACTORNETWORK_SUBVECTOR_VECTOR_INT_INT, "v"_a, "start_index"_a, "end_index"_a,
+      //    py::return_value_policy::reference_internal,
+      //    py::keep_alive<1,0>())
       .def("subvector", (ibex::IntervalVector & (ContractorNetwork::*)(ibex::IntervalVector &,int,int) )&ContractorNetwork::subvector,
           DOCS_CONTRACTORNETWORK_SUBVECTOR_INTERVALVECTOR_INT_INT, "iv"_a, "start_index"_a, "end_index"_a,
           py::return_value_policy::reference_internal,
@@ -171,14 +198,27 @@ void export_ContractorNetwork(py::module& m){
       .def("add", [](ContractorNetwork& cn, ibex::Ctc &ctc, py::list lst){
         std::vector<Domain> domaines;
         create_domain_from_vector_as_list(lst, domaines);
-        for(int i = 0; i < domaines.size(); i++){
+        for(size_t i = 0; i < domaines.size(); i++){
             //(*domaines)[i].interval().set_empty();
             //break;
-            std::cout << domaines[i] << std::endl;
+            //std::cout << domaines[i] << std::endl;
         }
         cn.add(ctc,domaines);
         // &create_domain_from_vector_as_list,
       }, DOCS_CONTRACTORNETWORK_ADD_CTC_VECTOR_DOMAIN_, "stastic_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
+
+
+      .def("add", [](ContractorNetwork& cn, tubex::DynCtc &ctc, py::list lst){
+        std::vector<Domain> domaines;
+        create_domain_from_vector_as_list(lst, domaines);
+        for(size_t i = 0; i < domaines.size(); i++){
+            //(*domaines)[i].interval().set_empty();
+            //break;
+            //std::cout << domaines[i] << std::endl;
+        }
+        cn.add(ctc,domaines);
+        // &create_domain_from_vector_as_list,
+      }, "todo", "dyn_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
       // create_domain_from_vector_as_list
       
       //.def("add", (void (ContractorNetwork::*)(ibex::Ctc &,const std::vector<Domain> &) )&ContractorNetwork::add,
