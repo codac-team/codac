@@ -26,7 +26,7 @@
 
 # Compilation
 
-  add_executable(${PROJECT_NAME} main.cpp)
+  add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp)
   target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})

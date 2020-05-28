@@ -286,6 +286,7 @@ namespace tubex
        * \param color optional color of the beacon
        */
       void add_beacon(const Beacon& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const ibex::IntervalVector& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a Beacon object to the map with a specific width
@@ -295,6 +296,7 @@ namespace tubex
        * \param color optional color of the beacon
        */
       void add_beacon(const Beacon& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const ibex::Vector& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a set of Beacon objects to the map

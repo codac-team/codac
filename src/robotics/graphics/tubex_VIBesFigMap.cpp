@@ -237,6 +237,18 @@ namespace tubex
     draw_beacon(beacon, width, color, vibesParams("figure", name(), "group", "beacons"));
   }
 
+  void VIBesFigMap::add_beacon(const IntervalVector& beacon, const string& color)
+  {
+    // Simply directly drawn
+    draw_beacon(Beacon(beacon), color, vibesParams("figure", name(), "group", "beacons"));
+  }
+
+  void VIBesFigMap::add_beacon(const Vector& beacon, double width, const string& color)
+  {
+    // Simply directly drawn
+    draw_beacon(Beacon(beacon), width, color, vibesParams("figure", name(), "group", "beacons"));
+  }
+
   void VIBesFigMap::add_beacons(const vector<Beacon>& v_beacons, const string& color)
   {
     // Simply directly drawn

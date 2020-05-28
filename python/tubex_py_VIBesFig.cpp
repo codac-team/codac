@@ -13,6 +13,7 @@
 #include "tubex_VIBesFig.h"
 #include "tubex_VIBesFigTube.h"
 #include "tubex_VIBesFigTubeVector.h"
+#include "pyIbex_type_caster.h"
 
 #include "tubex_VIBesFigMap.h"
 // #include "tubex_VIBesFigMap.h"
@@ -67,6 +68,8 @@ void export_VIBesFig(py::module& m){
       .def("draw_box", (void (VIBesFig::*)(const ibex::IntervalVector &,const std::string &,const vibes::Params &))&VIBesFig::draw_box,
            "todo", "box"_a, "color"_a, "params"_a=vibes::Params())
       .def("draw_circle", (void (VIBesFig::*)(double,double,double,const std::string &,const vibes::Params &))&VIBesFig::draw_circle,
+           "todo", "x"_a, "y"_a, "r"_a, "color"_a, "params"_a=vibes::Params())
+      .def("draw_ring", (void (VIBesFig::*)(double,double,const ibex::Interval&,const std::string &,const vibes::Params &))&VIBesFig::draw_ring,
            "todo", "x"_a, "y"_a, "r"_a, "color"_a, "params"_a=vibes::Params())
       .def("draw_pie", (void (VIBesFig::*)(double,double,const ibex::Interval &,const ibex::Interval &,const std::string &,const vibes::Params &))&VIBesFig::draw_pie,
            "todo", "x"_a, "y"_a, "r"_a, "theta"_a, "color"_a, "params"_a=vibes::Params())
@@ -219,13 +222,13 @@ void export_VIBesFig(py::module& m){
     //       DOCS_VIBESFIGMAP_DRAW_VEHICLE_VECTOR_FLOAT, "pose"_a, "size"_a=-1)
     //   .def("draw_vehicle", (void (VIBesFigMap::*)(const ibex::Vector &,const vibes::Params &,float) )&VIBesFigMap::draw_vehicle,
     //       DOCS_VIBESFIGMAP_DRAW_VEHICLE_VECTOR_VIBES::PARAMS_FLOAT, "pose"_a, "params"_a, "size"_a=-1)
-    //   .def("draw_vehicle", (void (VIBesFigMap::*)(double,const TrajectoryVector *,float) )&VIBesFigMap::draw_vehicle,
-    //       DOCS_VIBESFIGMAP_DRAW_VEHICLE_DOUBLE_TRAJECTORYVECTOR_FLOAT, "t"_a, "traj"_a, "size"_a=-1)
+       .def("draw_vehicle", (void (VIBesFigMap::*)(double,const TrajectoryVector *,float) )&VIBesFigMap::draw_vehicle,
+           DOCS_VIBESFIGMAP_DRAW_VEHICLE_DOUBLE_TRAJECTORYVECTOR_FLOAT, "t"_a, "traj"_a, "size"_a=-1)
     //   .def("draw_vehicle", (void (VIBesFigMap::*)(double,const TrajectoryVector *,const vibes::Params &,float) )&VIBesFigMap::draw_vehicle,
     //       DOCS_VIBESFIGMAP_DRAW_VEHICLE_DOUBLE_TRAJECTORYVECTOR_VIBES::PARAMS_FLOAT, "t"_a, "traj"_a, "params"_a, "size"_a=-1)
-      .def("add_beacon", (void (VIBesFigMap::*)(const Beacon &,const std::string &) )&VIBesFigMap::add_beacon,
+      .def("add_beacon", (void (VIBesFigMap::*)(const ibex::IntervalVector &,const std::string &) )&VIBesFigMap::add_beacon,
           DOCS_VIBESFIGMAP_ADD_BEACON_BEACON_STRING, "beacon"_a, "color"_a=DEFAULT_BEACON_COLOR)
-      .def("add_beacon", (void (VIBesFigMap::*)(const Beacon &,double,const std::string &) )&VIBesFigMap::add_beacon,
+      .def("add_beacon", (void (VIBesFigMap::*)(const ibex::Vector &,double,const std::string &) )&VIBesFigMap::add_beacon,
           DOCS_VIBESFIGMAP_ADD_BEACON_BEACON_DOUBLE_STRING, "beacon"_a, "width"_a, "color"_a=DEFAULT_BEACON_COLOR)
       .def("add_beacons", (void (VIBesFigMap::*)(const std::vector<Beacon> &,const std::string &) )&VIBesFigMap::add_beacons,
           DOCS_VIBESFIGMAP_ADD_BEACONS_VECTOR_BEACON__STRING, "v_beacons"_a, "color"_a=DEFAULT_BEACON_COLOR)
