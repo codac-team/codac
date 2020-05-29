@@ -73,8 +73,10 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
   # Tuto
   add_test(NAME cpp_tuto_01
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_01_getting_started/build/tubex_tuto_01 0)
+  if(WITH_PYTHON)
   add_test(NAME py_tuto_01
            COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_01_getting_started/tubex_tuto_01.py 0)
+  endif()
 
   if(WITH_CAPD)
     # Lie group

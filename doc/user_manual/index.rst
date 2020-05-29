@@ -189,14 +189,14 @@ We look at the state equations and use contractors to deal with them. The distan
 
     cn.add(ctc_f, [v, x, u])     # adding the f constraint
 
-    for i in range (0,3): # we add the observ. constraint for each range-only measurement
+    for i in range (0,3):        # we add the observ. constraint for each range-only measurement
 
       p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
 
       # Distance constraint: relation between the state at t_i and the ith beacon position
       cn.add(ctc.dist, [cn.subvector(p,0,1), IntervalVector(b[i]), y[i]])
 
-      # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]=
+      # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
       cn.add(ctc.eval, [Interval(t[i]), p, x, v])
 
 
@@ -220,7 +220,7 @@ We look at the state equations and use contractors to deal with them. The distan
 .. figure:: img/rangeonly-nox0.png
 
 | *You just solved a non-linear state-estimation without knowledge about initial condition.*
-| See the full example on Github `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/main.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/main.py>`_.
+| See the full example on Github `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.py>`_.
 
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
