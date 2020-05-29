@@ -1,4 +1,4 @@
-from pyibex import Interval
+from pyibex import *
 from tubex_lib import *
 import sys # only for checking if this example still works
 

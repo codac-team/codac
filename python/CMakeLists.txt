@@ -36,6 +36,7 @@
     tubex_py_Tube.cpp
     tubex_py_TubeVector.cpp
     tubex_py_VIBesFig.cpp
+    tubex_py_DataLoader.cpp
   )
 
   target_include_directories(tube
