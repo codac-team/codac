@@ -16,6 +16,6 @@ Start a Python project
   from tubex_lib import *
 
   tdomain = Interval(0,10)
-  x = Tube(tdomain);
+  x = Tube(tdomain)
 
   print("My first tube: ", x)

@@ -11,10 +11,10 @@
 Tubex: constraint-programming for robotics
 ##########################################
 
-Tubex is a library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
+Tubex is a C++/Python library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
 
 | **What is constraint programming?**
-| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a **reliable** set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*.
+| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a reliable set of **feasible solutions** corresponding to the problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*.
 
 .. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
@@ -71,14 +71,14 @@ In a few steps, a problem is solved by
 
 1. Defining the initial domains (boxes, tubes) of our variables (vectors, trajectories)
 2. Take contractors from a catalog of already existing operators, provided in the library
-3. Add the contractors and domains to the Contractor Network
+3. Add the contractors and domains to a Contractor Network
 4. Let the Contractor Network solve the problem 
 5. Obtain a reliable set of feasible variables
 
-**For instance.** Let us consider the robotic problem of localization with range-only measurements.
-A robot is described by a state vector :math:`\mathbf{x}=\{x_1,x_2,\psi,\vartheta\}^\intercal` depicting its position, its heading and its speed.
-It evolves between three landmarks :math:`\mathbf{b}_1`, :math:`\mathbf{b}_2`, :math:`\mathbf{b}_3` and measures distances :math:`y_i` from these points.
-The problem is summarized by classical state equations:
+| **For instance.**
+| Let us consider the robotic problem of localization with range-only measurements. A robot is described by the state vector :math:`\mathbf{x}=\{x_1,x_2,\psi,\vartheta\}^\intercal` depicting its position, its heading and its speed. It evolves between three landmarks :math:`\mathbf{b}_1`, :math:`\mathbf{b}_2`, :math:`\mathbf{b}_3` and measures distances :math:`y_i` from these points.
+
+The problem is defined by classical state equations:
 
 .. math::
 
@@ -86,6 +86,9 @@ The problem is summarized by classical state equations:
     \dot{\mathbf{x}}(t)=\mathbf{f}\big(\mathbf{x}(t),\mathbf{u}(t)\big)\\
     y_i=g\big(\mathbf{x}(t_i),\mathbf{b}_i\big)
   \end{array}\right.
+
+where :math:`\mathbf{u}(t)` is the input of the system, known with some uncertainties. :math:`\mathbf{f}` and :math:`g` are non-linear functions.
+
 
 | **First step.**
 | Defining domains for our variables.
@@ -140,15 +143,15 @@ Finally, we define the domains for the three range-only observations :math:`(t_i
   .. code-tab:: py
 
     e_y = Interval(-0.1,0.1)
-    y = [Interval(1.9+e_y), Interval(3.6+e_y), \
-         Interval(2.8+e_y)]                           # set of range-only observations
+    y = [Interval(1.9+e_y), Interval(3.6+e_y), \      # set of range-only observations
+         Interval(2.8+e_y)]
     b = [[8,3],[0,5],[-2,1]]                          # positions of the three 2d landmarks
     t = [0.3, 1.5, 2.0]                               # times of measurements
 
 | **Second step.**
 | Defining contractors to deal with the state equations.
 
-We look at the state equations and use contractors to deal with them. The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a landmark corresponds to the ``ctc::dist`` contractor provided in the library, and the evolution function :math:`\mathbf{f}(\mathbf{x},\mathbf{u})=\big(x_4\cos(x_3),x_4\sin(x_3),u_1,u_2\big)` can be handled by a custom-built contractor:
+The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a landmark corresponds to the ``CtcDist`` contractor provided in the library. The evolution function :math:`\mathbf{f}(\mathbf{x},\mathbf{u})=\big(x_4\cos(x_3),x_4\sin(x_3),u_1,u_2\big)` can be handled by a custom-built contractor:
 
 .. tabs::
 
@@ -185,11 +188,11 @@ We look at the state equations and use contractors to deal with them. The distan
 
   .. code-tab:: py
 
-    cn = ContractorNetwork()     # creating a network
+    cn = ContractorNetwork()   # creating a network
 
-    cn.add(ctc_f, [v, x, u])     # adding the f constraint
+    cn.add(ctc_f, [v, x, u])   # adding the f constraint
 
-    for i in range (0,3):        # we add the observ. constraint for each range-only measurement
+    for i in range (0,len(y)): # we add the observ. constraint for each range-only measurement
 
       p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
 
@@ -220,7 +223,7 @@ We look at the state equations and use contractors to deal with them. The distan
 .. figure:: img/rangeonly-nox0.png
 
 | *You just solved a non-linear state-estimation without knowledge about initial condition.*
-| See the full example on Github `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.py>`_.
+| See the full example on Github: `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.py>`_.
 
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
@@ -234,8 +237,8 @@ User manual
   :maxdepth: 1
  
   /install/01-installation
-  /install/02-start-cpp-project
-  /install/03-start-py-project
+  /install/02-start-py-project
+  /install/03-start-cpp-project
 
 Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Tubex for mobile robotics <sec-mainpage-tuto>`, with telling examples.
 
@@ -278,7 +281,7 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. seealso::
 
-  The `API technical documentation <../api/html/annotated.html>`_ of the library.
+  The `C++ API technical documentation <../api/html/annotated.html>`_ of the library.
 
 
 .. _sec-mainpage-tuto:
@@ -288,7 +291,7 @@ Then you have two options: read the details about the features of Tubex (domains
   .. Figure:: img/logo_icra.png
     :align: center
 
-  This tutorial is proposed in the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ (International Conference on Robotics and Automation), 4th June -- 30th June.
+  This tutorial is proposed in the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ (International Conference on Robotics and Automation), 8th June -- 28th June.
 
 
 Tutorial for mobile robotics

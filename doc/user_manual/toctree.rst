@@ -6,8 +6,8 @@ Tubex: constraint-programming for robotics
   :maxdepth: 1
  
   /install/01-installation
-  /install/02-start-cpp-project
-  /install/03-start-py-project
+  /install/02-start-py-project
+  /install/03-start-cpp-project
 
 .. toctree::
   :caption: User manual

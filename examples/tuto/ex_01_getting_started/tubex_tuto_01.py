@@ -44,11 +44,11 @@ ctc_f = CtcFunction("v[4]", "x[4]", "u[2]",
 
 # =============== 3. Adding the contractors to a network ===============
 
-cn = ContractorNetwork()     # creating a network
+cn = ContractorNetwork()   # creating a network
 
-cn.add(ctc_f, [v, x, u])     # adding the f constraint
+cn.add(ctc_f, [v, x, u])   # adding the f constraint
 
-for i in range (0,3): # we add the observ. constraint for each range-only measurement
+for i in range (0,len(y)): # we add the observ. constraint for each range-only measurement
 
   p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
 
