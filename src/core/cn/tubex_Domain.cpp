@@ -110,6 +110,14 @@ namespace tubex
     m_ref_memory_v = reference_wrapper<Vector>(v);
   }
 
+  // todo ? Domain::Domain(const Vector& v)
+  // todo ?   : Domain(Type::INTERVAL_VECTOR, MemoryRef::INTERVAL_VECTOR)
+  // todo ? {
+  // todo ?   m_iv_ptr = new IntervalVector(v);
+  // todo ?   m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+  // todo ?   m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+  // todo ? }
+
   Domain::Domain(IntervalVector& iv)
     : Domain(Type::INTERVAL_VECTOR, MemoryRef::INTERVAL_VECTOR)
   {

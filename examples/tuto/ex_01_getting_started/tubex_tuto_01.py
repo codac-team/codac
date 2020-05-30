@@ -53,15 +53,15 @@ for i in range (0,len(y)): # we add the observ. constraint for each range-only m
   p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
 
   # Distance constraint: relation between the state at t_i and the ith beacon position
-  cn.add(ctc.dist, [cn.subvector(p,0,1), IntervalVector(b[i]), y[i]])
+  cn.add(ctc.dist, [cn.subvector(p,0,1), b[i], y[i]])
 
   # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]=
-  cn.add(ctc.eval, [Interval(t[i]), p, x, v])
+  cn.add(ctc.eval, [t[i], p, x, v])
 
 
 # ======================= 4. Solving the problem =======================
 
-cn.contract()
+cn.contract(True)
 
 
 # ============================ 5. Graphics =============================

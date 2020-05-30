@@ -38,12 +38,14 @@ namespace tubex
 
       Domain();
       Domain(const Domain& ad);
+      // todo: constructor with non-ref double?
       Domain(double& d);
       Domain(ibex::Interval& i);
       Domain(ibex::Interval& i, double& extern_d);
       Domain(ibex::Interval& i, ibex::Interval& extern_i);
       Domain(const ibex::Interval& i);
       Domain(ibex::Vector& v);
+      // todo: ? Domain(const ibex::Vector& v);
       Domain(ibex::IntervalVector& iv);
       Domain(const ibex::IntervalVector& iv);
       Domain(Slice& s);

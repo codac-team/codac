@@ -18,6 +18,9 @@
 #include <pybind11/functional.h>
 #include "tubex_py_ContractorNetwork_docs.h"
 #include "tubex_py_Domain_docs.h"
+#include "pyIbex_type_caster.h"
+
+using namespace std;
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -42,43 +45,55 @@ void create_domain_from_vector_as_list(py::list lst, std::vector<Domain>& domain
 {
   if(lst.size() < 1)
     throw std::invalid_argument("Size of the input list is 0");
-  //std::cout << "create_domain_from_vector_as_list " << lst.size() << std::endl;
-  //std::vector<Domain> domains = new std::vector<Domain>();
-  for(size_t i = 0 ; i < lst.size() ; i++){
-    //std::cout << "Is Interval "<< py::isinstance<ibex::Interval>(lst[i]) << "\n";
 
-    if(py::isinstance<ibex::Interval>(lst[i]))
+  for(size_t i = 0 ; i < lst.size() ; i++)
+  {
+    if(py::isinstance<py::int_>(lst[i])) // todo: get a reference instead of const (possible?)
+    {
+      const double itv = lst[i].cast<int>();
+      domains.push_back(Domain(itv));
+    }
+    else if(py::isinstance<py::float_>(lst[i])) // todo: get a reference instead of const (possible?)
+    {
+      const double itv = lst[i].cast<double>();
+      domains.push_back(Domain(itv));
+    }
+    else if(py::isinstance<ibex::Interval>(lst[i]))
     {
       Interval &itv  = lst[i].cast<Interval&>();
-      //std::cout << "is intance: Interval" << std::endl;
+      domains.push_back(Domain(itv));
+    }
+    else if(py::isinstance<py::list>(lst[i]))
+    {
+      // todo: remove dynamic allocation here
+      IntervalVector *v = new IntervalVector(lst[i].cast<const ibex::Vector>());
+      domains.push_back(Domain(*v));
+    }
+    else if(py::isinstance<ibex::Vector>(lst[i])) // todo: this seems to be never used
+    {
+      Vector itv  = lst[i].cast<ibex::Vector>();
       domains.push_back(Domain(itv));
     }
     else if(py::isinstance<ibex::IntervalVector>(lst[i]))
     {
       IntervalVector &itv  = lst[i].cast<IntervalVector&>();
-      //std::cout << "is intance: IntervalVector (dim " << itv.size() << ")" << std::endl;
       domains.push_back(Domain(itv));
     }
     else if(py::isinstance<tubex::Tube>(lst[i]))
     {
-      //std::cout << "is intance: Tube" << std::endl;
       Tube &itv  = lst[i].cast<Tube&>();
       domains.push_back(Domain(itv));
     }
     else if(py::isinstance<tubex::TubeVector>(lst[i]))
     {
       TubeVector &itv  = lst[i].cast<TubeVector&>();
-      //std::cout << "is intance: TubeVector (dim " << itv.size() << ")" << std::endl;
       domains.push_back(Domain(itv));
     }
     else
     {
       std::cout << "error" << std::endl;
     }
-    //   (*itv).set_empty();
   }
-  //std::cout << "ICI OK \n";
-  //return domains;
 }
 
 // class pyContractorNetwork : public ContractorNetwork {

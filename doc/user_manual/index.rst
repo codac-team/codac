@@ -197,10 +197,10 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
       p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
 
       # Distance constraint: relation between the state at t_i and the ith beacon position
-      cn.add(ctc.dist, [cn.subvector(p,0,1), IntervalVector(b[i]), y[i]])
+      cn.add(ctc.dist, [cn.subvector(p,0,1), b[i], y[i]])
 
       # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
-      cn.add(ctc.eval, [Interval(t[i]), p, x, v])
+      cn.add(ctc.eval, [t[i], p, x, v])
 
 
 | **Fourth step.**
