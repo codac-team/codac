@@ -67,6 +67,7 @@ namespace tubex
 
   void CtcEval::contract(double t, Interval& z, Tube& y, Tube& w)
   {
+    assert(!std::isnan(t));
     assert(y.tdomain().contains(t));
     assert(y.tdomain() == w.tdomain());
     assert(Tube::same_slicing(y, w));
@@ -323,6 +324,7 @@ namespace tubex
 
   void CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w)
   {
+    assert(!std::isnan(t));
     assert(y.tdomain().contains(t));
     assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));

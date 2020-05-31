@@ -577,6 +577,7 @@ namespace tubex
 
     const Interval Tube::operator()(double t) const
     {
+      assert(!isnan(t));
       assert(tdomain().contains(t));
       return slice(t)->operator()(t);
     }
@@ -584,6 +585,9 @@ namespace tubex
     const Interval Tube::operator()(const Interval& t) const
     {
       assert(tdomain().is_superset(t));
+
+      if(t.is_empty())
+        return Interval::empty_set();
 
       if(t.is_degenerated())
         return operator()(t.lb());

@@ -1,6 +1,11 @@
+# tubex-lib - Examples
+# Dynamic range-only localization
+# ----------------------------------------------------------------------------
+
 from pyibex import *
 from tubex_lib import *
 import sys # only for checking if this example still works
+
 
 # =================== 0. Parameters, truth and data ====================
 

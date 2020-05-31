@@ -174,6 +174,11 @@ namespace tubex
     return generate_observations(x, map_beacons, nb_obs, random, visi_range, visi_angle, tdomain);
   }
   
+  vector<IntervalVector> DataLoader::generate_static_observations(const Vector& x, const vector<IntervalVector>& map, bool random, const Interval& visi_range, const Interval& visi_angle)
+  {
+    return generate_observations(x, map, random, visi_range, visi_angle);
+  }
+  
   vector<IntervalVector> DataLoader::generate_observations_along_traj(const TrajectoryVector& x, const vector<IntervalVector>& map, int nb_obs, bool random, const Interval& visi_range, const Interval& visi_angle, const Interval& tdomain)
   {
     return generate_observations(x, map, nb_obs, random, visi_range, visi_angle, tdomain);

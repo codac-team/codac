@@ -46,8 +46,8 @@ void export_DataLoader(py::module& m){
 
       .def_static("generate_landmarks_boxes", &DataLoader::generate_landmarks_boxes,
           DOCS_DATALOADER_GENERATE_LANDMARKS_BOXES_INTERVALVECTOR_INT, "map_box"_a, "nb_landmarks"_a=100)
-      //.def_static("generate_observations", &DataLoader::generate_observations_v,
-      //    "todo", "x"_a, "map"_a, "random"_a=true, "visi_range"_a=ibex::Interval::POS_REALS, "visi_angle"_a=ibex::Interval::ALL_REALS)
+      .def_static("generate_static_observations", &DataLoader::generate_static_observations,
+          "todo", "x"_a, "map"_a, "random"_a=true, "visi_range"_a=ibex::Interval::POS_REALS, "visi_angle"_a=ibex::Interval::ALL_REALS)
 
 
     //  //.def("generate_observations", (static std::vector<ibex::IntervalVector> (DataLoader::*)(const ibex::Vector &,const std::vector<Beacon> &,bool,const ibex::Interval &,const ibex::Interval &) )&DataLoader::generate_observations,

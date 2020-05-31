@@ -10,6 +10,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include "tubex_Figure.h"
 #include "tubex_VIBesFig.h"
 #include "tubex_VIBesFigTube.h"
 #include "tubex_VIBesFigTubeVector.h"
@@ -41,10 +42,12 @@ using ibex::IntervalVector;
 
 //PYBIND11_MODULE(graphics, m){
 
-void export_VIBesFig(py::module& m){
-
+void export_graphics(py::module& m){
     m.def("beginDrawing", [](){vibes::beginDrawing();});
     m.def("endDrawing", [](){vibes::endDrawing();});
+}
+
+void export_VIBesFig(py::module& m){
 
 
     py::class_<vibes::Params> params(m, "Params");
@@ -66,13 +69,13 @@ void export_VIBesFig(py::module& m){
       .def("show", &VIBesFig::show,DOCS_VIBESFIG_SHOW)
       .def("clear", &VIBesFig::clear,DOCS_VIBESFIG_CLEAR)
       .def("draw_box", (void (VIBesFig::*)(const ibex::IntervalVector &,const std::string &,const vibes::Params &))&VIBesFig::draw_box,
-           "todo", "box"_a, "color"_a, "params"_a=vibes::Params())
+           "todo", "box"_a, "color"_a = "black", "params"_a=vibes::Params())
       .def("draw_circle", (void (VIBesFig::*)(double,double,double,const std::string &,const vibes::Params &))&VIBesFig::draw_circle,
-           "todo", "x"_a, "y"_a, "r"_a, "color"_a, "params"_a=vibes::Params())
+           "todo", "x"_a, "y"_a, "r"_a, "color"_a = "black", "params"_a=vibes::Params())
       .def("draw_ring", (void (VIBesFig::*)(double,double,const ibex::Interval&,const std::string &,const vibes::Params &))&VIBesFig::draw_ring,
-           "todo", "x"_a, "y"_a, "r"_a, "color"_a, "params"_a=vibes::Params())
+           "todo", "x"_a, "y"_a, "r"_a, "color"_a = "black", "params"_a=vibes::Params())
       .def("draw_pie", (void (VIBesFig::*)(double,double,const ibex::Interval &,const ibex::Interval &,const std::string &,const vibes::Params &))&VIBesFig::draw_pie,
-           "todo", "x"_a, "y"_a, "r"_a, "theta"_a, "color"_a, "params"_a=vibes::Params())
+           "todo", "x"_a, "y"_a, "r"_a, "theta"_a, "color"_a = "black", "params"_a=vibes::Params())
     //   .def("draw_box", (void (VIBesFigTubeVector::*)(const ibex::Interval &,const ibex::IntervalVector &,const std::string &,const vibes::Params &) )&VIBesFigTubeVector::draw_box,
     //       DOCS_VIBESFIGTUBEVECTOR_DRAW_BOX_INTERVAL_INTERVALVECTOR_STRING_VIBES::PARAMS, "domain"_a, "box"_a, "color"_a="", "params"_a=vibes::Params())
     ;
@@ -218,8 +221,8 @@ void export_VIBesFig(py::module& m){
           DOCS_VIBESFIGMAP_SET_TRAJECTORY_COLOR_TRAJECTORYVECTOR_COLORMAP_TRAJECTORY, "traj"_a, "colormap"_a, "traj_colormap"_a=nullptr)
       .def("remove_trajectory", &VIBesFigMap::remove_trajectory,
           DOCS_VIBESFIGMAP_REMOVE_TRAJECTORY_TRAJECTORYVECTOR, "traj"_a)
-    //   .def("draw_vehicle", (void (VIBesFigMap::*)(const ibex::Vector &,float) )&VIBesFigMap::draw_vehicle,
-    //       DOCS_VIBESFIGMAP_DRAW_VEHICLE_VECTOR_FLOAT, "pose"_a, "size"_a=-1)
+       .def("draw_vehicle", (void (VIBesFigMap::*)(const ibex::Vector &,float) )&VIBesFigMap::draw_vehicle,
+           DOCS_VIBESFIGMAP_DRAW_VEHICLE_VECTOR_FLOAT, "pose"_a, "size"_a=-1)
     //   .def("draw_vehicle", (void (VIBesFigMap::*)(const ibex::Vector &,const vibes::Params &,float) )&VIBesFigMap::draw_vehicle,
     //       DOCS_VIBESFIGMAP_DRAW_VEHICLE_VECTOR_VIBES::PARAMS_FLOAT, "pose"_a, "params"_a, "size"_a=-1)
        .def("draw_vehicle", (void (VIBesFigMap::*)(double,const TrajectoryVector *,float) )&VIBesFigMap::draw_vehicle,

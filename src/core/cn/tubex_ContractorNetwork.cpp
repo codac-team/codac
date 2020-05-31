@@ -157,10 +157,7 @@ namespace tubex
 
       // Adding domains to the CN
       for(auto& dom : v_domains)
-      {
-        assert(!dom.is_empty() && "one domain is already empty when added to the CN");
         add_dom(dom);
-      }
 
       for(int i = 0 ; i < n/static_ctc.nb_var ; i++) // in case we are dealing with array data
       {
@@ -357,6 +354,8 @@ namespace tubex
 
     Domain* ContractorNetwork::add_dom(const Domain& ad)
     {
+      assert(!ad.is_empty() && "domain already empty when added to the CN");
+
       // Looking if this domain is not already part of the graph
       for(auto& dom : m_v_domains)
         if(*dom == ad) // found
