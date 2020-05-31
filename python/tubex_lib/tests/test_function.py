@@ -23,3 +23,5 @@ class TestFunctionOnTube(unittest.TestCase):
         self.assertAlmostEqual(y1.volume(), y2.volume());
 
     
+if __name__ ==  '__main__':
+  unittest.main()

@@ -773,3 +773,5 @@ class TestArithmeticOnVectorTubeIops(unittest.TestCase):
         self.assertApproxIntv(z[1].codomain(), self.a1)
         self.assertApproxIntv(z[2].codomain(), self.a2)
         
+if __name__ ==  '__main__':
+  unittest.main()

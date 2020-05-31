@@ -157,7 +157,10 @@ namespace tubex
 
       // Adding domains to the CN
       for(auto& dom : v_domains)
+      {
+        assert(!dom.is_empty() && "one domain is already empty when added to the CN");
         add_dom(dom);
+      }
 
       for(int i = 0 ; i < n/static_ctc.nb_var ; i++) // in case we are dealing with array data
       {

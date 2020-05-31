@@ -1,6 +1,5 @@
 #include "catch_interval.hpp"
 #include "tubex_ContractorNetwork.h"
-#include "ibex_CtcFwdBwd.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcFunction.h"
@@ -35,7 +34,7 @@ TEST_CASE("CN simple")
 
   SECTION("Simple static case")
   {
-    CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
+    CtcFunction ctc_plus("a", "b", "c", "a+b-c"); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2));
 
@@ -53,7 +52,7 @@ TEST_CASE("CN simple")
 
   SECTION("Dependencies on vector components")
   {
-    CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
+    CtcFunction ctc_plus("a", "b", "c", "a+b-c"); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2)), d(2, Interval(0.)), e(2);
 
@@ -165,15 +164,13 @@ TEST_CASE("CN simple")
 
   SECTION("CtcFunction on scalar or vector cases")
   {
-    Interval x(0,1), y(-2,3), a(1,20);
-    IntervalVector vx(2,x), vy(2,y), va(2,a);
-    Vector vec(4,0.5);
-    
     CtcFunction ctc_add("b", "c", "a", "b+c=a");
     CtcFunction ctc_cos("b", "c", "a", "b+c=a");
     CtcFunction ctc_minus("b", "c", "b-c=0");
 
     {
+      Interval x(0,1), y(-2,3), a(1,20);
+    
       ContractorNetwork cn;
 
       cn.add(ctc_add, {x,y,a});
@@ -188,6 +185,10 @@ TEST_CASE("CN simple")
     }
 
     {
+      Interval x(0,1), y(-2,3), a(1,20);
+      IntervalVector vx(2,x), vy(2,y), va(2,a);
+      Vector vec(4,0.5);
+    
       ContractorNetwork cn;
       cn.add(ctc_add, {vx,vy,va});
       cn.add(ctc_add, {vx[0],vy[0],va[0]});
@@ -253,14 +254,12 @@ TEST_CASE("CN simple")
 
   SECTION("Singleton variables: double or Vector")
   {
-    Interval x(0,1), y(-2,3), a(1,20);
-    double double_y = 1.;
-    Vector vector_y(2, 1.);
-    IntervalVector ivx(2,x), ivy(2,y), iva(2,a);
-    
     CtcFunction ctc_add("b", "c", "a", "b+c=a");
 
     {
+      Interval x(0,1), y(-2,3), a(1,20);
+      double double_y = 1.;
+      
       ContractorNetwork cn;
 
       cn.add(ctc_add, {x,double_y,a});
@@ -276,6 +275,10 @@ TEST_CASE("CN simple")
     }
 
     {
+      Interval x(0,1), a(1,20);
+      Vector vector_y(2, 1.);
+      IntervalVector ivx(2,x), iva(2,a);
+    
       ContractorNetwork cn;
 
       cn.add(ctc_add, {ivx,vector_y,iva});

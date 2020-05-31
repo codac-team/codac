@@ -40,60 +40,68 @@ std::string to_string(const Domain& x)
 }
 
 
-
-void create_domain_from_vector_as_list(py::list lst, std::vector<Domain>& domains)
+Domain pyobject_to_domain(py::object object)
 {
+  if(py::isinstance<py::int_>(object)) // todo: get a reference instead of const (possible?)
+  {
+    const double itv = object.cast<int>();
+    return Domain(itv);
+  }
+  else if(py::isinstance<py::float_>(object)) // todo: get a reference instead of const (possible?)
+  {
+    const double itv = object.cast<double>();
+    return Domain(itv);
+  }
+  else if(py::isinstance<ibex::Interval>(object))
+  {
+    Interval &itv  = object.cast<Interval&>();
+    return Domain(itv);
+  }
+  else if(py::isinstance<py::list>(object))
+  {
+    // todo: remove dynamic allocation here
+    IntervalVector *v = new IntervalVector(object.cast<const ibex::Vector>());
+    return Domain(*v);
+  }
+  else if(py::isinstance<ibex::Vector>(object)) // todo: this seems to be never used
+  {
+    Vector itv  = object.cast<ibex::Vector>();
+    return Domain(itv);
+  }
+  else if(py::isinstance<ibex::IntervalVector>(object))
+  {
+    IntervalVector &itv  = object.cast<IntervalVector&>();
+    return Domain(itv);
+  }
+  else if(py::isinstance<tubex::Tube>(object))
+  {
+    Tube &itv  = object.cast<Tube&>();
+    return Domain(itv);
+  }
+  else if(py::isinstance<tubex::TubeVector>(object))
+  {
+    TubeVector &itv  = object.cast<TubeVector&>();
+    return Domain(itv);
+  }
+  else
+  {
+    throw std::invalid_argument("unable to convert the py::object into a valid Domain");
+  }
+}
+
+
+
+vector<Domain> pylist_to_vectordomains(py::list lst)
+{
+  vector<Domain> domains;
+
   if(lst.size() < 1)
     throw std::invalid_argument("Size of the input list is 0");
 
   for(size_t i = 0 ; i < lst.size() ; i++)
-  {
-    if(py::isinstance<py::int_>(lst[i])) // todo: get a reference instead of const (possible?)
-    {
-      const double itv = lst[i].cast<int>();
-      domains.push_back(Domain(itv));
-    }
-    else if(py::isinstance<py::float_>(lst[i])) // todo: get a reference instead of const (possible?)
-    {
-      const double itv = lst[i].cast<double>();
-      domains.push_back(Domain(itv));
-    }
-    else if(py::isinstance<ibex::Interval>(lst[i]))
-    {
-      Interval &itv  = lst[i].cast<Interval&>();
-      domains.push_back(Domain(itv));
-    }
-    else if(py::isinstance<py::list>(lst[i]))
-    {
-      // todo: remove dynamic allocation here
-      IntervalVector *v = new IntervalVector(lst[i].cast<const ibex::Vector>());
-      domains.push_back(Domain(*v));
-    }
-    else if(py::isinstance<ibex::Vector>(lst[i])) // todo: this seems to be never used
-    {
-      Vector itv  = lst[i].cast<ibex::Vector>();
-      domains.push_back(Domain(itv));
-    }
-    else if(py::isinstance<ibex::IntervalVector>(lst[i]))
-    {
-      IntervalVector &itv  = lst[i].cast<IntervalVector&>();
-      domains.push_back(Domain(itv));
-    }
-    else if(py::isinstance<tubex::Tube>(lst[i]))
-    {
-      Tube &itv  = lst[i].cast<Tube&>();
-      domains.push_back(Domain(itv));
-    }
-    else if(py::isinstance<tubex::TubeVector>(lst[i]))
-    {
-      TubeVector &itv  = lst[i].cast<TubeVector&>();
-      domains.push_back(Domain(itv));
-    }
-    else
-    {
-      std::cout << "error" << std::endl;
-    }
-  }
+    domains.push_back(pyobject_to_domain(lst[i]));
+
+  return domains;
 }
 
 // class pyContractorNetwork : public ContractorNetwork {
@@ -211,27 +219,28 @@ void export_ContractorNetwork(py::module& m){
           // DOCS_CONTRACTORNETWORK_ADD_CTC_VECTOR_DOMAIN_, "static_ctc"_a, "v_domains"_a)
       
       .def("add", [](ContractorNetwork& cn, ibex::Ctc &ctc, py::list lst){
-        std::vector<Domain> domaines;
-        create_domain_from_vector_as_list(lst, domaines);
-        for(size_t i = 0; i < domaines.size(); i++){
-            //(*domaines)[i].interval().set_empty();
-            //break;
-            //std::cout << domaines[i] << std::endl;
-        }
-        cn.add(ctc,domaines);
+      //  std::vector<Domain> domains;
+      //  create_domain_from_vector_as_list(lst, domaines);
+      //  for(size_t i = 0; i < domaines.size(); i++){
+      //      //(*domaines)[i].interval().set_empty();
+      //      //break;
+      //      //std::cout << domaines[i] << std::endl;
+      //  }
+        cn.add(ctc, pylist_to_vectordomains(lst));
         // &create_domain_from_vector_as_list,
       }, DOCS_CONTRACTORNETWORK_ADD_CTC_VECTOR_DOMAIN_, "stastic_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
 
 
       .def("add", [](ContractorNetwork& cn, tubex::DynCtc &ctc, py::list lst){
-        std::vector<Domain> domaines;
-        create_domain_from_vector_as_list(lst, domaines);
-        for(size_t i = 0; i < domaines.size(); i++){
-            //(*domaines)[i].interval().set_empty();
-            //break;
-            //std::cout << domaines[i] << std::endl;
-        }
-        cn.add(ctc,domaines);
+        //std::vector<Domain> domaines;
+        //create_domain_from_vector_as_list(lst, domaines);
+        //for(size_t i = 0; i < domaines.size(); i++){
+        //    //(*domaines)[i].interval().set_empty();
+        //    //break;
+        //    //std::cout << domaines[i] << std::endl;
+        //}
+        //cn.add(ctc,domaines);
+        cn.add(ctc, pylist_to_vectordomains(lst));
         // &create_domain_from_vector_as_list,
       }, "todo", "dyn_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
       // create_domain_from_vector_as_list
@@ -256,12 +265,33 @@ void export_ContractorNetwork(py::module& m){
           DOCS_CONTRACTORNETWORK_TRIGGER_ALL_CONTRACTORS)
       .def("nb_ctc_in_stack", &ContractorNetwork::nb_ctc_in_stack,
           DOCS_CONTRACTORNETWORK_NB_CTC_IN_STACK)
-      .def("set_name", (void (ContractorNetwork::*)(Domain,const std::string &) )&ContractorNetwork::set_name,
-          DOCS_CONTRACTORNETWORK_SET_NAME_DOMAIN_STRING, "dom"_a, "name"_a)
+
+
+      //.def("add", [](ContractorNetwork& cn, tubex::DynCtc &ctc, py::list lst){
+      //  std::vector<Domain> domaines;
+      //  create_domain_from_vector_as_list(lst, domaines);
+      //  for(size_t i = 0; i < domaines.size(); i++){
+      //      //(*domaines)[i].interval().set_empty();
+      //      //break;
+      //      //std::cout << domaines[i] << std::endl;
+      //  }
+      //  cn.add(ctc,domaines);
+      //  // &create_domain_from_vector_as_list,
+      //}, "todo", "dyn_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
+
+
       .def("set_name", (void (ContractorNetwork::*)(ibex::Ctc &,const std::string &) )&ContractorNetwork::set_name,
           DOCS_CONTRACTORNETWORK_SET_NAME_CTC_STRING, "ctc"_a, "name"_a)
       .def("set_name", (void (ContractorNetwork::*)(DynCtc &,const std::string &) )&ContractorNetwork::set_name,
           DOCS_CONTRACTORNETWORK_SET_NAME_DYNCTC_STRING, "ctc"_a, "name"_a)
+
+      .def("set_name", [](ContractorNetwork& cn, py::object obj, const std::string & name)
+      {
+        // todo
+          Domain dom = pyobject_to_domain(obj);
+          cn.set_name(dom, name);
+      }, DOCS_CONTRACTORNETWORK_SET_NAME_DOMAIN_STRING, "dom"_a, "name"_a, py::keep_alive<1,2>())
+
       .def("print_dot_graph", &ContractorNetwork::print_dot_graph,
           DOCS_CONTRACTORNETWORK_PRINT_DOT_GRAPH_STRING_STRING, "cn_name"_a="cn", "layer_model"_a="fdp")
       ;

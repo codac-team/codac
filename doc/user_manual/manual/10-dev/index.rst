@@ -112,6 +112,14 @@ One shortcut to build both the examples and tests is:
   ./make all
 
 
+.. rubric:: Visualization of graphs of CN
+
+
+.. code-block:: bash
+
+  sudo apt install dot2tex
+
+
 .. rubric:: Installing local Python binding
 
 After having configured ``-DWITH_PYTHON=ON`` and compiled:

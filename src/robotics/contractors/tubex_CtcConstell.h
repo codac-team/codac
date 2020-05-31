@@ -12,6 +12,8 @@
 #define __TUBEX_CTCCONSTELL_H__
 
 #include "ibex_Ctc.h"
+#include <vector>
+#include <list>
 
 namespace tubex
 {
@@ -24,12 +26,13 @@ namespace tubex
     public:
 
       CtcConstell(const std::vector<ibex::IntervalVector>& map);
+      CtcConstell(const std::list<ibex::IntervalVector>& map);
       ~CtcConstell();
       void contract(ibex::IntervalVector &beacon_box);
 
     protected:
 
-      const std::vector<ibex::IntervalVector> m_map;
+      std::vector<ibex::IntervalVector> m_map;
   };
 }
 

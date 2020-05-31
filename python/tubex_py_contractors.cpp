@@ -121,24 +121,24 @@ void export_contractors(py::module& m){
   py::class_<CtcEval> ctc_eval(m, "CtcEval", dyn_ctc);
   ctc_eval
     .def(py::init<>(),DOCS_CTCEVAL_CTCEVAL)
-    .def("contract", (void (CtcEval::*)(std::vector<Domain *> &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
+    //.def("contract", (void (CtcEval::*)(std::vector<Domain *> &) )&CtcEval::contract,
+    //    DOCS_CTCEVAL_CONTRACT_VECTOR_a.noconvert()BSTRACTDOMAIN, "v_domains"_a.noconvert())
     .def("contract", (void (CtcEval::*)(double,ibex::Interval &,Tube &,Tube &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_DOUBLE_INTERVAL_TUBE_TUBE, "t"_a, "z"_a, "y"_a, "w"_a)
+        DOCS_CTCEVAL_CONTRACT_DOUBLE_INTERVAL_TUBE_TUBE, "t"_a.noconvert(), "z"_a.noconvert(), "y"_a.noconvert(), "w"_a.noconvert())
     .def("contract", (void (CtcEval::*)(ibex::Interval &,ibex::Interval &,Tube &,Tube &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVAL_TUBE_TUBE, "t"_a, "z"_a, "y"_a, "w"_a)
+        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVAL_TUBE_TUBE, "t"_a.noconvert(), "z"_a.noconvert(), "y"_a.noconvert(), "w"_a.noconvert())
     .def("contract", (void (CtcEval::*)(const ibex::Interval &,const ibex::Interval &,Tube &,Tube &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVAL_TUBE_TUBE1, "t"_a, "z"_a, "y"_a, "w"_a)
+        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVAL_TUBE_TUBE1, "t"_a.noconvert(), "z"_a.noconvert(), "y"_a.noconvert(), "w"_a.noconvert())
     .def("contract", (void (CtcEval::*)(double,ibex::IntervalVector &,TubeVector &,TubeVector &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_DOUBLE_INTERVALVECTOR_TUBEVECTOR_TUBEVECTOR, "t"_a, "z"_a, "y"_a, "w"_a)
+        DOCS_CTCEVAL_CONTRACT_DOUBLE_INTERVALVECTOR_TUBEVECTOR_TUBEVECTOR, "t"_a.noconvert(), "z"_a.noconvert(), "y"_a.noconvert(), "w"_a.noconvert())
     .def("contract", (void (CtcEval::*)(ibex::Interval &,ibex::IntervalVector &,TubeVector &,TubeVector &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVALVECTOR_TUBEVECTOR_TUBEVECTOR, "t"_a, "z"_a, "y"_a, "w"_a)
+        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVALVECTOR_TUBEVECTOR_TUBEVECTOR, "t"_a.noconvert(), "z"_a.noconvert(), "y"_a.noconvert(), "w"_a.noconvert())
     .def("contract", (void (CtcEval::*)(const ibex::Interval &,const ibex::IntervalVector &,TubeVector &,TubeVector &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVALVECTOR_TUBEVECTOR_TUBEVECTOR1, "t"_a, "z"_a, "y"_a, "w"_a)
+        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVALVECTOR_TUBEVECTOR_TUBEVECTOR1, "t"_a.noconvert(), "z"_a.noconvert(), "y"_a.noconvert(), "w"_a.noconvert())
     .def("contract", (void (CtcEval::*)(ibex::Interval &,ibex::Interval &,const Tube &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVAL_TUBE, "t"_a, "z"_a, "y"_a)
+        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVAL_TUBE, "t"_a.noconvert(), "z"_a.noconvert(), "y"_a.noconvert())
     .def("contract", (void (CtcEval::*)(ibex::Interval &,ibex::IntervalVector &,const TubeVector &) )&CtcEval::contract,
-        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVALVECTOR_TUBEVECTOR, "t"_a, "z"_a, "y"_a)
+        DOCS_CTCEVAL_CONTRACT_INTERVAL_INTERVALVECTOR_TUBEVECTOR, "t"_a.noconvert(), "z"_a.noconvert(), "y"_a.noconvert())
     .def("enable_time_propag", &CtcEval::enable_time_propag,
         DOCS_CTCEVAL_ENABLE_TEMPORAL_PROPAGATION_BOOL, "enable_propagation"_a)
   ;
@@ -149,22 +149,22 @@ void export_contractors(py::module& m){
         // .def("contract", (void (CtcDeriv::*)(std::vector<Domain> &) )&CtcDeriv::contract,
             // DOCS_CTCDERIV_CONTRACT_VECTOR_ABSTRACTDOMAIN, "v_domains"_a)
         .def("contract", (void (CtcDeriv::*)(Tube &,const Tube &,TimePropag) )&CtcDeriv::contract,
-            DOCS_CTCDERIV_CONTRACT_TUBE_TUBE_TIMEPROPAG, "x"_a, "v"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+            DOCS_CTCDERIV_CONTRACT_TUBE_TUBE_TIMEPROPAG, "x"_a.noconvert(), "v"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
         .def("contract", (void (CtcDeriv::*)(TubeVector &,const TubeVector &,TimePropag) )&CtcDeriv::contract,
-            DOCS_CTCDERIV_CONTRACT_TUBEVECTOR_TUBEVECTOR_TIMEPROPAG, "x"_a, "v"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+            DOCS_CTCDERIV_CONTRACT_TUBEVECTOR_TUBEVECTOR_TIMEPROPAG, "x"_a.noconvert(), "v"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
         .def("contract", (void (CtcDeriv::*)(Slice &,const Slice &,TimePropag) )&CtcDeriv::contract,
-            DOCS_CTCDERIV_CONTRACT_SLICE_SLICE_TIMEPROPAG, "x"_a, "v"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+            DOCS_CTCDERIV_CONTRACT_SLICE_SLICE_TIMEPROPAG, "x"_a.noconvert(), "v"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
     ;
 
     py::class_<CtcPicard> ctc_picard(m, "CtcPicard", dyn_ctc, DOCS_CTCPICARD);
     ctc_picard
       .def(py::init<float>(),DOCS_CTCPICARD_CTCPICARD_FLOAT, "delta"_a=1.1)
-      .def("contract", (void (CtcPicard::*)(std::vector<Domain *> &) )&CtcPicard::contract,
-          DOCS_CTCPICARD_CONTRACT_VECTOR_DOMAIN, "v_domains"_a)
+      //.def("contract", (void (CtcPicard::*)(std::vector<Domain *> &) )&CtcPicard::contract,
+      //    DOCS_CTCPICARD_CONTRACT_VECTOR_DOMAIN, "v_domains"_a)
       .def("contract", (void (CtcPicard::*)(const TFnc &,Tube &,TimePropag) )&CtcPicard::contract,
-          DOCS_CTCPICARD_CONTRACT_TFNC_TUBE_TIMEPROPAG, "f"_a, "x"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+          DOCS_CTCPICARD_CONTRACT_TFNC_TUBE_TIMEPROPAG, "f"_a, "x"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
       .def("contract", (void (CtcPicard::*)(const TFnc &,TubeVector &,TimePropag) )&CtcPicard::contract,
-          DOCS_CTCPICARD_CONTRACT_TFNC_TUBEVECTOR_TIMEPROPAG, "f"_a, "x"_a, "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+          DOCS_CTCPICARD_CONTRACT_TFNC_TUBEVECTOR_TIMEPROPAG, "f"_a, "x"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
       .def("picard_iterations", &CtcPicard::picard_iterations,
           DOCS_CTCPICARD_PICARD_ITERATIONS)
     ;
@@ -203,19 +203,19 @@ void export_contractors(py::module& m){
       .def("contract", (void (CtcFunction::*)(ibex::IntervalVector &) )&CtcFunction::contract,
           DOCS_CTCFUNCTION_CONTRACT_INTERVALVECTOR, "x"_a.noconvert())
       .def("contract", (void (CtcFunction::*)(TubeVector &) )&CtcFunction::contract,
-          DOCS_CTCFUNCTION_CONTRACT_TUBEVECTOR, "x"_a)
+          DOCS_CTCFUNCTION_CONTRACT_TUBEVECTOR, "x"_a.noconvert())
       .def("contract", (void (CtcFunction::*)(Tube &) )&CtcFunction::contract,
-          DOCS_CTCFUNCTION_CONTRACT_TUBE, "x1"_a)
+          DOCS_CTCFUNCTION_CONTRACT_TUBE, "x1"_a.noconvert())
       .def("contract", (void (CtcFunction::*)(Tube &,Tube &) )&CtcFunction::contract,
-          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE, "x1"_a, "x2"_a)
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE, "x1"_a.noconvert(), "x2"_a.noconvert())
       .def("contract", (void (CtcFunction::*)(Tube &,Tube &,Tube &) )&CtcFunction::contract,
-          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE, "x1"_a, "x2"_a, "x3"_a)
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE, "x1"_a.noconvert(), "x2"_a.noconvert(), "x3"_a.noconvert())
       .def("contract", (void (CtcFunction::*)(Tube &,Tube &,Tube &,Tube &) )&CtcFunction::contract,
-          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE, "x1"_a, "x2"_a, "x3"_a, "x4"_a)
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE, "x1"_a.noconvert(), "x2"_a.noconvert(), "x3"_a.noconvert(), "x4"_a.noconvert())
       .def("contract", (void (CtcFunction::*)(Tube &,Tube &,Tube &,Tube &,Tube &) )&CtcFunction::contract,
-          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE_TUBE, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a)
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE_TUBE, "x1"_a.noconvert(), "x2"_a.noconvert(), "x3"_a.noconvert(), "x4"_a.noconvert(), "x5"_a.noconvert())
       .def("contract", (void (CtcFunction::*)(Tube &,Tube &,Tube &,Tube &,Tube &,Tube &) )&CtcFunction::contract,
-          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE_TUBE_TUBE, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a)
+          DOCS_CTCFUNCTION_CONTRACT_TUBE_TUBE_TUBE_TUBE_TUBE_TUBE, "x1"_a.noconvert(), "x2"_a.noconvert(), "x3"_a.noconvert(), "x4"_a.noconvert(), "x5"_a.noconvert(), "x6"_a.noconvert())
       //.def("contract", (void (CtcFunction::*)(Slice * *) )&CtcFunction::contract,
       //    DOCS_CTCFUNCTION_CONTRACT_SLICE, "v_x_slices"_a)
     ;
@@ -224,16 +224,16 @@ void export_contractors(py::module& m){
     ctc_dist
       .def(py::init<>(),DOCS_CTCDIST_CTCDIST)
       .def("contract", &CtcDist::contract,
-          DOCS_CTCDIST_CONTRACT_INTERVALVECTOR_INTERVALVECTOR_INTERVAL, "a"_a, "b"_a, "d"_a)
+          DOCS_CTCDIST_CONTRACT_INTERVALVECTOR_INTERVALVECTOR_INTERVAL, "a"_a.noconvert(), "b"_a.noconvert(), "d"_a.noconvert())
 
     ;
 
 
     py::class_<CtcConstell> ctc_constell(m, "CtcConstell", static_ctc, DOCS_CTCCONSTELL);
     ctc_constell
-      .def(py::init<const std::vector<ibex::IntervalVector> &>(),
+      .def(py::init<const std::list<ibex::IntervalVector> &>(),
           DOCS_CTCCONSTELL_CTCCONSTELL_VECTOR_INTERVALVECTOR_, "map"_a)
       .def("contract", &CtcConstell::contract,
-          DOCS_CTCCONSTELL_CONTRACT_INTERVALVECTOR, "beacon_box"_a)
+          DOCS_CTCCONSTELL_CONTRACT_INTERVALVECTOR, "beacon_box"_a.noconvert())
     ;
 }
