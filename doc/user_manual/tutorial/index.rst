@@ -5,7 +5,7 @@ Tutorial: constraint programming for robotics
 #############################################
 
 .. centered:: Simon Rohou, Luc Jaulin, Benoît Desrochers, Raphael Voges
-.. centered:: **8th June -- 28th June**
+.. centered:: **8th June -- 5th July**
 
 .. sidebar:: ICRA 2020 tutorial
 
@@ -43,8 +43,8 @@ Requirements
 
 Prerequisite for attending the tutorial are:
 
-* basic knowledge of **Python or C++** (the exercises are available in both languages) ;
-* although the tutorial is about state estimation, you do not need skills in Kalman filter or particle approaches.
+* basic knowledge of **Python or C++** (the exercises are available in both languages);
+* although the tutorial is about state estimation, you do not need skills in Kalman or particle filters.
 
 
 Contact and registration
@@ -54,16 +54,16 @@ The tutorial involves three platforms:
 
 * the `Tubex website <http://simon-rohou.fr/research/tubex-lib>`_ (here you are!)
 * the `MOOC platform <https://mooc.ensta-bretagne.fr/course>`_ where you can send your work and get the tutorial diploma
-* the `Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for interactive meetings
+* the `Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
 
-All the exercises are available on the Tubex website. The registration to the MOOC platform is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
+This tutorial is proposed to the participants of `the ICRA conference <https://www.icra2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
 
 
 Diploma
 -------
 
 To get the diploma, you need to send valid exercises to the organizers. A participant who gets a minimum total of 12 points will receive a diploma corresponding to this tutorial.
-This diploma can be used by students to obtain the corresponding ECTS from their PhD courses, or to comply with any other requests by their home university.
+This diploma can be used by students to obtain the corresponding ECTS from their PhD courses, or to comply with any other requests from their home university.
 
 .. An example of the diploma you can obtain is:
 
@@ -72,7 +72,7 @@ This diploma can be used by students to obtain the corresponding ECTS from their
 Duration and meeting sessions
 -----------------------------
 
-The tutorial will be held **from 8th of June to 28th of June**.
+The tutorial will be held **from 8th of June to 5th of July**.
 Interactive meetings sessions are planned each Wednesday afternoon at 2pm:
 
 .. hlist::
@@ -81,6 +81,7 @@ Interactive meetings sessions are planned each Wednesday afternoon at 2pm:
   * 10th of June
   * 17th of June
   * 24th of June
+  * 1rst of July
 
 
 Content of the tutorial
@@ -88,23 +89,64 @@ Content of the tutorial
 
 A list of exercises is proposed with realistic robotic applications.
 
+------------------------------------------------------
 
-**Week 1: June  8 -- June 14**
+**Week 1: June 8 -- June 14**
 
-* Getting started with concepts of CP and IA
-* Static range-only localization
-* Static range-bearing localization
+.. image:: img/tuto_01.png
+   :align: right
+   :width: 200px
 
+* **Lesson A**: getting started with concepts of CP and IA
+* **Lesson B**: static range-only localization
+
+| During this first week, we will install the library and perform the **state estimation** of a static robot between some landmarks. For the moment, we will assume that the robot does not move and is only receiving **range-only data** from the landmarks.
+| This will be an introduction to :ref:`intervals <sec-manual-intervals>`, :ref:`constraints <sec-manual-contractors>` and :ref:`networks of contractors <sec-manual-cn>`.
+
+------------------------------------------------------
 
 **Week 2: June 15 -- June 21**
 
-* Dynamic range-only localization
-* Localization with data association
+.. image:: img/tuto_02.png
+   :align: right
+   :width: 200px
 
+* **Lesson C**: static range-bearing localization
+* **Lesson D**: dynamic range-only localization
+
+We will go a step further: now the landmarks are perceived with both **range and bearing data**. The resolution will involve new constraints, and a **decomposition** will be achieved.
+In the second part, we will make the robot move and see how we can handle **uncertainties on trajectories**. This will be done by solving the range-only problem of Lesson B, now in a dynamical context with **asynchronous measurements**. 
+
+------------------------------------------------------
 
 **Week 3: June 22 -- June 28**
 
-* Range-only SLAM
+.. image:: img/tuto_03.png
+   :align: right
+   :width: 200px
+
+* **Lesson E**: localization with data association
+
+Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see the `video presentation <https://www.youtube.com/watch?v=rkzouwuwo4I>`_).
+We will solve this problem with Tubex. The goal of this exercise is to develop **our own contractor**.
+
+------------------------------------------------------
+
+**Week 4: June 29 -- July 5**
+
+.. image:: img/tuto_04.png
+   :align: right
+   :width: 200px
+
+* **Lesson F**: range-only SLAM
+* **Lesson G**: loop detection in robot trajectories
+
+| We will end this tutorial with a **range-only SLAM** problem and see how Tubex can be used for **online missions**.
+| The last part of this section will focus on new tools to detect and **prove loops** in robot trajectories from the only knowledge of proprioceptive measurements such as velocities.
+
+------------------------------------------------------
+
+
 
 
 Organizers
