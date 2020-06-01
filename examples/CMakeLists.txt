@@ -85,6 +85,13 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
            COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_03_static_rangeonly/static_rangeonly.py 0)
   endif()
 
+  add_test(NAME cpp_tuto_04
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_04_static_rangebearing/build/static_rangebearing 0)
+  if(WITH_PYTHON)
+  add_test(NAME py_tuto_04
+           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_04_static_rangebearing/static_rangebearing.py 0)
+  endif()
+
   if(WITH_CAPD)
     # Lie group
     add_test(NAME lie_05
