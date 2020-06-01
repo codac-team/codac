@@ -3,7 +3,7 @@
 # ==================================================================
 
   cmake_minimum_required(VERSION 3.0.2)
-  project(tubex_tuto_01 LANGUAGES CXX)
+  project(03_static_rangebearing LANGUAGES CXX)
 
 # Adding IBEX
 

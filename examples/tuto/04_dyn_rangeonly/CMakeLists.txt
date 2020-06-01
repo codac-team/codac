@@ -3,7 +3,7 @@
 # ==================================================================
 
   cmake_minimum_required(VERSION 3.0.2)
-  project(static_rangebearing LANGUAGES CXX)
+  project(04_dyn_rangeonly LANGUAGES CXX)
 
 # Adding IBEX
 

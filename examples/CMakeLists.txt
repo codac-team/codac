@@ -33,6 +33,43 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
 #                      CMAKE_ARGS ${CMAKE_ARGS}
 #                      INSTALL_COMMAND cmake -E echo "Skipping install step.")
 
+
+  # Tuto
+  add_test(NAME cpp_01_getting_started
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/01_getting_started/build/01_getting_started 0)
+  if(WITH_PYTHON)
+  add_test(NAME py_01_getting_started
+           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/01_getting_started/01_getting_started.py 0)
+  endif()
+
+  add_test(NAME cpp_02_static_rangeonly
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/02_static_rangeonly/build/02_static_rangeonly 0)
+  if(WITH_PYTHON)
+  add_test(NAME py_02_static_rangeonly
+           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/02_static_rangeonly/02_static_rangeonly.py 0)
+  endif()
+
+  add_test(NAME cpp_03_static_rangebearing
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/03_static_rangebearing/build/03_static_rangebearing 0)
+  if(WITH_PYTHON)
+  add_test(NAME py_03_static_rangebearing
+           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/03_static_rangebearing/03_static_rangebearing.py 0)
+  endif()
+
+  add_test(NAME cpp_04_dyn_rangeonly
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/04_dyn_rangeonly/build/04_dyn_rangeonly 0)
+  if(WITH_PYTHON)
+  add_test(NAME py_04_dyn_rangeonly
+           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/04_dyn_rangeonly/04_dyn_rangeonly.py 0)
+  endif()
+
+  add_test(NAME cpp_05_dyn_rangebearing
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing 0)
+  if(WITH_PYTHON)
+  add_test(NAME py_05_dyn_rangebearing
+           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/05_dyn_rangebearing/05_dyn_rangebearing.py 0)
+  endif()
+  
   # Basics
   #add_test(NAME basics_01
   #         COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/ex_01_arithmetic/build/tubex_basics_01 0)
@@ -69,28 +106,6 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_09_lissajous/build/tubex_rob_09 0)
   add_test(NAME rob_10
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_10_datasso/build/tubex_rob_10 0)
-
-  # Tuto
-  add_test(NAME cpp_tuto_01
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_01_getting_started/build/tubex_tuto_01 0)
-  if(WITH_PYTHON)
-  add_test(NAME py_tuto_01
-           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_01_getting_started/tubex_tuto_01.py 0)
-  endif()
-
-  add_test(NAME cpp_tuto_03
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_03_static_rangeonly/build/static_rangeonly 0)
-  if(WITH_PYTHON)
-  add_test(NAME py_tuto_03
-           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_03_static_rangeonly/static_rangeonly.py 0)
-  endif()
-
-  add_test(NAME cpp_tuto_04
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_04_static_rangebearing/build/static_rangebearing 0)
-  if(WITH_PYTHON)
-  add_test(NAME py_tuto_04
-           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tuto/ex_04_static_rangebearing/static_rangebearing.py 0)
-  endif()
 
   if(WITH_CAPD)
     # Lie group

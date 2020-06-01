@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "tubex_DataLoader.h"
 #include "tubex_Exception.h"
+#include "tubex_Tools.h"
 
 #define DATA_FILE_EXTENSION ".tubex"
 
@@ -68,15 +69,15 @@ namespace tubex
     assert(nb_landmarks >= 0);
 
     srand(time(NULL));
-    vector<Beacon> v_beacons;
+    vector<Beacon> v_landmarks;
     for(int i = 0 ; i < nb_landmarks ; i++)
     {
       double x = map_box[0].lb() + static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * map_box[0].diam();
       double y = map_box[1].lb() + static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * map_box[1].diam();
-      v_beacons.push_back(Beacon(x, y));
+      v_landmarks.push_back(Beacon(x, y));
     }
 
-    return v_beacons;
+    return v_landmarks;
   }
 
   vector<IntervalVector> DataLoader::generate_landmarks_boxes(const IntervalVector& map_box, int nb_landmarks)
@@ -107,7 +108,7 @@ namespace tubex
       Interval r = sqrt(ibex::pow(x[0]-random_map[i][0],2) + ibex::pow(x[1]-random_map[i][1],2));
       Interval a = ibex::atan2(random_map[i][1]-x[1], random_map[i][0]-x[0]) - x[2];
       
-      if(visi_range.intersects(r) && visi_angle.intersects(a)) // if the beacon is seen by the robot
+      if(visi_range.intersects(r) && visi_angle.intersects(a)) // if the landmark is seen by the robot
       {
         IntervalVector obs(2);
         obs[0] = r; obs[1] = a;
@@ -121,8 +122,8 @@ namespace tubex
   vector<IntervalVector> DataLoader::generate_observations(const Vector& x, const vector<Beacon>& map, bool random, const Interval& visi_range, const Interval& visi_angle)
   {
     vector<IntervalVector> map_boxes;
-    for(auto& beacon : map)
-      map_boxes.push_back(beacon.pos());
+    for(auto& landmark : map)
+      map_boxes.push_back(landmark.pos());
     return generate_observations(x, map_boxes, random, visi_range, visi_angle);
   }
   
@@ -130,48 +131,51 @@ namespace tubex
   {
     assert(x.size() >= 2);
     assert(nb_obs >= 0);
-    assert(map.size() > 0 || nb_obs == 0); // if no observation, no beacon needed
+    assert(map.size() > 0 || nb_obs == 0); // if no observation, no landmark needed
 
-    float dt = 0.001;
-    vector<IntervalVector> v_obs;
-
-    if(nb_obs == 0)
-      return v_obs;
+    Interval tdomain_ = x.tdomain() & tdomain;
+    float t_epsilon = tdomain_.diam() / 10000.;
 
     vector<Beacon> random_map(map);
 
-    Interval tdomain_ = x.tdomain() & tdomain;
-    for(double t = tdomain_.lb() ; t < tdomain_.ub()-dt ; t+= tdomain_.diam() / nb_obs)
+    int nb_attempts = 0;
+    vector<IntervalVector> v_obs;
+    do
     {
       if(random)
         std::random_shuffle(random_map.begin(), random_map.end());
 
-      for(size_t i = 0 ; i < random_map.size() ; i++)
-      {
+      double t = Tools::rand_in_bounds(Interval(tdomain_.lb(),tdomain_.ub()-t_epsilon));
+
+      for(size_t i = 0 ; i < random_map.size() ; i++) // looking for a landmark to observe
+      {        
         Interval t_(t);
         Interval r = sqrt(pow(x[0](t_) - random_map[i].pos()[0], 2) + pow(x[1](t_) - random_map[i].pos()[1], 2));
-        Interval heading = atan2(x[1](t+dt) - x[1](t_), x[0](t+dt) - x[0](t_));
+        Interval heading = atan2(x[1](t+t_epsilon) - x[1](t_), x[0](t+t_epsilon) - x[0](t_));
         Interval a = atan2(random_map[i].pos()[1] - x[1](t_), random_map[i].pos()[0] - x[0](t_)) - heading;
         
-        if(visi_range.intersects(r) && visi_angle.intersects(a)) // if the beacon is seen by the robot
+        if(visi_range.intersects(r) && visi_angle.intersects(a)) // if the landmark is seen by the robot
         {
-          IntervalVector obs(3);
+          IntervalVector obs(5);
           obs[0] = t; obs[1] = r; obs[2] = a;
+          obs[3] = random_map[i].pos_box()[0]; obs[4] = random_map[i].pos_box()[1];
           v_obs.push_back(obs);
           break;
         }
       }
-    }
+
+      nb_attempts++;
+    } while((int)v_obs.size() < nb_obs && nb_attempts < nb_obs*3);
     
     return v_obs;
   }
   
   vector<IntervalVector> DataLoader::generate_observations(const TrajectoryVector& x, const vector<IntervalVector>& map, int nb_obs, bool random, const Interval& visi_range, const Interval& visi_angle, const Interval& tdomain)
   {
-    vector<Beacon> map_beacons;
+    vector<Beacon> map_landmarks;
     for(auto& b : map)
-      map_beacons.push_back(Beacon(b));
-    return generate_observations(x, map_beacons, nb_obs, random, visi_range, visi_angle, tdomain);
+      map_landmarks.push_back(Beacon(b));
+    return generate_observations(x, map_landmarks, nb_obs, random, visi_range, visi_angle, tdomain);
   }
   
   vector<IntervalVector> DataLoader::generate_static_observations(const Vector& x, const vector<IntervalVector>& map, bool random, const Interval& visi_range, const Interval& visi_angle)

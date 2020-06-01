@@ -81,7 +81,7 @@ fig.smooth_tube_drawing(True)
 for i in range(0,3):
   fig.add_beacon(b[i], 0.2) # drawing beacons
   fig.draw_ring(b[i][0], b[i][1], y[i], "darkGray") # drawing range-only measurements
-  fig.draw_vehicle(t[i], x_truth, 0.7) # drawing robot position at t
+  fig.draw_vehicle(t[i], x_truth, size=0.7) # drawing robot position at t
 
 fig.show(0.)
 endDrawing()

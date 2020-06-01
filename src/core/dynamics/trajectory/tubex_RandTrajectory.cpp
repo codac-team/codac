@@ -9,6 +9,7 @@
  */
 
 #include "tubex_RandTrajectory.h"
+#include "tubex_Tools.h"
 
 using namespace std;
 using namespace ibex;
@@ -30,7 +31,7 @@ namespace tubex
 
       double t;
       for(t = tdomain.lb() ; t <= tdomain.ub() ; t+=timestep)
-        m_map_values[t] = (rand()/double(RAND_MAX))*bounds.diam()+bounds.lb();
+        m_map_values[t] = Tools::rand_in_bounds(bounds);
       m_tdomain = Interval(tdomain.lb(),t);
 
       truncate_tdomain(tdomain);

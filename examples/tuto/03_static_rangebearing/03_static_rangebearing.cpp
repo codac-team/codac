@@ -28,14 +28,15 @@ int main()
     int nb_landmarks = 1;
     IntervalVector map_area(2, Interval(-8.,8.));
     vector<IntervalVector> v_map = DataLoader::generate_landmarks_boxes(map_area, nb_landmarks);
+    
     // The following function generates a set of [range]x[bearing] values
     vector<IntervalVector> v_obs = DataLoader::generate_static_observations(x_truth, v_map, false);
 
     // Adding uncertainties on the measurements
-    for(auto& obs : v_obs) // for each observation:
+    for(auto& y : v_obs) // for each observation:
     {
-      obs[0].inflate(0.5); // range
-      obs[1].inflate(0.1); // bearing
+      y[0].inflate(0.3); // range
+      y[1].inflate(0.1); // bearing
     }
 
 
@@ -56,7 +57,7 @@ int main()
 
     ContractorNetwork cn;
 
-    for(int i = 0 ; i < nb_landmarks ; i++)
+    for(int i = 0 ; i < v_obs.size() ; i++)
     {
       // Intermediate variables
       Interval& alpha = cn.create_dom(Interval());
@@ -64,7 +65,7 @@ int main()
 
       cn.add(ctc_plus, {v_obs[i][1], heading, alpha});
       cn.add(ctc_minus, {v_map[i], x, d});
-      cn.add(pyibex::ctc::polar, {d, v_obs[i][0], alpha});
+      cn.add(ctc::polar, {d, v_obs[i][0], alpha});
     }
 
 
@@ -77,22 +78,22 @@ int main()
 
     vibes::beginDrawing();
 
-    VIBesFigMap fig_map("Map");
-    fig_map.set_properties(50, 50, 600, 600);
+    VIBesFigMap fig("Map");
+    fig.set_properties(50, 50, 600, 600);
 
     for(const auto& iv : v_map)
-      fig_map.add_beacon(iv.mid(), 0.2);
+      fig.add_beacon(iv.mid(), 0.2);
 
-    for(int i = 0 ; i < nb_landmarks ; i++)
+    for(auto& y : v_obs)
     {
-      fig_map.draw_pie(x_truth[0], x_truth[1], v_obs[i][0] | 0., heading+v_obs[i][1], "lightGray");
-      fig_map.draw_pie(x_truth[0], x_truth[1], v_obs[i][0], heading+v_obs[i][1], "gray");
+      fig.draw_pie(x_truth[0], x_truth[1], y[0] | 0., heading+y[1], "lightGray");
+      fig.draw_pie(x_truth[0], x_truth[1], y[0], heading + y[1], "gray");
     }
 
-    fig_map.draw_vehicle(x_truth, 1.); // last param: vehicle size
-    fig_map.draw_box(x); // estimated position
-    fig_map.show();
+    fig.draw_vehicle(x_truth, 0.5); // last param: vehicle size
+    fig.draw_box(x); // estimated position
+    fig.show();
 
     vibes::endDrawing();
-    return x.contains(x_truth) ? EXIT_SUCCESS : EXIT_FAILURE;
+    return x.contains(x_truth.subvector(0,1)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -13,6 +13,7 @@
 #include "tubex_Tools.h"
 
 using namespace std;
+using namespace ibex;
 
 namespace tubex
 {
@@ -43,5 +44,12 @@ namespace tubex
     ostringstream o;
     o << str << sep1 << id << sep2;
     return o.str();
+  }
+
+  double Tools::rand_in_bounds(const Interval& itv)
+  {
+    // The seed of the pseudo-random number generator is voluntarily initialized
+    // outside this function, on demand.
+    return rand()/double(RAND_MAX)*itv.diam()+itv.lb();
   }
 }

@@ -27,6 +27,7 @@ int main()
     int nb_landmarks = 3;
     IntervalVector map_area(2, Interval(-8.,8.));
     vector<IntervalVector> v_map = DataLoader::generate_landmarks_boxes(map_area, nb_landmarks);
+    
     // The following function generates a set of [range]x[bearing] values
     vector<IntervalVector> v_obs = DataLoader::generate_static_observations(x_truth, v_map, false);
 
@@ -63,19 +64,19 @@ int main()
 
     vibes::beginDrawing();
 
-    VIBesFigMap fig_map("Map");
-    fig_map.set_properties(50, 50, 600, 600);
+    VIBesFigMap fig("Map");
+    fig.set_properties(50, 50, 600, 600);
 
     for(const auto& iv : v_map)
-      fig_map.add_beacon(iv.mid(), 0.2);
+      fig.add_beacon(iv.mid(), 0.2);
 
     for(int i = 0 ; i < nb_landmarks ; i++)
-      fig_map.draw_ring(v_map[i][0].mid(), v_map[i][1].mid(), v_range[i], "gray");
+      fig.draw_ring(v_map[i][0].mid(), v_map[i][1].mid(), v_range[i], "gray");
 
-    fig_map.draw_vehicle(x_truth, 1.); // last param: vehicle size
-    fig_map.draw_box(x); // estimated position
-    fig_map.show();
+    fig.draw_vehicle(x_truth, 0.5); // last param: vehicle size
+    fig.draw_box(x); // estimated position
+    fig.show();
 
     vibes::endDrawing();
-    return x.contains(x_truth) ? EXIT_SUCCESS : EXIT_FAILURE;
+    return x.contains(x_truth.subvector(0,1)) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

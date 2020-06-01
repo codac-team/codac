@@ -14,9 +14,9 @@ import sys # only for checking if this example still works
 x_truth = [0,0,math.pi/6] # (x,y,heading)
 
 # Creating random map of landmarks
-nb_landmarks = 3
 map_area = IntervalVector(2, [-8,8])
-v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks)
+v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks = 3)
+
 # The following function generates a set of [range]x[bearing] values
 v_obs = DataLoader.generate_static_observations(x_truth, v_map, False)
 
@@ -41,7 +41,7 @@ x = IntervalVector(2)
 
 cn = ContractorNetwork()
 
-for i in range(0,nb_landmarks):
+for i in range(0,len(v_range)):
   cn.add(ctc.dist, [x, v_map[i], v_range[i]])
 
 
@@ -54,21 +54,21 @@ cn.contract()
 
 beginDrawing()
 
-fig_map = VIBesFigMap("Map")
-fig_map.set_properties(50, 50, 600, 600)
+fig = VIBesFigMap("Map")
+fig.set_properties(50, 50, 600, 600)
 
 for iv in v_map:
-  fig_map.add_beacon(iv.mid(), 0.2)
+  fig.add_beacon(iv.mid(), 0.2)
 
-for i in range(0,nb_landmarks):
-  fig_map.draw_ring(v_map[i][0].mid(), v_map[i][1].mid(), v_range[i], "gray")
+for i in range(0,len(v_range)):
+  fig.draw_ring(v_map[i][0].mid(), v_map[i][1].mid(), v_range[i], "gray")
 
-fig_map.draw_vehicle(x_truth, 1.) # last param: vehicle size
-fig_map.draw_box(x) # estimated position
-fig_map.show()
+fig.draw_vehicle(x_truth, size=0.5)
+fig.draw_box(x) # estimated position
+fig.show()
 
 endDrawing()
 
 
 # Checking if this example still works:
-sys.exit(0 if x.contains(x_truth) else 1) # todo: x.contains(x_truth)
+sys.exit(0 if x.contains(x_truth[0:1]) else 1) # todo: x.contains(x_truth)

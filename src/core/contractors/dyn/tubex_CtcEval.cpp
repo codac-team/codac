@@ -277,9 +277,8 @@ namespace tubex
 
               CtcDeriv ctc_deriv;
               ctc_deriv.contract(*s_y, *s_w);
-              // If the number of slices has not changed, the next slice should exist:
-              assert(s_y->next_slice() != NULL && s_w->next_slice() != NULL);
-              ctc_deriv.contract(*s_y->next_slice(), *s_w->next_slice());
+              if(s_y->next_slice() != NULL && s_w->next_slice() != NULL)
+                ctc_deriv.contract(*s_y->next_slice(), *s_w->next_slice());
 
             // 2. Merge
 
