@@ -22,7 +22,7 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
 Using intervals for handling uncertainties
 ------------------------------------------
 
-The values involved in robotic problems will be represented by sets. This allows to represent in the very same structure both the value (a measurement, or a model parameter) together with the related uncertainty. Therefore, a measurement :math:`x` will be handled by a set, for instance an interval, denoted between brackets: :math:`[x]`. :math:`[x]` is made of two reals bounds, :math:`x^-` and :math:`x^+`, and we say that a value :math:`x` belongs to :math:`[x]=[x^-,x^+]` iff :math:`x^-\leqslant x\leqslant x^+`.
+The values involved in robotic problems will be represented by **sets**. This allows to hold in the very same structure both the value (a measurement, or a model parameter) together with the related uncertainty. Therefore, a measurement :math:`x` will be handled by a set, more precisely an **interval**, denoted between brackets: :math:`[x]`. :math:`[x]` is made of two real bounds, :math:`x^-` and :math:`x^+`, and we say that a value :math:`x` belongs to :math:`[x]=[x^-,x^+]` iff :math:`x^-\leqslant x\leqslant x^+`.
 
 This can be extended to other types of values such as vectors, matrices or trajectories. Then,
 
@@ -30,14 +30,14 @@ This can be extended to other types of values such as vectors, matrices or traje
 * vectors :math:`\mathbf{x}` of :math:`\mathbb{R}^n` will be enclosed in interval-vectors (also called boxes): :math:`[\mathbf{x}]`
 * later on, trajectories :math:`x(t)` will belong to tubes: :math:`[x](t)`
 
-The initial definition of the bounds of these sets will be done according to the amount of uncertainties we are considering. For measurements, we will rely on the datasheet of the sensor to define for instance that a measurement :math:`y` will be represented by the interval :math:`[y − 2\sigma, y + 2\sigma]`, where :math:`\sigma` is the standard deviation coming from sensors specifications. In this case, we assume that the interval :math:`[y]` is garanteed to contain the actual but unknown value with a 95% confidence rate.
+The initial definition of the bounds of these sets will be done according to the **amount of uncertainties** we are considering. For measurements, we will rely on the datasheet of the sensor to define for instance that a measurement :math:`y` will be represented by the interval :math:`[y − 2\sigma, y + 2\sigma]`, where :math:`\sigma` is the standard deviation coming from sensors specifications. In this case, we assume that the interval :math:`[y]` is **garanteed to contain** the actual but unknown value with a 95% confidence rate.
 
-The main advantage of this representation is that we will be able to apply lot of operations on these sets and that the computations will be **reliable**. This means that we will never lose a feasible solution in the initial sets throughout the operations we will perform. This is done by performing the computations on the bounds of the sets. For instance, the difference of two intervals is defined by: :math:`[x]+[y]=[x^--y^+,x^++y^-]`.
+The main advantage of this representation is that we will be able to apply lot of **reliable** operations on these sets while preserving the actual but unknown values. This means that we will never lose a feasible solution in the initial sets throughout the operations we will perform. This is done by performing the computations on the bounds of the sets. For instance, the difference of two intervals is defined by: :math:`[x]-[y]=[x^--y^+,x^++y^-]`.
 
-In addition, when dealing with non-linear functions, we will not have to make linearizations.
-Sometimes, when functions are monotonic, the computation is simple: :math:`\exp([x])=[\exp(x^-),\exp(x^+)]`. Otherwise, several algorithms and libraries exist to allow any mathematical operations on intervals such as :math:`\cos([x])`,  :math:`\sqrt([x])`, *etc*. 
+In addition, when dealing with **non-linear functions**, we will not have to make linearizations.
+Sometimes, when functions are monotonic, the computation is simple: :math:`\exp([x])=[\exp(x^-),\exp(x^+)]`. Otherwise, several algorithms and libraries exist to allow any mathematical operations on intervals such as :math:`\cos([x])`,  :math:`\sqrt{([x])}`, *etc*. 
 
-The asset of reliability coming with interval analysis will help us to estimate difficult solutions and make proofs.
+The asset of reliability coming with interval analysis will help us to estimate difficult solutions and **make proofs**.
 
 
 Hello Interval Analysis!
@@ -109,6 +109,7 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
     .. code-tab:: py
 
       x[1] = Interval(0,10)                       # updates to [x]=[-1,3]×[0,10]
+
 
 .. admonition:: Technical documentation
 
@@ -182,45 +183,50 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
 
   **A.4.** Create a view with:
 
-    .. tabs::
+  .. tabs::
 
-      .. code-tab:: c++
+    .. code-tab:: c++
 
-        vibes::beginDrawing();
-        VIBesFigMap fig("Map");
-        fig.set_properties(50, 50, 400, 400); // position and size
-        
-        // ... draw objects here
-        
-        fig.show(); // display all items of the figure
-        vibes::endDrawing();
+      vibes::beginDrawing();
+      VIBesFigMap fig("Map");
+      fig.set_properties(50, 50, 400, 400); // position and size
       
-      .. code-tab:: py
+      // ... draw objects here
+      
+      fig.show(); // display all items of the figure
+      vibes::endDrawing();
+    
+    .. code-tab:: py
 
-        beginDrawing()
-        fig = VIBesFigMap("Map")
-        fig.set_properties(50, 50, 400, 400) # position and size
-        
-        # ... draw objects here
-        
-        fig.show() # display all items of the figure
-        endDrawing()
+      beginDrawing()
+      fig = VIBesFigMap("Map")
+      fig.set_properties(50, 50, 400, 400) # position and size
+      
+      # ... draw objects here
+      
+      fig.show() # display all items of the figure
+      endDrawing()
 
-  **A.5.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box()`` method. Draw the computed interval range with the ``fig.draw_circle(x, y, rad)`` method. Is the result reliable, according to the sets :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]`?
+  **A.5.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box()`` method. Draw the computed interval range with ``fig.draw_circle(x, y, rad)``. Is the result reliable, according to the sets :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]`?
+
+
+.. admonition:: Technical documentation
+
+  For full details about graphical features, please read the :ref:`sec-manual-vibes` page of the user manual.
 
 
 Contractors, :math:`\mathcal{C}([x])`
 -------------------------------------
 
-You just had an initial overview of what is Interval Analysis. Now, we will introduce concepts from Constraint Programming and see how the two approaches can be coupled for solving problems.
+This was an initial overview of what is Interval Analysis. Now, we will introduce concepts from Constraint Programming and see how the two approaches can be coupled for solving problems.
 
 In robotics, **constraints** are coming from the equations of the robot. They can be for instance the evolution function :math:`\mathbf{f}` or the observation equation with :math:`\mathbf{g}`. In the case of :abbr:`SLAM (Simultaneous Localization And Mapping)`, we may also define a constraint to express the inter-relations between different states :math:`\mathbf{x}_1`, :math:`\mathbf{x}_2` at times :math:`t_1`, :math:`t_2`, for instance when a landmark has been seen two times.
 
-In the Constraint Programming community, we apply constraints and **domains** that represent sets of feasible values. The previously mentionned sets (intervals, boxes, tubes) will be used as domains. 
+Now, we want to apply the constraints in order to solve our problem. In the Constraint Programming community, we apply constraints on **domains** that represent sets of feasible values. The previously mentionned sets (intervals, boxes, tubes) will be used as domains. 
 
-Now, we want to apply the constraints in order to solve our problem. For this purpose, we will use **contractors** to implement constraints on sets. They are mathematical operators used to *contract* (reduce) a set, for instance a box, without losing any feasible solution. This way, contractors can be applied safely any time we want on our domains.
+For this purpose, we will use **contractors** to implement constraints on sets. They are mathematical operators used to *contract* (reduce) a set, for instance a box, without losing any feasible solution. This way, contractors can be applied safely any time we want on our domains.
 
-In Tubex, the contractors are also defined by C++/Python objects and are prefixed with ``Ctc``. For this lesson, we will use the ``CtcFunction`` class to define a contractor according to a function :math:`f`. Note that the contractors aim at solving constraints in the form :math:`f(\mathbf{x})=0`. This contractor can be instantiated with a reference to a ``Function`` object defining the constraint. For instance, the simple constraint :math:`(x+y=a)` is expressed as :math:`f(x,y,a)=x+y-a=0`, and can be implemented as a contractor :math:`\mathcal{C}_+` with:
+In Tubex, the contractors are also defined by C++/Python objects and are prefixed with ``Ctc``. For this lesson, we will use the ``CtcFunction`` class to define a contractor according to a function :math:`f`. Note that the resulting contractor will aim at solving a constraint in the form :math:`f(\mathbf{x})=0`. This contractor has to be instantiated from a ``Function`` object defining the constraint. For instance, the simple constraint :math:`(x+y=a)` is expressed as :math:`f(x,y,a)=x+y-a=0`, and can be implemented as a contractor :math:`\mathcal{C}_+` with:
 
 .. tabs::
 
@@ -230,13 +236,13 @@ In Tubex, the contractors are also defined by C++/Python objects and are prefixe
 
   .. code-tab:: py
 
-    ctc_add = CtcFunction(Function("x", "y", "a", "x+y-a"));
+    ctc_add = CtcFunction(Function("x", "y", "a", "x+y-a"))
 
 .. admonition:: Exercise
 
   **A.6.** Define a contractor :math:`\mathcal{C}_\textrm{dist}` related to the distance constraint between two 2d positions :math:`\mathbf{x}` and :math:`\mathbf{b}\in\mathbb{R}^2`. We will use the distance function previously defined, but in the form :math:`f(\mathbf{x},\mathbf{b},d)=0`.
 
-The contractor is then simply used in a **Contractor Network** (CN) that applies constraints on different variables for solving a problem. For instance, we can use the previously defined :math:`\mathcal{C}_+` as:
+The contractor is then simply added to a **Contractor Network** (CN) that will manage the constraints on the different variables for solving the problem. For instance, we can use the previously defined :math:`\mathcal{C}_+` as:
 
 .. tabs::
 
@@ -269,7 +275,7 @@ The contractor is then simply used in a **Contractor Network** (CN) that applies
 .. admonition:: Exercise
 
   | **A.7.** Define a Contractor Network with the :math:`\mathcal{C}_\textrm{dist}` object you have created and apply it on some boxes :math:`[\mathbf{b}^i]`.
-  | Check the results with :math:`\mathcal{C}_\textrm{dist}([x_1],[x_2],[b^i_1],[b^i_2],[r])`, :math:`i\in\{1,2,3\}` and 
+  | Check the results with :math:`\mathcal{C}_\textrm{dist}([\mathbf{x}],[\mathbf{b}^i],[r])`, :math:`i\in\{1,2,3\}` and 
   
   * :math:`[r]=[7,8]`
   * :math:`[\mathbf{x}]=[0,0]^2`
@@ -283,7 +289,12 @@ The contractor is then simply used in a **Contractor Network** (CN) that applies
   .. figure:: img/ctc_dist.png
     :width: 500px
 
+  As you can see, the four domains have been contracted after the ``.contract()`` method: even the bounded range :math:`[r]` has been reduced thanks to the knowledge provided by the boxes. In Constraint Programming, we only define the constraints of the problem and let the resolution propagate the information as much as possible.
+
+
+We now have all the material to compute a solver for state estimation in the next section.
+
 
 .. rubric:: Footnotes
 
-.. [#f1] C++ objects originates from the `IBEX library <http://www.ibex-lib.org>`_, the Python counterpart comes from `pyIbex <http://benensta.github.io/pyIbex>`_
+.. [#f1] C++ objects originates from the `IBEX library <http://www.ibex-lib.org>`_, the Python counterpart comes from `pyIbex <http://benensta.github.io/pyIbex>`_.

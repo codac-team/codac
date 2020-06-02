@@ -14,16 +14,16 @@ import sys # only for checking if this example still works
 x_truth = [0,0,math.pi/6] # (x,y,heading)
 
 # Creating random map of landmarks
-map_area = IntervalVector(2, [-8,8])
+map_area = IntervalVector(2, [-6,6])
 v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks = 3)
 
 # The following function generates a set of [range]x[bearing] values
 v_obs = DataLoader.generate_static_observations(x_truth, v_map, False)
 
-# Generating range-only observations of these landmarks
+# We keep range-only observations from v_obs, and add uncertainties
 v_range = []
 for obs in v_obs:
-  r = obs[0].inflate(0.1) # adding uncertainties
+  r = obs[0].inflate(0.1) # adding uncertainties: [-0.1,0.1]
   v_range.append(r)
 
 
@@ -64,7 +64,7 @@ for i in range(0,len(v_range)):
   fig.draw_ring(v_map[i][0].mid(), v_map[i][1].mid(), v_range[i], "gray")
 
 fig.draw_vehicle(x_truth, size=0.5)
-fig.draw_box(x) # estimated position
+#fig.draw_box(x) # estimated position
 fig.show()
 
 endDrawing()

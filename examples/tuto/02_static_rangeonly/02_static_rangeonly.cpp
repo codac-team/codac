@@ -31,10 +31,10 @@ int main()
     // The following function generates a set of [range]x[bearing] values
     vector<IntervalVector> v_obs = DataLoader::generate_static_observations(x_truth, v_map, false);
 
-    // Generating range-only observations of these landmarks
+    // We keep range-only observations from v_obs, and add uncertainties
     vector<Interval> v_range;
     for(auto& obs : v_obs)
-      v_range.push_back(obs[0].inflate(0.1)); // adding uncertainties
+      v_range.push_back(obs[0].inflate(0.1)); // adding uncertainties: [-0.1,0.1]
 
 
   /* =============== 1. Defining domains for our variables ================ */
