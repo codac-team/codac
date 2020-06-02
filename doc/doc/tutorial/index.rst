@@ -124,11 +124,13 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
    :align: right
    :width: 200px
 
-* **Lesson A**: getting started with concepts of CP and IA
+* **Lesson A**: getting started with concepts of CP and IA :ref:`s <sec-tuto-01>`
 * **Lesson B**: static range-only localization
 
 | During this first week, we will install the library and perform the **state estimation** of a static robot between some landmarks. For the moment, we will assume that the robot does not move and is only receiving **range-only data** from the landmarks.
 | This will be an introduction to :ref:`intervals <sec-manual-intervals>`, :ref:`constraints <sec-manual-contractors>` and :ref:`networks of contractors <sec-manual-cn>`.
+
+**Exercise to finish:** to be defined
 
 ------------------------------------------------------
 
@@ -144,6 +146,8 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 We will go a step further: now the landmarks are perceived with both **range and bearing data**. The resolution will involve new constraints, and a **decomposition** will be achieved.
 In the second part, we will make the robot move and see how we can handle **uncertainties on trajectories**. This will be done by solving the range-only problem of Lesson B, now in a dynamical context with **asynchronous measurements**. 
 
+**Exercise to finish:** dynamic range and bearing localization
+
 ------------------------------------------------------
 
 **Week 3: June 22 -- June 28**
@@ -156,6 +160,8 @@ In the second part, we will make the robot move and see how we can handle **unce
 
 Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see the `video presentation <https://www.youtube.com/watch?v=rkzouwuwo4I>`_).
 We will solve this problem with Tubex. The goal of this exercise is to develop **our own contractor**.
+
+**Exercise to finish:** data association with bearing only observations
 
 ------------------------------------------------------
 
@@ -170,6 +176,8 @@ We will solve this problem with Tubex. The goal of this exercise is to develop *
 
 | We will end this tutorial with a **range-only SLAM** problem and see how Tubex can be used for **online missions**.
 | The last part of this section will focus on new tools to detect and **prove loops** in robot trajectories from the only knowledge of proprioceptive measurements such as velocities.
+
+**Exercise to finish:** to be defined
 
 ------------------------------------------------------
 
