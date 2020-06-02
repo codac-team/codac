@@ -52,6 +52,12 @@ namespace tubex
 
   }
 
+  CtcFunction::CtcFunction(const Function& f)
+    : Ctc3BCid(*new CtcFwdBwd(*new Function(f), IntervalVector(f.image_dim(),0.)))
+  {
+
+  }
+
   CtcFunction::CtcFunction(const Function& f, const Domain& y)
     : Ctc3BCid(*new CtcFwdBwd(*new Function(f), y))
   {

@@ -194,6 +194,8 @@ void export_contractors(py::module& m){
           DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "f"_a)
       .def(py::init<const char *,const char *,const char *,const char *,const char *,const char *,const char *>(),
           DOCS_CTCFUNCTION_CTCFUNCTION_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR_CHAR, "x1"_a, "x2"_a, "x3"_a, "x4"_a, "x5"_a, "x6"_a, "f"_a)
+      .def(py::init<const ibex::Function &>(),
+          DOCS_CTCFUNCTION_CTCFUNCTION_FUNCTION, "f"_a)
       .def(py::init<const ibex::Function &,const ibex::Domain &>(),
           DOCS_CTCFUNCTION_CTCFUNCTION_FUNCTION_DOMAIN, "f"_a, "y"_a)
       .def(py::init<const ibex::Function &,const ibex::Interval &>(),

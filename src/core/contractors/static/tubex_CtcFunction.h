@@ -36,6 +36,7 @@ namespace tubex
       CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f);
       CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f);
       CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f);
+      CtcFunction(const ibex::Function& f);
       CtcFunction(const ibex::Function& f, const ibex::Domain& y);
       CtcFunction(const ibex::Function& f, const ibex::Interval& y);
       CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y);
