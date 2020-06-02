@@ -5,6 +5,8 @@ Static range-only localization
 
 We now have all the material to compute a solver for state estimation.
 
+.. contents:: Content of this lesson
+
 
 Problem statement
 -----------------
