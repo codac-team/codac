@@ -20,10 +20,13 @@ Start a C++ project
   
   int main()
   {
-    Interval tdomain(0.,10.);
-    Tube x(tdomain);
-  
-    cout << "My first tube: " << x << endl;
+    Tube x(Interval(0,10), 0.01, TFunction("cos(t)+abs(t-5)*[-0.1,0.1]"));
+
+    vibes::beginDrawing();
+    VIBesFigTube fig("My first tube");
+    fig.add_tube(&x, "x");
+    fig.show();
+    vibes::endDrawing();
   }
 
 For the compilation of your project, you can use CMake with the following file :file:`CMakeLists.txt` that you will add in the same directory:
@@ -91,3 +94,14 @@ Lastly, the project can be run with:
 .. code-block:: bash
 
   ./build/my_project
+
+| This script will create a simple tube and display it.
+| In order to visualize the tube, you need to launch the VIBes viewer independently. On Linux, you can for instance execute:
+
+.. code-block:: bash
+
+  VIBes-viewer
+
+If everything is well installed on your computer, you should see the following window appear:
+
+.. Figure:: img/helloworld.png

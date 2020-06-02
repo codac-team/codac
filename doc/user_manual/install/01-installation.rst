@@ -4,7 +4,7 @@
 Installing the Tubex library
 ############################
 
-The installation is supported on Linux systems. The current version of Tubex has not been tested on Windows.
+The installation is supported on Linux systems. The current version of Tubex will be soon available for Windows.
 Any support is more than welcome.
 
 .. contents::
@@ -23,16 +23,17 @@ where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the
 
 The ``✓`` configurations are officially supported at the moment:
 
-=================================  =============  =============  =============
-Python version                     Linux          Windows        macOS
-=================================  =============  =============  =============
-Python 3.4                         ✓              ?              ?
-Python 3.5                         ✓              ?              ?
-Python 3.6                         ✓              ?              ?
-Python 3.7                         ✓              ?              ?
-Python 3.8                         ✓              ?              ?
-=================================  =============  =============  =============
+=================================  =============  ===============  =============
+Python version                     Linux          Windows          macOS
+=================================  =============  ===============  =============
+Python 3.4                         ✓              soon available   ?
+Python 3.5                         ✓              soon available   ?
+Python 3.6                         ✓              soon available   ?
+Python 3.7                         ✓              soon available   ?
+Python 3.8                         ✓              soon available   ?
+=================================  =============  ===============  =============
 
+After the installation, please see the :ref:`sec-installation-graphics` section.
 
 
 Full installation for C++ use or developpers

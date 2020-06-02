@@ -53,10 +53,10 @@ Contact and registration
 The tutorial involves three platforms:
 
 * the `Tubex website <http://simon-rohou.fr/research/tubex-lib>`_ (here you are!)
-* the `MOOC platform <https://mooc.ensta-bretagne.fr/course>`_ where you can send your work and get the tutorial diploma
+* the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ where you can send your work and get the tutorial diploma
 * the `Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
 
-This tutorial is proposed to the participants of `the ICRA conference <https://www.icra2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
+This tutorial is proposed to the participants of `the ICRA conference <https://www.icra2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
 
 
 Diploma
@@ -88,6 +88,33 @@ Content of the tutorial
 -----------------------
 
 A list of exercises is proposed with realistic robotic applications.
+
+------------------------------------------------------
+
+**Week 0: June 1 -- June 7**
+
+Before starting the tutorial, you can read some words about the concepts of Constraint Programming and Interval Analysis. This will give you a first glimpse of the philosophy of this tutorial.
+
+.. toctree:: 
+  :maxdepth: 1
+
+  /tutorial/00-getting-started/01-introduction
+
+To get ready, you need to install the Tubex library on your computer.
+Please follow the related page of the manual to see how to do it:
+
+.. toctree:: 
+  :maxdepth: 1
+
+  /install/01-installation
+
+Then, depending on your preference between C++ or Python, you can run some *Hello World!* program to be sure everything is working well so far:
+
+.. toctree:: 
+  :maxdepth: 1
+
+  /install/02-start-py-project
+  /install/03-start-cpp-project
 
 ------------------------------------------------------
 
@@ -160,4 +187,4 @@ Organizers
   * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
   * Raphael Voges
 
-For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course>`_, so that other participants can reply or see posted answers. We will also answer you on `the Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ for very short questions.
+For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers. We will also answer you on `the Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ for very short questions.
