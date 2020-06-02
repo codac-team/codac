@@ -33,6 +33,8 @@ Python 3.7                         ✓              soon available   ?
 Python 3.8                         ✓              soon available   ?
 =================================  =============  ===============  =============
 
+If your configuration is missing in this table, please contact us. We may be able to make it available for Tubex.
+
 After the installation, please see the :ref:`sec-installation-graphics` section.
 
 
