@@ -35,6 +35,12 @@ Python 3.8                         ✓              soon available   ?
 
 If your configuration is missing in this table, please contact us. We may be able to make it available for Tubex.
 
+For updating your already installed version of Tubex, the procedure is:
+
+.. code-block:: bash
+
+  pip3 install tubex-lib --upgrade
+
 After the installation, please see the :ref:`sec-installation-graphics` section.
 
 
@@ -49,7 +55,7 @@ Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
 .. code-block:: bash
 
   # Requirements to compile IBEX
-  sudo apt-get install -y g++ gcc flex bison cmake
+  sudo apt-get install -y g++ gcc flex bison cmake git
   
   # Download the sources from Github
   git clone -b develop https://github.com/ibex-team/ibex-lib.git
@@ -168,17 +174,37 @@ Graphical tools
 `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ is a visualization system that aims at providing people working with intervals a way to display results (boxes, pavings), without worrying about GUI programming.
 Some methods have been implemented in Tubex in order to extend VIBes' features to tubes purposes.
 
-You can `download the VIBes viewer directly from the website <http://enstabretagnerobotics.github.io/VIBES/>`_, or install the last version from the sources available on `the GitHub development repository <https://github.com/ENSTABretagneRobotics/VIBES>`_. In this case, a fast installation can be made using the following command lines:
+You can `download the VIBes viewer directly from the official page <http://enstabretagnerobotics.github.io/VIBES/>`_ (click on the *Last Release* link).
 
-.. code-block:: bash
+.. admonition:: (optional) Get the very last version of VIBes from the sources
 
-  git clone https://github.com/ENSTABretagneRobotics/VIBES
-  cd VIBES/viewer ; mkdir build ; cd build ; cmake .. ; sudo make install
+  You can also install the last version from the sources available on `the GitHub development repository <https://github.com/ENSTABretagneRobotics/VIBES>`_.
+  Then, a fast installation can be made using the following command lines:
+
+  .. code-block:: bash
+    
+    sudo apt-get install qt5-default libqt5svg5-dev cmake git
+    git clone https://github.com/ENSTABretagneRobotics/VIBES
+    cd VIBES/viewer ; mkdir build ; cd build ; cmake .. ; sudo make install
+
+  Then, you can launch it from a terminal. For instance, on Linux systems:
+
+  .. code-block:: bash
+    
+    cd repository-where-vibes-is-installed/build/
+    ./VIBes-viewer
+
 
 .. \todo: test sudo make install and executable access
 
-Then, the VIBes viewer can be launch independently by executing:
+You can click on the icon to launch it, or use a terminal. For instance, on Linux systems:
 
 .. code-block:: bash
-
+  
   VIBes-viewer
+
+This will open the VIBes window, ready to display things:
+
+.. figure:: /manual/07-graphics/img/vibes_window.png
+
+Keep it open!

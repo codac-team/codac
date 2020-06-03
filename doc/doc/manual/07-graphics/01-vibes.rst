@@ -19,16 +19,9 @@ For the installation of VIBes, please refer to the installation page of this lib
 Launch VIBes
 ------------
 
-VIBes is an independent program that has to be launched together with the executable.
+VIBes is an independent program that has to be launched together with the executable of your project.
 
-For instance, on Linux systems:
-
-.. code-block:: bash
-  
-  cd repository-where-vibes-is-installed/
-  ./VIBes-viewer
-
-This will open the VIBes window, ready to display things:
+The first thing to do is launch VIBes. This will make appear the VIBes window, ready to display things (keep it open!):
 
 .. figure:: img/vibes_window.png
   
