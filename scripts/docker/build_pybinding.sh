@@ -5,12 +5,13 @@ set -e -x
 cd /io
 for PYBIN in /opt/python/cp3*/bin; do
   
-#  if [ "${PYBIN}" == "/opt/python/cp34-cp34m/bin" ]; then
-#    continue
-#  fi
+  #if [ "${PYBIN}" != "/opt/python/cp36-cp36m/bin" ]; then
+  #  continue
+  #fi
 
   "${PYBIN}/python" -m pip install --upgrade pip
-  "${PYBIN}/python" -m pip install --upgrade pyibex
+  #"${PYBIN}/python" -m pip install --upgrade pyibex
+  "${PYBIN}/python" -m pip install pyibex==1.8.1rc1
   mkdir -p build_dir && cd build_dir
   cmake3 -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" ..
   make -j
