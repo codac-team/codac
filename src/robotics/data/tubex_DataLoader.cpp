@@ -8,6 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <time.h>
 #include <algorithm>
 #include "tubex_DataLoader.h"
 #include "tubex_Exception.h"

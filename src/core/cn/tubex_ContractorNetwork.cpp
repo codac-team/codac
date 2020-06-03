@@ -94,7 +94,7 @@ namespace tubex
         Domain *vec_i = add_dom(Domain(v[i+start_index]));
 
         // Contractor to put them equal
-        Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::EQUALITY, {subvec_i, vec_i}));
+        Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::T_EQUALITY, {subvec_i, vec_i}));
         // todo: prevent from adding identical contractors if several calls of this method
 
         // Linking the component domains through this contractor of equality
@@ -122,7 +122,7 @@ namespace tubex
         Domain *vec_i = add_dom(Domain(iv[i+start_index]));
 
         // Contractor to put them equal
-        Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::EQUALITY, {subvec_i, vec_i}));
+        Contractor *ac_eq = add_ctc(Contractor(Contractor::Type::T_EQUALITY, {subvec_i, vec_i}));
         // todo: prevent from adding identical contractors if several calls of this method
 
         // Linking the component domains through this contractor of equality
@@ -172,13 +172,13 @@ namespace tubex
           {
             switch(dom.type())
             {
-              case Domain::Type::INTERVAL:
+              case Domain::Type::T_INTERVAL:
                 assert(n/static_ctc.nb_var == 1); // no array configuration with scalar type
-              case Domain::Type::SLICE:
+              case Domain::Type::T_SLICE:
                 v_dom_ptr.push_back(add_dom(dom));
                 break;
 
-              case Domain::Type::INTERVAL_VECTOR:
+              case Domain::Type::T_INTERVAL_VECTOR:
                 if(n/static_ctc.nb_var == 1) // heterogeneous case
                 {
                   // todo: ? add the vector itself, or each component as it is now:
@@ -193,13 +193,13 @@ namespace tubex
                 }
                 break;
 
-              case Domain::Type::TUBE:
+              case Domain::Type::T_TUBE:
                 assert(n/static_ctc.nb_var == 1); // no array configuration with scalar type
                 v_dom_ptr.push_back(add_dom(Domain(const_cast<Slice&>(*dom.tube().slice(k)))));
                 slices_nb = dom.tube().nb_slices();
                 break;
 
-              case Domain::Type::TUBE_VECTOR:
+              case Domain::Type::T_TUBE_VECTOR:
                 if(n/static_ctc.nb_var == 1) // heterogeneous case
                 {
                   for(int j = 0 ; j < dom.tube_vector().size() ; j++)
@@ -277,7 +277,7 @@ namespace tubex
 
           switch(dom.type())
           {
-            case Domain::Type::TUBE:
+            case Domain::Type::T_TUBE:
             {
               if(nb_slices == -1)
                 nb_slices = dom.tube().nb_slices();
@@ -286,7 +286,7 @@ namespace tubex
             }
             break;
 
-            case Domain::Type::TUBE_VECTOR:
+            case Domain::Type::T_TUBE_VECTOR:
             {            
               for(int j = 0 ; j < dom.tube_vector().size() ; j++)
               {
@@ -339,14 +339,14 @@ namespace tubex
     void ContractorNetwork::add_data(Tube& tube, double t, const Interval& y)
     {
       Domain *ad = add_dom(Domain(tube));
-      assert(ad->type() == Domain::Type::TUBE);
+      assert(ad->type() == Domain::Type::T_TUBE);
       ad->add_data(t, y, *this);
     }
     
     void ContractorNetwork::add_data(TubeVector& tube, double t, const IntervalVector& y)
     {
       Domain *ad = add_dom(Domain(tube));
-      assert(ad->type() == Domain::Type::TUBE_VECTOR);
+      assert(ad->type() == Domain::Type::T_TUBE_VECTOR);
       ad->add_data(t, y, *this);
     }
 
@@ -369,22 +369,22 @@ namespace tubex
 
         switch(dom->type())
         {
-          case Domain::Type::INTERVAL:
+          case Domain::Type::T_INTERVAL:
             // nothing to do
             break;
 
-          case Domain::Type::SLICE:
+          case Domain::Type::T_SLICE:
             // nothing to do
             break;
 
-          case Domain::Type::TUBE_VECTOR:
+          case Domain::Type::T_TUBE_VECTOR:
           {
             vector<Domain*> v_doms;
             v_doms.push_back(dom);
             for(int i = 0 ; i < dom->tube_vector().size() ; i++)
               v_doms.push_back(add_dom(Domain(dom->tube_vector()[i])));
 
-            Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT, v_doms));
+            Contractor *ac_component = add_ctc(Contractor(Contractor::Type::T_COMPONENT, v_doms));
 
             dom->add_ctc(ac_component); // main vector
             for(auto& dom_i : v_doms)
@@ -392,7 +392,7 @@ namespace tubex
           }
           break;
 
-          case Domain::Type::INTERVAL_VECTOR:
+          case Domain::Type::T_INTERVAL_VECTOR:
           {
             vector<Domain*> v_doms;
             v_doms.push_back(dom); // main vector
@@ -401,13 +401,13 @@ namespace tubex
             for(int i = 0 ; i < dom->interval_vector().size() ; i++)
               v_doms.push_back(add_dom(Domain::vector_component(*dom, i)));
 
-            Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT, v_doms));
+            Contractor *ac_component = add_ctc(Contractor(Contractor::Type::T_COMPONENT, v_doms));
             for(auto& dom_i : v_doms)
               dom_i->add_ctc(ac_component);
           }
           break;
 
-          case Domain::Type::TUBE:
+          case Domain::Type::T_TUBE:
           {
             vector<Domain*> v_doms;
             v_doms.push_back(dom);
@@ -415,7 +415,7 @@ namespace tubex
               v_doms.push_back(add_dom(Domain(*s)));
 
             // Dependencies tube <-> slice
-            Contractor *ac_component = add_ctc(Contractor(Contractor::Type::COMPONENT, v_doms));
+            Contractor *ac_component = add_ctc(Contractor(Contractor::Type::T_COMPONENT, v_doms));
 
             dom->add_ctc(ac_component);
             for(auto& dom_i : v_doms)
@@ -427,7 +427,7 @@ namespace tubex
               Domain *dom_i1 = add_dom(Domain(*s));
               Domain *dom_i2 = add_dom(Domain(*(s->next_slice())));
 
-              Contractor *ac_component_slices = add_ctc(Contractor(Contractor::Type::COMPONENT, {dom_i1, dom_i2}));
+              Contractor *ac_component_slices = add_ctc(Contractor(Contractor::Type::T_COMPONENT, {dom_i1, dom_i2}));
 
               dom_i1->add_ctc(ac_component_slices);
               dom_i2->add_ctc(ac_component_slices);

@@ -8,6 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <time.h>
 #include "tubex_RandTrajectory.h"
 #include "tubex_Tools.h"
 

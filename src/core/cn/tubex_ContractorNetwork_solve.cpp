@@ -8,6 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <time.h>
 #include "tubex_ContractorNetwork.h"
 
 using namespace std;
@@ -103,7 +104,7 @@ namespace tubex
     {
       // todo: propagate for EQUALITY contractors even in case of poor contractions?
 
-      if(ac->type() == Contractor::Type::COMPONENT)
+      if(ac->type() == Contractor::Type::T_COMPONENT)
         ctc_deque.push_back(ac);
 
       else

@@ -26,16 +26,16 @@ namespace tubex
 
   void CtcEval::contract(vector<Domain*>& v_domains)
   {
-    assert(v_domains[0]->type() == Domain::Type::INTERVAL);
+    assert(v_domains[0]->type() == Domain::Type::T_INTERVAL);
 
     if(v_domains.size() == 4) // full constraint with derivative
     {
       // Scalar case:
-      if(v_domains[1]->type() == Domain::Type::INTERVAL && v_domains[2]->type() == Domain::Type::TUBE && v_domains[3]->type() == Domain::Type::TUBE)
+      if(v_domains[1]->type() == Domain::Type::T_INTERVAL && v_domains[2]->type() == Domain::Type::T_TUBE && v_domains[3]->type() == Domain::Type::T_TUBE)
         contract(v_domains[0]->interval(), v_domains[1]->interval(), v_domains[2]->tube(), v_domains[3]->tube());
 
       // Vector case:
-      else if(v_domains[1]->type() == Domain::Type::INTERVAL_VECTOR && v_domains[2]->type() == Domain::Type::TUBE_VECTOR && v_domains[3]->type() == Domain::Type::TUBE_VECTOR)
+      else if(v_domains[1]->type() == Domain::Type::T_INTERVAL_VECTOR && v_domains[2]->type() == Domain::Type::T_TUBE_VECTOR && v_domains[3]->type() == Domain::Type::T_TUBE_VECTOR)
         contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector(), v_domains[3]->tube_vector());
 
       else
@@ -45,11 +45,11 @@ namespace tubex
     else if(v_domains.size() == 3) // simple evaluation without tube contraction
     {
       // Scalar case:
-      if(v_domains[1]->type() == Domain::Type::INTERVAL && v_domains[2]->type() == Domain::Type::TUBE)
+      if(v_domains[1]->type() == Domain::Type::T_INTERVAL && v_domains[2]->type() == Domain::Type::T_TUBE)
         contract(v_domains[0]->interval(), v_domains[1]->interval(), v_domains[2]->tube());
 
       // Vector case:
-      else if(v_domains[1]->type() == Domain::Type::INTERVAL_VECTOR && v_domains[2]->type() == Domain::Type::TUBE_VECTOR)
+      else if(v_domains[1]->type() == Domain::Type::T_INTERVAL_VECTOR && v_domains[2]->type() == Domain::Type::T_TUBE_VECTOR)
         contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector());
 
       else

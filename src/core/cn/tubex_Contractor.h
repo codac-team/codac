@@ -34,7 +34,7 @@ namespace tubex
   {
     public:
 
-      enum class Type { COMPONENT, EQUALITY, IBEX, TUBEX };
+      enum class Type { T_COMPONENT, T_EQUALITY, T_IBEX, T_TUBEX };
 
       Contractor(Type type, const std::vector<Domain*>& v_domains);
       Contractor(ibex::Ctc& ctc, const std::vector<Domain*>& v_domains);

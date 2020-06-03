@@ -33,8 +33,8 @@ namespace tubex
   {
     public:
 
-      enum class Type { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
-      enum class MemoryRef { DOUBLE, INTERVAL, VECTOR, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
+      enum class Type { T_INTERVAL, T_INTERVAL_VECTOR, T_SLICE, T_TUBE, T_TUBE_VECTOR };
+      enum class MemoryRef { M_DOUBLE, M_INTERVAL, M_VECTOR, M_INTERVAL_VECTOR, M_SLICE, M_TUBE, M_TUBE_VECTOR };
 
       Domain();
       Domain(const Domain& ad);

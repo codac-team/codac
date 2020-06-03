@@ -35,7 +35,7 @@ namespace tubex
       #endif
 
       for(const auto& added_ctc: m_v_ctc)
-        if(added_ctc->type() == Contractor::Type::IBEX && &added_ctc->ibex_ctc() == &ctc)
+        if(added_ctc->type() == Contractor::Type::T_IBEX && &added_ctc->ibex_ctc() == &ctc)
         {
           added_ctc->set_name(name);
           #ifndef NDEBUG
@@ -53,7 +53,7 @@ namespace tubex
       #endif
 
       for(const auto& added_ctc: m_v_ctc)
-        if(added_ctc->type() == Contractor::Type::TUBEX && &added_ctc->tubex_ctc() == &ctc)
+        if(added_ctc->type() == Contractor::Type::T_TUBEX && &added_ctc->tubex_ctc() == &ctc)
         {
           added_ctc->set_name(name);
           #ifndef NDEBUG
@@ -98,7 +98,7 @@ namespace tubex
       // Subgraph for clustering components of a same vector
       for(const auto dom : m_v_domains)
       {
-        if(dom->type() == Domain::Type::INTERVAL_VECTOR)
+        if(dom->type() == Domain::Type::T_INTERVAL_VECTOR)
         {
           dot_file << endl;
           dot_file << "  subgraph cluster_" << Tools::add_int("dom",dom->id()) << " {" << endl;
@@ -119,7 +119,7 @@ namespace tubex
           // Adding their component-contractor
           if(one_component != NULL) // todo: transform it as an assert
           for(const auto ctc : m_v_ctc)
-            if(ctc->type() == Contractor::Type::COMPONENT)
+            if(ctc->type() == Contractor::Type::T_COMPONENT)
               for(const auto& dom : ctc->domains())
                 if(dom == one_component)
                 {
@@ -134,7 +134,7 @@ namespace tubex
       // Subgraphs for tubes and their slices
       for(const auto dom : m_v_domains)
       {
-        if(dom->type() == Domain::Type::TUBE)
+        if(dom->type() == Domain::Type::T_TUBE)
         {
           dot_file << endl;
           dot_file << "  " << Tools::add_int("subgraph cluster_tube",dom->id()) << " {" << endl;
@@ -146,17 +146,17 @@ namespace tubex
           {
             for(const auto& dom_i : ctc->domains())
             {
-              if(dom_i != dom && dom_i->type() != Domain::Type::SLICE)
+              if(dom_i != dom && dom_i->type() != Domain::Type::T_SLICE)
                 break; // we are not dealing with the slice-component contractor
 
               // At this point we are dealing with either the tube or its slices
-              if(dom_i->type() == Domain::Type::SLICE)
+              if(dom_i->type() == Domain::Type::T_SLICE)
               {
                 for(const auto& ctc_dom_i : dom_i->contractors())
-                  if(ctc_dom_i->type() == Contractor::Type::COMPONENT
+                  if(ctc_dom_i->type() == Contractor::Type::T_COMPONENT
                     && ctc_dom_i->domains().size() == 2
-                    && ((ctc_dom_i->domains()[0] == dom_i && ctc_dom_i->domains()[1]->type() == Domain::Type::SLICE) ||
-                        (ctc_dom_i->domains()[1] == dom_i && ctc_dom_i->domains()[0]->type() == Domain::Type::SLICE)))
+                    && ((ctc_dom_i->domains()[0] == dom_i && ctc_dom_i->domains()[1]->type() == Domain::Type::T_SLICE) ||
+                        (ctc_dom_i->domains()[1] == dom_i && ctc_dom_i->domains()[0]->type() == Domain::Type::T_SLICE)))
                 dot_file << Tools::add_int("ctc",ctc_dom_i->id()) + "; "; // component contractor linking slices
               }
 
