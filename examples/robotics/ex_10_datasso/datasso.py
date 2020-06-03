@@ -1,8 +1,6 @@
-# 
 # tubex-lib - Examples
 # Set-membership state estimation by solving data association 
 # ----------------------------------------------------------------------------
-#
 # Example from the paper "Set-membership state estimation by solving data association"
 # Simon Rohou, Benoît Desrochers, Luc Jaulin
 # ICRA 2020, Paris
@@ -28,6 +26,7 @@ state_truth = TrajectoryVector(tdomain, \
 # Sets of trajectories
 
 dt = 0.01 # tube timestep
+state_truth[2].sample(dt).make_continuous()
 
 x = TubeVector(tdomain, dt, 2) # unbounded 2d tube vector
 
@@ -65,21 +64,37 @@ m = [IntervalVector(2)] * len(v_obs) # unknown association
 
 # =========== CUSTOM-BUILT CONTRACTORS ===========
 
-ctc_plus = CtcFunction("a", "b", "c", "a=b+c") # algebraic constraint a=b+c
-ctc_minus = CtcFunction("a", "b", "c", "a=b-c") # algebraic constraint a=b-c
+ctc_plus = CtcFunction(Function("a", "b", "c", "a-(b+c)")) # algebraic constraint a=b+c
+ctc_minus = CtcFunction(Function("a", "b", "c", "a-(b-c)")) # algebraic constraint a=b-c
 ctc_constell = CtcConstell(v_map) # constellation constraint
 
 
 # =========== CONTRACTOR NETWORK ===========
 
+x0 = IntervalVector(state_truth(tdomain.lb())[0:2])
+#x0.inflate(10)
+x.set(x0,tdomain.lb())
+
+xf = IntervalVector(state_truth(tdomain.ub())[0:2])
+#xf.inflate(10)
+x.set(xf,tdomain.ub())
+
 cn = ContractorNetwork()
+cn.add(ctc.deriv, [x, v])
 
 for i in range (0,len(v_obs)):
-
+  
   # Measurement i
-  t  = v_obs[i][0] # time
-  y1 = v_obs[i][1] # range
-  y2 = v_obs[i][2] # bearing
+  t  = Interval(v_obs[i][0]) # time
+  y1 = Interval(v_obs[i][1]) # range
+  y2 = Interval(v_obs[i][2]) # bearing
+
+  #t.set_empty()
+
+  t.inflate(0.1)
+  t&=tdomain
+  y1.inflate(1)
+  y2.inflate(1)
 
   # Intermediate variables:
   psi = cn.create_dom(Interval()) # robot heading
@@ -89,26 +104,29 @@ for i in range (0,len(v_obs)):
   
   cn.add(ctc_constell, [m[i]])
   cn.add(ctc_minus, [d, m[i], p])
-  cn.add(ctc_plus, [a, psi, v_obs[i][2]])
-  cn.add(ctc.polar, [d, v_obs[i][1], a])
-  cn.add(ctc.eval, [v_obs[i][0], p, x, v])
-  cn.add(ctc.eval, [v_obs[i][0], psi, heading])
+  cn.add(ctc_plus, [a, psi, y2])
+  cn.add(ctc.polar, [d, y1, a])
+  cn.add(ctc.eval, [t, p, x, v])
+  cn.add(ctc.eval, [t, psi, heading])
 
-#cn.set_fixedpoint_ratio(0)
 cn.contract(True)
-
 
 # =========== GRAPHICS ===========
 
 beginDrawing()
 
+fig_heading = VIBesFigTube("heading")
+fig_heading.add_tube(heading, "heading")
+fig_heading.add_trajectory(state_truth[2], "heading*")
+fig_heading.show()
+
 fig_map = VIBesFigMap("Map")
 fig_map.set_properties(1450, 50, 1000, 600)
 fig_map.add_tube(x, "x", 0, 1)
 fig_map.add_trajectory(state_truth, "x*", 0, 1, 2, "blue")
-#fig_map.add_observations(v_obs, state_truth)
-#for b in v_map:
-#  fig_map.add_beacon(b.inflate(2))
+fig_map.add_observations(v_obs, state_truth)
+for b in v_map:
+  fig_map.add_beacon(b.inflate(2))
 fig_map.smooth_tube_drawing(True)
 fig_map.show()
 fig_map.axis_limits(-340, 340, -1, 1, True)
