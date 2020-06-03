@@ -1,4 +1,4 @@
-from pyibex import Interval, IntervalVector
+from pyibex import Interval, IntervalVector, Function
 from pyibex.geometry import CtcPolar
 from tubex_lib.tube import *
 

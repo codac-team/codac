@@ -28,7 +28,7 @@ Definition
     .. code-tab:: c++
 
       // For the constraint f(x)=0
-      CtcFunction ctc_f("<var1>", "<var2...>", "<expr>");
+      CtcFunction ctc_f(Function("<var1>", "<var2...>", "<expr>"));
       ctc_f.contract(x);
 
       // For the constraint f(x)\in[y]
@@ -39,7 +39,7 @@ Definition
     .. code-tab:: py
 
       # For the constraint f(x)=0
-      ctc_f = CtcFunction("<var1>", "<var2...>", "<expr>")
+      ctc_f = CtcFunction(Function("<var1>", "<var2...>", "<expr>"))
       ctc_f.contract(x)
 
       # For the constraint f(x)\in[y]
@@ -78,11 +78,11 @@ A contractor for the constraint :math:`f(\mathbf{x})=0` can be built by:
 
   .. code-tab:: c++
 
-    CtcFunction ctc_f("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2");
+    CtcFunction ctc_f(Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"));
 
   .. code-tab:: py
 
-    ctc_f = CtcFunction("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2")
+    ctc_f = CtcFunction(Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"))
 
 | The first parameters are the variables names. The last one is the expression of :math:`f`.
 | Note that it is also possible to write vector variables:
@@ -91,11 +91,11 @@ A contractor for the constraint :math:`f(\mathbf{x})=0` can be built by:
 
   .. code-tab:: c++
 
-    CtcFunction ctc_f("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]");
+    CtcFunction ctc_f(Function("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]"));
 
   .. code-tab:: py
 
-    ctc_f = CtcFunction("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]")
+    ctc_f = CtcFunction(Function("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]"))
 
 
 Then, a box :math:`[\mathbf{x}]` can be contracted by:
@@ -132,7 +132,7 @@ The boxes are contracted in order to remove some vectors that are not consistent
 .. {
 ..   SIVIAPaving p({{-3.,3.},{-3.,3.}});
 ..   p.compute(ibex::Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"), {{0.}}, 0.01);
-..   CtcFunction ctc_f("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2");
+..   CtcFunction ctc_f(Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"));
 .. 
 ..   vibes::beginDrawing();
 .. 

@@ -49,7 +49,7 @@ x[3] = Tube(measured_speed, dt).inflate(0.01)
 
 # =========== 2. Defining contractors to deal with equations ===========
 
-ctc_f = CtcFunction( \
+ctc_f = CtcFunction(
   Function("v[4]", "x[4]", "u[2]",
            "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"))
 

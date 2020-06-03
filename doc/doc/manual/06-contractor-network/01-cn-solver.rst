@@ -19,7 +19,7 @@ Simple example:
 
   .. code-tab:: c++
 
-    CtcFunction ctc_plus("a", "b", "c", "a+b-c");
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c"));
     Interval a(0,1), b(-1,1), c(1.5,2);
 
     ContractorNetwork cn;
@@ -32,7 +32,7 @@ Simple example:
 
   .. code-tab:: py
 
-    ctc_plus = CtcFunction("a", "b", "c", "a+b-c")
+    ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c"))
     a = Interval(0,1)
     b = Interval(-1,1)
     c = Interval(1.5,2)
