@@ -28,7 +28,7 @@ Tubex: constraint-programming for robotics
   :caption: Tutorial for mobile robotics
   :maxdepth: 1
 
-  Home </tutorial/index>
+  Home <http://simon-rohou.fr/research/tubex-lib/doc/tutorial/index.html>
   Introduction </tutorial/00-getting-started/index>
   Getting started with IA and CP </tutorial/01-basics/index>
   /tutorial/02_static_rangeonly/index
