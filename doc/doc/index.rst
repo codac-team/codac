@@ -240,6 +240,7 @@ User manual
  
   /install/01-installation
   /install/02-start-py-project
+  /install/02-py-project-online
   /install/03-start-cpp-project
 
 Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Tubex for mobile robotics <sec-mainpage-tuto>`, with telling examples.
