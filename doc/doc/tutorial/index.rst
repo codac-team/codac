@@ -125,8 +125,8 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
    :align: right
    :width: 200px
 
-* **Lesson A**: :ref:`sec-tuto-01`
-* **Lesson B**: :ref:`sec-tuto-02`
+* :ref:`sec-tuto-01`
+* :ref:`sec-tuto-02`
 
 | During this first week, we will install the library and perform the **state estimation** of a static robot between some landmarks. For the moment, we will assume that the robot does not move and is only receiving **range-only data** from the landmarks.
 | This will be an introduction to :ref:`intervals <sec-manual-intervals>`, :ref:`constraints <sec-manual-contractors>` and :ref:`networks of contractors <sec-manual-cn>`.

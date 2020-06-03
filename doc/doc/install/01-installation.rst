@@ -187,14 +187,6 @@ You can `download the VIBes viewer directly from the official page <http://ensta
     git clone https://github.com/ENSTABretagneRobotics/VIBES
     cd VIBES/viewer ; mkdir build ; cd build ; cmake .. ; sudo make install
 
-  Then, you can launch it from a terminal. For instance, on Linux systems:
-
-  .. code-block:: bash
-    
-    cd repository-where-vibes-is-installed/build/
-    ./VIBes-viewer
-
-
 .. \todo: test sudo make install and executable access
 
 You can click on the icon to launch it, or use a terminal. For instance, on Linux systems:

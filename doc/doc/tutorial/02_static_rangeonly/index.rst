@@ -1,7 +1,7 @@
 .. _sec-tuto-02:
 
-Static range-only localization
-==============================
+Lesson B: Static range-only localization
+========================================
 
 We now have all the material to compute a solver for state estimation.
 

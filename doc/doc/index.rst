@@ -157,13 +157,17 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
 
   .. code-tab:: c++
 
-    CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
-                      "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
+    CtcFunction ctc_f(
+          Function("v[4]", "x[4]", "u[2]",
+                   "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"),
+          Vector(4, 0.));
 
   .. code-tab:: py
 
-    ctc_f = CtcFunction("v[4]", "x[4]", "u[2]",
-                        "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])")
+    ctc_f = CtcFunction(
+          Function("v[4]", "x[4]", "u[2]",
+                   "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"),
+          [0,0,0,0])
 
 | **Third step.**
 | Adding the contractors to a network, together with there related domains, is as easy as:

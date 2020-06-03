@@ -1,7 +1,7 @@
 .. _sec-tuto-01:
 
-Getting started with intervals and contractors
-==============================================
+Lesson A: Getting started with intervals and contractors
+========================================================
 
 Now that Tubex has been installed on your computer, we will get used to intervals, constraints and networks of contractors.
 This will allow use to perform the state estimaton of a static robot between some landmarks by the end of this lesson.
