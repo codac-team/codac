@@ -26,7 +26,7 @@ Use Tubex online with Python
 #. | First, go to the `https://repl.it <https://repl.it>`_ page.
    | 
 
-#. | Click on the blue icon |add_button| or |add_button_2| in the top right of the page.
+#. | Click on the blue icon |add_button_2| in the top right of the page.
    |
 
 #. | Select the tab |github_button| in the new window.
@@ -54,3 +54,12 @@ Use Tubex online with Python
 
     .. image:: img/replit_6.png
       :width: 300px
+
+
+Here is a video illustrating this procedure:
+
+.. raw:: html
+
+  <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto; margin-bottom: 30px;">
+      <iframe src="https://www.youtube.com/embed/XTpJk4lIwgw" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+  </div>

@@ -10,5 +10,5 @@ This chapter introduces the main graphical tools proposed in the library for dis
 
   01-vibes
   02-figtube
-  03-figmap
-  04-colormaps
+..  03-figmap
+..  04-colormaps

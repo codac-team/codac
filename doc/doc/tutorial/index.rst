@@ -18,7 +18,7 @@ Tutorial: constraint programming for robotics
 .. About the tutorial
 .. ------------------
 
-This tutorial is about Constraint Programming (CP), Interval Analysis (IA) and their applications to mobile robot localization.
+This tutorial is about Constraint Programming (CP), Interval Analysis (IA) and their applications to mobile robotics.
 
 | **Interval analysis** yields methods to compute intervals in place of real numbers, enclosing uncertainties in the mean time.
 | **Constraint Programming** aims at solving a complex problem by defining it in terms of constraints coming from the equations or the measurements.
@@ -31,11 +31,11 @@ This tutorial is about Constraint Programming (CP), Interval Analysis (IA) and t
 Constraint programming?
 -----------------------
 
-There are several ways to deal with **state estimation** in mobile robotics. The **constraint programming** approach consists in defining a problem as a set of rules and letting a solver perform the estimation. For mobile robotics, rules are constraints coming from state equations or uncertainties from the measurements.
+There are several ways to deal with **state estimation** in mobile robotics. The **constraint programming** approach consists in defining a problem as a set of rules and letting a solver perform the estimation. For mobile robotics, rules are constraints coming from state equations.
 
 Efforts have been done to propose operators and **solvers** to apply these constraints. The goal of this tutorial is to learn how to use them and understand the efficiency of the approach on realistic robotic applications. We will see that some problems that are difficult to solve with conventional methods (Kalman filters, particle approaches) can be easily dealt with by constraint programming. This is for instance the case of poor observation measurements, time uncertainties, delays, or when the initial conditions of the system are not known.
 
-The tutorial will stand on **the Tubex library**, that provides tools for computations over sets of reals and trajectories. It has been designed to deal with dynamical systems defined by non-linear differential equations and involving constraints such as trajectory evaluations, time uncertainties or delays. These computations stand on **interval analysis**, a well suited tool that reliably **propagates uncertainties**. 
+The tutorial will stand on :ref:`the Tubex library <home-page>`, that provides tools for computations over sets of reals and trajectories. It has been designed to deal with dynamical systems defined by non-linear differential equations and involving constraints such as trajectory evaluations, time uncertainties or delays. These computations stand on **interval analysis**, a well suited tool that reliably **propagates uncertainties**. 
 
 
 Requirements
@@ -49,6 +49,9 @@ Prerequisite for attending the tutorial are:
 
 Contact and registration
 ------------------------
+
+| **For registration, please feel in this questionnaire:**
+| https://docs.google.com/forms/d/1nuZ6lxMJ8SmoUeDJzVIjiMUdD5PmX7h72v_N9NtvGq4
 
 The tutorial involves three platforms:
 
@@ -66,7 +69,6 @@ To get the diploma, you need to send valid exercises to the organizers. A partic
 This diploma can be used by students to obtain the corresponding ECTS from their PhD courses, or to comply with any other requests from their home university.
 
 .. An example of the diploma you can obtain is:
-
 
 
 Duration and meeting sessions
@@ -87,11 +89,11 @@ Interactive meetings sessions are planned each Wednesday afternoon at 2pm:
 Content of the tutorial
 -----------------------
 
-A list of exercises is proposed with realistic robotic applications.
+A list of exercises is proposed with realistic robotic applications:
 
 ------------------------------------------------------
 
-**Week 0: June 1 -- June 7**
+**Week 0: June 1 -- June 7** (installation)
 
 Before starting the tutorial, you can read some words about the concepts of Constraint Programming and Interval Analysis. This will give you a first glimpse of the philosophy of this tutorial.
 
@@ -117,6 +119,19 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
   /install/02-start-py-project
   /install/03-start-cpp-project
 
+.. note::
+  
+  .. Figure:: img/replit.png
+    :align: right
+
+  In case you encounter difficulties to install Tubex on your computer, an alternative solution is to **try Tubex online** with Repl.it. You will find more information on the following page:
+
+  .. toctree:: 
+    :maxdepth: 1
+
+    /install/02-py-project-online
+
+
 ------------------------------------------------------
 
 **Week 1: June 8 -- June 14**
@@ -125,8 +140,11 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
    :align: right
    :width: 200px
 
-* :ref:`sec-tuto-01`
-* :ref:`sec-tuto-02`
+* **Lesson A**: Getting started with intervals and contractors
+* **Lesson B**: Static range-only localization
+
+.. * :ref:`sec-tuto-01`
+.. * :ref:`sec-tuto-02`
 
 | During this first week, we will install the library and perform the **state estimation** of a static robot between some landmarks. For the moment, we will assume that the robot does not move and is only receiving **range-only data** from the landmarks.
 | This will be an introduction to :ref:`intervals <sec-manual-intervals>`, :ref:`constraints <sec-manual-contractors>` and :ref:`networks of contractors <sec-manual-cn>`.
@@ -161,7 +179,7 @@ In the second part, we will make the robot move and see how we can handle **unce
 
 * **Lesson E**: localization with data association
 
-Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see the `video presentation <https://www.youtube.com/watch?v=rkzouwuwo4I>`_).
+Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see the `video presentation <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and `the Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
 We will solve this problem with Tubex. The goal of this exercise is to develop **our own contractor**.
 
 | **Exercise to finish:** (before Monday 29th of June)
@@ -188,15 +206,17 @@ We will solve this problem with Tubex. The goal of this exercise is to develop *
 
 
 
-Organizers
-----------
+Organizers and technical support
+--------------------------------
 
 .. hlist::
-  :columns: 2
+  :columns: 3
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
   * Raphael Voges
+  * Julien Damers
+  * Fabrice Le Bars
 
 For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers. We will also answer you on `the Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ for very short questions.

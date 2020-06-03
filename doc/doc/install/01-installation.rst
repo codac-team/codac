@@ -23,15 +23,15 @@ where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the
 
 The ``✓`` configurations are officially supported at the moment:
 
-=================================  =============  ===============  =============
-Python version                     Linux          Windows          macOS
-=================================  =============  ===============  =============
-Python 3.4                         ✓              soon available   ?
-Python 3.5                         ✓              soon available   ?
-Python 3.6                         ✓              soon available   ?
-Python 3.7                         ✓              soon available   ?
-Python 3.8                         ✓              soon available   ?
-=================================  =============  ===============  =============
+=================================  =============  =================  =============
+Python version                     Linux          Windows            macOS
+=================================  =============  =================  =============
+Python 3.4                         ✓              soon available ?   ?
+Python 3.5                         ✓              soon available ?   ?
+Python 3.6                         ✓              soon available ?   ?
+Python 3.7                         ✓              soon available ?   ?
+Python 3.8                         ✓              soon available ?   ?
+=================================  =============  =================  =============
 
 If your configuration is missing in this table, please contact us. We may be able to make it available for Tubex.
 

@@ -20,6 +20,17 @@
   margin-bottom: 0;
 }
 
-div.document a:visited {
+div.document a:visited
+{
   color: #3091d1;
+}
+
+.wy-menu-vertical li.current ul
+{
+  display: none;
+}
+
+.wy-menu-vertical li.on a:hover span.toctree-expand, .wy-menu-vertical li.current > a:hover span.toctree-expand, .wy-menu-vertical li.on a span.toctree-expand, .wy-menu-vertical li.current > a span.toctree-expand
+{
+  display: none;
 }

@@ -1,3 +1,5 @@
+.. _home-page:
+
 .. tubex-lib documentation master file
 
 ..  # with overline, for parts
@@ -233,14 +235,14 @@ In the tutorial and in the examples folder of this library, you will find more a
 User manual
 ===========
 
-*Want to use Tubex?* The first thing to do is to install the library:
+*Want to use Tubex?* The first thing to do is to install the library, or try it online:
 
 .. toctree::
   :maxdepth: 1
  
+  /install/02-py-project-online
   /install/01-installation
   /install/02-start-py-project
-  /install/02-py-project-online
   /install/03-start-cpp-project
 
 Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Tubex for mobile robotics <sec-mainpage-tuto>`, with telling examples.
@@ -274,9 +276,9 @@ Then you have two options: read the details about the features of Tubex (domains
   /manual/05-dynamic-contractors/index
   /manual/06-contractor-network/index
   /manual/07-graphics/index
-  /manual/08-going-further/index
-  /manual/09-extensions/index
   /manual/10-dev/index
+..  /manual/08-going-further/index
+..  /manual/09-extensions/index
 
 .. versionadded:: 3.0.0
    The Contractor Network tool.
@@ -294,24 +296,23 @@ Then you have two options: read the details about the features of Tubex (domains
   .. Figure:: img/logo_icra.png
     :align: center
 
-  This tutorial is proposed in the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ (International Conference on Robotics and Automation), 8th June -- 28th June.
+  This tutorial is proposed in the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ (International Conference on Robotics and Automation), 8th June -- 5th July.
 
 
 Tutorial for mobile robotics
 ============================
 
-The following tutorial is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples.
+The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples, namely:
 
-  * Introduction
-  * Basics
   * Static range-only localization
   * Static range-and-bearing localization
-  * Dynamic localization with asynchronous measurements
+  * Localization with asynchronous measurements
   * Range-only SLAM
   * Localization by solving data association
   * Real-time state estimation
-  * Distributed localization
   * Proving loops in robot trajectories
+
+You can see more on :ref:`the related page <sec-tuto-main-page>`.
 
 .. .. toctree:: 
 ..   :maxdepth: 1
