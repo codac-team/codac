@@ -79,8 +79,8 @@ int main()
 
   /* =========== CUSTOM-BUILT CONTRACTORS =========== */
 
-    CtcFunction ctc_plus("a", "b", "c", "a=b+c"); // algebraic constraint a=b+c
-    CtcFunction ctc_minus("a", "b", "c", "a=b-c"); // algebraic constraint a=b-c
+    CtcFunction ctc_plus(Function("a", "b", "c", "a-(b+c)")); // algebraic constraint a=b+c
+    CtcFunction ctc_minus(Function("a", "b", "c", "a-(b-c)")); // algebraic constraint a=b-c
     CtcConstell ctc_constell(v_map); // constellation constraint
 
 

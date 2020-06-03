@@ -53,9 +53,9 @@ int main()
 
   /* =========== 2. Defining contractors to deal with equations =========== */
 
-    CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
-                      "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
-
+    CtcFunction ctc_f(
+      Function("v[4]", "x[4]", "u[2]",
+               "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"));
 
   /* =============== 3. Adding the contractors to a network =============== */
 

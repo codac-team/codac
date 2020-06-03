@@ -48,8 +48,8 @@ int main()
 
   /* =========== 2. Defining contractors to deal with equations =========== */
 
-    CtcFunction ctc_plus("a", "b", "c", "a+b=c");
-    CtcFunction ctc_minus("a", "b", "c", "a-b=c");
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c")); // a+b=c
+    CtcFunction ctc_minus(Function("a", "b", "c", "a-b-c")); // a-b=c
     // We also use the predefined contractor ctc::polar, no need to build it
 
 

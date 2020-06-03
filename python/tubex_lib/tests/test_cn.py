@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import unittest
-from pyibex import Interval, IntervalVector
+from pyibex import Interval, IntervalVector, Function
 from tubex_lib import *
 import tubex_lib as tubex
 
@@ -9,7 +9,7 @@ class TestCN(unittest.TestCase):
 
   def test_CN_simple(self):
 
-    ctc_plus = CtcFunction("a", "b", "c", "a+b-c")
+    ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c"))
     a = Interval(0,1)
     b = Interval(-1,1)
     c = Interval(1.5,2)
@@ -28,7 +28,7 @@ class TestCN(unittest.TestCase):
 
   def test_simple_static_case(self):
 
-    ctc_plus = CtcFunction("a", "b", "c", "a+b-c") # algebraic constraint a+b=c
+    ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c")) # algebraic constraint a+b=c
 
     a = IntervalVector(2, [0,1])
     b = IntervalVector(2, [-1,1])
@@ -48,7 +48,7 @@ class TestCN(unittest.TestCase):
 
   def test_dependencies_on_vector_components(self):
 
-    ctc_plus = CtcFunction("a", "b", "c", "a+b-c") # algebraic constraint a+b=c
+    ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c")) # algebraic constraint a+b=c
 
     a = IntervalVector(2, [0,1])
     b = IntervalVector(2, [-1,1])
@@ -145,7 +145,7 @@ class TestCN(unittest.TestCase):
     v = Tube(domain, dt, Interval(0.))
 
     ctc_deriv = CtcDeriv()
-    ctc_f = CtcFunction("x", "xdot", "xdot=-sin(x)")
+    ctc_f = CtcFunction(Function("x", "xdot", "xdot+sin(x)"))
 
     cn = ContractorNetwork()
     cn.add(ctc_deriv, [x, v])
@@ -172,9 +172,9 @@ class TestCN(unittest.TestCase):
     va = IntervalVector(2,a)
     vec = [4,0.5]
     
-    ctc_add = CtcFunction("b", "c", "a", "b+c=a")
-    ctc_cos = CtcFunction("b", "c", "a", "b+c=a")
-    ctc_minus = CtcFunction("b", "c", "b-c=0")
+    ctc_add = CtcFunction(Function("b", "c", "a", "b+c-a"))
+    ctc_cos = CtcFunction(Function("b", "c", "a", "b+c-a"))
+    ctc_minus = CtcFunction(Function("b", "c", "b-c-0"))
 
     cn = ContractorNetwork()
 
@@ -199,9 +199,8 @@ class TestCN(unittest.TestCase):
     va = IntervalVector(2,a)
     vec = [4,0.5]
     
-    ctc_add = CtcFunction("b", "c", "a", "b+c=a")
-    ctc_cos = CtcFunction("b", "c", "a", "b+c=a")
-    ctc_minus = CtcFunction("b", "c", "b-c=0")
+    ctc_add = CtcFunction(Function("b", "c", "a", "b+c-a"))
+    ctc_cos = CtcFunction(Function("b", "c", "a", "b+c-a"))
 
     cn = ContractorNetwork()
     cn.add(ctc_add, [vx,vy,va])
@@ -226,7 +225,7 @@ class TestCN(unittest.TestCase):
     x = IntervalVector([[0,1],[-2,3]])
     a = Interval(1,20)
     
-    ctc_add = CtcFunction("b[2]", "a", "b[0]+b[1]=a")
+    ctc_add = CtcFunction(Function("b[2]", "a", "b[0]+b[1]-a"))
 
     cn = ContractorNetwork()
     cn.add(ctc_add, [x,a])
@@ -241,7 +240,7 @@ class TestCN(unittest.TestCase):
 
     x = IntervalVector([[0,1],[-2,3],[1,20]])
 
-    ctc_add = CtcFunction("b", "c", "a", "b+c=a")
+    ctc_add = CtcFunction(Function("b", "c", "a", "b+c-a"))
 
     cn = ContractorNetwork()
     sub_x = cn.subvector(x,1,2)
@@ -277,7 +276,7 @@ class TestCN(unittest.TestCase):
     ivy = IntervalVector(2,y)
     iva = IntervalVector(2,a)
     
-    ctc_add = CtcFunction("b", "c", "a", "b+c=a")
+    ctc_add = CtcFunction(Function("b", "c", "a", "b+c-a"))
 
     cn = ContractorNetwork()
 
@@ -303,7 +302,7 @@ class TestCN(unittest.TestCase):
     ivx = IntervalVector(2,x)
     iva = IntervalVector(2,a)
     
-    ctc_add = CtcFunction("b", "c", "a", "b+c=a")
+    ctc_add = CtcFunction(Function("b", "c", "a", "b+c-a"))
 
     cn = ContractorNetwork()
 
@@ -334,7 +333,7 @@ class TestCN(unittest.TestCase):
     a = Tube(tdomain, dt, Interval(4.,5.))
     b = Tube(tdomain, dt, Interval(5.,9.))
 
-    ctc_add = CtcFunction("x", "a", "b", "x+a=b")
+    ctc_add = CtcFunction(Function("x", "a", "b", "x+a-b"))
 
     cn = ContractorNetwork()
     cn.add(ctc_add, [x,a,b])
@@ -354,7 +353,7 @@ class TestCN(unittest.TestCase):
     a = Tube(tdomain, dt, Interval(6.,7.))
     b = Tube(tdomain, dt, Interval(7.))
 
-    ctc_add = CtcFunction("x", "a", "b", "x+a=b")
+    ctc_add = CtcFunction(Function("x", "a", "b", "x+a-b"))
 
     cn = ContractorNetwork()
     cn.add(ctc_add, [x,a,b])
@@ -378,7 +377,7 @@ class TestCN(unittest.TestCase):
     a = Tube(tdomain, dt, Interval(0.,10.))
     b = Tube(tdomain, dt, Interval(7.))
 
-    ctc_add = CtcFunction("x", "a", "b", "x+a=b")
+    ctc_add = CtcFunction(Function("x", "a", "b", "x+a-b"))
 
     cn = ContractorNetwork()
     cn.add(ctc_add, [x,a,b])
@@ -398,7 +397,7 @@ class TestCN(unittest.TestCase):
     a = Tube(tdomain, dt, TFunction("cos(t)"))
     b = Tube(tdomain, dt)
 
-    ctc_add = CtcFunction("x", "a", "b", "x+a=b")
+    ctc_add = CtcFunction(Function("x", "a", "b", "x+a-b"))
 
     cn = ContractorNetwork()
     cn.add(ctc_add, [x,a,b])

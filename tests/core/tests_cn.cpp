@@ -17,7 +17,7 @@ TEST_CASE("CN simple")
 {
   SECTION("Most simple case")
   {
-    CtcFunction ctc_plus("a", "b", "c", "a+b-c");
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c"));
     Interval a(0,1), b(-1,1), c(1.5,2);
 
     ContractorNetwork cn;
@@ -34,7 +34,7 @@ TEST_CASE("CN simple")
 
   SECTION("Simple static case")
   {
-    CtcFunction ctc_plus("a", "b", "c", "a+b-c"); // algebraic constraint a+b=c
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2));
 
@@ -52,7 +52,7 @@ TEST_CASE("CN simple")
 
   SECTION("Dependencies on vector components")
   {
-    CtcFunction ctc_plus("a", "b", "c", "a+b-c"); // algebraic constraint a+b=c
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2)), d(2, Interval(0.)), e(2);
 
@@ -145,7 +145,7 @@ TEST_CASE("CN simple")
     Tube x(domain, dt, Interval(-10.,10.)), v(domain, dt, Interval(0.));
 
     CtcDeriv ctc_deriv;
-    CtcFunction ctc_f("x", "xdot", "xdot=-sin(x)");
+    CtcFunction ctc_f(Function("x", "xdot", "xdot+sin(x)"));
 
     ContractorNetwork cn;
     cn.add(ctc_deriv, {x, v});
@@ -164,9 +164,8 @@ TEST_CASE("CN simple")
 
   SECTION("CtcFunction on scalar or vector cases")
   {
-    CtcFunction ctc_add("b", "c", "a", "b+c=a");
-    CtcFunction ctc_cos("b", "c", "a", "b+c=a");
-    CtcFunction ctc_minus("b", "c", "b-c=0");
+    CtcFunction ctc_add(Function("b", "c", "a", "b+c-a"));
+    CtcFunction ctc_cos(Function("b", "c", "a", "b+c-a"));
 
     {
       Interval x(0,1), y(-2,3), a(1,20);
@@ -213,7 +212,7 @@ TEST_CASE("CN simple")
     IntervalVector x{{0,1},{-2,3}};
     Interval a(1,20);
     
-    CtcFunction ctc_add("b[2]", "a", "b[0]+b[1]=a");
+    CtcFunction ctc_add(Function("b[2]", "a", "b[0]+b[1]-a"));
 
     ContractorNetwork cn;
     cn.add(ctc_add, {x,a});
@@ -228,7 +227,7 @@ TEST_CASE("CN simple")
   {
     IntervalVector x{{0,1},{-2,3},{1,20}};
 
-    CtcFunction ctc_add("b", "c", "a", "b+c=a");
+    CtcFunction ctc_add(Function("b", "c", "a", "b+c-a"));
 
     ContractorNetwork cn;
     IntervalVector& sub_x = cn.subvector(x,1,2);
@@ -254,7 +253,7 @@ TEST_CASE("CN simple")
 
   SECTION("Singleton variables: double or Vector")
   {
-    CtcFunction ctc_add("b", "c", "a", "b+c=a");
+    CtcFunction ctc_add(Function("b", "c", "a", "b+c-a"));
 
     {
       Interval x(0,1), y(-2,3), a(1,20);
@@ -309,7 +308,7 @@ TEST_CASE("CN simple")
       Interval x(2,3);
       Tube a(tdomain, dt, Interval(4.,5.)), b(tdomain, dt, Interval(5.,9.));
 
-      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+      CtcFunction ctc_add(Function("x", "a", "b", "x+a-b"));
 
       ContractorNetwork cn;
       cn.add(ctc_add, {x,a,b});
@@ -323,7 +322,7 @@ TEST_CASE("CN simple")
       Interval x(-1.,3.);
       Tube a(tdomain, dt, Interval(6.,7.)), b(tdomain, dt, Interval(7.));
 
-      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+      CtcFunction ctc_add(Function("x", "a", "b", "x+a-b"));
 
       ContractorNetwork cn;
       cn.add(ctc_add, {x,a,b});
@@ -341,7 +340,7 @@ TEST_CASE("CN simple")
       Interval x(2.,2.5);
       Tube a(tdomain, dt, Interval(0.,10.)), b(tdomain, dt, Interval(7.));
 
-      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+      CtcFunction ctc_add(Function("x", "a", "b", "x+a-b"));
 
       ContractorNetwork cn;
       cn.add(ctc_add, {x,a,b});
@@ -355,7 +354,7 @@ TEST_CASE("CN simple")
       Interval x(2.,2.5);
       Tube a(tdomain, dt, TFunction("cos(t)")), b(tdomain, dt);
 
-      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+      CtcFunction ctc_add(Function("x", "a", "b", "x+a-b"));
 
       ContractorNetwork cn;
       cn.add(ctc_add, {x,a,b});

@@ -49,11 +49,12 @@ x[3] = Tube(measured_speed, dt).inflate(0.01)
 
 # =========== 2. Defining contractors to deal with equations ===========
 
-ctc_f = CtcFunction("v[4]", "x[4]", "u[2]",
-                    "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])")
+ctc_f = CtcFunction( \
+  Function("v[4]", "x[4]", "u[2]",
+           "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"))
 
-ctc_plus = CtcFunction("a", "b", "c", "a+b=c")
-ctc_minus = CtcFunction("a", "b", "c", "a-b=c")
+ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c")) # a+b=c
+ctc_minus = CtcFunction(Function("a", "b", "c", "a-b-c")) # a-b=c
 # We also use the predefined contractors ctc.polar, ctc.eval, no need to build them
 
 

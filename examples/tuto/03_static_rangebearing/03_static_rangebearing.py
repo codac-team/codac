@@ -34,8 +34,8 @@ heading = Interval(x_truth[2]).inflate(0.01) # measured heading
 
 # =========== 2. Defining contractors to deal with equations ===========
 
-ctc_plus = CtcFunction("a", "b", "c", "a+b=c")
-ctc_minus = CtcFunction("a", "b", "c", "a-b=c")
+ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c")) # a+b=c
+ctc_minus = CtcFunction(Function("a", "b", "c", "a-b-c")) # a-b=c
 # We also use the predefined contractor ctc::polar, no need to build it
 
 

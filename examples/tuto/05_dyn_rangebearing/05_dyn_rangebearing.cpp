@@ -66,11 +66,12 @@ int main()
 
   /* =========== 2. Defining contractors to deal with equations =========== */
 
-    CtcFunction ctc_f("v[4]", "x[4]", "u[2]",
-                      "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])");
+    CtcFunction ctc_f(
+      Function("v[4]", "x[4]", "u[2]",
+               "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"));
 
-    CtcFunction ctc_plus("a", "b", "c", "a+b=c");
-    CtcFunction ctc_minus("a", "b", "c", "a-b=c");
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c")); // a+b=c
+    CtcFunction ctc_minus(Function("a", "b", "c", "a-b-c")); // a-b=c
     // We also use the predefined contractors ctc::polar, ctc::eval, no need to build them
 
   /* =============== 3. Adding the contractors to a network =============== */
