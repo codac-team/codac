@@ -632,8 +632,8 @@ namespace tubex
           continue;
 
         IntervalVector box(2);
-        box[0] = (*tube)[m_map_tubes[tube].index_x].slice(k)->input_gate();
-        box[1] = (*tube)[m_map_tubes[tube].index_y].slice(k)->input_gate();
+        box[0] = (*tube)[m_map_tubes[tube].index_x].slice(k)->codomain();
+        box[1] = (*tube)[m_map_tubes[tube].index_y].slice(k)->codomain();
         // Note: the last output gate is never shown
 
         if(box.is_empty())
