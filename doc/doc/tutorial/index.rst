@@ -4,6 +4,10 @@
 Tutorial: constraint programming for robotics
 #############################################
 
+.. |youtube_logo| image:: img/youtube_logo.png
+.. |youtube_logo_small| image:: img/youtube_logo.png
+   :height: 15px
+
 .. centered:: Simon Rohou, Luc Jaulin, Benoît Desrochers, Raphael Voges
 .. centered:: **8th June -- 5th July**
 
@@ -60,6 +64,8 @@ The tutorial involves three platforms:
 * the `Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
 
 This tutorial is proposed to the participants of `the ICRA conference <https://www.icra2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
+
+|youtube_logo| See `the video for registration on the MOOC platform <https://www.youtube.com/watch?v=E_aj7Mz_LWs>`_.
 
 
 Diploma
@@ -131,6 +137,7 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 
     /install/02-py-project-online
 
+  |youtube_logo| See `the video for using Tubex online <https://www.youtube.com/watch?v=XTpJk4lIwgw>`_.
 
 ------------------------------------------------------
 
@@ -179,7 +186,7 @@ In the second part, we will make the robot move and see how we can handle **unce
 
 * **Lesson E**: localization with data association
 
-Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see the `video presentation <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and `the Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
+Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |youtube_logo_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
 We will solve this problem with Tubex. The goal of this exercise is to develop **our own contractor**.
 
 | **Exercise to finish:** (before Monday 29th of June)
