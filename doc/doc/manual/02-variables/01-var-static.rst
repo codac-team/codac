@@ -39,7 +39,9 @@ Their use is intuitive:
 
   .. code-tab:: py
 
-    # todo
+    x1 = [0,1,3]                   # creates the vector x1=(0;1;3)
+    x2 = [1]*3                     # creates the vector x2=(1;1;1)
+    x3 = x1                        # creates a copy of x1
 
 Vector operations are available to handle ``Vector`` objects:
 
@@ -58,7 +60,7 @@ Vector operations are available to handle ``Vector`` objects:
 
   .. code-tab:: py
 
-    # todo
+    # Use default types of Python, or Numpy
 
 
 Note that these operations are also available for other vector types: :ref:`matrices <sec-manual-varstatic-matrices>`, :ref:`boxes <sec-manual-intervals-boxes>`, :ref:`vectors of trajectories <sec-manual-vardyn-trajectoryvector>`, and :ref:`vectors of tubes <sec-manual-tubes-tubevector>`.
@@ -75,7 +77,7 @@ Basic arithmetic operations are applicable on vectors such as binary operators: 
 
   .. code-tab:: py
 
-    # todo
+    # Use default types of Python, or Numpy
 
 
 .. _sec-manual-varstatic-matrices:
@@ -106,6 +108,6 @@ Matrices
 
   .. code-tab:: py
 
-    # todo
+    # Use default types of Python, or Numpy
 
 Other arithmetic operations apply on matrices in the same manner as for vectors.
