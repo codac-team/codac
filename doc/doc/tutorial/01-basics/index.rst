@@ -16,7 +16,46 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
 
 .. admonition:: Exercise
 
-  **A.0.** Check that it is displaying a tube in a graphical view.
+  **A.0.** Check that it is displaying a tube in a graphical view and print the tube in the terminal using:
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      cout << x << endl;
+
+    .. code-tab:: py
+
+      print(x)
+
+  You should see the following output:
+
+  .. code-block:: bash
+
+    Tube [0, 10]↦([-1.448469806203122, 1.500000000000001]), 1000 slices
+
+  | This was to be sure that everything is working well in your environment.
+  | Now, we will start from the following code:
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      #include <tubex.h>
+
+      using namespace std;
+      using namespace tubex;
+
+      int main()
+      {
+        // .. next questions will be here
+      }
+
+    .. code-tab:: py
+
+      from tubex_lib import *
+
+      # .. next questions will be here
 
 
 Using intervals for handling uncertainties

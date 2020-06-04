@@ -132,12 +132,8 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 
   In case you encounter difficulties to install Tubex on your computer, an alternative solution is to **try Tubex online** with Repl.it. You will find more information on the following page:
 
-  .. toctree:: 
-    :maxdepth: 1
-
-    /install/02-py-project-online
-
-  |youtube_logo| See `the video for using Tubex online <https://www.youtube.com/watch?v=XTpJk4lIwgw>`_.
+  * :ref:`sec-py-project-online`
+  * |youtube_logo| See `the video for using Tubex online <https://www.youtube.com/watch?v=XTpJk4lIwgw>`_.
 
 ------------------------------------------------------
 
