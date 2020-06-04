@@ -4,12 +4,40 @@
 Tutorial: constraint programming for robotics
 #############################################
 
-.. |youtube_logo| image:: img/youtube_logo.png
-.. |youtube_logo_small| image:: img/youtube_logo.png
+.. |logo_contredo| image:: img/logos/logo_contredo.png
+   :height: 50px
+   :target: https://anr.fr/Project-ANR-16-CE33-0024
+.. |logo_dga| image:: img/logos/logo_dga.png
+   :height: 60px
+   :target: https://www.defense.gouv.fr/dga
+.. |logo_ensta| image:: img/logos/logo_ensta.png
+   :height: 50px
+   :target: https://www.ensta-bretagne.fr/fr
+.. |logo_gdrmacs| image:: img/logos/logo_gdrmacs.png
+   :height: 60px
+   :target: https://gdr-macs.cnrs.fr/
+.. |logo_gdrrob| image:: img/logos/logo_gdrrob.png
+   :height: 60px
+   :target: https://www.gdr-robotique.org/
+.. |logo_intcomp| image:: img/logos/logo_intcomp.gif
+   :height: 40px
+   :target: https://interval.louisiana.edu/reliable-computing-journal/
+.. |logo_labsticc| image:: img/logos/logo_labsticc.png
+   :height: 50px
+   :target: https://www.labsticc.fr/en/index/
+
+.. |logo_youtube| image:: img/logos/logo_youtube.png
+   :height: 25px
+.. |logo_youtube_small| image:: img/logos/logo_youtube.png
    :height: 15px
 
 .. centered:: Simon Rohou, Luc Jaulin, Benoît Desrochers, Raphael Voges
 .. centered:: **8th June -- 5th July**
+
+.. centered:: |logo_ensta| |logo_labsticc| |logo_dga| 
+.. centered:: |logo_contredo| |logo_gdrmacs| |logo_gdrrob| |logo_intcomp| 
+
+
 
 .. sidebar:: ICRA 2020 tutorial
 
@@ -65,7 +93,7 @@ The tutorial involves three platforms:
 
 This tutorial is proposed to the participants of `the ICRA conference <https://www.icra2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
 
-|youtube_logo| See `the video for registration on the MOOC platform <https://www.youtube.com/watch?v=E_aj7Mz_LWs>`_.
+|logo_youtube| See `the video for registration on the MOOC platform <https://www.youtube.com/watch?v=E_aj7Mz_LWs>`_.
 
 
 Diploma
@@ -127,13 +155,13 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 
 .. note::
   
-  .. Figure:: img/replit.png
+  .. Figure:: img/logos/logo_replit.png
     :align: right
 
   In case you encounter difficulties to install Tubex on your computer, an alternative solution is to **try Tubex online** with Repl.it. You will find more information on the following page:
 
   * :ref:`sec-py-project-online`
-  * |youtube_logo| See `the video for using Tubex online <https://www.youtube.com/watch?v=XTpJk4lIwgw>`_.
+  * |logo_youtube| See `the video for using Tubex online <https://www.youtube.com/watch?v=XTpJk4lIwgw>`_.
 
 ------------------------------------------------------
 
@@ -182,7 +210,7 @@ In the second part, we will make the robot move and see how we can handle **unce
 
 * **Lesson E**: localization with data association
 
-Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |youtube_logo_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
+Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
 We will solve this problem with Tubex. The goal of this exercise is to develop **our own contractor**.
 
 | **Exercise to finish:** (before Monday 29th of June)
