@@ -121,15 +121,21 @@ namespace tubex
     if(box.is_unbounded())
       return;
 
-    vibes::Params params_this_fig(params);
-    m_view_box |= box;
-    params_this_fig["figure"] = name();
+    if(box.max_diam() == 0.)
+      draw_point(Point(box), color, params);
 
-    if(color != "")
-      vibes::drawBox(box, color, params_this_fig);
-    
     else
-      vibes::drawBox(box, params_this_fig);
+    {
+      vibes::Params params_this_fig(params);
+      m_view_box |= box;
+      params_this_fig["figure"] = name();
+
+      if(color != "")
+        vibes::drawBox(box, color, params_this_fig);
+      
+      else
+        vibes::drawBox(box, params_this_fig);
+    }
   }
   
   void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const vibes::Params& params)
