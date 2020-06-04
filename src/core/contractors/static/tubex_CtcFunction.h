@@ -30,9 +30,38 @@ namespace tubex
   {
     public:
 
+      /**
+       * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})=\mathbf{0}\f$
+       *
+       * \param f the function \f$\mathbf{f}\f$
+       */
       CtcFunction(const ibex::Function& f);
+
+      /**
+       * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$
+       *        where \f$[\mathbf{y}]\f$ is a ibex::Domain object
+       *
+       * \param f the function \f$\mathbf{f}\f$
+       * \param y the ibex::Domain object
+       */
       CtcFunction(const ibex::Function& f, const ibex::Domain& y);
+
+      /**
+       * \brief Creates a contractor for the constraint \f$f(\mathbf{x})\in[y]\f$
+       *        for the scalar case
+       *
+       * \param f the function \f$f\f$
+       * \param y the interval \f$[y]\f$
+       */
       CtcFunction(const ibex::Function& f, const ibex::Interval& y);
+
+      /**
+       * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$
+       *        for the vectorial case
+       *
+       * \param f the function \f$\mathbf{f}\f$
+       * \param y the IntervalVector \f$[\mathbf{y}]\f$
+       */
       CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y);
       
       /**

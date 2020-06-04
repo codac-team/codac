@@ -18,12 +18,24 @@ namespace tubex
 {
   /**
    * \class CtcDist
+   * \brief Distance constraint between two 2d vectors.
    */
   class CtcDist : public CtcFunction
   {
     public:
 
+      /**
+       * \brief Creates the contractor.
+       */
       CtcDist();
+
+      /**
+       * \brief \f$\mathcal{C}_{\textrm{dist}}\big([\mathbf{x}]\big)\f$
+       *
+       * \param a the 2d box of the first 2d vector
+       * \param b the 2d box of the second 2d vector
+       * \param d the interval distance
+       */
       void contract(ibex::IntervalVector& a, ibex::IntervalVector& b, ibex::Interval& d);
   };
 }
