@@ -28,23 +28,23 @@ Definition
     .. code-tab:: c++
 
       // For the constraint f(x)=0
-      CtcFunction ctc_f(Function("<var1>", "<var2...>", "<expr>"));
+      CtcFunction ctc_f(Function("<var1>", "<var2>", ..., "<expr>"));
       ctc_f.contract(x);
 
       // For the constraint f(x)\in[y]
       Interval y(...); // or IntervalVector if f is a vector function
-      CtcFunction ctc_f(Function("<var1>", "<var2...>", "<expr>"), y);
+      CtcFunction ctc_f(Function("<var1>", "<var2>", ..., "<expr>"), y);
       ctc_f.contract(x);
 
     .. code-tab:: py
 
       # For the constraint f(x)=0
-      ctc_f = CtcFunction(Function("<var1>", "<var2...>", "<expr>"))
+      ctc_f = CtcFunction(Function("<var1>", "<var2>", ..., "<expr>"))
       ctc_f.contract(x)
 
       # For the constraint f(x)\in[y]
       y = Interval(...) # or IntervalVector if f is a vector function
-      ctc_f = CtcFunction(Function("<var1>", "<var2...>", "<expr>"), y)
+      ctc_f = CtcFunction(Function("<var1>", "<var2>", ..., "<expr>"), y)
       ctc_f.contract(x)
 
 

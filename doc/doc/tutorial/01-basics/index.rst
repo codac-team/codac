@@ -172,6 +172,26 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
 
   **A.2.** These simple operations on sets can be extended to elementary functions such as :math:`\cos`, :math:`\exp`, :math:`\tan`. Create a 2d box :math:`[\mathbf{y}]=[0,\pi]\times[-\pi/6,\pi/6]` and print the result of :math:`|[\mathbf{y}]|` with ``abs()``.
 
+.. hint::
+
+  .. rubric:: How to use :math:`\pi`?
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      // In C++, pi is predefined by:
+
+      double x = M_PI;
+    
+    .. code-tab:: py
+
+      # In Python, you can use the math module:
+      import math
+      x = math.pi
+
+  Note that in this code, the variable ``x`` is not the exact :math:`\pi`! Of course, the mathematical one cannot be represented in a computer. But with intervals, we can manage reliable computations. :ref:`See more <sec-manual-intervals-pi>`.
+
 
 Functions, :math:`f([x])`
 -------------------------
@@ -182,7 +202,7 @@ Custom functions can be used on sets. For instance, to compute:
 
   f(x)=x^2+2x-\exp(x),
 
-a ``Function`` object can be created and evaluated over the set :math:`[x]`:
+a ``Function`` object can be created by ``Function("<var1>", "<var2>", ..., "<expr>")`` and then evaluated over the set :math:`[x]`:
 
 .. tabs::
 
@@ -200,6 +220,17 @@ a ``Function`` object can be created and evaluated over the set :math:`[x]`:
 
 The first arguments of the function (only one in the above example) are its input variables. The last argument is the expression of the output. The result is the set of images of all defined inputs through the function: :math:`[f]([x])=[\{f(x)\mid x\in[x]\}]`.
 
+We can also define vector input variables and access their components in the function definition:
+
+.. tabs::
+
+  .. code-tab:: c++
+
+    Function f("x[2]", "cos(x[0])^2+sin(x[1])^2");
+  
+  .. code-tab:: py
+
+    f = Function("x[2]", "cos(x[0])^2+sin(x[1])^2")
 
 .. admonition:: Exercise
 
@@ -247,12 +278,31 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
       fig.show() # display all items of the figure
       endDrawing()
 
-  **A.5.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box()`` method. Draw the computed interval range with ``fig.draw_circle(x, y, rad)``. Is the result reliable, according to the sets :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]`?
+  | **A.5.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. Draw the computed interval range with ``fig.draw_circle(x, y, rad)`` where ``x``, ``y``, ``rad`` are *double* values.
+
+  .. hint::
+
+    To access *double* bounds of an interval object ``x``, you can use the ``x.lb()``/``x.ub()`` methods for lower and upper bounds.
+
+  | **A.6.** Now, repeat the operation with :math:`[\mathbf{a}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``a``.
+  | Is the result reliable, according to the sets :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{a}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
 
 
 .. admonition:: Technical documentation
 
   For full details about graphical features, please read the :ref:`sec-manual-vibes` page of the user manual.
+
+  .. rubric:: Want to use colors? Here is an example you can try:
+
+  .. tabs::
+
+    .. code-tab:: c++
+
+      fig.draw_box(x, "red[yellow]"); // red: edge color of the box, yellow: fill color
+    
+    .. code-tab:: py
+
+      fig.draw_box(x, "red[yellow]") # red: edge color of the box, yellow: fill color
 
 
 Contractors, :math:`\mathcal{C}([x])`
@@ -280,7 +330,7 @@ In Tubex, the contractors are also defined by C++/Python objects and are prefixe
 
 .. admonition:: Exercise
 
-  **A.6.** Define a contractor :math:`\mathcal{C}_\textrm{dist}` related to the distance constraint between two 2d positions :math:`\mathbf{x}` and :math:`\mathbf{b}\in\mathbb{R}^2`. We will use the distance function previously defined, but in the form :math:`f(\mathbf{x},\mathbf{b},d)=0`.
+  **A.7.** Define a contractor :math:`\mathcal{C}_\textrm{dist}` related to the distance constraint between two 2d positions :math:`\mathbf{x}` and :math:`\mathbf{b}\in\mathbb{R}^2`. We will use the distance function previously defined, but in the form :math:`f(\mathbf{x},\mathbf{b},d)=0`.
 
 The contractor is then simply added to a **Contractor Network** (CN) that will manage the constraints on the different variables for solving the problem. For instance, we can use the previously defined :math:`\mathcal{C}_+` as:
 
@@ -314,7 +364,7 @@ The contractor is then simply added to a **Contractor Network** (CN) that will m
 
 .. admonition:: Exercise
 
-  | **A.7.** Define a Contractor Network with the :math:`\mathcal{C}_\textrm{dist}` object you have created and apply it on some boxes :math:`[\mathbf{b}^i]`.
+  | **A.8.** Define a Contractor Network with the :math:`\mathcal{C}_\textrm{dist}` object you have created and apply it on some boxes :math:`[\mathbf{b}^i]`.
   | Check the results with :math:`\mathcal{C}_\textrm{dist}([\mathbf{x}],[\mathbf{b}^i],[r])`, :math:`i\in\{1,2,3\}` and 
   
   * :math:`[r]=[7,8]`

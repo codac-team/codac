@@ -67,6 +67,8 @@ Intervals, boxes and interval matrices
       x = Interval.TWO_PI                         # [2π]
       x = Interval.HALF_PI                        # [π/2]
 
+  .. _sec-manual-intervals-pi:
+
   Note that the constant :math:`[\pi]` is a reliable enclosure of the :math:`\pi` value, that cannot be exactly represented in a computer with a single floating-point value.
 
   .. tabs::
