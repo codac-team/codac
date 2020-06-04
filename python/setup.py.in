@@ -30,7 +30,7 @@ setup(
   },
   install_requires=[
     'pip>=19.0.0',
-    'pyibex>=1.8.1'
+    'pyibex>=1.8.1rc1'
   ],
   license="LGPLv3+",
   classifiers=[

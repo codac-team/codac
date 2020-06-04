@@ -36,5 +36,13 @@ Tubex: constraint-programming for robotics
   Main page </tutorial/index>
   Introduction </tutorial/00-getting-started/index>
 
-..  A. Using intervals and contractors </tutorial/01-basics/index>
-..  B. Static range-only localization </tutorial/02-static-rangeonly/index>
+  [closed] A. Intervals and contractors </tutorial/01-basics/closed>
+  [closed] B. Static range-only loc. </tutorial/02-static-rangeonly/closed>
+
+  [closed] C. Static range-bearing loc. </tutorial/03-static-rangebearing/closed>
+  [closed] D. Dynamic range-only loc. </tutorial/04-dyn-rangeonly/closed>
+
+  [closed] E. Data association </tutorial/05-data-association/closed>
+
+  [closed] F. Range-only SLAM </tutorial/06-rangeonly-slam/closed>
+  [closed] G. Loop detections </tutorial/07-loops/closed>

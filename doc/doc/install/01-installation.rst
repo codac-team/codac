@@ -16,10 +16,11 @@ Very fast installation for Python use
 In case you want to use Tubex only with Python, then the installation procedure is simply:
 
 .. code-block:: bash
-
+  
+  pip3 install --upgrade pip # you may have to upgrade pip (19.0.0 required at least)
   pip3 install pyibex tubex-lib
 
-where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Tubex is based.
+where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Tubex is based. Note that Tubex requires pyIbex 1.8.1 at least.
 
 The ``✓`` configurations are officially supported at the moment:
 

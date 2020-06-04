@@ -53,6 +53,7 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
 
     .. code-tab:: py
 
+      from pyibex import *
       from tubex_lib import *
 
       # .. next questions will be here
