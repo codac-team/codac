@@ -232,9 +232,15 @@ We will solve this problem with Tubex. The goal of this exercise is to develop *
 
 **Exercise to finish:** to be defined
 
+The following video illustrates the result of Lesson F:
+
+.. raw:: html
+
+  <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto; margin-bottom: 30px;">
+      <iframe src="https://www.youtube.com/embed/Dw6-OHuW0vo" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+  </div>
+
 ------------------------------------------------------
-
-
 
 
 Organizers and technical support
