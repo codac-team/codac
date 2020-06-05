@@ -22,7 +22,7 @@ In case you want to use Tubex only with Python, then the installation procedure 
 
 where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Tubex is based. Note that Tubex requires pyIbex 1.8.1 at least.
 
-The ``✓`` configurations are officially supported at the moment:
+For Python, the ``✓`` configurations are officially supported at the moment:
 
 =================================  =============  =================  =============
 Python version                     Linux          Windows            macOS
@@ -33,6 +33,13 @@ Python 3.6                         ✓              soon available ?   ?
 Python 3.7                         ✓              soon available ?   ?
 Python 3.8                         ✓              soon available ?   ?
 =================================  =============  =================  =============
+
+.. note::
+
+  | (5th June) We are currently working on making Tubex available on Windows in Python.
+  | Any help is welcome.
+  | Meanwhile, you can :ref:`use the Python online version <sec-py-project-online>`.
+
 
 If your configuration is missing in this table, please contact us. We may be able to make it available for Tubex.
 
@@ -47,6 +54,24 @@ After the installation, please see the :ref:`sec-installation-graphics` section.
 
 Full installation for C++ use or developpers
 --------------------------------------------
+
+For C++, the ``✓`` configurations are officially supported at the moment:
+
+=================================  =============  =================  =============
+Python version                     Linux          Windows            macOS
+=================================  =============  =================  =============
+Python 3.4                         ✓              soon available ?   ?
+Python 3.5                         ✓              soon available ?   ?
+Python 3.6                         ✓              soon available ?   ?
+Python 3.7                         ✓              soon available ?   ?
+Python 3.8                         ✓              soon available ?   ?
+=================================  =============  =================  =============
+
+.. note::
+
+  | (5th June) We are currently working on making Tubex available on Windows in C++.
+  | Any help is welcome.
+
 
 Requirements and dependencies (IBEX)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
