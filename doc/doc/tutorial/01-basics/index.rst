@@ -240,9 +240,9 @@ We can also define vector input variables and access their components in the fun
 
     g(\mathbf{x},\mathbf{b})=\sqrt{\displaystyle(x_1-b_1)^2+(x_2-b_2)^2},
 
-  where :math:`\mathbf{x}\in\mathbb{R}^2` would represent for instance the 2d position of a robot, and :math:`\mathbf{b}\in\mathbb{R}^2` the 2d location of some landmark. Create :math:`g` and compute the distance between the boxes :math:`[\mathbf{a}]=[0,0]\times[0,0]` and :math:`[\mathbf{b}]=[3,4]\times[2,3]`. Note that in the library, the ``.eval()`` of functions only takes one argument: we have to concatenate the boxes :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]` into one 4d interval-vector :math:`[\mathbf{c}]` and then compute :math:`g([\mathbf{c}])`.
+  where :math:`\mathbf{x}\in\mathbb{R}^2` would represent for instance the 2d position of a robot, and :math:`\mathbf{b}\in\mathbb{R}^2` the 2d location of some landmark. Create :math:`g` and compute the distance between the boxes :math:`[\mathbf{x}]=[0,0]\times[0,0]` and :math:`[\mathbf{b}]=[3,4]\times[2,3]`. Note that in the library, the ``.eval()`` of functions only takes one argument: we have to concatenate the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` into one 4d interval-vector :math:`[\mathbf{c}]` and then compute :math:`g([\mathbf{c}])`.
 
-  Print the result that you obtain for :math:`g([\mathbf{a}],[\mathbf{b}])`.
+  Print the result that you obtain for :math:`g([\mathbf{x}],[\mathbf{b}])`.
 
 
 Graphics
@@ -278,14 +278,14 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
       fig.show() # display all items of the figure
       endDrawing()
 
-  | **A.5.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. Draw the computed interval range with ``fig.draw_circle(x, y, rad)`` where ``x``, ``y``, ``rad`` are *double* values.
+  | **A.5.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. The computed interval range can be displayed as a ring centered on :math:`\mathbf{x}=(0,0)`. To display each bound of the ring, you can use ``fig.draw_circle(x, y, rad)`` where ``x``, ``y``, ``rad`` are *double* values.
 
   .. hint::
 
     To access *double* bounds of an interval object ``x``, you can use the ``x.lb()``/``x.ub()`` methods for lower and upper bounds.
 
-  | **A.6.** Now, repeat the operation with :math:`[\mathbf{a}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``a``.
-  | Is the result reliable, according to the sets :math:`[\mathbf{a}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{a}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
+  | **A.6.** Now, repeat the operation with :math:`[\mathbf{x}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``a``.
+  | Is the result reliable, according to the sets :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{x}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
 
 
 .. admonition:: Technical documentation
@@ -362,9 +362,12 @@ The contractor is then simply added to a **Contractor Network** (CN) that will m
     # The three domains are then contracted as:
     # x=[0, 1], y=[0, 3], a=[1, 4]
 
+Note that one contractor can be added several times in the CN. This is useful to apply several constraints implemented by the same operator, on different sets of variables.
+
+
 .. admonition:: Exercise
 
-  | **A.8.** Define a Contractor Network with the :math:`\mathcal{C}_\textrm{dist}` object you have created and apply it on some boxes :math:`[\mathbf{b}^i]`.
+  | **A.8.** Define a Contractor Network with several :math:`\mathcal{C}_\textrm{dist}` object you have created and apply it on some boxes :math:`[\mathbf{b}^i]`.
   | Check the results with :math:`\mathcal{C}_\textrm{dist}([\mathbf{x}],[\mathbf{b}^i],[r])`, :math:`i\in\{1,2,3\}` and 
   
   * :math:`[r]=[7,8]`
@@ -373,7 +376,7 @@ The contractor is then simply added to a **Contractor Network** (CN) that will m
   * :math:`[\mathbf{b}^2]=[3,4]\times[4,6.5]`
   * :math:`[\mathbf{b}^3]=[5,7]\times[5.5,8]`
 
-  Draw the :math:`[\mathbf{b}^i]` boxes and :math:`[r]` before and after the contractions, in order to assess the contracting effects.
+  Draw the :math:`[\mathbf{b}^i]` boxes (``.draw_box()``) and :math:`[r]` (``.draw_circle()``) before and after the contractions, in order to assess the contracting effects.
   You should obtain this figure:
 
   .. figure:: img/ctc_dist.png
