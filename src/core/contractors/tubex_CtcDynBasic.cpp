@@ -32,6 +32,15 @@ namespace tubex
 
 	do{
 		fix_point_n = false;
+		double volume = 0.;
+		double input_diam=0.;
+		double output_diam=0.;
+		
+		for (int i =0; i<  x_slice.size(); i++){
+		  volume+=x_slice[i]->volume();
+		  input_diam+=x_slice[i]->input_gate().diam();
+		  output_diam+=x_slice[i]->output_gate().diam();
+		}
 		for (int i = 0 ; i < x_slice.size() ; i++){
 
 			Slice aux_slice_x(*x_slice[i]);
@@ -53,21 +62,42 @@ namespace tubex
 				ctc_deriv.contract(aux_slice_x, aux_slice_v,t_propa);
 				ctc_fwd(aux_slice_x, aux_slice_v, x_slice, v_slice, i);
 			}
-			double volume = x_slice[i]->volume();
+			
+
+			//			double input_diam = x_slice[i]->input_gate().diam();
+			//			double output_diam = x_slice[i]->output_gate().diam();
 
 			/*Replacing the old domains with the new ones*/
 			x_slice[i]->set_envelope(aux_slice_x.codomain()); v_slice[i]->set_envelope(aux_slice_v.codomain());
 			x_slice[i]->set_input_gate(aux_slice_x.input_gate()); v_slice[i]->set_input_gate(aux_slice_v.input_gate());
 			x_slice[i]->set_output_gate(aux_slice_x.output_gate()); v_slice[i]->set_output_gate(aux_slice_v.output_gate());
+			//			cout << " volume " << volume << " after " << x_slice[i]->volume() << endl;
 
-			if (x_slice[i]->volume() < volume)
-				fix_point_n = true;
+		
 		}
+		double volume_after=0;
+		double input_diam_after=0;
+		double output_diam_after=0;
+		for (int i =0; i<  x_slice.size(); i++){
+		  input_diam_after+=x_slice[i]->input_gate().diam();
+		  output_diam_after+=x_slice[i]->output_gate().diam();
+		  volume_after+=x_slice[i]->volume();
+		}
+		//		if (volume_after < volume || input_diam_after< input_diam || output_diam_after < output_diam) 
+		if (volume_after < volume)
+		  fix_point_n = true;
+
+
 
 		if ((first_iteration) && !(fix_point_n))
-			return false;
-		first_iteration = false;
-		if (!get_reasoning_slice()) fix_point_n=false;
+		  
+		  //		  { for (int i = 0 ; i < x_slice.size() ; i++){
+		      //		      cout << " end " << i << "  " <<  *(x_slice[i]) << endl;
+		  
+		  return false;
+	
+	first_iteration = false;
+	if (!get_reasoning_slice()) fix_point_n=false;
 
 	} while(fix_point_n);
 

@@ -59,7 +59,7 @@ namespace tubex
 		/*
 		 * todo: add comments
 		 */
-		bool contract_idiff(std::vector<Slice*> x_slice, std::vector<Slice*> v_slice,TubeVector x, int id, std::vector<ibex::Interval> idiff_values,TPropagation t_propa);
+		bool contract_idiff(std::vector<Slice*> x_slice, std::vector<Slice*> v_slice,TubeVector x, int id, std::vector<ibex::Interval>& idiff_values,TPropagation t_propa);
 		/*
 		 * If true, it contracts the tube until no contraction is obtained at the slice level.
 		 */

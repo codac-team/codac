@@ -16,7 +16,7 @@ namespace tubex
 {
 	CtcDynCidGuess::CtcDynCidGuess(tubex::Fnc& fnc, double prec): fnc(fnc), prec(prec)
 	{
-		assert(prec >= 0);
+		//assert(prec >= 0);
 		set_prec(0.05);
 	}
 
@@ -25,7 +25,7 @@ namespace tubex
 		//checks that the domain of each slice is the same.
 		Interval to_try(x_slice[0]->domain());
 		for (int i = 1 ; i < x_slice.size(); i++)
-			assert(to_try == x_slice[i]->domain());
+			//assert(to_try == x_slice[i]->domain());
 
 		//check if the gates used to contract are bounded
 		for (int i = 0 ; i < x_slice.size(); i++){
@@ -324,7 +324,7 @@ namespace tubex
 		Interval subinterval_removal;  bool success;
 		if (get_dpolicy() != 0){
 			for (int k = 0 ;  k < 1 ; k++){
-				double diam_removal = (remove_bound.diam()/128)*(k+1);
+				double diam_removal = (remove_bound.diam()/1024)*(k+1);
 				/*restore domains*/
 				x_slice_bounds.clear(); v_slice_bounds.clear();
 				for (int i = 0 ; i < x_slice.size() ; i++){
