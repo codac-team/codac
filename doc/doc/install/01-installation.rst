@@ -7,6 +7,9 @@ Installing the Tubex library
 The installation is supported on Linux systems. The current version of Tubex will be soon available for Windows.
 Any support is more than welcome.
 
+Note that you can also :ref:`use Tubex online in Python <sec-py-project-online>`, without having to install the library on your machine.
+
+
 .. contents::
 
 
@@ -38,7 +41,7 @@ Python 3.8                         ✓              soon available ?   ?
 
   | (5th June) We are currently working on making Tubex available on Windows in Python.
   | Any help is welcome.
-  | Meanwhile, you can :ref:`use the Python online version <sec-py-project-online>`.
+  | Meanwhile, you can :ref:`use Tubex online in Python <sec-py-project-online>`.
 
 
 If your configuration is missing in this table, please contact us. We may be able to make it available for Tubex.
@@ -57,15 +60,11 @@ Full installation for C++ use or developpers
 
 For C++, the ``✓`` configurations are officially supported at the moment:
 
-=================================  =============  =================  =============
-Python version                     Linux          Windows            macOS
-=================================  =============  =================  =============
-Python 3.4                         ✓              soon available ?   ?
-Python 3.5                         ✓              soon available ?   ?
-Python 3.6                         ✓              soon available ?   ?
-Python 3.7                         ✓              soon available ?   ?
-Python 3.8                         ✓              soon available ?   ?
-=================================  =============  =================  =============
+=============  =================  =============
+Linux          Windows            macOS
+=============  =================  =============
+✓              soon available ?   ?
+=============  =================  =============
 
 .. note::
 
@@ -73,8 +72,8 @@ Python 3.8                         ✓              soon available ?   ?
   | Any help is welcome.
 
 
-Requirements and dependencies (IBEX)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Linux] Requirements and dependencies (IBEX)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is available on `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
 
@@ -108,8 +107,8 @@ For further CMake options, please refer to the documentation. For instance, for 
 IBEX uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/wrswt/preprints/prep_01_4.pdf>`_ is also supported. Use :code:`-DINTERVAL_LIB=filib` during the CMake configuration to use it.
 
 
-Building the Tubex library
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Linux] Building the Tubex library
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The last sources are available on `the official Tubex development repository <https://github.com/SimonRohou/tubex-lib>`_. You can download the files and compile the sources with:
 
@@ -177,8 +176,8 @@ The last sources are available on `the official Tubex development repository <ht
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
 
 
-Compiling the examples
-^^^^^^^^^^^^^^^^^^^^^^
+[Linux] Compiling the examples
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To compile one specific example, use CMake in the example directory.
 For instance:
