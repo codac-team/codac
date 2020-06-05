@@ -102,17 +102,15 @@ This tutorial is proposed to the participants of `the ICRA conference <https://w
 Diploma
 -------
 
-To get the diploma, you need to send valid exercises to the organizers. A participant who gets a minimum total of 12 points will receive a diploma corresponding to this tutorial.
-This diploma can be used by students to obtain the corresponding ECTS from their PhD courses, or to comply with any other requests from their home university.
-
-.. An example of the diploma you can obtain is:
+| To get the diploma, you need to send valid exercises to the organizers. A participant who gets a minimum total of 12 points will receive a diploma corresponding to this tutorial. This diploma can be used by students to obtain the corresponding credits for their PhD courses (equivalent to 40 hours of lessons), or to comply with any other requests from their home university.
+| `Here is an example of the diploma you can obtain <http://simon-rohou.fr/research/tubex-lib/public/publipost_tubmooc_2020.pdf>`_.
 
 
 Duration and meeting sessions
 -----------------------------
 
 The tutorial will be held **from 8th of June to 5th of July**.
-Interactive meetings sessions are planned each Wednesday afternoon at 2pm:
+Interactive meetings sessions are planned each Wednesday afternoon at 2PM (UTC):
 
 .. hlist::
   :columns: 4
