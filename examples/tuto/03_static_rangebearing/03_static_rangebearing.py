@@ -81,4 +81,4 @@ endDrawing()
 
 
 # Checking if this example still works:
-sys.exit(0 if x.contains(x_truth[0:1]) else 1) # todo: x.contains(x_truth)
+sys.exit(0 if x.contains(x_truth[0:1]) else 1)

@@ -89,4 +89,4 @@ endDrawing()
 
 
 # Checking if this example still works:
-sys.exit(0 if x.volume() < 20. else 1) # todo: x.contains(x_truth)
+sys.exit(0 if x.contains(x_truth) == BoolInterval.YES else 1)
