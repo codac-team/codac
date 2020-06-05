@@ -32,7 +32,7 @@ Use Tubex online with Python
 #. | Select the tab |github_button| in the new window.
    |
 
-#. Past ``SimonRohou/tubex-replit`` in the text bar and click on |import_button|.
+#. Paste ``SimonRohou/tubex-replit`` in the text bar and click on |import_button|.
 
     .. image:: img/replit_2.png
       :width: 400px
