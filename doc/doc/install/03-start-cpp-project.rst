@@ -60,7 +60,7 @@ For the compilation of your project, you can use CMake with the following file :
     add_executable(${PROJECT_NAME} main.cpp)
     target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CXX_FLAGS})
     target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES} Ibex::ibex)
 
 
 The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directory:

@@ -11,7 +11,7 @@ We now have all the material to compute a solver for state estimation.
 Problem statement
 -----------------
 
-Our goal is to deal with the problem of localizing a robot of state :math:`\mathbf{x}\in\mathbb{R}^2` that measures distances :math:`\rho^{k}` from three landmarks :math:`\mathbf{b}^{k}`, :math:`k\in\{1,2,3\}`. We consider uncertainties on both the measurements and the location of the landmarks, which means that :math:`\rho^{k}\in[\rho^{k}]` and :math:`\mathbf{b}^{k}\in[\mathbf{b}^{k}]`. For now, the robot does not move.
+Our goal is to deal with the problem of localizing a robot of state :math:`\mathbf{x}\in\mathbb{R}^2` that measures distances :math:`d^{k}` from three landmarks :math:`\mathbf{b}^{k}`, :math:`k\in\{1,2,3\}`. We consider uncertainties on both the measurements and the location of the landmarks, which means that :math:`d^{k}\in[d^{k}]` and :math:`\mathbf{b}^{k}\in[\mathbf{b}^{k}]`. For now, the robot does not move.
 
 .. figure:: img/prior_result.png
   :width: 500px
@@ -24,22 +24,22 @@ Our problem corresponds to the following Constraint Network:
 
   \left\{
   \begin{array}{l}
-  \textrm{Variables:}~~ \mathbf{x}, \mathbf{b}^{1}, \mathbf{b}^{2}, \mathbf{b}^{3}, \rho^{1}, \rho^{2}, \rho^{3}\\
+  \textrm{Variables:}~~ \mathbf{x}, \mathbf{b}^{1}, \mathbf{b}^{2}, \mathbf{b}^{3}, d^{1}, d^{2}, d^{3}\\
   \textrm{Constraints:}~~ \\
-  -~ \mathcal{L}_{g}^{1}\left(\mathbf{x},\mathbf{b}^{1},\rho^{1}\right) \\
-  -~ \mathcal{L}_{g}^{2}\left(\mathbf{x},\mathbf{b}^{2},\rho^{2}\right) \\
-  -~ \mathcal{L}_{g}^{3}\left(\mathbf{x},\mathbf{b}^{3},\rho^{3}\right) \\
-  \textrm{Domains:}~~ [\mathbf{x}], [\mathbf{b}^{1}], [\mathbf{b}^{2}], [\mathbf{b}^{3}], [\rho^{1}], [\rho^{2}], [\rho^{3}]
+  -~ \mathcal{L}_{\textrm{dist}}^{1}\left(\mathbf{x},\mathbf{b}^{1},d^{1}\right) \\
+  -~ \mathcal{L}_{\textrm{dist}}^{2}\left(\mathbf{x},\mathbf{b}^{2},d^{2}\right) \\
+  -~ \mathcal{L}_{\textrm{dist}}^{3}\left(\mathbf{x},\mathbf{b}^{3},d^{3}\right) \\
+  \textrm{Domains:}~~ [\mathbf{x}], [\mathbf{b}^{1}], [\mathbf{b}^{2}], [\mathbf{b}^{3}], [d^{1}], [d^{2}], [d^{3}]
   \end{array}\right.
 
 This formalization can be seen in the literature and summarizes the problem in terms of variables, constraints on the variables, and domains for their sets of feasible values. As explained in the previous section, we will represent domains by means of intervals and boxes (interval vectors). In addition, constraints will be applied with contractors.
 
 
-The :math:`\mathcal{L}_{g}^{k}` is the distance constraint from a landmark :math:`\mathbf{b}^{k}`. It links a measurement :math:`\rho^{k}` to the state :math:`\mathbf{x}` with:
+The :math:`\mathcal{L}_{\textrm{dist}}^{k}` is the distance constraint from a landmark :math:`\mathbf{b}^{k}`. It links a measurement :math:`d^{k}` to the state :math:`\mathbf{x}` with:
 
 .. math::
 
-  \mathcal{L}_{g}^{k}:~\rho^{k}=\sqrt{\left(x_1-\mathbf{b}_1^{k}\right)^2+\left(x_2-\mathbf{b}_2^{k}\right)^2}.
+  \mathcal{L}_{\textrm{dist}}^{k}:~d^{k}=\sqrt{\left(x_1-b_1^{k}\right)^2+\left(x_2-b_2^{k}\right)^2}.
 
 
 Solving the problem
@@ -51,39 +51,62 @@ The following code provides a simulation of random landmarks and related range-o
 
   .. code-tab:: c++
 
-    // Truth (unknown pose)
-    Vector x_truth({0.,0.,M_PI/6.}); // (x,y,heading)
+    #include <tubex.h>
+    
+    using namespace std;
+    using namespace tubex;
+    
+    int main()
+    {
+      // Truth (unknown pose)
+      Vector x_truth({0.,0.,M_PI/6.}); // (x,y,heading)
 
-    // Creating random map of landmarks
-    int nb_landmarks = 3;
-    IntervalVector map_area(2, Interval(-8.,8.));
-    vector<IntervalVector> v_map = DataLoader::generate_landmarks_boxes(map_area, nb_landmarks);
+      // Creating random map of landmarks
+      int nb_landmarks = 3;
+      IntervalVector map_area(2, Interval(-8.,8.));
+      vector<IntervalVector> v_b =
+          DataLoader::generate_landmarks_boxes(map_area, nb_landmarks);
 
-    // The following function generates a set of [range]x[bearing] values
-    vector<IntervalVector> v_obs = DataLoader::generate_static_observations(x_truth, v_map, false);
+      // The following function generates a set of [range]x[bearing] values
+      vector<IntervalVector> v_obs =
+          DataLoader::generate_static_observations(x_truth, v_b, false);
 
-    // We keep range-only observations from v_obs, and add uncertainties
-    vector<Interval> v_range;
-    for(auto& obs : v_obs)
-      v_range.push_back(obs[0].inflate(0.1)); // adding uncertainties: [-0.1,0.1]
+      // We keep range-only observations from v_obs, and add uncertainties
+      vector<Interval> v_d;
+      for(auto& obs : v_obs)
+        v_d.push_back(obs[0].inflate(0.1)); // adding uncertainties: [-0.1,0.1]
+
+      // Set of feasible positions for x: x ϵ [-∞,∞]×[-∞,∞]
+      IntervalVector x(2);
+
+      // ...
 
   .. code-tab:: py
+
+    from tubex_lib import *
+    from pyibex import *
+    import math
 
     # Truth (unknown pose)
     x_truth = [0,0,math.pi/6] # (x,y,heading)
 
     # Creating random map of landmarks
     map_area = IntervalVector(2, [-8,8])
-    v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks = 3)
+    v_b = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks = 3)
 
     # The following function generates a set of [range]x[bearing] values
-    v_obs = DataLoader.generate_static_observations(x_truth, v_map, False)
+    v_obs = DataLoader.generate_static_observations(x_truth, v_b, False)
 
     # We keep range-only observations from v_obs, and add uncertainties
-    v_range = []
+    v_d = []
     for obs in v_obs:
-      r = obs[0].inflate(0.1) # adding uncertainties: [-0.1,0.1]
-      v_range.append(r)
+      d = obs[0].inflate(0.1) # adding uncertainties: [-0.1,0.1]
+      v_d.append(d)
+
+    # Set of feasible positions for x: x ϵ [-∞,∞]×[-∞,∞]
+    x = IntervalVector(2) # this is equivalent to: IntervalVector([[-oo,oo],[-oo,oo]])
+
+    # ...
 
 
 Finally, the graphical functions are given by:
@@ -92,37 +115,42 @@ Finally, the graphical functions are given by:
 
   .. code-tab:: c++
 
-    vibes::beginDrawing();
+      // ...
 
-    VIBesFigMap fig("Map");
-    fig.set_properties(50, 50, 600, 600);
+      vibes::beginDrawing();
 
-    for(const auto& iv : v_map)
-      fig.add_beacon(iv.mid(), 0.2);
+      VIBesFigMap fig("Map");
+      fig.set_properties(50, 50, 600, 600);
 
-    for(int i = 0 ; i < nb_landmarks ; i++)
-      fig.draw_ring(v_map[i][0].mid(), v_map[i][1].mid(), v_range[i], "gray");
+      for(const auto& b : v_b)
+        fig.add_beacon(b.mid(), 0.2);
 
-    fig.draw_vehicle(x_truth, 0.5); // last param: vehicle size
-    fig.draw_box(x); // estimated position
-    fig.show();
+      for(int i = 0 ; i < nb_landmarks ; i++)
+        fig.draw_ring(v_b[i][0].mid(), v_b[i][1].mid(), v_d[i], "gray");
 
-    vibes::endDrawing();
+      fig.draw_vehicle(x_truth, 0.7); // last param: vehicle size
+      fig.draw_box(x); // estimated position
+      fig.show();
+
+      vibes::endDrawing();
+    }
 
   .. code-tab:: py
+
+    # ...
 
     beginDrawing()
 
     fig = VIBesFigMap("Map")
     fig.set_properties(50, 50, 600, 600)
 
-    for iv in v_map:
-      fig.add_beacon(iv.mid(), 0.2)
+    for b in v_b:
+      fig.add_beacon(b.mid(), 0.2)
 
-    for i in range(0,len(v_range)):
-      fig.draw_ring(v_map[i][0].mid(), v_map[i][1].mid(), v_range[i], "gray")
+    for i in range(0,len(v_d)):
+      fig.draw_ring(v_b[i][0].mid(), v_b[i][1].mid(), v_d[i], "gray")
 
-    fig.draw_vehicle(x_truth, size=0.5)
+    fig.draw_vehicle(x_truth, size=0.7)
     fig.draw_box(x) # estimated position
     fig.show()
 
@@ -134,12 +162,12 @@ Finally, the graphical functions are given by:
   **B.1.** Before the code related to the graphical part, compute the state estimation of the robot by contracting the box :math:`[\mathbf{x}]` initialized to :math:`[-\infty,\infty]^2` with a Contractor Network:
   
   * :math:`[\mathbf{x}]` represents the unknown 2d position of the robot
-  * ``v_range`` is the set of bounded measurements :math:`\{[\rho^{1}],[\rho^{2}],[\rho^{3}]\}`
+  * ``v_d`` is the set of bounded measurements :math:`\{[d^{1}],[d^{2}],[d^{3}]\}`
   * ``v_b`` is the set of landmarks with bounded positions :math:`\{[\mathbf{b}^{1}],[\mathbf{b}^{2}],[\mathbf{b}^{3}]\}`
 
   For this, you can use the :math:`\mathcal{C}_{\textrm{dist}}` contractor you defined in the previous section.
 
-  You should obtain this figure:
+  You should obtain a figure similar to this:
 
   .. figure:: img/final_result.png
     :width: 500px
@@ -147,17 +175,37 @@ Finally, the graphical functions are given by:
     Range-only localization: expected result. The black painted box represents the set of feasible positions for our robot.
 
 
+  Due to the randomness of the landmarks, the geometry is sometimes bad and does not allow an accurate contraction: symmetrical solutions are possible, and the box :math:`[\mathbf{x}]` encloses them all. You can execute the code several times to see how the geometry influences the result.
+
+
 How does it work?
 -----------------
 
-The Contractor Network you have defined managed the contractions provided by the three :math:`\mathcal{C}_{\textrm{dist}}` contractors.
-But in this example, there are **dependencies between the constraints** that all act on the same variable :math:`\mathbf{x}`.
+.. rubric:: Combining the constraints
 
+The Contractor Network you have defined managed the contractions provided by the three :math:`\mathcal{C}_{\textrm{dist}}` contractors.
+
+Each constraint alone would not allow a good contraction, since it would contract :math:`[\mathbf{x}]` to the box enclosing the circle corresponding to :math:`d^k`. It is the intersection of the three constraints that makes the approach powerful.
+
+.. rubric:: Fixed point resolution
+
+There are **dependencies between the constraints** that all act on the same variable :math:`\mathbf{x}`.
 The Contractor Network has then made a **fixed point resolution method** for solving the problem.
 
-When a :math:`\mathcal{C}_{\textrm{dist}}` contractor reduces the box :math:`[\mathbf{x}]`, it may raise new contraction possibilities coming from the other constraints. It becomes interesting to call again the other contractors in order to take benefit from any contraction. An iterative resolution process is then used, where the contractors are called until a fixed point has been reached. By *fixed point* we mean that none of the domains :math:`[\mathbf{x}]` and :math:`[\rho^{k}]` has been contracted during a complete iteration.
+When a :math:`\mathcal{C}_{\textrm{dist}}` contractor reduces the box :math:`[\mathbf{x}]`, it may raise new contraction possibilities coming from the other constraints. It becomes interesting to call again the previous contractors (start another iteration) in order to take benefit from any contraction. An iterative resolution process is then used, where the contractors are called until a fixed point has been reached. By *fixed point* we mean that none of the domains :math:`[\mathbf{x}]` and :math:`[d^{k}]` has been contracted during a complete iteration.
 
 The following figure provides the synoptic of this state estimation, performed by the Contractor Network. In this example, constraints have been propagated over 7 iterations in a very short amount of time.
 
 .. figure:: img/fixedpoint_animation.gif
   :width: 500px
+
+
+
+
+Submit your exercise
+--------------------
+
+| That's about all for this first week!
+| You can submit your answers for the questions of Lessons A and B to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.
+
+Next lessons will introduce additional constraints, and a new domain for handling uncertain trajectories: tubes.

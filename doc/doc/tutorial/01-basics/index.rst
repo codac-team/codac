@@ -3,8 +3,8 @@
 Lesson A: Getting started with intervals and contractors
 ========================================================
 
-Now that Tubex has been installed on your computer, we will get used to intervals, constraints and networks of contractors.
-This will allow use to perform the state estimaton of a static robot between some landmarks by the end of this lesson.
+Now that Tubex has been installed on your computer or usable online, we will get used to intervals, constraints and networks of contractors.
+This will allow use to perform the state estimaton of a static robot between some landmarks by the end of :ref:`Lesson B <sec-tuto-02>`.
 
 .. contents:: Content of this lesson
 
@@ -62,7 +62,7 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
 Using intervals for handling uncertainties
 ------------------------------------------
 
-The values involved in robotic problems will be represented by **sets**. This allows to hold in the very same structure both the value (a measurement, or a model parameter) together with the related uncertainty. Therefore, a measurement :math:`x` will be handled by a set, more precisely an **interval**, denoted between brackets: :math:`[x]`. :math:`[x]` is made of two real bounds, :math:`x^-` and :math:`x^+`, and we say that a value :math:`x` belongs to :math:`[x]=[x^-,x^+]` iff :math:`x^-\leqslant x\leqslant x^+`.
+The values involved in robotic problems will be represented by **sets**. This allows to hold in the very same structure both the value (a measurement, or a model parameter) together with the related uncertainty. Therefore, a measurement :math:`x` will be handled by a set, more precisely an **interval**, denoted between brackets: :math:`[x]`. :math:`[x]` is made of two real bounds, :math:`x^-` and :math:`x^+`, and we say that a value :math:`x\in\mathbb{R}` belongs to :math:`[x]=[x^-,x^+]` iff :math:`x^-\leqslant x\leqslant x^+`.
 
 This can be extended to other types of values such as vectors, matrices or trajectories. Then,
 
@@ -131,7 +131,7 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
 
       x = IntervalVector(2, [-1,3])               # creates [x]=[-1,3]×[-1,3]=[-1,3]^2
       y = IntervalVector([[3,4],[4,6]])           # creates [y]= [3,4]×[4,6]
-      z = IntervalVector(3, Interval.POS_REALS)   # creates [z]=[0,∞]^3
+      z = IntervalVector(3, [0,oo])               # creates [z]=[0,∞]^3
       w = IntervalVector(y)                       # creates a copy: [w]=[y]
 
       v = (0.42,0.42,0.42)                        # one vector (0.42;0.42;0.42)
@@ -180,8 +180,8 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
 
     .. code-tab:: c++
 
-      // In C++, pi is predefined by:
-
+      // In C++, you can use <math.h>:
+      #include <math.h>
       double x = M_PI;
     
     .. code-tab:: py
@@ -190,7 +190,7 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
       import math
       x = math.pi
 
-  Note that in this code, the variable ``x`` is not the exact :math:`\pi`! Of course, the mathematical one cannot be represented in a computer. But with intervals, we can manage reliable computations. :ref:`See more <sec-manual-intervals-pi>`.
+  Note that in this code, the variable ``x`` is not the exact :math:`\pi`! Of course, the mathematical one cannot be represented in a computer. But with intervals, we can manage reliable representations of floating point numbers. :ref:`See more <sec-manual-intervals-pi>`.
 
 
 Functions, :math:`f([x])`
@@ -284,7 +284,7 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
 
     To access *double* bounds of an interval object ``x``, you can use the ``x.lb()``/``x.ub()`` methods for lower and upper bounds.
 
-  | **A.6.** Now, repeat the operation with :math:`[\mathbf{x}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``a``.
+  | **A.6.** Now, repeat the operation with :math:`[\mathbf{x}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``x``.
   | Is the result reliable, according to the sets :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{x}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
 
 
@@ -314,7 +314,7 @@ In robotics, **constraints** are coming from the equations of the robot. They ca
 
 Now, we want to apply the constraints in order to solve our problem. In the Constraint Programming community, we apply constraints on **domains** that represent sets of feasible values. The previously mentionned sets (intervals, boxes, tubes) will be used as domains. 
 
-For this purpose, we will use **contractors** to implement constraints on sets. They are mathematical operators used to *contract* (reduce) a set, for instance a box, without losing any feasible solution. This way, contractors can be applied safely any time we want on our domains.
+We will use **contractors** to implement constraints on sets. They are mathematical operators used to *contract* (reduce) a set, for instance a box, without losing any feasible solution. This way, contractors can be applied safely any time we want on our domains.
 
 In Tubex, the contractors are also defined by C++/Python objects and are prefixed with ``Ctc``. For this lesson, we will use the ``CtcFunction`` class to define a contractor according to a function :math:`f`. Note that the resulting contractor will aim at solving a constraint in the form :math:`f(\mathbf{x})=0`. This contractor has to be instantiated from a ``Function`` object defining the constraint. For instance, the simple constraint :math:`(x+y=a)` is expressed as :math:`f(x,y,a)=x+y-a=0`, and can be implemented as a contractor :math:`\mathcal{C}_+` with:
 
@@ -332,7 +332,8 @@ In Tubex, the contractors are also defined by C++/Python objects and are prefixe
 
   **A.7.** Define a contractor :math:`\mathcal{C}_\textrm{dist}` related to the distance constraint between two 2d positions :math:`\mathbf{x}` and :math:`\mathbf{b}\in\mathbb{R}^2`. We will use the distance function previously defined, but in the form :math:`f(\mathbf{x},\mathbf{b},d)=0`.
 
-The contractor is then simply added to a **Contractor Network** (CN) that will manage the constraints on the different variables for solving the problem. For instance, we can use the previously defined :math:`\mathcal{C}_+` as:
+| The contractor is then simply added to a **Contractor Network** (CN) that will manage the constraints on the different variables for solving the problem.
+| For instance, we can use the previously defined :math:`\mathcal{C}_+` as:
 
 .. tabs::
 
@@ -367,22 +368,24 @@ Note that one contractor can be added several times in the CN. This is useful to
 
 .. admonition:: Exercise
 
-  | **A.8.** Define a Contractor Network with several :math:`\mathcal{C}_\textrm{dist}` object you have created and apply it on some boxes :math:`[\mathbf{b}^i]`.
-  | Check the results with :math:`\mathcal{C}_\textrm{dist}([\mathbf{x}],[\mathbf{b}^i],[r])`, :math:`i\in\{1,2,3\}` and 
+  | **A.8.** Define a Contractor Network to implement three distance constraints.
+  | Check the results with :math:`\mathcal{C}_\textrm{dist}([\mathbf{x}],[\mathbf{b}^i],[d])`, :math:`i\in\{1,2,3\}` and 
   
-  * :math:`[r]=[7,8]`
+  * :math:`[d]=[7,8]`
   * :math:`[\mathbf{x}]=[0,0]^2`
   * :math:`[\mathbf{b}^1]=[1.5,2.5]\times[4,11]`
   * :math:`[\mathbf{b}^2]=[3,4]\times[4,6.5]`
   * :math:`[\mathbf{b}^3]=[5,7]\times[5.5,8]`
 
-  Draw the :math:`[\mathbf{b}^i]` boxes (``.draw_box()``) and :math:`[r]` (``.draw_circle()``) before and after the contractions, in order to assess the contracting effects.
+  We recall that the same :math:`\mathcal{C}_\textrm{dist}` object can appear several times in the CN.
+
+  Draw the :math:`[\mathbf{b}^i]` boxes (``.draw_box()``) and :math:`[d]` (``.draw_circle()``) before and after the contractions, in order to assess the contracting effects.
   You should obtain this figure:
 
   .. figure:: img/ctc_dist.png
     :width: 500px
 
-  As you can see, the four domains have been contracted after the ``.contract()`` method: even the bounded range :math:`[r]` has been reduced thanks to the knowledge provided by the boxes. In Constraint Programming, we only define the constraints of the problem and let the resolution propagate the information as much as possible.
+  As you can see, the four domains have been contracted after the ``.contract()`` method: even the bounded range :math:`[d]` has been reduced thanks to the knowledge provided by the boxes. In Constraint Programming, we only define the constraints of the problem and let the resolution propagate the information as much as possible.
 
 
 We now have all the material to compute a solver for state estimation in the next section.

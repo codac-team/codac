@@ -7,3 +7,5 @@
 
 Static range-and-bearing localization
 =====================================
+
+The following example is quite similar to the kidnapped robot problem that is somewhat difficult to solve using traditional methods.
