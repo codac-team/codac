@@ -4,7 +4,7 @@ Lesson A: Getting started with intervals and contractors
 ========================================================
 
 Now that Tubex has been installed on your computer or usable online, we will get used to intervals, constraints and networks of contractors.
-This will allow use to perform the state estimaton of a static robot between some landmarks by the end of :ref:`Lesson B <sec-tuto-02>`.
+This will allow use to perform the state estimation of a static robot between some landmarks by the end of :ref:`Lesson B <sec-tuto-02>`.
 
 .. contents:: Content of this lesson
 
@@ -70,12 +70,16 @@ This can be extended to other types of values such as vectors, matrices or traje
 * vectors :math:`\mathbf{x}` of :math:`\mathbb{R}^n` will be enclosed in interval-vectors (also called boxes): :math:`[\mathbf{x}]`
 * later on, trajectories :math:`x(t)` will belong to tubes: :math:`[x](t)`
 
-The initial definition of the bounds of these sets will be done according to the **amount of uncertainties** we are considering. For measurements, we will rely on the datasheet of the sensor to define for instance that a measurement :math:`y` will be represented by the interval :math:`[y − 2\sigma, y + 2\sigma]`, where :math:`\sigma` is the standard deviation coming from sensors specifications. In this case, we assume that the interval :math:`[y]` is **garanteed to contain** the actual but unknown value with a 95% confidence rate.
+The initial definition of the bounds of these sets will be done according to the **amount of uncertainties** we are considering. For measurements, we will rely on the datasheet of the sensor to define for instance that a measurement :math:`y` will be represented by the interval :math:`[y − 2\sigma, y + 2\sigma]`, where :math:`\sigma` is the standard deviation coming from sensors specifications. In this case, we assume that the interval :math:`[y]` is **guaranteed to contain** the actual but unknown value with a 95% confidence rate.
 
-The main advantage of this representation is that we will be able to apply lot of **reliable** operations on these sets while preserving the actual but unknown values. This means that we will never lose a feasible solution in the initial sets throughout the operations we will perform. This is done by performing the computations on the bounds of the sets. For instance, the difference of two intervals is defined by: :math:`[x]-[y]=[x^--y^+,x^++y^-]`.
+The main advantage of this representation is that we will be able to apply lot of **reliable** operations on these sets while preserving the actual but unknown values. This means that we will never lose a feasible solution in the initial sets throughout the operations we will perform. This is done by performing the computations on the bounds of the sets. For instance, the difference of two intervals is also an interval defined by: :math:`[x]-[y]=[x^--y^+,x^+-y^-]`. Mathematically, we can prove that :math:`\forall x\in[x]` and :math:`\forall y\in[y]`, we have :math:`(x-y)\in([x]-[y])`.
 
-In addition, when dealing with **non-linear functions**, we will not have to make linearizations.
-Sometimes, when functions are monotonic, the computation is simple: :math:`\exp([x])=[\exp(x^-),\exp(x^+)]`. Otherwise, several algorithms and libraries exist to allow any mathematical operations on intervals such as :math:`\cos([x])`,  :math:`\sqrt{([x])}`, *etc*. 
+| *Example:* :math:`[3,4]-[2,6]=[-3,2]`.
+| If we take :math:`x=3\in[3,4]` and :math:`y=5\in[2,6]`, we check that :math:`-2\in[-3,2]`.
+
+These simple operations on intervals can be extended to elementary functions such as :math:`\cos`, :math:`\exp`, :math:`\tan`, *etc*.
+It must be emphasized that there is no need to make linearizations when dealing with **non-linear functions**.
+Sometimes, when functions are monotonic, the computation is simple: :math:`\exp([x])=[\exp(x^-),\exp(x^+)]`. Otherwise, several algorithms and libraries exist to allow any mathematical operations on intervals such as :math:`\sin([x])`,  :math:`\sqrt{([x])}`, *etc*. 
 
 The asset of reliability coming with interval analysis will help us to estimate difficult solutions and **make proofs**.
 
@@ -158,19 +162,24 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
 
 .. admonition:: Exercise
 
-  **A.1.** In your new project, compute and print the following simple operations on intervals:
+  **A.1.** Let us consider two intervals :math:`[x]=[8,10]` and :math:`[y]=[1,2]`. Without coding the operation, what would be the result of :math:`[x]/[y]` (:math:`[x]` divided by :math:`[y]`)? Remember that the result of this interval-division is also an interval enclosing all feasible divisions.
+
+  **A.2.** In your new project, compute and print the following simple operations on intervals:
   
   * :math:`[-2,4]\cdot[1,3]`
-  * :math:`[-2,4]\sqcup[6,7]`
+  * :math:`[8,10]/[-1,0]`
+  * :math:`[-2,4]\sqcup[6,7]` with operator ``|``
   * :math:`\max([2,7],[1,9])`
   * :math:`\max(\varnothing,[1,2])`
-  * :math:`[-1,3]/[0,\infty]`
+  * :math:`\cos([-\infty,\infty])`
+  * :math:`[-1,4]^2` with function ``sqr()``
   * :math:`([1,2]\cdot[-1,3]) + \max([1,3]\cap[6,7],[1,2])`
 
-  Note that :math:`\sqcup` is the hull union (``|``), *i.e.*, :math:`[x]\sqcup[y] = [[x]\cup[y]]`.
+  | Note that :math:`\sqcup` is the hull union (``|``), *i.e.*, :math:`[x]\sqcup[y] = [[x]\cup[y]]`.
+  | *For instance:* :math:`[-1,2]\sqcup[4,6]=[-1,6]`
   
 
-  **A.2.** These simple operations on sets can be extended to elementary functions such as :math:`\cos`, :math:`\exp`, :math:`\tan`. Create a 2d box :math:`[\mathbf{y}]=[0,\pi]\times[-\pi/6,\pi/6]` and print the result of :math:`|[\mathbf{y}]|` with ``abs()``.
+  **A.3.** Create a 2d box :math:`[\mathbf{y}]=[0,\pi]\times[-\pi/6,\pi/6]` and print the result of :math:`|[\mathbf{y}]|` with ``abs()``.
 
 .. hint::
 
@@ -226,23 +235,23 @@ We can also define vector input variables and access their components in the fun
 
   .. code-tab:: c++
 
-    Function f("x[2]", "cos(x[0])^2+sin(x[1])^2");
+    Function f("x[2]", "cos(x[0])^2+sin(x[1])^2"); // the input x is a 2d vector
   
   .. code-tab:: py
 
-    f = Function("x[2]", "cos(x[0])^2+sin(x[1])^2")
+    f = Function("x[2]", "cos(x[0])^2+sin(x[1])^2") # the input x is a 2d vector
 
 .. admonition:: Exercise
 
-  **A.3.** For our robotic applications, we often need to define the distance function :math:`g`:
+  **A.4.** For our robotic applications, we often need to define the distance function :math:`g`:
   
   .. math::
 
     g(\mathbf{x},\mathbf{b})=\sqrt{\displaystyle(x_1-b_1)^2+(x_2-b_2)^2},
 
-  where :math:`\mathbf{x}\in\mathbb{R}^2` would represent for instance the 2d position of a robot, and :math:`\mathbf{b}\in\mathbb{R}^2` the 2d location of some landmark. Create :math:`g` and compute the distance between the boxes :math:`[\mathbf{x}]=[0,0]\times[0,0]` and :math:`[\mathbf{b}]=[3,4]\times[2,3]`. Note that in the library, the ``.eval()`` of functions only takes one argument: we have to concatenate the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` into one 4d interval-vector :math:`[\mathbf{c}]` and then compute :math:`g([\mathbf{c}])`.
+  where :math:`\mathbf{x}\in\mathbb{R}^2` would represent for instance the 2d position of a robot, and :math:`\mathbf{b}\in\mathbb{R}^2` the 2d location of some landmark. Create :math:`g` and compute the interval distance :math:`[d]` between the boxes :math:`[\mathbf{x}]=[0,0]\times[0,0]` and :math:`[\mathbf{b}]=[3,4]\times[2,3]`. Note that in the library, the ``.eval()`` of functions only takes one argument: we have to concatenate the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` into one 4d interval-vector :math:`[\mathbf{c}]` and then compute :math:`g([\mathbf{c}])`.
 
-  Print the result that you obtain for :math:`g([\mathbf{x}],[\mathbf{b}])`.
+  Print the result that you obtain for :math:`[d]=g([\mathbf{x}],[\mathbf{b}])`.
 
 
 Graphics
@@ -252,7 +261,7 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
 
 .. admonition:: Exercise
 
-  **A.4.** Create a view with:
+  **A.5.** Create a view with:
 
   .. tabs::
 
@@ -278,13 +287,15 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
       fig.show() # display all items of the figure
       endDrawing()
 
-  | **A.5.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. The computed interval range can be displayed as a ring centered on :math:`\mathbf{x}=(0,0)`. To display each bound of the ring, you can use ``fig.draw_circle(x, y, rad)`` where ``x``, ``y``, ``rad`` are *double* values.
+  | **A.6.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. The computed interval range :math:`[d]` can be displayed as a ring centered on :math:`\mathbf{x}=(0,0)`. The ring will contain the set of all positions that are :math:`d`-distant from :math:`\mathbf{x}=(0,0)`, with :math:`d\in[d]`.
+
+  To display each bound of the ring, you can use ``fig.draw_circle(x, y, rad)`` where ``x``, ``y``, ``rad`` are *double* values.
 
   .. hint::
 
     To access *double* bounds of an interval object ``x``, you can use the ``x.lb()``/``x.ub()`` methods for lower and upper bounds.
 
-  | **A.6.** Now, repeat the operation with :math:`[\mathbf{x}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``x``.
+  | **A.7.** Now, repeat the operation with :math:`[\mathbf{x}]=[-0.1,0.1]\times[-0.1,0.1]`. You can for instance use the ``.inflate(0.1)`` method on ``x``.
   | Is the result reliable, according to the sets :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{x}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
 
 
@@ -310,9 +321,9 @@ Contractors, :math:`\mathcal{C}([x])`
 
 This was an initial overview of what is Interval Analysis. Now, we will introduce concepts from Constraint Programming and see how the two approaches can be coupled for solving problems.
 
-In robotics, **constraints** are coming from the equations of the robot. They can be for instance the evolution function :math:`\mathbf{f}` or the observation equation with :math:`\mathbf{g}`. In the case of :abbr:`SLAM (Simultaneous Localization And Mapping)`, we may also define a constraint to express the inter-relations between different states :math:`\mathbf{x}_1`, :math:`\mathbf{x}_2` at times :math:`t_1`, :math:`t_2`, for instance when a landmark has been seen two times.
+In robotics, **constraints** are coming from the equations of the robot. They can be for instance the evolution function :math:`\mathbf{f}` or the observation equation with :math:`\mathbf{g}`. In the case of :abbr:`SLAM (Simultaneous Localization And Mapping)`, we may also define a constraint to express the inter-temporal relation between different states :math:`\mathbf{x}_1`, :math:`\mathbf{x}_2` at times :math:`t_1`, :math:`t_2`, for instance when a landmark has been seen two times.
 
-Now, we want to apply the constraints in order to solve our problem. In the Constraint Programming community, we apply constraints on **domains** that represent sets of feasible values. The previously mentionned sets (intervals, boxes, tubes) will be used as domains. 
+Now, we want to apply the constraints in order to solve our problem. In the Constraint Programming community, we apply constraints on **domains** that represent sets of feasible values. The previously mentioned sets (intervals, boxes, tubes) will be used as domains. 
 
 We will use **contractors** to implement constraints on sets. They are mathematical operators used to *contract* (reduce) a set, for instance a box, without losing any feasible solution. This way, contractors can be applied safely any time we want on our domains.
 
@@ -330,7 +341,7 @@ In Tubex, the contractors are also defined by C++/Python objects and are prefixe
 
 .. admonition:: Exercise
 
-  **A.7.** Define a contractor :math:`\mathcal{C}_\textrm{dist}` related to the distance constraint between two 2d positions :math:`\mathbf{x}` and :math:`\mathbf{b}\in\mathbb{R}^2`. We will use the distance function previously defined, but in the form :math:`f(\mathbf{x},\mathbf{b},d)=0`.
+  **A.8.** Define a contractor :math:`\mathcal{C}_\textrm{dist}` related to the distance constraint between two 2d positions :math:`\mathbf{x}` and :math:`\mathbf{b}\in\mathbb{R}^2`. We will use the distance function previously defined, but in the form :math:`f(\mathbf{x},\mathbf{b},d)=0`.
 
 | The contractor is then simply added to a **Contractor Network** (CN) that will manage the constraints on the different variables for solving the problem.
 | For instance, we can use the previously defined :math:`\mathcal{C}_+` as:
@@ -368,7 +379,7 @@ Note that one contractor can be added several times in the CN. This is useful to
 
 .. admonition:: Exercise
 
-  | **A.8.** Define a Contractor Network to implement three distance constraints.
+  | **A.9.** Define a Contractor Network to implement three distance constraints.
   | Check the results with :math:`\mathcal{C}_\textrm{dist}([\mathbf{x}],[\mathbf{b}^i],[d])`, :math:`i\in\{1,2,3\}` and 
   
   * :math:`[d]=[7,8]`
