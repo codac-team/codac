@@ -183,34 +183,6 @@ void export_Trajectory(py::module& m){
     .def("__rtruediv__", [](const Trajectory& x, const ibex::Vector& y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
   ;
 
-  m.def("cos",   (const Trajectory (*) (const Trajectory&)) &cos);
-  m.def("sin",   (const Trajectory (*) (const Trajectory&)) &sin);
-  m.def("abs",   (const Trajectory (*) (const Trajectory&)) &abs);
-  m.def("sqr",   (const Trajectory (*) (const Trajectory&)) &sqr);
-  m.def("sqrt",  (const Trajectory (*) (const Trajectory&)) &sqrt);
-  m.def("exp",   (const Trajectory (*) (const Trajectory&)) &exp);
-  m.def("log",   (const Trajectory (*) (const Trajectory&)) &log);
-  m.def("tan",   (const Trajectory (*) (const Trajectory&)) &tan);
-  m.def("acos",  (const Trajectory (*) (const Trajectory&)) &acos);
-  m.def("asin",  (const Trajectory (*) (const Trajectory&)) &asin);
-  m.def("atan",  (const Trajectory (*) (const Trajectory&)) &atan);
-  m.def("cosh",  (const Trajectory (*) (const Trajectory&)) &cosh);
-  m.def("sinh",  (const Trajectory (*) (const Trajectory&)) &sinh);
-  m.def("tanh",  (const Trajectory (*) (const Trajectory&)) &tanh);
-  m.def("acosh", (const Trajectory (*) (const Trajectory&)) &acosh);
-  m.def("asinh", (const Trajectory (*) (const Trajectory&)) &asinh);
-  m.def("atanh", (const Trajectory (*) (const Trajectory&)) &atanh);
-
-  m.def("atan2", (const Trajectory (*) (const Trajectory&, const Trajectory&)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", (const Trajectory (*) (const Trajectory&, double)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", (const Trajectory (*) (double, const Trajectory&)) &atan2, "y"_a, "x"_a);
-
-  m.def("pow",   (const Trajectory (*) (const Trajectory& x, int p)) &pow, "x"_a, "p"_a);
-  m.def("pow",   (const Trajectory (*) (const Trajectory& x, double p)) &pow, "x"_a, "p"_a);
-  m.def("pow",   (const Trajectory (*) (const Trajectory& x, double p)) &pow, "x"_a, "p"_a);
-  m.def("root",  (const Trajectory (*) (const Trajectory& x, int p)) &root, "x"_a, "p"_a);
-
-
     py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector");
     trajectoryvector
         .def(py::init<int>(),DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT, "n"_a)

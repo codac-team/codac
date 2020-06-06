@@ -17,6 +17,7 @@
 
 #include "tubex_Tube.h"
 #include "tubex_py_Tube_docs.h"
+#include "ibex_Interval.h"
 
 using namespace ibex;
 using namespace tubex;
@@ -493,31 +494,4 @@ void export_Tube(py::module& m)
     .def("__and__",      [](const Tube& x, const Trajectory& y) { return x & y; })
     .def("__rand__",     [](const Tube& x, const Trajectory& y) { return x & y; })
   ;
-
-  m.def("cos",   (const Tube (*) (const Tube&)) &cos);
-  m.def("sin",   (const Tube (*) (const Tube&)) &sin);
-  m.def("abs",   (const Tube (*) (const Tube&)) &abs);
-  m.def("sqr",   (const Tube (*) (const Tube&)) &sqr);
-  m.def("sqrt",  (const Tube (*) (const Tube&)) &sqrt);
-  m.def("exp",   (const Tube (*) (const Tube&)) &exp);
-  m.def("log",   (const Tube (*) (const Tube&)) &log);
-  m.def("tan",   (const Tube (*) (const Tube&)) &tan);
-  m.def("acos",  (const Tube (*) (const Tube&)) &acos);
-  m.def("asin",  (const Tube (*) (const Tube&)) &asin);
-  m.def("atan",  (const Tube (*) (const Tube&)) &atan);
-  m.def("cosh",  (const Tube (*) (const Tube&)) &cosh);
-  m.def("sinh",  (const Tube (*) (const Tube&)) &sinh);
-  m.def("tanh",  (const Tube (*) (const Tube&)) &tanh);
-  m.def("acosh", (const Tube (*) (const Tube&)) &acosh);
-  m.def("asinh", (const Tube (*) (const Tube&)) &asinh);
-  m.def("atanh", (const Tube (*) (const Tube&)) &atanh);
-
-  m.def("atan2", (const Tube (*) (const Tube&, const Tube&)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", (const Tube (*) (const Tube&, const Interval&)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", (const Tube (*) (const Interval&, const Tube&)) &atan2, "y"_a, "x"_a);
-
-  m.def("pow",   (const Tube (*) (const Tube& x, int p)) &pow, "x"_a, "p"_a);
-  m.def("pow",   (const Tube (*) (const Tube& x, double p)) &pow, "x"_a, "p"_a);
-  m.def("pow",   (const Tube (*) (const Tube& x, const Interval& p)) &pow, "x"_a, "p"_a);
-  m.def("root",  (const Tube (*) (const Tube& x, int p)) &root, "x"_a, "p"_a);
 }
