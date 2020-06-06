@@ -1,5 +1,4 @@
-# [Tubex library](http://simon-rohou.fr/research/tubex-lib) [![Build Status](https://travis-ci.org/SimonRohou/tubex-lib.svg)](https://travis-ci.org/SimonRohou/tubex-lib)
-
+# [Tubex library](http://simon-rohou.fr/research/tubex-lib) [![Build Status](https://api.travis-ci.org/SimonRohou/tubex-lib.svg?branch=master)](https://travis-ci.org/SimonRohou/tubex-lib)
 
 Tubex is a library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
 
