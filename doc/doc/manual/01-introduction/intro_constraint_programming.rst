@@ -83,7 +83,7 @@ By *reliable*, we mean that all sources of uncertainties are taken into account,
 - model parameter uncertainties
 - measurement noise
 - uncertainties related to time discretization
-- linearization truncatures
+- linearization truncations
 - approximation of real numbers by floating-point values
 
 The outcomes are intervals and tubes that are guaranteed to contain the solutions of the system.

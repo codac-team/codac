@@ -263,7 +263,7 @@ namespace tubex
       // If possible, breaking down the constraint to slices level
       if(!dyn_ctc.is_intertemporal() && !Domain::all_slices(v_domains))
       {
-        // Not intertemporal => 
+        // Not inter-temporal => 
         assert(Domain::all_dyn(v_domains)); // all domains are slices or tubes or tube vectors
         assert(Domain::dyn_same_slicing(v_domains)); // all domains share same slicing
 

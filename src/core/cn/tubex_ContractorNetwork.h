@@ -85,7 +85,7 @@ namespace tubex
       /**
        * \brief Creates an Interval intermediate variable with a reference kept in the 
        *        ContractorNetwork. The variable will be kept alive outside its definition
-       *        block. This allows for instance to add contraints involving intermediate
+       *        block. This allows for instance to add constraints involving intermediate
        *        variables inside iteration loops. The variable exists in the CN but cannot
        *        be reached outside its definition block. Its deallocation is handled by
        *        the CN.
@@ -98,7 +98,7 @@ namespace tubex
       /**
        * \brief Creates an IntervalVector intermediate variable with a reference kept in the 
        *        ContractorNetwork. The variable will be kept alive outside its definition
-       *        block. This allows for instance to add contraints involving intermediate
+       *        block. This allows for instance to add constraints involving intermediate
        *        variables inside iteration loops. The variable exists in the CN but cannot
        *        be reached outside its definition block. Its deallocation is handled by
        *        the CN.
@@ -111,7 +111,7 @@ namespace tubex
       /**
        * \brief Creates a Tube intermediate variable with a reference kept in the 
        *        ContractorNetwork. The variable will be kept alive outside its definition
-       *        block. This allows for instance to add contraints involving intermediate
+       *        block. This allows for instance to add constraints involving intermediate
        *        variables inside iteration loops. The variable exists in the CN but cannot
        *        be reached outside its definition block. Its deallocation is handled by
        *        the CN.
@@ -124,7 +124,7 @@ namespace tubex
       /**
        * \brief Creates a TubeVector intermediate variable with a reference kept in the 
        *        ContractorNetwork. The variable will be kept alive outside its definition
-       *        block. This allows for instance to add contraints involving intermediate
+       *        block. This allows for instance to add constraints involving intermediate
        *        variables inside iteration loops. The variable exists in the CN but cannot
        *        be reached outside its definition block. Its deallocation is handled by
        *        the CN.
@@ -268,7 +268,7 @@ namespace tubex
        * \brief Triggers on all contractors involved in the graph.
        *
        * This method can be used to reset the propagation process when domains have been updated
-       * externaly: outside the ContractorNetwork.
+       * externally: outside the ContractorNetwork.
        */
       void trigger_all_contractors();
 

@@ -44,7 +44,7 @@ namespace tubex
    * \brief Represents an RGB value in a HTML standard
    *
    * \param rgb_value
-   * \param prefix optional caracters ("#" by default)
+   * \param prefix optional characters ("#" by default)
    * \return the HTML string
    */
   const std::string rgb2hex(rgb rgb_value, const char* prefix = "#");

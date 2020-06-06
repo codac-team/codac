@@ -105,7 +105,7 @@ namespace tubex
     assert(x.tdomain() == v.tdomain());
     #ifndef NDEBUG
       double volume = x.volume() + v.volume(); // for last assert
-      // todo: remove this: (or use Polygons with truncature)
+      // todo: remove this: (or use Polygons with truncation)
       if(x.codomain().ub() == BOUNDED_INFINITY || x.codomain().lb() == -BOUNDED_INFINITY)
         volume = std::numeric_limits<double>::infinity();
     #endif
@@ -151,7 +151,7 @@ namespace tubex
 
       else // Using polygons to compute the envelope
       {
-        // todo: remove this: (or use Polygons with truncature)
+        // todo: remove this: (or use Polygons with truncation)
         envelope &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
 
         x.set_envelope(envelope);
@@ -167,7 +167,7 @@ namespace tubex
         // Optimal envelope
         envelope &= x.polygon(v).box()[1];
 
-        // todo: remove this: (or use Polygons with truncature)
+        // todo: remove this: (or use Polygons with truncation)
         if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
         if(envelope.lb() == -BOUNDED_INFINITY) envelope = Interval(NEG_INFINITY,envelope.ub());
         if(ingate.ub() == BOUNDED_INFINITY) ingate = Interval(ingate.lb(),POS_INFINITY);

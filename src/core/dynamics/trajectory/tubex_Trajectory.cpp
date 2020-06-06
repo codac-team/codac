@@ -314,7 +314,7 @@ namespace tubex
           else ++it;
         }
 
-        m_map_values[t.lb()] = y_lb; // clean truncature
+        m_map_values[t.lb()] = y_lb; // clean truncation
         m_map_values[t.ub()] = y_ub;
       }
 

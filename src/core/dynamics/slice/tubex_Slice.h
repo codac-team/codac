@@ -128,7 +128,7 @@ namespace tubex
       const ibex::Interval output_gate() const;
 
       /**
-       * \brief Computes a convex polygon that optimaly encloses the values of the slice
+       * \brief Computes a convex polygon that optimally encloses the values of the slice
        *        according to the knowledge of the derivative slice \f$\llbracket v\rrbracket\f$
        *
        * \todo Store the polygon in cache memory?
@@ -618,7 +618,7 @@ namespace tubex
       /**
        * \brief Specifies the temporal domain \f$[t_0,t_f]\f$ of this slice
        *
-       * \note Method necesary for Tube::sample()
+       * \note Method necessary for Tube::sample()
        *
        * \param tdomain the new temporal domain to be set
        */

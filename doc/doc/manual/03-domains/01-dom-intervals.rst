@@ -281,7 +281,7 @@ Dealing with closed intervals, most of the operations can rely on their bounds. 
     ~ & = & \varnothing \textrm{ otherwise}.
   \end{eqnarray}
 
-Low-level libraries upon which Tubex has been built provide functionnalities for computing arithmetic on intervals, involving basic operations as well as non-linear functions. The following functions can be used:
+Low-level libraries upon which Tubex has been built provide functionalities for computing arithmetic on intervals, involving basic operations as well as non-linear functions. The following functions can be used:
 
 =========================  ==================================================================
 Code                       Meaning

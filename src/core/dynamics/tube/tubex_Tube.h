@@ -292,7 +292,7 @@ namespace tubex
       /**
        * \brief Returns a pointer to the Slice defined over the wider temporal domain
        *
-       * \note If two Slice objects have the same tdomain's width, then the first one is considered
+       * \note If two Slice objects have the same tdomain width, then the first one is considered
        *
        * \return a pointer to the corresponding Slice
        */
@@ -301,7 +301,7 @@ namespace tubex
       /**
        * \brief Returns a constant pointer to the Slice defined over the wider temporal domain
        *
-       * \note If two Slice objects have the same tdomain's width, then the first one is considered
+       * \note If two Slice objects have the same tdomain width, then the first one is considered
        *
        * \return a const pointer to the corresponding Slice
        */
@@ -1148,7 +1148,7 @@ namespace tubex
 
         Slice *m_first_slice = NULL; //!< pointer to the first Slice object of this tube
         mutable TubeTreeSynthesis *m_synthesis_tree = NULL; //!< pointer to the optional synthesis tree
-        mutable bool m_enable_synthesis = Tube::s_enable_syntheses; //!< enablement of the use of a synthesis tree
+        mutable bool m_enable_synthesis = Tube::s_enable_syntheses; //!< enables of the use of a synthesis tree
         ibex::Interval m_tdomain; //!< redundant information for fast evaluations
 
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);

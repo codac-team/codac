@@ -391,7 +391,7 @@ namespace tubex
         integral_ub |= partial_primitive_first.second;
       }
       
-      else // partial integral (on [t]&[intv_t_lb]) rebuilt from precomputation
+      else // partial integral (on [t]&[intv_t_lb]) rebuilt from pre-computation
       {
         Interval primitive_lb = Interval(partial_primitive_first.first.lb(), partial_primitive_first.second.ub());
 
@@ -444,7 +444,7 @@ namespace tubex
         integral_ub |= partial_primitive_second.second;
       }
       
-      else // partial integral (on [t]&[intv_t_ub]) rebuilt from precomputation
+      else // partial integral (on [t]&[intv_t_ub]) rebuilt from pre-computation
       {
         Interval primitive_ub = Interval(partial_primitive_second.first.lb(), partial_primitive_second.second.ub());
 

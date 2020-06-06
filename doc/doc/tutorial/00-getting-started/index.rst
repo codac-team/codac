@@ -21,7 +21,7 @@ Please follow the related page of the manual to see how to do it:
 
   /install/01-installation
 
-Then, depending on your preference between C++ or Python, you can run some *Hello World!* program to be sure everything is working well so far:
+Then, depending on your preference between C++ or Python, you can run some *Hello World!* program to be sure everything is working well:
 
 .. toctree:: 
   :maxdepth: 1

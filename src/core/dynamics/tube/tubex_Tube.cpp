@@ -1233,7 +1233,7 @@ namespace tubex
               p_integ_uncertain = p_integ;
 
               if(intv_t.ub() == t.ub())
-                return p_integ; // end of the integral evalution
+                return p_integ; // end of the integral evaluation
             }
 
           // From tlb to tub

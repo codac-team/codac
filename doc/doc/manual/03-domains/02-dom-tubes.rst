@@ -43,7 +43,7 @@ The box :math:`[k\delta,k\delta+\delta]\times\left[x\right]\left(t_{k}\right)`, 
    Custom discretization of tubes is now at hand, they can be made of slices that are not all defined with the same sampling time :math:`\delta`.
 
 This implementation takes rigorously into account floating point precision when building a tube.
-Further computations involving :math:`[x](\cdot)` will be implicitely based on its slices, thus keeping a reliable outer approximation of the solution set. 
+Further computations involving :math:`[x](\cdot)` will be implicitly based on its slices, thus keeping a reliable outer approximation of the solution set. 
 
 
 Creating tubes

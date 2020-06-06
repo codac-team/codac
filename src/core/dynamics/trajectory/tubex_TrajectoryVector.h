@@ -332,7 +332,7 @@ namespace tubex
 
       /**
        * \brief Computes an approximative primitive of \f$\mathbf{x}(\cdot)\f$
-       *        whith some time discretization \f$\delta\f$
+       *        with some time discretization \f$\delta\f$
        *
        * \param c the constant of integration
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)

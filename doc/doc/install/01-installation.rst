@@ -55,8 +55,8 @@ For updating your already installed version of Tubex, the procedure is:
 After the installation, please see the :ref:`sec-installation-graphics` section.
 
 
-Full installation for C++ use or developpers
---------------------------------------------
+Full installation for C++ use or developers
+-------------------------------------------
 
 For C++, the ``✓`` configurations are officially supported at the moment:
 
@@ -114,7 +114,7 @@ The last sources are available on `the official Tubex development repository <ht
 
 .. code-block:: bash
 
-  git clone https://github.com/SimonRohou/tubex-lib # download the sources from Github
+  git clone https://github.com/SimonRohou/tubex-lib # download the sources from GitHub
   cd tubex-lib                                      # move to the Tubex directory
   git submodule init ; git submodule update         # get pybind11 submodule
   mkdir build ; cd build ; cmake .. ; make          # build the sources

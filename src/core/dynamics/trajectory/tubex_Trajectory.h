@@ -259,7 +259,7 @@ namespace tubex
       Trajectory& sample(const Trajectory& x);
 
       /**
-       * \brief Makes a trajectory continous by avoiding infinite slopes
+       * \brief Makes a trajectory continuous by avoiding infinite slopes
        *
        * \note This is mainly used when angles are expressed between \f$[-\pi,\pi]\f$,
        *       which produces troublesome discontinuities. For instance, a tube directly
@@ -289,7 +289,7 @@ namespace tubex
 
       /**
        * \brief Computes an approximative primitive of \f$x(\cdot)\f$
-       *        whith some time discretization \f$\delta\f$
+       *        with some time discretization \f$\delta\f$
        *
        * \param c the constant of integration
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)

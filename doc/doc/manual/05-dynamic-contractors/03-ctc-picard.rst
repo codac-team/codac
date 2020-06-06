@@ -2,7 +2,7 @@
 
 .. warning::
   
-  The writting of this page is in progress. Several changes are currently perfomed on the library.
+  The writing of this page is in progress. Several changes are currently performed on the library.
   A new stable version of Tubex will be released in the coming weeks.
 
 ***************************************************************

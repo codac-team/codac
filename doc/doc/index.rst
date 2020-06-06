@@ -21,7 +21,7 @@ Tubex is a C++/Python library providing tools for **constraint programming** ove
 .. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
 | **What about mobile robotics?**
-| In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapeed robot problems** can be solved in a very few steps by using constraint programming. Even though the Tubex library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
+| In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapped robot problems** can be solved in a very few steps by using constraint programming. Even though the Tubex library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
 
 In a nutshell, Tubex is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
 

@@ -2,7 +2,7 @@
 
 .. warning::
   
-  Several changes are currently perfomed on the library.
+  Several changes are currently performed on the library.
   This page may not be up to date.
 
 ##########################

@@ -60,7 +60,7 @@ Using IBEX in Python with pyIbex
 .. Figure:: ../../img/logo_pyibex.jpg
   :align: left
 
-A python API has been developped for IBEX: the `pyIbex library <http://benensta.github.io/pyIbex/>`_.
+A python API has been developed for IBEX: the `pyIbex library <http://benensta.github.io/pyIbex/>`_.
 It makes available in Python many C++ functionalities of IBEX that are used in robotic applications such as contractors and separators. It aims at combining the flexibility of Python with the speed of C++ algorithms.
 
 Tubex is available in both C++ and Python. It stands on pyIbex for the use of IBEX objects such as intervals and static contractors.

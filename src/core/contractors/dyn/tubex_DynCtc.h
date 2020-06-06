@@ -64,7 +64,7 @@ namespace tubex
       /**
        * \brief Creates a contractor
        *
-       * \param intertemporal set to `true` if it implements an inter-temporal constraint
+       * \param inter-temporal set to `true` if it implements an inter-temporal constraint
        */
       DynCtc(bool intertemporal = true); // todo: remove default value
 
