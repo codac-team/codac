@@ -736,6 +736,10 @@ namespace tubex
   {
     assert(obs.size() == 2);
     assert(pose.size() == 3);
+
+    if(obs.is_empty())
+      return;
+
     // todo: use color and params args
 
     vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
@@ -758,6 +762,9 @@ namespace tubex
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
       && "unknown traj, must be added beforehand");
 
+    if(obs.is_empty())
+      return;
+    
     vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
 
     Vector pose(3);
