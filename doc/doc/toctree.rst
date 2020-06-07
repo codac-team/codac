@@ -36,8 +36,8 @@ Tubex: constraint-programming for robotics
   Main page </tutorial/index>
   Introduction </tutorial/00-getting-started/index>
 
-  [closed] A. Intervals and contractors </tutorial/01-basics/closed>
-  [closed] B. Static range-only loc. </tutorial/02-static-rangeonly/closed>
+  A. Intervals and contractors </tutorial/01-basics/index>
+  B. Static range-only localization </tutorial/02-static-rangeonly/index>
 
   [closed] C. Static range-bearing loc. </tutorial/03-static-rangebearing/closed>
   [closed] D. Dynamic range-only loc. </tutorial/04-dyn-rangeonly/closed>
