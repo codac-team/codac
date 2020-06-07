@@ -2,6 +2,8 @@
 #  tubex-lib / Python binding - cmake configuration file
 # ==================================================================
 
+  add_subdirectory(pybind11)
+
   set(PYTHON_PACKAGE_NAME "tubex_lib")
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
 
