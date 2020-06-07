@@ -387,6 +387,7 @@ namespace tubex
       double m_contraction_duration_max = std::numeric_limits<double>::infinity(); //!< computation time limit
 
       CtcDeriv *m_ctc_deriv = NULL; //!< optional pointer to a CtcDeriv object that can be automatically added in the graph
+      std::list<std::pair<Domain*,Domain*> > m_domains_related_to_ctcderiv;
 
       friend class Domain;
   };
