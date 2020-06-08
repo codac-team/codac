@@ -121,5 +121,5 @@ int main()
 
     fig.show(0.);
     vibes::endDrawing();
-    return x.contains(x_truth) == BoolInterval::YES ? EXIT_SUCCESS : EXIT_FAILURE;
+    return x.contains(x_truth) != BoolInterval::NO ? EXIT_SUCCESS : EXIT_FAILURE;
 }
