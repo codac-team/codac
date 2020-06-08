@@ -4,7 +4,7 @@
 CtcConstell: :math:`\mathbf{x}\in\mathbb{M}`
 ********************************************
 
-The *constellation contractor*, denoted by :math:`\mathcal{C}_\textrm{constell}`, is used to solve :ref:`the data association problem <sec-tuto-data-association>`.
+The *constellation contractor*, denoted by :math:`\mathcal{C}_\textrm{constell}`, is used to solve :ref:`the data association problem <sec-tuto-05>`.
 Given a list of vectors :math:`\mathbf{m}_{1}`, :math:`\dots`, :math:`\mathbf{m}_{\ell}` forming a *constellation*, the contractor reduces a box :math:`[\mathbf{x}]` to perfectly wrap the vectors previously enclosed inside of it.
 
 .. contents::

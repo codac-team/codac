@@ -166,6 +166,8 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 
 ------------------------------------------------------
 
+.. _sec-tuto-week1:
+
 **Week 1: June 8 -- June 14**
 
 .. image:: img/tuto_01.png

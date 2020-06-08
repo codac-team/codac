@@ -1,7 +1,7 @@
 .. _sec-py-project-online:
 
 ############################
-Use Tubex online with Python 
+Try Tubex online with Python 
 ############################
 
 | You can try Tubex without installing it. 

@@ -8,6 +8,10 @@
   include(version_from_git)
   version_from_git() # Obtains the version number from Git tags
 
+  # To use a specific compiler:
+  #set(CMAKE_C_COMPILER "gcc-7")
+  #set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
+
   project(tubex-lib VERSION ${VERSION} LANGUAGES CXX)
 
   if(NOT VERSION_ID)

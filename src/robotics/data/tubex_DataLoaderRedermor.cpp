@@ -37,7 +37,7 @@ namespace tubex
     else // loading data from file
     {
       if(!m_datafile->is_open())
-        throw Exception("DataLoaderRedermor::load_data", "data file not already opened");
+        throw Exception("DataLoaderRedermor::load_data", "data file not already open");
 
       int i = 0;
       string line;
