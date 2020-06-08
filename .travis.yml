@@ -146,6 +146,7 @@ script:
 
   # Testing
   - make test
+  - ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
     
   # With synthesis tree for all created tubes
   
@@ -182,3 +183,4 @@ script:
 
   # Testing
   - make test
+  - ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
