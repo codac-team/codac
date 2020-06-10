@@ -162,6 +162,8 @@ namespace tubex
        * \note returns POS_INFINITY if the interval is unbounded
        * \note returns 0 if the interval is empty
        *
+       * \todo move this elsewhere
+       *
        * \param interval set to be evaluated
        * \return the diameter
        */

@@ -215,6 +215,9 @@ namespace tubex
     /** \brief \f$\mathbf{x}(\cdot)\cap[\mathbf{y}](\cdot)\f$ */
     const TubeVector operator&(const TrajectoryVector& x, const TubeVector& y);
 
+    /** \brief \f$\mid\mathbf{x}(\cdot)\mid\f$ */
+    const TubeVector abs(const TubeVector& x);
+
   /// @}
 }
 

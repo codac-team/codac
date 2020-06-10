@@ -93,4 +93,9 @@ void export_arithmetic(py::module& m)
   m.def("atan2", (const Trajectory (*) (double y, const Trajectory& x)) &atan2, "y"_a, "x"_a);
 
   // todo: atan2, pow with Trajectory as parameter
+
+  // Vector case
+  m.def("abs", [](const IntervalVector x) { return ibex::abs(x); }, "x"_a.noconvert());
+  m.def("abs", [](const TrajectoryVector x) { return abs(x); }, "x"_a.noconvert());
+  m.def("abs", [](const TubeVector x) { return abs(x); }, "x"_a.noconvert());
 }
