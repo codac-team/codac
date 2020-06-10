@@ -37,15 +37,15 @@ matrix:
           - g++-5
     env:
       - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - g++-7
-    env:
-      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+# todo  - os: linux
+# todo    addons:
+# todo      apt:
+# todo        sources:
+# todo          - ubuntu-toolchain-r-test
+# todo        packages:
+# todo          - g++-7
+# todo    env:
+# todo      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
   - os: linux
     addons:
       apt:
@@ -121,9 +121,17 @@ script:
           -DWITH_TUBE_TREE=OFF
           -DWITH_CAPD=ON
           -DTEST_EXAMPLES=ON ..
+  - make api
+  # Again for doxygen2docstring
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install
+          -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install
+          -DWITH_PYTHON=OFF
+          -DBUILD_TESTS=ON
+          -DWITH_TUBE_TREE=OFF
+          -DWITH_CAPD=ON
+          -DTEST_EXAMPLES=ON ..
   ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
-  - make api
   - make doc
   - make install
   #- cd python/python_package
@@ -158,9 +166,17 @@ script:
           -DWITH_TUBE_TREE=ON
           -DWITH_CAPD=ON
           -DTEST_EXAMPLES=ON ..
+  - make api
+  # Again for doxygen2docstring
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install
+          -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install
+          -DWITH_PYTHON=OFF
+          -DBUILD_TESTS=ON
+          -DWITH_TUBE_TREE=ON
+          -DWITH_CAPD=ON
+          -DTEST_EXAMPLES=ON ..
   ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
-  - make api
   - make doc
   - make install
   #- cd python/python_package

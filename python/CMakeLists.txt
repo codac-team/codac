@@ -27,12 +27,23 @@
   # Generating docstring documentation from Doxygen
   ################################################################################
 
+  if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml)
+    if(NOT WIN32)
+      string(ASCII 27 Esc)
+      set(ColourReset "${Esc}[m")
+      set(Red         "${Esc}[31m")
+      set(Blue        "${Esc}[34m")
+    endif()
+
+    message(STATUS "${Red}/!\\ Run \"make api\" for generating Doxygen doc, then \"cmake ..\" again, before \"make\"${ColourReset}")
+  endif()
+
   message(STATUS "Generating docstrings from doxygen files...")
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docstring)
   execute_process(COMMAND ${PYTHON_EXECUTABLE}
     ${PROJECT_SOURCE_DIR}/scripts/doc/doxygen2docstring.py
     ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
-    ${CMAKE_CURRENT_BINARY_DIR}/docstring/)
+    ${CMAKE_CURRENT_BINARY_DIR}/docstring)
   # The file generated_docstring.cpp contains all docstring of the library
 
 

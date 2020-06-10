@@ -108,6 +108,9 @@ def sentence(str):
   '''
   return (str + ".").replace("..",".")
 
+if not os.path.exists(sys.argv[1]):
+  print("-- /!\\ Enable to build doc files (generate XML Doxygen files first)")
+  quit()
 
 files = os.listdir(sys.argv[1])
 for xml_doc in files:
@@ -137,8 +140,9 @@ for xml_doc in files:
 
   # Last update of previous generation (if any)
   first_line = ""
-  with open(output_file_fullpath) as f_prev:
-    first_line = f_prev.readline()
+  if os.path.isfile(output_file_fullpath):
+    with open(output_file_fullpath) as f_prev:
+      first_line = f_prev.readline()
 
   if first_line.strip() == last_update_time_str.strip(): # no update
     continue

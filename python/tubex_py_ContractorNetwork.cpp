@@ -16,7 +16,6 @@
 // #include <pybind11/detail>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "tubex_py_Domain_docs.h"
 #include "pyIbex_type_caster.h"
 
 // Generated file from Doxygen XML (doxygen2docstring.py):
