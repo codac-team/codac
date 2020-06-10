@@ -106,8 +106,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_dot.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_solve.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_visu.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.h
@@ -178,6 +178,8 @@
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Ctc;\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Function;\n")
       file(APPEND ${TUBEX_MAIN_HEADER} "}\n\n")
+      file(APPEND ${TUBEX_MAIN_HEADER} "#include <tubex-rob.h>\n") # todo: clean this organization
+      file(APPEND ${TUBEX_MAIN_HEADER} "#include <tubex-pyibex.h>\n") # todo: clean this organization
   foreach(header_path ${HDR})
     get_filename_component(header_name ${header_path} NAME)
     file(APPEND ${TUBEX_MAIN_HEADER} "#include <${header_name}>\n")

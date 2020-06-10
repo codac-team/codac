@@ -237,6 +237,18 @@ namespace tubex
     draw_beacon(beacon, width, color, vibesParams("figure", name(), "group", "beacons"));
   }
 
+  void VIBesFigMap::add_beacon(const IntervalVector& beacon, const string& color)
+  {
+    // Simply directly drawn
+    draw_beacon(Beacon(beacon), color, vibesParams("figure", name(), "group", "beacons"));
+  }
+
+  void VIBesFigMap::add_beacon(const Vector& beacon, double width, const string& color)
+  {
+    // Simply directly drawn
+    draw_beacon(Beacon(beacon), width, color, vibesParams("figure", name(), "group", "beacons"));
+  }
+
   void VIBesFigMap::add_beacons(const vector<Beacon>& v_beacons, const string& color)
   {
     // Simply directly drawn
@@ -620,8 +632,8 @@ namespace tubex
           continue;
 
         IntervalVector box(2);
-        box[0] = (*tube)[m_map_tubes[tube].index_x].slice(k)->input_gate();
-        box[1] = (*tube)[m_map_tubes[tube].index_y].slice(k)->input_gate();
+        box[0] = (*tube)[m_map_tubes[tube].index_x].slice(k)->codomain();
+        box[1] = (*tube)[m_map_tubes[tube].index_y].slice(k)->codomain();
         // Note: the last output gate is never shown
 
         if(box.is_empty())
@@ -681,7 +693,9 @@ namespace tubex
     assert(pose.size() == 2 || pose.size() == 3);
     float robot_size = size == -1 ? m_robot_size : size;
     double robot_heading = pose.size() == 3 ? pose[2] : 0.;
-    vibes::drawTank(pose[0], pose[1], robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
+    axis_limits(m_view_box | pose.subvector(0,1), true);
+    //vibes::drawTank(pose[0], pose[1], robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
+    vibes::drawAUV(pose[0], pose[1], robot_heading * 180. / M_PI, robot_size, "black[yellow]", params);
   }
 
   void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, float size)
@@ -722,6 +736,10 @@ namespace tubex
   {
     assert(obs.size() == 2);
     assert(pose.size() == 3);
+
+    if(obs.is_empty())
+      return;
+
     // todo: use color and params args
 
     vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
@@ -744,6 +762,9 @@ namespace tubex
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
       && "unknown traj, must be added beforehand");
 
+    if(obs.is_empty())
+      return;
+    
     vibes::newGroup("obs", DEFAULT_OBS_COLOR, vibesParams("figure", name()));
 
     Vector pose(3);

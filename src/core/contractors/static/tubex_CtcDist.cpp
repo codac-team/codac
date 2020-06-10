@@ -16,8 +16,9 @@ using namespace ibex;
 namespace tubex
 {
   CtcDist::CtcDist()
-    : CtcFunction("a[2]", "b[2]", "d",
-                  "d = sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)")
+    : CtcFunction(
+        Function("a[2]", "b[2]", "d",
+                 "d - sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)"))
   {
     
   }
@@ -31,7 +32,7 @@ namespace tubex
     box.put(2, b);
     box[4] = d;
 
-    Ctc3BCid::contract(box);
+    CtcFwdBwd::contract(box);
 
     a &= box.subvector(0,1);
     b &= box.subvector(2,3);

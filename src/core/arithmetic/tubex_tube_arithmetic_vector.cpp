@@ -158,4 +158,12 @@ namespace tubex
       y[i] = operator/(y[i], x2);
     return y;
   }
+
+  const TubeVector abs(const TubeVector& x)
+  {
+    TubeVector y(x.tdomain(), x.size());
+    for(int i = 0 ; i < x.size() ; i++)
+      y[i] = abs(x[i]);
+    return y;
+  }
 }

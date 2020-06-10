@@ -33,16 +33,19 @@ namespace tubex
   {
     public:
 
-      enum class Type { INTERVAL, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
-      enum class MemoryRef { DOUBLE, INTERVAL, VECTOR, INTERVAL_VECTOR, SLICE, TUBE, TUBE_VECTOR };
+      enum class Type { T_INTERVAL, T_INTERVAL_VECTOR, T_SLICE, T_TUBE, T_TUBE_VECTOR };
+      enum class MemoryRef { M_DOUBLE, M_INTERVAL, M_VECTOR, M_INTERVAL_VECTOR, M_SLICE, M_TUBE, M_TUBE_VECTOR };
 
+      Domain();
       Domain(const Domain& ad);
+      // todo: constructor with non-ref double?
       Domain(double& d);
       Domain(ibex::Interval& i);
       Domain(ibex::Interval& i, double& extern_d);
       Domain(ibex::Interval& i, ibex::Interval& extern_i);
       Domain(const ibex::Interval& i);
       Domain(ibex::Vector& v);
+      // todo: ? Domain(const ibex::Vector& v);
       Domain(ibex::IntervalVector& iv);
       Domain(const ibex::IntervalVector& iv);
       Domain(Slice& s);
@@ -51,6 +54,8 @@ namespace tubex
       Domain(TubeVector& tv);
       Domain(const TubeVector& tv);
       ~Domain();
+
+      const Domain& operator=(const Domain& ad);
 
       int id() const;
       Type type() const;
@@ -107,7 +112,7 @@ namespace tubex
 
       // Theoretical type of domain
 
-        const Type m_type;
+        Type m_type;
 
         union // reference to the values (in memory) this domain is made of
         {
@@ -128,7 +133,7 @@ namespace tubex
 
       // Memory implementation of the domain
 
-        const MemoryRef m_memory_type;
+        MemoryRef m_memory_type;
 
         union // reference to the unique object (in memory) this domain represents
         {

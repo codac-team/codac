@@ -19,6 +19,12 @@ namespace tubex
 {
   int Domain::dom_counter = 0;
 
+  Domain::Domain()
+    : m_type(Type::T_INTERVAL), m_memory_type(MemoryRef::M_DOUBLE)
+  {
+    // todo: change these parameters ^
+  }
+
   Domain::Domain(Type type, MemoryRef memory_type)
     : m_type(type), m_memory_type(memory_type)
   {
@@ -27,19 +33,19 @@ namespace tubex
 
     switch(m_type)
     {
-      case Type::INTERVAL:
+      case Type::T_INTERVAL:
         m_i_ptr = NULL;
         break;
 
-      case Type::INTERVAL_VECTOR:
+      case Type::T_INTERVAL_VECTOR:
         m_iv_ptr = NULL;
         break;
 
-      case Type::TUBE:
+      case Type::T_TUBE:
         m_t_ptr = NULL;
         break;
 
-      case Type::TUBE_VECTOR:
+      case Type::T_TUBE_VECTOR:
         m_tv_ptr = NULL;
         break;
 
@@ -52,101 +58,12 @@ namespace tubex
   Domain::Domain(const Domain& ad)
     : Domain(ad.m_type, ad.m_memory_type)
   {
-    m_volume = ad.m_volume;
-    m_v_ctc = ad.m_v_ctc;
-    m_name = ad.m_name;
-    m_dom_id = ad.m_dom_id;
-
-    // todo: verify the copy of the above pointers
-    // todo: is this constructor useful?
-
-    switch(ad.m_type)
-    {
-      case Type::INTERVAL:
-        if(ad.m_i_ptr != NULL)
-        {
-          m_i_ptr = new Interval(*ad.m_i_ptr);
-          m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
-        }
-
-        else
-        {
-          m_ref_values_i = reference_wrapper<Interval>(ad.m_ref_values_i);
-        }
-        break;
-
-      case Type::INTERVAL_VECTOR:
-        if(ad.m_iv_ptr != NULL)
-        {
-          m_iv_ptr = new IntervalVector(*ad.m_iv_ptr);
-          m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
-        }
-
-        else
-        {
-          m_ref_values_iv = reference_wrapper<IntervalVector>(ad.m_ref_values_iv);
-        }
-        break;
-
-      case Type::SLICE:
-        m_ref_values_s = ad.m_ref_values_s;
-        break;
-
-      case Type::TUBE:
-        m_ref_values_t = ad.m_ref_values_t;
-        break;
-
-      case Type::TUBE_VECTOR:
-        m_ref_values_tv = ad.m_ref_values_tv;
-        break;
-
-      default:
-        assert(false && "unhandled case");
-    }
-    
-    switch(ad.m_memory_type)
-    {
-      case MemoryRef::DOUBLE:
-        m_ref_memory_d = ad.m_ref_memory_d;
-        break;
-
-      case MemoryRef::INTERVAL:
-        if(&ad.m_ref_memory_i.get() == ad.m_i_ptr)
-          m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr);
-        else
-          m_ref_memory_i = ad.m_ref_memory_i;
-        break;
-
-      case MemoryRef::VECTOR:
-        m_ref_memory_v = ad.m_ref_memory_v;
-        break;
-
-      case MemoryRef::INTERVAL_VECTOR:
-        if(&ad.m_ref_memory_iv.get() == ad.m_iv_ptr)
-          m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
-        else
-          m_ref_memory_iv = ad.m_ref_memory_iv;
-        break;
-
-      case MemoryRef::SLICE:
-        m_ref_memory_s = ad.m_ref_memory_s;
-        break;
-
-      case MemoryRef::TUBE:
-        m_ref_memory_t = ad.m_ref_memory_t;
-        break;
-
-      case MemoryRef::TUBE_VECTOR:
-        m_ref_memory_tv = ad.m_ref_memory_tv;
-        break;
-
-      default:
-        assert(false && "unhandled case");
-    }
+    *this = ad;
+    // todo: keep default arguments above?
   }
 
   Domain::Domain(double& d)
-    : Domain(Type::INTERVAL, MemoryRef::DOUBLE)
+    : Domain(Type::T_INTERVAL, MemoryRef::M_DOUBLE)
   {
     m_i_ptr = new Interval(d);
     m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
@@ -154,7 +71,7 @@ namespace tubex
   }
 
   Domain::Domain(Interval& i)
-    : Domain(Type::INTERVAL, MemoryRef::INTERVAL)
+    : Domain(Type::T_INTERVAL, MemoryRef::M_INTERVAL)
   {
     m_i_ptr = NULL;
     m_ref_values_i = reference_wrapper<Interval>(i);
@@ -162,7 +79,7 @@ namespace tubex
   }
   
   Domain::Domain(Interval& i, double& extern_d)
-    : Domain(Type::INTERVAL, MemoryRef::DOUBLE)
+    : Domain(Type::T_INTERVAL, MemoryRef::M_DOUBLE)
   {
     m_i_ptr = NULL;
     m_ref_values_i = reference_wrapper<Interval>(i);
@@ -170,7 +87,7 @@ namespace tubex
   }
   
   Domain::Domain(Interval& i, Interval& extern_i)
-    : Domain(Type::INTERVAL, MemoryRef::INTERVAL)
+    : Domain(Type::T_INTERVAL, MemoryRef::M_INTERVAL)
   {
     m_i_ptr = NULL;
     m_ref_values_i = reference_wrapper<Interval>(i);
@@ -178,7 +95,7 @@ namespace tubex
   }
 
   Domain::Domain(const Interval& i)
-    : Domain(Type::INTERVAL, MemoryRef::INTERVAL)
+    : Domain(Type::T_INTERVAL, MemoryRef::M_INTERVAL)
   {
     m_i_ptr = new Interval(i);
     m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
@@ -186,15 +103,23 @@ namespace tubex
   }
 
   Domain::Domain(Vector& v)
-    : Domain(Type::INTERVAL_VECTOR, MemoryRef::VECTOR)
+    : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_VECTOR)
   {
     m_iv_ptr = new IntervalVector(v);
     m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
     m_ref_memory_v = reference_wrapper<Vector>(v);
   }
 
+  // todo ? Domain::Domain(const Vector& v)
+  // todo ?   : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_INTERVAL_VECTOR)
+  // todo ? {
+  // todo ?   m_iv_ptr = new IntervalVector(v);
+  // todo ?   m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+  // todo ?   m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+  // todo ? }
+
   Domain::Domain(IntervalVector& iv)
-    : Domain(Type::INTERVAL_VECTOR, MemoryRef::INTERVAL_VECTOR)
+    : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_INTERVAL_VECTOR)
   {
     m_iv_ptr = NULL;
     m_ref_values_iv = reference_wrapper<IntervalVector>(iv);
@@ -202,7 +127,7 @@ namespace tubex
   }
 
   Domain::Domain(const IntervalVector& iv)
-    : Domain(Type::INTERVAL_VECTOR, MemoryRef::INTERVAL_VECTOR)
+    : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_INTERVAL_VECTOR)
   {
     m_iv_ptr = new IntervalVector(iv);
     m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
@@ -210,7 +135,7 @@ namespace tubex
   }
 
   Domain::Domain(Slice& s)
-    : Domain(Type::SLICE, MemoryRef::SLICE)
+    : Domain(Type::T_SLICE, MemoryRef::M_SLICE)
   {
     m_ref_values_s = reference_wrapper<Slice>(s);
     m_ref_memory_s = reference_wrapper<Slice>(s);
@@ -220,7 +145,7 @@ namespace tubex
   }
 
   Domain::Domain(Tube& t)
-    : Domain(Type::TUBE, MemoryRef::TUBE)
+    : Domain(Type::T_TUBE, MemoryRef::M_TUBE)
   {
     m_ref_values_t = reference_wrapper<Tube>(t);
     m_ref_memory_t = reference_wrapper<Tube>(t);
@@ -230,7 +155,7 @@ namespace tubex
   }
 
   Domain::Domain(const Tube& t)
-    : Domain(Type::TUBE, MemoryRef::TUBE)
+    : Domain(Type::T_TUBE, MemoryRef::M_TUBE)
   {
     m_t_ptr = new Tube(t);
     m_ref_values_t = reference_wrapper<Tube>(*m_t_ptr);
@@ -241,7 +166,7 @@ namespace tubex
   }
 
   Domain::Domain(TubeVector& tv)
-    : Domain(Type::TUBE_VECTOR, MemoryRef::TUBE_VECTOR)
+    : Domain(Type::T_TUBE_VECTOR, MemoryRef::M_TUBE_VECTOR)
   {
     m_ref_values_tv = reference_wrapper<TubeVector>(tv);
     m_ref_memory_tv = reference_wrapper<TubeVector>(tv);
@@ -251,7 +176,7 @@ namespace tubex
   }
 
   Domain::Domain(const TubeVector& tv)
-    : Domain(Type::TUBE_VECTOR, MemoryRef::TUBE_VECTOR)
+    : Domain(Type::T_TUBE_VECTOR, MemoryRef::M_TUBE_VECTOR)
   {
     m_tv_ptr = new TubeVector(tv);
     m_ref_values_tv = reference_wrapper<TubeVector>(*m_tv_ptr);
@@ -265,19 +190,19 @@ namespace tubex
   {
     switch(m_type)
     {
-      case Type::INTERVAL:
+      case Type::T_INTERVAL:
         if(m_i_ptr != NULL) delete m_i_ptr;
         break;
 
-      case Type::INTERVAL_VECTOR:
+      case Type::T_INTERVAL_VECTOR:
         if(m_iv_ptr != NULL) delete m_iv_ptr;
         break;
 
-      case Type::TUBE:
+      case Type::T_TUBE:
         if(m_t_ptr != NULL) delete m_t_ptr;
         break;
 
-      case Type::TUBE_VECTOR:
+      case Type::T_TUBE_VECTOR:
         if(m_tv_ptr != NULL) delete m_tv_ptr;
         break;
 
@@ -285,6 +210,106 @@ namespace tubex
         // Nothing else to manage
         break;
     }
+  }
+
+  const Domain& Domain::operator=(const Domain& ad)
+  {
+    m_volume = ad.m_volume;
+    m_v_ctc = ad.m_v_ctc;
+    m_name = ad.m_name;
+    m_dom_id = ad.m_dom_id;
+
+    m_type = ad.m_type;
+    m_memory_type = ad.m_memory_type;
+
+    // todo: verify the copy of the above pointers
+    // todo: is this constructor useful?
+
+    switch(ad.m_type)
+    {
+      case Type::T_INTERVAL:
+        if(ad.m_i_ptr != NULL)
+        {
+          m_i_ptr = new Interval(*ad.m_i_ptr);
+          m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
+        }
+
+        else
+        {
+          m_ref_values_i = reference_wrapper<Interval>(ad.m_ref_values_i);
+        }
+        break;
+
+      case Type::T_INTERVAL_VECTOR:
+        if(ad.m_iv_ptr != NULL)
+        {
+          m_iv_ptr = new IntervalVector(*ad.m_iv_ptr);
+          m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+        }
+
+        else
+        {
+          m_ref_values_iv = reference_wrapper<IntervalVector>(ad.m_ref_values_iv);
+        }
+        break;
+
+      case Type::T_SLICE:
+        m_ref_values_s = ad.m_ref_values_s;
+        break;
+
+      case Type::T_TUBE:
+        m_ref_values_t = ad.m_ref_values_t;
+        break;
+
+      case Type::T_TUBE_VECTOR:
+        m_ref_values_tv = ad.m_ref_values_tv;
+        break;
+
+      default:
+        assert(false && "unhandled case");
+    }
+    
+    switch(ad.m_memory_type)
+    {
+      case MemoryRef::M_DOUBLE:
+        m_ref_memory_d = ad.m_ref_memory_d;
+        break;
+
+      case MemoryRef::M_INTERVAL:
+        if(&ad.m_ref_memory_i.get() == ad.m_i_ptr)
+          m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr);
+        else
+          m_ref_memory_i = ad.m_ref_memory_i;
+        break;
+
+      case MemoryRef::M_VECTOR:
+        m_ref_memory_v = ad.m_ref_memory_v;
+        break;
+
+      case MemoryRef::M_INTERVAL_VECTOR:
+        if(&ad.m_ref_memory_iv.get() == ad.m_iv_ptr)
+          m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+        else
+          m_ref_memory_iv = ad.m_ref_memory_iv;
+        break;
+
+      case MemoryRef::M_SLICE:
+        m_ref_memory_s = ad.m_ref_memory_s;
+        break;
+
+      case MemoryRef::M_TUBE:
+        m_ref_memory_t = ad.m_ref_memory_t;
+        break;
+
+      case MemoryRef::M_TUBE_VECTOR:
+        m_ref_memory_tv = ad.m_ref_memory_tv;
+        break;
+
+      default:
+        assert(false && "unhandled case");
+    }
+
+    return *this;
   }
 
   int Domain::id() const
@@ -299,61 +324,61 @@ namespace tubex
 
   Interval& Domain::interval()
   {
-    assert(m_type == Type::INTERVAL);
+    assert(m_type == Type::T_INTERVAL);
     return const_cast<Interval&>(static_cast<const Domain&>(*this).interval());
   }
 
   const Interval& Domain::interval() const
   {
-    assert(m_type == Type::INTERVAL);
+    assert(m_type == Type::T_INTERVAL);
     return m_ref_values_i.get();
   }
 
   IntervalVector& Domain::interval_vector()
   {
-    assert(m_type == Type::INTERVAL_VECTOR);
+    assert(m_type == Type::T_INTERVAL_VECTOR);
     return const_cast<IntervalVector&>(static_cast<const Domain&>(*this).interval_vector());
   }
 
   const IntervalVector& Domain::interval_vector() const
   {
-    assert(m_type == Type::INTERVAL_VECTOR);
+    assert(m_type == Type::T_INTERVAL_VECTOR);
     return m_ref_values_iv.get();
   }
 
   Slice& Domain::slice()
   {
-    assert(m_type == Type::SLICE);
+    assert(m_type == Type::T_SLICE);
     return const_cast<Slice&>(static_cast<const Domain&>(*this).slice());
   }
 
   const Slice& Domain::slice() const
   {
-    assert(m_type == Type::SLICE);
+    assert(m_type == Type::T_SLICE);
     return m_ref_values_s.get();
   }
 
   Tube& Domain::tube()
   {
-    assert(m_type == Type::TUBE);
+    assert(m_type == Type::T_TUBE);
     return const_cast<Tube&>(static_cast<const Domain&>(*this).tube());
   }
 
   const Tube& Domain::tube() const
   {
-    assert(m_type == Type::TUBE);
+    assert(m_type == Type::T_TUBE);
     return m_ref_values_t.get();
   }
 
   TubeVector& Domain::tube_vector()
   {
-    assert(m_type == Type::TUBE_VECTOR);
+    assert(m_type == Type::T_TUBE_VECTOR);
     return const_cast<TubeVector&>(static_cast<const Domain&>(*this).tube_vector());
   }
 
   const TubeVector& Domain::tube_vector() const
   {
-    assert(m_type == Type::TUBE_VECTOR);
+    assert(m_type == Type::T_TUBE_VECTOR);
     return m_ref_values_tv.get();
   }
 
@@ -377,7 +402,7 @@ namespace tubex
   {
     switch(m_type)
     {
-      case Type::INTERVAL:
+      case Type::T_INTERVAL:
         if(interval().is_empty())
           return 0.;
         
@@ -387,10 +412,10 @@ namespace tubex
         else
           return interval().diam();
 
-      case Type::INTERVAL_VECTOR:
+      case Type::T_INTERVAL_VECTOR:
         return interval_vector().volume();
 
-      case Type::SLICE:
+      case Type::T_SLICE:
       {
         double vol = slice().volume();
 
@@ -413,7 +438,7 @@ namespace tubex
         return vol;
       }
 
-      case Type::TUBE:
+      case Type::T_TUBE:
       {
         double vol = tube().volume();
         vol += tube().first_slice()->input_gate().diam();
@@ -422,7 +447,7 @@ namespace tubex
         return vol;
       }
 
-      case Type::TUBE_VECTOR:
+      case Type::T_TUBE_VECTOR:
       {
         // todo: improve this
         double vol = 0.;
@@ -459,30 +484,30 @@ namespace tubex
   {
     switch(m_type)
     {
-      case Type::INTERVAL:
-        assert(m_memory_type == MemoryRef::DOUBLE
-            || m_memory_type == MemoryRef::INTERVAL);
+      case Type::T_INTERVAL:
+        assert(m_memory_type == MemoryRef::M_DOUBLE
+            || m_memory_type == MemoryRef::M_INTERVAL);
         return interval().is_empty();
         break;
 
-      case Type::INTERVAL_VECTOR:
-        assert(m_memory_type == MemoryRef::VECTOR
-            || m_memory_type == MemoryRef::INTERVAL_VECTOR);
+      case Type::T_INTERVAL_VECTOR:
+        assert(m_memory_type == MemoryRef::M_VECTOR
+            || m_memory_type == MemoryRef::M_INTERVAL_VECTOR);
         return interval_vector().is_empty();
         break;
 
-      case Type::SLICE:
-        assert(m_memory_type == MemoryRef::SLICE);
+      case Type::T_SLICE:
+        assert(m_memory_type == MemoryRef::M_SLICE);
         return slice().is_empty();
         break;
 
-      case Type::TUBE:
-        assert(m_memory_type == MemoryRef::TUBE);
+      case Type::T_TUBE:
+        assert(m_memory_type == MemoryRef::M_TUBE);
         return tube().is_empty();
         break;
 
-      case Type::TUBE_VECTOR:
-        assert(m_memory_type == MemoryRef::TUBE_VECTOR);
+      case Type::T_TUBE_VECTOR:
+        assert(m_memory_type == MemoryRef::M_TUBE_VECTOR);
         return tube_vector().is_empty();
         break;
 
@@ -517,25 +542,25 @@ namespace tubex
 
       switch(m_memory_type)
       {
-        case MemoryRef::DOUBLE:
+        case MemoryRef::M_DOUBLE:
           return &m_ref_memory_d.get() == &x.m_ref_memory_d.get();
 
-        case MemoryRef::INTERVAL:
+        case MemoryRef::M_INTERVAL:
           return &m_ref_memory_i.get() == &x.m_ref_memory_i.get();
 
-        case MemoryRef::VECTOR:
+        case MemoryRef::M_VECTOR:
           return &m_ref_memory_v.get() == &x.m_ref_memory_v.get();
 
-        case MemoryRef::INTERVAL_VECTOR:
+        case MemoryRef::M_INTERVAL_VECTOR:
           return &m_ref_memory_iv.get() == &x.m_ref_memory_iv.get();
 
-        case MemoryRef::SLICE:
+        case MemoryRef::M_SLICE:
           return &m_ref_memory_s.get() == &x.m_ref_memory_s.get();
 
-        case MemoryRef::TUBE:
+        case MemoryRef::M_TUBE:
           return &m_ref_memory_t.get() == &x.m_ref_memory_t.get();
 
-        case MemoryRef::TUBE_VECTOR:
+        case MemoryRef::M_TUBE_VECTOR:
           return &m_ref_memory_tv.get() == &x.m_ref_memory_tv.get();
 
         default:
@@ -548,23 +573,23 @@ namespace tubex
     // the other one is external (it points to the previously created var)
     switch(m_type)
     {
-      case Type::INTERVAL:
+      case Type::T_INTERVAL:
         return &m_ref_values_i.get() == &x.m_ref_memory_i.get()
           || &x.m_ref_values_i.get() == &m_ref_memory_i.get();
 
-      case Type::INTERVAL_VECTOR:
+      case Type::T_INTERVAL_VECTOR:
         return &m_ref_values_iv.get() == &x.m_ref_memory_iv.get()
           || &x.m_ref_values_iv.get() == &m_ref_memory_iv.get();
 
-      case Type::SLICE:
+      case Type::T_SLICE:
         return &m_ref_values_s.get() == &x.m_ref_memory_s.get()
           || &x.m_ref_values_s.get() == &m_ref_memory_s.get();
 
-      case Type::TUBE:
+      case Type::T_TUBE:
         return &m_ref_values_t.get() == &x.m_ref_memory_t.get()
           || &x.m_ref_values_t.get() == &m_ref_memory_t.get();
 
-      case Type::TUBE_VECTOR:
+      case Type::T_TUBE_VECTOR:
         return &m_ref_values_tv.get() == &x.m_ref_values_tv.get()
           || &x.m_ref_values_tv.get() == &m_ref_values_tv.get();
 
@@ -589,11 +614,11 @@ namespace tubex
 
   bool Domain::is_component_of(const Domain& x, int& component_id) const
   {
-    if((m_type == Type::INTERVAL && x.type() == Type::INTERVAL_VECTOR) || (m_type == Type::TUBE && x.type() == Type::TUBE_VECTOR))
+    if((m_type == Type::T_INTERVAL && x.type() == Type::T_INTERVAL_VECTOR) || (m_type == Type::T_TUBE && x.type() == Type::T_TUBE_VECTOR))
     {
       switch(x.type())
       {
-        case Type::INTERVAL_VECTOR:
+        case Type::T_INTERVAL_VECTOR:
           for(int i = 0 ; i < x.interval_vector().size() ; i++)
             if(&x.interval_vector()[i] == &interval())
             {
@@ -618,7 +643,7 @@ namespace tubex
 
   bool Domain::is_slice_of(const Domain& x, int& slice_id) const
   {
-    if(m_type == Type::SLICE && x.type() == Type::TUBE)
+    if(m_type == Type::T_SLICE && x.type() == Type::T_TUBE)
     {
       slice_id = 0;
       for(const Slice *s = x.tube().first_slice() ; s != NULL ; s=s->next_slice())
@@ -635,7 +660,7 @@ namespace tubex
   
   void Domain::add_data(double t, const Interval& y, ContractorNetwork& cn)
   {
-    assert(m_type == Type::TUBE);
+    assert(m_type == Type::T_TUBE);
     // Note: t may be defined outside the tube definition
 
     if(m_traj_lb.not_defined())
@@ -695,7 +720,7 @@ namespace tubex
   
   void Domain::add_data(double t, const IntervalVector& y, ContractorNetwork& cn)
   {
-    assert(m_type == Type::TUBE_VECTOR);
+    assert(m_type == Type::T_TUBE_VECTOR);
     assert(tube_vector().size() == y.size());
 
     for(int i = 0 ; i < tube_vector().size() ; i++)
@@ -714,13 +739,13 @@ namespace tubex
       switch(m_type)
       {
         // The variable may be a component of a vector one
-        case Type::INTERVAL:
-        case Type::TUBE:
+        case Type::T_INTERVAL:
+        case Type::T_TUBE:
           for(const auto& dom : v_domains) // looking for this possible vector
           {
             if(dom != this)
             {
-              if(dom->type() == Type::INTERVAL_VECTOR || dom->type() == Type::TUBE_VECTOR)
+              if(dom->type() == Type::T_INTERVAL_VECTOR || dom->type() == Type::T_TUBE_VECTOR)
               {
                 int component_id = 0;
                 if(is_component_of(*dom, component_id))
@@ -731,10 +756,10 @@ namespace tubex
           break;
 
         // The variable may be a slice of a tube
-        case Type::SLICE:
+        case Type::T_SLICE:
           for(const auto& dom : v_domains) // looking for this possible vector
           {
-            if(dom != this && dom->type() == Type::TUBE)
+            if(dom != this && dom->type() == Type::T_TUBE)
             {
               int slice_id = 0;
               if(is_slice_of(*dom, slice_id))
@@ -758,7 +783,7 @@ namespace tubex
       // The variable may be an alias of another one (equality)
       for(const auto& ctc : m_v_ctc) // looking for a contractor of equality
       {
-        if(ctc->type() == Contractor::Type::EQUALITY)
+        if(ctc->type() == Contractor::Type::T_EQUALITY)
         {
           for(const auto& dom : ctc->domains())
           {
@@ -787,7 +812,7 @@ namespace tubex
   bool Domain::all_slices(const vector<Domain>& v_domains)
   {
     for(const auto& dom : v_domains)
-      if(dom.type() != Type::SLICE)
+      if(dom.type() != Type::T_SLICE)
         return false;
     return true;
   }
@@ -795,7 +820,7 @@ namespace tubex
   bool Domain::all_dyn(const vector<Domain>& v_domains)
   {
     for(const auto& dom : v_domains)
-      if(dom.type() != Type::SLICE && dom.type() != Type::TUBE && dom.type() != Type::TUBE_VECTOR)
+      if(dom.type() != Type::T_SLICE && dom.type() != Type::T_TUBE && dom.type() != Type::T_TUBE_VECTOR)
         return false;
     return true;
   }
@@ -808,7 +833,7 @@ namespace tubex
     {
       switch(dom.type())
       {
-        case Domain::Type::TUBE:
+        case Domain::Type::T_TUBE:
           if(slicing_ref == NULL)
             slicing_ref = &dom.tube();
           else
@@ -816,7 +841,7 @@ namespace tubex
               return false;
           break;
 
-        case Domain::Type::TUBE_VECTOR:
+        case Domain::Type::T_TUBE_VECTOR:
           if(slicing_ref == NULL)
             slicing_ref = &dom.tube_vector()[0]; // first component is used as reference
           else
@@ -842,18 +867,18 @@ namespace tubex
       switch(dom.type())
       {
         // Scalar types:
-        case Domain::Type::TUBE:
-        case Domain::Type::INTERVAL:
-        case Domain::Type::SLICE:
+        case Domain::Type::T_TUBE:
+        case Domain::Type::T_INTERVAL:
+        case Domain::Type::T_SLICE:
           n++;
           break;
 
         // Vector types:
-        case Domain::Type::INTERVAL_VECTOR:
+        case Domain::Type::T_INTERVAL_VECTOR:
           n+=dom.interval_vector().size();
           break;
 
-        case Domain::Type::TUBE_VECTOR:
+        case Domain::Type::T_TUBE_VECTOR:
           n+=dom.tube_vector().size();
           break;
 
@@ -871,8 +896,8 @@ namespace tubex
 
     switch(m_type)
     {
-      case Type::INTERVAL_VECTOR:
-      case Type::TUBE_VECTOR:
+      case Type::T_INTERVAL_VECTOR:
+      case Type::T_TUBE_VECTOR:
         output_name = "\\mathbf{" + output_name + "}";
         break;
 
@@ -884,14 +909,14 @@ namespace tubex
 
     switch(m_memory_type)
     {
-      case MemoryRef::INTERVAL:
-      case MemoryRef::INTERVAL_VECTOR:
-      case MemoryRef::TUBE:
-      case MemoryRef::TUBE_VECTOR:
+      case MemoryRef::M_INTERVAL:
+      case MemoryRef::M_INTERVAL_VECTOR:
+      case MemoryRef::M_TUBE:
+      case MemoryRef::M_TUBE_VECTOR:
         output_name = "[" + output_name + "]";
         break;
 
-      case MemoryRef::SLICE:
+      case MemoryRef::M_SLICE:
         output_name = "[\\![" + output_name + "]\\!]";
         break;
 
@@ -901,7 +926,7 @@ namespace tubex
       }
     }
 
-    if(m_type == Type::TUBE || m_type == Type::TUBE_VECTOR)
+    if(m_type == Type::T_TUBE || m_type == Type::T_TUBE_VECTOR)
       output_name += "(\\cdot)";
 
     return output_name;
@@ -914,19 +939,19 @@ namespace tubex
     str << "  type=";
     switch(x.m_type)
     {
-      case Domain::Type::INTERVAL:
+      case Domain::Type::T_INTERVAL:
         str << "Interval  ";
         break;
-      case Domain::Type::INTERVAL_VECTOR:
+      case Domain::Type::T_INTERVAL_VECTOR:
         str << "IntVector ";
         break;
-      case Domain::Type::SLICE:
+      case Domain::Type::T_SLICE:
         str << "Slice     ";
         break;
-      case Domain::Type::TUBE:
+      case Domain::Type::T_TUBE:
         str << "Tube      ";
         break;
-      case Domain::Type::TUBE_VECTOR:
+      case Domain::Type::T_TUBE_VECTOR:
         str << "TubeVector";
         break;
       default:
@@ -936,25 +961,25 @@ namespace tubex
     str << "  mem=";
     switch(x.m_memory_type)
     {
-      case Domain::MemoryRef::DOUBLE:
+      case Domain::MemoryRef::M_DOUBLE:
         str << "double    ";
         break;
-      case Domain::MemoryRef::INTERVAL:
+      case Domain::MemoryRef::M_INTERVAL:
         str << "Interval  ";
         break;
-      case Domain::MemoryRef::VECTOR:
+      case Domain::MemoryRef::M_VECTOR:
         str << "Vector    ";
         break;
-      case Domain::MemoryRef::INTERVAL_VECTOR:
+      case Domain::MemoryRef::M_INTERVAL_VECTOR:
         str << "IntVector ";
         break;
-      case Domain::MemoryRef::SLICE:
+      case Domain::MemoryRef::M_SLICE:
         str << "Slice     ";
         break;
-      case Domain::MemoryRef::TUBE:
+      case Domain::MemoryRef::M_TUBE:
         str << "Tube      ";
         break;
-      case Domain::MemoryRef::TUBE_VECTOR:
+      case Domain::MemoryRef::M_TUBE_VECTOR:
         str << "TubeVector";
         break;
       default:
@@ -966,19 +991,19 @@ namespace tubex
     str << "\tval=";
     switch(x.m_type)
     {
-      case Domain::Type::INTERVAL:
+      case Domain::Type::T_INTERVAL:
         str << x.interval();
         break;
-      case Domain::Type::INTERVAL_VECTOR:
+      case Domain::Type::T_INTERVAL_VECTOR:
         str << x.interval_vector();
         break;
-      case Domain::Type::SLICE:
+      case Domain::Type::T_SLICE:
         str << x.slice();
         break;
-      case Domain::Type::TUBE:
+      case Domain::Type::T_TUBE:
         str << x.tube();
         break;
-      case Domain::Type::TUBE_VECTOR:
+      case Domain::Type::T_TUBE_VECTOR:
         str << x.tube_vector();
         break;
       default:
@@ -990,21 +1015,21 @@ namespace tubex
   
   Domain Domain::vector_component(Domain& x, int i)
   {
-    assert(x.type() == Type::INTERVAL_VECTOR || x.type() == Type::TUBE_VECTOR);
+    assert(x.type() == Type::T_INTERVAL_VECTOR || x.type() == Type::T_TUBE_VECTOR);
 
     // Builds a Domain object for the ith component of this vector Domain,
     // and makes it point to the component of the memory reference
 
     switch(x.type())
     {
-      case Type::INTERVAL_VECTOR:
+      case Type::T_INTERVAL_VECTOR:
         switch(x.m_memory_type)
         {
-          case MemoryRef::VECTOR:
+          case MemoryRef::M_VECTOR:
             return Domain(x.interval_vector()[i], x.m_ref_memory_v.get()[i]);
             break;
 
-          case MemoryRef::INTERVAL_VECTOR:
+          case MemoryRef::M_INTERVAL_VECTOR:
             return Domain(x.interval_vector()[i], x.m_ref_memory_iv.get()[i]);
             break;
 
@@ -1013,7 +1038,7 @@ namespace tubex
         }
         break;
 
-      case Type::TUBE_VECTOR:
+      case Type::T_TUBE_VECTOR:
 
         break;
 

@@ -358,7 +358,7 @@ namespace tubex
 
         else // too much pessimism for the trajectory evaluation on m_tdomain
         {
-          // Bissections are performed to reach an accurate evaluation
+          // Bisections are performed to reach an accurate evaluation
 
           list<Interval> s_subtdomains;
           s_subtdomains.push_front(m_tdomain);
@@ -547,7 +547,7 @@ namespace tubex
       second_slice->m_prev_slice = NULL;
       second_slice->m_next_slice = NULL;
       delete second_slice; // will destroy both input/output gates because
-                           // pointers to neighbour slices have been set to NULL
+                           // pointers to neighbor slices have been set to NULL
 
       // Chaining slices
       first_slice->m_next_slice = next_slice_after_merge;

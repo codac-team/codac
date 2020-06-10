@@ -57,7 +57,7 @@ namespace tubex
 
     // Sort n-1 points with respect to the first point.
 
-      // A point p1 comes before p2 in sorted ouput if p2
+      // A point p1 comes before p2 in sorted output if p2
       // has larger polar angle (in counterclockwise
       // direction) than p1
 
@@ -139,7 +139,7 @@ namespace tubex
     const IntervalVector pa = p1 - p0, pb = p2 - p0;
     const Interval cross_prod = pa[0]*pb[1] - pa[1]*pb[0];
 
-    if(cross_prod.contains(0.)) return OrientationInterval::UNDEFINED; // possibly colinear
+    if(cross_prod.contains(0.)) return OrientationInterval::UNDEFINED; // possibly collinear
     return (cross_prod.lb() > 0.) ? OrientationInterval::COUNTERCLOCKWISE : OrientationInterval::CLOCKWISE;
   }
 

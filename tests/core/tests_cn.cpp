@@ -1,6 +1,5 @@
 #include "catch_interval.hpp"
 #include "tubex_ContractorNetwork.h"
-#include "ibex_CtcFwdBwd.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcFunction.h"
@@ -16,9 +15,26 @@ using namespace tubex;
 
 TEST_CASE("CN simple")
 {
+  SECTION("Most simple case")
+  {
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c"));
+    Interval a(0,1), b(-1,1), c(1.5,2);
+
+    ContractorNetwork cn;
+    cn.add(ctc_plus, {a, b, c}); 
+    cn.contract();
+
+    CHECK(a == Interval(0.5,1));
+    CHECK(b == Interval(0.5,1));
+    CHECK(c == Interval(1.5,2));
+
+    CHECK(cn.nb_dom() == 3);
+    CHECK(cn.nb_ctc() == 1);
+  }
+
   SECTION("Simple static case")
   {
-    CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2));
 
@@ -36,7 +52,7 @@ TEST_CASE("CN simple")
 
   SECTION("Dependencies on vector components")
   {
-    CtcFwdBwd ctc_plus(*new Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c")); // algebraic constraint a+b=c
 
     IntervalVector a(2, Interval(0,1)), b(2, Interval(-1,1)), c(2, Interval(1.5,2)), d(2, Interval(0.)), e(2);
 
@@ -129,7 +145,7 @@ TEST_CASE("CN simple")
     Tube x(domain, dt, Interval(-10.,10.)), v(domain, dt, Interval(0.));
 
     CtcDeriv ctc_deriv;
-    CtcFunction ctc_f("x", "xdot", "xdot=-sin(x)");
+    CtcFunction ctc_f(Function("x", "xdot", "xdot+sin(x)"));
 
     ContractorNetwork cn;
     cn.add(ctc_deriv, {x, v});
@@ -148,15 +164,12 @@ TEST_CASE("CN simple")
 
   SECTION("CtcFunction on scalar or vector cases")
   {
-    Interval x(0,1), y(-2,3), a(1,20);
-    IntervalVector vx(2,x), vy(2,y), va(2,a);
-    Vector vec(4,0.5);
-    
-    CtcFunction ctc_add("b", "c", "a", "b+c=a");
-    CtcFunction ctc_cos("b", "c", "a", "b+c=a");
-    CtcFunction ctc_minus("b", "c", "b-c=0");
+    CtcFunction ctc_add(Function("b", "c", "a", "b+c-a"));
+    CtcFunction ctc_cos(Function("b", "c", "a", "b+c-a"));
 
     {
+      Interval x(0,1), y(-2,3), a(1,20);
+    
       ContractorNetwork cn;
 
       cn.add(ctc_add, {x,y,a});
@@ -171,6 +184,10 @@ TEST_CASE("CN simple")
     }
 
     {
+      Interval x(0,1), y(-2,3), a(1,20);
+      IntervalVector vx(2,x), vy(2,y), va(2,a);
+      Vector vec(4,0.5);
+    
       ContractorNetwork cn;
       cn.add(ctc_add, {vx,vy,va});
       cn.add(ctc_add, {vx[0],vy[0],va[0]});
@@ -195,7 +212,7 @@ TEST_CASE("CN simple")
     IntervalVector x{{0,1},{-2,3}};
     Interval a(1,20);
     
-    CtcFunction ctc_add("b[2]", "a", "b[0]+b[1]=a");
+    CtcFunction ctc_add(Function("b[2]", "a", "b[0]+b[1]-a"));
 
     ContractorNetwork cn;
     cn.add(ctc_add, {x,a});
@@ -210,7 +227,7 @@ TEST_CASE("CN simple")
   {
     IntervalVector x{{0,1},{-2,3},{1,20}};
 
-    CtcFunction ctc_add("b", "c", "a", "b+c=a");
+    CtcFunction ctc_add(Function("b", "c", "a", "b+c-a"));
 
     ContractorNetwork cn;
     IntervalVector& sub_x = cn.subvector(x,1,2);
@@ -236,14 +253,12 @@ TEST_CASE("CN simple")
 
   SECTION("Singleton variables: double or Vector")
   {
-    Interval x(0,1), y(-2,3), a(1,20);
-    double double_y = 1.;
-    Vector vector_y(2, 1.);
-    IntervalVector ivx(2,x), ivy(2,y), iva(2,a);
-    
-    CtcFunction ctc_add("b", "c", "a", "b+c=a");
+    CtcFunction ctc_add(Function("b", "c", "a", "b+c-a"));
 
     {
+      Interval x(0,1), y(-2,3), a(1,20);
+      double double_y = 1.;
+      
       ContractorNetwork cn;
 
       cn.add(ctc_add, {x,double_y,a});
@@ -259,6 +274,10 @@ TEST_CASE("CN simple")
     }
 
     {
+      Interval x(0,1), a(1,20);
+      Vector vector_y(2, 1.);
+      IntervalVector ivx(2,x), iva(2,a);
+    
       ContractorNetwork cn;
 
       cn.add(ctc_add, {ivx,vector_y,iva});
@@ -289,7 +308,7 @@ TEST_CASE("CN simple")
       Interval x(2,3);
       Tube a(tdomain, dt, Interval(4.,5.)), b(tdomain, dt, Interval(5.,9.));
 
-      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+      CtcFunction ctc_add(Function("x", "a", "b", "x+a-b"));
 
       ContractorNetwork cn;
       cn.add(ctc_add, {x,a,b});
@@ -303,7 +322,7 @@ TEST_CASE("CN simple")
       Interval x(-1.,3.);
       Tube a(tdomain, dt, Interval(6.,7.)), b(tdomain, dt, Interval(7.));
 
-      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+      CtcFunction ctc_add(Function("x", "a", "b", "x+a-b"));
 
       ContractorNetwork cn;
       cn.add(ctc_add, {x,a,b});
@@ -321,7 +340,7 @@ TEST_CASE("CN simple")
       Interval x(2.,2.5);
       Tube a(tdomain, dt, Interval(0.,10.)), b(tdomain, dt, Interval(7.));
 
-      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+      CtcFunction ctc_add(Function("x", "a", "b", "x+a-b"));
 
       ContractorNetwork cn;
       cn.add(ctc_add, {x,a,b});
@@ -335,7 +354,7 @@ TEST_CASE("CN simple")
       Interval x(2.,2.5);
       Tube a(tdomain, dt, TFunction("cos(t)")), b(tdomain, dt);
 
-      CtcFunction ctc_add("x", "a", "b", "x+a=b");
+      CtcFunction ctc_add(Function("x", "a", "b", "x+a-b"));
 
       ContractorNetwork cn;
       cn.add(ctc_add, {x,a,b});
@@ -399,4 +418,48 @@ TEST_CASE("CN simple")
     CHECK(v(3) == Interval(-2.5,-1.5));
     CHECK(v(4) == Interval(-3.,-1.));
   }
+
+  SECTION("create_dom Tube")
+  {
+    double dt = 0.1;
+    Interval tdomain(0.,10.);
+    Tube x(tdomain, dt);
+    x.set(0., 0.);
+
+    CHECK(x.codomain() == Interval());
+
+    ContractorNetwork cn;
+    CtcDeriv ctc_deriv;
+
+    {
+      Tube v_local(tdomain, dt, TFunction("0"));
+      Tube &v_inside = cn.create_dom(v_local);
+      //cn.add(ctc_deriv, {x,v_inside});
+    }
+
+    //cn.contract();
+    //CHECK(x.codomain() == Interval(0.));
+  }
+
+  /*SECTION("create_dom TubeVector")
+  {
+    double dt = 0.1;
+    Interval tdomain(0.,10.);
+    TubeVector x(tdomain, dt, 2);
+    x.set(Vector(2,0.), 0.);
+
+    CHECK(x.codomain() == IntervalVector(2));
+
+    ContractorNetwork cn;
+    CtcDeriv ctc_deriv;
+
+    {
+      TubeVector v_local(tdomain, dt, TFunction("(0.;0.)"));
+      TubeVector &v_inside = cn.create_dom(v_local);
+      cn.add(ctc_deriv, {x,v_inside});
+    }
+
+    //cn.contract();
+    CHECK(x.codomain() == IntervalVector(2, 0.));
+  }*/
 }

@@ -46,8 +46,9 @@ int main()
     CtcDeriv ctc_deriv;
     CtcEval ctc_eval;
     ctc_eval.enable_time_propag(false); // faster use
-    CtcFunction ctc_f("x", "y", "xdot", "ydot", "xddot", "yddot",
-                      "-0.4*xddot*xdot - yddot");
+    CtcFunction ctc_f(
+      Function("x", "y", "xdot", "ydot", "xddot", "yddot",
+               "-0.4*xddot*xdot - yddot"));
 
   /* =========== PROPAGATION =========== */
 

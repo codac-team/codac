@@ -86,7 +86,7 @@ namespace tubex
     protected:
 
       /**
-       * \brief Contracts input and ouput gates of a slice regarding its derivative set
+       * \brief Contracts input and output gates of a slice regarding its derivative set
        *
        * \pre \f$\llbracket x\rrbracket(\cdot)\f$ and \f$\llbracket v\rrbracket(\cdot)\f$ must share the same tdomain.
        *

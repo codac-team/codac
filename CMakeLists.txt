@@ -4,9 +4,27 @@
 
   cmake_minimum_required(VERSION 3.0.2)
 
-  project(tubex-lib VERSION 2.5.0 LANGUAGES CXX)
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/CMakeModules/)
+  include(version_from_git)
+  version_from_git() # Obtains the version number from Git tags
+
+  # To use a specific compiler:
+  #set(CMAKE_C_COMPILER "gcc-7")
+  #set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
+
+  project(tubex-lib VERSION ${VERSION} LANGUAGES CXX)
+
+  if(NOT VERSION_ID)
+    set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
+  else()
+    set(PROJECT_VERSION_FULL "${PROJECT_VERSION}-${VERSION_ID}")
+  endif()
+  message(STATUS "Full project version is ${PROJECT_VERSION_FULL}")
+
   set(PROJECT_DESCRIPTION
       "Tubex is a library providing tools for constraint programming over reals and trajectories.")
+  set(PROJECT_LONG_DESCRIPTION
+      "${PROJECT_DESCRIPTION}")
   set(PROJECT_HOMEPAGE_URL "http://simon-rohou.fr/research/tubex-lib")
   message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
@@ -26,6 +44,7 @@
   set(CMAKE_INSTALL_BINDIR "bin" CACHE PATH "user executables (bin)")
   set(CMAKE_INSTALL_PKGCONFIG "share/pkgconfig" CACHE PATH "pkg files (share/pkgconfig)")
   set(CMAKE_INSTALL_CMAKE "share/tubex/cmake" CACHE PATH "cmake files (share/tubex/cmake)")
+
 
 ################################################################################
 # Compilation configuration
@@ -90,6 +109,26 @@
 
 
 ################################################################################
+# Tests
+################################################################################
+  
+  # Note: place this tests block before the add_subdirectory(python),
+  # otherwise python tests will not be taken into account. 
+  option(BUILD_TESTS "Build test" OFF)
+  if(BUILD_TESTS)
+    include(CTest)
+    add_custom_target(check
+                      COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
+                      DEPENDS tubex COMMENT "Running the tests")
+
+    add_subdirectory(tests)
+  endif()
+
+  option(TEST_EXAMPLES "Testing examples" OFF)
+  add_subdirectory(examples) # examples are tested as integration tests
+
+
+################################################################################
 # Compile sources
 ################################################################################
 
@@ -99,24 +138,7 @@
 
   # Python binding:
   if(WITH_PYTHON)
-    add_subdirectory(pybind11)
     add_subdirectory(python)
-  endif()
-
-
-################################################################################
-# Tests
-################################################################################
-
-  option(BUILD_TESTS "Build test" OFF)
-  if(BUILD_TESTS)
-    include(CTest)
-    add_custom_target(check
-                      COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
-                      DEPENDS tubex COMMENT "Running the tests")
-
-    add_subdirectory(tests)
-    add_subdirectory(examples)
   endif()
 
 

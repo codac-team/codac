@@ -116,7 +116,7 @@ namespace tubex
       return m_map_values;
     }
 
-    const TFunction* Trajectory::function() const
+    const TFunction* Trajectory::tfunction() const
     {
       assert(m_traj_def_type == TrajDefnType::ANALYTIC_FNC);
       return m_function;
@@ -314,7 +314,7 @@ namespace tubex
           else ++it;
         }
 
-        m_map_values[t.lb()] = y_lb; // clean truncature
+        m_map_values[t.lb()] = y_lb; // clean truncation
         m_map_values[t.ub()] = y_ub;
       }
 

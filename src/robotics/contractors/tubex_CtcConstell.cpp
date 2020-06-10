@@ -22,6 +22,14 @@ namespace tubex
     // todo: binary tree for logarithmic complexity
   }
 
+  CtcConstell::CtcConstell(const list<IntervalVector>& map)
+    : Ctc(2)
+  {
+    for(const auto& b : map)
+      m_map.push_back(b);
+    // todo: binary tree for logarithmic complexity
+  }
+
   CtcConstell::~CtcConstell()
   {
 

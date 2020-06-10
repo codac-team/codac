@@ -26,28 +26,28 @@ namespace tubex
   void CtcDeriv::contract(vector<Domain*>& v_domains)
   {
     // Tube scalar case:
-    if(v_domains[0]->type() == Domain::Type::TUBE && v_domains[1]->type() == Domain::Type::TUBE)
+    if(v_domains[0]->type() == Domain::Type::T_TUBE && v_domains[1]->type() == Domain::Type::T_TUBE)
     {
       assert(v_domains.size() == 2);
       contract(v_domains[0]->tube(), v_domains[1]->tube());
     }
 
     // Tube vector case:
-    else if(v_domains[0]->type() == Domain::Type::TUBE_VECTOR && v_domains[1]->type() == Domain::Type::TUBE_VECTOR)
+    else if(v_domains[0]->type() == Domain::Type::T_TUBE_VECTOR && v_domains[1]->type() == Domain::Type::T_TUBE_VECTOR)
     {
       assert(v_domains.size() == 2);
       contract(v_domains[0]->tube_vector(), v_domains[1]->tube_vector());
     }
 
     // Slice case:
-    else if(v_domains[0]->type() == Domain::Type::SLICE)
+    else if(v_domains[0]->type() == Domain::Type::T_SLICE)
     {
       assert(v_domains.size() % 2 == 0);
 
       for(int i = 0 ; i < floor(v_domains.size()/2) ; i++)
       {
-        assert(v_domains[i]->type() == Domain::Type::SLICE);
-        assert(v_domains[i+v_domains.size()/2]->type() == Domain::Type::SLICE);
+        assert(v_domains[i]->type() == Domain::Type::T_SLICE);
+        assert(v_domains[i+v_domains.size()/2]->type() == Domain::Type::T_SLICE);
         contract(v_domains[i]->slice(), v_domains[i+v_domains.size()/2]->slice());
       }
     }
@@ -105,7 +105,7 @@ namespace tubex
     assert(x.tdomain() == v.tdomain());
     #ifndef NDEBUG
       double volume = x.volume() + v.volume(); // for last assert
-      // todo: remove this: (or use Polygons with truncature)
+      // todo: remove this: (or use Polygons with truncation)
       if(x.codomain().ub() == BOUNDED_INFINITY || x.codomain().lb() == -BOUNDED_INFINITY)
         volume = std::numeric_limits<double>::infinity();
     #endif
@@ -151,7 +151,7 @@ namespace tubex
 
       else // Using polygons to compute the envelope
       {
-        // todo: remove this: (or use Polygons with truncature)
+        // todo: remove this: (or use Polygons with truncation)
         envelope &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
 
         x.set_envelope(envelope);
@@ -167,7 +167,7 @@ namespace tubex
         // Optimal envelope
         envelope &= x.polygon(v).box()[1];
 
-        // todo: remove this: (or use Polygons with truncature)
+        // todo: remove this: (or use Polygons with truncation)
         if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
         if(envelope.lb() == -BOUNDED_INFINITY) envelope = Interval(NEG_INFINITY,envelope.ub());
         if(ingate.ub() == BOUNDED_INFINITY) ingate = Interval(ingate.lb(),POS_INFINITY);

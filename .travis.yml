@@ -12,9 +12,22 @@ addons:
 
     packages:
     - cmake
+    - python3.5
 
 matrix:
   include:
+  # One environment for python binding:
+  - sudo: true
+    services:
+      - docker
+    env: DOCKER_IMAGE=benensta/pyibex-docker
+    install:
+      - docker pull $DOCKER_IMAGE
+    script:
+      - chmod a+x scripts/docker/build_pybinding.sh
+      - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker/build_pybinding.sh
+      - ls wheelhouse
+  # Other environments for C++ tests (g++ versions, trees..)
   - os: linux
     addons:
       apt:
@@ -43,6 +56,8 @@ matrix:
     env:
       - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
+# Configuration for C++ tests:
+
 before_install:
   - eval "${MATRIX_EVAL}"
 
@@ -51,29 +66,33 @@ cache:
     - $HOME/capd
     - $HOME/ibex-lib
 
-#services:
-#  - docker
-#
-#env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
-
 install:
   
   # For documentation
   - sudo apt-get install python3.5 python3-setuptools python3-pip
+  - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 # using python3 as default version
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
 
-#  - docker pull $DOCKER_IMAGE
-  
+  # For Python wrapping
+  #- sudo python3 -m pip install wheel
+  #- sudo python3 -m pip install --upgrade pip
+  #- sudo python3 -m pip install pyibex
+  #- sudo python3 -m pip install --upgrade pyibex==1.8.0
+
   - pwd
   - ls
   - export ORIGIN_DIR=$PWD
+  - cd ..
+  - pwd
+  - ls
+  - cd $ORIGIN_DIR
 
   # IBEX
-  - bash scripts/ibex.sh
+  - bash scripts/dependencies/install_ibex.sh
 
   # CAPD
-  - bash scripts/capd.sh
+  - bash scripts/dependencies/install_capd.sh
 
   # Environment variables
   - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
@@ -82,24 +101,36 @@ install:
 
 script:
 
-  - py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
-  - echo "$py_version"
+  #- py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
+  #- echo "$py_version"
   
   - cd $ORIGIN_DIR
   - pwd
   - ls
-  - git submodule init ; git submodule update # for pybind11 submodule
+  #- git submodule init ; git submodule update # for pybind11 submodule
   - mkdir build -p
   - cd build
   
   # Without synthesis tree
-  
+
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install
+          -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install
+          -DWITH_PYTHON=OFF
+          -DBUILD_TESTS=ON
+          -DWITH_TUBE_TREE=OFF
+          -DWITH_CAPD=ON
+          -DTEST_EXAMPLES=ON ..
+  ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
   - make api
   - make doc
   - make install
+  #- cd python/python_package
+  #- /usr/bin/python3.5 setup.py develop --user
+  #- /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
+  #- cd ../../
+
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
@@ -108,21 +139,35 @@ script:
   - cd ../robotics
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../tuto
-  - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../../build
+
   # Testing
   - make test
+  - ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
     
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DPYTHON_VERSION="$py_version" ..
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install
+          -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install
+          -DWITH_PYTHON=OFF
+          -DBUILD_TESTS=ON
+          -DWITH_TUBE_TREE=ON
+          -DWITH_CAPD=ON
+          -DTEST_EXAMPLES=ON ..
+  ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
   - make api
   - make doc
   - make install
+  #- cd python/python_package
+  #- /usr/bin/python3.5 setup.py develop --user
+  #- /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
+  #- cd ../../
+
   # Building the examples
   - cd ../examples
   - find . -type d -name build -prune -exec rm -rf {} \;
@@ -131,9 +176,11 @@ script:
   - cd ../robotics
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../tuto
-  - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../../build
+
   # Testing
   - make test
+  - ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing

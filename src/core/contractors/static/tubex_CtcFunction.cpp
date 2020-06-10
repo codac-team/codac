@@ -16,77 +16,34 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcFunction::CtcFunction(const char* x1, const char* f)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, CtcFunction::parse_f(f).c_str())))
+  CtcFunction::CtcFunction(const Function& f)
+    : CtcFwdBwd(*new Function(f))
   {
     // todo: clean delete
   }
 
-  CtcFunction::CtcFunction(const char* x1, const char* x2, const char* f)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, CtcFunction::parse_f(f).c_str())))
-  {
-
-  }
-
-  CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* f)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, x3, CtcFunction::parse_f(f).c_str())))
-  {
-
-  }
-
-  CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, x3, x4, CtcFunction::parse_f(f).c_str())))
-  {
-
-  }
-
-  CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, x3, x4, x5, CtcFunction::parse_f(f).c_str())))
-  {
-
-  }
-
-  CtcFunction::CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(x1, x2, x3, x4, x5, x6, CtcFunction::parse_f(f).c_str())))
-  {
-
-  }
-
   CtcFunction::CtcFunction(const Function& f, const Domain& y)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(f), y))
+    : CtcFwdBwd(*new Function(f), y)
   {
-
+    // todo: clean delete
   }
   
   CtcFunction::CtcFunction(const Function& f, const Interval& y)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(f), y))
+    : CtcFwdBwd(*new Function(f), y)
   {
-
+    // todo: clean delete
   }
 
   CtcFunction::CtcFunction(const Function& f, const IntervalVector& y)
-    : Ctc3BCid(*new CtcFwdBwd(*new Function(f), y))
+    : CtcFwdBwd(*new Function(f), y)
   {
-
+    // todo: clean delete
   }
 
-  const string CtcFunction::parse_f(const char* f)
+  void CtcFunction::contract(IntervalVector& x)
   {
-    string str_f(f);
-    string str_eq("=");
-
-    if(str_f.find(str_eq) != string::npos)
-    {
-      str_f.replace(str_f.find(str_eq), str_eq.length(), "-(");
-      str_f += ")";
-    }
-
-    assert(str_f.find(str_eq) == string::npos && "only one '=' allowed");
-    assert(str_f.find(">") == string::npos
-        && str_f.find("<") == string::npos
-        && "inequalities not supported by this contractor");
-
-    return str_f;
+    assert(x.size() == nb_var);
+    CtcFwdBwd::contract(x);
   }
 
   void CtcFunction::contract(TubeVector& x)
@@ -195,8 +152,8 @@ namespace tubex
         ingate[i] = v_x_slices[i]->input_gate();
       }
 
-      Ctc3BCid::contract(envelope);
-      Ctc3BCid::contract(ingate);
+      CtcFwdBwd::contract(envelope);
+      CtcFwdBwd::contract(ingate);
 
       for(int i = 0 ; i < nb_var ; i++)
       {
@@ -211,7 +168,7 @@ namespace tubex
         for(int i = 0 ; i < nb_var ; i++)
           outgate[i] = v_x_slices[i]->output_gate();
 
-        Ctc3BCid::contract(outgate);
+        CtcFwdBwd::contract(outgate);
 
         for(int i = 0 ; i < nb_var ; i++)
           v_x_slices[i]->set_output_gate(outgate[i]);

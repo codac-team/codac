@@ -30,7 +30,7 @@ namespace tubex
   }
 
   Contractor::Contractor(Ctc& ctc, const vector<Domain*>& v_domains)
-    : Contractor(Type::IBEX, v_domains)
+    : Contractor(Type::T_IBEX, v_domains)
   {
     assert(!v_domains.empty());
 
@@ -38,7 +38,7 @@ namespace tubex
   }
 
   Contractor::Contractor(DynCtc& ctc, const vector<Domain*>& v_domains) 
-    : Contractor(Type::TUBEX, v_domains)
+    : Contractor(Type::T_TUBEX, v_domains)
   {
     assert(!v_domains.empty());
 
@@ -56,16 +56,16 @@ namespace tubex
 
     switch(ac.m_type)
     {
-      case Type::EQUALITY:
-      case Type::COMPONENT:
+      case Type::T_EQUALITY:
+      case Type::T_COMPONENT:
         // Nothing to do
         break;
         
-      case Type::IBEX:
+      case Type::T_IBEX:
         m_static_ctc = reference_wrapper<Ctc>(ac.m_static_ctc);
         break;
 
-      case Type::TUBEX:
+      case Type::T_TUBEX:
         m_dyn_ctc = reference_wrapper<DynCtc>(ac.m_dyn_ctc);
         break;
 
@@ -91,13 +91,13 @@ namespace tubex
 
   Ctc& Contractor::ibex_ctc()
   {
-    assert(m_type == Type::IBEX);
+    assert(m_type == Type::T_IBEX);
     return m_static_ctc.get();
   }
 
   DynCtc& Contractor::tubex_ctc()
   {
-    assert(m_type == Type::TUBEX);
+    assert(m_type == Type::T_TUBEX);
     return m_dyn_ctc.get();
   }
 
@@ -130,14 +130,14 @@ namespace tubex
 
     switch(m_type)
     {
-      case Type::IBEX:
+      case Type::T_IBEX:
         if(&m_static_ctc.get() != &x.m_static_ctc.get())
           return false;
 
         if(typeid(m_static_ctc.get()) != typeid(x.m_static_ctc.get()))
           return false;
 
-      case Type::TUBEX:
+      case Type::T_TUBEX:
         if(typeid(m_dyn_ctc.get()) != typeid(x.m_dyn_ctc.get()))
           return false;
 
@@ -147,8 +147,8 @@ namespace tubex
            typeid(m_dyn_ctc.get()) != typeid(CtcDist)))
           return false;
 
-      case Type::COMPONENT:
-      case Type::EQUALITY:
+      case Type::T_COMPONENT:
+      case Type::T_EQUALITY:
         // Nothing to compare
         break;
 
@@ -181,14 +181,14 @@ namespace tubex
   {
     assert(!m_v_domains.empty());
 
-    if(m_type == Type::IBEX)
+    if(m_type == Type::T_IBEX)
     {
       // Data may be presented in two ways:
       // - all components in one vector box
       // - a list of heterogeneous components
 
       // Case: all components in one vector box
-      if(m_v_domains.size() == 1 && m_v_domains[0]->type() == Domain::Type::INTERVAL_VECTOR)
+      if(m_v_domains.size() == 1 && m_v_domains[0]->type() == Domain::Type::T_INTERVAL_VECTOR)
       {
         m_static_ctc.get().contract(m_v_domains[0]->interval_vector());
       }
@@ -210,18 +210,18 @@ namespace tubex
             {
               switch(dom->type())
               {
-                case Domain::Type::INTERVAL:
+                case Domain::Type::T_INTERVAL:
                   box[i] = dom->interval();
                   i++;
                   break;
 
-                case Domain::Type::INTERVAL_VECTOR:
+                case Domain::Type::T_INTERVAL_VECTOR:
                   assert(false && "interval vectors should not be handled here");
                   box.put(i, dom->interval_vector());
                   i+=dom->interval_vector().size();
                   break;
 
-                case Domain::Type::SLICE:
+                case Domain::Type::T_SLICE:
                   switch(j)
                   {
                     case 0: // we start from the envelope
@@ -244,8 +244,8 @@ namespace tubex
                   at_least_one_slice = true;
                   break;
 
-                case Domain::Type::TUBE:
-                case Domain::Type::TUBE_VECTOR:
+                case Domain::Type::T_TUBE:
+                case Domain::Type::T_TUBE_VECTOR:
                   assert(false && "dynamic domains should not be handled here");
                   break;
 
@@ -267,14 +267,14 @@ namespace tubex
             {
               switch(dom->type())
               {
-                case Domain::Type::INTERVAL:
+                case Domain::Type::T_INTERVAL:
                 {
                   dom->interval() = box[i];
                   i++;
                 }
                 break;
 
-                case Domain::Type::INTERVAL_VECTOR:
+                case Domain::Type::T_INTERVAL_VECTOR:
                 {
                   int vector_size = dom->interval_vector().size();
                   dom->interval_vector() = box.subvector(i, i+vector_size);
@@ -282,7 +282,7 @@ namespace tubex
                 }
                 break;
 
-                case Domain::Type::SLICE:
+                case Domain::Type::T_SLICE:
                 {
                   switch(j)
                   {
@@ -318,24 +318,24 @@ namespace tubex
       }
     }
 
-    else if(m_type == Type::TUBEX)
+    else if(m_type == Type::T_TUBEX)
     {
       m_dyn_ctc.get().contract(m_v_domains);
     }
 
-    else if(m_type == Type::COMPONENT)
+    else if(m_type == Type::T_COMPONENT)
     {
       // Symbolic
     }
 
-    else if(m_type == Type::EQUALITY)
+    else if(m_type == Type::T_EQUALITY)
     {
       assert(m_v_domains.size() == 2);
       assert(m_v_domains[0]->type() == m_v_domains[1]->type());
 
       switch(m_v_domains[0]->type())
       {
-        case Domain::Type::INTERVAL:
+        case Domain::Type::T_INTERVAL:
         {
           Interval inter = m_v_domains[0]->interval() & m_v_domains[1]->interval();
           m_v_domains[0]->interval() = inter;
@@ -343,7 +343,7 @@ namespace tubex
         }
         break;
       
-        case Domain::Type::INTERVAL_VECTOR:
+        case Domain::Type::T_INTERVAL_VECTOR:
         {
           IntervalVector inter = m_v_domains[0]->interval_vector() & m_v_domains[1]->interval_vector();
           m_v_domains[0]->interval_vector() = inter;
@@ -351,7 +351,7 @@ namespace tubex
         }
         break;
     
-        case Domain::Type::TUBE:
+        case Domain::Type::T_TUBE:
         {
           Tube inter = m_v_domains[0]->tube() & m_v_domains[1]->tube();
           m_v_domains[0]->tube() = inter;
@@ -359,7 +359,7 @@ namespace tubex
         }
         break;
         
-        case Domain::Type::TUBE_VECTOR:
+        case Domain::Type::T_TUBE_VECTOR:
         {
           TubeVector inter = m_v_domains[0]->tube_vector() & m_v_domains[1]->tube_vector();
           m_v_domains[0]->tube_vector() = inter;
@@ -380,13 +380,13 @@ namespace tubex
   {
     switch(type())
     {
-      case Type::COMPONENT:
+      case Type::T_COMPONENT:
         return "";
 
-      case Type::EQUALITY:
+      case Type::T_EQUALITY:
         return "=";
 
-      case Type::TUBEX:
+      case Type::T_TUBEX:
         if(m_name.empty())
         {
           if(typeid(m_dyn_ctc.get()) == typeid(CtcEval))
@@ -397,7 +397,7 @@ namespace tubex
         }
         return "\\mathcal{C}_{" + m_name + "}";
 
-      case Type::IBEX:
+      case Type::T_IBEX:
       default:
         return "\\mathcal{C}_{" + m_name + "}";
     }

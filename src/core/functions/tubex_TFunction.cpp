@@ -288,7 +288,7 @@ namespace tubex
     if(nb_vars() != 0)
       assert(x.size() == nb_vars());
     
-    TubeVector y(x); // keeping x's slicing
+    TubeVector y(x); // keeping slicing the x
     y.resize(image_dim());
 
     if(x.is_empty())

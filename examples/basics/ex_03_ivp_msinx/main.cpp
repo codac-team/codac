@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     // Defining contractors
 
-    CtcFunction ctc_f("x", "xdot", "xdot+sin(x)"); // algebraic contractor
+    CtcFunction ctc_f(Function("x", "xdot", "xdot+sin(x)")); // algebraic contractor
     x[1] &= Interval(-1.,1.); // xdot=-sin(..)
     CtcDeriv ctc_deriv; // differential contractor
 

@@ -60,3 +60,4 @@ build_install/
 # Latex files
 *.aux
 *.log
+wheelhouse/

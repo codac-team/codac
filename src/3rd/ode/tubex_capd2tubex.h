@@ -27,7 +27,7 @@ namespace tubex
 
    * \param vectorField the vector field associated to the function that we would like to integrate
    * \param x0 The initial condition
-   * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timesep by itself
+   * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timestep by itself
    * to increase calculation speed
    */
 
@@ -48,7 +48,7 @@ namespace tubex
    * \param domain period of tine on which we would like to perform the integration
    * \param f function that we would like to integrate
    * \param x0 The initial condition
-   * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timesep by itself
+   * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timestep by itself
    * to increase calculation speed
    */
 

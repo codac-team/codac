@@ -66,6 +66,20 @@ namespace tubex
                      const ibex::Interval& visi_range = ibex::Interval(0.,50.),
                      const ibex::Interval& visi_angle = ibex::Interval(-M_PI/4.,M_PI/4.),
                      const ibex::Interval& tdomain = ibex::Interval::ALL_REALS);
+      static std::vector<ibex::IntervalVector> generate_static_observations(
+                     const ibex::Vector& x,
+                     const std::vector<ibex::IntervalVector>& map,
+                     bool random = true,
+                     const ibex::Interval& visi_range = ibex::Interval::POS_REALS,
+                     const ibex::Interval& visi_angle = ibex::Interval::ALL_REALS);
+      static std::vector<ibex::IntervalVector> generate_observations_along_traj(
+                     const TrajectoryVector& x,
+                     const std::vector<ibex::IntervalVector>& map,
+                     int nb_obs = 50,
+                     bool random = true,
+                     const ibex::Interval& visi_range = ibex::Interval(0.,50.),
+                     const ibex::Interval& visi_angle = ibex::Interval(-M_PI/4.,M_PI/4.),
+                     const ibex::Interval& tdomain = ibex::Interval::ALL_REALS);
 
     protected:
 

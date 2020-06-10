@@ -9,6 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <sstream>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
@@ -17,8 +18,10 @@
 
 #include "tubex_Trajectory.h"
 #include "tubex_TrajectoryVector.h"
+#include "tubex_RandTrajectory.h"
 #include "tubex_py_Trajectory_docs.h"
 #include "tubex_py_TrajectoryVector_docs.h"
+#include "tubex_py_RandTrajectory_docs.h"
 namespace py = pybind11;
 using namespace pybind11::literals;
 using py::class_;
@@ -27,6 +30,14 @@ using py::init;
 using namespace tubex;
 using ibex::Interval;
 using ibex::IntervalVector;
+
+
+std::string to_string(const Trajectory& x)
+{
+  std::ostringstream str;
+  str << x;
+  return str.str();
+}
 
 void export_Trajectory(py::module& m){
 
@@ -45,7 +56,7 @@ void export_Trajectory(py::module& m){
     .def("size", &Trajectory::size,DOCS_TRAJECTORY_SIZE)
     .def("tdomain", &Trajectory::tdomain,DOCS_TRAJECTORY_TDOMAIN)
     .def("sampled_map", &Trajectory::sampled_map,DOCS_TRAJECTORY_SAMPLED_MAP)
-    .def("function", &Trajectory::function,DOCS_TRAJECTORY_FUNCTION)
+    .def("tfunction", &Trajectory::tfunction,DOCS_TRAJECTORY_TFUNCTION,py::return_value_policy::reference_internal)
     .def("codomain", &Trajectory::codomain,DOCS_TRAJECTORY_CODOMAIN)
     .def("__call__", [](Trajectory& s,double o) { return s(o);}, 
         DOCS_TRAJECTORY_OPERATOR_CALL_DOUBLE)
@@ -67,6 +78,8 @@ void export_Trajectory(py::module& m){
         DOCS_TRAJECTORY_SAMPLE_DOUBLE, "timestep"_a)
     .def("sample", (Trajectory & (Trajectory::*)(const Trajectory &) )&Trajectory::sample,
         DOCS_TRAJECTORY_SAMPLE_TRAJECTORY, "x"_a)
+    .def("make_continuous", (Trajectory & (Trajectory::*)() )&Trajectory::make_continuous,
+        "todo")
     .def("primitive", (const Trajectory (Trajectory::*)(double) const)&Trajectory::primitive,
         DOCS_TRAJECTORY_PRIMITIVE_DOUBLE, "c"_a=0)
     .def("primitive", (const Trajectory (Trajectory::*)(double,double) const)&Trajectory::primitive,
@@ -74,23 +87,24 @@ void export_Trajectory(py::module& m){
     .def("diff", &Trajectory::diff,DOCS_TRAJECTORY_DIFF)
     .def("finite_diff", &Trajectory::finite_diff,
         DOCS_TRAJECTORY_FINITE_DIFF_DOUBLE, "t"_a)
-    .def("__iadd__", [](Trajectory& s,double o) { return s += o;}, 
-        DOCS_TRAJECTORY_IADD_DOUBLE)
-    .def("__iadd__", [](Trajectory& s,const Trajectory & o) { return s += o;}, 
-        DOCS_TRAJECTORY_IADD_TRAJECTORY)
-    .def("__isub__", [](Trajectory& s,double o) { return s -= o;}, 
-        DOCS_TRAJECTORY_ISUB_DOUBLE)
-    .def("__isub__", [](Trajectory& s,const Trajectory & o) { return s -= o;}, 
-        DOCS_TRAJECTORY_ISUB_TRAJECTORY)
-    .def("__imul__", [](Trajectory& s,double o) { return s *= o;}, 
-        DOCS_TRAJECTORY_IMUL_DOUBLE)
-    .def("__imul__", [](Trajectory& s,const Trajectory & o) { return s *= o;}, 
-        DOCS_TRAJECTORY_IMUL_TRAJECTORY)
-    .def("__itruediv__", [](Trajectory& s,double o) { return s /= o;}, 
-        DOCS_TRAJECTORY_ITRUEDIV_DOUBLE)
-    .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o;}, 
-        DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
+//    .def("__iadd__", [](Trajectory& s,double o) { return s += o;}, 
+//        DOCS_TRAJECTORY_IADD_DOUBLE)
+//    .def("__iadd__", [](Trajectory& s,const Trajectory & o) { return s += o;}, 
+//        DOCS_TRAJECTORY_IADD_TRAJECTORY)
+//    .def("__isub__", [](Trajectory& s,double o) { return s -= o;}, 
+//        DOCS_TRAJECTORY_ISUB_DOUBLE)
+//    .def("__isub__", [](Trajectory& s,const Trajectory & o) { return s -= o;}, 
+//        DOCS_TRAJECTORY_ISUB_TRAJECTORY)
+//    .def("__imul__", [](Trajectory& s,double o) { return s *= o;}, 
+//        DOCS_TRAJECTORY_IMUL_DOUBLE)
+//    .def("__imul__", [](Trajectory& s,const Trajectory & o) { return s *= o;}, 
+//        DOCS_TRAJECTORY_IMUL_TRAJECTORY)
+//    .def("__itruediv__", [](Trajectory& s,double o) { return s /= o;}, 
+//        DOCS_TRAJECTORY_ITRUEDIV_DOUBLE)
+//    .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o;}, 
+//        DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
     .def("class_name", &Trajectory::class_name,DOCS_TRAJECTORY_CLASS_NAME)
+      .def("__repr__", &to_string)
 
       // .def(py::init<>())
       // .def(py::init< const ibex::Interval&, const TFunction&>(), "domain"_a, "f"_a, py::keep_alive<1,3>())
@@ -117,6 +131,56 @@ void export_Trajectory(py::module& m){
       // .def("diff", &Trajectory::diff)
       // .def("finite_diff", &Trajectory::finite_diff, "t"_a)
       // .def("class_name", &Trajectory::class_name)
+
+  // Assignments operators
+
+    .def("__iadd__", [](Trajectory& s,double o) { return s += o; },
+      DOCS_TRAJECTORY_IADD_DOUBLE)
+
+    .def("__iadd__", [](Trajectory& s,const Trajectory & o) { return s += o; },
+      DOCS_TRAJECTORY_IADD_TRAJECTORY)
+
+    .def("__isub__", [](Trajectory& s,double o) { return s -= o; },
+      DOCS_TRAJECTORY_ISUB_DOUBLE)
+
+    .def("__isub__", [](Trajectory& s,const Trajectory & o) { return s -= o; },
+      DOCS_TRAJECTORY_ISUB_TRAJECTORY)
+
+    .def("__imul__", [](Trajectory& s,double o) { return s *= o; },
+      DOCS_TRAJECTORY_IMUL_DOUBLE)
+
+    .def("__imul__", [](Trajectory& s,const Trajectory & o) { return s *= o; },
+      DOCS_TRAJECTORY_IMUL_TRAJECTORY)
+
+    .def("__itruediv__", [](Trajectory& s,double o) { return s /= o; },
+      DOCS_TRAJECTORY_ITRUEDIV_DOUBLE)
+
+    .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o; },
+      DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
+
+  // Operators
+
+    .def("__add__",      [](const Trajectory& x) { return +x; })
+    .def("__add__",      [](const Trajectory& x, const Trajectory& y) { return x+y; })
+    .def("__add__",      [](const Trajectory& x, double y) { return x+y; })
+    .def("__radd__",     [](const Trajectory& x, double y) { return x+y; })
+
+    .def("__neg__",      [](const Trajectory& x) { return -x; })
+    .def("__sub__",      [](const Trajectory& x, const Trajectory& y) { return x-y; })
+    .def("__sub__",      [](const Trajectory& x, double y) { return x-y; })
+    .def("__rsub__",     [](const Trajectory& x, double y) { return y-x; })
+
+    .def("__mul__",      [](const Trajectory& x, const Trajectory& y) { return x*y; }, "y"_a.noconvert())
+    .def("__mul__",      [](const Trajectory& x, double y) { return x*y; }, "y"_a.noconvert())
+    .def("__rmul__",     [](const Trajectory& x, double y) { return x*y; }, "y"_a.noconvert())
+    // Vector case
+    .def("__mul__",      [](const Trajectory& x, const ibex::Vector& y) { return x*y; }, "y"_a.noconvert())
+
+    .def("__truediv__",  [](const Trajectory& x, const Trajectory& y) { return x/y; }) //, "x"_a.noconvert(), "y"_a.noconvert())
+    .def("__truediv__",  [](const Trajectory& x, double y) { return x/y; }) //, "x"_a.noconvert(), "y"_a.noconvert())
+    .def("__rtruediv__", [](const Trajectory& x, double y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
+    // Vector case
+    .def("__rtruediv__", [](const Trajectory& x, const ibex::Vector& y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
   ;
 
     py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector");
@@ -124,6 +188,8 @@ void export_Trajectory(py::module& m){
         .def(py::init<int>(),DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT, "n"_a)
         .def(py::init<const ibex::Interval &,const TFunction &>(),
             DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION, "domain"_a, "f"_a)
+        .def(py::init<const ibex::Interval &,const TFunction &,double>(),
+            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION_DOUBLE, "domain"_a, "f"_a, "timestep"_a)
         .def(py::init<const std::map<double, ibex::Vector> &>(),
             DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_MAP_DOUBLE_VECTOR_, "m_map_values"_a)
         .def(py::init<const std::vector<std::map<double, double> > &>(),
@@ -202,12 +268,32 @@ void export_Trajectory(py::module& m){
         .def("class_name", &TrajectoryVector::class_name,
             DOCS_TRAJECTORYVECTOR_CLASS_NAME)
 
-        .def("__getitem__", [](TrajectoryVector& s, size_t index) -> Trajectory&{
-              if ((int)index >= s.size()){
+
+      .def("__getitem__", [](TrajectoryVector& s, size_t index) -> Trajectory&{
+              if (index >= static_cast<size_t>(s.size())){
                   throw py::index_error();
               }
                 return s[static_cast<int>(index)];
           }, DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT, py::return_value_policy::reference_internal)
+
+      .def("__getitem__", [](const TrajectoryVector& s, py::slice slice) -> TrajectoryVector {
+            size_t start, stop, step, slicelength;
+            if (!slice.compute(s.size(), &start, &stop, &step, &slicelength))
+                throw py::error_already_set();
+            if (step != 1){
+                std::cout << "Warning slice step must be equal to 1\n";
+            }
+            
+            // to respect the python convention, the stop index 
+            // is not included in slice
+            return s.subvector(start, start + slicelength-1);
+        },DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT1)
+      .def("__setitem__", [](TrajectoryVector& s, size_t index, Trajectory& t){
+              if (index >= static_cast<size_t>(s.size())){
+                throw py::index_error();
+              }
+              s[static_cast<int>(index)] = t;
+          }, DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT)
         // .def("operator[]", [](TrajectoryVector& s,int o) { return s[o];}, 
         //     DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT)
         // .def("operator[]", [](TrajectoryVector& s,int o) { return s[o];}, 
@@ -257,6 +343,11 @@ void export_Trajectory(py::module& m){
       // .def("class_name", &TrajectoryVector::class_name)
     // ;
       // .def("__repr__", [](TrajectoryVector& s,std::ostream&, const tubex::TrajectoryVector& o) { s << o;});
-    
 
+    py::class_<RandTrajectory> randtrajectory(m, "RandTrajectory", trajectory, DOCS_RANDTRAJECTORY);
+    randtrajectory
+      .def(py::init<const ibex::Interval &,double,const ibex::Interval &>(),
+          DOCS_RANDTRAJECTORY_RANDTRAJECTORY_INTERVAL_DOUBLE_INTERVAL, "tdomain"_a, "timestep"_a, "bounds"_a);
+
+    //py::implicitly_convertible<Trajectory,RandTrajectory>();
 }

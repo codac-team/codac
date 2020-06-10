@@ -10,7 +10,7 @@
 
 #include "pyibex_predef_contractors.h"
 
-namespace pyibex
+namespace tubex
 {
   namespace ctc
   {

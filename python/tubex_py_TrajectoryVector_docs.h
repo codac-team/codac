@@ -34,6 +34,16 @@ const char* DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION=R"_docs(/**
 */
 )_docs";
 
+const char* DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION_DOUBLE=R"_docs(/**
+* \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from an analytic expression,
+*        and transforms it as a map of values (sampling procedure)
+*
+* \param tdomain temporal domain \f$[t_0,t_f]\f$
+* \param f TFunction object defining the trajectory: \f$\mathbf{x}(t)=\mathbf{f}(t)\f$
+* \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
+*/
+)_docs";
+
 const char* DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_MAP_DOUBLE_VECTOR_=R"_docs(/**
 * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a map of vector values
 *

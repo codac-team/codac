@@ -121,15 +121,21 @@ namespace tubex
     if(box.is_unbounded())
       return;
 
-    vibes::Params params_this_fig(params);
-    m_view_box |= box;
-    params_this_fig["figure"] = name();
+    if(box.max_diam() == 0.)
+      draw_point(Point(box), color, params);
 
-    if(color != "")
-      vibes::drawBox(box, color, params_this_fig);
-    
     else
-      vibes::drawBox(box, params_this_fig);
+    {
+      vibes::Params params_this_fig(params);
+      m_view_box |= box;
+      params_this_fig["figure"] = name();
+
+      if(color != "")
+        vibes::drawBox(box, color, params_this_fig);
+      
+      else
+        vibes::drawBox(box, params_this_fig);
+    }
   }
   
   void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const vibes::Params& params)
@@ -196,7 +202,9 @@ namespace tubex
   {
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
-    vibes::drawPie(x, y, r.lb(), r.ub(), theta.lb() * 180. / M_PI, theta.ub() * 180. / M_PI, color, params_this_fig);
+
+    // Corrected bug in case of r.lb() == 0 (only one edge of the pie is drawn)
+    vibes::drawPie(x, y, (r.lb() == 0. ? ibex::next_float(r.lb()) : r.lb()), r.ub(), theta.lb() * 180. / M_PI, theta.ub() * 180. / M_PI, color, params_this_fig);
   }
   
   void VIBesFig::draw_edge(const Edge& e, const vibes::Params& params)

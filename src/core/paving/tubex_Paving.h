@@ -164,7 +164,7 @@ namespace tubex
           bool no_degenerated_intersection = false) const;
 
       /**
-       * \brief Returns the neighbours (adjacent items) of this Paving, having some value
+       * \brief Returns the neighbors (adjacent items) of this Paving, having some value
        *
        * \param v_neighbours the set of leaves to be returned
        * \param val optional value of the leaves we are looking for, `-1` for no restriction

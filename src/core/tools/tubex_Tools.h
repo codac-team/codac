@@ -13,6 +13,7 @@
 #define __TUBEX_TOOLS_H__
 
 #include <string>
+#include "ibex_Interval.h"
 
 namespace tubex
 {
@@ -55,6 +56,14 @@ namespace tubex
        * \return the string value `string`+`sep1`+`id`+`sep2`
        */
       static std::string add_int(const std::string& str, const std::string& sep1, int id, const std::string& sep2);
+      
+      /**
+       * \brief Returns a random number inside an interval
+       *
+       * \param itv the bounds
+       * \return a random double
+       */
+      static double rand_in_bounds(const ibex::Interval& intv);
   };
 }
 

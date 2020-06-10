@@ -9,6 +9,7 @@
  */
 
 #include "tubex_capd2tubex.h"
+#include "tubex_Exception.h"
 #include "capd/capdlib.h"
 
 using namespace std;
@@ -228,7 +229,7 @@ namespace tubex
         }
         catch(exception& e)
         {
-            cout << "\n\nException caught!\n" << e.what() << endl << endl;
+            throw Exception("capd2tubex", e.what());
         }
 
     }

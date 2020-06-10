@@ -14,7 +14,7 @@
 
 #include <string>
 #include "ibex_Function.h"
-#include "ibex_Ctc3BCid.h"
+#include "ibex_CtcFwdBwd.h"
 #include "ibex_Domain.h"
 #include "tubex_TubeVector.h"
 
@@ -24,21 +24,52 @@ namespace tubex
    * \class CtcFunction
    * \brief Generic static \f$\mathcal{C}\f$ that contracts a box \f$[\mathbf{x}]\f$ or a tube \f$[\mathbf{x}](\cdot)\f$
    *        according to the constraint \f$\mathbf{f}(\mathbf{x})=\mathbf{0}\f$ or \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$.
-   *        It stands on the CtcFwdBwd of IBEX (HC4Revise) combined with a Ctc3BCid.
+   *        It stands on the CtcFwdBwd of IBEX (HC4Revise).
    */
-  class CtcFunction : public ibex::Ctc3BCid
+  class CtcFunction : public ibex::CtcFwdBwd
   {
     public:
 
-      CtcFunction(const char* x1, const char* f);
-      CtcFunction(const char* x1, const char* x2, const char* f);
-      CtcFunction(const char* x1, const char* x2, const char* x3, const char* f);
-      CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* f);
-      CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* f);
-      CtcFunction(const char* x1, const char* x2, const char* x3, const char* x4, const char* x5, const char* x6, const char* f);
+      /**
+       * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})=\mathbf{0}\f$
+       *
+       * \param f the function \f$\mathbf{f}\f$
+       */
+      CtcFunction(const ibex::Function& f);
+
+      /**
+       * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$
+       *        where \f$[\mathbf{y}]\f$ is a ibex::Domain object
+       *
+       * \param f the function \f$\mathbf{f}\f$
+       * \param y the ibex::Domain object
+       */
       CtcFunction(const ibex::Function& f, const ibex::Domain& y);
+
+      /**
+       * \brief Creates a contractor for the constraint \f$f(\mathbf{x})\in[y]\f$
+       *        for the scalar case
+       *
+       * \param f the function \f$f\f$
+       * \param y the interval \f$[y]\f$
+       */
       CtcFunction(const ibex::Function& f, const ibex::Interval& y);
+
+      /**
+       * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$
+       *        for the vectorial case
+       *
+       * \param f the function \f$\mathbf{f}\f$
+       * \param y the IntervalVector \f$[\mathbf{y}]\f$
+       */
       CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y);
+      
+      /**
+       * \brief \f$\mathcal{C}\big([\mathbf{x}]\big)\f$
+       *
+       * \param x the n-dimensional box \f$[\mathbf{x}]\f$ to be contracted
+       */
+      void contract(ibex::IntervalVector& x);
       
       /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}](\cdot)\big)\f$
@@ -112,11 +143,6 @@ namespace tubex
        * \param v_x_slices the slices to be contracted
        */
       void contract(Slice **v_x_slices);
-
-
-    protected:
-
-      static const std::string parse_f(const char* f);
   };
 }
 

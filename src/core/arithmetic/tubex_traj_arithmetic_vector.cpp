@@ -150,4 +150,12 @@ namespace tubex
     assert(x1.size() == 3 && x2.size() == 3);
     return -vecto_product(x2, x1);
   }
+
+  const TrajectoryVector abs(const TrajectoryVector& x)
+  {
+    TrajectoryVector y(x.size());
+    for(int i = 0 ; i < x.size() ; i++)
+      y[i] = abs(x[i]);
+    return y;
+  }
 }

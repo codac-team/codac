@@ -262,7 +262,7 @@ namespace tubex
         if(top->box().max_diam() < precision || precision == -1)
           return false;
 
-        // Trying to bissect up to a given precision.
+        // Trying to bisect up to a given precision.
         // This is a feature to overcome uncertainties encountered 
         // when dealing with wide [t] boxes.
         top->bisect(0.5);

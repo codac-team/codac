@@ -140,7 +140,7 @@ namespace tubex
           return MAYBE; // uncertainty
 
         if(e[1].intersects(box()[1].lb()) || e[1].intersects(box()[1].ub()))
-          continue; // the ray is horizontaly tangent to the polygon
+          continue; // the ray is horizontally tangent to the polygon
 
         if(prev_e[0].intersects(e[0]))
           continue; // point already dealt
@@ -192,7 +192,7 @@ namespace tubex
 
         if(Edge::parallel(e1, e2) == NO)
         {
-          // Computing new vertex: intersection of neighbour edges
+          // Computing new vertex: intersection of neighbor edges
           Point inter = Edge::proj_intersection(e1, e2);
 
           assert(!inter.is_unbounded());
