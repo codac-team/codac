@@ -24,6 +24,19 @@
 
 
   ################################################################################
+  # Generating docstring documentation from Doxygen
+  ################################################################################
+
+  message(STATUS "Generating docstrings from doxygen files...")
+  file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+  execute_process(COMMAND ${PYTHON_EXECUTABLE}
+    ${PROJECT_SOURCE_DIR}/scripts/doc/doxygen2docstring.py
+    ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
+    ${CMAKE_CURRENT_BINARY_DIR}/docstring/)
+  # The file generated_docstring.cpp contains all docstring of the library
+
+
+  ################################################################################
   # Library for Python binding
   ################################################################################
 
@@ -43,7 +56,8 @@
   )
 
   target_include_directories(tube
-    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include)
+    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
+    ${CMAKE_CURRENT_BINARY_DIR}/docstring)
 
   target_link_libraries(tube
     PRIVATE tubex tubex-rob ${LIBS})

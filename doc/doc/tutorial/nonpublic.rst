@@ -13,12 +13,21 @@ Exercises in progress...
 * :ref:`sec-tuto-01`
 * :ref:`sec-tuto-02`
 
+Corrections:
+
+* `tubex-lib/examples/tuto/02_static_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/02_static_rangeonly>`_
+
 ------------------------------------------------------
 
 **Week 2: June 15 -- June 21**
 
 * **Lesson C**: not yet available
 * **Lesson D**: not yet available
+
+Corrections:
+
+* `tubex-lib/examples/tuto/03_static_rangebearing/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/03_static_rangebearing>`_
+* `tubex-lib/examples/tuto/04_dyn_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/04_dyn_rangeonly>`_
 
 ------------------------------------------------------
 

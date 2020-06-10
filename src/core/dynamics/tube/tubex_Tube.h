@@ -50,8 +50,7 @@ namespace tubex
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ made of one slice
-       * \anchor DOCS_TUBE_TUBE_INTERVAL_INTERVAL
-       *
+       * 
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param codomain Interval value of the slice (all reals \f$[-\infty,\infty]\f$ by default)
        */
