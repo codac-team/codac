@@ -299,6 +299,31 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
   | Is the result reliable, according to the sets :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{x}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
 
 
+.. from pyibex import *
+.. from tubex_lib import *
+.. 
+.. x = IntervalVector([[0,0],[0,0]])
+.. b = IntervalVector([[3,4],[2,3]])
+.. print(b)
+.. 
+.. x.inflate(0.1)
+.. 
+.. f = Function("a[2]", "b[2]", "sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)")
+.. 
+.. box = cart_prod(x,b)
+.. r = f.eval(box)
+.. 
+.. beginDrawing()
+.. fig = VIBesFigMap("Map")
+.. fig.set_properties(50, 50, 400, 400) # position and size
+.. fig.draw_box(x, "red")
+.. fig.draw_box(b)
+.. fig.draw_box(b+x, "blue")
+.. fig.draw_ring(0,0,r)
+.. fig.show() # display all items of the figure
+.. endDrawing()
+
+
 .. admonition:: Technical documentation
 
   For full details about graphical features, please read the :ref:`sec-manual-vibes` page of the user manual.

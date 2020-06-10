@@ -34,7 +34,8 @@ int main()
   /* =========== DEGENERATED EVALUATION =========== */
 
     CtcEval ctc_eval;
-    ctc_eval.contract(3.125, sin(3.125), x, xdot);
+    Interval t(3.125), y(sin(t));
+    ctc_eval.contract(t, y, x, xdot);
     fig_x.show(true);
     vibes::endDrawing();
 
