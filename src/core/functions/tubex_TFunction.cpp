@@ -161,7 +161,12 @@ namespace tubex
     assert(n >= 0);
     assert(y != NULL && "function's output must be defined");
 
+#ifdef _MSC_VER
+    // see https://stackoverflow.com/questions/48459297/is-there-a-vlas-variable-length-arrays-support-workaround-for-vs2017
+    const char** xdyn = new const char* [n+1];
+#else
     const char* xdyn[n+1];
+#endif // _MSC_VER
     xdyn[0] = "t";
     for(int i = 0 ; i < n ; i++)
     {
@@ -174,6 +179,9 @@ namespace tubex
     m_img_dim = m_ibex_f->image_dim();
     m_intertemporal = false; // not supported yet
     m_expr = y;
+#ifdef _MSC_VER
+    delete[] xdyn;
+#endif // _MSC_VER
   }
 
   const Interval TFunction::eval(const Interval& t) const
