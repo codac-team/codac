@@ -54,20 +54,44 @@
   # Generating a library tube.so containing the python binding:
   pybind11_add_module(tube SHARED
     tubex_py.cpp
-    tubex_py_contractors.cpp
-    tubex_py_ContractorNetwork.cpp
-    tubex_py_Slice.cpp
-    tubex_py_TFunction.cpp
-    tubex_py_Trajectory.cpp
-    tubex_py_Tube.cpp
-    tubex_py_TubeVector.cpp
-    tubex_py_VIBesFig.cpp
-    tubex_py_DataLoader.cpp
-    tubex_py_arithmetic.cpp
+
+    src/core/arithmetic/tubex_py_arithmetic.cpp
+    src/core/cn/tubex_py_ContractorNetwork.cpp
+
+    src/core/contractors/static/tubex_py_Ctc.cpp
+    src/core/contractors/static/tubex_py_CtcDist.cpp
+    src/core/contractors/static/tubex_py_CtcFunction.cpp
+    src/core/contractors/static/tubex_py_CtcConstell.cpp
+
+    src/core/contractors/dyn/tubex_py_DynCtc.cpp
+    src/core/contractors/dyn/tubex_py_CtcDeriv.cpp
+    src/core/contractors/dyn/tubex_py_CtcEval.cpp
+    src/core/contractors/dyn/tubex_py_CtcPicard.cpp
+
+    src/core/dynamics/tube/tubex_py_Tube.cpp
+    src/core/dynamics/tube/tubex_py_TubeVector.cpp
+    src/core/dynamics/trajectory/tubex_py_Trajectory.cpp
+    src/core/dynamics/trajectory/tubex_py_RandTrajectory.cpp
+    src/core/dynamics/trajectory/tubex_py_TrajectoryVector.cpp
+    src/core/dynamics/slice/tubex_py_Slice.cpp
+
+    src/core/functions/tubex_py_TFnc.cpp
+    src/core/functions/tubex_py_TFunction.cpp
+
+    src/core/graphics/tubex_py_graphics.cpp
+    src/core/graphics/tubex_py_ColorMap.cpp
+    src/core/graphics/tubex_py_Figure.cpp
+    src/core/graphics/tubex_py_VIBesFig.cpp
+    src/core/graphics/tubex_py_VIBesFigTube.cpp
+    src/core/graphics/tubex_py_VIBesFigTubeVector.cpp
+    src/core/graphics/tubex_py_VIBesFigMap.cpp
+
+    src/robotics/tubex_py_DataLoader.cpp
   )
 
   target_include_directories(tube
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/docstring)
 
   target_link_libraries(tube
