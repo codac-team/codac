@@ -16,9 +16,11 @@
 // #include <pybind11/detail>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "tubex_py_ContractorNetwork_docs.h"
 #include "tubex_py_Domain_docs.h"
 #include "pyIbex_type_caster.h"
+
+// Generated file from Doxygen XML (doxygen2docstring.py):
+#include "tubex_py_ContractorNetwork_docs.h"
 
 using namespace std;
 
@@ -183,27 +185,27 @@ vector<Domain> pylist_to_vectordomains(py::list lst)
 void export_ContractorNetwork(py::module& m){
 
 
-    py::class_<ContractorNetwork> cn(m, "ContractorNetwork", DOCS_CONTRACTORNETWORK);
+    py::class_<ContractorNetwork> cn(m, "ContractorNetwork", "todo");
     cn
-      .def(py::init<>(),DOCS_CONTRACTORNETWORK_CONTRACTORNETWORK)
-      .def("nb_ctc", &ContractorNetwork::nb_ctc,DOCS_CONTRACTORNETWORK_NB_CTC)
-      .def("nb_dom", &ContractorNetwork::nb_dom,DOCS_CONTRACTORNETWORK_NB_DOM)
+      .def(py::init<>(),CONTRACTORNETWORK_CONTRACTORNETWORK)
+      .def("nb_ctc", &ContractorNetwork::nb_ctc,CONTRACTORNETWORK_INT_NB_CTC)
+      .def("nb_dom", &ContractorNetwork::nb_dom,CONTRACTORNETWORK_INT_NB_DOM)
       .def("emptiness", &ContractorNetwork::emptiness,
-          DOCS_CONTRACTORNETWORK_EMPTINESS)
+          CONTRACTORNETWORK_BOOL_EMPTINESS)
       .def("create_dom", (ibex::Interval & (ContractorNetwork::*)(const ibex::Interval &) )&ContractorNetwork::create_dom,
-          DOCS_CONTRACTORNETWORK_CREATE_DOM_INTERVAL, "i"_a,
+          CONTRACTORNETWORK_INTERVAL_CREATE_DOM_INTERVAL, "i"_a,
           py::return_value_policy::reference_internal,
           py::keep_alive<1,0>())
       .def("create_dom", (ibex::IntervalVector & (ContractorNetwork::*)(const ibex::IntervalVector &) )&ContractorNetwork::create_dom,
-          DOCS_CONTRACTORNETWORK_CREATE_DOM_INTERVALVECTOR, "iv"_a,
+          CONTRACTORNETWORK_INTERVALVECTOR_CREATE_DOM_INTERVALVECTOR, "iv"_a,
           py::return_value_policy::reference_internal,
           py::keep_alive<1,0>())
       .def("create_dom", (Tube & (ContractorNetwork::*)(const Tube &) )&ContractorNetwork::create_dom,
-          DOCS_CONTRACTORNETWORK_CREATE_DOM_TUBE, "t"_a,
+          CONTRACTORNETWORK_TUBE_CREATE_DOM_TUBE, "t"_a,
           py::return_value_policy::reference_internal,
           py::keep_alive<1,0>())
       .def("create_dom", (TubeVector & (ContractorNetwork::*)(const TubeVector &) )&ContractorNetwork::create_dom,
-          DOCS_CONTRACTORNETWORK_CREATE_DOM_TUBEVECTOR, "tv"_a,
+          CONTRACTORNETWORK_TUBEVECTOR_CREATE_DOM_TUBEVECTOR, "tv"_a,
           py::return_value_policy::reference_internal,
           py::keep_alive<1,0>())
       //.def("subvector", (ibex::IntervalVector & (ContractorNetwork::*)(ibex::Vector &,int,int) )&ContractorNetwork::subvector,
@@ -211,7 +213,7 @@ void export_ContractorNetwork(py::module& m){
       //    py::return_value_policy::reference_internal,
       //    py::keep_alive<1,0>())
       .def("subvector", (ibex::IntervalVector & (ContractorNetwork::*)(ibex::IntervalVector &,int,int) )&ContractorNetwork::subvector,
-          DOCS_CONTRACTORNETWORK_SUBVECTOR_INTERVALVECTOR_INT_INT, "iv"_a, "start_index"_a, "end_index"_a,
+          CONTRACTORNETWORK_INTERVALVECTOR_SUBVECTOR_VECTOR_INT_INT, "iv"_a, "start_index"_a, "end_index"_a,
           py::return_value_policy::reference_internal,
           py::keep_alive<1,0>())
 
@@ -228,7 +230,7 @@ void export_ContractorNetwork(py::module& m){
       //  }
         cn.add(ctc, pylist_to_vectordomains(lst));
         // &create_domain_from_vector_as_list,
-      }, DOCS_CONTRACTORNETWORK_ADD_CTC_VECTOR_DOMAIN_, "stastic_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
+      }, CONTRACTORNETWORK_VOID_ADD_CTC_VECTORDOMAIN, "stastic_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
 
 
       .def("add", [](ContractorNetwork& cn, tubex::DynCtc &ctc, py::list lst){
@@ -242,7 +244,7 @@ void export_ContractorNetwork(py::module& m){
         //cn.add(ctc,domaines);
         cn.add(ctc, pylist_to_vectordomains(lst));
         // &create_domain_from_vector_as_list,
-      }, "todo", "dyn_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
+      }, CONTRACTORNETWORK_VOID_ADD_DYNCTC_VECTORDOMAIN, "dyn_ctc"_a, "v_domains"_a, py::keep_alive<1,3>(), py::keep_alive<1,2>())
       // create_domain_from_vector_as_list
       
       //.def("add", (void (ContractorNetwork::*)(ibex::Ctc &,const std::vector<Domain> &) )&ContractorNetwork::add,
@@ -252,19 +254,19 @@ void export_ContractorNetwork(py::module& m){
       //    DOCS_CONTRACTORNETWORK_ADD_DYNCTC_VECTOR_DOMAIN_, "dyn_ctc"_a, "v_domains"_a,
       //    py::keep_alive<1,2>(),py::keep_alive<1,3>())
       .def("add_data", (void (ContractorNetwork::*)(Tube &,double,const ibex::Interval &) )&ContractorNetwork::add_data,
-          DOCS_CONTRACTORNETWORK_ADD_DATA_TUBE_DOUBLE_INTERVAL, "x"_a, "t"_a, "y"_a)
+          CONTRACTORNETWORK_VOID_ADD_DATA_TUBE_DOUBLE_INTERVAL, "x"_a, "t"_a, "y"_a)
       .def("add_data", (void (ContractorNetwork::*)(TubeVector &,double,const ibex::IntervalVector &) )&ContractorNetwork::add_data,
-          DOCS_CONTRACTORNETWORK_ADD_DATA_TUBEVECTOR_DOUBLE_INTERVALVECTOR, "x"_a, "t"_a, "y"_a)
+          CONTRACTORNETWORK_VOID_ADD_DATA_TUBEVECTOR_DOUBLE_INTERVALVECTOR, "x"_a, "t"_a, "y"_a)
       .def("contract", &ContractorNetwork::contract,
-          DOCS_CONTRACTORNETWORK_CONTRACT_BOOL, "verbose"_a=false)
+          CONTRACTORNETWORK_DOUBLE_CONTRACT_BOOL, "verbose"_a=false)
       .def("contract_during", &ContractorNetwork::contract_during,
-          DOCS_CONTRACTORNETWORK_CONTRACT_DURING_DOUBLE_BOOL, "dt"_a, "verbose"_a=false)
+          CONTRACTORNETWORK_DOUBLE_CONTRACT_DURING_DOUBLE_BOOL, "dt"_a, "verbose"_a=false)
       .def("set_fixedpoint_ratio", &ContractorNetwork::set_fixedpoint_ratio,
-          DOCS_CONTRACTORNETWORK_SET_FIXEDPOINT_RATIO_FLOAT, "r"_a)
+          CONTRACTORNETWORK_VOID_SET_FIXEDPOINT_RATIO_FLOAT, "r"_a)
       .def("trigger_all_contractors", &ContractorNetwork::trigger_all_contractors,
-          DOCS_CONTRACTORNETWORK_TRIGGER_ALL_CONTRACTORS)
+          CONTRACTORNETWORK_VOID_TRIGGER_ALL_CONTRACTORS)
       .def("nb_ctc_in_stack", &ContractorNetwork::nb_ctc_in_stack,
-          DOCS_CONTRACTORNETWORK_NB_CTC_IN_STACK)
+          CONTRACTORNETWORK_INT_NB_CTC_IN_STACK)
 
 
       //.def("add", [](ContractorNetwork& cn, tubex::DynCtc &ctc, py::list lst){
@@ -281,18 +283,18 @@ void export_ContractorNetwork(py::module& m){
 
 
       .def("set_name", (void (ContractorNetwork::*)(ibex::Ctc &,const std::string &) )&ContractorNetwork::set_name,
-          DOCS_CONTRACTORNETWORK_SET_NAME_CTC_STRING, "ctc"_a, "name"_a)
+          CONTRACTORNETWORK_VOID_SET_NAME_CTC_STRING, "ctc"_a, "name"_a)
       .def("set_name", (void (ContractorNetwork::*)(DynCtc &,const std::string &) )&ContractorNetwork::set_name,
-          DOCS_CONTRACTORNETWORK_SET_NAME_DYNCTC_STRING, "ctc"_a, "name"_a)
+          CONTRACTORNETWORK_VOID_SET_NAME_DYNCTC_STRING, "ctc"_a, "name"_a)
 
       .def("set_name", [](ContractorNetwork& cn, py::object obj, const std::string & name)
       {
         // todo
           Domain dom = pyobject_to_domain(obj);
           cn.set_name(dom, name);
-      }, DOCS_CONTRACTORNETWORK_SET_NAME_DOMAIN_STRING, "dom"_a, "name"_a, py::keep_alive<1,2>())
+      }, CONTRACTORNETWORK_VOID_SET_NAME_DOMAIN_STRING, "dom"_a, "name"_a, py::keep_alive<1,2>())
 
       .def("print_dot_graph", &ContractorNetwork::print_dot_graph,
-          DOCS_CONTRACTORNETWORK_PRINT_DOT_GRAPH_STRING_STRING, "cn_name"_a="cn", "layer_model"_a="fdp")
+          CONTRACTORNETWORK_INT_PRINT_DOT_GRAPH_STRING_STRING, "cn_name"_a="cn", "layer_model"_a="fdp")
       ;
 }

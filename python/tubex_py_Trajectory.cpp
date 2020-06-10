@@ -19,9 +19,12 @@
 #include "tubex_Trajectory.h"
 #include "tubex_TrajectoryVector.h"
 #include "tubex_RandTrajectory.h"
+
+// Generated files from Doxygen XML (doxygen2docstring.py):
+#include "tubex_py_RandTrajectory_docs.h"
 #include "tubex_py_Trajectory_docs.h"
 #include "tubex_py_TrajectoryVector_docs.h"
-#include "tubex_py_RandTrajectory_docs.h"
+
 namespace py = pybind11;
 using namespace pybind11::literals;
 using py::class_;
@@ -43,50 +46,50 @@ void export_Trajectory(py::module& m){
 
   py::class_<Trajectory> trajectory(m, "Trajectory");
   trajectory
-    .def(py::init<>(),DOCS_TRAJECTORY_TRAJECTORY)
+    .def(py::init<>(),TRAJECTORY_TRAJECTORY)
     .def(py::init<const ibex::Interval &,const TFunction &>(),
-        DOCS_TRAJECTORY_TRAJECTORY_INTERVAL_FUNCTION, "domain"_a, "f"_a, py::keep_alive<1,3>())
+        TRAJECTORY_TRAJECTORY_INTERVAL_TFUNCTION, "domain"_a, "f"_a, py::keep_alive<1,3>())
     .def(py::init<const ibex::Interval &,const TFunction &,double>(),
-        DOCS_TRAJECTORY_TRAJECTORY_INTERVAL_FUNCTION_DOUBLE, "domain"_a, "f"_a, "timestep"_a, py::keep_alive<1,3>())
+        TRAJECTORY_TRAJECTORY_INTERVAL_TFUNCTION_DOUBLE, "domain"_a, "f"_a, "timestep"_a, py::keep_alive<1,3>())
     .def(py::init<const std::map<double, double> &>(),
-        DOCS_TRAJECTORY_TRAJECTORY_MAP_DOUBLE_DOUBLE_, "m_map_values"_a)
+        TRAJECTORY_TRAJECTORY_MAPDOUBLEDOUBLE, "m_map_values"_a)
     .def(py::init<const Trajectory &>(),
-        DOCS_TRAJECTORY_TRAJECTORY_TRAJECTORY, "traj"_a)
+        TRAJECTORY_TRAJECTORY_TRAJECTORY, "traj"_a)
 
-    .def("size", &Trajectory::size,DOCS_TRAJECTORY_SIZE)
-    .def("tdomain", &Trajectory::tdomain,DOCS_TRAJECTORY_TDOMAIN)
-    .def("sampled_map", &Trajectory::sampled_map,DOCS_TRAJECTORY_SAMPLED_MAP)
-    .def("tfunction", &Trajectory::tfunction,DOCS_TRAJECTORY_TFUNCTION,py::return_value_policy::reference_internal)
-    .def("codomain", &Trajectory::codomain,DOCS_TRAJECTORY_CODOMAIN)
+    .def("size", &Trajectory::size,TRAJECTORY_INT_SIZE)
+    .def("tdomain", &Trajectory::tdomain,TRAJECTORY_CONSTINTERVAL_TDOMAIN)
+    .def("sampled_map", &Trajectory::sampled_map,TRAJECTORY_CONSTMAPDOUBLEDOUBLE_SAMPLED_MAP)
+    .def("tfunction", &Trajectory::tfunction,TRAJECTORY_CONSTTFUNCTION_TFUNCTION,py::return_value_policy::reference_internal)
+    .def("codomain", &Trajectory::codomain,TRAJECTORY_CONSTINTERVAL_CODOMAIN)
     .def("__call__", [](Trajectory& s,double o) { return s(o);}, 
-        DOCS_TRAJECTORY_OPERATOR_CALL_DOUBLE)
+        TRAJECTORY_DOUBLE_OPERATORP_DOUBLE)
     .def("__call__", [](Trajectory& s,const ibex::Interval & o) { return s(o);}, 
-        DOCS_TRAJECTORY_OPERATOR_CALL_INTERVAL)
-    .def("first_value", &Trajectory::first_value,DOCS_TRAJECTORY_FIRST_VALUE)
-    .def("last_value", &Trajectory::last_value,DOCS_TRAJECTORY_LAST_VALUE)
-    .def("not_defined", &Trajectory::not_defined,DOCS_TRAJECTORY_NOT_DEFINED)
+        TRAJECTORY_CONSTINTERVAL_OPERATORP_INTERVAL)
+    .def("first_value", &Trajectory::first_value,TRAJECTORY_DOUBLE_FIRST_VALUE)
+    .def("last_value", &Trajectory::last_value,TRAJECTORY_DOUBLE_LAST_VALUE)
+    .def("not_defined", &Trajectory::not_defined,TRAJECTORY_BOOL_NOT_DEFINED)
     .def("__eq__", [](Trajectory& s,const Trajectory & o) { return s == o;}, 
-        DOCS_TRAJECTORY_EQ_TRAJECTORY)
+        TRAJECTORY_BOOL_OPERATOREQ_TRAJECTORY)
     .def("__ne__", [](Trajectory& s,const Trajectory & o) { return s != o;}, 
-        DOCS_TRAJECTORY_NE_TRAJECTORY)
-    .def("set", &Trajectory::set,DOCS_TRAJECTORY_SET_DOUBLE_DOUBLE, "y"_a, "t"_a)
+        TRAJECTORY_BOOL_OPERATORNEQ_TRAJECTORY)
+    .def("set", &Trajectory::set,TRAJECTORY_VOID_SET_DOUBLE_DOUBLE, "y"_a, "t"_a)
     .def("truncate_tdomain", &Trajectory::truncate_tdomain,
-        DOCS_TRAJECTORY_TRUNCATE_TDOMAIN_INTERVAL, "domain"_a)
+        TRAJECTORY_TRAJECTORY_TRUNCATE_TDOMAIN_INTERVAL, "domain"_a)
     .def("shift_tdomain", &Trajectory::shift_tdomain,
-        DOCS_TRAJECTORY_SHIFT_TDOMAIN_DOUBLE, "a"_a)
+        TRAJECTORY_TRAJECTORY_SHIFT_TDOMAIN_DOUBLE, "a"_a)
     .def("sample", (Trajectory & (Trajectory::*)(double) )&Trajectory::sample,
-        DOCS_TRAJECTORY_SAMPLE_DOUBLE, "timestep"_a)
+        TRAJECTORY_TRAJECTORY_SAMPLE_DOUBLE, "timestep"_a)
     .def("sample", (Trajectory & (Trajectory::*)(const Trajectory &) )&Trajectory::sample,
-        DOCS_TRAJECTORY_SAMPLE_TRAJECTORY, "x"_a)
+        TRAJECTORY_TRAJECTORY_SAMPLE_TRAJECTORY, "x"_a)
     .def("make_continuous", (Trajectory & (Trajectory::*)() )&Trajectory::make_continuous,
-        "todo")
+        TRAJECTORY_TRAJECTORY_MAKE_CONTINUOUS)
     .def("primitive", (const Trajectory (Trajectory::*)(double) const)&Trajectory::primitive,
-        DOCS_TRAJECTORY_PRIMITIVE_DOUBLE, "c"_a=0)
+        TRAJECTORY_CONSTTRAJECTORY_PRIMITIVE_DOUBLE, "c"_a=0)
     .def("primitive", (const Trajectory (Trajectory::*)(double,double) const)&Trajectory::primitive,
-        DOCS_TRAJECTORY_PRIMITIVE_DOUBLE_DOUBLE, "c"_a, "timestep"_a)
-    .def("diff", &Trajectory::diff,DOCS_TRAJECTORY_DIFF)
+        TRAJECTORY_CONSTTRAJECTORY_PRIMITIVE_DOUBLE_DOUBLE, "c"_a, "timestep"_a)
+    .def("diff", &Trajectory::diff, TRAJECTORY_CONSTTRAJECTORY_DIFF)
     .def("finite_diff", &Trajectory::finite_diff,
-        DOCS_TRAJECTORY_FINITE_DIFF_DOUBLE, "t"_a)
+        TRAJECTORY_DOUBLE_FINITE_DIFF_DOUBLE, "t"_a)
 //    .def("__iadd__", [](Trajectory& s,double o) { return s += o;}, 
 //        DOCS_TRAJECTORY_IADD_DOUBLE)
 //    .def("__iadd__", [](Trajectory& s,const Trajectory & o) { return s += o;}, 
@@ -103,7 +106,7 @@ void export_Trajectory(py::module& m){
 //        DOCS_TRAJECTORY_ITRUEDIV_DOUBLE)
 //    .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o;}, 
 //        DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
-    .def("class_name", &Trajectory::class_name,DOCS_TRAJECTORY_CLASS_NAME)
+    .def("class_name", &Trajectory::class_name,TRAJECTORY_CONSTSTRING_CLASS_NAME)
       .def("__repr__", &to_string)
 
       // .def(py::init<>())
@@ -135,28 +138,28 @@ void export_Trajectory(py::module& m){
   // Assignments operators
 
     .def("__iadd__", [](Trajectory& s,double o) { return s += o; },
-      DOCS_TRAJECTORY_IADD_DOUBLE)
+      TRAJECTORY_CONSTTRAJECTORY_OPERATORADDEQ_DOUBLE)
 
     .def("__iadd__", [](Trajectory& s,const Trajectory & o) { return s += o; },
-      DOCS_TRAJECTORY_IADD_TRAJECTORY)
+      TRAJECTORY_CONSTTRAJECTORY_OPERATORADDEQ_TRAJECTORY)
 
     .def("__isub__", [](Trajectory& s,double o) { return s -= o; },
-      DOCS_TRAJECTORY_ISUB_DOUBLE)
+      TRAJECTORY_CONSTTRAJECTORY_OPERATORMINEQ_DOUBLE)
 
     .def("__isub__", [](Trajectory& s,const Trajectory & o) { return s -= o; },
-      DOCS_TRAJECTORY_ISUB_TRAJECTORY)
+      TRAJECTORY_CONSTTRAJECTORY_OPERATORMINEQ_TRAJECTORY)
 
     .def("__imul__", [](Trajectory& s,double o) { return s *= o; },
-      DOCS_TRAJECTORY_IMUL_DOUBLE)
+      TRAJECTORY_CONSTTRAJECTORY_OPERATORMULEQ_DOUBLE)
 
     .def("__imul__", [](Trajectory& s,const Trajectory & o) { return s *= o; },
-      DOCS_TRAJECTORY_IMUL_TRAJECTORY)
+      TRAJECTORY_CONSTTRAJECTORY_OPERATORMULEQ_TRAJECTORY)
 
     .def("__itruediv__", [](Trajectory& s,double o) { return s /= o; },
-      DOCS_TRAJECTORY_ITRUEDIV_DOUBLE)
+      TRAJECTORY_CONSTTRAJECTORY_OPERATORDIVEQ_DOUBLE)
 
     .def("__itruediv__", [](Trajectory& s,const Trajectory & o) { return s /= o; },
-      DOCS_TRAJECTORY_ITRUEDIV_TRAJECTORY)
+      TRAJECTORY_CONSTTRAJECTORY_OPERATORDIVEQ_TRAJECTORY)
 
   // Operators
 
@@ -185,88 +188,88 @@ void export_Trajectory(py::module& m){
 
     py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector");
     trajectoryvector
-        .def(py::init<int>(),DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT, "n"_a)
+        .def(py::init<int>(),TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT, "n"_a)
         .def(py::init<const ibex::Interval &,const TFunction &>(),
-            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION, "domain"_a, "f"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_TFUNCTION, "domain"_a, "f"_a)
         .def(py::init<const ibex::Interval &,const TFunction &,double>(),
-            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_FUNCTION_DOUBLE, "domain"_a, "f"_a, "timestep"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_INTERVAL_TFUNCTION_DOUBLE, "domain"_a, "f"_a, "timestep"_a)
         .def(py::init<const std::map<double, ibex::Vector> &>(),
-            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_MAP_DOUBLE_VECTOR_, "m_map_values"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_MAPDOUBLEVECTOR, "m_map_values"_a)
         .def(py::init<const std::vector<std::map<double, double> > &>(),
-            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_VECTOR_MAP_DOUBLE_DOUBLE, "v_map_values"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_VECTORMAPDOUBLEDOUBLE, "v_map_values"_a)
         .def(py::init<std::initializer_list<Trajectory>>(),
-            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INITIALIZER_LIST_TRAJECTORY_, "list"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_INITIALIZERLISTTRAJECTORY, "list"_a)
         .def(py::init<const TrajectoryVector &>(),
-            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_TRAJECTORYVECTOR, "traj"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_TRAJECTORYVECTOR, "traj"_a)
         .def(py::init<int,const Trajectory &>(),
-            DOCS_TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT_TRAJECTORY, "n"_a, "x"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_INT_TRAJECTORY, "n"_a, "x"_a)
 
-        .def("size", &TrajectoryVector::size,DOCS_TRAJECTORYVECTOR_SIZE)
-        .def("tdomain", &TrajectoryVector::tdomain,DOCS_TRAJECTORYVECTOR_TDOMAIN)
+        .def("size", &TrajectoryVector::size,TRAJECTORYVECTOR_INT_SIZE)
+        .def("tdomain", &TrajectoryVector::tdomain,TRAJECTORYVECTOR_CONSTINTERVAL_TDOMAIN)
         .def("resize", &TrajectoryVector::resize,
-            DOCS_TRAJECTORYVECTOR_RESIZE_INT, "n"_a)
+            TRAJECTORYVECTOR_VOID_RESIZE_INT, "n"_a)
         .def("subvector", &TrajectoryVector::subvector,
-            DOCS_TRAJECTORYVECTOR_SUBVECTOR_INT_INT, "start_index"_a, "end_index"_a)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_SUBVECTOR_INT_INT, "start_index"_a, "end_index"_a)
         .def("put", &TrajectoryVector::put,
-            DOCS_TRAJECTORYVECTOR_PUT_INT_TRAJECTORYVECTOR, "start_index"_a, "subvec"_a)
-        .def("codomain", &TrajectoryVector::codomain,DOCS_TRAJECTORYVECTOR_CODOMAIN)
+            TRAJECTORYVECTOR_VOID_PUT_INT_TRAJECTORYVECTOR, "start_index"_a, "subvec"_a)
+        .def("codomain", &TrajectoryVector::codomain,TRAJECTORYVECTOR_CONSTINTERVALVECTOR_CODOMAIN)
         .def("__call__", [](TrajectoryVector& s,double o) { return s(o);}, 
-            DOCS_TRAJECTORYVECTOR_OPERATOR_CALL_DOUBLE)
+            TRAJECTORYVECTOR_CONSTVECTOR_OPERATORP_DOUBLE)
         .def("__call__", [](TrajectoryVector& s,const ibex::Interval & o) { return s(o);}, 
-            DOCS_TRAJECTORYVECTOR_OPERATOR_CALL_INTERVAL)
+            TRAJECTORYVECTOR_CONSTINTERVALVECTOR_OPERATORP_INTERVAL)
         .def("first_value", &TrajectoryVector::first_value,
-            DOCS_TRAJECTORYVECTOR_FIRST_VALUE)
+            TRAJECTORYVECTOR_CONSTVECTOR_FIRST_VALUE)
         .def("last_value", &TrajectoryVector::last_value,
-            DOCS_TRAJECTORYVECTOR_LAST_VALUE)
+            TRAJECTORYVECTOR_CONSTVECTOR_LAST_VALUE)
         .def("not_defined", &TrajectoryVector::not_defined,
-            DOCS_TRAJECTORYVECTOR_NOT_DEFINED)
+            TRAJECTORYVECTOR_BOOL_NOT_DEFINED)
         .def("__eq__", [](TrajectoryVector& s,const TrajectoryVector & o) { return s == o;}, 
-            DOCS_TRAJECTORYVECTOR_EQ_TRAJECTORYVECTOR)
+            TRAJECTORYVECTOR_BOOL_OPERATOREQ_TRAJECTORYVECTOR)
         .def("__ne__", [](TrajectoryVector& s,const TrajectoryVector & o) { return s != o;}, 
-            DOCS_TRAJECTORYVECTOR_NE_TRAJECTORYVECTOR)
+            TRAJECTORYVECTOR_BOOL_OPERATORNEQ_TRAJECTORYVECTOR)
         .def("set", &TrajectoryVector::set,
-            DOCS_TRAJECTORYVECTOR_SET_VECTOR_DOUBLE, "y"_a, "t"_a)
+            TRAJECTORYVECTOR_VOID_SET_VECTOR_DOUBLE, "y"_a, "t"_a)
         .def("truncate_tdomain", &TrajectoryVector::truncate_tdomain,
-            DOCS_TRAJECTORYVECTOR_TRUNCATE_TDOMAIN_INTERVAL, "domain"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_TRUNCATE_TDOMAIN_INTERVAL, "domain"_a)
         .def("shift_tdomain", &TrajectoryVector::shift_tdomain,
-            DOCS_TRAJECTORYVECTOR_SHIFT_TDOMAIN_DOUBLE, "a"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_SHIFT_TDOMAIN_DOUBLE, "a"_a)
         .def("sample", (TrajectoryVector & (TrajectoryVector::*)(double) )&TrajectoryVector::sample,
-            DOCS_TRAJECTORYVECTOR_SAMPLE_DOUBLE, "timestep"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_SAMPLE_DOUBLE, "timestep"_a)
         .def("sample", (TrajectoryVector & (TrajectoryVector::*)(const Trajectory &) )&TrajectoryVector::sample,
-            DOCS_TRAJECTORYVECTOR_SAMPLE_TRAJECTORY, "x"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_SAMPLE_TRAJECTORY, "x"_a)
         .def("sample", (TrajectoryVector & (TrajectoryVector::*)(const TrajectoryVector &) )&TrajectoryVector::sample,
-            DOCS_TRAJECTORYVECTOR_SAMPLE_TRAJECTORYVECTOR, "x"_a)
+            TRAJECTORYVECTOR_TRAJECTORYVECTOR_SAMPLE_TRAJECTORYVECTOR, "x"_a)
         .def("primitive", (const TrajectoryVector (TrajectoryVector::*)(const ibex::Vector &) const)&TrajectoryVector::primitive,
-            DOCS_TRAJECTORYVECTOR_PRIMITIVE_VECTOR, "c"_a)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_PRIMITIVE_VECTOR, "c"_a)
         .def("primitive", (const TrajectoryVector (TrajectoryVector::*)(const ibex::Vector &,double) const)&TrajectoryVector::primitive,
-            DOCS_TRAJECTORYVECTOR_PRIMITIVE_VECTOR_DOUBLE, "c"_a, "timestep"_a)
-        .def("diff", &TrajectoryVector::diff,DOCS_TRAJECTORYVECTOR_DIFF)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_PRIMITIVE_VECTOR_DOUBLE, "c"_a, "timestep"_a)
+        .def("diff", &TrajectoryVector::diff,TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_DIFF)
         .def("__iadd__", [](TrajectoryVector& s,double o) { return s += o;}, 
-            DOCS_TRAJECTORYVECTOR_IADD_DOUBLE)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORADDEQ_DOUBLE)
         .def("__iadd__", [](TrajectoryVector& s,const Trajectory & o) { return s += o;}, 
-            DOCS_TRAJECTORYVECTOR_IADD_TRAJECTORY)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORADDEQ_TRAJECTORY)
         .def("__iadd__", [](TrajectoryVector& s,const ibex::Vector & o) { return s += o;}, 
-            DOCS_TRAJECTORYVECTOR_IADD_VECTOR)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORADDEQ_VECTOR)
         .def("__iadd__", [](TrajectoryVector& s,const TrajectoryVector & o) { return s += o;}, 
-            DOCS_TRAJECTORYVECTOR_IADD_TRAJECTORYVECTOR)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORADDEQ_TRAJECTORYVECTOR)
         .def("__isub__", [](TrajectoryVector& s,double o) { return s -= o;}, 
-            DOCS_TRAJECTORYVECTOR_ISUB_DOUBLE)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORMINEQ_DOUBLE)
         .def("__isub__", [](TrajectoryVector& s,const Trajectory & o) { return s -= o;}, 
-            DOCS_TRAJECTORYVECTOR_ISUB_TRAJECTORY)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORMINEQ_TRAJECTORY)
         .def("__isub__", [](TrajectoryVector& s,const ibex::Vector & o) { return s -= o;}, 
-            DOCS_TRAJECTORYVECTOR_ISUB_VECTOR)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORMINEQ_VECTOR)
         .def("__isub__", [](TrajectoryVector& s,const TrajectoryVector & o) { return s -= o;}, 
-            DOCS_TRAJECTORYVECTOR_ISUB_TRAJECTORYVECTOR)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORMINEQ_TRAJECTORYVECTOR)
         .def("__imul__", [](TrajectoryVector& s,double o) { return s *= o;}, 
-            DOCS_TRAJECTORYVECTOR_IMUL_DOUBLE)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORMULEQ_DOUBLE)
         .def("__imul__", [](TrajectoryVector& s,const Trajectory & o) { return s *= o;}, 
-            DOCS_TRAJECTORYVECTOR_IMUL_TRAJECTORY)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORMULEQ_TRAJECTORY)
         .def("__itruediv__", [](TrajectoryVector& s,double o) { return s /= o;}, 
-            DOCS_TRAJECTORYVECTOR_ITRUEDIV_DOUBLE)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORDIVEQ_DOUBLE)
         .def("__itruediv__", [](TrajectoryVector& s,const Trajectory & o) { return s /= o;}, 
-            DOCS_TRAJECTORYVECTOR_ITRUEDIV_TRAJECTORY)
+            TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORDIVEQ_TRAJECTORY)
         .def("class_name", &TrajectoryVector::class_name,
-            DOCS_TRAJECTORYVECTOR_CLASS_NAME)
+            TRAJECTORYVECTOR_CONSTSTRING_CLASS_NAME)
 
 
       .def("__getitem__", [](TrajectoryVector& s, size_t index) -> Trajectory&{
@@ -274,7 +277,7 @@ void export_Trajectory(py::module& m){
                   throw py::index_error();
               }
                 return s[static_cast<int>(index)];
-          }, DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT, py::return_value_policy::reference_internal)
+          }, TRAJECTORYVECTOR_TRAJECTORY_OPERATORB_INT, py::return_value_policy::reference_internal)
 
       .def("__getitem__", [](const TrajectoryVector& s, py::slice slice) -> TrajectoryVector {
             size_t start, stop, step, slicelength;
@@ -287,13 +290,13 @@ void export_Trajectory(py::module& m){
             // to respect the python convention, the stop index 
             // is not included in slice
             return s.subvector(start, start + slicelength-1);
-        },DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT1)
+        },TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_SUBVECTOR_INT_INT)
       .def("__setitem__", [](TrajectoryVector& s, size_t index, Trajectory& t){
               if (index >= static_cast<size_t>(s.size())){
                 throw py::index_error();
               }
               s[static_cast<int>(index)] = t;
-          }, DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT)
+          }, TRAJECTORYVECTOR_TRAJECTORY_OPERATORB_INT)
         // .def("operator[]", [](TrajectoryVector& s,int o) { return s[o];}, 
         //     DOCS_TRAJECTORYVECTOR_OPERATOR_INDEX_INT)
         // .def("operator[]", [](TrajectoryVector& s,int o) { return s[o];}, 
@@ -344,10 +347,10 @@ void export_Trajectory(py::module& m){
     // ;
       // .def("__repr__", [](TrajectoryVector& s,std::ostream&, const tubex::TrajectoryVector& o) { s << o;});
 
-    py::class_<RandTrajectory> randtrajectory(m, "RandTrajectory", trajectory, DOCS_RANDTRAJECTORY);
+    py::class_<RandTrajectory> randtrajectory(m, "RandTrajectory", trajectory, "todo");
     randtrajectory
       .def(py::init<const ibex::Interval &,double,const ibex::Interval &>(),
-          DOCS_RANDTRAJECTORY_RANDTRAJECTORY_INTERVAL_DOUBLE_INTERVAL, "tdomain"_a, "timestep"_a, "bounds"_a);
+          RANDTRAJECTORY_RANDTRAJECTORY_INTERVAL_DOUBLE_INTERVAL, "tdomain"_a, "timestep"_a, "bounds"_a);
 
     //py::implicitly_convertible<Trajectory,RandTrajectory>();
 }

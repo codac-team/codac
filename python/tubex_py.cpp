@@ -26,7 +26,7 @@ void export_arithmetic(py::module& m);
 
 PYBIND11_MODULE(tube, m)
 {
-  m.doc() = "python binding of tubex lib";
+  m.doc() = "Python binding of tubex-lib";
   export_Tube(m);
   export_TubeVector(m);
   export_Trajectory(m);
