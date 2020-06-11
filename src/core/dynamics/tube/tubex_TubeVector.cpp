@@ -82,7 +82,12 @@ namespace tubex
       assert(v_tdomains.size() == v_codomains.size());
       assert(!v_tdomains.empty());
 
+#ifdef _MSC_VER
+      // see https://stackoverflow.com/questions/48459297/is-there-a-vlas-variable-length-arrays-support-workaround-for-vs2017
+      vector<Interval>* v_scalar_codomains = new vector<Interval>[size()];
+#else
       vector<Interval> v_scalar_codomains[size()];
+#endif // _MSC_VER
 
       for(size_t i = 0 ; i < v_codomains.size() ; i++)
       {
@@ -94,6 +99,10 @@ namespace tubex
 
       for(int j = 0 ; j < size() ; j++)
         (*this)[j] = Tube(v_tdomains, v_scalar_codomains[j]);
+
+#ifdef _MSC_VER
+	  delete[] v_scalar_codomains;
+#endif // _MSC_VER
     }
 
     TubeVector::TubeVector(initializer_list<Tube> list)
