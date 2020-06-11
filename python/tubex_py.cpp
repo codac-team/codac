@@ -39,8 +39,8 @@ void export_CtcPicard(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 
 void export_Tube(py::module&m);
 void export_TubeVector(py::module& m);
-py::class_<Trajectory> export_Trajectory(py::module& m);
-void export_RandTrajectory(py::module& m, py::class_<Trajectory>& trajectory);
+void export_Trajectory(py::module& m);
+void export_RandTrajectory(py::module& m);
 void export_TrajectoryVector(py::module& m);
 void export_Slice(py::module& m);
 
@@ -76,8 +76,8 @@ PYBIND11_MODULE(tube, m)
 
   export_Tube(m);
   export_TubeVector(m);
-  py::class_<Trajectory> trajectory = export_Trajectory(m);
-  export_RandTrajectory(m, trajectory);
+  export_Trajectory(m);
+  export_RandTrajectory(m);
   export_TrajectoryVector(m);
   export_Slice(m);
 

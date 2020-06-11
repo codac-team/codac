@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  Tube binding
+ *  Tube Python binding
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou, Benoît Desrochers
@@ -16,25 +16,15 @@
 #include <pybind11/functional.h>
 
 #include "tubex_Tube.h"
-#include "ibex_Interval.h"
-
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "tubex_py_Tube_docs.h"
 
+using namespace std;
 using namespace ibex;
 using namespace tubex;
-
-using namespace pybind11::literals;
 namespace py = pybind11;
-using py::class_;
-using py::init;
+using namespace pybind11::literals;
 
-std::string to_string(const Tube& x)
-{
-  std::ostringstream str;
-  str << x;
-  return str.str();
-}
 
 void export_Tube(py::module& m)
 {
@@ -59,7 +49,7 @@ void export_Tube(py::module& m)
       TUBE_TUBE_INTERVAL_DOUBLE_TFNC_INT,
       "tdomain"_a, "timestep"_a, "f"_a, "f_image_id"_a=0)
 
-    .def(py::init<const std::vector<Interval> &,const std::vector<Interval> &>(),
+    .def(py::init<const vector<Interval> &,const vector<Interval> &>(),
       TUBE_TUBE_VECTORINTERVAL_VECTORINTERVAL,
       "v_domains"_a, "v_codomains"_a)
 
@@ -79,11 +69,11 @@ void export_Tube(py::module& m)
       TUBE_TUBE_TRAJECTORY_TRAJECTORY_DOUBLE,
       "lb"_a, "ub"_a, "timestep"_a)
 
-    .def(py::init<const std::string &>(),
+    .def(py::init<const string &>(),
       TUBE_TUBE_STRING,
       "binary_file_name"_a)
 
-    //.def(py::init<const std::string &,Trajectory * &>(),
+    //.def(py::init<const string &,Trajectory * &>(),
     //  TUBE_TUBE_STRING_TRAJECTORY,
     //  "binary_file_name"_a, "traj"_a)
     
@@ -105,19 +95,13 @@ void export_Tube(py::module& m)
     .def("nb_slices", &Tube::nb_slices,
       TUBE_INT_NB_SLICES)
 
+    // Note: const overloaded methods are not necessary for Python binding
+
     .def("slice", (Slice * (Tube::*)(int))&Tube::slice,
       TUBE_SLICE_SLICE_INT,
       "slice_id"_a, py::return_value_policy::reference_internal)
 
-    .def("slice", (const Slice * (Tube::*)(int) const)&Tube::slice,
-      TUBE_SLICE_SLICE_INT,
-      "slice_id"_a,py::return_value_policy::reference_internal)
-
     .def("slice", (Slice * (Tube::*)(double))&Tube::slice,
-      TUBE_SLICE_SLICE_DOUBLE,
-      "t"_a, py::return_value_policy::reference_internal)
-
-    .def("slice", (const Slice * (Tube::*)(double) const)&Tube::slice,
       TUBE_SLICE_SLICE_DOUBLE,
       "t"_a, py::return_value_policy::reference_internal)
 
@@ -125,15 +109,7 @@ void export_Tube(py::module& m)
       TUBE_SLICE_FIRST_SLICE,
       py::return_value_policy::reference_internal)
 
-    .def("first_slice", (const Slice * (Tube::*)() const)&Tube::first_slice,
-      TUBE_SLICE_FIRST_SLICE,
-      py::return_value_policy::reference_internal)
-
     .def("last_slice", (Slice * (Tube::*)())&Tube::last_slice,
-      TUBE_SLICE_LAST_SLICE,
-      py::return_value_policy::reference_internal)
-
-    .def("last_slice", (const Slice * (Tube::*)() const)&Tube::last_slice,
       TUBE_SLICE_LAST_SLICE,
       py::return_value_policy::reference_internal)
 
@@ -141,15 +117,7 @@ void export_Tube(py::module& m)
       TUBE_SLICE_WIDER_SLICE,
       py::return_value_policy::reference_internal)
 
-    .def("wider_slice", (const Slice * (Tube::*)() const)&Tube::wider_slice,
-      TUBE_SLICE_WIDER_SLICE,
-      py::return_value_policy::reference_internal)
-
     .def("largest_slice", (Slice * (Tube::*)())&Tube::largest_slice,
-      TUBE_SLICE_LARGEST_SLICE,
-      py::return_value_policy::reference_internal)
-
-    .def("largest_slice", (const Slice * (Tube::*)() const)&Tube::largest_slice,
       TUBE_SLICE_LARGEST_SLICE,
       py::return_value_policy::reference_internal)
 
@@ -221,7 +189,7 @@ void export_Tube(py::module& m)
       TUBE_CONSTINTERVAL_INVERT_INTERVAL_INTERVAL,
       "y"_a, "search_tdomain"_a=Interval::all_reals())
 
-    .def("invert", (void (Tube::*)(const Interval &,std::vector<Interval> &,const Interval &) const)&Tube::invert,
+    .def("invert", (void (Tube::*)(const Interval &,vector<Interval> &,const Interval &) const)&Tube::invert,
       TUBE_VOID_INVERT_INTERVAL_VECTORINTERVAL_INTERVAL,
       "y"_a, "v_t"_a, "search_tdomain"_a=Interval::all_reals())
 
@@ -229,7 +197,7 @@ void export_Tube(py::module& m)
       TUBE_CONSTINTERVAL_INVERT_INTERVAL_TUBE_INTERVAL,
       "y"_a, "v"_a, "search_tdomain"_a=Interval::all_reals())
 
-    .def("invert", (void (Tube::*)(const Interval &,std::vector<Interval> &,const Tube &,const Interval &) const)&Tube::invert,
+    .def("invert", (void (Tube::*)(const Interval &,vector<Interval> &,const Tube &,const Interval &) const)&Tube::invert,
       TUBE_VOID_INVERT_INTERVAL_VECTORINTERVAL_TUBE_INTERVAL,
       "y"_a, "v_t"_a, "v"_a, "search_tdomain"_a=Interval::all_reals())
 
@@ -395,7 +363,7 @@ void export_Tube(py::module& m)
     .def("class_name", &Tube::class_name,
       TUBE_CONSTSTRING_CLASS_NAME)
 
-    .def("__repr__", &to_string)
+    .def("__repr__", [](const Tube& x) { ostringstream str; str << x; return str.str(); })
   
   // Synthesis tree
 
@@ -417,21 +385,21 @@ void export_Tube(py::module& m)
       TUBE_CONSTINTERVAL_INTEGRAL_INTERVAL_INTERVAL,
       "t1"_a, "t2"_a)
 
-    .def("partial_integral", (const std::pair<Interval, Interval> (Tube::*)(const Interval &) const)&Tube::partial_integral,
+    .def("partial_integral", (const pair<Interval, Interval> (Tube::*)(const Interval &) const)&Tube::partial_integral,
       TUBE_CONSTPAIRINTERVALINTERVAL_PARTIAL_INTEGRAL_INTERVAL,
       "t"_a)
 
-    .def("partial_integral", (const std::pair<Interval, Interval> (Tube::*)(const Interval &,const Interval &) const)&Tube::partial_integral,
+    .def("partial_integral", (const pair<Interval, Interval> (Tube::*)(const Interval &,const Interval &) const)&Tube::partial_integral,
       TUBE_CONSTPAIRINTERVALINTERVAL_PARTIAL_INTEGRAL_INTERVAL_INTERVAL,
       "t1"_a, "t2"_a)
 
   // Serialization
 
-    .def("serialize", (void (Tube::*)(const std::string &,int) const)&Tube::serialize,
+    .def("serialize", (void (Tube::*)(const string &,int) const)&Tube::serialize,
       TUBE_VOID_SERIALIZE_STRING_INT,
       "binary_file_name"_a="x.tube", "version_number"_a=SERIALIZATION_VERSION)
 
-    .def("serialize", (void (Tube::*)(const std::string &,const Trajectory &,int) const)&Tube::serialize,
+    .def("serialize", (void (Tube::*)(const string &,const Trajectory &,int) const)&Tube::serialize,
       TUBE_VOID_SERIALIZE_STRING_TRAJECTORY_INT,
       "binary_file_name"_a, "traj"_a, "version_number"_a=SERIALIZATION_VERSION)
 
@@ -453,46 +421,63 @@ void export_Tube(py::module& m)
 
     .def("__add__",      [](const Tube& x) { return +x; })
     .def("__add__",      [](const Tube& x, const Tube& y) { return x+y; })
+    .def("__add__",      [](const Tube& x, double y) { return x+y; })
     .def("__add__",      [](const Tube& x, const Interval& y) { return x+y; })
-    .def("__radd__",     [](const Tube& x, const Interval& y) { return x+y; })
     .def("__add__",      [](const Tube& x, const Trajectory& y) { return x+y; })
+
+    .def("__radd__",     [](const Tube& x, double y) { return x+y; })
+    .def("__radd__",     [](const Tube& x, const Interval& y) { return x+y; })
     .def("__radd__",     [](const Tube& x, const Trajectory& y) { return x+y; })
 
     .def("__neg__",      [](const Tube& x) { return -x; })
     .def("__sub__",      [](const Tube& x, const Tube& y) { return x-y; })
+    .def("__sub__",      [](const Tube& x, double y) { return x-y; })
     .def("__sub__",      [](const Tube& x, const Interval& y) { return x-y; })
-    .def("__rsub__",     [](const Tube& x, const Interval& y) { return y-x; })
     .def("__sub__",      [](const Tube& x, const Trajectory& y) { return x-y; })
+
+    .def("__rsub__",     [](const Tube& x, const Interval& y) { return y-x; })
     .def("__rsub__",     [](const Tube& x, const Trajectory& y) { return y-x; })
 
-    .def("__mul__",      [](const Tube& x, const Tube& y) { return x*y; }, "y"_a.noconvert())
-    .def("__mul__",      [](const Tube& x, const Interval& y) { return x*y; }, "y"_a.noconvert())
-    .def("__rmul__",     [](const Tube& x, const Interval& y) { return x*y; }, "y"_a.noconvert())
-    .def("__mul__",      [](const Tube& x, const Trajectory& y) { return x*y; }, "y"_a.noconvert())
-    .def("__rmul__",     [](const Tube& x, const Trajectory& y) { return x*y; }, "y"_a.noconvert())
+    .def("__mul__",      [](const Tube& x, const Tube& y) { return x*y; })
+    .def("__mul__",      [](const Tube& x, double y) { return x*y; })
+    .def("__mul__",      [](const Tube& x, const Interval& y) { return x*y; })
+    .def("__mul__",      [](const Tube& x, const Trajectory& y) { return x*y; })
     // Vector case
-    .def("__mul__",      [](const Tube& x, const ibex::IntervalVector& y) { return x*y; }, "y"_a.noconvert())
-    .def("__mul__",      [](const Tube& x, const TubeVector& y) { return x*y; }, "y"_a.noconvert())
+    .def("__mul__",      [](const Tube& x, const IntervalVector& y) { return x*y; })
+    .def("__mul__",      [](const Tube& x, const TubeVector& y) { return x*y; })
 
-    .def("__truediv__",  [](const Tube& x, const Tube& y) { return x/y; }) //, "x"_a.noconvert(), "y"_a.noconvert())
-    .def("__truediv__",  [](const Tube& x, const Interval& y) { return x/y; }) //, "x"_a.noconvert(), "y"_a.noconvert())
-    .def("__rtruediv__", [](const Tube& x, const Interval& y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
-    .def("__truediv__",  [](const Tube& x, const Trajectory& y) { return x/y; }) //, "x"_a.noconvert(), "y"_a.noconvert())
-    .def("__rtruediv__", [](const Tube& x, const Trajectory& y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
+    .def("__rmul__",     [](const Tube& x, double y) { return x*y; })
+    .def("__rmul__",     [](const Tube& x, const Interval& y) { return x*y; })
+    .def("__rmul__",     [](const Tube& x, const Trajectory& y) { return x*y; })
+
+    .def("__truediv__",  [](const Tube& x, const Tube& y) { return x/y; })
+    .def("__truediv__",  [](const Tube& x, double y) { return x/y; })
+    .def("__truediv__",  [](const Tube& x, const Interval& y) { return x/y; })
+    .def("__truediv__",  [](const Tube& x, const Trajectory& y) { return x/y; })
+
+    .def("__rtruediv__", [](const Tube& x, const double y) { return y/x; })
+    .def("__rtruediv__", [](const Tube& x, const Interval& y) { return y/x; })
+    .def("__rtruediv__", [](const Tube& x, const Trajectory& y) { return y/x; })
     // Vector case
-    .def("__rtruediv__", [](const Tube& x, const IntervalVector& y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
-    .def("__rtruediv__", [](const Tube& x, const TubeVector& y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
+    .def("__rtruediv__", [](const Tube& x, const IntervalVector& y) { return y/x; })
+    .def("__rtruediv__", [](const Tube& x, const TubeVector& y) { return y/x; })
 
     .def("__or__",       [](const Tube& x, const Tube& y) { return x|y; })
+    .def("__or__",       [](const Tube& x, double y) { return x|y; })
     .def("__or__",       [](const Tube& x, const Interval& y) { return x|y; })
-    .def("__ror__",      [](const Tube& x, const Interval& y) { return x|y; })
     .def("__or__",       [](const Tube& x, const Trajectory& y) { return x|y; })
+
+    .def("__ror__",      [](const Tube& x, double y) { return x|y; })
+    .def("__ror__",      [](const Tube& x, const Interval& y) { return x|y; })
     .def("__ror__",      [](const Tube& x, const Trajectory& y) { return x|y; })
 
     .def("__and__",      [](const Tube& x, const Tube& y) { return x & y; })
+    .def("__and__",      [](const Tube& x, double y) { return x & y; })
     .def("__and__",      [](const Tube& x, const Interval& y) { return x & y; })
-    .def("__rand__",     [](const Tube& x, const Interval& y) { return x & y; })
     .def("__and__",      [](const Tube& x, const Trajectory& y) { return x & y; })
+
+    .def("__rand__",     [](const Tube& x, double y) { return x & y; })
+    .def("__rand__",     [](const Tube& x, const Interval& y) { return x & y; })
     .def("__rand__",     [](const Tube& x, const Trajectory& y) { return x & y; })
   ;
 }

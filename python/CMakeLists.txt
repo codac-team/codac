@@ -41,7 +41,7 @@
   message(STATUS "Generating docstrings from doxygen files...")
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docstring)
   execute_process(COMMAND ${PYTHON_EXECUTABLE}
-    ${PROJECT_SOURCE_DIR}/scripts/doc/doxygen2docstring.py
+    ${PROJECT_SOURCE_DIR}/scripts/pybind/doxygen2docstring.py
     ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
     ${CMAKE_CURRENT_BINARY_DIR}/docstring)
   # The file generated_docstring.cpp contains all docstring of the library

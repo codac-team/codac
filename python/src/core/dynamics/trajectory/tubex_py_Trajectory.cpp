@@ -40,7 +40,7 @@ std::string to_string(const Trajectory& x)
   return str.str();
 }
 
-py::class_<Trajectory> export_Trajectory(py::module& m){
+void export_Trajectory(py::module& m){
 
   py::class_<Trajectory> trajectory(m, "Trajectory");
   trajectory
@@ -183,6 +183,4 @@ py::class_<Trajectory> export_Trajectory(py::module& m){
     // Vector case
     .def("__rtruediv__", [](const Trajectory& x, const ibex::Vector& y) { return y/x; }) //, "x"_a.noconvert(), "y"_a.noconvert())
   ;
-
-  return trajectory;
 }

@@ -31,9 +31,9 @@ using ibex::Interval;
 using ibex::IntervalVector;
 
 
-void export_RandTrajectory(py::module& m, py::class_<Trajectory>& trajectory){
+void export_RandTrajectory(py::module& m){
 
-    py::class_<RandTrajectory> randtrajectory(m, "RandTrajectory", trajectory, "todo");
+    py::class_<RandTrajectory,Trajectory> randtrajectory(m, "RandTrajectory", "todo");
     randtrajectory
       .def(py::init<const ibex::Interval &,double,const ibex::Interval &>(),
           RANDTRAJECTORY_RANDTRAJECTORY_INTERVAL_DOUBLE_INTERVAL, "tdomain"_a, "timestep"_a, "bounds"_a);
