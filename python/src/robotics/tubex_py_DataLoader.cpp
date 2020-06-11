@@ -1,7 +1,6 @@
-
 /** 
  *  \file
- *  DataLoader binding
+ *  DataLoader Python binding
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou, Benoît Desrochers
@@ -17,50 +16,38 @@
 #include "pyIbex_type_caster.h"
 
 #include "tubex_DataLoader.h"
-
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "tubex_py_DataLoader_docs.h"
 
+using namespace std;
+using namespace ibex;
+using namespace tubex;
 namespace py = pybind11;
 using namespace pybind11::literals;
-using py::class_;
-using py::init;
-
-using namespace tubex;
-using ibex::Interval;
-using ibex::IntervalVector;
 
 
-void export_DataLoader(py::module& m){
+void export_DataLoader(py::module& m)
+{
+  py::class_<DataLoader> data_loader(m, "DataLoader", "todo");
+  data_loader
 
-    py::class_<DataLoader> data_loader(m, "DataLoader", "todo");
-    data_loader
-      .def(py::init<>(),DATALOADER_DATALOADER)
-      .def(py::init<const std::string &>(),
-          DATALOADER_DATALOADER_STRING, "file_path"_a)
-    //  .def("load_data", &DataLoader::load_data,
-    //      DOCS_DATALOADER_LOAD_DATA_TUBEVECTOR_TRAJECTORYVECTOR_FLOAT_INTERVAL, "x"_a, "truth"_a, "timestep"_a, "tdomain"_a=ibex::Interval::ALL_REALS)
-    //  .def("serialized_data_available", &DataLoader::serialized_data_available,
-    //      DOCS_DATALOADER_SERIALIZED_DATA_AVAILABLE)
-    //  .def("deserialize_data", &DataLoader::deserialize_data,
-    //      DOCS_DATALOADER_DESERIALIZE_DATA_TUBEVECTOR_TRAJECTORYVECTOR, "x"_a, "traj"_a)
-    //  .def("serialize_data", &DataLoader::serialize_data,
-    //      DOCS_DATALOADER_SERIALIZE_DATA_TUBEVECTOR_TRAJECTORYVECTOR, "x"_a, "traj"_a)
+    .def(py::init<>(),
+      DATALOADER_DATALOADER)
 
-      .def_static("generate_landmarks_boxes", &DataLoader::generate_landmarks_boxes,
-          DATALOADER_VECTORINTERVALVECTOR_GENERATE_LANDMARKS_BOXES_INTERVALVECTOR_INT, "map_box"_a, "nb_landmarks"_a=100)
-      .def_static("generate_static_observations", &DataLoader::generate_static_observations,
-          DATALOADER_VECTORINTERVALVECTOR_GENERATE_STATIC_OBSERVATIONS_VECTOR_VECTORINTERVALVECTOR_BOOL_INTERVAL_INTERVAL, "x"_a, "map"_a, "random"_a=true, "visi_range"_a=ibex::Interval::POS_REALS, "visi_angle"_a=ibex::Interval::ALL_REALS)
+    .def(py::init<const std::string &>(),
+      DATALOADER_DATALOADER_STRING,
+      "file_path"_a)
 
+    .def_static("generate_landmarks_boxes", &DataLoader::generate_landmarks_boxes,
+      DATALOADER_VECTORINTERVALVECTOR_GENERATE_LANDMARKS_BOXES_INTERVALVECTOR_INT,
+      "map_box"_a, "nb_landmarks"_a=100)
 
-    //  //.def("generate_observations", (static std::vector<ibex::IntervalVector> (DataLoader::*)(const ibex::Vector &,const std::vector<Beacon> &,bool,const ibex::Interval &,const ibex::Interval &) )&DataLoader::generate_observations,
-    //  //    DOCS_DATALOADER_GENERATE_OBSERVATIONS_VECTOR_VECTOR_BEACON__BOOL_INTERVAL_INTERVAL, "x"_a, "map"_a, "random"_a=true, "visi_range"_a=ibex::Interval::POS_REALS, "visi_angle"_a=ibex::Interval::ALL_REALS)
-    //  .def_static("generate_observations", &DataLoader::DOCS_DATALOADER_GENERATE_OBSERVATIONS_TRAJECTORYVECTOR_VECTOR_BEACON__INT_BOOL_INTERVAL_INTERVAL_INTERVAL,
-    //      "todo", "x"_a, "map"_a, "random"_a=true, "visi_range"_a=ibex::Interval::POS_REALS, "visi_angle"_a=ibex::Interval::ALL_REALS)
-    //  //.def("generate_observations", (static std::vector<ibex::IntervalVector> (DataLoader::*)(const TrajectoryVector &,const std::vector<Beacon> &,int,bool,const ibex::Interval &,const ibex::Interval &,const ibex::Interval &) )&DataLoader::generate_observations,
-    //  //    DOCS_DATALOADER_GENERATE_OBSERVATIONS_TRAJECTORYVECTOR_VECTOR_BEACON__INT_BOOL_INTERVAL_INTERVAL_INTERVAL, "x"_a, "map"_a, "nb_obs"_a=50, "random"_a=true, "visi_range"_a=ibex::Interval(0,50), "visi_angle"_a=ibex::Interval(-M_PI/4,M_PI/4), "tdomain"_a=ibex::Interval::ALL_REALS)
-      .def_static("generate_observations", &DataLoader::generate_observations_along_traj,
-          DATALOADER_VECTORINTERVALVECTOR_GENERATE_OBSERVATIONS_ALONG_TRAJ_TRAJECTORYVECTOR_VECTORINTERVALVECTOR_INT_BOOL_INTERVAL_INTERVAL_INTERVAL, "x"_a, "map"_a, "nb_obs"_a=50, "random"_a=true, "visi_range"_a=ibex::Interval(0,50), "visi_angle"_a=ibex::Interval(-M_PI/4,M_PI/4), "tdomain"_a=ibex::Interval::ALL_REALS)
+    .def_static("generate_static_observations", &DataLoader::generate_static_observations,
+      DATALOADER_VECTORINTERVALVECTOR_GENERATE_STATIC_OBSERVATIONS_VECTOR_VECTORINTERVALVECTOR_BOOL_INTERVAL_INTERVAL,
+      "x"_a, "map"_a, "random"_a=true, "visi_range"_a=ibex::Interval::POS_REALS, "visi_angle"_a=ibex::Interval::ALL_REALS)
 
-;
+    .def_static("generate_observations", &DataLoader::generate_observations_along_traj,
+      DATALOADER_VECTORINTERVALVECTOR_GENERATE_OBSERVATIONS_ALONG_TRAJ_TRAJECTORYVECTOR_VECTORINTERVALVECTOR_INT_BOOL_INTERVAL_INTERVAL_INTERVAL,
+      "x"_a, "map"_a, "nb_obs"_a=50, "random"_a=true, "visi_range"_a=ibex::Interval(0,50), "visi_angle"_a=ibex::Interval(-M_PI/4,M_PI/4), "tdomain"_a=ibex::Interval::ALL_REALS)
+  ;
 }

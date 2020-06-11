@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  Tube binding
+ *  RandTrajectory Python binding
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou, Benoît Desrochers
@@ -17,26 +17,24 @@
 #include "pyIbex_type_caster.h"
 
 #include "tubex_RandTrajectory.h"
-
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "tubex_py_RandTrajectory_docs.h"
 
+using namespace std;
+using namespace ibex;
+using namespace tubex;
 namespace py = pybind11;
 using namespace pybind11::literals;
-using py::class_;
-using py::init;
-
-using namespace tubex;
-using ibex::Interval;
-using ibex::IntervalVector;
 
 
-void export_RandTrajectory(py::module& m){
+void export_RandTrajectory(py::module& m)
+{
+  py::class_<RandTrajectory,Trajectory> randtrajectory(m, "RandTrajectory", "todo");
+  randtrajectory
 
-    py::class_<RandTrajectory,Trajectory> randtrajectory(m, "RandTrajectory", "todo");
-    randtrajectory
-      .def(py::init<const ibex::Interval &,double,const ibex::Interval &>(),
-          RANDTRAJECTORY_RANDTRAJECTORY_INTERVAL_DOUBLE_INTERVAL, "tdomain"_a, "timestep"_a, "bounds"_a);
+  // Definition
 
-    //py::implicitly_convertible<Trajectory,RandTrajectory>();
+    .def(py::init<const Interval&,double,const Interval&>(),
+      RANDTRAJECTORY_RANDTRAJECTORY_INTERVAL_DOUBLE_INTERVAL,
+      "tdomain"_a, "timestep"_a, "bounds"_a);
 }
