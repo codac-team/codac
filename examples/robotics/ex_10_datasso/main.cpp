@@ -26,43 +26,43 @@ int main()
 {
   /* =========== CREATING DATA =========== */
 
-    const Interval domain(0.,6.);
+    double dt = 0.02;
+    Interval tdomain(0.,6.);
 
     // Truth (analytic function)
 
-      const TrajectoryVector state_truth(domain,
+      TrajectoryVector state_truth(tdomain,
         // Lissajous function (px,py,theta):
-        tubex::Function("(240*cos(t) ; \
-                          120*sin(2*t) ; \
-                          atan2(240*cos(2*t),-240*sin(t)))"));
+        TFunction("(240*cos(t) ; \
+                    120*sin(2*t) ; \
+                    atan2(240*cos(2*t),-240*sin(t)))"));
+      state_truth[2].sample(dt).make_continuous();
 
     // Sets of trajectories
 
-      const double dt = 0.01; // tube timestep
-
-      TubeVector x(domain, dt, 2); // unbounded 2d tube vector
-
-      Tube heading(state_truth[2], dt); // heading computed from truth...
-      //heading.inflate(1.2); // ...with some uncertainty
+      TubeVector x(tdomain, dt, 3); // unbounded 2d tube vector
+      x[2] = Tube(state_truth[2], dt); // heading computed from truth...
+      //x[2].inflate(1.2); // ...with some uncertainty
 
       // Derivatives of positions, with uncertainties:
-      TubeVector v(domain, dt,
+      TubeVector v(tdomain, dt,
         // Lissajous derivative
-        tubex::Function("(-240*sin(t) ; \
-                          240*cos(2*t))"));
+        TFunction("(-240*sin(t) ; \
+                    240*cos(2*t))"));
       v.inflate(10.);
+      v.resize(3);
 
     // Sets of observations
 
       // Creating random map of landmarks
-      const int nb_landmarks = 150;
-      const IntervalVector map_area(2, Interval(-400.,400.));
-      const vector<Beacon> v_map = DataLoader::generate_landmarks(map_area, nb_landmarks);
+      int nb_landmarks = 150;
+      IntervalVector map_area(2, Interval(-400.,400.));
+      vector<IntervalVector> v_map = DataLoader::generate_landmarks_boxes(map_area, nb_landmarks);
 
       // Generating observations obs=(t,range,bearing) of these landmarks
-      const int max_nb_obs = 50;
-      const Interval visi_range(0.,75.); // [0m,75m]
-      const Interval visi_angle(-M_PI/4.,M_PI/4.); // frontal sonar
+      int max_nb_obs = 50;
+      Interval visi_range(0.,75.); // [0m,75m]
+      Interval visi_angle(-M_PI/4.,M_PI/4.); // frontal sonar
       vector<IntervalVector> v_obs =
         DataLoader::generate_observations(state_truth, v_map, max_nb_obs, true, visi_range, visi_angle);
 
@@ -79,8 +79,8 @@ int main()
 
   /* =========== CUSTOM-BUILT CONTRACTORS =========== */
 
-    CtcFunction ctc_plus("a", "b", "c", "a=b+c"); // algebraic constraint a=b+c
-    CtcFunction ctc_minus("a", "b", "c", "a=b-c"); // algebraic constraint a=b-c
+    CtcFunction ctc_plus(Function("a", "b", "c", "a-(b+c)")); // algebraic constraint a=b+c
+    CtcFunction ctc_minus(Function("a", "b", "c", "a-(b-c)")); // algebraic constraint a=b-c
     CtcConstell ctc_constell(v_map); // constellation constraint
 
 
@@ -96,33 +96,31 @@ int main()
       Interval &y2 = v_obs[i][2]; // bearing
 
       // Intermediate variables:
-      Interval& psi = cn.create_var(Interval()); // robot heading
-      Interval& a = cn.create_var(Interval());
-      IntervalVector& d = cn.create_var(IntervalVector(2));
-      IntervalVector& p = cn.create_var(IntervalVector(2));
+      Interval& a = cn.create_dom(Interval());
+      IntervalVector& d = cn.create_dom(IntervalVector(2));
+      IntervalVector& p = cn.create_dom(IntervalVector(3));
       
       cn.add(ctc_constell, {m[i]});
-      cn.add(ctc_minus, {d, m[i], p});
-      cn.add(ctc_plus, {a, psi, y2});
-      cn.add(pyibex::ctc::polar, {d[0], d[1], y1, a});
+      cn.add(ctc_minus, {d, m[i], cn.subvector(p,0,1)});
+      cn.add(ctc_plus, {a, p[2], y2});
+      cn.add(ctc::polar, {d[0], d[1], y1, a});
       cn.add(ctc::eval, {t, p, x, v});
-      cn.add(ctc::eval, {t, psi, heading});
     }
 
-    cn.set_fixedpoint_ratio(0.);
+    //cn.set_fixedpoint_ratio(0.);
     cn.contract(true);
 
 
   /* =========== GRAPHICS =========== */
 
     vibes::beginDrawing();
-
     VIBesFigMap fig_map("Map");
     fig_map.set_properties(1450, 50, 1000, 600);
     fig_map.add_tube(&x, "x", 0, 1);
     fig_map.add_trajectory(&state_truth, "x*", 0, 1, 2, "white");
     fig_map.add_observations(v_obs, &state_truth);
-    fig_map.add_beacons(v_map, 2.);
+    for(const auto& b : v_map)
+      fig_map.add_beacon(Beacon(b), 2.);
     fig_map.smooth_tube_drawing(true);
     fig_map.show();
     fig_map.axis_limits(-340., 340., -1., 1., true);
@@ -139,10 +137,10 @@ int main()
         fig_map.add_beacon(m[i], 2., "#00A53B[#00A53B]");
       }
     cout << identified << "/" << m.size() << " observations identified" << endl << endl;
-    fig_map.show();
+    fig_map.show(20.);
   
   vibes::endDrawing();
   // Checking if this example still works:
-  bool success = x.contains(state_truth.subvector(0,1)) == BoolInterval::YES;
+  bool success = x.contains(state_truth) == BoolInterval::YES;
   return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }

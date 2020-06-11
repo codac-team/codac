@@ -52,8 +52,8 @@ namespace tubex
       /**
        * \brief Sets the properties (coordinates and dimensions) of this figure
        *
-       * \param x horizontal coordinate (in pixels)
-       * \param y vertical coordinate (in pixels)
+       * \param x horizontal center coordinate (in pixels)
+       * \param y vertical center coordinate (in pixels)
        * \param width width value (in pixels)
        * \param height height value (in pixels)
        */
@@ -77,7 +77,7 @@ namespace tubex
        * \param y_max upper vertical value to be displayed
        * \param same_ratio if `true`, will compute the min/max values so
        *        that the previous ratio will be preserved (false by default)
-       * \param margin adds a custom margin to the view box (none by default)
+       * \param margin adds a custom margin to the view box (none by default, ratio of max diam)
        * \return the updated view box of this figure
        */
       const ibex::IntervalVector& axis_limits(double x_min, double x_max, double y_min, double y_max, bool same_ratio = false, float margin = 0.);
@@ -90,7 +90,7 @@ namespace tubex
        * \param viewbox the 2d box defining lower/upper horizontal/vertical values
        * \param same_ratio if `true`, will compute the min/max values so
        *        that the previous ratio will be preserved (false by default)
-       * \param margin adds a custom margin to the view box (none by default)
+       * \param margin adds a custom margin to the view box (none by default, ratio of max diam)
        * \return the updated view box of this figure
        */
       const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, bool same_ratio = false, float margin = 0.);
@@ -165,8 +165,8 @@ namespace tubex
       /**
        * \brief Draws a line of points
        *
-       * \param v_x vector of horizontal coordinates
-       * \param v_y vector of vertical coordinates
+       * \param v_x vector of horizontal center coordinates
+       * \param v_y vector of vertical center coordinates
        * \param params VIBes parameters related to the line
        */
       void draw_line(const std::vector<double>& v_x, const std::vector<double>& v_y, const vibes::Params& params);
@@ -174,8 +174,8 @@ namespace tubex
       /**
        * \brief Draws a line of points
        *
-       * \param v_x vector of horizontal coordinates
-       * \param v_y vector of vertical coordinates
+       * \param v_x vector of horizontal center coordinates
+       * \param v_y vector of vertical center coordinates
        * \param color the optional color of the line (black by default) 
        * \param params VIBes parameters related to the line (none by default)
        */
@@ -201,8 +201,8 @@ namespace tubex
       /**
        * \brief Draws a circle
        *
-       * \param x horizontal coordinate
-       * \param y vertical coordinate
+       * \param x horizontal center coordinate
+       * \param y vertical center coordinate
        * \param r radius
        * \param params VIBes parameters related to the circle
        */
@@ -211,8 +211,8 @@ namespace tubex
       /**
        * \brief Draws a circle
        *
-       * \param x horizontal coordinate
-       * \param y vertical coordinate
+       * \param x horizontal center coordinate
+       * \param y vertical center coordinate
        * \param r radius
        * \param color the optional color of the circle (black by default) 
        * \param params VIBes parameters related to the circle (none by default)
@@ -222,8 +222,8 @@ namespace tubex
       /**
        * \brief Draws a ring
        *
-       * \param x horizontal coordinate
-       * \param y vertical coordinate
+       * \param x horizontal center coordinate
+       * \param y vertical center coordinate
        * \param r interval radius
        * \param params VIBes parameters related to the ring
        */
@@ -232,13 +232,36 @@ namespace tubex
       /**
        * \brief Draws a ring
        *
-       * \param x horizontal coordinate
-       * \param y vertical coordinate
+       * \param x horizontal center coordinate
+       * \param y vertical center coordinate
        * \param r interval radius
        * \param color the optional color of the ring (black by default) 
        * \param params VIBes parameters related to the ring (none by default)
        */
       void draw_ring(double x, double y, const ibex::Interval& r, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
+      /**
+       * \brief Draws a pie: radial portion of a ring
+       *
+       * \param x horizontal center coordinate
+       * \param y vertical center coordinate
+       * \param r interval radius
+       * \param theta interval angle (in radian)
+       * \param params VIBes parameters related to the ring
+       */
+      void draw_pie(double x, double y, const ibex::Interval& r, const ibex::Interval& theta, const vibes::Params& params);
+
+      /**
+       * \brief Draws a pie: radial portion of a ring
+       *
+       * \param x horizontal center coordinate
+       * \param y vertical center coordinate
+       * \param r interval radius
+       * \param theta interval angle (in radian)
+       * \param color the optional color of the ring (black by default) 
+       * \param params VIBes parameters related to the ring (none by default)
+       */
+      void draw_pie(double x, double y, const ibex::Interval& r, const ibex::Interval& theta, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws an edge

@@ -44,10 +44,10 @@ namespace tubex
         double lb;
         for(const Slice *s = tube.first_slice() ; s != NULL ; s = s->next_slice())
         {
-          lb = s->domain().lb();
+          lb = s->tdomain().lb();
           bin_file.write((const char*)&lb, sizeof(double));
         }
-        lb = tube.domain().ub();
+        lb = tube.tdomain().ub();
         bin_file.write((const char*)&lb, sizeof(double));
 
         // Codomains
@@ -96,14 +96,14 @@ namespace tubex
         // Creating slices
         double lb;
         bin_file.read((char*)&lb, sizeof(double));
-        Interval tube_domain(lb);
+        Interval tube_tdomain(lb);
 
         Slice *prev_slice = NULL, *slice = NULL;
         for(int k = 0 ; k < slices_number ; k++)
         {
           double ub;
           bin_file.read((char*)&ub, sizeof(double));
-          tube_domain |= Interval(lb, ub);
+          tube_tdomain |= Interval(lb, ub);
 
           if(slice == NULL)
           {
@@ -137,8 +137,8 @@ namespace tubex
         }
 
         // Domain
-        tube_domain |= lb;
-        tube->m_domain = tube_domain; // redundant information for fast access
+        tube_tdomain |= lb;
+        tube->m_tdomain = tube_tdomain; // redundant information for fast access
 
         // Gates
         Interval gate;

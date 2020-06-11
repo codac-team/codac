@@ -21,12 +21,12 @@ namespace tubex
     return x;
   }
 
-  const ConvexPolygon operator+(const ConvexPolygon& x, const ibex::IntervalVector& v)
+  const ConvexPolygon operator+(const ConvexPolygon& x, const IntervalVector& v)
   {
     return operator+(v, x);
   }
 
-  const ConvexPolygon operator+(const ibex::IntervalVector& v, const ConvexPolygon& x)
+  const ConvexPolygon operator+(const IntervalVector& v, const ConvexPolygon& x)
   {
     assert(x.size() == v.size());
 
@@ -45,17 +45,17 @@ namespace tubex
     return ConvexPolygon(v_result_pts, true);
   }
 
-  const ConvexPolygon operator-(const ConvexPolygon& x, const ibex::IntervalVector& v)
+  const ConvexPolygon operator-(const ConvexPolygon& x, const IntervalVector& v)
   {
     return operator+(x, -v);
   }
 
-  const ConvexPolygon operator-(const ibex::IntervalVector& v, const ConvexPolygon& x)
+  const ConvexPolygon operator-(const IntervalVector& v, const ConvexPolygon& x)
   {
     return operator+(-x, v);
   }
 
-  const ConvexPolygon operator*(const ibex::IntervalMatrix& m, const ConvexPolygon& x)
+  const ConvexPolygon operator*(const IntervalMatrix& m, const ConvexPolygon& x)
   {
     assert(x.size() == m.nb_cols() && x.size() == m.nb_rows());
 

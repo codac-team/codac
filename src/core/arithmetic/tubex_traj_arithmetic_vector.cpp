@@ -33,7 +33,7 @@ namespace tubex
     const TrajectoryVector f(const TrajectoryVector& x1, const TrajectoryVector& x2) \
     { \
       assert(x1.size() == x2.size()); \
-      assert(x1.domain() == x2.domain()); \
+      assert(x1.tdomain() == x2.tdomain()); \
       TrajectoryVector y(x1); \
       for(int i = 0 ; i < y.size() ; i++) \
         y[i] = tubex::f(x1[i], x2[i]); \
@@ -77,7 +77,7 @@ namespace tubex
     return y;
   }
 
-  const TrajectoryVector operator*(const Trajectory& x1, const ibex::Vector& x2)
+  const TrajectoryVector operator*(const Trajectory& x1, const Vector& x2)
   {
     TrajectoryVector y(x2.size(), x1);
     for(int i = 0 ; i < y.size() ; i++)
@@ -85,7 +85,7 @@ namespace tubex
     return y;
   }
 
-  const TrajectoryVector operator*(const ibex::Matrix& x1, const TrajectoryVector& x2)
+  const TrajectoryVector operator*(const Matrix& x1, const TrajectoryVector& x2)
   {
     assert(x1.nb_cols() == x2.size());
 
@@ -119,7 +119,7 @@ namespace tubex
     return y;
   }
 
-  const TrajectoryVector operator/(const ibex::Vector& x1, const Trajectory& x2)
+  const TrajectoryVector operator/(const Vector& x1, const Trajectory& x2)
   {
     TrajectoryVector y(x1.size());
     for(int i = 0 ; i < y.size() ; i++)
@@ -149,5 +149,13 @@ namespace tubex
   {
     assert(x1.size() == 3 && x2.size() == 3);
     return -vecto_product(x2, x1);
+  }
+
+  const TrajectoryVector abs(const TrajectoryVector& x)
+  {
+    TrajectoryVector y(x.size());
+    for(int i = 0 ; i < x.size() ; i++)
+      y[i] = abs(x[i]);
+    return y;
   }
 }

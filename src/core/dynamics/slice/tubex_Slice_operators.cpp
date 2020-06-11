@@ -27,7 +27,7 @@ namespace tubex
     \
     Slice& Slice::f(const Slice& s_x) \
     { \
-      assert(domain() == s_x.domain()); \
+      assert(tdomain() == s_x.tdomain()); \
       Interval y = codomain(); y.f(s_x.codomain()); set_envelope(y, false); \
       y = input_gate(); y.f(s_x.input_gate()); set_input_gate(y, false); \
       y = output_gate(); y.f(s_x.output_gate()); set_output_gate(y, false); \
@@ -36,10 +36,10 @@ namespace tubex
     \
     Slice& Slice::f(const Trajectory& traj_x) \
     { \
-      assert(domain().is_subset(traj_x.domain())); \
-      Interval y = codomain(); y.f(traj_x(domain())); set_envelope(y, false); \
-      y = input_gate(); y.f(traj_x(Interval(domain().lb()))); set_input_gate(y, false); \
-      y = output_gate(); y.f(traj_x(Interval(domain().ub()))); set_output_gate(y, false); \
+      assert(tdomain().is_subset(traj_x.tdomain())); \
+      Interval y = codomain(); y.f(traj_x(tdomain())); set_envelope(y, false); \
+      y = input_gate(); y.f(traj_x(Interval(tdomain().lb()))); set_input_gate(y, false); \
+      y = output_gate(); y.f(traj_x(Interval(tdomain().ub()))); set_output_gate(y, false); \
       return *this; \
     }
 

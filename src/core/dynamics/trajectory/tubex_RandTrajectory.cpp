@@ -8,7 +8,9 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <time.h>
 #include "tubex_RandTrajectory.h"
+#include "tubex_Tools.h"
 
 using namespace std;
 using namespace ibex;
@@ -19,21 +21,21 @@ namespace tubex
 
     // Definition
 
-    RandTrajectory::RandTrajectory(const Interval& domain, double timestep, const Interval& bounds)
+    RandTrajectory::RandTrajectory(const Interval& tdomain, double timestep, const Interval& bounds)
       : Trajectory()
     {
-      assert(valid_domain(domain));
+      assert(valid_tdomain(tdomain));
       assert(timestep > 0.);
       assert(!bounds.is_empty() && !bounds.is_unbounded());
 
       srand(time(NULL));
 
       double t;
-      for(t = domain.lb() ; t <= domain.ub() ; t+=timestep)
-        m_map_values[t] = (rand()/double(RAND_MAX))*bounds.diam()+bounds.lb();
-      m_domain = Interval(domain.lb(),t);
+      for(t = tdomain.lb() ; t <= tdomain.ub() ; t+=timestep)
+        m_map_values[t] = Tools::rand_in_bounds(bounds);
+      m_tdomain = Interval(tdomain.lb(),t);
 
-      truncate_domain(domain);
+      truncate_tdomain(tdomain);
       compute_codomain();
 
       if(!(m_codomain.is_subset(bounds)))

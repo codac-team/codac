@@ -61,11 +61,11 @@ namespace tubex
 
       /**
        * \brief Restricts the display of the dynamical items to a part
-       *        of their temporal domain only
+       *        of their tdomain only
        *
        * \param restricted_tdomain subset of the temporal domain of the referenced items
        */
-      void set_restricted_tdomain(const ibex::Interval& restricted_tdomain);
+      void restrict_tdomain(const ibex::Interval& restricted_tdomain);
 
       /**
        * \brief Enables the display of previous versions of the tubes,
@@ -98,7 +98,7 @@ namespace tubex
        * \brief Limits the number of points to be displayed for trajectories
        *
        * Note that this will be applied for trajectories defined
-       * from tubex::Function objects (discretization).
+       * from TFunction objects (discretization).
        *
        * \param max the maximum number of points
        */
@@ -286,6 +286,7 @@ namespace tubex
        * \param color optional color of the beacon
        */
       void add_beacon(const Beacon& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const ibex::IntervalVector& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a Beacon object to the map with a specific width
@@ -295,6 +296,7 @@ namespace tubex
        * \param color optional color of the beacon
        */
       void add_beacon(const Beacon& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const ibex::Vector& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a set of Beacon objects to the map

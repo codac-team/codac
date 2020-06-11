@@ -31,19 +31,19 @@ namespace tubex
       *this = traj;
     }
 
-    Trajectory::Trajectory(const Interval& domain, const tubex::Function& f)
-      : m_domain(domain), m_traj_def_type(TrajDefnType::ANALYTIC_FNC), m_function(new tubex::Function(f))
+    Trajectory::Trajectory(const Interval& tdomain, const TFunction& f)
+      : m_tdomain(tdomain), m_traj_def_type(TrajDefnType::ANALYTIC_FNC), m_function(new TFunction(f))
     {
-      assert(valid_domain(domain));
+      assert(valid_tdomain(tdomain));
       assert(f.image_dim() == 1);
       assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
       // todo: check thickness of f? (only thin functions should be allowed)
 
-      m_codomain = m_function->eval(domain);
+      m_codomain = m_function->eval(tdomain);
     }
 
-    Trajectory::Trajectory(const Interval& domain, const tubex::Function& f, double timestep)
-      : Trajectory(domain, f)
+    Trajectory::Trajectory(const Interval& tdomain, const TFunction& f, double timestep)
+      : Trajectory(tdomain, f)
     {
       assert(timestep > 0.);
       sample(timestep);
@@ -57,7 +57,7 @@ namespace tubex
       // Temporal domain:
       map<double,double>::const_iterator
         last_it = map_values.end(); last_it--; // accessing last value
-      m_domain = Interval(map_values.begin()->first, last_it->first);
+      m_tdomain = Interval(map_values.begin()->first, last_it->first);
 
       // Codomain:
       compute_codomain();
@@ -71,7 +71,7 @@ namespace tubex
 
     const Trajectory& Trajectory::operator=(const Trajectory& x)
     {
-      m_domain = x.m_domain;
+      m_tdomain = x.m_tdomain;
       m_codomain = x.m_codomain;
       m_traj_def_type = x.m_traj_def_type;
 
@@ -79,7 +79,7 @@ namespace tubex
       {
         case TrajDefnType::ANALYTIC_FNC:
           delete m_function;
-          m_function = new tubex::Function(*x.m_function);
+          m_function = new TFunction(*x.m_function);
           break;
 
         case TrajDefnType::MAP_OF_VALUES:
@@ -98,9 +98,9 @@ namespace tubex
       return 1;
     }
 
-    const Interval Trajectory::domain() const
+    const Interval Trajectory::tdomain() const
     {
-      return m_domain;
+      return m_tdomain;
     }
     
     TrajDefnType Trajectory::definition_type() const
@@ -116,7 +116,7 @@ namespace tubex
       return m_map_values;
     }
 
-    const tubex::Function* Trajectory::function() const
+    const TFunction* Trajectory::tfunction() const
     {
       assert(m_traj_def_type == TrajDefnType::ANALYTIC_FNC);
       return m_function;
@@ -129,7 +129,7 @@ namespace tubex
 
     double Trajectory::operator()(double t) const
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
 
       switch(m_traj_def_type)
       {
@@ -162,9 +162,9 @@ namespace tubex
 
     const Interval Trajectory::operator()(const Interval& t) const
     {
-      assert(domain().is_superset(t));
+      assert(tdomain().is_superset(t));
 
-      if(m_domain == t)
+      if(m_tdomain == t)
         return m_codomain;
 
       Interval eval = Interval::EMPTY_SET;
@@ -196,7 +196,7 @@ namespace tubex
       switch(m_traj_def_type)
       {
         case TrajDefnType::ANALYTIC_FNC:
-          return m_function->eval(m_domain.lb()).mid(); // /!\ an approximation is made here
+          return m_function->eval(m_tdomain.lb()).mid(); // /!\ an approximation is made here
 
         case TrajDefnType::MAP_OF_VALUES:
           return m_map_values.begin()->second;
@@ -212,7 +212,7 @@ namespace tubex
       switch(m_traj_def_type)
       {
         case TrajDefnType::ANALYTIC_FNC:
-          return m_function->eval(m_domain.ub()).mid(); // /!\ an approximation is made here
+          return m_function->eval(m_tdomain.ub()).mid(); // /!\ an approximation is made here
 
         case TrajDefnType::MAP_OF_VALUES:
           return m_map_values.rbegin()->second;
@@ -244,11 +244,11 @@ namespace tubex
     bool Trajectory::operator==(const Trajectory& x) const
     {
       assert((m_traj_def_type == TrajDefnType::MAP_OF_VALUES || x.m_traj_def_type == TrajDefnType::MAP_OF_VALUES)
-        && "operator== not implemented in case of a Trajectory defined by a Function");
+        && "operator== not implemented in case of a Trajectory defined by a TFunction");
 
       if(m_traj_def_type == TrajDefnType::MAP_OF_VALUES && x.m_traj_def_type == TrajDefnType::MAP_OF_VALUES)
       {
-        if(m_domain != x.domain() || m_codomain != x.codomain())
+        if(m_tdomain != x.tdomain() || m_codomain != x.codomain())
           return false;
 
         typename map<double,double>::const_iterator it_map;
@@ -271,8 +271,8 @@ namespace tubex
     bool Trajectory::operator!=(const Trajectory& x) const
     {
       assert((m_traj_def_type == TrajDefnType::MAP_OF_VALUES && x.m_traj_def_type == TrajDefnType::MAP_OF_VALUES)
-        && "operator!= not implemented in case of a Trajectory defined by a Function");
-      return domain() != x.domain() || codomain() != x.codomain() || !(*this == x);
+        && "operator!= not implemented in case of a Trajectory defined by a TFunction");
+      return tdomain() != x.tdomain() || codomain() != x.codomain() || !(*this == x);
     }
 
     // Setting values
@@ -280,9 +280,9 @@ namespace tubex
     void Trajectory::set(double y, double t)
     {
       assert(m_traj_def_type == TrajDefnType::MAP_OF_VALUES
-        && "Trajectory already defined by a Function");
+        && "Trajectory already defined by a TFunction");
       
-      m_domain |= t;
+      m_tdomain |= t;
 
       bool update_codomain = m_map_values.find(t) != m_map_values.end() // key already exists
             && m_codomain.contains(m_map_values.at(t)); // and new value inside codomain hull
@@ -297,10 +297,10 @@ namespace tubex
         m_codomain |= y; // simple union
     }
 
-    Trajectory& Trajectory::truncate_domain(const Interval& t)
+    Trajectory& Trajectory::truncate_tdomain(const Interval& t)
     {
-      assert(valid_domain(t));
-      assert(domain().is_superset(t));
+      assert(valid_tdomain(t));
+      assert(tdomain().is_superset(t));
 
       if(m_traj_def_type == TrajDefnType::MAP_OF_VALUES)
       {
@@ -314,16 +314,16 @@ namespace tubex
           else ++it;
         }
 
-        m_map_values[t.lb()] = y_lb; // clean truncature
+        m_map_values[t.lb()] = y_lb; // clean truncation
         m_map_values[t.ub()] = y_ub;
       }
 
-      m_domain &= t;
+      m_tdomain &= t;
       compute_codomain();
       return *this;
     }
       
-    Trajectory& Trajectory::shift_domain(double shift_ref)
+    Trajectory& Trajectory::shift_tdomain(double shift_ref)
     {
       if(m_traj_def_type == TrajDefnType::MAP_OF_VALUES)
       {
@@ -331,10 +331,10 @@ namespace tubex
         m_map_values.clear();
 
         for(map<double,double>::iterator it = map_temp.begin() ; it != map_temp.end() ; it++)
-          m_map_values.emplace(it->first - shift_ref, it->second);
+          m_map_values.emplace(it->first + shift_ref, it->second);
       }
 
-      m_domain -= shift_ref;
+      m_tdomain += shift_ref;
       compute_codomain();
       return *this;
     }
@@ -349,10 +349,10 @@ namespace tubex
         new_map = m_map_values;
 
       double t;
-      for(t = m_domain.lb() ; t < m_domain.ub() ; t+=dt)
+      for(t = m_tdomain.lb() ; t < m_tdomain.ub() ; t+=dt)
         if(new_map.find(t) == new_map.end()) // if key does not exist already
           new_map[t] = (*this)(t); // evaluation/interpolation
-      new_map[m_domain.ub()] = (*this)(m_domain.ub());
+      new_map[m_tdomain.ub()] = (*this)(m_tdomain.ub());
 
       if(m_traj_def_type == TrajDefnType::ANALYTIC_FNC)
       {
@@ -367,7 +367,7 @@ namespace tubex
     
     Trajectory& Trajectory::sample(const Trajectory& x)
     {
-      assert(domain() == x.domain());
+      assert(tdomain() == x.tdomain());
       assert(x.m_traj_def_type == TrajDefnType::MAP_OF_VALUES && "trajectory x has to be sampled");
       
       map<double,double> new_map;
@@ -393,7 +393,7 @@ namespace tubex
     Trajectory& Trajectory::make_continuous()
     {
       assert(m_traj_def_type == TrajDefnType::MAP_OF_VALUES
-        && "not usable for trajectories defined by Function");
+        && "not usable for trajectories defined by TFunction");
 
       const Interval periodicity = codomain();
       m_codomain = Interval::EMPTY_SET;
@@ -425,7 +425,7 @@ namespace tubex
     const Trajectory Trajectory::primitive(double c) const
     {
       assert(m_traj_def_type == TrajDefnType::MAP_OF_VALUES
-        && "integration timestep requested for trajectories defined by Function");
+        && "integration timestep requested for trajectories defined by TFunction");
       
       double val;
       Trajectory x;
@@ -448,12 +448,12 @@ namespace tubex
     {
       assert(dt > 0.);
 
-      double t = domain().lb(), prev_t = t, val = c;
+      double t = tdomain().lb(), prev_t = t, val = c;
       Trajectory x;
 
-      while(t < domain().ub())
+      while(t < tdomain().ub())
       {
-        if(t != domain().lb())
+        if(t != tdomain().lb())
           val += ((*this)(t-dt) + (*this)(t)) * dt / 2.;
 
         x.set(val, t);
@@ -461,7 +461,7 @@ namespace tubex
         t += dt;
       }
 
-      t = domain().ub();
+      t = tdomain().ub();
       val += ((*this)(prev_t) + (*this)(t)) * (t - prev_t) / 2.;
       x.set(val, t);
 
@@ -475,7 +475,7 @@ namespace tubex
       switch(m_traj_def_type)
       {
         case TrajDefnType::ANALYTIC_FNC:
-          d = Trajectory(domain(), m_function->diff());
+          d = Trajectory(tdomain(), m_function->diff());
           break;
 
         case TrajDefnType::MAP_OF_VALUES: // finite difference computation
@@ -484,7 +484,7 @@ namespace tubex
           for(map<double,double>::const_iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
             d.set(finite_diff(it->first), it->first);
 
-          assert(d.domain() == domain());
+          assert(d.tdomain() == tdomain());
           break;
 
         default:
@@ -581,7 +581,7 @@ namespace tubex
     
     std::ostream& operator<<(std::ostream& str, const Trajectory& x)
     {
-      str << "Trajectory " << x.domain() << "↦" << x.codomain();
+      str << "Trajectory " << x.tdomain() << "↦" << x.codomain();
 
       switch(x.m_traj_def_type)
       {
@@ -624,7 +624,7 @@ namespace tubex
       switch(m_traj_def_type)
       {
         case TrajDefnType::ANALYTIC_FNC:
-          m_codomain = m_function->eval(m_domain);
+          m_codomain = m_function->eval(m_tdomain);
           break;
 
         case TrajDefnType::MAP_OF_VALUES:

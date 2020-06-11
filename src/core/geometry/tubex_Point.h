@@ -31,6 +31,7 @@ namespace tubex
       /// @{
 
         Point(); // undefined point
+        explicit Point(const ibex::Vector& p);
         explicit Point(const ibex::IntervalVector& p);
         Point(const ibex::Interval& x, const ibex::Interval& y);
         const Point& operator=(const Point& p);

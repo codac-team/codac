@@ -73,6 +73,8 @@ namespace tubex
     /** \brief \f$\sqrt[p]{[x](\cdot)}\f$ */
     const Tube root(const Tube& x, int p);
 
+    // todo: atan2, pow with Trajectory as parameter
+
     /** \brief \f$[x](\cdot)\f$ */
     const Tube operator+(const Tube& x);
     /** \brief \f$[x](\cdot)+[y](\cdot)\f$ */
@@ -212,6 +214,9 @@ namespace tubex
     const TubeVector operator&(const TubeVector& x, const TrajectoryVector& y);
     /** \brief \f$\mathbf{x}(\cdot)\cap[\mathbf{y}](\cdot)\f$ */
     const TubeVector operator&(const TrajectoryVector& x, const TubeVector& y);
+
+    /** \brief \f$\mid\mathbf{x}(\cdot)\mid\f$ */
+    const TubeVector abs(const TubeVector& x);
 
   /// @}
 }

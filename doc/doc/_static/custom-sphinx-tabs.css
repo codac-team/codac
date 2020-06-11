@@ -1,0 +1,5 @@
+/* Removes empty space below blocks of code in tabs */
+.rst-content .sphinx-tabs div[class^="highlight"]
+{
+  margin-bottom: 0;
+}

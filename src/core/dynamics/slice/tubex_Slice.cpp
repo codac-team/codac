@@ -21,16 +21,16 @@ namespace tubex
 
     // Definition
 
-    Slice::Slice(const Interval& domain, const Interval& codomain)
-      : m_domain(domain), m_codomain(codomain)
+    Slice::Slice(const Interval& tdomain, const Interval& codomain)
+      : m_tdomain(tdomain), m_codomain(codomain)
     {
-      assert(valid_domain(domain));
+      assert(valid_tdomain(tdomain));
       m_input_gate = new Interval(codomain);
       m_output_gate = new Interval(codomain);
     }
 
     Slice::Slice(const Slice& x)
-      : Slice(x.domain(), x.codomain()) // in order to instantiate gates
+      : Slice(x.tdomain(), x.codomain()) // in order to instantiate gates
     {
       *this = x;
     }
@@ -53,7 +53,7 @@ namespace tubex
 
     const Slice& Slice::operator=(const Slice& x)
     {
-      m_domain = x.m_domain;
+      m_tdomain = x.m_tdomain;
       m_codomain = x.m_codomain;
       *m_input_gate = *x.m_input_gate;
       *m_output_gate = *x.m_output_gate;
@@ -67,9 +67,9 @@ namespace tubex
       return *this;
     }
     
-    const Interval Slice::domain() const
+    const Interval Slice::tdomain() const
     {
-      return m_domain;
+      return m_tdomain;
     }
 
     // Slices structure
@@ -114,7 +114,7 @@ namespace tubex
     const IntervalVector Slice::box() const
     {
       IntervalVector box(2);
-      box[0] = domain();
+      box[0] = tdomain();
       box[1] = m_codomain;
       return box;
     }
@@ -138,19 +138,19 @@ namespace tubex
     
     double Slice::volume() const
     {
-      return m_domain.diam() * diam(m_codomain);
+      return m_tdomain.diam() * diam(m_codomain);
     }
 
     const Interval Slice::operator()(double t) const
     {
       // Write access is not allowed for this operator
       // For write access: use set()
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
 
-      if(t == m_domain.lb())
+      if(t == m_tdomain.lb())
         return input_gate();
 
-      else if(t == m_domain.ub())
+      else if(t == m_tdomain.ub())
         return output_gate();
 
       return m_codomain;
@@ -160,7 +160,7 @@ namespace tubex
     {
       // Write access is not allowed for this operator
       // For write access: use set()
-      assert(domain().is_superset(t));
+      assert(tdomain().is_superset(t));
       if(t.is_degenerated())
         return (*this)(t.lb());
       return m_codomain;
@@ -168,25 +168,25 @@ namespace tubex
 
     const pair<Interval,Interval> Slice::eval(const Interval& t) const
     {
-      Interval intersection = t & m_domain;
+      Interval intersection = t & m_tdomain;
       pair<Interval,Interval> p_eval = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
       if(!intersection.is_empty())
       {
-        if(intersection.contains(m_domain.lb()))
+        if(intersection.contains(m_tdomain.lb()))
         {
           p_eval.first |= input_gate().lb();
           p_eval.second |= input_gate().ub();
         }
 
-        if(intersection.contains(m_domain.ub()))
+        if(intersection.contains(m_tdomain.ub()))
         {
           p_eval.first |= output_gate().lb();
           p_eval.second |= output_gate().ub();
         }
 
         if(!intersection.is_degenerated()
-          || (intersection != m_domain.lb() && intersection != m_domain.ub()))
+          || (intersection != m_tdomain.lb() && intersection != m_tdomain.ub()))
         {
           p_eval.first |= m_codomain.lb();
           p_eval.second |= m_codomain.ub();
@@ -198,22 +198,22 @@ namespace tubex
 
     const Interval Slice::interpol(double t, const Slice& v) const
     {
-      assert(domain() == v.domain());
-      assert(domain().contains(t));
+      assert(tdomain() == v.tdomain());
+      assert(tdomain().contains(t));
       return interpol(Interval(t), v);
     }
 
     const Interval Slice::interpol(const Interval& t, const Slice& v) const
     {
-      assert(domain() == v.domain());
-      assert(domain().is_superset(t));
+      assert(tdomain() == v.tdomain());
+      assert(tdomain().is_superset(t));
 
-      if(domain().is_subset(t))
+      if(tdomain().is_subset(t))
         return codomain();
 
       else if(t.is_degenerated())
-        return (output_gate() - (m_domain.ub() - t) * v.codomain())
-             & (input_gate() + (t - m_domain.lb()) * v.codomain());
+        return (output_gate() - (m_tdomain.ub() - t) * v.codomain())
+             & (input_gate() + (t - m_tdomain.lb()) * v.codomain());
 
       else
       {
@@ -223,35 +223,43 @@ namespace tubex
       }
     }
 
-    const Interval Slice::invert(const Interval& y, const Interval& search_domain) const
+    const Interval Slice::invert(const Interval& y, const Interval& search_tdomain) const
     {
-      Slice v(domain(), Interval::ALL_REALS); // todo: optimize this
-      return invert(y, v, search_domain);
+      Slice v(tdomain(), Interval::ALL_REALS); // todo: optimize this
+      return invert(y, v, search_tdomain);
     }
 
-    const Interval Slice::invert(const Interval& y, const Slice& v, const Interval& search_domain) const
+    const Interval Slice::invert(const Interval& y, const Slice& v, const Interval& search_tdomain) const
     {
-      assert(domain() == v.domain());
+      assert(tdomain() == v.tdomain());
       // todo: use enclosed bounds also? in order to speed up computations
 
-      if(!m_domain.intersects(search_domain))
+      if(!m_tdomain.intersects(search_tdomain))
         return Interval::EMPTY_SET;
 
-      else if((m_domain & search_domain) == m_domain && m_codomain.is_subset(y))
-        return m_domain;
+      else if((m_tdomain & search_tdomain) == m_tdomain && m_codomain.is_subset(y))
+        return m_tdomain;
 
-      else if(search_domain == m_domain.lb())
+      else if(search_tdomain == m_tdomain.lb())
       {
         if(y.intersects(input_gate()))
-          return m_domain.lb();
+          return m_tdomain.lb();
         else
           return Interval::EMPTY_SET;
       }
 
-      else if(search_domain == m_domain.ub())
+      else if(search_tdomain == m_tdomain.ub())
       {
         if(y.intersects(output_gate()))
-          return m_domain.ub();
+          return m_tdomain.ub();
+        else
+          return Interval::EMPTY_SET;
+      }
+
+      else if(v.codomain() == Interval::all_reals())
+      {
+        if(y.intersects(m_codomain))
+          return search_tdomain & m_tdomain;
         else
           return Interval::EMPTY_SET;
       }
@@ -260,7 +268,7 @@ namespace tubex
       {
         ConvexPolygon p = polygon(v);
         IntervalVector box(2);
-        box[0] = search_domain; box[1] = y;
+        box[0] = search_tdomain; box[1] = y;
         box = p.fast_intersection(box);
         return box[0];
       }
@@ -270,7 +278,7 @@ namespace tubex
     
     bool Slice::operator==(const Slice& x) const
     {
-      return domain() == x.domain() &&
+      return tdomain() == x.tdomain() &&
              codomain() == x.codomain() &&
              input_gate() == x.input_gate() &&
              output_gate() == x.output_gate();
@@ -278,7 +286,7 @@ namespace tubex
     
     bool Slice::operator!=(const Slice& x) const
     {
-      return domain() != x.domain() ||
+      return tdomain() != x.tdomain() ||
              codomain() != x.codomain() ||
              input_gate() != x.input_gate() ||
              output_gate() != x.output_gate();
@@ -286,7 +294,7 @@ namespace tubex
 
     #define macro_sets_comparison(f) \
       \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       return codomain().f(x.codomain()) \
           && input_gate().f(x.input_gate()) \
           && output_gate().f(x.output_gate()); \
@@ -328,14 +336,14 @@ namespace tubex
 
     const BoolInterval Slice::contains(const Trajectory& x) const
     {
-      assert(domain().is_subset(x.domain()));
+      assert(tdomain().is_subset(x.tdomain()));
 
-      Interval traj_domain = x(m_domain);
+      Interval traj_tdomain = x(m_tdomain);
       // We use x(Interval(double)) for reliable evaluation:
-      Interval traj_input = x(Interval(m_domain.lb()));
-      Interval traj_output = x(Interval(m_domain.ub()));
+      Interval traj_input = x(Interval(m_tdomain.lb()));
+      Interval traj_output = x(Interval(m_tdomain.ub()));
 
-      if(!traj_domain.intersects(m_codomain)
+      if(!traj_tdomain.intersects(m_codomain)
       || !traj_input.intersects(input_gate())
       || !traj_output.intersects(output_gate()))
         return NO;
@@ -345,20 +353,20 @@ namespace tubex
         if(!traj_input.is_subset(input_gate()) || !traj_output.is_subset(output_gate()))
           return MAYBE;
 
-        else if(traj_domain.is_subset(m_codomain))
+        else if(traj_tdomain.is_subset(m_codomain))
           return YES;
 
-        else // too much pessimism for the trajectory evaluation on m_domain
+        else // too much pessimism for the trajectory evaluation on m_tdomain
         {
-          // Bissections are performed to reach an accurate evaluation
+          // Bisections are performed to reach an accurate evaluation
 
-          list<Interval> s_subdomains;
-          s_subdomains.push_front(m_domain);
+          list<Interval> s_subtdomains;
+          s_subtdomains.push_front(m_tdomain);
 
-          while(!s_subdomains.empty())
+          while(!s_subtdomains.empty())
           {
-            Interval t = s_subdomains.front();
-            s_subdomains.pop_front();
+            Interval t = s_subtdomains.front();
+            s_subtdomains.pop_front();
 
             Interval thinner_eval = x(t);
 
@@ -372,8 +380,8 @@ namespace tubex
               if(t.diam() < EPSILON_CONTAINS)
                 return MAYBE;
 
-              s_subdomains.push_front(Interval(t.lb(), t.lb() + t.diam() / 2.));
-              s_subdomains.push_front(Interval(t.lb() + t.diam() / 2., t.ub()));
+              s_subtdomains.push_front(Interval(t.lb(), t.lb() + t.diam() / 2.));
+              s_subtdomains.push_front(Interval(t.lb() + t.diam() / 2., t.ub()));
             }
           }
 
@@ -477,26 +485,26 @@ namespace tubex
 
     ostream& operator<<(ostream& str, const Slice& x)
     {
-      str << "Slice " << x.domain() << "↦(" << x.input_gate() << ")" << x.codomain() << "(" << x.output_gate() << ")" << flush;
+      str << "Slice " << x.tdomain() << "↦(" << x.input_gate() << ")" << x.codomain() << "(" << x.output_gate() << ")" << flush;
       return str;
     }
 
 
   // Protected methods
     
-    void Slice::set_domain(const Interval& domain)
+    void Slice::set_tdomain(const Interval& tdomain)
     {
-      assert(valid_domain(domain));
-      m_domain = domain;
+      assert(valid_tdomain(tdomain));
+      m_tdomain = tdomain;
     }
 
-    void Slice::shift_domain(double shift_ref)
+    void Slice::shift_tdomain(double shift_ref)
     {
-      set_domain(m_domain - shift_ref);
+      set_tdomain(m_tdomain + shift_ref);
 
       if(m_synthesis_reference != NULL)
       {
-        // todo: update domain structure
+        // todo: update tdomain structure
       }
     }
 
@@ -525,13 +533,13 @@ namespace tubex
     {
       assert(first_slice != NULL && second_slice != NULL);
       assert(first_slice->next_slice() == second_slice);
-      assert(first_slice->domain().ub() == second_slice->domain().lb());
+      assert(first_slice->tdomain().ub() == second_slice->tdomain().lb());
       assert(first_slice->m_output_gate == second_slice->m_input_gate);
 
       Slice *next_slice_after_merge = second_slice->next_slice(); // may be NULL
 
       first_slice->set_envelope(first_slice->codomain() | second_slice->codomain());
-      first_slice->set_domain(first_slice->domain() | second_slice->domain());
+      first_slice->set_tdomain(first_slice->tdomain() | second_slice->tdomain());
 
       // Deleting objects after fusion
       first_slice->m_output_gate = new Interval(second_slice->output_gate());
@@ -539,7 +547,7 @@ namespace tubex
       second_slice->m_prev_slice = NULL;
       second_slice->m_next_slice = NULL;
       delete second_slice; // will destroy both input/output gates because
-                           // pointers to neighbour slices have been set to NULL
+                           // pointers to neighbor slices have been set to NULL
 
       // Chaining slices
       first_slice->m_next_slice = next_slice_after_merge;

@@ -132,7 +132,7 @@ namespace Catch
 
         friend bool operator ==(tubex::Slice lhs, ApproxSlice const& rhs)
         {
-          return lhs.domain() == ApproxIntv(rhs.m_value.domain()) &&
+          return lhs.tdomain() == ApproxIntv(rhs.m_value.tdomain()) &&
                  lhs.codomain() == ApproxIntvVector(rhs.m_value.codomain()) &&
                  lhs.input_gate() == ApproxIntvVector(rhs.m_value.input_gate()) &&
                  lhs.output_gate() == ApproxIntvVector(rhs.m_value.output_gate());

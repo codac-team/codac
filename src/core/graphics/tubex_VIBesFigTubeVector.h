@@ -55,13 +55,13 @@ namespace tubex
       /**
        * \brief Creates a VIBesFigTube
        *
-       * The dimension of the figure (number of windows) is based on the `tubevector` parameter.
+       * The dimension of the figure (number of windows) is based on the `tube` parameter.
        *
        * \param fig_name name of the figure as displayed in the window title
-       * \param tubevector a const pointer to the tube vector to be displayed
-       * \param trajvector an optional const pointer to a trajectory to be displayed (`NULL` by default)
+       * \param tube a const pointer to the tube vector to be displayed
+       * \param traj an optional const pointer to a trajectory to be displayed (`NULL` by default)
        */
-      VIBesFigTubeVector(const std::string& fig_name, const TubeVector *tubevector, const TrajectoryVector *trajvector = NULL);
+      VIBesFigTubeVector(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj = NULL);
 
       /**
        * \brief VIBesFigTubeVector destructor
@@ -123,7 +123,7 @@ namespace tubex
       /**
        * \brief Set the position of the temporal cursor of this figure
        *
-       * \param t position on the temporal domain
+       * \param t position on the tdomain
        */
       void set_cursor(double t);
 
@@ -141,21 +141,21 @@ namespace tubex
       /**
        * \brief Draws a multi-dimensional box
        *
-       * \param domain the temporal domain related to the box
+       * \param tdomain the tdomain related to the box
        * \param box the \f$n\f$d IntervalVector to be displayed
        * \param params VIBes parameters related to the box
        */
-      void draw_box(const ibex::Interval& domain, const ibex::IntervalVector& box, const vibes::Params& params);
+      void draw_box(const ibex::Interval& tdomain, const ibex::IntervalVector& box, const vibes::Params& params);
 
       /**
        * \brief Draws a multi-dimensional box
        *
-       * \param domain the temporal domain related to the box
+       * \param tdomain the tdomain related to the box
        * \param box the \f$n\f$d IntervalVector to be displayed
        * \param color the optional color of the box (black by default) 
        * \param params VIBes parameters related to the box (none by default)
        */
-      void draw_box(const ibex::Interval& domain, const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_box(const ibex::Interval& tdomain, const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /// @}
       /// \name Handling tubes
@@ -164,20 +164,20 @@ namespace tubex
       /**
        * \brief Adds a tube vector object to this figure
        *
-       * \param tubevector a const pointer to a TubeVector object to be displayed
+       * \param tube a const pointer to a TubeVector object to be displayed
        * \param name a name to identify this object
        * \param color_frgrnd an optional color for the current values of the tube
        * \param color_bckgrnd an optional color for the previous values of the tube, before any new contraction
        */
-      void add_tubevector(const TubeVector *tubevector, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
+      void add_tube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd = DEFAULT_FRGRND_COLOR, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
 
       /**
        * \brief Sets a new name for a tube vector
        *
-       * \param tubevector the const pointer to the TubeVector object to be renamed
+       * \param tube the const pointer to the TubeVector object to be renamed
        * \param name a new name to identify this object
        */
-      void set_tubevector_name(const TubeVector *tubevector, const std::string& name);
+      void set_tube_name(const TubeVector *tube, const std::string& name);
 
       /**
        * \brief Links a tube vector to its derivative for display purposes
@@ -185,39 +185,39 @@ namespace tubex
        * When available, a derivative tube \f$[\dot{\mathbf{x}}](\cdot)\f$ allows to draw slices of
        * \f$[\mathbf{x}](\cdot)\f$ as polygons, thus displaying a thinner envelope of the tube \f$[\mathbf{x}](\cdot)\f$. 
        *
-       * \param tubevector the const pointer to the TubeVector object that will be displayed
+       * \param tube the const pointer to the TubeVector object that will be displayed
        * \param derivative the const pointer its derivative set
        */
-      void set_tubevector_derivative(const TubeVector *tubevector, const TubeVector *derivative);
+      void set_tube_derivative(const TubeVector *tube, const TubeVector *derivative);
 
       /**
        * \brief Sets color properties for a given tube vector
        *
-       * \param tubevector the const pointer to the TubeVector object for which the colors will be set
+       * \param tube the const pointer to the TubeVector object for which the colors will be set
        * \param color_frgrnd a color for the current values of the tube
        * \param color_bckgrnd a color for the previous values of the tube, before any new contraction (gray by default)
        */
-      void set_tubevector_color(const TubeVector *tubevector, const std::string& color_frgrnd, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
+      void set_tube_color(const TubeVector *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd = DEFAULT_BCKGRND_COLOR);
 
       /**
        * \brief Sets color properties for a given tube vector
        *
        * This method allows to change the display of slices, borders, gates, etc.
        *
-       * \param tubevector the const pointer to the TubeVector object for which the colors will be set
+       * \param tube the const pointer to the TubeVector object for which the colors will be set
        * \param color_type the `TubeColorType` key for which the value will be set
        * \param color the new color to be specified for the given type
        */
-      void set_tubevector_color(const TubeVector *tubevector, TubeColorType color_type, const std::string& color);
+      void set_tube_color(const TubeVector *tube, TubeColorType color_type, const std::string& color);
 
       /**
        * \brief Reset the background of a given tube vector
        *
        * \todo automatically clear the figure (for now, the pointer is only deleted)
        *
-       * \param tubevector the const pointer to the TubeVector object for which the background will be deleted
+       * \param tube the const pointer to the TubeVector object for which the background will be deleted
        */
-      void reset_tubevector_background(const TubeVector *tubevector);
+      void reset_tube_background(const TubeVector *tube);
 
       /**
        * \brief Removes a tube vector from this figure
@@ -227,9 +227,9 @@ namespace tubex
        *
        * \note the object will not be deleted
        *
-       * \param tubevector the const pointer to the TubeVector object to be removed
+       * \param tube the const pointer to the TubeVector object to be removed
        */
-      void remove_tubevector(const TubeVector *tubevector);
+      void remove_tube(const TubeVector *tube);
 
       /// @}
       /// \name Handling trajectories
@@ -238,27 +238,27 @@ namespace tubex
       /**
        * \brief Adds a trajectory vector object to this figure
        *
-       * \param trajvector a const pointer to a TrajectoryVector object to be displayed
+       * \param traj a const pointer to a TrajectoryVector object to be displayed
        * \param name a name to identify this object
        * \param color an optional color to draw this trajectory
        */
-      void add_trajectoryvector(const TrajectoryVector *trajvector, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
+      void add_trajectory(const TrajectoryVector *traj, const std::string& name, const std::string& color = DEFAULT_TRAJ_COLOR);
 
       /**
        * \brief Sets a new name for a trajectory vector
        *
-       * \param trajvector the const pointer to the TrajectoryVector object to be renamed
+       * \param traj the const pointer to the TrajectoryVector object to be renamed
        * \param name a new name to identify this object
        */
-      void set_trajectoryvector_name(const TrajectoryVector *trajvector, const std::string& name);
+      void set_trajectory_name(const TrajectoryVector *traj, const std::string& name);
 
       /**
        * \brief Sets color properties for a given trajectory vector
        *
-       * \param trajvector the const pointer to the TrajectoryVector object for which the color will be set
+       * \param traj the const pointer to the TrajectoryVector object for which the color will be set
        * \param color a color to draw this trajectory
        */
-      void set_trajectoryvector_color(const TrajectoryVector *trajvector, const std::string& color);
+      void set_trajectory_color(const TrajectoryVector *traj, const std::string& color);
 
       /**
        * \brief Removes a trajectory vector from this figure
@@ -268,9 +268,9 @@ namespace tubex
        *
        * \note the object will not be deleted
        *
-       * \param trajvector the const pointer to the TrajectoryVector object to be removed
+       * \param traj the const pointer to the TrajectoryVector object to be removed
        */
-      void remove_trajectoryvector(const TrajectoryVector *trajvector);
+      void remove_trajectory(const TrajectoryVector *traj);
 
       /// @}
       /// \name Static methods (shortcuts for fast and simple use)

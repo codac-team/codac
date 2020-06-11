@@ -121,7 +121,7 @@ namespace tubex
     \
     const Trajectory operator f(const Trajectory& x1, const Trajectory& x2) \
     { \
-      assert(x1.domain() == x2.domain()); \
+      assert(x1.tdomain() == x2.tdomain()); \
       assert(!(x1.definition_type() == TrajDefnType::ANALYTIC_FNC && x2.definition_type() == TrajDefnType::ANALYTIC_FNC) && \
         "not supported yet for two trajectories defined by a Function"); \
       \
@@ -181,7 +181,7 @@ namespace tubex
 
   const Trajectory atan2(const Trajectory& x1, const Trajectory& x2)
   {
-    assert(x1.domain() == x2.domain());
+    assert(x1.tdomain() == x2.tdomain());
     assert(!(x1.definition_type() == TrajDefnType::ANALYTIC_FNC && x2.definition_type() == TrajDefnType::ANALYTIC_FNC) &&
       "not supported yet for trajectories defined by a Function");
 

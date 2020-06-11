@@ -42,10 +42,10 @@ namespace tubex
       /**
        * \brief Creates a slice \f$\llbracket x\rrbracket\f$
        *
-       * \param domain Interval domain \f$[t^k_0,t^k_f]\f$
+       * \param tdomain Interval temporal domain \f$[t^k_0,t^k_f]\f$
        * \param codomain Interval value of the slice (all reals \f$[-\infty,\infty]\f$ by default)
        */
-      explicit Slice(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      explicit Slice(const ibex::Interval& tdomain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
 
       /**
        * \brief Creates a copy of the slice \f$\llbracket x\rrbracket\f$
@@ -70,7 +70,7 @@ namespace tubex
        * \brief Returns a copy of a Slice
        *
        * \param x the Slice object to be copied
-       * \return a new Slice object with same domain and codomain
+       * \return a new Slice object with same tdomain and codomain
        */
       const Slice& operator=(const Slice& x);
 
@@ -79,7 +79,7 @@ namespace tubex
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      const ibex::Interval domain() const;
+      const ibex::Interval tdomain() const;
 
       /// @}
       /// \name Slices structure
@@ -128,7 +128,7 @@ namespace tubex
       const ibex::Interval output_gate() const;
 
       /**
-       * \brief Computes a convex polygon that optimaly encloses the values of the slice
+       * \brief Computes a convex polygon that optimally encloses the values of the slice
        *        according to the knowledge of the derivative slice \f$\llbracket v\rrbracket\f$
        *
        * \todo Store the polygon in cache memory?
@@ -162,6 +162,8 @@ namespace tubex
        * \note returns POS_INFINITY if the interval is unbounded
        * \note returns 0 if the interval is empty
        *
+       * \todo move this elsewhere
+       *
        * \param interval set to be evaluated
        * \return the diameter
        */
@@ -192,7 +194,7 @@ namespace tubex
        *
        * \note The returned value is either the input gate, the envelope or the output gate
        *
-       * \param t the temporal key (double, must belong to the Slice domain)
+       * \param t the temporal key (double, must belong to the Slice's tdomain)
        * \return Interval value of \f$\llbracket x\rrbracket(t)\f$
        */
       const ibex::Interval operator()(double t) const;
@@ -200,7 +202,7 @@ namespace tubex
       /**
        * \brief Returns the interval evaluation of this slice over \f$[t]\f$
        *
-       * \param t the subdomain (Interval, must be a subset of the Slice domain)
+       * \param t the temporal domain (Interval, must be a subset of the Slice's tdomain)
        * \return Interval envelope \f$\llbracket x\rrbracket([t])\f$
        */
       const ibex::Interval operator()(const ibex::Interval& t) const;
@@ -210,7 +212,7 @@ namespace tubex
        *
        * \note It includes the lower and upper bounds of the gates
        *
-       * \param t the subdomain (Interval, must be a subset of the Slice domain)
+       * \param t the temporal domain (Interval, must be a subset of the Slice's tdomain)
        * \return the pair \f$\big(\llbracket\underline{x^-}\rrbracket([t]),\llbracket\overline{x^+}\rrbracket([t])\big)\f$
        */
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
@@ -221,7 +223,7 @@ namespace tubex
        *
        * \todo Change the name of this method?
        *
-       * \param t the temporal key (double, must belong to the Slice domain)
+       * \param t the temporal key (double, must belong to the Slice's tdomain)
        * \param v the derivative slice such that \f$\dot{x}(\cdot)\in\llbracket v\rrbracket(\cdot)\f$
        * \return Interval value of \f$\llbracket x\rrbracket(t)\f$
        */
@@ -233,7 +235,7 @@ namespace tubex
        *
        * \todo Change the name of this method?
        *
-       * \param t the subdomain (Interval, must be a subset of the Slice domain)
+       * \param t the temporal domain (Interval, must be a subset of the Slice's tdomain)
        * \param v the derivative slice such that \f$\dot{x}(\cdot)\in\llbracket v\rrbracket(\cdot)\f$
        * \return Interval value of \f$\llbracket x\rrbracket([t])\f$
        */
@@ -243,10 +245,10 @@ namespace tubex
        * \brief Returns the interval inversion \f$\llbracket x\rrbracket^{-1}([y])\f$
        *
        * \param y the interval codomain
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional interval tdomain on which the inversion will be performed
        * \return the hull of \f$\llbracket x\rrbracket^{-1}([y])\f$
        */
-      const ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
 
       /**
        * \brief Returns the optimal interval inversion \f$\llbracket x\rrbracket^{-1}([y])\f$
@@ -255,10 +257,10 @@ namespace tubex
        *
        * \param y the interval codomain
        * \param v the derivative slice such that \f$\dot{x}(\cdot)\in\llbracket v\rrbracket(\cdot)\f$
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional interval tdomain on which the inversion will be performed
        * \return the hull of \f$\llbracket x\rrbracket^{-1}([y])\f$
        */
-      const ibex::Interval invert(const ibex::Interval& y, const Slice& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::Interval& y, const Slice& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
 
       /// @}
       /// \name Tests
@@ -268,7 +270,7 @@ namespace tubex
        * \brief Returns true if this slice is equal to \f$\llbracket x\rrbracket(\cdot)\f$
        *
        * \note Equality is obtained if the slices share
-       *       the same gates, codomain and domain
+       *       the same gates, codomain and tdomain
        *
        * \param x the Slice object
        * \return true in case of equality
@@ -279,7 +281,7 @@ namespace tubex
        * \brief Returns true if this slice is different from \f$\llbracket x\rrbracket(\cdot)\f$
        *
        * \note The two slices are different if they do not share
-       *       the same gates, codomain or domain
+       *       the same gates, codomain or tdomain
        *
        * \param x the Slice object
        * \return true in case of difference
@@ -289,7 +291,7 @@ namespace tubex
       /**
        * \brief Returns true if this slice is a subset of \f$\llbracket x\rrbracket(\cdot)\f$
        *
-       * \note The two slices must have the same definition domain
+       * \note The two slices must have the same tdomain
        *
        * \param x the Slice object
        * \return true in case of subset
@@ -300,7 +302,7 @@ namespace tubex
        * \brief Returns true if this slice is a subset of \f$\llbracket x\rrbracket(\cdot)\f$,
        *        and not \f$\llbracket x\rrbracket(\cdot)\f$ itself
        *
-       * \note The two slices must have the same definition domain
+       * \note The two slices must have the same tdomain
        *
        * \param x the Slice object
        * \return true in case of strict subset
@@ -310,7 +312,7 @@ namespace tubex
       /**
        * \brief Returns true if this slice is a subset of the interior of \f$\llbracket x\rrbracket(\cdot)\f$
        *
-       * \note The two slices must have the same definition domain
+       * \note The two slices must have the same tdomain
        *
        * \param x the Slice object
        * \return true in case of interior subset
@@ -321,7 +323,7 @@ namespace tubex
        * \brief Returns true if this slice is a subset of the interior of \f$\llbracket x\rrbracket(\cdot)\f$,
        *        and not \f$\llbracket x\rrbracket(\cdot)\f$ itself
        *
-       * \note The two slices must have the same definition domain
+       * \note The two slices must have the same tdomain
        *
        * \param x the Slice object
        * \return true in case of strict interior subset
@@ -331,7 +333,7 @@ namespace tubex
       /**
        * \brief Returns true if this slice is a superset of \f$\llbracket x\rrbracket(\cdot)\f$
        *
-       * \note The two slices must have the same definition domain
+       * \note The two slices must have the same tdomain
        *
        * \param x the Slice object
        * \return true in case of superset
@@ -342,7 +344,7 @@ namespace tubex
        * \brief Returns true if this slice is a superset of \f$\llbracket x\rrbracket(\cdot)\f$,
        *        and not \f$\llbracket x\rrbracket(\cdot)\f$ itself
        *
-       * \note The two slices must have the same definition domain
+       * \note The two slices must have the same tdomain
        *
        * \param x the Slice object
        * \return true in case of strict superset
@@ -366,7 +368,7 @@ namespace tubex
        *       may appear for its evaluations (either if it is defined by a map of values
        *       or an analytic function). Hence, this "contains" test may not be able to
        *       conclude, if the thin envelope of \f$x(\cdot)\f$ overlaps a boundary of the slice.
-       * \note The domain of this slice must be a subset of the domain of \f$x(\cdot)\f$
+       * \note The tdomain of this slice must be a subset of the tdomain of \f$x(\cdot)\f$
        *
        * \param x the trajectory that might be crossing this slice
        * \return BoolInterval::YES (or BoolInterval::NO) if this slice contains \f$x(\cdot)\f$
@@ -390,7 +392,7 @@ namespace tubex
       /**
        * \brief Sets this slice to the empty set
        *
-       * \note The domain will not be affected
+       * \note The tdomain will not be affected
        */
       void set_empty();
 
@@ -618,18 +620,18 @@ namespace tubex
       /**
        * \brief Specifies the temporal domain \f$[t_0,t_f]\f$ of this slice
        *
-       * \note Method necesary for Tube::sample()
+       * \note Method necessary for Tube::sample()
        *
-       * \param domain the new temporal domain to be set
+       * \param tdomain the new temporal domain to be set
        */
-      void set_domain(const ibex::Interval& domain);
+      void set_tdomain(const ibex::Interval& tdomain);
 
       /**
-       * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$\llbracket x\rrbracket(\cdot)\f$
+       * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$\llbracket x\rrbracket(\cdot)\f$
        *
-       * \param a the offset value so that \f$[t^k_0,t^k_f]:=[t^k_0-a,t^k_f-a]\f$ 
+       * \param a the offset value so that \f$[t^k_0,t^k_f]:=[t^k_0+a,t^k_f+a]\f$ 
        */
-      void shift_domain(double a);
+      void shift_tdomain(double a);
 
       /**
        * \brief Chains the two slices so that they share pointers and a common gate
@@ -662,7 +664,7 @@ namespace tubex
 
       // Class variables:
 
-        ibex::Interval m_domain; //!< temporal domain \f$[t_0,t_f]\f$ of the slice
+        ibex::Interval m_tdomain; //!< temporal domain \f$[t_0,t_f]\f$ of the slice
         ibex::Interval m_codomain = ibex::Interval::ALL_REALS; //!< envelope of the slice
         ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL; //!< input and output gates
         Slice *m_prev_slice = NULL, *m_next_slice = NULL; //!< pointers to previous and next slices of the related tube

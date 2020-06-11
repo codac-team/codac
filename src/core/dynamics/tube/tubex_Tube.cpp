@@ -30,35 +30,35 @@ namespace tubex
       
     }
 
-    Tube::Tube(const Interval& domain, const Interval& codomain)
+    Tube::Tube(const Interval& tdomain, const Interval& codomain)
     {
-      assert(valid_domain(domain));
+      assert(valid_tdomain(tdomain));
 
       // By default, the tube is defined as one single slice
-      m_first_slice = new Slice(domain, codomain);
+      m_first_slice = new Slice(tdomain, codomain);
       
       // Redundant information for fast access
-      m_domain = domain;
+      m_tdomain = tdomain;
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const Interval& codomain)
+    Tube::Tube(const Interval& tdomain, double timestep, const Interval& codomain)
     {
-      assert(valid_domain(domain));
+      assert(valid_tdomain(tdomain));
       assert(timestep >= 0.); // if 0., equivalent to no sampling
 
       // Redundant information for fast access
-      m_domain = domain;
+      m_tdomain = tdomain;
 
       Slice *prev_slice = NULL, *slice;
-      double lb, ub = domain.lb();
+      double lb, ub = tdomain.lb();
 
       if(timestep == 0.)
-        timestep = domain.diam();
+        timestep = tdomain.diam();
 
       do
       {
         lb = ub; // we guarantee all slices are adjacent
-        ub = min(lb + timestep, domain.ub()); // the domain of the last slice may be smaller
+        ub = min(lb + timestep, tdomain.ub()); // the tdomain of the last slice may be smaller
 
         slice = new Slice(Interval(lb,ub));
 
@@ -73,7 +73,7 @@ namespace tubex
         if(m_first_slice == NULL) m_first_slice = slice;
         slice = slice->next_slice();
 
-      } while(ub < domain.ub());
+      } while(ub < tdomain.ub());
 
       if(codomain != Interval::ALL_REALS)
         set(codomain);
@@ -82,10 +82,10 @@ namespace tubex
         create_synthesis_tree();
     }
     
-    Tube::Tube(const Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id)
-      : Tube(domain, timestep)
+    Tube::Tube(const Interval& tdomain, double timestep, const TFnc& f, int f_image_id)
+      : Tube(tdomain, timestep)
     {
-      assert(valid_domain(domain));
+      assert(valid_tdomain(tdomain));
       assert(timestep >= 0.); // if 0., equivalent to no sampling
       assert(f_image_id >= 0 && f_image_id < f.image_dim());
       assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
@@ -95,31 +95,31 @@ namespace tubex
       *this = f.eval_vector(input)[f_image_id];
     }
     
-    Tube::Tube(const vector<Interval>& v_domains, const vector<Interval>& v_codomains)
+    Tube::Tube(const vector<Interval>& v_tdomains, const vector<Interval>& v_codomains)
     {
-      assert(v_domains.size() == v_codomains.size());
-      assert(!v_domains.empty());
+      assert(v_tdomains.size() == v_codomains.size());
+      assert(!v_tdomains.empty());
 
-      Interval tube_domain = Interval::EMPTY_SET;
-      for(size_t i = 0 ; i < v_domains.size() ; i++)
+      Interval tube_tdomain = Interval::EMPTY_SET;
+      for(size_t i = 0 ; i < v_tdomains.size() ; i++)
       {
-        assert(valid_domain(v_domains[i]));
-        if(i > 0) assert(v_domains[i].lb() == v_domains[i-1].ub()); // domains continuity
-        tube_domain |= v_domains[i];
+        assert(valid_tdomain(v_tdomains[i]));
+        if(i > 0) assert(v_tdomains[i].lb() == v_tdomains[i-1].ub()); // domains continuity
+        tube_tdomain |= v_tdomains[i];
       }
 
-      m_first_slice = new Slice(tube_domain, Interval::ALL_REALS);
+      m_first_slice = new Slice(tube_tdomain, Interval::ALL_REALS);
       Slice *s = m_first_slice;
 
-      for(size_t i = 0 ; i < v_domains.size() ; i++)
+      for(size_t i = 0 ; i < v_tdomains.size() ; i++)
       {
-        sample(v_domains[i].ub(), s);
+        sample(v_tdomains[i].ub(), s);
         s->set_envelope(v_codomains[i]);
         s = s->next_slice();
       }
       
       // Redundant information for fast access
-      m_domain = tube_domain;
+      m_tdomain = tube_tdomain;
     }
 
     Tube::Tube(const Tube& x)
@@ -133,7 +133,7 @@ namespace tubex
       set(codomain);
     }
     
-    Tube::Tube(const Tube& x, const tubex::Fnc& f, int f_image_id)
+    Tube::Tube(const Tube& x, const TFnc& f, int f_image_id)
       : Tube(x)
     {
       assert(f_image_id >= 0 && f_image_id < f.image_dim());
@@ -145,7 +145,7 @@ namespace tubex
     }
 
     Tube::Tube(const Trajectory& traj, double timestep)
-      : Tube(traj.domain(), timestep)
+      : Tube(traj.tdomain(), timestep)
     {
       assert(timestep >= 0.); // if 0., equivalent to no sampling
       set_empty();
@@ -153,10 +153,10 @@ namespace tubex
     }
 
     Tube::Tube(const Trajectory& lb, const Trajectory& ub, double timestep)
-      : Tube(lb.domain(), timestep)
+      : Tube(lb.tdomain(), timestep)
     {
       assert(timestep >= 0.); // if 0., equivalent to no sampling
-      assert(lb.domain() == ub.domain());
+      assert(lb.tdomain() == ub.tdomain());
       set_empty();
       *this |= lb; *this |= ub;
     }
@@ -197,7 +197,7 @@ namespace tubex
     const Tube Tube::primitive(const Interval& c) const
     {
       Tube primitive(*this, Interval::ALL_REALS); // a copy of this initialized to [-oo,oo]
-      primitive.set(c, primitive.domain().lb());
+      primitive.set(c, primitive.tdomain().lb());
       CtcDeriv ctc_deriv;
       ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), TimePropag::FORWARD);
       return primitive;
@@ -246,7 +246,7 @@ namespace tubex
         }
 
         // Redundant information for fast access
-        m_domain = x.domain();
+        m_tdomain = x.tdomain();
 
       if(m_enable_synthesis)
         create_synthesis_tree();
@@ -254,16 +254,16 @@ namespace tubex
       return *this;
     }
 
-    const Interval Tube::domain() const
+    const Interval Tube::tdomain() const
     {
       if(m_synthesis_tree != NULL) // fast evaluation
-        return m_synthesis_tree->domain();
+        return m_synthesis_tree->tdomain();
       
       else
       {
-        return m_domain; // redundant information for fast access
-        return Interval(first_slice()->domain().lb(),
-                        last_slice()->domain().ub());
+        return m_tdomain; // redundant information for fast access
+        return Interval(first_slice()->tdomain().lb(),
+                        last_slice()->tdomain().ub());
       }
     }
     
@@ -282,15 +282,15 @@ namespace tubex
         else
           s = s->next_slice();
 
-        v_pts.push_back(Vector({s->domain().lb(), s->codomain().ub()}));
-        v_pts.push_back(Vector({s->domain().ub(), s->codomain().ub()}));
+        v_pts.push_back(Vector({s->tdomain().lb(), s->codomain().ub()}));
+        v_pts.push_back(Vector({s->tdomain().ub(), s->codomain().ub()}));
 
       } while(s->next_slice() != NULL);
 
       while(s != NULL)
       {
-        v_pts.push_back(Vector({s->domain().ub(), s->codomain().lb()}));
-        v_pts.push_back(Vector({s->domain().lb(), s->codomain().lb()}));
+        v_pts.push_back(Vector({s->tdomain().ub(), s->codomain().lb()}));
+        v_pts.push_back(Vector({s->tdomain().lb(), s->codomain().lb()}));
 
         s = s->prev_slice();
       }
@@ -344,23 +344,23 @@ namespace tubex
 
     Slice* Tube::slice(double t)
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
       return const_cast<Slice*>(static_cast<const Tube&>(*this).slice(t));
     }
 
     const Slice* Tube::slice(double t) const
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
 
       if(m_synthesis_tree != NULL) // fast evaluation
-        return m_synthesis_tree->slice(m_synthesis_tree->input2index(t));
+        return m_synthesis_tree->slice(m_synthesis_tree->time_to_index(t));
       
       else
       {
         const Slice *last_s = NULL;
         for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
         {
-          if(t < s->domain().ub())
+          if(t < s->tdomain().ub())
             return s;
           last_s = s;
         }
@@ -406,14 +406,14 @@ namespace tubex
 
     const Slice* Tube::wider_slice() const
     {
-      double max_domain_width = 0.;
+      double max_tdomain_width = 0.;
       const Slice *wider_slice = first_slice();
 
       for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-        if(s->domain().diam() > max_domain_width)
+        if(s->tdomain().diam() > max_tdomain_width)
         {
           wider_slice = s;
-          max_domain_width = s->domain().diam();
+          max_tdomain_width = s->tdomain().diam();
         }
 
       return wider_slice;
@@ -443,18 +443,18 @@ namespace tubex
       return largest;
     }
     
-    const Interval Tube::slice_domain(int slice_id) const
+    const Interval Tube::slice_tdomain(int slice_id) const
     {
       assert(slice_id >= 0 && slice_id < nb_slices());
-      return slice(slice_id)->domain();
+      return slice(slice_id)->tdomain();
     }
 
-    int Tube::input2index(double t) const
+    int Tube::time_to_index(double t) const
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
 
       if(m_synthesis_tree != NULL) // fast evaluation
-        return m_synthesis_tree->input2index(t);
+        return m_synthesis_tree->time_to_index(t);
       
       else
       {
@@ -462,7 +462,7 @@ namespace tubex
         for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
         {
           i++;
-          if(t < s->domain().ub())
+          if(t < s->tdomain().ub())
             return i;
         }
 
@@ -485,7 +485,7 @@ namespace tubex
 
     void Tube::sample(double t)
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
 
       Slice *slice_to_be_sampled = slice(t);
       sample(t, slice_to_be_sampled);
@@ -494,9 +494,9 @@ namespace tubex
     void Tube::sample(double t, Slice *slice_to_be_sampled)
     {
       assert(slice_to_be_sampled != NULL);
-      assert(slice_to_be_sampled->domain().contains(t));
+      assert(slice_to_be_sampled->tdomain().contains(t));
 
-      if(slice_to_be_sampled->domain().lb() == t || slice_to_be_sampled->domain().ub() == t)
+      if(slice_to_be_sampled->tdomain().lb() == t || slice_to_be_sampled->tdomain().ub() == t)
       {
         // No degenerate slice,
         // the method has no effect.
@@ -511,8 +511,8 @@ namespace tubex
 
         // Creating new slice
         Slice *new_slice = new Slice(*slice_to_be_sampled);
-        new_slice->set_domain(Interval(t, slice_to_be_sampled->domain().ub()));
-        slice_to_be_sampled->set_domain(Interval(slice_to_be_sampled->domain().lb(), t));
+        new_slice->set_tdomain(Interval(t, slice_to_be_sampled->tdomain().ub()));
+        slice_to_be_sampled->set_tdomain(Interval(slice_to_be_sampled->tdomain().lb(), t));
 
         // Updated slices structure
         delete new_slice->m_input_gate;
@@ -525,13 +525,13 @@ namespace tubex
 
     void Tube::sample(double t, const Interval& gate)
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
 
       delete_synthesis_tree(); // todo: update tree if created, instead of delete
 
       sample(t);
       Slice *s = slice(t);
-      if(t == s->domain().lb())
+      if(t == s->tdomain().lb())
         s->set_input_gate(gate);
       else
         s->set_output_gate(gate);
@@ -539,15 +539,15 @@ namespace tubex
 
     void Tube::sample(const Tube& x)
     {
-      assert(domain() == x.domain());
+      assert(tdomain() == x.tdomain());
 
       for(const Slice *s = x.first_slice() ; s != NULL ; s = s->next_slice())
-        sample(s->domain().ub());
+        sample(s->tdomain().ub());
     }
 
     bool Tube::gate_exists(double t) const
     {
-      return slice(t)->domain().lb() == t || t == domain().ub();
+      return slice(t)->tdomain().lb() == t || t == tdomain().ub();
     }
 
     // Accessing values
@@ -577,13 +577,17 @@ namespace tubex
 
     const Interval Tube::operator()(double t) const
     {
-      assert(domain().contains(t));
+      assert(!isnan(t));
+      assert(tdomain().contains(t));
       return slice(t)->operator()(t);
     }
 
     const Interval Tube::operator()(const Interval& t) const
     {
-      assert(domain().is_superset(t));
+      assert(tdomain().is_superset(t));
+
+      if(t.is_empty())
+        return Interval::empty_set();
 
       if(t.is_degenerated())
         return operator()(t.lb());
@@ -595,7 +599,7 @@ namespace tubex
       {
         const Slice *first_slice = slice(t.lb());
         const Slice *last_slice = slice(t.ub());
-        if(last_slice->domain().lb() != t.ub())
+        if(last_slice->tdomain().lb() != t.ub())
           last_slice = last_slice->next_slice();
 
         Interval codomain = Interval::EMPTY_SET;
@@ -616,12 +620,12 @@ namespace tubex
         pair<Interval,Interval> enclosed_bounds
           = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-        Interval intersection = t & domain();
+        Interval intersection = t & tdomain();
         if(t.is_empty())
           return enclosed_bounds;
 
         const Slice *s = slice(intersection.lb());
-        while(s != NULL && s->domain().lb() <= intersection.ub())
+        while(s != NULL && s->tdomain().lb() <= intersection.ub())
         {
           pair<Interval,Interval> local_eval = s->eval(intersection);
           enclosed_bounds.first |= local_eval.first;
@@ -635,12 +639,12 @@ namespace tubex
 
     const Interval Tube::interpol(double t, const Tube& v) const
     {
-      assert(domain().contains(t));
-      assert(domain() == v.domain());
+      assert(tdomain().contains(t));
+      assert(tdomain() == v.tdomain());
       assert(same_slicing(*this, v));
 
       const Slice *s_x = slice(t);
-      if(s_x->domain().lb() == t || s_x->domain().ub() == t)
+      if(s_x->tdomain().lb() == t || s_x->tdomain().ub() == t)
         return (*s_x)(t);
 
       return interpol(Interval(t), v);
@@ -649,17 +653,17 @@ namespace tubex
 
     const Interval Tube::interpol(const Interval& t, const Tube& v) const
     {
-      assert(domain().is_superset(t));
-      assert(domain() == v.domain());
+      assert(tdomain().is_superset(t));
+      assert(tdomain() == v.tdomain());
       assert(same_slicing(*this, v));
 
       Interval interpol = Interval::EMPTY_SET;
 
       const Slice *s_x = slice(t.lb());
       const Slice *s_v = v.slice(t.lb());
-      while(s_x != NULL && s_x->domain().lb() < t.ub())
+      while(s_x != NULL && s_x->tdomain().lb() < t.ub())
       {
-        interpol |= s_x->interpol(t & s_x->domain(), *s_v);
+        interpol |= s_x->interpol(t & s_x->tdomain(), *s_v);
         s_x = s_x->next_slice();
         s_v = s_v->next_slice();
       }
@@ -667,38 +671,38 @@ namespace tubex
       return interpol;
     }
 
-    const Interval Tube::invert(const Interval& y, const Interval& search_domain) const
+    const Interval Tube::invert(const Interval& y, const Interval& search_tdomain) const
     {
       if(m_synthesis_tree != NULL) // fast inversion
-        return m_synthesis_tree->invert(y, search_domain);
+        return m_synthesis_tree->invert(y, search_tdomain);
 
       Tube v(*this, Interval::ALL_REALS); // todo: optimize this
-      return invert(y, v, search_domain);
+      return invert(y, v, search_tdomain);
     }
 
-    void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_domain) const
+    void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_tdomain) const
     {
       // todo: fast inversion with binary tree considering derivative information
       Tube v(*this, Interval::ALL_REALS); // todo: optimize this
       v_t.clear();
-      invert(y, v_t, v, search_domain);
+      invert(y, v_t, v, search_tdomain);
     }
 
-    const Interval Tube::invert(const Interval& y, const Tube& v, const Interval& search_domain) const
+    const Interval Tube::invert(const Interval& y, const Tube& v, const Interval& search_tdomain) const
     {
-      assert(domain() == v.domain());
+      assert(tdomain() == v.tdomain());
       assert(same_slicing(*this, v));
 
       // todo: tree computations
 
       Interval invert = Interval::EMPTY_SET;
-      Interval intersection = search_domain & domain();
+      Interval intersection = search_tdomain & tdomain();
       if(intersection.is_empty())
         return Interval::EMPTY_SET;
 
       const Slice *s_x = slice(intersection.lb());
       const Slice *s_v = v.slice(intersection.lb());
-      while(s_x != NULL && s_x->domain().lb() < intersection.ub())
+      while(s_x != NULL && s_x->tdomain().lb() < intersection.ub())
       {
         invert |= s_x->invert(y, *s_v, intersection);
         s_x = s_x->next_slice();
@@ -708,22 +712,22 @@ namespace tubex
       return invert;
     }
 
-    void Tube::invert(const Interval& y, vector<Interval> &v_t, const Tube& v, const Interval& search_domain) const
+    void Tube::invert(const Interval& y, vector<Interval> &v_t, const Tube& v, const Interval& search_tdomain) const
     {
-      assert(domain() == v.domain());
+      assert(tdomain() == v.tdomain());
       assert(same_slicing(*this, v));
       v_t.clear();
 
       // todo: tree computations
 
       Interval invert = Interval::EMPTY_SET;
-      Interval intersection = search_domain & domain();
+      Interval intersection = search_tdomain & tdomain();
       if(intersection.is_empty())
         return;
 
       const Slice *s_x = slice(intersection.lb());
       const Slice *s_v = v.slice(intersection.lb());
-      while(s_x != NULL && s_x->domain().lb() <= intersection.ub())
+      while(s_x != NULL && s_x->tdomain().lb() <= intersection.ub())
       {
         Interval local_invert = s_x->invert(y, *s_v, intersection);
         if(local_invert.is_empty() && !invert.is_empty())
@@ -760,7 +764,7 @@ namespace tubex
 
       if(slice->input_gate().is_unbounded())
       {
-        t = slice->domain().lb();
+        t = slice->tdomain().lb();
         return numeric_limits<double>::infinity();
       }
 
@@ -771,7 +775,7 @@ namespace tubex
       {
         if(slice->output_gate().is_unbounded())
         {
-          t = slice->domain().ub();
+          t = slice->tdomain().ub();
           return numeric_limits<double>::infinity();
         }
 
@@ -779,7 +783,7 @@ namespace tubex
         {
           max_diam = slice->codomain().diam();
           max_thickness = slice->output_gate().diam();
-          t = slice->domain().ub();
+          t = slice->tdomain().ub();
         }
 
         slice = slice->next_slice();
@@ -794,20 +798,20 @@ namespace tubex
 
       const Slice *s_x = first_slice();
       if(gates_thicknesses)
-        thicknesses.set(Slice::diam(s_x->input_gate()), s_x->domain().lb());
+        thicknesses.set(Slice::diam(s_x->input_gate()), s_x->tdomain().lb());
       else
-        thicknesses.set(Slice::diam(s_x->codomain()), s_x->domain().lb());
+        thicknesses.set(Slice::diam(s_x->codomain()), s_x->tdomain().lb());
 
       while(s_x != NULL)
       {
-        thicknesses.set(Slice::diam(s_x->codomain()), ibex::next_float(s_x->domain().lb()));
-        thicknesses.set(Slice::diam(s_x->codomain()), ibex::previous_float(s_x->domain().ub()));
+        thicknesses.set(Slice::diam(s_x->codomain()), ibex::next_float(s_x->tdomain().lb()));
+        thicknesses.set(Slice::diam(s_x->codomain()), ibex::previous_float(s_x->tdomain().ub()));
 
         if(gates_thicknesses)
-          thicknesses.set(Slice::diam(s_x->output_gate()), s_x->domain().ub());
+          thicknesses.set(Slice::diam(s_x->output_gate()), s_x->tdomain().ub());
 
         else if(s_x->next_slice() == NULL)
-          thicknesses.set(Slice::diam(s_x->codomain()), s_x->domain().ub());
+          thicknesses.set(Slice::diam(s_x->codomain()), s_x->tdomain().ub());
 
         s_x = s_x->next_slice();
       }
@@ -894,13 +898,13 @@ namespace tubex
           else \
             s = s->next_slice(); \
            \
-          if(!s->input_gate().f(x(s->domain().lb())) || \
-             !s->codomain().f(x(s->domain()))) \
+          if(!s->input_gate().f(x(s->tdomain().lb())) || \
+             !s->codomain().f(x(s->tdomain()))) \
             return false; \
            \
         } while(s->next_slice() != NULL); \
          \
-        if(!s->output_gate().f(x(s->domain().ub()))) \
+        if(!s->output_gate().f(x(s->tdomain().ub()))) \
           return false; \
         return true; \
       } \
@@ -957,7 +961,7 @@ namespace tubex
 
     const BoolInterval Tube::contains(const Trajectory& x) const
     {
-      assert(domain() == x.domain());
+      assert(tdomain() == x.tdomain());
 
       BoolInterval result = YES;
       for(const Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
@@ -972,7 +976,7 @@ namespace tubex
 
     bool Tube::overlaps(const Tube& x, float ratio) const
     {
-      assert(domain() == x.domain());
+      assert(tdomain() == x.tdomain());
 
       Tube inter = *this & x;
 
@@ -980,10 +984,10 @@ namespace tubex
       for(const Slice *s = inter.first_slice() ; s != NULL ; s = s->next_slice())
       {
         if(!s->codomain().is_empty())
-          overlaping_range += s->domain().diam();
+          overlaping_range += s->tdomain().diam();
       }
 
-      return overlaping_range / domain().diam() >= ratio;
+      return overlaping_range / tdomain().diam() >= ratio;
     }
 
     // Setting values
@@ -1002,13 +1006,13 @@ namespace tubex
 
     void Tube::set(const Interval& y, double t)
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
       sample(t, y);
     }
 
     void Tube::set(const Interval& y, const Interval& t)
     {
-      assert(domain().is_superset(t));
+      assert(tdomain().is_superset(t));
 
       if(t.is_degenerated())
         set(y, t.lb());
@@ -1018,8 +1022,8 @@ namespace tubex
         sample(t.lb());
         sample(t.ub());
 
-        for(Slice *s = slice(input2index(t.lb())) ;
-            s != NULL && !(t & s->domain()).is_degenerated() ;
+        for(Slice *s = slice(time_to_index(t.lb())) ;
+            s != NULL && !(t & s->tdomain()).is_degenerated() ;
             s = s->next_slice())
           s->set(y);
       }
@@ -1055,7 +1059,7 @@ namespace tubex
     const Tube& Tube::inflate(const Trajectory& rad)
     {
       assert(rad.codomain().lb() >= 0.);
-      assert(domain() == rad.domain());
+      assert(tdomain() == rad.tdomain());
 
       Slice *s = NULL;
       do
@@ -1066,32 +1070,32 @@ namespace tubex
           s = s->next_slice();
 
         s->set_envelope(s->codomain()
-          + Interval(-1.,1.) * rad(s->domain()), false);
+          + Interval(-1.,1.) * rad(s->tdomain()), false);
         s->set_input_gate(s->input_gate()
-          + Interval(-1.,1.) * rad(s->domain().lb()), false);
+          + Interval(-1.,1.) * rad(s->tdomain().lb()), false);
 
       } while(s->next_slice() != NULL);
 
       s->set_output_gate(s->output_gate()
-        + Interval(-1.,1.) * rad(s->domain().ub()), false);
+        + Interval(-1.,1.) * rad(s->tdomain().ub()), false);
       return *this;
     }
 
-    void Tube::shift_domain(double shift_ref)
+    void Tube::shift_tdomain(double shift_ref)
     {
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
-        s->shift_domain(shift_ref);
-      m_domain -= shift_ref;
+        s->shift_tdomain(shift_ref);
+      m_tdomain += shift_ref;
       delete_synthesis_tree();
     }
 
     void Tube::remove_gate(double t)
     {
-      assert(domain().contains(t));
-      assert(t != domain().lb() && t != domain().ub() && "cannot remove initial/final gates");
+      assert(tdomain().contains(t));
+      assert(t != tdomain().lb() && t != tdomain().ub() && "cannot remove initial/final gates");
 
       Slice *s2 = slice(t);
-      assert(s2->domain().lb() == t && "the gate must already exist");
+      assert(s2->tdomain().lb() == t && "the gate must already exist");
       Slice *s1 = s2->prev_slice();
 
       Slice::merge_slices(s1, s2);
@@ -1101,7 +1105,7 @@ namespace tubex
     
     const pair<Tube,Tube> Tube::bisect(double t, float ratio) const
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
       assert(Interval(0.,1.).interior_contains(ratio));
 
       pair<Tube,Tube> p = make_pair(*this,*this);
@@ -1126,7 +1130,7 @@ namespace tubex
     
     ostream& operator<<(ostream& str, const Tube& x)
     {
-      str << x.class_name() << " " << x.domain() << "↦" << x.codomain_box()
+      str << x.class_name() << " " << x.tdomain() << "↦" << x.codomain_box()
           << ", " << x.nb_slices()
           << " slice" << (x.nb_slices() > 1 ? "s" : "")
           << flush;
@@ -1150,13 +1154,13 @@ namespace tubex
 
     const Interval Tube::integral(double t) const
     {
-      assert(domain().contains(t));
+      assert(tdomain().contains(t));
       return integral(Interval(t));
     }
 
     const Interval Tube::integral(const Interval& t) const
     {
-      assert(domain().is_superset(t));
+      assert(tdomain().is_superset(t));
       pair<Interval,Interval> partial_ti = partial_integral(t);
 
       if(partial_ti.first.is_empty() || partial_ti.second.is_empty())
@@ -1171,8 +1175,8 @@ namespace tubex
 
     const Interval Tube::integral(const Interval& t1, const Interval& t2) const
     {
-      assert(domain().is_superset(t1));
-      assert(domain().is_superset(t2));
+      assert(tdomain().is_superset(t1));
+      assert(tdomain().is_superset(t2));
 
       pair<Interval,Interval> integral_t1 = partial_integral(t1);
       pair<Interval,Interval> integral_t2 = partial_integral(t2);
@@ -1199,7 +1203,7 @@ namespace tubex
 
     const pair<Interval,Interval> Tube::partial_integral(const Interval& t) const
     {
-      assert(domain().is_superset(t));
+      assert(tdomain().is_superset(t));
 
       if(m_synthesis_tree != NULL) // fast evaluation
         return m_synthesis_tree->partial_integral(t);
@@ -1211,7 +1215,7 @@ namespace tubex
         pair<Interval,Interval> p_integ
           = make_pair(0., 0.), p_integ_uncertain(p_integ);
 
-        while(slice != NULL && slice->domain().lb() < t.ub())
+        while(slice != NULL && slice->tdomain().lb() < t.ub())
         {
           if(slice->codomain().is_empty())
             return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
@@ -1221,7 +1225,7 @@ namespace tubex
 
           // From t0 to tlb
 
-            intv_t = slice->domain() & Interval(domain().lb(), t.lb());
+            intv_t = slice->tdomain() & Interval(tdomain().lb(), t.lb());
             if(!intv_t.is_empty())
             {
               p_integ.first += intv_t.diam() * slice->codomain().lb();
@@ -1229,12 +1233,12 @@ namespace tubex
               p_integ_uncertain = p_integ;
 
               if(intv_t.ub() == t.ub())
-                return p_integ; // end of the integral evalution
+                return p_integ; // end of the integral evaluation
             }
 
           // From tlb to tub
 
-            intv_t = slice->domain() & t;
+            intv_t = slice->tdomain() & t;
             if(!intv_t.is_empty())
             {
               pair<Interval,Interval> p_integ_temp(p_integ_uncertain);
@@ -1257,8 +1261,8 @@ namespace tubex
 
     const pair<Interval,Interval> Tube::partial_integral(const Interval& t1, const Interval& t2) const
     {
-      assert(domain().is_superset(t1));
-      assert(domain().is_superset(t2));
+      assert(tdomain().is_superset(t1));
+      assert(tdomain().is_superset(t2));
       pair<Interval,Interval> integral_t1 = partial_integral(t1);
       pair<Interval,Interval> integral_t2 = partial_integral(t2);
       return make_pair((integral_t2.first - integral_t1.first),
@@ -1299,7 +1303,7 @@ namespace tubex
       const Slice *s2 = x2.first_slice();
       for(const Slice *s1 = x1.first_slice() ; s1 != NULL ; s1 = s1->next_slice())
       {
-        if(s1->domain() != s2->domain())
+        if(s1->tdomain() != s2->tdomain())
           return false;
         s2 = s2->next_slice();
       }

@@ -49,12 +49,12 @@ namespace tubex
     return m_pos[2];
   }
 
-  const ibex::Vector& Beacon::pos() const
+  const Vector& Beacon::pos() const
   {
     return m_pos;
   }
 
-  const ibex::IntervalVector& Beacon::pos_box() const
+  const IntervalVector& Beacon::pos_box() const
   {
     return m_pos_box;
   }

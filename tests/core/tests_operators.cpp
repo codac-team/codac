@@ -72,21 +72,21 @@ TEST_CASE("Operators")
     // Now with vector trajectories...
 
     tube1.set(IntervalVector(2, Interval(-1.,1.)));
-    tube1 += TrajectoryVector(domain, tubex::Function("(2.;2.)"));
-    TrajectoryVector traj(domain, tubex::Function("(2.;2.)"));
+    tube1 += TrajectoryVector(domain, TFunction("(2.;2.)"));
+    TrajectoryVector traj(domain, TFunction("(2.;2.)"));
     CHECK(traj(0.) == Vector(2, 2.));
     CHECK(tube1.codomain() == IntervalVector(2, Interval(1.,3.)));
     CHECK(tube1(0.) == IntervalVector(2, Interval(1.,3.)));
     
-    tube1 -= TrajectoryVector(domain, tubex::Function("(4.;4.)"));
+    tube1 -= TrajectoryVector(domain, TFunction("(4.;4.)"));
     CHECK(tube1.codomain() == IntervalVector(2, Interval(-3.,-1.)));
     CHECK(tube1(0.) == IntervalVector(2, Interval(-3.,-1.)));
     
-    tube1 |= TrajectoryVector(domain, tubex::Function("(11.,11.)"));
+    tube1 |= TrajectoryVector(domain, TFunction("(11.,11.)"));
     CHECK(tube1.codomain() == IntervalVector(2, Interval(-3.,11.)));
     CHECK(tube1(0.) == IntervalVector(2, Interval(-3.,11.)));
     
-    tube1 &= TrajectoryVector(domain, tubex::Function("(1.;1.)"));
+    tube1 &= TrajectoryVector(domain, TFunction("(1.;1.)"));
     CHECK(tube1.codomain() == IntervalVector(2, Interval(1.)));
     CHECK(tube1(0.) == IntervalVector(2, Interval(1.)));
     
@@ -119,7 +119,7 @@ TEST_CASE("Operators")
     // Now with scalar trajectories...
 
     tube1.set(IntervalVector(2, Interval(-3.,-1.)));
-    tube1 *= Trajectory(domain, tubex::Function("(4.)"));
+    tube1 *= Trajectory(domain, TFunction("(4.)"));
     CHECK(tube1.codomain() == IntervalVector(2, Interval(-12.,-4.)));
     CHECK(tube1(0.) == IntervalVector(2, Interval(-12.,-4.)));
     
@@ -167,27 +167,27 @@ TEST_CASE("Operators")
     // Now with scalar trajectories...
 
     tube1.set(Interval(-1.,1.));
-    tube1 += Trajectory(domain, tubex::Function("(2.)"));
+    tube1 += Trajectory(domain, TFunction("(2.)"));
     CHECK(tube1.codomain() == Interval(1.,3.));
     CHECK(tube1(0.) == Interval(1.,3.));
     
-    tube1 -= Trajectory(domain, tubex::Function("(4.)"));
+    tube1 -= Trajectory(domain, TFunction("(4.)"));
     CHECK(tube1.codomain() == Interval(-3.,-1.));
     CHECK(tube1(0.) == Interval(-3.,-1.));
     
-    tube1 *= Trajectory(domain, tubex::Function("(4.)"));
+    tube1 *= Trajectory(domain, TFunction("(4.)"));
     CHECK(tube1.codomain() == Interval(-12.,-4.));
     CHECK(tube1(0.) == Interval(-12.,-4.));
     
-    tube1 |= Trajectory(domain, tubex::Function("(11.)"));
+    tube1 |= Trajectory(domain, TFunction("(11.)"));
     CHECK(tube1.codomain() == Interval(-12.,11.));
     CHECK(tube1(0.) == Interval(-12.,11.));
     
-    tube1 &= Trajectory(domain, tubex::Function("(1.)"));
+    tube1 &= Trajectory(domain, TFunction("(1.)"));
     CHECK(tube1.codomain() == Interval(1.));
     CHECK(tube1(0.) == Interval(1.));
     
-    tube1 /= Trajectory(domain, tubex::Function("(2.)"));
+    tube1 /= Trajectory(domain, TFunction("(2.)"));
     CHECK(tube1.codomain() == Interval(0.5));
     CHECK(tube1(0.) == Interval(0.5));
     
@@ -272,30 +272,30 @@ TEST_CASE("Operators")
     // Now with vector trajectories...
 
     tube1.set(IntervalVector(2, Interval(-1.,1.)));
-    result = tube1 + TrajectoryVector(domain, tubex::Function("(2.;2.)"));
-    TrajectoryVector traj(domain, tubex::Function("(2.;2.)"));
+    result = tube1 + TrajectoryVector(domain, TFunction("(2.;2.)"));
+    TrajectoryVector traj(domain, TFunction("(2.;2.)"));
     CHECK(traj(0.) == Vector(2, 2.));
     CHECK(result.codomain() == IntervalVector(2, Interval(1.,3.)));
     CHECK(result(0.) == IntervalVector(2, Interval(1.,3.)));
 
     tube1.set(IntervalVector(2, Interval(-1.,1.)));
-    result = TrajectoryVector(domain, tubex::Function("(2.;2.)")) + tube1;
+    result = TrajectoryVector(domain, TFunction("(2.;2.)")) + tube1;
     CHECK(traj(0.) == Vector(2, 2.));
     CHECK(result.codomain() == IntervalVector(2, Interval(1.,3.)));
     CHECK(result(0.) == IntervalVector(2, Interval(1.,3.)));
     
     tube1 = result;
-    result = tube1 - TrajectoryVector(domain, tubex::Function("(4.;4.)"));
+    result = tube1 - TrajectoryVector(domain, TFunction("(4.;4.)"));
     CHECK(result.codomain() == IntervalVector(2, Interval(-3.,-1.)));
     CHECK(result(0.) == IntervalVector(2, Interval(-3.,-1.)));
     
     tube1 = result;
-    result = tube1 | TrajectoryVector(domain, tubex::Function("(11.,11.)"));
+    result = tube1 | TrajectoryVector(domain, TFunction("(11.,11.)"));
     CHECK(result.codomain() == IntervalVector(2, Interval(-3.,11.)));
     CHECK(result(0.) == IntervalVector(2, Interval(-3.,11.)));
     
     tube1 = result;
-    result = tube1 & TrajectoryVector(domain, tubex::Function("(1.;1.)"));
+    result = tube1 & TrajectoryVector(domain, TFunction("(1.;1.)"));
     CHECK(result.codomain() == IntervalVector(2, Interval(1.)));
     CHECK(result(0.) == IntervalVector(2, Interval(1.)));
     
@@ -390,50 +390,50 @@ TEST_CASE("Operators")
     // Now with scalar trajectories...
 
     tube1.set(Interval(-1.,1.));
-    tube1 = tube1 + Trajectory(domain, tubex::Function("(2.)"));
+    tube1 = tube1 + Trajectory(domain, TFunction("(2.)"));
     CHECK(tube1.codomain() == Interval(1.,3.));
     CHECK(tube1(0.) == Interval(1.,3.));
     
-    tube1 = tube1 - Trajectory(domain, tubex::Function("(4.)"));
+    tube1 = tube1 - Trajectory(domain, TFunction("(4.)"));
     CHECK(tube1.codomain() == Interval(-3.,-1.));
     CHECK(tube1(0.) == Interval(-3.,-1.));
     
-    // todo ? tube1 = tube1 * Trajectory(domain, tubex::Function("(4.)"));
+    // todo ? tube1 = tube1 * Trajectory(domain, TFunction("(4.)"));
     // todo ? CHECK(tube1.codomain() == Interval(-12.,-4.));
     // todo ? CHECK(tube1(0.) == Interval(-12.,-4.));
     tube1.set(Interval(-12.,-4.));
 
-    tube1 = tube1 | Trajectory(domain, tubex::Function("(11.)"));
+    tube1 = tube1 | Trajectory(domain, TFunction("(11.)"));
     CHECK(tube1.codomain() == Interval(-12.,11.));
     CHECK(tube1(0.) == Interval(-12.,11.));
     
-    tube1 = tube1 & Trajectory(domain, tubex::Function("(1.)"));
+    tube1 = tube1 & Trajectory(domain, TFunction("(1.)"));
     CHECK(tube1.codomain() == Interval(1.));
     CHECK(tube1(0.) == Interval(1.));
     
-    tube1 = tube1 / Trajectory(domain, tubex::Function("(2.)"));
+    tube1 = tube1 / Trajectory(domain, TFunction("(2.)"));
     CHECK(tube1.codomain() == Interval(0.5));
     CHECK(tube1(0.) == Interval(0.5));
 
     tube1.set(Interval(-1.,1.));
-    tube1 = Trajectory(domain, tubex::Function("(2.)")) + tube1;
+    tube1 = Trajectory(domain, TFunction("(2.)")) + tube1;
     CHECK(tube1.codomain() == Interval(1.,3.));
     CHECK(tube1(0.) == Interval(1.,3.));
     
-    // todo: tube1 = - Trajectory(domain, tubex::Function("(4.)")) + tube1;
+    // todo: tube1 = - Trajectory(domain, TFunction("(4.)")) + tube1;
     // todo: CHECK(tube1.codomain() == Interval(-3.,-1.));
     // todo: CHECK(tube1(0.) == Interval(-3.,-1.));
     tube1.set(Interval(-3.,-1.));
     
-    tube1 = Trajectory(domain, tubex::Function("(4.)")) * tube1;
+    tube1 = Trajectory(domain, TFunction("(4.)")) * tube1;
     CHECK(tube1.codomain() == Interval(-12.,-4.));
     CHECK(tube1(0.) == Interval(-12.,-4.));
     
-    tube1 = Trajectory(domain, tubex::Function("(11.)")) | tube1;
+    tube1 = Trajectory(domain, TFunction("(11.)")) | tube1;
     CHECK(tube1.codomain() == Interval(-12.,11.));
     CHECK(tube1(0.) == Interval(-12.,11.));
     
-    tube1 = Trajectory(domain, tubex::Function("(1.)")) & tube1;
+    tube1 = Trajectory(domain, TFunction("(1.)")) & tube1;
     CHECK(tube1.codomain() == Interval(1.));
     CHECK(tube1(0.) == Interval(1.));
     

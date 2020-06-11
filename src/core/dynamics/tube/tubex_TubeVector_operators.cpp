@@ -31,7 +31,7 @@ namespace tubex
     const TubeVector& TubeVector::f(const TrajectoryVector& x) \
     { \
       assert(size() == x.size()); \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
@@ -41,7 +41,7 @@ namespace tubex
     const TubeVector& TubeVector::f(const TubeVector& x) \
     { \
       assert(size() == x.size()); \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x[i]); \
@@ -60,7 +60,7 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const Trajectory& x) \
     { \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       \
       for(int i = 0 ; i < size() ; i++) \
         (*this)[i].f(x); \
@@ -69,7 +69,7 @@ namespace tubex
     \
     const TubeVector& TubeVector::f(const Tube& x) \
     { \
-      assert(domain() == x.domain()); \
+      assert(tdomain() == x.tdomain()); \
       assert(same_slicing(*this, x)); \
       \
       for(int i = 0 ; i < size() ; i++) \

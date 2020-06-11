@@ -1,0 +1,36 @@
+/* Overrides table width restrictions */
+/* See: https://rackerlabs.github.io/docs-rackspace/tools/rtd-tables.html */
+@media screen and (min-width: 767px)
+{
+  .fit-page .wy-table-responsive table td
+  {
+    /* !important prevents the common CSS stylesheets from overriding
+       this as on RTD they are loaded after this stylesheet */
+    white-space: normal !important;
+  }
+
+  .fit-page .wy-table-responsive
+  {
+    overflow: visible !important;
+  }
+}
+
+.rst-content table .line-block
+{
+  margin-bottom: 0;
+}
+
+div.document a:visited
+{
+  color: #3091d1;
+}
+
+.wy-menu-vertical li.current ul
+{
+  display: none;
+}
+
+.wy-menu-vertical li.on a:hover span.toctree-expand, .wy-menu-vertical li.current > a:hover span.toctree-expand, .wy-menu-vertical li.on a span.toctree-expand, .wy-menu-vertical li.current > a span.toctree-expand
+{
+  display: none;
+}

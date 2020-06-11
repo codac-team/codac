@@ -28,6 +28,12 @@ namespace tubex
     if(m_pts[0].does_not_exist()) m_pts[1] = Point();
   }
 
+  Edge::Edge(const Vector& p1, const Vector& p2)
+    : Edge(Point(p1), Point(p2))
+  {
+    
+  }
+
   const Edge& Edge::operator=(const Edge& e)
   {
     m_pts[0] = e.m_pts[0];

@@ -15,7 +15,7 @@
 #include <vector>
 #include <functional>
 #include "ibex_Ctc.h"
-#include "tubex_Ctc.h"
+#include "tubex_DynCtc.h"
 #include "tubex_Domain.h"
 #include "tubex_ContractorNetwork.h"
 
@@ -28,17 +28,17 @@ namespace tubex
 {
   class Domain;
   class ContractorNetwork;
-  class Ctc;
+  class DynCtc;
 
   class Contractor
   {
     public:
 
-      enum class Type { COMPONENT, EQUALITY, IBEX, TUBEX };
+      enum class Type { T_COMPONENT, T_EQUALITY, T_IBEX, T_TUBEX };
 
       Contractor(Type type, const std::vector<Domain*>& v_domains);
       Contractor(ibex::Ctc& ctc, const std::vector<Domain*>& v_domains);
-      Contractor(tubex::Ctc& ctc, const std::vector<Domain*>& v_domains);
+      Contractor(DynCtc& ctc, const std::vector<Domain*>& v_domains);
       Contractor(const Contractor& ac);
       ~Contractor();
 
@@ -46,7 +46,7 @@ namespace tubex
       Type type() const;
 
       ibex::Ctc& ibex_ctc();
-      tubex::Ctc& tubex_ctc();
+      DynCtc& tubex_ctc();
 
       bool is_active() const;
       void set_active(bool active);
@@ -71,8 +71,8 @@ namespace tubex
 
       union
       {
-        std::reference_wrapper<ibex::Ctc> m_ibex_ctc;
-        std::reference_wrapper<tubex::Ctc> m_tubex_ctc;
+        std::reference_wrapper<ibex::Ctc> m_static_ctc;
+        std::reference_wrapper<DynCtc> m_dyn_ctc;
       };
 
       std::vector<Domain*> m_v_domains;

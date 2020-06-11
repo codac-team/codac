@@ -28,20 +28,20 @@ TEST_CASE("operator=")
   }
 }
 
-TEST_CASE("input2index")
+TEST_CASE("time_to_index")
 {
-  SECTION("input2index")
+  SECTION("time_to_index")
   {
     Tube tube = tube_test_1();
-    CHECK(tube.input2index(0.0) == 0);
-    CHECK(tube.input2index(0.1) == 0);
-    CHECK(tube.input2index(0.5) == 0);
-    CHECK(tube.input2index(0.6) == 0);
-    CHECK(tube.input2index(0.9) == 0);
-    CHECK(tube.input2index(ibex::previous_float(1.0)) == 0);
-    CHECK(tube.input2index(1.0) == 1);
-    CHECK(tube.input2index(46.0) == 45);
-    CHECK(tube.input2index(tube.domain().ub()) == 45);
+    CHECK(tube.time_to_index(0.0) == 0);
+    CHECK(tube.time_to_index(0.1) == 0);
+    CHECK(tube.time_to_index(0.5) == 0);
+    CHECK(tube.time_to_index(0.6) == 0);
+    CHECK(tube.time_to_index(0.9) == 0);
+    CHECK(tube.time_to_index(ibex::previous_float(1.0)) == 0);
+    CHECK(tube.time_to_index(1.0) == 1);
+    CHECK(tube.time_to_index(46.0) == 45);
+    CHECK(tube.time_to_index(tube.tdomain().ub()) == 45);
     CHECK(tube.nb_slices() == 46);
   }
 
@@ -62,20 +62,20 @@ TEST_CASE("Tube slices structure")
   SECTION("Tube class (one slice)")
   {
     Tube tube_a(Interval(0.,1.), Interval(-1.,1.));
-    CHECK(tube_a.domain() == Interval(0.,1.));
+    CHECK(tube_a.tdomain() == Interval(0.,1.));
     CHECK(tube_a.codomain() == Interval(-1.,1.));
     CHECK(tube_a.nb_slices() == 1);
     //CHECK(tube_a.slice(0)->tube_reference() == &tube_a);
 
     Tube tube_b(tube_a);
-    CHECK(tube_b.domain() == Interval(0.,1.));
+    CHECK(tube_b.tdomain() == Interval(0.,1.));
     CHECK(tube_b.codomain() == Interval(-1.,1.));
     CHECK(tube_b.nb_slices() == 1);
     CHECK(tube_b.slice(0) != NULL);
     //CHECK(tube_b.slice(0)->tube_reference() == &tube_b);
 
     Tube tube_c = tube_a;
-    CHECK(tube_c.domain() == Interval(0.,1.));
+    CHECK(tube_c.tdomain() == Interval(0.,1.));
     CHECK(tube_c.codomain() == Interval(-1.,1.));
     CHECK(tube_c.nb_slices() == 1);
     //CHECK(tube_c.slice(0)->tube_reference() == &tube_c);
@@ -85,7 +85,7 @@ TEST_CASE("Tube slices structure")
   {
     Tube tube_a(Interval(0.,1.), Interval(-1.,1.));
     CHECK(tube_a.nb_slices() == 1);
-    CHECK(tube_a.domain() == Interval(0.,1.));
+    CHECK(tube_a.tdomain() == Interval(0.,1.));
     //CHECK(tube_a.slice(0)->tube_reference() == &tube_a);
 
     // todo: find a way to catch assert abort: CHECK_THROWS(tube_a.sample(-1.0););
@@ -98,7 +98,7 @@ TEST_CASE("Tube slices structure")
     tube_a.sample(0.6);
 
     CHECK(tube_a.nb_slices() == 2);
-    CHECK(tube_a.domain() == Interval(0.,1.));
+    CHECK(tube_a.tdomain() == Interval(0.,1.));
 
     tube_a.sample(0.7);
 
@@ -165,7 +165,7 @@ TEST_CASE("Tube slices structure")
     CHECK(tube(6.) == Interval(-1.,0.)); // gate
   }
 
-  SECTION("input2index and reverse operation")
+  SECTION("time_to_index and reverse operation")
   {
     Tube tube(Interval(0.,1.), Interval(-1.,1.));
     tube.sample(0.6);
@@ -173,16 +173,16 @@ TEST_CASE("Tube slices structure")
     tube.sample(0.62);
     tube.sample(0.1);
 
-    // input2index
+    // time_to_index
     CHECK(tube.nb_slices() == 5);
-    // todo: find a way to catch assert abort: CHECK_THROWS(tube.input2index(-0.1));
-    CHECK(tube.input2index(0.) == 0);
-    CHECK(tube.input2index(0.01) == 0);
-    CHECK(tube.input2index(0.6) == 2);
-    CHECK(tube.input2index(0.61) == 2);
-    CHECK(tube.input2index(0.62) == 3);
-    CHECK(tube.input2index(1.0) == 4);
-    // todo: find a way to catch assert abort: CHECK_THROWS(tube.input2index(1.01));
+    // todo: find a way to catch assert abort: CHECK_THROWS(tube.time_to_index(-0.1));
+    CHECK(tube.time_to_index(0.) == 0);
+    CHECK(tube.time_to_index(0.01) == 0);
+    CHECK(tube.time_to_index(0.6) == 2);
+    CHECK(tube.time_to_index(0.61) == 2);
+    CHECK(tube.time_to_index(0.62) == 3);
+    CHECK(tube.time_to_index(1.0) == 4);
+    // todo: find a way to catch assert abort: CHECK_THROWS(tube.time_to_index(1.01));
   }
 
   SECTION("Getting slices")
@@ -197,39 +197,39 @@ TEST_CASE("Tube slices structure")
 
     // By indexes
     // todo: CHECK_THROWS(tube.slice(-1));
-    CHECK(tube.slice(0)->domain() == Interval(0.0,0.1));
-    CHECK(tube.slice(1)->domain() == Interval(0.1,0.6));
-    CHECK(tube.slice(2)->domain() == Interval(0.6,0.62));
-    CHECK(tube.slice(3)->domain() == Interval(0.62,0.7));
-    CHECK(tube.slice(4)->domain() == Interval(0.7,1.0));
+    CHECK(tube.slice(0)->tdomain() == Interval(0.0,0.1));
+    CHECK(tube.slice(1)->tdomain() == Interval(0.1,0.6));
+    CHECK(tube.slice(2)->tdomain() == Interval(0.6,0.62));
+    CHECK(tube.slice(3)->tdomain() == Interval(0.62,0.7));
+    CHECK(tube.slice(4)->tdomain() == Interval(0.7,1.0));
 
     // By times
     // todo: CHECK_THROWS(tube.slice(-0.001));
     // todo: CHECK_THROWS(tube.slice(1.001));
-    CHECK(tube.slice(0.)->domain() == Interval(0.0,0.1));
-    CHECK(tube.slice(0.03)->domain() == Interval(0.0,0.1));
-    CHECK(tube.slice(0.2)->domain() == Interval(0.1,0.6));
-    CHECK(tube.slice(0.6)->domain() == Interval(0.6,0.62));
-    CHECK(tube.slice(0.62)->domain() == Interval(0.62,0.7));
-    CHECK(tube.slice(1.0)->domain() == Interval(0.7,1.0));
+    CHECK(tube.slice(0.)->tdomain() == Interval(0.0,0.1));
+    CHECK(tube.slice(0.03)->tdomain() == Interval(0.0,0.1));
+    CHECK(tube.slice(0.2)->tdomain() == Interval(0.1,0.6));
+    CHECK(tube.slice(0.6)->tdomain() == Interval(0.6,0.62));
+    CHECK(tube.slice(0.62)->tdomain() == Interval(0.62,0.7));
+    CHECK(tube.slice(1.0)->tdomain() == Interval(0.7,1.0));
 
     // Copy: constructor
     Tube tube_b(tube);
-    CHECK(tube_b.slice(0.)->domain() == Interval(0.0,0.1));
-    CHECK(tube_b.slice(0.03)->domain() == Interval(0.0,0.1));
-    CHECK(tube_b.slice(0.2)->domain() == Interval(0.1,0.6));
-    CHECK(tube_b.slice(0.6)->domain() == Interval(0.6,0.62));
-    CHECK(tube_b.slice(0.62)->domain() == Interval(0.62,0.7));
-    CHECK(tube_b.slice(1.0)->domain() == Interval(0.7,1.0));
+    CHECK(tube_b.slice(0.)->tdomain() == Interval(0.0,0.1));
+    CHECK(tube_b.slice(0.03)->tdomain() == Interval(0.0,0.1));
+    CHECK(tube_b.slice(0.2)->tdomain() == Interval(0.1,0.6));
+    CHECK(tube_b.slice(0.6)->tdomain() == Interval(0.6,0.62));
+    CHECK(tube_b.slice(0.62)->tdomain() == Interval(0.62,0.7));
+    CHECK(tube_b.slice(1.0)->tdomain() == Interval(0.7,1.0));
     
     // Copy: operator
     Tube tube_c = tube;
-    CHECK(tube_c.slice(0.)->domain() == Interval(0.0,0.1));
-    CHECK(tube_c.slice(0.03)->domain() == Interval(0.0,0.1));
-    CHECK(tube_c.slice(0.2)->domain() == Interval(0.1,0.6));
-    CHECK(tube_c.slice(0.6)->domain() == Interval(0.6,0.62));
-    CHECK(tube_c.slice(0.62)->domain() == Interval(0.62,0.7));
-    CHECK(tube_c.slice(1.0)->domain() == Interval(0.7,1.0));
+    CHECK(tube_c.slice(0.)->tdomain() == Interval(0.0,0.1));
+    CHECK(tube_c.slice(0.03)->tdomain() == Interval(0.0,0.1));
+    CHECK(tube_c.slice(0.2)->tdomain() == Interval(0.1,0.6));
+    CHECK(tube_c.slice(0.6)->tdomain() == Interval(0.6,0.62));
+    CHECK(tube_c.slice(0.62)->tdomain() == Interval(0.62,0.7));
+    CHECK(tube_c.slice(1.0)->tdomain() == Interval(0.7,1.0));
 
     // First and last slices
     CHECK(tube.slice(0) == tube.first_slice());
@@ -245,13 +245,13 @@ TEST_CASE("Tube slices structure")
     // slices
     CHECK(tube.slice(0.1)->box()[0] == Interval(0.1,0.6));
     CHECK(tube.slice(0.1)->box()[1] == Interval(-1.,1.));
-    CHECK(tube.slice(0.1)->domain() == Interval(0.1,0.6));
+    CHECK(tube.slice(0.1)->tdomain() == Interval(0.1,0.6));
     CHECK(tube.slice(1)->box()[0] == Interval(0.1,0.6));
     CHECK(tube.slice(1)->box()[1] == Interval(-1.,1.));
-    CHECK(tube.slice(1)->domain() == Interval(0.1,0.6));
+    CHECK(tube.slice(1)->tdomain() == Interval(0.1,0.6));
     CHECK(tube.slice(4)->box()[0] == Interval(0.7,1.0));
     CHECK(tube.slice(4)->box()[1] == Interval(-1.,1.));
-    CHECK(tube.slice(4)->domain() == Interval(0.7,1.0));
+    CHECK(tube.slice(4)->tdomain() == Interval(0.7,1.0));
     // todo: CHECK_THROWS(tube.slice(5)->box());
 
     // prev/next slices

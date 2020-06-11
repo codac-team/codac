@@ -23,15 +23,15 @@ int main()
 {
   /* =========== PARAMETERS =========== */
 
-    Interval domain(0., 6.);
+    Interval tdomain(0., 6.);
     float timestep = 0.001;
 
   /* =========== INITIALIZATION =========== */
 
-    // Creating tubes over the [0,6] domain with some timestep:
-    TubeVector x(domain, timestep, 6);
+    // Creating tubes over the [0,6] tdomain with some timestep:
+    TubeVector x(tdomain, timestep, 6);
     x &= IntervalVector(6, Interval(-999.,999.)); // todo: remove this
-    x[4] = Tube(x[5], tubex::Function("-10*cos(t)+[-0.001,0.001]"));
+    x[4] = Tube(x[5], TFunction("-10*cos(t)+[-0.001,0.001]"));
 
     // Initial conditions:
     IntervalVector x0(x.size());
@@ -45,10 +45,10 @@ int main()
 
     CtcDeriv ctc_deriv;
     CtcEval ctc_eval;
-    ctc_eval.enable_temporal_propagation(false); // faster use
-    tubex::CtcFwdBwd ctc_fwdbwd(
-      tubex::Function("x", "y", "xdot", "ydot", "xddot", "yddot",
-                      "-0.4*xddot*xdot - yddot"));
+    ctc_eval.enable_time_propag(false); // faster use
+    CtcFunction ctc_f(
+      Function("x", "y", "xdot", "ydot", "xddot", "yddot",
+               "-0.4*xddot*xdot - yddot"));
 
   /* =========== PROPAGATION =========== */
 
@@ -67,28 +67,37 @@ int main()
       // Further constraints that could be considered
       if(false)
       {
-        ctc_eval.contract(x[1](M_PI/2.), 3.*M_PI/2., x[1], x[3]);
-        ctc_eval.contract(x[1](3.*M_PI/2.), M_PI/2., x[1], x[3]);
-        ctc_eval.contract(x[0](M_PI/2.), 3.*M_PI/2., x[0], x[2]);
-        ctc_eval.contract(x[0](3.*M_PI/2.), M_PI/2., x[0], x[2]);
+        Interval t, y;
+
+        t = x[1](M_PI/2.); y = 3.*M_PI/2.;
+        ctc_eval.contract(t, y, x[1], x[3]);
+
+        t = x[1](3.*M_PI/2.); y = M_PI/2.;
+        ctc_eval.contract(t, y, x[1], x[3]);
+
+        t = x[0](M_PI/2.); y = 3.*M_PI/2.;
+        ctc_eval.contract(t, y, x[0], x[2]);
+
+        t = x[0](3.*M_PI/2.); y = M_PI/2.;
+        ctc_eval.contract(t, y, x[0], x[2]);
         // todo: ctc_periodic.contract(x[1], M_PI);
       }
 
-      ctc_fwdbwd.contract(x);
+      ctc_f.contract(x);
 
       i++;
     } while(volume_x != x.volume());
 
   /* =========== GRAPHICS =========== */
 
-    TrajectoryVector x_truth(domain, tubex::Function("(10*cos(t);5*sin(2*t))"));
+    TrajectoryVector x_truth(tdomain, TFunction("(10*cos(t);5*sin(2*t))"));
     x_truth.resize(x.size());
 
     vibes::beginDrawing();
 
     VIBesFigTubeVector fig_x("x", 0, 1); // first two components
-    fig_x.add_tubevector(&x, "x");
-    fig_x.add_trajectoryvector(&x_truth, "x*");
+    fig_x.add_tube(&x, "x");
+    fig_x.add_trajectory(&x_truth, "x*");
     fig_x.set_properties(100, 100, 600, 300);
     fig_x.show();
 

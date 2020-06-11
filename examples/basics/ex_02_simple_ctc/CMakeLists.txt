@@ -5,12 +5,6 @@
   cmake_minimum_required(VERSION 3.0.2)
   project(tubex_basics_02 LANGUAGES CXX)
 
-# Compilation options
-
-  set(CMAKE_CXX_STANDARD 11)
-  add_compile_options(-O3 -Wall)
-  #add_compile_options(-DNDEBUG) # comment for debug mode
-
 # Adding IBEX
 
   # In case you installed IBEX in a local directory, you need 
@@ -33,5 +27,6 @@
 # Compilation
 
   add_executable(${PROJECT_NAME} main.cpp)
+  target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})

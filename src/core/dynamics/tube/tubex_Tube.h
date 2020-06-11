@@ -15,7 +15,7 @@
 #include <map>
 #include <list>
 #include <vector>
-#include "tubex_Fnc.h"
+#include "tubex_TFnc.h"
 #include "tubex_Slice.h"
 #include "tubex_Trajectory.h"
 #include "tubex_serialize_tubes.h"
@@ -29,7 +29,7 @@
 
 namespace tubex
 {
-  class Fnc;
+  class TFnc;
   class Tube;
   class Slice;
   class Trajectory;
@@ -50,46 +50,46 @@ namespace tubex
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ made of one slice
-       *
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * 
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param codomain Interval value of the slice (all reals \f$[-\infty,\infty]\f$ by default)
        */
-      explicit Tube(const ibex::Interval& domain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      explicit Tube(const ibex::Interval& tdomain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ with some temporal discretization
        *
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param codomain Interval value of the slices (all reals \f$[-\infty,\infty]\f$ by default)
        */
-      Tube(const ibex::Interval& domain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      Tube(const ibex::Interval& tdomain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
 
       /**
-       * \brief Creates a scalar tube \f$[x](\cdot)\f$ from a tubex::Fnc object and with some temporal discretization
+       * \brief Creates a scalar tube \f$[x](\cdot)\f$ from a TFnc object and with some temporal discretization
        *
        * \note Due to the slicing implementation of the tube, a wrapping
-       *       effect will occur to reliably enclose the tubex::Fnc object 
+       *       effect will occur to reliably enclose the TFnc object 
 
-       * \param domain Interval domain \f$[t_0,t_f]\f$
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
-       * \param f tubex::Fnc object that will be enclosed by the tube:
+       * \param f TFnc object that will be enclosed by the tube:
        *          \f$\forall t\in[t_0,t_f], [f](t)\subseteq[x](t)\f$
        * \param f_image_id component index of the interval function
        *                   \f$[f]\f$ (that is possibly multidimensional, first component by default)
        */
-      Tube(const ibex::Interval& domain, double timestep, const tubex::Fnc& f, int f_image_id = 0);
+      Tube(const ibex::Interval& tdomain, double timestep, const TFnc& f, int f_image_id = 0);
 
       /**
        * \brief Creates a tube \f$[x](\cdot)\f$ from a list of \f$k\f$ boxes \f$\big([t_1]\times[x_1],\dots,[t_k]\times[x_k]\big)\f$
        *
        * \note The slicing will be based on the vector of temporal domains.
-       * \note The \f$[t_i]\f$'s must cover continuously the domain of \f$[x](\cdot)\f$.
+       * \note The \f$[t_i]\f$'s must cover continuously the tdomain of \f$[x](\cdot)\f$.
        *
-       * \param v_domains vector of temporal domains \f$[t_i]\f$
+       * \param v_tdomains vector of temporal domains \f$[t_i]\f$
        * \param v_codomains vector of codomains \f$[x_i]\f$ related to the \f$[t_i]\f$'s
        */
-      Tube(const std::vector<ibex::Interval>& v_domains, const std::vector<ibex::Interval>& v_codomains);
+      Tube(const std::vector<ibex::Interval>& v_tdomains, const std::vector<ibex::Interval>& v_codomains);
 
       /**
        * \brief Creates a copy of a scalar tube \f$[x](\cdot)\f$, with the same time discretization
@@ -109,18 +109,18 @@ namespace tubex
 
       /**
        * \brief Creates a copy of a scalar tube \f$[x](\cdot)\f$, with the same time
-       *        discretization but a specific codomain defined by a tubex::Fnc object
+       *        discretization but a specific codomain defined by a TFnc object
        *
        * \note Due to the slicing implementation of the tube, a wrapping
-       *       effect will occur to reliably enclose the tubex::Fnc object 
+       *       effect will occur to reliably enclose the TFnc object 
        *
        * \param x Tube from which the sampling will be duplicated
-       * \param f tubex::Fnc object that will be enclosed by the tube:
+       * \param f TFnc object that will be enclosed by the tube:
        *                     \f$\forall t\in[t_0,t_f], [f](t)\subseteq[x](t)\f$
        * \param f_image_id component index of the interval function \f$[f]\f$
        *                   (that is possibly multidimensional, first component by default)
        */
-      Tube(const Tube& x, const tubex::Fnc& f, int f_image_id = 0);
+      Tube(const Tube& x, const TFnc& f, int f_image_id = 0);
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ enclosing a trajectory \f$x(\cdot)\f$,
@@ -202,7 +202,7 @@ namespace tubex
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      const ibex::Interval domain() const;
+      const ibex::Interval tdomain() const;
 
       /**
        * \brief Returns the polygon envelope of this tube
@@ -241,10 +241,10 @@ namespace tubex
       /**
        * \brief Returns a pointer to the Slice object of this tube that is defined at \f$t\f$
        *
-       * \note If two Slices are defined at \f$t\f$ (common domain),
+       * \note If two Slices are defined at \f$t\f$ (common tdomain),
        *       then the first Slice is considered
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \return a pointer to the corresponding Slice
        */
       Slice* slice(double t);
@@ -252,10 +252,10 @@ namespace tubex
       /**
        * \brief Returns a constant pointer to the Slice object of this tube that is defined at \f$t\f$
        *
-       * \note If two Slices are defined at \f$t\f$ (common domain),
+       * \note If two Slices are defined at \f$t\f$ (common tdomain),
        *       then the first Slice is considered
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \return a const pointer to the corresponding Slice
        */
       const Slice* slice(double t) const;
@@ -291,7 +291,7 @@ namespace tubex
       /**
        * \brief Returns a pointer to the Slice defined over the wider temporal domain
        *
-       * \note If two Slice objects have the same domain's width, then the first one is considered
+       * \note If two Slice objects have the same tdomain width, then the first one is considered
        *
        * \return a pointer to the corresponding Slice
        */
@@ -300,7 +300,7 @@ namespace tubex
       /**
        * \brief Returns a constant pointer to the Slice defined over the wider temporal domain
        *
-       * \note If two Slice objects have the same domain's width, then the first one is considered
+       * \note If two Slice objects have the same tdomain width, then the first one is considered
        *
        * \return a const pointer to the corresponding Slice
        */
@@ -328,15 +328,15 @@ namespace tubex
        * \param slice_id the index of the ith Slice
        * \return an Interval object \f$[t_0^i,t_f^i]\f$
        */
-      const ibex::Interval slice_domain(int slice_id) const;
+      const ibex::Interval slice_tdomain(int slice_id) const;
 
       /**
        * \brief Returns the Slice index related to the temporal key \f$t\f$
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \return an integer
        */
-      int input2index(double t) const;
+      int time_to_index(double t) const;
 
       /**
        * \brief Returns the Slice index related to the Slice pointer
@@ -352,7 +352,7 @@ namespace tubex
        * \note Without any effect if two Slice objects are already defined at \f$t\f$
        *       (if the gate \f$[x](t)\f$ already exists)
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        */
 
       void sample(double t);
@@ -366,8 +366,8 @@ namespace tubex
        * \note Without any effect if two Slice objects are already defined at \f$t\f$
        *       (if the gate \f$[x](t)\f$ already exists)
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
-       * \param slice_to_be_sampled a pointer to the Slice whose domain contains \f$t\f$
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
+       * \param slice_to_be_sampled a pointer to the Slice whose tdomain contains \f$t\f$
        */
       void sample(double t, Slice *slice_to_be_sampled);
 
@@ -377,7 +377,7 @@ namespace tubex
        * \note Without any sampling effect if two Slice objects are already defined at \f$t\f$
        *       (if the gate \f$[x](t)\f$ already exists)
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \param gate the Interval value of this tube at \f$t\f$
        */
       void sample(double t, const ibex::Interval& gate);
@@ -431,7 +431,7 @@ namespace tubex
       /**
        * \brief Returns the evaluation of this tube at \f$t\f$
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \return Interval value of \f$[x](t)\f$
        */
       const ibex::Interval operator()(double t) const;
@@ -439,7 +439,7 @@ namespace tubex
       /**
        * \brief Returns the interval evaluation of this tube over \f$[t]\f$
        *
-       * \param t the subdomain (Interval, must be a subset of the Tube domain)
+       * \param t the subtdomain (Interval, must be a subset of the Tube's tdomain)
        * \return Interval envelope \f$[x]([t])\f$
        */
       const ibex::Interval operator()(const ibex::Interval& t) const;
@@ -448,7 +448,7 @@ namespace tubex
        * \brief Returns the interval evaluations of the bounds of the
        *        tube \f$\underline{x^-}(\cdot)\f$ and \f$\overline{x^+}(\cdot)\f$ over \f$[t]\f$
        *
-       * \param t the subdomain (Interval, must be a subset of the Tube domain)
+       * \param t the subtdomain (Interval, must be a subset of the Tube's tdomain)
        * \return the pair \f$\big([\underline{x^-}]([t]),[\overline{x^+}]([t])\big)\f$
        */
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
@@ -459,7 +459,7 @@ namespace tubex
        *
        * \todo Change the name of this method?
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
        * \return Interval value of \f$[x](t)\f$
        */
@@ -471,7 +471,7 @@ namespace tubex
        *
        * \todo Change the name of this method?
        *
-       * \param t the subdomain (Interval, must be a subset of the Tube domain)
+       * \param t the subtdomain (Interval, must be a subset of the Tube's tdomain)
        * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
        * \return Interval value of \f$[x]([t])\f$
        */
@@ -483,20 +483,20 @@ namespace tubex
        * \note If the inversion results in several pre-images, their union is returned
        *
        * \param y the interval codomain
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional temporal domain on which the inversion will be performed
        * \return the hull of \f$[x]^{-1}([y])\f$
        */
-      const ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
 
       /**
        * \brief Computes the set of continuous values of the inversion \f$[x]^{-1}([y])\f$
        *
        * \param y the interval codomain
-       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which
+       * \param v_t the vector of the sub-tdomains \f$[t_k]\f$ for which
        *            \f$\forall t\in[t_k] \mid x(t)\in[y], x(\cdot)\in[x](\cdot)\f$
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional temporal domain on which the inversion will be performed
        */
-      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
 
       /**
        * \brief Returns the optimal interval inversion \f$[x]^{-1}([y])\f$
@@ -506,10 +506,10 @@ namespace tubex
        *
        * \param y the interval codomain
        * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional temporal domain on which the inversion will be performed
        * \return the hull of \f$[x]^{-1}([y])\f$
        */
-      const ibex::Interval invert(const ibex::Interval& y, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      const ibex::Interval invert(const ibex::Interval& y, const Tube& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
 
       /**
        * \brief Computes the set of continuous values of the optimal inversion \f$[x]^{-1}([y])\f$
@@ -517,12 +517,12 @@ namespace tubex
        * \note The knowledge of the derivative tube \f$[v](\cdot)\f$ allows finer inversions
        *
        * \param y the interval codomain
-       * \param v_t the vector of the sub-domains \f$[t_k]\f$ for which
+       * \param v_t the vector of the sub-tdomains \f$[t_k]\f$ for which
        *            \f$\exists t\in[t_k] \mid x(t)\in[y], x(\cdot)\in[x](\cdot), \dot{x}(\cdot)\in[v](\cdot)\f$
        * \param v the derivative tube such that \f$\dot{x}(\cdot)\in[v](\cdot)\f$
-       * \param search_domain the optional interval domain on which the inversion will be performed
+       * \param search_tdomain the optional temporal domain on which the inversion will be performed
        */
-      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const Tube& v, const ibex::Interval& search_domain = ibex::Interval::ALL_REALS) const;
+      void invert(const ibex::Interval& y, std::vector<ibex::Interval> &v_t, const Tube& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
       
       /**
        * \brief Returns the diameter of the interval value \f$[x](t)\f$ that is the more uncertain
@@ -571,7 +571,7 @@ namespace tubex
        * \brief Returns true if this tube is equal to \f$[x](\cdot)\f$
        *
        * \note Equality is obtained if the tubes share
-       *       the same bounds, domain and sampling
+       *       the same bounds, tdomain and sampling
        *
        * \param x the Tube object
        * \return true in case of equality
@@ -582,7 +582,7 @@ namespace tubex
        * \brief Returns true if this tube is different from \f$[x](\cdot)\f$
        *
        * \note The two tubes are different if they do not share
-       *       the same bounds, domain or sampling
+       *       the same bounds, tdomain or sampling
        *
        * \param x the Tube object
        * \return true in case of difference
@@ -593,7 +593,7 @@ namespace tubex
        * \brief Returns true if this tube is a subset of \f$[x](\cdot)\f$
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the Tube object
        * \return true in case of subset
@@ -605,7 +605,7 @@ namespace tubex
        *        and not \f$[x](\cdot)\f$ itself
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the Tube object
        * \return true in case of strict subset
@@ -616,7 +616,7 @@ namespace tubex
        * \brief Returns true if this tube is a subset of the interior of \f$[x](\cdot)\f$
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the Tube object
        * \return true in case of interior subset
@@ -628,7 +628,7 @@ namespace tubex
        *        of \f$[x](\cdot)\f$, and not \f$[x](\cdot)\f$ itself
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the Tube object
        * \return true in case of strict interior subset
@@ -639,7 +639,7 @@ namespace tubex
        * \brief Returns true if this tube is a superset of \f$[x](\cdot)\f$
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the Tube object
        * \return true in case of superset
@@ -651,7 +651,7 @@ namespace tubex
        *        and not \f$[x](\cdot)\f$ itself
        *
        * \note The two tubes may not share the same slicing,
-       *       but must have the same definition domain
+       *       but must have the same tdomain
        *
        * \param x the Tube object
        * \return true in case of strict superset
@@ -722,7 +722,7 @@ namespace tubex
        *       update the value of the already existing gate.
        *
        * \param y Interval value of the gate
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        */
       void set(const ibex::Interval& y, double t);
 
@@ -734,7 +734,7 @@ namespace tubex
        *       done to ensure that \f$\forall t\in[t], [x](t)=[y]\f$.
        *
        * \param y Interval value to be set
-       * \param t the subdomain (Interval, must be a subset of the Tube domain)
+       * \param t the subtdomain (Interval, must be a subset of the Tube's tdomain)
        */
       void set(const ibex::Interval& y, const ibex::Interval& t);
 
@@ -768,11 +768,11 @@ namespace tubex
       const Tube& inflate(const Trajectory& rad);
 
       /**
-       * \brief Shifts the domain \f$[t_0,t_f]\f$ of \f$[x](\cdot)\f$
+       * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$[x](\cdot)\f$
        *
-       * \param a the offset value so that \f$[t_0,t_f]:=[t_0-a,t_f-a]\f$ 
+       * \param a the offset value so that \f$[t_0,t_f]:=[t_0+a,t_f+a]\f$ 
        */
-      void shift_domain(double a);
+      void shift_tdomain(double a);
 
       /**
        * \brief Removes the gate at \f$t\f$ and merges the two related slices
@@ -792,7 +792,7 @@ namespace tubex
        * \note The bisection is performed on the interval value of the gate \f$[x](t)\f$
        * \note If the tube is not already sampled at \f$t\f$, then a sampling is performed
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \param ratio the bisection ratio (default value: 0.55)
        * \return a pair of two Tube objects resulting from the bisection
        */
@@ -989,7 +989,7 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_0^t[x](\tau)d\tau=[\int_0^t x^-(\tau)d\tau,\int_0^t x^+(\tau)d\tau]\f$
        *
-       * \param t the temporal key (double, must belong to the Tube domain)
+       * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \return the set of feasible integral values
        */
       const ibex::Interval integral(double t) const;
@@ -1000,7 +1000,7 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_0^{[t]}[x](\tau)d\tau=[\int_0^{[t]}x^-(\tau)d\tau,\int_0^{[t]}x^+(\tau)d\tau]\f$
        *
-       * \param t the subdomain (Interval, must be a subset of the Tube domain)
+       * \param t the subtdomain (Interval, must be a subset of the Tube's tdomain)
        * \return the set of feasible integral values
        */
       const ibex::Interval integral(const ibex::Interval& t) const;
@@ -1011,8 +1011,8 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_{[t_1]}^{[t_2]}[x](\tau)d\tau=[\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau,\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau]\f$
        *
-       * \param t1 lower bound, subset of the Tube domain
-       * \param t2 upper bound, subset of the Tube domain
+       * \param t1 lower bound, subset of the Tube's tdomain
+       * \param t2 upper bound, subset of the Tube's tdomain
        * \return the set of feasible integral values
        */
       const ibex::Interval integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
@@ -1023,7 +1023,7 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_{0}^{[t]}[x](\tau)d\tau=[\int_{0}^{[t]}x^-(\tau)d\tau,\int_{0}^{[t]}x^+(\tau)d\tau]\f$
        *
-       * \param t interval upper bound, subset of the Tube domain
+       * \param t interval upper bound, subset of the Tube's tdomain
        * \return the pair \f$\big([i^-],[i^+]\big)\f$,
        *         where \f$[i^-]=\int_{0}^{[t]}x^-(\tau)d\tau\f$ 
        *         and \f$[i^+]=\int_{0}^{[t]}x^+(\tau)d\tau\f$
@@ -1036,8 +1036,8 @@ namespace tubex
        * \note From the monotonicity of the integral operator, 
        *       \f$\int_{[t_1]}^{[t_2]}[x](\tau)d\tau=[\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau,\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau]\f$
        *
-       * \param t1 interval lower bound, subset of the Tube domain
-       * \param t2 interval upper bound, subset of the Tube domain
+       * \param t1 interval lower bound, subset of the Tube's tdomain
+       * \param t2 interval upper bound, subset of the Tube's tdomain
        * \return the pair \f$\big([i^-],[i^+]\big)\f$,
        *         where \f$[i^-]=\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau\f$ 
        *         and \f$[i^+]=\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau\f$
@@ -1062,7 +1062,7 @@ namespace tubex
        * \brief Serializes this tube together with a Trajectory object
        *
        * \note The values and sampling (slices and gates) are serialized
-       * \note The serialization of a Trajectory defined from a tubex::Function object is not supported
+       * \note The serialization of a Trajectory defined from a TFunction object is not supported
        * \note The output file will appear in the executable current directory
        *
        * \param binary_file_name name of the output file (default value: "x.tube")
@@ -1147,8 +1147,8 @@ namespace tubex
 
         Slice *m_first_slice = NULL; //!< pointer to the first Slice object of this tube
         mutable TubeTreeSynthesis *m_synthesis_tree = NULL; //!< pointer to the optional synthesis tree
-        mutable bool m_enable_synthesis = Tube::s_enable_syntheses; //!< enablement of the use of a synthesis tree
-        ibex::Interval m_domain; //!< redundant information for fast evaluations
+        mutable bool m_enable_synthesis = Tube::s_enable_syntheses; //!< enables of the use of a synthesis tree
+        ibex::Interval m_tdomain; //!< redundant information for fast evaluations
 
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);

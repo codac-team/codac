@@ -1,6 +1,6 @@
 #include <cstdio>
 #include "catch_interval.hpp"
-#include "tubex_Function.h"
+#include "tubex_TFunction.h"
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_VIBesFigTube.h"
@@ -28,7 +28,7 @@ TEST_CASE("CtcEval")
     CHECK(x.nb_slices() == 4);
     CtcEval ctc_eval;
     ctc_eval.preserve_slicing(false);
-    ctc_eval.enable_temporal_propagation(false);
+    ctc_eval.enable_time_propag(false);
     ctc_eval.contract(t, z, x, v);
     CHECK(x.nb_slices() == 6);
 
@@ -70,7 +70,7 @@ TEST_CASE("CtcEval")
 
     CtcEval ctc_eval;
     ctc_eval.preserve_slicing(false);
-    ctc_eval.enable_temporal_propagation(false);
+    ctc_eval.enable_time_propag(false);
     ctc_eval.contract(t, z, x, v);
 
     CHECK(x.nb_slices() == 7);
@@ -88,7 +88,7 @@ TEST_CASE("CtcEval")
     t = Interval(1.75,5.5);
     z = Interval(1.6);
 
-    ctc_eval.enable_temporal_propagation(true);
+    ctc_eval.enable_time_propag(true);
     ctc_eval.contract(t, z, x, v);
 
     VIBesFigTube *fig_tube;
@@ -141,8 +141,8 @@ TEST_CASE("CtcEval")
     CtcEval ctc_eval_propa, ctc_eval_nopropa; \
     ctc_eval_propa.preserve_slicing(false); \
     ctc_eval_nopropa.preserve_slicing(false); \
-    ctc_eval_propa.enable_temporal_propagation(true); \
-    ctc_eval_nopropa.enable_temporal_propagation(false); \
+    ctc_eval_propa.enable_time_propag(true); \
+    ctc_eval_nopropa.enable_time_propag(false); \
 
   SECTION("Test CtcEval, special cases (0, test init)")
   {
@@ -275,7 +275,7 @@ TEST_CASE("CtcEval")
     CHECK(x(0.5) == Interval(-4.,-1.));
     CHECK(x(1) == Interval(-4.,-1.));
     CHECK(x(1.) == Interval(-3.5,-1.25));
-    CHECK(x.slice(0.6)->domain() == Interval(0.5,1.));
+    CHECK(x.slice(0.6)->tdomain() == Interval(0.5,1.));
     CHECK(x.slice(0.6)->input_gate() == Interval(-4.,-1.));
     CHECK(x.slice(0.6)->output_gate() == Interval(-3.5,-1.25));
     CHECK(xdot(2) == Interval(-0.5,1.));
@@ -1041,15 +1041,15 @@ TEST_CASE("CtcEval")
 
   SECTION("Test CtcEval, multi eval")
   {
-    Tube x(Interval(0.,20.), 0.1, tubex::Function("cos(t)+t*[-0.1,0.2]"));
-    Tube v(Interval(0.,20.), 0.1, tubex::Function("-sin(t)+[-0.1,0.2]"));
+    Tube x(Interval(0.,20.), 0.1, TFunction("cos(t)+t*[-0.1,0.2]"));
+    Tube v(Interval(0.,20.), 0.1, TFunction("-sin(t)+[-0.1,0.2]"));
     
     CtcDeriv ctc_deriv;
     ctc_deriv.contract(x, v);
 
     IntervalVector box(2);
     CtcEval ctc_eval;
-    ctc_eval.enable_temporal_propagation(true);
+    ctc_eval.enable_time_propag(true);
     Tube x_c(x); Tube v_c(v);
 
     box[0] = Interval(11.98);

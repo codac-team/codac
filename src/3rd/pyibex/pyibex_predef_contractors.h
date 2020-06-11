@@ -14,7 +14,7 @@
 
 #include "pyibex_CtcPolar.h"
 
-namespace pyibex
+namespace tubex
 {
   namespace ctc
   {

@@ -1,0 +1,5 @@
+/* Reduces the skip above lists */
+ul.simple
+{
+  margin-top: -10px;
+}
