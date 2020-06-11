@@ -28,17 +28,17 @@ state_truth = TrajectoryVector(tdomain, \
 dt = 0.01 # tube timestep
 state_truth[2].sample(dt).make_continuous()
 
-x = TubeVector(tdomain, dt, 2) # unbounded 2d tube vector
-
-heading = Tube(state_truth[2], dt) # heading computed from truth...
-#heading.inflate(1.2) # ...with some uncertainty
+x = TubeVector(tdomain, dt, 3) # unbounded 2d tube vector
+x[2] = Tube(state_truth[2], dt) # heading computed from truth...
+#x[2].inflate(1.2) # ...with some uncertainty
 
 # Derivatives of positions, with uncertainties:
 v = TubeVector(tdomain, dt,
                # Lissajous derivative
                TFunction("(-240*sin(t) ; \
                            240*cos(2*t))"))
-v.inflate(10)
+v.inflate(1.)
+v.resize(3)
 
 # Sets of observations
 
@@ -71,16 +71,15 @@ ctc_constell = CtcConstell(v_map) # constellation constraint
 
 # =========== CONTRACTOR NETWORK ===========
 
-x0 = IntervalVector(state_truth(tdomain.lb())[0:2])
+#x0 = IntervalVector(state_truth(tdomain.lb()))
 #x0.inflate(10)
-x.set(x0,tdomain.lb())
+#x.set(x0,tdomain.lb())
 
-xf = IntervalVector(state_truth(tdomain.ub())[0:2])
+#xf = IntervalVector(state_truth(tdomain.ub())[0:2])
 #xf.inflate(10)
-x.set(xf,tdomain.ub())
+#x.set(xf,tdomain.ub())
 
 cn = ContractorNetwork()
-cn.add(ctc.deriv, [x, v])
 
 for i in range (0,len(v_obs)):
   
@@ -89,36 +88,24 @@ for i in range (0,len(v_obs)):
   y1 = Interval(v_obs[i][1]) # range
   y2 = Interval(v_obs[i][2]) # bearing
 
-  #t.set_empty()
-
-  t.inflate(0.1)
-  t&=tdomain
-  y1.inflate(1)
-  y2.inflate(1)
+  mtemp = cn.create_dom(m[i])
 
   # Intermediate variables:
-  psi = cn.create_dom(Interval()) # robot heading
   a = cn.create_dom(Interval())
   d = cn.create_dom(IntervalVector(2))
-  p = cn.create_dom(IntervalVector(2))
+  p = cn.create_dom(IntervalVector(3))
   
-  cn.add(ctc_constell, [m[i]])
-  cn.add(ctc_minus, [d, m[i], p])
-  cn.add(ctc_plus, [a, psi, y2])
+  cn.add(ctc_constell, [mtemp])
+  cn.add(ctc_minus, [d, mtemp, cn.subvector(p,0,1)])
+  cn.add(ctc_plus, [a, p[2], y2])
   cn.add(ctc.polar, [d, y1, a])
   cn.add(ctc.eval, [t, p, x, v])
-  cn.add(ctc.eval, [t, psi, heading])
 
 cn.contract(True)
 
 # =========== GRAPHICS ===========
 
 beginDrawing()
-
-fig_heading = VIBesFigTube("heading")
-fig_heading.add_tube(heading, "heading")
-fig_heading.add_trajectory(state_truth[2], "heading*")
-fig_heading.show()
 
 fig_map = VIBesFigMap("Map")
 fig_map.set_properties(1450, 50, 1000, 600)
@@ -131,21 +118,7 @@ fig_map.smooth_tube_drawing(True)
 fig_map.show()
 fig_map.axis_limits(-340, 340, -1, 1, True)
 
-
-# =========== ENDING ===========
-
-#  cout << endl << v_map.size() << " landmarks" << endl
-#  int identified = 0
-#  for(size_t i = 0 ; i < m.size() ; i++)
-#    if(m[i].volume() == 0 && !m[i].is_empty()) # degenerate box
-#    {
-#      identified ++
-#      fig_map.add_beacon(m[i], 2., "#00A53B[#00A53B]")
-#    }
-#  cout << identified << "/" << m.size() << " observations identified" << endl << endl
-#  fig_map.show(20.)
-
 endDrawing()
+
 # Checking if this example still works:
-#bool success = x.contains(state_truth.subvector(0,1)) == BoolInterval::YES
-#return success ? EXIT_SUCCESS : EXIT_FAILURE
+sys.exit(0 if x.contains(state_truth) == BoolInterval.YES else 1)
