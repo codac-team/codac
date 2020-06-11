@@ -25,7 +25,7 @@ state_truth = TrajectoryVector(tdomain, \
 
 # Sets of trajectories
 
-dt = 0.01 # tube timestep
+dt = 0.02 # tube timestep
 state_truth[2].sample(dt).make_continuous()
 
 x = TubeVector(tdomain, dt, 3) # unbounded 2d tube vector
@@ -71,17 +71,9 @@ ctc_constell = CtcConstell(v_map) # constellation constraint
 
 # =========== CONTRACTOR NETWORK ===========
 
-#x0 = IntervalVector(state_truth(tdomain.lb()))
-#x0.inflate(10)
-#x.set(x0,tdomain.lb())
-
-#xf = IntervalVector(state_truth(tdomain.ub())[0:2])
-#xf.inflate(10)
-#x.set(xf,tdomain.ub())
-
 cn = ContractorNetwork()
 
-for i in range (0,len(v_obs)):
+for i in range(0,len(v_obs)):
   
   # Measurement i
   t  = Interval(v_obs[i][0]) # time
@@ -89,6 +81,7 @@ for i in range (0,len(v_obs)):
   y2 = Interval(v_obs[i][2]) # bearing
 
   mtemp = cn.create_dom(m[i])
+  # This does not work: mtemp = m[i]
 
   # Intermediate variables:
   a = cn.create_dom(Interval())
@@ -102,6 +95,7 @@ for i in range (0,len(v_obs)):
   cn.add(ctc.eval, [t, p, x, v])
 
 cn.contract(True)
+
 
 # =========== GRAPHICS ===========
 
