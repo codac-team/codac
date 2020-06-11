@@ -60,7 +60,7 @@ namespace tubex
       /**
        * \brief Returns a random number inside an interval
        *
-       * \param itv the bounds
+       * \param intv the bounds
        * \return a random double
        */
       static double rand_in_bounds(const ibex::Interval& intv);

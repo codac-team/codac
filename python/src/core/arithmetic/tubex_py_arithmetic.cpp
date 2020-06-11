@@ -9,11 +9,11 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <sstream>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
+#include "pyIbex_type_caster.h"
 
 #include "tubex_tube_arithmetic.h"
 #include "tubex_traj_arithmetic.h"

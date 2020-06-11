@@ -85,7 +85,7 @@ Prerequisite for attending the tutorial are:
 Contact and registration
 ------------------------
 
-| **For registration, please feel in this questionnaire:**
+| **For registration, please fill in this questionnaire:**
 | https://docs.google.com/forms/d/1nuZ6lxMJ8SmoUeDJzVIjiMUdD5PmX7h72v_N9NtvGq4
 
 The tutorial involves three platforms:

@@ -59,9 +59,14 @@ public:
   void contract(Interval &x, Interval& y, Interval& rho, Interval& theta);
 
   /**
-   * \bref return polar coordinate from cartesion
+   * \brief Return polar coordinate from Cartesian ones
+   *
+   * \param x x coordinate
+   * \param y y coordinate
+   * \return 2d polar coordinates
    */
   IntervalVector RTfromXY(Interval x, Interval y);
+
   /**
    * \brief Delete this.
    */

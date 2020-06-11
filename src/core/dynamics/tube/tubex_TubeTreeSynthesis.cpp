@@ -150,7 +150,7 @@ namespace tubex
   const pair<Interval,Interval> TubeTreeSynthesis::eval(const Interval& t)
   {
     if(t.is_degenerated()) // faster to perform the evaluation over the related slice
-      return slice(input2index(t.lb()))->eval(t);
+      return slice(time_to_index(t.lb()))->eval(t);
 
     Interval inter = m_tdomain & t;
 
@@ -188,7 +188,7 @@ namespace tubex
     }
   }
 
-  int TubeTreeSynthesis::input2index(double t) const
+  int TubeTreeSynthesis::time_to_index(double t) const
   {
     assert(tdomain().contains(t));
 
@@ -199,10 +199,10 @@ namespace tubex
       return 0;
 
     if(t < m_first_subtree->tdomain().ub())
-      return m_first_subtree->input2index(t);
+      return m_first_subtree->time_to_index(t);
 
     else
-      return m_second_subtree->input2index(t) + m_first_subtree->nb_slices();
+      return m_second_subtree->time_to_index(t) + m_first_subtree->nb_slices();
   }
 
   Slice* TubeTreeSynthesis::slice(int slice_id)
@@ -363,8 +363,8 @@ namespace tubex
     if(m_integrals_update_needed)
       root()->update_integrals();
 
-    int index_lb = m_tube_ref->input2index(t.lb());
-    int index_ub = m_tube_ref->input2index(t.ub());
+    int index_lb = m_tube_ref->time_to_index(t.lb());
+    int index_ub = m_tube_ref->time_to_index(t.ub());
 
     Interval integral_lb = Interval::EMPTY_SET;
     Interval integral_ub = Interval::EMPTY_SET;

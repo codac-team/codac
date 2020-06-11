@@ -28,20 +28,20 @@ TEST_CASE("operator=")
   }
 }
 
-TEST_CASE("input2index")
+TEST_CASE("time_to_index")
 {
-  SECTION("input2index")
+  SECTION("time_to_index")
   {
     Tube tube = tube_test_1();
-    CHECK(tube.input2index(0.0) == 0);
-    CHECK(tube.input2index(0.1) == 0);
-    CHECK(tube.input2index(0.5) == 0);
-    CHECK(tube.input2index(0.6) == 0);
-    CHECK(tube.input2index(0.9) == 0);
-    CHECK(tube.input2index(ibex::previous_float(1.0)) == 0);
-    CHECK(tube.input2index(1.0) == 1);
-    CHECK(tube.input2index(46.0) == 45);
-    CHECK(tube.input2index(tube.tdomain().ub()) == 45);
+    CHECK(tube.time_to_index(0.0) == 0);
+    CHECK(tube.time_to_index(0.1) == 0);
+    CHECK(tube.time_to_index(0.5) == 0);
+    CHECK(tube.time_to_index(0.6) == 0);
+    CHECK(tube.time_to_index(0.9) == 0);
+    CHECK(tube.time_to_index(ibex::previous_float(1.0)) == 0);
+    CHECK(tube.time_to_index(1.0) == 1);
+    CHECK(tube.time_to_index(46.0) == 45);
+    CHECK(tube.time_to_index(tube.tdomain().ub()) == 45);
     CHECK(tube.nb_slices() == 46);
   }
 
@@ -165,7 +165,7 @@ TEST_CASE("Tube slices structure")
     CHECK(tube(6.) == Interval(-1.,0.)); // gate
   }
 
-  SECTION("input2index and reverse operation")
+  SECTION("time_to_index and reverse operation")
   {
     Tube tube(Interval(0.,1.), Interval(-1.,1.));
     tube.sample(0.6);
@@ -173,16 +173,16 @@ TEST_CASE("Tube slices structure")
     tube.sample(0.62);
     tube.sample(0.1);
 
-    // input2index
+    // time_to_index
     CHECK(tube.nb_slices() == 5);
-    // todo: find a way to catch assert abort: CHECK_THROWS(tube.input2index(-0.1));
-    CHECK(tube.input2index(0.) == 0);
-    CHECK(tube.input2index(0.01) == 0);
-    CHECK(tube.input2index(0.6) == 2);
-    CHECK(tube.input2index(0.61) == 2);
-    CHECK(tube.input2index(0.62) == 3);
-    CHECK(tube.input2index(1.0) == 4);
-    // todo: find a way to catch assert abort: CHECK_THROWS(tube.input2index(1.01));
+    // todo: find a way to catch assert abort: CHECK_THROWS(tube.time_to_index(-0.1));
+    CHECK(tube.time_to_index(0.) == 0);
+    CHECK(tube.time_to_index(0.01) == 0);
+    CHECK(tube.time_to_index(0.6) == 2);
+    CHECK(tube.time_to_index(0.61) == 2);
+    CHECK(tube.time_to_index(0.62) == 3);
+    CHECK(tube.time_to_index(1.0) == 4);
+    // todo: find a way to catch assert abort: CHECK_THROWS(tube.time_to_index(1.01));
   }
 
   SECTION("Getting slices")
