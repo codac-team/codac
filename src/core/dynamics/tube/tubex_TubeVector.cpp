@@ -539,14 +539,6 @@ namespace tubex
         v_v[i] = v_v[i]->next_slice());
     }
 
-    const Vector TubeVector::max_diam() const
-    {
-      Vector thickness(size());
-      for(int i = 0 ; i < size() ; i++)
-        thickness[i] = (*this)[i].max_diam();
-      return thickness;
-    }
-
     const TrajectoryVector TubeVector::diam(bool gates_thicknesses) const
     {
       TrajectoryVector thickness(size());
@@ -560,6 +552,14 @@ namespace tubex
       TrajectoryVector thickness(size());
       for(int i = 0 ; i < size() ; i++)
         thickness[i] = (*this)[i].diam(v[i]);
+      return thickness;
+    }
+
+    const Vector TubeVector::max_diam() const
+    {
+      Vector thickness(size());
+      for(int i = 0 ; i < size() ; i++)
+        thickness[i] = (*this)[i].max_diam();
       return thickness;
     }
 
