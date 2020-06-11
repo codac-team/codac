@@ -13,6 +13,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
+#include "pyIbex_type_caster.h"
 
 #include "tubex_py_DynCtc.h"
 #include "tubex_CtcDeriv.h"

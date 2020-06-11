@@ -13,6 +13,7 @@
 #define __TUBEX_PY_CTC_H__
 
 #include <pybind11/pybind11.h>
+#include "pyIbex_type_caster.h"
 
 #include "ibex_Ctc.h"
 
