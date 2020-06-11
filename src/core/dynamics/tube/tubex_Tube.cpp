@@ -353,7 +353,7 @@ namespace tubex
       assert(tdomain().contains(t));
 
       if(m_synthesis_tree != NULL) // fast evaluation
-        return m_synthesis_tree->slice(m_synthesis_tree->input2index(t));
+        return m_synthesis_tree->slice(m_synthesis_tree->time_to_index(t));
       
       else
       {
@@ -449,12 +449,12 @@ namespace tubex
       return slice(slice_id)->tdomain();
     }
 
-    int Tube::input2index(double t) const
+    int Tube::time_to_index(double t) const
     {
       assert(tdomain().contains(t));
 
       if(m_synthesis_tree != NULL) // fast evaluation
-        return m_synthesis_tree->input2index(t);
+        return m_synthesis_tree->time_to_index(t);
       
       else
       {
@@ -1022,7 +1022,7 @@ namespace tubex
         sample(t.lb());
         sample(t.ub());
 
-        for(Slice *s = slice(input2index(t.lb())) ;
+        for(Slice *s = slice(time_to_index(t.lb())) ;
             s != NULL && !(t & s->tdomain()).is_degenerated() ;
             s = s->next_slice())
           s->set(y);

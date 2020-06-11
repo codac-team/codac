@@ -267,7 +267,7 @@ namespace tubex
        * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        * \return an integer
        */
-      int input2index(double t) const;
+      int time_to_index(double t) const;
 
       /**
        * \brief Samples this tube at \f$t\f$

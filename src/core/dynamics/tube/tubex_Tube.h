@@ -336,7 +336,7 @@ namespace tubex
        * \param t the temporal key (double, must belong to the Tube's tdomain)
        * \return an integer
        */
-      int input2index(double t) const;
+      int time_to_index(double t) const;
 
       /**
        * \brief Returns the Slice index related to the Slice pointer

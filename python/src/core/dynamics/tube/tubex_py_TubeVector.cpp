@@ -120,8 +120,8 @@ void export_TubeVector(py::module& m)
     .def("nb_slices", &TubeVector::nb_slices,
       TUBEVECTOR_INT_NB_SLICES)
 
-    .def("input2index", &TubeVector::input2index,
-      TUBEVECTOR_INT_INPUT2INDEX_DOUBLE,
+    .def("time_to_index", &TubeVector::time_to_index,
+      TUBEVECTOR_INT_TIME_TO_INDEX_DOUBLE,
       "t"_a)
 
     .def("sample", (void (TubeVector::*)(double))&TubeVector::sample,

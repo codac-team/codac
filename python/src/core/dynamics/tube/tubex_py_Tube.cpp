@@ -126,8 +126,8 @@ void export_Tube(py::module& m)
       TUBE_CONSTINTERVAL_SLICE_TDOMAIN_INT,
       "slice_id"_a)
 
-    .def("input2index", &Tube::input2index,
-      TUBE_INT_INPUT2INDEX_DOUBLE,
+    .def("time_to_index", &Tube::time_to_index,
+      TUBE_INT_TIME_TO_INDEX_DOUBLE,
       "t"_a)
 
     .def("index", &Tube::index,

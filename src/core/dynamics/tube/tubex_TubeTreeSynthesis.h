@@ -30,7 +30,7 @@ namespace tubex
       const std::pair<ibex::Interval,ibex::Interval> codomain_bounds();
       const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS);
       
-      int input2index(double t) const;
+      int time_to_index(double t) const;
       Slice* slice(int slice_id);
       const Slice* slice(int slice_id) const;
 
