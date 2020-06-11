@@ -35,7 +35,7 @@ void export_VIBesFigTube(py::module& m)
 
     .def(py::init<const string&,const Tube*,const Trajectory*>(),
       VIBESFIGTUBE_VIBESFIGTUBE_STRING_TUBE_TRAJECTORY,
-      "fig_name"_a, "tube"_a=NULL, "traj"_a=NULL)
+      "fig_name"_a, "tube"_a=nullptr, "traj"_a=nullptr)
     
     .def("show", (void (VIBesFigTube::*)())&VIBesFigTube::show,
       VIBESFIGTUBE_VOID_SHOW)

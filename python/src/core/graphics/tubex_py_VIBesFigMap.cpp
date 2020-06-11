@@ -81,7 +81,7 @@ void export_VIBesFigMap(py::module& m)
 
     .def("set_tube_color", (void (VIBesFigMap::*)(const TubeVector*,const ColorMap&,const Trajectory*))&VIBesFigMap::set_tube_color,
       VIBESFIGMAP_VOID_SET_TUBE_COLOR_TUBEVECTOR_COLORMAP_TRAJECTORY,
-      "tube"_a, "colormap"_a, "traj_colormap"_a=NULL)
+      "tube"_a, "colormap"_a, "traj_colormap"_a=nullptr)
 
     .def("remove_tube", &VIBesFigMap::remove_tube,
       VIBESFIGMAP_VOID_REMOVE_TUBE_TUBEVECTOR,
@@ -107,7 +107,7 @@ void export_VIBesFigMap(py::module& m)
     
     .def("set_trajectory_color", (void (VIBesFigMap::*)(const TrajectoryVector*,const ColorMap&,const Trajectory*))&VIBesFigMap::set_trajectory_color,
       VIBESFIGMAP_VOID_SET_TRAJECTORY_COLOR_TRAJECTORYVECTOR_COLORMAP_TRAJECTORY,
-      "traj"_a, "colormap"_a, "traj_colormap"_a=NULL)
+      "traj"_a, "colormap"_a, "traj_colormap"_a=nullptr)
     
     .def("remove_trajectory", &VIBesFigMap::remove_trajectory,
       VIBESFIGMAP_VOID_REMOVE_TRAJECTORY_TRAJECTORYVECTOR,

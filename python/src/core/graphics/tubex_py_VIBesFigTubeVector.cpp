@@ -43,7 +43,7 @@ void export_VIBesFigTubeVector(py::module& m)
 
     .def(py::init<const string&,const TubeVector*,const TrajectoryVector*>(),
       VIBESFIGTUBEVECTOR_VIBESFIGTUBEVECTOR_STRING_TUBEVECTOR_TRAJECTORYVECTOR,
-      "fig_name"_a, "tubevector"_a, "trajvector"_a=NULL)
+      "fig_name"_a, "tubevector"_a, "trajvector"_a=nullptr)
 
     .def("size", &VIBesFigTubeVector::size,
       VIBESFIGTUBEVECTOR_INT_SIZE)

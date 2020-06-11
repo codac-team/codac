@@ -161,8 +161,7 @@ void export_ContractorNetwork(py::module& m)
       },
       CONTRACTORNETWORK_VOID_ADD_DYNCTC_VECTORDOMAIN,
       "dyn_ctc"_a, "v_domains"_a,
-      py::keep_alive<1,3>(),
-      py::keep_alive<1,2>())
+      py::keep_alive<1,3>(), py::keep_alive<1,2>())
 
     .def("add_data", (void (ContractorNetwork::*)(Tube &,double,const Interval&))&ContractorNetwork::add_data,
       CONTRACTORNETWORK_VOID_ADD_DATA_TUBE_DOUBLE_INTERVAL,
