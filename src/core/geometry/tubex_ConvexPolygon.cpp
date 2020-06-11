@@ -187,13 +187,8 @@ namespace tubex
 
       for(size_t i = 0 ; i < n ; i++)
       {
-#ifdef _MSC_VER
         const Edge e1 = Edge(Point(m_v_floating_pts[(i-1+n)%n]), Point(m_v_floating_pts[i]));
         const Edge e2 = Edge(Point(m_v_floating_pts[(i+1)%n]), Point(m_v_floating_pts[(i+2)%n]));
-#else
-        const Edge e1(Point(m_v_floating_pts[(i-1+n)%n]), Point(m_v_floating_pts[i]));
-        const Edge e2(Point(m_v_floating_pts[(i+1)%n]), Point(m_v_floating_pts[(i+2)%n]));
-#endif // _MSC_VER
 
         if(Edge::parallel(e1, e2) == NO)
         {
