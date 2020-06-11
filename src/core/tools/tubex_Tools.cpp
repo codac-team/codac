@@ -50,6 +50,6 @@ namespace tubex
   {
     // The seed of the pseudo-random number generator is voluntarily initialized
     // outside this function, on demand.
-    return rand()/double(RAND_MAX)*itv.diam()+itv.lb();
+    return max(itv.lb(),min(itv.ub(),rand()/double(RAND_MAX)*itv.diam()+itv.lb()));
   }
 }
