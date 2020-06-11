@@ -28,10 +28,10 @@
   set(PROJECT_HOMEPAGE_URL "http://simon-rohou.fr/research/tubex-lib")
   message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
-  if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
-    message(STATUS "Configuring ${PROJECT_NAME} in DEBUG mode as none was specified.")
-  endif()
+#  if(NOT CMAKE_BUILD_TYPE)
+#    set(CMAKE_BUILD_TYPE Debug)
+#    message(STATUS "Configuring ${PROJECT_NAME} in DEBUG mode as none was specified.")
+#  endif()
 
   
 ################################################################################
@@ -50,22 +50,27 @@
 # Compilation configuration
 ################################################################################
 
-  # Check that the compiler supports c++11
-  include(CheckCXXCompilerFlag)
-  check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
+#  # Check that the compiler supports c++11
+#  include(CheckCXXCompilerFlag)
+#  check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
+#
+#  if(COMPILER_SUPPORTS_CXX11)
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#  else()
+#    message(FATAL_ERROR "Tubex needs a compiler with C++11 support")
+#  endif()
+#
+#  if(WIN32)
+#    # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
+#    add_definitions(-U__STRICT_ANSI__)
+#  endif()
 
-  if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#  add_compile_options(-O3 -Wall)
+  if(MSVC)
+    add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
   else()
-    message(FATAL_ERROR "Tubex needs a compiler with C++11 support")
+    add_compile_options(-Wall)
   endif()
-
-  if(WIN32)
-    # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
-    add_definitions(-U__STRICT_ANSI__)
-  endif()
-
-  add_compile_options(-O3 -Wall)
 
 
 ################################################################################

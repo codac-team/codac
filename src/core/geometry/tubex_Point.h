@@ -11,6 +11,14 @@
 #ifndef __TUBEX_POINT_H__
 #define __TUBEX_POINT_H__
 
+#ifdef _MSC_VER
+// Enable additional features in math.h.
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif // _USE_MATH_DEFINES
+#include <math.h>
+#endif // _MSC_VER
+
 #include <vector>
 #include "ibex_Vector.h"
 #include "ibex_Interval.h"
