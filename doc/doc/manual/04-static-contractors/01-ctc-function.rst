@@ -66,6 +66,34 @@ This contractor is not necessarily optimal, depending on the expression of :math
 Example
 -------
 
+The constraint:
+
+.. math::
+
+  x_1+x_2=x_3
+
+is equivalent to:
+
+.. math::
+
+  f(\mathbf{x})=0 \mathrm{~~~with~~~} f(\mathbf{x})=x_1+x_2-x_3
+
+We can then build the contractor with:
+
+.. tabs::
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_f(Function("x1", "x2", "x3", "x1+x2-x3"));
+
+  .. code-tab:: py
+
+    ctc_f = CtcFunction(Function("x1", "x2", "x3", "x1+x2-x3"))
+
+
+Another example
+---------------
+
 Let us consider the following non-linear function:
 
 .. math::

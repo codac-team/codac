@@ -1,4 +1,4 @@
-.. _sec-tuto-06-closed:
+.. _sec-tuto-07-closed:
 
 Lesson F: closed.
 =================

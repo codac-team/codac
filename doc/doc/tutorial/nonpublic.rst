@@ -21,19 +21,22 @@ Corrections:
 
 **Week 2: June 15 -- June 21**
 
-* **Lesson C**: not yet available
+* :ref:`sec-tuto-03`
 * **Lesson D**: not yet available
 
 Corrections:
 
 * `tubex-lib/examples/tuto/03_static_rangebearing/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/03_static_rangebearing>`_
-* `tubex-lib/examples/tuto/04_dyn_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/04_dyn_rangeonly>`_
 
 ------------------------------------------------------
 
 **Week 3: June 22 -- June 28**
 
 * **Lesson E**: not yet available
+
+Corrections:
+
+* `tubex-lib/examples/tuto/04_dyn_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/04_dyn_rangeonly>`_
 
 ------------------------------------------------------
 
