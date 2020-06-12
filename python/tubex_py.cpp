@@ -16,7 +16,6 @@
 #include "tubex_Trajectory.h"
 
 #include "src/core/contractors/dyn/tubex_py_DynCtc.h"
-#include "src/core/contractors/static/tubex_py_Ctc.h"
 
 #include <pybind11/pybind11.h>
 
@@ -27,10 +26,9 @@ namespace py = pybind11;
 void export_arithmetic(py::module& m);
 void export_ContractorNetwork(py::module& m);
 
-py::class_<Ctc,pyCtc> export_Ctc(py::module& m);
-void export_CtcDist(py::module& m, py::class_<Ctc, pyCtc>& static_ctc);
-void export_CtcFunction(py::module& m, py::class_<Ctc, pyCtc>& static_ctc);
-void export_CtcConstell(py::module& m, py::class_<Ctc, pyCtc>& static_ctc);
+void export_CtcDist(py::module& m);
+void export_CtcFunction(py::module& m);
+void export_CtcConstell(py::module& m);
 
 py::class_<DynCtc,pyDynCtc> export_DynCtc(py::module& m);
 void export_CtcDeriv(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
@@ -64,10 +62,9 @@ PYBIND11_MODULE(tube, m)
   export_arithmetic(m);
   export_ContractorNetwork(m);
 
-  py::class_<Ctc, pyCtc> static_ctc = export_Ctc(m);
-  export_CtcDist(m, static_ctc);
-  export_CtcFunction(m, static_ctc);
-  export_CtcConstell(m, static_ctc);
+  export_CtcDist(m);
+  export_CtcFunction(m);
+  export_CtcConstell(m);
 
   py::class_<DynCtc, pyDynCtc> dyn_ctc = export_DynCtc(m);
   export_CtcDeriv(m, dyn_ctc);
