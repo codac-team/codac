@@ -27,14 +27,14 @@ Definition
 
   .. tabs::
 
+    .. code-tab:: py
+
+      ctc.polar.contract(x, y, rho, theta)
+
     .. code-tab:: c++
 
       #include <tubex-pyibex.h>
       ctc::polar.contract(x, y, rho, theta);
-
-    .. code-tab:: py
-
-      ctc.polar.contract(x, y, rho, theta)
 
 
 .. rubric:: Optimality
@@ -56,6 +56,18 @@ We define domains (intervals and boxes):
 
 .. tabs::
 
+  .. code-tab:: py
+
+    x = IntervalVector(2,Interval(0))
+
+    d = [Interval(7,8), Interval(9,10), Interval(10,11)]
+
+    theta = [Interval(0.6,1.45), Interval(1.15,1.2), Interval(0.8,1)]
+
+    b = [IntervalVector([[1.5,2.5],[4,11]]), \
+         IntervalVector([[3,4.5],[8,10.5]]), \
+         IntervalVector([[5,6.5],[6.5,8]])]
+
   .. code-tab:: c++
 
     IntervalVector x(2,0.);
@@ -69,22 +81,21 @@ We define domains (intervals and boxes):
     Interval d3(10.,11.), theta3(0.8,1.);
     IntervalVector b3{{5,6.5},{6.5,8}};
 
-  .. code-tab:: py
-
-    x = IntervalVector(2,Interval(0))
-
-    d = [Interval(7,8), Interval(9,10), Interval(10,11)]
-
-    theta = [Interval(0.6,1.45), Interval(1.15,1.2), Interval(0.8,1)]
-
-    b = [IntervalVector([[1.5,2.5],[4,11]]), \
-         IntervalVector([[3,4.5],[8,10.5]]), \
-         IntervalVector([[5,6.5],[6.5,8]])]
-
 
 Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the :math:`[\mathbf{b}^i]`, :math:`[d^i]` and :math:`[\theta^i]`:
 
 .. tabs::
+
+  .. code-tab:: py
+
+    ctc_polar = CtcPolar()
+
+    for i in range(0,3):
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+
+    # note that we could also use directly the ctc.polar object already available
 
   .. code-tab:: c++
 
@@ -99,17 +110,6 @@ Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the 
     ctc_polar.contract(b3[0], b3[1], d3, theta3);
 
     // note that we could also use directly the ctc::polar object already available
-
-  .. code-tab:: py
-
-    ctc_polar = CtcPolar()
-
-    for i in range(0,3):
-      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
-      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
-      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
-
-    # note that we could also use directly the ctc.polar object already available
 
 
 .. figure:: img/CtcPolar.png

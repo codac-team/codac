@@ -41,16 +41,16 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
   .. tabs::
 
+    .. code-tab:: py
+
+      ctc_constell = CtcConstell(v_b) # with v_b, the vector defining
+                                      # the constellation of points
+
     .. code-tab:: c++
 
       #include <tubex-rob.h>
       CtcConstell ctc_constell(v_b); // with v_b, the vector<IntervalVector> defining
                                      // the constellation of points
-
-    .. code-tab:: py
-
-      ctc_constell = CtcConstell(v_b) # with v_b, the vector defining
-                                      # the constellation of points
 
 
 Example
@@ -66,6 +66,12 @@ The :math:`\mathcal{C}_\textrm{constell}` can be instantiated with
 
 .. tabs::
 
+  .. code-tab:: py
+
+    v_b = [...  // vector defining the constellation of points
+
+    ctc_constell = CtcConstell(v_b)
+
   .. code-tab:: c++
 
     #include <tubex-rob.h>
@@ -77,15 +83,15 @@ The :math:`\mathcal{C}_\textrm{constell}` can be instantiated with
 
     CtcConstell ctc_constell(v_b);
 
-  .. code-tab:: py
-
-    v_b = [...  // vector defining the constellation of points
-
-    ctc_constell = CtcConstell(v_b)
-
 Now, if we define three boxes:
 
 .. tabs::
+
+  .. code-tab:: py
+
+    v_x = [IntervalVector([[1.25,3],[1.6,2.75]]), \
+           IntervalVector([[2.,3.5],[0.6,1.2]]), \
+           IntervalVector([[1.1,3.25],[0.2,1.4]])]
 
   .. code-tab:: c++
 
@@ -94,25 +100,19 @@ Now, if we define three boxes:
     v_x.push_back({{2.,3.5},{0.6,1.2}});
     v_x.push_back({{1.1,3.25},{0.2,1.4}});
 
-  .. code-tab:: py
-
-    v_x = [IntervalVector([[1.25,3],[1.6,2.75]]), \
-           IntervalVector([[2.,3.5],[0.6,1.2]]), \
-           IntervalVector([[1.1,3.25],[0.2,1.4]])]
-
 we can use the :math:`\mathcal{C}_\textrm{constell}` to contract them according to the constellation.
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    for(auto& x : v_x)
-      ctc_constell.contract(x);
 
   .. code-tab:: py
 
     for x in v_x:
       ctc_constell.contract(x)
+
+  .. code-tab:: c++
+
+    for(auto& x : v_x)
+      ctc_constell.contract(x);
 
 .. figure:: img/CtcConstell_ctc.png
 

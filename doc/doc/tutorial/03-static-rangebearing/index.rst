@@ -83,15 +83,15 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    CtcFunction ctc_dist(Function("x[2]", "b[2]", "y",
-        "sqrt((x[0]-b[0])^2+(x[1]-b[1]))-y"));
-
   .. code-tab:: py
 
     ctc_dist = CtcFunction(Function("x[2]", "b[2]", "y",
         "sqrt((x[0]-b[0])^2+(x[1]-b[1]))-y"))
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_dist(Function("x[2]", "b[2]", "y",
+        "sqrt((x[0]-b[0])^2+(x[1]-b[1]))-y"));
 
 
 Optimality of contractors
@@ -113,15 +113,15 @@ could be implemented by
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    CtcFunction ctc_g(Function("x[3]", "y[2]", "m[2]",
-      "(x[0]+y[0]*cos(x[2]+y[1])-m[0] ; x[1]+y[0]*sin(x[2]+y[1])-m[1])"));
-
   .. code-tab:: py
 
     ctc_g = CtcFunction(Function("x[3]", "y[2]", "m[2]",
       "(x[0]+y[0]*cos(x[2]+y[1])-m[0] ; x[1]+y[0]*sin(x[2]+y[1])-m[1])"))
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_g(Function("x[3]", "y[2]", "m[2]",
+      "(x[0]+y[0]*cos(x[2]+y[1])-m[0] ; x[1]+y[0]*sin(x[2]+y[1])-m[1])"));
 
 However, this involves a multi-occurrence of variables which leads to pessimism. For instance, the sum :math:`(x_3+y_2)` appears twice in functions :math:`\cos` and :math:`\sin`, which is hardly handled by a classical decomposition.
 
@@ -179,20 +179,6 @@ A robot depicted by the state :math:`\left(2,1,\pi/6\right)^\intercal` is percei
 
   .. tabs::
 
-    .. code-tab:: c++
-
-      vibes::beginDrawing();
-
-      VIBesFigMap fig_map("Map");
-      fig_map.set_properties(100,100,500,500);
-      fig_map.axis_limits(0,7,0,7);
-      fig_map.draw_vehicle(x_truth, 1);
-      fig_map.draw_box(m, "red");
-      fig_map.draw_box(x.subvector(0,1)); // does not display anything if unbounded
-      fig_map.show();
-
-      vibes::endDrawing();
-
     .. code-tab:: py
 
       beginDrawing()
@@ -206,6 +192,20 @@ A robot depicted by the state :math:`\left(2,1,\pi/6\right)^\intercal` is percei
       fig_map.show()
 
       endDrawing()
+
+    .. code-tab:: c++
+
+      vibes::beginDrawing();
+
+      VIBesFigMap fig_map("Map");
+      fig_map.set_properties(100,100,500,500);
+      fig_map.axis_limits(0,7,0,7);
+      fig_map.draw_vehicle(x_truth, 1);
+      fig_map.draw_box(m, "red");
+      fig_map.draw_box(x.subvector(0,1)); // does not display anything if unbounded
+      fig_map.show();
+
+      vibes::endDrawing();
 
   **C.5.** Display the range-and-bearing measurement with its uncertainties. For this, we will use the ``fig_map.draw_pie(x,y,interval_rho,interval_theta)`` to display a portion of a ring :math:`[\rho]\times[\theta]` centered on :math:`(x,y)^\intercal`.
 
@@ -238,15 +238,15 @@ We will implement the decomposition of Question **C.1** using the ``ContractorNe
 
   .. tabs::
 
-    .. code-tab:: c++
-
-      ContractorNetwork cn;
-      cn.add(<ctc_object>, {<dom1>,<dom2>,...});
-
     .. code-tab:: py
 
       cn = ContractorNetwork()
       cn.add(<ctc_object>, [<dom1>,<dom2>,...])
+
+    .. code-tab:: c++
+
+      ContractorNetwork cn;
+      cn.add(<ctc_object>, {<dom1>,<dom2>,...});
 
   **C.8.**  Use ``cn.contract()`` to solve the problem. You should obtain this figure:
 

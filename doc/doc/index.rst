@@ -99,15 +99,6 @@ We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    float dt = 0.01;                                  // timestep for tubes accuracy
-    Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]=[0,3]
-
-    TubeVector x(tdomain, dt, 4);                     // 4d tube for state vectors
-    TubeVector v(tdomain, dt, 4);                     // 4d tube for derivatives of the states
-    TubeVector u(tdomain, dt, 2);                     // 2d tube for inputs of the system
-
   .. code-tab:: py
 
     dt = 0.01                                         # timestep for tubes accuracy
@@ -117,30 +108,32 @@ We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t
     v = TubeVector(tdomain, dt, 4)                    # 4d tube for derivatives of the states
     u = TubeVector(tdomain, dt, 2)                    # 2d tube for inputs of the system
 
+  .. code-tab:: c++
+
+    float dt = 0.01;                                  // timestep for tubes accuracy
+    Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]=[0,3]
+
+    TubeVector x(tdomain, dt, 4);                     // 4d tube for state vectors
+    TubeVector v(tdomain, dt, 4);                     // 4d tube for derivatives of the states
+    TubeVector u(tdomain, dt, 2);                     // 2d tube for inputs of the system
+
 We assume that we have measurements on the headings :math:`\psi(t)` and the speeds :math:`\vartheta(t)`, with some bounded uncertainties defined by intervals :math:`[e_\psi]=[-0.01,0.01]`, :math:`[e_\vartheta]=[-0.01,0.01]`:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    x[2] = Tube(measured_psi, dt).inflate(0.01);      // measured_psi is a set of measurements
-    x[3] = Tube(measured_speed, dt).inflate(0.01);
 
   .. code-tab:: py
 
     x[2] = Tube(measured_psi, dt).inflate(0.01)       # measured_psi is a set of measurements
     x[3] = Tube(measured_speed, dt).inflate(0.01)
 
+  .. code-tab:: c++
+
+    x[2] = Tube(measured_psi, dt).inflate(0.01);      // measured_psi is a set of measurements
+    x[3] = Tube(measured_speed, dt).inflate(0.01);
+
 Finally, we define the domains for the three range-only observations :math:`(t_i,y_i)` and the position of the landmarks. The distances :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]`.
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval e_y(-0.1,0.1);
-    vector<Interval> y = {1.9+e_y, 3.6+e_y, 2.8+e_y}; // set of range-only observations
-    vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of the three 2d landmarks
-    vector<double>   t = {0.3, 1.5, 2.0};             // times of measurements
 
   .. code-tab:: py
 
@@ -150,6 +143,13 @@ Finally, we define the domains for the three range-only observations :math:`(t_i
     b = [[8,3],[0,5],[-2,1]]                          # positions of the three 2d landmarks
     t = [0.3, 1.5, 2.0]                               # times of measurements
 
+  .. code-tab:: c++
+
+    Interval e_y(-0.1,0.1);
+    vector<Interval> y = {1.9+e_y, 3.6+e_y, 2.8+e_y}; // set of range-only observations
+    vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of the three 2d landmarks
+    vector<double>   t = {0.3, 1.5, 2.0};             // times of measurements
+
 | **Second step.**
 | Defining contractors to deal with the state equations.
 
@@ -157,38 +157,22 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    CtcFunction ctc_f(
-      Function("v[4]", "x[4]", "u[2]",
-               "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"));
-
   .. code-tab:: py
 
     ctc_f = CtcFunction(
       Function("v[4]", "x[4]", "u[2]",
                "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"))
 
+  .. code-tab:: c++
+
+    CtcFunction ctc_f(
+      Function("v[4]", "x[4]", "u[2]",
+               "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"));
+
 | **Third step.**
 | Adding the contractors to a network, together with there related domains, is as easy as:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    ContractorNetwork cn;        // creating a network
-    cn.add(ctc_f, {v, x, u});    // adding the f constraint
-
-    for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
-    {
-      IntervalVector& p = cn.create_dom(IntervalVector(4)); // intermed. variable (state at t_i)
-
-      // Distance constraint: relation between the state at t_i and the ith beacon position
-      cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
-      
-      // Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
-      cn.add(ctc::eval, {t[i], p, x, v});
-    }
 
   .. code-tab:: py
 
@@ -206,19 +190,35 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
       # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
       cn.add(ctc.eval, [t[i], p, x, v])
 
+  .. code-tab:: c++
+
+    ContractorNetwork cn;        // creating a network
+    cn.add(ctc_f, {v, x, u});    // adding the f constraint
+
+    for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
+    {
+      IntervalVector& p = cn.create_dom(IntervalVector(4)); // intermed. variable (state at t_i)
+
+      // Distance constraint: relation between the state at t_i and the ith beacon position
+      cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
+      
+      // Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
+      cn.add(ctc::eval, {t[i], p, x, v});
+    }
+
 
 | **Fourth step.**
 | Solving the problem.
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    cn.contract();
-
   .. code-tab:: py
 
     cn.contract()
+
+  .. code-tab:: c++
+
+    cn.contract();
 
 
 | **Fifth step.**

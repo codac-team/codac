@@ -23,15 +23,15 @@ Definition
 
   .. tabs::
 
-    .. code-tab:: c++
-
-      CtcPicard ctc_picard(TFunction("<var1>", "<var2...>", "<exp>"));
-      ctc_picard.contract(x);
-
     .. code-tab:: py
 
       ctc_picard = CtcPicard(TFunction("<var1>", "<var2...>", "<exp>"))
       ctc_picard.contract(x)
+
+    .. code-tab:: c++
+
+      CtcPicard ctc_picard(TFunction("<var1>", "<var2...>", "<exp>"));
+      ctc_picard.contract(x);
 
 
 .. admonition:: Technical documentation
