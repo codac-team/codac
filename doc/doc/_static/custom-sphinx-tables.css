@@ -34,3 +34,8 @@ div.document a:visited
 {
   display: none;
 }
+
+.underline
+{
+  text-decoration: underline;
+}
