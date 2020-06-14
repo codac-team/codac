@@ -26,6 +26,7 @@ Corrections:
 
 Corrections:
 
+* for Lesson C, solutions are provided at the end of the lesson
 * `tubex-lib/examples/tuto/03_static_rangebearing/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/03_static_rangebearing>`_
 
 ------------------------------------------------------

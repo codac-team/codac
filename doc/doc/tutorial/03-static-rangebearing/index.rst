@@ -97,7 +97,7 @@ where :math:`a,b,\dots,e` are intermediate variables used for the decomposition.
 Optimality of contractors
 -------------------------
 
-Depending on the properties of the equation, the resulting contractor can be **optimal**. It means that the contracted box will perfectly enclose the set of feasible solutions **without pessimism**. This enables an efficiency resolution.
+Depending on the properties of the equation, the resulting contractor can be **optimal**. It means that the contracted box will perfectly enclose the set of feasible solutions **without pessimism**. This enables an efficient resolution.
 
 In other cases, for instance because of dependencies between the variables, the resulting operator may not be optimal.
 For instance, looking at the equation depicting the above problem of *range-and-bearing* localization, the formula
@@ -161,19 +161,22 @@ This constraint appears in the expression of :math:`\mathbf{g}`.
 
   **C.1.** On a sheet of paper, write a decomposition of function :math:`\mathbf{g}` that involves :math:`\mathcal{L}_\textrm{polar}`, other constraints and intermediate variables.
   
-  :download:`See the solution <img/solution_q1.png>`
+  :download:`See the solution <src/solution_c1.pdf>`
 
 
 Initialization
 --------------
 
-A robot depicted by the state :math:`\left(2,1,\pi/6\right)^\intercal` is perceiving a landmark :math:`\left(5,6.2\right)^\intercal` at a range :math:`y_1=6` and a bearing :math:`y_2=\pi/6`. We assume that the position of the robot is not known and that the uncertainties related to the measurement are: :math:`[y_1]=y_1+[-0.3,0.3]` and :math:`[y_2]=y_2+[-0.1,0.1]`.
+A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal` is perceiving a landmark :math:`\mathbf{m}=\left(5,6.2\right)^\intercal` at a range :math:`y_1=6` and a bearing :math:`y_2=\pi/6`. We assume that the position of the robot is not known and that the uncertainties related to the measurement and the landmark are:
+
+* **Measurement.** For :math:`y_1`: :math:`[-0.3,0.3]`, for :math:`y_2`: :math:`[-0.1,0.1]`.
+* **Landmark.** For each component of the 2d dimension: :math:`[-0.2,0.2]`.
 
 .. admonition:: Exercise
 
   **C.2.** Create a new project (:ref:`Python <sec-start-py-project>` or :ref:`C++ <sec-start-cpp-project>`) and create the vectors ``x_truth``, ``y_truth``, ``m_truth`` representing the actual but unknown values of :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal`, :math:`\mathbf{y}=\left(6,\pi/6\right)^\intercal` and :math:`\mathbf{m}=\left(5,6.2\right)^\intercal`.
 
-  **C.3.** Create the bounded sets related to the state, the measurement and the landmark position: :math:`[\mathbf{x}]\in\mathbb{IR}^3`, :math:`[\mathbf{y}]\in\mathbb{IR}^2`, :math:`[\mathbf{m}]\in\mathbb{IR}^2`. The heading of the robot is assumed precisely known (for instance thanks to a compass); the actual heading :math:`x_3` is represented by ``x_truth[2]``.
+  **C.3.** Create the bounded sets related to the state, the measurement and the landmark position: :math:`[\mathbf{x}]\in\mathbb{IR}^3`, :math:`[\mathbf{y}]\in\mathbb{IR}^2`, :math:`[\mathbf{m}]\in\mathbb{IR}^2`. We can for instance use the ``.inflate(float radius)`` method on intervals or boxes. The heading of the robot is assumed precisely known (for instance thanks to a compass); the actual heading :math:`x_3` is represented by ``x_truth[2]``.
 
   **C.4.** Display the vehicle and the landmark with:
 
@@ -207,12 +210,20 @@ A robot depicted by the state :math:`\left(2,1,\pi/6\right)^\intercal` is percei
 
       vibes::endDrawing();
 
-  **C.5.** Display the range-and-bearing measurement with its uncertainties. For this, we will use the ``fig_map.draw_pie(x,y,interval_rho,interval_theta)`` to display a portion of a ring :math:`[\rho]\times[\theta]` centered on :math:`(x,y)^\intercal`.
+  **C.5.** Display the range-and-bearing measurement with its uncertainties. For this, we will use the ``fig_map.draw_pie(x,y,interval_rho,interval_theta)`` to display a portion of a ring :math:`[\rho]\times[\theta]` centered on :math:`(x,y)^\intercal`. Here, we add in :math:`[\theta]` the robot heading :math:`x_3` and the bounded bearing :math:`[y_2]`.
 
   You should obtain this figure:
 
-  .. figure:: img/first_result.png
+  .. figure:: img/first_result.gif
     :width: 250px
+
+    On this figure, we also draw the origin of the measurement (in light gray). This can be done with:
+
+    .. code::
+
+      draw_pie(x, y, (Interval(0.1)|interval_rho), interval_theta, "lightGray")
+
+.. todo: use (Interval(0.)|interval_rho) instead of (Interval(0.1)|interval_rho) (already corrected)
 
 
 As one can see, intervals are not limited to axis-aligned boxes: we sometimes perform rotational mapping to better fit the set to represent. This polar constraint is a case in point.
@@ -229,8 +240,7 @@ We will implement the decomposition of Question **C.1** using the ``ContractorNe
 
   **C.6.** Create the contractors related to the decomposition of Question **C.1**.
 
-  * | The contractor :math:`\mathcal{C}_\textrm{polar}` is given by ``CtcPolar``, already instantiated in the library
-    | (the object is ``ctc.polar`` in Python, ``ctc::polar`` in C++).
+  * | The contractor :math:`\mathcal{C}_\textrm{polar}` is given by the class ``CtcPolar``. Note that you do not need to create an object of this class, since one is already instantiated in the library (it is named ``ctc.polar`` in Python, ``ctc::polar`` in C++).
   * The other contractors can be built with several ``CtcFunction`` objects, as we did in the previous Lessons :ref:`A <sec-tuto-01>` and :ref:`B <sec-tuto-02>`. We recall that these constraints have to be expressed in the form :math:`f(\mathbf{x})=0`. :ref:`See more <sec-manual-ctcfunction>`.
 
   | **C.7.**  Create a ``ContractorNetwork`` (CN) to solve the problem by adding the contractors and the domains from the decomposition.
@@ -248,7 +258,10 @@ We will implement the decomposition of Question **C.1** using the ``ContractorNe
       ContractorNetwork cn;
       cn.add(<ctc_object>, {<dom1>,<dom2>,...});
 
-  **C.8.**  Use ``cn.contract()`` to solve the problem. You should obtain this figure:
+  | **C.8.**  Create the intermediate variables introduced in Question **C.1**. They are ``Interval`` and ``IntervalVector`` objects, as for the other variables.
+  | Note that the intermediate variables do not have to be initialized with prior values.
+
+  **C.9.**  Use ``cn.contract()`` to solve the problem. You should obtain this figure:
 
   .. figure:: img/result_rangebearing.png
     :width: 250px
@@ -260,6 +273,13 @@ The black box :math:`[\mathbf{x}]` cumulates all the uncertainties of the proble
 
 If we remove the uncertainties related to the measurement :math:`[\mathbf{y}]`, then the width of :math:`[\mathbf{x}]` should be exactly the same as the one of :math:`[\mathbf{m}]`, because we used optimal contractors. The width of a box is given by the ``.diam()`` method.
 
+
+.. admonition:: Exercise
+
+  We provide the solution of these questions here:
+
+  | :download:`See the Python solution <src/solution_c.py>`
+  | :download:`See the C++ solution <src/solution_c.cpp>`
 
 .. from pyibex import *
 .. from tubex_lib import *
@@ -300,8 +320,8 @@ If we remove the uncertainties related to the measurement :math:`[\mathbf{y}]`, 
 .. fig_map.axis_limits(0,7,0,7)
 .. fig_map.draw_vehicle(x_truth,1)
 .. fig_map.draw_box(m, "red")
-.. fig_map.draw_pie(x_truth[0],x_truth[1],y[0],y[1]+x_truth[2],"darkGray")
 .. fig_map.draw_pie(x_truth[0],x_truth[1],(Interval(0.1)|y[0]),y[1]+x_truth[2],"lightGray")
+.. fig_map.draw_pie(x_truth[0],x_truth[1],y[0],y[1]+x_truth[2])
 .. fig_map.draw_box(x.subvector(0,1))
 .. fig_map.show()
 .. 
