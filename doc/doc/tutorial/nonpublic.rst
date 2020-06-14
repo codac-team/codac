@@ -22,12 +22,12 @@ Corrections:
 **Week 2: June 15 -- June 21**
 
 * :ref:`sec-tuto-03`
-* **Lesson D**: not yet available
+* :ref:`sec-tuto-04`
 
 Corrections:
 
 * for Lesson C, solutions are provided at the end of the lesson
-* `tubex-lib/examples/tuto/03_static_rangebearing/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/03_static_rangebearing>`_
+* `tubex-lib/blob/dev/doc/doc/tutorial/04-own-contractor/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/04-own-contractor/solution.py>`_
 
 ------------------------------------------------------
 

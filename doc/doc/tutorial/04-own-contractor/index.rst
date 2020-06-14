@@ -1,10 +1,10 @@
-.. _sec-tuto-own-ctc:
+.. _sec-tuto-04:
 
 .. role:: underline
     :class: underline
 
 
-Lesson D : Building our own contractor
+Lesson D: Building our own contractor
 ======================================
 
 This lesson will extend the previous exercise by dealing with a **data association** problem together with localization: the landmarks perceived by the robot are now **indistinguishable**: they all look alike. The goal of this exercise is to develop our own contractor in order to solve the problem.
@@ -34,7 +34,7 @@ This problem often occurs when using sonars for localization, where it is diffic
 Due to these difficulties, we consider that we cannot compute reliable data associations that stand on image processing of the observations. We will rather consider the data association problem **together with state estimation**.
 
 
-.. _sec-tuto-own-ctc-formalism:
+.. _sec-tuto-04-formalism:
 
 Data association: formalism
 ---------------------------
@@ -71,14 +71,14 @@ The following figure illustrates :math:`\mathbb{M}` with the difficulty to diffe
 In this exercise, the data association problem is solved together with state estimation, **without image processing**. The constraint :math:`\mathbf{g}\big(\mathbf{x},\mathbf{y}^{i},\mathbf{m}^{i}\big)=\mathbf{0}` has been solved in :ref:`Lesson C <sec-tuto-03>`, it remains to deal with the constraint :math:`\mathbf{m}^{i}\in\mathbb{M}`. We will call it the *constellation constraint*.
 
 
-.. _sec-tuto-own-ctc-constellation:
+.. _sec-tuto-04-constellation:
 
 The constellation constraint and its contractor
 -----------------------------------------------
 
 When solving a problem with a constraint propagation approach, we may not have the contractors at hand for dealing with all the involved constraints. In this lesson for instance, we assume that we do not have a contractor for dealing with this constellation constraint. The goal of the following exercise is to see how to build our own contractor. We will see that it is easy to extend our framework with new contractors, without loss of generality.
 
-**We now focus on the constellation constraint without relation with the other equations.** The constraint is expressed by :math:`\mathcal{L}_{\mathbb{M}}\left(\left[\mathbf{a}\right]\right)~:~\mathbf{a}\in\mathbb{M}`.
+**We now focus on the constellation constraint without relation with the other equations.** The constraint is expressed by :math:`\mathcal{L}_{\mathbb{M}}\left(\mathbf{a}\right)~:~\mathbf{a}\in\mathbb{M}`.
 
 Let us consider a constellation of :math:`\ell` landmarks :math:`\mathbb{M}=\{[\mathbf{m}_{1}],\dots,[\mathbf{m}_{\ell}]\}` of :math:`\mathbb{IR}^{2}` and a box :math:`[\mathbf{a}]\in\mathbb{IR}^2`. Our goal is to compute the smallest box containing :math:`\mathbb{M}\cap[\mathbf{a}]`. In other words, we want to contract the box :math:`[\mathbf{a}]` so that we only keep the best envelope of the landmarks that are already included in :math:`[\mathbf{a}]`. An illustration is provided by the following figures:
 
@@ -109,9 +109,9 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
       class MyCtc(Ctc):
 
-        def __init__(self, map_):
+        def __init__(self, M_):
           Ctc.__init__(self, 2) # the contractor acts on 2d boxes
-          self.map = map_       # attribute needed later on for the contraction
+          self.M = M_           # attribute needed later on for the contraction
 
         def contract(self, a):
           
@@ -125,9 +125,9 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
       {
         public:
 
-          MyCtc(const std::vector<ibex::IntervalVector>& map_)
+          MyCtc(const std::vector<ibex::IntervalVector>& M_)
             : ibex::Ctc(2), // the contractor acts on 2d boxes
-              map(map_)     // attribute needed later on for the contraction
+              M(M_)         // attribute needed later on for the contraction
           {
 
           }
@@ -139,13 +139,13 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
         protected:
 
-          const std::vector<ibex::IntervalVector> map;
+          const std::vector<ibex::IntervalVector> M;
       };
 
   | (you may continue the code from the previous Lesson C)
-  | Note that 
+  | Note that:
 
-    * ``map`` represents the set :math:`\mathbb{M}`, made of 2d ``IntervalVector`` objects;
+    * ``M`` represents the set :math:`\mathbb{M}`, made of 2d ``IntervalVector`` objects;
     * ``a`` (in ``.contract()``) is the box :math:`[\mathbf{a}]` (2d ``IntervalVector``) to be contracted.
 
   **D.2.** Propose a simple implementation of the method ``.contract()`` for contracting :math:`[\mathbf{a}]` as:
@@ -222,7 +222,15 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 .. figure:: img/CtcConstell_constell.png
   :width: 600px
 
-Expected result for Question **D.3** (you may verify your results only by printing boxes values). Non-filled boxes are initial domains before contraction. Filled boxes are contracted domains. The green one, :math:`[\mathbf{a}^3]`, is *identified* since it contains only one item of the constellation :math:`\mathbb{M}`: there is no ambiguity about the constellation point represented by the box :math:`[\mathbf{a}^3]`.
+  Expected result for Question **D.3** (you may verify your results only by printing boxes values). Non-filled boxes are initial domains before contraction. Filled boxes are contracted domains. The green one, :math:`[\mathbf{a}^3]`, is *identified* since it contains only one item of the constellation :math:`\mathbb{M}`: there is no ambiguity about the constellation point represented by the box :math:`[\mathbf{a}^3]`.
+
+  Numerical results are given:
+
+  .. code::
+
+    [a1]: ([1.45, 2.05] ; [1.95, 2.55])    (blue box)
+    [a2]: ([2.95, 3.05] ; [0.95, 1.05])    (green box)
+    [a3]: ([1.45, 3.05] ; [0.45, 1.05])    (red box)
 
 
 Application for localization
@@ -237,7 +245,41 @@ We will localize the robot in the map :math:`\mathbb{M}` created in Question **D
 
   **D.4.** In your code, define a robot with the following pose :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal` (the same as in Lesson C).
 
-  **D.5.** Display the robot and the landmarks in a graphical view. You should obtain this result.
+  **D.5.** Display the robot and the landmarks in a graphical view with:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      beginDrawing()
+
+      fig_map = VIBesFigMap("Map")
+      fig_map.set_properties(100,100,500,500)
+      fig_map.draw_vehicle(x_truth,0.5)
+      for Mi in M:
+        fig_map.draw_box(Mi, "red[orange]")
+
+      # Draw the result of next questions here
+
+      fig_map.axis_limits(fig_map.view_box(), True, 0.1)
+      endDrawing()
+
+    .. code-tab:: cpp
+
+      vibes::beginDrawing();
+
+      VIBesFigMap fig_map("Map");
+      fig_map.set_properties(100,100,500,500);
+      fig_map.draw_vehicle(x_truth,0.5);
+      for(const auto& Mi : M)
+        fig_map.draw_box(Mi, "red[orange]");
+
+      // Draw the result of next questions here
+
+      fig_map.axis_limits(fig_map.view_box(), true, 0.1);
+      vibes::endDrawing();
+
+  You should obtain this result.
 
   .. figure:: img/loc_robot_landmarks.png
     :width: 300px
@@ -255,7 +297,7 @@ We will localize the robot in the map :math:`\mathbb{M}` created in Question **D
       vector<IntervalVector> v_obs =
           DataLoader::generate_static_observations(x_truth, M, false);
 
-  where ``x_truth`` is the actual state vector of the robot and ``M`` the set of landmarks :math:`\mathbb{M}`. The returned value ``v_obs`` is a vector of ``[range]×[bearing]`` interval values.
+  where ``x_truth`` is the actual state vector of the robot and ``M`` the set of landmarks :math:`\mathbb{M}`. The returned value ``v_obs`` is a vector of [range]×[bearing] interval values.
 
   Display the measurements ``v_obs`` in the view with ``.draw_pie()``, as we did in the previous lesson. You should obtain a figure similar to this one:
 
@@ -292,7 +334,7 @@ We will first reuse the Contractor Network developed in the previous Lesson for 
 
 .. admonition:: Exercise
 
-  **D.7.** With a Contractor Network, perform the state estimation of the robot (the contraction of :math:`[\mathbf{x}]`) by considering simultaneously all the observations. You can reuse the CN previously implemented. We will assume that the identity (the position) of the related landmarks is known.
+  **D.7.** With a Contractor Network, perform the state estimation of the robot (the contraction of :math:`[\mathbf{x}]`) by considering simultaneously all the observations. You can reuse the CN previously implemented in Lesson C for this purpose. We will assume that the identity (the position) of the related landmarks is known.
 
   .. tabs::
 
@@ -338,15 +380,29 @@ We will first reuse the Contractor Network developed in the previous Lesson for 
       cn.contract();
 
 
-  If you are using C++, please read :ref:`the paragraph related to intermediate variables in C++ <sec-tuto-own-ctc-intermed-var-cpp>`, at the end of this page.
+  If you are using C++, please read :ref:`the paragraph related to intermediate variables in C++ <sec-tuto-04-intermed-var-cpp>`, at the end of this page.
 
   In the code, the *identity* of each landmark is known in the sense that a measurement ``v_obs[i]`` refers to a landmark ``M[i]``.
 
 
-  **D.8.** Display the resulted contracted box :math:`[\mathbf{x}]`. You should obtain this result in black (considering uncertainties proposed in Question **D.6**):
+  **D.8.** Display the resulted contracted box :math:`[\mathbf{x}]` with:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      fig_map.draw_box(x.subvector(0,1)) # displays ([x_1],[x_2])
+
+    .. code-tab:: cpp
+
+      fig_map.draw_box(x.subvector(0,1)); // displays ([x_1],[x_2])
+
+  You should obtain this result in black (considering uncertainties proposed in Question **D.6**):
 
   .. figure:: img/loc_robot_landmarks_obs_box.png
     :width: 300px
+
+    Range-and-bearing static localization, with several observations of identified landmarks.
 
 
 State estimation with data association
@@ -371,10 +427,10 @@ We now assume that the identities of the landmarks are not known. This means tha
       vector<IntervalVector> m(v_obs.size(), IntervalVector(2));
       // unknown association for each observation
 
-  Each ``m[i]`` object is a 2d box corresponding to the :math:`\mathbf{m}^i` vector of the equations in the above Section :ref:`Formalism <sec-tuto-own-ctc-formalism>`.
+  Each ``m[i]`` object is a 2d box corresponding to the :math:`\mathbf{m}^i` vector of the equations in the above Section :ref:`Formalism <sec-tuto-04-formalism>`.
 
 
-  **D.10.** Update the Contractor Network for solving the state estimation together with the data association problem. The CN should now involve the ``m[i]`` objects as well as the new contractor you developed in the Section :ref:`sec-tuto-own-ctc-constellation`.
+  **D.10.** Update the Contractor Network for solving the state estimation together with the data association problem. The CN should now involve the ``m[i]`` objects as well as the new contractor you developed in the Section :ref:`sec-tuto-04-constellation`.
 
   .. tabs::
 
@@ -404,7 +460,8 @@ We now assume that the identities of the landmarks are not known. This means tha
 
   We can now look at the set ``m`` containing the associations. If one :math:`[\mathbf{m}^i]` contains only one item of :math:`\mathbb{M}`, then it means that the landmark of the measurement :math:`\mathbf{y}^i` has been identified. 
 
-  We will draw a point in the middle of each :math:`[\mathbf{m}^i]` that contains only one item of  :math:`\mathbb{M}`. In Question **D.3**, we defined :math:`\mathbb{M}` as a set of boxes with a width of :math:`2\times 0.05`. Then, if one box :math:`[\mathbf{m}^i]` has a maximal diameter that is less than :math:`0.1`, it means that it contains one single item of :math:`\mathbb{M}`.
+  | We will draw a point in the middle of each :math:`[\mathbf{m}^i]` that contains only one item of  :math:`\mathbb{M}`.
+  | In Question **D.3**, we defined :math:`\mathbb{M}` as a set of boxes with a width of :math:`2\times 0.05`. Then, if one box :math:`[\mathbf{m}^i]` has a maximal diameter that is less than :math:`0.1`, it means that it contains one single item of :math:`\mathbb{M}`.
 
   .. tabs::
 
@@ -412,13 +469,13 @@ We now assume that the identities of the landmarks are not known. This means tha
 
       for mi in m:
         if mi.max_diam() <= 0.10001: # if identified
-          fig.draw_circle(mi[0].mid(), mi[1].mid(), 0.02, "blue[blue]")
+          fig_map.draw_circle(mi[0].mid(), mi[1].mid(), 0.02, "blue[blue]")
 
     .. code-tab:: cpp
 
       for(const auto& mi : m)
         if(mi.max_diam() <= 0.10001) // if identified
-          fig.draw_circle(mi[0].mid(), mi[1].mid(), 0.02, "blue[blue]");
+          fig_map.draw_circle(mi[0].mid(), mi[1].mid(), 0.02, "blue[blue]");
 
   Expected result:
 
@@ -428,14 +485,18 @@ We now assume that the identities of the landmarks are not known. This means tha
     All the boxes have been identified. 
 
 
-This association has been done only by merging all information together. We let the information propagate in the domains. This has led to a state estimation solved concurrently with a data association.
+Conclusion
+----------
 
-We could apply this solver on actual data, such as the underwater application presented in the introduction of this lesson. The identification of the rocks on the seafloor will be done by the fusion of all data, without image processing.
-The same algorithm also provides a reliable way to gather different views of a same object, without using data processing.
+This association has been done only by merging all information together. We define contractors from the equations of the problem, and let the information propagate in the domains. This has led to a state estimation solved concurrently with a data association.
 
 In the next lessons, we will go a step further by making the robot move. 
 This will introduce differential constraints, and a new domain for handling uncertain trajectories: tubes.
 
+.. rubric:: Underwater application
+
+We could apply this solver on actual data, such as the underwater application presented in the introduction of this lesson. The identification of the rocks on the seafloor would be done by the fusion of all data, without image processing.
+The same algorithm also provides a reliable way to gather different views of a same object, without using data processing.
 
 This topic of data association with underwater robotics has been the subject of a paper proposed for this ICRA 2020 conference:
 
@@ -443,7 +504,7 @@ This topic of data association with underwater robotics has been the subject of 
 | Simon Rohou, Benoît Desrochers, Luc Jaulin, *ICRA 2020*
 | `Download the paper <http://simon-rohou.fr/research/datasso/datasso_paper.pdf?PHPSESSID=88a679b3n54fh04kt3l5lnmvv6>`_
 
-Here is a video providing an overview of the problem and how to solve it. This is mainly the object of this Lesson D and the next ones, that will deal with the dynamics of the robot.
+Here is a video providing an overview of the problem and how to solve it. This is mainly the object of this Lesson D and the next one, that will deal with the dynamics of the robot.
 
 .. raw:: html
 
@@ -451,7 +512,7 @@ Here is a video providing an overview of the problem and how to solve it. This i
       <iframe src="https://www.youtube.com/embed/rkzouwuwo4I" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
   </div>
 
-If you want to discuss about it, you can join us on `the Slack channel dedicated to this paper (#tua07_6) <https://icra20.slack.com/app_redirect?channel=tua07_6>`_
+If you want to discuss about it, you can join us on `the Slack channel dedicated to this paper (#tua07_6) <https://icra20.slack.com/app_redirect?channel=tua07_6>`_.
 
 
 
@@ -467,21 +528,11 @@ See you next week for discovering tubes!
 Appendix
 --------
 
-.. _sec-tuto-own-ctc-intermed-var-cpp:
+.. _sec-tuto-04-intermed-var-cpp:
 
 .. important:: **The case of intermediate variables in C++.**
 
-  The following function:
-
-  .. code:: cpp
-
-    IntervalVector& d = cn.create_dom(IntervalVector(2));
-
-  creates an intermediate 2d variable with a 2d box domain: :math:`[\mathbf{d}]=[-\infty,\infty]^2`. The method ``create_dom()`` returns a C++ *reference* (in the above example, of type ``IntervalVector&``). The reference is an alias on the intermediate variable, that is now inside the Contractor Network. It can be used in the same way as other variables involved in the CN.
-
-  *Why use these references on intermediate variables instead of using directly domains, as we did in the previous lesson?*
-
-  The reason is that if we create a CN and add contractors and domains in another block of code (for instance during an iteration), then the C++ variables are destroyed at the end of the block and so the CN lose the reference to them. For instance:
+  In C++, if we create intermediate variables in a different block of code than the ``.contract()`` method, then the C++ variables are destroyed at the end of their block and so the CN lose the reference to them. For instance:
 
   .. code:: cpp
 
@@ -497,7 +548,7 @@ Appendix
     
     cn.contract(); // segmentation fault here
 
-  Instead, we create the domain of the variable inside the CN in order to keep it alive outside the block:
+  Instead, we must create the domains inside the CN object in order to keep it alive outside the block. This can be done with the method ``.create_dom()``:
 
   .. code:: cpp
 
@@ -513,4 +564,12 @@ Appendix
     
     cn.contract(); // the contraction works on [x], [y] and [a] that still exists
 
-  In our case, because there are several landmarks, we will have to use intermediate variables in the iteration of each observation *i*.
+  Therefore, the following function:
+
+  .. code:: cpp
+
+    IntervalVector& d = cn.create_dom(IntervalVector(2));
+
+  creates for instance an intermediate 2d variable with a 2d box domain: :math:`[\mathbf{d}]=[-\infty,\infty]^2`. Its argument defines the type of domain to be created (``Interval``, ``IntervalVector``, *etc.*). 
+
+  Technically, ``create_dom()`` returns a C++ *reference* (in the above example, of type ``IntervalVector&``). The reference is an alias on the intermediate variable, that is now inside the Contractor Network. It can be used in the same way as other variables involved in the CN.
