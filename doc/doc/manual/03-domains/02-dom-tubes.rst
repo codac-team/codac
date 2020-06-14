@@ -58,19 +58,6 @@ To create a ``Tube`` with a constant codomain:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    Interval tdomain(0.,10.);
-    
-    // One-slice tubes:
-    Tube x1(tdomain);                                // [0,10]→[-∞,∞]
-    Tube x2(tdomain, Interval(0.,2.));               // [0,10]→[0,2]
-
-    // 100-slices tubes:
-    float dt = 0.1;
-    Tube x3(tdomain, dt, Interval(0.,2.));           // [0,10]→[0,2]
-    Tube x4(tdomain, dt, Interval::pos_reals());     // [0,10]→[0,∞]
-
   .. code-tab:: py
 
     tdomain = Interval(0,10)
@@ -84,32 +71,38 @@ To create a ``Tube`` with a constant codomain:
     x3 = Tube(tdomain, dt, Interval(0,2))            # [0,10]→[0,2]
     x4 = Tube(tdomain, dt, Interval.POS_REALS)       # [0,10]→[0,∞]
 
+  .. code-tab:: c++
+
+    Interval tdomain(0.,10.);
+    
+    // One-slice tubes:
+    Tube x1(tdomain);                                // [0,10]→[-∞,∞]
+    Tube x2(tdomain, Interval(0.,2.));               // [0,10]→[0,2]
+
+    // 100-slices tubes:
+    float dt = 0.1;
+    Tube x3(tdomain, dt, Interval(0.,2.));           // [0,10]→[0,2]
+    Tube x4(tdomain, dt, Interval::pos_reals());     // [0,10]→[0,∞]
+
 The ``dt`` variable defines the temporal width of the slices. Note that it is also possible to create slices of different width; this will be explained afterwards.
 
 To create a copy of a tube with the same time discretization, use:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    Tube x5(x4);                     // identical tube (100 slices, [0,10]→[0,∞])
-    Tube x6(x4, Interval(5.));       // 100 slices, same timestep, but [0,10]→[5]
-
   .. code-tab:: py
 
     x5 = Tube(x4)                    # identical tube (100 slices, [0,10]→[0,∞])
     x6 = Tube(x4, Interval(5))       # 100 slices, same timestep, but [0,10]→[5]
 
+  .. code-tab:: c++
+
+    Tube x5(x4);                     // identical tube (100 slices, [0,10]→[0,∞])
+    Tube x6(x4, Interval(5.));       // 100 slices, same timestep, but [0,10]→[5]
+
 As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Trajectory`` objects:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    TrajectoryVector traj(tdomain, TFunction("(sin(t) ; cos(t) ; cos(t)+t/10)"));
-
-    Tube x8(traj[0], dt);            // 100 slices tube enclosing sin(t)
-    Tube x9(traj[1], traj[2], dt);   // 100 slices tube defined as [cos(t),cos(t)+t/10]
 
   .. code-tab:: py
 
@@ -117,6 +110,13 @@ As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Traject
 
     x8 = Tube(traj[0], dt)           # 100 slices tube enclosing sin(t)
     x9 = Tube(traj[1], traj[2], dt)  # 100 slices tube defined as [cos(t),cos(t)+t/10]
+
+  .. code-tab:: c++
+
+    TrajectoryVector traj(tdomain, TFunction("(sin(t) ; cos(t) ; cos(t)+t/10)"));
+
+    Tube x8(traj[0], dt);            // 100 slices tube enclosing sin(t)
+    Tube x9(traj[1], traj[2], dt);   // 100 slices tube defined as [cos(t),cos(t)+t/10]
 
 .. figure:: img/interval_trajs.png
 
@@ -152,17 +152,17 @@ It is also possible to create a tube from a thick function, where the uncertaint
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    dt = 0.01;
-    Tube x10(tdomain, dt,
-             TFunction("-abs(cos(t)+t/5)+(t/2)*[-0.1,0.1]"));
-
   .. code-tab:: py
 
     dt = 0.01
     x10 = Tube(tdomain, dt, \
                TFunction("-abs(cos(t)+t/5)+(t/2)*[-0.1,0.1]"))
+
+  .. code-tab:: c++
+
+    dt = 0.01;
+    Tube x10(tdomain, dt,
+             TFunction("-abs(cos(t)+t/5)+(t/2)*[-0.1,0.1]"));
 
 .. figure:: img/02_tube_fnc.png
 
@@ -172,14 +172,6 @@ Finally, as tube is an envelope (union) of trajectories, the following operation
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    TFunction f("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"); // 4d temporal function
-    TrajectoryVector traj(tdomain, f); // 4d trajectory defined over [0,10]
-
-    // 1d tube [x](·) defined as a union of the 4 trajectories
-    Tube x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3];
-
   .. code-tab:: py
 
     f = TFunction("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))") # 4d temporal function
@@ -187,6 +179,14 @@ Finally, as tube is an envelope (union) of trajectories, the following operation
 
     # 1d tube [x](·) defined as a union of the 4 trajectories
     x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3]
+
+  .. code-tab:: c++
+
+    TFunction f("(cos(t) ; cos(t)+t/10 ; sin(t)+t/10 ; sin(t))"); // 4d temporal function
+    TrajectoryVector traj(tdomain, f); // 4d trajectory defined over [0,10]
+
+    // 1d tube [x](·) defined as a union of the 4 trajectories
+    Tube x = Tube(traj[0], dt) | traj[1] | traj[2] | traj[3];
     
 Which produces:
 
@@ -203,19 +203,19 @@ The vector case
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    // TubeVector from a formula; the function's output is two-dimensional
-    TubeVector x(tdomain, dt,
-                 TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
-                            cos(t)+sin(t/0.2)*[-0.1,0.1])"));
-
   .. code-tab:: py
 
     # TubeVector from a formula; the function's output is two-dimensional
     x = TubeVector(tdomain, dt, \
                    TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
                               cos(t)+sin(t/0.2)*[-0.1,0.1])"))
+
+  .. code-tab:: c++
+
+    // TubeVector from a formula; the function's output is two-dimensional
+    TubeVector x(tdomain, dt,
+                 TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; \
+                            cos(t)+sin(t/0.2)*[-0.1,0.1])"));
 
 produces (each dimension displayed on the same figure):
 
@@ -293,17 +293,17 @@ Once created, several evaluations of the tubes can be made, as for trajectories.
 
   .. tabs::
 
-    .. code-tab:: c++
-
-      x(6.)                            // evaluation of [x](·) at 6
-      x(Interval(5.,6.))               // evaluation of [x](·) over [5,6]
-      x.codomain()                     // envelope of values
-
     .. code-tab:: py
 
       x(6.)                            # evaluation of [x](·) at 6
       x(Interval(5,6))                 # evaluation of [x](·) over [5,6]
       x.codomain()                     # envelope of values
+
+    .. code-tab:: c++
+
+      x(6.)                            // evaluation of [x](·) at 6
+      x(Interval(5.,6.))               // evaluation of [x](·) over [5,6]
+      x.codomain()                     // envelope of values
 
 
   .. rubric:: Inversion of tubes
@@ -311,6 +311,15 @@ Once created, several evaluations of the tubes can be made, as for trajectories.
   The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])`, is also at hand and returns the set :math:`[t]` enclosing the preimages of :math:`[y]`. The ``invert()`` method returns the union of these subsets, or the set of solutions within a vector of ``Interval`` objects. The following example returns the different subsets of the inversion :math:`[x]^{-1}([0,0.2])` projected in red in next figure:
 
   .. tabs::
+
+    .. code-tab:: py
+
+      v_t = []
+      x.invert(Interval(0,0.2), v_t)   # inversion
+      
+      for t in v_t:
+        tbox = IntervalVector([t,[0,0.2]])
+        fig.draw_box(tbox, "red")      # boxes display
 
     .. code-tab:: c++
 
@@ -322,15 +331,6 @@ Once created, several evaluations of the tubes can be made, as for trajectories.
         IntervalVector tbox = {t,{0.,0.2}};
         fig.draw_box(tbox, "red");     // boxes display
       }
-
-    .. code-tab:: py
-
-      v_t = []
-      x.invert(Interval(0,0.2), v_t)   # inversion
-      
-      for t in v_t:
-        tbox = IntervalVector([t,[0,0.2]])
-        fig.draw_box(tbox, "red")      # boxes display
 
   .. figure:: img/02_invert.png
 
@@ -412,28 +412,28 @@ Classical operations on sets are applicable on tubes.
 We recall that the tubes and trajectories have to share the same *t*-domain for these operations.
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Tube x4 = (x1 | x2) & x3;
     
   .. code-tab:: py
 
     x4 = (x1 | x2) & x3
 
+  .. code-tab:: c++
+
+    Tube x4 = (x1 | x2) & x3;
+
 The same for mathematical functions:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Tube x2 = abs(x1);
-    Tube x3 = cos(x1) + sqrt(x2 + pow(x1, Interval(2,3)));
 
   .. code-tab:: py
 
     x2 = abs(x1)
     x3 = cos(x1) + sqrt(x2 + pow(x1, Interval(2,3)))
+
+  .. code-tab:: c++
+
+    Tube x2 = abs(x1);
+    Tube x3 = cos(x1) + sqrt(x2 + pow(x1, Interval(2,3)));
 
 The following functions can be used:
 
@@ -478,36 +478,31 @@ Computation of the tube primitive :math:`[p](\cdot)=\int_{0}^{\cdot}[x](\tau)d\t
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    Tube p = x.primitive();
-
   .. code-tab:: py
 
     p = x.primitive()
+
+  .. code-tab:: c++
+
+    Tube p = x.primitive();
     
 Computation of the interval-integral :math:`[s]=\int_{0}^{[t]}[x](\tau)d\tau`:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval t(...);
-    Interval s = x.integral(t);
 
   .. code-tab:: py
 
     t = Interval(...)
     s = x.integral(t)
 
+  .. code-tab:: c++
+
+    Interval t(...);
+    Interval s = x.integral(t);
+
 Computation of :math:`[s]=\int_{[t_1]}^{[t_2]}[x](\tau)d\tau`:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval t1(...), t2(...);
-    Interval s = x.integral(t1, t2);
 
   .. code-tab:: py
 
@@ -515,17 +510,14 @@ Computation of :math:`[s]=\int_{[t_1]}^{[t_2]}[x](\tau)d\tau`:
     t2 = Interval(...)
     s = x.integral(t1, t2)
 
+  .. code-tab:: c++
+
+    Interval t1(...), t2(...);
+    Interval s = x.integral(t1, t2);
+
 Also, a decomposition of the interval-integral of :math:`[x](\cdot)=[x^-(\cdot),x^+(\cdot)]` with :math:`[s^-]=\int_{[t_1]}^{[t_2]}x^-(\tau)d\tau` and :math:`[s^+]=\int_{[t_1]}^{[t_2]}x^+(\tau)d\tau` is computable by:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval t1, t2;
-    pair<Interval,Interval> s;
-    s = x.partial_integral(t1, t2);
-    // s.first is [s^-]
-    // s.second is [s^+]
 
   .. code-tab:: py
 
@@ -534,6 +526,14 @@ Also, a decomposition of the interval-integral of :math:`[x](\cdot)=[x^-(\cdot),
     s = x.partial_integral(t1, t2)
     # s[0] is [s^-]
     # s[1] is [s^+]
+
+  .. code-tab:: c++
+
+    Interval t1, t2;
+    pair<Interval,Interval> s;
+    s = x.partial_integral(t1, t2);
+    // s.first is [s^-]
+    // s.second is [s^+]
 
 *Note:* :math:`[s]=[s^-]\sqcup[s^+]`.
 
@@ -545,13 +545,13 @@ The ``set()`` methods allow various updates on tubes. For instance:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    x.set(Interval(0.,2.), Interval(5.,6.)); // then [x]([5,6])=[0,2]
-
   .. code-tab:: py
 
     x.set(Interval(0,2), Interval(5,6)) # then [x]([5,6])=[0,2]
+
+  .. code-tab:: c++
+
+    x.set(Interval(0.,2.), Interval(5.,6.)); // then [x]([5,6])=[0,2]
     
 produces:
 
@@ -565,17 +565,17 @@ See also the following methods:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    x.set(Interval::pos_reals()); // set a constant codomain for all t
-    x.set(Interval(0.), 4.);      // set a value at some t: [x](4)=[0]
-    x.set_empty();                // empty set for all t
-
   .. code-tab:: py
 
     x.set(Interval.POS_REALS)     # set a constant codomain for all t
     x.set(Interval(0), 4.)        # set a value at some t: [x](4)=[0]
     x.set_empty()                 # empty set for all t
+
+  .. code-tab:: c++
+
+    x.set(Interval::pos_reals()); // set a constant codomain for all t
+    x.set(Interval(0.), 4.);      // set a value at some t: [x](4)=[0]
+    x.set_empty();                // empty set for all t
 
 
 .. _sec-manual-tubes-sampling:

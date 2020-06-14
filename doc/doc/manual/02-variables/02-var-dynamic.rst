@@ -25,15 +25,15 @@ A simple temporal function [#f1]_ can be defined and used for building a traject
 
 .. tabs::
 
+  .. code-tab:: py
+
+    tdomain = Interval(0,10)                               # temporal domain: [t_0,t_f]
+    x = Trajectory(tdomain, TFunction("cos(t)+sin(2*t)"))  # defining x(·) as: t ↦ cos(t)+sin(2t)
+
   .. code-tab:: c++
 
     Interval tdomain(0.,10.);                            // temporal domain: [t_0,t_f]
     Trajectory x(tdomain, TFunction("cos(t)+sin(2*t)")); // defining x(·) as: t ↦ cos(t)+sin(2t)
-
-  .. code-tab:: py
-
-    tdomain = Interval(0,10)                               # temporal domain: [t_0,t_f]
-    x = Trajectory(tdomain, TFunction("cos(t)+sin(2*t)")); # defining x(·) as: t ↦ cos(t)+sin(2t)
 
 Usual functions such as :math:`\cos`, :math:`\log`, *etc.* can be used to define a ``TFunction`` object. The convention used for these definitions is the one of IBEX (`read more <http://www.ibex-lib.org/doc/function.html>`_). Note that the system variable :math:`t` is a predefined variable of ``TFunction`` objects, that does not appear in IBEX's objects.
 
@@ -41,28 +41,19 @@ The evaluation of a trajectory at some time :math:`t`, for instance :math:`z=x(t
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    double z = x(M_PI);                          // z = cos(π)+sin(2π) = -1
-
   .. code-tab:: py
 
     z = x(math.pi)                               # z = cos(π)+sin(2π) = -1
+
+  .. code-tab:: c++
+
+    double z = x(M_PI);                          // z = cos(π)+sin(2π) = -1
 
 In this code, :math:`x(\cdot)` is implemented from the expression :math:`t\mapsto\cos(t)+\sin(2t)`, and no numerical approximation is performed: the formula is embedded in the object and the representation is accurate.
 However, the evaluation of the trajectory may lead to numerical errors related to the approximation of real numbers by floating-point values.
 For instance, if we change the decimal precision in order to format floating-point values, and then print the value of ``z``, we can see that the result is not exactly :math:`-1`:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    #include <iomanip>                           // for std::setprecision()
-
-    double z = x(M_PI);                          // z = cos(π)+sin(2π) = -1
-    cout << setprecision(10) << z << endl;
-    // Output:
-    // -1.0000000000000006661338147750939242541790008544921875
 
   .. code-tab:: py
 
@@ -73,22 +64,31 @@ For instance, if we change the decimal precision in order to format floating-poi
     // Output:
     // -1.0000000000000006661338147750939242541790008544921875
 
+  .. code-tab:: c++
+
+    #include <iomanip>                           // for std::setprecision()
+
+    double z = x(M_PI);                          // z = cos(π)+sin(2π) = -1
+    cout << setprecision(10) << z << endl;
+    // Output:
+    // -1.0000000000000006661338147750939242541790008544921875
+
 | This is not only due to the approximation made on :math:`\pi`, that could be reliably handled by some :math:`[\pi]`.
 | A reliable evaluation of :math:`x(\cdot)` can be done by specifying :math:`t` as a degenerate interval :math:`[t]`. This produces an interval evaluation that is reliable: the output is also an interval that is guaranteed to contain the actual value despite floating-point uncertainties:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    Interval z = x(Interval::pi());              // z = cos(π)+sin(2π) = -1
-    cout << setprecision(10) << z << endl;
-    // Output:
-    // [-1.000000000000002, -0.9999999999999991]
-
   .. code-tab:: py
 
     z = x(Interval.PI)                           # z = cos(π)+sin(2π) = -1
     print(z)
+    // Output:
+    // [-1.000000000000002, -0.9999999999999991]
+
+  .. code-tab:: c++
+
+    Interval z = x(Interval::pi());              // z = cos(π)+sin(2π) = -1
+    cout << setprecision(10) << z << endl;
     // Output:
     // [-1.000000000000002, -0.9999999999999991]
 
@@ -103,6 +103,17 @@ These trajectories are useful in case of actual data coming from sensors or nume
 
 .. tabs::
 
+  .. code-tab:: py
+
+    # Trajectory from a formula
+    x = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"))
+
+    # Trajectory from a map of values
+    values = {}
+    for t in np.arange(0., 10., 0.5):
+      values[t] = np.cos(t)+np.sin(2*t)
+    y = Trajectory(values)
+
   .. code-tab:: c++
 
     // Trajectory from a formula
@@ -113,17 +124,6 @@ These trajectories are useful in case of actual data coming from sensors or nume
     for(double t = 0. ; t <= 10. ; t+=0.5)
       values[t] = cos(t)+sin(2*t);
     Trajectory y(values);
-
-  .. code-tab:: py
-
-    # Trajectory from a formula
-    x = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"));
-
-    # Trajectory from a map of values
-    values = {}
-    for t in np.arange(0., 10., 0.5):
-      values[t] = np.cos(t)+np.sin(2*t)
-    y = Trajectory(values)
 
 ..    // Graphics (will be detailed later on)
 ..    fig.add_trajectory(&x_f, "x_f", "red");
@@ -146,6 +146,15 @@ It is also possible to define a trajectory from an analytical function while rep
 
 .. tabs::
 
+  .. code-tab:: py
+
+    # Analytical definition but sampling representation with dt=0.5:
+    y_1 = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"), 0.5)
+
+    # Same as before, in two steps. y_1 == y_2
+    y_2 = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"))
+    y_2.sample(0.5)
+
   .. code-tab:: c++
 
     // Analytical definition but sampling representation with dt=0.5:
@@ -153,15 +162,6 @@ It is also possible to define a trajectory from an analytical function while rep
 
     // Same as before, in two steps. y_1 == y_2
     Trajectory y_2(Interval(0.,10.), TFunction("cos(t)+sin(2*t)"));
-    y_2.sample(0.5);
-
-  .. code-tab:: py
-
-    # Analytical definition but sampling representation with dt=0.5:
-    y_1 = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"), 0.5);
-
-    # Same as before, in two steps. y_1 == y_2
-    y_2 = Trajectory(Interval(0,10), TFunction("cos(t)+sin(2*t)"));
     y_2.sample(0.5);
 
 The ``TFunction`` object is only used for the initialization. The resulting trajectory is only defined as a map of values.
@@ -174,13 +174,6 @@ Once created, several evaluations of the trajectory can be made. For instance:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    x.tdomain()        // temporal domain, returns [0, 10]
-    x.codomain()       // envelope of values, returns [-2,2]
-    x(6.)              // evaluation of x(·) at 6, returns 0.42..
-    x(Interval(5.,6.)) // evaluation of x(·) over [5,6], returns [-0.72..,0.42..]
-
   .. code-tab:: py
 
     x.tdomain())       # temporal domain, returns [0, 10]
@@ -188,33 +181,30 @@ Once created, several evaluations of the trajectory can be made. For instance:
     x(6.))             # evaluation of x(·) at 6, returns 0.42..
     x(Interval(5,6)))  # evaluation of x(·) over [5,6], returns [-0.72..,0.42..]
 
+  .. code-tab:: c++
+
+    x.tdomain()        // temporal domain, returns [0, 10]
+    x.codomain()       // envelope of values, returns [-2,2]
+    x(6.)              // evaluation of x(·) at 6, returns 0.42..
+    x(Interval(5.,6.)) // evaluation of x(·) over [5,6], returns [-0.72..,0.42..]
+
 Note that the items defining the trajectory (the map of values, or the function) are accessible from the object:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    TFunction *f = x.tfunction();              // x(·) was defined from a formula
-    map<double,double> m = y.sampled_map();    // y(·) was defined as a map of values
 
   .. code-tab:: py
 
     f = x.tfunction()                          # x(·) was defined from a formula
     m = y.sampled_map()                        # y(·) was defined as a map of values
 
+  .. code-tab:: c++
+
+    TFunction *f = x.tfunction();              // x(·) was defined from a formula
+    map<double,double> m = y.sampled_map();    // y(·) was defined as a map of values
+
 Other methods exist such as:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    // Approximation of primitives:
-    Trajectory y_prim = y.primitive();         // when defined from a map of values
-    Trajectory x_prim = x.primitive(0., 0.01); // when defined from a function,
-                                               // params are (x0,dt)
-    // Differentiations:
-    Trajectory y_diff = y.diff();              // finite differences on y(·)
-    Trajectory x_diff = x.diff();              // exact differentiation of x(·)
 
   .. code-tab:: py
 
@@ -226,19 +216,29 @@ Other methods exist such as:
     y_diff = y.diff()                          # finite differences on y(·)
     x_diff = x.diff()                          # exact differentiation of x(·)
 
+  .. code-tab:: c++
+
+    // Approximation of primitives:
+    Trajectory y_prim = y.primitive();         // when defined from a map of values
+    Trajectory x_prim = x.primitive(0., 0.01); // when defined from a function,
+                                               // params are (x0,dt)
+    // Differentiations:
+    Trajectory y_diff = y.diff();              // finite differences on y(·)
+    Trajectory x_diff = x.diff();              // exact differentiation of x(·)
+
 Note that the result of these methods is inaccurate on trajectories defined from a map. For trajectories built on analytic functions, the exact differentiation is performed and returned in the form of a trajectory defined by a ``TFunction`` too.
 
 Finally, to add a point to a mapped trajectory, the following function can be used:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    y.set(1., 4.);                             // add the value y(4)=1
-
   .. code-tab:: py
 
     y.set(1, 4)                                # add the value y(4)=1
+
+  .. code-tab:: c++
+
+    y.set(1., 4.);                             // add the value y(4)=1
 
 Other features and details can be found in the technical datasheet of the ``Trajectory`` class.
 
@@ -272,16 +272,6 @@ The use of the features presented above remain the same.
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    // Trajectory from a formula; the function's output is two-dimensional
-    TrajectoryVector x(Interval(0.,10.), TFunction("(cos(t);sin(t))"));
-
-    // Another example of discretized trajectory
-    TrajectoryVector y(2);
-    for(double t = 0. ; t <= 10. ; t+=0.6)
-      y.set({cos(t),sin(t)}, t);
-
   .. code-tab:: py
 
     # Trajectory from a formula; the function's output is two-dimensional
@@ -291,6 +281,16 @@ The use of the features presented above remain the same.
     y = TrajectoryVector(2)
     for t in np.arange(0., 10., 0.6):
       y.set([np.cos(t),np.sin(t)], t)
+
+  .. code-tab:: c++
+
+    // Trajectory from a formula; the function's output is two-dimensional
+    TrajectoryVector x(Interval(0.,10.), TFunction("(cos(t);sin(t))"));
+
+    // Another example of discretized trajectory
+    TrajectoryVector y(2);
+    for(double t = 0. ; t <= 10. ; t+=0.6)
+      y.set({cos(t),sin(t)}, t);
 
 ..    // ...
 ..
@@ -309,16 +309,16 @@ The use of the features presented above remain the same.
 Note that each component of a vector object (``IntervalVector``, ``TrajectoryVector``, ``TubeVector``) is available by reference:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    x[1] = Trajectory(tdomain, TFunction("exp(t)"));
-    cout << x[1] << endl;
   
   .. code-tab:: py
 
     x[1] = Trajectory(tdomain, TFunction("exp(t)"))
     print(x[1])
+
+  .. code-tab:: c++
+
+    x[1] = Trajectory(tdomain, TFunction("exp(t)"));
+    cout << x[1] << endl;
 
 
 .. _sec-manual-vardyn-lissajous:
@@ -333,15 +333,15 @@ Let us consider a robot following a Lissajous curve from :math:`t_0=0` to :math:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    Interval tdomain(0.,5.);
-    TrajectoryVector x(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), 0.01);
-
   .. code-tab:: py
 
     tdomain = Interval(0,5)
     x = TrajectoryVector(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), 0.01)
+
+  .. code-tab:: c++
+
+    Interval tdomain(0.,5.);
+    TrajectoryVector x(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), 0.01);
 
 .. figure:: img/lissajous.png
 
@@ -352,15 +352,15 @@ We compute the *trajectory* of distances by:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    Vector b({0.5,1.}); // landmark's position
-    Trajectory dist = sqrt(sqr(x[0]-b[0])+sqr(x[1]-b[1])); // simple operations between traj.
-
   .. code-tab:: py
 
     b = (0.5,1) # landmark's position
     dist = sqrt(sqr(x[0]-b[0])+sqr(x[1]-b[1])) # simple operations between traj.
+
+  .. code-tab:: c++
+
+    Vector b({0.5,1.}); // landmark's position
+    Trajectory dist = sqrt(sqr(x[0]-b[0])+sqr(x[1]-b[1])); // simple operations between traj.
 
 .. figure:: img/distances.png
 
@@ -373,13 +373,6 @@ Random trajectories
 As one can see, trajectories can be used to represent data. When it comes to consider some added noise, the ``RandTrajectory`` class may be useful.
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    // Random values in [-0.2,0.2] at each dt=0.01
-    RandTrajectory n(tdomain, 0.01, Interval(-0.2,0.2));
-
-    dist += n; // added noise (sum of trajectories)
   
   .. code-tab:: py
 
@@ -387,6 +380,13 @@ As one can see, trajectories can be used to represent data. When it comes to con
     n = RandTrajectory(tdomain, 0.01, Interval(-0.2,0.2))
 
     dist += n # added noise (sum of trajectories)
+
+  .. code-tab:: c++
+
+    // Random values in [-0.2,0.2] at each dt=0.01
+    RandTrajectory n(tdomain, 0.01, Interval(-0.2,0.2));
+
+    dist += n; // added noise (sum of trajectories)
 
 .. figure:: img/distances_noise.png
 

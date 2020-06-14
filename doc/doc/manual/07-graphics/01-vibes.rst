@@ -31,16 +31,7 @@ The first thing to do is launch VIBes. This will make appear the VIBes window, r
 
 To start and end the communications with the server, one should include:
 
-
 .. tabs::
-
-  .. code-tab:: c++
-
-    vibes::beginDrawing();
-
-    // ...
-
-    vibes::endDrawing();
 
   .. code-tab:: py
 
@@ -49,6 +40,14 @@ To start and end the communications with the server, one should include:
     # ...
 
     endDrawing()
+
+  .. code-tab:: c++
+
+    vibes::beginDrawing();
+
+    // ...
+
+    vibes::endDrawing();
 
 
 The VIBes API
@@ -81,17 +80,17 @@ The following:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    VIBesFig fig("Figure name");
-    fig.set_properties(100, 100, 400, 200);
-    fig.axis_limits(IntervalVector({{0.,10.},{0.,5.}}));
-
   .. code-tab:: py
 
     fig = VIBesFig("Figure name")
     fig.set_properties(100, 100, 400, 200)
     fig.axis_limits(IntervalVector([[0,10],[0,5]]))
+
+  .. code-tab:: c++
+
+    VIBesFig fig("Figure name");
+    fig.set_properties(100, 100, 400, 200);
+    fig.axis_limits(IntervalVector({{0.,10.},{0.,5.}}));
 
 creates a figure with:
 
@@ -104,46 +103,46 @@ creates a figure with:
 .. rubric:: Drawing boxes
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    IntervalVector x({{1,2},{3,4}});
-    fig.draw_box(x, "red[yellow]");
     
   .. code-tab:: py
 
     x = IntervalVector([[1,2],[3,4]])
     fig.draw_box(x, "red[yellow]")
 
+  .. code-tab:: c++
+
+    IntervalVector x({{1,2},{3,4}});
+    fig.draw_box(x, "red[yellow]");
+
 
 .. rubric:: Drawing circles
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    fig.draw_circle(7, 2.5, 2., "darkGreen[green]");
     
   .. code-tab:: py
 
     fig.draw_circle(7, 2.5, 2, "darkGreen[green]")
 
+  .. code-tab:: c++
+
+    fig.draw_circle(7, 2.5, 2., "darkGreen[green]");
+
 
 .. rubric:: Drawing pies
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval r(3.,4.);
-    Interval theta(-M_PI/10.,M_PI/10.);
-    fig.draw_pie(0., 2.5, r, theta, "blue[cyan]");
     
   .. code-tab:: py
 
     r = Interval(3,4)
     theta = Interval(-math.pi/10,math.pi/10)
     fig.draw_pie(0, 2.5, r, theta, "blue[cyan]")
+
+  .. code-tab:: c++
+
+    Interval r(3.,4.);
+    Interval theta(-M_PI/10.,M_PI/10.);
+    fig.draw_pie(0., 2.5, r, theta, "blue[cyan]");
 
 The above commands produce:
 
@@ -185,15 +184,15 @@ Predefined colors are:
 For custom colors, the HTML color code can be used. In the following example, the two last digits (``77``) add a *alpha* component to the colors for transparency. These last values may be chosen between ``00`` (transparency) and ``FF`` (opacity).
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    fig.draw_box(IntervalVector({{3,8},{2,4}}), "#A02400[#A0240077]");
-    fig.draw_box(IntervalVector({{1,5},{1,3}}), "#0074A0[#0074A077]");
       
   .. code-tab:: py
 
     fig.draw_box(IntervalVector([[3,8],[2,4]]), "#A02400[#A0240077]")
     fig.draw_box(IntervalVector([[1,5],[1,3]]), "#0074A0[#0074A077]")
+
+  .. code-tab:: c++
+
+    fig.draw_box(IntervalVector({{3,8},{2,4}}), "#A02400[#A0240077]");
+    fig.draw_box(IntervalVector({{1,5},{1,3}}), "#0074A0[#0074A077]");
 
 .. figure:: img/shaded_boxes.png

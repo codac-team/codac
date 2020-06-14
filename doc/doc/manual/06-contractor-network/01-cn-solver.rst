@@ -17,19 +17,6 @@ Simple example:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c"));
-    Interval a(0,1), b(-1,1), c(1.5,2);
-
-    ContractorNetwork cn;
-    cn.add(ctc_plus, {a, b, c}); 
-    cn.contract();
-
-    // a == [0.5,1]
-    // b == [0.5,1]
-    // c == [1.5,2]
-
   .. code-tab:: py
 
     ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c"))
@@ -44,3 +31,16 @@ Simple example:
     # a == [0.5,1]
     # b == [0.5,1]
     # c == [1.5,2]
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c"));
+    Interval a(0,1), b(-1,1), c(1.5,2);
+
+    ContractorNetwork cn;
+    cn.add(ctc_plus, {a, b, c}); 
+    cn.contract();
+
+    // a == [0.5,1]
+    // b == [0.5,1]
+    // c == [1.5,2]

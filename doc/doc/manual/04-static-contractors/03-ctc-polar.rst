@@ -27,14 +27,14 @@ Definition
 
   .. tabs::
 
+    .. code-tab:: py
+
+      ctc.polar.contract(x, y, rho, theta)
+
     .. code-tab:: c++
 
       #include <tubex-pyibex.h>
       ctc::polar.contract(x, y, rho, theta);
-
-    .. code-tab:: py
-
-      ctc.polar.contract(x, y, rho, theta)
 
 
 .. rubric:: Optimality
@@ -56,6 +56,18 @@ We define domains (intervals and boxes):
 
 .. tabs::
 
+  .. code-tab:: py
+
+    x = IntervalVector(2,Interval(0))
+
+    d = [Interval(7,8), Interval(9,10), Interval(10,11)]
+
+    theta = [Interval(0.6,1.45), Interval(1.15,1.2), Interval(0.8,1)]
+
+    b = [IntervalVector([[1.5,2.5],[4,11]]), \
+         IntervalVector([[3,4.5],[8,10.5]]), \
+         IntervalVector([[5,6.5],[6.5,8]])]
+
   .. code-tab:: c++
 
     IntervalVector x(2,0.);
@@ -69,22 +81,21 @@ We define domains (intervals and boxes):
     Interval d3(10.,11.), theta3(0.8,1.);
     IntervalVector b3{{5,6.5},{6.5,8}};
 
-  .. code-tab:: py
-
-    x = IntervalVector(2,Interval(0))
-
-    d = [Interval(7,8), Interval(9,10), Interval(10,11)]
-
-    theta = [Interval(0.6,1.45), Interval(1.15,1.2), Interval(0.8,1)]
-
-    b = [IntervalVector([[1.5,2.5],[4,11]]), \
-         IntervalVector([[3,4.5],[8,10.5]]), \
-         IntervalVector([[5,6.5],[6.5,8]])]
-
 
 Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the :math:`[\mathbf{b}^i]`, :math:`[d^i]` and :math:`[\theta^i]`:
 
 .. tabs::
+
+  .. code-tab:: py
+
+    ctc_polar = CtcPolar()
+
+    for i in range(0,3):
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
+
+    # note that we could also use directly the ctc.polar object already available
 
   .. code-tab:: c++
 
@@ -100,75 +111,93 @@ Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the 
 
     // note that we could also use directly the ctc::polar object already available
 
-  .. code-tab:: py
-
-    ctc_polar = CtcPolar()
-
-    for i in range(0,3):
-      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
-      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
-      ctc_polar.contract(b[i][0], b[i][1], d[i], theta[i])
-
-    # note that we could also use directly the ctc.polar object already available
-
 
 .. figure:: img/CtcPolar.png
 
   Illustration of several contracted boxes and pies with the above ``ctc_polar`` contractor. The blue boxes :math:`[\mathbf{b}^i]` have been contracted as well as the pies :math:`[d^i]\times[\theta^i]`.
 
-.. #include <tubex.h>
-.. #include <tubex-rob.h>
-.. #include <tubex-pyibex.h>
+
+.. note:: 
+
+  .. Figure:: img/CtcPolar_nonoptimal.png
+    :align: right
+    :width: 150px
+
+  | **Optimality**
+  | We could have used the ``CtcFunction`` contractor to express the constraint, but the results would not have been optimal. This means that the resulting intervals would not perfectly size the set of feasible values. The figure on the right shows off the pessimism of such alternative.
+
+
+
+.. from pyibex import *
+.. from tubex_lib import *
 .. 
-.. using namespace std;
-.. using namespace tubex;
-.. using namespace ibex;
+.. x = IntervalVector(2,Interval(0.))
 .. 
-.. int main()
-.. {
-..   Tube test(Interval(0.,10.), 0.1);
+.. d1 = Interval(7.,8.)
+.. theta1 = Interval(0.6,1.45)
+.. b1 = IntervalVector([[1.5,2.5],[4,11]])
 .. 
-..   IntervalVector x(2,0.);
+.. d2 = Interval(9.,10.)
+.. theta2 = Interval(1.15,1.2)
+.. b2 = IntervalVector([[3,4.5],[8,10.5]])
 .. 
-..   Interval d1(7.,8.), theta1(0.6,1.45);
-..   IntervalVector b1{{1.5,2.5},{4,11}};
+.. d3 = Interval(10.,11.)
+.. theta3 = Interval(0.8,1.)
+.. b3 = IntervalVector([[5,6.5],[6.5,8]])
 .. 
-..   Interval d2(9.,10.), theta2(1.15,1.2);
-..   IntervalVector b2{{3,4.5},{8,10.5}};
+.. # For highlighting non optimality:
+.. yd1 = Interval(7.,8.)
+.. ytheta1 = Interval(0.6,1.45)
+.. yd2 = Interval(9.,10.)
+.. ytheta2 = Interval(1.15,1.2)
+.. yd3 = Interval(10.,11.)
+.. ytheta3 = Interval(0.8,1.)
+.. c1 = IntervalVector([[1.5,2.5],[4,11]])
+.. c2 = IntervalVector([[3,4.5],[8,10.5]])
+.. c3 = IntervalVector([[5,6.5],[6.5,8]])
+.. ctc_g = CtcFunction(Function("y[2]", "m[2]",
+..   "(y[0]*cos(y[1])-m[0] ; y[0]*sin(y[1])-m[1])"))
+.. cn = ContractorNetwork()
+.. cn.add(ctc_g, [yd1, ytheta1, c1])
+.. cn.add(ctc_g, [yd2, ytheta2, c2])
+.. cn.add(ctc_g, [yd3, ytheta3, c3])
+.. cn.contract()
 .. 
-..   Interval d3(10.,11.), theta3(0.8,1.);
-..   IntervalVector b3{{5,6.5},{6.5,8}};
+.. beginDrawing()
 .. 
-..   pyibex::CtcPolar ctc_polar;
+.. fig = VIBesFigMap("Map")
+.. fig.set_properties(50, 50, 500, 500)
+.. fig.add_beacon(x.mid(), 0.2)
 .. 
-..   vibes::beginDrawing();
+.. fig.draw_box(b1, "#475B96")
+.. fig.draw_box(b2, "#475B96")
+.. fig.draw_box(b3, "#475B96")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), d1, theta1, "#C65B00")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), d2, theta2, "#C65B00")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), d3, theta3, "#C65B00")
 .. 
-..   VIBesFigMap fig("Map");
-..   fig.set_properties(50, 50, 500, 500);
-..   fig.add_beacon(Beacon(x), 0.2);
+.. ctc.polar.contract(b1[0], b1[1], d1, theta1)
+.. ctc.polar.contract(b2[0], b2[1], d2, theta2)
+.. ctc.polar.contract(b3[0], b3[1], d3, theta3)
 .. 
-..   fig.draw_box(b1, "#475B96");
-..   fig.draw_box(b2, "#475B96");
-..   fig.draw_box(b3, "#475B96");
-..   fig.draw_pie(x[0].mid(), x[1].mid(), d1, theta1, "#C65B00");
-..   fig.draw_pie(x[0].mid(), x[1].mid(), d2, theta2, "#C65B00");
-..   fig.draw_pie(x[0].mid(), x[1].mid(), d3, theta3, "#C65B00");
+.. fig.draw_box(b1, "#475B96[#1A80FF55]")
+.. fig.draw_box(b2, "#475B96[#1A80FF55]")
+.. fig.draw_box(b3, "#475B96[#1A80FF55]")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), d1, theta1, "#C65B00[#FF9A1A55]")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), d2, theta2, "#C65B00[#FF9A1A55]")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), d3, theta3, "#C65B00[#FF9A1A55]")
 .. 
-..   ctc_polar.contract(b1[0], b1[1], d1, theta1);
-..   ctc_polar.contract(b2[0], b2[1], d2, theta2);
-..   ctc_polar.contract(b3[0], b3[1], d3, theta3);
+.. # For highlighting non optimality:
+.. fig.draw_box(c1, "#475B96[#1A80FF55]")
+.. fig.draw_box(c2, "#475B96[#1A80FF55]")
+.. fig.draw_box(c3, "#475B96[#1A80FF55]")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), yd1, ytheta1, "#C65B00[#FF9A1A55]")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), yd2, ytheta2, "#C65B00[#FF9A1A55]")
+.. fig.draw_pie(x[0].mid(), x[1].mid(), yd3, ytheta3, "#C65B00[#FF9A1A55]")
 .. 
-..   fig.draw_box(b1, "#475B96[#1A80FF55]");
-..   fig.draw_box(b2, "#475B96[#1A80FF55]");
-..   fig.draw_box(b3, "#475B96[#1A80FF55]");
-..   fig.draw_pie(x[0].mid(), x[1].mid(), d1, theta1, "#C65B00[#FF9A1A55]");
-..   fig.draw_pie(x[0].mid(), x[1].mid(), d2, theta2, "#C65B00[#FF9A1A55]");
-..   fig.draw_pie(x[0].mid(), x[1].mid(), d3, theta3, "#C65B00[#FF9A1A55]");
+.. fig.axis_limits(0.5, 8., 4., 11., True, 0.02)
 .. 
-..   fig.axis_limits(0.5, 8., 4., 11., true, 0.02);
-.. 
-..   vibes::endDrawing();
-.. }
+.. endDrawing()
 
 
 Related content

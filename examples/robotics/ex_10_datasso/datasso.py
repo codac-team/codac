@@ -11,6 +11,20 @@ import math
 import sys # only for checking if this example still works
 
 
+class myCtc(Ctc):
+
+  def __init__(self, map_):
+    Ctc.__init__(self, 2)
+    self.map = map_
+
+  def contract(self, x):
+    envelope = IntervalVector(2,Interval.EMPTY_SET)
+    for m in self.map:
+      envelope |= x & m
+    x = envelope
+    return x
+
+
 # =========== CREATING DATA ===========
 
 tdomain = Interval(0,6)
@@ -59,14 +73,14 @@ for obs in v_obs:
   obs[2].inflate(0.1) # bearing
 
 # Association set
-m = [IntervalVector(2)] * len(v_obs) # unknown association
+m = [IntervalVector(2) for _ in v_obs] # unknown association
 
 
 # =========== CUSTOM-BUILT CONTRACTORS ===========
 
 ctc_plus = CtcFunction(Function("a", "b", "c", "a-(b+c)")) # algebraic constraint a=b+c
 ctc_minus = CtcFunction(Function("a", "b", "c", "a-(b-c)")) # algebraic constraint a=b-c
-ctc_constell = CtcConstell(v_map) # constellation constraint
+ctc_constell = myCtc(v_map) # constellation constraint
 
 
 # =========== CONTRACTOR NETWORK ===========
@@ -80,16 +94,13 @@ for i in range(0,len(v_obs)):
   y1 = Interval(v_obs[i][1]) # range
   y2 = Interval(v_obs[i][2]) # bearing
 
-  mtemp = cn.create_dom(m[i])
-  # This does not work: mtemp = m[i]
-
   # Intermediate variables:
   a = cn.create_dom(Interval())
   d = cn.create_dom(IntervalVector(2))
   p = cn.create_dom(IntervalVector(3))
   
-  cn.add(ctc_constell, [mtemp])
-  cn.add(ctc_minus, [d, mtemp, cn.subvector(p,0,1)])
+  cn.add(ctc_constell, [m[i]])
+  cn.add(ctc_minus, [d, m[i], cn.subvector(p,0,1)])
   cn.add(ctc_plus, [a, p[2], y2])
   cn.add(ctc.polar, [d, y1, a])
   cn.add(ctc.eval, [t, p, x, v])

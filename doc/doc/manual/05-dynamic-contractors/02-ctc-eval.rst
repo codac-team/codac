@@ -20,13 +20,13 @@ Definition
 
   .. tabs::
 
-    .. code-tab:: c++
-
-      ctc::eval.contract(ti, yi, x, v);
-
     .. code-tab:: py
 
       ctc.eval.contract(ti, yi, x, v)
+
+    .. code-tab:: c++
+
+      ctc::eval.contract(ti, yi, x, v);
 
   .. rubric:: Prerequisite
 
@@ -53,23 +53,6 @@ The code leading to the contraction presented in this figure is:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    double dt = 0.01;
-    Interval tdomain(-M_PI, M_PI/2.);
-
-    Tube v(tdomain, dt, TFunction("cos(t)+[-0.1,0.1]")); // uncertain derivative (not displayed)
-    Tube x = v.primitive() + Interval(-0.1, 0.1); // x is the primitive of v
-
-    // Bounded observation
-    Interval ti(-0.5,0.3);
-    Interval yi(0.3,1.1);
-
-    // Contraction
-    CtcEval ctc_eval;
-    ctc_eval.contract(ti, yi, x, v);
-    // Note that we could use directly ctc::eval.contract(ti, yi, x, v)
-
   .. code-tab:: py
 
     dt = 0.01
@@ -87,6 +70,23 @@ The code leading to the contraction presented in this figure is:
     ctc_eval.contract(ti, yi, x, v)
     # Note that we could use directly ctc.eval.contract(ti, yi, x, v)
 
+  .. code-tab:: c++
+
+    double dt = 0.01;
+    Interval tdomain(-M_PI, M_PI/2.);
+
+    Tube v(tdomain, dt, TFunction("cos(t)+[-0.1,0.1]")); // uncertain derivative (not displayed)
+    Tube x = v.primitive() + Interval(-0.1, 0.1); // x is the primitive of v
+
+    // Bounded observation
+    Interval ti(-0.5,0.3);
+    Interval yi(0.3,1.1);
+
+    // Contraction
+    CtcEval ctc_eval;
+    ctc_eval.contract(ti, yi, x, v);
+    // Note that we could use directly ctc::eval.contract(ti, yi, x, v)
+
 
 .. rubric:: Restrict the temporal propagation (save computation time)
 
@@ -96,6 +96,11 @@ For instance, we now consider three constraints on the tube:
 
 .. tabs::
 
+  .. code-tab:: py
+
+    ti = [Interval(-0.5,0.3), Interval(-0.6,0.8), Interval(-2.3,-2.2)]
+    yi = [Interval(0.3,1.1), Interval(-0.5,-0.4), Interval(-0.8,-0.7)]
+
   .. code-tab:: c++
 
     Interval ti[3], yi[3];
@@ -103,26 +108,9 @@ For instance, we now consider three constraints on the tube:
     ti[1] = Interval(-0.6,0.8); yi[1] = Interval(-0.5,-0.4);
     ti[2] = Interval(-2.3,-2.2); yi[2] = Interval(-0.8,-0.7);
 
-  .. code-tab:: py
-
-    ti = [Interval(-0.5,0.3), Interval(-0.6,0.8), Interval(-2.3,-2.2)]
-    yi = [Interval(0.3,1.1), Interval(-0.5,-0.4), Interval(-0.8,-0.7)]
-
 Then we use the contractor configured for the limited contraction:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    ctc_eval.enable_time_propag(false);
-
-    for(int i = 0 ; i < 3 ; i++)
-      ctc_eval.contract(ti[i], yi[i], x, v);
-
-    ctc::deriv.contract(x, v); // for smoothing the tube
-
-    for(int i = 0 ; i < 3 ; i++) // for contracting the [ti]×[yi] boxes
-      ctc_eval.contract(ti[i], yi[i], x, v);
 
   .. code-tab:: py
 
@@ -135,6 +123,18 @@ Then we use the contractor configured for the limited contraction:
 
     for i in range (0,3): # for contracting the [ti]×[yi] boxes
       ctc_eval.contract(ti[i], yi[i], x, v)
+
+  .. code-tab:: c++
+
+    ctc_eval.enable_time_propag(false);
+
+    for(int i = 0 ; i < 3 ; i++)
+      ctc_eval.contract(ti[i], yi[i], x, v);
+
+    ctc::deriv.contract(x, v); // for smoothing the tube
+
+    for(int i = 0 ; i < 3 ; i++) // for contracting the [ti]×[yi] boxes
+      ctc_eval.contract(ti[i], yi[i], x, v);
 
 
 The following animation presents the results before and after the :math:`\mathcal{C}_{\frac{d}{dt}}` contraction:
@@ -224,27 +224,6 @@ The tube is contracted over :math:`[t_0,t_f]` with its uncertain derivative :mat
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    double dt = 0.01;
-    Interval tdomain(0.,5.);
-    // No initial knowledge on [x](·)
-    TubeVector x(tdomain, dt, 2); // initialization with [-∞,∞]×[-∞,∞]
-
-    // New values for the temporal evaluation of [x](·)
-    Interval t(4.3,4.4);
-    IntervalVector b({{-0.73,-0.69},{0.64,0.68}});
-
-    // Uncertain derivative of [x](·)
-    TubeVector v(tdomain, dt, TFunction("(-2*sin(t) ; 2*cos(2*t))"));
-    v.inflate(0.01);
-
-    // Contraction
-    CtcEval ctc_eval;
-    ctc_eval.contract(t, b, x, v);
-    // Note that in this case, no contraction is performed on [t] and [b]
-    // Note also that we could use directly ctc::eval.contract(t, b, x, v)
-
   .. code-tab:: py
 
     dt = 0.01
@@ -265,6 +244,27 @@ The tube is contracted over :math:`[t_0,t_f]` with its uncertain derivative :mat
     ctc_eval.contract(t, b, x, v)
     # Note that in this case, no contraction is performed on [t] and [b]
     # Note also that we could use directly ctc.eval.contract(t, b, x, v)
+
+  .. code-tab:: c++
+
+    double dt = 0.01;
+    Interval tdomain(0.,5.);
+    // No initial knowledge on [x](·)
+    TubeVector x(tdomain, dt, 2); // initialization with [-∞,∞]×[-∞,∞]
+
+    // New values for the temporal evaluation of [x](·)
+    Interval t(4.3,4.4);
+    IntervalVector b({{-0.73,-0.69},{0.64,0.68}});
+
+    // Uncertain derivative of [x](·)
+    TubeVector v(tdomain, dt, TFunction("(-2*sin(t) ; 2*cos(2*t))"));
+    v.inflate(0.01);
+
+    // Contraction
+    CtcEval ctc_eval;
+    ctc_eval.contract(t, b, x, v);
+    // Note that in this case, no contraction is performed on [t] and [b]
+    // Note also that we could use directly ctc::eval.contract(t, b, x, v)
 
 
 The obtained tube is blue painted on the figure, the contraction to keep the trajectories going through :math:`[\mathbf{b}]` (red box) over :math:`[t]=[4.3,4.4]` is propagated over the whole *t*-domain:
@@ -322,15 +322,15 @@ Assume now that we know the actual trajectory to be bounded within the tube:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    TubeVector x(tdomain, dt, TFunction("(2*cos(t) ; sin(2*t))"));
-    x.inflate(0.05);
-
   .. code-tab:: py
 
     x = TubeVector(tdomain, dt, TFunction("(2*cos(t) ; sin(2*t))"))
     x.inflate(0.05)
+
+  .. code-tab:: c++
+
+    TubeVector x(tdomain, dt, TFunction("(2*cos(t) ; sin(2*t))"));
+    x.inflate(0.05);
 
 The tube is blue painted on the figure:
 
@@ -341,16 +341,6 @@ The :math:`\mathcal{C}_{\textrm{eval}}` can be used to evaluate the position tim
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    t = Interval::all_reals(); // new initialization
-    b = {{-1.,0.},{0.4,1.2}}; // (blue box on the figure)
-
-    ctc_eval.contract(t, b, x);
-
-    // [t] estimated to [4.15, 4.54]
-    // [b] contracted to ([-1, -0.29] ; [0.4, 0.95])  (red on the figure)
-
   .. code-tab:: py
 
     t = Interval(0,oo) # new initialization
@@ -360,6 +350,16 @@ The :math:`\mathcal{C}_{\textrm{eval}}` can be used to evaluate the position tim
 
     # [t] estimated to [4.15, 4.54]
     # [b] contracted to ([-1, -0.29] ; [0.4, 0.95])  (red on the figure)
+
+  .. code-tab:: c++
+
+    t = Interval::all_reals(); // new initialization
+    b = {{-1.,0.},{0.4,1.2}}; // (blue box on the figure)
+
+    ctc_eval.contract(t, b, x);
+
+    // [t] estimated to [4.15, 4.54]
+    // [b] contracted to ([-1, -0.29] ; [0.4, 0.95])  (red on the figure)
 
 
 .. #include <tubex.h>
