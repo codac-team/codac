@@ -204,7 +204,8 @@ namespace tubex
     params_this_fig["figure"] = name();
 
     // Corrected bug in case of r.lb() == 0 (only one edge of the pie is drawn)
-    vibes::drawPie(x, y, (r.lb() == 0. ? ibex::next_float(r.lb()) : r.lb()), r.ub(), theta.lb() * 180. / M_PI, theta.ub() * 180. / M_PI, color, params_this_fig);
+    double near_zero = 0.0000001;
+    vibes::drawPie(x, y, (fabs(r.lb()) <= near_zero ? near_zero : r.lb()), r.ub(), theta.lb() * 180. / M_PI, theta.ub() * 180. / M_PI, color, params_this_fig);
   }
   
   void VIBesFig::draw_edge(const Edge& e, const vibes::Params& params)
