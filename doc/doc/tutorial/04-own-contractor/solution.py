@@ -79,20 +79,20 @@ for obs in v_obs:
   obs[0].inflate(0.02) # range
   obs[1].inflate(0.02) # bearing
 
+x = IntervalVector(3)
+x[2] = Interval(x_truth[2])
+
 for obs in v_obs:
   fig_map.draw_pie(x_truth[0],x_truth[1],Interval(0)|obs[0],x_truth[2]+obs[1],"lightGray")
   fig_map.draw_pie(x_truth[0],x_truth[1],obs[0],x_truth[2]+obs[1],"darkGray")
 
-
+  fig_map.draw_pie(x_truth[0], x_truth[1], obs[0], x[2]+obs[1])
 # D.7
 
 # Define contractors
 ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c")) # a+b=c
 ctc_minus = CtcFunction(Function("a", "b", "c", "a-b-c")) # a-b=c
 # ctc_constell already created
-
-x = IntervalVector(3)
-x[2] = Interval(x_truth[2])
 
 if False:
 

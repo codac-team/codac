@@ -176,6 +176,23 @@ A robot depicted by the state :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal
 
   **C.2.** Create a new project (:ref:`Python <sec-start-py-project>` or :ref:`C++ <sec-start-cpp-project>`) and create the vectors ``x_truth``, ``y_truth``, ``m_truth`` representing the actual but unknown values of :math:`\mathbf{x}=\left(2,1,\pi/6\right)^\intercal`, :math:`\mathbf{y}=\left(6,\pi/6\right)^\intercal` and :math:`\mathbf{m}=\left(5,6.2\right)^\intercal`.
 
+  .. tabs::
+
+    .. code-tab:: py
+
+      # We recall that in Python, a mathematical vector (not an IntervalVector)
+      # can be represented with native objects, for instance:
+
+      x_truth = (2,1,math.pi/6) # actual state vector (pose)
+
+    .. code-tab:: cpp
+
+      // We recall that in C++, we can use the Vector class for
+      // representing mathematical vectors. For instance:
+
+      Vector x_truth({2.,1.,M_PI/6}); // actual state vector (pose)
+
+
   **C.3.** Create the bounded sets related to the state, the measurement and the landmark position: :math:`[\mathbf{x}]\in\mathbb{IR}^3`, :math:`[\mathbf{y}]\in\mathbb{IR}^2`, :math:`[\mathbf{m}]\in\mathbb{IR}^2`. We can for instance use the ``.inflate(float radius)`` method on intervals or boxes. The heading of the robot is assumed precisely known (for instance thanks to a compass); the actual heading :math:`x_3` is represented by ``x_truth[2]``.
 
   **C.4.** Display the vehicle and the landmark with:

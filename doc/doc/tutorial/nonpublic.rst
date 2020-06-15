@@ -15,7 +15,7 @@ Exercises in progress...
 
 Corrections:
 
-* `tubex-lib/examples/tuto/02_static_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/02_static_rangeonly>`_
+* `tubex-lib/examples/tuto/02_static_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/tuto/examples/tuto/02_static_rangeonly>`_
 
 ------------------------------------------------------
 
@@ -27,7 +27,7 @@ Corrections:
 Corrections:
 
 * for Lesson C, solutions are provided at the end of the lesson
-* `tubex-lib/blob/dev/doc/doc/tutorial/04-own-contractor/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/04-own-contractor/solution.py>`_
+* `tubex-lib/blob/tuto/doc/doc/tutorial/04-own-contractor/solution.py <https://github.com/SimonRohou/tubex-lib/blob/tuto/doc/doc/tutorial/04-own-contractor/solution.py>`_
 
 ------------------------------------------------------
 
@@ -37,7 +37,7 @@ Corrections:
 
 Corrections:
 
-* `tubex-lib/examples/tuto/04_dyn_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/dev/examples/tuto/04_dyn_rangeonly>`_
+* `tubex-lib/examples/tuto/04_dyn_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/tuto/examples/tuto/04_dyn_rangeonly>`_
 
 ------------------------------------------------------
 

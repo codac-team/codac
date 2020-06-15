@@ -190,14 +190,16 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 
 ------------------------------------------------------
 
+.. _sec-tuto-week2:
+
 **Week 2: June 15 -- June 21**
 
 .. image:: img/tuto_02.png
    :align: right
    :width: 200px
 
-* **Lesson C**: static range-bearing localization
-* **Lesson D**: building our own contractor
+* :ref:`sec-tuto-03`
+* :ref:`sec-tuto-04`
 
 We will go a step further: now the landmarks are perceived with both **range and bearing data**. The resolution will involve new constraints, and a **decomposition** will be achieved.
 In the second part, we will tackle the problem of **indistinguishable** landmarks. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. The goal of this exercise is to develop **our own contractor** to solve this problem.
@@ -206,6 +208,8 @@ In the second part, we will tackle the problem of **indistinguishable** landmark
 | -- the data association problem, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
+
+.. _sec-tuto-week3:
 
 **Week 3: June 22 -- June 28**
 
@@ -223,6 +227,8 @@ We will then use the tubes to solve the problem `Set-membership state estimation
 | -- the data association with bearing only observations, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
+
+.. _sec-tuto-week4:
 
 **Week 4: June 29 -- July 5**
 
