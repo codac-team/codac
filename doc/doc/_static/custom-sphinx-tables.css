@@ -39,3 +39,8 @@ div.document a:visited
 {
   text-decoration: underline;
 }
+
+.wy-table-responsive table td
+{
+  white-space: normal;
+}
