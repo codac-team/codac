@@ -49,6 +49,33 @@ The following code provides a simulation of random landmarks and related range-o
 
 .. tabs::
 
+  .. code-tab:: py
+
+    from tubex_lib import *
+    from pyibex import *
+    import math
+
+    # Truth (unknown pose)
+    x_truth = [0,0,math.pi/6] # (x,y,heading)
+
+    # Creating random map of landmarks
+    map_area = IntervalVector(2, [-8,8])
+    v_b = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks = 3)
+
+    # The following function generates a set of [range]x[bearing] values
+    v_obs = DataLoader.generate_static_observations(x_truth, v_b, False)
+
+    # We keep range-only observations from v_obs, and add uncertainties
+    v_d = []
+    for obs in v_obs:
+      d = obs[0].inflate(0.1) # adding uncertainties: [-0.1,0.1]
+      v_d.append(d)
+
+    # Set of feasible positions for x: x ϵ [-∞,∞]×[-∞,∞]
+    x = IntervalVector(2) # this is equivalent to: IntervalVector([[-oo,oo],[-oo,oo]])
+
+    # ...
+
   .. code-tab:: c++
 
     #include <tubex.h>
@@ -81,37 +108,31 @@ The following code provides a simulation of random landmarks and related range-o
 
       // ...
 
-  .. code-tab:: py
-
-    from tubex_lib import *
-    from pyibex import *
-    import math
-
-    # Truth (unknown pose)
-    x_truth = [0,0,math.pi/6] # (x,y,heading)
-
-    # Creating random map of landmarks
-    map_area = IntervalVector(2, [-8,8])
-    v_b = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks = 3)
-
-    # The following function generates a set of [range]x[bearing] values
-    v_obs = DataLoader.generate_static_observations(x_truth, v_b, False)
-
-    # We keep range-only observations from v_obs, and add uncertainties
-    v_d = []
-    for obs in v_obs:
-      d = obs[0].inflate(0.1) # adding uncertainties: [-0.1,0.1]
-      v_d.append(d)
-
-    # Set of feasible positions for x: x ϵ [-∞,∞]×[-∞,∞]
-    x = IntervalVector(2) # this is equivalent to: IntervalVector([[-oo,oo],[-oo,oo]])
-
-    # ...
-
 
 Finally, the graphical functions are given by:
 
 .. tabs::
+
+  .. code-tab:: py
+
+    # ...
+
+    beginDrawing()
+
+    fig = VIBesFigMap("Map")
+    fig.set_properties(50, 50, 600, 600)
+
+    for b in v_b:
+      fig.add_beacon(b.mid(), 0.2)
+
+    for i in range(0,len(v_d)):
+      fig.draw_ring(v_b[i][0].mid(), v_b[i][1].mid(), v_d[i], "gray")
+
+    fig.draw_vehicle(x_truth, size=0.7)
+    fig.draw_box(x) # estimated position
+    fig.show()
+
+    endDrawing()
 
   .. code-tab:: c++
 
@@ -134,27 +155,6 @@ Finally, the graphical functions are given by:
 
       vibes::endDrawing();
     }
-
-  .. code-tab:: py
-
-    # ...
-
-    beginDrawing()
-
-    fig = VIBesFigMap("Map")
-    fig.set_properties(50, 50, 600, 600)
-
-    for b in v_b:
-      fig.add_beacon(b.mid(), 0.2)
-
-    for i in range(0,len(v_d)):
-      fig.draw_ring(v_b[i][0].mid(), v_b[i][1].mid(), v_d[i], "gray")
-
-    fig.draw_vehicle(x_truth, size=0.7)
-    fig.draw_box(x) # estimated position
-    fig.show()
-
-    endDrawing()
 
 
 .. admonition:: Exercise
@@ -208,4 +208,4 @@ Submit your exercise
 | That's about all for this first week!
 | You can submit your answers for the questions of Lessons A and B to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.
 
-Next lessons will introduce additional constraints, and a new domain for handling uncertain trajectories: tubes.
+Next lessons will introduce other concepts of constraint propagation. We will also see how to build our own contractor.
