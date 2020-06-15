@@ -25,17 +25,6 @@ Definition
 
   .. tabs::
 
-    .. code-tab:: c++
-
-      // For the constraint f(x)=0
-      CtcFunction ctc_f(Function("<var1>", "<var2>", ..., "<expr>"));
-      ctc_f.contract(x);
-
-      // For the constraint f(x)\in[y]
-      Interval y(...); // or IntervalVector if f is a vector function
-      CtcFunction ctc_f(Function("<var1>", "<var2>", ..., "<expr>"), y);
-      ctc_f.contract(x);
-
     .. code-tab:: py
 
       # For the constraint f(x)=0
@@ -46,6 +35,17 @@ Definition
       y = Interval(...) # or IntervalVector if f is a vector function
       ctc_f = CtcFunction(Function("<var1>", "<var2>", ..., "<expr>"), y)
       ctc_f.contract(x)
+
+    .. code-tab:: c++
+
+      // For the constraint f(x)=0
+      CtcFunction ctc_f(Function("<var1>", "<var2>", ..., "<expr>"));
+      ctc_f.contract(x);
+
+      // For the constraint f(x)\in[y]
+      Interval y(...); // or IntervalVector if f is a vector function
+      CtcFunction ctc_f(Function("<var1>", "<var2>", ..., "<expr>"), y);
+      ctc_f.contract(x);
 
 
 .. note::
@@ -66,6 +66,34 @@ This contractor is not necessarily optimal, depending on the expression of :math
 Example
 -------
 
+The constraint:
+
+.. math::
+
+  x_1+x_2=x_3
+
+is equivalent to:
+
+.. math::
+
+  f(\mathbf{x})=0 \mathrm{~~~with~~~} f(\mathbf{x})=x_1+x_2-x_3
+
+We can then build the contractor with:
+
+.. tabs::
+
+  .. code-tab:: py
+
+    ctc_f = CtcFunction(Function("x1", "x2", "x3", "x1+x2-x3"))
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_f(Function("x1", "x2", "x3", "x1+x2-x3"));
+
+
+Another example
+---------------
+
 Let us consider the following non-linear function:
 
 .. math::
@@ -76,41 +104,41 @@ A contractor for the constraint :math:`f(\mathbf{x})=0` can be built by:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    CtcFunction ctc_f(Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"));
-
   .. code-tab:: py
 
     ctc_f = CtcFunction(Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"))
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_f(Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"));
 
 | The first parameters are the variables names. The last one is the expression of :math:`f`.
 | Note that it is also possible to write vector variables:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    CtcFunction ctc_f(Function("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]"));
-
   .. code-tab:: py
 
     ctc_f = CtcFunction(Function("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]"))
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_f(Function("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]"));
 
 
 Then, a box :math:`[\mathbf{x}]` can be contracted by:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    IntervalVector x({{-2.,-1.},{1.,2.5}});
-    ctc_f.contract(x);
-
   .. code-tab:: py
 
     x = IntervalVector([[-2,-1],[1,2.5]])
     ctc_f.contract(x)
+
+  .. code-tab:: c++
+
+    IntervalVector x({{-2.,-1.},{1.,2.5}});
+    ctc_f.contract(x);
 
 The boxes are contracted in order to remove some vectors that are not consistent with :math:`f(\mathbf{x})=0`. In the following figure, the exact solution for :math:`f(\mathbf{x})=0` is black painted. The initial boxes are depicted in blue, their contraction is represented in red.
 

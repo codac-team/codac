@@ -58,7 +58,6 @@
     src/core/arithmetic/tubex_py_arithmetic.cpp
     src/core/cn/tubex_py_ContractorNetwork.cpp
 
-    src/core/contractors/static/tubex_py_Ctc.cpp
     src/core/contractors/static/tubex_py_CtcDist.cpp
     src/core/contractors/static/tubex_py_CtcFunction.cpp
     src/core/contractors/static/tubex_py_CtcConstell.cpp

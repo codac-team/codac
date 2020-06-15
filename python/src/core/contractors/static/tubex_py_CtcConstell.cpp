@@ -15,7 +15,6 @@
 #include <pybind11/functional.h>
 #include "pyIbex_type_caster.h"
 
-#include "tubex_py_Ctc.h"
 #include "tubex_CtcConstell.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "tubex_py_CtcConstell_docs.h"
@@ -27,9 +26,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_CtcConstell(py::module& m, py::class_<Ctc, pyCtc>& static_ctc)
+void export_CtcConstell(py::module& m)
 {
-  py::class_<CtcConstell> ctc_constell(m, "CtcConstell", static_ctc, "todo");
+  py::class_<CtcConstell,Ctc> ctc_constell(m, "CtcConstell", "todo");
   ctc_constell
 
     .def(py::init<const list<IntervalVector> &>(),

@@ -21,13 +21,13 @@ Tubex allows you to declare symbolically a function and to perform interval comp
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    TFunction f(x, y, "sin(x)+exp(t*y)");
-
   .. code-tab:: py
 
     f = TFunction(x, y, "sin(x)+exp(t*y)")
+
+  .. code-tab:: c++
+
+    TFunction f(x, y, "sin(x)+exp(t*y)");
 
 defines the mathematical object :math:`\left(\begin{array}{c}x(t)\\y(t)\end{array}\right) \mapsto \sin\big(x(t)\big)+\exp\big(t\cdot y(t)\big)`.
 

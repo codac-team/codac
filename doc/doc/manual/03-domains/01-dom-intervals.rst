@@ -28,12 +28,6 @@ Intervals, boxes and interval matrices
   | It is made of its lower and upper bounds :math:`[x^{-},x^{+}]`.
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      Interval x(0, 10);                          // [0,10]
-      Interval x(1, POS_INFINITY);                // [1,∞]
-      Interval x(NEG_INFINITY, -10);              // [-∞,-10]
     
     .. code-tab:: py
 
@@ -41,20 +35,15 @@ Intervals, boxes and interval matrices
       x = Interval(1, oo)                         # [1,∞]
       x = Interval(-oo, -10)                      # [-∞,-10]
 
+    .. code-tab:: c++
+
+      Interval x(0, 10);                          // [0,10]
+      Interval x(1, POS_INFINITY);                // [1,∞]
+      Interval x(NEG_INFINITY, -10);              // [-∞,-10]
+
   Some pre-defined values are also at hand:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      Interval x;                                 // [-∞,∞] (default value)
-      Interval x = Interval::all_reals();         // [-∞,∞]
-      Interval x = Interval::pos_reals();         // [0,∞]
-      Interval x = Interval::neg_reals();         // [-∞,0]
-      Interval x = Interval::empty_set();         // ∅
-      Interval x = Interval::pi();                // [π]
-      Interval x = Interval::two_pi();            // [2π]
-      Interval x = Interval::half_pi();           // [π/2]
     
     .. code-tab:: py
 
@@ -67,21 +56,32 @@ Intervals, boxes and interval matrices
       x = Interval.TWO_PI                         # [2π]
       x = Interval.HALF_PI                        # [π/2]
 
+    .. code-tab:: c++
+
+      Interval x;                                 // [-∞,∞] (default value)
+      Interval x = Interval::all_reals();         // [-∞,∞]
+      Interval x = Interval::pos_reals();         // [0,∞]
+      Interval x = Interval::neg_reals();         // [-∞,0]
+      Interval x = Interval::empty_set();         // ∅
+      Interval x = Interval::pi();                // [π]
+      Interval x = Interval::two_pi();            // [2π]
+      Interval x = Interval::half_pi();           // [π/2]
+
   .. _sec-manual-intervals-pi:
 
   Note that the constant :math:`[\pi]` is a reliable enclosure of the :math:`\pi` value, that cannot be exactly represented in a computer with a single floating-point value.
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      Interval x = Interval::pi();                // [π]
-      // x = [3.141592653589793, 3.141592653589794]
     
     .. code-tab:: py
 
       x = Interval.PI                             # [π]
       # x = [3.141592653589793, 3.141592653589794]
+
+    .. code-tab:: c++
+
+      Interval x = Interval::pi();                // [π]
+      // x = [3.141592653589793, 3.141592653589794]
 
   
 .. _sec-manual-intervals-boxes:
@@ -90,17 +90,6 @@ Intervals, boxes and interval matrices
   | For instance:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      IntervalVector x(2, Interval(-1,3));        // creates [x]=[-1,3]×[-1,3]=[-1,3]^2
-      IntervalVector y{{3,4},{4,6}};              // creates [y]= [3,4]×[4,6]
-      IntervalVector z(3, Interval::pos_reals()); // creates [z]=[0,∞]^3
-      IntervalVector w(y);                        // creates a copy: [w]=[y]
-
-      Vector v(3, 0.42);                          // one vector (0.42;0.42;0.42)
-      IntervalVector iv(v);                       // creates one box that wraps v:
-                                                  //   [0.42,0.42]×[0.42,0.42]×[0.42,0.42]
     
     .. code-tab:: py
 
@@ -112,29 +101,33 @@ Intervals, boxes and interval matrices
       v = (0.42,0.42,0.42)                        # one vector (0.42;0.42;0.42)
       iv = IntervalVector(v)                      # creates one box that wraps v:
                                                   #   [0.42,0.42]×[0.42,0.42]×[0.42,0.42]
+
+    .. code-tab:: c++
+
+      IntervalVector x(2, Interval(-1,3));        // creates [x]=[-1,3]×[-1,3]=[-1,3]^2
+      IntervalVector y{{3,4},{4,6}};              // creates [y]= [3,4]×[4,6]
+      IntervalVector z(3, Interval::pos_reals()); // creates [z]=[0,∞]^3
+      IntervalVector w(y);                        // creates a copy: [w]=[y]
+
+      Vector v(3, 0.42);                          // one vector (0.42;0.42;0.42)
+      IntervalVector iv(v);                       // creates one box that wraps v:
+                                                  //   [0.42,0.42]×[0.42,0.42]×[0.42,0.42]
   
   One can access vector components as we do for ``Vector`` objects:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      x[1] = Interval(0,10);                      // updates to [x]=[-1,3]×[0,10]
     
     .. code-tab:: py
 
       x[1] = Interval(0,10)                       # updates to [x]=[-1,3]×[0,10]
 
+    .. code-tab:: c++
+
+      x[1] = Interval(0,10);                      // updates to [x]=[-1,3]×[0,10]
+
   The vector operations to handle ``Vector`` objects can also be used for boxes:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      int n = x.size();             // box dimension (number of components): 2
-      x.resize(5);                  // updates [x] to [-1,3]×[0,10]×[-∞,∞]×[-∞,∞]×[-∞,∞]
-      IntervalVector m = x.subvector(1,2); // creates [m]=[0,10]×[-∞,∞]
-      x.put(2,y);                   // updates [x] to [-1,3]×[0,10]×[3,4]×[4,6]×[-∞,∞]
 
     .. code-tab:: py
 
@@ -142,6 +135,13 @@ Intervals, boxes and interval matrices
       x.resize(5)                   # updates [x] to [-1,3]×[0,10]×[-∞,∞]×[-∞,∞]×[-∞,∞]
       m = x.subvector(1,2)          # creates [m]=[0,10]×[-∞,∞]
       x.put(2,y)                    # updates [x] to [-1,3]×[0,10]×[3,4]×[4,6]×[-∞,∞]
+
+    .. code-tab:: c++
+
+      int n = x.size();             // box dimension (number of components): 2
+      x.resize(5);                  // updates [x] to [-1,3]×[0,10]×[-∞,∞]×[-∞,∞]×[-∞,∞]
+      IntervalVector m = x.subvector(1,2); // creates [m]=[0,10]×[-∞,∞]
+      x.put(2,y);                   // updates [x] to [-1,3]×[0,10]×[3,4]×[4,6]×[-∞,∞]
 
 
 .. _sec-manual-intervals-matrices:
@@ -164,26 +164,26 @@ In mathematics, the empty set is the unique set having no elements; it correspon
 The empty set of an ``Interval`` object is given by:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      Interval x = Interval::empty_set();         // ∅
     
     .. code-tab:: py
 
       x = Interval.EMPTY_SET                      # ∅
 
+    .. code-tab:: c++
+
+      Interval x = Interval::empty_set();         // ∅
+
 For boxes (interval vectors), we have to specify their dimension even in case of empty set. This differs from mathematical definitions, but allows simple operations when programming with boxes.
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      IntervalVector x = IntervalVector::empty(3); // ∅×∅×∅
     
     .. code-tab:: py
 
       x = IntervalVector.empty(3) # ∅×∅×∅
+
+    .. code-tab:: c++
+
+      IntervalVector x = IntervalVector::empty(3); // ∅×∅×∅
 
 
 .. _sec-manual-intervals-operations:
@@ -305,16 +305,6 @@ Code                       Meaning
 The use on intervals is transparent:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval a = Interval(-2,4) * Interval(1,3);                    // a = [-6,12]
-    Interval b = Interval(-2,4) & Interval(6,7);                    // b = [empty] (intersection)
-    Interval c = max(Interval(2,7), Interval(1,9));                 // c = [2,9]
-    Interval d = max(Interval::empty_set(), Interval(1,2));         // d = [empty]
-    Interval e = Interval(-1,3) / Interval::pos_reals();            // e = [-oo,oo]
-    Interval f = (Interval(1,2) * Interval(-1,3))
-               + max(Interval(1,3) & Interval(6,7), Interval(1,2)); // f = [4,9]
   
   .. code-tab:: py
 
@@ -325,6 +315,16 @@ The use on intervals is transparent:
     e = Interval(-1,3) / Interval.POS_REALS                         # e = [-oo,oo]
     f = (Interval(1,2) * Interval(-1,3)) \
       + max(Interval(1,3) & Interval(6,7), Interval(1,2))           # f = [4,9]
+
+  .. code-tab:: c++
+
+    Interval a = Interval(-2,4) * Interval(1,3);                    // a = [-6,12]
+    Interval b = Interval(-2,4) & Interval(6,7);                    // b = [empty] (intersection)
+    Interval c = max(Interval(2,7), Interval(1,9));                 // c = [2,9]
+    Interval d = max(Interval::empty_set(), Interval(1,2));         // d = [empty]
+    Interval e = Interval(-1,3) / Interval::pos_reals();            // e = [-oo,oo]
+    Interval f = (Interval(1,2) * Interval(-1,3))
+               + max(Interval(1,3) & Interval(6,7), Interval(1,2)); // f = [4,9]
 
 
 ------------------------------------------------------
