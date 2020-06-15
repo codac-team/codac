@@ -34,3 +34,13 @@ div.document a:visited
 {
   display: none;
 }
+
+.underline
+{
+  text-decoration: underline;
+}
+
+.wy-table-responsive table td
+{
+  white-space: normal;
+}

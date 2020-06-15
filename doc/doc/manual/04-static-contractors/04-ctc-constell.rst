@@ -118,62 +118,50 @@ we can use the :math:`\mathcal{C}_\textrm{constell}` to contract them according 
 
   Filled boxes are the :math:`[\mathbf{x}]` after contraction.
 
-
-.. #include <tubex.h>
-.. #include <tubex-rob.h>
+.. from pyibex import *
+.. from tubex_lib import *
 .. 
-.. using namespace std;
-.. using namespace tubex;
-.. using namespace ibex;
+.. v_x = [ IntervalVector([[1.25,3],[1.6,2.75]]),
+..         IntervalVector([[2.,3.5],[0.6,1.2]]),
+..         IntervalVector([[1.1,3.25],[0.2,1.4]]) ]
 .. 
-.. int main()
-.. {
-..   Tube xd(Interval(0.,1.), 0.1);
+.. v_b = [ IntervalVector([1.5,2.5]),
+..         IntervalVector([3.,1.]),
+..         IntervalVector([2.,2.]),
+..         IntervalVector([2.5,3.]),
+..         IntervalVector([3.5,2.]),
+..         IntervalVector([4.,1.]),
+..         IntervalVector([1.5,0.5]) ]
 .. 
-..   vector<IntervalVector> v_x;
-..   v_x.push_back({{1.25,3},{1.6,2.75}});
-..   v_x.push_back({{2.,3.5},{0.6,1.2}});
-..   v_x.push_back({{1.1,3.25},{0.2,1.4}});
+.. for b in v_b:
+..   b.inflate(0.05)
 .. 
-..   vector<IntervalVector> v_b;
-..   v_b.push_back({{1.5},{2.5}});
-..   v_b.push_back({{3.},{1.}});
-..   v_b.push_back({{2.},{2.}});
-..   v_b.push_back({{2.5},{3.}});
-..   v_b.push_back({{3.5},{2.}});
-..   v_b.push_back({{4.},{1.}});
-..   v_b.push_back({{1.5},{0.5}});
+.. ctc_constell = CtcConstell(v_b)
 .. 
-..   for(auto& b : v_b)
-..     b.inflate(0.05);
+.. beginDrawing()
 .. 
-..   CtcConstell ctc_constell(v_b);
+.. fig = VIBesFigMap("Map")
+.. fig.set_properties(50, 50, 500, 500)
 .. 
-..   vibes::beginDrawing();
+.. for b in v_b:
+..   fig.add_beacon(b)
 .. 
-..   VIBesFigMap fig("Map");
-..   fig.set_properties(50, 50, 500, 500);
+.. fig.draw_box(v_x[0], "#475B96")
+.. ctc_constell.contract(v_x[0])
+.. fig.draw_box(v_x[0], "#475B96[#1A80FF55]")
 .. 
-..   for(const auto& b : v_b)
-..     fig.add_beacon(Beacon(b));
+.. fig.draw_box(v_x[1], "#158E2F")
+.. ctc_constell.contract(v_x[1])
+.. fig.draw_box(v_x[1], "#158E2F[#40C225DD]")
 .. 
-..   fig.draw_box(v_x[0], "#475B96");
-..   ctc_constell.contract(v_x[0]);
-..   fig.draw_box(v_x[0], "#475B96[#1A80FF55]");
+.. fig.draw_box(v_x[2], "#966447")
+.. ctc_constell.contract(v_x[2])
+.. fig.draw_box(v_x[2], "#966447[#FF6E1A55]")
 .. 
-..   fig.draw_box(v_x[1], "#158E2F");
-..   ctc_constell.contract(v_x[1]);
-..   fig.draw_box(v_x[1], "#158E2F[#40C225DD]");
+.. fig.show()
+.. fig.axis_limits(fig.view_box(), True, 0.1)
 .. 
-..   fig.draw_box(v_x[2], "#966447");
-..   ctc_constell.contract(v_x[2]);
-..   fig.draw_box(v_x[2], "#966447[#FF6E1A55]");
-.. 
-..   fig.show();
-..   fig.axis_limits(fig.view_box(), true, 0.1);
-.. 
-..   vibes::endDrawing();
-.. }
+.. endDrawing()
 
 
 Related content

@@ -208,4 +208,4 @@ Submit your exercise
 | That's about all for this first week!
 | You can submit your answers for the questions of Lessons A and B to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.
 
-Next lessons will introduce additional constraints, and a new domain for handling uncertain trajectories: tubes.
+Next lessons will introduce other concepts of constraint propagation. We will also see how to build our own contractor.

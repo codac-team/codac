@@ -29,4 +29,9 @@ using namespace pybind11::literals;
 void export_Figure(py::module& m)
 {
   py::class_<Figure> figure(m, "Figure", "todo");
+  figure
+
+    .def("view_box", &Figure::view_box,
+      FIGURE_CONSTINTERVALVECTOR_VIEW_BOX)
+  ;
 }
