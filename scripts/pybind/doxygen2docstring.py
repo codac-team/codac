@@ -17,6 +17,11 @@ import sys
 import xml.etree.ElementTree as ET
 
 
+if os.name == "nt":
+    import _locale
+    _locale._gdl_bak = _locale._getdefaultlocale
+    _locale._getdefaultlocale = (lambda *args: (_locale._gdl_bak()[0], 'utf8'))
+
 def anchor_id(memberdef, filename):
   '''
   Extract the anchor id from full string name obtained from Doxygen  <anchor> tag
