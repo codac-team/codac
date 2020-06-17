@@ -16,7 +16,6 @@
 #include "pyIbex_type_caster.h"
 
 #include "ibex_Domain.h"
-#include "tubex_py_Ctc.h"
 #include "tubex_CtcFunction.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "tubex_py_CtcFunction_docs.h"
@@ -28,9 +27,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_CtcFunction(py::module& m, py::class_<Ctc, pyCtc>& static_ctc)
+void export_CtcFunction(py::module& m)
 {
-  py::class_<CtcFunction> ctc_function(m, "CtcFunction", static_ctc, "todo");
+  py::class_<CtcFunction,Ctc> ctc_function(m, "CtcFunction", "todo");
   ctc_function
 
     .def(py::init<const Function&>(),

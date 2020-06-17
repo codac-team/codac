@@ -31,21 +31,25 @@ Their use is intuitive:
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    Vector x1({0,1,3});            // creates the vector x1=(0;1;3)
-    Vector x2(3,1);                // creates the vector x2=(1;1;1)
-    Vector x3(x1);                 // creates a copy of x1
-
   .. code-tab:: py
 
     x1 = [0,1,3]                   # creates the vector x1=(0;1;3)
     x2 = [1]*3                     # creates the vector x2=(1;1;1)
     x3 = x1                        # creates a copy of x1
 
+  .. code-tab:: c++
+
+    Vector x1({0,1,3});            // creates the vector x1=(0;1;3)
+    Vector x2(3,1);                // creates the vector x2=(1;1;1)
+    Vector x3(x1);                 // creates a copy of x1
+
 Vector operations are available to handle ``Vector`` objects:
 
 .. tabs::
+
+  .. code-tab:: py
+
+    # Use default types of Python, or Numpy
 
   .. code-tab:: c++
 
@@ -58,10 +62,6 @@ Vector operations are available to handle ``Vector`` objects:
     // Access to the ith component:
     x2[1] = 4;                     // updates x2 to (1;4;1)
 
-  .. code-tab:: py
-
-    # Use default types of Python, or Numpy
-
 
 Note that these operations are also available for other vector types: :ref:`matrices <sec-manual-varstatic-matrices>`, :ref:`boxes <sec-manual-intervals-boxes>`, :ref:`vectors of trajectories <sec-manual-vardyn-trajectoryvector>`, and :ref:`vectors of tubes <sec-manual-tubes-tubevector>`.
 
@@ -69,15 +69,15 @@ Basic arithmetic operations are applicable on vectors such as binary operators: 
 
 .. tabs::
 
+  .. code-tab:: py
+
+    # Use default types of Python, or Numpy
+
   .. code-tab:: c++
 
     x1 = 4*x1;                     // scalar multiplication of a vector
     x1 *= 4;                       // same operation (multiplication and assignment)
     Vector x5 = x3*x4;             // dot product
-
-  .. code-tab:: py
-
-    # Use default types of Python, or Numpy
 
 
 .. _sec-manual-varstatic-matrices:
@@ -88,6 +88,10 @@ Matrices
 ``Matrix`` objects are exactly designed the same way as vectors. Here are listed different ways to build a matrix:
 
 .. tabs::
+
+  .. code-tab:: py
+
+    # Use default types of Python, or Numpy
 
   .. code-tab:: c++
 
@@ -105,9 +109,5 @@ Matrices
 
     Matrix m2 = ones(2,2);         // a 2×2 matrix of ones
     Matrix m3 = eye(3);            // a 3×3 identity matrix
-
-  .. code-tab:: py
-
-    # Use default types of Python, or Numpy
 
 Other arithmetic operations apply on matrices in the same manner as for vectors.

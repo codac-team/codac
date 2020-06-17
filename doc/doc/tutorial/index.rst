@@ -185,10 +185,12 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 | During this first week, we will install the library and perform the **state estimation** of a static robot between some landmarks. For the moment, we will assume that the robot does not move and is only receiving **range-only data** from the landmarks.
 | This will be an introduction to :ref:`intervals <sec-manual-intervals>`, :ref:`constraints <sec-manual-contractors>` and :ref:`networks of contractors <sec-manual-cn>`.
 
-| **Exercise to finish:** (before Monday 15th of June)
+| **Exercise to finish:** (before Monday 6th of July)
 | -- the static range-only localization, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
+
+.. _sec-tuto-week2:
 
 **Week 2: June 15 -- June 21**
 
@@ -196,16 +198,18 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
    :align: right
    :width: 200px
 
-* **Lesson C**: static range-bearing localization
-* **Lesson D**: dynamic range-only localization
+* :ref:`sec-tuto-03`
+* :ref:`sec-tuto-04`
 
 We will go a step further: now the landmarks are perceived with both **range and bearing data**. The resolution will involve new constraints, and a **decomposition** will be achieved.
-In the second part, we will make the robot move and see how we can handle **uncertainties on trajectories**. This will be done by solving the range-only problem of Lesson B, now in a dynamical context with **asynchronous measurements**. 
+In the second part, we will tackle the problem of **indistinguishable** landmarks. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. The goal of this exercise is to develop **our own contractor** to solve this problem.
 
-| **Exercise to finish:** (before Monday 22th of June)
-| -- the dynamic range and bearing localization, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
+| **Exercise to finish:** (before Monday 6th of July)
+| -- the data association problem, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
+
+.. _sec-tuto-week3:
 
 **Week 3: June 22 -- June 28**
 
@@ -213,15 +217,18 @@ In the second part, we will make the robot move and see how we can handle **unce
    :align: right
    :width: 200px
 
-* **Lesson E**: localization with data association
+* **Lesson E**: tubes
+* **Lesson F**: dynamic localization with data association
 
-Now, the landmarks perceived by the robot are **indistinguishable**. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. This corresponds to the publication `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
-We will solve this problem with Tubex. The goal of this exercise is to develop **our own contractor**.
+Now, we will make the robot move and see how we can handle **uncertainties on trajectories**. This will be done by solving the range-only problem of Lesson B, now in a dynamical context with **asynchronous measurements**. 
+We will then use the tubes to solve the problem `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
 
-| **Exercise to finish:** (before Monday 29th of June)
+| **Exercise to finish:** (before Monday 6th of July)
 | -- the data association with bearing only observations, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
+
+.. _sec-tuto-week4:
 
 **Week 4: June 29 -- July 5**
 
@@ -229,8 +236,8 @@ We will solve this problem with Tubex. The goal of this exercise is to develop *
    :align: right
    :width: 200px
 
-* **Lesson F**: range-only SLAM
-* **Lesson G**: loop detection in robot trajectories
+* **Lesson G**: range-only SLAM
+* **Lesson H**: loop detection in robot trajectories
 
 | We will end this tutorial with a **range-only SLAM** problem and see how Tubex can be used for **online missions**.
 | The last part of this section will focus on new tools to detect and **prove loops** in robot trajectories from the only knowledge of proprioceptive measurements such as velocities.
