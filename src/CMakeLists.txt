@@ -73,13 +73,13 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
 # programs in Release (otherwise it would be only added by Ibex if the program 
 # is built in Debug)...
 file(APPEND ${TUBEX_CMAKE_CONFIG_FILE} "
-set(TUBEX_C_FLAGS \ ${CMAKE_C_FLAGS} \ -pg)
-set(TUBEX_CXX_FLAGS \ ${CMAKE_CXX_FLAGS} \ -pg)
+set(TUBEX_C_FLAGS \ \"${CMAKE_C_FLAGS} \ -pg\")
+set(TUBEX_CXX_FLAGS \ \"${CMAKE_CXX_FLAGS} \ -pg\")
 ")
 else()
 file(APPEND ${TUBEX_CMAKE_CONFIG_FILE} "
-set(TUBEX_C_FLAGS \ ${CMAKE_C_FLAGS})
-set(TUBEX_CXX_FLAGS \ ${CMAKE_CXX_FLAGS})
+set(TUBEX_C_FLAGS \ \"${CMAKE_C_FLAGS}\")
+set(TUBEX_CXX_FLAGS \ \"${CMAKE_CXX_FLAGS}\")
 ")
 endif()
 
