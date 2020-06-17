@@ -6,7 +6,7 @@ Installing Tubex for Python use
 
 .. note::
 
-  For the moment, the Python version is only available for Linux systems, :ref:`or online <sec-py-project-online>`.
+  For the moment, the Python version is only available for Linux, Windows (Python 3.5), :ref:`or online <sec-py-project-online>`.
 
 Install the Tubex Python package
 --------------------------------
@@ -33,25 +33,27 @@ where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the
 
 The :gbg:`✓` configurations are officially supported at the moment:
 
-+---------------+----------------+----------------+----------------+----------------+
-|Language       |Linux           |Windows         |macOS           |Online          |
-+===============+================+================+================+================+
-|Python 3.4     |:gbg:`✓`        |soon available ?|--              ||online-py|_    |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.5     |:gbg:`✓`        |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.6     |:gbg:`✓`        |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.7     |:gbg:`✓`        |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.8     |:gbg:`✓`        |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+----------------+
++---------------+----------------+-----------------------+----------------+----------------+
+|Language       |Linux           |Windows                |macOS           |Online          |
++===============+================+=======================+================+================+
+|Python 3.4     |:gbg:`✓`        |soon available ?       |--              ||online-py|_    |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.5     |:gbg:`✓`        |:gbg:`✓`   (2020/06/17)|--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.6     |:gbg:`✓`        |soon available ?       |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.7     |:gbg:`✓`        |soon available ?       |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.8     |:gbg:`✓`        |soon available ?       |--              |                |
++---------------+----------------+-----------------------+----------------+----------------+
 
 .. note::
 
   | (5th June 2020) We are currently working on making Tubex available on Windows in Python.
   | Any help is welcome.
   | Meanwhile, you can :ref:`use Tubex online in Python <sec-py-project-online>`.
+  |
+  | (26th June 2020) **Tubex is now available in Python3.5 for Windows**
 
 If your configuration is missing in this table, please `contact us <https://github.com/SimonRohou/tubex-lib/issues>`_. We may be able to make it available for Tubex.
 
