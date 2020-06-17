@@ -22,6 +22,9 @@ Note that you can also :ref:`use Tubex online in Python <sec-py-project-online>`
 .. |linux-py| replace:: :gbg:`✓` (link)
 .. _linux-py: 01-installation-python.html
 
+.. |win-py35| replace:: :gbg:`✓`   (2020/06/17)
+.. _win-py35: 01-installation-python.html
+
 .. |linux-cpp| replace:: :gbg:`✓` (link)
 .. _linux-cpp: 01-installation-full-linux.html
 
@@ -33,21 +36,21 @@ Note that you can also :ref:`use Tubex online in Python <sec-py-project-online>`
 
 The :gbg:`✓` configurations are officially supported at the moment:
 
-+---------------+----------------+----------------+----------------+----------------+
-|Language       |Linux           |Windows         |macOS           |Online          |
-+===============+================+================+================+================+
-|C++11          ||linux-cpp|_    ||win-cpp|_      |--              |soon available ?|
-+---------------+----------------+----------------+----------------+----------------+
-|Python 3.4     ||linux-py|_     |soon available ?|--              ||online-py|_    |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.5     ||linux-py|_     |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.6     ||linux-py|_     |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.7     ||linux-py|_     |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.8     ||linux-py|_     |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+----------------+
++---------------+----------------+-----------------------+----------------+----------------+
+|Language       |Linux           |Windows                |macOS           |Online          |
++===============+================+=======================+================+================+
+|C++11          ||linux-cpp|_    ||win-cpp|_             |--              |soon available ?|
++---------------+----------------+-----------------------+----------------+----------------+
+|Python 3.4     ||linux-py|_     |soon available ?       |--              ||online-py|_    |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.5     ||linux-py|_     ||win-py35|_            |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.6     ||linux-py|_     |soon available ?       |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.7     ||linux-py|_     |soon available ?       |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.8     ||linux-py|_     |soon available ?       |--              |                |
++---------------+----------------+-----------------------+----------------+----------------+
 
 **Click on the links in the table to access the related installation procedures.**
 

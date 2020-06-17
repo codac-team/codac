@@ -136,7 +136,7 @@ namespace tubex
   const IntervalVector Edge::operator&(const IntervalVector& x) const
   {
     assert(x.size() == 2);
-    assert(!x.is_empty());;
+    assert(!x.is_empty());
 
     IntervalVector inter(2, Interval::EMPTY_SET);
 
