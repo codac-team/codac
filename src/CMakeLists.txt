@@ -65,10 +65,23 @@ find_library(TUBEX_PYIBEX_LIBRARY NAMES tubex-pyibex
 
 set(TUBEX_VERSION ${PROJECT_VERSION})
 set(TUBEX_LIBRARIES \${TUBEX_LIBRARY} \${TUBEX_ROB_LIBRARY} \${TUBEX_PYIBEX_LIBRARY})
-set(TUBEX_INCLUDE_DIRS \${TUBEX_INCLUDE_DIR} \${TUBEX_ROB_INCLUDE_DIR} \${TUBEX_PYIBEX_INCLUDE_DIR})
+set(TUBEX_INCLUDE_DIRS \${TUBEX_INCLUDE_DIR} \${TUBEX_ROB_INCLUDE_DIR} \${TUBEX_PYIBEX_INCLUDE_DIR})")
 
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+# If Tubex is built in Debug, -pg (added by Ibex at the time of Tubex 
+# compilation) might be also necessary to be able to successfully build 
+# programs in Release (otherwise it would be only added by Ibex if the program 
+# is built in Debug)...
+file(APPEND ${TUBEX_CMAKE_CONFIG_FILE} "
+set(TUBEX_C_FLAGS \ ${CMAKE_C_FLAGS} \ -pg)
+set(TUBEX_CXX_FLAGS \ ${CMAKE_CXX_FLAGS} \ -pg)
+")
+else()
+file(APPEND ${TUBEX_CMAKE_CONFIG_FILE} "
 set(TUBEX_C_FLAGS \ ${CMAKE_C_FLAGS})
-set(TUBEX_CXX_FLAGS \ ${CMAKE_CXX_FLAGS})")
+set(TUBEX_CXX_FLAGS \ ${CMAKE_CXX_FLAGS})
+")
+endif()
 
 if(WITH_CAPD)
 
