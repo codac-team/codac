@@ -32,7 +32,7 @@ typedef const char* cc_ptr;
 
 void export_TFunction(py::module& m, py::class_<TFnc>& fnc)
 {
-  py::class_<TFunction,TFnc> function(m, "TFunction", "todo");
+  py::class_<TFunction,TFnc> function(m, "TFunction", TFUNCTION_MAIN);
   function
 
     .def(py::init<cc_ptr>(),

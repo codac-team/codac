@@ -28,7 +28,7 @@ using namespace pybind11::literals;
 
 void export_CtcDist(py::module& m)
 {
-  py::class_<CtcDist,Ctc> ctc_dist(m, "CtcDist", "todo");
+  py::class_<CtcDist,Ctc> ctc_dist(m, "CtcDist", CTCDIST_MAIN);
   ctc_dist
 
     .def(py::init<>(),

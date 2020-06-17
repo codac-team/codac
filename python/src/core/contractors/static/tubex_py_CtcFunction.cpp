@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_CtcFunction(py::module& m)
 {
-  py::class_<CtcFunction,Ctc> ctc_function(m, "CtcFunction", "todo");
+  py::class_<CtcFunction,Ctc> ctc_function(m, "CtcFunction", CTCFUNCTION_MAIN);
   ctc_function
 
     .def(py::init<const Function&>(),

@@ -28,7 +28,7 @@ using namespace pybind11::literals;
 
 void export_DataLoader(py::module& m)
 {
-  py::class_<DataLoader> data_loader(m, "DataLoader", "todo");
+  py::class_<DataLoader> data_loader(m, "DataLoader", DATALOADER_MAIN);
   data_loader
 
     .def(py::init<>(),

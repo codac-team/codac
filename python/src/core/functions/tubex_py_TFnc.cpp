@@ -77,7 +77,7 @@ class pyTFnc : public TFnc
 
 py::class_<TFnc, pyTFnc> export_TFnc(py::module& m)
 {
-  py::class_<TFnc, pyTFnc> fnc(m, "TFnc", "todo");
+  py::class_<TFnc, pyTFnc> fnc(m, "TFnc", TFNC_MAIN);
   fnc
 
     .def(py::init<int,int,bool>(),

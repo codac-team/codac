@@ -30,7 +30,7 @@ void export_VIBesFig(py::module& m)
 {
   py::class_<vibes::Params> params(m, "Params");
 
-  py::class_<VIBesFig,Figure> vibes_fig(m, "VIBesFig", "todo");
+  py::class_<VIBesFig,Figure> vibes_fig(m, "VIBesFig", VIBESFIG_MAIN);
   vibes_fig
 
   // Definition and properties

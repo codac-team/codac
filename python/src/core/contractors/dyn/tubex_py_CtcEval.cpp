@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_CtcEval(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc)
 {
-  py::class_<CtcEval> ctc_eval(m, "CtcEval", dyn_ctc);
+  py::class_<CtcEval> ctc_eval(m, "CtcEval", dyn_ctc, CTCEVAL_MAIN);
   ctc_eval
 
     .def(py::init<>(),
