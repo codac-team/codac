@@ -103,8 +103,8 @@ namespace tubex
 
     else
     {
-      vector<Point> v_pts;
-      v_pts.push_back(Point(t.lb(), input_gate().lb()));
+      vector<Vector> v_pts;
+      v_pts.push_back(Vector({t.lb(), input_gate().lb()}));
 
       // Lower bounds
 
@@ -126,23 +126,35 @@ namespace tubex
             y_inter_lb = yolb(t_inter_lb, *this, v) | yilb(t_inter_lb, *this, v);
 
             if(y_inter_lb.ub() >= codomain().lb())
-              v_pts.push_back(Point(t_inter_lb, y_inter_lb));
+            {
+              if(t_inter_lb.is_degenerated())
+                v_pts.push_back(Vector({t_inter_lb.ub(), y_inter_lb.lb()}));
+
+              else
+              {
+                // The following transforms the line intersection result into
+                // two floating 2d vectors. This creates an additional point,
+                // but maintains reliability.
+                v_pts.push_back(Vector({t_inter_lb.lb(), y_inter_lb.lb()}));
+                v_pts.push_back(Vector({t_inter_lb.ub(), y_inter_lb.lb()}));
+              }
+            }
 
             else
             {
               Interval t_a = yilb_inv(codomain().lb(), *this, v);
-              v_pts.push_back(Point(t_a.lb(), codomain().lb()));
+              v_pts.push_back(Vector({t_a.lb(), codomain().lb()}));
               Interval t_b = yolb_inv(codomain().lb(), *this, v);
-              v_pts.push_back(Point(t_b.ub(), codomain().lb()));
+              v_pts.push_back(Vector({t_b.ub(), codomain().lb()}));
             }
           }
         }
 
-        v_pts.push_back(Point(t.ub(), output_gate().lb()));
+        v_pts.push_back(Vector({t.ub(), output_gate().lb()}));
 
       // Upper bounds
 
-        v_pts.push_back(Point(t.ub(), output_gate().ub()));
+        v_pts.push_back(Vector({t.ub(), output_gate().ub()}));
 
         if(!v.codomain().is_degenerated())
         {
@@ -162,20 +174,33 @@ namespace tubex
             y_inter_ub = youb(t_inter_ub, *this, v) | yiub(t_inter_ub, *this, v);
 
             if(y_inter_ub.lb() <= codomain().ub())
-              v_pts.push_back(Point(t_inter_ub, y_inter_ub));
+            {
+              if(t_inter_ub.is_degenerated())
+                v_pts.push_back(Vector({t_inter_ub.ub(), y_inter_ub.ub()}));
+
+              else
+              {
+                // The following transforms the line intersection result into
+                // two floating 2d vectors. This creates an additional point,
+                // but maintains reliability.
+                v_pts.push_back(Vector({t_inter_ub.ub(), y_inter_ub.ub()}));
+                v_pts.push_back(Vector({t_inter_ub.lb(), y_inter_ub.ub()}));
+              }
+            }
 
             else
             {
               Interval t_b = youb_inv(codomain().ub(), *this, v);
-              v_pts.push_back(Point(t_b.ub(), codomain().ub()));
+              v_pts.push_back(Vector({t_b.ub(), codomain().ub()}));
               Interval t_a = yiub_inv(codomain().ub(), *this, v);
-              v_pts.push_back(Point(t_a.lb(), codomain().ub()));
+              v_pts.push_back(Vector({t_a.lb(), codomain().ub()}));
             }
           }
         }
       
-      v_pts.push_back(Point(t.lb(), input_gate().ub()));
-      return ConvexPolygon(v_pts);
+      v_pts.push_back(Vector({t.lb(), input_gate().ub()}));
+      v_pts = Point::remove_identical_pts(v_pts);
+      return ConvexPolygon(v_pts, true);
     }
   }
 }
