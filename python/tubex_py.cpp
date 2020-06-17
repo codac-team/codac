@@ -17,6 +17,7 @@
 
 #include "src/core/contractors/dyn/tubex_py_DynCtc.h"
 #include "src/core/contractors/static/tubex_py_Ctc.h"
+#include "src/core/functions/tubex_py_TFnc.h"
 
 #include <pybind11/pybind11.h>
 
@@ -44,7 +45,7 @@ void export_RandTrajectory(py::module& m);
 void export_TrajectoryVector(py::module& m);
 void export_Slice(py::module& m);
 
-py::class_<TFnc> export_TFnc(py::module& m);
+py::class_<TFnc, pyTFnc> export_TFnc(py::module& m);
 void export_TFunction(py::module& m, py::class_<TFnc>& fnc);
 
 void export_graphics(py::module& m);
