@@ -126,7 +126,7 @@
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
                       DEPENDS tubex COMMENT "Running the tests")
 
-    #add_subdirectory(tests)
+    add_subdirectory(tests)
   endif()
 
   option(TEST_EXAMPLES "Testing examples" OFF)

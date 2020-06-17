@@ -33,6 +33,7 @@ namespace tubex
     vector<Point> v_result_thick_pts = Point::to_Points(x.vertices());
     for(auto& pt : v_result_thick_pts)
       pt = Point(pt.box() + v);
+    // ^ The operation may transform a degenerate point-box into a large box
 
     return ConvexPolygon(v_result_thick_pts);
   }

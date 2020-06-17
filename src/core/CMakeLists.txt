@@ -99,6 +99,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcEval.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDeriv.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDeriv.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcLinobs.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcLinobs.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Domain.cpp
