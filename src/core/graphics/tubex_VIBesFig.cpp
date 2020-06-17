@@ -137,6 +137,18 @@ namespace tubex
         vibes::drawBox(box, params_this_fig);
     }
   }
+
+  void VIBesFig::draw_boxes(const vector<IntervalVector>& v_boxes, const vibes::Params& params)
+  {
+    for(const auto& box : v_boxes)
+      draw_box(box, params);
+  }
+
+  void VIBesFig::draw_boxes(const vector<IntervalVector>& v_boxes, const string& color, const vibes::Params& params)
+  {
+    for(const auto& box : v_boxes)
+      draw_box(box, color, params);
+  }
   
   void VIBesFig::draw_line(const vector<vector<double> >& v_pts, const vibes::Params& params)
   {
@@ -247,6 +259,24 @@ namespace tubex
       vibes::drawPolygon(v_x, v_y, color, params_this_fig);
       m_view_box |= p.box();
     }
+  }
+  
+  void VIBesFig::draw_polygons(const vector<ConvexPolygon>& v_p, const vibes::Params& params)
+  {
+    for(const auto& p : v_p)
+      draw_polygon(p, params);
+  }
+  
+  void VIBesFig::draw_polygons(const vector<ConvexPolygon>& v_p, const string& color, const vibes::Params& params)
+  {
+    for(const auto& p : v_p)
+      draw_polygon(p, color, params);
+  }
+  
+  void VIBesFig::draw_polygons(const vector<ConvexPolygon>& v_p, const ColorMap& color_map, const vibes::Params& params)
+  {
+    for(int i = v_p.size()-1 ; i >= 0 ; i--) // we usually prefer to display last poylgons first, that may be larger
+      draw_polygon(v_p[i], rgb2hex(color_map.color(i*1./(v_p.size()-1))));
   }
 
   void VIBesFig::draw_point(const Point& p, float size, const vibes::Params& params)

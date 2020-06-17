@@ -120,7 +120,7 @@ Interactive meetings sessions are planned each Wednesday afternoon at 2PM (UTC):
   * 24th of June
   * 1rst of July
 
-**Interactive sessions (Wed. 10, June):** `select your slot with this form <https://docs.google.com/forms/d/e/1FAIpQLSc4n22iSrwlSMpqqiTc86WmJX1spjzcziHVXPRYfsIdyBU4Kg/viewform?usp=sf_link>`_
+**Interactive sessions (Wed. 17, June):** `select your slot with this form <https://docs.google.com/forms/d/e/1FAIpQLSc4n22iSrwlSMpqqiTc86WmJX1spjzcziHVXPRYfsIdyBU4Kg/viewform?usp=sf_link>`_
 
 
 Content of the tutorial
