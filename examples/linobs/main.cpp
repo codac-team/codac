@@ -40,7 +40,7 @@ IntervalMatrix exp(const Matrix& A, const Interval& intv_t) // computes e^At
   return A_exp;
 }
 
-TrajectoryVector simu_truth(const Matrix& A, const Vector& B, const tubex::Function& f_u, double dt, const Interval& tdomain)
+TrajectoryVector simu_truth(const Matrix& A, const Vector& B, const TFunction& f_u, double dt, const Interval& tdomain)
 {
   TrajectoryVector truth(2);
   Vector x0(2, 0.), x = x0;
@@ -55,7 +55,7 @@ TrajectoryVector simu_truth(const Matrix& A, const Vector& B, const tubex::Funct
     truth.set(x, t);
   }
 
-  truth.truncate_domain(tdomain); // clean truncature [t0,tf]
+  truth.truncate_tdomain(tdomain); // clean truncature [t0,tf]
   return truth;
 }
 
@@ -67,7 +67,7 @@ int main()
 
     Interval tdomain(0.,10.);
 
-    tubex::Function f_u("cos(t)+sin(t/3)+t/10");
+    TFunction f_u("cos(t)+sin(t/3)+t/10");
 
     Matrix A(2,2);
     A[0][0] = 0.;  A[0][1] = 1.;
@@ -89,8 +89,8 @@ int main()
     TubeVector x(tdomain, dt, 2);
 
     // Optional: initial and final conditions on x:
-    x.set(IntervalVector(x_truth(tdomain.lb())).inflate(0.0001), tdomain.lb()); // x0
-    x.set(IntervalVector(x_truth(tdomain.ub())).inflate(0.0001), tdomain.ub()); // xf
+    x.set(IntervalVector(x_truth.first_value()).inflate(0.0001), tdomain.lb()); // x0
+    x.set(IntervalVector(x_truth.last_value()).inflate(0.0001), tdomain.ub()); // xf
 
 
   /* =========== CREATING OBSERVATIONS =========== */
@@ -102,7 +102,7 @@ int main()
     for(int i = 0 ; i < nb_obs ; i++)
     {
       // Random time in the temporal domain
-      v_t[i] = (rand()/double(RAND_MAX))*tdomain.diam()+tdomain.lb();
+      v_t[i] = Tools::rand_in_bounds(tdomain);
       // Getting observation from the truth
       v_obs[i] = IntervalVector(x_truth(v_t[i])).inflate(0.01);
     }
@@ -120,7 +120,7 @@ int main()
 
     vibes::beginDrawing();
     VIBesFigMap fig_map("Map");
-    fig_map.set_properties(1450, 50, 800, 800);
+    fig_map.set_properties(1450, 50, 600, 600);
     fig_map.add_trajectory(&x_truth, "x*", 0, 1);
     fig_map.draw_polygons(polygons_fwd, ColorMap::BLUE_TUBE);
     fig_map.draw_polygons(polygons_fwdbwd, "#1B4054");
