@@ -143,6 +143,26 @@ Intervals, boxes and interval matrices
       IntervalVector m = x.subvector(1,2); // creates [m]=[0,10]×[-∞,∞]
       x.put(2,y);                   // updates [x] to [-1,3]×[0,10]×[3,4]×[4,6]×[-∞,∞]
 
+  .. _sec-manual-intervals-concatenate:
+
+  Lastly, the concatenation of two ``IntervalVector`` can be done with the ``cart_prod`` function:
+
+  .. tabs::
+    
+    .. code-tab:: py
+
+      a = IntervalVector([[0,1],[2,3]])
+      b = IntervalVector([[4,5],[6,7]])
+      c = cart_prod(a,b)
+      # c: ([0, 1] ; [2, 3] ; [4, 5] ; [6, 7])
+
+    .. code-tab:: c++
+
+      IntervalVector a({{0,1},{2,3}});
+      IntervalVector b({{4,5},{6,7}});
+      IntervalVector c = cart_prod(a,b);
+      // c: ([0, 1] ; [2, 3] ; [4, 5] ; [6, 7])
+
 
 .. _sec-manual-intervals-matrices:
 
