@@ -137,7 +137,10 @@
 # Compile sources
 ################################################################################
 
+  if(MSVC)
+  else()
   add_compile_options(-fPIC) # is it necessary for python binding?
+  endif()
   add_subdirectory(src) # C++ sources
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
