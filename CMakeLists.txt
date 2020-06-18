@@ -137,15 +137,14 @@
 # Compile sources
 ################################################################################
 
-  if(MSVC)
-  else()
-  add_compile_options(-fPIC) # is it necessary for python binding?
-  endif()
   add_subdirectory(src) # C++ sources
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
   # Python binding:
   if(WITH_PYTHON)
+    if(NOT MSVC)
+      add_compile_options(-fPIC) # is it necessary for python binding?
+    endif()
     add_subdirectory(python)
   endif()
 
@@ -164,6 +163,6 @@
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Maintainer <simon.rohou@ensta-bretagne.fr>")
   set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${TUBEX_URL})
-  # TODO finish deb package
+  # todo: finish deb package
 
   include(CPack)
