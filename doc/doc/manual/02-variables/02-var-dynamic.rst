@@ -87,7 +87,7 @@ For instance, if we change the decimal precision in order to format floating-poi
 
   .. code-tab:: c++
 
-    Interval z = x(Interval::pi());              // z = cos(π)+sin(2π) = -1
+    Interval z = x(Interval::PI);              // z = cos(π)+sin(2π) = -1
     cout << setprecision(10) << z << endl;
     // Output:
     // [-1.000000000000002, -0.9999999999999991]

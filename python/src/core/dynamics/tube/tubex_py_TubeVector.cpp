@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_TubeVector(py::module& m)
 {
-  py::class_<TubeVector> tube_vector(m, "TubeVector", "todo");
+  py::class_<TubeVector> tube_vector(m, "TubeVector", TUBEVECTOR_MAIN);
   tube_vector
 
   // Definition

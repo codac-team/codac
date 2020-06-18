@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_Slice(py::module& m)
 {
-  py::class_<Slice> slice(m, "Slice", "todo");
+  py::class_<Slice> slice(m, "Slice", SLICE_MAIN);
   slice
 
   // Definition

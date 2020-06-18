@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_RandTrajectory(py::module& m)
 {
-  py::class_<RandTrajectory,Trajectory> randtrajectory(m, "RandTrajectory", "todo");
+  py::class_<RandTrajectory,Trajectory> randtrajectory(m, "RandTrajectory", RANDTRAJECTORY_MAIN);
   randtrajectory
 
   // Definition

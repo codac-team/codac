@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_CtcDeriv(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc)
 {
-  py::class_<CtcDeriv> ctc_deriv(m, "CtcDeriv", dyn_ctc, "todo");
+  py::class_<CtcDeriv> ctc_deriv(m, "CtcDeriv", dyn_ctc, CTCDERIV_MAIN);
   ctc_deriv
 
     .def(py::init<>(),

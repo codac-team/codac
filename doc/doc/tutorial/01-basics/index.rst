@@ -98,8 +98,7 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
       x = Interval()                              # [-∞,∞] (default value)
       x = Interval(0, 10)                         # [0,10]
       x = Interval(1, oo)                         # [1,∞]
-      x = Interval.ALL_REALS                      # [-∞,∞]
-      x = Interval.NEG_REALS                      # [-∞,0]
+      x = Interval(-oo,3)                         # [-∞,3]
       x = Interval.EMPTY_SET                      # ∅
       # ...
 
@@ -107,10 +106,9 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
 
       Interval x;                                 // [-∞,∞] (default value)
       Interval x(0, 10);                          // [0,10]
-      Interval x(1, POS_INFINITY);                // [1,∞]
-      Interval x = Interval::all_reals();         // [-∞,∞]
-      Interval x = Interval::neg_reals();         // [-∞,0]
-      Interval x = Interval::empty_set();         // ∅
+      Interval x(1, oo);                          // [1,∞]
+      Interval x(-oo, 3);                         // [-∞,3]
+      Interval x = Interval::EMPTY_SET;           // ∅
       // ...
 
 
@@ -134,7 +132,7 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
 
       IntervalVector x(2, Interval(-1,3));        // creates [x]=[-1,3]×[-1,3]=[-1,3]^2
       IntervalVector y{{3,4},{4,6}};              // creates [y]= [3,4]×[4,6]
-      IntervalVector z(3, Interval::pos_reals()); // creates [z]=[0,∞]^3
+      IntervalVector z(3, Interval(0,oo));        // creates [z]=[0,∞]^3
       IntervalVector w(y);                        // creates a copy: [w]=[y]
 
       Vector v(3, 0.42);                          // one vector (0.42;0.42;0.42)
