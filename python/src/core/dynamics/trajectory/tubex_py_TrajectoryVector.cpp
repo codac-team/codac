@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_TrajectoryVector(py::module& m)
 {
-  py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector", "todo");
+  py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector", TRAJECTORYVECTOR_MAIN);
   trajectoryvector
 
   // Definition

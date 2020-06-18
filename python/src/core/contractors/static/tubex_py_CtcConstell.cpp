@@ -28,7 +28,7 @@ using namespace pybind11::literals;
 
 void export_CtcConstell(py::module& m)
 {
-  py::class_<CtcConstell,Ctc> ctc_constell(m, "CtcConstell", "todo");
+  py::class_<CtcConstell,Ctc> ctc_constell(m, "CtcConstell", CTCCONSTELL_MAIN);
   ctc_constell
 
     .def(py::init<const list<IntervalVector> &>(),

@@ -27,7 +27,7 @@ using namespace pybind11::literals;
 
 py::class_<DynCtc, pyDynCtc> export_DynCtc(py::module& m)
 {
-  py::class_<DynCtc, pyDynCtc> dyn_ctc(m, "DynCtc");
+  py::class_<DynCtc, pyDynCtc> dyn_ctc(m, "DynCtc", DYNCTC_MAIN);
   dyn_ctc
 
     .def(py::init<>(),
@@ -46,7 +46,7 @@ py::class_<DynCtc, pyDynCtc> export_DynCtc(py::module& m)
       "tdomain"_a)
     ;
 
-  py::enum_<TimePropag>(m, "TimePropag", "todo")
+  py::enum_<TimePropag>(m, "TimePropag")
     .value("FORWARD", TimePropag::FORWARD)
     .value("BACKWARD", TimePropag::BACKWARD)
   ;
