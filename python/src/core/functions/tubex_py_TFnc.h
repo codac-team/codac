@@ -19,58 +19,57 @@
 #include "tubex_TubeVector.h"
 #include "tubex_TFnc.h"
 
-using namespace std;
-using namespace ibex;
-using namespace tubex;
 
-
-
-class pyTFnc : public TFnc
+namespace tubex
 {
-  public:
+  class pyTFnc : public TFnc
+  {
+    public:
 
-    using TFnc::TFnc;
+      using TFnc::TFnc;
 
-    const Tube eval(const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const Tube, TFnc, eval, x);
-    }
+      // Trampoline (need one for each virtual function)
 
-    const ibex::Interval eval(const ibex::IntervalVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, x);
-    }
+      const Tube eval(const TubeVector &x) const override
+      {
+        PYBIND11_OVERLOAD_PURE(const Tube, TFnc, eval, x);
+      }
 
-    const ibex::Interval eval(int slice_id,const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, slice_id, x);
-    }
+      const ibex::Interval eval(const ibex::IntervalVector &x) const override
+      {
+        PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, x);
+      }
 
-    const ibex::Interval eval(const ibex::Interval &t,const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, t, x);
-    }
+      const ibex::Interval eval(int slice_id,const TubeVector &x) const override
+      {
+        PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, slice_id, x);
+      }
 
-    const TubeVector eval_vector(const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const TubeVector, TFnc, eval_vector, x);
-    }
+      const ibex::Interval eval(const ibex::Interval &t,const TubeVector &x) const override
+      {
+        PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, t, x);
+      }
 
-    const ibex::IntervalVector eval_vector(const ibex::IntervalVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, x);
-    }
+      const TubeVector eval_vector(const TubeVector &x) const override
+      {
+        PYBIND11_OVERLOAD_PURE(const TubeVector, TFnc, eval_vector, x);
+      }
 
-    const ibex::IntervalVector eval_vector(int slice_id,const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, slice_id, x);
-    }
+      const ibex::IntervalVector eval_vector(const ibex::IntervalVector &x) const override
+      {
+        PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, x);
+      }
 
-    const ibex::IntervalVector eval_vector(const ibex::Interval &t,const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, t, x);
-    }
-};
+      const ibex::IntervalVector eval_vector(int slice_id,const TubeVector &x) const override
+      {
+        PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, slice_id, x);
+      }
 
+      const ibex::IntervalVector eval_vector(const ibex::Interval &t,const TubeVector &x) const override
+      {
+        PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, t, x);
+      }
+  };
+}
 
 #endif
