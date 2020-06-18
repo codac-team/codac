@@ -38,8 +38,8 @@ Intervals, boxes and interval matrices
     .. code-tab:: c++
 
       Interval x(0, 10);                          // [0,10]
-      Interval x(1, POS_INFINITY);                // [1,∞]
-      Interval x(NEG_INFINITY, -10);              // [-∞,-10]
+      Interval x(1, oo);                          // [1,∞]
+      Interval x(-oo, -10);                       // [-∞,-10]
 
   Some pre-defined values are also at hand:
 
@@ -48,9 +48,6 @@ Intervals, boxes and interval matrices
     .. code-tab:: py
 
       x = Interval()                              # [-∞,∞] (default value)
-      x = Interval.ALL_REALS                      # [-∞,∞]
-      x = Interval.POS_REALS                      # [0,∞]
-      x = Interval.NEG_REALS                      # [-∞,0]
       x = Interval.EMPTY_SET                      # ∅
       x = Interval.PI                             # [π]
       x = Interval.TWO_PI                         # [2π]
@@ -59,13 +56,10 @@ Intervals, boxes and interval matrices
     .. code-tab:: c++
 
       Interval x;                                 // [-∞,∞] (default value)
-      Interval x = Interval::all_reals();         // [-∞,∞]
-      Interval x = Interval::pos_reals();         // [0,∞]
-      Interval x = Interval::neg_reals();         // [-∞,0]
-      Interval x = Interval::empty_set();         // ∅
-      Interval x = Interval::pi();                // [π]
-      Interval x = Interval::two_pi();            // [2π]
-      Interval x = Interval::half_pi();           // [π/2]
+      Interval x = Interval::EMPTY_SET;           // ∅
+      Interval x = Interval::PI;                  // [π]
+      Interval x = Interval::TWO_PI;              // [2π]
+      Interval x = Interval::HALF_PI;             // [π/2]
 
   .. _sec-manual-intervals-pi:
 
@@ -80,7 +74,7 @@ Intervals, boxes and interval matrices
 
     .. code-tab:: c++
 
-      Interval x = Interval::pi();                // [π]
+      Interval x = Interval::PI;                  // [π]
       // x = [3.141592653589793, 3.141592653589794]
 
   
@@ -95,7 +89,7 @@ Intervals, boxes and interval matrices
 
       x = IntervalVector(2, [-1,3])               # creates [x]=[-1,3]×[-1,3]=[-1,3]^2
       y = IntervalVector([[3,4],[4,6]])           # creates [y]= [3,4]×[4,6]
-      z = IntervalVector(3, Interval.POS_REALS)   # creates [z]=[0,∞]^3
+      z = IntervalVector(3, Interval(0,oo))       # creates [z]=[0,∞]^3
       w = IntervalVector(y)                       # creates a copy: [w]=[y]
 
       v = (0.42,0.42,0.42)                        # one vector (0.42;0.42;0.42)
@@ -106,7 +100,7 @@ Intervals, boxes and interval matrices
 
       IntervalVector x(2, Interval(-1,3));        // creates [x]=[-1,3]×[-1,3]=[-1,3]^2
       IntervalVector y{{3,4},{4,6}};              // creates [y]= [3,4]×[4,6]
-      IntervalVector z(3, Interval::pos_reals()); // creates [z]=[0,∞]^3
+      IntervalVector z(3, Interval(0,oo));        // creates [z]=[0,∞]^3
       IntervalVector w(y);                        // creates a copy: [w]=[y]
 
       Vector v(3, 0.42);                          // one vector (0.42;0.42;0.42)
@@ -191,7 +185,7 @@ The empty set of an ``Interval`` object is given by:
 
     .. code-tab:: c++
 
-      Interval x = Interval::empty_set();         // ∅
+      Interval x = Interval::EMPTY_SET;           // ∅
 
 For boxes (interval vectors), we have to specify their dimension even in case of empty set. This differs from mathematical definitions, but allows simple operations when programming with boxes.
 
@@ -332,7 +326,7 @@ The use on intervals is transparent:
     b = Interval(-2,4) & Interval(6,7)                              # b = [empty] (intersection)
     c = max(Interval(2,7), Interval(1,9))                           # c = [2,9]
     d = max(Interval.EMPTY_SET, Interval(1,2))                      # d = [empty]
-    e = Interval(-1,3) / Interval.POS_REALS                         # e = [-oo,oo]
+    e = Interval(-1,3) / Interval(0,oo)                             # e = [-oo,oo]
     f = (Interval(1,2) * Interval(-1,3)) \
       + max(Interval(1,3) & Interval(6,7), Interval(1,2))           # f = [4,9]
 
@@ -341,8 +335,8 @@ The use on intervals is transparent:
     Interval a = Interval(-2,4) * Interval(1,3);                    // a = [-6,12]
     Interval b = Interval(-2,4) & Interval(6,7);                    // b = [empty] (intersection)
     Interval c = max(Interval(2,7), Interval(1,9));                 // c = [2,9]
-    Interval d = max(Interval::empty_set(), Interval(1,2));         // d = [empty]
-    Interval e = Interval(-1,3) / Interval::pos_reals();            // e = [-oo,oo]
+    Interval d = max(Interval::EMPTY_SET, Interval(1,2));           // d = [empty]
+    Interval e = Interval(-1,3) / Interval(0,oo);                   // e = [-oo,oo]
     Interval f = (Interval(1,2) * Interval(-1,3))
                + max(Interval(1,3) & Interval(6,7), Interval(1,2)); // f = [4,9]
 

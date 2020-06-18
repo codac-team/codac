@@ -342,7 +342,7 @@ Contributors
 ============
 
 .. hlist::
-  :columns: 3
+  :columns: 5
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
@@ -350,6 +350,7 @@ Contributors
   * `Gilles Chabert <https://web.imt-atlantique.fr/x-info/gchabe08/>`_
   * Julien Damers
   * Raphael Voges
+  * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
   * `Thomas Le Mézo <https://www.ensta-bretagne.fr/lemezo/>`_
   * `Cyril Bouvier <http://www.lirmm.fr/~bouvier/index.en.html>`_
   * `Bertrand Neveu <http://imagine.enpc.fr/~neveub/>`_

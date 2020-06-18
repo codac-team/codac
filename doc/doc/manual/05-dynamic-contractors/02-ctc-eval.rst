@@ -353,7 +353,7 @@ The :math:`\mathcal{C}_{\textrm{eval}}` can be used to evaluate the position tim
 
   .. code-tab:: c++
 
-    t = Interval::all_reals(); // new initialization
+    t = Interval(); // new initialization
     b = {{-1.,0.},{0.4,1.2}}; // (blue box on the figure)
 
     ctc_eval.contract(t, b, x);
