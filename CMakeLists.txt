@@ -28,10 +28,10 @@
   set(PROJECT_HOMEPAGE_URL "http://simon-rohou.fr/research/tubex-lib")
   message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
-#  if(NOT CMAKE_BUILD_TYPE)
-#    set(CMAKE_BUILD_TYPE Debug)
-#    message(STATUS "Configuring ${PROJECT_NAME} in DEBUG mode as none was specified.")
-#  endif()
+  if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+    message(STATUS "Configuring ${PROJECT_NAME} in DEBUG mode as none was specified.")
+  endif()
 
   
 ################################################################################
