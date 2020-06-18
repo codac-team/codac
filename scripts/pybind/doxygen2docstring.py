@@ -16,6 +16,12 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 
+# For special (math) characters on Windows systems:
+if os.name == "nt":
+  import _locale
+  _locale._gdl_bak = _locale._getdefaultlocale
+  _locale._getdefaultlocale = (lambda *args: (_locale._gdl_bak()[0], 'utf8'))
+
 
 def anchor_id(memberdef, filename):
   '''
