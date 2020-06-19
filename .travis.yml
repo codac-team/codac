@@ -4,17 +4,6 @@
 
 language: c++
 
-deploy: &deploy_base
-  provider: releases
-  api_key:
-    secure: Y+ZO/wvqZp29/cSnAqJKOAybSGlu8ALDsPS63zQXPtUSiUejfnoDLi77ANlHxUF7MhXlo38VanwYR/jGnXeCUPtX1Seg8W2v1mXFNaUKCki/bkEeLtK2uXAD5flxoBULPYcdspNbGlyzohxOZgr7VFNk0TkIg7jSlUkGuSAlJy81qh6ctVFtKhTsLDwi8ZKenwFFmlBNzw3dXR5c9AloBSCLRfWlwq2INYeEfgkItBMIe+7jh7RaacXoNrV/JkUQNcp4W5wA/zgMkOXqXSf7LPRIXd80zCgCmZ+ODqKTVHx5gXZxUPvW3cAtsm7RU4VNwpXiC2ckNRpLcCF8/dav3XG2hZrddUzvEXbrePnONrNQHrdszVokkQoJBYPFsZuUR4lDqV25aGVEvsn5tnBfIH6Rf2abF+pUkuKnWFqCO71kfwPBY5wKHi2SdaKVcZm06jD1tp87OuOt4T0DPBs4/SyQ7925eXk4Ol0MwCsGj1Pml+R90khq74xFe48KOxXLIYxHOqBO600HL3dYVrpQTZ/3rDpiTKlyGn8he+K7gCHFlJ85uBgp89cQei8aUOACLKhecT/rZqPIoZNsDe28AtDrj5LeLYeGSQDlukjukYfKcZF10itcSF8UusgNfexuLUPz5BUf2xrNF0cCFOAzP0auhgxRLC9VPGdEzvY0N1c=
-  file: ''
-  on:
-    repo: SimonRohou/tubex-lib
-  skip_cleanup: 'true'
-  draft: true
-  prerelease: true
-
 addons:
   apt:
     sources:
@@ -38,9 +27,6 @@ matrix:
       - chmod a+x scripts/docker/build_pybinding.sh
       - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker/build_pybinding.sh
       - ls wheelhouse
-    deploy:
-      <<: *deploy_base
-      file: "wheelhouse/*.whl"
   # Other environments for C++ tests (g++ versions, trees..)
   - os: linux
     addons:
@@ -168,7 +154,7 @@ script:
 
   # Testing
   - make test
-  - ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
+  #- ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
     
   # With synthesis tree for all created tubes
   
@@ -213,4 +199,18 @@ script:
 
   # Testing
   - make test
-  - ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
+  #- ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
+
+
+deploy:
+  provider: releases
+  tag_name: ${TRAVIS_TAG}
+  api_key:
+    secure: Y+ZO/wvqZp29/cSnAqJKOAybSGlu8ALDsPS63zQXPtUSiUejfnoDLi77ANlHxUF7MhXlo38VanwYR/jGnXeCUPtX1Seg8W2v1mXFNaUKCki/bkEeLtK2uXAD5flxoBULPYcdspNbGlyzohxOZgr7VFNk0TkIg7jSlUkGuSAlJy81qh6ctVFtKhTsLDwi8ZKenwFFmlBNzw3dXR5c9AloBSCLRfWlwq2INYeEfgkItBMIe+7jh7RaacXoNrV/JkUQNcp4W5wA/zgMkOXqXSf7LPRIXd80zCgCmZ+ODqKTVHx5gXZxUPvW3cAtsm7RU4VNwpXiC2ckNRpLcCF8/dav3XG2hZrddUzvEXbrePnONrNQHrdszVokkQoJBYPFsZuUR4lDqV25aGVEvsn5tnBfIH6Rf2abF+pUkuKnWFqCO71kfwPBY5wKHi2SdaKVcZm06jD1tp87OuOt4T0DPBs4/SyQ7925eXk4Ol0MwCsGj1Pml+R90khq74xFe48KOxXLIYxHOqBO600HL3dYVrpQTZ/3rDpiTKlyGn8he+K7gCHFlJ85uBgp89cQei8aUOACLKhecT/rZqPIoZNsDe28AtDrj5LeLYeGSQDlukjukYfKcZF10itcSF8UusgNfexuLUPz5BUf2xrNF0cCFOAzP0auhgxRLC9VPGdEzvY0N1c=
+  on:
+    repo: SimonRohou/tubex-lib
+  skip_cleanup: true
+  file_glob: true
+  file: ./**/*.whl
+  draft: true
+  prerelease: true
