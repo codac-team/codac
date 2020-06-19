@@ -1,9 +1,24 @@
 .. _sec-tuto-dynamic-loc:
 
-.. warning::
-  
-  This part of the documentation is deprecated. Several changes are currently performed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
+Lesson E: Dynamic localization with asynchronous measurements
+=============================================================
 
-Dynamic localization with asynchronous measurements
-===================================================
+This lesson will extend
+
+
+.. contents:: Content of this lesson
+
+
+
+Tubes: intervals of trajectories
+--------------------------------
+
+
+
+Contractors for differential equations
+--------------------------------------
+
+
+
+Dealing with asynchronous measurements
+--------------------------------------
