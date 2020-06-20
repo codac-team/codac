@@ -1,4 +1,4 @@
-.. _sec-tuto-dynamic-loc:
+.. _sec-tuto-05:
 
 Lesson E: Dynamic localization with asynchronous measurements
 =============================================================
@@ -20,5 +20,5 @@ Contractors for differential equations
 
 
 
-Dealing with asynchronous measurements
---------------------------------------
+Dead-reckoning
+--------------

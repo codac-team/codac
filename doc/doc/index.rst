@@ -276,17 +276,13 @@ Then you have two options: read the details about the features of Tubex (domains
   /manual/05-dynamic-contractors/index
   /manual/06-contractor-network/index
   /manual/07-graphics/index
+  api_technical_doc
   /manual/10-dev/index
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
 
 .. versionadded:: 3.0.0
    The Contractor Network tool.
-
-
-.. seealso::
-
-  The `C++ API technical documentation <../api/html/annotated.html>`_ of the library.
 
 
 .. _sec-mainpage-tuto:
@@ -302,31 +298,26 @@ Then you have two options: read the details about the features of Tubex (domains
 Tutorial for mobile robotics
 ============================
 
-The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples, namely:
+The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples:
 
-  * Static range-only localization
-  * Static range-and-bearing localization
-  * Localization with asynchronous measurements
-  * Range-only SLAM
-  * Localization by solving data association
-  * Real-time state estimation
-  * Proving loops in robot trajectories
+.. toctree::
+  :maxdepth: 1
+  :titlesonly:
 
-You can see more on :ref:`the related page <sec-tuto-main-page>`.
+  Main page </tutorial/index>
+  Introduction </tutorial/00-getting-started/index>
 
-.. .. toctree:: 
-..   :maxdepth: 1
-.. 
-..   /tutorial/01-introduction/index
-..   /tutorial/02-basics/index
-..   /tutorial/03-static-rangeonly-loc/index
-..   /tutorial/04-static-loc/index
-..   /tutorial/05-dynamic-loc/index
-..   /tutorial/06-rangeonly-slam/index
-..   /tutorial/07-data-association/index
-..   /tutorial/08-realtime-loc/index
-..   /tutorial/09-distributed-loc/index
-..   /tutorial/10-loop-detections/index
+  A. Intervals and contractors </tutorial/01-basics/index>
+  B. Static range-only localization </tutorial/02-static-rangeonly/index>
+
+  C. Static range-bearing loc. </tutorial/03-static-rangebearing/index>
+  D. Building our own contractor </tutorial/04-own-contractor/index>
+
+  [closed] E. Dynamic range-only loc. </tutorial/05-tubes/closed>
+  [closed] F. Data association </tutorial/06-dyn-rangeonly/closed>
+
+  [closed] G. Range-only SLAM </tutorial/07-data-association/closed>
+  [closed] H. Loop detections </tutorial/08-rangeonly-slam/closed>
 
 
 License and support

@@ -33,11 +33,8 @@ Corrections:
 
 **Week 3: June 22 -- June 28**
 
-* **Lesson E**: not yet available
-
-Corrections:
-
-* `tubex-lib/examples/tuto/04_dyn_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/tuto/examples/tuto/04_dyn_rangeonly>`_
+* :ref:`sec-tuto-05`
+* :ref:`sec-tuto-06`
 
 ------------------------------------------------------
 
