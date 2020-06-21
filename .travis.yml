@@ -19,17 +19,6 @@ addons:
 
 matrix:
   include:
-    - name: "deployquicktest"
-      os: windows
-      env:
-        - CMAKE_PARAM_G="Visual Studio 15" CMAKE_PARAM_A=x64
-        - PY_V_F=3.7.7 PY_V_MDM=3.7 PY_V_MM=37
-      before_install: 
-      cache:
-      install:
-        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} . || true
-      script: 
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
     # One environment for python binding:
     - sudo: true
       services:
