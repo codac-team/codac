@@ -218,13 +218,13 @@ In the second part, we will tackle the problem of **indistinguishable** landmark
    :width: 200px
 
 * **Lesson E**: tubes
-* **Lesson F**: dynamic localization with data association
+* **Lesson F**: localization with asynchronous measurements
 
 Now, we will make the robot move and see how we can handle **uncertainties on trajectories**. This will be done by solving the range-only problem of Lesson B, now in a dynamical context with **asynchronous measurements**. 
 We will then use the tubes to solve the problem `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
 
 | **Exercise to finish:** (before Monday 6th of July)
-| -- the data association with bearing only observations, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
+| -- the range-only localization, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
 
@@ -236,13 +236,14 @@ We will then use the tubes to solve the problem `Set-membership state estimation
    :align: right
    :width: 200px
 
-* **Lesson G**: range-only SLAM
-* **Lesson H**: loop detection in robot trajectories
+* **Lesson G**: dynamic localization with data association
+* **Lesson H**: range-only SLAM
 
 | We will end this tutorial with a **range-only SLAM** problem and see how Tubex can be used for **online missions**.
 | The last part of this section will focus on new tools to detect and **prove loops** in robot trajectories from the only knowledge of proprioceptive measurements such as velocities.
 
-**Exercise to finish:** to be defined
+| **Exercise to finish:** (before Monday 6th of July)
+| -- the range-only SLAM, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 The following video illustrates the result of Lesson F:
 
