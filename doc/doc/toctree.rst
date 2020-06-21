@@ -45,7 +45,7 @@ Tubex: constraint-programming for robotics
   C. Static range-bearing loc. </tutorial/03-static-rangebearing/index>
   D. Building our own contractor </tutorial/04-own-contractor/index>
 
-  [closed] E. Dynamic range-only loc. </tutorial/05-tubes/closed>
+  [closed] E. Hello tubes </tutorial/05-tubes/closed>
   [closed] F. Data association </tutorial/06-dyn-rangeonly/closed>
 
   [closed] G. Range-only SLAM </tutorial/07-data-association/closed>
