@@ -45,6 +45,12 @@ breathe_projects = {
     "tubex-lib":"../api/xml",
 }
 
+# For defining roles in all files
+rst_prolog = """
+.. role:: underline
+  :class: underline
+"""
+
 numfig = True
 
 # mathjax_path = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"

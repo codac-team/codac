@@ -1,9 +1,5 @@
 .. _sec-tuto-04:
 
-.. role:: underline
-    :class: underline
-
-
 Lesson D: Building our own contractor
 ======================================
 
