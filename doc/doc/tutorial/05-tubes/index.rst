@@ -9,6 +9,8 @@ Mobile robot motion is usually described by an evolution function :math:`\mathbf
 .. contents:: Content of this lesson
 
 
+.. _sec-tuto-05-formalism:
+
 Formalism
 ---------
 
@@ -152,7 +154,7 @@ Enclosing the feasible trajectories of a robot
 
 The state estimation will be done by enclosing the feasible trajectories in a tube submitted to contractors.
 
-| As for trajectories, tubes are defined over a *t*-domain :math:`[t_0,t_f]`.
+| As for trajectories, tubes are defined over a *t*-domain :math:`[t_0,t_f]`. A parameter :math:`\delta` allows to numerically represent a tube as a set of temporal slices (we will use :math:`\delta` = ``dt`` = 0.01).
 | We can build a tube from a temporal function, for instance:
 
 .. tabs::
@@ -312,6 +314,8 @@ For instance, one can contract three tubes :math:`[a](\cdot)`, :math:`[b](\cdot)
 
   As one can see, the contraction is reliable: the actual trajectory (in dark blue) is kept in the tube. However, the contraction is not efficient. We need to also consider the differential equation :math:`\dot{\mathbf{x}}(t)=\mathbf{f}\big(\mathbf{x}(t),\mathbf{u}(t)\big)`.
 
+
+.. _sec-tuto-05-diff-eq:
 
 Dealing with a differential equation
 ------------------------------------

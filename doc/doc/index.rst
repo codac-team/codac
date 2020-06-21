@@ -227,7 +227,7 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
 .. figure:: img/rangeonly-nox0.png
 
 | *You just solved a non-linear state-estimation without knowledge about initial condition.*
-| See the full example on Github: `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.py>`_.
+| See the full example on Github: `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/01_getting_started/tubex_tuto_01.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/01_getting_started/tubex_tuto_01.py>`_.
 
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
@@ -313,8 +313,8 @@ The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about
   C. Static range-bearing loc. </tutorial/03-static-rangebearing/index>
   D. Building our own contractor </tutorial/04-own-contractor/index>
 
-  [closed] E. Hello tubes </tutorial/05-tubes/closed>
-  [closed] F. Localization with asynchronous measurements </tutorial/06-dyn-rangeonly/closed>
+  E. Hello tubes </tutorial/05-tubes/index>
+  F. Localization with asynchronous measurements </tutorial/06-dyn-rangeonly/index>
 
   [closed] G. Localization with data association </tutorial/07-data-association/closed>
   [closed] H. Range-only SLAM </tutorial/08-rangeonly-slam/closed>

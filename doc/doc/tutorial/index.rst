@@ -217,8 +217,8 @@ In the second part, we will tackle the problem of **indistinguishable** landmark
    :align: right
    :width: 200px
 
-* **Lesson E**: tubes
-* **Lesson F**: localization with asynchronous measurements
+* :ref:`sec-tuto-05`
+* :ref:`sec-tuto-06`
 
 Now, we will make the robot move and see how we can handle **uncertainties on trajectories**. This will be done by solving the range-only problem of Lesson B, now in a dynamical context with **asynchronous measurements**. 
 
