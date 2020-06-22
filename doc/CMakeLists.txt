@@ -24,7 +24,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mathjax_stmaryrd.js
     set(DOXYGEN_OUTPUT ${APIDOC_DIR}/html/index.html)
 
     if(WIN32)
-      set(NULL_DEST "NUL 2>&1")
+      set(NULL_DEST NUL 2>&1)
     else()
       set(NULL_DEST "/dev/null")
     endif()
