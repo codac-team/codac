@@ -141,6 +141,7 @@
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
   # Python binding:
+  option(WITH_PYTHON "Build Python binding" OFF)
   if(WITH_PYTHON)
     if(NOT MSVC)
       add_compile_options(-fPIC) # is it necessary for python binding?

@@ -4,6 +4,9 @@
 
 language: c++
 
+# Should avoid triggering a build when a GitHub release or tag is manually created...
+if: tag IS blank
+
 addons:
   apt:
     sources:
@@ -16,27 +19,27 @@ addons:
 
 matrix:
   include:
-  # One environment for python binding:
-  - sudo: true
-    services:
-      - docker
-    env: DOCKER_IMAGE=benensta/pyibex-docker
-    install:
-      - docker pull $DOCKER_IMAGE
-    script:
-      - chmod a+x scripts/docker/build_pybinding.sh
-      - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker/build_pybinding.sh
-      - ls wheelhouse
-  # Other environments for C++ tests (g++ versions, trees..)
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - g++-5
-    env:
-      - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+    # One environment for python binding:
+    - sudo: true
+      services:
+        - docker
+      env: DOCKER_IMAGE=benensta/pyibex-docker
+      install:
+        - docker pull $DOCKER_IMAGE
+      script:
+        - chmod a+x scripts/docker/build_pybinding.sh
+        - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker/build_pybinding.sh
+        - ls wheelhouse
+    # Other environments for C++ tests (g++ versions, trees..)
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 # todo  - os: linux
 # todo    addons:
 # todo      apt:
@@ -46,15 +49,467 @@ matrix:
 # todo          - g++-7
 # todo    env:
 # todo      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - g++-8
-    env:
-      - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+      env:
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+    - name: "Ubuntu 18.04"
+      os: linux
+      dist: bionic
+      compiler: gcc
+      before_install: 
+        - sudo apt-get -q update || true
+        - sudo apt-get -y install flex bison || true
+      cache:
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake --build . --target install
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - unzip -q -o tubex_test_win.zip
+        - rm -Rf tubex_test_win.zip
+        - cd tubex_test_win
+        - mv test ..
+        - cd ../test
+        - rm -Rf ../tubex_test_win
+        - cmake .
+        - cmake --build .
+        - ./my_project
+    - name: "Ubuntu 18.04 C++ Python 3.8"
+      os: linux
+      dist: bionic
+      compiler: gcc
+      language: python
+      python: 3.8
+      before_install: 
+        - python --version || true
+        - python3 --version || true
+        - pip --version || true
+        - pip3 --version || true
+        - sudo python --version || true
+        - sudo python3 --version || true
+        - sudo pip --version || true
+        - sudo pip3 --version || true
+        - sudo apt-get -q update || true
+        - sudo apt-get -y install flex bison || true
+        - sudo apt-get -y install doxygen graphviz || true
+        #
+        #sudo apt-get -y install python3-pip python3-setuptools python3-wheel python3-breathe
+        #sudo pip3 install --upgrade pip
+        #sudo pip3 install --upgrade pyIbex
+        #
+        #sudo apt-get -y install python3.8-dev
+        #sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+        #sudo python -m pip install --upgrade pip
+        #sudo python -m pip install --upgrade pyIbex
+        #sudo python -m pip install --upgrade setuptools wheel
+        #
+        - pip install --upgrade pip
+        - pip install --upgrade pyIbex
+        - pip install --upgrade setuptools wheel
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
+        - cmake --build . --target api
+        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
+        - cmake --build . --target install
+        - cmake --build . --target pip_package
+        # Test python program and wheel...
+        - cp *.whl ../
+        #sudo pip3 install ../*.whl
+        #sudo python -m pip install ../*.whl
+        - pip install ../*.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - unzip -q -o tubex_test_win.zip
+        - rm -Rf tubex_test_win.zip
+        - cd tubex_test_win
+        - mv test ..
+        - cd ../test
+        - rm -Rf ../tubex_test_win
+        - cmake .
+        - cmake --build .
+        - ./my_project
+    - name: "Raspbian Buster pi Docker"
+      os: linux
+      dist: bionic
+      compiler: gcc
+      services:
+        - docker
+      before_install: 
+        - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      cache:
+      install:
+      script: 
+         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../tubex .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv && unzip -q -o tubex_test_win.zip && rm -Rf tubex_test_win.zip && cd tubex_test_win && mv test .. && cd ../test && rm -Rf ../tubex_test_win && cmake . && cmake --build . && ./my_project \""
+    - name: "Mac OS Xcode 10.1"
+      os: osx
+      osx_image: xcode10.1
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC -Wno-everything" -D CMAKE_C_FLAGS="-fPIC -Wno-everything" .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake --build . --target install
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - unzip -q -o tubex_test_win.zip
+        - rm -Rf tubex_test_win.zip
+        - cd tubex_test_win
+        - mv test ..
+        - cd ../test
+        - rm -Rf ../tubex_test_win
+        - cmake .
+        - cmake --build .
+        - ./my_project
+
+    - name: "Windows Visual Studio 2019 x86 C++"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 16" CMAKE_PARAM_A=Win32 CFG=x86_vc16
+      before_install: 
+        - choco install -y visualstudio2019buildtools visualstudio2019-workload-vctools winflexbison
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake --build . --config Debug --target install
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
+        - cmake --build . --config Release
+        - cmd //c "Release\my_project.exe"
+        - cd ../..
+
+    - name: "Windows Visual Studio 2019 x64 C++ Python 3.8"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 16" CMAKE_PARAM_A=x64 CFG=x64_vc16 CPCFG=-win_amd64 PY_V_F=3.8.3 PY_V_MDM=3.8 PY_V_MM=38
+      before_install: 
+        - choco install -y visualstudio2019buildtools visualstudio2019-workload-vctools winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 ttps://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
+        - cmake --build . --config Release
+        - cmd //c "Release\my_project.exe"
+        - cd ../..
+
+    - name: "Windows Visual Studio 2017 x86 C++"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 15" CMAKE_PARAM_A=Win32 CFG=x86_vc15
+      before_install: 
+        - choco install -y winflexbison
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake --build . --config Debug --target install
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
+        - cmake --build . --config Release
+        - cmd //c "Release\my_project.exe"
+        - cd ../..
+
+    - name: "Windows Visual Studio 2017 x64 C++ Python 3.7"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 15" CMAKE_PARAM_A=x64 CFG=x64_vc15 CPCFG=m-win_amd64 PY_V_F=3.7.7 PY_V_MDM=3.7 PY_V_MM=37
+      before_install: 
+        - choco install -y winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 ttps://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
+        - cmake --build . --config Release
+        - cmd //c "Release\my_project.exe"
+        - cd ../..
+
+    - name: "Windows Visual Studio 2015 x86 C++ Python 3.6"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CPCFG=m-win32 PY_V_F="3.6.8 --x86" PY_V_MDM=3.6 PY_V_MM=36
+      before_install: 
+        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b 3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
+        - cmake --build . --config Release
+        - cmd //c "Release\my_project.exe"
+        - cd ../..
+
+    - name: "Windows Visual Studio 2015 x86 Python 3.4"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CPCFG=m-win32 PY_V_F="3.4.4.20200110 --x86" PY_V_MDM=3.4 PY_V_MM=34
+      before_install: 
+        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+
+    - name: "Windows Visual Studio 2015 x64 C++ Python 3.6"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CPCFG=m-win_amd64 PY_V_F=3.6.8 PY_V_MDM=3.6 PY_V_MM=36
+      before_install: 
+        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 ttps://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
+        - cmake --build . --config Release
+        - cmd //c "Release\my_project.exe"
+        - cd ../..
+
+    - name: "Windows Visual Studio 2015 x64 Python 3.5"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CPCFG=m-win_amd64 PY_V_F=3.5.4.20200110 PY_V_MDM=3.5 PY_V_MM=35
+      before_install: 
+        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=3.5.4.20200110 & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b 3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python35:/c/Python35/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+
+    - name: "Windows Visual Studio 2015 x64 Python 3.4"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CPCFG=m-win_amd64 PY_V_F=3.4.4.20200110 PY_V_MDM=3.4 PY_V_MM=34
+      before_install: 
+        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python34;C:\Python34\Scripts;%PATH% & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex& pip install --upgrade wheel setuptools & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+
+    - name: "Windows Qt 5.12.6 MinGW 7.3.0 x86"
+      os: windows
+      env: CMAKE_PARAM_G="MSYS Makefiles" CFG=x86_mingw7
+      before_install: 
+        - choco uninstall -y mingw
+        # Need to free up disk space...
+        - df
+        - rm -Rf "/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools" || true
+        - df
+        - rm -Rf "/C/Program Files (x86)/Windows Kits" || true
+        - df
+        - rm -Rf "/C/Windows/SoftwareDistribution" || true
+        - df
+        - choco install -y winflexbison make patch
+        - wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
+        - cmd //c "move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\ "
+        - wget http://www.ensta-bretagne.fr/lebars/Share/qt-installer-5.12.6-mingw73_32.qs --no-check-certificate -nv
+        - cmd //c "move /Y qt-installer-5.12.6-mingw73_32.qs %SystemDrive%\ "
+        - cmd //c netsh advfirewall set allprofiles state on
+        - cmd //c netsh advfirewall firewall add rule name="Qt offline installer" dir=out action=block program="%SystemDrive%\qt-opensource-windows-x86-5.12.6.exe" enable=yes
+        # Take several min... 
+        - cmd //c "%SystemDrive%\qt-opensource-windows-x86-5.12.6.exe --script %SystemDrive%\qt-installer-5.12.6-mingw73_32.qs"
+        - cmd //c netsh advfirewall firewall del rule name="Qt offline installer"
+        - cmd //c netsh advfirewall set allprofiles state off
+        - cmd //c "del /f /q %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe"
+        - df
+        - export PATH=/c/Qt/Qt5.12.6/Tools/mingw730_32/bin:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" -D INTERVAL_LIB=filib .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "MSYS Makefiles" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake --build . --target install
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" .
+        - cmake --build .
+        - ./my_project.exe
+        - cd ../..
+
+    - name: "Windows MinGW 8.1.0 x64"
+      os: windows
+      env: CMAKE_PARAM_G="MSYS Makefiles" CFG=x64_mingw8
+      before_install: 
+        - choco install -y winflexbison make patch
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" -D INTERVAL_LIB=filib .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "MSYS Makefiles" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake --build . --target install
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" .
+        - cmake --build .
+        - ./my_project.exe
+        - cd ../..
 
 # Configuration for C++ tests:
 
@@ -200,3 +655,35 @@ script:
   # Testing
   - make test
   - ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: ILyVRxUJHYAYHY6aGeY0QSVpwRF/Nm5piue7jkOArZXvwwjavPT8Gm/ZpXeor5rOQV/7rY4ACoOgMyhcFFKrL7BnKmzJUPPGyLez6aZz5ZT0I7YsQIG9CPPko0nIihSOircAjii8XaYwTntFAL9AqCgQk2PQ9HajzhbQrur4RPXFIwhJd9DDSCf8gO1WRyqRkL3gZSaq3GjQP++ZGFR9S5YlpCWVaG88Vq+ygrR9894tQ2on8FnOeE4bS768I36yT/w8IzES2o3oDh1bVECI2oEkwb2IYL5J5si1b0Wo6ZQdKNLu/50mohHbtKYzGfWiliRMXikXVwSXA/Y5G8ou1SCNLb7fM1s2E8KpjeOBHJJzC6syYaQzRZ611Srt3DpdlFa+s4aivgaKQ+AK+gromXwinE61FLEpUMglu7+3jFs6sMNNeYLgpGLjpnquyClljHmms79gm3T7dCm8C5ZFsyCDJq3ETEGDfIxN256dqLE6nu/oWuU6koQ3aMlVytMKG/veMb+jJY/J+f7upkUIBDtw0RKxk08gKX84wnl2brcHOOWAkSxcRINe/KUVDoR/7B3LAiarOyglazdEfRAmTE2o+te82/T0Wv0LoBn5/zXHZvtlpJYDuXndJ8HB8NWQl7sLOiqh4KbYkoyjPt9bn5XHvbQM/E7LLYIzpiOWPT4=
+    on:
+      repo: lebarsfa/tubex-lib
+      all_branches: true
+    skip_cleanup: true
+    overwrite: true
+    draft: true
+    prerelease: true
+    file_glob: true
+    file: 
+      - "*.zip"
+      - "*.whl"
+      - "wheelhouse/*.whl"
+  - provider: releases
+    api_key:
+      secure: Y+ZO/wvqZp29/cSnAqJKOAybSGlu8ALDsPS63zQXPtUSiUejfnoDLi77ANlHxUF7MhXlo38VanwYR/jGnXeCUPtX1Seg8W2v1mXFNaUKCki/bkEeLtK2uXAD5flxoBULPYcdspNbGlyzohxOZgr7VFNk0TkIg7jSlUkGuSAlJy81qh6ctVFtKhTsLDwi8ZKenwFFmlBNzw3dXR5c9AloBSCLRfWlwq2INYeEfgkItBMIe+7jh7RaacXoNrV/JkUQNcp4W5wA/zgMkOXqXSf7LPRIXd80zCgCmZ+ODqKTVHx5gXZxUPvW3cAtsm7RU4VNwpXiC2ckNRpLcCF8/dav3XG2hZrddUzvEXbrePnONrNQHrdszVokkQoJBYPFsZuUR4lDqV25aGVEvsn5tnBfIH6Rf2abF+pUkuKnWFqCO71kfwPBY5wKHi2SdaKVcZm06jD1tp87OuOt4T0DPBs4/SyQ7925eXk4Ol0MwCsGj1Pml+R90khq74xFe48KOxXLIYxHOqBO600HL3dYVrpQTZ/3rDpiTKlyGn8he+K7gCHFlJ85uBgp89cQei8aUOACLKhecT/rZqPIoZNsDe28AtDrj5LeLYeGSQDlukjukYfKcZF10itcSF8UusgNfexuLUPz5BUf2xrNF0cCFOAzP0auhgxRLC9VPGdEzvY0N1c=
+    on:
+      repo: SimonRohou/tubex-lib
+      all_branches: true
+    skip_cleanup: true
+    overwrite: true
+    draft: true
+    prerelease: true
+    file_glob: true
+    file: 
+      - "*.zip"
+      - "*.whl"
+      - "wheelhouse/*.whl"

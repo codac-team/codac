@@ -45,6 +45,12 @@ breathe_projects = {
     "tubex-lib":"../api/xml",
 }
 
+# For defining roles in all files
+rst_prolog = """
+.. role:: underline
+  :class: underline
+"""
+
 numfig = True
 
 # mathjax_path = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
@@ -174,10 +180,7 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 html_css_files = [
-    'custom-sphinx-tabs.css',
-    'custom-sphinx-tables.css',
-    'custom-sphinx-lists.css',
-    'custom-sphinx-api.css',
+    'custom-sphinx.css',
 ]
 
 # Add any extra paths that contain custom files (such as robots.txt or
