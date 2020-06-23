@@ -75,7 +75,7 @@ cn.contract(True)
 beginDrawing()
 fig = VIBesFigMap("fig")
 fig.set_properties(50, 50, 900, 550)
-fig.add_trajectory(x_truth, "xtruth", 0, 1)
+fig.add_trajectory(x_truth, "xtruth", 0, 1, "white")
 fig.add_tube(x, "x", 0, 1)
 fig.smooth_tube_drawing(True)
 
