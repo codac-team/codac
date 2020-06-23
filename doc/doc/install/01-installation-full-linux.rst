@@ -55,6 +55,8 @@ The last sources are available on `the official Tubex development repository <ht
   cd ../                                            # back to the root of Tubex
 
 
+.. _sec-installation-full-linux-cmake:
+
 .. rst-class:: fit-page
 
   CMake supports the following options:

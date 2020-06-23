@@ -99,15 +99,6 @@ We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    float dt = 0.01;                                  // timestep for tubes accuracy
-    Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]=[0,3]
-
-    TubeVector x(tdomain, dt, 4);                     // 4d tube for state vectors
-    TubeVector v(tdomain, dt, 4);                     // 4d tube for derivatives of the states
-    TubeVector u(tdomain, dt, 2);                     // 2d tube for inputs of the system
-
   .. code-tab:: py
 
     dt = 0.01                                         # timestep for tubes accuracy
@@ -117,30 +108,32 @@ We have three variables evolving with time: the trajectories :math:`\mathbf{x}(t
     v = TubeVector(tdomain, dt, 4)                    # 4d tube for derivatives of the states
     u = TubeVector(tdomain, dt, 2)                    # 2d tube for inputs of the system
 
+  .. code-tab:: c++
+
+    float dt = 0.01;                                  // timestep for tubes accuracy
+    Interval tdomain(0, 3);                           // temporal limits [t_0,t_f]=[0,3]
+
+    TubeVector x(tdomain, dt, 4);                     // 4d tube for state vectors
+    TubeVector v(tdomain, dt, 4);                     // 4d tube for derivatives of the states
+    TubeVector u(tdomain, dt, 2);                     // 2d tube for inputs of the system
+
 We assume that we have measurements on the headings :math:`\psi(t)` and the speeds :math:`\vartheta(t)`, with some bounded uncertainties defined by intervals :math:`[e_\psi]=[-0.01,0.01]`, :math:`[e_\vartheta]=[-0.01,0.01]`:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    x[2] = Tube(measured_psi, dt).inflate(0.01);      // measured_psi is a set of measurements
-    x[3] = Tube(measured_speed, dt).inflate(0.01);
 
   .. code-tab:: py
 
     x[2] = Tube(measured_psi, dt).inflate(0.01)       # measured_psi is a set of measurements
     x[3] = Tube(measured_speed, dt).inflate(0.01)
 
+  .. code-tab:: c++
+
+    x[2] = Tube(measured_psi, dt).inflate(0.01);      // measured_psi is a set of measurements
+    x[3] = Tube(measured_speed, dt).inflate(0.01);
+
 Finally, we define the domains for the three range-only observations :math:`(t_i,y_i)` and the position of the landmarks. The distances :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]`.
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval e_y(-0.1,0.1);
-    vector<Interval> y = {1.9+e_y, 3.6+e_y, 2.8+e_y}; // set of range-only observations
-    vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of the three 2d landmarks
-    vector<double>   t = {0.3, 1.5, 2.0};             // times of measurements
 
   .. code-tab:: py
 
@@ -150,6 +143,13 @@ Finally, we define the domains for the three range-only observations :math:`(t_i
     b = [[8,3],[0,5],[-2,1]]                          # positions of the three 2d landmarks
     t = [0.3, 1.5, 2.0]                               # times of measurements
 
+  .. code-tab:: c++
+
+    Interval e_y(-0.1,0.1);
+    vector<Interval> y = {1.9+e_y, 3.6+e_y, 2.8+e_y}; // set of range-only observations
+    vector<Vector>   b = {{8,3}, {0,5}, {-2,1}};      // positions of the three 2d landmarks
+    vector<double>   t = {0.3, 1.5, 2.0};             // times of measurements
+
 | **Second step.**
 | Defining contractors to deal with the state equations.
 
@@ -157,38 +157,22 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    CtcFunction ctc_f(
-      Function("v[4]", "x[4]", "u[2]",
-               "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"));
-
   .. code-tab:: py
 
     ctc_f = CtcFunction(
       Function("v[4]", "x[4]", "u[2]",
                "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"))
 
+  .. code-tab:: c++
+
+    CtcFunction ctc_f(
+      Function("v[4]", "x[4]", "u[2]",
+               "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"));
+
 | **Third step.**
 | Adding the contractors to a network, together with there related domains, is as easy as:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    ContractorNetwork cn;        // creating a network
-    cn.add(ctc_f, {v, x, u});    // adding the f constraint
-
-    for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
-    {
-      IntervalVector& p = cn.create_dom(IntervalVector(4)); // intermed. variable (state at t_i)
-
-      // Distance constraint: relation between the state at t_i and the ith beacon position
-      cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
-      
-      // Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
-      cn.add(ctc::eval, {t[i], p, x, v});
-    }
 
   .. code-tab:: py
 
@@ -206,19 +190,35 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
       # Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
       cn.add(ctc.eval, [t[i], p, x, v])
 
+  .. code-tab:: c++
+
+    ContractorNetwork cn;        // creating a network
+    cn.add(ctc_f, {v, x, u});    // adding the f constraint
+
+    for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
+    {
+      IntervalVector& p = cn.create_dom(IntervalVector(4)); // intermed. variable (state at t_i)
+
+      // Distance constraint: relation between the state at t_i and the ith beacon position
+      cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});
+      
+      // Eval constraint: relation between the state at t_i and all the states over [t_0,t_f]
+      cn.add(ctc::eval, {t[i], p, x, v});
+    }
+
 
 | **Fourth step.**
 | Solving the problem.
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    cn.contract();
-
   .. code-tab:: py
 
     cn.contract()
+
+  .. code-tab:: c++
+
+    cn.contract();
 
 
 | **Fifth step.**
@@ -227,7 +227,7 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
 .. figure:: img/rangeonly-nox0.png
 
 | *You just solved a non-linear state-estimation without knowledge about initial condition.*
-| See the full example on Github: `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/ex_01_getting_started/tubex_tuto_01.py>`_.
+| See the full example on Github: `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/01_getting_started/tubex_tuto_01.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/01_getting_started/tubex_tuto_01.py>`_.
 
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
@@ -276,17 +276,13 @@ Then you have two options: read the details about the features of Tubex (domains
   /manual/05-dynamic-contractors/index
   /manual/06-contractor-network/index
   /manual/07-graphics/index
+  api_technical_doc
   /manual/10-dev/index
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
 
 .. versionadded:: 3.0.0
    The Contractor Network tool.
-
-
-.. seealso::
-
-  The `C++ API technical documentation <../api/html/annotated.html>`_ of the library.
 
 
 .. _sec-mainpage-tuto:
@@ -302,31 +298,26 @@ Then you have two options: read the details about the features of Tubex (domains
 Tutorial for mobile robotics
 ============================
 
-The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples, namely:
+The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples:
 
-  * Static range-only localization
-  * Static range-and-bearing localization
-  * Localization with asynchronous measurements
-  * Range-only SLAM
-  * Localization by solving data association
-  * Real-time state estimation
-  * Proving loops in robot trajectories
+.. toctree::
+  :maxdepth: 1
+  :titlesonly:
 
-You can see more on :ref:`the related page <sec-tuto-main-page>`.
+  Main page </tutorial/index>
+  Introduction </tutorial/00-getting-started/index>
 
-.. .. toctree:: 
-..   :maxdepth: 1
-.. 
-..   /tutorial/01-introduction/index
-..   /tutorial/02-basics/index
-..   /tutorial/03-static-rangeonly-loc/index
-..   /tutorial/04-static-loc/index
-..   /tutorial/05-dynamic-loc/index
-..   /tutorial/06-rangeonly-slam/index
-..   /tutorial/07-data-association/index
-..   /tutorial/08-realtime-loc/index
-..   /tutorial/09-distributed-loc/index
-..   /tutorial/10-loop-detections/index
+  A. Intervals and contractors </tutorial/01-basics/index>
+  B. Static range-only localization </tutorial/02-static-rangeonly/index>
+
+  C. Static range-bearing loc. </tutorial/03-static-rangebearing/index>
+  D. Building our own contractor </tutorial/04-own-contractor/index>
+
+  E. Hello tubes </tutorial/05-tubes/index>
+  F. Localization with asynchronous measurements </tutorial/06-dyn-rangeonly/index>
+
+  [closed] G. Localization with data association </tutorial/07-data-association/closed>
+  [closed] H. Range-only SLAM </tutorial/08-rangeonly-slam/closed>
 
 
 License and support
@@ -342,7 +333,7 @@ Contributors
 ============
 
 .. hlist::
-  :columns: 3
+  :columns: 5
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
@@ -350,6 +341,7 @@ Contributors
   * `Gilles Chabert <https://web.imt-atlantique.fr/x-info/gchabe08/>`_
   * Julien Damers
   * Raphael Voges
+  * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
   * `Thomas Le Mézo <https://www.ensta-bretagne.fr/lemezo/>`_
   * `Cyril Bouvier <http://www.lirmm.fr/~bouvier/index.en.html>`_
   * `Bertrand Neveu <http://imagine.enpc.fr/~neveub/>`_

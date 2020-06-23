@@ -50,22 +50,27 @@
 # Compilation configuration
 ################################################################################
 
-  # Check that the compiler supports c++11
-  include(CheckCXXCompilerFlag)
-  check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
+#  # Check that the compiler supports c++11
+#  include(CheckCXXCompilerFlag)
+#  check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
+#
+#  if(COMPILER_SUPPORTS_CXX11)
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#  else()
+#    message(FATAL_ERROR "Tubex needs a compiler with C++11 support")
+#  endif()
+#
+#  if(WIN32)
+#    # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
+#    add_definitions(-U__STRICT_ANSI__)
+#  endif()
 
-  if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#  add_compile_options(-O3 -Wall)
+  if(MSVC)
+    add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
   else()
-    message(FATAL_ERROR "Tubex needs a compiler with C++11 support")
+    add_compile_options(-Wall)
   endif()
-
-  if(WIN32)
-    # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
-    add_definitions(-U__STRICT_ANSI__)
-  endif()
-
-  add_compile_options(-O3 -Wall)
 
 
 ################################################################################
@@ -132,12 +137,15 @@
 # Compile sources
 ################################################################################
 
-  add_compile_options(-fPIC) # is it necessary for python binding?
   add_subdirectory(src) # C++ sources
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
   # Python binding:
+  option(WITH_PYTHON "Build Python binding" OFF)
   if(WITH_PYTHON)
+    if(NOT MSVC)
+      add_compile_options(-fPIC) # is it necessary for python binding?
+    endif()
     add_subdirectory(python)
   endif()
 
@@ -156,6 +164,6 @@
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Maintainer <simon.rohou@ensta-bretagne.fr>")
   set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${TUBEX_URL})
-  # TODO finish deb package
+  # todo: finish deb package
 
   include(CPack)

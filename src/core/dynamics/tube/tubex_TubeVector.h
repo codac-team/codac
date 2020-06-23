@@ -267,7 +267,7 @@ namespace tubex
        * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        * \return an integer
        */
-      int input2index(double t) const;
+      int time_to_index(double t) const;
 
       /**
        * \brief Samples this tube at \f$t\f$
@@ -450,13 +450,6 @@ namespace tubex
        * \param search_tdomain the optional temporal domain on which the inversion will be performed
        */
       void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const TubeVector& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
-      
-      /**
-       * \brief Returns a vector of the maximum diameters of the tube for each component
-       *
-       * \return the maximal thicknesses of this tube
-       */
-      const ibex::Vector max_diam() const;
 
       /**
        * \brief Returns the diameters of the tube as a trajectory
@@ -481,6 +474,13 @@ namespace tubex
        * \return the set of diameters associated to temporal inputs
        */
       const TrajectoryVector diam(const TubeVector& v) const;
+      
+      /**
+       * \brief Returns a vector of the maximum diameters of the tube for each component
+       *
+       * \return the maximal thicknesses of this tube
+       */
+      const ibex::Vector max_diam() const;
 
       /**
        * \brief Returns the slices diagonals of the tube as a trajectory

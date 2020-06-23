@@ -71,5 +71,36 @@ class TestCtcConstell(unittest.TestCase):
     self.assertEqual(x5, IntervalVector([1.5,2.5]))
     self.assertEqual(x6, IntervalVector.empty(2))
 
+  def test_in_CN_with_list(self):
+
+    v_map = [IntervalVector(2)] * 4
+    v_map[0] = IntervalVector([1.5,2.5])
+    v_map[1] = IntervalVector([2.5,1.5])
+    v_map[2] = IntervalVector([4.,2.])
+    v_map[3] = IntervalVector([1.,0.5])
+
+    ctc_constell = CtcConstell(v_map)
+
+    n = 6
+    x = [IntervalVector(2)] * n
+    x[1-1] = IntervalVector([[0.5,6],[0,3.5]])
+    x[2-1] = IntervalVector([[3.5,5.5],[0.5,2.5]])
+    x[3-1] = IntervalVector([[2,5],[1,3]])
+    x[4-1] = IntervalVector([[1,3],[1,2]])
+    x[5-1] = IntervalVector([[1.5,2],[2.5,3]])
+    x[6-1] = IntervalVector([[6.5,7.5],[2.5,3.5]])
+
+    cn = ContractorNetwork()
+    for i in range(0,len(x)):
+      cn.add(ctc_constell, [x[i]])
+    cn.contract()
+
+    self.assertEqual(x[1-1], IntervalVector([[1,4],[0.5,2.5]]))
+    self.assertEqual(x[2-1], IntervalVector([4,2]))
+    self.assertEqual(x[3-1], IntervalVector([[2.5,4],[1.5,2]]))
+    self.assertEqual(x[4-1], IntervalVector([2.5,1.5]))
+    self.assertEqual(x[5-1], IntervalVector([1.5,2.5]))
+    self.assertEqual(x[6-1], IntervalVector.empty(2))
+
 if __name__ ==  '__main__':
   unittest.main()

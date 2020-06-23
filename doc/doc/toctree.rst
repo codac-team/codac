@@ -12,6 +12,7 @@ Tubex: constraint-programming for robotics
   /install/02-start-py-project
   /install/03-start-cpp-project
 
+
 .. toctree::
   :caption: User manual
   :maxdepth: 1
@@ -24,9 +25,11 @@ Tubex: constraint-programming for robotics
   Temporal contractors </manual/05-dynamic-contractors/index>
   /manual/06-contractor-network/index
   /manual/07-graphics/index
+  api_technical_doc
   /manual/10-dev/index
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
+
 
 .. toctree::
   :caption: Tutorial for mobile robotics
@@ -39,10 +42,11 @@ Tubex: constraint-programming for robotics
   A. Intervals and contractors </tutorial/01-basics/index>
   B. Static range-only localization </tutorial/02-static-rangeonly/index>
 
-  [closed] C. Static range-bearing loc. </tutorial/03-static-rangebearing/closed>
-  [closed] D. Dynamic range-only loc. </tutorial/04-dyn-rangeonly/closed>
+  C. Static range-bearing loc. </tutorial/03-static-rangebearing/index>
+  D. Building our own contractor </tutorial/04-own-contractor/index>
 
-  [closed] E. Data association </tutorial/05-data-association/closed>
+  E. Hello tubes </tutorial/05-tubes/index>
+  F. Asynchronous measurements </tutorial/06-dyn-rangeonly/index>
 
-  [closed] F. Range-only SLAM </tutorial/06-rangeonly-slam/closed>
-  [closed] G. Loop detections </tutorial/07-loops/closed>
+  [closed] G. Localization with data association </tutorial/07-data-association/closed>
+  [closed] H. Range-only SLAM </tutorial/08-rangeonly-slam/closed>

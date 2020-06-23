@@ -20,13 +20,13 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
 
   .. tabs::
 
-    .. code-tab:: c++
-
-      cout << x << endl;
-
     .. code-tab:: py
 
       print(x)
+
+    .. code-tab:: c++
+
+      cout << x << endl;
 
   You should see the following output:
 
@@ -39,6 +39,13 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
 
   .. tabs::
 
+    .. code-tab:: py
+
+      from pyibex import *
+      from tubex_lib import *
+
+      # .. next questions will be here
+
     .. code-tab:: c++
 
       #include <tubex.h>
@@ -50,13 +57,6 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
       {
         // .. next questions will be here
       }
-
-    .. code-tab:: py
-
-      from pyibex import *
-      from tubex_lib import *
-
-      # .. next questions will be here
 
 
 Using intervals for handling uncertainties
@@ -92,44 +92,30 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
 * ``Interval(lb, ub)`` will be used to create an interval :math:`[x]=[\textrm{lb},\textrm{ub}]`. There exists predefined values for intervals. Here are some examples of ``Interval`` objects:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      Interval x;                                 // [-∞,∞] (default value)
-      Interval x(0, 10);                          // [0,10]
-      Interval x(1, POS_INFINITY);                // [1,∞]
-      Interval x = Interval::all_reals();         // [-∞,∞]
-      Interval x = Interval::neg_reals();         // [-∞,0]
-      Interval x = Interval::empty_set();         // ∅
-      // ...
-
     
     .. code-tab:: py
 
       x = Interval()                              # [-∞,∞] (default value)
       x = Interval(0, 10)                         # [0,10]
       x = Interval(1, oo)                         # [1,∞]
-      x = Interval.ALL_REALS                      # [-∞,∞]
-      x = Interval.NEG_REALS                      # [-∞,0]
+      x = Interval(-oo,3)                         # [-∞,3]
       x = Interval.EMPTY_SET                      # ∅
       # ...
+
+    .. code-tab:: c++
+
+      Interval x;                                 // [-∞,∞] (default value)
+      Interval x(0, 10);                          // [0,10]
+      Interval x(1, oo);                          // [1,∞]
+      Interval x(-oo, 3);                         // [-∞,3]
+      Interval x = Interval::EMPTY_SET;           // ∅
+      // ...
 
 
 * | ``IntervalVector(n)`` is used for :math:`n`-d vectors of intervals, also called *boxes*.
   | For instance:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      IntervalVector x(2, Interval(-1,3));        // creates [x]=[-1,3]×[-1,3]=[-1,3]^2
-      IntervalVector y{{3,4},{4,6}};              // creates [y]= [3,4]×[4,6]
-      IntervalVector z(3, Interval::pos_reals()); // creates [z]=[0,∞]^3
-      IntervalVector w(y);                        // creates a copy: [w]=[y]
-
-      Vector v(3, 0.42);                          // one vector (0.42;0.42;0.42)
-      IntervalVector iv(v);                       // creates one box that wraps v:
-                                                  //   [0.42,0.42]×[0.42,0.42]×[0.42,0.42]
     
     .. code-tab:: py
 
@@ -142,17 +128,28 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
       iv = IntervalVector(v)                      # creates one box that wraps v:
                                                   #   [0.42,0.42]×[0.42,0.42]×[0.42,0.42]
 
+    .. code-tab:: c++
+
+      IntervalVector x(2, Interval(-1,3));        // creates [x]=[-1,3]×[-1,3]=[-1,3]^2
+      IntervalVector y{{3,4},{4,6}};              // creates [y]= [3,4]×[4,6]
+      IntervalVector z(3, Interval(0,oo));        // creates [z]=[0,∞]^3
+      IntervalVector w(y);                        // creates a copy: [w]=[y]
+
+      Vector v(3, 0.42);                          // one vector (0.42;0.42;0.42)
+      IntervalVector iv(v);                       // creates one box that wraps v:
+                                                  //   [0.42,0.42]×[0.42,0.42]×[0.42,0.42]
+
   One can access vector components as we do classically:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      x[1] = Interval(0,10);                      // updates to [x]=[-1,3]×[0,10]
     
     .. code-tab:: py
 
       x[1] = Interval(0,10)                       # updates to [x]=[-1,3]×[0,10]
+
+    .. code-tab:: c++
+
+      x[1] = Interval(0,10);                      // updates to [x]=[-1,3]×[0,10]
 
 
 .. admonition:: Technical documentation
@@ -186,18 +183,18 @@ Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
   .. rubric:: How to use :math:`\pi`?
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      // In C++, you can use <math.h>:
-      #include <math.h>
-      double x = M_PI;
     
     .. code-tab:: py
 
       # In Python, you can use the math module:
       import math
       x = math.pi
+
+    .. code-tab:: c++
+
+      // In C++, you can use <math.h>:
+      #include <math.h>
+      double x = M_PI;
 
   Note that in this code, the variable ``x`` is not the exact :math:`\pi`! Of course, the mathematical one cannot be represented in a computer. But with intervals, we can manage reliable representations of floating point numbers. :ref:`See more <sec-manual-intervals-pi>`.
 
@@ -214,12 +211,6 @@ Custom functions can be used on sets. For instance, to compute:
 a ``Function`` object can be created by ``Function("<var1>", "<var2>", ..., "<expr>")`` and then evaluated over the set :math:`[x]`:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval x(-2,2);
-    Function f("x", "x^2+2*x-exp(x)");
-    Interval y = f.eval(x);
   
   .. code-tab:: py
 
@@ -227,19 +218,25 @@ a ``Function`` object can be created by ``Function("<var1>", "<var2>", ..., "<ex
     f = Function("x", "x^2+2*x-exp(x)")
     y = f.eval(x)
 
+  .. code-tab:: c++
+
+    Interval x(-2,2);
+    Function f("x", "x^2+2*x-exp(x)");
+    Interval y = f.eval(x);
+
 The first arguments of the function (only one in the above example) are its input variables. The last argument is the expression of the output. The result is the set of images of all defined inputs through the function: :math:`[f]([x])=[\{f(x)\mid x\in[x]\}]`.
 
 We can also define vector input variables and access their components in the function definition:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Function f("x[2]", "cos(x[0])^2+sin(x[1])^2"); // the input x is a 2d vector
   
   .. code-tab:: py
 
     f = Function("x[2]", "cos(x[0])^2+sin(x[1])^2") # the input x is a 2d vector
+
+  .. code-tab:: c++
+
+    Function f("x[2]", "cos(x[0])^2+sin(x[1])^2"); // the input x is a 2d vector
 
 .. admonition:: Exercise
 
@@ -264,17 +261,6 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
   **A.5.** Create a view with:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      vibes::beginDrawing();
-      VIBesFigMap fig("Map");
-      fig.set_properties(50, 50, 400, 400); // position and size
-      
-      // ... draw objects here
-      
-      fig.show(); // display all items of the figure
-      vibes::endDrawing();
     
     .. code-tab:: py
 
@@ -286,6 +272,17 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
       
       fig.show() # display all items of the figure
       endDrawing()
+
+    .. code-tab:: c++
+
+      vibes::beginDrawing();
+      VIBesFigMap fig("Map");
+      fig.set_properties(50, 50, 400, 400); // position and size
+      
+      // ... draw objects here
+      
+      fig.show(); // display all items of the figure
+      vibes::endDrawing();
 
   | **A.6.** Before the ``.show()`` method, draw the boxes :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]` with the ``fig.draw_box(..)`` method. The computed interval range :math:`[d]` can be displayed as a ring centered on :math:`\mathbf{x}=(0,0)`. The ring will contain the set of all positions that are :math:`d`-distant from :math:`\mathbf{x}=(0,0)`, with :math:`d\in[d]`.
 
@@ -299,6 +296,31 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
   | Is the result reliable, according to the sets :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{x}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
 
 
+.. from pyibex import *
+.. from tubex_lib import *
+.. 
+.. x = IntervalVector([[0,0],[0,0]])
+.. b = IntervalVector([[3,4],[2,3]])
+.. print(b)
+.. 
+.. x.inflate(0.1)
+.. 
+.. f = Function("a[2]", "b[2]", "sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)")
+.. 
+.. box = cart_prod(x,b)
+.. r = f.eval(box)
+.. 
+.. beginDrawing()
+.. fig = VIBesFigMap("Map")
+.. fig.set_properties(50, 50, 400, 400) # position and size
+.. fig.draw_box(x, "red")
+.. fig.draw_box(b)
+.. fig.draw_box(b+x, "blue")
+.. fig.draw_ring(0,0,r)
+.. fig.show() # display all items of the figure
+.. endDrawing()
+
+
 .. admonition:: Technical documentation
 
   For full details about graphical features, please read the :ref:`sec-manual-vibes` page of the user manual.
@@ -306,14 +328,14 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
   .. rubric:: Want to use colors? Here is an example you can try:
 
   .. tabs::
-
-    .. code-tab:: c++
-
-      fig.draw_box(x, "red[yellow]"); // red: edge color of the box, yellow: fill color
     
     .. code-tab:: py
 
       fig.draw_box(x, "red[yellow]") # red: edge color of the box, yellow: fill color
+
+    .. code-tab:: c++
+
+      fig.draw_box(x, "red[yellow]"); // red: edge color of the box, yellow: fill color
 
 
 Contractors, :math:`\mathcal{C}([x])`
@@ -331,13 +353,13 @@ In Tubex, the contractors are also defined by C++/Python objects and are prefixe
 
 .. tabs::
 
-  .. code-tab:: c++
-
-    CtcFunction ctc_add(Function("x", "y", "a", "x+y-a"));
-
   .. code-tab:: py
 
     ctc_add = CtcFunction(Function("x", "y", "a", "x+y-a"))
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_add(Function("x", "y", "a", "x+y-a"));
 
 .. admonition:: Exercise
 
@@ -347,18 +369,6 @@ In Tubex, the contractors are also defined by C++/Python objects and are prefixe
 | For instance, we can use the previously defined :math:`\mathcal{C}_+` as:
 
 .. tabs::
-
-  .. code-tab:: c++
-
-    Interval x(0,1), y(-2,3), a(1,20);
-    
-    ContractorNetwork cn;       // Creating a Contractor Network
-    cn.add(ctc_add, {x, y, a}); // Adding the C+ contractor to the network, 
-                                // applied on three domains listed between braces
-    cn.contract();
-    
-    // The three domains are then contracted as:
-    // x=[0, 1], y=[0, 3], a=[1, 4]
 
   .. code-tab:: py
 
@@ -373,6 +383,18 @@ In Tubex, the contractors are also defined by C++/Python objects and are prefixe
     
     # The three domains are then contracted as:
     # x=[0, 1], y=[0, 3], a=[1, 4]
+
+  .. code-tab:: c++
+
+    Interval x(0,1), y(-2,3), a(1,20);
+    
+    ContractorNetwork cn;       // Creating a Contractor Network
+    cn.add(ctc_add, {x, y, a}); // Adding the C+ contractor to the network, 
+                                // applied on three domains listed between braces
+    cn.contract();
+    
+    // The three domains are then contracted as:
+    // x=[0, 1], y=[0, 3], a=[1, 4]
 
 Note that one contractor can be added several times in the CN. This is useful to apply several constraints implemented by the same operator, on different sets of variables.
 

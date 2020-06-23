@@ -24,11 +24,13 @@ namespace tubex
 
 
   /** \brief  Returns a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD
-
+   *
+   * \param domain period of tine on which we would like to perform the integration
    * \param vectorField the vector field associated to the function that we would like to integrate
    * \param x0 The initial condition
    * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timestep by itself
    * to increase calculation speed
+   * \return guaranteed curve computed by CAPD
    */
 
     std::vector<ibex::IntervalVector> capd2ibex(const ibex::Interval& domain, capd::IMap& vectorField, const ibex::IntervalVector& x0,
@@ -38,18 +40,19 @@ namespace tubex
   /** \brief Convert a std::vector<ibex::IntervalVector> corresponding to the guaranteed curve computed by CAPD into a
    * TubeVector
    * \param ibex_curve a vector of ibex::IntervalVectors representing the curve computed by CAPD
+   * \return guaranteed curve computed by CAPD in a TubeVector
    */
 
     TubeVector ibex2tubex(std::vector<ibex::IntervalVector>& ibex_curve);
 
   /** \brief Combination of capd2ibex and ibex2tubex, to generate a tube from a curve obtained by
    * the guaranteed integration of CAPD
-   * \param result Tube Vector that will store the result of the integration
    * \param domain period of tine on which we would like to perform the integration
    * \param f function that we would like to integrate
    * \param x0 The initial condition
    * \param timestep time step desired for the integration. If equal to 0 CAPD will calculate the timestep by itself
    * to increase calculation speed
+   * \return tube from a curve obtained by the guaranteed integration of CAPD
    */
 
     TubeVector capd2tubex(const ibex::Interval& domain, const TFunction& f, const ibex::IntervalVector& x0, const double timestep);

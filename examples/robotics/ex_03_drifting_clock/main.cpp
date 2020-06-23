@@ -70,7 +70,7 @@ int main()
     obs[0] = 12.46; obs[2] = Interval(60.03, 64.03); v_obs.push_back(obs);
     obs[0] = 15.25; obs[2] = Interval(78.76, 82.76); v_obs.push_back(obs);
     obs[0] = 18.24; obs[2] = Interval(175.88, 179.88); v_obs.push_back(obs);
-    // nb: obs[1] set to ALL_REALS by default
+    // nb: obs[1] set to [-oo,oo] by default
   
   /* =========== CONTRACTIONS =========== */
 

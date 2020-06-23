@@ -19,14 +19,14 @@ todo
 
 .. tabs::
 
+  .. code-tab:: py
+
+    # todo
+
   .. code-tab:: c++
 
     VIBesFigPaving fig_pav("Paving", &p);
     fig_pav.show();
-
-  .. code-tab:: py
-
-    # todo
 
 .. rubric:: Color maps
 
@@ -38,17 +38,16 @@ SIVIAPaving
 
 .. tabs::
 
+  .. code-tab:: py
+
+    # todo
+
   .. code-tab:: c++
 
     SIVIAPaving p({{-3.,3.},{-3.,3.}});
     p.compute(ibex::Function("x", "y", "x*cos(x-y)*sin(x)+y"),
               {{-0.35,0.35}},
               0.01);
-
-
-  .. code-tab:: py
-
-    # todo
 
 .. figure:: img/SIVIAPaving.png
 
@@ -61,6 +60,10 @@ The class ``TubePaving`` performs this projection. For instance:
 
 .. tabs::
 
+  .. code-tab:: py
+
+    # todo
+
   .. code-tab:: c++
 
     // Creation of a tube
@@ -71,10 +74,6 @@ The class ``TubePaving`` performs this projection. For instance:
     IntervalVector initial_box(x.codomain());
     TubePaving pav(initial_box.inflate(0.1));
     pav.compute(0.01, x); // parameters: precision, tube
-
-  .. code-tab:: py
-
-    # todo
 
 
 .. figure:: img/TubePaving_map.png

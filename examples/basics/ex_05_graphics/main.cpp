@@ -22,7 +22,8 @@ int main()
     Tube xdot(Interval(0.,5.), 0.05, TFunction("cos(t)+[-0.10,0.10]"));
     Tube x = xdot.primitive(0.);
     CtcEval ctc_eval;
-    ctc_eval.contract(3.125, sin(3.125), x, xdot);
+    Interval t(3.125), y(sin(t));
+    ctc_eval.contract(t, y, x, xdot);
 
     Trajectory thicknesses = x.diam(false);
     Trajectory thicknesses_dot = x.diam(xdot);

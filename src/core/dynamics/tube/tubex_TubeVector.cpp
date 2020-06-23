@@ -82,7 +82,12 @@ namespace tubex
       assert(v_tdomains.size() == v_codomains.size());
       assert(!v_tdomains.empty());
 
+#ifdef _MSC_VER
+      // see https://stackoverflow.com/questions/48459297/is-there-a-vlas-variable-length-arrays-support-workaround-for-vs2017
+      vector<Interval>* v_scalar_codomains = new vector<Interval>[size()];
+#else
       vector<Interval> v_scalar_codomains[size()];
+#endif // _MSC_VER
 
       for(size_t i = 0 ; i < v_codomains.size() ; i++)
       {
@@ -94,6 +99,10 @@ namespace tubex
 
       for(int j = 0 ; j < size() ; j++)
         (*this)[j] = Tube(v_tdomains, v_scalar_codomains[j]);
+
+#ifdef _MSC_VER
+	  delete[] v_scalar_codomains;
+#endif // _MSC_VER
     }
 
     TubeVector::TubeVector(initializer_list<Tube> list)
@@ -255,10 +264,10 @@ namespace tubex
       return n;
     }
 
-    int TubeVector::input2index(double t) const
+    int TubeVector::time_to_index(double t) const
     {
       assert(tdomain().contains(t));
-      int index = (*this)[0].input2index(t);
+      int index = (*this)[0].time_to_index(t);
       for(int i = 1 ; i < size() ; i++)
         assert((*this)[0].nb_slices() == (*this)[i].nb_slices() && "all components do not have the same number of slices");
       return index;
@@ -539,14 +548,6 @@ namespace tubex
         v_v[i] = v_v[i]->next_slice());
     }
 
-    const Vector TubeVector::max_diam() const
-    {
-      Vector thickness(size());
-      for(int i = 0 ; i < size() ; i++)
-        thickness[i] = (*this)[i].max_diam();
-      return thickness;
-    }
-
     const TrajectoryVector TubeVector::diam(bool gates_thicknesses) const
     {
       TrajectoryVector thickness(size());
@@ -560,6 +561,14 @@ namespace tubex
       TrajectoryVector thickness(size());
       for(int i = 0 ; i < size() ; i++)
         thickness[i] = (*this)[i].diam(v[i]);
+      return thickness;
+    }
+
+    const Vector TubeVector::max_diam() const
+    {
+      Vector thickness(size());
+      for(int i = 0 ; i < size() ; i++)
+        thickness[i] = (*this)[i].max_diam();
       return thickness;
     }
 

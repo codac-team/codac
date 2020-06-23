@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get install autoconf
+
 cd $HOME
 echo 'Installing CAPD in ' $HOME '...';
 if [ ! -e "capd/README.md" ]; then

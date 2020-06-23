@@ -21,12 +21,51 @@ In case you are willing to contribute to Tubex, here are some information that m
   ======================  ======================================================================================
   Option                  Description
   ======================  ======================================================================================
+  CMAKE_INSTALL_PREFIX    :ref:`See more <sec-installation-full-linux-cmake>`
+  ----------------------  --------------------------------------------------------------------------------------
+  CMAKE_BUILD_TYPE        :ref:`See more <sec-installation-full-linux-cmake>`
+  ----------------------  --------------------------------------------------------------------------------------
+  CMAKE_PREFIX_PATH       :ref:`See more <sec-installation-full-linux-cmake>`
+  ----------------------  --------------------------------------------------------------------------------------
+  WITH_CAPD=ON            :ref:`See more <sec-extensions-ode>`
+  ----------------------  --------------------------------------------------------------------------------------
   BUILD_TESTS             | By default, the tests are not built.
                           | To enable the compilation of tests:
 
                           .. code-block:: bash
 
                             cmake <other_cmake_options> -DBUILD_TESTS=ON ..
+  ----------------------  --------------------------------------------------------------------------------------
+  TEST_EXAMPLES           This will add the execution of the examples in the tests list.
+
+                          .. code-block:: bash
+
+                            cmake <other_cmake_options> -DTEST_EXAMPLES=ON ..
+  ----------------------  --------------------------------------------------------------------------------------
+  WITH_PYTHON             Note: you need to have ``doxygen`` and Python3 installed on your computer.
+
+                          To enable the compilation of Python binding:
+
+                          .. code-block:: bash
+
+                            cmake <other_cmake_options> -DWITH_PYTHON=ON ..
+
+                          You will then have to generate the Doxygen documentation (XML files):
+
+                          .. code-block:: bash
+
+                            make api
+
+                          And finally run again the ``cmake`` command:
+
+                          .. code-block:: bash
+
+                            cmake <other_cmake_options> -DWITH_PYTHON=ON ..
+
+                          This last step will generate header files containing docstrings for Python, based on
+                          the content of XML files made by Doxygen. The documentation of any C++/Python function
+                          is then located in the C++ header files of the /src directory.
+
   ======================  ======================================================================================
 
 

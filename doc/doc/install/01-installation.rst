@@ -6,9 +6,8 @@ Installing the Tubex library
 
 Tubex is available in both C++ and Python3.
 
-It is fully supported on Linux systems (both languages). The current version of Tubex will be soon available for Windows and macOS.
+It is fully supported on Linux systems (both languages). Tubex  has been recently made available on Windows too (both languages). We are working on its availability for macOS.
 Any help is more than welcome.
-
 Note that you can also :ref:`use Tubex online in Python <sec-py-project-online>`, without having to install the library on your machine.
 
 .. role:: gbg
@@ -22,6 +21,9 @@ Note that you can also :ref:`use Tubex online in Python <sec-py-project-online>`
 .. |linux-py| replace:: :gbg:`✓` (link)
 .. _linux-py: 01-installation-python.html
 
+.. |win-py| replace:: :gbg:`✓` (link)
+.. _win-py: 01-installation-python.html
+
 .. |linux-cpp| replace:: :gbg:`✓` (link)
 .. _linux-cpp: 01-installation-full-linux.html
 
@@ -33,25 +35,24 @@ Note that you can also :ref:`use Tubex online in Python <sec-py-project-online>`
 
 The :gbg:`✓` configurations are officially supported at the moment:
 
-+---------------+----------------+----------------+----------------+----------------+
-|Language       |Linux           |Windows         |macOS           |Online          |
-+===============+================+================+================+================+
-|C++11          ||linux-cpp|_    ||win-cpp|_      |--              |soon available ?|
-+---------------+----------------+----------------+----------------+----------------+
-|Python 3.4     ||linux-py|_     |soon available ?|--              ||online-py|_    |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.5     ||linux-py|_     |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.6     ||linux-py|_     |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.7     ||linux-py|_     |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+                +
-|Python 3.8     ||linux-py|_     |soon available ?|--              |                |
-+---------------+----------------+----------------+----------------+----------------+
++---------------+----------------+-----------------------+----------------+----------------+
+|Language       |Linux           |Windows                |macOS           |Online          |
++===============+================+=======================+================+================+
+|C++11          ||linux-cpp|_    ||win-cpp|_             |--              |soon available ?|
++---------------+----------------+-----------------------+----------------+----------------+
+|Python 3.4     ||linux-py|_     ||win-py|_              |--              ||online-py|_    |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.5     ||linux-py|_     ||win-py|_              |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.6     ||linux-py|_     ||win-py|_              |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.7     ||linux-py|_     ||win-py|_              |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.8     ||linux-py|_     ||win-py|_              |--              |                |
++---------------+----------------+-----------------------+----------------+----------------+
 
-**Click on the links in the table to access the related installation procedures.**
-
-If your configuration is missing in this table, please `contact us <https://github.com/SimonRohou/tubex-lib/issues>`_. We may be able to make it available for Tubex.
+| **Click on the links in the table to access the related installation procedures.**
+| If your configuration is missing in this table, please `contact us <https://github.com/SimonRohou/tubex-lib/issues>`_. We may be able to make it available for Tubex.
 
 Note that if you want to contribute to Tubex, you have to make the full C++ installation.
 
