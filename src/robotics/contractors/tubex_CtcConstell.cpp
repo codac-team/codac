@@ -35,12 +35,13 @@ namespace tubex
 
   }
 
-  void CtcConstell::contract(IntervalVector &beacon_box)
+  void CtcConstell::contract(IntervalVector &a)
   {
-    assert(beacon_box.size() == 2);
-    IntervalVector envelope_beacons(2, Interval::EMPTY_SET);
-    for(const auto m : m_map)
-      envelope_beacons |= beacon_box & m.subvector(0,1);
-    beacon_box = envelope_beacons;
+    assert(a.size() == 2);
+    IntervalVector union_result(2, Interval::EMPTY_SET);
+
+    for(const auto mj : m_map)
+      union_result |= a & mj.subvector(0,1);
+    a = union_result;
   }
 }
