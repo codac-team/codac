@@ -36,7 +36,7 @@ void export_TubeVector(py::module& m)
 
     .def(py::init<const Interval&,int>(),
       TUBEVECTOR_TUBEVECTOR_INTERVAL_INT,
-      "domain"_a, "n"_a=1)
+      "domain"_a, "n"_a)
 
     .def(py::init<const Interval&,const IntervalVector &>(),
       TUBEVECTOR_TUBEVECTOR_INTERVAL_INTERVALVECTOR,
@@ -44,7 +44,7 @@ void export_TubeVector(py::module& m)
 
     .def(py::init<const Interval&,double,int>(),
       TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INT,
-      "domain"_a, "timestep"_a, "n"_a=1)
+      "domain"_a, "timestep"_a, "n"_a)
 
     .def(py::init<const Interval&,double,const IntervalVector &>(),
       TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INTERVALVECTOR,
