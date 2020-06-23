@@ -73,20 +73,22 @@ The following code creates the actual (but unknown) trajectory :math:`\mathbf{x}
 
   .. code-tab:: py
 
+    dt = 0.01
     tdomain = Interval(0,5) # temporal domain [t0,tf]
-    actual_x = TrajectoryVector(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), 0.01)
+    actual_x = TrajectoryVector(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), dt)
 
   .. code-tab:: c++
 
+    double dt = 0.01;
     Interval tdomain(0,5); // temporal domain [t0,tf]
-    TrajectoryVector actual_x(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), 0.01);
+    TrajectoryVector actual_x(tdomain, TFunction("(2*cos(t) ; sin(2*t))"), dt);
 
 .. figure:: ../../manual/02-variables/img/lissajous.png
 
   Top view. The yellow robot follows a Lissajous curve forming an :math:`\infty` symbol.
 
 | The ``TFunction`` object depicts a temporal function. It is similar to the ``Function`` objects we have seen previously, but the ``t`` variable is already defined. In this example, the output of the function is two-dimensional (defined with parenthesis).
-| The last argument ``0.01`` converts the analytical function into a discretized signal with :math:`\delta=0.01`.
+| The last argument ``dt`` converts the analytical function into a discretized signal with :math:`\delta=0.01`.
 
 
 .. admonition:: Exercise
@@ -107,7 +109,7 @@ The following code creates the actual (but unknown) trajectory :math:`\mathbf{x}
       fig_map.add_trajectory(actual_x, "x*", 0, 1)
       fig_map.add_beacon(b, 0.1)                    # 0.1: landmark width
       fig_map.axis_limits(-2.5,2.5,-0.1,0.1, True)
-      fig_map.show(0.25)                            # argument is robot size
+      fig_map.show(0.5)                             # argument is robot size
 
     .. code-tab:: cpp
     
@@ -116,7 +118,7 @@ The following code creates the actual (but unknown) trajectory :math:`\mathbf{x}
       fig_map.add_trajectory(actual_x, "x*", 0, 1);
       fig_map.add_beacon(b, 0.1);                   // 0.1: landmark width
       fig_map.axis_limits(-2.5,2.5,-0.1,0.1, true);
-      fig_map.show(0.25);                           // argument is robot size
+      fig_map.show(0.5);                            // argument is robot size
 
   **E.4.** The robot continuously measures its distance to the landmark :math:`\mathbf{b}`.
 
@@ -223,21 +225,23 @@ Tubes can also be built from trajectories. In this example, we could have define
 
 .. admonition:: Exercise
 
-  **E.6.** Create a 2d tube :math:`[\mathbf{x}](\cdot)` enclosing :math:`\mathbf{x}^*(\cdot)`.
+  **E.6.** Using the class ``TubeVector``, create a 2d tube :math:`[\mathbf{x}](\cdot)` enclosing :math:`\mathbf{x}^*(\cdot)`. You may refer :ref:`to the manual <sec-manual-tubes-tubevector>` for more information on ``TubeVector``.
 
   **E.7.** Using the ``.inflate()`` method on ``x``, inflate the tube so that :math:`\forall t,[\mathbf{x}](t)=\mathbf{x}^*(t)+[-0.2,0.2]`.
 
-  **E.8.** Display the tube in the previous figure (before the ``.show()`` method) with:
+  **E.8.** Display the tube in the previous figure with:
 
   .. tabs::
 
     .. code-tab:: py
 
       fig_map.add_tube(x, "x", 0, 1)
+      fig_map.show() # this method must be called to display the added objects
 
     .. code-tab:: c++
 
       fig_map.add_tube(&x, "x", 0, 1);
+      fig_map.show(); // this method must be called to display the added objects
 
   Is the actual trajectory :math:`\mathbf{x}^*(\cdot)` enclosed in :math:`[\mathbf{x}](\cdot)` at any time?
 
@@ -259,11 +263,12 @@ For instance, one can contract three tubes :math:`[a](\cdot)`, :math:`[b](\cdot)
 
   .. code-tab:: py
 
-    # a = Tube(...
+    # a = Tube(...  (creating tubes)
     # b = Tube(...
     # c = Tube(...
 
-    ctc_add = CtcFunction(Function("x1", "x2", "x3", "x1+x2-x3"))
+    # The constraint "x1+x2=x3" is equivalent to "x1+x2-x3=0":
+    ctc_add = CtcFunction(Function("x1", "x2", "x3", "x1+x2-x3"), Interval(0))
 
     cn = ContractorNetwork()
     cn.add(ctc_add, [a,b,c]) # the tubes are listed according to the constraint definition
@@ -271,11 +276,12 @@ For instance, one can contract three tubes :math:`[a](\cdot)`, :math:`[b](\cdot)
 
   .. code-tab:: c++
 
-    // a = Tube(...
+    // a = Tube(...  (creating tubes)
     // b = Tube(...
     // c = Tube(...
 
-    CtcFunction ctc_add(Function("x1", "x2", "x3", "x1+x2-x3"));
+    // The constraint "x1+x2=x3" is equivalent to "x1+x2-x3=0":
+    CtcFunction ctc_add(Function("x1", "x2", "x3", "x1+x2-x3"), Interval(0));
 
     ContractorNetwork cn;
     cn.add(ctc_add, {a,b,c}); // the tubes are listed according to the constraint definition
@@ -320,13 +326,13 @@ For instance, one can contract three tubes :math:`[a](\cdot)`, :math:`[b](\cdot)
 Dealing with a differential equation
 ------------------------------------
 
-The equation :math:`\dot{\mathbf{x}}(t)=\mathbf{f}\big(\mathbf{x}(t),\mathbf{u}(t)\big)` depicts the evolution of the robot. In this lesson, we assume that its actual speed :math:`\mathbf{v}^*(\cdot)` is given in the absolute frame by:
+The equation :math:`\dot{\mathbf{x}}(t)=\mathbf{f}\big(\mathbf{x}(t),\mathbf{u}(t)\big)` depicts the evolution of the robot. In this lesson, we assume that its actual speed :math:`\mathbf{v}^*(\cdot)` is given in the absolute reference frame by:
 
 .. math::
 
   \mathbf{v}^*(t) = \left(\begin{array}{c}-2\sin(t)\\2\cos(2t)\end{array}\right)
 
-Note that there is no difficulty to handle datasets instead of analytical functions: once the tube is defined (from functions are data), then the constraints will act on it in the same manner.
+Note that there is no difficulty to handle datasets instead of analytical functions: once the tube is defined (from functions or datasets), then the constraints will act on its bounds, in the same manner.
 
 Then, the evolution equation amounts to :math:`\dot{\mathbf{x}}(t)=\mathbf{v}(t)`.
 
@@ -355,9 +361,8 @@ Then, the evolution equation amounts to :math:`\dot{\mathbf{x}}(t)=\mathbf{v}(t)
 
       ctc::deriv // object already created, as for ctc::polar
 
-  Add this contractor to your Contractor Network.
-
-  You should obtain this result:
+  | Add this contractor to your Contractor Network.
+  | You should obtain this result:
 
   .. figure:: img/tube_ctc_all.png
 
