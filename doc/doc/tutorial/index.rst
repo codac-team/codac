@@ -78,8 +78,8 @@ Prerequisite for attending the tutorial are:
 * basic knowledge of **Python or C++** (the exercises are available in both languages);
 * although the tutorial is about state estimation, you do not need skills in Kalman or particle filters.
 
-| Tubex is fully supported on Linux systems (C++ and Python3).
-| We are currently working on making Tubex available for Windows and MacOS (any help is welcome!). Meanwhile, we propose :ref:`a Tubex-online solution <sec-py-project-online>`: this will allow you to use Tubex in Python without having to install the library on your machine.
+| Tubex is fully supported on Linux systems (C++ and Python3) and Windows (Python3).
+| We are currently working on making Tubex available for macOS (any help is welcome!). Meanwhile, we propose :ref:`a Tubex-online solution <sec-py-project-online>`: this will allow you to use Tubex in Python without having to install the library on your machine.
 
 
 Contact and registration
