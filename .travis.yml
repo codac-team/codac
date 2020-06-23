@@ -225,8 +225,8 @@ matrix:
         - cmake --build . --config Debug --target install
         - cmake --build . --config Debug --target pip_package
         # Test python program and wheel...
-        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
-        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
         # Test C++ program and bundle...
@@ -284,8 +284,8 @@ matrix:
         - cmake --build . --config Debug --target install
         - cmake --build . --config Debug --target pip_package
         # Test python program and wheel...
-        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
-        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
         # Test C++ program and bundle...
@@ -318,8 +318,8 @@ matrix:
         - cmake --build . --config Debug --target install
         - cmake --build . --config Debug --target pip_package
         # Test python program and wheel...
-        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
-        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
         # Test C++ program and bundle...
@@ -352,8 +352,8 @@ matrix:
         - cmake --build . --config Debug --target install
         - cmake --build . --config Debug --target pip_package
         # Test python program and wheel...
-        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
-        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
 
@@ -376,8 +376,8 @@ matrix:
         - cmake --build . --config Debug --target install
         - cmake --build . --config Debug --target pip_package
         # Test python program and wheel...
-        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
-        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
         # Test C++ program and bundle...
@@ -410,8 +410,8 @@ matrix:
         - cmake --build . --config Debug --target install
         - cmake --build . --config Debug --target pip_package
         # Test python program and wheel...
-        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
-        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
 
@@ -434,8 +434,8 @@ matrix:
         - cmake --build . --config Debug --target install
         - cmake --build . --config Debug --target pip_package
         # Test python program and wheel...
-        - cp *.whl ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
-        - pip install ../tubex_lib-X.X.X-cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}.whl
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
 
