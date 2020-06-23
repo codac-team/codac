@@ -62,15 +62,15 @@ cn.contract()
 fig_map.show(0.5)
 
 # E.13. (optional)
-n = RandTrajectory(tdomain, 0.01, Interval(-0.02,0.02))
-actual_y += n
-y = Tube(actual_y, dt)
+n = RandTrajectory(tdomain, 0.01, Interval(-0.2,0.2))
+measured_y = y + n
+y = Tube(measured_y, dt)
 
 # E.14. (optional)
-y.inflate(0.02)
+y.inflate(0.2)
 
 # E.15. (optional)
-x = TubeVector(actual_x, dt).inflate(0.2)
+x = TubeVector(actual_x, dt).inflate(0.2) # reinitialization
 cn = ContractorNetwork()
 cn.add(ctc.dist, [x,b_box,y])
 cn.add(ctc.deriv, [x,v])
