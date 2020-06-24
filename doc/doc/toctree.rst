@@ -34,9 +34,9 @@ Tubex: constraint-programming for robotics
   :maxdepth: 1
   :titlesonly:
 
-  /changelog
-  api_technical_doc
-  /manual/10-dev/index
+  /dev/changelog
+  /dev/api_technical_doc
+  /dev/info_dev
 
 
 .. toctree::
