@@ -100,7 +100,7 @@ Build this user manual using Sphinx:
 .. code-block:: bash
   
   # Install Sphinx with
-  pip3 install -U sphinx breathe sphinx_rtd_theme sphinx-tabs
+  pip3 install -U sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues
 
   # Build the doc
   cd build

@@ -276,6 +276,7 @@ Then you have two options: read the details about the features of Tubex (domains
   /manual/05-dynamic-contractors/index
   /manual/06-contractor-network/index
   /manual/07-graphics/index
+  changelog
   api_technical_doc
   /manual/10-dev/index
 ..  /manual/08-going-further/index

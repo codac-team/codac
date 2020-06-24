@@ -25,10 +25,18 @@ Tubex: constraint-programming for robotics
   Temporal contractors </manual/05-dynamic-contractors/index>
   /manual/06-contractor-network/index
   /manual/07-graphics/index
-  api_technical_doc
-  /manual/10-dev/index
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
+
+
+.. toctree::
+  :caption: Development
+  :maxdepth: 1
+  :titlesonly:
+
+  /changelog
+  api_technical_doc
+  /manual/10-dev/index
 
 
 .. toctree::
