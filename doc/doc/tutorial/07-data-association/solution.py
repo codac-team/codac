@@ -27,50 +27,52 @@ class myCtc(Ctc):
 
 # =========== CREATING DATA ===========
 
+dt = 0.05 # tube timestep
 tdomain = Interval(0,6)
 
 # Truth (analytic function)
 
-state_truth = TrajectoryVector(tdomain, \
-  # Lissajous function (px,py,theta):
-  TFunction("(240*cos(t) ; \
-              120*sin(2*t) ; \
-              atan2(240*cos(2*t),-240*sin(t)))"))
+x_truth = TrajectoryVector(tdomain, TFunction("( \
+  10*cos(t)+t ; \
+  5*sin(2*t)+t ; \
+  atan2((10*cos(2*t)+1),(-10*sin(t)+1)) ; \
+  sqrt((-10*sin(t)+1)^2+(10*cos(2*t)+1)^2))")) # actual trajectory
+
+# Continuous measurements coming from the truth
+measured_psi = x_truth[2].sample(dt).make_continuous()
+#measured_psi += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)) # adding some noise
+measured_speed = x_truth[3].sample(dt);
+#measured_speed += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)) # adding some noise
 
 # Sets of trajectories
 
-dt = 0.02 # tube timestep
-state_truth[2].sample(dt).make_continuous()
+x_truth[2].sample(dt).make_continuous()
 
-x = TubeVector(tdomain, dt, 3) # unbounded 2d tube vector
-x[2] = Tube(state_truth[2], dt) # heading computed from truth...
-#x[2].inflate(1.2) # ...with some uncertainty
+x = TubeVector(tdomain, dt, 4)                    # 4d tube for state vectors
+v = TubeVector(tdomain, dt, 4)                    # 4d tube for derivatives of the states
+u = TubeVector(tdomain, dt, 2)                    # 2d tube for inputs of the system
 
-# Derivatives of positions, with uncertainties:
-v = TubeVector(tdomain, dt,
-               # Lissajous derivative
-               TFunction("(-240*sin(t) ; \
-                           240*cos(2*t))"))
-v.inflate(1.)
-v.resize(3)
+x[2] = Tube(measured_psi, dt)#.inflate(0.01)       # measured_psi is a set of measurements
+x[3] = Tube(measured_speed, dt)#.inflate(0.01)
 
 # Sets of observations
 
 # Creating random map of landmarks
 nb_landmarks = 150
-map_area = IntervalVector(2, [-400,400])
+#map_area = IntervalVector(2, [-20,20])
+map_area = IntervalVector(x_truth.codomain().subvector(0,1)).inflate(2)
 v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks)
 
 # Generating observations obs=(t,range,bearing) of these landmarks
 max_nb_obs = 50
-visi_range = Interval(0,75) # [0m,75m]
+visi_range = Interval(0,4) # [0m,75m]
 visi_angle = Interval(-math.pi/4,math.pi/4) # frontal sonar
-v_obs = DataLoader.generate_observations(state_truth, v_map, max_nb_obs, True, visi_range, visi_angle)
+v_obs = DataLoader.generate_observations(x_truth, v_map, max_nb_obs, True, visi_range, visi_angle)
 
 # Adding uncertainties on the measurements
 for obs in v_obs:
-  obs[1].inflate(2) # range
-  obs[2].inflate(0.1) # bearing
+  obs[1].inflate(0.1) # range
+  obs[2].inflate(0.04) # bearing
 
 # Association set
 m = [IntervalVector(2) for _ in v_obs] # unknown association
@@ -82,10 +84,16 @@ ctc_plus = CtcFunction(Function("a", "b", "c", "a-(b+c)")) # algebraic constrain
 ctc_minus = CtcFunction(Function("a", "b", "c", "a-(b-c)")) # algebraic constraint a=b-c
 ctc_constell = myCtc(v_map) # constellation constraint
 
+ctc_f = CtcFunction(
+  Function("v[4]", "x[4]", "u[2]",
+           "(v[0]-x[3]*cos(x[2]) ; v[1]-x[3]*sin(x[2]) ; v[2]-u[0] ; v[3]-u[1])"))
+
 
 # =========== CONTRACTOR NETWORK ===========
 
 cn = ContractorNetwork()
+
+cn.add(ctc_f, [v, x, u])   # adding the f constraint
 
 for i in range(0,len(v_obs)):
   
@@ -97,7 +105,7 @@ for i in range(0,len(v_obs)):
   # Intermediate variables:
   a = cn.create_dom(Interval())
   d = cn.create_dom(IntervalVector(2))
-  p = cn.create_dom(IntervalVector(3))
+  p = cn.create_dom(IntervalVector(4))
   
   cn.add(ctc_constell, [m[i]])
   cn.add(ctc_minus, [d, m[i], cn.subvector(p,0,1)])
@@ -115,15 +123,15 @@ beginDrawing()
 fig_map = VIBesFigMap("Map")
 fig_map.set_properties(1450, 50, 1000, 600)
 fig_map.add_tube(x, "x", 0, 1)
-fig_map.add_trajectory(state_truth, "x*", 0, 1, 2, "white")
-fig_map.add_observations(v_obs, state_truth)
+fig_map.add_trajectory(x_truth, "x*", 0, 1, 2)
+fig_map.add_observations(v_obs, x_truth)
 for b in v_map:
-  fig_map.add_beacon(b.inflate(2))
+  fig_map.add_beacon(b.inflate(0.1))
 fig_map.smooth_tube_drawing(True)
-fig_map.show()
-fig_map.axis_limits(-340, 340, -1, 1, True)
+fig_map.show(1)
+#fig_map.axis_limits(-20, 20, -1, 1, True)
 
 endDrawing()
 
 # Checking if this example still works:
-sys.exit(0 if x.contains(state_truth) == BoolInterval.YES else 1)
+sys.exit(0 if x.contains(x_truth) == BoolInterval.YES else 1)
