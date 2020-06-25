@@ -96,7 +96,7 @@ Dynamic range-only localization
 
 We now have all the material to deal with a complete problem.
 
-Let us consider a localization with range-only measurements. A robot is described by the state vector :math:`\mathbf{x}=\{x_1,x_2,\psi,\vartheta\}^\intercal` depicting its position, its heading and its speed. It evolves between three landmarks :math:`\mathbf{b}_1`, :math:`\mathbf{b}_2`, :math:`\mathbf{b}_3` and measures distances :math:`y_i` from these points.
+Let us consider a localization with range-only measurements. A robot is described by the state vector :math:`\mathbf{x}=\{x_1,x_2,\psi,\vartheta\}^\intercal` depicting its position, its heading and its speed. It evolves between three landmarks :math:`\mathbf{b}_1`, :math:`\mathbf{b}_2`, :math:`\mathbf{b}_3` and measures distances :math:`y_i` from these points. We assume that the position and the identity of the landmarks are known.
 
 The problem is defined by:
 
@@ -111,12 +111,12 @@ where :math:`\mathbf{u}(t)` is the input of the system. :math:`g` is the distanc
 
 .. math::
 
-  \mathbf{f}(\mathbf{x})=\left( \begin{array}{c}
+  \mathbf{f}(\mathbf{x},\mathbf{u})=\left( \begin{array}{c}
     \vartheta\cos(\psi) \\
     \vartheta\sin(\psi) \\
     u_1 \\
     u_2
-  \end{array}\right)
+  \end{array}\right)=\dot{\mathbf{x}}.
 
 The actual (but unknown) state trajectory :math:`\mathbf{x}^*(\cdot)` is expressed by:
 

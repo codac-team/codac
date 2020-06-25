@@ -28,17 +28,6 @@ Tubex: constraint-programming for robotics
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
 
-
-.. toctree::
-  :caption: Development
-  :maxdepth: 1
-  :titlesonly:
-
-  /dev/changelog
-  /dev/api_technical_doc
-  /dev/info_dev
-
-
 .. toctree::
   :caption: Tutorial for mobile robotics
   :maxdepth: 1
@@ -50,7 +39,7 @@ Tubex: constraint-programming for robotics
   A. Intervals and contractors </tutorial/01-basics/index>
   B. Static range-only localization </tutorial/02-static-rangeonly/index>
 
-  C. Static range-bearing loc. </tutorial/03-static-rangebearing/index>
+  C. Static range-bearing localization </tutorial/03-static-rangebearing/index>
   D. Building our own contractor </tutorial/04-own-contractor/index>
 
   E. Hello tubes </tutorial/05-tubes/index>
@@ -58,3 +47,13 @@ Tubex: constraint-programming for robotics
 
   [closed] G. Localization with data association </tutorial/07-data-association/closed>
   [closed] H. Range-only SLAM </tutorial/08-rangeonly-slam/closed>
+
+
+.. toctree::
+  :caption: Development
+  :maxdepth: 1
+  :titlesonly:
+
+  /dev/changelog
+  /dev/api_technical_doc
+  /dev/info_dev
