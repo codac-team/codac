@@ -115,7 +115,7 @@ The following code creates the actual (but unknown) trajectory :math:`\mathbf{x}
     
       VIBesFigMap = fig_map("Map");
       fig_map.set_properties(100, 100, 600, 300);
-      fig_map.add_trajectory(actual_x, "x*", 0, 1);
+      fig_map.add_trajectory(&actual_x, "x*", 0, 1);
       fig_map.add_beacon(b, 0.1);                   // 0.1: landmark width
       fig_map.axis_limits(-2.5,2.5,-0.1,0.1, true);
       fig_map.show(0.5);                            // argument is robot size
