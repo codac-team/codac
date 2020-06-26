@@ -150,7 +150,8 @@ The measurements :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]
 
   **F.3.** First, the problem requires a decomposition into elementary constraints. This will make appear intermediate variables.
 
-  **F.4.** Define the domains for all the variables involved in the problem.
+  | **F.4.** Define the domains for all the variables involved in the problem.
+  | We also consider that :math:`t\in[0,3]`.
 
   **F.5.** In a figure, display the three landmarks and the related range-only bounded measurements.
 
