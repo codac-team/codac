@@ -119,3 +119,11 @@
   {
     margin-bottom: 0;
   }
+
+/* Removes space in lists */
+
+.rst-content .section ol p, .rst-content .section ul p
+{
+  margin-bottom: 0;
+  margin-top: 3px;
+}
