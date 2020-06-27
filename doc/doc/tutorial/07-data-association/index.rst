@@ -3,14 +3,14 @@
 Lesson G: Dynamic localization with data association
 ====================================================
 
-In this lesson, we will extend the application of :ref:`sec-tuto-04`. The data association problem was easily treated in a static context. We will now make the robot move and see that a complex problem, hardly solvable with convention methods, can be easily dealt with constraint programming and tubes.
+In this lesson, we will extend the application of :ref:`sec-tuto-04`, where the robot was perceiving landmarks that all look alike. The data association problem (*i.e.* the identification of the landmarks) was treated in a static context, together with the estimation of the vector :math:`\mathbf{x}`. We will now make the robot move and see that a complex problem, hardly solvable with conventional methods, can be easily dealt with constraint programming and tubes.
 
 
 .. contents:: Content of this lesson
 
 
-Video
------
+Related paper
+-------------
 
 The application of localization with data association has been presented during the ICRA 2020 conference:
 
@@ -18,7 +18,7 @@ The application of localization with data association has been presented during 
 | Simon Rohou, Benoît Desrochers, Luc Jaulin, *ICRA 2020*
 | `Download the paper <http://simon-rohou.fr/research/datasso/datasso_paper.pdf?PHPSESSID=88a679b3n54fh04kt3l5lnmvv6>`_
 
-Here is a video providing an overview of the problem and how to solve it. We will build the related solver in this lesson.
+The following video provides an overview of the problem and how to solve it. We will build the related solver in this lesson.
 
 .. raw:: html
 
@@ -39,3 +39,130 @@ The equations of the problem are given by:
   \mathbf{g}\big(\mathbf{x}(t_{i}),\mathbf{y}^{i},\mathbf{m}^{i}\big)=\mathbf{0} & &  \text{(observation eq.)}\\
   \mathbf{m}^{i}\in\mathbb{M} & & \text{(data association)}\\
   \end{array}\right.
+
+The two last equations have been explored in Lessons :ref:`C <sec-tuto-03>` and :ref:`D <sec-tuto-04>`. The first one involves a constraint related to a differential equation, that have been seen in Lesson :ref:`E <sec-tuto-05>`. We have all the necessary tools to make a solver for this complex problem.
+
+
+Initialization
+--------------
+
+We will use the same functions as in :ref:`the previous lesson <sec-tuto-06-formalism>`, but the measurements will not be range-only data. We now assume that the robot evolves in an environment made of 150 landmarks that are all indistinguishable. The measurements to these landmarks consist in range-and-bearing data. The map is known beforehand, as in :ref:`sec-tuto-04`.
+
+.. admonition:: Exercise
+
+  | **G.1.** In a new file, create the ``Trajectory`` variable ``actual_x``, corresponding to the actual but unknown truth.
+  | The simulation will run from :math:`t_0=0` to :math:`t_f=6`. We will set ``dt`` to :math:`0.05`.
+
+  **G.2.** To generate random observations, we will use the following code:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      # Creating random map of landmarks
+      nb_landmarks = 150
+      map_area = IntervalVector(actual_x.codomain().subvector(0,1)).inflate(2)
+      v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks)
+
+      # Generating observations obs=(t,range,bearing) of these landmarks
+      max_nb_obs = 20
+      visi_range = Interval(0,4) # [0m,75m]
+      visi_angle = Interval(-math.pi/4,math.pi/4) # frontal sonar
+      v_obs = DataLoader.generate_observations(actual_x, v_map, max_nb_obs, True, visi_range, visi_angle)
+
+    .. code-tab:: c++
+
+      // Creating random map of landmarks
+      int nb_landmarks = 150;
+      IntervalVector map_area(actual_x.codomain().subvector(0,1)).inflate(2);
+      vector<IntervalVector> v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks);
+
+      // Generating observations obs=(t,range,bearing) of these landmarks
+      int max_nb_obs = 20;
+      Interval visi_range(0,4); // [0m,75m]
+      Interval visi_angle(-math.pi/4,math.pi/4); // frontal sonar
+      vector<IntervalVector> v_obs = DataLoader.generate_observations(actual_x, v_map, max_nb_obs, True, visi_range, visi_angle);
+
+  **G.3.** The variable ``v_obs`` contains the measurement boxes. Each measurement box has three dimensions: time :math:`t`, range :math:`y_1` and bearing :math:`y_2`. These values are intervals with no uncertainty. Inflate these intervals in order to ensure that the actual values :math:`\mathbf{y}^*` are bounded with:
+
+  .. math::
+
+    y_1^*\in y_1+[-0.1,0.1]\\
+    y_2^*\in y_2+[-0.04,0.04]
+
+  | **G.4.** Display the landmarks, the range-and-bearing measurements and the actual trajectory in a ``VIBesFigMap`` view.
+  | You can use the ``fig_map.add_observations(v_obs, actual_x)`` function in order to display all the range-and-bearing observations.
+
+  You should obtain a result similar to this:
+
+  .. figure:: img/datasso_obs.png
+
+    Black pies depict the range-and-bearing measurements with uncertainties.
+
+
+Decomposition
+-------------
+
+.. admonition:: Exercise
+
+  **G.5.** In :ref:`Question <sec-tuto-06-decomposition>` **F.3**, we wrote a decomposition of the dynamic range-only problem into elementary constraints:
+
+  - :math:`\mathbf{v}(\cdot)=\mathbf{f}\big(\mathbf{x}(\cdot),\mathbf{u}(\cdot)\big)`, where :math:`\mathbf{v}(\cdot)` is an intermediate trajectory variable
+  - :math:`\dot{\mathbf{x}}(\cdot)=\mathbf{v}(\cdot)`
+  - :math:`\mathbf{p}_i=\mathbf{x}(t_i)`, where :math:`\mathbf{p}_i` is an intermediate 2d vector variable
+  - :math:`g(\mathbf{p}_i,\mathbf{m}_i,y_i)=0`, where function :math:`g` is the distance constraint
+
+  Update this decomposition to fit with the current problem. The difference now is that we are dealing with range-and-bearing measurements :math:`\mathbf{y}_i` (two dimensions), as in :ref:`Lesson C <sec-tuto-03>`. You may have a look at :download:`the solution <../03-static-rangebearing/src/solution_c1.pdf>` of Question **C.1**.
+
+
+Resolution
+----------
+
+.. admonition:: Exercise
+
+  **G.6.** Define the initial domains of the variables involved in the problem. Some of the domains are already set from the measurements :math:`[\mathbf{y}]`. Intermediate variables can be initialized as infinite sets.
+
+  **G.7.** Create the contractors of the problem. Some of them are already defined and instantiated in the library:
+
+    * the :math:`C_{\textrm{polar}}` contractor (:ref:`see more <sec-manual-ctcpolar>`)
+    * the :math:`C_{\textrm{constell}}` contractor (:ref:`see more <sec-manual-ctcconstell>`)
+    * the :math:`C_{\frac{d}{dt}}` contractor (:ref:`see more <sec-manual-ctcderiv>`)
+    * the :math:`C_{\textrm{eval}}` contractor (:ref:`see more <sec-manual-ctceval>`)
+
+  You may also use the class ``CtcFunction`` to deal with the constraint involving :math:`\mathbf{f}`.
+
+  **G.8.** Build a new Contractor Network for solving the problem.
+
+
+You should obtain a result similar to:
+
+.. figure:: img/datasso_solved.png
+  
+  Localization by solving data association: the state trajectory :math:`\mathbf{x}(\cdot)` (in white) has been estimated (in blue) together with the identification of the perceived landmarks.
+
+
+.. tip::
+
+  The ``cn.contract()`` method runs the propagation of the contractions. You can set the optional boolean argument to true in order to activate the *verbose* mode:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      cn.contract(True)
+
+    .. code-tab:: cpp
+
+      cn.contract(true);
+
+  This will display information related to the number of contractors and domains involved in the Contractor Network, as well as the computation time of the resolution.
+  In this application, we can obtain something similar to:
+
+  .. code:: bash
+
+    Contractor network has 1683 contractors and 1573 domains
+    Computing, 1683 contractors currently in stack
+
+      computation time: 6.40176s
+
+  The high number of domains and contractors is due to some automatic and hidden decompositions performed by the CN itself. We recall that tubes are implemented as sets of slices; in our case, because :math:`\delta` = ``dt`` = 0.05, the tubes are made of 120 slices. Some constraints defined on tubes can be broken down to the slice level, which allows accurate propagations. This is automatically done by the library.

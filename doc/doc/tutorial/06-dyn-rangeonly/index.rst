@@ -90,6 +90,7 @@ Before solving a complete range-only localization problem, let us come back to :
 An evaluation constraint has narrowed the tube at :math:`t=2`: the contraction keeps the trajectories going through the box :math:`[\mathbf{y}_i]`. This effect is propagated, backward and forward in time, from :math:`t=2`: the whole tube has been contracted, without other knowledge on :math:`[\mathbf{x}](\cdot)`.
 
 
+.. _sec-tuto-06-formalism:
 
 Dynamic range-only localization
 -------------------------------
@@ -147,6 +148,8 @@ The measurements :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]
 
 
 .. admonition:: Exercise
+  
+  .. _sec-tuto-06-decomposition:
 
   **F.3.** First, the problem requires a decomposition into elementary constraints. This will make appear intermediate variables.
 

@@ -32,21 +32,21 @@ tdomain = Interval(0,6)
 
 # Truth (analytic function)
 
-x_truth = TrajectoryVector(tdomain, TFunction("( \
+actual_x = TrajectoryVector(tdomain, TFunction("( \
   10*cos(t)+t ; \
   5*sin(2*t)+t ; \
   atan2((10*cos(2*t)+1),(-10*sin(t)+1)) ; \
   sqrt((-10*sin(t)+1)^2+(10*cos(2*t)+1)^2))")) # actual trajectory
 
 # Continuous measurements coming from the truth
-measured_psi = x_truth[2].sample(dt).make_continuous()
+measured_psi = actual_x[2].sample(dt).make_continuous()
 #measured_psi += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)) # adding some noise
-measured_speed = x_truth[3].sample(dt);
+measured_speed = actual_x[3].sample(dt);
 #measured_speed += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)) # adding some noise
 
 # Sets of trajectories
 
-x_truth[2].sample(dt).make_continuous()
+actual_x[2].sample(dt).make_continuous()
 
 x = TubeVector(tdomain, dt, 4)                    # 4d tube for state vectors
 v = TubeVector(tdomain, dt, 4)                    # 4d tube for derivatives of the states
@@ -60,14 +60,14 @@ x[3] = Tube(measured_speed, dt)#.inflate(0.01)
 # Creating random map of landmarks
 nb_landmarks = 150
 #map_area = IntervalVector(2, [-20,20])
-map_area = IntervalVector(x_truth.codomain().subvector(0,1)).inflate(2)
+map_area = IntervalVector(actual_x.codomain().subvector(0,1)).inflate(2)
 v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks)
 
 # Generating observations obs=(t,range,bearing) of these landmarks
-max_nb_obs = 50
+max_nb_obs = 20
 visi_range = Interval(0,4) # [0m,75m]
 visi_angle = Interval(-math.pi/4,math.pi/4) # frontal sonar
-v_obs = DataLoader.generate_observations(x_truth, v_map, max_nb_obs, True, visi_range, visi_angle)
+v_obs = DataLoader.generate_observations(actual_x, v_map, max_nb_obs, True, visi_range, visi_angle)
 
 # Adding uncertainties on the measurements
 for obs in v_obs:
@@ -94,6 +94,7 @@ ctc_f = CtcFunction(
 cn = ContractorNetwork()
 
 cn.add(ctc_f, [v, x, u])   # adding the f constraint
+cn.add(ctc.deriv, [x, v])
 
 for i in range(0,len(v_obs)):
   
@@ -121,10 +122,10 @@ cn.contract(True)
 beginDrawing()
 
 fig_map = VIBesFigMap("Map")
-fig_map.set_properties(1450, 50, 1000, 600)
+fig_map.set_properties(50, 50, 600*2, 300*2)
 fig_map.add_tube(x, "x", 0, 1)
-fig_map.add_trajectory(x_truth, "x*", 0, 1, 2)
-fig_map.add_observations(v_obs, x_truth)
+fig_map.add_trajectory(actual_x, "x*", 0, 1, 2, "white")
+fig_map.add_observations(v_obs, actual_x)
 for b in v_map:
   fig_map.add_beacon(b.inflate(0.1))
 fig_map.smooth_tube_drawing(True)
@@ -134,4 +135,4 @@ fig_map.show(1)
 endDrawing()
 
 # Checking if this example still works:
-sys.exit(0 if x.contains(x_truth) == BoolInterval.YES else 1)
+sys.exit(0 if x.contains(actual_x) == BoolInterval.YES else 1)

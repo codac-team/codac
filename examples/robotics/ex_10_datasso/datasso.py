@@ -39,7 +39,7 @@ state_truth = TrajectoryVector(tdomain, \
 
 # Sets of trajectories
 
-dt = 0.02 # tube timestep
+dt = 0.05 # tube timestep
 state_truth[2].sample(dt).make_continuous()
 
 x = TubeVector(tdomain, dt, 3) # unbounded 2d tube vector
@@ -86,6 +86,9 @@ ctc_constell = myCtc(v_map) # constellation constraint
 # =========== CONTRACTOR NETWORK ===========
 
 cn = ContractorNetwork()
+
+ctc.eval.enable_time_propag(False)
+cn.add(ctc.deriv, [x,v])
 
 for i in range(0,len(v_obs)):
   
