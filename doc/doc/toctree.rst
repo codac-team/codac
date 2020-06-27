@@ -1,3 +1,5 @@
+.. _sec-toctree:
+
 ##########################################
 Tubex: constraint-programming for robotics
 ##########################################

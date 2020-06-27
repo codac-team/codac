@@ -1,4 +1,4 @@
-.. _sec-tuto-faq:
+.. _sec-faq:
 
 ###############################
 FAQ: Frequently Asked Questions
@@ -55,19 +55,23 @@ For linear systems with known initial conditions, or when the linearization make
 Particle filter (PF) and interval / Constraint Propagation (CP) approaches can be combined. A set-membership approach (CP coupled with intervals) provides sets as results. Therefore, one can spread particles inside these sets. This allows particle approaches to better converge. At the end, one can state: *we ensure that the solution is inside this set (defined by bounds with CP/intervals); in addition, inside this set, it is more likely around this vector (estimation from the particle filter)*.
 
 
-What will be the beat methos to choose the uncertainties on [y](.)
+How to define a set from a measurement?
+---------------------------------------
+
+When dealing with real situations, speaking about guaranteed approaches is all based on inputs of our algorithms: the data-sets. The transition from theoretical computations to real values is a significant matter and has to be done rigorously in order to ensure further guaranteed outcomes.
+In practice, a measurement error is often modeled by a Gaussian distribution which has an infinite support. Therefore, setting bounds around this measurement already constitutes a theoretical risk of loosing the actual value. A choice has to be made at this step, considering such risk. After that, however, any algorithm standing on interval methods is ensured to not increase this risk.
+
+The following figure presents the interval evaluation of a measurement :math:`\mu` assumed to follow a Gaussian distribution, so that we consider the real value enclosed within the interval :math:`[x]`, centered on :math:`\mu`, with a 95% confidence rate. Datasheets usually give sensors specifications such as the standard deviation :math:`\sigma`. The bounded value :math:`[x]` can then be inflated according to this dispersion value.
+
+.. figure:: img/interval_gaussian.png
+  :width: 600px
+
+  An interval :math:`[x]=[x^-,x^+]` computed from a Gaussian distribution to guarantee a 95% confidence rate over a measurement :math:`\mu`: :math:`[x] = [\mu-2\sigma,\mu+2\sigma]`.
+
+
 ------------------------------------------------------------------
-
-In E14, I inflated the [y](.) by 0.2 and the got the following tube. At 0.2  my tube encloses the trajectory. What will be the beat methos to choose the uncertainties on [y](.) ?
-
-Hi Manvir,
-The method is simple: assume that you have a measurement y, from a sensor. y is made of the actual but unknown value y* plus a noise n: y=y*+n. If we know that n is bounded by [n]=[-0.2,0.2] (this can be found in some datasheets of the sensor), then we can state that the actual value y* (that we are looking for) is bounded by: y*ϵy-[n]. 
-Therefore, if you build a tube [y](.) from your continuous measurement y(.), and enlarge it by [n] (i.e., inflate it by width([n])/2=0.2), then you are 100% sure that the actual value y* will be inside [y](.). It is the case on your figure, red never goes outside the blue set. And so all the computations involving [y](.) will be 100% guaranteed too: by propagation of constraints, you will ensure that [x](.) also contains the actual trajectory of the robot.
-
 
 *Next questions are related to the use of the API.*
-
-------------------------------------------------------------------
 
 Ask for help
 ============
@@ -75,13 +79,11 @@ Ask for help
 How to access the documentation of the functions?
 -------------------------------------------------
 
-* API
-* help in Python
-* website
+You have three supports:
 
-You can read this page detailing some functions of VIBesFig (and so VIBesFigMap). We will add more content to this part of the manual within the next few days.
-In addition, you can have a look at the Tubex manual (besides that tutorial). If you want an exhaustive documentation, there is also the C++ list of functionalities here (it may help for Python use).
-
+* :ref:`the manual webpages <sec-toctree>`
+* :ref:`the technical documentation of the C++ API <sec-api>`
+* use the help in Python with the ``help()`` command, for instance: ``help(Tube.bisect)``
 
 
 ------------------------------------------------------------------
@@ -89,44 +91,53 @@ In addition, you can have a look at the Tubex manual (besides that tutorial). If
 Basic operations (arithmetic)
 =============================
 
-I am using an operator such as cos, exp, sin and I obtain the following error:
-------------------------------------------------------------------------------
+The vector arguments are not supported for :math:`\cos`, :math:`\exp`, :math:`\sin`, *etc*.
+-------------------------------------------------------------------------------------------
 
-TypeError: cos(): incompatible function arguments. The following argument types are supported:
-    1. (arg0: float) -> float
-    2. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
-    3. (arg0: tubex_lib.tube.Tube) -> tubex_lib.tube.Tube
-    4. (arg0: tubex_lib.tube.Trajectory) -> tubex_lib.tube.Trajectory
+Example of error (using Python):
 
-The computation of cos/sqrt/sqr/.. are only allowed on scalar values (so not available for IntervalVector objects).
-Contrary to abs that should work on an IntervalVector.
+.. code::
 
+  TypeError: cos(): incompatible function arguments. The following argument types are supported:
+      1. (arg0: float) -> float
+      2. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
+      3. (arg0: tubex::Tube) -> tubex::Tube
+      4. (arg0: tubex::Trajectory) -> tubex::Trajectory
 
-I have the error:
------------------
+.. from pyibex import *
+.. from tubex_lib import *
+.. import math
+.. 
+.. x = IntervalVector(2)
+.. print(cos(x))
 
-TypeError: sqr(): incompatible function arguments. The following argument types are supported:
-1. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
-Invoked with: Trajectory...
-
-Solution: import pyibex before tubex
-from pyibex import *
-from tubex_lib import *
-
-you need to import pyibex first, otherwise the sqrt function from pyibex will be set in current namespace, and pyibex does not know tubes and trajectories.
+The computation of ``cos``, ``sqrt``, ``sqr``, *etc.* are allowed only on scalar values. They are not available for vector objects such as ``IntervalVector``, ``TrajectoryVector``, ``TubeVector``.
 
 
-I Obtain this error :
----------------------
+The trajectory/tube arguments are not supported for :math:`\cos`, :math:`\exp`, :math:`\sin`, *etc*.
+----------------------------------------------------------------------------------------------------
 
-error: no match for ‘operator-’ (operand types are ‘tubex::Trajectory’ and ‘ibex::Interval’)
-TrajectoryVector actual_y=sqrt(sqr(actual_x[0]-b[0])+sqr(actual_x[1]-b[1]));
+Example of error (using Python):
 
-And furthermore, you probably defined b as an IntervalVector, which means that b[0] and b[1] are Interval objects. You cannot compute the difference between some real value (or a trajectory) and a set of values (an interval).
+.. code::
 
-You have two options:
-* define and use a vector, for instance: Vector actual_b({0.5,1});
-* use the mid of the sets (that are double values): b[0].mid(), b[1].mid()
+  TypeError: cos(): incompatible function arguments. The following argument types are supported:
+      1. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
+  Invoked with: TubeVector 
+
+.. from tubex_lib import *
+.. from pyibex import *
+.. import math
+.. 
+.. x = TubeVector(Interval(0,10),0.01,2)
+
+
+You probably imported the ``tubex_lib`` module before the ``pyibex`` module. Here is the correct import order:
+
+.. code:: py
+
+  from pyibex import *
+  from tubex_lib import *
 
 
 ------------------------------------------------------------------
@@ -137,48 +148,79 @@ Domains (intervals, boxes, tubes)
 How to concatenate two IntervalVectors?
 ---------------------------------------
 
-Three solution (the last one is the best)
+Use the ``cart_prod()`` method:
 
->>> a = IntervalVector([[1,2],[3,4]])
->>> b = IntervalVector([[5,6],[7,8]])
->>> cart_prod(a,b)
-([1, 2] ; [3, 4] ; [5, 6] ; [7, 8])
+.. tabs::
+  
+  .. code-tab:: py
 
-a = IntervalVector([[1,2],[3,4]])
-b = IntervalVector([[5,6],[7,8]])
-# 1
-c = IntervalVector(4)
-c.put(0,a)
-c.put(2,b)
-print(c)
-> ([1, 2] ; [3, 4] ; [5, 6] ; [7, 8])
-# 2
-d = IntervalVector([a[0], a[1], b[0], b[1]])
-print(d)
-> ([1, 2] ; [3, 4] ; [5, 6] ; [7, 8])
+    a = IntervalVector([[0,1],[2,3]])
+    b = IntervalVector([[4,5],[6,7]])
+    c = cart_prod(a,b)
+    # c: ([0, 1] ; [2, 3] ; [4, 5] ; [6, 7])
+
+  .. code-tab:: c++
+
+    IntervalVector a({{0,1},{2,3}});
+    IntervalVector b({{4,5},{6,7}});
+    IntervalVector c = cart_prod(a,b);
+    // c: ([0, 1] ; [2, 3] ; [4, 5] ; [6, 7])
 
 
 ------------------------------------------------------------------
 
-Contractors (independent constraints)
-=====================================
+Contractors
+===========
 
+I don't have accurate results with my own :math:`\mathcal{C}_{\textrm{dist}}` contractor, why?
+----------------------------------------------------------------------------------------------
 
+You may prefer to build your own :math:`\mathcal{C}_{\textrm{dist}}` contractor from a ``Function`` object, instead of using :ref:`the contractor already defined in the library<sec-manual-ctcdist>`.
 
-I don't have accurate results with my own Cdist contractor, why?
-----------------------------------------------------------------
+Then, if you define the distance contractor related to the constraint
 
-I got the problem.
-You should write
-ctc_dist = CtcFunction(Function("x[2]","b[2]","d","sqrt((x[0]-b[0])^2+(x[1]-b[1])^2) - d"))
-instead of
-ctc_dist = CtcFunction(Function("x[2]","b[2]","d","sqrt((x[0]-b[0])*(x[0]-b[0])+(x[1]-b[1])*(x[1]-b[1])) - d"))
+.. math::
 
-You result is correct (you do not loos any solution), but less accurate. It is what we call the dependency problem.
-When you write [a]*[a], you are less accurate than [a]^2.
-For instance, [-2,2]*[-2,2]=[-4,4]
-whereas [-2,2]^2=[0,4]
-Tell me if you do not understand.
+  \sqrt{(x_1-b_1)^2+(x_2-b_2)^2}=d
+
+with:
+
+.. tabs::
+  
+  .. code-tab:: py
+
+    f_dist = Function("x[2]", "b[2]", "d",
+                      "sqrt((x[0]-b[0])*(x[0]-b[0])+(x[1]-b[1])*(x[1]-b[1])) - d")
+    ctc_dist = CtcFunction(f_dist, Interval(0))
+
+  .. code-tab:: c++
+
+    Function f_dist("x[2]", "b[2]", "d",
+                    "sqrt((x[0]-b[0])*(x[0]-b[0])+(x[1]-b[1])*(x[1]-b[1])) - d");
+    CtcFunction ctc_dist(f_dist, Interval(0));
+
+You will obtain less efficient results than by defining:
+
+.. tabs::
+  
+  .. code-tab:: py
+
+    f_dist = Function("x[2]", "b[2]", "d",
+                      "sqrt((x[0]-b[0])^2+(x[1]-b[1])^2) - d")
+    ctc_dist = CtcFunction(f_dist, Interval(0))
+
+  .. code-tab:: c++
+
+    Function f_dist("x[2]", "b[2]", "d",
+                    "sqrt((x[0]-b[0])^2+(x[1]-b[1])^2) - d");
+    CtcFunction ctc_dist(f_dist, Interval(0));
+
+In both cases the contraction will be correct (no feasible solution will be lost), but the first one will be less accurate.
+
+This is due to **the dependency problem** in interval analysis. 
+For instance, the multiplication of two intervals :math:`[a]\cdot[a]` is less accurate than its equivalent :math:`[a]^2`.
+Indeed, from the following example with values, we realize that :math:`[-2,2]\cdot[-2,2]=[-4,4]` whereas :math:`[-2,2]^2=[0,4]`. 
+For this reason, it is often important to use appropriate symbols when expressing a function, in order to avoid as much as possible this dependency effect.
 
 
 I don't understand how the C_dist formula works in the code
@@ -324,6 +366,20 @@ x becomes a TubeVector with a default size=1. Then, the domains in the CN are no
 With:
 x = TubeVector(tdomain, dt, 2)
 the assertion disappears.
+
+
+------------------------------------------------------------------
+
+VIBes related questions (graphics)
+==================================
+
+
+My program crashes or does not display anything
+-----------------------------------------------
+
+do not forget to launch VIBes
+
+do not forget to initialize VIBes
 
 
 ------------------------------------------------------------------
