@@ -52,8 +52,8 @@ x = TubeVector(tdomain, dt, 4)                    # 4d tube for state vectors
 v = TubeVector(tdomain, dt, 4)                    # 4d tube for derivatives of the states
 u = TubeVector(tdomain, dt, 2)                    # 2d tube for inputs of the system
 
-x[2] = Tube(measured_psi, dt)#.inflate(0.01)       # measured_psi is a set of measurements
-x[3] = Tube(measured_speed, dt)#.inflate(0.01)
+x[2] = Tube(measured_psi, dt).inflate(0.01)       # measured_psi is a set of measurements
+x[3] = Tube(measured_speed, dt).inflate(0.01)
 
 # Sets of observations
 

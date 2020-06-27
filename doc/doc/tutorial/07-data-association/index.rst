@@ -18,7 +18,7 @@ The application of localization with data association has been presented during 
 | Simon Rohou, Benoît Desrochers, Luc Jaulin, *ICRA 2020*
 | `Download the paper <http://simon-rohou.fr/research/datasso/datasso_paper.pdf?PHPSESSID=88a679b3n54fh04kt3l5lnmvv6>`_
 
-The following video provides an overview of the problem and how to solve it. We will build the related solver in this lesson.
+The following video provides an overview of the problem and how to solve it. The last part of the video provides an application on actual data, involving an Autonomous Underwater Vehicle (AUV). We will build the related solver in this lesson.
 
 .. raw:: html
 
@@ -40,13 +40,40 @@ The equations of the problem are given by:
   \mathbf{m}^{i}\in\mathbb{M} & & \text{(data association)}\\
   \end{array}\right.
 
-The two last equations have been explored in Lessons :ref:`C <sec-tuto-03>` and :ref:`D <sec-tuto-04>`. The first one involves a constraint related to a differential equation, that have been seen in Lesson :ref:`E <sec-tuto-05>`. We have all the necessary tools to make a solver for this complex problem.
+The two last equations have been explored in Lessons :ref:`C <sec-tuto-03>` and :ref:`D <sec-tuto-04>`. The first one involves a constraint related to a differential equation, that has been seen in Lesson :ref:`E <sec-tuto-05>`. We have all the necessary tools to make a solver for this complex problem.
 
 
 Initialization
 --------------
 
-We will use the same functions as in :ref:`the previous lesson <sec-tuto-06-formalism>`, but the measurements will not be range-only data. We now assume that the robot evolves in an environment made of 150 landmarks that are all indistinguishable. The measurements to these landmarks consist in range-and-bearing data. The map is known beforehand, as in :ref:`sec-tuto-04`.
+For the simulation, we will use the same functions as in :ref:`the previous lesson <sec-tuto-06-formalism>`, but the measurements will not be range-only data.
+
+:math:`\mathbf{f}` is defined by
+
+.. math::
+
+  \mathbf{f}(\mathbf{x},\mathbf{u})=\left( \begin{array}{c}
+    \vartheta\cos(\psi) \\
+    \vartheta\sin(\psi) \\
+    u_1 \\
+    u_2
+  \end{array}\right)=\dot{\mathbf{x}}.
+
+The actual (but unknown) state trajectory :math:`\mathbf{x}^*(\cdot)` is expressed by:
+
+.. math::
+  
+  \mathbf{x}^*(t)=\left( \begin{array}{c}x^*_1\\x^*_2\\\psi^*\\\vartheta^*\end{array}\right)=
+  \left( \begin{array}{l}
+    10\cos(t)+t \\
+    5\sin(2t)+t \\
+    \textrm{atan2}\big((10\cos(2t)+1),(-10\sin(t)+1)\big) \\
+    \sqrt{(-10\sin(t)+1)^2+(10\cos(2t)+1)^2}
+  \end{array}\right)
+
+The heading :math:`x_3(\cdot)` and the speed :math:`x_4(\cdot)` are continuously measured with some uncertainties bounded by :math:`[0.01,0.01]`, as in the previous lesson.
+
+We now assume that the robot evolves in an environment made of 150 landmarks that are all indistinguishable. The measurements to these landmarks consist in range-and-bearing data. The map is known beforehand, as in :ref:`sec-tuto-04`.
 
 .. admonition:: Exercise
 
@@ -83,7 +110,8 @@ We will use the same functions as in :ref:`the previous lesson <sec-tuto-06-form
       Interval visi_angle(-math.pi/4,math.pi/4); // frontal sonar
       vector<IntervalVector> v_obs = DataLoader.generate_observations(actual_x, v_map, max_nb_obs, True, visi_range, visi_angle);
 
-  **G.3.** The variable ``v_obs`` contains the measurement boxes. Each measurement box has three dimensions: time :math:`t`, range :math:`y_1` and bearing :math:`y_2`. These values are intervals with no uncertainty. Inflate these intervals in order to ensure that the actual values :math:`\mathbf{y}^*` are bounded with:
+  | **G.3.** The variable ``v_obs`` contains the measurement boxes. Each measurement box has three dimensions: time :math:`t`, range :math:`y_1` and bearing :math:`y_2`. In the above code, these values are intervals with no uncertainty.
+  | Inflate these intervals in order to ensure that the actual values :math:`\mathbf{y}^*` are bounded by:
 
   .. math::
 
@@ -91,7 +119,7 @@ We will use the same functions as in :ref:`the previous lesson <sec-tuto-06-form
     y_2^*\in y_2+[-0.04,0.04]
 
   | **G.4.** Display the landmarks, the range-and-bearing measurements and the actual trajectory in a ``VIBesFigMap`` view.
-  | You can use the ``fig_map.add_observations(v_obs, actual_x)`` function in order to display all the range-and-bearing observations.
+  | You can use the ``fig_map.add_observations(v_obs, actual_x)`` function in order to display all the range-and-bearing observations along :math:`\mathbf{x}^*(\cdot)`.
 
   You should obtain a result similar to this:
 
@@ -143,7 +171,7 @@ You should obtain a result similar to:
 
 .. tip::
 
-  The ``cn.contract()`` method runs the propagation of the contractions. You can set the optional boolean argument to true in order to activate the *verbose* mode:
+  The ``cn.contract()`` method runs the propagation of the contractions. You can set the optional boolean argument to *true* in order to activate the *verbose* mode:
 
   .. tabs::
 
@@ -156,7 +184,7 @@ You should obtain a result similar to:
       cn.contract(true);
 
   This will display information related to the number of contractors and domains involved in the Contractor Network, as well as the computation time of the resolution.
-  In this application, we can obtain something similar to:
+  In this application, we can obtain the following display:
 
   .. code:: bash
 
@@ -165,4 +193,13 @@ You should obtain a result similar to:
 
       computation time: 6.40176s
 
-  The high number of domains and contractors is due to some automatic and hidden decompositions performed by the CN itself. We recall that tubes are implemented as sets of slices; in our case, because :math:`\delta` = ``dt`` = 0.05, the tubes are made of 120 slices. Some constraints defined on tubes can be broken down to the slice level, which allows accurate propagations. This is automatically done by the library.
+  The high number of domains and contractors is due to some automatic and hidden decompositions performed by the CN itself. We recall that tubes are implemented as sets of slices; in our case, because :math:`\delta` = ``dt`` = 0.05, the tubes are made of :math:`6/0.05=120` slices. Some constraints defined on tubes can be broken down to the slice level, which allows accurate propagations. This is automatically done by the library.
+
+
+.. rubric:: Why is this problem difficult?
+
+#. We do not know the **initial condition** of the system. Contrary to other approaches, this solver made of contractors does not require some initial vector :math:`\mathbf{x}_0` to start the estimation. Information is taken into account from anytime in :math:`[t_0,t_f]`.
+
+#. The constraints are heterogeneous: some of them are said **continuous** (they act on continuous domains of values, for instance intervals). Other are **discrete** (for instance, the identity of landmarks, estimated among a discrete set of :math:`n` possible values). And finally, some constraints come from **differential equations** (for instance for depicting the robot evolution). In this solver, we show that any kind of constraint can be combined, without going into a complex resolution algorithm.
+
+#. We do **not have to linearize**, and thus there is no approximation made here. This means that the equations are directly set in the solver, without transformation. Furthermore, the results are **reliable**: we can guarantee that the actual trajectory is inside the tube :math:`[\mathbf{x}](\cdot)`.
