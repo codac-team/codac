@@ -14,6 +14,7 @@ Bugs fixed
 ----------
 
 * :commit:`26bce8a2f7f2e0077a128c296332b6e326fa6381`: ``Trajectory::make_continuous()``, error encountered in *datasso*
+* :commit:`33f3b0db2b3995e18e62316632ccf5a87f6dd2da`: corrected bug in ``RandTrajectory``
 
 .. Deprecated
 .. ----------

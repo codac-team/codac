@@ -73,7 +73,9 @@ The actual (but unknown) state trajectory :math:`\mathbf{x}^*(\cdot)` is express
 
 The heading :math:`x_3(\cdot)` and the speed :math:`x_4(\cdot)` are continuously measured with some uncertainties bounded by :math:`[0.01,0.01]`, as in the previous lesson.
 
-We now assume that the robot evolves in an environment made of 150 landmarks that are all indistinguishable. The measurements to these landmarks consist in range-and-bearing data. The map is known beforehand, as in :ref:`sec-tuto-04`.
+We do not have any knowledge about the initial position of the robot.
+
+The robot evolves in an environment made of 150 landmarks that are all indistinguishable. The measurements to these landmarks consist in range-and-bearing data. The map is known beforehand, as in :ref:`sec-tuto-04`.
 
 .. admonition:: Exercise
 
@@ -127,6 +129,8 @@ We now assume that the robot evolves in an environment made of 150 landmarks tha
 
     Black pies depict the range-and-bearing measurements with uncertainties.
 
+At this point of the lesson, the robot perceives some of the 150 landmarks. It is not able to know which landmarks have been seen, and it has no knowledge about its trajectory.
+
 
 Decomposition
 -------------
@@ -157,7 +161,7 @@ Resolution
     * the :math:`C_{\frac{d}{dt}}` contractor (:ref:`see more <sec-manual-ctcderiv>`)
     * the :math:`C_{\textrm{eval}}` contractor (:ref:`see more <sec-manual-ctceval>`)
 
-  You may also use the class ``CtcFunction`` to deal with the constraint involving :math:`\mathbf{f}`.
+  You may also use the class ``CtcFunction`` to deal with the constraint involving :math:`\mathbf{f}` (:ref:`see more <sec-manual-ctcfunction>`).
 
   **G.8.** Build a new Contractor Network for solving the problem.
 

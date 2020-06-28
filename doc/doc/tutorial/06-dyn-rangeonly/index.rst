@@ -135,7 +135,6 @@ The input :math:`\mathbf{u}(\cdot)` is unknown, but we assume that we have conti
 
 Finally, we consider three range-only observations :math:`(t_i,y_i)`. They are summarized in the following table, with positions of the landmarks.
 
-
 =============================  =============================  =============================
 Time :math:`t_i`               Distance  :math:`y_i`          Landmark :math:`\mathbf{b}_i`
 =============================  =============================  =============================
