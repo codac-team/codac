@@ -18,7 +18,7 @@ The application of localization with data association has been presented during 
 | Simon Rohou, Benoît Desrochers, Luc Jaulin, *ICRA 2020*
 | `Download the paper <http://simon-rohou.fr/research/datasso/datasso_paper.pdf?PHPSESSID=88a679b3n54fh04kt3l5lnmvv6>`_
 
-The following video provides an overview of the problem and how to solve it. The last part of the video provides an application on actual data, involving an Autonomous Underwater Vehicle (AUV). We will build the related solver in this lesson.
+The following video provides an overview of the problem and how to solve it. The last part of the video presents an application on actual data, involving an Autonomous Underwater Vehicle (AUV). We will build the related solver in this lesson.
 
 .. raw:: html
 
@@ -48,7 +48,7 @@ Initialization
 
 For the simulation, we will use the same functions as in :ref:`the previous lesson <sec-tuto-06-formalism>`, but the measurements will not be range-only data.
 
-:math:`\mathbf{f}` is defined by
+We recall that :math:`\mathbf{f}` is defined by
 
 .. math::
 
@@ -59,7 +59,7 @@ For the simulation, we will use the same functions as in :ref:`the previous less
     u_2
   \end{array}\right)=\dot{\mathbf{x}}.
 
-The actual (but unknown) state trajectory :math:`\mathbf{x}^*(\cdot)` is expressed by:
+Also, the actual (but unknown) state trajectory :math:`\mathbf{x}^*(\cdot)` is expressed by:
 
 .. math::
   
@@ -129,7 +129,7 @@ The robot evolves in an environment made of 150 landmarks that are all indisting
 
     Black pies depict the range-and-bearing measurements with uncertainties.
 
-At this point of the lesson, the robot perceives some of the 150 landmarks. It is not able to know which landmarks have been seen, and it has no knowledge about its trajectory.
+At this point of the lesson, the robot perceives some of the 150 landmarks. It is not able to know which landmarks have been seen, and it has no knowledge about its own trajectory or its initial position.
 
 
 Decomposition
@@ -144,7 +144,7 @@ Decomposition
   - :math:`\mathbf{p}_i=\mathbf{x}(t_i)`, where :math:`\mathbf{p}_i` is an intermediate 2d vector variable
   - :math:`g(\mathbf{p}_i,\mathbf{m}_i,y_i)=0`, where function :math:`g` is the distance constraint
 
-  Update this decomposition to fit with the current problem. The difference now is that we are dealing with range-and-bearing measurements :math:`\mathbf{y}_i` (two dimensions), as in :ref:`Lesson C <sec-tuto-03>`. You may have a look at :download:`the solution <../03-static-rangebearing/src/solution_c1.pdf>` of Question **C.1**.
+  Update this decomposition to fit with the current problem. The difference now is that we are dealing with range-and-bearing measurements :math:`\mathbf{y}_i` (two dimensions), as in :ref:`Lesson C <sec-tuto-03>`. You may also have a look at :download:`the solution <../03-static-rangebearing/src/solution_c1.pdf>` of Question **C.1**.
 
 
 Resolution
@@ -154,7 +154,7 @@ Resolution
 
   **G.6.** Define the initial domains of the variables involved in the problem. Some of the domains are already set from the measurements :math:`[\mathbf{y}]`. Intermediate variables can be initialized as infinite sets.
 
-  **G.7.** Create the contractors of the problem. Some of them are already defined and instantiated in the library:
+  **G.7.** Create the contractors of the problem. Some of them are already defined and instantiated in the catalog of contractors of the library:
 
     * the :math:`C_{\textrm{polar}}` contractor (:ref:`see more <sec-manual-ctcpolar>`)
     * the :math:`C_{\textrm{constell}}` contractor (:ref:`see more <sec-manual-ctcconstell>`)
@@ -207,3 +207,7 @@ You should obtain a result similar to:
 #. The constraints are heterogeneous: some of them are said **continuous** (they act on continuous domains of values, for instance intervals). Other are **discrete** (for instance, the identity of landmarks, estimated among a discrete set of :math:`n` possible values). And finally, some constraints come from **differential equations** (for instance for depicting the robot evolution). In this solver, we show that any kind of constraint can be combined, without going into a complex resolution algorithm.
 
 #. We do **not have to linearize**, and thus there is no approximation made here. This means that the equations are directly set in the solver, without transformation. Furthermore, the results are **reliable**: we can guarantee that the actual trajectory is inside the tube :math:`[\mathbf{x}](\cdot)`.
+
+
+
+Now, we will end this tutorial with a last application: a range-only SLAM problem. In this example, the position of the landmarks will be estimated together with the localization of the robot. We will finally see how this can be processed for real-time applications.

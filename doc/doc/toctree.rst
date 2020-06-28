@@ -48,8 +48,8 @@ Tubex: constraint-programming for robotics
   E. Hello tubes </tutorial/05-tubes/index>
   F. Asynchronous measurements </tutorial/06-dyn-rangeonly/index>
 
-  [closed] G. Localization with data association </tutorial/07-data-association/closed>
-  [closed] H. Range-only SLAM </tutorial/08-rangeonly-slam/closed>
+  G. Localization with data association </tutorial/07-data-association/index>
+  H. Range-only SLAM </tutorial/08-rangeonly-slam/index>
 
 
 .. toctree::

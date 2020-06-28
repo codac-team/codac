@@ -3,7 +3,7 @@
 Lesson H: Range-only SLAM
 =========================
 
-This lesson is a summary of all the lessons of this tutorial. We will apply the concepts of constraints and interval analysis on a concrete SLAM problem, and see how an online SLAM can be solved.
+This lesson is a summary of all the lessons of this tutorial. We will apply the concepts of constraints and interval analysis on a concrete Simultaneous Localization and Mapping (SLAM) problem, and see how an online SLAM can be solved.
 
 
 .. contents:: Content of this lesson
@@ -68,12 +68,14 @@ At any time, we assume that the errors :math:`n_u(t)` and :math:`n_{x_3}(t)` are
 You should obtain a result similar to:
 
 .. figure:: img/slam_deadrecko.png
+  
+  In a dead-reckoning situation, the drift cannot be avoided. This is revealed by the thickness of the blue tube, very large around :math:`t_f`.
 
 
 Perceiving landmarks
 --------------------
 
-The environment is made of 4 landmarks. Their coordinates are given in the following table.
+The environment is made of 4 landmarks. Their coordinates are given in the following table:
 
   =========  =============================
   :math:`i`  Landmark :math:`\mathbf{b}_i`
@@ -84,7 +86,7 @@ The environment is made of 4 landmarks. Their coordinates are given in the follo
   :math:`3`  :math:`(3,4)^\intercal`
   =========  =============================
 
-The robot does not know these coordinates. Each :math:`t=2k\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`.
+The robot does not know these coordinates (the M of SLAM is for Mapping). Each :math:`t=2k\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`.
 
 .. admonition:: Exercise
 
@@ -101,7 +103,7 @@ Online SLAM
 
 These computations were made offline, assuming that all the data were collected before running the solver.
 
-We could use this approach **online** and make the solver run during the evolution of the robot. For this, we will use the ``.contract_during(ctc_dt)`` method instead of ``.contract()``. This way, we will let the solver contract as much as possible the domains **during a given amount of time** ``ctc_dt``. Remaining contractions will be done during the next call to ``.contract_during()``.
+We could also use this approach **online** and make the solver run during the evolution of the robot. For this, we will use the ``.contract_during(ctc_dt)`` method instead of ``.contract()``. This way, we will let the solver contract as much as possible the domains **during a given amount of time** ``ctc_dt``. Remaining contractions will be done during the next call to ``.contract_during()``. This allows to spread over time the resolution.
 
 Hence, for real-time SLAM, we can use the following temporal loop:
 
@@ -146,6 +148,9 @@ Hence, for real-time SLAM, we can use the following temporal loop:
 
   .. code-tab:: cpp
 
+    #include <unistd.h> // used for usleep
+    // ...
+
     double dt = 0.05;
     double iteration_dt = 0.2; // elapsed animation time between each dt
     Interval tdomain(0,15); // [t0,tf]
@@ -179,3 +184,13 @@ Hence, for real-time SLAM, we can use the following temporal loop:
 You should obtain an animation that looks like this:
 
 .. figure:: img/slam_online.png
+
+
+
+Submit your exercise
+--------------------
+
+| The tutorial ends here!
+| We do hope it provided you an interesting overview of what Constraint Programming methods can bring to mobile robotics. **We are looking forward your feedbacks!**
+
+You can submit your answers for the questions of Lessons G and H to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.

@@ -319,8 +319,8 @@ The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about
   E. Hello tubes </tutorial/05-tubes/index>
   F. Localization with asynchronous measurements </tutorial/06-dyn-rangeonly/index>
 
-  [closed] G. Localization with data association </tutorial/07-data-association/closed>
-  [closed] H. Range-only SLAM </tutorial/08-rangeonly-slam/closed>
+  G. Localization with data association </tutorial/07-data-association/index>
+  H. Range-only SLAM </tutorial/08-rangeonly-slam/index>
 
 
 License and support
