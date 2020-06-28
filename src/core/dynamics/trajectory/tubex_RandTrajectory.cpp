@@ -31,8 +31,12 @@ namespace tubex
       srand(time(NULL));
 
       double t;
-      for(t = tdomain.lb() ; t <= tdomain.ub() ; t+=timestep)
-        m_map_values[min(t,tdomain.ub())] = Tools::rand_in_bounds(bounds);
+      for(t = tdomain.lb() ; t < tdomain.ub()+timestep ; t+=timestep)
+      {
+        double y = Tools::rand_in_bounds(bounds);
+        m_map_values[std::min(t,tdomain.ub())] = y;
+        m_codomain |= y;
+      }
       m_tdomain = tdomain;
 
       assert(m_codomain.is_subset(bounds));
