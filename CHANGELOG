@@ -10,11 +10,8 @@ Unreleased yet (in development)
 .. Dependencies
 .. ------------
 
-Bugs fixed
-----------
-
-* :commit:`26bce8a2f7f2e0077a128c296332b6e326fa6381`: ``Trajectory::make_continuous()``, error encountered in *datasso*
-* :commit:`33f3b0db2b3995e18e62316632ccf5a87f6dd2da`: corrected bug in ``RandTrajectory``
+.. Bugs fixed
+.. ----------
 
 .. Deprecated
 .. ----------
@@ -22,8 +19,26 @@ Bugs fixed
 Documentation
 -------------
 
-* added this changelog page
 * added the FAQ page
+
+
+-----------------------------------------------------------------
+
+Release 3.0.9 (released `Jun 28, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.9>`_)
+======================================================================================================
+
+`Commits since previous release 3.0.8 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.8...v3.0.9>`_
+
+Bugs fixed
+----------
+
+* :commit:`26bce8a2f7f2e0077a128c296332b6e326fa6381`: ``Trajectory::make_continuous()``, error encountered in *datasso*
+* :commit:`33f3b0db2b3995e18e62316632ccf5a87f6dd2da`: corrected bug in ``RandTrajectory``
+
+Documentation
+-------------
+
+* added this changelog page
 
 
 -----------------------------------------------------------------
