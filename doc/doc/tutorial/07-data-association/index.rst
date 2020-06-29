@@ -103,14 +103,18 @@ The robot evolves in an environment made of 150 landmarks that are all indisting
 
       // Creating random map of landmarks
       int nb_landmarks = 150;
-      IntervalVector map_area(actual_x.codomain().subvector(0,1)).inflate(2);
-      vector<IntervalVector> v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks);
+      IntervalVector map_area(actual_x.codomain().subvector(0,1));
+      map_area.inflate(2);
+      vector<IntervalVector> v_map =
+        DataLoader::generate_landmarks_boxes(map_area, nb_landmarks);
 
       // Generating observations obs=(t,range,bearing) of these landmarks
       int max_nb_obs = 20;
       Interval visi_range(0,4); // [0m,75m]
-      Interval visi_angle(-math.pi/4,math.pi/4); // frontal sonar
-      vector<IntervalVector> v_obs = DataLoader.generate_observations(actual_x, v_map, max_nb_obs, True, visi_range, visi_angle);
+      Interval visi_angle(-M_PI/4,M_PI/4); // frontal sonar
+      vector<IntervalVector> v_obs =
+        DataLoader::generate_observations(actual_x, v_map, max_nb_obs,
+                                          true, visi_range, visi_angle);
 
   | **G.3.** The variable ``v_obs`` contains the measurement boxes. Each measurement box has three dimensions: time :math:`t`, range :math:`y_1` and bearing :math:`y_2`. In the above code, these values are intervals with no uncertainty.
   | Inflate these intervals in order to ensure that the actual values :math:`\mathbf{y}^*` are bounded by:
@@ -127,7 +131,7 @@ The robot evolves in an environment made of 150 landmarks that are all indisting
 
   .. figure:: img/datasso_obs.png
 
-    Black pies depict the range-and-bearing measurements with uncertainties.
+    Black pies depict the range-and-bearing measurements with uncertainties. Note that on this figure, landmarks boxes have been inflated for display purposes.
 
 At this point of the lesson, the robot perceives some of the 150 landmarks. It is not able to know which landmarks have been seen, and it has no knowledge about its own trajectory or its initial position.
 
@@ -165,14 +169,6 @@ Resolution
 
   **G.8.** Build a new Contractor Network for solving the problem.
 
-
-You should obtain a result similar to:
-
-.. figure:: img/datasso_solved.png
-  
-  Localization by solving data association: the state trajectory :math:`\mathbf{x}(\cdot)` (in white) has been estimated (in blue) together with the identification of the perceived landmarks.
-
-
 .. tip::
 
   The ``cn.contract()`` method runs the propagation of the contractions. You can set the optional boolean argument to *true* in order to activate the *verbose* mode:
@@ -200,14 +196,39 @@ You should obtain a result similar to:
   The high number of domains and contractors is due to some automatic and hidden decompositions performed by the CN itself. We recall that tubes are implemented as sets of slices; in our case, because :math:`\delta` = ``dt`` = 0.05, the tubes are made of :math:`6/0.05=120` slices. Some constraints defined on tubes can be broken down to the slice level, which allows accurate propagations. This is automatically done by the library.
 
 
-.. rubric:: Why is this problem difficult?
+You should obtain a result similar to:
+
+.. figure:: img/datasso_solved.png
+  
+  Localization by solving data association: the state trajectory :math:`\mathbf{x}(\cdot)` (in white) has been estimated (in blue) together with the identification of the perceived landmarks.
+
+
+.. tip::
+
+  As we said, a tube is implemented as a list of slices. Drawing a tube in the ``VIBesFigMap`` consists in displaying the projection of its slices. This leads to boxes drawn with some overlapping. When the sampling :math:`\delta` of the tube is light (when it is made of few slices), then we obtain a jagged result. The following code allows a nicer result, with a polygonal drawing between the slices:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      fig_map.smooth_tube_drawing(True)
+
+    .. code-tab:: cpp
+
+      fig_map.smooth_tube_drawing(true);
+
+  The following animation highlights this feature:
+
+  .. figure:: img/smoothing.gif
+
+
+.. rubric:: Why is this problem of localization and data association difficult?
 
 #. We do not know the **initial condition** of the system. Contrary to other approaches, this solver made of contractors does not require some initial vector :math:`\mathbf{x}_0` to start the estimation. Information is taken into account from anytime in :math:`[t_0,t_f]`.
 
 #. The constraints are heterogeneous: some of them are said **continuous** (they act on continuous domains of values, for instance intervals). Other are **discrete** (for instance, the identity of landmarks, estimated among a discrete set of :math:`n` possible values). And finally, some constraints come from **differential equations** (for instance for depicting the robot evolution). In this solver, we show that any kind of constraint can be combined, without going into a complex resolution algorithm.
 
 #. We do **not have to linearize**, and thus there is no approximation made here. This means that the equations are directly set in the solver, without transformation. Furthermore, the results are **reliable**: we can guarantee that the actual trajectory is inside the tube :math:`[\mathbf{x}](\cdot)`.
-
 
 
 Now, we will end this tutorial with a last application: a range-only SLAM problem. In this example, the position of the landmarks will be estimated together with the localization of the robot. We will finally see how this can be processed for real-time applications.
