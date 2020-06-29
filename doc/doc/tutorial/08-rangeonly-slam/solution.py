@@ -66,7 +66,7 @@ v_m_boxes = [IntervalVector(2) for _ in v_m]
 # Contractor Network:
 
 cn = ContractorNetwork()
-i=0
+
 t = tdomain.lb()
 prev_t_obs = t
 
@@ -106,8 +106,6 @@ while t < tdomain.ub():
 
   # Display the current slice [x](t)
   fig_map.draw_box(x(t).subvector(0,1))
-  fig_map.save_image(str(i),"png")
-  i=i+1
 
   t+=dt
 
