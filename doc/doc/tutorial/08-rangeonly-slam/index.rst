@@ -39,7 +39,7 @@ The motion of the robot is described by the state equation :math:`\dot{\mathbf{x
   u(t) = 3(\sin(t)^2)+\frac{t}{100}.
 
 | Contrary to the previous lesson, we assume that we know the initial state :math:`\mathbf{x}_0=(0,0,2)^\intercal`. This is common in SLAM problems.
-| We assume that the heading is measured (for instance by using a compass) with a small error:
+| We also assume that the heading is measured (for instance by using a compass) with a small error:
 
 .. math::
 
@@ -47,7 +47,7 @@ The motion of the robot is described by the state equation :math:`\dot{\mathbf{x
 
 where :math:`x_3^*(t)` represents the actual but unknown heading of the robot.
 
-At any time, we assume that the errors :math:`n_u(t)` and :math:`n_{x_3}(t)` are bounded by :math:`[-0.03,0.03]`.
+At any time, we consider that the errors :math:`n_u(t)` and :math:`n_{x_3}(t)` are bounded by :math:`[-0.03,0.03]`.
 
 
 Simulating the truth :math:`\mathbf{x}^*(\cdot)`
@@ -63,7 +63,7 @@ The term *simulation* often refers to the integration of one dynamical system fr
 
   **H.1.** Simulate the system. We will use :math:`\delta` = ``dt`` = :math:`0.05` for implementing the trajectories.
 
-  The simulation can be done with a classical temporal loop and an Euler integration method. With Tubex, we can also compute the system in the trajectory level, without temporal loop. For this, we will define the input of the system as a trajectory, and apply operations on it (from function :math:`\mathbf{f}`) and integrations.
+  The simulation can be done with a classical temporal loop and an Euler integration method. With Tubex, we can also compute the system at the trajectory level (applying operators on entire trajectories), without temporal loop. For this, we will define the input of the system as a trajectory, and apply operations on it (from function :math:`\mathbf{f}`) and integrations.
 
   The following code computes :math:`\mathbf{x}^*(\cdot)`:
 
@@ -116,15 +116,15 @@ The term *simulation* often refers to the integration of one dynamical system fr
 Deadreckoning
 -------------
 
-We will now enclose the trajectory :math:`\mathbf{x}^*(\cdot)` in a tube. For the moment, we do not take into account measurements from the environment. This is what we call *deadreckoning*: we estimate the positions of the robot only from proprioceptive data, coming from :math:`u(\cdot)` and heading measurements.
+We will now enclose the trajectory :math:`\mathbf{x}^*(\cdot)` in a tube. For the moment, we do not take into account measurements from the environment. This is what we call *deadreckoning*: we estimate the positions of the robot only from proprioceptive data, coming from the input :math:`u(\cdot)` and heading measurements.
 
 .. admonition:: Exercise
 
-  **H.2.** As we did for computing :math:`\mathbf{x}^*(\cdot)`, estimate the feasible state trajectories in a tube, according to the uncertainties on :math:`u(\cdot)` and :math:`x_3(\cdot)`. We will assume that the initial state :math:`\mathbf{x}_0` is well known.
+  **H.2.** As we did for the computation of :math:`\mathbf{x}^*(\cdot)`, estimate the feasible state trajectories in a tube, according to the uncertainties on :math:`u(\cdot)` and :math:`x_3(\cdot)`. We will assume that the initial state :math:`\mathbf{x}_0` is well known.
 
-  The functions ``cos``, ``primitive()``, *etc*., can be used on tubes as we did for ``Trajectory`` objects.
+  The functions ``cos``, ``primitive()``, *etc*., can be used on tubes as we did for ``Trajectory`` objects. This will **propagate the uncertainties** during the computations.
 
-  We will also use :math:`\delta` = ``dt`` = :math:`0.05` for the implementation of :math:`[\mathbf{x}](\cdot)`.
+  We will also use :math:`\delta` = ``dt`` = :math:`0.05` for the implementation of the tubes.
 
 
 You should obtain a result similar to:
@@ -133,20 +133,21 @@ You should obtain a result similar to:
   
   In a dead-reckoning situation, the drift cannot be avoided. This is revealed by the thickness of the blue tube, very large around :math:`t_f` where the robot is drawn.
 
+Note that if you obtain a tube :math:`[\mathbf{x}](\cdot)` that encloses accurately the actual trajectory :math:`\mathbf{x}^*(\cdot)` without uncertainties, then you did not correctly propagate information from the input tube :math:`[u](\cdot)`.
 
 .. tip::
   
-  We could use a Contractor Network for this deadreckoning estimation, but the use of simple operators on tubes is also fine, as we do not have observations or complex constraints to consider. If fact, for deadreckoning, we are dealing with a *causal system* where information propagates in one direction from :math:`u(\cdot)` to :math:`\mathbf{x}(\cdot)`:
+  We could use a Contractor Network for this deadreckoning estimation, but the use of simple operators on tubes is also fine, because we do not have observations or complex constraints to consider. If fact, for deadreckoning, we are dealing with a *causal system* where information propagates in one direction from :math:`u(\cdot)` to :math:`\mathbf{x}(\cdot)`:
 
   .. figure:: img/causal_chain.png
     :width: 400px
 
-  The use of a CN (or more generally, contractors) is relevant when we do not know how to propagate the information on sets (when the above graphic reveals loops) and when complex constraints have to be treated.
+  The use of a CN (or more generally, contractors) is relevant when we do not know how to propagate the information on sets (when the above graphic reveals loops) and when complex constraints have to be treated. This is typically the case when one has to consider observations on the sets, as we do in SLAM.
   
 
 
-Perceiving landmarks
---------------------
+Perceiving landmarks and solving a SLAM
+---------------------------------------
 
 The environment is made of 4 landmarks. Their coordinates are given in the following table:
 
@@ -161,22 +162,33 @@ The environment is made of 4 landmarks. Their coordinates are given in the follo
 
 The robot does not know these coordinates (the M of SLAM is for Mapping). Each :math:`t=2k\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`.
 
+We will use a constraint propagation approach to solve the problem. 
+
 .. admonition:: Exercise
 
-  **H.3.** Using a Contractor Network, improve the localization of the robot while simultaneously estimating the position of the landmarks by enclosing them into boxes.
+  **H.3.** First, define the variables of the problem.
+
+  **H.4.** List the involved constraints and the potential decompositions to perform. This may introduce intermediate variables. Note that all the constraints describing this SLAM have been seen in the previous lessons.
+
+  **H.5.** Define the initial domains of the variables:
+
+  * domains for intermediate variables will be set to infinite sets. 
+  * other domains may be initialized from measurements or to infinite sets when nothing is known, as it is the case for the position of the landmarks.
+
+  **H.6.** Using a Contractor Network, improve the localization of the robot while simultaneously estimating the position of the landmarks by enclosing them into boxes.
 
 
 You should obtain a result similar to:
 
 .. figure:: img/slam_final.png
 
-  The gray tube depicts the deadreckoning result while the blue one is the result of SLAM, with environment observations.
+  The gray tube depicts the deadreckoning result while the blue one is the result of SLAM, with environment observations. The landmarks have been localized in the black boxes.
 
 
-Online SLAM
------------
+(optional) Online SLAM
+----------------------
 
-These computations were made offline, assuming that all the data were collected before running the solver.
+These computations were made **offline**, assuming that all the data were collected before running the solver.
 
 We could also use this approach **online** and make the solver run during the evolution of the robot. For this, we will use the ``.contract_during(ctc_dt)`` method instead of ``.contract()``. This way, we will let the solver contract as much as possible the domains **during a given amount of time** ``ctc_dt``. Remaining contractions will be done during the next call to ``.contract_during()``. This allows to spread over time the resolution.
 
@@ -256,9 +268,21 @@ Hence, for real-time SLAM, we can use the following temporal loop:
       fig_map.draw_box(x(max(0.,ibex::previous_float(t))).subvector(0,1));
     }
 
+.. admonition:: Exercise
+
+  **H.7. (optional)** Transform the code of question **H.6** to make it work *online* with boxes :math:`[\mathbf{x}]` contracted in realtime.
+
 You should obtain an animation that looks like this:
 
 .. figure:: img/slam_online.png
+
+  One black box depicts the position set of the robot at the time of the simulation. Old boxes are kept on display. This figure depicts the animation at time :math:`t=t_f`.
+
+
+On the above figure, we can notice that the contracted boxes :math:`[\mathbf{x}]` obtained during the online SLAM are sometimes larger than the blue tube computed offline as post-processing. The reasons are:
+
+* at :math:`t`, the CN online may not have dealt with all the contractors: **some contractions remain to be done**. They will be processed afterwards, and the current box :math:`[\mathbf{x}](t)` does not enclose optimally the set of feasible positions;
+* at :math:`t`, the online SLAM does not take benefit from future measurements, while the offline SLAM was able to propagate all information forward and **backward in time**.
 
 
 
