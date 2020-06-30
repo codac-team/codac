@@ -235,16 +235,16 @@ Now, we will make the robot move and see how we can handle **uncertainties on tr
    :align: right
    :width: 200px
 
-* **Lesson G**: dynamic localization with data association
-* **Lesson H**: range-only SLAM
+* :ref:`sec-tuto-07`
+* :ref:`sec-tuto-08`
 
 | We will use the tubes to solve the problem `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
 | We will end this tutorial with a **range-only SLAM** problem and see how Tubex can be used for **online missions**.
 
 | **Exercise to finish:** (before Monday 6th of July)
-| -- the range-only SLAM, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
+| -- the data association and the range-only SLAM, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
-The following video illustrates the result of Lesson F:
+The following video illustrates the result of Lesson H:
 
 .. raw:: html
 

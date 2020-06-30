@@ -276,8 +276,11 @@ Then you have two options: read the details about the features of Tubex (domains
   /manual/05-dynamic-contractors/index
   /manual/06-contractor-network/index
   /manual/07-graphics/index
-  api_technical_doc
-  /manual/10-dev/index
+
+  /dev/changelog
+  /dev/api_technical_doc
+  /dev/info_dev
+  
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
 
@@ -316,8 +319,8 @@ The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about
   E. Hello tubes </tutorial/05-tubes/index>
   F. Localization with asynchronous measurements </tutorial/06-dyn-rangeonly/index>
 
-  [closed] G. Localization with data association </tutorial/07-data-association/closed>
-  [closed] H. Range-only SLAM </tutorial/08-rangeonly-slam/closed>
+  G. Localization with data association </tutorial/07-data-association/index>
+  H. Range-only SLAM </tutorial/08-rangeonly-slam/index>
 
 
 License and support

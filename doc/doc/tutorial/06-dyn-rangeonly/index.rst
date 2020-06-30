@@ -90,13 +90,14 @@ Before solving a complete range-only localization problem, let us come back to :
 An evaluation constraint has narrowed the tube at :math:`t=2`: the contraction keeps the trajectories going through the box :math:`[\mathbf{y}_i]`. This effect is propagated, backward and forward in time, from :math:`t=2`: the whole tube has been contracted, without other knowledge on :math:`[\mathbf{x}](\cdot)`.
 
 
+.. _sec-tuto-06-formalism:
 
 Dynamic range-only localization
 -------------------------------
 
 We now have all the material to deal with a complete problem.
 
-Let us consider a localization with range-only measurements. A robot is described by the state vector :math:`\mathbf{x}=\{x_1,x_2,\psi,\vartheta\}^\intercal` depicting its position, its heading and its speed. It evolves between three landmarks :math:`\mathbf{b}_1`, :math:`\mathbf{b}_2`, :math:`\mathbf{b}_3` and measures distances :math:`y_i` from these points.
+Let us consider a localization with range-only measurements. A robot is described by the state vector :math:`\mathbf{x}=\{x_1,x_2,\psi,\vartheta\}^\intercal` depicting its position, its heading and its speed. It evolves between three landmarks :math:`\mathbf{b}_1`, :math:`\mathbf{b}_2`, :math:`\mathbf{b}_3` and measures distances :math:`y_i` from these points. We assume that the position and the identity of the landmarks are known.
 
 The problem is defined by:
 
@@ -111,12 +112,12 @@ where :math:`\mathbf{u}(t)` is the input of the system. :math:`g` is the distanc
 
 .. math::
 
-  \mathbf{f}(\mathbf{x})=\left( \begin{array}{c}
+  \mathbf{f}(\mathbf{x},\mathbf{u})=\left( \begin{array}{c}
     \vartheta\cos(\psi) \\
     \vartheta\sin(\psi) \\
     u_1 \\
     u_2
-  \end{array}\right)
+  \end{array}\right)=\dot{\mathbf{x}}.
 
 The actual (but unknown) state trajectory :math:`\mathbf{x}^*(\cdot)` is expressed by:
 
@@ -134,7 +135,6 @@ The input :math:`\mathbf{u}(\cdot)` is unknown, but we assume that we have conti
 
 Finally, we consider three range-only observations :math:`(t_i,y_i)`. They are summarized in the following table, with positions of the landmarks.
 
-
 =============================  =============================  =============================
 Time :math:`t_i`               Distance  :math:`y_i`          Landmark :math:`\mathbf{b}_i`
 =============================  =============================  =============================
@@ -147,10 +147,13 @@ The measurements :math:`y_i` are bounded by the interval :math:`[e_y]=[-0.1,0.1]
 
 
 .. admonition:: Exercise
+  
+  .. _sec-tuto-06-decomposition:
 
   **F.3.** First, the problem requires a decomposition into elementary constraints. This will make appear intermediate variables.
 
-  **F.4.** Define the domains for all the variables involved in the problem.
+  | **F.4.** Define the domains for all the variables involved in the problem.
+  | We also consider that :math:`t\in[0,3]`.
 
   **F.5.** In a figure, display the three landmarks and the related range-only bounded measurements.
 
