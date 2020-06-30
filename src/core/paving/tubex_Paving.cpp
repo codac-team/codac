@@ -209,4 +209,15 @@ namespace tubex
 
     return v_connected_subsets;
   }
+
+  void Paving::clear_children()
+  {
+      assert(!this->is_leaf());
+      assert(this->value()==SetValue::IN || this->value()==SetValue::OUT);
+      delete m_first_subpaving;
+      delete m_second_subpaving;
+      m_first_subpaving = NULL;
+      m_second_subpaving = NULL;
+  }
+
 }
