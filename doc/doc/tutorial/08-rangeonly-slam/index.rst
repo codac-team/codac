@@ -19,57 +19,130 @@ This lesson is a summary of all the lessons of this tutorial. We will apply the 
 Robot motion
 ------------
 
-Consider a robot at position :math:`(x_1,x_2)` moving in an unknown environment.
-Its motion is described by the state equations:
+Consider a robot moving in an unknown environment and described by the state :math:`\mathbf{x}=(x_1,x_2,x_3)^\intercal`, with :math:`x_1,x_2` its 2d position and :math:`x_3` its heading. The evolution of :math:`\mathbf{x}` over time is represented by the trajectory :math:`\mathbf{x}(\cdot):[t_0,t_f]\rightarrow\mathbb{R}^3`, with :math:`t_0=0` and :math:`t_f=15`.
+
+The motion of the robot is described by the state equation :math:`\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x},u)` with:
 
 .. math::
 
-  \left\{ \begin{array}{rcl}
-    \dot{x}_1&=&10\cos(x_3) \\
-    \dot{x}_2&=&10\sin(x_3) \\
-    \dot{x}_3&=&u + n_u
-  \end{array}\right.
+  \mathbf{f}(\mathbf{x},u)=\left( \begin{array}{c}
+    10\cos(x_3) \\
+    10\sin(x_3) \\
+    u + n_u
+  \end{array}\right),
 
-where :math:`x_3` is the heading of the vehicle, :math:`u` is the desired rotational speed and :math:`n_u` is a noise.
-The simulation runs from :math:`t_0=0` to :math:`t_f=15`.
-
-Contrary to the previous lesson, we assume that we know the initial state :math:`\mathbf{x}_0=(0,0,2)^\intercal`. This is common in SLAM problems.
-
-The desired input :math:`u(t)` is chosen as:
+| where :math:`u` is the desired rotational speed (input of the system) and :math:`n_u` is a noise.
+| The desired input :math:`u(t)` is chosen as:
 
 .. math::
 
   u(t) = 3(\sin(t)^2)+\frac{t}{100}.
 
-We assume that the heading is measured (for instance by using a compass) with a small error:
+| Contrary to the previous lesson, we assume that we know the initial state :math:`\mathbf{x}_0=(0,0,2)^\intercal`. This is common in SLAM problems.
+| We assume that the heading is measured (for instance by using a compass) with a small error:
 
 .. math::
 
-  x_3^m(t) = x_3^*(t) + n_{x_3}(t).
+  x_3^m(t) = x_3^*(t) + n_{x_3}(t),
+
+where :math:`x_3^*(t)` represents the actual but unknown heading of the robot.
 
 At any time, we assume that the errors :math:`n_u(t)` and :math:`n_{x_3}(t)` are bounded by :math:`[-0.03,0.03]`.
 
+
+Simulating the truth :math:`\mathbf{x}^*(\cdot)`
+------------------------------------------------
+
+The term *simulation* often refers to the integration of one dynamical system from a known initial condition. The system we are dealing with is :math:`\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x},u)` and its initial condition is :math:`\mathbf{x}_0`. We will first compute the trajectory :math:`\mathbf{x}^*(\cdot)` solution of this system, without uncertainties, and call it the *truth*.
+
+.. important::
+
+  Of course, the computation of :math:`\mathbf{x}^*(\cdot)` will not be reliable: the result will depend on the integration timestep and the :math:`\delta` parameter used to represent the trajectory. We will only use the result for visualization. 
+
 .. admonition:: Exercise
 
-  **H.1.** Simulate the system using a uniform random noise (or a ``RandTrajectory``) and draw the tube enclosing the trajectory :math:`\mathbf{x}^*(\cdot)`. We will use :math:`\delta` = ``dt`` = :math:`0.05` for implementing trajectories and tubes.
+  **H.1.** Simulate the system. We will use :math:`\delta` = ``dt`` = :math:`0.05` for implementing the trajectories.
 
-  The tube of derivatives :math:`[\mathbf{v}](\cdot)` (containing the solutions of :math:`\dot{\mathbf{x}}(\cdot)`) can be computed with arithmetic functions. Furthermore, in this dead-reckoning situation (where only the initial state and the motion are known), the tube :math:`[\mathbf{x}](\cdot)` can be obtained as the primitive of :math:`[\mathbf{v}](\cdot)`:
+  The simulation can be done with a classical temporal loop and an Euler integration method. With Tubex, we can also compute the system in the trajectory level, without temporal loop. For this, we will define the input of the system as a trajectory, and apply operations on it (from function :math:`\mathbf{f}`) and integrations.
+
+  The following code computes :math:`\mathbf{x}^*(\cdot)`:
 
   .. tabs::
 
     .. code-tab:: py
 
-      x = v.primitive() + IntervalVector(x0) # dead reckoning
+      # ...
+
+      # Initial pose x0=(0,0,2)
+      x0 = (0,0,2)
+
+      # System input
+      u = Trajectory(tdomain, TFunction("3*(sin(t)^2)+t/100"))
+
+      # Actual trajectories (state + derivative)
+      v_truth = TrajectoryVector(3)
+      x_truth = TrajectoryVector(3)
+      v_truth[2] = u
+      x_truth[2] = v_truth[2].primitive() + x0[2]
+      v_truth[0] = 10*cos(x_truth[2])
+      v_truth[1] = 10*sin(x_truth[2])
+      x_truth[0] = v_truth[0].primitive() + x0[0]
+      x_truth[1] = v_truth[1].primitive() + x0[1]
 
     .. code-tab:: cpp
 
-      TubeVector x = v.primitive() + x0; // dead reckoning
+      // ...
+
+      // Initial pose x0=(0,0,2)
+      Vector x0({0,0,2});
+
+      // System input
+      Trajectory u(tdomain, TFunction("3*(sin(t)^2)+t/100"));
+
+      // Actual trajectories (state + derivative)
+      TrajectoryVector v_truth(3);
+      TrajectoryVector x_truth(3);
+      v_truth[2] = u;
+      x_truth[2] = v_truth[2].primitive() + x0[2];
+      v_truth[0] = 10*cos(x_truth[2]);
+      v_truth[1] = 10*sin(x_truth[2]);
+      x_truth[0] = v_truth[0].primitive() + x0[0];
+      x_truth[1] = v_truth[1].primitive() + x0[1];
+
+  | Create a new project with this simulation.
+  | Add a noise on :math:`u(\cdot)` as mentioned in the presentation of the problem, and display the result.
+
+
+Deadreckoning
+-------------
+
+We will now enclose the trajectory :math:`\mathbf{x}^*(\cdot)` in a tube. For the moment, we do not take into account measurements from the environment. This is what we call *deadreckoning*: we estimate the positions of the robot only from proprioceptive data, coming from :math:`u(\cdot)` and heading measurements.
+
+.. admonition:: Exercise
+
+  **H.2.** As we did for computing :math:`\mathbf{x}^*(\cdot)`, estimate the feasible state trajectories in a tube, according to the uncertainties on :math:`u(\cdot)` and :math:`x_3(\cdot)`. We will assume that the initial state :math:`\mathbf{x}_0` is well known.
+
+  The functions ``cos``, ``primitive()``, *etc*., can be used on tubes as we did for ``Trajectory`` objects.
+
+  We will also use :math:`\delta` = ``dt`` = :math:`0.05` for the implementation of :math:`[\mathbf{x}](\cdot)`.
+
 
 You should obtain a result similar to:
 
 .. figure:: img/slam_deadrecko.png
   
-  In a dead-reckoning situation, the drift cannot be avoided. This is revealed by the thickness of the blue tube, very large around :math:`t_f`.
+  In a dead-reckoning situation, the drift cannot be avoided. This is revealed by the thickness of the blue tube, very large around :math:`t_f` where the robot is drawn.
+
+
+.. tip::
+  
+  We could use a Contractor Network for this deadreckoning estimation, but the use of simple operators on tubes is also fine, as we do not have observations or complex constraints to consider. If fact, for deadreckoning, we are dealing with a *causal system* where information propagates in one direction from :math:`u(\cdot)` to :math:`\mathbf{x}(\cdot)`:
+
+  .. figure:: img/causal_chain.png
+    :width: 400px
+
+  The use of a CN (or more generally, contractors) is relevant when we do not know how to propagate the information on sets (when the above graphic reveals loops) and when complex constraints have to be treated.
+  
 
 
 Perceiving landmarks
@@ -90,12 +163,14 @@ The robot does not know these coordinates (the M of SLAM is for Mapping). Each :
 
 .. admonition:: Exercise
 
-  **H.2.** Using a Contractor Network, improve the localization of the robot while simultaneously estimating the position of the landmarks by enclosing them into boxes.
+  **H.3.** Using a Contractor Network, improve the localization of the robot while simultaneously estimating the position of the landmarks by enclosing them into boxes.
 
 
 You should obtain a result similar to:
 
 .. figure:: img/slam_final.png
+
+  The gray tube depicts the deadreckoning result while the blue one is the result of SLAM, with environment observations.
 
 
 Online SLAM

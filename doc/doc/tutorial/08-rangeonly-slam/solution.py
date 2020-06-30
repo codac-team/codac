@@ -65,51 +65,51 @@ v_m_boxes = [IntervalVector(2) for _ in v_m]
 
 # Contractor Network:
 
-cn = ContractorNetwork()
-
-t = tdomain.lb()
-prev_t_obs = t
-
-while t < tdomain.ub():
-
-  if t-prev_t_obs > 2*dt: # new observation each 2*delta
-    
-    # Creating new observation to a random landmark
-
-    landmark_id = random.randint(0,len(v_m)-1) # a random landmark is perceived
-
-    pos_x = x_truth(t)[0:2]
-    pos_b = v_m[landmark_id]
-
-    y = Interval(sqrt(pow(pos_x[0]-pos_b[0],2)+pow(pos_x[1]-pos_b[1],2)))
-    y.inflate(0.03) # adding range bounded uncertainty
-
-    prev_t_obs = t
-
-    # Adding related observation constraints to the network
-
-    # Alias (for ease of reading)
-    b = v_m_boxes[landmark_id]
-
-    # Intermediate variables
-    ti = cn.create_dom(Interval(t))
-    yi = cn.create_dom(y)
-    xi = cn.create_dom(IntervalVector(3))
-
-    # Contractors
-    cn.add(ctc.eval, [ti, xi, x, v])
-    cn.add(ctc.dist, [xi[0], xi[1], b[0], b[1], yi])
-
-  contraction_dt = cn.contract_during(iteration_dt)
-  if iteration_dt>contraction_dt:
-    time.sleep(iteration_dt-contraction_dt) # iteration delay
-
-  # Display the current slice [x](t)
-  fig_map.draw_box(x(t).subvector(0,1))
-
-  t+=dt
-
-cn.contract(True) # lets the solver run the remaining contractions
+#cn = ContractorNetwork()
+#
+#t = tdomain.lb()
+#prev_t_obs = t
+#
+#while t < tdomain.ub():
+#
+#  if t-prev_t_obs > 2*dt: # new observation each 2*delta
+#    
+#    # Creating new observation to a random landmark
+#
+#    landmark_id = random.randint(0,len(v_m)-1) # a random landmark is perceived
+#
+#    pos_x = x_truth(t)[0:2]
+#    pos_b = v_m[landmark_id]
+#
+#    y = Interval(sqrt(pow(pos_x[0]-pos_b[0],2)+pow(pos_x[1]-pos_b[1],2)))
+#    y.inflate(0.03) # adding range bounded uncertainty
+#
+#    prev_t_obs = t
+#
+#    # Adding related observation constraints to the network
+#
+#    # Alias (for ease of reading)
+#    b = v_m_boxes[landmark_id]
+#
+#    # Intermediate variables
+#    ti = cn.create_dom(Interval(t))
+#    yi = cn.create_dom(y)
+#    xi = cn.create_dom(IntervalVector(3))
+#
+#    # Contractors
+#    cn.add(ctc.eval, [ti, xi, x, v])
+#    cn.add(ctc.dist, [xi[0], xi[1], b[0], b[1], yi])
+#
+#  contraction_dt = cn.contract_during(iteration_dt)
+#  if iteration_dt>contraction_dt:
+#    time.sleep(iteration_dt-contraction_dt) # iteration delay
+#
+#  # Display the current slice [x](t)
+#  fig_map.draw_box(x(t).subvector(0,1))
+#
+#  t+=dt
+#
+#cn.contract(True) # lets the solver run the remaining contractions
 
 fig_map.show()
 for b in v_m_boxes:
