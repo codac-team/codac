@@ -1,9 +1,11 @@
 Unreleased yet (in development)
 ===============================
 
-.. Features added
-.. --------------
-.. 
+Features added
+--------------
+
+* :commit:`72ec9b2aaf6568ed82159dbe927b3931272f727b`: possibility to create ``TrajectoryVector`` or ``TubeVector`` from lists in Python
+
 .. Changes
 .. -------
 .. 

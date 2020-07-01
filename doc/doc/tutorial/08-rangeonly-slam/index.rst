@@ -152,7 +152,7 @@ Perceiving landmarks and solving a SLAM
 The environment is made of 4 landmarks. Their coordinates are given in the following table:
 
   =========  =============================
-  :math:`i`  Landmark :math:`\mathbf{b}_i`
+  :math:`j`  Landmark :math:`\mathbf{b}_j`
   =========  =============================
   :math:`0`  :math:`(6,12)^\intercal`
   :math:`1`  :math:`(-2,-5)^\intercal`
@@ -160,7 +160,7 @@ The environment is made of 4 landmarks. Their coordinates are given in the follo
   :math:`3`  :math:`(3,4)^\intercal`
   =========  =============================
 
-The robot does not know these coordinates (the M of SLAM is for Mapping). Each :math:`t=2k\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`.
+Each :math:`t=2k\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`. The robot does not know the landmarks coordinates (the M of SLAM is for Mapping), but it knows which landmark :math:`\mathbf{b}_j` is being observed (the landmarks are *identified*). 
 
 We will use a constraint propagation approach to solve the problem. 
 
