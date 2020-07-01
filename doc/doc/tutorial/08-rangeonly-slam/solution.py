@@ -15,7 +15,7 @@ tdomain = Interval(0,15) # [t0,tf]
 x0 = (0,0,2)
 
 # System input
-u = Trajectory(tdomain, TFunction("3*(sin(t)^2)+t/100"))
+u = Trajectory(tdomain, TFunction("3*(sin(t)^2)+t/100"), dt)
 
 # Noise
 i_n = Interval(-0.03,0.03) # the noises are known to be bounded by i_n

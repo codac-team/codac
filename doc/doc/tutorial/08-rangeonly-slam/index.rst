@@ -77,7 +77,7 @@ The term *simulation* often refers to the integration of one dynamical system fr
       x0 = (0,0,2)
 
       # System input
-      u = Trajectory(tdomain, TFunction("3*(sin(t)^2)+t/100"))
+      u = Trajectory(tdomain, TFunction("3*(sin(t)^2)+t/100"), dt)
 
       # Actual trajectories (state + derivative)
       v_truth = TrajectoryVector(3)
@@ -97,7 +97,7 @@ The term *simulation* often refers to the integration of one dynamical system fr
       Vector x0({0,0,2});
 
       // System input
-      Trajectory u(tdomain, TFunction("3*(sin(t)^2)+t/100"));
+      Trajectory u(tdomain, TFunction("3*(sin(t)^2)+t/100"), dt);
 
       // Actual trajectories (state + derivative)
       TrajectoryVector v_truth(3);
