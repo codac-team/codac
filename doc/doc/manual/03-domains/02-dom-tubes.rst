@@ -270,6 +270,27 @@ produces (each dimension displayed on the same figure):
 ..   vibes::endDrawing();
 .. }
 
+.. versionadded:: 3.0.10
+  The definition of a ``TubeVector`` can also be done from a list. The above example could be written as:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      # TubeVector as a list of scalar tubes
+      x = TubeVector([ \
+          Tube(tdomain, dt, TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]))")), \
+          Tube(tdomain, dt, TFunction("cos(t)+sin(t/0.2)*[-0.1,0.1]")) \
+        ])
+
+    .. code-tab:: c++
+
+      // TubeVector as a list of scalar tubes
+      TubeVector x({
+          Tube(tdomain, dt, TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]))")),
+          Tube(tdomain, dt, TFunction("cos(t)+sin(t/0.2)*[-0.1,0.1]"))
+        });
+
 As for ``Vector`` and ``IntervalVector`` objects, a ``Tube`` component of a ``TubeVector`` is available by reference with ``[]``.
 Vector operations are also at hand:
 
