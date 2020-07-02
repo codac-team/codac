@@ -1,3 +1,5 @@
+:orphan:
+
 .. _sec-tuto-dynamic-loc:
 
 .. warning::
