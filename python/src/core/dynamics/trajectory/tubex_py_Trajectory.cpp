@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_Trajectory(py::module& m)
 {
-  py::class_<Trajectory> trajectory(m, "Trajectory", "todo");
+  py::class_<Trajectory> trajectory(m, "Trajectory", TRAJECTORY_MAIN);
   trajectory
 
   // Definition

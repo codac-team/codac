@@ -91,7 +91,7 @@ vector<tubex::Domain> pylist_to_vectordomains(py::list lst)
 
 void export_ContractorNetwork(py::module& m)
 {
-  py::class_<ContractorNetwork> cn(m, "ContractorNetwork", "todo");
+  py::class_<ContractorNetwork> cn(m, "ContractorNetwork", CONTRACTORNETWORK_MAIN);
   cn
 
   // Definition

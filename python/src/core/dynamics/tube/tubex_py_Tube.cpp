@@ -29,7 +29,7 @@ using namespace pybind11::literals;
 
 void export_Tube(py::module& m)
 {
-  py::class_<Tube> tube(m, "Tube", "todo");
+  py::class_<Tube> tube(m, "Tube", TUBE_MAIN);
   tube
 
   // Definition

@@ -39,7 +39,7 @@ state_truth = TrajectoryVector(tdomain, \
 
 # Sets of trajectories
 
-dt = 0.02 # tube timestep
+dt = 0.05 # tube timestep
 state_truth[2].sample(dt).make_continuous()
 
 x = TubeVector(tdomain, dt, 3) # unbounded 2d tube vector
@@ -87,6 +87,9 @@ ctc_constell = myCtc(v_map) # constellation constraint
 
 cn = ContractorNetwork()
 
+ctc.eval.enable_time_propag(False)
+cn.add(ctc.deriv, [x,v])
+
 for i in range(0,len(v_obs)):
   
   # Measurement i
@@ -115,7 +118,7 @@ beginDrawing()
 fig_map = VIBesFigMap("Map")
 fig_map.set_properties(1450, 50, 1000, 600)
 fig_map.add_tube(x, "x", 0, 1)
-fig_map.add_trajectory(state_truth, "x*", 0, 1, 2, "blue")
+fig_map.add_trajectory(state_truth, "x*", 0, 1, 2, "white")
 fig_map.add_observations(v_obs, state_truth)
 for b in v_map:
   fig_map.add_beacon(b.inflate(2))

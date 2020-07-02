@@ -27,16 +27,27 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
+TubeVector* create_tubevector_from_list(py::list& lst)
+{
+  if(lst.size() < 1)
+    throw std::invalid_argument("Empty tube list");
+  
+  TubeVector *instance = new TubeVector(lst.size(), lst[0].cast<Tube>());
+  for(size_t i = 1 ; i < lst.size() ; i++)
+    (*instance)[i] = lst[i].cast<Tube>();
+  return instance;
+}
+
 void export_TubeVector(py::module& m)
 {
-  py::class_<TubeVector> tube_vector(m, "TubeVector", "todo");
+  py::class_<TubeVector> tube_vector(m, "TubeVector", TUBEVECTOR_MAIN);
   tube_vector
 
   // Definition
 
     .def(py::init<const Interval&,int>(),
       TUBEVECTOR_TUBEVECTOR_INTERVAL_INT,
-      "domain"_a, "n"_a=1)
+      "domain"_a, "n"_a)
 
     .def(py::init<const Interval&,const IntervalVector &>(),
       TUBEVECTOR_TUBEVECTOR_INTERVAL_INTERVALVECTOR,
@@ -44,7 +55,7 @@ void export_TubeVector(py::module& m)
 
     .def(py::init<const Interval&,double,int>(),
       TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INT,
-      "domain"_a, "timestep"_a, "n"_a=1)
+      "domain"_a, "timestep"_a, "n"_a)
 
     .def(py::init<const Interval&,double,const IntervalVector &>(),
       TUBEVECTOR_TUBEVECTOR_INTERVAL_DOUBLE_INTERVALVECTOR,
@@ -58,7 +69,8 @@ void export_TubeVector(py::module& m)
       TUBEVECTOR_TUBEVECTOR_VECTORINTERVAL_VECTORINTERVALVECTOR,
       "v_tdomains"_a, "v_codomains"_a)
 
-    .def(py::init<initializer_list<Tube>>(),
+    // Used instead of .def(py::init<initializer_list<Tube>>(),
+    .def(py::init(&create_tubevector_from_list),
       TUBEVECTOR_TUBEVECTOR_INITIALIZERLISTTUBE,
       "list"_a)
 

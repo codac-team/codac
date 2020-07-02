@@ -18,28 +18,27 @@
 #include "tubex_Domain.h"
 #include "tubex_DynCtc.h"
 
-using namespace std;
-using namespace tubex;
 
-
-class pyDynCtc : public DynCtc
+namespace tubex
 {
-  public:
+  class pyDynCtc : public DynCtc
+  {
+    public:
 
-    using DynCtc::DynCtc;
+      using DynCtc::DynCtc;
 
-    // Trampoline (need one for each virtual function)
-    void contract(vector<Domain*>& v_domains) override
-    {
-      PYBIND11_OVERLOAD_PURE
-      (
-        void,     // return type
-        DynCtc,   // Parent class
-        contract, // Name of function
-        v_domains // Argument(s)
-      );
-    }
-};
-
+      // Trampoline (need one for each virtual function)
+      void contract(std::vector<Domain*>& v_domains) override
+      {
+        PYBIND11_OVERLOAD_PURE
+        (
+          void,     // return type
+          DynCtc,   // Parent class
+          contract, // Name of function
+          v_domains // Argument(s)
+        );
+      }
+  };
+}
 
 #endif

@@ -1,0 +1,211 @@
+Unreleased yet (in development)
+===============================
+
+Features added
+--------------
+
+* :commit:`72ec9b2aaf6568ed82159dbe927b3931272f727b`: possibility to create ``TrajectoryVector`` or ``TubeVector`` from lists in Python
+
+.. Changes
+.. -------
+.. 
+.. Dependencies
+.. ------------
+
+.. Bugs fixed
+.. ----------
+
+.. Deprecated
+.. ----------
+
+Documentation
+-------------
+
+* added the FAQ page
+
+
+-----------------------------------------------------------------
+
+Release 3.0.9 (released `Jun 28, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.9>`_)
+======================================================================================================
+
+`Commits since previous release 3.0.8 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.8...v3.0.9>`_
+
+Bugs fixed
+----------
+
+* :commit:`26bce8a2f7f2e0077a128c296332b6e326fa6381`: ``Trajectory::make_continuous()``, error encountered in *datasso*
+* :commit:`33f3b0db2b3995e18e62316632ccf5a87f6dd2da`: corrected bug in ``RandTrajectory``
+
+Documentation
+-------------
+
+* added this changelog page
+
+
+-----------------------------------------------------------------
+
+Releases 3.0.6 -- 3.0.8 (released `Jun 23, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.8>`_)
+================================================================================================================
+
+`Commits since previous release 3.0.5 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.5...v3.0.8>`_
+
+Features added
+--------------
+
+* added new contractor ``CtcLinobs``
+* :commit:`5d7be8a`: predefined value ``oo`` for infinity in C++ (already exists in Python)
+* :commit:`92dae58`: added ``Figure::view_box()`` Python binding
+* :commit:`2c882a2`: drawing polygons
+* Compatibilities with Windows OS (improving compatibilities with macOS)
+
+Changes
+-------
+
+* :commit:`075104a`: Python binding, ``TubeVector``, removing default value ``n`` in constructor
+
+Bugs fixed
+----------
+
+* :commit:`be1c4b5`: ``RandTrajectory``, values were outside bounds
+* :commit:`6f78d94`: added *Linobs* example
+* :commit:`e19f459`: ``CtcDeriv``, restoring performances of V2 (polygons)
+
+Documentation
+-------------
+
+* Lessons E and F
+* Install page: Windows/Python
+* ``VIBesFigTube``
+* updated docstring from XML script
+* how to concatenate two boxes
+
+
+-----------------------------------------------------------------
+
+Release 3.0.5 (released `Jun 14, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.5>`_)
+======================================================================================================
+
+`Commits since previous release 3.0.4 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.4...v3.0.5>`_
+
+Changes
+-------
+
+* :commit:`962c219`: renaming from ``input2index()`` to ``time_to_index()``
+* revising whole Python binding
+* :commit:`e0a6c64`: ``CtcEval``, removing ``contract()`` methods with const args
+
+Bugs fixed
+----------
+
+* :commit:`79fd1f4`: ``VIBesFig::draw_pie``: corrected bug in case of ``r.lb() == 0``
+* :commit:`6febe83`: fixing *datasso* example in Python
+* :commit:`193bc95` fixing ``Tools::rand_in_bounds()``
+
+Documentation
+-------------
+
+* Lesson C
+* inverting ``py`` and ``cpp`` tabs in the manual
+* added docstring from XML script
+
+
+-----------------------------------------------------------------
+
+Release 3.0.4 (released `Jun 10, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.4>`_)
+======================================================================================================
+
+`Commits since previous release 3.0.3 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.3...v3.0.4>`_
+
+Features added
+--------------
+
+* :commit:`40a8ea6`: Python binding, ``abs()`` for any type
+
+Documentation
+-------------
+
+* updated Lessons A and B
+* table in Install pages with configurations
+
+
+-----------------------------------------------------------------
+
+Release 3.0.3 (released `Jun 7, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.3>`_)
+======================================================================================================
+
+`Commits since previous release 3.0.2 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.2...v3.0.3>`_
+
+Changes
+-------
+
+* :commit:`10110d5`: optimizing add of ``CtcDeriv`` in CN
+
+Bugs fixed
+----------
+
+* :commit:`5934513`: ``VIBesFigMap``, do not crash in case of empty observations
+
+
+-----------------------------------------------------------------
+
+Release 3.0.2 (released `Jun 6, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.2>`_)
+======================================================================================================
+
+`Commits since previous release 3.0.1 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.1...v3.0.2>`_
+
+Changes
+-------
+
+* :commit:`b1dcd55`: updated arithmetic for Python binding
+* :commit:`1b7e4f9`: using ``BoolInterval`` in Python scripts
+
+Documentation
+-------------
+
+* updated Lessons A and B
+* Install page: Windows/Python
+* :commit:`5e3555d`: spell checking
+
+
+-----------------------------------------------------------------
+
+Release 3.0.1 (released `Jun 5, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.1>`_)
+======================================================================================================
+
+`Commits since previous release 3.0.0 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.0-beta5...v3.0.1>`_
+
+Features added
+--------------
+
+* :commit:`16408f9`: shortcut ``oo`` available in tubex module
+* :commit:`67b1709`: Tubex available online with Python
+
+Dependencies
+------------
+
+* :commit:`fedbdb0`: pyibex 1.8.1 at least
+* :commit:`e6adc26`: using version 2.5.0 of pybind11
+
+Bugs fixed
+----------
+
+* :commit:`c8063dd`: ``VIBesFig``, display a point if ``box.max_diam() == 0``
+
+Documentation
+-------------
+
+* updated Lessons A and B
+* ``CtcDist``, ``CtcFunction`` doc
+
+
+-----------------------------------------------------------------
+
+Previous versions
+=================
+
+The changelog for versions before 3.0.1 can be found `on GitHub history <https://github.com/SimonRohou/tubex-lib/commits/master>`_.
+
+* **v3.0** (released `Jun 3, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.0-beta5>`_)
+* **v2.0** (released `Aug 12, 2019 <https://github.com/SimonRohou/tubex-lib/releases/tag/v2.0.0>`_)
+* **v1.0** (released `May 5, 2017 <https://github.com/SimonRohou/tubex-lib/releases/tag/v1.0.0>`_)

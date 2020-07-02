@@ -33,15 +33,22 @@ Corrections:
 
 **Week 3: June 22 -- June 28**
 
-* **Lesson E**: not yet available
+* :ref:`sec-tuto-05`
+* :ref:`sec-tuto-06`
 
 Corrections:
 
-* `tubex-lib/examples/tuto/04_dyn_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/tuto/examples/tuto/04_dyn_rangeonly>`_
+* `tubex-lib/doc/doc/tutorial/05-tubes/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/05-tubes/solution.py>`_
+* `tubex-lib/doc/doc/tutorial/06-dyn-rangeonly/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/06-dyn-rangeonly/solution.py>`_
 
 ------------------------------------------------------
 
 **Week 4: June 29 -- July 5**
 
-* **Lesson F**: not yet available
-* **Lesson G**: not yet available
+* :ref:`sec-tuto-07`
+* :ref:`sec-tuto-08`
+
+Corrections:
+
+* `tubex-lib/doc/doc/tutorial/07-data-association/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/07-data-association/solution.py>`_
+* `tubex-lib/doc/doc/tutorial/08-rangeonly-slam/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/08-rangeonly-slam/solution.py>`_

@@ -28,7 +28,7 @@ using namespace pybind11::literals;
 
 void export_VIBesFigMap(py::module& m)
 {
-  py::class_<VIBesFigMap,VIBesFig> fig_map(m, "VIBesFigMap", "todo");
+  py::class_<VIBesFigMap,VIBesFig> fig_map(m, "VIBesFigMap", VIBESFIGMAP_MAIN);
   fig_map
 
   // Basics

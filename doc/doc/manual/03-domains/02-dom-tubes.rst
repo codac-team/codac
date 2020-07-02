@@ -69,20 +69,20 @@ To create a ``Tube`` with a constant codomain:
     # 100-slices tubes:
     dt = 0.1 
     x3 = Tube(tdomain, dt, Interval(0,2))            # [0,10]→[0,2]
-    x4 = Tube(tdomain, dt, Interval.POS_REALS)       # [0,10]→[0,∞]
+    x4 = Tube(tdomain, dt, Interval(0,oo))           # [0,10]→[0,∞]
 
   .. code-tab:: c++
 
-    Interval tdomain(0.,10.);
+    Interval tdomain(0,10);
     
     // One-slice tubes:
     Tube x1(tdomain);                                // [0,10]→[-∞,∞]
-    Tube x2(tdomain, Interval(0.,2.));               // [0,10]→[0,2]
+    Tube x2(tdomain, Interval(0,2));                 // [0,10]→[0,2]
 
     // 100-slices tubes:
     float dt = 0.1;
-    Tube x3(tdomain, dt, Interval(0.,2.));           // [0,10]→[0,2]
-    Tube x4(tdomain, dt, Interval::pos_reals());     // [0,10]→[0,∞]
+    Tube x3(tdomain, dt, Interval(0,2));             // [0,10]→[0,2]
+    Tube x4(tdomain, dt, Interval(0,oo));            // [0,10]→[0,∞]
 
 The ``dt`` variable defines the temporal width of the slices. Note that it is also possible to create slices of different width; this will be explained afterwards.
 
@@ -269,6 +269,27 @@ produces (each dimension displayed on the same figure):
 .. 
 ..   vibes::endDrawing();
 .. }
+
+.. versionadded:: 3.0.10
+  The definition of a ``TubeVector`` can also be done from a list. The above example could be written as:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      # TubeVector as a list of scalar tubes
+      x = TubeVector([ \
+          Tube(tdomain, dt, TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]))")), \
+          Tube(tdomain, dt, TFunction("cos(t)+sin(t/0.2)*[-0.1,0.1]")) \
+        ])
+
+    .. code-tab:: c++
+
+      // TubeVector as a list of scalar tubes
+      TubeVector x({
+          Tube(tdomain, dt, TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]))")),
+          Tube(tdomain, dt, TFunction("cos(t)+sin(t/0.2)*[-0.1,0.1]"))
+        });
 
 As for ``Vector`` and ``IntervalVector`` objects, a ``Tube`` component of a ``TubeVector`` is available by reference with ``[]``.
 Vector operations are also at hand:
@@ -567,13 +588,13 @@ See also the following methods:
 
   .. code-tab:: py
 
-    x.set(Interval.POS_REALS)     # set a constant codomain for all t
+    x.set(Interval(0,oo))         # set a constant codomain for all t
     x.set(Interval(0), 4.)        # set a value at some t: [x](4)=[0]
     x.set_empty()                 # empty set for all t
 
   .. code-tab:: c++
 
-    x.set(Interval::pos_reals()); // set a constant codomain for all t
+    x.set(Interval(0,oo));        // set a constant codomain for all t
     x.set(Interval(0.), 4.);      // set a value at some t: [x](4)=[0]
     x.set_empty();                // empty set for all t
 
@@ -622,7 +643,7 @@ Next pages will present reliable operators to reduce the range of the presented 
 ..   Interval tdomain(0.,10.);
 .. 
 ..   TrajectoryVector traj(tdomain, TFunction("(cos(t) ; cos(t)+t/10)"));
-..   Tube x(tdomain, Interval::empty_set());
+..   Tube x(tdomain, Interval::EMPTY_SET);
 .. 
 ..   double t = tdomain.lb();
 ..   while(t < tdomain.ub())

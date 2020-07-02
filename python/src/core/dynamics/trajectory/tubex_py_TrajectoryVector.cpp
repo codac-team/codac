@@ -27,9 +27,20 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
+TrajectoryVector* create_trajectoryvector_from_list(py::list& lst)
+{
+  if(lst.size() < 1)
+    throw std::invalid_argument("Empty Trajectory list");
+  
+  TrajectoryVector *instance = new TrajectoryVector(lst.size());
+  for(size_t i = 0 ; i < lst.size() ; i++)
+    (*instance)[i] = lst[i].cast<Trajectory>();
+  return instance;
+}
+
 void export_TrajectoryVector(py::module& m)
 {
-  py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector", "todo");
+  py::class_<TrajectoryVector> trajectoryvector(m, "TrajectoryVector", TRAJECTORYVECTOR_MAIN);
   trajectoryvector
 
   // Definition
@@ -54,7 +65,8 @@ void export_TrajectoryVector(py::module& m)
       TRAJECTORYVECTOR_TRAJECTORYVECTOR_VECTORMAPDOUBLEDOUBLE,
       "v_map_values"_a)
 
-    .def(py::init<initializer_list<Trajectory>>(),
+    // Used instead of .def(py::init<initializer_list<Trajectory>>(),...
+    .def(py::init(&create_trajectoryvector_from_list),
       TRAJECTORYVECTOR_TRAJECTORYVECTOR_INITIALIZERLISTTRAJECTORY,
       "list"_a)
 

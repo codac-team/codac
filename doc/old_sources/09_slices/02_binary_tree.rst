@@ -1,4 +1,0 @@
-Optional binary tree structure
-==============================
-
-.

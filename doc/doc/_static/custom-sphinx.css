@@ -1,0 +1,129 @@
+/* Provides a custom style admonition for URL API */
+
+  .rst-content .admonition-technical-documentation
+  {
+    background-color: #EFE7FA;
+  }
+
+  div.admonition-technical-documentation
+  {
+    color: #9B6ADE;
+    background-color: #EFE7FA;
+  }
+
+  div.admonition-technical-documentation p
+  {
+    
+  }
+
+  div.admonition-technical-documentation p.admonition-title
+  {
+    background-color: #9B6ADE;
+  }
+
+  div.admonition-technical-documentation p.admonition-title::before
+  {
+    content: "API";
+    background-color: white;
+    color: #9B6ADE;
+    font-weight: bold;
+    padding: 2px;
+    font-size: 0.8em;
+    margin-right: 7px;
+  }
+
+
+/* Reduces the skip above lists */
+
+  ul.simple
+  {
+    margin-top: -10px;
+  }
+
+
+/* Overrides table width restrictions */
+/* See: https://rackerlabs.github.io/docs-rackspace/tools/rtd-tables.html */
+
+  @media screen and (min-width: 767px)
+  {
+    .wy-table-responsive table.fit-page  td
+    {
+      /* !important prevents the common CSS stylesheets from overriding
+         this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+    }
+
+    .wy-table-responsive .fit-page
+    {
+      overflow: visible !important;
+    }
+  }
+
+
+/* Margin below tables */
+
+  .rst-content table .line-block
+  {
+    margin-bottom: 0;
+  }
+
+
+/* Removing the different color of visited links */
+
+  div.document a:visited
+  {
+    color: #2980B9;
+  }
+
+
+/* Removing details of the vertical menu (for clarity) */
+
+  .wy-menu-vertical li.current ul
+  {
+    display: none;
+  }
+
+  .wy-menu-vertical li.on a:hover span.toctree-expand, .wy-menu-vertical li.current > a:hover span.toctree-expand, .wy-menu-vertical li.on a span.toctree-expand, .wy-menu-vertical li.current > a span.toctree-expand
+  {
+    display: none;
+  }
+
+
+/* Underlining text on demand */
+
+  .underline
+  {
+    text-decoration: underline;
+  }
+
+
+/*  */
+
+  .wy-table-responsive table td
+  {
+    /*white-space: normal;*/
+  }
+
+
+/* Removes empty space below blocks of code in tabs */
+
+  .rst-content .sphinx-tabs div[class^="highlight"]
+  {
+    margin-bottom: 0;
+  }
+
+
+/* Removes bottom margin in th of tables */
+  
+  table th p
+  {
+    margin-bottom: 0;
+  }
+
+/* Removes space in lists */
+
+.rst-content .section ol p, .rst-content .section ul p
+{
+  margin-bottom: 0;
+  margin-top: 3px;
+}

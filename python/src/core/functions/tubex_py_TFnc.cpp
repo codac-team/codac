@@ -15,9 +15,7 @@
 #include <pybind11/functional.h>
 #include "pyIbex_type_caster.h"
 
-#include "tubex_Tube.h"
-#include "tubex_TubeVector.h"
-#include "tubex_TFnc.h"
+#include "tubex_py_TFnc.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "tubex_py_TFnc_docs.h"
 
@@ -28,56 +26,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-class pyTFnc : public TFnc
-{
-  public:
-
-    using TFnc::TFnc;
-
-    const Tube eval(const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const Tube, TFnc, eval, x);
-    }
-
-    const ibex::Interval eval(const ibex::IntervalVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, x);
-    }
-
-    const ibex::Interval eval(int slice_id,const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, slice_id, x);
-    }
-
-    const ibex::Interval eval(const ibex::Interval &t,const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, t, x);
-    }
-
-    const TubeVector eval_vector(const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const TubeVector, TFnc, eval_vector, x);
-    }
-
-    const ibex::IntervalVector eval_vector(const ibex::IntervalVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, x);
-    }
-
-    const ibex::IntervalVector eval_vector(int slice_id,const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, slice_id, x);
-    }
-
-    const ibex::IntervalVector eval_vector(const ibex::Interval &t,const TubeVector &x) const override
-    {
-      PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, t, x);
-    }
-};
-
 py::class_<TFnc, pyTFnc> export_TFnc(py::module& m)
 {
-  py::class_<TFnc, pyTFnc> fnc(m, "TFnc", "todo");
+  py::class_<TFnc, pyTFnc> fnc(m, "TFnc", TFNC_MAIN);
   fnc
 
     .def(py::init<int,int,bool>(),

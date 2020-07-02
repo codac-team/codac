@@ -28,7 +28,7 @@ using namespace pybind11::literals;
 
 void export_ColorMap(py::module& m)
 {
-  py::class_<ColorMap> color_map(m, "ColorMap", "todo");
+  py::class_<ColorMap> color_map(m, "ColorMap", COLORMAP_MAIN);
 	color_map
 
     .def("is_opaque", &ColorMap::is_opaque,

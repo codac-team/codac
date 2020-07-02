@@ -28,7 +28,7 @@ using namespace pybind11::literals;
 
 void export_VIBesFigTubeVector(py::module& m)
 {
-  py::class_<VIBesFigTubeVector,Figure> fig_tubevector(m, "VIBesFigTubeVector", "todo");
+  py::class_<VIBesFigTubeVector,Figure> fig_tubevector(m, "VIBesFigTubeVector", VIBESFIGTUBEVECTOR_MAIN);
   fig_tubevector
 
   // Basics

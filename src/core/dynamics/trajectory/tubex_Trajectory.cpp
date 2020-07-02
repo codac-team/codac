@@ -405,9 +405,9 @@ namespace tubex
       {
         if(!m_continuous_values.empty())
         {
-          if(prev_value - it.second > periodicity.ub())
+          if(prev_value - it.second > periodicity.diam()*0.9)
             value_mod += periodicity.diam();
-          else if(prev_value - it.second < periodicity.lb())
+          else if(prev_value - it.second < -periodicity.diam()*0.9)
             value_mod -= periodicity.diam();
         }
 

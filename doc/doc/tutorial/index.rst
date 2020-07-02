@@ -78,8 +78,8 @@ Prerequisite for attending the tutorial are:
 * basic knowledge of **Python or C++** (the exercises are available in both languages);
 * although the tutorial is about state estimation, you do not need skills in Kalman or particle filters.
 
-| Tubex is fully supported on Linux systems (C++ and Python3).
-| We are currently working on making Tubex available for Windows and MacOS (any help is welcome!). Meanwhile, we propose :ref:`a Tubex-online solution <sec-py-project-online>`: this will allow you to use Tubex in Python without having to install the library on your machine.
+| Tubex is fully supported on Linux systems (C++ and Python3) and Windows (Python3).
+| We are currently working on making Tubex available for macOS (any help is welcome!). Meanwhile, we propose :ref:`a Tubex-online solution <sec-py-project-online>`: this will allow you to use Tubex in Python without having to install the library on your machine.
 
 
 Contact and registration
@@ -217,14 +217,13 @@ In the second part, we will tackle the problem of **indistinguishable** landmark
    :align: right
    :width: 200px
 
-* **Lesson E**: tubes
-* **Lesson F**: dynamic localization with data association
+* :ref:`sec-tuto-05`
+* :ref:`sec-tuto-06`
 
 Now, we will make the robot move and see how we can handle **uncertainties on trajectories**. This will be done by solving the range-only problem of Lesson B, now in a dynamical context with **asynchronous measurements**. 
-We will then use the tubes to solve the problem `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
 
 | **Exercise to finish:** (before Monday 6th of July)
-| -- the data association with bearing only observations, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
+| -- the range-only localization, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
 
@@ -236,15 +235,16 @@ We will then use the tubes to solve the problem `Set-membership state estimation
    :align: right
    :width: 200px
 
-* **Lesson G**: range-only SLAM
-* **Lesson H**: loop detection in robot trajectories
+* :ref:`sec-tuto-07`
+* :ref:`sec-tuto-08`
 
+| We will use the tubes to solve the problem `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
 | We will end this tutorial with a **range-only SLAM** problem and see how Tubex can be used for **online missions**.
-| The last part of this section will focus on new tools to detect and **prove loops** in robot trajectories from the only knowledge of proprioceptive measurements such as velocities.
 
-**Exercise to finish:** to be defined
+| **Exercise to finish:** (before Monday 6th of July)
+| -- the data association and the range-only SLAM, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
-The following video illustrates the result of Lesson F:
+The following video illustrates the result of Lesson H:
 
 .. raw:: html
 

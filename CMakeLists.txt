@@ -28,10 +28,10 @@
   set(PROJECT_HOMEPAGE_URL "http://simon-rohou.fr/research/tubex-lib")
   message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
-#  if(NOT CMAKE_BUILD_TYPE)
-#    set(CMAKE_BUILD_TYPE Debug)
-#    message(STATUS "Configuring ${PROJECT_NAME} in DEBUG mode as none was specified.")
-#  endif()
+  if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+    message(STATUS "Configuring ${PROJECT_NAME} in DEBUG mode as none was specified.")
+  endif()
 
   
 ################################################################################
@@ -137,12 +137,15 @@
 # Compile sources
 ################################################################################
 
-  add_compile_options(-fPIC) # is it necessary for python binding?
   add_subdirectory(src) # C++ sources
   add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
 
   # Python binding:
+  option(WITH_PYTHON "Build Python binding" OFF)
   if(WITH_PYTHON)
+    if(NOT MSVC)
+      add_compile_options(-fPIC) # is it necessary for python binding?
+    endif()
     add_subdirectory(python)
   endif()
 
@@ -161,6 +164,6 @@
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Maintainer <simon.rohou@ensta-bretagne.fr>")
   set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${TUBEX_URL})
-  # TODO finish deb package
+  # todo: finish deb package
 
   include(CPack)

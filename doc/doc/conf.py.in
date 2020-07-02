@@ -37,13 +37,28 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx_tabs.tabs',
-    'breathe'
+    'breathe',
+    'sphinx_issues'
     #'sphinx.ext.autodoc'
 ]
 
 breathe_projects = {
     "tubex-lib":"../api/xml",
 }
+
+# For defining roles in all files
+rst_prolog = """
+.. role:: underline
+  :class: underline
+"""
+
+# GitHub repo
+issues_github_path = "SimonRohou/tubex-lib"
+
+# equivalent to
+issues_uri = "https://github.com/SimonRohou/tubex-lib/issues/{issue}"
+issues_pr_uri = "https://github.com/SimonRohou/tubex-lib/pull/{pr}"
+issues_commit_uri = "https://github.com/SimonRohou/tubex-lib/commit/{commit}"
 
 numfig = True
 
@@ -175,10 +190,7 @@ html_theme = 'sphinx_rtd_theme'
 #html_static_path = ['_static']
 html_static_path = []
 html_css_files = [
-    'custom-sphinx-tabs.css',
-    'custom-sphinx-tables.css',
-    'custom-sphinx-lists.css',
-    'custom-sphinx-api.css',
+    'custom-sphinx.css',
 ]
 
 # Add any extra paths that contain custom files (such as robots.txt or

@@ -1,9 +1,5 @@
 .. _sec-tuto-04:
 
-.. role:: underline
-    :class: underline
-
-
 Lesson D: Building our own contractor
 ======================================
 
@@ -187,7 +183,7 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
     .. code-tab:: cpp
 
-      // vector<IntervalVector> M;
+      vector<IntervalVector> M;
       // M.push_back(IntervalVector( ...
       for(auto& Mi : M)
         Mi.inflate(0.05);
@@ -262,7 +258,6 @@ We will localize the robot in the map :math:`\mathbb{M}` created in Question **D
       # Draw the result of next questions here
 
       fig_map.axis_limits(fig_map.view_box(), True, 0.1)
-      endDrawing()
 
     .. code-tab:: cpp
 
@@ -277,7 +272,6 @@ We will localize the robot in the map :math:`\mathbb{M}` created in Question **D
       // Draw the result of next questions here
 
       fig_map.axis_limits(fig_map.view_box(), true, 0.1);
-      vibes::endDrawing();
 
   You should obtain this result.
 
@@ -334,7 +328,12 @@ We will first reuse the Contractor Network developed in the previous Lesson for 
 
 .. admonition:: Exercise
 
-  **D.7.** With a Contractor Network, perform the state estimation of the robot (the contraction of :math:`[\mathbf{x}]`) by considering simultaneously all the observations. You can reuse the CN previously implemented in Lesson C for this purpose. We will assume that the identity (the position) of the related landmarks is known.
+  **D.7.** With a Contractor Network, perform the state estimation of the robot (the contraction of :math:`[\mathbf{x}]`) by considering simultaneously all the observations. You can reuse the CN previously implemented in Lesson C for this purpose.
+
+  We will assume that:
+
+  * the identity (the position) of the related landmarks is known;
+  * the heading :math:`x_3` of the robot is known.
 
   .. tabs::
 
