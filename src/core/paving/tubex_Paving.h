@@ -189,14 +189,17 @@ namespace tubex
       std::vector<ConnectedSubset> get_connected_subsets(bool sort_by_size = false) const;
 
       /**
-       * \brief Clear the subpavings of this paving
+       * \brief Update the subpavings of this paving
        *
        * If a set satisfies or do not satisfy a condition strictly
        * then all of its subsets do satisfy or do not satisfy the same condition
        * thus we can remove subsets for faster computation.
        *
+       * If we are not able to distinguish then all the children
+       * are set to the value MAYBE
+       *
        */
-      void clear_children();
+      void update_children();
 
 
       /// @}
