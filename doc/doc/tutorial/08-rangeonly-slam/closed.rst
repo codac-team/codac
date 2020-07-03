@@ -1,3 +1,5 @@
+:orphan:
+
 .. _sec-tuto-08-closed:
 
 Lesson H: closed.
