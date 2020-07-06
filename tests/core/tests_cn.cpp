@@ -165,7 +165,6 @@ TEST_CASE("CN simple")
   SECTION("CtcFunction on scalar or vector cases")
   {
     CtcFunction ctc_add(Function("b", "c", "a", "b+c-a"));
-    CtcFunction ctc_cos(Function("b", "c", "a", "b+c-a"));
 
     {
       Interval x(0,1), y(-2,3), a(1,20);
@@ -182,6 +181,23 @@ TEST_CASE("CN simple")
       CHECK(cn.nb_dom() == 3);
       CHECK(cn.nb_ctc() == 1);
     }
+
+// todo:     { // With const case
+// todo:       Interval x(0,1), y(-2,3);
+// todo:       const Interval a(1,20);
+// todo:     
+// todo:       ContractorNetwork cn;
+// todo: 
+// todo:       cn.add(ctc_add, {x,y,a});
+// todo:       cn.add(ctc_add, {x,y,a});
+// todo:       cn.contract();
+// todo: 
+// todo:       CHECK(x == Interval(0,1));
+// todo:       CHECK(y == Interval(0,3));
+// todo:       CHECK(a == Interval(1,20));
+// todo:       CHECK(cn.nb_dom() == 3);
+// todo:       CHECK(cn.nb_ctc() == 1);
+// todo:     }
 
     {
       Interval x(0,1), y(-2,3), a(1,20);
