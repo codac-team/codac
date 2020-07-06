@@ -548,8 +548,8 @@ namespace tubex
           {
             // This happens if a variable has changed since its last add,
             // for instance when iterating a "t" inside a loop of constraints.
-            assert(m_ref_values_i.get() == x.m_ref_values_i.get()
-              && "values have changed since last add (double type). Use create_dom for local variables.");
+            if(m_ref_values_i.get() != x.m_ref_values_i.get())
+              throw Exception("values have changed since last add (double type). Use create_dom for local variables.");
           }
           return &m_ref_memory_d.get() == &x.m_ref_memory_d.get();
         }
@@ -563,8 +563,8 @@ namespace tubex
           {
             // This happens if a variable has changed since its last add,
             // for instance when iterating a "t" inside a loop of constraints.
-            assert(m_ref_values_iv.get() == x.m_ref_values_iv.get()
-              && "values have changed since last add (Vector type). Use create_dom for local variables.");
+            if(m_ref_values_iv.get() != x.m_ref_values_iv.get())
+              throw Exception("values have changed since last add (Vector type). Use create_dom for local variables.");
           }
           return &m_ref_memory_v.get() == &x.m_ref_memory_v.get();
         }
