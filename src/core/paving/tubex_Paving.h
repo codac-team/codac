@@ -118,6 +118,15 @@ namespace tubex
       void bisect(float ratio = 0.49);
 
       /**
+        * \brief Bisects this paving into two subpavings with some ratio bisection
+        *
+        * Will create two nodes in the binary tree implementing this set.
+        *
+        * \param ratio the bisection ratio (default value: 0.49)
+        */
+      void bisect(SetValue value, float ratio = 0.49);
+
+      /**
        * \brief Returns true if this paving is made of two subpavings
        *
        * \return `true` if this is a leaf, `false` otherwise

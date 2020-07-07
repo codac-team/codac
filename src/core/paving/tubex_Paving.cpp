@@ -99,6 +99,19 @@ namespace tubex
     m_second_subpaving->m_root = m_root;
   }
 
+    void Paving::bisect(SetValue value, float ratio)
+    {
+        assert(Interval(0.,1.).interior_contains(ratio));
+        assert(is_leaf() && "only leaves can be bisected");
+
+        LargestFirst bisector(0., ratio);
+        pair<IntervalVector,IntervalVector> subboxes = bisector.bisect(m_box);
+        m_first_subpaving = new Paving(subboxes.first, value);
+        m_first_subpaving->m_root = m_root;
+        m_second_subpaving = new Paving(subboxes.second, value);
+        m_second_subpaving->m_root = m_root;
+    }
+
   bool Paving::is_leaf() const
   {
     return m_first_subpaving == NULL;
@@ -212,9 +225,9 @@ namespace tubex
 
   void Paving::update_children()
   {
-      if (!this->is_leaf())
+      if (!is_leaf())
       {
-          if (this->value()==SetValue::IN || this->value()==SetValue::OUT)
+          if (value()==SetValue::IN || value()==SetValue::OUT)
           {
               delete m_first_subpaving;
               delete m_second_subpaving;
@@ -223,8 +236,8 @@ namespace tubex
           }
           else
           {
-              m_first_subpaving->set_value(this->value());
-              m_second_subpaving->set_value(this->value());
+              m_first_subpaving->set_value(value());
+              m_second_subpaving->set_value(value());
               m_first_subpaving->update_children();
               m_second_subpaving->update_children();
 

@@ -28,6 +28,7 @@ namespace tubex
     color_map[SetValue::IN] = "#9C9C9C[green]";
     color_map[SetValue::MAYBE] = "#9C9C9C[yellow]";
     color_map[SetValue::OUT] = "#9C9C9C[cyan]";
+    color_map[SetValue::UNCHECKED] = "#9C9C9C[magenta]";
     set_color_map(color_map);
   }
 
@@ -37,6 +38,7 @@ namespace tubex
     vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
     vibes::newGroup("val_maybe", color_map.at(SetValue::MAYBE), vibesParams("figure", name()));
     vibes::newGroup("val_out", color_map.at(SetValue::OUT), vibesParams("figure", name()));
+    vibes::newGroup("val_unchecked", color_map.at(SetValue::UNCHECKED), vibesParams("figure", name()));
   }
 
   void VIBesFigPaving::show()
@@ -45,6 +47,7 @@ namespace tubex
     vibes::clearGroup(name(), "val_in");
     vibes::clearGroup(name(), "val_maybe");
     vibes::clearGroup(name(), "val_out");
+    vibes::clearGroup(name(), "val_unchecked");
     draw_paving(m_paving);
   }
 
@@ -63,6 +66,10 @@ namespace tubex
 
         case SetValue::OUT:
           color_group = "val_out";
+          break;
+
+        case SetValue::UNCHECKED:
+          color_group = "val_unchecked";
           break;
 
         case SetValue::MAYBE:
