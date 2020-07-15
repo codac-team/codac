@@ -161,7 +161,14 @@ One shortcut to build both the examples and tests is:
 
 .. rubric:: Installing local Python binding
 
-After having configured ``-DWITH_PYTHON=ON`` and compiled:
+Get Pybind11 as submodule:
+
+.. code-block:: bash
+  
+   git submodule init
+   git submodule update
+
+After having configured CMake and ``-DWITH_PYTHON=ON`` and compiled:
 
 .. code-block:: bash
   
