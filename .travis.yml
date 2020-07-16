@@ -529,6 +529,9 @@ install:
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-issues sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
 
+  # For Linobs example
+  - sudo apt install libeigen3-dev
+
   # For Python wrapping
   #- sudo python3 -m pip install wheel
   #- sudo python3 -m pip install --upgrade pip
@@ -605,6 +608,8 @@ script:
   - find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - cd ../linobs
+  - ./build.sh
   - cd ../../build
 
   # Testing
@@ -650,6 +655,8 @@ script:
   - find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - cd ../linobs
+  - ./build.sh
   - cd ../../build
 
   # Testing
