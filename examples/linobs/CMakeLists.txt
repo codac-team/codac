@@ -32,7 +32,7 @@
 
 # Adding Eigen
 
-  find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+  find_package(Eigen3 REQUIRED NO_MODULE)
 
 # Compilation
 
