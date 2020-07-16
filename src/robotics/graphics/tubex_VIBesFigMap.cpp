@@ -222,7 +222,12 @@ namespace tubex
     assert(m_map_trajs.find(traj) != m_map_trajs.end()
       && "unable to remove, unknown traj");
 
+    std::ostringstream o;
+    o << "traj_" << m_map_trajs[traj].name;
+    string group_name = o.str();
+    vibes::clearGroup(name(), group_name);
     m_map_trajs.erase(traj);
+
   }
 
   void VIBesFigMap::add_beacon(const Beacon& beacon, const string& color)
