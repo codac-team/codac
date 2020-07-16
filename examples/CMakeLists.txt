@@ -107,6 +107,10 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
   add_test(NAME rob_10
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_10_datasso/build/tubex_rob_10 0)
 
+  # Linobs
+  add_test(NAME linobs
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/linobs/build/tubex_linobs 0)
+
   if(WITH_CAPD)
     # Lie group
     add_test(NAME lie_05
