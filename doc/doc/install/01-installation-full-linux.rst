@@ -55,7 +55,7 @@ The last sources are available on `the official Tubex development repository <ht
   git submodule init ; git submodule update           # get pybind11 submodule
   mkdir build ; cd build ; cmake .. ; make            # build the sources
   sudo make install                                   # install the library
-  cd ../                                              # back to the root of Tubex
+  cd ..                                               # back to the root of Tubex
 
 
 Compiling the examples
