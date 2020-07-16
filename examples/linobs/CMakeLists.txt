@@ -32,10 +32,12 @@
 
 # Adding Eigen
 
-  find_package(Eigen3 REQUIRED NO_MODULE)
+  find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+  add_definitions(${EIGEN3_DEFINITIONS})
+  include_directories(${EIGEN3_INCLUDE_DIRS})
 
 # Compilation
 
   add_executable(${PROJECT_NAME} main.cpp)
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES} Eigen3::Eigen)
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})
