@@ -15,7 +15,7 @@ tdomain = Interval(0,15) # [t0,tf]
 x0 = (0,0,2)
 
 # System input
-u = Trajectory(tdomain, TFunction("3*(sin(t)^2)+t/100"))
+u = Trajectory(tdomain, TFunction("3*(sin(t)^2)+t/100"), dt)
 
 # Noise
 i_n = Interval(-0.03,0.03) # the noises are known to be bounded by i_n
@@ -36,7 +36,7 @@ x_truth[1] = v_truth[1].primitive() + x0[1]
 # Bounded trajectories (dead reckoning)
 v = TubeVector(tdomain, dt, 3)
 x = TubeVector(tdomain, dt, 3)
-v[2] = Tube(u+n_u, dt).inflate(i_n.rad()) # command u with bounded uncertainties
+v[2] = Tube(u, dt).inflate(i_n.rad()) # command u with bounded uncertainties
 x[2] = Tube(x_truth[2]+n_theta, dt).inflate(i_n.rad()) # heading measurement with bounded uncertainties
 v[0] = 10*cos(x[2])
 v[1] = 10*sin(x[2])

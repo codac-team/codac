@@ -79,7 +79,7 @@ int main()
 
   /* =========== SIMULATING THE TRUTH =========== */
 
-    double dt = 0.01;
+    double dt = 0.1;
     TrajectoryVector x_truth = simu_truth(A, b, f_u, dt/10., tdomain);
 
 
@@ -89,31 +89,50 @@ int main()
     TubeVector x(tdomain, dt, 2);
 
     // Optional: initial and final conditions on x:
-    x.set(IntervalVector(x_truth.first_value()).inflate(0.0001), tdomain.lb()); // x0
-    x.set(IntervalVector(x_truth.last_value()).inflate(0.0001), tdomain.ub()); // xf
+    //x.set(IntervalVector(x_truth.first_value()).inflate(0.0001), tdomain.lb()); // x0
+    //x.set(IntervalVector(x_truth.last_value()).inflate(0.0001), tdomain.ub()); // xf
 
 
   /* =========== CREATING OBSERVATIONS =========== */
 
-    int nb_obs = 10;
+    int nb_obs = 8;
     vector<double> v_t(nb_obs);
     vector<IntervalVector> v_obs(nb_obs);
 
-    for(int i = 0 ; i < nb_obs ; i++)
-    {
-      // Random time in the temporal domain
-      v_t[i] = Tools::rand_in_bounds(tdomain);
-      // Getting observation from the truth
-      v_obs[i] = IntervalVector(x_truth(v_t[i])).inflate(0.01);
-    }
+    #if 1 // taking values of the paper for reproducing exactly the example
+
+      v_t[0] = 2./3.; v_obs[0] = Vector({0.188, 0.493});
+      v_t[1] = 1.9;   v_obs[1] = Vector({0.783, 0.261});
+      v_t[2] = 2.99;  v_obs[2] = Vector({0.728,-0.308});
+      v_t[3] = 4.33;  v_obs[3] = Vector({0.380, 0.009});
+      v_t[4] = 6.4;   v_obs[4] = Vector({1.747, 0.976});
+      v_t[5] = 6.5;   v_obs[5] = Vector({1.844, 0.947});
+      v_t[6] = 6.6;   v_obs[6] = Vector({1.937, 0.909});
+      v_t[7] = 9.;    v_obs[7] = Vector({1.700,-1.131});
+
+      for(auto& obs : v_obs)
+        obs.inflate(0.01);
+
+    #else // with random values
+
+      for(int i = 0 ; i < nb_obs ; i++)
+      {
+        // Random time in the temporal domain
+        v_t[i] = Tools::rand_in_bounds(tdomain);
+        // Getting observation from the truth
+        v_obs[i] = IntervalVector(x_truth(v_t[i])).inflate(0.01);
+      }
+
+    #endif
 
 
   /* =========== CONTRACTING THE POLYGONS =========== */
 
     CtcLinobs ctc_linobs(A, b, &exp);
-    vector<ConvexPolygon> polygons_fwd, polygons_fwdbwd;
-    ctc_linobs.contract(v_t, v_obs, x, u, polygons_fwd, TimePropag::FORWARD);
+    vector<ConvexPolygon> polygons_fwdbwd;
+    clock_t t_start = clock();
     ctc_linobs.contract(v_t, v_obs, x, u, polygons_fwdbwd, TimePropag::FORWARD | TimePropag::BACKWARD);
+    printf("Time taken: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
 
 
   /* =========== GRAPHICS =========== */
@@ -121,11 +140,11 @@ int main()
     vibes::beginDrawing();
     VIBesFigMap fig_map("Map");
     fig_map.set_properties(1450, 50, 600, 600);
-    fig_map.add_trajectory(&x_truth, "x*", 0, 1);
-    fig_map.draw_polygons(polygons_fwd, ColorMap::BLUE_TUBE);
-    fig_map.draw_polygons(polygons_fwdbwd, "#1B4054");
-    fig_map.draw_boxes(v_obs, "red");
+    fig_map.draw_polygons(polygons_fwdbwd, ColorMap::BLUE_TUBE);
+    fig_map.add_trajectory(&x_truth, "x*", 0, 1, "black");
     fig_map.show(0.);
+    fig_map.axis_limits(-0.1,2.8,-0.1,0.1,true,0.1);
+    fig_map.draw_boxes(v_obs, "red[red]");
     vibes::endDrawing();
 
   // Checking if this example still works:

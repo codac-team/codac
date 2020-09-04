@@ -84,67 +84,67 @@ matrix:
         - cmake .
         - cmake --build .
         - ./my_project
-    - name: "Ubuntu 18.04 C++ Python 3.8"
-      os: linux
-      dist: bionic
-      compiler: gcc
-      language: python
-      python: 3.8
-      before_install: 
-        - python --version || true
-        - python3 --version || true
-        - pip --version || true
-        - pip3 --version || true
-        - sudo python --version || true
-        - sudo python3 --version || true
-        - sudo pip --version || true
-        - sudo pip3 --version || true
-        - sudo apt-get -q update || true
-        - sudo apt-get -y install flex bison || true
-        - sudo apt-get -y install doxygen graphviz || true
-        #
-        #sudo apt-get -y install python3-pip python3-setuptools python3-wheel python3-breathe sphinx-issues
-        #sudo pip3 install --upgrade pip
-        #sudo pip3 install --upgrade pyIbex
-        #
-        #sudo apt-get -y install python3.8-dev
-        #sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
-        #sudo python -m pip install --upgrade pip
-        #sudo python -m pip install --upgrade pyIbex
-        #sudo python -m pip install --upgrade setuptools wheel
-        #
-        - pip install --upgrade pip
-        - pip install --upgrade pyIbex
-        - pip install --upgrade setuptools wheel
-      cache:
-        directories: ibex
-      install:
-      script: 
-        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
-        - mkdir build ; cd build
-        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
-        - cmake --build . --target api
-        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
-        - cmake --build . --target install
-        - cmake --build . --target pip_package
-        # Test python program and wheel...
-        - cp *.whl ../
-        #sudo pip3 install ../*.whl
-        #sudo python -m pip install ../*.whl
-        - pip install ../*.whl
-        - python ../examples/tuto/01_getting_started/01_getting_started.py
-        - cd ..
-        # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-        - unzip -q -o tubex_test_win.zip
-        - rm -Rf tubex_test_win.zip
-        - cd tubex_test_win
-        - mv test ..
-        - cd ../test
-        - rm -Rf ../tubex_test_win
-        - cmake .
-        - cmake --build .
-        - ./my_project
+#    - name: "Ubuntu 18.04 C++ Python 3.8"
+#      os: linux
+#      dist: bionic
+#      compiler: gcc
+#      language: python
+#      python: 3.8
+#      before_install: 
+#        - python --version || true
+#        - python3 --version || true
+#        - pip --version || true
+#        - pip3 --version || true
+#        - sudo python --version || true
+#        - sudo python3 --version || true
+#        - sudo pip --version || true
+#        - sudo pip3 --version || true
+#        - sudo apt-get -q update || true
+#        - sudo apt-get -y install flex bison || true
+#        - sudo apt-get -y install doxygen graphviz || true
+#        #
+#        #sudo apt-get -y install python3-pip python3-setuptools python3-wheel python3-breathe sphinx-issues
+#        #sudo pip3 install --upgrade pip
+#        #sudo pip3 install --upgrade pyIbex
+#        #
+#        #sudo apt-get -y install python3.8-dev
+#        #sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+#        #sudo python -m pip install --upgrade pip
+#        #sudo python -m pip install --upgrade pyIbex
+#        #sudo python -m pip install --upgrade setuptools wheel
+#        #
+#        - pip install --upgrade pip
+#        - pip install --upgrade pyIbex
+#        - pip install --upgrade setuptools wheel
+#      cache:
+#        directories: ibex
+#      install:
+#      script: 
+#        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+#        - mkdir build ; cd build
+#        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
+#        - cmake --build . --target api
+#        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
+#        - cmake --build . --target install
+#        - cmake --build . --target pip_package
+#        # Test python program and wheel...
+#        - cp *.whl ../
+#        #sudo pip3 install ../*.whl
+#        #sudo python -m pip install ../*.whl
+#        - pip install ../*.whl
+#        - python ../examples/tuto/01_getting_started/01_getting_started.py
+#        - cd ..
+#        # Test C++ program and bundle...
+#        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+#        - unzip -q -o tubex_test_win.zip
+#        - rm -Rf tubex_test_win.zip
+#        - cd tubex_test_win
+#        - mv test ..
+#        - cd ../test
+#        - rm -Rf ../tubex_test_win
+#        - cmake .
+#        - cmake --build .
+#        - ./my_project
     - name: "Raspbian Buster pi Docker"
       os: linux
       dist: bionic
@@ -529,6 +529,9 @@ install:
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-issues sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
 
+  # For Linobs example
+  - sudo apt install libeigen3-dev
+
   # For Python wrapping
   #- sudo python3 -m pip install wheel
   #- sudo python3 -m pip install --upgrade pip
@@ -605,6 +608,8 @@ script:
   - find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - cd ../linobs
+  - ./build.sh
   - cd ../../build
 
   # Testing
@@ -650,6 +655,8 @@ script:
   - find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
   - cd ../lie_group
   - find . -name "ex\_*" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+  - cd ../linobs
+  - ./build.sh
   - cd ../../build
 
   # Testing

@@ -159,9 +159,29 @@ One shortcut to build both the examples and tests is:
   sudo apt install dot2tex
 
 
+.. rubric:: Install IBEX for Python binding (example of local install)
+
+.. code-block:: bash
+  
+  cmake -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$HOME/ibex-lib/build_install ..
+
+IBEX uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ by default, but `Filib++ <http://www2.math.uni-wuppertal.de/wrswt/preprints/prep_01_4.pdf>`_ is also supported. Use :code:`-DINTERVAL_LIB=filib` during the CMake configuration to use it.
+
+
 .. rubric:: Installing local Python binding
 
-After having configured ``-DWITH_PYTHON=ON`` and compiled:
+.. warning::
+
+  The binding is not working with G++7 for the moment. 
+
+Get Pybind11 as submodule:
+
+.. code-block:: bash
+  
+   git submodule init
+   git submodule update
+
+After having configured CMake and ``-DWITH_PYTHON=ON`` and compiled:
 
 .. code-block:: bash
   

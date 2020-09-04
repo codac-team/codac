@@ -99,7 +99,7 @@ namespace tubex
   {
     m_i_ptr = new Interval(i);
     m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
-    m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr);
+    m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr); // todo: use const ref here?
   }
 
   Domain::Domain(Vector& v)
@@ -543,13 +543,31 @@ namespace tubex
       switch(m_memory_type)
       {
         case MemoryRef::M_DOUBLE:
+        {
+          if(&m_ref_memory_d.get() == &x.m_ref_memory_d.get())
+          {
+            // This happens if a variable has changed since its last add,
+            // for instance when iterating a "t" inside a loop of constraints.
+            if(m_ref_values_i.get() != x.m_ref_values_i.get())
+              throw Exception("values have changed since last add (double type). Use create_dom for local variables.");
+          }
           return &m_ref_memory_d.get() == &x.m_ref_memory_d.get();
+        }
 
         case MemoryRef::M_INTERVAL:
           return &m_ref_memory_i.get() == &x.m_ref_memory_i.get();
 
         case MemoryRef::M_VECTOR:
+        {
+          if(&m_ref_memory_v.get() == &x.m_ref_memory_v.get())
+          {
+            // This happens if a variable has changed since its last add,
+            // for instance when iterating a "t" inside a loop of constraints.
+            if(m_ref_values_iv.get() != x.m_ref_values_iv.get())
+              throw Exception("values have changed since last add (Vector type). Use create_dom for local variables.");
+          }
           return &m_ref_memory_v.get() == &x.m_ref_memory_v.get();
+        }
 
         case MemoryRef::M_INTERVAL_VECTOR:
           return &m_ref_memory_iv.get() == &x.m_ref_memory_iv.get();

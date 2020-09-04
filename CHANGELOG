@@ -1,12 +1,17 @@
 Unreleased yet (in development)
 ===============================
 
-.. Features added
-.. --------------
-.. 
-.. Changes
-.. -------
-.. 
+Features added
+--------------
+
+* :commit:`72ec9b2aaf6568ed82159dbe927b3931272f727b`: possibility to create ``TrajectoryVector`` or ``TubeVector`` from lists in Python
+
+Changes
+-------
+
+* :commit:`e806fc217de51399d0a0b56d6ff110bae45e6498`: added error when const domain has changed between two ``add()``
+
+
 .. Dependencies
 .. ------------
 

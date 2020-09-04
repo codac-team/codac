@@ -285,11 +285,11 @@ The use of the features presented above remain the same.
   .. code-tab:: c++
 
     // Trajectory from a formula; the function's output is two-dimensional
-    TrajectoryVector x(Interval(0.,10.), TFunction("(cos(t);sin(t))"));
+    TrajectoryVector x(Interval(0,10), TFunction("(cos(t);sin(t))"));
 
     // Another example of discretized trajectory
     TrajectoryVector y(2);
-    for(double t = 0. ; t <= 10. ; t+=0.6)
+    for(double t = 0 ; t <= 10 ; t+=0.6)
       y.set({cos(t),sin(t)}, t);
 
 ..    // ...
@@ -305,6 +305,28 @@ The use of the features presented above remain the same.
 .. figure:: img/trajvectors.png
 
   In red and blue, the ``TrajectoryVector`` defined from the analytical function. In gray, the sampled one.
+
+
+.. versionadded:: 3.0.10
+  The definition of a ``TrajectoryVector`` can also be done from a list. The above example could be written as:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      # TrajectoryVector as a list of scalar trajectories
+      x = TrajectoryVector([ \
+          Trajectory(Interval(0,10), TFunction("cos(t)")), \
+          Trajectory(Interval(0,10), TFunction("sin(t)")) \
+        ])
+
+    .. code-tab:: c++
+
+      // TrajectoryVector as a list of scalar trajectories
+      TrajectoryVector x({
+          Trajectory(Interval(0,10), TFunction("cos(t)")),
+          Trajectory(Interval(0,10), TFunction("sin(t)"))
+        });
 
 Note that each component of a vector object (``IntervalVector``, ``TrajectoryVector``, ``TubeVector``) is available by reference:
 

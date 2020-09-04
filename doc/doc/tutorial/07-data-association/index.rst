@@ -160,10 +160,10 @@ Resolution
 
   **G.7.** Create the contractors of the problem. Some of them are already defined and instantiated in the catalog of contractors of the library:
 
-    * the :math:`C_{\textrm{polar}}` contractor (:ref:`see more <sec-manual-ctcpolar>`)
-    * the :math:`C_{\textrm{constell}}` contractor (:ref:`see more <sec-manual-ctcconstell>`)
-    * the :math:`C_{\frac{d}{dt}}` contractor (:ref:`see more <sec-manual-ctcderiv>`)
-    * the :math:`C_{\textrm{eval}}` contractor (:ref:`see more <sec-manual-ctceval>`)
+    * the :math:`\mathcal{C}_{\textrm{polar}}` contractor (:ref:`see more <sec-manual-ctcpolar>`)
+    * the :math:`\mathcal{C}_{\textrm{constell}}` contractor (:ref:`see more <sec-manual-ctcconstell>`)
+    * the :math:`\mathcal{C}_{\frac{d}{dt}}` contractor (:ref:`see more <sec-manual-ctcderiv>`)
+    * the :math:`\mathcal{C}_{\textrm{eval}}` contractor (:ref:`see more <sec-manual-ctceval>`)
 
   You may also use the class ``CtcFunction`` to deal with the constraint involving :math:`\mathbf{f}` (:ref:`see more <sec-manual-ctcfunction>`).
 
