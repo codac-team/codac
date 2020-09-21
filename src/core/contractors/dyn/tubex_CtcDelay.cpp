@@ -47,24 +47,36 @@ namespace tubex
         return;
     }
 
+    // if the time domains do not intersect for the given [a], we cannot contract
+    Interval intv_t = x.tdomain() + a;
+    if(!intv_t.intersects(y.tdomain())) return;
+
     // iterate over the first tube x
     Slice *s_x = x.first_slice();
     while(s_x != NULL)
     {
       const Interval t_x = s_x->tdomain();
       Interval intv_t = t_x + a;
+
       if(intv_t.is_subset(y.tdomain())){
-          const Interval t_y = y.invert(s_x->codomain(),intv_t);
-          a &= t_y - t_x;
+          const Interval s_y = y(intv_t);
+          // if the evaluation of the tube y, which we would invert inside [intv_t],
+          // is already completely inside the codomain of s_x, no contraction for [a] can
+          // be achieved and we can avoid the inversion to save computation time
+          if(s_y.is_interior_subset(s_x->codomain())){
+              s_x->set_envelope(s_x->codomain() & s_y);
+          } else {
+              const Interval t_y = y.invert(s_x->codomain(),intv_t);
+              a &= t_y - t_x;
 
-          if(a.is_empty()){
-              x.set_empty();
-              y.set_empty();
-              return;
+              if(a.is_empty()){
+                  x.set_empty();
+                  y.set_empty();
+                  return;
+              }
+              intv_t = t_x + a;
+              s_x->set_envelope(s_x->codomain() & y(intv_t));
           }
-
-          intv_t = t_x + a;
-          s_x->set_envelope(s_x->codomain() & y(intv_t));
       }
 
       intv_t = t_x.lb() + a;
@@ -91,18 +103,26 @@ namespace tubex
     {
       const Interval t_y = s_y->tdomain();
       Interval intv_t = t_y - a;
+
       if(intv_t.is_subset(x.tdomain())){
-          const Interval t_x = x.invert(s_y->codomain(),intv_t);
-          a &= t_y - t_x;
+          const Interval s_x = x(intv_t);
+          // if the evaluation of the tube x, which we would invert inside [intv_t],
+          // is already completely inside the codomain of s_y, no contraction for [a] can
+          // be achieved and we can avoid the inversion to save computation time
+          if(s_x.is_interior_subset(s_y->codomain())){
+              s_y->set_envelope(s_y->codomain() & s_x);
+          } else {
+              const Interval t_x = x.invert(s_y->codomain(),intv_t);
+              a &= t_y - t_x;
 
-          if(a.is_empty()){
-              x.set_empty();
-              y.set_empty();
-              return;
+              if(a.is_empty()){
+                  x.set_empty();
+                  y.set_empty();
+                  return;
+              }
+              intv_t = t_y - a;
+              s_y->set_envelope(s_y->codomain() & x(intv_t));
           }
-
-          intv_t = t_y - a;
-          s_y->set_envelope(s_y->codomain() & x(intv_t));
       }
 
       intv_t = t_y.lb() - a;
