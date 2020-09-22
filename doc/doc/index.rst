@@ -409,5 +409,5 @@ We suggest the following BibTeX template to cite Tubex in scientific discourse:
      author = {Simon Rohou and others},
      year = {2017},
      note = {http://simon-rohou.fr/research/tubex-lib/},
-     title = {The Tubex library -- Constraint-programming for robotics}
+     title = {The {Tubex} library -- {C}onstraint-programming for robotics}
   }
