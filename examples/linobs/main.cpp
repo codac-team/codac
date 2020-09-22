@@ -140,11 +140,11 @@ int main()
     vibes::beginDrawing();
     VIBesFigMap fig_map("Map");
     fig_map.set_properties(1450, 50, 600, 600);
-    fig_map.add_trajectory(&x_truth, "x*", 0, 1);
-    fig_map.draw_boxes(v_obs, "red[red]");
-    fig_map.show(0.);
     fig_map.draw_polygons(polygons_fwdbwd, ColorMap::BLUE_TUBE);
+    fig_map.add_trajectory(&x_truth, "x*", 0, 1, "black");
+    fig_map.show(0.);
     fig_map.axis_limits(-0.1,2.8,-0.1,0.1,true,0.1);
+    fig_map.draw_boxes(v_obs, "red[red]");
     vibes::endDrawing();
 
   // Checking if this example still works:

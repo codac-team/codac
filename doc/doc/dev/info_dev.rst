@@ -170,6 +170,10 @@ IBEX uses the `GAOL library <http://frederic.goualard.net/#research-software>`_ 
 
 .. rubric:: Installing local Python binding
 
+.. warning::
+
+  The binding is not working with G++7 for the moment. 
+
 Get Pybind11 as submodule:
 
 .. code-block:: bash

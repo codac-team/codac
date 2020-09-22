@@ -1101,6 +1101,24 @@ namespace tubex
       Slice::merge_slices(s1, s2);
     }
 
+    void Tube::merge_similar_slices(double distance_threshold)
+    {
+      Slice *s2 = first_slice();
+      while(s2 != NULL)
+      {
+          Slice *s1 = s2->prev_slice();
+          Slice *next_slice = s2->next_slice();
+          if(s1 != NULL)
+          {
+              if(distance(s1->codomain(),s2->codomain()) < distance_threshold)
+              {
+                  Slice::merge_slices(s1, s2);
+              }
+          }
+          s2 = next_slice;
+      }
+    }
+
     // Bisection
     
     const pair<Tube,Tube> Tube::bisect(double t, float ratio) const

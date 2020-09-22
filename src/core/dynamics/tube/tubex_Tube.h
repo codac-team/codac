@@ -781,6 +781,15 @@ namespace tubex
        */
       void remove_gate(double t);
 
+      /**
+       * \brief Merges all adjacent slices whose Hausdorff distance is less than the given threshold
+       *
+       * \note Adjacent slices whose Hausdorff distance is larger (or equal) than the given threshold are not merged
+       *
+       * \param distance_threshold the threshold for the maximum Haussdorf distance between adjacent slices
+       */
+      void merge_similar_slices(double distance_threshold);
+
       /// @}
       /// \name Bisection
       /// @{
