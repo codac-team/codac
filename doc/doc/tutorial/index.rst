@@ -13,6 +13,9 @@ Tutorial: constraint programming for robotics
 .. |logo_ensta| image:: img/logos/logo_ensta.png
    :height: 50px
    :target: https://www.ensta-bretagne.fr/fr
+.. |logo_hannover| image:: img/logos/logo_hannover.png
+   :height: 50px
+   :target: https://www.uni-hannover.de/
 .. |logo_gdrmacs| image:: img/logos/logo_gdrmacs.png
    :height: 60px
    :target: https://gdr-macs.cnrs.fr/
@@ -31,20 +34,21 @@ Tutorial: constraint programming for robotics
 .. |logo_youtube_small| image:: img/logos/logo_youtube.png
    :height: 15px
 
-.. centered:: Simon Rohou, Luc Jaulin, Benoît Desrochers, Raphael Voges
-.. centered:: **8th June -- 5th July**
+.. centered:: Simon Rohou, Raphael Voges, Luc Jaulin, Benoît Desrochers
+.. centered:: **29th October -- ?**
 
-.. centered:: |logo_ensta| |logo_labsticc| |logo_dga| 
-.. centered:: |logo_contredo| |logo_gdrmacs| |logo_gdrrob| |logo_intcomp| 
+.. centered:: |logo_ensta| |logo_labsticc| |logo_hannover|
+.. centered:: |logo_contredo| |logo_gdrmacs| |logo_gdrrob|
+.. centered:: |logo_intcomp|  |logo_dga|
 
 
 
-.. sidebar:: ICRA 2020 tutorial
+.. sidebar:: IROS 2020 tutorial
 
-  .. Figure:: ../img/logo_icra.png
+  .. Figure:: img/logos/logo_iros.png
     :align: center
 
-  This tutorial is proposed in the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ (International Conference on Robotics and Automation).
+  This tutorial is proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ (International Conference on Intelligent Robots and Systems). It has also been proposed for the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ this year.
 
 
 .. About the tutorial
@@ -54,7 +58,7 @@ This tutorial is about Constraint Programming (CP), Interval Analysis (IA) and t
 
 | **Interval analysis** yields methods to compute intervals in place of real numbers, enclosing uncertainties in the mean time.
 | **Constraint Programming** aims at solving a complex problem by defining it in terms of constraints coming from the equations or the measurements.
-| Both concepts match perfectly for a large number of applications including Robotics, which is the subject of this tutorial proposed in the `ICRA 2020 <https://www.icra2020.org/>`_ conference.
+| Both concepts match perfectly for a large number of applications including Robotics, which is the subject of this tutorial proposed in the `IROS 2020 <https://www.iros2020.org/3program/Tutorials.html>`_ conference.
 
 
 .. contents:: Contents of this page
@@ -92,9 +96,10 @@ The tutorial involves three platforms:
 
 * the `Tubex website <http://simon-rohou.fr/research/tubex-lib>`_ (here you are!)
 * the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ where you can send your work and get the tutorial diploma
-* the `Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
 
-This tutorial is proposed to the participants of `the ICRA conference <https://www.icra2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
+.. * the `Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
+
+This tutorial is proposed to the participants of `the IROS conference <https://www.iros2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
 
 |logo_youtube| See `the video for registration on the MOOC platform <https://www.youtube.com/watch?v=E_aj7Mz_LWs>`_.
 
@@ -109,18 +114,18 @@ Diploma
 Duration and meeting sessions
 -----------------------------
 
-The tutorial will be held **from 8th of June to 5th of July**.
-Interactive meetings sessions are planned each Wednesday afternoon at 2PM (UTC):
+The tutorial will be held **from 29th of October**. More information about dates and interactive sessions are coming soon.
+..Interactive meetings sessions are also planned each Wednesday afternoon at 2PM (UTC):
 
-.. hlist::
-  :columns: 4
+.. .. hlist::
+..   :columns: 4
+.. 
+..   * 10th of June
+..   * 17th of June
+..   * 24th of June
+..   * 1rst of July
 
-  * 10th of June
-  * 17th of June
-  * 24th of June
-  * 1rst of July
-
-**Interactive sessions (Wed. 17, June):** `select your slot with this form <https://docs.google.com/forms/d/e/1FAIpQLSc4n22iSrwlSMpqqiTc86WmJX1spjzcziHVXPRYfsIdyBU4Kg/viewform?usp=sf_link>`_
+.. **Interactive sessions (Wed. 17, June):** `select your slot with this form <https://docs.google.com/forms/d/e/1FAIpQLSc4n22iSrwlSMpqqiTc86WmJX1spjzcziHVXPRYfsIdyBU4Kg/.. viewform?usp=sf_link>`_
 
 
 Content of the tutorial
@@ -130,7 +135,7 @@ A list of exercises is proposed with realistic robotic applications:
 
 ------------------------------------------------------
 
-**Week 0: June 1 -- June 7** (installation)
+**Week 0:** (installation)
 
 Before starting the tutorial, you can read some words about the concepts of Constraint Programming and Interval Analysis. This will give you a first glimpse of the philosophy of this tutorial.
 
@@ -170,7 +175,7 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 
 .. _sec-tuto-week1:
 
-**Week 1: June 8 -- June 14**
+**Week 1:**
 
 .. image:: img/tuto_01.png
    :align: right
@@ -185,14 +190,14 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 | During this first week, we will install the library and perform the **state estimation** of a static robot between some landmarks. For the moment, we will assume that the robot does not move and is only receiving **range-only data** from the landmarks.
 | This will be an introduction to :ref:`intervals <sec-manual-intervals>`, :ref:`constraints <sec-manual-contractors>` and :ref:`networks of contractors <sec-manual-cn>`.
 
-| **Exercise to finish:** (before Monday 6th of July)
+| **Exercise to finish:**
 | -- the static range-only localization, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
 
 .. _sec-tuto-week2:
 
-**Week 2: June 15 -- June 21**
+**Week 2:**
 
 .. image:: img/tuto_02.png
    :align: right
@@ -204,14 +209,14 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 We will go a step further: now the landmarks are perceived with both **range and bearing data**. The resolution will involve new constraints, and a **decomposition** will be achieved.
 In the second part, we will tackle the problem of **indistinguishable** landmarks. We still assume that we know their position, but the robot is not able to make the **association** between the map and the observations. The goal of this exercise is to develop **our own contractor** to solve this problem.
 
-| **Exercise to finish:** (before Monday 6th of July)
+| **Exercise to finish:**
 | -- the data association problem, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
 
 .. _sec-tuto-week3:
 
-**Week 3: June 22 -- June 28**
+**Week 3:**
 
 .. image:: img/tuto_03.png
    :align: right
@@ -222,14 +227,14 @@ In the second part, we will tackle the problem of **indistinguishable** landmark
 
 Now, we will make the robot move and see how we can handle **uncertainties on trajectories**. This will be done by solving the range-only problem of Lesson B, now in a dynamical context with **asynchronous measurements**. 
 
-| **Exercise to finish:** (before Monday 6th of July)
+| **Exercise to finish:**
 | -- the range-only localization, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 ------------------------------------------------------
 
 .. _sec-tuto-week4:
 
-**Week 4: June 29 -- July 5**
+**Week 4:**
 
 .. image:: img/tuto_04.png
    :align: right
@@ -238,10 +243,10 @@ Now, we will make the robot move and see how we can handle **uncertainties on tr
 * :ref:`sec-tuto-07`
 * :ref:`sec-tuto-08`
 
-| We will use the tubes to solve the problem `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that is currently presented during this ICRA conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_ and the `Slack channel #tua07_6 <https://icra20.slack.com/app_redirect?channel=tua07_6>`_).
+| We will use the tubes to solve the problem `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that has been presented during the ICRA 2020 conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_.
 | We will end this tutorial with a **range-only SLAM** problem and see how Tubex can be used for **online missions**.
 
-| **Exercise to finish:** (before Monday 6th of July)
+| **Exercise to finish:**
 | -- the data association and the range-only SLAM, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.
 
 The following video illustrates the result of Lesson H:
@@ -262,10 +267,40 @@ Organizers and technical support
   :columns: 3
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
+  * Raphael Voges
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
-  * Raphael Voges
   * Julien Damers
   * Fabrice Le Bars
 
-For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers. We will also answer you on `the Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ for very short questions.
+For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers.
+
+.. We will also answer you on `the Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ for very short questions.
+
+
+List of people who got the diploma
+----------------------------------
+
+.. hlist::
+  :columns: 4
+
+  * `Maria Luiza Costa Vianna <http://www.lix.polytechnique.fr/~costavianna/>`_
+  * `Bernardo  Hummes Flores <https://www.inf.ufrgs.br/~bhflores/>`_
+  * Mahmoud Hamandi
+  * Julian Erskine
+  * `Fatma Faruq <https://fatmaf.github.io/>`_
+  * Ilseo Jeon
+  * Nicolas Pecheux
+  * Jahir Argote
+  * Dahui Lin
+  * Daravuth Koung
+  * Songming Chen
+  * Manvir Singh Lamba
+  * Valentin Le Mesle
+  * Guillaume Jeanneau
+  * Haoming Zhang
+  * Vitalii Pruks
+  * Damien LaRocque
+  * Younès Raoui
+  * `Luke Sy <https://www.lukesy.net/>`_
+  * Elie Khairallah
