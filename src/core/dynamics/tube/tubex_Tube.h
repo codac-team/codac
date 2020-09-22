@@ -399,6 +399,22 @@ namespace tubex
        */
       bool gate_exists(double t) const;
 
+      /**
+       * \brief Removes the gate at \f$t\f$ and merges the two related slices
+       *
+       * \param t time input where the gate to remove is
+       */
+      void remove_gate(double t);
+
+      /**
+       * \brief Merges all adjacent slices whose Hausdorff distance is less than the given threshold
+       *
+       * \note Adjacent slices whose Hausdorff distance is larger (or equal) than the given threshold are not merged
+       *
+       * \param distance_threshold the threshold for the maximum Haussdorf distance between adjacent slices
+       */
+      void merge_similar_slices(double distance_threshold);
+
       /// @}
       /// \name Accessing values
       /// @{
@@ -773,22 +789,6 @@ namespace tubex
        * \param a the offset value so that \f$[t_0,t_f]:=[t_0+a,t_f+a]\f$ 
        */
       void shift_tdomain(double a);
-
-      /**
-       * \brief Removes the gate at \f$t\f$ and merges the two related slices
-       *
-       * \param t time input where the gate to remove is
-       */
-      void remove_gate(double t);
-
-      /**
-       * \brief Merges all adjacent slices whose Hausdorff distance is less than the given threshold
-       *
-       * \note Adjacent slices whose Hausdorff distance is larger (or equal) than the given threshold are not merged
-       *
-       * \param distance_threshold the threshold for the maximum Haussdorf distance between adjacent slices
-       */
-      void merge_similar_slices(double distance_threshold);
 
       /// @}
       /// \name Bisection
