@@ -4,13 +4,14 @@ Unreleased yet (in development)
 Features added
 --------------
 
+* :commit:`1273605e08f0408f3b4d082a68a8103170744b7a`: new method for merging adjacent slices that are *similar*
 * :commit:`72ec9b2aaf6568ed82159dbe927b3931272f727b`: possibility to create ``TrajectoryVector`` or ``TubeVector`` from lists in Python
 
 Changes
 -------
 
+* :commit:`fc711250036fd8b9c8c46126258690168828cfb0`: improved efficiency of ``CtcDelay``
 * :commit:`e806fc217de51399d0a0b56d6ff110bae45e6498`: added error when const domain has changed between two ``add()``
-
 
 .. Dependencies
 .. ------------
