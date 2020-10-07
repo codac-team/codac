@@ -154,7 +154,6 @@ void export_ContractorNetwork(py::module& m)
       "stastic_ctc"_a, "v_domains"_a,
       py::keep_alive<1,3>(), py::keep_alive<1,2>())
 
-
     .def("add", [](ContractorNetwork& cn, DynCtc& ctc, py::list lst)
       {
         cn.add(ctc, pylist_to_vectordomains(lst));

@@ -290,12 +290,12 @@ Then you have two options: read the details about the features of Tubex (domains
 
 .. _sec-mainpage-tuto:
 
-.. sidebar:: ICRA 2020 tutorial
+.. sidebar:: IROS 2020 tutorial
 
-  .. Figure:: img/logo_icra.png
+  .. Figure:: tutorial/img/logos/logo_iros.png
     :align: center
 
-  This tutorial is proposed in the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_ (International Conference on Robotics and Automation), 8th June -- 5th July.
+  This tutorial is proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ (International Conference on Intelligent Robots and Systems), 29th October.
 
 
 Tutorial for mobile robotics
@@ -409,5 +409,5 @@ We suggest the following BibTeX template to cite Tubex in scientific discourse:
      author = {Simon Rohou and others},
      year = {2017},
      note = {http://simon-rohou.fr/research/tubex-lib/},
-     title = {The Tubex library -- Constraint-programming for robotics}
+     title = {The {Tubex} library -- {C}onstraint-programming for robotics}
   }

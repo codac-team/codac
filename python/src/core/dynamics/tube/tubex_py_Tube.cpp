@@ -96,6 +96,18 @@ void export_Tube(py::module& m)
     .def("nb_slices", &Tube::nb_slices,
       TUBE_INT_NB_SLICES)
 
+    .def("gate_exists", &Tube::gate_exists,
+      TUBE_BOOL_GATE_EXISTS_DOUBLE,
+      "t"_a)
+
+    .def("remove_gate", &Tube::remove_gate,
+      TUBE_VOID_REMOVE_GATE_DOUBLE,
+      "t"_a)
+    
+    .def("merge_similar_slices", &Tube::merge_similar_slices,
+      TUBE_VOID_MERGE_SIMILAR_SLICES_DOUBLE,
+      "distance_threshold"_a)
+
     // Note: const overloaded methods are not necessary for Python binding
 
     .def("slice", (Slice * (Tube::*)(int))&Tube::slice,
@@ -149,10 +161,6 @@ void export_Tube(py::module& m)
     .def("sample", (void (Tube::*)(const Tube&))&Tube::sample,
       TUBE_VOID_SAMPLE_TUBE,
       "x"_a)
-
-    .def("gate_exists", &Tube::gate_exists,
-      TUBE_BOOL_GATE_EXISTS_DOUBLE,
-      "t"_a)
 
   // Accessing values
 
@@ -292,10 +300,6 @@ void export_Tube(py::module& m)
     .def("shift_tdomain", &Tube::shift_tdomain,
       TUBE_VOID_SHIFT_TDOMAIN_DOUBLE,
       "a"_a)
-
-    .def("remove_gate", &Tube::remove_gate,
-      TUBE_VOID_REMOVE_GATE_DOUBLE,
-      "t"_a)
 
   // Bisection
 

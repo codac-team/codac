@@ -550,6 +550,33 @@ namespace tubex
       return slice(t)->tdomain().lb() == t || t == tdomain().ub();
     }
 
+    void Tube::remove_gate(double t)
+    {
+      assert(tdomain().contains(t));
+      assert(t != tdomain().lb() && t != tdomain().ub() && "cannot remove initial/final gates");
+
+      Slice *s2 = slice(t);
+      assert(s2->tdomain().lb() == t && "the gate must already exist");
+      Slice *s1 = s2->prev_slice();
+
+      Slice::merge_slices(s1, s2);
+    }
+
+    void Tube::merge_similar_slices(double distance_threshold)
+    {
+      Slice *s2 = first_slice();
+      while(s2 != NULL)
+      {
+        Slice *s1 = s2->prev_slice();
+        Slice *next_slice = s2->next_slice();
+
+        if(s1 != NULL && distance(s1->codomain(),s2->codomain()) < distance_threshold)
+            Slice::merge_slices(s1, s2);
+      
+        s2 = next_slice;
+      }
+    }
+
     // Accessing values
 
     const Interval Tube::codomain() const
@@ -1087,18 +1114,6 @@ namespace tubex
         s->shift_tdomain(shift_ref);
       m_tdomain += shift_ref;
       delete_synthesis_tree();
-    }
-
-    void Tube::remove_gate(double t)
-    {
-      assert(tdomain().contains(t));
-      assert(t != tdomain().lb() && t != tdomain().ub() && "cannot remove initial/final gates");
-
-      Slice *s2 = slice(t);
-      assert(s2->tdomain().lb() == t && "the gate must already exist");
-      Slice *s1 = s2->prev_slice();
-
-      Slice::merge_slices(s1, s2);
     }
 
     // Bisection
