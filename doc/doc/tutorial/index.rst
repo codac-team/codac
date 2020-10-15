@@ -16,6 +16,9 @@ Tutorial: constraint programming for robotics
 .. |logo_hannover| image:: img/logos/logo_hannover.png
    :height: 50px
    :target: https://www.uni-hannover.de/
+.. |logo_rts| image:: img/logos/logo_rts.png
+   :height: 50px
+   :target: https://www.rts.uni-hannover.de/
 .. |logo_gdrmacs| image:: img/logos/logo_gdrmacs.png
    :height: 60px
    :target: https://gdr-macs.cnrs.fr/
@@ -35,9 +38,9 @@ Tutorial: constraint programming for robotics
    :height: 15px
 
 .. centered:: Simon Rohou, Raphael Voges, Luc Jaulin, Benoît Desrochers
-.. centered:: **29th October -- ?**
+.. centered:: **26th October -- 22th November**
 
-.. centered:: |logo_ensta| |logo_labsticc| |logo_hannover|
+.. centered:: |logo_ensta| |logo_labsticc| |logo_rts| |logo_hannover|
 .. centered:: |logo_contredo| |logo_gdrmacs| |logo_gdrrob|
 .. centered:: |logo_intcomp|  |logo_dga|
 
@@ -114,8 +117,8 @@ Diploma
 Duration and meeting sessions
 -----------------------------
 
-The tutorial will be held **from 29th of October**. More information about dates and interactive sessions are coming soon.
-..Interactive meetings sessions are also planned each Wednesday afternoon at 2PM (UTC):
+The tutorial will be held **from 26th of October**. More information about dates and interactive sessions are coming soon.
+Interactive meetings sessions are also planned each Tuesday afternoon at 2PM (UTC):
 
 .. .. hlist::
 ..   :columns: 4
@@ -175,7 +178,7 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 
 .. _sec-tuto-week1:
 
-**Week 1:**
+**Week 1:** 26th October -- 1st November
 
 .. image:: img/tuto_01.png
    :align: right
@@ -197,7 +200,7 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
 
 .. _sec-tuto-week2:
 
-**Week 2:**
+**Week 2:** 2nd November -- 8th November
 
 .. image:: img/tuto_02.png
    :align: right
@@ -216,7 +219,7 @@ In the second part, we will tackle the problem of **indistinguishable** landmark
 
 .. _sec-tuto-week3:
 
-**Week 3:**
+**Week 3:** 9th November -- 15th November
 
 .. image:: img/tuto_03.png
    :align: right
@@ -234,7 +237,7 @@ Now, we will make the robot move and see how we can handle **uncertainties on tr
 
 .. _sec-tuto-week4:
 
-**Week 4:**
+**Week 4:** 16th November -- 22th November
 
 .. image:: img/tuto_04.png
    :align: right

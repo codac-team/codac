@@ -295,7 +295,7 @@ Then you have two options: read the details about the features of Tubex (domains
   .. Figure:: tutorial/img/logos/logo_iros.png
     :align: center
 
-  This tutorial is proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ (International Conference on Intelligent Robots and Systems), 29th October.
+  This tutorial is proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ (International Conference on Intelligent Robots and Systems), 26th October.
 
 
 Tutorial for mobile robotics
