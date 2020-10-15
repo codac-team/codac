@@ -524,8 +524,8 @@ cache:
 install:
   
   # For documentation
-  - sudo apt-get install python3.5 python3-setuptools python3-pip
-  - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 # using python3 as default version
+  - sudo apt-get install python3.6 python3-setuptools python3-pip
+  - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 # using python3 as default version
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-issues sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
 
