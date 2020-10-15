@@ -74,10 +74,12 @@ namespace tubex
     assert(Tube::same_slicing(x[0], u));
     assert(Tube::same_slicing(x[1], u));
     assert(v_t.size() == v_y.size());
+    #ifdef DEBUG
     for(const auto& t : v_t)
       assert(x.tdomain().contains(t));
     for(const auto& y : v_y)
       assert(y.size() == x.size());
+    #endif
 
     int k = x[0].nb_slices();
 
