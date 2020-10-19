@@ -524,7 +524,6 @@ cache:
 install:
   
   # For documentation
-  - sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt-get update # for using recent Python versions
   - sudo apt-get install python3.6 python3-setuptools python3-pip
   - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 # using python3 as default version
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-issues sphinx-tabs
@@ -591,7 +590,7 @@ script:
           -DTEST_EXAMPLES=ON ..
   ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
-  - make doc
+  #- make doc # todo
   - make install
   #- cd python/python_package
   #- /usr/bin/python3.5 setup.py develop --user
@@ -638,7 +637,7 @@ script:
           -DTEST_EXAMPLES=ON ..
   ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
   - make
-  - make doc
+  #- make doc
   - make install
   #- cd python/python_package
   #- /usr/bin/python3.5 setup.py develop --user
