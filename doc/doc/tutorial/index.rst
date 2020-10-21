@@ -67,6 +67,18 @@ This tutorial is about Constraint Programming (CP), Interval Analysis (IA) and t
 .. contents:: Contents of this page
 
 
+Presentation of the tutorial for the IROS conference
+----------------------------------------------------
+
+Raphael Voges (co-organizer) provides an overview of the tutorial in the following video:
+
+.. raw:: html
+
+  <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto; margin-bottom: 30px;">
+      <iframe src="https://www.youtube.com/embed/1UoIQMJSHvU" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+  </div>
+
+
 Constraint programming?
 -----------------------
 
