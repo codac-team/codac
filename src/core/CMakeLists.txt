@@ -92,6 +92,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_DynCtc.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcPicard.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcPicard.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcChain.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcChain.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDelay.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDelay.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcStatic.h
