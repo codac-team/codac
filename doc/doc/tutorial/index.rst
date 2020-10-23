@@ -111,8 +111,9 @@ The tutorial involves three platforms:
 
 * the `Tubex website <http://simon-rohou.fr/research/tubex-lib>`_ (here you are!)
 * the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ where you can send your work and get the tutorial diploma
+* a Slack communication channel (soon available)
 
-.. * the `Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
+.. (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
 
 This tutorial is proposed to the participants of `the IROS conference <https://www.iros2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
 
