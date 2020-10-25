@@ -111,9 +111,7 @@ The tutorial involves three platforms:
 
 * the `Tubex website <http://simon-rohou.fr/research/tubex-lib>`_ (here you are!)
 * the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ where you can send your work and get the tutorial diploma
-* a Slack communication channel (soon available)
-
-.. (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
+* the `Slack communication workspace (tubex-tutorial.slack.com) <https://tubex-tutorial.slack.com>`_ for fast interactive meetings
 
 This tutorial is proposed to the participants of `the IROS conference <https://www.iros2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
 
@@ -131,7 +129,8 @@ Duration and meeting sessions
 -----------------------------
 
 The tutorial will be held **from 26th of October**. More information about dates and interactive sessions are coming soon.
-Interactive meetings sessions are also planned each Tuesday afternoon at 2PM (UTC):
+
+Interactive sessions are possible (each Tuesday afternoon, preferably). Just let us know by private message (via `Slack <https://tubex-tutorial.slack.com>`_ or the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_) if you need to communicate directly with us (discussions can be made via Slack or Skype, let us know your choice).
 
 .. .. hlist::
 ..   :columns: 4
@@ -140,7 +139,7 @@ Interactive meetings sessions are also planned each Tuesday afternoon at 2PM (UT
 ..   * 17th of June
 ..   * 24th of June
 ..   * 1rst of July
-
+..
 .. **Interactive sessions (Wed. 17, June):** `select your slot with this form <https://docs.google.com/forms/d/e/1FAIpQLSc4n22iSrwlSMpqqiTc86WmJX1spjzcziHVXPRYfsIdyBU4Kg/.. viewform?usp=sf_link>`_
 
 
