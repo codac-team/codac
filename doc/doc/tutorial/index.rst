@@ -40,12 +40,6 @@ Tutorial: constraint programming for robotics
 .. centered:: Simon Rohou, Raphael Voges, Luc Jaulin, Benoît Desrochers
 .. centered:: **26th October -- 22th November**
 
-.. centered:: |logo_ensta| |logo_labsticc| |logo_rts| |logo_hannover|
-.. centered:: |logo_contredo| |logo_gdrmacs| |logo_gdrrob|
-.. centered:: |logo_intcomp|  |logo_dga|
-
-
-
 .. sidebar:: IROS 2020 tutorial
 
   .. Figure:: img/logos/logo_iros.png
@@ -326,6 +320,14 @@ Organizers and technical support
 For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers.
 
 .. We will also answer you on `the Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ for very short questions.
+
+
+Organizations
+-------------
+
+.. centered:: |logo_ensta| |logo_labsticc| |logo_rts| |logo_hannover|
+.. centered:: |logo_contredo| |logo_gdrmacs| |logo_gdrrob|
+.. centered:: |logo_intcomp|  |logo_dga|
 
 
 List of people who got the diploma
