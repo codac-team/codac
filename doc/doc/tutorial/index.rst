@@ -107,6 +107,8 @@ Contact and registration
 | **For registration, please fill in this questionnaire:**
 | https://docs.google.com/forms/d/1nuZ6lxMJ8SmoUeDJzVIjiMUdD5PmX7h72v_N9NtvGq4
 
+Once you are registered, the organizers will be able to send you a link to the `Slack workspace of the tutorial <https://tubex-tutorial.slack.com>`_ (please note that this is not automatic, we will do our best to send you the link as soon as possible).
+
 The tutorial involves three platforms:
 
 * the `Tubex website <http://simon-rohou.fr/research/tubex-lib>`_ (here you are!)
