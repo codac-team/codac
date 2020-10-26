@@ -78,6 +78,39 @@ Raphael Voges (co-organizer) provides an overview of the tutorial in the followi
       <iframe src="https://www.youtube.com/embed/1UoIQMJSHvU" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
   </div>
 
+**Welcome message:**
+
+.. tip::
+
+  Dear All,
+
+  The tutorial has started and we are pleased to see so many of you show interest in constraint programming (CP) and intervals for robotics!
+
+  Because the `IROS conference <https://www.iros2020.org/>`_ became virtual this year, we had to think about some online way to provide the content of the tutorial. We prefer to let you handle the concepts of CP and intervals through programming applications. As a consequence, we provide the full explanations on webpages with equations, programming examples and images, instead of videos. We hope that this format is the best to let you understand these concepts and how to use libraries to apply them, at your own speed.
+
+  The tutorial is split into 4 weeks and each week involves 2 lessons.
+  The 8 lessons consist of several questions that will take you step by step towards a comprehensive application of Simultaneous Localization And Mapping (SLAM).
+  We recommend that you answer the questions in one source file per week (Python or C++) and upload it on the MOOC platform by the end of each week. Each Monday, we will post the corrections of the questions of the previous week, in order to ease your progression.
+
+  You may have questions about
+
+  * the tutorial
+  * difficulties to follow the lessons
+  * C++/Python issues
+  * or interrogations related to constraint programming, interval analysis or robotic applications
+
+  We will be happy to discuss with you about it, and we propose three ways of communication:
+
+  * A forum available on the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_. You may find answers to your questions in previous topics
+  * A `Slack workspace <https://tubex-tutorial.slack.com>`_ for fast interactive exchanges, do not hesitate to use it!
+  * Eventually, individual conversations with the organizers are possible. In this case, you can contact us by private message and we will schedule a slot for some Skype conversation
+
+  We do hope that this tutorial brings you a motivating introduction to intervals coupled with CP for robotics!
+
+  Let us start the first week with an introduction to the concepts of intervals and contractors (in :ref:`Lesson A <sec-tuto-01>`). These tools will be applied to a state estimation problem in :ref:`Lesson B <sec-tuto-02>` that requires a robot that is not yet moving to localize itself among three landmarks with range-only measurements. 
+
+  Good luck!
+
 
 Constraint programming?
 -----------------------
