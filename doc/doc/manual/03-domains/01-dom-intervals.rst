@@ -328,7 +328,7 @@ The use on intervals is transparent:
     d = max(Interval.EMPTY_SET, Interval(1,2))                      # d = [empty]
     e = Interval(-1,3) / Interval(0,oo)                             # e = [-oo,oo]
     f = (Interval(1,2) * Interval(-1,3)) \
-      + max(Interval(1,3) & Interval(6,7), Interval(1,2))           # f = [4,9]
+      + max(Interval(1,3) & Interval(6,7), Interval(1,2))           # f = [empty]
 
   .. code-tab:: c++
 
@@ -338,8 +338,7 @@ The use on intervals is transparent:
     Interval d = max(Interval::EMPTY_SET, Interval(1,2));           // d = [empty]
     Interval e = Interval(-1,3) / Interval(0,oo);                   // e = [-oo,oo]
     Interval f = (Interval(1,2) * Interval(-1,3))
-               + max(Interval(1,3) & Interval(6,7), Interval(1,2)); // f = [4,9]
-
+               + max(Interval(1,3) & Interval(6,7), Interval(1,2)); // f = [empty]
 
 ------------------------------------------------------
 
