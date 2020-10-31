@@ -49,6 +49,8 @@ The :gbg:`✓` configurations are officially supported at the moment:
 |Python 3.7     ||linux-py|_     ||win-py|_              |--              |                |
 +---------------+----------------+-----------------------+----------------+                +
 |Python 3.8     ||linux-py|_     ||win-py|_              |--              |                |
++---------------+----------------+-----------------------+----------------+                +
+|Python 3.9     ||linux-py|_     ||win-py|_              |--              |                |
 +---------------+----------------+-----------------------+----------------+----------------+
 
 | **Click on the links in the table to access the related installation procedures.**
