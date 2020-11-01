@@ -31,15 +31,15 @@ matrix:
         - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/docker/build_pybinding.sh
         - ls wheelhouse
     # Other environments for C++ tests (g++ versions, trees..)
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env:
-        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+# todo  - os: linux
+# todo    addons:
+# todo      apt:
+# todo        sources:
+# todo          - ubuntu-toolchain-r-test
+# todo        packages:
+# todo          - g++-5
+# todo    env:
+# todo      - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 # todo  - os: linux
 # todo    addons:
 # todo      apt:
