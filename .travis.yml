@@ -333,6 +333,40 @@ matrix:
         - cmd //c "Release\my_project.exe"
         - cd ../..
 
+    - name: "Windows Visual Studio 2015 x86 C++ Python 3.9"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CPCFG=m-win32 PY_V_F="3.9.0 --x86" PY_V_MDM=3.9 PY_V_MM=39
+      before_install: 
+        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b 3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+        # Test C++ program and bundle...
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
+        - cmake --build . --config Release
+        - cmd //c "Release\my_project.exe"
+        - cd ../..
+
     - name: "Windows Visual Studio 2015 x86 C++ Python 3.6"
       os: windows
       env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CPCFG=m-win32 PY_V_F="3.6.8 --x86" PY_V_MDM=3.6 PY_V_MM=36
