@@ -206,12 +206,12 @@ matrix:
         - cmd //c "Release\my_project.exe"
         - cd ../..
 
-    - name: "Windows Visual Studio 2019 x64 C++ Python 3.8"
+    - name: "Windows Visual Studio 2019 x64 C++ Python 3.9"
       os: windows
-      env: CMAKE_PARAM_G="Visual Studio 16" CMAKE_PARAM_A=x64 CFG=x64_vc16 CPCFG=-win_amd64 PY_V_F=3.8.3 PY_V_MDM=3.8 PY_V_MM=38
+      env: CMAKE_PARAM_G="Visual Studio 16" CMAKE_PARAM_A=x64 CFG=x64_vc16 CPCFG=-win_amd64 PY_V_F=3.9.0 PY_V_MDM=3.9 PY_V_MM=39
       before_install: 
         - choco install -y visualstudio2019buildtools visualstudio2019-workload-vctools winflexbison
-        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 ttps://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
         - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
       cache:
         directories: ibex
@@ -240,12 +240,12 @@ matrix:
         - cmd //c "Release\my_project.exe"
         - cd ../..
 
-    - name: "Windows Visual Studio 2019 x64 C++ Python 3.9"
+    - name: "Windows Visual Studio 2019 x64 Python 3.8"
       os: windows
-      env: CMAKE_PARAM_G="Visual Studio 16" CMAKE_PARAM_A=x64 CFG=x64_vc16 CPCFG=-win_amd64 PY_V_F=3.9.0 PY_V_MDM=3.9 PY_V_MM=39
+      env: CMAKE_PARAM_G="Visual Studio 16" CMAKE_PARAM_A=x64 CFG=x64_vc16 CPCFG=-win_amd64 PY_V_F=3.8.6 PY_V_MDM=3.8 PY_V_MM=38
       before_install: 
         - choco install -y visualstudio2019buildtools visualstudio2019-workload-vctools winflexbison
-        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 ttps://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
         - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
       cache:
         directories: ibex
@@ -263,16 +263,6 @@ matrix:
         - pip install ../*.whl
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
-        # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-        - 7z x tubex_test_win.zip -y
-        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
-        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
-        - cd tubex_test_win/test
-        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
-        - cmake --build . --config Release
-        - cmd //c "Release\my_project.exe"
-        - cd ../..
 
     - name: "Windows Visual Studio 2017 x86 C++"
       os: windows
@@ -299,62 +289,19 @@ matrix:
         - cmd //c "Release\my_project.exe"
         - cd ../..
 
-    - name: "Windows Visual Studio 2017 x64 C++ Python 3.7"
+    - name: "Windows Visual Studio 2017 x64 C++"
       os: windows
-      env: CMAKE_PARAM_G="Visual Studio 15" CMAKE_PARAM_A=x64 CFG=x64_vc15 CPCFG=m-win_amd64 PY_V_F=3.7.7 PY_V_MDM=3.7 PY_V_MM=37
+      env: CMAKE_PARAM_G="Visual Studio 15" CMAKE_PARAM_A=x64 CFG=x64_vc15
       before_install: 
         - choco install -y winflexbison
-        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 ttps://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
-        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
       cache:
         directories: ibex
       install:
       script: 
         - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
         - mkdir build ; cd build
-        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
-        - cmake --build . --config Debug --target api
-        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
         - cmake --build . --config Debug --target install
-        - cmake --build . --config Debug --target pip_package
-        # Test python program and wheel...
-        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
-        - pip install ../*.whl
-        - python ../examples/tuto/01_getting_started/01_getting_started.py
-        - cd ..
-        # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-        - 7z x tubex_test_win.zip -y
-        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
-        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
-        - cd tubex_test_win/test
-        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} .
-        - cmake --build . --config Release
-        - cmd //c "Release\my_project.exe"
-        - cd ../..
-
-    - name: "Windows Visual Studio 2015 x86 C++ Python 3.9"
-      os: windows
-      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CPCFG=m-win32 PY_V_F="3.9.0 --x86" PY_V_MDM=3.9 PY_V_MM=39
-      before_install: 
-        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
-        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b 3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
-        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
-      cache:
-        directories: ibex
-      install:
-      script: 
-        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
-        - mkdir build ; cd build
-        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
-        - cmake --build . --config Debug --target api
-        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
-        - cmake --build . --config Debug --target install
-        - cmake --build . --config Debug --target pip_package
-        # Test python program and wheel...
-        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
-        - pip install ../*.whl
-        - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
         # Test C++ program and bundle...
         - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
@@ -372,7 +319,7 @@ matrix:
       env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CPCFG=m-win32 PY_V_F="3.6.8 --x86" PY_V_MDM=3.6 PY_V_MM=36
       before_install: 
         - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
-        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b 3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
         - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
       cache:
         directories: ibex
@@ -400,6 +347,30 @@ matrix:
         - cmake --build . --config Release
         - cmd //c "Release\my_project.exe"
         - cd ../..
+
+    - name: "Windows Visual Studio 2015 x86 Python 3.5"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CPCFG=m-win32 PY_V_F="3.5.4.20200110 --x86" PY_V_MDM=3.5 PY_V_MM=35
+      before_install: 
+        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
 
     - name: "Windows Visual Studio 2015 x86 Python 3.4"
       os: windows
@@ -425,12 +396,12 @@ matrix:
         - python ../examples/tuto/01_getting_started/01_getting_started.py
         - cd ..
 
-    - name: "Windows Visual Studio 2015 x64 C++ Python 3.6"
+    - name: "Windows Visual Studio 2015 x64 C++ Python 3.7"
       os: windows
-      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CPCFG=m-win_amd64 PY_V_F=3.6.8 PY_V_MDM=3.6 PY_V_MM=36
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CPCFG=m-win_amd64 PY_V_F=3.7.9 PY_V_MDM=3.7 PY_V_MM=37
       before_install: 
         - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
-        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 ttps://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
         - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
       cache:
         directories: ibex
@@ -459,13 +430,37 @@ matrix:
         - cmd //c "Release\my_project.exe"
         - cd ../..
 
+    - name: "Windows Visual Studio 2015 x64 Python 3.6"
+      os: windows
+      env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CPCFG=m-win_amd64 PY_V_F=3.6.8 PY_V_MDM=3.6 PY_V_MM=36
+      before_install: 
+        - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
+      cache:
+        directories: ibex
+      install:
+      script: 
+        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone -b develop https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
+        - mkdir build ; cd build
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target api
+        - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=ON ..
+        - cmake --build . --config Debug --target install
+        - cmake --build . --config Debug --target pip_package
+        # Test python program and wheel...
+        - cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"`
+        - pip install ../*.whl
+        - python ../examples/tuto/01_getting_started/01_getting_started.py
+        - cd ..
+
     - name: "Windows Visual Studio 2015 x64 Python 3.5"
       os: windows
       env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CPCFG=m-win_amd64 PY_V_F=3.5.4.20200110 PY_V_MDM=3.5 PY_V_MM=35
       before_install: 
         - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
-        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=3.5.4.20200110 & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b 3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
-        - export PATH=/c/Python35:/c/Python35/Scripts:$PATH
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd"
+        - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
       cache:
         directories: ibex
       install:
@@ -488,7 +483,7 @@ matrix:
       env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CPCFG=m-win_amd64 PY_V_F=3.4.4.20200110 PY_V_MDM=3.4 PY_V_MM=34
       before_install: 
         - choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
-        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python34;C:\Python34\Scripts;%PATH% & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex& pip install --upgrade wheel setuptools & refreshenv.cmd"
+        - cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & refreshenv.cmd"
         - export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH
       cache:
         directories: ibex
