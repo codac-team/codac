@@ -315,7 +315,7 @@ Organizers and technical support
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
   * Julien Damers
-  * Fabrice Le Bars
+  * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
 
 For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers.
 

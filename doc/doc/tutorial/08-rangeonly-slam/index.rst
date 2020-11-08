@@ -217,12 +217,13 @@ Hence, for real-time SLAM, we can use the following temporal loop:
       if t-prev_t_obs > 2*dt: # new observation each 2*dt
       
         # Creating new observation to a random landmark
-
-          ...
+        ...
 
         # Adding related observation constraints to the network
+        ...
 
-          ...
+        # Updated last iteration time
+        prev_t_obs = t
 
       contraction_dt = cn.contract_during(iteration_dt)
       if iteration_dt>contraction_dt: # pause for the animation
@@ -253,12 +254,13 @@ Hence, for real-time SLAM, we can use the following temporal loop:
       if(t - prev_t_obs > 2*dt) // new observation each 2*dt
       {
         // Creating new observation to a random landmark
-
-          ...
+        ...
 
         // Adding related observation constraints to the network
+        ...
 
-          ...
+        // Updated last iteration time
+        prev_t_obs = t;
       }
 
       double contraction_dt = cn.contract_during(iteration_dt);
