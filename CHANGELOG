@@ -16,8 +16,10 @@ Changes
 .. Deprecated
 .. ----------
 
-.. Documentation
-.. -------------
+Documentation
+-------------
+
+* added `the FAQ page<sec-faq>`
 
 
 -----------------------------------------------------------------
@@ -45,12 +47,6 @@ Dependencies
 * now available in Python 3.9
 * using `IBEX 2.8.9 <https://github.com/ibex-team/ibex-lib/releases/tag/ibex-2.8.9>`_
 * using `pyIbex 1.9.2 <https://github.com/benEnsta/pyIbex/releases/tag/v1.9.2>`_
-
-
-Documentation
--------------
-
-* added the FAQ page
 
 
 -----------------------------------------------------------------
