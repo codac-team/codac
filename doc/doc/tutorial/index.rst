@@ -40,12 +40,6 @@ Tutorial: constraint programming for robotics
 .. centered:: Simon Rohou, Raphael Voges, Luc Jaulin, Benoît Desrochers
 .. centered:: **26th October -- 22th November**
 
-.. centered:: |logo_ensta| |logo_labsticc| |logo_rts| |logo_hannover|
-.. centered:: |logo_contredo| |logo_gdrmacs| |logo_gdrrob|
-.. centered:: |logo_intcomp|  |logo_dga|
-
-
-
 .. sidebar:: IROS 2020 tutorial
 
   .. Figure:: img/logos/logo_iros.png
@@ -78,6 +72,39 @@ Raphael Voges (co-organizer) provides an overview of the tutorial in the followi
       <iframe src="https://www.youtube.com/embed/1UoIQMJSHvU" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
   </div>
 
+**Welcome message:**
+
+.. tip::
+
+  Dear All,
+
+  The tutorial has started and we are pleased to see so many of you show interest in constraint programming (CP) and intervals for robotics!
+
+  Because the `IROS conference <https://www.iros2020.org/>`_ became virtual this year, we had to think about some online way to provide the content of the tutorial. We prefer to let you handle the concepts of CP and intervals through programming applications. As a consequence, we provide the full explanations on webpages with equations, programming examples and images, instead of videos. We hope that this format is the best to let you understand these concepts and how to use libraries to apply them, at your own speed.
+
+  The tutorial is split into 4 weeks and each week involves 2 lessons.
+  The 8 lessons consist of several questions that will take you step by step towards a comprehensive application of Simultaneous Localization And Mapping (SLAM).
+  We recommend that you answer the questions in one source file per week (Python or C++) and upload it on the MOOC platform by the end of each week. Each Monday, we will post the corrections of the questions of the previous week, in order to ease your progression.
+
+  You may have questions about
+
+  * the tutorial
+  * difficulties to follow the lessons
+  * C++/Python issues
+  * or interrogations related to constraint programming, interval analysis or robotic applications
+
+  We will be happy to discuss with you about it, and we propose three ways of communication:
+
+  * A forum available on the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_. You may find answers to your questions in previous topics
+  * A `Slack workspace <https://tubex-tutorial.slack.com>`_ for fast interactive exchanges, do not hesitate to use it!
+  * Eventually, individual conversations with the organizers are possible. In this case, you can contact us by private message and we will schedule a slot for some Skype conversation
+
+  We do hope that this tutorial brings you a motivating introduction to intervals coupled with CP for robotics!
+
+  Let us start the first week with an introduction to the concepts of intervals and contractors (in :ref:`Lesson A <sec-tuto-01>`). These tools will be applied to a state estimation problem in :ref:`Lesson B <sec-tuto-02>` that requires a robot that is not yet moving to localize itself among three landmarks with range-only measurements. 
+
+  Good luck!
+
 
 Constraint programming?
 -----------------------
@@ -107,12 +134,13 @@ Contact and registration
 | **For registration, please fill in this questionnaire:**
 | https://docs.google.com/forms/d/1nuZ6lxMJ8SmoUeDJzVIjiMUdD5PmX7h72v_N9NtvGq4
 
+Once you are registered, the organizers will be able to send you a link to the `Slack workspace of the tutorial <https://tubex-tutorial.slack.com>`_ (please note that this is not automatic, we will do our best to send you the link as soon as possible).
+
 The tutorial involves three platforms:
 
 * the `Tubex website <http://simon-rohou.fr/research/tubex-lib>`_ (here you are!)
 * the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ where you can send your work and get the tutorial diploma
-
-.. * the `Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ of ICRA for fast interactive meetings
+* the `Slack communication workspace (tubex-tutorial.slack.com) <https://tubex-tutorial.slack.com>`_ for fast interactive meetings
 
 This tutorial is proposed to the participants of `the IROS conference <https://www.iros2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
 
@@ -130,7 +158,8 @@ Duration and meeting sessions
 -----------------------------
 
 The tutorial will be held **from 26th of October**. More information about dates and interactive sessions are coming soon.
-Interactive meetings sessions are also planned each Tuesday afternoon at 2PM (UTC):
+
+Interactive sessions are possible (each Tuesday afternoon, preferably). Just let us know by private message (via `Slack <https://tubex-tutorial.slack.com>`_ or the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_) if you need to communicate directly with us (discussions can be made via Slack or Skype, let us know your choice).
 
 .. .. hlist::
 ..   :columns: 4
@@ -139,7 +168,7 @@ Interactive meetings sessions are also planned each Tuesday afternoon at 2PM (UT
 ..   * 17th of June
 ..   * 24th of June
 ..   * 1rst of July
-
+..
 .. **Interactive sessions (Wed. 17, June):** `select your slot with this form <https://docs.google.com/forms/d/e/1FAIpQLSc4n22iSrwlSMpqqiTc86WmJX1spjzcziHVXPRYfsIdyBU4Kg/.. viewform?usp=sf_link>`_
 
 
@@ -286,11 +315,19 @@ Organizers and technical support
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
   * Julien Damers
-  * Fabrice Le Bars
+  * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
 
 For any question, do not hesitate to use the `MOOC platform of this tutorial <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_, so that other participants can reply or see posted answers.
 
 .. We will also answer you on `the Slack communication platform (#tt1) <https://icra20.slack.com/app_redirect?channel=tt1>`_ for very short questions.
+
+
+Organizations
+-------------
+
+.. centered:: |logo_ensta| |logo_labsticc| |logo_rts| |logo_hannover|
+.. centered:: |logo_contredo| |logo_gdrmacs| |logo_gdrrob|
+.. centered:: |logo_intcomp|  |logo_dga|
 
 
 List of people who got the diploma

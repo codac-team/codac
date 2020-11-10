@@ -277,6 +277,10 @@ Then you have two options: read the details about the features of Tubex (domains
   /manual/06-contractor-network/index
   /manual/07-graphics/index
 
+.. toctree:: 
+  :maxdepth: 1
+
+  /faq
   /dev/changelog
   /dev/api_technical_doc
   /dev/info_dev

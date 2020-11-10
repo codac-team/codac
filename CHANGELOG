@@ -4,14 +4,8 @@ Unreleased yet (in development)
 Features added
 --------------
 
-* :commit:`1273605e08f0408f3b4d082a68a8103170744b7a`: new method for merging adjacent slices that are *similar*
-* :commit:`72ec9b2aaf6568ed82159dbe927b3931272f727b`: possibility to create ``TrajectoryVector`` or ``TubeVector`` from lists in Python
-
 Changes
 -------
-
-* :commit:`fc711250036fd8b9c8c46126258690168828cfb0`: improved efficiency of ``CtcDelay``
-* :commit:`e806fc217de51399d0a0b56d6ff110bae45e6498`: added error when const domain has changed between two ``add()``
 
 .. Dependencies
 .. ------------
@@ -25,7 +19,34 @@ Changes
 Documentation
 -------------
 
-* added the FAQ page
+* added `the FAQ page<sec-faq>`
+
+
+-----------------------------------------------------------------
+
+Release 3.0.10 (released `Oct 31, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.10>`_)
+========================================================================================================
+
+`Commits since previous release 3.0.9 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.9...v3.0.10>`_
+
+Features added
+--------------
+
+* :commit:`1273605e08f0408f3b4d082a68a8103170744b7a`: new method for merging adjacent slices that are *similar*
+* :commit:`72ec9b2aaf6568ed82159dbe927b3931272f727b`: possibility to create ``TrajectoryVector`` or ``TubeVector`` from lists in Python
+
+Changes
+-------
+
+* :commit:`fc711250036fd8b9c8c46126258690168828cfb0`: improved efficiency of ``CtcDelay``
+* :commit:`e806fc217de51399d0a0b56d6ff110bae45e6498`: added error when const domain has changed between two ``add()``
+
+Dependencies
+------------
+
+* now available in Python 3.9
+* using `IBEX 2.8.9 <https://github.com/ibex-team/ibex-lib/releases/tag/ibex-2.8.9>`_
+* using `pyIbex 1.9.2 <https://github.com/benEnsta/pyIbex/releases/tag/v1.9.2>`_
 
 
 -----------------------------------------------------------------
