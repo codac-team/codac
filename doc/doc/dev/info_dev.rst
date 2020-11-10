@@ -27,7 +27,7 @@ In case you are willing to contribute to Tubex, here are some information that m
   ----------------------  --------------------------------------------------------------------------------------
   CMAKE_PREFIX_PATH       :ref:`See more <sec-installation-full-linux-cmake>`
   ----------------------  --------------------------------------------------------------------------------------
-  WITH_CAPD=ON            :ref:`See more <sec-extensions-ode>`
+  WITH_CAPD=ON            :ref:`See more <sec-extensions-ode>` (not fully supported yet)
   ----------------------  --------------------------------------------------------------------------------------
   BUILD_TESTS             | By default, the tests are not built.
                           | To enable the compilation of tests:
