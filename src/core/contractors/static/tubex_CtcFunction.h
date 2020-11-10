@@ -136,6 +136,64 @@ namespace tubex
       void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6);
 
       /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot),[x_3](\cdot),[x_4](\cdot),[x_5](\cdot),[x_6](\cdot),[x_7](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       * \param x3 the scalar tube \f$[x_3](\cdot)\f$ to be contracted
+       * \param x4 the scalar tube \f$[x_4](\cdot)\f$ to be contracted
+       * \param x5 the scalar tube \f$[x_5](\cdot)\f$ to be contracted
+       * \param x6 the scalar tube \f$[x_6](\cdot)\f$ to be contracted
+       * \param x7 the scalar tube \f$[x_7](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot),[x_3](\cdot),[x_4](\cdot),[x_5](\cdot),[x_6](\cdot),[x_7](\cdot),[x_8](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       * \param x3 the scalar tube \f$[x_3](\cdot)\f$ to be contracted
+       * \param x4 the scalar tube \f$[x_4](\cdot)\f$ to be contracted
+       * \param x5 the scalar tube \f$[x_5](\cdot)\f$ to be contracted
+       * \param x6 the scalar tube \f$[x_6](\cdot)\f$ to be contracted
+       * \param x7 the scalar tube \f$[x_7](\cdot)\f$ to be contracted
+       * \param x8 the scalar tube \f$[x_8](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot),[x_3](\cdot),[x_4](\cdot),[x_5](\cdot),[x_6](\cdot),[x_7](\cdot),[x_8](\cdot),[x_9](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       * \param x3 the scalar tube \f$[x_3](\cdot)\f$ to be contracted
+       * \param x4 the scalar tube \f$[x_4](\cdot)\f$ to be contracted
+       * \param x5 the scalar tube \f$[x_5](\cdot)\f$ to be contracted
+       * \param x6 the scalar tube \f$[x_6](\cdot)\f$ to be contracted
+       * \param x7 the scalar tube \f$[x_7](\cdot)\f$ to be contracted
+       * \param x8 the scalar tube \f$[x_8](\cdot)\f$ to be contracted
+       * \param x9 the scalar tube \f$[x_9](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, Tube& x9);
+
+      /**
+       * \brief \f$\mathcal{C}\big([x_1](\cdot),[x_2](\cdot),[x_3](\cdot),[x_4](\cdot),[x_5](\cdot),[x_6](\cdot),[x_7](\cdot),[x_8](\cdot),[x_9](\cdot),[x_10](\cdot)\big)\f$
+       *
+       * \param x1 the scalar tube \f$[x_1](\cdot)\f$ to be contracted
+       * \param x2 the scalar tube \f$[x_2](\cdot)\f$ to be contracted
+       * \param x3 the scalar tube \f$[x_3](\cdot)\f$ to be contracted
+       * \param x4 the scalar tube \f$[x_4](\cdot)\f$ to be contracted
+       * \param x5 the scalar tube \f$[x_5](\cdot)\f$ to be contracted
+       * \param x6 the scalar tube \f$[x_6](\cdot)\f$ to be contracted
+       * \param x7 the scalar tube \f$[x_7](\cdot)\f$ to be contracted
+       * \param x8 the scalar tube \f$[x_8](\cdot)\f$ to be contracted
+       * \param x9 the scalar tube \f$[x_9](\cdot)\f$ to be contracted
+       * \param x10 the scalar tube \f$[x_10](\cdot)\f$ to be contracted
+       */
+      void contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, Tube& x9, Tube& x10);
+
+      /**
        * \brief Contracts an array of slices (representing a slice vector)
        *
        * Propagates the contractions to the next slices
