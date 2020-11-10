@@ -266,7 +266,7 @@ I am confused about how to apply a *static* contractor to a tube
 ----------------------------------------------------------------
 
 A *static* contractor does not depend on time and only involves static domains such as intervals and boxes.
-When one want to apply a static contractor on a tube, the goal is to apply it for each time :math:`t` in :math:`[t_0,t_f]`.
+When one wants to apply a static contractor on a tube, the goal is to apply it for each time :math:`t` in :math:`[t_0,t_f]`.
 
 Consider for instance a robot (the position of which is enclosed in :math:`[\mathbf{x}](\cdot)`) moving around a landmark represented by the box :math:`[\mathbf{b}]`. The evolution of the distances between the robot and the landmark is enclosed in a tube :math:`[y](\cdot)`.
 
@@ -282,7 +282,7 @@ Using the static :math:`\mathcal{C}_{\textrm{dist}}` contractor for the distance
 | ... continuously and for any time :math:`t` in :math:`[t_0,t_f]`.
 | Since :math:`[\mathbf{b}]` is not a tube, its value is repeated for each contractor.
 
-The CN can manage the static constraint for any time in an efficient way. This can be implemented in one line only:
+A :ref:`CN<sec-manual-solver>` can manage the static constraint for any time in an efficient way. This can be implemented in one line only:
 
 .. tabs::
 
