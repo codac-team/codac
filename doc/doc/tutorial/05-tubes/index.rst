@@ -113,7 +113,7 @@ The following code creates the actual (but unknown) trajectory :math:`\mathbf{x}
 
     .. code-tab:: cpp
     
-      VIBesFigMap = fig_map("Map");
+      VIBesFigMap fig_map("Map");
       fig_map.set_properties(100, 100, 600, 300);
       fig_map.add_trajectory(&actual_x, "x*", 0, 1);
       fig_map.add_beacon(b, 0.1);                   // 0.1: landmark width
