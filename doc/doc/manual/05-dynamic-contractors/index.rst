@@ -10,7 +10,8 @@ We now focus on time-related constraints. The following contractors provide a wa
 
   01-ctc-deriv
   02-ctc-eval
-  03-ctc-picard
+  03-ctc-lohner
+  04-ctc-picard
 
 ------------------------------------------------------
 
