@@ -12,6 +12,7 @@
 #include <fstream>
 #include "tubex_Tools.h"
 #include "tubex_ContractorNetwork.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -30,38 +31,32 @@ namespace tubex
     
     void ContractorNetwork::set_name(Ctc& ctc, const string& name)
     {
-      #ifndef NDEBUG
-        bool contractor_found = false;
-      #endif
+      bool contractor_found = false;
 
       for(const auto& added_ctc: m_v_ctc)
         if(added_ctc->type() == Contractor::Type::T_IBEX && &added_ctc->ibex_ctc() == &ctc)
         {
           added_ctc->set_name(name);
-          #ifndef NDEBUG
             contractor_found = true;
-          #endif
         }
 
-      assert(contractor_found);
+      if(!contractor_found)
+        throw Exception(__func__, "contractor cannot be found in CN");
     }
     
     void ContractorNetwork::set_name(DynCtc& ctc, const string& name)
     {
-      #ifndef NDEBUG
-        bool contractor_found = false;
-      #endif
+      bool contractor_found = false;
 
       for(const auto& added_ctc: m_v_ctc)
         if(added_ctc->type() == Contractor::Type::T_TUBEX && &added_ctc->tubex_ctc() == &ctc)
         {
           added_ctc->set_name(name);
-          #ifndef NDEBUG
             contractor_found = true;
-          #endif
         }
 
-      assert(contractor_found);
+      if(!contractor_found)
+        throw Exception(__func__, "contractor cannot be found in CN");
     }
 
     int ContractorNetwork::print_dot_graph(const string& cn_name, const string& layer_model) const

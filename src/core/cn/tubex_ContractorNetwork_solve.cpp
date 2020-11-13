@@ -10,6 +10,7 @@
 
 #include <time.h>
 #include "tubex_ContractorNetwork.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;

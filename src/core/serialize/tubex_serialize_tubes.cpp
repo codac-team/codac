@@ -23,12 +23,12 @@ namespace tubex
   void serialize_Tube(ofstream& bin_file, const Tube& tube, int version_number)
   {
     if(!bin_file.is_open())
-      throw Exception("serialize_Tube()", "ofstream& bin_file not open");
+      throw Exception(__func__, "ofstream& bin_file not open");
 
     switch(version_number)
     {
       case 1:
-        throw Exception("serialize_Tube()", "serialization version no more supported");
+        throw Exception(__func__, "serialization version no more supported");
         break;
 
       case 2:
@@ -63,14 +63,14 @@ namespace tubex
       }
 
       default:
-        throw Exception("serialize_Tube()", "unhandled case");
+        throw Exception(__func__, "unhandled case");
     }
   }
 
   void deserialize_Tube(ifstream& bin_file, Tube *&tube)
   {
     if(!bin_file.is_open())
-      throw Exception("deserialize_Tube()", "ifstream& bin_file not open");
+      throw Exception(__func__, "ifstream& bin_file not open");
 
     // Version number for compliance purposes
     short int version_number;
@@ -79,7 +79,7 @@ namespace tubex
     switch(version_number)
     {
       case 1:
-        throw Exception("deserialize_Tube()", "serialization version no more supported");
+        throw Exception(__func__, "serialization version no more supported");
         break;
 
       case 2:
@@ -91,7 +91,7 @@ namespace tubex
         bin_file.read((char*)&slices_number, sizeof(int));
 
         if(slices_number < 1)
-          throw Exception("deserialize_Tube()", "wrong slices number");
+          throw Exception(__func__, "wrong slices number");
 
         // Creating slices
         double lb;
@@ -154,14 +154,14 @@ namespace tubex
       }
 
       default:
-        throw Exception("deserialize_Tube()", "deserialization version number not supported");
+        throw Exception(__func__, "deserialization version number not supported");
     }
   }
 
   void serialize_TubeVector(ofstream& bin_file, const TubeVector& tube, int version_number)
   {
     if(!bin_file.is_open())
-      throw Exception("serialize_TubeVector()", "ofstream& bin_file not open");
+      throw Exception(__func__, "ofstream& bin_file not open");
 
     short int size = tube.size();
     bin_file.write((const char*)&size, sizeof(short int));
@@ -172,7 +172,7 @@ namespace tubex
   void deserialize_TubeVector(ifstream& bin_file, TubeVector *&tube)
   {
     if(!bin_file.is_open())
-      throw Exception("deserialize_TubeVector()", "ifstream& bin_file not open");
+      throw Exception(__func__, "ifstream& bin_file not open");
 
     tube = new TubeVector();
 

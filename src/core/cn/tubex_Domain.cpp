@@ -11,6 +11,7 @@
 #include "tubex_Tools.h"
 #include "tubex_Domain.h"
 #include "tubex_Figure.h" // for add_suffix
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -549,7 +550,7 @@ namespace tubex
             // This happens if a variable has changed since its last add,
             // for instance when iterating a "t" inside a loop of constraints.
             if(m_ref_values_i.get() != x.m_ref_values_i.get())
-              throw Exception("values have changed since last add (double type). Use create_dom for local variables.");
+              throw Exception(__func__, "Values have changed since last add (double type). Use create_dom for local variables.");
           }
           return &m_ref_memory_d.get() == &x.m_ref_memory_d.get();
         }
@@ -564,7 +565,7 @@ namespace tubex
             // This happens if a variable has changed since its last add,
             // for instance when iterating a "t" inside a loop of constraints.
             if(m_ref_values_iv.get() != x.m_ref_values_iv.get())
-              throw Exception("values have changed since last add (Vector type). Use create_dom for local variables.");
+              throw Exception(__func__, "Values have changed since last add (Vector type). Use create_dom for local variables.");
           }
           return &m_ref_memory_v.get() == &x.m_ref_memory_v.get();
         }
@@ -689,7 +690,8 @@ namespace tubex
     }
 
     double prev_t = m_traj_lb.tdomain().ub();
-    assert(t > prev_t && "t does not represent new data since last call");
+    if(t <= prev_t)
+      throw Exception(__func__, "t does not represent new data since last call");
 
     // Updating the trajectory
     m_traj_lb.set(y.lb(), t);
@@ -739,7 +741,8 @@ namespace tubex
   void Domain::add_data(double t, const IntervalVector& y, ContractorNetwork& cn)
   {
     assert(m_type == Type::T_TUBE_VECTOR);
-    assert(tube_vector().size() == y.size());
+    if(tube_vector().size() != y.size())
+      throw Exception(__func__, "tube and box not of same dimension");
 
     for(int i = 0 ; i < tube_vector().size() ; i++)
     {

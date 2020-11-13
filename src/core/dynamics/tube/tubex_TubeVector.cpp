@@ -159,8 +159,7 @@ namespace tubex
     {
       deserialize(binary_file_name, traj);
       if(traj == NULL)
-        throw Exception("Tube constructor",
-                        "unable to deserialize Trajectory object");
+        throw Exception(__func__, "unable to deserialize Trajectory object");
     }
     
     TubeVector::~TubeVector()
@@ -788,7 +787,7 @@ namespace tubex
 
       catch(ibex::NoBisectableVariableException&)
       {
-        throw Exception("TubeVector::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
+        throw Exception(__func__, "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
       };
 
       return p;
@@ -813,7 +812,7 @@ namespace tubex
 
       catch(ibex::NoBisectableVariableException&)
       {
-        throw Exception("TubeVector::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
+        throw Exception(__func__, "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
       };
 
       return p;
@@ -905,7 +904,7 @@ namespace tubex
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while writing file \"" + binary_file_name + "\"");
 
       serialize_TubeVector(bin_file, *this, version_number);
       bin_file.close();
@@ -916,7 +915,7 @@ namespace tubex
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while writing file \"" + binary_file_name + "\"");
 
       serialize_TubeVector(bin_file, *this, version_number);
       char c = 0; bin_file.write(&c, 1); // writing a bit to separate the two objects
@@ -972,7 +971,7 @@ namespace tubex
       ifstream bin_file(binary_file_name.c_str(), ios::in | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("TubeVector::deserialize()", "error while opening file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while opening file \"" + binary_file_name + "\"");
       
       TubeVector *ptr;
       deserialize_TubeVector(bin_file, ptr);

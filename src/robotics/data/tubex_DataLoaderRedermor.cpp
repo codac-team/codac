@@ -37,7 +37,7 @@ namespace tubex
     else // loading data from file
     {
       if(!m_datafile->is_open())
-        throw Exception("DataLoaderRedermor::load_data", "data file not already open");
+        throw Exception(__func__, "data file not already open");
 
       int i = 0;
       string line;
@@ -65,7 +65,7 @@ namespace tubex
                  >> y[7] >> dy[7]   // alt
                  >> y[8] >> dy[8]   // x
                  >> y[9] >> dy[9])) // y
-          throw Exception("DataLoaderRedermor::load_data", "fail loading data");
+          throw Exception(__func__, "fail loading data");
 
         // Trajectory used for velocities evaluations:
         traj_data_x.set(y, t);

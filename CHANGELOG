@@ -7,6 +7,8 @@ Features added
 Changes
 -------
 
+* throwing exceptions instead of assert error messages (mainly for graphics/serializ/CN)
+
 .. Dependencies
 .. ------------
 

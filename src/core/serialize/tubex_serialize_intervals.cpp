@@ -21,7 +21,7 @@ namespace tubex
   void serialize_Interval(ofstream& bin_file, const Interval& intv)
   {
     if(!bin_file.is_open())
-      throw Exception("serialize_Interval()", "ofstream& bin_file not open");
+      throw Exception(__func__, "ofstream& bin_file not open");
 
     IntervalType intv_type;
 
@@ -53,7 +53,7 @@ namespace tubex
   void deserialize_Interval(ifstream& bin_file, Interval& intv)
   {
     if(!bin_file.is_open())
-      throw Exception("deserialize_Interval()", "ifstream& bin_file not open");
+      throw Exception(__func__, "ifstream& bin_file not open");
 
     IntervalType intv_type;
     bin_file.read((char*)&intv_type, sizeof(IntervalType));
@@ -84,14 +84,14 @@ namespace tubex
         break;
 
       default:
-        throw Exception("deserialize_Interval()", "unhandled case");
+        throw Exception(__func__, "unhandled case");
     }
   }
 
   void serialize_IntervalVector(ofstream& bin_file, const IntervalVector& box)
   {
     if(!bin_file.is_open())
-      throw Exception("serialize_IntervalVector()", "ofstream& bin_file not open");
+      throw Exception(__func__, "ofstream& bin_file not open");
 
     short int size = box.size();
     bin_file.write((const char*)&size, sizeof(short int));
@@ -102,7 +102,7 @@ namespace tubex
   void deserialize_IntervalVector(ifstream& bin_file, IntervalVector& box)
   {
     if(!bin_file.is_open())
-      throw Exception("deserialize_IntervalVector()", "ifstream& bin_file not open");
+      throw Exception(__func__, "ifstream& bin_file not open");
 
     short int size;
     bin_file.read((char*)&size, sizeof(short int));

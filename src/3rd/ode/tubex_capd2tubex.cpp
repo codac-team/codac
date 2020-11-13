@@ -258,7 +258,7 @@ namespace tubex
         }
         catch(exception& e)
         {
-            throw Exception("capd2tubex", e.what());
+            throw Exception(__func__, e.what());
         }
 
     }

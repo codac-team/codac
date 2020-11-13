@@ -32,7 +32,7 @@ namespace tubex
     m_datafile = new ifstream();
     m_datafile->open(file_path.c_str(), std::ios_base::out);
     if(!m_datafile->is_open())
-      throw Exception("DataLoader constructor", "unable to load data file");
+      throw Exception(__func__, "unable to load data file");
   }
 
   DataLoader::~DataLoader()

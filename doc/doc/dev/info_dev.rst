@@ -132,7 +132,7 @@ One shortcut to build all the examples (including 3rd parties) is given by:
 .. code-block:: bash
   
   # From Tubex root
-  ./make examples
+  ./make.sh examples
 
 Note that the :file:`build` folders of each example is removed before the build.
 
@@ -141,14 +141,14 @@ One shortcut to build the tests is given by:
 .. code-block:: bash
 
   # From Tubex root
-  ./make tests
+  ./make.sh tests
 
 One shortcut to build both the examples and tests is:
 
 .. code-block:: bash
 
   # From Tubex root
-  ./make all
+  ./make.sh all
 
 
 .. rubric:: Visualization of graphs of CN

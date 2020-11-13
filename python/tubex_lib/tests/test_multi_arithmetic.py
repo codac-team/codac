@@ -51,7 +51,7 @@ class TestArithmeticOnTube(unittest.TestCase):
 
     testdx = 3.0
     testdy = 4.0
-    self.assertEqual(pow(testdx,testdy), 81);
+    self.assertAlmostEqual(pow(testdx,testdy), 81);
 
     testintvx = Interval(3)
     testintvy = Interval(4)

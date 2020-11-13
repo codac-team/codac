@@ -10,6 +10,7 @@
 
 #include "tubex_ContractorNetwork.h"
 #include "tubex_CtcEval.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -144,16 +145,20 @@ namespace tubex
 
     void ContractorNetwork::add(Ctc& static_ctc, const vector<Domain>& v_domains)
     {
-      assert(!v_domains.empty());
+      if(v_domains.empty())
+        throw Exception(__func__, "cannot add a contractor without domains");
 
       // Static constraint: each slice (if dyn case) is dealt with in parallel,
       // so dynamic variables must share the same slicing
-      assert(Domain::dyn_same_slicing(v_domains));
+      if(!Domain::dyn_same_slicing(v_domains))
+        throw Exception(__func__, "domains do not have same slicing");
 
       int n = Domain::total_size(v_domains);
       if(n % static_ctc.nb_var != 0)
+      {
         cout << "n=" << n << ", static_ctc.nb_var=" << static_ctc.nb_var << endl;
-      assert((n % static_ctc.nb_var == 0) && "invalid total dimension of domains");
+        throw Exception(__func__, "invalid total dimension of domains");
+      }
 
       // Adding domains to the CN
       for(auto& dom : v_domains)
@@ -188,7 +193,8 @@ namespace tubex
 
                 else // array data case
                 {
-                  assert((dom.interval_vector().size() == n/static_ctc.nb_var) && "wrong vector dimension");
+                  if(dom.interval_vector().size() != n/static_ctc.nb_var)
+                    throw Exception(__func__, "wrong vector dimension");
                   v_dom_ptr.push_back(add_dom(Domain::vector_component(const_cast<Domain&>(dom), i)));
                 }
                 break;
@@ -208,7 +214,8 @@ namespace tubex
 
                 else // array data case
                 {
-                  assert((dom.tube_vector().size() == n/static_ctc.nb_var) && "wrong vector dimension");
+                  if(dom.tube_vector().size() != n/static_ctc.nb_var)
+                    throw Exception(__func__, "wrong vector dimension");
                   v_dom_ptr.push_back(add_dom(Domain(const_cast<Slice&>(*dom.tube_vector()[i].slice(k)))));
                 }
 
@@ -239,7 +246,8 @@ namespace tubex
 
     void ContractorNetwork::add(DynCtc& dyn_ctc, const vector<Domain>& v_domains)
     {
-      assert(!v_domains.empty());
+      if(v_domains.empty())
+        throw Exception(__func__, "cannot add a contractor without domains");
 
       // If the CtcEval contractor is involved, its contracting impact is set
       // to the minimal and we add the CtcDeriv contractor on top of that, in 
@@ -248,7 +256,8 @@ namespace tubex
       // todo: prevent from several CtcDeriv on same couple of slices?
       if(typeid(dyn_ctc) == typeid(CtcEval))
       {
-        assert(v_domains.size() == 3 || v_domains.size() == 4);
+        if(v_domains.size() != 3 && v_domains.size() != 4)
+          throw Exception(__func__, "wrong number of domains");
 
         if(v_domains.size() == 4) // with derivative information
         {
@@ -265,7 +274,8 @@ namespace tubex
       if(&dyn_ctc == m_ctc_deriv // if we are dealing with the interval CtcDeriv
         && !Domain::all_slices(v_domains)) // and if the domains are not slices
       {
-        assert(v_domains.size() == 2);
+        if(v_domains.size() != 2)
+          throw Exception(__func__, "wrong number of domains");
         pair<Domain*,Domain*> p = make_pair(add_dom(v_domains[0]), add_dom(v_domains[1]));
 
         if(find(m_domains_related_to_ctcderiv.begin(), m_domains_related_to_ctcderiv.end(), p)
@@ -288,7 +298,8 @@ namespace tubex
       {
         // Not inter-temporal => 
         assert(Domain::all_dyn(v_domains)); // all domains are slices or tubes or tube vectors
-        assert(Domain::dyn_same_slicing(v_domains)); // all domains share same slicing
+        if(!Domain::dyn_same_slicing(v_domains))
+          throw Exception(__func__, "domains do not have same slicing");
 
         vector<const Slice*> v_slices;
 
@@ -377,7 +388,8 @@ namespace tubex
 
     Domain* ContractorNetwork::add_dom(const Domain& ad)
     {
-      assert(!ad.is_empty() && "domain already empty when added to the CN");
+      if(ad.is_empty())
+        throw Exception(__func__, "domain already empty when added to the CN");
 
       // Looking if this domain is not already part of the graph
       for(auto& dom : m_v_domains)

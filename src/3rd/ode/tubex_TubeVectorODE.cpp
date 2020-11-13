@@ -29,7 +29,7 @@ namespace tubex
       // Additional integration tools might be added in the future
 
       default:
-        throw Exception("TubeVectorODE", "integration tool not available");
+        throw Exception(__func__, "integration tool not available");
     }
   }
 }
