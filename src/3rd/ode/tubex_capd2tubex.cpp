@@ -107,14 +107,6 @@ namespace tubex
             {
                 timeMap(T,s);
                 capd::interval stepMade = solver.getStep();
-                //cout << "\nstep made: " << stepMade;
-                // This is how we can extract an information
-                // about the trajectory between time steps.
-                // The type CurveType is a function defined
-                // on the interval [0,stepMade].
-                // It can be evaluated at a point (or interval).
-                // The curve can be also differentiated wrt to time.
-                // We can also extract from it the 1-st order derivatives wrt.
                 const capd::IOdeSolver::SolutionCurve& curve = solver.getCurve();
                 capd::interval domain = capd::interval(0,1)*stepMade;
                 capd::IVector v = curve(domain);
@@ -138,6 +130,8 @@ namespace tubex
         catch(exception& e)
         {
             cout << "\n\nException caught!\n" << e.what() << endl << endl;
+            vector<IntervalVector> ibex_curve_error={};
+            return (ibex_curve_error);
         }
         return(ibex_curve);
 
