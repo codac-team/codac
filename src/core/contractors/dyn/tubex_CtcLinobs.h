@@ -60,6 +60,10 @@ namespace tubex
       ibex::IntervalMatrix (*m_exp_At)(const ibex::Matrix& A, const ibex::Interval& t);
 
       const int m_polygon_max_edges = 15;
+
+      static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
+      static std::vector<std::string> m_str_expected_doms; //!< allowed domains signatures (mainly used for CN Exceptions)
+      friend class ContractorNetwork;
   };
 }
 

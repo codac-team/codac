@@ -11,6 +11,7 @@
 #include "tubex_ContractorNetwork.h"
 #include "tubex_CtcEval.h"
 #include "tubex_Exception.h"
+#include "tubex_DomainsTypeException.h"
 
 using namespace std;
 using namespace ibex;
@@ -257,7 +258,7 @@ namespace tubex
       if(typeid(dyn_ctc) == typeid(CtcEval))
       {
         if(v_domains.size() != 3 && v_domains.size() != 4)
-          throw Exception(__func__, "wrong number of domains");
+          throw DomainsTypeException(CtcEval::m_ctc_name, v_domains, CtcEval::m_str_expected_doms);
 
         if(v_domains.size() == 4) // with derivative information
         {
@@ -269,13 +270,17 @@ namespace tubex
         }
       }
 
+      if(typeid(dyn_ctc) == typeid(CtcDeriv)
+        && !Domain::all_slices(v_domains)
+        && v_domains.size() != 2)
+        throw DomainsTypeException(CtcDeriv::m_ctc_name, v_domains, CtcDeriv::m_str_expected_doms);
+
       // Optimization: do not try to add a CtcDeriv contractor on tubes if it has already
       // been added (todo: generalize this optimization to any contractor?)
       if(&dyn_ctc == m_ctc_deriv // if we are dealing with the interval CtcDeriv
         && !Domain::all_slices(v_domains)) // and if the domains are not slices
       {
-        if(v_domains.size() != 2)
-          throw Exception(__func__, "wrong number of domains");
+        // todo ^: use "typeid(dyn_ctc) == typeid(CtcDeriv)" instead of "&dyn_ctc == m_ctc_deriv" ?
         pair<Domain*,Domain*> p = make_pair(add_dom(v_domains[0]), add_dom(v_domains[1]));
 
         if(find(m_domains_related_to_ctcderiv.begin(), m_domains_related_to_ctcderiv.end(), p)
@@ -297,7 +302,8 @@ namespace tubex
       if(!dyn_ctc.is_intertemporal() && !Domain::all_slices(v_domains))
       {
         // Not inter-temporal => 
-        assert(Domain::all_dyn(v_domains)); // all domains are slices or tubes or tube vectors
+        if(!Domain::all_dyn(v_domains))
+          throw Exception(__func__, "all domains are not slices nor tubes nor tube vectors");
         if(!Domain::dyn_same_slicing(v_domains))
           throw Exception(__func__, "domains do not have same slicing");
 
@@ -333,7 +339,7 @@ namespace tubex
             break;
 
             default:
-              assert(false && "domain is not a tube or a tube vector");
+              throw Exception(__func__, "domain is not a tube or a tube vector");
           }
         }
 

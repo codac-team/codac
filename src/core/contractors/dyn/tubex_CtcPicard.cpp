@@ -9,6 +9,7 @@
  */
 
 #include "tubex_CtcPicard.h"
+#include "tubex_DomainsTypeException.h"
 
 using namespace std;
 using namespace ibex;

@@ -78,6 +78,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_TrajectoryVector_operators.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_Exception.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_Exception.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsTypeException.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsTypeException.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_tubes.h

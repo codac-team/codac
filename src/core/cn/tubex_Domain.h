@@ -103,6 +103,7 @@ namespace tubex
 
       static Domain vector_component(Domain& x, int i);
 
+      const std::string dom_type_str() const;
       friend std::ostream& operator<<(std::ostream& str, const Domain& x);
 
     protected:

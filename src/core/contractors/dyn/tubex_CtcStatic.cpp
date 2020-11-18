@@ -9,6 +9,7 @@
  */
 
 #include "tubex_CtcStatic.h"
+#include "tubex_DomainsTypeException.h"
 
 using namespace std;
 using namespace ibex;
@@ -20,7 +21,14 @@ namespace tubex
   {
 
   }
-  
+
+  // Static members for contractor signature (mainly used for CN Exceptions)
+  const string CtcStatic::m_ctc_name = "CtcStatic";
+  vector<string> CtcStatic::m_str_expected_doms(
+  {
+    "Slice[, Slice..]"
+  });
+
   void CtcStatic::contract(vector<Domain*>& v_domains)
   {
     assert(!v_domains.empty());
@@ -28,7 +36,9 @@ namespace tubex
 
     for(size_t i = 0 ; i < v_domains.size() ; i++)
     {
-      assert(v_domains[i]->type() == Domain::Type::T_SLICE);
+      if(v_domains[i]->type() != Domain::Type::T_SLICE)
+        throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
+      
       if(i != 0)
         assert(v_domains[i]->slice().tdomain() == v_domains[i-1]->slice().tdomain());
     }

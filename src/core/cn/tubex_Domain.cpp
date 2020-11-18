@@ -953,31 +953,31 @@ namespace tubex
     return output_name;
   }
 
+  const string Domain::dom_type_str() const
+  {
+    switch(m_type)
+    {
+      case Domain::Type::T_INTERVAL:
+        return "Interval";
+      case Domain::Type::T_INTERVAL_VECTOR:
+        return "IntervalVector";
+      case Domain::Type::T_SLICE:
+        return "Slice";
+      case Domain::Type::T_TUBE:
+        return "Tube";
+      case Domain::Type::T_TUBE_VECTOR:
+        return "TubeVector";
+      default:
+        assert(false && "unhandled case");
+        return "unhandled case";
+    }
+  }
+
   ostream& operator<<(ostream& str, const Domain& x)
   {
     str << "Domain:";
 
     str << "  type=";
-    switch(x.m_type)
-    {
-      case Domain::Type::T_INTERVAL:
-        str << "Interval  ";
-        break;
-      case Domain::Type::T_INTERVAL_VECTOR:
-        str << "IntVector ";
-        break;
-      case Domain::Type::T_SLICE:
-        str << "Slice     ";
-        break;
-      case Domain::Type::T_TUBE:
-        str << "Tube      ";
-        break;
-      case Domain::Type::T_TUBE_VECTOR:
-        str << "TubeVector";
-        break;
-      default:
-        assert(false && "unhandled case");
-    }
 
     str << "  mem=";
     switch(x.m_memory_type)

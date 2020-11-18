@@ -10,6 +10,7 @@
 
 #include "tubex_CtcChain.h"
 #include "tubex_Domain.h"
+#include "tubex_DomainsTypeException.h"
 
 using namespace std;
 using namespace ibex;
@@ -28,12 +29,20 @@ namespace tubex
 
   }
 
+  // Static members for contractor signature (mainly used for CN Exceptions)
+  const string CtcChain::m_ctc_name = "CtcChain";
+  vector<string> CtcChain::m_str_expected_doms(
+  {
+    "Tube, Tube, Tube"
+  });
+
   void CtcChain::contract(vector<Domain*>& v_domains)
   {
-    assert(v_domains.size() == 3);
-    assert(v_domains[0]->type() == Domain::Type::T_TUBE
-        && v_domains[1]->type() == Domain::Type::T_TUBE
-        && v_domains[2]->type() == Domain::Type::T_TUBE);
+    if(v_domains.size() != 3
+      || v_domains[0]->type() != Domain::Type::T_TUBE
+      || v_domains[1]->type() != Domain::Type::T_TUBE
+      || v_domains[2]->type() != Domain::Type::T_TUBE)
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
 
     TubeVector x({ // todo: improve this
       v_domains[0]->tube(),

@@ -51,6 +51,10 @@ namespace tubex
 
       float m_delta;
       int m_picard_iterations = 0;
+
+      static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
+      static std::vector<std::string> m_str_expected_doms; //!< allowed domains signatures (mainly used for CN Exceptions)
+      friend class ContractorNetwork;
   };
 }
 
