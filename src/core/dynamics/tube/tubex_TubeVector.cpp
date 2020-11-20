@@ -82,12 +82,12 @@ namespace tubex
       assert(v_tdomains.size() == v_codomains.size());
       assert(!v_tdomains.empty());
 
-#ifdef _MSC_VER
+      #ifdef _MSC_VER
       // see https://stackoverflow.com/questions/48459297/is-there-a-vlas-variable-length-arrays-support-workaround-for-vs2017
       vector<Interval>* v_scalar_codomains = new vector<Interval>[size()];
-#else
+      #else
       vector<Interval> v_scalar_codomains[size()];
-#endif // _MSC_VER
+      #endif // _MSC_VER
 
       for(size_t i = 0 ; i < v_codomains.size() ; i++)
       {
@@ -100,9 +100,9 @@ namespace tubex
       for(int j = 0 ; j < size() ; j++)
         (*this)[j] = Tube(v_tdomains, v_scalar_codomains[j]);
 
-#ifdef _MSC_VER
-	  delete[] v_scalar_codomains;
-#endif // _MSC_VER
+      #ifdef _MSC_VER
+  	  delete[] v_scalar_codomains;
+      #endif // _MSC_VER
     }
 
     TubeVector::TubeVector(initializer_list<Tube> list)
@@ -135,6 +135,7 @@ namespace tubex
     TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)
       : TubeVector(traj.tdomain(), timestep, traj.size())
     {
+      assert(traj.same_tdomain_forall_components());
       assert(timestep >= 0.);
       set_empty();
       *this |= traj;
@@ -144,6 +145,7 @@ namespace tubex
       : TubeVector(lb, timestep)
     {
       assert(timestep >= 0.);
+      assert(lb.same_tdomain_forall_components() && ub.same_tdomain_forall_components());
       assert(lb.tdomain() == ub.tdomain());
       assert(lb.size() == ub.size());
       *this |= ub;

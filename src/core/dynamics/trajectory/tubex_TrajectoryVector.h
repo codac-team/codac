@@ -280,6 +280,13 @@ namespace tubex
       TrajectoryVector& shift_tdomain(double a);
 
       /**
+       * \brief Checks whether all the Trajectory components have the same tdomain or not
+       *
+       * \return true in case of temporal consistency
+       */
+      bool same_tdomain_forall_components() const;
+
+      /**
        * \brief Transforms an analytic trajectory as a map of values
        *
        * \note Sampling only available for trajectories firstly defined as analytic functions

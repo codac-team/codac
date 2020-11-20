@@ -279,6 +279,14 @@ namespace tubex
         (*this)[i].shift_tdomain(shift_ref);
       return *this;
     }
+    
+    bool TrajectoryVector::same_tdomain_forall_components() const
+    {
+      for(int i = 1 ; i < size() ; i++)
+        if((*this)[i].tdomain() != (*this)[0].tdomain())
+          return false;
+      return true;
+    }
 
     TrajectoryVector& TrajectoryVector::sample(double dt)
     {
