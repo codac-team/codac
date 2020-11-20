@@ -40,9 +40,9 @@ actual_x = TrajectoryVector(tdomain, TFunction("( \
 
 # Continuous measurements coming from the truth
 measured_psi = actual_x[2].sample(dt).make_continuous()
-#measured_psi += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)) # adding some noise
+measured_psi += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)) # adding some noise
 measured_speed = actual_x[3].sample(dt);
-#measured_speed += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)) # adding some noise
+measured_speed += RandTrajectory(tdomain, dt, Interval(-0.01,0.01)) # adding some noise
 
 # Sets of trajectories
 
@@ -59,7 +59,6 @@ x[3] = Tube(measured_speed, dt).inflate(0.01)
 
 # Creating random map of landmarks
 nb_landmarks = 150
-#map_area = IntervalVector(2, [-20,20])
 map_area = IntervalVector(actual_x.codomain().subvector(0,1)).inflate(2)
 v_map = DataLoader.generate_landmarks_boxes(map_area, nb_landmarks)
 
@@ -124,10 +123,10 @@ beginDrawing()
 fig_map = VIBesFigMap("Map")
 fig_map.set_properties(50, 50, 600*2, 300*2)
 fig_map.add_tube(x, "x", 0, 1)
-fig_map.add_observations(v_obs, actual_x)
 fig_map.add_trajectory(actual_x, "x*", 0, 1, 2, "white")
 for b in v_map:
   fig_map.add_beacon(b.inflate(0.1))
+fig_map.add_observations(v_obs, actual_x)
 fig_map.smooth_tube_drawing(True)
 fig_map.show(1)
 #fig_map.axis_limits(-20, 20, -1, 1, True)
