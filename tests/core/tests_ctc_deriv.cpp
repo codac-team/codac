@@ -301,7 +301,8 @@ TEST_CASE("CtcDeriv")
     tube.set(Interval::ALL_REALS, 8);
     tube.set(Interval(5.5), 23.); // setting gate again
 
-    Tube tubedot(tube, Interval(-1.,1.));
+    Tube tubedot(tube);
+    tubedot.set(Interval(-1.,1.));
 
     CHECK(tube.nb_slices() == 9);
     CHECK(tubedot.nb_slices() == 9);

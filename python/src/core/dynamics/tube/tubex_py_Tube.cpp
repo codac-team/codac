@@ -42,10 +42,6 @@ void export_Tube(py::module& m)
       TUBE_TUBE_INTERVAL_DOUBLE_INTERVAL,
       "tdomain"_a, "timestep"_a, "codomain"_a=Interval::all_reals())
 
-    .def(py::init<const Tube&,const Interval &>(),
-      TUBE_TUBE_TUBE_INTERVAL,
-      "x"_a, "codomain"_a)
-
     .def(py::init<const Interval&,double,const TFnc&,int>(),
       TUBE_TUBE_INTERVAL_DOUBLE_TFNC_INT,
       "tdomain"_a, "timestep"_a, "f"_a, "f_image_id"_a=0)

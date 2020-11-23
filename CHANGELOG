@@ -8,6 +8,7 @@ Changes
 -------
 
 * throwing explicit exceptions if contractors signatures not compliant in ``ContractorNetwork::add``
+* removing the constructor ``Tube(Tube, Interval)`` (may lead to cast errors)
 
 .. Dependencies
 .. ------------

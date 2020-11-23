@@ -341,7 +341,8 @@ namespace tubex
   const Tube operator/(const Trajectory& x1, const Tube& x2)
   {
     assert(x1.tdomain() == x2.tdomain());
-    Tube y(x2, 1.);
+    Tube y(x2); // same sampling
+    y.set(1.); // updated codomain
     y.operator/=(x2);
     y.operator*=(x1);
     return y;

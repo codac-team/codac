@@ -63,7 +63,7 @@ namespace tubex
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param codomain Interval value of the slices (all reals \f$[-\infty,\infty]\f$ by default)
        */
-      Tube(const ibex::Interval& tdomain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      explicit Tube(const ibex::Interval& tdomain, double timestep, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ from a TFnc object and with some temporal discretization
@@ -78,7 +78,7 @@ namespace tubex
        * \param f_image_id component index of the interval function
        *                   \f$[f]\f$ (that is possibly multidimensional, first component by default)
        */
-      Tube(const ibex::Interval& tdomain, double timestep, const TFnc& f, int f_image_id = 0);
+      explicit Tube(const ibex::Interval& tdomain, double timestep, const TFnc& f, int f_image_id = 0);
 
       /**
        * \brief Creates a tube \f$[x](\cdot)\f$ from a list of \f$k\f$ boxes \f$\big([t_1]\times[x_1],\dots,[t_k]\times[x_k]\big)\f$
@@ -89,7 +89,7 @@ namespace tubex
        * \param v_tdomains vector of temporal domains \f$[t_i]\f$
        * \param v_codomains vector of codomains \f$[x_i]\f$ related to the \f$[t_i]\f$'s
        */
-      Tube(const std::vector<ibex::Interval>& v_tdomains, const std::vector<ibex::Interval>& v_codomains);
+      explicit Tube(const std::vector<ibex::Interval>& v_tdomains, const std::vector<ibex::Interval>& v_codomains);
 
       /**
        * \brief Creates a copy of a scalar tube \f$[x](\cdot)\f$, with the same time discretization
@@ -97,15 +97,6 @@ namespace tubex
        * \param x Tube to be duplicated
        */
       Tube(const Tube& x);
-
-      /**
-       * \brief Creates a copy of a scalar tube \f$[x](\cdot)\f$, with the same time
-       *        discretization but a specific constant codomain
-       *
-       * \param x Tube from which the sampling will be duplicated
-       * \param codomain Interval value of the slices
-       */
-      Tube(const Tube& x, const ibex::Interval& codomain);
 
       /**
        * \brief Creates a copy of a scalar tube \f$[x](\cdot)\f$, with the same time
@@ -120,7 +111,7 @@ namespace tubex
        * \param f_image_id component index of the interval function \f$[f]\f$
        *                   (that is possibly multidimensional, first component by default)
        */
-      Tube(const Tube& x, const TFnc& f, int f_image_id = 0);
+      explicit Tube(const Tube& x, const TFnc& f, int f_image_id = 0);
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ enclosing a trajectory \f$x(\cdot)\f$,
@@ -133,7 +124,7 @@ namespace tubex
        * \param timestep sampling value \f$\delta\f$ for the temporal
        *        discretization (double, no discretization by default: one slice only)
        */
-      Tube(const Trajectory& traj, double timestep);
+      explicit Tube(const Trajectory& traj, double timestep);
 
       /**
        * \brief Creates a scalar tube \f$[x](\cdot)\f$ defined as an interval
@@ -147,7 +138,7 @@ namespace tubex
        * \param timestep sampling value \f$\delta\f$ for the temporal
        *        discretization (double, no discretization by default: one slice only)
        */
-      Tube(const Trajectory& lb, const Trajectory& ub, double timestep);
+      explicit Tube(const Trajectory& lb, const Trajectory& ub, double timestep);
 
       /**
        * \brief Restore a scalar tube from serialization
@@ -167,7 +158,7 @@ namespace tubex
        * \param binary_file_name path to the binary file
        * \param traj a pointer to the Trajectory object to be instantiated
        */
-      Tube(const std::string& binary_file_name, Trajectory *&traj);
+      explicit Tube(const std::string& binary_file_name, Trajectory *&traj);
 
       /**
        * \brief Tube destructor

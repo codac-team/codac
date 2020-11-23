@@ -227,7 +227,10 @@ namespace tubex
         new_vec[i] = m_v_tubes[i];
 
       for(; i < n ; i++)
-        new_vec[i] = Tube(m_v_tubes[0], Interval::ALL_REALS); // same slicing is used
+      {
+        new_vec[i] = Tube(m_v_tubes[0]); // same slicing is used
+        new_vec[i].set(Interval::ALL_REALS);
+      }
 
       if(m_v_tubes != NULL) // (m_v_tubes == NULL) may happen when default constructor is used
         delete[] m_v_tubes;

@@ -127,12 +127,6 @@ namespace tubex
       *this = x;
     }
 
-    Tube::Tube(const Tube& x, const Interval& codomain)
-      : Tube(x)
-    {
-      set(codomain);
-    }
-    
     Tube::Tube(const Tube& x, const TFnc& f, int f_image_id)
       : Tube(x)
     {
@@ -195,8 +189,9 @@ namespace tubex
 
     const Tube Tube::primitive(const Interval& c) const
     {
-      Tube primitive(*this, Interval::ALL_REALS); // a copy of this initialized to [-oo,oo]
-      primitive.set(c, primitive.tdomain().lb());
+      Tube primitive(*this); // same slicing
+      primitive.set(Interval::ALL_REALS); // initialized to [-oo,oo]
+      primitive.set(c, primitive.tdomain().lb()); // initial condition
       CtcDeriv ctc_deriv;
       ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), TimePropag::FORWARD);
       return primitive;
@@ -702,14 +697,18 @@ namespace tubex
       if(m_synthesis_tree != NULL) // fast inversion
         return m_synthesis_tree->invert(y, search_tdomain);
 
-      Tube v(*this, Interval::ALL_REALS); // todo: optimize this
+      // todo: optimize this:
+      Tube v(*this); // same slicing
+      v.set(Interval::ALL_REALS); 
       return invert(y, v, search_tdomain);
     }
 
     void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_tdomain) const
     {
+      // todo: optimize this:
       // todo: fast inversion with binary tree considering derivative information
-      Tube v(*this, Interval::ALL_REALS); // todo: optimize this
+      Tube v(*this); // same slicing
+      v.set(Interval::ALL_REALS);
       v_t.clear();
       invert(y, v_t, v, search_tdomain);
     }
