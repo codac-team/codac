@@ -8,6 +8,7 @@ from .version import __version__
 
 class ctc:
 
+  delay = CtcDelay()
   deriv = CtcDeriv()
   eval = CtcEval()
   dist = CtcDist()

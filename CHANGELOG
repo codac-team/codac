@@ -4,6 +4,9 @@ Unreleased yet (in development)
 Features added
 --------------
 
+* ``CtcDelay`` now available in Python
+
+
 Changes
 -------
 

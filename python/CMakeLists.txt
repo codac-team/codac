@@ -64,6 +64,7 @@
     src/core/contractors/static/tubex_py_CtcConstell.cpp
 
     src/core/contractors/dyn/tubex_py_DynCtc.cpp
+    src/core/contractors/dyn/tubex_py_CtcDelay.cpp
     src/core/contractors/dyn/tubex_py_CtcDeriv.cpp
     src/core/contractors/dyn/tubex_py_CtcEval.cpp
     src/core/contractors/dyn/tubex_py_CtcPicard.cpp
