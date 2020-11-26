@@ -9,6 +9,7 @@ Changes
 
 * :commit:`853450470334f9729e8e66c93385c0a15cd2a54c`: throwing explicit exceptions if contractors signatures not compliant in ``ContractorNetwork::add``
 * :commit:`9bb0773efd52415cbd819c6dcfb9008a665aee15`: removing the constructor ``Tube(Tube, Interval)`` (may lead to cast errors)
+* :commit:`b1548dbe0cbf7baecc73204189754b37f7719c38`: faster implementation of ``CtcDist``
 
 .. Dependencies
 .. ------------

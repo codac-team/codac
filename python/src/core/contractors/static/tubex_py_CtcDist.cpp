@@ -34,8 +34,16 @@ void export_CtcDist(py::module& m)
     .def(py::init<>(),
       CTCDIST_CTCDIST)
 
-    .def("contract", &CtcDist::contract,
+    .def("contract", (void (CtcDist::*)(IntervalVector&))&CtcDist::contract,
+      CTCDIST_VOID_CONTRACT_INTERVALVECTOR,
+      "x"_a.noconvert())
+
+    .def("contract", (void (CtcDist::*)(IntervalVector&,IntervalVector&,Interval&))&CtcDist::contract,
       CTCDIST_VOID_CONTRACT_INTERVALVECTOR_INTERVALVECTOR_INTERVAL,
       "a"_a.noconvert(), "b"_a.noconvert(), "d"_a.noconvert())
+
+    .def("contract", (void (CtcDist::*)(Interval&,Interval&,Interval&,Interval&,Interval&))&CtcDist::contract,
+      CTCDIST_VOID_CONTRACT_INTERVAL_INTERVAL_INTERVAL_INTERVAL_INTERVAL,
+      "ax"_a.noconvert(), "ay"_a.noconvert(), "bx"_a.noconvert(), "by"_a.noconvert(), "d"_a.noconvert())
   ;
 }
