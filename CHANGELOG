@@ -4,15 +4,8 @@ Unreleased yet (in development)
 Features added
 --------------
 
-* ``CtcDelay`` now available in Python
-
-
 Changes
 -------
-
-* :commit:`853450470334f9729e8e66c93385c0a15cd2a54c`: throwing explicit exceptions if contractors signatures not compliant in ``ContractorNetwork::add``
-* :commit:`9bb0773efd52415cbd819c6dcfb9008a665aee15`: removing the constructor ``Tube(Tube, Interval)`` (may lead to cast errors)
-* :commit:`b1548dbe0cbf7baecc73204189754b37f7719c38`: faster implementation of ``CtcDist``
 
 .. Dependencies
 .. ------------
@@ -25,6 +18,26 @@ Changes
 
 .. Documentation
 .. -------------
+
+
+-----------------------------------------------------------------
+
+Release 3.0.12 (released `Nov 26, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.12>`_)
+========================================================================================================
+
+`Commits since previous release 3.0.11 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.11...v3.0.12>`_
+
+Features added
+--------------
+
+* :commit:`3ab055196a6c21677702564b004da01663ed7f7a`: ``CtcDelay`` now available in Python
+
+Changes
+-------
+
+* :commit:`853450470334f9729e8e66c93385c0a15cd2a54c`: throwing explicit exceptions if contractors signatures not compliant in ``ContractorNetwork::add``
+* :commit:`9bb0773efd52415cbd819c6dcfb9008a665aee15`: removing the constructor ``Tube(Tube, Interval)`` (may lead to cast errors)
+* :commit:`b1548dbe0cbf7baecc73204189754b37f7719c38`: faster implementation of ``CtcDist``
 
 
 -----------------------------------------------------------------
