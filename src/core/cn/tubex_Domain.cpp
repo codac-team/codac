@@ -408,7 +408,7 @@ namespace tubex
           return 0.;
         
         else if(interval().is_unbounded())
-          return 999999.; // todo: manager the unbounded case for fixed point detection
+          return 999999.; // todo: manage the unbounded case for fixed point detection
         
         else
           return interval().diam();
@@ -425,14 +425,14 @@ namespace tubex
         if(slice().input_gate().is_empty())
           vol += 0.;
         else if(slice().input_gate().is_unbounded())
-          vol += 999999.; // todo: manager the unbounded case for fixed point detection
+          vol += 999999.; // todo: manage the unbounded case for fixed point detection
         else
           vol += slice().input_gate().diam();
 
         if(slice().output_gate().is_empty())
           vol += 0.;
         else if(slice().output_gate().is_unbounded())
-          vol += 999999.; // todo: manager the unbounded case for fixed point detection
+          vol += 999999.; // todo: manage the unbounded case for fixed point detection
         else
           vol += slice().output_gate().diam();
 

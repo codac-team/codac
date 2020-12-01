@@ -52,7 +52,6 @@ __pycache__
 doc/doxygen/html/*
 doc/doxygen/xml/*
 
-
 # CMake files
 build/
 build_install/
@@ -60,4 +59,8 @@ build_install/
 # Latex files
 *.aux
 *.log
+*.dot
 wheelhouse/
+
+# VSCode files
+*.vscode

@@ -13,6 +13,7 @@
 #include "tubex_CtcDeriv.h"
 #include "tubex_Domain.h"
 #include "tubex_DomainsTypeException.h"
+#include "tubex_DomainsSizeException.h"
 
 using namespace std;
 using namespace ibex;
@@ -334,9 +335,14 @@ namespace tubex
   void CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w)
   {
     assert(!std::isnan(t));
+    assert(y.size() == z.size());
+    assert(y.size() == w.size());
     assert(y.tdomain().contains(t));
     assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
+
+    if(y.size() != z.size() || y.size() != w.size())
+      throw DomainsSizeException(m_ctc_name);
 
     if(z.is_empty() || y.is_empty() || w.is_empty())
     {
@@ -375,6 +381,9 @@ namespace tubex
     assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
 
+    if(y.size() != z.size() || y.size() != w.size())
+      throw DomainsSizeException(m_ctc_name);
+
     if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())
     {
       t.set_empty();
@@ -406,6 +415,9 @@ namespace tubex
     assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
 
+    if(y.size() != z.size() || y.size() != w.size())
+      throw DomainsSizeException(m_ctc_name);
+
     if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())
     {
       y.set_empty();
@@ -433,6 +445,9 @@ namespace tubex
   void CtcEval::contract(Interval& t, IntervalVector& z, const TubeVector& y)
   {
     assert(y.size() == z.size());
+
+    if(y.size() != z.size())
+      throw DomainsSizeException(m_ctc_name);
 
     if(t.is_empty() || z.is_empty() || y.is_empty())
     {
