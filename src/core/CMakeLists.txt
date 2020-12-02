@@ -149,7 +149,7 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools)
   target_link_libraries(tubex PUBLIC Ibex::ibex)
   
-  set_property(TARGET tubex PROPERTY CXX_STANDARD 17)
+  #set_property(TARGET tubex PROPERTY CXX_STANDARD 17)
   add_compile_options(-O3 -Wall)
   #set_property(TARGET tubex PROPERTY CXX_STANDARD_REQUIRED ON)
 
