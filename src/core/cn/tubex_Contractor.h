@@ -18,6 +18,7 @@
 #include "tubex_DynCtc.h"
 #include "tubex_Domain.h"
 #include "tubex_ContractorNetwork.h"
+#include "tubex_Hashcode.h"
 
 namespace ibex
 {
@@ -81,6 +82,8 @@ namespace tubex
       int m_ctc_id;
 
       static int ctc_counter;
+      
+      friend class ContractorHashcode;
   };
 }
 

@@ -29,9 +29,14 @@ namespace tubex
 
     ContractorNetwork::~ContractorNetwork()
     {
-      for(auto& dom : m_v_domains)
+      /*for(auto& dom : m_v_domains)
         delete dom;
       for(auto& ctc : m_v_ctc)
+        delete ctc;*/
+
+      for(auto& [key, dom] : m_map_domains)
+        delete dom;
+      for(auto& [key, ctc] : m_map_ctc)
         delete ctc;
 
       if(m_ctc_deriv != NULL)
@@ -40,17 +45,20 @@ namespace tubex
 
     int ContractorNetwork::nb_ctc() const
     {
-      return m_v_ctc.size();
+      //return m_v_ctc.size();
+      return m_map_ctc.size();
     }
 
     int ContractorNetwork::nb_dom() const
     {
-      return m_v_domains.size();
+      //return m_v_domains.size();
+      return m_map_domains.size();
     }
     
     bool ContractorNetwork::emptiness() const
     {
-      for(const auto& dom : m_v_domains)
+      //for(const auto& dom : m_v_domains)
+      for(auto& [key, dom] : m_map_domains)
         if(dom->is_empty())
           return true;
 
@@ -346,9 +354,9 @@ namespace tubex
         // Adding each row of slices
         for(int k = 0 ; k < nb_slices ; k++)
         {
-          vector<Domain> v_slices_domains;
+          vector<Domain> v_slices_domains(v_slices.size());
           for(size_t i = 0 ; i < v_slices.size() ; i++)
-            v_slices_domains.push_back(Domain(const_cast<Slice&>(*v_slices[i])));
+            v_slices_domains[i] = Domain(const_cast<Slice&>(*v_slices[i]));
 
           add(dyn_ctc, v_slices_domains); 
 
@@ -360,9 +368,9 @@ namespace tubex
       else // otherwise, dealing with the inter-temporal constraint as it is
       {
         // Creating a vector of pointers to domains
-        vector<Domain*> v_dom_ptr;
-        for(const auto& dom : v_domains)
-          v_dom_ptr.push_back(add_dom(dom));
+        vector<Domain*> v_dom_ptr(v_domains.size());
+        for(size_t i = 0 ; i < v_domains.size() ; i++)
+          v_dom_ptr[i] = add_dom(v_domains[i]);
 
         // Creating what would be this new contractors (namely defined with domains)
         Contractor ctc(dyn_ctc, v_dom_ptr);
@@ -397,18 +405,27 @@ namespace tubex
       if(ad.is_empty())
         throw Exception(__func__, "domain already empty when added to the CN");
 
-      // Looking if this domain is not already part of the graph
+      DomainHashcode hash(ad);
+
+      if(m_map_domains.find(hash) != m_map_domains.end())
+        return m_map_domains[hash];
+    
+      Domain *new_dom = new Domain(ad);
+      m_map_domains[hash] = new_dom;
+      //m_v_domains.push_back(new_dom);
+
+      /*// Looking if this domain is not already part of the graph
       for(auto& dom : m_v_domains)
         if(*dom == ad) // found
           return dom;
       
       // Else, create and add this new domain
-        Domain *dom = new Domain(ad);
-        m_v_domains.push_back(dom);
+        Domain *new_dom = new Domain(ad);
+        m_v_domains.push_back(new_dom);*/
 
       // And add possible dependencies
 
-        switch(dom->type())
+        switch(new_dom->type())
         {
           case Domain::Type::T_INTERVAL:
             // nothing to do
@@ -420,14 +437,14 @@ namespace tubex
 
           case Domain::Type::T_TUBE_VECTOR:
           {
-            vector<Domain*> v_doms;
-            v_doms.push_back(dom);
-            for(int i = 0 ; i < dom->tube_vector().size() ; i++)
-              v_doms.push_back(add_dom(Domain(dom->tube_vector()[i])));
+            vector<Domain*> v_doms(new_dom->tube_vector().size() + 1);
+            v_doms[0] = new_dom;
+            for(int i = 0 ; i < new_dom->tube_vector().size() ; i++)
+              v_doms[i+1] = add_dom(Domain(new_dom->tube_vector()[i]));
 
             Contractor *ac_component = add_ctc(Contractor(Contractor::Type::T_COMPONENT, v_doms));
 
-            dom->add_ctc(ac_component); // main vector
+            new_dom->add_ctc(ac_component); // main vector
             for(auto& dom_i : v_doms)
               dom_i->add_ctc(ac_component); // and its components
           }
@@ -435,12 +452,12 @@ namespace tubex
 
           case Domain::Type::T_INTERVAL_VECTOR:
           {
-            vector<Domain*> v_doms;
-            v_doms.push_back(dom); // main vector
+            vector<Domain*> v_doms(new_dom->interval_vector().size() + 1);
+            v_doms[0] = new_dom; // main vector
 
             // And its components
-            for(int i = 0 ; i < dom->interval_vector().size() ; i++)
-              v_doms.push_back(add_dom(Domain::vector_component(*dom, i)));
+            for(int i = 0 ; i < new_dom->interval_vector().size() ; i++)
+              v_doms[i+1] = add_dom(Domain::vector_component(*new_dom, i));
 
             Contractor *ac_component = add_ctc(Contractor(Contractor::Type::T_COMPONENT, v_doms));
             for(auto& dom_i : v_doms)
@@ -450,20 +467,24 @@ namespace tubex
 
           case Domain::Type::T_TUBE:
           {
-            vector<Domain*> v_doms;
-            v_doms.push_back(dom);
-            for(Slice *s = dom->tube().first_slice() ; s != NULL ; s = s->next_slice())
-              v_doms.push_back(add_dom(Domain(*s)));
+            vector<Domain*> v_doms(new_dom->tube().nb_slices() + 1);
+            v_doms[0] = new_dom;
+            int i = 0;
+            for(Slice *s = new_dom->tube().first_slice() ; s != NULL ; s = s->next_slice())
+            {
+              i++;
+              v_doms[i] = add_dom(Domain(*s));
+            }
 
             // Dependencies tube <-> slice
             Contractor *ac_component = add_ctc(Contractor(Contractor::Type::T_COMPONENT, v_doms));
 
-            dom->add_ctc(ac_component);
+            new_dom->add_ctc(ac_component);
             for(auto& dom_i : v_doms)
               dom_i->add_ctc(ac_component);
 
             // Dependencies slice <-> slice
-            for(Slice *s = dom->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
+            for(Slice *s = new_dom->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
             {
               Domain *dom_i1 = add_dom(Domain(*s));
               Domain *dom_i2 = add_dom(Domain(*(s->next_slice())));
@@ -477,12 +498,26 @@ namespace tubex
           break;
         }
 
-      return dom;
+      return new_dom;
     }
 
     Contractor* ContractorNetwork::add_ctc(const Contractor& ac)
     {
-      // Looking if this contractor is not already part of the graph
+      ContractorHashcode hash(ac);
+
+      if(m_map_ctc.find(hash) == m_map_ctc.end())
+      {
+        Contractor *new_ctc = new Contractor(ac);
+        m_map_ctc[hash] = new_ctc;
+        //m_v_ctc.push_back(new_ctc);
+        add_ctc_to_queue(new_ctc, m_deque);
+        return new_ctc;
+      }
+
+      else
+        return m_map_ctc[hash];
+
+      /*// Looking if this contractor is not already part of the graph
       for(auto& ctc : m_v_ctc)
         if(*ctc == ac) // found
           return ctc;
@@ -491,6 +526,6 @@ namespace tubex
       Contractor *ctc = new Contractor(ac);
       m_v_ctc.push_back(ctc);
       add_ctc_to_queue(ctc, m_deque);
-      return ctc;
+      return ctc;*/
     }
 }
