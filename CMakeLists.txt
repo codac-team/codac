@@ -65,7 +65,7 @@
 #    add_definitions(-U__STRICT_ANSI__)
 #  endif()
 
-#  add_compile_options(-O3 -Wall)
+  add_compile_options(-O3 -Wall)
   if(MSVC)
     add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
   else()
