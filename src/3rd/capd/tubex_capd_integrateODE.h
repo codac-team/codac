@@ -9,22 +9,17 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __TUBEX_TUBEVECTORODE_H__
-#define __TUBEX_TUBEVECTORODE_H__
-
-#define DEFAULT_TIMESTEP 0
-#define CAPD_MODE 0
+#ifndef __TUBEX_CAPDINTEGRATEODE_H__
+#define __TUBEX_CAPDINTEGRATEODE_H__
 
 #include "tubex_TubeVector.h"
+#include "tubex_TFunction.h"
 #include "ibex_IntervalVector.h"
-#include "tubex_capd2tubex.h"
 
 namespace tubex
 {
-  TubeVector TubeVectorODE(const ibex::Interval& domain, const TFunction& f, const ibex::IntervalVector& x0,
-                           double timestep=DEFAULT_TIMESTEP, int mode=CAPD_MODE);
-
+  TubeVector CAPD_integrateODE(
+    const ibex::Interval& tdomain, const TFunction& f, const ibex::IntervalVector& x0, double dt = 0.);
 }
-
 
 #endif

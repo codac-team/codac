@@ -73,6 +73,8 @@
     add_compile_options(-Wall)
   endif()
 
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ################################################################################
 # Optional binary tree activation for all tubes (for tests purposes mainly)
