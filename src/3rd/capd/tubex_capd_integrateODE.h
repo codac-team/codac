@@ -1,6 +1,6 @@
 /**
  *  \file
- *  TubeVectorODE class
+ *  ODE integration tools based on CAPD
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Julien Damers
@@ -15,11 +15,41 @@
 #include "tubex_TubeVector.h"
 #include "tubex_TFunction.h"
 #include "ibex_IntervalVector.h"
+#include "ibex_Function.h"
 
 namespace tubex
 {
+  // Autonomous
+
+  /**
+   * \brief Integrates the autonomous ODE \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$ using CAPD.
+   *
+   * \param tdomain temporal domain \f$[t_0,t_f]\f$
+   * \param f the function \f$\mathbf{f}\f$ (defined with a `ibex::Function` object)
+   * \param x0 the initial condition \f$\mathbf{x}_0\f$ at \f$t_0\f$
+   * \param tube_dt sampling value \f$\delta\f$ for the temporal discretization of the resulting tube
+   * \param capd_order (optional) order of the integration method
+   * \param capd_dt (optional) custom time step for CAPD integration
+   */
   TubeVector CAPD_integrateODE(
-    const ibex::Interval& tdomain, const TFunction& f, const ibex::IntervalVector& x0, double dt = 0.);
+    const ibex::Interval& tdomain, const ibex::Function& f, const ibex::IntervalVector& x0,
+    double tube_dt = 0., int capd_order = 20, double capd_dt = 0.);
+
+  // Non autonomous
+
+  /**
+   * \brief Integrates the non-autonomous ODE \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x},t)\f$ using CAPD.
+   *
+   * \param tdomain temporal domain \f$[t_0,t_f]\f$
+   * \param f the temporal function \f$\mathbf{f}\f$ (defined with a `TFunction` object)
+   * \param x0 the initial condition \f$\mathbf{x}_0\f$ at \f$t_0\f$
+   * \param tube_dt sampling value \f$\delta\f$ for the temporal discretization of the resulting tube
+   * \param capd_order (optional) order of the integration method
+   * \param capd_dt (optional) custom time step for CAPD integration
+   */
+  TubeVector CAPD_integrateODE(
+    const ibex::Interval& tdomain, const TFunction& f, const ibex::IntervalVector& x0,
+    double tube_dt = 0., int capd_order = 20, double capd_dt = 0.);
 }
 
 #endif

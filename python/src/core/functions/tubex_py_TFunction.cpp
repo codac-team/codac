@@ -141,7 +141,7 @@ void export_TFunction(py::module& m, py::class_<TFnc>& fnc)
 
     .def("__getitem__", [](TFunction& s, size_t index)
       {
-        if((int)index >= s.nb_vars())
+        if((int)index >= s.nb_var())
           throw py::index_error();
               
         return s[static_cast<int>(index)];

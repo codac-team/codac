@@ -69,7 +69,7 @@ namespace tubex
     {
       assert(timestep >= 0.);
       assert(valid_tdomain(tdomain));
-      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+      assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
 
       // A copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(*this);

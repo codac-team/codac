@@ -88,7 +88,7 @@ namespace tubex
       assert(valid_tdomain(tdomain));
       assert(timestep >= 0.); // if 0., equivalent to no sampling
       assert(f_image_id >= 0 && f_image_id < f.image_dim());
-      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+      assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
 
       // A scalar copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(1, *this);
@@ -131,7 +131,7 @@ namespace tubex
       : Tube(x)
     {
       assert(f_image_id >= 0 && f_image_id < f.image_dim());
-      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+      assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
 
       // A scalar copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(1, *this);

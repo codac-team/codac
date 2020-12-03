@@ -44,7 +44,7 @@ TEST_CASE("Functions")
   {
     TFunction f("x1", "x2", "x1+sin(t)*x2+[-0.01,0.01]");
     CHECK(f.image_dim() == 1);
-    CHECK(f.nb_vars() == 2);
+    CHECK(f.nb_var() == 2);
     CHECK(f.arg_name(0) == "x1");
     CHECK(f.arg_name(1) == "x2");
     CHECK(f.expr() == "x1+sin(t)*x2+[-0.01,0.01]");

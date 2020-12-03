@@ -36,7 +36,7 @@ namespace tubex
     {
       assert(valid_tdomain(tdomain));
       assert(f.image_dim() == 1);
-      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+      assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
       // todo: check thickness of f? (only thin functions should be allowed)
 
       m_codomain = m_function->eval(tdomain);
