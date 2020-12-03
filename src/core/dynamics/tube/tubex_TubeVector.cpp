@@ -767,6 +767,13 @@ namespace tubex
       return *this;
     }
 
+    TubeVector& TubeVector::truncate_tdomain(const Interval& tdomain)
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].truncate_tdomain(tdomain);
+      return *this;
+    }
+
     void TubeVector::shift_tdomain(double shift_ref)
     {
       for(int i = 0 ; i < size() ; i++)

@@ -775,6 +775,16 @@ namespace tubex
       const Tube& inflate(const Trajectory& rad);
 
       /**
+       * \brief Truncates the tdomain of \f$[x](\cdot)\f$
+       *
+       * \note The new tdomain must be a subset of the old one
+       *
+       * \param tdomain new temporal domain \f$[t_0,t_f]\f$
+       * \return a reference to this tube
+       */
+      Tube& truncate_tdomain(const ibex::Interval& tdomain);
+
+      /**
        * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$[x](\cdot)\f$
        *
        * \param a the offset value so that \f$[t_0,t_f]:=[t_0+a,t_f+a]\f$ 

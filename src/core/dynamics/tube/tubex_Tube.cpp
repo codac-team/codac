@@ -1106,6 +1106,37 @@ namespace tubex
       return *this;
     }
 
+    Tube& Tube::truncate_tdomain(const Interval& t)
+    {
+      assert(valid_tdomain(t));
+      assert(tdomain().is_superset(t));
+
+      // The first slice is the slice containing t.lb()
+      while(!m_first_slice->tdomain().contains(t.lb()))
+      {
+        Slice *s_next = m_first_slice->next_slice();
+        delete m_first_slice;
+        m_first_slice = s_next;
+      }
+
+      m_first_slice->set_tdomain(t & m_first_slice->tdomain());
+
+      // After this iteration, the last slice will be the one containing t.ub()
+      Slice *s_last = last_slice();
+      while(!s_last->tdomain().contains(t.ub()))
+      {
+        Slice *s_prev = s_last->prev_slice();
+        delete s_last;
+        s_last = s_prev;
+      }
+
+      s_last->set_tdomain(t & s_last->tdomain());
+
+      m_tdomain = t;
+      delete_synthesis_tree(); // todo: update tree if created, instead of delete
+      return *this;
+    }
+
     void Tube::shift_tdomain(double shift_ref)
     {
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
