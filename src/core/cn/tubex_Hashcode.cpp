@@ -94,7 +94,7 @@ namespace tubex
 
   uintptr_t DomainHashcode::uintptr(const Domain& dom)
   {
-    uintptr_t ptr;
+    uintptr_t ptr = 0;
 
     switch(dom.m_memory_type)
     {

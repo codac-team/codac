@@ -29,15 +29,10 @@ namespace tubex
 
     ContractorNetwork::~ContractorNetwork()
     {
-      /*for(auto& dom : m_v_domains)
-        delete dom;
-      for(auto& ctc : m_v_ctc)
-        delete ctc;*/
-
-      for(auto& [key, dom] : m_map_domains)
-        delete dom;
-      for(auto& [key, ctc] : m_map_ctc)
-        delete ctc;
+      for(auto& dom : m_map_domains)
+        delete dom.second;
+      for(auto& ctc : m_map_ctc)
+        delete ctc.second;
 
       if(m_ctc_deriv != NULL)
         delete m_ctc_deriv;
@@ -45,21 +40,18 @@ namespace tubex
 
     int ContractorNetwork::nb_ctc() const
     {
-      //return m_v_ctc.size();
       return m_map_ctc.size();
     }
 
     int ContractorNetwork::nb_dom() const
     {
-      //return m_v_domains.size();
       return m_map_domains.size();
     }
     
     bool ContractorNetwork::emptiness() const
     {
-      //for(const auto& dom : m_v_domains)
-      for(auto& [key, dom] : m_map_domains)
-        if(dom->is_empty())
+      for(auto& dom : m_map_domains)
+        if(dom.second->is_empty())
           return true;
 
       return false;
@@ -412,16 +404,6 @@ namespace tubex
     
       Domain *new_dom = new Domain(ad);
       m_map_domains[hash] = new_dom;
-      //m_v_domains.push_back(new_dom);
-
-      /*// Looking if this domain is not already part of the graph
-      for(auto& dom : m_v_domains)
-        if(*dom == ad) // found
-          return dom;
-      
-      // Else, create and add this new domain
-        Domain *new_dom = new Domain(ad);
-        m_v_domains.push_back(new_dom);*/
 
       // And add possible dependencies
 
@@ -504,28 +486,17 @@ namespace tubex
     Contractor* ContractorNetwork::add_ctc(const Contractor& ac)
     {
       ContractorHashcode hash(ac);
+      map<ContractorHashcode,Contractor*>::iterator it = m_map_ctc.find(hash);
 
-      if(m_map_ctc.find(hash) == m_map_ctc.end())
+      if(it == m_map_ctc.end())
       {
         Contractor *new_ctc = new Contractor(ac);
         m_map_ctc[hash] = new_ctc;
-        //m_v_ctc.push_back(new_ctc);
         add_ctc_to_queue(new_ctc, m_deque);
         return new_ctc;
       }
 
       else
-        return m_map_ctc[hash];
-
-      /*// Looking if this contractor is not already part of the graph
-      for(auto& ctc : m_v_ctc)
-        if(*ctc == ac) // found
-          return ctc;
-
-      // Else, create and add this new domain
-      Contractor *ctc = new Contractor(ac);
-      m_v_ctc.push_back(ctc);
-      add_ctc_to_queue(ctc, m_deque);
-      return ctc;*/
+        return it->second;
     }
 }

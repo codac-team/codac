@@ -27,9 +27,7 @@ namespace tubex
 
       if(verbose)
       {
-        //cout << "Contractor network has " << m_v_ctc.size()
         cout << "Contractor network has " << m_map_ctc.size()
-        //     << " contractors and " << m_v_domains.size() << " domains" << endl;
              << " contractors and " << m_map_domains.size() << " domains" << endl;
         cout << "Computing, " << nb_ctc_in_stack() << " contractors currently in stack";
         if(!std::isinf(m_contraction_duration_max))
@@ -59,11 +57,10 @@ namespace tubex
       // Emptiness test
       // todo: test only contracted domains?
       if(verbose)
-        //for(const auto& dom : m_v_domains)
-        for(const auto& [key, dom] : m_map_domains)
-          if(dom->is_empty())
+        for(const auto& dom : m_map_domains)
+          if(dom.second->is_empty())
           {
-            cout << "  warning: empty set" << endl;
+            cout << "  Warning: empty set" << endl;
             break;
           }
 
@@ -89,11 +86,10 @@ namespace tubex
     {
       m_deque.clear();
 
-      //for(auto& ctc : m_v_ctc)
-      for(const auto& [key, ctc] : m_map_ctc)
+      for(const auto& ctc : m_map_ctc)
       {
-        ctc->set_active(true);
-        add_ctc_to_queue(ctc, m_deque);
+        ctc.second->set_active(true);
+        add_ctc_to_queue(ctc.second, m_deque);
       }
     }
 

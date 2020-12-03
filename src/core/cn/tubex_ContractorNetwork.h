@@ -382,12 +382,9 @@ namespace tubex
 
     protected:
 
-      //std::vector<Contractor*> m_v_ctc; //!< vector of pointers to the abstract Contractor objects the graph is made of
-      //std::vector<Domain*> m_v_domains; //!< vector of pointers to the abstract Domain objects the graph is made of
+      std::map<DomainHashcode,Domain*> m_map_domains; //!< pointers to the abstract Domain objects the graph is made of
+      std::map<ContractorHashcode,Contractor*> m_map_ctc; //!< pointers to the abstract Contractor objects the graph is made of
       std::deque<Contractor*> m_deque; //!< queue of active contractors
-
-      std::map<DomainHashcode,Domain*> m_map_domains;
-      std::map<ContractorHashcode,Contractor*> m_map_ctc;
 
       float m_fixedpoint_ratio = 0.0001; //!< fixed point ratio for propagation limit
       double m_contraction_duration_max = std::numeric_limits<double>::infinity(); //!< computation time limit
