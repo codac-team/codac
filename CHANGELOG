@@ -9,7 +9,7 @@ Features added
 Changes
 -------
 
-* updated version of ODE integration using CAPD
+* :commit:`5b42f856a8c24f18a71a4399b3fe29c99f5ea092`: updated version of ODE integration using CAPD
 
 .. Dependencies
 .. ------------

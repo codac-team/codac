@@ -1,6 +1,6 @@
 #include "catch_interval.hpp"
 #include "tubex_CtcDelay.h"
-#include "tubex_capd.h"
+#include "tubex-capd.h"
 #include "tubex_VIBesFigTube.h"
 
 using namespace std;
