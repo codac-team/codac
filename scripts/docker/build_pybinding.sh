@@ -2,6 +2,17 @@
 
 set -e -x
 
+# Quick fix for CentOS EOL since 2020-11-30...
+#ls -l /etc/yum.repos.d
+sed -i 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo
+sed -i 's/#baseurl=http:\x2F\x2Fmirror.centos.org\x2Fcentos\x2F$releasever/baseurl=http:\x2F\x2Fvault.centos.org\x2Fcentos\x2F6.10/g' /etc/yum.repos.d/CentOS-Base.repo
+sed -i 's/mirrorlist=http:\x2F\x2Fmirrorlist.centos.org?arch=$basearch&release=6&repo=sclo-rh/baseurl=http:\x2F\x2Fvault.centos.org\x2Fcentos\x2F6.10\x2Fsclo\x2FSource\x2Frh\x2F/g' /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
+sed -i 's/mirrorlist=http:\x2F\x2Fmirrorlist.centos.org?arch=$basearch&release=6&repo=sclo-sclo/baseurl=http:\x2F\x2Fvault.centos.org\x2Fcentos\x2F6.10\x2Fsclo\x2FSource\x2Fsclo\x2F/g' /etc/yum.repos.d/CentOS-SCLo-scl.repo
+#cat /etc/yum.repos.d/CentOS-Base.repo
+#cat /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
+#cat /etc/yum.repos.d/CentOS-SCLo-scl.repo
+#yum -y update
+
 yum -y install doxygen
 
 cd /io
