@@ -52,20 +52,21 @@
 
 #  # Check that the compiler supports c++11
 #  include(CheckCXXCompilerFlag)
-#  check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
+#  check_cxx_compiler_flag("-std=c++17" COMPILER_SUPPORTS_CXX17)
 #
-#  if(COMPILER_SUPPORTS_CXX11)
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#  if(COMPILER_SUPPORTS_CXX17)
+#    add_compile_options(-std=c++17)
 #  else()
-#    message(FATAL_ERROR "Tubex needs a compiler with C++11 support")
+#    message(FATAL_ERROR "Tubex needs a compiler with C++17 support")
 #  endif()
-#
+
 #  if(WIN32)
 #    # We need this for strdup under Windows (see issue #287 of ibex-lib repo)
 #    add_definitions(-U__STRICT_ANSI__)
 #  endif()
 
-#  add_compile_options(-O3 -Wall)
+  add_compile_options(-O3)
+  
   if(MSVC)
     add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
   else()

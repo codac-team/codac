@@ -20,6 +20,7 @@
 #include "tubex_TubeVector.h"
 #include "tubex_Contractor.h"
 #include "tubex_ContractorNetwork.h"
+#include "tubex_Hashcode.h"
 
 namespace tubex
 {
@@ -93,7 +94,7 @@ namespace tubex
       void add_data(double t, const ibex::Interval& y, ContractorNetwork& cn);
       void add_data(double t, const ibex::IntervalVector& y, ContractorNetwork& cn);
 
-      const std::string dom_name(const std::vector<Domain*>& v_domains) const;
+      const std::string dom_name(const std::map<DomainHashcode,Domain*> m_domains) const;
       void set_name(const std::string& name);
 
       static bool all_dyn(const std::vector<Domain>& v_domains);
@@ -109,7 +110,7 @@ namespace tubex
     protected:
 
       Domain(Type type, MemoryRef memory_type);
-      const std::string var_name(const std::vector<Domain*>& v_domains) const;
+      const std::string var_name(const std::map<DomainHashcode,Domain*> m_domains) const;
 
       // Theoretical type of domain
 
@@ -163,6 +164,7 @@ namespace tubex
       static int dom_counter;
 
       friend class ContractorNetwork; // todo: remove this
+      friend class DomainHashcode;
   };
 }
 

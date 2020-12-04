@@ -7,11 +7,16 @@ Features added
 Changes
 -------
 
+* :commit:`546de1e941b1217fcb47a205d127f667b3efe7f9`: strong optimization for CN building (using hashcodes for graph exploration)
+* improving Exception messages with contractors (on consistent dimensions)
+
 .. Dependencies
 .. ------------
 
-.. Bugs fixed
-.. ----------
+Bugs fixed
+----------
+
+* :commit:`d0b05aba8ba3bebf72e57d7f6d9ae8f45cb261f1`: corrected bug in ``Trajectory`` operations
 
 .. Deprecated
 .. ----------

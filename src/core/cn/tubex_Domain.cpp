@@ -189,7 +189,9 @@ namespace tubex
 
   Domain::~Domain()
   {
-    switch(m_type)
+    // todo: manage the delete of pointers
+
+    /*switch(m_type)
     {
       case Type::T_INTERVAL:
         if(m_i_ptr != NULL) delete m_i_ptr;
@@ -210,7 +212,7 @@ namespace tubex
       default:
         // Nothing else to manage
         break;
-    }
+    }*/
   }
 
   const Domain& Domain::operator=(const Domain& ad)
@@ -229,26 +231,26 @@ namespace tubex
     switch(ad.m_type)
     {
       case Type::T_INTERVAL:
-        if(ad.m_i_ptr != NULL)
+        /*if(ad.m_i_ptr != NULL)
         {
           m_i_ptr = new Interval(*ad.m_i_ptr);
           m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
         }
 
-        else
+        else*/
         {
           m_ref_values_i = reference_wrapper<Interval>(ad.m_ref_values_i);
         }
         break;
 
       case Type::T_INTERVAL_VECTOR:
-        if(ad.m_iv_ptr != NULL)
+        /*if(ad.m_iv_ptr != NULL)
         {
           m_iv_ptr = new IntervalVector(*ad.m_iv_ptr);
           m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
         }
 
-        else
+        else*/
         {
           m_ref_values_iv = reference_wrapper<IntervalVector>(ad.m_ref_values_iv);
         }
@@ -277,9 +279,11 @@ namespace tubex
         break;
 
       case MemoryRef::M_INTERVAL:
+        /*
+        // The following has been removed on 2020.12.02
         if(&ad.m_ref_memory_i.get() == ad.m_i_ptr)
           m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr);
-        else
+        else*/
           m_ref_memory_i = ad.m_ref_memory_i;
         break;
 
@@ -288,9 +292,11 @@ namespace tubex
         break;
 
       case MemoryRef::M_INTERVAL_VECTOR:
+        /*
+        // The following has been removed on 2020.12.02
         if(&ad.m_ref_memory_iv.get() == ad.m_iv_ptr)
           m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
-        else
+        else*/
           m_ref_memory_iv = ad.m_ref_memory_iv;
         break;
 
@@ -408,7 +414,7 @@ namespace tubex
           return 0.;
         
         else if(interval().is_unbounded())
-          return 999999.; // todo: manager the unbounded case for fixed point detection
+          return 999999.; // todo: manage the unbounded case for fixed point detection
         
         else
           return interval().diam();
@@ -425,14 +431,14 @@ namespace tubex
         if(slice().input_gate().is_empty())
           vol += 0.;
         else if(slice().input_gate().is_unbounded())
-          vol += 999999.; // todo: manager the unbounded case for fixed point detection
+          vol += 999999.; // todo: manage the unbounded case for fixed point detection
         else
           vol += slice().input_gate().diam();
 
         if(slice().output_gate().is_empty())
           vol += 0.;
         else if(slice().output_gate().is_unbounded())
-          vol += 999999.; // todo: manager the unbounded case for fixed point detection
+          vol += 999999.; // todo: manage the unbounded case for fixed point detection
         else
           vol += slice().output_gate().diam();
 
@@ -751,7 +757,7 @@ namespace tubex
     }
   }
   
-  const string Domain::var_name(const vector<Domain*>& v_domains) const
+  const string Domain::var_name(const map<DomainHashcode,Domain*> m_domains) const
   {
     string output_name = m_name;
 
@@ -762,15 +768,15 @@ namespace tubex
         // The variable may be a component of a vector one
         case Type::T_INTERVAL:
         case Type::T_TUBE:
-          for(const auto& dom : v_domains) // looking for this possible vector
+          for(const auto& dom : m_domains) // looking for this possible vector
           {
-            if(dom != this)
+            if(dom.second != this)
             {
-              if(dom->type() == Type::T_INTERVAL_VECTOR || dom->type() == Type::T_TUBE_VECTOR)
+              if(dom.second->type() == Type::T_INTERVAL_VECTOR || dom.second->type() == Type::T_TUBE_VECTOR)
               {
                 int component_id = 0;
-                if(is_component_of(*dom, component_id))
-                  output_name = Tools::add_int(dom->var_name(v_domains), component_id+1); // adding component id
+                if(is_component_of(*dom.second, component_id))
+                  output_name = Tools::add_int(dom.second->var_name(m_domains), component_id+1); // adding component id
               }
             }
           }
@@ -778,14 +784,14 @@ namespace tubex
 
         // The variable may be a slice of a tube
         case Type::T_SLICE:
-          for(const auto& dom : v_domains) // looking for this possible vector
+          for(const auto& dom : m_domains) // looking for this possible vector
           {
-            if(dom != this && dom->type() == Type::T_TUBE)
+            if(dom.second != this && dom.second->type() == Type::T_TUBE)
             {
               int slice_id = 0;
-              if(is_slice_of(*dom, slice_id))
+              if(is_slice_of(*dom.second, slice_id))
               {
-                output_name = Tools::add_int(dom->var_name(v_domains), "^{(", slice_id+1, ")}"); // adding slice id
+                output_name = Tools::add_int(dom.second->var_name(m_domains), "^{(", slice_id+1, ")}"); // adding slice id
               }
             }
           }
@@ -810,7 +816,7 @@ namespace tubex
           {
             if(dom != this)
             {
-              string dom_var_name = dom->var_name(v_domains);
+              string dom_var_name = dom->var_name(m_domains);
               if(!dom_var_name.empty() && dom_var_name.find("?") == string::npos)
                 output_name += (!output_name.empty() ? "/" : "") + dom_var_name;
             }
@@ -911,9 +917,9 @@ namespace tubex
     return n;
   }
 
-  const string Domain::dom_name(const vector<Domain*>& v_domains) const
+  const string Domain::dom_name(const map<DomainHashcode,Domain*> m_domains) const
   {
-    string output_name = var_name(v_domains);
+    string output_name = var_name(m_domains);
 
     switch(m_type)
     {

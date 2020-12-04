@@ -33,10 +33,10 @@ namespace tubex
     {
       bool contractor_found = false;
 
-      for(const auto& added_ctc: m_v_ctc)
-        if(added_ctc->type() == Contractor::Type::T_IBEX && &added_ctc->ibex_ctc() == &ctc)
+      for(auto& added_ctc : m_map_ctc)
+        if(added_ctc.second->type() == Contractor::Type::T_IBEX && &added_ctc.second->ibex_ctc() == &ctc)
         {
-          added_ctc->set_name(name);
+          added_ctc.second->set_name(name);
             contractor_found = true;
         }
 
@@ -48,10 +48,10 @@ namespace tubex
     {
       bool contractor_found = false;
 
-      for(const auto& added_ctc: m_v_ctc)
-        if(added_ctc->type() == Contractor::Type::T_TUBEX && &added_ctc->tubex_ctc() == &ctc)
+      for(auto& added_ctc : m_map_ctc)
+        if(added_ctc.second->type() == Contractor::Type::T_TUBEX && &added_ctc.second->tubex_ctc() == &ctc)
         {
-          added_ctc->set_name(name);
+          added_ctc.second->set_name(name);
             contractor_found = true;
         }
 
@@ -61,7 +61,7 @@ namespace tubex
 
     int ContractorNetwork::print_dot_graph(const string& cn_name, const string& layer_model) const
     {
-      if(m_v_domains.size() > 100 || m_v_ctc.size() > 100)
+      if(m_map_domains.size() > 100 || m_map_ctc.size() > 100)
         cout << "Warning: important number of domains/contractors in the graph, may not be able to generate the diagram." << endl;
 
       ofstream dot_file;
@@ -72,53 +72,53 @@ namespace tubex
       dot_file << "  splines=\"compound\"" << endl;
 
       dot_file << endl << "  // Domains nodes" << endl;
-      for(const auto dom : m_v_domains)
-        dot_file << "  " << Tools::add_int("dom",dom->id()) << " [shape=box, label=\"" << dom->dom_name(m_v_domains) << "\"];" << endl;
+      for(const auto& dom : m_map_domains)
+        dot_file << "  " << Tools::add_int("dom",dom.second->id()) << " [shape=box, label=\"" << dom.second->dom_name(m_map_domains) << "\"];" << endl;
 
       dot_file << endl << "  // Contractors nodes" << endl;
-      for(const auto ctc : m_v_ctc)
+      for(auto& ctc : m_map_ctc)
       {
-        dot_file << "  " << Tools::add_int("ctc",ctc->id())
+        dot_file << "  " << Tools::add_int("ctc",ctc.second->id())
                  // Node style:
                  << " [shape=circle, "
-                 << "label=\"" << ctc->name() << "\"];" << endl;
+                 << "label=\"" << ctc.second->name() << "\"];" << endl;
       }
 
       dot_file << endl << "  // Relations" << endl;
-      for(const auto ctc : m_v_ctc)
-        for(const auto dom : m_v_domains)
-          if(find(dom->contractors().begin(), dom->contractors().end(), ctc) != dom->contractors().end())
-            dot_file << "  " << Tools::add_int("ctc",ctc->id()) << " -- " << Tools::add_int("dom",dom->id()) << ";" << endl;
+      for(auto& ctc : m_map_ctc)
+        for(const auto& dom : m_map_domains)
+          if(find(dom.second->contractors().begin(), dom.second->contractors().end(), ctc.second) != dom.second->contractors().end())
+            dot_file << "  " << Tools::add_int("ctc",ctc.second->id()) << " -- " << Tools::add_int("dom",dom.second->id()) << ";" << endl;
 
       // Subgraph for clustering components of a same vector
-      for(const auto dom : m_v_domains)
+      for(const auto& dom : m_map_domains)
       {
-        if(dom->type() == Domain::Type::T_INTERVAL_VECTOR)
+        if(dom.second->type() == Domain::Type::T_INTERVAL_VECTOR)
         {
           dot_file << endl;
-          dot_file << "  subgraph cluster_" << Tools::add_int("dom",dom->id()) << " {" << endl;
+          dot_file << "  subgraph cluster_" << Tools::add_int("dom",dom.second->id()) << " {" << endl;
           dot_file << "    color=\"#006680\";" << endl << "    ";
 
           // Adding the main vector
-          dot_file << Tools::add_int("dom",dom->id()) + "; ";
+          dot_file << Tools::add_int("dom",dom.second->id()) + "; ";
 
           // Adding its components
           Domain *one_component = NULL;
-          for(const auto dom_i : m_v_domains) // todo: a fast get_components method
-            if(dom_i->is_component_of(*dom))
+          for(const auto& dom_i : m_map_domains) // todo: a fast get_components method
+            if(dom_i.second->is_component_of(*dom.second))
             {
-              one_component = dom_i;
-              dot_file << Tools::add_int("dom",dom_i->id()) + "; ";
+              one_component = dom_i.second;
+              dot_file << Tools::add_int("dom",dom_i.second->id()) + "; ";
             }
 
           // Adding their component-contractor
           if(one_component != NULL) // todo: transform it as an assert
-          for(const auto ctc : m_v_ctc)
-            if(ctc->type() == Contractor::Type::T_COMPONENT)
-              for(const auto& dom : ctc->domains())
-                if(dom == one_component)
+          for(auto& ctc : m_map_ctc)
+            if(ctc.second->type() == Contractor::Type::T_COMPONENT)
+              for(const auto& dom_i : ctc.second->domains())
+                if(dom_i == one_component)
                 {
-                  dot_file << Tools::add_int("ctc",ctc->id()) + "; ";
+                  dot_file << Tools::add_int("ctc",ctc.second->id()) + "; ";
                   break;
                 }
 
@@ -127,21 +127,21 @@ namespace tubex
       }
 
       // Subgraphs for tubes and their slices
-      for(const auto dom : m_v_domains)
+      for(const auto& dom : m_map_domains)
       {
-        if(dom->type() == Domain::Type::T_TUBE)
+        if(dom.second->type() == Domain::Type::T_TUBE)
         {
           dot_file << endl;
-          dot_file << "  " << Tools::add_int("subgraph cluster_tube",dom->id()) << " {" << endl;
+          dot_file << "  " << Tools::add_int("subgraph cluster_tube",dom.second->id()) << " {" << endl;
           dot_file << "    color=\"#BA4E00\";" << endl;
           dot_file << "    ";
 
           // Looking for all domains and contractors exclusively related to this tube
-          for(const auto& ctc : dom->contractors())
+          for(const auto& ctc : dom.second->contractors())
           {
             for(const auto& dom_i : ctc->domains())
             {
-              if(dom_i != dom && dom_i->type() != Domain::Type::T_SLICE)
+              if(dom_i != dom.second && dom_i->type() != Domain::Type::T_SLICE)
                 break; // we are not dealing with the slice-component contractor
 
               // At this point we are dealing with either the tube or its slices
@@ -177,8 +177,8 @@ namespace tubex
     {
       str << cn.nb_ctc() << " contractors\n";
       str << cn.nb_dom() << " domains:\n";
-      for(const auto& dom : cn.m_v_domains)
-        str << *dom << endl;
+      for(const auto& dom : cn.m_map_domains)
+        str << *dom.second << endl;
       return str;
     }
 }

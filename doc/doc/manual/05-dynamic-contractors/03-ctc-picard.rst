@@ -5,9 +5,9 @@
   The writing of this page is in progress. Several changes are currently performed on the library.
   A new stable version of Tubex will be released in the coming weeks.
 
-***************************************************************
-CtcPicard: :math:`\dot{\mathbf{x}}(t)=f\big(\mathbf{x}(t)\big)`
-***************************************************************
+*********************************************
+CtcPicard: :math:`\dot{x}(t)=f\big(x(t)\big)`
+*********************************************
 
 .. contents::
 
@@ -19,7 +19,7 @@ Definition
     
   .. math::
 
-    \left.\begin{array}{r}\dot{\mathbf{x}}(t)=f\big(\mathbf{x}(t)\big)\end{array}\right. \longrightarrow \mathcal{C}_{\textrm{picard}}\big([x](\cdot),[v](\cdot)\big)
+    \left.\begin{array}{r}\dot{x}(t)=f\big(x(t)\big)\end{array}\right. \longrightarrow \mathcal{C}_{\textrm{picard}}\big([x](\cdot)\big)
 
   .. tabs::
 

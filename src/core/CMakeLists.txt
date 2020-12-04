@@ -80,6 +80,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_Exception.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsTypeException.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsTypeException.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsSizeException.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsSizeException.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_tubes.h
@@ -116,6 +118,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_solve.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_visu.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Hashcode.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Hashcode.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.h
                   )
@@ -144,6 +148,10 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/cn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools)
   target_link_libraries(tubex PUBLIC Ibex::ibex)
+  
+  #set_property(TARGET tubex PROPERTY CXX_STANDARD 17)
+  add_compile_options(-O3 -Wall)
+  #set_property(TARGET tubex PROPERTY CXX_STANDARD_REQUIRED ON)
 
 
 ################################################################################
