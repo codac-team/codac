@@ -293,6 +293,10 @@ void export_Tube(py::module& m)
       TUBE_CONSTTUBE_INFLATE_TRAJECTORY,
       "rad"_a)
 
+    .def("truncate_tdomain", &Tube::truncate_tdomain,
+      TUBE_TUBE_TRUNCATE_TDOMAIN_INTERVAL,
+      "a"_a)
+
     .def("shift_tdomain", &Tube::shift_tdomain,
       TUBE_VOID_SHIFT_TDOMAIN_DOUBLE,
       "a"_a)

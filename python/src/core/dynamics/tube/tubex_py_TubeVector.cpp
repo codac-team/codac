@@ -292,6 +292,10 @@ void export_TubeVector(py::module& m)
       TUBEVECTOR_CONSTTUBEVECTOR_INFLATE_TRAJECTORYVECTOR,
       "rad"_a)
 
+    .def("truncate_tdomain", &TubeVector::truncate_tdomain,
+      TUBEVECTOR_TUBEVECTOR_TRUNCATE_TDOMAIN_INTERVAL,
+      "a"_a)
+
     .def("shift_tdomain", &TubeVector::shift_tdomain,
       TUBEVECTOR_VOID_SHIFT_TDOMAIN_DOUBLE,
       "a"_a)
