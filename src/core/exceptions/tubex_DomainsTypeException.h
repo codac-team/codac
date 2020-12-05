@@ -58,6 +58,7 @@ namespace tubex
        * \param ctc_name the contractor class name
        * \param v_domains the domains provided by the user
        * \param v_str_expected_doms the allowed definitions for the contractor
+       * \return exception message
        */
       static std::string exception_message(const std::string& ctc_name,
           const std::vector<Domain>& v_domains, const std::vector<std::string>& v_str_expected_doms);
@@ -68,6 +69,7 @@ namespace tubex
        * \param ctc_name the contractor class name
        * \param v_ptr_domains pointers to the domains provided by the user
        * \param v_str_expected_doms the allowed definitions for the contractor
+       * \return exception message
        */
       static std::string exception_message(const std::string& ctc_name,
           const std::vector<Domain*>& v_ptr_domains, const std::vector<std::string>& v_str_expected_doms);

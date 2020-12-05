@@ -23,131 +23,378 @@ namespace tubex
   /// \name Scalar outputs
   /// @{
 
-    /** \brief \f$\cos(x(\cdot))\f$ */
+    /** \brief \f$\cos(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory cos(const Trajectory& x);
-    /** \brief \f$\sin(x(\cdot))\f$ */
+
+    /** \brief \f$\sin(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory sin(const Trajectory& x);
-    /** \brief \f$\mid x(\cdot)\mid\f$ */
+
+    /** \brief \f$\mid x(\cdot)\mid\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory abs(const Trajectory& x);
-    /** \brief \f$x^2(\cdot)\f$ */
+
+    /** \brief \f$x^2(\cdot)\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory sqr(const Trajectory& x);
-    /** \brief \f$\sqrt{x(\cdot)}\f$ */
+
+    /** \brief \f$\sqrt{x(\cdot)}\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory sqrt(const Trajectory& x);
-    /** \brief \f$\exp(x(\cdot))\f$ */
+
+    /** \brief \f$\exp(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory exp(const Trajectory& x);
-    /** \brief \f$\log(x(\cdot))\f$ */
+
+    /** \brief \f$\log(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory log(const Trajectory& x);
-    /** \brief \f$\tan(x(\cdot))\f$ */
+
+    /** \brief \f$\tan(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory tan(const Trajectory& x);
-    /** \brief \f$\arccos(x(\cdot))\f$ */
+
+    /** \brief \f$\arccos(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory acos(const Trajectory& x);
-    /** \brief \f$\arcsin(x(\cdot))\f$ */
+
+    /** \brief \f$\arcsin(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory asin(const Trajectory& x);
-    /** \brief \f$\arctan(x(\cdot))\f$ */
+
+    /** \brief \f$\arctan(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory atan(const Trajectory& x);
-    /** \brief \f$\cosh(x(\cdot))\f$ */
+
+    /** \brief \f$\cosh(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory cosh(const Trajectory& x);
-    /** \brief \f$\sinh(x(\cdot))\f$ */
+
+    /** \brief \f$\sinh(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory sinh(const Trajectory& x);
-    /** \brief \f$\tanh(x(\cdot))\f$ */
+
+    /** \brief \f$\tanh(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory tanh(const Trajectory& x);
-    /** \brief \f$\mathrm{arccosh}(x(\cdot))\f$ */
+
+    /** \brief \f$\mathrm{arccosh}(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory acosh(const Trajectory& x);
-    /** \brief \f$\mathrm{arcsinh}(x(\cdot))\f$ */
+
+    /** \brief \f$\mathrm{arcsinh}(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory asinh(const Trajectory& x);
-    /** \brief \f$\mathrm{arctanh}(x(\cdot))\f$ */
+
+    /** \brief \f$\mathrm{arctanh}(x(\cdot))\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory atanh(const Trajectory& x);
 
-    /** \brief \f$\mathrm{arctan2}(y(\cdot),x(\cdot))\f$ */
+    /** \brief \f$\mathrm{arctan2}(y(\cdot),x(\cdot))\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory atan2(const Trajectory& y, const Trajectory& x);
-    /** \brief \f$\mathrm{arctan2}(y(\cdot),x)\f$ */
+
+    /** \brief \f$\mathrm{arctan2}(y(\cdot),x)\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory atan2(const Trajectory& y, double x);
-    /** \brief \f$\mathrm{arctan2}(y, x(\cdot))\f$ */
+
+    /** \brief \f$\mathrm{arctan2}(y, x(\cdot))\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory atan2(double y, const Trajectory& x);
 
-    /** \brief \f$x^p(\cdot)\f$ */
+    /** \brief \f$x^p(\cdot)\f$
+      * \param x
+      * \param p
+      * \return Trajectory output
+      */
     const Trajectory pow(const Trajectory& x, int p);
-    /** \brief \f$x^p(\cdot)\f$ */
+
+    /** \brief \f$x^p(\cdot)\f$
+      * \param x
+      * \param p
+      * \return Trajectory output
+      */
     const Trajectory pow(const Trajectory& x, double p);
-    /** \brief \f$\sqrt[p]{x(\cdot)}\f$ */
+
+    /** \brief \f$\sqrt[p]{x(\cdot)}\f$
+      * \param x
+      * \param p
+      * \return Trajectory output
+      */
     const Trajectory root(const Trajectory& x, int p);
 
-    /** \brief \f$x(\cdot)\f$ */
+    /** \brief \f$x(\cdot)\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory operator+(const Trajectory& x);
-    /** \brief \f$x(\cdot)+y(\cdot)\f$ */
+
+    /** \brief \f$x(\cdot)+y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator+(const Trajectory& x, const Trajectory& y);
-    /** \brief \f$x(\cdot)+y\f$ */
+
+    /** \brief \f$x(\cdot)+y\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator+(const Trajectory& x, double y);
-    /** \brief \f$x+y(\cdot)\f$ */
+
+    /** \brief \f$x+y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator+(double x, const Trajectory& y);
 
-    /** \brief \f$-x(\cdot)\f$ */
+    /** \brief \f$-x(\cdot)\f$
+      * \param x
+      * \return Trajectory output
+      */
     const Trajectory operator-(const Trajectory& x);
-    /** \brief \f$x(\cdot)-y(\cdot)\f$ */
+
+    /** \brief \f$x(\cdot)-y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator-(const Trajectory& x, const Trajectory& y);
-    /** \brief \f$x(\cdot)-y\f$ */
+
+    /** \brief \f$x(\cdot)-y\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator-(const Trajectory& x, double y);
-    /** \brief \f$x-y(\cdot)\f$ */
+
+    /** \brief \f$x-y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator-(double x, const Trajectory& y);
 
-    /** \brief \f$x(\cdot)\cdot y(\cdot)\f$ */
+
+    /** \brief \f$x(\cdot)\cdot y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator*(const Trajectory& x, const Trajectory& y);
-    /** \brief \f$x(\cdot)\cdot y\f$ */
+
+    /** \brief \f$x(\cdot)\cdot y\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator*(const Trajectory& x, double y);
-    /** \brief \f$x\cdot y(\cdot)\f$ */
+
+    /** \brief \f$x\cdot y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator*(double x, const Trajectory& y);
 
-    /** \brief \f$x(\cdot)/y(\cdot)\f$ */
+
+    /** \brief \f$x(\cdot)/y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator/(const Trajectory& x, const Trajectory& y);
-    /** \brief \f$x(\cdot)/y\f$ */
+
+    /** \brief \f$x(\cdot)/y\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator/(const Trajectory& x, double y);
-    /** \brief \f$x/y(\cdot)\f$ */
+
+    /** \brief \f$x/y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return Trajectory output
+      */
     const Trajectory operator/(double x, const Trajectory& y);
 
   /// @}
   /// \name Vector outputs
   /// @{
 
-    /** \brief \f$\mathbf{x}(\cdot)\f$ */
+    /** \brief \f$\mathbf{x}(\cdot)\f$
+      * \param x
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator+(const TrajectoryVector& x);
-    /** \brief \f$\mathbf{x}(\cdot)+\mathbf{y}(\cdot)\f$ */
+
+    /** \brief \f$\mathbf{x}(\cdot)+\mathbf{y}(\cdot)\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator+(const TrajectoryVector& x, const TrajectoryVector& y);
-    /** \brief \f$\mathbf{x}(\cdot)+\mathbf{y}\f$ */
+
+    /** \brief \f$\mathbf{x}(\cdot)+\mathbf{y}\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator+(const TrajectoryVector& x, const ibex::Vector& y);
-    /** \brief \f$\mathbf{x}+\mathbf{y}(\cdot)\f$ */
+
+    /** \brief \f$\mathbf{x}+\mathbf{y}(\cdot)\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator+(const ibex::Vector& x, const TrajectoryVector& y);
 
-    /** \brief \f$-\mathbf{x}(\cdot)\f$ */
+
+    /** \brief \f$-\mathbf{x}(\cdot)\f$
+      * \param x
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator-(const TrajectoryVector& x);
-    /** \brief \f$\mathbf{x}(\cdot)-\mathbf{y}(\cdot)\f$ */
+
+    /** \brief \f$\mathbf{x}(\cdot)-\mathbf{y}(\cdot)\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator-(const TrajectoryVector& x, const TrajectoryVector& y);
-    /** \brief \f$\mathbf{x}(\cdot)-\mathbf{y}\f$ */
+
+    /** \brief \f$\mathbf{x}(\cdot)-\mathbf{y}\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator-(const TrajectoryVector& x, const ibex::Vector& y);
-    /** \brief \f$\mathbf{x}-\mathbf{y}(\cdot)\f$ */
+
+    /** \brief \f$\mathbf{x}-\mathbf{y}(\cdot)\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator-(const ibex::Vector& x, const TrajectoryVector& y);
 
-    /** \brief \f$x\cdot\mathbf{y}(\cdot)\f$ */
+
+    /** \brief \f$x\cdot\mathbf{y}(\cdot)\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator*(double x, const TrajectoryVector& y);
-    /** \brief \f$x(\cdot)\cdot\mathbf{y}(\cdot)\f$ */
+
+    /** \brief \f$x(\cdot)\cdot\mathbf{y}(\cdot)\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator*(const Trajectory& x, const TrajectoryVector& y);
-    /** \brief \f$x(\cdot)\cdot\mathbf{y}\f$ */
+
+    /** \brief \f$x(\cdot)\cdot\mathbf{y}\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator*(const Trajectory& x, const ibex::Vector& y);
-    /** \brief \f$x(\cdot)\cdot\mathbf{y}\f$ */
+
+    /** \brief \f$x(\cdot)\cdot\mathbf{y}\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator*(const ibex::Matrix& x, const TrajectoryVector& y);
 
-    /** \brief \f$\mathbf{x}(\cdot)/y\f$ */
+
+    /** \brief \f$\mathbf{x}(\cdot)/y\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator/(const TrajectoryVector& x, double y);
-    /** \brief \f$\mathbf{x}(\cdot)/y(\cdot)\f$ */
+
+    /** \brief \f$\mathbf{x}(\cdot)/y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator/(const TrajectoryVector& x, const Trajectory& y);
-    /** \brief \f$\mathbf{x}/y(\cdot)\f$ */
+
+    /** \brief \f$\mathbf{x}/y(\cdot)\f$
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector operator/(const ibex::Vector& x, const Trajectory& y);
 
-    /** \brief \f$\mathbf{x}(\cdot)\times\mathbf{y}\f$ (or \f$\mathbf{x}(\cdot)\wedge\mathbf{y}\f$ in physics) */
+
+    /** \brief \f$\mathbf{x}(\cdot)\times\mathbf{y}\f$ (or \f$\mathbf{x}(\cdot)\wedge\mathbf{y}\f$ in physics)
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector vecto_product(const TrajectoryVector& x, const ibex::Vector& y);
-    /** \brief \f$\mathbf{x}\times\mathbf{y}(\cdot)\f$ (or \f$\mathbf{x}\wedge\mathbf{y}(\cdot)\f$ in physics) */
+
+    /** \brief \f$\mathbf{x}\times\mathbf{y}(\cdot)\f$ (or \f$\mathbf{x}\wedge\mathbf{y}(\cdot)\f$ in physics)
+      * \param x
+      * \param y
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector vecto_product(const ibex::Vector& x, const TrajectoryVector& y);
 
-    /** \brief \f$\mid\mathbf{x}(\cdot)\mid\f$ */
+
+    /** \brief \f$\mid\mathbf{x}(\cdot)\mid\f$
+      * \param x
+      * \return TrajectoryVector output
+      */
     const TrajectoryVector abs(const TrajectoryVector& x);
 
   /// @}

@@ -1101,6 +1101,7 @@ namespace tubex
        * \note A synthesis tree speeds up computations such as integrals or evaluations
        *
        * \param enable boolean
+       * \return void
        */
       static void enable_syntheses(bool enable = true);
 

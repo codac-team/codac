@@ -30,6 +30,7 @@ namespace tubex
    * \param tube_dt sampling value \f$\delta\f$ for the temporal discretization of the resulting tube
    * \param capd_order (optional) order of the integration method
    * \param capd_dt (optional) custom time step for CAPD integration
+   * \return TubeVector enclosing the solution
    */
   TubeVector CAPD_integrateODE(
     const ibex::Interval& tdomain, const ibex::Function& f, const ibex::IntervalVector& x0,
@@ -46,6 +47,7 @@ namespace tubex
    * \param tube_dt sampling value \f$\delta\f$ for the temporal discretization of the resulting tube
    * \param capd_order (optional) order of the integration method
    * \param capd_dt (optional) custom time step for CAPD integration
+   * \return TubeVector enclosing the solution
    */
   TubeVector CAPD_integrateODE(
     const ibex::Interval& tdomain, const TFunction& f, const ibex::IntervalVector& x0,

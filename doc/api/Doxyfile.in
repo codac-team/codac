@@ -261,8 +261,8 @@ TAB_SIZE               = 4
 # commands \{ and \} for these it is advised to use the version @{ and @} or use
 # a double escape (\\{ and \\})
 
-ALIASES                = "license=@par License:\n" \
-                         "bugfixes=@par Bug fixes:\n"
+ALIASES                = "license=@par License:<br>" \
+                         "bugfixes=@par Bug fixes:<br>"
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"
