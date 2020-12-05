@@ -65,16 +65,13 @@
 #    add_definitions(-U__STRICT_ANSI__)
 #  endif()
 
-  add_compile_options(-O3)
-  
   if(MSVC)
     add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
   else()
     add_compile_options(-Wall)
+    add_compile_options(-O3)
   endif()
 
-  set(CMAKE_CXX_STANDARD 17)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ################################################################################
 # Optional binary tree activation for all tubes (for tests purposes mainly)
