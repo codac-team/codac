@@ -247,6 +247,7 @@ matrix:
       env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CHOCO_VS_TOOLS=vcbuildtools CPCFG=m-win32 PY_V_F="3.5.4.20200110 --x86" PY_V_MDM=3.5 PY_V_MM=35 WITH_PYTHON=ON
       <<: *vs_specific
 
+    # Should be Visual Studio 2010 for Python 3.4...?
     - name: "Windows Visual Studio 2015 x86 Python 3.4"
       env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=Win32 CFG=x86_vc14 CHOCO_VS_TOOLS=vcbuildtools CPCFG=m-win32 PY_V_F="3.4.4.20200110 --x86" PY_V_MDM=3.4 PY_V_MM=34 WITH_PYTHON=ON
       <<: *vs_specific
@@ -263,6 +264,7 @@ matrix:
       env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CHOCO_VS_TOOLS=vcbuildtools CPCFG=m-win_amd64 PY_V_F=3.5.4.20200110 PY_V_MDM=3.5 PY_V_MM=35 WITH_PYTHON=ON
       <<: *vs_specific
 
+    # Should be Visual Studio 2010 for Python 3.4...?
     - name: "Windows Visual Studio 2015 x64 Python 3.4"
       env: CMAKE_PARAM_G="Visual Studio 14" CMAKE_PARAM_A=x64 CFG=x64_vc14 CHOCO_VS_TOOLS=vcbuildtools CPCFG=m-win_amd64 PY_V_F=3.4.4.20200110 PY_V_MDM=3.4 PY_V_MM=34 WITH_PYTHON=ON
       <<: *vs_specific
