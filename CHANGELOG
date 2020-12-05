@@ -1,6 +1,32 @@
 Unreleased yet (in development)
 ===============================
 
+.. Features added
+.. --------------
+
+.. Changes
+.. -------
+
+.. Dependencies
+.. ------------
+
+.. Bugs fixed
+.. ----------
+
+.. Deprecated
+.. ----------
+
+.. Documentation
+.. -------------
+
+
+-----------------------------------------------------------------
+
+Release 3.0.13 (released `Dec 5, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.13>`_)
+=======================================================================================================
+
+`Commits since previous release 3.0.12 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.12...v3.0.13>`_
+
 Features added
 --------------
 
@@ -9,43 +35,19 @@ Features added
 Changes
 -------
 
-* :commit:`5b42f856a8c24f18a71a4399b3fe29c99f5ea092`: updated version of ODE integration using CAPD
-
-.. Dependencies
-.. ------------
-
-.. Bugs fixed
-.. ----------
-
-Deprecated
-----------
-
-* :commit:`e039c427b04c51f51078043f334e1c2fdef7c831`: the function ``Fnc::nb_vars()`` is deprecated, use ``Fnc::nb_var()`` instead
-
-.. Documentation
-.. -------------
-
-
------------------------------------------------------------------
-
-Release 3.0.13 (released `Dec 3, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.13>`_)
-=======================================================================================================
-
-`Commits since previous release 3.0.12 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.12...v3.0.13>`_
-
-Features added
---------------
-
-Changes
--------
-
 * :commit:`546de1e941b1217fcb47a205d127f667b3efe7f9`: strong optimization for CN building (using hashcodes for graph exploration)
-* improving Exception messages with contractors (on consistent dimensions)
+* :commit:`2f531950481635b48ee12724b865b66d39cec614`: improving Exception messages with contractors (on consistent dimensions)
+* :commit:`5b42f856a8c24f18a71a4399b3fe29c99f5ea092`: updated version of ODE integration using CAPD
 
 Bugs fixed
 ----------
 
 * :commit:`d0b05aba8ba3bebf72e57d7f6d9ae8f45cb261f1`: corrected bug in ``Trajectory`` operations
+
+Deprecated
+----------
+
+* :commit:`e039c427b04c51f51078043f334e1c2fdef7c831`: the function ``Fnc::nb_vars()`` is deprecated, use ``Fnc::nb_var()`` instead
 
 
 -----------------------------------------------------------------
