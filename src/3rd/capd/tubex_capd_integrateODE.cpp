@@ -88,6 +88,7 @@ namespace tubex
       }
     }
 
+    delete v_s;
     return tube;
   }
 
