@@ -22,7 +22,7 @@ You may need to install the following packages in order to compile CAPD:
 
 .. code-block:: bash
 
-    sudo apt-get svn install autoconf libtool
+    sudo apt-get install subversion autoconf libtool
 
 Then you can proceed to the compilation of the sources of CAPD:
 

@@ -88,7 +88,7 @@ namespace tubex
       assert(valid_tdomain(tdomain));
       assert(timestep >= 0.); // if 0., equivalent to no sampling
       assert(f_image_id >= 0 && f_image_id < f.image_dim());
-      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+      assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
 
       // A scalar copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(1, *this);
@@ -127,17 +127,11 @@ namespace tubex
       *this = x;
     }
 
-    Tube::Tube(const Tube& x, const Interval& codomain)
-      : Tube(x)
-    {
-      set(codomain);
-    }
-    
     Tube::Tube(const Tube& x, const TFnc& f, int f_image_id)
       : Tube(x)
     {
       assert(f_image_id >= 0 && f_image_id < f.image_dim());
-      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+      assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
 
       // A scalar copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(1, *this);
@@ -172,8 +166,7 @@ namespace tubex
       deserialize(binary_file_name, traj);
 
       if(traj == NULL)
-        throw Exception("Tube constructor",
-                        "unable to deserialize Trajectory object");
+        throw Exception(__func__, "unable to deserialize Trajectory object");
     }
     
     Tube::~Tube()
@@ -196,8 +189,9 @@ namespace tubex
 
     const Tube Tube::primitive(const Interval& c) const
     {
-      Tube primitive(*this, Interval::ALL_REALS); // a copy of this initialized to [-oo,oo]
-      primitive.set(c, primitive.tdomain().lb());
+      Tube primitive(*this); // same slicing
+      primitive.set(Interval::ALL_REALS); // initialized to [-oo,oo]
+      primitive.set(c, primitive.tdomain().lb()); // initial condition
       CtcDeriv ctc_deriv;
       ctc_deriv.contract(primitive, static_cast<const Tube&>(*this), TimePropag::FORWARD);
       return primitive;
@@ -703,14 +697,18 @@ namespace tubex
       if(m_synthesis_tree != NULL) // fast inversion
         return m_synthesis_tree->invert(y, search_tdomain);
 
-      Tube v(*this, Interval::ALL_REALS); // todo: optimize this
+      // todo: optimize this:
+      Tube v(*this); // same slicing
+      v.set(Interval::ALL_REALS); 
       return invert(y, v, search_tdomain);
     }
 
     void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_tdomain) const
     {
+      // todo: optimize this:
       // todo: fast inversion with binary tree considering derivative information
-      Tube v(*this, Interval::ALL_REALS); // todo: optimize this
+      Tube v(*this); // same slicing
+      v.set(Interval::ALL_REALS);
       v_t.clear();
       invert(y, v_t, v, search_tdomain);
     }
@@ -1108,6 +1106,37 @@ namespace tubex
       return *this;
     }
 
+    Tube& Tube::truncate_tdomain(const Interval& t)
+    {
+      assert(valid_tdomain(t));
+      assert(tdomain().is_superset(t));
+
+      // The first slice is the slice containing t.lb()
+      while(!m_first_slice->tdomain().contains(t.lb()))
+      {
+        Slice *s_next = m_first_slice->next_slice();
+        delete m_first_slice;
+        m_first_slice = s_next;
+      }
+
+      m_first_slice->set_tdomain(t & m_first_slice->tdomain());
+
+      // After this iteration, the last slice will be the one containing t.ub()
+      Slice *s_last = last_slice();
+      while(!s_last->tdomain().contains(t.ub()))
+      {
+        Slice *s_prev = s_last->prev_slice();
+        delete s_last;
+        s_last = s_prev;
+      }
+
+      s_last->set_tdomain(t & s_last->tdomain());
+
+      m_tdomain = t;
+      delete_synthesis_tree(); // todo: update tree if created, instead of delete
+      return *this;
+    }
+
     void Tube::shift_tdomain(double shift_ref)
     {
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
@@ -1135,7 +1164,7 @@ namespace tubex
 
       catch(ibex::NoBisectableVariableException&)
       {
-        throw Exception("Tube::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
+        throw Exception(__func__, "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
       };
 
       return p;
@@ -1291,7 +1320,7 @@ namespace tubex
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("Tube::serialize()", "error while writing file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while writing file \"" + binary_file_name + "\"");
 
       serialize_Tube(bin_file, *this, version_number);
       bin_file.close();
@@ -1302,7 +1331,7 @@ namespace tubex
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("Tube::serialize()", "error while writing file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while writing file \"" + binary_file_name + "\"");
 
       serialize_Tube(bin_file, *this, version_number);
       char c = 0; bin_file.write(&c, 1); // writing a bit to separate the two objects
@@ -1370,7 +1399,7 @@ namespace tubex
       ifstream bin_file(binary_file_name.c_str(), ios::in | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("Tube::deserialize()", "error while opening file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while opening file \"" + binary_file_name + "\"");
 
       Tube *ptr;
       deserialize_Tube(bin_file, ptr);

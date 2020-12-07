@@ -14,9 +14,9 @@ namespace tubex
 {
   namespace ctc
   {
-    CtcDeriv deriv;
-    CtcEval eval;
-    CtcDist dist;
     CtcDelay delay;
+    CtcDeriv deriv;
+    CtcDist dist;
+    CtcEval eval;
   }
 }

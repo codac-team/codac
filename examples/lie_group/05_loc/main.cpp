@@ -13,22 +13,21 @@
 
 #include <tubex.h>
 #include <tubex-rob.h>
-#include <tubex-ode.h>
+#include <tubex-capd.h>
 
 using namespace std;
 using namespace tubex;
 using namespace vibes;
 
-
 int main()
 {
     // ----- Generate reference tube thanks to ODE integration -----
 
-    Interval domain(0.,17.);
+    Interval tdomain(0.,17.);
     TFunction f("x1","x2","x3","(cos(x3);sin(x3);sin(0.4*t))"); //function to be integrated
     IntervalVector a0(3,Interval(0.,0.)); // initial condition for reference tube
     double timestep = 0.1;
-    TubeVector a = TubeVectorODE(domain,f,a0,timestep,CAPD_MODE);
+    TubeVector a = CAPD_integrateODE(tdomain,f,a0,timestep);
     // ----- Generate derivative of [a](.) -----
     // function for the derivative tube
     TubeVector va= f.eval_vector(a);

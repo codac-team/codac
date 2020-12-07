@@ -160,7 +160,7 @@ The environment is made of 4 landmarks. Their coordinates are given in the follo
   :math:`3`  :math:`(3,4)^\intercal`
   =========  =============================
 
-Each :math:`t=2k\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`. The robot does not know the landmarks coordinates (the M of SLAM is for Mapping), but it knows which landmark :math:`\mathbf{b}_j` is being observed (the landmarks are *identified*). 
+Each :math:`t=2\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`. The robot does not know the landmarks coordinates (the M of SLAM is for Mapping), but it knows which landmark :math:`\mathbf{b}_j` is being observed (the landmarks are *identified*). 
 
 We will use a constraint propagation approach to solve the problem. 
 
@@ -217,12 +217,13 @@ Hence, for real-time SLAM, we can use the following temporal loop:
       if t-prev_t_obs > 2*dt: # new observation each 2*dt
       
         # Creating new observation to a random landmark
-
-          ...
+        ...
 
         # Adding related observation constraints to the network
+        ...
 
-          ...
+        # Updated last iteration time
+        prev_t_obs = t
 
       contraction_dt = cn.contract_during(iteration_dt)
       if iteration_dt>contraction_dt: # pause for the animation
@@ -253,12 +254,13 @@ Hence, for real-time SLAM, we can use the following temporal loop:
       if(t - prev_t_obs > 2*dt) // new observation each 2*dt
       {
         // Creating new observation to a random landmark
-
-          ...
+        ...
 
         // Adding related observation constraints to the network
+        ...
 
-          ...
+        // Updated last iteration time
+        prev_t_obs = t;
       }
 
       double contraction_dt = cn.contract_during(iteration_dt);

@@ -139,6 +139,80 @@ namespace tubex
     delete v_x_slices;
   }
 
+  void CtcFunction::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7)
+  {
+    assert(nb_var == 7);
+
+    Slice **v_x_slices = new Slice*[nb_var];
+    v_x_slices[0] = x1.first_slice();
+    v_x_slices[1] = x2.first_slice();
+    v_x_slices[2] = x3.first_slice();
+    v_x_slices[3] = x4.first_slice();
+    v_x_slices[4] = x5.first_slice();
+    v_x_slices[5] = x6.first_slice();
+    v_x_slices[6] = x7.first_slice();
+
+    contract(v_x_slices);
+    delete v_x_slices;
+  }
+
+  void CtcFunction::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8)
+  {
+    assert(nb_var == 8);
+
+    Slice **v_x_slices = new Slice*[nb_var];
+    v_x_slices[0] = x1.first_slice();
+    v_x_slices[1] = x2.first_slice();
+    v_x_slices[2] = x3.first_slice();
+    v_x_slices[3] = x4.first_slice();
+    v_x_slices[4] = x5.first_slice();
+    v_x_slices[5] = x6.first_slice();
+    v_x_slices[6] = x7.first_slice();
+    v_x_slices[7] = x8.first_slice();
+
+    contract(v_x_slices);
+    delete v_x_slices;
+  }
+
+  void CtcFunction::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, Tube& x9)
+  {
+    assert(nb_var == 9);
+
+    Slice **v_x_slices = new Slice*[nb_var];
+    v_x_slices[0] = x1.first_slice();
+    v_x_slices[1] = x2.first_slice();
+    v_x_slices[2] = x3.first_slice();
+    v_x_slices[3] = x4.first_slice();
+    v_x_slices[4] = x5.first_slice();
+    v_x_slices[5] = x6.first_slice();
+    v_x_slices[6] = x7.first_slice();
+    v_x_slices[7] = x8.first_slice();
+    v_x_slices[8] = x9.first_slice();
+
+    contract(v_x_slices);
+    delete v_x_slices;
+  }
+
+  void CtcFunction::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6, Tube& x7, Tube& x8, Tube& x9, Tube& x10)
+  {
+    assert(nb_var == 10);
+
+    Slice **v_x_slices = new Slice*[nb_var];
+    v_x_slices[0] = x1.first_slice();
+    v_x_slices[1] = x2.first_slice();
+    v_x_slices[2] = x3.first_slice();
+    v_x_slices[3] = x4.first_slice();
+    v_x_slices[4] = x5.first_slice();
+    v_x_slices[5] = x6.first_slice();
+    v_x_slices[6] = x7.first_slice();
+    v_x_slices[7] = x8.first_slice();
+    v_x_slices[8] = x9.first_slice();
+    v_x_slices[9] = x10.first_slice();
+
+    contract(v_x_slices);
+    delete v_x_slices;
+  }
+
   void CtcFunction::contract(Slice **v_x_slices)
   {
     IntervalVector envelope(nb_var);

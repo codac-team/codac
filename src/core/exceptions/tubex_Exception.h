@@ -9,8 +9,18 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+// For maximum portability, we recommend you use __func__, but provide a fallback definition with the preprocessor: 
+// https://gcc.gnu.org/onlinedocs/gcc-4.8.1/gcc/Function-Names.html
 #ifndef __TUBEX_EXCEPTION_H__
 #define __TUBEX_EXCEPTION_H__
+
+#if __STDC_VERSION__ < 199901L
+# if __GNUC__ >= 2
+#  define __func__ __FUNCTION__
+# else
+#  define __func__ "<unknown>"
+# endif
+#endif
 
 #include <iostream>
 #include <exception>

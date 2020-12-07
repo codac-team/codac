@@ -18,9 +18,9 @@ In case you want to use Tubex only with Python, then the installation procedure 
 .. code-block:: bash
   
   pip3 install --upgrade pip # you may have to upgrade pip (19.0.0 required at least)
-  pip3 install "pyibex>=1.8.1" tubex-lib
+  pip3 install "pyibex>=1.9.2" tubex-lib
 
-where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Tubex is based. Note that Tubex requires pyIbex 1.8.1 at least.
+where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Tubex is based. Note that Tubex requires pyIbex 1.9.2 at least.
 
 .. role:: gbg
 
@@ -35,19 +35,21 @@ where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the
 
 The :gbg:`✓` configurations are officially supported at the moment:
 
-+---------------+----------------+-----------------------+----------------+----------------+
-|Language       |Linux           |Windows                |macOS           |Online          |
-+===============+================+=======================+================+================+
-|Python 3.4     |:gbg:`✓`        |:gbg:`✓`               |--              ||online-py|_    |
-+---------------+----------------+-----------------------+----------------+                +
-|Python 3.5     |:gbg:`✓`        |:gbg:`✓`               |--              |                |
-+---------------+----------------+-----------------------+----------------+                +
-|Python 3.6     |:gbg:`✓`        |:gbg:`✓`               |--              |                |
-+---------------+----------------+-----------------------+----------------+                +
-|Python 3.7     |:gbg:`✓`        |:gbg:`✓`               |--              |                |
-+---------------+----------------+-----------------------+----------------+                +
-|Python 3.8     |:gbg:`✓`        |:gbg:`✓`               |--              |                |
-+---------------+----------------+-----------------------+----------------+----------------+
++---------------+----------------+-----------------+-----------------+----------------+----------------+
+|Language       |Linux 64 bits   |Windows (x86)    |Windows (x64)    |macOS           |Online          |
++===============+================+=================+=================+================+================+
+|Python 3.4     |                |:gbg:`✓`         |:gbg:`✓`         |--              ||online-py|_    |
++---------------+----------------+-----------------+-----------------+----------------+                +
+|Python 3.5     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |--              |                |
++---------------+----------------+-----------------+-----------------+----------------+                +
+|Python 3.6     |:gbg:`✓`        |:gbg:`✓`         |:gbg:`✓`         |--              |                |
++---------------+----------------+-----------------+-----------------+----------------+                +
+|Python 3.7     |:gbg:`✓`        |                 |:gbg:`✓`         |--              |                |
++---------------+----------------+-----------------+-----------------+----------------+                +
+|Python 3.8     |:gbg:`✓`        |                 |:gbg:`✓`         |--              |                |
++---------------+----------------+-----------------+-----------------+----------------+                +
+|Python 3.9     |:gbg:`✓`        |                 |:gbg:`✓`         |--              |                |
++---------------+----------------+-----------------+-----------------+----------------+----------------+
 
 If your configuration is missing in this table, please `contact us <https://github.com/SimonRohou/tubex-lib/issues>`_. We may be able to make it available for Tubex.
 

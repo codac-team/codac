@@ -27,7 +27,7 @@ In case you are willing to contribute to Tubex, here are some information that m
   ----------------------  --------------------------------------------------------------------------------------
   CMAKE_PREFIX_PATH       :ref:`See more <sec-installation-full-linux-cmake>`
   ----------------------  --------------------------------------------------------------------------------------
-  WITH_CAPD=ON            :ref:`See more <sec-extensions-ode>`
+  WITH_CAPD=ON            :ref:`See more <sec-extensions-ode>` (not fully supported yet)
   ----------------------  --------------------------------------------------------------------------------------
   BUILD_TESTS             | By default, the tests are not built.
                           | To enable the compilation of tests:
@@ -48,7 +48,7 @@ In case you are willing to contribute to Tubex, here are some information that m
 
                           .. code-block:: bash
 
-                            cmake <other_cmake_options> -DWITH_PYTHON=ON ..
+                            cmake <other_cmake_options> -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" ..
 
                           You will then have to generate the Doxygen documentation (XML files):
 
@@ -60,11 +60,11 @@ In case you are willing to contribute to Tubex, here are some information that m
 
                           .. code-block:: bash
 
-                            cmake <other_cmake_options> -DWITH_PYTHON=ON ..
+                            cmake <other_cmake_options> -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" ..
 
                           This last step will generate header files containing docstrings for Python, based on
                           the content of XML files made by Doxygen. The documentation of any C++/Python function
-                          is then located in the C++ header files of the /src directory.
+                          is then located in the C++ header files of the :file:`/src` directory.
 
   ======================  ======================================================================================
 
@@ -132,7 +132,7 @@ One shortcut to build all the examples (including 3rd parties) is given by:
 .. code-block:: bash
   
   # From Tubex root
-  ./make examples
+  ./make.sh examples
 
 Note that the :file:`build` folders of each example is removed before the build.
 
@@ -141,14 +141,14 @@ One shortcut to build the tests is given by:
 .. code-block:: bash
 
   # From Tubex root
-  ./make tests
+  ./make.sh tests
 
 One shortcut to build both the examples and tests is:
 
 .. code-block:: bash
 
   # From Tubex root
-  ./make all
+  ./make.sh all
 
 
 .. rubric:: Visualization of graphs of CN
@@ -178,10 +178,32 @@ Get Pybind11 as submodule:
 
 .. code-block:: bash
   
-   git submodule init
-   git submodule update
+  git submodule init
+  git submodule update
 
-After having configured CMake and ``-DWITH_PYTHON=ON`` and compiled:
+Then, configure ``cmake`` with custom options and ``-DWITH_PYTHON=ON``:
+
+.. code-block:: bash
+  
+  cmake <...> -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" ..
+
+You will then have to generate the Doxygen documentation (XML files):
+
+.. code-block:: bash
+
+  make api
+
+And finally run again the ``cmake`` command:
+
+.. code-block:: bash
+
+  cmake <other_cmake_options> -DWITH_PYTHON=ON ..
+
+This last step will generate header files containing docstrings for Python, based on
+the content of XML files made by Doxygen. The documentation of any C++/Python function
+is then located in the C++ header files of the :file:`/src` directory.
+
+Finally, after the compilation:
 
 .. code-block:: bash
   

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get install autoconf
+sudo apt-get install autoconf libtool
 
 cd $HOME
 echo 'Installing CAPD in ' $HOME '...';

@@ -63,7 +63,7 @@ fig_map.show(0.5)
 
 # E.13. (optional)
 n = RandTrajectory(tdomain, 0.01, Interval(-0.2,0.2))
-measured_y = y + n
+measured_y = actual_y + n
 y = Tube(measured_y, dt)
 
 # E.14. (optional)

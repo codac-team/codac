@@ -277,6 +277,10 @@ Then you have two options: read the details about the features of Tubex (domains
   /manual/06-contractor-network/index
   /manual/07-graphics/index
 
+.. toctree:: 
+  :maxdepth: 1
+
+  /faq
   /dev/changelog
   /dev/api_technical_doc
   /dev/info_dev
@@ -295,7 +299,7 @@ Then you have two options: read the details about the features of Tubex (domains
   .. Figure:: tutorial/img/logos/logo_iros.png
     :align: center
 
-  This tutorial is proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ (International Conference on Intelligent Robots and Systems), 29th October.
+  This tutorial is proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ (International Conference on Intelligent Robots and Systems), 26th October.
 
 
 Tutorial for mobile robotics

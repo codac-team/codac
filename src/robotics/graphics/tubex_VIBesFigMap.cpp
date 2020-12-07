@@ -14,6 +14,7 @@
 #include <tubex_colors.h>
 #include <tubex_Tube.h>
 #include <tubex_Trajectory.h>
+#include <tubex_Exception.h>
 
 using namespace std;
 using namespace ibex;
@@ -93,8 +94,8 @@ namespace tubex
     assert(index_x != index_y);
     assert(index_x >= 0 && index_x < tube->size());
     assert(index_y >= 0 && index_y < tube->size());
-    assert(m_map_tubes.find(tube) == m_map_tubes.end()
-      && "tube must not have been previously added");
+    if(m_map_tubes.find(tube) != m_map_tubes.end())
+      throw Exception(__func__, "tube must not have been previously added");
 
     m_map_tubes[tube];
     m_map_tubes[tube].index_x = index_x;
@@ -109,8 +110,8 @@ namespace tubex
   void VIBesFigMap::set_tube_name(const TubeVector *tube, const string& name)
   {
     assert(tube != NULL);
-    assert(m_map_tubes.find(tube) != m_map_tubes.end()
-      && "unknown tube, must be added beforehand");
+    if(m_map_tubes.find(tube) == m_map_tubes.end())
+      throw Exception(__func__, "unknown tube, must be added beforehand");
 
     m_map_tubes[tube].name = name;
   }
@@ -119,8 +120,8 @@ namespace tubex
   {
     assert(tube != NULL);
     assert(color != "");
-    assert(m_map_tubes.find(tube) != m_map_tubes.end()
-      && "unknown tube, must be added beforehand");
+    if(m_map_tubes.find(tube) == m_map_tubes.end())
+      throw Exception(__func__, "unknown tube, must be added beforehand");
 
     m_map_tubes[tube].color = color;
   }
@@ -128,8 +129,8 @@ namespace tubex
   void VIBesFigMap::set_tube_color(const TubeVector *tube, const ColorMap& colormap, const Trajectory *traj_colormap)
   {
     assert(tube != NULL);
-    assert(m_map_tubes.find(tube) != m_map_tubes.end()
-      && "unknown tube, must be added beforehand");
+    if(m_map_tubes.find(tube) == m_map_tubes.end())
+      throw Exception(__func__, "unknown tube, must be added beforehand");
 
     m_map_tubes[tube].color = ""; // removing constant color
     m_map_tubes[tube].color_map = make_pair(colormap, traj_colormap);
@@ -138,8 +139,8 @@ namespace tubex
   void VIBesFigMap::remove_tube(const TubeVector *tube)
   {
     assert(tube != NULL);
-    assert(m_map_tubes.find(tube) != m_map_tubes.end()
-      && "unable to remove, unknown tube");
+    if(m_map_tubes.find(tube) == m_map_tubes.end())
+      throw Exception(__func__, "unable to remove, unknown tube");
 
     if(m_map_tubes[tube].tube_x_copy != NULL)
     {
@@ -153,8 +154,8 @@ namespace tubex
   void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color, const int mode)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) == m_map_trajs.end()
-      && "traj must not have been previously added");
+    if(m_map_trajs.find(traj) != m_map_trajs.end())
+      throw Exception(__func__, "trajectory must not have been previously added");
     assert(index_x != index_y);
     assert(index_x >= 0 && index_x < traj->size());
     assert(index_y >= 0 && index_y < traj->size());
@@ -165,8 +166,8 @@ namespace tubex
   void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color, const int mode)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) == m_map_trajs.end()
-      && "traj must not have been previously added");
+    if(m_map_trajs.find(traj) != m_map_trajs.end())
+      throw Exception(__func__, "trajectory must not have been previously added");
     assert(index_x != index_y && index_x != index_heading && index_y != index_heading);
     assert(index_x >= 0 && index_x < traj->size());
     assert(index_y >= 0 && index_y < traj->size());
@@ -185,8 +186,8 @@ namespace tubex
   void VIBesFigMap::set_trajectory_name(const TrajectoryVector *traj, const string& name)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unknown traj, must be added beforehand");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unknown trajectory, must be added beforehand");
 
     m_map_trajs[traj].name = name;
   }
@@ -195,8 +196,8 @@ namespace tubex
   {
     assert(traj != NULL);
     assert(color != "");
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unable to remove, unknown traj");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unable to remove, unknown trajectory");
 
     m_map_trajs[traj].color = color;
 
@@ -207,8 +208,8 @@ namespace tubex
   void VIBesFigMap::set_trajectory_color(const TrajectoryVector *traj, const ColorMap& colormap, const Trajectory *traj_colormap)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unable to remove, unknown traj");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unable to remove, unknown trajectory");
 
     m_map_trajs[traj].color = ""; // removing constant color
     m_map_trajs[traj].color_map = make_pair(colormap, traj_colormap);
@@ -232,8 +233,8 @@ namespace tubex
   void VIBesFigMap::remove_trajectory(const TrajectoryVector *traj)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unable to remove, unknown traj");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unable to remove, unknown trajectory");
 
     std::ostringstream o;
     o << "traj_" << m_map_trajs[traj].name;
@@ -323,8 +324,8 @@ namespace tubex
   void VIBesFigMap::add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unknown traj, must be added beforehand");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unknown trajectory, must be added beforehand");
 
     // Simply directly drawn
     draw_observation(obs, traj, color, vibesParams("figure", name(), "group", "obs"));
@@ -333,8 +334,8 @@ namespace tubex
   void VIBesFigMap::add_observations(const vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const string& color)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unknown traj, must be added beforehand");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unknown trajectory, must be added beforehand");
 
     // Simply directly drawn
     for(size_t i = 0 ; i < v_obs.size() ; i++)
@@ -344,8 +345,8 @@ namespace tubex
   const IntervalVector VIBesFigMap::draw_tube(const TubeVector *tube)
   {
     assert(tube != NULL);
-    assert(m_map_tubes.find(tube) != m_map_tubes.end()
-      && "unknown tube, must be added beforehand");
+    if(m_map_tubes.find(tube) == m_map_tubes.end())
+      throw Exception(__func__, "unknown tube, must be added beforehand");
 
     IntervalVector viewbox(2, Interval::EMPTY_SET);
 
@@ -400,8 +401,8 @@ namespace tubex
   const IntervalVector VIBesFigMap::draw_trajectory(const TrajectoryVector *traj, float points_size)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unknown traj, must be added beforehand");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unknown trajectory, must be added beforehand");
     assert(points_size >= 0.);
 
     std::ostringstream o;
@@ -547,8 +548,8 @@ namespace tubex
   void VIBesFigMap::draw_slices(const TubeVector *tube)
   {
     assert(tube != NULL);
-    assert(m_map_tubes.find(tube) != m_map_tubes.end()
-      && "unknown tube, must be added beforehand");
+    if(m_map_tubes.find(tube) == m_map_tubes.end())
+      throw Exception(__func__, "unknown tube, must be added beforehand");
 
     // Reduced number of slices:
     int step = max((int)((1. * tube->nb_slices()) / m_tube_max_nb_disp_slices), 1);
@@ -727,8 +728,8 @@ namespace tubex
   void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params, float size)
   {
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unknown traj, must be added beforehand");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unknown trajectory, must be added beforehand");
     assert(traj->tdomain().contains(t));
 
     Vector pose(3);
@@ -780,8 +781,8 @@ namespace tubex
   {
     assert(obs.size() >= 3);
     assert(traj != NULL);
-    assert(m_map_trajs.find(traj) != m_map_trajs.end()
-      && "unknown traj, must be added beforehand");
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unknown trajectory, must be added beforehand");
 
     if(obs.is_empty())
       return;
