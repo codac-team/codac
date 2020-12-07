@@ -12,6 +12,8 @@
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_Domain.h"
+#include "tubex_DomainsTypeException.h"
+#include "tubex_DomainsSizeException.h"
 
 using namespace std;
 using namespace ibex;
@@ -24,9 +26,18 @@ namespace tubex
 
   }
 
+  // Static members for contractor signature (mainly used for CN Exceptions)
+  const string CtcEval::m_ctc_name = "CtcEval";
+  vector<string> CtcEval::m_str_expected_doms(
+  {
+    "Interval, Interval, Tube[, Tube]",
+    "Interval, IntervalVector, TubeVector[, TubeVector]"
+  });
+
   void CtcEval::contract(vector<Domain*>& v_domains)
   {
-    assert(v_domains[0]->type() == Domain::Type::T_INTERVAL);
+    if(v_domains[0]->type() != Domain::Type::T_INTERVAL)
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
 
     if(v_domains.size() == 4) // full constraint with derivative
     {
@@ -39,7 +50,7 @@ namespace tubex
         contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector(), v_domains[3]->tube_vector());
 
       else
-        assert(false && "vector of domains not consistent with the contractor definition");
+        throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
     }
 
     else if(v_domains.size() == 3) // simple evaluation without tube contraction
@@ -53,11 +64,11 @@ namespace tubex
         contract(v_domains[0]->interval(), v_domains[1]->interval_vector(), v_domains[2]->tube_vector());
 
       else
-        assert(false && "vector of domains not consistent with the contractor definition");
+        throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
     }
   
     else
-      assert(false && "vector of domains not consistent with the contractor definition");
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
   }
 
   void CtcEval::enable_time_propag(bool enable_propagation)
@@ -324,9 +335,14 @@ namespace tubex
   void CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w)
   {
     assert(!std::isnan(t));
+    assert(y.size() == z.size());
+    assert(y.size() == w.size());
     assert(y.tdomain().contains(t));
     assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
+
+    if(y.size() != z.size() || y.size() != w.size())
+      throw DomainsSizeException(m_ctc_name);
 
     if(z.is_empty() || y.is_empty() || w.is_empty())
     {
@@ -365,6 +381,9 @@ namespace tubex
     assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
 
+    if(y.size() != z.size() || y.size() != w.size())
+      throw DomainsSizeException(m_ctc_name);
+
     if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())
     {
       t.set_empty();
@@ -396,6 +415,9 @@ namespace tubex
     assert(y.tdomain() == w.tdomain());
     assert(TubeVector::same_slicing(y, w));
 
+    if(y.size() != z.size() || y.size() != w.size())
+      throw DomainsSizeException(m_ctc_name);
+
     if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())
     {
       y.set_empty();
@@ -423,6 +445,9 @@ namespace tubex
   void CtcEval::contract(Interval& t, IntervalVector& z, const TubeVector& y)
   {
     assert(y.size() == z.size());
+
+    if(y.size() != z.size())
+      throw DomainsSizeException(m_ctc_name);
 
     if(t.is_empty() || z.is_empty() || y.is_empty())
     {

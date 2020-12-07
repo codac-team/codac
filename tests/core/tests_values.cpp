@@ -1035,7 +1035,8 @@ TEST_CASE("Interpol")
   SECTION("Interpolation, isolated example, epsilon inflation required")
   {
     Tube x(Interval(8., 12.));
-    Tube v(x, Interval(-1./3.,1.));
+    Tube v(x);
+    v.set(Interval(-1./3.,1.));
     x.set(Interval(1.), 8.);
     x.set(Interval(1.), 12.);
 
@@ -1086,7 +1087,8 @@ TEST_CASE("Interpol")
     x.set(Interval::ALL_REALS, 8);
     x.set(Interval(5.5), 23.); // setting gate again
 
-    Tube v(x, Interval(-1.,1.));
+    Tube v(x);
+    v.set(Interval(-1.,1.));
     v.set(Interval(-1.5,4.), 0);
     v.set(Interval(-0.75,-0.5), 1);
     v.set(Interval(-1./3.,1.), 2);

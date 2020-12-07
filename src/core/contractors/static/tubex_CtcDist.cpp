@@ -16,26 +16,46 @@ using namespace ibex;
 namespace tubex
 {
   CtcDist::CtcDist()
-    : CtcFunction(
-        Function("a[2]", "b[2]", "d",
-                 "d - sqrt((a[0]-b[0])^2+(a[1]-b[1])^2)"))
+    : Ctc(5)
   {
     
+  }
+
+  void CtcDist::contract(IntervalVector& x)
+  {
+    assert(x.size() == 5);
+    contract(x[0], x[1], x[2], x[3], x[4]);
   }
 
   void CtcDist::contract(IntervalVector& a, IntervalVector& b, Interval& d)
   {
     assert(a.size() == 2 && b.size() == 2);
+    contract(a[0], a[1], b[0], b[1], d);
+  }
 
-    IntervalVector box(5);
-    box.put(0, a);
-    box.put(2, b);
-    box[4] = d;
+  void CtcDist::contract(Interval& ax, Interval& ay, Interval& bx, Interval& by, Interval& d)
+  {
+    // Forward
+    Interval i1 = -bx;
+    Interval i2 = ax + i1;
+    Interval i3 = sqr(i2);
+    Interval i4 = -by;
+    Interval i5 = ay + i4;
+    Interval i6 = sqr(i5);
+    Interval i7 = i3 + i6;
+    d &= sqrt(i7);
 
-    CtcFwdBwd::contract(box);
-
-    a &= box.subvector(0,1);
-    b &= box.subvector(2,3);
-    d &= box[4];
+    // Backward
+    i7 &= sqr(d);
+    i3 &= i7 - i6;
+    i6 &= i7 - i3;
+    bwd_sqr(i6, i5);
+    ay &= i5 - i4;
+    i4 &= i5 - ay;
+    by &= -i4;
+    bwd_sqr(i3, i2);
+    ax &= i2 - i1;
+    i1 &= i2 - ax;
+    bx &= -i1;
   }
 }

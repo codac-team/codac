@@ -640,6 +640,7 @@ namespace tubex
        *
        * \param first_slice a pointer to the first Slice object
        * \param second_slice a pointer to the second Slice object
+       * \return void
        */
       static void chain_slices(Slice *first_slice, Slice *second_slice);
 
@@ -650,6 +651,7 @@ namespace tubex
        *
        * \param first_slice a pointer to the first Slice object
        * \param second_slice a pointer to the second Slice object
+       * \return void
        */
       static void merge_slices(Slice *first_slice, Slice *&second_slice);
 

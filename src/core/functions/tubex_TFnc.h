@@ -26,6 +26,7 @@ namespace tubex
       virtual ~TFnc();
       const TFnc& operator=(const TFnc& f);
 
+      int nb_var() const;
       int nb_vars() const;
       int image_dim() const;
       bool is_intertemporal() const;

@@ -124,6 +124,10 @@ namespace tubex
 
       ibex::Ctc& m_static_ctc; //!< related static contractor
       int m_dynamic_ctc; //!< specifies either the temporal tdomain is part of the contraction or not
+
+      static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
+      static std::vector<std::string> m_str_expected_doms; //!< allowed domains signatures (mainly used for CN Exceptions)
+      friend class ContractorNetwork;
   };
 }
 

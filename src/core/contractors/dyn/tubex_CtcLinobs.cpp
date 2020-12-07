@@ -11,6 +11,7 @@
 #include "tubex_CtcLinobs.h"
 #include "tubex_Domain.h"
 #include "tubex_polygon_arithmetic.h"
+#include "tubex_DomainsTypeException.h"
 
 using namespace std;
 using namespace ibex;
@@ -25,10 +26,19 @@ namespace tubex
 
   }
 
+  // Static members for contractor signature (mainly used for CN Exceptions)
+  const string CtcLinobs::m_ctc_name = "CtcLinobs";
+  vector<string> CtcLinobs::m_str_expected_doms(
+  {
+    "TubeVector, Tube"
+  });
+
   void CtcLinobs::contract(vector<Domain*>& v_domains)
   {
-    assert(v_domains.size() == 2);
-    assert(v_domains[0]->type() == Domain::Type::T_TUBE_VECTOR && v_domains[1]->type() == Domain::Type::T_TUBE);
+    if(v_domains.size() != 2
+      || v_domains[0]->type() != Domain::Type::T_TUBE_VECTOR
+      || v_domains[1]->type() != Domain::Type::T_TUBE)
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
 
     contract(v_domains[0]->tube_vector(), v_domains[1]->tube());
   }

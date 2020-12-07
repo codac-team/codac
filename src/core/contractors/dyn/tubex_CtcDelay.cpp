@@ -10,6 +10,7 @@
 
 #include "tubex_CtcDelay.h"
 #include "tubex_Domain.h"
+#include "tubex_DomainsTypeException.h"
 
 using namespace std;
 using namespace ibex;
@@ -23,8 +24,12 @@ namespace tubex
 
   void CtcDelay::contract(vector<Domain*>& v_domains)
   {
-    assert(v_domains.size() == 3);
-    assert(v_domains[0]->type() == Domain::Type::T_INTERVAL);
+    vector<string> v_str_expected_doms(2);
+    v_str_expected_doms[0] = "Interval, Tube, Tube";
+    v_str_expected_doms[1] = "Interval, TubeVector, TubeVector";
+
+    if(v_domains.size() != 3 || v_domains[0]->type() != Domain::Type::T_INTERVAL)
+      throw DomainsTypeException("CtcDelay", v_domains, v_str_expected_doms);
 
     // Scalar case:
     if(v_domains[1]->type() == Domain::Type::T_TUBE && v_domains[2]->type() == Domain::Type::T_TUBE)
@@ -35,7 +40,7 @@ namespace tubex
       contract(v_domains[0]->interval(), v_domains[1]->tube_vector(), v_domains[2]->tube_vector());
 
     else
-      assert(false && "vector of domains not consistent with the contractor definition");
+      throw DomainsTypeException("CtcDelay", v_domains, v_str_expected_doms);
   }
 
   void CtcDelay::contract(Interval& a, Tube& x, Tube& y)

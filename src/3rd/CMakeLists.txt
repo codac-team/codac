@@ -5,5 +5,5 @@
 add_subdirectory(pyibex)
 
 if(WITH_CAPD)
-  add_subdirectory(ode)
+  add_subdirectory(capd)
 endif()

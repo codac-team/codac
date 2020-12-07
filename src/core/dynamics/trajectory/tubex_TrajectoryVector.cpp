@@ -35,7 +35,7 @@ namespace tubex
       : TrajectoryVector(f.image_dim())
     {
       assert(valid_tdomain(tdomain));
-      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+      assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
       // todo: check thickness of f? (only thin functions should be allowed)
 
       // Setting values for each component
@@ -278,6 +278,14 @@ namespace tubex
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].shift_tdomain(shift_ref);
       return *this;
+    }
+    
+    bool TrajectoryVector::same_tdomain_forall_components() const
+    {
+      for(int i = 1 ; i < size() ; i++)
+        if((*this)[i].tdomain() != (*this)[0].tdomain())
+          return false;
+      return true;
     }
 
     TrajectoryVector& TrajectoryVector::sample(double dt)

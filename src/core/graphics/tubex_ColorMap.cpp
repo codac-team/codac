@@ -106,8 +106,7 @@ namespace tubex
         }
 
         default:
-          throw Exception("ColorMap::color",
-                          "unable color interpolation mode");
+          throw Exception(__func__, "unable color interpolation mode");
       }
     }
 

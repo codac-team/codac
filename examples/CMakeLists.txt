@@ -29,7 +29,7 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
 #  list(APPEND CMAKE_ARGS "-DTUBEX_LIBRARIES=${TUBEX_LIBRARIES}")
 #
 #  ExternalProject_Add(basics_01
-#                      SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/basics/ex_01_arithmetic
+#                      SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/basics/01_arithmetic
 #                      CMAKE_ARGS ${CMAKE_ARGS}
 #                      INSTALL_COMMAND cmake -E echo "Skipping install step.")
 
@@ -72,49 +72,49 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
   
   # Basics
   #add_test(NAME basics_01
-  #         COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/ex_01_arithmetic/build/tubex_basics_01 0)
+  #         COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/01_arithmetic/build/tubex_basics_01 0)
   add_test(NAME basics_02
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/ex_02_simple_ctc/build/tubex_basics_02 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/02_simple_ctc/build/tubex_basics_02 0)
   add_test(NAME basics_03
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/ex_03_ivp_msinx/build/tubex_basics_03 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/03_ivp_msinx/build/tubex_basics_03 0)
   add_test(NAME basics_04
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/ex_04_simple_eval/build/tubex_basics_04 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/04_simple_eval/build/tubex_basics_04 0)
   add_test(NAME basics_05
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/ex_05_graphics/build/tubex_basics_05 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/05_graphics/build/tubex_basics_05 0)
 
   # Robotics
   add_test(NAME rob_01
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_01_causal_chain/build/tubex_rob_01 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/01_causal_chain/build/tubex_rob_01 0)
   #add_test(NAME rob_02
-  #         COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_02_lowcost_beacons/build/tubex_rob_02 0)
+  #         COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/02_lowcost_beacons/build/tubex_rob_02 0)
   add_test(NAME rob_03
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_03_drifting_clock/build/tubex_rob_03 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/03_drifting_clock/build/tubex_rob_03 0)
   add_test(NAME rob_04
            COMMAND sh -c "rm -f ${CMAKE_CURRENT_SOURCE_DIR}/../data/redermor/gesmi.txt.tubex ;
-                   ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_04_redermor_traj/build/tubex_rob_04 ${CMAKE_CURRENT_SOURCE_DIR}/../data/redermor/gesmi.txt 0")
+                   ${CMAKE_CURRENT_SOURCE_DIR}/robotics/04_redermor_traj/build/tubex_rob_04 ${CMAKE_CURRENT_SOURCE_DIR}/../data/redermor/gesmi.txt 0")
   add_test(NAME rob_04_with_serialize
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_04_redermor_traj/build/tubex_rob_04 ${CMAKE_CURRENT_SOURCE_DIR}/../data/redermor/gesmi.txt 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/04_redermor_traj/build/tubex_rob_04 ${CMAKE_CURRENT_SOURCE_DIR}/../data/redermor/gesmi.txt 0)
   add_test(NAME rob_05
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_05_loops_detec/build/tubex_rob_05 ${CMAKE_CURRENT_SOURCE_DIR}/../data/redermor/gesmi.txt  0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/05_loops_detec/build/tubex_rob_05 ${CMAKE_CURRENT_SOURCE_DIR}/../data/redermor/gesmi.txt  0)
   add_test(NAME rob_06
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_06_loops_proofs/build/tubex_rob_06 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/06_loops_proofs/build/tubex_rob_06 0)
   add_test(NAME rob_07
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_07_dynloc/build/tubex_rob_07 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/07_dynloc/build/tubex_rob_07 0)
   add_test(NAME rob_08
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_08_tubepaving/build/tubex_rob_08 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/08_tubepaving/build/tubex_rob_08 0)
   add_test(NAME rob_09
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_09_lissajous/build/tubex_rob_09 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/09_lissajous/build/tubex_rob_09 0)
   add_test(NAME rob_10
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/ex_10_datasso/build/tubex_rob_10 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/robotics/10_datasso/build/tubex_rob_10 0)
 
   # Linobs
   add_test(NAME linobs
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/linobs/build/tubex_linobs 0)
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/linobs/01_paper/build/tubex_linobs 0)
 
   if(WITH_CAPD)
     # Lie group
     add_test(NAME lie_05
-             COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lie_group/ex_05_loc/build/tubex_lie_05 0)
+             COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lie_group/05_loc/build/tubex_lie_05 0)
   endif()
 
 endif()

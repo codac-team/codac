@@ -44,6 +44,7 @@ namespace tubex
       const TFunction operator[](int i) const;
 
       const std::string& expr() const;
+      const ibex::Function& getFunction() const;
       const std::string arg_name(int i) const;
 
       using TFnc::eval;

@@ -147,14 +147,84 @@ namespace tubex
       /// \name Protected methods for topological degree computation
       /// @{
 
+      /**
+       * \brief Computes the topological degree related to \f$\mathbf{f}\f$
+       *
+       * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
+       * \return degree number
+       */
       int topological_degree(ibex::IntervalVector (*f)(const ibex::IntervalVector& b));
+
+      /**
+       * \brief Returns `true` if all items in v_s are positive
+       *
+       * \param v_s vector of integers
+       * \return `true` if all positive
+       */
       bool all_positive_signs(const std::vector<int>& v_s) const;
+
+      /**
+       * \brief Returns orientation of vector b
+       *
+       * \param b
+       * \param parent_coface
+       * \param orientation 
+       * \return orientation integer
+       */
       int orientation(const ibex::IntervalVector& b, const ibex::IntervalVector& parent_coface, int orientation) const;
+
+      /**
+       * \brief Computes local degree related to \f$\mathbf{f}\f$
+       *
+       * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
+       * \param b
+       * \param common_cocoface
+       * \return local degree number
+       */
       int compute_local_degree(ibex::IntervalVector (*f)(const ibex::IntervalVector& b), const ibex::IntervalVector& b, const ibex::IntervalVector& common_cocoface) const;
+      
+      /**
+       * \brief Returns a vector of signs represented as integers
+       *
+       * \param f
+       * \param b
+       * \param common_cocoface
+       * \return vector of integers
+       */
       std::vector<int> sign_vector(ibex::IntervalVector (*f)(const ibex::IntervalVector& b), const ibex::IntervalVector& b, const ibex::IntervalVector& common_cocoface) const;
+      
+      /**
+       * \brief Returns a vector of cofaces related to \f$[\mathbf{b}]\f$
+       *
+       * \param b
+       * \return vector of cofaces boxes
+       */
       std::vector<ibex::IntervalVector> get_cofaces(const ibex::IntervalVector& b) const;
+
+      /**
+       * \brief Returns a vector of cofaces related to \f$[\mathbf{b}]\f$, common_cocoface
+       *
+       * \param b
+       * \param common_cocoface
+       * \return vector of cofaces boxes
+       */
       std::vector<ibex::IntervalVector> get_cofaces(const ibex::IntervalVector& b, const ibex::IntervalVector& common_cocoface) const;
+
+      /**
+       * \brief Returns the dimension of the box \f$[\mathbf{b}]\f$
+       *
+       * \param b
+       * \return integer dimension
+       */
       int box_dimension(const ibex::IntervalVector& b) const;
+
+      /**
+       * \brief Tests whether the Jacobian is non-singular or not
+       *
+       * \param Jf Jacobian matrix function
+       * \param precision of the bisected method used in case of ambiguity on the already existing paving structure
+       * \return `true` if the Jacobian is non-singular
+       */
       bool non_singular_jacobian(ibex::IntervalMatrix (*Jf)(const ibex::IntervalVector& b), float precision);
 
       /// @}

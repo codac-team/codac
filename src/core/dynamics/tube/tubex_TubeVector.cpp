@@ -69,7 +69,7 @@ namespace tubex
     {
       assert(timestep >= 0.);
       assert(valid_tdomain(tdomain));
-      assert(f.nb_vars() == 0 && "function's inputs must be limited to system variable");
+      assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
 
       // A copy of this is sent anyway in order to know the data structure to produce
       TubeVector input(*this);
@@ -82,12 +82,12 @@ namespace tubex
       assert(v_tdomains.size() == v_codomains.size());
       assert(!v_tdomains.empty());
 
-#ifdef _MSC_VER
+      #ifdef _MSC_VER
       // see https://stackoverflow.com/questions/48459297/is-there-a-vlas-variable-length-arrays-support-workaround-for-vs2017
       vector<Interval>* v_scalar_codomains = new vector<Interval>[size()];
-#else
+      #else
       vector<Interval> v_scalar_codomains[size()];
-#endif // _MSC_VER
+      #endif // _MSC_VER
 
       for(size_t i = 0 ; i < v_codomains.size() ; i++)
       {
@@ -100,9 +100,9 @@ namespace tubex
       for(int j = 0 ; j < size() ; j++)
         (*this)[j] = Tube(v_tdomains, v_scalar_codomains[j]);
 
-#ifdef _MSC_VER
-	  delete[] v_scalar_codomains;
-#endif // _MSC_VER
+      #ifdef _MSC_VER
+  	  delete[] v_scalar_codomains;
+      #endif // _MSC_VER
     }
 
     TubeVector::TubeVector(initializer_list<Tube> list)
@@ -135,6 +135,7 @@ namespace tubex
     TubeVector::TubeVector(const TrajectoryVector& traj, double timestep)
       : TubeVector(traj.tdomain(), timestep, traj.size())
     {
+      assert(traj.same_tdomain_forall_components());
       assert(timestep >= 0.);
       set_empty();
       *this |= traj;
@@ -144,6 +145,7 @@ namespace tubex
       : TubeVector(lb, timestep)
     {
       assert(timestep >= 0.);
+      assert(lb.same_tdomain_forall_components() && ub.same_tdomain_forall_components());
       assert(lb.tdomain() == ub.tdomain());
       assert(lb.size() == ub.size());
       *this |= ub;
@@ -159,8 +161,7 @@ namespace tubex
     {
       deserialize(binary_file_name, traj);
       if(traj == NULL)
-        throw Exception("Tube constructor",
-                        "unable to deserialize Trajectory object");
+        throw Exception(__func__, "unable to deserialize Trajectory object");
     }
     
     TubeVector::~TubeVector()
@@ -226,7 +227,10 @@ namespace tubex
         new_vec[i] = m_v_tubes[i];
 
       for(; i < n ; i++)
-        new_vec[i] = Tube(m_v_tubes[0], Interval::ALL_REALS); // same slicing is used
+      {
+        new_vec[i] = Tube(m_v_tubes[0]); // same slicing is used
+        new_vec[i].set(Interval::ALL_REALS);
+      }
 
       if(m_v_tubes != NULL) // (m_v_tubes == NULL) may happen when default constructor is used
         delete[] m_v_tubes;
@@ -763,6 +767,13 @@ namespace tubex
       return *this;
     }
 
+    TubeVector& TubeVector::truncate_tdomain(const Interval& tdomain)
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].truncate_tdomain(tdomain);
+      return *this;
+    }
+
     void TubeVector::shift_tdomain(double shift_ref)
     {
       for(int i = 0 ; i < size() ; i++)
@@ -788,7 +799,7 @@ namespace tubex
 
       catch(ibex::NoBisectableVariableException&)
       {
-        throw Exception("TubeVector::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
+        throw Exception(__func__, "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
       };
 
       return p;
@@ -813,7 +824,7 @@ namespace tubex
 
       catch(ibex::NoBisectableVariableException&)
       {
-        throw Exception("TubeVector::bisect", "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
+        throw Exception(__func__, "unable to bisect, degenerated slice (ibex::NoBisectableVariableException)");
       };
 
       return p;
@@ -905,7 +916,7 @@ namespace tubex
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while writing file \"" + binary_file_name + "\"");
 
       serialize_TubeVector(bin_file, *this, version_number);
       bin_file.close();
@@ -916,7 +927,7 @@ namespace tubex
       ofstream bin_file(binary_file_name.c_str(), ios::out | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("TubeVector::serialize()", "error while writing file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while writing file \"" + binary_file_name + "\"");
 
       serialize_TubeVector(bin_file, *this, version_number);
       char c = 0; bin_file.write(&c, 1); // writing a bit to separate the two objects
@@ -972,7 +983,7 @@ namespace tubex
       ifstream bin_file(binary_file_name.c_str(), ios::in | ios::binary);
 
       if(!bin_file.is_open())
-        throw Exception("TubeVector::deserialize()", "error while opening file \"" + binary_file_name + "\"");
+        throw Exception(__func__, "error while opening file \"" + binary_file_name + "\"");
       
       TubeVector *ptr;
       deserialize_TubeVector(bin_file, ptr);
