@@ -108,7 +108,7 @@ int main()
       v_t[4] = 6.4;   v_obs[4] = Vector({1.747, 0.976});
       v_t[5] = 6.5;   v_obs[5] = Vector({1.844, 0.947});
       v_t[6] = 6.6;   v_obs[6] = Vector({1.937, 0.909});
-      v_t[7] = 9.;    v_obs[7] = Vector({1.700,-1.131});
+      v_t[7] = 9.;    v_obs[7] = Vector({1.700,-1.121});
 
       for(auto& obs : v_obs)
         obs.inflate(0.01);
