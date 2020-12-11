@@ -80,7 +80,7 @@ const ibex::IntervalVector &LohnerAlgorithm::getGlobalEnclosure() const {
   return u_tilde;
 }
 
-CtcLohner::CtcLohner(const ibex::Function &f, int contractions, double eps, bool debug)
+CtcLohner::CtcLohner(const ibex::Function &f, int contractions, double eps)
     : DynCtc(),
       _x_(ExprSymbol::new_(Dim::col_vec(f.nb_var()))),
       m_f(f),

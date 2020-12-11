@@ -38,7 +38,7 @@ private:
 
 class CtcLohner : public tubex::DynCtc {
 public:
-  explicit CtcLohner(const ibex::Function &f, int contractions = 5, double eps = 0.1, bool debug = false);
+  explicit CtcLohner(const ibex::Function &f, int contractions = 5, double eps = 0.1);
 
   void contract(tubex::TubeVector &tube, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
