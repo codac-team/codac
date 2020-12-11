@@ -88,9 +88,8 @@ int main()
       map<double,Trajectory> m_pol_area;
       map<double,double> m_pol_total_area;
 
-      bool success = true;
       vector<double> v_dt = { 0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.005, 0.0025, 0.001 };
-      // v_dt.push_back(0.0001); // uncomment this in order to obtain the figure of the paper
+      // v_dt.push_back(0.0001); // uncomment this in order to exactly obtain the figure of the paper
 
       for(const auto& dt: v_dt)
       {
@@ -99,10 +98,6 @@ int main()
           Tube u(Tube(tdomain, dt, f_u).inflate(0.1)); // u* + [-0.1,0.1]
           TubeVector x(tdomain, dt, 2);
 
-          // Optional: initial and final conditions on x:
-          //x.set(IntervalVector(x_truth.first_value()).inflate(0.0001), tdomain.lb()); // x0
-          //x.set(IntervalVector(x_truth.last_value()).inflate(0.0001), tdomain.ub()); // xf
-
 
         /* =========== CREATING OBSERVATIONS =========== */
 
@@ -110,31 +105,17 @@ int main()
           vector<double> v_t(nb_obs);
           vector<IntervalVector> v_obs(nb_obs);
 
-          #if 1 // taking values of the paper for reproducing exactly the example
+          v_t[0] = 2./3.; v_obs[0] = Vector({0.188, 0.493});
+          v_t[1] = 1.9;   v_obs[1] = Vector({0.783, 0.261});
+          v_t[2] = 2.99;  v_obs[2] = Vector({0.728,-0.308});
+          v_t[3] = 4.33;  v_obs[3] = Vector({0.380, 0.009});
+          v_t[4] = 6.4;   v_obs[4] = Vector({1.747, 0.976});
+          v_t[5] = 6.5;   v_obs[5] = Vector({1.844, 0.947});
+          v_t[6] = 6.6;   v_obs[6] = Vector({1.937, 0.909});
+          v_t[7] = 9.;    v_obs[7] = Vector({1.700,-1.121});
 
-            v_t[0] = 2./3.; v_obs[0] = Vector({0.188, 0.493});
-            v_t[1] = 1.9;   v_obs[1] = Vector({0.783, 0.261});
-            v_t[2] = 2.99;  v_obs[2] = Vector({0.728,-0.308});
-            v_t[3] = 4.33;  v_obs[3] = Vector({0.380, 0.009});
-            v_t[4] = 6.4;   v_obs[4] = Vector({1.747, 0.976});
-            v_t[5] = 6.5;   v_obs[5] = Vector({1.844, 0.947});
-            v_t[6] = 6.6;   v_obs[6] = Vector({1.937, 0.909});
-            v_t[7] = 9.;    v_obs[7] = Vector({1.700,-1.121});
-
-            for(auto& obs : v_obs)
-              obs.inflate(0.01);
-
-          #else // with random values
-
-            for(int i = 0 ; i < nb_obs ; i++)
-            {
-              // Random time in the temporal domain
-              v_t[i] = Tools::rand_in_bounds(tdomain);
-              // Getting observation from the truth
-              v_obs[i] = IntervalVector(x_truth(v_t[i])).inflate(0.01);
-            }
-
-          #endif
+          for(auto& obs : v_obs)
+            obs.inflate(0.01);
 
 
         /* =========== CONTRACTING THE POLYGONS =========== */
@@ -152,12 +133,12 @@ int main()
           }
 
           printf("dt=%f\tTime taken: %.2fs\n", dt, (double)(clock() - t_start)/CLOCKS_PER_SEC);
-          success &= x.contains(x_truth) == BoolInterval::YES;
+          if(x.contains(x_truth) != BoolInterval::YES)
+            return EXIT_FAILURE;
 
 
         /* =========== COMPUTING THE TUBE VOLUME =========== */
 
-          m_pol_area[dt] = Trajectory();
           m_pol_total_area[log10(dt)] = tube_polygons_volume;
 
           double dt_ = tdomain.diam()/(polygons_fwdbwd.size()-1);
@@ -173,7 +154,7 @@ int main()
     VIBesFigTube fig_area("Area");
     fig_area.set_properties(100, 100, 800, 400);
     IntervalVector view_box({tdomain,Interval(0.)});
-    for(const auto& [dt,pol_area] : m_pol_area)
+    for(auto& [dt,pol_area] : m_pol_area)
     {
       view_box[1] |= pol_area.codomain();
       fig_area.add_trajectory(&pol_area, Tools::add_int("polygons", dt*100000), "#424242");
@@ -191,5 +172,5 @@ int main()
     vibes::endDrawing();
 
   // Checking if this example still works:
-  return success ? EXIT_SUCCESS : EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
