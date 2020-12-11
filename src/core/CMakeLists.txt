@@ -96,6 +96,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_DynCtc.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcPicard.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcPicard.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcLohner.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcLohner.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcChain.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcChain.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDelay.h
@@ -122,6 +124,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Hashcode.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Eigen.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Eigen.h
                   )
 
 

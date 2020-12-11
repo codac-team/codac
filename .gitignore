@@ -64,3 +64,6 @@ wheelhouse/
 
 # VSCode files
 *.vscode
+.idea/
+
+cmake-build-debug/
