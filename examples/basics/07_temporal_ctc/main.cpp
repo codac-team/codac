@@ -19,50 +19,76 @@ using namespace tubex;
 
 int main() // testcase
 {
-  double dt = 0.1; // time step of the tubes
-  Interval tdomain(0, 5); // time domain of the tubes
+  /* =========== INITIALIZATION =========== */
 
-  // Picard contractor
-  TubeVector x(tdomain, dt, 1); // 1d tube vector
-  x.set(IntervalVector(1, Interval(0.9, 1.1)), 0.); // initial condition
+    double dt = 0.1; // time step of the tubes
+    Interval tdomain(0, 5); // time domain of the tubes
 
-  vibes::beginDrawing();
-  VIBesFigTube fig("picard");
-  fig.set_properties(100, 100, 800, 400);
+    TubeVector x(tdomain, dt, 1); // 1d tube vector
+    x.set(IntervalVector(1, Interval(0.9, 1.1)), 0.); // initial condition
+    TubeVector y(x); // copy of x
 
-  std::vector<Trajectory> vt(11);
+    vibes::beginDrawing();
 
-  for (int i = 0; i < 11; ++i) {
-    double x0 = 0.9 + 0.2 * (i / 10.);
-    vt.emplace_back(tdomain, TFunction((std::to_string(x0) + "*2.*atan(exp(-t)*tan(0.5))").c_str()));
-    fig.add_trajectory(&vt.back(), "truth" + std::to_string(i), "#1f77b4[#1f77b4]");
-  }
 
-  CtcPicard ctc_picard;
-  ctc_picard.contract(TFunction("x", "-sin(x)"), x); // xdot = -sin(x)
-  fig.add_tube(&x[0], "x", "#d62728[#2ca02c]");
-  fig.show(true);
+  /* =========== COMPARISON OF CONTRACTORS =========== */
 
-  // Lohner contractor
-  TubeVector y(tdomain, dt, 1); // 1d tube vector
-  y.set(IntervalVector(1, Interval(0.9, 1.1)), 0.); // initial condition
+    Function f("x", "-sin(x)"); // xdot = -sin(x)
 
-  VIBesFigTube fig2("lohner");
-  fig2.set_properties(100, 100, 800, 400);
-  std::vector<Trajectory> vt2(11);
+    // Picard contractor
 
-  for (int i = 0; i < 11; ++i) {
-    double x0 = 0.9 + 0.2 * (i / 10.);
-    vt2.emplace_back(tdomain, TFunction((std::to_string(x0) + "*2.*atan(exp(-t)*tan(0.5))").c_str()));
-    fig2.add_trajectory(&vt2.back(), "truth" + std::to_string(i), "#1f77b4[#1f77b4]");
-  }
+    CtcPicard ctc_picard(f);
+    ctc_picard.contract(x);
 
-  CtcLohner ctc_lohner(Function("x", "-sin(x)")); // xdot = -sin(x)
-  ctc_lohner.contract(y);
-  fig2.add_tube(&y[0], "y", "#d62728[#2ca02c]");
-  fig2.show(true);
+    VIBesFigTube fig1("Picard");
+    fig1.set_properties(100, 100, 800, 400);
+    fig1.add_tube(&x[0], "x");
 
-  vibes::endDrawing();
+    // Lohner contractor
 
-  return EXIT_SUCCESS;
+    CtcLohner ctc_lohner(f);
+    ctc_lohner.contract(y);
+
+    VIBesFigTube fig2("Lohner");
+    fig2.set_properties(100, 550, 800, 400);
+    fig2.add_tube(&y[0], "y");
+
+
+  /* =========== COMPUTING TRAJECTORIES AS ILLUSTRATION =========== */
+
+    std::vector<Trajectory> v_traj(11);
+
+    for (int i = 0; i < 11; ++i) {
+      double x0 = 0.9 + 0.199 * (i / 10.); // initial conditions in [x0]=[0.9,1.1]
+      v_traj[i] = Trajectory(tdomain,
+        TFunction((std::to_string(x0) + "*2.*atan(exp(-t)*tan(0.5))").c_str()));
+      fig1.add_trajectory(&v_traj[i], "truth" + std::to_string(i));
+      fig2.add_trajectory(&v_traj[i], "truth" + std::to_string(i));
+    }
+
+    fig1.show(true);
+    fig2.show(true);
+    fig1.axis_limits(fig2.view_box());
+
+    vibes::endDrawing();
+
+
+  /* =========== ENDING =========== */
+
+    // Checking if this example still works:
+
+    for (const auto& traj_i : v_traj) {
+      if(x[0].contains(traj_i) == BoolInterval::NO)
+        {cout << "x" << traj_i(0.) << x[0](0.) << endl;
+        return EXIT_FAILURE;
+      }
+      if(y[0].contains(traj_i) == BoolInterval::NO)
+        {cout << "y" << traj_i(0.) << y[0](0.) << endl;
+        return EXIT_FAILURE;
+      }
+    }
+cout << x[0].volume() << " " << y[0].volume() << endl;
+  return fabs(x[0].volume() - 13.9148) < 1e-2
+    && fabs(y[0].volume() - 0.43186) < 1e-2 ?
+      EXIT_SUCCESS : EXIT_FAILURE;
 }
