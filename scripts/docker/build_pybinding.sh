@@ -13,7 +13,7 @@ sed -i 's/mirrorlist=http:\x2F\x2Fmirrorlist.centos.org?arch=$basearch&release=6
 #cat /etc/yum.repos.d/CentOS-SCLo-scl.repo
 #yum -y update
 
-yum -y install doxygen
+yum -y install doxygen libeigen3-dev
 
 cd /io
 for PYBIN in /opt/python/cp3*/bin; do
