@@ -13,6 +13,7 @@
 #include "tubex_Exception.h"
 #include "tubex_TFunction.h"
 #include "ibex_Expr2Minibex.h"
+#include "tubex_capd_helpers.h"
 #include <capd/capdlib.h>
 
 using namespace std;
@@ -50,16 +51,14 @@ namespace tubex
 
     // Initial condition
 
-    capd::IVector capd_x0(x0.size());
-    for(int i = 0 ; i < x0.size() ; i++)
-      capd_x0[i] = capd::interval(x0[i].lb(), x0[i].ub()); // todo: use helpers here
+    capd::IVector capd_x0 = CapdHelpers::i2c_v(x0);
     capd::C0Rect2Set set(capd_x0, tdomain.lb()); // x0 at t0
 
     // Integration
 
     capd::ITimeMap::SolutionCurve solution(tdomain.lb()); // define functional object
     time_map(tdomain.ub()+capd_dt, set, solution); // and integrate
-    assert(Interval(solution.getLeftDomain(), solution.getRightDomain()).is_superset(tdomain)); // todo: use helpers here
+    assert(Interval(solution.getLeftDomain(), solution.getRightDomain()).is_superset(tdomain));
 
     // Building the tube
 
@@ -75,7 +74,7 @@ namespace tubex
 
       for(int i = 0 ; i < tube.size() ; i++)
       {
-        v_s[i]->set(Interval(y[i].left().leftBound(), y[i].right().rightBound())); // todo: use helpers here
+        v_s[i]->set(CapdHelpers::c2i_i(y[i]));
         v_s[i] = v_s[i]->next_slice();
       }
     }
