@@ -67,6 +67,7 @@
     src/core/contractors/dyn/tubex_py_CtcDelay.cpp
     src/core/contractors/dyn/tubex_py_CtcDeriv.cpp
     src/core/contractors/dyn/tubex_py_CtcEval.cpp
+    src/core/contractors/dyn/tubex_py_CtcLohner.cpp
     src/core/contractors/dyn/tubex_py_CtcPicard.cpp
 
     src/core/dynamics/tube/tubex_py_Tube.cpp

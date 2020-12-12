@@ -32,7 +32,11 @@ void export_CtcPicard(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc)
   py::class_<CtcPicard> ctc_picard(m, "CtcPicard", dyn_ctc, CTCPICARD_MAIN);
   ctc_picard
 
-    .def(py::init<const TFnc&,float>(),
+    .def(py::init<Function&,float>(),
+      CTCPICARD_CTCPICARD_FUNCTION_FLOAT,
+      "f"_a, "delta"_a=1.1)
+
+    .def(py::init<TFnc&,float>(),
       CTCPICARD_CTCPICARD_TFNC_FLOAT,
       "f"_a, "delta"_a=1.1)
 
