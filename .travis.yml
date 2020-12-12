@@ -16,12 +16,13 @@ addons:
     packages:
     - cmake
     - python3.6
+    - libeigen3-dev
 
 # See https://docs.travis-ci.com/user/build-config-yaml#private-keys-as-yaml-anchors-and-aliases-and-external-tooling
 _vs_specific: &vs_specific 
     os: windows
     before_install:
-    - if [ "${CHOCO_VS_TOOLS}" = "vcbuildtools" ]; then choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison ; else choco install -y ${CHOCO_VS_TOOLS} winflexbison ; fi
+    - if [ "${CHOCO_VS_TOOLS}" = "vcbuildtools" ]; then choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison ; else choco install -y ${CHOCO_VS_TOOLS} winflexbison eigen ; fi
     - if [ "${WITH_PYTHON}" = "ON" ]; then if [ "${PY_V_MM}" = "34" ]; then cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & refreshenv.cmd" ; else cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd" ; fi ; export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH ; fi
     cache:
     directories: ibex
@@ -87,7 +88,7 @@ matrix:
       compiler: gcc
       before_install: 
         - sudo apt-get -q update || true
-        - sudo apt-get -y install flex bison || true
+        - sudo apt-get -y install flex bison libeigen3-dev || true
       cache:
       install:
       script: 
@@ -282,7 +283,7 @@ matrix:
         - df
         - rm -Rf "/C/Windows/SoftwareDistribution" || true
         - df
-        - choco install -y winflexbison make patch
+        - choco install -y winflexbison make patch eigen
         - wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
         - cmd //c "move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\ "
         - wget http://www.ensta-bretagne.fr/lebars/Share/qt-installer-5.12.6-mingw73_32.qs --no-check-certificate -nv
@@ -320,7 +321,7 @@ matrix:
       os: windows
       env: CMAKE_PARAM_G="MSYS Makefiles" CFG=x64_mingw8
       before_install: 
-        - choco install -y winflexbison make patch
+        - choco install -y winflexbison make patch eigen
       cache:
         directories: ibex
       install:
@@ -359,8 +360,6 @@ install:
   - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 # using python3 as default version
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-issues sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
-
-  # For Linobs example
   - sudo apt install libeigen3-dev
 
   # For Python wrapping
