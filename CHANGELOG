@@ -1,8 +1,12 @@
 Unreleased yet (in development)
 ===============================
 
-.. Features added
-.. --------------
+Features added
+--------------
+
+* :commit:`465d1e0908695df2bb99d5c9b2ec3a79f54bd0da`: added example of Linobs (for each :math:`\delta` parameter)
+* :commit:`1493fb8ccd92eee502b5dea6493a9ac3ef060611`: area computation of polygons
+
 
 .. Changes
 .. -------
