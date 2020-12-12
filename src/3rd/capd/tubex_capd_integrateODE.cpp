@@ -11,6 +11,7 @@
 #include <iomanip>
 #include "tubex_capd_integrateODE.h"
 #include "tubex_Exception.h"
+#include "tubex_TFunction.h"
 #include "ibex_Expr2Minibex.h"
 #include <capd/capdlib.h>
 
@@ -20,15 +21,6 @@ using namespace tubex;
 
 namespace tubex
 {
-  std::string to_string(const Function& f)
-  {
-    stringstream s;
-    Expr2Minibex().print(s,f.expr());
-    string str = s.str().substr(10, s.str().size() - 12);
-    replace(str.begin(), str.end(), ';', ','); // replace ';' by ','
-    return str;
-  }
-
   string capd_str_function(const Function& f)
   {
     string capd_string = "time:t;";

@@ -32,17 +32,17 @@ void export_CtcPicard(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc)
   py::class_<CtcPicard> ctc_picard(m, "CtcPicard", dyn_ctc, CTCPICARD_MAIN);
   ctc_picard
 
-    .def(py::init<float>(),
-      CTCPICARD_CTCPICARD_FLOAT,
-      "delta"_a=1.1)
+    .def(py::init<const TFnc&,float>(),
+      CTCPICARD_CTCPICARD_TFNC_FLOAT,
+      "f"_a, "delta"_a=1.1)
 
-    .def("contract", (void (CtcPicard::*)(const TFnc&,Tube&,TimePropag))&CtcPicard::contract,
-      CTCPICARD_VOID_CONTRACT_TFNC_TUBE_TIMEPROPAG,
-      "f"_a, "x"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+    .def("contract", (void (CtcPicard::*)(Tube&,TimePropag))&CtcPicard::contract,
+      CTCPICARD_VOID_CONTRACT_TUBE_TIMEPROPAG,
+      "x"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
 
-    .def("contract", (void (CtcPicard::*)(const TFnc&,TubeVector&,TimePropag) )&CtcPicard::contract,
-      CTCPICARD_VOID_CONTRACT_TFNC_TUBEVECTOR_TIMEPROPAG,
-      "f"_a, "x"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
+    .def("contract", (void (CtcPicard::*)(TubeVector&,TimePropag) )&CtcPicard::contract,
+      CTCPICARD_VOID_CONTRACT_TUBEVECTOR_TIMEPROPAG,
+      "x"_a.noconvert(), "t_propa"_a=TimePropag::FORWARD|TimePropag::BACKWARD)
 
     .def("picard_iterations", &CtcPicard::picard_iterations,
       CTCPICARD_INT_PICARD_ITERATIONS)

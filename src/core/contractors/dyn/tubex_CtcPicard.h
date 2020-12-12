@@ -26,30 +26,24 @@ namespace tubex
   {
     public:
 
-      CtcPicard(float delta = 1.1);
+      CtcPicard(ibex::Function& f, float delta = 1.1);
+      CtcPicard(TFnc& f, float delta = 1.1);
+      ~CtcPicard();
 
       void contract(std::vector<Domain*>& v_domains);
-      
-      void contract(const TFnc& f,
-                    Tube& x,
-                    TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
-      void contract(const TFnc& f,
-                    TubeVector& x,
-                    TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(Tube& x, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(TubeVector& x, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+
       int picard_iterations() const;
 
     protected:
 
-      void contract_kth_slices(const TFnc& f,
-                               TubeVector& tube,
-                               int k,
-                               TimePropag t_propa);
-      void guess_kth_slices_envelope(const TFnc& f,
-                               TubeVector& tube,
-                               int k,
-                               TimePropag t_propa);
+      void contract_kth_slices(TubeVector& x, int k, TimePropag t_propa);
+      void guess_kth_slices_envelope(TubeVector& x, int k, TimePropag t_propa);
 
-      float m_delta;
+      const TFunction* m_f_ptr = NULL;
+      const TFnc& m_f;
+      const float m_delta;
       int m_picard_iterations = 0;
 
       static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
