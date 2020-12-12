@@ -77,74 +77,74 @@ int main()
     b[0] = 0.; b[1] = 1.;
 
 
-    /* =========== SIMULATING THE TRUTH =========== */
+  /* =========== SIMULATING THE TRUTH =========== */
 
-      double dt_truth = 0.0001;
-      TrajectoryVector x_truth = simu_truth(A, b, f_u, dt_truth, tdomain);
-
-
-    /* =========== TESTING SEVERAL dt VALUES =========== */
-
-      map<double,Trajectory> m_pol_area;
-      map<double,double> m_pol_total_area;
-
-      vector<double> v_dt = { 0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.005, 0.0025, 0.001 };
-      // v_dt.push_back(0.0001); // uncomment this in order to exactly obtain the figure of the paper
-
-      for(const auto& dt: v_dt)
-      {
-        /* =========== CREATING TUBES =========== */
-
-          Tube u(Tube(tdomain, dt, f_u).inflate(0.1)); // u* + [-0.1,0.1]
-          TubeVector x(tdomain, dt, 2);
+    double dt_truth = 0.0001;
+    TrajectoryVector x_truth = simu_truth(A, b, f_u, dt_truth, tdomain);
 
 
-        /* =========== CREATING OBSERVATIONS =========== */
+  /* =========== TESTING SEVERAL dt VALUES =========== */
 
-          int nb_obs = 8;
-          vector<double> v_t(nb_obs);
-          vector<IntervalVector> v_obs(nb_obs);
+    map<double,Trajectory> m_pol_area;
+    map<double,double> m_pol_total_area;
 
-          v_t[0] = 2./3.; v_obs[0] = Vector({0.188, 0.493});
-          v_t[1] = 1.9;   v_obs[1] = Vector({0.783, 0.261});
-          v_t[2] = 2.99;  v_obs[2] = Vector({0.728,-0.308});
-          v_t[3] = 4.33;  v_obs[3] = Vector({0.380, 0.009});
-          v_t[4] = 6.4;   v_obs[4] = Vector({1.747, 0.976});
-          v_t[5] = 6.5;   v_obs[5] = Vector({1.844, 0.947});
-          v_t[6] = 6.6;   v_obs[6] = Vector({1.937, 0.909});
-          v_t[7] = 9.;    v_obs[7] = Vector({1.700,-1.121});
+    vector<double> v_dt = { 0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.005, 0.0025, 0.001 };
+    // v_dt.push_back(0.0001); // uncomment this in order to exactly obtain the figure of the paper
 
-          for(auto& obs : v_obs)
-            obs.inflate(0.01);
+    for(const auto& dt: v_dt)
+    {
+      /* =========== CREATING TUBES =========== */
+
+        Tube u(Tube(tdomain, dt, f_u).inflate(0.1)); // u* + [-0.1,0.1]
+        TubeVector x(tdomain, dt, 2);
 
 
-        /* =========== CONTRACTING THE POLYGONS =========== */
+      /* =========== CREATING OBSERVATIONS =========== */
 
-          CtcLinobs ctc_linobs(A, b, &exp);
-          vector<ConvexPolygon> polygons_fwdbwd;
-          clock_t t_start = clock();
-          ctc_linobs.contract(v_t, v_obs, x, u, polygons_fwdbwd, TimePropag::FORWARD | TimePropag::BACKWARD);
+        int nb_obs = 8;
+        vector<double> v_t(nb_obs);
+        vector<IntervalVector> v_obs(nb_obs);
 
-          double tube_polygons_volume = 0.;
-          for(size_t i = 0 ; i < polygons_fwdbwd.size()-1 ; i++)
-          {
-            double dt_tk_kp1 = u.slice((int)i)->tdomain().diam();
-            tube_polygons_volume += ctc_linobs.polygon_envelope(polygons_fwdbwd[i], dt_tk_kp1, A, b, u.slice((int)i)->codomain()).area().mid() * dt_tk_kp1;
-          }
+        v_t[0] = 2./3.; v_obs[0] = Vector({0.188, 0.493});
+        v_t[1] = 1.9;   v_obs[1] = Vector({0.783, 0.261});
+        v_t[2] = 2.99;  v_obs[2] = Vector({0.728,-0.308});
+        v_t[3] = 4.33;  v_obs[3] = Vector({0.380, 0.009});
+        v_t[4] = 6.4;   v_obs[4] = Vector({1.747, 0.976});
+        v_t[5] = 6.5;   v_obs[5] = Vector({1.844, 0.947});
+        v_t[6] = 6.6;   v_obs[6] = Vector({1.937, 0.909});
+        v_t[7] = 9.;    v_obs[7] = Vector({1.700,-1.121});
 
-          printf("dt=%f\tTime taken: %.2fs\n", dt, (double)(clock() - t_start)/CLOCKS_PER_SEC);
-          if(x.contains(x_truth) != BoolInterval::YES)
-            return EXIT_FAILURE;
+        for(auto& obs : v_obs)
+          obs.inflate(0.01);
 
 
-        /* =========== COMPUTING THE TUBE VOLUME =========== */
+      /* =========== CONTRACTING THE POLYGONS =========== */
 
-          m_pol_total_area[log10(dt)] = tube_polygons_volume;
+        CtcLinobs ctc_linobs(A, b, &exp);
+        vector<ConvexPolygon> polygons_fwdbwd;
+        clock_t t_start = clock();
+        ctc_linobs.contract(v_t, v_obs, x, u, polygons_fwdbwd, TimePropag::FORWARD | TimePropag::BACKWARD);
 
-          double dt_ = tdomain.diam()/(polygons_fwdbwd.size()-1);
-          for(size_t i = 0 ; i < polygons_fwdbwd.size() ; i++)
-            m_pol_area[dt_].set(polygons_fwdbwd[i].area().mid(), i*dt_);
-      }
+        double tube_polygons_volume = 0.;
+        for(size_t i = 0 ; i < polygons_fwdbwd.size()-1 ; i++)
+        {
+          double dt_tk_kp1 = u.slice((int)i)->tdomain().diam();
+          tube_polygons_volume += ctc_linobs.polygon_envelope(polygons_fwdbwd[i], dt_tk_kp1, A, b, u.slice((int)i)->codomain()).area().mid() * dt_tk_kp1;
+        }
+
+        printf("dt=%f\tTime taken: %.2fs\n", dt, (double)(clock() - t_start)/CLOCKS_PER_SEC);
+        if(x.contains(x_truth) != BoolInterval::YES)
+          return EXIT_FAILURE;
+
+
+      /* =========== COMPUTING THE TUBE VOLUME =========== */
+
+        m_pol_total_area[log10(dt)] = tube_polygons_volume;
+
+        double dt_ = tdomain.diam()/(polygons_fwdbwd.size()-1);
+        for(size_t i = 0 ; i < polygons_fwdbwd.size() ; i++)
+          m_pol_area[dt_].set(polygons_fwdbwd[i].area().mid(), i*dt_);
+    }
 
 
   /* =========== GRAPHICS =========== */
