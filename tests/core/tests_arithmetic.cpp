@@ -18,7 +18,8 @@ TEST_CASE("Arithmetic on tubes")
     double dt = 0.1;
     double a = -0.8, b = 3.;
 
-    Tube x(domain, dt, a), y(x, b);
+    Tube x(domain, dt, a);
+    Tube y(x); y.set(b);
     CHECK(x.codomain() == a);
     CHECK(y.codomain() == b);
 

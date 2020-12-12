@@ -18,8 +18,8 @@ set(TUBEX_PKG_CONFIG_CFLAGS "-I\${includedir}/ibex -I\${includedir}/tubex -I\${i
 set(TUBEX_PKG_CONFIG_LIBS "-L\${libdir} -ltubex -ltubex-rob -ltubex-pyibex")
 
 if(WITH_CAPD)
-  set(TUBEX_PKG_CONFIG_CFLAGS "${TUBEX_PKG_CONFIG_CFLAGS} -I\${includedir}/tubex-ode")
-  set(TUBEX_PKG_CONFIG_LIBS "${TUBEX_PKG_CONFIG_LIBS} -ltubex-ode")
+  set(TUBEX_PKG_CONFIG_CFLAGS "${TUBEX_PKG_CONFIG_CFLAGS} -I\${includedir}/tubex-capd")
+  set(TUBEX_PKG_CONFIG_LIBS "${TUBEX_PKG_CONFIG_LIBS} -ltubex-capd")
 endif()
 
 set(TUBEX_PKG_CONFIG_LIBS "${TUBEX_PKG_CONFIG_LIBS} -ltubex") # Seems to be needed
@@ -87,13 +87,13 @@ if(WITH_CAPD)
 
   # Optional 3rd party:
 
-  find_path(TUBEX_ODE_INCLUDE_DIR tubex-ode.h
-            PATH_SUFFIXES include/tubex-ode)
-  set(TUBEX_INCLUDE_DIRS \${TUBEX_INCLUDE_DIRS} \${TUBEX_ODE_INCLUDE_DIR})
+  find_path(TUBEX_CAPD_INCLUDE_DIR tubex-capd.h
+            PATH_SUFFIXES include/tubex-capd)
+  set(TUBEX_INCLUDE_DIRS \${TUBEX_INCLUDE_DIRS} \${TUBEX_CAPD_INCLUDE_DIR})
 
-  find_library(TUBEX_ODE_LIBRARY NAMES tubex-ode
+  find_library(TUBEX_CAPD_LIBRARY NAMES tubex-capd
                PATH_SUFFIXES lib)
-  set(TUBEX_LIBRARIES \${TUBEX_LIBRARIES} \${TUBEX_ODE_LIBRARY})
+  set(TUBEX_LIBRARIES \${TUBEX_LIBRARIES} \${TUBEX_CAPD_LIBRARY})
   ")
 
 endif()

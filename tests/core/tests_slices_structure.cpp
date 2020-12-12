@@ -353,4 +353,53 @@ TEST_CASE("Tube slices structure")
     CHECK(x.nb_slices() == xold.nb_slices());
     CHECK(x == xold);
   }
+
+  SECTION("truncate_tdomain, test 1")
+  {
+    TubeVector tube(Interval(0.,10.), 1., 2);
+    CHECK(tube.nb_slices() == 10);
+    tube.truncate_tdomain(Interval(2.5,5.1));
+    CHECK(tube.tdomain() == Interval(2.5,5.1));
+    CHECK(tube.nb_slices() == 4);
+    CHECK(tube[0].slice(0)->tdomain() == Interval(2.5,3.));
+    CHECK(tube[0].slice(1)->tdomain() == Interval(3.,4.));
+    CHECK(tube[0].slice(2)->tdomain() == Interval(4.,5.));
+    CHECK(tube[0].slice(3)->tdomain() == Interval(5.,5.1));
+  }
+
+  SECTION("truncate_tdomain, test 2")
+  {
+    TubeVector tube(Interval(0.,10.), 1., 2);
+    CHECK(tube.nb_slices() == 10);
+    tube.truncate_tdomain(Interval(0.,5.1));
+    CHECK(tube.tdomain() == Interval(0.,5.1));
+    CHECK(tube.nb_slices() == 6);
+    CHECK(tube[0].slice(0)->tdomain() == Interval(0.,1.));
+    CHECK(tube[0].slice(1)->tdomain() == Interval(1.,2.));
+    CHECK(tube[0].slice(2)->tdomain() == Interval(2.,3.));
+    CHECK(tube[0].slice(3)->tdomain() == Interval(3.,4.));
+    CHECK(tube[0].slice(4)->tdomain() == Interval(4.,5.));
+    CHECK(tube[0].slice(5)->tdomain() == Interval(5.,5.1));
+  }
+
+  SECTION("truncate_tdomain, test 3")
+  {
+    TubeVector tube(Interval(0.,10.), 1., 2);
+    CHECK(tube.nb_slices() == 10);
+    tube.truncate_tdomain(Interval(8.2,10.));
+    CHECK(tube.tdomain() == Interval(8.2,10.));
+    CHECK(tube.nb_slices() == 2);
+    CHECK(tube[0].slice(0)->tdomain() == Interval(8.2,9.));
+    CHECK(tube[0].slice(1)->tdomain() == Interval(9.,10.));
+  }
+
+  SECTION("truncate_tdomain, test 4")
+  {
+    TubeVector tube(Interval(0.,10.), 1., 2);
+    CHECK(tube.nb_slices() == 10);
+    tube.truncate_tdomain(Interval(8.2,8.3));
+    CHECK(tube.tdomain() == Interval(8.2,8.3));
+    CHECK(tube.nb_slices() == 1);
+    CHECK(tube[0].slice(0)->tdomain() == Interval(8.2,8.3));
+  }
 }

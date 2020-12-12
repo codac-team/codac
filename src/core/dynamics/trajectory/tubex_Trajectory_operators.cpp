@@ -35,7 +35,7 @@ namespace tubex
         "not supported yet for trajectories defined by a Function"); \
       \
       Trajectory x_sampled(x); \
-      if(definition_type() == TrajDefnType::ANALYTIC_FNC) \
+      if(definition_type() == TrajDefnType::MAP_OF_VALUES) \
         x_sampled.sample(*this); \
       \
       map<double,double> new_map; \

@@ -81,8 +81,8 @@ while t < tdomain.ub():
     pos_x = x_truth(t)[0:2]
     pos_b = v_m[landmark_id]
 
-    y = Interval(sqrt(pow(pos_x[0]-pos_b[0],2)+pow(pos_x[1]-pos_b[1],2)))
-    y.inflate(0.03) # adding range bounded uncertainty
+    yi = Interval(sqrt(pow(pos_x[0]-pos_b[0],2)+pow(pos_x[1]-pos_b[1],2)))
+    yi.inflate(0.03) # adding range bounded uncertainty
 
     prev_t_obs = t
 
@@ -92,9 +92,8 @@ while t < tdomain.ub():
     b = v_m_boxes[landmark_id]
 
     # Intermediate variables
-    ti = cn.create_dom(Interval(t))
-    yi = cn.create_dom(y)
-    xi = cn.create_dom(IntervalVector(3))
+    ti = Interval(t)
+    xi = IntervalVector(3)
 
     # Contractors
     cn.add(ctc.eval, [ti, xi, x, v])

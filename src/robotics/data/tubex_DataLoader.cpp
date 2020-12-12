@@ -10,6 +10,7 @@
 
 #include <time.h>
 #include <algorithm>
+#include <random>
 #include "tubex_DataLoader.h"
 #include "tubex_Exception.h"
 #include "tubex_Tools.h"
@@ -32,7 +33,7 @@ namespace tubex
     m_datafile = new ifstream();
     m_datafile->open(file_path.c_str(), std::ios_base::out);
     if(!m_datafile->is_open())
-      throw Exception("DataLoader constructor", "unable to load data file");
+      throw Exception(__func__, "unable to load data file");
   }
 
   DataLoader::~DataLoader()
@@ -102,7 +103,11 @@ namespace tubex
     vector<IntervalVector> v_obs;
     vector<IntervalVector> random_map(map);
     if(random)
-      std::random_shuffle(random_map.begin(), random_map.end());
+    {
+      std::random_device rd;
+      std::mt19937 g(rd());
+      std::shuffle(random_map.begin(), random_map.end(), g);
+    }
 
     for(size_t i = 0 ; i < random_map.size() ; i++)
     {
@@ -144,7 +149,11 @@ namespace tubex
     do
     {
       if(random)
-        std::random_shuffle(random_map.begin(), random_map.end());
+      {
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(random_map.begin(), random_map.end(), g);
+      }
 
       double t = Tools::rand_in_bounds(Interval(tdomain_.lb(),tdomain_.ub()-t_epsilon));
 

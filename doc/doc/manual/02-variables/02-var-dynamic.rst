@@ -176,10 +176,10 @@ Once created, several evaluations of the trajectory can be made. For instance:
 
   .. code-tab:: py
 
-    x.tdomain())       # temporal domain, returns [0, 10]
-    x.codomain())      # envelope of values, returns [-2,2]
-    x(6.))             # evaluation of x(·) at 6, returns 0.42..
-    x(Interval(5,6)))  # evaluation of x(·) over [5,6], returns [-0.72..,0.42..]
+    x.tdomain()        # temporal domain, returns [0, 10]
+    x.codomain()       # envelope of values, returns [-2,2]
+    x(6.)              # evaluation of x(·) at 6, returns 0.42..
+    x(Interval(5,6))   # evaluation of x(·) over [5,6], returns [-0.72..,0.42..]
 
   .. code-tab:: c++
 

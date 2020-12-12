@@ -151,7 +151,10 @@ TEST_CASE("Polygons")
     CHECK_FALSE(p1 != p2);
     CHECK_FALSE(ApproxConvexPolygon(p1) != p2); // testing Approx* class too
   }
+}
 
+TEST_CASE("Polygons (intersections)")
+{
   SECTION("Intersection, line/polygon")
   {
     vector<Point> v_p;
@@ -413,7 +416,10 @@ TEST_CASE("Polygons")
     CHECK(box_inter[0] == Interval::EMPTY_SET);
     CHECK(box_inter[1] == Interval::EMPTY_SET);
   }
+}
 
+TEST_CASE("Polygons from Slice")
+{
   SECTION("Unbounded case, POS_INFINITY")
   {
     // not supported anymore vector<Point> v_p;
@@ -662,7 +668,10 @@ TEST_CASE("Polygons")
 
     CHECK(ApproxConvexPolygon(p1) == p2);
   }
+}
 
+TEST_CASE("Polygons (intersections, again)")
+{
   SECTION("Polygons intersections, test 1")
   {
     IntervalVector box(2, Interval(0.,4.));
@@ -892,7 +901,10 @@ TEST_CASE("Polygons")
     ConvexPolygon p_truth(v_points);
     CHECK(p_truth.is_subset(p_inter) != NO);
   }
+}
 
+TEST_CASE("Polygons (Graham scan)")
+{
   SECTION("Polygons, orientations")
   {
     IntervalVector p1({0.,0.});
@@ -1016,7 +1028,10 @@ TEST_CASE("Polygons")
       contains &= Interval(0.50,0.51).contains(sqrt(pow(pt[0]-0.5, 2) + pow(pt[1]-0.5, 2)));
     CHECK(contains);
   }
+}
 
+TEST_CASE("Polygons (operations)")
+{
   SECTION("Polygons, rotation")
   {
    vector<Point> v_pts;
@@ -1082,7 +1097,10 @@ TEST_CASE("Polygons")
     v_truth[2] = Point(6.,2.);
     CHECK(ApproxConvexPolygon(p) == ConvexPolygon(v_truth));
   }
+}
 
+TEST_CASE("Polygons (Graham scan, again)")
+{
   SECTION("Polygons, Graham scan, step by step")
   {
     vector<Vector> v_pts;
@@ -1276,7 +1294,10 @@ TEST_CASE("Polygons")
     //  vibes::endDrawing();
     //#endif
   }
+}
 
+TEST_CASE("Polygons (simplification)")
+{
   SECTION("Polygons, simplification, test1")
   {
     vector<Vector> v_pts;

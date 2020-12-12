@@ -33,6 +33,7 @@ namespace tubex
        * \param input an input string
        * \param search a substring to be searched for 
        * \param format a substitute string
+       * \return void
        */
       static void replace_all(std::string& input, const std::string& search, const std::string& format);
       

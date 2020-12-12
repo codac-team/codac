@@ -22,11 +22,14 @@ namespace tubex
   class Slice;
   class Trajectory;
   class TrajectoryVector;
+
+  std::string to_string(const ibex::Function& f);
   
   class TFunction : public TFnc
   {
     public:
 
+      TFunction(const ibex::Function& f);
       TFunction(const char* y);
       TFunction(const char* x1, const char* y);
       TFunction(const char* x1, const char* x2, const char* y);
@@ -44,6 +47,7 @@ namespace tubex
       const TFunction operator[](int i) const;
 
       const std::string& expr() const;
+      const ibex::Function& getFunction() const;
       const std::string arg_name(int i) const;
 
       using TFnc::eval;

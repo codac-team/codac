@@ -1,11 +1,11 @@
 Unreleased yet (in development)
 ===============================
 
-Features added
---------------
+.. Features added
+.. --------------
 
-Changes
--------
+.. Changes
+.. -------
 
 .. Dependencies
 .. ------------
@@ -15,6 +15,72 @@ Changes
 
 .. Deprecated
 .. ----------
+
+.. Documentation
+.. -------------
+
+
+-----------------------------------------------------------------
+
+Release 3.0.13 (released `Dec 5, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.13>`_)
+=======================================================================================================
+
+`Commits since previous release 3.0.12 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.12...v3.0.13>`_
+
+Features added
+--------------
+
+* :commit:`f56c0764f2021bca657c42f9bcfb95b175690bef`: added ``truncate_tdomain()`` method for ``Tube`` and ``TubeVector`` classes
+
+Changes
+-------
+
+* :commit:`546de1e941b1217fcb47a205d127f667b3efe7f9`: strong optimization for CN building (using hashcodes for graph exploration)
+* :commit:`2f531950481635b48ee12724b865b66d39cec614`: improving Exception messages with contractors (on consistent dimensions)
+* :commit:`5b42f856a8c24f18a71a4399b3fe29c99f5ea092`: updated version of ODE integration using CAPD
+
+Bugs fixed
+----------
+
+* :commit:`d0b05aba8ba3bebf72e57d7f6d9ae8f45cb261f1`: corrected bug in ``Trajectory`` operations
+
+Deprecated
+----------
+
+* :commit:`e039c427b04c51f51078043f334e1c2fdef7c831`: the function ``Fnc::nb_vars()`` is deprecated, use ``Fnc::nb_var()`` instead
+
+
+-----------------------------------------------------------------
+
+Release 3.0.12 (released `Nov 26, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.12>`_)
+========================================================================================================
+
+`Commits since previous release 3.0.11 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.11...v3.0.12>`_
+
+Features added
+--------------
+
+* :commit:`3ab055196a6c21677702564b004da01663ed7f7a`: ``CtcDelay`` now available in Python
+
+Changes
+-------
+
+* :commit:`853450470334f9729e8e66c93385c0a15cd2a54c`: throwing explicit exceptions if contractors signatures not compliant in ``ContractorNetwork::add``
+* :commit:`9bb0773efd52415cbd819c6dcfb9008a665aee15`: removing the constructor ``Tube(Tube, Interval)`` (may lead to cast errors)
+* :commit:`b1548dbe0cbf7baecc73204189754b37f7719c38`: faster implementation of ``CtcDist``
+
+
+-----------------------------------------------------------------
+
+Release 3.0.11 (released `Nov 15, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.11>`_)
+========================================================================================================
+
+`Commits since previous release 3.0.10 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.10...v3.0.11>`_
+
+Changes
+-------
+
+* :commit:`87bd65c04958acb92bc0d3eadba3baff7693c54c`: throwing exceptions instead of assert error messages (mainly for graphics/serializ/CN)
 
 Documentation
 -------------

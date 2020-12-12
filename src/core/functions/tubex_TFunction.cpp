@@ -8,15 +8,35 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <sstream>
 #include "tubex_TFunction.h"
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
+#include "ibex_Expr2Minibex.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
+  std::string to_string(const Function& f)
+  {
+    stringstream s;
+    Expr2Minibex().print(s,f.expr());
+    string str = s.str().substr(10, s.str().size() - 12);
+    replace(str.begin(), str.end(), ';', ','); // replace ';' by ','
+    return str;
+  }
+
+  TFunction::TFunction(const Function& f)
+  {
+    int n = f.nb_arg();
+    const char** xdyn = new const char*[n];
+    for(int i = 0 ; i < n ; i++)
+      xdyn[i] = f.arg_name(i);
+    construct_from_array(n, xdyn, to_string(f).c_str());
+  }
+
   TFunction::TFunction(int n, const char** x, const char* y)
   {
     construct_from_array(n, x, y);
@@ -112,7 +132,7 @@ namespace tubex
   }
 
   TFunction::TFunction(const TFunction& f)
-    : TFnc(f.nb_vars(), f.image_dim(), false)
+    : TFnc(f.nb_var(), f.image_dim(), false)
   {
     *this = f;
   }
@@ -149,6 +169,11 @@ namespace tubex
     return m_expr;
   }
   
+  const Function& TFunction::getFunction() const
+  {
+    return *m_ibex_f;
+  }
+  
   const string TFunction::arg_name(int i) const
   {
     assert(i >= 0 && i < m_nb_vars);
@@ -161,12 +186,13 @@ namespace tubex
     assert(n >= 0);
     assert(y != NULL && "function's output must be defined");
 
-#ifdef _MSC_VER
+    #ifdef _MSC_VER
     // see https://stackoverflow.com/questions/48459297/is-there-a-vlas-variable-length-arrays-support-workaround-for-vs2017
     const char** xdyn = new const char* [n+1];
-#else
+    #else
     const char* xdyn[n+1];
-#endif // _MSC_VER
+    #endif // _MSC_VER
+
     xdyn[0] = "t";
     for(int i = 0 ; i < n ; i++)
     {
@@ -179,21 +205,22 @@ namespace tubex
     m_img_dim = m_ibex_f->image_dim();
     m_intertemporal = false; // not supported yet
     m_expr = y;
-#ifdef _MSC_VER
+    
+    #ifdef _MSC_VER
     delete[] xdyn;
-#endif // _MSC_VER
+    #endif // _MSC_VER
   }
 
   const Interval TFunction::eval(const Interval& t) const
   {
-    assert(nb_vars() == 0);
+    assert(nb_var() == 0);
     assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(t)[0];
   }
 
   const Interval TFunction::eval(const IntervalVector& x) const
   {
-    assert(nb_vars() == x.size() - 1);
+    assert(nb_var() == x.size() - 1);
     assert(image_dim() == 1 && "scalar evaluation");
     assert(!is_intertemporal());
     return eval_vector(x)[0];
@@ -201,7 +228,7 @@ namespace tubex
 
   const Interval TFunction::eval(int slice_id, const TubeVector& x) const
   {
-    assert(x.size() == nb_vars());
+    assert(x.size() == nb_var());
     assert(slice_id >= 0 && slice_id < x.nb_slices());
     assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(slice_id, x)[0];
@@ -209,7 +236,7 @@ namespace tubex
 
   const Interval TFunction::eval(const Interval& t, const TubeVector& x) const
   {
-    assert(x.size() == nb_vars());
+    assert(x.size() == nb_var());
     assert(x.tdomain().is_superset(t));
     assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(t, x)[0];
@@ -217,28 +244,28 @@ namespace tubex
 
   const Tube TFunction::eval(const TubeVector& x) const
   {
-    assert(x.size() == nb_vars());
+    assert(x.size() == nb_var());
     assert(image_dim() == 1 && "scalar evaluation");
     return eval_vector(x)[0];
   }
 
   const Trajectory TFunction::traj_eval(const TrajectoryVector& x) const
   {
-    assert(x.size() == nb_vars());
+    assert(x.size() == nb_var());
     assert(image_dim() == 1 && "scalar evaluation");
     return traj_eval_vector(x)[0];
   }
 
   const IntervalVector TFunction::eval_vector(const Interval& t) const
   {
-    assert(nb_vars() == 0);
+    assert(nb_var() == 0);
     IntervalVector box(1, t);
     return m_ibex_f->eval_vector(box);
   }
 
   const IntervalVector TFunction::eval_vector(const IntervalVector& x) const
   {
-    assert(nb_vars() == x.size() - 1);
+    assert(nb_var() == x.size() - 1);
     assert(!is_intertemporal());
     return m_ibex_f->eval_vector(x);
   }
@@ -249,15 +276,15 @@ namespace tubex
 
     Interval t = x[0].slice_tdomain(slice_id);
 
-    if(nb_vars() == 0)
+    if(nb_var() == 0)
       return eval_vector(t);
 
-    assert(nb_vars() == x.size());
+    assert(nb_var() == x.size());
 
     if(x(slice_id).is_empty())
       return IntervalVector(image_dim(), Interval::EMPTY_SET);
 
-    IntervalVector box(nb_vars() + 1); // +1 for system variable (t)
+    IntervalVector box(nb_var() + 1); // +1 for system variable (t)
     box[0] = t;
     box.put(1, x(slice_id));
 
@@ -266,18 +293,18 @@ namespace tubex
 
   const IntervalVector TFunction::eval_vector(const Interval& t, const TubeVector& x) const
   {
-    if(nb_vars() == 0)
+    if(nb_var() == 0)
       return eval_vector(t);
 
     assert(x.tdomain().is_superset(t));
-    assert(nb_vars() == x.size());
+    assert(nb_var() == x.size());
 
     if(x(t).is_empty())
       return IntervalVector(image_dim(), Interval::EMPTY_SET);
 
-    IntervalVector box(nb_vars() + 1); // +1 for system variable (t)
+    IntervalVector box(nb_var() + 1); // +1 for system variable (t)
     box[0] = t;
-    if(nb_vars() != 0)
+    if(nb_var() != 0)
       for(int i = 0 ; i < x.size() ; i++)
         box[i+1] = x[i](t);
 
@@ -293,8 +320,8 @@ namespace tubex
 
     // todo: update this comment ^
 
-    if(nb_vars() != 0)
-      assert(x.size() == nb_vars());
+    if(nb_var() != 0)
+      assert(x.size() == nb_var());
     
     TubeVector y(x); // keeping slicing the x
     y.resize(image_dim());
@@ -370,8 +397,8 @@ namespace tubex
 
     // todo: update this comment ^
 
-    if(nb_vars() != 0)
-      assert(x.size() == nb_vars());
+    if(nb_var() != 0)
+      assert(x.size() == nb_var());
 
     assert(x[0].definition_type() == TrajDefnType::MAP_OF_VALUES
       && "eval TFunction not supported for analytic trajectories");
@@ -380,7 +407,7 @@ namespace tubex
     for(map<double,double>::const_iterator it = x[0].sampled_map().begin() ;
         it != x[0].sampled_map().end() ; it++)
     {
-      Vector v(nb_vars() + 1);
+      Vector v(nb_var() + 1);
       v[0] = it->first;
       v.put(1, x(it->first));
 

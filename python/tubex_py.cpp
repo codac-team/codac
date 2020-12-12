@@ -32,8 +32,10 @@ void export_CtcFunction(py::module& m);
 void export_CtcConstell(py::module& m);
 
 py::class_<DynCtc,pyDynCtc> export_DynCtc(py::module& m);
+void export_CtcDelay(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcDeriv(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcEval(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
+void export_CtcLohner(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcPicard(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 
 void export_Tube(py::module&m);
@@ -68,8 +70,10 @@ PYBIND11_MODULE(tube, m)
   export_CtcConstell(m);
 
   py::class_<DynCtc, pyDynCtc> dyn_ctc = export_DynCtc(m);
+  export_CtcDelay(m, dyn_ctc);
   export_CtcDeriv(m, dyn_ctc);
   export_CtcEval(m, dyn_ctc);
+  export_CtcLohner(m, dyn_ctc);
   export_CtcPicard(m, dyn_ctc);
 
   export_Tube(m);

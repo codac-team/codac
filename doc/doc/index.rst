@@ -349,6 +349,7 @@ Contributors
   * Julien Damers
   * Raphael Voges
   * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
+  * Auguste Bourgois
   * `Thomas Le Mézo <https://www.ensta-bretagne.fr/lemezo/>`_
   * `Cyril Bouvier <http://www.lirmm.fr/~bouvier/index.en.html>`_
   * `Bertrand Neveu <http://imagine.enpc.fr/~neveub/>`_

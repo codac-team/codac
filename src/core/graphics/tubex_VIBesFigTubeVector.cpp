@@ -9,6 +9,7 @@
  */
 
 #include "tubex_VIBesFigTubeVector.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;
@@ -99,7 +100,10 @@ namespace tubex
   void VIBesFigTubeVector::draw_box(const Interval& tdomain, const IntervalVector& box, const vibes::Params& params)
   {
     if(m_n != 0)
-      assert(size() == box.size() && "box and fig must be of same dimension");
+    {
+      if(size() != box.size())
+        throw Exception(__func__, "box and fig must be of same dimension");
+    }
     draw_box(tdomain, box, "", params);
   }
 
@@ -108,7 +112,8 @@ namespace tubex
     if(m_n == 0) // if the figure is still empty
       create_subfigures(box.size());
 
-    assert(size() == box.size() && "box and fig must be of same dimension");
+    if(size() != box.size())
+      throw Exception(__func__, "box and fig must be of same dimension");
 
     for(int i = 0 ; i < subfigs_number() ; i++)
     {

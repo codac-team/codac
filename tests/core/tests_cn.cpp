@@ -124,6 +124,8 @@ TEST_CASE("CN simple")
     cn.add(ctc_eval, {t1, z, x, v});
     cn.add(ctc_eval, {t1, z, x, v});
     cn.add(ctc_eval, {t1, z, x, v}); // redundant contractor that should not be added
+    cn.add(ctc_eval, {t1, z, x, v}); // redundant contractor that should not be added
+    cn.add(ctc_eval, {t1, z, x, v}); // redundant contractor that should not be added
     cn.contract();
 
     cn.set_name(t1, "t_1");

@@ -124,8 +124,18 @@ The robot evolves in an environment made of 150 landmarks that are all indisting
     y_1^*\in y_1+[-0.1,0.1]\\
     y_2^*\in y_2+[-0.04,0.04]
 
-  | **G.4.** Display the landmarks, the range-and-bearing measurements and the actual trajectory in a ``VIBesFigMap`` view.
-  | You can use the ``fig_map.add_observations(v_obs, actual_x)`` function in order to display all the range-and-bearing observations along :math:`\mathbf{x}^*(\cdot)`.
+  | **G.4.** Display the landmarks, the range-and-bearing measurements and the actual trajectory in a ``VIBesFigMap`` view. You can use the following function for displaying all the range-and-bearing observations along :math:`\mathbf{x}^*(\cdot)`:
+
+  .. tabs::
+
+    .. code-tab:: py
+
+      fig_map.add_observations(v_obs, actual_x)
+
+    .. code-tab:: c++
+
+      fig_map.add_observations(v_obs, &actual_x);
+
 
   You should obtain a result similar to this:
 

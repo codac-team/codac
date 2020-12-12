@@ -12,6 +12,7 @@
 #include "tubex_CtcEval.h"
 #include "tubex_CtcDeriv.h"
 #include "tubex_CtcDist.h"
+#include "tubex_Exception.h"
 
 using namespace std;
 using namespace ibex;

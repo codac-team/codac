@@ -34,6 +34,9 @@ namespace tubex
 
     protected:
 
+      static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
+      static std::vector<std::string> m_str_expected_doms; //!< allowed domains signatures (mainly used for CN Exceptions)
+      friend class ContractorNetwork;
   };
 }
 

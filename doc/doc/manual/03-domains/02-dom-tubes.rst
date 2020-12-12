@@ -93,12 +93,12 @@ To create a copy of a tube with the same time discretization, use:
   .. code-tab:: py
 
     x5 = Tube(x4)                    # identical tube (100 slices, [0,10]→[0,∞])
-    x6 = Tube(x4, Interval(5))       # 100 slices, same timestep, but [0,10]→[5]
+    x5.set(Interval(5))              # 100 slices, same timestep, but [0,10]→[5]
 
   .. code-tab:: c++
 
     Tube x5(x4);                     // identical tube (100 slices, [0,10]→[0,∞])
-    Tube x6(x4, Interval(5.));       // 100 slices, same timestep, but [0,10]→[5]
+    x5.set(Interval(5.));            // 100 slices, same timestep, but [0,10]→[5]
 
 As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Trajectory`` objects:
 

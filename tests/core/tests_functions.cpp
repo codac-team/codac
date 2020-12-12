@@ -44,9 +44,22 @@ TEST_CASE("Functions")
   {
     TFunction f("x1", "x2", "x1+sin(t)*x2+[-0.01,0.01]");
     CHECK(f.image_dim() == 1);
-    CHECK(f.nb_vars() == 2);
+    CHECK(f.nb_var() == 2);
     CHECK(f.arg_name(0) == "x1");
     CHECK(f.arg_name(1) == "x2");
     CHECK(f.expr() == "x1+sin(t)*x2+[-0.01,0.01]");
+  }
+
+  SECTION("Compare identical TFunction and Function")
+  {
+    Function f("x1", "x2", "x1+sin(x2)*x2+[-0.01,0.01]");
+    TFunction tf("x1", "x2", "x1+sin(x2)*x2+[-0.01,0.01]");
+
+    for(int i = 0 ; i < 100 ; i++)
+    {
+      IntervalVector box_i({Interval(0,1), cos(i*0.5) , sin(i*0.5)});
+      box_i.inflate(0.2);
+      CHECK(f.eval_vector(box_i.subvector(1,2)) == tf.eval_vector(box_i));
+    }
   }
 }

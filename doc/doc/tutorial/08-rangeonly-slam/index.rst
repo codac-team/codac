@@ -160,7 +160,7 @@ The environment is made of 4 landmarks. Their coordinates are given in the follo
   :math:`3`  :math:`(3,4)^\intercal`
   =========  =============================
 
-Each :math:`t=2k\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`. The robot does not know the landmarks coordinates (the M of SLAM is for Mapping), but it knows which landmark :math:`\mathbf{b}_j` is being observed (the landmarks are *identified*). 
+Each :math:`t=2\delta`, the robot is able to measure the distance to one of these landmarks (taken randomly), with an accuracy of :math:`\pm0.03`. The robot does not know the landmarks coordinates (the M of SLAM is for Mapping), but it knows which landmark :math:`\mathbf{b}_j` is being observed (the landmarks are *identified*). 
 
 We will use a constraint propagation approach to solve the problem. 
 

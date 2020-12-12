@@ -104,7 +104,8 @@ TEST_CASE("Tube definition")
     //CHECK(tube_d.slice(2)->tube_reference() == &tube_d);
     //CHECK(tube_d.slice(3)->tube_reference() == &tube_d);
 
-    Tube tube_e(tube_c, Interval(1.,2.));
+    Tube tube_e(tube_c);
+    tube_e.set(Interval(1.,2.));
     //CHECK(tube_e.slice(0)->tube_reference() == &tube_e);
     //CHECK(tube_e.slice(1)->tube_reference() == &tube_e);
     //CHECK(tube_e.slice(2)->tube_reference() == &tube_e);

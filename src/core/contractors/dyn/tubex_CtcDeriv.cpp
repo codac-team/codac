@@ -11,6 +11,7 @@
 #include "tubex_CtcDeriv.h"
 #include "tubex_ConvexPolygon.h"
 #include "tubex_Domain.h"
+#include "tubex_DomainsTypeException.h"
 
 using namespace std;
 using namespace ibex;
@@ -22,38 +23,54 @@ namespace tubex
   {
 
   }
+
+  // Static members for contractor signature (mainly used for CN Exceptions)
+  const string CtcDeriv::m_ctc_name = "CtcDeriv";
+  vector<string> CtcDeriv::m_str_expected_doms(
+  {
+    "Tube, Tube",
+    "TubeVector, TubeVector",
+    "Slice, Slice[, Slice, Slice..]"
+  });
   
   void CtcDeriv::contract(vector<Domain*>& v_domains)
   {
     // Tube scalar case:
     if(v_domains[0]->type() == Domain::Type::T_TUBE && v_domains[1]->type() == Domain::Type::T_TUBE)
     {
-      assert(v_domains.size() == 2);
+      if(v_domains.size() != 2)
+        throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
+
       contract(v_domains[0]->tube(), v_domains[1]->tube());
     }
 
     // Tube vector case:
     else if(v_domains[0]->type() == Domain::Type::T_TUBE_VECTOR && v_domains[1]->type() == Domain::Type::T_TUBE_VECTOR)
     {
-      assert(v_domains.size() == 2);
+      if(v_domains.size() != 2)
+        throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
+      
       contract(v_domains[0]->tube_vector(), v_domains[1]->tube_vector());
     }
 
     // Slice case:
     else if(v_domains[0]->type() == Domain::Type::T_SLICE)
     {
-      assert(v_domains.size() % 2 == 0);
-
+      if(v_domains.size() % 2 != 0)
+        throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
+      
       for(int i = 0 ; i < floor(v_domains.size()/2) ; i++)
       {
-        assert(v_domains[i]->type() == Domain::Type::T_SLICE);
-        assert(v_domains[i+v_domains.size()/2]->type() == Domain::Type::T_SLICE);
+        if(v_domains[i]->type() != Domain::Type::T_SLICE 
+          || v_domains[i+v_domains.size()/2]->type() != Domain::Type::T_SLICE)
+          throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
+      
         contract(v_domains[i]->slice(), v_domains[i+v_domains.size()/2]->slice());
       }
     }
 
     else
-      assert(false && "vector of domains not consistent with the contractor definition");
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
   }
 
   void CtcDeriv::contract(Tube& x, const Tube& v, TimePropag t_propa)

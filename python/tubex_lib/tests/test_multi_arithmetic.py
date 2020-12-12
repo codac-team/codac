@@ -36,7 +36,7 @@ class TestArithmeticOnTube(unittest.TestCase):
   def test_sqr(self):
 
     testd = 3.0
-    self.assertEqual(sqr(testd), 9);
+    self.assertAlmostEqual(sqr(testd), 9);
 
     testintv = Interval(1,2)
     self.assertEqual(sqr(testintv),Interval(1,4))
@@ -45,13 +45,14 @@ class TestArithmeticOnTube(unittest.TestCase):
     self.assertEqual(sqr(testtube).codomain(),Interval(9,16))
 
     testtraj = Trajectory(Interval(3,4), TFunction("t"), 0.1)
-    self.assertEqual(sqr(testtraj).codomain(),Interval(9,16))
+    self.assertAlmostEqual(sqr(testtraj).codomain().lb(),9)
+    self.assertAlmostEqual(sqr(testtraj).codomain().ub(),16)
 
   def test_pow(self):
 
     testdx = 3.0
     testdy = 4.0
-    self.assertEqual(pow(testdx,testdy), 81);
+    self.assertAlmostEqual(pow(testdx,testdy), 81);
 
     testintvx = Interval(3)
     testintvy = Interval(4)

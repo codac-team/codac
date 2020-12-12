@@ -45,6 +45,7 @@ public:
    * @details Contract the box according to the polar constraints
    *
    * @param box Box of Intervals to contract. box=([x],[y],[rho],[theta])
+   * @return void
    */
   virtual void contract(IntervalVector& box);
 
@@ -92,6 +93,7 @@ public:
    * @details Contract the box according to the polar constraints
    *
    * @param box Box of Intervals to contract. box=([x],[y])
+   * @return void
    */
   virtual void contract(IntervalVector& box);
 private:

@@ -20,10 +20,10 @@ namespace tubex
   void serialize_Trajectory(ofstream& bin_file, const Trajectory& traj, int version_number)
   {
     if(!bin_file.is_open())
-      throw Exception("serialize_Trajectory()", "ofstream& bin_file not open");
+      throw Exception(__func__, "ofstream& bin_file not open");
 
     if(traj.definition_type() == TrajDefnType::ANALYTIC_FNC)
-      throw Exception("serialize_Trajectory()", "Fnc serialization not implemented");
+      throw Exception(__func__, "Fnc serialization not implemented");
 
     // Version number for compliance purposes
     bin_file.write((const char*)&version_number, sizeof(short int));
@@ -31,7 +31,7 @@ namespace tubex
     switch(version_number)
     {
       case 1:
-        throw Exception("serialize_Trajectory()", "serialization version no more supported");
+        throw Exception(__func__, "serialization version no more supported");
         break;
 
       case 2:
@@ -51,14 +51,14 @@ namespace tubex
       }
 
       default:
-        throw Exception("serialize_Trajectory()", "unhandled case");
+        throw Exception(__func__, "unhandled case");
     }
   }
 
   void deserialize_Trajectory(ifstream& bin_file, Trajectory *&traj)
   {
     if(!bin_file.is_open())
-      throw Exception("deserialize_Trajectory()", "ifstream& bin_file not open");
+      throw Exception(__func__, "ifstream& bin_file not open");
 
     // Version number for compliance purposes
     short int version_number;
@@ -67,7 +67,7 @@ namespace tubex
     switch(version_number)
     {
       case 1:
-        throw Exception("deserialize_Trajectory()", "serialization version no more supported");
+        throw Exception(__func__, "serialization version no more supported");
         break;
 
       case 2:
@@ -90,14 +90,14 @@ namespace tubex
       }
 
       default:
-        throw Exception("deserialize_Trajectory()", "deserialization version number not supported");
+        throw Exception(__func__, "deserialization version number not supported");
     }
   }
 
   void serialize_TrajectoryVector(ofstream& bin_file, const TrajectoryVector& traj, int version_number)
   {
     if(!bin_file.is_open())
-      throw Exception("serialize_TrajectoryVector()", "ofstream& bin_file not open");
+      throw Exception(__func__, "ofstream& bin_file not open");
 
     short int size = traj.size();
     bin_file.write((const char*)&size, sizeof(short int));
@@ -108,7 +108,7 @@ namespace tubex
   void deserialize_TrajectoryVector(ifstream& bin_file, TrajectoryVector *&traj)
   {
     if(!bin_file.is_open())
-      throw Exception("deserialize_TrajectoryVector()", "ifstream& bin_file not open");
+      throw Exception(__func__, "ifstream& bin_file not open");
 
     traj = new TrajectoryVector();
 

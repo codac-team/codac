@@ -42,9 +42,15 @@ namespace tubex
     return *this;
   }
 
-  int TFnc::nb_vars() const
+  int TFnc::nb_var() const
   {
     return m_nb_vars;
+  }
+
+  int TFnc::nb_vars() const
+  {
+    cout << "Warning: deprecated function, use nb_var() instead." << endl;
+    return nb_var();
   }
 
   int TFnc::image_dim() const
@@ -65,8 +71,8 @@ namespace tubex
 
   const TubeVector TFnc::eval_vector(const TubeVector& x) const
   {
-    if(nb_vars() != 0)
-      assert(x.size() == nb_vars());
+    if(nb_var() != 0)
+      assert(x.size() == nb_var());
 
     TubeVector y(x); // keeping slicing of x
     y.resize(image_dim());

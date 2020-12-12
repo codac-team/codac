@@ -99,6 +99,10 @@ namespace tubex
       void contract_gates(Slice& x, const Slice& v);
       
       friend class CtcEval; // contract_gates used by CtcEval
+
+      static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
+      static std::vector<std::string> m_str_expected_doms; //!< allowed domains signatures (mainly used for CN Exceptions)
+      friend class ContractorNetwork;
   };
 }
 
