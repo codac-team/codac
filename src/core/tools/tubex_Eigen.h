@@ -3,7 +3,7 @@
 
 #include <ibex_Vector.h>
 #include <ibex_Matrix.h>
-#include "eigen3/Eigen/Dense"
+#include <eigen3/Eigen/Dense>
 
 
 namespace tubex {
