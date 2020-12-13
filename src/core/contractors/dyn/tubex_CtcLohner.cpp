@@ -21,38 +21,96 @@ using namespace std;
 
 namespace tubex {
 
-  // todo: to be placed in header file
+// todo: to be placed in header file
 
-    struct GlobalEnclosureError : public std::runtime_error{
-    GlobalEnclosureError() : std::runtime_error("Exceeded loop maximum range while looking for a global enclosure for the system.") {}
-    };
+/**
+ * \class GlobalEnclosureError
+ *
+ * \brief Encapsulates runtime error for global enclosure estimation failure
+ */
+struct GlobalEnclosureError : public std::runtime_error {
+  GlobalEnclosureError() : std::runtime_error(
+      "Exceeded loop maximum range while looking for a global enclosure for the system.") {}
+};
 
-    class LohnerAlgorithm {
-    public:
-      constexpr static const double FWD = 1, BWD = -1;
-      LohnerAlgorithm(const ibex::Function *f,
-                     double h,
-                     const ibex::IntervalVector &u0 = ibex::IntervalVector::empty(1),
-                     int contractions = 1,
-                     double eps = 0.1);
+/**
+ * \class LohnerAlgorithm
+ *
+ * \brief Simple first order Lohner algorithm to perform guaranteed integration of a system
+ * \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$
+ */
+class LohnerAlgorithm {
+public:
+  constexpr static const double FWD = 1, BWD = -1;
 
-      const ibex::IntervalVector &integrate(uint steps, double H = -1);
-      void contractStep(const ibex::IntervalVector &x);
-      const ibex::IntervalVector &getLocalEnclosure() const;
-      const ibex::IntervalVector &getGlobalEnclosure() const;
-    private:
-      ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double direction);
+  /**
+   * \brief Creates a Lohner algorithm object
+   *
+   * \param f function defining the system \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$
+   * \param h time step of the integration method
+   * \param u0 initial condition of the system
+   * \param contractions number of contractions of the global enclosure by the estimated local enclosure
+   * \param eps inflation parameter for the global enclosure
+   */
+  LohnerAlgorithm(const ibex::Function *f,
+                  double h,
+                  const ibex::IntervalVector &u0 = ibex::IntervalVector::empty(1),
+                  int contractions = 1,
+                  double eps = 0.1);
+  /**
+   * \brief integrate the system over a given number of steps
+   *
+   * \param steps number of steps to integrate
+   * \param H parameter to overwrite the integration time step
+   * \return enclosure of the system's state
+   */
+  const ibex::IntervalVector &integrate(uint steps, double H = -1);
 
-      uint dim;
-      double h, eps;
-      int contractions;
-      ibex::IntervalVector u, z, r, u_tilde;
-      ibex::Matrix B, Binv;
-      ibex::Vector u_hat;
-      const ibex::Function *f;
-    };
+  /**
+   * \brief contract the global & local enclosure of the previous integration step
+   *
+   * \param x estimation of the global enclosure
+   */
+  void contractStep(const ibex::IntervalVector &x);
 
-  // --
+  /**
+   * \brief Returns the current global enclosure, i.e. the box enclosing the trajectories between times \f$k-1\f$ and
+   * \f$k\f$
+   *
+   * \return global enclosure
+   */
+  const ibex::IntervalVector &getLocalEnclosure() const;
+
+  /**
+   * \brief Returns the current local enclosure, i.e. the box enclosing the trajectories at time \f$k\f$
+   *
+   * \return local enclosure \f$[\mathbf{x}_{k}]\f$
+   */
+  const ibex::IntervalVector &getGlobalEnclosure() const;
+private:
+  /**
+   * \brief Computes an estimation of the global enclosure of the system
+   *
+   * \param initialGuess initial guess for the global enclosure
+   * \param direction forward or backward in time
+   * \return estimation of the global enclosure
+   */
+  ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double direction);
+
+  uint dim; //!< dimension of the system's state
+  double h; //!< integration time step
+  double eps; //!< inflation parameter for the global enclosure
+  int contractions; //!< number of contractions of the global enclosure by the estimated local enclosure
+  ibex::IntervalVector u; //!< local enclosure
+  ibex::IntervalVector z; //!< Taylor-Lagrange remainder (order 2)
+  ibex::IntervalVector r; //!< enclosure of uncertainties in the frame given by the matrix B
+  ibex::IntervalVector u_tilde; //!< global enclosure
+  ibex::Matrix B, Binv;
+  ibex::Vector u_hat; //!< center of the box u
+  const ibex::Function *f; //!< litteral function of the system \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$
+};
+
+// --
 
 LohnerAlgorithm::LohnerAlgorithm(const ibex::Function *f,
                                  double h,
