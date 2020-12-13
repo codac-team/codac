@@ -16,6 +16,7 @@ addons:
     packages:
     - cmake
     - python3.6
+    - libeigen3-dev
 
 # See https://docs.travis-ci.com/user/build-config-yaml#private-keys-as-yaml-anchors-and-aliases-and-external-tooling
 _vs_specific: &vs_specific 
@@ -87,7 +88,7 @@ matrix:
       compiler: gcc
       before_install: 
         - sudo apt-get -q update || true
-        - sudo apt-get -y install flex bison || true
+        - sudo apt-get -y install flex bison libeigen3-dev || true
       cache:
       install:
       script: 
@@ -178,6 +179,11 @@ matrix:
       services:
         - docker
       before_install: 
+        - sudo apt install libeigen3-dev
+        - sudo ls /usr/include/
+        - sudo ls /usr/include/eigen3/
+        - sudo ls /usr/include/Eigen/
+        - sudo ln -sf /usr/include/Eigen /usr/include/eigen3/Eigen
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
       cache:
       install:
@@ -359,8 +365,6 @@ install:
   - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 # using python3 as default version
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-issues sphinx-tabs
   - sudo apt-get install python3-sphinx doxygen graphviz
-
-  # For Linobs example
   - sudo apt install libeigen3-dev
 
   # For Python wrapping

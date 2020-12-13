@@ -81,6 +81,12 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/04_simple_eval/build/tubex_basics_04 0)
   add_test(NAME basics_05
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/05_graphics/build/tubex_basics_05 0)
+  add_test(NAME basics_07
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/07_temporal_ctc/build/tubex_basics_07 0)
+  if(WITH_PYTHON)
+  add_test(NAME basics_07_py
+           COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/basics/07_temporal_ctc/07_temporal_ctc.py 0)
+  endif()
 
   # Robotics
   add_test(NAME rob_01
@@ -110,6 +116,8 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
   # Linobs
   add_test(NAME linobs
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/linobs/01_paper/build/tubex_linobs 0)
+  add_test(NAME linobs_foreach_dt
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/linobs/01_paper/build/tubex_linobs_foreach_dt 0)
 
   if(WITH_CAPD)
     # Lie group

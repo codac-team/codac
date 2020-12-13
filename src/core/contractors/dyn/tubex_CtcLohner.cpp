@@ -1,3 +1,13 @@
+/** 
+ *  CtcEval class
+ * ----------------------------------------------------------------------------
+ *  \date       2020
+ *  \author     Auguste Bourgois
+ *  \copyright  Copyright 2020 Tubex Team
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
+
 #include "tubex_CtcLohner.h"
 
 #include <tubex_CtcLohner.h>
@@ -10,6 +20,40 @@ using namespace ibex;
 using namespace std;
 
 namespace tubex {
+
+  // todo: to be placed in header file
+
+    struct GlobalEnclosureError : public std::runtime_error{
+    GlobalEnclosureError() : std::runtime_error("Exceeded loop maximum range while looking for a global enclosure for the system.") {}
+    };
+
+    class LohnerAlgorithm {
+    public:
+      constexpr static const double FWD = 1, BWD = -1;
+      LohnerAlgorithm(const ibex::Function *f,
+                     double h,
+                     const ibex::IntervalVector &u0 = ibex::IntervalVector::empty(1),
+                     int contractions = 1,
+                     double eps = 0.1);
+
+      const ibex::IntervalVector &integrate(uint steps, double H = -1);
+      void contractStep(const ibex::IntervalVector &x);
+      const ibex::IntervalVector &getLocalEnclosure() const;
+      const ibex::IntervalVector &getGlobalEnclosure() const;
+    private:
+      ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double direction);
+
+      uint dim;
+      double h, eps;
+      int contractions;
+      ibex::IntervalVector u, z, r, u_tilde;
+      ibex::Matrix B, Binv;
+      ibex::Vector u_hat;
+      const ibex::Function *f;
+    };
+
+  // --
+
 LohnerAlgorithm::LohnerAlgorithm(const ibex::Function *f,
                                  double h,
                                  const ibex::IntervalVector &u0,

@@ -14,10 +14,10 @@ Tubex uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
 
 .. code-block:: bash
 
-  # Requirements to compile IBEX
-  sudo apt-get install -y g++ gcc flex bison cmake git
+  # Requirements to compile IBEX and Tubex
+  sudo apt-get install -y g++ gcc flex bison cmake git libeigen3-dev
   
-  # Download the sources from Github
+  # Download IBEX sources from Github
   git clone -b develop https://github.com/ibex-team/ibex-lib.git
   
   # Configure IBEX before installation

@@ -42,6 +42,7 @@ namespace tubex
         const ibex::Vector& operator[](size_t vertex_id) const;
         const ibex::IntervalVector box() const;
         const Point center() const;
+        const ibex::Interval area() const;
 
       /// @}
       /// \name Tests
