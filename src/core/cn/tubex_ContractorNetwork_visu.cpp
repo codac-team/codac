@@ -73,12 +73,12 @@ namespace tubex
 
       dot_file << endl << "  // Domains nodes" << endl;
       for(const auto& dom : m_map_domains)
-        dot_file << "  " << Tools::add_int("dom",dom.second->id()) << " [shape=box, label=\"" << dom.second->dom_name(m_map_domains) << "\"];" << endl;
+        dot_file << "  " << ("dom" + std::to_string(dom.second->id())) << " [shape=box, label=\"" << dom.second->dom_name(m_map_domains) << "\"];" << endl;
 
       dot_file << endl << "  // Contractors nodes" << endl;
       for(auto& ctc : m_map_ctc)
       {
-        dot_file << "  " << Tools::add_int("ctc",ctc.second->id())
+        dot_file << "  " << ("ctc" + std::to_string(ctc.second->id()))
                  // Node style:
                  << " [shape=circle, "
                  << "label=\"" << ctc.second->name() << "\"];" << endl;
@@ -88,7 +88,7 @@ namespace tubex
       for(auto& ctc : m_map_ctc)
         for(const auto& dom : m_map_domains)
           if(find(dom.second->contractors().begin(), dom.second->contractors().end(), ctc.second) != dom.second->contractors().end())
-            dot_file << "  " << Tools::add_int("ctc",ctc.second->id()) << " -- " << Tools::add_int("dom",dom.second->id()) << ";" << endl;
+            dot_file << "  " << ("ctc" + std::to_string(ctc.second->id())) << " -- " << ("dom" + std::to_string(dom.second->id())) << ";" << endl;
 
       // Subgraph for clustering components of a same vector
       for(const auto& dom : m_map_domains)
@@ -96,11 +96,11 @@ namespace tubex
         if(dom.second->type() == Domain::Type::T_INTERVAL_VECTOR)
         {
           dot_file << endl;
-          dot_file << "  subgraph cluster_" << Tools::add_int("dom",dom.second->id()) << " {" << endl;
+          dot_file << "  subgraph cluster_" << ("dom" + std::to_string(dom.second->id())) << " {" << endl;
           dot_file << "    color=\"#006680\";" << endl << "    ";
 
           // Adding the main vector
-          dot_file << Tools::add_int("dom",dom.second->id()) + "; ";
+          dot_file << ("dom" + std::to_string(dom.second->id())) + "; ";
 
           // Adding its components
           Domain *one_component = NULL;
@@ -108,7 +108,7 @@ namespace tubex
             if(dom_i.second->is_component_of(*dom.second))
             {
               one_component = dom_i.second;
-              dot_file << Tools::add_int("dom",dom_i.second->id()) + "; ";
+              dot_file << ("dom" + std::to_string(dom_i.second->id())) + "; ";
             }
 
           // Adding their component-contractor
@@ -118,7 +118,7 @@ namespace tubex
               for(const auto& dom_i : ctc.second->domains())
                 if(dom_i == one_component)
                 {
-                  dot_file << Tools::add_int("ctc",ctc.second->id()) + "; ";
+                  dot_file << ("ctc" + std::to_string(ctc.second->id())) + "; ";
                   break;
                 }
 
@@ -132,7 +132,7 @@ namespace tubex
         if(dom.second->type() == Domain::Type::T_TUBE)
         {
           dot_file << endl;
-          dot_file << "  " << Tools::add_int("subgraph cluster_tube",dom.second->id()) << " {" << endl;
+          dot_file << "  " << ("subgraph cluster_tube" + std::to_string(dom.second->id())) << " {" << endl;
           dot_file << "    color=\"#BA4E00\";" << endl;
           dot_file << "    ";
 
@@ -152,11 +152,11 @@ namespace tubex
                     && ctc_dom_i->domains().size() == 2
                     && ((ctc_dom_i->domains()[0] == dom_i && ctc_dom_i->domains()[1]->type() == Domain::Type::T_SLICE) ||
                         (ctc_dom_i->domains()[1] == dom_i && ctc_dom_i->domains()[0]->type() == Domain::Type::T_SLICE)))
-                dot_file << Tools::add_int("ctc",ctc_dom_i->id()) + "; "; // component contractor linking slices
+                dot_file << ("ctc" + std::to_string(ctc_dom_i->id()) + "; "); // component contractor linking slices
               }
 
-              dot_file << Tools::add_int("dom",dom_i->id()) + "; ";
-              dot_file << Tools::add_int("ctc",ctc->id()) + "; ";
+              dot_file << ("dom" + std::to_string(dom_i->id()) + "; ");
+              dot_file << ("ctc" + std::to_string(ctc->id()) + "; ");
             }
           }
 

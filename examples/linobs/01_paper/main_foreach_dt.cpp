@@ -157,7 +157,7 @@ int main()
     for(auto& [dt,pol_area] : m_pol_area)
     {
       view_box[1] |= pol_area.codomain();
-      fig_area.add_trajectory(&pol_area, Tools::add_int("polygons", dt*100000), "#424242");
+      fig_area.add_trajectory(&pol_area, ("polygons_" + std::to_string(dt)), "#424242");
     }
     fig_area.axis_limits(view_box);
     fig_area.show();
