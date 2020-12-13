@@ -311,7 +311,7 @@ Organizers and technical support
   :columns: 3
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
-  * Raphael Voges
+  * `Raphael Voges <https://raphael-voges.de/>`_
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
   * Julien Damers

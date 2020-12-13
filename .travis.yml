@@ -180,9 +180,10 @@ matrix:
         - docker
       before_install: 
         - sudo apt install libeigen3-dev
-        - sudo ls /usr/local/include/
-        - sudo ls /usr/local/include/Eigen/
-        - sudo ln -sf /usr/local/include/Eigen /usr/local/include/eigen3/Eigen
+        - sudo ls /usr/include/
+        - sudo ls /usr/include/eigen3/
+        - sudo ls /usr/include/Eigen/
+        - sudo ln -sf /usr/include/Eigen /usr/include/eigen3/Eigen
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
       cache:
       install:
