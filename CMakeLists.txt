@@ -102,8 +102,10 @@
 ################################################################################
 
   find_package(Eigen3 REQUIRED NO_MODULE)
-  message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
-  include_directories(${Eigen3_INCLUDE_DIRS})
+  message(STATUS "Found Eigen3 version ${EIGEN3_VERSION}")
+  add_definitions(${EIGEN3_DEFINITIONS})
+  include_directories(${EIGEN3_INCLUDE_DIRS})
+
 
 
 ################################################################################
