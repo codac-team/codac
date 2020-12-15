@@ -184,7 +184,7 @@ matrix:
       cache:
       install:
       script: 
-         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && sudo apt-get -y install libeigen3-dev && mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../tubex .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv && unzip -q -o tubex_test_win.zip && rm -Rf tubex_test_win.zip && cd tubex_test_win && mv test .. && cd ../test && rm -Rf ../tubex_test_win && cmake . && cmake --build . && ./my_project \""
+         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev ; mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../tubex .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv && unzip -q -o tubex_test_win.zip && rm -Rf tubex_test_win.zip && cd tubex_test_win && mv test .. && cd ../test && rm -Rf ../tubex_test_win && cmake . && cmake --build . && ./my_project \""
 
     - name: "Mac OS Xcode 10.1"
       os: osx
@@ -361,11 +361,11 @@ install:
   
   # For documentation
   - sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt-get update # for using recent Python versions
-  - sudo apt-get install python3.6 python3-setuptools python3-pip
+  - sudo apt-get -y install python3.6 python3-setuptools python3-pip
   - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 # using python3 as default version
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-issues sphinx-tabs
-  - sudo apt-get install python3-sphinx doxygen graphviz
-  - sudo apt install libeigen3-dev
+  - sudo apt-get -y install python3-sphinx doxygen graphviz
+  - sudo apt-get -y install libeigen3-dev
 
   # For Python wrapping
   #- sudo python3 -m pip install wheel
