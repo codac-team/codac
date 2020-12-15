@@ -94,6 +94,22 @@ namespace tubex
     return Point(center);;
   }
 
+  const Interval Polygon::area() const
+  {
+    Interval a(0.);
+    size_t n = m_v_floating_pts.size();
+
+    for(size_t i = 0 ; i < n ; i++)
+    {
+      const Vector& pi = m_v_floating_pts[i];
+      const Vector& pip1 = m_v_floating_pts[(i+1)%n];
+
+      a += pi[0]*pip1[1] - pip1[0]*pi[1];
+    }
+
+    return 0.5*a;
+  }
+
 
   // Tests
 

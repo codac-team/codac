@@ -110,6 +110,8 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
   # Linobs
   add_test(NAME linobs
            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/linobs/01_paper/build/tubex_linobs 0)
+  add_test(NAME linobs_foreach_dt
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/linobs/01_paper/build/tubex_linobs_foreach_dt 0)
 
   if(WITH_CAPD)
     # Lie group

@@ -41,3 +41,8 @@
   add_executable(${PROJECT_NAME} main.cpp)
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})
+
+  set(PROJECT_NAME ${PROJECT_NAME}_foreach_dt)
+  add_executable(${PROJECT_NAME} main_foreach_dt.cpp)
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})

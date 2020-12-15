@@ -776,7 +776,7 @@ namespace tubex
               {
                 int component_id = 0;
                 if(is_component_of(*dom.second, component_id))
-                  output_name = Tools::add_int(dom.second->var_name(m_domains), component_id+1); // adding component id
+                  output_name = dom.second->var_name(m_domains) + std::to_string(component_id+1); // adding component id
               }
             }
           }
@@ -791,7 +791,7 @@ namespace tubex
               int slice_id = 0;
               if(is_slice_of(*dom.second, slice_id))
               {
-                output_name = Tools::add_int(dom.second->var_name(m_domains), "^{(", slice_id+1, ")}"); // adding slice id
+                output_name = dom.second->var_name(m_domains) + "^{(" + std::to_string(slice_id+1) + ")}"; // adding slice id
               }
             }
           }
