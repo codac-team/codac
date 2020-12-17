@@ -46,6 +46,15 @@ For the compilation of your project, you can use CMake with the following file :
     ibex_init_common() # IBEX should have installed this function
     message(STATUS "Found IBEX version ${IBEX_VERSION}")
 
+  # Adding Eigen3
+
+    # In case you installed Eigen3 in a local directory, you need
+    # to specify its path with the CMAKE_PREFIX_PATH option, e.g.
+    # set(CMAKE_PREFIX_PATH "~/eigen/build_install")
+
+    find_package(Eigen3 REQUIRED NO_MODULE)
+    message(STATUS "Found Eigen3 version ${EIGEN3_VERSION}")
+
   # Adding Tubex
 
     # In case you installed Tubex in a local directory, you need 
@@ -59,7 +68,7 @@ For the compilation of your project, you can use CMake with the following file :
 
     add_executable(${PROJECT_NAME} main.cpp)
     target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CXX_FLAGS})
-    target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS})
+    target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES} Ibex::ibex)
 
 
@@ -70,6 +79,11 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
   my_project
   ├── CMakeLists.txt
   └── main.cpp
+
+.. note::
+
+  Since Tubex 3.1, `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ becomes a dependency of the library.
+
 
 .. admonition:: Custom install directory of IBEX and Tubex
   
