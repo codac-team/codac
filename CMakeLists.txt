@@ -98,6 +98,16 @@
 
 
 ################################################################################
+# Looking for Eigen3
+################################################################################
+
+  find_package(Eigen3 REQUIRED NO_MODULE)
+  message(STATUS "Found Eigen3 version ${EIGEN3_VERSION}")
+  add_definitions(${EIGEN3_DEFINITIONS})
+  include_directories(${EIGEN3_INCLUDE_DIRS})
+
+
+################################################################################
 # Looking for CAPD (if needed)
 ################################################################################
 

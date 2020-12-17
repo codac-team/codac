@@ -11,7 +11,7 @@
 #include "tubex_CtcLohner.h"
 
 #include <tubex_CtcLohner.h>
-#include <eigen3/Eigen/QR>
+#include <Eigen/QR>
 #include <ibex.h>
 #include <tubex_Eigen.h>
 
@@ -36,14 +36,14 @@ namespace tubex {
                      int contractions = 1,
                      double eps = 0.1);
 
-      const ibex::IntervalVector &integrate(uint steps, double H = -1);
+      const ibex::IntervalVector &integrate(unsigned int steps, double H = -1);
       void contractStep(const ibex::IntervalVector &x);
       const ibex::IntervalVector &getLocalEnclosure() const;
       const ibex::IntervalVector &getGlobalEnclosure() const;
     private:
       ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double direction);
 
-      uint dim;
+      unsigned int dim;
       double h, eps;
       int contractions;
       ibex::IntervalVector u, z, r, u_tilde;
@@ -71,9 +71,9 @@ LohnerAlgorithm::LohnerAlgorithm(const ibex::Function *f,
       u_hat(u0.mid()),
       f(f) {}
 
-const ibex::IntervalVector &LohnerAlgorithm::integrate(uint steps, double H) {
+const ibex::IntervalVector &LohnerAlgorithm::integrate(unsigned int steps, double H) {
   if (H > 0) h = H;
-  for (uint i = 0; i < steps; ++i) {
+  for (unsigned int i = 0; i < steps; ++i) {
     auto z1 = z, r1 = r, u1 = u;
     auto B1 = B, B1inv = Binv;
     auto u_hat1 = u_hat;
@@ -99,7 +99,7 @@ const ibex::IntervalVector &LohnerAlgorithm::integrate(uint steps, double H) {
 
 ibex::IntervalVector LohnerAlgorithm::globalEnclosure(const ibex::IntervalVector &initialGuess, double direction) {
   ibex::IntervalVector u_0 = initialGuess;
-  for (uint i = 0; i < 30; ++i) {
+  for (unsigned int i = 0; i < 30; ++i) {
     ibex::IntervalVector u_1 = initialGuess + direction * ibex::Interval(0, h) * f->eval_vector(u_0);
     if (u_0.is_superset(u_1)) {
       return u_0;
@@ -134,7 +134,7 @@ CtcLohner::CtcLohner(const ibex::Function &f, int contractions, double eps)
       eps(eps) {}
 
 void CtcLohner::contract(tubex::TubeVector &tube, TimePropag t_propa) {
-  assert(not tube.is_empty() and tube.size() == dim);
+  assert((!tube.is_empty())&&(tube.size() == dim));
   IntervalVector input_gate(dim, Interval(0)), output_gate(dim, Interval(0)), slice(dim, Interval(0));
   double h;
   if (t_propa & TimePropag::FORWARD) {

@@ -23,6 +23,7 @@ _vs_specific: &vs_specific
     os: windows
     before_install:
     - if [ "${CHOCO_VS_TOOLS}" = "vcbuildtools" ]; then choco install -y vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison ; else choco install -y ${CHOCO_VS_TOOLS} winflexbison ; fi
+    - wget https://github.com/ros2/choco-packages/releases/download/2020-02-24/eigen.3.3.4.nupkg --no-check-certificate -nv ; choco install -y eigen.3.3.4.nupkg
     - if [ "${WITH_PYTHON}" = "ON" ]; then if [ "${PY_V_MM}" = "34" ]; then cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & refreshenv.cmd" ; else cmd //c "choco install -y doxygen.install graphviz & choco install -y python --version=${PY_V_F} & refreshenv.cmd & set PATH=C:\Python${PY_V_MM};C:\Python${PY_V_MM}\Scripts;%PATH% & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme & refreshenv.cmd" ; fi ; export PATH=/c/Python${PY_V_MM}:/c/Python${PY_V_MM}/Scripts:$PATH ; fi
     cache:
     directories: ibex
@@ -36,7 +37,7 @@ _vs_specific: &vs_specific
     - cmake --build . --config Debug --target install
     - if [ "${WITH_PYTHON}" = "ON" ]; then cmake --build . --config Debug --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py ; fi
     - cd ..
-    - if [ "${WITH_CPP_BUNDLE}" = "ON" ]; then wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv ; 7z x tubex_test_win.zip -y ; rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd .. ; 7z a -y tubex_test_${CFG}.zip tubex_test_win ; cd tubex_test_win/test ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} . ; cmake --build . --config Release ; cmd //c "Release\my_project.exe" ; cd ../.. ; fi
+    - if [ "${WITH_CPP_BUNDLE}" = "ON" ]; then wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv ; 7z x tubex_test_win.zip -y ; rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd .. ; 7z a -y tubex_test_${CFG}.zip tubex_test_win ; cd tubex_test_win/test ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} . ; cmake --build . --config Release ; cmd //c "Release\my_project.exe" ; cd ../.. ; fi
 
 matrix:
   include:
@@ -125,7 +126,7 @@ matrix:
 #        - sudo pip --version || true
 #        - sudo pip3 --version || true
 #        - sudo apt-get -q update || true
-#        - sudo apt-get -y install flex bison || true
+#        - sudo apt-get -y install flex bison libeigen3-dev || true
 #        - sudo apt-get -y install doxygen graphviz || true
 #        #
 #        #sudo apt-get -y install python3-pip python3-setuptools python3-wheel python3-breathe sphinx-issues
@@ -179,16 +180,11 @@ matrix:
       services:
         - docker
       before_install: 
-        - sudo apt install libeigen3-dev
-        - sudo ls /usr/include/
-        - sudo ls /usr/include/eigen3/
-        - sudo ls /usr/include/eigen3/Eigen/
-        #- sudo ln -sf /usr/include/Eigen /usr/include/eigen3/Eigen
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
       cache:
       install:
       script: 
-         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../tubex .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv && unzip -q -o tubex_test_win.zip && rm -Rf tubex_test_win.zip && cd tubex_test_win && mv test .. && cd ../test && rm -Rf ../tubex_test_win && cmake . && cmake --build . && ./my_project \""
+         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev ; mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../tubex .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv && unzip -q -o tubex_test_win.zip && rm -Rf tubex_test_win.zip && cd tubex_test_win && mv test .. && cd ../test && rm -Rf ../tubex_test_win && cmake . && cmake --build . && ./my_project \""
 
     - name: "Mac OS Xcode 10.1"
       os: osx
@@ -289,6 +285,8 @@ matrix:
         - rm -Rf "/C/Windows/SoftwareDistribution" || true
         - df
         - choco install -y winflexbison make patch
+        - wget https://github.com/ros2/choco-packages/releases/download/2020-02-24/eigen.3.3.4.nupkg --no-check-certificate -nv
+        - choco install -y eigen.3.3.4.nupkg
         - wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
         - cmd //c "move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\ "
         - wget http://www.ensta-bretagne.fr/lebars/Share/qt-installer-5.12.6-mingw73_32.qs --no-check-certificate -nv
@@ -312,7 +310,7 @@ matrix:
         - cmake --build . --target install
         - cd ..
         # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv
         - 7z x tubex_test_win.zip -y
         - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
         - 7z a -y tubex_test_${CFG}.zip tubex_test_win
@@ -327,6 +325,8 @@ matrix:
       env: CMAKE_PARAM_G="MSYS Makefiles" CFG=x64_mingw8
       before_install: 
         - choco install -y winflexbison make patch
+        - wget https://github.com/ros2/choco-packages/releases/download/2020-02-24/eigen.3.3.4.nupkg --no-check-certificate -nv
+        - choco install -y eigen.3.3.4.nupkg
       cache:
         directories: ibex
       install:
@@ -337,7 +337,7 @@ matrix:
         - cmake --build . --target install
         - cd ..
         # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
+        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv
         - 7z x tubex_test_win.zip -y
         - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
         - 7z a -y tubex_test_${CFG}.zip tubex_test_win
@@ -361,11 +361,11 @@ install:
   
   # For documentation
   - sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt-get update # for using recent Python versions
-  - sudo apt-get install python3.6 python3-setuptools python3-pip
+  - sudo apt-get -y install python3.6 python3-setuptools python3-pip
   - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 # using python3 as default version
   - sudo python3 -m pip install sphinx_rtd_theme breathe sphinx-issues sphinx-tabs
-  - sudo apt-get install python3-sphinx doxygen graphviz
-  - sudo apt install libeigen3-dev
+  - sudo apt-get -y install python3-sphinx doxygen graphviz
+  - sudo apt-get -y install libeigen3-dev
 
   # For Python wrapping
   #- sudo python3 -m pip install wheel
