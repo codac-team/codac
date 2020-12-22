@@ -4,8 +4,10 @@ Unreleased yet (in development)
 .. Features added
 .. --------------
 
-.. Changes
-.. -------
+Changes
+-------
+
+* :commit:`3563a0ff588c12f4e4e6accb07a92396c1645fa7`: improved ``Tube::invert`` methods (without tree)
 
 .. Dependencies
 .. ------------

@@ -225,7 +225,6 @@ namespace tubex
 
     const Interval Slice::invert(const Interval& y, const Interval& search_tdomain) const
     {
-      assert(tdomain() == v.tdomain());
       // todo: use enclosed bounds also? in order to speed up computations
 
       if(!m_tdomain.intersects(search_tdomain))
