@@ -44,6 +44,14 @@ public:
    */
   void contract(tubex::TubeVector &tube, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
+  /**
+   * \brief Contracts the tube with respect to the specified differential constraint, either forward, backward (or both) in time
+   *
+   * @param tube tube to contract
+   * @param t_propa direction of contraction
+   */
+  void contract(tubex::Tube &tube, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+
   void contract(std::vector<tubex::Domain *> &v_domains) override;
 
 protected:
@@ -53,6 +61,10 @@ protected:
   int contractions; //!< number of contractions of the global enclosure by the estimated local enclosure
   int dim; //!< dimension of the state vector
   double eps; //!< inflation parameter for the global enclosure
+
+  static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
+  static std::vector<std::string> m_str_expected_doms; //!< allowed domains signatures (mainly used for CN Exceptions)
+  friend class ContractorNetwork;
 };
 
 } // namespace tubex

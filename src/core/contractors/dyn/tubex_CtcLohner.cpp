@@ -14,6 +14,7 @@
 #include <eigen3/Eigen/QR>
 #include <ibex.h>
 #include <tubex_Eigen.h>
+#include <tubex_DomainsTypeException.h>
 
 
 using namespace ibex;
@@ -233,10 +234,33 @@ void CtcLohner::contract(tubex::TubeVector &tube, TimePropag t_propa) {
   }
 }
 
-void CtcLohner::contract(vector<tubex::Domain *> &v_domains) {
-  // For using CtcLohner in ContractorNetworks
-  //assert(v_domains.size() == 1 && v_domains[0]->type() == Domain::Type::T_TUBEVECTOR);
-  //contract(v_domains[0]->tube_vector());
+void CtcLohner::contract(tubex::Tube &tube, TimePropag t_propa) {
+  assert(not tube.is_empty());
+  tubex::TubeVector tubeVector(1, tube);
+  contract(tubeVector, t_propa);
+  tube = tubeVector[0];
+}
+
+// Static members for contractor signature (mainly used for CN Exceptions)
+const string CtcLohner::m_ctc_name = "CtcLohner";
+vector<string> CtcLohner::m_str_expected_doms(
+    {
+        "Tube",
+        "TubeVector",
+    });
+
+void CtcLohner::contract(vector<Domain *> &v_domains) {
+  if (v_domains.size() != 1)
+    throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
+
+  if (v_domains[0]->type() == Domain::Type::T_TUBE)
+    contract(v_domains[0]->tube(), TimePropag::FORWARD | TimePropag::BACKWARD);
+
+  else if (v_domains[0]->type() == Domain::Type::T_TUBE_VECTOR)
+    contract(v_domains[0]->tube_vector(), TimePropag::FORWARD | TimePropag::BACKWARD);
+
+  else
+    throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
 }
 
 } // namespace tubex
