@@ -22,8 +22,8 @@ Eigen::MatrixXd EigenHelpers::i2e(const ibex::Vector &x) {
 
 ibex::Matrix EigenHelpers::e2i(const Eigen::MatrixXd &x) {
   ibex::Matrix m(x.rows(), x.cols());
-  for (uint i = 0; i < x.rows(); ++i) {
-    for (uint j = 0; j < x.cols(); ++j) {
+  for (unsigned int i = 0; i < x.rows(); ++i) {
+    for (unsigned int j = 0; j < x.cols(); ++j) {
       m[i][j] = x(i, j);
     }
   }

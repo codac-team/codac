@@ -1,25 +1,16 @@
 Unreleased yet (in development)
 ===============================
 
-Features added
---------------
-
-* :commit:`465d1e0908695df2bb99d5c9b2ec3a79f54bd0da`: added example of Linobs (for each :math:`\delta` parameter)
-* :commit:`1493fb8ccd92eee502b5dea6493a9ac3ef060611`: area computation of polygons
-* :commit:`37306bcad7c3945c2e4fc71fdb932e23bd940a1f`: new ``CtcLohner`` contractor with example
-
+.. Features added
+.. --------------
 
 Changes
 -------
 
-* :commit:`1041e3f42f4a8144d84bd43f2bb28f94256f60b5`: changed interface of ``CtcPicard`` contractor
+* :commit:`3563a0ff588c12f4e4e6accb07a92396c1645fa7`: improved ``Tube::invert`` methods (without tree)
 
-
-Dependencies
-------------
-
-* :commit:`c18cdad6f1aa5c229ad31928eaadf76b81d428bf`: added CAPD - IBEX conversion functions
-
+.. Dependencies
+.. ------------
 
 .. Bugs fixed
 .. ----------
@@ -29,6 +20,32 @@ Dependencies
 
 .. Documentation
 .. -------------
+
+
+-----------------------------------------------------------------
+
+Release 3.1.0 (released `Dec 17, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.14>`_)
+=======================================================================================================
+
+`Commits since previous release 3.0.13 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.13...v3.1.0>`_
+
+Features added
+--------------
+
+* :commit:`465d1e0908695df2bb99d5c9b2ec3a79f54bd0da`: added example of Linobs (for each :math:`\delta` parameter)
+* :commit:`1493fb8ccd92eee502b5dea6493a9ac3ef060611`: area computation of polygons
+* :commit:`37306bcad7c3945c2e4fc71fdb932e23bd940a1f`: new ``CtcLohner`` contractor with example
+
+Changes
+-------
+
+* :commit:`1041e3f42f4a8144d84bd43f2bb28f94256f60b5`: changed interface of ``CtcPicard`` contractor
+
+Dependencies
+------------
+
+* :commit:`c18cdad6f1aa5c229ad31928eaadf76b81d428bf`: added CAPD - IBEX conversion functions
+* Eigen is now a dependency of Tubex
 
 
 -----------------------------------------------------------------

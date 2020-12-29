@@ -32,20 +32,6 @@ namespace tubex
     }
   }
 
-  string Tools::add_int(const string& str, int id, const string& sep)
-  {
-    ostringstream o;
-    o << str << sep << id;
-    return o.str();
-  }
-
-  string Tools::add_int(const string& str, const string& sep1, int id, const string& sep2)
-  {
-    ostringstream o;
-    o << str << sep1 << id << sep2;
-    return o.str();
-  }
-
   double Tools::rand_in_bounds(const Interval& itv)
   {
     // The seed of the pseudo-random number generator is voluntarily initialized

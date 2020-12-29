@@ -87,7 +87,7 @@ int main() // testcase
         return EXIT_FAILURE;
       }
     }
-cout << x[0].volume() << " " << y[0].volume() << endl;
+    
   return fabs(x[0].volume() - 13.9148) < 1e-2
     && fabs(y[0].volume() - 0.43186) < 1e-2 ?
       EXIT_SUCCESS : EXIT_FAILURE;
