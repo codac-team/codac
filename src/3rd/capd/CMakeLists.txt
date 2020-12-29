@@ -4,7 +4,9 @@
 
 
 list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd_integrateODE.h
-                ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd_integrateODE.cpp)
+                ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd_integrateODE.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd_helpers.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/tubex_capd_helpers.cpp)
 
 ################################################################################
 # Create the target for libtubex-capd

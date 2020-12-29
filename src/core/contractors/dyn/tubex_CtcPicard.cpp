@@ -18,31 +18,71 @@ using namespace ibex;
 
 namespace tubex
 {
-  CtcPicard::CtcPicard(float delta)
-    : DynCtc(true), m_delta(delta)
+  CtcPicard::CtcPicard(Function& f, float delta)
+    : DynCtc(true), m_f_ptr(new TFunction(f)), m_f(*m_f_ptr), m_delta(delta)
   {
+    assert(f.nb_var() == f.image_dim());
     assert(delta > 0.);
   }
+
+  CtcPicard::CtcPicard(TFnc& f, float delta)
+    : DynCtc(true), m_f(f), m_delta(delta)
+  {
+    assert(f.nb_var() == f.image_dim());
+    assert(delta > 0.);
+  }
+
+  CtcPicard::~CtcPicard()
+  {
+    if(m_f_ptr != NULL)
+      delete m_f_ptr;
+  }
+
+  // Static members for contractor signature (mainly used for CN Exceptions)
+  const string CtcPicard::m_ctc_name = "CtcPicard";
+  vector<string> CtcPicard::m_str_expected_doms(
+  {
+    "Tube",
+    "TubeVector",
+  });
   
   void CtcPicard::contract(vector<Domain*>& v_domains)
   {
-    // todo
+    if(v_domains.size() != 1)
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
+
+    if(v_domains[0]->type() == Domain::Type::T_TUBE)
+      contract(v_domains[0]->tube(), TimePropag::FORWARD | TimePropag::BACKWARD);
+
+    else if(v_domains[0]->type() == Domain::Type::T_TUBE_VECTOR)
+      contract(v_domains[0]->tube_vector(), TimePropag::FORWARD | TimePropag::BACKWARD);
+
+    else
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
   }
   
-  void CtcPicard::contract(const TFnc& f, Tube& x, TimePropag t_propa)
+  void CtcPicard::contract(Tube& x, TimePropag t_propa)
   {
-    assert(f.nb_var() == f.image_dim());
-    assert(f.nb_var() == 1 && "scalar case");
+    assert(m_f.nb_var() == 1 && "scalar case");
     // todo: faster implementation in the scalar case?
     TubeVector x_vect(1, x);
-    contract(f, x_vect, t_propa);
-    x = x_vect[0];
+    contract(x_vect, t_propa);
+    x &= x_vect[0];
   }
 
-  void CtcPicard::contract(const TFnc& f, TubeVector& x, TimePropag t_propa)
+  bool is_unbounded(const IntervalVector& x)
   {
-    assert(f.nb_var() == f.image_dim());
-    assert(f.nb_var() == x.size());
+    if(x.is_unbounded())
+      return true;
+    for(int i = 0 ; i < x.size() ; i++)
+      if(x[i] == Interval(-99999.,99999.)) // todo: remove this (improvements to be done in CN)
+        return true;
+    return false;
+  }
+
+  void CtcPicard::contract(TubeVector& x, TimePropag t_propa)
+  {
+    assert(m_f.nb_var() == x.size());
 
     if(x.is_empty())
       return;
@@ -50,8 +90,8 @@ namespace tubex
     if((t_propa & TimePropag::FORWARD) && (t_propa & TimePropag::BACKWARD))
     {
       // todo: select best way according to initial conditions
-      contract(f, x, TimePropag::FORWARD);
-      contract(f, x, TimePropag::BACKWARD);
+      contract(x, TimePropag::FORWARD);
+      contract(x, TimePropag::BACKWARD);
     }
 
     else
@@ -66,15 +106,15 @@ namespace tubex
 
         for(int k = 0 ; k < nb_slices ; k++)
         {
-          if(!x(k).is_unbounded())
+          if(!is_unbounded(x(k)))
             continue;
 
-          contract_kth_slices(f, x, k, TimePropag::FORWARD);
+          contract_kth_slices(x, k, TimePropag::FORWARD);
 
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
           // then it is sampled and contracted again.
-          if(x(k).is_unbounded() && x[0].slice_tdomain(k).diam() > x.tdomain().diam() / 500.)
+          if(is_unbounded(x(k)) && x[0].slice_tdomain(k).diam() > x.tdomain().diam() / 500.)
           {
             
             x.sample(x[0].slice_tdomain(k).mid()); // all the components of the tube are sampled,
@@ -90,15 +130,15 @@ namespace tubex
       {
         for(int k = x.nb_slices() - 1 ; k >= 0 ; k--)
         {
-          if(!x(k).is_unbounded())
+          if(!is_unbounded(x(k)))
             continue;
 
-          contract_kth_slices(f, x, k, TimePropag::BACKWARD);
+          contract_kth_slices(x, k, TimePropag::BACKWARD);
 
           // NB: all tube components share the same slicing
           // If the slice stays unbounded after the contraction step,
           // then it is sampled and contracted again.
-          if(x(k).is_unbounded() && x[0].slice_tdomain(k).diam() > x.tdomain().diam() / 500.)
+          if(is_unbounded(x(k)) && x[0].slice_tdomain(k).diam() > x.tdomain().diam() / 500.)
           {
             x.sample(x[0].slice_tdomain(k).mid()); // all the components of the tube are sampled,
             // and sampling time is selected according to the first slice of one of the components,
@@ -108,7 +148,7 @@ namespace tubex
         }
       }
 
-      if(first_slicing != NULL)
+      if(m_preserve_slicing)
       {
         first_slicing->set_empty();
         *first_slicing |= x;
@@ -123,71 +163,63 @@ namespace tubex
     return m_picard_iterations;
   }
 
-  void CtcPicard::contract_kth_slices(const TFnc& f,
-                                      TubeVector& tube,
-                                      int k,
-                                      TimePropag t_propa)
+  void CtcPicard::contract_kth_slices(TubeVector& x, int k, TimePropag t_propa)
   {
+    assert(m_f.nb_var() == x.size());
     assert(!((t_propa & TimePropag::FORWARD) && (t_propa & TimePropag::BACKWARD)) && "forward/backward case not implemented yet");
-    assert(f.nb_var() == f.image_dim());
-    assert(f.nb_var() == tube.size());
-    assert(k >= 0 && k < tube.nb_slices());
+    assert(k >= 0 && k < x.nb_slices());
 
-    if(tube.is_empty())
+    if(x.is_empty())
       return;
 
-    guess_kth_slices_envelope(f, tube, k, t_propa);
-    IntervalVector f_eval = f.eval_vector(k, tube); // computed only once
+    guess_kth_slices_envelope(x, k, t_propa);
+    IntervalVector f_eval = m_f.eval_vector(k, x); // computed only once
 
     if(t_propa & TimePropag::FORWARD)
-      for(int i = 0 ; i < tube.size() ; i++)
+      for(int i = 0 ; i < x.size() ; i++)
       {
-        Slice *s = tube[i].slice(k);
+        Slice *s = x[i].slice(k);
         s->set_output_gate(s->output_gate()
           & (s->input_gate() + s->tdomain().diam() * f_eval[i]));
       }
 
     else if(t_propa & TimePropag::BACKWARD)
-      for(int i = 0 ; i < tube.size() ; i++)
+      for(int i = 0 ; i < x.size() ; i++)
       {
-        Slice *s = tube[i].slice(k);
+        Slice *s = x[i].slice(k);
         s->set_input_gate(s->input_gate()
           & (s->output_gate() - s->tdomain().diam() * f_eval[i]));
       }
   }
 
-  void CtcPicard::guess_kth_slices_envelope(const TFnc& f,
-                                            TubeVector& tube,
-                                            int k,
-                                            TimePropag t_propa)
+  void CtcPicard::guess_kth_slices_envelope(TubeVector& x, int k, TimePropag t_propa)
   {
+    assert(m_f.nb_var() == x.size());
     assert(!((t_propa & TimePropag::FORWARD) && (t_propa & TimePropag::BACKWARD)) && "forward/backward case not implemented yet");
-    assert(f.nb_var() == f.image_dim());
-    assert(f.nb_var() == tube.size());
-    assert(k >= 0 && k < tube.nb_slices());
+    assert(k >= 0 && k < x.nb_slices());
 
-    if(tube.is_empty())
+    if(x.is_empty())
       return;
     
     float delta = m_delta;
-    Interval h, t = tube[0].slice_tdomain(k);
-    IntervalVector initial_x = tube(k), x0(tube.size()), xf(x0);
+    Interval h, t = x[0].slice_tdomain(k);
+    IntervalVector initial_x = x(k), x0(x.size()), xf(x0);
 
     if(t_propa & TimePropag::FORWARD)
     {
-      x0 = tube(t.lb());
-      xf = tube(t.ub());
+      x0 = x(t.lb());
+      xf = x(t.ub());
       h = Interval(0., t.diam());
     }
 
     else if(t_propa & TimePropag::BACKWARD)
     {
-      x0 = tube(t.ub());
-      xf = tube(t.lb());
+      x0 = x(t.ub());
+      xf = x(t.lb());
       h = Interval(-t.diam(), 0.);
     }
 
-    IntervalVector x_guess(tube.size()), x_enclosure = x0;
+    IntervalVector x_guess(x.size()), x_enclosure = x0;
     m_picard_iterations = 0;
 
     do
@@ -200,43 +232,43 @@ namespace tubex
                    + delta * (x_guess[i] - x_guess[i].mid())
                    + Interval(-EPSILON,EPSILON); // in case of a degenerate box
 
-      if(f.is_intertemporal())
+      if(m_f.is_intertemporal())
       {
         // Update needed for further computations
         // that may be related to this slice k
-        for(int i = 0 ; i < tube.size() ; i++)
-          tube[i].slice(k)->set_envelope(x_guess[i] & initial_x[i]);
-        x_enclosure = x0 + h * f.eval_vector(k, tube);
+        for(int i = 0 ; i < x.size() ; i++)
+          x[i].slice(k)->set_envelope(x_guess[i] & initial_x[i]);
+        x_enclosure = x0 + h * m_f.eval_vector(k, x);
       }
 
       else // faster evaluation without tube update
       {
-        IntervalVector input_box(tube.size() + 1);
+        IntervalVector input_box(x.size() + 1);
         input_box[0] = t;
         input_box.put(1, x_guess & initial_x); // todo: perform the intersection before?
-        x_enclosure = x0 + h * f.eval_vector(input_box);
+        x_enclosure = x0 + h * m_f.eval_vector(input_box);
       }
 
-      if(x_enclosure.is_unbounded() || x_enclosure.is_empty() || x_guess.is_empty())
+      if(is_unbounded(x_enclosure) || x_enclosure.is_empty() || x_guess.is_empty())
       {
-        if(f.is_intertemporal())
-          for(int i = 0 ; i < tube.size() ; i++)
-            tube[i].slice(k)->set_envelope(initial_x[i]); // coming back to the initial state
+        if(m_f.is_intertemporal())
+          for(int i = 0 ; i < x.size() ; i++)
+            x[i].slice(k)->set_envelope(initial_x[i]); // coming back to the initial state
         break;
       }
     } while(!x_enclosure.is_interior_subset(x_guess));
 
     // Setting tube's values
-    if(!(x_enclosure.is_unbounded() || x_enclosure.is_empty() || x_guess.is_empty()))
-      for(int i = 0 ; i < tube.size() ; i++)
-        tube[i].slice(k)->set_envelope(initial_x[i] & x_enclosure[i]);
+    if(!(is_unbounded(x_enclosure) || x_enclosure.is_empty() || x_guess.is_empty()))
+      for(int i = 0 ; i < x.size() ; i++)
+        x[i].slice(k)->set_envelope(initial_x[i] & x_enclosure[i]);
 
-    if(f.is_intertemporal())
+    if(m_f.is_intertemporal())
     {
       // Restoring ending gate, contracted by setting the envelope
-      for(int i = 0 ; i < tube.size() ; i++)
+      for(int i = 0 ; i < x.size() ; i++)
       {
-        Slice *s = tube[i].slice(k);
+        Slice *s = x[i].slice(k);
         if(t_propa & TimePropag::FORWARD)  s->set_output_gate(xf[i]);
         if(t_propa & TimePropag::BACKWARD) s->set_input_gate(xf[i]);
         // todo: ^ check this ^

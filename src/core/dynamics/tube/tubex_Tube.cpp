@@ -697,20 +697,55 @@ namespace tubex
       if(m_synthesis_tree != NULL) // fast inversion
         return m_synthesis_tree->invert(y, search_tdomain);
 
-      // todo: optimize this:
-      Tube v(*this); // same slicing
-      v.set(Interval::ALL_REALS); 
-      return invert(y, v, search_tdomain);
+      else
+      {
+        Interval invert = Interval::EMPTY_SET;
+        Interval intersection = search_tdomain & tdomain();
+        if(intersection.is_empty())
+          return Interval::EMPTY_SET;
+
+        const Slice *s_x = slice(intersection.lb());
+        while(s_x != NULL && s_x->tdomain().lb() < intersection.ub())
+        {
+          invert |= s_x->invert(y, intersection);
+          s_x = s_x->next_slice();
+        }
+
+        return invert;
+      }
     }
 
     void Tube::invert(const Interval& y, vector<Interval> &v_t, const Interval& search_tdomain) const
     {
       // todo: optimize this:
       // todo: fast inversion with binary tree considering derivative information
-      Tube v(*this); // same slicing
-      v.set(Interval::ALL_REALS);
       v_t.clear();
-      invert(y, v_t, v, search_tdomain);
+
+      // todo: tree computations
+
+      Interval invert = Interval::EMPTY_SET;
+      Interval intersection = search_tdomain & tdomain();
+      if(intersection.is_empty())
+        return;
+
+      const Slice *s_x = slice(intersection.lb());
+      while(s_x != NULL && s_x->tdomain().lb() <= intersection.ub())
+      {
+        Interval local_invert = s_x->invert(y, intersection);
+        if(local_invert.is_empty() && !invert.is_empty())
+        {
+          v_t.push_back(invert);
+          invert.set_empty();
+        }
+
+        else
+          invert |= local_invert;
+
+        s_x = s_x->next_slice();
+      }
+
+      if(!invert.is_empty())
+        v_t.push_back(invert);
     }
 
     const Interval Tube::invert(const Interval& y, const Tube& v, const Interval& search_tdomain) const

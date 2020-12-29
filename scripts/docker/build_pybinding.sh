@@ -13,7 +13,19 @@ sed -i 's/mirrorlist=http:\x2F\x2Fmirrorlist.centos.org?arch=$basearch&release=6
 #cat /etc/yum.repos.d/CentOS-SCLo-scl.repo
 #yum -y update
 
-yum -y install doxygen
+#yum -y install doxygen eigen3-devel
+yum -y install doxygen wget
+
+wget https://gitlab.com/libeigen/eigen/-/archive/3.3.4/eigen-3.3.4.zip -nv
+unzip -q -o eigen-3.3.4.zip
+cd eigen-3.3.4
+mkdir build
+cd build
+cmake3 ..
+cmake3 --build . --target install
+cd ../..
+rm -Rf eigen-3.3.4.zip
+rm -Rf eigen-3.3.4
 
 cd /io
 for PYBIN in /opt/python/cp3*/bin; do

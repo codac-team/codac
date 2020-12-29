@@ -225,8 +225,37 @@ namespace tubex
 
     const Interval Slice::invert(const Interval& y, const Interval& search_tdomain) const
     {
-      Slice v(tdomain(), Interval::ALL_REALS); // todo: optimize this
-      return invert(y, v, search_tdomain);
+      // todo: use enclosed bounds also? in order to speed up computations
+
+      if(!m_tdomain.intersects(search_tdomain))
+        return Interval::EMPTY_SET;
+
+      else if((m_tdomain & search_tdomain) == m_tdomain && m_codomain.is_subset(y))
+        return m_tdomain;
+
+      else if(search_tdomain == m_tdomain.lb())
+      {
+        if(y.intersects(input_gate()))
+          return m_tdomain.lb();
+        else
+          return Interval::EMPTY_SET;
+      }
+
+      else if(search_tdomain == m_tdomain.ub())
+      {
+        if(y.intersects(output_gate()))
+          return m_tdomain.ub();
+        else
+          return Interval::EMPTY_SET;
+      }
+
+      else
+      {
+        if(y.intersects(m_codomain))
+          return search_tdomain & m_tdomain;
+        else
+          return Interval::EMPTY_SET;
+      }
     }
 
     const Interval Slice::invert(const Interval& y, const Slice& v, const Interval& search_tdomain) const

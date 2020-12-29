@@ -3,7 +3,7 @@
 # ==================================================================
 
   cmake_minimum_required(VERSION 3.0.2)
-  project(03_static_rangebearing LANGUAGES CXX)
+  project(tubex_basics_07 LANGUAGES CXX)
 
 # Adding IBEX
 
@@ -35,7 +35,7 @@
 
 # Compilation
 
-  add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp)
+  add_executable(${PROJECT_NAME} main.cpp)
   target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})

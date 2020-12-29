@@ -8,15 +8,35 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <sstream>
 #include "tubex_TFunction.h"
 #include "tubex_Tube.h"
 #include "tubex_TubeVector.h"
+#include "ibex_Expr2Minibex.h"
 
 using namespace std;
 using namespace ibex;
 
 namespace tubex
 {
+  std::string to_string(const Function& f)
+  {
+    stringstream s;
+    Expr2Minibex().print(s,f.expr());
+    string str = s.str().substr(10, s.str().size() - 12);
+    replace(str.begin(), str.end(), ';', ','); // replace ';' by ','
+    return str;
+  }
+
+  TFunction::TFunction(const Function& f)
+  {
+    int n = f.nb_arg();
+    const char** xdyn = new const char*[n];
+    for(int i = 0 ; i < n ; i++)
+      xdyn[i] = f.arg_name(i);
+    construct_from_array(n, xdyn, to_string(f).c_str());
+  }
+
   TFunction::TFunction(int n, const char** x, const char* y)
   {
     construct_from_array(n, x, y);
