@@ -372,12 +372,18 @@ Main related publications
 .. _tubint-pdf: http://simon-rohou.fr/research/tubint/tubint_paper.pdf
 .. |loopdetect-pdf| replace:: PDF
 .. _loopdetect-pdf: https://www.ensta-bretagne.fr/jaulin/paper_loop.pdf
-
+.. |voges-phd-pdf| replace:: PDF
+.. _voges-phd-pdf: https://www.repo.uni-hannover.de/bitstream/handle/123456789/9990/publication_thesis_voges.pdf
 
 ====  =================  ===============================  =========================  ========================
 2020  |datasso-pdf|_     Set-membership state             S. Rohou, B. Desrochers,   ICRA Conference         
                          estimation by solving            L. Jaulin                                          
                          data association                                                                    
+                                                                                                             
+2020  |voges-phd-pdf|_   Bounded-error visual-LiDAR       Raphael Voges              PhD thesis              
+                         odometry on mobile robots under                                                     
+                         consideration of spatiotemporal                                                     
+                         uncertainties                                                                       
                                                                                                              
 2019  |robloc-pdf|_      Reliable robot localization: a   S. Rohou, L. Jaulin,       ISTE Ltd, Wiley         
                          constraint-programming approach  L. Mihaylova, F. Le Bars,                          
