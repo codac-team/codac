@@ -1,5 +1,6 @@
 /** 
- *  CtcPicard class
+ *  \file
+ *  CtcLohner class
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Auguste Bourgois
@@ -52,6 +53,13 @@ public:
    */
   void contract(tubex::Tube &tube, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
+  /*
+   * \brief Contracts a set of abstract domains
+   *
+   * This method makes the contractor available in the CN framework.
+   *
+   * \param v_domains vector of Domain pointers
+   */
   void contract(std::vector<tubex::Domain *> &v_domains) override;
 
 protected:

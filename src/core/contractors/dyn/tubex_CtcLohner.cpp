@@ -1,5 +1,5 @@
 /** 
- *  CtcEval class
+ *  CtcLohner class
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Auguste Bourgois
@@ -250,6 +250,9 @@ vector<string> CtcLohner::m_str_expected_doms(
     });
 
 void CtcLohner::contract(vector<Domain *> &v_domains) {
+
+  // todo: manage the contractor on a slice level
+  
   if (v_domains.size() != 1)
     throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
 
