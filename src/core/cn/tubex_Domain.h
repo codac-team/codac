@@ -156,7 +156,7 @@ namespace tubex
       Trajectory m_traj_lb, m_traj_ub;
 
       std::vector<Contractor*> m_v_ctc;
-      double m_volume = 0.;
+      double m_volume = -1.;
 
       std::string m_name;
       int m_dom_id;

@@ -480,4 +480,104 @@ TEST_CASE("CN simple")
     //cn.contract();
     CHECK(x.codomain() == IntervalVector(2, 0.));
   }*/
+
+
+  SECTION("Desired order")
+  {
+    Interval x(0.,1.), y(4.,5.), d(-10.,10.);
+    Interval x_(x), y_(y);
+
+    CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
+    CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
+    CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
+
+    ContractorNetwork cn;
+
+    Interval& a = cn.create_dom(Interval());
+    Interval& b = cn.create_dom(Interval());
+    Interval& c = cn.create_dom(Interval());
+
+    cn.add(ctc_sqr, {y, b});
+    cn.add(ctc_sqr, {x, a});
+    cn.add(ctc_plus, {a, b, c});
+    cn.add(ctc_sqrt, {c, d});
+
+    cn.set_name(ctc_sqrt, "sqrt");
+    cn.set_name(ctc_plus, "+");
+    cn.set_name(ctc_sqr, "sqr");
+
+    cn.set_fixedpoint_ratio(0.);
+    cn.contract_ordered_mode();
+
+    CHECK(x == x_);
+    CHECK(y == y_);
+    CHECK(d == sqrt(sqr(x_)+sqr(y_)));
+    CHECK(cn.iteration_nb() == 1);
+  }
+
+  SECTION("Desired order (reverse)")
+  {
+    Interval x(0.,0.), y(4.,6.), d(4.);
+    Interval d_(d);
+
+    CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
+    CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
+    CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
+
+    ContractorNetwork cn;
+
+    Interval& a = cn.create_dom(Interval());
+    Interval& b = cn.create_dom(Interval());
+    Interval& c = cn.create_dom(Interval());
+
+    cn.add(ctc_sqr, {y, b});
+    cn.add(ctc_sqr, {x, a});
+    cn.add(ctc_plus, {a, b, c});
+    cn.add(ctc_sqrt, {c, d});
+
+    cn.set_name(ctc_sqrt, "sqrt");
+    cn.set_name(ctc_plus, "+");
+    cn.set_name(ctc_sqr, "sqr");
+
+    cn.set_fixedpoint_ratio(1.);
+    cn.contract_ordered_mode();
+
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(cn.iteration_nb() == 1);
+  }
+
+  SECTION("Desired order (reverse, needs two iterations)")
+  {
+    Interval x(0.,0.), y(4.,6.), d(4.);
+    Interval d_(d);
+
+    CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
+    CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
+    CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
+
+    ContractorNetwork cn;
+
+    Interval& a = cn.create_dom(Interval());
+    Interval& b = cn.create_dom(Interval());
+    Interval& c = cn.create_dom(Interval());
+
+    cn.add(ctc_sqrt, {c, d});
+    cn.add(ctc_plus, {a, b, c});
+    cn.add(ctc_sqr, {x, a});
+    cn.add(ctc_sqr, {y, b});
+
+    cn.set_name(ctc_sqrt, "sqrt");
+    cn.set_name(ctc_plus, "+");
+    cn.set_name(ctc_sqr, "sqr");
+
+    cn.set_fixedpoint_ratio(0.);
+    cn.contract_ordered_mode();
+
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(cn.iteration_nb() <= 2);
+  }
 }

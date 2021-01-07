@@ -24,6 +24,8 @@ namespace tubex
     double ContractorNetwork::contract(bool verbose)
     {
       clock_t t_start = clock();
+      for(auto& dom : m_map_domains)
+        dom.second->set_volume(dom.second->compute_volume());
 
       if(verbose)
       {
@@ -42,15 +44,11 @@ namespace tubex
         m_deque.pop_front();
 
         ctc->contract();
+        ctc->set_active(false);
 
-        if(!m_ordered_mode)
-        {
-          ctc->set_active(false);
-
-          for(auto& ctc_dom : ctc->domains()) // for each domain related to this contractor
-            // If the domain has "changed" after the contraction
-            trigger_ctc_related_to_dom(ctc_dom, ctc);
-        }
+        for(auto& ctc_dom : ctc->domains()) // for each domain related to this contractor
+          // If the domain has "changed" after the contraction
+          trigger_ctc_related_to_dom(ctc_dom, ctc);
       }
 
       if(verbose)
@@ -71,11 +69,66 @@ namespace tubex
 
     double ContractorNetwork::contract_ordered_mode(bool verbose)
     {
-      m_ordered_mode = true;
-      deque<Contractor*> fwdbwd_deque(m_deque);
-      reverse(begin(fwdbwd_deque), end(fwdbwd_deque));
-      fwdbwd_deque.insert(fwdbwd_deque.begin(), m_deque.begin(), m_deque.end());
-      return contract(verbose);
+      // todo: reset all saved domains' volumes
+      clock_t t_start = clock();
+
+      if(verbose)
+      {
+        cout << "Contractor network has " << m_map_ctc.size()
+             << " contractors and " << m_map_domains.size() << " domains" << endl;
+        cout << "Computing in ordered mode, " << nb_ctc_in_stack() << " contractors currently in stack";
+        cout << endl;
+      }
+
+      map<DomainHashcode,Domain*> involved_domains;
+      for(const auto& ctc : m_deque)
+        for(const auto& dom : ctc->domains())
+          involved_domains[DomainHashcode(*dom)] = dom;
+      assert(!involved_domains.empty());
+
+      bool fixed_point;
+      m_iteration_nb = 0;
+
+      do
+      {
+        m_iteration_nb++;
+
+        // Forward: all contractors are called
+        for(deque<Contractor*>::reverse_iterator it = m_deque.rbegin(); it != m_deque.rend(); ++it)
+          (*it)->contract();
+
+        // Volumes are computed before bwd
+        for(auto& dom : involved_domains)
+          dom.second->set_volume(dom.second->compute_volume());
+
+        // Backward: all contractors are called in reverse order
+        deque<Contractor*>::iterator rit = m_deque.begin();
+        ++rit; // last fwd (now first bwd) contractor has already been called
+        for( ; rit != m_deque.end(); ++rit)
+          (*rit)->contract();
+
+        // Looking for fixed point
+        fixed_point = true;
+        for(auto& dom : involved_domains)
+        {
+          double current_volume = dom.second->compute_volume();
+          fixed_point &= !((current_volume/dom.second->get_saved_volume()) < 1.-m_fixedpoint_ratio);
+          dom.second->set_volume(current_volume); // updating old volume
+        }
+
+      } while(!fixed_point);
+
+      // Emptiness test
+      // todo: test only contracted domains?
+      if(verbose)
+        for(const auto& dom : m_map_domains)
+          if(dom.second->is_empty())
+          {
+            cout << "  Warning: empty set" << endl;
+            break;
+          }
+
+      return (double)(clock() - t_start)/CLOCKS_PER_SEC;
     }
 
     double ContractorNetwork::contract_during(double dt, bool verbose)
@@ -100,7 +153,8 @@ namespace tubex
       for(const auto& ctc : m_map_ctc)
       {
         if(ctc.second->type() == Contractor::Type::T_IBEX
-          || ctc.second->type() == Contractor::Type::T_TUBEX)
+          || ctc.second->type() == Contractor::Type::T_TUBEX
+          || ctc.second->type() == Contractor::Type::T_EQUALITY)
         {
           // Only "contracting" contractors are triggered
           ctc.second->set_active(true);
@@ -115,6 +169,11 @@ namespace tubex
     int ContractorNetwork::nb_ctc_in_stack() const
     {
       return m_deque.size();
+    }
+
+    int ContractorNetwork::iteration_nb() const
+    {
+      return m_iteration_nb;
     }
 
   // Protected methods

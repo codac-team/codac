@@ -286,6 +286,10 @@ namespace tubex
        */
       int nb_ctc_in_stack() const;
 
+
+      int iteration_nb() const;
+      
+
       /// @}
       /// \name Visualization
       /// @{
@@ -388,9 +392,9 @@ namespace tubex
       std::map<ContractorHashcode,Contractor*> m_map_ctc; //!< pointers to the abstract Contractor objects the graph is made of
       std::deque<Contractor*> m_deque; //!< queue of active contractors
 
+      int m_iteration_nb = 0;
       float m_fixedpoint_ratio = 0.0001; //!< fixed point ratio for propagation limit
       double m_contraction_duration_max = std::numeric_limits<double>::infinity(); //!< computation time limit
-      bool m_ordered_mode = false;
 
       CtcDeriv *m_ctc_deriv = NULL; //!< optional pointer to a CtcDeriv object that can be automatically added in the graph
       std::list<std::pair<Domain*,Domain*> > m_domains_related_to_ctcderiv;
