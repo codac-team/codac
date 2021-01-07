@@ -237,6 +237,8 @@ namespace tubex
        */
       double contract(bool verbose = false);
 
+      double contract_ordered_mode(bool verbose = false);
+
       /**
        * \brief Launch the contraction process and stops after \f$dt\f$ seconds
        *
@@ -388,6 +390,7 @@ namespace tubex
 
       float m_fixedpoint_ratio = 0.0001; //!< fixed point ratio for propagation limit
       double m_contraction_duration_max = std::numeric_limits<double>::infinity(); //!< computation time limit
+      bool m_ordered_mode = false;
 
       CtcDeriv *m_ctc_deriv = NULL; //!< optional pointer to a CtcDeriv object that can be automatically added in the graph
       std::list<std::pair<Domain*,Domain*> > m_domains_related_to_ctcderiv;

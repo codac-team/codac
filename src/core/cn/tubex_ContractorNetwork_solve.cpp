@@ -42,12 +42,14 @@ namespace tubex
         m_deque.pop_front();
 
         ctc->contract();
-        ctc->set_active(false);
 
-        for(auto& ctc_dom : ctc->domains()) // for each domain related to this contractor
+        if(!m_ordered_mode)
         {
-          // If the domain has "changed" after the contraction
-          trigger_ctc_related_to_dom(ctc_dom, ctc);
+          ctc->set_active(false);
+
+          for(auto& ctc_dom : ctc->domains()) // for each domain related to this contractor
+            // If the domain has "changed" after the contraction
+            trigger_ctc_related_to_dom(ctc_dom, ctc);
         }
       }
 
@@ -65,6 +67,15 @@ namespace tubex
           }
 
       return (double)(clock() - t_start)/CLOCKS_PER_SEC;
+    }
+
+    double ContractorNetwork::contract_ordered_mode(bool verbose)
+    {
+      m_ordered_mode = true;
+      deque<Contractor*> fwdbwd_deque(m_deque);
+      reverse(begin(fwdbwd_deque), end(fwdbwd_deque));
+      fwdbwd_deque.insert(fwdbwd_deque.begin(), m_deque.begin(), m_deque.end());
+      return contract(verbose);
     }
 
     double ContractorNetwork::contract_during(double dt, bool verbose)
