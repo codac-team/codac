@@ -88,8 +88,16 @@ namespace tubex
 
       for(const auto& ctc : m_map_ctc)
       {
-        ctc.second->set_active(true);
-        add_ctc_to_queue(ctc.second, m_deque);
+        if(ctc.second->type() == Contractor::Type::T_IBEX
+          || ctc.second->type() == Contractor::Type::T_TUBEX)
+        {
+          // Only "contracting" contractors are triggered
+          ctc.second->set_active(true);
+          add_ctc_to_queue(ctc.second, m_deque);
+        }
+
+        else
+          ctc.second->set_active(false);
       }
     }
 

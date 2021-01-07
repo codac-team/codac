@@ -490,6 +490,7 @@ namespace tubex
 
       if(it == m_map_ctc.end())
       {
+        // todo: trigger only "contracting" contractors?
         Contractor *new_ctc = new Contractor(ac);
         m_map_ctc[hash] = new_ctc;
         add_ctc_to_queue(new_ctc, m_deque);
