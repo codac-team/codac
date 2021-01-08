@@ -235,7 +235,7 @@ void CtcLohner::contract(tubex::TubeVector &tube, TimePropag t_propa) {
 }
 
 void CtcLohner::contract(tubex::Tube &tube, TimePropag t_propa) {
-  assert(not tube.is_empty());
+  assert(!tube.is_empty());
   tubex::TubeVector tubeVector(1, tube);
   contract(tubeVector, t_propa);
   tube = tubeVector[0];
