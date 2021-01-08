@@ -65,7 +65,7 @@ public:
    * \param H parameter to overwrite the integration time step
    * \return enclosure of the system's state
    */
-  const ibex::IntervalVector &integrate(uint steps, double H = -1);
+  const ibex::IntervalVector &integrate(unsigned int steps, double H = -1);
 
   /**
    * \brief contract the global & local enclosure of the previous integration step
@@ -98,7 +98,7 @@ private:
    */
   ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double direction);
 
-  uint dim; //!< dimension of the system's state
+  unsigned int dim; //!< dimension of the system's state
   double h; //!< integration time step
   double eps; //!< inflation parameter for the global enclosure
   int contractions; //!< number of contractions of the global enclosure by the estimated local enclosure
