@@ -67,7 +67,7 @@ public:
    * \param H parameter to overwrite the integration time step
    * \return enclosure of the system's state
    */
-  const ibex::IntervalVector &integrate(uint steps, double H = -1);
+  const ibex::IntervalVector &integrate(unsigned int steps, double H = -1);
 
   /**
    * \brief contract the global & local enclosure of the previous integration step
@@ -100,7 +100,7 @@ private:
    */
   ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double dir);
 
-  uint dim; //!< dimension of the system's state
+  unsigned int dim; //!< dimension of the system's state
   double h; //!< integration time step
   double direction; //!< forward or backward integration
   double eps; //!< inflation parameter for the global enclosure
@@ -238,7 +238,7 @@ void CtcLohner::contract(tubex::TubeVector &tube, TimePropag t_propa) {
 }
 
 void CtcLohner::contract(tubex::Tube &tube, TimePropag t_propa) {
-  assert(not tube.is_empty());
+  assert(!tube.is_empty());
   tubex::TubeVector tubeVector(1, tube);
   contract(tubeVector, t_propa);
   tube = tubeVector[0];

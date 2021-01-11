@@ -212,16 +212,16 @@ for xml_doc in files:
         print("\nArgs:", file=f)
 
         for param in params:
-          param_name = param.find("declname").text
-          print(indent + param_name, "(" + get_tags_text(param.find("type")) + "): ", end='', file=f)
+          param_name = param.find("declname")
+          if param_name:
+            print(indent + param_name.text, "(" + get_tags_text(param.find("type")) + "): ", end='', file=f)
+            parameterlist = memberdef.find("detaileddescription/para/parameterlist")
 
-          parameterlist = memberdef.find("detaileddescription/para/parameterlist")
-
-          if parameterlist:
-            for parameteritem in parameterlist.iter("parameteritem"):
-              if parameteritem.find("parameternamelist").find("parametername").text == param_name:
-                param_description = sentence(get_tags_text(parameteritem.find("parameterdescription")))
-                print(param_description, file=f)
+            if parameterlist:
+              for parameteritem in parameterlist.iter("parameteritem"):
+                if parameteritem.find("parameternamelist").find("parametername").text == param_name.text:
+                  param_description = sentence(get_tags_text(parameteritem.find("parameterdescription")))
+                  print(param_description, file=f)
 
       # Return value (if any)
       return_val = memberdef.find(".//simplesect[@kind='return']")
