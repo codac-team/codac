@@ -42,19 +42,21 @@ struct GlobalEnclosureError : public std::runtime_error {
  */
 class LohnerAlgorithm {
 public:
-  constexpr static const double FWD = 1, BWD = -1;
+  constexpr static const double FWD = 1., BWD = -1.;
 
   /**
    * \brief Creates a Lohner algorithm object
    *
    * \param f function defining the system \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$
    * \param h time step of the integration method
+   * \param direction forward or backaward integration
    * \param u0 initial condition of the system
    * \param contractions number of contractions of the global enclosure by the estimated local enclosure
    * \param eps inflation parameter for the global enclosure
    */
   LohnerAlgorithm(const ibex::Function *f,
                   double h,
+                  bool forward,
                   const ibex::IntervalVector &u0 = ibex::IntervalVector::empty(1),
                   int contractions = 1,
                   double eps = 0.1);
@@ -65,7 +67,7 @@ public:
    * \param H parameter to overwrite the integration time step
    * \return enclosure of the system's state
    */
-  const ibex::IntervalVector &integrate(uint steps, double H = -1);
+  const ibex::IntervalVector &integrate(unsigned int steps, double H = -1);
 
   /**
    * \brief contract the global & local enclosure of the previous integration step
@@ -93,13 +95,14 @@ private:
    * \brief Computes an estimation of the global enclosure of the system
    *
    * \param initialGuess initial guess for the global enclosure
-   * \param direction forward or backward in time
+   * \param dir forward or backward in time
    * \return estimation of the global enclosure
    */
-  ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double direction);
+  ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double dir);
 
-  uint dim; //!< dimension of the system's state
+  unsigned int dim; //!< dimension of the system's state
   double h; //!< integration time step
+  double direction; //!< forward or backward integration
   double eps; //!< inflation parameter for the global enclosure
   int contractions; //!< number of contractions of the global enclosure by the estimated local enclosure
   ibex::IntervalVector u; //!< local enclosure
@@ -115,11 +118,13 @@ private:
 
 LohnerAlgorithm::LohnerAlgorithm(const ibex::Function *f,
                                  double h,
+                                 bool forward,
                                  const ibex::IntervalVector &u0,
                                  int contractions,
                                  double eps)
     : dim(f->nb_var()),
       h(h),
+      direction((forward) ? FWD : BWD),
       eps(eps),
       contractions(contractions),
       u(u0),
@@ -140,12 +145,12 @@ const ibex::IntervalVector &LohnerAlgorithm::integrate(unsigned int steps, doubl
     for (int j = 0; j < contractions; ++j) {
       z1 = 0.5 * h * h * f->jacobian(u_t) * f->eval_vector(u_t);
       ibex::Vector m1 = z1.mid();
-      ibex::IntervalMatrix A = ibex::Matrix::eye(dim) + h * f->jacobian(u);
+      ibex::IntervalMatrix A = ibex::Matrix::eye(dim) + h * direction * f->jacobian(u);
       Eigen::HouseholderQR<Eigen::MatrixXd> qr(EigenHelpers::i2e((A * B).mid()));
       B1 = EigenHelpers::e2i(qr.householderQ());
       B1inv = ibex::real_inverse(B1);
       r1 = (B1inv * A * B) * r + B1inv * (z1 - m1);
-      u_hat1 = u_hat + h * f->eval_vector(u_hat).mid() + m1;
+      u_hat1 = u_hat + h * direction * f->eval_vector(u_hat).mid() + m1;
       u1 = u_hat1 + B1 * r1;
       if (j < contractions - 1) {
         u_t = u_t & globalEnclosure(u1, BWD);
@@ -156,10 +161,10 @@ const ibex::IntervalVector &LohnerAlgorithm::integrate(unsigned int steps, doubl
   return u;
 }
 
-ibex::IntervalVector LohnerAlgorithm::globalEnclosure(const ibex::IntervalVector &initialGuess, double direction) {
+ibex::IntervalVector LohnerAlgorithm::globalEnclosure(const ibex::IntervalVector &initialGuess, double dir) {
   ibex::IntervalVector u_0 = initialGuess;
   for (unsigned int i = 0; i < 30; ++i) {
-    ibex::IntervalVector u_1 = initialGuess + direction * ibex::Interval(0, h) * f->eval_vector(u_0);
+    ibex::IntervalVector u_1 = initialGuess + dir * direction * ibex::Interval(0, h) * f->eval_vector(u_0);
     if (u_0.is_superset(u_1)) {
       return u_0;
     } else {
@@ -185,22 +190,20 @@ const ibex::IntervalVector &LohnerAlgorithm::getGlobalEnclosure() const {
 
 CtcLohner::CtcLohner(const ibex::Function &f, int contractions, double eps)
     : DynCtc(),
-      _x_(ExprSymbol::new_(Dim::col_vec(f.nb_var()))),
       m_f(f),
-      m_f_1(_x_, -m_f(_x_)),
       contractions(contractions),
       dim(f.nb_var()),
       eps(eps) {}
 
 void CtcLohner::contract(tubex::TubeVector &tube, TimePropag t_propa) {
-  assert((!tube.is_empty())&&(tube.size() == dim));
+  assert((!tube.is_empty()) && (tube.size() == dim));
   IntervalVector input_gate(dim, Interval(0)), output_gate(dim, Interval(0)), slice(dim, Interval(0));
   double h;
   if (t_propa & TimePropag::FORWARD) {
     for (int j = 0; j < dim; ++j) {
       input_gate[j] = tube[j].slice(0)->input_gate();
     }
-    LohnerAlgorithm lo(&m_f, 0.1, input_gate, contractions, eps);
+    LohnerAlgorithm lo(&m_f, 0.1, true, input_gate, contractions, eps);
     // Forward loop
     for (int i = 0; i < tube.nb_slices(); ++i) {
       h = tube[0].slice(i)->tdomain().diam();
@@ -218,7 +221,7 @@ void CtcLohner::contract(tubex::TubeVector &tube, TimePropag t_propa) {
     for (int j = 0; j < dim; ++j) {
       input_gate[j] = tube[j].last_slice()->output_gate();
     }
-    LohnerAlgorithm lo2(&m_f_1, 0.1, input_gate, contractions, eps);
+    LohnerAlgorithm lo2(&m_f, 0.1, false, input_gate, contractions, eps);
     // Backward loop
     for (int i = tube.nb_slices() - 1; i >= 0; --i) {
       h = tube[0].slice(i)->tdomain().diam();
@@ -235,7 +238,7 @@ void CtcLohner::contract(tubex::TubeVector &tube, TimePropag t_propa) {
 }
 
 void CtcLohner::contract(tubex::Tube &tube, TimePropag t_propa) {
-  assert(not tube.is_empty());
+  assert(!tube.is_empty());
   tubex::TubeVector tubeVector(1, tube);
   contract(tubeVector, t_propa);
   tube = tubeVector[0];
@@ -252,7 +255,7 @@ vector<string> CtcLohner::m_str_expected_doms(
 void CtcLohner::contract(vector<Domain *> &v_domains) {
 
   // todo: manage the contractor on a slice level
-  
+
   if (v_domains.size() != 1)
     throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
 

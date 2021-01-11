@@ -63,9 +63,7 @@ public:
   void contract(std::vector<tubex::Domain *> &v_domains) override;
 
 protected:
-  const ibex::ExprSymbol &_x_; //!< symbol for inner litteral function
   ibex::Function m_f; //!< forward function
-  ibex::Function m_f_1; //!< backward function
   int contractions; //!< number of contractions of the global enclosure by the estimated local enclosure
   int dim; //!< dimension of the state vector
   double eps; //!< inflation parameter for the global enclosure

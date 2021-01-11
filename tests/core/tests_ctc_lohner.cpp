@@ -65,34 +65,34 @@ TEST_CASE("CtcLohner") {
     CHECK(x->output_gate().is_superset(Interval(exp(domain.ub()))));
   }
 
-//  SECTION("Test CtcLohner / TubeVector - dim 2") {
-//    Interval domain(0., 1.);
-//
-//    TubeVector x(domain, 2);
-//    IntervalVector condition(2, Interval(1.));
-//    x.set(condition, 0.);
-//
-//    Function f("x", "y", "(-x ; y)");
-//    CtcLohner ctc_lohner(f);
-//    ctc_lohner.contract(x, TimePropag::FORWARD);
-//
-//    CHECK_FALSE(x.codomain().is_unbounded());
-//    // TODO : CHECK(x.codomain()[0].is_superset(exp(-domain)));
-//    CHECK(x(0.)[0].is_superset(Interval(exp(-0.))));
-//    CHECK(x(1.)[0].is_superset(Interval(exp(-1.))));
-//    // TODO : CHECK(x.codomain()[1].is_superset(exp(domain)));
-//    CHECK(x(0.)[1].is_superset(Interval(exp(0.))));
-//    CHECK(x(1.)[1].is_superset(Interval(exp(1.))));
-//
-//    //if(false & VIBES_DRAWING) // drawing results
-//    //{
-//    //  vibes::beginDrawing();
-//    //  VIBesFigTube fig_tube("picard", &x);
-//    //  fig_tube.set_properties(100, 100, 500, 500);
-//    //  fig_tube.show(true);
-//    //  vibes::endDrawing();
-//    //}
-//  }
+  SECTION("Test CtcLohner / TubeVector - dim 2") {
+    Interval domain(0., 1.);
+    double dt = 0.1;
+    TubeVector x(domain, dt, 2);
+    IntervalVector condition(2, Interval(1.));
+    x.set(condition, 0.);
+
+    Function f("x", "y", "(-x ; y)");
+    CtcLohner ctc_lohner(f);
+    ctc_lohner.contract(x, TimePropag::FORWARD);
+
+    CHECK_FALSE(x.codomain().is_unbounded());
+    // TODO : CHECK(x.codomain()[0].is_superset(exp(-domain)));
+    CHECK(x(0.)[0].is_superset(Interval(exp(-0.))));
+    CHECK(x(1.)[0].is_superset(Interval(exp(-1.))));
+    // TODO : CHECK(x.codomain()[1].is_superset(exp(domain)));
+    CHECK(x(0.)[1].is_superset(Interval(exp(0.))));
+    CHECK(x(1.)[1].is_superset(Interval(exp(1.))));
+
+    //if(false & VIBES_DRAWING) // drawing results
+    //{
+    //  vibes::beginDrawing();
+    //  VIBesFigTube fig_tube("picard", &x);
+    //  fig_tube.set_properties(100, 100, 500, 500);
+    //  fig_tube.show(true);
+    //  vibes::endDrawing();
+    //}
+  }
 
   SECTION("Test CtcLohner / TubeVector - dim 1 - forward") {
     Interval domain(0., 1.);
