@@ -4,10 +4,8 @@ Unreleased yet (in development)
 .. Features added
 .. --------------
 
-Changes
--------
-
-* :commit:`3563a0ff588c12f4e4e6accb07a92396c1645fa7`: improved ``Tube::invert`` methods (without tree)
+.. Changes
+.. -------
 
 .. Dependencies
 .. ------------
@@ -24,7 +22,25 @@ Changes
 
 -----------------------------------------------------------------
 
-Release 3.1.0 (released `Dec 17, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.0.14>`_)
+Release 3.1.1 (released `Jan 12, 2021 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.1.1>`_)
+=======================================================================================================
+
+`Commits since previous release 3.1.0 <https://github.com/SimonRohou/tubex-lib/compare/v3.1.0...v3.1.1>`_
+
+Changes
+-------
+
+* :commit:`3563a0ff588c12f4e4e6accb07a92396c1645fa7`: improved ``Tube::invert`` methods (without tree)
+
+Bugs fixed
+----------
+
+* :commit:`782e4cc9750b5d880c35531969a76d29ff2995ab`: Lohner contractor with multi-dimensional functions
+
+
+-----------------------------------------------------------------
+
+Release 3.1.0 (released `Dec 17, 2020 <https://github.com/SimonRohou/tubex-lib/releases/tag/v3.1.0>`_)
 =======================================================================================================
 
 `Commits since previous release 3.0.13 <https://github.com/SimonRohou/tubex-lib/compare/v3.0.13...v3.1.0>`_
