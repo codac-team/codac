@@ -333,6 +333,8 @@ Organizations
 List of people who got the diploma
 ----------------------------------
 
+ICRA 2020 conference:
+
 .. hlist::
   :columns: 4
 
@@ -356,3 +358,27 @@ List of people who got the diploma
   * Younès Raoui
   * `Luke Sy <https://www.lukesy.net/>`_
   * Elie Khairallah
+
+IROS 2020 conference:
+
+.. hlist::
+  :columns: 4
+
+  * `Abdelhak Bougouffa <https://abdelhakbougouffa.pro>`_
+  * Ayman Beghdadi
+  * Baptiste Hudyma
+  * Camille Monière
+  * `Charles Villard <https://silvanosky.me/>`_
+  * Clément Demeslay
+  * Cyrill Guillemot
+  * Dimitrios Dimopoulos
+  * `Djahid Rabehi <https://sites.google.com/view/djahidrabehi/>`_
+  * Félix Quinton
+  * Flavien Lebrun
+  * Joaquin Rodriguez
+  * Lev Smolentsev
+  * Luca Melillo
+  * `Paulo Gonçalves <https://pessoas.ipcb.pt/paulo.goncalves/www/doku.php?id=start>`_
+  * Quentin Brateau
+  * Rodrigo Bernardo
+  * Yuehan Jiang
