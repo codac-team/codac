@@ -397,10 +397,27 @@ One have to update the ``a`` inside the function in order to return the contract
 
 
 No matching function for call to ``VIBesFigMap::add_trajectory...``
---------------------------------------------------------------------------
+-------------------------------------------------------------------
 
 .. code:: 
 
   error: no matching function for call to ‘tubex::VIBesFigMap::add_trajectory(tubex::TrajectoryVector&, const char [3], int, int)’
 
 The function needs a pointer to the trajectory.
+
+
+Error of ``unresolved overloaded function type`` with ``cout``
+--------------------------------------------------------------
+
+If you try to display the result of an operation on intervals, for instance, ``x|y``, you may obtain this type of error:
+
+.. code:: 
+  
+  no match for ‘operator<<’ (operand types are ‘ibex::Interval’ and ‘<unresolved overloaded function type>’)
+
+This can be solved using parentheses: 
+
+.. code:: c++
+
+  cout << (x|y) << endl;
+  // Instead of: cout << x|y << endl;
