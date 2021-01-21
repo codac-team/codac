@@ -42,6 +42,8 @@ namespace tubex
 
     bin_file.write((const char*)&intv_type, sizeof(IntervalType));
 
+    // todo: what about [5,oo]?
+
     if(intv_type == IntervalType::BOUNDED)
     {
       double lb = intv.lb(), ub = intv.ub();
@@ -75,6 +77,8 @@ namespace tubex
       case IntervalType::NEG_REALS:
         intv = Interval::NEG_REALS;
         break;
+
+      // todo: what about [5,oo]?
 
       case IntervalType::BOUNDED:
         double lb, ub;

@@ -51,7 +51,7 @@ TEST_CASE("CtcDelay")
     ctc_delay.contract(delay, x, y);
     ctc_delay.contract(delay, x, y);
 
-    if(false)
+    if(true)
     {
       vibes::beginDrawing();
       VIBesFigTube fig_x("delay x", &x);

@@ -1302,4 +1302,26 @@ TEST_CASE("CtcEval (other tests)")
     CHECK(tube(9) == Interval(1.,7.5)); 
     CHECK(tube(10 == Interval(2.,9.));*/
   }
+
+  SECTION("Test CtcEval, outside tdomain")
+  {
+    Tube y(Interval(2,3), 0.1, Interval(4,5));
+    CtcEval ctc_eval;
+
+    {
+      Interval t(-3,5), z(6.);
+      ctc_eval.contract(t, z, y);
+      CHECK(t == Interval(-3,5));
+      CHECK(z == Interval(6));
+      CHECK(y.codomain() == Interval(4,5));
+    }
+
+    {
+      Interval t(2.5,7.), z;
+      ctc_eval.contract(t, z, y);
+      CHECK(t == Interval(2.5,7.));
+      CHECK(z == Interval::all_reals());
+      CHECK(y.codomain() == Interval(4,5));
+    }
+  }
 }

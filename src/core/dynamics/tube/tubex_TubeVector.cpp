@@ -407,70 +407,76 @@ namespace tubex
 
     #define macro_invert_union(invert_method, slice_deriv_init_fwd, slice_deriv_init_bwd, slice_deriv_iter_fwd, slice_deriv_iter_bwd) \
       assert(size() == y.size()); \
-      assert(search_tdomain.intersects(tdomain())); \
        \
-      /* The method finds the lower bound in forward, */ \
-      /* then the upper one in backward, */ \
-      /* and returns their union. */ \
+      if(search_tdomain.is_empty()) \
+        return Interval::empty_set(); \
        \
-      Interval restricted_tdomain = tdomain() & search_tdomain; \
+      else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub()) \
+        return Interval::all_reals(); \
        \
-      const Slice **v_s = new const Slice*[size()]; \
-      const Slice **v_v = new const Slice*[size()]; \
-      for(int i = 0 ; i < size() ; i++) \
+      else \
       { \
-        v_s[i] = (*this)[i].slice(restricted_tdomain.lb()); \
-        slice_deriv_init_fwd; \
-      } \
-       \
-      Interval inversion_lb = Interval::EMPTY_SET; \
-      Interval inversion_ub = Interval::EMPTY_SET; \
-       \
-      while(v_s[0] != NULL \
-        && v_s[0]->tdomain().lb() < restricted_tdomain.ub() \
-        && inversion_lb.is_empty()) \
-      { \
-        inversion_lb = v_s[0]->tdomain(); \
-        for(int i = 0 ; i < size() && !inversion_lb.is_empty() ; i++) \
-          inversion_lb &= invert_method; \
+        /* The method finds the lower bound in forward, */ \
+        /* then the upper one in backward, */ \
+        /* and returns their union. */ \
+         \
+        const Slice **v_s = new const Slice*[size()]; \
+        const Slice **v_v = new const Slice*[size()]; \
+        for(int i = 0 ; i < size() ; i++) \
+        { \
+          v_s[i] = (*this)[i].slice(search_tdomain.lb()); \
+          slice_deriv_init_fwd; \
+        } \
+         \
+        Interval inversion_lb = Interval::EMPTY_SET; \
+        Interval inversion_ub = Interval::EMPTY_SET; \
+         \
+        while(v_s[0] != NULL \
+          && v_s[0]->tdomain().lb() < search_tdomain.ub() \
+          && inversion_lb.is_empty()) \
+        { \
+          inversion_lb = v_s[0]->tdomain(); \
+          for(int i = 0 ; i < size() && !inversion_lb.is_empty() ; i++) \
+            inversion_lb &= invert_method; \
+           \
+          for(int i = 0 ; i < size() ; i++) \
+          { \
+            v_s[i] = v_s[i]->next_slice(); \
+            slice_deriv_iter_fwd; \
+          } \
+        } \
          \
         for(int i = 0 ; i < size() ; i++) \
         { \
-          v_s[i] = v_s[i]->next_slice(); \
-          slice_deriv_iter_fwd; \
+          v_s[i] = (*this)[i].slice(search_tdomain.ub()); \
+          slice_deriv_init_bwd; \
         } \
-      } \
-       \
-      for(int i = 0 ; i < size() ; i++) \
-      { \
-        v_s[i] = (*this)[i].slice(restricted_tdomain.ub()); \
-        slice_deriv_init_bwd; \
-      } \
-       \
-      while(v_s[0] != NULL \
-        && v_s[0]->tdomain().ub() > restricted_tdomain.lb() \
-        && inversion_ub.is_empty()) \
-      { \
-        inversion_ub = v_s[0]->tdomain(); \
-        for(int i = 0 ; i < size() && !inversion_ub.is_empty() ; i++) \
-          inversion_ub &= invert_method; \
          \
-        for(int i = 0 ; i < size() ; i++) \
+        while(v_s[0] != NULL \
+          && v_s[0]->tdomain().ub() > search_tdomain.lb() \
+          && inversion_ub.is_empty()) \
         { \
-          v_s[i] = v_s[i]->prev_slice(); \
-          slice_deriv_iter_bwd; \
+          inversion_ub = v_s[0]->tdomain(); \
+          for(int i = 0 ; i < size() && !inversion_ub.is_empty() ; i++) \
+            inversion_ub &= invert_method; \
+           \
+          for(int i = 0 ; i < size() ; i++) \
+          { \
+            v_s[i] = v_s[i]->prev_slice(); \
+            slice_deriv_iter_bwd; \
+          } \
         } \
+         \
+        delete[] v_s; \
+        delete[] v_v; \
+         \
+        return inversion_lb | inversion_ub; \
       } \
-       \
-      delete[] v_s; \
-      delete[] v_v; \
-       \
-      return inversion_lb | inversion_ub; \
 
     const Interval TubeVector::invert(const IntervalVector& y, const Interval& search_tdomain) const
     {
       macro_invert_union(
-        v_s[i]->invert(y[i], restricted_tdomain), 
+        v_s[i]->invert(y[i], search_tdomain & v_s[i]->tdomain()), 
         {}, {}, {}, {});
     }
 
@@ -481,9 +487,9 @@ namespace tubex
       assert(same_slicing(*this, v));
 
       macro_invert_union(
-        v_s[i]->invert(y[i], *v_v[i], restricted_tdomain), 
-        v_v[i] = v[i].slice(restricted_tdomain.lb()),
-        v_v[i] = v[i].slice(restricted_tdomain.ub()),
+        v_s[i]->invert(y[i], *v_v[i], search_tdomain & v_s[i]->tdomain()), 
+        v_v[i] = v[i].slice((v[i].tdomain() & search_tdomain).lb()),
+        v_v[i] = v[i].slice((v[i].tdomain() & search_tdomain).ub()),
         v_v[i] = v_v[i]->next_slice(),
         v_v[i] = v_v[i]->prev_slice());
     }
@@ -493,49 +499,59 @@ namespace tubex
       assert(search_tdomain.intersects(tdomain())); \
        \
       v_t.clear(); \
-      Interval restricted_tdomain = tdomain() & search_tdomain; \
        \
-      const Slice **v_s = new const Slice*[size()]; \
-      const Slice **v_v = new const Slice*[size()]; \
-      for(int i = 0 ; i < size() ; i++) \
+      if(search_tdomain.is_empty()) \
+        return; \
+       \
+      else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub()) \
       { \
-        v_s[i] = (*this)[i].slice(restricted_tdomain.lb()); \
-        slice_deriv_init; \
+        v_t.push_back(Interval::all_reals()); \
       } \
        \
-      Interval ti = Interval::EMPTY_SET; \
-       \
-      while(v_s[0] != NULL && v_s[0]->tdomain().lb() < restricted_tdomain.ub()) \
+      else \
       { \
-        Interval inversion; \
-        for(int i = 0 ; i < size() && !inversion.is_empty() ; i++) \
-          inversion &= invert_method; \
-         \
-        ti |= inversion; \
-         \
-        if(inversion.is_empty() && !ti.is_empty()) \
-        { \
-          v_t.push_back(ti); \
-          ti.set_empty(); \
-        } \
-         \
+        const Slice **v_s = new const Slice*[size()]; \
+        const Slice **v_v = new const Slice*[size()]; \
         for(int i = 0 ; i < size() ; i++) \
         { \
-          v_s[i] = v_s[i]->next_slice(); \
-          slice_deriv_iter; \
+          v_s[i] = (*this)[i].slice(search_tdomain.lb()); \
+          slice_deriv_init; \
         } \
+         \
+        Interval ti = Interval::EMPTY_SET; \
+         \
+        while(v_s[0] != NULL && v_s[0]->tdomain().lb() < search_tdomain.ub()) \
+        { \
+          Interval inversion; \
+          for(int i = 0 ; i < size() && !inversion.is_empty() ; i++) \
+            inversion &= invert_method; \
+           \
+          ti |= inversion; \
+           \
+          if(inversion.is_empty() && !ti.is_empty()) \
+          { \
+            v_t.push_back(ti); \
+            ti.set_empty(); \
+          } \
+           \
+          for(int i = 0 ; i < size() ; i++) \
+          { \
+            v_s[i] = v_s[i]->next_slice(); \
+            slice_deriv_iter; \
+          } \
+        } \
+         \
+        if(!ti.is_empty()) \
+          v_t.push_back(ti); \
+         \
+        delete[] v_s; \
+        delete[] v_v; \
       } \
-       \
-      if(!ti.is_empty()) \
-        v_t.push_back(ti); \
-       \
-      delete[] v_s; \
-      delete[] v_v; \
 
     void TubeVector::invert(const IntervalVector& y, vector<Interval> &v_t, const Interval& search_tdomain) const
     {
       macro_invert_subsets(
-        v_s[i]->invert(y[i], restricted_tdomain), 
+        v_s[i]->invert(y[i], search_tdomain & v_s[i]->tdomain()), 
         {}, 
         {});
     }
@@ -547,8 +563,8 @@ namespace tubex
       assert(same_slicing(*this, v));
 
       macro_invert_subsets(
-        v_s[i]->invert(y[i], *v_v[i], restricted_tdomain), 
-        v_v[i] = v[i].slice(restricted_tdomain.lb()),
+        v_s[i]->invert(y[i], *v_v[i], search_tdomain & v_s[i]->tdomain()), 
+        v_v[i] = v[i].slice(search_tdomain.lb()),
         v_v[i] = v_v[i]->next_slice());
     }
 
