@@ -259,6 +259,25 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
     CHECK(test_serialization(tube));
   }
 
+  SECTION("Test [-oo,5]")
+  {
+    Tube tube = tube_test2();
+    tube.set(Interval::NEG_REALS | 5., 5);
+    CHECK(test_serialization(tube));
+    tube.set(Interval::NEG_REALS | 5.);
+    cout << tube << endl;
+    CHECK(test_serialization(tube));
+  }
+
+  SECTION("Test [-5,oo]")
+  {
+    Tube tube = tube_test2();
+    tube.set(Interval::POS_REALS | -5., 5);
+    CHECK(test_serialization(tube));
+    tube.set(Interval::POS_REALS | -5.);
+    CHECK(test_serialization(tube));
+  }
+
   SECTION("Test ALL_REALS")
   {
     Tube tube = tube_test3();
