@@ -37,7 +37,7 @@ namespace tubex
     else if(intv == Interval::NEG_REALS)
       intv_type = IntervalType::NEG_REALS;
 
-    else
+    else // at least one bound is set, e.g. [5,oo], or [-oo,-1]
       intv_type = IntervalType::BOUNDED;
 
     bin_file.write((const char*)&intv_type, sizeof(IntervalType));
@@ -76,7 +76,7 @@ namespace tubex
         intv = Interval::NEG_REALS;
         break;
 
-      case IntervalType::BOUNDED:
+      case IntervalType::BOUNDED: // at least one bound is set, e.g. [5,oo], or [-oo,-1]
         double lb, ub;
         bin_file.read((char*)&lb, sizeof(double));
         bin_file.read((char*)&ub, sizeof(double));
