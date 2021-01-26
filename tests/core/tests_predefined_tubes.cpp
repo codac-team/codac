@@ -2,7 +2,7 @@
 
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 Tube tube_test_1()
 {

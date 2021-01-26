@@ -1,19 +1,19 @@
 #include <cstdio>
-#include "tubex_serialize_trajectories.h"
-#include "tubex_serialize_tubes.h"
+#include "codac_serialize_trajectories.h"
+#include "codac_serialize_tubes.h"
 #include "catch_interval.hpp"
 #include "tests_predefined_tubes.h"
 
 // Using #define so that we can access protected methods
 // of the class for tests purposes
 #define protected public
-#include "tubex_TrajectoryVector.h"
+#include "codac_TrajectoryVector.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 TEST_CASE("serialization/deserialization of Tube")
 {

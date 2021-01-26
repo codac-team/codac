@@ -96,7 +96,7 @@ Raphael Voges (co-organizer) provides an overview of the tutorial in the followi
   We will be happy to discuss with you about it, and we propose three ways of communication:
 
   * A forum available on the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_. You may find answers to your questions in previous topics
-  * A `Slack workspace <https://tubex-tutorial.slack.com>`_ for fast interactive exchanges, do not hesitate to use it!
+  * A `Slack workspace <https://codac-tutorial.slack.com>`_ for fast interactive exchanges, do not hesitate to use it!
   * Eventually, individual conversations with the organizers are possible. In this case, you can contact us by private message and we will schedule a slot for some Skype conversation
 
   We do hope that this tutorial brings you a motivating introduction to intervals coupled with CP for robotics!
@@ -113,7 +113,7 @@ There are several ways to deal with **state estimation** in mobile robotics. The
 
 Efforts have been done to propose operators and **solvers** to apply these constraints. The goal of this tutorial is to learn how to use them and understand the efficiency of the approach on realistic robotic applications. We will see that some problems that are difficult to solve with conventional methods (Kalman filters, particle approaches) can be easily dealt with by constraint programming. This is for instance the case of poor observation measurements, time uncertainties, delays, or when the initial conditions of the system are not known.
 
-The tutorial will stand on :ref:`the Tubex library <home-page>`, that provides tools for computations over sets of reals and trajectories. It has been designed to deal with dynamical systems defined by non-linear differential equations and involving constraints such as trajectory evaluations, time uncertainties or delays. These computations stand on **interval analysis**, a well suited tool that reliably **propagates uncertainties**. 
+The tutorial will stand on :ref:`the Codac library <home-page>`, that provides tools for computations over sets of reals and trajectories. It has been designed to deal with dynamical systems defined by non-linear differential equations and involving constraints such as trajectory evaluations, time uncertainties or delays. These computations stand on **interval analysis**, a well suited tool that reliably **propagates uncertainties**. 
 
 
 Requirements
@@ -124,8 +124,8 @@ Prerequisite for attending the tutorial are:
 * basic knowledge of **Python or C++** (the exercises are available in both languages);
 * although the tutorial is about state estimation, you do not need skills in Kalman or particle filters.
 
-| Tubex is fully supported on Linux systems (C++ and Python3) and Windows (Python3).
-| We are currently working on making Tubex available for macOS (any help is welcome!). Meanwhile, we propose :ref:`a Tubex-online solution <sec-py-project-online>`: this will allow you to use Tubex in Python without having to install the library on your machine.
+| Codac is fully supported on Linux systems (C++ and Python3) and Windows (Python3).
+| We are currently working on making Codac available for macOS (any help is welcome!). Meanwhile, we propose :ref:`a Codac-online solution <sec-py-project-online>`: this will allow you to use Codac in Python without having to install the library on your machine.
 
 
 Contact and registration
@@ -134,15 +134,15 @@ Contact and registration
 | **For registration, please fill in this questionnaire:**
 | https://docs.google.com/forms/d/1nuZ6lxMJ8SmoUeDJzVIjiMUdD5PmX7h72v_N9NtvGq4
 
-Once you are registered, the organizers will be able to send you a link to the `Slack workspace of the tutorial <https://tubex-tutorial.slack.com>`_ (please note that this is not automatic, we will do our best to send you the link as soon as possible).
+Once you are registered, the organizers will be able to send you a link to the `Slack workspace of the tutorial <https://codac-tutorial.slack.com>`_ (please note that this is not automatic, we will do our best to send you the link as soon as possible).
 
 The tutorial involves three platforms:
 
-* the `Tubex website <http://simon-rohou.fr/research/tubex-lib>`_ (here you are!)
+* the `Codac website <http://simon-rohou.fr/research/codac>`_ (here you are!)
 * the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ where you can send your work and get the tutorial diploma
-* the `Slack communication workspace (tubex-tutorial.slack.com) <https://tubex-tutorial.slack.com>`_ for fast interactive meetings
+* the `Slack communication workspace (codac-tutorial.slack.com) <https://codac-tutorial.slack.com>`_ for fast interactive meetings
 
-This tutorial is proposed to the participants of `the IROS conference <https://www.iros2020.org>`_. All the exercises are available on this Tubex website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
+This tutorial is proposed to the participants of `the IROS conference <https://www.iros2020.org>`_. All the exercises are available on this Codac website. The registration to `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ is not mandatory, except if you want to share with the organizers your progression and difficulties, and to obtain the diploma.
 
 |logo_youtube| See `the video for registration on the MOOC platform <https://www.youtube.com/watch?v=E_aj7Mz_LWs>`_.
 
@@ -151,7 +151,7 @@ Diploma
 -------
 
 | To get the diploma, you need to send valid exercises to the organizers. A participant who gets a minimum total of 12 points will receive a diploma corresponding to this tutorial. This diploma can be used by students to obtain the corresponding credits for their PhD courses (equivalent to 40 hours of lessons), or to comply with any other requests from their home university.
-| `Here is an example of the diploma you can obtain <http://simon-rohou.fr/research/tubex-lib/public/publipost_tubmooc_2020.pdf>`_.
+| `Here is an example of the diploma you can obtain <http://simon-rohou.fr/research/codac/public/publipost_tubmooc_2020.pdf>`_.
 
 
 Duration and meeting sessions
@@ -159,7 +159,7 @@ Duration and meeting sessions
 
 The tutorial will be held **from 26th of October**. More information about dates and interactive sessions are coming soon.
 
-Interactive sessions are possible (each Tuesday afternoon, preferably). Just let us know by private message (via `Slack <https://tubex-tutorial.slack.com>`_ or the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_) if you need to communicate directly with us (discussions can be made via Slack or Skype, let us know your choice).
+Interactive sessions are possible (each Tuesday afternoon, preferably). Just let us know by private message (via `Slack <https://codac-tutorial.slack.com>`_ or the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_) if you need to communicate directly with us (discussions can be made via Slack or Skype, let us know your choice).
 
 .. .. hlist::
 ..   :columns: 4
@@ -188,14 +188,14 @@ Before starting the tutorial, you can read some words about the concepts of Cons
 
   /tutorial/00-getting-started/index
 
-To get ready, you need to install the Tubex library on your computer.
+To get ready, you need to install the Codac library on your computer.
 Please follow the related page of the manual to see how to do it:
 
 .. toctree:: 
   :maxdepth: 1
 
   /install/01-installation
-  [video] For C++, we advice to use the Qt Creator IDE, see how to use it for Tubex <https://www.youtube.com/watch?v=ElV6xVVKhSg>
+  [video] For C++, we advice to use the Qt Creator IDE, see how to use it for Codac <https://www.youtube.com/watch?v=ElV6xVVKhSg>
 
 Then, depending on your preference between C++ or Python, you can run some *Hello World!* program to be sure everything is working well so far:
 
@@ -210,10 +210,10 @@ Then, depending on your preference between C++ or Python, you can run some *Hell
   .. Figure:: img/logos/logo_replit.png
     :align: right
 
-  In case you encounter difficulties to install Tubex on your computer, an alternative solution is to **try Tubex online** with Repl.it. You will find more information on the following page:
+  In case you encounter difficulties to install Codac on your computer, an alternative solution is to **try Codac online** with Repl.it. You will find more information on the following page:
 
   * :ref:`sec-py-project-online`
-  * |logo_youtube| See `the video for using Tubex online <https://www.youtube.com/watch?v=XTpJk4lIwgw>`_.
+  * |logo_youtube| See `the video for using Codac online <https://www.youtube.com/watch?v=XTpJk4lIwgw>`_.
 
 ------------------------------------------------------
 
@@ -288,7 +288,7 @@ Now, we will make the robot move and see how we can handle **uncertainties on tr
 * :ref:`sec-tuto-08`
 
 | We will use the tubes to solve the problem `Set-membership state estimation by solving data association <https://ras.papercept.net/proceedings/ICRA20/1405.pdf>`_, that has been presented during the ICRA 2020 conference (see |logo_youtube_small| `the video presenting the paper <https://www.youtube.com/watch?v=rkzouwuwo4I>`_.
-| We will end this tutorial with a **range-only SLAM** problem and see how Tubex can be used for **online missions**.
+| We will end this tutorial with a **range-only SLAM** problem and see how Codac can be used for **online missions**.
 
 | **Exercise to finish:**
 | -- the data association and the range-only SLAM, to post on `the MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_.

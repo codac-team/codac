@@ -1,5 +1,5 @@
 /** 
- *  tubex-lib - Examples
+ *  Codac - Examples
  *  Mobile robot localization evolving among range-only beacons
  * ----------------------------------------------------------------------------
  *
@@ -8,16 +8,16 @@
  *
  *  \date       2016
  *  \author     Simon Rohou
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <tubex.h>
-#include <tubex-rob.h>
+#include <codac.h>
+#include <codac-rob.h>
 
 using namespace std;
-using namespace tubex;
+using namespace codac;
 
 int main()
 {
@@ -43,8 +43,8 @@ int main()
       x.set(ix0, 0.); // tube state vector with initial condition on v, phi
 
     // Computing an approximation of the actual state trajectory
-      Trajectory traj_vdot(tdomain, tubex::Function("0.1 + sin(0.25*t)"), dt);
-      Trajectory traj_phidot(tdomain, tubex::Function("-0.45 * cos(0.2*t)"), dt);
+      Trajectory traj_vdot(tdomain, codac::Function("0.1 + sin(0.25*t)"), dt);
+      Trajectory traj_phidot(tdomain, codac::Function("-0.45 * cos(0.2*t)"), dt);
 
       TrajectoryVector traj_state(4); // state equations
       traj_state[2] = traj_phidot.primitive(x0[2]);
@@ -89,15 +89,15 @@ int main()
     xdyn[4] = "bx"; xdyn[5] = "by";
     xdyn[6] = "g"; xdyn[7] = "gdot";
 
-    tubex::Function f_obs(8, xdyn, "(sqrt((x-bx)^2+(y-by)^2) - g ; \
+    codac::Function f_obs(8, xdyn, "(sqrt((x-bx)^2+(y-by)^2) - g ; \
                                      v*cos(phi)*sign(x-bx)/sqrt(1+((y-by)^2)/((x-bx)^2)) \
                                    + v*sin(phi)*sign(y-by)/sqrt(1+((x-bx)^2)/((y-by)^2)) - gdot)");
-    tubex::Function f_evol(8, xdyn, "(v*cos(phi) ; \
+    codac::Function f_evol(8, xdyn, "(v*cos(phi) ; \
                                       v*sin(phi) ; \
                                       -0.45 * cos(0.2*t) + [-0.001,0.001] ; \
                                       0.1 + sin(0.25*t) + [-0.001,0.001])");
 
-    tubex::CtcFwdBwd ctc_obs_fwdbwd(f_obs);
+    codac::CtcFwdBwd ctc_obs_fwdbwd(f_obs);
 
     map<int,TubeVector*> m_x;
     for(size_t i = 0 ; i < v_beacons.size() ; i++)

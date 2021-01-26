@@ -1,13 +1,13 @@
 #include "catch_interval.hpp"
-#include "tubex_CtcDelay.h"
-#include "tubex-capd.h"
-#include "tubex_VIBesFigTube.h"
+#include "codac_CtcDelay.h"
+#include "codac-capd.h"
+#include "codac_VIBesFigTube.h"
 
 using namespace std;
 using namespace Catch;
 using namespace Detail;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 #define VIBES_DRAWING 0
 

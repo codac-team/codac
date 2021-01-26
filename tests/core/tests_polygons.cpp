@@ -1,18 +1,18 @@
 #include "catch_interval.hpp"
-#include "tubex_VIBesFig.h"
-#include "tubex_polygon_arithmetic.h"
+#include "codac_VIBesFig.h"
+#include "codac_polygon_arithmetic.h"
 
 // Using #define so that we can access protected methods
 // of the class for tests purposes
 #define protected public
-#include "tubex_CtcDeriv.h"
-#include "tubex_GrahamScan.h"
+#include "codac_CtcDeriv.h"
+#include "codac_GrahamScan.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 #define VIBES_DRAWING 1
 

@@ -63,7 +63,7 @@ The term *simulation* often refers to the integration of one dynamical system fr
 
   **H.1.** Simulate the system. We will use :math:`\delta` = ``dt`` = :math:`0.05` for implementing the trajectories.
 
-  The simulation can be done with a classical temporal loop and an Euler integration method. With Tubex, we can also compute the system at the trajectory level (applying operators on entire trajectories), without temporal loop. For this, we will define the input of the system as a trajectory, and apply operations on it (from function :math:`\mathbf{f}`) and integrations.
+  The simulation can be done with a classical temporal loop and an Euler integration method. With Codac, we can also compute the system at the trajectory level (applying operators on entire trajectories), without temporal loop. For this, we will define the input of the system as a trajectory, and apply operations on it (from function :math:`\mathbf{f}`) and integrations.
 
   The following code computes :math:`\mathbf{x}^*(\cdot)`:
 

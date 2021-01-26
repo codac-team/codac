@@ -101,11 +101,11 @@ Several calls to :math:`\mathcal{C}_{\textrm{dist}}` will allow the contraction 
 
   Illustration of several contracted boxes with the above ``ctc_dist`` contractor. The blue boxes have been contracted as well as the ring.
 
-.. #include <tubex.h>
-.. #include <tubex-rob.h>
+.. #include <codac.h>
+.. #include <codac-rob.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. using namespace ibex;
 .. 
 .. int main()
@@ -151,4 +151,4 @@ Several calls to :math:`\mathcal{C}_{\textrm{dist}}` will allow the contraction 
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_dist.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_dist.html>`_.

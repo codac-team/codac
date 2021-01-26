@@ -146,14 +146,14 @@ The boxes are contracted in order to remove some vectors that are not consistent
 
   Illustration of several contracted boxes with the above ``ctc_f`` contractor.
 
-.. #include <tubex.h>
-.. #include <tubex-rob.h>
+.. #include <codac.h>
+.. #include <codac-rob.h>
 .. #include "ibex_CtcHC4.h"
 .. #include "ibex_SystemFactory.h"
 .. #include "ibex_Ctc3BCid.h"
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. using namespace ibex;
 .. 
 .. int main()
@@ -203,4 +203,4 @@ The IBEX contractor behind ``CtcFunction`` is a ``ibex::CtcFwdBwd`` coupled with
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_function.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_function.html>`_.

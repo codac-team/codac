@@ -51,7 +51,7 @@ The following code provides a simulation of random landmarks and related range-o
 
   .. code-tab:: py
 
-    from tubex_lib import *
+    from codac import *
     from pyibex import *
     import math
 
@@ -78,10 +78,10 @@ The following code provides a simulation of random landmarks and related range-o
 
   .. code-tab:: c++
 
-    #include <tubex.h>
+    #include <codac.h>
     
     using namespace std;
-    using namespace tubex;
+    using namespace codac;
     
     int main()
     {

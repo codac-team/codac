@@ -1,5 +1,5 @@
 # ==================================================================
-#  tubex-3rd - cmake configuration file
+#  codac-3rd - cmake configuration file
 # ==================================================================
 
 add_subdirectory(pyibex)

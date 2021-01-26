@@ -1,5 +1,5 @@
 # ==================================================================
-#  tubex-lib - cmake configuration file
+#  Codac - cmake configuration file
 # ==================================================================
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/mathjax_stmaryrd.js DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

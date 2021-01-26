@@ -142,10 +142,10 @@ The following animation presents the results before and after the :math:`\mathca
 .. figure:: img/ceval_multi.gif
 
 
-.. #include <tubex.h>
+.. #include <codac.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. 
 .. int main()
 .. {
@@ -272,11 +272,11 @@ The obtained tube is blue painted on the figure, the contraction to keep the tra
 .. figure:: img/ceval_lissajous_tube.png
 
 
-.. #include <tubex.h>
-.. #include <tubex-rob.h>
+.. #include <codac.h>
+.. #include <codac-rob.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. 
 .. int main()
 .. {
@@ -362,11 +362,11 @@ The :math:`\mathcal{C}_{\textrm{eval}}` can be used to evaluate the position tim
     // [b] contracted to ([-1, -0.29] ; [0.4, 0.95])  (red on the figure)
 
 
-.. #include <tubex.h>
-.. #include <tubex-rob.h>
+.. #include <codac.h>
+.. #include <codac-rob.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. 
 .. int main()
 .. {
@@ -417,4 +417,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_eval.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_eval.html>`_.
