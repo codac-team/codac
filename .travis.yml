@@ -37,7 +37,7 @@ _vs_specific: &vs_specific
     - cmake --build . --config Debug --target install
     - if [ "${WITH_PYTHON}" = "ON" ]; then cmake --build . --config Debug --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py ; fi
     - cd ..
-    - if [ "${WITH_CPP_BUNDLE}" = "ON" ]; then wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv ; 7z x codac_test_win.zip -y ; rm -Rf codac_test_win.zip ; cd codac_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd .. ; 7z a -y codac_test_${CFG}.zip codac_test_win ; cd codac_test_win/test ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} . ; cmake --build . --config Release ; cmd //c "Release\my_project.exe" ; cd ../.. ; fi
+    - if [ "${WITH_CPP_BUNDLE}" = "ON" ]; then wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv ; 7z x tubex_test_win.zip -y ; rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd .. ; 7z a -y tubex_test_${CFG}.zip tubex_test_win ; cd tubex_test_win/test ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} . ; cmake --build . --config Release ; cmd //c "Release\my_project.exe" ; cd ../.. ; fi
 
 matrix:
   include:
@@ -100,12 +100,12 @@ matrix:
         - cd ..
         # Test C++ program and bundle...
         - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-        - unzip -q -o codac_test_win.zip
-        - rm -Rf codac_test_win.zip
-        - cd codac_test_win
+        - unzip -q -o tubex_test_win.zip
+        - rm -Rf tubex_test_win.zip
+        - cd tubex_test_win
         - mv test ..
         - cd ../test
-        - rm -Rf ../codac_test_win
+        - rm -Rf ../tubex_test_win
         - cmake .
         - cmake --build .
         - ./my_project
@@ -163,12 +163,12 @@ matrix:
 #        - cd ..
 #        # Test C++ program and bundle...
 #        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-#        - unzip -q -o codac_test_win.zip
-#        - rm -Rf codac_test_win.zip
-#        - cd codac_test_win
+#        - unzip -q -o tubex_test_win.zip
+#        - rm -Rf tubex_test_win.zip
+#        - cd tubex_test_win
 #        - mv test ..
 #        - cd ../test
-#        - rm -Rf ../codac_test_win
+#        - rm -Rf ../tubex_test_win
 #        - cmake .
 #        - cmake --build .
 #        - ./my_project
@@ -184,7 +184,7 @@ matrix:
       cache:
       install:
       script: 
-         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev ; mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../codac .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv && unzip -q -o codac_test_win.zip && rm -Rf codac_test_win.zip && cd codac_test_win && mv test .. && cd ../test && rm -Rf ../codac_test_win && cmake . && cmake --build . && ./my_project \""
+         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev ; mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../codac .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv && unzip -q -o tubex_test_win.zip && rm -Rf tubex_test_win.zip && cd tubex_test_win && mv test .. && cd ../test && rm -Rf ../tubex_test_win && cmake . && cmake --build . && ./my_project \""
 
     - name: "Mac OS Xcode 10.1"
       os: osx
@@ -200,12 +200,12 @@ matrix:
         - cd ..
         # Test C++ program and bundle...
         - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-        - unzip -q -o codac_test_win.zip
-        - rm -Rf codac_test_win.zip
-        - cd codac_test_win
+        - unzip -q -o tubex_test_win.zip
+        - rm -Rf tubex_test_win.zip
+        - cd tubex_test_win
         - mv test ..
         - cd ../test
-        - rm -Rf ../codac_test_win
+        - rm -Rf ../tubex_test_win
         - cmake .
         - cmake --build .
         - ./my_project
@@ -311,10 +311,10 @@ matrix:
         - cd ..
         # Test C++ program and bundle...
         - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv
-        - 7z x codac_test_win.zip -y
-        - rm -Rf codac_test_win.zip ; cd codac_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd ..
-        - 7z a -y codac_test_${CFG}.zip codac_test_win
-        - cd codac_test_win/test
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
         - cmake -G "${CMAKE_PARAM_G}" .
         - cmake --build .
         - ./my_project.exe
@@ -338,10 +338,10 @@ matrix:
         - cd ..
         # Test C++ program and bundle...
         - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv
-        - 7z x codac_test_win.zip -y
-        - rm -Rf codac_test_win.zip ; cd codac_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd ..
-        - 7z a -y codac_test_${CFG}.zip codac_test_win
-        - cd codac_test_win/test
+        - 7z x tubex_test_win.zip -y
+        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd ..
+        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
+        - cd tubex_test_win/test
         - cmake -G "${CMAKE_PARAM_G}" .
         - cmake --build .
         - ./my_project.exe
