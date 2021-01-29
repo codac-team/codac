@@ -13,17 +13,17 @@
 Codac: constraint-programming for robotics
 ##########################################
 
-Codac is a C++/Python library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
+Codac (Catalog Of Domains And Contractors) is a C++/Python library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
 
 | **What is constraint programming?**
-| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a reliable set of **feasible solutions** corresponding to the problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*.
+| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs *constraint propagation* on the variables and provides a reliable set of **feasible solutions** corresponding to the problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*.
 
 .. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
 | **What about mobile robotics?**
-| In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapped robot problems** can be solved in a very few steps by using constraint programming. Even though the Codac library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Codac provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
+| In the field of robotics, complex problems such as **non-linear state estimation**, **parameter estimation**, **delays**, **SLAM** or **kidnapped robot problems** can be solved in a very few steps by using constraint programming. Even though the Codac library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Codac provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
 
-In a nutshell, Codac is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
+In a nutshell, Codac is a high-level **constraint programming framework** providing tools to easily solve a wide range of problems.
 
 
 .. contents:: Contents of this page
@@ -227,7 +227,7 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
 .. figure:: img/rangeonly-nox0.png
 
 | *You just solved a non-linear state-estimation without knowledge about initial condition.*
-| See the full example on Github: `in C++ <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/codac_tuto_01.cpp>`_ or `in Python <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/codac_tuto_01.py>`_.
+| See the full example on Github: `in C++ <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/01_getting_started.cpp>`_ or `in Python <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/01_getting_started.py>`_.
 
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
@@ -414,16 +414,16 @@ Main related publications
 ====  ===================  ===============================  =========================  ========================
 
 
-How to cite this project?
-=========================
-
-We suggest the following BibTeX template to cite Codac in scientific discourse:
-
-.. code-block:: none
-
-  @misc{codac,
-     author = {Simon Rohou and Benoit Desrochers and others},
-     year = {2021},
-     note = {http://simon-rohou.fr/research/codac/},
-     title = {The {Codac} library -- {C}onstraint-programming for robotics}
-  }
+.. How to cite this project?
+.. =========================
+.. 
+.. We suggest the following BibTeX template to cite Codac in scientific discourse:
+.. 
+.. .. code-block:: none
+.. 
+..   @misc{codac,
+..      author = {Simon Rohou and Benoit Desrochers and others},
+..      year = {2021},
+..      note = {http://simon-rohou.fr/research/codac/},
+..      title = {The {Codac} library -- {C}onstraint-programming for robotics}
+..   }
