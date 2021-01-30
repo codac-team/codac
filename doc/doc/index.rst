@@ -294,12 +294,16 @@ Then you have two options: read the details about the features of Codac (domains
 
 .. _sec-mainpage-tuto:
 
-.. sidebar:: IROS 2020 tutorial
+
+.. sidebar:: International tutorial
+
+  .. Figure:: tutorial/img/logos/logo_icra.png
+    :align: center
 
   .. Figure:: tutorial/img/logos/logo_iros.png
     :align: center
 
-  This tutorial is proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ (International Conference on Intelligent Robots and Systems), 26th October.
+  This tutorial has been proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ and the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_.
 
 
 Tutorial for mobile robotics
@@ -353,6 +357,7 @@ Contributors
   * `Thomas Le Mézo <https://www.ensta-bretagne.fr/lemezo/>`_
   * `Cyril Bouvier <http://www.lirmm.fr/~bouvier/index.en.html>`_
   * `Bertrand Neveu <http://imagine.enpc.fr/~neveub/>`_
+  * `Peter Franek <http://www.cs.cas.cz/~franek/>`_
 
 
 Main related publications
@@ -424,6 +429,6 @@ We suggest the following BibTeX template to cite Codac in scientific discourse:
   @misc{codac,
      author = {Simon Rohou and Benoit Desrochers and others},
      year = {2021},
-     note = {http://simon-rohou.fr/research/codac/},
+     note = {http://codac.io},
      title = {The {Codac} library -- {C}onstraint-programming for robotics}
   }

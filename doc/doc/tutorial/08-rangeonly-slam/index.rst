@@ -288,10 +288,10 @@ On the above figure, we can notice that the contracted boxes :math:`[\mathbf{x}]
 
 
 
-Submit your exercise
---------------------
+End of the tutorial
+-------------------
 
 | The tutorial ends here!
 | We do hope it provided you an interesting overview of what Constraint Programming methods can bring to mobile robotics. **We are looking forward your feedbacks!**
 
-You can submit your answers for the questions of Lessons G and H to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.
+.. You can submit your answers for the questions of Lessons G and H to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.
