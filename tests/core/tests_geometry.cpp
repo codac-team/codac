@@ -1,13 +1,13 @@
 #include "catch_interval.hpp"
-#include "tubex_Point.h"
-#include "tubex_Edge.h"
-#include "tubex_VIBesFig.h"
+#include "codac_Point.h"
+#include "codac_Edge.h"
+#include "codac_VIBesFig.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 #define VIBES_DRAWING 1
 

@@ -1,4 +1,4 @@
-# tubex-lib - Examples
+# Codac - Examples
 # Set-membership state estimation by solving data association 
 # ----------------------------------------------------------------------------
 # Example from the paper "Set-membership state estimation by solving data association"
@@ -6,7 +6,7 @@
 # ICRA 2020, Paris
 
 from pyibex import *
-from tubex_lib import *
+from codac import *
 import math
 import sys # only for checking if this example still works
 

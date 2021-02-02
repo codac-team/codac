@@ -1,18 +1,18 @@
 #include <cstdio>
 #include "catch_interval.hpp"
-#include "tubex_VIBesFigTube.h"
+#include "codac_VIBesFigTube.h"
 #include "vibes.h"
 
 // Using #define so that we can access protected methods
 // of the class for tests purposes
 #define protected public
-#include "tubex_CtcPicard.h"
+#include "codac_CtcPicard.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 #define VIBES_DRAWING 0
 

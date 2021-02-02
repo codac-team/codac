@@ -1,15 +1,15 @@
 #include "catch_interval.hpp"
-#include "tubex_ContractorNetwork.h"
-#include "tubex_CtcDeriv.h"
-#include "tubex_CtcEval.h"
-#include "tubex_CtcFunction.h"
+#include "codac_ContractorNetwork.h"
+#include "codac_CtcDeriv.h"
+#include "codac_CtcEval.h"
+#include "codac_CtcFunction.h"
 #include "vibes.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 #define VIBES_DRAWING 0
 

@@ -1,5 +1,5 @@
 # ==================================================================
-#  tubex-lib - build script
+#  Codac - build script
 # ==================================================================
 
 #!/bin/bash
@@ -14,7 +14,7 @@
 #  ./build.sh tests clean
 #  ./build.sh examples clean
 
-TUBEX_DIR="$(pwd)"
+CODAC_DIR="$(pwd)"
 
 
 if [ -z "${WITH_TUBE_TREE}" ]
@@ -30,7 +30,7 @@ fi
     find . -name build | xargs rm -fr
   fi
 
-# Building Tubex library
+# Building Codac library
 
   mkdir build -p
   cd build

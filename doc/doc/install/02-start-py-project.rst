@@ -8,13 +8,13 @@ Start a Python project
    | You are using C++?
    | :ref:`sec-start-cpp-project`
 
-| Tubex is ready to be used on your computer.
-| You can now import the ``tubex_lib`` package and start using it:
+| Codac is ready to be used on your computer.
+| You can now import the ``codac`` package and start using it:
 
 .. code-block:: py
   
   from pyibex import *
-  from tubex_lib import *
+  from codac import *
 
   x = Tube(Interval(0,10), 0.01, TFunction("cos(t)+abs(t-5)*[-0.1,0.1]"))
 

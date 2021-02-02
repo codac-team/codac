@@ -88,10 +88,10 @@ The following images depict the tubes. The dark gray parts are the obtained tube
 
 Only :math:`[x](\cdot)` is contracted (it can be theoretically proved that :math:`[v](\cdot)` cannot be contracted when :math:`[x](\cdot)` is not a degenerate tube). Note that all the feasible derivatives in :math:`[v](\cdot)` are negative over :math:`[0,1]` and so the contraction of :math:`[x](\cdot)` preserves decreasing trajectories over this part of the domain. Similarly, :math:`[v](\cdot)` is positive over :math:`[2,3]` which corresponds to increasing trajectories kept in :math:`[x](\cdot)` after contraction.
 
-.. #include <tubex.h>
+.. #include <codac.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. 
 .. int main()
 .. {
@@ -209,11 +209,11 @@ Which leads to:
 
 .. figure:: img/cderiv_lissajous.png
 
-.. #include <tubex.h>
-.. #include <tubex-rob.h>
+.. #include <codac.h>
+.. #include <codac-rob.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. 
 .. int main()
 .. {
@@ -285,4 +285,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_deriv.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_deriv.html>`_.

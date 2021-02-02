@@ -511,17 +511,18 @@ Here is a video providing an overview of the problem and how to solve it. This i
       <iframe src="https://www.youtube.com/embed/rkzouwuwo4I" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
   </div>
 
-If you want to discuss about it, you can join us on `the Slack channel dedicated to this paper (#tua07_6) <https://icra20.slack.com/app_redirect?channel=tua07_6>`_.
+.. If you want to discuss about it, you can join us on `the Slack channel dedicated to this paper (#tua07_6) <https://icra20.slack.com/app_redirect?channel=tua07_6>`_.
 
 
 
-Submit your exercise
---------------------
+End of second step!
+-------------------
 
-| That's about all for this second week!
-| You can submit your answers for the questions of Lessons C and D to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.
+That's about all for this second step.
 
-See you next week for discovering tubes!
+.. You can submit your answers for the questions of Lessons C and D to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can ..evaluate them for the diploma.
+
+See you next step for discovering tubes!
 
 
 Appendix

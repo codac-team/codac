@@ -7,7 +7,7 @@
   constants. They can be used with pybind11 for sharing C++
   documentation to Python binding.
   
-  Project: tubex-lib
+  Project: codac
   Author: Simon Rohou
   Date: 2020
 """
@@ -30,7 +30,7 @@ def anchor_id(filename, memberdef):
 
   anchor = filename.replace(".h", "") \
                    .replace(".cpp", "") \
-                   .replace("tubex_", "") \
+                   .replace("codac_", "") \
 
   if memberdef:
 
@@ -53,7 +53,7 @@ def anchor_id(filename, memberdef):
                .replace(".", "") \
                .replace("std::", "") \
                .replace("ibex::", "") \
-               .replace("tubex::", "") \
+               .replace("codac::", "") \
                .replace("::", "") \
                .replace("@", "_") \
                .replace("|=", "UNIEQ") \
@@ -84,7 +84,7 @@ def normalize(str):
   return str.replace("const", "") \
             .replace("std::", "") \
             .replace("ibex::", "") \
-            .replace("tubex::", "") \
+            .replace("codac::", "") \
             .replace("< ", "<") \
             .replace(" >", ">") \
             .replace("*", "") \
@@ -133,7 +133,7 @@ for xml_doc in files:
   if "class" not in xml_doc:
     continue
 
-  namespace = "tubex"
+  namespace = "codac"
   indent = "  "
 
   # Parsing XML file from Doxygen output (XML mode enabled)
@@ -142,7 +142,7 @@ for xml_doc in files:
   root = tree.getroot()
 
   input_filename = root.find(".//location").get("file").split("/")[-1]
-  output_filename = input_filename.replace(".h", "_docs.h").replace("tubex_", "tubex_py_")
+  output_filename = input_filename.replace(".h", "_docs.h").replace("codac_", "codac_py_")
   output_file_fullpath = sys.argv[2] + "/" + output_filename
 
   # We do not want to create again the files if nothing has changed since last

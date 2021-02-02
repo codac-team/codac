@@ -43,7 +43,7 @@ extensions = [
 ]
 
 breathe_projects = {
-    "tubex-lib":"../api/xml",
+    "codac":"../api/xml",
 }
 
 # For defining roles in all files
@@ -53,12 +53,12 @@ rst_prolog = """
 """
 
 # GitHub repo
-issues_github_path = "SimonRohou/tubex-lib"
+issues_github_path = "codac-team/codac"
 
 # equivalent to
-issues_uri = "https://github.com/SimonRohou/tubex-lib/issues/{issue}"
-issues_pr_uri = "https://github.com/SimonRohou/tubex-lib/pull/{pr}"
-issues_commit_uri = "https://github.com/SimonRohou/tubex-lib/commit/{commit}"
+issues_uri = "https://github.com/codac-team/codac/issues/{issue}"
+issues_pr_uri = "https://github.com/codac-team/codac/pull/{pr}"
+issues_commit_uri = "https://github.com/codac-team/codac/commit/{commit}"
 
 numfig = True
 
@@ -83,7 +83,7 @@ master_doc = 'toctree'
 
 # General information about the project.
 project = u'${PROJECT_NAME}'
-copyright = u'2020, Tubex Team'
+copyright = u'2020, Codac Team'
 author = u'Simon Rohou'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -3,7 +3,7 @@
 Lesson A: Getting started with intervals and contractors
 ========================================================
 
-Now that Tubex has been installed on your computer or usable online, we will get used to intervals, constraints and networks of contractors.
+Now that Codac has been installed on your computer or usable online, we will get used to intervals, constraints and networks of contractors.
 This will allow use to perform the state estimation of a static robot between some landmarks by the end of :ref:`Lesson B <sec-tuto-02>`.
 
 .. contents:: Content of this lesson
@@ -42,16 +42,16 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
     .. code-tab:: py
 
       from pyibex import *
-      from tubex_lib import *
+      from codac import *
 
       # .. next questions will be here
 
     .. code-tab:: c++
 
-      #include <tubex.h>
+      #include <codac.h>
 
       using namespace std;
-      using namespace tubex;
+      using namespace codac;
 
       int main()
       {
@@ -87,7 +87,7 @@ The asset of reliability coming with interval analysis will help us to estimate 
 Hello Interval Analysis!
 ------------------------
 
-Tubex is using C++/Python objects to represent intervals and boxes [#f1]_:
+Codac is using C++/Python objects to represent intervals and boxes [#f1]_:
 
 * ``Interval(lb, ub)`` will be used to create an interval :math:`[x]=[\textrm{lb},\textrm{ub}]`. There exists predefined values for intervals. Here are some examples of ``Interval`` objects:
 
@@ -254,7 +254,7 @@ We can also define vector input variables and access their components in the fun
 Graphics
 --------
 
-The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has been created to Visualize Intervals and BoxES. It is compatible with simple objects such as ``Interval`` and ``IntervalVector``. Its features have been extended in the Tubex library with objects such as ``VIBesFigMap``.
+The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has been created to Visualize Intervals and BoxES. It is compatible with simple objects such as ``Interval`` and ``IntervalVector``. Its features have been extended in the Codac library with objects such as ``VIBesFigMap``.
 
 .. admonition:: Exercise
 
@@ -297,7 +297,7 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
 
 
 .. from pyibex import *
-.. from tubex_lib import *
+.. from codac import *
 .. 
 .. x = IntervalVector([[0,0],[0,0]])
 .. b = IntervalVector([[3,4],[2,3]])
@@ -349,7 +349,7 @@ Now, we want to apply the constraints in order to solve our problem. In the Cons
 
 We will use **contractors** to implement constraints on sets. They are mathematical operators used to *contract* (reduce) a set, for instance a box, without losing any feasible solution. This way, contractors can be applied safely any time we want on our domains.
 
-In Tubex, the contractors are also defined by C++/Python objects and are prefixed with ``Ctc``. For this lesson, we will use the ``CtcFunction`` class to define a contractor according to a function :math:`f`. Note that the resulting contractor will aim at solving a constraint in the form :math:`f(\mathbf{x})=0`. This contractor has to be instantiated from a ``Function`` object defining the constraint. For instance, the simple constraint :math:`(x+y=a)` is expressed as :math:`f(x,y,a)=x+y-a=0`, and can be implemented as a contractor :math:`\mathcal{C}_+` with:
+In Codac, the contractors are also defined by C++/Python objects and are prefixed with ``Ctc``. For this lesson, we will use the ``CtcFunction`` class to define a contractor according to a function :math:`f`. Note that the resulting contractor will aim at solving a constraint in the form :math:`f(\mathbf{x})=0`. This contractor has to be instantiated from a ``Function`` object defining the constraint. For instance, the simple constraint :math:`(x+y=a)` is expressed as :math:`f(x,y,a)=x+y-a=0`, and can be implemented as a contractor :math:`\mathcal{C}_+` with:
 
 .. tabs::
 

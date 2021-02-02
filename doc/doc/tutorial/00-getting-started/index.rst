@@ -4,7 +4,7 @@ Introduction to the concepts of CP and IA
 =========================================
 
 | Welcome to this tutorial!
-| This first page aims at giving you a first glimpse of the philosophy of this tutorial based on Tubex.
+| This first page aims at giving you a first glimpse of the philosophy of this tutorial based on Codac.
 
 .. include:: /manual/01-introduction/intro_constraint_programming.rst
 
@@ -13,7 +13,7 @@ Introduction to the concepts of CP and IA
 Getting started
 ---------------
 
-Now, to get ready for the tutorial, you need to install the Tubex library on your computer.
+Now, to get ready for the tutorial, you need to install the Codac library on your computer.
 Please follow the related page of the manual to see how to do it:
 
 .. toctree:: 

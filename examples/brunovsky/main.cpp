@@ -1,5 +1,5 @@
 /** 
- *  tubex-lib - Examples
+ *  Codac - Examples
  *  Bounded-error continuous time linear observer
  * ----------------------------------------------------------------------------
  *
@@ -8,19 +8,19 @@
  *
  *  \date       2020
  *  \author     Simon Rohou, Luc Jaulin
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
 
 // sudo apt install libeigen3-dev
 
-#include <tubex.h>
-#include <tubex-rob.h>
+#include <codac.h>
+#include <codac-rob.h>
 #include <unsupported/Eigen/MatrixFunctions> // for computing e^At
 
 using namespace std;
-using namespace tubex;
+using namespace codac;
 
 IntervalMatrix exp(const Matrix& A, const Interval& intv_t) // computes e^At
 {

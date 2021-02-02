@@ -169,7 +169,7 @@ Intervals, boxes and interval matrices
 The empty set
 -------------
 
-In mathematics, the empty set is the unique set having no elements; it corresponds to one entity while in Tubex (as in IBEX/pyIbex) there exists one empty set representation for each class of domain.
+In mathematics, the empty set is the unique set having no elements; it corresponds to one entity while in Codac (as in IBEX/pyIbex) there exists one empty set representation for each class of domain.
 
 .. note::
 
@@ -295,7 +295,7 @@ Dealing with closed intervals, most of the operations can rely on their bounds. 
     ~ & = & \varnothing \textrm{ otherwise}.
   \end{eqnarray}
 
-Low-level libraries upon which Tubex has been built provide functionalities for computing arithmetic on intervals, involving basic operations as well as non-linear functions. The following functions can be used:
+Low-level libraries upon which Codac has been built provide functionalities for computing arithmetic on intervals, involving basic operations as well as non-linear functions. The following functions can be used:
 
 =========================  ==================================================================
 Code                       Meaning

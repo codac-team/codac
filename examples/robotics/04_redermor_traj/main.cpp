@@ -1,20 +1,20 @@
 /** 
- *  tubex-lib - Examples
+ *  Codac - Examples
  *  Localization of the Autonomous Underwater Vehicle (AUV) Redermor
  * ----------------------------------------------------------------------------
  *
  *  \date       2016
  *  \author     Simon Rohou
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <tubex.h>
-#include <tubex-rob.h>
+#include <codac.h>
+#include <codac-rob.h>
 
 using namespace std;
-using namespace tubex;
+using namespace codac;
 
 int main(int argc, char** argv)
 {
