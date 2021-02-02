@@ -177,11 +177,12 @@ You should obtain this figure:
 
 
 
-Submit your exercise
---------------------
+End of third step!
+------------------
 
-| That's about all for this week!
-| You can submit your answers for the questions of Lessons E and F to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.
+That's about all for this step!
+
+.. You can submit your answers for the questions of Lessons E and F to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can .. evaluate them for the diploma.
 
 Next (and last) lessons will merge all the concepts that have been seen so far, in order to solve :
 
