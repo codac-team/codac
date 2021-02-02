@@ -1,5 +1,19 @@
+#########
+Changelog
+#########
+
+.. contents:: Contents of this page
+  :depth: 2
+
+==============
+Codac releases
+==============
+
+
 Unreleased yet (in development)
 ===============================
+
+This list corresponds to ongoing developments.
 
 .. Features added
 .. --------------
@@ -20,12 +34,29 @@ Unreleased yet (in development)
 .. -------------
 
 
+==============================================
+Previous libraries from which Codac comes from
+==============================================
+
+Codac has been built upon two libraries:
+
+* Tubex (`Simon Rohou <http://simon-rohou.fr/research/>`_), that was dedicated to tubes, Contractor Networks, dynamical systems...
+
+* pyIbex (`Benoît Desrochers <http://benensta.github.io>`_), that was initially a Python binding of `IBEX <http://www.ibex-lib.org/>`_, and proposed tools related to separators, thicksets, geometrical contractors...
+
+
+==============================================
+Releases related to the previous Tubex library
+==============================================
+
+The previous Tubex releases are listed thereafter.
+
 -----------------------------------------------------------------
 
-Release 3.1.1 (released `Jan 12, 2021 <https://github.com/codac-team/codac/releases/tag/v3.1.1>`_)
-=======================================================================================================
+Tubex release 3.1.1 (released `Jan 12, 2021 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.1.1>`_)
+===============================================================================================================
 
-`Commits since previous release 3.1.0 <https://github.com/codac-team/codac/compare/v3.1.0...v3.1.1>`_
+`Commits since previous Tubex release 3.1.0 <https://github.com/codac-team/codac/compare/v.tubex.3.1.0...v.tubex.3.1.1>`_
 
 Changes
 -------
@@ -40,10 +71,10 @@ Bugs fixed
 
 -----------------------------------------------------------------
 
-Release 3.1.0 (released `Dec 17, 2020 <https://github.com/codac-team/codac/releases/tag/v3.1.0>`_)
-=======================================================================================================
+Tubex release 3.1.0 (released `Dec 17, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.1.0>`_)
+===============================================================================================================
 
-`Commits since previous release 3.0.13 <https://github.com/codac-team/codac/compare/v3.0.13...v3.1.0>`_
+`Commits since previous Tubex release 3.0.13 <https://github.com/codac-team/codac/compare/v.tubex.3.0.13...v.tubex.3.1.0>`_
 
 Features added
 --------------
@@ -66,10 +97,10 @@ Dependencies
 
 -----------------------------------------------------------------
 
-Release 3.0.13 (released `Dec 5, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.13>`_)
-=======================================================================================================
+Tubex release 3.0.13 (released `Dec 5, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.13>`_)
+================================================================================================================
 
-`Commits since previous release 3.0.12 <https://github.com/codac-team/codac/compare/v3.0.12...v3.0.13>`_
+`Commits since previous Tubex release 3.0.12 <https://github.com/codac-team/codac/compare/v.tubex.3.0.12...v.tubex.3.0.13>`_
 
 Features added
 --------------
@@ -96,10 +127,10 @@ Deprecated
 
 -----------------------------------------------------------------
 
-Release 3.0.12 (released `Nov 26, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.12>`_)
-========================================================================================================
+Tubex release 3.0.12 (released `Nov 26, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.12>`_)
+=================================================================================================================
 
-`Commits since previous release 3.0.11 <https://github.com/codac-team/codac/compare/v3.0.11...v3.0.12>`_
+`Commits since previous Tubex release 3.0.11 <https://github.com/codac-team/codac/compare/v.tubex.3.0.11...v.tubex.3.0.12>`_
 
 Features added
 --------------
@@ -116,10 +147,10 @@ Changes
 
 -----------------------------------------------------------------
 
-Release 3.0.11 (released `Nov 15, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.11>`_)
-========================================================================================================
+Tubex release 3.0.11 (released `Nov 15, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.11>`_)
+=================================================================================================================
 
-`Commits since previous release 3.0.10 <https://github.com/codac-team/codac/compare/v3.0.10...v3.0.11>`_
+`Commits since previous Tubex release 3.0.10 <https://github.com/codac-team/codac/compare/v.tubex.3.0.10...v.tubex.3.0.11>`_
 
 Changes
 -------
@@ -134,10 +165,10 @@ Documentation
 
 -----------------------------------------------------------------
 
-Release 3.0.10 (released `Oct 31, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.10>`_)
-========================================================================================================
+Tubex release 3.0.10 (released `Oct 31, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.10>`_)
+=================================================================================================================
 
-`Commits since previous release 3.0.9 <https://github.com/codac-team/codac/compare/v3.0.9...v3.0.10>`_
+`Commits since previous Tubex release 3.0.9 <https://github.com/codac-team/codac/compare/v.tubex.3.0.9...v.tubex.3.0.10>`_
 
 Features added
 --------------
@@ -156,15 +187,15 @@ Dependencies
 
 * now available in Python 3.9
 * using `IBEX 2.8.9 <https://github.com/ibex-team/ibex-lib/releases/tag/ibex-2.8.9>`_
-* using `pyIbex 1.9.2 <https://github.com/benEnsta/pyIbex/releases/tag/v1.9.2>`_
+* using `pyIbex 1.9.2 <https://github.com/benEnsta/pyIbex/releases/tag/v.tubex.1.9.2>`_
 
 
 -----------------------------------------------------------------
 
-Release 3.0.9 (released `Jun 28, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.9>`_)
-======================================================================================================
+Tubex release 3.0.9 (released `Jun 28, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.9>`_)
+===============================================================================================================
 
-`Commits since previous release 3.0.8 <https://github.com/codac-team/codac/compare/v3.0.8...v3.0.9>`_
+`Commits since previous Tubex release 3.0.8 <https://github.com/codac-team/codac/compare/v.tubex.3.0.8...v.tubex.3.0.9>`_
 
 Bugs fixed
 ----------
@@ -180,10 +211,10 @@ Documentation
 
 -----------------------------------------------------------------
 
-Releases 3.0.6 -- 3.0.8 (released `Jun 23, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.8>`_)
-================================================================================================================
+Tubex releases 3.0.6 -- 3.0.8 (released `Jun 23, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.8>`_)
+=========================================================================================================================
 
-`Commits since previous release 3.0.5 <https://github.com/codac-team/codac/compare/v3.0.5...v3.0.8>`_
+`Commits since previous Tubex release 3.0.5 <https://github.com/codac-team/codac/compare/v.tubex.3.0.5...v.tubex.3.0.8>`_
 
 Features added
 --------------
@@ -218,10 +249,10 @@ Documentation
 
 -----------------------------------------------------------------
 
-Release 3.0.5 (released `Jun 14, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.5>`_)
-======================================================================================================
+Tubex release 3.0.5 (released `Jun 14, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.5>`_)
+===============================================================================================================
 
-`Commits since previous release 3.0.4 <https://github.com/codac-team/codac/compare/v3.0.4...v3.0.5>`_
+`Commits since previous Tubex release 3.0.4 <https://github.com/codac-team/codac/compare/v.tubex.3.0.4...v.tubex.3.0.5>`_
 
 Changes
 -------
@@ -247,10 +278,10 @@ Documentation
 
 -----------------------------------------------------------------
 
-Release 3.0.4 (released `Jun 10, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.4>`_)
-======================================================================================================
+Tubex release 3.0.4 (released `Jun 10, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.4>`_)
+===============================================================================================================
 
-`Commits since previous release 3.0.3 <https://github.com/codac-team/codac/compare/v3.0.3...v3.0.4>`_
+`Commits since previous Tubex release 3.0.3 <https://github.com/codac-team/codac/compare/v.tubex.3.0.3...v.tubex.3.0.4>`_
 
 Features added
 --------------
@@ -266,10 +297,10 @@ Documentation
 
 -----------------------------------------------------------------
 
-Release 3.0.3 (released `Jun 7, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.3>`_)
-======================================================================================================
+Tubex release 3.0.3 (released `Jun 7, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.3>`_)
+==============================================================================================================
 
-`Commits since previous release 3.0.2 <https://github.com/codac-team/codac/compare/v3.0.2...v3.0.3>`_
+`Commits since previous Tubex release 3.0.2 <https://github.com/codac-team/codac/compare/v.tubex.3.0.2...v.tubex.3.0.3>`_
 
 Changes
 -------
@@ -284,10 +315,10 @@ Bugs fixed
 
 -----------------------------------------------------------------
 
-Release 3.0.2 (released `Jun 6, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.2>`_)
-======================================================================================================
+Tubex release 3.0.2 (released `Jun 6, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.2>`_)
+==============================================================================================================
 
-`Commits since previous release 3.0.1 <https://github.com/codac-team/codac/compare/v3.0.1...v3.0.2>`_
+`Commits since previous Tubex release 3.0.1 <https://github.com/codac-team/codac/compare/v.tubex.3.0.1...v.tubex.3.0.2>`_
 
 Changes
 -------
@@ -305,10 +336,10 @@ Documentation
 
 -----------------------------------------------------------------
 
-Release 3.0.1 (released `Jun 5, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.1>`_)
-======================================================================================================
+Tubex release 3.0.1 (released `Jun 5, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.1>`_)
+==============================================================================================================
 
-`Commits since previous release 3.0.0 <https://github.com/codac-team/codac/compare/v3.0.0-beta5...v3.0.1>`_
+`Commits since previous Tubex release 3.0.0 <https://github.com/codac-team/codac/compare/v.tubex.3.0.0-beta5...v.tubex.3.0.1>`_
 
 Features added
 --------------
@@ -336,11 +367,11 @@ Documentation
 
 -----------------------------------------------------------------
 
-Previous versions
-=================
+Previous versions of Tubex
+==========================
 
 The changelog for versions before 3.0.1 can be found `on GitHub history <https://github.com/codac-team/codac/commits/master>`_.
 
-* **v3.0** (released `Jun 3, 2020 <https://github.com/codac-team/codac/releases/tag/v3.0.0-beta5>`_)
-* **v2.0** (released `Aug 12, 2019 <https://github.com/codac-team/codac/releases/tag/v2.0.0>`_)
-* **v1.0** (released `May 5, 2017 <https://github.com/codac-team/codac/releases/tag/v1.0.0>`_)
+* Tubex **v3.0** (released `Jun 3, 2020 <https://github.com/codac-team/codac/releases/tag/v.tubex.3.0.0-beta5>`_)
+* Tubex **v2.0** (released `Aug 12, 2019 <https://github.com/codac-team/codac/releases/tag/v.tubex.2.0.0>`_)
+* Tubex **v1.0** (released `May 5, 2017 <https://github.com/codac-team/codac/releases/tag/v.tubex.1.0.0>`_)

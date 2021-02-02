@@ -288,9 +288,6 @@ Then you have two options: read the details about the features of Codac (domains
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
 
-.. versionadded:: 3.0.0
-   The Contractor Network tool.
-
 
 .. _sec-mainpage-tuto:
 
