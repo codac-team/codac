@@ -13,7 +13,7 @@
 Codac: constraint-programming for robotics
 ##########################################
 
-Codac (Catalog Of Domains And Contractors) is a C++/Python library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
+Codac (Catalog Of Domains And Contractors) is a C++/Python library providing tools for **constraint programming** over reals, trajectories and sets. It has many applications in **state estimation** or **robot localization**.
 
 | **What is constraint programming?**
 | In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs *constraint propagation* on the variables and provides a reliable set of **feasible solutions** corresponding to the problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*.
