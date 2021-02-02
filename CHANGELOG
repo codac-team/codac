@@ -9,30 +9,42 @@ Changelog
 Codac releases
 ==============
 
-
 Unreleased yet (in development)
 ===============================
 
 This list corresponds to ongoing developments.
 
-.. Features added
-.. --------------
+Features added
+--------------
 
-.. Changes
-.. -------
+Changes
+-------
 
-.. Dependencies
-.. ------------
+Dependencies
+------------
 
-.. Bugs fixed
-.. ----------
+Bugs fixed
+----------
 
-.. Deprecated
-.. ----------
+Deprecated
+----------
 
-.. Documentation
-.. -------------
+Documentation
+-------------
 
+-----------------------------------------------------------------
+
+Codac release 0.1.0 (released `Feb 2, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.0>`_)
+=======================================================================================================
+
+`Commits since previous release tubex.3.1.1 <https://github.com/codac-team/codac/compare/v.tubex.3.1.1...v0.1.0>`_
+
+Changes
+-------
+
+* :commit:`a98cd947e9f5b0823d88eda9abc8c4b71bfb16fe`: transition Tubex -> Codac
+
+-----------------------------------------------------------------
 
 ==============================================
 Previous libraries from which Codac comes from
