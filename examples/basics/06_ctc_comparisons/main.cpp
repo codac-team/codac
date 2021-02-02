@@ -1,19 +1,19 @@
 /** 
- *  tubex-lib - Examples
+ *  Codac - Examples
  *  Comparisons of two distance contractors
  * ----------------------------------------------------------------------------
  *
  *  \date       2020
  *  \author     Simon Rohou
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <tubex.h>
+#include <codac.h>
 
 using namespace std;
-using namespace tubex;
+using namespace codac;
 
 int main()
 {
@@ -27,7 +27,7 @@ int main()
   for(int i = 0 ; i < 100000 ; i++)
   {
     IntervalVector x({{2,2.5},{0,0.5},{1.5,2.5},{4,11},{7,8}});
-    ctc::dist.contract(x); // contractor from Tubex
+    ctc::dist.contract(x); // contractor from Codac
   }
 
   printf("[ Manual ctc   ] Time: %.3f\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);

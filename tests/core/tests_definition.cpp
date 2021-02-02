@@ -1,11 +1,11 @@
 #include "catch_interval.hpp"
-#include "tubex_TFunction.h"
+#include "codac_TFunction.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 TEST_CASE("Tube definition")
 {

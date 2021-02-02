@@ -1,14 +1,14 @@
 .. _sec-installation:
 
 ############################
-Installing the Tubex library
+Installing the Codac library
 ############################
 
-Tubex is available in both C++ and Python3.
+Codac is available in both C++ and Python3.
 
-It is fully supported on Linux systems (both languages). Tubex  has been recently made available on Windows too (both languages). We are working on its availability for macOS.
+It is fully supported on Linux systems (both languages). Codac  has been recently made available on Windows too (both languages). We are working on its availability for macOS.
 Any help is more than welcome.
-Note that you can also :ref:`use Tubex online in Python <sec-py-project-online>`, without having to install the library on your machine.
+Note that you can also :ref:`use Codac online in Python <sec-py-project-online>`, without having to install the library on your machine.
 
 .. role:: gbg
 
@@ -31,7 +31,7 @@ Note that you can also :ref:`use Tubex online in Python <sec-py-project-online>`
 .. _online-py: 02-py-project-online.html
 
 .. |win-cpp| replace:: in progress (#21)
-.. _win-cpp: https://github.com/SimonRohou/tubex-lib/issues/21
+.. _win-cpp: https://github.com/codac-team/codac/issues/21
 
 The :gbg:`✓` configurations are officially supported at the moment:
 
@@ -54,9 +54,9 @@ The :gbg:`✓` configurations are officially supported at the moment:
 +---------------+----------------+-----------------+-----------------+----------------+----------------+
 
 | **Click on the links in the table to access the related installation procedures.**
-| If your configuration is missing in this table, please `contact us <https://github.com/SimonRohou/tubex-lib/issues>`_. We may be able to make it available for Tubex.
+| If your configuration is missing in this table, please `contact us <https://github.com/codac-team/codac/issues>`_. We may be able to make it available for Codac.
 
-Note that if you want to contribute to Tubex, you have to make the full C++ installation.
+Note that if you want to contribute to Codac, you have to make the full C++ installation.
 
 
 
@@ -65,10 +65,10 @@ Note that if you want to contribute to Tubex, you have to make the full C++ inst
 Graphical tools
 ^^^^^^^^^^^^^^^
 
-For using Tubex with graphical outputs, you will need the VIBes viewer.
+For using Codac with graphical outputs, you will need the VIBes viewer.
 
 `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ is a visualization system that aims at providing people working with intervals a way to display results (boxes, pavings), without worrying about GUI programming.
-Some methods have been implemented in Tubex in order to extend VIBes' features to tubes purposes.
+Some methods have been implemented in Codac in order to extend VIBes' features to tubes purposes.
 
 You can `download the VIBes viewer directly from the official page <http://enstabretagnerobotics.github.io/VIBES/>`_ (click on the *Last Release* link).
 

@@ -1,14 +1,14 @@
 .. _sec-toctree:
 
 ##########################################
-Tubex: constraint-programming for robotics
+Codac: constraint-programming for robotics
 ##########################################
 
 .. toctree::
   :maxdepth: 1
   :titlesonly:
  
-  Tubex main page </index>
+  Codac main page </index>
   /install/02-py-project-online
   /install/01-installation
   /install/02-start-py-project

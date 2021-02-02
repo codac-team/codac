@@ -9,7 +9,7 @@
 Information for developers
 ##########################
 
-In case you are willing to contribute to Tubex, here are some information that may be useful.
+In case you are willing to contribute to Codac, here are some information that may be useful.
 
 
 .. rubric:: Definition
@@ -131,7 +131,7 @@ One shortcut to build all the examples (including 3rd parties) is given by:
 
 .. code-block:: bash
   
-  # From Tubex root
+  # From Codac root
   ./make.sh examples
 
 Note that the :file:`build` folders of each example is removed before the build.
@@ -140,14 +140,14 @@ One shortcut to build the tests is given by:
 
 .. code-block:: bash
 
-  # From Tubex root
+  # From Codac root
   ./make.sh tests
 
 One shortcut to build both the examples and tests is:
 
 .. code-block:: bash
 
-  # From Tubex root
+  # From Codac root
   ./make.sh all
 
 
@@ -217,11 +217,11 @@ Copy the :file:`pybind11gen.py` script in the sources folder. Then, for instance
 
 .. code-block:: bash
   
-  python3 pybind11gen.py module_name=RandTrajectory tubex_RandTrajectory.h
+  python3 pybind11gen.py module_name=RandTrajectory codac_RandTrajectory.h
   # get the files in /tmp
 
 
-.. rubric:: [For admins] Upload Python binding on PyPi (`see Tubex repo <https://pypi.org/project/tubex_lib/>`_)
+.. rubric:: [For admins] Upload Python binding on PyPi (`see Codac repo <https://pypi.org/project/codac/>`_)
 
 Tag the current version:
 

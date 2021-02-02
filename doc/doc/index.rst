@@ -1,6 +1,6 @@
 .. _home-page:
 
-.. tubex-lib documentation master file
+.. codac documentation master file
 
 ..  # with overline, for parts
 ..  * with overline, for chapters
@@ -10,20 +10,20 @@
 ..  ", for paragraphs
 
 ##########################################
-Tubex: constraint-programming for robotics
+Codac: constraint-programming for robotics
 ##########################################
 
-Tubex is a C++/Python library providing tools for **constraint programming** over reals and trajectories. It has many applications in **state estimation** or **robot localization**.
+Codac (Catalog Of Domains And Contractors) is a C++/Python library providing tools for **constraint programming** over reals, trajectories and sets. It has many applications in **state estimation** or **robot localization**.
 
 | **What is constraint programming?**
-| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs constraint propagation on the variables and provides a reliable set of **feasible solutions** corresponding to the problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*.
+| In this paradigm, users concentrate on the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) by stating **constraints on the variables**. Then, a solver performs *constraint propagation* on the variables and provides a reliable set of **feasible solutions** corresponding to the problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*.
 
 .. The strength of this declarative paradigm lies in its **simpleness**, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
 
 | **What about mobile robotics?**
-| In the field of robotics, complex problems such as **non-linear state estimation**, **delays**, **SLAM** or **kidnapped robot problems** can be solved in a very few steps by using constraint programming. Even though the Tubex library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Tubex provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
+| In the field of robotics, complex problems such as **non-linear state estimation**, **parameter estimation**, **delays**, **SLAM** or **kidnapped robot problems** can be solved in a very few steps by using constraint programming. Even though the Codac library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Codac provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
 
-In a nutshell, Tubex is a high-level **constraint programming framework** providing tools to easily solve a wide range of robotic problems.
+In a nutshell, Codac is a high-level **constraint programming framework** providing tools to easily solve a wide range of problems.
 
 
 .. contents:: Contents of this page
@@ -49,25 +49,25 @@ In a nutshell, Tubex is a high-level **constraint programming framework** provid
 .. It is available in C++ and Python.
 
 
-.. Tubex is a C++ library providing tools for computations over sets of trajectories.
+.. Codac is a C++ library providing tools for computations over sets of trajectories.
 .. It has been designed to deal with **dynamical systems** defined by **non-linear differential equations** and involving constraints such as trajectory evaluations, time uncertainties or **delays**.
-.. These constraints are commonly encountered in mobile robotics: Tubex provides solutions to deal with problems that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters.
+.. These constraints are commonly encountered in mobile robotics: Codac provides solutions to deal with problems that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters.
 
 .. The building blocks of this library are *tubes*, that represent domains for **trajectory** variables (*e.g.* signals evolving with time). When a trajectory :math:`x(\cdot)` comes with uncertainties (due to numerical approximations or errors coming from sensors), a reliable enclosure of it can be made thanks to a tube :math:`[x](\cdot)`.
 
 .. A tube is defined as an interval of two trajectories. Its bounds delineate the **uncertainties** of a dynamical system, thus defining a solution set.
 .. Then, any operation related to :math:`x(\cdot)` will be made on its reliable enclosure :math:`[x](\cdot)`, which allows **guaranteed outputs**. These computations stand on interval analysis, a well suited tool that reliably propagates uncertainties.
 
-.. **Mobile robotics** has been the initial motivation of this project: the mathematical tools provided in Tubex come together with robotic applications.
+.. **Mobile robotics** has been the initial motivation of this project: the mathematical tools provided in Codac come together with robotic applications.
 
 .. Computations stands on the `IBEX library <http://www.ibex-lib.org/>`_ that provides reliable tools for static systems.
 
 
-Getting started: 2 minutes to Tubex
+Getting started: 2 minutes to Codac
 ===================================
 
 We only have to define **domains** for our variables and a set of **contractors** to implement our constraints.
-The core of Tubex stands on a **Contractor Network** representing a solver. 
+The core of Codac stands on a **Contractor Network** representing a solver. 
 
 In a few steps, a problem is solved by
 
@@ -227,7 +227,7 @@ The distance function :math:`g(\mathbf{x},\mathbf{b})` between the robot and a l
 .. figure:: img/rangeonly-nox0.png
 
 | *You just solved a non-linear state-estimation without knowledge about initial condition.*
-| See the full example on Github: `in C++ <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/01_getting_started/tubex_tuto_01.cpp>`_ or `in Python <https://github.com/SimonRohou/tubex-lib/blob/master/examples/tuto/01_getting_started/tubex_tuto_01.py>`_.
+| See the full example on Github: `in C++ <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/01_getting_started.cpp>`_ or `in Python <https://github.com/codac-team/codac/blob/master/examples/tuto/01_getting_started/01_getting_started.py>`_.
 
 In the tutorial and in the examples folder of this library, you will find more advanced problems such as Simultaneous Localization And Mapping (SLAM), data association problems or delayed systems.
 
@@ -235,7 +235,7 @@ In the tutorial and in the examples folder of this library, you will find more a
 User manual
 ===========
 
-*Want to use Tubex?* The first thing to do is to install the library, or try it online:
+*Want to use Codac?* The first thing to do is to install the library, or try it online:
 
 .. toctree::
   :maxdepth: 1
@@ -245,7 +245,7 @@ User manual
   /install/02-start-py-project
   /install/03-start-cpp-project
 
-Then you have two options: read the details about the features of Tubex (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Tubex for mobile robotics <sec-mainpage-tuto>`, with telling examples.
+Then you have two options: read the details about the features of Codac (domains, tubes, contractors, slices, and so on) or jump to the standalone tutorial about how to :ref:`use Codac for mobile robotics <sec-mainpage-tuto>`, with telling examples.
 
 .. sidebar:: Dependencies
   
@@ -254,7 +254,7 @@ Then you have two options: read the details about the features of Tubex (domains
   .. Figure:: img/logo_ibex.jpg
     :align: center
 
-  | Note that Tubex stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
+  | Note that Codac stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
   | `Read the IBEX documentation. <http://www.ibex-lib.org/doc/>`_
 
   .. rubric:: pyIbex
@@ -262,7 +262,7 @@ Then you have two options: read the details about the features of Tubex (domains
   .. Figure:: img/logo_pyibex.jpg
     :align: center
 
-  | The Python API of Tubex is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing Python access to the IBEX library.
+  | The Python API of Codac is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing Python access to the IBEX library.
   | `Read the pyIbex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
 
 
@@ -288,24 +288,25 @@ Then you have two options: read the details about the features of Tubex (domains
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
 
-.. versionadded:: 3.0.0
-   The Contractor Network tool.
-
 
 .. _sec-mainpage-tuto:
 
-.. sidebar:: IROS 2020 tutorial
+
+.. sidebar:: International tutorial
+
+  .. Figure:: tutorial/img/logos/logo_icra.png
+    :align: center
 
   .. Figure:: tutorial/img/logos/logo_iros.png
     :align: center
 
-  This tutorial is proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ (International Conference on Intelligent Robots and Systems), 26th October.
+  This tutorial has been proposed in the `IROS 2020 Conference <https://www.iros2020.org/3program/Tutorials.html>`_ and the `ICRA 2020 Conference <https://www.icra2020.org/program/workshops-and-tutorials>`_.
 
 
 Tutorial for mobile robotics
 ============================
 
-The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about how to use Tubex for mobile robotic applications, with telling examples:
+The :ref:`following tutorial <sec-tuto-main-page>` is standalone and tells about how to use Codac for mobile robotic applications, with telling examples:
 
 .. toctree::
   :maxdepth: 1
@@ -332,8 +333,8 @@ License and support
 
 This software is under `GNU Lesser General Public License <https://www.gnu.org/copyleft/lgpl.html>`_.
 
-For recent improvements and activities, see the `Tubex Github repository <https://github.com/SimonRohou/tubex-lib>`_.
-You can post bug reports and feature requests on the `Issues page <https://github.com/SimonRohou/tubex-lib/issues>`_.
+For recent improvements and activities, see the `Codac Github repository <https://github.com/codac-team/codac>`_.
+You can post bug reports and feature requests on the `Issues page <https://github.com/codac-team/codac/issues>`_.
 
 
 Contributors
@@ -353,6 +354,7 @@ Contributors
   * `Thomas Le Mézo <https://www.ensta-bretagne.fr/lemezo/>`_
   * `Cyril Bouvier <http://www.lirmm.fr/~bouvier/index.en.html>`_
   * `Bertrand Neveu <http://imagine.enpc.fr/~neveub/>`_
+  * `Peter Franek <http://www.cs.cas.cz/~franek/>`_
 
 
 Main related publications
@@ -417,13 +419,13 @@ Main related publications
 How to cite this project?
 =========================
 
-We suggest the following BibTeX template to cite Tubex in scientific discourse:
+We suggest the following BibTeX template to cite Codac in scientific discourse:
 
 .. code-block:: none
 
-  @misc{tubex,
-     author = {Simon Rohou and others},
-     year = {2017},
-     note = {http://simon-rohou.fr/research/tubex-lib/},
-     title = {The {Tubex} library -- {C}onstraint-programming for robotics}
+  @misc{codac,
+     author = {Simon Rohou and Benoit Desrochers and others},
+     year = {2021},
+     note = {http://codac.io},
+     title = {The {Codac} library -- {C}onstraint-programming for robotics}
   }

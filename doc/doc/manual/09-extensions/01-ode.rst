@@ -3,7 +3,7 @@
 .. warning::
   
   This part of the documentation is deprecated. Several changes are currently performed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
+  A new stable version of Codac will be released in the coming weeks.
 
 *******************************************
 Using external integration methods for ODEs
@@ -15,7 +15,7 @@ Using external integration methods for ODEs
 Installing CAPD
 ---------------
 
-It is now possible to use CAPD to compute a guaranteed integration of an ODE. The result is enclosed in a ``TubeVector`` object of Tubex.
+It is now possible to use CAPD to compute a guaranteed integration of an ODE. The result is enclosed in a ``TubeVector`` object of Codac.
 
 To do so, you need to have CAPD and its DynSys module installed.
 You may need to install the following packages in order to compile CAPD:
@@ -57,7 +57,7 @@ Then you can proceed to the compilation of the sources of CAPD:
 
   For additional options on CAPD compilation and integration please visit the `CAPD official documentation <http://capd.sourceforge.net/capdDynSys/docs/html/>`_.
 
-Finally, you need to compile Tubex again:
+Finally, you need to compile Codac again:
 
 .. code-block:: bash
 
@@ -76,15 +76,15 @@ To use the module you need to add at the beginning of your code:
 
 .. code-block:: c++
 
-  #include <tubex-capd.h>
+  #include <codac-capd.h>
 
 
 Here is an example of use:
 
 .. code-block:: c++
 
-  #include <tubex.h>
-  #include <tubex-capd.h>
+  #include <codac.h>
+  #include <codac-capd.h>
 
   int main()
   {
@@ -103,14 +103,14 @@ Here is an example of use:
         "initial_coordinates": [[0.5,0.5],[0,0]],
 
         "output_file": "reference_output.txt",
-        "tubex_output": "tube.tube"
+        "codac_output": "tube.tube"
       }
     }
     )"_json;
 
     vector<IntervalVector> ibex_curve = capd2ibex(j); // list of IBEX format IntervalVector
     // or
-    TubeVector output = capd2tubex(j); // one tube of Tubex format
+    TubeVector output = capd2codac(j); // one tube of Codac format
   }
 
 
@@ -124,4 +124,4 @@ Note that you can also define the configuration in a separated file with:
     json j;
     i >> j;
 
-You can then use any Tubex operator on this new generated tube.
+You can then use any Codac operator on this new generated tube.

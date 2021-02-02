@@ -30,7 +30,7 @@ A trajectory :math:`x(\cdot)` belongs to the tube :math:`\left[x\right](\cdot)` 
 Slices
 ------
 
-| In Tubex, tubes are implemented as lists of slices.
+| In Codac, tubes are implemented as lists of slices.
 | More precisely, a tube :math:`[x](\cdot)` with a sampling time :math:`\delta>0` is implemented as a box-valued function which is constant for all :math:`t` inside intervals :math:`[k\delta,k\delta+\delta]`, :math:`k\in\mathbb{N}`.
 
 The box :math:`[k\delta,k\delta+\delta]\times\left[x\right]\left(t_{k}\right)`, with :math:`t_{k}\in[k\delta,k\delta+\delta]`, is called the :math:`k`-th slice of the tube :math:`[x](\cdot)` and is denoted by :math:`[\![x]\!]^{(k)}`.
@@ -122,10 +122,10 @@ As tubes are intervals of trajectories, a ``Tube`` can be defined from ``Traject
 
   Result of tubes :math:`[x_8](t)=[\sin(t),\sin(t)]`, :math:`[x_9](t)=[\cos(t),\cos(t)+\frac{t}{10}]`, made of 100 slices.
 
-.. #include <tubex.h>
+.. #include <codac.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. 
 .. int main()
 .. {
@@ -221,10 +221,10 @@ produces (each dimension displayed on the same figure):
 
 .. figure:: img/02_tubevectors.png
 
-.. #include <tubex.h>
+.. #include <codac.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. 
 .. int main()
 .. {
@@ -632,10 +632,10 @@ Next pages will present reliable operators to reduce the range of the presented 
 
 
 
-.. #include <tubex.h>
+.. #include <codac.h>
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. 
 .. int main()
 .. {
@@ -670,5 +670,5 @@ Next pages will present reliable operators to reduce the range of the presented 
 
   See the C++ API documentation of this class:
 
-  * `Tube <../../../api/html/classtubex_1_1_tube.html>`_
-  * `TubeVector <../../../api/html/classtubex_1_1_tube_vector.html>`_
+  * `Tube <../../../api/html/classcodac_1_1_tube.html>`_
+  * `TubeVector <../../../api/html/classcodac_1_1_tube_vector.html>`_
