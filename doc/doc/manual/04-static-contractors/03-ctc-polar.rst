@@ -33,7 +33,7 @@ Definition
 
     .. code-tab:: c++
 
-      #include <tubex-pyibex.h>
+      #include <codac-pyibex.h>
       ctc::polar.contract(x, y, rho, theta);
 
 
@@ -99,7 +99,7 @@ Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the 
 
   .. code-tab:: c++
 
-    #include <tubex-pyibex.h>
+    #include <codac-pyibex.h>
 
     // ...
 
@@ -129,7 +129,7 @@ Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the 
 
 
 .. from pyibex import *
-.. from tubex_lib import *
+.. from codac import *
 .. 
 .. x = IntervalVector(2,Interval(0.))
 .. 

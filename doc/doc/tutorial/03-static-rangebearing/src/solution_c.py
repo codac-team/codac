@@ -1,5 +1,5 @@
 from pyibex import *
-from tubex_lib import *
+from codac import *
 import math
 
 x_truth = (2,1,math.pi/6) # actual state vector (pose)

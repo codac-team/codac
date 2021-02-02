@@ -3,7 +3,7 @@
 .. warning::
   
   The writing of this page is in progress. Several changes are currently performed on the library.
-  A new stable version of Tubex will be released in the coming weeks.
+  A new stable version of Codac will be released in the coming weeks.
 
 ************************************************************************
 CtcPicard: :math:`\dot{\mathbf{x}}(t)=\mathbf{f}\big(\mathbf{x}(t)\big)`
@@ -36,4 +36,4 @@ Definition
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_picard.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_picard.html>`_.

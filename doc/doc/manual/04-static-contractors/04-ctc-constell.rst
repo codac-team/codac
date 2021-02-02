@@ -48,7 +48,7 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
     .. code-tab:: c++
 
-      #include <tubex-rob.h>
+      #include <codac-rob.h>
       CtcConstell ctc_constell(v_b); // with v_b, the vector<IntervalVector> defining
                                      // the constellation of points
 
@@ -74,7 +74,7 @@ The :math:`\mathcal{C}_\textrm{constell}` can be instantiated with
 
   .. code-tab:: c++
 
-    #include <tubex-rob.h>
+    #include <codac-rob.h>
 
     // ...
 
@@ -119,7 +119,7 @@ we can use the :math:`\mathcal{C}_\textrm{constell}` to contract them according 
   Filled boxes are the :math:`[\mathbf{x}]` after contraction.
 
 .. from pyibex import *
-.. from tubex_lib import *
+.. from codac import *
 .. 
 .. v_x = [ IntervalVector([[1.25,3],[1.6,2.75]]),
 ..         IntervalVector([[2.,3.5],[0.6,1.2]]),
@@ -180,4 +180,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_constell.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_constell.html>`_.

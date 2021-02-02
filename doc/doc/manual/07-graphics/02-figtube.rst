@@ -172,7 +172,7 @@ produces:
 
   See the C++ API documentation of this class:
 
-  * `VIBesFigTube <../../../api/html/classtubex_1_1_v_i_bes_fig_tube.html>`_
+  * `VIBesFigTube <../../../api/html/classcodac_1_1_v_i_bes_fig_tube.html>`_
 
 
 The class ``VIBesFigTubeVector``

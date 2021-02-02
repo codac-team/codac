@@ -46,7 +46,7 @@ CMakeLists.txt.user
 __pycache__
 
 # Tubes serialization files
-*.tubex
+*.codac
 
 # Documentation files
 doc/doxygen/html/*

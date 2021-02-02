@@ -17,7 +17,7 @@ Exercises in progress...
 
 Corrections:
 
-* `tubex-lib/examples/tuto/02_static_rangeonly/ <https://github.com/SimonRohou/tubex-lib/tree/tuto/examples/tuto/02_static_rangeonly>`_
+* `codac/examples/tuto/02_static_rangeonly/ <https://github.com/codac-team/codac/tree/tuto/examples/tuto/02_static_rangeonly>`_
 
 ------------------------------------------------------
 
@@ -29,7 +29,7 @@ Corrections:
 Corrections:
 
 * for Lesson C, solutions are provided at the end of the lesson
-* `tubex-lib/blob/tuto/doc/doc/tutorial/04-own-contractor/solution.py <https://github.com/SimonRohou/tubex-lib/blob/tuto/doc/doc/tutorial/04-own-contractor/solution.py>`_
+* `codac/blob/tuto/doc/doc/tutorial/04-own-contractor/solution.py <https://github.com/codac-team/codac/blob/tuto/doc/doc/tutorial/04-own-contractor/solution.py>`_
 
 ------------------------------------------------------
 
@@ -40,8 +40,8 @@ Corrections:
 
 Corrections:
 
-* `tubex-lib/doc/doc/tutorial/05-tubes/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/05-tubes/solution.py>`_
-* `tubex-lib/doc/doc/tutorial/06-dyn-rangeonly/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/06-dyn-rangeonly/solution.py>`_
+* `codac/doc/doc/tutorial/05-tubes/solution.py <https://github.com/codac-team/codac/blob/dev/doc/doc/tutorial/05-tubes/solution.py>`_
+* `codac/doc/doc/tutorial/06-dyn-rangeonly/solution.py <https://github.com/codac-team/codac/blob/dev/doc/doc/tutorial/06-dyn-rangeonly/solution.py>`_
 
 ------------------------------------------------------
 
@@ -52,5 +52,5 @@ Corrections:
 
 Corrections:
 
-* `tubex-lib/doc/doc/tutorial/07-data-association/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/07-data-association/solution.py>`_
-* `tubex-lib/doc/doc/tutorial/08-rangeonly-slam/solution.py <https://github.com/SimonRohou/tubex-lib/blob/dev/doc/doc/tutorial/08-rangeonly-slam/solution.py>`_
+* `codac/doc/doc/tutorial/07-data-association/solution.py <https://github.com/codac-team/codac/blob/dev/doc/doc/tutorial/07-data-association/solution.py>`_
+* `codac/doc/doc/tutorial/08-rangeonly-slam/solution.py <https://github.com/codac-team/codac/blob/dev/doc/doc/tutorial/08-rangeonly-slam/solution.py>`_

@@ -6,7 +6,7 @@ using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 #define TEST_COMPUTATION_TIMES 0
 #define COEFF_COMPUTATION_TIME 1.

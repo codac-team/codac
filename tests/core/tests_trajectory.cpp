@@ -4,7 +4,7 @@ using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 // todo: test TrajectoryVector
 

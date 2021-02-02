@@ -1,5 +1,5 @@
 /** 
- *  tubex-lib - Examples
+ *  Codac - Examples
  *  Robot evolution equations: causal chain
  * ----------------------------------------------------------------------------
  *
@@ -8,16 +8,16 @@
  *
  *  \date       2016
  *  \author     Simon Rohou
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <tubex.h>
-#include <tubex-rob.h>
+#include <codac.h>
+#include <codac-rob.h>
 
 using namespace std;
-using namespace tubex;
+using namespace codac;
 
 #define FINAL_CONDITION 0
 
@@ -86,7 +86,7 @@ int main()
 
     if(!FINAL_CONDITION)
     {
-      // Tubex result
+      // Codac result
       fig_map.draw_box(x(x.tdomain().ub()).subvector(0,1), "#008000");
 
       // CAPD result

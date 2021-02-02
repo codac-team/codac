@@ -35,7 +35,7 @@ As one can see, this constraint involves heterogeneous variables: a real :math:`
 
   The presence of the derivative in this constraint is due to the variable :math:`t_i` that may be uncertain: :math:`t_i\in[t_i]`. In this case, the derivative :math:`w(\cdot)` is required in order to depict the evolution of :math:`z(\cdot)` along the time interval :math:`[t_i]`.
 
-Tubex provides a contractor :math:`\mathcal{C}_{\textrm{eval}}\big([t_i],[y_i],[z](\cdot),[w](\cdot)\big)` to deal with this constraint on intervals and tubes.
+Codac provides a contractor :math:`\mathcal{C}_{\textrm{eval}}\big([t_i],[y_i],[z](\cdot),[w](\cdot)\big)` to deal with this constraint on intervals and tubes.
 
 
 Contract a tube at a given time
@@ -177,11 +177,12 @@ You should obtain this figure:
 
 
 
-Submit your exercise
---------------------
+End of third step!
+------------------
 
-| That's about all for this week!
-| You can submit your answers for the questions of Lessons E and F to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can evaluate them for the diploma.
+That's about all for this step!
+
+.. You can submit your answers for the questions of Lessons E and F to the `MOOC platform <https://mooc.ensta-bretagne.fr/course/view.php?id=7>`_ so that we can .. evaluate them for the diploma.
 
 Next (and last) lessons will merge all the concepts that have been seen so far, in order to solve :
 

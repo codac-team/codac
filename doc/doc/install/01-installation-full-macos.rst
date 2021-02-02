@@ -3,7 +3,7 @@
 .. _sec-installation-full-macos:
 
 #####################################
-Installing Tubex on macOS for C++ use
+Installing Codac on macOS for C++ use
 #####################################
 
 Not yet available.

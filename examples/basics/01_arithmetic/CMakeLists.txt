@@ -1,9 +1,9 @@
 # ==================================================================
-#  tubex-lib / basics example - cmake configuration file
+#  codac / basics example - cmake configuration file
 # ==================================================================
 
   cmake_minimum_required(VERSION 3.0.2)
-  project(tubex_basics_01 LANGUAGES CXX)
+  project(codac_basics_01 LANGUAGES CXX)
 
 # Adding IBEX
 
@@ -24,18 +24,18 @@
   find_package(Eigen3 REQUIRED NO_MODULE)
   message(STATUS "Found Eigen3 version ${EIGEN3_VERSION}")
 
-# Adding Tubex
+# Adding Codac
 
-  # In case you installed Tubex in a local directory, you need 
+  # In case you installed Codac in a local directory, you need 
   # to specify its path with the CMAKE_PREFIX_PATH option.
-  # set(CMAKE_PREFIX_PATH "~/tubex-lib/build_install")
+  # set(CMAKE_PREFIX_PATH "~/codac/build_install")
 
-  find_package(TUBEX REQUIRED)
-  message(STATUS "Found Tubex version ${TUBEX_VERSION}")
+  find_package(CODAC REQUIRED)
+  message(STATUS "Found Codac version ${CODAC_VERSION}")
 
 # Compilation
 
   add_executable(${PROJECT_NAME} main.cpp)
-  target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CXX_FLAGS})
-  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES})
+  target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex ${CODAC_LIBRARIES})

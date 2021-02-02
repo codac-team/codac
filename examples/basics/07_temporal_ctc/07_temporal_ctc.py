@@ -1,4 +1,4 @@
-# tubex-lib - Examples
+# Codac - Examples
 # Contractors on tubes: temporal contractors
 # Comparison between the Lohner & Picard temporal contractors
 # ----------------------------------------------------------------------------
@@ -6,7 +6,7 @@
 
 
 from pyibex import *
-from tubex_lib import *
+from codac import *
 import sys # only for checking if this example still works
 
 

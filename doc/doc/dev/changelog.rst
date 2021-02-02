@@ -6,8 +6,4 @@
 
 .. _changes:
 
-=========
-Changelog
-=========
-
 .. include:: ../../../CHANGELOG

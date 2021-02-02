@@ -1,5 +1,5 @@
 # ==================================================================
-#  tubex-lib - cmake configuration file
+#  Codac - cmake configuration file
 # ==================================================================
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/mathjax_stmaryrd.js DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -80,9 +80,9 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mathjax_stmaryrd.js
                       -c ${CMAKE_CURRENT_BINARY_DIR}/doc/
                       ${SPHINX_SOURCE} ${SPHINX_BUILD}
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                      COMMENT "Generating documentation with Sphinx")
+                      COMMENT "Generating the website using Sphinx")
 
-    install(DIRECTORY ${SPHINX_BUILD}
+    install(DIRECTORY ${SPHINX_BUILD}/
             DESTINATION share/doc/${CMAKE_PROJECT_NAME}
             OPTIONAL)
 

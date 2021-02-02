@@ -4,8 +4,8 @@
 The VIBes viewer
 ****************
 
-The graphical classes provided in Tubex are based on `the VIBes viewer <https://enstabretagnerobotics.github.io/VIBES/>`_: a visualization system that aims at providing people working with intervals a way to display results (boxes, pavings), without worrying about GUI programming.
-Some methods have been implemented in Tubex in order to extend VIBes' features to tubes purposes.
+The graphical classes provided in Codac are based on `the VIBes viewer <https://enstabretagnerobotics.github.io/VIBES/>`_: a visualization system that aims at providing people working with intervals a way to display results (boxes, pavings), without worrying about GUI programming.
+Some methods have been implemented in Codac in order to extend VIBes' features to tubes purposes.
 
 .. contents::
 
@@ -58,7 +58,7 @@ The VIBes API is available for both C++ and Python:
 * `C++ API <https://enstabretagnerobotics.github.io/VIBES/doxygen/cxx/>`_
 * `Python API <https://enstabretagnerobotics.github.io/VIBES/sphinx/html/index.html>`_
 
-Tubex provides custom classes to extend VIBes' features to appropriate drawings of tubes:
+Codac provides custom classes to extend VIBes' features to appropriate drawings of tubes:
 
 * ``VIBesFig``: parent class
 * ``VIBesFigTube``: view for 1d tubes and/or trajectories

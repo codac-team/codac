@@ -3,24 +3,24 @@
 .. _sec-installation-py:
 
 ###############################
-Installing Tubex for Python use
+Installing Codac for Python use
 ###############################
 
 .. note::
 
   For the moment, the Python version is only available for Linux, Windows, :ref:`or online <sec-py-project-online>`.
 
-Install the Tubex Python package
+Install the Codac Python package
 --------------------------------
 
-In case you want to use Tubex only with Python, then the installation procedure is simply:
+In case you want to use Codac only with Python, then the installation procedure is simply:
 
 .. code-block:: bash
   
   pip3 install --upgrade pip # you may have to upgrade pip (19.0.0 required at least)
-  pip3 install "pyibex>=1.9.2" tubex-lib
+  pip3 install "pyibex>=1.9.2" codac
 
-where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Tubex is based. Note that Tubex requires pyIbex 1.9.2 at least.
+where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Codac is based. Note that Codac requires pyIbex 1.9.2 at least.
 
 .. role:: gbg
 
@@ -51,14 +51,14 @@ The :gbg:`✓` configurations are officially supported at the moment:
 |Python 3.9     |:gbg:`✓`        |                 |:gbg:`✓`         |--              |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+
 
-If your configuration is missing in this table, please `contact us <https://github.com/SimonRohou/tubex-lib/issues>`_. We may be able to make it available for Tubex.
+If your configuration is missing in this table, please `contact us <https://github.com/codac-team/codac/issues>`_. We may be able to make it available for Codac.
 
 
-Update your Tubex Python package
+Update your Codac Python package
 --------------------------------
 
-For updating your already installed version of Tubex, the procedure is:
+For updating your already installed version of Codac, the procedure is:
 
 .. code-block:: bash
 
-  pip3 install tubex-lib --upgrade
+  pip3 install codac --upgrade

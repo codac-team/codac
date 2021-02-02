@@ -130,12 +130,15 @@ The robot evolves in an environment made of 150 landmarks that are all indisting
 
     .. code-tab:: py
 
-      fig_map.add_observations(v_obs, actual_x)
+      fig_map.add_observations(v_obs, actual_x) # drawing obs
+      for b in v_map:
+        fig_map.add_beacon(b.inflate(0.1)) # drawing beacons
 
     .. code-tab:: c++
 
-      fig_map.add_observations(v_obs, &actual_x);
-
+      fig_map.add_observations(v_obs, &actual_x); // drawing obs
+      for(const auto& b : v_map)
+        fig_map.add_beacon(b.mid(), 0.1); // drawing beacons
 
   You should obtain a result similar to this:
 

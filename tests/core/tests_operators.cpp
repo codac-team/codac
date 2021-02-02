@@ -1,12 +1,12 @@
 #include "catch_interval.hpp"
-#include "tubex_tube_arithmetic.h"
+#include "codac_tube_arithmetic.h"
 #include "tests_predefined_tubes.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 TEST_CASE("Operators")
 {
