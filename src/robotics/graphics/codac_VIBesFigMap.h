@@ -15,6 +15,7 @@
 #include <map>
 #include <vector>
 
+#include <codac_Interval.h>
 #include <codac_VIBesFig.h>
 #include <codac_TubeVector.h>
 #include <codac_TrajectoryVector.h>
@@ -65,7 +66,7 @@ namespace codac
        *
        * \param restricted_tdomain subset of the temporal domain of the referenced items
        */
-      void restrict_tdomain(const ibex::Interval& restricted_tdomain);
+      void restrict_tdomain(const Interval& restricted_tdomain);
 
       /**
        * \brief Enables the display of previous versions of the tubes,
@@ -295,7 +296,7 @@ namespace codac
        * \param beacon a const reference to the IntervalVector object to be drawn
        * \param color optional color of the beacon
        */
-      void add_beacon(const ibex::IntervalVector& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const IntervalVector& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a Beacon object to the map with a specific width
@@ -344,7 +345,7 @@ namespace codac
        * \param v_m a vector of boxes to be drawn
        * \param color optional color of the beacons
        */
-      void add_landmarks(const std::vector<ibex::IntervalVector>& v_m, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_landmarks(const std::vector<IntervalVector>& v_m, const std::string& color = DEFAULT_BEACON_COLOR);
       
       /**
        * \brief Adds a set of landmarks to the map with a specific width
@@ -366,7 +367,7 @@ namespace codac
        * \param pose the related 3d Vector object representing the pose (x,y,heading)
        * \param color optional color of the observation
        */
-      void add_observation(const ibex::IntervalVector& obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observation(const IntervalVector& obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
        * \brief Adds a set of range-and-bearing uncertain observations to the map,
@@ -379,7 +380,7 @@ namespace codac
        * \param pose the related 3d Vector object representing the pose (x,y,heading)
        * \param color optional color of the observation
        */
-      void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observations(const std::vector<IntervalVector>& v_obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
        * \brief Adds a range-and-bearing uncertain observation to the map,
@@ -392,7 +393,7 @@ namespace codac
        * \param traj the const pointer to the related TrajectoryVector object
        * \param color optional color of the observation
        */
-      void add_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
        * \brief Adds a set of range-and-bearing uncertain observations to the map,
@@ -405,7 +406,7 @@ namespace codac
        * \param traj the const pointer to the related TrajectoryVector object
        * \param color optional color of the observation
        */
-      void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observations(const std::vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
   
       /// @}
 
@@ -417,7 +418,7 @@ namespace codac
        * \param tube the const pointer to the TubeVector object to be drawn
        * \return the projected boxed envelope of the tube (used for figure calibration)
        */
-      const ibex::IntervalVector draw_tube(const TubeVector *tube);
+      const IntervalVector draw_tube(const TubeVector *tube);
 
       /**
        * \brief Draws the background of a tube
@@ -428,7 +429,7 @@ namespace codac
        * \param tube the const pointer to the TubeVector object to be drawn
        * \return the projected boxed envelope of the tube background (used for figure calibration)
        */
-      const ibex::IntervalVector draw_tube_background(const TubeVector *tube);
+      const IntervalVector draw_tube_background(const TubeVector *tube);
 
       /**
        * \brief Draws a trajectory
@@ -439,7 +440,7 @@ namespace codac
        * \param points_size optional size of points, 0 by default (line display instead of a list of points)
        * \return the projected boxed envelope of the trajectory (used for figure calibration)
        */
-      const ibex::IntervalVector draw_trajectory(const TrajectoryVector *traj, float points_size = 0.);
+      const IntervalVector draw_trajectory(const TrajectoryVector *traj, float points_size = 0.);
 
       /**
        * \brief Draws the slices of a tube
@@ -481,7 +482,7 @@ namespace codac
        * \param color color of the observation
        * \param params VIBes parameters related to the observation
        */
-      void draw_observation(const ibex::IntervalVector& obs, const ibex::Vector& pose, const std::string& color, const vibes::Params& params);
+      void draw_observation(const IntervalVector& obs, const ibex::Vector& pose, const std::string& color, const vibes::Params& params);
       
       /**
        * \brief Draws a range-and-bearing uncertain observation on the map
@@ -495,7 +496,7 @@ namespace codac
        * \param color color of the observation
        * \param params VIBes parameters related to the observation
        */
-      void draw_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color, const vibes::Params& params);
+      void draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const std::string& color, const vibes::Params& params);
       
       /**
        * \brief Returns actual or estimated heading related to some TrajectoryVector at t
@@ -542,7 +543,7 @@ namespace codac
       std::map<const TubeVector*,FigMapTubeParams> m_map_tubes; //!< map of Tube objects to be displayed, together with parameters
       std::map<const TrajectoryVector*,FigMapTrajParams> m_map_trajs; //!< map of Trajectory objects to be displayed, together with parameters
 
-      ibex::Interval m_restricted_tdomain; //!< restricts the display to a part of the temporal domain
+      Interval m_restricted_tdomain; //!< restricts the display to a part of the temporal domain
       bool m_draw_tubes_backgrounds = true; //!< if `true`, will highlight tubes contractions
       bool m_smooth_drawing = false; //!< if `true`, a smooth rendering of tubes will be done
       float m_robot_size = 5.5; //!< if `0`, no robot display

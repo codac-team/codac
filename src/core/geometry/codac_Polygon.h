@@ -13,7 +13,7 @@
 
 #include <vector>
 #include "ibex_Vector.h"
-#include "ibex_IntervalVector.h"
+#include "codac_IntervalVector.h"
 #include "codac_Edge.h"
 #include "codac_Point.h"
 
@@ -40,9 +40,9 @@ namespace codac
         const std::vector<Edge> edges() const;
         const std::vector<ibex::Vector>& vertices() const;
         const ibex::Vector& operator[](size_t vertex_id) const;
-        const ibex::IntervalVector box() const;
+        const IntervalVector box() const;
         const Point center() const;
-        const ibex::Interval area() const;
+        const Interval area() const;
 
       /// @}
       /// \name Tests

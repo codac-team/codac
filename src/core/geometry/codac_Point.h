@@ -21,9 +21,9 @@
 
 #include <vector>
 #include "ibex_Vector.h"
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
-#include "ibex_BoolInterval.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
+#include "codac_BoolInterval.h"
 
 // todo: remove this (polygons in unbounded case)
 #include <limits>
@@ -40,18 +40,18 @@ namespace codac
 
         Point(); // undefined point
         explicit Point(const ibex::Vector& p);
-        explicit Point(const ibex::IntervalVector& p);
-        Point(const ibex::Interval& x, const ibex::Interval& y);
+        explicit Point(const IntervalVector& p);
+        Point(const Interval& x, const Interval& y);
         const Point& operator=(const Point& p);
   
       /// @}
       /// \name Accessing values
       /// @{
 
-        const ibex::Interval& x() const;
-        const ibex::Interval& y() const;
-        const ibex::Interval& operator[](size_t id) const;
-        const ibex::IntervalVector& box() const;
+        const Interval& x() const;
+        const Interval& y() const;
+        const Interval& operator[](size_t id) const;
+        const IntervalVector& box() const;
         const ibex::Vector mid() const;
         double max_diam() const;
         const std::vector<ibex::Vector> bounds_pts() const;
@@ -81,10 +81,10 @@ namespace codac
       /// \name Static methods
       /// @{
 
-        static const ibex::BoolInterval aligned(const Point& a, const Point& b, const Point& c);
+        static const BoolInterval aligned(const Point& a, const Point& b, const Point& c);
         static const Point center(const std::vector<Point> v_pts);
-        static void push(const ibex::IntervalVector& box, std::vector<Point>& v_pts);
-        static void push(const ibex::IntervalVector& box, std::vector<ibex::Vector>& v_pts);
+        static void push(const IntervalVector& box, std::vector<Point>& v_pts);
+        static void push(const IntervalVector& box, std::vector<ibex::Vector>& v_pts);
         static std::vector<Point> to_Points(const std::vector<ibex::Vector>& v_pts);
         static std::vector<Point> remove_identical_pts(const std::vector<Point>& v_pts);
         static std::vector<ibex::Vector> remove_identical_pts(const std::vector<ibex::Vector>& v_pts);
@@ -95,7 +95,7 @@ namespace codac
     protected:
 
       // Reliable representation of points:
-      ibex::IntervalVector m_pt = ibex::IntervalVector(2, ibex::Interval::EMPTY_SET);
+      IntervalVector m_pt = IntervalVector(2, Interval::EMPTY_SET);
   };
 }
 

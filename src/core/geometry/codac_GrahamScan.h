@@ -12,7 +12,7 @@
 #define __CODAC_GRAHAMSCAN_H__
 
 #include <stack>
-#include "ibex_Interval.h"
+#include "codac_Interval.h"
 #include "codac_Point.h"
 #include "codac_ConvexPolygon.h"
 
@@ -37,10 +37,10 @@ namespace codac
       static void swap(ibex::Vector& p1, ibex::Vector& p2);
 
       // A utility function to return square of distance between p1 and p2
-      static const ibex::Interval dist(const ibex::IntervalVector& p1, const ibex::IntervalVector& p2);
+      static const Interval dist(const IntervalVector& p1, const IntervalVector& p2);
 
       // To find orientation of ordered triplet (p, q, r).
-      static OrientationInterval orientation(const ibex::IntervalVector& p0, const ibex::IntervalVector& p1, const ibex::IntervalVector& p2);
+      static OrientationInterval orientation(const IntervalVector& p0, const IntervalVector& p1, const IntervalVector& p2);
 
       friend class PointsSorter;
       friend class ConvexPolygon;

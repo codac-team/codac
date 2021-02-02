@@ -14,7 +14,7 @@
 
 #include "codac_TubeVector.h"
 #include "codac_TFunction.h"
-#include "ibex_IntervalVector.h"
+#include "codac_IntervalVector.h"
 #include "ibex_Function.h"
 
 namespace codac
@@ -33,7 +33,7 @@ namespace codac
    * \return TubeVector enclosing the solution
    */
   TubeVector CAPD_integrateODE(
-    const ibex::Interval& tdomain, const ibex::Function& f, const ibex::IntervalVector& x0,
+    const Interval& tdomain, const ibex::Function& f, const IntervalVector& x0,
     double tube_dt = 0., int capd_order = 20, double capd_dt = 0.);
 
   // Non autonomous
@@ -50,7 +50,7 @@ namespace codac
    * \return TubeVector enclosing the solution
    */
   TubeVector CAPD_integrateODE(
-    const ibex::Interval& tdomain, const TFunction& f, const ibex::IntervalVector& x0,
+    const Interval& tdomain, const TFunction& f, const IntervalVector& x0,
     double tube_dt = 0., int capd_order = 20, double capd_dt = 0.);
 }
 

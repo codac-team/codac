@@ -14,18 +14,15 @@
 #ifndef __IBEX_CTC_POLAR_H__
 #define __IBEX_CTC_POLAR_H__
 
-#include "ibex_IntervalVector.h"
+#include <codac_Interval.h>
+#include <codac_IntervalVector.h>
 #include "ibex_Ctc.h"
 
-using ibex::Interval;
-using ibex::IntervalVector;
 using ibex::Ctc;
-
-
 
 using namespace std;
 
-namespace pyibex {
+namespace codac {
 
 /**
  * \ingroup geometry

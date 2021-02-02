@@ -15,7 +15,7 @@
 #include <map>
 #include <initializer_list>
 #include "ibex_Vector.h"
-#include "ibex_Interval.h"
+#include "codac_Interval.h"
 #include "codac_TFunction.h"
 #include "codac_Trajectory.h"
 #include "codac_DynamicalItem.h"
@@ -53,7 +53,7 @@ namespace codac
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param f TFunction object defining the trajectory: \f$\mathbf{x}(t)=\mathbf{f}(t)\f$
        */
-      TrajectoryVector(const ibex::Interval& tdomain, const TFunction& f);
+      TrajectoryVector(const Interval& tdomain, const TFunction& f);
 
       /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from an analytic expression,
@@ -63,7 +63,7 @@ namespace codac
        * \param f TFunction object defining the trajectory: \f$\mathbf{x}(t)=\mathbf{f}(t)\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        */
-      TrajectoryVector(const ibex::Interval& tdomain, const TFunction& f, double timestep);
+      TrajectoryVector(const Interval& tdomain, const TFunction& f, double timestep);
 
       /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a map of vector values
@@ -126,7 +126,7 @@ namespace codac
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      const ibex::Interval tdomain() const;
+      const Interval tdomain() const;
 
       /**
        * \brief Resizes this TrajectoryVector
@@ -164,7 +164,7 @@ namespace codac
        *
        * \return an IntervalVector object \f$\mathbf{x}([t_0,t_f])\f$
        */
-      const ibex::IntervalVector codomain() const;
+      const IntervalVector codomain() const;
 
       /**
        * \brief Returns the ith Trajectory of this TrajectoryVector
@@ -201,7 +201,7 @@ namespace codac
        * \param t the subtdomain (Interval, must be a subset of the trajectory's tdomain)
        * \return IntervalVector envelope \f$\mathbf{x}([t])\f$
        */
-      const ibex::IntervalVector operator()(const ibex::Interval& t) const;
+      const IntervalVector operator()(const Interval& t) const;
 
       /**
        * \brief Returns the value \f$\mathbf{x}(t_0)\f$
@@ -265,7 +265,7 @@ namespace codac
        * \param tdomain new temporal domain \f$[t_0,t_f]\f$
        * \return a reference to this trajectory
        */
-      TrajectoryVector& truncate_tdomain(const ibex::Interval& tdomain);
+      TrajectoryVector& truncate_tdomain(const Interval& tdomain);
 
       /**
        * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$\mathbf{x}(\cdot)\f$
@@ -498,7 +498,7 @@ namespace codac
        *
        * \return the envelope of codomain values
        */
-      const ibex::IntervalVector codomain_box() const;
+      const IntervalVector codomain_box() const;
 
       // Class variables:
 

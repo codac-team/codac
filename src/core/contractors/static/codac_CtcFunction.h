@@ -53,7 +53,7 @@ namespace codac
        * \param f the function \f$f\f$
        * \param y the interval \f$[y]\f$
        */
-      CtcFunction(const ibex::Function& f, const ibex::Interval& y);
+      CtcFunction(const ibex::Function& f, const Interval& y);
 
       /**
        * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$
@@ -62,14 +62,14 @@ namespace codac
        * \param f the function \f$\mathbf{f}\f$
        * \param y the IntervalVector \f$[\mathbf{y}]\f$
        */
-      CtcFunction(const ibex::Function& f, const ibex::IntervalVector& y);
+      CtcFunction(const ibex::Function& f, const IntervalVector& y);
       
       /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}]\big)\f$
        *
        * \param x the n-dimensional box \f$[\mathbf{x}]\f$ to be contracted
        */
-      void contract(ibex::IntervalVector& x);
+      void contract(IntervalVector& x);
       
       /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}](\cdot)\big)\f$

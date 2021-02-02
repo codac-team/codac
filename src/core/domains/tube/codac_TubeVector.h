@@ -20,7 +20,7 @@
 #include "codac_TrajectoryVector.h"
 #include "codac_tube_arithmetic.h"
 #include "codac_serialize_tubes.h"
-#include "ibex_BoolInterval.h"
+#include "codac_BoolInterval.h"
 
 namespace codac
 {
@@ -47,7 +47,7 @@ namespace codac
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param n dimension of this tube
        */
-      explicit TubeVector(const ibex::Interval& tdomain, int n);
+      explicit TubeVector(const Interval& tdomain, int n);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ made of one slice
@@ -57,7 +57,7 @@ namespace codac
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param codomain IntervalVector value of the slice
        */
-      explicit TubeVector(const ibex::Interval& tdomain, const ibex::IntervalVector& codomain);
+      explicit TubeVector(const Interval& tdomain, const IntervalVector& codomain);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ with some temporal discretization
@@ -66,7 +66,7 @@ namespace codac
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param n dimension of this tube
        */
-      explicit TubeVector(const ibex::Interval& tdomain, double timestep, int n);
+      explicit TubeVector(const Interval& tdomain, double timestep, int n);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ with some temporal discretization
@@ -75,7 +75,7 @@ namespace codac
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param codomain IntervalVector value of the slices
        */
-      explicit TubeVector(const ibex::Interval& tdomain, double timestep, const ibex::IntervalVector& codomain);
+      explicit TubeVector(const Interval& tdomain, double timestep, const IntervalVector& codomain);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$
@@ -90,7 +90,7 @@ namespace codac
        * \param f TFnc object that will be enclosed by the tube:
        *          \f$\forall t\in[t_0,t_f], [\mathbf{f}](t)\subseteq[\mathbf{x}](t)\f$
        */
-      explicit TubeVector(const ibex::Interval& tdomain, double timestep, const TFnc& f);
+      explicit TubeVector(const Interval& tdomain, double timestep, const TFnc& f);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ from a list of \f$k\f$ boxes \f$\big([t_1]\times[\mathbf{x}_1],\dots,[t_k]\times[\mathbf{x}_k]\big)\f$
@@ -101,7 +101,7 @@ namespace codac
        * \param v_tdomains vector of temporal domains \f$[t_i]\f$
        * \param v_codomains vector of codomains \f$[\mathbf{x}_i]\f$ related to the \f$[t_i]\f$'s
        */
-      explicit TubeVector(const std::vector<ibex::Interval>& v_tdomains, const std::vector<ibex::IntervalVector>& v_codomains);
+      explicit TubeVector(const std::vector<Interval>& v_tdomains, const std::vector<IntervalVector>& v_codomains);
 
       /**
        * \brief Creates a n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ from a list of Tube objects
@@ -124,7 +124,7 @@ namespace codac
        * \param x TubeVector from which the sampling will be duplicated
        * \param codomain IntervalVector value of the slices
        */
-      explicit TubeVector(const TubeVector& x, const ibex::IntervalVector& codomain);
+      explicit TubeVector(const TubeVector& x, const IntervalVector& codomain);
 
       /**
        * \brief Creates a n-dimensional tube with all the components initialized to \f$[x](\cdot)\f$
@@ -233,7 +233,7 @@ namespace codac
        * \param c the constant of integration
        * \return a new TubeVector object with same slicing, enclosing the feasible primitives of this tube
        */
-      const TubeVector primitive(const ibex::IntervalVector& c) const;
+      const TubeVector primitive(const IntervalVector& c) const;
 
       /**
        * \brief Returns a copy of a TubeVector
@@ -248,7 +248,7 @@ namespace codac
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      const ibex::Interval tdomain() const;
+      const Interval tdomain() const;
 
       /// @}
       /// \name Slices structure
@@ -288,7 +288,7 @@ namespace codac
        * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        * \param gate the IntervalVector value of this tube at \f$t\f$
        */
-      void sample(double t, const ibex::IntervalVector& gate);
+      void sample(double t, const IntervalVector& gate);
 
       /**
        * \brief Samples this tube so that each component will share the same
@@ -319,7 +319,7 @@ namespace codac
        *
        * \return an IntervalVector object \f$[\mathbf{x}]([t_0,t_f])\f$
        */
-      const ibex::IntervalVector codomain() const;
+      const IntervalVector codomain() const;
 
       /**
        * \brief Returns the volume of this tube
@@ -353,7 +353,7 @@ namespace codac
        * \param slice_id the index of the ith slice
        * \return IntervalVector value of \f$[\mathbf{x}](i)\f$
        */
-      const ibex::IntervalVector operator()(int slice_id) const;
+      const IntervalVector operator()(int slice_id) const;
 
       /**
        * \brief Returns the evaluation of this tube at \f$t\f$
@@ -361,7 +361,7 @@ namespace codac
        * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        * \return IntervalVector value of \f$[\mathbf{x}](t)\f$
        */
-      const ibex::IntervalVector operator()(double t) const;
+      const IntervalVector operator()(double t) const;
 
       /**
        * \brief Returns the interval evaluation of this tube over \f$[t]\f$
@@ -369,7 +369,7 @@ namespace codac
        * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        * \return IntervalVector envelope \f$[\mathbf{x}]([t])\f$
        */
-      const ibex::IntervalVector operator()(const ibex::Interval& t) const;
+      const IntervalVector operator()(const Interval& t) const;
 
       /**
        * \brief Returns the interval evaluations of the bounds of the
@@ -378,7 +378,7 @@ namespace codac
        * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        * \return the pair \f$\big([\underline{\mathbf{x}^-}]([t]),[\overline{\mathbf{x}^+}]([t])\big)\f$
        */
-      const std::pair<ibex::IntervalVector,ibex::IntervalVector> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      const std::pair<IntervalVector,IntervalVector> eval(const Interval& t = Interval::ALL_REALS) const;
       
       /**
        * \brief Returns the optimal evaluation of this tube at \f$t\f$,
@@ -390,7 +390,7 @@ namespace codac
        * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
        * \return IntervalVector value of \f$[\mathbf{x}](t)\f$
        */
-      const ibex::IntervalVector interpol(double t, const TubeVector& v) const;
+      const IntervalVector interpol(double t, const TubeVector& v) const;
 
       /**
        * \brief Returns the optimal interval evaluation of this tube over \f$[t]\f$,
@@ -402,7 +402,7 @@ namespace codac
        * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
        * \return IntervalVector value of \f$[\mathbf{x}]([t])\f$
        */
-      const ibex::IntervalVector interpol(const ibex::Interval& t, const TubeVector& v) const;
+      const IntervalVector interpol(const Interval& t, const TubeVector& v) const;
 
       /**
        * \brief Returns the interval inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
@@ -413,7 +413,7 @@ namespace codac
        * \param search_tdomain the optional temporal domain on which the inversion will be performed
        * \return the hull of \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
        */
-      const ibex::Interval invert(const ibex::IntervalVector& y, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
+      const Interval invert(const IntervalVector& y, const Interval& search_tdomain = Interval::ALL_REALS) const;
 
       /**
        * \brief Computes the set of continuous values of the inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
@@ -423,7 +423,7 @@ namespace codac
        *            \f$\forall t\in[t_k] \mid \mathbf{x}(t)\in[\mathbf{y}], \mathbf{x}(\cdot)\in[\mathbf{x}](\cdot)\f$
        * \param search_tdomain the optional temporal domain on which the inversion will be performed
        */
-      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
+      void invert(const IntervalVector& y, std::vector<Interval> &v_t, const Interval& search_tdomain = Interval::ALL_REALS) const;
 
       /**
        * \brief Returns the optimal interval inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
@@ -436,7 +436,7 @@ namespace codac
        * \param search_tdomain the optional temporal domain on which the inversion will be performed
        * \return the hull of \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
        */
-      const ibex::Interval invert(const ibex::IntervalVector& y, const TubeVector& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
+      const Interval invert(const IntervalVector& y, const TubeVector& v, const Interval& search_tdomain = Interval::ALL_REALS) const;
 
       /**
        * \brief Computes the set of continuous values of the optimal inversion \f$[\mathbf{x}]^{-1}([\mathbf{y}])\f$
@@ -449,7 +449,7 @@ namespace codac
        * \param v the derivative tube such that \f$\dot{\mathbf{x}}(\cdot)\in[\mathbf{v}](\cdot)\f$
        * \param search_tdomain the optional temporal domain on which the inversion will be performed
        */
-      void invert(const ibex::IntervalVector& y, std::vector<ibex::Interval> &v_t, const TubeVector& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
+      void invert(const IntervalVector& y, std::vector<Interval> &v_t, const TubeVector& v, const Interval& search_tdomain = Interval::ALL_REALS) const;
 
       /**
        * \brief Returns the diameters of the tube as a trajectory
@@ -625,7 +625,7 @@ namespace codac
        * \return BoolInterval::YES (or BoolInterval::NO) if this tube contains \f$\mathbf{x}(\cdot)\f$
        *         (or does not contain) and BoolInterval::MAYBE in case of ambiguity
        */
-      const ibex::BoolInterval contains(const TrajectoryVector& x) const;
+      const BoolInterval contains(const TrajectoryVector& x) const;
 
       /**
        * \brief Returns true if this tube overlaps the tube \f$[\mathbf{x}](\cdot)\f$
@@ -649,7 +649,7 @@ namespace codac
        *
        * \param y IntervalVector value of the slices
        */
-      void set(const ibex::IntervalVector& y);
+      void set(const IntervalVector& y);
 
       /**
        * \brief Sets the box value of the ith slice of this tube
@@ -657,7 +657,7 @@ namespace codac
        * \param y IntervalVector value of the ith slice
        * \param slice_id index of the ith Slice
        */
-      void set(const ibex::IntervalVector& y, int slice_id);
+      void set(const IntervalVector& y, int slice_id);
 
       /**
        * \brief Sets the box value of this tube at \f$t\f$: \f$[\mathbf{x}](t)=[\mathbf{y}]\f$
@@ -669,7 +669,7 @@ namespace codac
        * \param y IntervalVector value of the gate
        * \param t the temporal key (double, must belong to the TubeVector's tdomain)
        */
-      void set(const ibex::IntervalVector& y, double t);
+      void set(const IntervalVector& y, double t);
 
       /**
        * \brief Sets the box value of this tube over \f$[t]\f$: \f$\forall t\in[t], [\mathbf{x}](t)=[\mathbf{y}]\f$
@@ -681,7 +681,7 @@ namespace codac
        * \param y IntervalVector value to be set
        * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        */
-      void set(const ibex::IntervalVector& y, const ibex::Interval& t);
+      void set(const IntervalVector& y, const Interval& t);
 
       /**
        * \brief Sets this tube to the empty set
@@ -730,7 +730,7 @@ namespace codac
        * \param tdomain new temporal domain \f$[t_0,t_f]\f$
        * \return a reference to this tube
        */
-      TubeVector& truncate_tdomain(const ibex::Interval& tdomain);
+      TubeVector& truncate_tdomain(const Interval& tdomain);
 
       /**
        * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$[\mathbf{x}](\cdot)\f$
@@ -780,7 +780,7 @@ namespace codac
        * \param x Interval
        * \return (*this)+=x
        */
-      const TubeVector& operator+=(const ibex::Interval& x);
+      const TubeVector& operator+=(const Interval& x);
 
       /**
        * \brief Operates +=
@@ -804,7 +804,7 @@ namespace codac
        * \param x IntervalVector
        * \return (*this)+=x
        */
-      const TubeVector& operator+=(const ibex::IntervalVector& x);
+      const TubeVector& operator+=(const IntervalVector& x);
 
       /**
        * \brief Operates +=
@@ -828,7 +828,7 @@ namespace codac
        * \param x Interval
        * \return (*this)-=x
        */
-      const TubeVector& operator-=(const ibex::Interval& x);
+      const TubeVector& operator-=(const Interval& x);
 
       /**
        * \brief Operates -=
@@ -852,7 +852,7 @@ namespace codac
        * \param x IntervalVector
        * \return (*this)-=x
        */
-      const TubeVector& operator-=(const ibex::IntervalVector& x);
+      const TubeVector& operator-=(const IntervalVector& x);
 
       /**
        * \brief Operates -=
@@ -876,7 +876,7 @@ namespace codac
        * \param x Interval
        * \return (*this)*=x
        */
-      const TubeVector& operator*=(const ibex::Interval& x);
+      const TubeVector& operator*=(const Interval& x);
 
       /**
        * \brief Operates *=
@@ -900,7 +900,7 @@ namespace codac
        * \param x Interval
        * \return (*this)/=x
        */
-      const TubeVector& operator/=(const ibex::Interval& x);
+      const TubeVector& operator/=(const Interval& x);
 
       /**
        * \brief Operates /=
@@ -924,7 +924,7 @@ namespace codac
        * \param x IntervalVector
        * \return (*this)|=x
        */
-      const TubeVector& operator|=(const ibex::IntervalVector& x);
+      const TubeVector& operator|=(const IntervalVector& x);
 
       /**
        * \brief Operates |=
@@ -948,7 +948,7 @@ namespace codac
        * \param x IntervalVector
        * \return (*this)&=x
        */
-      const TubeVector& operator&=(const ibex::IntervalVector& x);
+      const TubeVector& operator&=(const IntervalVector& x);
 
       /**
        * \brief Operates &=
@@ -1014,7 +1014,7 @@ namespace codac
        * \param t the temporal key (double, must belong to the TubeVector's domain)
        * \return the set of feasible integral vectors
        */
-      const ibex::IntervalVector integral(double t) const;
+      const IntervalVector integral(double t) const;
 
       /**
        * \brief Computes the box integral \f$\int_0^{[t]}[\mathbf{x}](\tau)d\tau\f$
@@ -1025,7 +1025,7 @@ namespace codac
        * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
        * \return the set of feasible integral vectors
        */
-      const ibex::IntervalVector integral(const ibex::Interval& t) const;
+      const IntervalVector integral(const Interval& t) const;
 
       /**
        * \brief Computes the box integral \f$\int_{[t_1]}^{[t_2]}[\mathbf{x}](\tau)d\tau\f$
@@ -1037,7 +1037,7 @@ namespace codac
        * \param t2 upper bound, subset of the TubeVector's tdomain
        * \return the set of feasible integral vectors
        */
-      const ibex::IntervalVector integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      const IntervalVector integral(const Interval& t1, const Interval& t2) const;
 
       /**
        * \brief Computes the partial box integral \f$\int_{0}^{[t]}[\mathbf{x}](\tau)d\tau\f$
@@ -1050,7 +1050,7 @@ namespace codac
        *         where \f$[i^-]=\int_{0}^{[t]}\mathbf{x}^-(\tau)d\tau\f$ 
        *         and \f$[i^+]=\int_{0}^{[t]}\mathbf{x}^+(\tau)d\tau\f$
        */
-      const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t) const;
+      const std::pair<IntervalVector,IntervalVector> partial_integral(const Interval& t) const;
 
       /**
        * \brief Computes the partial box integral \f$\int_{[t_1]}^{[t_2]}[\mathbf{x}](\tau)d\tau\f$
@@ -1064,7 +1064,7 @@ namespace codac
        *         where \f$[i^-]=\int_{[t_1]}^{[t_2]}\mathbf{x}^-(\tau)d\tau\f$ 
        *         and \f$[i^+]=\int_{[t_1]}^{[t_2]}\mathbf{x}^+(\tau)d\tau\f$
        */
-      const std::pair<ibex::IntervalVector,ibex::IntervalVector> partial_integral(const ibex::Interval& t1, const ibex::Interval& t2) const;
+      const std::pair<IntervalVector,IntervalVector> partial_integral(const Interval& t1, const Interval& t2) const;
 
       /// @}
       /// \name Serialization
@@ -1143,7 +1143,7 @@ namespace codac
        *
        * \return the envelope of codomain values
        */
-      const ibex::IntervalVector codomain_box() const;
+      const IntervalVector codomain_box() const;
 
       /**
        * \brief Restores a n-dimensional tube from serialization, together with a TrajectoryVector object

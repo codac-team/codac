@@ -57,7 +57,7 @@ public:
   LohnerAlgorithm(const ibex::Function *f,
                   double h,
                   bool forward,
-                  const ibex::IntervalVector &u0 = ibex::IntervalVector::empty(1),
+                  const IntervalVector &u0 = IntervalVector::empty(1),
                   int contractions = 1,
                   double eps = 0.1);
   /**
@@ -67,14 +67,14 @@ public:
    * \param H parameter to overwrite the integration time step
    * \return enclosure of the system's state
    */
-  const ibex::IntervalVector &integrate(unsigned int steps, double H = -1);
+  const IntervalVector &integrate(unsigned int steps, double H = -1);
 
   /**
    * \brief contract the global & local enclosure of the previous integration step
    *
    * \param x estimation of the global enclosure
    */
-  void contractStep(const ibex::IntervalVector &x);
+  void contractStep(const IntervalVector &x);
 
   /**
    * \brief Returns the current global enclosure, i.e. the box enclosing the trajectories between times \f$k-1\f$ and
@@ -82,14 +82,14 @@ public:
    *
    * \return global enclosure
    */
-  const ibex::IntervalVector &getLocalEnclosure() const;
+  const IntervalVector &getLocalEnclosure() const;
 
   /**
    * \brief Returns the current local enclosure, i.e. the box enclosing the trajectories at time \f$k\f$
    *
    * \return local enclosure \f$[\mathbf{x}_{k}]\f$
    */
-  const ibex::IntervalVector &getGlobalEnclosure() const;
+  const IntervalVector &getGlobalEnclosure() const;
 private:
   /**
    * \brief Computes an estimation of the global enclosure of the system
@@ -98,17 +98,17 @@ private:
    * \param dir forward or backward in time
    * \return estimation of the global enclosure
    */
-  ibex::IntervalVector globalEnclosure(const ibex::IntervalVector &initialGuess, double dir);
+  IntervalVector globalEnclosure(const IntervalVector &initialGuess, double dir);
 
   unsigned int dim; //!< dimension of the system's state
   double h; //!< integration time step
   double direction; //!< forward or backward integration
   double eps; //!< inflation parameter for the global enclosure
   int contractions; //!< number of contractions of the global enclosure by the estimated local enclosure
-  ibex::IntervalVector u; //!< local enclosure
-  ibex::IntervalVector z; //!< Taylor-Lagrange remainder (order 2)
-  ibex::IntervalVector r; //!< enclosure of uncertainties in the frame given by the matrix B
-  ibex::IntervalVector u_tilde; //!< global enclosure
+  IntervalVector u; //!< local enclosure
+  IntervalVector z; //!< Taylor-Lagrange remainder (order 2)
+  IntervalVector r; //!< enclosure of uncertainties in the frame given by the matrix B
+  IntervalVector u_tilde; //!< global enclosure
   ibex::Matrix B, Binv;
   ibex::Vector u_hat; //!< center of the box u
   const ibex::Function *f; //!< litteral function of the system \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$
@@ -119,7 +119,7 @@ private:
 LohnerAlgorithm::LohnerAlgorithm(const ibex::Function *f,
                                  double h,
                                  bool forward,
-                                 const ibex::IntervalVector &u0,
+                                 const IntervalVector &u0,
                                  int contractions,
                                  double eps)
     : dim(f->nb_var()),
@@ -135,17 +135,17 @@ LohnerAlgorithm::LohnerAlgorithm(const ibex::Function *f,
       u_hat(u0.mid()),
       f(f) {}
 
-const ibex::IntervalVector &LohnerAlgorithm::integrate(unsigned int steps, double H) {
+const IntervalVector &LohnerAlgorithm::integrate(unsigned int steps, double H) {
   if (H > 0) h = H;
   for (unsigned int i = 0; i < steps; ++i) {
     auto z1 = z, r1 = r, u1 = u;
     auto B1 = B, B1inv = Binv;
     auto u_hat1 = u_hat;
-    ibex::IntervalVector u_t = globalEnclosure(u, FWD);
+    IntervalVector u_t = globalEnclosure(u, FWD);
     for (int j = 0; j < contractions; ++j) {
       z1 = 0.5 * h * h * f->jacobian(u_t) * f->eval_vector(u_t);
       ibex::Vector m1 = z1.mid();
-      ibex::IntervalMatrix A = ibex::Matrix::eye(dim) + h * direction * f->jacobian(u);
+      IntervalMatrix A = ibex::Matrix::eye(dim) + h * direction * f->jacobian(u);
       Eigen::HouseholderQR<Eigen::MatrixXd> qr(EigenHelpers::i2e((A * B).mid()));
       B1 = EigenHelpers::e2i(qr.householderQ());
       B1inv = ibex::real_inverse(B1);
@@ -161,10 +161,10 @@ const ibex::IntervalVector &LohnerAlgorithm::integrate(unsigned int steps, doubl
   return u;
 }
 
-ibex::IntervalVector LohnerAlgorithm::globalEnclosure(const ibex::IntervalVector &initialGuess, double dir) {
-  ibex::IntervalVector u_0 = initialGuess;
+IntervalVector LohnerAlgorithm::globalEnclosure(const IntervalVector &initialGuess, double dir) {
+  IntervalVector u_0 = initialGuess;
   for (unsigned int i = 0; i < 30; ++i) {
-    ibex::IntervalVector u_1 = initialGuess + dir * direction * ibex::Interval(0, h) * f->eval_vector(u_0);
+    IntervalVector u_1 = initialGuess + dir * direction * Interval(0, h) * f->eval_vector(u_0);
     if (u_0.is_superset(u_1)) {
       return u_0;
     } else {
@@ -174,17 +174,17 @@ ibex::IntervalVector LohnerAlgorithm::globalEnclosure(const ibex::IntervalVector
   throw GlobalEnclosureError();
 }
 
-void LohnerAlgorithm::contractStep(const ibex::IntervalVector &x) {
+void LohnerAlgorithm::contractStep(const IntervalVector &x) {
   u = x & u;
   u_hat = u.mid();
   r = r & (Binv * (u - u_hat));
 }
 
-const ibex::IntervalVector &LohnerAlgorithm::getLocalEnclosure() const {
+const IntervalVector &LohnerAlgorithm::getLocalEnclosure() const {
   return u;
 }
 
-const ibex::IntervalVector &LohnerAlgorithm::getGlobalEnclosure() const {
+const IntervalVector &LohnerAlgorithm::getGlobalEnclosure() const {
   return u_tilde;
 }
 

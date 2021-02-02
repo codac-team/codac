@@ -56,17 +56,17 @@ namespace codac
 
       const Tube eval(const TubeVector& x) const;
       const Trajectory traj_eval(const TrajectoryVector& x) const;
-      const ibex::Interval eval(const ibex::Interval& t) const;
-      const ibex::Interval eval(const ibex::IntervalVector& x) const;
-      const ibex::Interval eval(int slice_id, const TubeVector& x) const;
-      const ibex::Interval eval(const ibex::Interval& t, const TubeVector& x) const;
+      const Interval eval(const Interval& t) const;
+      const Interval eval(const IntervalVector& x) const;
+      const Interval eval(int slice_id, const TubeVector& x) const;
+      const Interval eval(const Interval& t, const TubeVector& x) const;
 
       const TubeVector eval_vector(const TubeVector& x) const;
       const TrajectoryVector traj_eval_vector(const TrajectoryVector& x) const;
-      const ibex::IntervalVector eval_vector(const ibex::Interval& t) const;
-      const ibex::IntervalVector eval_vector(const ibex::IntervalVector& x) const;
-      const ibex::IntervalVector eval_vector(int slice_id, const TubeVector& x) const;
-      const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const;
+      const IntervalVector eval_vector(const Interval& t) const;
+      const IntervalVector eval_vector(const IntervalVector& x) const;
+      const IntervalVector eval_vector(int slice_id, const TubeVector& x) const;
+      const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const;
 
       const TFunction diff() const;
 

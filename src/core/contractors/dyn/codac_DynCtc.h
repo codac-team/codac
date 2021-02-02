@@ -104,7 +104,7 @@ namespace codac
        *
        * \param tdomain Interval tdomain of restriction \f$[t_1,t_2]\f$
        */
-      void restrict_tdomain(const ibex::Interval& tdomain);
+      void restrict_tdomain(const Interval& tdomain);
 
       /**
        * \brief Tests if the related constraint is inter-temporal or not
@@ -117,7 +117,7 @@ namespace codac
 
       bool m_preserve_slicing = true; //!< if `true`, tube's slicing will not be affected by the contractor
       bool m_fast_mode = false; //!< some contractors may propose more pessimistic but faster execution modes
-      ibex::Interval m_restricted_tdomain; //!< limits the contractions to the specified temporal domain
+      Interval m_restricted_tdomain; //!< limits the contractions to the specified temporal domain
       const bool m_intertemporal = true; //!< defines if the related constraint is inter-temporal or not (true by default)
   };
 }

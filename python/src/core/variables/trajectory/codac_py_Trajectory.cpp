@@ -37,11 +37,11 @@ void export_Trajectory(py::module& m)
     .def(py::init<>(),
       TRAJECTORY_TRAJECTORY)
 
-    .def(py::init<const ibex::Interval&,const TFunction&>(),
+    .def(py::init<const Interval&,const TFunction&>(),
       TRAJECTORY_TRAJECTORY_INTERVAL_TFUNCTION,
       "domain"_a, "f"_a)
 
-    .def(py::init<const ibex::Interval&,const TFunction&,double>(),
+    .def(py::init<const Interval&,const TFunction&,double>(),
       TRAJECTORY_TRAJECTORY_INTERVAL_TFUNCTION_DOUBLE,
       "domain"_a, "f"_a, "timestep"_a)
 
@@ -78,7 +78,7 @@ void export_Trajectory(py::module& m)
     .def("__call__", [](Trajectory& s,double o) { return s(o); }, 
       TRAJECTORY_DOUBLE_OPERATORP_DOUBLE)
 
-    .def("__call__", [](Trajectory& s,const ibex::Interval& o) { return s(o); }, 
+    .def("__call__", [](Trajectory& s,const Interval& o) { return s(o); }, 
       TRAJECTORY_CONSTINTERVAL_OPERATORP_INTERVAL)
 
     .def("first_value", &Trajectory::first_value,

@@ -13,7 +13,7 @@
 #define __CODAC_TOOLS_H__
 
 #include <string>
-#include "ibex_Interval.h"
+#include "codac_Interval.h"
 
 namespace codac
 {
@@ -43,7 +43,7 @@ namespace codac
        * \param intv the bounds
        * \return a random double
        */
-      static double rand_in_bounds(const ibex::Interval& intv);
+      static double rand_in_bounds(const Interval& intv);
   };
 }
 

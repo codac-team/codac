@@ -17,7 +17,7 @@
 
 #include "codac_tube_arithmetic.h"
 #include "codac_traj_arithmetic.h"
-#include "ibex_Interval.h"
+#include "codac_Interval.h"
 
 using namespace ibex;
 using namespace codac;

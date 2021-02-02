@@ -10,7 +10,7 @@
 
 #include <list>
 #include <iostream>
-#include "ibex_IntervalMatrix.h"
+#include "codac_IntervalMatrix.h"
 #include "codac_ConnectedSubset.h"
 #include "codac_Paving.h"
 

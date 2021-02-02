@@ -12,6 +12,7 @@
 #ifndef __CODAC_CONNECTEDSUBSET_H__
 #define __CODAC_CONNECTEDSUBSET_H__
 
+#include "codac_IntervalMatrix.h"
 #include "codac_Set.h"
 
 namespace codac
@@ -52,7 +53,7 @@ namespace codac
        *
        * \return the box
        */
-      const ibex::IntervalVector box() const;
+      const IntervalVector box() const;
 
       /**
        * \brief Tests if this subset is strictly included in its paving structure
@@ -80,7 +81,7 @@ namespace codac
        *
        * \return a vector of boxes
        */
-      std::vector<ibex::IntervalVector> get_boxes() const; // items of type k
+      std::vector<IntervalVector> get_boxes() const; // items of type k
 
       /**
        * \brief Returns the boundary boxes of this subset
@@ -92,7 +93,7 @@ namespace codac
        * \param value_out value of the items representing no-solution boxes in the paving
        * \return a vector of boxes
        */
-      std::vector<ibex::IntervalVector> get_boundary(SetValue value_boundary = SetValue::MAYBE, SetValue value_out = SetValue::OUT) const; // items of type k-1
+      std::vector<IntervalVector> get_boundary(SetValue value_boundary = SetValue::MAYBE, SetValue value_out = SetValue::OUT) const; // items of type k-1
 
       /// @}
       /// \name Methods related to topological degree
@@ -115,7 +116,7 @@ namespace codac
        * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
        * \return `true` in case of at least one zero proven on this subset, `false` in case of undecidability
        */
-      bool zero_proven(ibex::IntervalVector (*f)(const ibex::IntervalVector& b));
+      bool zero_proven(IntervalVector (*f)(const IntervalVector& b));
 
       /**
        * \brief Counts the number of zeros of an uncertain function \f$\mathbf{f}^*\f$
@@ -138,7 +139,7 @@ namespace codac
        *                  precision limit of this auto-refinement.
        * \return the number of zeros, or -1 in case of undecidability
        */
-      int zeros_number(ibex::IntervalVector (*f)(const ibex::IntervalVector& b), ibex::IntervalMatrix (*Jf)(const ibex::IntervalVector& b), float precision);
+      int zeros_number(IntervalVector (*f)(const IntervalVector& b), IntervalMatrix (*Jf)(const IntervalVector& b), float precision);
 
       /// @}
 
@@ -153,7 +154,7 @@ namespace codac
        * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
        * \return degree number
        */
-      int topological_degree(ibex::IntervalVector (*f)(const ibex::IntervalVector& b));
+      int topological_degree(IntervalVector (*f)(const IntervalVector& b));
 
       /**
        * \brief Returns `true` if all items in v_s are positive
@@ -171,7 +172,7 @@ namespace codac
        * \param orientation 
        * \return orientation integer
        */
-      int orientation(const ibex::IntervalVector& b, const ibex::IntervalVector& parent_coface, int orientation) const;
+      int orientation(const IntervalVector& b, const IntervalVector& parent_coface, int orientation) const;
 
       /**
        * \brief Computes local degree related to \f$\mathbf{f}\f$
@@ -181,7 +182,7 @@ namespace codac
        * \param common_cocoface
        * \return local degree number
        */
-      int compute_local_degree(ibex::IntervalVector (*f)(const ibex::IntervalVector& b), const ibex::IntervalVector& b, const ibex::IntervalVector& common_cocoface) const;
+      int compute_local_degree(IntervalVector (*f)(const IntervalVector& b), const IntervalVector& b, const IntervalVector& common_cocoface) const;
       
       /**
        * \brief Returns a vector of signs represented as integers
@@ -191,7 +192,7 @@ namespace codac
        * \param common_cocoface
        * \return vector of integers
        */
-      std::vector<int> sign_vector(ibex::IntervalVector (*f)(const ibex::IntervalVector& b), const ibex::IntervalVector& b, const ibex::IntervalVector& common_cocoface) const;
+      std::vector<int> sign_vector(IntervalVector (*f)(const IntervalVector& b), const IntervalVector& b, const IntervalVector& common_cocoface) const;
       
       /**
        * \brief Returns a vector of cofaces related to \f$[\mathbf{b}]\f$
@@ -199,7 +200,7 @@ namespace codac
        * \param b
        * \return vector of cofaces boxes
        */
-      std::vector<ibex::IntervalVector> get_cofaces(const ibex::IntervalVector& b) const;
+      std::vector<IntervalVector> get_cofaces(const IntervalVector& b) const;
 
       /**
        * \brief Returns a vector of cofaces related to \f$[\mathbf{b}]\f$, common_cocoface
@@ -208,7 +209,7 @@ namespace codac
        * \param common_cocoface
        * \return vector of cofaces boxes
        */
-      std::vector<ibex::IntervalVector> get_cofaces(const ibex::IntervalVector& b, const ibex::IntervalVector& common_cocoface) const;
+      std::vector<IntervalVector> get_cofaces(const IntervalVector& b, const IntervalVector& common_cocoface) const;
 
       /**
        * \brief Returns the dimension of the box \f$[\mathbf{b}]\f$
@@ -216,7 +217,7 @@ namespace codac
        * \param b
        * \return integer dimension
        */
-      int box_dimension(const ibex::IntervalVector& b) const;
+      int box_dimension(const IntervalVector& b) const;
 
       /**
        * \brief Tests whether the Jacobian is non-singular or not
@@ -225,7 +226,7 @@ namespace codac
        * \param precision of the bisected method used in case of ambiguity on the already existing paving structure
        * \return `true` if the Jacobian is non-singular
        */
-      bool non_singular_jacobian(ibex::IntervalMatrix (*Jf)(const ibex::IntervalVector& b), float precision);
+      bool non_singular_jacobian(IntervalMatrix (*Jf)(const IntervalVector& b), float precision);
 
       /// @}
 

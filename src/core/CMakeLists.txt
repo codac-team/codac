@@ -54,28 +54,32 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_GrahamScan.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Point.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Point.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/codac_DynamicalItem.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/codac_DynamicalItem.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/codac_TubeVector.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/codac_TubeVector.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/codac_TubeVector_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/codac_Tube.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/codac_Tube.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/codac_Tube_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/codac_TubeTreeSynthesis.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/codac_TubeTreeSynthesis.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/codac_Slice.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/codac_Slice.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/codac_Slice_polygon.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/codac_Slice_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/codac_RandTrajectory.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/codac_RandTrajectory.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/codac_Trajectory.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/codac_Trajectory.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/codac_Trajectory_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/codac_TrajectoryVector.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/codac_TrajectoryVector.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/codac_TrajectoryVector_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_Interval.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_IntervalVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_IntervalMatrix.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_BoolInterval.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_DynamicalItem.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_DynamicalItem.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeVector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeVector_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeTreeSynthesis.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeTreeSynthesis.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice_polygon.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_RandTrajectory.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_RandTrajectory.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_Trajectory.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_Trajectory.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_Trajectory_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_TrajectoryVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_TrajectoryVector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_TrajectoryVector_operators.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_Exception.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_Exception.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_DomainsTypeException.h
@@ -140,10 +144,11 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes
                                           ${CMAKE_CURRENT_SOURCE_DIR}/paving
                                           ${CMAKE_CURRENT_SOURCE_DIR}/geometry
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/dynamics
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/domains
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory
                                           ${CMAKE_CURRENT_SOURCE_DIR}/exceptions
                                           ${CMAKE_CURRENT_SOURCE_DIR}/serialize
                                           ${CMAKE_CURRENT_SOURCE_DIR}/contractors
@@ -178,22 +183,14 @@
   file(WRITE ${CODAC_MAIN_HEADER} "/* This file is generated by CMake */\n\n")
   file(APPEND ${CODAC_MAIN_HEADER} "#ifndef __CODAC_H__\n#define __CODAC_H__\n\n")
     # Simplifying access to frequently used items of IBEX 
-      file(APPEND ${CODAC_MAIN_HEADER} "#include <ibex_Interval.h>\n")
-      file(APPEND ${CODAC_MAIN_HEADER} "#include <ibex_IntervalVector.h>\n")
       file(APPEND ${CODAC_MAIN_HEADER} "#include <ibex_Vector.h>\n")
       file(APPEND ${CODAC_MAIN_HEADER} "#include <ibex_Matrix.h>\n")
-      file(APPEND ${CODAC_MAIN_HEADER} "#include <ibex_IntervalMatrix.h>\n")
-      file(APPEND ${CODAC_MAIN_HEADER} "#include <ibex_BoolInterval.h>\n")
       file(APPEND ${CODAC_MAIN_HEADER} "#include <ibex_Ctc.h>\n")
       file(APPEND ${CODAC_MAIN_HEADER} "#include <ibex_Function.h>\n")
       file(APPEND ${CODAC_MAIN_HEADER} "\n")
       file(APPEND ${CODAC_MAIN_HEADER} "namespace codac\n{\n")
-      file(APPEND ${CODAC_MAIN_HEADER} "  using ibex::Interval;\n")
-      file(APPEND ${CODAC_MAIN_HEADER} "  using ibex::IntervalVector;\n")
       file(APPEND ${CODAC_MAIN_HEADER} "  using ibex::Vector;\n")
       file(APPEND ${CODAC_MAIN_HEADER} "  using ibex::Matrix;\n")
-      file(APPEND ${CODAC_MAIN_HEADER} "  using ibex::IntervalMatrix;\n")
-      file(APPEND ${CODAC_MAIN_HEADER} "  using ibex::BoolInterval;\n")
       file(APPEND ${CODAC_MAIN_HEADER} "  using ibex::Ctc;\n")
       file(APPEND ${CODAC_MAIN_HEADER} "  using ibex::Function;\n")
       file(APPEND ${CODAC_MAIN_HEADER} "}\n\n")

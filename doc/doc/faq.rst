@@ -392,7 +392,7 @@ Should not the ``contract`` method have a return value and not be ``void``?
 
 In C++, it is different than in Python (due to the spirit of the language). The update is done by *reference* which means that the argument given to the ``contract()`` method will be updated. No need to return a value in this case.
 
-Note that we know that it is a "return value by reference" because of the ``&`` in the function definition. For instance: ``void contract(ibex::IntervalVector& a)``.
+Note that we know that it is a "return value by reference" because of the ``&`` in the function definition. For instance: ``void contract(IntervalVector& a)``.
 One have to update the ``a`` inside the function in order to return the contracted set.
 
 
@@ -413,7 +413,7 @@ If you try to display the result of an operation on intervals, for instance, ``x
 
 .. code:: 
   
-  no match for ‘operator<<’ (operand types are ‘ibex::Interval’ and ‘<unresolved overloaded function type>’)
+  no match for ‘operator<<’ (operand types are ‘Interval’ and ‘<unresolved overloaded function type>’)
 
 This can be solved using parentheses: 
 

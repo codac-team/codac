@@ -13,8 +13,8 @@
 #define __CODAC_SERIALIZ_INTERVALS_H__
 
 #include <fstream>
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -37,7 +37,7 @@ namespace codac
    * \param bin_file binary file (ofstream object)
    * \param intv Interval object to be serialized
    */
-  void serialize_Interval(std::ofstream& bin_file, const ibex::Interval& intv);
+  void serialize_Interval(std::ofstream& bin_file, const Interval& intv);
 
   /**
    * \brief Creates an Interval object from a binary file.
@@ -47,7 +47,7 @@ namespace codac
    * \param bin_file binary file (ifstream object)
    * \param intv Interval object to be deserialized
    */
-  void deserialize_Interval(std::ifstream& bin_file, ibex::Interval& intv);
+  void deserialize_Interval(std::ifstream& bin_file, Interval& intv);
 
   /// @}
   /// \name IntervalVector
@@ -65,7 +65,7 @@ namespace codac
    * \param bin_file binary file (ofstream object)
    * \param box IntervalVector object to be serialized
    */
-  void deserialize_IntervalVector(std::ifstream& bin_file, ibex::IntervalVector& box);
+  void deserialize_IntervalVector(std::ifstream& bin_file, IntervalVector& box);
 
   /**
    * \brief Creates an IntervalVector object from a binary file.
@@ -75,7 +75,7 @@ namespace codac
    * \param bin_file binary file (ifstream object)
    * \param box IntervalVector object to be deserialized
    */
-  void serialize_IntervalVector(std::ofstream& bin_file, const ibex::IntervalVector& box);
+  void serialize_IntervalVector(std::ofstream& bin_file, const IntervalVector& box);
   
   /// @}
 }

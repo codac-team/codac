@@ -1,19 +1,22 @@
 /** 
- *  Predefined contractors (shortcuts for ease of use)
+ *  \file
+ *  IntervalVector class
  * ----------------------------------------------------------------------------
- *  \date       2020
+ *  \date       2021
  *  \author     Simon Rohou
  *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "pyibex_predef_contractors.h"
+#ifndef __CODAC_INTERVALVECTOR_H__
+#define __CODAC_INTERVALVECTOR_H__
+
+#include "ibex_IntervalVector.h"
 
 namespace codac
 {
-  namespace ctc
-  {
-    CtcPolar polar;
-  }
+  using ibex::IntervalVector;
 }
+
+#endif

@@ -66,7 +66,7 @@ namespace codac
        *
        * \param f inclusion of the uncertain function \f$\mathbf{f}^*\f$ that vanishes in case of a loop
        */
-      void compute_proofs(ibex::IntervalVector (*f)(const ibex::IntervalVector& b));
+      void compute_proofs(IntervalVector (*f)(const IntervalVector& b));
 
       /**
        * \brief Returns the number of loop detections

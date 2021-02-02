@@ -37,7 +37,7 @@ namespace codac
        * \param box n-dimensional box defining the paving
        * \param value integer of the set, `SetValue::VALUE_MAYBE` by default
        */
-      Paving(const ibex::IntervalVector& box, SetValue value = SetValue::MAYBE);
+      Paving(const IntervalVector& box, SetValue value = SetValue::MAYBE);
 
       /**
        * \brief Paving destructor
@@ -159,7 +159,7 @@ namespace codac
        *                                    intersection amounts to a point will not be returned
        */
       void get_pavings_intersecting(SetValue val,
-          const ibex::IntervalVector& box_to_intersect,
+          const IntervalVector& box_to_intersect,
           std::vector<const Paving*>& v_subpavings,
           bool no_degenerated_intersection = false) const;
 

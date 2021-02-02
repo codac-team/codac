@@ -17,7 +17,7 @@
 #include "codac_DynamicalItem.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_TubeTreeSynthesis.h"
-#include "ibex_BoolInterval.h"
+#include "codac_BoolInterval.h"
 
 namespace codac
 {
@@ -45,7 +45,7 @@ namespace codac
        * \param tdomain Interval temporal domain \f$[t^k_0,t^k_f]\f$
        * \param codomain Interval value of the slice (all reals \f$[-\infty,\infty]\f$ by default)
        */
-      explicit Slice(const ibex::Interval& tdomain, const ibex::Interval& codomain = ibex::Interval::ALL_REALS);
+      explicit Slice(const Interval& tdomain, const Interval& codomain = Interval::ALL_REALS);
 
       /**
        * \brief Creates a copy of the slice \f$\llbracket x\rrbracket\f$
@@ -79,7 +79,7 @@ namespace codac
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      const ibex::Interval tdomain() const;
+      const Interval tdomain() const;
 
       /// @}
       /// \name Slices structure
@@ -118,14 +118,14 @@ namespace codac
        *
        * \return the interval input gate
        */
-      const ibex::Interval input_gate() const;
+      const Interval input_gate() const;
 
       /**
        * \brief Returns the value of the output gate \f$\llbracket x\rrbracket(t_f)\f$ of this slice
        *
        * \return the interval output gate
        */
-      const ibex::Interval output_gate() const;
+      const Interval output_gate() const;
 
       /**
        * \brief Computes a convex polygon that optimally encloses the values of the slice
@@ -147,14 +147,14 @@ namespace codac
        *
        * \return the Interval object \f$\llbracket x\rrbracket([t_0,t_f])\f$
        */
-      const ibex::Interval codomain() const;
+      const Interval codomain() const;
 
       /**
        * \brief Computes the two-dimensional box \f$[t_0,t_f]\times\llbracket x\rrbracket([t_0,t_f])\f$
        *
        * \return the slice box
        */
-      const ibex::IntervalVector box() const;
+      const IntervalVector box() const;
 
       /**
        * \brief Returns the diameter of an interval (IBEX overload)
@@ -167,7 +167,7 @@ namespace codac
        * \param interval set to be evaluated
        * \return the diameter
        */
-      static double diam(const ibex::Interval& interval);
+      static double diam(const Interval& interval);
 
       /**
        * \brief Returns the diameter of this slice
@@ -197,7 +197,7 @@ namespace codac
        * \param t the temporal key (double, must belong to the Slice's tdomain)
        * \return Interval value of \f$\llbracket x\rrbracket(t)\f$
        */
-      const ibex::Interval operator()(double t) const;
+      const Interval operator()(double t) const;
 
       /**
        * \brief Returns the interval evaluation of this slice over \f$[t]\f$
@@ -205,7 +205,7 @@ namespace codac
        * \param t the temporal domain (Interval, must be a subset of the Slice's tdomain)
        * \return Interval envelope \f$\llbracket x\rrbracket([t])\f$
        */
-      const ibex::Interval operator()(const ibex::Interval& t) const;
+      const Interval operator()(const Interval& t) const;
 
       /**
        * \brief Returns the interval evaluations of the bounds of the slice over \f$[t]\f$
@@ -215,7 +215,7 @@ namespace codac
        * \param t the temporal domain (Interval, must be a subset of the Slice's tdomain)
        * \return the pair \f$\big(\llbracket\underline{x^-}\rrbracket([t]),\llbracket\overline{x^+}\rrbracket([t])\big)\f$
        */
-      const std::pair<ibex::Interval,ibex::Interval> eval(const ibex::Interval& t = ibex::Interval::ALL_REALS) const;
+      const std::pair<Interval,Interval> eval(const Interval& t = Interval::ALL_REALS) const;
 
       /**
        * \brief Returns the optimal evaluation of this slice at \f$t\f$,
@@ -227,7 +227,7 @@ namespace codac
        * \param v the derivative slice such that \f$\dot{x}(\cdot)\in\llbracket v\rrbracket(\cdot)\f$
        * \return Interval value of \f$\llbracket x\rrbracket(t)\f$
        */
-      const ibex::Interval interpol(double t, const Slice& v) const;
+      const Interval interpol(double t, const Slice& v) const;
 
       /**
        * \brief Returns the optimal evaluation of this slice over \f$[t]\f$,
@@ -239,7 +239,7 @@ namespace codac
        * \param v the derivative slice such that \f$\dot{x}(\cdot)\in\llbracket v\rrbracket(\cdot)\f$
        * \return Interval value of \f$\llbracket x\rrbracket([t])\f$
        */
-      const ibex::Interval interpol(const ibex::Interval& t, const Slice& v) const;
+      const Interval interpol(const Interval& t, const Slice& v) const;
 
       /**
        * \brief Returns the interval inversion \f$\llbracket x\rrbracket^{-1}([y])\f$
@@ -248,7 +248,7 @@ namespace codac
        * \param search_tdomain the optional interval tdomain on which the inversion will be performed
        * \return the hull of \f$\llbracket x\rrbracket^{-1}([y])\f$
        */
-      const ibex::Interval invert(const ibex::Interval& y, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
+      const Interval invert(const Interval& y, const Interval& search_tdomain = Interval::ALL_REALS) const;
 
       /**
        * \brief Returns the optimal interval inversion \f$\llbracket x\rrbracket^{-1}([y])\f$
@@ -260,7 +260,7 @@ namespace codac
        * \param search_tdomain the optional interval tdomain on which the inversion will be performed
        * \return the hull of \f$\llbracket x\rrbracket^{-1}([y])\f$
        */
-      const ibex::Interval invert(const ibex::Interval& y, const Slice& v, const ibex::Interval& search_tdomain = ibex::Interval::ALL_REALS) const;
+      const Interval invert(const Interval& y, const Slice& v, const Interval& search_tdomain = Interval::ALL_REALS) const;
 
       /// @}
       /// \name Tests
@@ -374,7 +374,7 @@ namespace codac
        * \return BoolInterval::YES (or BoolInterval::NO) if this slice contains \f$x(\cdot)\f$
        *         (or does not contain) and BoolInterval::MAYBE in case of ambiguity
        */
-      const ibex::BoolInterval contains(const Trajectory& x) const;
+      const BoolInterval contains(const Trajectory& x) const;
 
       /// @}
       /// \name Setting values
@@ -387,7 +387,7 @@ namespace codac
        *
        * \param y Interval value of the slice
        */
-      void set(const ibex::Interval& y);
+      void set(const Interval& y);
 
       /**
        * \brief Sets this slice to the empty set
@@ -405,7 +405,7 @@ namespace codac
        * \param envelope Interval value of the envelope
        * \param slice_consistency if 'true', the value of the gates may be affected
        */
-      void set_envelope(const ibex::Interval& envelope, bool slice_consistency = true);
+      void set_envelope(const Interval& envelope, bool slice_consistency = true);
 
       /**
        * \brief Sets the interval value of the input gate of this slice
@@ -418,7 +418,7 @@ namespace codac
        * \param slice_consistency if 'true', the value of the gate will
        *        be computed according to the connected slices
        */
-      void set_input_gate(const ibex::Interval& input_gate, bool slice_consistency = true);
+      void set_input_gate(const Interval& input_gate, bool slice_consistency = true);
 
       /**
        * \brief Sets the interval value of the output gate of this slice
@@ -431,7 +431,7 @@ namespace codac
        * \param slice_consistency if 'true', the value of the gate will
        *        be computed according to the connected slices
        */
-      void set_output_gate(const ibex::Interval& output_gate, bool slice_consistency = true);
+      void set_output_gate(const Interval& output_gate, bool slice_consistency = true);
 
       /**
        * \brief Inflates this slice by adding \f$[-rad,+rad]\f$ to all its codomain components
@@ -624,7 +624,7 @@ namespace codac
        *
        * \param tdomain the new temporal domain to be set
        */
-      void set_tdomain(const ibex::Interval& tdomain);
+      void set_tdomain(const Interval& tdomain);
 
       /**
        * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$\llbracket x\rrbracket(\cdot)\f$
@@ -662,13 +662,13 @@ namespace codac
        *
        * \return the envelope of codomain values
        */
-      const ibex::IntervalVector codomain_box() const;
+      const IntervalVector codomain_box() const;
 
       // Class variables:
 
-        ibex::Interval m_tdomain; //!< temporal domain \f$[t_0,t_f]\f$ of the slice
-        ibex::Interval m_codomain = ibex::Interval::ALL_REALS; //!< envelope of the slice
-        ibex::Interval *m_input_gate = NULL, *m_output_gate = NULL; //!< input and output gates
+        Interval m_tdomain; //!< temporal domain \f$[t_0,t_f]\f$ of the slice
+        Interval m_codomain = Interval::ALL_REALS; //!< envelope of the slice
+        Interval *m_input_gate = NULL, *m_output_gate = NULL; //!< input and output gates
         Slice *m_prev_slice = NULL, *m_next_slice = NULL; //!< pointers to previous and next slices of the related tube
         mutable TubeTreeSynthesis *m_synthesis_reference = NULL; //!< pointer to a leaf of the optional synthesis tree of the related tube
 

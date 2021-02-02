@@ -34,7 +34,7 @@ namespace codac
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \param bounds interval range for random values
        */
-      RandTrajectory(const ibex::Interval& tdomain, double timestep, const ibex::Interval& bounds);
+      RandTrajectory(const Interval& tdomain, double timestep, const Interval& bounds);
   };
 }
 

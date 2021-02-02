@@ -50,7 +50,7 @@ namespace codac
        * \param tdomain temporal domain \f$[t_0,t_f]\f$
        * \param f TFunction object defining the trajectory: \f$x(t)=f(t)\f$
        */
-      Trajectory(const ibex::Interval& tdomain, const TFunction& f);
+      Trajectory(const Interval& tdomain, const TFunction& f);
 
       /**
        * \brief Creates a scalar trajectory \f$x(\cdot)\f$ from an analytic expression,
@@ -60,7 +60,7 @@ namespace codac
        * \param f TFunction object defining the trajectory: \f$x(t)=f(t)\f$
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        */
-      Trajectory(const ibex::Interval& tdomain, const TFunction& f, double timestep);
+      Trajectory(const Interval& tdomain, const TFunction& f, double timestep);
 
       /**
        * \brief Creates a scalar trajectory \f$x(\cdot)\f$ from a map of values
@@ -101,7 +101,7 @@ namespace codac
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      const ibex::Interval tdomain() const;
+      const Interval tdomain() const;
 
       /**
        * \brief Returns the definition type of this trajectory
@@ -133,7 +133,7 @@ namespace codac
        *
        * \return an Interval object \f$x([t_0,t_f])\f$
        */
-      const ibex::Interval codomain() const;
+      const Interval codomain() const;
 
       /**
        * \brief Returns the evaluation of this trajectory at \f$t\f$
@@ -154,7 +154,7 @@ namespace codac
        * \param t the subtdomain (Interval, must be a subset of the trajectory's domain)
        * \return Interval envelope \f$x([t])\f$
        */
-      const ibex::Interval operator()(const ibex::Interval& t) const;
+      const Interval operator()(const Interval& t) const;
 
       /**
        * \brief Returns the value \f$x(t_0)\f$
@@ -220,7 +220,7 @@ namespace codac
        * \param tdomain new temporal domain \f$[t_0,t_f]\f$
        * \return a reference to this trajectory
        */
-      Trajectory& truncate_tdomain(const ibex::Interval& tdomain);
+      Trajectory& truncate_tdomain(const Interval& tdomain);
 
       /**
        * \brief Shifts the tdomain \f$[t_0,t_f]\f$ of \f$x(\cdot)\f$
@@ -423,7 +423,7 @@ namespace codac
        *
        * \return the envelope of codomain values
        */
-      const ibex::IntervalVector codomain_box() const;
+      const IntervalVector codomain_box() const;
 
       /**
        * \brief Computes the envelope of trajectory values
@@ -432,8 +432,8 @@ namespace codac
 
       // Class variables:
 
-        ibex::Interval m_tdomain = ibex::Interval::EMPTY_SET; //!< temporal domain \f$[t_0,t_f]\f$ of the trajectory
-        ibex::Interval m_codomain = ibex::Interval::EMPTY_SET; //!< envelope of the values of the trajectory
+        Interval m_tdomain = Interval::EMPTY_SET; //!< temporal domain \f$[t_0,t_f]\f$ of the trajectory
+        Interval m_codomain = Interval::EMPTY_SET; //!< envelope of the values of the trajectory
         
         // A trajectory is defined either by a TFunction or a map of values
         TrajDefnType m_traj_def_type = TrajDefnType::MAP_OF_VALUES; //!< definition type

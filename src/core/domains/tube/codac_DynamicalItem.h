@@ -12,8 +12,8 @@
 #ifndef __CODAC_DYNAMICALITEM_H__
 #define __CODAC_DYNAMICALITEM_H__
 
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -43,7 +43,7 @@ namespace codac
        *
        * \return an Interval object \f$[t_0,t_f]\f$
        */
-      virtual const ibex::Interval tdomain() const = 0;
+      virtual const Interval tdomain() const = 0;
 
       /**
        * \brief Returns the box of the feasible values along \f$[t_0,t_f]\f$
@@ -52,7 +52,7 @@ namespace codac
        *
        * \return the envelope of codomain values
        */
-      virtual const ibex::IntervalVector codomain_box() const = 0;
+      virtual const IntervalVector codomain_box() const = 0;
 
       /**
        * \brief Returns the name of this class
@@ -72,7 +72,7 @@ namespace codac
        * \param tdomain temporal domain \f$[t_0,t_f]\f$ to be tested
        * \return true in case of valid temporal tdomain
        */
-      static bool valid_tdomain(const ibex::Interval& tdomain);
+      static bool valid_tdomain(const Interval& tdomain);
   };
 }
 

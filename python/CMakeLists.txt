@@ -70,12 +70,13 @@
     src/core/contractors/dyn/codac_py_CtcLohner.cpp
     src/core/contractors/dyn/codac_py_CtcPicard.cpp
 
-    src/core/dynamics/tube/codac_py_Tube.cpp
-    src/core/dynamics/tube/codac_py_TubeVector.cpp
-    src/core/dynamics/trajectory/codac_py_Trajectory.cpp
-    src/core/dynamics/trajectory/codac_py_RandTrajectory.cpp
-    src/core/dynamics/trajectory/codac_py_TrajectoryVector.cpp
-    src/core/dynamics/slice/codac_py_Slice.cpp
+    src/core/domains/tube/codac_py_Tube.cpp
+    src/core/domains/tube/codac_py_TubeVector.cpp
+    src/core/domains/slice/codac_py_Slice.cpp
+
+    src/core/variables/trajectory/codac_py_Trajectory.cpp
+    src/core/variables/trajectory/codac_py_RandTrajectory.cpp
+    src/core/variables/trajectory/codac_py_TrajectoryVector.cpp
 
     src/core/functions/codac_py_TFnc.cpp
     src/core/functions/codac_py_TFunction.cpp

@@ -11,9 +11,10 @@
 #ifndef __CODAC_CTCCONSTELL_H__
 #define __CODAC_CTCCONSTELL_H__
 
-#include "ibex_Ctc.h"
-#include <vector>
 #include <list>
+#include <vector>
+#include "ibex_Ctc.h"
+#include <codac_IntervalVector.h>
 
 namespace codac
 {
@@ -25,14 +26,14 @@ namespace codac
   {
     public:
 
-      CtcConstell(const std::vector<ibex::IntervalVector>& map);
-      CtcConstell(const std::list<ibex::IntervalVector>& map);
+      CtcConstell(const std::vector<IntervalVector>& map);
+      CtcConstell(const std::list<IntervalVector>& map);
       ~CtcConstell();
-      void contract(ibex::IntervalVector &beacon_box);
+      void contract(IntervalVector &beacon_box);
 
     protected:
 
-      std::vector<ibex::IntervalVector> m_map;
+      std::vector<IntervalVector> m_map;
   };
 }
 

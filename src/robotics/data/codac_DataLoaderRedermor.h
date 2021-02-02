@@ -11,7 +11,7 @@
 #ifndef __CODAC_DATALOADERREDERMOR_H__
 #define __CODAC_DATALOADERREDERMOR_H__
 
-#include "ibex_Interval.h"
+#include "codac_Interval.h"
 #include "codac_DataLoader.h"
 #include "codac_Beacon.h"
 
@@ -25,9 +25,9 @@ namespace codac
       void load_data(TubeVector *&x,
                      TrajectoryVector *&truth,
                      float timestep = 1.,
-                     const ibex::Interval& tdomain = ibex::Interval::ALL_REALS);
+                     const Interval& tdomain = Interval::ALL_REALS);
       std::vector<Beacon> get_beacons() const;
-      std::map<int,std::vector<ibex::IntervalVector> > get_observations() const;
+      std::map<int,std::vector<IntervalVector> > get_observations() const;
 
     protected:
 
