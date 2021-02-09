@@ -1,0 +1,149 @@
+on:
+    push:
+        branches: '**'
+        tags: '' # Restrict to blank tags
+    pull_request:
+
+jobs:
+ tests:
+    runs-on: ${{ matrix.cfg.os }}
+    strategy:
+        matrix:
+            cfg:
+            - { os: ubuntu-18.04, gcc_v: 8, py_v_maj: 3, py_v_min: 6, desc: 'Ubuntu 18.04 GCC 8 Python 3.6 tests' }
+    name: ${{ matrix.cfg.desc }}
+    steps: 
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
+    - run: |
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.cfg.gcc_v }} 100 --slave /usr/bin/g++ g++ /usr/bin/g++-${{ matrix.cfg.gcc_v }}
+        gcc --version
+        g++ --version
+
+        python -c "import sys; print(sys.version)"
+        pip --version
+
+        sudo apt-get -q update ; sudo apt-get -y install flex bison libeigen3-dev || true
+  
+        # For documentation
+        pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme
+        sudo apt-get -y install doxygen graphviz
+
+        # For Python wrapping
+        #pip install wheel
+        #pip install --upgrade pip
+        #pip install pyibex
+        #pip install --upgrade pyibex==1.8.0
+
+        pwd
+        ls
+        export ORIGIN_DIR=$PWD
+        cd ..
+        pwd
+        ls
+        cd $ORIGIN_DIR
+
+        # IBEX
+        bash scripts/dependencies/install_ibex.sh
+
+        # CAPD
+        bash scripts/dependencies/install_capd.sh
+
+        # Environment variables
+        export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
+        export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+        #py_version=$(python -c "import sys; print(sys.version[:3])") # default python version
+        #echo "$py_version"
+ 
+        cd $ORIGIN_DIR
+        pwd
+        ls
+        #git submodule init ; git submodule update # for pybind11 submodule
+        mkdir build -p
+        cd build
+  
+        # Without synthesis tree
+
+        # Building lib + tests
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DTEST_EXAMPLES=ON ..
+        make api
+        # Again for doxygen2docstring
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=ON -DTEST_EXAMPLES=ON ..
+        ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
+        make
+        #make doc # todo
+        make install
+        #cd python/python_package
+        #/usr/bin/python3.5 setup.py develop --user
+        #/usr/bin/python3.5 pycodac/tests/test_arithmetic.py 
+        #cd ../../
+
+        # Building the examples
+        cd ../examples
+        find . -type d -name build -prune -exec rm -rf {} \;
+        cd linobs
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ..
+        cd basics
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ..
+        cd robotics
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ..
+        cd tuto
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ..
+        cd lie_group
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ../../build
+
+        # Testing
+        make test
+        ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
+    
+        # With synthesis tree for all created tubes
+  
+        # Building lib + tests
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DTEST_EXAMPLES=ON ..
+        make api
+        # Again for doxygen2docstring
+        cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install -DWITH_PYTHON=OFF -DBUILD_TESTS=ON -DWITH_TUBE_TREE=ON -DWITH_CAPD=ON -DTEST_EXAMPLES=ON ..
+        ##-DPYTHON_EXECUTABLE=/usr/bin/python3.5 ..
+        make
+        #make doc
+        make install
+        #cd python/python_package
+        #/usr/bin/python3.5 setup.py develop --user
+        #/usr/bin/python3.5 pycodac/tests/test_arithmetic.py 
+        #cd ../../
+
+        # Building the examples
+        cd ../examples
+        find . -type d -name build -prune -exec rm -rf {} \;
+        cd linobs
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ..
+        cd basics
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ..
+        cd robotics
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ..
+        cd tuto
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ..
+        cd lie_group
+        find . * -maxdepth 0 | grep -P "^[0-9]" | xargs -L 1 bash -c 'cd "$0" && ./build.sh && cd ..'
+        cd ../../build
+
+        # Testing
+        make test
+        ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing

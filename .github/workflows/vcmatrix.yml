@@ -1,0 +1,101 @@
+on:
+    push:
+        branches: '**'
+        tags: '' # Restrict to blank tags
+    pull_request:
+
+jobs:
+ vcmatrix:
+    runs-on: ${{ matrix.cfg.os }}
+    defaults:
+        run:
+            shell: ${{ matrix.cfg.shell }}
+    strategy:
+        matrix:
+            cfg:
+            # Change with_python: OFF when pyibex becomes available...
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9, with_python: OFF, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x86 C++ Python 3.9' }
+            # Uncomment when pyibex becomes available...
+#            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8, with_python: OFF, desc: 'Windows Visual Studio 2019 x86 Python 3.8' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x64 C++ Python 3.9' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8, with_python: ON, desc: 'Windows Visual Studio 2019 x64 Python 3.8' }
+            - { os: windows-2016, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 15" -A Win32', with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x86 C++' }
+            - { os: windows-2016, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 15" -A x64', with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x64 C++' }
+            # Change with_python: OFF when pyibex becomes available...
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A Win32', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 7, with_python: OFF, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2015 x86 C++ Python 3.7' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A Win32', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 6, with_python: ON, desc: 'Windows Visual Studio 2015 x86 Python 3.6' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A Win32', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 5, with_python: ON, desc: 'Windows Visual Studio 2015 x86 Python 3.5' }
+            # Should be Visual Studio 2010 for Python 3.4...?
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A Win32', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 4, with_python: ON, desc: 'Windows Visual Studio 2015 x86 Python 3.4' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A x64', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 7, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2015 x64 C++ Python 3.7' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A x64', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, with_python: ON, desc: 'Windows Visual Studio 2015 x64 Python 3.6' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A x64', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 5, with_python: ON, desc: 'Windows Visual Studio 2015 x64 Python 3.5' }
+            # Should be Visual Studio 2010 for Python 3.4...?
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A x64', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 4, with_python: ON, desc: 'Windows Visual Studio 2015 x64 Python 3.4' }
+    name: ${{ matrix.cfg.desc }}
+    steps: 
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+#    # No real way to clear cache : https://stackoverflow.com/questions/63521430/clear-cache-in-github-actions, however GitHub will remove any cache entries that have not been accessed in over 7 days...
+#    - uses: actions/cache@v2
+#      id: cache-ibex
+#      with:
+#        path: 'ibex'
+#        key: ${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}-ibex
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
+        architecture: ${{ matrix.cfg.arch }}
+      if: matrix.cfg.py_v_maj!=''
+    - run: |
+        python -c "import sys; print(sys.version)"
+        echo ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
+      if: matrix.cfg.py_v_maj!=''
+    - run: |
+        (New-Object System.Net.WebClient).DownloadFile("http://www.ensta-bretagne.fr/lebars/Share/windows_extra_tools.zip", "C:\Windows\Temp\windows_extra_tools.zip") 
+        7z x C:\Windows\Temp\windows_extra_tools.zip -o"C:\Windows" -y
+      shell: pwsh
+      if: runner.os == 'Windows'
+    - run: choco install -y -r --no-progress vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
+      if: matrix.cfg.choco_vs_tools=='vcbuildtools'
+    - run: choco install -y -r --no-progress ${{ matrix.cfg.choco_vs_tools }} winflexbison
+      if: startsWith(matrix.cfg.runtime, 'vc') && matrix.cfg.choco_vs_tools!='vcbuildtools'
+      # Registry bug...?
+    - run: wget https://github.com/ros2/choco-packages/releases/download/2020-02-24/eigen.3.3.4.nupkg --no-check-certificate -nv & choco install -y -s . eigen & reg add HKEY_LOCAL_MACHINE\SOFTWARE\Kitware\CMake\Packages\Eigen3 /v "CMakePackageDir" /t REG_SZ /d "C:\ProgramData\chocolatey\lib\eigen\share\cmake" /f
+      shell: cmd
+      if: runner.os == 'Windows'
+    - run: choco install -y -r --no-progress doxygen.install graphviz & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools
+      if: runner.os == 'Windows' && matrix.cfg.py_v_maj=='3' && matrix.cfg.py_v_min=='4'
+    - run: choco install -y -r --no-progress doxygen.install graphviz & python -m pip install --upgrade pip & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme
+      if: runner.os == 'Windows' && (matrix.cfg.py_v_maj!='3' || matrix.cfg.py_v_min!='4')
+    - run: git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . --config Release --target install ; cd ../..
+      shell: bash
+#      if: steps.cache-ibex.outputs.cache-hit != 'true'
+    - run: |
+        mkdir build ; cd build
+        cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=${{ matrix.cfg.with_python }} ..
+        if [ "${{ matrix.cfg.with_python }}" = "ON" ]; then cmake --build . --config Debug --target api ; fi
+        if [ "${{ matrix.cfg.with_python }}" = "ON" ]; then cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=${{ matrix.cfg.with_python }} .. ; fi
+        cmake --build . --config Debug --target install
+        if [ "${{ matrix.cfg.with_python }}" = "ON" ]; then cmake --build . --config Debug --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py ; fi
+        cd ..
+      shell: bash
+    - run: |
+        wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
+        7z x codac_test_win.zip -y ; rm -Rf codac_test_win.zip ; cd codac_test_win ; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac . ; cd .. ; 7z a -y codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
+        cmake ${{ matrix.cfg.cmake_params }} .
+        cmake --build . --config Release
+        ./Release/my_project.exe
+        cd ../..
+      shell: bash
+      if: ${{ matrix.cfg.with_cpp_bundle }}==ON
+    - uses: xresloader/upload-to-github-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: "*.zip;*.whl"
+        overwrite: true
+        tag_name: autotagname
