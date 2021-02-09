@@ -55,8 +55,12 @@ void export_VIBesFig(py::module& m);
 void export_VIBesFigTube(py::module& m);
 void export_VIBesFigTubeVector(py::module& m);
 void export_VIBesFigMap(py::module& m);
+void export_VIBesFigPaving(py::module& m);
+
+void export_Paving(py::module& m);
 
 void export_DataLoader(py::module& m);
+void export_TPlane(py::module& m);
 
 PYBIND11_MODULE(tube, m)
 {
@@ -93,8 +97,12 @@ PYBIND11_MODULE(tube, m)
   export_VIBesFigTube(m);
   export_VIBesFigTubeVector(m);
   export_VIBesFigMap(m);
+  export_VIBesFigPaving(m);
+
+  export_Paving(m);
 
   export_DataLoader(m);
+  export_TPlane(m);
 
   // m.attr("ibex_version") = _IBEX_VERSION_;
   // return m.ptr();

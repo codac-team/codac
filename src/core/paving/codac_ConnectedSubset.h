@@ -95,6 +95,9 @@ namespace codac
        */
       std::vector<IntervalVector> get_boundary(SetValue value_boundary = SetValue::MAYBE, SetValue value_out = SetValue::OUT) const; // items of type k-1
 
+
+      static const std::vector<IntervalVector> get_boxed_hulls(const std::vector<ConnectedSubset> v_subsets);
+
       /// @}
       /// \name Methods related to topological degree
       /// @{

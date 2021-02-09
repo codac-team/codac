@@ -261,6 +261,22 @@ void export_TubeVector(py::module& m)
       TUBEVECTOR_BOOL_OVERLAPS_TUBEVECTOR_FLOAT,
       "x"_a, "ratio"_a=1)
 
+    .def("set", [](TubeVector& x, const Vector& y) { x.set(y); },
+      TUBEVECTOR_VOID_SET_INTERVALVECTOR,
+      "y"_a)
+
+    .def("set", [](TubeVector& x, const Vector& y, int slice_id) { x.set(y, slice_id); },
+      TUBEVECTOR_VOID_SET_INTERVALVECTOR_INT,
+      "y"_a, "slice_id"_a)
+
+    .def("set", [](TubeVector& x, const Vector& y, double t) { x.set(y, t); },
+      TUBEVECTOR_VOID_SET_INTERVALVECTOR_DOUBLE,
+      "y"_a, "t"_a)
+
+    .def("set", [](TubeVector& x, const Vector& y, const Interval& t) { x.set(y, t); },
+      TUBEVECTOR_VOID_SET_INTERVALVECTOR_INTERVAL,
+      "y"_a, "t"_a)
+
     .def("set", (void (TubeVector::*)(const IntervalVector&))&TubeVector::set,
       TUBEVECTOR_VOID_SET_INTERVALVECTOR,
       "y"_a)

@@ -88,8 +88,12 @@
     src/core/graphics/codac_py_VIBesFigTube.cpp
     src/core/graphics/codac_py_VIBesFigTubeVector.cpp
     src/core/graphics/codac_py_VIBesFigMap.cpp
+    src/core/graphics/codac_py_VIBesFigPaving.cpp
+
+    src/core/paving/codac_py_Paving.cpp
 
     src/robotics/codac_py_DataLoader.cpp
+    src/robotics/codac_py_TPlane.cpp
   )
 
   target_include_directories(tube

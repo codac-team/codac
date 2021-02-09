@@ -84,4 +84,12 @@ namespace codac
 
     return v_boundaries;
   }
+  
+  const vector<IntervalVector> ConnectedSubset::get_boxed_hulls(const vector<ConnectedSubset> v_subsets)
+  {
+    vector<IntervalVector> v_boxes(v_subsets.size());
+    for(size_t i = 0 ; i < v_subsets.size() ; i++)
+      v_boxes[i] = v_subsets[i].box();
+    return v_boxes;
+  }
 }
