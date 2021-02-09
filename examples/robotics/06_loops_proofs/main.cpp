@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 
     clock_t t_start = clock();
 
-    TPlane tplane;
+    TPlane tplane(x->tdomain());
     tplane.compute_detections(dt*2., *x, *v);
     tplane.compute_proofs(f);
 
@@ -82,15 +82,15 @@ int main(int argc, char** argv)
     fig_map.set_trajectory_color(&x_truth, colormap, &traj_colormap);
     fig_map.show(1.);
 
-    vector<ConnectedSubset> v_loops;
+    vector<IntervalVector> v_loops;
 
-    v_loops = tplane.get_detected_loops();
+    v_loops = tplane.detected_loops();
     for(size_t i = 0 ; i < v_loops.size() ; i++)
-      fig_tplane.draw_box(v_loops[i].box(), "red");
+      fig_tplane.draw_box(v_loops[i], "red");
 
-    v_loops = tplane.get_proven_loops();
+    v_loops = tplane.proven_loops();
     for(size_t i = 0 ; i < v_loops.size() ; i++)
-      fig_tplane.draw_box(v_loops[i].box(), "green");
+      fig_tplane.draw_box(v_loops[i], "green");
 
     vibes::endDrawing();
 

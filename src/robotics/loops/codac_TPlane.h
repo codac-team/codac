@@ -46,8 +46,10 @@ namespace codac
 
       /**
        * \brief Creates a 2d temporal space \f$[t_0,t_f]^2\f$
+       *
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        */
-      TPlane();
+      TPlane(const Interval& tdomain);
 
       /**
        * \brief Computes this tplane as a subpaving, from the tube of positions \f$[\mathbf{p}](\cdot)\f$
@@ -93,7 +95,16 @@ namespace codac
        *
        * \return the set of connected subsets corresponding to loop detections
        */
-      const std::vector<ConnectedSubset>& get_detected_loops() const;
+      const std::vector<ConnectedSubset>& detected_loops_subsets() const;
+
+      /**
+       * \brief Returns the set of boxed detected loops
+       *
+       * \note The tplane must have been computed beforehand.
+       *
+       * \return the set of boxes \f$[t_1]\times[t_2]\f$ corresponding to loop detections
+       */
+      const std::vector<IntervalVector> detected_loops() const;
 
       /**
        * \brief Returns the set of proven loops
@@ -102,7 +113,16 @@ namespace codac
        *
        * \return the set of connected subsets corresponding to loops proofs
        */
-      const std::vector<ConnectedSubset>& get_proven_loops() const;
+      const std::vector<ConnectedSubset>& proven_loops_subsets() const;
+
+      /**
+       * \brief Returns the set of boxed proven loops
+       *
+       * \note The tplane and the proofs must have been computed beforehand.
+       *
+       * \return the set of boxes \f$[t_1]\times[t_2]\f$ corresponding to loops proofs
+       */
+      const std::vector<IntervalVector> proven_loops() const;
 
       /**
        * \brief Returns a temporal function of value 0 in case of no-detection, 1 in case of

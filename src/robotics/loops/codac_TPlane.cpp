@@ -15,8 +15,8 @@ using namespace ibex;
 
 namespace codac
 {
-  TPlane::TPlane()
-    : Paving(IntervalVector(2), SetValue::MAYBE)
+  TPlane::TPlane(const Interval& tdomain)
+    : Paving(IntervalVector(2, tdomain), SetValue::MAYBE)
   {
 
   }
@@ -29,6 +29,7 @@ namespace codac
   void TPlane::compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool extract_subsets)
   {
     assert(precision > 0.);
+    assert(p.tdomain().is_superset(box()[0]));
     assert(p.tdomain() == v.tdomain());
     assert(p.size() == 2 && v.size() == 2);
 
@@ -124,14 +125,24 @@ namespace codac
     return m_v_proven_loops.size();
   }
 
-  const vector<ConnectedSubset>& TPlane::get_detected_loops() const
+  const vector<ConnectedSubset>& TPlane::detected_loops_subsets() const
   {
     return m_v_detected_loops;
   }
 
-  const vector<ConnectedSubset>& TPlane::get_proven_loops() const
+  const vector<IntervalVector> TPlane::detected_loops() const
+  {
+    return ConnectedSubset::get_boxed_hulls(m_v_detected_loops);
+  }
+
+  const vector<ConnectedSubset>& TPlane::proven_loops_subsets() const
   {
     return m_v_proven_loops;
+  }
+
+  const vector<IntervalVector> TPlane::proven_loops() const
+  {
+    return ConnectedSubset::get_boxed_hulls(m_v_proven_loops);
   }
 
   Trajectory TPlane::traj_loops_summary() const
