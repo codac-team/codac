@@ -27,7 +27,7 @@ ctc.deriv.contract(x, v)
 
 tplane = TPlane(x.tdomain())
 tplane.compute_detections(dt*2., x, v)
-#tplane.compute_proofs(f)
+tplane.compute_proofs(x, v)
 
 
 # =================== 2. Graphics ====================

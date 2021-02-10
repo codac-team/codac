@@ -38,9 +38,9 @@ void export_TPlane(py::module& m)
       TPLANE_VOID_COMPUTE_DETECTIONS_FLOAT_TUBEVECTOR_TUBEVECTOR,
       "precision"_a, "p"_a, "v"_a)
 
-    .def("compute_proofs", &TPlane::compute_proofs,
+    .def("compute_proofs", (void (TPlane::*)(const TubeVector&,const TubeVector&))&TPlane::compute_proofs,
       TPLANE_VOID_COMPUTE_PROOFS_INTERVALVECTORPINTERVALVECTORB,
-      "f"_a)
+      "p"_a, "v"_a)
 
     .def("nb_loops_detections", &TPlane::nb_loops_detections,
       TPLANE_INT_NB_LOOPS_DETECTIONS)

@@ -12,6 +12,7 @@
 #ifndef __CODAC_CONNECTEDSUBSET_H__
 #define __CODAC_CONNECTEDSUBSET_H__
 
+#include <functional>
 #include "codac_IntervalMatrix.h"
 #include "codac_Set.h"
 
@@ -95,7 +96,12 @@ namespace codac
        */
       std::vector<IntervalVector> get_boundary(SetValue value_boundary = SetValue::MAYBE, SetValue value_out = SetValue::OUT) const; // items of type k-1
 
-
+      /**
+       * \brief Returns the boxed hull of each connected subset into a vector of boxes
+       * 
+       * \param v_subsets vector of connected subsets
+       * \return a vector of boxes
+       */
       static const std::vector<IntervalVector> get_boxed_hulls(const std::vector<ConnectedSubset> v_subsets);
 
       /// @}
@@ -119,7 +125,7 @@ namespace codac
        * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
        * \return `true` in case of at least one zero proven on this subset, `false` in case of undecidability
        */
-      bool zero_proven(IntervalVector (*f)(const IntervalVector& b));
+      bool zero_proven(const std::function<IntervalVector(const IntervalVector&)>& f);
 
       /**
        * \brief Counts the number of zeros of an uncertain function \f$\mathbf{f}^*\f$
@@ -142,7 +148,7 @@ namespace codac
        *                  precision limit of this auto-refinement.
        * \return the number of zeros, or -1 in case of undecidability
        */
-      int zeros_number(IntervalVector (*f)(const IntervalVector& b), IntervalMatrix (*Jf)(const IntervalVector& b), float precision);
+      int zeros_number(const std::function<IntervalVector(const IntervalVector&)>& f, const std::function<IntervalMatrix(const IntervalVector&)>& Jf, float precision);
 
       /// @}
 
@@ -157,7 +163,7 @@ namespace codac
        * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
        * \return degree number
        */
-      int topological_degree(IntervalVector (*f)(const IntervalVector& b));
+      int topological_degree(const std::function<IntervalVector(const IntervalVector&)>& f);
 
       /**
        * \brief Returns `true` if all items in v_s are positive
@@ -185,7 +191,7 @@ namespace codac
        * \param common_cocoface
        * \return local degree number
        */
-      int compute_local_degree(IntervalVector (*f)(const IntervalVector& b), const IntervalVector& b, const IntervalVector& common_cocoface) const;
+      int compute_local_degree(const std::function<IntervalVector(const IntervalVector&)>& f, const IntervalVector& b, const IntervalVector& common_cocoface) const;
       
       /**
        * \brief Returns a vector of signs represented as integers
@@ -195,7 +201,7 @@ namespace codac
        * \param common_cocoface
        * \return vector of integers
        */
-      std::vector<int> sign_vector(IntervalVector (*f)(const IntervalVector& b), const IntervalVector& b, const IntervalVector& common_cocoface) const;
+      std::vector<int> sign_vector(const std::function<IntervalVector(const IntervalVector&)>& f, const IntervalVector& b, const IntervalVector& common_cocoface) const;
       
       /**
        * \brief Returns a vector of cofaces related to \f$[\mathbf{b}]\f$
@@ -229,7 +235,7 @@ namespace codac
        * \param precision of the bisected method used in case of ambiguity on the already existing paving structure
        * \return `true` if the Jacobian is non-singular
        */
-      bool non_singular_jacobian(IntervalMatrix (*Jf)(const IntervalVector& b), float precision);
+      bool non_singular_jacobian(const std::function<IntervalMatrix(const IntervalVector&)>& f, float precision);
 
       /// @}
 

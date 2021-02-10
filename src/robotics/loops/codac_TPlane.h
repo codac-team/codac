@@ -66,9 +66,10 @@ namespace codac
        *
        * \note The tplane must have been computed beforehand.
        *
-       * \param f inclusion of the uncertain function \f$\mathbf{f}^*\f$ that vanishes in case of a loop
+       * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
+       * \param v 2d TubeVector \f$[\mathbf{v}](\cdot)\f$ for velocities
        */
-      void compute_proofs(IntervalVector (*f)(const IntervalVector& b));
+      void compute_proofs(const TubeVector& p, const TubeVector& v);
 
       /**
        * \brief Returns the number of loop detections

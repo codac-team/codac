@@ -108,10 +108,20 @@ namespace codac
       m_v_detected_loops = get_connected_subsets();
   }
 
-  void TPlane::compute_proofs(IntervalVector (*f)(const IntervalVector& b))
+  // Inclusion function
+  IntervalVector f(const TubeVector& p, const TubeVector& v, const IntervalVector& input)
   {
+    return v.integral(input[0], input[1])
+         & (p(input[1]) - p(input[0]));
+  }
+
+  using namespace std::placeholders;
+  void TPlane::compute_proofs(const TubeVector& p, const TubeVector& v)
+  {
+    auto fp = std::bind(&f, p, v, _1);
+
     for(size_t i = 0 ; i < m_v_detected_loops.size() ; i++)
-      if(m_v_detected_loops[i].zero_proven(f))
+      if(m_v_detected_loops[i].zero_proven(fp))
         m_v_proven_loops.push_back(m_v_detected_loops[i]);
   }
 
