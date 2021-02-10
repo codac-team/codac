@@ -16,9 +16,7 @@
 
 #include <codac_Interval.h>
 #include <codac_IntervalVector.h>
-#include "ibex_Ctc.h"
-
-using ibex::Ctc;
+#include <codac_Ctc.h>
 
 using namespace std;
 

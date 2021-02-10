@@ -13,7 +13,7 @@
 
 #include <list>
 #include <vector>
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
 #include <codac_IntervalVector.h>
 
 namespace codac
@@ -22,7 +22,7 @@ namespace codac
    * \brief CtcConstell class.
    *
    */
-  class CtcConstell : public ibex::Ctc
+  class CtcConstell : public Ctc
   {
     public:
 

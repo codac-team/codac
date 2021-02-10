@@ -25,16 +25,16 @@ namespace codac
     public:
 
       // Prints convex hull of a set of n points.
-      static const std::vector<ibex::Vector> convex_hull(const std::vector<ibex::Vector>& v_points);
+      static const std::vector<Vector> convex_hull(const std::vector<Vector>& v_points);
 
 
     protected:
 
       // A utility function to find next to top in a stack
-      static const ibex::Vector next_to_top(const std::stack<ibex::Vector>& s);
+      static const Vector next_to_top(const std::stack<Vector>& s);
       
       // A utility function to swap two points
-      static void swap(ibex::Vector& p1, ibex::Vector& p2);
+      static void swap(Vector& p1, Vector& p2);
 
       // A utility function to return square of distance between p1 and p2
       static const Interval dist(const IntervalVector& p1, const IntervalVector& p2);
@@ -50,12 +50,12 @@ namespace codac
   {
     public:
 
-      PointsSorter(const ibex::Vector& p0);
-      bool operator()(const ibex::Vector& p1, const ibex::Vector& p2);
+      PointsSorter(const Vector& p0);
+      bool operator()(const Vector& p1, const Vector& p2);
 
     protected:
 
-      ibex::Vector m_p0 = ibex::Vector(2);
+      Vector m_p0 = Vector(2);
   };
 }
 

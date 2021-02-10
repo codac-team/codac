@@ -39,13 +39,13 @@ namespace codac
       static std::vector<Beacon> generate_landmarks(const IntervalVector& map_box, int nb_landmarks = 100);
       static std::vector<IntervalVector> generate_landmarks_boxes(const IntervalVector& map_box, int nb_landmarks = 100);
       static std::vector<IntervalVector> generate_observations(
-                     const ibex::Vector& x,
+                     const Vector& x,
                      const std::vector<Beacon>& map,
                      bool random = true,
                      const Interval& visi_range = Interval::POS_REALS,
                      const Interval& visi_angle = Interval::ALL_REALS);
       static std::vector<IntervalVector> generate_observations(
-                     const ibex::Vector& x,
+                     const Vector& x,
                      const std::vector<IntervalVector>& map,
                      bool random = true,
                      const Interval& visi_range = Interval::POS_REALS,
@@ -67,7 +67,7 @@ namespace codac
                      const Interval& visi_angle = Interval(-M_PI/4.,M_PI/4.),
                      const Interval& tdomain = Interval::ALL_REALS);
       static std::vector<IntervalVector> generate_static_observations(
-                     const ibex::Vector& x,
+                     const Vector& x,
                      const std::vector<IntervalVector>& map,
                      bool random = true,
                      const Interval& visi_range = Interval::POS_REALS,

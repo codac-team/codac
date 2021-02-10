@@ -54,7 +54,7 @@ public:
    * \param contractions number of contractions of the global enclosure by the estimated local enclosure
    * \param eps inflation parameter for the global enclosure
    */
-  LohnerAlgorithm(const ibex::Function *f,
+  LohnerAlgorithm(const Function *f,
                   double h,
                   bool forward,
                   const IntervalVector &u0 = IntervalVector::empty(1),
@@ -109,14 +109,14 @@ private:
   IntervalVector z; //!< Taylor-Lagrange remainder (order 2)
   IntervalVector r; //!< enclosure of uncertainties in the frame given by the matrix B
   IntervalVector u_tilde; //!< global enclosure
-  ibex::Matrix B, Binv;
-  ibex::Vector u_hat; //!< center of the box u
-  const ibex::Function *f; //!< litteral function of the system \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$
+  Matrix B, Binv;
+  Vector u_hat; //!< center of the box u
+  const Function *f; //!< litteral function of the system \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$
 };
 
 // --
 
-LohnerAlgorithm::LohnerAlgorithm(const ibex::Function *f,
+LohnerAlgorithm::LohnerAlgorithm(const Function *f,
                                  double h,
                                  bool forward,
                                  const IntervalVector &u0,
@@ -130,8 +130,8 @@ LohnerAlgorithm::LohnerAlgorithm(const ibex::Function *f,
       u(u0),
       z(u0 - u0.mid()),
       r(z),
-      B(ibex::Matrix::eye(dim)),
-      Binv(ibex::Matrix::eye(dim)),
+      B(Matrix::eye(dim)),
+      Binv(Matrix::eye(dim)),
       u_hat(u0.mid()),
       f(f) {}
 
@@ -144,8 +144,8 @@ const IntervalVector &LohnerAlgorithm::integrate(unsigned int steps, double H) {
     IntervalVector u_t = globalEnclosure(u, FWD);
     for (int j = 0; j < contractions; ++j) {
       z1 = 0.5 * h * h * f->jacobian(u_t) * f->eval_vector(u_t);
-      ibex::Vector m1 = z1.mid();
-      IntervalMatrix A = ibex::Matrix::eye(dim) + h * direction * f->jacobian(u);
+      Vector m1 = z1.mid();
+      IntervalMatrix A = Matrix::eye(dim) + h * direction * f->jacobian(u);
       Eigen::HouseholderQR<Eigen::MatrixXd> qr(EigenHelpers::i2e((A * B).mid()));
       B1 = EigenHelpers::e2i(qr.householderQ());
       B1inv = ibex::real_inverse(B1);
@@ -188,7 +188,7 @@ const IntervalVector &LohnerAlgorithm::getGlobalEnclosure() const {
   return u_tilde;
 }
 
-CtcLohner::CtcLohner(const ibex::Function &f, int contractions, double eps)
+CtcLohner::CtcLohner(const Function &f, int contractions, double eps)
     : DynCtc(),
       m_f(f),
       contractions(contractions),

@@ -12,7 +12,7 @@
 #ifndef __CODAC_CTCDIST_H__
 #define __CODAC_CTCDIST_H__
 
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 
@@ -22,7 +22,7 @@ namespace codac
    * \class CtcDist
    * \brief Distance constraint between two 2d vectors.
    */
-  class CtcDist : public ibex::Ctc
+  class CtcDist : public Ctc
   {
     public:
 

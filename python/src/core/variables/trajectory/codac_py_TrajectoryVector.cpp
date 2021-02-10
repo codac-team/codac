@@ -267,15 +267,15 @@ void export_TrajectoryVector(py::module& m)
     .def("__rmul__",     [](const TrajectoryVector& y, double x) { return x*y; })
     .def("__rmul__",     [](const TrajectoryVector& y, const Trajectory& x) { return x*y; })
 
-    // todo const TrajectoryVector operator*(const Trajectory& x, const ibex::Vector& y);
-    // todo const TrajectoryVector operator*(const ibex::Matrix& x, const TrajectoryVector& y);
+    // todo const TrajectoryVector operator*(const Trajectory& x, const Vector& y);
+    // todo const TrajectoryVector operator*(const Matrix& x, const TrajectoryVector& y);
 
     .def("__truediv__",  [](const TrajectoryVector& x, double y) { return x/y; })
     .def("__truediv__",  [](const TrajectoryVector& x, const Trajectory& y) { return x/y; })
 
-    // todo const TrajectoryVector operator/(const ibex::Vector& x, const Trajectory& y);
+    // todo const TrajectoryVector operator/(const Vector& x, const Trajectory& y);
 
-    // todo const TrajectoryVector vecto_product(const TrajectoryVector& x, const ibex::Vector& y);
-    // todo const TrajectoryVector vecto_product(const ibex::Vector& x, const TrajectoryVector& y);
+    // todo const TrajectoryVector vecto_product(const TrajectoryVector& x, const Vector& y);
+    // todo const TrajectoryVector vecto_product(const Vector& x, const TrajectoryVector& y);
   ;
 }

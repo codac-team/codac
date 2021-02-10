@@ -31,8 +31,8 @@ namespace codac
       /**
        * \brief Creates a contractor object \f$\mathcal{C}_\textrm{linobs}\f$
        */
-      // CtcLinobs(const ibex::Matrix& A, const ibex::Vector& b); // not yet available since auto evaluation of e^At not at hand
-      CtcLinobs(const ibex::Matrix& A, const ibex::Vector& b, IntervalMatrix (*exp_At)(const ibex::Matrix& A, const Interval& t));
+      // CtcLinobs(const Matrix& A, const Vector& b); // not yet available since auto evaluation of e^At not at hand
+      CtcLinobs(const Matrix& A, const Vector& b, IntervalMatrix (*exp_At)(const Matrix& A, const Interval& t));
 
       void contract(std::vector<Domain*>& v_domains);
       void contract(TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
@@ -46,20 +46,20 @@ namespace codac
       void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
-      ConvexPolygon polygon_envelope(const ConvexPolygon& p_k, double dt_k_kp1, const ibex::Matrix& A, const ibex::Vector& b, const Interval& u_k);
+      ConvexPolygon polygon_envelope(const ConvexPolygon& p_k, double dt_k_kp1, const Matrix& A, const Vector& b, const Interval& u_k);
 
 
     protected:
 
-      void ctc_fwd_gate(ConvexPolygon& p_k, const ConvexPolygon& p_km1, double dt_km1_k, const ibex::Matrix& A, const ibex::Vector& b, const Interval& u_km1);
-      void ctc_bwd_gate(ConvexPolygon& p_k, const ConvexPolygon& p_kp1, double dt_k_kp1, const ibex::Matrix& A, const ibex::Vector& b, const Interval& u_k);
+      void ctc_fwd_gate(ConvexPolygon& p_k, const ConvexPolygon& p_km1, double dt_km1_k, const Matrix& A, const Vector& b, const Interval& u_km1);
+      void ctc_bwd_gate(ConvexPolygon& p_k, const ConvexPolygon& p_kp1, double dt_k_kp1, const Matrix& A, const Vector& b, const Interval& u_k);
 
 
     protected:
 
-      const ibex::Matrix& m_A;
-      const ibex::Vector& m_b;
-      IntervalMatrix (*m_exp_At)(const ibex::Matrix& A, const Interval& t);
+      const Matrix& m_A;
+      const Vector& m_b;
+      IntervalMatrix (*m_exp_At)(const Matrix& A, const Interval& t);
 
       const int m_polygon_max_edges = 15;
 

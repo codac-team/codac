@@ -12,7 +12,7 @@
 #ifndef __CODAC_CTCSTATIC_H__
 #define __CODAC_CTCSTATIC_H__
 
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
 #include "codac_DynCtc.h"
 #include "codac_Domain.h"
 
@@ -35,7 +35,7 @@ namespace codac
        * \param dynamic_ctc if true, the contraction will include the
        *        temporal tdomain as first dimension of the (n+1) box
        */
-      CtcStatic(ibex::Ctc& ibex_ctc, bool dynamic_ctc = false);
+      CtcStatic(Ctc& ibex_ctc, bool dynamic_ctc = false);
 
       /*
        * \brief Contracts a set of abstract domains
@@ -122,7 +122,7 @@ namespace codac
 
     protected:
 
-      ibex::Ctc& m_static_ctc; //!< related static contractor
+      Ctc& m_static_ctc; //!< related static contractor
       int m_dynamic_ctc; //!< specifies either the temporal tdomain is part of the contraction or not
 
       static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)

@@ -13,7 +13,7 @@
 #define __CODAC_CTCFUNCTION_H__
 
 #include <string>
-#include "ibex_Function.h"
+#include "codac_Function.h"
 #include "ibex_CtcFwdBwd.h"
 #include "ibex_Domain.h"
 #include "codac_TubeVector.h"
@@ -35,7 +35,7 @@ namespace codac
        *
        * \param f the function \f$\mathbf{f}\f$
        */
-      CtcFunction(const ibex::Function& f);
+      CtcFunction(const Function& f);
 
       /**
        * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$
@@ -44,7 +44,7 @@ namespace codac
        * \param f the function \f$\mathbf{f}\f$
        * \param y the ibex::Domain object
        */
-      CtcFunction(const ibex::Function& f, const ibex::Domain& y);
+      CtcFunction(const Function& f, const ibex::Domain& y);
 
       /**
        * \brief Creates a contractor for the constraint \f$f(\mathbf{x})\in[y]\f$
@@ -53,7 +53,7 @@ namespace codac
        * \param f the function \f$f\f$
        * \param y the interval \f$[y]\f$
        */
-      CtcFunction(const ibex::Function& f, const Interval& y);
+      CtcFunction(const Function& f, const Interval& y);
 
       /**
        * \brief Creates a contractor for the constraint \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$
@@ -62,7 +62,7 @@ namespace codac
        * \param f the function \f$\mathbf{f}\f$
        * \param y the IntervalVector \f$[\mathbf{y}]\f$
        */
-      CtcFunction(const ibex::Function& f, const IntervalVector& y);
+      CtcFunction(const Function& f, const IntervalVector& y);
       
       /**
        * \brief \f$\mathcal{C}\big([\mathbf{x}]\big)\f$

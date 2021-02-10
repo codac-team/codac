@@ -117,12 +117,12 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
     .. code-tab:: cpp
 
-      class MyCtc : public ibex::Ctc
+      class MyCtc : public Ctc
       {
         public:
 
           MyCtc(const std::vector<IntervalVector>& M_)
-            : ibex::Ctc(2), // the contractor acts on 2d boxes
+            : Ctc(2), // the contractor acts on 2d boxes
               M(M_)         // attribute needed later on for the contraction
           {
 

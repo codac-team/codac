@@ -248,7 +248,7 @@ namespace codac
        * \param pose vector (x,y[,heading]) describing robot's pose (2d or 3d)
        * \param size optional robot size (-1 = size of main vehicle by default)
        */
-      void draw_vehicle(const ibex::Vector& pose, float size = -1);
+      void draw_vehicle(const Vector& pose, float size = -1);
 
       /**
        * \brief Draws a vehicle with a given pose
@@ -257,7 +257,7 @@ namespace codac
        * \param params VIBes parameters related to the vehicle (for groups)
        * \param size optional robot size (-1 = size of main vehicle by default)
        */
-      void draw_vehicle(const ibex::Vector& pose, const vibes::Params& params, float size = -1);
+      void draw_vehicle(const Vector& pose, const vibes::Params& params, float size = -1);
 
       /**
        * \brief Draws a vehicle on top of its trajectory
@@ -314,7 +314,7 @@ namespace codac
        * \param width the real width of the squared beacon
        * \param color optional color of the beacon
        */
-      void add_beacon(const ibex::Vector& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const Vector& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a set of Beacon objects to the map
@@ -354,7 +354,7 @@ namespace codac
        * \param width the width of the squared beacons
        * \param color optional color of the beacons
        */
-      void add_landmarks(const std::vector<ibex::Vector>& v_m, double width, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_landmarks(const std::vector<Vector>& v_m, double width, const std::string& color = DEFAULT_BEACON_COLOR);
       
       /**
        * \brief Adds a range-and-bearing uncertain observation to the map,
@@ -367,7 +367,7 @@ namespace codac
        * \param pose the related 3d Vector object representing the pose (x,y,heading)
        * \param color optional color of the observation
        */
-      void add_observation(const IntervalVector& obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observation(const IntervalVector& obs, const Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
        * \brief Adds a set of range-and-bearing uncertain observations to the map,
@@ -380,7 +380,7 @@ namespace codac
        * \param pose the related 3d Vector object representing the pose (x,y,heading)
        * \param color optional color of the observation
        */
-      void add_observations(const std::vector<IntervalVector>& v_obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observations(const std::vector<IntervalVector>& v_obs, const Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
        * \brief Adds a range-and-bearing uncertain observation to the map,
@@ -482,7 +482,7 @@ namespace codac
        * \param color color of the observation
        * \param params VIBes parameters related to the observation
        */
-      void draw_observation(const IntervalVector& obs, const ibex::Vector& pose, const std::string& color, const vibes::Params& params);
+      void draw_observation(const IntervalVector& obs, const Vector& pose, const std::string& color, const vibes::Params& params);
       
       /**
        * \brief Draws a range-and-bearing uncertain observation on the map

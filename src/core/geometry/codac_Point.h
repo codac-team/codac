@@ -20,7 +20,7 @@
 #endif // _MSC_VER
 
 #include <vector>
-#include "ibex_Vector.h"
+#include "codac_Vector.h"
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 #include "codac_BoolInterval.h"
@@ -39,7 +39,7 @@ namespace codac
       /// @{
 
         Point(); // undefined point
-        explicit Point(const ibex::Vector& p);
+        explicit Point(const Vector& p);
         explicit Point(const IntervalVector& p);
         Point(const Interval& x, const Interval& y);
         const Point& operator=(const Point& p);
@@ -52,9 +52,9 @@ namespace codac
         const Interval& y() const;
         const Interval& operator[](size_t id) const;
         const IntervalVector& box() const;
-        const ibex::Vector mid() const;
+        const Vector mid() const;
         double max_diam() const;
-        const std::vector<ibex::Vector> bounds_pts() const;
+        const std::vector<Vector> bounds_pts() const;
   
       /// @}
       /// \name Tests
@@ -84,10 +84,10 @@ namespace codac
         static const BoolInterval aligned(const Point& a, const Point& b, const Point& c);
         static const Point center(const std::vector<Point> v_pts);
         static void push(const IntervalVector& box, std::vector<Point>& v_pts);
-        static void push(const IntervalVector& box, std::vector<ibex::Vector>& v_pts);
-        static std::vector<Point> to_Points(const std::vector<ibex::Vector>& v_pts);
+        static void push(const IntervalVector& box, std::vector<Vector>& v_pts);
+        static std::vector<Point> to_Points(const std::vector<Vector>& v_pts);
         static std::vector<Point> remove_identical_pts(const std::vector<Point>& v_pts);
-        static std::vector<ibex::Vector> remove_identical_pts(const std::vector<ibex::Vector>& v_pts);
+        static std::vector<Vector> remove_identical_pts(const std::vector<Vector>& v_pts);
 
       /// @}
 

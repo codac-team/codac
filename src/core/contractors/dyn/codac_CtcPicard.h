@@ -26,7 +26,7 @@ namespace codac
   {
     public:
 
-      CtcPicard(ibex::Function& f, float delta = 1.1);
+      CtcPicard(Function& f, float delta = 1.1);
       CtcPicard(TFnc& f, float delta = 1.1);
       ~CtcPicard();
 

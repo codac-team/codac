@@ -9,7 +9,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
 #include "codac_DynCtc.h"
 #include "codac_TFnc.h"
 #include "codac_VIBesFig.h"

@@ -45,8 +45,8 @@ namespace codac
       Domain(Interval& i, double& extern_d);
       Domain(Interval& i, Interval& extern_i);
       Domain(const Interval& i);
-      Domain(ibex::Vector& v);
-      // todo: ? Domain(const ibex::Vector& v);
+      Domain(Vector& v);
+      // todo: ? Domain(const Vector& v);
       Domain(IntervalVector& iv);
       Domain(const IntervalVector& iv);
       Domain(Slice& s);
@@ -141,7 +141,7 @@ namespace codac
         {
           std::reference_wrapper<double> m_ref_memory_d;
           std::reference_wrapper<Interval> m_ref_memory_i;
-          std::reference_wrapper<ibex::Vector> m_ref_memory_v;
+          std::reference_wrapper<Vector> m_ref_memory_v;
           std::reference_wrapper<IntervalVector> m_ref_memory_iv;
           std::reference_wrapper<Slice> m_ref_memory_s;
           std::reference_wrapper<Tube> m_ref_memory_t;
@@ -151,7 +151,7 @@ namespace codac
 
       // todo: update this:
       std::map<double,double> m_map_data_s_lb, m_map_data_s_ub;
-      std::map<double,ibex::Vector> m_map_data_lb, m_map_data_ub;
+      std::map<double,Vector> m_map_data_lb, m_map_data_ub;
 
       Trajectory m_traj_lb, m_traj_ub;
 

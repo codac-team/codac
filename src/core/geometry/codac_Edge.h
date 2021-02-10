@@ -11,7 +11,7 @@
 #ifndef __CODAC_EDGE_H__
 #define __CODAC_EDGE_H__
 
-#include "ibex_Vector.h"
+#include "codac_Vector.h"
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 #include "codac_BoolInterval.h"
@@ -27,7 +27,7 @@ namespace codac
       /// @{
 
         Edge(const Point& p1, const Point& p2);
-        Edge(const ibex::Vector& p1, const ibex::Vector& p2);
+        Edge(const Vector& p1, const Vector& p2);
         const Edge& operator=(const Edge& e);
 
       /// @}

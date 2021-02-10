@@ -28,7 +28,7 @@ namespace codac
         ConvexPolygon(const ConvexPolygon& p);
         explicit ConvexPolygon(const IntervalVector& box);
         ConvexPolygon(const std::vector<Point>& v_thick_pts);
-        ConvexPolygon(const std::vector<ibex::Vector>& v_floating_pts, bool convex_and_convention_order = false);
+        ConvexPolygon(const std::vector<Vector>& v_floating_pts, bool convex_and_convention_order = false);
 
       /// @}
       /// \name Tests

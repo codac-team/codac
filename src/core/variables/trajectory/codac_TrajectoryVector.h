@@ -14,7 +14,7 @@
 
 #include <map>
 #include <initializer_list>
-#include "ibex_Vector.h"
+#include "codac_Vector.h"
 #include "codac_Interval.h"
 #include "codac_TFunction.h"
 #include "codac_Trajectory.h"
@@ -70,7 +70,7 @@ namespace codac
        *
        * \param m_map_values map<t,y> defining the trajectory: \f$\mathbf{x}(t)=\mathbf{y}\f$
        */
-      explicit TrajectoryVector(const std::map<double,ibex::Vector>& m_map_values);
+      explicit TrajectoryVector(const std::map<double,Vector>& m_map_values);
 
       /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a vector of maps of scalar values
@@ -193,7 +193,7 @@ namespace codac
        * \param t the temporal key (double, must belong to the trajectory's tdomain)
        * \return real vector value \f$\mathbf{x}(t)\f$
        */
-      const ibex::Vector operator()(double t) const;
+      const Vector operator()(double t) const;
 
       /**
        * \brief Returns the interval evaluation of this trajectory over \f$[t]\f$
@@ -208,14 +208,14 @@ namespace codac
        *
        * \return real value \f$\mathbf{x}(t_0)\f$
        */
-      const ibex::Vector first_value() const;
+      const Vector first_value() const;
 
       /**
        * \brief Returns the value \f$\mathbf{x}(t_f)\f$
        *
        * \return real value \f$\mathbf{x}(t_f)\f$
        */
-      const ibex::Vector last_value() const;
+      const Vector last_value() const;
 
       /// @}
       /// \name Tests
@@ -255,7 +255,7 @@ namespace codac
        * \param y local vector value of the trajectory
        * \param t the temporal key (double, must belong to the trajectory's tdomain)
        */
-      void set(const ibex::Vector& y, double t);
+      void set(const Vector& y, double t);
 
       /**
        * \brief Truncates the tdomain of \f$\mathbf{x}(\cdot)\f$
@@ -335,7 +335,7 @@ namespace codac
        * \param c the constant of integration
        * \return a new TrajectoryVector object with the same temporal keys
        */
-      const TrajectoryVector primitive(const ibex::Vector& c) const;
+      const TrajectoryVector primitive(const Vector& c) const;
 
       /**
        * \brief Computes an approximative primitive of \f$\mathbf{x}(\cdot)\f$
@@ -345,7 +345,7 @@ namespace codac
        * \param timestep sampling value \f$\delta\f$ for the temporal discretization (double)
        * \return a new TrajectoryVector object with the specified time discretization
        */
-      const TrajectoryVector primitive(const ibex::Vector& c, double timestep) const;
+      const TrajectoryVector primitive(const Vector& c, double timestep) const;
 
       /**
        * \brief Differentiates this trajectory vector
@@ -384,7 +384,7 @@ namespace codac
        * \param x Vector
        * \return (*this)+=x
        */
-      const TrajectoryVector& operator+=(const ibex::Vector& x);
+      const TrajectoryVector& operator+=(const Vector& x);
 
       /**
        * \brief Operates +=
@@ -416,7 +416,7 @@ namespace codac
        * \param x Vector
        * \return (*this)-=x
        */
-      const TrajectoryVector& operator-=(const ibex::Vector& x);
+      const TrajectoryVector& operator-=(const Vector& x);
 
       /**
        * \brief Operates -=

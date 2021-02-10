@@ -235,7 +235,7 @@ namespace codac
        * \param precision of the bisected method used in case of ambiguity on the already existing paving structure
        * \return `true` if the Jacobian is non-singular
        */
-      bool non_singular_jacobian(const std::function<IntervalMatrix(const IntervalVector&)>& f, float precision);
+      bool non_singular_jacobian(const std::function<IntervalMatrix(const IntervalVector&)>& Jf, float precision);
 
       /// @}
 

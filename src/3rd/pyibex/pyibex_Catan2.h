@@ -13,12 +13,11 @@
 #ifndef __IBEX_CTC_ANGLE_H__
 #define __IBEX_CTC_ANGLE_H__
 
-#include "codac_IntervalVector.h"
-#include "ibex_Ctc.h"
+#include <codac_IntervalVector.h>
+#include <codac_Ctc.h>
 #include <tuple>
 // using namespace std;
 
-using ibex::Ctc;
 using ibex::bwd_imod;
 
 namespace codac {

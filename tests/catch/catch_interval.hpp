@@ -20,6 +20,7 @@
 #define __CODAC_CATCH_H__
 
 #include "catch.hpp"
+#include "codac_Vector.h"
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 #include "codac_Point.h"
@@ -260,12 +261,12 @@ namespace Catch
     class ApproxVector
     {
       public:
-        explicit ApproxVector(ibex::Vector value, double epsilon = 100.*DEFAULT_EPSILON) :
+        explicit ApproxVector(codac::Vector value, double epsilon = 100.*DEFAULT_EPSILON) :
             m_epsilon(epsilon),
             m_value(value)
         {}
 
-        friend bool operator ==(ibex::Vector lhs, ApproxVector const& rhs)
+        friend bool operator ==(codac::Vector lhs, ApproxVector const& rhs)
         {
           double e = rhs.m_epsilon;
 
@@ -279,17 +280,17 @@ namespace Catch
           return true;
         }
 
-        friend bool operator ==(ApproxVector const& lhs, ibex::Vector rhs)
+        friend bool operator ==(ApproxVector const& lhs, codac::Vector rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(ibex::Vector lhs, ApproxVector const& rhs)
+        friend bool operator !=(codac::Vector lhs, ApproxVector const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxVector const& lhs, ibex::Vector rhs)
+        friend bool operator !=(ApproxVector const& lhs, codac::Vector rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -303,7 +304,7 @@ namespace Catch
 
       private:
         double m_epsilon;
-        ibex::Vector m_value = ibex::Vector(1);
+        codac::Vector m_value = codac::Vector(1);
     };
 
     class ApproxIntvPair

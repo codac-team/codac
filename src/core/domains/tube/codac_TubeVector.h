@@ -480,7 +480,7 @@ namespace codac
        *
        * \return the maximal thicknesses of this tube
        */
-      const ibex::Vector max_diam() const;
+      const Vector max_diam() const;
 
       /**
        * \brief Returns the slices diagonals of the tube as a trajectory
@@ -708,7 +708,7 @@ namespace codac
        * \param rad half of the inflation for each component
        * \return *this
        */
-      const TubeVector& inflate(const ibex::Vector& rad);
+      const TubeVector& inflate(const Vector& rad);
 
       /**
        * \brief Inflates this tube by adding non-constant uncertainties defined in a trajectory 

@@ -14,6 +14,7 @@
 
 #include "codac_Trajectory.h"
 #include "codac_TrajectoryVector.h"
+#include "codac_Matrix.h"
 
 namespace codac
 {
@@ -287,14 +288,14 @@ namespace codac
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector operator+(const TrajectoryVector& x, const ibex::Vector& y);
+    const TrajectoryVector operator+(const TrajectoryVector& x, const Vector& y);
 
     /** \brief \f$\mathbf{x}+\mathbf{y}(\cdot)\f$
       * \param x
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector operator+(const ibex::Vector& x, const TrajectoryVector& y);
+    const TrajectoryVector operator+(const Vector& x, const TrajectoryVector& y);
 
 
     /** \brief \f$-\mathbf{x}(\cdot)\f$
@@ -315,14 +316,14 @@ namespace codac
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector operator-(const TrajectoryVector& x, const ibex::Vector& y);
+    const TrajectoryVector operator-(const TrajectoryVector& x, const Vector& y);
 
     /** \brief \f$\mathbf{x}-\mathbf{y}(\cdot)\f$
       * \param x
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector operator-(const ibex::Vector& x, const TrajectoryVector& y);
+    const TrajectoryVector operator-(const Vector& x, const TrajectoryVector& y);
 
 
     /** \brief \f$x\cdot\mathbf{y}(\cdot)\f$
@@ -344,14 +345,14 @@ namespace codac
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector operator*(const Trajectory& x, const ibex::Vector& y);
+    const TrajectoryVector operator*(const Trajectory& x, const Vector& y);
 
     /** \brief \f$x(\cdot)\cdot\mathbf{y}\f$
       * \param x
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector operator*(const ibex::Matrix& x, const TrajectoryVector& y);
+    const TrajectoryVector operator*(const Matrix& x, const TrajectoryVector& y);
 
 
     /** \brief \f$\mathbf{x}(\cdot)/y\f$
@@ -373,7 +374,7 @@ namespace codac
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector operator/(const ibex::Vector& x, const Trajectory& y);
+    const TrajectoryVector operator/(const Vector& x, const Trajectory& y);
 
 
     /** \brief \f$\mathbf{x}(\cdot)\times\mathbf{y}\f$ (or \f$\mathbf{x}(\cdot)\wedge\mathbf{y}\f$ in physics)
@@ -381,14 +382,14 @@ namespace codac
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector vecto_product(const TrajectoryVector& x, const ibex::Vector& y);
+    const TrajectoryVector vecto_product(const TrajectoryVector& x, const Vector& y);
 
     /** \brief \f$\mathbf{x}\times\mathbf{y}(\cdot)\f$ (or \f$\mathbf{x}\wedge\mathbf{y}(\cdot)\f$ in physics)
       * \param x
       * \param y
       * \return TrajectoryVector output
       */
-    const TrajectoryVector vecto_product(const ibex::Vector& x, const TrajectoryVector& y);
+    const TrajectoryVector vecto_product(const Vector& x, const TrajectoryVector& y);
 
 
     /** \brief \f$\mid\mathbf{x}(\cdot)\mid\f$
