@@ -62,6 +62,21 @@ namespace codac
       // Codomain:
       compute_codomain();
     }
+    
+    Trajectory::Trajectory(const list<double>& list_t, const list<double>& list_x)
+      : m_traj_def_type(TrajDefnType::MAP_OF_VALUES)
+    {
+      assert(!list_t.empty());
+      assert(list_t.size() == list_x.size());
+
+      for(list<double>::const_iterator it_t = list_t.begin(), it_x = list_x.begin() ;
+          it_t != list_t.end() && it_x != list_x.end();
+          ++it_t, ++it_x)
+      {
+        m_map_values[*it_t] = *it_x;
+        m_tdomain |= *it_t;
+      }
+    }
 
     Trajectory::~Trajectory()
     {

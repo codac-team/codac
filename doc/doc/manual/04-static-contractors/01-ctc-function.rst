@@ -148,9 +148,9 @@ The boxes are contracted in order to remove some vectors that are not consistent
 
 .. #include <codac.h>
 .. #include <codac-rob.h>
-.. #include "codac_CtcHC4.h"
+.. #include "ibex_CtcHC4.h"
 .. #include "ibex_SystemFactory.h"
-.. #include "codac_Ctc3BCid.h"
+.. #include "ibex_Ctc3BCid.h"
 .. 
 .. using namespace std;
 .. using namespace codac;

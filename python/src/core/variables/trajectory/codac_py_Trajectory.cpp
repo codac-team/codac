@@ -49,6 +49,10 @@ void export_Trajectory(py::module& m)
       TRAJECTORY_TRAJECTORY_MAPDOUBLEDOUBLE,
       "m_map_values"_a)
 
+    .def(py::init<const std::list<double> &,const std::list<double> &>(),
+      TRAJECTORY_TRAJECTORY_LISTDOUBLE_LISTDOUBLE,
+      "list_t"_a, "list_x"_a)
+
     .def(py::init<const Trajectory&>(),
       TRAJECTORY_TRAJECTORY_TRAJECTORY,
       "traj"_a)

@@ -13,6 +13,7 @@
 #define __CODAC_TRAJECTORYVECTOR_H__
 
 #include <map>
+#include <list>
 #include <initializer_list>
 #include "codac_Vector.h"
 #include "codac_Interval.h"
@@ -78,6 +79,16 @@ namespace codac
        * \param v_map_values set of map<t,y> defining the trajectory: \f$\mathbf{x}(t)=\mathbf{y}\f$
        */
       explicit TrajectoryVector(const std::vector<std::map<double,double> >& v_map_values);
+
+      /**
+       * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a list of vector values
+       *
+       * Values and datations are separated into two lists.
+       *
+       * \param list_t list of time keys
+       * \param list_x list of vector values
+       */
+      explicit TrajectoryVector(const std::list<double>& list_t, const std::list<Vector>& list_x);
 
       /**
        * \brief Creates a n-dimensional trajectory \f$\mathbf{x}(\cdot)\f$ from a list of Trajectory objects

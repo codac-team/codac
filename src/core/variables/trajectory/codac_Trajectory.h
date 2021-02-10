@@ -13,6 +13,7 @@
 #define __CODAC_TRAJECTORY_H__
 
 #include <map>
+#include <list>
 #include "codac_DynamicalItem.h"
 #include "codac_TFunction.h"
 #include "codac_traj_arithmetic.h"
@@ -68,6 +69,16 @@ namespace codac
        * \param m_map_values map<t,y> defining the trajectory: \f$x(t)=y\f$
        */
       explicit Trajectory(const std::map<double,double>& m_map_values);
+
+      /**
+       * \brief Creates a scalar trajectory \f$x(\cdot)\f$ from a list of values
+       *
+       * Values and datations are separated into two lists.
+       *
+       * \param list_t list of time keys
+       * \param list_x list of values
+       */
+      explicit Trajectory(const std::list<double>& list_t, const std::list<double>& list_x);
 
       /**
        * \brief Creates a copy of a scalar trajectory \f$x(\cdot)\f$

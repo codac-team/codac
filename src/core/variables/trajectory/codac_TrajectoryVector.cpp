@@ -70,6 +70,26 @@ namespace codac
       for(int i = 0 ; i < size() ; i++)
         (*this)[i] = Trajectory(v_map_values[i]);
     }
+    
+    TrajectoryVector::TrajectoryVector(const list<double>& list_t, const list<Vector>& list_x)
+    {
+      assert(!list_t.empty());
+      assert(list_t.size() == list_x.size());
+
+      int n = list_x.begin()->size();
+
+      list<double>::const_iterator it_t = list_t.begin();
+      list<Vector>::const_iterator it_x = list_x.begin();
+      for( ;
+          it_t != list_t.end() && it_x != list_x.end();
+          ++it_t, ++it_x)
+      {
+        assert(it_x->size() == n);
+        set(*it_x, *it_t);
+      }
+
+      // todo: optimize this by building Trajectory objects here directly?
+    }
 
     TrajectoryVector::TrajectoryVector(int n, const Trajectory& x)
       : TrajectoryVector(n)

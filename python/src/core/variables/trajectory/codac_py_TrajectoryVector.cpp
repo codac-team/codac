@@ -14,6 +14,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
+#include <pybind11/numpy.h>
 #include "pyIbex_type_caster.h"
 
 #include "codac_TrajectoryVector.h"
@@ -35,7 +36,36 @@ TrajectoryVector* create_trajectoryvector_from_list(py::list& lst)
   TrajectoryVector *instance = new TrajectoryVector(lst.size());
   for(size_t i = 0 ; i < lst.size() ; i++)
     (*instance)[i] = lst[i].cast<Trajectory>();
-  return instance;
+  return instance; // todo: manage delete of pointer
+}
+
+TrajectoryVector* create_trajectoryvector_from_arrays(py::array_t<double>& lst_t, py::array_t<double>& lst_x)
+{
+  if(lst_t.size() < 1 || lst_x.size() < 1)
+    throw std::invalid_argument("Empty Trajectory list");
+
+  list<Vector> std_lst_x;
+
+  py::buffer_info info = lst_x.request();
+  auto ptr = static_cast<double*>(info.ptr);
+
+  int nb_values = 1;
+  for(auto r : info.shape)
+    nb_values *= r;
+  
+  assert(nb_values % lst_t.size() == 0);
+  int n = nb_values / lst_t.size();
+
+  for(int i = 0 ; i < nb_values ; i+=n)
+  {
+    Vector x(n);
+    for(int k = 0 ; k < n ; k++)
+      x[k] = *ptr++;
+    std_lst_x.push_back(x);
+  }
+
+  TrajectoryVector *instance = new TrajectoryVector(lst_t.cast<std::list<double> >(), std_lst_x);
+  return instance; // todo: manage delete of pointer
 }
 
 void export_TrajectoryVector(py::module& m)
@@ -64,6 +94,14 @@ void export_TrajectoryVector(py::module& m)
     .def(py::init<const vector<map<double,double> >&>(),
       TRAJECTORYVECTOR_TRAJECTORYVECTOR_VECTORMAPDOUBLEDOUBLE,
       "v_map_values"_a)
+
+    .def(py::init<const std::list<double> &,const std::list<Vector> &>(),
+      TRAJECTORYVECTOR_TRAJECTORYVECTOR_LISTDOUBLE_LISTVECTOR,
+      "list_t"_a, "list_x"_a)
+
+    .def(py::init(&create_trajectoryvector_from_arrays),
+      TRAJECTORYVECTOR_TRAJECTORYVECTOR_LISTDOUBLE_LISTVECTOR,
+      "list_t"_a, "list_x"_a)
 
     // Used instead of .def(py::init<initializer_list<Trajectory>>(),...
     .def(py::init(&create_trajectoryvector_from_list),
