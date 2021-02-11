@@ -433,6 +433,7 @@ void export_Tube(py::module& m)
     .def("__radd__",     [](const Tube& y, double x) { return x+y; })
     .def("__radd__",     [](const Tube& y, const Interval& x) { return x+y; })
     .def("__radd__",     [](const Tube& y, const Trajectory& x) { return x+y; })
+    .def("__radd__",     [](const Tube& y, const Tube& x) { return x+y; })
 
     .def("__neg__",      [](const Tube& x) { return -x; })
     .def("__sub__",      [](const Tube& x, const Tube& y) { return x-y; })
@@ -440,8 +441,10 @@ void export_Tube(py::module& m)
     .def("__sub__",      [](const Tube& x, const Interval& y) { return x-y; })
     .def("__sub__",      [](const Tube& x, const Trajectory& y) { return x-y; })
 
+    .def("__rsub__",     [](const Tube& y, double x) { return x-y; })
     .def("__rsub__",     [](const Tube& y, const Interval& x) { return x-y; })
     .def("__rsub__",     [](const Tube& y, const Trajectory& x) { return x-y; })
+    .def("__rsub__",     [](const Tube& y, const Tube& x) { return x-y; })
 
     .def("__mul__",      [](const Tube& x, const Tube& y) { return x*y; })
     .def("__mul__",      [](const Tube& x, double y) { return x*y; })
