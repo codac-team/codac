@@ -34,9 +34,17 @@ void export_TPlane(py::module& m)
     .def(py::init<const Interval&>(),
       TPLANE_TPLANE_INTERVAL)
 
+    .def("compute_detections", (void (TPlane::*)(float,const TubeVector&))&TPlane::compute_detections,
+      TPLANE_VOID_COMPUTE_DETECTIONS_FLOAT_TUBEVECTOR,
+      "precision"_a, "p"_a)
+
     .def("compute_detections", (void (TPlane::*)(float,const TubeVector&,const TubeVector&))&TPlane::compute_detections,
       TPLANE_VOID_COMPUTE_DETECTIONS_FLOAT_TUBEVECTOR_TUBEVECTOR,
       "precision"_a, "p"_a, "v"_a)
+
+    .def("compute_proofs", (void (TPlane::*)(const TubeVector&))&TPlane::compute_proofs,
+      TPLANE_VOID_COMPUTE_PROOFS_TUBEVECTOR,
+      "p"_a)
 
     .def("compute_proofs", (void (TPlane::*)(const TubeVector&,const TubeVector&))&TPlane::compute_proofs,
       TPLANE_VOID_COMPUTE_PROOFS_TUBEVECTOR_TUBEVECTOR,

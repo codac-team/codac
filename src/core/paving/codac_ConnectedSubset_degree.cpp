@@ -37,7 +37,12 @@ namespace codac
 
   int ConnectedSubset::topological_degree(const function<IntervalVector(const IntervalVector&)>& f)
   {
-    assert(is_strictly_included_in_paving() && "unable to compute the degree on paving's edges");
+    if(!is_strictly_included_in_paving())
+    {
+      // Unable to compute the degree on paving's edges
+      return 0;
+    }
+
     assert(box().size() == 2 && "unhandled dimension case");
 
     vector<IntervalVector> v_bi = get_boundary();

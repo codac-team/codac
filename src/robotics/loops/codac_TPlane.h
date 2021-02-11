@@ -52,6 +52,14 @@ namespace codac
       TPlane(const Interval& tdomain);
 
       /**
+       * \brief Computes this tplane as a subpaving, from the tube of positions \f$[\mathbf{p}](\cdot)\f$ only.
+       *
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
+       */
+      void compute_detections(float precision, const TubeVector& p);
+
+      /**
        * \brief Computes this tplane as a subpaving, from the tube of positions \f$[\mathbf{p}](\cdot)\f$
        *        and the tube of velocities \f$[\mathbf{v}](\cdot)\f$.
        *
@@ -60,6 +68,15 @@ namespace codac
        * \param v 2d TubeVector \f$[\mathbf{v}](\cdot)\f$ for velocities
        */
       void compute_detections(float precision, const TubeVector& p, const TubeVector& v);
+
+      /**
+       * \brief Tries to prove the existence of loops in each detection set
+       *
+       * \note The tplane must have been computed beforehand.
+       *
+       * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
+       */
+      void compute_proofs(const TubeVector& p);
 
       /**
        * \brief Tries to prove the existence of loops in each detection set
@@ -146,9 +163,10 @@ namespace codac
        * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
        * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
        * \param v 2d TubeVector \f$[\mathbf{v}](\cdot)\f$ for velocities
+       * \param with_derivative if `true`, the loop detection is made with derivative tubes given in arguments
        * \param extract_subsets if `true`, a set of ConnectedSubset objects will be computed from this Paving
        */
-      void compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool extract_subsets);
+      void compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool with_derivative, bool extract_subsets);
 
       float m_precision = 0.; //!< precision of the SIVIA algorithm, used later on in traj_loops_summary()
       std::vector<ConnectedSubset> m_v_detected_loops; //!< set of loops detections
