@@ -2,7 +2,9 @@
 #define CODAC_LIB_CODAC_CAPD_HELPERS_H
 
 #include "capd/capdlib.h"
-#include "ibex.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
+#include "codac_IntervalMatrix.h"
 
 namespace codac {
 class CapdHelpers {
