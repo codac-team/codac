@@ -20,7 +20,6 @@
 #include "codac_py_CtcDist_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;

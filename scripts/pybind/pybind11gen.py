@@ -368,8 +368,8 @@ using py::class_;
 using py::init;
 
 using namespace codac;
-using ibex::Interval;
-using ibex::IntervalVector;
+using Interval;
+using IntervalVector;
 
 
 void export_%s(py::module& m){

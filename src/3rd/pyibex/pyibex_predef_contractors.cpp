@@ -14,6 +14,6 @@ namespace codac
 {
   namespace ctc
   {
-    pyibex::CtcPolar polar;
+    CtcPolar polar;
   }
 }

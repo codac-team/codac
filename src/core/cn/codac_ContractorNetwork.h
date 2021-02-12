@@ -14,7 +14,7 @@
 
 #include <deque>
 #include <initializer_list>
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
 #include "codac_DynCtc.h"
 #include "codac_Domain.h"
 #include "codac_Contractor.h"
@@ -96,7 +96,7 @@ namespace codac
        * \param i initial domain providing information on the type and initial set of values
        * \return a reference to the created Interval domain variable
        */
-      ibex::Interval& create_dom(const ibex::Interval& i);
+      Interval& create_dom(const Interval& i);
 
       /**
        * \brief Creates an IntervalVector intermediate variable with a reference kept in the 
@@ -109,7 +109,7 @@ namespace codac
        * \param iv initial domain providing information on the type and initial set of values
        * \return a reference to the created IntervalVector domain variable
        */
-      ibex::IntervalVector& create_dom(const ibex::IntervalVector& iv);
+      IntervalVector& create_dom(const IntervalVector& iv);
 
       /**
        * \brief Creates a Tube intermediate variable with a reference kept in the 
@@ -148,7 +148,7 @@ namespace codac
        * \param end_index last component index of the subvector to be returned
        * \return a reference to the created IntervalVector extracted from the Vector domain
        */
-      ibex::IntervalVector& subvector(ibex::Vector& v, int start_index, int end_index);
+      IntervalVector& subvector(Vector& v, int start_index, int end_index);
 
       /**
        * \brief Creates a subvector of an IntervalVector domain
@@ -158,7 +158,7 @@ namespace codac
        * \param end_index last component index of the subvector to be returned
        * \return a reference to the created IntervalVector extracted from the IntervalVector domain
        */
-      ibex::IntervalVector& subvector(ibex::IntervalVector& iv, int start_index, int end_index);
+      IntervalVector& subvector(IntervalVector& iv, int start_index, int end_index);
 
       // not yet suported: /**
       // not yet suported:  * \brief Creates a subvector of a TubeVector domain
@@ -176,10 +176,10 @@ namespace codac
        * \note If tubes are involved in the domain list, they must share the same slicing and tdomain.
        *       The static contractor will be applied on each slice of these tubes.
        *
-       * \param static_ctc ibex::Ctc contractor object
+       * \param static_ctc Ctc contractor object
        * \param v_domains a vector of abstract domains (Interval, Slice, Tube, etc.)
        */
-      void add(ibex::Ctc& static_ctc, const std::vector<Domain>& v_domains);
+      void add(Ctc& static_ctc, const std::vector<Domain>& v_domains);
 
       /**
        * \brief Adds to the graph a dynamic contractor (inherited from DynCtc class) with related Domains
@@ -206,7 +206,7 @@ namespace codac
        * \param t time of measurement \f$t\f$ 
        * \param y bounded measurement, equivalent to the set \f$[x](t)=[y]\f$ 
        */
-      void add_data(Tube& x, double t, const ibex::Interval& y);
+      void add_data(Tube& x, double t, const Interval& y);
 
       /**
        * \brief Adds continuous data \f$[\mathbf{y}]\f$ to a tube \f$[\mathbf{x}](\cdot)\f$ at \f$t\f$ (used for realtime applications).
@@ -221,7 +221,7 @@ namespace codac
        * \param t time of measurement \f$t\f$ 
        * \param y bounded measurement, equivalent to the set \f$[\mathbf{x}](t)=[\mathbf{y}]\f$ 
        */
-      void add_data(TubeVector& x, double t, const ibex::IntervalVector& y);
+      void add_data(TubeVector& x, double t, const IntervalVector& y);
 
       /// @}
       /// \name Contraction process
@@ -302,7 +302,7 @@ namespace codac
        * \param ctc static contractor (inherited from Ctc) to name
        * \param name string of characters
        */
-      void set_name(ibex::Ctc& ctc, const std::string& name);
+      void set_name(Ctc& ctc, const std::string& name);
 
       /**
        * \brief Sets a string name for a given dynamic contractor

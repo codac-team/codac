@@ -12,7 +12,9 @@
 #ifndef __CODAC_CTCDIST_H__
 #define __CODAC_CTCDIST_H__
 
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -20,7 +22,7 @@ namespace codac
    * \class CtcDist
    * \brief Distance constraint between two 2d vectors.
    */
-  class CtcDist : public ibex::Ctc
+  class CtcDist : public Ctc
   {
     public:
 
@@ -34,7 +36,7 @@ namespace codac
        *
        * \param x the 5d box of domains: (x1,x2,b1,b2,d)
        */
-      void contract(ibex::IntervalVector& x);
+      void contract(IntervalVector& x);
 
       /**
        * \brief \f$\mathcal{C}_{\textrm{dist}}\big([\mathbf{x}]\big)\f$
@@ -43,7 +45,7 @@ namespace codac
        * \param b the 2d box of the second 2d vector
        * \param d the interval distance
        */
-      void contract(ibex::IntervalVector& a, ibex::IntervalVector& b, ibex::Interval& d);
+      void contract(IntervalVector& a, IntervalVector& b, Interval& d);
 
       /**
        * \brief \f$\mathcal{C}_{\textrm{dist}}\big([\mathbf{x}]\big)\f$
@@ -54,7 +56,7 @@ namespace codac
        * \param by the second component of the second 2d vector
        * \param d the interval distance
        */
-      void contract(ibex::Interval& ax, ibex::Interval& ay, ibex::Interval& bx, ibex::Interval& by, ibex::Interval& d);
+      void contract(Interval& ax, Interval& ay, Interval& bx, Interval& by, Interval& d);
   };
 }
 

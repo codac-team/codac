@@ -15,22 +15,32 @@ using namespace ibex;
 
 namespace codac
 {
-  TPlane::TPlane()
-    : Paving(IntervalVector(2), SetValue::MAYBE)
+  TPlane::TPlane(const Interval& tdomain)
+    : Paving(IntervalVector(2, tdomain), SetValue::MAYBE)
   {
 
+  }
+
+  void TPlane::compute_detections(float precision, const TubeVector& p)
+  {
+    compute_detections(precision, p, p, false, true);
   }
 
   void TPlane::compute_detections(float precision, const TubeVector& p, const TubeVector& v)
   {
-    compute_detections(precision, p, v, true);
+    compute_detections(precision, p, v, true, true);
   }
 
-  void TPlane::compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool extract_subsets)
+  void TPlane::compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool with_derivative, bool extract_subsets)
   {
     assert(precision > 0.);
-    assert(p.tdomain() == v.tdomain());
-    assert(p.size() == 2 && v.size() == 2);
+    assert(p.tdomain().is_superset(box()[0]));
+
+    if(with_derivative)
+    {
+      assert(p.tdomain() == v.tdomain());
+      assert(p.size() == 2 && v.size() == 2);
+    }
 
     if(m_box.is_unbounded())
       m_box = IntervalVector(2, p.tdomain()); // initializing
@@ -41,8 +51,8 @@ namespace codac
 
     else if(!is_leaf())
     {
-      ((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, false);
-      ((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, false);
+      ((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, with_derivative, false);
+      ((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, with_derivative, false);
     }
 
     else
@@ -53,16 +63,21 @@ namespace codac
 
       // Based on derivative information
       
+      bool derivative_out = false, derivative_in = false;
+
+      if(with_derivative)
+      {
         const pair<IntervalVector, IntervalVector> partial_integ = v.partial_integral(t1, t2);
         const IntervalVector integ = IntervalVector(partial_integ.first.lb()) | partial_integ.second.ub();
 
-        bool derivative_out = Interval::POS_REALS.is_strict_superset(t1 - t2)
-                           || !integ.interior_contains(Vector(2, 0.)) 
-                           || !v(t1 | t2).interior_contains(Vector(2, 0.));
+        derivative_out = Interval::POS_REALS.is_strict_superset(t1 - t2)
+                      || !integ.interior_contains(Vector(2, 0.)) 
+                      || !v(t1 | t2).interior_contains(Vector(2, 0.));
 
-        bool derivative_in = Interval::NEG_REALS.is_strict_superset(t1 - t2)
-                          && box_neg_reals.is_strict_superset(partial_integ.first)
-                          && box_pos_reals.is_strict_superset(partial_integ.second);
+        derivative_in = Interval::NEG_REALS.is_strict_superset(t1 - t2)
+                     && box_neg_reals.is_strict_superset(partial_integ.first)
+                     && box_pos_reals.is_strict_superset(partial_integ.second);
+      }
       
       // Based on primitive information (<=> kernel)
 
@@ -98,8 +113,8 @@ namespace codac
         else
         {
           bisect();
-          ((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, false);
-          ((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, false);
+          ((TPlane*)m_first_subpaving)->compute_detections(precision, p, v, with_derivative, false);
+          ((TPlane*)m_second_subpaving)->compute_detections(precision, p, v, with_derivative, false);
         }
     }
 
@@ -107,8 +122,34 @@ namespace codac
       m_v_detected_loops = get_connected_subsets();
   }
 
-  void TPlane::compute_proofs(IntervalVector (*f)(const IntervalVector& b))
+    // Inclusion functions
+    
+    IntervalVector f_pv(const TubeVector& p, const TubeVector& v, const IntervalVector& input)
+    {
+      return v.integral(input[0], input[1])
+           & (p(input[1]) - p(input[0]));
+    }
+    
+    IntervalVector f_p(const TubeVector& p, const IntervalVector& input)
+    {
+      return p(input[1]) - p(input[0]);
+    }
+
+  using namespace std::placeholders;
+
+  void TPlane::compute_proofs(const TubeVector& p)
   {
+    auto f = std::bind(&f_p, p, _1);
+
+    for(size_t i = 0 ; i < m_v_detected_loops.size() ; i++)
+      if(m_v_detected_loops[i].zero_proven(f))
+        m_v_proven_loops.push_back(m_v_detected_loops[i]);
+  }
+
+  void TPlane::compute_proofs(const TubeVector& p, const TubeVector& v)
+  {
+    auto f = std::bind(&f_pv, p, v, _1);
+
     for(size_t i = 0 ; i < m_v_detected_loops.size() ; i++)
       if(m_v_detected_loops[i].zero_proven(f))
         m_v_proven_loops.push_back(m_v_detected_loops[i]);
@@ -124,14 +165,24 @@ namespace codac
     return m_v_proven_loops.size();
   }
 
-  const vector<ConnectedSubset>& TPlane::get_detected_loops() const
+  const vector<ConnectedSubset>& TPlane::detected_loops_subsets() const
   {
     return m_v_detected_loops;
   }
 
-  const vector<ConnectedSubset>& TPlane::get_proven_loops() const
+  const vector<IntervalVector> TPlane::detected_loops() const
+  {
+    return ConnectedSubset::get_boxed_hulls(m_v_detected_loops);
+  }
+
+  const vector<ConnectedSubset>& TPlane::proven_loops_subsets() const
   {
     return m_v_proven_loops;
+  }
+
+  const vector<IntervalVector> TPlane::proven_loops() const
+  {
+    return ConnectedSubset::get_boxed_hulls(m_v_proven_loops);
   }
 
   Trajectory TPlane::traj_loops_summary() const

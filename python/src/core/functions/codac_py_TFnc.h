@@ -35,19 +35,19 @@ namespace codac
         PYBIND11_OVERLOAD_PURE(const Tube, TFnc, eval, x);
       }
 
-      const ibex::Interval eval(const ibex::IntervalVector &x) const override
+      const Interval eval(const IntervalVector &x) const override
       {
-        PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, x);
+        PYBIND11_OVERLOAD_PURE(const Interval, TFnc, eval, x);
       }
 
-      const ibex::Interval eval(int slice_id,const TubeVector &x) const override
+      const Interval eval(int slice_id,const TubeVector &x) const override
       {
-        PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, slice_id, x);
+        PYBIND11_OVERLOAD_PURE(const Interval, TFnc, eval, slice_id, x);
       }
 
-      const ibex::Interval eval(const ibex::Interval &t,const TubeVector &x) const override
+      const Interval eval(const Interval &t,const TubeVector &x) const override
       {
-        PYBIND11_OVERLOAD_PURE(const ibex::Interval, TFnc, eval, t, x);
+        PYBIND11_OVERLOAD_PURE(const Interval, TFnc, eval, t, x);
       }
 
       const TubeVector eval_vector(const TubeVector &x) const override
@@ -55,19 +55,19 @@ namespace codac
         PYBIND11_OVERLOAD_PURE(const TubeVector, TFnc, eval_vector, x);
       }
 
-      const ibex::IntervalVector eval_vector(const ibex::IntervalVector &x) const override
+      const IntervalVector eval_vector(const IntervalVector &x) const override
       {
-        PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, x);
+        PYBIND11_OVERLOAD_PURE(const IntervalVector, TFnc, eval_vector, x);
       }
 
-      const ibex::IntervalVector eval_vector(int slice_id,const TubeVector &x) const override
+      const IntervalVector eval_vector(int slice_id,const TubeVector &x) const override
       {
-        PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, slice_id, x);
+        PYBIND11_OVERLOAD_PURE(const IntervalVector, TFnc, eval_vector, slice_id, x);
       }
 
-      const ibex::IntervalVector eval_vector(const ibex::Interval &t,const TubeVector &x) const override
+      const IntervalVector eval_vector(const Interval &t,const TubeVector &x) const override
       {
-        PYBIND11_OVERLOAD_PURE(const ibex::IntervalVector, TFnc, eval_vector, t, x);
+        PYBIND11_OVERLOAD_PURE(const IntervalVector, TFnc, eval_vector, t, x);
       }
   };
 }

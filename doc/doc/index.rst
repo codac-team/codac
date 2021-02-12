@@ -344,8 +344,8 @@ Contributors
   :columns: 4
 
   * `Simon Rohou <http://simon-rohou.fr/research/>`_
-  * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
+  * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Gilles Chabert <https://web.imt-atlantique.fr/x-info/gchabe08/>`_
   * Julien Damers
   * `Raphael Voges <https://raphael-voges.de/>`_
@@ -416,16 +416,16 @@ Main related publications
 ====  ===================  ===============================  =========================  ========================
 
 
-How to cite this project?
-=========================
-
-We suggest the following BibTeX template to cite Codac in scientific discourse:
-
-.. code-block:: none
-
-  @misc{codac,
-     author = {Simon Rohou and Benoit Desrochers and others},
-     year = {2021},
-     note = {http://codac.io},
-     title = {The {Codac} library -- {C}onstraint-programming for robotics}
-  }
+.. How to cite this project?
+.. =========================
+.. 
+.. We suggest the following BibTeX template to cite Codac in scientific discourse:
+.. 
+.. .. code-block:: none
+.. 
+..   @misc{codac,
+..      author = {Simon Rohou and Benoit Desrochers and others},
+..      year = {2021},
+..      note = {http://codac.io},
+..      title = {The {Codac} library -- {C}onstraint-programming for robotics}
+..   }

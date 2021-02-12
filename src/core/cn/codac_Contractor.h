@@ -14,7 +14,7 @@
 
 #include <vector>
 #include <functional>
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
 #include "codac_DynCtc.h"
 #include "codac_Domain.h"
 #include "codac_ContractorNetwork.h"
@@ -38,7 +38,7 @@ namespace codac
       enum class Type { T_COMPONENT, T_EQUALITY, T_IBEX, T_CODAC };
 
       Contractor(Type type, const std::vector<Domain*>& v_domains);
-      Contractor(ibex::Ctc& ctc, const std::vector<Domain*>& v_domains);
+      Contractor(Ctc& ctc, const std::vector<Domain*>& v_domains);
       Contractor(DynCtc& ctc, const std::vector<Domain*>& v_domains);
       Contractor(const Contractor& ac);
       ~Contractor();
@@ -46,7 +46,7 @@ namespace codac
       int id() const;
       Type type() const;
 
-      ibex::Ctc& ibex_ctc();
+      Ctc& ibex_ctc();
       DynCtc& codac_ctc();
 
       bool is_active() const;
@@ -72,7 +72,7 @@ namespace codac
 
       union
       {
-        std::reference_wrapper<ibex::Ctc> m_static_ctc;
+        std::reference_wrapper<Ctc> m_static_ctc;
         std::reference_wrapper<DynCtc> m_dyn_ctc;
       };
 

@@ -18,7 +18,7 @@ namespace codac
 {
   namespace ctc
   {
-    extern pyibex::CtcPolar polar; // polar constraint (px,py,rho,phi)
+    extern CtcPolar polar; // polar constraint (px,py,rho,phi)
   }
 }
 

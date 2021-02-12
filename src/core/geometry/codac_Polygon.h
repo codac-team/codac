@@ -12,8 +12,8 @@
 #define __CODAC_POLYGON_H__
 
 #include <vector>
-#include "ibex_Vector.h"
-#include "ibex_IntervalVector.h"
+#include "codac_Vector.h"
+#include "codac_IntervalVector.h"
 #include "codac_Edge.h"
 #include "codac_Point.h"
 
@@ -28,7 +28,7 @@ namespace codac
 
         Polygon();
         Polygon(const Polygon& p);
-        Polygon(const std::vector<ibex::Vector>& v_floating_pts);
+        Polygon(const std::vector<Vector>& v_floating_pts);
 
       /// @}
       /// \name Accessing values
@@ -38,11 +38,11 @@ namespace codac
         int nb_edges() const;
         int nb_vertices() const;
         const std::vector<Edge> edges() const;
-        const std::vector<ibex::Vector>& vertices() const;
-        const ibex::Vector& operator[](size_t vertex_id) const;
-        const ibex::IntervalVector box() const;
+        const std::vector<Vector>& vertices() const;
+        const Vector& operator[](size_t vertex_id) const;
+        const IntervalVector box() const;
         const Point center() const;
-        const ibex::Interval area() const;
+        const Interval area() const;
 
       /// @}
       /// \name Tests
@@ -65,7 +65,7 @@ namespace codac
       
     protected:
       
-      std::vector<ibex::Vector> m_v_floating_pts;
+      std::vector<Vector> m_v_floating_pts;
   };
 }
 

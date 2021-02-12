@@ -12,6 +12,7 @@
 #ifndef __CODAC_VIBESFIG_H__
 #define __CODAC_VIBESFIG_H__
 
+#include "codac_Interval.h"
 #include "codac_Figure.h"
 #include "codac_Point.h"
 #include "codac_Polygon.h"
@@ -80,7 +81,7 @@ namespace codac
        * \param margin adds a custom margin to the view box (none by default, ratio of max diam)
        * \return the updated view box of this figure
        */
-      const ibex::IntervalVector& axis_limits(double x_min, double x_max, double y_min, double y_max, bool same_ratio = false, float margin = 0.);
+      const IntervalVector& axis_limits(double x_min, double x_max, double y_min, double y_max, bool same_ratio = false, float margin = 0.);
 
       /**
        * \brief Sets the axis limits of this figure
@@ -93,7 +94,7 @@ namespace codac
        * \param margin adds a custom margin to the view box (none by default, ratio of max diam)
        * \return the updated view box of this figure
        */
-      const ibex::IntervalVector& axis_limits(const ibex::IntervalVector& viewbox, bool same_ratio = false, float margin = 0.);
+      const IntervalVector& axis_limits(const IntervalVector& viewbox, bool same_ratio = false, float margin = 0.);
 
       /// @}
       /// \name Saving this figure
@@ -134,7 +135,7 @@ namespace codac
        * \param box the 2d IntervalVector to be displayed
        * \param params VIBes parameters related to the box
        */
-      void draw_box(const ibex::IntervalVector& box, const vibes::Params& params);
+      void draw_box(const IntervalVector& box, const vibes::Params& params);
 
       /**
        * \brief Draws a box
@@ -143,7 +144,7 @@ namespace codac
        * \param color the optional color of the box (black by default) 
        * \param params VIBes parameters related to the box (none by default)
        */
-      void draw_box(const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_box(const IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a set of boxes
@@ -151,7 +152,7 @@ namespace codac
        * \param v_boxes vector of 2d IntervalVector to be displayed
        * \param params VIBes parameters related to the boxes
        */
-      void draw_boxes(const std::vector<ibex::IntervalVector>& v_boxes, const vibes::Params& params);
+      void draw_boxes(const std::vector<IntervalVector>& v_boxes, const vibes::Params& params);
 
       /**
        * \brief Draws a set of boxes
@@ -160,7 +161,7 @@ namespace codac
        * \param color the optional color of the boxes (black by default) 
        * \param params VIBes parameters related to the boxes (none by default)
        */
-      void draw_boxes(const std::vector<ibex::IntervalVector>& v_boxes, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_boxes(const std::vector<IntervalVector>& v_boxes, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a line of points
@@ -227,7 +228,7 @@ namespace codac
        * \param r interval radius
        * \param params VIBes parameters related to the ring
        */
-      void draw_ring(double x, double y, const ibex::Interval& r, const vibes::Params& params);
+      void draw_ring(double x, double y, const Interval& r, const vibes::Params& params);
 
       /**
        * \brief Draws a ring
@@ -238,7 +239,7 @@ namespace codac
        * \param color the optional color of the ring (black by default) 
        * \param params VIBes parameters related to the ring (none by default)
        */
-      void draw_ring(double x, double y, const ibex::Interval& r, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_ring(double x, double y, const Interval& r, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a pie: radial portion of a ring
@@ -249,7 +250,7 @@ namespace codac
        * \param theta interval angle (in radian)
        * \param params VIBes parameters related to the ring
        */
-      void draw_pie(double x, double y, const ibex::Interval& r, const ibex::Interval& theta, const vibes::Params& params);
+      void draw_pie(double x, double y, const Interval& r, const Interval& theta, const vibes::Params& params);
 
       /**
        * \brief Draws a pie: radial portion of a ring
@@ -261,7 +262,7 @@ namespace codac
        * \param color the optional color of the ring (black by default) 
        * \param params VIBes parameters related to the ring (none by default)
        */
-      void draw_pie(double x, double y, const ibex::Interval& r, const ibex::Interval& theta, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_pie(double x, double y, const Interval& r, const Interval& theta, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws an edge

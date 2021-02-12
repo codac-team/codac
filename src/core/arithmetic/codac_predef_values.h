@@ -12,7 +12,7 @@
 #ifndef __CODAC_PREDEF_VALUES_H__
 #define __CODAC_PREDEF_VALUES_H__
 
-#include "ibex_Interval.h"
+#include "codac_Interval.h"
 
 namespace codac
 {

@@ -11,10 +11,10 @@
 #ifndef __CODAC_EDGE_H__
 #define __CODAC_EDGE_H__
 
-#include "ibex_Vector.h"
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
-#include "ibex_BoolInterval.h"
+#include "codac_Vector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
+#include "codac_BoolInterval.h"
 #include "codac_Point.h"
 
 namespace codac
@@ -27,7 +27,7 @@ namespace codac
       /// @{
 
         Edge(const Point& p1, const Point& p2);
-        Edge(const ibex::Vector& p1, const ibex::Vector& p2);
+        Edge(const Vector& p1, const Vector& p2);
         const Edge& operator=(const Edge& e);
 
       /// @}
@@ -36,18 +36,18 @@ namespace codac
 
         const Point& p1() const;
         const Point& p2() const;
-        const ibex::Interval length() const;
-        const ibex::IntervalVector box() const;
+        const Interval length() const;
+        const IntervalVector box() const;
 
       /// @}
       /// \name Tests
       /// @{
 
-        const ibex::BoolInterval is_horizontal() const;
-        const ibex::BoolInterval is_vertical() const;
-        const ibex::BoolInterval is_degenerated() const;
+        const BoolInterval is_horizontal() const;
+        const BoolInterval is_vertical() const;
+        const BoolInterval is_degenerated() const;
         bool does_not_exist() const;
-        const ibex::BoolInterval contains(const Point& p) const;
+        const BoolInterval contains(const Point& p) const;
         bool operator==(const Edge& e) const;
         bool operator!=(const Edge& e) const;
 
@@ -55,7 +55,7 @@ namespace codac
       /// \name Operators
       /// @{
 
-        const ibex::IntervalVector operator&(const ibex::IntervalVector& x) const;
+        const IntervalVector operator&(const IntervalVector& x) const;
         const Point operator&(const Edge& e) const;
         static const Point proj_intersection(const Edge& e1, const Edge& e2);
 
@@ -69,8 +69,8 @@ namespace codac
       /// \name Static methods
       /// @{
 
-        static const ibex::BoolInterval parallel(const Edge& e1, const Edge& e2);
-        static void push(const ibex::IntervalVector& box, std::vector<Edge>& v_edges);
+        static const BoolInterval parallel(const Edge& e1, const Edge& e2);
+        static void push(const IntervalVector& box, std::vector<Edge>& v_edges);
 
       /// @}
 

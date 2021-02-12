@@ -1,0 +1,89 @@
+on:
+    push:
+        branches: '**'
+        tags: '' # Restrict to blank tags
+    pull_request:
+
+jobs:
+ unixmatrix:
+    runs-on: ${{ matrix.cfg.os }}
+    defaults:
+        run:
+            shell: ${{ matrix.cfg.shell }}
+    strategy:
+        matrix:
+            cfg:
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', desc: 'Windows Qt 5.12.6 MinGW 7.3.0 x86' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', desc: 'Windows MinGW 8.1.0 x64' }
+            - { os: ubuntu-20.04, shell: bash, arch: x64, runtime: focal, desc: 'Ubuntu 20.04' }
+            - { os: ubuntu-18.04, shell: bash, arch: x64, runtime: bionic, desc: 'Ubuntu 18.04' }
+#            - { os: macos-11.0, shell: bash, arch: x64, runtime: bigsur, desc: 'macOS Big Sur 11.0' } # Not yet available...
+#            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, desc: 'macOS Catalina 10.15' } # clang: error: the clang compiler does not support -pg option on versions of OS X 10.9 and later
+    name: ${{ matrix.cfg.desc }}
+    steps: 
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+#    # No real way to clear cache : https://stackoverflow.com/questions/63521430/clear-cache-in-github-actions, however GitHub will remove any cache entries that have not been accessed in over 7 days...
+#    - uses: actions/cache@v2
+#      id: cache-ibex
+#      with:
+#        path: 'ibex'
+#        key: ${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}-ibex
+    - run: |
+        (New-Object System.Net.WebClient).DownloadFile("http://www.ensta-bretagne.fr/lebars/Share/windows_extra_tools.zip", "C:\Windows\Temp\windows_extra_tools.zip") 
+        7z x C:\Windows\Temp\windows_extra_tools.zip -o"C:\Windows" -y
+      shell: pwsh
+      if: runner.os == 'Windows'
+    - run: |
+        wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
+        move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\
+        wget http://www.ensta-bretagne.fr/lebars/Share/qt-installer-5.12.6-mingw73_32.qs --no-check-certificate -nv
+        move /Y qt-installer-5.12.6-mingw73_32.qs %SystemDrive%\
+        netsh advfirewall set allprofiles state on
+        netsh advfirewall firewall add rule name="Qt offline installer" dir=out action=block program="%SystemDrive%\qt-opensource-windows-x86-5.12.6.exe" enable=yes
+        rem Take several min...
+        %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe --script %SystemDrive%\qt-installer-5.12.6-mingw73_32.qs
+        netsh advfirewall firewall del rule name="Qt offline installer"
+        netsh advfirewall set allprofiles state off
+        del /f /q %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe
+        echo C:\Qt\Qt5.12.6\5.12.6\mingw73_32\bin;C:\Qt\Qt5.12.6\Tools\mingw730_32\bin>>%GITHUB_PATH%
+      shell: cmd
+      if: matrix.cfg.runtime=='mingw7'
+    - run: choco install -y winflexbison make patch zip
+      if: runner.os == 'Windows'
+      # Registry bug...?
+    - run: wget https://github.com/ros2/choco-packages/releases/download/2020-02-24/eigen.3.3.4.nupkg --no-check-certificate -nv & choco install -y -s . eigen & reg add HKEY_LOCAL_MACHINE\SOFTWARE\Kitware\CMake\Packages\Eigen3 /v "CMakePackageDir" /t REG_SZ /d "C:\ProgramData\chocolatey\lib\eigen\share\cmake" /f
+      shell: cmd
+      if: runner.os == 'Windows'
+    - run: sudo apt-get -q update ; sudo apt-get -y install flex bison libeigen3-dev || true
+      shell: bash
+      if: runner.os == 'Linux'
+    - run: brew install eigen
+      if: runner.os == 'macOS'
+    - run: git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" .. ; cmake --build . --target install ; cd ../..
+      shell: bash
+#      if: steps.cache-ibex.outputs.cache-hit != 'true'
+    - run: |
+        mkdir build ; cd build
+        cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
+        cmake --build . --target install
+        cd ..
+      shell: bash
+    - run: |
+        wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
+        unzip -q codac_test_win.zip ; rm -Rf codac_test_win.zip ; cd codac_test_win ; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac . ; cd .. ; zip -q -r codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
+        cmake ${{ matrix.cfg.cmake_params }} .
+        cmake --build .
+        ./my_project
+        cd ../..
+      shell: bash
+    - uses: xresloader/upload-to-github-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: "*.zip"
+        overwrite: true
+        tag_name: autotagname

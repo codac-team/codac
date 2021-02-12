@@ -10,7 +10,7 @@
 
 #include <list>
 #include <iostream>
-#include "ibex_IntervalMatrix.h"
+#include "codac_IntervalMatrix.h"
 #include "codac_ConnectedSubset.h"
 #include "codac_Paving.h"
 
@@ -19,12 +19,12 @@ using namespace ibex;
 
 namespace codac
 {
-  bool ConnectedSubset::zero_proven(IntervalVector (*f)(const IntervalVector& b))
+  bool ConnectedSubset::zero_proven(const function<IntervalVector(const IntervalVector&)>& f)
   {
     return topological_degree(f) != 0;
   }
 
-  int ConnectedSubset::zeros_number(IntervalVector (*f)(const IntervalVector& b), IntervalMatrix (*Jf)(const IntervalVector& b), float precision)
+  int ConnectedSubset::zeros_number(const function<IntervalVector(const IntervalVector&)>& f, const function<IntervalMatrix(const IntervalVector&)>& Jf, float precision)
   {
     int degree = topological_degree(f);
 
@@ -35,9 +35,14 @@ namespace codac
       return -1;
   }
 
-  int ConnectedSubset::topological_degree(IntervalVector (*f)(const IntervalVector& b))
+  int ConnectedSubset::topological_degree(const function<IntervalVector(const IntervalVector&)>& f)
   {
-    assert(is_strictly_included_in_paving() && "unable to compute the degree on paving's edges");
+    if(!is_strictly_included_in_paving())
+    {
+      // Unable to compute the degree on paving's edges
+      return 0;
+    }
+
     assert(box().size() == 2 && "unhandled dimension case");
 
     vector<IntervalVector> v_bi = get_boundary();
@@ -92,7 +97,7 @@ namespace codac
     return 0;
   }
 
-  int ConnectedSubset::compute_local_degree(IntervalVector (*f)(const IntervalVector& b), const IntervalVector& b, const IntervalVector& common_cocoface) const
+  int ConnectedSubset::compute_local_degree(const function<IntervalVector(const IntervalVector&)>& f, const IntervalVector& b, const IntervalVector& common_cocoface) const
   {
     assert(b.size() == 2 && common_cocoface.size() == 2 && "unhandled dimension case");
 
@@ -134,7 +139,7 @@ namespace codac
     return sum;
   }
 
-  vector<int> ConnectedSubset::sign_vector(IntervalVector (*f)(const IntervalVector& b), const IntervalVector& b, const IntervalVector& common_cocoface) const
+  vector<int> ConnectedSubset::sign_vector(const function<IntervalVector(const IntervalVector&)>& f, const IntervalVector& b, const IntervalVector& common_cocoface) const
   {
     assert(b.size() == 2 && common_cocoface.size() == 2 && "unhandled dimension case");
 
@@ -239,7 +244,7 @@ namespace codac
     return k;
   }
 
-  bool ConnectedSubset::non_singular_jacobian(IntervalMatrix (*Jf)(const IntervalVector& b), float precision)
+  bool ConnectedSubset::non_singular_jacobian(const function<IntervalMatrix(const IntervalVector&)>& Jf, float precision)
   {
     assert(precision > 0.);
     

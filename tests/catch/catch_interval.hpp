@@ -1,11 +1,11 @@
 /* ============================================================================
- *  Catch extended to Ibex
+ *  Catch extended to Codac
  *
  *  This code is used for unit-tests purposes and based on the Catch library.
  *  https://github.com/philsquared/Catch
  *
  *  The Approx classes enable the floating point tolerance comparison of
- *  Intervals objects and pairs of Intervals.
+ *  codac::Intervals objects and pairs of codac::Intervals.
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -20,8 +20,9 @@
 #define __CODAC_CATCH_H__
 
 #include "catch.hpp"
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
+#include "codac_Vector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
 #include "codac_Point.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_TubeVector.h"
@@ -36,34 +37,34 @@ namespace Catch
     class ApproxIntv
     {
       public:
-        explicit ApproxIntv(ibex::Interval value) :
+        explicit ApproxIntv(codac::Interval value) :
             m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
-        explicit ApproxIntv(ibex::Interval value, double epsilon) :
+        explicit ApproxIntv(codac::Interval value, double epsilon) :
             m_epsilon(epsilon),
             m_value(value)
         {}
 
-        friend bool operator ==(ibex::Interval lhs, ApproxIntv const& rhs)
+        friend bool operator ==(codac::Interval lhs, ApproxIntv const& rhs)
         {
           double e = rhs.m_epsilon;
           return lhs == rhs.m_value ||
                  (fabs(lhs.lb() - rhs.m_value.lb()) < e && fabs(lhs.ub() - rhs.m_value.ub()) < e);
         }
 
-        friend bool operator ==(ApproxIntv const& lhs, ibex::Interval rhs)
+        friend bool operator ==(ApproxIntv const& lhs, codac::Interval rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(ibex::Interval lhs, ApproxIntv const& rhs)
+        friend bool operator !=(codac::Interval lhs, ApproxIntv const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxIntv const& lhs, ibex::Interval rhs)
+        friend bool operator !=(ApproxIntv const& lhs, codac::Interval rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -77,17 +78,17 @@ namespace Catch
 
       private:
         double m_epsilon;
-        ibex::Interval m_value;
+        codac::Interval m_value;
     };
 
     class ApproxIntvVector
     {
       public:
-        explicit ApproxIntvVector(ibex::IntervalVector value) :
+        explicit ApproxIntvVector(codac::IntervalVector value) :
             m_value(value)
         {}
 
-        friend bool operator ==(ibex::IntervalVector lhs, ApproxIntvVector const& rhs)
+        friend bool operator ==(codac::IntervalVector lhs, ApproxIntvVector const& rhs)
         {
           if(lhs.size() != rhs.m_value.size())
             return false;
@@ -97,17 +98,17 @@ namespace Catch
           return true;
         }
 
-        friend bool operator ==(ApproxIntvVector const& lhs, ibex::IntervalVector rhs)
+        friend bool operator ==(ApproxIntvVector const& lhs, codac::IntervalVector rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(ibex::IntervalVector lhs, ApproxIntvVector const& rhs)
+        friend bool operator !=(codac::IntervalVector lhs, ApproxIntvVector const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxIntvVector const& lhs, ibex::IntervalVector rhs)
+        friend bool operator !=(ApproxIntvVector const& lhs, codac::IntervalVector rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -120,7 +121,7 @@ namespace Catch
         }
 
       private:
-        ibex::IntervalVector m_value;
+        codac::IntervalVector m_value;
     };
 
     class ApproxSlice
@@ -260,12 +261,12 @@ namespace Catch
     class ApproxVector
     {
       public:
-        explicit ApproxVector(ibex::Vector value, double epsilon = 100.*DEFAULT_EPSILON) :
+        explicit ApproxVector(codac::Vector value, double epsilon = 100.*DEFAULT_EPSILON) :
             m_epsilon(epsilon),
             m_value(value)
         {}
 
-        friend bool operator ==(ibex::Vector lhs, ApproxVector const& rhs)
+        friend bool operator ==(codac::Vector lhs, ApproxVector const& rhs)
         {
           double e = rhs.m_epsilon;
 
@@ -279,17 +280,17 @@ namespace Catch
           return true;
         }
 
-        friend bool operator ==(ApproxVector const& lhs, ibex::Vector rhs)
+        friend bool operator ==(ApproxVector const& lhs, codac::Vector rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(ibex::Vector lhs, ApproxVector const& rhs)
+        friend bool operator !=(codac::Vector lhs, ApproxVector const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxVector const& lhs, ibex::Vector rhs)
+        friend bool operator !=(ApproxVector const& lhs, codac::Vector rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -303,33 +304,33 @@ namespace Catch
 
       private:
         double m_epsilon;
-        ibex::Vector m_value = ibex::Vector(1);
+        codac::Vector m_value = codac::Vector(1);
     };
 
     class ApproxIntvPair
     {
       public:
-        explicit ApproxIntvPair(std::pair<ibex::Interval,ibex::Interval> value) :
+        explicit ApproxIntvPair(std::pair<codac::Interval,codac::Interval> value) :
             m_value(value)
         {}
 
-        friend bool operator ==(std::pair<ibex::Interval,ibex::Interval> lhs, ApproxIntvPair const& rhs)
+        friend bool operator ==(std::pair<codac::Interval,codac::Interval> lhs, ApproxIntvPair const& rhs)
         {
           return lhs == rhs.m_value ||
                  (ApproxIntv(lhs.first) == rhs.m_value.first && ApproxIntv(lhs.second) == rhs.m_value.second);
         }
 
-        friend bool operator ==(ApproxIntvPair const& lhs, std::pair<ibex::Interval,ibex::Interval> rhs)
+        friend bool operator ==(ApproxIntvPair const& lhs, std::pair<codac::Interval,codac::Interval> rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(std::pair<ibex::Interval,ibex::Interval> lhs, ApproxIntvPair const& rhs)
+        friend bool operator !=(std::pair<codac::Interval,codac::Interval> lhs, ApproxIntvPair const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxIntvPair const& lhs, std::pair<ibex::Interval,ibex::Interval> rhs)
+        friend bool operator !=(ApproxIntvPair const& lhs, std::pair<codac::Interval,codac::Interval> rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -343,7 +344,7 @@ namespace Catch
 
       private:
         double m_epsilon;
-        std::pair<ibex::Interval,ibex::Interval> m_value;
+        std::pair<codac::Interval,codac::Interval> m_value;
     };
 
     class ApproxPoint

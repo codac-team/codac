@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include "ibex_IntervalMatrix.h"
+#include "codac_IntervalMatrix.h"
 #include "codac_Polygon.h"
 #include "codac_GrahamScan.h"
 #include "codac_VIBesFig.h"

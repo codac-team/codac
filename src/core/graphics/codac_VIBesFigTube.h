@@ -293,7 +293,7 @@ namespace codac
        *        otherwise, only polygon envelopes of the tubes will be shown (fast display)
        * \return the box hull of the displayed object
        */
-      const ibex::IntervalVector draw_tube(const Tube *tube, bool detail_slices = false);
+      const IntervalVector draw_tube(const Tube *tube, bool detail_slices = false);
 
       /**
        * \brief Draws a slice
@@ -320,7 +320,7 @@ namespace codac
        * \param t the tdomain input
        * \param params VIBes parameters related to the gate (for groups)
        */
-      void draw_gate(const ibex::Interval& gate, double t, const vibes::Params& params);
+      void draw_gate(const Interval& gate, double t, const vibes::Params& params);
 
       /**
        * \brief Draws a trajectory
@@ -328,7 +328,7 @@ namespace codac
        * \param traj the const pointer to the Trajectory object to be shown
        * \return the box hull of the displayed object
        */
-      const ibex::IntervalVector draw_trajectory(const Trajectory *traj);
+      const IntervalVector draw_trajectory(const Trajectory *traj);
 
     protected:
 

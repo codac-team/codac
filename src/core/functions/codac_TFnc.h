@@ -11,7 +11,8 @@
 #ifndef __CODAC_TFNC_H__
 #define __CODAC_TFNC_H__
 
-#include "ibex_IntervalVector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -32,14 +33,14 @@ namespace codac
       bool is_intertemporal() const;
 
       virtual const Tube eval(const TubeVector& x) const;
-      virtual const ibex::Interval eval(const ibex::IntervalVector& x) const = 0;
-      virtual const ibex::Interval eval(int slice_id, const TubeVector& x) const = 0;
-      virtual const ibex::Interval eval(const ibex::Interval& t, const TubeVector& x) const = 0;
+      virtual const Interval eval(const IntervalVector& x) const = 0;
+      virtual const Interval eval(int slice_id, const TubeVector& x) const = 0;
+      virtual const Interval eval(const Interval& t, const TubeVector& x) const = 0;
       
       virtual const TubeVector eval_vector(const TubeVector& x) const;
-      virtual const ibex::IntervalVector eval_vector(const ibex::IntervalVector& x) const = 0;
-      virtual const ibex::IntervalVector eval_vector(int slice_id, const TubeVector& x) const = 0;
-      virtual const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const = 0;
+      virtual const IntervalVector eval_vector(const IntervalVector& x) const = 0;
+      virtual const IntervalVector eval_vector(int slice_id, const TubeVector& x) const = 0;
+      virtual const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const = 0;
 
     protected:
       

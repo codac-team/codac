@@ -45,7 +45,7 @@ SIVIAPaving
   .. code-tab:: c++
 
     SIVIAPaving p({{-3.,3.},{-3.,3.}});
-    p.compute(ibex::Function("x", "y", "x*cos(x-y)*sin(x)+y"),
+    p.compute(Function("x", "y", "x*cos(x-y)*sin(x)+y"),
               {{-0.35,0.35}},
               0.01);
 

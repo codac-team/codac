@@ -13,7 +13,7 @@
 
 #include <vector>
 #include "codac_Polygon.h"
-#include "ibex_BoolInterval.h"
+#include "codac_BoolInterval.h"
 
 namespace codac
 {
@@ -26,16 +26,16 @@ namespace codac
 
         ConvexPolygon();
         ConvexPolygon(const ConvexPolygon& p);
-        explicit ConvexPolygon(const ibex::IntervalVector& box);
+        explicit ConvexPolygon(const IntervalVector& box);
         ConvexPolygon(const std::vector<Point>& v_thick_pts);
-        ConvexPolygon(const std::vector<ibex::Vector>& v_floating_pts, bool convex_and_convention_order = false);
+        ConvexPolygon(const std::vector<Vector>& v_floating_pts, bool convex_and_convention_order = false);
 
       /// @}
       /// \name Tests
       /// @{
 
-        const ibex::BoolInterval is_subset(const ConvexPolygon& p) const;
-        const ibex::BoolInterval encloses(const Point& p) const;
+        const BoolInterval is_subset(const ConvexPolygon& p) const;
+        const BoolInterval encloses(const Point& p) const;
 
       /// @}
       /// \name Setting values
@@ -43,13 +43,13 @@ namespace codac
 
         const ConvexPolygon& inflate(double rad);
         const ConvexPolygon& simplify(size_t max_edges);
-        const ConvexPolygon& rotate(const ibex::Interval& theta, const ibex::IntervalVector& center);
+        const ConvexPolygon& rotate(const Interval& theta, const IntervalVector& center);
 
       /// @}
       /// \name Operators
       /// @{
 
-        const ibex::IntervalVector fast_intersection(const ibex::IntervalVector& x) const;
+        const IntervalVector fast_intersection(const IntervalVector& x) const;
 
       /// @}
   };

@@ -11,7 +11,8 @@
 #ifndef __CODAC_BEACON_H__
 #define __CODAC_BEACON_H__
 
-#include "ibex_IntervalVector.h"
+#include "codac_Vector.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -20,18 +21,18 @@ namespace codac
     public:
 
       Beacon(double x = 0., double y = 0., double z = 0.);
-      Beacon(const ibex::Vector& pos);
-      Beacon(const ibex::IntervalVector& pos_box);
+      Beacon(const Vector& pos);
+      Beacon(const IntervalVector& pos_box);
       double x() const;
       double y() const;
       double z() const;
-      const ibex::Vector& pos() const;
-      const ibex::IntervalVector& pos_box() const;
+      const Vector& pos() const;
+      const IntervalVector& pos_box() const;
 
     protected:
 
-      ibex::Vector m_pos = ibex::Vector(3, 0.);
-      ibex::IntervalVector m_pos_box = ibex::IntervalVector(3);
+      Vector m_pos = Vector(3, 0.);
+      IntervalVector m_pos_box = IntervalVector(3);
   };
 }
 

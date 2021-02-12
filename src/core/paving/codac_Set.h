@@ -12,7 +12,7 @@
 #ifndef __CODAC_SET_H__
 #define __CODAC_SET_H__
 
-#include "ibex_IntervalVector.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -70,7 +70,7 @@ namespace codac
        * \param box n-dimensional box representing the set
        * \param value integer of the set, `SetValue::VALUE_MAYBE` by default
        */
-      Set(const ibex::IntervalVector& box, SetValue value = SetValue::MAYBE);
+      Set(const IntervalVector& box, SetValue value = SetValue::MAYBE);
 
       /**
        * \brief Set destructor
@@ -96,7 +96,7 @@ namespace codac
        *
        * \return the box
        */
-      const ibex::IntervalVector& box() const;
+      const IntervalVector& box() const;
 
       /**
        * \brief Sets the integer value for this set
@@ -108,7 +108,7 @@ namespace codac
     protected:
 
       SetValue m_value; //!< integer value of this set
-      ibex::IntervalVector m_box; //!< box representing this set
+      IntervalVector m_box; //!< box representing this set
   };
 }
 
