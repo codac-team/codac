@@ -29,7 +29,7 @@ namespace codac
 
     IntervalVector y = box();
     vector<Interval> v_t_inv;
-    x.invert(y, v_t_inv);
+    x.invert(y, v_t_inv, x.tdomain());
 
     bool is_out = v_t_inv.empty();
     bool is_in = false;

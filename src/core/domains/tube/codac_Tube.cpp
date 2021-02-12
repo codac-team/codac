@@ -599,21 +599,23 @@ namespace codac
     const Interval Tube::operator()(double t) const
     {
       assert(!isnan(t));
-      assert(tdomain().contains(t));
+      if(!tdomain().contains(t))
+        return Interval::all_reals();
       return slice(t)->operator()(t);
     }
 
     const Interval Tube::operator()(const Interval& t) const
     {
-      assert(tdomain().is_superset(t));
-
       if(t.is_empty())
         return Interval::empty_set();
 
-      if(t.is_degenerated())
+      else if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
+        return Interval::all_reals();
+
+      else if(t.is_degenerated())
         return operator()(t.lb());
 
-      if(m_synthesis_tree != NULL) // fast evaluation
+      else if(m_synthesis_tree != NULL) // fast evaluation
         return m_synthesis_tree->operator()(t);
       
       else
@@ -638,17 +640,16 @@ namespace codac
       
       else
       {
+        if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
+          return make_pair(Interval::all_reals(), Interval::all_reals());
+
         pair<Interval,Interval> enclosed_bounds
           = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-        Interval intersection = t & tdomain();
-        if(t.is_empty())
-          return enclosed_bounds;
-
-        const Slice *s = slice(intersection.lb());
-        while(s != NULL && s->tdomain().lb() <= intersection.ub())
+        const Slice *s = slice(t.lb());
+        while(s != NULL && s->tdomain().lb() <= t.ub())
         {
-          pair<Interval,Interval> local_eval = s->eval(intersection);
+          pair<Interval,Interval> local_eval = s->eval(t & s->tdomain());
           enclosed_bounds.first |= local_eval.first;
           enclosed_bounds.second |= local_eval.second;
           s = s->next_slice();
@@ -699,15 +700,18 @@ namespace codac
 
       else
       {
-        Interval invert = Interval::EMPTY_SET;
-        Interval intersection = search_tdomain & tdomain();
-        if(intersection.is_empty())
-          return Interval::EMPTY_SET;
+        if(search_tdomain.is_empty())
+          return Interval::empty_set();
 
-        const Slice *s_x = slice(intersection.lb());
-        while(s_x != NULL && s_x->tdomain().lb() < intersection.ub())
+        else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub())
+          return Interval::all_reals();
+
+        Interval invert = Interval::EMPTY_SET;
+
+        const Slice *s_x = slice(search_tdomain.lb());
+        while(s_x != NULL && s_x->tdomain().lb() < search_tdomain.ub())
         {
-          invert |= s_x->invert(y, intersection);
+          invert |= s_x->invert(y, search_tdomain & s_x->tdomain());
           s_x = s_x->next_slice();
         }
 
@@ -723,15 +727,21 @@ namespace codac
 
       // todo: tree computations
 
-      Interval invert = Interval::EMPTY_SET;
-      Interval intersection = search_tdomain & tdomain();
-      if(intersection.is_empty())
+      if(search_tdomain.is_empty())
         return;
 
-      const Slice *s_x = slice(intersection.lb());
-      while(s_x != NULL && s_x->tdomain().lb() <= intersection.ub())
+      else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub())
       {
-        Interval local_invert = s_x->invert(y, intersection);
+        v_t.push_back(Interval::all_reals());
+        return;
+      }
+
+      Interval invert = Interval::EMPTY_SET;
+
+      const Slice *s_x = slice(search_tdomain.lb());
+      while(s_x != NULL && s_x->tdomain().lb() <= search_tdomain.ub())
+      {
+        Interval local_invert = s_x->invert(y, search_tdomain & s_x->tdomain());
         if(local_invert.is_empty() && !invert.is_empty())
         {
           v_t.push_back(invert);
@@ -753,18 +763,21 @@ namespace codac
       assert(tdomain() == v.tdomain());
       assert(same_slicing(*this, v));
 
+      if(search_tdomain.is_empty())
+        return Interval::empty_set();
+
+      else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub())
+        return Interval::all_reals();
+
       // todo: tree computations
 
       Interval invert = Interval::EMPTY_SET;
-      Interval intersection = search_tdomain & tdomain();
-      if(intersection.is_empty())
-        return Interval::EMPTY_SET;
 
-      const Slice *s_x = slice(intersection.lb());
-      const Slice *s_v = v.slice(intersection.lb());
-      while(s_x != NULL && s_x->tdomain().lb() < intersection.ub())
+      const Slice *s_x = slice(search_tdomain.lb());
+      const Slice *s_v = v.slice(search_tdomain.lb());
+      while(s_x != NULL && s_x->tdomain().lb() < search_tdomain.ub())
       {
-        invert |= s_x->invert(y, *s_v, intersection);
+        invert |= s_x->invert(y, *s_v, search_tdomain & s_x->tdomain());
         s_x = s_x->next_slice();
         s_v = s_v->next_slice();
       }
@@ -780,16 +793,22 @@ namespace codac
 
       // todo: tree computations
 
-      Interval invert = Interval::EMPTY_SET;
-      Interval intersection = search_tdomain & tdomain();
-      if(intersection.is_empty())
+      if(search_tdomain.is_empty())
         return;
 
-      const Slice *s_x = slice(intersection.lb());
-      const Slice *s_v = v.slice(intersection.lb());
-      while(s_x != NULL && s_x->tdomain().lb() <= intersection.ub())
+      else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub())
       {
-        Interval local_invert = s_x->invert(y, *s_v, intersection);
+        v_t.push_back(Interval::all_reals());
+        return;
+      }
+
+      Interval invert = Interval::EMPTY_SET;
+
+      const Slice *s_x = slice(search_tdomain.lb());
+      const Slice *s_v = v.slice(search_tdomain.lb());
+      while(s_x != NULL && s_x->tdomain().lb() <= search_tdomain.ub())
+      {
+        Interval local_invert = s_x->invert(y, *s_v, search_tdomain & s_x->tdomain());
         if(local_invert.is_empty() && !invert.is_empty())
         {
           v_t.push_back(invert);

@@ -145,9 +145,11 @@ namespace codac
     {
       // Write access is not allowed for this operator
       // For write access: use set()
-      assert(tdomain().contains(t));
+      
+      if(!tdomain().contains(t))
+        return Interval::all_reals();
 
-      if(t == m_tdomain.lb())
+      else if(t == m_tdomain.lb())
         return input_gate();
 
       else if(t == m_tdomain.ub())
@@ -160,55 +162,67 @@ namespace codac
     {
       // Write access is not allowed for this operator
       // For write access: use set()
-      assert(tdomain().is_superset(t));
-      if(t.is_degenerated())
+
+      if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
+        return Interval::all_reals();
+
+      else if(t.is_degenerated())
         return (*this)(t.lb());
-      return m_codomain;
+
+      else
+        return m_codomain;
     }
 
     const pair<Interval,Interval> Slice::eval(const Interval& t) const
     {
-      Interval intersection = t & m_tdomain;
-      pair<Interval,Interval> p_eval = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+      if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
+        return make_pair(Interval::all_reals(), Interval::all_reals());
 
-      if(!intersection.is_empty())
+      else
       {
-        if(intersection.contains(m_tdomain.lb()))
+        pair<Interval,Interval> p_eval = make_pair(Interval::empty_set(), Interval::empty_set());
+
+        if(t.contains(m_tdomain.lb()))
         {
           p_eval.first |= input_gate().lb();
           p_eval.second |= input_gate().ub();
         }
 
-        if(intersection.contains(m_tdomain.ub()))
+        if(t.contains(m_tdomain.ub()))
         {
           p_eval.first |= output_gate().lb();
           p_eval.second |= output_gate().ub();
         }
 
-        if(!intersection.is_degenerated()
-          || (intersection != m_tdomain.lb() && intersection != m_tdomain.ub()))
+        if(!t.is_degenerated()
+          || (t != m_tdomain.lb() && t != m_tdomain.ub()))
         {
           p_eval.first |= m_codomain.lb();
           p_eval.second |= m_codomain.ub();
         }
+
+        return p_eval;
       }
-      
-      return p_eval;
     }
 
     const Interval Slice::interpol(double t, const Slice& v) const
     {
-      assert(tdomain() == v.tdomain());
-      assert(tdomain().contains(t));
-      return interpol(Interval(t), v);
+      if(!tdomain().contains(t))
+        return Interval::all_reals();
+      // todo: need this? assert(tdomain() == v.tdomain());
+      else
+        return interpol(Interval(t), v);
     }
 
     const Interval Slice::interpol(const Interval& t, const Slice& v) const
     {
-      assert(tdomain() == v.tdomain());
+      // todo: need this? assert(tdomain() == v.tdomain());
       assert(tdomain().is_superset(t));
 
-      if(tdomain().is_subset(t))
+      if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
+        return Interval::all_reals();
+
+      else if(tdomain().is_subset(t))
         return codomain();
 
       else if(t.is_degenerated())
@@ -226,9 +240,12 @@ namespace codac
     const Interval Slice::invert(const Interval& y, const Interval& search_tdomain) const
     {
       // todo: use enclosed bounds also? in order to speed up computations
+      
+      if(search_tdomain.is_empty())
+        return Interval::empty_set();
 
-      if(!m_tdomain.intersects(search_tdomain))
-        return Interval::EMPTY_SET;
+      else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub())
+        return Interval::all_reals();
 
       else if((m_tdomain & search_tdomain) == m_tdomain && m_codomain.is_subset(y))
         return m_tdomain;
@@ -263,8 +280,11 @@ namespace codac
       assert(tdomain() == v.tdomain());
       // todo: use enclosed bounds also? in order to speed up computations
 
-      if(!m_tdomain.intersects(search_tdomain))
-        return Interval::EMPTY_SET;
+      if(search_tdomain.is_empty())
+        return Interval::empty_set();
+
+      else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub())
+        return Interval::all_reals();
 
       else if((m_tdomain & search_tdomain) == m_tdomain && m_codomain.is_subset(y))
         return m_tdomain;

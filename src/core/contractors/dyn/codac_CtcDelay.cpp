@@ -64,14 +64,14 @@ namespace codac
       Interval intv_t = t_x + a;
 
       if(intv_t.is_subset(y.tdomain())){
-          const Interval s_y = y(intv_t);
+          const Interval s_y = y(intv_t & y.tdomain());
           // if the evaluation of the tube y, which we would invert inside [intv_t],
           // is already completely inside the codomain of s_x, no contraction for [a] can
           // be achieved and we can avoid the inversion to save computation time
           if(s_y.is_interior_subset(s_x->codomain())){
               s_x->set_envelope(s_x->codomain() & s_y);
           } else {
-              const Interval t_y = y.invert(s_x->codomain(),intv_t);
+              const Interval t_y = y.invert(s_x->codomain(), intv_t & y.tdomain());
               a &= t_y - t_x;
 
               if(a.is_empty()){
@@ -80,17 +80,17 @@ namespace codac
                   return;
               }
               intv_t = t_x + a;
-              s_x->set_envelope(s_x->codomain() & y(intv_t));
+              s_x->set_envelope(s_x->codomain() & y(intv_t & y.tdomain()));
           }
       }
 
       intv_t = t_x.lb() + a;
       if(intv_t.is_subset(y.tdomain()))
-          s_x->set_input_gate(s_x->input_gate() & y(intv_t));
+          s_x->set_input_gate(s_x->input_gate() & y(intv_t & y.tdomain()));
 
       intv_t = t_x.ub() + a;
       if(intv_t.is_subset(y.tdomain()))
-          s_x->set_output_gate(s_x->output_gate() & y(intv_t));
+          s_x->set_output_gate(s_x->output_gate() & y(intv_t & y.tdomain()));
 
       if(s_x->is_empty()){
           a.set_empty();
@@ -110,14 +110,14 @@ namespace codac
       Interval intv_t = t_y - a;
 
       if(intv_t.is_subset(x.tdomain())){
-          const Interval s_x = x(intv_t);
+          const Interval s_x = x(intv_t & x.tdomain());
           // if the evaluation of the tube x, which we would invert inside [intv_t],
           // is already completely inside the codomain of s_y, no contraction for [a] can
           // be achieved and we can avoid the inversion to save computation time
           if(s_x.is_interior_subset(s_y->codomain())){
               s_y->set_envelope(s_y->codomain() & s_x);
           } else {
-              const Interval t_x = x.invert(s_y->codomain(),intv_t);
+              const Interval t_x = x.invert(s_y->codomain(), intv_t & x.tdomain());
               a &= t_y - t_x;
 
               if(a.is_empty()){
@@ -126,17 +126,17 @@ namespace codac
                   return;
               }
               intv_t = t_y - a;
-              s_y->set_envelope(s_y->codomain() & x(intv_t));
+              s_y->set_envelope(s_y->codomain() & x(intv_t & x.tdomain()));
           }
       }
 
       intv_t = t_y.lb() - a;
       if(intv_t.is_subset(x.tdomain()))
-          s_y->set_input_gate(s_y->input_gate() & x(intv_t));
+          s_y->set_input_gate(s_y->input_gate() & x(intv_t & x.tdomain()));
 
       intv_t = t_y.ub() - a;
       if(intv_t.is_subset(x.tdomain()))
-          s_y->set_output_gate(s_y->output_gate() & x(intv_t));
+          s_y->set_output_gate(s_y->output_gate() & x(intv_t & x.tdomain()));
 
       if(s_y->is_empty()){
           a.set_empty();
