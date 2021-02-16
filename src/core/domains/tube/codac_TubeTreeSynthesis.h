@@ -33,6 +33,8 @@ namespace codac
       int time_to_index(double t) const;
       Slice* slice(int slice_id);
       const Slice* slice(int slice_id) const;
+      Slice* slice(double t);
+      const Slice* slice(double t) const;
 
       bool is_leaf() const;
       bool is_root() const;

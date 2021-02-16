@@ -347,7 +347,7 @@ namespace codac
       assert(tdomain().contains(t));
 
       if(m_synthesis_tree != NULL) // fast evaluation
-        return m_synthesis_tree->slice(m_synthesis_tree->time_to_index(t));
+        return m_synthesis_tree->slice(t);
       
       else
       {

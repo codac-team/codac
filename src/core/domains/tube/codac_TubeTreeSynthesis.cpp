@@ -234,6 +234,29 @@ namespace codac
     }
   }
 
+  Slice* TubeTreeSynthesis::slice(double t)
+  {
+    assert(tdomain().contains(t));
+    return const_cast<Slice*>(static_cast<const TubeTreeSynthesis&>(*this).slice(t));
+  }
+
+  const Slice* TubeTreeSynthesis::slice(double t) const
+  {
+    assert(tdomain().contains(t));
+
+    if(is_leaf())
+      return m_slice_ref;
+
+    else
+    {
+      if(t < m_first_subtree->tdomain().ub())
+        return m_first_subtree->slice(t);
+
+      else
+        return m_second_subtree->slice(t);
+    }
+  }
+
   void TubeTreeSynthesis::request_values_update()
   {
     if(m_values_update_needed)
