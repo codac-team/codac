@@ -18,7 +18,7 @@ jobs:
             - { os: ubuntu-20.04, shell: bash, arch: x64, runtime: focal, desc: 'Ubuntu 20.04' }
             - { os: ubuntu-18.04, shell: bash, arch: x64, runtime: bionic, desc: 'Ubuntu 18.04' }
 #            - { os: macos-11.0, shell: bash, arch: x64, runtime: bigsur, desc: 'macOS Big Sur 11.0' } # Not yet available...
-#            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, desc: 'macOS Catalina 10.15' } # clang: error: the clang compiler does not support -pg option on versions of OS X 10.9 and later
+            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, desc: 'macOS Catalina 10.15' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v2
