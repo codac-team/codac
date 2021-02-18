@@ -1,6 +1,6 @@
 on:
     push:
-        branches: '**'
+        branches: 'master'
         tags: '' # Restrict to blank tags
     pull_request:
 
