@@ -329,9 +329,10 @@ namespace codac
        * \note A uniform grid spacing is assumed.
        * 
        * \param t the temporal key (double, must belong to the trajectory's tdomain)
+       * \param h temporal timestep around t
        * \return a derivative trajectory
        */
-      double finite_diff(double t) const;
+      double finite_diff(double t, double h) const;
 
       /// @}
       /// \name Assignments operators
