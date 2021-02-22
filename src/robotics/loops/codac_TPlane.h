@@ -52,6 +52,16 @@ namespace codac
       TPlane(const Interval& tdomain);
 
       /**
+       * \brief Computes the loops (detections and proofs) as a subpaving, from the tube of
+       *        positions \f$[\mathbf{p}](\cdot)\f$ and the tube of velocities \f$[\mathbf{v}](\cdot)\f$.
+       *
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
+       * \param v 2d TubeVector \f$[\mathbf{v}](\cdot)\f$ for velocities
+       */
+      void compute_loops(float precision, const TubeVector& p, const TubeVector& v);
+
+      /**
        * \brief Computes this tplane as a subpaving, from the tube of positions \f$[\mathbf{p}](\cdot)\f$ only.
        *
        * \param precision precision \f$\epsilon\f$ of the SIVIA approximation

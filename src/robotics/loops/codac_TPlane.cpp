@@ -21,6 +21,12 @@ namespace codac
 
   }
 
+  void TPlane::compute_loops(float precision, const TubeVector& p, const TubeVector& v)
+  {
+    compute_detections(precision, p, v, true, true);
+    compute_proofs(p, v);
+  }
+
   void TPlane::compute_detections(float precision, const TubeVector& p)
   {
     compute_detections(precision, p, p, false, true);
