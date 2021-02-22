@@ -38,6 +38,17 @@ void export_TPlane(py::module& m)
       TPLANE_VOID_COMPUTE_DETECTIONS_FLOAT_TUBEVECTOR,
       "precision"_a, "p"_a)
 
+    .def("compute_loops", [](TPlane& tplane, float precision, const TubeVector& p, const TubeVector& v)
+      {
+        TubeVector p_(p), v_(v);
+        p_.enable_synthesis(true);
+        v_.enable_synthesis(true);
+        tplane.compute_detections(precision, p_, v_);
+        tplane.compute_proofs(p_, v_);
+      },
+      TPLANE_VOID_COMPUTE_DETECTIONS_FLOAT_TUBEVECTOR_TUBEVECTOR,
+      "precision"_a, "p"_a, "v"_a)
+
     .def("compute_detections", (void (TPlane::*)(float,const TubeVector&,const TubeVector&))&TPlane::compute_detections,
       TPLANE_VOID_COMPUTE_DETECTIONS_FLOAT_TUBEVECTOR_TUBEVECTOR,
       "precision"_a, "p"_a, "v"_a)
