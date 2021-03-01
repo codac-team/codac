@@ -94,7 +94,7 @@ namespace codac
        * \param value_out value of the items representing no-solution boxes in the paving
        * \return a vector of boxes
        */
-      std::vector<IntervalVector> get_boundary(SetValue value_boundary = SetValue::MAYBE, SetValue value_out = SetValue::OUT) const; // items of type k-1
+      std::vector<IntervalVector> get_boundary(SetValue value_boundary = SetValue::UNKNOWN, SetValue value_out = SetValue::OUT) const; // items of type k-1
 
       /**
        * \brief Returns the boxed hull of each connected subset into a vector of boxes

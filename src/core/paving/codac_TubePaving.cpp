@@ -17,7 +17,7 @@ using namespace ibex;
 
 namespace codac
 {
-  TubePaving::TubePaving(const IntervalVector& init_box) : Paving(init_box, SetValue::MAYBE)
+  TubePaving::TubePaving(const IntervalVector& init_box) : Paving(init_box, SetValue::UNKNOWN)
   {
 
   }
@@ -61,7 +61,7 @@ namespace codac
       set_value(SetValue::IN);
 
     else if(box().max_diam() < precision)
-      set_value(SetValue::MAYBE);
+      set_value(SetValue::UNKNOWN);
 
     else
     {

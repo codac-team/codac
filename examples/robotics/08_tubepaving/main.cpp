@@ -22,7 +22,7 @@ int main()
 {
   /* =========== TUBE =========== */
 
-    Interval tdomain(0., 2.*M_PI);
+    Interval tdomain(2,6);
     TrajectoryVector traj_bound_1(tdomain, TFunction("(2*sin(t)-0.2;sin(2*t)-0.2)"));
     TrajectoryVector traj_bound_2(tdomain, TFunction("(2*sin(t)-0.2;sin(2*t)+0.2)"));
     TrajectoryVector traj_bound_3(tdomain, TFunction("(2*sin(t)+0.2;sin(2*t)-0.2)"));

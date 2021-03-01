@@ -16,7 +16,7 @@ using namespace ibex;
 namespace codac
 {
   TPlane::TPlane(const Interval& tdomain)
-    : Paving(IntervalVector(2, tdomain), SetValue::MAYBE)
+    : Paving(IntervalVector(2, tdomain), SetValue::UNKNOWN)
   {
 
   }
@@ -114,7 +114,7 @@ namespace codac
           set_value(SetValue::IN);
 
         else if(max(t1.diam(), t2.diam()) < precision)
-          set_value(SetValue::MAYBE);
+          set_value(SetValue::UNKNOWN);
 
         else
         {
