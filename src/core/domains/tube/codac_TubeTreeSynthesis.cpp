@@ -424,9 +424,9 @@ namespace codac
 
         Interval y_first = s_lb->codomain();
         Interval ta1 = Interval(intv_t_lb.lb(), t.lb());
-        Interval ta2 = Interval(intv_t_lb.lb(), min(t.ub(), intv_t_lb.ub()));
+        Interval ta2 = Interval(intv_t_lb.lb(), std::min(t.ub(), intv_t_lb.ub()));
         Interval tb1 = Interval(t.lb(), intv_t_lb.ub());
-        Interval tb2 = Interval(min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
+        Interval tb2 = Interval(std::min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
 
         if(y_first.lb() < 0)
           integral_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),

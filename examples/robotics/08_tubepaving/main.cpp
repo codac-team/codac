@@ -22,13 +22,13 @@ int main()
 {
   /* =========== TUBE =========== */
 
-    Interval tdomain(2,6);
+    Interval tdomain(0,6);
     TrajectoryVector traj_bound_1(tdomain, TFunction("(2*sin(t)-0.2;sin(2*t)-0.2)"));
     TrajectoryVector traj_bound_2(tdomain, TFunction("(2*sin(t)-0.2;sin(2*t)+0.2)"));
     TrajectoryVector traj_bound_3(tdomain, TFunction("(2*sin(t)+0.2;sin(2*t)-0.2)"));
     TrajectoryVector traj_bound_4(tdomain, TFunction("(2*sin(t)+0.2;sin(2*t)+0.2)"));
 
-    TubeVector x(traj_bound_1, 0.1);
+    TubeVector x(traj_bound_1, 0.01);
     x |= traj_bound_1;
     x |= traj_bound_2;
     x |= traj_bound_3;
@@ -53,7 +53,7 @@ int main()
   /* =========== PAVING =========== */
 
     TubePaving pav(fig_map.view_box());
-    pav.compute(0.08, x);
+    pav.compute(0.06, x);
 
 
   /* =========== GRAPHICS =========== */
@@ -68,5 +68,5 @@ int main()
   /* =========== ENDING =========== */
 
   // Checking if this example still works:
-  return (fabs(x.volume() - 6.6203) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return (fabs(x.volume() - 4.94905) < 1e-2) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -69,7 +69,7 @@ namespace codac
 
   bool ContractorHashcode::operator<(const ContractorHashcode& a) const
   {
-    for(size_t i = 0 ; i < min(m_n, a.m_n) ; i++)
+    for(size_t i = 0 ; i < std::min(m_n, a.m_n) ; i++)
     {
       if(m_ptr[i] == a.m_ptr[i])
         continue;

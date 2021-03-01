@@ -113,7 +113,7 @@ namespace codac
         else if(derivative_in && primitive_in)
           set_value(SetValue::IN);
 
-        else if(max(t1.diam(), t2.diam()) < precision)
+        else if(std::max(t1.diam(), t2.diam()) < precision)
           set_value(SetValue::UNKNOWN);
 
         else

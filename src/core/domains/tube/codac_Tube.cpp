@@ -58,7 +58,7 @@ namespace codac
       do
       {
         lb = ub; // we guarantee all slices are adjacent
-        ub = min(lb + timestep, tdomain.ub()); // the tdomain of the last slice may be smaller
+        ub = std::min(lb + timestep, tdomain.ub()); // the tdomain of the last slice may be smaller
 
         slice = new Slice(Interval(lb,ub));
 
