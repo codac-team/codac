@@ -32,6 +32,41 @@ Deprecated
 Documentation
 -------------
 
+Python binding
+--------------
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.3 (released `Mar 1, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.3>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.2 <https://github.com/codac-team/codac/compare/v0.1.2...v0.1.3>`_
+
+Changes
+-------
+
+* :commit:`cddb5989a66f5955dd7edc7ba3400c656defd3dc`: improving loop computation in Python
+
+Python binding
+--------------
+
+* :commit:`b1781373ef22f372d7536a4c48b295de30d998a2`: building Python module in Release mode 
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.2 (released `Feb 20, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.2>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.1 <https://github.com/codac-team/codac/compare/v0.1.1...v0.1.2>`_
+
+Bugs fixed
+----------
+
+* :commit:`9f25886e1b19821e709dc3e617629fc5ebb68b19`: corrected bug in diff 
+
+
 -----------------------------------------------------------------
 
 Codac release 0.1.1 (released `Feb 16, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.1>`_)
@@ -56,7 +91,7 @@ Python binding
 
 * :commit:`d0351fb474055d98b7908e1fcd6f5534b517f531`: Python binding of loop detections/proofs
 * :commit:`afadfd759af88d5b8923952590fa85ac13965efe`: building trajectories objects from numpy arrays
-* :commit:`3a79bf3c89c2c37f591e5a03db72e78bcb2a906e`: added missing `rsub` operators on Tubes
+* :commit:`3a79bf3c89c2c37f591e5a03db72e78bcb2a906e`: added missing *rsub* operators on Tubes
 
 
 -----------------------------------------------------------------
