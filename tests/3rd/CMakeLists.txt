@@ -1,5 +1,5 @@
 # ==================================================================
-#  tubex-lib / tests - cmake configuration file
+#  codac / tests - cmake configuration file
 # ==================================================================
 
   if(WITH_CAPD)

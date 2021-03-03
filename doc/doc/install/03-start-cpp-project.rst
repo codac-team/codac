@@ -8,15 +8,15 @@ Start a C++ project
    | You are using Python?
    | :ref:`sec-start-py-project`
 
-| Tubex is ready to be used on your computer.
+| Codac is ready to be used on your computer.
 | You can now copy-paste the following example code in a file named :file:`main.cpp`:
 
 .. code-block:: c++
 
-  #include <tubex.h>
+  #include <codac.h>
   
   using namespace std;
-  using namespace tubex;
+  using namespace codac;
   
   int main()
   {
@@ -55,21 +55,21 @@ For the compilation of your project, you can use CMake with the following file :
     find_package(Eigen3 REQUIRED NO_MODULE)
     message(STATUS "Found Eigen3 version ${EIGEN3_VERSION}")
 
-  # Adding Tubex
+  # Adding Codac
 
-    # In case you installed Tubex in a local directory, you need 
+    # In case you installed Codac in a local directory, you need 
     # to specify its path with the CMAKE_PREFIX_PATH option.
-    # set(CMAKE_PREFIX_PATH "~/tubex-lib/build_install")
+    # set(CMAKE_PREFIX_PATH "~/codac/build_install")
 
-    find_package(TUBEX REQUIRED)
-    message(STATUS "Found Tubex version ${TUBEX_VERSION}")
+    find_package(CODAC REQUIRED)
+    message(STATUS "Found Codac version ${CODAC_VERSION}")
 
   # Compilation
 
     add_executable(${PROJECT_NAME} main.cpp)
-    target_compile_options(${PROJECT_NAME} PUBLIC ${TUBEX_CXX_FLAGS})
-    target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${TUBEX_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${TUBEX_LIBRARIES} Ibex::ibex ${TUBEX_LIBRARIES} Ibex::ibex)
+    target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
+    target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex ${CODAC_LIBRARIES} Ibex::ibex)
 
 
 The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directory:
@@ -82,12 +82,12 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
 
 .. note::
 
-  Since Tubex 3.1, `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ becomes a dependency of the library.
+  Since Codac 3.1, `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ becomes a dependency of the library.
 
 
-.. admonition:: Custom install directory of IBEX and Tubex
+.. admonition:: Custom install directory of IBEX and Codac
   
-  If you installed IBEX and/or Tubex in a custom directory (instead of the file system such as :file:`/usr/local/` under Linux),
+  If you installed IBEX and/or Codac in a custom directory (instead of the file system such as :file:`/usr/local/` under Linux),
   then you need to specify the ``CMAKE_PREFIX_PATH`` option, as indicated in the above :file:`CMakeLists.txt` file.
 
   Another way is to export the ``CMAKE_PREFIX_PATH`` environment variable. For instance:
@@ -95,7 +95,7 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
   .. code-block:: bash
 
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
-    export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
+    export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
 
 The compilation of your project is made by the following command line:
 

@@ -1,9 +1,9 @@
 #ifndef __PYIBEX_TYPE_CASTER_H__
 #define __PYIBEX_TYPE_CASTER_H__
 
-#include "ibex_Vector.h"
+#include "codac_Vector.h"
 #include "ibex_Array.h"
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
 #include <pybind11/pybind11.h>
 
 NAMESPACE_BEGIN(pybind11)
@@ -12,11 +12,11 @@ NAMESPACE_BEGIN(detail)
 using ibex::Vector;
 using ibex::Array;
 
-template <> struct type_caster<ibex::Vector> {
+template <> struct type_caster<Vector> {
 public:
-    PYBIND11_TYPE_CASTER(ibex::Vector, _("Vector"));
+    PYBIND11_TYPE_CASTER(Vector, _("Vector"));
 
-    type_caster<ibex::Vector>() :  value(1) { }
+    type_caster<Vector>() :  value(1) { }
     bool load(handle src_hdl, bool convert) {
         PyObject *src = src_hdl.ptr();
         if (!PyList_Check(src) && !PyTuple_Check(src))
@@ -37,7 +37,7 @@ public:
         return true;
     }
 
-    static handle cast(const ibex::Vector &src, return_value_policy policy, handle parent) {
+    static handle cast(const Vector &src, return_value_policy policy, handle parent) {
         list l(src.size());
 
         for (int i = 0; i < src.size(); i++){

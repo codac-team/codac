@@ -1,20 +1,20 @@
 #include "catch_interval.hpp"
-#include "tubex_CtcEval.h"
-#include "tubex_VIBesFigTube.h"
-#include "tubex_VIBesFigTubeVector.h"
+#include "codac_CtcEval.h"
+#include "codac_VIBesFigTube.h"
+#include "codac_VIBesFigTubeVector.h"
 #include "tests_predefined_tubes.h"
 #include "vibes.h"
 
 // Using #define so that we can access protected methods
 // of the class for tests purposes
 #define protected public
-#include "tubex_CtcDeriv.h"
+#include "codac_CtcDeriv.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 #define VIBES_DRAWING 0
 
@@ -222,7 +222,7 @@ TEST_CASE("Testing enclosed bounds (x evaluations)")
     Tube x1 = tube_test_1();
     x1.set(Interval(-4,2), 14); // to test primitives pre-computation
 
-    CHECK(ApproxIntvPair(x1.eval())  == make_pair(Interval(-11,9), Interval(-7,13)));
+    CHECK(ApproxIntvPair(x1.eval(x1.tdomain()))  == make_pair(Interval(-11,9), Interval(-7,13)));
     CHECK(x1.eval(Interval(0.5,25.5)) == make_pair(Interval(-11,9), Interval(-7,13)));
     CHECK(x1.eval(Interval(7.1,19.8)) == make_pair(Interval(-11,6), Interval(-7,9)));
     CHECK(x1.eval(Interval(6.0,9.0)) == make_pair(Interval(-11,-9), Interval(-7,-6)));
@@ -263,26 +263,26 @@ TEST_CASE("Testing set inversion")
   {
     Slice sx(Interval(0.,1.), Interval(0.,10.));
     Slice sv(Interval(0.,1.), Interval::all_reals());
-    CHECK(sx.invert(5., sv) == Interval(0.,1.));
-    CHECK(sx.invert(15., sv) == Interval::empty_set());
+    CHECK(sx.invert(5., sv, sx.tdomain()) == Interval(0.,1.));
+    CHECK(sx.invert(15., sv, sx.tdomain()) == Interval::empty_set());
   }
 
   SECTION("Scalar set inversion (Tube)")
   {
     Tube x = tube_test_1();
     x.set(Interval(-4,2), 14); // to test primitives pre-computation
-    CHECK(x.invert(Interval(0.)) == Interval(3.0,46.0));
-    CHECK(x.invert(Interval(-7.)) == Interval(4.0,12.0));
-    CHECK(x.invert(Interval::ALL_REALS) == Interval(0.0,46.0));
-    CHECK(x.invert(Interval(-12.0,14.0)) == Interval(0.0,46.0));
-    CHECK(x.invert(Interval(-20,-18)) == Interval::EMPTY_SET);
-    CHECK(x.invert(Interval(-1.0,1.0)) == Interval(2.0,46.0));
-    CHECK(x.invert(Interval(-10.5)) == Interval(7.0,8.0));
-    CHECK(x.invert(Interval(-12.0,-7.0)) == Interval(4.0,12.0));
-    CHECK(x.invert(Interval(10.0,11.0)) == Interval(20.0,27.0));
-    CHECK(x.invert(Interval(6.01,7.0)) == Interval(0.0,30.0));
-    CHECK(x.invert(Interval(6.0,7.0)) == Interval(0.0,43.0));
-    CHECK(x.invert(Interval(5.9,7.0)) == Interval(0.0,43.0));
+    CHECK(x.invert(Interval(0.), x.tdomain()) == Interval(3.0,46.0));
+    CHECK(x.invert(Interval(-7.), x.tdomain()) == Interval(4.0,12.0));
+    CHECK(x.invert(Interval::ALL_REALS, x.tdomain()) == Interval(0.0,46.0));
+    CHECK(x.invert(Interval(-12.0,14.0), x.tdomain()) == Interval(0.0,46.0));
+    CHECK(x.invert(Interval(-20,-18), x.tdomain()) == Interval::EMPTY_SET);
+    CHECK(x.invert(Interval(-1.0,1.0), x.tdomain()) == Interval(2.0,46.0));
+    CHECK(x.invert(Interval(-10.5), x.tdomain()) == Interval(7.0,8.0));
+    CHECK(x.invert(Interval(-12.0,-7.0), x.tdomain()) == Interval(4.0,12.0));
+    CHECK(x.invert(Interval(10.0,11.0), x.tdomain()) == Interval(20.0,27.0));
+    CHECK(x.invert(Interval(6.01,7.0), x.tdomain()) == Interval(0.0,30.0));
+    CHECK(x.invert(Interval(6.0,7.0), x.tdomain()) == Interval(0.0,43.0));
+    CHECK(x.invert(Interval(5.9,7.0), x.tdomain()) == Interval(0.0,43.0));
   }
   
   SECTION("Vector set inversion")
@@ -292,7 +292,7 @@ TEST_CASE("Testing set inversion")
 
     vector<Interval> v;
 
-    x.invert(Interval(0.), v);
+    x.invert(Interval(0.), v, x.tdomain());
     CHECK(v.size() == 4);
 
     if(v.size() == 4)
@@ -314,7 +314,7 @@ TEST_CASE("Testing set inversion")
       CHECK(v[2] == Interval(37.0,42.0));
     }
 
-    x.invert(Interval(-1.0,1.0), v, Interval::ALL_REALS);
+    x.invert(Interval(-1.0,1.0), v, x.tdomain());
     CHECK(v.size() == 4);
 
     if(v.size() == 4)
@@ -326,10 +326,10 @@ TEST_CASE("Testing set inversion")
     }
 
     // The same, with a custom domain (empty):
-    x.invert(Interval(-1.0,1.0), v, Interval::EMPTY_SET);
+    x.invert(Interval(-1.0,1.0), v, Interval::empty_set());
     CHECK(v.size() == 0);
 
-    x.invert(Interval(-6.9999), v);
+    x.invert(Interval(-6.9999), v, x.tdomain());
     CHECK(v.size() == 2);
 
     if(v.size() == 2)
@@ -338,16 +338,16 @@ TEST_CASE("Testing set inversion")
       CHECK(v[1] == Interval(8.,12.));
     }
 
-    x.invert(Interval::ALL_REALS, v);
+    x.invert(Interval::ALL_REALS, v, x.tdomain());
     CHECK(v.size() == 1);
 
     if(v.size() == 1)
       CHECK(v[0] == Interval(0.0,46.0));
 
-    x.invert(Interval(-30.0,-29.0), v);
+    x.invert(Interval(-30.0,-29.0), v, x.tdomain());
     CHECK(v.size() == 0);
 
-    x.invert(Interval(3.5), v);
+    x.invert(Interval(3.5), v, x.tdomain());
     CHECK(v.size() == 5);
 
     if(v.size() == 5)
@@ -359,19 +359,19 @@ TEST_CASE("Testing set inversion")
       CHECK(v[4] == Interval(40.0,45.0));
     }
 
-    x.invert(Interval(9.5,30.0), v);
+    x.invert(Interval(9.5,30.0), v, x.tdomain());
     CHECK(v.size() == 1);
 
     if(v.size() == 1)
       CHECK(v[0] == Interval(20.0,27.0));
 
-    x.invert(Interval(12.0,13.0), v);
+    x.invert(Interval(12.0,13.0), v, x.tdomain());
     CHECK(v.size() == 1);
 
     if(v.size() == 1)
       CHECK(v[0] == Interval(22.0,25.0));
 
-    x.invert(Interval(-4.0,-3.0), v);
+    x.invert(Interval(-4.0,-3.0), v, x.tdomain());
     CHECK(v.size() == 3);
 
     if(v.size() == 3)
@@ -399,22 +399,22 @@ TEST_CASE("Testing set inversion")
     CtcDeriv ctc;
     ctc.contract(x, v);
 
-    CHECK(x.invert(x.codomain()) == x.tdomain());
-    CHECK(x.invert(Interval::ALL_REALS) == x.tdomain());
+    CHECK(x.invert(x.codomain(), x.tdomain()) == x.tdomain());
+    CHECK(x.invert(Interval::ALL_REALS, x.tdomain()) == x.tdomain());
 
     // Using derivative
-    CHECK(x.invert(x.codomain(), v) == x.tdomain());
-    CHECK(x.invert(Interval::ALL_REALS, v) == x.tdomain());
-    CHECK(x.invert(Interval(0.), v) == Interval(0.));
-    CHECK(x.invert(Interval(4.25), v) == Interval(4.5));
-    CHECK(x.invert(Interval(4.), v) == Interval(3.,5.));
-    CHECK(ApproxIntv(x.invert(Interval(4.1), v)) == Interval(4.2,4.8));
-    CHECK(x.invert(Interval(3.5), v) == Interval(2.,4.));
-    CHECK(x.invert(Interval::EMPTY_SET, v) == Interval::EMPTY_SET);
-    CHECK(x.invert(Interval(10.), v) == Interval::EMPTY_SET);
-    CHECK(x.invert(Interval(2.,3.), v) == Interval(1.,2.));
-    CHECK(x.invert(Interval(1.), v) == Interval(0.5,0.75));
-    CHECK(x.invert(Interval(3.5,4.), v) == Interval(2.,5.));
+    CHECK(x.invert(x.codomain(), v, x.tdomain()) == x.tdomain());
+    CHECK(x.invert(Interval::ALL_REALS, v, x.tdomain()) == x.tdomain());
+    CHECK(x.invert(Interval(0.), v, x.tdomain()) == Interval(0.));
+    CHECK(x.invert(Interval(4.25), v, x.tdomain()) == Interval(4.5));
+    CHECK(x.invert(Interval(4.), v, x.tdomain()) == Interval(3.,5.));
+    CHECK(ApproxIntv(x.invert(Interval(4.1), v, x.tdomain())) == Interval(4.2,4.8));
+    CHECK(x.invert(Interval(3.5), v, x.tdomain()) == Interval(2.,4.));
+    CHECK(x.invert(Interval::EMPTY_SET, v, x.tdomain()) == Interval::EMPTY_SET);
+    CHECK(x.invert(Interval(10.), v, x.tdomain()) == Interval::EMPTY_SET);
+    CHECK(x.invert(Interval(2.,3.), v, x.tdomain()) == Interval(1.,2.));
+    CHECK(x.invert(Interval(1.), v, x.tdomain()) == Interval(0.5,0.75));
+    CHECK(x.invert(Interval(3.5,4.), v, x.tdomain()) == Interval(2.,5.));
   }
 
   SECTION("Another test")
@@ -423,7 +423,7 @@ TEST_CASE("Testing set inversion")
     // to test the interest of trees, use a very small dt
     Interval domain(-20., 20.);
     Tube x(domain, dt, TFunction("[-1,1]*(t^2+1)"));
-    CHECK(x.invert(0.) == domain);
+    CHECK(x.invert(0., x.tdomain()) == domain);
   }
 }
 
@@ -436,7 +436,7 @@ TEST_CASE("Testing set inversion in vector case")
 
     IntervalVector inv_val(2, 0.5);
     vector<Interval> v_t;
-    x.invert(inv_val, v_t);
+    x.invert(inv_val, v_t, x.tdomain());
 
     if(false & VIBES_DRAWING)
     {
@@ -460,7 +460,7 @@ TEST_CASE("Testing set inversion in vector case")
     CHECK(v_t[4] == Interval(43.,45.));
 
     // Union inversion:
-    Interval inv = x.invert(inv_val);
+    Interval inv = x.invert(inv_val, x.tdomain());
     CHECK(inv == Interval(3.,45.));
 
     // Restricted domain

@@ -14,7 +14,7 @@
 #include "pyibex_CtcPolar.h"
 #include "pyibex_Catan2.h"
 
-namespace pyibex {
+namespace codac {
 
 CtcPolar::CtcPolar() : Ctc(4) {}
 

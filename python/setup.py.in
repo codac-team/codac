@@ -16,7 +16,7 @@ setup(
   version='${PROJECT_VERSION_FULL}',
   author='Simon Rohou, Benoit Desrochers',
   author_email='simon.rohou@ensta-bretagne.fr',
-  url='http://simon-rohou.fr/research/tubex-lib',
+  url='http://codac.io',
   description='${PROJECT_DESCRIPTION}',
   long_description='${PROJECT_LONG_DESCRIPTION}',
   ${FORCE_PYTHON_EXT}

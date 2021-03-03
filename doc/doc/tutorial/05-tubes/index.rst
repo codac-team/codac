@@ -389,7 +389,7 @@ The ``RandTrajectory`` class allows to create a trajectory with random values.
 
 .. admonition:: Exercise
 
-  **E.13. (optional)** Add a noise, bounded by :math:`[-0.2,0.2]`, to the distance trajectory:
+  **E.13. (optional)** Add a noise, bounded by :math:`[-0.05,0.05]`, to the distance trajectory:
 
   .. figure:: img/distances_noise.png
 

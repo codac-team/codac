@@ -1,0 +1,40 @@
+on:
+    push:
+        branches: '**'
+        tags: '' # Restrict to blank tags
+    pull_request:
+
+jobs:
+ # This job may be commented if a new release should not be created...
+ deploy:
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        draft: true
+        tag_name: autotagname
+        release_name: autotagname
+
+ dockercentos:
+    name: CentOS Docker
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+        fetch-depth: 0
+        clean: false
+    - run: |
+        chmod a+x scripts/docker/build_pybinding.sh
+        docker run --rm -v `pwd`:/io benensta/pyibex-docker /io/scripts/docker/build_pybinding.sh
+        ls wheelhouse
+    - uses: xresloader/upload-to-github-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: "wheelhouse/*.whl"
+        overwrite: true
+        tag_name: autotagname

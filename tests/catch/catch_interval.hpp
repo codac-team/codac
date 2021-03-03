@@ -1,11 +1,11 @@
 /* ============================================================================
- *  Catch extended to Ibex
+ *  Catch extended to Codac
  *
  *  This code is used for unit-tests purposes and based on the Catch library.
  *  https://github.com/philsquared/Catch
  *
  *  The Approx classes enable the floating point tolerance comparison of
- *  Intervals objects and pairs of Intervals.
+ *  codac::Intervals objects and pairs of codac::Intervals.
  * ============================================================================
  *  Copyright : Copyright 2017 Simon Rohou
  *  License   : This program is distributed under the terms of
@@ -16,16 +16,17 @@
  *  Created   : 2016
  * ---------------------------------------------------------------------------- */
 
-#ifndef __TUBEX_CATCH_H__
-#define __TUBEX_CATCH_H__
+#ifndef __CODAC_CATCH_H__
+#define __CODAC_CATCH_H__
 
 #include "catch.hpp"
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
-#include "tubex_Point.h"
-#include "tubex_ConvexPolygon.h"
-#include "tubex_TubeVector.h"
-#include "tubex_Slice.h"
+#include "codac_Vector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
+#include "codac_Point.h"
+#include "codac_ConvexPolygon.h"
+#include "codac_TubeVector.h"
+#include "codac_Slice.h"
 
 namespace Catch
 {
@@ -36,34 +37,34 @@ namespace Catch
     class ApproxIntv
     {
       public:
-        explicit ApproxIntv(ibex::Interval value) :
+        explicit ApproxIntv(codac::Interval value) :
             m_epsilon(DEFAULT_EPSILON),
             m_value(value)
         {}
 
-        explicit ApproxIntv(ibex::Interval value, double epsilon) :
+        explicit ApproxIntv(codac::Interval value, double epsilon) :
             m_epsilon(epsilon),
             m_value(value)
         {}
 
-        friend bool operator ==(ibex::Interval lhs, ApproxIntv const& rhs)
+        friend bool operator ==(codac::Interval lhs, ApproxIntv const& rhs)
         {
           double e = rhs.m_epsilon;
           return lhs == rhs.m_value ||
                  (fabs(lhs.lb() - rhs.m_value.lb()) < e && fabs(lhs.ub() - rhs.m_value.ub()) < e);
         }
 
-        friend bool operator ==(ApproxIntv const& lhs, ibex::Interval rhs)
+        friend bool operator ==(ApproxIntv const& lhs, codac::Interval rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(ibex::Interval lhs, ApproxIntv const& rhs)
+        friend bool operator !=(codac::Interval lhs, ApproxIntv const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxIntv const& lhs, ibex::Interval rhs)
+        friend bool operator !=(ApproxIntv const& lhs, codac::Interval rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -77,17 +78,17 @@ namespace Catch
 
       private:
         double m_epsilon;
-        ibex::Interval m_value;
+        codac::Interval m_value;
     };
 
     class ApproxIntvVector
     {
       public:
-        explicit ApproxIntvVector(ibex::IntervalVector value) :
+        explicit ApproxIntvVector(codac::IntervalVector value) :
             m_value(value)
         {}
 
-        friend bool operator ==(ibex::IntervalVector lhs, ApproxIntvVector const& rhs)
+        friend bool operator ==(codac::IntervalVector lhs, ApproxIntvVector const& rhs)
         {
           if(lhs.size() != rhs.m_value.size())
             return false;
@@ -97,17 +98,17 @@ namespace Catch
           return true;
         }
 
-        friend bool operator ==(ApproxIntvVector const& lhs, ibex::IntervalVector rhs)
+        friend bool operator ==(ApproxIntvVector const& lhs, codac::IntervalVector rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(ibex::IntervalVector lhs, ApproxIntvVector const& rhs)
+        friend bool operator !=(codac::IntervalVector lhs, ApproxIntvVector const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxIntvVector const& lhs, ibex::IntervalVector rhs)
+        friend bool operator !=(ApproxIntvVector const& lhs, codac::IntervalVector rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -120,17 +121,17 @@ namespace Catch
         }
 
       private:
-        ibex::IntervalVector m_value;
+        codac::IntervalVector m_value;
     };
 
     class ApproxSlice
     {
       public:
-        explicit ApproxSlice(tubex::Slice value) :
+        explicit ApproxSlice(codac::Slice value) :
             m_value(value)
         {}
 
-        friend bool operator ==(tubex::Slice lhs, ApproxSlice const& rhs)
+        friend bool operator ==(codac::Slice lhs, ApproxSlice const& rhs)
         {
           return lhs.tdomain() == ApproxIntv(rhs.m_value.tdomain()) &&
                  lhs.codomain() == ApproxIntvVector(rhs.m_value.codomain()) &&
@@ -138,17 +139,17 @@ namespace Catch
                  lhs.output_gate() == ApproxIntvVector(rhs.m_value.output_gate());
         }
 
-        friend bool operator ==(ApproxSlice const& lhs, tubex::Slice rhs)
+        friend bool operator ==(ApproxSlice const& lhs, codac::Slice rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(tubex::Slice lhs, ApproxSlice const& rhs)
+        friend bool operator !=(codac::Slice lhs, ApproxSlice const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxSlice const& lhs, tubex::Slice rhs)
+        friend bool operator !=(ApproxSlice const& lhs, codac::Slice rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -161,22 +162,22 @@ namespace Catch
         }
 
       private:
-        tubex::Slice m_value;
+        codac::Slice m_value;
     };
 
     class ApproxTube
     {
       public:
-        explicit ApproxTube(tubex::Tube value) :
+        explicit ApproxTube(codac::Tube value) :
             m_value(value)
         {}
 
-        friend bool operator ==(tubex::Tube lhs, ApproxTube const& rhs)
+        friend bool operator ==(codac::Tube lhs, ApproxTube const& rhs)
         {
           if(lhs.nb_slices() != rhs.m_value.nb_slices())
             return false;
 
-          const tubex::Slice *s = lhs.first_slice(), *s_x = rhs.m_value.first_slice();
+          const codac::Slice *s = lhs.first_slice(), *s_x = rhs.m_value.first_slice();
           while(s != NULL)
           {
             if(*s != ApproxSlice(*s_x)) // todo
@@ -188,17 +189,17 @@ namespace Catch
           return true;
         }
 
-        friend bool operator ==(ApproxTube const& lhs, tubex::Tube rhs)
+        friend bool operator ==(ApproxTube const& lhs, codac::Tube rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(tubex::Tube lhs, ApproxTube const& rhs)
+        friend bool operator !=(codac::Tube lhs, ApproxTube const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxTube const& lhs, tubex::Tube rhs)
+        friend bool operator !=(ApproxTube const& lhs, codac::Tube rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -211,17 +212,17 @@ namespace Catch
         }
 
       private:
-        tubex::Tube m_value;
+        codac::Tube m_value;
     };
 
     class ApproxTubeVector
     {
       public:
-        explicit ApproxTubeVector(tubex::TubeVector value) :
+        explicit ApproxTubeVector(codac::TubeVector value) :
             m_value(value)
         {}
 
-        friend bool operator ==(tubex::TubeVector lhs, ApproxTubeVector const& rhs)
+        friend bool operator ==(codac::TubeVector lhs, ApproxTubeVector const& rhs)
         {
           if((lhs.nb_slices() != rhs.m_value.nb_slices()) || (lhs.size() != rhs.m_value.size()))
             return false;
@@ -231,17 +232,17 @@ namespace Catch
           return true;
         }
 
-        friend bool operator ==(ApproxTubeVector const& lhs, tubex::TubeVector rhs)
+        friend bool operator ==(ApproxTubeVector const& lhs, codac::TubeVector rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(tubex::TubeVector lhs, ApproxTubeVector const& rhs)
+        friend bool operator !=(codac::TubeVector lhs, ApproxTubeVector const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxTubeVector const& lhs, tubex::TubeVector rhs)
+        friend bool operator !=(ApproxTubeVector const& lhs, codac::TubeVector rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -254,18 +255,18 @@ namespace Catch
         }
 
       private:
-        tubex::TubeVector m_value;
+        codac::TubeVector m_value;
     };
 
     class ApproxVector
     {
       public:
-        explicit ApproxVector(ibex::Vector value, double epsilon = 100.*DEFAULT_EPSILON) :
+        explicit ApproxVector(codac::Vector value, double epsilon = 100.*DEFAULT_EPSILON) :
             m_epsilon(epsilon),
             m_value(value)
         {}
 
-        friend bool operator ==(ibex::Vector lhs, ApproxVector const& rhs)
+        friend bool operator ==(codac::Vector lhs, ApproxVector const& rhs)
         {
           double e = rhs.m_epsilon;
 
@@ -279,17 +280,17 @@ namespace Catch
           return true;
         }
 
-        friend bool operator ==(ApproxVector const& lhs, ibex::Vector rhs)
+        friend bool operator ==(ApproxVector const& lhs, codac::Vector rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(ibex::Vector lhs, ApproxVector const& rhs)
+        friend bool operator !=(codac::Vector lhs, ApproxVector const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxVector const& lhs, ibex::Vector rhs)
+        friend bool operator !=(ApproxVector const& lhs, codac::Vector rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -303,33 +304,33 @@ namespace Catch
 
       private:
         double m_epsilon;
-        ibex::Vector m_value = ibex::Vector(1);
+        codac::Vector m_value = codac::Vector(1);
     };
 
     class ApproxIntvPair
     {
       public:
-        explicit ApproxIntvPair(std::pair<ibex::Interval,ibex::Interval> value) :
+        explicit ApproxIntvPair(std::pair<codac::Interval,codac::Interval> value) :
             m_value(value)
         {}
 
-        friend bool operator ==(std::pair<ibex::Interval,ibex::Interval> lhs, ApproxIntvPair const& rhs)
+        friend bool operator ==(std::pair<codac::Interval,codac::Interval> lhs, ApproxIntvPair const& rhs)
         {
           return lhs == rhs.m_value ||
                  (ApproxIntv(lhs.first) == rhs.m_value.first && ApproxIntv(lhs.second) == rhs.m_value.second);
         }
 
-        friend bool operator ==(ApproxIntvPair const& lhs, std::pair<ibex::Interval,ibex::Interval> rhs)
+        friend bool operator ==(ApproxIntvPair const& lhs, std::pair<codac::Interval,codac::Interval> rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(std::pair<ibex::Interval,ibex::Interval> lhs, ApproxIntvPair const& rhs)
+        friend bool operator !=(std::pair<codac::Interval,codac::Interval> lhs, ApproxIntvPair const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxIntvPair const& lhs, std::pair<ibex::Interval,ibex::Interval> rhs)
+        friend bool operator !=(ApproxIntvPair const& lhs, std::pair<codac::Interval,codac::Interval> rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -343,35 +344,35 @@ namespace Catch
 
       private:
         double m_epsilon;
-        std::pair<ibex::Interval,ibex::Interval> m_value;
+        std::pair<codac::Interval,codac::Interval> m_value;
     };
 
     class ApproxPoint
     {
       public:
-        explicit ApproxPoint(tubex::Point value) :
+        explicit ApproxPoint(codac::Point value) :
             m_value(value)
         {
           m_value.inflate(100.*DEFAULT_EPSILON);
         }
 
-        friend bool operator ==(tubex::Point lhs, ApproxPoint const& rhs)
+        friend bool operator ==(codac::Point lhs, ApproxPoint const& rhs)
         {
           return lhs == rhs.m_value ||
             (lhs.x().intersects(rhs.m_value.x()) && lhs.y().intersects(rhs.m_value.y()));
         }
 
-        friend bool operator ==(ApproxPoint const& lhs, tubex::Point rhs)
+        friend bool operator ==(ApproxPoint const& lhs, codac::Point rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(tubex::Point lhs, ApproxPoint const& rhs)
+        friend bool operator !=(codac::Point lhs, ApproxPoint const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxPoint const& lhs, tubex::Point rhs)
+        friend bool operator !=(ApproxPoint const& lhs, codac::Point rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -384,25 +385,25 @@ namespace Catch
         }
 
       private:
-        tubex::Point m_value;
+        codac::Point m_value;
     };
 
     class ApproxConvexPolygon
     {
       public:
-        explicit ApproxConvexPolygon(tubex::ConvexPolygon value, double epsilon = 100.*DEFAULT_EPSILON) :
+        explicit ApproxConvexPolygon(codac::ConvexPolygon value, double epsilon = 100.*DEFAULT_EPSILON) :
             m_epsilon(epsilon),
             m_value(value)
         {
 
         }
 
-        const tubex::ConvexPolygon& polygon() const
+        const codac::ConvexPolygon& polygon() const
         {
           return m_value;
         }
 
-        friend bool operator ==(tubex::ConvexPolygon lhs, ApproxConvexPolygon const& rhs)
+        friend bool operator ==(codac::ConvexPolygon lhs, ApproxConvexPolygon const& rhs)
         {
           if(lhs == rhs.m_value)
             return true;
@@ -434,17 +435,17 @@ namespace Catch
           return true;
         }
 
-        friend bool operator ==(ApproxConvexPolygon const& lhs, tubex::ConvexPolygon rhs)
+        friend bool operator ==(ApproxConvexPolygon const& lhs, codac::ConvexPolygon rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(tubex::ConvexPolygon lhs, ApproxConvexPolygon const& rhs)
+        friend bool operator !=(codac::ConvexPolygon lhs, ApproxConvexPolygon const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxConvexPolygon const& lhs, tubex::ConvexPolygon rhs)
+        friend bool operator !=(ApproxConvexPolygon const& lhs, codac::ConvexPolygon rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -458,7 +459,7 @@ namespace Catch
 
       private:
         double m_epsilon;
-        tubex::ConvexPolygon m_value;
+        codac::ConvexPolygon m_value;
     };
   }
 

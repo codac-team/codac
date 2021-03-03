@@ -62,4 +62,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_lohner.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_lohner.html>`_.

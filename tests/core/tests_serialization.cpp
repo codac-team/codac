@@ -1,19 +1,19 @@
 #include <cstdio>
-#include "tubex_serialize_trajectories.h"
-#include "tubex_serialize_tubes.h"
+#include "codac_serialize_trajectories.h"
+#include "codac_serialize_tubes.h"
 #include "catch_interval.hpp"
 #include "tests_predefined_tubes.h"
 
 // Using #define so that we can access protected methods
 // of the class for tests purposes
 #define protected public
-#include "tubex_TrajectoryVector.h"
+#include "codac_TrajectoryVector.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 TEST_CASE("serialization/deserialization of Tube")
 {
@@ -256,6 +256,25 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
     tube.set(Interval::NEG_REALS, 5);
     CHECK(test_serialization(tube));
     tube.set(Interval::NEG_REALS);
+    CHECK(test_serialization(tube));
+  }
+
+  SECTION("Test [-oo,5]")
+  {
+    Tube tube = tube_test2();
+    tube.set(Interval::NEG_REALS | 5., 5);
+    CHECK(test_serialization(tube));
+    tube.set(Interval::NEG_REALS | 5.);
+    cout << tube << endl;
+    CHECK(test_serialization(tube));
+  }
+
+  SECTION("Test [-5,oo]")
+  {
+    Tube tube = tube_test2();
+    tube.set(Interval::POS_REALS | -5., 5);
+    CHECK(test_serialization(tube));
+    tube.set(Interval::POS_REALS | -5.);
     CHECK(test_serialization(tube));
   }
 

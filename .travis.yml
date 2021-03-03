@@ -1,5 +1,5 @@
 # ==================================================================
-#  tubex-lib - travis test script
+#  Codac - travis test script
 # ==================================================================
 
 language: c++
@@ -31,13 +31,13 @@ _vs_specific: &vs_specific
     script:
     - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=filib .. ; cmake --build . --config Release --target install ; cd ../.. ) else echo "Using cached directory." ; fi
     - mkdir build ; cd build
-    - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=${WITH_PYTHON} ..
+    - cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=${WITH_PYTHON} ..
     - if [ "${WITH_PYTHON}" = "ON" ]; then cmake --build . --config Debug --target api ; fi
-    - if [ "${WITH_PYTHON}" = "ON" ]; then cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D WITH_PYTHON=${WITH_PYTHON} .. ; fi
+    - if [ "${WITH_PYTHON}" = "ON" ]; then cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} -D CMAKE_CXX_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_C_FLAGS=" /D WIN32 /EHsc /D _CRT_SECURE_NO_WARNINGS /wd4267 /wd4244 /wd4305" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=${WITH_PYTHON} .. ; fi
     - cmake --build . --config Debug --target install
     - if [ "${WITH_PYTHON}" = "ON" ]; then cmake --build . --config Debug --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${PY_V_MM}-cp${PY_V_MM}${CPCFG}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py ; fi
     - cd ..
-    - if [ "${WITH_CPP_BUNDLE}" = "ON" ]; then wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv ; 7z x tubex_test_win.zip -y ; rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd .. ; 7z a -y tubex_test_${CFG}.zip tubex_test_win ; cd tubex_test_win/test ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} . ; cmake --build . --config Release ; cmd //c "Release\my_project.exe" ; cd ../.. ; fi
+    - if [ "${WITH_CPP_BUNDLE}" = "ON" ]; then wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv ; 7z x codac_test_win.zip -y ; rm -Rf codac_test_win.zip ; cd codac_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd .. ; 7z a -y codac_test_${CFG}.zip codac_test_win ; cd codac_test_win/test ; cmake -G "${CMAKE_PARAM_G}" -A ${CMAKE_PARAM_A} . ; cmake --build . --config Release ; cmd //c "Release\my_project.exe" ; cd ../.. ; fi
 
 matrix:
   include:
@@ -95,17 +95,17 @@ matrix:
       script: 
         - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
         - mkdir build ; cd build
-        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
         - cmake --build . --target install
         - cd ..
         # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-        - unzip -q -o tubex_test_win.zip
-        - rm -Rf tubex_test_win.zip
-        - cd tubex_test_win
+        - wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip -nv
+        - unzip -q -o codac_test_win.zip
+        - rm -Rf codac_test_win.zip
+        - cd codac_test_win
         - mv test ..
         - cd ../test
-        - rm -Rf ../tubex_test_win
+        - rm -Rf ../codac_test_win
         - cmake .
         - cmake --build .
         - ./my_project
@@ -148,9 +148,9 @@ matrix:
 #      script: 
 #        - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
 #        - mkdir build ; cd build
-#        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
+#        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
 #        - cmake --build . --target api
-#        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
+#        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D CMAKE_BUILD_TYPE=Debug -D WITH_PYTHON=ON -D CMAKE_CXX_FLAGS="-fPIC" ..
 #        - cmake --build . --target install
 #        - cmake --build . --target pip_package
 #        # Test python program and wheel...
@@ -162,13 +162,13 @@ matrix:
 #        - python ../examples/tuto/01_getting_started/01_getting_started.py
 #        - cd ..
 #        # Test C++ program and bundle...
-#        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-#        - unzip -q -o tubex_test_win.zip
-#        - rm -Rf tubex_test_win.zip
-#        - cd tubex_test_win
+#        - wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip -nv
+#        - unzip -q -o codac_test_win.zip
+#        - rm -Rf codac_test_win.zip
+#        - cd codac_test_win
 #        - mv test ..
 #        - cd ../test
-#        - rm -Rf ../tubex_test_win
+#        - rm -Rf ../codac_test_win
 #        - cmake .
 #        - cmake --build .
 #        - ./my_project
@@ -184,7 +184,7 @@ matrix:
       cache:
       install:
       script: 
-         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev ; mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../tubex .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv && unzip -q -o tubex_test_win.zip && rm -Rf tubex_test_win.zip && cd tubex_test_win && mv test .. && cd ../test && rm -Rf ../tubex_test_win && cmake . && cmake --build . && ./my_project \""
+         - "docker run -i -v \"${PWD}/..:${PWD}/..\" lebarsfa/pi:buster-ibex /bin/bash -c \"uname -a && cat /etc/os-release && cd ${PWD} && lsb_release -a && sudo apt-get -q update ; sudo apt-get -y install libeigen3-dev ; mkdir build ; cd build && cmake -D CMAKE_PREFIX_PATH=../ibex -D CMAKE_INSTALL_PREFIX=../../codac .. && cmake --build . --target install && cd ../.. && wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip -nv && unzip -q -o codac_test_win.zip && rm -Rf codac_test_win.zip && cd codac_test_win && mv test .. && cd ../test && rm -Rf ../codac_test_win && cmake . && cmake --build . && ./my_project \""
 
     - name: "Mac OS Xcode 10.1"
       os: osx
@@ -195,17 +195,17 @@ matrix:
       script: 
         - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC -Wno-everything" -D CMAKE_C_FLAGS="-fPIC -Wno-everything" .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
         - mkdir build ; cd build
-        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
         - cmake --build . --target install
         - cd ..
         # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip -nv
-        - unzip -q -o tubex_test_win.zip
-        - rm -Rf tubex_test_win.zip
-        - cd tubex_test_win
+        - wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip -nv
+        - unzip -q -o codac_test_win.zip
+        - rm -Rf codac_test_win.zip
+        - cd codac_test_win
         - mv test ..
         - cd ../test
-        - rm -Rf ../tubex_test_win
+        - rm -Rf ../codac_test_win
         - cmake .
         - cmake --build .
         - ./my_project
@@ -306,15 +306,15 @@ matrix:
       script: 
         - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" -D INTERVAL_LIB=filib .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
         - mkdir build ; cd build
-        - cmake -G "MSYS Makefiles" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake -G "${CMAKE_PARAM_G}" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
         - cmake --build . --target install
         - cd ..
         # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv
-        - 7z x tubex_test_win.zip -y
-        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
-        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
-        - cd tubex_test_win/test
+        - wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
+        - 7z x codac_test_win.zip -y
+        - rm -Rf codac_test_win.zip ; cd codac_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd ..
+        - 7z a -y codac_test_${CFG}.zip codac_test_win
+        - cd codac_test_win/test
         - cmake -G "${CMAKE_PARAM_G}" .
         - cmake --build .
         - ./my_project.exe
@@ -333,15 +333,15 @@ matrix:
       script: 
         - if [ ! -e "ibex/include/ibex.h" ]; then ( git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -G "${CMAKE_PARAM_G}" -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="-fPIC" -D CMAKE_C_FLAGS="-fPIC" -D INTERVAL_LIB=filib .. ; cmake --build . --target install ; cd ../.. ) else echo "Using cached directory." ; fi
         - mkdir build ; cd build
-        - cmake -G "MSYS Makefiles" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../tubex" ..
+        - cmake -G "${CMAKE_PARAM_G}" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
         - cmake --build . --target install
         - cd ..
         # Test C++ program and bundle...
-        - wget http://www.ensta-bretagne.fr/lebars/Share/tubex_test_win.zip --no-check-certificate -nv
-        - 7z x tubex_test_win.zip -y
-        - rm -Rf tubex_test_win.zip ; cd tubex_test_win; rm -Rf ibex tubex ; cp -Rf ../ibex . ; cp -Rf ../tubex .; cd ..
-        - 7z a -y tubex_test_${CFG}.zip tubex_test_win
-        - cd tubex_test_win/test
+        - wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
+        - 7z x codac_test_win.zip -y
+        - rm -Rf codac_test_win.zip ; cd codac_test_win; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac .; cd ..
+        - 7z a -y codac_test_${CFG}.zip codac_test_win
+        - cd codac_test_win/test
         - cmake -G "${CMAKE_PARAM_G}" .
         - cmake --build .
         - ./my_project.exe
@@ -388,7 +388,7 @@ install:
   - bash scripts/dependencies/install_capd.sh
 
   # Environment variables
-  - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/tubex-lib/build_install
+  - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
   - export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
@@ -407,7 +407,7 @@ script:
   # Without synthesis tree
 
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install
           -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install
           -DWITH_PYTHON=OFF
           -DBUILD_TESTS=ON
@@ -416,7 +416,7 @@ script:
           -DTEST_EXAMPLES=ON ..
   - make api
   # Again for doxygen2docstring
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install
           -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install
           -DWITH_PYTHON=OFF
           -DBUILD_TESTS=ON
@@ -429,7 +429,7 @@ script:
   - make install
   #- cd python/python_package
   #- /usr/bin/python3.5 setup.py develop --user
-  #- /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
+  #- /usr/bin/python3.5 pyibex/tests/test_arithmetic.py 
   #- cd ../../
 
   # Building the examples
@@ -458,7 +458,7 @@ script:
   # With synthesis tree for all created tubes
   
   # Building lib + tests
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install
           -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install
           -DWITH_PYTHON=OFF
           -DBUILD_TESTS=ON
@@ -467,7 +467,7 @@ script:
           -DTEST_EXAMPLES=ON ..
   - make api
   # Again for doxygen2docstring
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/tubex-lib/build_install
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/codac/build_install
           -DCMAKE_PREFIX_PATH=$HOME/ibex-lib/build_install
           -DWITH_PYTHON=OFF
           -DBUILD_TESTS=ON
@@ -480,7 +480,7 @@ script:
   - make install
   #- cd python/python_package
   #- /usr/bin/python3.5 setup.py develop --user
-  #- /usr/bin/python3.5 pytubex/tests/test_arithmetic.py 
+  #- /usr/bin/python3.5 pyibex/tests/test_arithmetic.py 
   #- cd ../../
 
   # Building the examples
@@ -511,7 +511,7 @@ deploy:
     api_key:
       secure: ILyVRxUJHYAYHY6aGeY0QSVpwRF/Nm5piue7jkOArZXvwwjavPT8Gm/ZpXeor5rOQV/7rY4ACoOgMyhcFFKrL7BnKmzJUPPGyLez6aZz5ZT0I7YsQIG9CPPko0nIihSOircAjii8XaYwTntFAL9AqCgQk2PQ9HajzhbQrur4RPXFIwhJd9DDSCf8gO1WRyqRkL3gZSaq3GjQP++ZGFR9S5YlpCWVaG88Vq+ygrR9894tQ2on8FnOeE4bS768I36yT/w8IzES2o3oDh1bVECI2oEkwb2IYL5J5si1b0Wo6ZQdKNLu/50mohHbtKYzGfWiliRMXikXVwSXA/Y5G8ou1SCNLb7fM1s2E8KpjeOBHJJzC6syYaQzRZ611Srt3DpdlFa+s4aivgaKQ+AK+gromXwinE61FLEpUMglu7+3jFs6sMNNeYLgpGLjpnquyClljHmms79gm3T7dCm8C5ZFsyCDJq3ETEGDfIxN256dqLE6nu/oWuU6koQ3aMlVytMKG/veMb+jJY/J+f7upkUIBDtw0RKxk08gKX84wnl2brcHOOWAkSxcRINe/KUVDoR/7B3LAiarOyglazdEfRAmTE2o+te82/T0Wv0LoBn5/zXHZvtlpJYDuXndJ8HB8NWQl7sLOiqh4KbYkoyjPt9bn5XHvbQM/E7LLYIzpiOWPT4=
     on:
-      repo: lebarsfa/tubex-lib
+      repo: lebarsfa/codac
       all_branches: true
     skip_cleanup: true
     overwrite: true
@@ -526,7 +526,7 @@ deploy:
     api_key:
       secure: Y+ZO/wvqZp29/cSnAqJKOAybSGlu8ALDsPS63zQXPtUSiUejfnoDLi77ANlHxUF7MhXlo38VanwYR/jGnXeCUPtX1Seg8W2v1mXFNaUKCki/bkEeLtK2uXAD5flxoBULPYcdspNbGlyzohxOZgr7VFNk0TkIg7jSlUkGuSAlJy81qh6ctVFtKhTsLDwi8ZKenwFFmlBNzw3dXR5c9AloBSCLRfWlwq2INYeEfgkItBMIe+7jh7RaacXoNrV/JkUQNcp4W5wA/zgMkOXqXSf7LPRIXd80zCgCmZ+ODqKTVHx5gXZxUPvW3cAtsm7RU4VNwpXiC2ckNRpLcCF8/dav3XG2hZrddUzvEXbrePnONrNQHrdszVokkQoJBYPFsZuUR4lDqV25aGVEvsn5tnBfIH6Rf2abF+pUkuKnWFqCO71kfwPBY5wKHi2SdaKVcZm06jD1tp87OuOt4T0DPBs4/SyQ7925eXk4Ol0MwCsGj1Pml+R90khq74xFe48KOxXLIYxHOqBO600HL3dYVrpQTZ/3rDpiTKlyGn8he+K7gCHFlJ85uBgp89cQei8aUOACLKhecT/rZqPIoZNsDe28AtDrj5LeLYeGSQDlukjukYfKcZF10itcSF8UusgNfexuLUPz5BUf2xrNF0cCFOAzP0auhgxRLC9VPGdEzvY0N1c=
     on:
-      repo: SimonRohou/tubex-lib
+      repo: codac-team/codac
       all_branches: true
     skip_cleanup: true
     overwrite: true

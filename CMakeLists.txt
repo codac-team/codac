@@ -1,5 +1,5 @@
 # ==================================================================
-#  tubex-lib - cmake configuration file
+#  Codac - cmake configuration file
 # ==================================================================
 
   cmake_minimum_required(VERSION 3.0.2)
@@ -12,7 +12,7 @@
   #set(CMAKE_C_COMPILER "gcc-7")
   #set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 
-  project(tubex-lib VERSION ${VERSION} LANGUAGES CXX)
+  project(codac VERSION ${VERSION} LANGUAGES CXX)
 
   if(NOT VERSION_ID)
     set(PROJECT_VERSION_FULL ${PROJECT_VERSION})
@@ -22,10 +22,10 @@
   message(STATUS "Full project version is ${PROJECT_VERSION_FULL}")
 
   set(PROJECT_DESCRIPTION
-      "Tubex is a library providing tools for constraint programming over reals and trajectories.")
+      "Codac is a library providing tools for constraint programming over reals and trajectories.")
   set(PROJECT_LONG_DESCRIPTION
       "${PROJECT_DESCRIPTION}")
-  set(PROJECT_HOMEPAGE_URL "http://simon-rohou.fr/research/tubex-lib")
+  set(PROJECT_HOMEPAGE_URL "http://codac.io")
   message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
   if(NOT CMAKE_BUILD_TYPE)
@@ -43,7 +43,7 @@
   set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "object code libraries (lib)")
   set(CMAKE_INSTALL_BINDIR "bin" CACHE PATH "user executables (bin)")
   set(CMAKE_INSTALL_PKGCONFIG "share/pkgconfig" CACHE PATH "pkg files (share/pkgconfig)")
-  set(CMAKE_INSTALL_CMAKE "share/tubex/cmake" CACHE PATH "cmake files (share/tubex/cmake)")
+  set(CMAKE_INSTALL_CMAKE "share/codac/cmake" CACHE PATH "cmake files (share/codac/cmake)")
 
 
 ################################################################################
@@ -57,7 +57,7 @@
 #  if(COMPILER_SUPPORTS_CXX17)
 #    add_compile_options(-std=c++17)
 #  else()
-#    message(FATAL_ERROR "Tubex needs a compiler with C++17 support")
+#    message(FATAL_ERROR "Codac needs a compiler with C++17 support")
 #  endif()
 
 #  if(WIN32)
@@ -118,8 +118,8 @@
     include(FindPkgConfig)
     pkg_search_module(PKG_CAPD REQUIRED capd capd-gui mpcapd mpcapd-gui)
     include_directories(${PKG_CAPD_INCLUDE_DIRS})
-    #message(STATUS "[capd2tubex] PKG_CAPD_INCLUDE_DIRS = ${PKG_CAPD_INCLUDE_DIRS}")
-    #message(STATUS "[capd2tubex] PKG_CAPD_LDFLAGS = ${PKG_CAPD_LDFLAGS}")
+    #message(STATUS "[capd2codac] PKG_CAPD_INCLUDE_DIRS = ${PKG_CAPD_INCLUDE_DIRS}")
+    #message(STATUS "[capd2codac] PKG_CAPD_LDFLAGS = ${PKG_CAPD_LDFLAGS}")
   endif()
 
 
@@ -134,7 +134,7 @@
     include(CTest)
     add_custom_target(check
                       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure $(ARGS)
-                      DEPENDS tubex COMMENT "Running the tests")
+                      DEPENDS codac COMMENT "Running the tests")
 
     add_subdirectory(tests)
   endif()
@@ -166,14 +166,14 @@
 
   set(CPACK_GENERATOR "TGZ" "ZIP" "DEB")
   string(TOLOWER "${CMAKE_PROJECT_NAME}" CPACK_PACKAGE_NAME)
-  set(CPACK_PACKAGE_VENDOR "TubexTeam")
-  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${TUBEX_DESCRIPTION})
+  set(CPACK_PACKAGE_VENDOR "Codac Team")
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${CODAC_DESCRIPTION})
   set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
   set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Maintainer <simon.rohou@ensta-bretagne.fr>")
-  set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${TUBEX_URL})
+  set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${CODAC_URL})
   # todo: finish deb package
 
   include(CPack)

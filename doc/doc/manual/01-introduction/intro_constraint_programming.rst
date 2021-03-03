@@ -2,7 +2,7 @@
 Constraint programming
 **********************
 
-Tubex is designed to deal with static and dynamical systems that are usually encountered in robotics. 
+Codac is designed to deal with static and dynamical systems that are usually encountered in robotics. 
 It stands on constraint programming: a paradigm in which the properties of a solution to be found (*e.g.* the pose of a robot, the location of a landmark) are stated by constraints coming from the equations of the problem.
 
 Then, a solver performs **constraint propagation** on the variables and provides a reliable set of feasible solutions corresponding to the considered problem. In this approach, the user concentrates on *what* is the problem instead of *how* to solve it, thus leaving the computer dealing with the *how*. The strength of this declarative paradigm lies in its simpleness, as it allows one to describe a complex problem without requiring the knowledge of resolution tools coming with specific parameters to choose.
@@ -33,7 +33,7 @@ Domains
 -------
 
 As depicted in the figure, a variable is known to be enclosed in some domain :math:`\mathbb{X}` on which we will apply constraints.
-In Tubex, the domains are represented by the following sets:
+In Codac, the domains are represented by the following sets:
 
 - for reals :math:`x`, domains are intervals :math:`[x]`;
 - for vectors :math:`\mathbf{x}`, we define boxes :math:`[\mathbf{x}]`;
@@ -52,20 +52,20 @@ In mobile robotics, we usually have to deal with:
 - time uncertainties: :math:`x(t)=y`, with :math:`t\in[t]`
 - *etc.*
 
-The aim of Tubex is to easily deal with these constraints in order to eventually characterize sets of variables compliant with the defined rules.
+The aim of Codac is to easily deal with these constraints in order to eventually characterize sets of variables compliant with the defined rules.
 Each constraint comes from equations or measurements. And each constraint will be applied by means of an operator called **contractor**.
 
 
 Contractors
 -----------
 
-Contractors are operators designed to reduce domains without losing any solution consistent with the related constraint. In Tubex, the contractors act on intervals, boxes and tubes.
+Contractors are operators designed to reduce domains without losing any solution consistent with the related constraint. In Codac, the contractors act on intervals, boxes and tubes.
 
 .. Figure:: /manual/01-introduction/img/ctc.png
 
   Implementation of the constraints :math:`\mathcal{L}_1` and :math:`\mathcal{L}_2` of the previous figure by means of respective contractors :math:`\mathcal{C}_1` and :math:`\mathcal{C}_2`. On this theoretical example, the domain :math:`\mathbb{X}` is now a subset of a box :math:`[\mathbf{x}]`, easily representable and contractible.
 
-Tubex already provides a catalog a contractors that one can use to deal with many applications. New contractors can also be designed and embedded in this framework without difficulty.
+Codac already provides a catalog a contractors that one can use to deal with many applications. New contractors can also be designed and embedded in this framework without difficulty.
 
 .. admonition:: Constraint programming *vs* probabilistic methods
 

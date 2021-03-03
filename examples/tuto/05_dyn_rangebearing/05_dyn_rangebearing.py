@@ -1,9 +1,9 @@
-# tubex-lib - Examples
+# Codac - Examples
 # Dynamic range-only localization
 # ----------------------------------------------------------------------------
 
 from pyibex import *
-from tubex_lib import *
+from codac import *
 import sys # only for checking if this example still works
 
 

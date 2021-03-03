@@ -1,6 +1,6 @@
-import tubex_lib
-print('Tubex version: ', tubex_lib.__version__)
-from tubex_lib import *
+import codac
+print('Codac version: ', codac.__version__)
+from codac import *
 import timeit
 
 # Comparisons of two distance contractors
@@ -12,7 +12,7 @@ time_sum = 0
 for i in range(0, 100000):
   x = IntervalVector([[2,2.5],[0,0.5],[1.5,2.5],[4,11],[7,8]])
   start = timeit.default_timer()
-  ctc.dist.contract(x) # contractor from Tubex
+  ctc.dist.contract(x) # contractor from Codac
   time_sum += timeit.default_timer() - start
   #if i == 0: print(x)
 

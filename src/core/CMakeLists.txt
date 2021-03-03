@@ -1,149 +1,159 @@
 # ==================================================================
-#  tubex-lib - cmake configuration file
+#  Codac - cmake configuration file
 # ==================================================================
 
-  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_TFnc.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_TFnc.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_TFunction.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_TFunction.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayTFunction.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/tubex_DelayTFunction.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_polygon_arithmetic.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_polygon_arithmetic.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_predef_values.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic_scalar.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_tube_arithmetic_vector.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic_scalar.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/tubex_traj_arithmetic_vector.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_Figure.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_Figure.cpp
+  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_Function.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_TFnc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_TFnc.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_TFunction.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_TFunction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_DelayTFunction.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/functions/codac_DelayTFunction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_polygon_arithmetic.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_polygon_arithmetic.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_predef_values.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_tube_arithmetic.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_tube_arithmetic_scalar.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_tube_arithmetic_vector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_traj_arithmetic.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_traj_arithmetic_scalar.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_traj_arithmetic_vector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_Figure.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_Figure.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTube.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTube.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_ColorMap.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_ColorMap.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTubeVector.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigTubeVector.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_colors.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_colors.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFig.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFig.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigPaving.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/tubex_VIBesFigPaving.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Paving.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Paving.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Set.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_Set.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_TubePaving.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_ConnectedSubset_degree.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_SIVIAPaving.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/tubex_SIVIAPaving.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Polygon.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_ConvexPolygon.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_ConvexPolygon.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Edge.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Edge.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_GrahamScan.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_GrahamScan.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Point.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/tubex_Point.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tubex_DynamicalItem.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tubex_DynamicalItem.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeVector.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeVector.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeVector_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_Tube.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_Tube.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_Tube_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeTreeSynthesis.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube/tubex_TubeTreeSynthesis.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_polygon.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice/tubex_Slice_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_RandTrajectory.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_RandTrajectory.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_Trajectory_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_TrajectoryVector.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_TrajectoryVector.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory/tubex_TrajectoryVector_operators.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_Exception.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_Exception.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsTypeException.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsTypeException.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsSizeException.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/tubex_DomainsSizeException.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_trajectories.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_tubes.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_tubes.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_intervals.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/tubex_serialize_intervals.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/tubex_CtcDist.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/tubex_CtcDist.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/tubex_CtcFunction.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/tubex_CtcFunction.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_DynCtc.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_DynCtc.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcPicard.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcPicard.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcLohner.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcLohner.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcChain.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcChain.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDelay.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDelay.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcStatic.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcStatic.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcEval.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcEval.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDeriv.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcDeriv.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcLinobs.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/tubex_CtcLinobs.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/tubex_predef_contractors.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Domain.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Domain.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Contractor.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_solve.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork_visu.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_ContractorNetwork.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Hashcode.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/tubex_Hashcode.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Tools.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Eigen.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/tubex_Eigen.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFigTube.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFigTube.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_ColorMap.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_ColorMap.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFigTubeVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFigTubeVector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_colors.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_colors.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFig.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFig.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFigPaving.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_VIBesFigPaving.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_ConnectedSubset.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_ConnectedSubset.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_Paving.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_Paving.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_Set.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_Set.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_TubePaving.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_TubePaving.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_ConnectedSubset_degree.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_SIVIAPaving.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/paving/codac_SIVIAPaving.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Polygon.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Polygon.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ConvexPolygon.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ConvexPolygon.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Edge.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Edge.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_GrahamScan.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_GrahamScan.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Point.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Point.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_Interval.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_IntervalVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_IntervalMatrix.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_BoolInterval.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_DynamicalItem.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_DynamicalItem.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeVector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeVector_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeTreeSynthesis.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeTreeSynthesis.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice_polygon.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/real/codac_Vector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/real/codac_Matrix.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_RandTrajectory.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_RandTrajectory.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_Trajectory.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_Trajectory.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_Trajectory_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_TrajectoryVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_TrajectoryVector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory/codac_TrajectoryVector_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_Exception.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_Exception.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_DomainsTypeException.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_DomainsTypeException.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_DomainsSizeException.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/exceptions/codac_DomainsSizeException.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_trajectories.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_trajectories.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_tubes.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_tubes.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_intervals.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_intervals.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_Ctc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcFunction.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcFunction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_DynCtc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_DynCtc.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcPicard.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcPicard.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcLohner.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcLohner.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcChain.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcChain.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcDelay.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcDelay.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcStatic.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcStatic.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcEval.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcEval.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcDeriv.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcDeriv.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcLinobs.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcLinobs.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac_predef_contractors.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/codac_predef_contractors.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Domain.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Domain.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Contractor.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Contractor.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_ContractorNetwork.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_ContractorNetwork_solve.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_ContractorNetwork_visu.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_ContractorNetwork.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Hashcode.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Hashcode.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.h
                   )
 
 
 ################################################################################
-# Create the target for libtubex
+# Create the target for libcodac
 ################################################################################
 
-  add_library(tubex ${SRC})
-  target_include_directories(tubex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
+  add_library(codac ${SRC})
+  target_include_directories(codac PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/functions
                                           ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic
                                           ${CMAKE_CURRENT_SOURCE_DIR}/graphics
                                           ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes
                                           ${CMAKE_CURRENT_SOURCE_DIR}/paving
                                           ${CMAKE_CURRENT_SOURCE_DIR}/geometry
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/dynamics
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/tube
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/slice
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/dynamics/trajectory
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/domains
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/variables/real
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/variables/trajectory
                                           ${CMAKE_CURRENT_SOURCE_DIR}/exceptions
                                           ${CMAKE_CURRENT_SOURCE_DIR}/serialize
                                           ${CMAKE_CURRENT_SOURCE_DIR}/contractors
@@ -151,15 +161,15 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/cn
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools)
-  target_link_libraries(tubex PUBLIC Ibex::ibex)
+  target_link_libraries(codac PUBLIC Ibex::ibex)
   
-  #set_property(TARGET tubex PROPERTY CXX_STANDARD 17)
+  #set_property(TARGET codac PROPERTY CXX_STANDARD 17)
   add_compile_options(-O3 -Wall)
-  #set_property(TARGET tubex PROPERTY CXX_STANDARD_REQUIRED ON)
+  #set_property(TARGET codac PROPERTY CXX_STANDARD_REQUIRED ON)
 
 
 ################################################################################
-# Installation of libtubex files
+# Installation of libcodac files
 ################################################################################
   
 # Getting header files from sources
@@ -167,47 +177,29 @@
   foreach(srcfile ${SRC})
     if(srcfile MATCHES "\\.h$" OR srcfile MATCHES "\\.hpp$")
       list(APPEND HDR ${srcfile})
-      # Copying header files for other Tubex libraries compiled in the same time
+      # Copying header files for other Codac libraries compiled in the same time
       file(COPY ${srcfile} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
     endif()
   endforeach()
 
-# Generating a tubex.h file
+# Generating a codac.h file
 
-  set(TUBEX_MAIN_HEADER ${CMAKE_CURRENT_BINARY_DIR}/tubex.h)
-  file(WRITE ${TUBEX_MAIN_HEADER} "/* This file is generated by CMake */\n\n")
-  file(APPEND ${TUBEX_MAIN_HEADER} "#ifndef __TUBEX_H__\n#define __TUBEX_H__\n\n")
+  set(CODAC_MAIN_HEADER ${CMAKE_CURRENT_BINARY_DIR}/codac.h)
+  file(WRITE ${CODAC_MAIN_HEADER} "/* This file is generated by CMake */\n\n")
+  file(APPEND ${CODAC_MAIN_HEADER} "#ifndef __CODAC_H__\n#define __CODAC_H__\n\n")
     # Simplifying access to frequently used items of IBEX 
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Interval.h>\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_IntervalVector.h>\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Vector.h>\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Matrix.h>\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_IntervalMatrix.h>\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_BoolInterval.h>\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Ctc.h>\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <ibex_Function.h>\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "namespace tubex\n{\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Interval;\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::IntervalVector;\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Vector;\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Matrix;\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::IntervalMatrix;\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::BoolInterval;\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Ctc;\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "  using ibex::Function;\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "}\n\n")
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <tubex-rob.h>\n") # todo: clean this organization
-      file(APPEND ${TUBEX_MAIN_HEADER} "#include <tubex-pyibex.h>\n") # todo: clean this organization
+      file(APPEND ${CODAC_MAIN_HEADER} "\n")
+      file(APPEND ${CODAC_MAIN_HEADER} "#include <codac-rob.h>\n") # todo: clean this organization
+      file(APPEND ${CODAC_MAIN_HEADER} "#include <codac-pyibex.h>\n") # todo: clean this organization
   foreach(header_path ${HDR})
     get_filename_component(header_name ${header_path} NAME)
-    file(APPEND ${TUBEX_MAIN_HEADER} "#include <${header_name}>\n")
+    file(APPEND ${CODAC_MAIN_HEADER} "#include <${header_name}>\n")
   endforeach()
-  file(APPEND ${TUBEX_MAIN_HEADER} "\n#endif /* __TUBEX_H__ */\n")
-  file(COPY ${TUBEX_MAIN_HEADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
+  file(APPEND ${CODAC_MAIN_HEADER} "\n#endif /* __CODAC_H__ */\n")
+  file(COPY ${CODAC_MAIN_HEADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../include)
 
 # Install files in system directories
 
-  install(TARGETS tubex DESTINATION ${CMAKE_INSTALL_LIBDIR})
-  install(FILES ${HDR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tubex)
-  install(FILES ${TUBEX_MAIN_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tubex)
+  install(TARGETS codac DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(FILES ${HDR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/codac)
+  install(FILES ${CODAC_MAIN_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/codac)

@@ -94,7 +94,7 @@ doc_tag_set = {}
 def gen_doc_tag_(py_methname, class_name, parameters):
     letters = string.ascii_uppercase
     suffix = ''.join(random.choice(letters) for i in range(1))
-    l = [p['raw_type'].replace("ibex::","").replace('std::', "").replace('tubex::', "").replace('<','_').replace(">", "_") for p in parameters]
+    l = [p['raw_type'].replace("ibex::","").replace('std::', "").replace('codac::', "").replace('<','_').replace(">", "_") for p in parameters]
     # print(l)
     l = [p.upper() for p in l]
     # print(l)
@@ -337,7 +337,7 @@ doc_header = """
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
@@ -351,12 +351,12 @@ cpp_header = """
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \\author     Simon Rohou, Benoît Desrochers
- *  \copyright  Copyright 2020 Simon Rohou
+ *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "tubex_Tube.h"
+#include "codac_Tube.h"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
@@ -367,9 +367,9 @@ using namespace pybind11::literals;
 using py::class_;
 using py::init;
 
-using namespace tubex;
-using ibex::Interval;
-using ibex::IntervalVector;
+using namespace codac;
+using Interval;
+using IntervalVector;
 
 
 void export_%s(py::module& m){
@@ -384,8 +384,8 @@ def process_module(module_name, header, hooks):
 
     pybind_dict = process_header(header, hooks)
     m_name = Path(header.name.split("_")[-1]).stem
-    outModuleFile = Path("/tmp") / f"tubex_py_{m_name}.cpp"
-    outModuleDocsFile = Path("/tmp") / f"tubex_py_{m_name}_docs.h"
+    outModuleFile = Path("/tmp") / f"codac_py_{m_name}.cpp"
+    outModuleDocsFile = Path("/tmp") / f"codac_py_{m_name}_docs.h"
     
     with outModuleDocsFile.open("w") as fout:
         fout.write(doc_header % m_name )

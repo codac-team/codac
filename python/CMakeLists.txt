@@ -1,10 +1,10 @@
 # ==================================================================
-#  tubex-lib / Python binding - cmake configuration file
+#  codac / Python binding - cmake configuration file
 # ==================================================================
 
   add_subdirectory(pybind11)
 
-  set(PYTHON_PACKAGE_NAME "tubex_lib")
+  set(PYTHON_PACKAGE_NAME "codac")
   set(PYTHON_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/python_package")
 
   file(MAKE_DIRECTORY ${PYTHON_PACKAGE_DIR})
@@ -54,41 +54,46 @@
 
   # Generating a library tube.so containing the python binding:
   pybind11_add_module(tube SHARED
-    tubex_py.cpp
+    codac_py.cpp
 
-    src/core/arithmetic/tubex_py_arithmetic.cpp
-    src/core/cn/tubex_py_ContractorNetwork.cpp
+    src/core/arithmetic/codac_py_arithmetic.cpp
+    src/core/cn/codac_py_ContractorNetwork.cpp
 
-    src/core/contractors/static/tubex_py_CtcDist.cpp
-    src/core/contractors/static/tubex_py_CtcFunction.cpp
-    src/core/contractors/static/tubex_py_CtcConstell.cpp
+    src/core/contractors/static/codac_py_CtcDist.cpp
+    src/core/contractors/static/codac_py_CtcFunction.cpp
+    src/core/contractors/static/codac_py_CtcConstell.cpp
 
-    src/core/contractors/dyn/tubex_py_DynCtc.cpp
-    src/core/contractors/dyn/tubex_py_CtcDelay.cpp
-    src/core/contractors/dyn/tubex_py_CtcDeriv.cpp
-    src/core/contractors/dyn/tubex_py_CtcEval.cpp
-    src/core/contractors/dyn/tubex_py_CtcLohner.cpp
-    src/core/contractors/dyn/tubex_py_CtcPicard.cpp
+    src/core/contractors/dyn/codac_py_DynCtc.cpp
+    src/core/contractors/dyn/codac_py_CtcDelay.cpp
+    src/core/contractors/dyn/codac_py_CtcDeriv.cpp
+    src/core/contractors/dyn/codac_py_CtcEval.cpp
+    src/core/contractors/dyn/codac_py_CtcLohner.cpp
+    src/core/contractors/dyn/codac_py_CtcPicard.cpp
 
-    src/core/dynamics/tube/tubex_py_Tube.cpp
-    src/core/dynamics/tube/tubex_py_TubeVector.cpp
-    src/core/dynamics/trajectory/tubex_py_Trajectory.cpp
-    src/core/dynamics/trajectory/tubex_py_RandTrajectory.cpp
-    src/core/dynamics/trajectory/tubex_py_TrajectoryVector.cpp
-    src/core/dynamics/slice/tubex_py_Slice.cpp
+    src/core/domains/tube/codac_py_Tube.cpp
+    src/core/domains/tube/codac_py_TubeVector.cpp
+    src/core/domains/slice/codac_py_Slice.cpp
 
-    src/core/functions/tubex_py_TFnc.cpp
-    src/core/functions/tubex_py_TFunction.cpp
+    src/core/variables/trajectory/codac_py_Trajectory.cpp
+    src/core/variables/trajectory/codac_py_RandTrajectory.cpp
+    src/core/variables/trajectory/codac_py_TrajectoryVector.cpp
 
-    src/core/graphics/tubex_py_graphics.cpp
-    src/core/graphics/tubex_py_ColorMap.cpp
-    src/core/graphics/tubex_py_Figure.cpp
-    src/core/graphics/tubex_py_VIBesFig.cpp
-    src/core/graphics/tubex_py_VIBesFigTube.cpp
-    src/core/graphics/tubex_py_VIBesFigTubeVector.cpp
-    src/core/graphics/tubex_py_VIBesFigMap.cpp
+    src/core/functions/codac_py_TFnc.cpp
+    src/core/functions/codac_py_TFunction.cpp
 
-    src/robotics/tubex_py_DataLoader.cpp
+    src/core/graphics/codac_py_graphics.cpp
+    src/core/graphics/codac_py_ColorMap.cpp
+    src/core/graphics/codac_py_Figure.cpp
+    src/core/graphics/codac_py_VIBesFig.cpp
+    src/core/graphics/codac_py_VIBesFigTube.cpp
+    src/core/graphics/codac_py_VIBesFigTubeVector.cpp
+    src/core/graphics/codac_py_VIBesFigMap.cpp
+    src/core/graphics/codac_py_VIBesFigPaving.cpp
+
+    src/core/paving/codac_py_Paving.cpp
+
+    src/robotics/codac_py_DataLoader.cpp
+    src/robotics/codac_py_TPlane.cpp
   )
 
   target_include_directories(tube
@@ -97,11 +102,11 @@
     ${CMAKE_CURRENT_BINARY_DIR}/docstring)
 
   target_link_libraries(tube
-    PRIVATE tubex tubex-rob ${LIBS})
+    PRIVATE codac codac-rob ${LIBS})
 
-    # ex: from tubex_lib import tube
+    # ex: from codac import tube
     #     tube.Tube
-    # ex: from tubex_lib.tube import Tube
+    # ex: from codac.tube import Tube
     #     Tube
 
   # Copy the generated library in the package folder
@@ -110,9 +115,9 @@
   )
 
   #pybind11_add_module(graphics SHARED
-  #  tubex_py_VIBesFig.cpp
+  #  codac_py_VIBesFig.cpp
   #)
-  #target_link_libraries(graphics PRIVATE tubex tubex-rob ${LIBS})
+  #target_link_libraries(graphics PRIVATE codac codac-rob ${LIBS})
   #add_custom_command(TARGET graphics POST_BUILD
   #  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:graphics>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
   #)

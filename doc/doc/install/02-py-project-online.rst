@@ -1,10 +1,10 @@
 .. _sec-py-project-online:
 
 ############################
-Try Tubex online with Python 
+Try Codac online with Python 
 ############################
 
-| You can try Tubex without installing it. 
+| You can try Codac without installing it. 
 | This will be done with the Repl.it platform, that allows to write code from a browser.
 
 
@@ -32,7 +32,7 @@ Try Tubex online with Python
 #. | Select the tab |github_button| in the new window.
    |
 
-#. Paste ``SimonRohou/tubex-replit`` in the text bar and click on |import_button|.
+#. Paste ``codac-team/codac-replit`` in the text bar and click on |import_button|.
 
     .. image:: img/replit_2.png
       :width: 400px
@@ -56,7 +56,7 @@ Try Tubex online with Python
       :width: 300px
 
 
-Here is a video illustrating this procedure:
+Here is a video illustrating this procedure. It was used for the Tubex library, but the procedure is the same for Codac:
 
 .. raw:: html
 

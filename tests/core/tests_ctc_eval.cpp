@@ -1,15 +1,15 @@
 #include <cstdio>
 #include "catch_interval.hpp"
-#include "tubex_TFunction.h"
-#include "tubex_CtcEval.h"
-#include "tubex_CtcDeriv.h"
-#include "tubex_VIBesFigTube.h"
+#include "codac_TFunction.h"
+#include "codac_CtcEval.h"
+#include "codac_CtcDeriv.h"
+#include "codac_VIBesFigTube.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
 using namespace ibex;
-using namespace tubex;
+using namespace codac;
 
 #define VIBES_DRAWING 0
 
@@ -1301,5 +1301,27 @@ TEST_CASE("CtcEval (other tests)")
     CHECK(tube(8) == Interval(-0.,6.)); 
     CHECK(tube(9) == Interval(1.,7.5)); 
     CHECK(tube(10 == Interval(2.,9.));*/
+  }
+
+  SECTION("Test CtcEval, outside tdomain")
+  {
+    Tube y(Interval(2,3), 0.1, Interval(4,5));
+    CtcEval ctc_eval;
+
+    {
+      Interval t(-3,5), z(6.);
+      ctc_eval.contract(t, z, y);
+      CHECK(t == Interval(-3,5));
+      CHECK(z == Interval(6));
+      CHECK(y.codomain() == Interval(4,5));
+    }
+
+    {
+      Interval t(2.5,7.), z;
+      ctc_eval.contract(t, z, y);
+      CHECK(t == Interval(2.5,7.));
+      CHECK(z == Interval::all_reals());
+      CHECK(y.codomain() == Interval(4,5));
+    }
   }
 }

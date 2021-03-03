@@ -1,5 +1,5 @@
 /** 
- *  tubex-lib - Examples
+ *  Codac - Examples
  *  Lie symmetries examples
  * ----------------------------------------------------------------------------
  *
@@ -11,12 +11,12 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include <tubex.h>
-#include <tubex-rob.h>
-#include <tubex-capd.h>
+#include <codac.h>
+#include <codac-rob.h>
+#include <codac-capd.h>
 
 using namespace std;
-using namespace tubex;
+using namespace codac;
 using namespace vibes;
 
 int main()

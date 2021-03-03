@@ -101,11 +101,11 @@ Example of error (using Python):
   TypeError: cos(): incompatible function arguments. The following argument types are supported:
       1. (arg0: float) -> float
       2. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
-      3. (arg0: tubex::Tube) -> tubex::Tube
-      4. (arg0: tubex::Trajectory) -> tubex::Trajectory
+      3. (arg0: codac::Tube) -> codac::Tube
+      4. (arg0: codac::Trajectory) -> codac::Trajectory
 
 .. from pyibex import *
-.. from tubex_lib import *
+.. from codac import *
 .. import math
 .. 
 .. x = IntervalVector(2)
@@ -317,15 +317,15 @@ Do not forget to initialize :ref:`the VIBes Viewer<sec-manual-vibes>` before any
 Python related questions
 ========================
 
-How can I get the last Python version of Tubex?
+How can I get the last Python version of Codac?
 -----------------------------------------------
 
 .. code-block:: bash
   
-  pip3 install tubex-lib --upgrade
+  pip3 install codac --upgrade
 
 
-ValueError: unable to convert the ``py::object`` into a valid ``tubex::Domain``
+ValueError: unable to convert the ``py::object`` into a valid ``codac::Domain``
 -------------------------------------------------------------------------------
 
 In Python, if you are defining a box with:
@@ -353,31 +353,31 @@ Example of error (using Python):
       1. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
   Invoked with: TubeVector 
 
-.. from tubex_lib import *
+.. from codac import *
 .. from pyibex import *
 .. import math
 .. 
 .. x = TubeVector(Interval(0,10),0.01,2)
 
 
-You probably imported the ``tubex_lib`` module before the ``pyibex`` module. Here is the correct import order:
+You probably imported the ``codac`` module before the ``pyibex`` module. Here is the correct import order:
 
 .. code:: py
 
   from pyibex import *
-  from tubex_lib import *
+  from codac import *
 
 
-TypeError: must be real number, not tubex_lib.tube.Trajectory
+TypeError: must be real number, not codac.tube.Trajectory
 -------------------------------------------------------------
 
-The problem may appear when you import the ``math`` module after the ``tubex_lib``.
+The problem may appear when you import the ``math`` module after the ``codac``.
 The following import order works:
 
 .. code:: py
 
   from math import *
-  from tubex_lib import *
+  from codac import *
 
 
 ------------------------------------------------------------------
@@ -392,15 +392,32 @@ Should not the ``contract`` method have a return value and not be ``void``?
 
 In C++, it is different than in Python (due to the spirit of the language). The update is done by *reference* which means that the argument given to the ``contract()`` method will be updated. No need to return a value in this case.
 
-Note that we know that it is a "return value by reference" because of the ``&`` in the function definition. For instance: ``void contract(ibex::IntervalVector& a)``.
+Note that we know that it is a "return value by reference" because of the ``&`` in the function definition. For instance: ``void contract(IntervalVector& a)``.
 One have to update the ``a`` inside the function in order to return the contracted set.
 
 
 No matching function for call to ``VIBesFigMap::add_trajectory...``
---------------------------------------------------------------------------
+-------------------------------------------------------------------
 
 .. code:: 
 
-  error: no matching function for call to ‘tubex::VIBesFigMap::add_trajectory(tubex::TrajectoryVector&, const char [3], int, int)’
+  error: no matching function for call to ‘codac::VIBesFigMap::add_trajectory(codac::TrajectoryVector&, const char [3], int, int)’
 
 The function needs a pointer to the trajectory.
+
+
+Error of ``unresolved overloaded function type`` with ``cout``
+--------------------------------------------------------------
+
+If you try to display the result of an operation on intervals, for instance, ``x|y``, you may obtain this type of error:
+
+.. code:: 
+  
+  no match for ‘operator<<’ (operand types are ‘Interval’ and ‘<unresolved overloaded function type>’)
+
+This can be solved using parentheses: 
+
+.. code:: c++
+
+  cout << (x|y) << endl;
+  // Instead of: cout << x|y << endl;

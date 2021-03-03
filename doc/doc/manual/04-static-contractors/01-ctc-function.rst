@@ -146,20 +146,20 @@ The boxes are contracted in order to remove some vectors that are not consistent
 
   Illustration of several contracted boxes with the above ``ctc_f`` contractor.
 
-.. #include <tubex.h>
-.. #include <tubex-rob.h>
+.. #include <codac.h>
+.. #include <codac-rob.h>
 .. #include "ibex_CtcHC4.h"
 .. #include "ibex_SystemFactory.h"
 .. #include "ibex_Ctc3BCid.h"
 .. 
 .. using namespace std;
-.. using namespace tubex;
+.. using namespace codac;
 .. using namespace ibex;
 .. 
 .. int main()
 .. {
 ..   SIVIAPaving p({{-3.,3.},{-3.,3.}});
-..   p.compute(ibex::Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"), {{0.}}, 0.01);
+..   p.compute(Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"), {{0.}}, 0.01);
 ..   CtcFunction ctc_f(Function("x1", "x2", "x1*cos(x1-x2)*sin(x1)+x2"));
 .. 
 ..   vibes::beginDrawing();
@@ -198,9 +198,9 @@ Going further
 This ``CtcFunction`` class is a generic shortcut to deal with :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}` or :math:`\mathbf{f}(\mathbf{x})\in[\mathbf{y}]`. However, several algorithms exist to optimally deal with different classes of problems. A list of static contractors is provided in the IBEX library: `see more <http://www.ibex-lib.org/doc/contractor.html>`_.
 The user is invited to use an appropriate tool to deal with the constraint at stake.
 
-The IBEX contractor behind ``CtcFunction`` is a ``ibex::CtcFwdBwd`` coupled with a ``ibex::Ctc3BCid``.
+The IBEX contractor behind ``CtcFunction`` is a ``CtcFwdBwd`` coupled with a ``Ctc3BCid``.
 
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classtubex_1_1_ctc_function.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_function.html>`_.
