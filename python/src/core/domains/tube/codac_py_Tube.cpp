@@ -266,24 +266,24 @@ void export_Tube(py::module& m)
 
   // Setting values
 
-    .def("set", (void (Tube::*)(const Interval&))&Tube::set,
-      TUBE_VOID_SET_INTERVAL,
+    .def("set", (const Tube& (Tube::*)(const Interval&))&Tube::set,
+      TUBE_CONSTTUBE_SET_INTERVAL,
       "y"_a)
 
-    .def("set", (void (Tube::*)(const Interval&,int))&Tube::set,
-      TUBE_VOID_SET_INTERVAL_INT,
+    .def("set", (const Tube& (Tube::*)(const Interval&,int))&Tube::set,
+      TUBE_CONSTTUBE_SET_INTERVAL_INT,
       "y"_a, "slice_id"_a)
 
-    .def("set", (void (Tube::*)(const Interval&,double))&Tube::set,
-      TUBE_VOID_SET_INTERVAL_DOUBLE,
+    .def("set", (const Tube& (Tube::*)(const Interval&,double))&Tube::set,
+      TUBE_CONSTTUBE_SET_INTERVAL_DOUBLE,
       "y"_a, "t"_a)
 
-    .def("set", (void (Tube::*)(const Interval&,const Interval&))&Tube::set,
-      TUBE_VOID_SET_INTERVAL_INTERVAL,
+    .def("set", (const Tube& (Tube::*)(const Interval&,const Interval&))&Tube::set,
+      TUBE_CONSTTUBE_SET_INTERVAL_INTERVAL,
       "y"_a, "t"_a)
 
     .def("set_empty", &Tube::set_empty,
-      TUBE_VOID_SET_EMPTY)
+      TUBE_CONSTTUBE_SET_EMPTY)
 
     .def("inflate", (const Tube& (Tube::*)(double))&Tube::inflate,
       TUBE_CONSTTUBE_INFLATE_DOUBLE,

@@ -257,6 +257,22 @@ namespace codac
       for(int i = 0 ; i < subvec.size() ; i++)
         (*this)[i + start_index] = subvec[i];
     }
+    
+    const TrajectoryVector TubeVector::lb() const
+    {
+      TrajectoryVector lb(size());
+      for(int i = 0 ; i < lb.size() ; i++)
+        lb[i] = (*this)[i].lb();
+      return lb;
+    }
+    
+    const TrajectoryVector TubeVector::ub() const
+    {
+      TrajectoryVector ub(size());
+      for(int i = 0 ; i < ub.size() ; i++)
+        ub[i] = (*this)[i].ub();
+      return ub;
+    }
   
     // Slices structure
 
@@ -715,41 +731,46 @@ namespace codac
 
     // Setting values
 
-    void TubeVector::set(const IntervalVector& y)
+    const TubeVector& TubeVector::set(const IntervalVector& y)
     {
       assert(size() == y.size());
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(y[i]);
+      return *this;
     }
 
-    void TubeVector::set(const IntervalVector& y, int slice_id)
+    const TubeVector& TubeVector::set(const IntervalVector& y, int slice_id)
     {
       assert(size() == y.size());
       assert(slice_id >= 0 && slice_id < nb_slices());
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(y[i], slice_id);
+      return *this;
     }
 
-    void TubeVector::set(const IntervalVector& y, double t)
+    const TubeVector& TubeVector::set(const IntervalVector& y, double t)
     {
       assert(size() == y.size());
       assert(tdomain().contains(t));
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(y[i], t);
+      return *this;
     }
 
-    void TubeVector::set(const IntervalVector& y, const Interval& t)
+    const TubeVector& TubeVector::set(const IntervalVector& y, const Interval& t)
     {
       assert(size() == y.size());
       assert(tdomain().is_superset(t));
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set(y[i], t);
+      return *this;
     }
 
-    void TubeVector::set_empty()
+    const TubeVector& TubeVector::set_empty()
     {
       for(int i = 0 ; i < size() ; i++)
         (*this)[i].set_empty();
+      return *this;
     }
 
     const TubeVector& TubeVector::inflate(double rad)
