@@ -683,13 +683,13 @@ namespace codac
       */
     const Tube det(const TubeVector& x, const TubeVector& y);
 
-    /** \brief Returns an enclosure of the Euclidian norm of \mathbf{x}(\cdot)
+    /** \brief Returns an enclosure of the Euclidian norm of \f$\mathbf{x}(\cdot)\f$
       * \param x
       * \return Tube output
       */
     const Tube sqnorm(const TubeVector& x);
 
-    /** \brief Returns the Euclidian norm of \mathbf{x}(\cdot)
+    /** \brief Returns the Euclidian norm of \f$\mathbf{x}(\cdot)\f$
       * \param x
       * \return Tube output
       */
