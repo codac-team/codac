@@ -675,6 +675,26 @@ namespace codac
       */
     const TubeVector abs(const TubeVector& x);
 
+
+    /** \brief \f$\textrm{det}(\mathbf{x}(\cdot),\mathbf{y}(\cdot))\f$
+      * \param x
+      * \param y
+      * \return Tube output
+      */
+    const Tube det(const TubeVector& x, const TubeVector& y);
+
+    /** \brief Returns an enclosure of the Euclidian norm of \mathbf{x}(\cdot)
+      * \param x
+      * \return Tube output
+      */
+    const Tube sqnorm(const TubeVector& x);
+
+    /** \brief Returns the Euclidian norm of \mathbf{x}(\cdot)
+      * \param x
+      * \return Tube output
+      */
+    const Tube norm(const TubeVector& x);
+
   /// @}
 }
 

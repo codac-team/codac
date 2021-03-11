@@ -166,4 +166,24 @@ namespace codac
       y[i] = abs(x[i]);
     return y;
   }
+  
+  const Tube det(const TubeVector& x, const TubeVector& y)
+  {
+    return x[0]*y[1] - x[1]*y[0];
+  }
+  
+  const Tube sqnorm(const TubeVector& x)
+  {
+    Tube d(x[0]); // same sampling
+    d.set(0.); // init
+
+    for(int i = 0 ; i < x.size() ; i++)
+      d += pow(x[i], 2);
+    return d;
+  }
+  
+  const Tube norm(const TubeVector& x)
+  {
+    return sqrt(sqnorm(x));
+  }
 }
