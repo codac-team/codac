@@ -291,6 +291,38 @@ namespace codac
       
       return Polygon(v_pts);
     }
+    
+    const Trajectory Tube::lb() const
+    {
+      Trajectory lb;
+
+      const Slice *s_x = first_slice();
+      lb.set(s_x->input_gate().lb(), s_x->tdomain().lb());
+
+      while(s_x != NULL)
+      {
+        lb.set(s_x->output_gate().lb(), s_x->tdomain().ub());
+        s_x = s_x->next_slice();
+      }
+
+      return lb;
+    }
+    
+    const Trajectory Tube::ub() const
+    {
+      Trajectory ub;
+
+      const Slice *s_x = first_slice();
+      ub.set(s_x->input_gate().ub(), s_x->tdomain().lb());
+
+      while(s_x != NULL)
+      {
+        ub.set(s_x->output_gate().ub(), s_x->tdomain().ub());
+        s_x = s_x->next_slice();
+      }
+
+      return ub;
+    }
   
     // Slices structure
 
@@ -1071,25 +1103,28 @@ namespace codac
 
     // Setting values
 
-    void Tube::set(const Interval& y)
+    const Tube& Tube::set(const Interval& y)
     {
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
         s->set(y);
+      return *this;
     }
 
-    void Tube::set(const Interval& y, int slice_id)
+    const Tube& Tube::set(const Interval& y, int slice_id)
     {
       assert(slice_id >= 0 && slice_id < nb_slices());
       slice(slice_id)->set(y);
+      return *this;
     }
 
-    void Tube::set(const Interval& y, double t)
+    const Tube& Tube::set(const Interval& y, double t)
     {
       assert(tdomain().contains(t));
       sample(t, y);
+      return *this;
     }
 
-    void Tube::set(const Interval& y, const Interval& t)
+    const Tube& Tube::set(const Interval& y, const Interval& t)
     {
       assert(tdomain().is_superset(t));
 
@@ -1106,11 +1141,13 @@ namespace codac
             s = s->next_slice())
           s->set(y);
       }
+
+      return *this;
     }
 
-    void Tube::set_empty()
+    const Tube& Tube::set_empty()
     {
-      set(Interval::EMPTY_SET);
+      return set(Interval::EMPTY_SET);
     }
 
     const Tube& Tube::inflate(double rad)

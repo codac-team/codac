@@ -202,6 +202,26 @@ namespace codac
        */
       const Polygon polygon_envelope() const;
 
+      /**
+       * \brief Returns a possible lower bound \f$x^{-}(\cdot)\f$ of the tube
+       *
+       * \note The exact lower bound cannot be known. However, the returned trajectory \f$x^{-}(\cdot)\f$
+       * is guaranteed to be enclosed in the tube \f$[x](\cdot)\f$.
+       *
+       * \return a candidate for \f$x^{-}(\cdot)\f$
+       */
+      const Trajectory lb() const;
+
+      /**
+       * \brief Returns a possible upper bound \f$x^{+}(\cdot)\f$ of the tube
+       *
+       * \note The exact upper bound cannot be known. However, the returned trajectory \f$x^{+}(\cdot)\f$
+       * is guaranteed to be enclosed in the tube \f$[x](\cdot)\f$.
+       *
+       * \return a candidate for \f$x^{+}(\cdot)\f$
+       */
+      const Trajectory ub() const;
+
       /// @}
       /// \name Slices structure
       /// @{
@@ -710,16 +730,18 @@ namespace codac
        * \note The sampling of this tube is preserved
        *
        * \param y Interval value of the slices
+       * \return *this
        */
-      void set(const Interval& y);
+      const Tube& set(const Interval& y);
 
       /**
        * \brief Sets the interval value of the ith slice of this tube
        *
        * \param y Interval value of the ith slice
        * \param slice_id index of the ith Slice
+       * \return *this
        */
-      void set(const Interval& y, int slice_id);
+      const Tube& set(const Interval& y, int slice_id);
 
       /**
        * \brief Sets the interval value of this tube at \f$t\f$: \f$[x](t)=[y]\f$
@@ -730,8 +752,9 @@ namespace codac
        *
        * \param y Interval value of the gate
        * \param t the temporal key (double, must belong to the Tube's tdomain)
+       * \return *this
        */
-      void set(const Interval& y, double t);
+      const Tube& set(const Interval& y, double t);
 
       /**
        * \brief Sets the interval value of this tube over \f$[t]\f$: \f$\forall t\in[t], [x](t)=[y]\f$
@@ -742,15 +765,17 @@ namespace codac
        *
        * \param y Interval value to be set
        * \param t the subtdomain (Interval, must be a subset of the Tube's tdomain)
+       * \return *this
        */
-      void set(const Interval& y, const Interval& t);
+      const Tube& set(const Interval& y, const Interval& t);
 
       /**
        * \brief Sets this tube to the empty set
        *
        * \note By convention, all slices will be set to the empty set
+       * \return *this
        */
-      void set_empty();
+      const Tube& set_empty();
 
       /**
        * \brief Inflates this tube by adding \f$[-rad,+rad]\f$ to all its codomain components

@@ -261,40 +261,42 @@ void export_TubeVector(py::module& m)
       TUBEVECTOR_BOOL_OVERLAPS_TUBEVECTOR_FLOAT,
       "x"_a, "ratio"_a=1)
 
+    // todo: which functions to keep? (two implementations for each)
+
     .def("set", [](TubeVector& x, const Vector& y) { x.set(y); },
-      TUBEVECTOR_VOID_SET_INTERVALVECTOR,
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_INTERVALVECTOR,
       "y"_a)
 
     .def("set", [](TubeVector& x, const Vector& y, int slice_id) { x.set(y, slice_id); },
-      TUBEVECTOR_VOID_SET_INTERVALVECTOR_INT,
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_INTERVALVECTOR_INT,
       "y"_a, "slice_id"_a)
 
     .def("set", [](TubeVector& x, const Vector& y, double t) { x.set(y, t); },
-      TUBEVECTOR_VOID_SET_INTERVALVECTOR_DOUBLE,
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_INTERVALVECTOR_DOUBLE,
       "y"_a, "t"_a)
 
     .def("set", [](TubeVector& x, const Vector& y, const Interval& t) { x.set(y, t); },
-      TUBEVECTOR_VOID_SET_INTERVALVECTOR_INTERVAL,
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_INTERVALVECTOR_INTERVAL,
       "y"_a, "t"_a)
 
-    .def("set", (void (TubeVector::*)(const IntervalVector&))&TubeVector::set,
-      TUBEVECTOR_VOID_SET_INTERVALVECTOR,
+    .def("set", (const TubeVector& (TubeVector::*)(const IntervalVector&))&TubeVector::set,
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_INTERVALVECTOR,
       "y"_a)
 
-    .def("set", (void (TubeVector::*)(const IntervalVector&,int))&TubeVector::set,
-      TUBEVECTOR_VOID_SET_INTERVALVECTOR_INT,
+    .def("set", (const TubeVector& (TubeVector::*)(const IntervalVector&,int))&TubeVector::set,
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_INTERVALVECTOR_INT,
       "y"_a, "slice_id"_a)
 
-    .def("set", (void (TubeVector::*)(const IntervalVector&,double))&TubeVector::set,
-      TUBEVECTOR_VOID_SET_INTERVALVECTOR_DOUBLE,
+    .def("set", (const TubeVector& (TubeVector::*)(const IntervalVector&,double))&TubeVector::set,
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_INTERVALVECTOR_DOUBLE,
       "y"_a, "t"_a)
 
-    .def("set", (void (TubeVector::*)(const IntervalVector&,const Interval&))&TubeVector::set,
-      TUBEVECTOR_VOID_SET_INTERVALVECTOR_INTERVAL,
+    .def("set", (const TubeVector& (TubeVector::*)(const IntervalVector&,const Interval&))&TubeVector::set,
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_INTERVALVECTOR_INTERVAL,
       "y"_a, "t"_a)
 
     .def("set_empty", &TubeVector::set_empty,
-      TUBEVECTOR_VOID_SET_EMPTY)
+      TUBEVECTOR_CONSTTUBEVECTOR_SET_EMPTY)
 
     .def("inflate", (const TubeVector& (TubeVector::*)(double))&TubeVector::inflate,
       TUBEVECTOR_CONSTTUBEVECTOR_INFLATE_DOUBLE,
