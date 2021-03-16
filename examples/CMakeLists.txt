@@ -87,6 +87,8 @@ if(BUILD_TESTS AND TEST_EXAMPLES)
   add_test(NAME basics_07_py
            COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/basics/07_temporal_ctc/07_temporal_ctc.py 0)
   endif()
+  add_test(NAME basics_08
+           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/basics/08_tubepaving/build/codac_basics_08 0)
 
   # Robotics
   add_test(NAME rob_01
