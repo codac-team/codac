@@ -195,7 +195,7 @@ namespace codac
         p_eval.second |= output_gate().ub();
       }
 
-      if(t.is_subset(tdomain()))
+      if(t.is_subset(tdomain()) && t != m_tdomain.lb() && t != m_tdomain.ub())
       {
         p_eval.first |= m_codomain.lb();
         p_eval.second |= m_codomain.ub();
