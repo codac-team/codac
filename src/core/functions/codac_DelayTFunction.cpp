@@ -20,6 +20,11 @@ namespace codac
   {
 
   }
+  
+  DelayTFunction::~DelayTFunction()
+  {
+
+  }
 
   const Interval DelayTFunction::eval(const Interval& t, const TubeVector& x) const
   {
