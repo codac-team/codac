@@ -26,9 +26,10 @@ namespace codac
     // Default color map
     map<SetValue,string> color_map;
     color_map[SetValue::IN] = "#9C9C9C[green]";
-    color_map[SetValue::MAYBE] = "#9C9C9C[yellow]";
+    color_map[SetValue::UNKNOWN] = "#9C9C9C[yellow]";
     color_map[SetValue::OUT] = "#9C9C9C[cyan]";
     color_map[SetValue::UNCHECKED] = "#9C9C9C[magenta]";
+    color_map[SetValue::PENUMBRA] = "#9C9C9C[white]";
     set_color_map(color_map);
   }
 
@@ -36,18 +37,20 @@ namespace codac
   {
     // todo: deal with color maps defined with any kind of values
     vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
-    vibes::newGroup("val_maybe", color_map.at(SetValue::MAYBE), vibesParams("figure", name()));
+    vibes::newGroup("val_unknown", color_map.at(SetValue::UNKNOWN), vibesParams("figure", name()));
     vibes::newGroup("val_out", color_map.at(SetValue::OUT), vibesParams("figure", name()));
     vibes::newGroup("val_unchecked", color_map.at(SetValue::UNCHECKED), vibesParams("figure", name()));
+    vibes::newGroup("val_penumbra", color_map.at(SetValue::PENUMBRA), vibesParams("figure", name()));
   }
 
   void VIBesFigPaving::show()
   {
     // todo: deal with color maps defined with any kind of values
     vibes::clearGroup(name(), "val_in");
-    vibes::clearGroup(name(), "val_maybe");
+    vibes::clearGroup(name(), "val_unknown");
     vibes::clearGroup(name(), "val_out");
     vibes::clearGroup(name(), "val_unchecked");
+    vibes::clearGroup(name(), "val_penumbra");
     draw_paving(m_paving);
   }
 
@@ -72,9 +75,13 @@ namespace codac
           color_group = "val_unchecked";
           break;
 
-        case SetValue::MAYBE:
+        case SetValue::PENUMBRA:
+          color_group = "val_penumbra";
+          break;
+
+        case SetValue::UNKNOWN:
         default:
-          color_group = "val_maybe";
+          color_group = "val_unknown";
       }
 
       draw_box(paving->box(), vibesParams("figure", name(), "group", color_group));

@@ -21,14 +21,15 @@ namespace codac
    * \brief Defines a set of feasible values of a set
    *
    * \note These values can be used as flags for boolean selections.
-   * Example of use: `(VALUE_MAYBE | VALUE_IN)` to get items of these types
+   * Example of use: `(UNKNOWN | IN)` to get items of these types
    */
   enum class SetValue
   {
-    MAYBE = 0x01, ///< unable to conclude
     OUT = 0x02,   ///< outside the solution set
     IN = 0x04,     ///< inside the solution set
-    UNCHECKED = 0x08
+    UNKNOWN = 0x01, ///< unable to conclude
+    PENUMBRA = 0x08, ///< inside the penumbra set
+    UNCHECKED = 0x10,
   };
 
   /**
@@ -69,9 +70,9 @@ namespace codac
        * \brief Creates a set
        *
        * \param box n-dimensional box representing the set
-       * \param value integer of the set, `SetValue::VALUE_MAYBE` by default
+       * \param value integer of the set, `SetValue::UNKNOWN` by default
        */
-      Set(const IntervalVector& box, SetValue value = SetValue::MAYBE);
+      Set(const IntervalVector& box, SetValue value = SetValue::UNKNOWN);
 
       /**
        * \brief Set destructor

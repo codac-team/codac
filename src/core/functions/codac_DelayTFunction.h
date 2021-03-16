@@ -20,12 +20,12 @@ namespace codac
     public:
 
       DelayTFunction(double delay);
+      ~DelayTFunction();
 
       using TFnc::eval; // todo: check this
-      const Interval eval(int slice_id, const TubeVector& x) const;
       const Interval eval(const Interval& t, const TubeVector& x) const;
-      const IntervalVector eval_vector(int slice_id, const TubeVector& x) const;
       const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const;
+
 
     protected:
 

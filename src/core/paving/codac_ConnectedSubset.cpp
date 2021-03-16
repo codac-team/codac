@@ -18,7 +18,7 @@ using namespace ibex;
 namespace codac
 {
   ConnectedSubset::ConnectedSubset(const vector<const Paving*>& v_subset_items)
-    : Set(IntervalVector(2, Interval::EMPTY_SET), SetValue::IN | SetValue::MAYBE),
+    : Set(IntervalVector(2, Interval::EMPTY_SET), SetValue::IN | SetValue::UNKNOWN),
       m_v_subset_items(v_subset_items)
   {
     m_box = IntervalVector(2, Interval::EMPTY_SET);

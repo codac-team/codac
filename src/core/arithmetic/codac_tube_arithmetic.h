@@ -180,6 +180,48 @@ namespace codac
 
     // todo: atan2, pow with Trajectory as parameter
 
+    /** \brief \f$\mathrm{min}([y](\cdot),[x](\cdot))\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube min(const Tube& y, const Tube& x);
+
+    /** \brief \f$\mathrm{min}([y](\cdot),[x])\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube min(const Tube& y, const Interval& x);
+
+    /** \brief \f$\mathrm{min}([y],[x](\cdot))\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube min(const Interval& y, const Tube& x);
+
+    /** \brief \f$\mathrm{max}([y](\cdot),[x](\cdot))\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube max(const Tube& y, const Tube& x);
+
+    /** \brief \f$\mathrm{max}([y](\cdot),[x])\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube max(const Tube& y, const Interval& x);
+
+    /** \brief \f$\mathrm{max}([y],[x](\cdot))\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube max(const Interval& y, const Tube& x);
+
 
     /** \brief \f$[x](\cdot)\f$
       * \param x

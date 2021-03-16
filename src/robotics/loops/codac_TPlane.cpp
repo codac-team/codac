@@ -16,9 +16,15 @@ using namespace ibex;
 namespace codac
 {
   TPlane::TPlane(const Interval& tdomain)
-    : Paving(IntervalVector(2, tdomain), SetValue::MAYBE)
+    : Paving(IntervalVector(2, tdomain), SetValue::UNKNOWN)
   {
 
+  }
+
+  void TPlane::compute_loops(float precision, const TubeVector& p, const TubeVector& v)
+  {
+    compute_detections(precision, p, v, true, true);
+    compute_proofs(p, v);
   }
 
   void TPlane::compute_detections(float precision, const TubeVector& p)
@@ -107,8 +113,8 @@ namespace codac
         else if(derivative_in && primitive_in)
           set_value(SetValue::IN);
 
-        else if(max(t1.diam(), t2.diam()) < precision)
-          set_value(SetValue::MAYBE);
+        else if(std::max(t1.diam(), t2.diam()) < precision)
+          set_value(SetValue::UNKNOWN);
 
         else
         {

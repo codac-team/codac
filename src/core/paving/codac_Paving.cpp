@@ -187,7 +187,7 @@ namespace codac
     reset_flags();
 
     const Paving *p;
-    SetValue val = SetValue::MAYBE | SetValue::IN;
+    SetValue val = SetValue::UNKNOWN | SetValue::IN;
     vector<ConnectedSubset> v_connected_subsets;
 
     while((p = get_first_leaf(val, true)) != NULL)

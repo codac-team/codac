@@ -1,23 +1,10 @@
 on:
     push:
-        branches: '**'
+        branches: 'master'
         tags: '' # Restrict to blank tags
     pull_request:
 
 jobs:
- # This job may be commented if a new release should not be created...
- deploy:
-    runs-on: ubuntu-latest
-    steps: 
-    - uses: actions/create-release@v1
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        draft: true
-        tag_name: autotagname
-        release_name: autotagname
-
  dockercentos:
     name: CentOS Docker
     runs-on: ubuntu-latest

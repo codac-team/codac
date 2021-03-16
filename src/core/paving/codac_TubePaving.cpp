@@ -61,7 +61,7 @@ namespace codac
       set_value(SetValue::IN);
 
     else if(box().max_diam() < precision)
-      set_value(SetValue::MAYBE);
+      set_value(SetValue::UNKNOWN);
 
     else
     {
@@ -104,12 +104,12 @@ namespace codac
       }
       else if(box().max_diam() < precision)
       {
-          set_value(SetValue::MAYBE);
+          set_value(SetValue::UNKNOWN);
 
       }
       else
       {
-          set_value(SetValue::MAYBE);
+          set_value(SetValue::UNKNOWN);
           bisect();
           ((TubePaving*)m_first_subpaving)->compute(precision, x);
           ((TubePaving*)m_second_subpaving)->compute(precision, x);
