@@ -4,7 +4,7 @@
  * ----------------------------------------------------------------------------
  *
  *  \brief      Tube paving
- 
+
  *  \date       2021
  *  \author     Simon Rohou
  *  \copyright  Copyright 2021 Codac Team
@@ -32,7 +32,10 @@ class TemporalPaving : public Paving
       const Interval& t = box()[0], &y = box()[1];
 
       if(!x(t).intersects(y))
+      {
+        assert(!x.invert(y,t).intersects(y)); // used as a test of invert() method
         return set_value(SetValue::OUT);
+      }
 
       pair<Interval,Interval> p = x.eval(t);
 
