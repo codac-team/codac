@@ -26,7 +26,6 @@ namespace codac
       const Interval eval(const Interval& t, const TubeVector& x) const;
       const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const;
 
-
     protected:
 
       double m_delay;
