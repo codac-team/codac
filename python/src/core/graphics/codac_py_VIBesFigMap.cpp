@@ -90,11 +90,11 @@ void export_VIBesFigMap(py::module& m)
   // Handling trajectories
 
     .def("add_trajectory", (void (VIBesFigMap::*)(const TrajectoryVector*,const string&,int,int,const string&,const int))&VIBesFigMap::add_trajectory,
-      VIBESFIGMAP_VOID_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_INT_INT_STRING,
+      VIBESFIGMAP_VOID_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_INT_INT_STRING_INT,
       "traj"_a, "name"_a, "index_x"_a, "index_y"_a, "color"_a=DEFAULT_TRAJMAP_COLOR, "mode"_a=DEFAULT_VEHICLE_ON)
     
     .def("add_trajectory", (void (VIBesFigMap::*)(const TrajectoryVector*,const string&,int,int,int,const string&,const int))&VIBesFigMap::add_trajectory,
-      VIBESFIGMAP_VOID_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_INT_INT_INT_STRING,
+      VIBESFIGMAP_VOID_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_INT_INT_INT_STRING_INT,
       "traj"_a, "name"_a, "index_x"_a, "index_y"_a, "index_heading"_a, "color"_a=DEFAULT_TRAJMAP_COLOR, "mode"_a=DEFAULT_VEHICLE_ON)
     
     .def("set_trajectory_name", &VIBesFigMap::set_trajectory_name,
