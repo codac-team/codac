@@ -342,13 +342,13 @@ namespace codac
 
     Slice* Tube::slice(int slice_id)
     {
-      assert(slice_id >= 0 && slice_id < nb_slices());
       return const_cast<Slice*>(static_cast<const Tube&>(*this).slice(slice_id));
     }
 
     const Slice* Tube::slice(int slice_id) const
     {
-      assert(slice_id >= 0 && slice_id < nb_slices());
+      if(slice_id < 0 && slice_id >= nb_slices())
+        return NULL;
 
       if(m_synthesis_tree != NULL) // fast access
         return m_synthesis_tree->slice(slice_id);
@@ -370,13 +370,13 @@ namespace codac
 
     Slice* Tube::slice(double t)
     {
-      assert(tdomain().contains(t));
       return const_cast<Slice*>(static_cast<const Tube&>(*this).slice(t));
     }
 
     const Slice* Tube::slice(double t) const
     {
-      assert(tdomain().contains(t));
+      if(!tdomain().contains(t))
+        return NULL;
 
       if(m_synthesis_tree != NULL) // fast evaluation
         return m_synthesis_tree->slice(t);
@@ -672,16 +672,20 @@ namespace codac
       
       else
       {
-        if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
-          return make_pair(Interval::all_reals(), Interval::all_reals());
-
         pair<Interval,Interval> enclosed_bounds
           = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-        const Slice *s = slice(t.lb());
-        while(s != NULL && s->tdomain().lb() <= t.ub())
+        if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
         {
-          pair<Interval,Interval> local_eval = s->eval(t & s->tdomain());
+          enclosed_bounds.first |= NEG_INFINITY;
+          enclosed_bounds.second |= POS_INFINITY;
+        }
+
+        Interval t_tdomain = t & tdomain();
+        const Slice *s = slice(t_tdomain.lb());
+        while(s != NULL && s->tdomain().lb() <= t_tdomain.ub())
+        {
+          pair<Interval,Interval> local_eval = s->eval(t_tdomain & s->tdomain());
           enclosed_bounds.first |= local_eval.first;
           enclosed_bounds.second |= local_eval.second;
           s = s->next_slice();

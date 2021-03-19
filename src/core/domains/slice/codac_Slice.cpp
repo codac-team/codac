@@ -175,34 +175,33 @@ namespace codac
 
     const pair<Interval,Interval> Slice::eval(const Interval& t) const
     {
+      pair<Interval,Interval> p_eval = make_pair(Interval::empty_set(), Interval::empty_set());
+
       if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
-        return make_pair(Interval::all_reals(), Interval::all_reals());
-
-      else
       {
-        pair<Interval,Interval> p_eval = make_pair(Interval::empty_set(), Interval::empty_set());
-
-        if(t.contains(m_tdomain.lb()))
-        {
-          p_eval.first |= input_gate().lb();
-          p_eval.second |= input_gate().ub();
-        }
-
-        if(t.contains(m_tdomain.ub()))
-        {
-          p_eval.first |= output_gate().lb();
-          p_eval.second |= output_gate().ub();
-        }
-
-        if(!t.is_degenerated()
-          || (t != m_tdomain.lb() && t != m_tdomain.ub()))
-        {
-          p_eval.first |= m_codomain.lb();
-          p_eval.second |= m_codomain.ub();
-        }
-
-        return p_eval;
+        p_eval.first |= NEG_INFINITY;
+        p_eval.second |= POS_INFINITY;
       }
+
+      if(t.contains(tdomain().lb()))
+      {
+        p_eval.first |= input_gate().lb();
+        p_eval.second |= input_gate().ub();
+      }
+
+      if(t.contains(tdomain().ub()))
+      {
+        p_eval.first |= output_gate().lb();
+        p_eval.second |= output_gate().ub();
+      }
+
+      if(t.is_subset(tdomain()) && t != m_tdomain.lb() && t != m_tdomain.ub())
+      {
+        p_eval.first |= m_codomain.lb();
+        p_eval.second |= m_codomain.ub();
+      }
+
+      return p_eval;
     }
 
     const Interval Slice::interpol(double t, const Slice& v) const
