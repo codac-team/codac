@@ -29,10 +29,11 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cmake_flags: ' /D WIN32 /EHsc /wd4267 /wd4244 /wd4305', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows Qt 5.12.6 MinGW 7.3.0 x86' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 8.1.0 x64' }
-            - { os: ubuntu-20.04, shell: bash, arch: x64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
-            - { os: ubuntu-18.04, shell: bash, arch: x64, runtime: bionic, cmake_flags: '-fPIC', desc: 'Ubuntu 18.04' }
-#            - { os: macos-11.0, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur 11.0' } # Not yet available...
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', desc: 'macOS Catalina 10.15' }
+            - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
+            - { os: ubuntu-18.04, shell: bash, arch: amd64, runtime: bionic, cmake_flags: '-fPIC', desc: 'Ubuntu 18.04' }
+            - { os: ubuntu-16.04, shell: bash, arch: amd64, runtime: xenial, cmake_flags: '-fPIC', desc: 'Ubuntu 16.04' }
+#            - { os: macos-11.0, shell: bash, arch: amd64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur 11.0' } # Not yet available...
+            - { os: macos-10.15, shell: bash, arch: amd64, runtime: catalina, cmake_flags: '-fPIC', desc: 'macOS Catalina 10.15' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v2
@@ -40,17 +41,24 @@ jobs:
         submodules: true
         fetch-depth: 0
         clean: false
-#    # No real way to clear cache : https://stackoverflow.com/questions/63521430/clear-cache-in-github-actions, however GitHub will remove any cache entries that have not been accessed in over 7 days...
-#    - uses: actions/cache@v2
-#      id: cache-ibex
-#      with:
-#        path: 'ibex'
-#        key: ${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}-ibex
+      # See https://askubuntu.com/questions/620533/what-is-the-meaning-of-the-xubuntuy-string-in-ubuntu-package-names
+    - run: |
+        echo "SOFTWARE_VERSION=0.1.3" >> $GITHUB_ENV
+        echo "DEBIAN_PACKAGE_REV=0" >> $GITHUB_ENV
+        echo "PACKAGE_REV=0" >> $GITHUB_ENV
+        echo "CHOCO_PACKAGE_REV=" >> $GITHUB_ENV
+      shell: bash
+    - run: if [ -z "$CHOCO_PACKAGE_REV" ]; then echo "PACKAGE_VERSION=$SOFTWARE_VERSION" >> $GITHUB_ENV ; else echo "PACKAGE_VERSION=$SOFTWARE_VERSION.$CHOCO_PACKAGE_REV" >> $GITHUB_ENV ; fi
+      shell: bash
+      if: runner.os=='Windows'
+    - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
+      shell: bash
+      if: runner.os=='Linux'
     - run: |
         (New-Object System.Net.WebClient).DownloadFile("http://www.ensta-bretagne.fr/lebars/Share/windows_extra_tools.zip", "C:\Windows\Temp\windows_extra_tools.zip") 
         7z x C:\Windows\Temp\windows_extra_tools.zip -o"C:\Windows" -y
       shell: pwsh
-      if: runner.os == 'Windows'
+      if: runner.os=='Windows'
     - run: |
         wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
         move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\
@@ -66,20 +74,24 @@ jobs:
         echo C:\Qt\Qt5.12.6\5.12.6\mingw73_32\bin;C:\Qt\Qt5.12.6\Tools\mingw730_32\bin>>%GITHUB_PATH%
       shell: cmd
       if: matrix.cfg.runtime=='mingw7'
-    - run: choco install -y winflexbison make patch zip
-      if: runner.os == 'Windows'
-      # Registry bug...?
-    - run: wget https://github.com/ros2/choco-packages/releases/download/2020-02-24/eigen.3.3.4.nupkg --no-check-certificate -nv & choco install -y -s . eigen & reg add HKEY_LOCAL_MACHINE\SOFTWARE\Kitware\CMake\Packages\Eigen3 /v "CMakePackageDir" /t REG_SZ /d "C:\ProgramData\chocolatey\lib\eigen\share\cmake" /f
+    - run: |
+        choco install -y winflexbison make patch zip
+        wget http://www.ensta-bretagne.fr/lebars/packages/choco/eigen.3.3.4.nupkg --no-check-certificate -nv & wget http://www.ensta-bretagne.fr/lebars/packages/choco/ibex.2.8.9.nupkg --no-check-certificate -nv & choco source add -n=current-directory -s . & choco install -y eigen ibex
       shell: cmd
-      if: runner.os == 'Windows'
-    - run: sudo apt-get -q update ; sudo apt-get -y install flex bison libeigen3-dev || true
+      if: runner.os=='Windows'
+#    - run: sudo apt-get -q update ; sudo apt-get -y install flex bison libeigen3-dev || true
+#      shell: bash
+#      if: runner.os=='Linux'
+    - run: |
+        echo "deb [trusted=yes] http://www.ensta-bretagne.fr/lebars/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" | sudo tee -a /etc/apt/sources.list.d/ensta-bretagne.list
+        sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
       shell: bash
-      if: runner.os == 'Linux'
+      if: runner.os=='Linux'
     - run: brew install eigen
-      if: runner.os == 'macOS'
+      if: runner.os=='macOS'
     - run: git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="${{ matrix.cfg.cmake_flags }}" -D CMAKE_C_FLAGS="${{ matrix.cfg.cmake_flags }}" .. ; cmake --build . ${{ matrix.cfg.cmake_config }} --target install ; cd ../..
       shell: bash
-#      if: steps.cache-ibex.outputs.cache-hit != 'true'
+      if: ((runner.os=='Windows')&&(matrix.cfg.runtime!='mingw8'))||(runner.os=='macOS')
     - run: |
         mkdir build ; cd build
         cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_CXX_FLAGS="${{ matrix.cfg.cmake_flags }}" -D CMAKE_C_FLAGS="${{ matrix.cfg.cmake_flags }}" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
@@ -88,16 +100,48 @@ jobs:
       shell: bash
     - run: |
         wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
-        unzip -q codac_test_win.zip ; rm -Rf codac_test_win.zip ; cd codac_test_win ; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac . ; cd .. ; zip -q -r codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
+        unzip -q codac_test_win.zip ; rm -Rf codac_test_win.zip ; cd codac_test_win ; if [ -d ../ibex ]; then rm -Rf ibex ; cp -Rf ../ibex . ; fi ; rm -Rf codac ; cp -Rf ../codac . ; cd .. ; zip -q -r codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
         cmake ${{ matrix.cfg.cmake_params }} .
         cmake --build . ${{ matrix.cfg.cmake_config }}
         ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
+    - run: |
+        cd packages/choco
+        cp -Rf ../../codac/* codac
+        sed_param=s/\<version\>1\<\\/version\>/\<version\>${PACKAGE_VERSION}\<\\/version\>/
+        sed -i "$sed_param" codac/codac.nuspec
+        sed_param=s/PATH_SUFFIXES\ /PATHS\ \$\{CMAKE_CURRENT_LIST_FILE\}\\/..\\/..\\/..\\/..\\/\ PATH_SUFFIXES\ /
+        sed -i "$sed_param" codac/share/codac/cmake/*.cmake
+        mv -f codac codac.$PACKAGE_VERSION
+        cd codac.$PACKAGE_VERSION
+        choco pack
+        mv -f codac.$PACKAGE_VERSION.nupkg ../../../
+        cd ../../..
+        choco source add -n=current-directory -s . --priority=100
+        choco install -y codac
+      shell: bash
+      if: matrix.cfg.runtime=='mingw8'
+    - run: |
+        cd packages
+        chmod +x ./genlibcodac-dev.sh
+        ./genlibcodac-dev.sh ubuntu ${{ matrix.cfg.runtime }} ${{ matrix.cfg.arch }} $SOFTWARE_VERSION $DEBIAN_PACKAGE_REV $PACKAGE_REV
+        cd ..
+        sudo dpkg -i libcodac-dev-$PACKAGE_VERSION\_${{ matrix.cfg.arch }}.deb
+      shell: bash
+      if: runner.os=='Linux'
+    - run: |
+        rm -Rf codac
+        cd tests/test_codac
+        cmake ${{ matrix.cfg.cmake_params }} .
+        cmake --build . ${{ matrix.cfg.cmake_config }}
+        ./${{ matrix.cfg.test_config }}my_project
+      shell: bash
+      if: (matrix.cfg.runtime=='mingw8')||(runner.os=='Linux')
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: "*.zip"
+        file: "*.zip;*.nupkg;*.deb"
         overwrite: true
         tag_name: autotagname
