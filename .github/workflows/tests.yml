@@ -22,6 +22,7 @@ jobs:
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
     - run: |
+        sudo apt-get -y install gcc-${{ matrix.cfg.gcc_v }} g++-${{ matrix.cfg.gcc_v }}
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.cfg.gcc_v }} 100 --slave /usr/bin/g++ g++ /usr/bin/g++-${{ matrix.cfg.gcc_v }}
         gcc --version
         g++ --version
