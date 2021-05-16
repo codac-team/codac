@@ -152,25 +152,24 @@ namespace codac
 
   const pair<Interval,Interval> TubeTreeSynthesis::eval(const Interval& t)
   {
+    pair<Interval,Interval> p = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
     if(t.is_degenerated()) // faster to perform the evaluation over the related slice
-      return slice(time_to_index(t.lb()))->eval(t);
+      p = slice(time_to_index(t.lb()))->eval(t);
 
-    if(t.is_empty())
-      return make_pair(Interval::empty_set(), Interval::empty_set());
-
-    else if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
-      return make_pair(Interval::all_reals(), Interval::all_reals());
+    else if(t.is_empty())
+      p = make_pair(Interval::empty_set(), Interval::empty_set());
 
     else if(is_leaf() || t == m_tdomain) // todo: this last condition useful?
     {
       if(t == m_tdomain)
-        return codomain_bounds();
+        p = codomain_bounds();
 
       else
-        return m_slice_ref->eval(t);
+        p = m_slice_ref->eval(t & m_tdomain);
     }
 
-    else
+    else if(t.intersects(tdomain()))
     {
       Interval inter_firstsubtree = m_first_subtree->tdomain() & t;
       Interval inter_secondsubtree = m_second_subtree->tdomain() & t;
@@ -178,18 +177,27 @@ namespace codac
       assert(inter_firstsubtree != inter_secondsubtree); // both degenerated
 
       if(inter_firstsubtree.is_degenerated() && !inter_secondsubtree.is_degenerated())
-        return m_second_subtree->eval(inter_secondsubtree);
+        p = m_second_subtree->eval(inter_secondsubtree);
 
       else if(inter_secondsubtree.is_degenerated() && !inter_firstsubtree.is_degenerated())
-        return m_first_subtree->eval(inter_firstsubtree);
+        p = m_first_subtree->eval(inter_firstsubtree);
 
       else
       {
         pair<Interval,Interval> p_first = m_first_subtree->eval(inter_firstsubtree);
         pair<Interval,Interval> p_second = m_second_subtree->eval(inter_secondsubtree);
-        return make_pair(p_first.first | p_second.first, p_first.second | p_second.second);
+        p = make_pair(p_first.first | p_second.first, p_first.second | p_second.second);
       }
     }
+
+    // Outside tdomain
+    if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
+    {
+      p.first |= NEG_INFINITY;
+      p.second |= POS_INFINITY;
+    }
+
+    return p;
   }
 
   int TubeTreeSynthesis::time_to_index(double t) const
@@ -424,9 +432,9 @@ namespace codac
 
         Interval y_first = s_lb->codomain();
         Interval ta1 = Interval(intv_t_lb.lb(), t.lb());
-        Interval ta2 = Interval(intv_t_lb.lb(), min(t.ub(), intv_t_lb.ub()));
+        Interval ta2 = Interval(intv_t_lb.lb(), std::min(t.ub(), intv_t_lb.ub()));
         Interval tb1 = Interval(t.lb(), intv_t_lb.ub());
-        Interval tb2 = Interval(min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
+        Interval tb2 = Interval(std::min(t.ub(), intv_t_lb.ub()), intv_t_lb.ub());
 
         if(y_first.lb() < 0)
           integral_lb |= Interval(primitive_lb.lb() - y_first.lb() * tb2.diam(),

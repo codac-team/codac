@@ -494,13 +494,24 @@ namespace codac
           break;
 
         case TrajDefnType::MAP_OF_VALUES: // finite difference computation
+        {
           assert(m_map_values.size() > 1);
           
+          double prev_t = m_map_values.begin()->first;
           for(map<double,double>::const_iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
-            d.set(finite_diff(it->first), it->first);
+          {
+            double h = it->first - prev_t;
+
+            if(h == 0.) // first value
+              h = next(m_map_values.begin())->first - prev_t;
+
+            d.set(finite_diff(it->first, h), it->first);
+            prev_t = it->first;
+          }
 
           assert(d.tdomain() == tdomain());
           break;
+        }
 
         default:
           assert(false && "unhandled case");
@@ -509,13 +520,12 @@ namespace codac
       return d;
     }
 
-    double Trajectory::finite_diff(double t) const
+    double Trajectory::finite_diff(double t, double h) const
     {
+      // todo: improve this with h not symmetric?
       assert(m_traj_def_type == TrajDefnType::MAP_OF_VALUES);
       assert(m_map_values.find(t) != m_map_values.end()); // key exists
       assert(m_map_values.size() > 2);
-
-      double h = next(m_map_values.begin())->first - m_map_values.begin()->first;
 
       vector<double> fwd;
       map<double,double>::const_iterator it_fwd = m_map_values.find(t);

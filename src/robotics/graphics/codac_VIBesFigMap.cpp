@@ -531,7 +531,7 @@ namespace codac
       throw Exception(__func__, "unknown tube, must be added beforehand");
 
     // Reduced number of slices:
-    int step = max((int)((1. * tube->nb_slices()) / m_tube_max_nb_disp_slices), 1);
+    int step = std::max((int)((1. * tube->nb_slices()) / m_tube_max_nb_disp_slices), 1);
 
     // 1. Background:
     if(m_draw_tubes_backgrounds)
@@ -627,7 +627,7 @@ namespace codac
 
       for(int k = k0 ;
           (from_first_to_last && k <= kf) || (!from_first_to_last && k >= kf) ;
-          k+= from_first_to_last ? max(1,min(step,kf-k)) : -max(1,min(step,k)))
+          k+= from_first_to_last ? std::max(1,std::min(step,kf-k)) : -std::max(1,std::min(step,k)))
       {
         if(!(*tube)[0].slice(k)->tdomain().intersects(m_restricted_tdomain))
           continue;

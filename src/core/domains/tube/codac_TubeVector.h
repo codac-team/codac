@@ -250,6 +250,26 @@ namespace codac
        */
       const Interval tdomain() const;
 
+      /**
+       * \brief Returns a possible lower bound \f$\mathbf{x}^{-}(\cdot)\f$ of the tube
+       *
+       * \note The exact lower bound cannot be known. However, the returned trajectory \f$\mathbf{x}^{-}(\cdot)\f$
+       * is guaranteed to be enclosed in the tube \f$[\mathbf{x}](\cdot)\f$.
+       *
+       * \return a candidate for \f$\mathbf{x}^{-}(\cdot)\f$
+       */
+      const TrajectoryVector lb() const;
+
+      /**
+       * \brief Returns a possible upper bound \f$\mathbf{x}^{+}(\cdot)\f$ of the tube
+       *
+       * \note The exact upper bound cannot be known. However, the returned trajectory \f$\mathbf{x}^{+}(\cdot)\f$
+       * is guaranteed to be enclosed in the tube \f$[\mathbf{x}](\cdot)\f$.
+       *
+       * \return a candidate for \f$\mathbf{x}^{+}(\cdot)\f$
+       */
+      const TrajectoryVector ub() const;
+
       /// @}
       /// \name Slices structure
       /// @{
@@ -648,16 +668,18 @@ namespace codac
        * \note The sampling of this tube is preserved
        *
        * \param y IntervalVector value of the slices
+       * \return *this
        */
-      void set(const IntervalVector& y);
+      const TubeVector& set(const IntervalVector& y);
 
       /**
        * \brief Sets the box value of the ith slice of this tube
        *
        * \param y IntervalVector value of the ith slice
        * \param slice_id index of the ith Slice
+       * \return *this
        */
-      void set(const IntervalVector& y, int slice_id);
+      const TubeVector& set(const IntervalVector& y, int slice_id);
 
       /**
        * \brief Sets the box value of this tube at \f$t\f$: \f$[\mathbf{x}](t)=[\mathbf{y}]\f$
@@ -668,8 +690,9 @@ namespace codac
        *
        * \param y IntervalVector value of the gate
        * \param t the temporal key (double, must belong to the TubeVector's tdomain)
+       * \return *this
        */
-      void set(const IntervalVector& y, double t);
+      const TubeVector& set(const IntervalVector& y, double t);
 
       /**
        * \brief Sets the box value of this tube over \f$[t]\f$: \f$\forall t\in[t], [\mathbf{x}](t)=[\mathbf{y}]\f$
@@ -680,15 +703,17 @@ namespace codac
        *
        * \param y IntervalVector value to be set
        * \param t the subtdomain (Interval, must be a subset of the TubeVector's tdomain)
+       * \return *this
        */
-      void set(const IntervalVector& y, const Interval& t);
+      const TubeVector& set(const IntervalVector& y, const Interval& t);
 
       /**
        * \brief Sets this tube to the empty set
        *
        * \note By convention, all slices will be set to the empty set
+       * \return *this
        */
-      void set_empty();
+      const TubeVector& set_empty();
 
       /**
        * \brief Inflates this tube by adding \f$[-\mathbf{rad},+\mathbf{rad}]\f$ to all its codomain components

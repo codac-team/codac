@@ -58,7 +58,7 @@ namespace codac
       do
       {
         lb = ub; // we guarantee all slices are adjacent
-        ub = min(lb + timestep, tdomain.ub()); // the tdomain of the last slice may be smaller
+        ub = std::min(lb + timestep, tdomain.ub()); // the tdomain of the last slice may be smaller
 
         slice = new Slice(Interval(lb,ub));
 
@@ -291,6 +291,38 @@ namespace codac
       
       return Polygon(v_pts);
     }
+    
+    const Trajectory Tube::lb() const
+    {
+      Trajectory lb;
+
+      const Slice *s_x = first_slice();
+      lb.set(s_x->input_gate().lb(), s_x->tdomain().lb());
+
+      while(s_x != NULL)
+      {
+        lb.set(s_x->output_gate().lb(), s_x->tdomain().ub());
+        s_x = s_x->next_slice();
+      }
+
+      return lb;
+    }
+    
+    const Trajectory Tube::ub() const
+    {
+      Trajectory ub;
+
+      const Slice *s_x = first_slice();
+      ub.set(s_x->input_gate().ub(), s_x->tdomain().lb());
+
+      while(s_x != NULL)
+      {
+        ub.set(s_x->output_gate().ub(), s_x->tdomain().ub());
+        s_x = s_x->next_slice();
+      }
+
+      return ub;
+    }
   
     // Slices structure
 
@@ -310,13 +342,13 @@ namespace codac
 
     Slice* Tube::slice(int slice_id)
     {
-      assert(slice_id >= 0 && slice_id < nb_slices());
       return const_cast<Slice*>(static_cast<const Tube&>(*this).slice(slice_id));
     }
 
     const Slice* Tube::slice(int slice_id) const
     {
-      assert(slice_id >= 0 && slice_id < nb_slices());
+      if(slice_id < 0 && slice_id >= nb_slices())
+        return NULL;
 
       if(m_synthesis_tree != NULL) // fast access
         return m_synthesis_tree->slice(slice_id);
@@ -338,13 +370,13 @@ namespace codac
 
     Slice* Tube::slice(double t)
     {
-      assert(tdomain().contains(t));
       return const_cast<Slice*>(static_cast<const Tube&>(*this).slice(t));
     }
 
     const Slice* Tube::slice(double t) const
     {
-      assert(tdomain().contains(t));
+      if(!tdomain().contains(t))
+        return NULL;
 
       if(m_synthesis_tree != NULL) // fast evaluation
         return m_synthesis_tree->slice(t);
@@ -640,16 +672,20 @@ namespace codac
       
       else
       {
-        if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
-          return make_pair(Interval::all_reals(), Interval::all_reals());
-
         pair<Interval,Interval> enclosed_bounds
           = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
 
-        const Slice *s = slice(t.lb());
-        while(s != NULL && s->tdomain().lb() <= t.ub())
+        if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
         {
-          pair<Interval,Interval> local_eval = s->eval(t & s->tdomain());
+          enclosed_bounds.first |= NEG_INFINITY;
+          enclosed_bounds.second |= POS_INFINITY;
+        }
+
+        Interval t_tdomain = t & tdomain();
+        const Slice *s = slice(t_tdomain.lb());
+        while(s != NULL && s->tdomain().lb() <= t_tdomain.ub())
+        {
+          pair<Interval,Interval> local_eval = s->eval(t_tdomain & s->tdomain());
           enclosed_bounds.first |= local_eval.first;
           enclosed_bounds.second |= local_eval.second;
           s = s->next_slice();
@@ -1071,25 +1107,28 @@ namespace codac
 
     // Setting values
 
-    void Tube::set(const Interval& y)
+    const Tube& Tube::set(const Interval& y)
     {
       for(Slice *s = first_slice() ; s != NULL ; s = s->next_slice())
         s->set(y);
+      return *this;
     }
 
-    void Tube::set(const Interval& y, int slice_id)
+    const Tube& Tube::set(const Interval& y, int slice_id)
     {
       assert(slice_id >= 0 && slice_id < nb_slices());
       slice(slice_id)->set(y);
+      return *this;
     }
 
-    void Tube::set(const Interval& y, double t)
+    const Tube& Tube::set(const Interval& y, double t)
     {
       assert(tdomain().contains(t));
       sample(t, y);
+      return *this;
     }
 
-    void Tube::set(const Interval& y, const Interval& t)
+    const Tube& Tube::set(const Interval& y, const Interval& t)
     {
       assert(tdomain().is_superset(t));
 
@@ -1106,11 +1145,13 @@ namespace codac
             s = s->next_slice())
           s->set(y);
       }
+
+      return *this;
     }
 
-    void Tube::set_empty()
+    const Tube& Tube::set_empty()
     {
-      set(Interval::EMPTY_SET);
+      return set(Interval::EMPTY_SET);
     }
 
     const Tube& Tube::inflate(double rad)

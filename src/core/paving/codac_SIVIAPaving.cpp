@@ -37,7 +37,7 @@ namespace codac
       set_value(SetValue::OUT);
 
     else if(box().max_diam() < precision)
-      set_value(SetValue::MAYBE);
+      set_value(SetValue::UNKNOWN);
 
     else
     {

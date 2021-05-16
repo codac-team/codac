@@ -259,6 +259,8 @@ namespace codac
   macro_scal_binary(operator|);
   macro_scal_binary(operator&);
   macro_scal_binary(atan2);
+  macro_scal_binary(min);
+  macro_scal_binary(max);
 
   #define macro_scal_binary_traj(f, feq) \
     \

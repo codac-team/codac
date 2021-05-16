@@ -141,8 +141,8 @@ void export_Trajectory(py::module& m)
       TRAJECTORY_CONSTTRAJECTORY_DIFF)
 
     .def("finite_diff", &Trajectory::finite_diff,
-        TRAJECTORY_DOUBLE_FINITE_DIFF_DOUBLE,
-        "t"_a)
+        TRAJECTORY_DOUBLE_FINITE_DIFF_DOUBLE_DOUBLE,
+        "t"_a, "h"_a)
 
   // Assignments operators
 

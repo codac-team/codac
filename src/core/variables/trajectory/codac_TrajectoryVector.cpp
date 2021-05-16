@@ -76,7 +76,9 @@ namespace codac
       assert(!list_t.empty());
       assert(list_t.size() == list_x.size());
 
+      #ifdef DEBUG
       int n = list_x.begin()->size();
+      #endif
 
       list<double>::const_iterator it_t = list_t.begin();
       list<Vector>::const_iterator it_x = list_x.begin();
