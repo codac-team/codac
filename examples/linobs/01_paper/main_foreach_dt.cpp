@@ -120,7 +120,7 @@ int main()
 
       /* =========== CONTRACTING THE POLYGONS =========== */
 
-        CtcLinobs ctc_linobs(A, b, &exp);
+        CtcLinobs ctc_linobs(A, b/*, &exp*/);
         vector<ConvexPolygon> polygons_fwdbwd;
         clock_t t_start = clock();
         ctc_linobs.contract(v_t, v_obs, x, u, polygons_fwdbwd, TimePropag::FORWARD | TimePropag::BACKWARD);

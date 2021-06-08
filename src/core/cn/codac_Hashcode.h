@@ -13,8 +13,7 @@
 #define __CODAC_HASHCODE_H__
 
 #include <cstdint>
-#include "codac_Contractor.h"
-#include "codac_Domain.h"
+#include <cstdlib>
 
 namespace codac
 {

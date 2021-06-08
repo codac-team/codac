@@ -19,7 +19,6 @@
 #include "codac_Tube.h"
 #include "codac_TubeVector.h"
 #include "codac_Contractor.h"
-#include "codac_ContractorNetwork.h"
 #include "codac_Hashcode.h"
 
 namespace codac

@@ -20,30 +20,11 @@
 using namespace std;
 using namespace codac;
 
-TrajectoryVector simu_truth(const Matrix& A, const Vector& B, const TFunction& f_u, double dt, const Interval& tdomain)
-{
-  TrajectoryVector truth(2);
-  Vector x0(2, 0.), x = x0;
-
-  for(double t = tdomain.lb() ; t < tdomain.ub()+dt ; t+=dt)
-  {
-    Vector xdot(2);
-    xdot[0] = x[1];
-    xdot[1] = -x[0]-x[1]+f_u.eval(t).mid();
-
-    x += dt*xdot;
-    truth.set(x, t);
-  }
-
-  truth.truncate_tdomain(tdomain); // clean truncature [t0,tf]
-  return truth;
-}
-
 int main()
 {
   /* =========== TRUTH =========== */
 
-    double dt = 0.001;
+    double dt = 0.01;
     Interval tdomain(0.,3.);
 
     TrajectoryVector x_truth(tdomain, TFunction("(10*cos(t) ; 5*sin(2*t) ; atan2(10*cos(2*t),-10*sin(t)) ; sqrt((-10*sin(t))^2+(10*cos(2*t))^2))"));
@@ -132,19 +113,19 @@ int main()
 
     double vol = 0.;
 
-    ContractorNetwork cn;
+    ContractorNetwork subcn;
     //cn.set_fixedpoint_ratio(0.0001);
 
     int nb_obs = 6;
     for(int i = 0 ; i < nb_obs ; i++)
     {
-      IntervalVector& b = cn.create_dom(IntervalVector((i%2 == 0) ? Vector({-5,6}) : Vector({0,-4})));
-      Interval& t = cn.create_dom((i+1)*tdomain.diam()/nb_obs+tdomain.lb());
-      Interval& d = cn.create_dom(sqrt(sqr(b[0]-x_truth(t)[0])+sqr(b[1]-x_truth(t)[1])));
-      IntervalVector& p = cn.create_dom(IntervalVector(4));
+      IntervalVector& b = subcn.create_dom(IntervalVector((i%2 == 0) ? Vector({-5,6}) : Vector({0,-4})));
+      Interval& t = subcn.create_dom((i+1)*tdomain.diam()/nb_obs+tdomain.lb());
+      Interval& d = subcn.create_dom(sqrt(sqr(b[0]-x_truth(t)[0])+sqr(b[1]-x_truth(t)[1])));
+      IntervalVector& p = subcn.create_dom(IntervalVector(4));
 
-      cn.add(ctc::eval, {t, p, x, v});
-      cn.add(ctc::dist, {p[0], p[1], b[0], b[1], d});
+      subcn.add(ctc::eval, {t, p, x, v});
+      subcn.add(ctc::dist, {p[0], p[1], b[0], b[1], d});
 
       fig_map.draw_line({b[0].lb(),x_truth(t.lb())[0]},{b[1].lb(),x_truth(t.lb())[1]}, "gray");
     }
@@ -165,13 +146,25 @@ int main()
     //cn.add(ctc_h, {a, x, u});
     //cn.print_dot_graph("dot");
 
-    cn.add(ctc::deriv, {x, v});
-    cn.add(ctc::deriv, {v, a});
-    cn.add(ctc::deriv, {x[2], u[0]});
-    cn.add(ctc::deriv, {x[3], u[1]});
+    subcn.add(ctc::deriv, {x, v});
+    subcn.add(ctc::deriv, {v, a});
+    subcn.add(ctc::deriv, {x[2], u[0]});
+    subcn.add(ctc::deriv, {x[3], u[1]});
 
-    cn.add(ctc_f_v, {v[0], v[1], v[2], v[3], x[0], x[1], x[2], x[3], u[0], u[1]});
-    cn.add(ctc_h_v, {a[0], a[1], a[2], a[3], x[0], x[1], x[2], x[3], u[0], u[1]});
+    subcn.add(ctc_f_v, {v[0], v[1], v[2], v[3], x[0], x[1], x[2], x[3], u[0], u[1]});
+    subcn.add(ctc_h_v, {a[0], a[1], a[2], a[3], x[0], x[1], x[2], x[3], u[0], u[1]});
+
+    /*cout << "BEFORE" << endl;
+    ContractorNetwork cn;
+    cn.add(subcn);
+    cn.add(ctc_chain, {x[0], v[0], a[0]});
+    cn.add(ctc_chain, {x[1], v[1], a[1]});
+    cn.contract(true);
+    fig_map.show(0.);
+    fig_map.axis_limits(p_truth.codomain(), true);
+    cout << "AFTER" << endl;*/
+    //fig_map.show(0.);
+    //fig_map.axis_limits(p_truth.codomain(), true);
 
     // too slow: cn.add(ctc_linobs, {c0, a[0]});
     // too slow: cn.add(ctc_linobs, {c1, a[1]});
@@ -180,8 +173,8 @@ int main()
     {
       vol = x.volume();
 
-      cn.trigger_all_contractors();
-      cn.contract(true);
+      subcn.trigger_all_contractors();
+      subcn.contract(true);
 
       ctc_chain.contract(x[0], v[0], a[0]);
       ctc_chain.contract(x[1], v[1], a[1]);
