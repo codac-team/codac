@@ -55,6 +55,8 @@ doc/doxygen/xml/*
 # CMake files
 build/
 build_install/
+build-debug/
+build-release/
 
 # Latex files
 *.aux
@@ -66,4 +68,3 @@ wheelhouse/
 *.vscode
 .idea/
 
-cmake-build-debug/
