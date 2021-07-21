@@ -21,5 +21,5 @@ Contractors are C++/Python objects. Some of them can be instantiated according t
   :math:`\mathcal{C}_{\textrm{eval}}`   Dynam.   | ``ctc::eval``  for C++                                :ref:`Link <sec-manual-ctceval>`
                                                  | ``ctc.eval`` for Python                                                              
   :math:`\mathcal{C}_{\textrm{delay}}`  Dynam.   | ``ctc::delay`` for C++                                --
-                                                 | not yet available in Python                                                            
+                                                 | ``ctc.delay`` for Python                                                               
   ====================================  =======  ======================================================  =================================

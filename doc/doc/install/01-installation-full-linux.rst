@@ -28,7 +28,7 @@ Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/in
   # Building + installing
   make
   sudo make install
-  cd ..
+  cd ../..
 
 For further CMake options, please refer to the IBEX documentation. 
 
@@ -66,7 +66,7 @@ For instance:
 
 .. code-block:: bash
   
-  cd examples/basics/ex_01_arithmetic                 # moving to the example directory
+  cd examples/basics/01_arithmetic                    # moving to the example directory
   mkdir build -p ; cd build ; cmake .. ; make         # cmake compilation
   ./codac_basics_01                                   # running example
 

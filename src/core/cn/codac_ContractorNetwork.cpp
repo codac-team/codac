@@ -375,6 +375,19 @@ namespace codac
           dom->add_ctc(ctc_ptr);
       }
     }
+
+    void ContractorNetwork::add(ContractorNetwork& cn)
+    {
+      // Getting the actual contractor (maybe the same if not already added)
+      Contractor *ctc_ptr = add_ctc(cn);
+
+      // Sharing domains from sub_cn to cn
+      for(auto& dom : cn.m_map_domains)
+      {
+        Domain* ad = add_dom(*dom.second);
+        ad->add_ctc(ctc_ptr);
+      }
+    }
     
     void ContractorNetwork::add_data(Tube& tube, double t, const Interval& y)
     {

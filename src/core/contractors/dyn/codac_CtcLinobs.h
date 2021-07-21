@@ -31,10 +31,10 @@ namespace codac
       /**
        * \brief Creates a contractor object \f$\mathcal{C}_\textrm{linobs}\f$
        */
-      // CtcLinobs(const Matrix& A, const Vector& b); // not yet available since auto evaluation of e^At not at hand
-      CtcLinobs(const Matrix& A, const Vector& b, IntervalMatrix (*exp_At)(const Matrix& A, const Interval& t));
+      CtcLinobs(const Matrix& A, const Vector& b); // /!\ auto evaluation of e^At not reliable?
 
       void contract(std::vector<Domain*>& v_domains);
+      void contract(Tube& x1, Tube& x2, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract(TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract(TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
@@ -45,6 +45,7 @@ namespace codac
       // todo: contraction of the observations
       void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, TubeVector& x, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract(std::vector<double>& v_t, std::vector<IntervalVector>& v_y, Tube& x1, Tube& x2, const Tube& u, std::vector<ConvexPolygon>& v_p_k, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
 
       ConvexPolygon polygon_envelope(const ConvexPolygon& p_k, double dt_k_kp1, const Matrix& A, const Vector& b, const Interval& u_k);
 
@@ -59,7 +60,6 @@ namespace codac
 
       const Matrix& m_A;
       const Vector& m_b;
-      IntervalMatrix (*m_exp_At)(const Matrix& A, const Interval& t);
 
       const int m_polygon_max_edges = 15;
 

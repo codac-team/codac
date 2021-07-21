@@ -18,5 +18,6 @@ namespace codac
     CtcDeriv deriv;
     CtcDist dist;
     CtcEval eval;
+    CtcChain chain;
   }
 }

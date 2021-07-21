@@ -24,7 +24,7 @@ TEST_CASE("CtcDelay")
     Interval pi = Interval::pi();
     ctc_delay.contract(pi, x, y);
 
-    if(VIBES_DRAWING)
+    if(false && VIBES_DRAWING)
     {
       vibes::beginDrawing();
       VIBesFigTube fig_x("delay x", &x);
@@ -51,7 +51,7 @@ TEST_CASE("CtcDelay")
     ctc_delay.contract(delay, x, y);
     ctc_delay.contract(delay, x, y);
 
-    if(VIBES_DRAWING)
+    if(true && VIBES_DRAWING)
     {
       vibes::beginDrawing();
       VIBesFigTube fig_x("delay x", &x);

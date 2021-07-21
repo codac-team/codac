@@ -12,6 +12,7 @@
 #include "codac_Domain.h"
 #include "codac_Figure.h" // for add_suffix
 #include "codac_Exception.h"
+#include "codac_ContractorNetwork.h"
 
 using namespace std;
 using namespace ibex;
