@@ -13,6 +13,7 @@
 #include "codac_CtcDeriv.h"
 #include "codac_CtcDist.h"
 #include "codac_Exception.h"
+#include "codac_ContractorNetwork.h"
 
 using namespace std;
 using namespace ibex;
@@ -24,8 +25,6 @@ namespace codac
   Contractor::Contractor(Type type, const vector<Domain*>& v_domains)
     : m_type(type), m_v_domains(v_domains)
   {
-    assert(!v_domains.empty());
-
     ctc_counter++;
     m_ctc_id = ctc_counter;
   }
@@ -34,7 +33,6 @@ namespace codac
     : Contractor(Type::T_IBEX, v_domains)
   {
     assert(!v_domains.empty());
-
     m_static_ctc = reference_wrapper<Ctc>(ctc);
   }
 
@@ -42,16 +40,19 @@ namespace codac
     : Contractor(Type::T_CODAC, v_domains)
   {
     assert(!v_domains.empty());
-
     m_dyn_ctc = reference_wrapper<DynCtc>(ctc);
     m_dyn_ctc.get().preserve_slicing(true);
+  }
+
+  Contractor::Contractor(ContractorNetwork& cn)
+    : Contractor(Type::T_CN, vector<Domain*>())
+  {
+    m_cn_ctc = reference_wrapper<ContractorNetwork>(cn);
   }
 
   Contractor::Contractor(const Contractor& ac)
     : Contractor(ac.m_type, ac.m_v_domains)
   {
-    assert(!ac.m_v_domains.empty());
-
     m_name = ac.m_name;
     m_ctc_id = ac.m_ctc_id;
 
@@ -68,6 +69,10 @@ namespace codac
 
       case Type::T_CODAC:
         m_dyn_ctc = reference_wrapper<DynCtc>(ac.m_dyn_ctc);
+        break;
+
+      case Type::T_CN:
+        m_cn_ctc = reference_wrapper<ContractorNetwork>(ac.m_cn_ctc);
         break;
 
       default:
@@ -102,6 +107,12 @@ namespace codac
     return m_dyn_ctc.get();
   }
 
+  ContractorNetwork& Contractor::cn_ctc()
+  {
+    assert(m_type == Type::T_CN);
+    return m_cn_ctc.get();
+  }
+
   bool Contractor::is_active() const
   {
     return m_active;
@@ -110,16 +121,27 @@ namespace codac
   void Contractor::set_active(bool active)
   {
     m_active = active;
+    if(m_type == Type::T_CN)
+      m_cn_ctc.get().trigger_all_contractors();
   }
 
-  vector<Domain*>& Contractor::domains()
-  {
-    return const_cast<vector<Domain*>&>(static_cast<const Contractor&>(*this).domains());
-  }
+  //vector<Domain*> Contractor::domains()
+  //{
+  //  return const_cast<vector<Domain*> >(static_cast<const Contractor&>(*this).domains());
+  //}
 
-  const vector<Domain*>& Contractor::domains() const
+  const vector<Domain*> Contractor::domains() const
   {
-    return m_v_domains;
+    if(m_type == Type::T_CN)
+    {
+      vector<Domain*> v_dom; // building a vector of domains from the CN map
+      for(const auto& dom : m_cn_ctc.get().m_map_domains)
+        v_dom.push_back(dom.second);
+      return v_dom;
+    }
+
+    else
+      return m_v_domains;
   }
 
   bool Contractor::operator==(const Contractor& x) const
@@ -146,6 +168,10 @@ namespace codac
           (typeid(m_dyn_ctc.get()) != typeid(CtcEval) && 
            typeid(m_dyn_ctc.get()) != typeid(CtcDeriv) && 
            typeid(m_dyn_ctc.get()) != typeid(CtcDist)))
+          return false;
+
+      case Type::T_CN:
+        if(typeid(m_cn_ctc.get()) != typeid(x.m_cn_ctc.get()))
           return false;
 
       case Type::T_COMPONENT:
@@ -180,7 +206,7 @@ namespace codac
 
   void Contractor::contract()
   {
-    assert(!m_v_domains.empty());
+    assert(!m_v_domains.empty() || m_type == Type::T_CN);
 
     if(m_type == Type::T_IBEX)
     {
@@ -324,6 +350,11 @@ namespace codac
       m_dyn_ctc.get().contract(m_v_domains);
     }
 
+    else if(m_type == Type::T_CN)
+    {
+      m_cn_ctc.get().contract();
+    }
+
     else if(m_type == Type::T_COMPONENT)
     {
       // Symbolic
@@ -397,6 +428,9 @@ namespace codac
             return "\\mathcal{C}_{\\frac{d}{dt}}";
         }
         return "\\mathcal{C}_{" + m_name + "}";
+
+      case Type::T_CN:
+        return "CN";
 
       case Type::T_IBEX:
       default:

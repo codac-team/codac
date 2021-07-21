@@ -12,6 +12,7 @@
 #include "codac_CtcEval.h"
 #include "codac_CtcDeriv.h"
 #include "codac_CtcDist.h"
+#include "codac_Contractor.h"
 
 using namespace std;
 using namespace ibex;
@@ -22,48 +23,57 @@ namespace codac
   
   ContractorHashcode::ContractorHashcode(const Contractor& ctc)
   {
-    m_n = ctc.m_v_domains.size()+1;
-    m_ptr = new std::uintptr_t[m_n];
-
-    for(size_t i = 0 ; i < m_n-1 ; i++)
-      m_ptr[i] = DomainHashcode::uintptr(*ctc.m_v_domains[i]);
-
-    switch(ctc.m_type)
+    if(ctc.m_type == Contractor::Type::T_CN)
     {
-      case Contractor::Type::T_EQUALITY:
-        m_ptr[m_n-1] = 0; // todo: check this
-        break;
+      m_ptr = new std::uintptr_t[1];
+      m_ptr[0] = reinterpret_cast<std::uintptr_t>(&ctc.m_cn_ctc.get());
+    }
 
-      case Contractor::Type::T_COMPONENT:
-        m_ptr[m_n-1] = 1; // todo: check this
-        break;
-        
-      case Contractor::Type::T_IBEX:
-        m_ptr[m_n-1] = reinterpret_cast<std::uintptr_t>(&ctc.m_static_ctc.get());
-        assert(m_ptr[m_n-1] > 4); // reserved codes
-        break;
+    else
+    {
+      m_n = ctc.m_v_domains.size()+1;
+      m_ptr = new std::uintptr_t[m_n];
 
-      case Contractor::Type::T_CODAC:
+      for(size_t i = 0 ; i < m_n-1 ; i++)
+        m_ptr[i] = DomainHashcode::uintptr(*ctc.m_v_domains[i]);
 
-        if(typeid(ctc.m_dyn_ctc.get()) == typeid(CtcEval))
-          m_ptr[m_n-1] = 2;
+      switch(ctc.m_type)
+      {
+        case Contractor::Type::T_EQUALITY:
+          m_ptr[m_n-1] = 0; // todo: check this
+          break;
 
-        else if(typeid(ctc.m_dyn_ctc.get()) == typeid(CtcDeriv))
-          m_ptr[m_n-1] = 3;
-
-        else if(typeid(ctc.m_dyn_ctc.get()) == typeid(CtcDist))
-          m_ptr[m_n-1] = 4;
-
-        else
-        {
-          m_ptr[m_n-1] = reinterpret_cast<std::uintptr_t>(&ctc.m_dyn_ctc.get());
+        case Contractor::Type::T_COMPONENT:
+          m_ptr[m_n-1] = 1; // todo: check this
+          break;
+          
+        case Contractor::Type::T_IBEX:
+          m_ptr[m_n-1] = reinterpret_cast<std::uintptr_t>(&ctc.m_static_ctc.get());
           assert(m_ptr[m_n-1] > 4); // reserved codes
-        }
+          break;
 
-        break;
+        case Contractor::Type::T_CODAC:
 
-      default:
-        assert(false && "unhandled case");
+          if(typeid(ctc.m_dyn_ctc.get()) == typeid(CtcEval))
+            m_ptr[m_n-1] = 2;
+
+          else if(typeid(ctc.m_dyn_ctc.get()) == typeid(CtcDeriv))
+            m_ptr[m_n-1] = 3;
+
+          else if(typeid(ctc.m_dyn_ctc.get()) == typeid(CtcDist))
+            m_ptr[m_n-1] = 4;
+
+          else
+          {
+            m_ptr[m_n-1] = reinterpret_cast<std::uintptr_t>(&ctc.m_dyn_ctc.get());
+            assert(m_ptr[m_n-1] > 4); // reserved codes
+          }
+
+          break;
+
+        default:
+          assert(false && "unhandled case");
+      }
     }
   }
 
