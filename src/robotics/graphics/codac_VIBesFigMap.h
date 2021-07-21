@@ -33,6 +33,10 @@ namespace codac
   #define DEFAULT_MAPBCKGRND_COLOR      "#d2d2d2[#d2d2d2]"
   #define DEFAULT_OBS_COLOR             "gray"
 
+  // Vehicle Display modes
+  #define DEFAULT_VEHICLE_ON            1
+  #define DEFAULT_VEHICLE_OFF           0
+
   /**
    * \class VIBesFigMap
    * \brief Two-dimensional graphical item to project dynamical items
@@ -182,8 +186,9 @@ namespace codac
        * \param index_x integer reference for the x-horizontal state component
        * \param index_y integer reference for the y-horizontal state component
        * \param color an optional constant color for this object
+       * \param mode an optional setting to display a vehicle at the end of the trajectory or not
        */
-      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, const std::string& color = DEFAULT_TRAJMAP_COLOR);
+      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, const std::string& color = DEFAULT_TRAJMAP_COLOR, const int mode = DEFAULT_VEHICLE_ON);
 
       /**
        * \brief Adds a trajectory vector object (x,y,heading) to this figure
@@ -197,8 +202,9 @@ namespace codac
        * \param index_y integer reference for the y-horizontal state component
        * \param index_heading integer reference for the heading state component
        * \param color an optional constant color for this object
+       * \param mode an optional setting to display a vehicle at the end of the trajectory or not
        */
-      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, int index_heading, const std::string& color = DEFAULT_TRAJMAP_COLOR);
+      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, int index_heading, const std::string& color = DEFAULT_TRAJMAP_COLOR, const int mode = DEFAULT_VEHICLE_ON);
 
       /**
        * \brief Sets a new name for a trajectory
@@ -227,10 +233,19 @@ namespace codac
       void set_trajectory_color(const TrajectoryVector *traj, const ColorMap& colormap, const Trajectory *traj_colormap = NULL);
 
       /**
+       * \brief Sets a color map for a given trajectory
+       *
+       * \param traj the const pointer to the TrajectoryVector object for which the color will be set
+       * \param mode the integer to indicate vehicle display mode
+       */
+      void set_trajectory_mode(const TrajectoryVector *traj, const int mode);
+
+
+      /**
        * \brief Removes a trajectory from this figure
        *
        * \todo automatically clear the figure (for now, the trajectory is only removed
-       *       from the list of objects to be shown afterwards)
+       *       from the list of objects to be shown afterwards) (done by Julien need to be checked)
        *
        * \note the object will not be deleted
        *
@@ -538,6 +553,7 @@ namespace codac
         std::string color = ""; //!< constant color of the trajectory
         std::pair<ColorMap,const Trajectory*> color_map; //!< custom colormap of the trajectory
         int index_x, index_y, index_heading = -1; //!< integer references for state components ; -1: not defined
+        int vehicle_display_mode = DEFAULT_VEHICLE_ON;
       };
 
       std::map<const TubeVector*,FigMapTubeParams> m_map_tubes; //!< map of Tube objects to be displayed, together with parameters

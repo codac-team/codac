@@ -17,7 +17,7 @@ using namespace ibex;
 
 namespace codac
 {
-  TubePaving::TubePaving(const IntervalVector& init_box) : Paving(init_box, SetValue::UNKNOWN)
+  TubePaving::TubePaving(const IntervalVector& init_box, SetValue value) : Paving(init_box, value)
   {
 
   }
@@ -70,4 +70,70 @@ namespace codac
       ((TubePaving*)m_second_subpaving)->compute(precision, x);
     }
   }
+
+  void TubePaving::compute(float precision, const Tube &x)
+  {
+      assert(precision > 0.);
+      IntervalVector y = box();
+      bool is_in = false;
+
+
+      if ((x.tdomain()&y[0]).is_empty()||(x.codomain()&y[1]).is_empty() || (y[1]&(x(x.tdomain()&y[0]))).is_empty())
+      {
+          set_value(SetValue::OUT);
+          return;
+      }
+
+      else if (y[0].is_subset(x.tdomain()) && y[1].is_subset(x(y[0])))
+      {
+          is_in = true;
+          const Slice* s = x.slice(y[0].lb());
+          while(is_in  && s != NULL && s->tdomain().lb() <= y[0].ub())
+          {
+              if (!s->codomain().is_superset(y[1]))
+              {
+                  is_in = false;
+              }
+              s = s->next_slice();
+          }
+
+      }
+      if (is_in)
+      {
+          set_value(SetValue::IN);
+      }
+      else if(box().max_diam() < precision)
+      {
+          set_value(SetValue::UNKNOWN);
+
+      }
+      else
+      {
+          set_value(SetValue::UNKNOWN);
+          bisect();
+          ((TubePaving*)m_first_subpaving)->compute(precision, x);
+          ((TubePaving*)m_second_subpaving)->compute(precision, x);
+      }
+  }
+      /*
+          for(size_t i = 0 ; i < v_t_inv.size(); i++)
+          {
+              bool is_in = true;
+              if(!(y[0].is_subset(v_t_inv[i]))){is_in=false;}
+              const Slice *s = x.slice(v_t_inv[i].lb());
+              while (is_in && s != NULL && s->tdomain().ub() <= v_t_inv[i].ub())
+              {
+                    is_in &=(y[1].is_subset(s->codomain()));
+                    s=s->next_slice();
+              }
+              if(is_in)
+              {
+                  set_value(SetValue::IN);
+                  return;
+              }
+          }
+          */
+
+
+
 }

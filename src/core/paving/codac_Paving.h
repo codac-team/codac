@@ -118,6 +118,15 @@ namespace codac
       void bisect(float ratio = 0.49);
 
       /**
+        * \brief Bisects this paving into two subpavings with some ratio bisection
+        *
+        * Will create two nodes in the binary tree implementing this set.
+        *
+        * \param ratio the bisection ratio (default value: 0.49)
+        */
+      void bisect(SetValue value, float ratio = 0.49);
+
+      /**
        * \brief Returns true if this paving is made of two subpavings
        *
        * \return `true` if this is a leaf, `false` otherwise
@@ -187,6 +196,20 @@ namespace codac
        * \return the set of connected subsets
        */
       std::vector<ConnectedSubset> get_connected_subsets(bool sort_by_size = false) const;
+
+      /**
+       * \brief Update the subpavings of this paving
+       *
+       * If a set satisfies or do not satisfy a condition strictly
+       * then all of its subsets do satisfy or do not satisfy the same condition
+       * thus we can remove subsets for faster computation.
+       *
+       * If we are not able to distinguish then all the children
+       * are set to the value MAYBE
+       *
+       */
+      void update_children();
+
 
       /// @}
 

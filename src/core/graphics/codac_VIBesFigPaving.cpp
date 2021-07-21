@@ -28,6 +28,7 @@ namespace codac
     color_map[SetValue::IN] = "#9C9C9C[green]";
     color_map[SetValue::UNKNOWN] = "#9C9C9C[yellow]";
     color_map[SetValue::OUT] = "#9C9C9C[cyan]";
+    color_map[SetValue::UNCHECKED] = "#9C9C9C[magenta]";
     color_map[SetValue::PENUMBRA] = "#9C9C9C[white]";
     set_color_map(color_map);
   }
@@ -38,6 +39,7 @@ namespace codac
     vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
     vibes::newGroup("val_unknown", color_map.at(SetValue::UNKNOWN), vibesParams("figure", name()));
     vibes::newGroup("val_out", color_map.at(SetValue::OUT), vibesParams("figure", name()));
+    vibes::newGroup("val_unchecked", color_map.at(SetValue::UNCHECKED), vibesParams("figure", name()));
     vibes::newGroup("val_penumbra", color_map.at(SetValue::PENUMBRA), vibesParams("figure", name()));
   }
 
@@ -47,6 +49,7 @@ namespace codac
     vibes::clearGroup(name(), "val_in");
     vibes::clearGroup(name(), "val_unknown");
     vibes::clearGroup(name(), "val_out");
+    vibes::clearGroup(name(), "val_unchecked");
     vibes::clearGroup(name(), "val_penumbra");
     draw_paving(m_paving);
   }
@@ -66,6 +69,10 @@ namespace codac
 
         case SetValue::OUT:
           color_group = "val_out";
+          break;
+
+        case SetValue::UNCHECKED:
+          color_group = "val_unchecked";
           break;
 
         case SetValue::PENUMBRA:
