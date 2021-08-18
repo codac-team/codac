@@ -361,7 +361,6 @@ namespace codac
 
     const IntervalVector TubeVector::operator()(double t) const
     {
-      assert(tdomain().contains(t));
       IntervalVector box(size());
       for(int i = 0 ; i < size() ; i++)
         box[i] = (*this)[i](t);
@@ -370,7 +369,6 @@ namespace codac
 
     const IntervalVector TubeVector::operator()(const Interval& t) const
     {
-      assert(tdomain().is_superset(t));
       IntervalVector box(size());
       for(int i = 0 ; i < size() ; i++)
         box[i] = (*this)[i](t);
@@ -379,8 +377,6 @@ namespace codac
 
     const pair<IntervalVector,IntervalVector> TubeVector::eval(const Interval& t) const
     {
-      assert(tdomain().is_superset(t));
-
       pair<IntervalVector,IntervalVector> p_eval
         = make_pair(IntervalVector(size()), IntervalVector(size()));
 

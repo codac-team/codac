@@ -38,6 +38,31 @@ Python binding
 
 -----------------------------------------------------------------
 
+Codac release 0.1.5 (released `Aug 18, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.5>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.4 <https://github.com/codac-team/codac/compare/v0.1.4...v0.1.5>`_
+
+Features added
+--------------
+
+* :commit:`b0b627a184c59c788318b25c84eb1c0783cd15c9`: added *Brunovsky* example
+* :commit:`6a1625927bae77a2682084c71138ba8cf67a8048`: first attempt of sub-CN
+* :commit:`f6fbe30d082656a37d049e4f09a8dfea0e5bc4a7`: vehicle displayed on demand on trajectories
+
+Changes
+-------
+
+* :commit:`3ed609083fb2b0c2a2f22ceeb79348d373a2279b`: improved ``CtcDelay`` since new tube definition
+
+Bugs fixed
+----------
+
+* :commit:`22106ee3a4a25b55113a6bba014d6de84b6ce0b4`: eval of ``TubeVector`` objects
+
+
+-----------------------------------------------------------------
+
 Codac release 0.1.4 (released `Mar 17, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.4>`_)
 ========================================================================================================
 
@@ -100,7 +125,7 @@ Codac release 0.1.1 (released `Feb 16, 2021 <https://github.com/codac-team/codac
 Changes
 -------
 
-* :commit:`ed3ff69b60ce0f936f5a94ac4ddb9d796c5186e1`: improved TubeTreeSynthesis computations
+* :commit:`ed3ff69b60ce0f936f5a94ac4ddb9d796c5186e1`: improved `TubeTreeSynthesis` computations
 * :commit:`630a98111b5a2e5fe64785593451840df1631e16`: changing tube definition: unbounded outside tdomain :math:`[t_0,t_f]`
 * :commit:`bb3d64cb42fe530835ac627bd0f916299bc565f6`: updated the interface of loop detections/proofs
 

@@ -52,9 +52,8 @@ namespace codac
         return;
     }
 
-    // if the time domains do not intersect for the given [a], we cannot contract
-    Interval intv_t = x.tdomain() + a;
-    if(!intv_t.intersects(y.tdomain())) return;
+    // Build Tree for Tube y since we will evaluate/invert it in the following
+    y.enable_synthesis();
 
     // iterate over the first tube x
     Slice *s_x = x.first_slice();
@@ -63,34 +62,47 @@ namespace codac
       const Interval t_x = s_x->tdomain();
       Interval intv_t = t_x + a;
 
-      if(intv_t.is_subset(y.tdomain())){
-          const Interval s_y = y(intv_t & y.tdomain());
-          // if the evaluation of the tube y, which we would invert inside [intv_t],
-          // is already completely inside the codomain of s_x, no contraction for [a] can
-          // be achieved and we can avoid the inversion to save computation time
-          if(s_y.is_interior_subset(s_x->codomain())){
-              s_x->set_envelope(s_x->codomain() & s_y);
-          } else {
-              const Interval t_y = y.invert(s_x->codomain(), intv_t & y.tdomain());
-              a &= t_y - t_x;
+      Interval s_y = y(intv_t);
+
+      // if the evaluation of the tube y, which we would invert inside [intv_t],
+      // is already completely inside the codomain of s_x, no contraction for [a] can
+      // be achieved and we can avoid the inversion to save computation time
+
+      // TODO: this only makes sense if we assume that
+      // (1) most slices won't help to contract the time delay [a]
+      // (2) the codomain of s_x is often (more often than (1)) large such that we can
+      // omit the inversion (this is especially the case if we want to propagate information
+      // from y to x and x is initially unknown or very inaccurate)
+      // If we are able to contract [a], the evaluation y(intv_t) is
+      // performed twice, thus increasing the computation time
+
+      if(!s_y.is_interior_subset(s_x->codomain())){
+
+          double a_diam_bef = a.diam();
+
+          const Interval t_y = y.invert(s_x->codomain(), intv_t);
+          a &= t_y - t_x;
+
+          // Only if a has been contracted, we need to update s_y
+          // This can avoid the tube evaluation to save computation time
+          // TODO: The tube evaluation could be implemented more intelligently
+          // since we already know where to evaluate it (as we did the same evaluation above)
+          if(a.diam() < a_diam_bef){
 
               if(a.is_empty()){
                   x.set_empty();
                   y.set_empty();
                   return;
               }
+
               intv_t = t_x + a;
-              s_x->set_envelope(s_x->codomain() & y(intv_t & y.tdomain()));
+              s_y = y(intv_t);
           }
       }
 
-      intv_t = t_x.lb() + a;
-      if(intv_t.is_subset(y.tdomain()))
-          s_x->set_input_gate(s_x->input_gate() & y(intv_t & y.tdomain()));
-
-      intv_t = t_x.ub() + a;
-      if(intv_t.is_subset(y.tdomain()))
-          s_x->set_output_gate(s_x->output_gate() & y(intv_t & y.tdomain()));
+      s_x->set_envelope(s_x->codomain() & s_y);
+      s_x->set_input_gate(s_x->input_gate() & y(t_x.lb() + a));
+      s_x->set_output_gate(s_x->output_gate() & y(t_x.ub() + a));
 
       if(s_x->is_empty()){
           a.set_empty();
@@ -102,6 +114,9 @@ namespace codac
       s_x = s_x->next_slice();
     }
 
+    // Build Tree for Tube x since we will evaluate/invert it in the following
+    x.enable_synthesis();
+
     // iterate over the second tube y
     Slice *s_y = y.first_slice();
     while(s_y != NULL)
@@ -109,34 +124,40 @@ namespace codac
       const Interval t_y = s_y->tdomain();
       Interval intv_t = t_y - a;
 
-      if(intv_t.is_subset(x.tdomain())){
-          const Interval s_x = x(intv_t & x.tdomain());
-          // if the evaluation of the tube x, which we would invert inside [intv_t],
-          // is already completely inside the codomain of s_y, no contraction for [a] can
-          // be achieved and we can avoid the inversion to save computation time
-          if(s_x.is_interior_subset(s_y->codomain())){
-              s_y->set_envelope(s_y->codomain() & s_x);
-          } else {
-              const Interval t_x = x.invert(s_y->codomain(), intv_t & x.tdomain());
-              a &= t_y - t_x;
+      Interval s_x = x(intv_t);
+
+      // if the evaluation of the tube x, which we would invert inside [intv_t],
+      // is already completely inside the codomain of s_y, no contraction for [a] can
+      // be achieved and we can avoid the inversion to save computation time
+
+      // TODO: see above
+
+      if(!s_x.is_interior_subset(s_y->codomain())){
+
+          double a_diam_bef = a.diam();
+
+          const Interval t_x = x.invert(s_y->codomain(), intv_t);
+          a &= t_y - t_x;
+
+          // Only if a has been contracted, we need to update s_x
+          // This can avoid the tube evaluation to save computation time
+          // TODO: see above
+          if(a.diam() < a_diam_bef){
 
               if(a.is_empty()){
                   x.set_empty();
                   y.set_empty();
                   return;
               }
+
               intv_t = t_y - a;
-              s_y->set_envelope(s_y->codomain() & x(intv_t & x.tdomain()));
+              s_x = x(intv_t);
           }
       }
 
-      intv_t = t_y.lb() - a;
-      if(intv_t.is_subset(x.tdomain()))
-          s_y->set_input_gate(s_y->input_gate() & x(intv_t & x.tdomain()));
-
-      intv_t = t_y.ub() - a;
-      if(intv_t.is_subset(x.tdomain()))
-          s_y->set_output_gate(s_y->output_gate() & x(intv_t & x.tdomain()));
+      s_y->set_envelope(s_y->codomain() & s_x);
+      s_y->set_input_gate(s_y->input_gate() & x(t_y.lb() - a));
+      s_y->set_output_gate(s_y->output_gate() & x(t_y.ub() - a));
 
       if(s_y->is_empty()){
           a.set_empty();

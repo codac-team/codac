@@ -151,7 +151,7 @@ namespace codac
     m_map_tubes.erase(tube);
   }
 
-  void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color)
+  void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color, bool vehicle_display)
   {
     assert(traj != NULL);
     if(m_map_trajs.find(traj) != m_map_trajs.end())
@@ -160,10 +160,10 @@ namespace codac
     assert(index_x >= 0 && index_x < traj->size());
     assert(index_y >= 0 && index_y < traj->size());
 
-    add_trajectory(traj, name, index_x, index_y, -1, color);
+    add_trajectory(traj, name, index_x, index_y, -1, color, vehicle_display);
   }
 
-  void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color)
+  void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color, bool vehicle_display)
   {
     assert(traj != NULL);
     if(m_map_trajs.find(traj) != m_map_trajs.end())
@@ -180,6 +180,7 @@ namespace codac
 
     set_trajectory_name(traj, name);
     set_trajectory_color(traj, color);
+    set_vehicle_display(traj, vehicle_display);
   }
 
   void VIBesFigMap::set_trajectory_name(const TrajectoryVector *traj, const string& name)
@@ -217,6 +218,15 @@ namespace codac
     // so that trajectories stay on top of the tubes.
   }
   
+  void VIBesFigMap::set_vehicle_display(const TrajectoryVector *traj, bool vehicle_display)
+  {
+    assert(traj != NULL);
+    if(m_map_trajs.find(traj) == m_map_trajs.end())
+      throw Exception(__func__, "unable to set display mode, unknown trajectory");
+
+    m_map_trajs[traj].vehicle_display = vehicle_display;
+  }
+  
   void VIBesFigMap::remove_trajectory(const TrajectoryVector *traj)
   {
     assert(traj != NULL);
@@ -224,6 +234,11 @@ namespace codac
       throw Exception(__func__, "unable to remove, unknown trajectory");
 
     m_map_trajs.erase(traj);
+
+    ostringstream o;
+    o << "traj_" << m_map_trajs[traj].name;
+    string group_name = o.str();
+    vibes::clearGroup(name(), group_name);
   }
 
   void VIBesFigMap::add_beacon(const Beacon& beacon, const string& color)
@@ -387,7 +402,7 @@ namespace codac
       throw Exception(__func__, "unknown trajectory, must be added beforehand");
     assert(points_size >= 0.);
 
-    std::ostringstream o;
+    ostringstream o;
     o << "traj_" << m_map_trajs[traj].name;
     string group_name = o.str();
     vibes::clearGroup(name(), group_name);
@@ -519,7 +534,8 @@ namespace codac
     else
       vibes::drawLine(v_x, v_y, params);
 
-    draw_vehicle((traj->tdomain() & m_restricted_tdomain).ub(), traj, params);
+    if(m_map_trajs[traj].vehicle_display)
+      draw_vehicle((traj->tdomain() & m_restricted_tdomain).ub(), traj, params);
 
     return viewbox;
   }

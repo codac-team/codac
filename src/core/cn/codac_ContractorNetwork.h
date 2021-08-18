@@ -17,9 +17,9 @@
 #include "codac_Ctc.h"
 #include "codac_DynCtc.h"
 #include "codac_Domain.h"
-#include "codac_Contractor.h"
 #include "codac_CtcDeriv.h"
 #include "codac_Hashcode.h"
+#include "codac_Contractor.h"
 
 namespace ibex
 {
@@ -29,7 +29,6 @@ namespace ibex
 namespace codac
 {
   class Domain;
-  class Contractor;
   class DynCtc;
   class CtcDeriv;
   class DomainHashcode;
@@ -192,6 +191,9 @@ namespace codac
        * \param v_domains a vector of abstract domains (Interval, Slice, Tube, etc.)
        */
       void add(DynCtc& dyn_ctc, const std::vector<Domain>& v_domains);
+
+
+      void add(ContractorNetwork& cn);
 
       /**
        * \brief Adds continuous data \f$[y]\f$ to a tube \f$[x](\cdot)\f$ at \f$t\f$ (used for realtime applications).
@@ -393,6 +395,7 @@ namespace codac
       std::list<std::pair<Domain*,Domain*> > m_domains_related_to_ctcderiv;
 
       friend class Domain;
+      friend class Contractor;
   };
 }
 

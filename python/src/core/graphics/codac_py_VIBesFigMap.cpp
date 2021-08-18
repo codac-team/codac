@@ -89,13 +89,13 @@ void export_VIBesFigMap(py::module& m)
 
   // Handling trajectories
 
-    .def("add_trajectory", (void (VIBesFigMap::*)(const TrajectoryVector*,const string&,int,int,const string&))&VIBesFigMap::add_trajectory,
-      VIBESFIGMAP_VOID_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_INT_INT_STRING,
-      "traj"_a, "name"_a, "index_x"_a, "index_y"_a, "color"_a=DEFAULT_TRAJMAP_COLOR)
+    .def("add_trajectory", (void (VIBesFigMap::*)(const TrajectoryVector*,const string&,int,int,const string&,bool))&VIBesFigMap::add_trajectory,
+      VIBESFIGMAP_VOID_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_INT_INT_STRING_BOOL,
+      "traj"_a, "name"_a, "index_x"_a, "index_y"_a, "color"_a=DEFAULT_TRAJMAP_COLOR, "vehicle_display"_a=DEFAULT_VEHICLE_DISPLAY_ON_EACH_TRAJ)
     
-    .def("add_trajectory", (void (VIBesFigMap::*)(const TrajectoryVector*,const string&,int,int,int,const string&))&VIBesFigMap::add_trajectory,
-      VIBESFIGMAP_VOID_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_INT_INT_INT_STRING,
-      "traj"_a, "name"_a, "index_x"_a, "index_y"_a, "index_heading"_a, "color"_a=DEFAULT_TRAJMAP_COLOR)
+    .def("add_trajectory", (void (VIBesFigMap::*)(const TrajectoryVector*,const string&,int,int,int,const string&,bool))&VIBesFigMap::add_trajectory,
+      VIBESFIGMAP_VOID_ADD_TRAJECTORY_TRAJECTORYVECTOR_STRING_INT_INT_INT_STRING_BOOL,
+      "traj"_a, "name"_a, "index_x"_a, "index_y"_a, "index_heading"_a, "color"_a=DEFAULT_TRAJMAP_COLOR, "vehicle_display"_a=DEFAULT_VEHICLE_DISPLAY_ON_EACH_TRAJ)
     
     .def("set_trajectory_name", &VIBesFigMap::set_trajectory_name,
       VIBESFIGMAP_VOID_SET_TRAJECTORY_NAME_TRAJECTORYVECTOR_STRING,
@@ -108,6 +108,10 @@ void export_VIBesFigMap(py::module& m)
     .def("set_trajectory_color", (void (VIBesFigMap::*)(const TrajectoryVector*,const ColorMap&,const Trajectory*))&VIBesFigMap::set_trajectory_color,
       VIBESFIGMAP_VOID_SET_TRAJECTORY_COLOR_TRAJECTORYVECTOR_COLORMAP_TRAJECTORY,
       "traj"_a, "colormap"_a, "traj_colormap"_a=nullptr)
+    
+    .def("set_vehicle_display", (void (VIBesFigMap::*)(const TrajectoryVector*,bool))&VIBesFigMap::set_vehicle_display,
+      VIBESFIGMAP_VOID_SET_VEHICLE_DISPLAY_TRAJECTORYVECTOR_BOOL,
+      "traj"_a, "vehicle_display"_a)
     
     .def("remove_trajectory", &VIBesFigMap::remove_trajectory,
       VIBESFIGMAP_VOID_REMOVE_TRAJECTORY_TRAJECTORYVECTOR,
