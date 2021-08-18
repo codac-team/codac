@@ -15,8 +15,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         draft: true
-        tag_name: autotagname
-        release_name: autotagname
+        tag_name: autotagname-${{ github.sha }}
+        release_name: autotagname-${{ github.sha }}
+      if: github.event_name != 'pull_request'
 
  unixmatrix:
     runs-on: ${{ matrix.cfg.os }}
@@ -58,27 +59,33 @@ jobs:
     - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
       shell: bash
       if: runner.os=='Linux'
+#    - run: |
+#        choco install -y -r --no-progress wget
+#        wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
+#        move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\
+#        wget http://www.ensta-bretagne.fr/lebars/Share/qt-installer-5.12.6-mingw73_32.qs --no-check-certificate -nv
+#        move /Y qt-installer-5.12.6-mingw73_32.qs %SystemDrive%\
+#        netsh advfirewall set allprofiles state on
+#        netsh advfirewall firewall add rule name="Qt offline installer" dir=out action=block program="%SystemDrive%\qt-opensource-windows-x86-5.12.6.exe" enable=yes
+#        rem Take several min...
+#        %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe --script %SystemDrive%\qt-installer-5.12.6-mingw73_32.qs
+#        netsh advfirewall firewall del rule name="Qt offline installer"
+#        netsh advfirewall set allprofiles state off
+#        del /f /q %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe
+#        echo C:\Qt\Qt5.12.6\5.12.6\mingw73_32\bin;C:\Qt\Qt5.12.6\Tools\mingw730_32\bin>>%GITHUB_PATH%
+#      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw7')
     - run: |
-        choco install -y -r --no-progress wget
-        wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
-        move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\
-        wget http://www.ensta-bretagne.fr/lebars/Share/qt-installer-5.12.6-mingw73_32.qs --no-check-certificate -nv
-        move /Y qt-installer-5.12.6-mingw73_32.qs %SystemDrive%\
-        netsh advfirewall set allprofiles state on
-        netsh advfirewall firewall add rule name="Qt offline installer" dir=out action=block program="%SystemDrive%\qt-opensource-windows-x86-5.12.6.exe" enable=yes
-        rem Take several min...
-        %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe --script %SystemDrive%\qt-installer-5.12.6-mingw73_32.qs
-        netsh advfirewall firewall del rule name="Qt offline installer"
-        netsh advfirewall set allprofiles state off
-        del /f /q %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe
-        echo C:\Qt\Qt5.12.6\5.12.6\mingw73_32\bin;C:\Qt\Qt5.12.6\Tools\mingw730_32\bin>>%GITHUB_PATH%
-      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw7')
+        choco install -y -r --no-progress mingw --version=7.3.0 --force ${{ matrix.cfg.choco_flags }}
+        echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin>>%GITHUB_PATH%
+        choco install -y -r --no-progress ibex --version=2.8.9 --ignore-dependencies ${{ matrix.cfg.choco_flags }}
+      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw7')&&(matrix.cfg.arch=='x86')
     - run: |
         choco install -y -r --no-progress mingw --version=8.1.0 --force ${{ matrix.cfg.choco_flags }}
         echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin>>%GITHUB_PATH%
       if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8')&&(matrix.cfg.arch=='x86')
     - run: |
-        choco install -y -r --no-progress checksum wget winflexbison make patch zip eigen ${{ matrix.cfg.choco_flags }}
+        choco install -y -r --no-progress checksum wget winflexbison make patch zip ${{ matrix.cfg.choco_flags }}
+        choco install -y -r --no-progress eigen --version=3.3.4.20210818 ${{ matrix.cfg.choco_flags }}
         choco install -y -r --no-progress ibex --version=2.8.9 ${{ matrix.cfg.choco_flags }}
       if: runner.os=='Windows'
 #    - run: sudo apt-get -q update ; sudo apt-get -y install flex bison libeigen3-dev || true
@@ -102,7 +109,7 @@ jobs:
       shell: bash
     - run: |
         wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
-        unzip -q codac_test_win.zip ; rm -Rf codac_test_win.zip ; cd codac_test_win ; if [ -d ../ibex ]; then rm -Rf ibex ; cp -Rf ../ibex . ; fi ; rm -Rf codac ; cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./test ; cd .. ; zip -q -r codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
+        unzip -q codac_test_win.zip ; rm -Rf codac_test_win.zip ; cd codac_test_win ; if [ -d ../ibex ]; then rm -Rf ibex ; cp -Rf ../ibex . ; fi ; rm -Rf codac ; cp -Rf ../codac . ; rm -Rf ReadMe.txt ; cp -Rf ../tests/test_codac/* ./test ; cd .. ; zip -q -r codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
         cmake ${{ matrix.cfg.cmake_params }} .
         cmake --build . ${{ matrix.cfg.cmake_config }}
         ./${{ matrix.cfg.test_config }}my_project
@@ -149,4 +156,5 @@ jobs:
       with:
         file: "*.zip;*.nupkg;*.deb"
         overwrite: true
-        tag_name: autotagname
+        tag_name: autotagname-${{ github.sha }}
+      if: github.event_name != 'pull_request'

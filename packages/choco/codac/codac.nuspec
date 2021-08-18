@@ -11,13 +11,13 @@
     <licenseUrl>https://github.com/codac-team/codac/blob/master/COPYING.LESSER</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/codac-team/codac</projectSourceUrl>
-    <tags>codac</tags>
+    <tags>codac tube interval contraints contractor C++ CPP</tags>
     <summary>Codac is a library providing tools for constraint programming over reals, trajectories and sets.</summary>
     <description>
 Codac is a library providing tools for constraint programming over reals, trajectories and sets.
 
 ## Quick start
-- After installing Chocolatey, run `choco install -y codac cmake make qtcreator` in PowerShell and then launch Qt Creator and choose Open Project, open `test_codac\CMakelists.txt` (get the folder from https://www.ensta-bretagne.fr/lebars/Share/test_codac.zip), ensure Desktop is selected and click Configure Project, wait 10 s then click on the big bottom green Run button, finally check that "My first tube:Tube [0, 10]" appears.
+- After [installing Chocolatey](https://chocolatey.org/install), run `choco install -y codac cmake make qtcreator` in PowerShell and then launch Qt Creator and choose Open Project, open `test_codac\CMakelists.txt` (get the folder from https://www.ensta-bretagne.fr/lebars/Share/test_codac.zip), ensure Desktop is selected and click Configure Project, wait 10 s then click on the big bottom green Run button, finally check that "My first tube:Tube [0, 10]" appears.
 - Optionally, download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/download/0.2.3/VIBes-0.2.3-win32.exe before running the project, and check that a tube appears in VIBes window.
 
 ## Troubleshooting
