@@ -33,7 +33,6 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
             - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
             - { os: ubuntu-18.04, shell: bash, arch: amd64, runtime: bionic, cmake_flags: '-fPIC', desc: 'Ubuntu 18.04' }
-            - { os: ubuntu-16.04, shell: bash, arch: amd64, runtime: xenial, cmake_flags: '-fPIC', desc: 'Ubuntu 16.04' }
 #            - { os: macos-11.0, shell: bash, arch: amd64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur 11.0' } # Not yet available...
             - { os: macos-10.15, shell: bash, arch: amd64, runtime: catalina, cmake_flags: '-fPIC', desc: 'macOS Catalina 10.15' }
     name: ${{ matrix.cfg.desc }}
