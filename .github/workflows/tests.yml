@@ -22,6 +22,7 @@ jobs:
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
     - run: |
+        sudo apt-get -q update ; sudo apt-get -y install gcc-${{ matrix.cfg.gcc_v }} g++-${{ matrix.cfg.gcc_v }} || true
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.cfg.gcc_v }} 100 --slave /usr/bin/g++ g++ /usr/bin/g++-${{ matrix.cfg.gcc_v }}
         gcc --version
         g++ --version
@@ -29,7 +30,7 @@ jobs:
         python -c "import sys; print(sys.version)"
         pip --version
 
-        sudo apt-get -q update ; sudo apt-get -y install flex bison libeigen3-dev || true
+        sudo apt-get -y install flex bison libeigen3-dev
   
         # For documentation
         pip install sphinx breathe sphinx-issues sphinx-tabs sphinx_rtd_theme

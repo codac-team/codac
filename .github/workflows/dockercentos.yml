@@ -24,4 +24,5 @@ jobs:
       with:
         file: "wheelhouse/*.whl"
         overwrite: true
-        tag_name: autotagname
+        tag_name: autotagname-${{ github.sha }}
+      if: github.event_name != 'pull_request'
