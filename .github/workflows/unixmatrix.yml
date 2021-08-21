@@ -27,7 +27,7 @@ jobs:
     strategy:
         matrix:
             cfg:
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cmake_flags: ' /D WIN32 /EHsc /wd4267 /wd4244 /wd4305', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x64' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows Qt 5.12.6 MinGW 7.3.0 x86' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 8.1.0 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
@@ -91,18 +91,18 @@ jobs:
 #      shell: bash
 #      if: runner.os=='Linux'
     - run: |
-        echo "deb [trusted=yes] http://www.ensta-bretagne.fr/lebars/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" | sudo tee -a /etc/apt/sources.list.d/ensta-bretagne.list
+        sudo sh -c 'echo "deb [trusted=yes] http://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
       shell: bash
       if: runner.os=='Linux'
     - run: brew install eigen
       if: runner.os=='macOS'
-    - run: git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" -D CMAKE_CXX_FLAGS="${{ matrix.cfg.cmake_flags }}" -D CMAKE_C_FLAGS="${{ matrix.cfg.cmake_flags }}" .. ; cmake --build . ${{ matrix.cfg.cmake_config }} --target install ; cd ../..
+    - run: git clone https://github.com/ibex-team/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . ${{ matrix.cfg.cmake_config }} --target install ; cd ../..
       shell: bash
       if: ((runner.os=='Windows')&&(matrix.cfg.runtime!='mingw8'))||((runner.os!='Windows')&&(runner.os!='Linux'))
     - run: |
         mkdir build ; cd build
-        cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_CXX_FLAGS="${{ matrix.cfg.cmake_flags }}" -D CMAKE_C_FLAGS="${{ matrix.cfg.cmake_flags }}" -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
         cmake --build . ${{ matrix.cfg.cmake_codac_config }} --target install
         cd ..
       shell: bash
