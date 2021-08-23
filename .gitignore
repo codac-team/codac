@@ -54,9 +54,8 @@ doc/doxygen/xml/*
 
 # CMake files
 build/
-build_install/
-build-debug/
-build-release/
+build_*/
+build-*/
 
 # Latex files
 *.aux
