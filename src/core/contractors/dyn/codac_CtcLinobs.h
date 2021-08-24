@@ -31,7 +31,8 @@ namespace codac
       /**
        * \brief Creates a contractor object \f$\mathcal{C}_\textrm{linobs}\f$
        */
-      CtcLinobs(const Matrix& A, const Vector& b); // /!\ auto evaluation of e^At not reliable?
+      CtcLinobs(const Matrix& A, const Vector& b); // /!\ auto evaluation of e^At not reliable
+      ~CtcLinobs();
 
       void contract(std::vector<Domain*>& v_domains);
       void contract(Tube& x1, Tube& x2, const Tube& u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
@@ -58,8 +59,8 @@ namespace codac
 
     protected:
 
-      const Matrix& m_A;
-      const Vector& m_b;
+      const Matrix* m_A;
+      const Vector* m_b;
 
       const int m_polygon_max_edges = 15;
 
