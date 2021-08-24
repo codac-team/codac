@@ -16,7 +16,7 @@ using namespace std;
 using namespace ibex;
 using namespace codac;
 
-#define VIBES_DRAWING 0
+//#define VIBES_DRAWING 0
 
 TEST_CASE("CtcChain")
 {
