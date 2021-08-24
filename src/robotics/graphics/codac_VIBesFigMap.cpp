@@ -151,11 +151,7 @@ namespace codac
     m_map_tubes.erase(tube);
   }
 
-<<<<<<< HEAD
-  void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color, const int mode)
-=======
   void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color, bool vehicle_display)
->>>>>>> upstream/dev
   {
     assert(traj != NULL);
     if(m_map_trajs.find(traj) != m_map_trajs.end())
@@ -163,18 +159,10 @@ namespace codac
     assert(index_x != index_y);
     assert(index_x >= 0 && index_x < traj->size());
     assert(index_y >= 0 && index_y < traj->size());
-
-<<<<<<< HEAD
-    add_trajectory(traj, name, index_x, index_y, -1, color, mode);
-  }
-
-  void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color, const int mode)
-=======
     add_trajectory(traj, name, index_x, index_y, -1, color, vehicle_display);
   }
 
   void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color, bool vehicle_display)
->>>>>>> upstream/dev
   {
     assert(traj != NULL);
     if(m_map_trajs.find(traj) != m_map_trajs.end())
@@ -191,11 +179,7 @@ namespace codac
 
     set_trajectory_name(traj, name);
     set_trajectory_color(traj, color);
-<<<<<<< HEAD
-    set_trajectory_mode(traj,mode);
-=======
     set_vehicle_display(traj, vehicle_display);
->>>>>>> upstream/dev
   }
 
   void VIBesFigMap::set_trajectory_name(const TrajectoryVector *traj, const string& name)
@@ -232,17 +216,6 @@ namespace codac
     // Related groups are created during the display procedure
     // so that trajectories stay on top of the tubes.
   }
-
-  void VIBesFigMap::set_trajectory_mode(const TrajectoryVector *traj, const int mode)
-  {
-      assert(traj != NULL);
-      assert(m_map_trajs.find(traj) != m_map_trajs.end()
-             && "unable to remove, unknown traj");
-      m_map_trajs[traj].vehicle_display_mode = mode;
-  }
-
-
-
 
   
   void VIBesFigMap::set_vehicle_display(const TrajectoryVector *traj, bool vehicle_display)
