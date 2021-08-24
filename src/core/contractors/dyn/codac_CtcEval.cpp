@@ -161,7 +161,7 @@ namespace codac
     w &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY); // todo: remove this
 
     t &= y.tdomain();
-    t &= y.invert(z, w ,t);
+    t &= y.invert(z, w, t);
 
     if(!t.is_empty())
     {
@@ -268,7 +268,7 @@ namespace codac
 
         // 4. Evaluation contraction
 
-          t &= y.invert(z, w ,t);
+          t &= y.invert(z, w, t);
           if(!t.is_empty())
             z &= y.interpol(t, w);
 
@@ -395,7 +395,7 @@ namespace codac
 
     Interval t_result = Interval::EMPTY_SET;
 
-    t &= y.invert(z);
+    t &= y.invert(z, t);
     z &= y(t);
 
     for(int i = 0 ; i < y.size() ; i++)
@@ -438,7 +438,7 @@ namespace codac
       return;
     }
 
-    t &= y.invert(z);
+    t &= y.invert(z, t);
     z &= y(t);
   }
 
@@ -456,7 +456,7 @@ namespace codac
       return;
     }
 
-    t &= y.invert(z);
+    t &= y.invert(z, t);
     z &= y(t);
   }
 }

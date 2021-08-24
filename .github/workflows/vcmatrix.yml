@@ -14,24 +14,25 @@ jobs:
         matrix:
             cfg:
             # Change with_python: OFF when pyibex becomes available...
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9, with_python: OFF, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x86 C++ Python 3.9' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9, with_python: OFF, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x86 C++ Python 3.9' }
             # Uncomment when pyibex becomes available...
-#            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8, with_python: OFF, desc: 'Windows Visual Studio 2019 x86 Python 3.8' }
+#            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8, with_python: OFF, desc: 'Windows Visual Studio 2019 x86 Python 3.8' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x64 C++ Python 3.9' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8, with_python: ON, desc: 'Windows Visual Studio 2019 x64 Python 3.8' }
-            - { os: windows-2016, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 15" -A Win32', with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x86 C++' }
+            - { os: windows-2016, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 15" -A Win32', choco_flags: '--x86', with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x86 C++' }
             - { os: windows-2016, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 15" -A x64', with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x64 C++' }
+            # Temporary fix due to current Visual Studio 2015 installation problem : changed os: windows-2019, cmake_params: '-G "Visual Studio 14" -A Win32' and removed choco_vs_tools: 'vcbuildtools' in all the cfg below so Visual Studio 2017 is currently used instead of 2015...
             # Change with_python: OFF when pyibex becomes available...
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A Win32', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 7, with_python: OFF, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2015 x86 C++ Python 3.7' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A Win32', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 6, with_python: ON, desc: 'Windows Visual Studio 2015 x86 Python 3.6' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A Win32', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 5, with_python: ON, desc: 'Windows Visual Studio 2015 x86 Python 3.5' }
+            - { os: windows-2016, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 15" -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 7, with_python: OFF, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x86 C++ Python 3.7' }
+            - { os: windows-2016, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 15" -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 6, with_python: ON, desc: 'Windows Visual Studio 2017 x86 Python 3.6' }
+            - { os: windows-2016, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 15" -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 5, with_python: ON, desc: 'Windows Visual Studio 2017 x86 Python 3.5' }
             # Should be Visual Studio 2010 for Python 3.4...?
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A Win32', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 4, with_python: ON, desc: 'Windows Visual Studio 2015 x86 Python 3.4' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A x64', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 7, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2015 x64 C++ Python 3.7' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A x64', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, with_python: ON, desc: 'Windows Visual Studio 2015 x64 Python 3.6' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A x64', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 5, with_python: ON, desc: 'Windows Visual Studio 2015 x64 Python 3.5' }
+            - { os: windows-2016, shell: cmd, arch: x86, runtime: vc14, cmake_params: '-G "Visual Studio 15" -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 4, with_python: ON, desc: 'Windows Visual Studio 2017 x86 Python 3.4' }
+            - { os: windows-2016, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 15" -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 7, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x64 C++ Python 3.7' }
+            - { os: windows-2016, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 15" -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, with_python: ON, desc: 'Windows Visual Studio 2017 x64 Python 3.6' }
+            - { os: windows-2016, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 15" -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 5, with_python: ON, desc: 'Windows Visual Studio 2017 x64 Python 3.5' }
             # Should be Visual Studio 2010 for Python 3.4...?
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 14" -A x64', choco_vs_tools: 'vcbuildtools', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 4, with_python: ON, desc: 'Windows Visual Studio 2015 x64 Python 3.4' }
+            - { os: windows-2016, shell: cmd, arch: x64, runtime: vc14, cmake_params: '-G "Visual Studio 15" -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 4, with_python: ON, desc: 'Windows Visual Studio 2017 x64 Python 3.4' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v2
@@ -63,8 +64,7 @@ jobs:
       if: matrix.cfg.choco_vs_tools=='vcbuildtools'
     - run: choco install -y -r --no-progress ${{ matrix.cfg.choco_vs_tools }} winflexbison
       if: startsWith(matrix.cfg.runtime, 'vc') && matrix.cfg.choco_vs_tools!='vcbuildtools'
-      # Registry bug...?
-    - run: wget https://github.com/ros2/choco-packages/releases/download/2020-02-24/eigen.3.3.4.nupkg --no-check-certificate -nv & choco install -y -s . eigen & reg add HKEY_LOCAL_MACHINE\SOFTWARE\Kitware\CMake\Packages\Eigen3 /v "CMakePackageDir" /t REG_SZ /d "C:\ProgramData\chocolatey\lib\eigen\share\cmake" /f
+    - run: choco install -y -r --no-progress eigen --version=3.3.4.20210818 ${{ matrix.cfg.choco_flags }}
       shell: cmd
       if: runner.os == 'Windows'
     - run: choco install -y -r --no-progress doxygen.install graphviz & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade pyIbex & pip install --upgrade wheel setuptools
@@ -85,7 +85,7 @@ jobs:
       shell: bash
     - run: |
         wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
-        7z x codac_test_win.zip -y ; rm -Rf codac_test_win.zip ; cd codac_test_win ; rm -Rf ibex codac ; cp -Rf ../ibex . ; cp -Rf ../codac . ; cd .. ; 7z a -y codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
+        7z x codac_test_win.zip -y ; rm -Rf codac_test_win.zip ; cd codac_test_win ; if [ -d ../ibex ]; then rm -Rf ibex ; cp -Rf ../ibex . ; fi ; rm -Rf codac ; cp -Rf ../codac . ; rm -Rf ReadMe.txt ; cp -Rf ../tests/test_codac/* ./test ; cd .. ; 7z a -y codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
         cmake ${{ matrix.cfg.cmake_params }} .
         cmake --build . --config Release
         ./Release/my_project.exe
@@ -98,4 +98,5 @@ jobs:
       with:
         file: "*.zip;*.whl"
         overwrite: true
-        tag_name: autotagname
+        tag_name: autotagname-${{ github.sha }}
+      if: github.event_name != 'pull_request'

@@ -1,0 +1,9 @@
+Package: libcodac-dev
+Version: 1
+Architecture: armhf
+Depends: libeigen3-dev, libibex-dev
+Section: math
+Priority: optional
+Description: Codac is a library providing tools for constraint programming over reals, trajectories and sets
+Maintainer: codac.io
+Homepage: codac.io

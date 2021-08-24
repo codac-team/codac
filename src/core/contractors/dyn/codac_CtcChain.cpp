@@ -17,11 +17,8 @@ using namespace ibex;
 
 namespace codac
 {
-  const Matrix CtcChain::m_A = Matrix({{0,1},{0,0}});
-  const Vector CtcChain::m_b = Vector({0,1});
-
   CtcChain::CtcChain()
-    : CtcLinobs(m_A, m_b)
+    : CtcLinobs(Matrix({{0,1},{0,0}}), Vector({0,1}))
   {
 
   }

@@ -1,0 +1,6 @@
+﻿
+VERIFICATION
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package's contents are trustworthy.
+ 
+This package is generated from https://github.com/codac-team/codac (the official Codac GitHub source repository) or https://github.com/lebarsfa/codac/master, which is a fork (the modifications made can be listed on https://github.com/codac-team/codac/compare/master...lebarsfa:master). The automated build log can be seen by clicking on "Windows MinGW 8.1.0 x64" and "Windows MinGW 8.1.0 x86" jobs on https://github.com/codac-team/codac/actions/workflows/unixmatrix.yml or https://github.com/lebarsfa/codac/actions/workflows/unixmatrix.yml, and signing in with GitHub. In particular, a sha256 checksum is visible for each generated .nupkg, as it is computed in .github/workflows/unixmatrix.yml using checksum command. Those temporary .nupkg are available on https://github.com/codac-team/codac/releases or https://github.com/lebarsfa/codac/releases and are used to create this package : it can be checked e.g. using WinMerge that x86 folder from this package contains the bin, include, lib, share folders from the "--x86" package on GitHub and all the other folders are from the non-"--x86" package.

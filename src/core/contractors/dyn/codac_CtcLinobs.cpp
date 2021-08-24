@@ -41,10 +41,16 @@ namespace codac
   }
 
   CtcLinobs::CtcLinobs(const Matrix& A, const Vector& b)
-    : DynCtc(), m_A(A), m_b(b)
+    : DynCtc(), m_A(new Matrix(A)), m_b(new Vector(b))
   {
     assert(A.nb_cols() == 2 && A.nb_rows() == 2);
     assert(b.size() == 2);
+  }
+
+  CtcLinobs::~CtcLinobs()
+  {
+    delete m_A;
+    delete m_b;
   }
 
   // Static members for contractor signature (mainly used for CN Exceptions)
@@ -167,11 +173,11 @@ namespace codac
 
           if(tkm1_tk.intersects(m_restricted_tdomain))
           {
-            ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain());
+            ctc_fwd_gate(v_p_k[i], v_p_k[i-1], tkm1_tk.diam(), *m_A, *m_b, su->codomain());
 
             for(size_t j = 0 ; j < v_t.size() ; j++) // observations at uncertain times
               if(tkm1_tk.contains(v_t[j]))
-                ctc_fwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), tkm1_tk.ub()-v_t[j], m_A, m_b, su->codomain());
+                ctc_fwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), tkm1_tk.ub()-v_t[j], *m_A, *m_b, su->codomain());
             // todo: contraction of the observations
 
             IntervalVector ouputgate_box = v_p_k[i].box();
@@ -186,7 +192,7 @@ namespace codac
 
             else
             {
-              IntervalVector envelope_box = polygon_envelope(v_p_k[i-1], tkm1_tk.diam(), m_A, m_b, su->codomain()).box();
+              IntervalVector envelope_box = polygon_envelope(v_p_k[i-1], tkm1_tk.diam(), *m_A, *m_b, su->codomain()).box();
               s1->set_envelope(envelope_box[0]);
               s2->set_envelope(envelope_box[1]);
             }
@@ -212,18 +218,18 @@ namespace codac
 
           if(tk_kp1.intersects(m_restricted_tdomain))
           {
-            ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), m_A, m_b, su->codomain());
+            ctc_bwd_gate(v_p_k[i], v_p_k[i+1], tk_kp1.diam(), *m_A, *m_b, su->codomain());
 
             for(size_t j = 0 ; j < v_t.size() ; j++) // observations at uncertain times
               if(tk_kp1.contains(v_t[j]))
-                ctc_bwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), v_t[j]-tk_kp1.lb(), m_A, m_b, su->codomain());
+                ctc_bwd_gate(v_p_k[i], ConvexPolygon(v_y[j]), v_t[j]-tk_kp1.lb(), *m_A, *m_b, su->codomain());
             // todo: contraction of the observations
 
             IntervalVector polybox = v_p_k[i].box();
             s1->set_input_gate(polybox[0]);
             s2->set_input_gate(polybox[1]);
 
-            IntervalVector envelope_box = polygon_envelope(v_p_k[i], tk_kp1.diam(), m_A, m_b, su->codomain()).box();
+            IntervalVector envelope_box = polygon_envelope(v_p_k[i], tk_kp1.diam(), *m_A, *m_b, su->codomain()).box();
             s1->set_envelope(envelope_box[0]);
             s2->set_envelope(envelope_box[1]);
           }
