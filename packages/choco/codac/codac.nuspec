@@ -21,7 +21,7 @@ Codac is a library providing tools for constraint programming over reals, trajec
 - Optionally, download and run https://github.com/ENSTABretagneRobotics/VIBES/releases/download/0.2.3/VIBes-0.2.3-win32.exe before running the project, and check that a tube appears in VIBes window.
 
 ## Troubleshooting
-- Check that all packages and their dependencies were installed, if one failed (e.g. due to network-related errors) try to reinstall it using --force or try a previous version...
+- Check that all the packages and their dependencies were installed, if one failed (e.g. due to network-related errors) try to reinstall it using --force or try a previous version...
 - 32 bit versions of latest Qt Creator do not seem available, if needed use `choco install -y qtcreator --version=4.13.3 --x86 --force`
 - If multiple compilers are already installed, Qt Creator might show multiple possibilities in the Configure Project panel, ensure you choose one compatible with https://chocolatey.org/packages/codac#dependencies.
     </description>

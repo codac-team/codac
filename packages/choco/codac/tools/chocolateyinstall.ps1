@@ -14,6 +14,6 @@ if (Test-Path "$env:ChocolateyPackageFolder\x86") {
 	Remove-Item -Recurse -Force "$env:ChocolateyPackageFolder\x86"
 }
 
-Install-BinFile -Name libcodac.a -Path "$env:ChocolateyPackageFolder\lib"
-Install-BinFile -Name libcodac-rob.a -Path "$env:ChocolateyPackageFolder\lib"
-Install-BinFile -Name libcodac-pybex.a -Path "$env:ChocolateyPackageFolder\lib"
+#Install-BinFile -Name libcodac.a -Path "$env:ChocolateyPackageFolder\lib"
+#Install-BinFile -Name libcodac-rob.a -Path "$env:ChocolateyPackageFolder\lib"
+#Install-BinFile -Name libcodac-pybex.a -Path "$env:ChocolateyPackageFolder\lib"
