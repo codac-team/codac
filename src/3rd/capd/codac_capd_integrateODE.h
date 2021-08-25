@@ -14,8 +14,8 @@
 
 #include "codac_TubeVector.h"
 #include "codac_TFunction.h"
-#include "ibex_IntervalVector.h"
-#include "ibex_Function.h"
+#include "codac_IntervalVector.h"
+#include "codac_Function.h"
 
 namespace codac
 {
@@ -25,7 +25,7 @@ namespace codac
    * \brief Integrates the autonomous ODE \f$\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})\f$ using CAPD.
    *
    * \param tdomain temporal domain \f$[t_0,t_f]\f$
-   * \param f the function \f$\mathbf{f}\f$ (defined with a `ibex::Function` object)
+   * \param f the function \f$\mathbf{f}\f$ (defined with a `Function` object)
    * \param x0 the initial condition \f$\mathbf{x}_0\f$ at \f$t_0\f$
    * \param tube_dt sampling value \f$\delta\f$ for the temporal discretization of the resulting tube
    * \param capd_order (optional) order of the integration method
@@ -33,7 +33,7 @@ namespace codac
    * \return TubeVector enclosing the solution
    */
   TubeVector CAPD_integrateODE(
-    const ibex::Interval& tdomain, const ibex::Function& f, const ibex::IntervalVector& x0,
+    const Interval& tdomain, const Function& f, const IntervalVector& x0,
     double tube_dt = 0., int capd_order = 20, double capd_dt = 0.);
 
   // Non autonomous
@@ -50,7 +50,7 @@ namespace codac
    * \return TubeVector enclosing the solution
    */
   TubeVector CAPD_integrateODE(
-    const ibex::Interval& tdomain, const TFunction& f, const ibex::IntervalVector& x0,
+    const Interval& tdomain, const TFunction& f, const IntervalVector& x0,
     double tube_dt = 0., int capd_order = 20, double capd_dt = 0.);
 }
 

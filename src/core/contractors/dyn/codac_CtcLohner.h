@@ -35,7 +35,7 @@ public:
    * \param contractions number of contractions of the global enclosure by the estimated local enclosure
    * \param eps inflation parameter for the global enclosure
    */
-  explicit CtcLohner(const ibex::Function &f, int contractions = 5, double eps = 0.1);
+  explicit CtcLohner(const Function &f, int contractions = 5, double eps = 0.1);
 
   /**
    * \brief Contracts the tube with respect to the specified differential constraint, either forward, backward (or both) in time
@@ -63,7 +63,7 @@ public:
   void contract(std::vector<codac::Domain *> &v_domains) override;
 
 protected:
-  ibex::Function m_f; //!< forward function
+  Function m_f; //!< forward function
   int contractions; //!< number of contractions of the global enclosure by the estimated local enclosure
   int dim; //!< dimension of the state vector
   double eps; //!< inflation parameter for the global enclosure

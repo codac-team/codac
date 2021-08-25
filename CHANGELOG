@@ -9,30 +9,172 @@ Changelog
 Codac releases
 ==============
 
-
 Unreleased yet (in development)
 ===============================
 
 This list corresponds to ongoing developments.
 
-.. Features added
-.. --------------
+Features added
+--------------
 
-.. Changes
-.. -------
+Changes
+-------
 
-.. Dependencies
-.. ------------
+Dependencies
+------------
 
-.. Bugs fixed
-.. ----------
+Bugs fixed
+----------
 
-.. Deprecated
-.. ----------
+Deprecated
+----------
 
-.. Documentation
-.. -------------
+Documentation
+-------------
 
+Python binding
+--------------
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.6 (released `Aug 25, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.6>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.5 <https://github.com/codac-team/codac/compare/v0.1.5...v0.1.6>`_
+
+Features added
+--------------
+
+* :commit:`4f273d976005244344081d2feff81653095f5cfd`: towards generation of ``.deb`` and ``.nupkg packages``
+
+Bugs fixed
+----------
+
+* :commit:`5cf92232da71aa4bf8e329ac2ceb99bd46969dcf`: corrected recent bug in ``CtcChain``
+* :commit:`b4c5a2c35f43c30c9e63918b4b1e917bb955fad3`: corrected recent bug in ``CtcEval``
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.5 (released `Aug 18, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.5>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.4 <https://github.com/codac-team/codac/compare/v0.1.4...v0.1.5>`_
+
+Features added
+--------------
+
+* :commit:`b0b627a184c59c788318b25c84eb1c0783cd15c9`: added *Brunovsky* example
+* :commit:`6a1625927bae77a2682084c71138ba8cf67a8048`: first attempt of sub-CN
+* :commit:`f6fbe30d082656a37d049e4f09a8dfea0e5bc4a7`: vehicle displayed on demand on trajectories
+
+Changes
+-------
+
+* :commit:`3ed609083fb2b0c2a2f22ceeb79348d373a2279b`: improved ``CtcDelay`` since new tube definition
+
+Bugs fixed
+----------
+
+* :commit:`22106ee3a4a25b55113a6bba014d6de84b6ce0b4`: eval of ``TubeVector`` objects
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.4 (released `Mar 17, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.4>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.3 <https://github.com/codac-team/codac/compare/v0.1.3...v0.1.4>`_
+
+Features added
+--------------
+
+* :commit:`bed28ab547a798abdc1ca1ecb80efcdfc3784c79`: added simple tube paving (1d)
+* :commit:`8a0f317c5ae589a058167672eb7d096103f0f92d`: added explored area
+* :commit:`6d486040d16d05d146b1a69d2f13caa44aa0357d`: new ``Tube::lb()``/``Tube::ub()`` methods 
+* :commit:`f50db66af3d6d01b6200cb45b63717fb89c01ed2`: new ``min``/``max`` functions on ``Tube`` 
+* :commit:`04bd085468a6ef78dae8d2b66697ce0f8bb4f11c`: added ``PENUMBRA`` value for ``Set``
+
+Bugs fixed
+----------
+
+* :commit:`d9dee9c17e4f6437e957ed7528251c9a0c933b16`: corrected bug in ``eval`` function
+* :commit:`0996ca9833582c5bc283d9399c143b76283a0cb7`: solving implementation of ``DelayTFunction`` (shared libraries)
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.3 (released `Mar 1, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.3>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.2 <https://github.com/codac-team/codac/compare/v0.1.2...v0.1.3>`_
+
+Changes
+-------
+
+* :commit:`cddb5989a66f5955dd7edc7ba3400c656defd3dc`: improving loop computation in Python
+
+Python binding
+--------------
+
+* :commit:`b1781373ef22f372d7536a4c48b295de30d998a2`: building Python module in Release mode 
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.2 (released `Feb 20, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.2>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.1 <https://github.com/codac-team/codac/compare/v0.1.1...v0.1.2>`_
+
+Bugs fixed
+----------
+
+* :commit:`9f25886e1b19821e709dc3e617629fc5ebb68b19`: corrected bug in diff 
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.1 (released `Feb 16, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.1>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.0 <https://github.com/codac-team/codac/compare/v0.1.0...v0.1.1>`_
+
+Changes
+-------
+
+* :commit:`ed3ff69b60ce0f936f5a94ac4ddb9d796c5186e1`: improved ``TubeTreeSynthesis`` computations
+* :commit:`630a98111b5a2e5fe64785593451840df1631e16`: changing tube definition: unbounded outside tdomain :math:`[t_0,t_f]`
+* :commit:`bb3d64cb42fe530835ac627bd0f916299bc565f6`: updated the interface of loop detections/proofs
+
+Dependencies
+------------
+
+* :commit:`803c839dc48964c2b57ec986991f916eaf412ff6`: IBEX types are now embedded
+
+Python binding
+--------------
+
+* :commit:`d0351fb474055d98b7908e1fcd6f5534b517f531`: Python binding of loop detections/proofs
+* :commit:`afadfd759af88d5b8923952590fa85ac13965efe`: building trajectories objects from numpy arrays
+* :commit:`3a79bf3c89c2c37f591e5a03db72e78bcb2a906e`: added missing *rsub* operators on Tubes
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.0 (released `Feb 2, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.0>`_)
+=======================================================================================================
+
+`Commits since previous release tubex.3.1.1 <https://github.com/codac-team/codac/compare/v.tubex.3.1.1...v0.1.0>`_
+
+Changes
+-------
+
+* :commit:`a98cd947e9f5b0823d88eda9abc8c4b71bfb16fe`: transition Tubex -> Codac
+
+
+-----------------------------------------------------------------
 
 ==============================================
 Previous libraries from which Codac comes from

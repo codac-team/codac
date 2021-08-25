@@ -16,6 +16,7 @@
 #include "codac_CtcDist.h"
 #include "codac_CtcEval.h"
 #include "codac_CtcDelay.h"
+#include "codac_CtcChain.h"
 
 namespace codac
 {
@@ -25,6 +26,7 @@ namespace codac
     extern CtcDeriv deriv; // derivative constraint (x,v)
     extern CtcDist dist; // distance constraint (a,b,d)
     extern CtcEval eval; // evaluation constraint (t,z,y,w)
+    extern CtcChain chain; // double integration constraint (x,xdot,xddot)
   }
 }
 

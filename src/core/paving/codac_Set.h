@@ -12,7 +12,7 @@
 #ifndef __CODAC_SET_H__
 #define __CODAC_SET_H__
 
-#include "ibex_IntervalVector.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -21,13 +21,14 @@ namespace codac
    * \brief Defines a set of feasible values of a set
    *
    * \note These values can be used as flags for boolean selections.
-   * Example of use: `(VALUE_MAYBE | VALUE_IN)` to get items of these types
+   * Example of use: `(UNKNOWN | IN)` to get items of these types
    */
   enum class SetValue
   {
-    MAYBE = 0x01, ///< unable to conclude
-    OUT = 0x02,   ///< outside the solution set
-    IN = 0x04     ///< inside the solution set
+    UNKNOWN = 0x01, ///< unable to conclude
+    OUT = 0x02,     ///< outside the solution set
+    IN = 0x04,      ///< inside the solution set
+    PENUMBRA = 0x08 ///< inside the penumbra set
   };
 
   /**
@@ -68,9 +69,9 @@ namespace codac
        * \brief Creates a set
        *
        * \param box n-dimensional box representing the set
-       * \param value integer of the set, `SetValue::VALUE_MAYBE` by default
+       * \param value integer of the set, `SetValue::UNKNOWN` by default
        */
-      Set(const ibex::IntervalVector& box, SetValue value = SetValue::MAYBE);
+      Set(const IntervalVector& box, SetValue value = SetValue::UNKNOWN);
 
       /**
        * \brief Set destructor
@@ -96,7 +97,7 @@ namespace codac
        *
        * \return the box
        */
-      const ibex::IntervalVector& box() const;
+      const IntervalVector& box() const;
 
       /**
        * \brief Sets the integer value for this set
@@ -108,7 +109,7 @@ namespace codac
     protected:
 
       SetValue m_value; //!< integer value of this set
-      ibex::IntervalVector m_box; //!< box representing this set
+      IntervalVector m_box; //!< box representing this set
   };
 }
 

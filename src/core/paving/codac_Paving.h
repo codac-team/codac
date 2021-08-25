@@ -35,9 +35,9 @@ namespace codac
        * \brief Creates a paving
        *
        * \param box n-dimensional box defining the paving
-       * \param value integer of the set, `SetValue::VALUE_MAYBE` by default
+       * \param value integer of the set, `SetValue::UNKNOWN` by default
        */
-      Paving(const ibex::IntervalVector& box, SetValue value = SetValue::MAYBE);
+      Paving(const IntervalVector& box, SetValue value = SetValue::UNKNOWN);
 
       /**
        * \brief Paving destructor
@@ -159,7 +159,7 @@ namespace codac
        *                                    intersection amounts to a point will not be returned
        */
       void get_pavings_intersecting(SetValue val,
-          const ibex::IntervalVector& box_to_intersect,
+          const IntervalVector& box_to_intersect,
           std::vector<const Paving*>& v_subpavings,
           bool no_degenerated_intersection = false) const;
 
@@ -171,7 +171,7 @@ namespace codac
        * \param without_flag optional research mode: select the leaves among non-flagged items only
        */
       void get_neighbours(std::vector<const Paving*>& v_neighbours,
-          SetValue val = SetValue::IN | SetValue::OUT | SetValue::MAYBE, // all by default
+          SetValue val = SetValue::IN | SetValue::OUT | SetValue::UNKNOWN, // all by default
           bool without_flag = false) const;
 
       /**

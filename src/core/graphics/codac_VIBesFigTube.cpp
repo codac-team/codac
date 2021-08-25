@@ -8,8 +8,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
 #include "codac_Tools.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_VIBesFigTube.h"

@@ -2,7 +2,7 @@
 
 
 namespace codac {
-Eigen::MatrixXd EigenHelpers::i2e(const ibex::Matrix &x) {
+Eigen::MatrixXd EigenHelpers::i2e(const Matrix &x) {
   Eigen::MatrixXd m(x.nb_rows(), x.nb_cols());
   for (int i = 0; i < x.nb_rows(); ++i) {
     for (int j = 0; j < x.nb_cols(); ++j) {
@@ -12,7 +12,7 @@ Eigen::MatrixXd EigenHelpers::i2e(const ibex::Matrix &x) {
   return m;
 }
 
-Eigen::MatrixXd EigenHelpers::i2e(const ibex::Vector &x) {
+Eigen::MatrixXd EigenHelpers::i2e(const Vector &x) {
   Eigen::MatrixXd m(x.size(), 1);
   for (int i = 0; i < x.size(); ++i) {
     m(i, 1) = x[i];
@@ -20,8 +20,8 @@ Eigen::MatrixXd EigenHelpers::i2e(const ibex::Vector &x) {
   return m;
 }
 
-ibex::Matrix EigenHelpers::e2i(const Eigen::MatrixXd &x) {
-  ibex::Matrix m(x.rows(), x.cols());
+Matrix EigenHelpers::e2i(const Eigen::MatrixXd &x) {
+  Matrix m(x.rows(), x.cols());
   for (unsigned int i = 0; i < x.rows(); ++i) {
     for (unsigned int j = 0; j < x.cols(); ++j) {
       m[i][j] = x(i, j);

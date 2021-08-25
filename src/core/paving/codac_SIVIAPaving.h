@@ -13,8 +13,8 @@
 #define __CODAC_SIVIAPAVING_H__
 
 #include "codac_Paving.h"
-#include "ibex_Function.h"
-#include "ibex_IntervalVector.h"
+#include "codac_Function.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -34,7 +34,7 @@ namespace codac
        *
        * \param init_box n-dimensional box defining the hull of the paving
        */
-      SIVIAPaving(const ibex::IntervalVector& init_box);
+      SIVIAPaving(const IntervalVector& init_box);
 
       /**
        * \brief Computes the paving from the constraint \f$\mathbf{f}(\mathbf{x})\in[\mathbf{y}]\f$.
@@ -43,7 +43,7 @@ namespace codac
        * \param y box \f$[\mathbf{y}]\f$
        * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
        */
-      void compute(const ibex::Function& f, const ibex::IntervalVector& y, float precision);
+      void compute(const Function& f, const IntervalVector& y, float precision);
 
       /// @}
   };

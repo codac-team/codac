@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "ibex_Vector.h"
+#include "codac_Vector.h"
 #include "codac_Exception.h"
 #include "codac_serialize_trajectories.h"
 

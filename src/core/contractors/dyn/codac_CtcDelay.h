@@ -49,7 +49,7 @@ namespace codac
        * \param x the scalar tube \f$[x](\cdot)\f$ to be contracted
        * \param y the scalar tube \f$[y](\cdot)\f$ to be contracted
        */
-      void contract(ibex::Interval& a, Tube& x, Tube& y);
+      void contract(Interval& a, Tube& x, Tube& y);
 
       /**
        * \brief \f$\mathcal{C}_{delay}\big([a],[\mathbf{x}](\cdot),[\mathbf{y}](\cdot)\big)\f$:
@@ -60,7 +60,7 @@ namespace codac
        * \param x the n-dimensional tube \f$[\mathbf{x}](\cdot)\f$ to be contracted
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$ to be contracted
        */
-      void contract(ibex::Interval& a, TubeVector& x, TubeVector& y);
+      void contract(Interval& a, TubeVector& x, TubeVector& y);
 
     protected:
 

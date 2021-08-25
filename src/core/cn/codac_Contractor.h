@@ -14,10 +14,9 @@
 
 #include <vector>
 #include <functional>
-#include "ibex_Ctc.h"
+#include "codac_Ctc.h"
 #include "codac_DynCtc.h"
 #include "codac_Domain.h"
-#include "codac_ContractorNetwork.h"
 #include "codac_Hashcode.h"
 
 namespace ibex
@@ -28,32 +27,34 @@ namespace ibex
 namespace codac
 {
   class Domain;
-  class ContractorNetwork;
   class DynCtc;
+  class ContractorNetwork;
 
   class Contractor
   {
     public:
 
-      enum class Type { T_COMPONENT, T_EQUALITY, T_IBEX, T_CODAC };
+      enum class Type { T_COMPONENT, T_EQUALITY, T_IBEX, T_CODAC, T_CN };
 
       Contractor(Type type, const std::vector<Domain*>& v_domains);
-      Contractor(ibex::Ctc& ctc, const std::vector<Domain*>& v_domains);
+      Contractor(Ctc& ctc, const std::vector<Domain*>& v_domains);
       Contractor(DynCtc& ctc, const std::vector<Domain*>& v_domains);
+      Contractor(ContractorNetwork& cn);
       Contractor(const Contractor& ac);
       ~Contractor();
 
       int id() const;
       Type type() const;
 
-      ibex::Ctc& ibex_ctc();
+      Ctc& ibex_ctc();
       DynCtc& codac_ctc();
+      ContractorNetwork& cn_ctc();
 
       bool is_active() const;
       void set_active(bool active);
 
-      std::vector<Domain*>& domains();
-      const std::vector<Domain*>& domains() const;
+      //std::vector<Domain*> domains();
+      const std::vector<Domain*> domains() const;
 
       bool operator==(const Contractor& x) const;
 
@@ -68,12 +69,13 @@ namespace codac
     protected:
 
       const Type m_type;
-      double m_active = true;
+      bool m_active = true;
 
       union
       {
-        std::reference_wrapper<ibex::Ctc> m_static_ctc;
+        std::reference_wrapper<Ctc> m_static_ctc;
         std::reference_wrapper<DynCtc> m_dyn_ctc;
+        std::reference_wrapper<ContractorNetwork> m_cn_ctc;
       };
 
       std::vector<Domain*> m_v_domains;

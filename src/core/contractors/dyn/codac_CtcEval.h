@@ -61,7 +61,7 @@ namespace codac
        * \param y the scalar tube \f$[y](\cdot)\f$
        * \param w the scalar derivative tube \f$[w](\cdot)\f$
        */
-      void contract(double t, ibex::Interval& z, Tube& y, Tube& w);
+      void contract(double t, Interval& z, Tube& y, Tube& w);
 
       /**
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[z],[y](\cdot),[w](\cdot)\big)\f$:
@@ -74,7 +74,7 @@ namespace codac
        * \param y the scalar tube \f$[y](\cdot)\f$
        * \param w the scalar derivative tube \f$[w](\cdot)\f$
        */
-      void contract(ibex::Interval& t, ibex::Interval& z, Tube& y, Tube& w);
+      void contract(Interval& t, Interval& z, Tube& y, Tube& w);
 
       /**
        * \brief \f$\mathcal{C}_\textrm{eval}\big(t,[\mathbf{z}],[\mathbf{y}](\cdot),[\mathbf{w}](\cdot)\big)\f$:
@@ -87,7 +87,7 @@ namespace codac
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
        * \param w the n-dimensional derivative tube \f$[\mathbf{w}](\cdot)\f$
        */
-      void contract(double t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w);
+      void contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w);
 
       /**
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[\mathbf{z}],[\mathbf{y}](\cdot),[\mathbf{w}](\cdot)\big)\f$:
@@ -100,7 +100,7 @@ namespace codac
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
        * \param w the n-dimensional derivative tube \f$[\mathbf{w}](\cdot)\f$
        */
-      void contract(ibex::Interval& t, ibex::IntervalVector& z, TubeVector& y, TubeVector& w);
+      void contract(Interval& t, IntervalVector& z, TubeVector& y, TubeVector& w);
 
       /**
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[z],[y](\cdot)\big)\f$:
@@ -110,7 +110,7 @@ namespace codac
        * \param z the bounded evaluation \f$[z]\f$
        * \param y the scalar tube \f$[y](\cdot)\f$
        */
-      void contract(ibex::Interval& t, ibex::Interval& z, const Tube& y);
+      void contract(Interval& t, Interval& z, const Tube& y);
 
       /**
        * \brief \f$\mathcal{C}_\textrm{eval}\big([t],[\mathbf{z}],[\mathbf{y}](\cdot)\big)\f$:
@@ -120,7 +120,7 @@ namespace codac
        * \param z the bounded evaluation \f$[\mathbf{z}]\f$
        * \param y the n-dimensional tube \f$[\mathbf{y}](\cdot)\f$
        */
-      void contract(ibex::Interval& t, ibex::IntervalVector& z, const TubeVector& y);
+      void contract(Interval& t, IntervalVector& z, const TubeVector& y);
 
     protected:
 

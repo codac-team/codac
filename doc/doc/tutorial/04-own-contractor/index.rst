@@ -117,25 +117,25 @@ where :math:`\bigsqcup`, called *squared union*, returns the smallest box enclos
 
     .. code-tab:: cpp
 
-      class MyCtc : public ibex::Ctc
+      class MyCtc : public Ctc
       {
         public:
 
-          MyCtc(const std::vector<ibex::IntervalVector>& M_)
-            : ibex::Ctc(2), // the contractor acts on 2d boxes
+          MyCtc(const std::vector<IntervalVector>& M_)
+            : Ctc(2), // the contractor acts on 2d boxes
               M(M_)         // attribute needed later on for the contraction
           {
 
           }
 
-          void contract(ibex::IntervalVector& a)
+          void contract(IntervalVector& a)
           {
             // Insert contraction formula here (question D.2)
           }
 
         protected:
 
-          const std::vector<ibex::IntervalVector> M;
+          const std::vector<IntervalVector> M;
       };
 
   | (you may continue the code from the previous Lesson C)

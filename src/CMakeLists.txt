@@ -67,11 +67,11 @@ set(CODAC_VERSION ${PROJECT_VERSION})
 set(CODAC_LIBRARIES \${CODAC_LIBRARY} \${CODAC_ROB_LIBRARY} \${CODAC_PYIBEX_LIBRARY})
 set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIR} \${CODAC_ROB_INCLUDE_DIR} \${CODAC_PYIBEX_INCLUDE_DIR})
 
-set(CODAC_C_FLAGS \"${CMAKE_C_FLAGS}\")
-set(CODAC_CXX_FLAGS \"${CMAKE_CXX_FLAGS}\")
+set(CODAC_C_FLAGS \"\")
+set(CODAC_CXX_FLAGS \"\")
 ")
 
-if((CMAKE_BUILD_TYPE MATCHES Debug) AND (NOT MSVC))
+if((CMAKE_BUILD_TYPE MATCHES Debug) AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
 # If Codac is built in Debug, -pg (added by Ibex at the time of Codac 
 # compilation) might be also necessary to be able to successfully build 
 # programs in Release (otherwise it would be only added by Ibex if the program 

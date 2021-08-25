@@ -145,7 +145,7 @@ namespace codac
        * \param box the \f$n\f$d IntervalVector to be displayed
        * \param params VIBes parameters related to the box
        */
-      void draw_box(const ibex::Interval& tdomain, const ibex::IntervalVector& box, const vibes::Params& params);
+      void draw_box(const Interval& tdomain, const IntervalVector& box, const vibes::Params& params);
 
       /**
        * \brief Draws a multi-dimensional box
@@ -155,7 +155,7 @@ namespace codac
        * \param color the optional color of the box (black by default) 
        * \param params VIBes parameters related to the box (none by default)
        */
-      void draw_box(const ibex::Interval& tdomain, const ibex::IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_box(const Interval& tdomain, const IntervalVector& box, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /// @}
       /// \name Handling tubes

@@ -15,6 +15,7 @@
 #include <map>
 #include <vector>
 
+#include <codac_Interval.h>
 #include <codac_VIBesFig.h>
 #include <codac_TubeVector.h>
 #include <codac_TrajectoryVector.h>
@@ -27,10 +28,11 @@ namespace codac
   #define TUBE_MAX_NB_DISPLAYED_SLICES  2000
 
   // HTML color codes:
-  #define DEFAULT_BEACON_COLOR          "#D65A00[#FFB93C]"
-  #define DEFAULT_TRAJMAP_COLOR         "#276279"
-  #define DEFAULT_MAPBCKGRND_COLOR      "#d2d2d2[#d2d2d2]"
-  #define DEFAULT_OBS_COLOR             "gray"
+  #define DEFAULT_BEACON_COLOR                  "#D65A00[#FFB93C]"
+  #define DEFAULT_TRAJMAP_COLOR                 "#276279"
+  #define DEFAULT_MAPBCKGRND_COLOR              "#d2d2d2[#d2d2d2]"
+  #define DEFAULT_OBS_COLOR                     "gray"
+  #define DEFAULT_VEHICLE_DISPLAY_ON_EACH_TRAJ  true
 
   /**
    * \class VIBesFigMap
@@ -65,7 +67,7 @@ namespace codac
        *
        * \param restricted_tdomain subset of the temporal domain of the referenced items
        */
-      void restrict_tdomain(const ibex::Interval& restricted_tdomain);
+      void restrict_tdomain(const Interval& restricted_tdomain);
 
       /**
        * \brief Enables the display of previous versions of the tubes,
@@ -181,8 +183,9 @@ namespace codac
        * \param index_x integer reference for the x-horizontal state component
        * \param index_y integer reference for the y-horizontal state component
        * \param color an optional constant color for this object
+       * \param vehicle_display an optional boolean parameter to display a vehicle at the end of the trajectory
        */
-      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, const std::string& color = DEFAULT_TRAJMAP_COLOR);
+      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, const std::string& color = DEFAULT_TRAJMAP_COLOR, bool vehicle_display = DEFAULT_VEHICLE_DISPLAY_ON_EACH_TRAJ);
 
       /**
        * \brief Adds a trajectory vector object (x,y,heading) to this figure
@@ -196,8 +199,9 @@ namespace codac
        * \param index_y integer reference for the y-horizontal state component
        * \param index_heading integer reference for the heading state component
        * \param color an optional constant color for this object
+       * \param vehicle_display an optional boolean parameter to display a vehicle at the end of the trajectory
        */
-      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, int index_heading, const std::string& color = DEFAULT_TRAJMAP_COLOR);
+      void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, int index_heading, const std::string& color = DEFAULT_TRAJMAP_COLOR, bool vehicle_display = DEFAULT_VEHICLE_DISPLAY_ON_EACH_TRAJ);
 
       /**
        * \brief Sets a new name for a trajectory
@@ -226,6 +230,14 @@ namespace codac
       void set_trajectory_color(const TrajectoryVector *traj, const ColorMap& colormap, const Trajectory *traj_colormap = NULL);
 
       /**
+       * \brief Displays a vehicle at the end of a trajectory
+       *
+       * \param traj the const pointer to the TrajectoryVector object for which the vehicle will be drawn
+       * \param vehicle_display boolean parameter
+       */
+      void set_vehicle_display(const TrajectoryVector *traj, bool vehicle_display);
+
+      /**
        * \brief Removes a trajectory from this figure
        *
        * \todo automatically clear the figure (for now, the trajectory is only removed
@@ -247,7 +259,7 @@ namespace codac
        * \param pose vector (x,y[,heading]) describing robot's pose (2d or 3d)
        * \param size optional robot size (-1 = size of main vehicle by default)
        */
-      void draw_vehicle(const ibex::Vector& pose, float size = -1);
+      void draw_vehicle(const Vector& pose, float size = -1);
 
       /**
        * \brief Draws a vehicle with a given pose
@@ -256,7 +268,7 @@ namespace codac
        * \param params VIBes parameters related to the vehicle (for groups)
        * \param size optional robot size (-1 = size of main vehicle by default)
        */
-      void draw_vehicle(const ibex::Vector& pose, const vibes::Params& params, float size = -1);
+      void draw_vehicle(const Vector& pose, const vibes::Params& params, float size = -1);
 
       /**
        * \brief Draws a vehicle on top of its trajectory
@@ -295,7 +307,7 @@ namespace codac
        * \param beacon a const reference to the IntervalVector object to be drawn
        * \param color optional color of the beacon
        */
-      void add_beacon(const ibex::IntervalVector& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const IntervalVector& beacon, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a Beacon object to the map with a specific width
@@ -313,7 +325,7 @@ namespace codac
        * \param width the real width of the squared beacon
        * \param color optional color of the beacon
        */
-      void add_beacon(const ibex::Vector& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_beacon(const Vector& beacon, double width, const std::string& color = DEFAULT_BEACON_COLOR);
 
       /**
        * \brief Adds a set of Beacon objects to the map
@@ -344,7 +356,7 @@ namespace codac
        * \param v_m a vector of boxes to be drawn
        * \param color optional color of the beacons
        */
-      void add_landmarks(const std::vector<ibex::IntervalVector>& v_m, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_landmarks(const std::vector<IntervalVector>& v_m, const std::string& color = DEFAULT_BEACON_COLOR);
       
       /**
        * \brief Adds a set of landmarks to the map with a specific width
@@ -353,7 +365,7 @@ namespace codac
        * \param width the width of the squared beacons
        * \param color optional color of the beacons
        */
-      void add_landmarks(const std::vector<ibex::Vector>& v_m, double width, const std::string& color = DEFAULT_BEACON_COLOR);
+      void add_landmarks(const std::vector<Vector>& v_m, double width, const std::string& color = DEFAULT_BEACON_COLOR);
       
       /**
        * \brief Adds a range-and-bearing uncertain observation to the map,
@@ -366,7 +378,7 @@ namespace codac
        * \param pose the related 3d Vector object representing the pose (x,y,heading)
        * \param color optional color of the observation
        */
-      void add_observation(const ibex::IntervalVector& obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observation(const IntervalVector& obs, const Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
        * \brief Adds a set of range-and-bearing uncertain observations to the map,
@@ -379,7 +391,7 @@ namespace codac
        * \param pose the related 3d Vector object representing the pose (x,y,heading)
        * \param color optional color of the observation
        */
-      void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const ibex::Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observations(const std::vector<IntervalVector>& v_obs, const Vector& pose, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
        * \brief Adds a range-and-bearing uncertain observation to the map,
@@ -392,7 +404,7 @@ namespace codac
        * \param traj the const pointer to the related TrajectoryVector object
        * \param color optional color of the observation
        */
-      void add_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
       
       /**
        * \brief Adds a set of range-and-bearing uncertain observations to the map,
@@ -405,7 +417,7 @@ namespace codac
        * \param traj the const pointer to the related TrajectoryVector object
        * \param color optional color of the observation
        */
-      void add_observations(const std::vector<ibex::IntervalVector>& v_obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
+      void add_observations(const std::vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
   
       /// @}
 
@@ -417,7 +429,7 @@ namespace codac
        * \param tube the const pointer to the TubeVector object to be drawn
        * \return the projected boxed envelope of the tube (used for figure calibration)
        */
-      const ibex::IntervalVector draw_tube(const TubeVector *tube);
+      const IntervalVector draw_tube(const TubeVector *tube);
 
       /**
        * \brief Draws the background of a tube
@@ -428,7 +440,7 @@ namespace codac
        * \param tube the const pointer to the TubeVector object to be drawn
        * \return the projected boxed envelope of the tube background (used for figure calibration)
        */
-      const ibex::IntervalVector draw_tube_background(const TubeVector *tube);
+      const IntervalVector draw_tube_background(const TubeVector *tube);
 
       /**
        * \brief Draws a trajectory
@@ -439,7 +451,7 @@ namespace codac
        * \param points_size optional size of points, 0 by default (line display instead of a list of points)
        * \return the projected boxed envelope of the trajectory (used for figure calibration)
        */
-      const ibex::IntervalVector draw_trajectory(const TrajectoryVector *traj, float points_size = 0.);
+      const IntervalVector draw_trajectory(const TrajectoryVector *traj, float points_size = 0.);
 
       /**
        * \brief Draws the slices of a tube
@@ -481,7 +493,7 @@ namespace codac
        * \param color color of the observation
        * \param params VIBes parameters related to the observation
        */
-      void draw_observation(const ibex::IntervalVector& obs, const ibex::Vector& pose, const std::string& color, const vibes::Params& params);
+      void draw_observation(const IntervalVector& obs, const Vector& pose, const std::string& color, const vibes::Params& params);
       
       /**
        * \brief Draws a range-and-bearing uncertain observation on the map
@@ -495,7 +507,7 @@ namespace codac
        * \param color color of the observation
        * \param params VIBes parameters related to the observation
        */
-      void draw_observation(const ibex::IntervalVector& obs, const TrajectoryVector *traj, const std::string& color, const vibes::Params& params);
+      void draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const std::string& color, const vibes::Params& params);
       
       /**
        * \brief Returns actual or estimated heading related to some TrajectoryVector at t
@@ -537,12 +549,13 @@ namespace codac
         std::string color = ""; //!< constant color of the trajectory
         std::pair<ColorMap,const Trajectory*> color_map; //!< custom colormap of the trajectory
         int index_x, index_y, index_heading = -1; //!< integer references for state components ; -1: not defined
+        bool vehicle_display = DEFAULT_VEHICLE_DISPLAY_ON_EACH_TRAJ; //!< boolean for vehicle display
       };
 
       std::map<const TubeVector*,FigMapTubeParams> m_map_tubes; //!< map of Tube objects to be displayed, together with parameters
       std::map<const TrajectoryVector*,FigMapTrajParams> m_map_trajs; //!< map of Trajectory objects to be displayed, together with parameters
 
-      ibex::Interval m_restricted_tdomain; //!< restricts the display to a part of the temporal domain
+      Interval m_restricted_tdomain; //!< restricts the display to a part of the temporal domain
       bool m_draw_tubes_backgrounds = true; //!< if `true`, will highlight tubes contractions
       bool m_smooth_drawing = false; //!< if `true`, a smooth rendering of tubes will be done
       float m_robot_size = 5.5; //!< if `0`, no robot display

@@ -25,7 +25,7 @@
       "Codac is a library providing tools for constraint programming over reals and trajectories.")
   set(PROJECT_LONG_DESCRIPTION
       "${PROJECT_DESCRIPTION}")
-  set(PROJECT_HOMEPAGE_URL "http://simon-rohou.fr/research/codac")
+  set(PROJECT_HOMEPAGE_URL "http://codac.io")
   message(STATUS "Configuring build for ${PROJECT_NAME} ${PROJECT_VERSION}")
 
   if(NOT CMAKE_BUILD_TYPE)
@@ -166,7 +166,7 @@
 
   set(CPACK_GENERATOR "TGZ" "ZIP" "DEB")
   string(TOLOWER "${CMAKE_PROJECT_NAME}" CPACK_PACKAGE_NAME)
-  set(CPACK_PACKAGE_VENDOR "CodacTeam")
+  set(CPACK_PACKAGE_VENDOR "Codac Team")
   set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${CODAC_DESCRIPTION})
   set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
   set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})

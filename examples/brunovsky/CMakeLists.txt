@@ -10,6 +10,7 @@
   set(CMAKE_CXX_STANDARD 17)
   add_compile_options(-O3 -Wall)
   #add_compile_options(-DNDEBUG) # comment for debug mode
+  set(CMAKE_BUILD_TYPE Debug)
 
 # Adding IBEX
 

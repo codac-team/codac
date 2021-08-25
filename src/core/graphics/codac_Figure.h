@@ -13,7 +13,8 @@
 #define __CODAC_FIGURE_H__
 
 #include <string>
-#include "ibex_IntervalVector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
@@ -77,7 +78,7 @@ namespace codac
        *
        * \return the view box
        */
-      const ibex::IntervalVector& view_box() const;
+      const IntervalVector& view_box() const;
 
       /**
        * \brief Reset the view box of this figure
@@ -117,7 +118,7 @@ namespace codac
        * \param x the interval for which the bounds will be truncated if necessary
        * \return truncated value
        */
-      static const ibex::Interval trunc_inf(const ibex::Interval& x);
+      static const Interval trunc_inf(const Interval& x);
       
       /**
        * \brief Returns a representable value of any interval vector \f$[\mathbf{x}]\f$
@@ -128,13 +129,13 @@ namespace codac
        * \param x the interval vector for which the bounds will be truncated if necessary
        * \return truncated value
        */
-      static const ibex::IntervalVector trunc_inf(const ibex::IntervalVector& x);
+      static const IntervalVector trunc_inf(const IntervalVector& x);
 
     protected:
 
       const std::string m_name; //!< figure name
       int m_x = 100, m_y = 100, m_width = 600, m_height = 300; //!< figure properties
-      ibex::IntervalVector m_view_box = ibex::IntervalVector(2, ibex::Interval::EMPTY_SET); //!< view box
+      IntervalVector m_view_box = IntervalVector(2, Interval::EMPTY_SET); //!< view box
   };
 }
 

@@ -11,7 +11,7 @@
 #ifndef __CODAC_DATALOADERLISSAJOUS_H__
 #define __CODAC_DATALOADERLISSAJOUS_H__
 
-#include "ibex_Interval.h"
+#include "codac_Interval.h"
 #include "codac_DataLoader.h"
 #include "codac_Beacon.h"
 
@@ -25,15 +25,15 @@ namespace codac
       void load_data(TubeVector *&x, TubeVector *&xdot,
                      TrajectoryVector *&truth,
                      float timestep = 0.01,
-                     const ibex::Interval& tdomain = ibex::Interval(0.,6.));
-      std::vector<Beacon> get_beacons(const ibex::IntervalVector& map_box, int nb_beacons = 100) const;
-      std::vector<ibex::IntervalVector> get_observations(
+                     const Interval& tdomain = Interval(0.,6.));
+      std::vector<Beacon> get_beacons(const IntervalVector& map_box, int nb_beacons = 100) const;
+      std::vector<IntervalVector> get_observations(
                      const TrajectoryVector& x,
                      const std::vector<Beacon>& map,
                      int nb_obs = 50,
-                     const ibex::Interval& visi_range = ibex::Interval(0.,50.),
-                     const ibex::Interval& visi_angle = ibex::Interval(-M_PI/4.,M_PI/4.),
-                     const ibex::Interval& tdomain = ibex::Interval::ALL_REALS) const;
+                     const Interval& visi_range = Interval(0.,50.),
+                     const Interval& visi_angle = Interval(-M_PI/4.,M_PI/4.),
+                     const Interval& tdomain = Interval::ALL_REALS) const;
 
     protected:
 

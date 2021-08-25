@@ -44,8 +44,9 @@ namespace codac
         m_deque.pop_front();
 
         ctc->contract();
-        ctc->set_active(false);
-
+        if(ctc->type() != Contractor::Type::T_CN)
+          ctc->set_active(false); // Sub CN will be always triggered
+        
         for(auto& ctc_dom : ctc->domains()) // for each domain related to this contractor
           // If the domain has "changed" after the contraction
           trigger_ctc_related_to_dom(ctc_dom, ctc);
@@ -144,6 +145,10 @@ namespace codac
     {
       assert(Interval(0.,1).contains(r) && "invalid ratio");
       m_fixedpoint_ratio = r;
+
+      for(const auto& ctc : m_map_ctc)
+        if(ctc.second->type() == Contractor::Type::T_CN)
+          ctc.second->cn_ctc().set_fixedpoint_ratio(r);
     }
 
     void ContractorNetwork::trigger_all_contractors()

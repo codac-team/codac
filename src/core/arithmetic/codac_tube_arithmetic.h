@@ -15,8 +15,8 @@
 #ifndef __CODAC_TUBE_ARITHMETIC_H__
 #define __CODAC_TUBE_ARITHMETIC_H__
 
-#include "ibex_Interval.h"
-#include "ibex_IntervalVector.h"
+#include "codac_Interval.h"
+#include "codac_IntervalVector.h"
 #include "codac_Tube.h"
 #include "codac_TubeVector.h"
 
@@ -140,14 +140,14 @@ namespace codac
       * \param x
       * \return Tube output
       */
-    const Tube atan2(const Tube& y, const ibex::Interval& x);
+    const Tube atan2(const Tube& y, const Interval& x);
 
     /** \brief \f$\mathrm{arctan2}([y],[x](\cdot))\f$
       * \param y
       * \param x
       * \return Tube output
       */
-    const Tube atan2(const ibex::Interval& y, const Tube& x);
+    const Tube atan2(const Interval& y, const Tube& x);
 
 
     /** \brief \f$[x]^p(\cdot)\f$
@@ -169,7 +169,7 @@ namespace codac
       * \param p
       * \return Tube output
       */
-    const Tube pow(const Tube& x, const ibex::Interval& p);
+    const Tube pow(const Tube& x, const Interval& p);
 
     /** \brief \f$\sqrt[p]{[x](\cdot)}\f$
       * \param x
@@ -179,6 +179,48 @@ namespace codac
     const Tube root(const Tube& x, int p);
 
     // todo: atan2, pow with Trajectory as parameter
+
+    /** \brief \f$\mathrm{min}([y](\cdot),[x](\cdot))\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube min(const Tube& y, const Tube& x);
+
+    /** \brief \f$\mathrm{min}([y](\cdot),[x])\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube min(const Tube& y, const Interval& x);
+
+    /** \brief \f$\mathrm{min}([y],[x](\cdot))\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube min(const Interval& y, const Tube& x);
+
+    /** \brief \f$\mathrm{max}([y](\cdot),[x](\cdot))\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube max(const Tube& y, const Tube& x);
+
+    /** \brief \f$\mathrm{max}([y](\cdot),[x])\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube max(const Tube& y, const Interval& x);
+
+    /** \brief \f$\mathrm{max}([y],[x](\cdot))\f$
+      * \param y
+      * \param x
+      * \return Tube output
+      */
+    const Tube max(const Interval& y, const Tube& x);
 
 
     /** \brief \f$[x](\cdot)\f$
@@ -199,14 +241,14 @@ namespace codac
       * \param y
       * \return Tube output
       */
-    const Tube operator+(const Tube& x, const ibex::Interval& y);
+    const Tube operator+(const Tube& x, const Interval& y);
 
     /** \brief \f$[x]+[y](\cdot)\f$
       * \param x
       * \param y
       * \return Tube output
       */
-    const Tube operator+(const ibex::Interval& x, const Tube& y);
+    const Tube operator+(const Interval& x, const Tube& y);
 
     /** \brief \f$[x](\cdot)+y(\cdot)\f$
       * \param x
@@ -241,14 +283,14 @@ namespace codac
       * \param y
       * \return Tube output
       */
-    const Tube operator-(const Tube& x, const ibex::Interval& y);
+    const Tube operator-(const Tube& x, const Interval& y);
 
     /** \brief \f$[x]-[y](\cdot)\f$
       * \param x
       * \param y
       * \return Tube output
       */
-    const Tube operator-(const ibex::Interval& x, const Tube& y);
+    const Tube operator-(const Interval& x, const Tube& y);
 
     /** \brief \f$[x](\cdot)-y(\cdot)\f$
       * \param x
@@ -277,14 +319,14 @@ namespace codac
       * \param y
       * \return Tube output
       */
-    const Tube operator*(const Tube& x, const ibex::Interval& y);
+    const Tube operator*(const Tube& x, const Interval& y);
 
     /** \brief \f$[x]\cdot[y](\cdot)\f$
       * \param x
       * \param y
       * \return Tube output
       */
-    const Tube operator*(const ibex::Interval& x, const Tube& y);
+    const Tube operator*(const Interval& x, const Tube& y);
 
     /** \brief \f$[x](\cdot)\cdot y(\cdot)\f$
       * \param x
@@ -313,14 +355,14 @@ namespace codac
       * \param y
       * \return Tube output
       */
-    const Tube operator/(const Tube& x, const ibex::Interval& y);
+    const Tube operator/(const Tube& x, const Interval& y);
 
     /** \brief \f$[x]/[y](\cdot)\f$
       * \param x
       * \param y
       * \return Tube output
       */
-    const Tube operator/(const ibex::Interval& x, const Tube& y);
+    const Tube operator/(const Interval& x, const Tube& y);
 
     /** \brief \f$[x](\cdot)/y(\cdot)\f$
       * \param x
@@ -349,14 +391,14 @@ namespace codac
       * \param y
       * \return Tube output
       */
-    const Tube operator|(const Tube& x, const ibex::Interval& y);
+    const Tube operator|(const Tube& x, const Interval& y);
 
     /** \brief \f$[x]\sqcup[y](\cdot)\f$
       * \param x
       * \param y
       * \return Tube output
       */
-    const Tube operator|(const ibex::Interval& x, const Tube& y);
+    const Tube operator|(const Interval& x, const Tube& y);
 
     /** \brief \f$[x](\cdot)\sqcup y(\cdot)\f$
       * \param x
@@ -385,14 +427,14 @@ namespace codac
       * \param y
       * \return Tube output
       */
-    const Tube operator&(const Tube& x, const ibex::Interval& y);
+    const Tube operator&(const Tube& x, const Interval& y);
 
     /** \brief \f$[x]\cap[y](\cdot)\f$
       * \param x
       * \param y
       * \return Tube output
       */
-    const Tube operator&(const ibex::Interval& x, const Tube& y);
+    const Tube operator&(const Interval& x, const Tube& y);
 
     /** \brief \f$[x](\cdot)\cap y(\cdot)\f$
       * \param x
@@ -431,14 +473,14 @@ namespace codac
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator+(const TubeVector& x, const ibex::IntervalVector& y);
+    const TubeVector operator+(const TubeVector& x, const IntervalVector& y);
 
     /** \brief \f$[\mathbf{x}]+[\mathbf{y}](\cdot)\f$
       * \param x
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator+(const ibex::IntervalVector& x, const TubeVector& y);
+    const TubeVector operator+(const IntervalVector& x, const TubeVector& y);
 
     /** \brief \f$[\mathbf{x}](\cdot)+\mathbf{y}(\cdot)\f$
       * \param x
@@ -473,14 +515,14 @@ namespace codac
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator-(const TubeVector& x, const ibex::IntervalVector& y);
+    const TubeVector operator-(const TubeVector& x, const IntervalVector& y);
 
     /** \brief \f$[\mathbf{x}]-[\mathbf{y}](\cdot)\f$
       * \param x
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator-(const ibex::IntervalVector& x, const TubeVector& y);
+    const TubeVector operator-(const IntervalVector& x, const TubeVector& y);
 
     /** \brief \f$[\mathbf{x}](\cdot)-\mathbf{y}(\cdot)\f$
       * \param x
@@ -509,14 +551,14 @@ namespace codac
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator*(const ibex::Interval& x, const TubeVector& y);
+    const TubeVector operator*(const Interval& x, const TubeVector& y);
 
     /** \brief \f$[x](\cdot)\cdot[\mathbf{y}]\f$
       * \param x
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator*(const Tube& x, const ibex::IntervalVector& y);
+    const TubeVector operator*(const Tube& x, const IntervalVector& y);
 
     /** \brief \f$x(\cdot)\cdot[\mathbf{y}](\cdot)\f$
       * \param x
@@ -538,14 +580,14 @@ namespace codac
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator/(const TubeVector& x, const ibex::Interval& y);
+    const TubeVector operator/(const TubeVector& x, const Interval& y);
 
     /** \brief \f$[\mathbf{x}]/[y](\cdot)\f$
       * \param x
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator/(const ibex::IntervalVector& x, const Tube& y);
+    const TubeVector operator/(const IntervalVector& x, const Tube& y);
 
     /** \brief \f$[\mathbf{x}](\cdot)/y(\cdot)\f$
       * \param x
@@ -567,14 +609,14 @@ namespace codac
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator|(const TubeVector& x, const ibex::IntervalVector& y);
+    const TubeVector operator|(const TubeVector& x, const IntervalVector& y);
 
     /** \brief \f$[\mathbf{x}]\sqcup[\mathbf{y}](\cdot)\f$
       * \param x
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator|(const ibex::IntervalVector& x, const TubeVector& y);
+    const TubeVector operator|(const IntervalVector& x, const TubeVector& y);
 
     /** \brief \f$[\mathbf{x}](\cdot)\sqcup\mathbf{y}(\cdot)\f$
       * \param x
@@ -603,14 +645,14 @@ namespace codac
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator&(const TubeVector& x, const ibex::IntervalVector& y);
+    const TubeVector operator&(const TubeVector& x, const IntervalVector& y);
 
     /** \brief \f$[\mathbf{x}]\cap[\mathbf{y}](\cdot)\f$
       * \param x
       * \param y
       * \return TubeVector output
       */
-    const TubeVector operator&(const ibex::IntervalVector& x, const TubeVector& y);
+    const TubeVector operator&(const IntervalVector& x, const TubeVector& y);
 
     /** \brief \f$[\mathbf{x}](\cdot)\cap\mathbf{y}(\cdot)\f$
       * \param x

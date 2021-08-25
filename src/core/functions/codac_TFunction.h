@@ -12,7 +12,7 @@
 #define __CODAC_TFUNCTION_H__
 
 #include <string>
-#include "ibex_Function.h"
+#include "codac_Function.h"
 #include "codac_TFnc.h"
 #include "codac_Trajectory.h"
 #include "codac_TrajectoryVector.h"
@@ -23,13 +23,13 @@ namespace codac
   class Trajectory;
   class TrajectoryVector;
 
-  std::string to_string(const ibex::Function& f);
+  std::string to_string(const Function& f);
   
   class TFunction : public TFnc
   {
     public:
 
-      TFunction(const ibex::Function& f);
+      TFunction(const Function& f);
       TFunction(const char* y);
       TFunction(const char* x1, const char* y);
       TFunction(const char* x1, const char* x2, const char* y);
@@ -47,7 +47,7 @@ namespace codac
       const TFunction operator[](int i) const;
 
       const std::string& expr() const;
-      const ibex::Function& getFunction() const;
+      const Function& getFunction() const;
       const std::string arg_name(int i) const;
 
       using TFnc::eval;
@@ -56,17 +56,17 @@ namespace codac
 
       const Tube eval(const TubeVector& x) const;
       const Trajectory traj_eval(const TrajectoryVector& x) const;
-      const ibex::Interval eval(const ibex::Interval& t) const;
-      const ibex::Interval eval(const ibex::IntervalVector& x) const;
-      const ibex::Interval eval(int slice_id, const TubeVector& x) const;
-      const ibex::Interval eval(const ibex::Interval& t, const TubeVector& x) const;
+      const Interval eval(const Interval& t) const;
+      const Interval eval(const IntervalVector& x) const;
+      const Interval eval(int slice_id, const TubeVector& x) const;
+      const Interval eval(const Interval& t, const TubeVector& x) const;
 
       const TubeVector eval_vector(const TubeVector& x) const;
       const TrajectoryVector traj_eval_vector(const TrajectoryVector& x) const;
-      const ibex::IntervalVector eval_vector(const ibex::Interval& t) const;
-      const ibex::IntervalVector eval_vector(const ibex::IntervalVector& x) const;
-      const ibex::IntervalVector eval_vector(int slice_id, const TubeVector& x) const;
-      const ibex::IntervalVector eval_vector(const ibex::Interval& t, const TubeVector& x) const;
+      const IntervalVector eval_vector(const Interval& t) const;
+      const IntervalVector eval_vector(const IntervalVector& x) const;
+      const IntervalVector eval_vector(int slice_id, const TubeVector& x) const;
+      const IntervalVector eval_vector(const Interval& t, const TubeVector& x) const;
 
       const TFunction diff() const;
 
@@ -74,8 +74,8 @@ namespace codac
 
       void construct_from_array(int n, const char** x, const char* y);
 
-      ibex::Function *m_ibex_f = NULL;
-      std::string m_expr; // stored here because impossible to get this value from ibex::Function
+      Function *m_ibex_f = NULL;
+      std::string m_expr; // stored here because impossible to get this value from Function
   };
 }
 

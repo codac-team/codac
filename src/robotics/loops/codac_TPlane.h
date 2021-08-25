@@ -46,8 +46,28 @@ namespace codac
 
       /**
        * \brief Creates a 2d temporal space \f$[t_0,t_f]^2\f$
+       *
+       * \param tdomain temporal domain \f$[t_0,t_f]\f$
        */
-      TPlane();
+      TPlane(const Interval& tdomain);
+
+      /**
+       * \brief Computes the loops (detections and proofs) as a subpaving, from the tube of
+       *        positions \f$[\mathbf{p}](\cdot)\f$ and the tube of velocities \f$[\mathbf{v}](\cdot)\f$.
+       *
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
+       * \param v 2d TubeVector \f$[\mathbf{v}](\cdot)\f$ for velocities
+       */
+      void compute_loops(float precision, const TubeVector& p, const TubeVector& v);
+
+      /**
+       * \brief Computes this tplane as a subpaving, from the tube of positions \f$[\mathbf{p}](\cdot)\f$ only.
+       *
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
+       */
+      void compute_detections(float precision, const TubeVector& p);
 
       /**
        * \brief Computes this tplane as a subpaving, from the tube of positions \f$[\mathbf{p}](\cdot)\f$
@@ -64,9 +84,19 @@ namespace codac
        *
        * \note The tplane must have been computed beforehand.
        *
-       * \param f inclusion of the uncertain function \f$\mathbf{f}^*\f$ that vanishes in case of a loop
+       * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
        */
-      void compute_proofs(ibex::IntervalVector (*f)(const ibex::IntervalVector& b));
+      void compute_proofs(const TubeVector& p);
+
+      /**
+       * \brief Tries to prove the existence of loops in each detection set
+       *
+       * \note The tplane must have been computed beforehand.
+       *
+       * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
+       * \param v 2d TubeVector \f$[\mathbf{v}](\cdot)\f$ for velocities
+       */
+      void compute_proofs(const TubeVector& p, const TubeVector& v);
 
       /**
        * \brief Returns the number of loop detections
@@ -93,7 +123,16 @@ namespace codac
        *
        * \return the set of connected subsets corresponding to loop detections
        */
-      const std::vector<ConnectedSubset>& get_detected_loops() const;
+      const std::vector<ConnectedSubset>& detected_loops_subsets() const;
+
+      /**
+       * \brief Returns the set of boxed detected loops
+       *
+       * \note The tplane must have been computed beforehand.
+       *
+       * \return the set of boxes \f$[t_1]\times[t_2]\f$ corresponding to loop detections
+       */
+      const std::vector<IntervalVector> detected_loops() const;
 
       /**
        * \brief Returns the set of proven loops
@@ -102,7 +141,16 @@ namespace codac
        *
        * \return the set of connected subsets corresponding to loops proofs
        */
-      const std::vector<ConnectedSubset>& get_proven_loops() const;
+      const std::vector<ConnectedSubset>& proven_loops_subsets() const;
+
+      /**
+       * \brief Returns the set of boxed proven loops
+       *
+       * \note The tplane and the proofs must have been computed beforehand.
+       *
+       * \return the set of boxes \f$[t_1]\times[t_2]\f$ corresponding to loops proofs
+       */
+      const std::vector<IntervalVector> proven_loops() const;
 
       /**
        * \brief Returns a temporal function of value 0 in case of no-detection, 1 in case of
@@ -125,9 +173,10 @@ namespace codac
        * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
        * \param p 2d TubeVector \f$[\mathbf{p}](\cdot)\f$ for positions
        * \param v 2d TubeVector \f$[\mathbf{v}](\cdot)\f$ for velocities
+       * \param with_derivative if `true`, the loop detection is made with derivative tubes given in arguments
        * \param extract_subsets if `true`, a set of ConnectedSubset objects will be computed from this Paving
        */
-      void compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool extract_subsets);
+      void compute_detections(float precision, const TubeVector& p, const TubeVector& v, bool with_derivative, bool extract_subsets);
 
       float m_precision = 0.; //!< precision of the SIVIA algorithm, used later on in traj_loops_summary()
       std::vector<ConnectedSubset> m_v_detected_loops; //!< set of loops detections

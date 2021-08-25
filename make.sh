@@ -1,8 +1,8 @@
+#!/bin/bash
+
 # ==================================================================
 #  Codac - build script
 # ==================================================================
-
-#!/bin/bash
 
 # Possible commands:
 #  ./build.sh
@@ -44,7 +44,7 @@ fi
     cmake -DBUILD_TESTS=OFF -DWITH_TUBE_TREE="${WITH_TUBE_TREE}" ..
   fi
 
-  make
+  make -j
   make api
   make doc
   cd ..

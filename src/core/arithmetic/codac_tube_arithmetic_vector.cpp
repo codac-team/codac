@@ -29,7 +29,7 @@ namespace codac
     return y;
   }
 
-  #define macro_vect_binary(f, feq) \
+  #define macro_vect_binary(f) \
     \
     const TubeVector f(const TubeVector& x1, const TubeVector& x2) \
     { \
@@ -85,10 +85,10 @@ namespace codac
     } \
     \
 
-  macro_vect_binary(operator+, operator+=);
-  macro_vect_binary(operator-, operator-=);
-  macro_vect_binary(operator|, operator|=);
-  macro_vect_binary(operator&, operator&=);
+  macro_vect_binary(operator+);
+  macro_vect_binary(operator-);
+  macro_vect_binary(operator|);
+  macro_vect_binary(operator&);
 
   const TubeVector operator*(const Interval& x1, const TubeVector& x2)
   {

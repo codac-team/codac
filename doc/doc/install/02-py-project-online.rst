@@ -56,7 +56,7 @@ Try Codac online with Python
       :width: 300px
 
 
-Here is a video illustrating this procedure:
+Here is a video illustrating this procedure. It was used for the Tubex library, but the procedure is the same for Codac:
 
 .. raw:: html
 

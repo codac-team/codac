@@ -12,6 +12,7 @@
 #include "codac_Domain.h"
 #include "codac_Figure.h" // for add_suffix
 #include "codac_Exception.h"
+#include "codac_ContractorNetwork.h"
 
 using namespace std;
 using namespace ibex;
@@ -615,8 +616,8 @@ namespace codac
           || &x.m_ref_values_t.get() == &m_ref_memory_t.get();
 
       case Type::T_TUBE_VECTOR:
-        return &m_ref_values_tv.get() == &x.m_ref_values_tv.get()
-          || &x.m_ref_values_tv.get() == &m_ref_values_tv.get();
+        return &m_ref_values_tv.get() == &x.m_ref_memory_tv.get()
+          || &x.m_ref_values_tv.get() == &m_ref_memory_tv.get();
 
       default:
         assert(false && "unhandled case");

@@ -44,10 +44,10 @@ void export_DataLoader(py::module& m)
 
     .def_static("generate_static_observations", &DataLoader::generate_static_observations,
       DATALOADER_VECTORINTERVALVECTOR_GENERATE_STATIC_OBSERVATIONS_VECTOR_VECTORINTERVALVECTOR_BOOL_INTERVAL_INTERVAL,
-      "x"_a, "map"_a, "random"_a=true, "visi_range"_a=ibex::Interval::POS_REALS, "visi_angle"_a=ibex::Interval::ALL_REALS)
+      "x"_a, "map"_a, "random"_a=true, "visi_range"_a=Interval::POS_REALS, "visi_angle"_a=Interval::ALL_REALS)
 
     .def_static("generate_observations", &DataLoader::generate_observations_along_traj,
       DATALOADER_VECTORINTERVALVECTOR_GENERATE_OBSERVATIONS_ALONG_TRAJ_TRAJECTORYVECTOR_VECTORINTERVALVECTOR_INT_BOOL_INTERVAL_INTERVAL_INTERVAL,
-      "x"_a, "map"_a, "nb_obs"_a=50, "random"_a=true, "visi_range"_a=ibex::Interval(0,50), "visi_angle"_a=ibex::Interval(-M_PI/4,M_PI/4), "tdomain"_a=ibex::Interval::ALL_REALS)
+      "x"_a, "map"_a, "nb_obs"_a=50, "random"_a=true, "visi_range"_a=Interval(0,50), "visi_angle"_a=Interval(-M_PI/4,M_PI/4), "tdomain"_a=Interval::ALL_REALS)
   ;
 }

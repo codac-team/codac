@@ -17,7 +17,7 @@
 
 #include "codac_tube_arithmetic.h"
 #include "codac_traj_arithmetic.h"
-#include "ibex_Interval.h"
+#include "codac_Interval.h"
 
 using namespace ibex;
 using namespace codac;
@@ -93,6 +93,7 @@ void export_arithmetic(py::module& m)
   m.def("atan2", (const Trajectory (*) (double y, const Trajectory& x)) &atan2, "y"_a, "x"_a);
 
   // todo: atan2, pow with Trajectory as parameter
+  // todo: min, max
 
   // Vector case
   m.def("abs", [](const IntervalVector x) { return ibex::abs(x); }, "x"_a.noconvert());
