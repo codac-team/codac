@@ -38,6 +38,25 @@ Python binding
 
 -----------------------------------------------------------------
 
+Codac release 0.1.6 (released `Aug 25, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.6>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.5 <https://github.com/codac-team/codac/compare/v0.1.5...v0.1.6>`_
+
+Features added
+--------------
+
+* :commit:`4f273d976005244344081d2feff81653095f5cfd`: towards generation of `.deb` and `.nupkg packages`
+
+Bugs fixed
+----------
+
+* :commit:`5cf92232da71aa4bf8e329ac2ceb99bd46969dcf`: corrected recent bug in ``CtcChain``
+* :commit:`b4c5a2c35f43c30c9e63918b4b1e917bb955fad3`: corrected recent bug in ``CtcEval``
+
+
+-----------------------------------------------------------------
+
 Codac release 0.1.5 (released `Aug 18, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.5>`_)
 ========================================================================================================
 

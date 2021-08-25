@@ -265,7 +265,6 @@ TEST_CASE("(de)serializations on unbounded tubes", "[core]")
     tube.set(Interval::NEG_REALS | 5., 5);
     CHECK(test_serialization(tube));
     tube.set(Interval::NEG_REALS | 5.);
-    cout << tube << endl;
     CHECK(test_serialization(tube));
   }
 
