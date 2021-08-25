@@ -548,7 +548,7 @@ Appendix
     
     cn.contract(); // segmentation fault here
 
-  Instead, we must create the domains inside the CN object in order to keep it alive outside the block. This can be done with the method ``.create_dom()``:
+  Instead, we must create the domains inside the CN object in order to keep it alive outside the block. This can be done with the method ``.create_interm_var()``:
 
   .. code:: cpp
 
@@ -558,7 +558,7 @@ Appendix
     
     if(/* some condition */)
     {
-      Interval& a = cn.create_dom(Interval(1,20));
+      Interval& a = cn.create_interm_var(Interval(1,20));
       cn.add(ctc_plus, {x, y, a});
     } // 'a' is not lost
     
@@ -568,8 +568,8 @@ Appendix
 
   .. code:: cpp
 
-    IntervalVector& d = cn.create_dom(IntervalVector(2));
+    IntervalVector& d = cn.create_interm_var(IntervalVector(2));
 
   creates for instance an intermediate 2d variable with a 2d box domain: :math:`[\mathbf{d}]=[-\infty,\infty]^2`. Its argument defines the type of domain to be created (``Interval``, ``IntervalVector``, *etc.*). 
 
-  Technically, ``create_dom()`` returns a C++ *reference* (in the above example, of type ``IntervalVector&``). The reference is an alias on the intermediate variable, that is now inside the Contractor Network. It can be used in the same way as other variables involved in the CN.
+  Technically, ``create_interm_var()`` returns a C++ *reference* (in the above example, of type ``IntervalVector&``). The reference is an alias on the intermediate variable, that is now inside the Contractor Network. It can be used in the same way as other variables involved in the CN.

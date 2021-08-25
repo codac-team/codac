@@ -109,10 +109,10 @@ int main()
     {
       // New domains and intermediate variables:
       Vector& landmark((i%2 == 0) ? m_a : m_b); // selecting landmark
-      IntervalVector& b = cn.create_dom(IntervalVector(landmark));
-      Interval& t = cn.create_dom((i+1)*tdomain.diam()/nb_obs+tdomain.lb());
-      Interval& d = cn.create_dom(sqrt(sqr(b[0]-x_truth(t)[0])+sqr(b[1]-x_truth(t)[1])));
-      IntervalVector& p = cn.create_dom(IntervalVector(4)); // state at time t
+      IntervalVector& b = cn.create_interm_var(IntervalVector(landmark));
+      Interval& t = cn.create_interm_var((i+1)*tdomain.diam()/nb_obs+tdomain.lb());
+      Interval& d = cn.create_interm_var(sqrt(sqr(b[0]-x_truth(t)[0])+sqr(b[1]-x_truth(t)[1])));
+      IntervalVector& p = cn.create_interm_var(IntervalVector(4)); // state at time t
 
       d.inflate(0.025); // bounded measurement
       cout << i << "\t" << ((i%2 == 0) ? "m_a" : "m_b") << "\t" << t.mid() << "\t" << d << endl;

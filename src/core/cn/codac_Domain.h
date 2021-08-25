@@ -43,16 +43,16 @@ namespace codac
       Domain(Interval& i);
       Domain(Interval& i, double& extern_d);
       Domain(Interval& i, Interval& extern_i);
-      Domain(const Interval& i);
+      Domain(const Interval& i, bool interm_var = false);
       Domain(Vector& v);
       // todo: ? Domain(const Vector& v);
       Domain(IntervalVector& iv);
-      Domain(const IntervalVector& iv);
+      Domain(const IntervalVector& iv, bool interm_var = false);
       Domain(Slice& s);
       Domain(Tube& t);
-      Domain(const Tube& t);
+      Domain(const Tube& t, bool interm_var = false);
       Domain(TubeVector& tv);
-      Domain(const TubeVector& tv);
+      Domain(const TubeVector& tv, bool interm_var = false);
       ~Domain();
 
       const Domain& operator=(const Domain& ad);
@@ -78,6 +78,9 @@ namespace codac
       double compute_volume() const;
       double get_saved_volume() const;
       void set_volume(double vol);
+
+      bool is_interm_var() const;
+      void reset_value();
 
       bool is_empty() const;
       
@@ -145,6 +148,16 @@ namespace codac
           std::reference_wrapper<Slice> m_ref_memory_s;
           std::reference_wrapper<Tube> m_ref_memory_t;
           std::reference_wrapper<TubeVector> m_ref_memory_tv;
+        };
+
+      // Possibly initial value (for intermediate variables to be reset)
+
+        union // if locally stored (such as intermediate variables or doubles to intervals):
+        {
+          Interval *m_init_i_ptr;
+          IntervalVector *m_init_iv_ptr;
+          Tube *m_init_t_ptr;
+          TubeVector *m_init_tv_ptr;
         };
 
 

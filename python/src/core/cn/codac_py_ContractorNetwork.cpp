@@ -134,6 +134,30 @@ void export_ContractorNetwork(py::module& m)
       py::return_value_policy::reference_internal,
       py::keep_alive<1,0>())
 
+    .def("create_interm_var", (Interval& (ContractorNetwork::*)(const Interval&))&ContractorNetwork::create_interm_var,
+      CONTRACTORNETWORK_INTERVAL_CREATE_INTERM_VAR_INTERVAL,
+      "i"_a,
+      py::return_value_policy::reference_internal,
+      py::keep_alive<1,0>())
+
+    .def("create_interm_var", (IntervalVector& (ContractorNetwork::*)(const IntervalVector&))&ContractorNetwork::create_interm_var,
+      CONTRACTORNETWORK_INTERVALVECTOR_CREATE_INTERM_VAR_INTERVALVECTOR,
+      "iv"_a,
+      py::return_value_policy::reference_internal,
+      py::keep_alive<1,0>())
+
+    .def("create_interm_var", (Tube& (ContractorNetwork::*)(const Tube&))&ContractorNetwork::create_interm_var,
+      CONTRACTORNETWORK_TUBE_CREATE_INTERM_VAR_TUBE,
+      "t"_a,
+      py::return_value_policy::reference_internal,
+      py::keep_alive<1,0>())
+
+    .def("create_interm_var", (TubeVector& (ContractorNetwork::*)(const TubeVector&))&ContractorNetwork::create_interm_var,
+      CONTRACTORNETWORK_TUBEVECTOR_CREATE_INTERM_VAR_TUBEVECTOR,
+      "tv"_a,
+      py::return_value_policy::reference_internal,
+      py::keep_alive<1,0>())
+
     .def("subvector", (IntervalVector& (ContractorNetwork::*)(Vector&,int,int))&ContractorNetwork::subvector,
       CONTRACTORNETWORK_INTERVALVECTOR_SUBVECTOR_VECTOR_INT_INT,
       "v"_a, "start_index"_a, "end_index"_a,

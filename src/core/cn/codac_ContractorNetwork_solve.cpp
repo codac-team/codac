@@ -158,7 +158,7 @@ namespace codac
       for(const auto& ctc : m_map_ctc)
       {
         if(ctc.second->type() == Contractor::Type::T_IBEX
-          || ctc.second->type() == Contractor::Type::T_TUBEX
+          || ctc.second->type() == Contractor::Type::T_CODAC
           || ctc.second->type() == Contractor::Type::T_EQUALITY)
         {
           // Only "contracting" contractors are triggered
@@ -169,6 +169,16 @@ namespace codac
         else
           ctc.second->set_active(false);
       }
+    }
+
+    void ContractorNetwork::reset_interm_var()
+    {
+      for(auto& dom : m_map_domains)
+        if(dom.second->is_interm_var())
+        {
+          dom.second->reset_value();
+          trigger_ctc_related_to_dom(dom.second);
+        }
     }
 
     int ContractorNetwork::nb_ctc_in_stack() const

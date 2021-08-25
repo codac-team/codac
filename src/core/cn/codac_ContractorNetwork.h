@@ -96,6 +96,7 @@ namespace codac
        * \return a reference to the created Interval domain variable
        */
       Interval& create_dom(const Interval& i);
+      Interval& create_interm_var(const Interval& i);
 
       /**
        * \brief Creates an IntervalVector intermediate variable with a reference kept in the 
@@ -109,6 +110,7 @@ namespace codac
        * \return a reference to the created IntervalVector domain variable
        */
       IntervalVector& create_dom(const IntervalVector& iv);
+      IntervalVector& create_interm_var(const IntervalVector& iv);
 
       /**
        * \brief Creates a Tube intermediate variable with a reference kept in the 
@@ -122,6 +124,7 @@ namespace codac
        * \return a reference to the created Tube domain variable
        */
       Tube& create_dom(const Tube& t);
+      Tube& create_interm_var(const Tube& t);
 
       /**
        * \brief Creates a TubeVector intermediate variable with a reference kept in the 
@@ -135,6 +138,7 @@ namespace codac
        * \return a reference to the created TubeVector domain variable
        */
       TubeVector& create_dom(const TubeVector& tv);
+      TubeVector& create_interm_var(const TubeVector& tv);
 
       /**
        * \brief Creates a subvector of a Vector domain
@@ -278,6 +282,8 @@ namespace codac
        * externally: outside the ContractorNetwork.
        */
       void trigger_all_contractors();
+
+      void reset_interm_var();
 
       /**
        * \brief Returns the number of contractors that are waiting for process.

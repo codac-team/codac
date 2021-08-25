@@ -56,7 +56,7 @@ cn.add(ctc_f, [v, x, u])   # adding the f constraint
 
 for i in range (0,len(y)): # we add the observ. constraint for each range-only measurement
 
-  p = cn.create_dom(IntervalVector(4)) # intermed. variable (state at t_i)
+  p = cn.create_interm_var(IntervalVector(4)) # intermed. variable (state at t_i)
 
   # Distance constraint: relation between the state at t_i and the ith beacon position
   cn.add(ctc.dist, [cn.subvector(p,0,1), b[i], y[i]])

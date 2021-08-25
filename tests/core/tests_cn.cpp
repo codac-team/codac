@@ -437,7 +437,7 @@ TEST_CASE("CN simple")
     CHECK(v(4) == Interval(-3.,-1.));
   }
 
-  SECTION("create_dom Tube")
+  SECTION("create_interm_var Tube")
   {
     double dt = 0.1;
     Interval tdomain(0.,10.);
@@ -451,7 +451,7 @@ TEST_CASE("CN simple")
 
     {
       Tube v_local(tdomain, dt, TFunction("0"));
-      Tube &v_inside = cn.create_dom(v_local);
+      Tube &v_inside = cn.create_interm_var(v_local);
       //cn.add(ctc_deriv, {x,v_inside});
     }
 
@@ -459,7 +459,7 @@ TEST_CASE("CN simple")
     //CHECK(x.codomain() == Interval(0.));
   }
 
-  /*SECTION("create_dom TubeVector")
+  /*SECTION("create_interm_var TubeVector")
   {
     double dt = 0.1;
     Interval tdomain(0.,10.);
@@ -473,7 +473,7 @@ TEST_CASE("CN simple")
 
     {
       TubeVector v_local(tdomain, dt, TFunction("(0.;0.)"));
-      TubeVector &v_inside = cn.create_dom(v_local);
+      TubeVector &v_inside = cn.create_interm_var(v_local);
       cn.add(ctc_deriv, {x,v_inside});
     }
 
@@ -493,9 +493,9 @@ TEST_CASE("CN simple")
 
     ContractorNetwork cn;
 
-    Interval& a = cn.create_dom(Interval());
-    Interval& b = cn.create_dom(Interval());
-    Interval& c = cn.create_dom(Interval());
+    Interval& a = cn.create_interm_var(Interval());
+    Interval& b = cn.create_interm_var(Interval());
+    Interval& c = cn.create_interm_var(Interval());
 
     cn.add(ctc_sqr, {y, b});
     cn.add(ctc_sqr, {x, a});
@@ -526,9 +526,9 @@ TEST_CASE("CN simple")
 
     ContractorNetwork cn;
 
-    Interval& a = cn.create_dom(Interval());
-    Interval& b = cn.create_dom(Interval());
-    Interval& c = cn.create_dom(Interval());
+    Interval& a = cn.create_interm_var(Interval());
+    Interval& b = cn.create_interm_var(Interval());
+    Interval& c = cn.create_interm_var(Interval());
 
     cn.add(ctc_sqr, {y, b});
     cn.add(ctc_sqr, {x, a});
@@ -559,9 +559,9 @@ TEST_CASE("CN simple")
 
     ContractorNetwork cn;
 
-    Interval& a = cn.create_dom(Interval());
-    Interval& b = cn.create_dom(Interval());
-    Interval& c = cn.create_dom(Interval());
+    Interval& a = cn.create_interm_var(Interval());
+    Interval& b = cn.create_interm_var(Interval());
+    Interval& c = cn.create_interm_var(Interval());
 
     cn.add(ctc_sqrt, {c, d});
     cn.add(ctc_plus, {a, b, c});
@@ -579,5 +579,53 @@ TEST_CASE("CN simple")
     CHECK(y == Interval(4.));
     CHECK(d == d_);
     CHECK(cn.iteration_nb() <= 2);
+  }
+
+  SECTION("Reset method")
+  {
+    Interval x(0.,0.), y(4.,6.), d(4.);
+    Interval d_(d);
+
+    CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
+    CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
+    CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
+
+    ContractorNetwork cn;
+
+    Interval& a = cn.create_interm_var(Interval(-55.,55.));
+    Interval& b = cn.create_interm_var(Interval());
+    Interval& c = cn.create_interm_var(Interval());
+
+    cn.add(ctc_sqrt, {c, d});
+    cn.add(ctc_plus, {a, b, c});
+    cn.add(ctc_sqr, {x, a});
+    cn.add(ctc_sqr, {y, b});
+
+    cn.contract();
+
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(a == Interval(0.));
+    CHECK(b == Interval(16.));
+    CHECK(c == Interval(16.));
+
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.reset_interm_var();
+    CHECK(cn.nb_ctc_in_stack() != 0);
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(a == Interval(-55.,55.));
+    CHECK(b == Interval());
+    CHECK(c == Interval());
+
+    cn.contract();
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(a == Interval(0.));
+    CHECK(b == Interval(16.));
+    CHECK(c == Interval(16.));
   }
 }

@@ -61,22 +61,46 @@ namespace codac
 
     Interval& ContractorNetwork::create_dom(const Interval& i)
     {
-      return add_dom(Domain(i))->interval();
+      cout << "create_dom(): deprecated. Use create_interm_var() instead." << endl;
+      return create_interm_var(i);
+    }
+
+    Interval& ContractorNetwork::create_interm_var(const Interval& i)
+    {
+      return add_dom(Domain(i, true))->interval();
     }
 
     IntervalVector& ContractorNetwork::create_dom(const IntervalVector& iv)
     {
-      return add_dom(Domain(iv))->interval_vector();
+      cout << "create_dom(): deprecated. Use create_interm_var() instead." << endl;
+      return create_interm_var(iv);
+    }
+
+    IntervalVector& ContractorNetwork::create_interm_var(const IntervalVector& iv)
+    {
+      return add_dom(Domain(iv, true))->interval_vector();
     }
 
     Tube& ContractorNetwork::create_dom(const Tube& t)
     {
-      return add_dom(Domain(t))->tube();
+      cout << "create_dom(): deprecated. Use create_interm_var() instead." << endl;
+      return create_interm_var(t);
+    }
+
+    Tube& ContractorNetwork::create_interm_var(const Tube& t)
+    {
+      return add_dom(Domain(t, true))->tube();
     }
 
     TubeVector& ContractorNetwork::create_dom(const TubeVector& tv)
     {
-      return add_dom(Domain(tv))->tube_vector();
+      cout << "create_dom(): deprecated. Use create_interm_var() instead." << endl;
+      return create_interm_var(tv);
+    }
+
+    TubeVector& ContractorNetwork::create_interm_var(const TubeVector& tv)
+    {
+      return add_dom(Domain(tv, true))->tube_vector();
     }
 
     IntervalVector& ContractorNetwork::subvector(Vector& v, int start_index, int end_index)
