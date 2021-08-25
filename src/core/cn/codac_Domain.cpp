@@ -15,7 +15,6 @@
 #include "codac_ContractorNetwork.h"
 
 using namespace std;
-using namespace ibex;
 
 namespace codac
 {

@@ -20,6 +20,7 @@
 #include "codac_CtcDeriv.h"
 #include "codac_Hashcode.h"
 #include "codac_Contractor.h"
+#include "codac_Variable.h"
 
 namespace ibex
 {
@@ -28,6 +29,7 @@ namespace ibex
 
 namespace codac
 {
+  class Variable;
   class Domain;
   class DynCtc;
   class CtcDeriv;
@@ -242,6 +244,7 @@ namespace codac
        * \return the computation time in seconds
        */
       double contract(bool verbose = false);
+      double contract(const std::map<std::string,Domain>& var_dom, bool verbose = false);
 
       double contract_ordered_mode(bool verbose = false);
 

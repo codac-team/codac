@@ -196,7 +196,7 @@ void export_ContractorNetwork(py::module& m)
 
   // Contraction process  
 
-    .def("contract", &ContractorNetwork::contract,
+    .def("contract", (double (ContractorNetwork::*)(bool))&ContractorNetwork::contract,
       CONTRACTORNETWORK_DOUBLE_CONTRACT_BOOL,
       "verbose"_a=false)
 

@@ -68,6 +68,11 @@ namespace codac
       return (double)(clock() - t_start)/CLOCKS_PER_SEC;
     }
 
+    double ContractorNetwork::contract(const map<string,Domain>& var_dom, bool verbose)
+    {
+      return contract(verbose);
+    }
+
     double ContractorNetwork::contract_ordered_mode(bool verbose)
     {
       // todo: reset all saved domains' volumes

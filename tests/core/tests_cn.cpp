@@ -1,14 +1,15 @@
 #include "catch_interval.hpp"
+#include "codac_Variable.h"
 #include "codac_ContractorNetwork.h"
 #include "codac_CtcDeriv.h"
 #include "codac_CtcEval.h"
 #include "codac_CtcFunction.h"
+#include "codac.h"
 #include "vibes.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
-using namespace ibex;
 using namespace codac;
 
 #define VIBES_DRAWING 0
@@ -627,5 +628,35 @@ TEST_CASE("CN simple")
     CHECK(a == Interval(0.));
     CHECK(b == Interval(16.));
     CHECK(c == Interval(16.));
+  }
+
+  SECTION("Variables in CN")
+  {
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c"));
+    Interval a1(0,1), b1(-1,1), a2(-1,1), b2(0,1), c(1.5,2);
+
+    ContractorNetwork cn;
+    Variable a(Interval(-oo,oo)), b(Interval(-oo,oo));
+    CtcDeriv ctc_deriv;
+    cn.add(ctc_plus, {a, b1, c}); 
+
+    /*cn.contract({
+      {a, a1},
+      {b, b1}
+    });
+
+    cn.contract({
+      {a, a2}, 
+      {b, b2}
+    });*/
+
+    /*CHECK(a1 == Interval(0.5,1));
+    CHECK(b1 == Interval(0.5,1));
+    CHECK(a2 == Interval(0.5,1));
+    CHECK(b2 == Interval(0.5,1));
+    CHECK(c == Interval(1.5,2));
+
+    CHECK(cn.nb_dom() == 3);
+    CHECK(cn.nb_ctc() == 1);*/
   }
 }
