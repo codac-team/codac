@@ -23,6 +23,14 @@ namespace codac
 
     double ContractorNetwork::contract(bool verbose)
     {
+      // Checking existance of remaining variables
+      // All of them should be associated to domains
+      for(const auto& dom : m_map_domains)
+      {
+        if(dom.second->is_var())
+          throw Exception(__func__, "some CN variables are not associated to domains");
+      }
+
       clock_t t_start = clock();
       for(auto& dom : m_map_domains)
         dom.second->set_volume(dom.second->compute_volume());
@@ -112,9 +120,7 @@ namespace codac
 
       // References are changed according to the specified domains
       for(auto& v : var_dom)
-      {
         replace_var_by_dom(v.first, v.second, init_map);
-      }
 
       double t = contract(verbose);
 

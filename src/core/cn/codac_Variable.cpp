@@ -14,27 +14,5 @@ using namespace std;
 
 namespace codac
 {
-  /*Variable::Variable(const Interval& i)
-    : Domain(i)
-  {
-    
-  }
-
-  Variable::Variable(const IntervalVector& iv)
-    : Domain(iv)
-  {
-    
-  }
-
-  Variable::Variable(const Tube& t)
-    : Domain(t)
-  {
-    
-  }
-
-  Variable::Variable(const TubeVector& tv)
-    : Domain(tv)
-  {
-    
-  }*/
+  
 }

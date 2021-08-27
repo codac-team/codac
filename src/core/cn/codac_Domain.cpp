@@ -265,6 +265,7 @@ namespace codac
     m_v_ctc = ad.m_v_ctc;
     m_name = ad.m_name;
     m_dom_id = ad.m_dom_id;
+    m_is_var = ad.m_is_var;
 
     m_type = ad.m_type;
     m_memory_type = ad.m_memory_type;
@@ -572,6 +573,9 @@ namespace codac
 
       case Type::T_INTERVAL_VECTOR:
         return m_init_iv_ptr != NULL;
+
+      case Type::T_SLICE:
+        return false; // to be changed
 
       case Type::T_TUBE:
         return m_init_t_ptr != NULL;

@@ -45,7 +45,7 @@ namespace codac
 
       IntervalVar& operator[](int index)
       {
-        return (IntervalVar&)(*this)[index];
+        return (IntervalVar&)IntervalVector::operator[](index);
       }
   };
 }
