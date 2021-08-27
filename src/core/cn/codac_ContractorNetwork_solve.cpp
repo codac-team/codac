@@ -96,8 +96,12 @@ namespace codac
           break;
 
         case Domain::Type::T_INTERVAL_VECTOR:
+          if(var.interval_vector().size() != dom.interval_vector().size())
+            throw Exception(__func__, "the provided IntervalVector does not match the variable dimension");
+
           for(int j = 0 ; j < var.interval_vector().size() ; j++)
             replace_var_by_dom(Domain(var.interval_vector()[j]), Domain::vector_component(dom,j), init_map);
+
           break;
 
         case Domain::Type::T_SLICE:
@@ -109,7 +113,7 @@ namespace codac
           break;
 
         case Domain::Type::T_TUBE_VECTOR:
-
+          // to be implemented
           break;
       }
     }
