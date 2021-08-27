@@ -14,6 +14,7 @@
 
 #include <deque>
 #include <initializer_list>
+#include <unordered_map>
 #include "codac_Ctc.h"
 #include "codac_DynCtc.h"
 #include "codac_Domain.h"
