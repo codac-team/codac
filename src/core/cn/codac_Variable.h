@@ -13,22 +13,40 @@
 #define __CODAC_VARIABLE_H__
 
 #include "codac_Interval.h"
-#include "codac_Domain.h"
+#include "codac_IntervalVector.h"
 
 namespace codac
 {
-  class Variable : public Domain
+  class Var
+  {
+
+  };
+
+  class IntervalVar : public Interval, Var
   {
     public:
 
-      Variable(const Interval& i);
-      Variable(const IntervalVector& iv);
-      Variable(const Tube& t);
-      Variable(const TubeVector& tv);
+      IntervalVar()
+        : Interval()
+      {
 
+      }
+  };
 
-    protected:
+  class IntervalVectorVar : public IntervalVector, Var
+  {
+    public:
 
+      IntervalVectorVar(int n)
+        : IntervalVector(n)
+      {
+
+      }
+
+      IntervalVar& operator[](int index)
+      {
+        return (IntervalVar&)(*this)[index];
+      }
   };
 }
 

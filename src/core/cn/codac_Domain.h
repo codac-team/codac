@@ -14,6 +14,7 @@
 
 #include <functional>
 #include "codac_Interval.h"
+#include "codac_Variable.h"
 #include "codac_IntervalVector.h"
 #include "codac_Slice.h"
 #include "codac_Tube.h"
@@ -44,10 +45,12 @@ namespace codac
       Domain(Interval& i, double& extern_d);
       Domain(Interval& i, Interval& extern_i);
       Domain(const Interval& i, bool interm_var = false);
+      Domain(IntervalVar& i);
       Domain(Vector& v);
       // todo: ? Domain(const Vector& v);
       Domain(IntervalVector& iv);
       Domain(const IntervalVector& iv, bool interm_var = false);
+      Domain(IntervalVectorVar& iv);
       Domain(Slice& s);
       Domain(Tube& t);
       Domain(const Tube& t, bool interm_var = false);
@@ -56,6 +59,7 @@ namespace codac
       ~Domain();
 
       const Domain& operator=(const Domain& ad);
+      void set_references(const Domain& ad);
 
       int id() const;
       Type type() const;
@@ -74,6 +78,8 @@ namespace codac
       std::vector<Contractor*>& contractors();
       const std::vector<Contractor*>& contractors() const;
       void add_ctc(Contractor *ctc);
+
+      bool is_var() const;
 
       double compute_volume() const;
       double get_saved_volume() const;
@@ -172,6 +178,8 @@ namespace codac
 
       std::string m_name;
       int m_dom_id;
+
+      bool m_is_var = false;
 
       static int dom_counter;
 

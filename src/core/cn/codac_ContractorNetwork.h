@@ -244,7 +244,8 @@ namespace codac
        * \return the computation time in seconds
        */
       double contract(bool verbose = false);
-      double contract(const std::map<std::string,Domain>& var_dom, bool verbose = false);
+      double contract(const std::unordered_map<Domain,Domain>& var_dom, bool verbose = false);
+      void replace_var_by_dom(Domain var, Domain dom, std::map<DomainHashcode,Domain>& init_map);
 
       double contract_ordered_mode(bool verbose = false);
 

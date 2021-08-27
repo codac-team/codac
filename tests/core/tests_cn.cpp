@@ -636,27 +636,83 @@ TEST_CASE("CN simple")
     Interval a1(0,1), b1(-1,1), a2(-1,1), b2(0,1), c(1.5,2);
 
     ContractorNetwork cn;
-    Variable a(Interval(-oo,oo)), b(Interval(-oo,oo));
+    IntervalVar a;
     CtcDeriv ctc_deriv;
     cn.add(ctc_plus, {a, b1, c}); 
 
-    /*cn.contract({
-      {a, a1},
-      {b, b1}
-    });
+    cn.contract({
+      {a, a1}
+    });    
+
+    CHECK(a1 == Interval(0.5,1));
+    CHECK(b1 == Interval(0.5,1));
+    CHECK(c == Interval(1.5,2));
+
+    a1 |= Interval(0,1);
+    b1 |= Interval(-1,1);
 
     cn.contract({
-      {a, a2}, 
-      {b, b2}
-    });*/
+      {a, a1}
+    });
 
-    /*CHECK(a1 == Interval(0.5,1));
+    CHECK(a1 == Interval(0.5,1));
+    CHECK(b1 == Interval(0.5,1));
+    CHECK(c == Interval(1.5,2));
+
+    cn.contract({
+      {a, a2},
+      {b1, b2}
+    });
+
+    CHECK(a1 == Interval(0.5,1));
     CHECK(b1 == Interval(0.5,1));
     CHECK(a2 == Interval(0.5,1));
     CHECK(b2 == Interval(0.5,1));
     CHECK(c == Interval(1.5,2));
 
     CHECK(cn.nb_dom() == 3);
-    CHECK(cn.nb_ctc() == 1);*/
+    CHECK(cn.nb_ctc() == 1);
+  }
+
+  SECTION("Variables and CtcFunction on heterogeneous variables")
+  {
+    IntervalVar a;
+    IntervalVectorVar x(2);
+    
+    CtcFunction ctc_add(Function("b[2]", "c", "b[0]+b[1]-c"));
+
+    ContractorNetwork cn;
+    cn.add(ctc_add, {x,a});
+
+    IntervalVector x1{{0,1},{-2,3}};
+    Interval a1(1,20);
+    cn.contract({
+      {a, a1},
+      {x, x1}
+    });
+
+    CHECK(x1[0] == Interval(0,1));
+    CHECK(x1[1] == Interval(0,3));
+    CHECK(a1 == Interval(1,4));
+
+    IntervalVector x2(2);
+    x2[0] = Interval(10,10.5);
+    x2[1] = Interval(22,99);
+
+    Interval a2(32,33);
+    cn.contract({
+      {x, x2},
+      {a, a2}
+    });
+
+    //CHECK(a == Interval());
+    //CHECK(x == IntervalVector(2));
+
+    CHECK(x1[0] == Interval(0,1)); // remain unchanged
+    CHECK(x1[1] == Interval(0,3)); // remain unchanged
+    CHECK(a1 == Interval(1,4));    // remain unchanged
+    CHECK(ApproxIntv(x2[0]) == Interval(10,10.5));
+    CHECK(x2[1] == Interval(22,23));
+    CHECK(a2 == Interval(32,33));
   }
 }

@@ -14,7 +14,7 @@ using namespace std;
 
 namespace codac
 {
-  Variable::Variable(const Interval& i)
+  /*Variable::Variable(const Interval& i)
     : Domain(i)
   {
     
@@ -36,5 +36,5 @@ namespace codac
     : Domain(tv)
   {
     
-  }
+  }*/
 }

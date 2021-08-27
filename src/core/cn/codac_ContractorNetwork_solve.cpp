@@ -68,9 +68,64 @@ namespace codac
       return (double)(clock() - t_start)/CLOCKS_PER_SEC;
     }
 
-    double ContractorNetwork::contract(const map<string,Domain>& var_dom, bool verbose)
+    void ContractorNetwork::replace_var_by_dom(Domain var, Domain dom, map<DomainHashcode,Domain>& init_map)
     {
-      return contract(verbose);
+      DomainHashcode hashcode(var);
+      if(m_map_domains.find(hashcode) == m_map_domains.end())
+        throw Exception(__func__, "unknown variable domain");
+
+      Domain* var_ptr = m_map_domains[hashcode];
+      var_ptr->set_references(dom);
+      var_ptr->set_volume(-1.);
+      var_ptr->m_is_var = false;
+      trigger_ctc_related_to_dom(var_ptr);
+      init_map[hashcode] = var;
+
+      switch(var.type())
+      {
+        case Domain::Type::T_INTERVAL:
+          // Nothing to do
+          break;
+
+        case Domain::Type::T_INTERVAL_VECTOR:
+          for(int j = 0 ; j < var.interval_vector().size() ; j++)
+            replace_var_by_dom(Domain(var.interval_vector()[j]), Domain::vector_component(dom,j), init_map);
+          break;
+
+        case Domain::Type::T_SLICE:
+          // Nothing to do
+          break;
+          
+        case Domain::Type::T_TUBE:
+          // Nothing to do
+          break;
+
+        case Domain::Type::T_TUBE_VECTOR:
+
+          break;
+      }
+    }
+
+    double ContractorNetwork::contract(const unordered_map<Domain,Domain>& var_dom, bool verbose)
+    {
+      map<DomainHashcode,Domain> init_map;
+
+      // References are changed according to the specified domains
+      for(auto& v : var_dom)
+      {
+        replace_var_by_dom(v.first, v.second, init_map);
+      }
+
+      double t = contract(verbose);
+
+      // Back to the "abstract" architecture with pure defined variables
+      for(auto& v : init_map)
+      {
+        m_map_domains[v.first]->set_references(v.second);
+        m_map_domains[v.first]->m_is_var = true;
+      }
+
+      return t;
     }
 
     double ContractorNetwork::contract_ordered_mode(bool verbose)
@@ -220,7 +275,7 @@ namespace codac
         // Local deque, for specific order related to this domain
         deque<Contractor*> ctc_deque;
 
-        for(auto& ctc_of_dom : dom->contractors()) 
+        for(auto& ctc_of_dom : dom->contractors())
           if(ctc_of_dom != ctc_to_avoid && !ctc_of_dom->is_active())
           {
             ctc_of_dom->set_active(true);

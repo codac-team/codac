@@ -112,6 +112,12 @@ namespace codac
       m_init_i_ptr = NULL;
   }
 
+  Domain::Domain(IntervalVar& i)
+    : Domain(static_cast<Interval&>(i))
+  {
+    m_is_var = true;
+  }
+
   Domain::Domain(Vector& v)
     : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_VECTOR)
   {
@@ -149,6 +155,12 @@ namespace codac
       m_init_iv_ptr = new IntervalVector(iv);
     else
       m_init_iv_ptr = NULL;
+  }
+
+  Domain::Domain(IntervalVectorVar& iv)
+    : Domain(static_cast<IntervalVector&>(iv))
+  {
+    m_is_var = true;
   }
 
   Domain::Domain(Slice& s)
@@ -260,6 +272,15 @@ namespace codac
     // todo: verify the copy of the above pointers
     // todo: is this constructor useful?
 
+    set_references(ad);
+
+    return *this;
+  }
+
+  void Domain::set_references(const Domain& ad)
+  {
+    assert(m_type == ad.m_type && m_memory_type == ad.m_memory_type);
+
     switch(ad.m_type)
     {
       case Type::T_INTERVAL:
@@ -367,8 +388,6 @@ namespace codac
       default:
         assert(false && "unhandled case");
     }
-
-    return *this;
   }
 
   int Domain::id() const
@@ -455,6 +474,11 @@ namespace codac
   {
     //assert(find(m_v_ctc.begin(), m_v_ctc.end(), ctc) == m_v_ctc.end()); // not already added (todo?)
     m_v_ctc.push_back(ctc);
+  }
+
+  bool Domain::is_var() const
+  {
+    return m_is_var;
   }
 
   double Domain::compute_volume() const
@@ -556,7 +580,6 @@ namespace codac
         return m_init_tv_ptr != NULL;
 
       default:
-        cout << "type " << (int)m_type << endl;
         assert(false && "unhandled case");
     }
   }
@@ -584,7 +607,6 @@ namespace codac
         break;
 
       default:
-        cout << "type " << (int)m_type << endl;
         assert(false && "unhandled case");
     }
   }
@@ -621,7 +643,6 @@ namespace codac
         break;
 
       default:
-        cout << "type " << (int)m_type << endl;
         assert(false && "unhandled case");
     }
 
@@ -1149,17 +1170,19 @@ namespace codac
     // Builds a Domain object for the ith component of this vector Domain,
     // and makes it point to the component of the memory reference
 
+    Domain d;
+
     switch(x.type())
     {
       case Type::T_INTERVAL_VECTOR:
         switch(x.m_memory_type)
         {
           case MemoryRef::M_VECTOR:
-            return Domain(x.interval_vector()[i], x.m_ref_memory_v.get()[i]);
+            d = Domain(x.interval_vector()[i], x.m_ref_memory_v.get()[i]);
             break;
 
           case MemoryRef::M_INTERVAL_VECTOR:
-            return Domain(x.interval_vector()[i], x.m_ref_memory_iv.get()[i]);
+            d = Domain(x.interval_vector()[i], x.m_ref_memory_iv.get()[i]);
             break;
 
           default:
@@ -1175,6 +1198,7 @@ namespace codac
         assert(false && "domain is not a vector");
     }
 
-    return x; // should not reach this point
+    d.m_is_var = x.m_is_var;
+    return d;
   }
 }
