@@ -353,6 +353,19 @@ namespace codac
       compute_codomain();
       return *this;
     }
+
+    bool Trajectory::constant_timestep(double& h) const
+    {
+      assert(m_map_values.size() > 2);
+      h = next(m_map_values.begin())->first - m_map_values.begin()->first;
+
+      for(map<double,double>::const_iterator it = m_map_values.begin() ;
+        next(it) != m_map_values.end() ; it++)
+        if(next(it)->first - it->first != h)
+          return false;
+        
+      return true;
+    }
     
     Trajectory& Trajectory::sample(double dt)
     {
@@ -495,18 +508,34 @@ namespace codac
 
         case TrajDefnType::MAP_OF_VALUES: // finite difference computation
         {
-          assert(m_map_values.size() > 1);
-          
-          double prev_t = m_map_values.begin()->first;
-          for(map<double,double>::const_iterator it = m_map_values.begin() ; it != m_map_values.end() ; it++)
+          assert(m_map_values.size() > 2);
+
+          double h;
+          if(!constant_timestep(h))
           {
-            double h = it->first - prev_t;
-
-            if(h == 0.) // first value
-              h = next(m_map_values.begin())->first - prev_t;
-
-            d.set(finite_diff(it->first, h), it->first);
-            prev_t = it->first;
+            // Mean timestep
+            double mean_h = 0.;
+            for(map<double,double>::const_iterator it = m_map_values.begin() ;
+              next(it) != m_map_values.end() ; it++)
+              mean_h += next(it)->first-it->first;
+            mean_h /= m_map_values.size()-1;
+            
+            // Equivalent traj with mean timestep
+            Trajectory d_cst_h;
+            for(double t = tdomain().lb() ; t < tdomain().ub()+h ; t+=h)
+              d_cst_h.set((*this)(min(tdomain().ub(),t)), t); // interpolation
+            // If the last value is outside tdomain, the last value is duplicated
+            
+            d = d_cst_h.diff();
+            d.truncate_tdomain(tdomain());
+          }
+          
+          else
+          {
+            // h is already constant at this point:
+            double h = next(m_map_values.begin())->first - m_map_values.begin()->first;
+            for(const auto& v : m_map_values)
+              d.set(finite_diff(v.first, h), v.first);
           }
 
           assert(d.tdomain() == tdomain());
