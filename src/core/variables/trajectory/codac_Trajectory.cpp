@@ -427,7 +427,7 @@ namespace codac
       m_codomain = Interval::EMPTY_SET;
 
       double prev_value = 0., value_mod = 0.;
-      map<double,double> m_continuous_values(m_map_values);
+      map<double,double> m_continuous_values;
 
       for(const auto& it : m_map_values)
       {
@@ -440,7 +440,7 @@ namespace codac
         }
 
         prev_value = it.second;
-        m_continuous_values[it.first] += value_mod;
+        m_continuous_values[it.first] = m_map_values[it.first] + value_mod;
         m_codomain |= m_continuous_values[it.first];
       }
 

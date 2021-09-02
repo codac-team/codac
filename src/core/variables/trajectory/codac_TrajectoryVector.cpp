@@ -331,6 +331,13 @@ namespace codac
         (*this)[i].sample(x[i]);
       return *this;
     }
+
+    TrajectoryVector& TrajectoryVector::make_continuous()
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].make_continuous();
+      return *this;
+    }
     
     // Integration
     
