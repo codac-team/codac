@@ -595,19 +595,23 @@ namespace codac
     switch(m_type)
     {
       case Type::T_INTERVAL:
-        interval() = *m_init_i_ptr;
+        assert(m_i_ptr != NULL);
+        *m_i_ptr = *m_init_i_ptr;
         break;
 
       case Type::T_INTERVAL_VECTOR:
-        interval_vector() = *m_init_iv_ptr;
+        assert(m_iv_ptr != NULL);
+        *m_iv_ptr = *m_init_iv_ptr;
         break;
 
       case Type::T_TUBE:
-        tube() = *m_init_t_ptr;
+        assert(m_t_ptr != NULL);
+        *m_t_ptr = *m_init_t_ptr;
         break;
 
       case Type::T_TUBE_VECTOR:
-        tube_vector() = *m_init_tv_ptr;
+        assert(m_tv_ptr != NULL);
+        *m_tv_ptr = *m_init_tv_ptr;
         break;
 
       default:
