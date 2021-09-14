@@ -335,44 +335,9 @@ namespace codac
   void CtcEval::contract(double t, IntervalVector& z, TubeVector& y, TubeVector& w)
   {
     assert(!std::isnan(t));
-    assert(y.size() == z.size());
-    assert(y.size() == w.size());
-    assert(y.tdomain().contains(t));
-    assert(y.tdomain() == w.tdomain());
-    assert(TubeVector::same_slicing(y, w));
-
-    if(y.size() != z.size() || y.size() != w.size())
-      throw DomainsSizeException(m_ctc_name);
-
-    if(z.is_empty() || y.is_empty() || w.is_empty())
-    {
-      z.set_empty();
-      y.set_empty();
-      w.set_empty();
-      return;
-    }
-    
-    z &= y(t);
-
-    for(int i = 0 ; i < y.size() ; i++)
-      contract(t, z[i], y[i], w[i]);
+    Interval intv_t(t);
+    contract(intv_t, z, y, w);
   }
-
-  /*void CtcEval::contract(const Interval& t, const Interval& z, Tube& y, Tube& w)
-  {
-    assert(y.tdomain() == w.tdomain());
-    assert(Tube::same_slicing(y, w));
-
-    if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())
-    {
-      y.set_empty();
-      w.set_empty();
-      return;
-    }
-
-    Interval _t(t), _z(z);
-    contract(_t, _z, y, w);
-  }*/
 
   void CtcEval::contract(Interval& t, IntervalVector& z, TubeVector& y, TubeVector& w)
   {
@@ -393,42 +358,13 @@ namespace codac
       return;
     }
 
-    Interval t_result = Interval::EMPTY_SET;
-
-    t &= y.invert(z, t);
+    t &= y.invert(z, t); // is this useful?
     z &= y(t);
 
     for(int i = 0 ; i < y.size() ; i++)
-    {
-      Interval _t(t);
-      contract(_t, z[i], y[i], w[i]);
-      t_result |= _t;
-    }
-
-    t &= t_result;
+      contract(t, z[i], y[i], w[i]);
   }
-/*
-  void CtcEval::contract(const Interval& t, const IntervalVector& z, TubeVector& y, TubeVector& w)
-  {
-    assert(y.size() == z.size());
-    assert(y.size() == w.size());
-    assert(y.tdomain() == w.tdomain());
-    assert(TubeVector::same_slicing(y, w));
-
-    if(y.size() != z.size() || y.size() != w.size())
-      throw DomainsSizeException(m_ctc_name);
-
-    if(t.is_empty() || z.is_empty() || y.is_empty() || w.is_empty())
-    {
-      y.set_empty();
-      w.set_empty();
-      return;
-    }
-
-    Interval _t(t); IntervalVector _z(z);
-    contract(_t, _z, y, w);
-  }*/
-
+  
   void CtcEval::contract(Interval& t, Interval& z, const Tube& y)
   {
     if(t.is_empty() || z.is_empty() || y.is_empty())
