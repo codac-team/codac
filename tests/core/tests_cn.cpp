@@ -1,14 +1,15 @@
 #include "catch_interval.hpp"
+#include "codac_Variable.h"
 #include "codac_ContractorNetwork.h"
 #include "codac_CtcDeriv.h"
 #include "codac_CtcEval.h"
 #include "codac_CtcFunction.h"
+#include "codac.h"
 #include "vibes.h"
 
 using namespace Catch;
 using namespace Detail;
 using namespace std;
-using namespace ibex;
 using namespace codac;
 
 #define VIBES_DRAWING 0
@@ -437,7 +438,7 @@ TEST_CASE("CN simple")
     CHECK(v(4) == Interval(-3.,-1.));
   }
 
-  SECTION("create_dom Tube")
+  SECTION("create_interm_var Tube")
   {
     double dt = 0.1;
     Interval tdomain(0.,10.);
@@ -451,7 +452,7 @@ TEST_CASE("CN simple")
 
     {
       Tube v_local(tdomain, dt, TFunction("0"));
-      Tube &v_inside = cn.create_dom(v_local);
+      Tube &v_inside = cn.create_interm_var(v_local);
       //cn.add(ctc_deriv, {x,v_inside});
     }
 
@@ -459,7 +460,7 @@ TEST_CASE("CN simple")
     //CHECK(x.codomain() == Interval(0.));
   }
 
-  /*SECTION("create_dom TubeVector")
+  /*SECTION("create_interm_var TubeVector")
   {
     double dt = 0.1;
     Interval tdomain(0.,10.);
@@ -473,11 +474,245 @@ TEST_CASE("CN simple")
 
     {
       TubeVector v_local(tdomain, dt, TFunction("(0.;0.)"));
-      TubeVector &v_inside = cn.create_dom(v_local);
+      TubeVector &v_inside = cn.create_interm_var(v_local);
       cn.add(ctc_deriv, {x,v_inside});
     }
 
     //cn.contract();
     CHECK(x.codomain() == IntervalVector(2, 0.));
   }*/
+
+
+  SECTION("Desired order")
+  {
+    Interval x(0.,1.), y(4.,5.), d(-10.,10.);
+    Interval x_(x), y_(y);
+
+    CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
+    CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
+    CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
+
+    ContractorNetwork cn;
+
+    Interval& a = cn.create_interm_var(Interval());
+    Interval& b = cn.create_interm_var(Interval());
+    Interval& c = cn.create_interm_var(Interval());
+
+    cn.add(ctc_sqr, {y, b});
+    cn.add(ctc_sqr, {x, a});
+    cn.add(ctc_plus, {a, b, c});
+    cn.add(ctc_sqrt, {c, d});
+
+    cn.set_name(ctc_sqrt, "sqrt");
+    cn.set_name(ctc_plus, "+");
+    cn.set_name(ctc_sqr, "sqr");
+
+    cn.set_fixedpoint_ratio(0.);
+    cn.contract_ordered_mode();
+
+    CHECK(x == x_);
+    CHECK(y == y_);
+    CHECK(d == sqrt(sqr(x_)+sqr(y_)));
+    CHECK(cn.iteration_nb() == 1);
+  }
+
+  SECTION("Desired order (reverse)")
+  {
+    Interval x(0.,0.), y(4.,6.), d(4.);
+    Interval d_(d);
+
+    CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
+    CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
+    CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
+
+    ContractorNetwork cn;
+
+    Interval& a = cn.create_interm_var(Interval());
+    Interval& b = cn.create_interm_var(Interval());
+    Interval& c = cn.create_interm_var(Interval());
+
+    cn.add(ctc_sqr, {y, b});
+    cn.add(ctc_sqr, {x, a});
+    cn.add(ctc_plus, {a, b, c});
+    cn.add(ctc_sqrt, {c, d});
+
+    cn.set_name(ctc_sqrt, "sqrt");
+    cn.set_name(ctc_plus, "+");
+    cn.set_name(ctc_sqr, "sqr");
+
+    cn.set_fixedpoint_ratio(1.);
+    cn.contract_ordered_mode();
+
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(cn.iteration_nb() == 1);
+  }
+
+  SECTION("Desired order (reverse, needs two iterations)")
+  {
+    Interval x(0.,0.), y(4.,6.), d(4.);
+    Interval d_(d);
+
+    CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
+    CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
+    CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
+
+    ContractorNetwork cn;
+
+    Interval& a = cn.create_interm_var(Interval());
+    Interval& b = cn.create_interm_var(Interval());
+    Interval& c = cn.create_interm_var(Interval());
+
+    cn.add(ctc_sqrt, {c, d});
+    cn.add(ctc_plus, {a, b, c});
+    cn.add(ctc_sqr, {x, a});
+    cn.add(ctc_sqr, {y, b});
+
+    cn.set_name(ctc_sqrt, "sqrt");
+    cn.set_name(ctc_plus, "+");
+    cn.set_name(ctc_sqr, "sqr");
+
+    cn.set_fixedpoint_ratio(0.);
+    cn.contract_ordered_mode();
+
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(cn.iteration_nb() <= 2);
+  }
+
+  SECTION("Reset method")
+  {
+    Interval x(0.,0.), y(4.,6.), d(4.);
+    Interval d_(d);
+
+    CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
+    CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
+    CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
+
+    ContractorNetwork cn;
+
+    Interval& a = cn.create_interm_var(Interval(-55.,55.));
+    Interval& b = cn.create_interm_var(Interval());
+    Interval& c = cn.create_interm_var(Interval());
+
+    cn.add(ctc_sqrt, {c, d});
+    cn.add(ctc_plus, {a, b, c});
+    cn.add(ctc_sqr, {x, a});
+    cn.add(ctc_sqr, {y, b});
+
+    cn.contract();
+
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(a == Interval(0.));
+    CHECK(b == Interval(16.));
+    CHECK(c == Interval(16.));
+
+    CHECK(cn.nb_ctc_in_stack() == 0);
+    cn.reset_interm_var();
+    CHECK(cn.nb_ctc_in_stack() != 0);
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(a == Interval(-55.,55.));
+    CHECK(b == Interval());
+    CHECK(c == Interval());
+
+    cn.contract();
+    CHECK(x == Interval(0.));
+    CHECK(y == Interval(4.));
+    CHECK(d == d_);
+    CHECK(a == Interval(0.));
+    CHECK(b == Interval(16.));
+    CHECK(c == Interval(16.));
+  }
+
+  SECTION("Variables in CN")
+  {
+    CtcFunction ctc_plus(Function("a", "b", "c", "a+b-c"));
+    Interval a1(0,1), b1(-1,1), a2(-1,1), b2(0,1), c(1.5,2);
+
+    ContractorNetwork cn;
+    IntervalVar a;
+    CtcDeriv ctc_deriv;
+    cn.add(ctc_plus, {a, b1, c}); 
+
+    cn.contract({
+      {a, a1}
+    });    
+
+    CHECK(a1 == Interval(0.5,1));
+    CHECK(b1 == Interval(0.5,1));
+    CHECK(c == Interval(1.5,2));
+
+    a1 |= Interval(0,1);
+    b1 |= Interval(-1,1);
+
+    cn.contract({
+      {a, a1}
+    });
+
+    CHECK(a1 == Interval(0.5,1));
+    CHECK(b1 == Interval(0.5,1));
+    CHECK(c == Interval(1.5,2));
+
+    cn.contract({
+      {a, a2},
+      {b1, b2}
+    });
+
+    CHECK(a1 == Interval(0.5,1));
+    CHECK(b1 == Interval(0.5,1));
+    CHECK(a2 == Interval(0.5,1));
+    CHECK(b2 == Interval(0.5,1));
+    CHECK(c == Interval(1.5,2));
+
+    CHECK(cn.nb_dom() == 3);
+    CHECK(cn.nb_ctc() == 1);
+  }
+
+  SECTION("Variables and CtcFunction on heterogeneous variables")
+  {
+    IntervalVar a;
+    IntervalVectorVar x(2);
+    
+    CtcFunction ctc_add(Function("b[2]", "c", "b[0]+b[1]-c"));
+
+    ContractorNetwork cn;
+    cn.add(ctc_add, {x,a});
+
+    IntervalVector x1{{0,1},{-2,3}};
+    Interval a1(1,20);
+    cn.contract({
+      {a, a1},
+      {x, x1}
+    });
+
+    CHECK(x1[0] == Interval(0,1));
+    CHECK(x1[1] == Interval(0,3));
+    CHECK(a1 == Interval(1,4));
+
+    IntervalVector x2(2);
+    x2[0] = Interval(10,10.5);
+    x2[1] = Interval(22,99);
+
+    Interval a2(32,33);
+    cn.contract({
+      {x, x2},
+      {a, a2}
+    });
+
+    //CHECK(a == Interval());
+    //CHECK(x == IntervalVector(2));
+
+    CHECK(x1[0] == Interval(0,1)); // remain unchanged
+    CHECK(x1[1] == Interval(0,3)); // remain unchanged
+    CHECK(a1 == Interval(1,4));    // remain unchanged
+    CHECK(ApproxIntv(x2[0]) == Interval(10,10.5));
+    CHECK(x2[1] == Interval(22,23));
+    CHECK(a2 == Interval(32,33));
+  }
 }

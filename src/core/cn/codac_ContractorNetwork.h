@@ -14,12 +14,14 @@
 
 #include <deque>
 #include <initializer_list>
+#include <unordered_map>
 #include "codac_Ctc.h"
 #include "codac_DynCtc.h"
 #include "codac_Domain.h"
 #include "codac_CtcDeriv.h"
 #include "codac_Hashcode.h"
 #include "codac_Contractor.h"
+#include "codac_Variable.h"
 
 namespace ibex
 {
@@ -28,6 +30,7 @@ namespace ibex
 
 namespace codac
 {
+  class Variable;
   class Domain;
   class DynCtc;
   class CtcDeriv;
@@ -96,6 +99,7 @@ namespace codac
        * \return a reference to the created Interval domain variable
        */
       Interval& create_dom(const Interval& i);
+      Interval& create_interm_var(const Interval& i);
 
       /**
        * \brief Creates an IntervalVector intermediate variable with a reference kept in the 
@@ -109,6 +113,7 @@ namespace codac
        * \return a reference to the created IntervalVector domain variable
        */
       IntervalVector& create_dom(const IntervalVector& iv);
+      IntervalVector& create_interm_var(const IntervalVector& iv);
 
       /**
        * \brief Creates a Tube intermediate variable with a reference kept in the 
@@ -122,6 +127,7 @@ namespace codac
        * \return a reference to the created Tube domain variable
        */
       Tube& create_dom(const Tube& t);
+      Tube& create_interm_var(const Tube& t);
 
       /**
        * \brief Creates a TubeVector intermediate variable with a reference kept in the 
@@ -135,6 +141,7 @@ namespace codac
        * \return a reference to the created TubeVector domain variable
        */
       TubeVector& create_dom(const TubeVector& tv);
+      TubeVector& create_interm_var(const TubeVector& tv);
 
       /**
        * \brief Creates a subvector of a Vector domain
@@ -238,6 +245,10 @@ namespace codac
        * \return the computation time in seconds
        */
       double contract(bool verbose = false);
+      double contract(const std::unordered_map<Domain,Domain>& var_dom, bool verbose = false);
+      void replace_var_by_dom(Domain var, Domain dom, std::map<DomainHashcode,Domain>& init_map);
+
+      double contract_ordered_mode(bool verbose = false);
 
       /**
        * \brief Launch the contraction process and stops after \f$dt\f$ seconds
@@ -277,6 +288,8 @@ namespace codac
        */
       void trigger_all_contractors();
 
+      void reset_interm_var();
+
       /**
        * \brief Returns the number of contractors that are waiting for process.
        *
@@ -285,6 +298,10 @@ namespace codac
        * \return number of active contractors
        */
       int nb_ctc_in_stack() const;
+
+
+      int iteration_nb() const;
+      
 
       /// @}
       /// \name Visualization
@@ -388,6 +405,7 @@ namespace codac
       std::map<ContractorHashcode,Contractor*> m_map_ctc; //!< pointers to the abstract Contractor objects the graph is made of
       std::deque<Contractor*> m_deque; //!< queue of active contractors
 
+      int m_iteration_nb = 0;
       float m_fixedpoint_ratio = 0.0001; //!< fixed point ratio for propagation limit
       double m_contraction_duration_max = std::numeric_limits<double>::infinity(); //!< computation time limit
 

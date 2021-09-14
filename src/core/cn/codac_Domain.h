@@ -14,6 +14,7 @@
 
 #include <functional>
 #include "codac_Interval.h"
+#include "codac_Variable.h"
 #include "codac_IntervalVector.h"
 #include "codac_Slice.h"
 #include "codac_Tube.h"
@@ -43,19 +44,22 @@ namespace codac
       Domain(Interval& i);
       Domain(Interval& i, double& extern_d);
       Domain(Interval& i, Interval& extern_i);
-      Domain(const Interval& i);
+      Domain(const Interval& i, bool interm_var = false);
+      Domain(IntervalVar& i);
       Domain(Vector& v);
       // todo: ? Domain(const Vector& v);
       Domain(IntervalVector& iv);
-      Domain(const IntervalVector& iv);
+      Domain(const IntervalVector& iv, bool interm_var = false);
+      Domain(IntervalVectorVar& iv);
       Domain(Slice& s);
       Domain(Tube& t);
-      Domain(const Tube& t);
+      Domain(const Tube& t, bool interm_var = false);
       Domain(TubeVector& tv);
-      Domain(const TubeVector& tv);
+      Domain(const TubeVector& tv, bool interm_var = false);
       ~Domain();
 
       const Domain& operator=(const Domain& ad);
+      void set_references(const Domain& ad);
 
       int id() const;
       Type type() const;
@@ -75,9 +79,14 @@ namespace codac
       const std::vector<Contractor*>& contractors() const;
       void add_ctc(Contractor *ctc);
 
+      bool is_var() const;
+
       double compute_volume() const;
       double get_saved_volume() const;
       void set_volume(double vol);
+
+      bool is_interm_var() const;
+      void reset_value();
 
       bool is_empty() const;
       
@@ -147,6 +156,16 @@ namespace codac
           std::reference_wrapper<TubeVector> m_ref_memory_tv;
         };
 
+      // Possibly initial value (for intermediate variables to be reset)
+
+        union // if locally stored (such as intermediate variables or doubles to intervals):
+        {
+          Interval *m_init_i_ptr;
+          IntervalVector *m_init_iv_ptr;
+          Tube *m_init_t_ptr;
+          TubeVector *m_init_tv_ptr;
+        };
+
 
       // todo: update this:
       std::map<double,double> m_map_data_s_lb, m_map_data_s_ub;
@@ -155,10 +174,12 @@ namespace codac
       Trajectory m_traj_lb, m_traj_ub;
 
       std::vector<Contractor*> m_v_ctc;
-      double m_volume = 0.;
+      double m_volume = -1.;
 
       std::string m_name;
       int m_dom_id;
+
+      bool m_is_var = false;
 
       static int dom_counter;
 

@@ -462,7 +462,7 @@ class TestCN(unittest.TestCase):
     self.assertEqual(v(4), Interval(-3.,-1.))
 
 
-  def test_create_dom_tube(self):
+  def test_create_interm_var_tube(self):
 
     dt = 0.1
     tdomain = Interval(0.,10.)
@@ -475,7 +475,7 @@ class TestCN(unittest.TestCase):
     ctc_deriv = CtcDeriv()
 
     v_local = Tube(tdomain, dt, TFunction("0"))
-    #v_inside = cn.create_dom(v_local)
+    #v_inside = cn.create_interm_var(v_local)
     #cn.add(ctc_deriv, [x,v_inside])
 
     #cn.contract()

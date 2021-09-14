@@ -333,6 +333,20 @@ namespace codac
        */
       TrajectoryVector& sample(const TrajectoryVector& x);
 
+      /**
+       * \brief Makes a trajectory continuous by avoiding infinite slopes
+       *
+       * \note This is mainly used when angles are expressed between \f$[-\pi,\pi]\f$,
+       *       which produces troublesome discontinuities. For instance, a tube directly
+       *       built from such discontinuous trajectory will be made of very large slices,
+       *       inducing unwanted pessimism.
+       *
+       * \note The previous sampling of this trajectory is preserved
+       *
+       * \return a reference to this trajectory
+       */
+      TrajectoryVector& make_continuous();
+
       /// @}
       /// \name Integration
       /// @{
