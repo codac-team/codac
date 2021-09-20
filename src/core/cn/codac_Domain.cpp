@@ -36,10 +36,12 @@ namespace codac
     {
       case Type::T_INTERVAL:
         m_i_ptr = NULL;
+        m_init_i_ptr = NULL;
         break;
 
       case Type::T_INTERVAL_VECTOR:
         m_iv_ptr = NULL;
+        m_init_iv_ptr = NULL;
         break;
 
       case Type::T_TUBE:
@@ -52,6 +54,7 @@ namespace codac
 
       default:
         m_i_ptr = NULL; // default value of the union
+        m_init_i_ptr = NULL;
         break;
     }
   }
@@ -113,9 +116,12 @@ namespace codac
   }
 
   Domain::Domain(IntervalVar& i)
-    : Domain(static_cast<Interval&>(i))
+    : Domain(Type::T_INTERVAL, MemoryRef::M_INTERVAL_VAR)
   {
-    m_is_var = true;
+    m_i_ptr = NULL;
+    m_init_i_ptr = NULL;
+    m_ref_values_i = reference_wrapper<Interval>(static_cast<Interval&>(i));
+    m_ref_memory_ivar = reference_wrapper<IntervalVar>(i);
   }
 
   Domain::Domain(Vector& v)
@@ -158,9 +164,12 @@ namespace codac
   }
 
   Domain::Domain(IntervalVectorVar& iv)
-    : Domain(static_cast<IntervalVector&>(iv))
+    : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_INTERVAL_VECTOR_VAR)
   {
-    m_is_var = true;
+    m_iv_ptr = NULL;
+    m_init_iv_ptr = NULL;
+    m_ref_values_iv = reference_wrapper<IntervalVector>(static_cast<IntervalVector&>(iv));
+    m_ref_memory_ivvar = reference_wrapper<IntervalVectorVar>(iv);
   }
 
   Domain::Domain(Slice& s)
@@ -261,11 +270,9 @@ namespace codac
 
   const Domain& Domain::operator=(const Domain& ad)
   {
-    m_volume = ad.m_volume;
     m_v_ctc = ad.m_v_ctc;
     m_name = ad.m_name;
     m_dom_id = ad.m_dom_id;
-    m_is_var = ad.m_is_var;
 
     m_type = ad.m_type;
     m_memory_type = ad.m_memory_type;
@@ -273,28 +280,73 @@ namespace codac
     // todo: verify the copy of the above pointers
     // todo: is this constructor useful?
 
-    set_references(ad);
+    set_ref_values(ad);
+
+    switch(ad.m_memory_type)
+    {
+      case MemoryRef::M_DOUBLE:
+        m_ref_memory_d = ad.m_ref_memory_d;
+        break;
+
+      case MemoryRef::M_INTERVAL:
+        /*
+        // The following has been removed on 2020.12.02
+        if(&ad.m_ref_memory_i.get() == ad.m_i_ptr)
+          m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr);
+        else*/
+          m_ref_memory_i = ad.m_ref_memory_i;
+        break;
+
+      case MemoryRef::M_INTERVAL_VAR:
+        m_ref_memory_ivar = ad.m_ref_memory_ivar;
+        break;
+
+      case MemoryRef::M_VECTOR:
+        m_ref_memory_v = ad.m_ref_memory_v;
+        break;
+
+      case MemoryRef::M_INTERVAL_VECTOR:
+        /*
+        // The following has been removed on 2020.12.02
+        if(&ad.m_ref_memory_iv.get() == ad.m_iv_ptr)
+          m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
+        else*/
+          m_ref_memory_iv = ad.m_ref_memory_iv;
+        break;
+
+      case MemoryRef::M_INTERVAL_VECTOR_VAR:
+        m_ref_memory_ivvar = ad.m_ref_memory_ivvar;
+        break;
+
+      case MemoryRef::M_SLICE:
+        m_ref_memory_s = ad.m_ref_memory_s;
+        break;
+
+      case MemoryRef::M_TUBE:
+        m_ref_memory_t = ad.m_ref_memory_t;
+        break;
+
+      case MemoryRef::M_TUBE_VECTOR:
+        m_ref_memory_tv = ad.m_ref_memory_tv;
+        break;
+
+      default:
+        assert(false && "unhandled case");
+    }
 
     return *this;
   }
 
-  void Domain::set_references(const Domain& ad)
+  void Domain::set_ref_values(const Domain& ad)
   {
-    assert(m_type == ad.m_type && m_memory_type == ad.m_memory_type);
+    assert(m_type == ad.m_type);
+
+    m_volume = ad.m_volume;
 
     switch(ad.m_type)
     {
       case Type::T_INTERVAL:
-        /*if(ad.m_i_ptr != NULL)
-        {
-          m_i_ptr = new Interval(*ad.m_i_ptr);
-          m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
-        }
-
-        else*/
-        {
-          m_ref_values_i = reference_wrapper<Interval>(ad.m_ref_values_i);
-        }
+        m_ref_values_i = reference_wrapper<Interval>(ad.m_ref_values_i);
 
         if(ad.m_init_i_ptr != NULL)
           m_init_i_ptr = new Interval(*ad.m_init_i_ptr);
@@ -303,16 +355,7 @@ namespace codac
         break;
 
       case Type::T_INTERVAL_VECTOR:
-        /*if(ad.m_iv_ptr != NULL)
-        {
-          m_iv_ptr = new IntervalVector(*ad.m_iv_ptr);
-          m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
-        }
-
-        else*/
-        {
-          m_ref_values_iv = reference_wrapper<IntervalVector>(ad.m_ref_values_iv);
-        }
+        m_ref_values_iv = reference_wrapper<IntervalVector>(ad.m_ref_values_iv);
 
         if(ad.m_init_iv_ptr != NULL)
           m_init_iv_ptr = new IntervalVector(*ad.m_init_iv_ptr);
@@ -340,50 +383,6 @@ namespace codac
           m_init_tv_ptr = new TubeVector(*ad.m_init_tv_ptr);
         else
           m_init_tv_ptr = NULL;
-        break;
-
-      default:
-        assert(false && "unhandled case");
-    }
-    
-    switch(ad.m_memory_type)
-    {
-      case MemoryRef::M_DOUBLE:
-        m_ref_memory_d = ad.m_ref_memory_d;
-        break;
-
-      case MemoryRef::M_INTERVAL:
-        /*
-        // The following has been removed on 2020.12.02
-        if(&ad.m_ref_memory_i.get() == ad.m_i_ptr)
-          m_ref_memory_i = reference_wrapper<Interval>(*m_i_ptr);
-        else*/
-          m_ref_memory_i = ad.m_ref_memory_i;
-        break;
-
-      case MemoryRef::M_VECTOR:
-        m_ref_memory_v = ad.m_ref_memory_v;
-        break;
-
-      case MemoryRef::M_INTERVAL_VECTOR:
-        /*
-        // The following has been removed on 2020.12.02
-        if(&ad.m_ref_memory_iv.get() == ad.m_iv_ptr)
-          m_ref_memory_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
-        else*/
-          m_ref_memory_iv = ad.m_ref_memory_iv;
-        break;
-
-      case MemoryRef::M_SLICE:
-        m_ref_memory_s = ad.m_ref_memory_s;
-        break;
-
-      case MemoryRef::M_TUBE:
-        m_ref_memory_t = ad.m_ref_memory_t;
-        break;
-
-      case MemoryRef::M_TUBE_VECTOR:
-        m_ref_memory_tv = ad.m_ref_memory_tv;
         break;
 
       default:
@@ -479,7 +478,27 @@ namespace codac
 
   bool Domain::is_var() const
   {
-    return m_is_var;
+    return m_memory_type == MemoryRef::M_INTERVAL_VAR || m_memory_type == MemoryRef::M_INTERVAL_VECTOR_VAR;
+  }
+
+  bool Domain::is_var_not_associated() const
+  {
+    if(is_var())
+    {
+      switch(m_type)
+      {
+        case Type::T_INTERVAL:
+          return &m_ref_values_i.get() == &m_ref_memory_ivar.get();
+
+        case Type::T_INTERVAL_VECTOR:
+          return &m_ref_values_iv.get() == &m_ref_memory_ivvar.get();
+
+        default:
+          assert(false && "unhandled case");
+      }
+    }
+
+    return false;
   }
 
   double Domain::compute_volume() const
@@ -590,28 +609,30 @@ namespace codac
 
   void Domain::reset_value()
   {
+    assert(is_interm_var());
+
     m_volume = -1.;
     
     switch(m_type)
     {
       case Type::T_INTERVAL:
-        assert(m_i_ptr != NULL);
-        *m_i_ptr = *m_init_i_ptr;
+        assert(m_init_i_ptr != NULL);
+        m_ref_values_i.get() = *m_init_i_ptr;
         break;
 
       case Type::T_INTERVAL_VECTOR:
-        assert(m_iv_ptr != NULL);
-        *m_iv_ptr = *m_init_iv_ptr;
+        assert(m_init_iv_ptr != NULL);
+        m_ref_values_iv.get() = *m_init_iv_ptr;
         break;
 
       case Type::T_TUBE:
-        assert(m_t_ptr != NULL);
-        *m_t_ptr = *m_init_t_ptr;
+        assert(m_init_t_ptr != NULL);
+        m_ref_values_t.get() = *m_init_t_ptr;
         break;
 
       case Type::T_TUBE_VECTOR:
-        assert(m_tv_ptr != NULL);
-        *m_tv_ptr = *m_init_tv_ptr;
+        assert(m_init_tv_ptr != NULL);
+        m_ref_values_tv.get() = *m_init_tv_ptr;
         break;
 
       default:
@@ -625,13 +646,15 @@ namespace codac
     {
       case Type::T_INTERVAL:
         assert(m_memory_type == MemoryRef::M_DOUBLE
-            || m_memory_type == MemoryRef::M_INTERVAL);
+            || m_memory_type == MemoryRef::M_INTERVAL
+            || m_memory_type == MemoryRef::M_INTERVAL_VAR);
         return interval().is_empty();
         break;
 
       case Type::T_INTERVAL_VECTOR:
         assert(m_memory_type == MemoryRef::M_VECTOR
-            || m_memory_type == MemoryRef::M_INTERVAL_VECTOR);
+            || m_memory_type == MemoryRef::M_INTERVAL_VECTOR
+            || m_memory_type == MemoryRef::M_INTERVAL_VECTOR_VAR);
         return interval_vector().is_empty();
         break;
 
@@ -672,7 +695,6 @@ namespace codac
     // - 2. One is a created_var (points to a variable stored in the CN) and
     //      the other one is external (it points to the previously created var)
 
-
     // Case 1: the two objects point to the same memory reference.
     if(m_memory_type == x.m_memory_type)
     {
@@ -695,6 +717,9 @@ namespace codac
         case MemoryRef::M_INTERVAL:
           return &m_ref_memory_i.get() == &x.m_ref_memory_i.get();
 
+        case MemoryRef::M_INTERVAL_VAR:
+          return &m_ref_memory_ivar.get() == &x.m_ref_memory_ivar.get();
+
         case MemoryRef::M_VECTOR:
         {
           if(&m_ref_memory_v.get() == &x.m_ref_memory_v.get())
@@ -709,6 +734,9 @@ namespace codac
 
         case MemoryRef::M_INTERVAL_VECTOR:
           return &m_ref_memory_iv.get() == &x.m_ref_memory_iv.get();
+
+        case MemoryRef::M_INTERVAL_VECTOR_VAR:
+          return &m_ref_memory_ivvar.get() == &x.m_ref_memory_ivvar.get();
 
         case MemoryRef::M_SLICE:
           return &m_ref_memory_s.get() == &x.m_ref_memory_s.get();
@@ -1068,7 +1096,9 @@ namespace codac
     switch(m_memory_type)
     {
       case MemoryRef::M_INTERVAL:
+      case MemoryRef::M_INTERVAL_VAR:
       case MemoryRef::M_INTERVAL_VECTOR:
+      case MemoryRef::M_INTERVAL_VECTOR_VAR:
       case MemoryRef::M_TUBE:
       case MemoryRef::M_TUBE_VECTOR:
         output_name = "[" + output_name + "]";
@@ -1114,37 +1144,43 @@ namespace codac
   {
     str << "Domain:";
 
-    str << "  type=";
-
     str << "  mem=";
     switch(x.m_memory_type)
     {
       case Domain::MemoryRef::M_DOUBLE:
-        str << "double    ";
+        str << "double              ";
         break;
       case Domain::MemoryRef::M_INTERVAL:
-        str << "Interval  ";
+        str << "Interval            ";
+        break;
+      case Domain::MemoryRef::M_INTERVAL_VAR:
+        str << "Interval (var)      ";
         break;
       case Domain::MemoryRef::M_VECTOR:
-        str << "Vector    ";
+        str << "Vector              ";
         break;
       case Domain::MemoryRef::M_INTERVAL_VECTOR:
-        str << "IntVector ";
+        str << "IntervalVector      ";
+        break;
+      case Domain::MemoryRef::M_INTERVAL_VECTOR_VAR:
+        str << "IntervalVector (var)";
         break;
       case Domain::MemoryRef::M_SLICE:
-        str << "Slice     ";
+        str << "Slice               ";
         break;
       case Domain::MemoryRef::M_TUBE:
-        str << "Tube      ";
+        str << "Tube                ";
         break;
       case Domain::MemoryRef::M_TUBE_VECTOR:
-        str << "TubeVector";
+        str << "TubeVector          ";
         break;
       default:
         assert(false && "unhandled case");
     }
 
-    str << "  name=\"" << (x.m_name == "" ? "?" : x.m_name) << "\"";
+    str << (x.is_interm_var() ? " (interm)" : "         ");
+
+    str << " name=\"" << (x.m_name == "" ? "?" : x.m_name) << "\"";
 
     str << "\tval=";
     switch(x.m_type)
@@ -1167,6 +1203,8 @@ namespace codac
       default:
         assert(false && "unhandled case");
     }
+
+    str << ", hash: " << DomainHashcode::uintptr(x);
 
     return str;
   }
@@ -1193,6 +1231,10 @@ namespace codac
             d = Domain(x.interval_vector()[i], x.m_ref_memory_iv.get()[i]);
             break;
 
+          case MemoryRef::M_INTERVAL_VECTOR_VAR:
+            d = Domain(x.interval_vector()[i], x.m_ref_memory_ivvar.get()[i]);
+            break;
+
           default:
             assert(false && "unhandled case");
         }
@@ -1206,7 +1248,6 @@ namespace codac
         assert(false && "domain is not a vector");
     }
 
-    d.m_is_var = x.m_is_var;
     return d;
   }
 }

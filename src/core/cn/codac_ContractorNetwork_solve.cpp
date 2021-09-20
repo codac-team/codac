@@ -27,7 +27,7 @@ namespace codac
       // All of them should be associated to domains
       for(const auto& dom : m_map_domains)
       {
-        if(dom.second->is_var())
+        if(dom.second->is_var_not_associated())
           throw Exception(__func__, "some CN variables are not associated to domains");
       }
 
@@ -76,18 +76,15 @@ namespace codac
       return (double)(clock() - t_start)/CLOCKS_PER_SEC;
     }
 
-    void ContractorNetwork::replace_var_by_dom(Domain var, Domain dom, map<DomainHashcode,Domain>& init_map)
+    void ContractorNetwork::replace_var_by_dom(Domain var, Domain dom)
     {
       DomainHashcode hashcode(var);
       if(m_map_domains.find(hashcode) == m_map_domains.end())
         throw Exception(__func__, "unknown variable domain");
 
       Domain* var_ptr = m_map_domains[hashcode];
-      var_ptr->set_references(dom);
-      var_ptr->set_volume(-1.);
-      var_ptr->m_is_var = false;
+      var_ptr->set_ref_values(dom);
       trigger_ctc_related_to_dom(var_ptr);
-      init_map[hashcode] = var;
 
       switch(var.type())
       {
@@ -100,7 +97,7 @@ namespace codac
             throw Exception(__func__, "the provided IntervalVector does not match the variable dimension");
 
           for(int j = 0 ; j < var.interval_vector().size() ; j++)
-            replace_var_by_dom(Domain(var.interval_vector()[j]), Domain::vector_component(dom,j), init_map);
+            replace_var_by_dom(Domain(var.interval_vector()[j]), Domain::vector_component(dom,j));
 
           break;
 
@@ -120,20 +117,20 @@ namespace codac
 
     double ContractorNetwork::contract(const unordered_map<Domain,Domain>& var_dom, bool verbose)
     {
-      map<DomainHashcode,Domain> init_map;
-
       // References are changed according to the specified domains
       for(auto& v : var_dom)
-        replace_var_by_dom(v.first, v.second, init_map);
+      {
+        if(v.first.type() != v.second.type())
+          throw Exception(__func__, "associated domains are not of same type");
+
+        replace_var_by_dom(v.first, v.second);
+      }
 
       double t = contract(verbose);
 
       // Back to the "abstract" architecture with pure defined variables
-      for(auto& v : init_map)
-      {
-        m_map_domains[v.first]->set_references(v.second);
-        m_map_domains[v.first]->m_is_var = true;
-      }
+      for(auto& v : var_dom)
+        replace_var_by_dom(v.first, v.first); // points to itself
 
       return t;
     }
@@ -241,14 +238,17 @@ namespace codac
       }
     }
 
-    void ContractorNetwork::reset_interm_var()
+    void ContractorNetwork::reset_interm_vars()
     {
       for(auto& dom : m_map_domains)
         if(dom.second->is_interm_var())
         {
-          dom.second->reset_value();
+          reset_value(dom.second);
           trigger_ctc_related_to_dom(dom.second);
         }
+
+      trigger_all_contractors();
+      // ^ this could be optimized
     }
 
     int ContractorNetwork::nb_ctc_in_stack() const
@@ -274,6 +274,23 @@ namespace codac
         ctc_deque.push_front(ac); // priority
     }
 
+    void ContractorNetwork::reset_value(Domain *dom)
+    {
+      dom->reset_value();
+
+      // todo: switch(dom->m_type)
+      // todo: {
+      // todo:   case Domain::Type::T_INTERVAL_VECTOR:
+      // todo:     for(int j = 0 ; j < dom->interval_vector().size() ; j++)
+      // todo:       reset_value(add_dom(dom->interval_vector()[j]));
+      // todo:     break;
+      // todo:     
+      // todo:   default:
+      // todo:     // .
+      // todo:     break;
+      // todo: }
+    }
+
     void ContractorNetwork::trigger_ctc_related_to_dom(Domain *dom, Contractor *ctc_to_avoid)
     {
       double current_volume = dom->compute_volume(); // new volume after contraction
@@ -286,11 +303,13 @@ namespace codac
         deque<Contractor*> ctc_deque;
 
         for(auto& ctc_of_dom : dom->contractors())
+        {
           if(ctc_of_dom != ctc_to_avoid && !ctc_of_dom->is_active())
           {
             ctc_of_dom->set_active(true);
             add_ctc_to_queue(ctc_of_dom, ctc_deque);
           }
+        }
 
         // Merging this local deque in the CN one
         for(auto& c : ctc_deque)
@@ -298,5 +317,17 @@ namespace codac
       }
       
       dom->set_volume(current_volume); // updating old volume
+
+      switch(dom->m_type)
+      {
+        case Domain::Type::T_INTERVAL_VECTOR:
+          for(int j = 0 ; j < dom->interval_vector().size() ; j++)
+            trigger_ctc_related_to_dom(add_dom(dom->interval_vector()[j]), ctc_to_avoid);
+          break;
+
+        default:
+          // .
+          break;
+      }
     }
 }

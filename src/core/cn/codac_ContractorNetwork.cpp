@@ -435,7 +435,6 @@ namespace codac
         throw Exception(__func__, "domain already empty when added to the CN");
 
       DomainHashcode hash(ad);
-
       if(m_map_domains.find(hash) != m_map_domains.end())
         return m_map_domains[hash];
     

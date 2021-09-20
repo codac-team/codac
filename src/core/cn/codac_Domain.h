@@ -35,7 +35,7 @@ namespace codac
     public:
 
       enum class Type { T_INTERVAL, T_INTERVAL_VECTOR, T_SLICE, T_TUBE, T_TUBE_VECTOR };
-      enum class MemoryRef { M_DOUBLE, M_INTERVAL, M_VECTOR, M_INTERVAL_VECTOR, M_SLICE, M_TUBE, M_TUBE_VECTOR };
+      enum class MemoryRef { M_DOUBLE, M_INTERVAL, M_INTERVAL_VAR, M_VECTOR, M_INTERVAL_VECTOR, M_INTERVAL_VECTOR_VAR, M_SLICE, M_TUBE, M_TUBE_VECTOR };
 
       Domain();
       Domain(const Domain& ad);
@@ -59,7 +59,7 @@ namespace codac
       ~Domain();
 
       const Domain& operator=(const Domain& ad);
-      void set_references(const Domain& ad);
+      void set_ref_values(const Domain& ad);
 
       int id() const;
       Type type() const;
@@ -80,6 +80,7 @@ namespace codac
       void add_ctc(Contractor *ctc);
 
       bool is_var() const;
+      bool is_var_not_associated() const;
 
       double compute_volume() const;
       double get_saved_volume() const;
@@ -149,8 +150,10 @@ namespace codac
         {
           std::reference_wrapper<double> m_ref_memory_d;
           std::reference_wrapper<Interval> m_ref_memory_i;
+          std::reference_wrapper<IntervalVar> m_ref_memory_ivar;
           std::reference_wrapper<Vector> m_ref_memory_v;
           std::reference_wrapper<IntervalVector> m_ref_memory_iv;
+          std::reference_wrapper<IntervalVectorVar> m_ref_memory_ivvar;
           std::reference_wrapper<Slice> m_ref_memory_s;
           std::reference_wrapper<Tube> m_ref_memory_t;
           std::reference_wrapper<TubeVector> m_ref_memory_tv;
@@ -178,8 +181,6 @@ namespace codac
 
       std::string m_name;
       int m_dom_id;
-
-      bool m_is_var = false;
 
       static int dom_counter;
 
