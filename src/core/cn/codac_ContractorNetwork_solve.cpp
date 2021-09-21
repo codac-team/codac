@@ -322,7 +322,12 @@ namespace codac
       {
         case Domain::Type::T_INTERVAL_VECTOR:
           for(int j = 0 ; j < dom->interval_vector().size() ; j++)
-            trigger_ctc_related_to_dom(add_dom(dom->interval_vector()[j]), ctc_to_avoid);
+          {
+            DomainHashcode hash(Domain::vector_component(*dom,j));
+            assert(m_map_domains.find(hash) != m_map_domains.end() 
+                    && "component of the domain cannot be found in CN");
+            trigger_ctc_related_to_dom(m_map_domains[hash], ctc_to_avoid);
+          }
           break;
 
         default:
