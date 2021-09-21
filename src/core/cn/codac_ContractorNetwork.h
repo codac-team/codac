@@ -246,7 +246,7 @@ namespace codac
        */
       double contract(bool verbose = false);
       double contract(const std::unordered_map<Domain,Domain>& var_dom, bool verbose = false);
-      void replace_var_by_dom(Domain var, Domain dom, std::map<DomainHashcode,Domain>& init_map);
+      void replace_var_by_dom(Domain var, Domain dom);
 
       double contract_ordered_mode(bool verbose = false);
 
@@ -288,7 +288,7 @@ namespace codac
        */
       void trigger_all_contractors();
 
-      void reset_interm_var();
+      void reset_interm_vars();
 
       /**
        * \brief Returns the number of contractors that are waiting for process.
@@ -390,6 +390,8 @@ namespace codac
        * \param ctc_deque queue of contractors
        */
       void add_ctc_to_queue(Contractor *ac, std::deque<Contractor*>& ctc_deque);
+
+      void reset_value(Domain *dom);
 
       /**
        * \brief Triggers on the contractors related to the given Domain

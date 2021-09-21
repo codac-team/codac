@@ -25,8 +25,12 @@ namespace codac
 
     void ContractorNetwork::set_name(Domain dom, const string& name)
     {
-      Domain *dom_ptr = add_dom(dom);
-      dom_ptr->set_name(name);
+      // DomainHashcode hash(dom);
+      // if(m_map_domains.find(hash) == m_map_domains.end())
+      //   throw Exception(__func__, "domain cannot be found in CN");
+      //   
+      // m_map_domains[hash]->set_name(name);
+      add_dom(dom)->set_name(name);
     }
     
     void ContractorNetwork::set_name(Ctc& ctc, const string& name)
@@ -37,7 +41,7 @@ namespace codac
         if(added_ctc.second->type() == Contractor::Type::T_IBEX && &added_ctc.second->ibex_ctc() == &ctc)
         {
           added_ctc.second->set_name(name);
-            contractor_found = true;
+          contractor_found = true;
         }
 
       if(!contractor_found)
