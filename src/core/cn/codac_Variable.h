@@ -22,7 +22,7 @@ namespace codac
 
   };
 
-  class IntervalVar : public Interval, Var
+  class IntervalVar : private Interval, Var
   {
     public:
 
@@ -31,9 +31,15 @@ namespace codac
       {
 
       }
+
+    protected:
+
+      friend class Domain;
+      friend class Contractor;
+      friend class ContractorNetwork;
   };
 
-  class IntervalVectorVar : public IntervalVector, Var
+  class IntervalVectorVar : private IntervalVector, Var
   {
     public:
 
@@ -43,10 +49,18 @@ namespace codac
 
       }
 
+      using IntervalVector::size;
+
+    protected:
+
       IntervalVar& operator[](int index)
       {
         return (IntervalVar&)IntervalVector::operator[](index);
       }
+
+      friend class Domain;
+      friend class Contractor;
+      friend class ContractorNetwork;
   };
 }
 
