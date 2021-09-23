@@ -58,6 +58,7 @@
 
     src/core/arithmetic/codac_py_arithmetic.cpp
     src/core/cn/codac_py_ContractorNetwork.cpp
+    src/core/cn/codac_py_Variable.cpp
 
     src/core/contractors/static/codac_py_CtcDist.cpp
     src/core/contractors/static/codac_py_CtcFunction.cpp

@@ -14,9 +14,11 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
+#include <unordered_map>
 #include "pyIbex_type_caster.h"
 
 #include "codac_ContractorNetwork.h"
+#include "codac_Variable.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_ContractorNetwork_docs.h"
 
@@ -44,6 +46,11 @@ codac::Domain pyobject_to_domain(py::object object)
     Interval &itv  = object.cast<Interval&>();
     return codac::Domain(itv);
   }
+  else if(py::isinstance<IntervalVar>(object))
+  {
+    IntervalVar &itv  = object.cast<IntervalVar&>();
+    return codac::Domain(itv);
+  }
   else if(py::isinstance<py::list>(object))
   {
     // todo: remove dynamic allocation here
@@ -58,6 +65,11 @@ codac::Domain pyobject_to_domain(py::object object)
   else if(py::isinstance<IntervalVector>(object))
   {
     IntervalVector &itv  = object.cast<IntervalVector&>();
+    return codac::Domain(itv);
+  }
+  else if(py::isinstance<IntervalVectorVar>(object))
+  {
+    IntervalVectorVar &itv  = object.cast<IntervalVectorVar&>();
     return codac::Domain(itv);
   }
   else if(py::isinstance<Tube>(object))
@@ -89,6 +101,19 @@ vector<codac::Domain> pylist_to_vectordomains(py::list lst)
   return domains;
 }
 
+unordered_map<codac::Domain,codac::Domain> pydict_to_unorderedmapdomains(py::dict dct)
+{
+  unordered_map<codac::Domain,codac::Domain> domains;
+
+  if(dct.size() < 1)
+    throw invalid_argument("Size of the input dict is 0");
+
+  for(auto e : dct)
+    domains[pyobject_to_domain(e.first.cast<py::object>())] = pyobject_to_domain(e.second.cast<py::object>());
+
+  return domains;
+}
+
 void export_ContractorNetwork(py::module& m)
 {
   py::class_<ContractorNetwork> cn(m, "ContractorNetwork", CONTRACTORNETWORK_MAIN);
@@ -114,25 +139,25 @@ void export_ContractorNetwork(py::module& m)
       CONTRACTORNETWORK_INTERVAL_CREATE_DOM_INTERVAL,
       "i"_a,
       py::return_value_policy::reference_internal,
-      py::keep_alive<1,0>())
+      py::keep_alive<1,0>()) // deprecated!
 
     .def("create_dom", (IntervalVector& (ContractorNetwork::*)(const IntervalVector&))&ContractorNetwork::create_dom,
       CONTRACTORNETWORK_INTERVALVECTOR_CREATE_DOM_INTERVALVECTOR,
       "iv"_a,
       py::return_value_policy::reference_internal,
-      py::keep_alive<1,0>())
+      py::keep_alive<1,0>()) // deprecated!
 
     .def("create_dom", (Tube& (ContractorNetwork::*)(const Tube&))&ContractorNetwork::create_dom,
       CONTRACTORNETWORK_TUBE_CREATE_DOM_TUBE,
       "t"_a,
       py::return_value_policy::reference_internal,
-      py::keep_alive<1,0>())
+      py::keep_alive<1,0>()) // deprecated!
 
     .def("create_dom", (TubeVector& (ContractorNetwork::*)(const TubeVector&))&ContractorNetwork::create_dom,
       CONTRACTORNETWORK_TUBEVECTOR_CREATE_DOM_TUBEVECTOR,
       "tv"_a,
       py::return_value_policy::reference_internal,
-      py::keep_alive<1,0>())
+      py::keep_alive<1,0>()) // deprecated!
 
     .def("create_interm_var", (Interval& (ContractorNetwork::*)(const Interval&))&ContractorNetwork::create_interm_var,
       CONTRACTORNETWORK_INTERVAL_CREATE_INTERM_VAR_INTERVAL,
@@ -194,11 +219,18 @@ void export_ContractorNetwork(py::module& m)
       CONTRACTORNETWORK_VOID_ADD_DATA_TUBEVECTOR_DOUBLE_INTERVALVECTOR,
       "x"_a, "t"_a, "y"_a)
 
-  // Contraction process  
+  // Contraction process
 
     .def("contract", (double (ContractorNetwork::*)(bool))&ContractorNetwork::contract,
       CONTRACTORNETWORK_DOUBLE_CONTRACT_BOOL,
       "verbose"_a=false)
+
+    .def("contract", [](ContractorNetwork& cn, py::dict var_dom, bool verbose)
+      {
+        cn.contract(pydict_to_unorderedmapdomains(var_dom), verbose);
+      },
+      CONTRACTORNETWORK_DOUBLE_CONTRACT_UNORDEREDMAPDOMAINDOMAIN_BOOL,
+      "var_dom"_a, "verbose"_a=false)
 
     .def("contract_during", &ContractorNetwork::contract_during,
       CONTRACTORNETWORK_DOUBLE_CONTRACT_DURING_DOUBLE_BOOL,

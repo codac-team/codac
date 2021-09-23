@@ -98,8 +98,8 @@ namespace codac
        * \param i initial domain providing information on the type and initial set of values
        * \return a reference to the created Interval domain variable
        */
-      Interval& create_dom(const Interval& i);
       Interval& create_interm_var(const Interval& i);
+      Interval& create_dom(const Interval& i); // deprecated
 
       /**
        * \brief Creates an IntervalVector intermediate variable with a reference kept in the 
@@ -112,8 +112,8 @@ namespace codac
        * \param iv initial domain providing information on the type and initial set of values
        * \return a reference to the created IntervalVector domain variable
        */
-      IntervalVector& create_dom(const IntervalVector& iv);
       IntervalVector& create_interm_var(const IntervalVector& iv);
+      IntervalVector& create_dom(const IntervalVector& iv); // deprecated
 
       /**
        * \brief Creates a Tube intermediate variable with a reference kept in the 
@@ -126,8 +126,8 @@ namespace codac
        * \param t initial domain providing information on the type and initial set of values
        * \return a reference to the created Tube domain variable
        */
-      Tube& create_dom(const Tube& t);
       Tube& create_interm_var(const Tube& t);
+      Tube& create_dom(const Tube& t); // deprecated
 
       /**
        * \brief Creates a TubeVector intermediate variable with a reference kept in the 
@@ -140,8 +140,8 @@ namespace codac
        * \param tv initial domain providing information on the type and initial set of values
        * \return a reference to the created TubeVector domain variable
        */
-      TubeVector& create_dom(const TubeVector& tv);
       TubeVector& create_interm_var(const TubeVector& tv);
+      TubeVector& create_dom(const TubeVector& tv); // deprecated
 
       /**
        * \brief Creates a subvector of a Vector domain
@@ -245,8 +245,17 @@ namespace codac
        * \return the computation time in seconds
        */
       double contract(bool verbose = false);
+
+      /**
+       * \brief Launch the contraction process with specified domains in place of Variables objects
+       *
+       * Contractions are performed until a fixed point has been reached on the whole graph.
+       *
+       * \param var_dom unordered map of type <Var,Domain>, for instance <IntervalVar,Interval>
+       * \param verbose verbose mode, `false` by default
+       * \return the computation time in seconds
+       */
       double contract(const std::unordered_map<Domain,Domain>& var_dom, bool verbose = false);
-      void replace_var_by_dom(Domain var, Domain dom);
 
       double contract_ordered_mode(bool verbose = false);
 
@@ -288,6 +297,9 @@ namespace codac
        */
       void trigger_all_contractors();
 
+      /**
+       * \brief Resets the initial value of the domains declared as intermediate variables.
+       */
       void reset_interm_vars();
 
       /**
@@ -298,7 +310,6 @@ namespace codac
        * \return number of active contractors
        */
       int nb_ctc_in_stack() const;
-
 
       int iteration_nb() const;
       
@@ -400,6 +411,8 @@ namespace codac
        * \param ctc_to_avoid optional pointer to a Contractor to not activate
        */
       void trigger_ctc_related_to_dom(Domain *dom, Contractor *ctc_to_avoid = NULL);
+
+      void replace_var_by_dom(Domain var, Domain dom);
 
     protected:
 
