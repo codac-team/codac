@@ -22,10 +22,17 @@ namespace codac
 
   };
 
+  /**
+   * \class IntervalVar
+   * \brief todo
+   */
   class IntervalVar : private Interval, Var
   {
     public:
 
+      /**
+       * \brief todo
+       */
       IntervalVar()
         : Interval()
       {
@@ -39,10 +46,17 @@ namespace codac
       friend class ContractorNetwork;
   };
 
+  /**
+   * \class IntervalVectorVar
+   * \brief todo
+   */
   class IntervalVectorVar : private IntervalVector, Var
   {
     public:
 
+      /**
+       * \brief todo
+       */
       IntervalVectorVar(int n)
         : IntervalVector(n)
       {
