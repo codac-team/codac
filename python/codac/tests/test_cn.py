@@ -481,6 +481,93 @@ class TestCN(unittest.TestCase):
     #cn.contract()
     #self.assertEqual(x.codomain(), Interval(0))
 
+  
+  def test_cn_variables(self):
+
+    cn = ContractorNetwork()
+    a = IntervalVar()
+
+    ctc_plus = CtcFunction(Function("a", "b", "c", "a+b-c"))
+    a1 = Interval(0,1)
+    b1 = Interval(-1,1)
+    a2 = Interval(-1,1)
+    b2 = Interval(0,1)
+    c = Interval(1.5,2);
+
+    cn.add(ctc_plus, [a, b1, c])
+
+    cn.contract({
+      a: a1
+    })
+
+    self.assertEqual(a1, Interval(0.5,1))
+    self.assertEqual(b1, Interval(0.5,1))
+    self.assertEqual(c, Interval(1.5,2))
+
+    a1 |= Interval(0,1)
+    b1 |= Interval(-1,1)
+
+    cn.contract({
+      a: a1
+    })
+
+    self.assertEqual(a1, Interval(0.5,1))
+    self.assertEqual(b1, Interval(0.5,1))
+    self.assertEqual(c, Interval(1.5,2))
+
+    cn.contract({
+      a: a2,
+      b1: b2
+    })
+
+    self.assertEqual(a1, Interval(0.5,1))
+    self.assertEqual(b1, Interval(0.5,1))
+    self.assertEqual(a2, Interval(0.5,1))
+    self.assertEqual(b2, Interval(0.5,1))
+    self.assertEqual(c, Interval(1.5,2))
+
+    self.assertEqual(cn.nb_dom(), 3)
+    self.assertEqual(cn.nb_ctc(), 1)
+
+  def test_cn_heterogeneous_variables(self):
+
+    a = IntervalVar()
+    x = IntervalVectorVar(2)
+    
+    ctc_add = CtcFunction(Function("b[2]", "c", "b[0]+b[1]-c"))
+
+    cn = ContractorNetwork()
+    cn.add(ctc_add, [x,a])
+
+    x1 = IntervalVector([[0,1],[-2,3]])
+    a1 = Interval(1,20)
+    cn.contract({
+      a: a1,
+      x: x1
+    })
+
+    self.assertEqual(x1[0], Interval(0,1))
+    self.assertEqual(x1[1], Interval(0,3))
+    self.assertEqual(a1, Interval(1,4))
+
+    x2 = IntervalVector([[10,10.5],[22,99]])
+
+    a2 = Interval(32,33)
+    cn.contract({
+      x: x2,
+      a: a2
+    })
+
+    #self.assertEqual(a, Interval())
+    #self.assertEqual(x, IntervalVector(2))
+
+    self.assertEqual(x1[0], Interval(0,1)) # remain unchanged
+    self.assertEqual(x1[1], Interval(0,3)) # remain unchanged
+    self.assertEqual(a1, Interval(1,4))    # remain unchanged
+    self.assertEqual(x2[0], Interval(10,10.5))
+    self.assertEqual(x2[1], Interval(22,23))
+    self.assertEqual(a2, Interval(32,33))
+
 
 if __name__ ==  '__main__':
   unittest.main()

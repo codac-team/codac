@@ -26,6 +26,8 @@ namespace py = pybind11;
 
 void export_arithmetic(py::module& m);
 void export_ContractorNetwork(py::module& m);
+void export_IntervalVar(py::module& m);
+void export_IntervalVectorVar(py::module& m);
 
 void export_CtcDist(py::module& m);
 void export_CtcFunction(py::module& m);
@@ -68,6 +70,8 @@ PYBIND11_MODULE(tube, m)
 
   export_arithmetic(m);
   export_ContractorNetwork(m);
+  export_IntervalVar(m);
+  export_IntervalVectorVar(m);
 
   export_CtcDist(m);
   export_CtcFunction(m);

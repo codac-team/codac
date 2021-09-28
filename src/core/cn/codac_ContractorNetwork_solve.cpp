@@ -76,45 +76,6 @@ namespace codac
       return (double)(clock() - t_start)/CLOCKS_PER_SEC;
     }
 
-    void ContractorNetwork::replace_var_by_dom(Domain var, Domain dom)
-    {
-      DomainHashcode hashcode(var);
-      if(m_map_domains.find(hashcode) == m_map_domains.end())
-        throw Exception(__func__, "unknown variable domain");
-
-      Domain* var_ptr = m_map_domains[hashcode];
-      var_ptr->set_ref_values(dom);
-      trigger_ctc_related_to_dom(var_ptr);
-
-      switch(var.type())
-      {
-        case Domain::Type::T_INTERVAL:
-          // Nothing to do
-          break;
-
-        case Domain::Type::T_INTERVAL_VECTOR:
-          if(var.interval_vector().size() != dom.interval_vector().size())
-            throw Exception(__func__, "the provided IntervalVector does not match the variable dimension");
-
-          for(int j = 0 ; j < var.interval_vector().size() ; j++)
-            replace_var_by_dom(Domain(var.interval_vector()[j]), Domain::vector_component(dom,j));
-
-          break;
-
-        case Domain::Type::T_SLICE:
-          // Nothing to do
-          break;
-          
-        case Domain::Type::T_TUBE:
-          // Nothing to do
-          break;
-
-        case Domain::Type::T_TUBE_VECTOR:
-          // to be implemented
-          break;
-      }
-    }
-
     double ContractorNetwork::contract(const unordered_map<Domain,Domain>& var_dom, bool verbose)
     {
       // References are changed according to the specified domains
@@ -332,6 +293,45 @@ namespace codac
 
         default:
           // .
+          break;
+      }
+    }
+
+    void ContractorNetwork::replace_var_by_dom(Domain var, Domain dom)
+    {
+      DomainHashcode hashcode(var);
+      if(m_map_domains.find(hashcode) == m_map_domains.end())
+        throw Exception(__func__, "unknown variable domain");
+
+      Domain* var_ptr = m_map_domains[hashcode];
+      var_ptr->set_ref_values(dom);
+      trigger_ctc_related_to_dom(var_ptr);
+
+      switch(var.type())
+      {
+        case Domain::Type::T_INTERVAL:
+          // Nothing to do
+          break;
+
+        case Domain::Type::T_INTERVAL_VECTOR:
+          if(var.interval_vector().size() != dom.interval_vector().size())
+            throw Exception(__func__, "the provided IntervalVector does not match the variable dimension");
+
+          for(int j = 0 ; j < var.interval_vector().size() ; j++)
+            replace_var_by_dom(Domain(var.interval_vector()[j]), Domain::vector_component(dom,j));
+
+          break;
+
+        case Domain::Type::T_SLICE:
+          // Nothing to do
+          break;
+          
+        case Domain::Type::T_TUBE:
+          // Nothing to do
+          break;
+
+        case Domain::Type::T_TUBE_VECTOR:
+          // to be implemented
           break;
       }
     }
