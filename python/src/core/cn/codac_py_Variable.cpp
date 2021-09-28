@@ -29,21 +29,21 @@ using namespace pybind11::literals;
 
 void export_IntervalVar(py::module& m)
 {
-  py::class_<IntervalVar> intervalvar(m, "IntervalVar", VARIABLE_INTERVALVAR); // todo: doc
+  py::class_<IntervalVar> intervalvar(m, "IntervalVar", "todo"); // todo: doc
   intervalvar
 
     .def(py::init<>(),
-      VARIABLE_INTERVALVAR) // todo: doc
+      "todo") // todo: doc
   ;
 }
 
 void export_IntervalVectorVar(py::module& m)
 {
-  py::class_<IntervalVectorVar> intervalvectorvar(m, "IntervalVectorVar", VARIABLE_INTERVALVAR); // todo: doc
+  py::class_<IntervalVectorVar> intervalvectorvar(m, "IntervalVectorVar", "todo"); // todo: doc
   intervalvectorvar
 
     .def(py::init<int>(),
-      VARIABLE_INTERVALVAR,
+      "todo",
       "n"_a.noconvert()) // todo: doc
   ;
 }
