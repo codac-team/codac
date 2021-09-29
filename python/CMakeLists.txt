@@ -70,6 +70,7 @@
     src/core/contractors/dyn/codac_py_CtcEval.cpp
     src/core/contractors/dyn/codac_py_CtcLohner.cpp
     src/core/contractors/dyn/codac_py_CtcPicard.cpp
+    src/core/contractors/dyn/codac_py_CtcStatic.cpp
 
     src/core/domains/tube/codac_py_Tube.cpp
     src/core/domains/tube/codac_py_TubeVector.cpp
