@@ -63,14 +63,14 @@ namespace codac
 
       }
 
-      using IntervalVector::size;
-
-    protected:
-
       IntervalVar& operator[](int index)
       {
         return (IntervalVar&)IntervalVector::operator[](index);
       }
+
+      using IntervalVector::size;
+
+    protected:
 
       friend class Domain;
       friend class Contractor;
