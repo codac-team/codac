@@ -109,9 +109,6 @@ void export_VIBesFigMap(py::module& m)
       VIBESFIGMAP_VOID_SET_TRAJECTORY_COLOR_TRAJECTORYVECTOR_COLORMAP_TRAJECTORY,
       "traj"_a, "colormap"_a, "traj_colormap"_a=nullptr)
 
-    .def("set_trajectory_mode", (void (VIBesFigMap::*)(const TrajectoryVector*, const int mode))&VIBesFigMap::set_trajectory_mode,
-      VIBESFIGMAP_VOID_SET_TRAJECTORY_MODE_TRAJECTORYVECTOR_INT,
-      "traj"_a, "mode"_a)
     
     .def("set_vehicle_display", (void (VIBesFigMap::*)(const TrajectoryVector*,bool))&VIBesFigMap::set_vehicle_display,
       VIBESFIGMAP_VOID_SET_VEHICLE_DISPLAY_TRAJECTORYVECTOR_BOOL,
