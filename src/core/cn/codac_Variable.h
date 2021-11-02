@@ -68,7 +68,10 @@ namespace codac
         return (IntervalVar&)IntervalVector::operator[](index);
       }
 
-      using IntervalVector::size;
+      int size()
+      {
+        return IntervalVector::size();
+      }
 
     protected:
 

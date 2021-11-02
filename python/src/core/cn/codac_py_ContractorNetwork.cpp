@@ -243,6 +243,9 @@ void export_ContractorNetwork(py::module& m)
     .def("trigger_all_contractors", &ContractorNetwork::trigger_all_contractors,
       CONTRACTORNETWORK_VOID_TRIGGER_ALL_CONTRACTORS)
 
+    .def("reset_interm_vars", &ContractorNetwork::reset_interm_vars,
+      CONTRACTORNETWORK_VOID_RESET_INTERM_VARS)
+
     .def("nb_ctc_in_stack", &ContractorNetwork::nb_ctc_in_stack,
       CONTRACTORNETWORK_INT_NB_CTC_IN_STACK)
 
