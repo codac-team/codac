@@ -67,7 +67,7 @@ void export_TPlane(py::module& m);
 
 PYBIND11_MODULE(tube, m)
 {
-  m.doc() = "Python binding of codac";
+  m.doc() = "Python binding of Codac";
 
   export_arithmetic(m);
   export_ContractorNetwork(m);
