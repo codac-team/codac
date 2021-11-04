@@ -46,13 +46,30 @@ Codac release 0.1.7 (released `Nov 4, 2021 <https://github.com/codac-team/codac/
 Features added
 --------------
 
-* :commit:`4f273d976005244344081d2feff81653095f5cfd`: towards generation of ``.deb`` and ``.nupkg packages``
+* :commit:`ff42f1c88510c2d503440f754c311923f65ad3e2`: in CN, allowing interm variables to be reset
+* :commit:`c0477301e0596d4c2df8e949885b034c352bb897`: introducing *CN variables*: ``IntervalVar`` and ``IntervalVectorVar``
+* :commit:`edd84d9154abe1568220059685fe8a5d915c4d4a`: added an example of how to build a paving from a CN
+* :commit:`480b74b03ac68ccb28a880932e4ce142416f3df4`: ``CtcStatic`` can now be used in CN for ``Tube`` and ``TubeVector`` objects
+
+Changes
+-------
+
+* :commit:`0bc617a4be6c4313cdf66d1aa18c7efe4ab3f203`: in CN, only contracting contractors are triggered
+* :commit:`ff42f1c88510c2d503440f754c311923f65ad3e2`: the method ``create_dom`` is deprecated, use  ``create_interm_var`` instead
+* :commit:`cb34255db712423755274fb77afc7c33059d1c9a`: updated ``diff`` method
+* :commit:`0e87a9cc7871c7bf469d2648ecaed2956c64f7d9`: minor optimization in ``CtcDeriv``
 
 Bugs fixed
 ----------
 
-* :commit:`5cf92232da71aa4bf8e329ac2ceb99bd46969dcf`: corrected recent bug in ``CtcChain``
-* :commit:`b4c5a2c35f43c30c9e63918b4b1e917bb955fad3`: corrected recent bug in ``CtcEval``
+* :commit:`2511f25d6bc062fcf10537dac779a38f0e06e026`: corrected bug in ``make_continuous()``
+* :commit:`9b3c33d728c59d571ff9b262f8b8eb183b25b132`: corrected bug when empty subdomain
+
+Python binding
+--------------
+
+* :commit:`08e670b5b33f055ba550576d3914215d0a53c4ba`: Python binding of CN variables
+* :commit:`5c64d19e9f38c286e253c704cac06e377801cda8`: Python binding of ``CtcStatic``
 
 
 -----------------------------------------------------------------
