@@ -14,6 +14,7 @@
 
 #include <functional>
 #include "codac_Interval.h"
+#include "codac_Variable.h"
 #include "codac_IntervalVector.h"
 #include "codac_Slice.h"
 #include "codac_Tube.h"
@@ -34,7 +35,7 @@ namespace codac
     public:
 
       enum class Type { T_INTERVAL, T_INTERVAL_VECTOR, T_SLICE, T_TUBE, T_TUBE_VECTOR };
-      enum class MemoryRef { M_DOUBLE, M_INTERVAL, M_VECTOR, M_INTERVAL_VECTOR, M_SLICE, M_TUBE, M_TUBE_VECTOR };
+      enum class MemoryRef { M_DOUBLE, M_INTERVAL, M_INTERVAL_VAR, M_VECTOR, M_INTERVAL_VECTOR, M_INTERVAL_VECTOR_VAR, M_SLICE, M_TUBE, M_TUBE_VECTOR };
 
       Domain();
       Domain(const Domain& ad);
@@ -43,19 +44,22 @@ namespace codac
       Domain(Interval& i);
       Domain(Interval& i, double& extern_d);
       Domain(Interval& i, Interval& extern_i);
-      Domain(const Interval& i);
+      Domain(const Interval& i, bool interm_var = false);
+      Domain(IntervalVar& i);
       Domain(Vector& v);
       // todo: ? Domain(const Vector& v);
       Domain(IntervalVector& iv);
-      Domain(const IntervalVector& iv);
+      Domain(const IntervalVector& iv, bool interm_var = false);
+      Domain(IntervalVectorVar& iv);
       Domain(Slice& s);
       Domain(Tube& t);
-      Domain(const Tube& t);
+      Domain(const Tube& t, bool interm_var = false);
       Domain(TubeVector& tv);
-      Domain(const TubeVector& tv);
+      Domain(const TubeVector& tv, bool interm_var = false);
       ~Domain();
 
       const Domain& operator=(const Domain& ad);
+      void set_ref_values(const Domain& ad);
 
       int id() const;
       Type type() const;
@@ -75,9 +79,15 @@ namespace codac
       const std::vector<Contractor*>& contractors() const;
       void add_ctc(Contractor *ctc);
 
+      bool is_var() const;
+      bool is_var_not_associated() const;
+
       double compute_volume() const;
       double get_saved_volume() const;
       void set_volume(double vol);
+
+      bool is_interm_var() const;
+      void reset_value();
 
       bool is_empty() const;
       
@@ -140,11 +150,23 @@ namespace codac
         {
           std::reference_wrapper<double> m_ref_memory_d;
           std::reference_wrapper<Interval> m_ref_memory_i;
+          std::reference_wrapper<IntervalVar> m_ref_memory_ivar;
           std::reference_wrapper<Vector> m_ref_memory_v;
           std::reference_wrapper<IntervalVector> m_ref_memory_iv;
+          std::reference_wrapper<IntervalVectorVar> m_ref_memory_ivvar;
           std::reference_wrapper<Slice> m_ref_memory_s;
           std::reference_wrapper<Tube> m_ref_memory_t;
           std::reference_wrapper<TubeVector> m_ref_memory_tv;
+        };
+
+      // Possibly initial value (for intermediate variables to be reset)
+
+        union // if locally stored (such as intermediate variables or doubles to intervals):
+        {
+          Interval *m_init_i_ptr;
+          IntervalVector *m_init_iv_ptr;
+          Tube *m_init_t_ptr;
+          TubeVector *m_init_tv_ptr;
         };
 
 
@@ -155,7 +177,7 @@ namespace codac
       Trajectory m_traj_lb, m_traj_ub;
 
       std::vector<Contractor*> m_v_ctc;
-      double m_volume = 0.;
+      double m_volume = -1.;
 
       std::string m_name;
       int m_dom_id;

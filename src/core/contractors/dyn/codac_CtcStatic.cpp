@@ -16,8 +16,8 @@ using namespace ibex;
 
 namespace codac
 {
-  CtcStatic::CtcStatic(Ctc& static_ctc, bool dynamic_ctc)
-    : DynCtc(false), m_static_ctc(static_ctc), m_dynamic_ctc(dynamic_ctc ? 1 : 0)
+  CtcStatic::CtcStatic(Ctc& static_ctc, bool temporal_ctc)
+    : DynCtc(temporal_ctc), m_static_ctc(static_ctc), m_temporal_ctc(temporal_ctc ? 1 : 0)
   {
 
   }
@@ -26,55 +26,28 @@ namespace codac
   const string CtcStatic::m_ctc_name = "CtcStatic";
   vector<string> CtcStatic::m_str_expected_doms(
   {
-    "Slice[, Slice..]"
+    "Tube",
+    "TubeVector",
   });
 
   void CtcStatic::contract(vector<Domain*>& v_domains)
   {
-    assert(!v_domains.empty());
-    assert(!m_dynamic_ctc && "not implemented for inter-temporal constraints");
+    if(v_domains.size() != 1)
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
 
-    for(size_t i = 0 ; i < v_domains.size() ; i++)
-    {
-      if(v_domains[i]->type() != Domain::Type::T_SLICE)
-        throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
-      
-      if(i != 0)
-        assert(v_domains[i]->slice().tdomain() == v_domains[i-1]->slice().tdomain());
-    }
+    if(v_domains[0]->type() == Domain::Type::T_TUBE)
+      contract(v_domains[0]->tube());
 
-    // If these slices should not be impacted by the contractor
-    if(!v_domains[0]->slice().tdomain().intersects(m_restricted_tdomain))
-      return;
+    else if(v_domains[0]->type() == Domain::Type::T_TUBE_VECTOR)
+      contract(v_domains[0]->tube_vector());
 
-    int n = v_domains.size();
-
-    IntervalVector envelope(n);
-    IntervalVector ingate(n);
-    IntervalVector outgate(n);
-
-    for(int i = 0 ; i < n ; i++)
-    {
-      envelope[i] = v_domains[i]->slice().codomain();
-      ingate[i] = v_domains[i]->slice().input_gate();
-      outgate[i] = v_domains[i]->slice().output_gate();
-    }
-
-    m_static_ctc.contract(envelope);
-    m_static_ctc.contract(ingate);
-    m_static_ctc.contract(outgate);
-
-    for(int i = 0 ; i < n ; i++)
-    {
-      v_domains[i]->slice().set_envelope(envelope[i]);
-      v_domains[i]->slice().set_input_gate(ingate[i]);
-      v_domains[i]->slice().set_output_gate(outgate[i]);
-    }
+    else
+      throw DomainsTypeException(m_ctc_name, v_domains, m_str_expected_doms);
   }
 
   void CtcStatic::contract(TubeVector& x)
   {
-    assert(x.size()+m_dynamic_ctc == m_static_ctc.nb_var);
+    assert(x.size()+m_temporal_ctc == m_static_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[x.size()];
     for(int i = 0 ; i < x.size() ; i++)
@@ -87,7 +60,7 @@ namespace codac
   void CtcStatic::contract(Tube& x1)
   {
     int n = 1;
-    assert(n+m_dynamic_ctc == m_static_ctc.nb_var);
+    assert(n+m_temporal_ctc == m_static_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -99,7 +72,7 @@ namespace codac
   void CtcStatic::contract(Tube& x1, Tube& x2)
   {
     int n = 2;
-    assert(n+m_dynamic_ctc == m_static_ctc.nb_var);
+    assert(n+m_temporal_ctc == m_static_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -112,7 +85,7 @@ namespace codac
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3)
   {
     int n = 3;
-    assert(n+m_dynamic_ctc == m_static_ctc.nb_var);
+    assert(n+m_temporal_ctc == m_static_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -126,7 +99,7 @@ namespace codac
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4)
   {
     int n = 4;
-    assert(n+m_dynamic_ctc == m_static_ctc.nb_var);
+    assert(n+m_temporal_ctc == m_static_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -141,7 +114,7 @@ namespace codac
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5)
   {
     int n = 5;
-    assert(n+m_dynamic_ctc == m_static_ctc.nb_var);
+    assert(n+m_temporal_ctc == m_static_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -157,7 +130,7 @@ namespace codac
   void CtcStatic::contract(Tube& x1, Tube& x2, Tube& x3, Tube& x4, Tube& x5, Tube& x6)
   {
     int n = 6;
-    assert(n+m_dynamic_ctc == m_static_ctc.nb_var);
+    assert(n+m_temporal_ctc == m_static_ctc.nb_var);
 
     Slice **v_x_slices = new Slice*[n];
     v_x_slices[0] = x1.first_slice();
@@ -173,8 +146,8 @@ namespace codac
 
   void CtcStatic::contract(Slice **v_x_slices, int n)
   {
-    IntervalVector envelope(n + m_dynamic_ctc);
-    IntervalVector ingate(n + m_dynamic_ctc);
+    IntervalVector envelope(n + m_temporal_ctc);
+    IntervalVector ingate(n + m_temporal_ctc);
 
     while(v_x_slices[0] != NULL)
     {
@@ -191,7 +164,7 @@ namespace codac
         continue; // moving to next slice
       }
 
-      if(m_dynamic_ctc)
+      if(m_temporal_ctc)
       {
         envelope[0] = v_x_slices[0]->tdomain();
         ingate[0] = v_x_slices[0]->tdomain().lb();
@@ -199,8 +172,8 @@ namespace codac
 
       for(int i = 0 ; i < n ; i++)
       {
-        envelope[i+m_dynamic_ctc] = v_x_slices[i]->codomain();
-        ingate[i+m_dynamic_ctc] = v_x_slices[i]->input_gate();
+        envelope[i+m_temporal_ctc] = v_x_slices[i]->codomain();
+        ingate[i+m_temporal_ctc] = v_x_slices[i]->input_gate();
       }
 
       m_static_ctc.contract(envelope);
@@ -208,24 +181,24 @@ namespace codac
 
       for(int i = 0 ; i < n ; i++)
       {
-        v_x_slices[i]->set_envelope(envelope[i+m_dynamic_ctc]);
-        v_x_slices[i]->set_input_gate(ingate[i+m_dynamic_ctc]);
+        v_x_slices[i]->set_envelope(envelope[i+m_temporal_ctc]);
+        v_x_slices[i]->set_input_gate(ingate[i+m_temporal_ctc]);
       }
 
       if(v_x_slices[0]->next_slice() == NULL) // output gate
       {
-        IntervalVector outgate(n + m_dynamic_ctc);
+        IntervalVector outgate(n + m_temporal_ctc);
 
-        if(m_dynamic_ctc)
+        if(m_temporal_ctc)
           outgate[0] = v_x_slices[0]->tdomain().ub();
 
         for(int i = 0 ; i < n ; i++)
-          outgate[i+m_dynamic_ctc] = v_x_slices[i]->output_gate();
+          outgate[i+m_temporal_ctc] = v_x_slices[i]->output_gate();
 
         m_static_ctc.contract(outgate);
 
         for(int i = 0 ; i < n ; i++)
-          v_x_slices[i]->set_output_gate(outgate[i+m_dynamic_ctc]);
+          v_x_slices[i]->set_output_gate(outgate[i+m_temporal_ctc]);
 
         break; // end of contractions
       }

@@ -107,6 +107,7 @@ jobs:
         cd ../../build
 
         # Testing
+        ./tests/core/codac-tests-core 
         make test
         ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing
     
@@ -146,5 +147,7 @@ jobs:
         cd ../../build
 
         # Testing
+
+        ./tests/core/codac-tests-core 
         make test
         ./../examples/tuto/05_dyn_rangebearing/build/05_dyn_rangebearing

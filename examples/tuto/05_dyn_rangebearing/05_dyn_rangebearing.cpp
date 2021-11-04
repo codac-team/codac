@@ -81,9 +81,9 @@ int main()
     for(auto& y : v_obs)
     {
       // Intermediate variables
-      Interval& alpha = cn.create_dom(Interval()); // absolute angle robot-landmark
-      IntervalVector& d = cn.create_dom(IntervalVector(2)); // dist robot-landmark
-      IntervalVector& p = cn.create_dom(IntervalVector(4)); // state at t_i
+      Interval& alpha = cn.create_interm_var(Interval()); // absolute angle robot-landmark
+      IntervalVector& d = cn.create_interm_var(IntervalVector(2)); // dist robot-landmark
+      IntervalVector& p = cn.create_interm_var(IntervalVector(4)); // state at t_i
 
       cn.add(ctc_plus, {y[2], p[2], alpha});
       cn.add(ctc_minus, {cn.subvector(y,3,4), cn.subvector(p,0,1), d});

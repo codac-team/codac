@@ -130,6 +130,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_ContractorNetwork.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Hashcode.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Hashcode.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Variable.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Variable.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.cpp

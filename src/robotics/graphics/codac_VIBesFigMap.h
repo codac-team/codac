@@ -493,7 +493,7 @@ namespace codac
        * \param color color of the observation
        * \param params VIBes parameters related to the observation
        */
-      void draw_observation(const IntervalVector& obs, const Vector& pose, const std::string& color, const vibes::Params& params);
+      void draw_observation(const IntervalVector& obs, const Vector& pose, const std::string& color = "", const vibes::Params& params = vibes::Params());
       
       /**
        * \brief Draws a range-and-bearing uncertain observation on the map
@@ -507,7 +507,7 @@ namespace codac
        * \param color color of the observation
        * \param params VIBes parameters related to the observation
        */
-      void draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const std::string& color, const vibes::Params& params);
+      void draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = "", const vibes::Params& params = vibes::Params());
       
       /**
        * \brief Returns actual or estimated heading related to some TrajectoryVector at t

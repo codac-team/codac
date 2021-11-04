@@ -46,8 +46,8 @@ cn = ContractorNetwork()
 for i in range(0,len(v_obs)):
 
   # Intermediate variables
-  alpha = cn.create_dom(Interval())
-  d = cn.create_dom(IntervalVector(2))
+  alpha = cn.create_interm_var(Interval())
+  d = cn.create_interm_var(IntervalVector(2))
 
   cn.add(ctc_plus, [v_obs[i][1], heading, alpha])
   cn.add(ctc_minus, [v_map[i], x, d])
