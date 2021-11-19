@@ -100,6 +100,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcFunction.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcFunction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCN.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCN.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_DynCtc.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_DynCtc.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcPicard.h
