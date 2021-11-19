@@ -22,21 +22,41 @@ namespace codac
 
   };
 
-  class IntervalVar : public Interval, Var
+  /**
+   * \class IntervalVar
+   * \brief todo
+   */
+  class IntervalVar : private Interval, Var
   {
     public:
 
+      /**
+       * \brief todo
+       */
       IntervalVar()
         : Interval()
       {
 
       }
+
+    protected:
+
+      friend class Domain;
+      friend class Contractor;
+      friend class ContractorNetwork;
   };
 
-  class IntervalVectorVar : public IntervalVector, Var
+  /**
+   * \class IntervalVectorVar
+   * \brief todo
+   */
+  class IntervalVectorVar : private IntervalVector, Var
   {
     public:
 
+      /**
+       * \brief todo
+       */
       IntervalVectorVar(int n)
         : IntervalVector(n)
       {
@@ -47,6 +67,17 @@ namespace codac
       {
         return (IntervalVar&)IntervalVector::operator[](index);
       }
+
+      int size()
+      {
+        return IntervalVector::size();
+      }
+
+    protected:
+
+      friend class Domain;
+      friend class Contractor;
+      friend class ContractorNetwork;
   };
 }
 

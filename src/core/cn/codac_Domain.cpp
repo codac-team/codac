@@ -604,6 +604,7 @@ namespace codac
 
       default:
         assert(false && "unhandled case");
+        return false;
     }
   }
 

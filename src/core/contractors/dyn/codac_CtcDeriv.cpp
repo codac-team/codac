@@ -116,7 +116,7 @@ namespace codac
     for(int i = 0 ; i < x.size() ; i++)
       contract(x[i], v[i], t_propa);
   }
-
+  
   void CtcDeriv::contract(Slice& x, const Slice& v, TimePropag t_propa)
   {
     assert(x.tdomain() == v.tdomain());
@@ -135,68 +135,51 @@ namespace codac
       return;
     }
 
-    Interval envelope = x.codomain(), ingate = x.input_gate(), outgate = x.output_gate();
+    // todo: the fwd/bwd way of propag. is lost in this procedure
+    // Restore this feature? Use it in CN only?
 
-    if(m_fast_mode) // Faster contraction without polygons
+    Interval ingate = x.input_gate();
+    Interval outgate = x.output_gate();
+    Interval envelope = x.codomain();
+
+    // Gates contraction
+    ingate &= x.output_gate() - x.tdomain().diam() * v.codomain();
+    outgate &= x.input_gate() + x.tdomain().diam() * v.codomain();
+
+    if(outgate.is_superset(x.output_gate()) || ingate.is_superset(x.input_gate()))
     {
-      if(t_propa & TimePropag::FORWARD)
-      {
-        x.set_envelope(envelope & (ingate + Interval(0.,x.tdomain().diam()) * v.codomain()));
-        x.set_output_gate(outgate & (ingate + x.tdomain().diam() * v.codomain()));
-      }
+      // Optimal computation
 
-      if(t_propa & TimePropag::BACKWARD)
-      {
-        x.set_envelope(envelope & (outgate - Interval(0.,x.tdomain().diam()) * v.codomain()));
-        x.set_input_gate(ingate & (outgate - x.tdomain().diam() * v.codomain()));
-      }
-    }
-
-    else // Optimal contraction
-    {
-      if(outgate == Interval::ALL_REALS) // Direct evaluation, polygons not needed
-      {
-        envelope &= ingate + Interval(0.,x.tdomain().diam()) * v.codomain();
-        outgate &= ingate + x.tdomain().diam() * v.codomain();
-      }
-
-      else if(ingate == Interval::ALL_REALS) // Direct evaluation, polygons not needed
-      {
-        envelope &= outgate - Interval(0.,x.tdomain().diam()) * v.codomain();
-        ingate &= outgate - x.tdomain().diam() * v.codomain();
-      }
-
-      else // Using polygons to compute the envelope
-      {
-        // todo: remove this: (or use Polygons with truncation)
-        envelope &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
-
-        x.set_envelope(envelope);
-
-        // Gates contraction
-        outgate &= ingate + x.tdomain().diam() * v.codomain();
-        ingate &= outgate - x.tdomain().diam() * v.codomain();
-
-        // Gates needed for polygon computation
-        x.set_input_gate(ingate);
-        x.set_output_gate(outgate);
-
-        // Optimal envelope
-        envelope &= x.polygon(v).box()[1];
-
-        // todo: remove this: (or use Polygons with truncation)
-        if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
-        if(envelope.lb() == -BOUNDED_INFINITY) envelope = Interval(NEG_INFINITY,envelope.ub());
-        if(ingate.ub() == BOUNDED_INFINITY) ingate = Interval(ingate.lb(),POS_INFINITY);
-        if(ingate.lb() == -BOUNDED_INFINITY) ingate = Interval(NEG_INFINITY,ingate.ub());
-        if(outgate.ub() == BOUNDED_INFINITY) outgate = Interval(outgate.lb(),POS_INFINITY);
-        if(outgate.lb() == -BOUNDED_INFINITY) outgate = Interval(NEG_INFINITY,outgate.ub());
-      }
+      // todo: remove this: (or use Polygons with truncation)
+      envelope &= Interval(-BOUNDED_INFINITY,BOUNDED_INFINITY);
 
       x.set_envelope(envelope);
+
+      // Gates needed for polygon computation
       x.set_input_gate(ingate);
       x.set_output_gate(outgate);
+
+      // Optimal envelope
+      envelope &= x.polygon(v).box()[1];
+
+      // todo: remove this: (or use Polygons with truncation)
+      if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
+      if(envelope.lb() == -BOUNDED_INFINITY) envelope = Interval(NEG_INFINITY,envelope.ub());
+      if(ingate.ub() == BOUNDED_INFINITY) ingate = Interval(ingate.lb(),POS_INFINITY);
+      if(ingate.lb() == -BOUNDED_INFINITY) ingate = Interval(NEG_INFINITY,ingate.ub());
+      if(outgate.ub() == BOUNDED_INFINITY) outgate = Interval(outgate.lb(),POS_INFINITY);
+      if(outgate.lb() == -BOUNDED_INFINITY) outgate = Interval(NEG_INFINITY,outgate.ub());
     }
+
+    else
+    {
+      envelope &= ingate + Interval(0.,x.tdomain().diam()) * v.codomain();
+      envelope &= outgate - Interval(0.,x.tdomain().diam()) * v.codomain();
+    }
+
+    x.set_envelope(envelope);
+    x.set_input_gate(ingate);
+    x.set_output_gate(outgate);
 
     assert(volume >= x.volume() + v.volume() && "contraction rule not respected");
   }
