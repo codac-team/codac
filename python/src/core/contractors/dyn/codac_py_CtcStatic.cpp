@@ -29,8 +29,8 @@ using namespace pybind11::literals;
 
 void export_CtcStatic(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc)
 {
-  py::class_<CtcStatic> ctc_picard(m, "CtcStatic", dyn_ctc, CTCSTATIC_MAIN);
-  ctc_picard
+  py::class_<CtcStatic> ctc_static(m, "CtcStatic", dyn_ctc, CTCSTATIC_MAIN);
+  ctc_static
 
     .def(py::init<Ctc&,bool>(),
       CTCSTATIC_CTCSTATIC_CTC_BOOL,
