@@ -622,7 +622,7 @@ namespace codac
       {
         double diag = 0.;
         for(int i = start_index ; i <= end_index ; i++)
-          diag += std::pow(it->second, 2);
+          diag += std::pow(diams(it->first)[i], 2);
         diag_traj.set(std::sqrt(diag), it->first);
       }
 
