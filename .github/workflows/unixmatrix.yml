@@ -1,3 +1,4 @@
+# This file generates .deb (Unix) and .nupkg (Windows) files
 on:
     push:
         branches: '**'

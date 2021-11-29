@@ -1,3 +1,5 @@
+# This file generates Python wheels for Windows
+# (and zip for having Codac and IBEX binaries for several Visual Studio versions)
 on:
     push:
         branches: 'master'
