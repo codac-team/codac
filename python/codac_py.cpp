@@ -26,6 +26,8 @@ namespace py = pybind11;
 
 void export_arithmetic(py::module& m);
 void export_ContractorNetwork(py::module& m);
+void export_IntervalVar(py::module& m);
+void export_IntervalVectorVar(py::module& m);
 
 void export_CtcDist(py::module& m);
 void export_CtcFunction(py::module& m);
@@ -37,6 +39,7 @@ void export_CtcDeriv(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcEval(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcLohner(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcPicard(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
+void export_CtcStatic(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 
 void export_Tube(py::module&m);
 void export_TubeVector(py::module& m);
@@ -64,10 +67,12 @@ void export_TPlane(py::module& m);
 
 PYBIND11_MODULE(tube, m)
 {
-  m.doc() = "Python binding of codac";
+  m.doc() = "Python binding of Codac";
 
   export_arithmetic(m);
   export_ContractorNetwork(m);
+  export_IntervalVar(m);
+  export_IntervalVectorVar(m);
 
   export_CtcDist(m);
   export_CtcFunction(m);
@@ -79,6 +84,7 @@ PYBIND11_MODULE(tube, m)
   export_CtcEval(m, dyn_ctc);
   export_CtcLohner(m, dyn_ctc);
   export_CtcPicard(m, dyn_ctc);
+  export_CtcStatic(m, dyn_ctc);
 
   export_Tube(m);
   export_TubeVector(m);

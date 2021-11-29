@@ -478,6 +478,14 @@ namespace codac
         else
         {
           v_x.push_back(it_scalar_values->first);
+
+          if(std::isnan(it_scalar_values->second))
+          {
+            cout << "Trajectory graphics: warning, nan values (" << name() << "),"
+                 << " at " << it_scalar_values->first << endl;
+            return viewbox;
+          }
+
           v_y.push_back(it_scalar_values->second);
         }
 
@@ -506,7 +514,7 @@ namespace codac
 
     if(v_x.size() != 0)
       vibes::drawLine(v_x, v_y, vibesParams("figure", name(), "group", group_name));
-
+    
     return viewbox;
   }
 }

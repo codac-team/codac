@@ -15,6 +15,7 @@ list(APPEND SRC_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/tests_ctc_eval.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/tests_ctc_picard.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/tests_ctc_lohner.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests_ctc_static.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/tests_definition.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/tests_functions.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/tests_integration.cpp

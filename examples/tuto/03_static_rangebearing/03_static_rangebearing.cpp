@@ -60,8 +60,8 @@ int main()
     for(int i = 0 ; i < v_obs.size() ; i++)
     {
       // Intermediate variables
-      Interval& alpha = cn.create_dom(Interval());
-      IntervalVector& d = cn.create_dom(IntervalVector(2));
+      Interval& alpha = cn.create_interm_var(Interval());
+      IntervalVector& d = cn.create_interm_var(IntervalVector(2));
 
       cn.add(ctc_plus, {v_obs[i][1], heading, alpha});
       cn.add(ctc_minus, {v_map[i], x, d});

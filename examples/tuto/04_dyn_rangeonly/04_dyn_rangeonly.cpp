@@ -64,7 +64,7 @@ int main()
 
     for(int i = 0 ; i < 3 ; i++) // we add the observ. constraint for each range-only measurement
     {
-      IntervalVector& p = cn.create_dom(IntervalVector(4)); // intermed. variable (state at t_i)
+      IntervalVector& p = cn.create_interm_var(IntervalVector(4)); // intermed. variable (state at t_i)
 
       // Distance constraint: relation between the state at t_i and the ith beacon position
       cn.add(ctc::dist, {cn.subvector(p,0,1), b[i], y[i]});

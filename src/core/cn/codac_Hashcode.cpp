@@ -116,12 +116,20 @@ namespace codac
         ptr = reinterpret_cast<std::uintptr_t>(&dom.m_ref_memory_i.get());
         break;
 
+      case Domain::MemoryRef::M_INTERVAL_VAR:
+        ptr = reinterpret_cast<std::uintptr_t>(&dom.m_ref_memory_ivar.get());
+        break;
+
       case Domain::MemoryRef::M_VECTOR:
         ptr = reinterpret_cast<std::uintptr_t>(&dom.m_ref_memory_v.get());
         break;
 
       case Domain::MemoryRef::M_INTERVAL_VECTOR:
         ptr = reinterpret_cast<std::uintptr_t>(&dom.m_ref_memory_iv.get());
+        break;
+
+      case Domain::MemoryRef::M_INTERVAL_VECTOR_VAR:
+        ptr = reinterpret_cast<std::uintptr_t>(&dom.m_ref_memory_ivvar.get());
         break;
 
       case Domain::MemoryRef::M_SLICE:

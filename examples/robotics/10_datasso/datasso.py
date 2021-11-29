@@ -98,9 +98,9 @@ for i in range(0,len(v_obs)):
   y2 = Interval(v_obs[i][2]) # bearing
 
   # Intermediate variables:
-  a = cn.create_dom(Interval())
-  d = cn.create_dom(IntervalVector(2))
-  p = cn.create_dom(IntervalVector(3))
+  a = cn.create_interm_var(Interval())
+  d = cn.create_interm_var(IntervalVector(2))
+  p = cn.create_interm_var(IntervalVector(3))
   
   cn.add(ctc_constell, [m[i]])
   cn.add(ctc_minus, [d, m[i], cn.subvector(p,0,1)])

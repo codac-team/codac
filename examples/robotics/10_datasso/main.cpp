@@ -96,9 +96,9 @@ int main()
       Interval &y2 = v_obs[i][2]; // bearing
 
       // Intermediate variables:
-      Interval& a = cn.create_dom(Interval());
-      IntervalVector& d = cn.create_dom(IntervalVector(2));
-      IntervalVector& p = cn.create_dom(IntervalVector(3));
+      Interval& a = cn.create_interm_var(Interval());
+      IntervalVector& d = cn.create_interm_var(IntervalVector(2));
+      IntervalVector& p = cn.create_interm_var(IntervalVector(3));
       
       cn.add(ctc_constell, {m[i]});
       cn.add(ctc_minus, {d, m[i], cn.subvector(p,0,1)});

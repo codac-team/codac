@@ -66,9 +66,9 @@ cn.add(ctc_f, [v, x, u])   # adding the f constraint
 for y in v_obs: # we add the observ. constraint for each range-only measurement
 
   # Intermediate variables
-  alpha = cn.create_dom(Interval()) # absolute angle robot-landmark
-  d = cn.create_dom(IntervalVector(2)) # dist robot-landmark
-  p = cn.create_dom(IntervalVector(4)) # state at t_i
+  alpha = cn.create_interm_var(Interval()) # absolute angle robot-landmark
+  d = cn.create_interm_var(IntervalVector(2)) # dist robot-landmark
+  p = cn.create_interm_var(IntervalVector(4)) # state at t_i
 
   cn.add(ctc_plus, [y[2], p[2], alpha])
   cn.add(ctc_minus, [cn.subvector(y,3,4), cn.subvector(p,0,1), d])

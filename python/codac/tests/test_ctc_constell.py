@@ -62,6 +62,7 @@ class TestCtcConstell(unittest.TestCase):
     cn.add(ctc_constell, [x4])
     cn.add(ctc_constell, [x5])
     cn.add(ctc_constell, [x6])
+    self.assertEqual(cn.nb_dom(), 18)
     cn.contract()
 
     self.assertEqual(x1, IntervalVector([[1,4],[0.5,2.5]]))

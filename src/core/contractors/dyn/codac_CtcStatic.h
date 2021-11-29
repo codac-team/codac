@@ -21,7 +21,7 @@ namespace codac
   /**
    * \class CtcStatic
    * \brief Generic static \f$\mathcal{C}\f$ that contracts a tube \f$[\mathbf{x}](\cdot)\f$ 
-   *        with some IBEX contractor (for boxes).
+   *        with some IBEX contractor (for boxes, possibly including time).
    *        The contractor will be applied on each slice and gate.
    */
   class CtcStatic : public DynCtc
@@ -32,10 +32,10 @@ namespace codac
        * \brief Creates a static contractor object \f$\mathcal{C}\f$ for tubes
        *
        * \param ibex_ctc the IBEX contractor for boxes
-       * \param dynamic_ctc if true, the contraction will include the
+       * \param temporal_ctc if true, the contraction will include the
        *        temporal tdomain as first dimension of the (n+1) box
        */
-      CtcStatic(Ctc& ibex_ctc, bool dynamic_ctc = false);
+      CtcStatic(Ctc& ibex_ctc, bool temporal_ctc = false);
 
       /*
        * \brief Contracts a set of abstract domains
@@ -123,7 +123,7 @@ namespace codac
     protected:
 
       Ctc& m_static_ctc; //!< related static contractor
-      int m_dynamic_ctc; //!< specifies either the temporal tdomain is part of the contraction or not
+      int m_temporal_ctc; //!< specifies either the temporal tdomain is part of the constraint or not
 
       static const std::string m_ctc_name; //!< class name (mainly used for CN Exceptions)
       static std::vector<std::string> m_str_expected_doms; //!< allowed domains signatures (mainly used for CN Exceptions)

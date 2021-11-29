@@ -153,7 +153,6 @@ void export_TrajectoryVector(py::module& m)
   
   // Tests
 
-
     .def("not_defined", &TrajectoryVector::not_defined,
       TRAJECTORYVECTOR_BOOL_NOT_DEFINED)
 
@@ -164,7 +163,6 @@ void export_TrajectoryVector(py::module& m)
       TRAJECTORYVECTOR_BOOL_OPERATORNEQ_TRAJECTORYVECTOR)
   
   // Setting values
-
 
     .def("set", &TrajectoryVector::set,
       TRAJECTORYVECTOR_VOID_SET_VECTOR_DOUBLE,
@@ -189,9 +187,11 @@ void export_TrajectoryVector(py::module& m)
     .def("sample", (TrajectoryVector & (TrajectoryVector::*)(const TrajectoryVector &))&TrajectoryVector::sample,
       TRAJECTORYVECTOR_TRAJECTORYVECTOR_SAMPLE_TRAJECTORYVECTOR,
       "x"_a)
+
+    .def("make_continuous", (TrajectoryVector & (TrajectoryVector::*)())&TrajectoryVector::make_continuous,
+      TRAJECTORYVECTOR_TRAJECTORYVECTOR_MAKE_CONTINUOUS)
   
   // Integration
-
 
     .def("primitive", (const TrajectoryVector (TrajectoryVector::*)(const Vector &) const)&TrajectoryVector::primitive,
       TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_PRIMITIVE_VECTOR,
@@ -205,7 +205,6 @@ void export_TrajectoryVector(py::module& m)
       TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_DIFF)
   
   // Assignments operators
-
 
     .def("__iadd__", [](TrajectoryVector& s,double o) { return s += o;}, 
       TRAJECTORYVECTOR_CONSTTRAJECTORYVECTOR_OPERATORADDEQ_DOUBLE)
