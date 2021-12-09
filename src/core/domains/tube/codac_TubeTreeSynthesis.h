@@ -50,12 +50,12 @@ namespace codac
     protected:
 
       // Slices connections
-      const Slice *m_slice_ref = NULL;
-      const Tube *m_tube_ref = NULL;
+      const Slice *m_slice_ref = nullptr;
+      const Tube *m_tube_ref = nullptr;
 
       // Binary tree structure
-      TubeTreeSynthesis *m_parent = NULL;
-      TubeTreeSynthesis *m_first_subtree = NULL, *m_second_subtree = NULL;
+      TubeTreeSynthesis *m_parent = nullptr;
+      TubeTreeSynthesis *m_first_subtree = nullptr, *m_second_subtree = nullptr;
 
       int m_nb_slices = 1;
       Interval m_tdomain, m_codomain;

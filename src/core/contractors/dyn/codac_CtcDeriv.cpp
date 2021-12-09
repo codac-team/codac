@@ -83,9 +83,9 @@ namespace codac
       Slice *s_x = x.first_slice();
       const Slice *s_v = v.first_slice();
 
-      while(s_x != NULL)
+      while(s_x)
       {
-        assert(s_v != NULL);
+        assert(s_v);
         contract(*s_x, *s_v, t_propa);
         s_x = s_x->next_slice();
         s_v = s_v->next_slice();
@@ -97,9 +97,9 @@ namespace codac
       Slice *s_x = x.last_slice();
       const Slice *s_v = v.last_slice();
 
-      while(s_x != NULL)
+      while(s_x)
       {
-        assert(s_v != NULL);
+        assert(s_v);
         contract(*s_x, *s_v, t_propa);
         s_x = s_x->prev_slice();
         s_v = s_v->prev_slice();

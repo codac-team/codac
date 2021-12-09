@@ -461,7 +461,7 @@ namespace codac
 
         //union
         //{
-          TFunction *m_function = NULL; //!< optional pointer to the analytic expression of this trajectory
+          TFunction *m_function = nullptr; //!< optional pointer to the analytic expression of this trajectory
           std::map<double,double> m_map_values; //!< optional map of values <t,y>: \f$x(t)=y\f$
         //};
 

@@ -63,7 +63,7 @@ int main()
 {
   /* =========== PROBLEM DEFINITION =========== */
 
-    srand(time(NULL));
+    srand(time(nullptr));
 
     Interval tdomain(0.,10.);
 

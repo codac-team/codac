@@ -84,7 +84,7 @@ namespace codac
     protected:
 
       std::string m_file_path;
-      std::ifstream *m_datafile = NULL;
+      std::ifstream *m_datafile = nullptr;
   };
 }
 

@@ -528,7 +528,7 @@ namespace codac
       // Class variables:
 
         int m_n = 0; //!< dimension of this trajectory
-        Trajectory *m_v_trajs = NULL; //!< array of components (scalar trajectories)
+        Trajectory *m_v_trajs = nullptr; //!< array of components (scalar trajectories)
 
       friend void deserialize_TrajectoryVector(std::ifstream& bin_file, TrajectoryVector *&traj);
       friend class TubeVector; // for TubeVector::deserialize method

@@ -28,7 +28,7 @@ namespace codac
 
   Paving::~Paving()
   {
-    if(m_first_subpaving != NULL)
+    if(m_first_subpaving)
     {
       delete m_first_subpaving;
       delete m_second_subpaving;
@@ -77,12 +77,12 @@ namespace codac
     if(is_leaf() && (value() & val) && (!without_flag || (without_flag && !flag())))
       return this;
 
-    const Paving* p = NULL;
+    const Paving* p = nullptr;
 
-    if(m_first_subpaving != NULL) p = m_first_subpaving->get_first_leaf(val, without_flag);
-    if(p != NULL) return p;
+    if(m_first_subpaving) p = m_first_subpaving->get_first_leaf(val, without_flag);
+    if(p) return p;
 
-    if(m_second_subpaving != NULL) p = m_second_subpaving->get_first_leaf(val, without_flag);
+    if(m_second_subpaving) p = m_second_subpaving->get_first_leaf(val, without_flag);
     return p;
   }
 
@@ -101,7 +101,7 @@ namespace codac
 
   bool Paving::is_leaf() const
   {
-    return m_first_subpaving == NULL;
+    return m_first_subpaving == nullptr;
   }
 
   // Flags
@@ -109,23 +109,23 @@ namespace codac
   bool Paving::flag() const
   {
     bool flag = m_flag;
-    if(!flag && m_first_subpaving != NULL) flag |= m_first_subpaving->flag();
-    if(!flag && m_second_subpaving != NULL) flag |= m_second_subpaving->flag();
+    if(!flag && m_first_subpaving) flag |= m_first_subpaving->flag();
+    if(!flag && m_second_subpaving) flag |= m_second_subpaving->flag();
     return flag;
   }
 
   void Paving::set_flag() const
   {
     m_flag = true;
-    if(m_first_subpaving != NULL) m_first_subpaving->set_flag();
-    if(m_second_subpaving != NULL) m_second_subpaving->set_flag();
+    if(m_first_subpaving) m_first_subpaving->set_flag();
+    if(m_second_subpaving) m_second_subpaving->set_flag();
   }
 
   void Paving::reset_flags() const
   {
     m_flag = false;
-    if(m_first_subpaving != NULL) m_first_subpaving->reset_flags();
-    if(m_second_subpaving != NULL) m_second_subpaving->reset_flags();
+    if(m_first_subpaving) m_first_subpaving->reset_flags();
+    if(m_second_subpaving) m_second_subpaving->reset_flags();
   }
 
   // Extract methods
@@ -177,7 +177,7 @@ namespace codac
     SetValue val = SetValue::UNKNOWN | SetValue::IN;
     vector<ConnectedSubset> v_connected_subsets;
 
-    while((p = get_first_leaf(val, true)) != NULL)
+    while((p = get_first_leaf(val, true)))
     {
       vector<const Paving*> v_subset_items;
       list<const Paving*> l;

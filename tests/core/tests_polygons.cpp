@@ -1392,7 +1392,7 @@ TEST_CASE("Polygons (simplification)")
   {
     IntervalVector box(2,Interval(0.,10.));
 
-    srand(time(NULL));
+    srand(time(nullptr));
 
     vector<Vector> v_pts;
     for(int i = 0 ; i < 500 ; i++)

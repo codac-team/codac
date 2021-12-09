@@ -80,7 +80,7 @@ namespace codac
 
     Trajectory::~Trajectory()
     {
-      if(m_traj_def_type == TrajDefnType::ANALYTIC_FNC && m_function != NULL)
+      if(m_traj_def_type == TrajDefnType::ANALYTIC_FNC && m_function)
         delete m_function;
     }
 
@@ -245,7 +245,7 @@ namespace codac
       switch(m_traj_def_type)
       {
         case TrajDefnType::ANALYTIC_FNC:
-          return m_function == NULL;
+          return m_function == nullptr;
 
         case TrajDefnType::MAP_OF_VALUES:
           return m_map_values.empty();

@@ -18,7 +18,7 @@ namespace codac
   VIBesFigPaving::VIBesFigPaving(const string& fig_name, const Paving *paving)
     : VIBesFig(fig_name), m_paving(paving)
   {
-    assert(paving != NULL);
+    assert(paving);
 
     set_properties(100, 100, 500, 500); // default properties
     axis_limits(paving->box());
@@ -53,7 +53,7 @@ namespace codac
 
   void VIBesFigPaving::draw_paving(const Paving *paving)
   {
-    assert(paving != NULL);
+    assert(paving);
     
     if(paving->is_leaf())
     {

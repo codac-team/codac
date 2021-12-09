@@ -410,7 +410,7 @@ namespace codac
        * \param dom pointer to the Domain
        * \param ctc_to_avoid optional pointer to a Contractor to not activate
        */
-      void trigger_ctc_related_to_dom(Domain *dom, Contractor *ctc_to_avoid = NULL);
+      void trigger_ctc_related_to_dom(Domain *dom, Contractor *ctc_to_avoid = nullptr);
 
       void replace_var_by_dom(Domain var, Domain dom);
 
@@ -424,7 +424,7 @@ namespace codac
       float m_fixedpoint_ratio = 0.0001; //!< fixed point ratio for propagation limit
       double m_contraction_duration_max = std::numeric_limits<double>::infinity(); //!< computation time limit
 
-      CtcDeriv *m_ctc_deriv = NULL; //!< optional pointer to a CtcDeriv object that can be automatically added in the graph
+      CtcDeriv *m_ctc_deriv = nullptr; //!< optional pointer to a CtcDeriv object that can be automatically added in the graph
       std::list<std::pair<Domain*,Domain*> > m_domains_related_to_ctcderiv;
 
       friend class Domain;

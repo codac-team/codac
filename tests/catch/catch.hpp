@@ -81,7 +81,7 @@
 // Detect a number of compiler features - mostly C++11/14 conformance - by compiler
 // The following features are defined:
 //
-// CATCH_CONFIG_CPP11_NULLPTR : is nullptr supported?
+// CATCH_CONFIG_CPP11_nullptrPTR : is nullptr supported?
 // CATCH_CONFIG_CPP11_NOEXCEPT : is noexcept supported?
 // CATCH_CONFIG_CPP11_GENERATED_METHODS : The delete and default keywords for compiler generated methods
 // CATCH_CONFIG_CPP11_IS_ENUM : std::is_enum is supported?
@@ -100,7 +100,7 @@
 // ****************
 
 // In general each macro has a _NO_<feature name> form
-// (e.g. CATCH_CONFIG_CPP11_NO_NULLPTR) which disables the feature.
+// (e.g. CATCH_CONFIG_CPP11_NO_nullptrPTR) which disables the feature.
 // Many features, at point of detection, define an _INTERNAL_ macro, so they
 // can be combined, en-mass, with the _NO_ forms later.
 
@@ -121,7 +121,7 @@
 #ifdef __clang__
 
 #  if __has_feature(cxx_nullptr)
-#    define CATCH_INTERNAL_CONFIG_CPP11_NULLPTR
+#    define CATCH_INTERNAL_CONFIG_CPP11_nullptrPTR
 #  endif
 
 #  if __has_feature(cxx_noexcept)
@@ -157,7 +157,7 @@
 #ifdef __GNUC__
 
 #   if __GNUC__ == 4 && __GNUC_MINOR__ >= 6 && defined(__GXX_EXPERIMENTAL_CXX0X__)
-#       define CATCH_INTERNAL_CONFIG_CPP11_NULLPTR
+#       define CATCH_INTERNAL_CONFIG_CPP11_nullptrPTR
 #   endif
 
 #   if !defined(CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS) && defined(CATCH_CPP11_OR_GREATER)
@@ -174,7 +174,7 @@
 #ifdef _MSC_VER
 
 #if (_MSC_VER >= 1600)
-#   define CATCH_INTERNAL_CONFIG_CPP11_NULLPTR
+#   define CATCH_INTERNAL_CONFIG_CPP11_nullptrPTR
 #   define CATCH_INTERNAL_CONFIG_CPP11_UNIQUE_PTR
 #endif
 
@@ -212,8 +212,8 @@
 // catch all support for C++11
 #if defined(CATCH_CPP11_OR_GREATER)
 
-#  if !defined(CATCH_INTERNAL_CONFIG_CPP11_NULLPTR)
-#    define CATCH_INTERNAL_CONFIG_CPP11_NULLPTR
+#  if !defined(CATCH_INTERNAL_CONFIG_CPP11_nullptrPTR)
+#    define CATCH_INTERNAL_CONFIG_CPP11_nullptrPTR
 #  endif
 
 #  ifndef CATCH_INTERNAL_CONFIG_CPP11_NOEXCEPT
@@ -250,8 +250,8 @@
 #endif // __cplusplus >= 201103L
 
 // Now set the actual defines based on the above + anything the user has configured
-#if defined(CATCH_INTERNAL_CONFIG_CPP11_NULLPTR) && !defined(CATCH_CONFIG_CPP11_NO_NULLPTR) && !defined(CATCH_CONFIG_CPP11_NULLPTR) && !defined(CATCH_CONFIG_NO_CPP11)
-#   define CATCH_CONFIG_CPP11_NULLPTR
+#if defined(CATCH_INTERNAL_CONFIG_CPP11_nullptrPTR) && !defined(CATCH_CONFIG_CPP11_NO_nullptrPTR) && !defined(CATCH_CONFIG_CPP11_nullptrPTR) && !defined(CATCH_CONFIG_NO_CPP11)
+#   define CATCH_CONFIG_CPP11_nullptrPTR
 #endif
 #if defined(CATCH_INTERNAL_CONFIG_CPP11_NOEXCEPT) && !defined(CATCH_CONFIG_CPP11_NO_NOEXCEPT) && !defined(CATCH_CONFIG_CPP11_NOEXCEPT) && !defined(CATCH_CONFIG_NO_CPP11)
 #   define CATCH_CONFIG_CPP11_NOEXCEPT
@@ -295,10 +295,10 @@
 #endif
 
 // nullptr support
-#ifdef CATCH_CONFIG_CPP11_NULLPTR
-#   define CATCH_NULL nullptr
+#ifdef CATCH_CONFIG_CPP11_nullptrPTR
+#   define CATCH_nullptr nullptr
 #else
-#   define CATCH_NULL NULL
+#   define CATCH_nullptr nullptr
 #endif
 
 // override support
@@ -498,7 +498,7 @@ namespace Catch {
     template<typename T>
     class Ptr {
     public:
-        Ptr() : m_p( CATCH_NULL ){}
+        Ptr() : m_p( CATCH_nullptr ){}
         Ptr( T* p ) : m_p( p ){
             if( m_p )
                 m_p->addRef();
@@ -514,7 +514,7 @@ namespace Catch {
         void reset() {
             if( m_p )
                 m_p->release();
-            m_p = CATCH_NULL;
+            m_p = CATCH_nullptr;
         }
         Ptr& operator = ( T* p ){
             Ptr temp( p );
@@ -530,8 +530,8 @@ namespace Catch {
         T* get() const{ return m_p; }
         T& operator*() const { return *m_p; }
         T* operator->() const { return m_p; }
-        bool operator !() const { return m_p == CATCH_NULL; }
-        operator SafeBool::type() const { return SafeBool::makeSafe( m_p != CATCH_NULL ); }
+        bool operator !() const { return m_p == CATCH_nullptr; }
+        operator SafeBool::type() const { return SafeBool::makeSafe( m_p != CATCH_nullptr ); }
 
     private:
         T* m_p;
@@ -1321,9 +1321,9 @@ namespace Internal {
     inline T& opCast(T const& t) { return const_cast<T&>(t); }
 
 // nullptr_t support based on pull request #154 from Konstantin Baumann
-#ifdef CATCH_CONFIG_CPP11_NULLPTR
+#ifdef CATCH_CONFIG_CPP11_nullptrPTR
     inline std::nullptr_t opCast(std::nullptr_t) { return nullptr; }
-#endif // CATCH_CONFIG_CPP11_NULLPTR
+#endif // CATCH_CONFIG_CPP11_nullptrPTR
 
     // So the compare overloads can be operator agnostic we convey the operator as a template
     // enum, which is used to specialise an Evaluator for doing the comparison.
@@ -1425,7 +1425,7 @@ namespace Internal {
         return applyEvaluator<Op>( static_cast<unsigned long>( lhs ), rhs );
     }
 
-    // pointer to long (when comparing against NULL)
+    // pointer to long (when comparing against nullptr)
     template<Operator Op, typename T> bool compare( long lhs, T* rhs ) {
         return Evaluator<T*, T*, Op>::evaluate( reinterpret_cast<T*>( lhs ), rhs );
     }
@@ -1433,7 +1433,7 @@ namespace Internal {
         return Evaluator<T*, T*, Op>::evaluate( lhs, reinterpret_cast<T*>( rhs ) );
     }
 
-    // pointer to int (when comparing against NULL)
+    // pointer to int (when comparing against nullptr)
     template<Operator Op, typename T> bool compare( int lhs, T* rhs ) {
         return Evaluator<T*, T*, Op>::evaluate( reinterpret_cast<T*>( lhs ), rhs );
     }
@@ -1470,7 +1470,7 @@ namespace Internal {
         return applyEvaluator<Op>( static_cast<long>( lhs ), rhs );
     }
 
-    // pointer to long long (when comparing against NULL)
+    // pointer to long long (when comparing against nullptr)
     template<Operator Op, typename T> bool compare( long long lhs, T* rhs ) {
         return Evaluator<T*, T*, Op>::evaluate( reinterpret_cast<T*>( lhs ), rhs );
     }
@@ -1479,7 +1479,7 @@ namespace Internal {
     }
 #endif // CATCH_CONFIG_CPP11_LONG_LONG
 
-#ifdef CATCH_CONFIG_CPP11_NULLPTR
+#ifdef CATCH_CONFIG_CPP11_nullptrPTR
     // pointer to nullptr_t (when comparing against nullptr)
     template<Operator Op, typename T> bool compare( std::nullptr_t, T* rhs ) {
         return Evaluator<T*, T*, Op>::evaluate( nullptr, rhs );
@@ -1487,7 +1487,7 @@ namespace Internal {
     template<Operator Op, typename T> bool compare( T* lhs, std::nullptr_t ) {
         return Evaluator<T*, T*, Op>::evaluate( lhs, nullptr );
     }
-#endif // CATCH_CONFIG_CPP11_NULLPTR
+#endif // CATCH_CONFIG_CPP11_nullptrPTR
 
 } // end of namespace Internal
 } // end of namespace Catch
@@ -1588,7 +1588,7 @@ std::string toString( long long value );
 std::string toString( unsigned long long value );
 #endif
 
-#ifdef CATCH_CONFIG_CPP11_NULLPTR
+#ifdef CATCH_CONFIG_CPP11_nullptrPTR
 std::string toString( std::nullptr_t );
 #endif
 
@@ -1683,7 +1683,7 @@ struct StringMaker<T*> {
     template<typename U>
     static std::string convert( U* p ) {
         if( !p )
-            return "NULL";
+            return "nullptr";
         else
             return Detail::rawMemoryToString( p );
     }
@@ -1693,7 +1693,7 @@ template<typename R, typename C>
 struct StringMaker<R C::*> {
     static std::string convert( R C::* p ) {
         if( !p )
-            return "NULL";
+            return "nullptr";
         else
             return Detail::rawMemoryToString( p );
     }
@@ -2731,12 +2731,12 @@ namespace Catch {
     template<typename T>
     class Option {
     public:
-        Option() : nullableValue( CATCH_NULL ) {}
+        Option() : nullableValue( CATCH_nullptr ) {}
         Option( T const& _value )
         : nullableValue( new( storage ) T( _value ) )
         {}
         Option( Option const& _other )
-        : nullableValue( _other ? new( storage ) T( *_other ) : CATCH_NULL )
+        : nullableValue( _other ? new( storage ) T( *_other ) : CATCH_nullptr )
         {}
 
         ~Option() {
@@ -2760,7 +2760,7 @@ namespace Catch {
         void reset() {
             if( nullableValue )
                 nullableValue->~T();
-            nullableValue = CATCH_NULL;
+            nullableValue = CATCH_nullptr;
         }
 
         T& operator*() { return *nullableValue; }
@@ -2772,10 +2772,10 @@ namespace Catch {
             return nullableValue ? *nullableValue : defaultValue;
         }
 
-        bool some() const { return nullableValue != CATCH_NULL; }
-        bool none() const { return nullableValue == CATCH_NULL; }
+        bool some() const { return nullableValue != CATCH_nullptr; }
+        bool none() const { return nullableValue == CATCH_nullptr; }
 
-        bool operator !() const { return nullableValue == CATCH_NULL; }
+        bool operator !() const { return nullableValue == CATCH_nullptr; }
         operator SafeBool::type() const {
             return SafeBool::makeSafe( some() );
         }
@@ -2947,7 +2947,7 @@ namespace Catch {
 
     inline size_t registerTestMethods() {
         size_t noTestMethods = 0;
-        int noClasses = objc_getClassList( CATCH_NULL, 0 );
+        int noClasses = objc_getClassList( CATCH_nullptr, 0 );
 
         Class* classes = (CATCH_UNSAFE_UNRETAINED Class *)malloc( sizeof(Class) * noClasses);
         objc_getClassList( classes, noClasses );
@@ -3799,7 +3799,7 @@ namespace Tbc {
 // Detect a number of compiler features - mostly C++11/14 conformance - by compiler
 // The following features are defined:
 //
-// CLARA_CONFIG_CPP11_NULLPTR : is nullptr supported?
+// CLARA_CONFIG_CPP11_nullptrPTR : is nullptr supported?
 // CLARA_CONFIG_CPP11_NOEXCEPT : is noexcept supported?
 // CLARA_CONFIG_CPP11_GENERATED_METHODS : The delete and default keywords for compiler generated methods
 // CLARA_CONFIG_CPP11_OVERRIDE : is override supported?
@@ -3810,7 +3810,7 @@ namespace Tbc {
 // CLARA_CONFIG_VARIADIC_MACROS : are variadic macros supported?
 
 // In general each macro has a _NO_<feature name> form
-// (e.g. CLARA_CONFIG_CPP11_NO_NULLPTR) which disables the feature.
+// (e.g. CLARA_CONFIG_CPP11_NO_nullptrPTR) which disables the feature.
 // Many features, at point of detection, define an _INTERNAL_ macro, so they
 // can be combined, en-mass, with the _NO_ forms later.
 
@@ -3819,7 +3819,7 @@ namespace Tbc {
 #ifdef __clang__
 
 #if __has_feature(cxx_nullptr)
-#define CLARA_INTERNAL_CONFIG_CPP11_NULLPTR
+#define CLARA_INTERNAL_CONFIG_CPP11_nullptrPTR
 #endif
 
 #if __has_feature(cxx_noexcept)
@@ -3833,7 +3833,7 @@ namespace Tbc {
 #ifdef __GNUC__
 
 #if __GNUC__ == 4 && __GNUC_MINOR__ >= 6 && defined(__GXX_EXPERIMENTAL_CXX0X__)
-#define CLARA_INTERNAL_CONFIG_CPP11_NULLPTR
+#define CLARA_INTERNAL_CONFIG_CPP11_nullptrPTR
 #endif
 
 // - otherwise more recent versions define __cplusplus >= 201103L
@@ -3846,7 +3846,7 @@ namespace Tbc {
 #ifdef _MSC_VER
 
 #if (_MSC_VER >= 1600)
-#define CLARA_INTERNAL_CONFIG_CPP11_NULLPTR
+#define CLARA_INTERNAL_CONFIG_CPP11_nullptrPTR
 #define CLARA_INTERNAL_CONFIG_CPP11_UNIQUE_PTR
 #endif
 
@@ -3865,8 +3865,8 @@ namespace Tbc {
 
 #define CLARA_CPP11_OR_GREATER
 
-#if !defined(CLARA_INTERNAL_CONFIG_CPP11_NULLPTR)
-#define CLARA_INTERNAL_CONFIG_CPP11_NULLPTR
+#if !defined(CLARA_INTERNAL_CONFIG_CPP11_nullptrPTR)
+#define CLARA_INTERNAL_CONFIG_CPP11_nullptrPTR
 #endif
 
 #ifndef CLARA_INTERNAL_CONFIG_CPP11_NOEXCEPT
@@ -3887,8 +3887,8 @@ namespace Tbc {
 #endif // __cplusplus >= 201103L
 
 // Now set the actual defines based on the above + anything the user has configured
-#if defined(CLARA_INTERNAL_CONFIG_CPP11_NULLPTR) && !defined(CLARA_CONFIG_CPP11_NO_NULLPTR) && !defined(CLARA_CONFIG_CPP11_NULLPTR) && !defined(CLARA_CONFIG_NO_CPP11)
-#define CLARA_CONFIG_CPP11_NULLPTR
+#if defined(CLARA_INTERNAL_CONFIG_CPP11_nullptrPTR) && !defined(CLARA_CONFIG_CPP11_NO_nullptrPTR) && !defined(CLARA_CONFIG_CPP11_nullptrPTR) && !defined(CLARA_CONFIG_NO_CPP11)
+#define CLARA_CONFIG_CPP11_nullptrPTR
 #endif
 #if defined(CLARA_INTERNAL_CONFIG_CPP11_NOEXCEPT) && !defined(CLARA_CONFIG_CPP11_NO_NOEXCEPT) && !defined(CLARA_CONFIG_CPP11_NOEXCEPT) && !defined(CLARA_CONFIG_NO_CPP11)
 #define CLARA_CONFIG_CPP11_NOEXCEPT
@@ -3913,10 +3913,10 @@ namespace Tbc {
 #endif
 
 // nullptr support
-#ifdef CLARA_CONFIG_CPP11_NULLPTR
-#define CLARA_NULL nullptr
+#ifdef CLARA_CONFIG_CPP11_nullptrPTR
+#define CLARA_nullptr nullptr
 #else
-#define CLARA_NULL NULL
+#define CLARA_nullptr nullptr
 #endif
 
 // override support
@@ -4020,11 +4020,11 @@ namespace Clara {
         template<typename ConfigT>
         class BoundArgFunction {
         public:
-            BoundArgFunction() : functionObj( CLARA_NULL ) {}
+            BoundArgFunction() : functionObj( CLARA_nullptr ) {}
             BoundArgFunction( IArgFunction<ConfigT>* _functionObj ) : functionObj( _functionObj ) {}
-            BoundArgFunction( BoundArgFunction const& other ) : functionObj( other.functionObj ? other.functionObj->clone() : CLARA_NULL ) {}
+            BoundArgFunction( BoundArgFunction const& other ) : functionObj( other.functionObj ? other.functionObj->clone() : CLARA_nullptr ) {}
             BoundArgFunction& operator = ( BoundArgFunction const& other ) {
-                IArgFunction<ConfigT>* newFunctionObj = other.functionObj ? other.functionObj->clone() : CLARA_NULL;
+                IArgFunction<ConfigT>* newFunctionObj = other.functionObj ? other.functionObj->clone() : CLARA_nullptr;
                 delete functionObj;
                 functionObj = newFunctionObj;
                 return *this;
@@ -4037,7 +4037,7 @@ namespace Clara {
             bool takesArg() const { return functionObj->takesArg(); }
 
             bool isSet() const {
-                return functionObj != CLARA_NULL;
+                return functionObj != CLARA_nullptr;
             }
         private:
             IArgFunction<ConfigT>* functionObj;
@@ -5291,7 +5291,7 @@ namespace Catch
 
         virtual void skipTest( TestCaseInfo const& testInfo ) = 0;
 
-        virtual MultipleReporters* tryAsMulti() { return CATCH_NULL; }
+        virtual MultipleReporters* tryAsMulti() { return CATCH_nullptr; }
     };
 
     struct IReporterFactory : IShared {
@@ -5535,7 +5535,7 @@ namespace TestCaseTracking {
         }
 
         TrackerContext()
-        :   m_currentTracker( CATCH_NULL ),
+        :   m_currentTracker( CATCH_nullptr ),
             m_runState( NotStarted )
         {}
 
@@ -5543,7 +5543,7 @@ namespace TestCaseTracking {
 
         void endRun() {
             m_rootTracker.reset();
-            m_currentTracker = CATCH_NULL;
+            m_currentTracker = CATCH_nullptr;
             m_runState = NotStarted;
         }
 
@@ -5623,7 +5623,7 @@ namespace TestCaseTracking {
             Children::const_iterator it = std::find_if( m_children.begin(), m_children.end(), TrackerHasName( name ) );
             return( it != m_children.end() )
                 ? it->get()
-                : CATCH_NULL;
+                : CATCH_nullptr;
         }
         virtual ITracker& parent() CATCH_OVERRIDE {
             assert( m_parent ); // Should always be non-null except for root
@@ -5707,7 +5707,7 @@ namespace TestCaseTracking {
         virtual bool isSectionTracker() const CATCH_OVERRIDE { return true; }
 
         static SectionTracker& acquire( TrackerContext& ctx, std::string const& name ) {
-            SectionTracker* section = CATCH_NULL;
+            SectionTracker* section = CATCH_nullptr;
 
             ITracker& currentTracker = ctx.currentTracker();
             if( ITracker* childTracker = currentTracker.findChild( name ) ) {
@@ -5741,7 +5741,7 @@ namespace TestCaseTracking {
         virtual bool isIndexTracker() const CATCH_OVERRIDE { return true; }
 
         static IndexTracker& acquire( TrackerContext& ctx, std::string const& name, int size ) {
-            IndexTracker* tracker = CATCH_NULL;
+            IndexTracker* tracker = CATCH_nullptr;
 
             ITracker& currentTracker = ctx.currentTracker();
             if( ITracker* childTracker = currentTracker.findChild( name ) ) {
@@ -5778,8 +5778,8 @@ namespace TestCaseTracking {
     };
 
     inline ITracker& TrackerContext::startRun() {
-        m_rootTracker = new SectionTracker( "{root}", *this, CATCH_NULL );
-        m_currentTracker = CATCH_NULL;
+        m_rootTracker = new SectionTracker( "{root}", *this, CATCH_nullptr );
+        m_currentTracker = CATCH_nullptr;
         m_runState = Executing;
         return *m_rootTracker;
     }
@@ -5908,7 +5908,7 @@ namespace Catch {
         explicit RunContext( Ptr<IConfig const> const& _config, Ptr<IStreamingReporter> const& reporter )
         :   m_runInfo( _config->name() ),
             m_context( getCurrentMutableContext() ),
-            m_activeTestCase( CATCH_NULL ),
+            m_activeTestCase( CATCH_nullptr ),
             m_config( _config ),
             m_reporter( reporter )
         {
@@ -5966,8 +5966,8 @@ namespace Catch {
                                                         redirectedCerr,
                                                         aborting() ) );
 
-            m_activeTestCase = CATCH_NULL;
-            m_testCaseTracker = CATCH_NULL;
+            m_activeTestCase = CATCH_nullptr;
+            m_testCaseTracker = CATCH_nullptr;
 
             return deltaTotals;
         }
@@ -6651,7 +6651,7 @@ namespace Catch {
         virtual IStreamingReporter* create( std::string const& name, Ptr<IConfig const> const& config ) const CATCH_OVERRIDE {
             FactoryMap::const_iterator it =  m_factories.find( name );
             if( it == m_factories.end() )
-                return CATCH_NULL;
+                return CATCH_nullptr;
             return it->second->create( ReporterConfig( config ) );
         }
 
@@ -6781,7 +6781,7 @@ namespace Catch {
 
         // Single, global, instance
         inline RegistryHub*& getTheRegistryHub() {
-            static RegistryHub* theRegistryHub = CATCH_NULL;
+            static RegistryHub* theRegistryHub = CATCH_nullptr;
             if( !theRegistryHub )
                 theRegistryHub = new RegistryHub();
             return theRegistryHub;
@@ -6796,7 +6796,7 @@ namespace Catch {
     }
     void cleanUp() {
         delete getTheRegistryHub();
-        getTheRegistryHub() = CATCH_NULL;
+        getTheRegistryHub() = CATCH_nullptr;
         cleanUpContext();
     }
     std::string translateActiveException() {
@@ -6929,7 +6929,7 @@ namespace Catch {
 
     class Context : public IMutableContext {
 
-        Context() : m_config( CATCH_NULL ), m_runner( CATCH_NULL ), m_resultCapture( CATCH_NULL ) {}
+        Context() : m_config( CATCH_nullptr ), m_runner( CATCH_nullptr ), m_resultCapture( CATCH_nullptr ) {}
         Context( Context const& );
         void operator=( Context const& );
 
@@ -6975,7 +6975,7 @@ namespace Catch {
                 m_generatorsByTestName.find( testName );
             return it != m_generatorsByTestName.end()
                 ? it->second
-                : CATCH_NULL;
+                : CATCH_nullptr;
         }
 
         IGeneratorsForTest& getGeneratorsForCurrentTest() {
@@ -6996,7 +6996,7 @@ namespace Catch {
     };
 
     namespace {
-        Context* currentContext = CATCH_NULL;
+        Context* currentContext = CATCH_nullptr;
     }
     IMutableContext& getCurrentMutableContext() {
         if( !currentContext )
@@ -7009,7 +7009,7 @@ namespace Catch {
 
     void cleanUpContext() {
         delete currentContext;
-        currentContext = CATCH_NULL;
+        currentContext = CATCH_nullptr;
     }
 }
 
@@ -7764,7 +7764,7 @@ namespace Catch {
 #else
         uint64_t getCurrentTicks() {
             timeval t;
-            gettimeofday(&t,CATCH_NULL);
+            gettimeofday(&t,CATCH_nullptr);
             return static_cast<uint64_t>( t.tv_sec ) * 1000000ull + static_cast<uint64_t>( t.tv_usec );
         }
 #endif
@@ -7968,7 +7968,7 @@ namespace Catch {
             // Call sysctl.
 
             size = sizeof(info);
-            if( sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, CATCH_NULL, 0) != 0 ) {
+            if( sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, CATCH_nullptr, 0) != 0 ) {
                 Catch::cerr() << "\n** Call to sysctl failed - unable to determine if debugger is active **\n" << std::endl;
                 return false;
             }
@@ -8183,7 +8183,7 @@ std::string toString( unsigned long long value ) {
 }
 #endif
 
-#ifdef CATCH_CONFIG_CPP11_NULLPTR
+#ifdef CATCH_CONFIG_CPP11_nullptrPTR
 std::string toString( std::nullptr_t ) {
     return "nullptr";
 }
@@ -8981,7 +8981,7 @@ namespace Catch {
 
             ScopedElement( ScopedElement const& other )
             :   m_writer( other.m_writer ){
-                other.m_writer = CATCH_NULL;
+                other.m_writer = CATCH_nullptr;
             }
 
             ~ScopedElement() {

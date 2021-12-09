@@ -33,7 +33,7 @@ namespace codac
   {
     typename map<const TubeVector*,FigMapTubeParams>::const_iterator it;
     for(it = m_map_tubes.begin(); it != m_map_tubes.end(); it++)
-      if(it->second.tube_x_copy != NULL)
+      if(it->second.tube_x_copy)
       {
         delete it->second.tube_x_copy;
         delete it->second.tube_y_copy;
@@ -90,7 +90,7 @@ namespace codac
 
   void VIBesFigMap::add_tube(const TubeVector *tube, const string& name, int index_x, int index_y)
   {
-    assert(tube != NULL);
+    assert(tube);
     assert(index_x != index_y);
     assert(index_x >= 0 && index_x < tube->size());
     assert(index_y >= 0 && index_y < tube->size());
@@ -109,7 +109,7 @@ namespace codac
 
   void VIBesFigMap::set_tube_name(const TubeVector *tube, const string& name)
   {
-    assert(tube != NULL);
+    assert(tube);
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       throw Exception(__func__, "unknown tube, must be added beforehand");
 
@@ -118,7 +118,7 @@ namespace codac
   
   void VIBesFigMap::set_tube_color(const TubeVector *tube, const string& color)
   {
-    assert(tube != NULL);
+    assert(tube);
     assert(color != "");
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       throw Exception(__func__, "unknown tube, must be added beforehand");
@@ -128,7 +128,7 @@ namespace codac
   
   void VIBesFigMap::set_tube_color(const TubeVector *tube, const ColorMap& colormap, const Trajectory *traj_colormap)
   {
-    assert(tube != NULL);
+    assert(tube);
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       throw Exception(__func__, "unknown tube, must be added beforehand");
 
@@ -138,11 +138,11 @@ namespace codac
   
   void VIBesFigMap::remove_tube(const TubeVector *tube)
   {
-    assert(tube != NULL);
+    assert(tube);
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       throw Exception(__func__, "unable to remove, unknown tube");
 
-    if(m_map_tubes[tube].tube_x_copy != NULL)
+    if(m_map_tubes[tube].tube_x_copy)
     {
       delete m_map_tubes[tube].tube_x_copy;
       delete m_map_tubes[tube].tube_y_copy;
@@ -153,7 +153,7 @@ namespace codac
 
   void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, const string& color, bool vehicle_display)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) != m_map_trajs.end())
       throw Exception(__func__, "trajectory must not have been previously added");
     assert(index_x != index_y);
@@ -165,7 +165,7 @@ namespace codac
 
   void VIBesFigMap::add_trajectory(const TrajectoryVector *traj, const string& name, int index_x, int index_y, int index_heading, const string& color, bool vehicle_display)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) != m_map_trajs.end())
       throw Exception(__func__, "trajectory must not have been previously added");
     assert(index_x != index_y && index_x != index_heading && index_y != index_heading);
@@ -185,7 +185,7 @@ namespace codac
 
   void VIBesFigMap::set_trajectory_name(const TrajectoryVector *traj, const string& name)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unknown trajectory, must be added beforehand");
 
@@ -194,7 +194,7 @@ namespace codac
   
   void VIBesFigMap::set_trajectory_color(const TrajectoryVector *traj, const string& color)
   {
-    assert(traj != NULL);
+    assert(traj);
     assert(color != "");
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unable to remove, unknown trajectory");
@@ -207,7 +207,7 @@ namespace codac
   
   void VIBesFigMap::set_trajectory_color(const TrajectoryVector *traj, const ColorMap& colormap, const Trajectory *traj_colormap)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unable to remove, unknown trajectory");
 
@@ -220,7 +220,7 @@ namespace codac
   
   void VIBesFigMap::set_vehicle_display(const TrajectoryVector *traj, bool vehicle_display)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unable to set display mode, unknown trajectory");
 
@@ -229,7 +229,7 @@ namespace codac
   
   void VIBesFigMap::remove_trajectory(const TrajectoryVector *traj)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unable to remove, unknown trajectory");
 
@@ -320,7 +320,7 @@ namespace codac
   
   void VIBesFigMap::add_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unknown trajectory, must be added beforehand");
 
@@ -330,7 +330,7 @@ namespace codac
   
   void VIBesFigMap::add_observations(const vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const string& color)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unknown trajectory, must be added beforehand");
 
@@ -341,7 +341,7 @@ namespace codac
 
   const IntervalVector VIBesFigMap::draw_tube(const TubeVector *tube)
   {
-    assert(tube != NULL);
+    assert(tube);
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       throw Exception(__func__, "unknown tube, must be added beforehand");
 
@@ -365,7 +365,7 @@ namespace codac
           pos_lb[i] = NAN;
           pos_ub[i] = NAN;
 
-          for(const Slice *s = (*tube)[index].first_slice() ; s != NULL ; s = s->next_slice())
+          for(const Slice *s = (*tube)[index].first_slice() ; s ; s = s->next_slice())
           {
             Interval codomain = s->codomain();
             if(!codomain.is_unbounded())
@@ -386,7 +386,7 @@ namespace codac
       // The background is the previous version of the tube (before contraction).
       // If a copy of the tube has not been done,
       // we make one and no display is done.
-      if(m_map_tubes[tube].tube_x_copy == NULL)
+      if(m_map_tubes[tube].tube_x_copy == nullptr)
       {
         m_map_tubes[tube].tube_x_copy = new Tube((*tube)[m_map_tubes[tube].index_x]);
         m_map_tubes[tube].tube_y_copy = new Tube((*tube)[m_map_tubes[tube].index_y]);
@@ -397,7 +397,7 @@ namespace codac
 
   const IntervalVector VIBesFigMap::draw_trajectory(const TrajectoryVector *traj, float points_size)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unknown trajectory, must be added beforehand");
     assert(points_size >= 0.);
@@ -424,14 +424,14 @@ namespace codac
       identity_traj.set(traj->tdomain().ub(), traj->tdomain().ub());
 
       const Trajectory *traj_colormap = &identity_traj;
-      if(m_map_trajs[traj].color_map.second != NULL)
+      if(m_map_trajs[traj].color_map.second)
         traj_colormap = m_map_trajs[traj].color_map.second;
 
     if((*traj)[index_x].definition_type() == TrajDefnType::MAP_OF_VALUES
         && (*traj)[index_x].sampled_map().size() != 0)
     {
       const Trajectory *displayed_traj_x, *displayed_traj_y;
-      Trajectory *temp_displayed_traj_x = NULL, *temp_displayed_traj_y = NULL; // possibly used in case of heavy trajectories
+      Trajectory *temp_displayed_traj_x = nullptr, *temp_displayed_traj_y = nullptr; // possibly used in case of heavy trajectories
 
       if((*traj)[index_x].sampled_map().size() > m_traj_max_nb_disp_points) // heavy trajectories
       {
@@ -486,7 +486,7 @@ namespace codac
         it_scalar_values_y++;
       }
 
-      if(temp_displayed_traj_x != NULL)
+      if(temp_displayed_traj_x)
       {
         delete displayed_traj_x;
         delete displayed_traj_y;
@@ -542,7 +542,7 @@ namespace codac
 
   void VIBesFigMap::draw_slices(const TubeVector *tube)
   {
-    assert(tube != NULL);
+    assert(tube);
     if(m_map_tubes.find(tube) == m_map_tubes.end())
       throw Exception(__func__, "unknown tube, must be added beforehand");
 
@@ -559,7 +559,7 @@ namespace codac
       vibes::Params params = vibesParams("figure", name(), "group", group_name);
 
       // if available, the copy of the tube (old version) is displayed
-      if(m_map_tubes[tube].tube_x_copy != NULL)
+      if(m_map_tubes[tube].tube_x_copy)
       {
         string color = DEFAULT_MAPBCKGRND_COLOR;
         IntervalVector prev_box(2); // used for diff or polygon display
@@ -622,7 +622,7 @@ namespace codac
         identity_traj.set(tube->tdomain().ub(), tube->tdomain().ub());
 
         const Trajectory *traj_colormap = &identity_traj;
-        if(m_map_tubes[tube].color_map.second != NULL)
+        if(m_map_tubes[tube].color_map.second)
           traj_colormap = m_map_tubes[tube].color_map.second;
 
       int k0, kf;
@@ -722,7 +722,7 @@ namespace codac
 
   void VIBesFigMap::draw_vehicle(double t, const TrajectoryVector *traj, const vibes::Params& params, float size)
   {
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unknown trajectory, must be added beforehand");
     assert(traj->tdomain().contains(t));
@@ -775,7 +775,7 @@ namespace codac
   void VIBesFigMap::draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const string& color, const vibes::Params& params)
   {
     assert(obs.size() >= 3);
-    assert(traj != NULL);
+    assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unknown trajectory, must be added beforehand");
 

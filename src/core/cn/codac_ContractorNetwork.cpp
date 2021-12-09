@@ -34,7 +34,7 @@ namespace codac
       for(auto& ctc : m_map_ctc)
         delete ctc.second;
 
-      if(m_ctc_deriv != NULL)
+      if(m_ctc_deriv)
         delete m_ctc_deriv;
     }
 
@@ -288,7 +288,7 @@ namespace codac
         {
           static_cast<CtcEval&>(dyn_ctc).enable_time_propag(false);
 
-          if(m_ctc_deriv == NULL)
+          if(m_ctc_deriv == nullptr)
             m_ctc_deriv = new CtcDeriv();
           add(*m_ctc_deriv, {v_domains[2], v_domains[3]});
         }
@@ -488,7 +488,7 @@ namespace codac
             vector<Domain*> v_doms(new_dom->tube().nb_slices() + 1);
             v_doms[0] = new_dom;
             int i = 0;
-            for(Slice *s = new_dom->tube().first_slice() ; s != NULL ; s = s->next_slice())
+            for(Slice *s = new_dom->tube().first_slice() ; s ; s = s->next_slice())
             {
               i++;
               v_doms[i] = add_dom(Domain(*s));
@@ -502,7 +502,7 @@ namespace codac
               dom_i->add_ctc(ac_component);
 
             // Dependencies slice <-> slice
-            for(Slice *s = new_dom->tube().first_slice() ; s->next_slice() != NULL ; s = s->next_slice())
+            for(Slice *s = new_dom->tube().first_slice() ; s->next_slice() ; s = s->next_slice())
             {
               Domain *dom_i1 = add_dom(Domain(*s));
               Domain *dom_i2 = add_dom(Domain(*(s->next_slice())));

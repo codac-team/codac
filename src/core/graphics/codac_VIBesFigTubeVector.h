@@ -59,9 +59,9 @@ namespace codac
        *
        * \param fig_name name of the figure as displayed in the window title
        * \param tube a const pointer to the tube vector to be displayed
-       * \param traj an optional const pointer to a trajectory to be displayed (`NULL` by default)
+       * \param traj an optional const pointer to a trajectory to be displayed (`nullptr` by default)
        */
-      VIBesFigTubeVector(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj = NULL);
+      VIBesFigTubeVector(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj = nullptr);
 
       /**
        * \brief VIBesFigTubeVector destructor
@@ -297,7 +297,7 @@ namespace codac
     protected:
 
       int m_n = 0; //!< dimension of this figure
-      VIBesFigTube **m_v_figs = NULL; //!< array of components (scalar figures)
+      VIBesFigTube **m_v_figs = nullptr; //!< array of components (scalar figures)
       int m_start_index = -1, m_end_index = -1; //!< restriction on the dimensions that will be displayed
   };
 }

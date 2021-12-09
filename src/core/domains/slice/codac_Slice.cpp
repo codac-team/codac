@@ -38,12 +38,12 @@ namespace codac
     Slice::~Slice()
     {
       // Links to other slices are destroyed
-      if(m_prev_slice != NULL) m_prev_slice->m_next_slice = NULL;
-      if(m_next_slice != NULL) m_next_slice->m_prev_slice = NULL;
+      if(m_prev_slice) m_prev_slice->m_next_slice = nullptr;
+      if(m_next_slice) m_next_slice->m_prev_slice = nullptr;
 
       // Gates are deleted if not shared with other slices
-      if(m_prev_slice == NULL) delete m_input_gate;
-      if(m_next_slice == NULL) delete m_output_gate;
+      if(m_prev_slice == nullptr) delete m_input_gate;
+      if(m_next_slice == nullptr) delete m_output_gate;
     }
 
     int Slice::size() const
@@ -58,7 +58,7 @@ namespace codac
       *m_input_gate = *x.m_input_gate;
       *m_output_gate = *x.m_output_gate;
       
-      if(m_synthesis_reference != NULL)
+      if(m_synthesis_reference)
       {
         m_synthesis_reference->request_values_update();
         m_synthesis_reference->request_integrals_update();
@@ -445,14 +445,14 @@ namespace codac
       m_codomain = y;
 
       *m_input_gate = y;
-      if(prev_slice() != NULL)
+      if(prev_slice())
         *m_input_gate &= prev_slice()->codomain();
 
       *m_output_gate = y;
-      if(next_slice() != NULL)
+      if(next_slice())
         *m_output_gate &= next_slice()->codomain();
 
-      if(m_synthesis_reference != NULL)
+      if(m_synthesis_reference)
       {
         m_synthesis_reference->request_values_update();
         m_synthesis_reference->request_integrals_update();
@@ -474,7 +474,7 @@ namespace codac
         *m_output_gate &= m_codomain;
       }
 
-      if(m_synthesis_reference != NULL)
+      if(m_synthesis_reference)
       {
         m_synthesis_reference->request_values_update();
         m_synthesis_reference->request_integrals_update();
@@ -488,11 +488,11 @@ namespace codac
       if(slice_consistency)
       {
         *m_input_gate &= m_codomain;
-        if(prev_slice() != NULL)
+        if(prev_slice())
           *m_input_gate &= prev_slice()->codomain();
       }
 
-      if(m_synthesis_reference != NULL)
+      if(m_synthesis_reference)
       {
         m_synthesis_reference->request_values_update();
         // Note: integrals are not impacted by gates
@@ -506,11 +506,11 @@ namespace codac
       if(slice_consistency)
       {
         *m_output_gate &= m_codomain;
-        if(next_slice() != NULL)
+        if(next_slice())
           *m_output_gate &= next_slice()->codomain();
       }
 
-      if(m_synthesis_reference != NULL)
+      if(m_synthesis_reference)
       {
         m_synthesis_reference->request_values_update();
         // Note: integrals are not impacted by gates
@@ -550,7 +550,7 @@ namespace codac
     {
       set_tdomain(m_tdomain + shift_ref);
 
-      if(m_synthesis_reference != NULL)
+      if(m_synthesis_reference)
       {
         // todo: update tdomain structure
       }
@@ -560,15 +560,15 @@ namespace codac
 
     void Slice::chain_slices(Slice *first_slice, Slice *second_slice)
     {
-      if(first_slice != NULL)
+      if(first_slice)
         first_slice->m_next_slice = second_slice;
 
-      if(second_slice != NULL)
+      if(second_slice)
         second_slice->m_prev_slice = first_slice;
 
-      if(first_slice != NULL && second_slice != NULL)
+      if(first_slice && second_slice)
       {
-        if(second_slice->m_input_gate != NULL)
+        if(second_slice->m_input_gate)
         {
           *first_slice->m_output_gate &= *second_slice->m_input_gate;
           // todo: memory leak there? second_slice->m_input_gate should be deleted
@@ -579,12 +579,12 @@ namespace codac
 
     void Slice::merge_slices(Slice *first_slice, Slice *&second_slice)
     {
-      assert(first_slice != NULL && second_slice != NULL);
+      assert(first_slice && second_slice);
       assert(first_slice->next_slice() == second_slice);
       assert(first_slice->tdomain().ub() == second_slice->tdomain().lb());
       assert(first_slice->m_output_gate == second_slice->m_input_gate);
 
-      Slice *next_slice_after_merge = second_slice->next_slice(); // may be NULL
+      Slice *next_slice_after_merge = second_slice->next_slice(); // may be nullptr
 
       first_slice->set_envelope(first_slice->codomain() | second_slice->codomain());
       first_slice->set_tdomain(first_slice->tdomain() | second_slice->tdomain());
@@ -592,14 +592,14 @@ namespace codac
       // Deleting objects after fusion
       first_slice->m_output_gate = new Interval(second_slice->output_gate());
 
-      second_slice->m_prev_slice = NULL;
-      second_slice->m_next_slice = NULL;
+      second_slice->m_prev_slice = nullptr;
+      second_slice->m_next_slice = nullptr;
       delete second_slice; // will destroy both input/output gates because
-                           // pointers to neighbor slices have been set to NULL
+                           // pointers to neighbor slices have been set to nullptr
 
       // Chaining slices
       first_slice->m_next_slice = next_slice_after_merge;
-      if(next_slice_after_merge != NULL)
+      if(next_slice_after_merge)
       {
         next_slice_after_merge->m_prev_slice = first_slice;
         next_slice_after_merge->m_input_gate = first_slice->m_output_gate;

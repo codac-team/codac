@@ -1181,8 +1181,8 @@ namespace codac
 
       // Class variables:
 
-        Slice *m_first_slice = NULL; //!< pointer to the first Slice object of this tube
-        mutable TubeTreeSynthesis *m_synthesis_tree = NULL; //!< pointer to the optional synthesis tree
+        Slice *m_first_slice = nullptr; //!< pointer to the first Slice object of this tube
+        mutable TubeTreeSynthesis *m_synthesis_tree = nullptr; //!< pointer to the optional synthesis tree
         mutable bool m_enable_synthesis = Tube::s_enable_syntheses; //!< enables of the use of a synthesis tree
         Interval m_tdomain; //!< redundant information for fast evaluations
 

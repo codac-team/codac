@@ -25,12 +25,12 @@ namespace codac
   const Tube operator-(const Tube& x)
   {
     Tube y(x);
-    Slice *s_y = NULL;
-    const Slice *s_x = NULL;
+    Slice *s_y = nullptr;
+    const Slice *s_x = nullptr;
 
     do
     {
-      if(s_y == NULL) // first iteration
+      if(s_y == nullptr) // first iteration
       {
         s_y = y.first_slice();
         s_x = x.first_slice();
@@ -45,7 +45,7 @@ namespace codac
       s_y->set_envelope(-s_x->codomain(), false);
       s_y->set_input_gate(-s_x->input_gate(), false);
 
-    } while(s_y->next_slice() != NULL);
+    } while(s_y->next_slice());
 
     s_y->set_output_gate(-s_x->output_gate(), false);
     return y;
@@ -56,12 +56,12 @@ namespace codac
     const Tube f(const Tube& x) \
     { \
       Tube y(x); \
-      Slice *s_y = NULL; \
-      const Slice *s_x = NULL; \
+      Slice *s_y = nullptr; \
+      const Slice *s_x = nullptr; \
       \
       do \
       { \
-        if(s_y == NULL) /* first iteration */ \
+        if(s_y == nullptr) /* first iteration */ \
         { \
           s_y = y.first_slice(); \
           s_x = x.first_slice(); \
@@ -76,7 +76,7 @@ namespace codac
         s_y->set_envelope(ibex::f(s_x->codomain()), false); \
         s_y->set_input_gate(ibex::f(s_x->input_gate()), false); \
         \
-      } while(s_y->next_slice() != NULL); \
+      } while(s_y->next_slice()); \
       \
       s_y->set_output_gate(ibex::f(s_x->output_gate()), false); \
       return y; \
@@ -106,12 +106,12 @@ namespace codac
     const Tube f(const Tube& x, p param) \
     { \
       Tube y(x); \
-      Slice *s_y = NULL; \
-      const Slice *s_x = NULL; \
+      Slice *s_y = nullptr; \
+      const Slice *s_x = nullptr; \
       \
       do \
       { \
-        if(s_y == NULL) /* first iteration */ \
+        if(s_y == nullptr) /* first iteration */ \
         { \
           s_y = y.first_slice(); \
           s_x = x.first_slice(); \
@@ -126,7 +126,7 @@ namespace codac
         s_y->set_envelope(ibex::f(s_x->codomain(), param), false); \
         s_y->set_input_gate(ibex::f(s_x->input_gate(), param), false); \
         \
-      } while(s_y->next_slice() != NULL); \
+      } while(s_y->next_slice()); \
       \
       s_y->set_output_gate(ibex::f(s_x->output_gate(), param), false); \
       return y; \
@@ -147,8 +147,8 @@ namespace codac
       Tube y(x1); \
       const Slice *s_x1, *s_x2; \
       \
-      Tube *x1_resampled = NULL; /* In case of different slicing between x1 and x2, */ \
-      Tube *x2_resampled = NULL; /* copies of x1 and x2 will be made and equally resampled. */ \
+      Tube *x1_resampled = nullptr; /* In case of different slicing between x1 and x2, */ \
+      Tube *x2_resampled = nullptr; /* copies of x1 and x2 will be made and equally resampled. */ \
       \
       if(Tube::same_slicing(x1, x2)) /* faster, no sampling computation needed */ \
       { \
@@ -167,10 +167,10 @@ namespace codac
         s_x2 = x2_resampled->first_slice(); \
       } \
       \
-      Slice *s_y = NULL; \
+      Slice *s_y = nullptr; \
       do \
       { \
-        if(s_y == NULL) /* first iteration */ \
+        if(s_y == nullptr) /* first iteration */ \
           s_y = y.first_slice(); \
         \
         else \
@@ -183,24 +183,24 @@ namespace codac
         s_y->set_envelope(ibex::f(s_x1->codomain(), s_x2->codomain()), false); \
         s_y->set_input_gate(ibex::f(s_x1->input_gate(), s_x2->input_gate()), false); \
         \
-      } while(s_y->next_slice() != NULL); \
+      } while(s_y->next_slice()); \
       \
       s_y->set_output_gate(ibex::f(s_x1->output_gate(), s_x2->output_gate()), false); \
       \
-      if(x1_resampled != NULL) delete x1_resampled; \
-      if(x2_resampled != NULL) delete x2_resampled; \
+      if(x1_resampled) delete x1_resampled; \
+      if(x2_resampled) delete x2_resampled; \
       return y; \
     } \
     \
     const Tube f(const Tube& x1, const Interval& x2) \
     { \
       Tube y(x1); \
-      Slice *s_y = NULL; \
-      const Slice *s_x1 = NULL; \
+      Slice *s_y = nullptr; \
+      const Slice *s_x1 = nullptr; \
       \
       do \
       { \
-        if(s_y == NULL) /* first iteration */ \
+        if(s_y == nullptr) /* first iteration */ \
         { \
           s_y = y.first_slice(); \
           s_x1 = x1.first_slice(); \
@@ -215,7 +215,7 @@ namespace codac
         s_y->set_envelope(ibex::f(s_x1->codomain(), x2), false); \
         s_y->set_input_gate(ibex::f(s_x1->input_gate(), x2), false); \
         \
-      } while(s_y->next_slice() != NULL); \
+      } while(s_y->next_slice()); \
       \
       s_y->set_output_gate(ibex::f(s_x1->output_gate(), x2), false); \
       \
@@ -225,12 +225,12 @@ namespace codac
     const Tube f(const Interval& x1, const Tube& x2) \
     { \
       Tube y(x2); \
-      Slice *s_y = NULL; \
-      const Slice *s_x2 = NULL; \
+      Slice *s_y = nullptr; \
+      const Slice *s_x2 = nullptr; \
       \
       do \
       { \
-        if(s_y == NULL) /* first iteration */ \
+        if(s_y == nullptr) /* first iteration */ \
         { \
           s_y = y.first_slice(); \
           s_x2 = x2.first_slice(); \
@@ -245,7 +245,7 @@ namespace codac
         s_y->set_envelope(ibex::f(x1, s_x2->codomain()), false); \
         s_y->set_input_gate(ibex::f(x1, s_x2->input_gate()), false); \
         \
-      } while(s_y->next_slice() != NULL); \
+      } while(s_y->next_slice()); \
       \
       s_y->set_output_gate(ibex::f(x1, s_x2->output_gate()), false); \
       \

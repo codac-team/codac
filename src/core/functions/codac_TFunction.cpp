@@ -44,7 +44,7 @@ namespace codac
 
   TFunction::TFunction(const char* y)
   {
-    construct_from_array(0, NULL, y);
+    construct_from_array(0, nullptr, y);
   }
 
   TFunction::TFunction(const char* x1, const char* y)
@@ -144,7 +144,7 @@ namespace codac
 
   const TFunction& TFunction::operator=(const TFunction& f)
   {
-    if(m_ibex_f != NULL)
+    if(m_ibex_f)
       delete m_ibex_f;
     m_ibex_f = new Function(*f.m_ibex_f);
     m_expr = f.m_expr;
@@ -184,7 +184,7 @@ namespace codac
   void TFunction::construct_from_array(int n, const char** x, const char* y)
   {
     assert(n >= 0);
-    assert(y != NULL && "function's output must be defined");
+    assert(y && "function's output must be defined");
 
     #ifdef _MSC_VER
     // see https://stackoverflow.com/questions/48459297/is-there-a-vlas-variable-length-arrays-support-workaround-for-vs2017
@@ -336,15 +336,15 @@ namespace codac
 
     const Slice **v_sx = new const Slice*[x.size()];
     for(int i = 0 ; i < x.size() ; i++)
-      v_sx[i] = NULL;
+      v_sx[i] = nullptr;
 
     Slice **v_sy = new Slice*[y.size()];
     for(int i = 0 ; i < y.size() ; i++)
-      v_sy[i] = NULL;
+      v_sy[i] = nullptr;
 
     do
     {
-      if(v_sx[0] == NULL) // first iteration
+      if(v_sx[0] == nullptr) // first iteration
       {
         for(int i = 0 ; i < x.size() ; i++)
           v_sx[i] = x[i].first_slice();
@@ -374,7 +374,7 @@ namespace codac
       for(int i = 0 ; i < y.size() ; i++)
         v_sy[i]->set_input_gate(result[i], false);
 
-    } while(v_sx[0]->next_slice() != NULL);
+    } while(v_sx[0]->next_slice());
     
     box[0] = v_sx[0]->tdomain().ub();
     for(int i = 0 ; i < x.size() ; i++)

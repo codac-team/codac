@@ -1184,7 +1184,7 @@ namespace codac
       // Class variables:
 
         int m_n = 0; //!< dimension of this tube
-        Tube *m_v_tubes = NULL; //!< array of components (scalar tubes)
+        Tube *m_v_tubes = nullptr; //!< array of components (scalar tubes)
 
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
   };

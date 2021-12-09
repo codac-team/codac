@@ -217,7 +217,7 @@ namespace codac
     IntervalVector envelope(nb_var);
     IntervalVector ingate(nb_var);
 
-    while(v_x_slices[0] != NULL)
+    while(v_x_slices[0])
     {
       for(int i = 0 ; i < nb_var ; i++)
       {
@@ -234,7 +234,7 @@ namespace codac
         v_x_slices[i]->set_input_gate(ingate[i]);
       }
 
-      if(v_x_slices[0]->next_slice() == NULL) // output gate
+      if(v_x_slices[0]->next_slice() == nullptr) // output gate
       {
         IntervalVector outgate(nb_var);
 
