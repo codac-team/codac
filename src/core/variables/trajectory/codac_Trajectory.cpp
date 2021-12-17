@@ -52,21 +52,25 @@ namespace codac
     Trajectory::Trajectory(const map<double,double>& map_values)
       : m_traj_def_type(TrajDefnType::MAP_OF_VALUES), m_map_values(map_values)
     {
-      assert(!map_values.empty());
+      // todo: restore this? assert(!map_values.empty());
+      // todo: check that empty traj are allowed for all methods
 
-      // Temporal domain:
-      map<double,double>::const_iterator
-        last_it = map_values.end(); last_it--; // accessing last value
-      m_tdomain = Interval(map_values.begin()->first, last_it->first);
+      if(!map_values.empty())
+      {
+        // Temporal domain:
+        map<double,double>::const_iterator
+          last_it = map_values.end(); last_it--; // accessing last value
+        m_tdomain = Interval(map_values.begin()->first, last_it->first);
 
-      // Codomain:
-      compute_codomain();
+        // Codomain:
+        compute_codomain();
+      }
     }
     
     Trajectory::Trajectory(const list<double>& list_t, const list<double>& list_x)
       : m_traj_def_type(TrajDefnType::MAP_OF_VALUES)
     {
-      assert(!list_t.empty());
+      // todo: restore this? assert(!list_t.empty());
       assert(list_t.size() == list_x.size());
 
       for(list<double>::const_iterator it_t = list_t.begin(), it_x = list_x.begin() ;
