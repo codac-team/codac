@@ -358,8 +358,15 @@ namespace codac
       return;
     }
 
-    t &= y.invert(z, t); // is this useful?
-    z &= y(t);
+    vector<Interval> v_t;
+    y.invert(z, v_t, t);
+    Interval t_ = Interval::EMPTY_SET;
+    for(const auto& ti : v_t)
+    {
+      z &= y(ti);
+      t_ |= ti;
+    }
+    t &= t_;
 
     for(int i = 0 ; i < y.size() ; i++)
       contract(t, z[i], y[i], w[i]);
@@ -374,8 +381,15 @@ namespace codac
       return;
     }
 
-    t &= y.invert(z, t);
-    z &= y(t);
+    vector<Interval> v_t;
+    y.invert(z, v_t, t);
+    Interval t_ = Interval::EMPTY_SET;
+    for(const auto& ti : v_t)
+    {
+      z &= y(ti);
+      t_ |= ti;
+    }
+    t &= t_;
   }
 
   void CtcEval::contract(Interval& t, IntervalVector& z, const TubeVector& y)
@@ -392,7 +406,14 @@ namespace codac
       return;
     }
 
-    t &= y.invert(z, t);
-    z &= y(t);
+    vector<Interval> v_t;
+    y.invert(z, v_t, t);
+    Interval t_ = Interval::EMPTY_SET;
+    for(const auto& ti : v_t)
+    {
+      z &= y(ti);
+      t_ |= ti;
+    }
+    t &= t_;
   }
 }
