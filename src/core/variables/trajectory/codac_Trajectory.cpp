@@ -361,7 +361,7 @@ namespace codac
 
       for(map<double,double>::const_iterator it = m_map_values.begin() ;
         next(it) != m_map_values.end() ; it++)
-        if(next(it)->first - it->first != h)
+        if((it->first + h) != next(it)->first)
           return false;
         
       return true;
@@ -517,7 +517,7 @@ namespace codac
             double mean_h = 0.;
             for(map<double,double>::const_iterator it = m_map_values.begin() ;
               next(it) != m_map_values.end() ; it++)
-              mean_h += next(it)->first-it->first;
+              mean_h += next(it)->first - it->first;
             mean_h /= m_map_values.size()-1;
             
             // Equivalent traj with mean timestep
@@ -525,6 +525,7 @@ namespace codac
             for(double t = tdomain().lb() ; t < tdomain().ub()+h ; t+=h)
               d_cst_h.set((*this)(min(tdomain().ub(),t)), t); // interpolation
             // If the last value is outside tdomain, the last value is duplicated
+            assert(d_cst_h.constant_timestep(h));
             
             d = d_cst_h.diff();
             d.truncate_tdomain(tdomain());
