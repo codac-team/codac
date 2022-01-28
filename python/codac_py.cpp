@@ -32,6 +32,7 @@ void export_IntervalVectorVar(py::module& m);
 void export_CtcDist(py::module& m);
 void export_CtcFunction(py::module& m);
 void export_CtcConstell(py::module& m);
+void export_CtcNewton(py::module& m);
 
 py::class_<DynCtc,pyDynCtc> export_DynCtc(py::module& m);
 void export_CtcDelay(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
@@ -77,6 +78,7 @@ PYBIND11_MODULE(tube, m)
   export_CtcDist(m);
   export_CtcFunction(m);
   export_CtcConstell(m);
+  export_CtcNewton(m);
 
   py::class_<DynCtc, pyDynCtc> dyn_ctc = export_DynCtc(m);
   export_CtcDelay(m, dyn_ctc);
