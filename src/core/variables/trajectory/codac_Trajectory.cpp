@@ -523,7 +523,7 @@ namespace codac
             // Equivalent traj with mean timestep
             Trajectory d_cst_h;
             for(double t = tdomain().lb() ; t < tdomain().ub()+h ; t+=h)
-              d_cst_h.set((*this)(min(tdomain().ub(),t)), t); // interpolation
+              d_cst_h.set((*this)(std::min(tdomain().ub(),t)), t); // interpolation
             // If the last value is outside tdomain, the last value is duplicated
             assert(d_cst_h.constant_timestep(h));
             

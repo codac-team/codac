@@ -127,7 +127,6 @@ namespace codac
       */
     const Tube atanh(const Tube& x);
 
-
     /** \brief \f$\mathrm{arctan2}([y](\cdot),[x](\cdot))\f$
       * \param y
       * \param x
@@ -148,7 +147,6 @@ namespace codac
       * \return Tube output
       */
     const Tube atan2(const Interval& y, const Tube& x);
-
 
     /** \brief \f$[x]^p(\cdot)\f$
       * \param x
@@ -180,42 +178,42 @@ namespace codac
 
     // todo: atan2, pow with Trajectory as parameter
 
-    /** \brief \f$\mathrm{min}([y](\cdot),[x](\cdot))\f$
+    /** \brief \f\min([y](\cdot),[x](\cdot))\f$
       * \param y
       * \param x
       * \return Tube output
       */
     const Tube min(const Tube& y, const Tube& x);
 
-    /** \brief \f$\mathrm{min}([y](\cdot),[x])\f$
+    /** \brief \f\min([y](\cdot),[x])\f$
       * \param y
       * \param x
       * \return Tube output
       */
     const Tube min(const Tube& y, const Interval& x);
 
-    /** \brief \f$\mathrm{min}([y],[x](\cdot))\f$
+    /** \brief \f\min([y],[x](\cdot))\f$
       * \param y
       * \param x
       * \return Tube output
       */
     const Tube min(const Interval& y, const Tube& x);
 
-    /** \brief \f$\mathrm{max}([y](\cdot),[x](\cdot))\f$
+    /** \brief \f$\max([y](\cdot),[x](\cdot))\f$
       * \param y
       * \param x
       * \return Tube output
       */
     const Tube max(const Tube& y, const Tube& x);
 
-    /** \brief \f$\mathrm{max}([y](\cdot),[x])\f$
+    /** \brief \f$\max([y](\cdot),[x])\f$
       * \param y
       * \param x
       * \return Tube output
       */
     const Tube max(const Tube& y, const Interval& x);
 
-    /** \brief \f$\mathrm{max}([y],[x](\cdot))\f$
+    /** \brief \f$\max([y],[x](\cdot))\f$
       * \param y
       * \param x
       * \return Tube output
