@@ -44,3 +44,17 @@ TEST_CASE("CtcStatic")
     CHECK(x[1] == expected);
   }
 }
+
+TEST_CASE("CtcFunction")
+{
+  SECTION("Test max tubes")
+  {
+    CtcFunction ctc_max(Function("x1", "x2","x3", "max(x1,x2)-x3"));
+    TubeVector tube(Interval(0,10), 1., 3);
+    tube[0].set(Interval(2,3));
+    tube[1].set(Interval(4,5));
+    tube[2].set(Interval::ALL_REALS);
+    ctc_max.contract(tube);
+    CHECK(tube[2].codomain() == Interval(4,5));
+  }
+}
