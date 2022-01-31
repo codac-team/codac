@@ -1,0 +1,45 @@
+from setuptools import setup, Distribution, Extension
+
+# force External module
+class BinaryDistribution(Distribution):
+    def has_ext_modules(self):
+        return True
+
+    def is_pure(self):
+        return False
+
+
+
+setup(
+  name='pyibex',
+  version='${PROJECT_VERSION}',
+  author='Benoit Desrochers',
+  author_email='ben.ensta@gmail.com',
+  url='https://github.com/benEnsta/pyIbex',
+  description='PyIbex a python interface of ibexlib ',
+  long_description='',
+  ${FORCE_PYTHON_EXT}
+  packages=['pyibex', 'pyibex.examples', 'pyibex.polar',
+            'pyibex.thickset', 'pyibex.tube',
+            'pyibex.geometry', 'pyibex.image', 'pyibex.tests'],
+  package_data={
+      'pyibex': [
+          'pyibex${PYTHON_MODULE_EXTENSION}',
+          'geometry/geometry${PYTHON_MODULE_EXTENSION}',
+          'image/image${PYTHON_MODULE_EXTENSION}',
+          'paving${PYTHON_MODULE_EXTENSION}',
+          'thickset/thickset${PYTHON_MODULE_EXTENSION}',
+          'thickset/thickimage${PYTHON_MODULE_EXTENSION}'
+      ],
+  },
+  test_suite='pyibex.tests',
+  license="LGPLv3+",
+  install_requires=['vibes'],
+  classifiers=[
+      "Development Status :: 3 - Alpha",
+      "Topic :: Scientific/Engineering :: Mathematics",
+      "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+  ],
+  include_package_data=True,
+  distclass=BinaryDistribution
+)
