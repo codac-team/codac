@@ -178,21 +178,21 @@ namespace codac
 
     // todo: atan2, pow with Trajectory as parameter
 
-    /** \brief \f\min([y](\cdot),[x](\cdot))\f$
+    /** \brief \f$\min([y](\cdot),[x](\cdot))\f$
       * \param y
       * \param x
       * \return Tube output
       */
     const Tube min(const Tube& y, const Tube& x);
 
-    /** \brief \f\min([y](\cdot),[x])\f$
+    /** \brief \f$\min([y](\cdot),[x])\f$
       * \param y
       * \param x
       * \return Tube output
       */
     const Tube min(const Tube& y, const Interval& x);
 
-    /** \brief \f\min([y],[x](\cdot))\f$
+    /** \brief \f$\min([y],[x](\cdot))\f$
       * \param y
       * \param x
       * \return Tube output
@@ -219,7 +219,6 @@ namespace codac
       * \return Tube output
       */
     const Tube max(const Interval& y, const Tube& x);
-
 
     /** \brief \f$[x](\cdot)\f$
       * \param x
@@ -262,7 +261,6 @@ namespace codac
       */
     const Tube operator+(const Trajectory& x, const Tube& y);
 
-
     /** \brief \f$-[x](\cdot)\f$
       * \param x
       * \return Tube output
@@ -304,7 +302,6 @@ namespace codac
       */
     const Tube operator-(const Trajectory& x, const Tube& y);
 
-
     /** \brief \f$[x](\cdot)\cdot[y](\cdot)\f$
       * \param x
       * \param y
@@ -339,7 +336,6 @@ namespace codac
       * \return Tube output
       */
     const Tube operator*(const Trajectory& x, const Tube& y);
-
 
     /** \brief \f$[x](\cdot)/[y](\cdot)\f$
       * \param x
@@ -376,7 +372,6 @@ namespace codac
       */
     const Tube operator/(const Trajectory& x, const Tube& y);
 
-
     /** \brief \f$[x](\cdot)\sqcup[y](\cdot)\f$
       * \param x
       * \param y
@@ -411,7 +406,6 @@ namespace codac
       * \return Tube output
       */
     const Tube operator|(const Trajectory& x, const Tube& y);
-
 
     /** \brief \f$[x](\cdot)\cap[y](\cdot)\f$
       * \param x
@@ -451,7 +445,6 @@ namespace codac
   /// @}
   /// \name Vector outputs
   /// @{
-
 
     /** \brief \f$[\mathbf{x}](\cdot)\f$
       * \param x
@@ -494,7 +487,6 @@ namespace codac
       */
     const TubeVector operator+(const TrajectoryVector& x, const TubeVector& y);
 
-
     /** \brief \f$-[\mathbf{x}](\cdot)\f$
       * \param x
       * \return TubeVector output
@@ -536,7 +528,6 @@ namespace codac
       */
     const TubeVector operator-(const TrajectoryVector& x, const TubeVector& y);
 
-
     /** \brief \f$[x](\cdot)\cdot[\mathbf{y}](\cdot)\f$
       * \param x
       * \param y
@@ -565,7 +556,6 @@ namespace codac
       */
     const TubeVector operator*(const Trajectory& x, const TubeVector& y);
 
-
     /** \brief \f$[\mathbf{x}](\cdot)/[y](\cdot)\f$
       * \param x
       * \param y
@@ -593,7 +583,6 @@ namespace codac
       * \return TubeVector output
       */
     const TubeVector operator/(const TubeVector& x, const Trajectory& y);
-
 
     /** \brief \f$[\mathbf{x}](\cdot)\sqcup[\mathbf{y}](\cdot)\f$
       * \param x
@@ -630,7 +619,6 @@ namespace codac
       */
     const TubeVector operator|(const TrajectoryVector& x, const TubeVector& y);
 
-
     /** \brief \f$[\mathbf{x}](\cdot)\cap[\mathbf{y}](\cdot)\f$
       * \param x
       * \param y
@@ -665,7 +653,6 @@ namespace codac
       * \return TubeVector output
       */
     const TubeVector operator&(const TrajectoryVector& x, const TubeVector& y);
-
 
     /** \brief \f$\mid\mathbf{x}(\cdot)\mid\f$
       * \param x

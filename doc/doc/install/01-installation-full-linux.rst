@@ -49,13 +49,14 @@ Building the Codac library
 The last sources are available on `the official Codac development repository <https://github.com/codac-team/codac>`_. You can download the files and compile the sources with:
 
 .. code-block:: bash
-
+  
+  # The codac directory can be placed in your home, same level as IBEX
   git clone https://github.com/codac-team/codac   # download the sources from GitHub
   cd codac                                        # move to the Codac directory
-  git submodule init ; git submodule update           # get pybind11 submodule
-  mkdir build ; cd build ; cmake .. ; make            # build the sources
-  sudo make install                                   # install the library
-  cd ..                                               # back to the root of Codac
+  git submodule init ; git submodule update       # get pybind11 submodule
+  mkdir build ; cd build ; cmake .. ; make        # build the sources
+  sudo make install                               # install the library
+  cd ..                                           # back to the root of Codac
 
 
 Compiling the examples
