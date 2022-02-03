@@ -8,7 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "pyibex_predef_contractors.h"
+#include "codac_predef_contractors.h"
 
 namespace codac
 {
