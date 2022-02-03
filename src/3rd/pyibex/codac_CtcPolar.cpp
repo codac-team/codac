@@ -11,8 +11,8 @@
 // Last Update : May 24, 2015
 //============================================================================
 
-#include "pyibex_CtcPolar.h"
-#include "pyibex_Catan2.h"
+#include "codac_CtcPolar.h"
+#include "codac_Catan2.h"
 
 namespace codac {
 

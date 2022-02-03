@@ -12,7 +12,7 @@
 #ifndef __PYIBEX_PREDEF_CTC_H__
 #define __PYIBEX_PREDEF_CTC_H__
 
-#include "pyibex_CtcPolar.h"
+#include "codac_CtcPolar.h"
 
 namespace codac
 {
