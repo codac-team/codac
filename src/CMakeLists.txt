@@ -4,6 +4,7 @@
 
 add_subdirectory(core)
 add_subdirectory(robotics)
+add_subdirectory(unsupported)
 add_subdirectory(3rd) # 3rd party (todo: make a clean dependency)
 
 # todo: specify minimum version of IBEX (in Requires field):
@@ -14,8 +15,8 @@ add_subdirectory(3rd) # 3rd party (todo: make a clean dependency)
 
 set(CODAC_PKG_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/codac.pc)
 
-set(CODAC_PKG_CONFIG_CFLAGS "-I\${includedir}/ibex -I\${includedir}/codac -I\${includedir}/codac-rob -I\${includedir}/codac-pyibex")
-set(CODAC_PKG_CONFIG_LIBS "-L\${libdir} -lcodac -lcodac-rob -lcodac-pyibex")
+set(CODAC_PKG_CONFIG_CFLAGS "-I\${includedir}/ibex -I\${includedir}/codac -I\${includedir}/codac-rob -I\${includedir}/codac-unsupported -I\${includedir}/codac-pyibex")
+set(CODAC_PKG_CONFIG_LIBS "-L\${libdir} -lcodac -lcodac-rob -lcodac-unsupported -lcodac-pyibex")
 
 if(WITH_CAPD)
   set(CODAC_PKG_CONFIG_CFLAGS "${CODAC_PKG_CONFIG_CFLAGS} -I\${includedir}/codac-capd")
@@ -53,6 +54,8 @@ find_path(CODAC_INCLUDE_DIR codac.h
           PATH_SUFFIXES include/codac)
 find_path(CODAC_ROB_INCLUDE_DIR codac-rob.h
           PATH_SUFFIXES include/codac-rob)
+find_path(CODAC_UNSUPPORTED_INCLUDE_DIR codac-unsupported.h
+          PATH_SUFFIXES include/codac-unsupported)
 find_path(CODAC_PYIBEX_INCLUDE_DIR codac-pyibex.h
           PATH_SUFFIXES include/codac-pyibex)
 
@@ -60,12 +63,14 @@ find_library(CODAC_LIBRARY NAMES codac
              PATH_SUFFIXES lib)
 find_library(CODAC_ROB_LIBRARY NAMES codac-rob
              PATH_SUFFIXES lib)
+find_library(CODAC_UNSUPPORTED_LIBRARY NAMES codac-unsupported
+             PATH_SUFFIXES lib)
 find_library(CODAC_PYIBEX_LIBRARY NAMES codac-pyibex
              PATH_SUFFIXES lib)
 
 set(CODAC_VERSION ${PROJECT_VERSION})
-set(CODAC_LIBRARIES \${CODAC_LIBRARY} \${CODAC_ROB_LIBRARY} \${CODAC_PYIBEX_LIBRARY})
-set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIR} \${CODAC_ROB_INCLUDE_DIR} \${CODAC_PYIBEX_INCLUDE_DIR})
+set(CODAC_LIBRARIES \${CODAC_LIBRARY} \${CODAC_ROB_LIBRARY} \${CODAC_UNSUPPORTED_LIBRARY} \${CODAC_PYIBEX_LIBRARY})
+set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIR} \${CODAC_ROB_INCLUDE_DIR} \${CODAC_UNSUPPORTED_INCLUDE_DIR} \${CODAC_PYIBEX_INCLUDE_DIR})
 
 set(CODAC_C_FLAGS \"\")
 set(CODAC_CXX_FLAGS \"\")
