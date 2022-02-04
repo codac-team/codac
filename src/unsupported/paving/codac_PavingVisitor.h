@@ -7,15 +7,15 @@
 // Created     : 08/08/2016
 //============================================================================
 
-#ifndef __PYIBEX_PAVING_VISITOR_H__
-#define __PYIBEX_PAVING_VISITOR_H__
+#ifndef __PYIBEX_PAVING_VISITOR_H___
+#define __PYIBEX_PAVING_VISITOR_H___
 
 // #include "ThickBoolean.h"
 
 #include <ibex_IntervalVector.h>
 
 using ibex::IntervalVector;
-namespace pyibex {
+//namespace codac {
 
 // class T;
 /**
@@ -65,6 +65,6 @@ public:
 
 };
 
-} // namespace ibex
+//} // namespace ibex
 
 #endif // __IBEX_PAVING_VISITOR_H__

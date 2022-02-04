@@ -7,7 +7,6 @@
     # Thickets
     #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_exploredAreaTools.h
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_GeoMapper.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_PavingVisitor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_PNode.h
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_PNode_impl.hpp
     #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_sweepTest.cpp

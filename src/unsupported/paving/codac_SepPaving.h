@@ -37,7 +37,7 @@ namespace pyibex {
 
 class SepPaving;
 
-using SepVisitor = ibex::PavingVisitor<SepPaving, IntervalVector>;
+using SepVisitor = PavingVisitor<SepPaving, IntervalVector>;
 
 class SepPaving : public Sep
 {

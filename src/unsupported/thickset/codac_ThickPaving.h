@@ -30,7 +30,7 @@ using std::vector;
 namespace ibex
 {
 	class ThickPaving;
-	using ThickVisitor = ibex::PavingVisitor<ThickPaving, ThickBoolean>;
+	using ThickVisitor = PavingVisitor<ThickPaving, ThickBoolean>;
 	using BINARY_OP = std::function<ThickBoolean(const ThickBoolean &, const ThickBoolean &)>;
 	using UNARY_OP = std::function<ThickBoolean(const ThickBoolean &)>;
 
