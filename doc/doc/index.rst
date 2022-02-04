@@ -272,6 +272,7 @@ Then you have two options: read the details about the features of Codac (domains
   /manual/01-introduction/index
   /manual/02-variables/index
   /manual/03-domains/index
+  /manual/10-functions/index
   /manual/04-static-contractors/index
   /manual/05-dynamic-contractors/index
   /manual/06-contractor-network/index
