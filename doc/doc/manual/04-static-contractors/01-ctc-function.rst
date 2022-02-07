@@ -31,7 +31,7 @@ Definition
       ctc_f = CtcFunction(Function("<var1>", "<var2>", ..., "<expr>"))
       ctc_f.contract(x)
 
-      # For the constraint f(x)\in[y]
+      # For the constraint f(x)ϵ[y]
       y = Interval(...) # or IntervalVector if f is a vector function
       ctc_f = CtcFunction(Function("<var1>", "<var2>", ..., "<expr>"), y)
       ctc_f.contract(x)
@@ -42,7 +42,7 @@ Definition
       CtcFunction ctc_f(Function("<var1>", "<var2>", ..., "<expr>"));
       ctc_f.contract(x);
 
-      // For the constraint f(x)\in[y]
+      // For the constraint f(x)ϵ[y]
       Interval y(...); // or IntervalVector if f is a vector function
       CtcFunction ctc_f(Function("<var1>", "<var2>", ..., "<expr>"), y);
       ctc_f.contract(x);

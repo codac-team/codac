@@ -35,10 +35,14 @@ namespace codac
   void VIBesFigPaving::set_color_map(const map<SetValue,string>& color_map)
   {
     // todo: deal with color maps defined with any kind of values
-    vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
-    vibes::newGroup("val_unknown", color_map.at(SetValue::UNKNOWN), vibesParams("figure", name()));
-    vibes::newGroup("val_out", color_map.at(SetValue::OUT), vibesParams("figure", name()));
-    vibes::newGroup("val_penumbra", color_map.at(SetValue::PENUMBRA), vibesParams("figure", name()));
+    if(color_map.find(SetValue::IN) != color_map.end())
+      vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
+    if(color_map.find(SetValue::UNKNOWN) != color_map.end())
+      vibes::newGroup("val_unknown", color_map.at(SetValue::UNKNOWN), vibesParams("figure", name()));
+    if(color_map.find(SetValue::OUT) != color_map.end())
+      vibes::newGroup("val_out", color_map.at(SetValue::OUT), vibesParams("figure", name()));
+    if(color_map.find(SetValue::PENUMBRA) != color_map.end())
+      vibes::newGroup("val_penumbra", color_map.at(SetValue::PENUMBRA), vibesParams("figure", name()));
   }
 
   void VIBesFigPaving::show()
