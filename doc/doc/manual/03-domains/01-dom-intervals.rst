@@ -90,6 +90,7 @@ Intervals, boxes and interval matrices
       x = IntervalVector(2, [-1,3])               # creates [x]=[-1,3]×[-1,3]=[-1,3]^2
       y = IntervalVector([[3,4],[4,6]])           # creates [y]= [3,4]×[4,6]
       z = IntervalVector(3, Interval(0,oo))       # creates [z]=[0,∞]^3
+      q = IntervalVector([x[1],y[0],z[0]])        # creates [q]=[-1,3]×[3,4]×[0,∞]
       w = IntervalVector(y)                       # creates a copy: [w]=[y]
 
       v = (0.42,0.42,0.42)                        # one vector (0.42;0.42;0.42)

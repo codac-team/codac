@@ -2,11 +2,11 @@
 #  codac-pyibex - cmake configuration file
 # ==================================================================
 
-  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/pyibex_Catan2.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/pyibex_CtcPolar.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/pyibex_CtcPolar.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/pyibex_predef_contractors.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/pyibex_predef_contractors.h
+  list(APPEND SRC ${CMAKE_CURRENT_SOURCE_DIR}/codac_Catan2.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/codac_CtcPolar.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/codac_CtcPolar.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/codac_predef_contractors.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/codac_predef_contractors.h
                   )
 
 

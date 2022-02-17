@@ -4,7 +4,7 @@
 #include "codac_CtcDeriv.h"
 #include "codac_CtcEval.h"
 #include "codac_CtcFunction.h"
-#include "codac.h"
+#include "codac_predef_values.h"
 #include "vibes.h"
 
 using namespace Catch;

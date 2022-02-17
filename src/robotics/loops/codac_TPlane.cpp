@@ -154,11 +154,29 @@ namespace codac
 
   void TPlane::compute_proofs(const TubeVector& p, const TubeVector& v)
   {
+    clock_t t_start = clock();
     auto f = std::bind(&f_pv, p, v, _1);
+    m_v_proven_loops.clear();
 
     for(size_t i = 0 ; i < m_v_detected_loops.size() ; i++)
+    {
+      if(TPlane::m_verbose)
+        cout << "Computing loop " << i << "/" << m_v_detected_loops.size() << ".." << flush;
+      
       if(m_v_detected_loops[i].zero_proven(f))
+      {
         m_v_proven_loops.push_back(m_v_detected_loops[i]);
+        if(TPlane::m_verbose)
+          cout << " proven." << endl;
+      }
+
+      else if(TPlane::m_verbose)
+        cout << endl;
+    }
+
+    printf("%d proven loops. Computation time: %.2fs\n",
+      (int)m_v_proven_loops.size(),
+      (double)(clock() - t_start)/CLOCKS_PER_SEC);
   }
 
   int TPlane::nb_loops_detections() const
@@ -238,5 +256,12 @@ namespace codac
     }
 
     return traj;
+  }
+
+  bool TPlane::m_verbose = false;
+
+  void TPlane::verbose(bool verbose)
+  {
+    TPlane::m_verbose = verbose;
   }
 }

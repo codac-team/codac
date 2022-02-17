@@ -21,6 +21,7 @@
 #include "codac_serialize_tubes.h"
 #include "codac_tube_arithmetic.h"
 #include "codac_TubeTreeSynthesis.h"
+#include "codac_TubePolynomialSynthesis.h"
 #include "codac_Polygon.h"
 #include "codac_BoolInterval.h"
 
@@ -34,6 +35,9 @@ namespace codac
   class Slice;
   class Trajectory;
   class TubeTreeSynthesis;
+  class TubePolynomialSynthesis;
+
+  enum class SynthesisMode { NONE, BINARY_TREE, POLYNOMIAL };
 
   /**
    * \class Tube
@@ -1012,7 +1016,7 @@ namespace codac
        *
        * \param enable boolean
        */
-      void enable_synthesis(bool enable = true) const;
+      void enable_synthesis(SynthesisMode mode = SynthesisMode::BINARY_TREE, double eps = 1.e-3) const;
 
       /// @}
       /// \name Integration
@@ -1179,11 +1183,26 @@ namespace codac
        */
       void delete_synthesis_tree() const;
 
+      /**
+       * \brief Creates the synthesis tree associated to the values of this tube
+       *
+       * \note The synthesis tree speeds up computations such as integrals or evaluations
+       * 
+       * \param eps precision of the polynomial approximation
+       */
+      void create_polynomial_synthesis(double eps) const;
+
+      /**
+       * \brief Deletes the synthesis tree of this tube
+       */
+      void delete_polynomial_synthesis() const;
+
       // Class variables:
 
         Slice *m_first_slice = nullptr; //!< pointer to the first Slice object of this tube
         mutable TubeTreeSynthesis *m_synthesis_tree = nullptr; //!< pointer to the optional synthesis tree
-        mutable bool m_enable_synthesis = Tube::s_enable_syntheses; //!< enables of the use of a synthesis tree
+        mutable TubePolynomialSynthesis *m_polynomial_synthesis = nullptr; //!< pointer to the optional synthesis tree
+        mutable SynthesisMode m_synthesis_mode = SynthesisMode::NONE; //!< enables of the use of a synthesis tree
         Interval m_tdomain; //!< redundant information for fast evaluations
 
       friend void deserialize_Tube(std::ifstream& bin_file, Tube *&tube);

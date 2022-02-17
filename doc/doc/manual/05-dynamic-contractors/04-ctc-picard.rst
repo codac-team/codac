@@ -34,6 +34,7 @@ Definition
       ctc_picard.contract(x);
 
 
+
 .. admonition:: Technical documentation
 
   See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_picard.html>`_.

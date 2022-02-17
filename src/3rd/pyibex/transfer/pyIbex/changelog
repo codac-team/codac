@@ -1,0 +1,152 @@
+--------------------------
+Changelog
+--------------------------
+
+All notable changes to this project will be documented in this file.
+
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](http://semver.org/).
+
+2020-10-18 Benoit Desrochers <ben.ensta@gmail.com>
+ * [release] 1.9.2
+ * [fix] update ibex v2.8.9
+
+
+2020-10-18 Benoit Desrochers <ben.ensta@gmail.com>
+ * [release] 1.9.1
+ * [fix] minor fixes in Thickset package
+ 
+
+2020-10-01 Benoit Desrochers <ben.ensta@gmail.com>
+ * [release] 1.9.0
+ * [add] thickset code from phd thesis (https://tel.archives-ouvertes.fr/tel-01850567)
+ * [refactoring] change folder organisation (to be continued in next release)
+ * [BREAKING] remove python 2.7 support
+
+2020-06-02 Benoit Desrochers <ben.ensta@gmail.com>
+ * [release] 1.8.1
+ * [pybind11] switch to version 2.5.0
+ * [add] add BoolInterval binding
+
+2020-04-02 Benoit Desrochers <ben.ensta@gmail.com>
+ * [release] 1.8.0dev1
+ * [BREAKING] change Ctc python API. Ctc can return a IntervalVector
+ * [update] ibex-lib 2.8.6 with cmake
+ * [change] remove bwd_integer; add bwd_ceil and bwd_flootr
+ * [change] add 
+
+2020-02-16 Benoit Desrochers <ben.ensta@gmail.com>
+  * [release] v1.7.1
+  * [pybind11] use v2.4.3 (15 Oct 2019)
+  * [add] add pickling support on Interval
+  * [add] paving library
+  * [add] add CtcPropag
+  * [add] add CtcExist and CtcForAll interface
+  * [fix] update breaking api with ibex-lib v2.6.5
+  * [fix] CtcFwdBwd constuctor with list
+
+2019-02-06 Benoit Desrochers <ben.ensta@gmail.com>
+  * [update] pybind11 2.2.4
+  * [update] ibex-lib 2.7.4 (with breaking api changes)
+  * [add] ibex version info pyibex.ibex_version
+  * [add] pickling support for Interval, IntervalVector
+  * [CI] update travis / appveyor script
+  * [release] v1.8.0
+
+2018-03-12 Benoit Desrochers <ben.ensta@gmail.com>
+  * [install] add vibes requirment in setup.py (for iamooc)
+  * [doc] fix indentation error in Interval
+
+2018-02-25 Benoit Desrochers <ben.ensta@gmail.com>
+  * [update] pybind11 version > 2.2.1 (#b48d4a)
+  * [update] doc
+  * [new] CtcHull and CtcPaving
+  * [new] Paving object
+
+2017-09-12 Benoit Desrochers <ben.ensta@gmail.com>
+  * PATCH v1.6.3b
+  * [add] Interval Matrix shape function (need to be converted in property)
+  * [update] fix pybind11 version to 2.2.1.
+
+2017-08-07 Benoit Desrochers <ben.ensta@gmail.com>
+  * PATCH v1.6.3a
+  * [update] use last pybind version
+  * [add] diff operator for function
+  * [add] perftools to measure execution time
+  * [add] inner argument in CtcRaster to handle part which is outside the bbox of the image
+  * [fix] sepProj bugs
+  * [fix] SepTransform bwd operation
+  * [fix] bug in Catan2 when x=[0,0]
+  * [fix] bug in SepPolarXY when computing the complementary of [rho]x[theta]
+  * [fix] PdcInPolygon can return MAYBE (need ibex update)
+  * [fix] Bug with SepBoundary with undeterminated case (need ibex fix)
+
+2017-07-14 Benoit Desrochers <ben.ensta@gmail.com>
+  * RELEASE v1.6.2
+  * [new] add image module with CtcRaster
+  * [change] vertices are passed as [[x1, y1], [x2, y2], ...] to SepPolygon constructor
+  * [fix] inverse fbwd and ffwd arguement in SepTransform
+
+2017-07-10 Benoit Desrochers <ben.ensta@gmail.com>
+  * [update] add "oo" to represent infinit number in order to write [0, oo]
+  * [fix] conversion of [lb, ub] to Interval. ex: SepFwdBwd(f, [1, 2])
+  * [fix] errors in SepProj algorithm
+  * [update] add message when syntaxe error is raised in Function constructor
+
+2017-07-02 Benoit Desrochers <ben.ensta@gmail.com>
+  * [fix] add default arguement ratio for CtcFixPoint
+  * [update] add automoatic conversion from Interval to IntervalVector
+  * [fix] bug in SepProj when y is empty
+
+2017-06-29 Benoit Desrochers <ben.ensta@gmail.com>
+  * RELEASE V1.6
+  * [new] add SepFixpoint to handle fix point of a separator
+  * [new] add SepTransform -> f(S(f^1(X)))
+  * [new] add SepProj projection of a sepatator
+  * [new] add SepCtcPair projection of a separator based on CtcExist/CtcForAll
+  * [new] add CtcQInterProjF and SepQInterProjF
+  * [new] add ibex-geometry content with SepPolygon and CtcPolar
+  * [update] add "compactness" option on diff method (IntervalVector)
+  * [update] add "ratio" argument to CtcFixPoint contrator
+
+
+2017-01-04 Benoit Desrochers <ben.ensta@gmail.com>
+  * [update] upgrade pybind11 to version 2.0.0
+  * [new]  __contains__ for Interval and IntervalVector
+  * [fix]    add version number in python module __version__
+
+2016-09-15 Benoit Desrochers <ben.ensta@gmail.com>
+  * [fix] update pybind11 code to support reflected operator (__radd__, ...)
+  * [fix] remove print in tests.
+  * [fix] export LEQ, GEQ, ... directly (no need to CmpOp.LEQ)
+  * [update] update pybind11 to last version ( tuple and list => vector)
+  * [update] use last version of ibex
+
+2016-08-31 Benoit Desrochers <ben.ensta@gmail.com>
+  * write phinx doc
+  * [added] register syntax error exception
+  * [fix] simplify IntervalVector constructor
+  * [fix] copy contrutor not required anymore for static interval( ALL_REALS, ...)
+  * [added] reference to module thickset and tube
+
+2016-07-19 Benoit Desrochers <ben.ensta@gmail.com>
+  * remove ibex-robotitcs part
+  * Keep core functionalities of ibex
+  * Move geometry tools to ibex-geometry project
+  * remove predicate and sets. Will be integrated into pyibex-thickset
+
+2016-07-06 Benoit Desrochers <ben.ensta@gmail.com>
+  * use ibex-lib 3.2.0
+  * update pybind11 to version 2.0 (not yet released )
+
+2016-01-27 Benoit Desrochers <ben.ensta@gmail.com>
+  * Use pybind11 instead of Boost-Python
+  * Remove wip directory
+
+2015-02-2015 Benoit Desrochers <ben.ensta@gmail.com>
+  * Add SepPolarXY
+
+2015-10-04 Benoit Desrochers <ben.ensta@gmail.com>
+  * add predicate and Paving class
+  * add Set interface

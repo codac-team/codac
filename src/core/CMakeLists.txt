@@ -67,6 +67,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_Tube_operators.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubePolynomialSynthesis.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubePolynomialSynthesis.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeTreeSynthesis.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/tube/codac_TubeTreeSynthesis.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/slice/codac_Slice.h

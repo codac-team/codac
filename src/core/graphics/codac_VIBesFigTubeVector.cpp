@@ -209,6 +209,13 @@ namespace codac
       m_v_figs[i]->set_trajectory_color(&(*traj)[i + m_start_index], color);
   }
 
+  void VIBesFigTubeVector::set_trajectory_points_size(const TrajectoryVector *traj, double points_size)
+  {
+    assert(traj);
+    for(int i = 0 ; i < subfigs_number() ; i++)
+      m_v_figs[i]->set_trajectory_points_size(&(*traj)[i + m_start_index], points_size);
+  }
+
   void VIBesFigTubeVector::remove_trajectory(const TrajectoryVector *traj)
   {
     assert(traj);
