@@ -117,7 +117,7 @@ void export_VIBesFigTube(py::module& m)
       "traj"_a, "color"_a)
 
     .def("set_trajectory_points_size", &VIBesFigTube::set_trajectory_points_size,
-      VIBESFIGTUBE_VOID_SET_TRAJECTORY_POINTS_SIZE_TRAJECTORY_FLOAT,
+      VIBESFIGTUBE_VOID_SET_TRAJECTORY_POINTS_SIZE_TRAJECTORY_DOUBLE,
       "traj"_a, "points_size"_a)
 
     .def("remove_trajectory", &VIBesFigTube::remove_trajectory,
