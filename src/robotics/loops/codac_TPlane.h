@@ -162,6 +162,13 @@ namespace codac
        */
       Trajectory traj_loops_summary() const;
 
+      /**
+       * \brief Enables verbose mode for displaying information related to loops computations
+       *
+       * \return verbose boolean
+       */
+      static void verbose(bool verbose = true);
+
     protected:
 
       /**
@@ -181,6 +188,8 @@ namespace codac
       float m_precision = 0.; //!< precision of the SIVIA algorithm, used later on in traj_loops_summary()
       std::vector<ConnectedSubset> m_v_detected_loops; //!< set of loops detections
       std::vector<ConnectedSubset> m_v_proven_loops; //!< set of loops proofs
+
+      static bool m_verbose;
   };
 }
 

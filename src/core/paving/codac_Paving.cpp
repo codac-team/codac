@@ -157,10 +157,10 @@ namespace codac
     vector<const Paving*> v;
     m_root->get_pavings_intersecting(val, m_box, v);
 
-    for(size_t i = 0 ; i < v.size() ; i++)
+    for(const auto& p : v)
     {
-      if(v[i] != this && (v[i]->value() & val) && (!without_flag || (without_flag && !v[i]->flag())))
-        v_neighbours.push_back(v[i]);
+      if(p != this && (p->value() & val) && (!without_flag || (without_flag && !p->flag())))
+        v_neighbours.push_back(p);
     }
   }
 
@@ -194,10 +194,10 @@ namespace codac
         vector<const Paving*> v_neighbours;
         e->get_neighbours(v_neighbours, val, true);
 
-        for(size_t i = 0 ; i < v_neighbours.size() ; i++)
+        for(const auto& neighb : v_neighbours)
         {
-          v_neighbours[i]->set_flag();
-          l.push_back(v_neighbours[i]);
+          neighb->set_flag();
+          l.push_back(neighb);
         }
       }
 
