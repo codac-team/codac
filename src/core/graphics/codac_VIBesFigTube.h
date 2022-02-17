@@ -252,7 +252,7 @@ namespace codac
        * \param traj the const pointer to the Trajectory object for which the points size will be set
        * \param points_size size of the points (if 0, the display is done with a line)
        */
-      void set_trajectory_points_size(const Trajectory *traj, float points_size);
+      void set_trajectory_points_size(const Trajectory *traj, double points_size);
 
       /**
        * \brief Removes a trajectory from this figure

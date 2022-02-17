@@ -213,7 +213,7 @@ namespace codac
     // so that trajectories stay on top of the tubes.
   }
   
-  void VIBesFigTube::set_trajectory_points_size(const Trajectory *traj, float points_size)
+  void VIBesFigTube::set_trajectory_points_size(const Trajectory *traj, double points_size)
   {
     assert(traj);
     if(m_map_trajs.find(traj) == m_map_trajs.end())

@@ -259,6 +259,15 @@ namespace codac
        * \param color a color to draw this trajectory
        */
       void set_trajectory_color(const TrajectoryVector *traj, const std::string& color);
+      
+      /**
+       * \brief Sets points size for a given trajectory, and activates
+       *        a display mode with points instead of a line for this trajectory
+       *
+       * \param traj the const pointer to the TrajectoryVector object for which the points size will be set
+       * \param points_size size of the points (if 0, the display is done with a line)
+       */
+      void set_trajectory_points_size(const TrajectoryVector *traj, double points_size);
 
       /**
        * \brief Removes a trajectory vector from this figure
