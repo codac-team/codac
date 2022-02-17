@@ -78,8 +78,20 @@ namespace codac
       if(codomain != Interval::ALL_REALS)
         set(codomain);
 
-      if(m_enable_synthesis)
-        create_synthesis_tree();
+      switch(m_synthesis_mode)
+      {
+        case SynthesisMode::BINARY_TREE:
+          create_synthesis_tree();
+          break;
+
+        case SynthesisMode::POLYNOMIAL:
+          create_polynomial_synthesis();
+          break;
+
+        case SynthesisMode::NONE:
+        default:
+          break;
+      }
     }
     
     Tube::Tube(const Interval& tdomain, double timestep, const TFnc& f, int f_image_id)
@@ -172,6 +184,7 @@ namespace codac
     Tube::~Tube()
     {
       delete_synthesis_tree();
+      delete_polynomial_synthesis();
 
       Slice *slice = first_slice();
       while(slice)
@@ -210,6 +223,7 @@ namespace codac
         }
 
         delete_synthesis_tree();
+        delete_polynomial_synthesis();
       
       // Creating new structure
 
@@ -242,23 +256,29 @@ namespace codac
         // Redundant information for fast access
         m_tdomain = x.tdomain();
 
-      if(m_enable_synthesis)
-        create_synthesis_tree();
+        switch(m_synthesis_mode)
+        {
+          case SynthesisMode::BINARY_TREE:
+            create_synthesis_tree();
+            break;
+
+          case SynthesisMode::POLYNOMIAL:
+            create_polynomial_synthesis();
+            break;
+
+          case SynthesisMode::NONE:
+          default:
+            break;
+        }
 
       return *this;
     }
 
     const Interval Tube::tdomain() const
     {
-      if(m_synthesis_tree) // fast evaluation
-        return m_synthesis_tree->tdomain();
-      
-      else
-      {
-        return m_tdomain; // redundant information for fast access
-        return Interval(first_slice()->tdomain().lb(),
-                        last_slice()->tdomain().ub());
-      }
+      return m_tdomain; // redundant information for fast access
+      return Interval(first_slice()->tdomain().lb(),
+                      last_slice()->tdomain().ub());
     }
     
     const Polygon Tube::polygon_envelope() const
@@ -328,7 +348,7 @@ namespace codac
 
     int Tube::nb_slices() const
     {
-      if(m_synthesis_tree) // fast evaluation
+      if(m_synthesis_mode == SynthesisMode::BINARY_TREE) // fast evaluation
         return m_synthesis_tree->nb_slices();
       
       else
@@ -350,7 +370,7 @@ namespace codac
       if(slice_id < 0 && slice_id >= nb_slices())
         return nullptr;
 
-      if(m_synthesis_tree) // fast access
+      if(m_synthesis_mode == SynthesisMode::BINARY_TREE) // fast access
         return m_synthesis_tree->slice(slice_id);
       
       else
@@ -378,7 +398,7 @@ namespace codac
       if(!tdomain().contains(t))
         return nullptr;
 
-      if(m_synthesis_tree) // fast evaluation
+      if(m_synthesis_mode == SynthesisMode::BINARY_TREE) // fast evaluation
         return m_synthesis_tree->slice(t);
       
       else
@@ -413,7 +433,7 @@ namespace codac
 
     const Slice* Tube::last_slice() const
     {
-      if(m_synthesis_tree) // fast evaluation
+      if(m_synthesis_mode == SynthesisMode::BINARY_TREE) // fast evaluation
         return m_synthesis_tree->slice(nb_slices() - 1);
       
       else
@@ -479,7 +499,7 @@ namespace codac
     {
       assert(tdomain().contains(t));
 
-      if(m_synthesis_tree) // fast evaluation
+      if(m_synthesis_mode == SynthesisMode::BINARY_TREE) // fast evaluation
         return m_synthesis_tree->time_to_index(t);
       
       else
@@ -532,6 +552,7 @@ namespace codac
       else
       {
         delete_synthesis_tree(); // todo: update tree if created, instead of delete
+        delete_polynomial_synthesis(); // todo: update tree if created, instead of delete
 
         Slice *next_slice = slice_to_be_sampled->next_slice();
 
@@ -554,6 +575,7 @@ namespace codac
       assert(tdomain().contains(t));
 
       delete_synthesis_tree(); // todo: update tree if created, instead of delete
+      delete_polynomial_synthesis(); // todo: update tree if created, instead of delete
 
       sample(t);
       Slice *s = slice(t);
@@ -647,51 +669,75 @@ namespace codac
       else if(t.is_degenerated())
         return operator()(t.lb());
 
-      else if(m_synthesis_tree) // fast evaluation
-        return m_synthesis_tree->operator()(t);
-      
       else
       {
-        const Slice *first_slice = slice(t.lb());
-        const Slice *last_slice = slice(t.ub());
-        if(last_slice->tdomain().lb() != t.ub())
-          last_slice = last_slice->next_slice();
+        switch(m_synthesis_mode)
+        {
+          case SynthesisMode::BINARY_TREE:
+          {
+            return m_synthesis_tree->operator()(t);
+          }
 
-        Interval codomain = Interval::EMPTY_SET;
-        for(const Slice *s = first_slice ; s != last_slice ; s = s->next_slice())
-          codomain |= s->codomain();
+          case SynthesisMode::POLYNOMIAL:
+          {
+            return m_polynomial_synthesis->operator()(t);
+          }
 
-        return codomain;
+          case SynthesisMode::NONE:
+          default:
+          {
+            const Slice *first_slice = slice(t.lb());
+            const Slice *last_slice = slice(t.ub());
+            if(last_slice->tdomain().lb() != t.ub())
+              last_slice = last_slice->next_slice();
+
+            Interval codomain = Interval::EMPTY_SET;
+            for(const Slice *s = first_slice ; s != last_slice ; s = s->next_slice())
+              codomain |= s->codomain();
+
+            return codomain;
+          }
+        }
       }
     }
 
     const pair<Interval,Interval> Tube::eval(const Interval& t) const
     {
-      if(m_synthesis_tree) // fast evaluation
-        return m_synthesis_tree->eval(t);
-      
-      else
+      switch(m_synthesis_mode)
       {
-        pair<Interval,Interval> enclosed_bounds
-          = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
-
-        if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
+        case SynthesisMode::BINARY_TREE:
         {
-          enclosed_bounds.first |= NEG_INFINITY;
-          enclosed_bounds.second |= POS_INFINITY;
+          return m_synthesis_tree->eval(t);
         }
 
-        Interval t_tdomain = t & tdomain();
-        const Slice *s = slice(t_tdomain.lb());
-        while(s && s->tdomain().lb() <= t_tdomain.ub())
-        {
-          pair<Interval,Interval> local_eval = s->eval(t_tdomain & s->tdomain());
-          enclosed_bounds.first |= local_eval.first;
-          enclosed_bounds.second |= local_eval.second;
-          s = s->next_slice();
-        }
+        case SynthesisMode::POLYNOMIAL:
+          cout << "todo: Polynomial eval" << endl;
+          // no break
 
-        return enclosed_bounds;
+        case SynthesisMode::NONE:
+        default:
+        {
+          pair<Interval,Interval> enclosed_bounds
+            = make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+          if(t.lb() < tdomain().lb() || t.ub() > tdomain().ub())
+          {
+            enclosed_bounds.first |= NEG_INFINITY;
+            enclosed_bounds.second |= POS_INFINITY;
+          }
+
+          Interval t_tdomain = t & tdomain();
+          const Slice *s = slice(t_tdomain.lb());
+          while(s && s->tdomain().lb() <= t_tdomain.ub())
+          {
+            pair<Interval,Interval> local_eval = s->eval(t_tdomain & s->tdomain());
+            enclosed_bounds.first |= local_eval.first;
+            enclosed_bounds.second |= local_eval.second;
+            s = s->next_slice();
+          }
+
+          return enclosed_bounds;
+        }
       }
     }
 
@@ -731,27 +777,34 @@ namespace codac
 
     const Interval Tube::invert(const Interval& y, const Interval& search_tdomain) const
     {
-      if(m_synthesis_tree) // fast inversion
-        return m_synthesis_tree->invert(y, search_tdomain);
-
-      else
+      switch(m_synthesis_mode)
       {
-        if(search_tdomain.is_empty())
-          return Interval::empty_set();
-
-        else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub())
-          return Interval::all_reals();
-
-        Interval invert = Interval::EMPTY_SET;
-
-        const Slice *s_x = slice(search_tdomain.lb());
-        while(s_x && s_x->tdomain().lb() < search_tdomain.ub())
+        case SynthesisMode::BINARY_TREE:
         {
-          invert |= s_x->invert(y, search_tdomain & s_x->tdomain());
-          s_x = s_x->next_slice();
+          return m_synthesis_tree->invert(y, search_tdomain);
         }
 
-        return invert;
+        case SynthesisMode::POLYNOMIAL:
+        case SynthesisMode::NONE:
+        default:
+        {
+          if(search_tdomain.is_empty())
+            return Interval::empty_set();
+
+          else if(search_tdomain.lb() < tdomain().lb() || search_tdomain.ub() > tdomain().ub())
+            return Interval::all_reals();
+
+          Interval invert = Interval::EMPTY_SET;
+
+          const Slice *s_x = slice(search_tdomain.lb());
+          while(s_x && s_x->tdomain().lb() < search_tdomain.ub())
+          {
+            invert |= s_x->invert(y, search_tdomain & s_x->tdomain());
+            s_x = s_x->next_slice();
+          }
+
+          return invert;
+        }
       }
     }
 
@@ -1229,6 +1282,7 @@ namespace codac
 
       m_tdomain = t;
       delete_synthesis_tree(); // todo: update tree if created, instead of delete
+      delete_polynomial_synthesis(); // todo: update tree if created, instead of delete
       return *this;
     }
 
@@ -1238,6 +1292,7 @@ namespace codac
         s->shift_tdomain(shift_ref);
       m_tdomain += shift_ref;
       delete_synthesis_tree();
+      delete_polynomial_synthesis();
     }
 
     // Bisection
@@ -1344,57 +1399,64 @@ namespace codac
     {
       assert(tdomain().is_superset(t));
 
-      if(m_synthesis_tree) // fast evaluation
-        return m_synthesis_tree->partial_integral(t);
-      
-      else
+      switch(m_synthesis_mode)
       {
-        Interval intv_t;
-        const Slice *slice = first_slice();
-        pair<Interval,Interval> p_integ
-          = make_pair(0., 0.), p_integ_uncertain(p_integ);
-
-        while(slice && slice->tdomain().lb() < t.ub())
+        case SynthesisMode::BINARY_TREE:
         {
-          if(slice->codomain().is_empty())
-            return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
-
-          if(slice->codomain().is_unbounded())
-            return make_pair(Interval::ALL_REALS, Interval::ALL_REALS);
-
-          // From t0 to tlb
-
-            intv_t = slice->tdomain() & Interval(tdomain().lb(), t.lb());
-            if(!intv_t.is_empty())
-            {
-              p_integ.first += intv_t.diam() * slice->codomain().lb();
-              p_integ.second += intv_t.diam() * slice->codomain().ub();
-              p_integ_uncertain = p_integ;
-
-              if(intv_t.ub() == t.ub())
-                return p_integ; // end of the integral evaluation
-            }
-
-          // From tlb to tub
-
-            intv_t = slice->tdomain() & t;
-            if(!intv_t.is_empty())
-            {
-              pair<Interval,Interval> p_integ_temp(p_integ_uncertain);
-              p_integ_uncertain.first += Interval(0., intv_t.diam()) * slice->codomain().lb();
-              p_integ_uncertain.second += Interval(0., intv_t.diam()) * slice->codomain().ub();
-            
-              p_integ.first |= p_integ_uncertain.first;
-              p_integ.second |= p_integ_uncertain.second;
-
-              p_integ_uncertain.first = p_integ_temp.first + intv_t.diam() * slice->codomain().lb();
-              p_integ_uncertain.second = p_integ_temp.second + intv_t.diam() * slice->codomain().ub();
-            }
-
-          slice = slice->next_slice();
+          return m_synthesis_tree->partial_integral(t);
         }
 
-        return p_integ;
+        case SynthesisMode::POLYNOMIAL:
+        case SynthesisMode::NONE:
+        default:
+        {
+          Interval intv_t;
+          const Slice *slice = first_slice();
+          pair<Interval,Interval> p_integ
+            = make_pair(0., 0.), p_integ_uncertain(p_integ);
+
+          while(slice && slice->tdomain().lb() < t.ub())
+          {
+            if(slice->codomain().is_empty())
+              return make_pair(Interval::EMPTY_SET, Interval::EMPTY_SET);
+
+            if(slice->codomain().is_unbounded())
+              return make_pair(Interval::ALL_REALS, Interval::ALL_REALS);
+
+            // From t0 to tlb
+
+              intv_t = slice->tdomain() & Interval(tdomain().lb(), t.lb());
+              if(!intv_t.is_empty())
+              {
+                p_integ.first += intv_t.diam() * slice->codomain().lb();
+                p_integ.second += intv_t.diam() * slice->codomain().ub();
+                p_integ_uncertain = p_integ;
+
+                if(intv_t.ub() == t.ub())
+                  return p_integ; // end of the integral evaluation
+              }
+
+            // From tlb to tub
+
+              intv_t = slice->tdomain() & t;
+              if(!intv_t.is_empty())
+              {
+                pair<Interval,Interval> p_integ_temp(p_integ_uncertain);
+                p_integ_uncertain.first += Interval(0., intv_t.diam()) * slice->codomain().lb();
+                p_integ_uncertain.second += Interval(0., intv_t.diam()) * slice->codomain().ub();
+              
+                p_integ.first |= p_integ_uncertain.first;
+                p_integ.second |= p_integ_uncertain.second;
+
+                p_integ_uncertain.first = p_integ_temp.first + intv_t.diam() * slice->codomain().lb();
+                p_integ_uncertain.second = p_integ_temp.second + intv_t.diam() * slice->codomain().ub();
+              }
+
+            slice = slice->next_slice();
+          }
+
+          return p_integ;
+        }
       }
     }
 
@@ -1450,11 +1512,30 @@ namespace codac
       return true;
     }
 
-    void Tube::enable_synthesis(bool enable) const
+    void Tube::enable_synthesis(SynthesisMode mode) const
     {
-      m_enable_synthesis = enable;
-      if(enable)
-        create_synthesis_tree();
+      switch(mode)
+      {
+        case SynthesisMode::BINARY_TREE:
+        {
+          create_synthesis_tree();
+          break;
+        }
+
+        case SynthesisMode::POLYNOMIAL:
+        {
+          create_polynomial_synthesis();
+          break;
+        }
+
+        case SynthesisMode::NONE:
+        default:
+        {
+          delete_synthesis_tree();
+          delete_polynomial_synthesis();
+          break;
+        }
+      }
     }
 
     const Tube Tube::hull(const list<Tube>& l_tubes)
@@ -1473,15 +1554,26 @@ namespace codac
 
     const IntervalVector Tube::codomain_box() const
     {
-      if(m_synthesis_tree) // fast evaluation
-        return m_synthesis_tree->codomain();
-      
-      else
+      switch(m_synthesis_mode)
       {
-        IntervalVector codomain(1, Interval::EMPTY_SET);
-        for(const Slice *s = first_slice() ; s ; s = s->next_slice())
-          codomain |= s->codomain_box();
-        return codomain;
+        case SynthesisMode::BINARY_TREE:
+        {
+          return m_synthesis_tree->codomain();
+        }
+
+        case SynthesisMode::POLYNOMIAL:
+        {
+          return m_polynomial_synthesis->operator()(tdomain());
+        }
+
+        case SynthesisMode::NONE:
+        default:
+        {
+          IntervalVector codomain(1, Interval::EMPTY_SET);
+          for(const Slice *s = first_slice() ; s ; s = s->next_slice())
+            codomain |= s->codomain_box();
+          return codomain;
+        }
       }
     }
 
@@ -1516,7 +1608,6 @@ namespace codac
     
     void Tube::create_synthesis_tree() const
     {
-      m_enable_synthesis = true;
       delete_synthesis_tree();
 
       vector<const Slice*> v_slices;
@@ -1524,14 +1615,35 @@ namespace codac
         v_slices.push_back(s);
 
       m_synthesis_tree = new TubeTreeSynthesis(this, 0, nb_slices() - 1, v_slices);
+      m_synthesis_mode = SynthesisMode::BINARY_TREE;
     }
     
     void Tube::delete_synthesis_tree() const
     {
-      if(m_synthesis_tree)
+      if(m_synthesis_mode == SynthesisMode::BINARY_TREE)
       {
         delete m_synthesis_tree;
         m_synthesis_tree = nullptr;
+        m_synthesis_mode = SynthesisMode::NONE;
+      }
+    }
+
+    // Polynomial synthesis
+    
+    void Tube::create_polynomial_synthesis() const
+    {
+      delete_polynomial_synthesis();
+      m_polynomial_synthesis = new TubePolynomialSynthesis(*this, 0.5e-7);
+      m_synthesis_mode = SynthesisMode::POLYNOMIAL;
+    }
+    
+    void Tube::delete_polynomial_synthesis() const
+    {
+      if(m_synthesis_mode == SynthesisMode::POLYNOMIAL)
+      {
+        delete m_polynomial_synthesis;
+        m_polynomial_synthesis = nullptr;
+        m_synthesis_mode = SynthesisMode::NONE;
       }
     }
 }

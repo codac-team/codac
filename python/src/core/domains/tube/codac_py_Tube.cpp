@@ -30,6 +30,12 @@ using namespace pybind11::literals;
 
 void export_Tube(py::module& m)
 {
+  py::enum_<SynthesisMode>(m, "SynthesisMode")
+    .value("NONE", SynthesisMode::NONE)
+    .value("BINARY_TREE", SynthesisMode::BINARY_TREE)
+    .value("POLYNOMIAL", SynthesisMode::POLYNOMIAL)
+  ;
+
   py::class_<Tube> tube(m, "Tube", TUBE_MAIN);
   tube
 
@@ -390,8 +396,8 @@ void export_Tube(py::module& m)
   // Synthesis tree
 
     .def("enable_synthesis", &Tube::enable_synthesis,
-      TUBE_VOID_ENABLE_SYNTHESIS_BOOL,
-      "enable"_a=true)
+      TUBE_VOID_ENABLE_SYNTHESIS_SYNTHESISMODE,
+      "enable"_a=SynthesisMode::BINARY_TREE)
 
   // Integration
 

@@ -359,7 +359,7 @@ namespace codac
     }
 
     vector<Interval> v_t;
-    y.invert(z, v_t, t);
+    y.invert(z, v_t, t); // todo: invert with derivative? 
     Interval t_ = Interval::EMPTY_SET;
     for(const auto& ti : v_t)
     {
