@@ -8,6 +8,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <ctime>
 #include "codac_TPlane.h"
 
 using namespace std;
