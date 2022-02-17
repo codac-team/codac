@@ -39,10 +39,12 @@ namespace codac
     m_tube_ref(x),
     m_tdomain(tdomain),
     m_upper_bound(upper_bound),
-    m_p(polynomial_traj(upper_bound)),
+    m_p(polynomial_factoredform(upper_bound)),
+    m_codomain(m_p.f(m_tdomain)),
     m_fig(fig)
   {
-    if(fabs(m_p.offset) > eps)
+    if(fabs(m_p.offset) > eps
+      && x.time_to_index(tdomain.ub()) - x.time_to_index(tdomain.lb()) > 3)
     {
       LargestFirst bisector;
       pair<IntervalVector,IntervalVector> t =
@@ -57,7 +59,7 @@ namespace codac
       ostringstream ostr;
       ostr << m_upper_bound << m_tdomain;
       m_fig.add_trajectory(traj, ostr.str(), m_upper_bound ? "blue" : "red");
-      m_fig.draw_box(IntervalVector({m_tdomain, m_p.codomain}), m_upper_bound ? "blue" : "red");
+      m_fig.draw_box(IntervalVector({m_tdomain, m_codomain}), m_upper_bound ? "blue" : "red");
       // todo: manage delete
     }
   }
@@ -80,24 +82,13 @@ namespace codac
       return m_left->operator()(t) | m_right->operator()(t);
 
     else if(t.is_superset(m_tdomain))
-      return m_p.codomain;
+      return m_codomain;
     
     else
-      return f(m_p, t & m_tdomain);
+      return m_p.f(t & m_tdomain);
   }
 
-  Interval TubePolynomialTreeSynthesis::f(const PolynomialSubtraj& p, const Interval& t) const
-  {
-    if(p.factor_form)
-      return p.c*sqr(t-p.a)+p.b+p.offset;
-
-    Interval x = p.offset;
-    for(int i = 0 ; i < POLYNOMIAL_ORDER + 1 ; i++)
-      x += p.coeff[i]*pow(t,i);
-    return x;
-  }
-
-  void TubePolynomialTreeSynthesis::polyfit(const vector<double> &t, const vector<double> &v, array<double,POLYNOMIAL_ORDER+1> &coeff) const
+  Polynomial TubePolynomialTreeSynthesis::polyfit(const vector<double> &t, const vector<double> &v) const
   {
     // Create a matrix placeholder of size (n x k),
     // n = nb of datapoints,
@@ -113,11 +104,11 @@ namespace codac
         T(i, j) = std::pow(t.at(i), j);
 
     // Linear least square fit
+    Polynomial p;
     result = T.householderQr().solve(V);
     for(int k = 0 ; k < POLYNOMIAL_ORDER + 1 ; k++)
-      coeff[k] = result[k];
-
-
+      p.coeff[k] = result[k];
+    return p;
   }
 
   void TubePolynomialTreeSynthesis::get_bounds(const Interval& tdomain, bool upper_bound, vector<double>& t, vector<double>& v) const
@@ -139,50 +130,51 @@ namespace codac
     assert(t.size() > 3);
   }
 
-  Trajectory TubePolynomialTreeSynthesis::traj_from_polynom(const PolynomialSubtraj& p) const
+  Trajectory TubePolynomialTreeSynthesis::traj_from_polynom(const PolynomialFactoredForm& p) const
   {
     // todo: analytical traj?
     Trajectory traj;
-    double dt = m_tdomain.diam()/1000.;
+    double dt = m_tdomain.diam()/10000.;
     for(double t = m_tdomain.lb() ; t < m_tdomain.ub() + dt ; t += dt)
     {
       double t_ = std::min(t, m_tdomain.ub());
-      traj.set(f(p,t_).mid(), t_);
+      traj.set(p.f(t_).mid(), t_);
     }
     return traj;
   }
 
-  PolynomialSubtraj TubePolynomialTreeSynthesis::polynomial_traj(bool upper_bound) const
+  PolynomialFactoredForm TubePolynomialTreeSynthesis::polynomial_factoredform(bool upper_bound) const
   {
-    PolynomialSubtraj p;
+    PolynomialFactoredForm p_factored;
 
     vector<double> t,v;
     get_bounds(m_tdomain, upper_bound, t, v);
-    polyfit(t, v, p.coeff);
+    Polynomial p = polyfit(t, v);
 
-    double offset = 0.;
+    if(p.coeff[2] != 0.) // avoid div by zero
+    {
+      p_factored.a = -p.coeff[1]/(2*p.coeff[2]); 
+      p_factored.b = p.f(p_factored.a).mid();
+
+      double x = m_tdomain.lb();
+      if(x == p_factored.a)
+        x = m_tdomain.ub(); // selecting another x: avoiding div by zero
+
+      p_factored.c = (p.f(x).mid()-p_factored.b)/std::pow(x-p_factored.a,2);
+    }
+
+    else
+      assert(false && "TubePolynomialTreeSynthesis: unable to factorize");
+
     for(size_t i = 0 ; i < t.size() ; i++)
     {
-      Interval diff = v[i]-f(p, t[i]);
+      Interval diff = v[i]-p.f(t[i]);
       if(upper_bound)
-        offset = std::max(offset, diff.ub());
+        p_factored.offset = (i == 0) ? diff.ub() : std::max(p_factored.offset, diff.ub());
       else
-        offset = std::min(offset, diff.lb());
+        p_factored.offset = (i == 0) ? diff.lb() : std::min(p_factored.offset, diff.lb());
     }
 
-    if(p.coeff[2] != 0.)
-    {
-      p.a = -p.coeff[1]/(2*p.coeff[2]); 
-      p.b = f(p, p.a).mid();
-      if(m_tdomain.mid() != p.a)
-      {
-        p.c = (f(p, m_tdomain.mid()).mid()-p.b)/std::pow(m_tdomain.mid()-p.a,2);
-        p.factor_form = true;
-      }
-    }
-
-    p.offset = offset;
-    p.codomain = f(p,m_tdomain);
-    return p;
+    return p_factored;
   }
 }

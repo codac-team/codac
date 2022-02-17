@@ -21,13 +21,13 @@
 #include "codac_tube_arithmetic.h"
 #include "codac_serialize_tubes.h"
 #include "codac_BoolInterval.h"
+#include "codac_TubeSynthesis.h"
 
 namespace codac
 {
   class TFnc;
   class Tube;
   class Trajectory;
-  enum class SynthesisMode;
   
   /**
    * \class TubeVector
@@ -1022,10 +1022,11 @@ namespace codac
        * \brief Enables the computation of a synthesis tree
        *
        * \note The synthesis tree speeds up computations such as integrals or evaluations
-       *
-       * \param enable boolean
+       *   
+       * \param mode mode of synthesis
+       * \param eps precision of the polynomial approximation, if selected
        */
-      void enable_synthesis(SynthesisMode mode) const;
+      void enable_synthesis(SynthesisMode mode = SynthesisMode::BINARY_TREE, double eps = 1.e-3) const;
 
       /// @}
       /// \name Integration

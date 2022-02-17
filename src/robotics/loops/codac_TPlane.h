@@ -172,6 +172,15 @@ namespace codac
     protected:
 
       /**
+       * \brief Tries to prove the existence of loops in each detection set
+       *
+       * \note The tplane must have been computed beforehand.
+       *
+       * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
+       */
+      void compute_proofs(const std::function<IntervalVector(const IntervalVector&)>& f);
+
+      /**
        * \brief Recursive computation of the tplane, from the tube of positions \f$[\mathbf{p}](\cdot)\f$
        *        and the tube of velocities \f$[\mathbf{v}](\cdot)\f$.
        *

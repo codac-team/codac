@@ -23,13 +23,31 @@
 
 namespace codac
 {
-  struct PolynomialSubtraj
+  struct Polynomial
   {
-    Interval codomain;
+    // Form: ax² + bx + c + offset = 0
     std::array<double,POLYNOMIAL_ORDER+1> coeff;
     double offset = 0.;
+
+    Interval f(const Interval& t) const
+    {
+      Interval x = offset;
+      for(int i = 0 ; i < POLYNOMIAL_ORDER+1 ; i++)
+        x += coeff[i]*pow(t,i);
+      return x;
+    }
+  };
+
+  struct PolynomialFactoredForm
+  {
+    // Form: c(x-a)² + b + offset = 0
     double a, b, c;
-    bool factor_form = false;
+    double offset = 0.;
+
+    Interval f(const Interval& t) const
+    {
+      return c*sqr(t-a) + b + offset;
+    }
   };
 
   class VIBesFigTube;
@@ -45,11 +63,10 @@ namespace codac
 
     protected:
 
-      Interval f(const PolynomialSubtraj& p, const Interval& t) const;
-      void polyfit(const std::vector<double> &t, const std::vector<double> &v, std::array<double,POLYNOMIAL_ORDER+1> &coeff) const;
+      Polynomial polyfit(const std::vector<double> &t, const std::vector<double> &v) const;
       void get_bounds(const Interval& tdomain, bool upper_bound, std::vector<double>& t, std::vector<double>& v) const;
-      Trajectory traj_from_polynom(const PolynomialSubtraj& p) const;
-      PolynomialSubtraj polynomial_traj(bool upper_bound) const;
+      Trajectory traj_from_polynom(const PolynomialFactoredForm& p) const;
+      PolynomialFactoredForm polynomial_factoredform(bool upper_bound) const;
 
 
     protected:
@@ -57,7 +74,8 @@ namespace codac
       const Tube& m_tube_ref;
       const Interval m_tdomain;
       bool m_upper_bound;
-      PolynomialSubtraj m_p;
+      PolynomialFactoredForm m_p;
+      Interval m_codomain;
       TubePolynomialTreeSynthesis *m_left = nullptr, *m_right = nullptr;
       VIBesFigTube& m_fig;
   };

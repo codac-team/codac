@@ -44,7 +44,7 @@ void export_TPlane(py::module& m)
         p_.enable_synthesis(SynthesisMode::BINARY_TREE);
         v_.enable_synthesis(SynthesisMode::BINARY_TREE);
         tplane.compute_detections(precision, p_, v_);
-        //p_.enable_synthesis(SynthesisMode::POLYNOMIAL);
+        //p_.enable_synthesis(SynthesisMode::POLYNOMIAL, 5.e-7);
         tplane.compute_proofs(p_, v_);
       },
       TPLANE_VOID_COMPUTE_DETECTIONS_FLOAT_TUBEVECTOR_TUBEVECTOR,

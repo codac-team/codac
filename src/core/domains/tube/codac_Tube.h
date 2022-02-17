@@ -22,6 +22,7 @@
 #include "codac_tube_arithmetic.h"
 #include "codac_TubeTreeSynthesis.h"
 #include "codac_TubePolynomialSynthesis.h"
+#include "codac_TubeSynthesis.h"
 #include "codac_Polygon.h"
 #include "codac_BoolInterval.h"
 
@@ -36,8 +37,6 @@ namespace codac
   class Trajectory;
   class TubeTreeSynthesis;
   class TubePolynomialSynthesis;
-
-  enum class SynthesisMode { NONE, BINARY_TREE, POLYNOMIAL };
 
   /**
    * \class Tube
@@ -1014,7 +1013,8 @@ namespace codac
        *
        * \note The synthesis tree speeds up computations such as integrals or evaluations
        *
-       * \param enable boolean
+       * \param mode mode of synthesis
+       * \param eps precision of the polynomial approximation, if selected
        */
       void enable_synthesis(SynthesisMode mode = SynthesisMode::BINARY_TREE, double eps = 1.e-3) const;
 

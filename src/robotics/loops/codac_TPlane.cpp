@@ -147,16 +147,18 @@ namespace codac
   void TPlane::compute_proofs(const TubeVector& p)
   {
     auto f = std::bind(&f_p, p, _1);
-
-    for(size_t i = 0 ; i < m_v_detected_loops.size() ; i++)
-      if(m_v_detected_loops[i].zero_proven(f))
-        m_v_proven_loops.push_back(m_v_detected_loops[i]);
+    compute_proofs(f);
   }
 
   void TPlane::compute_proofs(const TubeVector& p, const TubeVector& v)
   {
-    clock_t t_start = clock();
     auto f = std::bind(&f_pv, p, v, _1);
+    compute_proofs(f);
+  }
+
+  void TPlane::compute_proofs(const function<IntervalVector(const IntervalVector&)>& f)
+  {
+    clock_t t_start = clock();
     m_v_proven_loops.clear();
 
     for(size_t i = 0 ; i < m_v_detected_loops.size() ; i++)

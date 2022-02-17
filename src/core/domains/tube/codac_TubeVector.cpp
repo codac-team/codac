@@ -877,10 +877,10 @@ namespace codac
 
     // Tree synthesis structure
 
-    void TubeVector::enable_synthesis(SynthesisMode mode) const
+    void TubeVector::enable_synthesis(SynthesisMode mode, double eps) const
     {
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i].enable_synthesis(mode);
+        (*this)[i].enable_synthesis(mode, eps);
     }
 
     // Integration

@@ -424,8 +424,8 @@ void export_TubeVector(py::module& m)
   // Tree synthesis structure
 
     .def("enable_synthesis", &TubeVector::enable_synthesis,
-      TUBEVECTOR_VOID_ENABLE_SYNTHESIS_SYNTHESISMODE,
-      "enable"_a=SynthesisMode::BINARY_TREE)
+      TUBEVECTOR_VOID_ENABLE_SYNTHESIS_SYNTHESISMODE_DOUBLE,
+      "enable"_a=SynthesisMode::BINARY_TREE, "eps"_a=1.e-3)
 
     .def("integral", (const IntervalVector (TubeVector::*)(double) const)&TubeVector::integral,
       TUBEVECTOR_CONSTINTERVALVECTOR_INTEGRAL_DOUBLE,
