@@ -135,6 +135,8 @@ namespace codac
       t.push_back(t_.ub());
       v.push_back(upper_bound ? s->codomain().ub() : s->codomain().lb());
     }
+
+    assert(t.size() > 3);
   }
 
   Trajectory TubePolynomialTreeSynthesis::traj_from_polynom(const PolynomialSubtraj& p) const
@@ -172,8 +174,11 @@ namespace codac
     {
       p.a = -p.coeff[1]/(2*p.coeff[2]); 
       p.b = f(p, p.a).mid();
-      p.c = (f(p, m_tdomain.mid()).mid()-p.b)/std::pow(m_tdomain.mid()-p.a,2);
-      p.factor_form = true;
+      if(m_tdomain.mid() != p.a)
+      {
+        p.c = (f(p, m_tdomain.mid()).mid()-p.b)/std::pow(m_tdomain.mid()-p.a,2);
+        p.factor_form = true;
+      }
     }
 
     p.offset = offset;

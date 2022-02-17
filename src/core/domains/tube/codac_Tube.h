@@ -1016,7 +1016,7 @@ namespace codac
        *
        * \param enable boolean
        */
-      void enable_synthesis(SynthesisMode mode = SynthesisMode::BINARY_TREE) const;
+      void enable_synthesis(SynthesisMode mode = SynthesisMode::BINARY_TREE, double eps = 1.e-3) const;
 
       /// @}
       /// \name Integration
@@ -1187,8 +1187,10 @@ namespace codac
        * \brief Creates the synthesis tree associated to the values of this tube
        *
        * \note The synthesis tree speeds up computations such as integrals or evaluations
+       * 
+       * \param eps precision of the polynomial approximation
        */
-      void create_polynomial_synthesis() const;
+      void create_polynomial_synthesis(double eps) const;
 
       /**
        * \brief Deletes the synthesis tree of this tube

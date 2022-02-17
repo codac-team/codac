@@ -77,21 +77,6 @@ namespace codac
 
       if(codomain != Interval::ALL_REALS)
         set(codomain);
-
-      switch(m_synthesis_mode)
-      {
-        case SynthesisMode::BINARY_TREE:
-          create_synthesis_tree();
-          break;
-
-        case SynthesisMode::POLYNOMIAL:
-          create_polynomial_synthesis();
-          break;
-
-        case SynthesisMode::NONE:
-        default:
-          break;
-      }
     }
     
     Tube::Tube(const Interval& tdomain, double timestep, const TFnc& f, int f_image_id)
@@ -255,21 +240,6 @@ namespace codac
 
         // Redundant information for fast access
         m_tdomain = x.tdomain();
-
-        switch(m_synthesis_mode)
-        {
-          case SynthesisMode::BINARY_TREE:
-            create_synthesis_tree();
-            break;
-
-          case SynthesisMode::POLYNOMIAL:
-            create_polynomial_synthesis();
-            break;
-
-          case SynthesisMode::NONE:
-          default:
-            break;
-        }
 
       return *this;
     }
@@ -1512,7 +1482,7 @@ namespace codac
       return true;
     }
 
-    void Tube::enable_synthesis(SynthesisMode mode) const
+    void Tube::enable_synthesis(SynthesisMode mode, double eps) const
     {
       switch(mode)
       {
@@ -1524,7 +1494,7 @@ namespace codac
 
         case SynthesisMode::POLYNOMIAL:
         {
-          create_polynomial_synthesis();
+          create_polynomial_synthesis(eps);
           break;
         }
 
@@ -1630,10 +1600,10 @@ namespace codac
 
     // Polynomial synthesis
     
-    void Tube::create_polynomial_synthesis() const
+    void Tube::create_polynomial_synthesis(double eps) const
     {
       delete_polynomial_synthesis();
-      m_polynomial_synthesis = new TubePolynomialSynthesis(*this, 0.5e-7);
+      m_polynomial_synthesis = new TubePolynomialSynthesis(*this, eps);
       m_synthesis_mode = SynthesisMode::POLYNOMIAL;
     }
     
