@@ -396,8 +396,8 @@ void export_Tube(py::module& m)
   // Synthesis tree
 
     .def("enable_synthesis", &Tube::enable_synthesis,
-      TUBE_VOID_ENABLE_SYNTHESIS_SYNTHESISMODE,
-      "enable"_a=SynthesisMode::BINARY_TREE)
+      TUBE_VOID_ENABLE_SYNTHESIS_SYNTHESISMODE_DOUBLE,
+      "enable"_a=SynthesisMode::BINARY_TREE, "eps"_a=1.e-3)
 
   // Integration
 
