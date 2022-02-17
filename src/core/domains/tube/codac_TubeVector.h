@@ -27,6 +27,7 @@ namespace codac
   class TFnc;
   class Tube;
   class Trajectory;
+  enum class SynthesisMode;
   
   /**
    * \class TubeVector
@@ -1024,7 +1025,7 @@ namespace codac
        *
        * \param enable boolean
        */
-      void enable_synthesis(bool enable = true) const;
+      void enable_synthesis(SynthesisMode mode) const;
 
       /// @}
       /// \name Integration
