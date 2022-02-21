@@ -1,4 +1,5 @@
-on:
+# This files generates Python wheels for Linux
+.on:
     push:
         branches: 'master'
         tags: '' # Restrict to blank tags

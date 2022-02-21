@@ -419,6 +419,13 @@ namespace codac
     const TrajectoryVector operator/(const Vector& x, const Trajectory& y);
 
 
+    /** \brief \f$\mathbf{x}\times\mathbf{y}\f$ (or \f$\mathbf{x}\wedge\mathbf{y}\f$ in physics)
+      * \param x
+      * \param y
+      * \return Vector output
+      */
+    const Vector vecto_product(const Vector& x, const Vector& y);
+
     /** \brief \f$\mathbf{x}(\cdot)\times\mathbf{y}\f$ (or \f$\mathbf{x}(\cdot)\wedge\mathbf{y}\f$ in physics)
       * \param x
       * \param y
