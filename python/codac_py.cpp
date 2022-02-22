@@ -42,6 +42,10 @@ void export_CtcLohner(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcPicard(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcStatic(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 
+void export_Interval(py::module&m);
+void export_IntervalVector(py::module&m);
+void export_IntervalMatrix(py::module&m);
+void export_BoolInterval(py::module&m);
 void export_Tube(py::module&m);
 void export_TubeVector(py::module& m);
 void export_Trajectory(py::module& m);
@@ -88,6 +92,10 @@ PYBIND11_MODULE(tube, m)
   export_CtcPicard(m, dyn_ctc);
   export_CtcStatic(m, dyn_ctc);
 
+  export_BoolInterval(m);
+  export_Interval(m);
+  export_IntervalVector(m);
+  export_IntervalMatrix(m);
   export_Tube(m);
   export_TubeVector(m);
   export_Trajectory(m);

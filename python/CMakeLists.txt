@@ -73,6 +73,10 @@
     src/core/contractors/dyn/codac_py_CtcPicard.cpp
     src/core/contractors/dyn/codac_py_CtcStatic.cpp
 
+    src/core/domains/interval/codac_py_BoolInterval.cpp
+    src/core/domains/interval/codac_py_Interval.cpp
+    src/core/domains/interval/codac_py_IntervalVector.cpp
+    src/core/domains/interval/codac_py_IntervalMatrix.cpp
     src/core/domains/tube/codac_py_Tube.cpp
     src/core/domains/tube/codac_py_TubeVector.cpp
     src/core/domains/slice/codac_py_Slice.cpp

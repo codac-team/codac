@@ -1,12 +1,14 @@
-//============================================================================
-//                                P Y I B E X
-// File        : pyIbex_doc_IntervalVector.h
-// Author      : Benoit Desrochers, Gilles Charbert
-// Copyright   : Benoit Desrochers
-// License     : See the LICENSE file
-// Created     : Jul 06, 2016
-// Comments    : Mainly taken from ibex_IntervalVector.h source file
-//============================================================================
+/** 
+ *  \file
+ *  IntervalVector Python binding (doc)
+ *  Originated from the former pyIbex library (Benoît Desrochers)
+ * ----------------------------------------------------------------------------
+ *  \date       2022
+ *  \author     Benoît Desrochers
+ *  \copyright  Copyright 2021 Codac Team
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
 
 const char* DOCS_INTERVALVECTOR_TYPE =
 R"doc_itv(An IntervalVector is a cartesian product of Intervals
@@ -70,7 +72,6 @@ R"_docs(Create [empty; ...; empty]
 
 )_docs";
 
-
 const char* DOCS_INTERVALVECTOR_SET_EMPTY =
 R"_docs(Set this IntervalVector to the empty IntervalVector
     The dimension remains the same.
@@ -133,8 +134,6 @@ Note:
     (self) must not be empty
 )_docs";
 
-
-
 const char * DOCS_INTERVALVECTOR_SIZE=
 R"_docs(Returns:
     The dimension (number of components)
@@ -170,7 +169,6 @@ R"_docs(Return the magnitude vector.
 Note:
    (self) must be nonempty
 )_docs";
-
 
 const char* DOCS_INTERVALVECTOR_IS_EMPTY=
 R"_docs(Return true iff this IntervalVector is empty
@@ -218,7 +216,6 @@ See Also:
     Interval.is_interior_subse
  )_docs";
 
-
 const char* DOCS_INTERVALVECTOR_IS_STRICT_INTERIOR_SUBSET=
 R"_docs(Return True iff this interval vector is a subset of the interior of \a x and different from x.
 Dimension of \a x must be equal to the dimension of this vector.
@@ -229,7 +226,6 @@ Note:
 Sea Also:
     Interval.is_interior_subset.
 )_docs";
-
 
 const char* DOCS_INTERVALVECTOR_IS_SUPERSET=
 R"_docs(Return True iff this interval vector is a superset of \a x.
@@ -377,7 +373,6 @@ Sea also:
     Interval.rel_distance
 )_docs";
 
-
 const char* DOCS_INTERVALVECTOR_DIFF =
 R"_docs(Return self \\ y (set difference).
 
@@ -431,7 +426,6 @@ Return:
     list<IntervalVector> : two sub intervalvectors.
 
 )_docs";
-
 
 const char* DOCS_INTERVALVECTOR_TOLIST=
 R"_docs(Convert an IntervalVector  into a list

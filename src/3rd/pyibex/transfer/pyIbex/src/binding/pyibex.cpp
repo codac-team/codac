@@ -38,14 +38,4 @@ PYBIND11_MODULE(pyibex, m)
   export_Separators(m);
   m.attr("ibex_version") = _IBEX_RELEASE_;
 
-  // Export bool inteval
-  py::enum_<ibex::BoolInterval>(m, "BoolInterval")
-    .value( "YES", 	ibex::YES)
-    .value( "MAYBE", 	ibex::MAYBE)
-    .value( "NO", 	ibex::NO)
-    .value( "EMPTY_BOOL", 	ibex::EMPTY_BOOL)
-    .export_values()
-  ;
-  // return m.ptr();
-
 }

@@ -1,12 +1,14 @@
-//============================================================================
-//                                P Y I B E X
-// File        : pyIbex_doc_Interval.h
-// Author      : Benoit Desrochers, Gilles Charbert
-// Copyright   : Benoit Desrochers
-// License     : See the LICENSE file
-// Created     : Jul 06, 2016
-// Comments    : Mainly taken from ibex_Interval.h source file
-//============================================================================
+/** 
+ *  \file
+ *  Interval Python binding (doc)
+ *  Originated from the former pyIbex library (Benoît Desrochers)
+ * ----------------------------------------------------------------------------
+ *  \date       2022
+ *  \author     Benoît Desrochers
+ *  \copyright  Copyright 2021 Codac Team
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
 
 const char* DOCS_INTERVAL_TYPE =
 R"doc_itv(An Interval represents a closed sub set of R
@@ -44,7 +46,6 @@ Note:
     the upper / lower bounds of the Interval object
 
 )doc_itv";
-
 
 const char* DOCS_INTERVAL_INFLATE =
 R"doc_itv(Add [-rad,+rad] to self.
@@ -87,7 +88,6 @@ Returns the mignitude of self:
   * 0 otherwise
 
 )doc_itv";
-
 
 const char* DOCS_INTERVAL_MAG =
 R"doc_itv(Returns the magnitude of self
