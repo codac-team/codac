@@ -16,14 +16,13 @@
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_BoolInterval.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 // todo: #include "codac_py_BoolInterval_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -32,9 +31,9 @@ using namespace pybind11::literals;
 void export_BoolInterval(py::module& m)
 {
   py::enum_<BoolInterval>(m, "BoolInterval")
-    .value("YES", YES)
-    .value("MAYBE", MAYBE)
-    .value("NO", NO)
-    .value("EMPTY_BOOL", EMPTY_BOOL)
+    .value("YES", BoolInterval::YES)
+    .value("MAYBE", BoolInterval::MAYBE)
+    .value("NO", BoolInterval::NO)
+    .value("EMPTY_BOOL", BoolInterval::EMPTY_BOOL)
   ;
 }

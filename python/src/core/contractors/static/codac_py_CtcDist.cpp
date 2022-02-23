@@ -13,8 +13,9 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
+#include "codac_py_Ctc.h"
 #include "codac_CtcDist.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_CtcDist_docs.h"
@@ -25,9 +26,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_CtcDist(py::module& m)
+void export_CtcDist(py::module& m, py::class_<Ctc, pyCtc>& ctc)
 {
-  py::class_<CtcDist,Ctc> ctc_dist(m, "CtcDist", CTCDIST_MAIN);
+  py::class_<CtcDist> ctc_dist(m, "CtcDist", ctc, CTCDIST_MAIN);
   ctc_dist
 
     .def(py::init<>(),

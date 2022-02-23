@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  TFnc Python binding
+ *  CtcPolar Python binding
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou, Benoît Desrochers
@@ -15,9 +15,10 @@
 #include <pybind11/functional.h>
 #include "codac_type_caster.h"
 
-#include "codac_py_TFnc.h"
+#include "codac_py_Ctc.h"
+#include "codac_CtcPolar.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
-#include "codac_py_TFnc_docs.h"
+// todo: #include "codac_py_CtcPolar_docs.h"
 
 using namespace std;
 using namespace codac;
@@ -25,24 +26,20 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-py::class_<TFnc, pyTFnc> export_TFnc(py::module& m)
+void export_CtcPolar(py::module& m, py::class_<Ctc, pyCtc>& ctc)
 {
-  py::class_<TFnc, pyTFnc> fnc(m, "TFnc", TFNC_MAIN);
-  fnc
+  py::class_<CtcPolar> ctc_polar(m, "CtcPolar", ctc);
+  ctc_polar
 
-    .def(py::init<int,int,bool>(),
-      TFNC_TFNC_INT_INT_BOOL,
-      "n"_a, "m"_a, "is_intertemporal"_a)
+    .def(py::init<>(),
+      "todo")
 
-    .def("nb_vars", &TFnc::nb_vars,
-      TFNC_INT_NB_VARS)
+    .def("contract", (void (CtcPolar::*)(IntervalVector&))&CtcPolar::contract,
+      "todo",
+      "x"_a.noconvert())
 
-    .def("image_dim", &TFnc::image_dim,
-      TFNC_INT_IMAGE_DIM)
-
-    .def("is_intertemporal", &TFnc::is_intertemporal,
-      TFNC_BOOL_IS_INTERTEMPORAL)
+    .def("contract", (void (CtcPolar::*)(Interval&,Interval&,Interval&,Interval&))&CtcPolar::contract,
+      "todo",
+      "x"_a.noconvert(), "y"_a.noconvert(), "rho"_a.noconvert(), "theta"_a.noconvert())
   ;
-
-  return fnc;
 }

@@ -13,8 +13,9 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
+#include "codac_py_Ctc.h"
 #include "ibex_Domain.h"
 #include "ibex_Newton.h" // for default values of the Ctc
 #include "ibex_CtcNewton.h"
@@ -22,22 +23,21 @@
 // todo: #include "codac_py_CtcNewton_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_CtcNewton(py::module& m)
+void export_CtcNewton(py::module& m, py::class_<Ctc, pyCtc>& ctc)
 {
-  py::class_<CtcNewton,Ctc> ctc_newton(m, "CtcNewton", "todo");
+  py::class_<ibex::CtcNewton> ctc_newton(m, "CtcNewton", ctc, "todo");
   ctc_newton
 
     .def(py::init<const Function&,double,double,double>(),
       "todo",
-      "f"_a, "ceil"_a=CtcNewton::default_ceil, "prec"_a=default_newton_prec, "ratio"_a=default_gauss_seidel_ratio)
+      "f"_a, "ceil"_a=ibex::CtcNewton::default_ceil, "prec"_a=ibex::default_newton_prec, "ratio"_a=ibex::default_gauss_seidel_ratio)
 
-    .def("contract", (void (CtcNewton::*)(IntervalVector&))&CtcNewton::contract,
+    .def("contract", (void (ibex::CtcNewton::*)(IntervalVector&))&ibex::CtcNewton::contract,
       "todo",
       "x"_a.noconvert());
   ;

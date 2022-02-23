@@ -13,23 +13,23 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
+#include "codac_py_Ctc.h"
 #include "ibex_Domain.h"
 #include "codac_CtcFunction.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_CtcFunction_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_CtcFunction(py::module& m)
+void export_CtcFunction(py::module& m, py::class_<Ctc, pyCtc>& ctc)
 {
-  py::class_<CtcFunction,Ctc> ctc_function(m, "CtcFunction", CTCFUNCTION_MAIN);
+  py::class_<CtcFunction> ctc_function(m, "CtcFunction", ctc, CTCFUNCTION_MAIN);
   ctc_function
 
     .def(py::init<const Function&>(),

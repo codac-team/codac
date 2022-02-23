@@ -1,12 +1,14 @@
-//============================================================================
-//                                P Y I B E X
-// File        : pyIbex_doc_Bsc.h
-// Author      : Benoit Desrochers, Gilles Charbert
-// Copyright   : Benoit Desrochers
-// License     : See the LICENSE file
-// Created     : Jul 06, 2016
-// Comments    : Mainly taken from ibex_Bsc.h source file
-//============================================================================
+/** 
+ *  \file
+ *  Bisectors Python binding (doc)
+ *  Originated from the former pyIbex library (Benoît Desrochers)
+ * ----------------------------------------------------------------------------
+ *  \date       2022
+ *  \author     Benoît Desrochers
+ *  \copyright  Copyright 2021 Codac Team
+ *  \license    This program is distributed under the terms of
+ *              the GNU Lesser General Public License (LGPL).
+ */
 
 const char* DOCS_BSC_TYPE=
 R"_docs(Generic bisector
@@ -55,7 +57,6 @@ const char* DOCS_BSC_TOO_SMALL=
 R"_docs(Return:
     True iff box[i] is greater than the required precision and bisectable.
 )_docs";
-
 
 const char* DOCS_LARGEST_FIRST=
 R"_docs(Create a bisector with largest first heuristic.

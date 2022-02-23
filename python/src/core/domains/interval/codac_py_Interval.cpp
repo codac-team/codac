@@ -17,14 +17,13 @@
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_Interval.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_Interval_docs.h" // todo: generate this file from Doxygen doc
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;

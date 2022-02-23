@@ -13,22 +13,22 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
+#include "codac_py_Ctc.h"
 #include "codac_CtcConstell.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_CtcConstell_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_CtcConstell(py::module& m)
+void export_CtcConstell(py::module& m, py::class_<Ctc, pyCtc>& ctc)
 {
-  py::class_<CtcConstell,Ctc> ctc_constell(m, "CtcConstell", CTCCONSTELL_MAIN);
+  py::class_<CtcConstell> ctc_constell(m, "CtcConstell", ctc, CTCCONSTELL_MAIN);
   ctc_constell
 
     .def(py::init<const list<IntervalVector> &>(),

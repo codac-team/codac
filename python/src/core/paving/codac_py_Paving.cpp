@@ -19,7 +19,6 @@
 #include "codac_py_Paving_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;

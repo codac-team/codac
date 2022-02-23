@@ -1,7 +1,4 @@
-import pyibex
-from pyibex import Ctc, Interval, IntervalVector, Function, BoolInterval
-from pyibex.geometry import CtcPolar
-from codac.tube import *
+from codac.core import *
 from .version import __version__
 
 # Predefined contractor objects
@@ -13,5 +10,3 @@ class ctc:
   eval = CtcEval()
   dist = CtcDist()
   polar = CtcPolar()
-
-oo = pyibex.oo

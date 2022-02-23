@@ -16,7 +16,7 @@
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
 #include <unordered_map>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_ContractorNetwork.h"
 #include "codac_Variable.h"
@@ -24,7 +24,6 @@
 #include "codac_py_ContractorNetwork_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;

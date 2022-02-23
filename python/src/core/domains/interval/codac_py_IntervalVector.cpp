@@ -17,14 +17,14 @@
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
+#include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_IntervalVector_docs.h" // todo: generate this file from Doxygen doc
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -84,11 +84,11 @@ Interval& get_item(IntervalVector& x, size_t i)
   return x[i];
 }
 
-void set_item(IntervalVector& x, size_t i, Interval& itv)
+void set_item(IntervalVector& x, size_t i, Interval& xi)
 {
   if(i >= static_cast<size_t>(x.size()))
     throw py::index_error();
-  x[i] = itv;
+  x[i] = xi;
 }
 
 vector<IntervalVector> complementary_wrapper(IntervalVector& x)
@@ -169,16 +169,32 @@ void export_IntervalVector(py::module& m)
     .def(py::init(&create_from_int_list), "dim"_a, "list"_a)
     .def(py::init(&create_from_vector_of_intervals), "list"_a)
     //.def("__init__", &create_from_tuple, "list"_a)
-    
+
+  // Python vector methods
+
     .def("__len__", &IntervalVector::size)
-    .def("__get_item__", get_item, py::return_value_policy::reference_internal)
-    .def("__set_item__", set_item)
+
+    .def("__getitem__", [](IntervalVector& s, size_t index) -> Interval&
+      {
+        if(index >= static_cast<size_t>(s.size()))
+          throw py::index_error();
+        return s[static_cast<int>(index)];
+      },
+      py::return_value_policy::reference_internal)
+
+    .def("__setitem__", [](IntervalVector& s, size_t index, Interval& t)
+      {
+        if(index >= static_cast<size_t>(s.size()))
+          throw py::index_error();
+        s[static_cast<int>(index)] = t;
+      })
+    
     .def("__iter__", 
-      [](const IntervalVector &s)
+      [](const IntervalVector& s)
       {
         return py::make_iterator(&s[0], &s[0]+s.size());
       },
-      py::keep_alive<0, 1>()) // keep object alive while iterator exists
+      py::keep_alive<0,1>()) // keep object alive while iterator exists
     
     //.def("__contains__", [](const IntervalVector &s, float v) { return s.contains(v); })
     //.def("__reversed__", [](const IntervalVector &s) -> IntervalVector { return s.reversed(); })
@@ -245,7 +261,7 @@ void export_IntervalVector(py::module& m)
     .def("init", &IntervalVector::init, DOCS_INTERVALVECTOR_INIT, py::arg("x"))
     .def("inflate", (IntervalVector& (IntervalVector::*) (double)) &IntervalVector::inflate, DOCS_INTERVALVECTOR_INFLATE, "rad"_a)
     .def("inflate", (IntervalVector& (IntervalVector::*) (double, double)) &IntervalVector::inflate, DOCS_INTERVALVECTOR_INFLATE, "rad"_a, "chi"_a)
-    //.def( "inflate", &IntervalVector::inflate, DOCS_INTERVALVECTOR_INFLATE, py::return_value_policy::reference_internal, py::arg("rad"))
+    //.def("inflate", &IntervalVector::inflate, DOCS_INTERVALVECTOR_INFLATE, py::return_value_policy::reference_internal, py::arg("rad"))
     .def("resize", &IntervalVector::resize, DOCS_INTERVALVECTOR_RESIZE, py::arg("n"))
     .def("subvector", &IntervalVector::subvector, DOCS_INTERVALVECTOR_SUBVECTOR, "start_index"_a, "end_index"_a) //, return_value_policy<return_by_value>())
     .def("put", &IntervalVector::put, DOCS_INTERVALVECTOR_PUT)

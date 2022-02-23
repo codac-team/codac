@@ -13,14 +13,13 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_VIBesFigTubeVector.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_VIBesFigTubeVector_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
