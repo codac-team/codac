@@ -2,7 +2,6 @@
 # Static range-bearing localization
 # ----------------------------------------------------------------------------
 
-from pyibex import *
 from codac import *
 import math
 import sys # only for checking if this example still works
