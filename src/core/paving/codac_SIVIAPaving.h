@@ -15,6 +15,8 @@
 #include "codac_Paving.h"
 #include "codac_Function.h"
 #include "codac_IntervalVector.h"
+#include "codac_Ctc.h"
+#include "ibex_Sep.h"
 
 namespace codac
 {
@@ -44,6 +46,31 @@ namespace codac
        * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
        */
       void compute(const Function& f, const IntervalVector& y, float precision);
+
+      /**
+       * \brief Computes the paving from the constraint defined by \f$\mathcal{C}_{f}\f$.
+       * \param ctc IBEX static contractor
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       */
+      void compute(Ctc& ctc, float precision);
+
+      /**
+       * \brief Computes the paving from the constraint \f$\mathcal{S}_{f}\f$.
+       * \param sep IBEX static separator
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       */
+      void compute(ibex::Sep& sep, float precision);
+
+
+      /**
+       * \brief Check if the box is empty.
+       * \param box interval vector we wan to check
+       */
+      bool check_empty(const IntervalVector& box);
+
+
+
+
 
       /// @}
   };

@@ -46,4 +46,65 @@ namespace codac
       ((SIVIAPaving*)m_second_subpaving)->compute(f, y, precision);
     }
   }
+
+  void SIVIAPaving::compute(Ctc &ctc, float precision)
+  {
+    assert(precision > 0.);
+    IntervalVector result = box();
+    ctc.contract(result);
+    if (check_empty(result))
+    {
+      set_value(SetValue::OUT);
+    }
+    else if(box().max_diam() < precision)
+    {
+      set_value(SetValue::UNKNOWN);
+    }
+    else
+    {
+      bisect();
+      ((SIVIAPaving*)m_first_subpaving)->compute(ctc, precision);
+      ((SIVIAPaving*)m_second_subpaving)->compute(ctc, precision);
+    }
+  }
+
+  void SIVIAPaving::compute(Sep &sep, float precision)
+  {
+    assert(precision > 0.);
+    IntervalVector boxIn = box();
+    IntervalVector boxOut = box();
+    sep.separate(boxIn,boxOut);
+    if ( check_empty(boxIn))
+    {
+      set_value(SetValue::IN);
+    }
+    else if ( check_empty(boxOut))
+    {
+      set_value(SetValue::OUT);
+    }
+    else if(box().max_diam() < precision)
+    {
+      set_value(SetValue::UNKNOWN);
+    }
+    else
+    {
+      bisect();
+      ((SIVIAPaving*)m_first_subpaving)->compute(sep, precision);
+      ((SIVIAPaving*)m_second_subpaving)->compute(sep, precision);
+    }
+  }
+
+  bool SIVIAPaving::check_empty(const IntervalVector &box)
+  {
+    bool empty = false;
+    int i = 0;
+    while (!empty && i<box.size())
+    {
+      empty = box[i].is_empty();
+      ++i;
+    }
+    return empty;
+  }
+
+
 }
