@@ -127,20 +127,24 @@ namespace codac
     return y;
   }
 
+  const Vector vecto_product(const Vector& x1, const Vector& x2)
+  {
+    assert(x1.size() == 3 && x2.size() == 3);
+
+    return Vector({
+      x1[1]*x2[2] - x1[2]*x2[1],
+      x1[2]*x2[0] - x1[0]*x2[2],
+      x1[0]*x2[1] - x1[1]*x2[0]
+    });
+  }
+
   const TrajectoryVector vecto_product(const TrajectoryVector& x1, const Vector& x2)
   {
     assert(x1.size() == 3 && x2.size() == 3);
 
     TrajectoryVector result(x1.size());
     for(auto const& it : x1[0].sampled_map())
-    {
-      double t = it.first;
-      Vector v(3);
-      v[0] = x1[1](t)*x2[2] - x1[2](t)*x2[1];
-      v[1] = x1[2](t)*x2[0] - x1[0](t)*x2[2];
-      v[2] = x1[0](t)*x2[1] - x1[1](t)*x2[0];
-      result.set(v, t);
-    }
+      result.set(vecto_product(x1(it.first),x2), it.first);
 
     return result;
   }
