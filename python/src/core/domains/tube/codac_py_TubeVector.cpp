@@ -151,6 +151,9 @@ void export_TubeVector(py::module& m)
     .def("sample", (void (TubeVector::*)(const TubeVector&))&TubeVector::sample,
       TUBEVECTOR_VOID_SAMPLE_TUBEVECTOR,
       "x"_a)
+    
+    .def("move_timeframe_fwd", &TubeVector::move_timeframe_fwd,
+      TUBEVECTOR_VOID_MOVE_TIMEFRAME_FWD)
 
   // Accessing values
 

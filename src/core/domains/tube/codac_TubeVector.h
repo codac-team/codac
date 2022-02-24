@@ -765,6 +765,15 @@ namespace codac
        */
       void shift_tdomain(double a);
 
+      /**
+       * \brief Moves timeframe forward
+       * 
+       * First slice is moved at the end of the temporal domain, its content is
+       * reset to \f$[-\infty,\infty]\f$, allowing fast operation. The temporal
+       * width of the last slice is the same as the former first slice of the tube.
+       */
+      void move_timeframe_fwd();
+
       /// @}
       /// \name Bisection
       /// @{

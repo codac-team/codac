@@ -110,6 +110,9 @@ void export_Tube(py::module& m)
     .def("merge_similar_slices", &Tube::merge_similar_slices,
       TUBE_VOID_MERGE_SIMILAR_SLICES_DOUBLE,
       "distance_threshold"_a)
+    
+    .def("move_timeframe_fwd", &Tube::move_timeframe_fwd,
+      TUBE_VOID_MOVE_TIMEFRAME_FWD)
 
     // Note: const overloaded methods are not necessary for Python binding
 

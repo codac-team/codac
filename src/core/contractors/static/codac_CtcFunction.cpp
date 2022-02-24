@@ -11,7 +11,6 @@
 #include "codac_CtcFunction.h"
 
 using namespace std;
-using namespace ibex;
 
 namespace codac
 {
@@ -21,7 +20,7 @@ namespace codac
     // todo: clean delete
   }
 
-  CtcFunction::CtcFunction(const Function& f, const Domain& y)
+  CtcFunction::CtcFunction(const Function& f, const ibex::Domain& y)
     : CtcFwdBwd(*new Function(f), y)
   {
     // todo: clean delete

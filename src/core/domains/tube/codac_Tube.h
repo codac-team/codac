@@ -368,7 +368,6 @@ namespace codac
        *
        * \param t the temporal key (double, must belong to the Tube's tdomain)
        */
-
       void sample(double t);
 
       /**
@@ -428,6 +427,15 @@ namespace codac
        * \param distance_threshold the threshold for the maximum Haussdorf distance between adjacent slices
        */
       void merge_similar_slices(double distance_threshold);
+
+      /**
+       * \brief Moves timeframe forward
+       * 
+       * First slice is moved at the end of the temporal domain, its content is
+       * reset to \f$[-\infty,\infty]\f$, allowing fast operation. The temporal
+       * width of the last slice is the same as the former first slice of the tube.
+       */
+      void move_timeframe_fwd();
 
       /// @}
       /// \name Accessing values

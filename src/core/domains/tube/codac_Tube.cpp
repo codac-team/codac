@@ -578,6 +578,8 @@ namespace codac
       Slice *s1 = s2->prev_slice();
 
       Slice::merge_slices(s1, s2);
+      delete_synthesis_tree(); // todo: update tree if created, instead of delete
+      delete_polynomial_synthesis(); // todo: update tree if created, instead of delete
     }
 
     void Tube::merge_similar_slices(double distance_threshold)
@@ -593,6 +595,33 @@ namespace codac
       
         s2 = next_slice;
       }
+
+      delete_synthesis_tree(); // todo: update tree if created, instead of delete
+      delete_polynomial_synthesis(); // todo: update tree if created, instead of delete
+    }
+
+    void Tube::move_timeframe_fwd()
+    {
+      Slice *s = m_first_slice;
+      m_first_slice = s->next_slice();
+      m_first_slice->m_input_gate = new Interval(*m_first_slice->m_input_gate);
+      m_first_slice->m_prev_slice = nullptr;
+
+      s->set_tdomain(Interval(
+        tdomain().ub(),
+        tdomain().ub() + s->tdomain().diam()));
+      s->m_next_slice = nullptr;
+      s->set_envelope(Interval::all_reals());
+      s->set_input_gate(last_slice()->output_gate());
+      s->set_output_gate(Interval::all_reals());
+      Slice::chain_slices(last_slice(), s);
+
+      m_tdomain = Interval(
+        m_first_slice->tdomain().lb(),
+        s->tdomain().ub());
+      
+      delete_synthesis_tree(); // todo: update tree if created, instead of delete
+      delete_polynomial_synthesis(); // todo: update tree if created, instead of delete
     }
 
     // Accessing values

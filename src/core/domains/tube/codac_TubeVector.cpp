@@ -813,6 +813,12 @@ namespace codac
         (*this)[i].shift_tdomain(shift_ref);
     }
 
+    void TubeVector::move_timeframe_fwd()
+    {
+      for(int i = 0 ; i < size() ; i++)
+        (*this)[i].move_timeframe_fwd();
+    }
+
     // Bisection
     
     const pair<TubeVector,TubeVector> TubeVector::bisect(double t, float ratio) const
