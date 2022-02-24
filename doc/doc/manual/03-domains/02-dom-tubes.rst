@@ -329,14 +329,15 @@ Once created, several evaluations of the tubes can be made, as for trajectories.
 
   .. rubric:: Inversion of tubes
 
-  The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])`, is also at hand and returns the set :math:`[t]` enclosing the preimages of :math:`[y]`. The ``invert()`` method returns the union of these subsets, or the set of solutions within a vector of ``Interval`` objects. The following example returns the different subsets of the inversion :math:`[x]^{-1}([0,0.2])` projected in red in next figure:
+  The inversion of a tube :math:`[x](\cdot)`, denoted :math:`[x]^{-1}([y])`, returns the set :math:`[t]` enclosing the preimages of :math:`[y]`. The ``invert()`` method returns the squared-union of these subsets, or the set of solutions within a vector of ``Interval`` objects. The following example returns the different subsets of the inversion :math:`[x]^{-1}([0,0.2])` projected in red in next figure:
 
   .. tabs::
 
     .. code-tab:: py
 
       v_t = []
-      x.invert(Interval(0,0.2), v_t)   # inversion
+      x.invert(Interval(0,0.2), v_t, tdomain)   # inversion
+      # tdomain is a temporal subset over which the inversion is performed
       
       for t in v_t:
         tbox = IntervalVector([t,[0,0.2]])
@@ -345,7 +346,8 @@ Once created, several evaluations of the tubes can be made, as for trajectories.
     .. code-tab:: c++
 
       vector<Interval> v_t;            // vector of preimages
-      x.invert(Interval(0.,0.2), v_t); // inversion
+      x.invert(Interval(0.,0.2), v_t, tdomain); // inversion
+      // tdomain is a temporal subset over which the inversion is performed
 
       for(auto& t : v_t)
       {

@@ -88,28 +88,28 @@ namespace codac
       /**
        * \brief Points to the previous slice \f$\llbracket x\rrbracket(k-1)\f$
        *
-       * \return a pointer to a Slice object, or NULL is this slice is the first one
+       * \return a pointer to a Slice object, or nullptr is this slice is the first one
        */
       Slice* prev_slice();
 
       /**
        * \brief Points to the previous slice \f$\llbracket x\rrbracket(k-1)\f$
        *
-       * \return a const pointer to a Slice object, or NULL is this slice is the first one
+       * \return a const pointer to a Slice object, or nullptr is this slice is the first one
        */
       const Slice* prev_slice() const;
 
       /**
        * \brief Points to the next slice \f$\llbracket x\rrbracket(k+1)\f$
        *
-       * \return a pointer to a Slice object, or NULL is this slice is the last one
+       * \return a pointer to a Slice object, or nullptr is this slice is the last one
        */
       Slice* next_slice();
 
       /**
        * \brief Points to the next slice \f$\llbracket x\rrbracket(k+1)\f$
        *
-       * \return a const pointer to a Slice object, or NULL is this slice is the last one
+       * \return a const pointer to a Slice object, or nullptr is this slice is the last one
        */
       const Slice* next_slice() const;
 
@@ -668,9 +668,9 @@ namespace codac
 
         Interval m_tdomain; //!< temporal domain \f$[t_0,t_f]\f$ of the slice
         Interval m_codomain = Interval::ALL_REALS; //!< envelope of the slice
-        Interval *m_input_gate = NULL, *m_output_gate = NULL; //!< input and output gates
-        Slice *m_prev_slice = NULL, *m_next_slice = NULL; //!< pointers to previous and next slices of the related tube
-        mutable TubeTreeSynthesis *m_synthesis_reference = NULL; //!< pointer to a leaf of the optional synthesis tree of the related tube
+        Interval *m_input_gate = nullptr, *m_output_gate = nullptr; //!< input and output gates
+        Slice *m_prev_slice = nullptr, *m_next_slice = nullptr; //!< pointers to previous and next slices of the related tube
+        mutable TubeTreeSynthesis *m_synthesis_reference = nullptr; //!< pointer to a leaf of the optional synthesis tree of the related tube
 
       friend class Tube;
       friend class TubeTreeSynthesis;

@@ -50,13 +50,6 @@ namespace codac
       ~ConnectedSubset();
 
       /**
-       * \brief Returns the n-dimensional box enclosing this subset
-       *
-       * \return the box
-       */
-      const IntervalVector box() const;
-
-      /**
        * \brief Tests if this subset is strictly included in its paving structure
        *
        * \return `true` in case of strict inclusion

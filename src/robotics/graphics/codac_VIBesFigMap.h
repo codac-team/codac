@@ -158,7 +158,7 @@ namespace codac
        * \param traj_colormap an optional const pointer to a Trajectory object in order to have a custom
        *        color evolution instead of a linear time evolving color 
        */
-      void set_tube_color(const TubeVector *tube, const ColorMap& colormap, const Trajectory *traj_colormap = NULL);
+      void set_tube_color(const TubeVector *tube, const ColorMap& colormap, const Trajectory *traj_colormap = nullptr);
 
       /**
        * \brief Removes a tube from this figure
@@ -232,7 +232,7 @@ namespace codac
        * \param traj_colormap an optional const pointer to a Trajectory object in order to have a custom
        *        color evolution instead of a linear time evolving color 
        */
-      void set_trajectory_color(const TrajectoryVector *traj, const ColorMap& colormap, const Trajectory *traj_colormap = NULL);
+      void set_trajectory_color(const TrajectoryVector *traj, const ColorMap& colormap, const Trajectory *traj_colormap = nullptr);
 
       /**
        * \brief Displays a vehicle at the end of a trajectory
@@ -539,7 +539,7 @@ namespace codac
         std::string name; //!< human readable identifier of the tube
         std::string color = ""; //!< constant color of the tube
         std::pair<ColorMap,const Trajectory*> color_map; //!< custom colormap of the tube
-        const Tube *tube_x_copy = NULL, *tube_y_copy; //!< to display previous values in background, before any new contraction
+        const Tube *tube_x_copy = nullptr, *tube_y_copy; //!< to display previous values in background, before any new contraction
         bool from_first_to_last = !true; //!< order of slices display (each one on top of the next/previous one)
         int index_x, index_y; //!< integer references for state components
       };

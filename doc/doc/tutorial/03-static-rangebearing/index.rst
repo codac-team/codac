@@ -291,9 +291,9 @@ The black box :math:`[\mathbf{x}]` cumulates all the uncertainties of the proble
 If we remove the uncertainties related to the measurement :math:`[\mathbf{y}]`, then the width of :math:`[\mathbf{x}]` should be exactly the same as the one of :math:`[\mathbf{m}]`, because we used optimal contractors. The width of a box is given by the ``.diam()`` method.
 
 
-.. admonition:: Exercise
-
-  We provide the solution of these questions here:
-
-  | :download:`See the Python solution <src/solution_c.py>`
-  | :download:`See the C++ solution <src/solution_c.cpp>`
+.. .. admonition:: Exercise
+.. 
+..   We provide the solution of these questions here:
+.. 
+..   | :download:`See the Python solution <src/solution_c.py>`
+..   | :download:`See the C++ solution <src/solution_c.cpp>`

@@ -1,0 +1,1757 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Python API &mdash; pyibex 1.5.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pyibex 1.5.0 documentation" href="index.html"/>
+        <link rel="prev" title="Installation" href="installation.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyibex
+          
+
+          
+            
+            <img src="_static/pyibex_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html#basic-types">Basic Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#interval">Interval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#intervalvector">IntervalVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#function">Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contractors-ctc">Contractors (Ctc)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ctcunion">CtcUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ctccompo">CtcCompo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ctcfwdbwd">CtcFwdBwd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ctcinverse">CtcInverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ctcnotin">CtcNotIn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ctcfixpoint">CtcFixPoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ctcqinter">CtcQInter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#separators-sep">Separators (Sep)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sepunion">SepUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sepinter">SepInter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sepctcpair">SepCtcPair</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sepfwdbwd">SepFwdBwd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sepnot">SepNot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sepinverse">SepInverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sepqinter">SepQInter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">pyibex</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Python API</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/api.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python-api">
+<span id="api"></span><h1>Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="interval">
+<h2>Interval<a class="headerlink" href="#interval" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyibex.Interval">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">Interval</code><a class="headerlink" href="#pyibex.Interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>An Interval represents a closed sub set of R</p>
+<p>The docs string is taken from ibex_Interval.h source file
+For more information read doc from <a class="reference external" href="http://www.ibex-lib.org/">http://www.ibex-lib.org/</a></p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Interval</span><span class="o">.</span><span class="n">ALL_REALS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>For C++ user, recall that the assigment operator in python copies only references
+and not the object. a and b are referencing the same object. To make a copy used:</p>
+<dl class="last docutils">
+<dt>For instance:</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<p>It is posible to acess ub and lower bound with lb() and ub() but also with
+an array like syntax.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">lb</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Because intervals are immutable object, it is not possible to set directly
+the upper / lower bounds of the Interval object</p>
+</div>
+<dl class="method">
+<dt id="pyibex.Interval.assign">
+<code class="descname">assign</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>itv: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.Interval.assign" title="Permalink to this definition">¶</a></dt>
+<dd><p>assign the value of itv to this</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.bisect">
+<code class="descname">bisect</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>ratio: float=0.5</em><span class="sig-paren">)</span> &rarr; Tuple[pyibex.pyibex.Interval, pyibex.pyibex.Interval]<a class="headerlink" href="#pyibex.Interval.bisect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Bisect self into two subintervals.</dt>
+<dd>The Interval musts be bisectable (  is_bisectable() must be true.)</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ratio</strong> (<em>float</em>) &#8211; says where to split (in [0, 1] , 0.5=middle)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">two sub intervals</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.complementary">
+<code class="descname">complementary</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; tuple<a class="headerlink" href="#pyibex.Interval.complementary" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The complementary of x.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.contains">
+<code class="descname">contains</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: float</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff self contains a d.</p>
+<dl class="docutils">
+<dt>Note: d can also be an &#8220;open bound&#8221;, i.e., infinity.</dt>
+<dd>So this function is not restricted to a set-membership
+interpretation.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.Interval<a class="headerlink" href="#pyibex.Interval.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a new objec which is the copy of self</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.diam">
+<code class="descname">diam</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.Interval.diam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the diameter of self.
+By convention, 0 if self is empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>y: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; tuple<a class="headerlink" href="#pyibex.Interval.diff" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">xy</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.inflate">
+<code class="descname">inflate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>arg0: float</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.Interval<a class="headerlink" href="#pyibex.Interval.inflate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add [-rad,+rad] to self.
+:returns: Return self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.interior_contains">
+<code class="descname">interior_contains</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: float</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.interior_contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff the interior of self contains a d.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.intersects">
+<code class="descname">intersects</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.intersects" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff self and a x intersect.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_bisectable">
+<code class="descname">is_bisectable</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_bisectable" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff self can be bisected into two non-degenerated intervals.
+Examples of non bisectable intervals are [0,next_float(0)] or [DBL_MAX,+oo).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_degenerated">
+<code class="descname">is_degenerated</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_degenerated" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff self is degenerated.
+An interval is degenerated if it is of the form [a, a]
+.. note:: An empty interval is considered here as degenerated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_disjoint">
+<code class="descname">is_disjoint</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_disjoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff self and a x do not intersect.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff self is empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_interior_subset">
+<code class="descname">is_interior_subset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_interior_subset" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True iff this interval is in the interior of a x.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In particular, (-oo,oo) is in the interior of (-oo,oo)
+and the empty set is in the interior of the empty set.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Always return true if self is empty.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_strict_interior_subset">
+<code class="descname">is_strict_interior_subset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_strict_interior_subset" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True iff this interval is in the interior of a x and different from x.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In particular, (-oo,oo) is not &#8220;strictly&#8221; in the interior of (-oo,oo)
+and the empty set is not &#8220;strictly&#8221; in the interior of the empty set.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_strict_subset">
+<code class="descname">is_strict_subset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_strict_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff this interval is a subset of a x and not a x itself.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In particular, (-oo,oo) is not a strict subset of (-oo,oo)
+and the empty set is not a strict subset of the empty set although
+in both cases, the first is inside the interior of the second.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_strict_superset">
+<code class="descname">is_strict_superset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_strict_superset" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff this interval is a superset of a x different from x.
+see:</p>
+<blockquote>
+<div>#is_strict_subset(const Interval&amp;) const.</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_subset">
+<code class="descname">is_subset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff this interval is a subset of a x.
+.. note:: Always return true if self is empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_superset">
+<code class="descname">is_superset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_superset" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff this interval is a superset of a x.
+.. note:: Always return true if x is empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.is_unbounded">
+<code class="descname">is_unbounded</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.is_unbounded" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if one bound of self is infinite.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">An empty interval is always bounded.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.lb">
+<code class="descname">lb</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.Interval.lb" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the upper bound</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.mag">
+<code class="descname">mag</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.Interval.mag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the magnitude of self:
+mag(self)=max(<a href="#id1"><span class="problematic" id="id2">|lower bound|</span></a>, <a href="#id3"><span class="problematic" id="id4">|upper bound|</span></a>).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.mid">
+<code class="descname">mid</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.Interval.mid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the midpoint of self.</p>
+<blockquote>
+<div><p>The return point is guaranteed to be included in self
+but not necessarily to be the closest floating point
+from the real midpoint.
+Cases are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>emptyset  -&gt; Quiet NaN</li>
+<li>[-oo, +oo] -&gt; midP = 0.0</li>
+<li>[-oo, b]   -&gt; midP = -MAXREAL</li>
+<li>[a, +oo]   -&gt; midP = MAXREAL</li>
+<li>[a, b]     -&gt; midP ~ a + .5*(b-a)</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.mig">
+<code class="descname">mig</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.Interval.mig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mignitude of self:</p>
+<blockquote>
+<div><ul class="simple">
+<li>+(lower bound)  if self &gt; 0</li>
+<li>-(upper bound) if self &lt; 0</li>
+<li>0 otherwise</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.overlaps">
+<code class="descname">overlaps</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.Interval.overlaps" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>True iff self and a x intersect and the intersection</dt>
+<dd>has a non-null volume.
+Equivalently, some interior points (of this or x) must belong
+to the intersection.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.rad">
+<code class="descname">rad</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.Interval.rad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the diameter of self.
+By convention, 0 if self is empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.rel_distance">
+<code class="descname">rel_distance</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.Interval.rel_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Relative Hausdorff distance between self and x.
+The relative distance is basically distance(x)/diam(self).
+See:</p>
+<blockquote>
+<div>#ibex::distance (const ibex::Interval &amp;x1, const ibex::Interval &amp;x2).</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.set_empty">
+<code class="descname">set_empty</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.Interval.set_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>set self to empty set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Interval.ub">
+<code class="descname">ub</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.Interval.ub" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the lower bound</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="intervalvector">
+<h2>IntervalVector<a class="headerlink" href="#intervalvector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyibex.IntervalVector">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">IntervalVector</code><a class="headerlink" href="#pyibex.IntervalVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>An IntervalVector is a cartesian product of Intervals
+The docs string is taken from ibex_IntervalVector.h source file
+For more information read doc from <a class="reference external" href="http://www.ibex-lib.org/">http://www.ibex-lib.org/</a></p>
+<p>An IntervalVector can be initialized with:</p>
+<blockquote>
+<div><ul class="simple">
+<li>a int (i.e. size) only ( all elements are initialized to [-oo,oo])</li>
+<li>a int (i.e. size) and a value for all elements</li>
+<li>another IntervalVector (make a copy)</li>
+<li>a list of bounds [[lb_1, ub_1], [...], [lb_n, ub_n]]</li>
+<li>a tuple of intervals</li>
+</ul>
+</div></blockquote>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalVector</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">([ ENTIRE ] ; [ ENTIRE ])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalVector</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="go">([1, 5] ; [1, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalVector</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="go">([1, 5] ; [1, 5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalVector</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="go">([1, 2] ; [3, 4])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalVector</span><span class="p">(</span> <span class="p">(</span><span class="n">Interval</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+<span class="go">([2, 4] ; [5, 6])</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pyibex.IntervalVector.assign">
+<code class="descname">assign</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.IntervalVector.assign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.bisect">
+<code class="descname">bisect</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>i: int</em>, <em>ratio: float=0.5</em><span class="sig-paren">)</span> &rarr; Tuple[pyibex.pyibex.IntervalVector, pyibex.pyibex.IntervalVector]<a class="headerlink" href="#pyibex.IntervalVector.bisect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bisect the box
+The box is bisected along the dimension a i
+and with a ratio a ratio. If (self)[i] is the interval [a,a+d]:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The first box of the result is (self)[0]x...x(self)[i-1]x[a+ratio*d]x...</li>
+<li>The second box is (self)[0]x...x(self)[i-1]x[a+ratio*d,a+d]x...</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>i</strong> (<em>int</em>) &#8211; dimension to besect along</li>
+<li><strong>radio</strong> (<em>float</em>) &#8211; ratio Default  is 0.5. Need to belong to [0, 1]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">two sub intervalvectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list&lt;IntervalVector&gt;</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.IntervalVector.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set all the elements to 0 (even if empty).
+.. note:: Emptiness is &#8220;overridden&#8221;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.complementary">
+<code class="descname">complementary</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; List[pyibex.pyibex.IntervalVector]<a class="headerlink" href="#pyibex.IntervalVector.complementary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the complementary of self.
+Store the complementary under the form of a union of non-overlapping IntervalVectors,
+into a result, and return the size of the union.</p>
+<p>If (self) is the empty set with n components, the complementary of (self) is
+the n-dimensional box (-oo,oo)x...(-oo,oo).</p>
+<p>If the complementary is empty, a result is an array of one element set to the empty box.
+It is <strong>not</strong> a zero-sized array containing no element.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">complementaries boxes.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list&lt;IntervalVector&gt;</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">IntervalVector</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+<span class="go">([2, 3] ; [-2, 4])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">complementary</span><span class="p">()</span>
+<span class="go">[([-inf, 2] ; [ ENTIRE ]),</span>
+<span class="go"> ([3, inf] ; [ ENTIRE ]),</span>
+<span class="go"> ([2, 3] ; [-inf, -2]),</span>
+<span class="go"> ([2, 3] ; [4, inf])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.contains">
+<code class="descname">contains</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: list&lt;float&gt;</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff this interval vector contains a x.
+Dimension of a x must be equal to the dimension of (self).
+:param x: to be compared
+:type x: IntervalVector</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">pyibex.pyibex.Interval.contains.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.IntervalVector<a class="headerlink" href="#pyibex.IntervalVector.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.diam">
+<code class="descname">diam</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; list&lt;float&gt;<a class="headerlink" href="#pyibex.IntervalVector.diam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vector of diameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>y: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; List[pyibex.pyibex.IntervalVector]<a class="headerlink" href="#pyibex.IntervalVector.diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self \ y (set difference).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the difference under the form of a union of
+non-overlapping IntervalVectors. The lenght of the list is &lt;= 2*n</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list&lt;IntervalVector&gt;</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the difference is empty, result is an array of one element set
+to the empty box. It is &lt;b&gt;not&lt;/b&gt; a zero-sized array containing no element.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>y</strong> (<a class="reference internal" href="#pyibex.IntervalVector" title="pyibex.IntervalVector"><em>IntervalVector</em></a>) &#8211; to be compared</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.empty">
+<code class="descname">empty</code><span class="sig-paren">(</span><em>n: int</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.IntervalVector<a class="headerlink" href="#pyibex.IntervalVector.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create [empty; ...; empty]</p>
+<blockquote>
+<div><p>Create an empty IntervalVector of dimension a n
+(all the components being empty Intervals)</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>n (int): dimension &gt; 0</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.extr_diam_index">
+<code class="descname">extr_diam_index</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>min: bool</em><span class="sig-paren">)</span> &rarr; int<a class="headerlink" href="#pyibex.IntervalVector.extr_diam_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the index of a component with minimal/maximal diameter.
+:param min: true =&gt; minimal diameter
+:type min: bool</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">InvalidIntervalVectorOp if the IntervalVector is empty.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.inflate">
+<code class="descname">inflate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>rad: float</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.IntervalVector<a class="headerlink" href="#pyibex.IntervalVector.inflate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add [-rad,+rad] to all the components of self.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rad</strong> (<em>float</em>) &#8211; radius to use</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.Interval</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.IntervalVector.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set all the elements to x (even if empty).
+:param x: value for elements
+:type x: Interval</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Emptiness is &#8220;overridden&#8221;.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.interior_contains">
+<code class="descname">interior_contains</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: list&lt;float&gt;</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.interior_contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff a x is in the interior of this interval vector
+Dimension of a x must be equal to the dimension of (self).
+:param x: to be compared
+:type x: IntervalVector</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">pyibex.pyibex.Interval.strictly_contain : same for Interval</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.intersects">
+<code class="descname">intersects</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.intersects" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff this interval vector intersects a x.
+Dimension of a x must be equal to the dimension of (self).
+:param x: to be compared
+:type x: IntervalVector</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Interval.intersects.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_bisectable">
+<code class="descname">is_bisectable</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_bisectable" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True iff self can be bisected along one dimension.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Interval.is_bisectable.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_disjoint">
+<code class="descname">is_disjoint</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_disjoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff this interval vector does not intersect a x.
+Dimension of a x must be equal to the dimension of (self).
+:param x: to be compared
+:type x: IntervalVector</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Interval.is_disjoint.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true iff this IntervalVector is empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_flat">
+<code class="descname">is_flat</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_flat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true iff this IntervalVector is flat.</p>
+<blockquote>
+<div>An IntervalVector is &#8220;flat&#8221; if the radius is 0 on at least one dimension
+An empty interval vector is considered as flat.</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_interior_subset">
+<code class="descname">is_interior_subset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_interior_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff this interval vector is a subset of the interior of a x.
+Dimension of a x must be equal to the dimension of this vector.
+.. note:: Always return true if this interval vector is empty.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Interval.is_interior_subse</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_strict_interior_subset">
+<code class="descname">is_strict_interior_subset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_strict_interior_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff this interval vector is a subset of the interior of a x and different from x.
+Dimension of a x must be equal to the dimension of this vector.
+:param x: to be compared
+:type x: IntervalVector</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Always return true if this interval vector is empty.</p>
+</div>
+<dl class="docutils">
+<dt>Sea Also:</dt>
+<dd>Interval.is_interior_subset.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_strict_subset">
+<code class="descname">is_strict_subset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_strict_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Return True iff this interval vector is inside the interior of a x.
+Dimension of a x must be equal to the dimension of this vector.
+.. note:: return true if this interval vector is empty and a x not.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Interval.is_strict_subset.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_strict_superset">
+<code class="descname">is_strict_superset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_strict_superset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff a x is inside the interior of (self).
+Dimension of a x must be equal to the dimension of this vector.
+:param x: to be compared
+:type x: IntervalVector</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">return true if x is empty and not (self).</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Interval.is_strict_superset.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_subset">
+<code class="descname">is_subset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff this interval vector is a subset of a x.
+Dimension of a x must be equal to the dimension of this vector.
+.. note:: Always return true if this interval vector is empty.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">#Interval.is_subset.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_superset">
+<code class="descname">is_superset</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_superset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff this interval vector is a superset of a x.
+Dimension of a x must be equal to the dimension of this vector.
+:param x: to be compared
+:type x: IntervalVector</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Always return true if a x is empty.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Interval.is_superset.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_unbounded">
+<code class="descname">is_unbounded</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_unbounded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff this interval vector contains an infinite bound.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">An empty interval vector is always bounded.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.is_zero">
+<code class="descname">is_zero</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.is_zero" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True iff self is a vector of zeros.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.lb">
+<code class="descname">lb</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; list&lt;float&gt;<a class="headerlink" href="#pyibex.IntervalVector.lb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the lower bound vector
+.. note:: (self) must be nonempty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.mag">
+<code class="descname">mag</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; list&lt;float&gt;<a class="headerlink" href="#pyibex.IntervalVector.mag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the magnitude vector.
+.. note:: (self) must be nonempty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.max_diam">
+<code class="descname">max_diam</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.IntervalVector.max_diam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the maximal diameter among all the components.
+:raises: InvalidIntervalVectorOp if the IntervalVector is empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.mid">
+<code class="descname">mid</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; list&lt;float&gt;<a class="headerlink" href="#pyibex.IntervalVector.mid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the midpoint
+.. note:: (self) must be nonempty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.mig">
+<code class="descname">mig</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; list&lt;float&gt;<a class="headerlink" href="#pyibex.IntervalVector.mig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mignitude vector.
+.. note:: (self) must be nonempty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.min_diam">
+<code class="descname">min_diam</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.IntervalVector.min_diam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the minimal diameter among all the components.
+:raises: InvalidIntervalVectorOp if the IntervalVector is empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.overlaps">
+<code class="descname">overlaps</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; bool<a class="headerlink" href="#pyibex.IntervalVector.overlaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>True iff this interval vector intersects a x and the intersection has a non-null volume
+Dimension of a x must be equal to the dimension of (self).
+:param x: to be compared
+:type x: IntervalVector</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Interval.strictly_intersects.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.perimeter">
+<code class="descname">perimeter</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.IntervalVector.perimeter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the perimeter of this interval vector.
+.. note:: Return c POS_INFINITY if unbounded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.put">
+<code class="descname">put</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>arg0: int</em>, <em>arg1: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.IntervalVector.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put a subvector into self at a given position.
+:param start_index - the position where the subvector:
+:param subvec: the subvector
+:type subvec: IntervalVector</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">(self) must not be empty</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.rad">
+<code class="descname">rad</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; list&lt;float&gt;<a class="headerlink" href="#pyibex.IntervalVector.rad" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Vector of radii.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.rel_distance">
+<code class="descname">rel_distance</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>x: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.IntervalVector.rel_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the relative distance with x.
+:param x:
+:type x: IntervalVector</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">f$displaystyle max_{i=1..n} rel_distance([this]_i, x_i)/diam([this]_i)f$.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Sea also:</dt>
+<dd>distance
+Interval.rel_distance</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.resize">
+<code class="descname">resize</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>n: int</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.IntervalVector.resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize this IntervalVector.
+If the size is increased, the existing components are not
+modified and the new ones are set to (-inf,+inf), even if
+(self) is the empty Interval (however, in this case, the status of
+(self) remains &#8220;empty&#8221;).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; size of the new vector</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.set_empty">
+<code class="descname">set_empty</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.IntervalVector.set_empty" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Set this IntervalVector to the empty IntervalVector</dt>
+<dd>The dimension remains the same.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.size">
+<code class="descname">size</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyibex.IntervalVector.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li>size(self: pyibex.pyibex.IntervalVector) -&gt; int</li>
+<li>size(self: pyibex.pyibex.IntervalVector) -&gt; int</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The dimension (number of components)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.sort_indices">
+<code class="descname">sort_indices</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>min: bool</em><span class="sig-paren">)</span> &rarr; List[int]<a class="headerlink" href="#pyibex.IntervalVector.sort_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the indices of all the components, sorted by increasing/decreasing diameter.
+:returns: list of indices sorted by increasing/decreasing diameter.
+:rtype: list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>min</strong> (<em>bool</em>) &#8211; true =&gt; first indice corresponds to smallest diameter</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.subvector">
+<code class="descname">subvector</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em>, <em>start_index: int</em>, <em>end_index: int</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.IntervalVector<a class="headerlink" href="#pyibex.IntervalVector.subvector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a subvector
+:returns: [ (self)[start_index]; ...; (self)[end_index] ].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start_index</strong> (<em>int</em>) &#8211; first index</li>
+<li><strong>end_index</strong> (<em>int</em>) &#8211; last index</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">self must not be empty</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.ub">
+<code class="descname">ub</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; list&lt;float&gt;<a class="headerlink" href="#pyibex.IntervalVector.ub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the upper bound vector
+.. note:: (self) must be nonempty</p>
+<blockquote>
+<div>/</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.IntervalVector.volume">
+<code class="descname">volume</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; float<a class="headerlink" href="#pyibex.IntervalVector.volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the volume of this interval vector.
+.. note:: Return c POS_INFINITY if the vector is unbounded and not flat.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Return 0 if the vector is flat and not unbounded.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If the interval vector is both flat and unbounded, the result is undefined.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">flat()
+unbounded()</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="function">
+<h2>Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyibex.Function">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">Function</code><a class="headerlink" href="#pyibex.Function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="pyibex.Function.backward">
+<code class="descname">backward</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyibex.Function.backward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li>backward(self: pyibex.pyibex.Function, arg0: pyibex.pyibex.Interval, arg1: pyibex.pyibex.IntervalVector) -&gt; bool</li>
+<li>backward(self: pyibex.pyibex.Function, arg0: pyibex.pyibex.IntervalVector, arg1: pyibex.pyibex.IntervalVector) -&gt; bool</li>
+<li>backward(self: pyibex.pyibex.Function, arg0: ibex::IntervalMatrix, arg1: pyibex.pyibex.IntervalVector) -&gt; bool</li>
+</ol>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Function.eval">
+<code class="descname">eval</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Function</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.Interval<a class="headerlink" href="#pyibex.Function.eval" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Function.eval_matrix">
+<code class="descname">eval_matrix</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Function</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; ibex::IntervalMatrix<a class="headerlink" href="#pyibex.Function.eval_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Function.eval_vector">
+<code class="descname">eval_vector</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Function</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.IntervalVector<a class="headerlink" href="#pyibex.Function.eval_vector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.Function.nb_arg">
+<code class="descname">nb_arg</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Function</em><span class="sig-paren">)</span> &rarr; int<a class="headerlink" href="#pyibex.Function.nb_arg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="contractors-ctc">
+<h2>Contractors (Ctc)<a class="headerlink" href="#contractors-ctc" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyibex.Ctc">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">Ctc</code><a class="headerlink" href="#pyibex.Ctc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Contractor abscract class
+All contractor need to inherit from this class and define the method <em>contract</em>
+and initilize the Ctc class with the dimension of the contractor
+i.e. the dimension of the box passed to contract function.</p>
+<p>In python you can define yout own contractor
+.. rubric:: Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1">#  contractor on a 2 dimensionnal boxes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">myCtc</span><span class="p">(</span><span class="n">Ctc</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">Ctc</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># init Ctc abstract class</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>You can also make the intersection / union of contractors using &amp; and |</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctc1</span> <span class="o">=</span> <span class="n">CtcXXX</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctc2</span> <span class="o">=</span> <span class="n">CtcXXX</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># intersection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctc3</span> <span class="o">=</span> <span class="n">ctc1</span> <span class="o">&amp;</span> <span class="n">ctc2</span> <span class="c1"># intersection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctc4</span> <span class="o">=</span> <span class="n">ctc1</span> <span class="o">|</span> <span class="n">ctc3</span> <span class="o">&amp;</span> <span class="n">ctc2</span> <span class="c1"># combinaison</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pyibex.Ctc.contract">
+<code class="descname">contract</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Ctc</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.Ctc.contract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contract the box (in-place)
+:param x: box to be contracted
+:type x: IntervalVector</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyibex.Ctc.nb_var">
+<code class="descname">nb_var</code><a class="headerlink" href="#pyibex.Ctc.nb_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of variables this contractor works with.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="ctcunion">
+<h3>CtcUnion<a class="headerlink" href="#ctcunion" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.CtcUnion">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">CtcUnion</code><a class="headerlink" href="#pyibex.CtcUnion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Ctc</span></code></p>
+<p>Union of contractors
+For a box [x] the union of {c_0,...c_n} performs
+<span class="math">\(c_1([x]) \cup ... \cup c_n([x])\)</span></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list of contractors</strong> (<em>list&lt;Ctc&gt;</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#pyibex.CtcUnion" title="pyibex.CtcUnion">CtcUnion</a></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyibex.CtcUnion.contract">
+<code class="descname">contract</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.CtcUnion</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.CtcUnion.contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ctccompo">
+<h3>CtcCompo<a class="headerlink" href="#ctccompo" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.CtcCompo">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">CtcCompo</code><a class="headerlink" href="#pyibex.CtcCompo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Ctc</span></code></p>
+<p>Intersection (composition) of contractors
+For a box [x] the composition of {c_0,...c_n} performs
+c_n(...(c_1(c_0([x])))).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list of contractors</strong> (<em>list&lt;Ctc&gt;</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#pyibex.CtcCompo" title="pyibex.CtcCompo">CtcCompo</a></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyibex.CtcCompo.contract">
+<code class="descname">contract</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.CtcCompo</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.CtcCompo.contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ctcfwdbwd">
+<h3>CtcFwdBwd<a class="headerlink" href="#ctcfwdbwd" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.CtcFwdBwd">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">CtcFwdBwd</code><a class="headerlink" href="#pyibex.CtcFwdBwd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Ctc</span></code></p>
+<p>Forward-backward contractor (HC4Revise).
+Can be initialized with:</p>
+<blockquote>
+<div><ul class="simple">
+<li>a function ( constraint f(x) cmp 0) default cmp = EQ</li>
+<li>a function and a interval/box  f(x) in itv</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>f</strong> (<a class="reference internal" href="#pyibex.Function" title="pyibex.Function"><em>Function</em></a>) &#8211; Function used for the Forward-backward</li>
+<li><strong>op</strong> (<em>CmpOp</em>) &#8211; comparaison operator</li>
+<li><strong>itv_y</strong> (<a class="reference internal" href="#pyibex.Interval" title="pyibex.Interval"><em>Interval</em></a>) &#8211; for constraint f(x) in itv_y</li>
+<li><strong>box_y</strong> (<a class="reference internal" href="#pyibex.IntervalVector" title="pyibex.IntervalVector"><em>IntervalVector</em></a>) &#8211; for constraint f(x) in box_y</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a Forward-backward contractor</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyibex.CtcFwdBwd" title="pyibex.CtcFwdBwd">CtcFwdBwd</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;(sin(x)^2 + 3*y)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Constaint f(x) &lt;= O</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctc</span> <span class="o">=</span> <span class="n">CtcFwdBwd</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">LEQ</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Constaint f(x) &lt;= [0, 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctc</span> <span class="o">=</span> <span class="n">CtcFwdBwd</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Interval</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pyibex.CtcFwdBwd.contract">
+<code class="descname">contract</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.CtcFwdBwd</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.CtcFwdBwd.contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ctcinverse">
+<h3>CtcInverse<a class="headerlink" href="#ctcinverse" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.CtcInverse">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">CtcInverse</code><a class="headerlink" href="#pyibex.CtcInverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Ctc</span></code></p>
+<p>Image of a contractor by a function in a forward-backaward manner
+[x] = [x] cap f^{-1}( ctc( f([x]) ) )</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ctc</strong> (<a class="reference internal" href="#pyibex.Ctc" title="pyibex.Ctc"><em>Ctc</em></a>) &#8211; contrctor to use</li>
+<li><strong>f</strong> (<a class="reference internal" href="#pyibex.Function" title="pyibex.Function"><em>Function</em></a>) &#8211; function to use</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">contractor</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyibex.CtcInverse" title="pyibex.CtcInverse">CtcInverse</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyibex.CtcInverse.contract">
+<code class="descname">contract</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.CtcInverse</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.CtcInverse.contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ctcnotin">
+<h3>CtcNotIn<a class="headerlink" href="#ctcnotin" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.CtcNotIn">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">CtcNotIn</code><a class="headerlink" href="#pyibex.CtcNotIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Ctc</span></code></p>
+<p>Contractor for f(x) not-in y
+wrt to f, y can be an Interval or a box.
+.. note:: Only Interval and IntervalVector types are supported for now.</p>
+<dl class="method">
+<dt id="pyibex.CtcNotIn.contract">
+<code class="descname">contract</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.CtcNotIn</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.CtcNotIn.contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ctcfixpoint">
+<h3>CtcFixPoint<a class="headerlink" href="#ctcfixpoint" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.CtcFixPoint">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">CtcFixPoint</code><a class="headerlink" href="#pyibex.CtcFixPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Ctc</span></code></p>
+<p>Fix point of a contractor
+:param ctc: a contractor
+:type ctc: Ctc</p>
+<dl class="method">
+<dt id="pyibex.CtcFixPoint.contract">
+<code class="descname">contract</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.CtcFixPoint</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.CtcFixPoint.contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ctcqinter">
+<h3>CtcQInter<a class="headerlink" href="#ctcqinter" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.CtcQInter">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">CtcQInter</code><a class="headerlink" href="#pyibex.CtcQInter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Ctc</span></code></p>
+<p>Exact relaxed intersection of a list of contractors
+:param list: list of contractors
+:type list: list&lt;Ctc&gt;
+:param q: The number of contractors which have to intersect the result
+:type q: int</p>
+<dl class="method">
+<dt id="pyibex.CtcQInter.contract">
+<code class="descname">contract</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.CtcQInter</em>, <em>arg0: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.CtcQInter.contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="separators-sep">
+<h2>Separators (Sep)<a class="headerlink" href="#separators-sep" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyibex.Sep">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">Sep</code><a class="headerlink" href="#pyibex.Sep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Separator interface.
+A separator is an operator that performs two independent and
+complementary contractions. The separator is associated with
+a set (noted S) and the first contraction (called &#8220;inner&#8221;)
+removes points inside S. The second contraction (called
+&#8220;outer&#8221;) removes points outside S.
+In summary:
+Given a box [x], the separator produces two sub-boxes
+[x_in] and [x_out] that verify:</p>
+<blockquote>
+<div><ul class="simple">
+<li>([x] \cap [x_in]) \subset S</li>
+<li>([x] \cap [x_out]) \cap S = \emptyset</li>
+</ul>
+</div></blockquote>
+<p>For efficiency reasons, the separate(...) function takes only
+two input-output arguments, x_in and x_out, each containing
+initially a copy of the box [x].
+A separator can also be viewed a as pair of contractors.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">pyibex.SepCtcPair.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">L. Jaulin and B. Desrochers (2014). &#8220;Introduction to the
+Algebra of Separators with Application to Path Planning&#8221;.
+Engineering Applications of Artificial Intelligence volume 33, pp. 141-147.</p>
+</div>
+<p>All separator need to inherit from this class and define the method <em>separate</em>
+and initilize the Sep class with the dimension of the separator
+i.e. the dimension of the box passed to separate function.</p>
+<p>In python you can define yout own separator</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1">#  separator on a 2 dimensionnal boxes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">mySep</span><span class="p">(</span><span class="n">Sep</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">Sep</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># init Sep abstract class</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">def</span> <span class="nf">separate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box_in</span><span class="p">,</span> <span class="n">box_out</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>You can also make the intersection / union / restriction of separators using &amp;, | and ~</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sep1</span> <span class="o">=</span> <span class="n">SepXXX</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sep2</span> <span class="o">=</span> <span class="n">SepXXX</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># intersection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sep3</span> <span class="o">=</span> <span class="n">sep1</span> <span class="o">&amp;</span> <span class="n">sep2</span> <span class="c1"># intersection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sep4</span> <span class="o">=</span> <span class="n">sep1</span> <span class="o">|</span> <span class="n">sep3</span> <span class="o">&amp;</span> <span class="n">sep2</span> <span class="c1"># combinaison</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sep5</span> <span class="o">=</span>   <span class="o">~</span><span class="n">sep4</span> <span class="o">|</span> <span class="n">spe1</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pyibex.Sep.separate">
+<code class="descname">separate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Sep</em>, <em>x_in: pyibex.pyibex.IntervalVector</em>, <em>x_out: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.Sep.separate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separate a box in two sub-boxes.
+:param x_in: As input: the initial box. As output: result of the first (&#8220;inner&#8221;) contraction
+:type x_in: IntervalVector
+:param x_out: As input: the initial box. As output: the result of the second (&#8220;outer&#8221;) contraction
+:type x_out: IntervalVector</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Precondition: x_in and x_out must be the same boxes.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyibex.Sep.nb_var">
+<code class="descname">nb_var</code><a class="headerlink" href="#pyibex.Sep.nb_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of variables this separator works with.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="sepunion">
+<h3>SepUnion<a class="headerlink" href="#sepunion" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.SepUnion">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">SepUnion</code><a class="headerlink" href="#pyibex.SepUnion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Sep</span></code></p>
+<p>Union of separators
+:param list&lt;Sep&gt; list of separators:</p>
+<dl class="method">
+<dt id="pyibex.SepUnion.separate">
+<code class="descname">separate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepUnion</em>, <em>arg0: pyibex.pyibex.IntervalVector</em>, <em>arg1: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.SepUnion.separate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sepinter">
+<h3>SepInter<a class="headerlink" href="#sepinter" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.SepInter">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">SepInter</code><a class="headerlink" href="#pyibex.SepInter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Sep</span></code></p>
+<p>Intersection of separators
+:param list&lt;Sep&gt; list of separators:</p>
+<dl class="method">
+<dt id="pyibex.SepInter.separate">
+<code class="descname">separate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepInter</em>, <em>arg0: pyibex.pyibex.IntervalVector</em>, <em>arg1: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.SepInter.separate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sepctcpair">
+<h3>SepCtcPair<a class="headerlink" href="#sepctcpair" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.SepCtcPair">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">SepCtcPair</code><a class="headerlink" href="#pyibex.SepCtcPair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Sep</span></code></p>
+<p>Build a separator with a pair of complementary contractors
+:param ctc_in: inner contractor
+:type ctc_in: Ctc
+:param ctc_out: outer contractor
+:type ctc_out: Ctc</p>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s2">&quot;x[2]&quot;</span><span class="p">,</span>  <span class="s2">&quot;x[0] + 2*x[1]&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctc_out</span> <span class="o">=</span> <span class="n">CtcFwdBwd</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">LEQ</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctc_in</span> <span class="o">=</span> <span class="n">CtcFwdBwd</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">GEQ</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sep</span> <span class="o">=</span> <span class="n">SepCtcPair</span><span class="p">(</span><span class="n">ctc_in</span><span class="p">,</span> <span class="n">ctc_out</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pyibex.SepCtcPair.ctc_in">
+<code class="descname">ctc_in</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepCtcPair</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.Ctc<a class="headerlink" href="#pyibex.SepCtcPair.ctc_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.SepCtcPair.ctc_out">
+<code class="descname">ctc_out</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepCtcPair</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.Ctc<a class="headerlink" href="#pyibex.SepCtcPair.ctc_out" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.SepCtcPair.separate">
+<code class="descname">separate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Sep</em>, <em>arg0: pyibex.pyibex.IntervalVector</em>, <em>arg1: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.SepCtcPair.separate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sepfwdbwd">
+<h3>SepFwdBwd<a class="headerlink" href="#sepfwdbwd" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.SepFwdBwd">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">SepFwdBwd</code><a class="headerlink" href="#pyibex.SepFwdBwd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Sep</span></code></p>
+<p>This separator applies inner and outer forward-backward
+contractors to separate a box w.r.t. a constraint
+<span class="math">\(f(x) in [y]\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f</strong> (<a class="reference internal" href="#pyibex.Function" title="pyibex.Function"><em>Function</em></a>) &#8211; Function used for the Forward-backward</li>
+<li><strong>op</strong> (<em>CmpOp</em>) &#8211; comparaison operator</li>
+<li><strong>itv_y</strong> (<a class="reference internal" href="#pyibex.Interval" title="pyibex.Interval"><em>Interval</em></a>) &#8211; for constraint f(x) in itv_y</li>
+<li><strong>box_y</strong> (<a class="reference internal" href="#pyibex.IntervalVector" title="pyibex.IntervalVector"><em>IntervalVector</em></a>) &#8211; for constraint f(x) in box_y</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># disk of raduis 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;x^2+y^2 - 4&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sep</span> <span class="o">=</span> <span class="n">SepFwdBwd</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">LEQ</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pyibex.SepFwdBwd.ctc_in">
+<code class="descname">ctc_in</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepFwdBwd</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.Ctc<a class="headerlink" href="#pyibex.SepFwdBwd.ctc_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.SepFwdBwd.ctc_out">
+<code class="descname">ctc_out</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepFwdBwd</em><span class="sig-paren">)</span> &rarr; pyibex.pyibex.Ctc<a class="headerlink" href="#pyibex.SepFwdBwd.ctc_out" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyibex.SepFwdBwd.separate">
+<code class="descname">separate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.Sep</em>, <em>arg0: pyibex.pyibex.IntervalVector</em>, <em>arg1: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.SepFwdBwd.separate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sepnot">
+<h3>SepNot<a class="headerlink" href="#sepnot" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.SepNot">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">SepNot</code><a class="headerlink" href="#pyibex.SepNot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Sep</span></code></p>
+<p>Separator for <span class="math">\(f(x) \notin [y]\)</span></p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">pyibex.CtCNotIn</p>
+</div>
+<dl class="method">
+<dt id="pyibex.SepNot.separate">
+<code class="descname">separate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepNot</em>, <em>arg0: pyibex.pyibex.IntervalVector</em>, <em>arg1: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.SepNot.separate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sepinverse">
+<h3>SepInverse<a class="headerlink" href="#sepinverse" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.SepInverse">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">SepInverse</code><a class="headerlink" href="#pyibex.SepInverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Sep</span></code></p>
+<p>Image of a separator by a function in a forward-backaward manner
+:param sep: Separator to use
+:type sep: Sep
+:param f: Function to use
+:type f: Function</p>
+<dl class="docutils">
+<dt>See Also</dt>
+<dd>pyibex.CtcInverse</dd>
+</dl>
+<dl class="method">
+<dt id="pyibex.SepInverse.separate">
+<code class="descname">separate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepInverse</em>, <em>arg0: pyibex.pyibex.IntervalVector</em>, <em>arg1: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.SepInverse.separate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sepqinter">
+<h3>SepQInter<a class="headerlink" href="#sepqinter" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pyibex.SepQInter">
+<em class="property">class </em><code class="descclassname">pyibex.</code><code class="descname">SepQInter</code><a class="headerlink" href="#pyibex.SepQInter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyibex.pyibex.Sep</span></code></p>
+<p>Exact relaxed intersection of a list of separators
+:param list: list of separators
+:type list: list&lt;Ctc&gt;
+:param q: The number of separators which have to intersect the result
+:type q: int</p>
+<dl class="method">
+<dt id="pyibex.SepQInter.separate">
+<code class="descname">separate</code><span class="sig-paren">(</span><em>self: pyibex.pyibex.SepQInter</em>, <em>arg0: pyibex.pyibex.IntervalVector</em>, <em>arg1: pyibex.pyibex.IntervalVector</em><span class="sig-paren">)</span> &rarr; None<a class="headerlink" href="#pyibex.SepQInter.separate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Benoit Desrochers.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.5.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

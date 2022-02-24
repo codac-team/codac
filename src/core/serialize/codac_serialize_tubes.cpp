@@ -42,7 +42,7 @@ namespace codac
 
         // Domains
         double lb;
-        for(const Slice *s = tube.first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube.first_slice() ; s ; s = s->next_slice())
         {
           lb = s->tdomain().lb();
           bin_file.write((const char*)&lb, sizeof(double));
@@ -51,12 +51,12 @@ namespace codac
         bin_file.write((const char*)&lb, sizeof(double));
 
         // Codomains
-        for(const Slice *s = tube.first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube.first_slice() ; s ; s = s->next_slice())
           serialize_Interval(bin_file, s->codomain());
 
         // Gates
         serialize_Interval(bin_file, tube.first_slice()->input_gate());
-        for(const Slice *s = tube.first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube.first_slice() ; s ; s = s->next_slice())
           serialize_Interval(bin_file, s->output_gate());
 
         break;
@@ -98,14 +98,14 @@ namespace codac
         bin_file.read((char*)&lb, sizeof(double));
         Interval tube_tdomain(lb);
 
-        Slice *prev_slice = NULL, *slice = NULL;
+        Slice *prev_slice = nullptr, *slice = nullptr;
         for(int k = 0 ; k < slices_number ; k++)
         {
           double ub;
           bin_file.read((char*)&ub, sizeof(double));
           tube_tdomain |= Interval(lb, ub);
 
-          if(slice == NULL)
+          if(slice == nullptr)
           {
             slice = new Slice(Interval(lb, ub));
             tube->m_first_slice = slice;
@@ -117,10 +117,10 @@ namespace codac
             slice = slice->next_slice();
           }
 
-          if(prev_slice != NULL)
+          if(prev_slice)
           {
             delete slice->m_input_gate;
-            slice->m_input_gate = NULL;
+            slice->m_input_gate = nullptr;
             Slice::chain_slices(prev_slice, slice);
           }
 
@@ -129,7 +129,7 @@ namespace codac
         }
 
         // Codomains
-        for(Slice *s = tube->first_slice() ; s != NULL ; s = s->next_slice())
+        for(Slice *s = tube->first_slice() ; s ; s = s->next_slice())
         {
           Interval slice_value;
           deserialize_Interval(bin_file, slice_value);
@@ -144,7 +144,7 @@ namespace codac
         Interval gate;
         deserialize_Interval(bin_file, gate);
         tube->first_slice()->set_input_gate(gate);
-        for(Slice *s = tube->first_slice() ; s != NULL ; s = s->next_slice())
+        for(Slice *s = tube->first_slice() ; s ; s = s->next_slice())
         {
           deserialize_Interval(bin_file, gate);
           s->set_output_gate(gate);

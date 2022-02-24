@@ -74,7 +74,7 @@ namespace codac
 
       void construct_from_array(int n, const char** x, const char* y);
 
-      Function *m_ibex_f = NULL;
+      Function *m_ibex_f = nullptr;
       std::string m_expr; // stored here because impossible to get this value from Function
   };
 }

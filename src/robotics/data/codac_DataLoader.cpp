@@ -38,7 +38,7 @@ namespace codac
 
   DataLoader::~DataLoader()
   {
-    if(m_datafile != NULL)
+    if(m_datafile)
       delete m_datafile;
   }
 
@@ -70,7 +70,7 @@ namespace codac
     assert(map_box.size() == 2);
     assert(nb_landmarks >= 0);
 
-    srand(time(NULL));
+    srand(time(nullptr));
     vector<Beacon> v_landmarks;
     for(int i = 0 ; i < nb_landmarks ; i++)
     {

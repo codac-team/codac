@@ -121,6 +121,10 @@ void export_VIBesFigTubeVector(py::module& m)
       VIBESFIGTUBEVECTOR_VOID_SET_TRAJECTORY_COLOR_TRAJECTORYVECTOR_STRING,
       "trajvector"_a, "color"_a)
 
+    .def("set_trajectory_points_size", &VIBesFigTubeVector::set_trajectory_points_size,
+      VIBESFIGTUBEVECTOR_VOID_SET_TRAJECTORY_POINTS_SIZE_TRAJECTORYVECTOR_DOUBLE,
+      "trajvector"_a, "points_size"_a)
+
     .def("remove_trajectory", &VIBesFigTubeVector::remove_trajectory,
       VIBESFIGTUBEVECTOR_VOID_REMOVE_TRAJECTORY_TRAJECTORYVECTOR,
       "trajvector"_a)

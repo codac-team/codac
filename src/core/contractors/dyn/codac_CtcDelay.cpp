@@ -57,7 +57,7 @@ namespace codac
 
     // iterate over the first tube x
     Slice *s_x = x.first_slice();
-    while(s_x != NULL)
+    while(s_x)
     {
       const Interval t_x = s_x->tdomain();
       Interval intv_t = t_x + a;
@@ -119,7 +119,7 @@ namespace codac
 
     // iterate over the second tube y
     Slice *s_y = y.first_slice();
-    while(s_y != NULL)
+    while(s_y)
     {
       const Interval t_y = s_y->tdomain();
       Interval intv_t = t_y - a;

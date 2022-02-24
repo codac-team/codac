@@ -798,4 +798,13 @@ TEST_CASE("Arithmetic on trajs")
     trajz = trajx; trajz /= trajy[1];
     CHECK(ApproxIntvVector(trajz.codomain()) == IntervalVector((1./vy[1])*vx));
   }
+  
+  SECTION("Tests vector traj")
+  {
+    TubeVector tube(Interval(0,10), 1., 3);
+    tube[0].set(Interval(2,3));
+    tube[1].set(Interval(1,5));
+    tube[2] = max(tube[0],tube[1]);
+    CHECK(tube[2].codomain() == Interval(2,5));
+  }
 }

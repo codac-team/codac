@@ -16,16 +16,16 @@ using namespace ibex;
 namespace codac
 {
   TubeTreeSynthesis::TubeTreeSynthesis(const Tube* tube, int k0, int kf, const vector<const Slice*>& v_tube_slices)
-    : m_tube_ref(tube), m_parent(NULL)
+    : m_tube_ref(tube), m_parent(nullptr)
   {
-    assert(tube != NULL);
+    assert(tube);
     assert(k0 >= 0 && k0 < (int)v_tube_slices.size()); // todo: use size_t
     assert(kf >= 0 && kf < (int)v_tube_slices.size()); // todo: use size_t
 
     if(k0 == kf) // leaf, pointer to a slice
     {
-      m_first_subtree = NULL;
-      m_second_subtree = NULL;
+      m_first_subtree = nullptr;
+      m_second_subtree = nullptr;
       m_slice_ref = v_tube_slices[k0];
       m_slice_ref->m_synthesis_reference = this;
       m_tdomain = m_slice_ref->tdomain();
@@ -50,22 +50,22 @@ namespace codac
       }
 
       else
-        m_second_subtree = NULL;
+        m_second_subtree = nullptr;
 
       m_tdomain = m_first_subtree->tdomain() | m_second_subtree->tdomain();
-      m_slice_ref = NULL;
+      m_slice_ref = nullptr;
     }
   }
 
   TubeTreeSynthesis::~TubeTreeSynthesis()
   {
-    if(m_slice_ref != NULL)
-      m_slice_ref->m_synthesis_reference = NULL; // removing reference from slice's part
+    if(m_slice_ref)
+      m_slice_ref->m_synthesis_reference = nullptr; // removing reference from slice's part
 
-    if(m_first_subtree != NULL)
+    if(m_first_subtree)
       delete m_first_subtree;
 
-    if(m_second_subtree != NULL)
+    if(m_second_subtree)
       delete m_second_subtree;
   }
 
@@ -272,7 +272,7 @@ namespace codac
     
     m_values_update_needed = true;
 
-    if(m_parent != NULL && !m_parent->m_values_update_needed)
+    if(m_parent && !m_parent->m_values_update_needed)
       m_parent->request_values_update();
   }
 
@@ -283,15 +283,15 @@ namespace codac
 
     m_integrals_update_needed = true;
     
-    if(m_parent != NULL && !m_parent->m_integrals_update_needed)
+    if(m_parent && !m_parent->m_integrals_update_needed)
       m_parent->request_integrals_update();
 
-    if(m_slice_ref != NULL && propagate_to_other_slices)
+    if(m_slice_ref && propagate_to_other_slices)
     {
       // Update everything after the updated slice
-      for(const Slice *s = m_slice_ref->next_slice() ; s != NULL ; s = s->next_slice())
+      for(const Slice *s = m_slice_ref->next_slice() ; s ; s = s->next_slice())
       {
-        assert(s->m_synthesis_reference != NULL);
+        assert(s->m_synthesis_reference);
         s->m_synthesis_reference->request_integrals_update(false);
       }
     }
@@ -299,21 +299,21 @@ namespace codac
 
   bool TubeTreeSynthesis::is_leaf() const
   {
-    bool is_leaf_ = (m_first_subtree == NULL && m_second_subtree == NULL);
+    bool is_leaf_ = (m_first_subtree == nullptr && m_second_subtree == nullptr);
     if(is_leaf_)
-      assert(m_slice_ref != NULL);
+      assert(m_slice_ref);
     return is_leaf_;
   }
 
   bool TubeTreeSynthesis::is_root() const
   {
-    bool is_root_ = (m_parent == NULL);
+    bool is_root_ = (m_parent == nullptr);
     return is_root_;
   }
 
   TubeTreeSynthesis* TubeTreeSynthesis::root()
   {
-    if(m_parent == NULL)
+    if(m_parent == nullptr)
       return this;
     else
       return m_parent->root();
@@ -361,12 +361,12 @@ namespace codac
         // (because integral computation starts from k=0)
 
         Interval sum = Interval(0);
-        for(const Slice *s = m_tube_ref->first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = m_tube_ref->first_slice() ; s ; s = s->next_slice())
         {
           double dt = s->tdomain().diam();
           Interval slice_value = s->codomain();
           Interval integral = sum + slice_value * Interval(0., dt);
-          assert(s->m_synthesis_reference != NULL);
+          assert(s->m_synthesis_reference);
           s->m_synthesis_reference->m_partial_primitive =
                 make_pair(Interval(integral.lb(), integral.lb() + fabs(slice_value.lb() * dt)),
                           Interval(integral.ub() - fabs(slice_value.ub() * dt), integral.ub()));

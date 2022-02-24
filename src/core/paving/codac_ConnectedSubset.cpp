@@ -22,18 +22,13 @@ namespace codac
       m_v_subset_items(v_subset_items)
   {
     m_box = IntervalVector(2, Interval::EMPTY_SET);
-    for(size_t i = 0 ; i < m_v_subset_items.size() ; i++)
-      m_box |= m_v_subset_items[i]->box();
+    for(const auto& subset_item : m_v_subset_items)
+      m_box |= subset_item->box();
   }
 
   ConnectedSubset::~ConnectedSubset()
   {
 
-  }
-
-  const IntervalVector ConnectedSubset::box() const
-  {
-    return m_box;
   }
 
   bool ConnectedSubset::is_strictly_included_in_paving() const
@@ -54,9 +49,13 @@ namespace codac
 
   vector<IntervalVector> ConnectedSubset::get_boxes() const // items of type k
   {
-    vector<IntervalVector> v_boxes;
-    for(size_t i = 0 ; i < m_v_subset_items.size() ; i++)
-      v_boxes.push_back(m_v_subset_items[i]->box());
+    vector<IntervalVector> v_boxes(m_v_subset_items.size());
+    size_t i = 0;
+    for(const auto& subset_item : m_v_subset_items)
+    {
+      v_boxes[i] = subset_item->box();
+      i++;
+    }
     return v_boxes;
   }
 
@@ -65,17 +64,17 @@ namespace codac
     assert(value_out != value_boundary);
     vector<IntervalVector> v_boundaries;
 
-    for(size_t i = 0 ; i < m_v_subset_items.size() ; i++)
+    for(const auto& subset_item : m_v_subset_items)
     {
-      if(!(m_v_subset_items[i]->value() & value_boundary))
+      if(!(subset_item->value() & value_boundary))
         continue;
 
       vector<const Paving*> v_neighbours;
-      m_v_subset_items[i]->get_neighbours(v_neighbours, value_out, false);
+      subset_item->get_neighbours(v_neighbours, value_out, false);
 
-      for(size_t j = 0 ; j < v_neighbours.size() ; j++)
+      for(const auto& neighb : v_neighbours)
       {
-        IntervalVector inter = m_v_subset_items[i]->box() & v_neighbours[j]->box();
+        IntervalVector inter = subset_item->box() & neighb->box();
 
         if(!inter[0].is_degenerated() || !inter[1].is_degenerated())
           v_boundaries.push_back(inter);
@@ -88,8 +87,12 @@ namespace codac
   const vector<IntervalVector> ConnectedSubset::get_boxed_hulls(const vector<ConnectedSubset> v_subsets)
   {
     vector<IntervalVector> v_boxes(v_subsets.size());
-    for(size_t i = 0 ; i < v_subsets.size() ; i++)
-      v_boxes[i] = v_subsets[i].box();
+    size_t i = 0;
+    for(const auto& subset : v_subsets)
+    {
+      v_boxes[i] = subset.box();
+      i++;
+    }
     return v_boxes;
   }
 }

@@ -35,26 +35,26 @@ namespace codac
     switch(m_type)
     {
       case Type::T_INTERVAL:
-        m_i_ptr = NULL;
-        m_init_i_ptr = NULL;
+        m_i_ptr = nullptr;
+        m_init_i_ptr = nullptr;
         break;
 
       case Type::T_INTERVAL_VECTOR:
-        m_iv_ptr = NULL;
-        m_init_iv_ptr = NULL;
+        m_iv_ptr = nullptr;
+        m_init_iv_ptr = nullptr;
         break;
 
       case Type::T_TUBE:
-        m_t_ptr = NULL;
+        m_t_ptr = nullptr;
         break;
 
       case Type::T_TUBE_VECTOR:
-        m_tv_ptr = NULL;
+        m_tv_ptr = nullptr;
         break;
 
       default:
-        m_i_ptr = NULL; // default value of the union
-        m_init_i_ptr = NULL;
+        m_i_ptr = nullptr; // default value of the union
+        m_init_i_ptr = nullptr;
         break;
     }
   }
@@ -70,7 +70,7 @@ namespace codac
     : Domain(Type::T_INTERVAL, MemoryRef::M_DOUBLE)
   {
     m_i_ptr = new Interval(d);
-    m_init_i_ptr = NULL;
+    m_init_i_ptr = nullptr;
     m_ref_values_i = reference_wrapper<Interval>(*m_i_ptr);
     m_ref_memory_d = reference_wrapper<double>(d);
   }
@@ -78,8 +78,8 @@ namespace codac
   Domain::Domain(Interval& i)
     : Domain(Type::T_INTERVAL, MemoryRef::M_INTERVAL)
   {
-    m_i_ptr = NULL;
-    m_init_i_ptr = NULL;
+    m_i_ptr = nullptr;
+    m_init_i_ptr = nullptr;
     m_ref_values_i = reference_wrapper<Interval>(i);
     m_ref_memory_i = reference_wrapper<Interval>(i);
   }
@@ -87,8 +87,8 @@ namespace codac
   Domain::Domain(Interval& i, double& extern_d)
     : Domain(Type::T_INTERVAL, MemoryRef::M_DOUBLE)
   {
-    m_i_ptr = NULL;
-    m_init_i_ptr = NULL;
+    m_i_ptr = nullptr;
+    m_init_i_ptr = nullptr;
     m_ref_values_i = reference_wrapper<Interval>(i);
     m_ref_memory_d = reference_wrapper<double>(extern_d);
   }
@@ -96,8 +96,8 @@ namespace codac
   Domain::Domain(Interval& i, Interval& extern_i)
     : Domain(Type::T_INTERVAL, MemoryRef::M_INTERVAL)
   {
-    m_i_ptr = NULL;
-    m_init_i_ptr = NULL;
+    m_i_ptr = nullptr;
+    m_init_i_ptr = nullptr;
     m_ref_values_i = reference_wrapper<Interval>(i);
     m_ref_memory_i = reference_wrapper<Interval>(extern_i);
   }
@@ -112,14 +112,14 @@ namespace codac
     if(interm_var)
       m_init_i_ptr = new Interval(i);
     else
-      m_init_i_ptr = NULL;
+      m_init_i_ptr = nullptr;
   }
 
   Domain::Domain(IntervalVar& i)
     : Domain(Type::T_INTERVAL, MemoryRef::M_INTERVAL_VAR)
   {
-    m_i_ptr = NULL;
-    m_init_i_ptr = NULL;
+    m_i_ptr = nullptr;
+    m_init_i_ptr = nullptr;
     m_ref_values_i = reference_wrapper<Interval>(static_cast<Interval&>(i));
     m_ref_memory_ivar = reference_wrapper<IntervalVar>(i);
   }
@@ -128,7 +128,7 @@ namespace codac
     : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_VECTOR)
   {
     m_iv_ptr = new IntervalVector(v);
-    m_init_iv_ptr = NULL;
+    m_init_iv_ptr = nullptr;
     m_ref_values_iv = reference_wrapper<IntervalVector>(*m_iv_ptr);
     m_ref_memory_v = reference_wrapper<Vector>(v);
   }
@@ -144,8 +144,8 @@ namespace codac
   Domain::Domain(IntervalVector& iv)
     : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_INTERVAL_VECTOR)
   {
-    m_iv_ptr = NULL;
-    m_init_iv_ptr = NULL;
+    m_iv_ptr = nullptr;
+    m_init_iv_ptr = nullptr;
     m_ref_values_iv = reference_wrapper<IntervalVector>(iv);
     m_ref_memory_iv = reference_wrapper<IntervalVector>(iv);
   }
@@ -160,14 +160,14 @@ namespace codac
     if(interm_var)
       m_init_iv_ptr = new IntervalVector(iv);
     else
-      m_init_iv_ptr = NULL;
+      m_init_iv_ptr = nullptr;
   }
 
   Domain::Domain(IntervalVectorVar& iv)
     : Domain(Type::T_INTERVAL_VECTOR, MemoryRef::M_INTERVAL_VECTOR_VAR)
   {
-    m_iv_ptr = NULL;
-    m_init_iv_ptr = NULL;
+    m_iv_ptr = nullptr;
+    m_init_iv_ptr = nullptr;
     m_ref_values_iv = reference_wrapper<IntervalVector>(static_cast<IntervalVector&>(iv));
     m_ref_memory_ivvar = reference_wrapper<IntervalVectorVar>(iv);
   }
@@ -185,7 +185,7 @@ namespace codac
   Domain::Domain(Tube& t)
     : Domain(Type::T_TUBE, MemoryRef::M_TUBE)
   {
-    m_init_t_ptr = NULL;
+    m_init_t_ptr = nullptr;
     m_ref_values_t = reference_wrapper<Tube>(t);
     m_ref_memory_t = reference_wrapper<Tube>(t);
 
@@ -206,13 +206,13 @@ namespace codac
     if(interm_var)
       m_init_t_ptr = new Tube(t);
     else
-      m_init_t_ptr = NULL;
+      m_init_t_ptr = nullptr;
   }
 
   Domain::Domain(TubeVector& tv)
     : Domain(Type::T_TUBE_VECTOR, MemoryRef::M_TUBE_VECTOR)
   {
-    m_init_tv_ptr = NULL;
+    m_init_tv_ptr = nullptr;
     m_ref_values_tv = reference_wrapper<TubeVector>(tv);
     m_ref_memory_tv = reference_wrapper<TubeVector>(tv);
 
@@ -233,7 +233,7 @@ namespace codac
     if(interm_var)
       m_init_tv_ptr = new TubeVector(tv);
     else
-      m_init_tv_ptr = NULL;
+      m_init_tv_ptr = nullptr;
   }
 
   Domain::~Domain()
@@ -243,23 +243,23 @@ namespace codac
     switch(m_type)
     {
       case Type::T_INTERVAL:
-        // todo: if(m_i_ptr != NULL) delete m_i_ptr;
-        if(m_init_i_ptr != NULL) delete m_init_i_ptr;
+        // todo: if(m_i_ptr) delete m_i_ptr;
+        if(m_init_i_ptr) delete m_init_i_ptr;
         break;
 
       case Type::T_INTERVAL_VECTOR:
-        // todo: if(m_iv_ptr != NULL) delete m_iv_ptr;
-        if(m_init_iv_ptr != NULL) delete m_init_iv_ptr;
+        // todo: if(m_iv_ptr) delete m_iv_ptr;
+        if(m_init_iv_ptr) delete m_init_iv_ptr;
         break;
 
       case Type::T_TUBE:
-        // todo: if(m_t_ptr != NULL) delete m_t_ptr;
-        if(m_init_t_ptr != NULL) delete m_init_t_ptr;
+        // todo: if(m_t_ptr) delete m_t_ptr;
+        if(m_init_t_ptr) delete m_init_t_ptr;
         break;
 
       case Type::T_TUBE_VECTOR:
-        // todo: if(m_tv_ptr != NULL) delete m_tv_ptr;
-        if(m_init_tv_ptr != NULL) delete m_init_tv_ptr;
+        // todo: if(m_tv_ptr) delete m_tv_ptr;
+        if(m_init_tv_ptr) delete m_init_tv_ptr;
         break;
 
       default:
@@ -348,19 +348,19 @@ namespace codac
       case Type::T_INTERVAL:
         m_ref_values_i = reference_wrapper<Interval>(ad.m_ref_values_i);
 
-        if(ad.m_init_i_ptr != NULL)
+        if(ad.m_init_i_ptr)
           m_init_i_ptr = new Interval(*ad.m_init_i_ptr);
         else
-          m_init_i_ptr = NULL;
+          m_init_i_ptr = nullptr;
         break;
 
       case Type::T_INTERVAL_VECTOR:
         m_ref_values_iv = reference_wrapper<IntervalVector>(ad.m_ref_values_iv);
 
-        if(ad.m_init_iv_ptr != NULL)
+        if(ad.m_init_iv_ptr)
           m_init_iv_ptr = new IntervalVector(*ad.m_init_iv_ptr);
         else
-          m_init_iv_ptr = NULL;
+          m_init_iv_ptr = nullptr;
         break;
 
       case Type::T_SLICE:
@@ -370,19 +370,19 @@ namespace codac
       case Type::T_TUBE:
         m_ref_values_t = ad.m_ref_values_t;
 
-        if(ad.m_init_t_ptr != NULL)
+        if(ad.m_init_t_ptr)
           m_init_t_ptr = new Tube(*ad.m_init_t_ptr);
         else
-          m_init_t_ptr = NULL;
+          m_init_t_ptr = nullptr;
         break;
 
       case Type::T_TUBE_VECTOR:
         m_ref_values_tv = ad.m_ref_values_tv;
 
-        if(ad.m_init_tv_ptr != NULL)
+        if(ad.m_init_tv_ptr)
           m_init_tv_ptr = new TubeVector(*ad.m_init_tv_ptr);
         else
-          m_init_tv_ptr = NULL;
+          m_init_tv_ptr = nullptr;
         break;
 
       default:
@@ -545,7 +545,7 @@ namespace codac
       {
         double vol = tube().volume();
         vol += tube().first_slice()->input_gate().diam();
-        for(const Slice *s = tube().first_slice() ; s != NULL ; s = s->next_slice())
+        for(const Slice *s = tube().first_slice() ; s ; s = s->next_slice())
           vol += s->output_gate().diam();
         return vol;
       }
@@ -559,7 +559,7 @@ namespace codac
         {
           vol += tube_vector()[i].volume();
           vol += tube_vector()[i].first_slice()->input_gate().diam();
-          for(const Slice *s = tube_vector()[i].first_slice() ; s != NULL ; s = s->next_slice())
+          for(const Slice *s = tube_vector()[i].first_slice() ; s ; s = s->next_slice())
             vol += s->output_gate().diam();
         }
         
@@ -588,19 +588,19 @@ namespace codac
     switch(m_type)
     {
       case Type::T_INTERVAL:
-        return m_init_i_ptr != NULL;
+        return m_init_i_ptr;
 
       case Type::T_INTERVAL_VECTOR:
-        return m_init_iv_ptr != NULL;
+        return m_init_iv_ptr;
 
       case Type::T_SLICE:
         return false; // to be changed
 
       case Type::T_TUBE:
-        return m_init_t_ptr != NULL;
+        return m_init_t_ptr;
 
       case Type::T_TUBE_VECTOR:
-        return m_init_tv_ptr != NULL;
+        return m_init_tv_ptr;
 
       default:
         assert(false && "unhandled case");
@@ -617,22 +617,22 @@ namespace codac
     switch(m_type)
     {
       case Type::T_INTERVAL:
-        assert(m_init_i_ptr != NULL);
+        assert(m_init_i_ptr);
         m_ref_values_i.get() = *m_init_i_ptr;
         break;
 
       case Type::T_INTERVAL_VECTOR:
-        assert(m_init_iv_ptr != NULL);
+        assert(m_init_iv_ptr);
         m_ref_values_iv.get() = *m_init_iv_ptr;
         break;
 
       case Type::T_TUBE:
-        assert(m_init_t_ptr != NULL);
+        assert(m_init_t_ptr);
         m_ref_values_t.get() = *m_init_t_ptr;
         break;
 
       case Type::T_TUBE_VECTOR:
-        assert(m_init_tv_ptr != NULL);
+        assert(m_init_tv_ptr);
         m_ref_values_tv.get() = *m_init_tv_ptr;
         break;
 
@@ -831,7 +831,7 @@ namespace codac
     if(m_type == Type::T_SLICE && x.type() == Type::T_TUBE)
     {
       slice_id = 0;
-      for(const Slice *s = x.tube().first_slice() ; s != NULL ; s=s->next_slice())
+      for(const Slice *s = x.tube().first_slice() ; s ; s=s->next_slice())
       {
         if(s == &slice())
           return true;
@@ -887,7 +887,7 @@ namespace codac
     // t and the previous one.
 
     // So we iterate:
-    while(prev_s != NULL && prev_s->tdomain().is_subset(m_traj_lb.tdomain()))
+    while(prev_s && prev_s->tdomain().is_subset(m_traj_lb.tdomain()))
     {
       Interval new_slice_envelope = (m_traj_lb(prev_s->tdomain()) | m_traj_ub(prev_s->tdomain()));
 
@@ -1015,13 +1015,13 @@ namespace codac
   bool Domain::dyn_same_slicing(const vector<Domain>& v_domains)
   {
     // If domains are tubes or tube vectors, they must share the same slicing
-    const Tube *slicing_ref = NULL;
+    const Tube *slicing_ref = nullptr;
     for(const auto& dom: v_domains)
     {
       switch(dom.type())
       {
         case Domain::Type::T_TUBE:
-          if(slicing_ref == NULL)
+          if(slicing_ref == nullptr)
             slicing_ref = &dom.tube();
           else
             if(!Tube::same_slicing(dom.tube(), *slicing_ref))
@@ -1029,7 +1029,7 @@ namespace codac
           break;
 
         case Domain::Type::T_TUBE_VECTOR:
-          if(slicing_ref == NULL)
+          if(slicing_ref == nullptr)
             slicing_ref = &dom.tube_vector()[0]; // first component is used as reference
           else
             if(!TubeVector::same_slicing(dom.tube_vector(), *slicing_ref))

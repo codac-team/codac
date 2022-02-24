@@ -107,7 +107,7 @@ namespace codac
           dot_file << ("dom" + std::to_string(dom.second->id())) + "; ";
 
           // Adding its components
-          Domain *one_component = NULL;
+          Domain *one_component = nullptr;
           for(const auto& dom_i : m_map_domains) // todo: a fast get_components method
             if(dom_i.second->is_component_of(*dom.second))
             {
@@ -116,7 +116,7 @@ namespace codac
             }
 
           // Adding their component-contractor
-          if(one_component != NULL) // todo: transform it as an assert
+          if(one_component) // todo: transform it as an assert
           for(auto& ctc : m_map_ctc)
             if(ctc.second->type() == Contractor::Type::T_COMPONENT)
               for(const auto& dom_i : ctc.second->domains())

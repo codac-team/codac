@@ -162,7 +162,23 @@ namespace codac
        */
       Trajectory traj_loops_summary() const;
 
+      /**
+       * \brief Enables verbose mode for displaying information related to loops computations
+       *
+       * \return verbose boolean
+       */
+      static void verbose(bool verbose = true);
+
     protected:
+
+      /**
+       * \brief Tries to prove the existence of loops in each detection set
+       *
+       * \note The tplane must have been computed beforehand.
+       *
+       * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
+       */
+      void compute_proofs(const std::function<IntervalVector(const IntervalVector&)>& f);
 
       /**
        * \brief Recursive computation of the tplane, from the tube of positions \f$[\mathbf{p}](\cdot)\f$
@@ -181,6 +197,8 @@ namespace codac
       float m_precision = 0.; //!< precision of the SIVIA algorithm, used later on in traj_loops_summary()
       std::vector<ConnectedSubset> m_v_detected_loops; //!< set of loops detections
       std::vector<ConnectedSubset> m_v_proven_loops; //!< set of loops proofs
+
+      static bool m_verbose;
   };
 }
 

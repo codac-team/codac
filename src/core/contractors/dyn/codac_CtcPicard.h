@@ -41,7 +41,7 @@ namespace codac
       void contract_kth_slices(TubeVector& x, int k, TimePropag t_propa);
       void guess_kth_slices_envelope(TubeVector& x, int k, TimePropag t_propa);
 
-      const TFunction* m_f_ptr = NULL;
+      const TFunction* m_f_ptr = nullptr;
       const TFnc& m_f;
       const float m_delta;
       int m_picard_iterations = 0;

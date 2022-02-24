@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; pyibex 1.6.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.6.4',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Python API" href="api.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyibex
+          
+
+          
+            
+            <img src="_static/pyibex_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.6
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html#basics">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Python API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#conda-best-way-to-install">Conda (Best way to install)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-pip">Using pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-from-sources">Build from sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dependancies">Dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linux-mac-osx">Linux/Mac OSX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for-windows-users-win64-version">For Windows Users (Win64 version)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyibex</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installation.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="conda-best-way-to-install">
+<h2>Conda (Best way to install)<a class="headerlink" href="#conda-best-way-to-install" title="Permalink to this headline">¶</a></h2>
+<p><strong><a class="reference external" href="http://conda.pydata.org/docs/">conda</a></strong>
+Builds for osx-64,linux-64,linux-32,win-64,win-32 for Python 2.7, Python 3.4, and Python 3.5 are all available.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c BenEnsta pyibex
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-pip">
+<h2>Using pip<a class="headerlink" href="#using-pip" title="Permalink to this headline">¶</a></h2>
+<p>Best way to get pyibex is to install it using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyibex</span>
+</pre></div>
+</div>
+<p>On linux system, the pip version must be greater than 9.0 in order to support
+pre-compiled binaries (.whl)</p>
+<!-- ## Using apt-get (Ubuntu 16.04 / 14.04)
+```bash
+sudo add-apt-repository ppa:ben-ensta/pyibex
+sudo apt-get update
+sudo apt install python3-pyibex
+``` --></div>
+<div class="section" id="build-from-sources">
+<h2>Build from sources<a class="headerlink" href="#build-from-sources" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dependancies">
+<h3>Dependancies<a class="headerlink" href="#dependancies" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="http://www.cmake.org">CMake</a> (&gt;= 2.8.3)</li>
+<li><a class="reference external" href="http://www.python.org">Python</a> (tested with 3.4, but should work with &gt;= 2.7)</li>
+<li><a class="reference external" href="https://github.com/wjakob/pybind11">pybind11</a> required C++11 support</li>
+<li><a class="reference external" href="http://www.ibex-lib.org/">ibex-lib</a> custom version from <a class="reference external" href="https://github.com/benEnsta/ibex-lib/tree/pyIbex_version_3">github</a></li>
+<li>a C++ compiler for your platform with c++11 support, e.g. <a class="reference external" href="http://gcc.gnu.org">GCC</a> (&gt;= 4.8), <a class="reference external" href="https://www.visualstudio.com">MSVS 13</a>, <a class="reference external" href="http://llvm.org">llvm</a></li>
+</ul>
+</div>
+<div class="section" id="linux-mac-osx">
+<h3>Linux/Mac OSX<a class="headerlink" href="#linux-mac-osx" title="Permalink to this headline">¶</a></h3>
+<p>To build pyIbex from source with python 3.4 run the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/benEnsta/pyIbex.git
+<span class="nb">cd</span> pyIbex
+install.sh  --python<span class="o">=</span><span class="m">3</span>.4
+</pre></div>
+</div>
+<p>You can change the install directory with <code class="docutils literal notranslate"><span class="pre">--prefix=${PREFIX}</span></code> option.
+and add <code class="docutils literal notranslate"><span class="pre">/home/${PREFIX}/lib/python3/dist-packages</span></code> to PYTHONPATH</p>
+</div>
+<div class="section" id="for-windows-users-win64-version">
+<h3>For Windows Users (Win64 version)<a class="headerlink" href="#for-windows-users-win64-version" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Build Ibex
+Open the developer command prompt and compile ibex-lib</li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/benEnsta/ibex-lib.git
+<span class="nb">cd</span> ibex-lib
+git checkout with_cmake
+mkdir build
+<span class="nb">cd</span> build
+cmake -G <span class="s2">&quot;Visual Studio 12 2013 Win64&quot;</span> -DCMAKE_BUILD_TYPE<span class="o">=</span>Release -DBUILD_TESTS<span class="o">=</span>OFF ../
+msbuild /P:Configuration<span class="o">=</span>Release /p:RuntimeLibrary<span class="o">=</span>MT_StaticRelease PACKAGE.vcxproj
+</pre></div>
+</div>
+<p>The last command generates a installer for ibex-lib</p>
+<ul class="simple">
+<li>build pyIbex with pyzo2015a</li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> pyIbex
+mkdir build
+<span class="nb">cd</span> build
+cmake -G <span class="s2">&quot;Visual Studio 12 2013 Win64&quot;</span> -DBOOST_ROOT<span class="o">=</span><span class="nv">$$$$$$$$</span> -DIBEX_ROOT<span class="o">=</span><span class="nv">$$$$$$$$</span> -DPYTHON_EXECUTABLE<span class="o">=</span><span class="nv">$$$$$$$$</span> ../
+msbuild /P:Configuration<span class="o">=</span>Release /p:RuntimeLibrary<span class="o">=</span>MT_StaticRelease INSTALL.vcxproj
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="api.html" class="btn btn-neutral float-left" title="Python API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Benoit Desrochers
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

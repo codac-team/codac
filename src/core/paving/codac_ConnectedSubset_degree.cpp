@@ -50,13 +50,13 @@ namespace codac
 
     int degree = 0;
 
-    for(size_t i = 0 ; i < v_bi.size() ; i++)
+    for(const auto& b : v_bi)
     {
-      assert(box_dimension(v_bi[i]) == 1 && "wrong dimension");
+      assert(box_dimension(b) == 1 && "wrong dimension");
 
-      vector<IntervalVector> v_cofaces = get_cofaces(v_bi[i]);
-      int b_orientation = orientation(v_bi[i], v_cofaces[0], 1);
-      int local_deg = compute_local_degree(f, v_bi[i], v_cofaces[0]);
+      vector<IntervalVector> v_cofaces = get_cofaces(b);
+      int b_orientation = orientation(b, v_cofaces[0], 1);
+      int local_deg = compute_local_degree(f, b, v_cofaces[0]);
       degree += b_orientation * local_deg;
     }
 
@@ -65,8 +65,8 @@ namespace codac
 
   bool ConnectedSubset::all_positive_signs(const vector<int>& v_s) const
   {
-    for(size_t i = 0 ; i < v_s.size() ; i++)
-      if(v_s[i] != 1)
+    for(const auto& s : v_s)
+      if(s != 1)
         return false;
     return true;
   }
@@ -149,8 +149,8 @@ namespace codac
     if(dim == 2)
     {
       IntervalVector c = f(b);
-      for(int i = 0 ; i < c.size() ; i++)
-        v_s.push_back(c[i].contains(0.) ? 0 : (c[i].mid() > 0. ? 1 : -1));
+      for(const auto& ci : c)
+        v_s.push_back(ci.contains(0.) ? 0 : (ci.mid() > 0. ? 1 : -1));
     }
 
     else
@@ -159,10 +159,10 @@ namespace codac
         v_s.push_back(0);
 
       vector<IntervalVector> v_cofaces = get_cofaces(b, common_cocoface);
-      for(size_t j = 0 ; j < v_cofaces.size() ; j++)
+      for(const auto& coface : v_cofaces)
       {
-        assert(box_dimension(v_cofaces[j]) == dim+1 && "unhandled dimension case");
-        vector<int> v_sj = sign_vector(f, v_cofaces[j], common_cocoface);
+        assert(box_dimension(coface) == dim+1 && "unhandled dimension case");
+        vector<int> v_sj = sign_vector(f, coface, common_cocoface);
 
         for(size_t i = 0 ; i < v_sj.size() ; i++)
           if(v_sj[i] != 0)
@@ -197,22 +197,22 @@ namespace codac
           vector<IntervalVector> v_bi = get_boundary();
 
           int p = 0;
-          for(size_t i = 0 ; i < v_bi.size() ; i++)
-            if(v_bi[i].intersects(b) && (common_cocoface & v_bi[i]).max_diam() != 0.)
+          for(const auto& bi : v_bi)
+            if(bi.intersects(b) && (common_cocoface & bi).max_diam() != 0.)
               p++;
 
           if(p == 2) // Case of two subsets joined by a single point
           {
-            for(size_t i = 0 ; i < v_bi.size() ; i++)
-              if(v_bi[i].intersects(b) && (common_cocoface & v_bi[i]).max_diam() != 0.)
-                v_cofaces.push_back(v_bi[i]);
+            for(const auto& bi : v_bi)
+              if(bi.intersects(b) && (common_cocoface & bi).max_diam() != 0.)
+                v_cofaces.push_back(bi);
           }
 
           else
           {
-            for(size_t i = 0 ; i < v_bi.size() ; i++)
-              if(v_bi[i].intersects(b))
-                v_cofaces.push_back(v_bi[i]);
+            for(const auto& bi : v_bi)
+              if(bi.intersects(b))
+                v_cofaces.push_back(bi);
           }
 
           assert(v_cofaces.size() == 2 && "nb of cofaces for a point should be 2");
@@ -250,8 +250,8 @@ namespace codac
     
     // Inside the subpaving:
     list<Paving*> l;
-    for(size_t i = 0 ; i < m_v_subset_items.size() ; i++)
-      l.push_back((Paving*)m_v_subset_items[i]);
+    for(const auto& subset_item : m_v_subset_items)
+      l.push_back((Paving*)subset_item);
 
     while(!l.empty())
     {

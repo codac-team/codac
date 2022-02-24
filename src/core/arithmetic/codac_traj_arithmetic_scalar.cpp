@@ -179,58 +179,64 @@ namespace codac
   macro_scal_binary_arith(*);
   macro_scal_binary_arith(/);
 
-  const Trajectory atan2(const Trajectory& x1, const Trajectory& x2)
-  {
-    assert(x1.tdomain() == x2.tdomain());
-    assert(!(x1.definition_type() == TrajDefnType::ANALYTIC_FNC && x2.definition_type() == TrajDefnType::ANALYTIC_FNC) &&
-      "not supported yet for trajectories defined by a Function");
+  #define macro_scal_binary_f(f) \
+    \
+    const Trajectory f(const Trajectory& x1, const Trajectory& x2) \
+    { \
+      assert(x1.tdomain() == x2.tdomain()); \
+      assert(!(x1.definition_type() == TrajDefnType::ANALYTIC_FNC && x2.definition_type() == TrajDefnType::ANALYTIC_FNC) && \
+        "not supported yet for trajectories defined by a Function"); \
+    \
+      Trajectory x1_sampled(x1), x2_sampled(x2); \
+      if(x2.definition_type() == TrajDefnType::MAP_OF_VALUES) \
+        x1_sampled.sample(x2); \
+      if(x1.definition_type() == TrajDefnType::MAP_OF_VALUES) \
+        x2_sampled.sample(x1); \
+      map<double,double> map_x1 = x1.sampled_map(), map_x2 = x2.sampled_map(); \
+    \
+      map<double,double>::iterator it_x1 = map_x1.begin(); \
+      map<double,double>::iterator it_x2 = map_x2.begin(); \
+    \
+      while(it_x1 != map_x1.end()) \
+      { \
+        it_x1->second = std::f(it_x1->second, it_x2->second); \
+        it_x1++; it_x2++; \
+      } \
+    \
+      return Trajectory(map_x1); \
+    } \
+    \
+    const Trajectory f(const Trajectory& x1, double x2) \
+    { \
+      assert(x1.definition_type() == TrajDefnType::MAP_OF_VALUES && \
+        "not supported yet for trajectories defined by a Function"); \
+    \
+      Trajectory y(x1); \
+      map<double,double> map_y = y.sampled_map(); \
+    \
+      for(map<double,double>::iterator it = map_y.begin() ; \
+        it != map_y.end() ; it++) \
+        it->second = std::f(it->second, x2); \
+    \
+      return Trajectory(map_y); \
+    } \
+    \
+    const Trajectory f(double x1, const Trajectory& x2) \
+    { \
+      assert(x2.definition_type() == TrajDefnType::MAP_OF_VALUES && \
+        "not supported yet for trajectories defined by a Function"); \
+    \
+      Trajectory y(x2); \
+      map<double,double> map_y = y.sampled_map(); \
+    \
+      for(map<double,double>::iterator it = map_y.begin() ; \
+        it != map_y.end() ; it++) \
+        it->second = std::f(x1, it->second); \
+    \
+      return Trajectory(map_y); \
+    } \
 
-    Trajectory x1_sampled(x1), x2_sampled(x2);
-    if(x2.definition_type() == TrajDefnType::MAP_OF_VALUES)
-      x1_sampled.sample(x2);
-    if(x1.definition_type() == TrajDefnType::MAP_OF_VALUES)
-      x2_sampled.sample(x1);
-    map<double,double> map_x1 = x1.sampled_map(), map_x2 = x2.sampled_map();
-
-    map<double,double>::iterator it_x1 = map_x1.begin();
-    map<double,double>::iterator it_x2 = map_x2.begin();
-
-    while(it_x1 != map_x1.end())
-    {
-      it_x1->second = std::atan2(it_x1->second, it_x2->second);
-      it_x1++; it_x2++;
-    }
-
-    return Trajectory(map_x1);
-  }
-
-  const Trajectory atan2(const Trajectory& x1, double x2)
-  {
-    assert(x1.definition_type() == TrajDefnType::MAP_OF_VALUES &&
-      "not supported yet for trajectories defined by a Function");
-
-    Trajectory y(x1);
-    map<double,double> map_y = y.sampled_map();
-
-    for(map<double,double>::iterator it = map_y.begin() ;
-      it != map_y.end() ; it++)
-      it->second = std::atan2(it->second, x2);
-
-    return Trajectory(map_y);
-  }
-
-  const Trajectory atan2(double x1, const Trajectory& x2)
-  {
-    assert(x2.definition_type() == TrajDefnType::MAP_OF_VALUES &&
-      "not supported yet for trajectories defined by a Function");
-
-    Trajectory y(x2);
-    map<double,double> map_y = y.sampled_map();
-
-    for(map<double,double>::iterator it = map_y.begin() ;
-      it != map_y.end() ; it++)
-      it->second = std::atan2(x1, it->second);
-
-    return Trajectory(map_y);
-  }
+  macro_scal_binary_f(atan2);
+  macro_scal_binary_f(min);
+  macro_scal_binary_f(max);
 }

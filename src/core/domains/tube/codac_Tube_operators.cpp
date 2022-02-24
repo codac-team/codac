@@ -20,10 +20,10 @@ namespace codac
     \
     const Tube& Tube::f(const Interval& x) \
     { \
-      Slice *s = NULL; \
+      Slice *s = nullptr; \
       do \
       { \
-        if(s == NULL) /* first iteration */ \
+        if(s == nullptr) /* first iteration */ \
           s = first_slice(); \
         else \
           s = s->next_slice(); \
@@ -31,7 +31,7 @@ namespace codac
         s->set_envelope(Interval(s->codomain()).f(x), false); \
         s->set_input_gate(Interval(s->input_gate()).f(x), false); \
         \
-      } while(s->next_slice() != NULL); \
+      } while(s->next_slice()); \
       \
       s->set_output_gate(Interval(s->output_gate()).f(x), false); \
       return *this; \
@@ -41,10 +41,10 @@ namespace codac
     { \
       assert(tdomain() == x.tdomain()); \
       \
-      Slice *s = NULL; \
+      Slice *s = nullptr; \
       do \
       { \
-        if(s == NULL) /* first iteration */ \
+        if(s == nullptr) /* first iteration */ \
           s = first_slice(); \
         else \
           s = s->next_slice(); \
@@ -52,7 +52,7 @@ namespace codac
         s->set_envelope(Interval(s->codomain()).f(x(s->tdomain())), false); \
         s->set_input_gate(Interval(s->input_gate()).f(x(Interval(s->tdomain().lb()))), false); \
          \
-      } while(s->next_slice() != NULL); \
+      } while(s->next_slice()); \
       \
       s->set_output_gate(Interval(s->output_gate()).f(x(Interval(s->tdomain().ub()))), false); \
       return *this; \
@@ -64,11 +64,11 @@ namespace codac
       \
       if(Tube::same_slicing(*this, x)) /* faster */ \
       { \
-        Slice *s = NULL; \
-        const Slice *s_x = NULL; \
+        Slice *s = nullptr; \
+        const Slice *s_x = nullptr; \
         do \
         { \
-          if(s == NULL) /* first iteration */ \
+          if(s == nullptr) /* first iteration */ \
           { \
             s = first_slice(); \
             s_x = x.first_slice(); \
@@ -82,17 +82,17 @@ namespace codac
           \
           s->set_envelope(Interval(s->codomain()).f(s_x->codomain()), false); \
           s->set_input_gate(Interval(s->input_gate()).f(s_x->input_gate()), false); \
-        } while(s->next_slice() != NULL); \
+        } while(s->next_slice()); \
         \
         s->set_output_gate(Interval(s->output_gate()).f((s_x->output_gate())), false); \
       } \
       \
       else \
       { \
-        Slice *s = NULL; \
+        Slice *s = nullptr; \
         do \
         { \
-          if(s == NULL) /* first iteration */ \
+          if(s == nullptr) /* first iteration */ \
             s = first_slice(); \
           else \
             s = s->next_slice(); \
@@ -100,7 +100,7 @@ namespace codac
           s->set_envelope(Interval(s->codomain()).f(x(s->tdomain())), false); \
           s->set_input_gate(Interval(s->input_gate()).f(x(s->tdomain().lb())), false); \
           \
-        } while(s->next_slice() != NULL); \
+        } while(s->next_slice()); \
         \
         s->set_output_gate(Interval(s->output_gate()).f(x(s->tdomain().ub())), false); \
       } \

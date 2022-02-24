@@ -115,14 +115,14 @@ namespace codac
 
     TrajectoryVector::~TrajectoryVector()
     {
-      if(m_v_trajs != NULL)
+      if(m_v_trajs)
         delete[] m_v_trajs;
     }
 
     const TrajectoryVector& TrajectoryVector::operator=(const TrajectoryVector& x)
     {
       { // Destroying already existing components
-        if(m_v_trajs != NULL)
+        if(m_v_trajs)
           delete[] m_v_trajs;
       }
 
@@ -156,7 +156,7 @@ namespace codac
       for(; i < n ; i++)
         new_vec[i] = Trajectory();
 
-      if(m_v_trajs != NULL) // (m_v_trajs == NULL) may happen when default constructor is used
+      if(m_v_trajs) // (m_v_trajs == nullptr) may happen when default constructor is used
         delete[] m_v_trajs;
 
       m_n = n;

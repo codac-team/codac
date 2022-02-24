@@ -14,6 +14,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
+#include <pybind11/numpy.h>
 #include "pyIbex_type_caster.h"
 
 #include "codac_Tube.h"
@@ -29,6 +30,12 @@ using namespace pybind11::literals;
 
 void export_Tube(py::module& m)
 {
+  py::enum_<SynthesisMode>(m, "SynthesisMode")
+    .value("NONE", SynthesisMode::NONE)
+    .value("BINARY_TREE", SynthesisMode::BINARY_TREE)
+    .value("POLYNOMIAL", SynthesisMode::POLYNOMIAL)
+  ;
+
   py::class_<Tube> tube(m, "Tube", TUBE_MAIN);
   tube
 
@@ -194,13 +201,29 @@ void export_Tube(py::module& m)
       TUBE_CONSTINTERVAL_INVERT_INTERVAL_INTERVAL,
       "y"_a, "search_tdomain"_a=Interval::all_reals())
 
-    .def("invert", (void (Tube::*)(const Interval&,vector<Interval>&,const Interval&) const)&Tube::invert,
+    .def("invert", [](Tube& tube, const Interval& y, py::list& v_t, const Interval& search_tdomain)
+      {
+        vector<Interval> vector_t;
+        tube.invert(y, vector_t, search_tdomain);
+        for(const auto& t : vector_t)
+          v_t.append(t);
+      },
       TUBE_VOID_INVERT_INTERVAL_VECTORINTERVAL_INTERVAL,
       "y"_a, "v_t"_a, "search_tdomain"_a=Interval::all_reals())
 
     .def("invert", (const Interval (Tube::*)(const Interval&,const Tube&,const Interval&) const)&Tube::invert,
       TUBE_CONSTINTERVAL_INVERT_INTERVAL_TUBE_INTERVAL,
       "y"_a, "v"_a, "search_tdomain"_a=Interval::all_reals())
+
+    .def("invert", [](Tube& tube, const Interval& y, py::list& v_t, const Tube& v, const Interval& search_tdomain)
+      {
+        vector<Interval> vector_t;
+        tube.invert(y, vector_t, v, search_tdomain);
+        for(const auto& t : vector_t)
+          v_t.append(t);
+      },
+      TUBE_VOID_INVERT_INTERVAL_VECTORINTERVAL_TUBE_INTERVAL,
+      "y"_a, "v_t"_a, "v"_a, "search_tdomain"_a=Interval::all_reals())
 
     .def("invert", (void (Tube::*)(const Interval&,vector<Interval>&,const Tube&,const Interval&) const)&Tube::invert,
       TUBE_VOID_INVERT_INTERVAL_VECTORINTERVAL_TUBE_INTERVAL,
@@ -373,8 +396,8 @@ void export_Tube(py::module& m)
   // Synthesis tree
 
     .def("enable_synthesis", &Tube::enable_synthesis,
-      TUBE_VOID_ENABLE_SYNTHESIS_BOOL,
-      "enable"_a=true)
+      TUBE_VOID_ENABLE_SYNTHESIS_SYNTHESISMODE_DOUBLE,
+      "enable"_a=SynthesisMode::BINARY_TREE, "eps"_a=1.e-3)
 
   // Integration
 

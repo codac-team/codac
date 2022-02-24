@@ -35,6 +35,21 @@ using py::init;
   m.def(str_f, (const Tube (*) (const Tube&)) &f); \
   m.def(str_f, (const Trajectory (*) (const Trajectory&)) &f); \
 
+#define macro_scal_binary(str_f, f) \
+  \
+  m.def(str_f, [](double y, double x) { return std::f(y,x); }, "y"_a.noconvert(), "x"_a.noconvert()); \
+  m.def(str_f, [](const Interval& y, double x) { return ibex::f(y,Interval(x)); }, "y"_a.noconvert(), "x"_a.noconvert()); \
+  m.def(str_f, [](double y, const Interval& x) { return ibex::f(Interval(y),x); }, "y"_a.noconvert(), "x"_a.noconvert()); \
+  m.def(str_f, (Interval (*) (const Interval& y, const Interval& x)) &f, "y"_a, "x"_a); \
+  m.def(str_f, (const Tube (*) (const Tube& y, const Tube& x)) &f, "y"_a, "x"_a); \
+  m.def(str_f, [](const Tube& y, double x) { return f(y,Interval(x)); } , "y"_a.noconvert(), "x"_a.noconvert()); \
+  m.def(str_f, (const Tube (*) (const Tube& y, const Interval& x)) &f, "y"_a, "x"_a); \
+  m.def(str_f, [](double y, const Tube& x) { return f(Interval(y),x); } , "y"_a.noconvert(), "x"_a.noconvert()); \
+  m.def(str_f, [](const Interval& y, const Tube& x) { return f(y,x); }, "y"_a, "x"_a); \
+  m.def(str_f, [] (const Trajectory& y, const Trajectory& x) { return f(y,x); }, "y"_a, "x"_a); \
+  m.def(str_f, [] (const Trajectory& y, double x) { return f(y,x); }, "y"_a, "x"_a); \
+  m.def(str_f, [] (double y, const Trajectory& x) { return f(y,x); }, "y"_a, "x"_a); \
+
 void export_arithmetic(py::module& m)
 {
   macro_scal_unary("cos", cos);
@@ -78,22 +93,12 @@ void export_arithmetic(py::module& m)
   m.def("root", (const Tube (*) (const Tube& x, int p)) &root, "x"_a, "p"_a);
   m.def("root", (const Trajectory (*) (const Trajectory& x, int p)) &root, "x"_a, "p"_a);
 
-  // atan2
-  m.def("atan2", [](double y, double x) { return std::atan2(y,x); }, "y"_a.noconvert(), "x"_a.noconvert());
-  m.def("atan2", [](const Interval& y, double x) { return ibex::atan2(y,Interval(x)); }, "y"_a.noconvert(), "x"_a.noconvert());
-  m.def("atan2", [](double y, const Interval& x) { return ibex::atan2(Interval(y),x); }, "y"_a.noconvert(), "x"_a.noconvert());
-  m.def("atan2", (Interval (*) (const Interval& y, const Interval& x)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", (const Tube (*) (const Tube& y, const Tube& x)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", [](const Tube& y, double x) { return atan2(y,Interval(x)); } , "y"_a.noconvert(), "x"_a.noconvert());
-  m.def("atan2", (const Tube (*) (const Tube& y, const Interval& x)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", [](double y, const Tube& x) { return atan2(Interval(y),x); } , "y"_a.noconvert(), "x"_a.noconvert());
-  m.def("atan2", (const Tube (*) (const Interval& y, const Tube& x)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", (const Trajectory (*) (const Trajectory& y, const Trajectory& x)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", (const Trajectory (*) (const Trajectory& y, double x)) &atan2, "y"_a, "x"_a);
-  m.def("atan2", (const Trajectory (*) (double y, const Trajectory& x)) &atan2, "y"_a, "x"_a);
+  // binary
+  macro_scal_binary("atan2", atan2);
+  macro_scal_binary("min", min);
+  macro_scal_binary("max", max);
 
   // todo: atan2, pow with Trajectory as parameter
-  // todo: min, max
 
   // Vector case
   m.def("abs", [](const IntervalVector x) { return ibex::abs(x); }, "x"_a.noconvert());
