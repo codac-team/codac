@@ -214,7 +214,7 @@ namespace codac
 
           l_gates.push_front(front_gate);
 
-          while(s_y != NULL && s_y->tdomain().lb() < t.ub())
+          while(s_y && s_y->tdomain().lb() < t.ub())
           {
             // Forward propagation of the evaluation
             front_gate += s_y->tdomain().diam() * s_w->codomain(); // projection
@@ -244,7 +244,7 @@ namespace codac
 
           s_y->set_output_gate(l_gates.front() | front_gate);
 
-          while(s_y != NULL && s_y->tdomain().lb() >= t.lb())
+          while(s_y && s_y->tdomain().lb() >= t.lb())
           {
             // Backward propagation of the evaluation
             front_gate -= s_y->tdomain().diam() * s_w->codomain(); // projection
@@ -288,7 +288,7 @@ namespace codac
 
               CtcDeriv ctc_deriv;
               ctc_deriv.contract(*s_y, *s_w);
-              if(s_y->next_slice() != NULL && s_w->next_slice() != NULL)
+              if(s_y->next_slice() && s_w->next_slice())
                 ctc_deriv.contract(*s_y->next_slice(), *s_w->next_slice());
 
             // 2. Merge
@@ -303,7 +303,7 @@ namespace codac
 
       // todo: remove this (or use Polygons with truncation)
 
-        for(Slice *s = y.first_slice() ; s != NULL ; s = s->next_slice())
+        for(Slice *s = y.first_slice() ; s ; s = s->next_slice())
         {
           Interval envelope = s->codomain();
           if(envelope.ub() == BOUNDED_INFINITY) envelope = Interval(envelope.lb(),POS_INFINITY);
@@ -358,8 +358,15 @@ namespace codac
       return;
     }
 
-    t &= y.invert(z, t); // is this useful?
-    z &= y(t);
+    vector<Interval> v_t;
+    y.invert(z, v_t, t); // todo: invert with derivative? 
+    Interval t_ = Interval::EMPTY_SET;
+    for(const auto& ti : v_t)
+    {
+      z &= y(ti);
+      t_ |= ti;
+    }
+    t &= t_;
 
     for(int i = 0 ; i < y.size() ; i++)
       contract(t, z[i], y[i], w[i]);
@@ -374,8 +381,15 @@ namespace codac
       return;
     }
 
-    t &= y.invert(z, t);
-    z &= y(t);
+    vector<Interval> v_t;
+    y.invert(z, v_t, t);
+    Interval t_ = Interval::EMPTY_SET;
+    for(const auto& ti : v_t)
+    {
+      z &= y(ti);
+      t_ |= ti;
+    }
+    t &= t_;
   }
 
   void CtcEval::contract(Interval& t, IntervalVector& z, const TubeVector& y)
@@ -392,7 +406,14 @@ namespace codac
       return;
     }
 
-    t &= y.invert(z, t);
-    z &= y(t);
+    vector<Interval> v_t;
+    y.invert(z, v_t, t);
+    Interval t_ = Interval::EMPTY_SET;
+    for(const auto& ti : v_t)
+    {
+      z &= y(ti);
+      t_ |= ti;
+    }
+    t &= t_;
   }
 }

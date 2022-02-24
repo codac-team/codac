@@ -18,7 +18,7 @@ namespace codac
   VIBesFigPaving::VIBesFigPaving(const string& fig_name, const Paving *paving)
     : VIBesFig(fig_name), m_paving(paving)
   {
-    assert(paving != NULL);
+    assert(paving);
 
     set_properties(100, 100, 500, 500); // default properties
     axis_limits(paving->box());
@@ -35,12 +35,14 @@ namespace codac
 
   void VIBesFigPaving::set_color_map(const map<SetValue,string>& color_map)
   {
-    // todo: deal with color maps defined with any kind of values
-    vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
-    vibes::newGroup("val_unknown", color_map.at(SetValue::UNKNOWN), vibesParams("figure", name()));
-    vibes::newGroup("val_out", color_map.at(SetValue::OUT), vibesParams("figure", name()));
-    vibes::newGroup("val_unchecked", color_map.at(SetValue::UNCHECKED), vibesParams("figure", name()));
-    vibes::newGroup("val_penumbra", color_map.at(SetValue::PENUMBRA), vibesParams("figure", name()));
+    if(color_map.find(SetValue::IN) != color_map.end())
+      vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
+    if(color_map.find(SetValue::UNKNOWN) != color_map.end())
+      vibes::newGroup("val_unknown", color_map.at(SetValue::UNKNOWN), vibesParams("figure", name()));
+    if(color_map.find(SetValue::OUT) != color_map.end())
+      vibes::newGroup("val_out", color_map.at(SetValue::OUT), vibesParams("figure", name()));
+    if(color_map.find(SetValue::PENUMBRA) != color_map.end())
+      vibes::newGroup("val_penumbra", color_map.at(SetValue::PENUMBRA), vibesParams("figure", name()));
   }
 
   void VIBesFigPaving::show()
@@ -56,7 +58,7 @@ namespace codac
 
   void VIBesFigPaving::draw_paving(const Paving *paving)
   {
-    assert(paving != NULL);
+    assert(paving);
     
     if(paving->is_leaf())
     {

@@ -34,7 +34,7 @@ namespace codac
 
   CtcPicard::~CtcPicard()
   {
-    if(m_f_ptr != NULL)
+    if(m_f_ptr)
       delete m_f_ptr;
   }
 
@@ -96,7 +96,7 @@ namespace codac
 
     else
     {
-      TubeVector *first_slicing = NULL;
+      TubeVector *first_slicing = nullptr;
       if(m_preserve_slicing)
         first_slicing = new TubeVector(x);
 

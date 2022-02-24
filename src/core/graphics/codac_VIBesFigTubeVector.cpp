@@ -17,7 +17,7 @@ using namespace ibex;
 namespace codac
 {
   VIBesFigTubeVector::VIBesFigTubeVector(const std::string& fig_name)
-    : Figure(fig_name), m_n(0), m_v_figs(NULL)
+    : Figure(fig_name), m_n(0), m_v_figs(nullptr)
   {
 
   }
@@ -35,15 +35,15 @@ namespace codac
   VIBesFigTubeVector::VIBesFigTubeVector(const std::string& fig_name, const TubeVector *tube, const TrajectoryVector *traj)
     : VIBesFigTubeVector(fig_name)
   {
-    assert(tube != NULL);
+    assert(tube);
     add_tube(tube, fig_name);
-    if(traj != NULL)
+    if(traj)
       add_trajectory(traj, fig_name);
   }
 
   VIBesFigTubeVector::~VIBesFigTubeVector()
   {
-    if(m_v_figs != NULL)
+    if(m_v_figs)
       for(int i = 0 ; i < subfigs_number() ; i++)
         delete m_v_figs[i];
     delete[] m_v_figs;
@@ -56,7 +56,7 @@ namespace codac
 
   int VIBesFigTubeVector::subfigs_number() const
   {
-    return (m_v_figs != NULL) ? (m_end_index - m_start_index + 1) : -1;
+    return (m_v_figs) ? (m_end_index - m_start_index + 1) : -1;
   }
 
   VIBesFigTube* VIBesFigTubeVector::operator[](int index)
@@ -129,7 +129,7 @@ namespace codac
 
   void VIBesFigTubeVector::add_tube(const TubeVector *tube, const std::string& name, const std::string& color_frgrnd, const std::string& color_bckgrnd)
   {
-    assert(tube != NULL);
+    assert(tube);
 
     if(m_n == 0) // if the figure is still empty
       create_subfigures(tube->size());
@@ -142,49 +142,49 @@ namespace codac
 
   void VIBesFigTubeVector::set_tube_name(const TubeVector *tube, const std::string& name)
   {
-    assert(tube != NULL);
+    assert(tube);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->set_tube_name(&(*tube)[i + m_start_index], name);
   }
 
   void VIBesFigTubeVector::set_tube_derivative(const TubeVector *tube, const TubeVector *derivative)
   {
-    assert(tube != NULL && derivative != NULL);
+    assert(tube && derivative);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->set_tube_derivative(&(*tube)[i + m_start_index], &(*derivative)[i + m_start_index]);
   }
 
   void VIBesFigTubeVector::set_tube_color(const TubeVector *tube, const std::string& color_frgrnd, const std::string& color_bckgrnd)
   {
-    assert(tube != NULL);
+    assert(tube);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->set_tube_color(&(*tube)[i + m_start_index], color_frgrnd, color_bckgrnd);
   }
 
   void VIBesFigTubeVector::set_tube_color(const TubeVector *tube, TubeColorType color_type, const std::string& color)
   {
-    assert(tube != NULL);
+    assert(tube);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->set_tube_color(&(*tube)[i + m_start_index], color_type, color);
   }
 
   void VIBesFigTubeVector::reset_tube_background(const TubeVector *tube)
   {
-    assert(tube != NULL);
+    assert(tube);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->reset_tube_background(&(*tube)[i + m_start_index]);
   }
 
   void VIBesFigTubeVector::remove_tube(const TubeVector *tube)
   {
-    assert(tube != NULL);
+    assert(tube);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->remove_tube(&(*tube)[i + m_start_index]);
   }
 
   void VIBesFigTubeVector::add_trajectory(const TrajectoryVector *traj, const std::string& name, const std::string& color)
   {
-    assert(traj != NULL);
+    assert(traj);
 
     if(m_n == 0) // if the figure is still empty
       create_subfigures(traj->size());
@@ -197,21 +197,28 @@ namespace codac
 
   void VIBesFigTubeVector::set_trajectory_name(const TrajectoryVector *traj, const std::string& name)
   {
-    assert(traj != NULL);
+    assert(traj);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->set_trajectory_name(&(*traj)[i + m_start_index], name);
   }
 
   void VIBesFigTubeVector::set_trajectory_color(const TrajectoryVector *traj, const std::string& color)
   {
-    assert(traj != NULL);
+    assert(traj);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->set_trajectory_color(&(*traj)[i + m_start_index], color);
   }
 
+  void VIBesFigTubeVector::set_trajectory_points_size(const TrajectoryVector *traj, double points_size)
+  {
+    assert(traj);
+    for(int i = 0 ; i < subfigs_number() ; i++)
+      m_v_figs[i]->set_trajectory_points_size(&(*traj)[i + m_start_index], points_size);
+  }
+
   void VIBesFigTubeVector::remove_trajectory(const TrajectoryVector *traj)
   {
-    assert(traj != NULL);
+    assert(traj);
     for(int i = 0 ; i < subfigs_number() ; i++)
       m_v_figs[i]->remove_trajectory(&(*traj)[i + m_start_index]);
   }
@@ -219,7 +226,7 @@ namespace codac
   void VIBesFigTubeVector::create_subfigures(int n)
   {
     assert(n > 0);
-    assert(m_v_figs == NULL && m_n == 0);
+    assert(m_v_figs == nullptr && m_n == 0);
 
     m_n = n;
     m_v_figs = new VIBesFigTube*[m_n];

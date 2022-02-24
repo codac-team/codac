@@ -4,7 +4,7 @@
 #include "codac_CtcDeriv.h"
 #include "codac_CtcEval.h"
 #include "codac_CtcFunction.h"
-#include "codac.h"
+#include "codac_predef_values.h"
 #include "vibes.h"
 
 using namespace Catch;
@@ -789,5 +789,25 @@ TEST_CASE("CN simple")
     CHECK(ApproxIntv(x2[0]) == Interval(10,10.5));
     CHECK(x2[1] == Interval(22,23));
     CHECK(a2 == Interval(32,33));
+  }
+
+  SECTION("IntervalVectorVar linked only with components")
+  {
+    Function f1("x[2]","(x[0]+1;x[1]+2)");
+    ibex::CtcFwdBwd ctc_f1(f1);
+    Function f2("x","(x+3)");
+    ibex::CtcFwdBwd ctc_f2(f2);
+
+    ContractorNetwork cn;
+    IntervalVectorVar box(3);
+    cn.add(ctc_f1,{box[0],box[1]});
+    cn.add(ctc_f2,{box[2]});
+
+    IntervalVector x({{-10,10},{-10,10},{-10,10}});
+    cn.contract({{box,x}});
+
+    CHECK(x[0] == Interval(-1));
+    CHECK(x[1] == Interval(-2));
+    CHECK(x[2] == Interval(-3));
   }
 }

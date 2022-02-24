@@ -41,9 +41,10 @@ void export_TPlane(py::module& m)
     .def("compute_loops", [](TPlane& tplane, float precision, const TubeVector& p, const TubeVector& v)
       {
         TubeVector p_(p), v_(v);
-        p_.enable_synthesis(true);
-        v_.enable_synthesis(true);
+        p_.enable_synthesis(SynthesisMode::BINARY_TREE);
+        v_.enable_synthesis(SynthesisMode::BINARY_TREE);
         tplane.compute_detections(precision, p_, v_);
+        //p_.enable_synthesis(SynthesisMode::POLYNOMIAL, 5.e-7);
         tplane.compute_proofs(p_, v_);
       },
       TPLANE_VOID_COMPUTE_DETECTIONS_FLOAT_TUBEVECTOR_TUBEVECTOR,
@@ -75,5 +76,9 @@ void export_TPlane(py::module& m)
 
     .def("traj_loops_summary", &TPlane::traj_loops_summary,
       TPLANE_TRAJECTORY_TRAJ_LOOPS_SUMMARY)
+
+    .def_static("verbose", &TPlane::verbose,
+      TPLANE_VOID_VERBOSE_BOOL,
+      "verbose"_a = true)
   ;
 }

@@ -14,6 +14,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
+#include <pybind11/numpy.h>
 #include <unordered_map>
 #include "pyIbex_type_caster.h"
 
@@ -43,12 +44,12 @@ codac::Domain pyobject_to_domain(py::object object)
   }
   else if(py::isinstance<Interval>(object))
   {
-    Interval &itv  = object.cast<Interval&>();
+    Interval &itv = object.cast<Interval&>();
     return codac::Domain(itv);
   }
   else if(py::isinstance<IntervalVar>(object))
   {
-    IntervalVar &itv  = object.cast<IntervalVar&>();
+    IntervalVar &itv = object.cast<IntervalVar&>();
     return codac::Domain(itv);
   }
   else if(py::isinstance<py::list>(object))
@@ -59,32 +60,48 @@ codac::Domain pyobject_to_domain(py::object object)
   }
   else if(py::isinstance<Vector>(object)) // todo: this seems to be never used
   {
-    Vector itv  = object.cast<Vector>();
+    Vector itv = object.cast<Vector>();
     return codac::Domain(itv);
   }
   else if(py::isinstance<IntervalVector>(object))
   {
-    IntervalVector &itv  = object.cast<IntervalVector&>();
+    IntervalVector &itv = object.cast<IntervalVector&>();
     return codac::Domain(itv);
   }
   else if(py::isinstance<IntervalVectorVar>(object))
   {
-    IntervalVectorVar &itv  = object.cast<IntervalVectorVar&>();
+    IntervalVectorVar &itv = object.cast<IntervalVectorVar&>();
     return codac::Domain(itv);
   }
   else if(py::isinstance<Tube>(object))
   {
-    Tube &itv  = object.cast<Tube&>();
+    Tube &itv = object.cast<Tube&>();
     return codac::Domain(itv);
   }
   else if(py::isinstance<TubeVector>(object))
   {
-    TubeVector &itv  = object.cast<TubeVector&>();
+    TubeVector &itv = object.cast<TubeVector&>();
+    return codac::Domain(itv);
+  }
+  else if(py::isinstance<float>(object))
+  {
+    const double itv = object.cast<double>();
+    return codac::Domain(itv);
+  }
+  else if(py::isinstance<double>(object))
+  {
+    const double itv = object.cast<double>();
     return codac::Domain(itv);
   }
   else
   {
-    throw invalid_argument("unable to convert the py::object into a valid codac::Domain");
+    try {
+      const double itv = object.cast<double>();
+      return codac::Domain(itv);
+    }
+    catch(py::cast_error const&) {
+      throw invalid_argument("unable to convert the py::object into a valid codac::Domain");
+    }
   }
 }
 

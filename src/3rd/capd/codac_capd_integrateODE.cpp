@@ -68,7 +68,7 @@ namespace codac
     for(int i = 0 ; i < tube.size() ; i++)
       v_s[i] = tube[i].first_slice();
 
-    while(v_s[0] != NULL)
+    while(v_s[0])
     {
       capd::IVector y = solution(capd::interval(v_s[0]->tdomain().lb(), v_s[0]->tdomain().ub()));
 

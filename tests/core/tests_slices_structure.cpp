@@ -71,7 +71,7 @@ TEST_CASE("Tube slices structure")
     CHECK(tube_b.tdomain() == Interval(0.,1.));
     CHECK(tube_b.codomain() == Interval(-1.,1.));
     CHECK(tube_b.nb_slices() == 1);
-    CHECK(tube_b.slice(0) != NULL);
+    CHECK(tube_b.slice(0));
     //CHECK(tube_b.slice(0)->tube_reference() == &tube_b);
 
     Tube tube_c = tube_a;
@@ -255,17 +255,17 @@ TEST_CASE("Tube slices structure")
     // todo: CHECK_THROWS(tube.slice(5)->box());
 
     // prev/next slices
-    CHECK(tube.slice(0)->prev_slice() == NULL);
+    CHECK(tube.slice(0)->prev_slice() == nullptr);
     for(int i = 0 ; i < tube.nb_slices()-1 ; i++)
     {      
       CHECK(tube.slice(i)->next_slice() == tube.slice(i+1));
       CHECK(tube.slice(i+1)->prev_slice() == tube.slice(i));
     }
-    CHECK(tube.slice(4)->next_slice() == NULL);
+    CHECK(tube.slice(4)->next_slice() == nullptr);
 
     Tube tube_simple(Interval(0.,1.), Interval(-1.,1.));
-    CHECK(tube_simple.slice(0)->prev_slice() == NULL);
-    CHECK(tube_simple.slice(0)->next_slice() == NULL);
+    CHECK(tube_simple.slice(0)->prev_slice() == nullptr);
+    CHECK(tube_simple.slice(0)->next_slice() == nullptr);
     tube_simple.sample(0.3);
     CHECK(tube_simple.slice(0)->next_slice() == tube_simple.slice(1));
     CHECK(tube_simple.slice(1)->prev_slice() == tube_simple.slice(0));

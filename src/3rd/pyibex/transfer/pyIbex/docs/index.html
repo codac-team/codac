@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Theme Made By www.w3schools.com - No Copyright -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="logo.ico">
+
+  <title>pyIbex</title>
+
+  <!-- Bootstrap core CSS -->
+
+  <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css"> -->
+  <!-- <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"> -->
+  <!-- // <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script> -->
+  <!-- // <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link href="dist/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+  <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+  <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+  <script src="dist/js/ie-emulation-modes-warning.js"></script>
+
+  <script src="http://www.w3schools.com/lib/w3data.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src=js/vendor/jquery.min.js"><\/script>')</script>
+
+  <!-- <link rel="stylesheet" href="./highlight/styles/default.css"> -->
+  <!-- <script src="./highlight/highlight.pack.js"></script> -->
+  <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Custom styles for this template -->
+  <!-- <link href="carousel.css" rel="stylesheet"> -->
+  <link href="dist/css/compagny.css" rel="stylesheet">
+  <link rel="stylesheet" href="dist/css/pygments.css" type="text/css" />
+
+  <!-- <link rel="stylesheet" href="dist/css/styles/monokai.css">
+  <script src="dist/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> -->
+
+</head>
+<body id="pyibex" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#myPage">pyIbex</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#about">ABOUT</a></li>
+          <li><a href="#getstarted">GET STARTED</a></li>
+          <!-- <li><a href="#services">DOWNLOADS</a></li> -->
+          <li><a href="sphinx/index.html">DOC</a></li>
+          <li><a href="https://github.com/benEnsta/pyIbex">VIEW ON GITHUB</a></li>
+          <!-- <li><a href="#pricing">PRICING</a></li> -->
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- <div class="jumbotron text-center">
+  <h1>pyIbex</h1>
+  <p>An other Python Interval Library based on ibex-lib</p>
+</div>
+</div> -->
+<div class="container" >
+  <!-- Container (About Section) -->
+  <div id="about" class="container-fluid bg-grey2">
+    <div class="row vertical-align">
+
+      <div class="col-sm-10">
+        <h2>What is pyIbex</h2><br>
+
+
+        <h4><strong>pyIbex</strong> is set of python modules for solving nonlinear problems using Interval Arithmetic tools. It provides high-level functionalities such as Contractors and Separators programming.<br>
+        Initially based on the core part of  <a href="http://www.ibex-lib.org/">Ibex-lib</a>, it aims at combining the flexibility of python with the speed of C++ algorithms. <br>
+          <!-- It is composed of the following submodules:
+          <ul>
+            <li>Interval, IntervalVector, IntervalMatrix (partial)</li>
+            <li>Functions evaluation</li>
+            <li>Contractors and Separators programming  </li>
+          </ul> -->
+        </h4>
+      </div>
+      <div class="col-sm-2">
+        <img class="img-circle" src="img/pyibex_logo.png" alt="Generic placeholder image" width="180" height="180">
+      </div>
+    </div>
+  </div>
+
+
+
+  <div id="getstarted" class="container-fluid bg-grey">
+    <!-- Three columns of text below the carousel -->
+    <!-- <div class="row"> -->
+      <!-- <div class="col-sm-12"> -->
+        <h2> Get Started </h2>
+
+        <div class="alert alert-success">
+          <h2> Quick Install </h2>
+          <p> To install <strong>pyibex</strong> enter in a terminal :</p>
+          <div class="hlcode align-left">
+            <div class="syntax text-left"><pre><span class="gp">$</span> <span class="nb">python -m pip</span> install pyibex</pre></div>
+          </div>
+          <p></p><p></p>
+          <h4> <b>Remarks:</b> </4>
+          <p> If you don't have any python install or you faced troubles with your existing installation, we recommend using Miniconda.
+          The download link and the installation instructions are available at <a href="https://conda.io/miniconda.html"> miniconda website</a> </p>
+
+          <!-- <p><i>Remark: </i>Remark: If you don't have any python install, we recommend to use Miniconda available at <a ref="https://conda.io/miniconda.html"> miniconda website</a> </p> -->
+          <!-- <p>If you don't have Conda installed, instruction for linux/OSX and windows can be found at <a aref="http://conda.pydata.org/docs/install/quick.html">conda website</a> </p> -->
+          <p>See also <a href="sphinx/installation.html">Installation manual</a> for more details.
+
+        </div>
+
+
+
+        <div class="alert alert-info">
+          <div class="row vertical-align">
+            <div class="col-sm-10">
+              <h2>Note </h2>
+              <p>To draw results, we recommend to use <a href="http://enstabretagnerobotics.github.io/VIBES/">VIBes-viewer</a> which provides a simple and fast GUI tool for people working with intervals. The last releases for Window, OSX, and Linux are available <a href=https://github.com/ENSTABretagneRobotics/VIBES/releases/tag/0.2.3>here</a>.
+              </p>
+            </div>
+            <div class="col-sm-2">
+              <img src="img/vibes_512.png" alt="tititi" width="120" height="120">
+            </div>
+          </div>
+          <p>Do not forget to install the python interface with</p>
+          <div class="hlcode align-left">
+            <div class="syntax text-left"><pre><span class="gp">$</span> <span class="nb">python</span> -m pip install vibes</pre></div>
+            <!-- <div class="syntax text-left"><pre><span class="gp">$</span> <span class="nb">conda</span> install -c benensta vibes vibes-bin</pre></div> -->
+          </div>
+          <p>The documentation and a quick introduction can be found <a href="http://enstabretagnerobotics.github.io/VIBES/sphinx/html/index.html">here</a>.</p>
+        </div>
+      <!-- </div> <br> -->
+      <div class="alert alert-warning"><!-- <div class="col-sm-12"> -->
+        <h3> Example : set inversion of a non linear function. </h3> <br>
+        <div class="row">
+          <div class="col-sm-6">
+            <p> Copy the code on the right into "example.py" and enter in a terminal: </p>
+      <div class="syntax"><pre><span></span><span class="c1"># launch before vibes viewer</span>
+<span class="gp">$</span> python ./example.py</pre></div>
+        <p> You should get <a href="img/example0.png">this figure</a> which corresponds to set of all (x,y) such as f(x,y) < 0 </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="hlcode align-left">
+<div class="syntax"><pre><span></span><span class="kn">from</span> <span class="nn">pyibex</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">vibes</span> <span class="kn">import</span> <span class="n">vibes</span>
+<span class="c1"># define the function (x,y) -&gt; sin(x+y)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x*cos(x-y)+y&#39;</span><span class="p">)</span>
+<span class="c1"># build the Forward / backward separator f(x,y) &lt; 0</span>
+<span class="n">sep</span> <span class="o">=</span> <span class="n">SepFwdBwd</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">[<span class="o">-</span><span class="mi">oo</span>, <span class="mf">0</span>]</span><span class="p">)</span>
+<span class="c1"># define the initial domain [-10,10]x[-10,10]</span>
+<span class="n">X0</span> <span class="o">=</span> <span class="n">IntervalVector</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="p">)</span>
+<span class="c1">#initialize vibes display</span>
+<span class="n">vibes</span><span class="o">.</span><span class="n">beginDrawing</span><span class="p">()</span>
+<span class="c1"># run the set inversion algorithm</span>
+<span class="n">pySIVIA</span><span class="p">(</span><span class="n">X0</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="n">vibes</span><span class="o">.</span><span class="n">endDrawing</span><span class="p">()</span>
+</pre></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+  <div id="nextSetp" class="container-fluid bg-grey2">
+    <h2> Next Step </h2>
+    <div class="row text-center">
+      <div class="col-sm-6">
+        <a href=./sphinx/index.html>
+          <img class="img-circle" src="img/img-documentation.jpg" alt="Generic placeholder image" width="140" height="140">
+          <h3>Read the documentation</h3>
+        </a>
+        <p> Examples and tutorials</p>
+
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-6">
+        <a href="http://iamooc.ensta-bretagne.fr">
+          <img class="img-circle" src="img/img-iamooc.png" alt="Generic placeholder image" width="140" height="140">
+          <h3>Learn intervals with IAMOOC</h3>
+        </a>
+        <p>a free MOOC focused on Interval Analysis with application to parameter estimation, robot localization and SLAM</p>
+      </div>
+    </div>
+  </div>
+
+<div id="link" class="container-fluid bg-gray">
+ <h2>Links</h2>
+
+    <h4>Resources</h4>
+      <ul>
+        <li>
+          Introduction to pyibex <a href="https://www.ensta-bretagne.fr/jaulin/pyibex_doc.pdf">PDF</a>
+        </li>
+      </ul>
+    <h4>Personal web pages</h4>
+
+    <ul>
+      <li>
+        <strong><a href="https://www.ensta-bretagne.fr/jaulin">Pr Luc Jaulin</a>:</strong>
+        Professor, ENSTA-Bretagne, Brest, France
+      </li>
+      <li>
+        <strong><a href="http://www.ensta-bretagne.fr/lebars">Dr Fabrice Le Bars</a>:</strong>
+        associate Professor, ENSTA Bretagne, Brest, France
+      </li>
+      <li>
+        <strong><a href="https://sites.google.com/site/clementaubry/">Dr Clement Aubry</a>:</strong>
+        associate Professor, ISEN, Brest, France
+      </li>
+      <li>
+        <strong><a href="http://vincentdrevelle.fr">Dr Vincent Drevelle</a>:</strong>
+        associate Professor, INRIA (Lagadic), Rennes, France
+      </li>
+      <li>
+        <strong><a href="http://www.simon-rohou.fr">Dr Simon Rohou</a>:</strong>
+        associate Professor, ENSTA Bretagne, Brest, France
+      </li>
+      <li>
+        <strong><a href="https://www.ensta-bretagne.fr/lemezo/">Dr Thomas Le Mézo</a>:</strong>
+        associate Professor, ENSTA Bretagne, Brest, France
+      </li>
+    </ul>
+
+    <h4>Software</h4>
+
+    <ul>
+      <li>
+        <strong><a href="http://www.ibex-lib.org">Ibex-lib</a>:</strong>
+        a C++ library for system solving and global optimization based on <strong>interval</strong> arithmetic
+      </li>
+      <li>
+        <strong><a href="https://github.com/ENSTABretagneRobotics/VIBES">VIBes</a>:</strong>
+        a Visualizer for <strong>Intervals</strong> and BoxES, a simple way to display results (boxes, pavings)
+      </li>
+      <li>
+        <strong><a href="http://www.simon-rohou.fr/research/tubex-lib/?PHPSESSID=14an4r39b39f5t486756s96b93">tubex-lib</a>:</strong>
+        Tubex is a C++ library providing tools for computations over sets of trajectories
+      </li>      
+    </ul>
+
+    <br/>
+  </div>
+
+</div>
+
+
+
+
+<footer class="container-fluid text-center">
+  <a href="#myPage" title="To Top">
+    <span class="glyphicon glyphicon-chevron-up"></span>
+  </a>
+  <p>Bootstrap Theme Made By <a href="http://www.w3schools.com" title="Visit w3schools">www.w3schools.com</a></p>
+  <p>Author : Benoit Desrochers ben.ensta@gmail.com </p>
+</footer>
+
+<script>
+w3IncludeHTML();
+</script>
+
+<script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links in navbar + footer link
+  $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 900, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+
+  $(window).scroll(function() {
+    $(".slideanim").each(function(){
+      var pos = $(this).offset().top;
+
+      var winTop = $(window).scrollTop();
+      if (pos < winTop + 600) {
+        $(this).addClass("slide");
+      }
+    });
+  });
+})
+</script>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src=js/vendor/jquery.min.js"><\/script>')</script>
+<script src="dist/js/bootstrap.min.js"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<script src="dist/js/vendor/holder.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="dist/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

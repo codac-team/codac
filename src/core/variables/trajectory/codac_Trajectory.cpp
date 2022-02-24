@@ -52,21 +52,25 @@ namespace codac
     Trajectory::Trajectory(const map<double,double>& map_values)
       : m_traj_def_type(TrajDefnType::MAP_OF_VALUES), m_map_values(map_values)
     {
-      assert(!map_values.empty());
+      // todo: restore this? assert(!map_values.empty());
+      // todo: check that empty traj are allowed for all methods
 
-      // Temporal domain:
-      map<double,double>::const_iterator
-        last_it = map_values.end(); last_it--; // accessing last value
-      m_tdomain = Interval(map_values.begin()->first, last_it->first);
+      if(!map_values.empty())
+      {
+        // Temporal domain:
+        map<double,double>::const_iterator
+          last_it = map_values.end(); last_it--; // accessing last value
+        m_tdomain = Interval(map_values.begin()->first, last_it->first);
 
-      // Codomain:
-      compute_codomain();
+        // Codomain:
+        compute_codomain();
+      }
     }
     
     Trajectory::Trajectory(const list<double>& list_t, const list<double>& list_x)
       : m_traj_def_type(TrajDefnType::MAP_OF_VALUES)
     {
-      assert(!list_t.empty());
+      // todo: restore this? assert(!list_t.empty());
       assert(list_t.size() == list_x.size());
 
       for(list<double>::const_iterator it_t = list_t.begin(), it_x = list_x.begin() ;
@@ -80,7 +84,7 @@ namespace codac
 
     Trajectory::~Trajectory()
     {
-      if(m_traj_def_type == TrajDefnType::ANALYTIC_FNC && m_function != NULL)
+      if(m_traj_def_type == TrajDefnType::ANALYTIC_FNC && m_function)
         delete m_function;
     }
 
@@ -245,7 +249,7 @@ namespace codac
       switch(m_traj_def_type)
       {
         case TrajDefnType::ANALYTIC_FNC:
-          return m_function == NULL;
+          return m_function == nullptr;
 
         case TrajDefnType::MAP_OF_VALUES:
           return m_map_values.empty();
@@ -361,7 +365,7 @@ namespace codac
 
       for(map<double,double>::const_iterator it = m_map_values.begin() ;
         next(it) != m_map_values.end() ; it++)
-        if(next(it)->first - it->first != h)
+        if((it->first + h) != next(it)->first)
           return false;
         
       return true;
@@ -517,14 +521,15 @@ namespace codac
             double mean_h = 0.;
             for(map<double,double>::const_iterator it = m_map_values.begin() ;
               next(it) != m_map_values.end() ; it++)
-              mean_h += next(it)->first-it->first;
+              mean_h += next(it)->first - it->first;
             mean_h /= m_map_values.size()-1;
             
             // Equivalent traj with mean timestep
             Trajectory d_cst_h;
             for(double t = tdomain().lb() ; t < tdomain().ub()+h ; t+=h)
-              d_cst_h.set((*this)(min(tdomain().ub(),t)), t); // interpolation
+              d_cst_h.set((*this)(std::min(tdomain().ub(),t)), t); // interpolation
             // If the last value is outside tdomain, the last value is duplicated
+            assert(d_cst_h.constant_timestep(h));
             
             d = d_cst_h.diff();
             d.truncate_tdomain(tdomain());

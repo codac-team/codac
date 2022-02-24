@@ -38,9 +38,15 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx_tabs.tabs',
     'breathe',
-    'sphinx_issues'
+    'sphinx_issues',
+    'sphinx_reredirects'
     #'sphinx.ext.autodoc'
 ]
+
+redirects = {
+    "lohner": "manual/05-dynamic-contractors/03-ctc-lohner.html",
+    "slam": "tutorial/08-rangeonly-slam/index.html",
+}
 
 breathe_projects = {
     "codac":"../api/xml",

@@ -86,11 +86,11 @@ namespace codac
     IntervalVector res_codomain(y.size()), res_gate(y.size());
     Slice **v_sy = new Slice*[y.size()];
     for(int i = 0 ; i < y.size() ; i++)
-      v_sy[i] = NULL;
+      v_sy[i] = nullptr;
 
     do
     {
-      if(v_sy[0] == NULL) // first iteration
+      if(v_sy[0] == nullptr) // first iteration
         for(int i = 0 ; i < y.size() ; i++)
           v_sy[i] = y[i].first_slice();
 
@@ -107,7 +107,7 @@ namespace codac
         v_sy[i]->set_input_gate(res_gate[i], false);
       }
 
-    } while(v_sy[0]->next_slice() != NULL);
+    } while(v_sy[0]->next_slice());
     
     res_gate = eval_vector(v_sy[0]->tdomain().ub(), x);
     for(int i = 0 ; i < y.size() ; i++)

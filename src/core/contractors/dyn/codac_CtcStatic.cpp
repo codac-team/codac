@@ -149,7 +149,7 @@ namespace codac
     IntervalVector envelope(n + m_temporal_ctc);
     IntervalVector ingate(n + m_temporal_ctc);
 
-    while(v_x_slices[0] != NULL)
+    while(v_x_slices[0])
     {
       // If these slices should not be impacted by the contractor
       if(!v_x_slices[0]->tdomain().intersects(m_restricted_tdomain))
@@ -185,7 +185,7 @@ namespace codac
         v_x_slices[i]->set_input_gate(ingate[i+m_temporal_ctc]);
       }
 
-      if(v_x_slices[0]->next_slice() == NULL) // output gate
+      if(v_x_slices[0]->next_slice() == nullptr) // output gate
       {
         IntervalVector outgate(n + m_temporal_ctc);
 

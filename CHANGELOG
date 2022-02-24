@@ -36,6 +36,56 @@ Codac releases
 .. --------------
 
 
+
+-----------------------------------------------------------------
+
+Codac release 0.1.10 (released `Jan 31, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.10>`_)
+==========================================================================================================
+
+`Commits since previous release 0.1.9 <https://github.com/codac-team/codac/compare/v0.1.9...v0.1.10>`_
+
+
+Python binding
+--------------
+
+* :commit:`76e0f8c8e9dae8748ce570e378773e5839e7424b`: completing missing math functions on tubes/traj
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.9 (released `Jan 28, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.9>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.8 <https://github.com/codac-team/codac/compare/v0.1.8...v0.1.9>`_
+
+
+Bugs fixed
+----------
+
+* :commit:`40c1d3e2d9cbd6bc1ba834f37ac06c18dad1dfe9`: corrected bug in ``Trajectory::diff()``
+
+Python binding
+--------------
+
+* :commit:`f43de8e75d91399fe8d642d70307986e9f09841c`: added binding for ``CtcNewton`` from IBEX
+* :commit:`c91d672d43ea573cb8522af47493391b01a0a110`: corrected bug in Python binding of ``Tube::invert()`` (subsets) methods
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.8 (released `Jan 15, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.8>`_)
+========================================================================================================
+
+`Commits since previous release 0.1.7 <https://github.com/codac-team/codac/compare/v0.1.7...v0.1.8>`_
+
+
+Bugs fixed
+----------
+
+* :commit:`a134aec462489db2d892cb6ee5d31eafe5ba73bd`: corrected pessimism in ``CtcEval`` on :math:`[t]\times[z]`
+* :commit:`f242159a160be266273030432e3c8b29054f9e3d`: solving bug when ``IntervalVectorVar`` connected by components only 
+
+
 -----------------------------------------------------------------
 
 Codac release 0.1.7 (released `Nov 4, 2021 <https://github.com/codac-team/codac/releases/tag/v0.1.7>`_)

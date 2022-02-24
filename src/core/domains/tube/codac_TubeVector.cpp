@@ -160,7 +160,7 @@ namespace codac
     TubeVector::TubeVector(const string& binary_file_name, TrajectoryVector *&traj)
     {
       deserialize(binary_file_name, traj);
-      if(traj == NULL)
+      if(traj == nullptr)
         throw Exception(__func__, "unable to deserialize Trajectory object");
     }
     
@@ -187,7 +187,7 @@ namespace codac
     const TubeVector& TubeVector::operator=(const TubeVector& x)
     {
       { // Destroying already existing components
-        if(m_v_tubes != NULL)
+        if(m_v_tubes)
           delete[] m_v_tubes;
       }
 
@@ -232,7 +232,7 @@ namespace codac
         new_vec[i].set(Interval::ALL_REALS);
       }
 
-      if(m_v_tubes != NULL) // (m_v_tubes == NULL) may happen when default constructor is used
+      if(m_v_tubes) // (m_v_tubes == nullptr) may happen when default constructor is used
         delete[] m_v_tubes;
 
       m_n = n;
@@ -443,7 +443,7 @@ namespace codac
         Interval inversion_lb = Interval::EMPTY_SET; \
         Interval inversion_ub = Interval::EMPTY_SET; \
          \
-        while(v_s[0] != NULL \
+        while(v_s[0] \
           && v_s[0]->tdomain().lb() < search_tdomain.ub() \
           && inversion_lb.is_empty()) \
         { \
@@ -464,7 +464,7 @@ namespace codac
           slice_deriv_init_bwd; \
         } \
          \
-        while(v_s[0] != NULL \
+        while(v_s[0] \
           && v_s[0]->tdomain().ub() > search_tdomain.lb() \
           && inversion_ub.is_empty()) \
         { \
@@ -532,7 +532,7 @@ namespace codac
          \
         Interval ti = Interval::EMPTY_SET; \
          \
-        while(v_s[0] != NULL && v_s[0]->tdomain().lb() < search_tdomain.ub()) \
+        while(v_s[0] && v_s[0]->tdomain().lb() <= search_tdomain.ub()) \
         { \
           Interval inversion; \
           for(int i = 0 ; i < size() && !inversion.is_empty() ; i++) \
@@ -622,7 +622,7 @@ namespace codac
       {
         double diag = 0.;
         for(int i = start_index ; i <= end_index ; i++)
-          diag += std::pow(it->second, 2);
+          diag += std::pow(diams(it->first)[i], 2);
         diag_traj.set(std::sqrt(diag), it->first);
       }
 
@@ -877,10 +877,10 @@ namespace codac
 
     // Tree synthesis structure
 
-    void TubeVector::enable_synthesis(bool enable) const
+    void TubeVector::enable_synthesis(SynthesisMode mode, double eps) const
     {
       for(int i = 0 ; i < size() ; i++)
-        (*this)[i].enable_synthesis(enable);
+        (*this)[i].enable_synthesis(mode, eps);
     }
 
     // Integration
@@ -1028,7 +1028,7 @@ namespace codac
         deserialize_TrajectoryVector(bin_file, traj);
 
       else
-        traj = NULL;
+        traj = nullptr;
 
       delete ptr;
       bin_file.close();

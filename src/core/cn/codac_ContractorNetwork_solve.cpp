@@ -299,8 +299,38 @@ namespace codac
 
     void ContractorNetwork::replace_var_by_dom(Domain var, Domain dom)
     {
+      bool var_fully_present_in_graph = true;
+      bool var_partially_present_in_graph = false;
+
       DomainHashcode hashcode(var);
       if(m_map_domains.find(hashcode) == m_map_domains.end())
+      {
+        // The variable may not be in the graph..
+        var_fully_present_in_graph = false;
+
+        // ..or only its components are in the graph (not the vector)
+        if(var.type() == Domain::Type::T_INTERVAL_VECTOR)
+        {
+          for(int i = 0 ; i < var.interval_vector().size() ; i++)
+          {
+            DomainHashcode hashcode_i(var.interval_vector()[i]);
+            if(m_map_domains.find(hashcode_i) != m_map_domains.end())
+            {
+              var_partially_present_in_graph = true;
+              break;
+            }
+          }
+
+          if(var_partially_present_in_graph)
+          {
+            // The vector var is added
+            add_dom(Domain(var.interval_vector()));
+            return replace_var_by_dom(var, dom);
+          }
+        }
+      }
+
+      if(!var_fully_present_in_graph)
         throw Exception(__func__, "unknown variable domain");
 
       Domain* var_ptr = m_map_domains[hashcode];

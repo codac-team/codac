@@ -1,3 +1,4 @@
+# This file generates .deb (Unix) and .nupkg (Windows) files
 on:
     push:
         branches: '**'
@@ -17,7 +18,7 @@ jobs:
         draft: true
         tag_name: autotagname-${{ github.sha }}
         release_name: autotagname-${{ github.sha }}
-      if: github.event_name != 'pull_request'
+      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
 
  unixmatrix:
     runs-on: ${{ matrix.cfg.os }}
@@ -33,8 +34,8 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
             - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
             - { os: ubuntu-18.04, shell: bash, arch: amd64, runtime: bionic, cmake_flags: '-fPIC', desc: 'Ubuntu 18.04' }
-#            - { os: macos-11.0, shell: bash, arch: amd64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur 11.0' } # Not yet available...
-            - { os: macos-10.15, shell: bash, arch: amd64, runtime: catalina, cmake_flags: '-fPIC', desc: 'macOS Catalina 10.15' }
+            - { os: macos-11, shell: bash, arch: amd64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur' }
+            - { os: macos-10.15, shell: bash, arch: amd64, runtime: catalina, cmake_flags: '-fPIC', desc: 'macOS Catalina' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v2
@@ -91,7 +92,7 @@ jobs:
 #      shell: bash
 #      if: runner.os=='Linux'
     - run: |
-        sudo sh -c 'echo "deb [trusted=yes] http://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
       shell: bash
       if: runner.os=='Linux'
@@ -156,4 +157,4 @@ jobs:
         file: "*.zip;*.nupkg;*.deb"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
-      if: github.event_name != 'pull_request'
+      if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')

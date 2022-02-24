@@ -1324,4 +1324,18 @@ TEST_CASE("CtcEval (other tests)")
       CHECK(y.codomain() == Interval(4,5));
     }
   }
+
+  SECTION("Test CtcEval, dependency on t")
+  {
+    double dt = 0.1;
+    Interval tdomain(0,10);
+    Interval t(0,10);
+    IntervalVector b({{0,2},{0,2}});
+    TubeVector x(tdomain, dt, TFunction("(sin(t) ; -sin(t))"));
+    CtcEval ctc_eval;
+    ctc_eval.contract(t, b, x);
+    CHECK(b.contains(Vector(2,0.)));
+    CHECK(b.max_diam() < 0.02);
+    CHECK(t == Interval(x[0].slice(0.)->tdomain().lb(),x[0].slice(3.*M_PI)->tdomain().ub()));
+  }
 }

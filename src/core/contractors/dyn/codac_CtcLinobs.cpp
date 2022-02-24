@@ -150,7 +150,7 @@ namespace codac
       Slice *s1 = x1.first_slice(), *s2 = x2.first_slice();
 
       v_p_k[i] = ConvexPolygon({s1->input_gate(), s2->input_gate()});
-      while(s1 != NULL)
+      while(s1)
       {
         i++;
         v_p_k[i] = ConvexPolygon({s1->output_gate(), s2->output_gate()});
@@ -167,7 +167,7 @@ namespace codac
         s2 = x2.first_slice();
         su = u.first_slice();
 
-        while(s1 != NULL)
+        while(s1)
         {
           const Interval tkm1_tk = s1->tdomain(); // [t_{k-1},t_k]
 
@@ -212,7 +212,7 @@ namespace codac
         s2 = x2.last_slice();
         su = u.last_slice();
 
-        while(s1 != NULL)
+        while(s1)
         {
           const Interval tk_kp1 = s1->tdomain(); // [t_k,t_{k+1}]
 

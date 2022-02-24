@@ -21,6 +21,7 @@
 #include "codac_tube_arithmetic.h"
 #include "codac_serialize_tubes.h"
 #include "codac_BoolInterval.h"
+#include "codac_TubeSynthesis.h"
 
 namespace codac
 {
@@ -1021,10 +1022,11 @@ namespace codac
        * \brief Enables the computation of a synthesis tree
        *
        * \note The synthesis tree speeds up computations such as integrals or evaluations
-       *
-       * \param enable boolean
+       *   
+       * \param mode mode of synthesis
+       * \param eps precision of the polynomial approximation, if selected
        */
-      void enable_synthesis(bool enable = true) const;
+      void enable_synthesis(SynthesisMode mode = SynthesisMode::BINARY_TREE, double eps = 1.e-3) const;
 
       /// @}
       /// \name Integration
@@ -1184,7 +1186,7 @@ namespace codac
       // Class variables:
 
         int m_n = 0; //!< dimension of this tube
-        Tube *m_v_tubes = NULL; //!< array of components (scalar tubes)
+        Tube *m_v_tubes = nullptr; //!< array of components (scalar tubes)
 
       friend void deserialize_TubeVector(std::ifstream& bin_file, TubeVector *&tube);
   };

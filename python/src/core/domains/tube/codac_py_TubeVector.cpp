@@ -185,17 +185,29 @@ void export_TubeVector(py::module& m)
       TUBEVECTOR_CONSTINTERVAL_INVERT_INTERVALVECTOR_INTERVAL,
       "y"_a, "search_domain"_a=Interval::all_reals())
 
-    .def("invert", (void (TubeVector::*)(const IntervalVector&,vector<Interval>&,const Interval&) const)&TubeVector::invert,
+    .def("invert", [](TubeVector& tube, const IntervalVector& y, py::list& v_t, const Interval& search_tdomain)
+      {
+        vector<Interval> vector_t;
+        tube.invert(y, vector_t, search_tdomain);
+        for(const auto& t : vector_t)
+          v_t.append(t);
+      },
       TUBEVECTOR_VOID_INVERT_INTERVALVECTOR_VECTORINTERVAL_INTERVAL,
-      "y"_a, "v_t"_a, "search_domain"_a=Interval::all_reals())
+      "y"_a, "v_t"_a, "search_tdomain"_a=Interval::all_reals())
 
     .def("invert", (const Interval (TubeVector::*)(const IntervalVector&,const TubeVector&,const Interval&) const)&TubeVector::invert,
       TUBEVECTOR_CONSTINTERVAL_INVERT_INTERVALVECTOR_TUBEVECTOR_INTERVAL,
       "y"_a, "v"_a, "search_domain"_a=Interval::all_reals())
 
-    .def("invert", (void (TubeVector::*)(const IntervalVector&,vector<Interval>&,const TubeVector&,const Interval&) const)&TubeVector::invert,
+    .def("invert", [](TubeVector& tube, const IntervalVector& y, py::list& v_t, const TubeVector& v, const Interval& search_tdomain)
+      {
+        vector<Interval> vector_t;
+        tube.invert(y, vector_t, v, search_tdomain);
+        for(const auto& t : vector_t)
+          v_t.append(t);
+      },
       TUBEVECTOR_VOID_INVERT_INTERVALVECTOR_VECTORINTERVAL_TUBEVECTOR_INTERVAL,
-      "y"_a, "v_t"_a, "v"_a, "search_domain"_a=Interval::all_reals())
+      "y"_a, "v_t"_a, "v"_a, "search_tdomain"_a=Interval::all_reals())
 
     .def("max_diam", &TubeVector::max_diam,
       TUBEVECTOR_CONSTVECTOR_MAX_DIAM)
@@ -412,8 +424,8 @@ void export_TubeVector(py::module& m)
   // Tree synthesis structure
 
     .def("enable_synthesis", &TubeVector::enable_synthesis,
-      TUBEVECTOR_VOID_ENABLE_SYNTHESIS_BOOL,
-      "enable"_a=true)
+      TUBEVECTOR_VOID_ENABLE_SYNTHESIS_SYNTHESISMODE_DOUBLE,
+      "enable"_a=SynthesisMode::BINARY_TREE, "eps"_a=1.e-3)
 
     .def("integral", (const IntervalVector (TubeVector::*)(double) const)&TubeVector::integral,
       TUBEVECTOR_CONSTINTERVALVECTOR_INTEGRAL_DOUBLE,

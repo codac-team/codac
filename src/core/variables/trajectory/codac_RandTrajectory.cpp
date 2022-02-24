@@ -28,7 +28,7 @@ namespace codac
       assert(timestep > 0.);
       assert(!bounds.is_empty() && !bounds.is_unbounded());
 
-      srand(time(NULL));
+      srand(time(nullptr));
 
       double t;
       for(t = tdomain.lb() ; t < tdomain.ub()+timestep ; t+=timestep)

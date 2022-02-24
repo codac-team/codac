@@ -52,7 +52,7 @@ namespace codac
     assert(map_box.size() == 2);
     assert(nb_beacons >= 0);
 
-    srand(time(NULL));
+    srand(time(nullptr));
     vector<Beacon> v_beacons;
     for(int i = 0 ; i < nb_beacons ; i++)
     {

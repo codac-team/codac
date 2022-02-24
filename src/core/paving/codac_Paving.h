@@ -51,28 +51,28 @@ namespace codac
       /**
        * \brief Points to the first subpaving of the binary tree implementing this paving set
        *
-       * \return a pointer to the first Paving object, or NULL is this set is a leaf
+       * \return a pointer to the first Paving object, or nullptr is this set is a leaf
        */
       Paving* get_first_subpaving();
 
       /**
        * \brief Points to the first subpaving of the binary tree implementing this paving set
        *
-       * \return a const pointer to the first Paving object, or NULL is this set is a leaf
+       * \return a const pointer to the first Paving object, or nullptr is this set is a leaf
        */
       const Paving* get_first_subpaving() const;
 
       /**
        * \brief Points to the second subpaving of the binary tree implementing this paving set
        *
-       * \return a pointer to the second Paving object, or NULL is this set is a leaf
+       * \return a pointer to the second Paving object, or nullptr is this set is a leaf
        */
       Paving* get_second_subpaving();
 
       /**
        * \brief Points to the second subpaving of the binary tree implementing this paving set
        *
-       * \return a const pointer to the second Paving object, or NULL is this set is a leaf
+       * \return a const pointer to the second Paving object, or nullptr is this set is a leaf
        */
       const Paving* get_second_subpaving() const;
 
@@ -216,8 +216,8 @@ namespace codac
     protected:
 
       mutable bool m_flag; //!< optional flag, can be used by search algorithms
-      Paving *m_root = NULL; //!< pointer to the root
-      Paving *m_first_subpaving = NULL, *m_second_subpaving = NULL; //!< tree structure
+      Paving *m_root = nullptr; //!< pointer to the root
+      Paving *m_first_subpaving = nullptr, *m_second_subpaving = nullptr; //!< tree structure
   };
 }
 

@@ -178,7 +178,7 @@ namespace Catch
             return false;
 
           const codac::Slice *s = lhs.first_slice(), *s_x = rhs.m_value.first_slice();
-          while(s != NULL)
+          while(s != nullptr)
           {
             if(*s != ApproxSlice(*s_x)) // todo
               return false;

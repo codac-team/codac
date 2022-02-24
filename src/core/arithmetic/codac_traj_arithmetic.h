@@ -147,6 +147,48 @@ namespace codac
       */
     const Trajectory atan2(double y, const Trajectory& x);
 
+    /** \brief \f$\min(y(\cdot),x(\cdot))\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
+    const Trajectory min(const Trajectory& y, const Trajectory& x);
+
+    /** \brief \f$\min(y(\cdot),x)\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
+    const Trajectory min(const Trajectory& y, double x);
+
+    /** \brief \f$\min(y, x(\cdot))\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
+    const Trajectory min(double y, const Trajectory& x);
+
+    /** \brief \f$\max(y(\cdot),x(\cdot))\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
+    const Trajectory max(const Trajectory& y, const Trajectory& x);
+
+    /** \brief \f$\max(y(\cdot),x)\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
+    const Trajectory max(const Trajectory& y, double x);
+
+    /** \brief \f$\max(y, x(\cdot))\f$
+      * \param y
+      * \param x
+      * \return Trajectory output
+      */
+    const Trajectory max(double y, const Trajectory& x);
+
     /** \brief \f$x^p(\cdot)\f$
       * \param x
       * \param p
@@ -376,6 +418,13 @@ namespace codac
       */
     const TrajectoryVector operator/(const Vector& x, const Trajectory& y);
 
+
+    /** \brief \f$\mathbf{x}\times\mathbf{y}\f$ (or \f$\mathbf{x}\wedge\mathbf{y}\f$ in physics)
+      * \param x
+      * \param y
+      * \return Vector output
+      */
+    const Vector vecto_product(const Vector& x, const Vector& y);
 
     /** \brief \f$\mathbf{x}(\cdot)\times\mathbf{y}\f$ (or \f$\mathbf{x}(\cdot)\wedge\mathbf{y}\f$ in physics)
       * \param x

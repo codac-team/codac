@@ -55,10 +55,10 @@ namespace codac
        * \brief Creates a VIBesFigTube
        *
        * \param fig_name name of the figure as displayed in the window title
-       * \param tube an optional const pointer to the tube to be displayed (`NULL` by default)
-       * \param traj an optional const pointer to a trajectory to be displayed (`NULL` by default)
+       * \param tube an optional const pointer to the tube to be displayed (`nullptr` by default)
+       * \param traj an optional const pointer to a trajectory to be displayed (`nullptr` by default)
        */
-      VIBesFigTube(const std::string& fig_name, const Tube *tube = NULL, const Trajectory *traj = NULL);
+      VIBesFigTube(const std::string& fig_name, const Tube *tube = nullptr, const Trajectory *traj = nullptr);
 
       /**
        * \brief VIBesFigTube destructor
@@ -252,7 +252,7 @@ namespace codac
        * \param traj the const pointer to the Trajectory object for which the points size will be set
        * \param points_size size of the points (if 0, the display is done with a line)
        */
-      void set_trajectory_points_size(const Trajectory *traj, float points_size);
+      void set_trajectory_points_size(const Trajectory *traj, double points_size);
 
       /**
        * \brief Removes a trajectory from this figure
@@ -340,8 +340,8 @@ namespace codac
       {
         std::string name; //!< human readable identifier of the tube
         std::map<TubeColorType,std::string> m_colors; //!< map of colors `<TubeColorType,html_color_code>`
-        const Tube *tube_copy = NULL; //!< to display previous values in background, before any new contraction
-        const Tube *tube_derivative = NULL; //!< to display thinner envelopes (polygons) enclosed by the slices
+        const Tube *tube_copy = nullptr; //!< to display previous values in background, before any new contraction
+        const Tube *tube_derivative = nullptr; //!< to display thinner envelopes (polygons) enclosed by the slices
       };
 
       /**
