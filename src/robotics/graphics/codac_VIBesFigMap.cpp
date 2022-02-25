@@ -159,6 +159,7 @@ namespace codac
     assert(index_x != index_y);
     assert(index_x >= 0 && index_x < traj->size());
     assert(index_y >= 0 && index_y < traj->size());
+
     add_trajectory(traj, name, index_x, index_y, -1, color, vehicle_display);
   }
 
@@ -216,7 +217,6 @@ namespace codac
     // Related groups are created during the display procedure
     // so that trajectories stay on top of the tubes.
   }
-
   
   void VIBesFigMap::set_vehicle_display(const TrajectoryVector *traj, bool vehicle_display)
   {
@@ -233,12 +233,11 @@ namespace codac
     if(m_map_trajs.find(traj) == m_map_trajs.end())
       throw Exception(__func__, "unable to remove, unknown trajectory");
 
+    m_map_trajs.erase(traj);
     std::ostringstream o;
     o << "traj_" << m_map_trajs[traj].name;
     string group_name = o.str();
     vibes::clearGroup(name(), group_name);
-    m_map_trajs.erase(traj);
-
   }
 
   void VIBesFigMap::add_beacon(const Beacon& beacon, const string& color)
