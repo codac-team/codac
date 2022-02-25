@@ -34,10 +34,6 @@ namespace codac
   #define DEFAULT_OBS_COLOR                     "gray"
   #define DEFAULT_VEHICLE_DISPLAY_ON_EACH_TRAJ  true
 
-  // Vehicle Display modes
-  #define DEFAULT_VEHICLE_ON            1
-  #define DEFAULT_VEHICLE_OFF           0
-
   /**
    * \class VIBesFigMap
    * \brief Two-dimensional graphical item to project dynamical items
@@ -191,7 +187,6 @@ namespace codac
        */
       void add_trajectory(const TrajectoryVector *traj, const std::string& name, int index_x, int index_y, const std::string& color = DEFAULT_TRAJMAP_COLOR, bool vehicle_display = DEFAULT_VEHICLE_DISPLAY_ON_EACH_TRAJ);
 
-
       /**
        * \brief Adds a trajectory vector object (x,y,heading) to this figure
        *
@@ -246,7 +241,7 @@ namespace codac
        * \brief Removes a trajectory from this figure
        *
        * \todo automatically clear the figure (for now, the trajectory is only removed
-       *       from the list of objects to be shown afterwards) (done by Julien need to be checked)
+       *       from the list of objects to be shown afterwards)
        *
        * \note the object will not be deleted
        *

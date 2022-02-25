@@ -234,6 +234,7 @@ namespace codac
       throw Exception(__func__, "unable to remove, unknown trajectory");
 
     m_map_trajs.erase(traj);
+
     std::ostringstream o;
     o << "traj_" << m_map_trajs[traj].name;
     string group_name = o.str();
