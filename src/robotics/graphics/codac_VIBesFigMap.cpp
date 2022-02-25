@@ -235,7 +235,7 @@ namespace codac
 
     m_map_trajs.erase(traj);
 
-    std::ostringstream o;
+    ostringstream o;
     o << "traj_" << m_map_trajs[traj].name;
     string group_name = o.str();
     vibes::clearGroup(name(), group_name);
@@ -536,7 +536,6 @@ namespace codac
 
     if(m_map_trajs[traj].vehicle_display)
       draw_vehicle((traj->tdomain() & m_restricted_tdomain).ub(), traj, params);
-
 
     return viewbox;
   }
