@@ -26,9 +26,9 @@ namespace codac
   enum class SetValue
   {
     UNKNOWN = 0x01, ///< unable to conclude
-    OUT = 0x02,   ///< outside the solution set
-    IN = 0x04,     ///< inside the solution set
-    PENUMBRA = 0x08, ///< inside the penumbra set
+    OUT = 0x02,     ///< outside the solution set
+    IN = 0x04,      ///< inside the solution set
+    PENUMBRA = 0x08 ///< inside the penumbra set
   };
 
   /**
