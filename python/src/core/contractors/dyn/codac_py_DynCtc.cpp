@@ -13,7 +13,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_py_DynCtc.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
@@ -25,9 +25,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-py::class_<DynCtc, pyDynCtc> export_DynCtc(py::module& m)
+py::class_<DynCtc,pyDynCtc> export_DynCtc(py::module& m)
 {
-  py::class_<DynCtc, pyDynCtc> dyn_ctc(m, "DynCtc", DYNCTC_MAIN);
+  py::class_<DynCtc,pyDynCtc> dyn_ctc(m, "DynCtc", DYNCTC_MAIN);
   dyn_ctc
 
     .def(py::init<>(),

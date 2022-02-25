@@ -99,10 +99,12 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_intervals.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_intervals.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_Ctc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCompo.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcFunction.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcFunction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcUnion.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_DynCtc.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_DynCtc.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcPicard.h

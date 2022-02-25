@@ -13,13 +13,12 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_tube_arithmetic.h"
 #include "codac_traj_arithmetic.h"
 #include "codac_Interval.h"
 
-using namespace ibex;
 using namespace codac;
 
 using namespace pybind11::literals;
@@ -40,7 +39,7 @@ using py::init;
   m.def(str_f, [](double y, double x) { return std::f(y,x); }, "y"_a.noconvert(), "x"_a.noconvert()); \
   m.def(str_f, [](const Interval& y, double x) { return ibex::f(y,Interval(x)); }, "y"_a.noconvert(), "x"_a.noconvert()); \
   m.def(str_f, [](double y, const Interval& x) { return ibex::f(Interval(y),x); }, "y"_a.noconvert(), "x"_a.noconvert()); \
-  m.def(str_f, (Interval (*) (const Interval& y, const Interval& x)) &f, "y"_a, "x"_a); \
+  m.def(str_f, (Interval (*) (const Interval& y, const Interval& x)) &ibex::f, "y"_a, "x"_a); \
   m.def(str_f, (const Tube (*) (const Tube& y, const Tube& x)) &f, "y"_a, "x"_a); \
   m.def(str_f, [](const Tube& y, double x) { return f(y,Interval(x)); } , "y"_a.noconvert(), "x"_a.noconvert()); \
   m.def(str_f, (const Tube (*) (const Tube& y, const Interval& x)) &f, "y"_a, "x"_a); \

@@ -5,7 +5,6 @@
 # Simon Rohou, Benoît Desrochers, Luc Jaulin
 # ICRA 2020, Paris
 
-from pyibex import *
 from codac import *
 import math
 import sys # only for checking if this example still works

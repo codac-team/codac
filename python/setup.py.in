@@ -23,13 +23,12 @@ setup(
   packages=['${PYTHON_PACKAGE_NAME}', '${PYTHON_PACKAGE_NAME}.tests'],
   package_data={
     '${PYTHON_PACKAGE_NAME}': [
-      'tube${PYTHON_MODULE_EXTENSION}',
-      'graphics${PYTHON_MODULE_EXTENSION}',
+      'core${PYTHON_MODULE_EXTENSION}',
+      #'graphics${PYTHON_MODULE_EXTENSION}',
     ],
   },
   install_requires=[
-    'pip>=19.0.0',
-    'pyibex>=1.9.2'
+    'pip>=19.0.0'
   ],
   license="LGPLv3+",
   classifiers=[

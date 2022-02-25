@@ -39,6 +39,45 @@ Codac releases
 
 -----------------------------------------------------------------
 
+Codac release 0.1.12 (released `Feb 21, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.12>`_)
+==========================================================================================================
+
+`Commits since previous release 0.1.11 <https://github.com/codac-team/codac/compare/v0.1.11...v0.1.12>`_
+
+Features added
+--------------
+
+* :commit:`f53c7e9bdda3f8b8f98fcc2f3788447efd54dbb5`: towards polynomial representation of tubes
+
+
+-----------------------------------------------------------------
+
+Codac release 0.1.11 (released `Feb 17, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.11>`_)
+==========================================================================================================
+
+`Commits since previous release 0.1.10 <https://github.com/codac-team/codac/compare/v0.1.10...v0.1.11>`_
+
+
+Bugs fixed
+----------
+
+* :commit:`e34095d0967a02cda3fff51b010cd0355b7b7118`: corrected bug in ``VIBesFigPaving``
+* :commit:`4ac8120024cb144a57837fcf062ffbdb722c2dda`: corrected bug in ``TubeVector::invert`` (subsets)
+
+Documentation
+-------------
+
+* :commit:`3b391c11e9e82eb423565c250e2c9c43ffdb990e`: added ``Function`` page to the manual
+* :commit:`07023a5b4d8d794c0e9d538a3576e789318fd955`: added example in ``Lohner`` page
+
+Python binding
+--------------
+
+* :commit:`945314bfdcb033b9b14457fa160a1753fd4e385e`: casting for dealing with ``numpy.float32``
+
+
+-----------------------------------------------------------------
+
 Codac release 0.1.10 (released `Jan 31, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.10>`_)
 ==========================================================================================================
 

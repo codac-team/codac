@@ -15,8 +15,9 @@
 #include "codac_VIBesFig.h"
 #include "codac_Trajectory.h"
 
-#include "src/core/contractors/dyn/codac_py_DynCtc.h" // virtual items
-#include "src/core/functions/codac_py_TFnc.h" // virtual items
+#include "src/core/contractors/static/codac_py_Ctc.h"
+#include "src/core/contractors/dyn/codac_py_DynCtc.h"
+#include "src/core/functions/codac_py_TFnc.h"
 
 #include <pybind11/pybind11.h>
 
@@ -29,10 +30,12 @@ void export_ContractorNetwork(py::module& m);
 void export_IntervalVar(py::module& m);
 void export_IntervalVectorVar(py::module& m);
 
-void export_CtcDist(py::module& m);
-void export_CtcFunction(py::module& m);
-void export_CtcConstell(py::module& m);
-void export_CtcNewton(py::module& m);
+py::class_<Ctc,pyCtc> export_Ctc(py::module& m);
+void export_CtcDist(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+void export_CtcFunction(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+void export_CtcConstell(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+void export_CtcNewton(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+void export_CtcPolar(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 
 py::class_<DynCtc,pyDynCtc> export_DynCtc(py::module& m);
 void export_CtcDelay(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
@@ -42,6 +45,11 @@ void export_CtcLohner(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcPicard(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcStatic(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 
+void export_bisectors(py::module&m);
+void export_Interval(py::module&m);
+void export_IntervalVector(py::module&m);
+void export_IntervalMatrix(py::module&m);
+void export_BoolInterval(py::module&m);
 void export_Tube(py::module&m);
 void export_TubeVector(py::module& m);
 void export_Trajectory(py::module& m);
@@ -49,6 +57,7 @@ void export_RandTrajectory(py::module& m);
 void export_TrajectoryVector(py::module& m);
 void export_Slice(py::module& m);
 
+void export_Function(py::module& m);
 py::class_<TFnc,pyTFnc> export_TFnc(py::module& m);
 void export_TFunction(py::module& m, py::class_<TFnc>& fnc);
 
@@ -66,19 +75,21 @@ void export_Paving(py::module& m);
 void export_DataLoader(py::module& m);
 void export_TPlane(py::module& m);
 
-PYBIND11_MODULE(tube, m)
+PYBIND11_MODULE(core, m)
 {
-  m.doc() = "Python binding of Codac";
+  m.doc() = "Python binding of Codac (core)";
 
   export_arithmetic(m);
   export_ContractorNetwork(m);
   export_IntervalVar(m);
   export_IntervalVectorVar(m);
 
-  export_CtcDist(m);
-  export_CtcFunction(m);
-  export_CtcConstell(m);
-  export_CtcNewton(m);
+  py::class_<Ctc, pyCtc> ctc = export_Ctc(m);
+  export_CtcDist(m, ctc);
+  export_CtcFunction(m, ctc);
+  export_CtcConstell(m, ctc);
+  export_CtcNewton(m, ctc);
+  export_CtcPolar(m, ctc);
 
   py::class_<DynCtc, pyDynCtc> dyn_ctc = export_DynCtc(m);
   export_CtcDelay(m, dyn_ctc);
@@ -88,6 +99,11 @@ PYBIND11_MODULE(tube, m)
   export_CtcPicard(m, dyn_ctc);
   export_CtcStatic(m, dyn_ctc);
 
+  export_bisectors(m);
+  export_BoolInterval(m);
+  export_Interval(m);
+  export_IntervalVector(m);
+  export_IntervalMatrix(m);
   export_Tube(m);
   export_TubeVector(m);
   export_Trajectory(m);
@@ -95,6 +111,7 @@ PYBIND11_MODULE(tube, m)
   export_TrajectoryVector(m);
   export_Slice(m);
 
+  export_Function(m);
   py::class_<TFnc> tfnc = export_TFnc(m);
   export_TFunction(m, tfnc);
 

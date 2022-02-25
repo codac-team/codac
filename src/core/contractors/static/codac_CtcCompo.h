@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  IntervalMatrix class
+ *  CtcCompo class
  * ----------------------------------------------------------------------------
  *  \date       2021
  *  \author     Simon Rohou
@@ -9,16 +9,14 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC_INTERVALMATRIX_H__
-#define __CODAC_INTERVALMATRIX_H__
+#ifndef __CODAC_CTCCOMPO_H__
+#define __CODAC_CTCCOMPO_H__
 
-#include "codac_Interval.h"
-#include "codac_IntervalVector.h"
-#include "ibex_IntervalMatrix.h"
+#include "ibex_CtcCompo.h"
 
 namespace codac
 {
-  using ibex::IntervalMatrix;
+  using ibex::CtcCompo;
 }
 
 #endif

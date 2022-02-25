@@ -52,18 +52,20 @@
   # Library for Python binding
   ################################################################################
 
-  # Generating a library tube.so containing the python binding:
-  pybind11_add_module(tube SHARED
-    codac_py.cpp
+  # Generating a library core.so containing the python binding:
+  pybind11_add_module(core SHARED
+    codac_py_core.cpp
 
     src/core/arithmetic/codac_py_arithmetic.cpp
     src/core/cn/codac_py_ContractorNetwork.cpp
     src/core/cn/codac_py_Variable.cpp
 
+    src/core/contractors/static/codac_py_Ctc.cpp
     src/core/contractors/static/codac_py_CtcDist.cpp
     src/core/contractors/static/codac_py_CtcFunction.cpp
     src/core/contractors/static/codac_py_CtcConstell.cpp
     src/core/contractors/static/codac_py_CtcNewton.cpp
+    src/core/contractors/static/codac_py_CtcPolar.cpp
 
     src/core/contractors/dyn/codac_py_DynCtc.cpp
     src/core/contractors/dyn/codac_py_CtcDelay.cpp
@@ -73,6 +75,11 @@
     src/core/contractors/dyn/codac_py_CtcPicard.cpp
     src/core/contractors/dyn/codac_py_CtcStatic.cpp
 
+    src/core/domains/interval/codac_py_bisectors.cpp
+    src/core/domains/interval/codac_py_BoolInterval.cpp
+    src/core/domains/interval/codac_py_Interval.cpp
+    src/core/domains/interval/codac_py_IntervalVector.cpp
+    src/core/domains/interval/codac_py_IntervalMatrix.cpp
     src/core/domains/tube/codac_py_Tube.cpp
     src/core/domains/tube/codac_py_TubeVector.cpp
     src/core/domains/slice/codac_py_Slice.cpp
@@ -81,6 +88,7 @@
     src/core/variables/trajectory/codac_py_RandTrajectory.cpp
     src/core/variables/trajectory/codac_py_TrajectoryVector.cpp
 
+    src/core/functions/codac_py_Function.cpp
     src/core/functions/codac_py_TFnc.cpp
     src/core/functions/codac_py_TFunction.cpp
 
@@ -99,22 +107,22 @@
     src/robotics/codac_py_TPlane.cpp
   )
 
-  target_include_directories(tube
+  target_include_directories(core
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/docstring)
 
-  target_link_libraries(tube
-    PRIVATE codac codac-rob ${LIBS})
+  target_link_libraries(core
+    PRIVATE codac codac-rob codac-pyibex ${LIBS})
 
-    # ex: from codac import tube
-    #     tube.Tube
-    # ex: from codac.tube import Tube
+    # ex: from codac import core
+    #     core.Tube
+    # ex: from codac.core import Tube
     #     Tube
 
   # Copy the generated library in the package folder
-  add_custom_command(TARGET tube POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:tube>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+  add_custom_command(TARGET core POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
   )
 
   #pybind11_add_module(graphics SHARED

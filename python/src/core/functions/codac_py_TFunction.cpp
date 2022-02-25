@@ -13,7 +13,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_Tube.h"
 #include "codac_TubeVector.h"
@@ -22,7 +22,6 @@
 #include "codac_py_TFunction_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -32,8 +31,8 @@ typedef const char* cc_ptr;
 
 void export_TFunction(py::module& m, py::class_<TFnc>& fnc)
 {
-  py::class_<TFunction,TFnc> function(m, "TFunction", TFUNCTION_MAIN);
-  function
+  py::class_<TFunction,TFnc> tfunction(m, "TFunction", TFUNCTION_MAIN);
+  tfunction
 
     .def(py::init<cc_ptr>(),
       TFUNCTION_TFUNCTION_CHAR,

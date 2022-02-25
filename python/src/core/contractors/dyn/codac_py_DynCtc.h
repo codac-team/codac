@@ -13,7 +13,7 @@
 #define __CODAC_PY_DYNCTC_H__
 
 #include <pybind11/pybind11.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_Domain.h"
 #include "codac_DynCtc.h"
@@ -24,8 +24,6 @@ namespace codac
   class pyDynCtc : public DynCtc
   {
     public:
-
-      using DynCtc::DynCtc;
 
       // Trampoline (need one for each virtual function)
       void contract(std::vector<Domain*>& v_domains) override

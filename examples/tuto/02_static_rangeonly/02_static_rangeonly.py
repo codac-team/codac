@@ -2,7 +2,6 @@
 # Static range-only localization
 # ----------------------------------------------------------------------------
 
-from pyibex import *
 from codac import *
 import math
 import sys # only for checking if this example still works
@@ -64,7 +63,7 @@ for i in range(0,len(v_range)):
   fig.draw_ring(v_map[i][0].mid(), v_map[i][1].mid(), v_range[i], "gray")
 
 fig.draw_vehicle(x_truth, size=0.5)
-#fig.draw_box(x) # estimated position
+fig.draw_box(x) # estimated position
 fig.show()
 
 endDrawing()

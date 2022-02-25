@@ -13,7 +13,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 #include <pybind11/functional.h>
-#include "pyIbex_type_caster.h"
+#include "codac_type_caster.h"
 
 #include "codac_py_DynCtc.h"
 #include "codac_CtcDeriv.h"
@@ -21,7 +21,6 @@
 #include "codac_py_CtcDeriv_docs.h"
 
 using namespace std;
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 using namespace pybind11::literals;
