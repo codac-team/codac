@@ -19,5 +19,6 @@ namespace codac
     CtcDist dist;
     CtcEval eval;
     CtcChain chain;
+    CtcPolar polar;
   }
 }

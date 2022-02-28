@@ -17,6 +17,7 @@
 #include "codac_CtcEval.h"
 #include "codac_CtcDelay.h"
 #include "codac_CtcChain.h"
+#include "codac_CtcPolar.h"
 
 namespace codac
 {
@@ -27,6 +28,7 @@ namespace codac
     extern CtcDist dist; // distance constraint (a,b,d)
     extern CtcEval eval; // evaluation constraint (t,z,y,w)
     extern CtcChain chain; // double integration constraint (x,xdot,xddot)
+    extern CtcPolar polar; // polar constraint (px,py,rho,phi)
   }
 }
 
