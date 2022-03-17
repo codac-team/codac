@@ -192,6 +192,34 @@ The boxes are contracted in order to remove some vectors that are not consistent
 .. }
 
 
+Dealing with inequalities
+-------------------------
+
+For constraints under the form :math:`\mathbf{f}(\mathbf{x})\in[\mathbf{y}]` (instead of :math:`\mathbf{f}(\mathbf{x})=\mathbf{0}` as in the previous section), one can specify :math:`[\mathbf{y}]` as last optional argument of ``CtcFunction``.
+
+A constraint :math:`\mathbf{f}(\mathbf{x})\leqslant 0` is equivalent to :math:`\mathbf{f}(\mathbf{x})\in[-\infty,0]` and so the related contractor becomes:
+
+.. tabs::
+
+  .. code-tab:: py
+
+    ctc_f = CtcFunction(Function("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]"), Interval(-oo,0))
+
+  .. code-tab:: c++
+
+    CtcFunction ctc_f(Function("x[2]", "x[0]*cos(x[0]-x[1])*sin(x[0])+x[1]"), Interval(-oo,0));
+
+|pic1| |pic2|
+
+.. |pic1| image:: img/CtcFunction_inequalities.png
+   :width: 300
+
+.. |pic2| image:: img/CtcFunction_inequalities_paving.png
+   :width: 300
+
+The above illustration reveals several contracted boxes with the new ``ctc_f`` contractor, in the case of inequalities. The actual solution set :math:`\mathbb{X}=\{\mathbf{x}\mid\mathbf{f}(\mathbf{x})\leqslant 0\}` is green painted.
+
+
 Going further
 -------------
 
