@@ -213,7 +213,8 @@ void CtcLohner::contract(codac::TubeVector &tube, TimePropag t_propa) {
       }
       lo.integrate(1, h);
       lo.contractStep(output_gate);
-      tube.set(slice & lo.getGlobalEnclosure(), i);
+      for (int j = 0; j < dim; ++j)
+        tube[j].slice(i)->set_envelope(slice[j] & lo.getGlobalEnclosure()[j]);
     }
     tube.set(output_gate & lo.getLocalEnclosure(), tube.tdomain().ub());
   }
@@ -231,7 +232,8 @@ void CtcLohner::contract(codac::TubeVector &tube, TimePropag t_propa) {
       }
       lo2.integrate(1, h);
       lo2.contractStep(output_gate);
-      tube.set(slice & lo2.getGlobalEnclosure(), i); // tube update
+      for (int j = 0; j < dim; ++j)
+        tube[j].slice(i)->set_envelope(slice[j] & lo2.getGlobalEnclosure()[j]);
     }
     tube.set(output_gate & lo2.getLocalEnclosure(), tube.tdomain().lb());
   }
