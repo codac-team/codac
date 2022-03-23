@@ -322,7 +322,7 @@ namespace codac
 
       /**
        * \brief Returns a pointer to the Slice object of this tube for which
-       *        the interval value is the more uncertain
+       *        the interval value is the most uncertain
        *
        * \return a pointer to the corresponding Slice
        */
@@ -330,13 +330,31 @@ namespace codac
 
       /**
        * \brief Returns a constant pointer to the Slice object of this tube for
-       *        which the interval value is the more uncertain
+       *        which the interval value is the most uncertain
        *
        * \return a const pointer to the corresponding Slice
        */
       const Slice* largest_slice() const;
 
-      /**
+ /**
+       * \brief Returns a pointer to the Slice object of this tube for which
+       *        the difference between the input and outout gate midvalue is the largest
+       *
+       * \return a pointer to the corresponding Slice
+       */
+      Slice* steepest_slice();
+       /**
+       * \brief Returns a const pointer to the Slice object of this tube for which
+       *        the difference between the input and outout gate midvalue is the largest
+       *
+       * \return a const pointer to the corresponding Slice
+       */
+      const Slice* steepest_slice() const;
+
+
+
+
+       /**
        * \brief Returns the temporal definition domain of the ith Slice of this tube
        *
        * \param slice_id the index of the ith Slice
