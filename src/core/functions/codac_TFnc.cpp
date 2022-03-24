@@ -99,7 +99,7 @@ namespace codac
           v_sy[i] = v_sy[i]->next_slice();
 
       res_codomain = eval_vector(v_sy[0]->tdomain(), x);
-      res_gate = eval_vector(v_sy[0]->tdomain().lb(), x);
+      res_gate = eval_vector(Interval(v_sy[0]->tdomain().lb()), x);
 
       for(int i = 0 ; i < y.size() ; i++)
       {
@@ -109,7 +109,8 @@ namespace codac
 
     } while(v_sy[0]->next_slice());
     
-    res_gate = eval_vector(v_sy[0]->tdomain().ub(), x);
+    res_gate = eval_vector(Interval(v_sy[0]->tdomain().ub()), x);
+
     for(int i = 0 ; i < y.size() ; i++)
       v_sy[i]->set_output_gate(res_gate[i], false);
 

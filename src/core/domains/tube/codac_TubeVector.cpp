@@ -629,6 +629,39 @@ namespace codac
       return diag_traj;
     }
 
+    const double TubeVector::max_gate_diam(double & t) const
+    {
+      double max_gate_diam=0; 
+      for (int i = 0 ; i < size() ; i++){
+	double ti;
+	double gate_diam= (*this)[i].max_gate_diam(ti);
+	if (gate_diam > max_gate_diam){
+	  t=ti;
+	  max_gate_diam=gate_diam;
+	}
+      }
+      return max_gate_diam;
+    }
+
+
+  
+    const Slice* TubeVector::steepest_slice() const
+    {
+      const Slice* s=nullptr;
+      double maxdif=0;
+      for (int k=0; k< size(); k++){
+	const Slice* s0= (*this)[k].steepest_slice();
+	double dif=fabs(s0->output_gate().mid()-s0->input_gate().mid());
+	if (dif >= maxdif) {s=s0;
+	 maxdif=dif;}
+      }
+
+      return s;
+    }
+
+
+
+  
     // Tests
 
     bool TubeVector::operator==(const TubeVector& x) const
