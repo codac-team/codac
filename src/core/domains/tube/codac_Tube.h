@@ -336,23 +336,23 @@ namespace codac
        */
       const Slice* largest_slice() const;
 
- /**
+      /**
        * \brief Returns a pointer to the Slice object of this tube for which
-       *        the difference between the input and outout gate midvalue is the largest
+       *        the difference between the mid values of the input and output 
+       *        gates is the largest
        *
        * \return a pointer to the corresponding Slice
        */
       Slice* steepest_slice();
+
        /**
        * \brief Returns a const pointer to the Slice object of this tube for which
-       *        the difference between the input and outout gate midvalue is the largest
+       *        the difference between the mid values of the input and output 
+       *        gates is the largest
        *
        * \return a const pointer to the corresponding Slice
        */
       const Slice* steepest_slice() const;
-
-
-
 
        /**
        * \brief Returns the temporal definition domain of the ith Slice of this tube

@@ -458,6 +458,7 @@ namespace codac
 
       return largest;
     }
+    
     Slice* Tube::steepest_slice()
     {
       return const_cast<Slice*>(static_cast<const Tube&>(*this).steepest_slice());
@@ -465,17 +466,19 @@ namespace codac
 
     const Slice* Tube::steepest_slice() const
     {
-      double max_dif = 0.;
-      const Slice *steepest_slice;
-      steepest_slice=first_slice();
-      for(const Slice *s = first_slice() ; s != nullptr ; s = s->next_slice()){
-	double dif = fabs (s->output_gate().mid() - s->input_gate().mid());
-        if( dif > max_dif)
-	  {
-	    steepest_slice = s;
-	    max_dif = dif;
-	  }
+      double max_diff = 0.;
+      const Slice *steepest_slice = first_slice();
+      
+      for(const Slice *s = first_slice() ; s != nullptr ; s = s->next_slice())
+      {
+        double diff = fabs(s->output_gate().mid() - s->input_gate().mid());
+        if(diff > max_diff)
+        {
+          steepest_slice = s;
+          max_diff = diff;
+        }
       }
+
       return steepest_slice;
     }
   
