@@ -238,7 +238,8 @@ int main()
     ExploredArea area(z);
 
     clock_t t_start = clock();
-    x.enable_synthesis(true);
+    x.enable_synthesis(SynthesisMode::BINARY_TREE);
+    cout << "Computing the explored area... (may take some time)" << endl;
     area.compute(0.1, x);
     printf("Paving computation time: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
 

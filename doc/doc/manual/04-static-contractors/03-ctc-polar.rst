@@ -23,7 +23,7 @@ Definition
     
   .. math::
 
-    \left.\begin{array}{r}x=\rho\cos\theta\\y=\rho\sin\theta\end{array}\right\} \longrightarrow \mathcal{C}_{\textrm{polar}}\big([x],[y],[\rho],[\theta]\big)
+    \left.\begin{array}{r}x=\rho\cos\theta\\y=\rho\sin\theta\end{array}\right\} \longrightarrow \mathcal{C}_{\textrm{polar}}\big([x],[y],[\rho],[\theta]\big) \textrm{,   with: } [\rho]\subseteq[0,\infty]
 
   .. tabs::
 

@@ -27,7 +27,7 @@ To create and show a :math:`600\times300` figure located at :math:`100,100`:
 
     # add graphical items here ...
 
-    show()
+    fig.show()
 
   .. code-tab:: c++
 
@@ -36,7 +36,7 @@ To create and show a :math:`600\times300` figure located at :math:`100,100`:
 
     // add graphical items here ...
 
-    show();
+    fig.show();
 
 To add temporal objects (before the method ``.show()``), use the methods ``.add_tube()`` or ``.add_trajectory()`` with three arguments:
 
