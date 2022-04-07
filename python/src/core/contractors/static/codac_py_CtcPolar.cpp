@@ -18,7 +18,7 @@
 #include "codac_py_Ctc.h"
 #include "codac_CtcPolar.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
-// todo: #include "codac_py_CtcPolar_docs.h"
+#include "codac_py_CtcPolar_docs.h"
 
 using namespace std;
 using namespace codac;
@@ -32,14 +32,14 @@ void export_CtcPolar(py::module& m, py::class_<Ctc, pyCtc>& ctc)
   ctc_polar
 
     .def(py::init<>(),
-      "todo")
+      CTCPOLAR_CTCPOLAR)
 
     .def("contract", (void (CtcPolar::*)(IntervalVector&))&CtcPolar::contract,
-      "todo",
+      CTCPOLAR_VOID_CONTRACT_INTERVALVECTOR,
       "x"_a.noconvert())
 
     .def("contract", (void (CtcPolar::*)(Interval&,Interval&,Interval&,Interval&))&CtcPolar::contract,
-      "todo",
+      CTCPOLAR_VOID_CONTRACT_INTERVAL_INTERVAL_INTERVAL_INTERVAL,
       "x"_a.noconvert(), "y"_a.noconvert(), "rho"_a.noconvert(), "theta"_a.noconvert())
   ;
 }

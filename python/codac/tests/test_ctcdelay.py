@@ -2,7 +2,6 @@
 
 import unittest
 import math
-from pyibex import Interval, IntervalVector
 from codac import *
 
 class TestCtcDelay(unittest.TestCase):

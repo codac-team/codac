@@ -52,7 +52,6 @@ The following code provides a simulation of random landmarks and related range-o
   .. code-tab:: py
 
     from codac import *
-    from pyibex import *
     import math
 
     # Truth (unknown pose)

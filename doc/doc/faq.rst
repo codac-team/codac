@@ -100,11 +100,10 @@ Example of error (using Python):
 
   TypeError: cos(): incompatible function arguments. The following argument types are supported:
       1. (arg0: float) -> float
-      2. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
+      2. (arg0: codac::Interval) -> codac::Interval
       3. (arg0: codac::Tube) -> codac::Tube
       4. (arg0: codac::Trajectory) -> codac::Trajectory
 
-.. from pyibex import *
 .. from codac import *
 .. import math
 .. 
@@ -342,30 +341,30 @@ In Python, if you are defining a box with:
   yi = IntervalVector([[-0.84, -0.83], [-0.76, -0.75]])
 
 
-The trajectory/tube arguments are not supported for :math:`\cos`, :math:`\exp`, :math:`\sin`, *etc*.
-----------------------------------------------------------------------------------------------------
-
-Example of error (using Python):
-
-.. code::
-
-  TypeError: cos(): incompatible function arguments. The following argument types are supported:
-      1. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
-  Invoked with: TubeVector 
-
-.. from codac import *
-.. from pyibex import *
-.. import math
+.. The trajectory/tube arguments are not supported for :math:`\cos`, :math:`\exp`, :math:`\sin`, *etc*.
+.. ----------------------------------------------------------------------------------------------------
 .. 
-.. x = TubeVector(Interval(0,10),0.01,2)
-
-
-You probably imported the ``codac`` module before the ``pyibex`` module. Here is the correct import order:
-
-.. code:: py
-
-  from pyibex import *
-  from codac import *
+.. Example of error (using Python):
+.. 
+.. .. code::
+.. 
+..   TypeError: cos(): incompatible function arguments. The following argument types are supported:
+..       1. (arg0: pyibex.pyibex.Interval) -> pyibex.pyibex.Interval
+..   Invoked with: TubeVector 
+.. 
+.. .. from codac import *
+.. .. from pyibex import *
+.. .. import math
+.. .. 
+.. .. x = TubeVector(Interval(0,10),0.01,2)
+.. 
+.. 
+.. You probably imported the ``codac`` module before the ``pyibex`` module. Here is the correct import order:
+.. 
+.. .. code:: py
+.. 
+..   from pyibex import *
+..   from codac import *
 
 
 TypeError: must be real number, not codac.tube.Trajectory

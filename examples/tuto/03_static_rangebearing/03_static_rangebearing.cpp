@@ -12,7 +12,6 @@
 
 #include <codac.h>
 #include <codac-rob.h>
-#include <codac-pyibex.h>
 
 using namespace std;
 using namespace codac;

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import unittest
-from pyibex import Interval, IntervalVector, Function
 from codac import *
 import codac as codac
 

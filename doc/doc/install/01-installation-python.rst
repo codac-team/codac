@@ -18,9 +18,7 @@ In case you want to use Codac only with Python, then the installation procedure 
 .. code-block:: bash
   
   pip3 install --upgrade pip # you may have to upgrade pip (19.0.0 required at least)
-  pip3 install "pyibex>=1.9.2" codac
-
-where `pyIbex <http://benensta.github.io/pyIbex/>`_ is the Python wrapper of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ on which Codac is based. Note that Codac requires pyIbex 1.9.2 at least.
+  pip3 install codac
 
 .. role:: gbg
 

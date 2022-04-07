@@ -4,16 +4,9 @@
 CtcPolar: :math:`\big(x=\rho\cos\theta~;y=\rho\sin\theta\big)`
 **************************************************************
 
-The :math:`\mathcal{C}_{\textrm{polar}}` contractor is mainly used in robotics to express a range-and-bearing constraint. It can be seen as an extension of the :ref:`previously presented <sec-manual-ctcdist>` :math:`\mathcal{C}_{\textrm{dist}}` enriched with the bearing information. However, its implementation does not stand on the :math:`\mathcal{C}_{\mathbf{f}}` contractor :ref:`presented in the beginning of this chapter <sec-manual-ctcfunction>`. The implementation of :math:`\mathcal{C}_{\textrm{polar}}` is minimal and comes from the `pyIbex library <http://benensta.github.io/pyIbex/>`_.
+The :math:`\mathcal{C}_{\textrm{polar}}` contractor is mainly used in robotics to express a range-and-bearing constraint. It can be seen as an extension of the :ref:`previously presented <sec-manual-ctcdist>` :math:`\mathcal{C}_{\textrm{dist}}` enriched with the bearing information. However, its implementation does not stand on the :math:`\mathcal{C}_{\mathbf{f}}` contractor :ref:`presented in the beginning of this chapter <sec-manual-ctcfunction>`. The implementation of :math:`\mathcal{C}_{\textrm{polar}}` is minimal and originally comes from the `pyIbex library <http://benensta.github.io/pyIbex/>`_.
 
 .. contents::
-
-.. note::
-
-  .. Figure:: ../../img/logo_pyibex.jpg
-    :align: right
-  
-  This contractor directly comes from the `pyIbex library <http://benensta.github.io/pyIbex/>`_ and is temporarily provided here for ease of integration.
 
 
 Definition
@@ -33,7 +26,6 @@ Definition
 
     .. code-tab:: c++
 
-      #include <codac-pyibex.h>
       ctc::polar.contract(x, y, rho, theta);
 
 
@@ -99,10 +91,6 @@ Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the 
 
   .. code-tab:: c++
 
-    #include <codac-pyibex.h>
-
-    // ...
-
     CtcPolar ctc_polar;
 
     ctc_polar.contract(b1[0], b1[1], d1, theta1);
@@ -128,7 +116,6 @@ Calls to :math:`\mathcal{C}_{\textrm{polar}}` will allow the contraction of the 
 
 
 
-.. from pyibex import *
 .. from codac import *
 .. 
 .. x = IntervalVector(2,Interval(0.))
@@ -215,4 +202,4 @@ Related content
 
 .. admonition:: Technical documentation
 
-  See the `C++ API documentation of this class <../../../api/html/classpyibex_1_1_ctc_polar.html>`_.
+  See the `C++ API documentation of this class <../../../api/html/classcodac_1_1_ctc_polar.html>`_.

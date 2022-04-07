@@ -98,7 +98,6 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_tubes.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_intervals.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_intervals.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_Catan2.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_Ctc.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCompo.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.h
@@ -200,7 +199,6 @@
     # Simplifying access to frequently used items of IBEX 
       file(APPEND ${CODAC_MAIN_HEADER} "\n")
       file(APPEND ${CODAC_MAIN_HEADER} "#include <codac-rob.h>\n") # todo: clean this organization
-      file(APPEND ${CODAC_MAIN_HEADER} "#include <codac-pyibex.h>\n") # todo: clean this organization
   foreach(header_path ${HDR})
     get_filename_component(header_name ${header_path} NAME)
     file(APPEND ${CODAC_MAIN_HEADER} "#include <${header_name}>\n")

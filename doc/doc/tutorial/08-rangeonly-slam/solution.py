@@ -1,4 +1,3 @@
-from pyibex import *
 from codac import *
 import math
 import random

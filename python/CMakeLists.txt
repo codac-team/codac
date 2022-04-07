@@ -113,7 +113,7 @@
     ${CMAKE_CURRENT_BINARY_DIR}/docstring)
 
   target_link_libraries(core
-    PRIVATE codac codac-rob codac-pyibex ${LIBS})
+    PRIVATE codac codac-rob ${LIBS})
 
     # ex: from codac import core
     #     core.Tube

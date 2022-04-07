@@ -41,7 +41,6 @@ Start a new project as explained in :ref:`sec-start-py-project` or :ref:`sec-sta
 
     .. code-tab:: py
 
-      from pyibex import *
       from codac import *
 
       # .. next questions will be here
@@ -296,7 +295,6 @@ The graphical tool `VIBes <http://enstabretagnerobotics.github.io/VIBES/>`_ has 
   | Is the result reliable, according to the sets :math:`[\mathbf{x}]` and :math:`[\mathbf{b}]`? You may display the box :math:`([\mathbf{x}]+[\mathbf{b}])` to understand how the reliable interval distance is computed.
 
 
-.. from pyibex import *
 .. from codac import *
 .. 
 .. x = IntervalVector([[0,0],[0,0]])
@@ -426,4 +424,4 @@ We now have all the material to compute a solver for state estimation in the nex
 
 .. rubric:: Footnotes
 
-.. [#f1] C++ objects originates from the `IBEX library <http://www.ibex-lib.org>`_, the Python counterpart comes from `pyIbex <http://benensta.github.io/pyIbex>`_.
+.. [#f1] C++ objects originates from the `IBEX library <http://www.ibex-lib.org>`_.

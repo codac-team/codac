@@ -51,16 +51,16 @@ Codac is built upon IBEX and uses the elementary components of this library such
 If the use of IBEX is transparent in several robotic applications presented in this manual, it is still possible to build complex static contractors with IBEX and use them in Codac. Hence, IBEX can be used as a **powerful contractor factory** for static systems.
 
 
-------------------------------------------------------
-
-********************************
-Using IBEX in Python with pyIbex
-********************************
-
-.. Figure:: ../../img/logo_pyibex.jpg
-  :align: left
-
-A python API has been developed for IBEX: the `pyIbex library <http://benensta.github.io/pyIbex/>`_.
-It makes available in Python many C++ functionalities of IBEX that are used in robotic applications such as contractors and separators. It aims at combining the flexibility of Python with the speed of C++ algorithms.
-
-Codac is available in both C++ and Python. It stands on pyIbex for the use of IBEX objects such as intervals and static contractors.
+.. ------------------------------------------------------
+.. 
+.. ********************************
+.. Using IBEX in Python with pyIbex
+.. ********************************
+.. 
+.. .. Figure:: ../../img/logo_pyibex.jpg
+..   :align: left
+.. 
+.. A python API has been developed for IBEX: the `pyIbex library <http://benensta.github.io/pyIbex/>`_.
+.. It makes available in Python many C++ functionalities of IBEX that are used in robotic applications such as contractors and separators. It aims at combining the flexibility of Python with the speed of C++ algorithms.
+.. 
+.. Codac is available in both C++ and Python. It stands on pyIbex for the use of IBEX objects such as intervals and static contractors.

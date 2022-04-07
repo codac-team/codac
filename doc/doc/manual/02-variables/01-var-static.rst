@@ -15,10 +15,8 @@ Note also that they are not involved during the process of constraint propagatio
 
   .. Figure:: ../../img/logo_ibex.jpg
     :align: right
-  .. Figure:: ../../img/logo_pyibex.jpg
-    :align: right
   
-  These static variables come from the `IBEX library <http://www.ibex-lib.org>`_. They are briefly presented here for the sake of consistency. For more information, please refer to the `IBEX documentation <http://www.ibex-lib.org/doc/interval.html#intervals-vectors-and-matrices>`_ for C++ use or to the `pyIbex manual <http://benensta.github.io/pyIbex/sphinx/quickstart.html>`_ for Python usage.
+  These static variables come from the `IBEX library <http://www.ibex-lib.org>`_. They are briefly presented here for the sake of consistency. For more information, please refer to the `IBEX documentation <http://www.ibex-lib.org/doc/interval.html#intervals-vectors-and-matrices>`_ for C++ use.
 
 
 .. _sec-manual-varstatic-vectors:

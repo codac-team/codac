@@ -13,10 +13,8 @@ The vectors :math:`\mathbf{x}` and matrices :math:`\mathbf{X}`, presented :ref:`
 
   .. Figure:: ../../img/logo_ibex.jpg
     :align: right
-  .. Figure:: ../../img/logo_pyibex.jpg
-    :align: right
   
-  These interval variables come from the `IBEX library <http://www.ibex-lib.org>`_. They are briefly presented here for the sake of consistency. For more information, please refer to the `IBEX documentation <http://www.ibex-lib.org/doc/interval.html#intervals-vectors-and-matrices>`_ for C++ use or to the `pyIbex manual <http://benensta.github.io/pyIbex/sphinx/quickstart.html>`_ for Python usage.
+  These interval variables come from the `IBEX library <http://www.ibex-lib.org>`_. They are briefly presented here for the sake of consistency. For more information, please refer to the `IBEX documentation <http://www.ibex-lib.org/doc/interval.html#intervals-vectors-and-matrices>`_ for C++ use.
 
 
 .. _sec-manual-intervals-domains:
@@ -170,7 +168,7 @@ Intervals, boxes and interval matrices
 The empty set
 -------------
 
-In mathematics, the empty set is the unique set having no elements; it corresponds to one entity while in Codac (as in IBEX/pyIbex) there exists one empty set representation for each class of domain.
+In mathematics, the empty set is the unique set having no elements; it corresponds to one entity while in Codac (as in IBEX) there exists one empty set representation for each class of domain.
 
 .. note::
 

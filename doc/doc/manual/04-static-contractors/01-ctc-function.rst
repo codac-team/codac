@@ -52,10 +52,8 @@ Definition
 
   .. Figure:: ../../img/logo_ibex.jpg
     :align: right
-  .. Figure:: ../../img/logo_pyibex.jpg
-    :align: right
   
-  This contractor originates from the `IBEX library <http://www.ibex-lib.org>`_. It is briefly presented here for the sake of consistency. For more information, please refer to the `IBEX documentation <http://www.ibex-lib.org/doc/contractor.html>`_ for C++ use or to the `pyIbex manual <http://benensta.github.io/pyIbex/sphinx/api.html#ctcfwdbwd>`_ for Python usage.
+  This contractor originates from the `IBEX library <http://www.ibex-lib.org>`_. It is briefly presented here for the sake of consistency. For more information, please refer to the `IBEX documentation <http://www.ibex-lib.org/doc/contractor.html>`_ for C++.
 
 
 .. rubric:: Optimality

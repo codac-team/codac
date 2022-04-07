@@ -257,13 +257,13 @@ Then you have two options: read the details about the features of Codac (domains
   | Note that Codac stands on the `IBEX library <http://www.ibex-lib.org/>`_ for interval analysis computations and static contractors on boxes.
   | `Read the IBEX documentation. <http://www.ibex-lib.org/doc/>`_
 
-  .. rubric:: pyIbex
-
-  .. Figure:: img/logo_pyibex.jpg
-    :align: center
-
-  | The Python API of Codac is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing Python access to the IBEX library.
-  | `Read the pyIbex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
+..  .. rubric:: pyIbex
+..
+..  .. Figure:: img/logo_pyibex.jpg
+..    :align: center
+..
+..  | The Python API of Codac is available thanks to the `pyIbex library <http://benensta.github.io/pyIbex/>`_ providing Python access to the IBEX library.
+..  | `Read the pyIbex documentation. <http://benensta.github.io/pyIbex/sphinx/index.html>`_
 
 
 .. toctree:: 

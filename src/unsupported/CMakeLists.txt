@@ -75,9 +75,8 @@
                                               ${CMAKE_CURRENT_SOURCE_DIR}/separators
                                               ${CMAKE_CURRENT_SOURCE_DIR}/paving
                                               ${CMAKE_CURRENT_SOURCE_DIR}/geometry
-                                              ${CMAKE_CURRENT_SOURCE_DIR}/../3rd/pyibex
                                               )
-  target_link_libraries(codac-unsupported PUBLIC Ibex::ibex codac codac-pyibex)
+  target_link_libraries(codac-unsupported PUBLIC Ibex::ibex codac)
 
 
 ################################################################################

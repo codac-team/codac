@@ -118,7 +118,6 @@ we can use the :math:`\mathcal{C}_\textrm{constell}` to contract them according 
 
   Filled boxes are the :math:`[\mathbf{x}]` after contraction.
 
-.. from pyibex import *
 .. from codac import *
 .. 
 .. v_x = [ IntervalVector([[1.25,3],[1.6,2.75]]),

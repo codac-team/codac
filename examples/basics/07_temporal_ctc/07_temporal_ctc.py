@@ -5,7 +5,6 @@
 # Auguste Bourgois, 2020
 
 
-from pyibex import *
 from codac import *
 import sys # only for checking if this example still works
 

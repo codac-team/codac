@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import unittest
-from pyibex import Interval, IntervalVector
 from codac import *
 
 class TestCtcEval(unittest.TestCase):

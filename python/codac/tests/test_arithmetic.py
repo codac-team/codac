@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 import unittest
-import pyibex 
-from pyibex import Interval, IntervalVector
 from codac import *
 
 class TestArithmeticOnTube(unittest.TestCase):
@@ -28,13 +26,13 @@ class TestArithmeticOnTube(unittest.TestCase):
         self.assertEqual(y.codomain(), Interval(b))
 
         # const Tube cos(const Tube& x)
-        self.assertApproxIntv(cos(x).codomain(), pyibex.cos(a))
+        self.assertApproxIntv(cos(x).codomain(), cos(a))
 
         # const Tube sin(const Tube& x)
-        self.assertApproxIntv(sin(x).codomain(), pyibex.sin(a))
+        self.assertApproxIntv(sin(x).codomain(), sin(a))
 
         # const Tube abs(const Tube& x)
-        # self.assertApproxIntv(abs(x).codomain(), pyibex.fabs(a))
+        # self.assertApproxIntv(abs(x).codomain(), fabs(a))
 
         # const Tube sqr(const Tube& x)
         self.assertApproxIntv(sqr(x).codomain(), a**2)
@@ -43,52 +41,52 @@ class TestArithmeticOnTube(unittest.TestCase):
         self.assertApproxIntv(sqrt(x).codomain(), Interval.EMPTY_SET)
         a = Interval(0.2)
         x.set(a)
-        self.assertApproxIntv(sqrt(x).codomain(), pyibex.sqrt(a))
+        self.assertApproxIntv(sqrt(x).codomain(), sqrt(a))
 
         # const Tube exp(const Tube& x)
-        self.assertApproxIntv(exp(x).codomain(), pyibex.exp(a))
+        self.assertApproxIntv(exp(x).codomain(), exp(a))
 
         # const Tube log(const Tube& x)
-        self.assertApproxIntv(log(x).codomain(), pyibex.log(a))
+        self.assertApproxIntv(log(x).codomain(), log(a))
 
         # const Tube tan(const Tube& x)
-        self.assertApproxIntv(tan(x).codomain(), pyibex.tan(a))
+        self.assertApproxIntv(tan(x).codomain(), tan(a))
 
         # const Tube acos(const Tube& x)
-        self.assertApproxIntv(acos(x).codomain(), pyibex.acos(a))
+        self.assertApproxIntv(acos(x).codomain(), acos(a))
 
         # const Tube asin(const Tube& x)
-        self.assertApproxIntv(asin(x).codomain(), pyibex.asin(a))
+        self.assertApproxIntv(asin(x).codomain(), asin(a))
 
         # const Tube atan(const Tube& x)
-        self.assertApproxIntv(atan(x).codomain(), pyibex.atan(a))
+        self.assertApproxIntv(atan(x).codomain(), atan(a))
 
         # const Tube cosh(const Tube& x)
-        self.assertApproxIntv(cosh(x).codomain(), pyibex.cosh(a))
+        self.assertApproxIntv(cosh(x).codomain(), cosh(a))
 
         # const Tube sinh(const Tube& x)
-        self.assertApproxIntv(sinh(x).codomain(), pyibex.sinh(a))
+        self.assertApproxIntv(sinh(x).codomain(), sinh(a))
 
         # const Tube tanh(const Tube& x)
-        self.assertApproxIntv(tanh(x).codomain(), pyibex.tanh(a))
+        self.assertApproxIntv(tanh(x).codomain(), tanh(a))
 
         # const Tube acosh(const Tube& x)
-        self.assertApproxIntv(acosh(x).codomain(), pyibex.acosh(a))
+        self.assertApproxIntv(acosh(x).codomain(), acosh(a))
 
         # const Tube asinh(const Tube& x)
-        self.assertApproxIntv(asinh(x).codomain(), pyibex.asinh(a))
+        self.assertApproxIntv(asinh(x).codomain(), asinh(a))
 
         # const Tube atanh(const Tube& x)
-        self.assertApproxIntv(atanh(x).codomain(), pyibex.atanh(a))
+        self.assertApproxIntv(atanh(x).codomain(), atanh(a))
 
         # const Tube atan2(const Tube& y, const Tube& x)
-        self.assertApproxIntv(atan2(y,x).codomain(), pyibex.atan2(b,a))
+        self.assertApproxIntv(atan2(y,x).codomain(), atan2(b,a))
 
         # const Tube atan2(const Tube& y, const ibex.Interval& x)
-        self.assertApproxIntv(atan2(y,Interval(a)).codomain(), pyibex.atan2(b,a))
+        self.assertApproxIntv(atan2(y,Interval(a)).codomain(), atan2(b,a))
 
         # const Tube atan2(const ibex.Interval& y, const Tube& x)
-        self.assertApproxIntv(atan2(Interval(b),x).codomain(), pyibex.atan2(b,a))
+        self.assertApproxIntv(atan2(Interval(b),x).codomain(), atan2(b,a))
 
         # const Tube pow(const Tube& x, int p)
         self.assertApproxIntv(pow(x,3).codomain(), a**3)
@@ -100,7 +98,7 @@ class TestArithmeticOnTube(unittest.TestCase):
         self.assertApproxIntv(pow(x,Interval(4.,5.2)).codomain(), a**Interval(4., 5.2))
 
         # const Tube root(const Tube& x, int p)
-        self.assertApproxIntv(root(x,6).codomain(), pyibex.root(a,6))
+        self.assertApproxIntv(root(x,6).codomain(), root(a,6))
 
         # const Tube operator+(const Tube& x)
         # self.assertEqual(+x, x) # not necessary

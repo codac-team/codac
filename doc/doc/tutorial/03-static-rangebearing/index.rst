@@ -144,7 +144,7 @@ This simple and elementary constraint is expressed by:
   \end{array}\right),
 
 | where :math:`\rho` and :math:`\theta` are respectively the radial and angular coordinates.
-| It is *elementary* in the sense that it cannot be decomposed anymore without losing its optimality. In addition, a dedicated contractor already exists to deal with it: the ``CtcPolar`` (provided by `the pyIbex library <http://benensta.github.io/pyIbex/>`_ and usable in Codac).
+| It is *elementary* in the sense that it cannot be decomposed anymore without losing its optimality. In addition, a dedicated contractor already exists to deal with it: the ``CtcPolar``.
 
 .. admonition:: Technical documentation
 
