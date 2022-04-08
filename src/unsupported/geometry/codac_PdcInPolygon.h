@@ -18,7 +18,7 @@ using ibex::IntervalVector;
 using ibex::Pdc;
 using ibex::BoolInterval;
 
-namespace pyibex {
+namespace codac {
 
 /**
  * \ingroup geometry

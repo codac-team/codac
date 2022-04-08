@@ -25,7 +25,7 @@ X[0] = [0x1.be002da3cfcc6p+2 , 0x1.be002da3cfcc6p+2]
 X[1] = [-0x1.32b8f5d87284bp-2 , -0x1.32b8f5d87284bp-2]
 */
 
-namespace pyibex {
+namespace codac {
 
 /**
  * \ingroup iset

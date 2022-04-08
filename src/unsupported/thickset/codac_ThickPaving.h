@@ -27,7 +27,7 @@ using std::cout;
 using std::ostream;
 using std::vector;
 
-namespace ibex
+namespace codac
 {
 	class ThickPaving;
 	using ThickVisitor = PavingVisitor<ThickPaving, ThickBoolean>;
@@ -52,11 +52,11 @@ namespace ibex
 		// Constructors
 		ThickPaving(int dim);
 		ThickPaving(const IntervalVector &v, ThickBoolean b);
-		ThickPaving(const IntervalVector &p, ThickBoolean b, const LargestFirst &bisector);
+		ThickPaving(const IntervalVector &p, ThickBoolean b, const ibex::LargestFirst &bisector);
 		ThickPaving(const ThickPaving &p);
 
-		ThickPaving(IntervalVector &p, ThickTest &pdc, double eps, BINARY_OP op = opInter, bool display = false);
-		ThickPaving(IntervalVector &p, FuncTest &test, double eps, BINARY_OP op = opInter, bool display = false);
+		ThickPaving(IntervalVector &p, ThickTest &pdc, double eps, BINARY_OP op = ibex::opInter, bool display = false);
+		ThickPaving(IntervalVector &p, FuncTest &test, double eps, BINARY_OP op = ibex::opInter, bool display = false);
 
 		ThickPaving(const std::string &filename);
 		//~ThickPaving ();
@@ -70,8 +70,8 @@ namespace ibex
 		friend ostream &operator<<(ostream &, const ThickPaving &);
 		ThickPaving &change(UNARY_OP &op);
 		// Paving algorithms
-		ThickPaving &Sivia(ThickTest &pdc, double eps, BINARY_OP op = opInter);
-		ThickPaving &Sivia(FuncTest &test, double eps, BINARY_OP op = opInter);
+		ThickPaving &Sivia(ThickTest &pdc, double eps, BINARY_OP op = ibex::opInter);
+		ThickPaving &Sivia(FuncTest &test, double eps, BINARY_OP op = ibex::opInter);
 		// ThickPaving Sivia(ThickTest& pdc,BINARY_OP op,double eps);
 		ThickPaving &USivia(ThickTest &pdc, double eps);
 

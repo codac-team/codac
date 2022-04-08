@@ -24,7 +24,7 @@
 
 using ibex::IntervalVector;
 
-namespace pyibex {
+namespace codac {
 
 class PSetNode
 {

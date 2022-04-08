@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace pyibex {
+namespace codac {
 
 /*! Default composition ratio. */
 const double SepFixPoint::default_ratio = 0.1;

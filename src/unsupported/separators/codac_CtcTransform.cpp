@@ -10,7 +10,7 @@
 
 #include "codac_CtcTransform.h"
 
-namespace pyibex {
+namespace codac {
 
 CtcTransform::CtcTransform(Ctc& ctc, Function& ffwd, Function& fbwd) :
   Ctc(ctc.nb_var), ctc(ctc), fbwd(fbwd), ffwd(ffwd), y(fbwd.image_dim()) {

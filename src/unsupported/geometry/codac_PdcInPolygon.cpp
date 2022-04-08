@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace pyibex {
+namespace codac {
 
 PdcInPolygon::PdcInPolygon(vector< vector< vector<double> > > &points) : Pdc(2) {
     ax.resize(points.size()); ay.resize(points.size()); bx.resize(points.size()); by.resize(points.size());

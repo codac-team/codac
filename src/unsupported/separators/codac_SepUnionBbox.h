@@ -14,7 +14,7 @@
 #include "ibex_Sep.h"
 #include "ibex_Array.h"
 
-namespace pyibex {
+namespace codac {
 
 /**
  * \ingroup iset

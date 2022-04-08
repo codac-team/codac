@@ -17,7 +17,7 @@ using ibex::Sep;
 using ibex::IntervalVector;
 using std::list;
 
-namespace pyibex {
+namespace codac {
 
 CtcHull::CtcHull(Sep& sep, double eps, Bsc& bsc) :
   Ctc(sep.nb_var), sep(sep), eps(eps), bsc(bsc) {

@@ -18,7 +18,7 @@ using ibex::Interval;
 using ibex::IntervalVector;
 
 
-namespace pyibex {
+namespace codac {
 
 /**
  * \ingroup iset

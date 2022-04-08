@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace pyibex {
+namespace codac {
 
 CtcSegment::CtcSegment(double ax, double ay, double bx, double by) : Ctc(2),
     X_with_params(2+4) {

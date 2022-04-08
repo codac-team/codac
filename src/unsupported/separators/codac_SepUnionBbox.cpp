@@ -15,7 +15,7 @@ using ibex::Sep;
 using ibex::IntervalVector;
 
 
-namespace pyibex {
+namespace codac {
 
 SepUnionBbox::SepUnionBbox(const ibex::Array<Sep>& list, std::vector<IntervalVector>& bbox) :
   Sep(list[0].nb_var), list(list), bbox(bbox) {

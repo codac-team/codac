@@ -10,7 +10,7 @@
 #include <cmath>
 
 #include "codac_sweepTest.h"
-namespace ibex {
+namespace codac {
 
 SweepTest::SweepTest(const Tube& x, const Tube& y, const Tube& ux, const Tube&uy, double _L):
     ThickTest(2),

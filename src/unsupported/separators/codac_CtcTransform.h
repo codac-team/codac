@@ -19,7 +19,7 @@ using ibex::Ctc;
 using ibex::Function;
 using ibex::IntervalVector;
 
-namespace pyibex {
+namespace codac {
 /**
 * \ingroup set
 *

@@ -21,6 +21,7 @@
 #include "ibex_CtcNewton.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 // todo: #include "codac_py_CtcNewton_docs.h"
+#include "codac_Function.h"
 
 using namespace std;
 using namespace codac;

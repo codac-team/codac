@@ -1,6 +1,6 @@
 /** 
  *  \file
- *  Tube binding
+ *  Codac binding (core)
  * ----------------------------------------------------------------------------
  *  \date       2020
  *  \author     Simon Rohou, Benoît Desrochers
@@ -10,6 +10,7 @@
  */
 
 #include "codac_Ctc.h"
+#include <ibex_Sep.h>
 #include "codac_DynCtc.h"
 #include "codac_TFnc.h"
 #include "codac_VIBesFig.h"
@@ -17,11 +18,11 @@
 
 #include "src/core/contractors/static/codac_py_Ctc.h"
 #include "src/core/contractors/dyn/codac_py_DynCtc.h"
+#include "src/core/separators/codac_py_Sep.h"
 #include "src/core/functions/codac_py_TFnc.h"
 
 #include <pybind11/pybind11.h>
 
-using namespace ibex;
 using namespace codac;
 namespace py = pybind11;
 
@@ -44,6 +45,8 @@ void export_CtcEval(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcLohner(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcPicard(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
 void export_CtcStatic(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
+
+py::class_<ibex::Sep,pySep> export_Sep(py::module& m);
 
 void export_bisectors(py::module&m);
 void export_Interval(py::module&m);
@@ -98,6 +101,8 @@ PYBIND11_MODULE(core, m)
   export_CtcLohner(m, dyn_ctc);
   export_CtcPicard(m, dyn_ctc);
   export_CtcStatic(m, dyn_ctc);
+
+  py::class_<ibex::Sep, pySep> sep = export_Sep(m);
 
   export_bisectors(m);
   export_BoolInterval(m);

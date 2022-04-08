@@ -10,7 +10,7 @@
 
 #include "codac_SepTransform.h"
 
-namespace pyibex {
+namespace codac {
 
 SepTransform::SepTransform(Sep& s, Function& ffwd, Function& fbwd) :
   Sep(s.nb_var), s(s), fbwd(fbwd), ffwd(ffwd), yin(fbwd.image_dim()), yout(fbwd.image_dim()) {

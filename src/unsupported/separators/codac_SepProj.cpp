@@ -14,7 +14,7 @@
 #include "ibex_NoBisectableVariableException.h"
 using namespace std;
 
-namespace pyibex {
+namespace codac {
 
 
 

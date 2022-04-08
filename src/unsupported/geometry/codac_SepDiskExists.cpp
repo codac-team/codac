@@ -14,7 +14,7 @@
 #endif
 #include "codac_SepDiskExists.h"
 
-namespace pyibex {
+namespace codac {
 
 
 SepDiskExists::SepDiskExists(Interval x0, Interval y0, Interval rho) : x0(x0), y0(y0), rho(rho), Sep(2) {

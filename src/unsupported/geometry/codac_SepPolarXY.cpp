@@ -15,7 +15,7 @@
 #include "codac_SepPolarXY.h"
 
 using namespace codac;
-namespace pyibex {
+namespace codac {
 
 
 SepPolarXY::SepPolarXY(Interval rho, Interval theta) : rho(rho), theta(theta), Sep(2) {

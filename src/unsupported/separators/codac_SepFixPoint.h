@@ -32,7 +32,7 @@ using ibex::IntervalVector;
  * belong (or not) to the solution set.
  *
  */
-namespace pyibex {
+namespace codac {
 class SepFixPoint : public Sep {
 
 public:

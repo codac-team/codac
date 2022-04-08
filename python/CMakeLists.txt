@@ -53,77 +53,125 @@
   ################################################################################
 
   # Generating a library core.so containing the python binding:
-  pybind11_add_module(core SHARED
-    codac_py_core.cpp
 
-    src/core/arithmetic/codac_py_arithmetic.cpp
-    src/core/cn/codac_py_ContractorNetwork.cpp
-    src/core/cn/codac_py_Variable.cpp
+    pybind11_add_module(core SHARED
+      codac_py_core.cpp
 
-    src/core/contractors/static/codac_py_Ctc.cpp
-    src/core/contractors/static/codac_py_CtcDist.cpp
-    src/core/contractors/static/codac_py_CtcFunction.cpp
-    src/core/contractors/static/codac_py_CtcConstell.cpp
-    src/core/contractors/static/codac_py_CtcNewton.cpp
-    src/core/contractors/static/codac_py_CtcPolar.cpp
+      src/core/arithmetic/codac_py_arithmetic.cpp
 
-    src/core/contractors/dyn/codac_py_DynCtc.cpp
-    src/core/contractors/dyn/codac_py_CtcDelay.cpp
-    src/core/contractors/dyn/codac_py_CtcDeriv.cpp
-    src/core/contractors/dyn/codac_py_CtcEval.cpp
-    src/core/contractors/dyn/codac_py_CtcLohner.cpp
-    src/core/contractors/dyn/codac_py_CtcPicard.cpp
-    src/core/contractors/dyn/codac_py_CtcStatic.cpp
+      src/core/cn/codac_py_ContractorNetwork.cpp
+      src/core/cn/codac_py_Variable.cpp
 
-    src/core/domains/interval/codac_py_bisectors.cpp
-    src/core/domains/interval/codac_py_BoolInterval.cpp
-    src/core/domains/interval/codac_py_Interval.cpp
-    src/core/domains/interval/codac_py_IntervalVector.cpp
-    src/core/domains/interval/codac_py_IntervalMatrix.cpp
-    src/core/domains/tube/codac_py_Tube.cpp
-    src/core/domains/tube/codac_py_TubeVector.cpp
-    src/core/domains/slice/codac_py_Slice.cpp
+      src/core/contractors/static/codac_py_Ctc.cpp
+      src/core/contractors/static/codac_py_CtcDist.cpp
+      src/core/contractors/static/codac_py_CtcFunction.cpp
+      src/core/contractors/static/codac_py_CtcConstell.cpp
+      src/core/contractors/static/codac_py_CtcNewton.cpp
+      src/core/contractors/static/codac_py_CtcPolar.cpp
 
-    src/core/variables/trajectory/codac_py_Trajectory.cpp
-    src/core/variables/trajectory/codac_py_RandTrajectory.cpp
-    src/core/variables/trajectory/codac_py_TrajectoryVector.cpp
+      src/core/contractors/dyn/codac_py_DynCtc.cpp
+      src/core/contractors/dyn/codac_py_CtcDelay.cpp
+      src/core/contractors/dyn/codac_py_CtcDeriv.cpp
+      src/core/contractors/dyn/codac_py_CtcEval.cpp
+      src/core/contractors/dyn/codac_py_CtcLohner.cpp
+      src/core/contractors/dyn/codac_py_CtcPicard.cpp
+      src/core/contractors/dyn/codac_py_CtcStatic.cpp
 
-    src/core/functions/codac_py_Function.cpp
-    src/core/functions/codac_py_TFnc.cpp
-    src/core/functions/codac_py_TFunction.cpp
+      src/core/domains/interval/codac_py_bisectors.cpp
+      src/core/domains/interval/codac_py_BoolInterval.cpp
+      src/core/domains/interval/codac_py_Interval.cpp
+      src/core/domains/interval/codac_py_IntervalVector.cpp
+      src/core/domains/interval/codac_py_IntervalMatrix.cpp
+      src/core/domains/tube/codac_py_Tube.cpp
+      src/core/domains/tube/codac_py_TubeVector.cpp
+      src/core/domains/slice/codac_py_Slice.cpp
 
-    src/core/graphics/codac_py_graphics.cpp
-    src/core/graphics/codac_py_ColorMap.cpp
-    src/core/graphics/codac_py_Figure.cpp
-    src/core/graphics/codac_py_VIBesFig.cpp
-    src/core/graphics/codac_py_VIBesFigTube.cpp
-    src/core/graphics/codac_py_VIBesFigTubeVector.cpp
-    src/core/graphics/codac_py_VIBesFigMap.cpp
-    src/core/graphics/codac_py_VIBesFigPaving.cpp
+      src/core/functions/codac_py_Function.cpp
+      src/core/functions/codac_py_TFnc.cpp
+      src/core/functions/codac_py_TFunction.cpp
 
-    src/core/paving/codac_py_Paving.cpp
+      src/core/graphics/codac_py_graphics.cpp
+      src/core/graphics/codac_py_ColorMap.cpp
+      src/core/graphics/codac_py_Figure.cpp
+      src/core/graphics/codac_py_VIBesFig.cpp
+      src/core/graphics/codac_py_VIBesFigTube.cpp
+      src/core/graphics/codac_py_VIBesFigTubeVector.cpp
+      src/core/graphics/codac_py_VIBesFigMap.cpp
+      src/core/graphics/codac_py_VIBesFigPaving.cpp
 
-    src/robotics/codac_py_DataLoader.cpp
-    src/robotics/codac_py_TPlane.cpp
-  )
+      src/core/paving/codac_py_Paving.cpp
 
-  target_include_directories(core
-    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+      src/core/separators/codac_py_Sep.cpp
 
-  target_link_libraries(core
-    PRIVATE codac codac-rob ${LIBS})
+      src/core/variables/trajectory/codac_py_Trajectory.cpp
+      src/core/variables/trajectory/codac_py_RandTrajectory.cpp
+      src/core/variables/trajectory/codac_py_TrajectoryVector.cpp
 
-    # ex: from codac import core
-    #     core.Tube
-    # ex: from codac.core import Tube
-    #     Tube
+      src/robotics/codac_py_DataLoader.cpp
+      src/robotics/codac_py_TPlane.cpp
+    )
 
-  # Copy the generated library in the package folder
-  add_custom_command(TARGET core POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
-  )
+    target_include_directories(core
+      PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+      ${CMAKE_CURRENT_BINARY_DIR}/docstring
+    )
+
+    target_link_libraries(core
+      PRIVATE codac codac-rob ${LIBS}
+    )
+
+    # Copy the generated library in the package folder
+    add_custom_command(TARGET core POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:core>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+    )
+
+      # ex: from codac import core
+      #     core.Tube
+      # ex: from codac.core import Tube
+      #     Tube
+
+  # Generating a library unsupported.so containing the python binding:
+
+    pybind11_add_module(unsupported SHARED
+      codac_py_unsupported.cpp
+
+      # Contractors
+      src/unsupported/contractors/codac_py_Ctc_unsupported.cpp
+
+      # Geometry
+      src/unsupported/geometry/codac_geometry.cpp
+
+      # Image
+      src/unsupported/image/codac_images.cpp
+
+      # Paving
+      src/unsupported/paving/codac_paving.cpp
+
+      # Separators
+      src/unsupported/separators/codac_py_Sep_unsupported.cpp
+
+      # Thickets
+      src/unsupported/thickset/codac_thickset.cpp
+      src/unsupported/thickset/codac_ThickInterval.cpp
+      src/unsupported/thickset/codac_GeoImages.cpp
+    )
+
+    target_include_directories(unsupported
+      PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+      ${CMAKE_CURRENT_BINARY_DIR}/docstring
+    )
+
+    target_link_libraries(unsupported
+      PRIVATE core codac codac-unsupported core ${LIBS} core
+    )
+
+    # Copy the generated library in the package folder
+    add_custom_command(TARGET unsupported POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:unsupported>" "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}"
+    )
+
 
   #pybind11_add_module(graphics SHARED
   #  codac_py_VIBesFig.cpp

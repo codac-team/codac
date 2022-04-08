@@ -62,10 +62,10 @@ R"_doc(Intersection of contractors)_doc";
 const char* DOC_CMPOP_TYPE=
 R"_doc(Comparaison operators
   + LT  <
-	+ LEQ <=
-	+ EQ  =
-	+ GEQ >=
-	+ GT  >
+  + LEQ <=
+  + EQ  =
+  + GEQ >=
+  + GT  >
 )_doc";
 
 const char* DOC_CTCUNION_TYPE=
@@ -180,4 +180,25 @@ R"_doc(Projection of a contractor C assosiated with a constraint  such as:
 Args:
     C (Ctc) : the contractor to use
     eps (double) : accuracy of the approximation used by the paver
+)_doc";
+
+const char* DOC_CTCPOLAR_TYPE=
+R"_doc(Polar contractor
+Contraction associated with the change between Cartesian to Polar coordinates.
+    x = \rho cos(\theta) and y = \rho sin(\theta)
+)_doc";
+
+const char* DOC_CTCPOLAR_CONTRACT1=
+R"_doc(contract the input box
+Args:
+    box (IntervalVector): input box ([x],[y],[\rho],[\theta])
+)_doc";
+
+const char* DOC_CTCPOLAR_CONTRACT2=
+R"_doc(contract the input intervals
+Args:
+    x (Interval): [x]
+    x (Interval): [y]
+    \rho (Interval): [\rho]
+    \theta (Interval): [\theta]
 )_doc";

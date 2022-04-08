@@ -24,7 +24,7 @@ using ibex::Interval;
 using ibex::Sep;
 using ibex::LargestFirst;
 
-namespace pyibex {
+namespace codac {
 
 typedef std::pair<IntervalVector, IntervalVector> TwoItv;
 

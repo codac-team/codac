@@ -25,7 +25,7 @@ using ibex::Interval;
 
 
 
-namespace pyibex {
+namespace codac {
 
 
 IntervalVector qinter_projf(const Array<IntervalVector>& _boxes, int q);

@@ -30,7 +30,7 @@ using ibex::BitSet;
 using ibex::SepCtcPair;
 using ibex::SepFwdBwd;
 
-namespace pyibex {
+namespace codac {
 
 
 class CtcFromSep : public Ctc {

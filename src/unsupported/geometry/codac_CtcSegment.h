@@ -22,7 +22,7 @@ using ibex::NumConstraint;
 using ibex::CtcFwdBwd;
 
 
-namespace pyibex {
+namespace codac {
 
 /**
  * \ingroup geometry

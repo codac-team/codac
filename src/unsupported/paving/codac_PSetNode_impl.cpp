@@ -15,7 +15,7 @@
 #include <utility>
 #include <codac_PSetNode.h>
 
-namespace pyibex {
+namespace codac {
 
 PSetNode::PSetNode(const ibex::IntervalVector& box):
   m_box_in(box), m_box_out(box), m_left(nullptr), m_right(nullptr) {}

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace pyibex {
+namespace codac {
 
 SepCtcPairProj::SepCtcPairProj(Ctc& ctc_in, Ctc& ctc_out, const IntervalVector& y_init, double prec) :
     Sep(ctc_in.nb_var), ctcIn(ctc_in), ctcOut(ctc_out),

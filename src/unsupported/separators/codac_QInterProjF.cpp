@@ -18,7 +18,7 @@ using namespace std;
 
 bool paircomp (const pair<double,int>& i, const pair<double,int>& j) { return (i.first<j.first || (i.first==j.first && i.second < j.second)); }
 
-namespace pyibex {
+namespace codac {
 
 void CtcQInterProjF::contract(IntervalVector& box) {
 	Array<IntervalVector> refs(list.size());

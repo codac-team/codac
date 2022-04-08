@@ -17,7 +17,7 @@
 
 
 
-namespace pyibex {
+namespace codac {
 
 /**
  * \ingroup iset

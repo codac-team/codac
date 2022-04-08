@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-namespace pyibex {
+namespace codac {
 
 
 

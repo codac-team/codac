@@ -33,7 +33,7 @@ using std::cout;
 using ibex::LargestFirst;
 using ibex::Sep;
 
-namespace pyibex {
+namespace codac {
 
 class SepPaving;
 

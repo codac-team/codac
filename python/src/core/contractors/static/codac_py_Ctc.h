@@ -15,10 +15,8 @@
 #include <pybind11/pybind11.h>
 #include "codac_type_caster.h"
 
-#include "codac_Domain.h"
 #include "codac_Ctc.h"
-#include "codac_CtcCompo.h"
-#include "codac_CtcUnion.h"
+#include "codac_IntervalVector.h"
 
 
 namespace codac
@@ -55,7 +53,8 @@ namespace codac
           else
           {
             box &= box_copy;
-            std::cout << "WARNING: Deprecated Python Contractor.\n The function contract must return an IntervalVector to avoid unpredictable results\n";
+            std::cout << "WARNING: Deprecated Python Contractor." << std::endl;
+            std::cout << "The function contract must return an IntervalVector to avoid unpredictable results." << std::endl;
             return ; // Python returned none, return false.
           }
         }

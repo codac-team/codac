@@ -22,7 +22,7 @@ using ibex::Function;
 using ibex::IntervalVector;
 using ibex::Bsc;
 
-namespace pyibex {
+namespace codac {
 /**
 * \ingroup set
 *
