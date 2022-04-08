@@ -54,7 +54,7 @@ namespace codac
           {
             box &= box_copy;
             std::cout << "WARNING: Deprecated Python Contractor." << std::endl;
-            std::cout << "The function contract must return an IntervalVector to avoid unpredictable results." << std::endl;
+            std::cout << "The contract() method must return an IntervalVector to avoid unpredictable results." << std::endl << std::endl;
             return ; // Python returned none, return false.
           }
         }

@@ -49,7 +49,7 @@ namespace codac
             if(tup.size() != 2)
             {
               std::cout << "Return type error: must return two IntervalVector objects, but get " << tup.size() << std::endl;
-              std::cout << "The separate() function must return x_in and x_out." << std::endl;
+              std::cout << "The separate() method must return x_in and x_out." << std::endl << std::endl;
               return;
             }
 
@@ -61,8 +61,8 @@ namespace codac
           else
           {
             std::cout << "WARNING: Deprecated Python Separator." << std::endl;
-            std::cout << "The function separate() must return two IntervalVector objects, to avoid unpredictable results." << std::endl;
-            std::cout << "Following IBEX convention, it is assumed that x_in, x_out have been contracted by the function." << std::endl;
+            std::cout << "The separate() method must return two IntervalVector objects, to avoid unpredictable results." << std::endl;
+            std::cout << "Following IBEX convention, it is assumed that x_in, x_out have been contracted by the function." << std::endl << std::endl;
             return;  // Python returned none, return false.
           }
         }

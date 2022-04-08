@@ -50,16 +50,6 @@ IntervalMatrix* create_from_list(int nb_rows, int nb_cols, vector<Interval>& lst
   // todo: manage delete
 }
 
-IntervalVector& get_item(IntervalMatrix& x, int i)
-{
-  return x[i];
-}
-
-void set_item(IntervalMatrix& x, int i, IntervalVector& xi)
-{
-  x[i] = xi;
-}
-
 void assign_IntervalMatrix(IntervalMatrix& x, const IntervalMatrix& y)
 {
   x = y;
@@ -86,8 +76,22 @@ void export_IntervalMatrix(py::module& m)
   .def(py::init<int,int,const Interval>())
   .def(py::init<const IntervalMatrix&>())
   .def(py::init(&create_from_list))
-  .def("__get_item__", get_item, py::return_value_policy::reference_internal)
-  .def("__set_item__", set_item)
+
+  .def("__getitem__", [](IntervalMatrix& s, size_t index) -> IntervalVector&
+    {
+      if(index < 0 || index >= static_cast<size_t>(s.nb_rows()))
+        throw py::index_error();
+      return s[static_cast<int>(index)];
+    },
+    py::return_value_policy::reference_internal)
+
+  .def("__setitem__", [](IntervalMatrix& s, size_t index, IntervalVector& t)
+    {
+      if(index < 0 || index >= static_cast<size_t>(s.nb_rows()))
+        throw py::index_error();
+      s[static_cast<int>(index)] = t;
+    })
+
   .def("assign", &assign_IntervalMatrix)
   .def(py::self == py::self)
   .def(py::self != py::self)

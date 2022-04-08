@@ -77,20 +77,6 @@ IntervalVector* create_from_int_list(int ndim, vector<double>& v)
 //  new(&instance) IntervalVector(lst.size(), Interval(v[0], v[1]));
 //}
 
-Interval& get_item(IntervalVector& x, size_t i)
-{
-  if(i >= static_cast<size_t>(x.size()))
-    throw py::index_error();
-  return x[i];
-}
-
-void set_item(IntervalVector& x, size_t i, Interval& xi)
-{
-  if(i >= static_cast<size_t>(x.size()))
-    throw py::index_error();
-  x[i] = xi;
-}
-
 vector<IntervalVector> complementary_wrapper(IntervalVector& x)
 {
   IntervalVector* result;
@@ -124,13 +110,6 @@ void assign_IntervalVector(IntervalVector& x, const IntervalVector& y)
 IntervalVector IntervalVector_copy(IntervalVector& x)
 {
   return IntervalVector(x);
-}
-
-string to_string(const IntervalVector& x)
-{
-  stringstream ss;
-  ss << x;
-  return ss.str();
 }
 
 IntervalVector max_IntevalVector(const IntervalVector& a, const IntervalVector& b)
@@ -176,7 +155,7 @@ void export_IntervalVector(py::module& m)
 
     .def("__getitem__", [](IntervalVector& s, size_t index) -> Interval&
       {
-        if(index >= static_cast<size_t>(s.size()))
+        if(index < 0 || index >= static_cast<size_t>(s.size()))
           throw py::index_error();
         return s[static_cast<int>(index)];
       },
@@ -184,7 +163,7 @@ void export_IntervalVector(py::module& m)
 
     .def("__setitem__", [](IntervalVector& s, size_t index, Interval& t)
       {
-        if(index >= static_cast<size_t>(s.size()))
+        if(index < 0 || index >= static_cast<size_t>(s.size()))
           throw py::index_error();
         s[static_cast<int>(index)] = t;
       })
