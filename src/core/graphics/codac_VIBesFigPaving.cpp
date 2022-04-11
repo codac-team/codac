@@ -15,6 +15,13 @@ using namespace ibex;
 
 namespace codac
 {
+  SetColorMap DEFAULT_SET_COLOR_MAP({
+    { SetValue::IN, "#9C9C9C[green]" },
+    { SetValue::UNKNOWN, "#9C9C9C[yellow]" },
+    { SetValue::OUT, "#9C9C9C[cyan]" },
+    { SetValue::PENUMBRA, "#9C9C9C[white]" },
+  });
+
   VIBesFigPaving::VIBesFigPaving(const string& fig_name, const Paving *paving)
     : VIBesFig(fig_name), m_paving(paving)
   {

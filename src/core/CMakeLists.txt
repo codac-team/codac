@@ -176,8 +176,8 @@
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
   add_compile_options(-O3 -Wall)
-  set_property(TARGET codac PROPERTY CXX_STANDARD 17)
-  set_property(TARGET codac PROPERTY CXX_STANDARD_REQUIRED ON)
+  #set_property(TARGET codac PROPERTY CXX_STANDARD 17)
+  #set_property(TARGET codac PROPERTY CXX_STANDARD_REQUIRED ON)
 
 
 ################################################################################

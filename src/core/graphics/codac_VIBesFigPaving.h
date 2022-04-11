@@ -20,12 +20,7 @@
 namespace codac
 {
   typedef std::map<SetValue,std::string> SetColorMap;
-  inline const SetColorMap DEFAULT_SET_COLOR_MAP {
-    { SetValue::IN, "#9C9C9C[green]" },
-    { SetValue::UNKNOWN, "#9C9C9C[yellow]" },
-    { SetValue::OUT, "#9C9C9C[cyan]" },
-    { SetValue::PENUMBRA, "#9C9C9C[white]" },
-  }; //!< predefined DEFAULT_SET_COLOR_MAP
+  extern SetColorMap DEFAULT_SET_COLOR_MAP; //!< predefined DEFAULT_SET_COLOR_MAP
 
   /**
    * \class VIBesFigPaving
