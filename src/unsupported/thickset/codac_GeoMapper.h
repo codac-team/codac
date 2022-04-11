@@ -11,9 +11,11 @@
 #ifndef __GEO_MAPPER_H__
 #define __GEO_MAPPER_H__
 
-#include <ibex_IntervalVector.h>
+#include <codac_Interval.h>
+#include <codac_IntervalVector.h>
 #include <iomanip>      // std::setprecision
-using ibex::IntervalVector;
+using codac::Interval;
+using codac::IntervalVector;
 
 using PixelCoords = std::array<int, 4>;
 

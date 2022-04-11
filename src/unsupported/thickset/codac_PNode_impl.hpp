@@ -14,7 +14,7 @@
 #include <array>
 
 template <typename V>
-PNode<V>::PNode(const ibex::IntervalVector& box, V value):
+PNode<V>::PNode(const codac::IntervalVector& box, V value):
 	m_value(value), m_box(box), m_left(nullptr), m_right(nullptr) {}
 
 template <typename V>
@@ -54,7 +54,7 @@ PNode<V> &PNode<V>::operator=(const PNode<V> &&other){
 }
 
 template <typename V>
-const ibex::IntervalVector& PNode<V>::getBox() const
+const codac::IntervalVector& PNode<V>::getBox() const
 {
   return m_box;
 }
@@ -145,7 +145,7 @@ void PNode<V>::bisect(ibex::Bsc &bisector)
 {
   if(isLeaf())
   {
-    std::pair<ibex::IntervalVector,ibex::IntervalVector> boxes = bisector.bisect(m_box);
+    std::pair<codac::IntervalVector,codac::IntervalVector> boxes = bisector.bisect(m_box);
     m_left = new PNode(boxes.first, m_value);
     m_right = new PNode(boxes.second, m_value);
   }

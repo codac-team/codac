@@ -12,12 +12,13 @@
 #define __THICKBOX__
 
 
-#include <ibex_Interval.h>
-#include <ibex_IntervalVector.h>
+#include <codac_Interval.h>
+#include <codac_IntervalVector.h>
 #include <codac_ThickInterval.h>
 #include <sstream>
 
-using ibex::IntervalVector;
+using codac::Interval;
+using codac::IntervalVector;
 class ThickBox {
 public:
   ThickBox(int dim, ThickInterval val): itvs(dim,val) {}

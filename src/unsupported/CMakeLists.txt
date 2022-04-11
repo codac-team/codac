@@ -8,13 +8,13 @@
     #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_exploredAreaTools.h
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_GeoMapper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_PNode.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_PNode_impl.hpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_PNode_impl.hpp
     #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_sweepTest.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_sweepTest.h
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_ThickBoolean.h
     #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_ThickBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_ThickBox.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_ThickBox_impl.hpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_ThickBox_impl.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_ThickFunction.h
     #${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_ThickInterval.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/thickset/codac_ThickInterval.h

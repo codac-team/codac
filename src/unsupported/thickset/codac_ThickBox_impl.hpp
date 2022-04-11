@@ -48,7 +48,7 @@ inline std::pair<IntervalVector, std::vector<bool> > ThickBox::inner_box() const
     res[i] = itvs[i].subset();
     status[i]=res[i].is_empty();
     if (status[i]) {
-      res[i] = ibex::Interval( std::max(itvs[i].lb().lb(), itvs[i].ub().lb() ), std::min(itvs[i].lb().ub(), itvs[i].ub().ub() ) );
+      res[i] = codac::Interval( std::max(itvs[i].lb().lb(), itvs[i].ub().lb() ), std::min(itvs[i].lb().ub(), itvs[i].ub().ub() ) );
     }
   }
   return std::pair<IntervalVector, std::vector<bool> >(res, status);

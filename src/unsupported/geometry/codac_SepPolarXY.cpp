@@ -72,7 +72,7 @@ void SepPolarXY::separate(IntervalVector& x_in, IntervalVector& x_out){
 	x_in &= x_out;
 
     if (x_in.is_empty()){
-        std::cerr << "EMPRT\n";
+        //std::cerr << "EMPRT\n";
         return;
     }
     IntervalVector xinOld(x_in);
