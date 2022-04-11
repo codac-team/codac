@@ -587,44 +587,44 @@ TEST_CASE("CN simple")
   {
     Interval x(0.,0.), y(4.,6.), d(4.);
     Interval d_(d);
-
+    
     CtcFunction ctc_sqr(Function("x", "y", "sqr(x)-y"));
     CtcFunction ctc_sqrt(Function("x", "y", "sqrt(x)-y"));
     CtcFunction ctc_plus(Function("x", "y", "z", "x+y-z"));
-
+    
     ContractorNetwork cn;
-
+    
     Interval& a = cn.create_interm_var(Interval(-55.,55.));
     cn.set_name(a, "a");
     Interval& b = cn.create_interm_var(Interval());
     Interval& c = cn.create_interm_var(Interval());
-
+    
     cn.set_name(b, "b");
     cn.set_name(c, "c");
-
+    
     cn.add(ctc_sqrt, {c, d});
     cn.add(ctc_plus, {a, b, c});
     cn.add(ctc_sqr, {x, a});
     cn.add(ctc_sqr, {y, b});
-
+    
     cn.set_name(a, "a");
     cn.set_name(b, "b");
     cn.set_name(c, "c");
     cn.set_name(d, "d");
     cn.set_name(x, "x");
     cn.set_name(y, "y");
-
+    
     CHECK(cn.nb_dom() == 6);
-
+    
     cn.contract();
-
+    
     CHECK(x == Interval(0.));
     CHECK(y == Interval(4.));
     CHECK(d == d_);
     CHECK(a == Interval(0.));
     CHECK(b == Interval(16.));
     CHECK(c == Interval(16.));
-
+    
     CHECK(cn.nb_ctc_in_stack() == 0);
     CHECK(cn.nb_dom() == 6);
     CHECK(cn.nb_ctc() == 4);
@@ -637,7 +637,7 @@ TEST_CASE("CN simple")
     CHECK(a == Interval(-55.,55.));
     CHECK(b == Interval());
     CHECK(c == Interval());
-
+    
     cn.contract();
     CHECK(x == Interval(0.));
     CHECK(y == Interval(4.));

@@ -64,7 +64,7 @@ int main()
 
   clock_t t_start = clock();
   TemporalPaving paving(IntervalVector({{-1,7},{-2,2}}));
-  x.enable_synthesis(true);
+  x.enable_synthesis(SynthesisMode::BINARY_TREE);
   paving.compute(dt*2.,x);
   printf("Paving computation time: %.2fs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
 
