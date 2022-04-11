@@ -22,17 +22,10 @@ namespace codac
 
     set_properties(100, 100, 500, 500); // default properties
     axis_limits(paving->box());
-
-    // Default color map
-    map<SetValue,string> color_map;
-    color_map[SetValue::IN] = "#9C9C9C[green]";
-    color_map[SetValue::UNKNOWN] = "#9C9C9C[yellow]";
-    color_map[SetValue::OUT] = "#9C9C9C[cyan]";
-    color_map[SetValue::PENUMBRA] = "#9C9C9C[white]";
-    set_color_map(color_map);
+    set_color_map(DEFAULT_SET_COLOR_MAP);
   }
 
-  void VIBesFigPaving::set_color_map(const map<SetValue,string>& color_map)
+  void VIBesFigPaving::set_color_map(const SetColorMap& color_map)
   {
     // todo: deal with color maps defined with any kind of values
     if(color_map.find(SetValue::IN) != color_map.end())
