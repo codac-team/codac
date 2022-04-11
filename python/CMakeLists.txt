@@ -114,7 +114,7 @@
       src/robotics/codac_py_TPlane.cpp
     )
     
-    if(MSVC)
+    if(WIN32)
       #set_property(TARGET core PROPERTY CXX_STANDARD 17)
       add_compile_options(-O3 -Wall)
       #set_property(TARGET core PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -170,7 +170,7 @@
       src/unsupported/thickset/codac_GeoImages.cpp
     )
     
-    if(MSVC)
+    if(WIN32)
       #set_property(TARGET unsupported PROPERTY CXX_STANDARD 17)
       add_compile_options(-O3 -Wall)
       #set_property(TARGET unsupported PROPERTY CXX_STANDARD_REQUIRED ON)
