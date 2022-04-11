@@ -15,8 +15,8 @@ add_subdirectory(3rd) # 3rd party (todo: make a clean dependency)
 
 set(CODAC_PKG_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/codac.pc)
 
-set(CODAC_PKG_CONFIG_CFLAGS "-I\${includedir}/ibex -I\${includedir}/codac -I\${includedir}/codac-rob -I\${includedir}/codac-unsupported")
-set(CODAC_PKG_CONFIG_LIBS "-L\${libdir} -lcodac -lcodac-rob -lcodac-unsupported")
+set(CODAC_PKG_CONFIG_CFLAGS "-I\${includedir}/ibex -I\${includedir}/codac -I\${includedir}/codac-rob -I\${includedir}/codac-unsupported -I\${includedir}/codac")
+set(CODAC_PKG_CONFIG_LIBS "-L\${libdir} -lcodac -lcodac-rob -lcodac-unsupported -lcodac")
 
 if(WITH_CAPD)
   set(CODAC_PKG_CONFIG_CFLAGS "${CODAC_PKG_CONFIG_CFLAGS} -I\${includedir}/codac-capd")
@@ -65,7 +65,7 @@ find_library(CODAC_UNSUPPORTED_LIBRARY NAMES codac-unsupported
              PATH_SUFFIXES lib)
 
 set(CODAC_VERSION ${PROJECT_VERSION})
-set(CODAC_LIBRARIES \${CODAC_LIBRARY} \${CODAC_ROB_LIBRARY} \${CODAC_UNSUPPORTED_LIBRARY})
+set(CODAC_LIBRARIES \${CODAC_LIBRARY} \${CODAC_ROB_LIBRARY} \${CODAC_UNSUPPORTED_LIBRARY} \${CODAC_LIBRARY})
 set(CODAC_INCLUDE_DIRS \${CODAC_INCLUDE_DIR} \${CODAC_ROB_INCLUDE_DIR} \${CODAC_UNSUPPORTED_INCLUDE_DIR})
 
 set(CODAC_C_FLAGS \"\")
