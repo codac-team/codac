@@ -165,7 +165,7 @@ namespace codac
       /**
        * \brief Enables verbose mode for displaying information related to loops computations
        *
-       * \return verbose boolean
+       * \param verbose boolean
        */
       static void verbose(bool verbose = true);
 

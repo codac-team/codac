@@ -56,6 +56,8 @@ namespace codac
 
       /**
        * \brief todo
+       * *
+       * \param n todo
        */
       IntervalVectorVar(int n)
         : IntervalVector(n)
@@ -63,11 +65,23 @@ namespace codac
 
       }
 
+      /**
+       * \brief todo
+       * 
+       * \param index todo
+       * 
+       * \return todo
+       */
       IntervalVar& operator[](int index)
       {
         return (IntervalVar&)IntervalVector::operator[](index);
       }
 
+      /**
+       * \brief todo
+       * 
+       * \return todo
+       */
       int size()
       {
         return IntervalVector::size();

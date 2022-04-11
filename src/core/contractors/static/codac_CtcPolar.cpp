@@ -155,13 +155,13 @@ namespace codac
 
   void CtcPolar::contract(Interval& x, Interval& y, Interval& rho, Interval& theta)
   {
-    _contract(x,y,rho, theta);
-    _contract(x,y,rho, theta);
+    _contract(x,y,rho,theta);
+    _contract(x,y,rho,theta);
   }
 
-  void CtcPolar::contract(IntervalVector &box)
+  void CtcPolar::contract(IntervalVector& x)
   {
-    _contract(box[0], box[1], box[2], box[3]);
-    _contract(box[0], box[1], box[2], box[3]);
+    _contract(x[0],x[1],x[2],x[3]);
+    _contract(x[0],x[1],x[2],x[3]);
   }
 }

@@ -43,7 +43,7 @@ namespace codac
        *
        * \param x the 4d box of domains: (x,y,rho,theta)
        */
-      virtual void contract(IntervalVector& box);
+      virtual void contract(IntervalVector& x);
 
       /**
        * \brief \f$\mathcal{C}_{\textrm{polar}}\big([x],[y],[\rho],[\theta]\big)\f$

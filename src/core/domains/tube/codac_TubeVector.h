@@ -506,7 +506,7 @@ namespace codac
       /**
        * \brief Returns the maximum diameter of all gates of the tube vector in all components
        *
-       * \param instant \f$t\f$ corresponding to this maximal diameter
+       * \param t instant \f$t\f$ corresponding to this maximal diameter
        * \return the maximal diameter of a component of a gate
        */
       double max_gate_diam(double& t) const;

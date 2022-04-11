@@ -114,15 +114,9 @@
       src/robotics/codac_py_TPlane.cpp
     )
     
-    if(WIN32)
-      #set_property(TARGET core PROPERTY CXX_STANDARD 17)
-      add_compile_options(-O3 -Wall)
-      #set_property(TARGET core PROPERTY CXX_STANDARD_REQUIRED ON)
-    else()
-      set_property(TARGET core PROPERTY CXX_STANDARD 17)
-      add_compile_options(-O3 -Wall -std=c++17)
-      set_property(TARGET core PROPERTY CXX_STANDARD_REQUIRED ON)
-    endif()
+    add_compile_options(-O3 -Wall)
+    set_property(TARGET core PROPERTY CXX_STANDARD 17)
+    set_property(TARGET core PROPERTY CXX_STANDARD_REQUIRED ON)
 
     target_include_directories(core
       PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
@@ -170,15 +164,9 @@
       src/unsupported/thickset/codac_GeoImages.cpp
     )
     
-    if(WIN32)
-      #set_property(TARGET unsupported PROPERTY CXX_STANDARD 17)
-      add_compile_options(-O3 -Wall)
-      #set_property(TARGET unsupported PROPERTY CXX_STANDARD_REQUIRED ON)
-    else()
-      set_property(TARGET unsupported PROPERTY CXX_STANDARD 17)
-      add_compile_options(-O3 -Wall -std=c++17)
-      set_property(TARGET unsupported PROPERTY CXX_STANDARD_REQUIRED ON)
-    endif()
+    add_compile_options(-O3 -Wall)
+    set_property(TARGET unsupported PROPERTY CXX_STANDARD 17)
+    set_property(TARGET unsupported PROPERTY CXX_STANDARD_REQUIRED ON)
 
     target_include_directories(unsupported
       PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
