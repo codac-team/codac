@@ -484,7 +484,7 @@ TEST_CASE("CN simple")
   }*/
 
 
-  SECTION("Desired order")
+  /*SECTION("Desired order")
   {
     Interval x(0.,1.), y(4.,5.), d(-10.,10.);
     Interval x_(x), y_(y);
@@ -581,7 +581,7 @@ TEST_CASE("CN simple")
     CHECK(y == Interval(4.));
     CHECK(d == d_);
     CHECK(cn.iteration_nb() <= 2);
-  }
+  }*/
 
   SECTION("Reset method")
   {
