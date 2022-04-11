@@ -99,8 +99,8 @@ py::class_<ibex::Sep,pySep> export_Sep(py::module& m)
   // Export SepFwdBwd
   py::class_<ibex::SepFwdBwd>(m, "SepFwdBwd", sep, __DOC_SEP_SEPFWDBWD)
     .def(py::init<Function&,ibex::CmpOp>(), py::keep_alive<1,2>(), py::arg("f"), py::arg("op"))
-    .def(py::init<Function&,Interval& >(), py::keep_alive<1,2>(), py::arg("f"), py::arg("itv_y"))
-    .def(py::init<Function&,IntervalVector& >(), py::keep_alive<1,2>(), py::arg("f"), py::arg("itv_y"))
+    .def(py::init<Function&,Interval&>(), py::keep_alive<1,2>(), py::arg("f"), py::arg("itv_y"))
+    .def(py::init<Function&,IntervalVector&>(), py::keep_alive<1,2>(), py::arg("f"), py::arg("itv_y"))
     .def(py::init([](Function& f,const array<double, 2>& itv)
       {
         return unique_ptr<ibex::SepFwdBwd>(new ibex::SepFwdBwd(f, Interval(itv[0], itv[1])));
@@ -117,7 +117,7 @@ py::class_<ibex::Sep,pySep> export_Sep(py::module& m)
 
   // Export SepInverse
   py::class_<ibex::SepInverse>(m, "SepInverse", sep, __DOC_SEP_SEPINVERSE)
-    .def(py::init<ibex::Sep&,Function& >(), py::keep_alive<1,2>(), py::keep_alive<1,3>(), py::arg("sep"), py::arg("f"))
+    .def(py::init<ibex::Sep&,Function&>(), py::keep_alive<1,2>(), py::keep_alive<1,3>(), py::arg("sep"), py::arg("f"))
     .def("separate", &ibex::SepInverse::separate, py::call_guard<py::gil_scoped_release>())
   ;
 

@@ -37,6 +37,20 @@ namespace codac
     deque<IntervalVector> stack = { x0 };
     int k = 0;
 
+    // Some values in the desired color map may not have been defined by the user
+    // We select default colors
+
+      SetColorMap cm = DEFAULT_SET_COLOR_MAP;
+
+      if(color_map.find(SetValue::IN) != color_map.end())
+        cm[SetValue::IN] = color_map.at(SetValue::IN);
+
+      if(color_map.find(SetValue::OUT) != color_map.end())
+        cm[SetValue::OUT] = color_map.at(SetValue::OUT);
+
+      if(color_map.find(SetValue::UNKNOWN) != color_map.end())
+        cm[SetValue::UNKNOWN] = color_map.at(SetValue::UNKNOWN);
+
     while(!stack.empty())
     {
       k++;
@@ -48,7 +62,7 @@ namespace codac
 
       vector<IntervalVector> x_out_l = box_diff(x_before_ctc.subvector(0,1), x.subvector(0,1));
       for(const auto& o : x_out_l)
-        vibes::drawBox(o, color_map.at(SetValue::OUT));
+        vibes::drawBox(o, cm.at(SetValue::OUT));
 
       if(x.is_empty())
         continue;
@@ -56,7 +70,7 @@ namespace codac
       else
       {
         if(x.max_diam() < precision)
-          vibes::drawBox(x.subvector(0,1), color_map.at(SetValue::UNKNOWN));
+          vibes::drawBox(x.subvector(0,1), cm.at(SetValue::UNKNOWN));
 
         else
         {
@@ -79,6 +93,20 @@ namespace codac
     deque<IntervalVector> stack = { x0 };
     int k = 0;
 
+    // Some values in the desired color map may not have been defined by the user
+    // We select default colors
+    
+      SetColorMap cm = DEFAULT_SET_COLOR_MAP;
+
+      if(color_map.find(SetValue::IN) != color_map.end())
+        cm[SetValue::IN] = color_map.at(SetValue::IN);
+
+      if(color_map.find(SetValue::OUT) != color_map.end())
+        cm[SetValue::OUT] = color_map.at(SetValue::OUT);
+
+      if(color_map.find(SetValue::UNKNOWN) != color_map.end())
+        cm[SetValue::UNKNOWN] = color_map.at(SetValue::UNKNOWN);
+
     while(!stack.empty())
     {
       k++;
@@ -92,11 +120,11 @@ namespace codac
 
       vector<IntervalVector> x_in_l = box_diff(x_before_ctc, x_in);
       for(const auto& i : x_in_l)
-        vibes::drawBox(i, color_map.at(SetValue::IN));
+        vibes::drawBox(i, cm.at(SetValue::IN));
 
       vector<IntervalVector> x_out_l = box_diff(x_before_ctc, x_out);
       for(const auto& o : x_out_l)
-        vibes::drawBox(o, color_map.at(SetValue::OUT));
+        vibes::drawBox(o, cm.at(SetValue::OUT));
 
       if(x.is_empty())
         continue;
@@ -105,7 +133,7 @@ namespace codac
       {
 
         if(x.max_diam() < precision)
-          vibes::drawBox(x.subvector(0,1), color_map.at(SetValue::UNKNOWN));
+          vibes::drawBox(x.subvector(0,1), cm.at(SetValue::UNKNOWN));
 
         else
         {
