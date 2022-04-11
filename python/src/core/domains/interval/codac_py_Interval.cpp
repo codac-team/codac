@@ -97,6 +97,20 @@ void export_Interval(py::module& m)
 
     .def("assign", &assign_interval, "assign the value of x to this", "x"_a)
     .def("__repr__", [](const Interval& x) { ostringstream str; str << x; return str.str(); })
+
+    .def("__getitem__", [](Interval& s, size_t index) -> double
+      {
+        if(index < 0 || index > 1)
+          throw py::index_error();
+
+        cout << "Warning: indexing on intervals is deprecated." << endl
+             << "         Use .lb(), .ub() methods instead of []." << endl;
+
+        if(index == 0) return s.lb();
+        else if(index == 1) return s.ub();
+        else return NAN;
+      },
+      py::return_value_policy::reference_internal)
   
   // Arithmetic
 
