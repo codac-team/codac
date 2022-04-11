@@ -74,9 +74,12 @@ void export_VIBesFigMap(py::module& m);
 void export_VIBesFigPaving(py::module& m);
 
 void export_Paving(py::module& m);
+void export_Set(py::module& m);
 
 void export_DataLoader(py::module& m);
 void export_TPlane(py::module& m);
+
+void export_unsupported_geometry(py::module& m, py::class_<Ctc,pyCtc>& ctc, py::class_<ibex::Sep,pySep>& sep);
 
 PYBIND11_MODULE(core, m)
 {
@@ -130,9 +133,12 @@ PYBIND11_MODULE(core, m)
   export_VIBesFigPaving(m);
 
   export_Paving(m);
+  export_Set(m);
 
   export_DataLoader(m);
   export_TPlane(m);
+
+  export_unsupported_geometry(m, ctc, sep);
 
   // m.attr("ibex_version") = _IBEX_VERSION_;
   // return m.ptr();

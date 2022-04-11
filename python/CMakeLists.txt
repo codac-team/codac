@@ -100,6 +100,9 @@
       src/core/graphics/codac_py_VIBesFigPaving.cpp
 
       src/core/paving/codac_py_Paving.cpp
+      src/core/paving/codac_py_Set.cpp
+
+      src/core/sivia/codac_py_sivia.cpp
 
       src/core/separators/codac_py_Sep.cpp
 
@@ -110,6 +113,10 @@
       src/robotics/codac_py_DataLoader.cpp
       src/robotics/codac_py_TPlane.cpp
     )
+    
+    set_property(TARGET core PROPERTY CXX_STANDARD 17)
+    add_compile_options(-O3 -Wall -std=c++17)
+    set_property(TARGET core PROPERTY CXX_STANDARD_REQUIRED ON)
 
     target_include_directories(core
       PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
@@ -156,6 +163,10 @@
       src/unsupported/thickset/codac_ThickInterval.cpp
       src/unsupported/thickset/codac_GeoImages.cpp
     )
+    
+    set_property(TARGET unsupported PROPERTY CXX_STANDARD 17)
+    add_compile_options(-O3 -Wall -std=c++17)
+    set_property(TARGET unsupported PROPERTY CXX_STANDARD_REQUIRED ON)
 
     target_include_directories(unsupported
       PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/../include 
