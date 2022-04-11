@@ -348,14 +348,17 @@ Contributors
   * `Benoît Desrochers <http://www.ensta-bretagne.fr/desrochers>`_
   * `Luc Jaulin <https://www.ensta-bretagne.fr/jaulin/>`_
   * `Gilles Chabert <https://web.imt-atlantique.fr/x-info/gchabe08/>`_
-  * Julien Damers
-  * `Raphael Voges <https://raphael-voges.de/>`_
-  * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
   * Auguste Bourgois
+  * Julien Damers
+  * `Fabrice Le Bars <https://www.ensta-bretagne.fr/lebars/>`_
+  * `Raphael Voges <https://raphael-voges.de/>`_
   * `Thomas Le Mézo <https://www.ensta-bretagne.fr/lemezo/>`_
   * `Cyril Bouvier <http://www.lirmm.fr/~bouvier/index.en.html>`_
   * `Bertrand Neveu <http://imagine.enpc.fr/~neveub/>`_
   * `Peter Franek <http://www.cs.cas.cz/~franek/>`_
+  * `Gilles Trombettoni <https://www.lirmm.fr/~trombetton/>`_
+  * Verlein Radwan
+  * `Mohamed Saad Ibn Seddik <https://msis.github.io/>`_
 
 
 Main related publications

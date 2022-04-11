@@ -47,23 +47,31 @@ Codac release 0.1.13 (released `Apr 11, 2022 <https://github.com/codac-team/coda
 Features added
 --------------
 
-Changes
--------
+* :commit:`72596498a96b5f6fde066f9c095482ad16627f78`: added vector product between two vectors
+* :commit:`c7efd74cb93c1fb8449deb52c214dc37a281a4e6`: added ``steepest_slice()``, ``max_gate_diam()``
+* :commit:`f37e819a63c6032a51b8dfbaaf88c0bc02241f4f`: added SIVIA algorithms (Ctc,Sep) and binding
+* :commit:`bafa1e4b2571a2a3bdc80fe1a0a00ac45bef2b00`: defining ``SetColorMap``
 
 Dependencies
 ------------
 
+* :commit:`633ab95dc7b6dc9d652763463446fe67b53c2629`: embedding pyIbex into Codac (several commits)
+
 Bugs fixed
 ----------
+
+* :commit:`495eef93d1685abb658fa75abb4951fbf5a2af34`: corrected bug in ``TFnc``
+* :commit:`044535fcf63c5bb506ef63458d2c50a960b1ff46`: corrected bug on ``CtcLohner`` (input/output gates)
 
 Deprecated
 ----------
 
+* :commit:`f8b0f8ca500a4da722db4e194748d91e4e4eb8ca`: indexing on ``Intervals`` is now deprecated (py)
+
 Documentation
 -------------
 
-Python binding
---------------
+* :commit:`59e8e3eb13a956043206dd78fc93eafb43501b25`: ``CtcFunction`` and how to deal with inequalities
 
 
 -----------------------------------------------------------------
