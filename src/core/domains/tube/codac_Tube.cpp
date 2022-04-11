@@ -922,10 +922,10 @@ namespace codac
     double Tube::max_gate_diam(double& t) const
     {
       const Slice *slice = first_slice();
+      t = slice->tdomain().lb();
 
       if(slice->input_gate().is_unbounded())
       {
-        t = slice->tdomain().lb();
         return numeric_limits<double>::infinity();
       }
 
