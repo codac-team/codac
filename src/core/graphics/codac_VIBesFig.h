@@ -379,6 +379,29 @@ namespace codac
        */
       void draw_points(const std::vector<Point>& v_pts, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
+      /**
+       * \brief Draws a vehicle
+       *
+       * \param x horizontal center coordinate
+       * \param y vertical center coordinate
+       * \param heading vehicle heading
+       * \param size length of the vehicle
+       * \param params VIBes parameters related to the object (none by default)
+       */
+      void draw_vehicle(double x, double y, double heading, double size, const vibes::Params& params);
+
+      /**
+       * \brief Draws a vehicle
+       *
+       * \param x horizontal center coordinate
+       * \param y vertical center coordinate
+       * \param heading vehicle heading
+       * \param size length of the vehicle
+       * \param color the optional color of the set (black by default)
+       * \param params VIBes parameters related to the object (none by default)
+       */
+      void draw_vehicle(double x, double y, double heading, double size, const std::string& color = "", const vibes::Params& params = vibes::Params());
+
       /// @}
   };
 }

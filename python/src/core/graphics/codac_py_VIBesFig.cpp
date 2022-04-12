@@ -73,20 +73,24 @@ void export_VIBesFig(py::module& m)
   
   // Displaying objects
 
-    .def("draw_box", (void (VIBesFig::*)(const IntervalVector &,const string &,const vibes::Params &))&VIBesFig::draw_box,
+    .def("draw_box", (void (VIBesFig::*)(const IntervalVector&,const string&,const vibes::Params &))&VIBesFig::draw_box,
       VIBESFIG_VOID_DRAW_BOX_INTERVALVECTOR_STRING_VIBESPARAMS,
       "box"_a, "color"_a="black", "params"_a=vibes::Params())
 
-    .def("draw_circle", (void (VIBesFig::*)(double,double,double,const string &,const vibes::Params &))&VIBesFig::draw_circle,
+    .def("draw_circle", (void (VIBesFig::*)(double,double,double,const string&,const vibes::Params &))&VIBesFig::draw_circle,
       VIBESFIG_VOID_DRAW_CIRCLE_DOUBLE_DOUBLE_DOUBLE_STRING_VIBESPARAMS,
       "x"_a, "y"_a, "r"_a, "color"_a="black", "params"_a=vibes::Params())
 
-    .def("draw_ring", (void (VIBesFig::*)(double,double,const Interval&,const string &,const vibes::Params &))&VIBesFig::draw_ring,
+    .def("draw_ring", (void (VIBesFig::*)(double,double,const Interval&,const string&,const vibes::Params &))&VIBesFig::draw_ring,
       VIBESFIG_VOID_DRAW_RING_DOUBLE_DOUBLE_INTERVAL_STRING_VIBESPARAMS,
       "x"_a, "y"_a, "r"_a, "color"_a="black", "params"_a=vibes::Params())
 
-    .def("draw_pie", (void (VIBesFig::*)(double,double,const Interval &,const Interval &,const string &,const vibes::Params &))&VIBesFig::draw_pie,
+    .def("draw_pie", (void (VIBesFig::*)(double,double,const Interval&,const Interval&,const string&,const vibes::Params &))&VIBesFig::draw_pie,
       VIBESFIG_VOID_DRAW_PIE_DOUBLE_DOUBLE_INTERVAL_INTERVAL_STRING_VIBESPARAMS,
       "x"_a, "y"_a, "r"_a, "theta"_a, "color"_a="black", "params"_a=vibes::Params())
+
+    .def("draw_vehicle", (void (VIBesFig::*)(double,double,double,double,const string&,const vibes::Params &))&VIBesFig::draw_vehicle,
+      VIBESFIG_VOID_DRAW_VEHICLE_DOUBLE_DOUBLE_DOUBLE_DOUBLE_STRING_VIBESPARAMS,
+      "x"_a, "y"_a, "heading"_a, "size"_a, "color"_a="", "params"_a=vibes::Params())
   ;
 }

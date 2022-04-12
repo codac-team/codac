@@ -24,6 +24,13 @@ using namespace pybind11::literals;
 
 void export_graphics(py::module& m)
 {
-  m.def("beginDrawing", []() { vibes::beginDrawing(); });
-  m.def("endDrawing",   []() { vibes::endDrawing(); });
+  m.def("beginDrawing", []() { 
+    cout << "Warning: beginDrawing() is deprecated. Use begin_drawing() instead." << endl;
+    vibes::beginDrawing(); });
+  m.def("endDrawing",   []() { 
+    cout << "Warning: endDrawing() is deprecated. Use end_drawing() instead." << endl;
+    vibes::endDrawing(); });
+
+  m.def("begin_drawing", []() { vibes::beginDrawing(); });
+  m.def("end_drawing",   []() { vibes::endDrawing(); });
 }

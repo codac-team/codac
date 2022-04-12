@@ -325,4 +325,14 @@ namespace codac
     for(size_t i = 0 ; i < v_pts.size() ; i++)
       draw_point(v_pts[i], size, color, params);
   }
+  
+  void VIBesFig::draw_vehicle(double x, double y, double heading, double size, const vibes::Params& params)
+  {
+    draw_vehicle(x, y, heading, size, "", params);
+  }
+  
+  void VIBesFig::draw_vehicle(double x, double y, double heading, double size, const string& color, const vibes::Params& params)
+  {
+    vibes::drawVehicle(x, y, heading, size, color, params);
+  }
 }
