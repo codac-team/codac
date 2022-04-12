@@ -17,7 +17,7 @@ Codac: constraint-programming for robotics
 
 .. toctree::
   :caption: User manual
-  :maxdepth: 1
+  :maxdepth: 2
   :titlesonly:
 
   /manual/01-introduction/index
@@ -32,9 +32,19 @@ Codac: constraint-programming for robotics
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
 
+
+.. .. toctree::
+..   :caption: Use cases
+..   :maxdepth: 2
+..   :titlesonly:
+.. 
+..   /use-cases/separators/index
+..   /use-cases/lie-symmetries/index
+
+
 .. toctree::
   :caption: Tutorial for mobile robotics
-  :maxdepth: 1
+  :maxdepth: 2
   :titlesonly:
 
   Main page </tutorial/index>

@@ -80,9 +80,9 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
   ├── CMakeLists.txt
   └── main.cpp
 
-.. note::
-
-  Since Codac 3.1, `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ becomes a dependency of the library.
+.. .. note::
+.. 
+..   Since Codac 3.1, `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ becomes a dependency of the library.
 
 
 .. admonition:: Custom install directory of IBEX and Codac
