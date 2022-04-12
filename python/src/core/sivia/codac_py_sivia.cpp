@@ -33,6 +33,7 @@ void export_unsupported_geometry(py::module& m, py::class_<Ctc,pyCtc>& ctc, py::
     {
       SIVIA(x, &ctc, precision, color_map);
     },
+    
     "x"_a.noconvert(), "ctc"_a.noconvert(), "precision"_a.noconvert(), "color_map"_a.noconvert() = DEFAULT_SET_COLOR_MAP);
 
   m.def("SIVIA", [](const IntervalVector& x, ibex::Sep& sep, float precision, const SetColorMap& color_map)

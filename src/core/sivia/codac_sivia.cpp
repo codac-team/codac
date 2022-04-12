@@ -60,9 +60,9 @@ namespace codac
 
       ctc->contract(x);
 
-      vector<IntervalVector> x_out_l = box_diff(x_before_ctc.subvector(0,1), x.subvector(0,1));
+      vector<IntervalVector> x_out_l = box_diff(x_before_ctc, x);
       for(const auto& o : x_out_l)
-        vibes::drawBox(o, cm.at(SetValue::OUT));
+        vibes::drawBox(o.subvector(0,1), cm.at(SetValue::OUT));
 
       if(x.is_empty())
         continue;
@@ -74,9 +74,9 @@ namespace codac
 
         else
         {
-          pair<IntervalVector,IntervalVector> p = bisector.bisect(x.subvector(0,1));
-          stack.push_back(cart_prod(p.first,x[2]));
-          stack.push_back(cart_prod(p.second,x[2]));
+          pair<IntervalVector,IntervalVector> p = bisector.bisect(x);
+          stack.push_back(p.first);
+          stack.push_back(p.second);
         }
       }
     }
