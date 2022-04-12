@@ -88,7 +88,7 @@ int main()
     map<double,Trajectory> m_pol_area;
     map<double,double> m_pol_total_area;
 
-    vector<double> v_dt = { 0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.005, 0.0025, 0.001 };
+    vector<double> v_dt = { 0.1, 0.09, 0.08, 0.07, 0.06, 0.05/*, 0.04, 0.03, 0.02, 0.01, 0.005, 0.0025, 0.001*/ };
     // v_dt.push_back(0.0001); // uncomment this in order to exactly obtain the figure of the paper
 
     for(const auto& dt: v_dt)

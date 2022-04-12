@@ -8,8 +8,8 @@
 # Created     : Feb 05, 2016
 # ============================================================================
 import unittest
-from codac import Interval
-from codac import Catan2
+from pyibex import Interval
+from pyibex.geometry import Catan2
 
 
 def hex2Itv(lb, ub):

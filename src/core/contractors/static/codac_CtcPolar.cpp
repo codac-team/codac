@@ -42,7 +42,7 @@ namespace codac
       return x_;
     }
 
-    tuple<Interval,Interval,Interval> Catan2(const Interval& x, const Interval& y, const Interval &th)
+    tuple<Interval,Interval,Interval> Catan2(const Interval& x, const Interval& y, const Interval& th)
     {
       static const Interval i_0_pi2 = Interval(0) | Interval::HALF_PI;
       static const Interval i_pi_2pi = Interval::HALF_PI | Interval::PI;

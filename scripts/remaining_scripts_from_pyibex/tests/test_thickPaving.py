@@ -8,9 +8,9 @@
 # Created     : Dec 28, 2015
 #============================================================================
 import unittest
-import codac
-from codac import Interval, IntervalVector, LargestFirst, Function
-from codac.unsupported import *
+import pyibex
+from pyibex import Interval, IntervalVector, LargestFirst, Function
+from pyibex.thickset import *
 import math
 
 

@@ -8,10 +8,10 @@
 # Created     : Dec 28, 2015
 #============================================================================
 import unittest
-import codac
-from codac import Interval
-from codac.unsupported import ThickInterval
-from codac.unsupported import MAYBE, MAYBE_IN, MAYBE_OUT, IN, OUT, UNK
+import pyibex
+from pyibex import Interval
+from pyibex.thickset import ThickInterval
+from pyibex.thickset import MAYBE, MAYBE_IN, MAYBE_OUT, IN, OUT, UNK
 
 class TestThickInterval(unittest.TestCase):
 

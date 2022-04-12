@@ -8,9 +8,9 @@
 # Created     : Dec 28, 2015
 #============================================================================
 import unittest
-import codac
-from codac import Interval, IntervalVector
-from codac.unsupported import ThickInterval, ThickBox, ThickFunction
+import pyibex
+from pyibex import Interval, IntervalVector
+from pyibex.thickset import ThickInterval, ThickBox, ThickFunction
 
 class TestThickInterval(unittest.TestCase):
 

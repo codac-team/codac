@@ -8,10 +8,8 @@
 # Created     : Dec 28, 2015
 #============================================================================
 import unittest
-import codac
-from codac import Interval, IntervalVector, LargestFirst, Function, SepFwdBwd
-from codac.unsupported import SepToVibes
-from codac.unsupported import SepPaving
+from codac import *
+from codac.unsupported import *
 import math
 from vibes import vibes
 

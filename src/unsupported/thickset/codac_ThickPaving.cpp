@@ -627,7 +627,7 @@ ThickPaving& ThickPaving::Sivia_visu(FuncTest &test, double eps, BINARY_OP op )
 
         n->setValue(vali);
     }
-    std::cerr << "k = " << k  << "|| j = " << j << std::endl;
+    //std::cerr << "k = " << k  << "|| j = " << j << std::endl;
     // Clean();
    // Reunite();
     vibes::endDrawing();
@@ -1197,7 +1197,7 @@ ThickPaving& ThickPaving::Sivia(FuncTest &test, double eps, BINARY_OP op )
         }
         n->setValue(vali);
     }
-    std::cerr << "k = " << k  << "|| j = " << j << std::endl;
+    //std::cerr << "k = " << k  << "|| j = " << j << std::endl;
     return (*this);
 }
 // ThickPaving& ThickPaving::Sivia(FuncTest &test, double eps, BINARY_OP op )
@@ -1352,7 +1352,7 @@ ThickPaving& ThickPaving::FastSivia(FuncTest &test, double eps, BINARY_OP op )
         n->setValue(vali);
 
     }
-    std::cerr << "k = " << k  << "|| j = " << j << std::endl;
+    //std::cerr << "k = " << k  << "|| j = " << j << std::endl;
 
     return (*this);
 }
@@ -1403,7 +1403,7 @@ ThickBoolean ThickPaving::erode(FuncTest &test, double eps, BINARY_OP op){
     n->setValue(vali);
 
   } // end while
-  std::cerr << "k = " << k  << "|| j = " << j << std::endl;
+  //std::cerr << "k = " << k  << "|| j = " << j << std::endl;
   if (!find_in && check_empty() == OUT){
     return IN;
   }
@@ -1444,7 +1444,7 @@ ThickBoolean ThickPaving::erode(FuncTest &test, double eps, BINARY_OP op){
     n->setValue(vali);
 
   } // end while
-  std::cerr << "k = " << k  << "|| j = " << j << std::endl;
+  //std::cerr << "k = " << k  << "|| j = " << j << std::endl;
   return UNK;
 
 }

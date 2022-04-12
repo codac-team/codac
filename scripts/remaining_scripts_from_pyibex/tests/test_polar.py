@@ -7,9 +7,9 @@
 # License     : See the LICENSE file
 # Created     : Dec 28, 2014
 # ============================================================================
-from codac import Interval, IntervalVector
-from codac.unsupported import SepPolarXY
-from codac import Interval, IntervalVector
+from pyibex import Interval, IntervalVector
+from pyibex.geometry import SepPolarXY
+from pyibex import Interval, IntervalVector
 import unittest
 
 

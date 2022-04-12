@@ -3,11 +3,11 @@
 # Codac tests
 # Originated from the former pyIbex library (Benoît Desrochers)
 # ---------------------------------------------------------------------------
-# \date     2022
-# \author   Benoît Desrochers
-# \copyright  Copyright 2021 Codac Team
-# \license  This program is distributed under the terms of
-#       the GNU Lesser General Public License (LGPL).
+# \date      2022
+# \author    Benoît Desrochers
+# \copyright Copyright 2022 Codac Team
+# \license   This program is distributed under the terms of
+#            the GNU Lesser General Public License (LGPL).
 
 import unittest
 from codac import *

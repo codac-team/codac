@@ -9,9 +9,10 @@
 #============================================================================
 
 import unittest
-import codac
-from codac import *
-from codac.unsupported import *
+import pyibex
+from pyibex import *
+from pyibex.thickset.thickimage import *
+from pyibex.thickset import *
 try:
   import numpy as np
   has_np = True

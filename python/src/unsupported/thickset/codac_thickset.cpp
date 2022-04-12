@@ -19,6 +19,10 @@ using py::keep_alive;
 using py::class_;
 using namespace pybind11::literals;
 
+#include "../../core/contractors/static/codac_py_Ctc.h"
+#include "../../core/separators/codac_py_Sep.h"
+
+#include "codac_GeoImages.cpp"
 
 #include <codac_type_caster.h>
 
@@ -387,7 +391,9 @@ IntervalVector getX0(ThickPaving &p){
 // BOOST_PYTHON_FUNCTION_OVERLOADS(thickNotInclude_overload, thickNotInclude, 3,4)
 // BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(contains_overload, contains, 1,2)
 extern void export_thickInterval(py::module& m);
-PYBIND11_MODULE(thickset, m)
+//PYBIND11_MODULE(thickset, m)
+//{
+void export_unsupported_thickset(py::module& m, py::class_<Ctc, pyCtc>& ctc, py::class_<ibex::Sep, pySep>& sep)
 {
   // py::module m("thickset", "python binding ThickPaving Class");
 
@@ -638,4 +644,35 @@ PYBIND11_MODULE(thickset, m)
         .def("post_visit", &ThickVisitor::post_visit)
         ;
       // return m.ptr();
+
+
+
+
+  class_<ThickGeoImage>(m, "ThickGeoImage", TT)
+      .def(init<py::array_t<DATA_TYPE>&, py::array_t<DATA_TYPE>&, double, double, double, double, ThickBoolean>(),
+           py::keep_alive<1,2>(), py::keep_alive<1,3>(),
+           "img_in"_a, "img_out"_a, "x0"_a, "y0"_a, "dx"_a, "dy"_a, "outerVal"_a=MAYBE)
+      .def("test", &ThickGeoImage::test)
+      .def("intersects", &ThickGeoImage::intersects)
+      .def_readonly("img_in", &ThickGeoImage::img_in)
+      .def_readonly("img_out", &ThickGeoImage::img_out)
+      .def_readwrite("timestamp", &ThickGeoImage::timestamp)
+      // .def_property_readinly("boundingBox", [](ThickGeoImage& self){return self.boundingBox;})
+  ;
+
+  // class_<GeoMapper>(m, "GeoMapper")
+  //     .def(init<double, double, int, int, double, double>(), DOC_GEOMAPPER_CONSTRUCTOR, "x0"_a, "y0"_a, "x_size"_a, "y_size"_a, "dx"_a, "dy"_a)
+  //     .def("world_to_grid", &GeoMapper::world_to_grid, DOC_GEOMAPPER_CONSTRUCTOR, "box"_a)
+  //     .def("grid_to_world", &GeoMapper::grid_to_world, DOC_GEOMAPPER_GRID_TO_WORLD, "pixel_coords"_a)
+  //     ;
+
+  class_<GeoImageTranslate>(m, "GeoImageTranslate", TT)
+      .def(init<ThickGeoImage&, IntervalVector&>(), py::keep_alive<1,2>())
+      .def("test", &GeoImageTranslate::test)
+      ;
+
+    class_<ThickImgAEqualB>(m, "ThickImgAEqualB", TT)
+        .def(init<ThickGeoImage&,ThickGeoImage&, double>(), py::keep_alive<1,2>())
+        .def("test", &ThickImgAEqualB::test)
+        ;
 }

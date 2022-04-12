@@ -42,4 +42,6 @@ void export_CtcPolar(py::module& m, py::class_<Ctc, pyCtc>& ctc)
       CTCPOLAR_VOID_CONTRACT_INTERVAL_INTERVAL_INTERVAL_INTERVAL,
       "x"_a.noconvert(), "y"_a.noconvert(), "rho"_a.noconvert(), "theta"_a.noconvert())
   ;
+  
+  m.def("Catan2", &Catan2);
 }

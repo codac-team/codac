@@ -24,6 +24,8 @@
 #include <codac_GeoMapper.h>
 //#include "../image/codac_doc_image.h"
 
+#include "../../core/contractors/static/codac_py_Ctc.h"
+#include "../../core/separators/codac_py_Sep.h"
 
 
 namespace py = pybind11;
@@ -32,8 +34,7 @@ using py::init;
 using py::keep_alive;
 using py::class_;
 
-using codac::IntervalVector;
-using codac::Interval;
+using namespace codac;
 using ibex::opInter;
 using ibex::opRestrict;
 using ibex::opLower;
@@ -590,53 +591,53 @@ private:
 
 using namespace pybind11::literals;
 
-PYBIND11_MODULE(thickimage, m)
-{
-  // py::module m("image", "python binding CtcIMage Class");
-
-  py::object thickTest = (py::object) py::module::import("codac.thickset").attr("ThickTest");
-
-  // py::object ctc = (py::object) py::module::import("codac").attr("Ctc");
-  // class_<GeoImage>(m, "GeoImage", thickTest)
-  //     .def(init<py::array_t<DATA_TYPE> , double, double , double , double, ThickBoolean >(), DOC_GEOIMAGE_CONSTRUCTOR,
-  //          py::keep_alive<1,2>(), "img"_a, "x0"_a, "y0"_a, "dx"_a, "dy"_a, "outerVal"_a=MAYBE)
-  //     .def("world_to_grid", &GeoImage::world_to_grid, DOC_GEOIMAGE_WORLD_TO_GRID, "box"_a)
-  //     .def("grid_to_world", &GeoImage::grid_to_world, DOC_GEOIMAGE_GRID_TO_WORLD, "pixel_coords"_a)
-  //     .def("pixelAt", &GeoImage::pixelAt, DOC_GEOIMAGE_PIXELAT, "x"_a, "y"_a)
-  //     .def("enclosed_pixels", &GeoImage::enclosed_pixels, DOC_GEOIMAGE_ENCLOSED_PIXELS,
-  //                           "xmin"_a, "xmax"_a, "ymin"_a, "ymax"_a )
-  //     .def("test", &GeoImage::test, DOC_GEOIMAGE_TEST, "box"_a)
-  //     .def("test_bb", &GeoImage::test_bb)
-  //     .def_property_readonly("boundingBox", [](GeoImage& self){return self.boundingBox;})
-  //     // .def("is_projection_included", GeoImage::is_projection_included)
-  //     ;
-
-  class_<ThickGeoImage>(m, "ThickGeoImage", thickTest)
-      .def(init<py::array_t<DATA_TYPE>&, py::array_t<DATA_TYPE>&, double, double, double, double, ThickBoolean>(),
-           py::keep_alive<1,2>(), py::keep_alive<1,3>(),
-           "img_in"_a, "img_out"_a, "x0"_a, "y0"_a, "dx"_a, "dy"_a, "outerVal"_a=MAYBE)
-      .def("test", &ThickGeoImage::test)
-      .def("intersects", &ThickGeoImage::intersects)
-      .def_readonly("img_in", &ThickGeoImage::img_in)
-      .def_readonly("img_out", &ThickGeoImage::img_out)
-      .def_readwrite("timestamp", &ThickGeoImage::timestamp)
-      // .def_property_readinly("boundingBox", [](ThickGeoImage& self){return self.boundingBox;})
-  ;
-
-  // class_<GeoMapper>(m, "GeoMapper")
-  //     .def(init<double, double, int, int, double, double>(), DOC_GEOMAPPER_CONSTRUCTOR, "x0"_a, "y0"_a, "x_size"_a, "y_size"_a, "dx"_a, "dy"_a)
-  //     .def("world_to_grid", &GeoMapper::world_to_grid, DOC_GEOMAPPER_CONSTRUCTOR, "box"_a)
-  //     .def("grid_to_world", &GeoMapper::grid_to_world, DOC_GEOMAPPER_GRID_TO_WORLD, "pixel_coords"_a)
-  //     ;
-
-  class_<GeoImageTranslate>(m, "GeoImageTranslate", thickTest)
-      .def(init<ThickGeoImage&, IntervalVector&>(), py::keep_alive<1,2>())
-      .def("test", &GeoImageTranslate::test)
-      ;
-
-    class_<ThickImgAEqualB>(m, "ThickImgAEqualB", thickTest)
-        .def(init<ThickGeoImage&,ThickGeoImage&, double>(), py::keep_alive<1,2>())
-        .def("test", &ThickImgAEqualB::test)
-        ;
-    // return m.ptr();
-}
+// now in codac_thickset.cpp: void export_unsupported_thickgeoimage(py::module& m, py::class_<Ctc, pyCtc>& ctc, py::class_<ibex::Sep, pySep>& sep)
+// now in codac_thickset.cpp: {
+// now in codac_thickset.cpp:   // py::module m("image", "python binding CtcIMage Class");
+// now in codac_thickset.cpp: 
+// now in codac_thickset.cpp:   py::object thickTest = (py::object) py::module::import("codac.unsupported").attr("ThickTest");
+// now in codac_thickset.cpp: 
+// now in codac_thickset.cpp:   // py::object ctc = (py::object) py::module::import("codac").attr("Ctc");
+// now in codac_thickset.cpp:   // class_<GeoImage>(m, "GeoImage", thickTest)
+// now in codac_thickset.cpp:   //     .def(init<py::array_t<DATA_TYPE> , double, double , double , double, ThickBoolean >(), DOC_GEOIMAGE_CONSTRUCTOR,
+// now in codac_thickset.cpp:   //          py::keep_alive<1,2>(), "img"_a, "x0"_a, "y0"_a, "dx"_a, "dy"_a, "outerVal"_a=MAYBE)
+// now in codac_thickset.cpp:   //     .def("world_to_grid", &GeoImage::world_to_grid, DOC_GEOIMAGE_WORLD_TO_GRID, "box"_a)
+// now in codac_thickset.cpp:   //     .def("grid_to_world", &GeoImage::grid_to_world, DOC_GEOIMAGE_GRID_TO_WORLD, "pixel_coords"_a)
+// now in codac_thickset.cpp:   //     .def("pixelAt", &GeoImage::pixelAt, DOC_GEOIMAGE_PIXELAT, "x"_a, "y"_a)
+// now in codac_thickset.cpp:   //     .def("enclosed_pixels", &GeoImage::enclosed_pixels, DOC_GEOIMAGE_ENCLOSED_PIXELS,
+// now in codac_thickset.cpp:   //                           "xmin"_a, "xmax"_a, "ymin"_a, "ymax"_a )
+// now in codac_thickset.cpp:   //     .def("test", &GeoImage::test, DOC_GEOIMAGE_TEST, "box"_a)
+// now in codac_thickset.cpp:   //     .def("test_bb", &GeoImage::test_bb)
+// now in codac_thickset.cpp:   //     .def_property_readonly("boundingBox", [](GeoImage& self){return self.boundingBox;})
+// now in codac_thickset.cpp:   //     // .def("is_projection_included", GeoImage::is_projection_included)
+// now in codac_thickset.cpp:   //     ;
+// now in codac_thickset.cpp: 
+// now in codac_thickset.cpp:   class_<ThickGeoImage>(m, "ThickGeoImage", thickTest)
+// now in codac_thickset.cpp:       .def(init<py::array_t<DATA_TYPE>&, py::array_t<DATA_TYPE>&, double, double, double, double, ThickBoolean>(),
+// now in codac_thickset.cpp:            py::keep_alive<1,2>(), py::keep_alive<1,3>(),
+// now in codac_thickset.cpp:            "img_in"_a, "img_out"_a, "x0"_a, "y0"_a, "dx"_a, "dy"_a, "outerVal"_a=MAYBE)
+// now in codac_thickset.cpp:       .def("test", &ThickGeoImage::test)
+// now in codac_thickset.cpp:       .def("intersects", &ThickGeoImage::intersects)
+// now in codac_thickset.cpp:       .def_readonly("img_in", &ThickGeoImage::img_in)
+// now in codac_thickset.cpp:       .def_readonly("img_out", &ThickGeoImage::img_out)
+// now in codac_thickset.cpp:       .def_readwrite("timestamp", &ThickGeoImage::timestamp)
+// now in codac_thickset.cpp:       // .def_property_readinly("boundingBox", [](ThickGeoImage& self){return self.boundingBox;})
+// now in codac_thickset.cpp:   ;
+// now in codac_thickset.cpp: 
+// now in codac_thickset.cpp:   // class_<GeoMapper>(m, "GeoMapper")
+// now in codac_thickset.cpp:   //     .def(init<double, double, int, int, double, double>(), DOC_GEOMAPPER_CONSTRUCTOR, "x0"_a, "y0"_a, "x_size"_a, "y_size"_a, "dx"_a, "dy"_a)
+// now in codac_thickset.cpp:   //     .def("world_to_grid", &GeoMapper::world_to_grid, DOC_GEOMAPPER_CONSTRUCTOR, "box"_a)
+// now in codac_thickset.cpp:   //     .def("grid_to_world", &GeoMapper::grid_to_world, DOC_GEOMAPPER_GRID_TO_WORLD, "pixel_coords"_a)
+// now in codac_thickset.cpp:   //     ;
+// now in codac_thickset.cpp: 
+// now in codac_thickset.cpp:   class_<GeoImageTranslate>(m, "GeoImageTranslate", thickTest)
+// now in codac_thickset.cpp:       .def(init<ThickGeoImage&, IntervalVector&>(), py::keep_alive<1,2>())
+// now in codac_thickset.cpp:       .def("test", &GeoImageTranslate::test)
+// now in codac_thickset.cpp:       ;
+// now in codac_thickset.cpp: 
+// now in codac_thickset.cpp:     class_<ThickImgAEqualB>(m, "ThickImgAEqualB", thickTest)
+// now in codac_thickset.cpp:         .def(init<ThickGeoImage&,ThickGeoImage&, double>(), py::keep_alive<1,2>())
+// now in codac_thickset.cpp:         .def("test", &ThickImgAEqualB::test)
+// now in codac_thickset.cpp:         ;
+// now in codac_thickset.cpp:     // return m.ptr();
+// now in codac_thickset.cpp: }

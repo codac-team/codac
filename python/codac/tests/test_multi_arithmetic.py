@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+# Codac tests
+# ---------------------------------------------------------------------------
+# \date      2022
+# \author    Simon Rohou
+# \copyright Copyright 2022 Codac Team
+# \license   This program is distributed under the terms of
+#            the GNU Lesser General Public License (LGPL).
+
 import unittest
 from codac import *
 

@@ -197,7 +197,7 @@ SepPaving& SepPaving::Sivia(Sep &sep, double eps)
           L.push_back(n->right());
         }
     }
-    std::cerr << "k = " << k  << "|| j = " << j << std::endl;
+    //std::cerr << "k = " << k  << "|| j = " << j << std::endl;
     return (*this);
 }
 

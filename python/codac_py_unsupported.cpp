@@ -26,7 +26,7 @@ void export_unsupported_sep(py::module& m, py::class_<ibex::Sep, pySep>& sep);
 void export_unsupported_ctc(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_unsupported_geometry(py::module& m, py::class_<Ctc, pyCtc>& ctc, py::class_<ibex::Sep, pySep>& sep);
 void export_unsupported_paving(py::module& m, py::class_<Ctc, pyCtc>& ctc, py::class_<ibex::Sep, pySep>& sep);
-
+void export_unsupported_thickset(py::module& m, py::class_<Ctc, pyCtc>& ctc, py::class_<ibex::Sep, pySep>& sep);
 
 PYBIND11_MODULE(unsupported, m)
 {
@@ -43,6 +43,8 @@ PYBIND11_MODULE(unsupported, m)
   export_unsupported_ctc(m, ctc);
   export_unsupported_geometry(m, ctc, sep);
   export_unsupported_paving(m, ctc, sep);
+  export_unsupported_thickset(m, ctc, sep);
+
   // m.attr("ibex_version") = _IBEX_VERSION_;
   // return m.ptr();
 }

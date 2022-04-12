@@ -79,7 +79,6 @@ void export_Set(py::module& m);
 void export_DataLoader(py::module& m);
 void export_TPlane(py::module& m);
 
-void export_unsupported_geometry(py::module& m, py::class_<Ctc,pyCtc>& ctc, py::class_<ibex::Sep,pySep>& sep);
 
 PYBIND11_MODULE(core, m)
 {
@@ -137,8 +136,6 @@ PYBIND11_MODULE(core, m)
 
   export_DataLoader(m);
   export_TPlane(m);
-
-  export_unsupported_geometry(m, ctc, sep);
 
   // m.attr("ibex_version") = _IBEX_VERSION_;
   // return m.ptr();

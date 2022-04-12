@@ -9,9 +9,9 @@
 #============================================================================
 
 import unittest
-import codac
-from codac import *
-from codac.unsupported import *
+import pyibex
+from pyibex import *
+from pyibex.image import *
 import sys
 try:
   import numpy as np

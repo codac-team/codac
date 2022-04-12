@@ -142,26 +142,13 @@
 
     pybind11_add_module(unsupported SHARED
       codac_py_unsupported.cpp
-
-      # Contractors
       src/unsupported/contractors/codac_py_Ctc_unsupported.cpp
-
-      # Geometry
       src/unsupported/geometry/codac_geometry.cpp
-
-      # Image
       src/unsupported/image/codac_images.cpp
-
-      # Paving
       src/unsupported/paving/codac_paving.cpp
-
-      # Separators
       src/unsupported/separators/codac_py_Sep_unsupported.cpp
-
-      # Thickets
       src/unsupported/thickset/codac_thickset.cpp
       src/unsupported/thickset/codac_ThickInterval.cpp
-      src/unsupported/thickset/codac_GeoImages.cpp
     )
     
     add_compile_options(-O3 -Wall)
@@ -194,8 +181,8 @@
 
   add_custom_target(pip_package)
   add_custom_command(TARGET pip_package PRE_BUILD
-      COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
-      WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
+    COMMAND ${PYTHON_EXECUTABLE} ARGS setup.py bdist_wheel -d ${CMAKE_BINARY_DIR}
+    WORKING_DIRECTORY ${PYTHON_PACKAGE_DIR}
   )
 
 
@@ -205,7 +192,9 @@
 
   if(BUILD_TESTS)
 
-    file(GLOB TESTS_FILES "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/test_*.py")
+    file(GLOB TESTS_FILES
+      "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/test_*.py"
+      "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/tests_from_pyibex/test_*.py")
     foreach(TEST_FILE ${TESTS_FILES})
       get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
       set(TEST_NAME "python_${TEST_NAME}")

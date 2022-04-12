@@ -55,6 +55,8 @@ namespace codac
        */
       void contract(Interval& x, Interval& y, Interval& rho, Interval& theta);
   };
+
+  std::tuple<Interval,Interval,Interval> Catan2(const Interval& x, const Interval& y, const Interval& th);
 }
 
 #endif
