@@ -27,7 +27,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-void export_unsupported_geometry(py::module& m, py::class_<Ctc,pyCtc>& ctc, py::class_<ibex::Sep,pySep>& sep)
+void export_sivia(py::module& m, py::class_<Ctc,pyCtc>& ctc, py::class_<ibex::Sep,pySep>& sep)
 {
   m.def("SIVIA", [](const IntervalVector& x, Ctc& ctc, float precision, const SetColorMap& color_map)
     {
