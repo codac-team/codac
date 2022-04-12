@@ -33,13 +33,14 @@ Codac: constraint-programming for robotics
 ..  /manual/09-extensions/index
 
 
-.. .. toctree::
-..   :caption: Use cases
-..   :maxdepth: 2
-..   :titlesonly:
-.. 
-..   /use-cases/separators/index
-..   /use-cases/lie-symmetries/index
+.. toctree::
+  :caption: Use cases
+  :maxdepth: 2
+  :titlesonly:
+
+  /use-cases/set-inversion/index
+  Lie symmetries for guaranteed integ. </use-cases/lie-symmetries/index>
+  /use-cases/loops/index
 
 
 .. toctree::
