@@ -18,7 +18,7 @@ using namespace ibex;
 
 namespace codac
 {
-  CtcPicard::CtcPicard(Function& f, float delta)
+  CtcPicard::CtcPicard(const Function& f, float delta)
     : DynCtc(true), m_f_ptr(new TFunction(f)), m_f(*m_f_ptr), m_delta(delta)
   {
     assert(f.nb_var() == f.image_dim());
