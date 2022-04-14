@@ -175,7 +175,11 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/sivia)
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
-  add_compile_options(-O3 -Wall)
+  if(MSVC)
+    #add_compile_options(/W4)
+  else()
+    add_compile_options(-O3 -Wall)
+  endif()
   #set_property(TARGET codac PROPERTY CXX_STANDARD 17)
   #set_property(TARGET codac PROPERTY CXX_STANDARD_REQUIRED ON)
 

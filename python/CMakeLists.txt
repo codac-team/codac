@@ -114,7 +114,11 @@
       src/robotics/codac_py_TPlane.cpp
     )
     
-    add_compile_options(-O3 -Wall)
+    if(MSVC)
+      #add_compile_options(/W4)
+    else()
+      add_compile_options(-O3 -Wall)
+    endif()
     #set_property(TARGET core PROPERTY CXX_STANDARD 17)
     #set_property(TARGET core PROPERTY CXX_STANDARD_REQUIRED ON)
 
@@ -151,7 +155,11 @@
       src/unsupported/thickset/codac_ThickInterval.cpp
     )
     
-    add_compile_options(-O3 -Wall)
+    if(MSVC)
+      #add_compile_options(/W4)
+    else()
+      add_compile_options(-O3 -Wall)
+    endif()
     #set_property(TARGET unsupported PROPERTY CXX_STANDARD 17)
     #set_property(TARGET unsupported PROPERTY CXX_STANDARD_REQUIRED ON)
 
