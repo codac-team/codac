@@ -180,8 +180,6 @@
   else()
     add_compile_options(-O3 -Wall)
   endif()
-  #set_property(TARGET codac PROPERTY CXX_STANDARD 17)
-  #set_property(TARGET codac PROPERTY CXX_STANDARD_REQUIRED ON)
 
 
 ################################################################################

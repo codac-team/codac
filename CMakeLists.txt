@@ -65,6 +65,11 @@
 #    add_definitions(-U__STRICT_ANSI__)
 #  endif()
 
+  #if(NOT CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  #endif()
+
   if(MSVC)
     add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
   else()
