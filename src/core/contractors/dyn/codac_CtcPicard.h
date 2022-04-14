@@ -26,8 +26,8 @@ namespace codac
   {
     public:
 
-      CtcPicard(Function& f, float delta = 1.1);
-      CtcPicard(TFnc& f, float delta = 1.1);
+      CtcPicard(const Function& f, float delta = 1.1);
+      CtcPicard(const TFnc& f, float delta = 1.1);
       ~CtcPicard();
 
       void contract(std::vector<Domain*>& v_domains);

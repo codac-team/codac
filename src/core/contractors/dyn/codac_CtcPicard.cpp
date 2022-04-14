@@ -18,14 +18,14 @@ using namespace ibex;
 
 namespace codac
 {
-  CtcPicard::CtcPicard(Function& f, float delta)
+  CtcPicard::CtcPicard(const Function& f, float delta)
     : DynCtc(true), m_f_ptr(new TFunction(f)), m_f(*m_f_ptr), m_delta(delta)
   {
     assert(f.nb_var() == f.image_dim());
     assert(delta > 0.);
   }
 
-  CtcPicard::CtcPicard(TFnc& f, float delta)
+  CtcPicard::CtcPicard(const TFnc& f, float delta)
     : DynCtc(true), m_f(f), m_delta(delta)
   {
     assert(f.nb_var() == f.image_dim());
