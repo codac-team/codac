@@ -39,6 +39,25 @@ Codac releases
 
 -----------------------------------------------------------------
 
+Codac release 0.1.14 (released `Apr 14, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.14>`_)
+==========================================================================================================
+
+`Commits since previous release 0.1.13 <https://github.com/codac-team/codac/compare/v0.1.13...v0.1.14>`_
+
+Features added
+--------------
+
+* :commit:`e52a3ada3ae959ad4697a87a0b197890972447b9`: added examples from the former pyIbex library
+* :commit:`65d5320883f68116c08b4f686fd32ae602288654`: added ``VIBesFig::draw_vehicle()``
+
+Changes
+----------
+
+* :commit:`a5730999820fcb4c8c74d02ff46ca063567cc240`: SIVIA: updated code
+
+
+-----------------------------------------------------------------
+
 Codac release 0.1.13 (released `Apr 11, 2022 <https://github.com/codac-team/codac/releases/tag/v0.1.13>`_)
 ==========================================================================================================
 
