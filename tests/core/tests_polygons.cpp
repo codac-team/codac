@@ -233,7 +233,7 @@ TEST_CASE("Polygons (intersections)")
 
     x[0] = Interval(0.5,4.); x[1] = Interval(-1.,1.);
     box_inter = p.fast_intersection(x);
-    CHECK(box_inter[0] == Interval(2./3.,3.));
+    CHECK(ApproxIntv(box_inter[0]) == Interval(2./3.,3.));
     CHECK(box_inter[1] == Interval(0.,1.));
 
     x[0] = Interval(2.,6.); x[1] = Interval(2.,3.);
