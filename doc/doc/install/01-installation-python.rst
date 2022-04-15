@@ -20,6 +20,7 @@ In case you want to use Codac only with Python, then the installation procedure 
   pip3 install --upgrade pip # you may have to upgrade pip (19.0.0 required at least)
   pip3 install codac
 
+
 .. role:: gbg
 
 .. raw:: html
@@ -60,3 +61,13 @@ For updating your already installed version of Codac, the procedure is:
 .. code-block:: bash
 
   pip3 install codac --upgrade
+
+
+Test your Codac Python package
+------------------------------
+
+In order to verify that your installation is working properly in Python, you can run:
+
+.. code-block:: bash
+
+  python -m unittest discover codac.tests
