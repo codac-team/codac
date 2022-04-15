@@ -175,12 +175,6 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/sivia)
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
-  if(MSVC)
-    #add_compile_options(/W4)
-  else()
-    add_compile_options(-O3 -Wall)
-  endif()
-
 
 ################################################################################
 # Installation of libcodac files
