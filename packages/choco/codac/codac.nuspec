@@ -29,7 +29,7 @@ Codac is a library providing tools for constraint programming over reals, trajec
     <dependencies>
       <dependency id="mingw" version="[8.1.0]" />
       <dependency id="eigen" version="3.3.4.20210818" />
-      <dependency id="ibex" version="2.8.9" />
+      <dependency id="ibex" version="2.8.9.20220413" />
     </dependencies>
   </metadata>
 </package>

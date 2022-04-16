@@ -8,7 +8,11 @@
 # Compilation options
 
   set(CMAKE_CXX_STANDARD 17)
-  add_compile_options(-O3 -Wall)
+  if(MSVC)
+    #add_compile_options(/W4)
+  else()
+    add_compile_options(-O3 -Wall)
+  endif()
   #add_compile_options(-DNDEBUG) # comment for debug mode
   set(CMAKE_BUILD_TYPE Debug)
 
