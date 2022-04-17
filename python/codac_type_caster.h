@@ -5,8 +5,13 @@
 #include "ibex_Array.h"
 #include <pybind11/pybind11.h>
 
+#ifdef PYBIND11_NAMESPACE_BEGIN
+PYBIND11_NAMESPACE_BEGIN(pybind11)
+PYBIND11_NAMESPACE_BEGIN(detail)
+#else
 NAMESPACE_BEGIN(pybind11)
 NAMESPACE_BEGIN(detail)
+#endif // PYBIND11_NAMESPACE_BEGIN
 
 template <> struct type_caster<codac::Vector>
 {
@@ -101,7 +106,12 @@ template <typename Value> struct type_caster<ibex::Array<Value>>
     }
 };
 
+#ifdef PYBIND11_NAMESPACE_END
+PYBIND11_NAMESPACE_END(detail)
+PYBIND11_NAMESPACE_END(pybind11)
+#else
 NAMESPACE_END(detail)
 NAMESPACE_END(pybind11)
+#endif // PYBIND11_NAMESPACE_END
 
 #endif // __PYIBEX_TYPE_CASTER_H__
