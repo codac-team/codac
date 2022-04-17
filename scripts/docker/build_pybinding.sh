@@ -2,47 +2,12 @@
 
 set -e -x
 
-# Quick fix for CentOS EOL since 2020-11-30...
-#ls -l /etc/yum.repos.d
-sed -i 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo
-sed -i 's/#baseurl=http:\x2F\x2Fmirror.centos.org\x2Fcentos\x2F$releasever/baseurl=http:\x2F\x2Fvault.centos.org\x2Fcentos\x2F6.10/g' /etc/yum.repos.d/CentOS-Base.repo
-sed -i 's/mirrorlist=http:\x2F\x2Fmirrorlist.centos.org?arch=$basearch&release=6&repo=sclo-rh/baseurl=http:\x2F\x2Fvault.centos.org\x2Fcentos\x2F6.10\x2Fsclo\x2FSource\x2Frh\x2F/g' /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
-sed -i 's/mirrorlist=http:\x2F\x2Fmirrorlist.centos.org?arch=$basearch&release=6&repo=sclo-sclo/baseurl=http:\x2F\x2Fvault.centos.org\x2Fcentos\x2F6.10\x2Fsclo\x2FSource\x2Fsclo\x2F/g' /etc/yum.repos.d/CentOS-SCLo-scl.repo
-#cat /etc/yum.repos.d/CentOS-Base.repo
-#cat /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo
-#cat /etc/yum.repos.d/CentOS-SCLo-scl.repo
-#yum -y update
-
-#yum -y install doxygen eigen3-devel
-yum -y install doxygen wget openssl-devel
-
-wget https://github.com/Kitware/CMake/releases/download/v3.23.0/cmake-3.23.0.tar.gz -nv
-tar xfz cmake-3.23.0.tar.gz
-cd cmake-3.23.0
-./bootstrap --prefix=/usr/local
-make
-make install
-cd ..
-rm -Rf cmake-3.23.0.tar.gz
-rm -Rf cmake-3.23.0
-
-wget https://gitlab.com/libeigen/eigen/-/archive/3.3.4/eigen-3.3.4.zip -nv
-unzip -q -o eigen-3.3.4.zip
-cd eigen-3.3.4
-mkdir build
-cd build
-cmake ..
-cmake --build . --target install
-cd ../..
-rm -Rf eigen-3.3.4.zip
-rm -Rf eigen-3.3.4
-
 cd /io
 for PYBIN in /opt/python/cp3*/bin; do
   
-  #if [ "${PYBIN}" != "/opt/python/cp36-cp36m/bin" ]; then
-  #  continue
-  #fi
+  if [ "${PYBIN}" = "/opt/python/cp310-cp310/bin" ]; then
+    continue
+  fi
 
   "${PYBIN}/python" -m pip install --upgrade pip
   #"${PYBIN}/python" -m pip install --upgrade pyibex
