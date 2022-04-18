@@ -15,10 +15,10 @@ jobs:
     strategy:
         matrix:
             cfg:
-#            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'Windows Visual Studio 2019 x86 Python 3.10' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'Windows Visual Studio 2019 x86 Python 3.10' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9, with_python: ON, desc: 'Windows Visual Studio 2019 x86 Python 3.9' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x86 C++ Python 3.8' }
-#            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'Windows Visual Studio 2019 x64 Python 3.10' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'Windows Visual Studio 2019 x64 Python 3.10' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9, with_python: ON, desc: 'Windows Visual Studio 2019 x64 Python 3.9' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x64 C++ Python 3.8' }
             # Should be Visual Studio 2015 for Python 3.5-3.7, Visual Studio 2010 for Python 3.4, but need Visual Studio 2017 for C++17 compatibility...?

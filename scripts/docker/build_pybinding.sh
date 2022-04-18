@@ -5,9 +5,9 @@ set -e -x
 cd /io
 for PYBIN in /opt/python/cp3*/bin; do
   
-  if [ "${PYBIN}" = "/opt/python/cp310-cp310/bin" ]; then
-    continue
-  fi
+  #if [ "${PYBIN}" = "/opt/python/cp310-cp310/bin" ]; then
+  #  continue
+  #fi
 
   "${PYBIN}/python" -m pip install --upgrade pip
   #"${PYBIN}/python" -m pip install --upgrade pyibex
