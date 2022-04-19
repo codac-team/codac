@@ -15,21 +15,17 @@ jobs:
     strategy:
         matrix:
             cfg:
-#            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'Windows Visual Studio 2019 x86 Python 3.10' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'Windows Visual Studio 2019 x86 Python 3.10' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 9, with_python: ON, desc: 'Windows Visual Studio 2019 x86 Python 3.9' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cpcfg: '-win32', py_v_maj: 3, py_v_min: 8, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x86 C++ Python 3.8' }
-#            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'Windows Visual Studio 2019 x64 Python 3.10' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'Windows Visual Studio 2019 x64 Python 3.10' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 9, with_python: ON, desc: 'Windows Visual Studio 2019 x64 Python 3.9' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cpcfg: '-win_amd64', py_v_maj: 3, py_v_min: 8, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2019 x64 C++ Python 3.8' }
-            # Should be Visual Studio 2015 for Python 3.5-3.7, Visual Studio 2010 for Python 3.4, but need Visual Studio 2017 for C++17 compatibility...?
+            # Should be Visual Studio 2015 for Python 3.5-3.7, but need Visual Studio 2017 for C++17 compatibility...?
             - { os: windows-2019, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 7, with_python: ON, desc: 'Windows Visual Studio 2017 x86 Python 3.7' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 6, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x86 C++ Python 3.6' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 5, with_python: ON, desc: 'Windows Visual Studio 2017 x86 Python 3.5' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A Win32', choco_flags: '--x86', cpcfg: 'm-win32', py_v_maj: 3, py_v_min: 4, with_python: ON, desc: 'Windows Visual Studio 2017 x86 Python 3.4' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 7, with_python: ON, desc: 'Windows Visual Studio 2017 x64 Python 3.7' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 6, with_python: ON, with_cpp_bundle: ON, desc: 'Windows Visual Studio 2017 x64 C++ Python 3.6' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 5, with_python: ON, desc: 'Windows Visual Studio 2017 x64 Python 3.5' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A x64', cpcfg: 'm-win_amd64', py_v_maj: 3, py_v_min: 4, with_python: ON, desc: 'Windows Visual Studio 2017 x64 Python 3.4' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v2
@@ -51,17 +47,13 @@ jobs:
         7z x C:\Windows\Temp\windows_extra_tools.zip -o"C:\Windows" -y
       shell: pwsh
       if: runner.os=='Windows'
-    - run: choco install -y -r --no-progress vcbuildtools -ia "/InstallSelectableItems Win81SDK_CppBuildSKUV1;VisualCppBuildTools_ATLMFC_SDK" winflexbison
-      if: matrix.cfg.choco_vs_tools=='vcbuildtools'
-    - run: choco install -y -r --no-progress ${{ matrix.cfg.choco_vs_tools }} winflexbison
-      if: startsWith(matrix.cfg.runtime, 'vc')&&(matrix.cfg.choco_vs_tools!='vcbuildtools')
+    - run: choco install -y -r --no-progress winflexbison
+      if: startsWith(matrix.cfg.runtime, 'vc')
     - run: choco install -y -r --no-progress eigen --version=3.3.4.20210818 ${{ matrix.cfg.choco_flags }}
       shell: cmd
       if: runner.os=='Windows'
-    - run: choco install -y -r --no-progress doxygen.install graphviz & python -m pip install --upgrade pip==19.1.1 & pip install --upgrade wheel setuptools
-      if: (runner.os=='Windows')&&((matrix.cfg.py_v_maj=='3')&&(matrix.cfg.py_v_min=='4'))
     - run: choco install -y -r --no-progress doxygen.install graphviz & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme
-      if: (runner.os=='Windows')&&(matrix.cfg.py_v_maj!='3'||matrix.cfg.py_v_min!='4')
+      if: runner.os=='Windows'
     - run: git clone -b actions https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" CFLAGS=" /wd4267 /wd4244 /wd4305 /wd4996" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . --config Release --target install ; cd ../..
       shell: bash
     - run: |
