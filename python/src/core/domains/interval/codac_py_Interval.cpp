@@ -199,6 +199,7 @@ void export_Interval(py::module& m)
     .def("bisect", &Interval::bisect, DOCS_INTERVAL_BISECT, py::arg("ratio")=0.5)
     .def("__get_item__", get_item, "x[0] returns the lb and x[1] returns ub")
     .def("copy", &interval_copy, "return a new object which is the copy of x")
+    .def("__hash__", [](const Interval& s1) { return reinterpret_cast<std::uintptr_t>(&s1); })
     //.def( "__pow__", pow__)
 
   // Constants
