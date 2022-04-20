@@ -52,6 +52,7 @@ jobs:
         echo "DEBIAN_PACKAGE_REV=0" >> $GITHUB_ENV
         echo "PACKAGE_REV=0" >> $GITHUB_ENV
         echo "CHOCO_PACKAGE_REV=" >> $GITHUB_ENV
+        echo "VERBOSE=1" >> $GITHUB_ENV
       shell: bash
     - run: if [ -z "$CHOCO_PACKAGE_REV" ]; then echo "PACKAGE_VERSION=$SOFTWARE_VERSION" >> $GITHUB_ENV ; else echo "PACKAGE_VERSION=$SOFTWARE_VERSION.$CHOCO_PACKAGE_REV" >> $GITHUB_ENV ; fi
       shell: bash
