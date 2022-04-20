@@ -129,6 +129,23 @@
 
 
 ################################################################################
+# Compile sources
+################################################################################
+
+  add_subdirectory(src) # C++ sources
+  add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
+
+  # Python binding:
+  option(WITH_PYTHON "Build Python binding" OFF)
+  if(WITH_PYTHON)
+    if(NOT MSVC)
+      add_compile_options(-fPIC) # is it necessary for python binding?
+    endif()
+    add_subdirectory(python)
+  endif()
+
+
+################################################################################
 # Tests
 ################################################################################
   
@@ -146,23 +163,6 @@
 
   option(TEST_EXAMPLES "Testing examples" OFF)
   add_subdirectory(examples) # examples are tested as integration tests
-
-
-################################################################################
-# Compile sources
-################################################################################
-
-  add_subdirectory(src) # C++ sources
-  add_subdirectory(doc) # documentation (Doxygen + Sphinx manual)
-
-  # Python binding:
-  option(WITH_PYTHON "Build Python binding" OFF)
-  if(WITH_PYTHON)
-    if(NOT MSVC)
-      add_compile_options(-fPIC) # is it necessary for python binding?
-    endif()
-    add_subdirectory(python)
-  endif()
 
 
 ################################################################################
