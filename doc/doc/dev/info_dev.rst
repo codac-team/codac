@@ -50,19 +50,7 @@ In case you are willing to contribute to Codac, here are some information that m
 
                             cmake <other_cmake_options> -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" ..
 
-                          You will then have to generate the Doxygen documentation (XML files):
-
-                          .. code-block:: bash
-
-                            make api
-
-                          And finally run again the ``cmake`` command:
-
-                          .. code-block:: bash
-
-                            cmake <other_cmake_options> -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" ..
-
-                          This last step will generate header files containing docstrings for Python, based on
+                          This configuration generates header files containing docstrings for Python, based on
                           the content of XML files made by Doxygen. The documentation of any C++/Python function
                           is then located in the C++ header files of the :file:`/src` directory.
 
@@ -111,16 +99,12 @@ The website will be generated in :file:`build/doc/`.
 
 .. rubric:: API technical documentation
 
-Build the API technical documentation using Doxygen:
+For building the API technical documentation using Doxygen:
 
 .. code-block:: bash
 
   # Install Doxygen with
   sudo apt install doxygen graphviz
-
-  # Build the doc
-  cd build
-  make api
 
 The API pages will be generated in :file:`build/doc/api/html/`.
 
@@ -187,19 +171,7 @@ Then, configure ``cmake`` with custom options and ``-DWITH_PYTHON=ON``:
   
   cmake <...> -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" ..
 
-You will then have to generate the Doxygen documentation (XML files):
-
-.. code-block:: bash
-
-  make api
-
-And finally run again the ``cmake`` command:
-
-.. code-block:: bash
-
-  cmake <other_cmake_options> -DWITH_PYTHON=ON ..
-
-This last step will generate header files containing docstrings for Python, based on
+This configuration generates header files containing docstrings for Python, based on
 the content of XML files made by Doxygen. The documentation of any C++/Python function
 is then located in the C++ header files of the :file:`/src` directory.
 

@@ -29,14 +29,8 @@
   ################################################################################
 
   if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml)
-    if(NOT WIN32)
-      string(ASCII 27 Esc)
-      set(ColourReset "${Esc}[m")
-      set(Red         "${Esc}[31m")
-      set(Blue        "${Esc}[34m")
-    endif()
-
-    message(STATUS "${Red}/!\\ Run \"make api\" for generating Doxygen doc, then \"cmake ..\" again, before \"make\"${ColourReset}")
+    # The file generated_docstring.cpp contains all docstring of the library
+    message(FATAL_ERROR "Unable to find Doxygen generated files, this is required for Python binding (docstring)")
   endif()
 
   message(STATUS "Generating docstrings from doxygen files...")
@@ -45,7 +39,6 @@
     ${PROJECT_SOURCE_DIR}/scripts/pybind/doxygen2docstring.py
     ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
     ${CMAKE_CURRENT_BINARY_DIR}/docstring)
-  # The file generated_docstring.cpp contains all docstring of the library
 
 
   ################################################################################

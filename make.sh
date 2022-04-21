@@ -45,7 +45,6 @@ fi
   fi
 
   make -j
-  make api
   make doc
   cd ..
 

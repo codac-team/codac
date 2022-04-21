@@ -1,5 +1,10 @@
 .. _sec-usecases-setinv:
 
+.. warning::
+  
+  Several changes are currently performed on the library.
+  This page may not be up to date.
+  
 ##############################
 Set-inversion using separators
 ##############################

@@ -447,7 +447,7 @@ We suggest the following BibTeX template to cite Codac in scientific discourse:
 .. code-block:: none
 
  @misc{codac,
-    author = {Simon Rohou and Benoit Desrochers and others},
+    author = {Rohou, Simon and Desrochers, Benoit and others},
     year = {2022},
     note = {http://codac.io},
     title = {The {Codac} library -- {C}onstraint-programming for robotics}

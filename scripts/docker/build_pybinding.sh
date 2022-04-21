@@ -12,9 +12,6 @@ for PYBIN in /opt/python/cp3*/bin; do
   "${PYBIN}/python" -m pip install --upgrade pip
   mkdir -p build_dir && cd build_dir
   cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" ..
-  make api
-  # Again for doxygen2docstring:
-  cmake -DPYTHON_EXECUTABLE=${PYBIN}/python -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DWITH_TUBE_TREE=OFF -DWITH_CAPD=OFF -DWITH_PYTHON=ON -DCMAKE_CXX_FLAGS="-fPIC" ..
   make -j2
 
   #make test ARGS="-V"s
