@@ -4,7 +4,7 @@
 Installing the Codac library
 ############################
 
-Codac is available in both C++ and Python3.
+Codac is available in both C++17 and Python3.
 
 It is fully supported on Linux systems (both languages). Codac  has been recently made available on Windows too (both languages). We are working on its availability for macOS.
 Any help is more than welcome.
@@ -30,7 +30,7 @@ Note that you can also :ref:`use Codac online in Python <sec-py-project-online>`
 .. |online-py| replace:: :gbg:`✓` (Repl.it)
 .. _online-py: 02-py-project-online.html
 
-.. |win-cpp| replace:: in progress (#21)
+.. |win-cpp| replace:: In progress (#21)
 .. _win-cpp: https://github.com/codac-team/codac/issues/21
 
 The :gbg:`✓` configurations are officially supported at the moment:
@@ -38,19 +38,17 @@ The :gbg:`✓` configurations are officially supported at the moment:
 +---------------+----------------+-----------------+-----------------+----------------+----------------+
 |Language       |Linux 64 bits   |Windows (x86)    |Windows (x64)    |macOS           |Online          |
 +===============+================+=================+=================+================+================+
-|C++11          ||linux-cpp|_    ||win-cpp|_                         |--              |soon available ?|
+|C++17          ||linux-cpp|_    ||win-cpp|_                         |--              |soon available ?|
 +---------------+----------------+-----------------+-----------------+----------------+----------------+
-|Python 3.4     |                ||win-py|_        ||win-py|_        |--              ||online-py|_    |
+|Python 3.6     ||linux-py|_     ||win-py|_        ||win-py|_        |--              ||online-py|_    |
 +---------------+----------------+-----------------+-----------------+----------------+                +
-|Python 3.5     ||linux-py|_     ||win-py|_        ||win-py|_        |--              |                |
+|Python 3.7     ||linux-py|_     ||win-py|_        ||win-py|_        |--              |                |
 +---------------+----------------+-----------------+-----------------+----------------+                +
-|Python 3.6     ||linux-py|_     ||win-py|_        ||win-py|_        |--              |                |
+|Python 3.8     ||linux-py|_     ||win-py|_        ||win-py|_        |--              |                |
 +---------------+----------------+-----------------+-----------------+----------------+                +
-|Python 3.7     ||linux-py|_     |                 ||win-py|_        |--              |                |
+|Python 3.9     ||linux-py|_     ||win-py|_        ||win-py|_        |--              |                |
 +---------------+----------------+-----------------+-----------------+----------------+                +
-|Python 3.8     ||linux-py|_     |                 ||win-py|_        |--              |                |
-+---------------+----------------+-----------------+-----------------+----------------+                +
-|Python 3.9     ||linux-py|_     |                 ||win-py|_        |--              |                |
+|Python 3.10    ||linux-py|_     ||win-py|_        ||win-py|_        |--              |                |
 +---------------+----------------+-----------------+-----------------+----------------+----------------+
 
 | **Click on the links in the table to access the related installation procedures.**
