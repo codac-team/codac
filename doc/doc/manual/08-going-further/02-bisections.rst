@@ -1,4 +1,4 @@
-.. _sec-manual-bisections:
+.. _sec-manual-more-bisections:
 
 .. warning::
   
