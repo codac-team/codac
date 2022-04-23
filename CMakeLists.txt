@@ -74,12 +74,6 @@
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
   #endif()
 
-  if(MSVC)
-    add_compile_options(/D _CRT_SECURE_NO_WARNINGS)
-  else()
-    add_compile_options(-Wall)
-  endif()
-
 
 ################################################################################
 # Optional binary tree activation for all tubes (for tests purposes mainly)
