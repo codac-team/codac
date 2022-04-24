@@ -33,8 +33,9 @@
     message(STATUS "Configuring ${PROJECT_NAME} in DEBUG mode as none was specified.")
     if(MSVC)
       add_compile_options(/MD) # Temporary fix to avoid debug vs release inconsistencies...
+    else()
+      add_compile_options(-O3)
     endif()
-    add_compile_options(-O3)
   endif()
 
   
