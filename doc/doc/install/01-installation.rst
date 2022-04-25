@@ -77,7 +77,7 @@ You can `download the VIBes viewer directly from the official page <http://ensta
 
   .. code-block:: bash
     
-    sudo apt-get install qt5-default libqt5svg5-dev cmake git
+    sudo apt-get install qt5-default libqt5svg5-dev qtbase5-dev cmake git
     git clone https://github.com/ENSTABretagneRobotics/VIBES
     cd VIBES/viewer ; mkdir build ; cd build ; cmake .. ; sudo make install
 
