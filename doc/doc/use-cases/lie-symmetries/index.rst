@@ -4,6 +4,11 @@
 
    <br />
 
+.. warning::
+
+  This page is related to a new paper that has not been published yet.
+  It has been submitted to the Automatica journal.
+
 #########################################
 Lie symmetries for guaranteed integration
 #########################################

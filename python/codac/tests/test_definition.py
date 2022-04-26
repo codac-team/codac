@@ -137,6 +137,14 @@ class TestTubeVector(unittest.TestCase):
 
 class TestTubeClassFunction(unittest.TestCase):
 
+  def assertApproxIntv(self, first, second):
+      if first.is_empty() is False:
+      # if isinstance(second, Interval):
+          self.assertAlmostEqual(first.lb(), second.lb())
+          self.assertAlmostEqual(first.ub(), second.ub())
+      else:
+          self.assertEqual(first, second)
+         
   # def test_1(self):
   #   f = TFunction("t^2")
   #   f2 = TFunction("t^2")
@@ -209,7 +217,7 @@ class TestTubeClassFunction(unittest.TestCase):
 
 
   def test_TubeClasss(self):
-
+ 
     box1 = IntervalVector(2) 
     box2 = IntervalVector(2) 
     box3 = IntervalVector(2)
@@ -306,6 +314,33 @@ class TestTubeClassFunction(unittest.TestCase):
     self.assertEqual(tube_from_boxes[1].slice(2).tdomain(), Interval(10.5,12.));
     self.assertEqual(tube_from_boxes[1].slice(3).tdomain(), Interval(12.,14.));
 
+
+  def test_invert_tube(self):
+
+    tdomain = Interval(-5,20)
+    x = Tube(tdomain, 0.05, TFunction("cos(t+1.5)+(t-8)*[-0.10,0.10]"))
+
+    beginDrawing()
+    fig_x = VIBesFigTube("x")
+    fig_x.set_properties(100, 100, 600, 300)
+    fig_x.add_tube(x, "x")
+    fig_x.show(True);
+
+    v_t = []
+    z = Interval(-oo,-0.6)
+    x.invert(z,v_t,tdomain)
+    for ti in v_t:
+      fig_x.draw_box(IntervalVector([ti,x(ti)&z]), "red")
+      print(ti)
+
+    endDrawing()
+
+    self.assertEqual(len(v_t), 5)
+    self.assertApproxIntv(v_t[0], Interval(-5, -2.55))
+    self.assertApproxIntv(v_t[1], Interval(-0.2, 3.15))
+    self.assertApproxIntv(v_t[2], Interval(6.85,9.))
+    self.assertApproxIntv(v_t[3], Interval(12.75, 16))
+    self.assertApproxIntv(v_t[4], Interval(18.45, 20))
 
 if __name__ == '__main__':
 
