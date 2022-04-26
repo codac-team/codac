@@ -38,9 +38,10 @@ Codac: constraint-programming for robotics
   :maxdepth: 2
   :titlesonly:
 
-  /use-cases/set-inversion/index
   Lie symmetries for guaranteed integ. </use-cases/lie-symmetries/index>
-  /use-cases/loops/index
+
+..  /use-cases/set-inversion/index
+..  /use-cases/loops/index
 
 
 .. toctree::

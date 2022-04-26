@@ -57,7 +57,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mathjax_stmaryrd.js
 
   if(NOT SPHINX_FOUND)
 
-    message(STATUS "Sphinx not found, not able to generate/install the manual.")
+    message(STATUS "Sphinx not found, will not be able to generate/install the manual.")
 
   else()
 

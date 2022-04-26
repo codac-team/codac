@@ -47,6 +47,7 @@ redirects = {
     "lohner": "manual/05-dynamic-contractors/03-ctc-lohner.html",
     "slam": "tutorial/08-rangeonly-slam/index.html",
     "lie-symmetries": "use-cases/lie-symmetries/index.html",
+    "sivia": "use-cases/set-inversion/01-setinv-separators.html",
 }
 
 breathe_projects = {
