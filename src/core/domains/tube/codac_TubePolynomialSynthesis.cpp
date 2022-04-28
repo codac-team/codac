@@ -15,19 +15,29 @@
 using namespace std;
 using namespace ibex;
 
+#define VIBES_DRAWING true
+
 namespace codac
 {
   TubePolynomialSynthesis::TubePolynomialSynthesis(const Tube& x, double eps) :
-    m_fig(new VIBesFigTube("TubePolynomialSynthesis", &x)),
+    #if VIBES_DRAWING
+    m_fig(new VIBesFigTube("TubePolynomialSynthesis", &x)), 
+    #else
+    m_fig(nullptr),
+    #endif
     m_trees(make_pair(TubePolynomialTreeSynthesis(x, x.tdomain(), false, eps, *m_fig),TubePolynomialTreeSynthesis(x, x.tdomain(), true, eps, *m_fig)))
   {
+    #if VIBES_DRAWING
     m_fig->set_properties(100, 100, 600, 300);
     m_fig->show();
+    #endif
   }
 
   TubePolynomialSynthesis::~TubePolynomialSynthesis()
   {
+    #if VIBES_DRAWING
     delete m_fig;
+    #endif
   }
 
   Interval TubePolynomialSynthesis::operator()(const Interval& t) const
@@ -55,11 +65,13 @@ namespace codac
 
     else
     {
-      Trajectory *traj = new Trajectory(traj_from_polynom(m_p));
       ostringstream ostr;
       ostr << m_upper_bound << m_tdomain;
+      #if VIBES_DRAWING
+      Trajectory *traj = new Trajectory(traj_from_polynom(m_p));
       m_fig.add_trajectory(traj, ostr.str(), m_upper_bound ? "blue" : "red");
       m_fig.draw_box(IntervalVector({m_tdomain, m_codomain}), m_upper_bound ? "blue" : "red");
+      #endif
       // todo: manage delete
     }
   }
