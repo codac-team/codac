@@ -37,6 +37,7 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 8.1.0 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows Qt 5.12.6 MinGW 7.3.0 x86' }
+            - { os: ubuntu-22.04, shell: bash, arch: amd64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
             - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
             - { os: ubuntu-18.04, shell: bash, arch: amd64, runtime: bionic, cmake_flags: '-fPIC', desc: 'Ubuntu 18.04' }
             - { os: macos-11, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur' }
