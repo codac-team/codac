@@ -49,7 +49,7 @@ jobs:
       if: runner.os=='Windows'
     - run: choco install -y -r --no-progress winflexbison
       if: startsWith(matrix.cfg.runtime, 'vc')
-    - run: choco install -y -r --no-progress eigen --version=3.3.4.20210818 ${{ matrix.cfg.choco_flags }}
+    - run: choco install -y -r --no-progress eigen --version=3.4.0 ${{ matrix.cfg.choco_flags }}
       shell: cmd
       if: runner.os=='Windows'
     - run: choco install -y -r --no-progress doxygen.install graphviz & python -m pip install --upgrade pip & pip install --upgrade wheel setuptools & git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx & cd sphinx & pip install . & pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme
