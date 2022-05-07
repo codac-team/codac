@@ -36,6 +36,9 @@ For the compilation of your project, you can use CMake with the following file :
     cmake_minimum_required(VERSION 3.0.2)
     project(my_project LANGUAGES CXX)
 
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
   # Adding IBEX
 
     # In case you installed IBEX in a local directory, you need 
@@ -82,7 +85,7 @@ The files :file:`main.cpp` and :file:`CMakeLists.txt` appear in the same directo
 
 .. .. note::
 .. 
-..   Since Codac 3.1, `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ becomes a dependency of the library.
+..   `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_ is also currently a dependency of the library.
 
 
 .. admonition:: Custom install directory of IBEX and Codac

@@ -7,18 +7,32 @@ Installing Codac on Linux for C++ use
 #####################################
 
 
-Requirements and dependencies (IBEX)
-------------------------------------
+Quick start (for Ubuntu (amd64))
+--------------------------------
 
-Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is available on `the official development repository <https://github.com/ibex-team/ibex-lib>`_:
+.. code-block:: bash
+
+  sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+  sudo apt update
+  sudo apt install codac
+
+Then, check `this <03-start-cpp-project.html>`_.
+
+.. note::
+  For a Raspberry Pi running Raspbian Buster, download and extract ``codac_standalone_armv6hf_buster.zip`` from `<https://github.com/codac-team/codac/releases/latest/>`_, then in ``example`` folder run ``cmake . ; cmake --build . ; ./my_project`` and check that "My first tube:Tube [0, 10]" appears.
+
+Requirements and dependencies if rebuilding from source
+-------------------------------------------------------
+
+Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/actions>`_:
 
 .. code-block:: bash
 
   # Requirements to compile IBEX and Codac
   sudo apt-get install -y g++ gcc flex bison cmake git libeigen3-dev
   
-  # Download IBEX sources from Github
-  git clone -b develop https://github.com/ibex-team/ibex-lib.git
+  # Download IBEX sources from GitHub
+  git clone -b actions https://github.com/lebarsfa/ibex-lib.git
   
   # Configure IBEX before installation
   cd ibex-lib
@@ -131,3 +145,5 @@ Do not forget to launch the VIBes viewer before running your program.
 
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/ibex-lib/build_install
     export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$HOME/codac/build_install
+
+See also `Information for developers <info_dev.html>`_.
