@@ -138,7 +138,7 @@ jobs:
         cd ../../..
         checksum -f=codac.$PACKAGE_VERSION.nupkg -t=sha256
         choco source add -n=current-directory -s . --priority=100
-        choco install -y -r --no-progress codac
+        choco install -y -r --no-progress codac --version=$PACKAGE_VERSION ${{ matrix.cfg.choco_flags }}
         mv -f codac.$PACKAGE_VERSION.nupkg codac.$PACKAGE_VERSION${{ matrix.cfg.choco_flags }}.nupkg
       shell: bash
       if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8')
