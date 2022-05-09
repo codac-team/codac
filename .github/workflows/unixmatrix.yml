@@ -37,8 +37,10 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 8.1.0 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows Qt 5.12.6 MinGW 7.3.0 x86' }
+            - { os: ubuntu-22.04, shell: bash, arch: amd64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
             - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
             - { os: ubuntu-18.04, shell: bash, arch: amd64, runtime: bionic, cmake_flags: '-fPIC', desc: 'Ubuntu 18.04' }
+            - { os: macos-12, shell: bash, arch: x64, runtime: monterey, cmake_flags: '-fPIC', desc: 'macOS Monterey' }
             - { os: macos-11, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur' }
             - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', desc: 'macOS Catalina' }
     name: ${{ matrix.cfg.desc }}
@@ -91,7 +93,7 @@ jobs:
       if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8')&&(matrix.cfg.arch=='x86')
     - run: |
         choco install -y -r --no-progress checksum wget winflexbison make patch zip ${{ matrix.cfg.choco_flags }}
-        choco install -y -r --no-progress eigen --version=3.3.4.20210818 ${{ matrix.cfg.choco_flags }}
+        choco install -y -r --no-progress eigen --version=3.4.0 ${{ matrix.cfg.choco_flags }}
         choco install -y -r --no-progress ibex --version=2.8.9.20220413 ${{ matrix.cfg.choco_flags }}
       if: runner.os=='Windows'
 #    - run: sudo apt-get -q update ; sudo apt-get -y install flex bison libeigen3-dev || true
@@ -114,8 +116,9 @@ jobs:
         cd ..
       shell: bash
     - run: |
-        wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
-        unzip -q codac_test_win.zip ; rm -Rf codac_test_win.zip ; cd codac_test_win ; if [ -d ../ibex ]; then rm -Rf ibex ; cp -Rf ../ibex . ; fi ; rm -Rf codac ; cp -Rf ../codac . ; rm -Rf ReadMe.txt ; cp -Rf ../tests/test_codac/* ./test ; cd .. ; zip -q -r codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
+        mkdir -p codac_standalone/example ; cd codac_standalone
+        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0 --no-check-certificate -nv ; unzip -q 3.4.0 -d eigen ; rm -Rf 3.4.0 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools
+        cp -Rf ../ibex . ; cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone ; cd codac_standalone/example
         cmake ${{ matrix.cfg.cmake_params }} .
         cmake --build . ${{ matrix.cfg.cmake_config }}
         ./${{ matrix.cfg.test_config }}my_project
@@ -136,7 +139,7 @@ jobs:
         cd ../../..
         checksum -f=codac.$PACKAGE_VERSION.nupkg -t=sha256
         choco source add -n=current-directory -s . --priority=100
-        choco install -y -r --no-progress codac
+        choco install -y -r --no-progress codac --version=$PACKAGE_VERSION ${{ matrix.cfg.choco_flags }}
         mv -f codac.$PACKAGE_VERSION.nupkg codac.$PACKAGE_VERSION${{ matrix.cfg.choco_flags }}.nupkg
       shell: bash
       if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8')

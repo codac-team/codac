@@ -15,12 +15,12 @@ jobs:
     strategy:
         matrix:
             cfg:
-#            - { os: macos-11, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', cpcfg: '-macosx_11_0_x86_64', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'macOS Big Sur Python 3.10' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 10, with_python: ON, desc: 'macOS Catalina Python 3.10' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 9, with_python: ON, desc: 'macOS Catalina Python 3.9' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 8, with_python: ON, desc: 'macOS Catalina Python 3.8' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 7, with_python: ON, desc: 'macOS Catalina Python 3.7' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 6, with_python: ON, desc: 'macOS Catalina Python 3.6' }
+#            - { os: macos-11, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', cpcfg: '-macosx_11_0_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Big Sur Python 3.10' }
+            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Catalina Python 3.10' }
+            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Catalina Python 3.9' }
+            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Catalina Python 3.8' }
+            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Catalina Python 3.7' }
+            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 6, desc: 'macOS Catalina Python 3.6' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v2
@@ -40,30 +40,21 @@ jobs:
     - run: brew install eigen
       if: runner.os=='macOS'
     - run: brew install doxygen ; brew install graphviz ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
-      if: (runner.os=='macOS')&&(matrix.cfg.with_python=='ON')
+      if: runner.os=='macOS'
     - run: git clone -b actions https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . --config Release --target install ; cd ../..
       shell: bash
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=${{ matrix.cfg.with_python }} ..
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
         cmake --build . --config Release --target install
-        if [ "${{ matrix.cfg.with_python }}" = "ON" ]; then cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py ; fi
+        cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py
         cd ..
       shell: bash
-    - run: |
-        wget http://www.ensta-bretagne.fr/lebars/Share/codac_test_win.zip --no-check-certificate -nv
-        unzip -q codac_test_win.zip ; rm -Rf codac_test_win.zip ; cd codac_test_win ; if [ -d ../ibex ]; then rm -Rf ibex ; cp -Rf ../ibex . ; fi ; rm -Rf codac ; cp -Rf ../codac . ; rm -Rf ReadMe.txt ; cp -Rf ../tests/test_codac/* ./test ; cd .. ; zip -q -r codac_test_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_test_win ; cd codac_test_win/test
-        cmake ${{ matrix.cfg.cmake_params }} .
-        cmake --build . ${{ matrix.cfg.cmake_config }}
-        ./${{ matrix.cfg.test_config }}my_project
-        cd ../..
-      shell: bash
-      if: matrix.cfg.with_cpp_bundle=='ON'
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: "*.zip;*.whl"
+        file: "*.whl"
         overwrite: true
         tag_name: autotagname-${{ github.sha }}
       if: (github.event_name != 'pull_request')&&(github.ref_name == 'master')
