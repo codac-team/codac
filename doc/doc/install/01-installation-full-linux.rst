@@ -7,8 +7,10 @@ Installing Codac on Linux for C++ use
 #####################################
 
 
-Quick start (for Ubuntu (amd64))
---------------------------------
+Install from package (latest release, for Ubuntu amd64)
+---------------------------------------------------------
+
+A Debian package is available for the last release |version| of the library:
 
 .. code-block:: bash
 
@@ -16,13 +18,26 @@ Quick start (for Ubuntu (amd64))
   sudo apt update
   sudo apt install codac
 
-Then, check `this <03-start-cpp-project.html>`_.
+Then, check your installation `with the instructions of this page <03-start-cpp-project.html>`_.
 
 .. note::
-  For a Raspberry Pi running Raspbian Buster, download and extract ``codac_standalone_armv6hf_buster.zip`` from `<https://github.com/codac-team/codac/releases/latest/>`_, then in ``example`` folder run ``cmake . ; cmake --build . ; ./my_project`` and check that "My first tube:Tube [0, 10]" appears.
 
-Requirements and dependencies if rebuilding from source
--------------------------------------------------------
+  For a Raspberry Pi running Raspbian Buster, download and extract ``codac_standalone_armv6hf_buster.zip`` from `<https://github.com/codac-team/codac/releases/latest/>`_, then in the ``example`` folder run:
+
+  .. code-block:: bash
+
+    cmake . ; cmake --build . ; ./my_project
+
+  and check that "My first tube:Tube [0, 10]" appears.
+
+
+Install from sources (latest development)
+-----------------------------------------
+
+In case you prefer the latest development version, Codac can be installed by compiling the sources.
+
+Requirements
+^^^^^^^^^^^^
 
 Codac uses several features of the `IBEX library <http://www.ibex-lib.org/doc/install.html>`_ that you have to install first. The last version of IBEX is maintained on `this unofficial development repository <https://github.com/lebarsfa/ibex-lib/tree/actions>`_:
 
@@ -48,9 +63,7 @@ For further CMake options, please refer to the IBEX documentation.
 
 .. admonition:: Debug/development mode
   
-  Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. **It is highly recommended** for your developments.
-
-  To use it:
+  Note that the :code:`-DCMAKE_BUILD_TYPE=Debug` option will slightly slow down your computations, but display useful error messages in case of failure conditions such as access violations. **It is highly recommended** for your developments. To use it:
 
   .. code-block:: bash
   
@@ -58,7 +71,7 @@ For further CMake options, please refer to the IBEX documentation.
 
 
 Building the Codac library
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The last sources are available on `the official Codac development repository <https://github.com/codac-team/codac>`_. You can download the files and compile the sources with:
 
@@ -74,22 +87,22 @@ The last sources are available on `the official Codac development repository <ht
 
 
 Compiling the examples
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 To compile one specific example, use CMake in the example directory.
 For instance:
 
 .. code-block:: bash
   
-  cd examples/basics/01_arithmetic                    # moving to the example directory
-  mkdir build -p ; cd build ; cmake .. ; make         # cmake compilation
-  ./codac_basics_01                                   # running example
+  cd examples/basics/01_arithmetic                # moving to the example directory
+  mkdir build -p ; cd build ; cmake .. ; make     # cmake compilation
+  ./codac_basics_01                               # running example
 
 Do not forget to launch the VIBes viewer before running your program.
 
 
 (for experts) Additional installation options
----------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. _sec-installation-full-linux-cmake:
 

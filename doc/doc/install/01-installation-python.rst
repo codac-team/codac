@@ -17,18 +17,9 @@ In case you want to use Codac only with Python, then the installation procedure 
 
 .. code-block:: bash
   
-  pip3 install --upgrade pip # you may have to upgrade pip (19.0.0 required at least)
+  # You may have to upgrade pip (19.0.0 required at least)
+  pip3 install --upgrade pip 
   pip3 install codac
-
-.. warning::
-
-  macOS Big Sur and Monterey (amd64): `Python wheels provided for Catalina may still be installed <https://stackoverflow.com/questions/64847996/force-usage-of-10-x-wheel-in-macos-big-sur>`_, try something similar to: 
-
-  .. code-block:: bash
-
-    sudo pip3 install --platform macosx_10_15_x86_64 --only-binary=:all: --target=/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/site-packages codac
-
-  Depending on the way Python was installed, the path to specify after ``--target`` may differ, e.g. if Python was installed from https://www.python.org/ftp/python/3.10.4/python-3.10.4-macos11.pkg, it may be ``/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages``. Otherwise, run ``python3 -m site`` to check the ``site-packages`` full path in ``sys.path list``. 
 
 
 .. role:: gbg
@@ -59,6 +50,17 @@ The :gbg:`✓` configurations are officially supported at the moment:
 +---------------+----------------+-----------------+-----------------+----------------+----------------+
 
 If a configuration in this table does not work, please `contact us <https://github.com/codac-team/codac/issues>`_.
+
+.. warning::
+
+  | **macOS Big Sur and Monterey (amd64):**
+  | `Python wheels provided for Catalina may still be installed <https://stackoverflow.com/questions/64847996/force-usage-of-10-x-wheel-in-macos-big-sur>`_, try something similar to: 
+
+  .. code-block:: bash
+
+    sudo pip3 install --platform macosx_10_15_x86_64 --only-binary=:all: --target=/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/site-packages codac
+
+  Depending on the way Python was installed, the path to specify after ``--target`` may differ, *e.g.* if Python was installed from https://www.python.org/ftp/python/3.10.4/python-3.10.4-macos11.pkg, it may be ``/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages``. Otherwise, run ``python3 -m site`` to check the ``site-packages`` full path in ``sys.path list``. 
 
 .. note::
 
