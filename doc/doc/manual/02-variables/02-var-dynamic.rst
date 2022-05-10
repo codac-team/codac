@@ -169,15 +169,16 @@ The ``TFunction`` object is only used for the initialization. The resulting traj
 
 .. note::
 
-  **In Python: defining a trajectory from a NpzFile**
+  **In Python: defining a trajectory from NumPy arrays**
 
-  The `.npz` file format is a zipped archive for storing Python variables. For instance, let us consider a :math:`n\times 1` array and a :math:`n\times 3` array for representing respectively time and 3d angles along time. The following allows to build a ``Trajectory`` for the third component:
+  For instance, let us consider a :math:`n\times 1` array and a :math:`n\times 3` array for representing respectively time and 3d angles along time. The following allows to build a ``Trajectory`` for the third component:
 
   .. code-block:: py
 
     data = np.load("data_angles.npz")
-    traj = Trajectory(dict(zip(data['t'][:],data['angles'][:,2])))
+    traj = Trajectory(data['t'][:],data['angles'][:,2])
 
+.. traj = Trajectory(dict(zip(data['t'][:],data['angles'][:,2])))
 .. beginDrawing()
 .. fig = VIBesFigTube("Traj")
 .. fig.set_properties(100, 100, 600, 300)
