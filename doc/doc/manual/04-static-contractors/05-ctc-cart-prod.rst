@@ -1,10 +1,10 @@
 .. _sec-manual-ctccartprod:
 
-*********************************
+******************************************************************
 CtcCartProd: :math:`\mathcal{C}_{\mathrm{X}_1\times \mathrm{X}_2}`
-*********************************
+******************************************************************
 
-The :math:`\mathcal{C}_{\mathrm{X}_1\times \mathrm{X}_2}` contractor is the cartesian product of two other contractors :math:`\mathcal{C}_{\mathrm{X}_1}` and :math:`\mathcal{C}_{\mathrm{X}_2}`. 
+The :math:`\mathcal{C}_{\mathrm{X}_1\times \mathrm{X}_2}` contractor is the Cartesian product of two other contractors :math:`\mathcal{C}_{\mathrm{X}_1}` and :math:`\mathcal{C}_{\mathrm{X}_2}`. 
 
 .. contents::
 
@@ -22,21 +22,22 @@ Definition
 
     .. code-tab:: py
 
-      todo
+      c = CtcCardProd(c1, c2)
+      c.contract(x)
 
     .. code-tab:: c++
       
-      CtcCardProd C(C1, C2);
-      C.contract(x);
+      CtcCardProd c(c1, c2);
+      c.contract(x);
 
 .. todo::
 
-  | For now, this contractor is only available for two contractors, but this cartesian product could be extended to the cartesian product of n contractors.
-  | Todo: implement the *n*-d version of :math:`\mathcal{C}_\times`.
+  | For now, this contractor is only available for two contractors, but this Cartesian product could be extended to the Cartesian product of :math:`n` contractors.
+  | Todo: implement the :math:`n`-d version of :math:`\mathcal{C}_\times`.
 
 .. rubric:: Optimality
 
-This contractor is optimal as it is based on the optimality on other contractors.
+This contractor is optimal as it is based on the optimality of other contractors.
 
 Example
 -------

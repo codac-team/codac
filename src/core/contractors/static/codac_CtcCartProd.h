@@ -28,12 +28,12 @@ namespace codac
     public:
 
       /**
-       * \brief Creates the contractor based on the cartesian product of the two others.
+       * \brief Creates the contractor based on the Cartesian product of the two others.
        * 
-       * \param C1 The first cotractor
-       * \param C2 The second contractor
+       * \param c1 The first cotractor
+       * \param c2 The second contractor
        */
-      CtcCartProd(T1 &C1, T2 &C2) : Ctc(C1.nb_var + C2.nb_var), C1(C1), C2(C2) {};
+      CtcCartProd(T1 &c1, T2 &c2) : Ctc(c1.nb_var + c2.nb_var), m_c1(c1), m_c2(c2) {};
 
       /**
        * \brief \f$\mathcal{C}_{\mathcal{C_1}\times\mathcal{C_2}}\big([\mathbf{x}]\big)\f$
@@ -42,46 +42,42 @@ namespace codac
        */
       void contract(IntervalVector& x);
 
-      /**
-       * \param C1 the first contractor
-       */
-      Ctc &C1;
 
-      /**
-       * \param C2 the second contractor
-       */
-      Ctc &C2;
+    protected:
 
+      Ctc &m_c1; //!< the first contractor
+      Ctc &m_c2; //!< the second contractor
   };
 
   template <typename T1, typename T2>
   void CtcCartProd<T1, T2>::contract(IntervalVector& x)
   {
     // Checking the dimension of the input box
-    assert(C1.nb_var + C2.nb_var == x.size());
+    assert(m_c1.nb_var + m_c2.nb_var == x.size());
 
-    // Contracting the projection of x along the n first dimensions using C1
-    IntervalVector x1 = x.subvector(0, C1.nb_var);
-    C1.contract(x1);
+    // Contracting the projection of x along the n first dimensions using m_c1
+    IntervalVector x1 = x.subvector(0, m_c1.nb_var);
+    m_c1.contract(x1);
     x.put(0, x1);
 
-    // Contracting the projeciton of x over the m last dimensions using C2
-    IntervalVector x2 = x.subvector(C1.nb_var, C1.nb_var+C2.nb_var);
-    C2.contract(x2);
-    x.put(C1.nb_var, x2);
+    // Contracting the projeciton of x over the m last dimensions using m_c2
+    IntervalVector x2 = x.subvector(m_c1.nb_var, m_c1.nb_var+m_c2.nb_var);
+    m_c2.contract(x2);
+    x.put(m_c1.nb_var, x2);
   }
 
   /**
-   * \fn template <typename T1, typename T2> CtcCartProd<T1, T2> cart_prod(T1 &C1, T2 &C2)
+   * \fn template <typename T1, typename T2> CtcCartProd<T1, T2> cart_prod(T1 &c1, T2 &c2)
    * \brief Cartesian product of two contractors
    * 
-   * \param C1 the first contractor
-   * \param C2 the second contractor
+   * \param c1 the first contractor
+   * \param c2 the second contractor
+   * \return the Cartesian product of c1 and c2
    */
   template <typename T1, typename T2>
-  CtcCartProd<T1, T2> cart_prod(T1 &C1, T2 &C2)
+  CtcCartProd<T1, T2> cart_prod(T1 &c1, T2 &c2)
   {
-    return CtcCartProd<T1, T2>(C1, C2);
+    return CtcCartProd<T1, T2>(c1, c2);
   }
 }
 
