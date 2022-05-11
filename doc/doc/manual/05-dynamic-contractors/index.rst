@@ -15,6 +15,8 @@ We now focus on time-related constraints. The following contractors provide a wa
   05-ctc-delay
   06-ctc-linobs
   07-ctc-chain
+  
+See also: :ref:`codac-unsupported <sec-codac-unsupported>`.
 
 ------------------------------------------------------
 

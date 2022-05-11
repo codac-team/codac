@@ -36,6 +36,8 @@ The following contractors apply on intervals and boxes:
   04-ctc-constell
   05-ctc-cart-prod
 
+See also: :ref:`codac-unsupported <sec-codac-unsupported>`.
+
 ------------------------------------------------------
 
 .. rubric:: Combining contractors

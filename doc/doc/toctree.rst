@@ -29,6 +29,7 @@ Codac: constraint-programming for robotics
   /manual/06-contractor-network/index
   /manual/07-graphics/index
   /faq
+  See also: codac-unsupported </dev/codac-unsupported>
 ..  /manual/08-going-further/index
 ..  /manual/09-extensions/index
 
