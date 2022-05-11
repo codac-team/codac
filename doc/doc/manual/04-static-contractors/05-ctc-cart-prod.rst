@@ -1,10 +1,10 @@
 .. _sec-manual-ctccartprod:
 
-******************************************************************
-CtcCartProd: :math:`\mathcal{C}_{\mathrm{X}_1\times \mathrm{X}_2}`
-******************************************************************
+********************************************************************
+CtcCartProd: :math:`\mathcal{C}_{\mathcal{C}_1\times \mathcal{C}_2}`
+********************************************************************
 
-The :math:`\mathcal{C}_{\mathrm{X}_1\times \mathrm{X}_2}` contractor is the Cartesian product of two other contractors :math:`\mathcal{C}_{\mathrm{X}_1}` and :math:`\mathcal{C}_{\mathrm{X}_2}`. 
+The :math:`\mathcal{C}_{\mathcal{C}_1\times \mathcal{C}_2}` contractor is the Cartesian product of two other contractors :math:`\mathcal{C}_{\mathcal{C}_1}` and :math:`\mathcal{C}_{\mathcal{C}_2}`. 
 
 .. contents::
 
@@ -16,7 +16,7 @@ Definition
     
   .. math::
 
-    \mathcal{C}_{\mathrm{X}_1\times\mathrm{X}_2}\left([\mathbf{x}] \right) = \left(\mathcal{C}_{\mathrm{X}_1}\left(\Pi_1\right) \times \mathcal{C}_{\mathrm{X}_2}\left(\Pi_2\right)\right) [\mathbf{x}]
+    \mathcal{C}_{\mathcal{C}_1\times\mathcal{C}_2}\left([\mathbf{x}]\right) = \left(\mathcal{C}_1\left(\Pi_1\right) \times \mathcal{C}_2\left(\Pi_2\right)\right)\left([\mathbf{x}]\right)
 
   .. tabs::
 

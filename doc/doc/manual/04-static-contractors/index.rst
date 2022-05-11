@@ -42,7 +42,7 @@ See also: :ref:`codac-unsupported <sec-codac-unsupported>`.
 
 .. rubric:: Combining contractors
 
-Union, intersection, or inversion of contractors is achievable. See for instance:
+Union, intersection, Cartesian product, or inversion of contractors is achievable. See for instance:
 
 .. tabs::
 
@@ -57,6 +57,9 @@ Union, intersection, or inversion of contractors is achievable. See for instance
 
     # Example of union of a Python list of contractors
     ctc_union = CtcUnion([ctc_1, ctc_2, ctc_3])
+
+    # Example of Cartesian product of two contractors
+    c3 = cart_prod(ctc_1, ctc_2)
 
   .. code-tab:: c++
 
