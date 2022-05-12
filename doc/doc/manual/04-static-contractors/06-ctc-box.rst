@@ -42,4 +42,56 @@ This contractor is optimal as it is based on intersection between boxes which is
 Example
 -------
 
-Example incoming
+Let consider a box :math:`\mathbf{b} = ((1, 2), (3, 4))` around which we want to contract boxes.
+
+.. tabs::
+
+  .. code-tab:: py
+
+    b = IntervalVector([[1, 2], [3, 4]])
+    ctc_box = CtcBox(b)
+
+    x1 = IntervalVector([[0, 3], [2, 5]])
+    x2 = IntervalVector([[1.5, 3.5], [3.5, 6.5]])
+
+    ctc_box.contract(x1)
+    ctc_box.contract(x2)
+
+  .. code-tab:: c++
+
+    IntervalVector b{{1, 2}, {3, 4}};
+    CtcBox ctc_box(b);
+
+    IntervalVector x1{{0, 3}, {2, 5}};
+    IntervalVector x2{{1.5, 3.5}, {3.5, 6.5}};
+
+    ctc_box.contract(x1);
+    ctc_box.contract(x2);
+
+.. from codac import *
+.. 
+.. b = IntervalVector([[1, 2], [3, 4]])
+.. ctc_box = CtcBox(b)
+..
+.. x1 = IntervalVector([[0, 3], [2, 5]])
+.. x2 = IntervalVector([[1.5, 3.5], [3.5, 6.5]])
+..
+.. beginDrawing()
+.. 
+.. fig = VIBesFigMap("Map")
+.. fig.set_properties(50, 50, 500, 500)
+.. 
+.. fig.draw_box(b, "#475B96")
+..
+.. fig.draw_box(x1, "#475B96")
+.. ctc_box.contract(x1)
+.. fig.draw_box(x1, "#475B96")
+.. 
+.. fig.draw_box(x2, "#475B96")
+.. ctc_box.contract(x2)
+.. fig.draw_box(x2, "#475B96")
+.. 
+.. fig.show()
+.. fig.axis_limits(fig.view_box(), True, 0.1)
+.. 
+.. endDrawing()
