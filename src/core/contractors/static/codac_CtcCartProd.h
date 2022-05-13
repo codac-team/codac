@@ -20,7 +20,7 @@ namespace codac
 {
   /**
    * \class CtcCartProd
-   * \brief Cartesian product of contractors \f$\mathcal{C_1}\times\dots\times\mathcal{C_n}\f$
+   * \brief Cartesian product of contractors \f$\mathcal{C}_1\times\dots\times\mathcal{C}_n\f$
    */
   class CtcCartProd : public Ctc
   {
@@ -32,17 +32,17 @@ namespace codac
        * \param args list of contractors
        */
       template <typename ...Args>
-      CtcCartProd(Args &... args) : Ctc(ibex::Array<Ctc>({args...})), m_v({args...}) {};
+      CtcCartProd(Args&... args) : Ctc(ibex::Array<Ctc>({args...})), m_v({args...}) {};
 
       /**
        * \brief Creates the contractor based on the Cartesian product of other.
        * 
        * \param array Array of contractors
        */
-      CtcCartProd(ibex::Array<Ctc> array) : Ctc(array), m_v(array) {};
+      CtcCartProd(const ibex::Array<Ctc>& array) : Ctc(array), m_v(array) {};
 
       /**
-       * \brief \f$\mathcal{C}_{\mathcal{C_1}\times\dots\times\mathcal{C_n}}\big([\mathbf{x}]\big)\f$
+       * \brief \f$\mathcal{C}_{\mathcal{C}_1\times\dots\times\mathcal{C}_n}\big([\mathbf{x}]\big)\f$
        *
        * \param x a m-d box of domains
        */
@@ -72,12 +72,23 @@ namespace codac
    * \brief Cartesian product of contractors
    * 
    * \param args list of contractors
-   * \return the Cartesian product of the contractors \f$\mathcal{C_1}\times\dots\times\mathcal{C_n}\f$
+   * \return the Cartesian product of the contractors \f$\mathcal{C}_1\times\dots\times\mathcal{C}_n\f$
    */
   template <typename ...Args>
-  CtcCartProd cart_prod(Args &...args)
+  CtcCartProd cart_prod(Args&...args)
   {
     return CtcCartProd(args...);
+  }
+
+  /**
+   * \brief Cartesian product of contractors from an ibex::Array
+   * 
+   * \param array ibex::Array of contractors
+   * \return the Cartesian product of the contractors \f$\mathcal{C}_1\times\dots\times\mathcal{C}_n\f$
+   */
+  CtcCartProd cart_prod(const ibex::Array<Ctc>& array)
+  {
+    return CtcCartProd(array);
   }
 }
 

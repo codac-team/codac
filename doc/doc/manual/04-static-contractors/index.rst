@@ -60,7 +60,7 @@ Union, intersection, Cartesian product, or inversion of contractors is achievabl
     ctc_union = CtcUnion([ctc_1, ctc_2, ctc_3])
 
     # Example of Cartesian product of two contractors
-    c3 = cart_prod(ctc_1, ctc_2)
+    c3 = cart_prod([ctc_1, ctc_2])
 
   .. code-tab:: c++
 
