@@ -27,6 +27,7 @@ Codac: constraint-programming for robotics
   Static contractors </manual/04-static-contractors/index>
   Temporal contractors </manual/05-dynamic-contractors/index>
   /manual/06-contractor-network/index
+  /manual/11-separators/index
   /manual/07-graphics/index
   /faq
   See also: codac-unsupported </dev/codac-unsupported>

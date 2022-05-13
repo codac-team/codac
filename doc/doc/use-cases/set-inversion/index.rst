@@ -14,5 +14,5 @@ Set-inversion is...
 .. toctree::
 
   01-setinv-separators
-  02-setinv-localization
-  03-setinv-paramestim
+..  02-setinv-localization
+..  03-setinv-paramestim
