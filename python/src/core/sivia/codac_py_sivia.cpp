@@ -32,7 +32,7 @@ void export_sivia(py::module& m, py::class_<Ctc,pyCtc>& ctc, py::class_<ibex::Se
   m.def("SIVIA", [](const IntervalVector& x, Ctc& ctc, float precision,
     bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
     {
-      return SIVIA(x, &ctc, precision, display_result, fig_name, return_result, color_map);
+      return SIVIA(x, ctc, precision, display_result, fig_name, return_result, color_map);
     },
     "x"_a.noconvert(), "ctc"_a.noconvert(), "precision"_a.noconvert(), 
     "display_result"_a.noconvert() = true, "fig_name"_a.noconvert() = "", "return_result"_a.noconvert() = false, "color_map"_a.noconvert() = DEFAULT_SET_COLOR_MAP);
@@ -40,7 +40,7 @@ void export_sivia(py::module& m, py::class_<Ctc,pyCtc>& ctc, py::class_<ibex::Se
   m.def("SIVIA", [](const IntervalVector& x, ibex::Sep& sep, float precision,
     bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
     {
-      return SIVIA(x, &sep, precision, display_result, fig_name, return_result, color_map);
+      return SIVIA(x, sep, precision, display_result, fig_name, return_result, color_map);
     },
     "x"_a.noconvert(), "sep"_a.noconvert(), "precision"_a.noconvert(),
     "display_result"_a.noconvert() = true, "fig_name"_a.noconvert() = "", "return_result"_a.noconvert() = false, "color_map"_a.noconvert() = DEFAULT_SET_COLOR_MAP);
