@@ -12,12 +12,7 @@
 #ifndef __CODAC_CTCCARTPROD_H__
 #define __CODAC_CTCCARTPROD_H__
 
-#include <vector>
-#include <numeric>
-#include <type_traits>
-
 #include "codac_Ctc.h"
-#include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 #include "ibex_Array.h"
 
@@ -27,7 +22,6 @@ namespace codac
    * \class CtcCartProd
    * \brief Cartesian product of contractors \f$\mathcal{C_1}\times\dots\times\mathcal{C_n}\f$
    */
-  template <typename ...Args>
   class CtcCartProd : public Ctc
   {
     public:
@@ -37,7 +31,15 @@ namespace codac
        * 
        * \param args list of contractors
        */
+      template <typename ...Args>
       CtcCartProd(Args &... args) : Ctc(ibex::Array<Ctc>({args...})), m_v({args...}) {};
+
+      /**
+       * \brief Creates the contractor based on the Cartesian product of other.
+       * 
+       * \param array Array of contractors
+       */
+      CtcCartProd(ibex::Array<Ctc> array) : Ctc(array), m_v(array) {};
 
       /**
        * \brief \f$\mathcal{C}_{\mathcal{C_1}\times\dots\times\mathcal{C_n}}\big([\mathbf{x}]\big)\f$
@@ -51,8 +53,7 @@ namespace codac
       ibex::Array<Ctc> m_v; //!< vector containing the contractors
   };
 
-  template <typename ...Args>
-  void CtcCartProd<Args...>::contract(IntervalVector& x)
+  void CtcCartProd::contract(IntervalVector& x)
   {
     std::size_t index = 0;
     for (int i=0; i < m_v.size(); i++) {
@@ -74,9 +75,9 @@ namespace codac
    * \return the Cartesian product of the contractors \f$\mathcal{C_1}\times\dots\times\mathcal{C_n}\f$
    */
   template <typename ...Args>
-  CtcCartProd<Args...> cart_prod(Args &...args)
+  CtcCartProd cart_prod(Args &...args)
   {
-    return CtcCartProd<Args...>(args...);
+    return CtcCartProd(args...);
   }
 }
 
