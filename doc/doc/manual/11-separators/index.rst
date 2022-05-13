@@ -1,8 +1,8 @@
 .. _sec-manual-separators:
 
-##########
-Separators
-##########
+############################
+Set-inversion and separators
+############################
 
 A separator :math:`\mathcal{S}` is an operator that performs two complementary contractions. Associated with a set :math:`\mathbb{S}` and given a box :math:`[\mathbf{x}]`, the separator produces two sub-boxes :math:`[\mathbf{x}_ {in}]` and :math:`[\mathbf{x}_{out}]` that verify:
 
@@ -70,3 +70,31 @@ The set-inversion leads to the following paving:
 .. figure:: img/paving_set_inversion.png
 
   Set-inversion of the function :math:`f(x,y)=x\cdot\cos(x-y)+y`, considering the constraint :math:`f(x,y)\leqslant 0` (which can be formalized as :math:`f(x,y)\in[-\infty,0]`).
+
+Green boxes only enclose vectors that are solutions of the inequality, blue ones do not contain solutions, and the yellow fronteer contains the boundary of the solution set.
+
+The ``SIVIA(..)`` function allows several parameters for specifying result outputs (returned values, displayed colors). For instance:
+
+.. tabs::
+
+  .. code-tab:: py
+
+    SIVIA(box,              # initial domain to be bisected
+      sep,                  # related separator (or contractor if provided)
+      0.21,                 # precision parameter (stopping condition)
+      display_result=True,  # displaying boxes in a VIBes figure
+      fig_name="SIVIA",     # name of the VIBes figure in case of display
+      return_result=True,   # returning a map of lists of boxes
+      # The following color map allows to define custom colors for subpavings:
+      color_map={SetValue.IN:"k[r]", SetValue.OUT:"k[b]", SetValue.UNKNOWN:"k[y]"})
+
+  .. code-tab:: c++
+
+    SIVIA(box,              // initial domain to be bisected
+      sep,                  // related separator (or contractor if provided)
+      0.21,                 // precision parameter (stopping condition)
+      true,                 // boolean for displaying boxes in a VIBes figure
+      "SIVIA",              // name of the VIBes figure in case of display
+      true,                 // boolean for returning a map of lists of boxes
+      // The following color map allows to define custom colors for subpavings:
+      {{SetValue::IN,"k[r]"},{SetValue::OUT,"k[b]"},{SetValue::UNKNOWN,"k[y]"}});

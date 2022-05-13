@@ -4,7 +4,7 @@
  * ----------------------------------------------------------------------------
  *  \date       2022
  *  \author     Quentin Brateau
- *  \copyright  Copyright 2021 Codac Team
+ *  \copyright  Copyright 2022 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
  */

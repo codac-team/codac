@@ -34,7 +34,7 @@ To get the set :math:`\mathbb{X}_{t_{i}}` of all feasible states at time :math:`
 
 * *Step 2.* Find a Lie group of symmetries :math:`G_{\mathbf{p}}` and give an expression for the transport function :math:`\mathbf{h}(\mathbf{x},\mathbf{a})`.
 
-* *Step 3.* Solve the resulting :ref:`set inversion problem <sec-usecases-setinv-separators>` related to :math:`\boldsymbol{\Phi}_{-t}^{-1}` with SIVIA.
+* *Step 3.* Solve the resulting :ref:`set inversion problem <sec-manual-separators>` related to :math:`\boldsymbol{\Phi}_{-t}^{-1}` with SIVIA.
 
 This method is illustrated on four examples. For each of these, the set :math:`\underset{t\in\mathbb{T}}{\bigcup}\mathbb{X}_{t} = \underset{t\in\mathbb{T}}{\bigcup}\boldsymbol{\Phi}_{-t}^{-1}([\mathbf{x}_{0}])` is computed, where :math:`\boldsymbol{\Phi}_{t}(\mathbf{x})=\mathbf{g}{}_{\mathbf{h}\left(\mathbf{x},\mathbf{a}_{0}\right)}\circ\mathbf{a}(t)`, and where :math:`\mathbb{T}` is either 
 
@@ -42,7 +42,7 @@ This method is illustrated on four examples. For each of these, the set :math:`\
 
 * an interval :math:`\mathbb{T}=[0,t_{\max}]`, in order to approximate forward reach sets.
 
-Note that the unions of sets, as well as other set-theoretical operators such as the projection, can easily be done :ref:`using separator algebra <sec-usecases-setinv-separators>`.
+Note that the unions of sets, as well as other set-theoretical operators such as the projection, can easily be done :ref:`using separator algebra <sec-manual-separators>`.
 
 More details about this method can be found `in the related paper <https://www.journals.elsevier.com/automatica>`_.
 
