@@ -30,7 +30,7 @@ namespace codac
     return v;
   }
 
-  map<SetValue,list<IntervalVector>> SIVIA(const IntervalVector& x0, Ctc* ctc, float precision,
+  map<SetValue,list<IntervalVector>> SIVIA(const IntervalVector& x0, Ctc& ctc, float precision,
     bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
   {
     assert(x0.size() >= 2);
@@ -80,7 +80,7 @@ namespace codac
       stack.pop_front();
       IntervalVector x_before_ctc(x);
 
-      ctc->contract(x);
+      ctc.contract(x);
 
       vector<IntervalVector> x_out_l = box_diff(x_before_ctc, x);
       for(const auto& o : x_out_l)
@@ -132,7 +132,7 @@ namespace codac
     return boxes;
   }
 
-  map<SetValue,list<IntervalVector>> SIVIA(const IntervalVector& x0, ibex::Sep* sep, float precision,
+  map<SetValue,list<IntervalVector>> SIVIA(const IntervalVector& x0, ibex::Sep& sep, float precision,
     bool display_result, const string& fig_name, bool return_result, const SetColorMap& color_map)
   {
     assert(x0.size() >= 2);
@@ -186,7 +186,7 @@ namespace codac
       stack.pop_front();
       IntervalVector x_in(x_before_ctc), x_out(x_before_ctc);
 
-      sep->separate(x_in, x_out);
+      sep.separate(x_in, x_out);
 
       IntervalVector x = x_in & x_out;
 

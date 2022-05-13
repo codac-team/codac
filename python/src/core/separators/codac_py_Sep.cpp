@@ -19,9 +19,11 @@
 #include "codac_py_Sep.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 #include "codac_py_Sep_docs.h" // todo: generate this file from Doxygen doc
+#include "codac_py_SepFunction_docs.h"
 
 #include <codac_Ctc.h>
 #include <codac_Function.h>
+#include <codac_SepFunction.h>
 #include <ibex_SepUnion.h>
 #include <ibex_SepInter.h>
 #include <ibex_SepNot.h>
@@ -107,6 +109,22 @@ py::class_<ibex::Sep,pySep> export_Sep(py::module& m)
       }),
       py::keep_alive<1,2>(), py::arg("f"), py::arg("itv_y"))
     .def("separate", (void (ibex::Sep::*)(IntervalVector&,IntervalVector&)) &ibex::SepFwdBwd::separate)
+  ;
+
+  // Export SepFunction
+  py::class_<SepFunction>(m, "SepFunction", sep, SEPFUNCTION_MAIN)
+    .def(py::init<Function&>(),
+      SEPFUNCTION_SEPFUNCTION_FUNCTION,
+      "f"_a.noconvert())
+    .def(py::init<Function&,const Interval&>(),
+      SEPFUNCTION_SEPFUNCTION_FUNCTION_INTERVAL,
+      "f"_a.noconvert(), "y"_a.noconvert())
+    .def(py::init<Function&,const IntervalVector&>(),
+      SEPFUNCTION_SEPFUNCTION_FUNCTION_INTERVALVECTOR,
+      "f"_a.noconvert(), "y"_a.noconvert())
+    .def("separate", &SepFunction::separate,
+      SEPFUNCTION_VOID_SEPARATE_INTERVALVECTOR_INTERVALVECTOR,
+      "x_in"_a.noconvert(), "x_out"_a.noconvert())
   ;
 
   // Export SepNot

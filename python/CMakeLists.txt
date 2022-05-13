@@ -56,6 +56,7 @@
       src/core/cn/codac_py_Variable.cpp
 
       src/core/contractors/static/codac_py_Ctc.cpp
+      src/core/contractors/static/codac_py_CtcBox.cpp
       src/core/contractors/static/codac_py_CtcCartProd.cpp
       src/core/contractors/static/codac_py_CtcDist.cpp
       src/core/contractors/static/codac_py_CtcFunction.cpp

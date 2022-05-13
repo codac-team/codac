@@ -30,7 +30,7 @@ namespace codac
        * 
        * \param b the support box
        */
-      CtcBox(IntervalVector b) : Ctc(b.size()), _b(b) {};
+      CtcBox(const IntervalVector& b) : Ctc(b.size()), _b(b) {};
 
       /**
        * \brief \f$\mathcal{C}_\mathbf{b}\big([\mathbf{x}]\big)\f$
@@ -42,7 +42,7 @@ namespace codac
 
     protected:
 
-      IntervalVector _b; //!< the support box
+      const IntervalVector _b; //!< the support box
   };
 
   void CtcBox::contract(IntervalVector& x)
