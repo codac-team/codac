@@ -22,7 +22,7 @@ Definition
 
     .. code-tab:: py
 
-      c = CtcCartProd(c1, c2)
+      c = CtcCartProd([c1, c2])
       c.contract(x)
 
     .. code-tab:: c++
@@ -52,7 +52,7 @@ Example incoming
 .. C1 = CtcUnion(x1)
 .. C2 = CtcUnion(x2)
 ..
-.. C = CtcCartProd(C1, C2)
+.. C = CtcCartProd([C1, C2])
 .. 
 .. x = [ IntervalVector([[4.5, 9], [5.75, 8.5]]),
 ..       IntervalVector([[0.5, 3.5], [3, 5]]) ]

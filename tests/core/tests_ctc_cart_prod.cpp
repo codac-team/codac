@@ -68,3 +68,35 @@ TEST_CASE("CtcCartProd")
     CHECK(x1[1] == x2[1]);
   }
 }
+
+TEST_CASE("cart_prod")
+{
+  SECTION("Test card_prod")
+  {
+    // C1
+    Interval y1(0, 1);
+    Function f1("x", "sin(x)");
+    CtcFwdBwd C1(f1, y1);
+
+    // C2
+    Interval y2(0, 1);
+    Function f2("x", "sqr(x)");
+    CtcFwdBwd C2(f2, y2);
+
+    // CtcCartProd
+    CtcCartProd C = cart_prod(C1, C2);
+
+    // Expected
+    IntervalVector e1 = {{-5, 1}};
+    IntervalVector e2 = {{-3, 6}};
+    C1.contract(e1);
+    C2.contract(e2);
+
+    // // Testing
+    IntervalVector x = {{-5, 1}, {-3, 6}};
+    C.contract(x);
+
+    CHECK(x[0] == e1[0]);
+    CHECK(x[1] == e2[0]);
+  }
+}

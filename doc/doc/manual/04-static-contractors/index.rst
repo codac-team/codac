@@ -58,15 +58,8 @@ Union, intersection, Cartesian product, or inversion of contractors is achievabl
     # Build the separator associated to the constraint f(x,y) < 0
     sep = SepFwdBwd(f, CmpOp.LEQ)
 
-    # Setup the initial box
-    box = IntervalVector(2, [-10, 10])
-
-    # Graphics
-    vibes.beginDrawing()
-    vibes.newFigure("Set inversion")
-    vibes.setFigureProperties({"x":100, "y":100, "width":600, "height":600})
-    SIVIA(box, sep, 0.21, fig_name="Set inversion")
-    vibes.endDrawing()
+    # Example of Cartesian product of two contractors
+    c3 = cart_prod([ctc_1, ctc_2])
 
   .. code-tab:: c++
 

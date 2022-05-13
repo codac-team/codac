@@ -27,26 +27,22 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-CtcCartProd<Ctc&,Ctc&>* create_ctc_cartprod(Ctc& c1, Ctc& c2)
-{
-  return new CtcCartProd<Ctc&,Ctc&>(c1, c2);
-}
-
 void export_CtcCartProd(py::module& m, py::class_<Ctc, pyCtc>& ctc)
 {
-  py::class_<CtcCartProd<Ctc&,Ctc&>> ctc_cartprod(m, "CtcCartProd", ctc, CTCCARTPROD_MAIN);
+  py::class_<CtcCartProd> ctc_cartprod(m, "CtcCartProd", ctc, CTCCARTPROD_MAIN);
   ctc_cartprod
 
-    .def(py::init(&create_ctc_cartprod),
-      CTCCARTPROD_CTCCARTPROD_T1_T2,
-      "c1"_a.noconvert(), "c2"_a.noconvert())
+    .def(py::init<ibex::Array<Ctc>&>(),
+      CTCCARTPROD_ARRAYCTC_M_V,
+      py::keep_alive<1,2>(),
+      "array"_a.noconvert())
 
-    .def("contract", &CtcCartProd<Ctc&,Ctc&>::contract,
+    .def("contract", &CtcCartProd::contract,
       CTCCARTPROD_VOID_CONTRACT_INTERVALVECTOR,
       "x"_a.noconvert())
   ;
 
-  m.def("cart_prod", [](Ctc& c1, Ctc& c2)
-    { return cart_prod<Ctc&,Ctc&>(c1,c2); },
-    "c1"_a.noconvert(), "c2"_a.noconvert());
+  m.def("cart_prod", [](ibex::Array<Ctc> a)
+    { return cart_prod(a); },
+    "array"_a.noconvert());
 }
