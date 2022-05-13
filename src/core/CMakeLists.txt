@@ -99,6 +99,7 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_intervals.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/serialize/codac_serialize_intervals.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_Ctc.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCartProd.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCompo.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.cpp

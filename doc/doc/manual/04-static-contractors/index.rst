@@ -35,6 +35,7 @@ The following contractors apply on intervals and boxes:
   03-ctc-polar
   04-ctc-constell
   05-ctc-cart-prod
+  06-ctc-box
 
 See also: :ref:`codac-unsupported <sec-codac-unsupported>`.
 
