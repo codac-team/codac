@@ -47,6 +47,7 @@ namespace codac
       const TFunction operator[](int i) const;
 
       const std::string& expr() const;
+      const std::string expr(int i) const;
       const Function& getFunction() const;
       const std::string arg_name(int i) const;
 

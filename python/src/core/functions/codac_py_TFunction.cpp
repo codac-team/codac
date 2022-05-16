@@ -78,8 +78,11 @@ void export_TFunction(py::module& m, py::class_<TFnc>& fnc)
       TFUNCTION_TFUNCTION_TFUNCTION, 
       "f"_a)
 
-    .def("expr", &TFunction::expr,
+    .def("expr", (const string& (TFunction::*)() const)&TFunction::expr,
       TFUNCTION_CONSTSTRING_EXPR)
+
+    .def("expr", (const string (TFunction::*)(int) const)&TFunction::expr,
+      TFUNCTION_CONSTSTRING_EXPR_INT)
 
     .def("arg_name", &TFunction::arg_name,
       TFUNCTION_CONSTSTRING_ARG_NAME_INT,
