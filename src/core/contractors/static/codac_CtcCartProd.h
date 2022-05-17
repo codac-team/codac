@@ -53,20 +53,6 @@ namespace codac
       ibex::Array<Ctc> m_v; //!< vector containing the contractors
   };
 
-  void CtcCartProd::contract(IntervalVector& x)
-  {
-    std::size_t index = 0;
-    for (int i=0; i < m_v.size(); i++) {
-      IntervalVector sx(m_v[i].nb_var);
-      for (int k=0; k < m_v[i].nb_var; k++) {
-        sx[k] = x[index + k];
-      }
-      m_v[i].contract(sx);
-      x.put(index, sx);
-      index += m_v[i].nb_var;
-    }
-  }
-
   /**
    * \fn template <typename ...Args> CtcCartProd<Args...> cart_prod(Args &...args)
    * \brief Cartesian product of contractors
@@ -86,10 +72,7 @@ namespace codac
    * \param array ibex::Array of contractors
    * \return the Cartesian product of the contractors \f$\mathcal{C}_1\times\dots\times\mathcal{C}_n\f$
    */
-  CtcCartProd cart_prod(const ibex::Array<Ctc>& array)
-  {
-    return CtcCartProd(array);
-  }
+  CtcCartProd cart_prod(const ibex::Array<Ctc>& array);
 }
 
 #endif

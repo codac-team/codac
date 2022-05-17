@@ -44,15 +44,6 @@ namespace codac
 
       const IntervalVector _b; //!< the support box
   };
-
-  void CtcBox::contract(IntervalVector& x)
-  {
-    // Checking the dimension of the input box
-    assert(_b.size() == x.size());
-
-    // Contracting the input box around the support box
-    x &= _b;
-  }
 }
 
 #endif
