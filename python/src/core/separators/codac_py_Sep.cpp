@@ -75,7 +75,7 @@ py::class_<ibex::Sep,pySep> export_Sep(py::module& m)
       },
       __DOC_SEP_INVERSE,
       py::return_value_policy::take_ownership,
-      py::keep_alive<0,1>(), py::keep_alive<0,2>(), py::call_guard<py::gil_scoped_release>())
+      py::keep_alive<0,1>(), py::call_guard<py::gil_scoped_release>())
     ;
 
   // Export SepUnion
