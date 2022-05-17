@@ -34,10 +34,10 @@ namespace codac
     }
   }
 
-  void Tools::trim(string& str)
+  void Tools::trim(string& s)
   {
-    str.erase(str.begin(), find_if(str.begin(), str.end(), not1(ptr_fun<int, int>(isspace))));
-    str.erase(find_if(str.rbegin(), str.rend(), not1(ptr_fun<int, int>(isspace))).base(), str.end());
+    s.erase(s.begin(), find_if(s.begin(), s.end(), [](int c) { return !isspace(c); }));
+    s.erase(find_if(s.rbegin(), s.rend(), [](int c) { return !isspace(c); }).base(), s.end());
   }
 
   double Tools::rand_in_bounds(const Interval& itv)
