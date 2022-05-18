@@ -143,6 +143,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Hashcode.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Variable.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/cn/codac_Variable.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepBox.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepBox.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFunction.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFunction.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.cpp
