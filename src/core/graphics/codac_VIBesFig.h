@@ -14,7 +14,7 @@
 
 #include "codac_Interval.h"
 #include "codac_Figure.h"
-#include "codac_Point.h"
+#include "codac_ThickPoint.h"
 #include "codac_Polygon.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_ColorMap.h"
@@ -270,7 +270,7 @@ namespace codac
        * \param e edge
        * \param params VIBes parameters related to the edge (none by default)
        */
-      void draw_edge(const Edge& e, const vibes::Params& params);
+      void draw_edge(const ThickEdge& e, const vibes::Params& params);
 
       /**
        * \brief Draws an edge
@@ -279,7 +279,7 @@ namespace codac
        * \param color the optional color of the edge (black by default) 
        * \param params VIBes parameters related to the edge (none by default)
        */
-      void draw_edge(const Edge& e, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_edge(const ThickEdge& e, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a polygon
@@ -327,57 +327,57 @@ namespace codac
       /**
        * \brief Draws a point
        *
-       * \param p the 2d Point to be displayed
+       * \param p the 2d ThickPoint to be displayed
        * \param params VIBes parameters related to the point
        */
-      void draw_point(const Point& p, const vibes::Params& params);
+      void draw_point(const ThickPoint& p, const vibes::Params& params);
 
       /**
        * \brief Draws a point
        *
-       * \param p the 2d Point to be displayed
+       * \param p the 2d ThickPoint to be displayed
        * \param color the optional color of the point (black by default) 
        * \param params VIBes parameters related to the point (none by default)
        */
-      void draw_point(const Point& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_point(const ThickPoint& p, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a point
        *
-       * \param p the 2d Point to be displayed
+       * \param p the 2d ThickPoint to be displayed
        * \param size display size of the points
        * \param params VIBes parameters related to the point
        */
-      void draw_point(const Point& p, float size, const vibes::Params& params);
+      void draw_point(const ThickPoint& p, float size, const vibes::Params& params);
 
       /**
        * \brief Draws a point
        *
-       * \param p the 2d Point to be displayed
+       * \param p the 2d ThickPoint to be displayed
        * \param size display size of the points
        * \param color the optional color of the point (black by default) 
        * \param params VIBes parameters related to the point (none by default)
        */
-      void draw_point(const Point& p, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_point(const ThickPoint& p, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a set of points
        *
-       * \param v_pts vector of Point objects
+       * \param v_pts vector of ThickPoint objects
        * \param size display size of the points
        * \param params VIBes parameters related to the set (none by default)
        */
-      void draw_points(const std::vector<Point>& v_pts, float size, const vibes::Params& params);
+      void draw_points(const std::vector<ThickPoint>& v_pts, float size, const vibes::Params& params);
 
       /**
        * \brief Draws a set of points
        *
-       * \param v_pts vector of Point objects
+       * \param v_pts vector of ThickPoint objects
        * \param size display size of the points
        * \param color the optional color of the set (black by default) 
        * \param params VIBes parameters related to the set (none by default)
        */
-      void draw_points(const std::vector<Point>& v_pts, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
+      void draw_points(const std::vector<ThickPoint>& v_pts, float size, const std::string& color = "", const vibes::Params& params = vibes::Params());
 
       /**
        * \brief Draws a vehicle

@@ -1,5 +1,5 @@
 /** 
- *  Point class
+ *  ThickPoint class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -9,7 +9,7 @@
  */
 
 #include <iomanip>
-#include "codac_Point.h"
+#include "codac_ThickPoint.h"
 
 using namespace std;
 using namespace ibex;
@@ -18,24 +18,24 @@ namespace codac
 {
   // Definition
 
-  Point::Point()
+  ThickPoint::ThickPoint()
   {
 
   }
 
-  Point::Point(const Vector& p)
-    : Point(p[0], p[1])
-  {
-    assert(p.size() == 2);
-  }
-
-  Point::Point(const IntervalVector& p)
-    : Point(p[0], p[1])
+  ThickPoint::ThickPoint(const Vector& p)
+    : ThickPoint(p[0], p[1])
   {
     assert(p.size() == 2);
   }
 
-  Point::Point(const Interval& x, const Interval& y)
+  ThickPoint::ThickPoint(const IntervalVector& p)
+    : ThickPoint(p[0], p[1])
+  {
+    assert(p.size() == 2);
+  }
+
+  ThickPoint::ThickPoint(const Interval& x, const Interval& y)
   {
     m_pt[0] = x;
     m_pt[1] = y;
@@ -44,7 +44,7 @@ namespace codac
     if(y.is_empty()) m_pt[0].set_empty();
   }
 
-  const Point& Point::operator=(const Point& p)
+  const ThickPoint& ThickPoint::operator=(const ThickPoint& p)
   {
     m_pt = p.box();
     return *this;
@@ -53,38 +53,38 @@ namespace codac
 
   // Accessing values
 
-  const Interval& Point::x() const
+  const Interval& ThickPoint::x() const
   {
     return m_pt[0];
   }
 
-  const Interval& Point::y() const
+  const Interval& ThickPoint::y() const
   {
     return m_pt[1];
   }
 
-  const Interval& Point::operator[](size_t id) const
+  const Interval& ThickPoint::operator[](size_t id) const
   {
     assert(id >= 0 && (int)id < m_pt.size());
     return m_pt[id];
   }
 
-  const IntervalVector& Point::box() const
+  const IntervalVector& ThickPoint::box() const
   {
     return m_pt;
   }
 
-  const Vector Point::mid() const
+  const Vector ThickPoint::mid() const
   {
     return m_pt.mid();
   }
 
-  double Point::max_diam() const
+  double ThickPoint::max_diam() const
   {
     return m_pt.max_diam();
   }
   
-  const vector<Vector> Point::bounds_pts() const
+  const vector<Vector> ThickPoint::bounds_pts() const
   {
     vector<Vector> v_pts;
 
@@ -96,28 +96,28 @@ namespace codac
       v_pts.push_back(Vector({m_pt[0].ub(),m_pt[1].ub()}));
     }
 
-    return Point::remove_identical_pts(v_pts);
+    return ThickPoint::remove_identical_pts(v_pts);
   }
 
 
   // Tests
 
-  bool Point::is_unbounded() const
+  bool ThickPoint::is_unbounded() const
   {
     return m_pt.is_unbounded();
   }
 
-  bool Point::does_not_exist() const
+  bool ThickPoint::does_not_exist() const
   {
     return m_pt.is_empty();
   }
 
-  bool Point::operator==(const Point& p) const
+  bool ThickPoint::operator==(const ThickPoint& p) const
   {
     return m_pt == p.m_pt;
   }
 
-  bool Point::operator!=(const Point& p) const
+  bool ThickPoint::operator!=(const ThickPoint& p) const
   {
     return m_pt != p.m_pt;
   }
@@ -125,7 +125,7 @@ namespace codac
 
   // Setting values
 
-  const Point& Point::inflate(double rad)
+  const ThickPoint& ThickPoint::inflate(double rad)
   {
     assert(rad >= 0.);
     m_pt.inflate(rad);
@@ -135,7 +135,7 @@ namespace codac
 
   // String
 
-  ostream& operator<<(ostream& str, const Point& p)
+  ostream& operator<<(ostream& str, const ThickPoint& p)
   {
     str << "(";
     
@@ -154,13 +154,13 @@ namespace codac
 
   // Static methods
 
-  const BoolInterval Point::aligned(const Point& a, const Point& b, const Point& c)
+  const BoolInterval ThickPoint::aligned(const ThickPoint& a, const ThickPoint& b, const ThickPoint& c)
   {
     const Interval cross_product = (b[0]-a[0]) * (c[1]-a[1]) - (b[1]-a[1]) * (c[0]-a[0]);
     return (cross_product == Interval(0.)) ? YES : (cross_product.contains(0.) ? MAYBE : NO);
   }
 
-  const Point Point::center(const vector<Point> v_pts)
+  const ThickPoint ThickPoint::center(const vector<ThickPoint> v_pts)
   {
     assert(!v_pts.empty());
 
@@ -171,10 +171,10 @@ namespace codac
       center += pt.box();
     }
 
-    return Point((1./v_pts.size())*center.mid());
+    return ThickPoint((1./v_pts.size())*center.mid());
   }
 
-  void Point::push(const IntervalVector& box, vector<Point>& v_pts)
+  void ThickPoint::push(const IntervalVector& box, vector<ThickPoint>& v_pts)
   {
     assert(box.size() == 2);
     assert(!box.is_empty());
@@ -185,13 +185,13 @@ namespace codac
     const Interval ylb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
     const Interval yub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
 
-    v_pts.push_back(Point(xlb, ylb));
-    v_pts.push_back(Point(xub, ylb));
-    v_pts.push_back(Point(xub, yub));
-    v_pts.push_back(Point(xlb, yub));
+    v_pts.push_back(ThickPoint(xlb, ylb));
+    v_pts.push_back(ThickPoint(xub, ylb));
+    v_pts.push_back(ThickPoint(xub, yub));
+    v_pts.push_back(ThickPoint(xlb, yub));
   }
 
-  void Point::push(const IntervalVector& box, vector<Vector>& v_pts)
+  void ThickPoint::push(const IntervalVector& box, vector<Vector>& v_pts)
   {
     assert(box.size() == 2);
     assert(!box.is_empty());
@@ -209,25 +209,25 @@ namespace codac
     v_pts.push_back(Vector({xlb, yub}));
   }
 
-  vector<Point> Point::to_Points(const vector<Vector>& v_pts)
+  vector<ThickPoint> ThickPoint::to_ThickPoints(const vector<Vector>& v_pts)
   {
-    vector<Point> v_pts_(v_pts.size());
+    vector<ThickPoint> v_pts_(v_pts.size());
     for(size_t i = 0 ; i < v_pts.size() ; i++)
-      v_pts_[i] = Point(v_pts[i]);
+      v_pts_[i] = ThickPoint(v_pts[i]);
     return v_pts_;
   }
   
-  vector<Point> Point::remove_identical_pts(const vector<Point>& v_pts_)
+  vector<ThickPoint> ThickPoint::remove_identical_pts(const vector<ThickPoint>& v_pts_)
   {
     // Removing possible redundant points
-    vector<Point> v_pts;
+    vector<ThickPoint> v_pts;
     for(const auto& pt : v_pts_)
       if(find(v_pts.begin(),v_pts.end(),pt) == v_pts.end())
         v_pts.push_back(pt);
     return v_pts;
   }
   
-  vector<Vector> Point::remove_identical_pts(const vector<Vector>& v_pts_)
+  vector<Vector> ThickPoint::remove_identical_pts(const vector<Vector>& v_pts_)
   {
     // Removing possible redundant points
     vector<Vector> v_pts;

@@ -1,5 +1,5 @@
 /** 
- *  Edge class
+ *  ThickEdge class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include "codac_Edge.h"
+#include "codac_ThickEdge.h"
 
 using namespace std;
 using namespace ibex;
@@ -19,22 +19,22 @@ namespace codac
 {
   // Definition
 
-  Edge::Edge(const Point& p1, const Point& p2)
+  ThickEdge::ThickEdge(const ThickPoint& p1, const ThickPoint& p2)
   {
     m_pts[0] = p1;
     m_pts[1] = p2;
 
-    if(m_pts[1].does_not_exist()) m_pts[0] = Point();
-    if(m_pts[0].does_not_exist()) m_pts[1] = Point();
+    if(m_pts[1].does_not_exist()) m_pts[0] = ThickPoint();
+    if(m_pts[0].does_not_exist()) m_pts[1] = ThickPoint();
   }
 
-  Edge::Edge(const Vector& p1, const Vector& p2)
-    : Edge(Point(p1), Point(p2))
+  ThickEdge::ThickEdge(const Vector& p1, const Vector& p2)
+    : ThickEdge(ThickPoint(p1), ThickPoint(p2))
   {
     
   }
 
-  const Edge& Edge::operator=(const Edge& e)
+  const ThickEdge& ThickEdge::operator=(const ThickEdge& e)
   {
     m_pts[0] = e.m_pts[0];
     m_pts[1] = e.m_pts[1];
@@ -44,22 +44,22 @@ namespace codac
 
   // Accessing values
 
-  const Point& Edge::p1() const
+  const ThickPoint& ThickEdge::p1() const
   {
     return m_pts[0];
   }
 
-  const Point& Edge::p2() const
+  const ThickPoint& ThickEdge::p2() const
   {
     return m_pts[1];
   }
 
-  const Interval Edge::length() const
+  const Interval ThickEdge::length() const
   {
     return sqrt(sqr(m_pts[0][0]-m_pts[1][0]) + sqr(m_pts[0][1]-m_pts[1][1]));
   }
 
-  const IntervalVector Edge::box() const
+  const IntervalVector ThickEdge::box() const
   {
     return m_pts[0].box() | m_pts[1].box();
   }
@@ -67,7 +67,7 @@ namespace codac
 
   // Tests
 
-  const BoolInterval Edge::is_horizontal() const
+  const BoolInterval ThickEdge::is_horizontal() const
   {
     if(box()[1].is_degenerated())
       return YES;
@@ -79,7 +79,7 @@ namespace codac
       return NO;
   }
 
-  const BoolInterval Edge::is_vertical() const
+  const BoolInterval ThickEdge::is_vertical() const
   {
     if(box()[0].is_degenerated())
       return YES;
@@ -91,7 +91,7 @@ namespace codac
       return NO;
   }
 
-  const BoolInterval Edge::is_degenerated() const
+  const BoolInterval ThickEdge::is_degenerated() const
   {
     if(m_pts[0][0] == m_pts[1][0] && m_pts[0][1] == m_pts[1][1])
       return YES;
@@ -103,14 +103,14 @@ namespace codac
       return NO;
   }
 
-  bool Edge::does_not_exist() const
+  bool ThickEdge::does_not_exist() const
   {
     return m_pts[0].does_not_exist() || m_pts[1].does_not_exist();
   }
 
-  const BoolInterval Edge::contains(const Point& p) const
+  const BoolInterval ThickEdge::contains(const ThickPoint& p) const
   {
-    if(Point::aligned(p, m_pts[0], m_pts[1]) == NO)
+    if(ThickPoint::aligned(p, m_pts[0], m_pts[1]) == NO)
       return NO;
 
     // Testing if p is between p1 and p2
@@ -120,12 +120,12 @@ namespace codac
     return k_p1p.is_subset(k_p1p2 | 0.) ? MAYBE : NO;
   }
 
-  bool Edge::operator==(const Edge& e) const
+  bool ThickEdge::operator==(const ThickEdge& e) const
   {
     return m_pts[0] == e.m_pts[0] && m_pts[1] == e.m_pts[1];
   }
 
-  bool Edge::operator!=(const Edge& e) const
+  bool ThickEdge::operator!=(const ThickEdge& e) const
   {
     return m_pts[0] != e.m_pts[0] || m_pts[1] != e.m_pts[1];
   }
@@ -133,7 +133,7 @@ namespace codac
 
   // Operators
 
-  const IntervalVector Edge::operator&(const IntervalVector& x) const
+  const IntervalVector ThickEdge::operator&(const IntervalVector& x) const
   {
     assert(x.size() == 2);
     assert(!x.is_empty());
@@ -156,8 +156,8 @@ namespace codac
 
       else // interpolation
       {
-        vector<Edge> v_box_edges;
-        Edge::push(x, v_box_edges);
+        vector<ThickEdge> v_box_edges;
+        ThickEdge::push(x, v_box_edges);
         for(size_t i = 0 ; i < v_box_edges.size() ; i++)
           inter |= (*this & v_box_edges[i]).box();
         return inter;
@@ -168,34 +168,34 @@ namespace codac
     return inter;
   }
 
-  const Point Edge::operator&(const Edge& e) const
+  const ThickPoint ThickEdge::operator&(const ThickEdge& e) const
   {
-    const Point proj = proj_intersection(*this, e);
-    return Point(proj[0] & box()[0] & e.box()[0], proj[1] & box()[1] & e.box()[1]);
+    const ThickPoint proj = proj_intersection(*this, e);
+    return ThickPoint(proj[0] & box()[0] & e.box()[0], proj[1] & box()[1] & e.box()[1]);
   }
 
-  const Point Edge::proj_intersection(const Edge& e1, const Edge& e2)
+  const ThickPoint ThickEdge::proj_intersection(const ThickEdge& e1, const ThickEdge& e2)
   {
     assert(!e1.does_not_exist() && !e2.does_not_exist());
 
-    Point p;
+    ThickPoint p;
 
     if(e1.is_degenerated() == NO && e2.is_degenerated() != NO)
       p = proj_intersection(e2, e1); // permutation
 
     else if(e1.is_degenerated() != NO && e2.is_degenerated() != NO)
-      p = Point(e1.box()[0] & e2.box()[0], e1.box()[1] & e2.box()[1]);
+      p = ThickPoint(e1.box()[0] & e2.box()[0], e1.box()[1] & e2.box()[1]);
 
     else if(e2.is_vertical() != NO)
     {
       if(e1.is_degenerated() != NO)
-        p = Point(e1.box()[0] & e2.box()[0], e1.box()[1]);
+        p = ThickPoint(e1.box()[0] & e2.box()[0], e1.box()[1]);
 
       else if(e1.is_vertical() != NO)
-        p = Point(e1.box()[0] & e2.box()[0], Interval::ALL_REALS); // undefined intersection
+        p = ThickPoint(e1.box()[0] & e2.box()[0], Interval::ALL_REALS); // undefined intersection
 
       else if(e1.is_horizontal() != NO)
-        p = Point(e2.box()[0], e1.box()[1]);
+        p = ThickPoint(e2.box()[0], e1.box()[1]);
 
       else // oblique e1
       {
@@ -204,20 +204,20 @@ namespace codac
         const Interval b = e1.p1()[1];
 
         // Intersecting polygon's line and edge's line
-        p = Point(e2.box()[0], b + a * (e2.box()[0] - e1.p1()[0]));
+        p = ThickPoint(e2.box()[0], b + a * (e2.box()[0] - e1.p1()[0]));
       }
     }
 
     else if(e2.is_horizontal() != NO)
     {
       if(e1.is_degenerated() != NO)
-        p = Point(e1.box()[0], e1.box()[1] & e2.box()[1]);
+        p = ThickPoint(e1.box()[0], e1.box()[1] & e2.box()[1]);
 
       else if(e1.is_horizontal() != NO)
-        p = Point(Interval::ALL_REALS, e1.box()[1] & e2.box()[1]); // undefined intersection
+        p = ThickPoint(Interval::ALL_REALS, e1.box()[1] & e2.box()[1]); // undefined intersection
 
       else if(e1.is_vertical() != NO)
-        p = Point(e1.box()[0], e2.box()[1]);
+        p = ThickPoint(e1.box()[0], e2.box()[1]);
 
       else // oblique e1
       {
@@ -226,7 +226,7 @@ namespace codac
         const Interval b = e1.p1()[1];
 
         // Intersecting polygon's line and edge's line
-        p = Point(e1.p1()[0] + ((e2.box()[1] - b) / a), e2.box()[1]);
+        p = ThickPoint(e1.p1()[0] + ((e2.box()[1] - b) / a), e2.box()[1]);
       }
     }
 
@@ -241,7 +241,7 @@ namespace codac
       const Interval b = (x3*y4-y3*x4);
       const Interval c = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
 
-      p = Point((a*(x3-x4)-(x1-x2)*b)/c, (a*(y3-y4)-(y1-y2)*b)/c);
+      p = ThickPoint((a*(x3-x4)-(x1-x2)*b)/c, (a*(y3-y4)-(y1-y2)*b)/c);
     }
 
     return p;
@@ -250,7 +250,7 @@ namespace codac
 
   // String
 
-  ostream& operator<<(ostream& str, const Edge& e)
+  ostream& operator<<(ostream& str, const ThickEdge& e)
   {
     str << e.m_pts[0] << "--" << e.m_pts[1];
     return str;
@@ -259,7 +259,7 @@ namespace codac
 
   // Static methods
 
-  const BoolInterval Edge::parallel(const Edge& e1, const Edge& e2)
+  const BoolInterval ThickEdge::parallel(const ThickEdge& e1, const ThickEdge& e2)
   {
     assert(!e1.does_not_exist() && !e2.does_not_exist());
 
@@ -273,7 +273,7 @@ namespace codac
     return proj_intersection(e1, e2).is_unbounded() ? MAYBE : NO;
   }
 
-  void Edge::push(const IntervalVector& box, vector<Edge>& v_edges)
+  void ThickEdge::push(const IntervalVector& box, vector<ThickEdge>& v_edges)
   {
     assert(box.size() == 2);
     assert(!box.is_empty());
@@ -281,9 +281,9 @@ namespace codac
     const Interval xlb = box[1].lb() != NEG_INFINITY ? box[1].lb() : Interval(NEG_INFINITY, box[1].ub());
     const Interval xub = box[1].ub() != POS_INFINITY ? box[1].ub() : Interval(box[1].lb(), POS_INFINITY);
 
-    v_edges.push_back(Edge(Point(box[0].lb(), xlb), Point(box[0].ub(), xlb)));
-    v_edges.push_back(Edge(Point(box[0].ub(), xlb), Point(box[0].ub(), xub)));
-    v_edges.push_back(Edge(Point(box[0].ub(), xub), Point(box[0].lb(), xub)));
-    v_edges.push_back(Edge(Point(box[0].lb(), xub), Point(box[0].lb(), xlb)));
+    v_edges.push_back(ThickEdge(ThickPoint(box[0].lb(), xlb), ThickPoint(box[0].ub(), xlb)));
+    v_edges.push_back(ThickEdge(ThickPoint(box[0].ub(), xlb), ThickPoint(box[0].ub(), xub)));
+    v_edges.push_back(ThickEdge(ThickPoint(box[0].ub(), xub), ThickPoint(box[0].lb(), xub)));
+    v_edges.push_back(ThickEdge(ThickPoint(box[0].lb(), xub), ThickPoint(box[0].lb(), xlb)));
   }
 }

@@ -41,19 +41,19 @@ TEST_CASE("Polygons")
     // not anymore supported iv1[0] = Interval(-1.,5.);
     // not anymore supported ConvexPolygon p(iv1);
     // not anymore supported 
-    // not anymore supported CHECK(p[0] == Point(-1.,Interval::ALL_REALS));
-    // not anymore supported CHECK(p[1] == Point(5.,Interval::ALL_REALS));
-    // not anymore supported CHECK(p[2] == Point(5.,Interval::ALL_REALS));
-    // not anymore supported CHECK(p[3] == Point(-1.,Interval::ALL_REALS));
+    // not anymore supported CHECK(p[0] == ThickPoint(-1.,Interval::ALL_REALS));
+    // not anymore supported CHECK(p[1] == ThickPoint(5.,Interval::ALL_REALS));
+    // not anymore supported CHECK(p[2] == ThickPoint(5.,Interval::ALL_REALS));
+    // not anymore supported CHECK(p[3] == ThickPoint(-1.,Interval::ALL_REALS));
   }
 
   SECTION("Polygon from points (box shape)")
   {
-    vector<Point> v_pts;
-    v_pts.push_back(Point(2.,4.));
-    v_pts.push_back(Point(2.,6.));
-    v_pts.push_back(Point(4.,6.));
-    v_pts.push_back(Point(4.,4.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(2.,4.));
+    v_pts.push_back(ThickPoint(2.,6.));
+    v_pts.push_back(ThickPoint(4.,6.));
+    v_pts.push_back(ThickPoint(4.,4.));
 
     ConvexPolygon p1(v_pts);
     CHECK(p1.nb_vertices() == 4);
@@ -69,10 +69,10 @@ TEST_CASE("Polygons")
 
     // Polygon defined by points in different order
     v_pts.clear();
-    v_pts.push_back(Point(2.,6.));
-    v_pts.push_back(Point(4.,6.));
-    v_pts.push_back(Point(4.,4.));
-    v_pts.push_back(Point(2.,4.));
+    v_pts.push_back(ThickPoint(2.,6.));
+    v_pts.push_back(ThickPoint(4.,6.));
+    v_pts.push_back(ThickPoint(4.,4.));
+    v_pts.push_back(ThickPoint(2.,4.));
     ConvexPolygon p3(v_pts);
     CHECK(p3 == p1);
     CHECK(p3 == p2);
@@ -85,11 +85,11 @@ TEST_CASE("Polygons")
     // not supported anymore iv1[1] = Interval::ALL_REALS;
     // not supported anymore ConvexPolygon p1(iv1);
     // not supported anymore 
-    // not supported anymore vector<Point> v_pts;
-    // not supported anymore v_pts.push_back(Point(-1.,Interval::ALL_REALS));
-    // not supported anymore v_pts.push_back(Point(-1.,Interval::ALL_REALS));
-    // not supported anymore v_pts.push_back(Point(5.,Interval::ALL_REALS));
-    // not supported anymore v_pts.push_back(Point(5.,Interval::ALL_REALS));
+    // not supported anymore vector<ThickPoint> v_pts;
+    // not supported anymore v_pts.push_back(ThickPoint(-1.,Interval::ALL_REALS));
+    // not supported anymore v_pts.push_back(ThickPoint(-1.,Interval::ALL_REALS));
+    // not supported anymore v_pts.push_back(ThickPoint(5.,Interval::ALL_REALS));
+    // not supported anymore v_pts.push_back(ThickPoint(5.,Interval::ALL_REALS));
     // not supported anymore Polygon p2(v_pts);
     // not supported anymore 
     // not supported anymore CHECK(p1 == p2);
@@ -99,12 +99,12 @@ TEST_CASE("Polygons")
 
   SECTION("Polygon from points (random shape)")
   {
-    vector<Point> v_p;
-    v_p.push_back(Point(1.,3.));
-    v_p.push_back(Point(3.,3.));
-    v_p.push_back(Point(5.,6.));
-    v_p.push_back(Point(5.,2.));
-    v_p.push_back(Point(3.,2.));
+    vector<ThickPoint> v_p;
+    v_p.push_back(ThickPoint(1.,3.));
+    v_p.push_back(ThickPoint(3.,3.));
+    v_p.push_back(ThickPoint(5.,6.));
+    v_p.push_back(ThickPoint(5.,2.));
+    v_p.push_back(ThickPoint(3.,2.));
 
     ConvexPolygon p(v_p);
     CHECK(p.nb_vertices() == 4);
@@ -115,10 +115,10 @@ TEST_CASE("Polygons")
     CHECK(p.box() == iv);
 
     v_p.clear(); // points in different order
-    v_p.push_back(Point(5.,2.));
-    v_p.push_back(Point(3.,2.));
-    v_p.push_back(Point(1.,3.));
-    v_p.push_back(Point(5.,6.));
+    v_p.push_back(ThickPoint(5.,2.));
+    v_p.push_back(ThickPoint(3.,2.));
+    v_p.push_back(ThickPoint(1.,3.));
+    v_p.push_back(ThickPoint(5.,6.));
 
     ConvexPolygon p_result(v_p);
     CHECK(p_result == p);
@@ -126,24 +126,24 @@ TEST_CASE("Polygons")
 
   SECTION("Polygon from points (comparison)")
   {
-    vector<Point> v_p;
-    v_p.push_back(Point(-1., -1.));
-    v_p.push_back(Point(-3.5, -3.5));
-    v_p.push_back(Point(1.5, 1.5));
-    v_p.push_back(Point(3., -2.));
-    v_p.push_back(Point(3., 0.));
-    v_p.push_back(Point(0., 3.));
-    v_p.push_back(Point(-1., 2.));
+    vector<ThickPoint> v_p;
+    v_p.push_back(ThickPoint(-1., -1.));
+    v_p.push_back(ThickPoint(-3.5, -3.5));
+    v_p.push_back(ThickPoint(1.5, 1.5));
+    v_p.push_back(ThickPoint(3., -2.));
+    v_p.push_back(ThickPoint(3., 0.));
+    v_p.push_back(ThickPoint(0., 3.));
+    v_p.push_back(ThickPoint(-1., 2.));
     ConvexPolygon p1(v_p);
 
     v_p.clear();
-    v_p.push_back(Point(-1., -1.));
-    v_p.push_back(Point(-1., 2.));
-    v_p.push_back(Point(0., 3.));
-    v_p.push_back(Point(3., 0.));
-    v_p.push_back(Point(3., -2.));
-    v_p.push_back(Point(1.5, 1.5));
-    v_p.push_back(Point(-3.5, -3.5));
+    v_p.push_back(ThickPoint(-1., -1.));
+    v_p.push_back(ThickPoint(-1., 2.));
+    v_p.push_back(ThickPoint(0., 3.));
+    v_p.push_back(ThickPoint(3., 0.));
+    v_p.push_back(ThickPoint(3., -2.));
+    v_p.push_back(ThickPoint(1.5, 1.5));
+    v_p.push_back(ThickPoint(-3.5, -3.5));
     ConvexPolygon p2(v_p);
 
     CHECK(p1 == p2);
@@ -157,61 +157,61 @@ TEST_CASE("Polygons (intersections)")
 {
   SECTION("Intersection, line/polygon")
   {
-    vector<Point> v_p;
-    v_p.push_back(Point(1.,0.));
-    v_p.push_back(Point(2.,0.));
-    v_p.push_back(Point(4.,2.));
-    v_p.push_back(Point(4.,4.));
-    v_p.push_back(Point(3.,7.));
-    v_p.push_back(Point(2.,7.));
-    v_p.push_back(Point(0.,5.));
-    v_p.push_back(Point(0.,3.));
+    vector<ThickPoint> v_p;
+    v_p.push_back(ThickPoint(1.,0.));
+    v_p.push_back(ThickPoint(2.,0.));
+    v_p.push_back(ThickPoint(4.,2.));
+    v_p.push_back(ThickPoint(4.,4.));
+    v_p.push_back(ThickPoint(3.,7.));
+    v_p.push_back(ThickPoint(2.,7.));
+    v_p.push_back(ThickPoint(0.,5.));
+    v_p.push_back(ThickPoint(0.,3.));
     ConvexPolygon p(v_p);
     CHECK(p.nb_vertices() == 8);
 
-    CHECK(p.edges()[0] == Edge(Point(1.,0.), Point(2.,0.)));
-    CHECK(p.edges()[1] == Edge(Point(2.,0.), Point(4.,2.)));
+    CHECK(p.edges()[0] == ThickEdge(ThickPoint(1.,0.), ThickPoint(2.,0.)));
+    CHECK(p.edges()[1] == ThickEdge(ThickPoint(2.,0.), ThickPoint(4.,2.)));
 
     IntervalVector inter(2), x(2);
     
-    Edge edge = Edge(Point(1.,0.), Point(2.,0.));
+    ThickEdge edge = ThickEdge(ThickPoint(1.,0.), ThickPoint(2.,0.));
     x[0] = Interval(0.5,4.); x[1] = Interval(-1.,1.);
     inter = edge & x;
     CHECK(inter[0] == Interval(1.,2.));
     CHECK(inter[1] == Interval(0.));
 
     // Horizontal edge
-    Edge edge1(Point(2.,0.), Point(9.,4.));
-    Edge edge2(Point(3.,2.), Point(7.,2.));
-    Point pt_inter = edge1 & edge2;
-    CHECK(ApproxIntv(pt_inter.x()) == Point(5.5,2.).x());
-    CHECK(ApproxIntv(pt_inter.y()) == Point(5.5,2.).y());
+    ThickEdge edge1(ThickPoint(2.,0.), ThickPoint(9.,4.));
+    ThickEdge edge2(ThickPoint(3.,2.), ThickPoint(7.,2.));
+    ThickPoint pt_inter = edge1 & edge2;
+    CHECK(ApproxIntv(pt_inter.x()) == ThickPoint(5.5,2.).x());
+    CHECK(ApproxIntv(pt_inter.y()) == ThickPoint(5.5,2.).y());
 
     // Vertical edge
-    edge1 = Edge(Point(1.,4.), Point(3.,2.));
-    edge2 = Edge(Point(2.,1.), Point(2.,7.));
+    edge1 = ThickEdge(ThickPoint(1.,4.), ThickPoint(3.,2.));
+    edge2 = ThickEdge(ThickPoint(2.,1.), ThickPoint(2.,7.));
     pt_inter = edge1 & edge2;
-    CHECK(ApproxIntv(pt_inter.x()) == Point(2.,3.).x());
-    CHECK(ApproxIntv(pt_inter.y()) == Point(2.,3.).y());
+    CHECK(ApproxIntv(pt_inter.x()) == ThickPoint(2.,3.).x());
+    CHECK(ApproxIntv(pt_inter.y()) == ThickPoint(2.,3.).y());
 
     // No intersection
-    edge1 = Edge(Point(2.,0.), Point(4.,2.));
-    edge2 = Edge(Point(0.,-1.), Point(4.,-1.));
+    edge1 = ThickEdge(ThickPoint(2.,0.), ThickPoint(4.,2.));
+    edge2 = ThickEdge(ThickPoint(0.,-1.), ThickPoint(4.,-1.));
     pt_inter = edge1 & edge2;
     CHECK(ApproxIntv(pt_inter.x()) == Interval::EMPTY_SET);
     CHECK(ApproxIntv(pt_inter.y()) == Interval::EMPTY_SET);
 
-    edge = Edge(Point(2.,0.), Point(4.,2.));
+    edge = ThickEdge(ThickPoint(2.,0.), ThickPoint(4.,2.));
     inter = edge & x;
     CHECK(inter[0] == Interval(2.,3.));
     CHECK(inter[1] == Interval(0.,1.));
 
-    edge = Edge(Point(4.,2.), Point(4.,4.));
+    edge = ThickEdge(ThickPoint(4.,2.), ThickPoint(4.,4.));
     inter = edge & x;
     CHECK(inter[0] == Interval::EMPTY_SET);
     CHECK(inter[1] == Interval::EMPTY_SET);
 
-    edge = Edge(Point(4.,4.), Point(3.,7.));
+    edge = ThickEdge(ThickPoint(4.,4.), ThickPoint(3.,7.));
     inter = edge & x;
     CHECK(inter[0] == Interval::EMPTY_SET);
     CHECK(inter[1] == Interval::EMPTY_SET);
@@ -219,15 +219,15 @@ TEST_CASE("Polygons (intersections)")
 
   SECTION("Intersection, box/polygon")
   {
-    vector<Point> v_p;
-    v_p.push_back(Point(1.,0.));
-    v_p.push_back(Point(2.,0.));
-    v_p.push_back(Point(4.,2.));
-    v_p.push_back(Point(4.,4.));
-    v_p.push_back(Point(3.,7.));
-    v_p.push_back(Point(2.,7.));
-    v_p.push_back(Point(0.,5.));
-    v_p.push_back(Point(0.,3.));
+    vector<ThickPoint> v_p;
+    v_p.push_back(ThickPoint(1.,0.));
+    v_p.push_back(ThickPoint(2.,0.));
+    v_p.push_back(ThickPoint(4.,2.));
+    v_p.push_back(ThickPoint(4.,4.));
+    v_p.push_back(ThickPoint(3.,7.));
+    v_p.push_back(ThickPoint(2.,7.));
+    v_p.push_back(ThickPoint(0.,5.));
+    v_p.push_back(ThickPoint(0.,3.));
     ConvexPolygon p(v_p);
     IntervalVector x(2), box_inter(2);
 
@@ -287,49 +287,49 @@ TEST_CASE("Polygons (intersections)")
 
   SECTION("Intersection, box/polygon, another test")
   {
-    vector<Point> v_p;
-    v_p.push_back(Point(1.,1.));
-    v_p.push_back(Point(3.,1.));
-    v_p.push_back(Point(11.,3.));
-    v_p.push_back(Point(13.,5.));
-    v_p.push_back(Point(14.,9.));
-    v_p.push_back(Point(10.,13.));
-    v_p.push_back(Point(8.,14.));
-    v_p.push_back(Point(6.,13.));
-    v_p.push_back(Point(3.,10.));
-    v_p.push_back(Point(1.,6.));
-    v_p.push_back(Point(1.,3.));
+    vector<ThickPoint> v_p;
+    v_p.push_back(ThickPoint(1.,1.));
+    v_p.push_back(ThickPoint(3.,1.));
+    v_p.push_back(ThickPoint(11.,3.));
+    v_p.push_back(ThickPoint(13.,5.));
+    v_p.push_back(ThickPoint(14.,9.));
+    v_p.push_back(ThickPoint(10.,13.));
+    v_p.push_back(ThickPoint(8.,14.));
+    v_p.push_back(ThickPoint(6.,13.));
+    v_p.push_back(ThickPoint(3.,10.));
+    v_p.push_back(ThickPoint(1.,6.));
+    v_p.push_back(ThickPoint(1.,3.));
     ConvexPolygon p(v_p);
     IntervalVector x(2), box_inter(2);
 
-    CHECK(p.encloses(Point(7.,7.)) == YES);
-    CHECK(p.encloses(Point(2.,7.)) == YES);
-    CHECK(p.encloses(Point(10.,3.)) == YES);
-    CHECK(p.encloses(Point(11.,9.)) == YES);
-    CHECK(p.encloses(Point(13.5,9.)) == YES);
-    CHECK(p.encloses(Point(5.8,12.2)) == YES);
+    CHECK(p.encloses(ThickPoint(7.,7.)) == YES);
+    CHECK(p.encloses(ThickPoint(2.,7.)) == YES);
+    CHECK(p.encloses(ThickPoint(10.,3.)) == YES);
+    CHECK(p.encloses(ThickPoint(11.,9.)) == YES);
+    CHECK(p.encloses(ThickPoint(13.5,9.)) == YES);
+    CHECK(p.encloses(ThickPoint(5.8,12.2)) == YES);
 
-    CHECK(p.encloses(Point(1.,4.)) == MAYBE);
-    CHECK(p.encloses(Point(3.,10.)) == MAYBE);
-    CHECK(p.encloses(Point(8.,14.)) == MAYBE);
-    CHECK(p.encloses(Point(2.,8.)) == MAYBE);
-    CHECK(p.encloses(Point(2.5,9.)) == MAYBE);
-    CHECK(p.encloses(Point(5.5,12.5)) == MAYBE);
-    CHECK(p.encloses(Point(1.,5.)) == MAYBE);
-    CHECK(p.encloses(Point(1.,1.)) == MAYBE);
+    CHECK(p.encloses(ThickPoint(1.,4.)) == MAYBE);
+    CHECK(p.encloses(ThickPoint(3.,10.)) == MAYBE);
+    CHECK(p.encloses(ThickPoint(8.,14.)) == MAYBE);
+    CHECK(p.encloses(ThickPoint(2.,8.)) == MAYBE);
+    CHECK(p.encloses(ThickPoint(2.5,9.)) == MAYBE);
+    CHECK(p.encloses(ThickPoint(5.5,12.5)) == MAYBE);
+    CHECK(p.encloses(ThickPoint(1.,5.)) == MAYBE);
+    CHECK(p.encloses(ThickPoint(1.,1.)) == MAYBE);
 
-    CHECK(p.encloses(Point(10.,2.)) == NO);
-    CHECK(p.encloses(Point(0.0,0.0)) == NO);
-    CHECK(p.encloses(Point(0.0,0.9)) == NO);
-    CHECK(p.encloses(Point(0.9,0.0)) == NO);
-    CHECK(p.encloses(Point(0.9,0.9)) == NO);
-    CHECK(p.encloses(Point(0.5,1.)) == NO);
-    CHECK(p.encloses(Point(5.2,12.8)) == NO);
-    CHECK(p.encloses(Point(1.,14.)) == NO);
-    CHECK(p.encloses(Point(1.,13.5)) == NO);
-    CHECK(p.encloses(Point(14.,1.)) == NO);
-    CHECK(p.encloses(Point(14.,14.)) == NO);
-    CHECK(p.encloses(Point(5.,14.)) == NO);
+    CHECK(p.encloses(ThickPoint(10.,2.)) == NO);
+    CHECK(p.encloses(ThickPoint(0.0,0.0)) == NO);
+    CHECK(p.encloses(ThickPoint(0.0,0.9)) == NO);
+    CHECK(p.encloses(ThickPoint(0.9,0.0)) == NO);
+    CHECK(p.encloses(ThickPoint(0.9,0.9)) == NO);
+    CHECK(p.encloses(ThickPoint(0.5,1.)) == NO);
+    CHECK(p.encloses(ThickPoint(5.2,12.8)) == NO);
+    CHECK(p.encloses(ThickPoint(1.,14.)) == NO);
+    CHECK(p.encloses(ThickPoint(1.,13.5)) == NO);
+    CHECK(p.encloses(ThickPoint(14.,1.)) == NO);
+    CHECK(p.encloses(ThickPoint(14.,14.)) == NO);
+    CHECK(p.encloses(ThickPoint(5.,14.)) == NO);
 
     x[0] = Interval(0.,2.); x[1] = Interval(0.,2.);
     box_inter = p.fast_intersection(x);
@@ -422,19 +422,19 @@ TEST_CASE("Polygons from Slice")
 {
   SECTION("Unbounded case, POS_INFINITY")
   {
-    // not supported anymore vector<Point> v_p;
-    // not supported anymore v_p.push_back(Point(1.,0.));
-    // not supported anymore v_p.push_back(Point(2.,0.));
-    // not supported anymore v_p.push_back(Point(4.,2.));
-    // not supported anymore v_p.push_back(Point(4.,4.));
-    // not supported anymore v_p.push_back(Point(3.,Interval(3.,POS_INFINITY)));
-    // not supported anymore v_p.push_back(Point(2.,Interval(3.,POS_INFINITY)));
-    // not supported anymore v_p.push_back(Point(0.,5.));
-    // not supported anymore v_p.push_back(Point(0.,3.));
+    // not supported anymore vector<ThickPoint> v_p;
+    // not supported anymore v_p.push_back(ThickPoint(1.,0.));
+    // not supported anymore v_p.push_back(ThickPoint(2.,0.));
+    // not supported anymore v_p.push_back(ThickPoint(4.,2.));
+    // not supported anymore v_p.push_back(ThickPoint(4.,4.));
+    // not supported anymore v_p.push_back(ThickPoint(3.,Interval(3.,POS_INFINITY)));
+    // not supported anymore v_p.push_back(ThickPoint(2.,Interval(3.,POS_INFINITY)));
+    // not supported anymore v_p.push_back(ThickPoint(0.,5.));
+    // not supported anymore v_p.push_back(ThickPoint(0.,3.));
     // not supported anymore ConvexPolygon p(v_p);
     // not supported anymore IntervalVector x(2), box_inter(2);
     // not supported anymore 
-    // not supported anymore CHECK(p.encloses(Point(3.5,8.)));
+    // not supported anymore CHECK(p.encloses(ThickPoint(3.5,8.)));
     // not supported anymore 
     // not supported anymore x[0] = Interval(0.5,4.); x[1] = Interval(-1.,1.);
     // not supported anymore box_inter = p & x;
@@ -506,13 +506,13 @@ TEST_CASE("Polygons from Slice")
     CHECK(p1.box()[0] == Interval(-1.,3.));
     CHECK(p1.box()[1] == Interval(-3.5,3.));
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(-1.,-1.));
-    v_pts.push_back(Point(-1.,2.));
-    v_pts.push_back(Point(0.,3.));
-    v_pts.push_back(Point(3.,0.));
-    v_pts.push_back(Point(3.,-2.));
-    v_pts.push_back(Point(1.5,-3.5));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(-1.,-1.));
+    v_pts.push_back(ThickPoint(-1.,2.));
+    v_pts.push_back(ThickPoint(0.,3.));
+    v_pts.push_back(ThickPoint(3.,0.));
+    v_pts.push_back(ThickPoint(3.,-2.));
+    v_pts.push_back(ThickPoint(1.5,-3.5));
     ConvexPolygon p2(v_pts);
 
     CHECK(ApproxConvexPolygon(p1) == p2);
@@ -533,12 +533,12 @@ TEST_CASE("Polygons from Slice")
     CHECK(p1.box()[0] == Interval(-1.,3.));
     CHECK(p1.box()[1] == Interval(-5.,3.));
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(-1.,-1.));
-    v_pts.push_back(Point(-1.,3.));
-    v_pts.push_back(Point(3.,-1.));
-    v_pts.push_back(Point(3.,-5.));
-    v_pts.push_back(Point(-1.,-1.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(-1.,-1.));
+    v_pts.push_back(ThickPoint(-1.,3.));
+    v_pts.push_back(ThickPoint(3.,-1.));
+    v_pts.push_back(ThickPoint(3.,-5.));
+    v_pts.push_back(ThickPoint(-1.,-1.));
     ConvexPolygon p2(v_pts);
 
     CHECK(ApproxConvexPolygon(p1) == p2);
@@ -559,9 +559,9 @@ TEST_CASE("Polygons from Slice")
     CHECK(p1.box()[0] == Interval(-1.,3.));
     CHECK(p1.box()[1] == Interval(-3.,1.));
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(-1.,1.));
-    v_pts.push_back(Point(3.,-3.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(-1.,1.));
+    v_pts.push_back(ThickPoint(3.,-3.));
     ConvexPolygon p2(v_pts);
 
     CHECK(p1.nb_vertices() == 2);
@@ -583,15 +583,15 @@ TEST_CASE("Polygons from Slice")
     CHECK(p1.box()[0] == Interval(0.,4.));
     CHECK(p1.box()[1] == Interval(-1.,7.));
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(0.,2.));
-    v_pts.push_back(Point(0.,3.));
-    v_pts.push_back(Point(1.,7.));
-    v_pts.push_back(Point(2.,7.));
-    v_pts.push_back(Point(4.,4.));
-    v_pts.push_back(Point(4.,3.));
-    v_pts.push_back(Point(3.,-1.));
-    v_pts.push_back(Point(2.,-1.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(0.,2.));
+    v_pts.push_back(ThickPoint(0.,3.));
+    v_pts.push_back(ThickPoint(1.,7.));
+    v_pts.push_back(ThickPoint(2.,7.));
+    v_pts.push_back(ThickPoint(4.,4.));
+    v_pts.push_back(ThickPoint(4.,3.));
+    v_pts.push_back(ThickPoint(3.,-1.));
+    v_pts.push_back(ThickPoint(2.,-1.));
     ConvexPolygon p2(v_pts);
 
     CHECK(ApproxConvexPolygon(p1) == p2);
@@ -612,10 +612,10 @@ TEST_CASE("Polygons from Slice")
     CHECK(p1.box()[0] == Interval(4.,8.));
     CHECK(p1.box()[1] == Interval(1.,4.));
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(4.,3.));
-    v_pts.push_back(Point(4.,4.));
-    v_pts.push_back(Point(8.,1.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(4.,3.));
+    v_pts.push_back(ThickPoint(4.,4.));
+    v_pts.push_back(ThickPoint(8.,1.));
     ConvexPolygon p2(v_pts);
 
     CHECK(ApproxConvexPolygon(p1) == p2);
@@ -636,11 +636,11 @@ TEST_CASE("Polygons from Slice")
     CHECK(p1.box()[0] == Interval(8.,12.));
     CHECK(ApproxIntv(p1.box()[1]) == Interval(0.,2.));
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(8.,1.));
-    v_pts.push_back(Point(9.,2.));
-    v_pts.push_back(Point(12.,1.));
-    v_pts.push_back(Point(11.,0.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(8.,1.));
+    v_pts.push_back(ThickPoint(9.,2.));
+    v_pts.push_back(ThickPoint(12.,1.));
+    v_pts.push_back(ThickPoint(11.,0.));
     ConvexPolygon p2(v_pts);
 
     CHECK(ApproxConvexPolygon(p1) == p2);
@@ -661,9 +661,9 @@ TEST_CASE("Polygons from Slice")
     CHECK(p1.box()[0] == Interval(12.,14.));
     CHECK(ApproxIntv(p1.box()[1]) == Interval(1.,5.5));
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(12.,1.));
-    v_pts.push_back(Point(14,5.5));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(12.,1.));
+    v_pts.push_back(ThickPoint(14,5.5));
     ConvexPolygon p2(v_pts);
 
     CHECK(ApproxConvexPolygon(p1) == p2);
@@ -676,10 +676,10 @@ TEST_CASE("Polygons (intersections, again)")
   {
     IntervalVector box(2, Interval(0.,4.));
 
-    vector<Point> v_points;
-    v_points.push_back(Point(3.,2.));
-    v_points.push_back(Point(1.,6.));
-    v_points.push_back(Point(6.,5.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(3.,2.));
+    v_points.push_back(ThickPoint(1.,6.));
+    v_points.push_back(ThickPoint(6.,5.));
     ConvexPolygon p(v_points);
 
     ConvexPolygon box_inter = p & box;
@@ -689,10 +689,10 @@ TEST_CASE("Polygons (intersections, again)")
     CHECK(p_inter.nb_vertices() == 4);
 
     v_points.clear();
-    v_points.push_back(Point(3.,2.));
-    v_points.push_back(Point(2.,4.));
-    v_points.push_back(Point(4.,4.));
-    v_points.push_back(Point(4.,3.));
+    v_points.push_back(ThickPoint(3.,2.));
+    v_points.push_back(ThickPoint(2.,4.));
+    v_points.push_back(ThickPoint(4.,4.));
+    v_points.push_back(ThickPoint(4.,3.));
     ConvexPolygon p_truth(v_points);
     CHECK(p_truth == p_inter);
   }
@@ -701,11 +701,11 @@ TEST_CASE("Polygons (intersections, again)")
   {
     IntervalVector box(2, Interval(2.,6.));
 
-    vector<Point> v_points;
-    v_points.push_back(Point(1.,2.));
-    v_points.push_back(Point(3.,4.));
-    v_points.push_back(Point(5.,1.));
-    v_points.push_back(Point(2.,1.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(1.,2.));
+    v_points.push_back(ThickPoint(3.,4.));
+    v_points.push_back(ThickPoint(5.,1.));
+    v_points.push_back(ThickPoint(2.,1.));
     ConvexPolygon p(v_points);
 
     ConvexPolygon box_inter = p & box;
@@ -718,10 +718,10 @@ TEST_CASE("Polygons (intersections, again)")
     CHECK(p_inter.nb_vertices() == 4);
 
     v_points.clear();
-    v_points.push_back(Point(2.,2.));
-    v_points.push_back(Point(2.,3.));
-    v_points.push_back(Point(3.,4.));
-    v_points.push_back(Point(4.+1./3.,2.));
+    v_points.push_back(ThickPoint(2.,2.));
+    v_points.push_back(ThickPoint(2.,3.));
+    v_points.push_back(ThickPoint(3.,4.));
+    v_points.push_back(ThickPoint(4.+1./3.,2.));
     ConvexPolygon p_truth(v_points);
 
     CHECK(ApproxConvexPolygon(p_truth, 0.01) == p_inter);
@@ -731,11 +731,11 @@ TEST_CASE("Polygons (intersections, again)")
   {
     IntervalVector box(2, Interval(-10.,10.));
 
-    vector<Point> v_points;
-    v_points.push_back(Point(1.,2.));
-    v_points.push_back(Point(3.,4.));
-    v_points.push_back(Point(5.,1.));
-    v_points.push_back(Point(2.,1.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(1.,2.));
+    v_points.push_back(ThickPoint(3.,4.));
+    v_points.push_back(ThickPoint(5.,1.));
+    v_points.push_back(ThickPoint(2.,1.));
     ConvexPolygon p(v_points);
 
     ConvexPolygon p_inter = p & box;
@@ -746,11 +746,11 @@ TEST_CASE("Polygons (intersections, again)")
   {
     IntervalVector box(2, Interval(2.8,3.));
 
-    vector<Point> v_points;
-    v_points.push_back(Point(1.,2.));
-    v_points.push_back(Point(3.,4.));
-    v_points.push_back(Point(5.,1.));
-    v_points.push_back(Point(2.,1.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(1.,2.));
+    v_points.push_back(ThickPoint(3.,4.));
+    v_points.push_back(ThickPoint(5.,1.));
+    v_points.push_back(ThickPoint(2.,1.));
     ConvexPolygon p(v_points);
 
     ConvexPolygon box_inter = p & box;
@@ -765,15 +765,15 @@ TEST_CASE("Polygons (intersections, again)")
   {
     IntervalVector box(2, Interval(1.,4.));
 
-    vector<Point> v_points;
-    v_points.push_back(Point(2.,1.));
-    v_points.push_back(Point(3.,1.));
-    v_points.push_back(Point(4.,2.));
-    v_points.push_back(Point(4.,3.));
-    v_points.push_back(Point(3.,4.));
-    v_points.push_back(Point(2.,4.));
-    v_points.push_back(Point(1.,3.));
-    v_points.push_back(Point(1.,2.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(2.,1.));
+    v_points.push_back(ThickPoint(3.,1.));
+    v_points.push_back(ThickPoint(4.,2.));
+    v_points.push_back(ThickPoint(4.,3.));
+    v_points.push_back(ThickPoint(3.,4.));
+    v_points.push_back(ThickPoint(2.,4.));
+    v_points.push_back(ThickPoint(1.,3.));
+    v_points.push_back(ThickPoint(1.,2.));
     reverse(v_points.begin(), v_points.end());
     ConvexPolygon p(v_points);
 
@@ -785,15 +785,15 @@ TEST_CASE("Polygons (intersections, again)")
   {
     IntervalVector box(2, Interval(1.,4.));
 
-    vector<Point> v_points;
-    v_points.push_back(Point(3.,4.));
-    v_points.push_back(Point(2.,4.));
-    v_points.push_back(Point(1.,3.));
-    v_points.push_back(Point(1.,2.));
-    v_points.push_back(Point(2.,1.));
-    v_points.push_back(Point(3.,1.));
-    v_points.push_back(Point(4.,2.));
-    v_points.push_back(Point(4.,3.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(3.,4.));
+    v_points.push_back(ThickPoint(2.,4.));
+    v_points.push_back(ThickPoint(1.,3.));
+    v_points.push_back(ThickPoint(1.,2.));
+    v_points.push_back(ThickPoint(2.,1.));
+    v_points.push_back(ThickPoint(3.,1.));
+    v_points.push_back(ThickPoint(4.,2.));
+    v_points.push_back(ThickPoint(4.,3.));
     reverse(v_points.begin(), v_points.end());
     ConvexPolygon p(v_points);
 
@@ -807,8 +807,8 @@ TEST_CASE("Polygons (intersections, again)")
     x[0] = 4000.;
     x[1] = 200.;
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(4000.,200.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(4000.,200.));
     ConvexPolygon p(v_pts);
 
     ConvexPolygon inter = p & x;
@@ -821,11 +821,11 @@ TEST_CASE("Polygons (intersections, again)")
     box[0] = Interval(2.,6.);
     box[1] = Interval(1.,5.);
 
-    vector<Point> v_points;
-    v_points.push_back(Point(1.,1.));
-    v_points.push_back(Point(2.,4.));
-    v_points.push_back(Point(7.,5.));
-    v_points.push_back(Point(6.,2.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(1.,1.));
+    v_points.push_back(ThickPoint(2.,4.));
+    v_points.push_back(ThickPoint(7.,5.));
+    v_points.push_back(ThickPoint(6.,2.));
     ConvexPolygon p(v_points);
 
     IntervalVector box_inter = p.fast_intersection(box);
@@ -836,10 +836,10 @@ TEST_CASE("Polygons (intersections, again)")
 
     ConvexPolygon p_inter = p & box;
     v_points.clear();
-    v_points.push_back(Point(2.,1.+(1./5.)));
-    v_points.push_back(Point(2.,4.));
-    v_points.push_back(Point(6.,4.+(4./5.)));
-    v_points.push_back(Point(6.,2.));
+    v_points.push_back(ThickPoint(2.,1.+(1./5.)));
+    v_points.push_back(ThickPoint(2.,4.));
+    v_points.push_back(ThickPoint(6.,4.+(4./5.)));
+    v_points.push_back(ThickPoint(6.,2.));
     ConvexPolygon p_truth(v_points);
     CHECK(p_truth.is_subset(p_inter) != NO);
     CHECK(ApproxVector(p_inter.vertices()[1]) == p_inter.vertices()[2]);
@@ -852,11 +852,11 @@ TEST_CASE("Polygons (intersections, again)")
     box[0].inflate(1.);
     box[1] = Interval(1.,5.);
 
-    vector<Point> v_points;
-    v_points.push_back(Point(1.,1.));
-    v_points.push_back(Point(2.,4.));
-    v_points.push_back(Point(7.,5.));
-    v_points.push_back(Point(6.,2.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(1.,1.));
+    v_points.push_back(ThickPoint(2.,4.));
+    v_points.push_back(ThickPoint(7.,5.));
+    v_points.push_back(ThickPoint(6.,2.));
     ConvexPolygon p(v_points);
 
     IntervalVector box_inter = p.fast_intersection(box);
@@ -867,10 +867,10 @@ TEST_CASE("Polygons (intersections, again)")
 
     ConvexPolygon p_inter = p & box;
     v_points.clear();
-    v_points.push_back(Point(3.,1.+(2./5.)));
-    v_points.push_back(Point(5.,1.+(4./5.)));
-    v_points.push_back(Point(5.,4.+(3./5.)));
-    v_points.push_back(Point(3.,4.+(1./5.)));
+    v_points.push_back(ThickPoint(3.,1.+(2./5.)));
+    v_points.push_back(ThickPoint(5.,1.+(4./5.)));
+    v_points.push_back(ThickPoint(5.,4.+(3./5.)));
+    v_points.push_back(ThickPoint(3.,4.+(1./5.)));
     ConvexPolygon p_truth(v_points);
     CHECK(p_truth.is_subset(p_inter) != NO);
   }
@@ -881,11 +881,11 @@ TEST_CASE("Polygons (intersections, again)")
     box[0] = 4.;
     box[1] = Interval(1.,5.);
 
-    vector<Point> v_points;
-    v_points.push_back(Point(1.,1.));
-    v_points.push_back(Point(2.,4.));
-    v_points.push_back(Point(7.,5.));
-    v_points.push_back(Point(6.,2.));
+    vector<ThickPoint> v_points;
+    v_points.push_back(ThickPoint(1.,1.));
+    v_points.push_back(ThickPoint(2.,4.));
+    v_points.push_back(ThickPoint(7.,5.));
+    v_points.push_back(ThickPoint(6.,2.));
     ConvexPolygon p(v_points);
 
     IntervalVector box_inter = p.fast_intersection(box);
@@ -896,8 +896,8 @@ TEST_CASE("Polygons (intersections, again)")
 
     ConvexPolygon p_inter = p & box;
     v_points.clear();
-    v_points.push_back(Point(4.,1.+(3./5.)));
-    v_points.push_back(Point(4.,4.+(2./5.)));
+    v_points.push_back(ThickPoint(4.,1.+(3./5.)));
+    v_points.push_back(ThickPoint(4.,4.+(2./5.)));
     ConvexPolygon p_truth(v_points);
     CHECK(p_truth.is_subset(p_inter) != NO);
   }
@@ -975,13 +975,13 @@ TEST_CASE("Polygons (Graham scan)")
 
   SECTION("Polygons, Graham scan, other")
   {
-    vector<Point> v_pts;
-    v_pts.push_back(Point(0.307007,0.0340742));
-    v_pts.push_back(Point(0.0340742,0.307));
-    v_pts.push_back(Point(0.1,0.2));
-    v_pts.push_back(Point(0.1,0.2));
-    v_pts.push_back(Point(0.2,0.1));
-    v_pts.push_back(Point(0.1,0.1));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(0.307007,0.0340742));
+    v_pts.push_back(ThickPoint(0.0340742,0.307));
+    v_pts.push_back(ThickPoint(0.1,0.2));
+    v_pts.push_back(ThickPoint(0.1,0.2));
+    v_pts.push_back(ThickPoint(0.2,0.1));
+    v_pts.push_back(ThickPoint(0.1,0.1));
 
     ConvexPolygon s(v_pts);
 
@@ -1034,19 +1034,19 @@ TEST_CASE("Polygons (operations)")
 {
   SECTION("Polygons, rotation")
   {
-   vector<Point> v_pts;
-   v_pts.push_back(Point(1.,1.));
-   v_pts.push_back(Point(3.,2.));
-   v_pts.push_back(Point(2.,4.));
+   vector<ThickPoint> v_pts;
+   v_pts.push_back(ThickPoint(1.,1.));
+   v_pts.push_back(ThickPoint(3.,2.));
+   v_pts.push_back(ThickPoint(2.,4.));
    
    ConvexPolygon p(v_pts);
    p.rotate(-M_PI/2., Vector({3.,1.}));
    
    // Rotated polygon truth
-   vector<Point> v_pts_rot_truth;
-   v_pts_rot_truth.push_back(Point(4.,1.));
-   v_pts_rot_truth.push_back(Point(3.,3.));
-   v_pts_rot_truth.push_back(Point(6.,2.));
+   vector<ThickPoint> v_pts_rot_truth;
+   v_pts_rot_truth.push_back(ThickPoint(4.,1.));
+   v_pts_rot_truth.push_back(ThickPoint(3.,3.));
+   v_pts_rot_truth.push_back(ThickPoint(6.,2.));
    ConvexPolygon p_rot_truth(v_pts_rot_truth);
    
    CHECK(ApproxConvexPolygon(p) == p_rot_truth);
@@ -1054,7 +1054,7 @@ TEST_CASE("Polygons (operations)")
 
   SECTION("Polygons, arithmetic")
   {
-    vector<Point> v_truth(3);
+    vector<ThickPoint> v_truth(3);
 
     double theta = -M_PI/2.;
 
@@ -1065,36 +1065,36 @@ TEST_CASE("Polygons (operations)")
     IntervalVector c(2);
     c[0] = 3.; c[1] = 1.;
 
-    vector<Point> v_pts;
-    v_pts.push_back(Point(1.,1.));
-    v_pts.push_back(Point(3.,2.));
-    v_pts.push_back(Point(2.,4.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(1.,1.));
+    v_pts.push_back(ThickPoint(3.,2.));
+    v_pts.push_back(ThickPoint(2.,4.));
     ConvexPolygon p(v_pts);
 
-    v_truth[0] = Point(1.,1.);
-    v_truth[1] = Point(3.,2.);
-    v_truth[2] = Point(2.,4.);
+    v_truth[0] = ThickPoint(1.,1.);
+    v_truth[1] = ThickPoint(3.,2.);
+    v_truth[2] = ThickPoint(2.,4.);
     CHECK(ApproxConvexPolygon(p) == ConvexPolygon(v_truth));
 
     p = p - c;
 
-    v_truth[0] = Point(1.-3.,1.-1.);
-    v_truth[1] = Point(3.-3.,2.-1.);
-    v_truth[2] = Point(2.-3.,4.-1.);
+    v_truth[0] = ThickPoint(1.-3.,1.-1.);
+    v_truth[1] = ThickPoint(3.-3.,2.-1.);
+    v_truth[2] = ThickPoint(2.-3.,4.-1.);
     CHECK(ApproxConvexPolygon(p) == ConvexPolygon(v_truth));
 
     p = rot_mat * p;
 
-    v_truth[0] = Point(4.-3.,1.-1.);
-    v_truth[1] = Point(3.-3.,3.-1.);
-    v_truth[2] = Point(6.-3.,2.-1.);
+    v_truth[0] = ThickPoint(4.-3.,1.-1.);
+    v_truth[1] = ThickPoint(3.-3.,3.-1.);
+    v_truth[2] = ThickPoint(6.-3.,2.-1.);
     CHECK(ApproxConvexPolygon(p) == ConvexPolygon(v_truth));
 
     p = p + c;
 
-    v_truth[0] = Point(4.,1.);
-    v_truth[1] = Point(3.,3.);
-    v_truth[2] = Point(6.,2.);
+    v_truth[0] = ThickPoint(4.,1.);
+    v_truth[1] = ThickPoint(3.,3.);
+    v_truth[2] = ThickPoint(6.,2.);
     CHECK(ApproxConvexPolygon(p) == ConvexPolygon(v_truth));
   }
 }
@@ -1127,7 +1127,7 @@ TEST_CASE("Polygons (Graham scan, again)")
       // direction) than p1
 
     Vector p0 = v_pts[0];
-    sort(v_pts.begin(), v_pts.end(), PointsSorter(p0));
+    sort(v_pts.begin(), v_pts.end(), ThickPointsSorter(p0));
 
     CHECK(v_pts.size() == 9);
     CHECK(v_pts[0] == Vector({0.,0.}));
@@ -1151,7 +1151,7 @@ TEST_CASE("Polygons (Graham scan, again)")
       {
         // Keep removing i while angle of i and i+1 is same
         // with respect to p0
-        while(i < v_pts.size()-1 && Point::aligned(Point(p0), Point(v_pts[i]), Point(v_pts[i+1])) == YES)
+        while(i < v_pts.size()-1 && ThickPoint::aligned(ThickPoint(p0), ThickPoint(v_pts[i]), ThickPoint(v_pts[i+1])) == YES)
           i++; 
         v_pts[m] = v_pts[i];
         m++; // Update size of modified array
@@ -1209,7 +1209,7 @@ TEST_CASE("Polygons (Graham scan, again)")
     Vector p3({-4041.935273669676917052129283547401428223,-5492.667604696874150249641388654708862305});
 
     CHECK(p1[0] == p3[0]);
-    CHECK(Point::aligned(Point(p1), Point(p2), Point(p3)) == NO);
+    CHECK(ThickPoint::aligned(ThickPoint(p1), ThickPoint(p2), ThickPoint(p3)) == NO);
 
     // 0
     v_pts.push_back(p1);
@@ -1238,7 +1238,7 @@ TEST_CASE("Polygons (Graham scan, again)")
     v_pts_bis.push_back(v_pts[3]);
     v_pts_bis.push_back(p1);
     v_pts_bis.push_back(p3);
-    sort(v_pts_bis.begin(), v_pts_bis.end(), PointsSorter(p1));
+    sort(v_pts_bis.begin(), v_pts_bis.end(), ThickPointsSorter(p1));
 
     CHECK(v_pts_bis[0] == p1);
     CHECK(v_pts_bis[1] == v_pts[3]);
@@ -1265,7 +1265,7 @@ TEST_CASE("Polygons (Graham scan, again)")
 
     CHECK(p1 == v_pts[id_min]);
 
-    sort(v_pts.begin(), v_pts.end(), PointsSorter(p1));
+    sort(v_pts.begin(), v_pts.end(), ThickPointsSorter(p1));
 
     CHECK(GrahamScan::orientation(p1, v_save[2], v_save[3]) == OrientationInterval::COUNTERCLOCKWISE);
     CHECK(GrahamScan::orientation(p1, v_save[6], v_save[5]) == OrientationInterval::COUNTERCLOCKWISE);
@@ -1334,11 +1334,11 @@ TEST_CASE("Polygons (simplification)")
 
   SECTION("Polygons, simplification, test2")
   {
-    vector<Point> v_pts;
-    v_pts.push_back(Point(2.,0.));
-    v_pts.push_back(Point(0.,0.));
-    v_pts.push_back(Point(0.,2.));
-    v_pts.push_back(Point(2., 2.));
+    vector<ThickPoint> v_pts;
+    v_pts.push_back(ThickPoint(2.,0.));
+    v_pts.push_back(ThickPoint(0.,0.));
+    v_pts.push_back(ThickPoint(0.,2.));
+    v_pts.push_back(ThickPoint(2., 2.));
 
     ConvexPolygon p(v_pts), p_simple(p);
     CHECK(p.nb_vertices() == 4);
@@ -1358,10 +1358,10 @@ TEST_CASE("Polygons (simplification)")
 
   SECTION("Polygons, simplification, test3")
   {
-    vector<Point> v_pts;
+    vector<ThickPoint> v_pts;
     int nb_pts = 8;
     for(int a = 0 ; a < nb_pts ; a++)
-      v_pts.push_back(Point(cos(a*2.*M_PI/nb_pts),sin(a*2.*M_PI/nb_pts)));
+      v_pts.push_back(ThickPoint(cos(a*2.*M_PI/nb_pts),sin(a*2.*M_PI/nb_pts)));
 
     ConvexPolygon p(v_pts);
     vector<ConvexPolygon> simplified(6,p);

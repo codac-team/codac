@@ -49,12 +49,12 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Polygon.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ConvexPolygon.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ConvexPolygon.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Edge.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Edge.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ThickEdge.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ThickEdge.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_GrahamScan.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_GrahamScan.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Point.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Point.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ThickPoint.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ThickPoint.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_Interval.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_IntervalVector.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_IntervalMatrix.h

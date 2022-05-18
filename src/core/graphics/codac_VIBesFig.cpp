@@ -122,7 +122,7 @@ namespace codac
       return;
 
     if(box.max_diam() == 0.)
-      draw_point(Point(box), color, params);
+      draw_point(ThickPoint(box), color, params);
 
     else
     {
@@ -220,12 +220,12 @@ namespace codac
     vibes::drawPie(x, y, (fabs(r.lb()) <= near_zero ? near_zero : r.lb()), r.ub(), theta.lb() * 180. / M_PI, theta.ub() * 180. / M_PI, color, params_this_fig);
   }
   
-  void VIBesFig::draw_edge(const Edge& e, const vibes::Params& params)
+  void VIBesFig::draw_edge(const ThickEdge& e, const vibes::Params& params)
   {
     draw_edge(e, "", params);
   }
   
-  void VIBesFig::draw_edge(const Edge& e, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_edge(const ThickEdge& e, const string& color, const vibes::Params& params)
   {
     vibes::Params params_this_fig(params);
     params_this_fig["figure"] = name();
@@ -279,29 +279,29 @@ namespace codac
       draw_polygon(v_p[i], rgb2hex(color_map.color(i*1./(v_p.size()-1))));
   }
 
-  void VIBesFig::draw_point(const Point& p, float size, const vibes::Params& params)
+  void VIBesFig::draw_point(const ThickPoint& p, float size, const vibes::Params& params)
   {
     assert(!p.does_not_exist());
-    Point inflated_pt = p;
+    ThickPoint inflated_pt = p;
     inflated_pt.inflate(size);
     draw_point(inflated_pt, "", params);
   }
 
-  void VIBesFig::draw_point(const Point& p, float size, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_point(const ThickPoint& p, float size, const string& color, const vibes::Params& params)
   {
     assert(!p.does_not_exist());
-    Point inflated_pt = p;
+    ThickPoint inflated_pt = p;
     inflated_pt.inflate(size);
     draw_point(inflated_pt, color, params);
   }
 
-  void VIBesFig::draw_point(const Point& p, const vibes::Params& params)
+  void VIBesFig::draw_point(const ThickPoint& p, const vibes::Params& params)
   {
     assert(!p.does_not_exist());
     draw_point(p, "", params);
   }
 
-  void VIBesFig::draw_point(const Point& p, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_point(const ThickPoint& p, const string& color, const vibes::Params& params)
   {
     assert(!p.does_not_exist());
     vibes::Params params_this_fig(params);
@@ -315,12 +315,12 @@ namespace codac
       draw_box(trunc_inf(p.box()), color, params_this_fig);
   }
   
-  void VIBesFig::draw_points(const vector<Point>& v_pts, float size, const vibes::Params& params)
+  void VIBesFig::draw_points(const vector<ThickPoint>& v_pts, float size, const vibes::Params& params)
   {
     draw_points(v_pts, size, "", params);
   }
   
-  void VIBesFig::draw_points(const vector<Point>& v_pts, float size, const string& color, const vibes::Params& params)
+  void VIBesFig::draw_points(const vector<ThickPoint>& v_pts, float size, const string& color, const vibes::Params& params)
   {
     for(size_t i = 0 ; i < v_pts.size() ; i++)
       draw_point(v_pts[i], size, color, params);

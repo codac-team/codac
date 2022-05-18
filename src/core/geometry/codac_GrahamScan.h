@@ -13,7 +13,7 @@
 
 #include <stack>
 #include "codac_Interval.h"
-#include "codac_Point.h"
+#include "codac_ThickPoint.h"
 #include "codac_ConvexPolygon.h"
 
 namespace codac
@@ -42,15 +42,15 @@ namespace codac
       // To find orientation of ordered triplet (p, q, r).
       static OrientationInterval orientation(const IntervalVector& p0, const IntervalVector& p1, const IntervalVector& p2);
 
-      friend class PointsSorter;
+      friend class ThickPointsSorter;
       friend class ConvexPolygon;
   };
 
-  class PointsSorter
+  class ThickPointsSorter
   {
     public:
 
-      PointsSorter(const Vector& p0);
+      ThickPointsSorter(const Vector& p0);
       bool operator()(const Vector& p1, const Vector& p2);
 
     protected:

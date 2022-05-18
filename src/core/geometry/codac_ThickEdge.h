@@ -1,5 +1,5 @@
 /** 
- *  Edge class
+ *  ThickEdge class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -8,34 +8,34 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC_EDGE_H__
-#define __CODAC_EDGE_H__
+#ifndef __CODAC_THICKEDGE_H__
+#define __CODAC_THICKEDGE_H__
 
 #include "codac_Vector.h"
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 #include "codac_BoolInterval.h"
-#include "codac_Point.h"
+#include "codac_ThickPoint.h"
 
 namespace codac
 {
-  class Edge
+  class ThickEdge
   {
     public:
 
       /// \name Definition
       /// @{
 
-        Edge(const Point& p1, const Point& p2);
-        Edge(const Vector& p1, const Vector& p2);
-        const Edge& operator=(const Edge& e);
+        ThickEdge(const ThickPoint& p1, const ThickPoint& p2);
+        ThickEdge(const Vector& p1, const Vector& p2);
+        const ThickEdge& operator=(const ThickEdge& e);
 
       /// @}
       /// \name Accessing values
       /// @{
 
-        const Point& p1() const;
-        const Point& p2() const;
+        const ThickPoint& p1() const;
+        const ThickPoint& p2() const;
         const Interval length() const;
         const IntervalVector box() const;
 
@@ -47,37 +47,37 @@ namespace codac
         const BoolInterval is_vertical() const;
         const BoolInterval is_degenerated() const;
         bool does_not_exist() const;
-        const BoolInterval contains(const Point& p) const;
-        bool operator==(const Edge& e) const;
-        bool operator!=(const Edge& e) const;
+        const BoolInterval contains(const ThickPoint& p) const;
+        bool operator==(const ThickEdge& e) const;
+        bool operator!=(const ThickEdge& e) const;
 
       /// @}
       /// \name Operators
       /// @{
 
         const IntervalVector operator&(const IntervalVector& x) const;
-        const Point operator&(const Edge& e) const;
-        static const Point proj_intersection(const Edge& e1, const Edge& e2);
+        const ThickPoint operator&(const ThickEdge& e) const;
+        static const ThickPoint proj_intersection(const ThickEdge& e1, const ThickEdge& e2);
 
       /// @}
       /// \name String
       /// @{
 
-        friend std::ostream& operator<<(std::ostream& str, const Edge& e);
+        friend std::ostream& operator<<(std::ostream& str, const ThickEdge& e);
 
       /// @}
       /// \name Static methods
       /// @{
 
-        static const BoolInterval parallel(const Edge& e1, const Edge& e2);
-        static void push(const IntervalVector& box, std::vector<Edge>& v_edges);
+        static const BoolInterval parallel(const ThickEdge& e1, const ThickEdge& e2);
+        static void push(const IntervalVector& box, std::vector<ThickEdge>& v_edges);
 
       /// @}
 
 
     protected:
 
-      Point m_pts[2];
+      ThickPoint m_pts[2];
   };
 }
 

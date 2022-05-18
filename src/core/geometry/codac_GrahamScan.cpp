@@ -22,7 +22,7 @@ namespace codac
 
   const vector<Vector> GrahamScan::convex_hull(const vector<Vector>& v_pts_)
   {
-    vector<Vector> v_pts = Point::remove_identical_pts(v_pts_);
+    vector<Vector> v_pts = ThickPoint::remove_identical_pts(v_pts_);
 
     if(v_pts.size() <= 3)
       return v_pts;
@@ -62,7 +62,7 @@ namespace codac
       // direction) than p1
 
       Vector p0 = v_pts[0];
-      sort(v_pts.begin(), v_pts.end(), PointsSorter(p0));
+      sort(v_pts.begin(), v_pts.end(), ThickPointsSorter(p0));
 
     // If two or more points make same angle with p0,
     // remove all but the one that is farthest from p0
@@ -75,7 +75,7 @@ namespace codac
       {
         // Keep removing i while angle of i and i+1 is same
         // with respect to p0
-        while(i < v_pts.size()-1 && Point::aligned(Point(p0), Point(v_pts[i]), Point(v_pts[i+1])) == YES)
+        while(i < v_pts.size()-1 && ThickPoint::aligned(ThickPoint(p0), ThickPoint(v_pts[i]), ThickPoint(v_pts[i+1])) == YES)
           i++; 
         v_pts[m] = v_pts[i];
         m++; // Update size of modified array
@@ -143,14 +143,14 @@ namespace codac
     return (cross_prod.lb() > 0.) ? OrientationInterval::COUNTERCLOCKWISE : OrientationInterval::CLOCKWISE;
   }
 
-  // Class PointsSorter
+  // Class ThickPointsSorter
 
-  PointsSorter::PointsSorter(const Vector& p0)
+  ThickPointsSorter::ThickPointsSorter(const Vector& p0)
   {
     m_p0 = p0;
   }
 
-  bool PointsSorter::operator()(const Vector& p1, const Vector& p2)
+  bool ThickPointsSorter::operator()(const Vector& p1, const Vector& p2)
   {
     // Find orientation
     OrientationInterval o = GrahamScan::orientation(m_p0, p1, p2);

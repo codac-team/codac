@@ -584,8 +584,8 @@ namespace codac
             if(!prev_box.is_unbounded())
             {
               vector<Vector> v_pts;
-              Point::push(box, v_pts);
-              Point::push(prev_box, v_pts);
+              ThickPoint::push(box, v_pts);
+              ThickPoint::push(prev_box, v_pts);
               ConvexPolygon p(v_pts, false);
               draw_polygon(p, color, params);
             }
@@ -669,8 +669,8 @@ namespace codac
           if(!prev_box.is_unbounded())
           {
             vector<Vector> v_pts;
-            Point::push(box, v_pts);
-            Point::push(prev_box, v_pts);
+            ThickPoint::push(box, v_pts);
+            ThickPoint::push(prev_box, v_pts);
             ConvexPolygon p(v_pts, false);
             draw_polygon(p, color, params);
           }

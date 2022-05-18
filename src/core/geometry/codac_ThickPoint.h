@@ -1,5 +1,5 @@
 /** 
- *  Point class
+ *  ThickPoint class
  * ----------------------------------------------------------------------------
  *  \date       2018
  *  \author     Simon Rohou
@@ -8,8 +8,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC_POINT_H__
-#define __CODAC_POINT_H__
+#ifndef __CODAC_THICKPOINT_H__
+#define __CODAC_THICKPOINT_H__
 
 #ifdef _MSC_VER
 // Enable additional features in math.h.
@@ -31,18 +31,18 @@
 
 namespace codac
 {
-  class Point // todo: derive from IntervalVector?
+  class ThickPoint // todo: derive from IntervalVector?
   {
     public:
 
       /// \name Definition
       /// @{
 
-        Point(); // undefined point
-        explicit Point(const Vector& p);
-        explicit Point(const IntervalVector& p);
-        Point(const Interval& x, const Interval& y);
-        const Point& operator=(const Point& p);
+        ThickPoint(); // undefined point
+        explicit ThickPoint(const Vector& p);
+        explicit ThickPoint(const IntervalVector& p);
+        ThickPoint(const Interval& x, const Interval& y);
+        const ThickPoint& operator=(const ThickPoint& p);
   
       /// @}
       /// \name Accessing values
@@ -62,31 +62,31 @@ namespace codac
 
         bool is_unbounded() const;
         bool does_not_exist() const;
-        bool operator==(const Point& p) const;
-        bool operator!=(const Point& p) const;
+        bool operator==(const ThickPoint& p) const;
+        bool operator!=(const ThickPoint& p) const;
   
       /// @}
       /// \name Setting values
       /// @{
 
-        const Point& inflate(double rad);
+        const ThickPoint& inflate(double rad);
   
       /// @}
       /// \name String
       /// @{
 
-        friend std::ostream& operator<<(std::ostream& str, const Point& p);
+        friend std::ostream& operator<<(std::ostream& str, const ThickPoint& p);
   
       /// @}
       /// \name Static methods
       /// @{
 
-        static const BoolInterval aligned(const Point& a, const Point& b, const Point& c);
-        static const Point center(const std::vector<Point> v_pts);
-        static void push(const IntervalVector& box, std::vector<Point>& v_pts);
+        static const BoolInterval aligned(const ThickPoint& a, const ThickPoint& b, const ThickPoint& c);
+        static const ThickPoint center(const std::vector<ThickPoint> v_pts);
+        static void push(const IntervalVector& box, std::vector<ThickPoint>& v_pts);
         static void push(const IntervalVector& box, std::vector<Vector>& v_pts);
-        static std::vector<Point> to_Points(const std::vector<Vector>& v_pts);
-        static std::vector<Point> remove_identical_pts(const std::vector<Point>& v_pts);
+        static std::vector<ThickPoint> to_ThickPoints(const std::vector<Vector>& v_pts);
+        static std::vector<ThickPoint> remove_identical_pts(const std::vector<ThickPoint>& v_pts);
         static std::vector<Vector> remove_identical_pts(const std::vector<Vector>& v_pts);
 
       /// @}

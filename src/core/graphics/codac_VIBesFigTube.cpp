@@ -430,7 +430,7 @@ namespace codac
       return; // no display
     
     else if(gate.is_degenerated())
-      draw_point(Point(t, gate.lb()), params);
+      draw_point(ThickPoint(t, gate.lb()), params);
 
     else
     {
@@ -473,7 +473,7 @@ namespace codac
       for(it_scalar_values = traj->sampled_map().begin(); it_scalar_values != traj->sampled_map().end(); it_scalar_values++)
       {
         if(m_map_trajs[traj].points_size != 0.)
-          draw_point(Point(it_scalar_values->first, it_scalar_values->second), m_map_trajs[traj].points_size, vibesParams("figure", name(), "group", group_name));
+          draw_point(ThickPoint(it_scalar_values->first, it_scalar_values->second), m_map_trajs[traj].points_size, vibesParams("figure", name(), "group", group_name));
 
         else
         {
@@ -499,7 +499,7 @@ namespace codac
       for(double t = traj->tdomain().lb() ; t <= traj->tdomain().ub() ; t+=traj->tdomain().diam()/TRAJ_NB_DISPLAYED_POINTS)
       {
         if(m_map_trajs[traj].points_size != 0.)
-          draw_point(Point(t, (*traj)(t)), m_map_trajs[traj].points_size, vibesParams("figure", name(), "group", group_name));
+          draw_point(ThickPoint(t, (*traj)(t)), m_map_trajs[traj].points_size, vibesParams("figure", name(), "group", group_name));
 
         else
         {

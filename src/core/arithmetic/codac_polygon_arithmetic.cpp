@@ -30,9 +30,9 @@ namespace codac
   {
     assert(x.size() == v.size());
 
-    vector<Point> v_result_thick_pts = Point::to_Points(x.vertices());
+    vector<ThickPoint> v_result_thick_pts = ThickPoint::to_ThickPoints(x.vertices());
     for(auto& pt : v_result_thick_pts)
-      pt = Point(pt.box() + v);
+      pt = ThickPoint(pt.box() + v);
     // ^ The operation may transform a degenerate point-box into a large box
 
     return ConvexPolygon(v_result_thick_pts);
@@ -60,21 +60,21 @@ namespace codac
   {
     assert(x.size() == m.nb_cols() && x.size() == m.nb_rows());
 
-    vector<Point> v_result_thick_pts = Point::to_Points(x.vertices());
+    vector<ThickPoint> v_result_thick_pts = ThickPoint::to_ThickPoints(x.vertices());
     for(auto& pt : v_result_thick_pts)
-      pt = Point(m * pt.box());
+      pt = ThickPoint(m * pt.box());
 
     return ConvexPolygon(v_result_thick_pts);
   }
   
   const ConvexPolygon operator&(const ConvexPolygon& p1, const ConvexPolygon& p2)
   {
-    vector<Point> v_pts;
+    vector<ThickPoint> v_pts;
 
     // Add all vertices of p1 that are inside p2
     for(const auto& pt_ : p1.vertices())
     {
-      Point pt(pt_);
+      ThickPoint pt(pt_);
       if(p2.encloses(pt) != NO)
         v_pts.push_back(pt);
     }
@@ -82,7 +82,7 @@ namespace codac
     // Add all vertices of p2 that are inside p1
     for(const auto& pt_ : p2.vertices())
     {
-      Point pt(pt_);
+      ThickPoint pt(pt_);
       if(p1.encloses(pt) != NO)
         v_pts.push_back(pt);
     }
@@ -91,12 +91,12 @@ namespace codac
     for(const auto& e1 : p1.edges())
       for(const auto& e2 : p2.edges())
       {
-        const Point intersection_pt = e1 & e2;
+        const ThickPoint intersection_pt = e1 & e2;
 
         if(!intersection_pt.does_not_exist())
         {
           // If edges are possibly parallel:
-          if(Edge::parallel(e1, e2) != NO)
+          if(ThickEdge::parallel(e1, e2) != NO)
           {
             if(e1.contains(e2.p1()) != NO)
               v_pts.push_back(e2.p1());

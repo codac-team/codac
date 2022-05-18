@@ -40,11 +40,11 @@ namespace codac
     assert(box.size() == 2);
     assert(!box.is_empty());
 
-    Point::push(box, m_v_floating_pts);
+    ThickPoint::push(box, m_v_floating_pts);
     m_v_floating_pts = GrahamScan::convex_hull(m_v_floating_pts);
   }
 
-  ConvexPolygon::ConvexPolygon(const vector<Point>& v_thick_pts)
+  ConvexPolygon::ConvexPolygon(const vector<ThickPoint>& v_thick_pts)
     : Polygon()
   {
     for(const auto& thick_pt : v_thick_pts)
@@ -100,7 +100,7 @@ namespace codac
 
     for(const auto& pt : vertices())
     {
-      is_subset = is_subset && p.encloses(Point(pt));
+      is_subset = is_subset && p.encloses(ThickPoint(pt));
       if(is_subset == NO)
         return NO;
     }
@@ -108,7 +108,7 @@ namespace codac
     return is_subset;
   }
 
-  const BoolInterval ConvexPolygon::encloses(const Point& p) const
+  const BoolInterval ConvexPolygon::encloses(const ThickPoint& p) const
   {
     if(p.does_not_exist() || is_empty())
       return NO;
@@ -120,11 +120,11 @@ namespace codac
     //   A ray is defined from p to the right ; if it crosses
     //   'a' times one of the edges, and (a & 1), then p is inside
 
-    vector<Edge> v_edges = edges();
+    vector<ThickEdge> v_edges = edges();
     int a = 0; // the crossing number counter
     size_t n = v_edges.size();
-    const Edge ray(p, Point(box()[0].ub()+1., p[1])); // horizontal edge to the right
-    Point prev_e = v_edges[n-1] & ray;
+    const ThickEdge ray(p, ThickPoint(box()[0].ub()+1., p[1])); // horizontal edge to the right
+    ThickPoint prev_e = v_edges[n-1] & ray;
 
     // Loop through all edges of the polygon, looking for intersections
     for(size_t i = 0 ; i < n ; i++)
@@ -133,7 +133,7 @@ namespace codac
         continue;
 
       // Intersecting point
-      const Point e = v_edges[i] & ray;
+      const ThickPoint e = v_edges[i] & ray;
       if(!e.does_not_exist()) // intersection to the left of p, not considered
       {
         if(e[0].intersects(p[0]))
@@ -183,17 +183,17 @@ namespace codac
       // Finding shortest edge, to be removed
       double min_surf = 0.;
       size_t min_i = 0;
-      Point min_inter;
+      ThickPoint min_inter;
 
       for(size_t i = 0 ; i < n ; i++)
       {
-        const Edge e1 = Edge(Point(m_v_floating_pts[(i-1+n)%n]), Point(m_v_floating_pts[i]));
-        const Edge e2 = Edge(Point(m_v_floating_pts[(i+1)%n]), Point(m_v_floating_pts[(i+2)%n]));
+        const ThickEdge e1 = ThickEdge(ThickPoint(m_v_floating_pts[(i-1+n)%n]), ThickPoint(m_v_floating_pts[i]));
+        const ThickEdge e2 = ThickEdge(ThickPoint(m_v_floating_pts[(i+1)%n]), ThickPoint(m_v_floating_pts[(i+2)%n]));
 
-        if(Edge::parallel(e1, e2) == NO)
+        if(ThickEdge::parallel(e1, e2) == NO)
         {
           // Computing new vertex: intersection of neighbor edges
-          Point inter = Edge::proj_intersection(e1, e2);
+          ThickPoint inter = ThickEdge::proj_intersection(e1, e2);
 
           assert(!inter.is_unbounded());
           assert(e1 != e2);
@@ -246,14 +246,14 @@ namespace codac
     rtra[1][0] = 0.; rtra[1][1] = 1.; rtra[1][2] = -center[1];
     rtra[2][0] = 0.; rtra[2][1] = 0.; rtra[2][2] = 1.;
 
-    vector<Point> v_thick_pts(m_v_floating_pts.size());
+    vector<ThickPoint> v_thick_pts(m_v_floating_pts.size());
     for(size_t i = 0 ; i < m_v_floating_pts.size() ; i++)
     {
       IntervalVector pt(3);
       pt[0] = m_v_floating_pts[i][0];
       pt[1] = m_v_floating_pts[i][1];
       pt[2] = 1.;
-      v_thick_pts[i] = Point((tra * rot * rtra * pt).subvector(0,1));
+      v_thick_pts[i] = ThickPoint((tra * rot * rtra * pt).subvector(0,1));
     }
 
     *this = ConvexPolygon(v_thick_pts);
@@ -279,12 +279,12 @@ namespace codac
 
     IntervalVector inter(2, Interval::EMPTY_SET);
 
-    vector<Edge> v_edges = edges();
+    vector<ThickEdge> v_edges = edges();
     for(const auto& edge : v_edges)
       inter |= edge & reduced_x;
 
-    vector<Point> v_x_vertices;
-    Point::push(reduced_x, v_x_vertices);
+    vector<ThickPoint> v_x_vertices;
+    ThickPoint::push(reduced_x, v_x_vertices);
 
     for(const auto& vertex : v_x_vertices)
       if(encloses(vertex) != NO)

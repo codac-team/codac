@@ -199,7 +199,7 @@ namespace codac
         }
       
       v_pts.push_back(Vector({t.lb(), input_gate().ub()}));
-      v_pts = Point::remove_identical_pts(v_pts);
+      v_pts = ThickPoint::remove_identical_pts(v_pts);
       return ConvexPolygon(v_pts, true);
     }
   }

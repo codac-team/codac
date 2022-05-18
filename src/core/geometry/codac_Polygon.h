@@ -14,8 +14,8 @@
 #include <vector>
 #include "codac_Vector.h"
 #include "codac_IntervalVector.h"
-#include "codac_Edge.h"
-#include "codac_Point.h"
+#include "codac_ThickEdge.h"
+#include "codac_ThickPoint.h"
 
 namespace codac
 {
@@ -37,11 +37,11 @@ namespace codac
         int size() const;
         int nb_edges() const;
         int nb_vertices() const;
-        const std::vector<Edge> edges() const;
+        const std::vector<ThickEdge> edges() const;
         const std::vector<Vector>& vertices() const;
         const Vector& operator[](size_t vertex_id) const;
         const IntervalVector box() const;
-        const Point center() const;
+        const ThickPoint center() const;
         const Interval area() const;
 
       /// @}

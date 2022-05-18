@@ -23,7 +23,7 @@
 #include "codac_Vector.h"
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
-#include "codac_Point.h"
+#include "codac_ThickPoint.h"
 #include "codac_ConvexPolygon.h"
 #include "codac_TubeVector.h"
 #include "codac_Slice.h"
@@ -347,32 +347,32 @@ namespace Catch
         std::pair<codac::Interval,codac::Interval> m_value;
     };
 
-    class ApproxPoint
+    class ApproxThickPoint
     {
       public:
-        explicit ApproxPoint(codac::Point value) :
+        explicit ApproxThickPoint(codac::ThickPoint value) :
             m_value(value)
         {
           m_value.inflate(100.*DEFAULT_EPSILON);
         }
 
-        friend bool operator ==(codac::Point lhs, ApproxPoint const& rhs)
+        friend bool operator ==(codac::ThickPoint lhs, ApproxThickPoint const& rhs)
         {
           return lhs == rhs.m_value ||
             (lhs.x().intersects(rhs.m_value.x()) && lhs.y().intersects(rhs.m_value.y()));
         }
 
-        friend bool operator ==(ApproxPoint const& lhs, codac::Point rhs)
+        friend bool operator ==(ApproxThickPoint const& lhs, codac::ThickPoint rhs)
         {
           return operator ==(rhs, lhs);
         }
 
-        friend bool operator !=(codac::Point lhs, ApproxPoint const& rhs)
+        friend bool operator !=(codac::ThickPoint lhs, ApproxThickPoint const& rhs)
         {
           return !operator ==(lhs, rhs);
         }
 
-        friend bool operator !=(ApproxPoint const& lhs, codac::Point rhs)
+        friend bool operator !=(ApproxThickPoint const& lhs, codac::ThickPoint rhs)
         {
           return !operator ==(rhs, lhs);
         }
@@ -380,12 +380,12 @@ namespace Catch
         std::string toString() const
         {
           std::ostringstream oss;
-          oss << "ApproxPoint(" << Catch::toString(m_value) << ")";
+          oss << "ApproxThickPoint(" << Catch::toString(m_value) << ")";
           return oss.str();
         }
 
       private:
-        codac::Point m_value;
+        codac::ThickPoint m_value;
     };
 
     class ApproxConvexPolygon
@@ -500,7 +500,7 @@ namespace Catch
   }
 
   template<>
-  inline std::string toString<Detail::ApproxPoint>(Detail::ApproxPoint const& value)
+  inline std::string toString<Detail::ApproxThickPoint>(Detail::ApproxThickPoint const& value)
   {
     return value.toString();
   }

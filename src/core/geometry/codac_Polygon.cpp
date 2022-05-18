@@ -57,12 +57,12 @@ namespace codac
     return m_v_floating_pts.size();
   }
 
-  const vector<Edge> Polygon::edges() const
+  const vector<ThickEdge> Polygon::edges() const
   {
     size_t n = m_v_floating_pts.size();
-    vector<Edge> v_edges(n,Edge(Point(),Point()));
+    vector<ThickEdge> v_edges(n,ThickEdge(ThickPoint(),ThickPoint()));
     for(size_t i = 0 ; i < n ; i++)
-      v_edges[i] = Edge(Point(m_v_floating_pts[i]), Point(m_v_floating_pts[(i+1)%n]));
+      v_edges[i] = ThickEdge(ThickPoint(m_v_floating_pts[i]), ThickPoint(m_v_floating_pts[(i+1)%n]));
     return v_edges;
   }
 
@@ -85,13 +85,13 @@ namespace codac
     return box;
   }
 
-  const Point Polygon::center() const
+  const ThickPoint Polygon::center() const
   {
     IntervalVector center(2, 0.);
     for(const auto& pt : m_v_floating_pts)
       center += pt;
     center *= (1. / m_v_floating_pts.size());
-    return Point(center);;
+    return ThickPoint(center);;
   }
 
   const Interval Polygon::area() const
