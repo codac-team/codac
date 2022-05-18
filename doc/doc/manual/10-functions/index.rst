@@ -136,3 +136,35 @@ Functions can then be evaluated on intervals or boxes by using the ``eval(..)`` 
   For using contractors defined from functions, the ``CtcFunction`` class is available.
 
   :ref:`See more <sec-manual-ctcfunction>`.
+
+Function formatting
+-------------------
+
+Let's consider the function that gives the distance to a beacon
+
+:math:`f : \left(\begin{array}{c}\mathbf{x}\\\mathbf{b}\end{array}\right) \mapsto \sqrt{(x_1-b_1)^2+(x_2-b_2)^2}`
+
+If :math:`\mathbf{b} = (b_1, b_2)^\intercal` is known *a priori*, for instance let :math:`\mathbf{b} = (1, 2)^\intercal`, its values could be hard-coded in the ``Function`` object:
+
+.. tabs::
+
+  .. code-tab:: py
+
+    f = Function("x[2]", "sqrt(sqr(x[0]-1)+sqr(x[1]-2))")
+
+  .. code-tab:: c++
+
+    Function f("x[2]", "sqrt(sqr(x[0]-1)+sqr(x[1]-2))");
+
+But sometimes it is useful to define this function at run-time, for example when the coordinates need to be calculated first. Then, the ``Function`` can be defined using string formatting. String formatting is natively supported in `Python3 <https://docs.python.org/3/library/string.html>`_ and is introduced in `C++20 <https://en.cppreference.com/w/cpp/utility/format/format>`_. For users of an older version of C++, a string formatting library can be used like `fmt <https://fmt.dev/latest/index.html>`_.
+
+.. tabs::
+
+  .. code-tab:: py
+
+    f = Function("x[2]", "sqrt(sqr(x[0]-{0})+sqr(x[1]-{1}))".format(b1, b2))
+
+  .. code-tab:: c++
+    
+    std::string function = fmt::format("sqrt(sqr(x[0]-{0})+sqr(x[1]-{1}))", b1, b2);
+    Function f("x[2]", function.c_str());
