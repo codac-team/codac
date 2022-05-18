@@ -38,6 +38,14 @@ namespace codac
       static void replace_all(std::string& input, const std::string& search, const std::string& format);
       
       /**
+       * \brief Trims a string (removes both leading and trailing whitespace from the string)
+       *
+       * \param str the string to trim
+       * \return void
+       */
+      static void trim(std::string& str);
+
+      /**
        * \brief Returns a random number inside an interval
        *
        * \param intv the bounds

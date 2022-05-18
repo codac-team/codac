@@ -8,10 +8,12 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <string>
 #include <sstream>
 #include "codac_TFunction.h"
 #include "codac_Tube.h"
 #include "codac_TubeVector.h"
+#include "codac_Tools.h"
 #include "ibex_Expr2Minibex.h"
 
 using namespace std;
@@ -166,6 +168,34 @@ namespace codac
   
   const string& TFunction::expr() const
   {
+    return m_expr;
+  }
+  
+  const string TFunction::expr(int i) const
+  {
+    assert(i >= 0 && i < m_img_dim);
+    string trim_expr = m_expr;
+    Tools::trim(trim_expr);
+    istringstream iss(trim_expr);
+
+    int j = 0;
+    for(string token ; getline(iss, token, ';') ; )
+    {
+      if(i == j)
+      {
+        if(i == 0)
+          token = token.substr(1,token.size()-1);
+
+        if(i == m_img_dim-1)
+          token = token.substr(0,token.size()-1);
+
+        Tools::trim(token);
+        return token;
+      }
+      j++;
+    }
+
+    assert("unable to return subexpression" && false);
     return m_expr;
   }
   

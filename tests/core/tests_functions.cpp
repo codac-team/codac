@@ -62,4 +62,12 @@ TEST_CASE("Functions")
       CHECK(f.eval_vector(box_i.subvector(1,2)) == tf.eval_vector(box_i));
     }
   }
+
+  SECTION("Subexpressions")
+  {
+    TFunction f("x1", "x2[4]", "(cos(x1); cos(x2[2])+x1  ; x2[1]) ");
+    CHECK(f.expr(0) == "cos(x1)");
+    CHECK(f.expr(1) == "cos(x2[2])+x1");
+    CHECK(f.expr(2) == "x2[1]");
+  }
 }

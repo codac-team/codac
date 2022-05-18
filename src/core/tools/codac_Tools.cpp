@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include <sstream>
+#include <algorithm>
+#include <functional>
 #include "codac_Tools.h"
 
 using namespace std;
@@ -30,6 +32,12 @@ namespace codac
         index += format.length();
       }
     }
+  }
+
+  void Tools::trim(string& s)
+  {
+    s.erase(s.begin(), find_if(s.begin(), s.end(), [](int c) { return !isspace(c); }));
+    s.erase(find_if(s.rbegin(), s.rend(), [](int c) { return !isspace(c); }).base(), s.end());
   }
 
   double Tools::rand_in_bounds(const Interval& itv)
