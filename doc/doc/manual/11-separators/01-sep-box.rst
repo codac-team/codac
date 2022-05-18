@@ -4,7 +4,7 @@
 SepBox: :math:`\mathcal{S}_{box}`
 ********************************************************************
 
-The :math:`\mathcal{S}_{box}` is separating inner and outer part o a box around a support box of :math:`\mathbb{R}^n`.
+The :math:`\mathcal{S}_{box}` is separating inner and outer parts of a box around a support box of :math:`\mathbb{R}^n`.
 
 .. contents::
 
@@ -35,14 +35,11 @@ This separator is optimal as it is based on other separators optimality.
 Example
 -------
 
-Let consider a support box :math:`\mathbf{b} = [[1, 2], [3, 4]]` for our separator.
+Let consider a support box :math:`[\mathbf{b}] = [1, 2]\times[3, 4]` for our separator.
 
 .. tabs::
 
   .. code-tab:: py
-
-    from codac import *
-    from vibes import vibes
 
     # Build the separator
     b = IntervalVector([[1, 2], [3, 4]])
@@ -60,30 +57,21 @@ Let consider a support box :math:`\mathbf{b} = [[1, 2], [3, 4]]` for our separat
 
   .. code-tab:: c++
 
-    #include <codac.h>
+    // Build the separator
+    IntervalVector b{{1, 2}, {3, 4}};
+    SepBox sep_box(b);
 
-    using namespace codac;
+    // Setup the initial box
+    IntervalVector box(2, {0, 5});
 
-    int main()
-    {
-      // Build the separator
-      IntervalVector b{{1, 2}, {3, 4}};
-      SepBox sep_box(b);
-
-      // Setup the initial box
-      IntervalVector box(2, {0, 5});
-
-      // Graphics
-      vibes::beginDrawing();
-      vibes::newFigure("Set inversion");
-      vibes::setFigureProperties(vibesParams("x",100, "y",100, "width",500, "height",500));
-      SIVIA(box, sep_box, 0.1, "Set inversion");
-      vibes::endDrawing();
-
-      return EXIT_SUCCESS;
-    }
+    // Graphics
+    vibes::beginDrawing();
+    vibes::newFigure("Set inversion");
+    vibes::setFigureProperties(vibesParams("x",100, "y",100, "width",500, "height",500));
+    SIVIA(box, sep_box, 0.1, "Set inversion");
+    vibes::endDrawing();
 
 .. figure:: img/SepBox.png
   :width: 500px
 
-  SIVIA on a SepBox with a support box :math:`\mathbf{b} = [[1, 2], [3, 4]]`.
+  SIVIA on a SepBox with a support box :math:`[\mathbf{b}] = [1, 2]\times[3, 4]`.

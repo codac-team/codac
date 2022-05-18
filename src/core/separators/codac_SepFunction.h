@@ -54,7 +54,7 @@ namespace codac
       SepFunction(Function& f, const IntervalVector& y);
       
       /**
-       * \brief \f$\mathcal{S}\big([\mathbf{x}]\big)\f$
+       * \brief \f$\mathcal{S}\big([\mathbf{x}_{\textrm{in}}],[\mathbf{x}_{\textrm{out}}]\big)\f$
        *
        * \param x_in the n-dimensional box \f$[\mathbf{x}]\f$ to be inner-contracted
        * \param x_out the n-dimensional box \f$[\mathbf{x}]\f$ to be outer-contracted

@@ -24,6 +24,7 @@
 #include <codac_Ctc.h>
 #include <codac_Function.h>
 #include <codac_SepFunction.h>
+#include <codac_SepBox.h>
 #include <ibex_SepUnion.h>
 #include <ibex_SepInter.h>
 #include <ibex_SepNot.h>
@@ -144,6 +145,12 @@ py::class_<ibex::Sep,pySep> export_Sep(py::module& m)
     .def(py::init<ibex::Array<ibex::Sep>>(), py::keep_alive<1,2>(), py::arg("list"))
     .def("separate", &ibex::SepQInter::separate)
     .def_property("q", py::cpp_function(&ibex::SepQInter::get_q), py::cpp_function(&ibex::SepQInter::set_q))
+  ;
+
+  // Export SepBox
+  py::class_<SepBox>(m, "SepBox", sep, __DOC_SEP_SEPINTER)
+    .def(py::init<const IntervalVector&>())
+    .def("separate", &SepBox::separate)
   ;
 
   return sep;
