@@ -98,3 +98,14 @@ The ``SIVIA(..)`` function allows several parameters for specifying result outpu
       true,                 // boolean for returning a map of lists of boxes
       // The following color map allows to define custom colors for subpavings:
       {{SetValue::IN,"k[r]"},{SetValue::OUT,"k[b]"},{SetValue::UNKNOWN,"k[y]"}});
+
+Separators
+----------
+
+The following separators apply on intervals and boxes:
+
+.. toctree::
+
+  01-sep-box
+
+See also: :ref:`codac-unsupported <sec-codac-unsupported>`.

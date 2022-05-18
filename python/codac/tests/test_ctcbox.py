@@ -12,7 +12,7 @@ import unittest
 from codac import *
 import codac as codac
 
-class TestCtcCartProBox(unittest.TestCase):
+class TestCtcBox(unittest.TestCase):
 
   def test_ctcbox_1d(self):
 
