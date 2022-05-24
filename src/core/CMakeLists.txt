@@ -153,6 +153,20 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/sivia/codac_sivia.h
+
+                  # Files related to codac2
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_SliceVector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_SliceVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TSlice.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TSlice.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TDomain.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TDomain.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeAbstract_const.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeAbstract_const.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVector.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVectorComponent.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVectorComponent.h
                   )
 
 
