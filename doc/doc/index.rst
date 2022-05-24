@@ -23,7 +23,7 @@ Codac (Catalog Of Domains And Contractors) is a C++/Python library providing too
 | **What about mobile robotics?**
 | In the field of robotics, complex problems such as **non-linear state estimation**, **parameter estimation**, **delays**, **SLAM** or **kidnapped robot problems** can be solved in a very few steps by using constraint programming. Even though the Codac library is not meant to target only robotics problems, the design of its interface has been largely influenced by the needs of the above class of applications. Codac provides solutions to deal with these problems, that are usually hardly solvable by conventional methods such as particle approaches or Kalman filters. 
 
-In a nutshell, Codac is a high-level **constraint programming framework** providing tools to easily solve a wide range of problems.
+In a nutshell, Codac is a **constraint programming framework** providing tools to easily solve a wide range of problems.
 
 
 .. contents:: Contents of this page

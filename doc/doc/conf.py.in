@@ -48,6 +48,7 @@ redirects = {
     "slam": "tutorial/08-rangeonly-slam/index.html",
     "lie-symmetries": "use-cases/lie-symmetries/index.html",
     "sivia": "manual/11-separators/index.html",
+    "installation": "install/01-installation.html",
 }
 
 breathe_projects = {
@@ -207,7 +208,7 @@ html_css_files = [
 # .htaccess) here, relative to this directory. These files are copied
 # directly to the root of the documentation.
 #
-# html_extra_path = []
+html_extra_path = ['tmp']
 
 # If not None, a 'Last updated on:' timestamp is inserted at every page
 # bottom, using the given strftime format.
