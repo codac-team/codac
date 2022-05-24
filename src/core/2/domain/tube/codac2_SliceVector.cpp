@@ -57,9 +57,8 @@ namespace codac2
 
   shared_ptr<SliceVector> SliceVector::prev_slice()
   {
-    if(_tube_vector.first_slice().get() == this)
-      return shared_ptr<SliceVector>(nullptr);
-    return prev(_it_tslice)->get()->slices().at(&_tube_vector);
+    return const_pointer_cast<SliceVector>(
+      static_cast<const SliceVector&>(*this).prev_slice());
   }
 
   shared_ptr<const SliceVector> SliceVector::next_slice() const
@@ -71,9 +70,8 @@ namespace codac2
 
   shared_ptr<SliceVector> SliceVector::next_slice()
   {
-    if(_tube_vector.last_slice().get() == this)
-      return shared_ptr<SliceVector>(nullptr);
-    return next(_it_tslice)->get()->slices().at(&_tube_vector);
+    return const_pointer_cast<SliceVector>(
+      static_cast<const SliceVector&>(*this).next_slice());
   }
 
   const IntervalVector& SliceVector::codomain() const
