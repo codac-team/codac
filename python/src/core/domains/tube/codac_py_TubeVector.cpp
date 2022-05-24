@@ -97,10 +97,6 @@ void export_TubeVector(py::module& m)
       TUBEVECTOR_TUBEVECTOR_STRING,
       "binary_file_name"_a)
 
-    //.def(py::init<const string&,TrajectoryVector * &>(),
-    //  TUBEVECTOR_TUBEVECTOR_STRING_TRAJECTORYVECTOR,
-    //  "binary_file_name"_a, "traj"_a)
-
     .def("size", &TubeVector::size,
       TUBEVECTOR_INT_SIZE)
 
