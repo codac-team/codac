@@ -60,98 +60,62 @@ namespace codac2
 
     public:
 
-      struct Iterator
+      using base_container = std::list<std::shared_ptr<TSlice>>;
+
+      struct iterator : public base_container::iterator
       {
-        using iterator_category = std::bidirectional_iterator_tag;
-        using difference_type   = std::ptrdiff_t;
+        using iterator_category = typename base_container::iterator::iterator_category;
+        using difference_type   = typename base_container::iterator::difference_type;
+
         using value_type        = SliceVector;
         using pointer           = std::shared_ptr<SliceVector>;
         using reference         = SliceVector&;
 
         public:
+          
+          iterator(const TubeVector& tube_vector, base_container::iterator it) : 
+            base_container::iterator(it), _tube_vector(tube_vector) { }
 
-          Iterator(pointer ptr) : m_ptr(ptr) { }
-
-          reference operator*() const
+          reference operator*()
           {
-            return *m_ptr;
+            return *((*this)->get()->_slices.at(&_tube_vector));
           }
 
-          pointer operator->()
-          {
-            return m_ptr;
-          }
+        protected:
 
-          Iterator& operator++()
-          {
-            if(m_ptr != nullptr)
-              m_ptr = m_ptr->next_slice();
-            return *this;
-          }
-
-          friend bool operator==(const Iterator& a, const Iterator& b)
-          {
-            return a.m_ptr == b.m_ptr;
-          };
-
-          friend bool operator!=(const Iterator& a, const Iterator& b)
-          {
-            return a.m_ptr != b.m_ptr;
-          };
-
-        private:
-
-          pointer m_ptr;
+          const TubeVector& _tube_vector;
       };
 
-      Iterator begin() { return Iterator(first_slice()); }
-      Iterator end()   { return Iterator(last_slice()); }
+      iterator begin() { return iterator(*this, _tdomain._tslices.begin()); }
+      iterator end()   { return iterator(*this, _tdomain._tslices.end()); }
 
-      struct ConstIterator
+
+      struct const_iterator : public base_container::const_iterator
       {
-        using iterator_category = std::bidirectional_iterator_tag;
-        using difference_type   = std::ptrdiff_t;
+        using iterator_category = typename base_container::const_iterator::iterator_category;
+        using difference_type   = typename base_container::const_iterator::difference_type;
+
         using value_type        = SliceVector;
         using pointer           = const std::shared_ptr<SliceVector>;
         using reference         = const SliceVector&;
 
         public:
-
-          ConstIterator(pointer ptr) : m_ptr(ptr) { }
+          
+          const_iterator(const TubeVector& tube_vector, base_container::const_iterator it) : 
+            base_container::const_iterator(it), _tube_vector(tube_vector) { }
 
           reference operator*() const
           {
-            return *m_ptr;
+            return *((*this)->get()->_slices.at(&_tube_vector));
           }
 
-          pointer operator->()
-          {
-            return m_ptr;
-          }
+        protected:
 
-          const ConstIterator& operator++()
-          { 
-            m_ptr = m_ptr->next_slice();
-            return *this;
-          }
-
-          friend bool operator==(const ConstIterator& a, const ConstIterator& b)
-          {
-            return a.m_ptr == b.m_ptr;
-          };
-
-          friend bool operator!=(const ConstIterator& a, const ConstIterator& b)
-          {
-            return a.m_ptr != b.m_ptr;
-          };
-
-        private:
-
-          std::shared_ptr<SliceVector> m_ptr;
+          const TubeVector& _tube_vector;
       };
 
-      ConstIterator begin() const { return ConstIterator(first_slice()); }
-      ConstIterator end()   const { return ConstIterator(last_slice()); }
+      const_iterator begin() const { return const_iterator(*this, _tdomain._tslices.cbegin()); }
+      const_iterator end() const   { return const_iterator(*this, _tdomain._tslices.cend()); }
   };
 } // namespace codac
 

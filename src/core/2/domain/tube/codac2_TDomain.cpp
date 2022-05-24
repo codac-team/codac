@@ -31,20 +31,17 @@ namespace codac2
     if(with_gates)
       _tslices.push_back(make_shared<TSlice>(Interval(t0_tf.ub())));
     _tslices.push_back(make_shared<TSlice>(Interval(t0_tf.ub(),oo)));
-
-    // End of container:
-    _tslices.push_back(make_shared<TSlice>(Interval(oo,oo)));
   }
 
   const Interval TDomain::t0_tf() const
   {
     return Interval(_tslices.front()->tdomain().ub(),
-      prev(prev(_tslices.end()))->get()->tdomain().lb());
+      prev(_tslices.end())->get()->tdomain().lb());
   }
 
   size_t TDomain::nb_tslices() const
   {
-    return _tslices.size() - 1;
+    return _tslices.size();
   }
 
   const list<std::shared_ptr<TSlice>> TDomain::tslices() const

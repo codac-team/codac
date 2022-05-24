@@ -38,6 +38,7 @@ namespace codac2
 
     protected:
 
+      friend class TubeVector;
       const Interval _tdomain;
       std::map<const TubeVector*,std::shared_ptr<SliceVector>> _slices;
   };
