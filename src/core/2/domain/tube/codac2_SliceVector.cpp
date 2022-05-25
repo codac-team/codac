@@ -23,6 +23,12 @@ namespace codac2
 
   }
 
+  SliceVector::SliceVector(const SliceVector& s) :
+    _tube_vector(s._tube_vector), _it_tslice(s._it_tslice), _codomain(s.size())
+  {
+
+  }
+
   SliceVector::~SliceVector()
   {
 

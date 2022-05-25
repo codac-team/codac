@@ -17,14 +17,27 @@ using namespace codac;
 
 namespace codac2
 {
-  TSlice::TSlice(const Interval& t0_tf) : _tdomain(t0_tf)
+  TSlice::TSlice(const Interval& tdomain)
   {
+    set_tdomain(tdomain);
+  }
 
+  TSlice::TSlice(const TSlice& tslice, const Interval& tdomain)
+  {
+    set_tdomain(tdomain);
+    for(const auto& [tv,s] : tslice.slices())
+      add_slice(make_shared<SliceVector>(*s.get()));
   }
 
   const Interval& TSlice::tdomain() const
   {
     return _tdomain;
+  }
+  
+  void TSlice::set_tdomain(const Interval& tdomain)
+  {
+    assert(!tdomain.is_empty());
+    _tdomain = tdomain;
   }
 
   const map<const TubeVector*,shared_ptr<SliceVector>> TSlice::slices() const

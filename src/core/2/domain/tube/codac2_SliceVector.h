@@ -33,6 +33,7 @@ namespace codac2
     public:
 
       explicit SliceVector(size_t n, const TubeVector& tube_vector, std::list<std::shared_ptr<TSlice>>::iterator it_tslice);
+      SliceVector(const SliceVector& s);
       ~SliceVector();
 
       const TubeVector& tube_vector() const;

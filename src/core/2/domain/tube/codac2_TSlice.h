@@ -30,7 +30,8 @@ namespace codac2
   {
     public:
 
-      explicit TSlice(const Interval& t0_tf);
+      explicit TSlice(const Interval& tdomain);
+      TSlice(const TSlice& tslice, const Interval& tdomain); // performs a deep copy on slices
       const Interval& tdomain() const;
       const std::map<const TubeVector*,std::shared_ptr<SliceVector>> slices() const;
       void add_slice(const std::shared_ptr<SliceVector>& slice);
@@ -38,8 +39,11 @@ namespace codac2
 
     protected:
 
+      void set_tdomain(const Interval& tdomain);
+
       friend class TubeVector;
-      const Interval _tdomain;
+      friend class TDomain;
+      Interval _tdomain;
       std::map<const TubeVector*,std::shared_ptr<SliceVector>> _slices;
   };
 } // namespace codac

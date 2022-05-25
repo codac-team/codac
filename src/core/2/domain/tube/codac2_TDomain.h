@@ -30,7 +30,10 @@ namespace codac2
 
       explicit TDomain(const Interval& t0_tf, double dt, bool with_gates = false);
       const Interval t0_tf() const;
+      std::list<std::shared_ptr<TSlice>>::iterator iterator_tslice(double t);
       size_t nb_tslices() const;
+      size_t nb_tubes() const;
+      void sample(double t);
       friend std::ostream& operator<<(std::ostream& os, const TDomain& x);
 
 
