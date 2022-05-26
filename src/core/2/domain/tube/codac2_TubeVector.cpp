@@ -21,14 +21,14 @@ namespace codac2
   TubeVector::TubeVector(size_t n, TDomain& tdomain) :
     _tdomain(tdomain)
   {
-    for(list<shared_ptr<TSlice>>::iterator it = _tdomain._tslices.begin();
+    for(list<TSlice>::iterator it = _tdomain._tslices.begin();
       it != _tdomain._tslices.end(); ++it)
-      it->get()->add_slice(make_shared<SliceVector>(n, *this, it));
+      it->add_slice(SliceVector(n, *this, it));
   }
 
   size_t TubeVector::size() const
   {
-    return first_slice()->size();
+    return first_slice().size();
   }
 
   size_t TubeVector::nb_slices() const
@@ -36,25 +36,25 @@ namespace codac2
     return _tdomain.nb_tslices();
   }
 
-  const std::shared_ptr<SliceVector>& TubeVector::first_slice() const
+  const SliceVector& TubeVector::first_slice() const
   {
-    return _tdomain.tslices().front()->slices().at(this);
+    return _tdomain.tslices().front().slices().at(this);
   }
 
-  std::shared_ptr<SliceVector>& TubeVector::first_slice()
+  SliceVector& TubeVector::first_slice()
   {
-    return const_cast<shared_ptr<SliceVector>&>(
+    return const_cast<SliceVector&>(
       static_cast<const TubeVector&>(*this).first_slice());
   }
 
-  const std::shared_ptr<SliceVector>& TubeVector::last_slice() const
+  const SliceVector& TubeVector::last_slice() const
   {
-    return _tdomain.tslices().back()->slices().at(this);
+    return _tdomain.tslices().back().slices().at(this);
   }
 
-  std::shared_ptr<SliceVector>& TubeVector::last_slice()
+  SliceVector& TubeVector::last_slice()
   {
-    return const_cast<shared_ptr<SliceVector>&>(
+    return const_cast<SliceVector&>(
       static_cast<const TubeVector&>(*this).last_slice());
   }
 

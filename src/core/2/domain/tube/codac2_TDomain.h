@@ -30,7 +30,7 @@ namespace codac2
 
       explicit TDomain(const Interval& t0_tf, double dt, bool with_gates = false);
       const Interval t0_tf() const;
-      std::list<std::shared_ptr<TSlice>>::iterator iterator_tslice(double t);
+      std::list<TSlice>::iterator iterator_tslice(double t);
       size_t nb_tslices() const;
       size_t nb_tubes() const;
       void sample(double t);
@@ -39,11 +39,11 @@ namespace codac2
 
     protected:
 
-      const std::list<std::shared_ptr<TSlice>> tslices() const;
+      const std::list<TSlice>& tslices() const;
 
       friend class SliceVector;
       friend class TubeVector;
-      std::list<std::shared_ptr<TSlice>> _tslices;
+      std::list<TSlice> _tslices;
   };
 } // namespace codac
 

@@ -21,7 +21,7 @@ namespace codac2
 {
   TDomain::TDomain(const Interval& t0_tf, double dt, bool with_gates)
   {
-    _tslices.push_back(make_shared<TSlice>(Interval(-oo,oo)));
+    _tslices.push_back(TSlice(Interval(-oo,oo)));
     for(double t = t0_tf.lb() ; t < t0_tf.ub()+dt ; t+=dt)
     {
       double t_ = min(t, t0_tf.ub());
@@ -34,8 +34,8 @@ namespace codac2
 
   const Interval TDomain::t0_tf() const
   {
-    return Interval(_tslices.front()->tdomain().ub(),
-      prev(_tslices.end())->get()->tdomain().lb());
+    return Interval(_tslices.front().tdomain().ub(),
+      prev(_tslices.end())->tdomain().lb());
   }
 
   size_t TDomain::nb_tslices() const
@@ -45,35 +45,35 @@ namespace codac2
 
   size_t TDomain::nb_tubes() const
   {
-    return _tslices.front().get()->_slices.size();
+    return _tslices.front()._slices.size();
   }
 
-  list<shared_ptr<TSlice>>::iterator TDomain::iterator_tslice(double t)
+  list<TSlice>::iterator TDomain::iterator_tslice(double t)
   {
-    list<shared_ptr<TSlice>>::iterator it;
+    list<TSlice>::iterator it;
     for(it = _tslices.begin(); it != _tslices.end(); ++it)
-      if(it->get()->tdomain().contains(t)) return it;
+      if(it->tdomain().contains(t)) return it;
     return _tslices.end();
   }
   
   void TDomain::sample(double t)
   {
-    std::list<std::shared_ptr<TSlice>>::iterator it = iterator_tslice(t);
+    std::list<TSlice>::iterator it = iterator_tslice(t);
     assert(it != _tslices.end());
-    const Interval tdomain = it->get()->tdomain();
+    const Interval tdomain = it->tdomain();
     assert(tdomain.contains(t));
 
-    it->get()->set_tdomain(Interval(tdomain.lb(), t));
+    it->set_tdomain(Interval(tdomain.lb(), t));
     ++it;
     
     if(t == tdomain.ub())
-      assert(!it->get()->tdomain().is_degenerated() &&
+      assert(!it->tdomain().is_degenerated() &&
         "degenerated tslice (gate) already existing at this time");
 
-    _tslices.insert(it, make_shared<TSlice>(Interval(t, tdomain.ub())));
+    _tslices.insert(it, TSlice(Interval(t, tdomain.ub())));
   }
 
-  const list<shared_ptr<TSlice>> TDomain::tslices() const
+  const list<TSlice>& TDomain::tslices() const
   {
     return _tslices;
   }

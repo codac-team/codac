@@ -32,10 +32,10 @@ namespace codac2
       size_t size() const;
 
       size_t nb_slices() const;
-      const std::shared_ptr<SliceVector>& first_slice() const;
-      std::shared_ptr<SliceVector>& first_slice();
-      const std::shared_ptr<SliceVector>& last_slice() const;
-      std::shared_ptr<SliceVector>& last_slice();
+      const SliceVector& first_slice() const;
+      SliceVector& first_slice();
+      const SliceVector& last_slice() const;
+      SliceVector& last_slice();
 
       //TubeVectorComponent operator[](size_t index);
       //const TubeVectorComponent operator[](size_t index) const;
@@ -60,7 +60,7 @@ namespace codac2
 
     public:
 
-      using base_container = std::list<std::shared_ptr<TSlice>>;
+      using base_container = std::list<TSlice>;
 
       struct iterator : public base_container::iterator
       {
@@ -68,7 +68,7 @@ namespace codac2
         using difference_type   = typename base_container::iterator::difference_type;
 
         using value_type        = SliceVector;
-        using pointer           = std::shared_ptr<SliceVector>;
+        using pointer           = SliceVector*;
         using reference         = SliceVector&;
 
         public:
@@ -78,7 +78,7 @@ namespace codac2
 
           reference operator*()
           {
-            return *((*this)->get()->_slices.at(&_tube_vector));
+            return ((*this)->_slices.at(&_tube_vector));
           }
 
         protected:
@@ -96,7 +96,7 @@ namespace codac2
         using difference_type   = typename base_container::const_iterator::difference_type;
 
         using value_type        = SliceVector;
-        using pointer           = const std::shared_ptr<SliceVector>;
+        using pointer           = const SliceVector*;
         using reference         = const SliceVector&;
 
         public:
@@ -106,7 +106,7 @@ namespace codac2
 
           reference operator*() const
           {
-            return *((*this)->get()->_slices.at(&_tube_vector));
+            return ((*this)->_slices.at(&_tube_vector));
           }
 
         protected:

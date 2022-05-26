@@ -16,7 +16,7 @@ using namespace std;
 
 namespace codac2
 {
-  SliceVector::SliceVector(size_t n, const TubeVector& tube_vector, list<shared_ptr<TSlice>>::iterator it_tslice) :
+  SliceVector::SliceVector(size_t n, const TubeVector& tube_vector, list<TSlice>::iterator it_tslice) :
     _tube_vector(tube_vector), _it_tslice(it_tslice),
     _codomain(IntervalVector(n))
   {
@@ -51,32 +51,32 @@ namespace codac2
 
   const Interval& SliceVector::tdomain() const
   {
-    return _it_tslice->get()->tdomain();
+    return _it_tslice->tdomain();
   }
 
-  shared_ptr<const SliceVector> SliceVector::prev_slice() const
+  const SliceVector* SliceVector::prev_slice() const
   {
-    if(_tube_vector.first_slice().get() == this)
-      return shared_ptr<const SliceVector>(nullptr);
-    return prev(_it_tslice)->get()->slices().at(&_tube_vector);
+    if(&_tube_vector.first_slice() == this)
+      return nullptr;
+    return &prev(_it_tslice)->slices().at(&_tube_vector);
   }
 
-  shared_ptr<SliceVector> SliceVector::prev_slice()
+  SliceVector* SliceVector::prev_slice()
   {
-    return const_pointer_cast<SliceVector>(
+    return const_cast<SliceVector*>(
       static_cast<const SliceVector&>(*this).prev_slice());
   }
 
-  shared_ptr<const SliceVector> SliceVector::next_slice() const
+  const SliceVector* SliceVector::next_slice() const
   {
-    if(_tube_vector.last_slice().get() == this)
-      return shared_ptr<const SliceVector>(nullptr);
-    return next(_it_tslice)->get()->slices().at(&_tube_vector);
+    if(&_tube_vector.last_slice() == this)
+      return nullptr;
+    return &next(_it_tslice)->slices().at(&_tube_vector);
   }
 
-  shared_ptr<SliceVector> SliceVector::next_slice()
+  SliceVector* SliceVector::next_slice()
   {
-    return const_pointer_cast<SliceVector>(
+    return const_cast<SliceVector*>(
       static_cast<const SliceVector&>(*this).next_slice());
   }
 
@@ -89,7 +89,7 @@ namespace codac2
   {
     IntervalVector gate = codomain();
     if(prev_slice())
-      gate &= prev_slice().get()->codomain();
+      gate &= prev_slice()->codomain();
     return gate;
   }
 
@@ -97,7 +97,7 @@ namespace codac2
   {
     IntervalVector gate = codomain();
     if(next_slice())
-      gate &= next_slice().get()->codomain();
+      gate &= next_slice()->codomain();
     return gate;
   }
 

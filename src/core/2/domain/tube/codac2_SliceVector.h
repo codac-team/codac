@@ -32,7 +32,7 @@ namespace codac2
   {
     public:
 
-      explicit SliceVector(size_t n, const TubeVector& tube_vector, std::list<std::shared_ptr<TSlice>>::iterator it_tslice);
+      explicit SliceVector(size_t n, const TubeVector& tube_vector, std::list<TSlice>::iterator it_tslice);
       SliceVector(const SliceVector& s);
       ~SliceVector();
 
@@ -48,10 +48,10 @@ namespace codac2
 
       bool contains(const TrajectoryVector& value) const;
 
-      std::shared_ptr<const SliceVector> prev_slice() const;
-      std::shared_ptr<SliceVector> prev_slice();
-      std::shared_ptr<const SliceVector> next_slice() const;
-      std::shared_ptr<SliceVector> next_slice();
+      const SliceVector* prev_slice() const;
+      SliceVector* prev_slice();
+      const SliceVector* next_slice() const;
+      SliceVector* next_slice();
 
       const Interval& tdomain() const;
 
@@ -70,7 +70,7 @@ namespace codac2
       //friend class TubeVectorComponent;
       
       const TubeVector& _tube_vector;
-      std::list<std::shared_ptr<TSlice>>::iterator _it_tslice;
+      std::list<TSlice>::iterator _it_tslice;
       IntervalVector _codomain;
   };
 } // namespace codac

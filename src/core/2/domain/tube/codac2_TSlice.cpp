@@ -26,7 +26,7 @@ namespace codac2
   {
     set_tdomain(tdomain);
     for(const auto& [tv,s] : tslice.slices())
-      add_slice(make_shared<SliceVector>(*s.get()));
+      add_slice(s);
   }
 
   const Interval& TSlice::tdomain() const
@@ -40,15 +40,15 @@ namespace codac2
     _tdomain = tdomain;
   }
 
-  const map<const TubeVector*,shared_ptr<SliceVector>> TSlice::slices() const
+  const map<const TubeVector*,SliceVector>& TSlice::slices() const
   {
     return _slices;
   }
   
-  void TSlice::add_slice(const std::shared_ptr<SliceVector>& slice)
+  void TSlice::add_slice(const SliceVector& slice)
   {
     _slices.insert(
-      pair<const TubeVector*,shared_ptr<SliceVector>>(&slice.get()->tube_vector(), slice));
+      pair<const TubeVector*,SliceVector>(&slice.tube_vector(), slice));
   }
 
   ostream& operator<<(ostream& os, const TSlice& x)
