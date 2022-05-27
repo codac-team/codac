@@ -87,7 +87,7 @@ void SepFixPoint::setCoutFlags(IntervalVector& x_out, IntervalVector& x0){
  *  +++++++++++++++++++++++++++++++++++
  *
  */
-bool SepFixPoint::reconstrut(IntervalVector &x_in, IntervalVector& x_out, IntervalVector& x_old){
+bool SepFixPoint::reconstruct(IntervalVector &x_in, IntervalVector& x_out, IntervalVector& x_old){
     IntervalVector x = x_in & x_out;
     IntervalVector *rest;
 
@@ -159,7 +159,7 @@ void SepFixPoint::separate(IntervalVector& x_in, IntervalVector& x_out){
         dist = x_old.rel_distance(x);
         // std::cerr << dist << " / " << ratio << " " <<  " " <<  x  << " " << x.diam() << "\n";
     } while (  dist > ratio);// || x_old.rel_distance(x_out)>ratio ));
-    reconstrut(x_in, x_out, x_old0);
+    reconstruct(x_in, x_out, x_old0);
 }
 
 } // namespace pyibex
