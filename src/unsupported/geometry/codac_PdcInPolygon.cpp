@@ -26,6 +26,19 @@ PdcInPolygon::PdcInPolygon(vector< vector< vector<double> > > &points) : Pdc(2) 
     }
 }
 
+PdcInPolygon::PdcInPolygon(vector< vector<double> > &vertices) : Pdc(2) {
+    size_t n_vertices = vertices.size();
+    
+    ax.resize(n_vertices); ay.resize(n_vertices); bx.resize(n_vertices); by.resize(n_vertices);
+    for(int i=0; i< n_vertices; i++)
+    {
+        ax[i] = vertices[i % n_vertices][0];
+        ay[i] = vertices[i % n_vertices][1];
+        bx[i] = vertices[(i+1) % n_vertices][0];
+        by[i] = vertices[(i+1) % n_vertices][1];
+    }
+}
+
 PdcInPolygon::PdcInPolygon(vector<double> &_ax, vector<double> &_ay, vector<double> &_bx, vector<double> &_by) : Pdc(2),
             ax(_ax),
             ay(_ay),

@@ -41,9 +41,30 @@ Array<Ctc> segment_ctc_list(vector< vector< vector<double> > > points) {
     return l;
 }
 
+Array<Ctc> segment_ctc_list(vector< vector <double> > &vertices) {
+    Array<Ctc> l(vertices.size());
+    size_t n_vertices = vertices.size();
+    for(unsigned int i=0; i<n_vertices; i++) {
+        l.set_ref(i, *new codac::CtcSegment(
+            vertices[i % n_vertices][0],
+            vertices[i % n_vertices][1],
+            vertices[(i+1) % n_vertices][0],
+            vertices[(i+1)%n_vertices][1])
+        );
+    }
+    return l;
+}
+
+
 } // end anonymous namespace
 
 namespace codac {
+
+SepPolygon::SepPolygon(vector< vector<double> > &vertices) :
+            SepBoundaryCtc(*new CtcUnion(segment_ctc_list(vertices)),
+                           *new PdcInPolygon(vertices)) {
+
+}
 
 SepPolygon::SepPolygon(vector< vector< vector<double> > > &points) :
             SepBoundaryCtc(*new CtcUnion(segment_ctc_list(points)),
@@ -56,6 +77,8 @@ SepPolygon::SepPolygon(vector<double> &_ax, vector<double> &_ay, vector<double> 
                            *new PdcInPolygon(_ax,_ay,_bx,_by)) {
 
 }
+
+
 
 SepPolygon::~SepPolygon() {
 	for(int i=0; i<((CtcUnion&) ctc_boundary).list.size(); i++) {
