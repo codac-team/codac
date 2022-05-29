@@ -60,10 +60,10 @@ public:
     void separate(IntervalVector &x_in, IntervalVector &x_out);
 
 protected:
-    Ctc& ctcIn;
-    Ctc& ctcOut;
-    // CtcExist *ctcExist;
-    // CtcForAll *ctcForAll;
+    Ctc& ctc_in;
+    Ctc& ctc_out;
+    CtcExist *ctcExist;
+    CtcForAll *ctcForAll;
     // bool delete_ctc;
     IntervalVector y_init;
     BitSet vars;

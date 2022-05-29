@@ -228,8 +228,8 @@ typedef struct ImpactStatus_{
  *
  * This operator allows to contract a box [x] with respect to:
  *
- *    x_out : exists y in[y] |  c_out(x,y).
- *    x_in : for all y in[y] | c_in(x,y)
+ *    \f$x_{out} = \left{ \exists y in [y] |  c_{out}(x,y) \right}\f$
+ *    \f$x_{in} =  \left{ \forall y in[y] | c_in(x,y) \right\}\f$
  *
  * where y is a vector of "parameters".
  * Note that the fix point propagation is not enable.
