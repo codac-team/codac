@@ -18,6 +18,7 @@
 #include "codac2_TubeVector.h"
 #include "codac2_TubeAbstract_const.h"
 #include "ibex_Interval.h"
+#include "codac_Tube.h" // to be removed
 
 namespace codac2
 {
@@ -44,6 +45,8 @@ namespace codac2
       const TubeVectorComponent& operator=(std::pair<std::function<Interval(const Interval&)>,const TubeVectorComponent> x);
 
       friend std::ostream& operator<<(std::ostream& os, const TubeVectorComponent& x);
+
+      codac::Tube to_codac1() const; // to be removed
       
 
     protected:

@@ -19,6 +19,7 @@
 #include "codac2_TubeVectorComponent.h"
 #include "codac2_TubeVectorEvaluation.h"
 #include "codac2_TubeAbstract_const.h"
+#include "codac_TubeVector.h" // to be removed
 
 namespace codac2
 {
@@ -56,6 +57,8 @@ namespace codac2
       void set(const IntervalVector& codomain);
 
       friend std::ostream& operator<<(std::ostream& os, const TubeVector& x);
+
+      codac::TubeVector to_codac1() const; // to be removed
 
 
     protected:

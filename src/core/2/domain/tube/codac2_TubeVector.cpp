@@ -155,4 +155,16 @@ namespace codac2
        << flush;
     return os;
   }
+  
+  codac::TubeVector TubeVector::to_codac1() const
+  {
+    codac::TubeVector x(t0_tf(), size());
+    for(const auto& s : *this)
+      if(!s.t0_tf().is_unbounded())
+        x.set(s.codomain(), s.t0_tf());
+    for(const auto& s : *this) // setting gate (were overwritten)
+      if(s.t0_tf().is_degenerated())
+        x.set(s.codomain(), s.t0_tf());
+    return x;
+  }
 } // namespace codac

@@ -92,5 +92,17 @@ namespace codac2
   {
     return make_pair(static_cast<Interval(*)(const Interval&)>(ibex::cos), x);
   }
+  
+  codac::Tube TubeVectorComponent::to_codac1() const
+  {
+    codac::Tube x(t0_tf());
+    for(const auto& s : _tubevector)
+      if(!s.t0_tf().is_unbounded())
+        x.set(s.codomain()[_i], s.t0_tf());
+    for(const auto& s : _tubevector) // setting gate (were overwritten)
+      if(s.t0_tf().is_degenerated())
+        x.set(s.codomain()[_i], s.t0_tf());
+    return x;
+  }
 
 } // namespace codac
