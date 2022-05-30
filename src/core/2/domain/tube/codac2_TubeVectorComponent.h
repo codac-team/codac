@@ -14,33 +14,50 @@
 
 #include <memory>
 #include "codac_Interval.h"
+#include "codac_Trajectory.h"
 #include "codac2_TubeVector.h"
+#include "codac2_TubeAbstract_const.h"
+#include "ibex_Interval.h"
 
 namespace codac2
 {
-  class TubeVector_;
+  using codac::Interval;
+  using codac::Trajectory;
 
-  /*template<typename T_TubeVector>
-  class TubeVectorComponent// : public DomainItem_<Trajectory_>, public TemporalItem_
+  class TubeVector;
+
+  class TubeVectorComponent : public Tube_const
   {
     public:
 
-      const Interval_& tdomain() const;
+      TubeVectorComponent(const TubeVectorComponent& tubevector_i);
 
-      bool contains(const Trajectory_& value) const;
+      size_t size() const;
+      const TDomain& tdomain() const;
+      Interval t0_tf() const;
+      Interval codomain() const;
 
-      void set_codomain(const Interval_& codomain);
+      bool contains(const Trajectory& value) const;
+
+      void set(const Interval& codomain);
+      const TubeVectorComponent& operator=(const TubeVectorComponent& x);
+      const TubeVectorComponent& operator=(std::pair<std::function<Interval(const Interval&)>,const TubeVectorComponent> x);
+
+      friend std::ostream& operator<<(std::ostream& os, const TubeVectorComponent& x);
       
 
     protected:
 
-      friend class TubeVector_;
-      explicit TubeVectorComponent(T_TubeVector& tubevector, size_t i);
+      friend class TubeVector;
+      explicit TubeVectorComponent(TubeVector& tubevector, size_t i);
 
-      size_t m_i;
-      T_TubeVector& m_tubevector;
+      size_t _i;
+      TubeVector& _tubevector;
+  };
 
-  };*/
+  std::pair<std::function<Interval(const Interval&)>,const TubeVectorComponent> cos(const TubeVectorComponent& x);
+
+
 } // namespace codac
 
 #endif

@@ -17,16 +17,16 @@ using namespace std;
 namespace codac2
 {
   SliceVector::SliceVector(size_t n, const TubeVector& tube_vector, list<TSlice>::iterator it_tslice) :
-    _tube_vector(tube_vector), _it_tslice(it_tslice),
+    _tubevector(tube_vector), _it_tslice(it_tslice),
     _codomain(IntervalVector(n))
   {
 
   }
 
   SliceVector::SliceVector(const SliceVector& s) :
-    _tube_vector(s._tube_vector), _it_tslice(s._it_tslice), _codomain(s.size())
+    _tubevector(s._tubevector), _it_tslice(s._it_tslice), _codomain(s._codomain)
   {
-
+    
   }
 
   SliceVector::~SliceVector()
@@ -36,7 +36,7 @@ namespace codac2
 
   const TubeVector& SliceVector::tube_vector() const
   {
-    return _tube_vector;
+    return _tubevector;
   }
 
   size_t SliceVector::size() const
@@ -49,16 +49,16 @@ namespace codac2
     return true;
   }
 
-  const Interval& SliceVector::tdomain() const
+  const Interval& SliceVector::t0_tf() const
   {
-    return _it_tslice->tdomain();
+    return _it_tslice->t0_tf();
   }
 
   const SliceVector* SliceVector::prev_slice() const
   {
-    if(&_tube_vector.first_slice() == this)
+    if(&_tubevector.first_slice() == this)
       return nullptr;
-    return &prev(_it_tslice)->slices().at(&_tube_vector);
+    return &prev(_it_tslice)->slices().at(&_tubevector);
   }
 
   SliceVector* SliceVector::prev_slice()
@@ -69,9 +69,9 @@ namespace codac2
 
   const SliceVector* SliceVector::next_slice() const
   {
-    if(&_tube_vector.last_slice() == this)
+    if(&_tubevector.last_slice() == this)
       return nullptr;
-    return &next(_it_tslice)->slices().at(&_tube_vector);
+    return &next(_it_tslice)->slices().at(&_tubevector);
   }
 
   SliceVector* SliceVector::next_slice()
@@ -85,7 +85,7 @@ namespace codac2
     return _codomain;
   }
 
-  const IntervalVector SliceVector::input_gate() const
+  IntervalVector SliceVector::input_gate() const
   {
     IntervalVector gate = codomain();
     if(prev_slice())
@@ -93,7 +93,7 @@ namespace codac2
     return gate;
   }
 
-  const IntervalVector SliceVector::output_gate() const
+  IntervalVector SliceVector::output_gate() const
   {
     IntervalVector gate = codomain();
     if(next_slice())
@@ -109,7 +109,7 @@ namespace codac2
 
   ostream& operator<<(ostream& os, const SliceVector& x)
   {
-    os << x.tdomain()
+    os << x.t0_tf()
        << "↦" << x.codomain()
        << flush;
     return os;

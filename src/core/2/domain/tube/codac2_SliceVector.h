@@ -33,8 +33,9 @@ namespace codac2
     public:
 
       explicit SliceVector(size_t n, const TubeVector& tube_vector, std::list<TSlice>::iterator it_tslice);
-      SliceVector(const SliceVector& s);
       ~SliceVector();
+      
+      SliceVector(const SliceVector& s);
 
       const TubeVector& tube_vector() const;
 
@@ -53,11 +54,11 @@ namespace codac2
       const SliceVector* next_slice() const;
       SliceVector* next_slice();
 
-      const Interval& tdomain() const;
+      const Interval& t0_tf() const;
 
       const IntervalVector& codomain() const;
-      const IntervalVector input_gate() const;
-      const IntervalVector output_gate() const;
+      IntervalVector input_gate() const;
+      IntervalVector output_gate() const;
 
       void set(const IntervalVector& codomain);
 
@@ -67,9 +68,11 @@ namespace codac2
     protected:
 
       friend class TubeVector;
-      //friend class TubeVectorComponent;
+      friend class TubeVectorComponent;
+      friend class TDomain;
+      friend class TSlice;
       
-      const TubeVector& _tube_vector;
+      const TubeVector& _tubevector;
       std::list<TSlice>::iterator _it_tslice;
       IntervalVector _codomain;
   };

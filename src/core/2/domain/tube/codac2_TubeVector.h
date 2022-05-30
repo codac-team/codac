@@ -16,19 +16,23 @@
 #include <memory>
 #include "codac2_TDomain.h"
 #include "codac2_SliceVector.h"
-
+#include "codac2_TubeVectorComponent.h"
+#include "codac2_TubeVectorEvaluation.h"
 #include "codac2_TubeAbstract_const.h"
 
 namespace codac2
 {
   class TDomain;
-  //class SliceVector;
+  class TubeVectorComponent;
+  class TubeVectorEvaluation;
 
   class TubeVector : public TubeVector_const
   {
     public:
 
       explicit TubeVector(size_t n, TDomain& tdomain);
+      explicit TubeVector(const TubeVector& x);
+      ~TubeVector();
       size_t size() const;
 
       size_t nb_slices() const;
@@ -37,16 +41,18 @@ namespace codac2
       const SliceVector& last_slice() const;
       SliceVector& last_slice();
 
-      //TubeVectorComponent operator[](size_t index);
-      //const TubeVectorComponent operator[](size_t index) const;
+      TubeVectorComponent operator[](size_t i);
+      //const TubeVectorComponent operator[](size_t i) const;
 
       bool contains(const TrajectoryVector& value) const;
 
       TDomain& tdomain() const;
       Interval t0_tf() const;
       IntervalVector codomain() const;
-      IntervalVector operator()(double t) const;
-      IntervalVector operator()(const Interval& t) const;
+      TubeVectorEvaluation operator()(double t);
+      TubeVectorEvaluation operator()(const Interval& t);
+      IntervalVector eval(double t) const;
+      IntervalVector eval(const Interval& t) const;
       void set(const IntervalVector& codomain);
 
       friend std::ostream& operator<<(std::ostream& os, const TubeVector& x);
@@ -54,7 +60,8 @@ namespace codac2
 
     protected:
 
-      //friend class TubeVectorComponent;
+      friend class TubeVectorComponent;
+      friend class TubeVectorEvaluation;
       TDomain& _tdomain;
 
 

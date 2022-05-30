@@ -9,35 +9,88 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
+#include <functional>
 #include "codac2_TubeVectorComponent.h"
 #include "codac2_TubeVector.h"
 #include "codac2_SliceVector.h"
+#include "ibex_Interval.h"
 
 using namespace std;
 
 namespace codac2
 {
-  /*const Interval_& TubeVectorComponent::tdomain() const
-  {
-    return m_tubevector.tdomain();
-  }
-
-  bool TubeVectorComponent::contains(const Trajectory_& value) const
-  {
-    return true;
-  }
-
-  TubeVectorComponent::TubeVectorComponent(T_TubeVector& tubevector, size_t i) :
-    m_i(i), m_tubevector(tubevector)
+  TubeVectorComponent::TubeVectorComponent(TubeVector& tubevector, size_t i) :
+    _i(i), _tubevector(tubevector)
   {
     assert(i >= 0 && i < tubevector.size());
+  }
+
+  TubeVectorComponent::TubeVectorComponent(const TubeVectorComponent& tubevector_i) :
+    _i(tubevector_i._i), _tubevector(tubevector_i._tubevector)
+  {
 
   }
   
-  void TubeVectorComponent::set_codomain(const Interval_& codomain)
+  size_t TubeVectorComponent::size() const
   {
-    for(auto& s : m_tubevector.m_slices)
-      s->m_codomain[m_i] = codomain;
-  }*/
+    return 1;
+  }
+
+  const TDomain& TubeVectorComponent::tdomain() const
+  {
+    return _tubevector.tdomain();
+  }
+  
+  Interval TubeVectorComponent::t0_tf() const
+  {
+    return _tubevector.t0_tf();
+  }
+  
+  Interval TubeVectorComponent::codomain() const
+  {
+    Interval codomain(Interval::EMPTY_SET);
+    for(const auto& s : _tubevector)
+      codomain |= s.codomain()[_i];
+    return codomain;
+  }
+
+  bool TubeVectorComponent::contains(const Trajectory& value) const
+  {
+    assert(false);
+    return true;
+  }
+  
+  void TubeVectorComponent::set(const Interval& codomain)
+  {
+    for(auto& s : _tubevector)
+      s._codomain[_i] = codomain;
+  }
+
+  const TubeVectorComponent& TubeVectorComponent::operator=(const TubeVectorComponent& x)
+  {
+    assert(&x.tdomain() == &tdomain());
+    for(auto& s : _tubevector)
+      s._codomain[_i] = s._it_tslice->_slices.at(&x._tubevector)._codomain[x._i];
+    return *this;
+  }
+
+  const TubeVectorComponent& TubeVectorComponent::operator=(pair<function<Interval(const Interval&)>,const TubeVectorComponent> rel)
+  {
+    assert(&rel.second.tdomain() == &tdomain());
+    for(auto& s : _tubevector)
+      s._codomain[_i] = rel.first(s._it_tslice->_slices.at(&rel.second._tubevector)._codomain[_i]);
+    return *this;
+  }
+
+  ostream& operator<<(ostream& os, const TubeVectorComponent& x)
+  {
+    os << "Component " << x._i << " of: " << x._tubevector << flush;
+    return os;
+  }
+
+  pair<function<Interval(const Interval&)>,const TubeVectorComponent> cos(const TubeVectorComponent& x)
+  {
+    return make_pair(static_cast<Interval(*)(const Interval&)>(ibex::cos), x);
+  }
 
 } // namespace codac

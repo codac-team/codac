@@ -167,6 +167,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVector.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVectorComponent.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVectorComponent.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVectorEvaluation.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domain/tube/codac2_TubeVectorEvaluation.h
                   )
 
 

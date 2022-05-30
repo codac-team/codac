@@ -43,8 +43,8 @@ namespace codac2
       virtual bool contains(const V& value) const = 0;
       virtual Interval t0_tf() const = 0;
       virtual I codomain() const = 0;
-      virtual I operator()(double t) const = 0;
-      virtual I operator()(const Interval& t) const = 0;
+      // virtual I operator()(double t) const = 0;
+      //virtual I operator()(const Interval& t) const = 0;
 
       //TubeVectorComponent operator[](size_t index);
       //const TubeVectorComponent operator[](size_t index) const;

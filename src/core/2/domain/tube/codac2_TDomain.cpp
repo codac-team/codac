@@ -21,6 +21,9 @@ namespace codac2
 {
   TDomain::TDomain(const Interval& t0_tf, double dt, bool with_gates)
   {
+    assert(!t0_tf.is_empty());
+    assert(dt > 0.);
+
     _tslices.push_back(TSlice(Interval(-oo,oo)));
     for(double t = t0_tf.lb() ; t < t0_tf.ub()+dt ; t+=dt)
     {
@@ -34,8 +37,8 @@ namespace codac2
 
   const Interval TDomain::t0_tf() const
   {
-    return Interval(_tslices.front().tdomain().ub(),
-      prev(_tslices.end())->tdomain().lb());
+    return Interval(_tslices.front().t0_tf().ub(),
+      prev(_tslices.end())->t0_tf().lb());
   }
 
   size_t TDomain::nb_tslices() const
@@ -50,27 +53,40 @@ namespace codac2
 
   list<TSlice>::iterator TDomain::iterator_tslice(double t)
   {
+    if(t == -oo) return _tslices.begin();
+    if(t == oo) return prev(_tslices.end());
+
     list<TSlice>::iterator it;
     for(it = _tslices.begin(); it != _tslices.end(); ++it)
-      if(it->tdomain().contains(t)) return it;
+    {
+      const Interval& tdom = it->t0_tf();
+      if((tdom.is_degenerated() && tdom.lb() == t) // gate
+        || (tdom.lb() <= t && tdom.ub() > t)) // slice
+        return it;
+    }
+    assert(false && "time must belong to one slice because tdomain is unbounded");
     return _tslices.end();
   }
   
-  void TDomain::sample(double t)
+  list<TSlice>::iterator TDomain::sample(double t, bool allow_gate)
   {
-    std::list<TSlice>::iterator it = iterator_tslice(t);
+    list<TSlice>::iterator it = iterator_tslice(t);
     assert(it != _tslices.end());
-    const Interval tdomain = it->tdomain();
+    const Interval tdomain = it->t0_tf();
     assert(tdomain.contains(t));
 
-    it->set_tdomain(Interval(tdomain.lb(), t));
-    ++it;
-    
-    if(t == tdomain.ub())
-      assert(!it->tdomain().is_degenerated() &&
-        "degenerated tslice (gate) already existing at this time");
+    if((tdomain.lb() == t && !allow_gate) || tdomain.is_degenerated())
+      return it;
 
-    _tslices.insert(it, TSlice(Interval(t, tdomain.ub())));
+    it->set_tdomain(Interval(tdomain.lb(), t));
+    TSlice ts(*it, Interval(t, tdomain.ub()));
+
+    ++it;
+    it = _tslices.insert(it, ts);
+    for(auto& [k,s] : it->_slices) // adding the new iterator pointer to the new slices
+      s._it_tslice = it;
+    
+    return it;
   }
 
   const list<TSlice>& TDomain::tslices() const

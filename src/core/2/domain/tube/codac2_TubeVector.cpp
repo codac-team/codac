@@ -23,7 +23,29 @@ namespace codac2
   {
     for(list<TSlice>::iterator it = _tdomain._tslices.begin();
       it != _tdomain._tslices.end(); ++it)
-      it->add_slice(SliceVector(n, *this, it));
+    {
+      it->_slices.insert(
+        pair<const TubeVector*,SliceVector>(this,
+          SliceVector(n, *this, it)));
+    }
+  }
+
+  TubeVector::TubeVector(const TubeVector& x) :
+    _tdomain(x.tdomain())
+  {
+    for(list<TSlice>::iterator it = _tdomain._tslices.begin();
+      it != _tdomain._tslices.end(); ++it)
+    {
+      it->_slices.insert(
+        pair<const TubeVector*,SliceVector>(this,
+          SliceVector(it->_slices.at(&x).size(), *this, it)));
+    }
+  }
+
+  TubeVector::~TubeVector()
+  {
+    for(auto& s : _tdomain._tslices)
+      s._slices.erase(this);
   }
 
   size_t TubeVector::size() const
@@ -82,14 +104,33 @@ namespace codac2
     return codomain;
   }
   
-  IntervalVector TubeVector::operator()(double t) const
+  TubeVectorEvaluation TubeVector::operator()(double t)
   {
-    return codomain();
+    return TubeVectorEvaluation(*this, t);
   }
   
-  IntervalVector TubeVector::operator()(const Interval& t) const
+  TubeVectorEvaluation TubeVector::operator()(const Interval& t)
   {
-    return codomain();
+    return TubeVectorEvaluation(*this, t);
+  }
+  
+  IntervalVector TubeVector::eval(double t) const
+  {
+    return _tdomain.iterator_tslice(t)->_slices.at(this).codomain();
+  }
+  
+  IntervalVector TubeVector::eval(const Interval& t) const
+  {
+    list<TSlice>::iterator it = _tdomain.iterator_tslice(t.lb());
+    IntervalVector codomain = it->_slices.at(this).codomain();
+
+    while(it != _tdomain.iterator_tslice(t.ub()))
+    {
+      codomain |= it->_slices.at(this).codomain();
+      it++;
+    }
+
+    return codomain;
   }
 
   void TubeVector::set(const IntervalVector& codomain)
@@ -99,20 +140,11 @@ namespace codac2
       s.set(codomain);
   }
 
-  /*TubeVectorComponent TubeVector::operator[](size_t index)
+  TubeVectorComponent TubeVector::operator[](size_t i)
   {
-    assert(index >= 0 && index < size());
-    return TubeVectorComponent(*this, index);
+    assert(i >= 0 && i < size());
+    return TubeVectorComponent(*this, i);
   }
-
-  const TubeVectorComponent TubeVector::operator[](size_t index) const
-  {
-//    assert(index >= 0 && index < size());
-//return const_cast<Tube&>(static_cast<const TubeVector&>(*this).operator[](index));
- 
-    assert(index >= 0 && index < size());
-    return TubeVectorComponent(*this, index);
-  }*/
 
   ostream& operator<<(ostream& os, const TubeVector& x)
   {
