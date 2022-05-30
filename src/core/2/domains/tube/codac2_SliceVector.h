@@ -47,6 +47,9 @@ namespace codac2
 
       size_t size() const;
 
+      bool is_gate() const;
+      bool is_empty() const;
+      bool is_unbounded() const;
       bool contains(const TrajectoryVector& value) const;
 
       const SliceVector* prev_slice() const;
@@ -55,6 +58,7 @@ namespace codac2
       SliceVector* next_slice();
 
       const Interval& t0_tf() const;
+      const TSlice& tslice() const;
 
       const IntervalVector& codomain() const;
       IntervalVector input_gate() const;
@@ -75,6 +79,9 @@ namespace codac2
       const TubeVector& _tubevector;
       std::list<TSlice>::iterator _it_tslice;
       IntervalVector _codomain;
+
+      // Wrappers related to guaranteed integration can be dynamically allocated here
+      // ...
   };
 } // namespace codac
 

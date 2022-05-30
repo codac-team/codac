@@ -80,6 +80,22 @@ namespace codac2
       static_cast<const TubeVector&>(*this).last_slice());
   }
 
+  bool TubeVector::is_empty() const
+  {
+    for(const auto& s : *this)
+      if(s.is_empty())
+        return true;
+    return false;
+  }
+
+  bool TubeVector::is_unbounded() const
+  {
+    for(const auto& s : *this)
+      if(s.is_unbounded())
+        return true;
+    return false;
+  }
+
   bool TubeVector::contains(const TrajectoryVector& value) const
   {
     return true;

@@ -45,6 +45,8 @@ namespace codac2
       TubeVectorComponent operator[](size_t i);
       //const TubeVectorComponent operator[](size_t i) const;
 
+      bool is_empty() const;
+      bool is_unbounded() const;
       bool contains(const TrajectoryVector& value) const;
 
       TDomain& tdomain() const;

@@ -44,6 +44,21 @@ namespace codac2
     return _codomain.size();
   }
 
+  bool SliceVector::is_gate() const
+  {
+    return t0_tf().is_degenerated();
+  }
+
+  bool SliceVector::is_empty() const
+  {
+    return input_gate().is_empty() || output_gate().is_empty();
+  }
+
+  bool SliceVector::is_unbounded() const
+  {
+    return _codomain.is_unbounded();
+  }
+
   bool SliceVector::contains(const TrajectoryVector& value) const
   {
     return true;
@@ -52,6 +67,11 @@ namespace codac2
   const Interval& SliceVector::t0_tf() const
   {
     return _it_tslice->t0_tf();
+  }
+
+  const TSlice& SliceVector::tslice() const
+  {
+    return *_it_tslice;
   }
 
   const SliceVector* SliceVector::prev_slice() const
@@ -105,6 +125,8 @@ namespace codac2
   {
     assert((size_t)codomain.size() == size());
     _codomain = codomain;
+    if(is_gate())
+      _codomain &= prev_slice()->codomain() & next_slice()->codomain();
   }
 
   ostream& operator<<(ostream& os, const SliceVector& x)
