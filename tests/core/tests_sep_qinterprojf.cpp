@@ -28,7 +28,7 @@ TEST_CASE("QIntersection tests")
     };
 
     ibex::Array<IntervalVector> array_boxes(boxes.size());
-    for (int i = 0; i < boxes.size(); i++)
+    for (size_t i = 0; i < boxes.size(); i++)
     {
       array_boxes.set_ref(i, boxes[i]);
     }
@@ -65,7 +65,7 @@ TEST_CASE("QIntersection tests")
     };
 
     ibex::Array<IntervalVector> array_boxes(boxes.size());
-    for (int i = 0; i < boxes.size(); i++)
+    for (size_t i = 0; i < boxes.size(); i++)
     {
       array_boxes.set_ref(i, boxes[i]);
     }
@@ -103,7 +103,7 @@ TEST_CASE("SepQInterProjF")
   };
 
   ibex::Array<Sep> array_sep(seps.size());
-  for (int i = 0; i < seps.size(); i++)
+  for (size_t i = 0; i < seps.size(); i++)
   {
     array_sep.set_ref(i, seps[i]);
   }

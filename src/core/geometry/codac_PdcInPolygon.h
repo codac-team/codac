@@ -92,6 +92,9 @@ public:
 
 	/**
 	 * \brief Test the box.
+     * \param box to be tested
+     * 
+     * \return YES if the point is inside the close polygon, NO if outside, else MAYBE.
 	 */
 	virtual BoolInterval test(const IntervalVector& box);
 

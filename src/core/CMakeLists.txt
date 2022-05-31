@@ -55,6 +55,10 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_GrahamScan.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ThickPoint.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ThickPoint.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_PdcInPolygon.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_PdcInPolygon.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolygon.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolygon.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_Interval.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_IntervalVector.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/domains/interval/codac_IntervalMatrix.h
@@ -111,6 +115,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcPolar.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcPolar.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcUnion.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcSegment.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcSegment.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_DynCtc.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_DynCtc.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/dyn/codac_CtcPicard.h
@@ -147,6 +153,14 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepBox.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFunction.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFunction.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_QInterProjF.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_QInterProjF.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepCtcPairProj.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepCtcPairProj.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepFixPoint.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/separators/codac_SepProj.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Tools.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/tools/codac_Eigen.cpp

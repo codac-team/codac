@@ -66,7 +66,7 @@ class SepPolygon : public ibex::SepBoundaryCtc {
 public:
 
 	/**
-	 * Create a Separator with the polygon passed as argument.
+	 * \brief Create a Separator with the polygon passed as argument.
      *
      * A polygon is defined as an union of segments given in a counter-clockwise order.
      * See unit test for an example of usage
@@ -81,7 +81,7 @@ public:
     SepPolygon(std::vector< std::vector< std::vector<double> > >& points);
 
     /**
-	 * Create a Separator with the polygon passed as argument.
+	 * \brief  Create a Separator with the polygon passed as argument.
      *
      * A polygon is defined as an union of segments given in a counter-clockwise order.
      * See unit test for an example of usage
@@ -91,7 +91,7 @@ public:
      * This contractor is minimal as an union of minimal contractors.
      * See #ibex::SepBoundaryCtc.
      *
-     * \param points list of vertices on the form (ax, ay), (bx, by), (cx, cy), ...
+     * \param vertices list of vertices on the form (ax, ay), (bx, by), (cx, cy), ...
      */
     SepPolygon(std::vector< std::vector < double > > & vertices);
 

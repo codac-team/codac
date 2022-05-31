@@ -5,11 +5,7 @@
 set(TESTS_NAME codac-unsupported-test)
 
 list(APPEND SRC_TESTS ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-        # ${CMAKE_CURRENT_SOURCE_DIR}/tests_sep_transform.cpp
-        # ${CMAKE_CURRENT_SOURCE_DIR}/tests_sep_polygon.cpp
-        # ${CMAKE_CURRENT_SOURCE_DIR}/tests_sep_qinterprojf.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/tests_sep_fixpoint.cpp
-        
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests_sep_transform.cpp
         )
 
 add_executable(${TESTS_NAME} ${SRC_TESTS})
