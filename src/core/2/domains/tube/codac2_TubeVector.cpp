@@ -30,6 +30,16 @@ namespace codac2
     }
   }
 
+  TubeVector::TubeVector(size_t n, TDomain& tdomain, const TFnc& f) :
+    TubeVector(n, tdomain)
+  {
+    assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
+    assert((size_t)f.image_dim() == n);
+
+    for(auto& s : *this)
+      s.set(f.eval_vector(s.t0_tf()));
+  }
+
   TubeVector::TubeVector(const TubeVector& x) :
     _tdomain(x.tdomain())
   {

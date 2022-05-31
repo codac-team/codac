@@ -24,15 +24,19 @@ namespace codac2
     assert(!t0_tf.is_empty());
     assert(dt > 0.);
 
-    _tslices.push_back(TSlice(Interval(-oo,oo)));
+    double prev_t = -oo;
     for(double t = t0_tf.lb() ; t < t0_tf.ub()+dt ; t+=dt)
     {
       double t_ = min(t, t0_tf.ub());
 
-      sample(t_);
+      _tslices.push_back(TSlice(Interval(prev_t,t_)));
       if(with_gates)
-        sample(t_); // second sampling
+        _tslices.push_back(TSlice(Interval(t_,t_)));
+
+      prev_t = t_;
     }
+
+    _tslices.push_back(TSlice(Interval(t0_tf.ub(),oo)));
   }
 
   const Interval TDomain::t0_tf() const

@@ -14,6 +14,7 @@
 
 #include "codac_TFunction.h"
 #include "codac2_TubeVector.h"
+#include "codac2_SliceVector.h"
 
 namespace codac2
 {
@@ -29,9 +30,8 @@ namespace codac2
 
       CtcDiffInclusion(const TFunction& t);
       void contract(TubeVector& x, const TubeVector& u);
+      void contract(SliceVector& x, const SliceVector& u);
       const TFunction& f() const;
-
-      void contract(TubeVector& x, TubeVector& u);
 
     protected:
 

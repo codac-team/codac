@@ -14,6 +14,7 @@
 
 #include <list>
 #include <memory>
+#include "codac_TFnc.h"
 #include "codac2_TDomain.h"
 #include "codac2_SliceVector.h"
 #include "codac2_TubeVectorComponent.h"
@@ -23,6 +24,7 @@
 
 namespace codac2
 {
+  using codac::TFnc;
   class TDomain;
   class TubeVectorComponent;
   class TubeVectorEvaluation;
@@ -32,6 +34,7 @@ namespace codac2
     public:
 
       explicit TubeVector(size_t n, TDomain& tdomain);
+      explicit TubeVector(size_t n, TDomain& tdomain, const TFnc& f);
       explicit TubeVector(const TubeVector& x);
       ~TubeVector();
       size_t size() const;
