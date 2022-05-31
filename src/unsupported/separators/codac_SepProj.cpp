@@ -48,7 +48,8 @@ SepProj::~SepProj() {}
  * @return true if x_in or x_out is empty.
  */
 bool SepProj::process(IntervalVector& x_in, IntervalVector& x_out, IntervalVector &y, ImpactStatus& impact, bool use_point){
-    assert(x_in == x_out);
+    assert(x_in == x_out); // assert x_in == x_out
+    
     IntervalVector x = (x_in & x_out);
     if (x.is_empty()) return true;
 
