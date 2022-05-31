@@ -27,7 +27,7 @@ namespace codac {
 /**
  * \ingroup geometry
  *
- * Minimal contractor for a segment
+ * \brief Minimal contractor for a segment
  */
 class CtcSegment : public Ctc {
 
