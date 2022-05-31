@@ -24,7 +24,7 @@ namespace codac {
 * \ingroup set
 *
 * \brief Image of a separator by a function \f$f\f$ where  an analytic expression 
-* of \f$\mathbfs{f}^{-1}\f$ is avaiable. 
+* of \f$\mathbf{f}^{-1}\f$ is avaiable. 
 * the computation is less pessimism than using a classical
 * a forward / backward propagation (@see: Ibex::SepInverse)
 * Transformation of a separator with an inversible function
