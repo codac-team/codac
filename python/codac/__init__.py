@@ -6,7 +6,6 @@ if 'pyibex' in sys.modules:
   print('Conflicts may occur between the two libraries.\n')
 
 from codac.core import *
-from codac.unsupported import SepPolarXY, SepQInterProjF, SepTransform
 from .version import __version__
 
 

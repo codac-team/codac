@@ -39,6 +39,7 @@ void export_CtcFunction(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcConstell(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcNewton(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcPolar(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+void export_CtcQInterProjF(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 
 py::class_<DynCtc,pyDynCtc> export_DynCtc(py::module& m);
 void export_CtcDelay(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
@@ -74,6 +75,9 @@ void export_VIBesFigTube(py::module& m);
 void export_VIBesFigTubeVector(py::module& m);
 void export_VIBesFigMap(py::module& m);
 void export_VIBesFigPaving(py::module& m);
+
+void export_geometry(py::module& m, py::class_<Ctc, pyCtc>& ctc, py::class_<ibex::Sep, pySep>& sep);
+
 
 void export_Paving(py::module& m);
 void export_Set(py::module& m);
@@ -136,6 +140,8 @@ PYBIND11_MODULE(core, m)
   export_VIBesFigTubeVector(m);
   export_VIBesFigMap(m);
   export_VIBesFigPaving(m);
+
+  export_geometry(m, ctc, sep);
 
   export_Paving(m);
   export_Set(m);

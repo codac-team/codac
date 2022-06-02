@@ -65,24 +65,25 @@ void export_unsupported_geometry(py::module& m, py::class_<Ctc, pyCtc>& ctc, py:
   ;*/
 
   // // Export SepPolarXY
-  py::class_<SepPolarXY>(m, "SepPolarXY", sep)
-      .def(py::init<Interval, Interval>())
-      .def("separate", &SepPolarXY::separate)
-  ;
+  // py::class_<SepPolarXY>(m, "SepPolarXY", sep)
+  //     .def(py::init<Interval, Interval>())
+  //     .def("separate", &SepPolarXY::separate)
+  // ;
+
 
   // // Export CtcSegment
-  py::class_<CtcSegment>(m, "CtcSegment", ctc)
-      .def(py::init<double, double,double,double>())
-      .def("contract", &CtcSegment::contract)
-  ;
-  //
+  // py::class_<CtcSegment>(m, "CtcSegment", ctc)
+  //     .def(py::init<double, double,double,double>())
+  //     .def("contract", &CtcSegment::contract)
+  // ;
+  
   // // Export SepPolygon
-  py::class_<SepPolygon>(m, "SepPolygon", sep)
-    .def(py::init(&SepPolygonFromList), "list"_a)
-    // .def(py::init<std::vector< std::vector< std::vector<double> > >& >())
-    .def(py::init<std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&>())
-    .def("separate", (void (ibex::Sep::*) (IntervalVector&, IntervalVector&)) &SepPolygon::separate)
-  ;
+  // py::class_<SepPolygon>(m, "SepPolygon", sep)
+  //   .def(py::init(&SepPolygonFromList), "list"_a)
+  //   // .def(py::init<std::vector< std::vector< std::vector<double> > >& >())
+  //   .def(py::init<std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&>())
+  //   .def("separate", (void (ibex::Sep::*) (IntervalVector&, IntervalVector&)) &SepPolygon::separate)
+  // ;
 
   // Export SepDiskExists
   py::class_<SepDiskExists>(m, "SepDiskExists", sep)

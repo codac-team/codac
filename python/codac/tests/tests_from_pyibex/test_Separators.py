@@ -11,7 +11,6 @@
 
 import unittest
 from codac import *
-from codac.unsupported import SepFixPoint, SepProj
 import sys
 import math
 

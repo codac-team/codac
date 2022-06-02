@@ -25,6 +25,11 @@
 #include <codac_Function.h>
 #include <codac_SepFunction.h>
 #include <codac_SepBox.h>
+#include <codac_SepCtcPairProj.h>
+#include <codac_SepProj.h>
+#include <codac_SepFixPoint.h>
+#include <codac_QInterProjF.h>
+
 #include <ibex_SepUnion.h>
 #include <ibex_SepInter.h>
 #include <ibex_SepNot.h>
@@ -152,6 +157,52 @@ py::class_<ibex::Sep,pySep> export_Sep(py::module& m)
     .def(py::init<const IntervalVector&>())
     .def("separate", &SepBox::separate)
   ;
+
+  // Export SepQInterProjF
+  py::class_<SepQInterProjF>(m, "SepQInterProjF", sep, __DOC_SEP_SEPQINTERPROJF)
+    .def(py::init<Array<Sep> >(), py::keep_alive<1,2>(), py::arg("list"))
+    .def("separate", &SepQInterProjF::separate)
+    .def_property("q", py::cpp_function(&SepQInterProjF::get_q), py::cpp_function(&SepQInterProjF::set_q))
+  ;
+
+
+  // Export SepProj
+  py::class_<SepProj>(m, "SepProj", sep, __DOC_SEP_SEPPROJ)
+    .def(py::init<ibex::Sep&,const IntervalVector&, double>(), py::keep_alive<1,2>(),
+          py::arg("sep"), py::arg("y_init"), py::arg("prec")=1e-3 )
+    .def(py::init<ibex::Sep&,const Interval&, double>(), py::keep_alive<1,2>(),
+          py::arg("sep"), py::arg("y_init"), py::arg("prec")=1e-3 )
+    .def(py::init(
+        [](ibex::Sep& S,const std::array<double, 2>& itv, double eps){
+          return std::unique_ptr<SepProj> (
+            new SepProj(S, Interval(itv[0], itv[1]), eps)
+          );
+        }),
+        py::keep_alive<1,2>(),
+        py::arg("sep"),
+        py::arg("y_init"),
+        py::arg("prec")=1e-3 )
+
+    .def("separate", &SepProj::separate, py::call_guard<py::gil_scoped_release>())
+  ;
+
+  // Export SepCtcPairProj
+  py::class_<SepCtcPairProj>(m, "SepCtcPairProj", sep, __DOC_SEP_SEPCTCPAIRPROJ)
+    .def(py::init<ibex::Ctc&, ibex::Ctc&,const IntervalVector&, double>(), py::keep_alive<1,2>(), py::keep_alive<1,3>(),
+          py::arg("ctc_in"), py::arg("ctc_out"), py::arg("y_init"), py::arg("prec"))
+    .def(py::init<ibex::SepCtcPair&,const IntervalVector&, double>(), py::keep_alive<1,2>(),
+          py::arg("sep"), py::arg("y_init"), py::arg("prec") )
+    .def(py::init<ibex::Sep&,const IntervalVector&, double>(), py::keep_alive<1,2>(),
+          py::arg("sep"), py::arg("y_init"), py::arg("prec") )
+    .def("separate", &SepCtcPairProj::separate, py::call_guard<py::gil_scoped_release>())
+  ;
+
+  // Export SepFixPoint
+  py::class_<SepFixPoint>(m, "SepFixPoint", sep)
+    .def(py::init<ibex::Sep&, double >(), py::keep_alive<1,2>(), "sep"_a, "ratio"_a=0.01)
+    .def("separate", &SepFixPoint::separate, py::call_guard<py::gil_scoped_release>())
+  ;
+
 
   return sep;
 }
