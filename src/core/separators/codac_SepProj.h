@@ -300,11 +300,6 @@ protected:
      */
     bool process(IntervalVector &x_in, IntervalVector &x_out, IntervalVector &y, ImpactStatus &impact, bool use_point);
     
-    /**
-     * @brief internal variable used to count the number of call of the SepProj::process method
-     * 
-     */
-    int nbx;
 
     bool separate_fixPoint(IntervalVector& x_in, IntervalVector& x_out, IntervalVector &y);
 
@@ -323,6 +318,13 @@ protected:
      * \brief precision
      */
     double prec;
+
+    /**
+     * @brief internal variable used to count the number of call of the SepProj::process method
+     * 
+     */
+    // int nbx;
+
 
     /**
       * \brief the outer contractor / inner contractor has an impact

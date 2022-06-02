@@ -66,9 +66,9 @@ protected:
 
 
     Interval rho, theta;
-    Interval rho_m, rho_p;
-    Interval theta_m, theta_p;
-    Interval cmpl;
+    // Interval rho_m, rho_p;
+    // Interval theta_m, theta_p;
+    // Interval cmpl;
     codac::CtcPolar ctc;
 };
 

@@ -47,8 +47,7 @@ public:
    * @param sep separator to use
    * @param return_ctc_in if true, if true return inner contracted box else the outer one
    */
-  CtcFromSep(Sep &sep, bool return_ctc_in) : Ctc(sep.nb_var), sep(sep),
-  return_ctc_in(return_ctc_in) {}
+  CtcFromSep(Sep &sep, bool return_ctc_in) : Ctc(sep.nb_var), sep(sep), return_ctc_in(return_ctc_in) {}
 
   /**
    * @brief contract method

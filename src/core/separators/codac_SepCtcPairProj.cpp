@@ -15,7 +15,7 @@ namespace codac {
 
 SepCtcPairProj::SepCtcPairProj(Ctc& ctc_in, Ctc& ctc_out, const IntervalVector& y_init, double prec) :
     Sep(ctc_in.nb_var), ctc_in(ctc_in), ctc_out(ctc_out),
-    vars(ibex::BitSet(ctc_in.nb_var)), y_init(y_init)
+    y_init(y_init), vars(ibex::BitSet(ctc_in.nb_var))
 {
     for(int i = 0; i < ctc_in.nb_var-y_init.size(); i++){
         vars.add(i);
@@ -32,7 +32,7 @@ SepCtcPairProj::SepCtcPairProj(Ctc& ctc_in, Ctc& ctc_out, const IntervalVector& 
 
 SepCtcPairProj::SepCtcPairProj(SepCtcPair& sep, const IntervalVector& y_init, double prec) :
     Sep(sep.nb_var), ctc_in(sep.ctc_in), ctc_out(sep.ctc_out),
-    vars(ibex::BitSet(sep.nb_var)), y_init(y_init)
+    y_init(y_init), vars(ibex::BitSet(sep.nb_var))
 {
     for(int i = 0; i < sep.nb_var-y_init.size(); i++){
         vars.add(i);
@@ -50,7 +50,7 @@ SepCtcPairProj::SepCtcPairProj(SepCtcPair& sep, const IntervalVector& y_init, do
 
 SepCtcPairProj::SepCtcPairProj(Sep& sep, const IntervalVector& y_init, double prec) :
     Sep(sep.nb_var), ctc_in(*new CtcFromSep(sep, true)), ctc_out(*new CtcFromSep(sep, false)),
-    vars(ibex::BitSet(sep.nb_var)), y_init(y_init)
+    y_init(y_init), vars(ibex::BitSet(sep.nb_var))
 {
     for(int i = 0; i < sep.nb_var-y_init.size(); i++){
         vars.add(i);

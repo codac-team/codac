@@ -19,8 +19,8 @@ const double SepFixPoint::default_ratio = 0.1;
 SepFixPoint::SepFixPoint(Sep& sep, double ratio) :
     Sep(sep.nb_var),
     sep(sep),
-    ratio(ratio), impact_cin(false), impact_cout(false),
-    first_cin_boxes(NULL), first_cout_boxes(NULL)
+    impact_cin(false), impact_cout(false),
+    first_cin_boxes(NULL), first_cout_boxes(NULL), ratio(ratio)
 {
     clearFlags();
 }

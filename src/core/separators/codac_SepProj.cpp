@@ -19,7 +19,7 @@ namespace codac {
 
 
 SepProj::SepProj(Sep& sep, const IntervalVector& y_init, double prec) : Sep(sep.nb_var), sep(sep),
-    y_init(y_init), prec(prec), nbx(0)
+    y_init(y_init), prec(prec) //, nbx(0)
 {
     // The LargestFirst minimal size is set to a very small number to avoid
     //  NoBisectableVariableException to be raised
@@ -27,7 +27,7 @@ SepProj::SepProj(Sep& sep, const IntervalVector& y_init, double prec) : Sep(sep.
 }
 
 SepProj::SepProj(Sep& sep, const Interval& y_init, double prec) : Sep(sep.nb_var), sep(sep),
-    y_init(1, y_init), prec(prec), nbx(0)
+    y_init(1, y_init), prec(prec)//,  nbx(0)
 {
     // The LargestFirst minimal size is set to a very small number to avoid
     //  NoBisectableVariableException to be raised
@@ -61,7 +61,7 @@ bool SepProj::process(IntervalVector& x_in, IntervalVector& x_out, IntervalVecto
     // IntervalVector XoutFull0(XoutFull);
     // std::cerr << "XinFull " << XinFull << "\n";
     sep.separate(XinFull, XoutFull);
-    nbx++;
+    // nbx++;
 
     if (!((XinFull | XoutFull)  == cart_prod(x, y))){
       std::cerr << "##########################################################\n";
@@ -210,7 +210,7 @@ void SepProj::separate(IntervalVector &x_in, IntervalVector &x_out){
 
     // vibes::drawBox(x_old0, "y");
     l.push(TwoItv(x_out, y_init));
-    static int k = 0;
+    // static int k = 0;
     // std::cerr << "###########################################################\n";
     while(!l.empty()){
         IntervalVector x_out_save(l.front().first);
