@@ -59,13 +59,17 @@ public:
 	Array<Ctc> list;
 
 	/**
-	 * The number of contractors we have to intersect the
+	 * \brief The number of contractors we have to intersect the
 	 * result.
 	 */
 	int q;
 
 protected:
-	IntervalMatrix boxes; // store boxes for each contraction
+	/**
+	 * @brief store boxes for each contraction
+	 * 
+	 */
+	IntervalMatrix boxes; 
 };
 
 
@@ -115,12 +119,12 @@ protected:
 	 */
 	IntervalMatrix boxes_in;
 	/**
-		* \brief boxes_out : stores in boxes for each contraction
-		*/
+	 * \brief boxes_out : stores in boxes for each contraction
+	 */
 	IntervalMatrix boxes_out;
 
 	/**
-	 * The number of contractors we have to intersect the
+	 * \brief The number of contractors we have to intersect the
 	 * result.
 	 */
 	int q;
