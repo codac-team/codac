@@ -49,6 +49,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_Polygon.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ConvexPolygon.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ConvexPolygon.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ThickEdge.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_ThickEdge.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_GrahamScan.h

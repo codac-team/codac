@@ -51,8 +51,8 @@
     # Geometry
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepDiskExists.h
     ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepDiskExists.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolarXY.cpp
     # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_CtcSegment.h
     # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_CtcSegment.cpp
     # ${CMAKE_CURRENT_SOURCE_DIR}/geometry/codac_SepPolygon.h

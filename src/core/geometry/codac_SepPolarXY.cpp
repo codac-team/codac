@@ -68,6 +68,7 @@ void SepPolarXY::separate(IntervalVector& x_in, IntervalVector& x_out){
 
 	assert(x_out.size() == 2);
 	assert(x_in.size() == 2);
+
 	x_out &= x_in;
 	x_in &= x_out;
 
@@ -95,22 +96,5 @@ void SepPolarXY::separate(IntervalVector& x_in, IntervalVector& x_out){
     }
 }
 
-// SepPolarXYT(const Interval& rho, const Interval& phi): rho(rho), phi(phi) {}
-// 		// sep(*(new SepPolarXY(rho, phi))){
-// }
-//
-// void separate(IntervalVector& x_in, IntervalVector& x_out){
-// 		assert(x_out.size() == 3);
-// 		assert(x_in.size() == 3);
-// 		x_out &= x_in;
-// 		x_in &= x_out;
-// 		Interval theta_in = x_in[2] + phi;
-// 		Interval theta_out = x_out[2] + phi;
-// 		SepPolarXY sep(rho, theta);
-// 		sep.separate(x_in)
-//
-//
-//
-// }
 
 }; // end namespace pyibex
