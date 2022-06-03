@@ -206,7 +206,7 @@ for xml_doc in files:
 
         for param in params:
           param_name = param.find("declname")
-          if param_name:
+          if param_name != None and param_name.text:
             print(indent + param_name.text, "(" + get_tags_text(param.find("type")) + "): ", end='', file=f)
             parameterlist = memberdef.find("detaileddescription/para/parameterlist")
 
