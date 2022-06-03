@@ -41,7 +41,7 @@ TEST_CASE("SepTransform")
       // SepFwdBwd S1 = SepFwdBwd(f1, Interval(16, 25));
       double theta = 3.14/6;
       string f2_str = string_format("(cos(%f)  + sin(%f), -sin(%f) + cos(%f))", theta,theta,theta,theta);
-      cout << f2_str << std::endl;
+      //cout << f2_str << std::endl;
 
       Function f2 = Function("x", "y", string_format("(x*cos(%f)  + y*sin(%f), -x*sin(%f) + y*cos(%f))", theta,theta,theta,theta).c_str());
       Function f2_inv = Function("x", "y", string_format("(x*cos(%f) - y*sin(%f), x*sin(%f) + y*cos(%f))", theta,theta,theta,theta).c_str());
@@ -51,9 +51,9 @@ TEST_CASE("SepTransform")
 
       SepInter Sinter = SepInter(T, Ti);
       IntervalVector X0 = IntervalVector({Interval(-10, 10), Interval(-10, 10)});
-      SIVIA(X0, T, 0.01, true, "SepTransform");
-      SIVIA(X0, Ti, 0.01, true, "SepInverse");
-      SIVIA(X0, S, 0.01, true, "SepInverse_both");
+      SIVIA(X0, T, 0.01, !true, "SepTransform");
+      SIVIA(X0, Ti, 0.01, !true, "SepInverse");
+      SIVIA(X0, S, 0.01, !true, "SepInverse_both");
 
   }
 

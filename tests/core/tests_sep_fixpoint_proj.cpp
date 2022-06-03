@@ -56,7 +56,7 @@ TEST_CASE("FixPoint tests")
 
 
     sep.separate(x_in, x_out);
-    cout << "FakeSep called " << S.count << " time\n";
+    //cout << "FakeSep called " << S.count << " time\n";
     CHECK(x_out[0].contains({0}));
     CHECK(x_in[0].contains({0}));
     CHECK((x_in[0] | x_out[0]) == Interval(-10, 10));
