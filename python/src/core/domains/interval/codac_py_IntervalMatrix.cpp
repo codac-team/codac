@@ -138,5 +138,21 @@ void export_IntervalMatrix(py::module& m)
 
   .def("__or__", [](const IntervalMatrix& x, const IntervalMatrix& y) { return x|y; })
   .def("__and__", [](const IntervalMatrix& x, const IntervalMatrix& y) { return x&y; })
+
+  .def("inflate", &IntervalMatrix::inflate, "r"_a)
+  .def("is_unbounded", &IntervalMatrix::is_unbounded)
+  .def("is_subset", &IntervalMatrix::is_subset, "x"_a)
+  .def("is_strict_subset", &IntervalMatrix::is_strict_subset, "x"_a)
+  .def("is_interior_subset", &IntervalMatrix::is_interior_subset, "x"_a)
+  .def("is_strict_interior_subset", &IntervalMatrix::is_strict_interior_subset, "x"_a)
+  .def("is_superset", &IntervalMatrix::is_superset, "x"_a)
+  .def("is_strict_superset", &IntervalMatrix::is_strict_superset, "x"_a)
+  .def("contains", &IntervalMatrix::contains, "x"_a)
+  .def("__contains__", &IntervalMatrix::contains, "x"_a)
+  .def("interior_contains", &IntervalMatrix::interior_contains, "x"_a)
+  .def("intersects", &IntervalMatrix::intersects, "x"_a)
+  .def("overlaps", &IntervalMatrix::overlaps, "x"_a)
+  .def("is_disjoint", &IntervalMatrix::is_disjoint,"x"_a)
+  .def("is_zero", &IntervalMatrix::is_zero)
   ;
 };
