@@ -19,6 +19,7 @@
 #include <pybind11/numpy.h>
 #include "codac_type_caster.h"
 
+#include "ibex_Matrix.h"
 #include "codac_Interval.h"
 #include "codac_IntervalMatrix.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
@@ -76,6 +77,22 @@ void export_IntervalMatrix(py::module& m)
   .def(py::init<int,int,const Interval>())
   .def(py::init<const IntervalMatrix&>())
   .def(py::init(&create_from_list))
+
+  .def(py::init([](py::buffer b) // create for instance an IntervalMatrix from a NumPy matrix
+  {
+    // Request a buffer descriptor from Python
+    py::buffer_info info = b.request();
+
+    // Some sanity checks...
+    if(info.format != py::format_descriptor<double>::format())
+        throw std::runtime_error("Incompatible format: expected a double array");
+
+    if(info.ndim != 2)
+        throw std::runtime_error("Incompatible buffer dimension");
+
+    ibex::Matrix m((int)info.shape[0], (int)info.shape[1], static_cast<double *>(info.ptr));
+    return IntervalMatrix(m);
+  }))
 
   .def("__getitem__", [](IntervalMatrix& s, size_t index) -> IntervalVector&
     {
