@@ -18,6 +18,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_traj_arithmetic.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_traj_arithmetic_scalar.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_traj_arithmetic_vector.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_matrix_arithmetic.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/arithmetic/codac_matrix_arithmetic.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_Figure.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/graphics/codac_Figure.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/graphics/vibes/vibes.h

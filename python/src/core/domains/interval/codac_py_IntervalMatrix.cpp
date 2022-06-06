@@ -22,6 +22,7 @@
 #include "ibex_Matrix.h"
 #include "codac_Interval.h"
 #include "codac_IntervalMatrix.h"
+#include "codac_matrix_arithmetic.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 // todo: #include "codac_py_IntervalMatrix_docs.h"
 
@@ -85,12 +86,12 @@ void export_IntervalMatrix(py::module& m)
 
     // Some sanity checks...
     if(info.format != py::format_descriptor<double>::format())
-        throw std::runtime_error("Incompatible format: expected a double array");
+      throw std::runtime_error("Incompatible format: expected a double array");
 
     if(info.ndim != 2)
-        throw std::runtime_error("Incompatible buffer dimension");
+      throw std::runtime_error("Incompatible buffer dimension");
 
-    ibex::Matrix m((int)info.shape[0], (int)info.shape[1], static_cast<double *>(info.ptr));
+    ibex::Matrix m((int)info.shape[0], (int)info.shape[1], static_cast<double*>(info.ptr));
     return IntervalMatrix(m);
   }))
 
@@ -134,5 +135,8 @@ void export_IntervalMatrix(py::module& m)
   .def( "__mul__", [](IntervalMatrix& m, const Interval& x) { return x*m; })
   .def("shape", [] (IntervalMatrix& o) { return make_tuple(o.nb_rows(), o.nb_cols()); })
   .def("__repr__", [](const IntervalMatrix& x) { ostringstream str; str << x; return str.str(); })
+
+  .def("__or__", [](const IntervalMatrix& x, const IntervalMatrix& y) { return x|y; })
+  .def("__and__", [](const IntervalMatrix& x, const IntervalMatrix& y) { return x&y; })
   ;
 };

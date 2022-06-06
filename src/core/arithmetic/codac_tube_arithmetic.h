@@ -7,10 +7,7 @@
  *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
-
-      * \param x
-      * \return Tube output
-      */
+ */
 
 #ifndef __CODAC_TUBE_ARITHMETIC_H__
 #define __CODAC_TUBE_ARITHMETIC_H__
