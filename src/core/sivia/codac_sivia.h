@@ -39,7 +39,7 @@ namespace codac
    * \param color_map color map used to draw boxes, see SetColorMap
    * \return return a map of lists of boxes. Keys of the map are IN/OUT/UNKNOWN. The lists are empty if return_result if false.
    */
-  std::map<SetValue,std::list<IntervalVector>>  SIVIA(const IntervalVector& x, Ctc& ctc, float precision,
+  std::map<SetValue,std::list<IntervalVector>> SIVIA(const IntervalVector& x, Ctc& ctc, float precision,
     bool display_result = true, const std::string& fig_name = "", bool return_result = false, const SetColorMap& color_map = DEFAULT_SET_COLOR_MAP);
   
   /// @}
@@ -61,7 +61,7 @@ namespace codac
    * \param color_map color map used to draw boxes, see SetColorMap
    * \return return a map of lists of boxes. Keys of the map are IN/OUT/UNKNOWN. The lists are empty if return_result if false.
    */
-  std::map<SetValue,std::list<IntervalVector>>  SIVIA(const IntervalVector& x, ibex::Sep& sep, float precision,
+  std::map<SetValue,std::list<IntervalVector>> SIVIA(const IntervalVector& x, ibex::Sep& sep, float precision,
     bool display_result = true, const std::string& fig_name = "", bool return_result = false, const SetColorMap& color_map = DEFAULT_SET_COLOR_MAP);
 
   /// @}

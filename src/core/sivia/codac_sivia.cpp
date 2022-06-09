@@ -21,6 +21,8 @@ using namespace std;
 
 namespace codac
 {
+  static bool _vibes_initialized = false;
+
   vector<IntervalVector> box_diff(const IntervalVector& x0, const IntervalVector& x)
   {
     vector<IntervalVector> v;
@@ -37,8 +39,13 @@ namespace codac
 
     if(display_result)
     {
-      vibes::beginDrawing();
-      // will not be ended in case the init has been done outside this SIVIA function
+      if(!_vibes_initialized)
+      {
+        _vibes_initialized = true;
+        vibes::beginDrawing();
+        // will not be ended in case the init has been done outside this SIVIA function
+      }
+
       vibes::drawBox(x0, vibesParams("figure", fig_name));
       vibes::axisAuto();
     }
@@ -139,8 +146,12 @@ namespace codac
 
     if(display_result)
     {
-      vibes::beginDrawing();
-      // will not be ended in case the init has been done outside this SIVIA function
+      if(!_vibes_initialized)
+      {
+        _vibes_initialized = true;
+        vibes::beginDrawing();
+        // will not be ended in case the init has been done outside this SIVIA function
+      }
 
       if(!fig_name.empty())
         vibes::selectFigure(fig_name);
