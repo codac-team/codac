@@ -35,6 +35,7 @@ namespace codac2
 
     protected:
 
+      friend class SliceVector; // to be removed
       const TFunction _f;
   };
 }

@@ -63,14 +63,14 @@ namespace codac2
   void TubeVectorComponent::set(const Interval& codomain)
   {
     for(auto& s : _tubevector)
-      s._codomain[_i] = codomain;
+      s.set_component(_i, codomain);
   }
 
   const TubeVectorComponent& TubeVectorComponent::operator=(const TubeVectorComponent& x)
   {
     assert(&x.tdomain() == &tdomain());
     for(auto& s : _tubevector)
-      s._codomain[_i] = s._it_tslice->_slices.at(&x._tubevector)._codomain[x._i];
+      s.set_component(_i, s._it_tslice->_slices.at(&x._tubevector).codomain()[x._i]);
     return *this;
   }
 
@@ -78,7 +78,7 @@ namespace codac2
   {
     assert(&rel.second.tdomain() == &tdomain());
     for(auto& s : _tubevector)
-      s._codomain[_i] = rel.first(s._it_tslice->_slices.at(&rel.second._tubevector)._codomain[_i]);
+      s.set_component(_i, rel.first(s._it_tslice->_slices.at(&rel.second._tubevector).codomain()[rel.second._i]));
     return *this;
   }
 

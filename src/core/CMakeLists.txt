@@ -171,6 +171,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeVectorEvaluation.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.h
                   )
 
 
@@ -200,7 +202,8 @@
                                           ${CMAKE_CURRENT_SOURCE_DIR}/tools
                                           ${CMAKE_CURRENT_SOURCE_DIR}/sivia
                                           ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube)
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/)
   target_link_libraries(codac PUBLIC Ibex::ibex)
   
 

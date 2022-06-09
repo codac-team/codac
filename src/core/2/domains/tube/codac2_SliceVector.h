@@ -13,11 +13,13 @@
 #define __CODAC2_SLICEVECTOR_H__
 
 #include <list>
+#include <variant>
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 #include "codac_TrajectoryVector.h"
 #include "codac2_TSlice.h"
 #include "codac2_TDomain.h"
+#include "codac2_AbstractDomain.h"
 
 namespace codac2
 {
@@ -32,7 +34,9 @@ namespace codac2
   {
     public:
 
-      explicit SliceVector(size_t n, const TubeVector& tube_vector, std::list<TSlice>::iterator it_tslice);
+      explicit SliceVector(size_t n, const TubeVector& tube_vector, const std::list<TSlice>::iterator& it_tslice);
+      explicit SliceVector(const IntervalVector& box, const TubeVector& tube_vector, const std::list<TSlice>::iterator& it_tslice);
+      explicit SliceVector(const AbstractDomain& ad, const TubeVector& tube_vector, const std::list<TSlice>::iterator& it_tslice);
       ~SliceVector();
       
       SliceVector(const SliceVector& s);
@@ -60,11 +64,12 @@ namespace codac2
       const Interval& t0_tf() const;
       const TSlice& tslice() const;
 
-      const IntervalVector& codomain() const;
+      const IntervalVector codomain() const;
       IntervalVector input_gate() const;
       IntervalVector output_gate() const;
 
       void set(const IntervalVector& codomain);
+      void set_component(size_t i, const Interval& x);
 
       friend std::ostream& operator<<(std::ostream& os, const SliceVector& x);
 
@@ -78,10 +83,9 @@ namespace codac2
       
       const TubeVector& _tubevector;
       std::list<TSlice>::iterator _it_tslice;
-      IntervalVector _codomain;
 
-      // Wrappers related to guaranteed integration can be dynamically allocated here
-      // ...
+      // Several abstract domains related to guaranteed integration can be considered here
+      std::variant<IntervalVector,AbstractDomain> _codomain;
   };
 } // namespace codac
 

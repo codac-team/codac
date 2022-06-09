@@ -11,16 +11,28 @@
 
 #include "codac2_TubeVector.h"
 #include "codac2_SliceVector.h"
+#include "codac_Exception.h"
 
 using namespace std;
 
 namespace codac2
 {
-  SliceVector::SliceVector(size_t n, const TubeVector& tube_vector, list<TSlice>::iterator it_tslice) :
-    _tubevector(tube_vector), _it_tslice(it_tslice),
-    _codomain(IntervalVector(n))
+  SliceVector::SliceVector(size_t n, const TubeVector& tube_vector, const list<TSlice>::iterator& it_tslice) :
+    SliceVector(IntervalVector(n), tube_vector, it_tslice)
   {
 
+  }
+
+  SliceVector::SliceVector(const IntervalVector& box, const TubeVector& tube_vector, const list<TSlice>::iterator& it_tslice) :
+    _tubevector(tube_vector), _it_tslice(it_tslice), _codomain(box)
+  {
+    assert(holds_alternative<IntervalVector>(_codomain));
+  }
+
+  SliceVector::SliceVector(const AbstractDomain& ad, const TubeVector& tube_vector, const list<TSlice>::iterator& it_tslice) :
+    _tubevector(tube_vector), _it_tslice(it_tslice), _codomain(ad)
+  {
+    assert(holds_alternative<AbstractDomain>(_codomain));
   }
 
   SliceVector::SliceVector(const SliceVector& s) :
@@ -41,7 +53,7 @@ namespace codac2
 
   size_t SliceVector::size() const
   {
-    return _codomain.size();
+    return codomain().size();
   }
 
   bool SliceVector::is_gate() const
@@ -56,7 +68,7 @@ namespace codac2
 
   bool SliceVector::is_unbounded() const
   {
-    return _codomain.is_unbounded();
+    return codomain().is_unbounded();
   }
 
   bool SliceVector::contains(const TrajectoryVector& value) const
@@ -100,9 +112,16 @@ namespace codac2
       static_cast<const SliceVector&>(*this).next_slice());
   }
 
-  const IntervalVector& SliceVector::codomain() const
+  const IntervalVector SliceVector::codomain() const
   {
-    return _codomain;
+    if(holds_alternative<IntervalVector>(_codomain))
+      return get<IntervalVector>(_codomain);
+
+    else if(holds_alternative<AbstractDomain>(_codomain))
+      return get<AbstractDomain>(_codomain).box();
+
+    assert(false && "unhandled case");
+    return IntervalVector(0); // should not happen
   }
 
   IntervalVector SliceVector::input_gate() const
@@ -123,10 +142,21 @@ namespace codac2
 
   void SliceVector::set(const IntervalVector& codomain)
   {
-    assert((size_t)codomain.size() == size());
-    _codomain = codomain;
-    if(is_gate())
-      _codomain &= prev_slice()->codomain() & next_slice()->codomain();
+    if(holds_alternative<IntervalVector>(_codomain))
+    {
+      assert((size_t)codomain.size() == size());
+      get<IntervalVector>(_codomain) = codomain;
+      if(is_gate())
+        get<IntervalVector>(_codomain) &= prev_slice()->codomain() & next_slice()->codomain();
+    }
+
+    else
+      throw codac::Exception(__func__, "unable to set values for this AbstractDomain");
+  }
+
+  void SliceVector::set_component(size_t i, const Interval& x)
+  {
+
   }
 
   ostream& operator<<(ostream& os, const SliceVector& x)
