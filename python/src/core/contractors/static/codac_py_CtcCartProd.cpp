@@ -42,7 +42,11 @@ void export_CtcCartProd(py::module& m, py::class_<Ctc, pyCtc>& ctc)
       "x"_a.noconvert())
   ;
 
-  m.def("cart_prod", [](ibex::Array<Ctc> a)
+  m.def("cart_prod", [](Ctc& c1, Ctc& c2)
+    { return cart_prod(c1, c2); },
+    "c1"_a.noconvert(), "c2"_a.noconvert());
+
+  m.def("cart_prod", [](const ibex::Array<Ctc>& a)
     { return cart_prod(a); },
     "array"_a.noconvert());
 }

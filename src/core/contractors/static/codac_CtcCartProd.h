@@ -54,17 +54,13 @@ namespace codac
   };
 
   /**
-   * \fn template <typename ...Args> CtcCartProd<Args...> cart_prod(Args &...args)
-   * \brief Cartesian product of contractors
+   * \brief Cartesian product of contractors from two Ctc objects
    * 
-   * \param args list of contractors
+   * \param c1 first Ctc contractor
+   * \param c2 second Ctc contractor
    * \return the Cartesian product of the contractors \f$\mathcal{C}_1\times\dots\times\mathcal{C}_n\f$
    */
-  template <typename ...Args>
-  CtcCartProd cart_prod(Args&...args)
-  {
-    return CtcCartProd(args...);
-  }
+  CtcCartProd cart_prod(Ctc& c1, Ctc& c2);
 
   /**
    * \brief Cartesian product of contractors from an ibex::Array
