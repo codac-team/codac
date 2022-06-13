@@ -68,8 +68,8 @@ namespace codac2
       IntervalVector input_gate() const;
       IntervalVector output_gate() const;
 
-      void set(const IntervalVector& codomain);
-      void set_component(size_t i, const Interval& x);
+      void set(const IntervalVector& x);
+      void set_component(size_t i, const Interval& xi);
 
       friend std::ostream& operator<<(std::ostream& os, const SliceVector& x);
 

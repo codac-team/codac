@@ -140,12 +140,12 @@ namespace codac2
     return gate;
   }
 
-  void SliceVector::set(const IntervalVector& codomain)
+  void SliceVector::set(const IntervalVector& x)
   {
     if(holds_alternative<IntervalVector>(_codomain))
     {
-      assert((size_t)codomain.size() == size());
-      get<IntervalVector>(_codomain) = codomain;
+      assert((size_t)codomain().size() == size());
+      get<IntervalVector>(_codomain) = x;
       if(is_gate())
         get<IntervalVector>(_codomain) &= prev_slice()->codomain() & next_slice()->codomain();
     }
@@ -154,12 +154,12 @@ namespace codac2
       throw codac::Exception(__func__, "unable to set values for this AbstractDomain");
   }
 
-  void SliceVector::set_component(size_t i, const Interval& x)
+  void SliceVector::set_component(size_t i, const Interval& xi)
   {
     if(holds_alternative<IntervalVector>(_codomain))
     {
-      assert((size_t)codomain.size() == size());
-      get<IntervalVector>(_codomain)[i] = x;
+      assert((size_t)codomain().size() == size());
+      get<IntervalVector>(_codomain)[i] = xi;
       if(is_gate())
         get<IntervalVector>(_codomain)[i] &= prev_slice()->codomain()[i] & next_slice()->codomain()[i];
     }
