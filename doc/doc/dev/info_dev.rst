@@ -214,3 +214,12 @@ Upload the *wheels* on PyPi:
 .. code-block:: bash
 
   python3 -m twine upload --repository pypi *
+
+.. rubric:: Testing with Docker
+
+In the :file:`codac` directory, test the Ubuntu configuration locally using Docker:
+
+.. code-block:: bash
+
+  chmod a+x scripts/docker/build_pybinding.sh
+  docker run --rm -v `pwd`:/io lebarsfa/manylinux2010_x86_64-ibex /io/scripts/docker/build_pybinding.sh
