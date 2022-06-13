@@ -156,7 +156,16 @@ namespace codac2
 
   void SliceVector::set_component(size_t i, const Interval& x)
   {
+    if(holds_alternative<IntervalVector>(_codomain))
+    {
+      assert((size_t)codomain.size() == size());
+      get<IntervalVector>(_codomain)[i] = x;
+      if(is_gate())
+        get<IntervalVector>(_codomain)[i] &= prev_slice()->codomain()[i] & next_slice()->codomain()[i];
+    }
 
+    else
+      throw codac::Exception(__func__, "unable to set values for this AbstractDomain");
   }
 
   ostream& operator<<(ostream& os, const SliceVector& x)
