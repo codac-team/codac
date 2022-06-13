@@ -26,7 +26,7 @@ namespace codac2
     return _f;
   }
 
-  void CtcDiffInclusion::contract(TubeVector& x, const TubeVector& u)
+  void CtcDiffInclusion::contract(TubeVector& x, const TubeVector& u, TimePropag t_propa)
   {
     // Verifying that x and u share exactly the same tdomain and slicing:
     assert(&x.tdomain() == &u.tdomain());
@@ -48,10 +48,22 @@ namespace codac2
       // cout << sx << " " << su << endl;
 
       // ...
+
+      if(t_propa & TimePropag::FORWARD)
+      {
+        // Computations related to forward propagation
+        // ...
+      }
+
+      if(t_propa & TimePropag::BACKWARD)
+      {
+        // Computations related to backward propagation
+        // ...
+      }
     }
   }
 
-  void CtcDiffInclusion::contract(SliceVector& x, const SliceVector& u)
+  void CtcDiffInclusion::contract(SliceVector& x, const SliceVector& u, TimePropag t_propa)
   {
     // Verifying that x and u share exactly the same tdomain
     assert(&x.tslice() == &u.tslice());
@@ -62,5 +74,17 @@ namespace codac2
     const double dt = x.t0_tf().diam();
 
     // ...
+
+    if(t_propa & TimePropag::FORWARD)
+    {
+      // Computations related to forward propagation
+      // ...
+    }
+
+    if(t_propa & TimePropag::BACKWARD)
+    {
+      // Computations related to backward propagation
+      // ...
+    }
   }
 }
