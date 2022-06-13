@@ -5,6 +5,9 @@
   cmake_minimum_required(VERSION 3.0.2)
   project(codac_basics_01 LANGUAGES CXX)
 
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Adding IBEX
 
   # In case you installed IBEX in a local directory, you need 
@@ -35,7 +38,7 @@
 
 # Compilation
 
-  add_executable(${PROJECT_NAME} main.cpp)
+  add_executable(${PROJECT_NAME} main_test_sample.cpp)
   target_compile_options(${PROJECT_NAME} PUBLIC ${CODAC_CXX_FLAGS})
   target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CODAC_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${CODAC_LIBRARIES} Ibex::ibex ${CODAC_LIBRARIES} Ibex::ibex)
