@@ -114,6 +114,8 @@ namespace codac
 
         else
         {
+          if(display_result)
+            vibes::drawBox(x.subvector(0,1), "lightGray");
           pair<IntervalVector,IntervalVector> p = bisector.bisect(x);
           stack.push_back(p.first);
           stack.push_back(p.second);
