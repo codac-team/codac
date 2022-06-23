@@ -19,7 +19,7 @@
 #include "codac_TrajectoryVector.h"
 #include "codac2_TSlice.h"
 #include "codac2_TDomain.h"
-#include "codac2_AbstractDomain.h"
+#include "codac2_IParals.h"
 
 namespace codac2
 {
@@ -36,7 +36,7 @@ namespace codac2
 
       explicit SliceVector(size_t n, const TubeVector& tube_vector, const std::list<TSlice>::iterator& it_tslice);
       explicit SliceVector(const IntervalVector& box, const TubeVector& tube_vector, const std::list<TSlice>::iterator& it_tslice);
-      explicit SliceVector(const AbstractDomain& ad, const TubeVector& tube_vector, const std::list<TSlice>::iterator& it_tslice);
+      explicit SliceVector(const IParals& ad, const TubeVector& tube_vector, const std::list<TSlice>::iterator& it_tslice);
       ~SliceVector();
       
       SliceVector(const SliceVector& s);
@@ -64,11 +64,17 @@ namespace codac2
       const Interval& t0_tf() const;
       const TSlice& tslice() const;
 
-      const IntervalVector codomain() const;
+      const IntervalVector& codomain() const;
       IntervalVector input_gate() const;
       IntervalVector output_gate() const;
 
+      const IParals& codomainI();
+      IParals codomainI() const;
+      IParals input_gateI() const;
+      IParals output_gateI() const;
+
       void set(const IntervalVector& x);
+      void set(const IParals& ip);
       void set_component(size_t i, const Interval& xi);
 
       friend std::ostream& operator<<(std::ostream& os, const SliceVector& x);
@@ -85,7 +91,7 @@ namespace codac2
       std::list<TSlice>::iterator _it_tslice;
 
       // Several abstract domains related to guaranteed integration can be considered here
-      std::variant<IntervalVector,AbstractDomain> _codomain;
+      std::variant<IntervalVector,IParals> _codomain;
   };
 } // namespace codac
 

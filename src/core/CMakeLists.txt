@@ -171,7 +171,10 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeVectorEvaluation.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
-                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_IParals.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_IParals.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_expIMat.cpp
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_expIMat.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.h
                   )
 

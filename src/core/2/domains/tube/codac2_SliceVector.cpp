@@ -29,10 +29,10 @@ namespace codac2
     assert(holds_alternative<IntervalVector>(_codomain));
   }
 
-  SliceVector::SliceVector(const AbstractDomain& ad, const TubeVector& tube_vector, const list<TSlice>::iterator& it_tslice) :
+  SliceVector::SliceVector(const IParals& ad, const TubeVector& tube_vector, const list<TSlice>::iterator& it_tslice) :
     _tubevector(tube_vector), _it_tslice(it_tslice), _codomain(ad)
   {
-    assert(holds_alternative<AbstractDomain>(_codomain));
+    assert(holds_alternative<IParals>(_codomain));
   }
 
   SliceVector::SliceVector(const SliceVector& s) :
@@ -112,16 +112,16 @@ namespace codac2
       static_cast<const SliceVector&>(*this).next_slice());
   }
 
-  const IntervalVector SliceVector::codomain() const
+  const IntervalVector& SliceVector::codomain() const
   {
     if(holds_alternative<IntervalVector>(_codomain))
       return get<IntervalVector>(_codomain);
 
-    else if(holds_alternative<AbstractDomain>(_codomain))
-      return get<AbstractDomain>(_codomain).box();
+    else if(holds_alternative<IParals>(_codomain))
+      return get<IParals>(_codomain).box();
 
     assert(false && "unhandled case");
-    return IntervalVector(0); // should not happen
+    // return IntervalVector(0); // should not happen
   }
 
   IntervalVector SliceVector::input_gate() const
@@ -140,6 +140,49 @@ namespace codac2
     return gate;
   }
 
+
+
+  const IParals& SliceVector::codomainI()
+  {
+    if(holds_alternative<IParals>(_codomain))
+      return get<IParals>(_codomain); 
+    else if (holds_alternative<IntervalVector>(_codomain)) {
+      IParals ip(get<IntervalVector>(_codomain));
+      _codomain.emplace<IParals>(ip);
+      return get<IParals>(_codomain); 
+    }
+    assert(false && "unhandled case");
+    // return IntervalVector(0); // should not happen
+  }
+
+  IParals SliceVector::codomainI() const
+  {
+    if(holds_alternative<IParals>(_codomain))
+      return get<IParals>(_codomain); 
+    else if (holds_alternative<IntervalVector>(_codomain)) {
+      IParals ip(get<IntervalVector>(_codomain));
+      return ip;
+    }
+    assert(false && "unhandled case");
+    // return IntervalVector(0); // should not happen
+  }
+
+  IParals SliceVector::input_gateI() const
+  {
+    IParals gate = codomainI();
+    if(prev_slice())
+      gate &= prev_slice()->codomainI();
+    return gate;
+  }
+
+  IParals SliceVector::output_gateI() const
+  {
+    IParals gate = codomain();
+    if(next_slice())
+      gate &= next_slice()->codomainI();
+    return gate;
+  }
+
   void SliceVector::set(const IntervalVector& x)
   {
     if(holds_alternative<IntervalVector>(_codomain))
@@ -148,10 +191,23 @@ namespace codac2
       get<IntervalVector>(_codomain) = x;
       if(is_gate())
         get<IntervalVector>(_codomain) &= prev_slice()->codomain() & next_slice()->codomain();
+    } else if (holds_alternative<IParals>(_codomain)) {
+      IParals n (x);
+      set(n);
     }
-
     else
       throw codac::Exception(__func__, "unable to set values for this AbstractDomain");
+  }
+
+  void SliceVector::set(const IParals& ip)
+  {
+    if (holds_alternative<IParals>(_codomain)) {
+      get<IParals>(_codomain) = ip;
+    } else {
+      _codomain.emplace<IParals>(ip);
+    }
+    if(is_gate())
+        get<IParals>(_codomain) &= prev_slice()->codomainI() & next_slice()->codomainI();
   }
 
   void SliceVector::set_component(size_t i, const Interval& xi)
