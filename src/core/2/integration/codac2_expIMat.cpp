@@ -451,7 +451,7 @@ std::vector<int> construct_free_set(const IntervalMatrix &A,
       int place=-1;
       Interval delta(0.0);
       IntervalVector bestPU;
-      for (int i=1;i<A.nb_rows();i++) {
+      for (int i=0;i<A.nb_rows();i++) {
          if (used[i]) continue;
 			/* we can use P and PT indifferently */
          Interval delta2 = productPMPt(A[i],G);

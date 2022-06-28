@@ -207,7 +207,7 @@ namespace codac2
       _codomain.emplace<IParals>(ip);
     }
     if(is_gate())
-        get<IParals>(_codomain) &= prev_slice()->codomainI() & next_slice()->codomainI();
+        get<IParals>(_codomain).meetKeep(prev_slice()->codomainI() & next_slice()->codomainI());
   }
 
   void SliceVector::set_component(size_t i, const Interval& xi)

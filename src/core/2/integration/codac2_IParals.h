@@ -164,6 +164,9 @@ namespace codac2
       friend IParals operator&(const IParals& iv, const IntervalVector& x);
       /** intersection with IParals, equals matrices (fast) */
       IParals& meetFast(const IParals& iv);
+      /** meet with complete keeping of the base (used for .set on a gate),
+       *  to avoid using nearby matrices */
+      IParals& meetKeep(const IParals& iv);
       /** intersection with IParals :
        *  meet : may modify the base (subset not guaranteed, 
 						except if ctcG=true)
@@ -364,7 +367,6 @@ namespace codac2 {
         std::make_shared<std::pair<IntervalMatrix,IntervalMatrix>>
                         (std::pair(M,rM));
                this->Vrhs[numM+1]=V;
-               this->nbmat++;
       }
       inline void IParals::borrow_base(const IParals& iv, unsigned int n,
   			const IntervalVector &V) {

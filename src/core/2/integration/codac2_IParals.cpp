@@ -302,6 +302,25 @@ namespace codac2 {
         this->simplify();
         return (*this);
    }
+   IParals& IParals::meetKeep(const IParals& iv) {
+        if (this->empty) return *this;
+        if (iv.empty) { this->set_empty(); return *this; }
+        if (iv.nbmat==0) { (*this) &= iv.bbox(); return *this; }
+        this->bbox() &= iv.bbox();
+        if (this->bbox().is_empty()) { this->set_empty(); return *this; }
+        for (unsigned int i=0;i<this->nbmat;i++) {
+          this->rhs(i) &= this->Imat(i) * iv.bbox();
+          for (unsigned int j=0;j<iv.nbmat;j++) {
+             if (this->mats[i]==iv.mats[j]) 
+	        this->rhs(i) &= iv.rhs(j);
+	     else
+	        this->rhs(i) &= (this->Imat(i)*iv.mat(j)) * iv.rhs(j);
+          }
+          if (this->rhs(i).is_empty()) { this->set_empty(); return *this; }
+       }
+       this->simplify();
+       return *this;
+   }
    IParals& IParals::meet(const IParals& iv, bool ctcG) {
         if (this->empty) return *this;
         if (iv.empty) { this->set_empty(); return *this; }
@@ -441,6 +460,7 @@ namespace codac2 {
         } else {
            this->createMatrixImat(Smid, numM, nlig);
         }
+
         for (int i=0;i<dim;i=i+1) {
            int nl = nlig[i];
            if (nl<0) continue;
@@ -862,10 +882,10 @@ namespace codac2 {
             newRhs[i] = MRes[i] * this->bbox();
             newRhs[i] &= (MRes[i]*this->Imat(numM)) * this->rhs(numM);
          } else {
-            newRhs[i] = this->rhs(numM)[-i-1];
+            newRhs[i] = this->rhs(numM)[-nlig[i]-1];
          }
       }
-      this->change_base(numM,MRes,MInv,newRhs);
+      this->change_base(numM,MInv.transpose(),MRes,newRhs);
       return *this;
    }   
 

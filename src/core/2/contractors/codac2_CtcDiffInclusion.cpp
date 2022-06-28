@@ -205,6 +205,7 @@ namespace codac2
            ntauState.ctau_mult_and_add(cent_tauState,tauExpM,tauCent);
 
 
+           ntauState &= frame;
            if (ntauState.is_subsetFast(tauState)) {
               reducing=true;
 //              cout << "plus petit " << nb_red << " " << ntauState << "\t" << tauState << "\n";
@@ -297,6 +298,41 @@ namespace codac2
         // ...
       }
 */
+    }
+  }
+
+  void CtcDiffInclusion::contract_from_slice(TubeVector& x, const TubeVector* u,       SliceVector& gate, TimePropag t_propa)
+  {
+    // Verifying that x and u share exactly the same tdomain and slicing:
+    if (u!=NULL) {
+       assert(&x.tdomain() == &u->tdomain());
+    // Verifying that the provided tubes are consistent with the function
+       assert((size_t)_f.nb_var() == x.size()+u->size());
+    } else 
+       assert((size_t)_f.nb_var() == x.size());
+    assert((size_t)_f.image_dim() == x.size());
+
+    if (t_propa & TimePropag::FORWARD) {
+       SliceVector *sx = gate.next_slice();
+       while (sx!=NULL) {
+         if (!sx->is_gate() && !sx->tslice().t0_tf().is_unbounded()) {
+             const SliceVector*su = 
+		(u==NULL ? NULL : &(sx->tslice().slices().at(u)));
+             contract(*sx,su,TimePropag::FORWARD);
+         }
+         sx = sx->next_slice();
+       }
+    }
+    if (t_propa & TimePropag::BACKWARD) {
+       SliceVector *sx = gate.prev_slice();
+       while (sx!=NULL) {
+         if (!sx->is_gate() && !sx->tslice().t0_tf().is_unbounded()) {
+             const SliceVector*su = 
+		(u==NULL ? NULL : &(sx->tslice().slices().at(u)));
+             contract(*sx,su,TimePropag::BACKWARD);
+         }
+         sx = sx->prev_slice();
+       }
     }
   }
 

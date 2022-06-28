@@ -75,6 +75,7 @@ namespace codac2
 
 
       void contract(TubeVector& x, const TubeVector* u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
+      void contract_from_slice(TubeVector& x, const TubeVector* u, SliceVector& gate, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       void contract(SliceVector& x, const SliceVector* u, TimePropag t_propa = TimePropag::FORWARD | TimePropag::BACKWARD);
       const TFunction& f() const;
 
