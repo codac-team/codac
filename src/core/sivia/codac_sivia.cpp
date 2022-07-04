@@ -43,11 +43,11 @@ namespace codac
       {
         _vibes_initialized = true;
         vibes::beginDrawing();
+        vibes::axisAuto();
         // will not be ended in case the init has been done outside this SIVIA function
       }
 
       vibes::drawBox(x0, vibesParams("figure", fig_name));
-      vibes::axisAuto();
     }
 
     map<SetValue,int> n_boxes;
@@ -150,6 +150,7 @@ namespace codac
       {
         _vibes_initialized = true;
         vibes::beginDrawing();
+        vibes::axisAuto();
         // will not be ended in case the init has been done outside this SIVIA function
       }
 
@@ -157,7 +158,6 @@ namespace codac
         vibes::selectFigure(fig_name);
 
       vibes::drawBox(x0);
-      vibes::axisAuto();
     }
 
     map<SetValue,int> n_boxes;

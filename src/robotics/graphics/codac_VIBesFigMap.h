@@ -418,6 +418,19 @@ namespace codac
        * \param color optional color of the observation
        */
       void add_observations(const std::vector<IntervalVector>& v_obs, const TrajectoryVector *traj, const std::string& color = DEFAULT_OBS_COLOR);
+      
+      /**
+       * \brief Returns actual or estimated heading related to some TrajectoryVector at t
+       *
+       * If one component of the traj object depicts the heading, then it is 
+       * evaluated. Otherwise, some approximation is made around t in order
+       * to provide an estimate of the heading.
+       *
+       * \param t time input of evaluation
+       * \param traj the const pointer to the related TrajectoryVector object
+       * \return heading in radians
+       */
+      double heading(double t, const TrajectoryVector *traj) const;
   
       /// @}
 
@@ -508,19 +521,6 @@ namespace codac
        * \param params VIBes parameters related to the observation
        */
       void draw_observation(const IntervalVector& obs, const TrajectoryVector *traj, const std::string& color = "", const vibes::Params& params = vibes::Params());
-      
-      /**
-       * \brief Returns actual or estimated heading related to some TrajectoryVector at t
-       *
-       * If one component of the traj object depicts the heading, then it is 
-       * evaluated. Otherwise, some approximation is made around t in order
-       * to provide an estimate of the heading.
-       *
-       * \param t time input of evaluation
-       * \param traj the const pointer to the related TrajectoryVector object
-       * \return heading in radians
-       */
-      double heading(double t, const TrajectoryVector *traj) const;
 
 
     protected:

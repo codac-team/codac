@@ -46,4 +46,29 @@ namespace codac
       ((SIVIAPaving*)m_second_subpaving)->compute(f, y, precision);
     }
   }
+
+  void SIVIAPaving::compute(Ctc& ctc, float precision, list<IntervalVector>& l_unknown_boxes)
+  {
+    assert(precision > 0.);
+    assert(ctc.nb_var == box().size());
+
+    IntervalVector result = box();
+    ctc.contract(result);
+
+    if(result.is_empty())
+      set_value(SetValue::OUT);
+
+    else if(result.max_diam() < precision)
+    {
+      l_unknown_boxes.push_back(result);
+      set_value(SetValue::UNKNOWN);
+    }
+
+    else
+    {
+      bisect();
+      ((SIVIAPaving*)m_first_subpaving)->compute(ctc, precision, l_unknown_boxes);
+      ((SIVIAPaving*)m_second_subpaving)->compute(ctc, precision, l_unknown_boxes);
+    }
+  }
 }

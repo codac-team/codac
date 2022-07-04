@@ -14,6 +14,7 @@
 
 #include "codac_Paving.h"
 #include "codac_Function.h"
+#include "codac_Ctc.h"
 #include "codac_IntervalVector.h"
 
 namespace codac
@@ -44,6 +45,15 @@ namespace codac
        * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
        */
       void compute(const Function& f, const IntervalVector& y, float precision);
+
+      /**
+       * \brief Computes the paving from using a contractor.
+       *
+       * \param ctc static contractor on boxes
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       * \param l_unknown_boxes list of unknown boxes enclosing solutions for the inversion
+       */
+      void compute(Ctc& ctc, float precision, std::list<IntervalVector>& l_unknown_boxes);
 
       /// @}
   };
