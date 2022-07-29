@@ -9,23 +9,25 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#include "codac2_TubeAbstract_const.h"
+#include "codac2_AbstractSlicedTube.h"
 
 using namespace std;
 
 namespace codac2
 {
-  /*template<typename I, typename T, typename V>
-  TubeAbstract_const::TubeAbstract_const()
+  AbstractSlicedTube::AbstractSlicedTube(TDomain& tdomain) :
+    _tdomain(tdomain)
   {
 
   }
 
-  //ostream& operator<<(ostream& os, const TubeAbstract_const& x)
-  void TubeAbstract_const::print(ostream& os) const
+  TDomain& AbstractSlicedTube::tdomain() const
   {
-    os << tdomain()
-       << "↦" << codomain()
-       << flush;
-  }*/
+    return _tdomain;
+  }
+
+  Interval AbstractSlicedTube::t0_tf() const
+  {
+    return _tdomain.t0_tf();
+  }
 } // namespace codac

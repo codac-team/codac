@@ -18,13 +18,15 @@
 #include <memory>
 
 #include "codac_Interval.h"
+#include "codac2_Slice.h"
 
 namespace codac2
 {
   using codac::Interval;
 
-  class SliceVector;
-  class TubeVector;
+  class TDomain;
+  class AbstractSlice;
+  class AbstractSlicedTube;
 
   class TSlice
   {
@@ -33,19 +35,19 @@ namespace codac2
       explicit TSlice(const Interval& tdomain);
       TSlice(const TSlice& tslice, const Interval& tdomain); // performs a deep copy on slices
       const Interval& t0_tf() const;
-      const std::map<const TubeVector*,SliceVector>& slices() const;
+      const std::map<const AbstractSlicedTube*,std::shared_ptr<AbstractSlice>>& slices() const;
       friend std::ostream& operator<<(std::ostream& os, const TSlice& x);
 
     protected:
 
       void set_tdomain(const Interval& tdomain);
-
-      friend class TubeVector;
-      friend class TubeVectorComponent;
-      friend class TubeVectorEvaluation;
-      friend class TDomain;
+      
       Interval _t0_tf;
-      std::map<const TubeVector*,SliceVector> _slices;
+      std::map<const AbstractSlicedTube*,std::shared_ptr<AbstractSlice>> _slices;
+
+      friend class TDomain;
+      template<typename U>
+      friend class Tube;
   };
 } // namespace codac
 

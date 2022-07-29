@@ -10,8 +10,9 @@
  */
 
 #include <cassert>
+#include "codac2_TSlice.h"
 #include "codac2_TDomain.h"
-#include "codac2_TubeVector.h"
+#include "codac2_Slice.h"
 #include "codac_predef_values.h"
 
 using namespace std;
@@ -19,6 +20,17 @@ using namespace codac;
 
 namespace codac2
 {
+  TDomain::TDomain()
+  {
+    _tslices.push_back(TSlice(Interval()));
+  }
+
+  TDomain::TDomain(const Interval& t0_tf, bool with_gates) :
+    TDomain(t0_tf, t0_tf.diam(), with_gates)
+  {
+
+  }
+
   TDomain::TDomain(const Interval& t0_tf, double dt, bool with_gates)
   {
     assert(!t0_tf.is_empty());
@@ -52,7 +64,7 @@ namespace codac2
 
   size_t TDomain::nb_tubes() const
   {
-    return _tslices.front()._slices.size();
+    return _tslices.front().slices().size();
   }
 
   list<TSlice>::iterator TDomain::iterator_tslice(double t)
@@ -88,7 +100,7 @@ namespace codac2
     ++it;
     it = _tslices.insert(it, ts);
     for(auto& [k,s] : it->_slices) // adding the new iterator pointer to the new slices
-      s._it_tslice = it;
+      s->_it_tslice = it;
     
     return it;
   }

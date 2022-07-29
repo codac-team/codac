@@ -26,7 +26,7 @@ namespace codac2
     return _f;
   }
 
-  void CtcDiffInclusion::contract(TubeVector& x, const TubeVector& u, TimePropag t_propa)
+  void CtcDiffInclusion::contract(Tube<IntervalVector>& x, const Tube<IntervalVector>& u, TimePropag t_propa)
   {
     // Verifying that x and u share exactly the same tdomain and slicing:
     assert(&x.tdomain() == &u.tdomain());
@@ -40,8 +40,9 @@ namespace codac2
         continue;
 
       // su is a SliceVector of the TubeVector u:
-      const SliceVector& su = sx.tslice().slices().at(&u);
-      const double dt = sx.t0_tf().diam();
+      const shared_ptr<Slice<IntervalVector>> su = static_pointer_cast<Slice<IntervalVector>>(sx.tslice().slices().at(&u));
+      
+      //const double dt = sx.t0_tf().diam();
 
 
       // sx.set(su.codomain());
@@ -63,7 +64,7 @@ namespace codac2
     }
   }
 
-  void CtcDiffInclusion::contract(SliceVector& x, const SliceVector& u, TimePropag t_propa)
+  void CtcDiffInclusion::contract(Slice<IntervalVector>& x, const Slice<IntervalVector>& u, TimePropag t_propa)
   {
     // Verifying that x and u share exactly the same tdomain
     assert(&x.tslice() == &u.tslice());
@@ -71,7 +72,7 @@ namespace codac2
     assert((size_t)_f.nb_var() == 2);
     assert((size_t)_f.image_dim() == x.size());
 
-    const double dt = x.t0_tf().diam();
+    //const double dt = x.t0_tf().diam();
 
     // ...
 

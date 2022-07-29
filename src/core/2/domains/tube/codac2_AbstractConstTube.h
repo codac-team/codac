@@ -9,8 +9,8 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#ifndef __CODAC2_TUBEVECTOR_CONST_H__
-#define __CODAC2_TUBEVECTOR_CONST_H__
+#ifndef __CODAC2_ABSTRACTCONSTTUBE_H__
+#define __CODAC2_ABSTRACTCONSTTUBE_H__
 
 #include <list>
 #include <memory>
@@ -21,30 +21,29 @@
 
 namespace codac2
 {
-  using codac::Tube;
   using codac::Trajectory;
   using codac::TrajectoryVector;
   using codac::Interval;
   using codac::IntervalVector;
 
-  template<typename I, typename T, typename V>
-  class TubeAbstract_const
+  template<typename W, typename T>
+  class AbstractConstTube
   {
     public:
 
-      TubeAbstract_const()
+      AbstractConstTube()
       {
 
       }
 
-      explicit TubeAbstract_const(const T& x);
+      explicit AbstractConstTube(const T& x);
 
       virtual size_t size() const = 0;
-      virtual bool contains(const V& value) const = 0;
+      virtual bool contains(const TrajectoryVector& value) const = 0;
       virtual Interval t0_tf() const = 0;
-      virtual I codomain() const = 0;
-      // virtual I operator()(double t) const = 0;
-      //virtual I operator()(const Interval& t) const = 0;
+      virtual W codomain() const = 0;
+      // virtual W operator()(double t) const = 0;
+      //virtual W operator()(const Interval& t) const = 0;
 
       //TubeVectorComponent operator[](size_t index);
       //const TubeVectorComponent operator[](size_t index) const;
@@ -58,20 +57,6 @@ namespace codac2
       }
   };
 
-  class Tube_const : public TubeAbstract_const<Interval,Tube_const,Trajectory>
-  {
-    
-  };
-
-  class TubeVector_const : public TubeAbstract_const<IntervalVector,TubeVector_const,TrajectoryVector>
-  {
-    
-  };
-
-  /*class TubeMatrix_const : public TubeAbstract_const<IntervalMatrix_,TubeMatrix_,TrajectoryMatrix_>
-  {
-    
-  };*/
 } // namespace codac
 
 #endif

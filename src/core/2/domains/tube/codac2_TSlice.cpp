@@ -10,8 +10,7 @@
  */
 
 #include "codac2_TSlice.h"
-#include "codac2_SliceVector.h"
-#include "codac2_TubeVector.h"
+#include "codac2_Slice.h"
 
 using namespace std;
 using namespace codac;
@@ -19,7 +18,7 @@ using namespace codac;
 namespace codac2
 {
   TSlice::TSlice(const Interval& tdomain) :
-    _slices(map<const TubeVector*,SliceVector>())
+    _slices(map<const AbstractSlicedTube*,shared_ptr<AbstractSlice>>())
   {
     set_tdomain(tdomain);
   }
@@ -28,8 +27,8 @@ namespace codac2
     TSlice(tdomain)
   {
     for(const auto[k,s] : tslice._slices)
-      _slices.insert(pair<const TubeVector*,SliceVector>(
-        k, SliceVector(s)));
+      _slices.insert(pair<const AbstractSlicedTube*,shared_ptr<AbstractSlice>>(
+        k, s->duplicate()));
   }
 
   const Interval& TSlice::t0_tf() const
@@ -43,7 +42,7 @@ namespace codac2
     _t0_tf = tdomain;
   }
 
-  const map<const TubeVector*,SliceVector>& TSlice::slices() const
+  const map<const AbstractSlicedTube*,shared_ptr<AbstractSlice>>& TSlice::slices() const
   {
     return _slices;
   }

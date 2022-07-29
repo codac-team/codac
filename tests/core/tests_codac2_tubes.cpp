@@ -7,7 +7,8 @@
 #include "codac2_TDomain.h"
 
 #include "codac_predef_values.h"
-#include "codac2_TubeVector.h"
+#include "codac2_Tube.h"
+#include "codac2_CtcDiffInclusion.h"
 
 using namespace Catch;
 using namespace Detail;
@@ -41,11 +42,11 @@ TEST_CASE("Test codac2::tubes")
     CHECK(tdomain.iterator_tslice(5540.2)->t0_tf() == Interval(1,oo));
 
     CHECK(tdomain.nb_tubes() == 0);
-    TubeVector x(2, tdomain); // adding a tubevector to the tdomain
+    Tube<IntervalVector> x(2, tdomain); // adding a tubevector to the tdomain
     CHECK(tdomain.nb_tubes() == 1);
 
     { // new scope
-      TubeVector v(3, tdomain);
+      Tube<IntervalVector> v(3, tdomain);
       CHECK(tdomain.nb_tubes() == 2);
     } // end of scope, auto removing the tube
     
@@ -121,23 +122,77 @@ TEST_CASE("Test codac2::tubes")
     CHECK(vector_tslices[3].t0_tf() == Interval(10,oo));
   }
 
-  SECTION("Test basic TubeVector")
+  SECTION("Test unbounded TDomain")
+  {
+    TDomain tdomain;
+    const list<TSlice>& tslices = tdomain.tslices();
+    vector<TSlice> vector_tslices{
+      make_move_iterator(tslices.begin()),
+      make_move_iterator(tslices.end()) };
+    CHECK(tdomain.nb_tslices() == 1);
+    CHECK(vector_tslices.size() == 1);
+    CHECK(vector_tslices[0].t0_tf() == Interval(-oo,oo));
+  }
+
+  SECTION("Test TDomain with sampling and values")
+  {
+    TDomain tdomain;
+    CHECK(tdomain.nb_tslices() == 1);
+    Tube<IntervalVector> x(1, tdomain);
+    x.set(Interval(4));
+    x(Interval(0,1)) = IntervalVector({{1,2}});
+    x(Interval(1,2)) = IntervalVector({{5,6}});
+    x(Interval(2,3)) = IntervalVector({{8,9}});
+    CHECK(x.codomain() == IntervalVector({{1,9}}));
+    CHECK(static_cast<IntervalVector>(x(0.5)) == IntervalVector({{1,2}}));
+    CHECK(static_cast<IntervalVector>(x(1.5)) == IntervalVector({{5,6}}));
+    CHECK(static_cast<IntervalVector>(x(2.5)) == IntervalVector({{8,9}}));
+    
+    const std::shared_ptr<Slice<IntervalVector>> s0 = x.first_slice_ptr();
+    CHECK(s0->t0_tf() == Interval(-oo,0));
+    CHECK(s0->codomain() == IntervalVector({{4}}));
+    const std::shared_ptr<Slice<IntervalVector>> s1 = s0->next_slice();
+    CHECK(s1->t0_tf() == Interval(0,1));
+    CHECK(s1->codomain() == IntervalVector({{1,2}}));
+    const std::shared_ptr<Slice<IntervalVector>> s2 = s1->next_slice();
+    CHECK(s2->t0_tf() == Interval(1,2));
+    CHECK(s2->codomain() == IntervalVector({{5,6}}));
+    const std::shared_ptr<Slice<IntervalVector>> s3 = s2->next_slice();
+    CHECK(s3->t0_tf() == Interval(2,3));
+    CHECK(s3->codomain() == IntervalVector({{8,9}}));
+    const std::shared_ptr<Slice<IntervalVector>> s4 = s3->next_slice();
+    CHECK(s4->t0_tf() == Interval(3,oo));
+    CHECK(s4->codomain() == IntervalVector({{4}}));
+
+    CHECK(tdomain.nb_tslices() == 5);
+    tdomain.sample(1.3);
+    CHECK(tdomain.nb_tslices() == 6);
+    CHECK(s2->t0_tf() == Interval(1,1.3));
+    CHECK(s2->codomain() == IntervalVector({{5,6}}));
+    const std::shared_ptr<Slice<IntervalVector>> s2bis = s2->next_slice();
+    CHECK(s2bis->t0_tf() == Interval(1.3,2));
+    CHECK(s2bis->codomain() == IntervalVector({{5,6}}));
+    CHECK(s3->t0_tf() == Interval(2,3));
+    CHECK(s3->codomain() == IntervalVector({{8,9}}));
+  }
+
+  SECTION("Test basic Tube<IntervalVector>")
   {
     TDomain tdomain(Interval(0,1), 0.1, false);
-    TubeVector x(3, tdomain);
+    Tube<IntervalVector> x(3, tdomain);
 
     CHECK(x.size() == 3);
     CHECK(&x.tdomain() == &tdomain);
     CHECK(x.t0_tf() == Interval(0,1));
     CHECK(x.nb_slices() == tdomain.nb_tslices());
     CHECK(x.nb_slices() == 12);
-    CHECK(x.first_slice().t0_tf() == Interval(-oo,0));
-    CHECK(x.last_slice().t0_tf() == Interval(1,oo));
+    CHECK(x.first_slice_ptr()->t0_tf() == Interval(-oo,0));
+    CHECK(x.last_slice_ptr()->t0_tf() == Interval(1,oo));
     CHECK(x.codomain() == IntervalVector(3));
     x.set(IntervalVector(3, Interval(-10,10)));
     CHECK(x.codomain() == IntervalVector(3, Interval(-10,10)));
 
-    // TubeVectorComponent
+    // Tube<IntervalVector>Component
     CHECK(x[0].codomain() == Interval(-10,10));
     CHECK(x[0].t0_tf() == Interval(0,1));
     CHECK(&x[0].tdomain() == &tdomain);
@@ -172,21 +227,21 @@ TEST_CASE("Test codac2::tubes")
 
     // Iterators tests
     {
-      SliceVector* s_ = &x.first_slice();
+      shared_ptr<Slice<IntervalVector>> s_ = x.first_slice_ptr();
       for(auto& s : x)
       {
-        CHECK(&s == s_);
+        CHECK(&s == &(*s_));
         s_ = s_->next_slice();
       }
     }
 
     // Iterators tests (const)
     {
-      const TubeVector y(x); // copy constructor
-      const SliceVector* s_ = &x.first_slice();
+      const Tube<IntervalVector> y(x); // copy constructor
+      shared_ptr<Slice<IntervalVector>> s_ = x.first_slice_ptr();
       for(const auto& s : x)
       {
-        CHECK(&s == s_);
+        CHECK(&s == &(*s_));
         s_ = s_->next_slice();
       }
     }
@@ -195,15 +250,15 @@ TEST_CASE("Test codac2::tubes")
   SECTION("Test SliceVector")
   {
     TDomain tdomain(Interval(0,1), 0.1);
-    TubeVector x(2, tdomain);
+    Tube<IntervalVector> x(2, tdomain);
     CHECK(x.nb_slices() == 12);
-    CHECK(&x.first_slice() == &tdomain.iterator_tslice(-oo)->_slices.at(&x));
-    CHECK(&x.last_slice() == &tdomain.iterator_tslice(oo)->_slices.at(&x));
+    CHECK(x.first_slice_ptr() == tdomain.iterator_tslice(-oo)->_slices.at(&x));
+    CHECK(x.last_slice_ptr() == tdomain.iterator_tslice(oo)->_slices.at(&x));
 
     for(auto& s : x)
       s.set(IntervalVector(2,s.t0_tf()));
 
-    vector<const SliceVector*> v;
+    vector<const Slice<IntervalVector>*> v;
     for(const auto& s : x)
       v.push_back(&s);
 
@@ -223,5 +278,56 @@ TEST_CASE("Test codac2::tubes")
     CHECK(v[11]->codomain() == IntervalVector(2,Interval(1,oo)));
     CHECK(v[11]->input_gate() == IntervalVector(2,Interval(1)));
     CHECK(v[11]->output_gate() == IntervalVector(2,Interval(1,oo)));
+  }
+
+  SECTION("Test again 1")
+  {
+    TDomain tdomain(Interval(0,10), 0.01, true); // last argument creates "gates" (degenerated slices at scalar timesteps)
+    Tube<IntervalVector> x(2, tdomain,
+      codac::TFunction("(sin(sqrt(t)+((t-5)^2)*[-0.01,0.01]) ; cos(t)+sin(t/0.2)*[-0.1,0.1])"));
+    Tube<IntervalVector> u(2, tdomain);
+
+    codac::TFunction tf("x[2]", "u[2]", "(sin(x[1]) ; -sin(x[0]))");
+    CtcDiffInclusion ctc_diffincl(tf);
+    ctc_diffincl.contract(x,u);
+
+    //vibes::beginDrawing();
+
+    codac::TubeVector x_codac1 = x.to_codac1(); // may take time
+    codac::Tube xi_codac1 = x[1].to_codac1(); // may take time
+
+    //codac::VIBesFigTube fig("Tube");
+    //fig.set_properties(100, 100, 600, 300);
+    //fig.add_tube(&xi_codac1, "x");
+    //fig.show(true);
+
+    //vibes::endDrawing();
+  }
+
+  SECTION("Test again 2")
+  {
+    /*{
+      TDomain tdomain(Interval(0,10), 1., false);
+      Tube<IntervalVector> x(2, tdomain);
+
+      for(auto& sx : x)
+      {
+        if(sx.t0_tf().contains(5.2))
+        {
+          cout << "sample" << endl;
+          tdomain.sample(5.2);
+        }
+        cout << sx << endl;
+      }
+    }*/
+
+    {
+      codac::TFunction f("x1", "x2", "u1", "u2", "(t+u1+x1;t+u2+x2)");
+      IntervalVector x({{2,3},{5,6}});
+      IntervalVector u({{0,0.1},{0,0.1}});
+      Interval t(5.);
+      //cout << f.eval_vector(t,x,u) << endl;
+      CHECK(f.eval_vector(t,x,u) == ApproxIntvVector(IntervalVector({{7, 8.100000000000002},{10, 11.10000000000001}})));
+    }
   }
 }
