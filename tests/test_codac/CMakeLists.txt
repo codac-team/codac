@@ -23,7 +23,7 @@ cmake_minimum_required(VERSION 3.0.2)
   set(CMAKE_PREFIX_PATH "../eigen")
 
   find_package(Eigen3 REQUIRED NO_MODULE)
-  message(STATUS "Found Eigen3 version ${EIGEN3_VERSION}")
+  message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
 
 # Adding Codac
 
