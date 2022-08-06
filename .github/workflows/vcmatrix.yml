@@ -34,7 +34,7 @@ jobs:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
         architecture: ${{ matrix.cfg.arch }}

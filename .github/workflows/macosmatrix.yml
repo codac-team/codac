@@ -7,8 +7,11 @@ on:
     pull_request:
 
 jobs:
- vcmatrix:
+ macosmatrix:
     runs-on: ${{ matrix.cfg.os }}
+    env:
+        MACOSX_DEPLOYMENT_TARGET: ${{ matrix.cfg.trgt }}
+        _PYTHON_HOST_PLATFORM: macosx-${{ matrix.cfg.trgt }}-${{ matrix.cfg.arch }}
     defaults:
         run:
             shell: ${{ matrix.cfg.shell }}
@@ -16,12 +19,13 @@ jobs:
         fail-fast: false
         matrix:
             cfg:
-#            - { os: macos-11, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', cpcfg: '-macosx_11_0_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Big Sur Python 3.10' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Catalina Python 3.10' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Catalina Python 3.9' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Catalina Python 3.8' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Catalina Python 3.7' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', cpcfg: '-macosx_10_15_x86_64', py_v_maj: 3, py_v_min: 6, desc: 'macOS Catalina Python 3.6' }
+            - { os: macos-11, shell: bash, arch: arm64, runtime: bigsur, cmake_flags: '-fPIC', ilib: 'filib', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Big Sur Python 3.10 arm64' }
+            - { os: macos-11, shell: bash, arch: arm64, runtime: bigsur, cmake_flags: '-fPIC', ilib: 'filib', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Big Sur Python 3.9 arm64' }
+            - { os: macos-11, shell: bash, arch: arm64, runtime: bigsur, cmake_flags: '-fPIC', ilib: 'filib', trgt: '11.0', cpcfg: '-macosx_11_0_arm64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Big Sur Python 3.8 arm64' }
+            - { os: macos-11, shell: bash, arch: x86_64, runtime: bigsur, cmake_flags: '-fPIC', ilib: 'gaol', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Big Sur Python 3.10' }
+            - { os: macos-11, shell: bash, arch: x86_64, runtime: bigsur, cmake_flags: '-fPIC', ilib: 'gaol', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 9, desc: 'macOS Big Sur Python 3.9' }
+            - { os: macos-11, shell: bash, arch: x86_64, runtime: bigsur, cmake_flags: '-fPIC', ilib: 'gaol', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 8, desc: 'macOS Big Sur Python 3.8' }
+            - { os: macos-11, shell: bash, arch: x86_64, runtime: bigsur, cmake_flags: '-fPIC', ilib: 'gaol', trgt: '10.9', cpcfg: '-macosx_10_9_x86_64', py_v_maj: 3, py_v_min: 7, desc: 'macOS Big Sur Python 3.7' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v2
@@ -29,10 +33,10 @@ jobs:
         submodules: true
         fetch-depth: 0
         clean: false
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.cfg.py_v_maj }}.${{ matrix.cfg.py_v_min }}
-        architecture: ${{ matrix.cfg.arch }}
+        architecture: x64
       if: matrix.cfg.py_v_maj!=''
     - run: |
         python -c "import sys; print(sys.version)"
@@ -42,15 +46,18 @@ jobs:
       if: runner.os=='macOS'
     - run: brew install doxygen ; brew install graphviz ; python -m pip install --upgrade pip ; pip install --upgrade wheel setuptools sphinx breathe sphinx_rtd_theme sphinx-tabs sphinx-issues sphinx-reredirects
       if: runner.os=='macOS'
-    - run: git clone -b actions https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . --config Release --target install ; cd ../..
+    - run: git clone -b actions https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_INSTALL_PREFIX="../../ibex" -D INTERVAL_LIB=${{ matrix.cfg.ilib }} .. ; cmake --build . --config Release --target install ; cd ../..
       shell: bash
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=${{ matrix.cfg.arch }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
         cmake --build . --config Release --target install
-        cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py
+        cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"`
         cd ..
       shell: bash
+    - run: pip install *.whl ; python -c "import sys; print(sys.version)" ; python examples/tuto/01_getting_started/01_getting_started.py
+      shell: bash
+      if: (runner.os=='macOS')&&(matrix.cfg.arch=='x86_64')
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
