@@ -13,6 +13,7 @@ jobs:
         run:
             shell: ${{ matrix.cfg.shell }}
     strategy:
+        fail-fast: false
         matrix:
             cfg:
 #            - { os: macos-11, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', cpcfg: '-macosx_11_0_x86_64', py_v_maj: 3, py_v_min: 10, desc: 'macOS Big Sur Python 3.10' }

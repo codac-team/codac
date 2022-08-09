@@ -26,6 +26,7 @@ jobs:
         run:
             shell: ${{ matrix.cfg.shell }}
     strategy:
+        fail-fast: false
         matrix:
             cfg:
             - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2022 x64' }

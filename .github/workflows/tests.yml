@@ -9,6 +9,7 @@ jobs:
  tests:
     runs-on: ${{ matrix.cfg.os }}
     strategy:
+        fail-fast: false
         matrix:
             cfg:
             - { os: ubuntu-18.04, gcc_v: 8, py_v_maj: 3, py_v_min: 6, desc: 'Ubuntu 18.04 GCC 8 Python 3.6 tests' }
