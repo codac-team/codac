@@ -112,8 +112,9 @@ jobs:
       if: ((runner.os=='Windows')&&(matrix.cfg.runtime!='mingw8'))||((runner.os!='Windows')&&(runner.os!='Linux'))
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON ..
         cmake --build . --config Debug --target install
+        cmake --build . --config Debug --target test -- ARGS="-V --output-on-failure"
         cd ..
       shell: bash
     - run: |
