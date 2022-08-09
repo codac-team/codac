@@ -46,10 +46,9 @@ jobs:
       shell: bash
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D BUILD_TESTS=ON -D WITH_PYTHON=ON ..
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" -D WITH_PYTHON=ON ..
         cmake --build . --config Release --target install
-        cmake --build . --config Release --target test -- ARGS="-V --output-on-failure"
-        cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py ; pip install numpy ; python -m unittest discover codac.tests
+        cmake --build . --config Release --target pip_package ; cp `ls *.whl` ../`ls *.whl | sed "s/py3-none-any/cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}-cp${{ matrix.cfg.py_v_maj }}${{ matrix.cfg.py_v_min }}${{ matrix.cfg.cpcfg }}/"` ; pip install ../*.whl ; python -c "import sys; print(sys.version)" ; python ../examples/tuto/01_getting_started/01_getting_started.py
         cd ..
       shell: bash
     - uses: xresloader/upload-to-github-release@v1
