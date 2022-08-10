@@ -35,14 +35,17 @@ jobs:
             - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x86' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2017 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A Win32', choco_flags: '--x86', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2017 x86' }
+#            - { os: windows-2022, shell: cmd, arch: x64, runtime: mingw11, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 11.2.0 x64' }
+#            - { os: windows-2022, shell: cmd, arch: x86, runtime: mingw11, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 11.2.0 x86' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 8.1.0 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows Qt 5.12.6 MinGW 7.3.0 x86' }
+#            - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 7.3.0 x64' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 7.3.0 x86' }
             - { os: ubuntu-22.04, shell: bash, arch: amd64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
             - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
             - { os: ubuntu-18.04, shell: bash, arch: amd64, runtime: bionic, cmake_flags: '-fPIC', desc: 'Ubuntu 18.04' }
-            - { os: macos-12, shell: bash, arch: x64, runtime: monterey, cmake_flags: '-fPIC', desc: 'macOS Monterey' }
-            - { os: macos-11, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_flags: '-fPIC', desc: 'macOS Monterey' }
+            - { os: macos-11, shell: bash, arch: x86_64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur' }
     name: ${{ matrix.cfg.desc }}
     steps: 
     - uses: actions/checkout@v3
@@ -67,21 +70,6 @@ jobs:
     - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
       shell: bash
       if: runner.os=='Linux'
-#    - run: |
-#        choco install -y -r --no-progress wget
-#        wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
-#        move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\
-#        wget http://www.ensta-bretagne.fr/lebars/Share/qt-installer-5.12.6-mingw73_32.qs --no-check-certificate -nv
-#        move /Y qt-installer-5.12.6-mingw73_32.qs %SystemDrive%\
-#        netsh advfirewall set allprofiles state on
-#        netsh advfirewall firewall add rule name="Qt offline installer" dir=out action=block program="%SystemDrive%\qt-opensource-windows-x86-5.12.6.exe" enable=yes
-#        rem Take several min...
-#        %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe --script %SystemDrive%\qt-installer-5.12.6-mingw73_32.qs
-#        netsh advfirewall firewall del rule name="Qt offline installer"
-#        netsh advfirewall set allprofiles state off
-#        del /f /q %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe
-#        echo C:\Qt\Qt5.12.6\5.12.6\mingw73_32\bin;C:\Qt\Qt5.12.6\Tools\mingw730_32\bin>>%GITHUB_PATH%
-#      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw7')
     - run: |
         choco install -y -r --no-progress mingw --version=7.3.0 --force ${{ matrix.cfg.choco_flags }}
         echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin>>%GITHUB_PATH%
