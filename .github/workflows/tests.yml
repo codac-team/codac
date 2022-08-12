@@ -15,7 +15,7 @@ jobs:
             - { os: ubuntu-18.04, gcc_v: 8, py_v_maj: 3, py_v_min: 6, desc: 'Ubuntu 18.04 GCC 8 Python 3.6 tests' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
         fetch-depth: 0
