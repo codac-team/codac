@@ -11,9 +11,7 @@
  *              the GNU Lesser General Public License (LGPL).
  */
 
-#//
-// Created by julien-damers on 11/12/2019.
-//
+
 #include <iostream>
 #include <cstdlib>
 #include <random>
@@ -38,7 +36,6 @@ void example_1_continous()
     IntervalVector x0({{0,0},{1,1}});
     Function f("x1","x2","(1; -x2)");
     TubeVector a = CAPD_integrateODE(domain,f,x0,timestep);
-    //a.enable_synthesis(codac::SynthesisMode::POLYNOMIAL);
     a.enable_synthesis(codac::SynthesisMode::BINARY_TREE);
     cout << "Reference generated " << a << endl;
 
