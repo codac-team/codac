@@ -289,7 +289,7 @@ TEST_CASE("Test codac2::tubes")
 
     codac::TFunction tf("x[2]", "u[2]", "(sin(x[1]) ; -sin(x[0]))");
     CtcDiffInclusion ctc_diffincl(tf);
-    ctc_diffincl.contract(x,u);
+//    ctc_diffincl.contract(x,u);
 
     //vibes::beginDrawing();
 

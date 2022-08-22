@@ -156,9 +156,9 @@ namespace codac2
         return true;
       }
 
-      IntervalVector codomain() const
+      T codomain() const
       {
-        IntervalVector codomain(size());
+        T codomain(size());
         codomain.set_empty();
         for(const auto& s : *this)
           codomain |= s.codomain();
