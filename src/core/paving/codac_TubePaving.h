@@ -35,7 +35,7 @@ namespace codac
        *
        * \param init_box n-dimensional box defining the hull of the paving
        */
-      TubePaving(const IntervalVector& init_box);
+      TubePaving(const ibex::IntervalVector& init_box, SetValue value = SetValue::UNKNOWN);
 
       /**
        * \brief Computes the paving from the tube \f$[\mathbf{x}](\cdot)\f$.

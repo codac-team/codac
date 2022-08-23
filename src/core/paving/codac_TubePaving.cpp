@@ -17,59 +17,59 @@ using namespace ibex;
 
 namespace codac
 {
-  TubePaving::TubePaving(const IntervalVector& init_box) : Paving(init_box, SetValue::UNKNOWN)
-  {
-
-  }
-
-  void TubePaving::compute(float precision, const TubeVector& x)
-  {
-    assert(precision > 0.);
-    assert(x.size() == size());
-
-    IntervalVector y = box();
-    vector<Interval> v_t_inv;
-    x.invert(y, v_t_inv, x.tdomain());
-
-    bool is_out = v_t_inv.empty();
-    bool is_in = false;
-
-    for(size_t i = 0 ; i < v_t_inv.size() && !is_in ; i++)
+    TubePaving::TubePaving(const IntervalVector &init_box, SetValue value) : Paving(init_box, value)
     {
-      const Slice **s = new const Slice*[size()];
-      for(int j = 0 ; j < size() ; j++)
-        s[j] = x[j].slice(v_t_inv[i].lb());
 
-      while(!is_in && s[0] && s[0]->tdomain().ub() <= v_t_inv[i].ub())
-      {
-        bool is_in_i = true;
-
-        for(int j = 0 ; j < size() && is_in_i ; j++)
-          is_in_i &= y[j].is_subset(s[j]->codomain());
-
-        is_in |= is_in_i;
-
-        for(int j = 0 ; j < size() ; j++)
-          s[j] = s[j]->next_slice();
-      }
     }
 
-    if(is_out)
-      set_value(SetValue::OUT);
-
-    else if(is_in)
-      set_value(SetValue::IN);
-
-    else if(box().max_diam() < precision)
-      set_value(SetValue::UNKNOWN);
-
-    else
+    void TubePaving::compute(float precision, const TubeVector &x)
     {
-      bisect();
-      ((TubePaving*)m_first_subpaving)->compute(precision, x);
-      ((TubePaving*)m_second_subpaving)->compute(precision, x);
+        assert(precision > 0.);
+        assert(x.size() == size());
+
+        IntervalVector y = box();
+        vector<Interval> v_t_inv;
+        x.invert(y, v_t_inv, x.tdomain());
+
+        bool is_out = v_t_inv.empty();
+        bool is_in = false;
+
+        for ( size_t i = 0; i < v_t_inv.size() && !is_in; i++ )
+        {
+            const Slice **s = new const Slice *[size()];
+            for ( int j = 0; j < size(); j++ )
+                s[j] = x[j].slice(v_t_inv[i].lb());
+
+            while ( !is_in && s[0] && s[0]->tdomain().ub() <= v_t_inv[i].ub())
+            {
+                bool is_in_i = true;
+
+                for ( int j = 0; j < size() && is_in_i; j++ )
+                    is_in_i &= y[j].is_subset(s[j]->codomain());
+
+                is_in |= is_in_i;
+
+                for ( int j = 0; j < size(); j++ )
+                    s[j] = s[j]->next_slice();
+            }
+        }
+
+        if ( is_out )
+            set_value(SetValue::OUT);
+
+        else if ( is_in )
+            set_value(SetValue::IN);
+
+        else if ( box().max_diam() < precision )
+            set_value(SetValue::UNKNOWN);
+
+        else
+        {
+            bisect();
+            ((TubePaving *) m_first_subpaving)->compute(precision, x);
+            ((TubePaving *) m_second_subpaving)->compute(precision, x);
+        }
     }
-  }
 
     void TubePaving::compute(float precision, const Tube &x)
     {
@@ -78,19 +78,20 @@ namespace codac
         bool is_in = false;
 
 
-        if ((x.tdomain()&y[0]).is_empty()||(x.codomain()&y[1]).is_empty() || (y[1]&(x(x.tdomain()&y[0]))).is_empty())
+        if ((x.tdomain() & y[0]).is_empty() || (x.codomain() & y[1]).is_empty() ||
+            (y[1] & (x(x.tdomain() & y[0]))).is_empty())
         {
             set_value(SetValue::OUT);
             return;
         }
 
-        else if (y[0].is_subset(x.tdomain()) && y[1].is_subset(x(y[0])))
+        else if ( y[0].is_subset(x.tdomain()) && y[1].is_subset(x(y[0])))
         {
             is_in = true;
-            const Slice* s = x.slice(y[0].lb());
-            while(is_in  && s != NULL && s->tdomain().lb() <= y[0].ub())
+            const Slice *s = x.slice(y[0].lb());
+            while ( is_in && s != NULL && s->tdomain().lb() <= y[0].ub())
             {
-                if (!s->codomain().is_superset(y[1]))
+                if ( !s->codomain().is_superset(y[1]))
                 {
                     is_in = false;
                 }
@@ -98,11 +99,11 @@ namespace codac
             }
 
         }
-        if (is_in)
+        if ( is_in )
         {
             set_value(SetValue::IN);
         }
-        else if(box().max_diam() < precision)
+        else if ( box().max_diam() < precision )
         {
             set_value(SetValue::UNKNOWN);
 
@@ -111,9 +112,10 @@ namespace codac
         {
             set_value(SetValue::UNKNOWN);
             bisect();
-            ((TubePaving*)m_first_subpaving)->compute(precision, x);
-            ((TubePaving*)m_second_subpaving)->compute(precision, x);
+            ((TubePaving *) m_first_subpaving)->compute(precision, x);
+            ((TubePaving *) m_second_subpaving)->compute(precision, x);
         }
     }
+
 
 }
