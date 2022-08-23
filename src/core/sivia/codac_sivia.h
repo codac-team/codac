@@ -44,6 +44,7 @@ namespace codac
                                                      bool regular = false, bool display_result = true,
                                                      const std::string& fig_name = "", bool return_result = false,
                                                      const SetColorMap& color_map = DEFAULT_SET_COLOR_MAP);
+  codac::SetValue::
   
   /// @}
   /// \name SIVIA for separators

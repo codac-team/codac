@@ -123,6 +123,7 @@ namespace codac
       static const ColorMap BLUE_TUBE; //!< a predefined color map for tubes
       static const ColorMap RAINBOW; //!< a predefined color map
 
+
     protected:
 
       InterpolMode m_interpol_mode = InterpolMode::RGB; //!< interpolation mode
