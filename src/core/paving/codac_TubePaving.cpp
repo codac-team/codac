@@ -73,7 +73,6 @@ namespace codac
       ((TubePaving*)m_first_subpaving)->compute(precision, x);
       ((TubePaving*)m_second_subpaving)->compute(precision, x);
     }
-
   }
 
   void TubePaving::compute(float precision, const Tube &x)
