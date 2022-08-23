@@ -112,6 +112,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCartProd.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCartProd.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCompo.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCN.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcCN.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcDist.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/contractors/static/codac_CtcFunction.h
