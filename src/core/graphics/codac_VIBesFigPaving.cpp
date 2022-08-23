@@ -34,7 +34,6 @@ namespace codac
 
   void VIBesFigPaving::set_color_map(const SetColorMap& color_map)
   {
-    // todo: deal with color maps defined with any kind of values
     if(color_map.find(SetValue::IN) != color_map.end())
       vibes::newGroup("val_in", color_map.at(SetValue::IN), vibesParams("figure", name()));
     if(color_map.find(SetValue::UNKNOWN) != color_map.end())
