@@ -22,6 +22,13 @@ namespace codac
     { SetValue::PENUMBRA, "#9C9C9C[white]" },
   });
 
+  SetColorMap LIE_SET_COLOR_MAP({
+    { SetValue::IN, "grey[white]" },
+    { SetValue::UNKNOWN, "#D55E00[#CC79A7]" },
+    { SetValue::OUT, "#009E73[#56B4E9]" },
+    { SetValue::PENUMBRA, "#9C9C9C[#E69F00]" },
+  });
+
   VIBesFigPaving::VIBesFigPaving(const string& fig_name, const Paving *paving)
     : VIBesFig(fig_name), m_paving(paving)
   {
@@ -70,7 +77,6 @@ namespace codac
         case SetValue::OUT:
           color_group = "val_out";
           break;
-
 
         case SetValue::PENUMBRA:
           color_group = "val_penumbra";
