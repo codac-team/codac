@@ -441,6 +441,7 @@ Main related publications
 
 .. csv-table::
   :header: "Year", "Title (download paper)", "Authors", "Journal"
+  
   |lie-year|,            |lie-title|_,            |lie-authors|,            |lie-journal|
   |damers-phd-year|,     |damers-phd-title|_,     |damers-phd-authors|,     |damers-phd-journal|
   |bourgois-phd-year|,   |bourgois-phd-title|_,   |bourgois-phd-authors|,   |bourgois-phd-journal|
