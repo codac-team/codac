@@ -20,26 +20,44 @@ using namespace vibes;
 
 int main(int argc, char** argv)
 {
-    Function f("x", "y", "x*cos(x-y)+y");
-    CtcFwdBwd ctc(f,Interval::NEG_REALS);
-    SepFwdBwd sep(f,Interval::NEG_REALS);
-    IntervalVector X0({{-10,10},{-10,10}});
+  Function f("x", "y", "x*cos(x-y)+y");
+  CtcFwdBwd ctc(f, Interval(-oo,0));
+  SepFwdBwd sep(f, Interval(-oo,0));
+  IntervalVector X0({{-10,10},{-10,10}});
 
+  const SetColorMap custom_colormap = {
+    {SetValue::IN,"#E2884F[#E2C54F]"},
+    {SetValue::OUT,"#009E73[#56B4E9]"},
+    {SetValue::UNKNOWN,"#D55E00[#CC79A7]"}};
 
+  string figname;
+  beginDrawing();
 
-    beginDrawing();
+  figname = "Sep regular";
+  newFigure(figname); cout << figname << endl;
+  SIVIA(X0, sep, 0.1, true, true, figname, false, custom_colormap);
+  setFigureProperties(vibesParams("x",100, "y",100, "width",500, "height",500));
+  axisAuto();
 
-    cout << "sep regular" << endl;
-    SIVIA(X0, sep, 0.1,true, true, "regular",false,{{SetValue::IN,"lightgrey[white]"},{SetValue::OUT,"#009E73[#56B4E9]"},{SetValue::UNKNOWN,"#D55E00[#CC79A7]"}});
-    cout << "sep diff" << endl;
-    SIVIA(X0, sep, 0.1,false, true, "diff");
+  figname = "Sep diff";
+  newFigure(figname); cout << figname << endl;
+  SIVIA(X0, sep, 0.1, false, true, figname, false, custom_colormap);
+  setFigureProperties(vibesParams("x",150, "y",150, "width",500, "height",500));
+  axisAuto();
 
+  figname = "Ctc regular";
+  newFigure(figname); cout << figname << endl;
+  SIVIA(X0, ctc, 0.1, true, true, figname, false, custom_colormap);
+  setFigureProperties(vibesParams("x",200, "y",200, "width",500, "height",500));
+  axisAuto();
 
-    cout << "ctc regular" << endl;
-    SIVIA(X0, ctc, 0.1, true, true,"ctc_r");
-    cout << "ctc diff" << endl;
-    SIVIA(X0, ctc, 0.1,false, true, "ctc_d");
-    endDrawing();
+  figname = "Ctc diff";
+  newFigure(figname); cout << figname << endl;
+  SIVIA(X0, ctc, 0.1, false, true, figname, false, custom_colormap);
+  setFigureProperties(vibesParams("x",250, "y",250, "width",500, "height",500));
+  axisAuto();
 
+  endDrawing();
 
+  return EXIT_SUCCESS;
 }

@@ -16,25 +16,24 @@ using namespace codac;
 
 TEST_CASE("CtcCN")
 {
-    SECTION("Test CtcCN") // x = a(t) + 2
-    {
-        Interval tdomain(0.,10.);
-        Tube a(tdomain, 0.01, TFunction("t"));
-        float t = 1;
-        IntervalVector x({{t,t},Interval::ALL_REALS});
+  SECTION("Test CtcCN") // x = a(t) + 2
+  {
+    Interval tdomain(0.,10.);
+    Tube a(tdomain, 0.01, TFunction("t"));
+    float t = 1;
+    IntervalVector x({{t,t},Interval::ALL_REALS});
 
-        CtcFunction ctc_f(Function("x[2]","a","(x[1]-2-a)"));
-        CtcEval ctc_eval;
+    CtcFunction ctc_f(Function("x[2]","a","(x[1]-2-a)"));
+    CtcEval ctc_eval;
 
-        ContractorNetwork cn;
-        IntervalVectorVar box(2);
-        Interval& at = cn.create_interm_var(Interval());
-        cn.add(ctc_eval,{box[0],at,a});
-        cn.add(ctc_f,{box,at});
-        CtcCN ctc_cn(&cn,&box);
+    ContractorNetwork cn;
+    IntervalVectorVar box(2);
+    Interval& at = cn.create_interm_var(Interval());
+    cn.add(ctc_eval,{box[0],at,a});
+    cn.add(ctc_f,{box,at});
+    CtcCN ctc_cn(cn,box);
 
-        ctc_cn.contract(x);
-        CHECK(ApproxIntv(x[1]) == a(t)+ 2);
-    }
+    ctc_cn.contract(x);
+    CHECK(ApproxIntv(x[1]) == a(t)+ 2);
+  }
 }
-

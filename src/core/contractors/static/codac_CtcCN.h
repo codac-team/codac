@@ -19,35 +19,32 @@
 
 namespace codac
 {
-    /**
-     * \class CtcCN
-     * \brief static contractor on a contractor network object
-     */
-    class CtcCN : public Ctc
-    {
-        public:
-            /**
-             * \brief Creates the contractor
-             * @param cn  the contractor network on which this contractor is based on
-             * @param box the IntervalVectorVar symbolising the box to contract in the Contractor Network
-             */
-            CtcCN(codac::ContractorNetwork *cn, codac::IntervalVectorVar *box);
+  /**
+   * \class CtcCN
+   * \brief static contractor on a contractor network object
+   */
+  class CtcCN : public Ctc
+  {
+    public:
+      /**
+       * \brief Creates the CtcCN contractor
+       * \param cn  the contractor network on which this contractor is based on
+       * \param box the IntervalVectorVar symbolising the box to contract in the Contractor Network
+       */
+      CtcCN(ContractorNetwork& cn, IntervalVectorVar& box);
 
-            /**
-             * \brief
-             * @param x Box we want to contract. Its size should be equal to m_box size
-             */
-            void contract(codac::IntervalVector& x);
+      /**
+       * \brief Contracts
+       * \param x the box we want to contract. Its size should be equal to m_box size
+       */
+      void contract(IntervalVector& x);
 
-        private:
-            codac::ContractorNetwork* m_cn;
-            codac::IntervalVectorVar* m_box;
 
-    };
+    private:
 
+      ContractorNetwork& m_cn;
+      IntervalVectorVar& m_box_var;
+  };
 }
-
-
-
 
 #endif //__CODAC_CTCCN_H__
