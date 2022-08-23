@@ -17,7 +17,8 @@ using namespace ibex;
 
 namespace codac
 {
-  TubePaving::TubePaving(const IntervalVector& init_box) : Paving(init_box, SetValue::UNKNOWN)
+  TubePaving::TubePaving(const IntervalVector& init_box)
+    : Paving(init_box, SetValue::UNKNOWN)
   {
 
   }
@@ -33,10 +34,11 @@ namespace codac
 
     bool is_out = v_t_inv.empty();
     bool is_in = false;
+    
+    const Slice **s = new const Slice*[size()];
 
     for(size_t i = 0 ; i < v_t_inv.size() && !is_in ; i++)
     {
-      const Slice **s = new const Slice*[size()];
       for(int j = 0 ; j < size() ; j++)
         s[j] = x[j].slice(v_t_inv[i].lb());
 
@@ -53,6 +55,8 @@ namespace codac
           s[j] = s[j]->next_slice();
       }
     }
+
+    delete s;
 
     if(is_out)
       set_value(SetValue::OUT);
