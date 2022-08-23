@@ -71,7 +71,6 @@ namespace codac
           color_group = "val_out";
           break;
 
-
         case SetValue::PENUMBRA:
           color_group = "val_penumbra";
           break;
