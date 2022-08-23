@@ -30,7 +30,16 @@ void example_3_continuous_article()
     double timestep = 0.001; // Time step for the creation of the reference
     IntervalVector x0({{0.5,0.5},{0,0}}); // Initial condition for reference
     Function f("x","y","(-x^3-x*y^2+x-y; -y^3-x^2*y+x+y)"); // Evolution function to integrate
-    TubeVector a = CAPD_integrateODE(domain,f,x0,timestep); // The reference
+
+    // Lohner version
+    CtcLohner ctc_lohner(f);
+    TubeVector a(domain,timestep, f.image_dim()); // The reference
+    a.set(x0,0.);
+    ctc_lohner.contract(a);
+
+    // CAPD version
+    //TubeVector a = CAPD_integrateODE(domain,f,x0,timestep); // The reference
+
     cout << "Reference generated " << a << endl;
 
     IntervalVector x({{-2,2},{-2,2}}); // The space to explore for the set inversion
@@ -61,7 +70,7 @@ void example_3_continuous_article()
     IntervalVector& x_init_out = cn_out.create_interm_var(IntervalVector(2));
     cn_out.add(ctc_phi, {box_out, x_init_out});
     cn_out.add(ctc_initial, {x_init_out});
-    CtcCN ctc_cn_out(&cn_out, &box_out);
+    CtcCN ctc_cn_out(cn_out, box_out);
 
     // Inside contractor
     ContractorNetwork cn_in;
@@ -69,7 +78,7 @@ void example_3_continuous_article()
     IntervalVector& x_init_in = cn_in.create_interm_var(IntervalVector(2));
     cn_in.add(ctc_phi_int,{box_in,x_init_in});
     cn_in.add(ctc_not_initial,{x_init_in});
-    CtcCN ctc_cn_in(&cn_in,&box_in);
+    CtcCN ctc_cn_in(cn_in,box_in);
 
     SepCtcPair sep(ctc_cn_in,ctc_cn_out);
     SepProj sep_proj(sep,Interval(-6,0), epsilon);
@@ -82,7 +91,7 @@ void example_3_continuous_article()
     fig.axis_limits(x);
 
     auto start = chrono::steady_clock::now();
-    SIVIA(x,sep_proj,epsilon,true,false,"Example 3 continuous",false,{{SetValue::IN,"#D55E00[#CC79A7]"},{SetValue::OUT,"#009E73[#56B4E9]"},{SetValue::UNKNOWN,"lightgrey[white]"}}); // Perform the set inversion algorithm
+    SIVIA(x, sep_proj, epsilon,true, true, "Example 3 continuous",false,LIE_SET_COLOR_MAP); // Perform the set inversion algorithm
     auto stop = chrono::steady_clock::now();
     cout << "elapsed time for test-case 3 continuous version: " << chrono::duration_cast<chrono::milliseconds>(stop - start).count() << " ms" <<endl;
     drawCircle(1.5,1.5,0.2,"#00FF00A3[#00FF00A3]");
@@ -103,7 +112,16 @@ void example_3_discrete_article()
     double timestep = 0.001; // Time step for the creation of the reference
     IntervalVector x0({{0.5,0.5},{0,0}}); // Initial condition for reference
     Function f("x","y","(-x^3-x*y^2+x-y; -y^3-x^2*y+x+y)"); // Evolution function to integrate
-    TubeVector a = CAPD_integrateODE(domain,f,x0,timestep); // The reference
+
+    // Lohner version
+    CtcLohner ctc_lohner(f);
+    TubeVector a(domain,timestep, f.image_dim()); // The reference
+    a.set(x0,0.);
+    ctc_lohner.contract(a);
+
+    // CAPD version
+    //TubeVector a = CAPD_integrateODE(domain,f,x0,timestep); // The reference
+
     cout << "Reference generated " << a << endl;
 
     IntervalVector x({{-2,2},{-2,2}}); // The space to explore for the set inversion
@@ -133,7 +151,7 @@ void example_3_discrete_article()
     IntervalVector& x_init_out = cn_out.create_interm_var(IntervalVector(2));
     cn_out.add(ctc_phi, {box_out, x_init_out});
     cn_out.add(ctc_initial, {x_init_out});
-    CtcCN ctc_cn_out(&cn_out, &box_out);
+    CtcCN ctc_cn_out(cn_out, box_out);
 
 
     ContractorNetwork cn_in;
@@ -141,7 +159,7 @@ void example_3_discrete_article()
     IntervalVector& x_init_in = cn_in.create_interm_var(IntervalVector(2));
     cn_in.add(ctc_phi_int,{box_in,x_init_in});
     cn_in.add(ctc_not_initial,{x_init_in});
-    CtcCN ctc_cn_in(&cn_in,&box_in);
+    CtcCN ctc_cn_in(cn_in,box_in);
 
     SepCtcPair sep(ctc_cn_in,ctc_cn_out);
 
@@ -176,7 +194,7 @@ void example_3_discrete_article()
     fig.axis_limits(x);
 
     auto start = chrono::steady_clock::now();
-    SIVIA(x,usep,epsilon,true,false,"Example 3 discrete",false,{{SetValue::IN,"#D55E00[#CC79A7]"},{SetValue::OUT,"#009E73[#56B4E9]"},{SetValue::UNKNOWN,"lightgrey[white]"}}); // Perform the set inversion algorithm
+    SIVIA(x,usep,epsilon,true,true,"Example 3 discrete",false,LIE_SET_COLOR_MAP); // Perform the set inversion algorithm
     auto stop = chrono::steady_clock::now();
     cout << "elapsed time for test-case 3 discrete version: " << chrono::duration_cast<chrono::milliseconds>(stop - start).count() << " ms" <<endl;
     drawCircle(1.5,1.5,0.2,"#00FF00A3[#00FF00A3]");
@@ -193,11 +211,6 @@ void example_3_discrete_article()
 
 int main (int argc, char* argv[])
 {
-    Tube::enable_syntheses();
-
     example_3_continuous_article();
     example_3_discrete_article();
-
-
-
 }
