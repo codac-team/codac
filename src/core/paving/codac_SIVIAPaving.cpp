@@ -47,7 +47,7 @@ namespace codac
         }
     }
 
-    void SIVIAPaving::compute(Ctc &ctc, float precision, list<IntervalVector> &l_unknown_boxes)
+    void SIVIAPaving::compute(Ctc &ctc, float precision)
     {
         assert(precision > 0.);
         assert(ctc.nb_var == box().size());
@@ -60,20 +60,18 @@ namespace codac
 
         else if ( result.max_diam() < precision )
         {
-            l_unknown_boxes.push_back(result);
             set_value(SetValue::UNKNOWN);
         }
 
         else
         {
             bisect();
-            ((SIVIAPaving *) m_first_subpaving)->compute(ctc, precision, l_unknown_boxes);
-            ((SIVIAPaving *) m_second_subpaving)->compute(ctc, precision, l_unknown_boxes);
+            ((SIVIAPaving *) m_first_subpaving)->compute(ctc, precision);
+            ((SIVIAPaving *) m_second_subpaving)->compute(ctc, precision);
         }
     }
 
-    void SIVIAPaving::compute(Sep &sep, float precision, list<IntervalVector> &l_unknown_boxes,
-                              list<IntervalVector> &l_inner_boxes)
+    void SIVIAPaving::compute(Sep &sep, float precision)
     {
         assert(precision > 0.);
         IntervalVector boxIn = box();
@@ -94,8 +92,8 @@ namespace codac
         else
         {
             bisect();
-            ((SIVIAPaving *) m_first_subpaving)->compute(sep, precision, l_unknown_boxes, l_inner_boxes);
-            ((SIVIAPaving *) m_second_subpaving)->compute(sep, precision, l_unknown_boxes, l_inner_boxes);
+            ((SIVIAPaving *) m_first_subpaving)->compute(sep, precision);
+            ((SIVIAPaving *) m_second_subpaving)->compute(sep, precision);
         }
     }
 

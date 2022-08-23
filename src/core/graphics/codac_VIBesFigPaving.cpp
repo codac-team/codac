@@ -50,7 +50,6 @@ namespace codac
     vibes::clearGroup(name(), "val_in");
     vibes::clearGroup(name(), "val_unknown");
     vibes::clearGroup(name(), "val_out");
-    vibes::clearGroup(name(), "val_unchecked");
     vibes::clearGroup(name(), "val_penumbra");
     draw_paving(m_paving);
   }
@@ -72,9 +71,6 @@ namespace codac
           color_group = "val_out";
           break;
 
-        case SetValue::UNCHECKED:
-          color_group = "val_unchecked";
-          break;
 
         case SetValue::PENUMBRA:
           color_group = "val_penumbra";

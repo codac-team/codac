@@ -54,19 +54,16 @@ namespace codac
          *
          * \param ctc static contractor on boxes
          * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
-         * \param l_unknown_boxes list of unknown boxes enclosing solutions for the inversion
          */
-        void compute(Ctc &ctc, float precision, std::list<IntervalVector> &l_unknown_boxes);
+        void compute(Ctc &ctc, float precision);
 
 
         /**
          * \brief Computes the paving from the constraint \f$\mathcal{S}_{f}\f$.
          * \param sep IBEX static separator
          * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
-         * \param l_unknown_boxes list of unknown boxes enclosing solutions for the inversion
-         * \param l_inner_boxes list of inner boxes enclosing solutions for the inversion
          */
-        void compute(ibex::Sep &sep, float precision, std::list<IntervalVector> &l_unknown_boxes, std::list<IntervalVector> &l_inner_boxes);
+        void compute(ibex::Sep &sep, float precision);
 
 
         /**
