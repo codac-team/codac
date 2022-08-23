@@ -45,6 +45,14 @@ namespace codac
        */
       void compute(float precision, const TubeVector& x);
 
+      /**
+       * \brief Computes the paving from the tube \f$[x](\cdot)\f$.
+       *
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       * \param x Tube \f$[x](\cdot)\f$
+       */
+      void compute(float precision, const Tube& x);
+
       /// @}
   };
 }
