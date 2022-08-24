@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <random>
 #include "codac.h"
-#include "codac-capd.h"
+//#include "codac-capd.h"
 #include "codac-rob.h"
 #include "codac-unsupported.h"
 
@@ -30,12 +30,20 @@ using namespace vibes;
 
 void example_1_continous()
 {
-    beginDrawing();
+
     Interval domain(0,5); // Integration time of the reference, must be > proj
     double timestep = 0.001; // Time step for the creation of the reference
     IntervalVector x0({{0,0},{1,1}});
     Function f("x1","x2","(1; -x2)");
-    TubeVector a = CAPD_integrateODE(domain,f,x0,timestep);
+
+    // Lohner version
+    CtcLohner ctc_lohner(f);
+    TubeVector a(domain,timestep, f.image_dim()); // The reference
+    a.set(x0,0.);
+    ctc_lohner.contract(a);
+
+    // CAPD Version
+    // TubeVector a = CAPD_integrateODE(domain,f,x0,timestep);
     a.enable_synthesis(codac::SynthesisMode::BINARY_TREE);
     cout << "Reference generated " << a << endl;
 
@@ -43,7 +51,7 @@ void example_1_continous()
 
     IntervalVector x({{-0.1,6.5},{-0.2,3.5}}); // The space to explore for the set inversion
 
-    double epsilon = timestep; // define accuracy of paving
+    double epsilon = timestep*10.; // define accuracy of paving
 
     // Generate the separator for the forward reach set
     ibex::Function phi("x1","x2","t","(x1+t;x2/exp(t))"); // define transformation function
@@ -54,11 +62,12 @@ void example_1_continous()
 
 
     // Visuals initialization
+    beginDrawing();
     VIBesFigMap fig_map("Example 1 continuous");
     fig_map.set_properties(50,50,800,464);
     fig_map.axis_limits(x);
     auto start = chrono::steady_clock::now();
-    SIVIA(x,sepProj,epsilon); // Perform the set inversion algorithm
+    SIVIA(x, sepProj, epsilon,true, true, "Example 1 continuous",false,LIE_SET_COLOR_MAP); // Perform the set inversion algorithm
     auto stop = chrono::steady_clock::now();
     cout << "elapsed time test-case 1 continuous: " << chrono::duration_cast<chrono::milliseconds>(stop - start).count() << " ms" <<endl;
     drawBox(X0[0].lb(),X0[0].ub(),X0[1].lb(),X0[1].ub(),"#00FF00A3[#00FF00A3]");
@@ -76,21 +85,28 @@ void example_1_continous()
 
 void example_1_discrete()
 {
-    beginDrawing();
+
     // Generate reference
-    Interval domain(0,5);
-    double timestep = 0.001;
+    Interval domain(0,5); // Integration time of the reference, must be > proj
+    double timestep = 0.001; // Time step for the creation of the reference
     IntervalVector x0({{0,0},{1,1}});
     Function f("x1","x2","(1; -x2)");
-    TubeVector a = CAPD_integrateODE(domain,f,x0,timestep);
-    //a.enable_synthesis(codac::SynthesisMode::POLYNOMIAL);
+
+    // Lohner version
+    CtcLohner ctc_lohner(f);
+    TubeVector a(domain,timestep, f.image_dim()); // The reference
+    a.set(x0,0.);
+    ctc_lohner.contract(a);
+
+    // CAPD Version
+    // TubeVector a = CAPD_integrateODE(domain,f,x0,timestep);
     a.enable_synthesis(codac::SynthesisMode::BINARY_TREE);
     cout << "Reference generated " << a << endl;
 
 
     IntervalVector X0({{0,1},{2,3}});
     IntervalVector x({{-0.1,6.5},{-0.2,3.5}});
-    double epsilon = timestep;
+    double epsilon = timestep*10.;
 
     // Generate the separator for the forward reach set
     ibex::Function phi("x1","x2","t","(x1+t;x2/exp(t))");
@@ -120,12 +136,13 @@ void example_1_discrete()
 
 
     // Visuals initialization
+    beginDrawing();
     VIBesFigMap fig_map("Example 1 discrete");
-    fig_map.set_properties(50,50,800,464);
+    fig_map.set_properties(50,50+464,800,464);
     fig_map.axis_limits(x);
 
     auto start = chrono::steady_clock::now();
-    SIVIA(x,usep,epsilon); // Perform the set inversion algorithm
+    SIVIA(x, usep, epsilon,true, true, "Example 1 discrete",false,LIE_SET_COLOR_MAP); // Perform the set inversion algorithm
     auto stop = chrono::steady_clock::now();
     cout << "elapsed time test-case 1 discrete: " << chrono::duration_cast<chrono::milliseconds>(stop - start).count() << " ms" <<endl;
 
