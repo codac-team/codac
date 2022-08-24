@@ -9,7 +9,7 @@
 Lie symmetries for guaranteed integration
 #########################################
 
-In the paper `Lie symmetries applied to interval integration <https://www.journals.elsevier.com/automatica>`_, a new approach has been proposed for improving significantly existing guaranteed integration methods for state equations under the form :math:`\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})`, with uncertain initial conditions, when symmetries can be found in the vector field of :math:`\mathbf{f}`.
+In the paper `Lie symmetries applied to interval integration <https://www.sciencedirect.com/science/article/pii/S0005109822003612>`_ (`download preprint <http://julien-damers.fr/publis/lie_groups_applied_to_guaranteed_integration.pdf>`_), a new approach has been proposed for improving significantly existing guaranteed integration methods for state equations under the form :math:`\dot{\mathbf{x}}=\mathbf{f}(\mathbf{x})`, with uncertain initial conditions, when symmetries can be found in the vector field of :math:`\mathbf{f}`.
 
 First, a tube is computed for enclosing the solution of the differential equation assuming that the initial state is known. Then, using Lie symmetries, the tube is inflated in order to contain the uncertainty associated with the initial state. 
 
@@ -40,8 +40,7 @@ This method is illustrated on four examples. For each of these, the set :math:`\
 
 Note that the unions of sets, as well as other set-theoretical operators such as the projection, can easily be done :ref:`using separator algebra <sec-manual-separators>`.
 
-More details about this method can be found `in the related paper <https://www.journals.elsevier
-.com/automatica>`_ and in `the following thesis <https://julien-damers.fr/phd/complete.pdf>`_
+More details about this method can be found `in the related paper <https://www.sciencedirect.com/science/article/pii/S0005109822003612>`_ (`download preprint <http://julien-damers.fr/publis/lie_groups_applied_to_guaranteed_integration.pdf>`_) and in `Julien Damers's thesis <https://julien-damers.fr/phd/complete.pdf>`_.
 
 
 Test-case 1
@@ -158,12 +157,20 @@ All the examples can be found in the 'examples' folder of the library in the dir
 Related content
 ---------------
 
+.. |lie-pdf| replace:: **Download the preprint**
+.. _lie-pdf: http://julien-damers.fr/publis/lie_groups_applied_to_guaranteed_integration.pdf
+
+.. |thesis-pdf| replace:: **Download the thesis**
+.. _thesis-pdf: https://julien-damers.fr/phd/complete.pdf
+
 .. admonition:: Related publication
   
   | **Lie symmetries applied to interval integration**
   | J. Damers, L. Jaulin, S. Rohou
   | *Automatica*, 2022.
+  | |lie-pdf|_
 
   | **Lie Groups applied to localisation of mobile robots**
   | J. Damers
   | *PhD Thesis*
+  | |thesis-pdf|_
