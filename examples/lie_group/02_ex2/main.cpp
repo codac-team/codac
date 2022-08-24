@@ -31,7 +31,7 @@ void example_2_continuous()
 
     // Generate reference
     Interval domain(0, 8);
-    double timestep = 0.001;
+    double timestep = 0.01;
     IntervalVector x0({{0., 0.},
                        {0., 0.}});
     Function f("x", "y", "(1;sin(x))");
@@ -84,7 +84,7 @@ void example_2_discrete()
 {
     // Generate reference
     Interval domain(0, 8);
-    double timestep = 0.001;
+    double timestep = 0.01;
     IntervalVector x0({{0., 0.},
                        {0., 0.}});
     Function f("x", "y", "(1;sin(x))");
