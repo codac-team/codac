@@ -33,12 +33,12 @@
     message(FATAL_ERROR "Unable to find Doxygen generated files, this is required for Python binding (docstring)")
   endif()
 
-  message(STATUS "Generating docstrings from doxygen files...")
-  file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docstring)
-  execute_process(COMMAND ${PYTHON_EXECUTABLE}
-    ${PROJECT_SOURCE_DIR}/scripts/pybind/doxygen2docstring.py
-    ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
-    ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+    message(STATUS "Generating docstrings from doxygen files...")
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docstring)
+    execute_process(COMMAND ${PYTHON_EXECUTABLE}
+      ${PROJECT_SOURCE_DIR}/scripts/pybind/doxygen2docstring.py
+      ${CMAKE_CURRENT_BINARY_DIR}/../doc/api/xml/
+      ${CMAKE_CURRENT_BINARY_DIR}/docstring)
 
 
   ################################################################################
@@ -94,6 +94,8 @@
       src/core/graphics/codac_py_VIBesFigMap.cpp
       src/core/graphics/codac_py_VIBesFigPaving.cpp
 
+      src/core/geometry/codac_py_geometry.cpp
+      
       src/core/paving/codac_py_Paving.cpp
       src/core/paving/codac_py_Set.cpp
 
@@ -178,10 +180,11 @@
 ################################################################################
 
   if(BUILD_TESTS)
-
+    include(CTest)
     file(GLOB TESTS_FILES
       "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/test_*.py"
-      "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/tests_from_pyibex/test_*.py")
+      "${PYTHON_PACKAGE_DIR}/${PYTHON_PACKAGE_NAME}/tests/tests_from_pyibex/test_*.py"
+      )
     foreach(TEST_FILE ${TESTS_FILES})
       get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
       set(TEST_NAME "python_${TEST_NAME}")

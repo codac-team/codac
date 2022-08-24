@@ -22,8 +22,8 @@ using ibex::IntervalVector;
 // Compute the fixed point of a separator
 /**
  * \ingroup Set
- * \brief FixPoint of a separator
- * The fixpoint of a separator is computed by calling the <separate> function
+ * @brief FixPoint of a separator
+ * The fixpoint of a separator is computed by calling the "::"separate function
  * on a given box until the Hausdorff distance between two iterations is less than
  * a given ratio. This operation can be seen as a contractor on the boundary of the solution set.
  *
@@ -33,25 +33,35 @@ using ibex::IntervalVector;
  *
  */
 namespace codac {
+  /**
+   * \class SepFixPoint
+   * @brief Fix point of a Separator.
+   */
 class SepFixPoint : public Sep {
 
 public:
     /**
-     * \brief build a fix point.
-     *
+     * @brief build a fix point Separator from the one given as arguments.
      * When the Hausdorff distance between
      * two iterations is less than ratio*diameter
      * the fix-point is considered to be reached.
+     * 
+     * @param sep Separator to use
+     * @param ratio iteration stop criteria
+     * 
      */
     SepFixPoint(Sep& sep, double ratio=default_ratio);
 
     /**
-     * \brief Delete *this.
+     * @brief Delete *this.
      */
     ~SepFixPoint();
 
     /**
-     * \brief Separate a box.
+     * @brief Separate a box. 
+     * @see ibex::Sep
+     * @param x_in the n-dimensional box \f$[\mathbf{x}_{\textrm{in}}]\f$ to be inner-contracted
+     * \param x_out the n-dimensional box \f$[\mathbf{x}_{\textrm{out}}]\f$ to be outer-contracted
      */
     void separate(IntervalVector &x_in, IntervalVector &x_out);
 
@@ -59,30 +69,52 @@ public:
 protected:
 
     /**
-     * \brief The Contractor.
+     * @brief The Separator.
      */
     Sep& sep;
 
     /**
-      * \brief the outer contractor / inner contractor has an impact
+      * @brief backtrace if the inner contractor had an impact
       */
-    bool impact_cin, impact_cout;
+    bool impact_cin;
+    /**
+      * @brief backtrace if the outer contractor had an impact
+      */
+    bool impact_cout;
 
     /**
-      * \brief store the first box contracted by the inner / outer contractor
+      * @brief store the first box contracted by the outer contractor
+      * It is the result of the ibex function  IntervalVector::diff
       */
-    IntervalVector *first_cin_boxes, *first_cout_boxes;
-    int n_in, n_out;
+    IntervalVector *first_cin_boxes;
+
+    /**
+      * @brief store the first box contracted by the inner / outer contractor
+      * It is the result of the ibex function  IntervalVector::diff
+      */
+    IntervalVector *first_cout_boxes;
+
+    /**
+     * @brief number of boxes in  SepFixPoint::first_cin_boxes
+     */
+    int n_in;
+    
+    /**
+     * @brief number of boxes in  SepFixPoint::first_cout_boxes
+     */
+    int n_out;
 
 
     /**
-     * Ratio. When the Hausdorff distance between
+     * @brief When the Hausdorff distance between
      * two iterations is less than ratio*diameter
      * the fix-point is considered to be reached.
      */
     double ratio;
 
-    /** Default ratio used, set to 0.1. */
+    /** 
+     * @brief  ratio used, set to 0.1. 
+     */
     static const double default_ratio;
 
 private:
@@ -123,11 +155,11 @@ private:
      * stored in x_in and x_out.
      * this function reconstructs x_in and x_out
      * such as
-     *      - x_in \cup x_out = x_old and
-     *      - x_in \cap x_out = x
+     *      - \f$x_in \cup x_out = x_old\f$ and
+     *      - \f$x_in \cap x_out = x\f$
      *
      */
-    bool reconstrut(IntervalVector &x_in, IntervalVector &x_out, IntervalVector &x_old);
+    bool reconstruct(IntervalVector &x_in, IntervalVector &x_out, IntervalVector &x_old);
 
 };
 

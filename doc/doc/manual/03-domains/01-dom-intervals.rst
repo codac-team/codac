@@ -156,12 +156,35 @@ Intervals, boxes and interval matrices
       IntervalVector c = cart_prod(a,b);
       // c: ([0, 1] ; [2, 3] ; [4, 5] ; [6, 7])
 
+  .. note::
+
+    With Python, one can use NumPy arrays for building degenerated ``IntervalVector`` objects such as:
+
+    .. code:: py
+
+      x = IntervalVector(np.array([1,0,0]))       # [1,1]×[0,0]×[0,0]
+      y = IntervalVector(np.array([[1],[0],[0]])) # [1,1]×[0,0]×[0,0]
+
 
 .. _sec-manual-intervals-matrices:
 
 * | ``IntervalMatrix`` is also available.
   | One can refer to the `documentation of IBEX <http://www.ibex-lib.org/doc/interval.html#matrices-and-array-of-matrices>`_ for more information.
 
+
+  .. note::
+
+    With Python, one can use NumPy matrices for building degenerated ``IntervalMatrix`` objects such as:
+
+    .. code:: py
+
+      x = IntervalMatrix(np.eye(3,2))
+
+      # Produces:
+      #
+      # ((<1, 1> ; <0, 0>)
+      #  (<0, 0> ; <1, 1>)
+      #  (<0, 0> ; <0, 0>))
 
 .. _sec-manual-intervals-empty-set:
 
@@ -204,7 +227,7 @@ For boxes (interval vectors), we have to specify their dimension even in case of
 Set operations
 --------------
 
-Set operations are available for ``Interval`` and ``IntervalVector`` objects (see the `official reference <http://www.ibex-lib.org/doc/interval.html#set-membership-operations>`_). In the following table, if :math:`[x]` is an interval object, :math:`d` is a real value.
+Set operations are available for ``Interval``, ``IntervalVector`` and ``IntervalMatrix`` objects (see the `official reference <http://www.ibex-lib.org/doc/interval.html#set-membership-operations>`_). In the following table, if :math:`[x]` is an interval object, :math:`d` is a real value.
 
 ====================================  =======================================================
 Code                                  Meaning

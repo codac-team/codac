@@ -33,14 +33,17 @@ namespace codac
    * \param x initial box
    * \param ctc Contractor operator for the set inversion
    * \param precision accuracy of the paving algorithm
+   * \param regular_paving regular bisection rule
    * \param display_result display information if true
    * \param fig_name name of the figure on which boxes are drawn. If empty, default figure is used
    * \param return_result if true, boxes will be stored in the returned map
    * \param color_map color map used to draw boxes, see SetColorMap
    * \return return a map of lists of boxes. Keys of the map are IN/OUT/UNKNOWN. The lists are empty if return_result if false.
    */
-  std::map<SetValue,std::list<IntervalVector>>  SIVIA(const IntervalVector& x, Ctc& ctc, float precision,
-    bool display_result = true, const std::string& fig_name = "", bool return_result = false, const SetColorMap& color_map = DEFAULT_SET_COLOR_MAP);
+  std::map<SetValue,std::list<IntervalVector>> SIVIA(const IntervalVector& x, Ctc& ctc, float precision,
+                                                     bool regular_paving = false, bool display_result = true,
+                                                     const std::string& fig_name = "", bool return_result = false,
+                                                     const SetColorMap& color_map = DEFAULT_SET_COLOR_MAP);
   
   /// @}
   /// \name SIVIA for separators
@@ -55,14 +58,18 @@ namespace codac
    * \param x initial box
    * \param sep Separator operator for the set inversion
    * \param precision accuracy of the paving algorithm
+   * \param regular_paving regular bisection rule
    * \param display_result display information if true
    * \param fig_name name of the figure             if None use the current figure. If empty, default figure is used
    * \param return_result if true, boxes will be stored in the returned map
    * \param color_map color map used to draw boxes, see SetColorMap
    * \return return a map of lists of boxes. Keys of the map are IN/OUT/UNKNOWN. The lists are empty if return_result if false.
    */
-  std::map<SetValue,std::list<IntervalVector>>  SIVIA(const IntervalVector& x, ibex::Sep& sep, float precision,
-    bool display_result = true, const std::string& fig_name = "", bool return_result = false, const SetColorMap& color_map = DEFAULT_SET_COLOR_MAP);
+  std::map<SetValue,std::list<IntervalVector>> SIVIA(const IntervalVector& x, ibex::Sep& sep, float precision,
+                                                     bool regular_paving = false, bool display_result = true,
+                                                     const std::string& fig_name = "", bool return_result = false,
+                                                     const SetColorMap& color_map = DEFAULT_SET_COLOR_MAP);
+
 
   /// @}
 }

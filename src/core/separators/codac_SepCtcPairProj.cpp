@@ -14,8 +14,8 @@ using namespace std;
 namespace codac {
 
 SepCtcPairProj::SepCtcPairProj(Ctc& ctc_in, Ctc& ctc_out, const IntervalVector& y_init, double prec) :
-    Sep(ctc_in.nb_var), ctcIn(ctc_in), ctcOut(ctc_out),
-    vars(ibex::BitSet(ctc_in.nb_var)), y_init(y_init)
+    Sep(ctc_in.nb_var), ctc_in(ctc_in), ctc_out(ctc_out),
+    y_init(y_init), vars(ibex::BitSet(ctc_in.nb_var))
 {
     for(int i = 0; i < ctc_in.nb_var-y_init.size(); i++){
         vars.add(i);
@@ -25,14 +25,14 @@ SepCtcPairProj::SepCtcPairProj(Ctc& ctc_in, Ctc& ctc_out, const IntervalVector& 
     }
     // this->ctc_in = &ctc_in;
     // this->ctc_out = &ctc_in;
-    // ctcForAll = new CtcForAll(ctc_in, vars, y_init, prec);
-    // ctcExist = new CtcExist(ctc_out, vars, y_init, prec);
+    ctcForAll = new CtcForAll(ctc_in, vars, y_init, prec);
+    ctcExist = new CtcExist(ctc_out, vars, y_init, prec);
 
 }
 
 SepCtcPairProj::SepCtcPairProj(SepCtcPair& sep, const IntervalVector& y_init, double prec) :
-    Sep(sep.nb_var), ctcIn(sep.ctc_in), ctcOut(sep.ctc_out),
-    vars(ibex::BitSet(sep.nb_var)), y_init(y_init)
+    Sep(sep.nb_var), ctc_in(sep.ctc_in), ctc_out(sep.ctc_out),
+    y_init(y_init), vars(ibex::BitSet(sep.nb_var))
 {
     for(int i = 0; i < sep.nb_var-y_init.size(); i++){
         vars.add(i);
@@ -49,8 +49,8 @@ SepCtcPairProj::SepCtcPairProj(SepCtcPair& sep, const IntervalVector& y_init, do
 }
 
 SepCtcPairProj::SepCtcPairProj(Sep& sep, const IntervalVector& y_init, double prec) :
-    Sep(sep.nb_var), ctcIn(*new CtcFromSep(sep, true)), ctcOut(*new CtcFromSep(sep, false)),
-    vars(ibex::BitSet(sep.nb_var)), y_init(y_init)
+    Sep(sep.nb_var), ctc_in(*new CtcFromSep(sep, true)), ctc_out(*new CtcFromSep(sep, false)),
+    y_init(y_init), vars(ibex::BitSet(sep.nb_var))
 {
     for(int i = 0; i < sep.nb_var-y_init.size(); i++){
         vars.add(i);
@@ -60,7 +60,7 @@ SepCtcPairProj::SepCtcPairProj(Sep& sep, const IntervalVector& y_init, double pr
     }
 
     // ctc_in = &sep.ctc_in;
-    // ctc_out = &sep_ctc_out;
+    // ctc_out = &sep.ctc_out;
     // ctcForAll = new CtcForAll(sep.ctc_in, vars, y_init, prec);
     // ctcExist = new CtcExist(sep_ctc_out, vars, y_init, prec);
 
@@ -86,8 +86,8 @@ SepCtcPairProj::SepCtcPairProj(Sep& sep, const IntervalVector& y_init, double pr
 
 
 SepCtcPairProj::~SepCtcPairProj() {
-    // delete ctcExist;
-    // delete ctcForAll;
+    delete ctcExist;
+    delete ctcForAll;
     // delete ctcIn;
     // delete ctcOut;
 }
@@ -95,11 +95,9 @@ SepCtcPairProj::~SepCtcPairProj() {
 void SepCtcPairProj::separate(IntervalVector &x_in, IntervalVector &x_out)
 {
 
-    assert(x_in==x_out);
-    CtcExist(ctcOut,vars,y_init,x_out.max_diam()/10).contract(x_out);
-    CtcForAll(ctcIn,vars,y_init,x_in.max_diam()/10).contract(x_in);
-    // ctcExist->contract(x_out);
-    // ctcForAll->contract(x_in);
+    assert(x_in==x_out); // SepCtcPairProj::separate x_in == x_out
+    ctcExist->contract(x_out);
+    ctcForAll->contract(x_in);
 
 }
 

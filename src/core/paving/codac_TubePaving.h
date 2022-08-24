@@ -3,7 +3,7 @@
  *  TubePaving class
  * ----------------------------------------------------------------------------
  *  \date       2019
- *  \author     Simon Rohou
+ *  \author     Simon Rohou, Julien Damers
  *  \copyright  Copyright 2021 Codac Team
  *  \license    This program is distributed under the terms of
  *              the GNU Lesser General Public License (LGPL).
@@ -35,7 +35,7 @@ namespace codac
        *
        * \param init_box n-dimensional box defining the hull of the paving
        */
-      TubePaving(const IntervalVector& init_box);
+      TubePaving(const ibex::IntervalVector& init_box);
 
       /**
        * \brief Computes the paving from the tube \f$[\mathbf{x}](\cdot)\f$.
@@ -44,6 +44,16 @@ namespace codac
        * \param x TubeVector \f$[\mathbf{x}](\cdot)\f$
        */
       void compute(float precision, const TubeVector& x);
+
+      /**
+       * \brief Computes the 2d paving from the 1d tube \f$[x](\cdot)\f$.
+       * 
+       * Axes of the paving are time and codomain.
+       *
+       * \param precision precision \f$\epsilon\f$ of the SIVIA approximation
+       * \param x Tube \f$[x](\cdot)\f$
+       */
+      void compute(float precision, const Tube& x);
 
       /// @}
   };

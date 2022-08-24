@@ -19,8 +19,10 @@
 #include <pybind11/numpy.h>
 #include "codac_type_caster.h"
 
+#include "ibex_Matrix.h"
 #include "codac_Interval.h"
 #include "codac_IntervalMatrix.h"
+#include "codac_matrix_arithmetic.h"
 // Generated file from Doxygen XML (doxygen2docstring.py):
 // todo: #include "codac_py_IntervalMatrix_docs.h"
 
@@ -77,6 +79,22 @@ void export_IntervalMatrix(py::module& m)
   .def(py::init<const IntervalMatrix&>())
   .def(py::init(&create_from_list))
 
+  .def(py::init([](py::buffer b) // create for instance an IntervalMatrix from a NumPy matrix
+  {
+    // Request a buffer descriptor from Python
+    py::buffer_info info = b.request();
+
+    // Some sanity checks...
+    if(info.format != py::format_descriptor<double>::format())
+      throw std::runtime_error("Incompatible format: expected a double array");
+
+    if(info.ndim != 2)
+      throw std::runtime_error("Incompatible buffer dimension");
+
+    ibex::Matrix m((int)info.shape[0], (int)info.shape[1], static_cast<double*>(info.ptr));
+    return IntervalMatrix(m);
+  }))
+
   .def("__getitem__", [](IntervalMatrix& s, size_t index) -> IntervalVector&
     {
       if(index < 0 || index >= static_cast<size_t>(s.nb_rows()))
@@ -117,5 +135,24 @@ void export_IntervalMatrix(py::module& m)
   .def( "__mul__", [](IntervalMatrix& m, const Interval& x) { return x*m; })
   .def("shape", [] (IntervalMatrix& o) { return make_tuple(o.nb_rows(), o.nb_cols()); })
   .def("__repr__", [](const IntervalMatrix& x) { ostringstream str; str << x; return str.str(); })
+
+  .def("__or__", [](const IntervalMatrix& x, const IntervalMatrix& y) { return x|y; })
+  .def("__and__", [](const IntervalMatrix& x, const IntervalMatrix& y) { return x&y; })
+
+  .def("inflate", &IntervalMatrix::inflate, "r"_a)
+  .def("is_unbounded", &IntervalMatrix::is_unbounded)
+  .def("is_subset", &IntervalMatrix::is_subset, "x"_a)
+  .def("is_strict_subset", &IntervalMatrix::is_strict_subset, "x"_a)
+  .def("is_interior_subset", &IntervalMatrix::is_interior_subset, "x"_a)
+  .def("is_strict_interior_subset", &IntervalMatrix::is_strict_interior_subset, "x"_a)
+  .def("is_superset", &IntervalMatrix::is_superset, "x"_a)
+  .def("is_strict_superset", &IntervalMatrix::is_strict_superset, "x"_a)
+  .def("contains", &IntervalMatrix::contains, "x"_a)
+  .def("__contains__", &IntervalMatrix::contains, "x"_a)
+  .def("interior_contains", &IntervalMatrix::interior_contains, "x"_a)
+  .def("intersects", &IntervalMatrix::intersects, "x"_a)
+  .def("overlaps", &IntervalMatrix::overlaps, "x"_a)
+  .def("is_disjoint", &IntervalMatrix::is_disjoint,"x"_a)
+  .def("is_zero", &IntervalMatrix::is_zero)
   ;
 };

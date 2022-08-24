@@ -72,6 +72,11 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mathjax_stmaryrd.js
       file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/doc/_static/)
     endforeach()
 
+    # Copying tmp files
+    foreach(static_file ${CMAKE_CURRENT_SOURCE_DIR}/doc/tmp/)
+      file(COPY ${static_file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/doc/tmp/)
+    endforeach()
+
     # todo: the SPHINX_EXECUTABLE is already set by FindSphinx.cmake:
     # check that it works without the following overload for Win and Linux:
     if(WIN32)

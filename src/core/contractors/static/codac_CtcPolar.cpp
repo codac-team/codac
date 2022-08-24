@@ -73,7 +73,7 @@ namespace codac
         return make_tuple(x_, y_, thr);
       }
 
-      // Divide into four quadrats and call contractor
+      // Divide into four quadrants and call contractor
 
         // x > 0 and y > 0 and th \in [0, PI/2.]
         Interval x1 = x & Interval::POS_REALS;

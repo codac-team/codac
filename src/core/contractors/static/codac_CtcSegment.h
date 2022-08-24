@@ -27,7 +27,7 @@ namespace codac {
 /**
  * \ingroup geometry
  *
- * Minimal contractor for a segment
+ * \brief Minimal contractor for a segment
  */
 class CtcSegment : public Ctc {
 
@@ -39,6 +39,11 @@ public:
    *
    * This contractor is associated with the set of all points which
    * are on the segment, which is fixed. It works with 2 variables.
+   * 
+   * @param ax : x coordinate of the start of the segment
+   * @param ay : y coordinate of the start of the segment
+   * @param bx : x coordinate of the end of the segment
+   * @param by : y coordinate of the end of the segment
    */
   CtcSegment(double ax, double ay, double bx, double by);
 
@@ -55,6 +60,7 @@ public:
 
   /**
    * \brief Contract a box.
+   * \param box to be contracted
    */
   virtual void contract(IntervalVector& box);
 
@@ -76,7 +82,10 @@ protected:
   CtcFwdBwd *ctc_f, *ctc_g;
 
 private:
-  /* Initialize ncf, ncg, ctc_f, ctc_g. */
+  /**
+   * @brief Initialize ncf, ncg, ctc_f, ctc_g.
+   * 
+   */
   void init();
 };
 
