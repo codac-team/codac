@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include "codac.h"
 //#include "codac-capd.h"
-//#include "codac-unsupported.h"
+#include "codac-unsupported.h"
 #include "lie_group_ex4_separator.h"
 #include "chrono"
 

@@ -15,7 +15,7 @@
 #include <iostream>
 #include <random>
 #include "codac.h"
-#include "codac-capd.h"
+//#include "codac-capd.h"
 #include "codac-rob.h"
 #include "codac-unsupported.h"
 
@@ -131,7 +131,7 @@ void example_2_discrete()
 
     beginDrawing();
     VIBesFigMap fig_map("Example 2 discrete");
-    fig_map.set_properties(50,50,800,368);
+    fig_map.set_properties(50,50+368,800,368);
     fig_map.axis_limits(x);
     auto start = chrono::steady_clock::now();
     SIVIA(x, usep, epsilon,true, true, "Example 2 discrete",false,LIE_SET_COLOR_MAP); // Perform the set inversion algorithm
