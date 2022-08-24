@@ -4,10 +4,6 @@
 
    <br />
 
-.. warning::
-
-  This page is related to a new paper that has not been published yet.
-  It has been submitted to the Automatica journal.
 
 #########################################
 Lie symmetries for guaranteed integration
@@ -44,7 +40,8 @@ This method is illustrated on four examples. For each of these, the set :math:`\
 
 Note that the unions of sets, as well as other set-theoretical operators such as the projection, can easily be done :ref:`using separator algebra <sec-manual-separators>`.
 
-More details about this method can be found `in the related paper <https://www.journals.elsevier.com/automatica>`_.
+More details about this method can be found `in the related paper <https://www.journals.elsevier
+.com/automatica>`_ and in `the following thesis <https://julien-damers.fr/phd/complete.pdf>`_
 
 
 Test-case 1
@@ -152,6 +149,12 @@ Results are provided below.
   `Try this example TC4-continuous on Repl.it <https://replit.com/@JulienDamers/Lie-symmetries-test-case-4-continuous>`_. 
 
 
+Note
+---------------
+
+All the examples can be found in the 'examples' folder of the library in the directory
+'lie-symmetries' in both Python and C++
+
 Related content
 ---------------
 
@@ -160,3 +163,7 @@ Related content
   | **Lie symmetries applied to interval integration**
   | J. Damers, L. Jaulin, S. Rohou
   | *Automatica*, 2022.
+
+  | **Lie Groups applied to localisation of mobile robots**
+  | J. Damers
+  | *PhD Thesis*
