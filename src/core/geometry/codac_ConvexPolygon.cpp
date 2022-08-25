@@ -40,8 +40,46 @@ namespace codac
     assert(box.size() == 2);
     assert(!box.is_empty());
 
-    ThickPoint::push(box, m_v_floating_pts);
-    m_v_floating_pts = GrahamScan::convex_hull(m_v_floating_pts);
+    // Already convex, but order matters
+
+    if(box[0].is_degenerated() && box[1].is_degenerated())
+    {
+      m_v_floating_pts = vector<Vector>({
+        Vector({box[0].lb(),box[1].lb()}),
+      });
+    }
+
+    else if(box[0].is_degenerated())
+    {
+      m_v_floating_pts = vector<Vector>({
+        Vector({box[0].lb(),box[1].lb()}),
+        Vector({box[0].lb(),box[1].ub()}),
+      });
+    }
+
+    else if(box[1].is_degenerated())
+    {
+      m_v_floating_pts = vector<Vector>({
+        Vector({box[0].lb(),box[1].lb()}),
+        Vector({box[0].ub(),box[1].lb()}),
+      });
+    }
+
+    else if(!box.is_unbounded())
+    {
+      m_v_floating_pts = vector<Vector>({
+        Vector({box[0].lb(),box[1].lb()}),
+        Vector({box[0].ub(),box[1].lb()}),
+        Vector({box[0].ub(),box[1].ub()}),
+        Vector({box[0].lb(),box[1].ub()}),
+      });
+    }
+
+    else
+    {
+      ThickPoint::push(box, m_v_floating_pts);
+      m_v_floating_pts = GrahamScan::convex_hull(m_v_floating_pts);
+    }
   }
 
   ConvexPolygon::ConvexPolygon(const vector<ThickPoint>& v_thick_pts)
