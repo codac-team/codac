@@ -418,6 +418,11 @@ namespace codac
     return y;
   }
 
+  const IntervalVector TFunction::eval_vector(const IntervalVector& x1, const IntervalVector& x2) const
+  {
+    return eval_vector(cart_prod(x1,x2));
+  }
+
   const TrajectoryVector TFunction::traj_eval_vector(const TrajectoryVector& x) const
   {
     // Faster evaluation than the generic Fnc::eval method
