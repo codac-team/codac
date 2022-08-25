@@ -76,7 +76,11 @@ namespace codac2
 
       virtual size_t size() const
       {
-        return codomain().size();
+        // todo: define size() method in Interval class
+        if constexpr(std::is_same<T,Interval>::value)
+          return 1;
+        else
+          return codomain().size();
       }
 
       bool is_gate() const

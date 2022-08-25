@@ -38,11 +38,11 @@ namespace codac2
   {
     public:
 
-      explicit Tube(size_t n, TDomain& tdomain) :
+      explicit Tube(size_t n, const std::shared_ptr<TDomain>& tdomain) :
         AbstractSlicedTube(tdomain)
       {
-        for(std::list<TSlice>::iterator it = _tdomain._tslices.begin();
-          it != _tdomain._tslices.end(); ++it)
+        for(std::list<TSlice>::iterator it = _tdomain->_tslices.begin();
+          it != _tdomain->_tslices.end(); ++it)
         {
           it->_slices.insert(
             std::pair<const AbstractSlicedTube*,std::shared_ptr<Slice<T>>>(this,
@@ -50,7 +50,7 @@ namespace codac2
         }
       }
 
-      explicit Tube(size_t n, TDomain& tdomain, const TFnc& f) :
+      explicit Tube(size_t n, const std::shared_ptr<TDomain>& tdomain, const TFnc& f) :
         Tube(n, tdomain)
       {
         assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
@@ -63,8 +63,8 @@ namespace codac2
       explicit Tube(const Tube& x) :
         AbstractSlicedTube(x.tdomain())
       {
-        for(std::list<TSlice>::iterator it = _tdomain._tslices.begin();
-          it != _tdomain._tslices.end(); ++it)
+        for(std::list<TSlice>::iterator it = _tdomain->_tslices.begin();
+          it != _tdomain->_tslices.end(); ++it)
         {
           it->_slices.insert(
             std::pair<const AbstractSlicedTube*,std::shared_ptr<Slice<T>>>(this,
@@ -74,7 +74,7 @@ namespace codac2
 
       ~Tube()
       {
-        for(auto& s : _tdomain._tslices)
+        for(auto& s : _tdomain->_tslices)
           s._slices.erase(this);
       }
       
@@ -85,22 +85,26 @@ namespace codac2
 
       size_t size() const
       {
-        return first_slice().size();
+        // todo: define size() method in Interval class
+        if constexpr(std::is_same<T,Interval>::value)
+          return 1;
+        else
+          return first_slice().size();
       }
 
       size_t nb_slices() const
       {
-        return _tdomain.nb_tslices();
+        return _tdomain->nb_tslices();
       }
 
       virtual const std::shared_ptr<AbstractSlice>& first_abstract_slice() const
       {
-        return _tdomain.tslices().front().slices().at(this);
+        return _tdomain->tslices().front().slices().at(this);
       }
 
       virtual const std::shared_ptr<AbstractSlice>& last_abstract_slice() const
       {
-        return _tdomain.tslices().back().slices().at(this);
+        return _tdomain->tslices().back().slices().at(this);
       }
 
       const std::shared_ptr<Slice<T>> first_slice_ptr() const
@@ -156,9 +160,9 @@ namespace codac2
         return true;
       }
 
-      IntervalVector codomain() const
+      T codomain() const
       {
-        IntervalVector codomain(size());
+        T codomain = first_slice().codomain();
         codomain.set_empty();
         for(const auto& s : *this)
           codomain |= s.codomain();
@@ -177,15 +181,15 @@ namespace codac2
       
       T eval(double t) const
       {
-        return std::static_pointer_cast<Slice<T>>(_tdomain.iterator_tslice(t)->_slices.at(this))->codomain();
+        return std::static_pointer_cast<Slice<T>>(_tdomain->iterator_tslice(t)->_slices.at(this))->codomain();
       }
       
       T eval(const Interval& t) const
       {
-        std::list<TSlice>::iterator it = _tdomain.iterator_tslice(t.lb());
+        std::list<TSlice>::iterator it = _tdomain->iterator_tslice(t.lb());
         T codomain = std::static_pointer_cast<Slice<T>>(it->_slices.at(this))->codomain();
 
-        while(it != _tdomain.iterator_tslice(t.ub()))
+        while(it != _tdomain->iterator_tslice(t.ub()))
         {
           codomain |= std::static_pointer_cast<Slice<T>>(it->_slices.at(this))->codomain();
           it++;
@@ -258,8 +262,8 @@ namespace codac2
           const Tube& _tube_vector;
       };
 
-      iterator begin() { return iterator(*this, _tdomain._tslices.begin()); }
-      iterator end()   { return iterator(*this, _tdomain._tslices.end()); }
+      iterator begin() { return iterator(*this, _tdomain->_tslices.begin()); }
+      iterator end()   { return iterator(*this, _tdomain->_tslices.end()); }
 
 
       struct const_iterator : public base_container::const_iterator
@@ -286,8 +290,8 @@ namespace codac2
           const Tube& _tube_vector;
       };
 
-      const_iterator begin() const { return const_iterator(*this, _tdomain._tslices.cbegin()); }
-      const_iterator end() const   { return const_iterator(*this, _tdomain._tslices.cend()); }
+      const_iterator begin() const { return const_iterator(*this, _tdomain->_tslices.cbegin()); }
+      const_iterator end() const   { return const_iterator(*this, _tdomain->_tslices.cend()); }
   };
 
 
@@ -300,8 +304,8 @@ namespace codac2
       {
         // Sampling the tube only if affectation is performed
         // (i.e. this is not done in the constructor)
-        std::list<TSlice>::iterator it_lb = _tubevector->_tdomain.sample(_t.lb(), false);
-        std::list<TSlice>::iterator it_ub = _tubevector->_tdomain.sample(_t.ub(), _t.is_degenerated());
+        std::list<TSlice>::iterator it_lb = _tubevector->_tdomain->sample(_t.lb(), false);
+        std::list<TSlice>::iterator it_ub = _tubevector->_tdomain->sample(_t.ub(), _t.is_degenerated());
 
         do
         {
@@ -367,7 +371,7 @@ namespace codac2
         return 1;
       }
 
-      const TDomain& tdomain() const
+      const std::shared_ptr<TDomain>& tdomain() const
       {
         return _tubevector.tdomain();
       }
@@ -399,7 +403,7 @@ namespace codac2
 
       const TubeComponent<T>& operator=(const TubeComponent<T>& x)
       {
-        assert(&x.tdomain() == &tdomain());
+        assert(x.tdomain() == tdomain());
         for(auto& s : _tubevector)
           s.set_component(_i, std::static_pointer_cast<Slice<T>>(s._it_tslice->_slices.at(&x._tubevector))->codomain()[x._i]);
         return *this;
@@ -407,7 +411,7 @@ namespace codac2
 
       const TubeComponent<T>& operator=(std::pair<std::function<Interval(const Interval&)>,const TubeComponent<T>> rel)
       {
-        assert(&rel.second.tdomain() == &tdomain());
+        assert(rel.second.tdomain() == tdomain());
         for(auto& s : _tubevector)
           s.set_component(_i, rel.first(std::static_pointer_cast<Slice<T>>(s._it_tslice->_slices.at(&rel.second._tubevector))->codomain()[rel.second._i]));
         return *this;

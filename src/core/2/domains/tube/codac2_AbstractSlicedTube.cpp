@@ -15,19 +15,19 @@ using namespace std;
 
 namespace codac2
 {
-  AbstractSlicedTube::AbstractSlicedTube(TDomain& tdomain) :
+  AbstractSlicedTube::AbstractSlicedTube(const shared_ptr<TDomain>& tdomain) :
     _tdomain(tdomain)
   {
 
   }
 
-  TDomain& AbstractSlicedTube::tdomain() const
+  const shared_ptr<TDomain>& AbstractSlicedTube::tdomain() const
   {
     return _tdomain;
   }
 
   Interval AbstractSlicedTube::t0_tf() const
   {
-    return _tdomain.t0_tf();
+    return _tdomain->t0_tf();
   }
 } // namespace codac
