@@ -28,17 +28,15 @@ using namespace pybind11::literals;
 
 void export_CtcCN(py::module& m, py::class_<Ctc, pyCtc>& ctc)
 {
-    py::class_<CtcCN> ctc_cn(m, "CtcCN", ctc, CTCCN_MAIN);
-    ctc_cn
+  py::class_<CtcCN> ctc_cn(m, "CtcCN", ctc, CTCCN_MAIN);
+  ctc_cn
 
-            .def(py::init<ContractorNetwork &, IntervalVectorVar &>(),
-                 CTCCN_CTCCN_CONTRACTORNETWORK_INTERVALVECTORVAR,
-                 "cn"_a.noconvert(),"box"_a.noconvert())
+    .def(py::init<ContractorNetwork&, IntervalVectorVar&>(),
+     CTCCN_CTCCN_CONTRACTORNETWORK_INTERVALVECTORVAR,
+     "cn"_a.noconvert(),"box"_a.noconvert())
 
-
-            .def("contract", &CtcCN::contract,
-                 CTCCN_VOID_CONTRACT_INTERVALVECTOR,
-                 "box"_a.noconvert())
-            ;
+    .def("contract", &CtcCN::contract,
+     CTCCN_VOID_CONTRACT_INTERVALVECTOR,
+     "box"_a.noconvert())
+  ;
 }
-

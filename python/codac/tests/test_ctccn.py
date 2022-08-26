@@ -37,6 +37,5 @@ class TestCtcCN(unittest.TestCase):
 
         self.assertEqual(x[1], a(t) + 2)
 
-
 if __name__ == '__main__':
     unittest.main()
