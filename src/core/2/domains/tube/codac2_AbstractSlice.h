@@ -40,8 +40,8 @@ namespace codac2
       const Interval& t0_tf() const;
       const TSlice& tslice() const;
 
-      const std::shared_ptr<AbstractSlice> prev_abstract_slice() const;
-      const std::shared_ptr<AbstractSlice> next_abstract_slice() const;
+      const std::shared_ptr<AbstractSlice> prev_abstract_slice_ptr() const;
+      const std::shared_ptr<AbstractSlice> next_abstract_slice_ptr() const;
 
 
     protected:

@@ -38,9 +38,10 @@ namespace codac2
   {
     public:
 
-      explicit Tube(size_t n, const std::shared_ptr<TDomain>& tdomain) :
-        AbstractSlicedTube(tdomain)
+      explicit Tube(const std::shared_ptr<TDomain>& tdomain, size_t n = 1) :
+        Tube(tdomain, T(n))
       {
+        assert(n > 0);
         for(std::list<TSlice>::iterator it = _tdomain->_tslices.begin();
           it != _tdomain->_tslices.end(); ++it)
         {
@@ -50,14 +51,25 @@ namespace codac2
         }
       }
 
-      explicit Tube(size_t n, const std::shared_ptr<TDomain>& tdomain, const TFnc& f) :
-        Tube(n, tdomain)
+      explicit Tube(const std::shared_ptr<TDomain>& tdomain, const TFnc& f) :
+        Tube(tdomain, (size_t)f.image_dim())
       {
         assert(f.nb_var() == 0 && "function's inputs must be limited to system variable");
-        assert((size_t)f.image_dim() == n);
 
         for(auto& s : *this)
           s.set(f.eval_vector(s.t0_tf()));
+      }
+
+      explicit Tube(const std::shared_ptr<TDomain>& tdomain, const T& default_value) :
+        AbstractSlicedTube(tdomain)
+      {
+        for(std::list<TSlice>::iterator it = _tdomain->_tslices.begin();
+          it != _tdomain->_tslices.end(); ++it)
+        {
+          it->_slices.insert(
+            std::pair<const AbstractSlicedTube*,std::shared_ptr<Slice<T>>>(this,
+              std::make_shared<Slice<T>>(default_value, *this, it)));
+        }
       }
 
       explicit Tube(const Tube& x) :
@@ -97,19 +109,19 @@ namespace codac2
         return _tdomain->nb_tslices();
       }
 
-      virtual const std::shared_ptr<AbstractSlice>& first_abstract_slice() const
+      virtual const std::shared_ptr<AbstractSlice>& first_abstract_slice_ptr() const
       {
         return _tdomain->tslices().front().slices().at(this);
       }
 
-      virtual const std::shared_ptr<AbstractSlice>& last_abstract_slice() const
+      virtual const std::shared_ptr<AbstractSlice>& last_abstract_slice_ptr() const
       {
         return _tdomain->tslices().back().slices().at(this);
       }
 
       const std::shared_ptr<Slice<T>> first_slice_ptr() const
       {
-        return std::static_pointer_cast<Slice<T>>(first_abstract_slice());
+        return std::static_pointer_cast<Slice<T>>(first_abstract_slice_ptr());
       }
 
       const Slice<T>& first_slice() const
@@ -125,7 +137,7 @@ namespace codac2
 
       const std::shared_ptr<Slice<T>> last_slice_ptr() const
       {
-        return std::static_pointer_cast<Slice<T>>(last_abstract_slice());
+        return std::static_pointer_cast<Slice<T>>(last_abstract_slice_ptr());
       }
 
       const Slice<T>& last_slice() const

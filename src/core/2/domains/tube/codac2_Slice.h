@@ -41,8 +41,8 @@ namespace codac2
 
       }
 
-      explicit Slice(const T& box, const AbstractSlicedTube& tube_vector, const std::list<TSlice>::iterator& it_tslice) :
-        AbstractSlice(tube_vector,it_tslice), _codomain(box)
+      explicit Slice(const T& codomain, const AbstractSlicedTube& tube_vector, const std::list<TSlice>::iterator& it_tslice) :
+        AbstractSlice(tube_vector,it_tslice), _codomain(codomain)
       {
 
       }
@@ -103,26 +103,26 @@ namespace codac2
         return true; // todo
       }
 
-      const std::shared_ptr<Slice<T>> prev_slice() const
+      const std::shared_ptr<Slice<T>> prev_slice_ptr() const
       {
-        return std::static_pointer_cast<Slice<T>>(prev_abstract_slice());
+        return std::static_pointer_cast<Slice<T>>(prev_abstract_slice_ptr());
       }
 
-      std::shared_ptr<Slice<T>> prev_slice()
+      std::shared_ptr<Slice<T>> prev_slice_ptr()
       {
         return std::const_pointer_cast<Slice<T>>(
-          static_cast<const Slice&>(*this).prev_slice());
+          static_cast<const Slice&>(*this).prev_slice_ptr());
       }
 
-      const std::shared_ptr<Slice<T>> next_slice() const
+      const std::shared_ptr<Slice<T>> next_slice_ptr() const
       {
-        return std::static_pointer_cast<Slice<T>>(next_abstract_slice());
+        return std::static_pointer_cast<Slice<T>>(next_abstract_slice_ptr());
       }
 
-      std::shared_ptr<Slice<T>> next_slice()
+      std::shared_ptr<Slice<T>> next_slice_ptr()
       {
         return std::const_pointer_cast<Slice<T>>(
-          static_cast<const Slice&>(*this).next_slice());
+          static_cast<const Slice&>(*this).next_slice_ptr());
       }
 
       const T& codomain() const
@@ -133,16 +133,16 @@ namespace codac2
       T input_gate() const
       {
         T gate = codomain();
-        if(prev_slice())
-          gate &= prev_slice()->codomain();
+        if(prev_slice_ptr())
+          gate &= prev_slice_ptr()->codomain();
         return gate;
       }
 
       T output_gate() const
       {
         T gate = codomain();
-        if(next_slice())
-          gate &= next_slice()->codomain();
+        if(next_slice_ptr())
+          gate &= next_slice_ptr()->codomain();
         return gate;
       }
 
@@ -151,7 +151,7 @@ namespace codac2
         assert((size_t)codomain().size() == size());
         _codomain = x;
         if(is_gate())
-          _codomain &= prev_slice()->codomain() & next_slice()->codomain();
+          _codomain &= prev_slice_ptr()->codomain() & next_slice_ptr()->codomain();
       }
 
       void set_component(size_t i, const Interval& xi)
@@ -159,7 +159,7 @@ namespace codac2
         assert((size_t)codomain().size() == size());
         _codomain[i] = xi;
         if(is_gate())
-          _codomain[i] &= prev_slice()->codomain()[i] & next_slice()->codomain()[i];
+          _codomain[i] &= prev_slice_ptr()->codomain()[i] & next_slice_ptr()->codomain()[i];
       }
 
       friend std::ostream& operator<<(std::ostream& os, const Slice& x)
