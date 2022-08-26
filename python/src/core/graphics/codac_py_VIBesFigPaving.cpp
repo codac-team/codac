@@ -36,6 +36,9 @@ void export_VIBesFigPaving(py::module& m)
 
   .def("show", (void (VIBesFigPaving::*)())&VIBesFigPaving::show,
     VIBESFIGPAVING_VOID_SHOW)
+  
+  .def_property_readonly_static("DEFAULT_SET_COLOR_MAP", [](py::object) { return DEFAULT_SET_COLOR_MAP; })
+  .def_property_readonly_static("LIE_SET_COLOR_MAP", [](py::object) { return LIE_SET_COLOR_MAP; })
 
   ;
 }
