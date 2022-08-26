@@ -61,6 +61,7 @@
       src/core/contractors/static/codac_py_CtcDist.cpp
       src/core/contractors/static/codac_py_CtcFunction.cpp
       src/core/contractors/static/codac_py_CtcConstell.cpp
+      src/core/contractors/static/codac_py_CtcCN.cpp
       src/core/contractors/static/codac_py_CtcNewton.cpp
       src/core/contractors/static/codac_py_CtcPolar.cpp
 

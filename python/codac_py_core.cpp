@@ -37,9 +37,11 @@ void export_CtcCartProd(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcDist(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcFunction(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcConstell(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+void export_CtcCN(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcNewton(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcPolar(py::module& m, py::class_<Ctc, pyCtc>& ctc);
 void export_CtcQInterProjF(py::module& m, py::class_<Ctc, pyCtc>& ctc);
+
 
 py::class_<DynCtc,pyDynCtc> export_DynCtc(py::module& m);
 void export_CtcDelay(py::module& m, py::class_<DynCtc, pyDynCtc>& dyn_ctc);
@@ -103,6 +105,7 @@ PYBIND11_MODULE(core, m)
   export_CtcDist(m, ctc);
   export_CtcFunction(m, ctc);
   export_CtcConstell(m, ctc);
+  export_CtcCN(m, ctc);
   export_CtcNewton(m, ctc);
   export_CtcPolar(m, ctc);
 

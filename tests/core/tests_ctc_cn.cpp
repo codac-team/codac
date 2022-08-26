@@ -20,7 +20,7 @@ TEST_CASE("CtcCN")
   {
     Interval tdomain(0.,10.);
     Tube a(tdomain, 0.01, TFunction("t"));
-    float t = 1;
+    double t = 1.0;
     IntervalVector x({{t,t},Interval::ALL_REALS});
 
     CtcFunction ctc_f(Function("x[2]","a","(x[1]-2-a)"));
