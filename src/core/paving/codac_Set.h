@@ -25,6 +25,8 @@ namespace codac
    */
   enum class SetValue
   {
+    DEFAULT = 0x00, ///< does not have a meaning, only used for default values of arguments
+
     UNKNOWN = 0x01, ///< unable to conclude
     OUT = 0x02,     ///< outside the solution set
     IN = 0x04,      ///< inside the solution set
