@@ -29,7 +29,7 @@ namespace codac2
   void CtcDiffInclusion::contract(Tube<IntervalVector>& x, const Tube<IntervalVector>& u, TimePropag t_propa)
   {
     // Verifying that x and u share exactly the same tdomain and slicing:
-    assert(&x.tdomain() == &u.tdomain());
+    assert(x.tdomain() == u.tdomain());
     // Verifying that the provided tubes are consistent with the function
     assert((size_t)_f.nb_var() == 2);
     assert((size_t)_f.image_dim() == x.size());
