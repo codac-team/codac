@@ -186,6 +186,8 @@
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TSlice.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TSlice.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_Tube.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeComponent.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/2/domains/tube/codac2_TubeEvaluation.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.cpp
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/contractors/codac2_CtcDiffInclusion.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/2/integration/codac2_AbstractDomain.cpp
