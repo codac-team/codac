@@ -118,6 +118,24 @@ jobs:
         zip -q -r codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac
       shell: bash
     - run: |
+        mkdir -p codac_standalone/example ; cd codac_standalone
+        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0 --no-check-certificate -nv ; unzip -q 3.4.0 -d eigen ; rm -Rf 3.4.0 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools       
+        if [ ${{ runner.os }} = Windows ]; then cp -Rf /C/ProgramData/chocolatey/lib/ibex . ; rm -Rf ibex/tools ibex/ibex.*
+        elif [ ${{ runner.os }} = Linux ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/
+        elif [ ${{ runner.os }} = macOS ]; then cp -Rf ../ibex .
+        fi       
+        cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone
+      shell: bash
+    - run: |
+        cd codac_standalone/example
+        cmake ${{ matrix.cfg.cmake_params }} .
+        cmake --build . --config Release
+        file ./${{ matrix.cfg.test_config }}my_project
+        ./${{ matrix.cfg.test_config }}my_project
+        cd ../..
+      shell: bash
+      if: (runner.os!='macOS')||(matrix.cfg.arch=='x86_64')
+    - run: |
         cd packages/choco
         sed_param=s/\<version\>1\<\\/version\>/\<version\>${PACKAGE_VERSION}\<\\/version\>/
         sed -i "$sed_param" codac/codac.nuspec
@@ -153,6 +171,7 @@ jobs:
         cmake --build . --config Release
         file ./${{ matrix.cfg.test_config }}my_project
         ./${{ matrix.cfg.test_config }}my_project
+        cd ../..
       shell: bash
       if: (runner.os!='macOS')||(matrix.cfg.arch=='x86_64')
     - uses: xresloader/upload-to-github-release@v1
