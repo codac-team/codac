@@ -92,7 +92,10 @@ jobs:
         del /f /q ibex.2.8.9.20220812.nupkg
       if: runner.os=='Windows'
     - run: |
-        sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        wget https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs`/libibex-dev-2.8.9.20220809-0`lsb_release -cs`0_amd64.deb --no-check-certificate -nv
+        sudo apt-get -q update ; sudo apt-get -y install ./libibex-dev-2.8.9.20220809-0`lsb_release -cs`0_amd64.deb || true
+        rm -Rf ./libibex-dev-2.8.9.20220809-0`lsb_release -cs`0_amd64.deb
+        #sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
       shell: bash
       if: runner.os=='Linux'
