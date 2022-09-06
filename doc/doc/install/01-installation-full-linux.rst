@@ -30,6 +30,8 @@ Then, check your installation `with the instructions of this page <03-start-cpp-
 
   and check that "My first tube:Tube [0, 10]" appears.
 
+  Similar archives exist also for all the supported configurations.
+
 
 Install from sources (latest development)
 -----------------------------------------

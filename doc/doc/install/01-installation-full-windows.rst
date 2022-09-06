@@ -41,7 +41,7 @@ Optionally, for Python (*e.g.* ``choco install python --version=3.8.2``) and doc
   choco install doxygen.install graphviz
   python -m pip install --upgrade pip
   pip install --upgrade wheel setuptools
-  git clone -b v3.1.1 https://github.com/sphinx-doc/sphinx
+  git clone --depth 1 -b v3.1.1 https://github.com/sphinx-doc/sphinx
   cd sphinx
   pip install .
   pip install --upgrade breathe sphinx-issues sphinx-tabs sphinx_rtd_theme sphinx-reredirects

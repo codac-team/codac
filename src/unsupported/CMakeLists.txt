@@ -66,7 +66,7 @@
 ################################################################################
 
   add_library(codac-unsupported ${SRC})
-  target_compile_options(codac-unsupported PUBLIC -w)
+  #target_compile_options(codac-unsupported PUBLIC -w)
 
   # todo: find a clean way to access codac header files?
   set(CODAC_HEADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../include)
