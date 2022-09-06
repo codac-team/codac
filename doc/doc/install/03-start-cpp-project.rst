@@ -56,7 +56,7 @@ For the compilation of your project, you can use CMake with the following file :
     # set(CMAKE_PREFIX_PATH "~/eigen/build_install")
 
     find_package(Eigen3 REQUIRED NO_MODULE)
-    message(STATUS "Found Eigen3 version ${EIGEN3_VERSION}")
+    message(STATUS "Found Eigen3 version ${Eigen3_VERSION}")
 
   # Adding Codac
 

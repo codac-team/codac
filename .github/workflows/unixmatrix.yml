@@ -26,26 +26,31 @@ jobs:
         run:
             shell: ${{ matrix.cfg.shell }}
     strategy:
+        fail-fast: false
         matrix:
             cfg:
-            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2022 x64' }
-            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -A Win32', choco_flags: '--x86', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2022 x86' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x64' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x86' }
-            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2017 x64' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A Win32', choco_flags: '--x86', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', cmake_config: '--config Release', cmake_codac_config: '--config Debug', test_config: 'Release/', desc: 'Windows Visual Studio 2017 x86' }
+            - { os: windows-2022, shell: cmd, arch: x64, runtime: vc17, cmake_params: '-G "Visual Studio 17" -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2022 x64' }
+            - { os: windows-2022, shell: cmd, arch: x86, runtime: vc17, cmake_params: '-G "Visual Studio 17" -A Win32', choco_flags: '--x86', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2022 x86' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x64' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc16, cmake_params: '-G "Visual Studio 16" -A Win32', choco_flags: '--x86', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2019 x86' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A x64', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2017 x64' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: vc15, cmake_params: '-G "Visual Studio 16" -T v141 -A Win32', choco_flags: '--x86', cmake_flags: ' /wd4267 /wd4244 /wd4305 /wd4996', test_config: 'Release/', desc: 'Windows Visual Studio 2017 x86' }
+            - { os: windows-2022, shell: cmd, arch: x64, runtime: mingw11, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 11.2.0 x64' }
+            - { os: windows-2022, shell: cmd, arch: x86, runtime: mingw11, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 11.2.0 x86' }
             - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 8.1.0 x64' }
             - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw8, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 8.1.0 x86' }
-            - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows Qt 5.12.6 MinGW 7.3.0 x86' }
+            - { os: windows-2019, shell: cmd, arch: x64, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', desc: 'Windows MinGW 7.3.0 x64' }
+            - { os: windows-2019, shell: cmd, arch: x86, runtime: mingw7, cmake_params: '-G "MSYS Makefiles"', cmake_flags: '-fPIC', choco_flags: '--x86', desc: 'Windows MinGW 7.3.0 x86' }
             - { os: ubuntu-22.04, shell: bash, arch: amd64, runtime: jammy, cmake_flags: '-fPIC', desc: 'Ubuntu 22.04' }
             - { os: ubuntu-20.04, shell: bash, arch: amd64, runtime: focal, cmake_flags: '-fPIC', desc: 'Ubuntu 20.04' }
             - { os: ubuntu-18.04, shell: bash, arch: amd64, runtime: bionic, cmake_flags: '-fPIC', desc: 'Ubuntu 18.04' }
-            - { os: macos-12, shell: bash, arch: x64, runtime: monterey, cmake_flags: '-fPIC', desc: 'macOS Monterey' }
-            - { os: macos-11, shell: bash, arch: x64, runtime: bigsur, cmake_flags: '-fPIC', desc: 'macOS Big Sur' }
-            - { os: macos-10.15, shell: bash, arch: x64, runtime: catalina, cmake_flags: '-fPIC', desc: 'macOS Catalina' }
+            - { os: macos-12, shell: bash, arch: arm64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Monterey arm64' }
+            - { os: macos-12, shell: bash, arch: x86_64, runtime: monterey, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Monterey x86_64' }
+            - { os: macos-11, shell: bash, arch: arm64, runtime: bigsur, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=arm64', cmake_flags: '-fPIC', desc: 'macOS Big Sur arm64' }
+            - { os: macos-11, shell: bash, arch: x86_64, runtime: bigsur, cmake_params: '-D CMAKE_SYSTEM_NAME=Darwin -D CMAKE_OSX_ARCHITECTURES=x86_64', cmake_flags: '-fPIC', desc: 'macOS Big Sur x86_64' }
     name: ${{ matrix.cfg.desc }}
     steps: 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
         fetch-depth: 0
@@ -67,82 +72,86 @@ jobs:
     - run: echo "PACKAGE_VERSION=$SOFTWARE_VERSION-${DEBIAN_PACKAGE_REV}${{ matrix.cfg.runtime }}$PACKAGE_REV" >> $GITHUB_ENV
       shell: bash
       if: runner.os=='Linux'
-#    - run: |
-#        choco install -y -r --no-progress wget
-#        wget http://download.qt.io/archive/qt/5.12/5.12.6/qt-opensource-windows-x86-5.12.6.exe --no-check-certificate -nv
-#        move /Y qt-opensource-windows-x86-5.12.6.exe %SystemDrive%\
-#        wget http://www.ensta-bretagne.fr/lebars/Share/qt-installer-5.12.6-mingw73_32.qs --no-check-certificate -nv
-#        move /Y qt-installer-5.12.6-mingw73_32.qs %SystemDrive%\
-#        netsh advfirewall set allprofiles state on
-#        netsh advfirewall firewall add rule name="Qt offline installer" dir=out action=block program="%SystemDrive%\qt-opensource-windows-x86-5.12.6.exe" enable=yes
-#        rem Take several min...
-#        %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe --script %SystemDrive%\qt-installer-5.12.6-mingw73_32.qs
-#        netsh advfirewall firewall del rule name="Qt offline installer"
-#        netsh advfirewall set allprofiles state off
-#        del /f /q %SystemDrive%\qt-opensource-windows-x86-5.12.6.exe
-#        echo C:\Qt\Qt5.12.6\5.12.6\mingw73_32\bin;C:\Qt\Qt5.12.6\Tools\mingw730_32\bin>>%GITHUB_PATH%
-#      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw7')
     - run: |
         choco install -y -r --no-progress mingw --version=7.3.0 --force ${{ matrix.cfg.choco_flags }}
         echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin>>%GITHUB_PATH%
-        choco install -y -r --no-progress ibex --version=2.8.9.20220413 --ignore-dependencies ${{ matrix.cfg.choco_flags }}
-      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw7')&&(matrix.cfg.arch=='x86')
+      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw7')
     - run: |
         choco install -y -r --no-progress mingw --version=8.1.0 --force ${{ matrix.cfg.choco_flags }}
         echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin>>%GITHUB_PATH%
       if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8')&&(matrix.cfg.arch=='x86')
     - run: |
+        choco install -y -r --no-progress mingw --version=11.2.0 --force ${{ matrix.cfg.choco_flags }}
+        echo C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin>>%GITHUB_PATH%
+      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw11')&&(matrix.cfg.arch=='x86')
+    - run: |
         choco install -y -r --no-progress checksum wget winflexbison make patch zip ${{ matrix.cfg.choco_flags }}
         choco install -y -r --no-progress eigen --version=3.4.0 ${{ matrix.cfg.choco_flags }}
-        choco install -y -r --no-progress ibex --version=2.8.9.20220413 ${{ matrix.cfg.choco_flags }}
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20220812/ibex.2.8.9.20220812.nupkg --no-check-certificate -nv
+        choco install -y -r --no-progress --ignore-dependencies -s . ibex --version=2.8.9.20220812 ${{ matrix.cfg.choco_flags }} --params "'/url:https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20220812/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        del /f /q ibex.2.8.9.20220812.nupkg
       if: runner.os=='Windows'
-#    - run: sudo apt-get -q update ; sudo apt-get -y install flex bison libeigen3-dev || true
-#      shell: bash
-#      if: runner.os=='Linux'
     - run: |
-        sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
+        wget https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs`/libibex-dev-2.8.9.20220809-0`lsb_release -cs`0_amd64.deb --no-check-certificate -nv
+        sudo apt-get -q update ; sudo apt-get -y install ./libibex-dev-2.8.9.20220809-0`lsb_release -cs`0_amd64.deb || true
+        rm -Rf ./libibex-dev-2.8.9.20220809-0`lsb_release -cs`0_amd64.deb
+        #sudo sh -c 'echo "deb [trusted=yes] https://www.ensta-bretagne.fr/packages/`lsb_release --id -s | tr [:upper:] [:lower:]`/`lsb_release -cs` ./" > /etc/apt/sources.list.d/ensta-bretagne.list'
         sudo apt-get -q update ; sudo apt-get -y install libibex-dev libeigen3-dev dpkg-dev || true
       shell: bash
       if: runner.os=='Linux'
-    - run: brew install eigen
+    - run: |
+        brew install eigen
+        wget https://github.com/lebarsfa/ibex-lib/releases/download/ibex-2.8.9.20220812/ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip --no-check-certificate -nv
+        unzip -q ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
+        rm -Rf ibex_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip
+        cp -Rf ibex/* /usr/local/
       if: runner.os=='macOS'
-    - run: git clone -b actions https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . ${{ matrix.cfg.cmake_config }} --target install ; cd ../..
-      shell: bash
-      if: ((runner.os=='Windows')&&(matrix.cfg.runtime!='mingw8'))||((runner.os!='Windows')&&(runner.os!='Linux'))
+#    - run: git clone --depth 1 -b actions https://github.com/lebarsfa/ibex-lib.git ; cd ibex-lib ; mkdir build ; cd build ; cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../../ibex" .. ; cmake --build . --config Release --target install ; cd ../..
+#      shell: bash
     - run: |
         mkdir build ; cd build
-        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_PREFIX_PATH="ibex" -D CMAKE_INSTALL_PREFIX="../codac" ..
-        cmake --build . ${{ matrix.cfg.cmake_codac_config }} --target install
+        cmake -E env CXXFLAGS="${{ matrix.cfg.cmake_flags }}" CFLAGS="${{ matrix.cfg.cmake_flags }}" cmake ${{ matrix.cfg.cmake_params }} -D CMAKE_INSTALL_PREFIX="../codac" ..
+        cmake --build . --config Debug --target install
         cd ..
+        sed_param=s/PATH_SUFFIXES\ /PATHS\ \$\{CMAKE_CURRENT_LIST_FILE\}\\/..\\/..\\/..\\/..\\/\ PATH_SUFFIXES\ /
+        if [ ${{ runner.os }} = Windows ]; then sed -i "$sed_param" codac/share/codac/cmake/*.cmake ; fi
+        zip -q -r codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac
       shell: bash
     - run: |
         mkdir -p codac_standalone/example ; cd codac_standalone
-        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0 --no-check-certificate -nv ; unzip -q 3.4.0 -d eigen ; rm -Rf 3.4.0 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools
-        cp -Rf ../ibex . ; cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone ; cd codac_standalone/example
+        wget https://community.chocolatey.org/api/v2/package/eigen/3.4.0 --no-check-certificate -nv ; unzip -q 3.4.0 -d eigen ; rm -Rf 3.4.0 eigen/*.xml eigen/*.nuspec eigen/_* eigen/package eigen/tools       
+        if [ ${{ runner.os }} = Windows ]; then cp -Rf /C/ProgramData/chocolatey/lib/ibex . ; rm -Rf ibex/tools ibex/ibex.*
+        elif [ ${{ runner.os }} = Linux ]; then mkdir -p ibex/include ; mkdir -p ibex/lib ; mkdir -p ibex/share ; mkdir -p ibex/bin ; cp -Rf /usr/include/ibex* ibex/include/ ; cp -Rf /usr/lib/*ibex* ibex/lib/ ; cp -Rf /usr/share/*ibex* ibex/share/ ; cp -Rf /usr/share/pkgconfig ibex/share/ ; cp -Rf /usr/bin/ibex* ibex/bin/
+        elif [ ${{ runner.os }} = macOS ]; then cp -Rf ../ibex .
+        fi       
+        cp -Rf ../codac . ; cp -Rf ../tests/test_codac/* ./example/ ; cd .. ; zip -q -r codac_standalone_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip codac_standalone
+      shell: bash
+    - run: |
+        cd codac_standalone/example
         cmake ${{ matrix.cfg.cmake_params }} .
-        cmake --build . ${{ matrix.cfg.cmake_config }}
+        cmake --build . --config Release
+        file ./${{ matrix.cfg.test_config }}my_project
         ./${{ matrix.cfg.test_config }}my_project
         cd ../..
       shell: bash
-      if: ((runner.os=='Windows')&&(matrix.cfg.runtime!='mingw8'))||((runner.os!='Windows')&&(runner.os!='Linux'))
+      if: (runner.os!='macOS')||(matrix.cfg.arch=='x86_64')
     - run: |
         cd packages/choco
-        cp -Rf ../../codac/* codac
         sed_param=s/\<version\>1\<\\/version\>/\<version\>${PACKAGE_VERSION}\<\\/version\>/
         sed -i "$sed_param" codac/codac.nuspec
-        sed_param=s/PATH_SUFFIXES\ /PATHS\ \$\{CMAKE_CURRENT_LIST_FILE\}\\/..\\/..\\/..\\/..\\/\ PATH_SUFFIXES\ /
-        sed -i "$sed_param" codac/share/codac/cmake/*.cmake
+        sed_param=s/codac-1/codac-${PACKAGE_VERSION}/
+        sed -i "$sed_param" codac/tools/chocolateyinstall.ps1
         mv -f codac codac.$PACKAGE_VERSION
         cd codac.$PACKAGE_VERSION
         choco pack
         mv -f codac.$PACKAGE_VERSION.nupkg ../../../
         cd ../../..
         checksum -f=codac.$PACKAGE_VERSION.nupkg -t=sha256
-        choco source add -n=current-directory -s . --priority=100
-        choco install -y -r --no-progress codac --version=$PACKAGE_VERSION ${{ matrix.cfg.choco_flags }}
-        mv -f codac.$PACKAGE_VERSION.nupkg codac.$PACKAGE_VERSION${{ matrix.cfg.choco_flags }}.nupkg
+        choco install -y -r --no-progress --ignore-dependencies -s . codac --params "'/url:./codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip'"
+        if [ ${{ matrix.cfg.runtime }} != mingw8 ] || [ ${{ matrix.cfg.arch }} != x64 ]; then rm -Rf codac.$PACKAGE_VERSION.nupkg ; fi # To avoid upload conflicts of the same file...
+        checksum -f=codac_${{ matrix.cfg.arch }}_${{ matrix.cfg.runtime }}.zip -t=sha256
       shell: bash
-      if: (runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8')
+      if: runner.os=='Windows'
     - run: |
         cd packages
         chmod +x ./genlibcodac-dev.sh
@@ -152,13 +161,19 @@ jobs:
       shell: bash
       if: runner.os=='Linux'
     - run: |
+        cp -Rf codac/* /usr/local/
+      shell: bash
+      if: (runner.os=='macOS')&&(matrix.cfg.arch=='x86_64')
+    - run: |
         rm -Rf codac
         cd tests/test_codac
         cmake ${{ matrix.cfg.cmake_params }} .
-        cmake --build . ${{ matrix.cfg.cmake_config }}
+        cmake --build . --config Release
+        file ./${{ matrix.cfg.test_config }}my_project
         ./${{ matrix.cfg.test_config }}my_project
+        cd ../..
       shell: bash
-      if: ((runner.os=='Windows')&&(matrix.cfg.runtime=='mingw8'))||(runner.os=='Linux')
+      if: (runner.os!='macOS')||(matrix.cfg.arch=='x86_64')
     - uses: xresloader/upload-to-github-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
