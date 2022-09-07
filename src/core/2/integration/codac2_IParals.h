@@ -15,10 +15,12 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "codac_TubeVector.h"
 #include "codac_Interval.h"
 #include "codac_IntervalVector.h"
 #include "codac_IntervalMatrix.h"
 #include "codac_ConvexPolygon.h"
+#include "codac2_Tube.h"
 
 
 namespace codac2 
@@ -199,6 +201,7 @@ namespace codac2
       /** union with a box 
        */
       IParals& operator|=(const IntervalVector& x);
+      IParals& operator|=(const IParals& x);
       friend IParals operator|(const IParals& iv, const IntervalVector& x);
 
       /***** operations  *****/
@@ -396,6 +399,9 @@ namespace codac2 {
         this->empty=true;
         for (unsigned int i=0;i<=this->nbmat;i++) (this->Vrhs[i]).set_empty();
       }
+
+      codac::TubeVector to_codac1(codac2::Tube<IParals>& tube);
+
 }
 
 #endif
