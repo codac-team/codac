@@ -38,6 +38,11 @@ namespace codac2
 
       explicit AbstractConstTube(const T& x);
 
+      virtual ~AbstractConstTube()
+      {
+
+      }
+
       virtual size_t size() const = 0;
       virtual bool contains(const TrajectoryVector& value) const = 0;
       virtual Interval t0_tf() const = 0;

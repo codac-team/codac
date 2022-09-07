@@ -26,7 +26,7 @@ namespace codac2
   TSlice::TSlice(const TSlice& tslice, const Interval& tdomain) :
     TSlice(tdomain)
   {
-    for(const auto[k,s] : tslice._slices)
+    for(const auto&[k,s] : tslice._slices)
       _slices.insert(pair<const AbstractSlicedTube*,shared_ptr<AbstractSlice>>(
         k, s->duplicate()));
   }
