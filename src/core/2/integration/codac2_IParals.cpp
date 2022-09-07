@@ -501,6 +501,17 @@ namespace codac2 {
        this->bbox() |= x;
        return *this;
    }
+   IParals& IParals::operator|= (const IParals& x) {
+       if (x.is_empty()) return *this;
+       if (this->empty) {
+           return (*this = x);
+       }
+       for (unsigned int i=1;i<this->nbmat;i++) {
+          this->rhs(i) |= x.getPar(this->Imat(i));
+       }
+       this->simplify(true);
+       return *this;
+   }
    IParals operator|(const IParals& iv, const IntervalVector& x) {
        IParals Res(iv);
        Res |= x;
@@ -994,6 +1005,18 @@ namespace codac2 {
        str << "\n" << std::flush;
        return str;
    }
+
+    codac::TubeVector to_codac1(codac2::Tube<IParals>& tube)
+    {
+      codac::TubeVector x(tube.t0_tf(), tube.size());
+      for(const auto& s : tube)
+        if(!s.t0_tf().is_unbounded())
+          x.set(s.codomain().box(), s.t0_tf());
+      for(const auto& s : tube) // setting gate (were overwritten)
+        if(s.t0_tf().is_degenerated())
+          x.set(s.codomain().box(), s.t0_tf());
+      return x;
+    }
 
 
 }
