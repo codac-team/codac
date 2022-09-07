@@ -169,8 +169,6 @@ namespace codac
        */
       static void verbose(bool verbose = true);
 
-    protected:
-
       /**
        * \brief Tries to prove the existence of loops in each detection set
        *
@@ -179,6 +177,8 @@ namespace codac
        * \param f the inclusion function \f$[\mathbf{f}]:\mathbb{IR}^2\to\mathbb{IR}^2\f$
        */
       void compute_proofs(const std::function<IntervalVector(const IntervalVector&)>& f);
+
+    protected:
 
       /**
        * \brief Recursive computation of the tplane, from the tube of positions \f$[\mathbf{p}](\cdot)\f$
