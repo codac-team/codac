@@ -303,8 +303,8 @@ TEST_CASE("Test codac2::tubes")
 
     //vibes::beginDrawing();
 
-    codac::TubeVector x_codac1 = x.to_codac1(); // may take time
-    codac::Tube xi_codac1 = x[1].to_codac1(); // may take time
+    codac::TubeVector x_codac1 = to_codac1(x); // may take time
+    codac::Tube xi_codac1 = to_codac1(x)[1]; // may take time
 
     //codac::VIBesFigTube fig("Tube");
     //fig.set_properties(100, 100, 600, 300);

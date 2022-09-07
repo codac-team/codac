@@ -222,18 +222,6 @@ namespace codac2
         assert(i >= 0 && i < size());
         return TubeComponent<T>(*this, i);
       }
-    
-      codac::TubeVector to_codac1() const
-      {
-        codac::TubeVector x(t0_tf(), size());
-        for(const auto& s : *this)
-          if(!s.t0_tf().is_unbounded())
-            x.set(s.codomain(), s.t0_tf());
-        for(const auto& s : *this) // setting gate (were overwritten)
-          if(s.t0_tf().is_degenerated())
-            x.set(s.codomain(), s.t0_tf());
-        return x;
-      }
 
       friend std::ostream& operator<<(std::ostream& os, const Tube<T>& x)
       {
@@ -306,10 +294,13 @@ namespace codac2
       const_iterator end() const   { return const_iterator(*this, _tdomain->_tslices.cend()); }
   };
 
+  codac::Tube to_codac1(const Tube<Interval>& x);
+  codac::TubeVector to_codac1(const Tube<IntervalVector>& x);
+
 
   #include "codac2_TubeEvaluation.h"
   #include "codac2_TubeComponent.h"
-
+  
 } // namespace codac
 
 #endif
